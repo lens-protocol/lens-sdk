@@ -1,0 +1,24 @@
+{
+  "name": "lens-sdk",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test --no-cache",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "prettier": "latest",
+    "turbo": "latest"
+  },
+  "engines": {
+    "node": "^18.12.1",
+    "pnpm": "^7.17.0"
+  },
+  "packageManager": "pnpm@7.17.1"
+}

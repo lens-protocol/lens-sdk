@@ -1,0 +1,19 @@
+{
+  "name": "@lens-protocol/eslint-config",
+  "main": "./index.js",
+  "private": true,
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-turbo": "0.0.7",
+    "eslint-plugin-import": "^2.26.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.3"
+  },
+  "peerDependencies": {
+    "eslint": "^8.28.0"
+  }
+}
