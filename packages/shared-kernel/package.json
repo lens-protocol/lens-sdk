@@ -10,9 +10,15 @@
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx"
   },
   "license": "ISC",
+  "dependencies": {
+    "decimal.js": "^10.3.1",
+    "ethers": "^5.5.2",
+    "lodash": "^4.17.21"
+  },
   "devDependencies": {
     "@lens-protocol/eslint-config": "workspace:*",
     "@types/jest": "^29.2.3",
+    "@types/lodash": "^4.14.191",
     "jest": "^29.3.1",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
