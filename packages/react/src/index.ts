@@ -1,6 +1,14 @@
 import { sharedKernel } from "@lens-protocol/shared-kernel";
 
-export function useHook() {
+export type UseHookResponse = {
+  message: string;
+  success: boolean;
+};
+
+export function useHook(): UseHookResponse {
   const response = sharedKernel();
-  return `react & ${response}`;
+  return {
+    message: `react & ${response}`,
+    success: true,
+  };
 }
