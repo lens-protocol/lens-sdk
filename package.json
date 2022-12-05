@@ -7,6 +7,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "build:react": "pnpm --filter react build ",
     "test": "turbo run test --no-cache",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",

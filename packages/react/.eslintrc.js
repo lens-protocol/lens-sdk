@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: [
-    "eslint-config-custom",
+    "@lens-protocol/eslint-config",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:react/jsx-runtime",
