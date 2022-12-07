@@ -1,0 +1,38 @@
+query ProfilesToFollow($activeProfileId: ProfileId) {
+  recommendedProfiles {
+    id
+    name
+    bio
+    handle
+    ownedBy
+  }
+}
+
+query MutualFollowersProfiles(
+  $activeProfileId: ProfileId!
+  $viewingProfileId: ProfileId!
+  $limit: LimitScalar!
+  $cursor: Cursor
+) {
+  result: mutualFollowersProfiles(
+    request: {
+      yourProfileId: $activeProfileId
+      viewingProfileId: $viewingProfileId
+      limit: $limit
+      cursor: $cursor
+    }
+  ) {
+    items {
+      id
+      name
+      bio
+      handle
+      ownedBy
+    }
+    pageInfo {
+      prev
+      next
+      totalCount
+    }
+  }
+}
