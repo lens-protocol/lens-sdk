@@ -1,3 +1,7 @@
 {
-  "eslint.workingDirectories": ["./packages/react", "./packages/shared-kernel"]
+  "eslint.workingDirectories": [
+    "./packages/react",
+    "./packages/shared-kernel",
+    "./packages/storage"
+  ]
 }
