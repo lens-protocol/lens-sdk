@@ -1,4 +1,4 @@
-import { sharedKernel } from "@lens-protocol/shared-kernel";
+import { sharedKernel } from '@lens-protocol/shared-kernel';
 
 export type UseHookResponse = {
   message: string;

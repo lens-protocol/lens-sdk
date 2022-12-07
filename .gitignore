@@ -12,6 +12,7 @@ coverage
 # misc
 .DS_Store
 *.pem
+.vscode
 
 # debug
 .pnpm-debug.log*
