@@ -1,16 +1,6 @@
 export default {
+  preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  extensionsToTreatAsEsm: ['.ts'],
-  moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
-  },
-  transform: {
-    '^.+\\.[tj]sx?$': [
-      'ts-jest',
-      {
-        useESM: true,
-      },
-    ],
-  },
+  testRegex: '/__tests__/.*|(\\.|/)spec\\.tsx?$',
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
 };
