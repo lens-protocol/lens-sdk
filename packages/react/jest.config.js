@@ -1,16 +1,16 @@
-module.exports = {
-  testEnvironment: "jsdom",
-  extensionsToTreatAsEsm: [".ts"],
+export default {
+  testEnvironment: 'jsdom',
+  extensionsToTreatAsEsm: ['.ts'],
   moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1",
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   transform: {
-    "^.+\\.[tj]sx?$": [
-      "ts-jest",
+    '^.+\\.[tj]sx?$': [
+      'ts-jest',
       {
         useESM: true,
       },
     ],
   },
-  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
 };
