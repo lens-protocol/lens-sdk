@@ -1,0 +1,11 @@
+{
+  "name": "@lens-protocol/prettier-config",
+  "private": true,
+  "main": "./index.json",
+  "devDependencies": {
+    "prettier": "^2.8.0"
+  },
+  "peerDependencies": {
+    "prettier": "^2.8.0"
+  }
+}

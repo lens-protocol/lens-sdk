@@ -1,15 +1,15 @@
-import { clearSafeTimeout, safeSetTimeout } from "../safeSetTimeout";
+import { clearSafeTimeout, safeSetTimeout } from '../safeSetTimeout';
 
 const now = Date.now();
 
-describe("safeSetTimeout", () => {
+describe('safeSetTimeout', () => {
   jest.useFakeTimers();
 
   beforeEach(() => {
     jest.setSystemTime(now);
   });
 
-  it("should return exact timing", () => {
+  it('should return exact timing', () => {
     const callbackSpy = jest.fn();
 
     safeSetTimeout(callbackSpy, 10000);
@@ -20,7 +20,7 @@ describe("safeSetTimeout", () => {
     expect(callbackSpy).toHaveBeenCalled();
   });
 
-  it("should correctly clear timeout", () => {
+  it('should correctly clear timeout', () => {
     const callbackSpy = jest.fn();
 
     const timer = safeSetTimeout(callbackSpy, 10000);

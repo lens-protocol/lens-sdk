@@ -1,32 +1,32 @@
-import { omitDeep } from "../omitDeep";
+import { omitDeep } from '../omitDeep';
 
-describe("Given the omitDeep helper", () => {
-  describe("when invoked on an object", () => {
-    it("should remove the specified key from nested objects", () => {
+describe('Given the omitDeep helper', () => {
+  describe('when invoked on an object', () => {
+    it('should remove the specified key from nested objects', () => {
       const actual = omitDeep(
         {
           key: 42,
           bar: {
-            foo: "foo",
+            foo: 'foo',
             key: true,
           },
         },
-        "key"
+        'key',
       );
 
       expect(actual).toEqual({
         bar: {
-          foo: "foo",
+          foo: 'foo',
         },
       });
     });
 
-    it("should remove the specified key from objects in nested arrays", () => {
+    it('should remove the specified key from objects in nested arrays', () => {
       const actual = omitDeep(
         {
           arr: [{ key: 42, bar: true }],
         },
-        "key"
+        'key',
       );
 
       expect(actual).toEqual({
@@ -34,19 +34,19 @@ describe("Given the omitDeep helper", () => {
       });
     });
 
-    it("should leave primitive types untouched", () => {
+    it('should leave primitive types untouched', () => {
       const primitives = {
-        string: "string",
+        string: 'string',
         boolean: true,
         number: 42,
-        symbol: Symbol("symbol"),
+        symbol: Symbol('symbol'),
         bigint: BigInt(42),
         undefined: undefined,
         null: null,
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         function: () => {},
       };
-      const actual = omitDeep(primitives, "not-relevant");
+      const actual = omitDeep(primitives, 'not-relevant');
 
       expect(actual).toEqual(primitives);
     });
