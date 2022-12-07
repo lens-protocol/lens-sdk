@@ -1,4 +1,4 @@
-import { useHook } from '.';
+import { useHook } from '../index';
 
 describe('react', () => {
   it('should return react & shared-kernel', () => {
