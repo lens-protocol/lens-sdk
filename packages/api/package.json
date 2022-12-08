@@ -2,11 +2,12 @@
   "name": "@lens-protocol/api",
   "version": "0.0.1",
   "description": "",
+  "type": "module",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.mjs"
+        "default": "./dist/esm/index.js"
       },
       "require": {
         "types": "./dist/cjs/index.d.ts",
@@ -43,6 +44,7 @@
     "@graphql-codegen/typescript-react-apollo": "^2.3.1",
     "@graphql-codegen/typescript": "^1.23.0",
     "@lens-protocol/eslint-config": "workspace:*",
+    "@lens-protocol/shared-kernel": "workspace:*",
     "@types/jest": "^29.2.3",
     "babel-plugin-graphql-tag": "^3.3.0",
     "graphql-tag": "^2.12.6",

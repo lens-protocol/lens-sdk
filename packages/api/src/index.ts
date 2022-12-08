@@ -1,1 +1,2 @@
-export { useMutualFollowersProfilesQuery } from "./graphql/generated";
+export * from "./graphql";
+export * from "./apollo";

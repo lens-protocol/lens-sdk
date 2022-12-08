@@ -1,38 +1,49 @@
-query ProfilesToFollow($activeProfileId: ProfileId) {
-  recommendedProfiles {
-    id
-    name
-    bio
-    handle
-    ownedBy
+fragment MediaFields on Media {
+  url
+  mimeType
+}
+
+fragment MediaSet on MediaSet {
+  original {
+    ...MediaFields
   }
 }
 
-query MutualFollowersProfiles(
-  $activeProfileId: ProfileId!
-  $viewingProfileId: ProfileId!
-  $limit: LimitScalar!
-  $cursor: Cursor
-) {
-  result: mutualFollowersProfiles(
-    request: {
-      yourProfileId: $activeProfileId
-      viewingProfileId: $viewingProfileId
-      limit: $limit
-      cursor: $cursor
-    }
-  ) {
-    items {
-      id
-      name
-      bio
-      handle
-      ownedBy
-    }
-    pageInfo {
-      prev
-      next
-      totalCount
-    }
+fragment ProfileMediaFields on ProfileMedia {
+  ... on NftImage {
+    contractAddress
+    tokenId
+    uri
+    verified
+  }
+
+  ... on MediaSet {
+    ...MediaSet
+  }
+}
+
+fragment ProfileFields on Profile {
+  id
+  name
+  bio
+  handle
+  ownedBy
+  picture {
+    ...ProfileMediaFields
+  }
+  coverPicture {
+    ...ProfileMediaFields
+  }
+  stats {
+    totalFollowers
+    totalFollowing
+    totalPosts
+  }
+  ownedBy
+}
+
+query ProfilesToFollow {
+  recommendedProfiles {
+    ...ProfileFields
   }
 }

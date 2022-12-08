@@ -1,21 +1,10 @@
 import gql from "graphql-tag";
 import * as Apollo from "@apollo/client";
-import {
-  FieldPolicy,
-  FieldReadFunction,
-  TypePolicies,
-  TypePolicy,
-} from "@apollo/client/cache";
+import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from "@apollo/client/cache";
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -3784,51 +3773,104 @@ export type WorldcoinIdentity = {
   isHuman: Scalars["Boolean"];
 };
 
-export type ProfilesToFollowQueryVariables = Exact<{
-  activeProfileId?: Maybe<Scalars["ProfileId"]>;
-}>;
+export type MediaFieldsFragment = { __typename: "Media" } & Pick<Media, "url" | "mimeType">;
 
-export type ProfilesToFollowQuery = {
-  recommendedProfiles: Array<
-    { __typename: "Profile" } & Pick<
-      Profile,
-      "id" | "name" | "bio" | "handle" | "ownedBy"
-    >
-  >;
+export type MediaSetFragment = { __typename: "MediaSet" } & {
+  original: { __typename: "Media" } & MediaFieldsFragment;
 };
 
-export type MutualFollowersProfilesQueryVariables = Exact<{
-  activeProfileId: Scalars["ProfileId"];
-  viewingProfileId: Scalars["ProfileId"];
-  limit: Scalars["LimitScalar"];
-  cursor?: Maybe<Scalars["Cursor"]>;
-}>;
+type ProfileMediaFields_NftImage_Fragment = { __typename: "NftImage" } & Pick<
+  NftImage,
+  "contractAddress" | "tokenId" | "uri" | "verified"
+>;
 
-export type MutualFollowersProfilesQuery = {
-  result: { __typename: "PaginatedProfileResult" } & {
-    items: Array<
-      { __typename: "Profile" } & Pick<
-        Profile,
-        "id" | "name" | "bio" | "handle" | "ownedBy"
-      >
+type ProfileMediaFields_MediaSet_Fragment = { __typename: "MediaSet" } & MediaSetFragment;
+
+export type ProfileMediaFieldsFragment =
+  | ProfileMediaFields_NftImage_Fragment
+  | ProfileMediaFields_MediaSet_Fragment;
+
+export type ProfileFieldsFragment = { __typename: "Profile" } & Pick<
+  Profile,
+  "id" | "name" | "bio" | "handle" | "ownedBy"
+> & {
+    picture: Maybe<
+      | ({ __typename: "NftImage" } & ProfileMediaFields_NftImage_Fragment)
+      | ({ __typename: "MediaSet" } & ProfileMediaFields_MediaSet_Fragment)
     >;
-    pageInfo: { __typename: "PaginatedResultInfo" } & Pick<
-      PaginatedResultInfo,
-      "prev" | "next" | "totalCount"
+    coverPicture: Maybe<
+      | ({ __typename: "NftImage" } & ProfileMediaFields_NftImage_Fragment)
+      | ({ __typename: "MediaSet" } & ProfileMediaFields_MediaSet_Fragment)
+    >;
+    stats: { __typename: "ProfileStats" } & Pick<
+      ProfileStats,
+      "totalFollowers" | "totalFollowing" | "totalPosts"
     >;
   };
+
+export type ProfilesToFollowQueryVariables = Exact<{ [key: string]: never }>;
+
+export type ProfilesToFollowQuery = {
+  recommendedProfiles: Array<{ __typename: "Profile" } & ProfileFieldsFragment>;
 };
 
-export const ProfilesToFollowDocument = gql`
-  query ProfilesToFollow($activeProfileId: ProfileId) {
-    recommendedProfiles {
-      id
-      name
-      bio
-      handle
-      ownedBy
+export const MediaFieldsFragmentDoc = gql`
+  fragment MediaFields on Media {
+    url
+    mimeType
+  }
+`;
+export const MediaSetFragmentDoc = gql`
+  fragment MediaSet on MediaSet {
+    original {
+      ...MediaFields
     }
   }
+  ${MediaFieldsFragmentDoc}
+`;
+export const ProfileMediaFieldsFragmentDoc = gql`
+  fragment ProfileMediaFields on ProfileMedia {
+    ... on NftImage {
+      contractAddress
+      tokenId
+      uri
+      verified
+    }
+    ... on MediaSet {
+      ...MediaSet
+    }
+  }
+  ${MediaSetFragmentDoc}
+`;
+export const ProfileFieldsFragmentDoc = gql`
+  fragment ProfileFields on Profile {
+    id
+    name
+    bio
+    handle
+    ownedBy
+    picture {
+      ...ProfileMediaFields
+    }
+    coverPicture {
+      ...ProfileMediaFields
+    }
+    stats {
+      totalFollowers
+      totalFollowing
+      totalPosts
+    }
+    ownedBy
+  }
+  ${ProfileMediaFieldsFragmentDoc}
+`;
+export const ProfilesToFollowDocument = gql`
+  query ProfilesToFollow {
+    recommendedProfiles {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
 `;
 
 /**
@@ -3843,15 +3885,11 @@ export const ProfilesToFollowDocument = gql`
  * @example
  * const { data, loading, error } = useProfilesToFollowQuery({
  *   variables: {
- *      activeProfileId: // value for 'activeProfileId'
  *   },
  * });
  */
 export function useProfilesToFollowQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    ProfilesToFollowQuery,
-    ProfilesToFollowQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<ProfilesToFollowQuery, ProfilesToFollowQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<ProfilesToFollowQuery, ProfilesToFollowQueryVariables>(
@@ -3860,110 +3898,19 @@ export function useProfilesToFollowQuery(
   );
 }
 export function useProfilesToFollowLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    ProfilesToFollowQuery,
-    ProfilesToFollowQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfilesToFollowQuery, ProfilesToFollowQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    ProfilesToFollowQuery,
-    ProfilesToFollowQueryVariables
-  >(ProfilesToFollowDocument, options);
+  return Apollo.useLazyQuery<ProfilesToFollowQuery, ProfilesToFollowQueryVariables>(
+    ProfilesToFollowDocument,
+    options
+  );
 }
-export type ProfilesToFollowQueryHookResult = ReturnType<
-  typeof useProfilesToFollowQuery
->;
-export type ProfilesToFollowLazyQueryHookResult = ReturnType<
-  typeof useProfilesToFollowLazyQuery
->;
+export type ProfilesToFollowQueryHookResult = ReturnType<typeof useProfilesToFollowQuery>;
+export type ProfilesToFollowLazyQueryHookResult = ReturnType<typeof useProfilesToFollowLazyQuery>;
 export type ProfilesToFollowQueryResult = Apollo.QueryResult<
   ProfilesToFollowQuery,
   ProfilesToFollowQueryVariables
->;
-export const MutualFollowersProfilesDocument = gql`
-  query MutualFollowersProfiles(
-    $activeProfileId: ProfileId!
-    $viewingProfileId: ProfileId!
-    $limit: LimitScalar!
-    $cursor: Cursor
-  ) {
-    result: mutualFollowersProfiles(
-      request: {
-        yourProfileId: $activeProfileId
-        viewingProfileId: $viewingProfileId
-        limit: $limit
-        cursor: $cursor
-      }
-    ) {
-      items {
-        id
-        name
-        bio
-        handle
-        ownedBy
-      }
-      pageInfo {
-        prev
-        next
-        totalCount
-      }
-    }
-  }
-`;
-
-/**
- * __useMutualFollowersProfilesQuery__
- *
- * To run a query within a React component, call `useMutualFollowersProfilesQuery` and pass it any options that fit your needs.
- * When your component renders, `useMutualFollowersProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMutualFollowersProfilesQuery({
- *   variables: {
- *      activeProfileId: // value for 'activeProfileId'
- *      viewingProfileId: // value for 'viewingProfileId'
- *      limit: // value for 'limit'
- *      cursor: // value for 'cursor'
- *   },
- * });
- */
-export function useMutualFollowersProfilesQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    MutualFollowersProfilesQuery,
-    MutualFollowersProfilesQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    MutualFollowersProfilesQuery,
-    MutualFollowersProfilesQueryVariables
-  >(MutualFollowersProfilesDocument, options);
-}
-export function useMutualFollowersProfilesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    MutualFollowersProfilesQuery,
-    MutualFollowersProfilesQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    MutualFollowersProfilesQuery,
-    MutualFollowersProfilesQueryVariables
-  >(MutualFollowersProfilesDocument, options);
-}
-export type MutualFollowersProfilesQueryHookResult = ReturnType<
-  typeof useMutualFollowersProfilesQuery
->;
-export type MutualFollowersProfilesLazyQueryHookResult = ReturnType<
-  typeof useMutualFollowersProfilesLazyQuery
->;
-export type MutualFollowersProfilesQueryResult = Apollo.QueryResult<
-  MutualFollowersProfilesQuery,
-  MutualFollowersProfilesQueryVariables
 >;
 export type AccessConditionOutputKeySpecifier = (
   | "nft"
@@ -3986,10 +3933,7 @@ export type AccessConditionOutputFieldPolicy = {
   and?: FieldPolicy<any> | FieldReadFunction<any>;
   or?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type AndConditionOutputKeySpecifier = (
-  | "criteria"
-  | AndConditionOutputKeySpecifier
-)[];
+export type AndConditionOutputKeySpecifier = ("criteria" | AndConditionOutputKeySpecifier)[];
 export type AndConditionOutputFieldPolicy = {
   criteria?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -4019,10 +3963,7 @@ export type AttributeFieldPolicy = {
   key?: FieldPolicy<any> | FieldReadFunction<any>;
   value?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type AuthChallengeResultKeySpecifier = (
-  | "text"
-  | AuthChallengeResultKeySpecifier
-)[];
+export type AuthChallengeResultKeySpecifier = ("text" | AuthChallengeResultKeySpecifier)[];
 export type AuthChallengeResultFieldPolicy = {
   text?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -4035,10 +3976,7 @@ export type AuthenticationResultFieldPolicy = {
   accessToken?: FieldPolicy<any> | FieldReadFunction<any>;
   refreshToken?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type CanCommentResponseKeySpecifier = (
-  | "result"
-  | CanCommentResponseKeySpecifier
-)[];
+export type CanCommentResponseKeySpecifier = ("result" | CanCommentResponseKeySpecifier)[];
 export type CanCommentResponseFieldPolicy = {
   result?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -4051,10 +3989,7 @@ export type CanDecryptResponseFieldPolicy = {
   result?: FieldPolicy<any> | FieldReadFunction<any>;
   reasons?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type CanMirrorResponseKeySpecifier = (
-  | "result"
-  | CanMirrorResponseKeySpecifier
-)[];
+export type CanMirrorResponseKeySpecifier = ("result" | CanMirrorResponseKeySpecifier)[];
 export type CanMirrorResponseFieldPolicy = {
   result?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -4076,11 +4011,7 @@ export type CollectConditionOutputFieldPolicy = {
   publicationId?: FieldPolicy<any> | FieldReadFunction<any>;
   thisPublication?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type CollectedEventKeySpecifier = (
-  | "profile"
-  | "timestamp"
-  | CollectedEventKeySpecifier
-)[];
+export type CollectedEventKeySpecifier = ("profile" | "timestamp" | CollectedEventKeySpecifier)[];
 export type CollectedEventFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   timestamp?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -4700,11 +4631,7 @@ export type DegreesOfSeparationReferenceModuleSettingsFieldPolicy = {
   mirrorsRestricted?: FieldPolicy<any> | FieldReadFunction<any>;
   degreesOfSeparation?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type DispatcherKeySpecifier = (
-  | "address"
-  | "canUseRelay"
-  | DispatcherKeySpecifier
-)[];
+export type DispatcherKeySpecifier = ("address" | "canUseRelay" | DispatcherKeySpecifier)[];
 export type DispatcherFieldPolicy = {
   address?: FieldPolicy<any> | FieldReadFunction<any>;
   canUseRelay?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -4839,38 +4766,22 @@ export type EncryptionParamsOutputFieldPolicy = {
   accessCondition?: FieldPolicy<any> | FieldReadFunction<any>;
   encryptedFields?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type EnsOnChainIdentityKeySpecifier = (
-  | "name"
-  | EnsOnChainIdentityKeySpecifier
-)[];
+export type EnsOnChainIdentityKeySpecifier = ("name" | EnsOnChainIdentityKeySpecifier)[];
 export type EnsOnChainIdentityFieldPolicy = {
   name?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type EoaOwnershipOutputKeySpecifier = (
-  | "address"
-  | EoaOwnershipOutputKeySpecifier
-)[];
+export type EoaOwnershipOutputKeySpecifier = ("address" | EoaOwnershipOutputKeySpecifier)[];
 export type EoaOwnershipOutputFieldPolicy = {
   address?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type Erc20KeySpecifier = (
-  | "name"
-  | "symbol"
-  | "decimals"
-  | "address"
-  | Erc20KeySpecifier
-)[];
+export type Erc20KeySpecifier = ("name" | "symbol" | "decimals" | "address" | Erc20KeySpecifier)[];
 export type Erc20FieldPolicy = {
   name?: FieldPolicy<any> | FieldReadFunction<any>;
   symbol?: FieldPolicy<any> | FieldReadFunction<any>;
   decimals?: FieldPolicy<any> | FieldReadFunction<any>;
   address?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type Erc20AmountKeySpecifier = (
-  | "asset"
-  | "value"
-  | Erc20AmountKeySpecifier
-)[];
+export type Erc20AmountKeySpecifier = ("asset" | "value" | Erc20AmountKeySpecifier)[];
 export type Erc20AmountFieldPolicy = {
   asset?: FieldPolicy<any> | FieldReadFunction<any>;
   value?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -4955,10 +4866,7 @@ export type FeedItemFieldPolicy = {
   reactions?: FieldPolicy<any> | FieldReadFunction<any>;
   comments?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type FollowConditionOutputKeySpecifier = (
-  | "profileId"
-  | FollowConditionOutputKeySpecifier
-)[];
+export type FollowConditionOutputKeySpecifier = ("profileId" | FollowConditionOutputKeySpecifier)[];
 export type FollowConditionOutputFieldPolicy = {
   profileId?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -4971,10 +4879,7 @@ export type FollowOnlyReferenceModuleSettingsFieldPolicy = {
   type?: FieldPolicy<any> | FieldReadFunction<any>;
   contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type FollowRevenueResultKeySpecifier = (
-  | "revenues"
-  | FollowRevenueResultKeySpecifier
-)[];
+export type FollowRevenueResultKeySpecifier = ("revenues" | FollowRevenueResultKeySpecifier)[];
 export type FollowRevenueResultFieldPolicy = {
   revenues?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -5145,12 +5050,7 @@ export type MediaOutputFieldPolicy = {
   cover?: FieldPolicy<any> | FieldReadFunction<any>;
   source?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type MediaSetKeySpecifier = (
-  | "original"
-  | "small"
-  | "medium"
-  | MediaSetKeySpecifier
-)[];
+export type MediaSetKeySpecifier = ("original" | "small" | "medium" | MediaSetKeySpecifier)[];
 export type MediaSetFieldPolicy = {
   original?: FieldPolicy<any> | FieldReadFunction<any>;
   small?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -5243,29 +5143,17 @@ export type MirrorFieldPolicy = {
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type MirrorEventKeySpecifier = (
-  | "profile"
-  | "timestamp"
-  | MirrorEventKeySpecifier
-)[];
+export type MirrorEventKeySpecifier = ("profile" | "timestamp" | MirrorEventKeySpecifier)[];
 export type MirrorEventFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   timestamp?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type ModuleFeeAmountKeySpecifier = (
-  | "asset"
-  | "value"
-  | ModuleFeeAmountKeySpecifier
-)[];
+export type ModuleFeeAmountKeySpecifier = ("asset" | "value" | ModuleFeeAmountKeySpecifier)[];
 export type ModuleFeeAmountFieldPolicy = {
   asset?: FieldPolicy<any> | FieldReadFunction<any>;
   value?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type ModuleInfoKeySpecifier = (
-  | "name"
-  | "type"
-  | ModuleInfoKeySpecifier
-)[];
+export type ModuleInfoKeySpecifier = ("name" | "type" | ModuleInfoKeySpecifier)[];
 export type ModuleInfoFieldPolicy = {
   name?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -5319,9 +5207,7 @@ export type MutationFieldPolicy = {
   createCollectTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetDefaultProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetProfileImageURITypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createSetProfileImageURIViaDispatcher?:
-    | FieldPolicy<any>
-    | FieldReadFunction<any>;
+  createSetProfileImageURIViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
   createBurnProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createPostTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createPostViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -5335,9 +5221,7 @@ export type MutationFieldPolicy = {
   addProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   removeProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetProfileMetadataTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createSetProfileMetadataViaDispatcher?:
-    | FieldPolicy<any>
-    | FieldReadFunction<any>;
+  createSetProfileMetadataViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
   proxyAction?: FieldPolicy<any> | FieldReadFunction<any>;
   addReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   removeReaction?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -5385,11 +5269,7 @@ export type NFTContentFieldPolicy = {
   metaType?: FieldPolicy<any> | FieldReadFunction<any>;
   animatedUrl?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type NFTsResultKeySpecifier = (
-  | "items"
-  | "pageInfo"
-  | NFTsResultKeySpecifier
-)[];
+export type NFTsResultKeySpecifier = ("items" | "pageInfo" | NFTsResultKeySpecifier)[];
 export type NFTsResultFieldPolicy = {
   items?: FieldPolicy<any> | FieldReadFunction<any>;
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -5524,10 +5404,7 @@ export type OnChainIdentityFieldPolicy = {
   sybilDotOrg?: FieldPolicy<any> | FieldReadFunction<any>;
   worldcoin?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type OrConditionOutputKeySpecifier = (
-  | "criteria"
-  | OrConditionOutputKeySpecifier
-)[];
+export type OrConditionOutputKeySpecifier = ("criteria" | OrConditionOutputKeySpecifier)[];
 export type OrConditionOutputFieldPolicy = {
   criteria?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -5824,10 +5701,7 @@ export type ProxyActionErrorFieldPolicy = {
   reason?: FieldPolicy<any> | FieldReadFunction<any>;
   lastKnownTxId?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type ProxyActionQueuedKeySpecifier = (
-  | "queuedAt"
-  | ProxyActionQueuedKeySpecifier
-)[];
+export type ProxyActionQueuedKeySpecifier = ("queuedAt" | ProxyActionQueuedKeySpecifier)[];
 export type ProxyActionQueuedFieldPolicy = {
   queuedAt?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -5981,9 +5855,7 @@ export type QueryFieldPolicy = {
   hasTxHashBeenIndexed?: FieldPolicy<any> | FieldReadFunction<any>;
   enabledModuleCurrencies?: FieldPolicy<any> | FieldReadFunction<any>;
   approvedModuleAllowanceAmount?: FieldPolicy<any> | FieldReadFunction<any>;
-  generateModuleCurrencyApprovalData?:
-    | FieldPolicy<any>
-    | FieldReadFunction<any>;
+  generateModuleCurrencyApprovalData?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowModuleBeenRedeemed?: FieldPolicy<any> | FieldReadFunction<any>;
   enabledModules?: FieldPolicy<any> | FieldReadFunction<any>;
   unknownEnabledModules?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6032,11 +5904,7 @@ export type RelayErrorKeySpecifier = ("reason" | RelayErrorKeySpecifier)[];
 export type RelayErrorFieldPolicy = {
   reason?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type RelayerResultKeySpecifier = (
-  | "txHash"
-  | "txId"
-  | RelayerResultKeySpecifier
-)[];
+export type RelayerResultKeySpecifier = ("txHash" | "txId" | RelayerResultKeySpecifier)[];
 export type RelayerResultFieldPolicy = {
   txHash?: FieldPolicy<any> | FieldReadFunction<any>;
   txId?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6054,10 +5922,7 @@ export type ReservedClaimableHandleFieldPolicy = {
   source?: FieldPolicy<any> | FieldReadFunction<any>;
   expiry?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type RevenueAggregateKeySpecifier = (
-  | "total"
-  | RevenueAggregateKeySpecifier
-)[];
+export type RevenueAggregateKeySpecifier = ("total" | RevenueAggregateKeySpecifier)[];
 export type RevenueAggregateFieldPolicy = {
   total?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -6271,11 +6136,7 @@ export type UserSigNoncesFieldPolicy = {
   lensHubOnChainSigNonce?: FieldPolicy<any> | FieldReadFunction<any>;
   peripheryOnChainSigNonce?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type WalletKeySpecifier = (
-  | "address"
-  | "defaultProfile"
-  | WalletKeySpecifier
-)[];
+export type WalletKeySpecifier = ("address" | "defaultProfile" | WalletKeySpecifier)[];
 export type WalletFieldPolicy = {
   address?: FieldPolicy<any> | FieldReadFunction<any>;
   defaultProfile?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6293,10 +6154,7 @@ export type WhoReactedResultFieldPolicy = {
   reactionAt?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type WorldcoinIdentityKeySpecifier = (
-  | "isHuman"
-  | WorldcoinIdentityKeySpecifier
-)[];
+export type WorldcoinIdentityKeySpecifier = ("isHuman" | WorldcoinIdentityKeySpecifier)[];
 export type WorldcoinIdentityFieldPolicy = {
   isHuman?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -6323,10 +6181,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: ApprovedAllowanceAmountFieldPolicy;
   };
   Attribute?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | AttributeKeySpecifier
-      | (() => undefined | AttributeKeySpecifier);
+    keyFields?: false | AttributeKeySpecifier | (() => undefined | AttributeKeySpecifier);
     fields?: AttributeFieldPolicy;
   };
   AuthChallengeResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -6379,17 +6234,11 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: CollectConditionOutputFieldPolicy;
   };
   CollectedEvent?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | CollectedEventKeySpecifier
-      | (() => undefined | CollectedEventKeySpecifier);
+    keyFields?: false | CollectedEventKeySpecifier | (() => undefined | CollectedEventKeySpecifier);
     fields?: CollectedEventFieldPolicy;
   };
   Comment?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | CommentKeySpecifier
-      | (() => undefined | CommentKeySpecifier);
+    keyFields?: false | CommentKeySpecifier | (() => undefined | CommentKeySpecifier);
     fields?: CommentFieldPolicy;
   };
   CreateBurnEIP712TypedData?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -6413,20 +6262,14 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | CreateBurnEIP712TypedDataValueKeySpecifier);
     fields?: CreateBurnEIP712TypedDataValueFieldPolicy;
   };
-  CreateBurnProfileBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateBurnProfileBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateBurnProfileBroadcastItemResultKeySpecifier
       | (() => undefined | CreateBurnProfileBroadcastItemResultKeySpecifier);
     fields?: CreateBurnProfileBroadcastItemResultFieldPolicy;
   };
-  CreateCollectBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateCollectBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateCollectBroadcastItemResultKeySpecifier
@@ -6440,30 +6283,21 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | CreateCollectEIP712TypedDataKeySpecifier);
     fields?: CreateCollectEIP712TypedDataFieldPolicy;
   };
-  CreateCollectEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateCollectEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateCollectEIP712TypedDataTypesKeySpecifier
       | (() => undefined | CreateCollectEIP712TypedDataTypesKeySpecifier);
     fields?: CreateCollectEIP712TypedDataTypesFieldPolicy;
   };
-  CreateCollectEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateCollectEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateCollectEIP712TypedDataValueKeySpecifier
       | (() => undefined | CreateCollectEIP712TypedDataValueKeySpecifier);
     fields?: CreateCollectEIP712TypedDataValueFieldPolicy;
   };
-  CreateCommentBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateCommentBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateCommentBroadcastItemResultKeySpecifier
@@ -6477,20 +6311,14 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | CreateCommentEIP712TypedDataKeySpecifier);
     fields?: CreateCommentEIP712TypedDataFieldPolicy;
   };
-  CreateCommentEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateCommentEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateCommentEIP712TypedDataTypesKeySpecifier
       | (() => undefined | CreateCommentEIP712TypedDataTypesKeySpecifier);
     fields?: CreateCommentEIP712TypedDataTypesFieldPolicy;
   };
-  CreateCommentEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateCommentEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateCommentEIP712TypedDataValueKeySpecifier
@@ -6511,20 +6339,14 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | CreateFollowEIP712TypedDataKeySpecifier);
     fields?: CreateFollowEIP712TypedDataFieldPolicy;
   };
-  CreateFollowEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateFollowEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateFollowEIP712TypedDataTypesKeySpecifier
       | (() => undefined | CreateFollowEIP712TypedDataTypesKeySpecifier);
     fields?: CreateFollowEIP712TypedDataTypesFieldPolicy;
   };
-  CreateFollowEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateFollowEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateFollowEIP712TypedDataValueKeySpecifier
@@ -6545,20 +6367,14 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | CreateMirrorEIP712TypedDataKeySpecifier);
     fields?: CreateMirrorEIP712TypedDataFieldPolicy;
   };
-  CreateMirrorEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateMirrorEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateMirrorEIP712TypedDataTypesKeySpecifier
       | (() => undefined | CreateMirrorEIP712TypedDataTypesKeySpecifier);
     fields?: CreateMirrorEIP712TypedDataTypesFieldPolicy;
   };
-  CreateMirrorEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateMirrorEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateMirrorEIP712TypedDataValueKeySpecifier
@@ -6593,299 +6409,190 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | CreatePostEIP712TypedDataValueKeySpecifier);
     fields?: CreatePostEIP712TypedDataValueFieldPolicy;
   };
-  CreateSetDispatcherBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetDispatcherBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetDispatcherBroadcastItemResultKeySpecifier
       | (() => undefined | CreateSetDispatcherBroadcastItemResultKeySpecifier);
     fields?: CreateSetDispatcherBroadcastItemResultFieldPolicy;
   };
-  CreateSetDispatcherEIP712TypedData?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetDispatcherEIP712TypedData?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetDispatcherEIP712TypedDataKeySpecifier
       | (() => undefined | CreateSetDispatcherEIP712TypedDataKeySpecifier);
     fields?: CreateSetDispatcherEIP712TypedDataFieldPolicy;
   };
-  CreateSetDispatcherEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetDispatcherEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetDispatcherEIP712TypedDataTypesKeySpecifier
       | (() => undefined | CreateSetDispatcherEIP712TypedDataTypesKeySpecifier);
     fields?: CreateSetDispatcherEIP712TypedDataTypesFieldPolicy;
   };
-  CreateSetDispatcherEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetDispatcherEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetDispatcherEIP712TypedDataValueKeySpecifier
       | (() => undefined | CreateSetDispatcherEIP712TypedDataValueKeySpecifier);
     fields?: CreateSetDispatcherEIP712TypedDataValueFieldPolicy;
   };
-  CreateSetFollowModuleBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetFollowModuleBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetFollowModuleBroadcastItemResultKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetFollowModuleBroadcastItemResultKeySpecifier);
+      | (() => undefined | CreateSetFollowModuleBroadcastItemResultKeySpecifier);
     fields?: CreateSetFollowModuleBroadcastItemResultFieldPolicy;
   };
-  CreateSetFollowModuleEIP712TypedData?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetFollowModuleEIP712TypedData?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetFollowModuleEIP712TypedDataKeySpecifier
       | (() => undefined | CreateSetFollowModuleEIP712TypedDataKeySpecifier);
     fields?: CreateSetFollowModuleEIP712TypedDataFieldPolicy;
   };
-  CreateSetFollowModuleEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetFollowModuleEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetFollowModuleEIP712TypedDataTypesKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetFollowModuleEIP712TypedDataTypesKeySpecifier);
+      | (() => undefined | CreateSetFollowModuleEIP712TypedDataTypesKeySpecifier);
     fields?: CreateSetFollowModuleEIP712TypedDataTypesFieldPolicy;
   };
-  CreateSetFollowModuleEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetFollowModuleEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetFollowModuleEIP712TypedDataValueKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetFollowModuleEIP712TypedDataValueKeySpecifier);
+      | (() => undefined | CreateSetFollowModuleEIP712TypedDataValueKeySpecifier);
     fields?: CreateSetFollowModuleEIP712TypedDataValueFieldPolicy;
   };
-  CreateSetFollowNFTUriBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetFollowNFTUriBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetFollowNFTUriBroadcastItemResultKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetFollowNFTUriBroadcastItemResultKeySpecifier);
+      | (() => undefined | CreateSetFollowNFTUriBroadcastItemResultKeySpecifier);
     fields?: CreateSetFollowNFTUriBroadcastItemResultFieldPolicy;
   };
-  CreateSetFollowNFTUriEIP712TypedData?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetFollowNFTUriEIP712TypedData?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetFollowNFTUriEIP712TypedDataKeySpecifier
       | (() => undefined | CreateSetFollowNFTUriEIP712TypedDataKeySpecifier);
     fields?: CreateSetFollowNFTUriEIP712TypedDataFieldPolicy;
   };
-  CreateSetFollowNFTUriEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetFollowNFTUriEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetFollowNFTUriEIP712TypedDataTypesKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetFollowNFTUriEIP712TypedDataTypesKeySpecifier);
+      | (() => undefined | CreateSetFollowNFTUriEIP712TypedDataTypesKeySpecifier);
     fields?: CreateSetFollowNFTUriEIP712TypedDataTypesFieldPolicy;
   };
-  CreateSetFollowNFTUriEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetFollowNFTUriEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetFollowNFTUriEIP712TypedDataValueKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetFollowNFTUriEIP712TypedDataValueKeySpecifier);
+      | (() => undefined | CreateSetFollowNFTUriEIP712TypedDataValueKeySpecifier);
     fields?: CreateSetFollowNFTUriEIP712TypedDataValueFieldPolicy;
   };
-  CreateSetProfileImageUriBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetProfileImageUriBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetProfileImageUriBroadcastItemResultKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetProfileImageUriBroadcastItemResultKeySpecifier);
+      | (() => undefined | CreateSetProfileImageUriBroadcastItemResultKeySpecifier);
     fields?: CreateSetProfileImageUriBroadcastItemResultFieldPolicy;
   };
-  CreateSetProfileImageUriEIP712TypedData?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetProfileImageUriEIP712TypedData?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetProfileImageUriEIP712TypedDataKeySpecifier
       | (() => undefined | CreateSetProfileImageUriEIP712TypedDataKeySpecifier);
     fields?: CreateSetProfileImageUriEIP712TypedDataFieldPolicy;
   };
-  CreateSetProfileImageUriEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetProfileImageUriEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetProfileImageUriEIP712TypedDataTypesKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetProfileImageUriEIP712TypedDataTypesKeySpecifier);
+      | (() => undefined | CreateSetProfileImageUriEIP712TypedDataTypesKeySpecifier);
     fields?: CreateSetProfileImageUriEIP712TypedDataTypesFieldPolicy;
   };
-  CreateSetProfileImageUriEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetProfileImageUriEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetProfileImageUriEIP712TypedDataValueKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetProfileImageUriEIP712TypedDataValueKeySpecifier);
+      | (() => undefined | CreateSetProfileImageUriEIP712TypedDataValueKeySpecifier);
     fields?: CreateSetProfileImageUriEIP712TypedDataValueFieldPolicy;
   };
-  CreateSetProfileMetadataURIBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetProfileMetadataURIBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetProfileMetadataURIBroadcastItemResultKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetProfileMetadataURIBroadcastItemResultKeySpecifier);
+      | (() => undefined | CreateSetProfileMetadataURIBroadcastItemResultKeySpecifier);
     fields?: CreateSetProfileMetadataURIBroadcastItemResultFieldPolicy;
   };
-  CreateSetProfileMetadataURIEIP712TypedData?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetProfileMetadataURIEIP712TypedData?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetProfileMetadataURIEIP712TypedDataKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetProfileMetadataURIEIP712TypedDataKeySpecifier);
+      | (() => undefined | CreateSetProfileMetadataURIEIP712TypedDataKeySpecifier);
     fields?: CreateSetProfileMetadataURIEIP712TypedDataFieldPolicy;
   };
-  CreateSetProfileMetadataURIEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetProfileMetadataURIEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetProfileMetadataURIEIP712TypedDataTypesKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetProfileMetadataURIEIP712TypedDataTypesKeySpecifier);
+      | (() => undefined | CreateSetProfileMetadataURIEIP712TypedDataTypesKeySpecifier);
     fields?: CreateSetProfileMetadataURIEIP712TypedDataTypesFieldPolicy;
   };
-  CreateSetProfileMetadataURIEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateSetProfileMetadataURIEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateSetProfileMetadataURIEIP712TypedDataValueKeySpecifier
-      | (() =>
-          | undefined
-          | CreateSetProfileMetadataURIEIP712TypedDataValueKeySpecifier);
+      | (() => undefined | CreateSetProfileMetadataURIEIP712TypedDataValueKeySpecifier);
     fields?: CreateSetProfileMetadataURIEIP712TypedDataValueFieldPolicy;
   };
-  CreateToggleFollowBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateToggleFollowBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateToggleFollowBroadcastItemResultKeySpecifier
       | (() => undefined | CreateToggleFollowBroadcastItemResultKeySpecifier);
     fields?: CreateToggleFollowBroadcastItemResultFieldPolicy;
   };
-  CreateToggleFollowEIP712TypedData?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateToggleFollowEIP712TypedData?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateToggleFollowEIP712TypedDataKeySpecifier
       | (() => undefined | CreateToggleFollowEIP712TypedDataKeySpecifier);
     fields?: CreateToggleFollowEIP712TypedDataFieldPolicy;
   };
-  CreateToggleFollowEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateToggleFollowEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateToggleFollowEIP712TypedDataTypesKeySpecifier
       | (() => undefined | CreateToggleFollowEIP712TypedDataTypesKeySpecifier);
     fields?: CreateToggleFollowEIP712TypedDataTypesFieldPolicy;
   };
-  CreateToggleFollowEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateToggleFollowEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateToggleFollowEIP712TypedDataValueKeySpecifier
       | (() => undefined | CreateToggleFollowEIP712TypedDataValueKeySpecifier);
     fields?: CreateToggleFollowEIP712TypedDataValueFieldPolicy;
   };
-  CreateUnfollowBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  CreateUnfollowBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CreateUnfollowBroadcastItemResultKeySpecifier
       | (() => undefined | CreateUnfollowBroadcastItemResultKeySpecifier);
     fields?: CreateUnfollowBroadcastItemResultFieldPolicy;
   };
-  DegreesOfSeparationReferenceModuleSettings?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  DegreesOfSeparationReferenceModuleSettings?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | DegreesOfSeparationReferenceModuleSettingsKeySpecifier
-      | (() =>
-          | undefined
-          | DegreesOfSeparationReferenceModuleSettingsKeySpecifier);
+      | (() => undefined | DegreesOfSeparationReferenceModuleSettingsKeySpecifier);
     fields?: DegreesOfSeparationReferenceModuleSettingsFieldPolicy;
   };
   Dispatcher?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | DispatcherKeySpecifier
-      | (() => undefined | DispatcherKeySpecifier);
+    keyFields?: false | DispatcherKeySpecifier | (() => undefined | DispatcherKeySpecifier);
     fields?: DispatcherFieldPolicy;
   };
   DoesFollowResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -6910,24 +6617,15 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: EIP712TypedDataFieldFieldPolicy;
   };
   ElectedMirror?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | ElectedMirrorKeySpecifier
-      | (() => undefined | ElectedMirrorKeySpecifier);
+    keyFields?: false | ElectedMirrorKeySpecifier | (() => undefined | ElectedMirrorKeySpecifier);
     fields?: ElectedMirrorFieldPolicy;
   };
   EnabledModule?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | EnabledModuleKeySpecifier
-      | (() => undefined | EnabledModuleKeySpecifier);
+    keyFields?: false | EnabledModuleKeySpecifier | (() => undefined | EnabledModuleKeySpecifier);
     fields?: EnabledModuleFieldPolicy;
   };
   EnabledModules?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | EnabledModulesKeySpecifier
-      | (() => undefined | EnabledModulesKeySpecifier);
+    keyFields?: false | EnabledModulesKeySpecifier | (() => undefined | EnabledModulesKeySpecifier);
     fields?: EnabledModulesFieldPolicy;
   };
   EncryptedFieldsOutput?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -6938,10 +6636,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: EncryptedFieldsOutputFieldPolicy;
   };
   EncryptedMedia?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | EncryptedMediaKeySpecifier
-      | (() => undefined | EncryptedMediaKeySpecifier);
+    keyFields?: false | EncryptedMediaKeySpecifier | (() => undefined | EncryptedMediaKeySpecifier);
     fields?: EncryptedMediaFieldPolicy;
   };
   EncryptedMediaSet?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -6973,17 +6668,11 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: EoaOwnershipOutputFieldPolicy;
   };
   Erc20?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | Erc20KeySpecifier
-      | (() => undefined | Erc20KeySpecifier);
+    keyFields?: false | Erc20KeySpecifier | (() => undefined | Erc20KeySpecifier);
     fields?: Erc20FieldPolicy;
   };
   Erc20Amount?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | Erc20AmountKeySpecifier
-      | (() => undefined | Erc20AmountKeySpecifier);
+    keyFields?: false | Erc20AmountKeySpecifier | (() => undefined | Erc20AmountKeySpecifier);
     fields?: Erc20AmountFieldPolicy;
   };
   Erc20OwnershipOutput?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7022,10 +6711,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: FeeFollowModuleSettingsFieldPolicy;
   };
   FeedItem?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | FeedItemKeySpecifier
-      | (() => undefined | FeedItemKeySpecifier);
+    keyFields?: false | FeedItemKeySpecifier | (() => undefined | FeedItemKeySpecifier);
     fields?: FeedItemFieldPolicy;
   };
   FollowConditionOutput?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7035,10 +6721,7 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | FollowConditionOutputKeySpecifier);
     fields?: FollowConditionOutputFieldPolicy;
   };
-  FollowOnlyReferenceModuleSettings?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  FollowOnlyReferenceModuleSettings?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | FollowOnlyReferenceModuleSettingsKeySpecifier
@@ -7053,10 +6736,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: FollowRevenueResultFieldPolicy;
   };
   Follower?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | FollowerKeySpecifier
-      | (() => undefined | FollowerKeySpecifier);
+    keyFields?: false | FollowerKeySpecifier | (() => undefined | FollowerKeySpecifier);
     fields?: FollowerFieldPolicy;
   };
   FollowerNftOwnedTokenIds?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7067,10 +6747,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: FollowerNftOwnedTokenIdsFieldPolicy;
   };
   Following?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | FollowingKeySpecifier
-      | (() => undefined | FollowingKeySpecifier);
+    keyFields?: false | FollowingKeySpecifier | (() => undefined | FollowingKeySpecifier);
     fields?: FollowingFieldPolicy;
   };
   FreeCollectModuleSettings?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7101,10 +6778,7 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | LimitedFeeCollectModuleSettingsKeySpecifier);
     fields?: LimitedFeeCollectModuleSettingsFieldPolicy;
   };
-  LimitedTimedFeeCollectModuleSettings?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  LimitedTimedFeeCollectModuleSettings?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | LimitedTimedFeeCollectModuleSettingsKeySpecifier
@@ -7116,24 +6790,15 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: LogFieldPolicy;
   };
   Media?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | MediaKeySpecifier
-      | (() => undefined | MediaKeySpecifier);
+    keyFields?: false | MediaKeySpecifier | (() => undefined | MediaKeySpecifier);
     fields?: MediaFieldPolicy;
   };
   MediaOutput?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | MediaOutputKeySpecifier
-      | (() => undefined | MediaOutputKeySpecifier);
+    keyFields?: false | MediaOutputKeySpecifier | (() => undefined | MediaOutputKeySpecifier);
     fields?: MediaOutputFieldPolicy;
   };
   MediaSet?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | MediaSetKeySpecifier
-      | (() => undefined | MediaSetKeySpecifier);
+    keyFields?: false | MediaSetKeySpecifier | (() => undefined | MediaSetKeySpecifier);
     fields?: MediaSetFieldPolicy;
   };
   MetadataAttributeOutput?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7144,24 +6809,15 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: MetadataAttributeOutputFieldPolicy;
   };
   MetadataOutput?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | MetadataOutputKeySpecifier
-      | (() => undefined | MetadataOutputKeySpecifier);
+    keyFields?: false | MetadataOutputKeySpecifier | (() => undefined | MetadataOutputKeySpecifier);
     fields?: MetadataOutputFieldPolicy;
   };
   Mirror?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | MirrorKeySpecifier
-      | (() => undefined | MirrorKeySpecifier);
+    keyFields?: false | MirrorKeySpecifier | (() => undefined | MirrorKeySpecifier);
     fields?: MirrorFieldPolicy;
   };
   MirrorEvent?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | MirrorEventKeySpecifier
-      | (() => undefined | MirrorEventKeySpecifier);
+    keyFields?: false | MirrorEventKeySpecifier | (() => undefined | MirrorEventKeySpecifier);
     fields?: MirrorEventFieldPolicy;
   };
   ModuleFeeAmount?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7172,17 +6828,11 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: ModuleFeeAmountFieldPolicy;
   };
   ModuleInfo?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | ModuleInfoKeySpecifier
-      | (() => undefined | ModuleInfoKeySpecifier);
+    keyFields?: false | ModuleInfoKeySpecifier | (() => undefined | ModuleInfoKeySpecifier);
     fields?: ModuleInfoFieldPolicy;
   };
   Mutation?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | MutationKeySpecifier
-      | (() => undefined | MutationKeySpecifier);
+    keyFields?: false | MutationKeySpecifier | (() => undefined | MutationKeySpecifier);
     fields?: MutationFieldPolicy;
   };
   NFT?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7190,17 +6840,11 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: NFTFieldPolicy;
   };
   NFTContent?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | NFTContentKeySpecifier
-      | (() => undefined | NFTContentKeySpecifier);
+    keyFields?: false | NFTContentKeySpecifier | (() => undefined | NFTContentKeySpecifier);
     fields?: NFTContentFieldPolicy;
   };
   NFTsResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | NFTsResultKeySpecifier
-      | (() => undefined | NFTsResultKeySpecifier);
+    keyFields?: false | NFTsResultKeySpecifier | (() => undefined | NFTsResultKeySpecifier);
     fields?: NFTsResultFieldPolicy;
   };
   NewCollectNotification?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7246,10 +6890,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: NewReactionNotificationFieldPolicy;
   };
   NftImage?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | NftImageKeySpecifier
-      | (() => undefined | NftImageKeySpecifier);
+    keyFields?: false | NftImageKeySpecifier | (() => undefined | NftImageKeySpecifier);
     fields?: NftImageFieldPolicy;
   };
   NftOwnershipChallengeResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7281,16 +6922,10 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: OrConditionOutputFieldPolicy;
   };
   Owner?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | OwnerKeySpecifier
-      | (() => undefined | OwnerKeySpecifier);
+    keyFields?: false | OwnerKeySpecifier | (() => undefined | OwnerKeySpecifier);
     fields?: OwnerFieldPolicy;
   };
-  PaginatedAllPublicationsTagsResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  PaginatedAllPublicationsTagsResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | PaginatedAllPublicationsTagsResultKeySpecifier
@@ -7325,16 +6960,11 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | PaginatedNotificationResultKeySpecifier);
     fields?: PaginatedNotificationResultFieldPolicy;
   };
-  PaginatedProfilePublicationsForSaleResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  PaginatedProfilePublicationsForSaleResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | PaginatedProfilePublicationsForSaleResultKeySpecifier
-      | (() =>
-          | undefined
-          | PaginatedProfilePublicationsForSaleResultKeySpecifier);
+      | (() => undefined | PaginatedProfilePublicationsForSaleResultKeySpecifier);
     fields?: PaginatedProfilePublicationsForSaleResultFieldPolicy;
   };
   PaginatedProfileResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7391,10 +7021,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: PostFieldPolicy;
   };
   Profile?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | ProfileKeySpecifier
-      | (() => undefined | ProfileKeySpecifier);
+    keyFields?: false | ProfileKeySpecifier | (() => undefined | ProfileKeySpecifier);
     fields?: ProfileFieldPolicy;
   };
   ProfileFollowModuleSettings?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7426,10 +7053,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: ProfileSearchResultFieldPolicy;
   };
   ProfileStats?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | ProfileStatsKeySpecifier
-      | (() => undefined | ProfileStatsKeySpecifier);
+    keyFields?: false | ProfileStatsKeySpecifier | (() => undefined | ProfileStatsKeySpecifier);
     fields?: ProfileStatsFieldPolicy;
   };
   ProviderSpecificParamsOutput?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7495,10 +7119,7 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | PublicationStatsKeySpecifier);
     fields?: PublicationStatsFieldPolicy;
   };
-  PublicationValidateMetadataResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  PublicationValidateMetadataResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | PublicationValidateMetadataResultKeySpecifier
@@ -7506,31 +7127,19 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: PublicationValidateMetadataResultFieldPolicy;
   };
   Query?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | QueryKeySpecifier
-      | (() => undefined | QueryKeySpecifier);
+    keyFields?: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier);
     fields?: QueryFieldPolicy;
   };
   ReactionEvent?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | ReactionEventKeySpecifier
-      | (() => undefined | ReactionEventKeySpecifier);
+    keyFields?: false | ReactionEventKeySpecifier | (() => undefined | ReactionEventKeySpecifier);
     fields?: ReactionEventFieldPolicy;
   };
   RelayError?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | RelayErrorKeySpecifier
-      | (() => undefined | RelayErrorKeySpecifier);
+    keyFields?: false | RelayErrorKeySpecifier | (() => undefined | RelayErrorKeySpecifier);
     fields?: RelayErrorFieldPolicy;
   };
   RelayerResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | RelayerResultKeySpecifier
-      | (() => undefined | RelayerResultKeySpecifier);
+    keyFields?: false | RelayerResultKeySpecifier | (() => undefined | RelayerResultKeySpecifier);
     fields?: RelayerResultFieldPolicy;
   };
   ReservedClaimableHandle?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7561,40 +7170,28 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | RevertFollowModuleSettingsKeySpecifier);
     fields?: RevertFollowModuleSettingsFieldPolicy;
   };
-  SetDefaultProfileBroadcastItemResult?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  SetDefaultProfileBroadcastItemResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | SetDefaultProfileBroadcastItemResultKeySpecifier
       | (() => undefined | SetDefaultProfileBroadcastItemResultKeySpecifier);
     fields?: SetDefaultProfileBroadcastItemResultFieldPolicy;
   };
-  SetDefaultProfileEIP712TypedData?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  SetDefaultProfileEIP712TypedData?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | SetDefaultProfileEIP712TypedDataKeySpecifier
       | (() => undefined | SetDefaultProfileEIP712TypedDataKeySpecifier);
     fields?: SetDefaultProfileEIP712TypedDataFieldPolicy;
   };
-  SetDefaultProfileEIP712TypedDataTypes?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  SetDefaultProfileEIP712TypedDataTypes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | SetDefaultProfileEIP712TypedDataTypesKeySpecifier
       | (() => undefined | SetDefaultProfileEIP712TypedDataTypesKeySpecifier);
     fields?: SetDefaultProfileEIP712TypedDataTypesFieldPolicy;
   };
-  SetDefaultProfileEIP712TypedDataValue?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  SetDefaultProfileEIP712TypedDataValue?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | SetDefaultProfileEIP712TypedDataValueKeySpecifier
@@ -7623,10 +7220,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: SybilDotOrgTwitterIdentityFieldPolicy;
   };
   TagResult?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | TagResultKeySpecifier
-      | (() => undefined | TagResultKeySpecifier);
+    keyFields?: false | TagResultKeySpecifier | (() => undefined | TagResultKeySpecifier);
     fields?: TagResultFieldPolicy;
   };
   TimedFeeCollectModuleSettings?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -7679,17 +7273,11 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: UnknownReferenceModuleSettingsFieldPolicy;
   };
   UserSigNonces?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | UserSigNoncesKeySpecifier
-      | (() => undefined | UserSigNoncesKeySpecifier);
+    keyFields?: false | UserSigNoncesKeySpecifier | (() => undefined | UserSigNoncesKeySpecifier);
     fields?: UserSigNoncesFieldPolicy;
   };
   Wallet?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | WalletKeySpecifier
-      | (() => undefined | WalletKeySpecifier);
+    keyFields?: false | WalletKeySpecifier | (() => undefined | WalletKeySpecifier);
     fields?: WalletFieldPolicy;
   };
   WhoReactedResult?: Omit<TypePolicy, "fields" | "keyFields"> & {

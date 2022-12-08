@@ -8,11 +8,21 @@
     ".": {
       "import": {
         "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.mjs"
+        "default": "./dist/esm/index.js"
       },
       "require": {
         "types": "./dist/cjs/index.d.ts",
         "default": "./dist/cjs/index.js"
+      }
+    },
+    "./tests": {
+      "import": {
+        "types": "./dist/esm/tests.d.ts",
+        "default": "./dist/esm/tests.js"
+      },
+      "require": {
+        "types": "./dist/cjs/tests.d.ts",
+        "default": "./dist/cjs/tests.js"
       }
     }
   },
