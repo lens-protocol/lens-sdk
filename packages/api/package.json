@@ -26,7 +26,8 @@
     "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
     "clean": "rimraf ./dist",
     "test": "jest --passWithNoTests",
-    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "eslint": "eslint",
+    "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
     "tsc": "tsc --noEmit",
@@ -53,5 +54,8 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
     "typescript": "^4.9.3"
+  },
+  "peerDependencies": {
+    "eslint": "^8.28.0"
   }
 }
