@@ -1,7 +1,5 @@
 import { ChainType, PromiseResult } from '@lens-protocol/shared-kernel';
 
-// TODO brand these aliases?
-
 export type Challenge = string;
 
 export type Signature = string;

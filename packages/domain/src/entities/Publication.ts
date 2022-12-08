@@ -1,4 +1,3 @@
-// TODO brand this
 export type PublicationId = string;
 
 export enum PublicationType {

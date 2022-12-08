@@ -1,4 +1,3 @@
-// TODO brand this
 export type ProfileId = string;
 
 export class Profile {

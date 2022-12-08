@@ -17,14 +17,18 @@ importers:
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/shared-kernel': workspace:*
+      '@types/jest': ^29.2.3
+      '@types/jest-when': ^3.5.2
       eslint: ^8.28.0
       jest: ^29.3.1
       jest-mock-extended: ^3.0.1
+      jest-when: ^3.5.2
       prettier: ^2.8.0
       rimraf: ^3.0.2
       ts-jest: ^29.0.3
       tslib: ^2.4.1
       typescript: ^4.9.3
+      wait-for-expect: ^3.0.2
     dependencies:
       '@lens-protocol/shared-kernel': link:../shared-kernel
     devDependencies:
@@ -32,14 +36,18 @@ importers:
       '@jest/globals': 29.3.1
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
+      '@types/jest': 29.2.3
+      '@types/jest-when': 3.5.2
       eslint: 8.28.0
       jest: 29.3.1
       jest-mock-extended: 3.0.1_4f6uxrzmuwipl5rr3bcogf6k74
+      jest-when: 3.5.2_jest@29.3.1
       prettier: 2.8.0
       rimraf: 3.0.2
       ts-jest: 29.0.3_4f6uxrzmuwipl5rr3bcogf6k74
       tslib: 2.4.1
       typescript: 4.9.3
+      wait-for-expect: 3.0.2
 
   packages/eslint-config:
     specifiers:
@@ -1179,6 +1187,12 @@ packages:
     resolution: {integrity: sha512-c3mAZEuK0lvBp8tmuL74XRKn1+y2dcwOUpH7x4WrF6gk1GIgiluDRgMYQtw2OFcBvAJWlt6ASU3tSqxp0Uu0Aw==}
     dependencies:
       '@types/istanbul-lib-report': 3.0.0
+    dev: true
+
+  /@types/jest-when/3.5.2:
+    resolution: {integrity: sha512-1WP+wJDW7h4TYAVLoIebxRIVv8GPk66Qsq2nU7PkwKZ6usurnDQZgk0DfBNKAJ9gVzapCXSV53Vn/3nBHBNzAw==}
+    dependencies:
+      '@types/jest': 29.2.3
     dev: true
 
   /@types/jest/29.2.3:
@@ -3208,6 +3222,14 @@ packages:
       string-length: 4.0.2
     dev: true
 
+  /jest-when/3.5.2_jest@29.3.1:
+    resolution: {integrity: sha512-4rDvnhaWh08RcPsoEVXgxRnUIE9wVIbZtGqZ5x2Wm9Ziz9aQs89PipQFmOK0ycbEhVAgiV3MUeTXp3Ar4s2FcQ==}
+    peerDependencies:
+      jest: '>= 25'
+    dependencies:
+      jest: 29.3.1
+    dev: true
+
   /jest-worker/29.3.1:
     resolution: {integrity: sha512-lY4AnnmsEWeiXirAIA0c9SDPbuCBq8IYuDVL8PMm0MZ2PEs2yPvRA/J64QBXuZp7CYKrDM/rmNrc9/i3KJQncw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -4206,6 +4228,10 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       xml-name-validator: 4.0.0
+    dev: true
+
+  /wait-for-expect/3.0.2:
+    resolution: {integrity: sha512-cfS1+DZxuav1aBYbaO/kE06EOS8yRw7qOFoD3XtjTkYvCvh3zUvNST8DXK/nPaeqIzIv3P3kL3lRJn8iwOiSag==}
     dev: true
 
   /walker/1.0.8:
