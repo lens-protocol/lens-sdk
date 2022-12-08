@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { ProfileFieldsFragment } from '..';
 import { useProfilesToFollow } from '..';
-import { mockProfileFieldsFragment } from './mocks/mocks';
+import { mockProfileFieldsFragment } from '../__helpers__/mocks';
 
 const mockProfiles: ProfileFieldsFragment[] = [mockProfileFieldsFragment()];
 

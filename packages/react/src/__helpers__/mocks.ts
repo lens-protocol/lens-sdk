@@ -1,5 +1,4 @@
 import { ProfileFieldsFragment } from '@lens-protocol/api';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/src/tests';
 
 export function mockProfileFieldsFragment(
   overrides?: Partial<ProfileFieldsFragment>,
@@ -9,7 +8,7 @@ export function mockProfileFieldsFragment(
     name: 'reece',
     bio: 'i love lens',
     handle: 'reecej.lens',
-    ownedBy: mockEthereumAddress(),
+    ownedBy: '0x2324',
     picture: null,
     coverPicture: null,
 
