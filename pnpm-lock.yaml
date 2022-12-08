@@ -7,8 +7,39 @@ importers:
       prettier: latest
       turbo: latest
     devDependencies:
-      prettier: 2.8.0
+      prettier: 2.8.1
       turbo: 1.6.3
+
+  packages/domain:
+    specifiers:
+      '@faker-js/faker': ^7.6.0
+      '@jest/globals': ^29.3.1
+      '@lens-protocol/eslint-config': workspace:*
+      '@lens-protocol/prettier-config': workspace:*
+      '@lens-protocol/shared-kernel': workspace:*
+      eslint: ^8.28.0
+      jest: ^29.3.1
+      jest-mock-extended: ^3.0.1
+      prettier: ^2.8.0
+      rimraf: ^3.0.2
+      ts-jest: ^29.0.3
+      tslib: ^2.4.1
+      typescript: ^4.9.3
+    dependencies:
+      '@lens-protocol/shared-kernel': link:../shared-kernel
+    devDependencies:
+      '@faker-js/faker': 7.6.0
+      '@jest/globals': 29.3.1
+      '@lens-protocol/eslint-config': link:../eslint-config
+      '@lens-protocol/prettier-config': link:../prettier-config
+      eslint: 8.28.0
+      jest: 29.3.1
+      jest-mock-extended: 3.0.1_4f6uxrzmuwipl5rr3bcogf6k74
+      prettier: 2.8.0
+      rimraf: 3.0.2
+      ts-jest: 29.0.3_4f6uxrzmuwipl5rr3bcogf6k74
+      tslib: 2.4.1
+      typescript: 4.9.3
 
   packages/eslint-config:
     specifiers:
@@ -770,6 +801,11 @@ packages:
       '@ethersproject/properties': 5.7.0
       '@ethersproject/strings': 5.7.0
     dev: false
+
+  /@faker-js/faker/7.6.0:
+    resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
+    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+    dev: true
 
   /@humanwhocodes/config-array/0.11.7:
     resolution: {integrity: sha512-kBbPWzN8oVMLb0hOUYXhmxggL/1cJE6ydvjDIGi9EnAGUyA7cLVKQg+d/Dsm+KZwx2czGHrCmMVLiyg8s5JPKw==}
@@ -2981,6 +3017,17 @@ packages:
       stack-utils: 2.0.6
     dev: true
 
+  /jest-mock-extended/3.0.1_4f6uxrzmuwipl5rr3bcogf6k74:
+    resolution: {integrity: sha512-RF4Ow8pXvbRuEcCTj56oYHmig5311BSFvbEGxPNYL51wGKGu93MvVQgx0UpFmjqyBXIcElkZo2Rke88kR1iSKQ==}
+    peerDependencies:
+      jest: ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0
+      typescript: ^3.0.0 || ^4.0.0
+    dependencies:
+      jest: 29.3.1
+      ts-essentials: 7.0.3_typescript@4.9.3
+      typescript: 4.9.3
+    dev: true
+
   /jest-mock/29.3.1:
     resolution: {integrity: sha512-H8/qFDtDVMFvFP4X8NuOT3XRDzOUTz+FeACjufHzsOIBAxivLqkB1PoLCaJx9iPPQ8dZThHPp/G3WRWyMgA3JA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -3621,6 +3668,12 @@ packages:
     hasBin: true
     dev: true
 
+  /prettier/2.8.1:
+    resolution: {integrity: sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
+
   /pretty-format/29.3.1:
     resolution: {integrity: sha512-FyLnmb1cYJV8biEIiRyzRFvs2lry7PPIvOqKVe1GCUEYg4YGmlx1qG9EJNMxArYm7piII4qb8UV1Pncq5dxmcg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -3939,6 +3992,14 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       punycode: 2.1.1
+    dev: true
+
+  /ts-essentials/7.0.3_typescript@4.9.3:
+    resolution: {integrity: sha512-8+gr5+lqO3G84KdiTSMRLtuyJ+nTBVRKuCrK4lidMPdVeEp0uqC875uE5NMcaA7YYMN7XsNiFQuMvasF8HT/xQ==}
+    peerDependencies:
+      typescript: '>=3.7.0'
+    dependencies:
+      typescript: 4.9.3
     dev: true
 
   /ts-jest/29.0.3_4f6uxrzmuwipl5rr3bcogf6k74:
