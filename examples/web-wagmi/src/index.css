@@ -67,3 +67,9 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+#root {
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}

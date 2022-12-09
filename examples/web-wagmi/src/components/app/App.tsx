@@ -1,9 +1,8 @@
-import "./App.css";
-
 import { WagmiConfig, chain, configureChains, createClient } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
-import { Header } from "../header/Header";
 import { LensClient } from "@lens-protocol/react";
+
+import { Header } from "../header/Header";
 import { ProfilesToFollow } from "../profiles-to-follow/ProfilesToFollow";
 
 const { provider, webSocketProvider } = configureChains([chain.polygon], [publicProvider()]);

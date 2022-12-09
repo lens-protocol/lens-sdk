@@ -21,6 +21,7 @@ export function Header() {
         position: "sticky",
         top: 0,
         width: "100%",
+        boxSizing: "border-box",
       }}
     >
       <div
