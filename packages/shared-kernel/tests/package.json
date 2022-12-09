@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/tests/index.d.ts",
+        "default": "./dist/esm/tests/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/tests/index.d.ts",
+        "default": "./dist/cjs/tests/index.js"
+      }
+    }
+  },
+  "types": "./dist/cjs/tests/index.d.ts",
+  "main": "./dist/cjs/tests/index.js"
+}
