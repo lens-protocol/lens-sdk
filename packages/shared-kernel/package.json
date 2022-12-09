@@ -14,16 +14,6 @@
         "types": "./dist/cjs/index.d.ts",
         "default": "./dist/cjs/index.js"
       }
-    },
-    "./tests": {
-      "import": {
-        "types": "./dist/esm/tests/index.d.ts",
-        "default": "./dist/esm/tests/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/tests/index.d.ts",
-        "default": "./dist/cjs/tests/index.js"
-      }
     }
   },
   "types": "./dist/cjs/index.d.ts",
