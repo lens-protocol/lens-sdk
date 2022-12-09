@@ -1,0 +1,52 @@
+overwrite: true
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+watch: false
+config:
+  gqlImport: graphql-tag
+  defaultScalarType: unknown
+  nonOptionalTypename: true
+  skipTypeNameForRoot: true
+
+  scalars:
+    Attach: string
+    BroadcastId: string
+    ChainId: number
+    ContractAddress: string
+    Cursor: string
+    DateTime: string
+    EthereumAddress: string
+    Handle: string
+    InternalPublicationId: string
+    Jwt: string
+    LimitScalar: number
+    Markdown: string
+    Media: string
+    MimeType: string
+    ProfileId: string
+    NotificationId: string
+    Signature: string
+    String: string
+    TxHash: string
+    TxId: string
+    Url: string
+    Void: string
+    NftOwnershipId: string
+    Nonce: number
+    ProxyActionId: string
+  avoidOptionals:
+    field: true
+generates:
+  src/graphql/generated.tsx:
+    schema:
+      - https://api.lens.dev/graphql
+      - graphql/client.graphql
+    documents:
+      - src/graphql/*.graphql
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+      - "typescript-apollo-client-helpers"
+      - "fragment-matcher"
