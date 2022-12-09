@@ -1,3 +1,3 @@
-# `@lens-protocol/shared-kernel`
+# `@lens-protocol/storage`
 
-This package contains the shared project utilities.
+This package contains functionality related to storage.
