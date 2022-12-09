@@ -31,11 +31,13 @@
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
     "tsc": "tsc --noEmit",
-    "gql-gen:api": "graphql-codegen --config codegen-api.yml"
+    "gql-codegen": "graphql-codegen --config codegen-api.yml"
   },
   "license": "ISC",
+  "dependencies": {
+    "@apollo/client": "^3.7.1"
+  },
   "devDependencies": {
-    "@apollo/client": "^3.7.1",
     "@babel/core": "^7.0.0",
     "@graphql-codegen/cli": "^1.21.7",
     "@graphql-codegen/fragment-matcher": "^3.1.0",
