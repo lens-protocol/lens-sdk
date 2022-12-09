@@ -1,7 +1,7 @@
 {
-  "name": "@lens-protocol/shared-kernel",
+  "name": "@lens-protocol/domain",
   "version": "0.0.1",
-  "description": "Shared kernel",
+  "description": "Critical Business Rules and Application-specific Business Rules",
   "private": true,
   "type": "module",
   "exports": {
@@ -31,27 +31,30 @@
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "jest",
     "tsc": "tsc --noEmit"
   },
   "license": "ISC",
   "dependencies": {
-    "decimal.js": "^10.4.3",
-    "ethers": "^5.7.2",
-    "lodash": "^4.17.21"
+    "@lens-protocol/shared-kernel": "workspace:*"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@jest/globals": "^29.3.1",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
     "@types/jest": "^29.2.3",
-    "@types/lodash": "^4.14.191",
+    "@types/jest-when": "^3.5.2",
     "eslint": "^8.28.0",
     "jest": "^29.3.1",
+    "jest-mock-extended": "^3.0.1",
+    "jest-when": "^3.5.2",
     "prettier": "^2.8.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
     "tslib": "^2.4.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "wait-for-expect": "^3.0.2"
   },
   "prettier": "@lens-protocol/prettier-config",
   "peerDependencies": {
