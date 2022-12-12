@@ -1,7 +1,8 @@
 import { renderHook } from '@testing-library/react';
-import { ProfileFieldsFragment } from '..';
-import { useProfilesToFollow } from '..';
+import { ProfileFieldsFragment } from '@lens-protocol/api';
+
 import { mockProfileFieldsFragment } from '../__helpers__/mocks';
+import { useProfilesToFollow } from '../useProfilesToFollow';
 
 const mockProfiles: ProfileFieldsFragment[] = [mockProfileFieldsFragment()];
 
