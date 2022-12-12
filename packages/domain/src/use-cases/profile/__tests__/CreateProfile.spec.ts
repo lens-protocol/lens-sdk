@@ -1,8 +1,8 @@
 import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
 import { NativeTransaction } from '../../../entities';
+import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
 import { mockTransactionQueue } from '../../transactions/__helpers__/mocks';
 import {

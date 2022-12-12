@@ -1,6 +1,6 @@
+import { LensConfig, LensProvider, staging } from '@lens-protocol/react';
 import { WagmiConfig, chain, configureChains, createClient } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
-import { LensConfig, LensProvider, staging } from '@lens-protocol/react';
 
 import { Header } from '../header/Header';
 import { ProfilesToFollow } from '../profiles-to-follow/ProfilesToFollow';

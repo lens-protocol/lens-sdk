@@ -12,8 +12,8 @@ import {
   WalletConnectionError,
 } from '../../entities';
 import { ActiveWallet } from '../wallets/ActiveWallet';
-import { TransactionQueue } from './TransactionQueue';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
+import { TransactionQueue } from './TransactionQueue';
 
 export interface IMetaTransactionNonceGateway {
   getNextMetaTransactionNonceFor(kind: TransactionKind): Promise<Nonce | undefined>;

@@ -1,14 +1,14 @@
-import { mock } from 'jest-mock-extended';
 import { failure, success } from '@lens-protocol/shared-kernel';
+import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
+import { NetworkError } from '../NetworkError';
 import {
   IRemoveReactionGateway,
   IRemoveReactionPresenter,
   RemoveReaction,
 } from '../RemoveReaction';
 import { mockReactionRequest } from '../__helpers__/mocks';
-import { NetworkError } from '../NetworkError';
 
 describe(`Given the ${RemoveReaction.name} use-case interactor`, () => {
   describe('when removing a reaction to publication', () => {

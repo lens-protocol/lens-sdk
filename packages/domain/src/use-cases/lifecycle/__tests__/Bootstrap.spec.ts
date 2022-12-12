@@ -1,15 +1,15 @@
+import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
-import { failure, success } from '@lens-protocol/shared-kernel';
 
-import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { TransactionRequestModel } from '../../../entities';
-import { IActiveWalletPresenter } from '../../wallets/IActiveWalletPresenter';
-import { ActiveWallet } from '../../wallets/ActiveWallet';
+import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveProfile } from '../../profile/ActiveProfile';
-import { ILoginPresenter } from '../../wallets/ILoginPresenter';
-import { mockTransactionQueue } from '../../transactions/__helpers__/mocks';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
+import { mockTransactionQueue } from '../../transactions/__helpers__/mocks';
+import { ActiveWallet } from '../../wallets/ActiveWallet';
+import { IActiveWalletPresenter } from '../../wallets/IActiveWalletPresenter';
+import { ILoginPresenter } from '../../wallets/ILoginPresenter';
 import {
   Bootstrap,
   CredentialsExpiredError,

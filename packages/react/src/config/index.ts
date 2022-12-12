@@ -1,6 +1,5 @@
-import { providers } from 'ethers';
-
 import { IStorageProvider } from '@lens-protocol/storage';
+import { providers } from 'ethers';
 
 import { EnvironmentConfig } from './environments';
 

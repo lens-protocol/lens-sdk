@@ -1,14 +1,12 @@
 {
   "name": "web-wagmi",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "eslint:fix": "eslint --fix",
-    "eslint": "eslint",
+    "eslint:fix": "pnpm run eslint --fix",
+    "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",

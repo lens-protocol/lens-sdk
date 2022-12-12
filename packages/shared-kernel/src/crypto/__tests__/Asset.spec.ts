@@ -1,6 +1,6 @@
-import { mockDaiAsset } from '../__helpers__/mocks';
 import { ether, matic, usd } from '../Asset';
 import { ChainType } from '../ChainType';
+import { mockDaiAsset } from '../__helpers__/mocks';
 
 describe('Given the Asset type definition', () => {
   [

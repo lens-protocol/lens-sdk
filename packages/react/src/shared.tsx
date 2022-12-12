@@ -1,11 +1,11 @@
-import React, { useContext, ReactNode } from 'react';
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { createApolloClient } from '@lens-protocol/api';
 import { invariant } from '@lens-protocol/shared-kernel';
+import React, { useContext, ReactNode } from 'react';
 
 import { LensConfig } from './config';
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
-type SharedDependencies = {
+export type SharedDependencies = {
   apolloClient: ApolloClient<NormalizedCacheObject>;
 };
 

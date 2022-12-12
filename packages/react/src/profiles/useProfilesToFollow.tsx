@@ -1,4 +1,5 @@
 import { useProfilesToFollowQuery } from '@lens-protocol/api';
+
 import { useSharedDependencies } from '../shared';
 
 // Return type here is just a patch... this is just a pathfinder hook, might change a lot.

@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react';
-import { LensConfig } from '.';
+
+import { LensConfig } from './config';
 import { createSharedDependencies, SharedDependenciesProvider } from './shared';
 
 export type LensProviderProps = {

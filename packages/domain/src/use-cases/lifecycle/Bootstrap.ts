@@ -1,11 +1,11 @@
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { ICredentials, TransactionRequestModel, Wallet } from '../../entities';
-import { ActiveWallet } from '../wallets/ActiveWallet';
 import { ActiveProfile } from '../profile/ActiveProfile';
+import { TransactionQueue } from '../transactions/TransactionQueue';
+import { ActiveWallet } from '../wallets/ActiveWallet';
 import { IActiveWalletPresenter } from '../wallets/IActiveWalletPresenter';
 import { ILoginPresenter } from '../wallets/ILoginPresenter';
-import { TransactionQueue } from '../transactions/TransactionQueue';
 
 export class CredentialsExpiredError extends Error {
   name = 'CredentialsExpiredError' as const;

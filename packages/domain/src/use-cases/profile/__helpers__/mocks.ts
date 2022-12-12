@@ -1,41 +1,46 @@
-import { ChainType, Result } from '@lens-protocol/shared-kernel';
+import { faker } from '@faker-js/faker';
+import {
+  ChainType,
+  Result,
+  mockEthereumAddress,
+  mockDaiAmount,
+  mockUsdcAmount,
+} from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
-import { faker } from '@faker-js/faker';
-import { mockEthereumAddress, mockDaiAmount, mockUsdcAmount } from '@lens-protocol/shared-kernel';
 
-import { mockSignature } from '../../../entities/__helpers__/mocks';
 import { Transaction, TransactionKind, Profile, NftOwnershipChallenge } from '../../../entities';
-import { UnfollowRequest } from '../UnfollowProfile';
-import { UpdateDispatcherConfigRequest } from '../UpdateDispatcherConfig';
+import { mockSignature } from '../../../entities/__helpers__/mocks';
+import { ActiveProfile } from '../ActiveProfile';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
   IProfileTransactionGateway,
 } from '../CreateProfile';
-import { ActiveProfile } from '../ActiveProfile';
 import {
   UnconstrainedFollowRequest,
   PaidFollowRequest,
   ProfileOwnerFollowRequest,
 } from '../FollowProfiles';
 import {
+  INftOwnershipChallengeGateway,
+  NftOwnershipSignature,
+  ProveNftOwnershipRequest,
+} from '../ProveNftOwnership';
+import { UnfollowRequest } from '../UnfollowProfile';
+import { UpdateCoverImageRequest } from '../UpdateCoverImage';
+import { UpdateDispatcherConfigRequest } from '../UpdateDispatcherConfig';
+import {
   ChargeFollowPolicy,
   FollowPolicyType,
   NoFeeFollowPolicy,
   UpdateFollowPolicyRequest,
 } from '../UpdateFollowPolicy';
-import { UpdateCoverImageRequest } from '../UpdateCoverImage';
 import { UpdateProfileDetailsRequest, ProfileDetails } from '../UpdateProfileDetails';
 import {
   UpdateNftProfileImageRequest,
   UpdateOffChainProfileImageRequest,
 } from '../UpdateProfileImage';
-import {
-  INftOwnershipChallengeGateway,
-  NftOwnershipSignature,
-  ProveNftOwnershipRequest,
-} from '../ProveNftOwnership';
 
 export function mockCreateProfileRequest(
   overrides?: Partial<CreateProfileRequest>,

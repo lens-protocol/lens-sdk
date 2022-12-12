@@ -2,16 +2,16 @@ import { mock } from 'jest-mock-extended';
 import waitFor from 'wait-for-expect';
 
 import {
-  MockedMetaTransaction,
-  mockTransactionHash,
-  mockTransactionRequestModel,
-} from '../../../entities/__helpers__/mocks';
-import {
   TransactionRequestModel,
   TransactionEvent,
   TransactionError,
   TransactionErrorReason,
 } from '../../../entities';
+import {
+  MockedMetaTransaction,
+  mockTransactionHash,
+  mockTransactionRequestModel,
+} from '../../../entities/__helpers__/mocks';
 import { mockCreatePostRequest } from '../../publications/__helpers__/mocks';
 import {
   IPendingTransactionGateway,

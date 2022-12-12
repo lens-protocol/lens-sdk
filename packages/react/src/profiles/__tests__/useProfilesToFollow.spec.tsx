@@ -1,6 +1,6 @@
-import { renderHook } from '@testing-library/react';
 import { ProfileFieldsFragment } from '@lens-protocol/api';
 
+import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { mockProfileFieldsFragment } from '../__helpers__/mocks';
 import { useProfilesToFollow } from '../useProfilesToFollow';
 
@@ -18,7 +18,7 @@ jest.mock('@lens-protocol/api', () => ({
 
 describe('useProfilesToFollow', () => {
   it('should return profiles to follow', () => {
-    const { result } = renderHook(() => useProfilesToFollow());
+    const { result } = renderHookWithMocks(() => useProfilesToFollow());
 
     expect(result.current.data).toEqual({
       recommendedProfiles: mockProfiles,

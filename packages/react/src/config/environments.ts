@@ -1,4 +1,5 @@
 import { ChainType } from '@lens-protocol/shared-kernel';
+
 import { ChainConfig, mumbai, polygon } from './chains';
 
 export type EnvironmentConfig = {

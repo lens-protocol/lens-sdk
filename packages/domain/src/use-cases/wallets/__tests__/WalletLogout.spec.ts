@@ -3,9 +3,9 @@ import { when } from 'jest-when';
 
 import { mockWallet } from '../../../entities/__helpers__/mocks';
 import { IActiveProfileGateway, IActiveProfilePresenter } from '../../profile';
-import { ILoginPresenter } from '../ILoginPresenter';
 import { ActiveWallet } from '../ActiveWallet';
 import { IActiveWalletPresenter } from '../IActiveWalletPresenter';
+import { ILoginPresenter } from '../ILoginPresenter';
 import {
   IResettableCredentialsGateway,
   IResettableWalletGateway,

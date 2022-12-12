@@ -1,10 +1,10 @@
-import { mock } from 'jest-mock-extended';
 import { failure, success } from '@lens-protocol/shared-kernel';
+import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { AddReaction, IAddReactionGateway, IAddReactionPresenter } from '../AddReaction';
-import { mockReactionRequest } from '../__helpers__/mocks';
 import { NetworkError } from '../NetworkError';
+import { mockReactionRequest } from '../__helpers__/mocks';
 
 describe(`Given the ${AddReaction.name} use-case interactor`, () => {
   describe('when adding a reaction to publication', () => {

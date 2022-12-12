@@ -1,14 +1,18 @@
-import { ChainType } from '@lens-protocol/shared-kernel';
-import { mockDaiAmount, mockEthereumAddress, mockUsdcAmount } from '@lens-protocol/shared-kernel';
 import { faker } from '@faker-js/faker';
+import {
+  ChainType,
+  mockDaiAmount,
+  mockEthereumAddress,
+  mockUsdcAmount,
+} from '@lens-protocol/shared-kernel';
 
 import { PublicationType, ReactionType, TransactionKind } from '../../../entities';
 import { mockProfileId } from '../../profile/__helpers__/mocks';
+import { ImageType } from '../../types';
 import { AddReactionRequest } from '../AddReaction';
+import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
-import { ImageType } from '../../types';
-import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
 import { CreatePostRequest } from '../CreatePost';
 import {
   ChargeCollectPolicy,
