@@ -1,4 +1,5 @@
 import { ProfileFieldsFragment, useProfilesToFollowQuery } from '@lens-protocol/api';
+
 import { useLensResponse, LensResponse } from '../helpers';
 import { useSharedDependencies } from '../shared';
 

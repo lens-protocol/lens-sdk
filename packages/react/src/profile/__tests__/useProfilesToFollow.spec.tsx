@@ -1,8 +1,6 @@
-import { mockProfileFieldsFragment } from '../__helpers__/mocks';
-import { ProfileFieldsFragment } from '../useProfilesToFollow';
-import { useProfilesToFollow } from '../useProfilesToFollow';
-
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { mockProfileFieldsFragment } from '../__helpers__/mocks';
+import { ProfileFieldsFragment, useProfilesToFollow } from '../useProfilesToFollow';
 
 const mockProfiles: ProfileFieldsFragment[] = [mockProfileFieldsFragment()];
 

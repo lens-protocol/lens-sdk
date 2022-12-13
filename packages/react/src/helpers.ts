@@ -6,7 +6,11 @@ export type LensResponse<T> = {
   error: Error | null;
 };
 
-export function useLensResponse<T>({ error, data, loading }: QueryResult<T, any>): LensResponse<T> {
+export function useLensResponse<T, V>({
+  error,
+  data,
+  loading,
+}: QueryResult<T, V>): LensResponse<T> {
   return {
     data: data ?? null,
     loading,
