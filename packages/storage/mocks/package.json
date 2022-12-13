@@ -1,4 +1,4 @@
 {
   "type": "module",
-  "main": "../dist/esm/mocks.ts"
+  "main": "../dist/esm/mocks.js"
 }

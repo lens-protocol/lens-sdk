@@ -20,7 +20,7 @@ export function mockStorageProvider(initial: string | null = null): IStorageProv
 // Otherwise it might keep references to the actual original objects and it might trick
 // consumer tests to think they are deserializing correctly (i.e. it might let them thing they
 // are recreating the correct object with appropriate prototype chains while they don't).
-export function mockStorageRoundTrip(data: unknown): unknown {
+function mockStorageRoundTrip(data: unknown): unknown {
   return JSON.parse(JSON.stringify(data));
 }
 
