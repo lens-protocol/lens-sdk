@@ -34,9 +34,7 @@ export interface ICredentialsIssuer {
 }
 
 export interface ICredentialsWriter {
-  save(
-    credentials: ICredentials,
-  ): Promise<void>
+  save(credentials: ICredentials): Promise<void>;
 }
 
 export class WalletLogin {
@@ -64,8 +62,8 @@ export class WalletLogin {
       this.connectionErrorPresenter.presentConnectionError(result.error);
       return;
     }
-    const credentials = result.unwrap()
-    await this.credentialsWriter.save(credentials)
+    const credentials = result.unwrap();
+    await this.credentialsWriter.save(credentials);
 
     this.activeWalletPresenter.presentActiveWallet(wallet);
     await this.activeProfile.loadActiveProfileByOwnerAddress(wallet.address);

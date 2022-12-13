@@ -30,7 +30,7 @@ function setupConnectWallet({
 }: {
   walletGateway?: IExternalWalletGateway;
   credentialsIssuer?: ICredentialsIssuer;
-  credentialsWriter?: ICredentialsWriter
+  credentialsWriter?: ICredentialsWriter;
   walletPresenter?: IActiveWalletPresenter;
   errorPresenter?: IConnectionErrorPresenter;
   activeProfile?: ActiveProfile;
@@ -58,7 +58,7 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
       const walletPresenter = mock<IActiveWalletPresenter>();
       const activeProfile = mock<ActiveProfile>();
 
-      const credentials = mockCredentials({ address: wallet.address })
+      const credentials = mockCredentials({ address: wallet.address });
 
       when(walletGateway.connect)
         .calledWith(wallet.type, ChainType.POLYGON)
@@ -73,12 +73,12 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
         activeProfile,
         walletGateway,
         walletPresenter,
-        credentialsWriter
+        credentialsWriter,
       });
 
       await connectWallet.login(wallet.type);
 
-      expect(credentialsWriter.save).toHaveBeenCalledWith(credentials)
+      expect(credentialsWriter.save).toHaveBeenCalledWith(credentials);
       expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
       expect(activeProfile.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(wallet.address);
     });

@@ -22,7 +22,7 @@ export interface ICredentialsGateway {
 }
 
 export interface ICredentialsRenewer {
-  renewCredentials(credentials: ICredentials): PromiseResult<ICredentials, CredentialsExpiredError>
+  renewCredentials(credentials: ICredentials): PromiseResult<ICredentials, CredentialsExpiredError>;
 }
 
 export class Bootstrap<T extends TransactionRequestModel> {
@@ -46,7 +46,7 @@ export class Bootstrap<T extends TransactionRequestModel> {
     }
 
     const credentials = await this.credentialsGateway.getCredentials(wallet);
-    if(!credentials) {
+    if (!credentials) {
       await this.startWithExpCredentials(wallet);
       return;
     }
@@ -59,8 +59,8 @@ export class Bootstrap<T extends TransactionRequestModel> {
       return;
     }
 
-    const newCredentials = result.unwrap()
-    await this.credentialsGateway.save(newCredentials)
+    const newCredentials = result.unwrap();
+    await this.credentialsGateway.save(newCredentials);
 
     await this.startWithCredentials(wallet);
   }

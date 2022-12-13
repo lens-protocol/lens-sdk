@@ -15,7 +15,7 @@ import {
   CredentialsExpiredError,
   IApplicationPresenter,
   ICredentialsGateway,
-  ICredentialsRenewer
+  ICredentialsRenewer,
 } from '../Bootstrap';
 
 const wallet = mockWallet();
@@ -85,7 +85,9 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
 
           when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
           when(credentialsRenewer.renewCredentials).mockResolvedValue(success(mockCredentials()));
-          when(credentialsGateway.getCredentials).calledWith(wallet).mockResolvedValue(mockCredentials());
+          when(credentialsGateway.getCredentials)
+            .calledWith(wallet)
+            .mockResolvedValue(mockCredentials());
 
           const bootstrap = setupBootstrapInteractor({
             activeProfile,
@@ -118,15 +120,16 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
           const applicationPresenter = mock<IApplicationPresenter>();
 
           when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
-          when(credentialsRenewer.renewCredentials)
-            .mockResolvedValue(failure(new CredentialsExpiredError()));
+          when(credentialsRenewer.renewCredentials).mockResolvedValue(
+            failure(new CredentialsExpiredError()),
+          );
 
           const bootstrap = setupBootstrapInteractor({
             activeWallet,
             applicationPresenter,
             loginPresenter,
             credentialsGateway,
-            credentialsRenewer
+            credentialsRenewer,
           });
 
           await bootstrap.start();
