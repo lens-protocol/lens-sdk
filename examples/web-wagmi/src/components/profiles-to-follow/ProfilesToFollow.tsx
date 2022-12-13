@@ -19,7 +19,7 @@ function ProfileList({ profiles }: ProfileListProps) {
 }
 
 export function ProfilesToFollow() {
-  const { data, loading, error } = useProfilesToFollow();
+  const { data, error, loading } = useProfilesToFollow();
 
   if (loading) return <div>Loading...</div>;
 
@@ -28,7 +28,7 @@ export function ProfilesToFollow() {
   return (
     <div>
       <h1>Recommend Followers</h1>
-      <ProfileList profiles={data.recommendedProfiles} />
+      <ProfileList profiles={data} />
     </div>
   );
 }
