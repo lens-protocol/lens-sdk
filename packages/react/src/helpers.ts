@@ -1,4 +1,5 @@
 import { QueryResult } from '@apollo/client';
+import { CausedError } from '@lens-protocol/shared-kernel';
 
 export type LensResponse<T> = {
   data: T | null;
@@ -14,6 +15,6 @@ export function useLensResponse<T, V>({
   return {
     data: data ?? null,
     loading,
-    error: error ? new Error(error.message) : null,
+    error: error ? new CausedError(error.message, { cause: error }) : null,
   };
 }
