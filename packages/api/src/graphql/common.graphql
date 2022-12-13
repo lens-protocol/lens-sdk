@@ -1,0 +1,13 @@
+fragment Erc20 on Erc20 {
+  name
+  symbol
+  decimals
+  address
+}
+
+fragment ModuleFeeAmount on ModuleFeeAmount {
+  asset {
+    ...Erc20
+  }
+  value
+}

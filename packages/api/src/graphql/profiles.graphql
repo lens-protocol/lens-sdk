@@ -9,6 +9,25 @@ fragment MediaSet on MediaSet {
   }
 }
 
+fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+  __typename
+  amount {
+    ...ModuleFeeAmount
+  }
+  contractAddress
+  recipient
+}
+
+fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
+  __typename
+  contractAddress
+}
+
+fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+  __typename
+  contractAddress
+}
+
 fragment ProfileMediaFields on ProfileMedia {
   ... on NftImage {
     contractAddress
@@ -22,12 +41,21 @@ fragment ProfileMediaFields on ProfileMedia {
   }
 }
 
+fragment Attribute on Attribute {
+  __typename
+  key
+  value
+}
+
 fragment ProfileFields on Profile {
   id
   name
   bio
   handle
   ownedBy
+  attributes {
+    ...Attribute
+  }
   picture {
     ...ProfileMediaFields
   }
@@ -39,11 +67,42 @@ fragment ProfileFields on Profile {
     totalFollowing
     totalPosts
   }
-  ownedBy
+  followModule {
+    ... on FeeFollowModuleSettings {
+      ...FeeFollowModuleSettings
+    }
+
+    ... on ProfileFollowModuleSettings {
+      ...ProfileFollowModuleSettings
+    }
+
+    ... on RevertFollowModuleSettings {
+      ...RevertFollowModuleSettings
+    }
+  }
+  dispatcher {
+    address
+    canUseRelay
+  }
+
+  isFollowedByMe(isFinalisedOnChain: true)
+  # isFollowing(who: $activeProfileId) //TODO: active profile id for read queries?
 }
 
 query ProfilesToFollow {
   recommendedProfiles {
+    ...ProfileFields
+  }
+}
+
+query GetProfileByHandle($handle: Handle!, $activeProfileId: ProfileId) {
+  result: profile(request: { handle: $handle }) {
+    ...ProfileFields
+  }
+}
+
+query GetProfileById($id: ProfileId!, $activeProfileId: ProfileId) {
+  result: profile(request: { profileId: $id }) {
     ...ProfileFields
   }
 }

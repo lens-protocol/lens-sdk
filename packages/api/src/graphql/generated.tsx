@@ -241,9 +241,9 @@ export type CanCommentResponse = {
 };
 
 export type CanDecryptResponse = {
-  __typename: "CanDecryptResponse";
-  result: Scalars["Boolean"];
-  reasons: Maybe<DecryptFailReason>;
+  __typename: 'CanDecryptResponse';
+  result: Scalars['Boolean'];
+  reasons: Maybe<Array<DecryptFailReason>>;
 };
 
 export type CanMirrorResponse = {
@@ -280,7 +280,7 @@ export type ClaimableHandles = {
 /** Condition that signifies if address or profile has collected a publication */
 export type CollectConditionInput = {
   /** The publication id that has to be collected to unlock content */
-  publicationId?: Maybe<Scalars["ProfileId"]>;
+  publicationId?: Maybe<Scalars['InternalPublicationId']>;
   /** True if the content will be unlocked for this specific publication */
   thisPublication?: Maybe<Scalars['Boolean']>;
 };
@@ -289,7 +289,7 @@ export type CollectConditionInput = {
 export type CollectConditionOutput = {
   __typename: 'CollectConditionOutput';
   /** The publication id that has to be collected to unlock content */
-  publicationId: Maybe<Scalars["ProfileId"]>;
+  publicationId: Maybe<Scalars['InternalPublicationId']>;
   /** True if the content will be unlocked for this specific publication */
   thisPublication: Maybe<Scalars['Boolean']>;
 };
@@ -2239,7 +2239,7 @@ export type NftOwnershipInput = {
   /** The unlocker contract type */
   contractType: ContractType;
   /** The optional token ID(s) to check for ownership */
-  tokenIds?: Maybe<Scalars["TokenId"]>;
+  tokenIds?: Maybe<Array<Scalars['TokenId']>>;
 };
 
 export type NftOwnershipOutput = {
@@ -2251,7 +2251,7 @@ export type NftOwnershipOutput = {
   /** The unlocker contract type */
   contractType: ContractType;
   /** The optional token ID(s) to check for ownership */
-  tokenIds: Maybe<Scalars["TokenId"]>;
+  tokenIds: Maybe<Array<Scalars['TokenId']>>;
 };
 
 export type Notification =
@@ -3773,11 +3773,34 @@ export type WorldcoinIdentity = {
   isHuman: Scalars['Boolean'];
 };
 
+export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
+  Erc20,
+  'name' | 'symbol' | 'decimals' | 'address'
+>;
+
+export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
+  ModuleFeeAmount,
+  'value'
+> & { asset: { __typename: 'Erc20' } & Erc20Fragment };
+
 export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
 
 export type MediaSetFragment = { __typename: 'MediaSet' } & {
   original: { __typename: 'Media' } & MediaFieldsFragment;
 };
+
+export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
+  FeeFollowModuleSettings,
+  'contractAddress' | 'recipient'
+> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+
+export type ProfileFollowModuleSettingsFragment = {
+  __typename: 'ProfileFollowModuleSettings';
+} & Pick<ProfileFollowModuleSettings, 'contractAddress'>;
+
+export type RevertFollowModuleSettingsFragment = {
+  __typename: 'RevertFollowModuleSettings';
+} & Pick<RevertFollowModuleSettings, 'contractAddress'>;
 
 type ProfileMediaFields_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
   NftImage,
@@ -3790,10 +3813,13 @@ export type ProfileMediaFieldsFragment =
   | ProfileMediaFields_NftImage_Fragment
   | ProfileMediaFields_MediaSet_Fragment;
 
+export type AttributeFragment = { __typename: 'Attribute' } & Pick<Attribute, 'key' | 'value'>;
+
 export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   Profile,
-  'id' | 'name' | 'bio' | 'handle' | 'ownedBy'
+  'id' | 'name' | 'bio' | 'handle' | 'ownedBy' | 'isFollowedByMe'
 > & {
+    attributes: Maybe<Array<{ __typename: 'Attribute' } & AttributeFragment>>;
     picture: Maybe<
       | ({ __typename: 'NftImage' } & ProfileMediaFields_NftImage_Fragment)
       | ({ __typename: 'MediaSet' } & ProfileMediaFields_MediaSet_Fragment)
@@ -3806,6 +3832,13 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
       ProfileStats,
       'totalFollowers' | 'totalFollowing' | 'totalPosts'
     >;
+    followModule: Maybe<
+      | ({ __typename: 'FeeFollowModuleSettings' } & FeeFollowModuleSettingsFragment)
+      | ({ __typename: 'ProfileFollowModuleSettings' } & ProfileFollowModuleSettingsFragment)
+      | ({ __typename: 'RevertFollowModuleSettings' } & RevertFollowModuleSettingsFragment)
+      | { __typename: 'UnknownFollowModuleSettings' }
+    >;
+    dispatcher: Maybe<{ __typename: 'Dispatcher' } & Pick<Dispatcher, 'address' | 'canUseRelay'>>;
   };
 
 export type ProfilesToFollowQueryVariables = Exact<{ [key: string]: never }>;
@@ -3814,6 +3847,31 @@ export type ProfilesToFollowQuery = {
   recommendedProfiles: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
 };
 
+export type GetProfileByHandleQueryVariables = Exact<{
+  handle: Scalars['Handle'];
+  activeProfileId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type GetProfileByHandleQuery = {
+  result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+};
+
+export type GetProfileByIdQueryVariables = Exact<{
+  id: Scalars['ProfileId'];
+  activeProfileId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type GetProfileByIdQuery = {
+  result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+};
+
+export const AttributeFragmentDoc = gql`
+  fragment Attribute on Attribute {
+    __typename
+    key
+    value
+  }
+`;
 export const MediaFieldsFragmentDoc = gql`
   fragment MediaFields on Media {
     url
@@ -3842,6 +3900,46 @@ export const ProfileMediaFieldsFragmentDoc = gql`
   }
   ${MediaSetFragmentDoc}
 `;
+export const Erc20FragmentDoc = gql`
+  fragment Erc20 on Erc20 {
+    name
+    symbol
+    decimals
+    address
+  }
+`;
+export const ModuleFeeAmountFragmentDoc = gql`
+  fragment ModuleFeeAmount on ModuleFeeAmount {
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
+`;
+export const FeeFollowModuleSettingsFragmentDoc = gql`
+  fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    contractAddress
+    recipient
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const ProfileFollowModuleSettingsFragmentDoc = gql`
+  fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const RevertFollowModuleSettingsFragmentDoc = gql`
+  fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
 export const ProfileFieldsFragmentDoc = gql`
   fragment ProfileFields on Profile {
     id
@@ -3849,6 +3947,9 @@ export const ProfileFieldsFragmentDoc = gql`
     bio
     handle
     ownedBy
+    attributes {
+      ...Attribute
+    }
     picture {
       ...ProfileMediaFields
     }
@@ -3860,9 +3961,28 @@ export const ProfileFieldsFragmentDoc = gql`
       totalFollowing
       totalPosts
     }
-    ownedBy
+    followModule {
+      ... on FeeFollowModuleSettings {
+        ...FeeFollowModuleSettings
+      }
+      ... on ProfileFollowModuleSettings {
+        ...ProfileFollowModuleSettings
+      }
+      ... on RevertFollowModuleSettings {
+        ...RevertFollowModuleSettings
+      }
+    }
+    dispatcher {
+      address
+      canUseRelay
+    }
+    isFollowedByMe(isFinalisedOnChain: true)
   }
+  ${AttributeFragmentDoc}
   ${ProfileMediaFieldsFragmentDoc}
+  ${FeeFollowModuleSettingsFragmentDoc}
+  ${ProfileFollowModuleSettingsFragmentDoc}
+  ${RevertFollowModuleSettingsFragmentDoc}
 `;
 export const ProfilesToFollowDocument = gql`
   query ProfilesToFollow {
@@ -3911,6 +4031,111 @@ export type ProfilesToFollowLazyQueryHookResult = ReturnType<typeof useProfilesT
 export type ProfilesToFollowQueryResult = Apollo.QueryResult<
   ProfilesToFollowQuery,
   ProfilesToFollowQueryVariables
+>;
+export const GetProfileByHandleDocument = gql`
+  query GetProfileByHandle($handle: Handle!, $activeProfileId: ProfileId) {
+    result: profile(request: { handle: $handle }) {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
+
+/**
+ * __useGetProfileByHandleQuery__
+ *
+ * To run a query within a React component, call `useGetProfileByHandleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileByHandleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProfileByHandleQuery({
+ *   variables: {
+ *      handle: // value for 'handle'
+ *      activeProfileId: // value for 'activeProfileId'
+ *   },
+ * });
+ */
+export function useGetProfileByHandleQuery(
+  baseOptions: Apollo.QueryHookOptions<GetProfileByHandleQuery, GetProfileByHandleQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetProfileByHandleQuery, GetProfileByHandleQueryVariables>(
+    GetProfileByHandleDocument,
+    options,
+  );
+}
+export function useGetProfileByHandleLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetProfileByHandleQuery,
+    GetProfileByHandleQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetProfileByHandleQuery, GetProfileByHandleQueryVariables>(
+    GetProfileByHandleDocument,
+    options,
+  );
+}
+export type GetProfileByHandleQueryHookResult = ReturnType<typeof useGetProfileByHandleQuery>;
+export type GetProfileByHandleLazyQueryHookResult = ReturnType<
+  typeof useGetProfileByHandleLazyQuery
+>;
+export type GetProfileByHandleQueryResult = Apollo.QueryResult<
+  GetProfileByHandleQuery,
+  GetProfileByHandleQueryVariables
+>;
+export const GetProfileByIdDocument = gql`
+  query GetProfileById($id: ProfileId!, $activeProfileId: ProfileId) {
+    result: profile(request: { profileId: $id }) {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
+
+/**
+ * __useGetProfileByIdQuery__
+ *
+ * To run a query within a React component, call `useGetProfileByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProfileByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      activeProfileId: // value for 'activeProfileId'
+ *   },
+ * });
+ */
+export function useGetProfileByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<GetProfileByIdQuery, GetProfileByIdQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetProfileByIdQuery, GetProfileByIdQueryVariables>(
+    GetProfileByIdDocument,
+    options,
+  );
+}
+export function useGetProfileByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetProfileByIdQuery, GetProfileByIdQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetProfileByIdQuery, GetProfileByIdQueryVariables>(
+    GetProfileByIdDocument,
+    options,
+  );
+}
+export type GetProfileByIdQueryHookResult = ReturnType<typeof useGetProfileByIdQuery>;
+export type GetProfileByIdLazyQueryHookResult = ReturnType<typeof useGetProfileByIdLazyQuery>;
+export type GetProfileByIdQueryResult = Apollo.QueryResult<
+  GetProfileByIdQuery,
+  GetProfileByIdQueryVariables
 >;
 export type AccessConditionOutputKeySpecifier = (
   | 'nft'
