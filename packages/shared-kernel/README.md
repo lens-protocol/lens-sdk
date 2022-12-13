@@ -1,3 +1,3 @@
 # `@lens-protocol/shared-kernel`
 
-This package contains the shared project utilities.
+This package contains Shared Kernel types and language extensions. For more details about the mindset read this [article](https://herbertograca.com/2018/07/07/more-than-concentric-layers/).
