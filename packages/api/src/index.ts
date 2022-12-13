@@ -1,2 +1,2 @@
-export * from "./graphql/generated";
-export * from "./apollo";
+export * from './graphql/generated';
+export * from './apollo';

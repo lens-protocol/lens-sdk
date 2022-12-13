@@ -1,8 +1,13 @@
-import { Amount, ChainType, Erc20 } from '@lens-protocol/shared-kernel';
-import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import {
+  Amount,
+  ChainType,
+  Erc20,
+  mockDaiAmount,
+  mockEthereumAddress,
+} from '@lens-protocol/shared-kernel';
 
-import { mockWallet } from '../../../entities/__helpers__/mocks';
 import { Wallet } from '../../../entities';
+import { mockWallet } from '../../../entities/__helpers__/mocks';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,

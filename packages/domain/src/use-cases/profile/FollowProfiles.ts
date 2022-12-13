@@ -6,17 +6,17 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '../../entities';
-import {
-  InsufficientAllowanceError,
-  InsufficientFundsError,
-  TokenAvailability,
-} from '../wallets/TokenAvailability';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import {
   IUnsignedProtocolCallGateway,
   ProtocolCallUseCase,
 } from '../transactions/ProtocolCallUseCase';
 import { SignlessProtocolCallUseCase } from '../transactions/SignlessProtocolCallUseCase';
+import {
+  InsufficientAllowanceError,
+  InsufficientFundsError,
+  TokenAvailability,
+} from '../wallets/TokenAvailability';
 
 export type FollowRequestFee = {
   amount: Amount<Erc20>;

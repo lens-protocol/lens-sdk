@@ -3,13 +3,6 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import {
-  MockedMetaTransaction,
-  MockedProxyTransaction,
-  mockNonce,
-  mockTransactionHash,
-  mockUnsignedProtocolCall,
-} from '../../../entities/__helpers__/mocks';
-import {
   IUnsignedProtocolCall,
   MetaTransaction,
   NativeTransaction,
@@ -19,6 +12,13 @@ import {
   TransactionKind,
   TransactionRequestModel,
 } from '../../../entities';
+import {
+  MockedMetaTransaction,
+  MockedProxyTransaction,
+  mockNonce,
+  mockTransactionHash,
+  mockUnsignedProtocolCall,
+} from '../../../entities/__helpers__/mocks';
 import { IProtocolCallGateway, WithDelegateFlag } from '../DelegableProtocolCallUseCase';
 import {
   IMetaTransactionNonceGateway,

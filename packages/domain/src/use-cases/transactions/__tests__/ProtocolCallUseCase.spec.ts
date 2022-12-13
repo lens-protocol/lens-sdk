@@ -1,15 +1,7 @@
-import { mock } from 'jest-mock-extended';
 import { failure, success } from '@lens-protocol/shared-kernel';
+import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import {
-  MockedMetaTransaction,
-  mockNonce,
-  mockSignedProtocolCall,
-  mockTransactionRequestModel,
-  mockUnsignedProtocolCall,
-  mockWallet,
-} from '../../../entities/__helpers__/mocks';
 import {
   PendingSigningRequestError,
   WalletConnectionError,
@@ -21,12 +13,13 @@ import {
   TransactionRequestModel,
 } from '../../../entities';
 import {
-  mockIMetaTransactionNonceGateway,
-  mockIProtocolCallRelayer,
-  mockIUnsignedProtocolCallGateway,
-  mockTransactionQueue,
-} from '../__helpers__/mocks';
-import { TransactionQueue } from '../TransactionQueue';
+  MockedMetaTransaction,
+  mockNonce,
+  mockSignedProtocolCall,
+  mockTransactionRequestModel,
+  mockUnsignedProtocolCall,
+  mockWallet,
+} from '../../../entities/__helpers__/mocks';
 import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
 import {
   ProtocolCallUseCase,
@@ -35,6 +28,13 @@ import {
   IUnsignedProtocolCallGateway,
   IProtocolCallRelayer,
 } from '../ProtocolCallUseCase';
+import { TransactionQueue } from '../TransactionQueue';
+import {
+  mockIMetaTransactionNonceGateway,
+  mockIProtocolCallRelayer,
+  mockIUnsignedProtocolCallGateway,
+  mockTransactionQueue,
+} from '../__helpers__/mocks';
 
 function setupMetaTransactionUseCase<T extends TransactionRequestModel>({
   metaTransactionNonceGateway,

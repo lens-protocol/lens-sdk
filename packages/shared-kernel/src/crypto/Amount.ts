@@ -1,3 +1,4 @@
+import { BigDecimal } from '../arithmetic/BigDecimal';
 import { invariant } from '../ts-helpers/invariant';
 import {
   Asset,
@@ -11,7 +12,6 @@ import {
   matic,
   usd,
 } from './Asset';
-import { BigDecimal } from '../arithmetic/BigDecimal';
 
 type AmountValue = BigDecimal | number | string;
 

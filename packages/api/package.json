@@ -26,7 +26,8 @@
     "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
     "clean": "rimraf ./dist",
     "test": "jest --passWithNoTests",
-    "eslint": "eslint",
+    "eslint:fix": "pnpm run eslint --fix",
+    "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
@@ -42,16 +43,17 @@
     "@graphql-codegen/cli": "^1.21.7",
     "@graphql-codegen/fragment-matcher": "^3.1.0",
     "@graphql-codegen/introspection": "^1.18.2",
+    "@graphql-codegen/typescript": "^1.23.0",
     "@graphql-codegen/typescript-apollo-client-helpers": "^1.1.10",
     "@graphql-codegen/typescript-operations": "^1.18.4",
     "@graphql-codegen/typescript-react-apollo": "^2.3.1",
-    "@graphql-codegen/typescript": "^1.23.0",
     "@lens-protocol/eslint-config": "workspace:*",
+    "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@types/jest": "^29.2.3",
     "babel-plugin-graphql-tag": "^3.3.0",
-    "graphql-tag": "^2.12.6",
     "graphql": "15.5.1",
+    "graphql-tag": "^2.12.6",
     "jest": "^29.3.1",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
@@ -59,5 +61,6 @@
   },
   "peerDependencies": {
     "eslint": "^8.28.0"
-  }
+  },
+  "prettier": "@lens-protocol/prettier-config"
 }

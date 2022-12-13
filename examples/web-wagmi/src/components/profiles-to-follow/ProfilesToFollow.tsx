@@ -1,4 +1,4 @@
-import { useProfilesToFollow, ProfileFieldsFragment } from "@lens-protocol/react";
+import { useProfilesToFollow, ProfileFieldsFragment } from '@lens-protocol/react';
 
 type ProfileListProps = {
   profiles: ProfileFieldsFragment[];
@@ -6,7 +6,7 @@ type ProfileListProps = {
 
 function ProfileList({ profiles }: ProfileListProps) {
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
       {profiles.map((profile) => (
         <div key={profile.id}>
           <h2>{profile.name ?? `@${profile.handle}`}</h2>
@@ -23,7 +23,7 @@ export function ProfilesToFollow() {
 
   if (loading) return <div>Loading...</div>;
 
-  if (error || !data) return <div>Error: {error?.message ?? "Unexpected error."}</div>;
+  if (error || !data) return <div>Error: {error?.message ?? 'Unexpected error.'}</div>;
 
   return (
     <div>

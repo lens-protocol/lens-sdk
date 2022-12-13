@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { assertError } from '@lens-protocol/shared-kernel';
+import { z } from 'zod';
 
 export class SchemaMismatchError extends Error {
   name = 'SchemaMismatchError' as const;

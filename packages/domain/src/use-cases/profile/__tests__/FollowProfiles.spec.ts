@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { mock } from 'jest-mock-extended';
 import { failure, success } from '@lens-protocol/shared-kernel';
+import { mock } from 'jest-mock-extended';
 
+import { ProtocolCallUseCase } from '../../transactions/ProtocolCallUseCase';
+import { SignlessProtocolCallUseCase } from '../../transactions/SignlessProtocolCallUseCase';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
   TokenAvailability,
 } from '../../wallets/TokenAvailability';
 import { mockTokeAvailability } from '../../wallets/__helpers__/mocks';
-import { ProtocolCallUseCase } from '../../transactions/ProtocolCallUseCase';
-import { SignlessProtocolCallUseCase } from '../../transactions/SignlessProtocolCallUseCase';
 import {
   FollowProfiles,
   FollowRequest,

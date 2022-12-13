@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { jest } from '@jest/globals';
 import {
   ChainType,
@@ -5,9 +6,9 @@ import {
   failure,
   PromiseResult,
   success,
+  mock32BytesHexString,
+  mockEthereumAddress,
 } from '@lens-protocol/shared-kernel';
-import { mock32BytesHexString, mockEthereumAddress } from '@lens-protocol/shared-kernel';
-import { faker } from '@faker-js/faker';
 import { mock } from 'jest-mock-extended';
 
 import { ICredentials } from '../Credentials';

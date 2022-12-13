@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   env: {
     es6: true,
     commonjs: true,
@@ -50,6 +50,16 @@ export default {
         ],
       },
     },
+
+    {
+      files: ['**/__{mocks,tests,helpers}__/**/*.{js,ts,tsx}'],
+      rules: {
+        '@typescript-eslint/unbound-method': 'off',
+        '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/no-shadow': 'off',
+        '@typescript-eslint/no-empty-function': 'off',
+      },
+    },
   ],
   rules: {
     'no-console': 'error',
@@ -78,6 +88,7 @@ export default {
     'import/order': [
       'error',
       {
+        alphabetize: { order: 'asc' },
         groups: ['builtin', 'external', 'unknown', ['internal', 'parent', 'sibling', 'index']],
         pathGroups: [
           {

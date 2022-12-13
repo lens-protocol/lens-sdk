@@ -1,16 +1,16 @@
-import { CreatePostRequest } from '../publications/CreatePost';
 import { CreateProfileRequest } from '../profile/CreateProfile';
-import { CreateCommentRequest } from '../publications/CreateComment';
-import { CreateMirrorRequest } from '../publications/CreateMirror';
 import { FollowRequest, UnconstrainedFollowRequest } from '../profile/FollowProfiles';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
-import { TokenAllowanceRequest } from '../wallets/TokenAllowance';
-import { CollectRequest, FreeCollectRequest } from '../publications/CollectPublication';
 import { UpdateCoverImageRequest } from '../profile/UpdateCoverImage';
-import { UpdateProfileDetailsRequest } from '../profile/UpdateProfileDetails';
-import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
 import { UpdateDispatcherConfigRequest } from '../profile/UpdateDispatcherConfig';
+import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
+import { UpdateProfileDetailsRequest } from '../profile/UpdateProfileDetails';
 import { UpdateProfileImageRequest } from '../profile/UpdateProfileImage';
+import { CollectRequest, FreeCollectRequest } from '../publications/CollectPublication';
+import { CreateCommentRequest } from '../publications/CreateComment';
+import { CreateMirrorRequest } from '../publications/CreateMirror';
+import { CreatePostRequest } from '../publications/CreatePost';
+import { TokenAllowanceRequest } from '../wallets/TokenAllowance';
 
 export type SupportedTransactionRequest =
   | CollectRequest

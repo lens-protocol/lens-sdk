@@ -1,9 +1,9 @@
 import { assertNever } from '@lens-protocol/shared-kernel';
 
 import { IActiveProfilePresenter, IActiveProfileGateway } from '../profile';
-import { ILoginPresenter } from './ILoginPresenter';
 import { ActiveWallet } from './ActiveWallet';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
+import { ILoginPresenter } from './ILoginPresenter';
 
 export interface IResettableCredentialsGateway {
   invalidate(): Promise<void>;

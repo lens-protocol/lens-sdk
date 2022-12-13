@@ -1,9 +1,10 @@
-import { mock } from 'jest-mock-extended';
 import { success } from '@lens-protocol/shared-kernel';
+import { mock } from 'jest-mock-extended';
 
-import { MockedProxyTransaction } from '../../../entities/__helpers__/mocks';
 import { TransactionRequestModel } from '../../../entities';
+import { MockedProxyTransaction } from '../../../entities/__helpers__/mocks';
 import { mockUnconstrainedFollowRequest } from '../../profile/__helpers__/mocks';
+import { mockFreeCollectRequest } from '../../publications/__helpers__/mocks';
 import {
   ISignlessProtocolCallRelayerCallPresenter,
   ISignlessProtocolCallRelayer,
@@ -11,7 +12,6 @@ import {
 } from '../SignlessProtocolCallUseCase';
 import { TransactionQueue } from '../TransactionQueue';
 import { mockISignlessProtocolCallRelayer, mockTransactionQueue } from '../__helpers__/mocks';
-import { mockFreeCollectRequest } from '../../publications/__helpers__/mocks';
 
 function setup<T extends TransactionRequestModel>({
   relayer,
