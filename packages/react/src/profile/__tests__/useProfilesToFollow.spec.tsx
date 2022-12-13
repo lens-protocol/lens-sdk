@@ -1,15 +1,8 @@
-<<<<<<<< HEAD:packages/react/src/profile/__tests__/profiles-to-follow.tsx
-import { renderHook } from '@testing-library/react';
-import { mockProfileFieldsFragment } from '../../__helpers__/mocks';
-import { ProfileFieldsFragment } from '../profiles-to-follow';
-import { useProfilesToFollow } from '../profiles-to-follow';
-========
-import { ProfileFieldsFragment } from '@lens-protocol/api';
+import { mockProfileFieldsFragment } from '../__helpers__/mocks';
+import { ProfileFieldsFragment } from '../useProfilesToFollow';
+import { useProfilesToFollow } from '../useProfilesToFollow';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { mockProfileFieldsFragment } from '../__helpers__/mocks';
-import { useProfilesToFollow } from '../useProfilesToFollow';
->>>>>>>> main:packages/react/src/profiles/__tests__/useProfilesToFollow.spec.tsx
 
 const mockProfiles: ProfileFieldsFragment[] = [mockProfileFieldsFragment()];
 
