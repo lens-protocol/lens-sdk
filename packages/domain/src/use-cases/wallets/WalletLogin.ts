@@ -24,8 +24,8 @@ export interface IConnectionErrorPresenter {
   ): void;
 }
 
-export interface IAuthenticationGateway {
-  authenticate(
+export interface ICredentialsIssuer {
+  issueCredentials(
     wallet: Wallet,
   ): PromiseResult<
     ICredentials,
@@ -33,10 +33,17 @@ export interface IAuthenticationGateway {
   >;
 }
 
+export interface ICredentialsWriter {
+  save(
+    credentials: ICredentials,
+  ): Promise<void>
+}
+
 export class WalletLogin {
   constructor(
     private readonly walletGateway: IExternalWalletGateway,
-    private readonly authGateway: IAuthenticationGateway,
+    private readonly credentialsIssuer: ICredentialsIssuer,
+    private readonly credentialsWriter: ICredentialsWriter,
     private readonly activeWalletPresenter: IActiveWalletPresenter,
     private readonly connectionErrorPresenter: IConnectionErrorPresenter,
     private readonly activeProfile: ActiveProfile,
@@ -51,12 +58,14 @@ export class WalletLogin {
     }
 
     const wallet = walletResult.value;
-    const authResult = await this.authGateway.authenticate(wallet);
+    const result = await this.credentialsIssuer.issueCredentials(wallet);
 
-    if (authResult.isFailure()) {
-      this.connectionErrorPresenter.presentConnectionError(authResult.error);
+    if (result.isFailure()) {
+      this.connectionErrorPresenter.presentConnectionError(result.error);
       return;
     }
+    const credentials = result.unwrap()
+    await this.credentialsWriter.save(credentials)
 
     this.activeWalletPresenter.presentActiveWallet(wallet);
     await this.activeProfile.loadActiveProfileByOwnerAddress(wallet.address);

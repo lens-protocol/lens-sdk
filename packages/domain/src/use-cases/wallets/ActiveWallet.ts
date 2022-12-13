@@ -2,7 +2,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import { ICredentials, Wallet } from '../../entities';
 
-export interface ICredentialsGateway {
+export interface ICredentialsReader {
   getCredentials(): Promise<ICredentials | null>;
 }
 
@@ -12,12 +12,12 @@ export interface IWalletGateway {
 
 export class ActiveWallet {
   constructor(
-    private credentialsGateway: ICredentialsGateway,
+    private credentialsReader: ICredentialsReader,
     private walletGateway: IWalletGateway,
   ) {}
 
   async getActiveWallet(): Promise<Wallet | null> {
-    const credentials = await this.credentialsGateway.getCredentials();
+    const credentials = await this.credentialsReader.getCredentials();
 
     if (!credentials) {
       return null;

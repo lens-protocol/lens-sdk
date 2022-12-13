@@ -14,7 +14,8 @@ import {
   Bootstrap,
   CredentialsExpiredError,
   IApplicationPresenter,
-  IAuthorizationGateway,
+  ICredentialsGateway,
+  ICredentialsRenewer
 } from '../Bootstrap';
 
 const wallet = mockWallet();
@@ -22,7 +23,8 @@ const wallet = mockWallet();
 type BootstrapSetupConfig = {
   activeProfile?: ActiveProfile;
   activeWallet?: ActiveWallet;
-  authGateway?: IAuthorizationGateway;
+  credentialsGateway?: ICredentialsGateway;
+  credentialsRenewer?: ICredentialsRenewer;
   walletPresenter?: IActiveWalletPresenter;
   applicationPresenter?: IApplicationPresenter;
   loginPresenter?: ILoginPresenter;
@@ -32,7 +34,8 @@ type BootstrapSetupConfig = {
 const setupBootstrapInteractor = ({
   activeProfile = mock<ActiveProfile>(),
   activeWallet = mock<ActiveWallet>(),
-  authGateway = mock<IAuthorizationGateway>(),
+  credentialsGateway = mock<ICredentialsGateway>(),
+  credentialsRenewer = mock<ICredentialsRenewer>(),
   walletPresenter = mock<IActiveWalletPresenter>(),
   applicationPresenter = mock<IApplicationPresenter>(),
   loginPresenter = mock<ILoginPresenter>(),
@@ -40,7 +43,8 @@ const setupBootstrapInteractor = ({
 }: BootstrapSetupConfig = {}) => {
   return new Bootstrap(
     activeWallet,
-    authGateway,
+    credentialsGateway,
+    credentialsRenewer,
     walletPresenter,
     applicationPresenter,
     loginPresenter,
@@ -74,20 +78,21 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
           const activeProfile = mock<ActiveProfile>();
           const activeWallet = mock<ActiveWallet>();
           const applicationPresenter = mock<IApplicationPresenter>();
-          const authGateway = mock<IAuthorizationGateway>();
+          const credentialsGateway = mock<ICredentialsGateway>();
+          const credentialsRenewer = mock<ICredentialsRenewer>();
           const transactionQueue = mockTransactionQueue();
           const walletPresenter = mock<IActiveWalletPresenter>();
 
           when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
-          when(authGateway.authorize)
-            .calledWith(wallet)
-            .mockResolvedValue(success(mockCredentials()));
+          when(credentialsRenewer.renewCredentials).mockResolvedValue(success(mockCredentials()));
+          when(credentialsGateway.getCredentials).calledWith(wallet).mockResolvedValue(mockCredentials());
 
           const bootstrap = setupBootstrapInteractor({
             activeProfile,
             activeWallet,
             applicationPresenter,
-            authGateway,
+            credentialsGateway,
+            credentialsRenewer,
             transactionQueue,
             walletPresenter,
           });
@@ -108,19 +113,20 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
         it("should present login options and signal readiness if we can't refresh credentials", async () => {
           const activeWallet = mock<ActiveWallet>();
           const loginPresenter = mock<ILoginPresenter>();
-          const authGateway = mock<IAuthorizationGateway>();
+          const credentialsGateway = mock<ICredentialsGateway>();
+          const credentialsRenewer = mock<ICredentialsRenewer>();
           const applicationPresenter = mock<IApplicationPresenter>();
 
           when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
-          when(authGateway.authorize)
-            .calledWith(wallet)
+          when(credentialsRenewer.renewCredentials)
             .mockResolvedValue(failure(new CredentialsExpiredError()));
 
           const bootstrap = setupBootstrapInteractor({
             activeWallet,
             applicationPresenter,
             loginPresenter,
-            authGateway,
+            credentialsGateway,
+            credentialsRenewer
           });
 
           await bootstrap.start();
