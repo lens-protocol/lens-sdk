@@ -165,7 +165,7 @@ importers:
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/shared-kernel': workspace:*
-      '@lens-protocol/storage': workspace:^0.0.1
+      '@lens-protocol/storage': workspace:*
       '@testing-library/react': ^13.4.0
       '@types/jest': ^29.2.3
       '@types/react': ^18.0.26

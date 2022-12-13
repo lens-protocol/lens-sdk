@@ -1,3 +1,4 @@
+import { Deferred } from '@lens-protocol/shared-kernel';
 import { TypeOf, z } from 'zod';
 
 import {
@@ -54,7 +55,7 @@ describe(`Given a ${Storage.name} instance`, () => {
       expect(mockedStorageProvider.getItem).toHaveBeenCalledWith(key);
     });
 
-    it('should migrate data when migration strategy was provided', async () => {
+    it('should migrate data if a migration strategy was provided', async () => {
       const newSchema = z.object({
         userName: z.string(),
       });
@@ -94,7 +95,7 @@ describe(`Given a ${Storage.name} instance`, () => {
       expect(mockedStorageProvider.getItem).toHaveBeenCalledWith(key);
     });
 
-    it(`should throw ${NoMigrationPathError.name} when migration to newest version was not provided`, async () => {
+    it(`should throw ${NoMigrationPathError.name} if a migration to newest version was not provided`, async () => {
       const mockedStorageProvider = mockStorageProvider(JSON.stringify(storageItem));
 
       class TestStorageSchema extends BaseStorageSchema<typeof schema> {
@@ -109,7 +110,7 @@ describe(`Given a ${Storage.name} instance`, () => {
       await expect(() => storage.get()).rejects.toThrow(new NoMigrationPathError(key, 1, 2));
     });
 
-    it(`should throw ${SchemaMismatchError.name} when 'data' field is corrupted`, async () => {
+    it(`should throw ${SchemaMismatchError.name} if 'data' field is corrupted`, async () => {
       const mockedStorageProvider = mockStorageProvider(
         JSON.stringify({
           ...storageItem,
@@ -139,7 +140,7 @@ describe(`Given a ${Storage.name} instance`, () => {
       `);
     });
 
-    it(`should throw ${SchemaMismatchError.name} when 'metadata' field is corrupted`, async () => {
+    it(`should throw ${SchemaMismatchError.name} if 'metadata' field is corrupted`, async () => {
       const mockedStorageProvider = mockStorageProvider(
         JSON.stringify({
           ...storageItem,
@@ -263,6 +264,44 @@ describe(`Given a ${Storage.name} instance`, () => {
       await storage.reset();
 
       expect(mockedStorageProvider.removeItem).toHaveBeenCalledWith(key);
+    });
+  });
+
+  describe('when subscribing to updates', () => {
+    const oldStorageItem = {
+      data: { name: 'Pawel' },
+      metadata: {
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        version: 1,
+      },
+    };
+    const newStorageItem = {
+      data: { name: 'Cesare' },
+      metadata: {
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        version: 1,
+      },
+    };
+
+    it('should call the subscriber with new data and old data', async () => {
+      const oldValue = JSON.stringify(oldStorageItem);
+      const mockedStorageProvider = mockStorageProvider(oldValue);
+
+      const deferred = new Deferred<unknown>();
+      const storage = Storage.createForSchema(storageSchema, mockedStorageProvider);
+
+      storage.subscribe((newData, oldData) => deferred.resolve({ newData, oldData }));
+
+      const newValue = JSON.stringify(newStorageItem);
+      jest.mocked(mockedStorageProvider.subscribe).mock.calls[0][1](newValue, oldValue);
+
+      const result = await deferred.promise;
+      expect(result).toEqual({
+        newData: newStorageItem.data,
+        oldData: oldStorageItem.data,
+      });
     });
   });
 });
