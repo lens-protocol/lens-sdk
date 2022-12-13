@@ -20,7 +20,3 @@ export * from './ts-helpers/nonNullable';
 export * from './ts-helpers/types';
 export * from './ts-helpers/isInEnum';
 export { omitDeep } from './omitDeep';
-
-export function sharedKernel() {
-  return 'shared-kernel';
-}
