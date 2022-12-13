@@ -1,5 +1,8 @@
 import { useProfilesToFollow, ProfileFieldsFragment } from '@lens-protocol/react';
 
+import { GenericError } from '../error/GenericError';
+import { Loading } from '../loading/Loading';
+
 type ProfileListProps = {
   profiles: ProfileFieldsFragment[];
 };
@@ -7,7 +10,7 @@ type ProfileListProps = {
 function ProfileList({ profiles }: ProfileListProps) {
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      {profiles.map((profile) => (
+      {profiles.map((profile, i) => (
         <div key={profile.id}>
           <h2>{profile.name ?? `@${profile.handle}`}</h2>
           <p>{profile.bio}</p>
@@ -21,9 +24,9 @@ function ProfileList({ profiles }: ProfileListProps) {
 export function ProfilesToFollow() {
   const { data: profilesToFollow, error, loading } = useProfilesToFollow();
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
-  if (error || !profilesToFollow) return <div>Error: {error?.message ?? 'Unexpected error.'}</div>;
+  if (error || !profilesToFollow) return <GenericError error={error} />;
 
   return (
     <div>

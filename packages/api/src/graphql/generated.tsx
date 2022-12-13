@@ -3849,7 +3849,6 @@ export type ProfilesToFollowQuery = {
 
 export type GetProfileByHandleQueryVariables = Exact<{
   handle: Scalars['Handle'];
-  activeProfileId?: Maybe<Scalars['ProfileId']>;
 }>;
 
 export type GetProfileByHandleQuery = {
@@ -3858,7 +3857,6 @@ export type GetProfileByHandleQuery = {
 
 export type GetProfileByIdQueryVariables = Exact<{
   id: Scalars['ProfileId'];
-  activeProfileId?: Maybe<Scalars['ProfileId']>;
 }>;
 
 export type GetProfileByIdQuery = {
@@ -4033,7 +4031,7 @@ export type ProfilesToFollowQueryResult = Apollo.QueryResult<
   ProfilesToFollowQueryVariables
 >;
 export const GetProfileByHandleDocument = gql`
-  query GetProfileByHandle($handle: Handle!, $activeProfileId: ProfileId) {
+  query GetProfileByHandle($handle: Handle!) {
     result: profile(request: { handle: $handle }) {
       ...ProfileFields
     }
@@ -4054,7 +4052,6 @@ export const GetProfileByHandleDocument = gql`
  * const { data, loading, error } = useGetProfileByHandleQuery({
  *   variables: {
  *      handle: // value for 'handle'
- *      activeProfileId: // value for 'activeProfileId'
  *   },
  * });
  */
@@ -4088,7 +4085,7 @@ export type GetProfileByHandleQueryResult = Apollo.QueryResult<
   GetProfileByHandleQueryVariables
 >;
 export const GetProfileByIdDocument = gql`
-  query GetProfileById($id: ProfileId!, $activeProfileId: ProfileId) {
+  query GetProfileById($id: ProfileId!) {
     result: profile(request: { profileId: $id }) {
       ...ProfileFields
     }
@@ -4109,7 +4106,6 @@ export const GetProfileByIdDocument = gql`
  * const { data, loading, error } = useGetProfileByIdQuery({
  *   variables: {
  *      id: // value for 'id'
- *      activeProfileId: // value for 'activeProfileId'
  *   },
  * });
  */

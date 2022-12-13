@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
@@ -33,7 +34,9 @@ export function Header() {
           justifyContent: 'space-between',
         }}
       >
-        <span style={{ fontWeight: 'bold' }}>@lens-protocol/react - wagmi</span>
+        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <span style={{ fontWeight: 'bold' }}>@lens-protocol/react - wagmi</span>
+        </Link>
         {!address && <button onClick={() => connect()}>Connect Wallet</button>}
         {address && <button onClick={() => disconnect()}>{truncateAddress(address)}</button>}
       </div>

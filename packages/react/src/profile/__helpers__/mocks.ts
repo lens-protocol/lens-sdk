@@ -1,9 +1,9 @@
+import { faker } from '@faker-js/faker';
 import {
   MediaFieldsFragment,
   ProfileFieldsFragment,
   ProfileMediaFieldsFragment,
 } from '@lens-protocol/api';
-import { faker } from '@faker-js/faker';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
 
 function mockMedia(): MediaFieldsFragment {
@@ -31,9 +31,9 @@ export function mockProfileFieldsFragment(
   const twitter = faker.internet.userName(firstName, lastName);
 
   return {
-    id: '1',
+    id: faker.datatype.uuid(),
     name: `${firstName} ${lastName}`,
-    bio: 'i love lens',
+    bio: faker.lorem.sentence(),
     attributes: [
       {
         __typename: 'Attribute',

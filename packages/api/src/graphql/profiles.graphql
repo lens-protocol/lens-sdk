@@ -95,13 +95,13 @@ query ProfilesToFollow {
   }
 }
 
-query GetProfileByHandle($handle: Handle!, $activeProfileId: ProfileId) {
+query GetProfileByHandle($handle: Handle!) {
   result: profile(request: { handle: $handle }) {
     ...ProfileFields
   }
 }
 
-query GetProfileById($id: ProfileId!, $activeProfileId: ProfileId) {
+query GetProfileById($id: ProfileId!) {
   result: profile(request: { profileId: $id }) {
     ...ProfileFields
   }
