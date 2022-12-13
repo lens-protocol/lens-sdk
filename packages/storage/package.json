@@ -14,7 +14,18 @@
         "types": "./dist/cjs/index.d.ts",
         "default": "./dist/cjs/index.js"
       }
-    }
+    },
+    "./mocks": {
+      "import": {
+        "types": "./dist/esm/mocks.d.ts",
+        "default": "./dist/esm/mocks.js"
+      },
+      "require": {
+        "types": "./dist/cjs/mocks.d.ts",
+        "default": "./dist/cjs/mocks.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "types": "./dist/cjs/index.d.ts",
   "main": "./dist/cjs/index.js",

@@ -1,5 +1,2 @@
-export * from './lifecycle';
-export * from './profile';
-export * from './publications';
-export * from './transactions';
-export * from './wallets';
+export * from './types';
+export * from './utils';

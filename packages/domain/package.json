@@ -2,24 +2,48 @@
   "name": "@lens-protocol/domain",
   "version": "0.0.1",
   "description": "Critical Business Rules and Application-specific Business Rules",
-  "private": true,
   "type": "module",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/cjs/index.d.ts",
   "exports": {
-    ".": {
+    "./entities": {
       "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
+        "types": "./dist/esm/entities/index.d.ts",
+        "default": "./dist/esm/entities/index.js"
       },
       "require": {
-        "types": "./dist/cjs/index.d.ts",
-        "default": "./dist/cjs/index.js"
+        "types": "./dist/cjs/entities/index.d.ts",
+        "default": "./dist/cjs/entities/index.js"
       }
-    }
+    },
+    "./use-cases": {
+      "import": {
+        "types": "./dist/esm/use-cases/index.d.ts",
+        "default": "./dist/esm/use-cases/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/use-cases/index.d.ts",
+        "default": "./dist/cjs/use-cases/index.js"
+      }
+    },
+    "./mocks": {
+      "import": {
+        "types": "./dist/esm/mocks/index.d.ts",
+        "default": "./dist/esm/mocks/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/mocks/index.d.ts",
+        "default": "./dist/cjs/mocks/index.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
-  "types": "./dist/cjs/index.d.ts",
-  "main": "./dist/cjs/index.js",
+  "sideEffects": false,
   "files": [
-    "dist/**/*"
+    "dist",
+    "entities",
+    "use-cases",
+    "mocks"
   ],
   "scripts": {
     "build:cjs": "tsc -p ./tsconfig.cjs.json",

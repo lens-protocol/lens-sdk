@@ -14,12 +14,25 @@
         "types": "./dist/cjs/index.d.ts",
         "default": "./dist/cjs/index.js"
       }
-    }
+    },
+    "./mocks": {
+      "import": {
+        "types": "./dist/esm/mocks.d.ts",
+        "default": "./dist/esm/mocks.js"
+      },
+      "require": {
+        "types": "./dist/cjs/mocks.d.ts",
+        "default": "./dist/cjs/mocks.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "types": "./dist/cjs/index.d.ts",
   "main": "./dist/cjs/index.js",
+  "sideEffects": false,
   "files": [
-    "dist/**/*"
+    "dist",
+    "mocks"
   ],
   "scripts": {
     "build:cjs": "tsc -p ./tsconfig.cjs.json",
@@ -53,8 +66,8 @@
     "tslib": "^2.4.1",
     "typescript": "^4.9.3"
   },
-  "prettier": "@lens-protocol/prettier-config",
   "peerDependencies": {
     "tslib": "^2.4.1"
-  }
+  },
+  "prettier": "@lens-protocol/prettier-config"
 }
