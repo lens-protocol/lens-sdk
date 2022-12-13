@@ -7,6 +7,7 @@ export type { ProfileFieldsFragment };
 
 export function useProfilesToFollow(): LensResponse<ProfileFieldsFragment[]> {
   const { apolloClient } = useSharedDependencies();
+
   const response = useLensResponse(useProfilesToFollowQuery({ client: apolloClient }));
 
   return {

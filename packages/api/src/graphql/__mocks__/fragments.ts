@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker';
+import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
+
 import {
   MediaFieldsFragment,
   ProfileFieldsFragment,
   ProfileMediaFieldsFragment,
-} from '@lens-protocol/api';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
+} from '../generated';
 
 function mockMedia(): MediaFieldsFragment {
   return {

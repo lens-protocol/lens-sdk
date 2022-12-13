@@ -47,6 +47,7 @@ importers:
     specifiers:
       '@apollo/client': ^3.7.1
       '@babel/core': ^7.0.0
+      '@faker-js/faker': ^7.6.0
       '@graphql-codegen/cli': ^1.21.7
       '@graphql-codegen/fragment-matcher': ^3.1.0
       '@graphql-codegen/introspection': ^1.18.2
@@ -69,6 +70,7 @@ importers:
       '@apollo/client': 3.7.1_graphql@15.5.1
     devDependencies:
       '@babel/core': 7.20.5
+      '@faker-js/faker': 7.6.0
       '@graphql-codegen/cli': 1.21.8_ip2mfm7udawkijmyryr4rrfhem
       '@graphql-codegen/fragment-matcher': 3.3.1_graphql@15.5.1
       '@graphql-codegen/introspection': 1.18.2_graphql@15.5.1
@@ -159,7 +161,6 @@ importers:
   packages/react:
     specifiers:
       '@apollo/client': ^3.7.1
-      '@faker-js/faker': ^7.6.0
       '@lens-protocol/api': workspace:*
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
@@ -189,7 +190,6 @@ importers:
       graphql: 15.5.1
       react: 18.2.0
     devDependencies:
-      '@faker-js/faker': 7.6.0
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
