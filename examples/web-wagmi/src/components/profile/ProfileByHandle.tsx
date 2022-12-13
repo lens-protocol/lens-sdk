@@ -13,7 +13,6 @@ export function ProfileByHandle() {
   return (
     <div>
       <h1>Profile by Handle</h1>
-      <input type="text" />
       <pre>{JSON.stringify(profile, null, 2)}</pre>
     </div>
   );

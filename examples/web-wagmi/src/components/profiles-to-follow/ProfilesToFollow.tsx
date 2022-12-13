@@ -9,8 +9,8 @@ type ProfileListProps = {
 
 function ProfileList({ profiles }: ProfileListProps) {
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      {profiles.map((profile, i) => (
+    <div>
+      {profiles.map((profile) => (
         <div key={profile.id}>
           <h2>{profile.name ?? `@${profile.handle}`}</h2>
           <p>{profile.bio}</p>

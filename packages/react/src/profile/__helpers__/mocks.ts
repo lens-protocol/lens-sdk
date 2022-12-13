@@ -72,6 +72,7 @@ export function mockProfileFieldsFragment(
     dispatcher: null,
     followModule: null,
     isFollowedByMe: false,
+    isFollowing: false,
 
     ...overrides,
     __typename: 'Profile',

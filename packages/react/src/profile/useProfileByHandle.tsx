@@ -5,10 +5,12 @@ import { useSharedDependencies } from '../shared';
 
 type UseProfileByHandleArgs = {
   handle: string;
+  activeProfileId?: string;
 };
 
 export function useProfileByHandle({
   handle,
+  activeProfileId,
 }: UseProfileByHandleArgs): LensResponse<ProfileFieldsFragment> {
   const { apolloClient } = useSharedDependencies();
 
@@ -16,6 +18,7 @@ export function useProfileByHandle({
     useGetProfileByHandleQuery({
       variables: {
         handle,
+        activeProfileId,
       },
       client: apolloClient,
     }),

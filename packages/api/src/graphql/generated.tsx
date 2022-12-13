@@ -3817,7 +3817,7 @@ export type AttributeFragment = { __typename: 'Attribute' } & Pick<Attribute, 'k
 
 export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   Profile,
-  'id' | 'name' | 'bio' | 'handle' | 'ownedBy' | 'isFollowedByMe'
+  'id' | 'name' | 'bio' | 'handle' | 'ownedBy' | 'isFollowedByMe' | 'isFollowing'
 > & {
     attributes: Maybe<Array<{ __typename: 'Attribute' } & AttributeFragment>>;
     picture: Maybe<
@@ -3841,7 +3841,9 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
     dispatcher: Maybe<{ __typename: 'Dispatcher' } & Pick<Dispatcher, 'address' | 'canUseRelay'>>;
   };
 
-export type ProfilesToFollowQueryVariables = Exact<{ [key: string]: never }>;
+export type ProfilesToFollowQueryVariables = Exact<{
+  activeProfileId?: Maybe<Scalars['ProfileId']>;
+}>;
 
 export type ProfilesToFollowQuery = {
   recommendedProfiles: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
@@ -3849,6 +3851,7 @@ export type ProfilesToFollowQuery = {
 
 export type GetProfileByHandleQueryVariables = Exact<{
   handle: Scalars['Handle'];
+  activeProfileId?: Maybe<Scalars['ProfileId']>;
 }>;
 
 export type GetProfileByHandleQuery = {
@@ -3857,6 +3860,7 @@ export type GetProfileByHandleQuery = {
 
 export type GetProfileByIdQueryVariables = Exact<{
   id: Scalars['ProfileId'];
+  activeProfileId?: Maybe<Scalars['ProfileId']>;
 }>;
 
 export type GetProfileByIdQuery = {
@@ -3975,6 +3979,7 @@ export const ProfileFieldsFragmentDoc = gql`
       canUseRelay
     }
     isFollowedByMe(isFinalisedOnChain: true)
+    isFollowing(who: $activeProfileId)
   }
   ${AttributeFragmentDoc}
   ${ProfileMediaFieldsFragmentDoc}
@@ -3983,7 +3988,7 @@ export const ProfileFieldsFragmentDoc = gql`
   ${RevertFollowModuleSettingsFragmentDoc}
 `;
 export const ProfilesToFollowDocument = gql`
-  query ProfilesToFollow {
+  query ProfilesToFollow($activeProfileId: ProfileId) {
     recommendedProfiles {
       ...ProfileFields
     }
@@ -4003,6 +4008,7 @@ export const ProfilesToFollowDocument = gql`
  * @example
  * const { data, loading, error } = useProfilesToFollowQuery({
  *   variables: {
+ *      activeProfileId: // value for 'activeProfileId'
  *   },
  * });
  */
@@ -4031,7 +4037,7 @@ export type ProfilesToFollowQueryResult = Apollo.QueryResult<
   ProfilesToFollowQueryVariables
 >;
 export const GetProfileByHandleDocument = gql`
-  query GetProfileByHandle($handle: Handle!) {
+  query GetProfileByHandle($handle: Handle!, $activeProfileId: ProfileId) {
     result: profile(request: { handle: $handle }) {
       ...ProfileFields
     }
@@ -4052,6 +4058,7 @@ export const GetProfileByHandleDocument = gql`
  * const { data, loading, error } = useGetProfileByHandleQuery({
  *   variables: {
  *      handle: // value for 'handle'
+ *      activeProfileId: // value for 'activeProfileId'
  *   },
  * });
  */
@@ -4085,7 +4092,7 @@ export type GetProfileByHandleQueryResult = Apollo.QueryResult<
   GetProfileByHandleQueryVariables
 >;
 export const GetProfileByIdDocument = gql`
-  query GetProfileById($id: ProfileId!) {
+  query GetProfileById($id: ProfileId!, $activeProfileId: ProfileId) {
     result: profile(request: { profileId: $id }) {
       ...ProfileFields
     }
@@ -4106,6 +4113,7 @@ export const GetProfileByIdDocument = gql`
  * const { data, loading, error } = useGetProfileByIdQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      activeProfileId: // value for 'activeProfileId'
  *   },
  * });
  */

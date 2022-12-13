@@ -86,22 +86,22 @@ fragment ProfileFields on Profile {
   }
 
   isFollowedByMe(isFinalisedOnChain: true)
-  # isFollowing(who: $activeProfileId) //TODO: active profile id for read queries?
+  isFollowing(who: $activeProfileId)
 }
 
-query ProfilesToFollow {
+query ProfilesToFollow($activeProfileId: ProfileId) {
   recommendedProfiles {
     ...ProfileFields
   }
 }
 
-query GetProfileByHandle($handle: Handle!) {
+query GetProfileByHandle($handle: Handle!, $activeProfileId: ProfileId) {
   result: profile(request: { handle: $handle }) {
     ...ProfileFields
   }
 }
 
-query GetProfileById($id: ProfileId!) {
+query GetProfileById($id: ProfileId!, $activeProfileId: ProfileId) {
   result: profile(request: { profileId: $id }) {
     ...ProfileFields
   }
