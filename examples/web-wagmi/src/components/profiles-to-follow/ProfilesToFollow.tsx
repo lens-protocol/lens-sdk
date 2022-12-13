@@ -19,16 +19,16 @@ function ProfileList({ profiles }: ProfileListProps) {
 }
 
 export function ProfilesToFollow() {
-  const { data, error, loading } = useProfilesToFollow();
+  const { data: profilesToFollow, error, loading } = useProfilesToFollow();
 
   if (loading) return <div>Loading...</div>;
 
-  if (error || !data) return <div>Error: {error?.message ?? 'Unexpected error.'}</div>;
+  if (error || !profilesToFollow) return <div>Error: {error?.message ?? 'Unexpected error.'}</div>;
 
   return (
     <div>
       <h1>Recommend Followers</h1>
-      <ProfileList profiles={data} />
+      <ProfileList profiles={profilesToFollow} />
     </div>
   );
 }
