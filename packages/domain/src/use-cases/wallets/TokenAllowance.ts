@@ -10,8 +10,8 @@ import {
   PendingSigningRequestError,
   TransactionRequestModel,
 } from '../../entities';
-import { TransactionQueue } from '../transactions/TransactionQueue';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
+import { TransactionQueue } from '../transactions/TransactionQueue';
 import { ActiveWallet } from './ActiveWallet';
 
 export enum TokenAllowanceLimit {

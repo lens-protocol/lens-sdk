@@ -1,14 +1,7 @@
-import { mock } from 'jest-mock-extended';
 import { success } from '@lens-protocol/shared-kernel';
+import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import {
-  MockedMetaTransaction,
-  MockedNativeTransaction,
-  mockNonce,
-  mockSignedProtocolCall,
-  mockWallet,
-} from '../../../entities/__helpers__/mocks';
 import {
   Wallet,
   MetaTransaction,
@@ -17,24 +10,31 @@ import {
   TransactionRequestModel,
 } from '../../../entities';
 import {
+  MockedMetaTransaction,
+  MockedNativeTransaction,
+  mockNonce,
+  mockSignedProtocolCall,
+  mockWallet,
+} from '../../../entities/__helpers__/mocks';
+import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
+import {
+  DelegableProtocolCallUseCase,
+  IProtocolCallGateway,
+  WithDelegateFlag,
+} from '../DelegableProtocolCallUseCase';
+import {
+  IProtocolCallPresenter,
+  IMetaTransactionNonceGateway,
+  IProtocolCallRelayer,
+} from '../ProtocolCallUseCase';
+import { TransactionQueue } from '../TransactionQueue';
+import {
   mockIMetaTransactionNonceGateway,
   mockIProtocolCallRelayer,
   mockIProtocolCallTransactionGateway,
   mockTransactionQueue,
   mockTransactionRequestModelWithDelegateFlag,
 } from '../__helpers__/mocks';
-import { TransactionQueue } from '../TransactionQueue';
-import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
-import {
-  IProtocolCallPresenter,
-  IMetaTransactionNonceGateway,
-  IProtocolCallRelayer,
-} from '../ProtocolCallUseCase';
-import {
-  DelegableProtocolCallUseCase,
-  IProtocolCallGateway,
-  WithDelegateFlag,
-} from '../DelegableProtocolCallUseCase';
 
 function setupDelegableProtocolCallUseCase<T extends TransactionRequestModel>({
   metaTransactionNonceGateway = mockIMetaTransactionNonceGateway(),

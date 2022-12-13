@@ -1,6 +1,6 @@
+import { InvariantError } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
-import { InvariantError } from '@lens-protocol/shared-kernel';
 
 import { mockProfile, mockWallet } from '../../../entities/__helpers__/mocks';
 import { IProfileGateway, ActiveProfile, IActiveProfileGateway } from '../ActiveProfile';

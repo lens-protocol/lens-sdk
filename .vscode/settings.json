@@ -1,0 +1,12 @@
+{
+  "eslint.workingDirectories": [
+    "examples/web-wagmi",
+    "packages/api",
+    "packages/domain",
+    "packages/eslint-config",
+    "packages/prettier-config",
+    "packages/react",
+    "packages/shared-kernel",
+    "packages/storage"
+  ]
+}

@@ -1,12 +1,24 @@
+import {
+  mockDaiAmount,
+  mockEthereumAddress,
+  Amount,
+  Erc20,
+  EthereumAddress,
+  Result,
+} from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
-import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel';
-import { Amount, Erc20, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
 
-import { mockWallet } from '../../../entities/__helpers__/mocks';
 import { Wallet, TransactionKind } from '../../../entities';
-import { WalletData } from '../IActiveWalletPresenter';
+import { mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveWallet } from '../ActiveWallet';
+import { WalletData } from '../IActiveWalletPresenter';
+import {
+  IApproveTransactionGateway,
+  TokenAllowanceRequest,
+  TokenAllowanceLimit,
+  UnsignedTokenAllowanceTransaction,
+} from '../TokenAllowance';
 import {
   IBalanceGateway,
   ITokenGateway,
@@ -14,12 +26,6 @@ import {
   TokenAvailabilityError,
   TokenAvailabilityRequest,
 } from '../TokenAvailability';
-import {
-  IApproveTransactionGateway,
-  TokenAllowanceRequest,
-  TokenAllowanceLimit,
-  UnsignedTokenAllowanceTransaction,
-} from '../TokenAllowance';
 
 export function mockWalletData(override: Partial<WalletData> = {}): WalletData {
   // Currently leverages structural typing matching the type of WalletData

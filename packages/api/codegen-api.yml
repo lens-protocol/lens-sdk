@@ -45,8 +45,8 @@ generates:
     documents:
       - src/graphql/*.graphql
     plugins:
-      - "typescript"
-      - "typescript-operations"
-      - "typescript-react-apollo"
-      - "typescript-apollo-client-helpers"
-      - "fragment-matcher"
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+      - 'typescript-apollo-client-helpers'
+      - 'fragment-matcher'

@@ -1,12 +1,7 @@
 import { failure, success } from '@lens-protocol/shared-kernel';
-import { when } from 'jest-when';
 import { mock } from 'jest-mock-extended';
+import { when } from 'jest-when';
 
-import {
-  mockNftOwnershipChallenge,
-  mockSignature,
-  mockWallet,
-} from '../../../entities/__helpers__/mocks';
 import {
   PendingSigningRequestError,
   UserRejectedError,
@@ -14,16 +9,21 @@ import {
   WalletConnectionError,
   WalletConnectionErrorReason,
 } from '../../../entities';
-import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
 import {
-  mockINftOwnershipChallengeGateway,
-  mockProveNftOwnershipRequest,
-} from '../__helpers__/mocks';
+  mockNftOwnershipChallenge,
+  mockSignature,
+  mockWallet,
+} from '../../../entities/__helpers__/mocks';
+import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
 import {
   INftOwnershipChallengeGateway,
   IProveNftOwnershipPresenter,
   ProveNftOwnership,
 } from '../ProveNftOwnership';
+import {
+  mockINftOwnershipChallengeGateway,
+  mockProveNftOwnershipRequest,
+} from '../__helpers__/mocks';
 
 function setupProveNftOwnership({
   gateway,

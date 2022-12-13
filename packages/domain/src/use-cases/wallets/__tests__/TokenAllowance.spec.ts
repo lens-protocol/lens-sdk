@@ -3,11 +3,6 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import {
-  MockedNativeTransaction,
-  mockUnsignedTransaction,
-  mockWallet,
-} from '../../../entities/__helpers__/mocks';
-import {
   NativeTransaction,
   UnsignedTransaction,
   InsufficientGasError,
@@ -17,6 +12,11 @@ import {
   UserRejectedError,
   PendingSigningRequestError,
 } from '../../../entities';
+import {
+  MockedNativeTransaction,
+  mockUnsignedTransaction,
+  mockWallet,
+} from '../../../entities/__helpers__/mocks';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
 import { mockTransactionQueue } from '../../transactions/__helpers__/mocks';
 import {

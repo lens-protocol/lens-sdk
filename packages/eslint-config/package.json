@@ -1,8 +1,7 @@
 {
   "name": "@lens-protocol/eslint-config",
   "private": true,
-  "type": "module",
-  "exports": "./index.js",
+  "main": "./index.cjs",
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",

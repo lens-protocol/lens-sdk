@@ -1,6 +1,7 @@
-import { ApolloClient } from "@apollo/client";
-import { createApolloCache } from "./createApolloCache";
-import generatedIntrospection from "../graphql/generated";
+import { ApolloClient } from '@apollo/client';
+
+import generatedIntrospection from '../graphql/generated';
+import { createApolloCache } from './createApolloCache';
 
 type ApolloClientConfig = {
   backendURL: string;

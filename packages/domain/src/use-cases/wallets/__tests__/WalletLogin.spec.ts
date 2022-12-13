@@ -1,21 +1,21 @@
+import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
-import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 
-import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import {
   WalletConnectionError,
   WalletConnectionErrorReason,
   UserRejectedError,
 } from '../../../entities';
+import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveProfile } from '../../profile/ActiveProfile';
+import { IActiveWalletPresenter } from '../IActiveWalletPresenter';
 import {
   WalletLogin,
   IAuthenticationGateway,
   IConnectionErrorPresenter,
   IExternalWalletGateway,
 } from '../WalletLogin';
-import { IActiveWalletPresenter } from '../IActiveWalletPresenter';
 
 const wallet = mockWallet();
 
