@@ -36,7 +36,11 @@ function mockStorageRoundTrip(data: unknown): unknown {
   return JSON.parse(JSON.stringify(data));
 }
 
-export function mockStorage<T>(initial: T | null = null): IStorage<T> {
+export interface IMockedStorage<T> extends IStorage<T> {
+  simulateUpdate(newData: T | null, oldData: T | null): void;
+}
+
+export function mockStorage<T>(initial: T | null = null): IMockedStorage<T> {
   let internalStorage: unknown | null = mockStorageRoundTrip(initial);
 
   return {
@@ -55,5 +59,11 @@ export function mockStorage<T>(initial: T | null = null): IStorage<T> {
         unsubscribe() {},
       };
     }),
+
+    simulateUpdate(newData: T | null, oldData: T | null): void {
+      jest
+        .mocked(this.subscribe)
+        .mock.calls.forEach(([subscriber]) => subscriber(newData, oldData));
+    },
   };
 }

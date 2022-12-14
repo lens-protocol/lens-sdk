@@ -19,5 +19,24 @@ module.exports = {
       'error',
       { props: 'never', children: 'never', propElementValues: 'always' },
     ],
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          {
+            name: 'lodash',
+            message: 'Please use lodash submodules imports.',
+          },
+          {
+            name: 'lodash/fp',
+            message: 'Please use lodash submodules imports.',
+          },
+          {
+            name: 'eth-rpc-errors',
+            message: 'Please use src/wallet/adapters/errors.ts (and generalize if appropriate)',
+          },
+        ],
+      },
+    ],
   },
 };
