@@ -26,14 +26,24 @@
         "default": "./dist/cjs/use-cases/index.js"
       }
     },
-    "./mocks": {
+    "./use-cases/*": {
       "import": {
-        "types": "./dist/esm/mocks/index.d.ts",
-        "default": "./dist/esm/mocks/index.js"
+        "types": "./dist/esm/use-cases/*/index.d.ts",
+        "default": "./dist/esm/use-cases/*/index.js"
       },
       "require": {
-        "types": "./dist/cjs/mocks/index.d.ts",
-        "default": "./dist/cjs/mocks/index.js"
+        "types": "./dist/cjs/use-cases/*/index.d.ts",
+        "default": "./dist/cjs/use-cases/*/index.js"
+      }
+    },
+    "./mocks": {
+      "import": {
+        "types": "./dist/esm/mocks.d.ts",
+        "default": "./dist/esm/mocks.js"
+      },
+      "require": {
+        "types": "./dist/cjs/mocks.d.ts",
+        "default": "./dist/cjs/mocks.js"
       }
     },
     "./package.json": "./package.json"
