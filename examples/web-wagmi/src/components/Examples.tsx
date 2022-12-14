@@ -2,6 +2,10 @@ import { Link } from 'react-router-dom';
 
 const examples = [
   {
+    label: 'Feed',
+    path: '/feed',
+  },
+  {
     label: 'Profiles to follow',
     path: '/profiles-to-follow',
   },

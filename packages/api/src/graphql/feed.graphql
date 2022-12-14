@@ -1,0 +1,34 @@
+fragment FeedItem on FeedItem {
+  root {
+    ... on Post {
+      ...Post
+    }
+
+    ... on Comment {
+      ...Comment
+    }
+  }
+  comments {
+    ...Comment
+  }
+}
+
+query Feed(
+  $profileId: ProfileId!
+  $observerId: ProfileId
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $sources: [Sources!]
+) {
+  result: feed(
+    request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
+  ) {
+    items {
+      ...FeedItem
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

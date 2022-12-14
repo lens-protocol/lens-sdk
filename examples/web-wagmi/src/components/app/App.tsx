@@ -1,10 +1,11 @@
-import { LensConfig, LensProvider, staging } from '@lens-protocol/react';
+import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
 import { localStorage } from '@lens-protocol/react/web';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Examples } from '../Examples';
+import { Feed } from '../feed/Feed';
 import { BackButton } from '../header/BackButton';
 import { Header } from '../header/Header';
 import { ProfileByHandle } from '../profile/ProfileByHandle';
@@ -23,6 +24,7 @@ const lensConfig: LensConfig = {
   provider: client.provider,
   environment: staging,
   storage: localStorage(),
+  sources: [sources.lenster, sources.orb, 'any-other-app-id'],
 };
 
 export function App() {
@@ -35,6 +37,7 @@ export function App() {
             <BackButton />
             <Routes>
               <Route path="/" element={<Examples />} />
+              <Route path="/feed" element={<Feed />} />
               <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
               <Route path="/profile-by-id" element={<ProfileById />} />
               <Route path="/profile-by-handle" element={<ProfileByHandle />} />

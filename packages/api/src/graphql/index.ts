@@ -1,1 +1,2 @@
-export { useProfilesToFollowQuery, ProfileFieldsFragment } from './generated';
+export * from './generated';
+export * from './utils';
