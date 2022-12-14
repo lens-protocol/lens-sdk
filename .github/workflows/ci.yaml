@@ -19,7 +19,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2.2.4
 
-      - run: pnpm install
+      - run: pnpm install --loglevel=debug
       - run: pnpm build
       - run: pnpm lint
       - run: pnpm test
