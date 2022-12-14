@@ -4,17 +4,20 @@ import { useLensResponse } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type UseFeedArgs = {
-  activeProfileId: string;
+  profileId: string;
+  observerId?: string;
+  limit?: number;
 };
 
-export function useFeed({ activeProfileId }: UseFeedArgs) {
+export function useFeed({ profileId, observerId, limit }: UseFeedArgs) {
   const { apolloClient, sources } = useSharedDependencies();
 
   const response = useLensResponse(
     useFeedQuery({
       variables: {
-        activeProfileId,
-        limit: 10,
+        profileId,
+        observerId,
+        limit: limit ?? 10,
         sources,
       },
       client: apolloClient,

@@ -30,7 +30,7 @@ export function Feed() {
     error,
     loading,
   } = useFeed({
-    activeProfileId: '0x3a2a',
+    profileId: '0x3a2a',
   });
 
   if (loading) return <Loading />;

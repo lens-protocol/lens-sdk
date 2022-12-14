@@ -86,7 +86,7 @@ fragment ProfileFields on Profile {
   }
 
   isFollowedByMe(isFinalisedOnChain: true)
-  isFollowing(who: $activeProfileId)
+  isFollowing(who: $observerId)
 
   isOptimisticFollowedByMe @client
   location @client
@@ -95,19 +95,19 @@ fragment ProfileFields on Profile {
   ownedByMe @client
 }
 
-query ProfilesToFollow($activeProfileId: ProfileId) {
+query ProfilesToFollow($observerId: ProfileId) {
   recommendedProfiles {
     ...ProfileFields
   }
 }
 
-query GetProfileByHandle($handle: Handle!, $activeProfileId: ProfileId) {
+query GetProfileByHandle($handle: Handle!, $observerId: ProfileId) {
   result: profile(request: { handle: $handle }) {
     ...ProfileFields
   }
 }
 
-query GetProfileById($id: ProfileId!, $activeProfileId: ProfileId) {
+query GetProfileById($id: ProfileId!, $observerId: ProfileId) {
   result: profile(request: { profileId: $id }) {
     ...ProfileFields
   }

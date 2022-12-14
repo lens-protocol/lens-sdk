@@ -14,13 +14,14 @@ fragment FeedItem on FeedItem {
 }
 
 query Feed(
-  $activeProfileId: ProfileId!
+  $profileId: ProfileId!
+  $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!]
 ) {
   result: feed(
-    request: { profileId: $activeProfileId, limit: $limit, cursor: $cursor, sources: $sources }
+    request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
   ) {
     items {
       ...FeedItem

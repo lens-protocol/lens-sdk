@@ -152,12 +152,12 @@ fragment MirrorBase on Mirror {
   createdAt
   hidden
   isGated
-  reaction(request: { profileId: $activeProfileId })
+  reaction(request: { profileId: $observerId })
   hasCollectedByMe(isFinalisedOnChain: true)
-  canComment(profileId: $activeProfileId) {
+  canComment(profileId: $observerId) {
     result
   }
-  canMirror(profileId: $activeProfileId) {
+  canMirror(profileId: $observerId) {
     result
   }
 
@@ -203,15 +203,15 @@ fragment CommentBase on Comment {
   createdAt
   hidden
   isGated
-  reaction(request: { profileId: $activeProfileId })
+  reaction(request: { profileId: $observerId })
   hasCollectedByMe(isFinalisedOnChain: true)
-  canComment(profileId: $activeProfileId) {
+  canComment(profileId: $observerId) {
     result
   }
-  canMirror(profileId: $activeProfileId) {
+  canMirror(profileId: $observerId) {
     result
   }
-  mirrors(by: $activeProfileId)
+  mirrors(by: $observerId)
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
@@ -275,15 +275,15 @@ fragment Post on Post {
   createdAt
   hidden
   isGated
-  reaction(request: { profileId: $activeProfileId })
+  reaction(request: { profileId: $observerId })
   hasCollectedByMe(isFinalisedOnChain: true)
-  canComment(profileId: $activeProfileId) {
+  canComment(profileId: $observerId) {
     result
   }
-  canMirror(profileId: $activeProfileId) {
+  canMirror(profileId: $observerId) {
     result
   }
-  mirrors(by: $activeProfileId)
+  mirrors(by: $observerId)
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client

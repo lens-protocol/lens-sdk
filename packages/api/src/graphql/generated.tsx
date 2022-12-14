@@ -4094,7 +4094,8 @@ export type FeedItemFragment = { __typename: 'FeedItem' } & {
 };
 
 export type FeedQueryVariables = Exact<{
-  activeProfileId: Scalars['ProfileId'];
+  profileId: Scalars['ProfileId'];
+  observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
@@ -4177,7 +4178,7 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   };
 
 export type ProfilesToFollowQueryVariables = Exact<{
-  activeProfileId?: Maybe<Scalars['ProfileId']>;
+  observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
 export type ProfilesToFollowQuery = {
@@ -4186,7 +4187,7 @@ export type ProfilesToFollowQuery = {
 
 export type GetProfileByHandleQueryVariables = Exact<{
   handle: Scalars['Handle'];
-  activeProfileId?: Maybe<Scalars['ProfileId']>;
+  observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
 export type GetProfileByHandleQuery = {
@@ -4195,7 +4196,7 @@ export type GetProfileByHandleQuery = {
 
 export type GetProfileByIdQueryVariables = Exact<{
   id: Scalars['ProfileId'];
-  activeProfileId?: Maybe<Scalars['ProfileId']>;
+  observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
 export type GetProfileByIdQuery = {
@@ -4344,7 +4345,7 @@ export const ProfileFieldsFragmentDoc = gql`
       canUseRelay
     }
     isFollowedByMe(isFinalisedOnChain: true)
-    isFollowing(who: $activeProfileId)
+    isFollowing(who: $observerId)
     isOptimisticFollowedByMe @client
     location @client
     twitter @client
@@ -4478,12 +4479,12 @@ export const MirrorBaseFragmentDoc = gql`
     createdAt
     hidden
     isGated
-    reaction(request: { profileId: $activeProfileId })
+    reaction(request: { profileId: $observerId })
     hasCollectedByMe(isFinalisedOnChain: true)
-    canComment(profileId: $activeProfileId) {
+    canComment(profileId: $observerId) {
       result
     }
-    canMirror(profileId: $activeProfileId) {
+    canMirror(profileId: $observerId) {
       result
     }
     hasOptimisticCollectedByMe @client
@@ -4530,15 +4531,15 @@ export const PostFragmentDoc = gql`
     createdAt
     hidden
     isGated
-    reaction(request: { profileId: $activeProfileId })
+    reaction(request: { profileId: $observerId })
     hasCollectedByMe(isFinalisedOnChain: true)
-    canComment(profileId: $activeProfileId) {
+    canComment(profileId: $observerId) {
       result
     }
-    canMirror(profileId: $activeProfileId) {
+    canMirror(profileId: $observerId) {
       result
     }
-    mirrors(by: $activeProfileId)
+    mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     ownedByMe @client
@@ -4575,15 +4576,15 @@ export const CommentBaseFragmentDoc = gql`
     createdAt
     hidden
     isGated
-    reaction(request: { profileId: $activeProfileId })
+    reaction(request: { profileId: $observerId })
     hasCollectedByMe(isFinalisedOnChain: true)
-    canComment(profileId: $activeProfileId) {
+    canComment(profileId: $observerId) {
       result
     }
-    canMirror(profileId: $activeProfileId) {
+    canMirror(profileId: $observerId) {
       result
     }
-    mirrors(by: $activeProfileId)
+    mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     ownedByMe @client
@@ -4665,13 +4666,14 @@ export const FeedItemFragmentDoc = gql`
 `;
 export const FeedDocument = gql`
   query Feed(
-    $activeProfileId: ProfileId!
+    $profileId: ProfileId!
+    $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]
   ) {
     result: feed(
-      request: { profileId: $activeProfileId, limit: $limit, cursor: $cursor, sources: $sources }
+      request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
     ) {
       items {
         ...FeedItem
@@ -4697,7 +4699,8 @@ export const FeedDocument = gql`
  * @example
  * const { data, loading, error } = useFeedQuery({
  *   variables: {
- *      activeProfileId: // value for 'activeProfileId'
+ *      profileId: // value for 'profileId'
+ *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
@@ -4718,7 +4721,7 @@ export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
 export type FeedQueryResult = Apollo.QueryResult<FeedQuery, FeedQueryVariables>;
 export const ProfilesToFollowDocument = gql`
-  query ProfilesToFollow($activeProfileId: ProfileId) {
+  query ProfilesToFollow($observerId: ProfileId) {
     recommendedProfiles {
       ...ProfileFields
     }
@@ -4738,7 +4741,7 @@ export const ProfilesToFollowDocument = gql`
  * @example
  * const { data, loading, error } = useProfilesToFollowQuery({
  *   variables: {
- *      activeProfileId: // value for 'activeProfileId'
+ *      observerId: // value for 'observerId'
  *   },
  * });
  */
@@ -4767,7 +4770,7 @@ export type ProfilesToFollowQueryResult = Apollo.QueryResult<
   ProfilesToFollowQueryVariables
 >;
 export const GetProfileByHandleDocument = gql`
-  query GetProfileByHandle($handle: Handle!, $activeProfileId: ProfileId) {
+  query GetProfileByHandle($handle: Handle!, $observerId: ProfileId) {
     result: profile(request: { handle: $handle }) {
       ...ProfileFields
     }
@@ -4788,7 +4791,7 @@ export const GetProfileByHandleDocument = gql`
  * const { data, loading, error } = useGetProfileByHandleQuery({
  *   variables: {
  *      handle: // value for 'handle'
- *      activeProfileId: // value for 'activeProfileId'
+ *      observerId: // value for 'observerId'
  *   },
  * });
  */
@@ -4822,7 +4825,7 @@ export type GetProfileByHandleQueryResult = Apollo.QueryResult<
   GetProfileByHandleQueryVariables
 >;
 export const GetProfileByIdDocument = gql`
-  query GetProfileById($id: ProfileId!, $activeProfileId: ProfileId) {
+  query GetProfileById($id: ProfileId!, $observerId: ProfileId) {
     result: profile(request: { profileId: $id }) {
       ...ProfileFields
     }
@@ -4843,7 +4846,7 @@ export const GetProfileByIdDocument = gql`
  * const { data, loading, error } = useGetProfileByIdQuery({
  *   variables: {
  *      id: // value for 'id'
- *      activeProfileId: // value for 'activeProfileId'
+ *      observerId: // value for 'observerId'
  *   },
  * });
  */
