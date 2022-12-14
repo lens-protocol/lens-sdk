@@ -1,5 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { TransactionError, TransactionRequestModel } from '@lens-protocol/domain/entities';
+import {
+  ProxyActionStatus,
+  TransactionError,
+  TransactionRequestModel,
+} from '@lens-protocol/domain/entities';
 import {
   mockNonce,
   mockSignedProtocolCall,
@@ -22,6 +26,7 @@ import {
   DeferredNativeTransactionInit,
   MetaTransactionData,
   NativeTransactionData,
+  ProxyTransactionData,
   RelayReceipt,
 } from '../ITransactionFactory';
 import { TypedData } from '../TypedData';
@@ -108,6 +113,33 @@ export function mockNativeTransactionData<T extends TransactionRequestModel>({
 }: Partial<NativeTransactionData<T>> = {}): NativeTransactionData<T> {
   return {
     chainType: ChainType.ETHEREUM,
+    id: faker.datatype.uuid(),
+    request,
+    txHash: mockTransactionHash(),
+    ...others,
+  };
+}
+
+export function mockNativeTransactionDataWithIndexingId<
+  T extends TransactionRequestModel,
+>(): Required<NativeTransactionData<T>> {
+  return {
+    chainType: ChainType.ETHEREUM,
+    id: faker.datatype.uuid(),
+    indexingId: faker.datatype.uuid(),
+    request: mockTransactionRequestModel() as T,
+    txHash: mockTransactionHash(),
+  };
+}
+
+export function mockProxyTransactionData<T extends TransactionRequestModel>({
+  request = mockTransactionRequestModel() as T,
+  ...others
+}: Partial<ProxyTransactionData<T>> = {}): ProxyTransactionData<T> {
+  return {
+    status: ProxyActionStatus.MINTING,
+    chainType: ChainType.ETHEREUM,
+    proxyId: faker.datatype.uuid(),
     id: faker.datatype.uuid(),
     request,
     txHash: mockTransactionHash(),
