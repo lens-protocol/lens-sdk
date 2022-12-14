@@ -1,4 +1,10 @@
-import { IStorage, IStorageProvider } from '../IStorage';
+import {
+  IStorage,
+  IStorageProvider,
+  StorageProviderSubscriber,
+  StorageSubscriber,
+  StorageSubscription,
+} from '../IStorage';
 
 export function mockStorageProvider(initial: string | null = null): IStorageProvider {
   let internalStorage: string | null = initial;
@@ -12,6 +18,12 @@ export function mockStorageProvider(initial: string | null = null): IStorageProv
 
     removeItem: jest.fn<Promise<void>, [string]>(async () => {
       internalStorage = null;
+    }),
+
+    subscribe: jest.fn<StorageSubscription, [string, StorageProviderSubscriber]>(() => {
+      return {
+        unsubscribe() {},
+      };
     }),
   };
 }
@@ -36,6 +48,12 @@ export function mockStorage<T>(initial: T | null = null): IStorage<T> {
 
     reset: jest.fn<Promise<void>, []>(async () => {
       internalStorage = null;
+    }),
+
+    subscribe: jest.fn<StorageSubscription, [StorageSubscriber<T>]>(() => {
+      return {
+        unsubscribe() {},
+      };
     }),
   };
 }

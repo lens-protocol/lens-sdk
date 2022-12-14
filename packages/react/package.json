@@ -13,12 +13,24 @@
         "types": "./dist/cjs/index.d.ts",
         "default": "./dist/cjs/index.js"
       }
-    }
+    },
+    "./web": {
+      "import": {
+        "types": "./dist/esm/web.d.ts",
+        "default": "./dist/esm/web.js"
+      },
+      "require": {
+        "types": "./dist/cjs/web.d.ts",
+        "default": "./dist/cjs/web.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "types": "./dist/cjs/index.d.ts",
   "main": "./dist/cjs/index.js",
   "files": [
-    "dist/**/*"
+    "dist",
+    "web"
   ],
   "scripts": {
     "build:cjs": "tsc -p ./tsconfig.cjs.json",
@@ -38,7 +50,7 @@
     "@apollo/client": "^3.7.1",
     "@lens-protocol/api": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
-    "@lens-protocol/storage": "workspace:^0.0.1",
+    "@lens-protocol/storage": "workspace:*",
     "graphql": "15.5.1",
     "react": "^18.2.0"
   },

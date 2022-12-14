@@ -1,4 +1,5 @@
 import { LensConfig, LensProvider, staging } from '@lens-protocol/react';
+import { localStorage } from '@lens-protocol/react/web';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
@@ -21,7 +22,7 @@ const client = createClient({
 const lensConfig: LensConfig = {
   provider: client.provider,
   environment: staging,
-  storage: window.localStorage,
+  storage: localStorage(),
 };
 
 export function App() {

@@ -1,5 +1,5 @@
 import { IStorageItem, IStorageSchema, StorageMetadata } from './BaseStorageSchema';
-import { IStorage, IStorageProvider } from './IStorage';
+import { IStorage, IStorageProvider, StorageSubscriber, StorageSubscription } from './IStorage';
 
 /**
  * An implementation of `IStorage` with support for migration strategies
@@ -34,6 +34,14 @@ export class Storage<Data> implements IStorage<Data> {
     const json = JSON.stringify(storageItem);
 
     await this.provider.setItem(this.getStorageKey(), json);
+  }
+
+  subscribe(subscriber: StorageSubscriber<Data>): StorageSubscription {
+    return this.provider.subscribe(this.getStorageKey(), async (newValue, oldValue) => {
+      const newItem = newValue ? await this.parse(newValue) : { data: null };
+      const oldItem = oldValue ? await this.parse(oldValue) : { data: null };
+      subscriber(newItem.data, oldItem.data);
+    });
   }
 
   private async getWithMetadata(): Promise<IStorageItem<Data> | null> {
