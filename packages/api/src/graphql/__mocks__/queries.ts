@@ -1,4 +1,5 @@
 import { MockedResponse } from '@apollo/client/testing';
+import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   ProfileFieldsFragment,
@@ -8,6 +9,8 @@ import {
   GetProfileQuery,
   GetProfileDocument,
   SingleProfileQueryRequest,
+  GetAllProfilesByOwnerAddressQuery,
+  GetAllProfilesByOwnerAddressDocument,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -26,7 +29,7 @@ export function mockProfilesToFollowQueryMockedResponse(args: {
   };
 }
 
-function mockGetProfileQuery(profile: Maybe<ProfileFieldsFragment>): GetProfileQuery {
+export function mockGetProfileQuery(profile: Maybe<ProfileFieldsFragment>): GetProfileQuery {
   return {
     result: profile,
   };
@@ -51,6 +54,37 @@ export function mockGetProfileQueryMockedResponse({
     },
     result: {
       data: mockGetProfileQuery(profile),
+    },
+  };
+}
+
+function mockGetAllProfilesByOwnerAddressQuery(
+  profiles: ProfileFieldsFragment[],
+): GetAllProfilesByOwnerAddressQuery {
+  return {
+    profilesByOwner: {
+      __typename: 'PaginatedProfileResult',
+      items: profiles,
+    },
+  };
+}
+
+export function mockGetAllProfilesByOwnerAddressQueryMockedResponse({
+  address,
+  profiles = [mockProfileFieldsFragment()],
+}: {
+  address: EthereumAddress;
+  profiles?: ProfileFieldsFragment[];
+}): MockedResponse<GetAllProfilesByOwnerAddressQuery> {
+  return {
+    request: {
+      query: GetAllProfilesByOwnerAddressDocument,
+      variables: {
+        address,
+      },
+    },
+    result: {
+      data: mockGetAllProfilesByOwnerAddressQuery(profiles),
     },
   };
 }

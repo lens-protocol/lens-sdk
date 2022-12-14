@@ -1,6 +1,6 @@
 import { assertNever } from '@lens-protocol/shared-kernel';
 
-import { IActiveProfilePresenter, IActiveProfileGateway } from '../profile';
+import { IActiveProfilePresenter } from '../profile';
 import { ActiveWallet } from './ActiveWallet';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 import { ILoginPresenter } from './ILoginPresenter';
@@ -16,6 +16,10 @@ export interface IResettableWalletGateway {
 export enum LogoutReason {
   TOKEN_EXPIRED = 'token_expired',
   USER_INITIATED = 'user_initiated',
+}
+
+export interface IActiveProfileGateway {
+  reset(): Promise<void>;
 }
 
 export class WalletLogout {

@@ -2,11 +2,12 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { mockWallet } from '../../../entities/__helpers__/mocks';
-import { IActiveProfileGateway, IActiveProfilePresenter } from '../../profile';
+import { IActiveProfilePresenter } from '../../profile';
 import { ActiveWallet } from '../ActiveWallet';
 import { IActiveWalletPresenter } from '../IActiveWalletPresenter';
 import { ILoginPresenter } from '../ILoginPresenter';
 import {
+  IActiveProfileGateway,
   IResettableCredentialsGateway,
   IResettableWalletGateway,
   LogoutReason,
