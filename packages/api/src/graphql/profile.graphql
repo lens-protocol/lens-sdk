@@ -87,6 +87,12 @@ fragment ProfileFields on Profile {
 
   isFollowedByMe(isFinalisedOnChain: true)
   isFollowing(who: $activeProfileId)
+
+  isOptimisticFollowedByMe @client
+  location @client
+  twitter @client
+  website @client
+  ownedByMe @client
 }
 
 query ProfilesToFollow($activeProfileId: ProfileId) {

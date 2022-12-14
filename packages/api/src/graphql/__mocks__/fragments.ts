@@ -74,6 +74,12 @@ export function mockProfileFieldsFragment(
     followModule: null,
     isFollowedByMe: false,
     isFollowing: false,
+    isOptimisticFollowedByMe: false,
+
+    location: location,
+    website: website,
+    twitter: twitter,
+    ownedByMe: false,
 
     ...overrides,
     __typename: 'Profile',

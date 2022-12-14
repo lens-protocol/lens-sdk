@@ -2497,40 +2497,45 @@ export type PostMirrorsArgs = {
 /** The Profile */
 export type Profile = {
   __typename: 'Profile';
-  /** The profile id */
-  id: Scalars['ProfileId'];
-  /** Name of the profile */
-  name: Maybe<Scalars['String']>;
-  /** Bio of the profile */
-  bio: Maybe<Scalars['String']>;
-  /** Follow nft address */
-  followNftAddress: Maybe<Scalars['ContractAddress']>;
-  /** Metadata url */
-  metadata: Maybe<Scalars['Url']>;
-  /** The profile handle */
-  handle: Scalars['Handle'];
-  /** The picture for the profile */
-  picture: Maybe<ProfileMedia>;
-  /** The cover picture for the profile */
-  coverPicture: Maybe<ProfileMedia>;
-  /** Who owns the profile */
-  ownedBy: Scalars['EthereumAddress'];
-  /** The dispatcher */
-  dispatcher: Maybe<Dispatcher>;
-  /** Profile stats */
-  stats: ProfileStats;
-  /** The follow module */
-  followModule: Maybe<FollowModule>;
-  /** Is the profile default */
-  isDefault: Scalars['Boolean'];
   /** Optionals param to add extra attributes on the metadata */
   attributes: Maybe<Array<Attribute>>;
-  /** The on chain identity */
-  onChainIdentity: OnChainIdentity;
+  /** Bio of the profile */
+  bio: Maybe<Scalars['String']>;
+  /** The cover picture for the profile */
+  coverPicture: Maybe<ProfileMedia>;
+  /** The dispatcher */
+  dispatcher: Maybe<Dispatcher>;
+  /** The follow module */
+  followModule: Maybe<FollowModule>;
+  /** Follow nft address */
+  followNftAddress: Maybe<Scalars['ContractAddress']>;
+  /** The profile handle */
+  handle: Scalars['Handle'];
+  /** The profile id */
+  id: Scalars['ProfileId'];
   /** The profile interests */
   interests: Maybe<Array<Scalars['ProfileInterest']>>;
+  /** Is the profile default */
+  isDefault: Scalars['Boolean'];
   isFollowedByMe: Scalars['Boolean'];
   isFollowing: Scalars['Boolean'];
+  isOptimisticFollowedByMe: Scalars['Boolean'];
+  location: Maybe<Scalars['String']>;
+  /** Metadata url */
+  metadata: Maybe<Scalars['Url']>;
+  /** Name of the profile */
+  name: Maybe<Scalars['String']>;
+  /** The on chain identity */
+  onChainIdentity: OnChainIdentity;
+  /** Who owns the profile */
+  ownedBy: Scalars['EthereumAddress'];
+  ownedByMe: Scalars['Boolean'];
+  /** The picture for the profile */
+  picture: Maybe<ProfileMedia>;
+  /** Profile stats */
+  stats: ProfileStats;
+  twitter: Maybe<Scalars['String']>;
+  website: Maybe<Scalars['String']>;
 };
 
 /** The Profile */
@@ -3817,7 +3822,18 @@ export type AttributeFragment = { __typename: 'Attribute' } & Pick<Attribute, 'k
 
 export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   Profile,
-  'id' | 'name' | 'bio' | 'handle' | 'ownedBy' | 'isFollowedByMe' | 'isFollowing'
+  | 'id'
+  | 'name'
+  | 'bio'
+  | 'handle'
+  | 'ownedBy'
+  | 'isFollowedByMe'
+  | 'isFollowing'
+  | 'isOptimisticFollowedByMe'
+  | 'location'
+  | 'twitter'
+  | 'website'
+  | 'ownedByMe'
 > & {
     attributes: Maybe<Array<{ __typename: 'Attribute' } & AttributeFragment>>;
     picture: Maybe<
@@ -3980,6 +3996,11 @@ export const ProfileFieldsFragmentDoc = gql`
     }
     isFollowedByMe(isFinalisedOnChain: true)
     isFollowing(who: $activeProfileId)
+    isOptimisticFollowedByMe @client
+    location @client
+    twitter @client
+    website @client
+    ownedByMe @client
   }
   ${AttributeFragmentDoc}
   ${ProfileMediaFieldsFragmentDoc}
@@ -5809,45 +5830,55 @@ export type PostFieldPolicy = {
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileKeySpecifier = (
-  | 'id'
-  | 'name'
-  | 'bio'
-  | 'followNftAddress'
-  | 'metadata'
-  | 'handle'
-  | 'picture'
-  | 'coverPicture'
-  | 'ownedBy'
-  | 'dispatcher'
-  | 'stats'
-  | 'followModule'
-  | 'isDefault'
   | 'attributes'
-  | 'onChainIdentity'
+  | 'bio'
+  | 'coverPicture'
+  | 'dispatcher'
+  | 'followModule'
+  | 'followNftAddress'
+  | 'handle'
+  | 'id'
   | 'interests'
+  | 'isDefault'
   | 'isFollowedByMe'
   | 'isFollowing'
+  | 'isOptimisticFollowedByMe'
+  | 'location'
+  | 'metadata'
+  | 'name'
+  | 'onChainIdentity'
+  | 'ownedBy'
+  | 'ownedByMe'
+  | 'picture'
+  | 'stats'
+  | 'twitter'
+  | 'website'
   | ProfileKeySpecifier
 )[];
 export type ProfileFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  name?: FieldPolicy<any> | FieldReadFunction<any>;
-  bio?: FieldPolicy<any> | FieldReadFunction<any>;
-  followNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
-  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
-  handle?: FieldPolicy<any> | FieldReadFunction<any>;
-  picture?: FieldPolicy<any> | FieldReadFunction<any>;
-  coverPicture?: FieldPolicy<any> | FieldReadFunction<any>;
-  ownedBy?: FieldPolicy<any> | FieldReadFunction<any>;
-  dispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
-  stats?: FieldPolicy<any> | FieldReadFunction<any>;
-  followModule?: FieldPolicy<any> | FieldReadFunction<any>;
-  isDefault?: FieldPolicy<any> | FieldReadFunction<any>;
   attributes?: FieldPolicy<any> | FieldReadFunction<any>;
-  onChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
+  bio?: FieldPolicy<any> | FieldReadFunction<any>;
+  coverPicture?: FieldPolicy<any> | FieldReadFunction<any>;
+  dispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
+  followModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  followNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  handle?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
   interests?: FieldPolicy<any> | FieldReadFunction<any>;
+  isDefault?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowing?: FieldPolicy<any> | FieldReadFunction<any>;
+  isOptimisticFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  location?: FieldPolicy<any> | FieldReadFunction<any>;
+  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
+  name?: FieldPolicy<any> | FieldReadFunction<any>;
+  onChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
+  ownedBy?: FieldPolicy<any> | FieldReadFunction<any>;
+  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  picture?: FieldPolicy<any> | FieldReadFunction<any>;
+  stats?: FieldPolicy<any> | FieldReadFunction<any>;
+  twitter?: FieldPolicy<any> | FieldReadFunction<any>;
+  website?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileFollowModuleSettingsKeySpecifier = (
   | 'type'
