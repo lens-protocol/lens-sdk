@@ -344,66 +344,54 @@ export type CollectedEvent = {
 /** The social comment */
 export type Comment = {
   __typename: 'Comment';
-  /** The internal publication id */
-  id: Scalars['InternalPublicationId'];
-  /** The profile ref */
-  profile: Profile;
-  /** The publication stats */
-  stats: PublicationStats;
-  /** The metadata for the post */
-  metadata: MetadataOutput;
-  /** The on chain content uri could be `ipfs://` or `https` */
-  onChainContentURI: Scalars['String'];
-  /** The date the post was created on */
-  createdAt: Scalars['DateTime'];
-  /** The collect module */
-  collectModule: CollectModule;
-  /** The reference module */
-  referenceModule: Maybe<ReferenceModule>;
   /** ID of the source */
   appId: Maybe<Scalars['Sources']>;
-  /** If the publication has been hidden if it has then the content and media is not available */
-  hidden: Scalars['Boolean'];
+  canComment: CanCommentResponse;
+  canDecrypt: CanDecryptResponse;
+  canMirror: CanMirrorResponse;
+  /** The collect module */
+  collectModule: CollectModule;
   /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
-  /** Indicates if the publication is gated behind some access criteria */
-  isGated: Scalars['Boolean'];
-  /** Indicates if the publication is data availability post */
-  isDataAvailability: Scalars['Boolean'];
-  /** The top level post/mirror this comment lives on */
-  mainPost: MainPostReference;
-  /** Which comment this points to if its null the pointer too deep so do another query to find it out */
-  commentOn: Maybe<Publication>;
-  /** This will bring back the first comment of a comment and only be defined if using `publication` query and `commentOf` */
-  firstComment: Maybe<Comment>;
   /** Who collected it, this is used for timeline results and like this for better caching for the client */
   collectedBy: Maybe<Wallet>;
-  reaction: Maybe<ReactionTypes>;
-  hasCollectedByMe: Scalars['Boolean'];
-  canComment: CanCommentResponse;
-  canMirror: CanMirrorResponse;
-  canDecrypt: CanDecryptResponse;
+  /** Which comment this points to if its null the pointer too deep so do another query to find it out */
+  commentOn: Maybe<Publication>;
+  /** The date the post was created on */
+  createdAt: Scalars['DateTime'];
   dataAvailabilityProofs: Maybe<Scalars['String']>;
+  /** This will bring back the first comment of a comment and only be defined if using `publication` query and `commentOf` */
+  firstComment: Maybe<Comment>;
+  hasCollectedByMe: Scalars['Boolean'];
+  hasOptimisticCollectedByMe: Scalars['Boolean'];
+  /** If the publication has been hidden if it has then the content and media is not available */
+  hidden: Scalars['Boolean'];
+  /** The internal publication id */
+  id: Scalars['InternalPublicationId'];
+  /** Indicates if the publication is data availability post */
+  isDataAvailability: Scalars['Boolean'];
+  /** Indicates if the publication is gated behind some access criteria */
+  isGated: Scalars['Boolean'];
+  isOptimisticMirroredByMe: Scalars['Boolean'];
+  /** The top level post/mirror this comment lives on */
+  mainPost: MainPostReference;
+  /** The metadata for the post */
+  metadata: MetadataOutput;
   mirrors: Array<Scalars['InternalPublicationId']>;
-};
-
-/** The social comment */
-export type CommentReactionArgs = {
-  request?: Maybe<ReactionFieldResolverRequest>;
-};
-
-/** The social comment */
-export type CommentHasCollectedByMeArgs = {
-  isFinalisedOnChain?: Maybe<Scalars['Boolean']>;
+  /** The on chain content uri could be `ipfs://` or `https` */
+  onChainContentURI: Scalars['String'];
+  ownedByMe: Scalars['Boolean'];
+  /** The profile ref */
+  profile: Profile;
+  reaction: Maybe<ReactionTypes>;
+  /** The reference module */
+  referenceModule: Maybe<ReferenceModule>;
+  /** The publication stats */
+  stats: PublicationStats;
 };
 
 /** The social comment */
 export type CommentCanCommentArgs = {
-  profileId?: Maybe<Scalars['ProfileId']>;
-};
-
-/** The social comment */
-export type CommentCanMirrorArgs = {
   profileId?: Maybe<Scalars['ProfileId']>;
 };
 
@@ -414,8 +402,23 @@ export type CommentCanDecryptArgs = {
 };
 
 /** The social comment */
+export type CommentCanMirrorArgs = {
+  profileId?: Maybe<Scalars['ProfileId']>;
+};
+
+/** The social comment */
+export type CommentHasCollectedByMeArgs = {
+  isFinalisedOnChain?: Maybe<Scalars['Boolean']>;
+};
+
+/** The social comment */
 export type CommentMirrorsArgs = {
   by?: Maybe<Scalars['ProfileId']>;
+};
+
+/** The social comment */
+export type CommentReactionArgs = {
+  request?: Maybe<ReactionFieldResolverRequest>;
 };
 
 /** The gated publication access criteria contract types */
@@ -1790,50 +1793,43 @@ export type MetadataOutput = {
 /** The social mirror */
 export type Mirror = {
   __typename: 'Mirror';
-  /** The internal publication id */
-  id: Scalars['InternalPublicationId'];
-  /** The profile ref */
-  profile: Profile;
-  /** The publication stats */
-  stats: PublicationStats;
-  /** The metadata for the post */
-  metadata: MetadataOutput;
-  /** The on chain content uri could be `ipfs://` or `https` */
-  onChainContentURI: Scalars['String'];
-  /** The date the post was created on */
-  createdAt: Scalars['DateTime'];
-  /** The collect module */
-  collectModule: CollectModule;
-  /** The reference module */
-  referenceModule: Maybe<ReferenceModule>;
   /** ID of the source */
   appId: Maybe<Scalars['Sources']>;
-  /** If the publication has been hidden if it has then the content and media is not available */
-  hidden: Scalars['Boolean'];
+  canComment: CanCommentResponse;
+  canDecrypt: CanDecryptResponse;
+  canMirror: CanMirrorResponse;
+  /** The collect module */
+  collectModule: CollectModule;
   /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
-  /** Indicates if the publication is gated behind some access criteria */
-  isGated: Scalars['Boolean'];
+  /** The date the post was created on */
+  createdAt: Scalars['DateTime'];
+  dataAvailabilityProofs: Maybe<Scalars['String']>;
+  hasCollectedByMe: Scalars['Boolean'];
+  hasOptimisticCollectedByMe: Scalars['Boolean'];
+  /** If the publication has been hidden if it has then the content and media is not available */
+  hidden: Scalars['Boolean'];
+  /** The internal publication id */
+  id: Scalars['InternalPublicationId'];
   /** Indicates if the publication is data availability post */
   isDataAvailability: Scalars['Boolean'];
+  /** Indicates if the publication is gated behind some access criteria */
+  isGated: Scalars['Boolean'];
+  isOptimisticMirroredByMe: Scalars['Boolean'];
+  /** The metadata for the post */
+  metadata: MetadataOutput;
   /** The mirror publication */
   mirrorOf: MirrorablePublication;
+  /** The on chain content uri could be `ipfs://` or `https` */
+  onChainContentURI: Scalars['String'];
+  ownedByMe: Scalars['Boolean'];
+  /** The profile ref */
+  profile: Profile;
   reaction: Maybe<ReactionTypes>;
-  hasCollectedByMe: Scalars['Boolean'];
-  canComment: CanCommentResponse;
-  canMirror: CanMirrorResponse;
-  canDecrypt: CanDecryptResponse;
-  dataAvailabilityProofs: Maybe<Scalars['String']>;
-};
-
-/** The social mirror */
-export type MirrorReactionArgs = {
-  request?: Maybe<ReactionFieldResolverRequest>;
-};
-
-/** The social mirror */
-export type MirrorHasCollectedByMeArgs = {
-  isFinalisedOnChain?: Maybe<Scalars['Boolean']>;
+  /** The reference module */
+  referenceModule: Maybe<ReferenceModule>;
+  /** The publication stats */
+  stats: PublicationStats;
 };
 
 /** The social mirror */
@@ -1842,14 +1838,24 @@ export type MirrorCanCommentArgs = {
 };
 
 /** The social mirror */
+export type MirrorCanDecryptArgs = {
+  profileId?: Maybe<Scalars['ProfileId']>;
+  address?: Maybe<Scalars['EthereumAddress']>;
+};
+
+/** The social mirror */
 export type MirrorCanMirrorArgs = {
   profileId?: Maybe<Scalars['ProfileId']>;
 };
 
 /** The social mirror */
-export type MirrorCanDecryptArgs = {
-  profileId?: Maybe<Scalars['ProfileId']>;
-  address?: Maybe<Scalars['EthereumAddress']>;
+export type MirrorHasCollectedByMeArgs = {
+  isFinalisedOnChain?: Maybe<Scalars['Boolean']>;
+};
+
+/** The social mirror */
+export type MirrorReactionArgs = {
+  request?: Maybe<ReactionFieldResolverRequest>;
 };
 
 export type MirrorEvent = {
@@ -2423,63 +2429,51 @@ export type PendingApproveFollowsResult = {
 /** The social post */
 export type Post = {
   __typename: 'Post';
-  /** The internal publication id */
-  id: Scalars['InternalPublicationId'];
-  /** The profile ref */
-  profile: Profile;
-  /** The publication stats */
-  stats: PublicationStats;
-  /** The metadata for the post */
-  metadata: MetadataOutput;
-  /** The on chain content uri could be `ipfs://` or `https` */
-  onChainContentURI: Scalars['String'];
-  /** The date the post was created on */
-  createdAt: Scalars['DateTime'];
-  /** The collect module */
-  collectModule: CollectModule;
-  /** The reference module */
-  referenceModule: Maybe<ReferenceModule>;
   /** ID of the source */
   appId: Maybe<Scalars['Sources']>;
-  /** If the publication has been hidden if it has then the content and media is not available */
-  hidden: Scalars['Boolean'];
+  canComment: CanCommentResponse;
+  canDecrypt: CanDecryptResponse;
+  canMirror: CanMirrorResponse;
+  /** The collect module */
+  collectModule: CollectModule;
   /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
-  /** Indicates if the publication is gated behind some access criteria */
-  isGated: Scalars['Boolean'];
-  /** Indicates if the publication is data availability post */
-  isDataAvailability: Scalars['Boolean'];
   /**
    * Who collected it, this is used for timeline results and like this for better caching for the client
    * @deprecated use `feed` query, timeline query will be killed on the 15th November. This includes this field.
    */
   collectedBy: Maybe<Wallet>;
-  reaction: Maybe<ReactionTypes>;
-  hasCollectedByMe: Scalars['Boolean'];
-  canComment: CanCommentResponse;
-  canMirror: CanMirrorResponse;
-  canDecrypt: CanDecryptResponse;
+  /** The date the post was created on */
+  createdAt: Scalars['DateTime'];
   dataAvailabilityProofs: Maybe<Scalars['String']>;
+  hasCollectedByMe: Scalars['Boolean'];
+  hasOptimisticCollectedByMe: Scalars['Boolean'];
+  /** If the publication has been hidden if it has then the content and media is not available */
+  hidden: Scalars['Boolean'];
+  /** The internal publication id */
+  id: Scalars['InternalPublicationId'];
+  /** Indicates if the publication is data availability post */
+  isDataAvailability: Scalars['Boolean'];
+  /** Indicates if the publication is gated behind some access criteria */
+  isGated: Scalars['Boolean'];
+  isOptimisticMirroredByMe: Scalars['Boolean'];
+  /** The metadata for the post */
+  metadata: MetadataOutput;
   mirrors: Array<Scalars['InternalPublicationId']>;
-};
-
-/** The social post */
-export type PostReactionArgs = {
-  request?: Maybe<ReactionFieldResolverRequest>;
-};
-
-/** The social post */
-export type PostHasCollectedByMeArgs = {
-  isFinalisedOnChain?: Maybe<Scalars['Boolean']>;
+  /** The on chain content uri could be `ipfs://` or `https` */
+  onChainContentURI: Scalars['String'];
+  ownedByMe: Scalars['Boolean'];
+  /** The profile ref */
+  profile: Profile;
+  reaction: Maybe<ReactionTypes>;
+  /** The reference module */
+  referenceModule: Maybe<ReferenceModule>;
+  /** The publication stats */
+  stats: PublicationStats;
 };
 
 /** The social post */
 export type PostCanCommentArgs = {
-  profileId?: Maybe<Scalars['ProfileId']>;
-};
-
-/** The social post */
-export type PostCanMirrorArgs = {
   profileId?: Maybe<Scalars['ProfileId']>;
 };
 
@@ -2490,8 +2484,23 @@ export type PostCanDecryptArgs = {
 };
 
 /** The social post */
+export type PostCanMirrorArgs = {
+  profileId?: Maybe<Scalars['ProfileId']>;
+};
+
+/** The social post */
+export type PostHasCollectedByMeArgs = {
+  isFinalisedOnChain?: Maybe<Scalars['Boolean']>;
+};
+
+/** The social post */
 export type PostMirrorsArgs = {
   by?: Maybe<Scalars['ProfileId']>;
+};
+
+/** The social post */
+export type PostReactionArgs = {
+  request?: Maybe<ReactionFieldResolverRequest>;
 };
 
 /** The Profile */
@@ -3788,6 +3797,316 @@ export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
   'value'
 > & { asset: { __typename: 'Erc20' } & Erc20Fragment };
 
+type ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment = {
+  __typename: 'FollowOnlyReferenceModuleSettings';
+} & Pick<FollowOnlyReferenceModuleSettings, 'contractAddress'>;
+
+type ReferenceModule_UnknownReferenceModuleSettings_Fragment = {
+  __typename: 'UnknownReferenceModuleSettings';
+};
+
+type ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment = {
+  __typename: 'DegreesOfSeparationReferenceModuleSettings';
+};
+
+export type ReferenceModuleFragment =
+  | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+  | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+  | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment;
+
+export type FreeCollectModuleSettingsFragment = { __typename: 'FreeCollectModuleSettings' } & Pick<
+  FreeCollectModuleSettings,
+  'contractAddress' | 'followerOnly'
+>;
+
+export type FeeCollectModuleSettingsFragment = { __typename: 'FeeCollectModuleSettings' } & Pick<
+  FeeCollectModuleSettings,
+  'contractAddress' | 'followerOnly' | 'recipient' | 'referralFee'
+> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+
+export type LimitedFeeCollectModuleSettingsFragment = {
+  __typename: 'LimitedFeeCollectModuleSettings';
+} & Pick<
+  LimitedFeeCollectModuleSettings,
+  'collectLimit' | 'contractAddress' | 'followerOnly' | 'recipient' | 'referralFee'
+> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+
+export type LimitedTimedFeeCollectModuleSettingsFragment = {
+  __typename: 'LimitedTimedFeeCollectModuleSettings';
+} & Pick<
+  LimitedTimedFeeCollectModuleSettings,
+  'collectLimit' | 'contractAddress' | 'followerOnly' | 'endTimestamp' | 'recipient' | 'referralFee'
+> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+
+export type RevertCollectModuleSettingsFragment = {
+  __typename: 'RevertCollectModuleSettings';
+} & Pick<RevertCollectModuleSettings, 'contractAddress'>;
+
+export type TimedFeeCollectModuleSettingsFragment = {
+  __typename: 'TimedFeeCollectModuleSettings';
+} & Pick<
+  TimedFeeCollectModuleSettings,
+  'contractAddress' | 'followerOnly' | 'endTimestamp' | 'recipient' | 'referralFee'
+> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+
+type CollectModule_FreeCollectModuleSettings_Fragment = {
+  __typename: 'FreeCollectModuleSettings';
+} & FreeCollectModuleSettingsFragment;
+
+type CollectModule_FeeCollectModuleSettings_Fragment = {
+  __typename: 'FeeCollectModuleSettings';
+} & FeeCollectModuleSettingsFragment;
+
+type CollectModule_LimitedFeeCollectModuleSettings_Fragment = {
+  __typename: 'LimitedFeeCollectModuleSettings';
+} & LimitedFeeCollectModuleSettingsFragment;
+
+type CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment = {
+  __typename: 'LimitedTimedFeeCollectModuleSettings';
+} & LimitedTimedFeeCollectModuleSettingsFragment;
+
+type CollectModule_RevertCollectModuleSettings_Fragment = {
+  __typename: 'RevertCollectModuleSettings';
+} & RevertCollectModuleSettingsFragment;
+
+type CollectModule_TimedFeeCollectModuleSettings_Fragment = {
+  __typename: 'TimedFeeCollectModuleSettings';
+} & TimedFeeCollectModuleSettingsFragment;
+
+type CollectModule_UnknownCollectModuleSettings_Fragment = {
+  __typename: 'UnknownCollectModuleSettings';
+};
+
+export type CollectModuleFragment =
+  | CollectModule_FreeCollectModuleSettings_Fragment
+  | CollectModule_FeeCollectModuleSettings_Fragment
+  | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+  | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+  | CollectModule_RevertCollectModuleSettings_Fragment
+  | CollectModule_TimedFeeCollectModuleSettings_Fragment
+  | CollectModule_UnknownCollectModuleSettings_Fragment;
+
+export type WalletFragment = { __typename: 'Wallet' } & Pick<Wallet, 'address'> & {
+    defaultProfile: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+  };
+
+export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
+  MetadataOutput,
+  'name' | 'description' | 'mainContentFocus' | 'content'
+> & {
+    media: Array<{ __typename: 'MediaSet' } & MediaSetFragment>;
+    attributes: Array<{ __typename: 'MetadataAttributeOutput' } & MetadataAttributeOutputFragment>;
+  };
+
+export type MetadataAttributeOutputFragment = { __typename: 'MetadataAttributeOutput' } & Pick<
+  MetadataAttributeOutput,
+  'traitType' | 'value'
+>;
+
+export type PublicationStatsFragment = { __typename: 'PublicationStats' } & Pick<
+  PublicationStats,
+  'totalAmountOfMirrors' | 'totalUpvotes' | 'totalAmountOfCollects' | 'totalAmountOfComments'
+>;
+
+export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
+  Mirror,
+  | 'id'
+  | 'createdAt'
+  | 'hidden'
+  | 'isGated'
+  | 'reaction'
+  | 'hasCollectedByMe'
+  | 'hasOptimisticCollectedByMe'
+  | 'isOptimisticMirroredByMe'
+  | 'ownedByMe'
+> & {
+    stats: { __typename: 'PublicationStats' } & PublicationStatsFragment;
+    metadata: { __typename: 'MetadataOutput' } & MetadataFragment;
+    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
+    collectModule:
+      | ({
+          __typename: 'FreeCollectModuleSettings';
+        } & CollectModule_FreeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'FeeCollectModuleSettings';
+        } & CollectModule_FeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'LimitedFeeCollectModuleSettings';
+        } & CollectModule_LimitedFeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'LimitedTimedFeeCollectModuleSettings';
+        } & CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'RevertCollectModuleSettings';
+        } & CollectModule_RevertCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'TimedFeeCollectModuleSettings';
+        } & CollectModule_TimedFeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'UnknownCollectModuleSettings';
+        } & CollectModule_UnknownCollectModuleSettings_Fragment);
+    referenceModule: Maybe<
+      | ({
+          __typename: 'FollowOnlyReferenceModuleSettings';
+        } & ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment)
+      | ({
+          __typename: 'UnknownReferenceModuleSettings';
+        } & ReferenceModule_UnknownReferenceModuleSettings_Fragment)
+      | ({
+          __typename: 'DegreesOfSeparationReferenceModuleSettings';
+        } & ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment)
+    >;
+    canComment: { __typename: 'CanCommentResponse' } & Pick<CanCommentResponse, 'result'>;
+    canMirror: { __typename: 'CanMirrorResponse' } & Pick<CanMirrorResponse, 'result'>;
+  };
+
+export type MirrorFragment = { __typename: 'Mirror' } & {
+  mirrorOf: ({ __typename: 'Post' } & PostFragment) | ({ __typename: 'Comment' } & CommentFragment);
+} & MirrorBaseFragment;
+
+export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
+  Comment,
+  | 'id'
+  | 'createdAt'
+  | 'hidden'
+  | 'isGated'
+  | 'reaction'
+  | 'hasCollectedByMe'
+  | 'mirrors'
+  | 'hasOptimisticCollectedByMe'
+  | 'isOptimisticMirroredByMe'
+  | 'ownedByMe'
+> & {
+    stats: { __typename: 'PublicationStats' } & PublicationStatsFragment;
+    metadata: { __typename: 'MetadataOutput' } & MetadataFragment;
+    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
+    collectedBy: Maybe<{ __typename: 'Wallet' } & WalletFragment>;
+    collectModule:
+      | ({
+          __typename: 'FreeCollectModuleSettings';
+        } & CollectModule_FreeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'FeeCollectModuleSettings';
+        } & CollectModule_FeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'LimitedFeeCollectModuleSettings';
+        } & CollectModule_LimitedFeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'LimitedTimedFeeCollectModuleSettings';
+        } & CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'RevertCollectModuleSettings';
+        } & CollectModule_RevertCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'TimedFeeCollectModuleSettings';
+        } & CollectModule_TimedFeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'UnknownCollectModuleSettings';
+        } & CollectModule_UnknownCollectModuleSettings_Fragment);
+    referenceModule: Maybe<
+      | ({
+          __typename: 'FollowOnlyReferenceModuleSettings';
+        } & ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment)
+      | ({
+          __typename: 'UnknownReferenceModuleSettings';
+        } & ReferenceModule_UnknownReferenceModuleSettings_Fragment)
+      | ({
+          __typename: 'DegreesOfSeparationReferenceModuleSettings';
+        } & ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment)
+    >;
+    canComment: { __typename: 'CanCommentResponse' } & Pick<CanCommentResponse, 'result'>;
+    canMirror: { __typename: 'CanMirrorResponse' } & Pick<CanMirrorResponse, 'result'>;
+  };
+
+export type CommonPaginatedResultInfoFragment = { __typename: 'PaginatedResultInfo' } & Pick<
+  PaginatedResultInfo,
+  'prev' | 'next' | 'totalCount'
+>;
+
+export type CommentFragment = { __typename: 'Comment' } & {
+  commentOn: Maybe<
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Comment' } & CommentBaseFragment)
+    | ({ __typename: 'Mirror' } & MirrorBaseFragment)
+  >;
+  mainPost:
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Mirror' } & MirrorBaseFragment);
+} & CommentBaseFragment;
+
+export type PostFragment = { __typename: 'Post' } & Pick<
+  Post,
+  | 'id'
+  | 'createdAt'
+  | 'hidden'
+  | 'isGated'
+  | 'reaction'
+  | 'hasCollectedByMe'
+  | 'mirrors'
+  | 'hasOptimisticCollectedByMe'
+  | 'isOptimisticMirroredByMe'
+  | 'ownedByMe'
+> & {
+    stats: { __typename: 'PublicationStats' } & PublicationStatsFragment;
+    metadata: { __typename: 'MetadataOutput' } & MetadataFragment;
+    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
+    collectedBy: Maybe<{ __typename: 'Wallet' } & WalletFragment>;
+    collectModule:
+      | ({
+          __typename: 'FreeCollectModuleSettings';
+        } & CollectModule_FreeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'FeeCollectModuleSettings';
+        } & CollectModule_FeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'LimitedFeeCollectModuleSettings';
+        } & CollectModule_LimitedFeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'LimitedTimedFeeCollectModuleSettings';
+        } & CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'RevertCollectModuleSettings';
+        } & CollectModule_RevertCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'TimedFeeCollectModuleSettings';
+        } & CollectModule_TimedFeeCollectModuleSettings_Fragment)
+      | ({
+          __typename: 'UnknownCollectModuleSettings';
+        } & CollectModule_UnknownCollectModuleSettings_Fragment);
+    referenceModule: Maybe<
+      | ({
+          __typename: 'FollowOnlyReferenceModuleSettings';
+        } & ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment)
+      | ({
+          __typename: 'UnknownReferenceModuleSettings';
+        } & ReferenceModule_UnknownReferenceModuleSettings_Fragment)
+      | ({
+          __typename: 'DegreesOfSeparationReferenceModuleSettings';
+        } & ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment)
+    >;
+    canComment: { __typename: 'CanCommentResponse' } & Pick<CanCommentResponse, 'result'>;
+    canMirror: { __typename: 'CanMirrorResponse' } & Pick<CanMirrorResponse, 'result'>;
+  };
+
+export type FeedItemFragment = { __typename: 'FeedItem' } & {
+  root: ({ __typename: 'Post' } & PostFragment) | ({ __typename: 'Comment' } & CommentFragment);
+  comments: Maybe<Array<{ __typename: 'Comment' } & CommentFragment>>;
+};
+
+export type FeedQueryVariables = Exact<{
+  activeProfileId: Scalars['ProfileId'];
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+}>;
+
+export type FeedQuery = {
+  result: { __typename: 'PaginatedFeedResult' } & {
+    items: Array<{ __typename: 'FeedItem' } & FeedItemFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  };
+};
+
 export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
 
 export type MediaSetFragment = { __typename: 'MediaSet' } & {
@@ -3883,11 +4202,12 @@ export type GetProfileByIdQuery = {
   result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment>;
 };
 
-export const AttributeFragmentDoc = gql`
-  fragment Attribute on Attribute {
-    __typename
-    key
-    value
+export const PublicationStatsFragmentDoc = gql`
+  fragment PublicationStats on PublicationStats {
+    totalAmountOfMirrors
+    totalUpvotes
+    totalAmountOfCollects
+    totalAmountOfComments
   }
 `;
 export const MediaFieldsFragmentDoc = gql`
@@ -3903,6 +4223,35 @@ export const MediaSetFragmentDoc = gql`
     }
   }
   ${MediaFieldsFragmentDoc}
+`;
+export const MetadataAttributeOutputFragmentDoc = gql`
+  fragment MetadataAttributeOutput on MetadataAttributeOutput {
+    traitType
+    value
+  }
+`;
+export const MetadataFragmentDoc = gql`
+  fragment Metadata on MetadataOutput {
+    name
+    description
+    mainContentFocus
+    content
+    media {
+      ...MediaSet
+    }
+    attributes {
+      ...MetadataAttributeOutput
+    }
+  }
+  ${MediaSetFragmentDoc}
+  ${MetadataAttributeOutputFragmentDoc}
+`;
+export const AttributeFragmentDoc = gql`
+  fragment Attribute on Attribute {
+    __typename
+    key
+    value
+  }
 `;
 export const ProfileMediaFieldsFragmentDoc = gql`
   fragment ProfileMediaFields on ProfileMedia {
@@ -4008,6 +4357,366 @@ export const ProfileFieldsFragmentDoc = gql`
   ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
 `;
+export const FreeCollectModuleSettingsFragmentDoc = gql`
+  fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
+    contractAddress
+    followerOnly
+  }
+`;
+export const FeeCollectModuleSettingsFragmentDoc = gql`
+  fragment FeeCollectModuleSettings on FeeCollectModuleSettings {
+    amount {
+      ...ModuleFeeAmount
+    }
+    contractAddress
+    followerOnly
+    recipient
+    referralFee
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const LimitedFeeCollectModuleSettingsFragmentDoc = gql`
+  fragment LimitedFeeCollectModuleSettings on LimitedFeeCollectModuleSettings {
+    amount {
+      ...ModuleFeeAmount
+    }
+    collectLimit
+    contractAddress
+    followerOnly
+    recipient
+    referralFee
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const LimitedTimedFeeCollectModuleSettingsFragmentDoc = gql`
+  fragment LimitedTimedFeeCollectModuleSettings on LimitedTimedFeeCollectModuleSettings {
+    amount {
+      ...ModuleFeeAmount
+    }
+    collectLimit
+    contractAddress
+    followerOnly
+    endTimestamp
+    recipient
+    referralFee
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const RevertCollectModuleSettingsFragmentDoc = gql`
+  fragment RevertCollectModuleSettings on RevertCollectModuleSettings {
+    contractAddress
+  }
+`;
+export const TimedFeeCollectModuleSettingsFragmentDoc = gql`
+  fragment TimedFeeCollectModuleSettings on TimedFeeCollectModuleSettings {
+    amount {
+      ...ModuleFeeAmount
+    }
+    contractAddress
+    followerOnly
+    endTimestamp
+    recipient
+    referralFee
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const CollectModuleFragmentDoc = gql`
+  fragment CollectModule on CollectModule {
+    __typename
+    ... on FreeCollectModuleSettings {
+      ...FreeCollectModuleSettings
+    }
+    ... on FeeCollectModuleSettings {
+      ...FeeCollectModuleSettings
+    }
+    ... on LimitedFeeCollectModuleSettings {
+      ...LimitedFeeCollectModuleSettings
+    }
+    ... on LimitedTimedFeeCollectModuleSettings {
+      ...LimitedTimedFeeCollectModuleSettings
+    }
+    ... on RevertCollectModuleSettings {
+      ...RevertCollectModuleSettings
+    }
+    ... on TimedFeeCollectModuleSettings {
+      ...TimedFeeCollectModuleSettings
+    }
+  }
+  ${FreeCollectModuleSettingsFragmentDoc}
+  ${FeeCollectModuleSettingsFragmentDoc}
+  ${LimitedFeeCollectModuleSettingsFragmentDoc}
+  ${LimitedTimedFeeCollectModuleSettingsFragmentDoc}
+  ${RevertCollectModuleSettingsFragmentDoc}
+  ${TimedFeeCollectModuleSettingsFragmentDoc}
+`;
+export const ReferenceModuleFragmentDoc = gql`
+  fragment ReferenceModule on ReferenceModule {
+    ... on FollowOnlyReferenceModuleSettings {
+      contractAddress
+    }
+  }
+`;
+export const MirrorBaseFragmentDoc = gql`
+  fragment MirrorBase on Mirror {
+    __typename
+    id
+    stats {
+      ...PublicationStats
+    }
+    metadata {
+      ...Metadata
+    }
+    profile {
+      ...ProfileFields
+    }
+    collectModule {
+      ...CollectModule
+    }
+    referenceModule {
+      ...ReferenceModule
+    }
+    createdAt
+    hidden
+    isGated
+    reaction(request: { profileId: $activeProfileId })
+    hasCollectedByMe(isFinalisedOnChain: true)
+    canComment(profileId: $activeProfileId) {
+      result
+    }
+    canMirror(profileId: $activeProfileId) {
+      result
+    }
+    hasOptimisticCollectedByMe @client
+    isOptimisticMirroredByMe @client
+    ownedByMe @client
+  }
+  ${PublicationStatsFragmentDoc}
+  ${MetadataFragmentDoc}
+  ${ProfileFieldsFragmentDoc}
+  ${CollectModuleFragmentDoc}
+  ${ReferenceModuleFragmentDoc}
+`;
+export const WalletFragmentDoc = gql`
+  fragment Wallet on Wallet {
+    address
+    defaultProfile {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
+export const PostFragmentDoc = gql`
+  fragment Post on Post {
+    __typename
+    id
+    stats {
+      ...PublicationStats
+    }
+    metadata {
+      ...Metadata
+    }
+    profile {
+      ...ProfileFields
+    }
+    collectedBy {
+      ...Wallet
+    }
+    collectModule {
+      ...CollectModule
+    }
+    referenceModule {
+      ...ReferenceModule
+    }
+    createdAt
+    hidden
+    isGated
+    reaction(request: { profileId: $activeProfileId })
+    hasCollectedByMe(isFinalisedOnChain: true)
+    canComment(profileId: $activeProfileId) {
+      result
+    }
+    canMirror(profileId: $activeProfileId) {
+      result
+    }
+    mirrors(by: $activeProfileId)
+    hasOptimisticCollectedByMe @client
+    isOptimisticMirroredByMe @client
+    ownedByMe @client
+  }
+  ${PublicationStatsFragmentDoc}
+  ${MetadataFragmentDoc}
+  ${ProfileFieldsFragmentDoc}
+  ${WalletFragmentDoc}
+  ${CollectModuleFragmentDoc}
+  ${ReferenceModuleFragmentDoc}
+`;
+export const CommentBaseFragmentDoc = gql`
+  fragment CommentBase on Comment {
+    __typename
+    id
+    stats {
+      ...PublicationStats
+    }
+    metadata {
+      ...Metadata
+    }
+    profile {
+      ...ProfileFields
+    }
+    collectedBy {
+      ...Wallet
+    }
+    collectModule {
+      ...CollectModule
+    }
+    referenceModule {
+      ...ReferenceModule
+    }
+    createdAt
+    hidden
+    isGated
+    reaction(request: { profileId: $activeProfileId })
+    hasCollectedByMe(isFinalisedOnChain: true)
+    canComment(profileId: $activeProfileId) {
+      result
+    }
+    canMirror(profileId: $activeProfileId) {
+      result
+    }
+    mirrors(by: $activeProfileId)
+    hasOptimisticCollectedByMe @client
+    isOptimisticMirroredByMe @client
+    ownedByMe @client
+  }
+  ${PublicationStatsFragmentDoc}
+  ${MetadataFragmentDoc}
+  ${ProfileFieldsFragmentDoc}
+  ${WalletFragmentDoc}
+  ${CollectModuleFragmentDoc}
+  ${ReferenceModuleFragmentDoc}
+`;
+export const CommentFragmentDoc = gql`
+  fragment Comment on Comment {
+    __typename
+    ...CommentBase
+    commentOn {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...MirrorBase
+      }
+      ... on Comment {
+        ...CommentBase
+      }
+    }
+    mainPost {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...MirrorBase
+      }
+    }
+  }
+  ${CommentBaseFragmentDoc}
+  ${PostFragmentDoc}
+  ${MirrorBaseFragmentDoc}
+`;
+export const MirrorFragmentDoc = gql`
+  fragment Mirror on Mirror {
+    ...MirrorBase
+    mirrorOf {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${MirrorBaseFragmentDoc}
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+`;
+export const CommonPaginatedResultInfoFragmentDoc = gql`
+  fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+    prev
+    next
+    totalCount
+  }
+`;
+export const FeedItemFragmentDoc = gql`
+  fragment FeedItem on FeedItem {
+    root {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+    comments {
+      ...Comment
+    }
+  }
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+`;
+export const FeedDocument = gql`
+  query Feed(
+    $activeProfileId: ProfileId!
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $sources: [Sources!]
+  ) {
+    result: feed(
+      request: { profileId: $activeProfileId, limit: $limit, cursor: $cursor, sources: $sources }
+    ) {
+      items {
+        ...FeedItem
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${FeedItemFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useFeedQuery__
+ *
+ * To run a query within a React component, call `useFeedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFeedQuery({
+ *   variables: {
+ *      activeProfileId: // value for 'activeProfileId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
+ *   },
+ * });
+ */
+export function useFeedQuery(baseOptions: Apollo.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, options);
+}
+export function useFeedLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, options);
+}
+export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
+export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
+export type FeedQueryResult = Apollo.QueryResult<FeedQuery, FeedQueryVariables>;
 export const ProfilesToFollowDocument = gql`
   query ProfilesToFollow($activeProfileId: ProfileId) {
     recommendedProfiles {
@@ -4267,57 +4976,63 @@ export type CollectedEventFieldPolicy = {
   timestamp?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type CommentKeySpecifier = (
-  | 'id'
-  | 'profile'
-  | 'stats'
-  | 'metadata'
-  | 'onChainContentURI'
-  | 'createdAt'
-  | 'collectModule'
-  | 'referenceModule'
   | 'appId'
-  | 'hidden'
-  | 'collectNftAddress'
-  | 'isGated'
-  | 'isDataAvailability'
-  | 'mainPost'
-  | 'commentOn'
-  | 'firstComment'
-  | 'collectedBy'
-  | 'reaction'
-  | 'hasCollectedByMe'
   | 'canComment'
-  | 'canMirror'
   | 'canDecrypt'
+  | 'canMirror'
+  | 'collectModule'
+  | 'collectNftAddress'
+  | 'collectedBy'
+  | 'commentOn'
+  | 'createdAt'
   | 'dataAvailabilityProofs'
+  | 'firstComment'
+  | 'hasCollectedByMe'
+  | 'hasOptimisticCollectedByMe'
+  | 'hidden'
+  | 'id'
+  | 'isDataAvailability'
+  | 'isGated'
+  | 'isOptimisticMirroredByMe'
+  | 'mainPost'
+  | 'metadata'
   | 'mirrors'
+  | 'onChainContentURI'
+  | 'ownedByMe'
+  | 'profile'
+  | 'reaction'
+  | 'referenceModule'
+  | 'stats'
   | CommentKeySpecifier
 )[];
 export type CommentFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  profile?: FieldPolicy<any> | FieldReadFunction<any>;
-  stats?: FieldPolicy<any> | FieldReadFunction<any>;
-  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
-  onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
-  referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
   appId?: FieldPolicy<any> | FieldReadFunction<any>;
-  hidden?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
-  isGated?: FieldPolicy<any> | FieldReadFunction<any>;
-  isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
-  mainPost?: FieldPolicy<any> | FieldReadFunction<any>;
-  commentOn?: FieldPolicy<any> | FieldReadFunction<any>;
-  firstComment?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
-  reaction?: FieldPolicy<any> | FieldReadFunction<any>;
-  hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   canComment?: FieldPolicy<any> | FieldReadFunction<any>;
-  canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
+  canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
+  commentOn?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
+  firstComment?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasOptimisticCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  hidden?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
+  isGated?: FieldPolicy<any> | FieldReadFunction<any>;
+  isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  mainPost?: FieldPolicy<any> | FieldReadFunction<any>;
+  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
+  onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
+  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  reaction?: FieldPolicy<any> | FieldReadFunction<any>;
+  referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  stats?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type CreateBurnEIP712TypedDataKeySpecifier = (
   | 'types'
@@ -5349,49 +6064,55 @@ export type MetadataOutputFieldPolicy = {
   encryptionParams?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MirrorKeySpecifier = (
-  | 'id'
-  | 'profile'
-  | 'stats'
-  | 'metadata'
-  | 'onChainContentURI'
-  | 'createdAt'
-  | 'collectModule'
-  | 'referenceModule'
   | 'appId'
-  | 'hidden'
-  | 'collectNftAddress'
-  | 'isGated'
-  | 'isDataAvailability'
-  | 'mirrorOf'
-  | 'reaction'
-  | 'hasCollectedByMe'
   | 'canComment'
-  | 'canMirror'
   | 'canDecrypt'
+  | 'canMirror'
+  | 'collectModule'
+  | 'collectNftAddress'
+  | 'createdAt'
   | 'dataAvailabilityProofs'
+  | 'hasCollectedByMe'
+  | 'hasOptimisticCollectedByMe'
+  | 'hidden'
+  | 'id'
+  | 'isDataAvailability'
+  | 'isGated'
+  | 'isOptimisticMirroredByMe'
+  | 'metadata'
+  | 'mirrorOf'
+  | 'onChainContentURI'
+  | 'ownedByMe'
+  | 'profile'
+  | 'reaction'
+  | 'referenceModule'
+  | 'stats'
   | MirrorKeySpecifier
 )[];
 export type MirrorFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  profile?: FieldPolicy<any> | FieldReadFunction<any>;
-  stats?: FieldPolicy<any> | FieldReadFunction<any>;
-  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
-  onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
-  referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
   appId?: FieldPolicy<any> | FieldReadFunction<any>;
-  hidden?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
-  isGated?: FieldPolicy<any> | FieldReadFunction<any>;
-  isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
-  mirrorOf?: FieldPolicy<any> | FieldReadFunction<any>;
-  reaction?: FieldPolicy<any> | FieldReadFunction<any>;
-  hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   canComment?: FieldPolicy<any> | FieldReadFunction<any>;
-  canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
+  canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasOptimisticCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  hidden?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
+  isGated?: FieldPolicy<any> | FieldReadFunction<any>;
+  isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
+  mirrorOf?: FieldPolicy<any> | FieldReadFunction<any>;
+  onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
+  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  reaction?: FieldPolicy<any> | FieldReadFunction<any>;
+  referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  stats?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MirrorEventKeySpecifier = ('profile' | 'timestamp' | MirrorEventKeySpecifier)[];
 export type MirrorEventFieldPolicy = {
@@ -5783,51 +6504,57 @@ export type PendingApproveFollowsResultFieldPolicy = {
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PostKeySpecifier = (
-  | 'id'
-  | 'profile'
-  | 'stats'
-  | 'metadata'
-  | 'onChainContentURI'
-  | 'createdAt'
-  | 'collectModule'
-  | 'referenceModule'
   | 'appId'
-  | 'hidden'
-  | 'collectNftAddress'
-  | 'isGated'
-  | 'isDataAvailability'
-  | 'collectedBy'
-  | 'reaction'
-  | 'hasCollectedByMe'
   | 'canComment'
-  | 'canMirror'
   | 'canDecrypt'
+  | 'canMirror'
+  | 'collectModule'
+  | 'collectNftAddress'
+  | 'collectedBy'
+  | 'createdAt'
   | 'dataAvailabilityProofs'
+  | 'hasCollectedByMe'
+  | 'hasOptimisticCollectedByMe'
+  | 'hidden'
+  | 'id'
+  | 'isDataAvailability'
+  | 'isGated'
+  | 'isOptimisticMirroredByMe'
+  | 'metadata'
   | 'mirrors'
+  | 'onChainContentURI'
+  | 'ownedByMe'
+  | 'profile'
+  | 'reaction'
+  | 'referenceModule'
+  | 'stats'
   | PostKeySpecifier
 )[];
 export type PostFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  profile?: FieldPolicy<any> | FieldReadFunction<any>;
-  stats?: FieldPolicy<any> | FieldReadFunction<any>;
-  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
-  onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
-  referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
   appId?: FieldPolicy<any> | FieldReadFunction<any>;
-  hidden?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
-  isGated?: FieldPolicy<any> | FieldReadFunction<any>;
-  isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
-  reaction?: FieldPolicy<any> | FieldReadFunction<any>;
-  hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   canComment?: FieldPolicy<any> | FieldReadFunction<any>;
-  canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
+  canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasOptimisticCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  hidden?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
+  isGated?: FieldPolicy<any> | FieldReadFunction<any>;
+  isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
+  onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
+  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  reaction?: FieldPolicy<any> | FieldReadFunction<any>;
+  referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  stats?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileKeySpecifier = (
   | 'attributes'

@@ -7,6 +7,7 @@ import { LensConfig } from './config';
 
 export type SharedDependencies = {
   apolloClient: ApolloClient<NormalizedCacheObject>;
+  sources: string[];
 };
 
 export function createSharedDependencies(config: LensConfig) {
@@ -16,6 +17,7 @@ export function createSharedDependencies(config: LensConfig) {
 
   return {
     apolloClient,
+    sources: config.sources ?? [],
   };
 }
 
