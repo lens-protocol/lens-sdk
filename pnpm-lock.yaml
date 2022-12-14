@@ -1,5 +1,8 @@
 lockfileVersion: 5.4
 
+overrides:
+  ethereumjs-abi: https://registry.npmjs.org/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz
+
 importers:
 
   .:
@@ -6712,7 +6715,7 @@ packages:
     resolution: {integrity: sha512-iNZ576iTOGcfllftB73cPB5AN+XUQAT/T8xzsILsghXC1o8gJUqe3RHlcDqagu+biFpYQ61KQrZZJza8eRSYqw==}
     deprecated: Deprecated in favor of '@metamask/eth-sig-util'
     dependencies:
-      ethereumjs-abi: github.com/ethereumjs/ethereumjs-abi/ee3994657fa7a427238e6ba92a84d0b529bbcde0
+      ethereumjs-abi: 0.6.8
       ethereumjs-util: 5.2.1
 
   /eth-sig-util/3.0.0:
@@ -6721,7 +6724,7 @@ packages:
     dependencies:
       buffer: 5.7.1
       elliptic: 6.5.4
-      ethereumjs-abi: 0.6.5
+      ethereumjs-abi: 0.6.8
       ethereumjs-util: 5.2.1
       tweetnacl: 1.0.3
       tweetnacl-util: 0.15.1
@@ -6803,19 +6806,11 @@ packages:
       - utf-8-validate
     dev: true
 
-  /ethereumjs-abi/0.6.5:
-    resolution: {integrity: sha512-rCjJZ/AE96c/AAZc6O3kaog4FhOsAViaysBxqJNy2+LHP0ttH0zkZ7nXdVHOAyt6lFwLO0nlCwWszysG/ao1+g==}
-    dependencies:
-      bn.js: 4.12.0
-      ethereumjs-util: 4.5.1
-    dev: true
-
   /ethereumjs-abi/0.6.8:
     resolution: {integrity: sha512-Tx0r/iXI6r+lRsdvkFDlut0N08jWMnKRZ6Gkq+Nmw75lZe4e6o3EkSnkaBP5NF6+m5PTGAr9JP43N3LyeoglsA==}
     dependencies:
       bn.js: 4.12.0
       ethereumjs-util: 6.2.1
-    dev: true
 
   /ethereumjs-account/2.0.5:
     resolution: {integrity: sha512-bgDojnXGjhMwo6eXQC0bY6UK2liSFUSMwwylOmQvZbSl/D7NXQ3+vrGO46ZeOgjGfxXmgIeVNDIiHw7fNZM4VA==}
@@ -6891,16 +6886,6 @@ packages:
     dependencies:
       ethereumjs-common: 1.5.0
       ethereumjs-util: 6.2.1
-    dev: true
-
-  /ethereumjs-util/4.5.1:
-    resolution: {integrity: sha512-WrckOZ7uBnei4+AKimpuF1B3Fv25OmoRgmYCpGsP7u8PFxXAmAgiJSYT2kRWnt6fVIlKaQlZvuwXp7PIrmn3/w==}
-    dependencies:
-      bn.js: 4.12.0
-      create-hash: 1.2.0
-      elliptic: 6.5.4
-      ethereum-cryptography: 0.1.3
-      rlp: 2.2.7
     dev: true
 
   /ethereumjs-util/5.2.1:
@@ -14163,11 +14148,3 @@ packages:
       react: 18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
-
-  github.com/ethereumjs/ethereumjs-abi/ee3994657fa7a427238e6ba92a84d0b529bbcde0:
-    resolution: {commit: ee3994657fa7a427238e6ba92a84d0b529bbcde0, repo: git+ssh://git@github.com/ethereumjs/ethereumjs-abi.git, type: git}
-    name: ethereumjs-abi
-    version: 0.6.8
-    dependencies:
-      bn.js: 4.12.0
-      ethereumjs-util: 6.2.1
