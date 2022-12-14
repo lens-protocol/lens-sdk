@@ -1,4 +1,4 @@
-import { WalletConnectionError, WalletType } from '@lens-protocol/domain';
+import { WalletConnectionError, WalletType } from '@lens-protocol/domain/entities';
 import { ChainType, EthereumAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 
