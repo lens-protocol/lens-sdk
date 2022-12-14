@@ -12,18 +12,24 @@ export class CredentialsExpiredError extends Error {
   message = 'Auth credentials are expired';
 }
 
-export interface IAuthorizationGateway {
-  authorize(wallet: Wallet): PromiseResult<ICredentials, CredentialsExpiredError>;
-}
-
 export interface IApplicationPresenter {
   signalReady(): void;
+}
+
+export interface ICredentialsGateway {
+  getCredentials(wallet: Wallet): Promise<ICredentials | null>;
+  save(credentials: ICredentials): Promise<void>;
+}
+
+export interface ICredentialsRenewer {
+  renewCredentials(credentials: ICredentials): PromiseResult<ICredentials, CredentialsExpiredError>;
 }
 
 export class Bootstrap<T extends TransactionRequestModel> {
   constructor(
     private readonly activeWallet: ActiveWallet,
-    private readonly authGateway: IAuthorizationGateway,
+    private readonly credentialsGateway: ICredentialsGateway,
+    private readonly credentialsRenewer: ICredentialsRenewer,
     private readonly activeWalletPresenter: IActiveWalletPresenter,
     private readonly applicationPresenter: IApplicationPresenter,
     private readonly loginPresenter: ILoginPresenter,
@@ -39,13 +45,22 @@ export class Bootstrap<T extends TransactionRequestModel> {
       return;
     }
 
-    const result = await this.authGateway.authorize(wallet);
+    const credentials = await this.credentialsGateway.getCredentials(wallet);
+    if (!credentials) {
+      await this.startWithExpCredentials(wallet);
+      return;
+    }
+
+    const result = await this.credentialsRenewer.renewCredentials(credentials);
 
     if (result.isFailure()) {
       await this.startWithExpCredentials(wallet);
 
       return;
     }
+
+    const newCredentials = result.unwrap();
+    await this.credentialsGateway.save(newCredentials);
 
     await this.startWithCredentials(wallet);
   }

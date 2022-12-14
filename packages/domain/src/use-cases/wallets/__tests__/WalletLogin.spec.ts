@@ -12,7 +12,8 @@ import { ActiveProfile } from '../../profile/ActiveProfile';
 import { IActiveWalletPresenter } from '../IActiveWalletPresenter';
 import {
   WalletLogin,
-  IAuthenticationGateway,
+  ICredentialsIssuer,
+  ICredentialsWriter,
   IConnectionErrorPresenter,
   IExternalWalletGateway,
 } from '../WalletLogin';
@@ -21,20 +22,23 @@ const wallet = mockWallet();
 
 function setupConnectWallet({
   walletGateway = mock<IExternalWalletGateway>(),
-  authGateway = mock<IAuthenticationGateway>(),
+  credentialsIssuer = mock<ICredentialsIssuer>(),
+  credentialsWriter = mock<ICredentialsWriter>(),
   walletPresenter = mock<IActiveWalletPresenter>(),
   errorPresenter = mock<IConnectionErrorPresenter>(),
   activeProfile = mock<ActiveProfile>(),
 }: {
   walletGateway?: IExternalWalletGateway;
-  authGateway?: IAuthenticationGateway;
+  credentialsIssuer?: ICredentialsIssuer;
+  credentialsWriter?: ICredentialsWriter;
   walletPresenter?: IActiveWalletPresenter;
   errorPresenter?: IConnectionErrorPresenter;
   activeProfile?: ActiveProfile;
 } = {}) {
   return new WalletLogin(
     walletGateway,
-    authGateway,
+    credentialsIssuer,
+    credentialsWriter,
     walletPresenter,
     errorPresenter,
     activeProfile,
@@ -46,29 +50,35 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
     it(`should:
         - connect with an external wallet
         - login with the backend
+        - save the credentials
         - load the active profile associated with the wallet`, async () => {
       const walletGateway = mock<IExternalWalletGateway>();
-      const authGateway = mock<IAuthenticationGateway>();
+      const credentialsIssuer = mock<ICredentialsIssuer>();
+      const credentialsWriter = mock<ICredentialsWriter>();
       const walletPresenter = mock<IActiveWalletPresenter>();
       const activeProfile = mock<ActiveProfile>();
+
+      const credentials = mockCredentials({ address: wallet.address });
 
       when(walletGateway.connect)
         .calledWith(wallet.type, ChainType.POLYGON)
         .mockResolvedValue(success(wallet));
 
-      when(authGateway.authenticate)
+      when(credentialsIssuer.issueCredentials)
         .calledWith(wallet)
-        .mockResolvedValue(success(mockCredentials({ address: wallet.address })));
+        .mockResolvedValue(success(credentials));
 
       const connectWallet = setupConnectWallet({
-        authGateway,
+        credentialsIssuer,
         activeProfile,
         walletGateway,
         walletPresenter,
+        credentialsWriter,
       });
 
       await connectWallet.login(wallet.type);
 
+      expect(credentialsWriter.save).toHaveBeenCalledWith(credentials);
       expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
       expect(activeProfile.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(wallet.address);
     });
@@ -76,17 +86,17 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
     it('should handle scenarios where the user cancels the challenge signing operation', async () => {
       const walletGateway = mock<IExternalWalletGateway>();
       const errorPresenter = mock<IConnectionErrorPresenter>();
-      const authGateway = mock<IAuthenticationGateway>();
+      const credentialsIssuer = mock<ICredentialsIssuer>();
       const error = new UserRejectedError();
 
       when(walletGateway.connect)
         .calledWith(wallet.type, ChainType.POLYGON)
         .mockResolvedValue(success(wallet));
 
-      when(authGateway.authenticate).calledWith(wallet).mockResolvedValue(failure(error));
+      when(credentialsIssuer.issueCredentials).calledWith(wallet).mockResolvedValue(failure(error));
 
       const connectWallet = setupConnectWallet({
-        authGateway,
+        credentialsIssuer,
         errorPresenter,
         walletGateway,
       });
