@@ -6,7 +6,13 @@ import {
   mockTransactionHash,
   mockTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
-import { ChainType, Result, success } from '@lens-protocol/shared-kernel';
+import {
+  ChainType,
+  mockEthereumAddress,
+  mockUint256HexString,
+  Result,
+  success,
+} from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
@@ -18,6 +24,7 @@ import {
   NativeTransactionData,
   RelayReceipt,
 } from '../ITransactionFactory';
+import { TypedData } from '../TypedData';
 
 export function mockITransactionFactory(
   transactionObserver: ITransactionObserver = mock<ITransactionObserver>(),
@@ -31,6 +38,23 @@ export function mockRelayReceipt(): RelayReceipt {
   return {
     indexingId: faker.datatype.uuid(),
     txHash: mockTransactionHash(),
+  };
+}
+
+export function mockTypedData(): TypedData {
+  return {
+    types: {
+      CreateProfileWithSig: [{ name: 'foo', type: 'string' }],
+    },
+    domain: {
+      name: 'Bean',
+      version: '1',
+      chainId: mockUint256HexString(),
+      verifyingContract: mockEthereumAddress(),
+    },
+    value: {
+      nonce: 0,
+    },
   };
 }
 

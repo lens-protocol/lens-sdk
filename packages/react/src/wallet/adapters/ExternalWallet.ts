@@ -14,10 +14,11 @@ import {
   NativeTransaction,
 } from '@lens-protocol/domain/entities';
 import { ChainType, failure, matic, PromiseResult, success } from '@lens-protocol/shared-kernel';
-import { errors, TypedDataDomain, TypedDataField } from 'ethers';
+import { errors } from 'ethers';
 import { z } from 'zod';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
+import { TypedData } from '../../transactions/adapters/TypedData';
 import { ISignerFactory } from './ISignerFactory';
 import { assertErrorObjectWithCode, ProviderErrorCode, ProviderErrors } from './errors';
 
@@ -27,15 +28,6 @@ export const WalletDataSchema = z.object({
 });
 
 export type WalletDataSchema = z.infer<typeof WalletDataSchema>;
-
-export type TypedData = {
-  domain: TypedDataDomain;
-  types: Record<string, Array<TypedDataField>>;
-  value: {
-    nonce: number;
-    [k: string]: unknown;
-  };
-};
 
 export class UnsignedLensProtocolCall<T extends TransactionRequestModel>
   implements IUnsignedProtocolCall<T>

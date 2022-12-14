@@ -23,17 +23,14 @@ function setupExternalWalletGateway({
 }) {
   const signer = mock<JsonRpcSigner>();
   when(signer.getAddress).mockResolvedValue(wallet.address);
-  const ethersProviderFactory = mockISignerFactory({
+  const signerFactory = mockISignerFactory({
     walletType: wallet.type,
     chainType,
     signerResult: success(signer),
   });
 
   const transactionFactory = mockITransactionFactory();
-  const externalWalletFactory = new ExternalWalletFactory(
-    ethersProviderFactory,
-    transactionFactory,
-  );
+  const externalWalletFactory = new ExternalWalletFactory(signerFactory, transactionFactory);
   return new ExternalWalletGateway(storage, externalWalletFactory);
 }
 
