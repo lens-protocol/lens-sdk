@@ -243,7 +243,7 @@ export type CanCommentResponse = {
 export type CanDecryptResponse = {
   __typename: 'CanDecryptResponse';
   result: Scalars['Boolean'];
-  reasons: Maybe<DecryptFailReason>;
+  reasons: Maybe<Array<DecryptFailReason>>;
 };
 
 export type CanMirrorResponse = {
@@ -280,7 +280,7 @@ export type ClaimableHandles = {
 /** Condition that signifies if address or profile has collected a publication */
 export type CollectConditionInput = {
   /** The publication id that has to be collected to unlock content */
-  publicationId?: Maybe<Scalars['ProfileId']>;
+  publicationId?: Maybe<Scalars['InternalPublicationId']>;
   /** True if the content will be unlocked for this specific publication */
   thisPublication?: Maybe<Scalars['Boolean']>;
 };
@@ -289,7 +289,7 @@ export type CollectConditionInput = {
 export type CollectConditionOutput = {
   __typename: 'CollectConditionOutput';
   /** The publication id that has to be collected to unlock content */
-  publicationId: Maybe<Scalars['ProfileId']>;
+  publicationId: Maybe<Scalars['InternalPublicationId']>;
   /** True if the content will be unlocked for this specific publication */
   thisPublication: Maybe<Scalars['Boolean']>;
 };
@@ -2239,7 +2239,7 @@ export type NftOwnershipInput = {
   /** The unlocker contract type */
   contractType: ContractType;
   /** The optional token ID(s) to check for ownership */
-  tokenIds?: Maybe<Scalars['TokenId']>;
+  tokenIds?: Maybe<Array<Scalars['TokenId']>>;
 };
 
 export type NftOwnershipOutput = {
@@ -2251,7 +2251,7 @@ export type NftOwnershipOutput = {
   /** The unlocker contract type */
   contractType: ContractType;
   /** The optional token ID(s) to check for ownership */
-  tokenIds: Maybe<Scalars['TokenId']>;
+  tokenIds: Maybe<Array<Scalars['TokenId']>>;
 };
 
 export type Notification =
@@ -2497,40 +2497,45 @@ export type PostMirrorsArgs = {
 /** The Profile */
 export type Profile = {
   __typename: 'Profile';
-  /** The profile id */
-  id: Scalars['ProfileId'];
-  /** Name of the profile */
-  name: Maybe<Scalars['String']>;
-  /** Bio of the profile */
-  bio: Maybe<Scalars['String']>;
-  /** Follow nft address */
-  followNftAddress: Maybe<Scalars['ContractAddress']>;
-  /** Metadata url */
-  metadata: Maybe<Scalars['Url']>;
-  /** The profile handle */
-  handle: Scalars['Handle'];
-  /** The picture for the profile */
-  picture: Maybe<ProfileMedia>;
-  /** The cover picture for the profile */
-  coverPicture: Maybe<ProfileMedia>;
-  /** Who owns the profile */
-  ownedBy: Scalars['EthereumAddress'];
-  /** The dispatcher */
-  dispatcher: Maybe<Dispatcher>;
-  /** Profile stats */
-  stats: ProfileStats;
-  /** The follow module */
-  followModule: Maybe<FollowModule>;
-  /** Is the profile default */
-  isDefault: Scalars['Boolean'];
   /** Optionals param to add extra attributes on the metadata */
   attributes: Maybe<Array<Attribute>>;
-  /** The on chain identity */
-  onChainIdentity: OnChainIdentity;
+  /** Bio of the profile */
+  bio: Maybe<Scalars['String']>;
+  /** The cover picture for the profile */
+  coverPicture: Maybe<ProfileMedia>;
+  /** The dispatcher */
+  dispatcher: Maybe<Dispatcher>;
+  /** The follow module */
+  followModule: Maybe<FollowModule>;
+  /** Follow nft address */
+  followNftAddress: Maybe<Scalars['ContractAddress']>;
+  /** The profile handle */
+  handle: Scalars['Handle'];
+  /** The profile id */
+  id: Scalars['ProfileId'];
   /** The profile interests */
   interests: Maybe<Array<Scalars['ProfileInterest']>>;
+  /** Is the profile default */
+  isDefault: Scalars['Boolean'];
   isFollowedByMe: Scalars['Boolean'];
   isFollowing: Scalars['Boolean'];
+  isOptimisticFollowedByMe: Scalars['Boolean'];
+  location: Maybe<Scalars['String']>;
+  /** Metadata url */
+  metadata: Maybe<Scalars['Url']>;
+  /** Name of the profile */
+  name: Maybe<Scalars['String']>;
+  /** The on chain identity */
+  onChainIdentity: OnChainIdentity;
+  /** Who owns the profile */
+  ownedBy: Scalars['EthereumAddress'];
+  ownedByMe: Scalars['Boolean'];
+  /** The picture for the profile */
+  picture: Maybe<ProfileMedia>;
+  /** Profile stats */
+  stats: ProfileStats;
+  twitter: Maybe<Scalars['String']>;
+  website: Maybe<Scalars['String']>;
 };
 
 /** The Profile */
@@ -3773,11 +3778,34 @@ export type WorldcoinIdentity = {
   isHuman: Scalars['Boolean'];
 };
 
+export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
+  Erc20,
+  'name' | 'symbol' | 'decimals' | 'address'
+>;
+
+export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
+  ModuleFeeAmount,
+  'value'
+> & { asset: { __typename: 'Erc20' } & Erc20Fragment };
+
 export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
 
 export type MediaSetFragment = { __typename: 'MediaSet' } & {
   original: { __typename: 'Media' } & MediaFieldsFragment;
 };
+
+export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
+  FeeFollowModuleSettings,
+  'contractAddress' | 'recipient'
+> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+
+export type ProfileFollowModuleSettingsFragment = {
+  __typename: 'ProfileFollowModuleSettings';
+} & Pick<ProfileFollowModuleSettings, 'contractAddress'>;
+
+export type RevertFollowModuleSettingsFragment = {
+  __typename: 'RevertFollowModuleSettings';
+} & Pick<RevertFollowModuleSettings, 'contractAddress'>;
 
 type ProfileMediaFields_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
   NftImage,
@@ -3790,10 +3818,24 @@ export type ProfileMediaFieldsFragment =
   | ProfileMediaFields_NftImage_Fragment
   | ProfileMediaFields_MediaSet_Fragment;
 
+export type AttributeFragment = { __typename: 'Attribute' } & Pick<Attribute, 'key' | 'value'>;
+
 export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   Profile,
-  'id' | 'name' | 'bio' | 'handle' | 'ownedBy'
+  | 'id'
+  | 'name'
+  | 'bio'
+  | 'handle'
+  | 'ownedBy'
+  | 'isFollowedByMe'
+  | 'isFollowing'
+  | 'isOptimisticFollowedByMe'
+  | 'location'
+  | 'twitter'
+  | 'website'
+  | 'ownedByMe'
 > & {
+    attributes: Maybe<Array<{ __typename: 'Attribute' } & AttributeFragment>>;
     picture: Maybe<
       | ({ __typename: 'NftImage' } & ProfileMediaFields_NftImage_Fragment)
       | ({ __typename: 'MediaSet' } & ProfileMediaFields_MediaSet_Fragment)
@@ -3806,14 +3848,48 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
       ProfileStats,
       'totalFollowers' | 'totalFollowing' | 'totalPosts'
     >;
+    followModule: Maybe<
+      | ({ __typename: 'FeeFollowModuleSettings' } & FeeFollowModuleSettingsFragment)
+      | ({ __typename: 'ProfileFollowModuleSettings' } & ProfileFollowModuleSettingsFragment)
+      | ({ __typename: 'RevertFollowModuleSettings' } & RevertFollowModuleSettingsFragment)
+      | { __typename: 'UnknownFollowModuleSettings' }
+    >;
+    dispatcher: Maybe<{ __typename: 'Dispatcher' } & Pick<Dispatcher, 'address' | 'canUseRelay'>>;
   };
 
-export type ProfilesToFollowQueryVariables = Exact<{ [key: string]: never }>;
+export type ProfilesToFollowQueryVariables = Exact<{
+  activeProfileId?: Maybe<Scalars['ProfileId']>;
+}>;
 
 export type ProfilesToFollowQuery = {
   recommendedProfiles: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
 };
 
+export type GetProfileByHandleQueryVariables = Exact<{
+  handle: Scalars['Handle'];
+  activeProfileId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type GetProfileByHandleQuery = {
+  result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+};
+
+export type GetProfileByIdQueryVariables = Exact<{
+  id: Scalars['ProfileId'];
+  activeProfileId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type GetProfileByIdQuery = {
+  result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+};
+
+export const AttributeFragmentDoc = gql`
+  fragment Attribute on Attribute {
+    __typename
+    key
+    value
+  }
+`;
 export const MediaFieldsFragmentDoc = gql`
   fragment MediaFields on Media {
     url
@@ -3842,6 +3918,46 @@ export const ProfileMediaFieldsFragmentDoc = gql`
   }
   ${MediaSetFragmentDoc}
 `;
+export const Erc20FragmentDoc = gql`
+  fragment Erc20 on Erc20 {
+    name
+    symbol
+    decimals
+    address
+  }
+`;
+export const ModuleFeeAmountFragmentDoc = gql`
+  fragment ModuleFeeAmount on ModuleFeeAmount {
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
+`;
+export const FeeFollowModuleSettingsFragmentDoc = gql`
+  fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    contractAddress
+    recipient
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const ProfileFollowModuleSettingsFragmentDoc = gql`
+  fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const RevertFollowModuleSettingsFragmentDoc = gql`
+  fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
 export const ProfileFieldsFragmentDoc = gql`
   fragment ProfileFields on Profile {
     id
@@ -3849,6 +3965,9 @@ export const ProfileFieldsFragmentDoc = gql`
     bio
     handle
     ownedBy
+    attributes {
+      ...Attribute
+    }
     picture {
       ...ProfileMediaFields
     }
@@ -3860,12 +3979,37 @@ export const ProfileFieldsFragmentDoc = gql`
       totalFollowing
       totalPosts
     }
-    ownedBy
+    followModule {
+      ... on FeeFollowModuleSettings {
+        ...FeeFollowModuleSettings
+      }
+      ... on ProfileFollowModuleSettings {
+        ...ProfileFollowModuleSettings
+      }
+      ... on RevertFollowModuleSettings {
+        ...RevertFollowModuleSettings
+      }
+    }
+    dispatcher {
+      address
+      canUseRelay
+    }
+    isFollowedByMe(isFinalisedOnChain: true)
+    isFollowing(who: $activeProfileId)
+    isOptimisticFollowedByMe @client
+    location @client
+    twitter @client
+    website @client
+    ownedByMe @client
   }
+  ${AttributeFragmentDoc}
   ${ProfileMediaFieldsFragmentDoc}
+  ${FeeFollowModuleSettingsFragmentDoc}
+  ${ProfileFollowModuleSettingsFragmentDoc}
+  ${RevertFollowModuleSettingsFragmentDoc}
 `;
 export const ProfilesToFollowDocument = gql`
-  query ProfilesToFollow {
+  query ProfilesToFollow($activeProfileId: ProfileId) {
     recommendedProfiles {
       ...ProfileFields
     }
@@ -3885,6 +4029,7 @@ export const ProfilesToFollowDocument = gql`
  * @example
  * const { data, loading, error } = useProfilesToFollowQuery({
  *   variables: {
+ *      activeProfileId: // value for 'activeProfileId'
  *   },
  * });
  */
@@ -3911,6 +4056,111 @@ export type ProfilesToFollowLazyQueryHookResult = ReturnType<typeof useProfilesT
 export type ProfilesToFollowQueryResult = Apollo.QueryResult<
   ProfilesToFollowQuery,
   ProfilesToFollowQueryVariables
+>;
+export const GetProfileByHandleDocument = gql`
+  query GetProfileByHandle($handle: Handle!, $activeProfileId: ProfileId) {
+    result: profile(request: { handle: $handle }) {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
+
+/**
+ * __useGetProfileByHandleQuery__
+ *
+ * To run a query within a React component, call `useGetProfileByHandleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileByHandleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProfileByHandleQuery({
+ *   variables: {
+ *      handle: // value for 'handle'
+ *      activeProfileId: // value for 'activeProfileId'
+ *   },
+ * });
+ */
+export function useGetProfileByHandleQuery(
+  baseOptions: Apollo.QueryHookOptions<GetProfileByHandleQuery, GetProfileByHandleQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetProfileByHandleQuery, GetProfileByHandleQueryVariables>(
+    GetProfileByHandleDocument,
+    options,
+  );
+}
+export function useGetProfileByHandleLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetProfileByHandleQuery,
+    GetProfileByHandleQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetProfileByHandleQuery, GetProfileByHandleQueryVariables>(
+    GetProfileByHandleDocument,
+    options,
+  );
+}
+export type GetProfileByHandleQueryHookResult = ReturnType<typeof useGetProfileByHandleQuery>;
+export type GetProfileByHandleLazyQueryHookResult = ReturnType<
+  typeof useGetProfileByHandleLazyQuery
+>;
+export type GetProfileByHandleQueryResult = Apollo.QueryResult<
+  GetProfileByHandleQuery,
+  GetProfileByHandleQueryVariables
+>;
+export const GetProfileByIdDocument = gql`
+  query GetProfileById($id: ProfileId!, $activeProfileId: ProfileId) {
+    result: profile(request: { profileId: $id }) {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
+
+/**
+ * __useGetProfileByIdQuery__
+ *
+ * To run a query within a React component, call `useGetProfileByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProfileByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      activeProfileId: // value for 'activeProfileId'
+ *   },
+ * });
+ */
+export function useGetProfileByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<GetProfileByIdQuery, GetProfileByIdQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetProfileByIdQuery, GetProfileByIdQueryVariables>(
+    GetProfileByIdDocument,
+    options,
+  );
+}
+export function useGetProfileByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetProfileByIdQuery, GetProfileByIdQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetProfileByIdQuery, GetProfileByIdQueryVariables>(
+    GetProfileByIdDocument,
+    options,
+  );
+}
+export type GetProfileByIdQueryHookResult = ReturnType<typeof useGetProfileByIdQuery>;
+export type GetProfileByIdLazyQueryHookResult = ReturnType<typeof useGetProfileByIdLazyQuery>;
+export type GetProfileByIdQueryResult = Apollo.QueryResult<
+  GetProfileByIdQuery,
+  GetProfileByIdQueryVariables
 >;
 export type AccessConditionOutputKeySpecifier = (
   | 'nft'
@@ -5580,45 +5830,55 @@ export type PostFieldPolicy = {
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileKeySpecifier = (
-  | 'id'
-  | 'name'
-  | 'bio'
-  | 'followNftAddress'
-  | 'metadata'
-  | 'handle'
-  | 'picture'
-  | 'coverPicture'
-  | 'ownedBy'
-  | 'dispatcher'
-  | 'stats'
-  | 'followModule'
-  | 'isDefault'
   | 'attributes'
-  | 'onChainIdentity'
+  | 'bio'
+  | 'coverPicture'
+  | 'dispatcher'
+  | 'followModule'
+  | 'followNftAddress'
+  | 'handle'
+  | 'id'
   | 'interests'
+  | 'isDefault'
   | 'isFollowedByMe'
   | 'isFollowing'
+  | 'isOptimisticFollowedByMe'
+  | 'location'
+  | 'metadata'
+  | 'name'
+  | 'onChainIdentity'
+  | 'ownedBy'
+  | 'ownedByMe'
+  | 'picture'
+  | 'stats'
+  | 'twitter'
+  | 'website'
   | ProfileKeySpecifier
 )[];
 export type ProfileFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  name?: FieldPolicy<any> | FieldReadFunction<any>;
-  bio?: FieldPolicy<any> | FieldReadFunction<any>;
-  followNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
-  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
-  handle?: FieldPolicy<any> | FieldReadFunction<any>;
-  picture?: FieldPolicy<any> | FieldReadFunction<any>;
-  coverPicture?: FieldPolicy<any> | FieldReadFunction<any>;
-  ownedBy?: FieldPolicy<any> | FieldReadFunction<any>;
-  dispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
-  stats?: FieldPolicy<any> | FieldReadFunction<any>;
-  followModule?: FieldPolicy<any> | FieldReadFunction<any>;
-  isDefault?: FieldPolicy<any> | FieldReadFunction<any>;
   attributes?: FieldPolicy<any> | FieldReadFunction<any>;
-  onChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
+  bio?: FieldPolicy<any> | FieldReadFunction<any>;
+  coverPicture?: FieldPolicy<any> | FieldReadFunction<any>;
+  dispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
+  followModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  followNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  handle?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
   interests?: FieldPolicy<any> | FieldReadFunction<any>;
+  isDefault?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowing?: FieldPolicy<any> | FieldReadFunction<any>;
+  isOptimisticFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  location?: FieldPolicy<any> | FieldReadFunction<any>;
+  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
+  name?: FieldPolicy<any> | FieldReadFunction<any>;
+  onChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
+  ownedBy?: FieldPolicy<any> | FieldReadFunction<any>;
+  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  picture?: FieldPolicy<any> | FieldReadFunction<any>;
+  stats?: FieldPolicy<any> | FieldReadFunction<any>;
+  twitter?: FieldPolicy<any> | FieldReadFunction<any>;
+  website?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileFollowModuleSettingsKeySpecifier = (
   | 'type'

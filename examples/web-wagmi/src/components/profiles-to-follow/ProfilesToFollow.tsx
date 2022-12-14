@@ -1,12 +1,15 @@
 import { useProfilesToFollow, ProfileFieldsFragment } from '@lens-protocol/react';
 
+import { GenericError } from '../error/GenericError';
+import { Loading } from '../loading/Loading';
+
 type ProfileListProps = {
   profiles: ProfileFieldsFragment[];
 };
 
 function ProfileList({ profiles }: ProfileListProps) {
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div>
       {profiles.map((profile) => (
         <div key={profile.id}>
           <h2>{profile.name ?? `@${profile.handle}`}</h2>
@@ -19,16 +22,16 @@ function ProfileList({ profiles }: ProfileListProps) {
 }
 
 export function ProfilesToFollow() {
-  const { data, loading, error } = useProfilesToFollow();
+  const { data: profilesToFollow, error, loading } = useProfilesToFollow();
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
-  if (error || !data) return <div>Error: {error?.message ?? 'Unexpected error.'}</div>;
+  if (error || !profilesToFollow) return <GenericError error={error} />;
 
   return (
     <div>
       <h1>Recommend Followers</h1>
-      <ProfileList profiles={data.recommendedProfiles} />
+      <ProfileList profiles={profilesToFollow} />
     </div>
   );
 }
