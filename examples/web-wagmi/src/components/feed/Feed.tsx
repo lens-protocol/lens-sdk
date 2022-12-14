@@ -4,14 +4,14 @@ import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
 import { ProfilePicture } from '../profile/ProfilePicture';
 
-type ProfileListProps = {
-  publications: FeedItemFragment[];
+type FeedItemProps = {
+  feedItems: FeedItemFragment[];
 };
 
-function FeedItems({ publications }: ProfileListProps) {
+function FeedItems({ feedItems }: FeedItemProps) {
   return (
     <div>
-      {publications.map(({ root: publication, comments }) => (
+      {feedItems.map(({ root: publication, comments }) => (
         <div key={publication.id}>
           <ProfilePicture picture={publication.profile.picture} />
           <h2>{publication.profile.name ?? `@${publication.profile.handle}`}</h2>
@@ -40,7 +40,7 @@ export function Feed() {
   return (
     <div>
       <h1>Feed</h1>
-      <FeedItems publications={feed.items} />
+      <FeedItems feedItems={feed.items} />
     </div>
   );
 }
