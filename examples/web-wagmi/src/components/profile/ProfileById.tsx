@@ -1,11 +1,11 @@
-import { useProfileById } from '@lens-protocol/react';
+import { useProfile } from '@lens-protocol/react';
 
 import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
 import { ProfilePicture } from './ProfilePicture';
 
 export function ProfileById() {
-  const { data: profile, loading, error } = useProfileById({ id: '0x40c6' });
+  const { data: profile, loading, error } = useProfile({ handle: 'lens', observerId: 'lens' });
 
   if (loading) return <Loading />;
 

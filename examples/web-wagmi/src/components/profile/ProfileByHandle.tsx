@@ -1,11 +1,11 @@
-import { useProfileByHandle } from '@lens-protocol/react';
+import { useProfile } from '@lens-protocol/react';
 
 import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
 import { ProfilePicture } from './ProfilePicture';
 
 export function ProfileByHandle() {
-  const { data: profile, loading, error } = useProfileByHandle({ handle: 'lensprotocol.test' });
+  const { data: profile, loading, error } = useProfile({ handle: 'lensprotocol.test' });
 
   if (loading) return <Loading />;
 
