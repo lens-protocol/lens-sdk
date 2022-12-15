@@ -1,7 +1,6 @@
 import {
   createMockApolloClientWithMultipleResponses,
-  mockGetProfileByHandleQueryMockedResponse,
-  mockGetProfileByIdQueryMockedResponse,
+  mockGetProfileQueryMockedResponse,
   mockProfileFieldsFragment,
 } from '@lens-protocol/api/mocks';
 import { waitFor } from '@testing-library/react';
@@ -11,17 +10,22 @@ import { useProfile } from '../useProfile';
 import { ProfileFieldsFragment } from '../useProfilesToFollow';
 
 describe('Given the useProfile hook', () => {
-  const id = '0x2000';
+  const profileId = '0x2000';
   const handle = 'aave.lens';
-  const mockProfile: ProfileFieldsFragment = mockProfileFieldsFragment({ id, handle });
+  const mockProfile: ProfileFieldsFragment = mockProfileFieldsFragment({ id: profileId, handle });
 
   describe('when supplied with a profile id', () => {
     describe('and the query returns data successfully', () => {
       it('should return a profile', async () => {
-        const { result } = renderHookWithMocks(() => useProfile({ id }), {
+        const { result } = renderHookWithMocks(() => useProfile({ profileId: profileId }), {
           mocks: {
             apolloClient: createMockApolloClientWithMultipleResponses([
-              mockGetProfileByIdQueryMockedResponse({ profile: mockProfile, id }),
+              mockGetProfileQueryMockedResponse({
+                profile: mockProfile,
+                request: {
+                  profileId,
+                },
+              }),
             ]),
           },
         });
@@ -39,7 +43,10 @@ describe('Given the useProfile hook', () => {
         const { result } = renderHookWithMocks(() => useProfile({ handle }), {
           mocks: {
             apolloClient: createMockApolloClientWithMultipleResponses([
-              mockGetProfileByHandleQueryMockedResponse({ profile: mockProfile, handle }),
+              mockGetProfileQueryMockedResponse({
+                profile: mockProfile,
+                request: { handle },
+              }),
             ]),
           },
         });

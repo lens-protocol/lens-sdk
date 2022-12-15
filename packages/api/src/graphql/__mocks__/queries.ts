@@ -5,10 +5,9 @@ import {
   ProfilesToFollowQuery,
   ProfilesToFollowDocument,
   Maybe,
-  GetProfileByHandleQuery,
-  GetProfileByHandleDocument,
-  GetProfileByIdDocument,
-  GetProfileByIdQuery,
+  GetProfileQuery,
+  GetProfileDocument,
+  SingleProfileQueryRequest,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -27,58 +26,31 @@ export function mockProfilesToFollowQueryMockedResponse(args: {
   };
 }
 
-function mockGetProfileByHandleQuery(
-  profile: Maybe<ProfileFieldsFragment>,
-): GetProfileByHandleQuery {
+function mockGetProfileQuery(profile: Maybe<ProfileFieldsFragment>): GetProfileQuery {
   return {
     result: profile,
   };
 }
 
-export function mockGetProfileByHandleQueryMockedResponse({
+export function mockGetProfileQueryMockedResponse({
   profile = mockProfileFieldsFragment(),
-  handle = profile?.handle ?? 'aave.lens',
+  request,
+  observerId,
 }: {
   profile?: Maybe<ProfileFieldsFragment>;
-  handle?: string;
-} = {}): MockedResponse<GetProfileByHandleQuery> {
+  request: SingleProfileQueryRequest;
+  observerId?: string;
+}): MockedResponse<GetProfileQuery> {
   return {
     request: {
-      query: GetProfileByHandleDocument,
+      query: GetProfileDocument,
       variables: {
-        handle,
+        request,
+        observerId,
       },
     },
     result: {
-      data: mockGetProfileByHandleQuery(profile),
-    },
-  };
-}
-
-export function mockGetProfileByIdQuery(
-  profile = mockProfileFieldsFragment(),
-): GetProfileByIdQuery {
-  return {
-    result: profile,
-  };
-}
-
-export function mockGetProfileByIdQueryMockedResponse({
-  profile = mockProfileFieldsFragment(),
-  id = profile?.id ?? '0x123',
-}: {
-  profile: ProfileFieldsFragment;
-  id: string;
-}): MockedResponse<GetProfileByIdQuery> {
-  return {
-    request: {
-      query: GetProfileByIdDocument,
-      variables: {
-        id,
-      },
-    },
-    result: {
-      data: mockGetProfileByIdQuery(profile),
+      data: mockGetProfileQuery(profile),
     },
   };
 }

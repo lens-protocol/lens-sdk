@@ -101,14 +101,8 @@ query ProfilesToFollow($observerId: ProfileId) {
   }
 }
 
-query GetProfileByHandle($handle: Handle!, $observerId: ProfileId) {
-  result: profile(request: { handle: $handle }) {
-    ...ProfileFields
-  }
-}
-
-query GetProfileById($id: ProfileId!, $observerId: ProfileId) {
-  result: profile(request: { profileId: $id }) {
+query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+  result: profile(request: $request) {
     ...ProfileFields
   }
 }
