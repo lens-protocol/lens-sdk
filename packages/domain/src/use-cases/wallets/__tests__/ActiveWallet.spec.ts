@@ -3,7 +3,7 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
-import { ActiveWallet, ICredentialsReader, IWalletGateway } from '../ActiveWallet';
+import { ActiveWallet, ICredentialsReader, IReadableWalletGateway } from '../ActiveWallet';
 
 describe('Given the ActiveWallet interactor', () => {
   describe('when "getActiveWallet" is invoked', () => {
@@ -14,7 +14,7 @@ describe('Given the ActiveWallet interactor', () => {
       const credentialsReader = mock<ICredentialsReader>({
         getCredentials: async () => credentials,
       });
-      const walletGateway = mock<IWalletGateway>();
+      const walletGateway = mock<IReadableWalletGateway>();
 
       when(walletGateway.getByAddress).calledWith(credentials.address).mockResolvedValue(wallet);
 
@@ -29,7 +29,7 @@ describe('Given the ActiveWallet interactor', () => {
       const credentialsReader = mock<ICredentialsReader>({
         getCredentials: async () => null,
       });
-      const walletGateway = mock<IWalletGateway>();
+      const walletGateway = mock<IReadableWalletGateway>();
 
       const gateway = new ActiveWallet(credentialsReader, walletGateway);
 
@@ -44,7 +44,7 @@ describe('Given the ActiveWallet interactor', () => {
       const credentialsReader = mock<ICredentialsReader>({
         getCredentials: async () => credentials,
       });
-      const walletGateway = mock<IWalletGateway>();
+      const walletGateway = mock<IReadableWalletGateway>();
 
       when(walletGateway.getByAddress).calledWith(credentials.address).mockResolvedValue(null);
 

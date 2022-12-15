@@ -49,7 +49,7 @@ export class UserRejectedError extends Error {
 export enum WalletType {
   INJECTED = 'injected',
   WALLET_CONNECT = 'wallet-connect',
-  OTHER = 'other',
+  UNSPECIFIED = 'unspecified',
 }
 
 export abstract class Wallet {

@@ -2,7 +2,6 @@ import { ChainType, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import {
   Wallet,
-  WalletType,
   WalletConnectionError,
   UserRejectedError,
   PendingSigningRequestError,
@@ -11,11 +10,12 @@ import {
 import { ActiveProfile } from '../profile/ActiveProfile';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 
-export interface IExternalWalletGateway {
-  connect(
-    walletType: WalletType,
-    chainType: ChainType,
-  ): PromiseResult<Wallet, WalletConnectionError>;
+export interface IWalletConnector {
+  connect(chainType: ChainType): PromiseResult<Wallet, WalletConnectionError>;
+}
+
+export interface IWritableWalletGateway {
+  save(wallet: Wallet): Promise<void>;
 }
 
 export interface IConnectionErrorPresenter {
@@ -39,7 +39,8 @@ export interface ICredentialsWriter {
 
 export class WalletLogin {
   constructor(
-    private readonly walletGateway: IExternalWalletGateway,
+    private readonly walletConnector: IWalletConnector,
+    private readonly walletGateway: IWritableWalletGateway,
     private readonly credentialsIssuer: ICredentialsIssuer,
     private readonly credentialsWriter: ICredentialsWriter,
     private readonly activeWalletPresenter: IActiveWalletPresenter,
@@ -47,8 +48,8 @@ export class WalletLogin {
     private readonly activeProfile: ActiveProfile,
   ) {}
 
-  async login(type: WalletType): Promise<void> {
-    const walletResult = await this.walletGateway.connect(type, ChainType.POLYGON);
+  async login(): Promise<void> {
+    const walletResult = await this.walletConnector.connect(ChainType.POLYGON);
 
     if (walletResult.isFailure()) {
       this.connectionErrorPresenter.presentConnectionError(walletResult.error);
@@ -62,8 +63,8 @@ export class WalletLogin {
       this.connectionErrorPresenter.presentConnectionError(result.error);
       return;
     }
-    const credentials = result.unwrap();
-    await this.credentialsWriter.save(credentials);
+    await this.walletGateway.save(wallet);
+    await this.credentialsWriter.save(result.value);
 
     this.activeWalletPresenter.presentActiveWallet(wallet);
     await this.activeProfile.loadActiveProfileByOwnerAddress(wallet.address);
