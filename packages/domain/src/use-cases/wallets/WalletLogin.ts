@@ -1,4 +1,4 @@
-import { ChainType, PromiseResult } from '@lens-protocol/shared-kernel';
+import { EthereumAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import {
   Wallet,
@@ -6,12 +6,13 @@ import {
   UserRejectedError,
   PendingSigningRequestError,
   ICredentials,
+  WalletType,
 } from '../../entities';
 import { ActiveProfile } from '../profile/ActiveProfile';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 
-export interface IWalletConnector {
-  connect(chainType: ChainType): PromiseResult<Wallet, WalletConnectionError>;
+export interface IWalletFactory {
+  create(request: WalletLoginRequest): Promise<Wallet>;
 }
 
 export interface IWritableWalletGateway {
@@ -37,9 +38,14 @@ export interface ICredentialsWriter {
   save(credentials: ICredentials): Promise<void>;
 }
 
+export type WalletLoginRequest = {
+  address: EthereumAddress;
+  type: WalletType;
+};
+
 export class WalletLogin {
   constructor(
-    private readonly walletConnector: IWalletConnector,
+    private readonly walletFactory: IWalletFactory,
     private readonly walletGateway: IWritableWalletGateway,
     private readonly credentialsIssuer: ICredentialsIssuer,
     private readonly credentialsWriter: ICredentialsWriter,
@@ -48,15 +54,8 @@ export class WalletLogin {
     private readonly activeProfile: ActiveProfile,
   ) {}
 
-  async login(): Promise<void> {
-    const walletResult = await this.walletConnector.connect(ChainType.POLYGON);
-
-    if (walletResult.isFailure()) {
-      this.connectionErrorPresenter.presentConnectionError(walletResult.error);
-      return;
-    }
-
-    const wallet = walletResult.value;
+  async login(request: WalletLoginRequest): Promise<void> {
+    const wallet = await this.walletFactory.create(request);
     const result = await this.credentialsIssuer.issueCredentials(wallet);
 
     if (result.isFailure()) {

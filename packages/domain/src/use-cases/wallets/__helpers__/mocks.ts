@@ -9,7 +9,7 @@ import {
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { Wallet, TransactionKind } from '../../../entities';
+import { Wallet, TransactionKind, WalletType } from '../../../entities';
 import { mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveWallet } from '../ActiveWallet';
 import { WalletData } from '../IActiveWalletPresenter';
@@ -26,6 +26,7 @@ import {
   TokenAvailabilityError,
   TokenAvailabilityRequest,
 } from '../TokenAvailability';
+import { WalletLoginRequest } from '../WalletLogin';
 
 export function mockWalletData(override: Partial<WalletData> = {}): WalletData {
   // Currently leverages structural typing matching the type of WalletData
@@ -130,4 +131,14 @@ export function mockTokeAvailability({
   when(tokenAvailability.checkAvailability).calledWith(request).mockResolvedValue(result);
 
   return tokenAvailability;
+}
+
+export function mockWalletLoginRequest(
+  overrides?: Partial<WalletLoginRequest>,
+): WalletLoginRequest {
+  return {
+    address: mockEthereumAddress(),
+    type: WalletType.UNSPECIFIED,
+    ...overrides,
+  };
 }
