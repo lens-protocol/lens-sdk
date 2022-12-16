@@ -49,6 +49,7 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/client": "^3.7.1",
+    "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@lens-protocol/api": "workspace:*",
     "@lens-protocol/domain": "workspace:^0.0.1",
@@ -56,6 +57,7 @@
     "@lens-protocol/storage": "workspace:*",
     "eth-rpc-errors": "^4.0.3",
     "graphql": "15.5.1",
+    "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
     "zod": "^3.19.1"
   },
