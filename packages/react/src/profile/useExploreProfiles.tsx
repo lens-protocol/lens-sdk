@@ -8,7 +8,6 @@ import {
 import { useSharedDependencies } from '../shared';
 
 type UseFeedArgs = PaginatedArgs<{
-  profileId: string;
   observerId?: string;
 }>;
 

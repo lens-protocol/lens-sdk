@@ -4,7 +4,7 @@ import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { Loading } from '../loading/Loading';
 
 export function ExploreProfiles() {
-  const infiniteScroll = useInfiniteScroll(useExploreProfiles({ profileId: '0x3a2a' }));
+  const infiniteScroll = useInfiniteScroll(useExploreProfiles({}));
 
   if (infiniteScroll.loading) return <Loading />;
 
