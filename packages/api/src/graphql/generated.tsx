@@ -4192,6 +4192,17 @@ export type GetProfileQueryVariables = Exact<{
 
 export type GetProfileQuery = { result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment> };
 
+export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
+  address: Scalars['EthereumAddress'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type GetAllProfilesByOwnerAddressQuery = {
+  profilesByOwner: { __typename: 'PaginatedProfileResult' } & {
+    items: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+  };
+};
+
 export const PublicationStatsFragmentDoc = gql`
   fragment PublicationStats on PublicationStats {
     totalAmountOfMirrors
@@ -4802,6 +4813,68 @@ export function useGetProfileLazyQuery(
 export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
 export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
 export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
+export const GetAllProfilesByOwnerAddressDocument = gql`
+  query GetAllProfilesByOwnerAddress($address: EthereumAddress!, $observerId: ProfileId) {
+    profilesByOwner: profiles(request: { ownedBy: [$address] }) {
+      items {
+        ...ProfileFields
+      }
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
+
+/**
+ * __useGetAllProfilesByOwnerAddressQuery__
+ *
+ * To run a query within a React component, call `useGetAllProfilesByOwnerAddressQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllProfilesByOwnerAddressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllProfilesByOwnerAddressQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useGetAllProfilesByOwnerAddressQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetAllProfilesByOwnerAddressQuery,
+    GetAllProfilesByOwnerAddressQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetAllProfilesByOwnerAddressQuery,
+    GetAllProfilesByOwnerAddressQueryVariables
+  >(GetAllProfilesByOwnerAddressDocument, options);
+}
+export function useGetAllProfilesByOwnerAddressLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllProfilesByOwnerAddressQuery,
+    GetAllProfilesByOwnerAddressQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetAllProfilesByOwnerAddressQuery,
+    GetAllProfilesByOwnerAddressQueryVariables
+  >(GetAllProfilesByOwnerAddressDocument, options);
+}
+export type GetAllProfilesByOwnerAddressQueryHookResult = ReturnType<
+  typeof useGetAllProfilesByOwnerAddressQuery
+>;
+export type GetAllProfilesByOwnerAddressLazyQueryHookResult = ReturnType<
+  typeof useGetAllProfilesByOwnerAddressLazyQuery
+>;
+export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
+  GetAllProfilesByOwnerAddressQuery,
+  GetAllProfilesByOwnerAddressQueryVariables
+>;
 export type AccessConditionOutputKeySpecifier = (
   | 'nft'
   | 'token'
