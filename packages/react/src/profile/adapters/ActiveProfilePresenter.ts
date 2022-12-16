@@ -1,8 +1,8 @@
 import { ApolloClient, makeVar, NormalizedCacheObject, useReactiveVar } from '@apollo/client';
 import {
-  GetProfileByIdDocument,
-  GetProfileByIdQuery,
-  GetProfileByIdQueryVariables,
+  GetProfileDocument,
+  GetProfileQuery,
+  GetProfileQueryVariables,
   ProfileFieldsFragment,
 } from '@lens-protocol/api';
 import { IActiveProfilePresenter, ProfileData } from '@lens-protocol/domain/use-cases/profile';
@@ -21,13 +21,10 @@ export class ActiveProfilePresenter implements IActiveProfilePresenter {
     }
 
     if (profileData) {
-      const observable = this.apolloClient.watchQuery<
-        GetProfileByIdQuery,
-        GetProfileByIdQueryVariables
-      >({
-        query: GetProfileByIdDocument,
+      const observable = this.apolloClient.watchQuery<GetProfileQuery, GetProfileQueryVariables>({
+        query: GetProfileDocument,
         variables: {
-          id: profileData.id,
+          request: { profileId: profileData.id },
         },
         nextFetchPolicy: 'cache-only',
       });

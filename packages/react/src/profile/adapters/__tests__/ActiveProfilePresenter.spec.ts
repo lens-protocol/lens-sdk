@@ -1,8 +1,8 @@
 import { ApolloClient } from '@apollo/client';
-import { GetProfileByIdDocument, ProfileFieldsFragment } from '@lens-protocol/api';
+import { GetProfileDocument, ProfileFieldsFragment } from '@lens-protocol/api';
 import {
   createMockApolloCache,
-  mockGetProfileByIdQuery,
+  mockGetProfileQuery,
   mockProfileFieldsFragment,
 } from '@lens-protocol/api/mocks';
 
@@ -18,10 +18,10 @@ function setupApolloClient({ profile }: { profile: ProfileFieldsFragment }) {
 
   const updateProfileCache = (profilePatch: Omit<ProfileFieldsFragment, 'id'>) => {
     cache.writeQuery({
-      query: GetProfileByIdDocument,
-      data: mockGetProfileByIdQuery({ ...profile, ...profilePatch }),
+      query: GetProfileDocument,
+      data: mockGetProfileQuery({ ...profile, ...profilePatch }),
       variables: {
-        id: profile.id,
+        request: { profileId: profile.id },
       },
     });
   };

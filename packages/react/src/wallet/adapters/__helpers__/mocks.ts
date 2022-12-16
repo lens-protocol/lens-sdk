@@ -75,7 +75,7 @@ export function mockUnsignedTransactionRequest({
 
 export function mockExternalWallet() {
   return ExternalWallet.create(
-    { address: mockEthereumAddress(), type: WalletType.OTHER },
+    { address: mockEthereumAddress(), type: WalletType.UNSPECIFIED },
     mock<ISignerFactory>(),
     mock<ITransactionFactory<TransactionRequestModel>>(),
   );
