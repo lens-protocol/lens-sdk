@@ -34,7 +34,7 @@ export type PaginatedArgs<T> = T & {
 };
 
 export type LensResponseWithPagination<T> = LensResponse<T> & {
-  totalCount: number;
+  totalCount: number | null;
   previousCursor: string | null;
   nextCursor: string | null;
   next: (options: {
@@ -52,15 +52,14 @@ export function useLensResponseWithPagination<
 >({ error, data, loading, fetchMore }: QueryResult<T, V>): LensResponseWithPagination<K> {
   return {
     ...buildLensResponse<K>(data?.result.items, loading, error),
-    totalCount: data?.result.pageInfo.totalCount ?? 0,
+    totalCount: data?.result.pageInfo.totalCount ?? null,
     previousCursor: data?.result.pageInfo.prev ?? null,
     nextCursor: data?.result.pageInfo.next ?? null,
-    next: async (options) => {
-      return fetchMore({
+    next: async (options) =>
+      fetchMore({
         variables: {
           cursor: options.variables.cursor,
         },
-      }).then((res) => buildLensResponse<K>(res.data.result.items, res.loading, res.error));
-    },
+      }).then((res) => buildLensResponse<K>(res.data.result.items, res.loading, res.error)),
   };
 }

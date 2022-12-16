@@ -1,4 +1,4 @@
-import { FeedItemFragment, FeedQuery, FeedQueryVariables, useFeedQuery } from '@lens-protocol/api';
+import { ProfileFieldsFragment, useExploreProfilesQuery } from '@lens-protocol/api';
 
 import {
   LensResponseWithPagination,
@@ -12,26 +12,21 @@ type UseFeedArgs = PaginatedArgs<{
   observerId?: string;
 }>;
 
-export function useFeed({
-  profileId,
+export function useExploreProfiles({
   observerId,
   limit,
   cursor,
-}: UseFeedArgs): LensResponseWithPagination<FeedItemFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
+}: UseFeedArgs): LensResponseWithPagination<ProfileFieldsFragment[]> {
+  const { apolloClient } = useSharedDependencies();
 
-  const res = useLensResponseWithPagination<FeedItemFragment[], FeedQuery, FeedQueryVariables>(
-    useFeedQuery({
+  return useLensResponseWithPagination(
+    useExploreProfilesQuery({
       variables: {
-        profileId,
         observerId,
-        sources,
         limit: limit ?? 10,
         cursor: cursor ?? undefined,
       },
       client: apolloClient,
     }),
   );
-
-  return res;
 }

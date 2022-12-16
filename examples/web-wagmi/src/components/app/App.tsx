@@ -5,6 +5,7 @@ import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Examples } from '../Examples';
+import { ExploreProfiles } from '../feed/Explore';
 import { Feed } from '../feed/Feed';
 import { BackButton } from '../header/BackButton';
 import { Header } from '../header/Header';
@@ -38,6 +39,7 @@ export function App() {
             <Routes>
               <Route path="/" element={<Examples />} />
               <Route path="/feed" element={<Feed />} />
+              <Route path="/explore" element={<ExploreProfiles />} />
               <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
               <Route path="/profile-by-id" element={<ProfileById />} />
               <Route path="/profile-by-handle" element={<ProfileByHandle />} />

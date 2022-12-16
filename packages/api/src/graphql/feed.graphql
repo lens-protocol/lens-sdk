@@ -32,3 +32,16 @@ query Feed(
     }
   }
 }
+
+query ExploreProfiles($observerId: ProfileId, $limit: LimitScalar!, $cursor: Cursor) {
+  result: exploreProfiles(
+    request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
+  ) {
+    items {
+      ...ProfileFields
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
