@@ -11,6 +11,16 @@ import {
   SingleProfileQueryRequest,
   GetAllProfilesByOwnerAddressQuery,
   GetAllProfilesByOwnerAddressDocument,
+  ProxyActionError,
+  ProxyActionStatusResult,
+  ProxyActionStatusTypes,
+  ProxyActionStatusQueryVariables,
+  ProxyActionStatusQuery,
+  ProxyActionStatusDocument,
+  HasTxHashBeenIndexedQuery,
+  TransactionErrorReasons,
+  HasTxHashBeenIndexedQueryVariables,
+  HasTxHashBeenIndexedDocument,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -85,6 +95,82 @@ export function mockGetAllProfilesByOwnerAddressQueryMockedResponse({
     },
     result: {
       data: mockGetAllProfilesByOwnerAddressQuery(profiles),
+    },
+  };
+}
+
+export function mockHasTxHashBeenIndexedQuery(
+  result: { reason: TransactionErrorReasons } | { indexed: boolean; txHash: string },
+): HasTxHashBeenIndexedQuery {
+  return {
+    result:
+      'reason' in result
+        ? {
+            __typename: 'TransactionError',
+            ...result,
+          }
+        : {
+            __typename: 'TransactionIndexedResult',
+            ...result,
+          },
+  };
+}
+
+export function mockHasTxHashBeenIndexedQueryMockedResponse({
+  variables,
+  data,
+}: {
+  variables: HasTxHashBeenIndexedQueryVariables;
+  data: HasTxHashBeenIndexedQuery;
+}): MockedResponse<HasTxHashBeenIndexedQuery> {
+  return {
+    request: {
+      query: HasTxHashBeenIndexedDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+function mockProxyActionStatusError(overrides?: Partial<ProxyActionError>): ProxyActionError {
+  return {
+    __typename: 'ProxyActionError',
+    reason: 'UNKNOWN',
+    lastKnownTxId: '0x123',
+    ...overrides,
+  };
+}
+
+function mockProxyActionStatusResult(
+  overrides?: Partial<ProxyActionStatusResult>,
+): ProxyActionStatusResult {
+  return {
+    txHash: '0x123',
+    txId: '1',
+    status: ProxyActionStatusTypes.Minting,
+    ...overrides,
+    __typename: 'ProxyActionStatusResult',
+  };
+}
+
+export function mockProxyActionStatusMockedResponse(instructions: {
+  result: { reason: string; lastKnownTxId: string } | Partial<ProxyActionStatusResult>;
+  variables: ProxyActionStatusQueryVariables;
+}): MockedResponse<ProxyActionStatusQuery> {
+  return {
+    request: {
+      query: ProxyActionStatusDocument,
+      variables: instructions.variables,
+    },
+    result: {
+      data: {
+        result:
+          'reason' in instructions.result
+            ? mockProxyActionStatusError(instructions.result)
+            : mockProxyActionStatusResult(instructions.result),
+      },
     },
   };
 }

@@ -3787,6 +3787,37 @@ export type WorldcoinIdentity = {
   isHuman: Scalars['Boolean'];
 };
 
+export type AuthChallengeQueryVariables = Exact<{
+  address: Scalars['EthereumAddress'];
+}>;
+
+export type AuthChallengeQuery = {
+  result: { __typename: 'AuthChallengeResult' } & Pick<AuthChallengeResult, 'text'>;
+};
+
+export type AuthAuthenticateMutationVariables = Exact<{
+  address: Scalars['EthereumAddress'];
+  signature: Scalars['Signature'];
+}>;
+
+export type AuthAuthenticateMutation = {
+  result: { __typename: 'AuthenticationResult' } & Pick<
+    AuthenticationResult,
+    'accessToken' | 'refreshToken'
+  >;
+};
+
+export type AuthRefreshMutationVariables = Exact<{
+  refreshToken: Scalars['Jwt'];
+}>;
+
+export type AuthRefreshMutation = {
+  result: { __typename: 'AuthenticationResult' } & Pick<
+    AuthenticationResult,
+    'accessToken' | 'refreshToken'
+  >;
+};
+
 export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
   Erc20,
   'name' | 'symbol' | 'decimals' | 'address'
@@ -4214,6 +4245,51 @@ export type GetAllProfilesByOwnerAddressQuery = {
   profilesByOwner: { __typename: 'PaginatedProfileResult' } & {
     items: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
   };
+};
+
+export type ProxyActionStatusResultFragment = { __typename: 'ProxyActionStatusResult' } & Pick<
+  ProxyActionStatusResult,
+  'txHash' | 'txId' | 'status'
+>;
+
+export type ProxyActionErrorFragment = { __typename: 'ProxyActionError' } & Pick<
+  ProxyActionError,
+  'reason' | 'lastKnownTxId'
+>;
+
+export type ProxyActionQueuedFragment = { __typename: 'ProxyActionQueued' } & Pick<
+  ProxyActionQueued,
+  'queuedAt'
+>;
+
+export type ProxyActionStatusQueryVariables = Exact<{
+  proxyActionId: Scalars['ProxyActionId'];
+}>;
+
+export type ProxyActionStatusQuery = {
+  result:
+    | ({ __typename: 'ProxyActionStatusResult' } & ProxyActionStatusResultFragment)
+    | ({ __typename: 'ProxyActionError' } & ProxyActionErrorFragment)
+    | ({ __typename: 'ProxyActionQueued' } & ProxyActionQueuedFragment);
+};
+
+export type ProxyActionMutationVariables = Exact<{
+  request: ProxyActionRequest;
+}>;
+
+export type ProxyActionMutation = { result: Mutation['proxyAction'] };
+
+export type HasTxHashBeenIndexedQueryVariables = Exact<{
+  request: HasTxHashBeenIndexedRequest;
+}>;
+
+export type HasTxHashBeenIndexedQuery = {
+  result:
+    | ({ __typename: 'TransactionIndexedResult' } & Pick<
+        TransactionIndexedResult,
+        'indexed' | 'txHash'
+      >)
+    | ({ __typename: 'TransactionError' } & Pick<TransactionError, 'reason'>);
 };
 
 export const PublicationStatsFragmentDoc = gql`
@@ -4677,6 +4753,166 @@ export const FeedItemFragmentDoc = gql`
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
+export const ProxyActionStatusResultFragmentDoc = gql`
+  fragment ProxyActionStatusResult on ProxyActionStatusResult {
+    txHash
+    txId
+    status
+  }
+`;
+export const ProxyActionErrorFragmentDoc = gql`
+  fragment ProxyActionError on ProxyActionError {
+    reason
+    lastKnownTxId
+  }
+`;
+export const ProxyActionQueuedFragmentDoc = gql`
+  fragment ProxyActionQueued on ProxyActionQueued {
+    queuedAt
+  }
+`;
+export const AuthChallengeDocument = gql`
+  query AuthChallenge($address: EthereumAddress!) {
+    result: challenge(request: { address: $address }) {
+      text
+    }
+  }
+`;
+
+/**
+ * __useAuthChallengeQuery__
+ *
+ * To run a query within a React component, call `useAuthChallengeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAuthChallengeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAuthChallengeQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useAuthChallengeQuery(
+  baseOptions: Apollo.QueryHookOptions<AuthChallengeQuery, AuthChallengeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<AuthChallengeQuery, AuthChallengeQueryVariables>(
+    AuthChallengeDocument,
+    options,
+  );
+}
+export function useAuthChallengeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<AuthChallengeQuery, AuthChallengeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<AuthChallengeQuery, AuthChallengeQueryVariables>(
+    AuthChallengeDocument,
+    options,
+  );
+}
+export type AuthChallengeQueryHookResult = ReturnType<typeof useAuthChallengeQuery>;
+export type AuthChallengeLazyQueryHookResult = ReturnType<typeof useAuthChallengeLazyQuery>;
+export type AuthChallengeQueryResult = Apollo.QueryResult<
+  AuthChallengeQuery,
+  AuthChallengeQueryVariables
+>;
+export const AuthAuthenticateDocument = gql`
+  mutation AuthAuthenticate($address: EthereumAddress!, $signature: Signature!) {
+    result: authenticate(request: { address: $address, signature: $signature }) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+export type AuthAuthenticateMutationFn = Apollo.MutationFunction<
+  AuthAuthenticateMutation,
+  AuthAuthenticateMutationVariables
+>;
+
+/**
+ * __useAuthAuthenticateMutation__
+ *
+ * To run a mutation, you first call `useAuthAuthenticateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthAuthenticateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [authAuthenticateMutation, { data, loading, error }] = useAuthAuthenticateMutation({
+ *   variables: {
+ *      address: // value for 'address'
+ *      signature: // value for 'signature'
+ *   },
+ * });
+ */
+export function useAuthAuthenticateMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AuthAuthenticateMutation,
+    AuthAuthenticateMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AuthAuthenticateMutation, AuthAuthenticateMutationVariables>(
+    AuthAuthenticateDocument,
+    options,
+  );
+}
+export type AuthAuthenticateMutationHookResult = ReturnType<typeof useAuthAuthenticateMutation>;
+export type AuthAuthenticateMutationResult = Apollo.MutationResult<AuthAuthenticateMutation>;
+export type AuthAuthenticateMutationOptions = Apollo.BaseMutationOptions<
+  AuthAuthenticateMutation,
+  AuthAuthenticateMutationVariables
+>;
+export const AuthRefreshDocument = gql`
+  mutation AuthRefresh($refreshToken: Jwt!) {
+    result: refresh(request: { refreshToken: $refreshToken }) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+export type AuthRefreshMutationFn = Apollo.MutationFunction<
+  AuthRefreshMutation,
+  AuthRefreshMutationVariables
+>;
+
+/**
+ * __useAuthRefreshMutation__
+ *
+ * To run a mutation, you first call `useAuthRefreshMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthRefreshMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [authRefreshMutation, { data, loading, error }] = useAuthRefreshMutation({
+ *   variables: {
+ *      refreshToken: // value for 'refreshToken'
+ *   },
+ * });
+ */
+export function useAuthRefreshMutation(
+  baseOptions?: Apollo.MutationHookOptions<AuthRefreshMutation, AuthRefreshMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AuthRefreshMutation, AuthRefreshMutationVariables>(
+    AuthRefreshDocument,
+    options,
+  );
+}
+export type AuthRefreshMutationHookResult = ReturnType<typeof useAuthRefreshMutation>;
+export type AuthRefreshMutationResult = Apollo.MutationResult<AuthRefreshMutation>;
+export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
+  AuthRefreshMutation,
+  AuthRefreshMutationVariables
+>;
 export const FeedDocument = gql`
   query Feed(
     $profileId: ProfileId!
@@ -4946,6 +5182,172 @@ export type GetAllProfilesByOwnerAddressLazyQueryHookResult = ReturnType<
 export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
   GetAllProfilesByOwnerAddressQuery,
   GetAllProfilesByOwnerAddressQueryVariables
+>;
+export const ProxyActionStatusDocument = gql`
+  query ProxyActionStatus($proxyActionId: ProxyActionId!) {
+    result: proxyActionStatus(proxyActionId: $proxyActionId) {
+      ... on ProxyActionStatusResult {
+        ...ProxyActionStatusResult
+      }
+      ... on ProxyActionError {
+        ...ProxyActionError
+      }
+      ... on ProxyActionQueued {
+        ...ProxyActionQueued
+      }
+    }
+  }
+  ${ProxyActionStatusResultFragmentDoc}
+  ${ProxyActionErrorFragmentDoc}
+  ${ProxyActionQueuedFragmentDoc}
+`;
+
+/**
+ * __useProxyActionStatusQuery__
+ *
+ * To run a query within a React component, call `useProxyActionStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProxyActionStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProxyActionStatusQuery({
+ *   variables: {
+ *      proxyActionId: // value for 'proxyActionId'
+ *   },
+ * });
+ */
+export function useProxyActionStatusQuery(
+  baseOptions: Apollo.QueryHookOptions<ProxyActionStatusQuery, ProxyActionStatusQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProxyActionStatusQuery, ProxyActionStatusQueryVariables>(
+    ProxyActionStatusDocument,
+    options,
+  );
+}
+export function useProxyActionStatusLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProxyActionStatusQuery,
+    ProxyActionStatusQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProxyActionStatusQuery, ProxyActionStatusQueryVariables>(
+    ProxyActionStatusDocument,
+    options,
+  );
+}
+export type ProxyActionStatusQueryHookResult = ReturnType<typeof useProxyActionStatusQuery>;
+export type ProxyActionStatusLazyQueryHookResult = ReturnType<typeof useProxyActionStatusLazyQuery>;
+export type ProxyActionStatusQueryResult = Apollo.QueryResult<
+  ProxyActionStatusQuery,
+  ProxyActionStatusQueryVariables
+>;
+export const ProxyActionDocument = gql`
+  mutation ProxyAction($request: ProxyActionRequest!) {
+    result: proxyAction(request: $request)
+  }
+`;
+export type ProxyActionMutationFn = Apollo.MutationFunction<
+  ProxyActionMutation,
+  ProxyActionMutationVariables
+>;
+
+/**
+ * __useProxyActionMutation__
+ *
+ * To run a mutation, you first call `useProxyActionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useProxyActionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [proxyActionMutation, { data, loading, error }] = useProxyActionMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useProxyActionMutation(
+  baseOptions?: Apollo.MutationHookOptions<ProxyActionMutation, ProxyActionMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ProxyActionMutation, ProxyActionMutationVariables>(
+    ProxyActionDocument,
+    options,
+  );
+}
+export type ProxyActionMutationHookResult = ReturnType<typeof useProxyActionMutation>;
+export type ProxyActionMutationResult = Apollo.MutationResult<ProxyActionMutation>;
+export type ProxyActionMutationOptions = Apollo.BaseMutationOptions<
+  ProxyActionMutation,
+  ProxyActionMutationVariables
+>;
+export const HasTxHashBeenIndexedDocument = gql`
+  query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
+    result: hasTxHashBeenIndexed(request: $request) {
+      ... on TransactionIndexedResult {
+        indexed
+        txHash
+      }
+      ... on TransactionError {
+        reason
+      }
+    }
+  }
+`;
+
+/**
+ * __useHasTxHashBeenIndexedQuery__
+ *
+ * To run a query within a React component, call `useHasTxHashBeenIndexedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHasTxHashBeenIndexedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHasTxHashBeenIndexedQuery({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useHasTxHashBeenIndexedQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    HasTxHashBeenIndexedQuery,
+    HasTxHashBeenIndexedQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<HasTxHashBeenIndexedQuery, HasTxHashBeenIndexedQueryVariables>(
+    HasTxHashBeenIndexedDocument,
+    options,
+  );
+}
+export function useHasTxHashBeenIndexedLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    HasTxHashBeenIndexedQuery,
+    HasTxHashBeenIndexedQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<HasTxHashBeenIndexedQuery, HasTxHashBeenIndexedQueryVariables>(
+    HasTxHashBeenIndexedDocument,
+    options,
+  );
+}
+export type HasTxHashBeenIndexedQueryHookResult = ReturnType<typeof useHasTxHashBeenIndexedQuery>;
+export type HasTxHashBeenIndexedLazyQueryHookResult = ReturnType<
+  typeof useHasTxHashBeenIndexedLazyQuery
+>;
+export type HasTxHashBeenIndexedQueryResult = Apollo.QueryResult<
+  HasTxHashBeenIndexedQuery,
+  HasTxHashBeenIndexedQueryVariables
 >;
 export type AccessConditionOutputKeySpecifier = (
   | 'nft'
