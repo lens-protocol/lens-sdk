@@ -29,7 +29,7 @@ importers:
       react-router-dom: ^6.4.5
       typescript: ^4.6.4
       vite: ^3.2.3
-      wagmi: ^0.8.10
+      wagmi: 0.9.2
     dependencies:
       '@lens-protocol/react': link:../../packages/react
       ethers: 5.7.2
@@ -37,7 +37,7 @@ importers:
       react-cool-inview: 3.0.1_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-router-dom: 6.4.5_biqbaboplfbrettd7655fr4n2y
-      wagmi: 0.8.10_j2ypj35ch2jv6b3hllmh4dxtwm
+      wagmi: 0.9.2_j2ypj35ch2jv6b3hllmh4dxtwm
     devDependencies:
       '@lens-protocol/eslint-config': link:../../packages/eslint-config
       '@lens-protocol/prettier-config': link:../../packages/prettier-config
@@ -166,6 +166,7 @@ importers:
   packages/react:
     specifiers:
       '@apollo/client': ^3.7.1
+      '@ethersproject/abstract-signer': ^5.7.0
       '@ethersproject/providers': ^5.7.2
       '@faker-js/faker': ^7.6.0
       '@lens-protocol/api': workspace:*
@@ -190,6 +191,7 @@ importers:
       jest-environment-jsdom: ^29.3.1
       jest-mock-extended: ^3.0.1
       jest-when: ^3.5.2
+      jwt-decode: ^3.1.2
       lodash: ^4.17.21
       prettier: ^2.8.0
       react: ^18.2.0
@@ -200,6 +202,7 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@apollo/client': 3.7.1_47swblzip3hkvavljfwh7ztgne
+      '@ethersproject/abstract-signer': 5.7.0
       '@ethersproject/providers': 5.7.2
       '@lens-protocol/api': link:../api
       '@lens-protocol/domain': link:../domain
@@ -207,6 +210,7 @@ importers:
       '@lens-protocol/storage': link:../storage
       eth-rpc-errors: 4.0.3
       graphql: 15.5.1
+      jwt-decode: 3.1.2
       react: 18.2.0
       zod: 3.19.1
     devDependencies:
@@ -2842,7 +2846,7 @@ packages:
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
-      '@types/node': 18.11.10
+      '@types/node': 18.11.11
     dev: false
 
   /@types/graceful-fs/4.1.5:
@@ -2949,6 +2953,7 @@ packages:
 
   /@types/node/18.11.10:
     resolution: {integrity: sha512-juG3RWMBOqcOuXC643OAdSA525V44cVgGV6dUDuiFtss+8Fk5x1hI93Rsld43VeJVIeqlP9I7Fn9/qaVqoEAuQ==}
+    dev: true
 
   /@types/node/18.11.11:
     resolution: {integrity: sha512-KJ021B1nlQUBLopzZmPBVuGU9un7WJd/W4ya7Ih02B4Uwky5Nja0yGYav2EfYIk0RR2Q9oVhf60S2XR1BCWJ2g==}
@@ -3026,7 +3031,7 @@ packages:
   /@types/ws/7.4.7:
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
     dependencies:
-      '@types/node': 18.11.10
+      '@types/node': 18.11.11
     dev: false
 
   /@types/yargs-parser/21.0.0:
@@ -3186,10 +3191,14 @@ packages:
       - supports-color
     dev: true
 
-  /@wagmi/core/0.7.9_5hvgmjn74qcngqzwitileagqei:
-    resolution: {integrity: sha512-97KCELUP5Q1AagRyE7SmpLh4/v3xdcy/XMbybLvvtQbgmi3y5oEzy4h/wJMY1hEZlmicqyWZAHHm6xIr1tP5HA==}
+  /@wagmi/chains/0.1.1:
+    resolution: {integrity: sha512-isHtXKy6acossn6NQsBzgY25CH+m+v/eAjCUv8HAmAAYHxhvo59fWGneiSRK2pCPdjN3VIG5ZcMG4cAaO7qqjQ==}
+    dev: false
+
+  /@wagmi/core/0.8.2_5hvgmjn74qcngqzwitileagqei:
+    resolution: {integrity: sha512-AQzHbGWfYcFb9VPnKH/61MXNjBHJX1o7M7enK5d4qefqbBkhxBiHBjQH+D1YfA4w0dJgriRZo9FsHJj8X2jjDA==}
     peerDependencies:
-      '@coinbase/wallet-sdk': '>=3.3.0'
+      '@coinbase/wallet-sdk': '>=3.6.0'
       '@walletconnect/ethereum-provider': '>=1.7.5'
       ethers: '>=5.5.1'
     peerDependenciesMeta:
@@ -3199,8 +3208,9 @@ packages:
         optional: true
     dependencies:
       '@coinbase/wallet-sdk': 3.6.2
+      '@wagmi/chains': 0.1.1
       '@walletconnect/ethereum-provider': 1.8.0
-      abitype: 0.1.8_typescript@4.9.3
+      abitype: 0.2.5_typescript@4.9.3
       ethers: 5.7.2
       eventemitter3: 4.0.7
       zustand: 4.1.5_react@18.2.0
@@ -3208,6 +3218,7 @@ packages:
       - immer
       - react
       - typescript
+      - zod
     dev: false
 
   /@walletconnect/browser-utils/1.8.0:
@@ -3451,11 +3462,15 @@ packages:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
     dev: true
 
-  /abitype/0.1.8_typescript@4.9.3:
-    resolution: {integrity: sha512-2pde0KepTzdfu19ZrzYTYVIWo69+6UbBCY4B1RDiwWgo2XZtFSJhF6C+XThuRXbbZ823J0Rw1Y5cP0NXYVcCdQ==}
+  /abitype/0.2.5_typescript@4.9.3:
+    resolution: {integrity: sha512-t1iiokWYpkrziu4WL2Gb6YdGvaP9ZKs7WnA39TI8TsW2E99GVRgDPW/xOKhzoCdyxOYt550CNYEFluCwGaFHaA==}
     engines: {pnpm: '>=7'}
     peerDependencies:
       typescript: '>=4.7.4'
+      zod: '>=3.19.1'
+    peerDependenciesMeta:
+      zod:
+        optional: true
     dependencies:
       typescript: 4.9.3
     dev: false
@@ -9467,6 +9482,10 @@ packages:
       safe-buffer: 5.2.1
     dev: true
 
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
+
   /keccak/3.0.2:
     resolution: {integrity: sha512-PyKKjkH53wDMLGrvmRGSNWgmSxZOUqbnXwKL9tmgbFYA1iAYqW21kfR7mZXV0MlESiefxQQE9X9fTa3X+2MPDQ==}
     engines: {node: '>=10.0.0'}
@@ -13286,8 +13305,8 @@ packages:
       xml-name-validator: 4.0.0
     dev: true
 
-  /wagmi/0.8.10_j2ypj35ch2jv6b3hllmh4dxtwm:
-    resolution: {integrity: sha512-svS/Debs6maJX3TlPDXNo+UDfZn8VCHzN2xcMMjPjcu2Z9k2iwFwC0TMLxM1itluzrTcw9n8F8E+f6gb+Aw+EQ==}
+  /wagmi/0.9.2_j2ypj35ch2jv6b3hllmh4dxtwm:
+    resolution: {integrity: sha512-ZHmVXQ0U2650pBf0k168CZJ5pAotqefy5d5P9HpoW4oMaHoQ9+BvUjLcA0L2SEeUUY6L3MYRrOmoHHrcyTsToQ==}
     peerDependencies:
       ethers: '>=5.5.1'
       react: '>=17.0.0'
@@ -13296,9 +13315,9 @@ packages:
       '@tanstack/query-sync-storage-persister': 4.19.1
       '@tanstack/react-query': 4.19.1_biqbaboplfbrettd7655fr4n2y
       '@tanstack/react-query-persist-client': 4.19.1_tbzjkhe5jt5eajidrzbcozbyna
-      '@wagmi/core': 0.7.9_5hvgmjn74qcngqzwitileagqei
+      '@wagmi/core': 0.8.2_5hvgmjn74qcngqzwitileagqei
       '@walletconnect/ethereum-provider': 1.8.0
-      abitype: 0.1.8_typescript@4.9.3
+      abitype: 0.2.5_typescript@4.9.3
       ethers: 5.7.2
       react: 18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
@@ -13314,6 +13333,7 @@ packages:
       - supports-color
       - typescript
       - utf-8-validate
+      - zod
     dev: false
 
   /wait-for-expect/3.0.2:
