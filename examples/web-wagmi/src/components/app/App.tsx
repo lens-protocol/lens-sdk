@@ -1,9 +1,8 @@
-import { IBindings, LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
+import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
 import { localStorage } from '@lens-protocol/react/web';
-import { providers } from 'ethers';
+import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { fetchSigner, getProvider } from 'wagmi/actions';
 import { optimism, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -23,13 +22,6 @@ const client = createClient({
   provider,
   webSocketProvider,
 });
-
-function wagmiBindings(): IBindings {
-  return {
-    getProvider: async ({ chainId }) => getProvider<providers.JsonRpcProvider>({ chainId }),
-    getSigner: ({ chainId }) => fetchSigner<providers.JsonRpcSigner>({ chainId }),
-  };
-}
 
 const lensConfig: LensConfig = {
   environment: staging,
