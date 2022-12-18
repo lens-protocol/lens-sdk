@@ -6,10 +6,9 @@ import { TransactionRequestModel } from '../../../entities';
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveProfile } from '../../profile/ActiveProfile';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
-import { mockTransactionQueue } from '../../transactions/__helpers__/mocks';
 import { ActiveWallet } from '../../wallets/ActiveWallet';
 import { IActiveWalletPresenter } from '../../wallets/IActiveWalletPresenter';
-import { ILoginPresenter } from '../../wallets/ILoginPresenter';
+import { ILogoutPresenter, LogoutReason } from '../../wallets/ILogoutPresenter';
 import {
   Bootstrap,
   CredentialsExpiredError,
@@ -21,48 +20,48 @@ import {
 const wallet = mockWallet();
 
 type BootstrapSetupConfig = {
-  activeProfile?: ActiveProfile;
-  activeWallet?: ActiveWallet;
+  activeWallet: ActiveWallet;
   credentialsGateway?: ICredentialsGateway;
   credentialsRenewer?: ICredentialsRenewer;
   walletPresenter?: IActiveWalletPresenter;
   applicationPresenter?: IApplicationPresenter;
-  loginPresenter?: ILoginPresenter;
+  logoutPresenter?: ILogoutPresenter;
   transactionQueue?: TransactionQueue<TransactionRequestModel>;
 };
 
 const setupBootstrapInteractor = ({
-  activeProfile = mock<ActiveProfile>(),
-  activeWallet = mock<ActiveWallet>(),
+  activeWallet,
   credentialsGateway = mock<ICredentialsGateway>(),
   credentialsRenewer = mock<ICredentialsRenewer>(),
-  walletPresenter = mock<IActiveWalletPresenter>(),
-  applicationPresenter = mock<IApplicationPresenter>(),
-  loginPresenter = mock<ILoginPresenter>(),
-  transactionQueue = mockTransactionQueue(),
-}: BootstrapSetupConfig = {}) => {
-  return new Bootstrap(
+}: BootstrapSetupConfig) => {
+  const activeProfile = mock<ActiveProfile>();
+  const walletPresenter = mock<IActiveWalletPresenter>();
+  const applicationPresenter = mock<IApplicationPresenter>();
+  const logoutPresenter = mock<ILogoutPresenter>();
+  // transactionQueue = mockTransactionQueue()
+
+  const bootstrap = new Bootstrap(
     activeWallet,
     credentialsGateway,
     credentialsRenewer,
     walletPresenter,
     applicationPresenter,
-    loginPresenter,
+    logoutPresenter,
     activeProfile,
-    transactionQueue,
+    // transactionQueue,
   );
+
+  return { bootstrap, activeProfile, walletPresenter, applicationPresenter, logoutPresenter };
 };
 
 describe(`Given the ${Bootstrap.name} interactor`, () => {
-  describe(`when "${Bootstrap.prototype.start.name}" is invoked`, () => {
-    describe('without wallet', () => {
+  describe('and there is no active wallet', () => {
+    describe(`when the "${Bootstrap.prototype.start.name}" method is invoked`, () => {
       it('should just signal readiness', async () => {
         const activeWallet = mock<ActiveWallet>();
-        const applicationPresenter = mock<IApplicationPresenter>();
-
         when(activeWallet.getActiveWallet).mockResolvedValue(null);
 
-        const bootstrap = setupBootstrapInteractor({ activeWallet, applicationPresenter });
+        const { applicationPresenter, bootstrap } = setupBootstrapInteractor({ activeWallet });
 
         await bootstrap.start();
 
@@ -70,71 +69,95 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
       });
     });
 
-    describe('with wallet', () => {
-      describe('and with not expired credentials', () => {
-        it(`should:
-            - present wallet and signal readiness
-            - resume the ${TransactionQueue.name}`, async () => {
-          const activeProfile = mock<ActiveProfile>();
+    describe('and there is an active wallet', () => {
+      describe(`when the "${Bootstrap.prototype.start.name}" method is invoked`, () => {
+        it(`should check if the credentials are expired and if not:
+            - present the wallet
+            - resume the ${TransactionQueue.name} (TODO)
+            - and finally signal readiness`, async () => {
           const activeWallet = mock<ActiveWallet>();
-          const applicationPresenter = mock<IApplicationPresenter>();
           const credentialsGateway = mock<ICredentialsGateway>();
           const credentialsRenewer = mock<ICredentialsRenewer>();
-          const transactionQueue = mockTransactionQueue();
-          const walletPresenter = mock<IActiveWalletPresenter>();
 
           when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
           when(credentialsRenewer.renewCredentials).mockResolvedValue(success(mockCredentials()));
-          when(credentialsGateway.getCredentials)
-            .calledWith(wallet)
-            .mockResolvedValue(mockCredentials());
+          when(credentialsGateway.getCredentials).mockResolvedValue(mockCredentials());
 
-          const bootstrap = setupBootstrapInteractor({
-            activeProfile,
-            activeWallet,
-            applicationPresenter,
-            credentialsGateway,
-            credentialsRenewer,
-            transactionQueue,
-            walletPresenter,
-          });
+          const { activeProfile, applicationPresenter, bootstrap, walletPresenter } =
+            setupBootstrapInteractor({
+              activeWallet,
+              credentialsGateway,
+              credentialsRenewer,
+            });
 
           await bootstrap.start();
 
           expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
+          expect(activeProfile.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
+            wallet.address,
+          );
           expect(applicationPresenter.signalReady).toHaveBeenCalled();
+          // expect(transactionQueue.init).toHaveBeenCalled();
+        });
+
+        it(`should renew the credentials if expired and then:
+            - save the new credentials
+            - present the wallet
+            - resume the ${TransactionQueue.name} (TODO)
+            - and finally signal readiness`, async () => {
+          const activeWallet = mock<ActiveWallet>();
+          const credentialsGateway = mock<ICredentialsGateway>();
+          const credentialsRenewer = mock<ICredentialsRenewer>();
+          const oldCredentials = mockCredentials();
+          const newCredentials = mockCredentials();
+
+          when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
+          when(credentialsGateway.getCredentials).mockResolvedValue(oldCredentials);
+          when(credentialsRenewer.renewCredentials)
+            .calledWith(oldCredentials)
+            .mockResolvedValue(success(newCredentials));
+
+          const { bootstrap, activeProfile, applicationPresenter, walletPresenter } =
+            setupBootstrapInteractor({
+              activeWallet,
+              credentialsGateway,
+              credentialsRenewer,
+            });
+
+          await bootstrap.start();
+
           expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
           expect(activeProfile.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
             wallet.address,
           );
-          expect(transactionQueue.init).toHaveBeenCalled();
+          expect(applicationPresenter.signalReady).toHaveBeenCalled();
+          // expect(transactionQueue.init).toHaveBeenCalled();
         });
-      });
 
-      describe('and with expired credentials', () => {
-        it("should present login options and signal readiness if we can't refresh credentials", async () => {
+        it(`should:
+            - present the logout reason if it fails to renew the credentials
+            - and finally signal readiness`, async () => {
           const activeWallet = mock<ActiveWallet>();
-          const loginPresenter = mock<ILoginPresenter>();
           const credentialsGateway = mock<ICredentialsGateway>();
           const credentialsRenewer = mock<ICredentialsRenewer>();
-          const applicationPresenter = mock<IApplicationPresenter>();
 
           when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
           when(credentialsRenewer.renewCredentials).mockResolvedValue(
             failure(new CredentialsExpiredError()),
           );
 
-          const bootstrap = setupBootstrapInteractor({
+          const { bootstrap, applicationPresenter, logoutPresenter } = setupBootstrapInteractor({
             activeWallet,
-            applicationPresenter,
-            loginPresenter,
             credentialsGateway,
             credentialsRenewer,
           });
 
           await bootstrap.start();
 
-          expect(loginPresenter.presentLoginOptions).toHaveBeenCalledWith(wallet);
+          expect(logoutPresenter.presentLogout).toHaveBeenCalledWith({
+            lastLoggedInWallet: wallet,
+            logoutReason: LogoutReason.CREDENTIALS_EXPIRED,
+          });
           expect(applicationPresenter.signalReady).toHaveBeenCalled();
         });
       });

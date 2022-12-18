@@ -1,11 +1,7 @@
-import { useWalletLogin } from '@lens-protocol/react';
+import { useWalletLogin, useActiveProfile } from '@lens-protocol/react';
 import { Link } from 'react-router-dom';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
-
-function truncateAddress(address: string, chars = 4) {
-  return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`;
-}
 
 export function Header() {
   const login = useWalletLogin();
@@ -22,7 +18,7 @@ export function Header() {
   });
 
   const { disconnect } = useDisconnect();
-  const { address } = useAccount();
+  const { loading, profile } = useActiveProfile();
 
   return (
     <div
@@ -48,8 +44,14 @@ export function Header() {
         <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
           <span style={{ fontWeight: 'bold' }}>@lens-protocol/react - wagmi</span>
         </Link>
-        {!address && <button onClick={() => connect()}>Connect Wallet</button>}
-        {address && <button onClick={() => disconnect()}>{truncateAddress(address)}</button>}
+        {!loading &&
+          (profile ? (
+            <button onClick={() => disconnect()}>
+              <strong>{profile.handle}</strong>
+            </button>
+          ) : (
+            <button onClick={() => connect()}>Log in</button>
+          ))}
       </div>
     </div>
   );
