@@ -1,12 +1,12 @@
 import { WalletType } from '@lens-protocol/domain/entities';
-import { providers } from 'ethers';
+import { Signer } from 'ethers';
 
 import { useWalletLoginController } from './adapters/useWalletLoginController';
 
 export function useWalletLogin() {
   const login = useWalletLoginController();
 
-  return (signer: providers.JsonRpcSigner, walletType: WalletType = WalletType.UNSPECIFIED) => {
+  return (signer: Signer, walletType: WalletType = WalletType.UNSPECIFIED) => {
     void signer.getAddress().then((address) => {
       login({
         address,
