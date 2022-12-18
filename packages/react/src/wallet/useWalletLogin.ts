@@ -1,4 +1,4 @@
-import { WalletType } from '@lens-protocol/domain/dist/esm/entities';
+import { WalletType } from '@lens-protocol/domain/entities';
 import { providers } from 'ethers';
 
 import { useWalletLoginController } from './adapters/useWalletLoginController';

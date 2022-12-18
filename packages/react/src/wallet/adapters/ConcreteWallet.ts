@@ -1,6 +1,5 @@
 import { TypedDataSigner } from '@ethersproject/abstract-signer';
 import { TransactionRequest } from '@ethersproject/providers';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/dist/esm/use-cases/transactions';
 import {
   InsufficientGasError,
   Wallet,
@@ -14,6 +13,7 @@ import {
   UnsignedTransaction,
   NativeTransaction,
 } from '@lens-protocol/domain/entities';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
   ChainType,
   EthereumAddress,

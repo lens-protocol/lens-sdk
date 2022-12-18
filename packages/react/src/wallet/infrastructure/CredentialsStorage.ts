@@ -17,7 +17,7 @@ const AuthData = z.object({
 
 type AuthData = z.infer<typeof AuthData>;
 
-const authStorageSchema = new BaseStorageSchema('LENS_CREDENTIALS', AuthData);
+const authStorageSchema = new BaseStorageSchema('lens.credentials', AuthData);
 
 /**
  * Stores auth credentials.
