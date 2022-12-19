@@ -43,6 +43,11 @@ export function createPublicationTypePolicy(): TypePolicy<R> {
       isOptimisticMirroredByMe(existing: boolean | undefined) {
         return existing ?? false;
       },
+
+      ownedByMe() {
+        // TODO: implement ownership check using active profile
+        return false;
+      },
     },
   };
 }

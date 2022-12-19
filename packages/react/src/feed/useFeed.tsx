@@ -1,4 +1,4 @@
-import { FeedItemFragment, FeedQuery, FeedQueryVariables, useFeedQuery } from '@lens-protocol/api';
+import { FeedItemFragment, useFeedQuery } from '@lens-protocol/api';
 
 import {
   LensResponseWithPagination,
@@ -20,7 +20,7 @@ export function useFeed({
 }: UseFeedArgs): LensResponseWithPagination<FeedItemFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
-  const res = useLensResponseWithPagination<FeedItemFragment[], FeedQuery, FeedQueryVariables>(
+  return useLensResponseWithPagination(
     useFeedQuery({
       variables: {
         profileId,
@@ -32,6 +32,4 @@ export function useFeed({
       client: apolloClient,
     }),
   );
-
-  return res;
 }

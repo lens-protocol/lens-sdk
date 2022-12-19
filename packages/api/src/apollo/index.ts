@@ -5,10 +5,14 @@ import { createApolloCache, TypePolicies } from './createApolloCache';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
+import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 
 function createTypePolicies(): TypePolicies {
   return {
     Profile: createProfileTypePolicy(),
+    Post: createPublicationTypePolicy(),
+    Comment: createPublicationTypePolicy(),
+    Mirror: createPublicationTypePolicy(),
 
     Query: {
       fields: {
