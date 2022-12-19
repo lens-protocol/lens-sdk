@@ -37,12 +37,7 @@ export type LensResponseWithPagination<T> = LensResponse<T> & {
   totalCount: number | null;
   previousCursor: string | null;
   nextCursor: string | null;
-  next: (options: {
-    variables: {
-      offset?: number;
-      cursor: string | null;
-    };
-  }) => Promise<LensResponse<T>>;
+  next: () => Promise<void>;
 };
 
 export function useLensResponseWithPagination<
@@ -55,11 +50,12 @@ export function useLensResponseWithPagination<
     totalCount: data?.result.pageInfo.totalCount ?? null,
     previousCursor: data?.result.pageInfo.prev ?? null,
     nextCursor: data?.result.pageInfo.next ?? null,
-    next: async (options) =>
-      fetchMore({
+    next: async () => {
+      await fetchMore({
         variables: {
-          cursor: options.variables.cursor,
+          cursor: data?.result.pageInfo.next,
         },
-      }).then((res) => buildLensResponse<K>(res.data.result.items, res.loading, res.error)),
+      });
+    },
   };
 }

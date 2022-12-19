@@ -4,12 +4,11 @@ import generatedIntrospection from '../graphql/generated';
 import { createApolloCache, TypePolicies } from './createApolloCache';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
+import { createProfileTypePolicy } from './createProfileTypePolicy';
 
 function createTypePolicies(): TypePolicies {
   return {
-    // Post: createPublicationTypePolicy(),
-    // Comment: createPublicationTypePolicy(),
-    // Mirror: createPublicationTypePolicy(),
+    Profile: createProfileTypePolicy(),
 
     Query: {
       fields: {

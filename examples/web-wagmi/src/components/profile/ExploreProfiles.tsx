@@ -2,9 +2,12 @@ import { useExploreProfiles } from '@lens-protocol/react';
 
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { Loading } from '../loading/Loading';
+import { ProfilePicture } from './ProfilePicture';
 
 export function ExploreProfiles() {
-  const infiniteScroll = useInfiniteScroll(useExploreProfiles({}));
+  const exploreProfiles = useExploreProfiles({});
+
+  const infiniteScroll = useInfiniteScroll(exploreProfiles);
 
   if (infiniteScroll.loading) return <Loading />;
 
@@ -18,9 +21,13 @@ export function ExploreProfiles() {
         <h1>Explore Profiles</h1>
 
         {infiniteScroll.data.map((item) => (
-          <p key={item.id} style={{ margin: '10rem' }}>
-            {item.handle}
-          </p>
+          <>
+            <div key={item.id} style={{ margin: '1rem' }}>
+              <ProfilePicture picture={item.picture} />
+              <p>{item.handle}</p>
+            </div>
+            <hr />
+          </>
         ))}
 
         {hasMoreItems && <p ref={infiniteScroll.observeRef}>Loading more...</p>}

@@ -8,13 +8,10 @@ export function useInfiniteScroll<T>(queryResult: LensResponseWithPagination<T>)
 
   const { observe: observeRef } = useInView({
     // Grow the root margin so the data will be loaded earlier
-
+    rootMargin: '20% 0px',
     onEnter: async ({ unobserve, observe }) => {
       unobserve();
-      await nonErroredQueryResult.next({
-        variables: { cursor: nonErroredQueryResult.nextCursor },
-      });
-
+      await nonErroredQueryResult.next();
       observe();
     },
   });
