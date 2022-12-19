@@ -44,6 +44,7 @@ export class WalletConnectionError extends Error {
 
 export class UserRejectedError extends Error {
   name = 'UserRejectedError' as const;
+  message = 'User rejected the request';
 }
 
 export enum WalletType {

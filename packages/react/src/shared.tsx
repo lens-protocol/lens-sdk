@@ -8,7 +8,7 @@ import {
   TransactionQueue,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
-import { IEquatableError, invariant } from '@lens-protocol/shared-kernel';
+import { invariant } from '@lens-protocol/shared-kernel';
 import React, { useContext, ReactNode } from 'react';
 
 import { NoopResponder } from './NoopResponder';
@@ -34,7 +34,7 @@ import { ProviderFactory } from './wallet/infrastructure/ProviderFactory';
 import { SignerFactory } from './wallet/infrastructure/SignerFactory';
 import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
 
-export type ErrorHandler = (error: IEquatableError) => void;
+export type ErrorHandler = (error: Error) => void;
 
 export type SharedDependencies = {
   activeProfile: ActiveProfile;
