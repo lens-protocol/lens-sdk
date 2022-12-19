@@ -26,6 +26,8 @@ import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
 
 export type SharedDependencies = {
   activeProfile: ActiveProfile;
+  activeProfileGateway: ActiveProfileGateway;
+  activeProfilePresenter: ActiveProfilePresenter;
   activeWallet: ActiveWallet;
   apolloClient: ApolloClient<NormalizedCacheObject>;
   authApi: AuthApi;
@@ -88,6 +90,8 @@ export function createSharedDependencies(config: LensConfig, { onLogout }: Handl
 
   return {
     activeProfile,
+    activeProfileGateway,
+    activeProfilePresenter,
     activeWallet,
     apolloClient,
     authApi,

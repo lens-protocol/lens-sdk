@@ -21,7 +21,7 @@ export function LensProvider({ children, config, onLogout = noop }: LensProvider
 
   useEffect(() => {
     start();
-  }, []);
+  }, [start]);
 
   return (
     <SharedDependenciesProvider dependencies={sharedDependencies}>
