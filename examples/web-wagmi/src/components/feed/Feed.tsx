@@ -11,13 +11,11 @@ type PublicationProps = {
 function Publication({ feedItem: { root: publication, comments } }: PublicationProps) {
   return (
     <div>
-      <div key={publication.id}>
-        <ProfilePicture picture={publication.profile.picture} />
-        <h2>{publication.profile.name ?? `@${publication.profile.handle}`}</h2>
-        <p>{publication.metadata.content}</p>
-        <p>Total comments: {comments?.length ?? 0}</p>
-        <hr />
-      </div>
+      <ProfilePicture picture={publication.profile.picture} />
+      <h2>{publication.profile.name ?? `@${publication.profile.handle}`}</h2>
+      <p>{publication.metadata.content}</p>
+      <p>Total comments: {comments?.length ?? 0}</p>
+      <hr />
     </div>
   );
 }
@@ -41,8 +39,8 @@ export function Feed() {
 
       {infiniteScroll.data
         .filter((i) => isPostPublication(i.root))
-        .map((item) => (
-          <Publication key={item.root.id} feedItem={item} />
+        .map((item, i) => (
+          <Publication key={`${item.root.id}-${i}`} feedItem={item} />
         ))}
 
       {hasMoreItems && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
