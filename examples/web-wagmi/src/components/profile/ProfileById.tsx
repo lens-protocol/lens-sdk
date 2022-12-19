@@ -5,11 +5,11 @@ import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
 import { ProfileCard } from './ProfileCard';
 
-type HandleIdProps = {
+type ProfileByIdLayoutProps = {
   profileId: string;
 };
 
-export function Handle({ profileId }: HandleIdProps) {
+export function ProfileByIdLayout({ profileId }: ProfileByIdLayoutProps) {
   const { data: profile, loading, error } = useProfile({ profileId });
 
   if (loading) return <Loading />;
@@ -29,5 +29,5 @@ export function Handle({ profileId }: HandleIdProps) {
 export function ProfileById() {
   const { profileId } = useParams();
   if (!profileId) return <GenericError error={new Error('Page not found')} />;
-  return <Handle profileId={profileId} />;
+  return <ProfileByIdLayout profileId={profileId} />;
 }
