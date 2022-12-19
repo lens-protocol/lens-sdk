@@ -1,31 +1,35 @@
-import { useFeedQuery } from '@lens-protocol/api';
+import { FeedItemFragment, useFeedQuery } from '@lens-protocol/api';
 
-import { useLensResponse } from '../helpers';
+import {
+  LensResponseWithPagination,
+  PaginatedArgs,
+  useLensResponseWithPagination,
+} from '../helpers';
 import { useSharedDependencies } from '../shared';
 
-type UseFeedArgs = {
+type UseFeedArgs = PaginatedArgs<{
   profileId: string;
   observerId?: string;
-  limit?: number;
-};
+}>;
 
-export function useFeed({ profileId, observerId, limit }: UseFeedArgs) {
+export function useFeed({
+  profileId,
+  observerId,
+  limit,
+  cursor,
+}: UseFeedArgs): LensResponseWithPagination<FeedItemFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
-  const response = useLensResponse(
+  return useLensResponseWithPagination(
     useFeedQuery({
       variables: {
         profileId,
         observerId,
-        limit: limit ?? 10,
         sources,
+        limit: limit ?? 10,
+        cursor: cursor ?? undefined,
       },
       client: apolloClient,
     }),
   );
-
-  return {
-    ...response,
-    data: response.data?.result ?? null,
-  };
 }

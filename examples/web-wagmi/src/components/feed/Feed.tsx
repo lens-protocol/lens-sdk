@@ -1,51 +1,53 @@
-import { FeedItemFragment, useFeed } from '@lens-protocol/react';
 import { Link } from 'react-router-dom';
+import { FeedItemFragment, isPostPublication, useFeed } from '@lens-protocol/react';
 
-import { GenericError } from '../error/GenericError';
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { Loading } from '../loading/Loading';
 import { PublicationCard } from '../publication/PublicationCard';
 
-type FeedItemProps = {
-  feedItems: FeedItemFragment[];
+type PublicationProps = {
+  feedItem: FeedItemFragment;
 };
 
-function FeedItems({ feedItems }: FeedItemProps) {
+function Publication({ feedItem: { root: publication, comments } }: PublicationProps) {
   return (
-    <div>
-      {feedItems.map(({ root: publication, comments }) => (
-        <Link
-          to={`/publication/${publication.id}`}
-          key={publication.id}
-          style={{
-            color: 'inherit',
-          }}
-        >
-          <PublicationCard publication={publication} />
-          <p>Total comments: {comments?.length ?? 0}</p>
-          <hr />
-        </Link>
-      ))}
-    </div>
+    <Link
+      to={`/publication/${publication.id}`}
+      key={publication.id}
+      style={{
+        color: 'inherit',
+        margin: '1rem'
+      }}
+    >
+      <PublicationCard publication={publication} />
+      <p>Total comments: {comments?.length ?? 0}</p>
+      <hr />
+    </Link>
   );
 }
 
 export function Feed() {
-  const {
-    data: feed,
-    error,
-    loading,
-  } = useFeed({
-    profileId: '0x3a2a',
-  });
+  const infiniteScroll = useInfiniteScroll(
+    useFeed({
+      profileId: '0x3a2a',
+    }),
+  );
 
-  if (loading) return <Loading />;
+  if (infiniteScroll.loading) return <Loading />;
 
-  if (error || !feed) return <GenericError error={error} />;
+  if (infiniteScroll.data.length === 0) return <p>No items</p>;
 
   return (
     <div>
       <h1>Feed</h1>
-      <FeedItems feedItems={feed.items} />
+
+      {infiniteScroll.data
+        .filter((i) => isPostPublication(i.root))
+        .map((item, i) => (
+          <Publication key={`${item.root.id}-${i}`} feedItem={item} />
+        ))}
+
+      {infiniteScroll.hasMore && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
     </div>
   );
 }

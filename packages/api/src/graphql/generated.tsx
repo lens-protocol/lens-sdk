@@ -4131,6 +4131,19 @@ export type FeedQuery = {
   };
 };
 
+export type ExploreProfilesQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+}>;
+
+export type ExploreProfilesQuery = {
+  result: { __typename: 'ExploreProfileResult' } & {
+    items: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  };
+};
+
 export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
 
 export type MediaSetFragment = { __typename: 'MediaSet' } & {
@@ -4885,6 +4898,65 @@ export function useFeedLazyQuery(
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
 export type FeedQueryResult = Apollo.QueryResult<FeedQuery, FeedQueryVariables>;
+export const ExploreProfilesDocument = gql`
+  query ExploreProfiles($observerId: ProfileId, $limit: LimitScalar!, $cursor: Cursor) {
+    result: exploreProfiles(
+      request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
+    ) {
+      items {
+        ...ProfileFields
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useExploreProfilesQuery__
+ *
+ * To run a query within a React component, call `useExploreProfilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExploreProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useExploreProfilesQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useExploreProfilesQuery(
+  baseOptions: Apollo.QueryHookOptions<ExploreProfilesQuery, ExploreProfilesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ExploreProfilesQuery, ExploreProfilesQueryVariables>(
+    ExploreProfilesDocument,
+    options,
+  );
+}
+export function useExploreProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ExploreProfilesQuery, ExploreProfilesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ExploreProfilesQuery, ExploreProfilesQueryVariables>(
+    ExploreProfilesDocument,
+    options,
+  );
+}
+export type ExploreProfilesQueryHookResult = ReturnType<typeof useExploreProfilesQuery>;
+export type ExploreProfilesLazyQueryHookResult = ReturnType<typeof useExploreProfilesLazyQuery>;
+export type ExploreProfilesQueryResult = Apollo.QueryResult<
+  ExploreProfilesQuery,
+  ExploreProfilesQueryVariables
+>;
 export const ProfilesToFollowDocument = gql`
   query ProfilesToFollow($observerId: ProfileId) {
     recommendedProfiles {
