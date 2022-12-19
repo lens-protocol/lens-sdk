@@ -12,7 +12,6 @@ export interface IProfileGateway {
 export interface IActiveProfileGateway {
   setActiveProfile(profile: Profile): Promise<void>;
   getActiveProfile(): Promise<Profile | null>;
-  reset(): Promise<void>;
 }
 
 export class ActiveProfile {

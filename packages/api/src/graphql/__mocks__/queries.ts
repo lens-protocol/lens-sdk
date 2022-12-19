@@ -1,14 +1,16 @@
 import { MockedResponse } from '@apollo/client/testing';
+import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   ProfileFieldsFragment,
   ProfilesToFollowQuery,
   ProfilesToFollowDocument,
   Maybe,
-  GetProfileByHandleQuery,
-  GetProfileByHandleDocument,
-  GetProfileByIdDocument,
-  GetProfileByIdQuery,
+  GetProfileQuery,
+  GetProfileDocument,
+  SingleProfileQueryRequest,
+  GetAllProfilesByOwnerAddressQuery,
+  GetAllProfilesByOwnerAddressDocument,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -27,58 +29,62 @@ export function mockProfilesToFollowQueryMockedResponse(args: {
   };
 }
 
-function mockGetProfileByHandleQuery(
-  profile: Maybe<ProfileFieldsFragment>,
-): GetProfileByHandleQuery {
+export function mockGetProfileQuery(profile: Maybe<ProfileFieldsFragment>): GetProfileQuery {
   return {
     result: profile,
   };
 }
 
-export function mockGetProfileByHandleQueryMockedResponse({
+export function mockGetProfileQueryMockedResponse({
   profile = mockProfileFieldsFragment(),
-  handle = profile?.handle ?? 'aave.lens',
+  request,
+  observerId,
 }: {
   profile?: Maybe<ProfileFieldsFragment>;
-  handle?: string;
-} = {}): MockedResponse<GetProfileByHandleQuery> {
+  request: SingleProfileQueryRequest;
+  observerId?: string;
+}): MockedResponse<GetProfileQuery> {
   return {
     request: {
-      query: GetProfileByHandleDocument,
+      query: GetProfileDocument,
       variables: {
-        handle,
+        request,
+        observerId,
       },
     },
     result: {
-      data: mockGetProfileByHandleQuery(profile),
+      data: mockGetProfileQuery(profile),
     },
   };
 }
 
-export function mockGetProfileByIdQuery(
-  profile = mockProfileFieldsFragment(),
-): GetProfileByIdQuery {
+function mockGetAllProfilesByOwnerAddressQuery(
+  profiles: ProfileFieldsFragment[],
+): GetAllProfilesByOwnerAddressQuery {
   return {
-    result: profile,
+    profilesByOwner: {
+      __typename: 'PaginatedProfileResult',
+      items: profiles,
+    },
   };
 }
 
-export function mockGetProfileByIdQueryMockedResponse({
-  profile = mockProfileFieldsFragment(),
-  id = profile?.id ?? '0x123',
+export function mockGetAllProfilesByOwnerAddressQueryMockedResponse({
+  address,
+  profiles = [mockProfileFieldsFragment()],
 }: {
-  profile: ProfileFieldsFragment;
-  id: string;
-}): MockedResponse<GetProfileByIdQuery> {
+  address: EthereumAddress;
+  profiles?: ProfileFieldsFragment[];
+}): MockedResponse<GetAllProfilesByOwnerAddressQuery> {
   return {
     request: {
-      query: GetProfileByIdDocument,
+      query: GetAllProfilesByOwnerAddressDocument,
       variables: {
-        id,
+        address,
       },
     },
     result: {
-      data: mockGetProfileByIdQuery(profile),
+      data: mockGetAllProfilesByOwnerAddressQuery(profiles),
     },
   };
 }

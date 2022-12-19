@@ -43,6 +43,7 @@
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
     "test": "jest",
+    "test:watch": "jest --watch",
     "tsc": "tsc --noEmit"
   },
   "license": "ISC",
