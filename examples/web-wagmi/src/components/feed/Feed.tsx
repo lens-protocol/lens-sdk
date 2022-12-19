@@ -13,7 +13,6 @@ function Publication({ feedItem: { root: publication, comments } }: PublicationP
   return (
     <Link
       to={`/publication/${publication.id}`}
-      key={publication.id}
       style={{
         color: 'inherit',
         margin: '1rem',

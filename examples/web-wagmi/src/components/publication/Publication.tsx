@@ -1,5 +1,4 @@
 import { useComments, usePublication } from '@lens-protocol/react';
-import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { GenericError } from '../error/GenericError';
@@ -22,11 +21,8 @@ function PublicationLayout({ publicationId }: PublicationLayoutProps) {
     error: commentsError,
   } = useComments({ commentsOf: publicationId });
 
-  const loading = useMemo(
-    () => publicationLoading || commentsLoading,
-    [publicationLoading, commentsLoading],
-  );
-  const error = useMemo(() => publicationError || commentsError, [publicationError, commentsError]);
+  const loading = publicationLoading || commentsLoading
+  const error = publicationError || commentsError
 
   if (loading) return <Loading />;
 
