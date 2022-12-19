@@ -1,11 +1,11 @@
-import { useProfileFollowers } from "@lens-protocol/react";
+import { useProfileFollowers } from '@lens-protocol/react';
 
-import { GenericError } from "../error/GenericError";
-import { Loading } from "../loading/Loading";
-import { ProfileCard } from "./ProfileCard";
+import { GenericError } from '../error/GenericError';
+import { Loading } from '../loading/Loading';
+import { ProfileCard } from './ProfileCard';
 
 type ProfileFollowersProps = {
-  profileId: string
+  profileId: string;
 };
 
 export function ProfileFollowers({ profileId }: ProfileFollowersProps) {

@@ -11,11 +11,22 @@ type PublicationLayoutProps = {
 };
 
 function PublicationLayout({ publicationId }: PublicationLayoutProps) {
-  const { data: publication, loading: publicationLoading, error: publicationError } = usePublication({ publicationId });
-  const { data: comments, loading: commentsLoading, error: commentsError } = useComments({ commentsOf: publicationId });
+  const {
+    data: publication,
+    loading: publicationLoading,
+    error: publicationError,
+  } = usePublication({ publicationId });
+  const {
+    data: comments,
+    loading: commentsLoading,
+    error: commentsError,
+  } = useComments({ commentsOf: publicationId });
 
-  const loading = useMemo(() => publicationLoading || commentsLoading, [publicationLoading, commentsLoading])
-  const error = useMemo(() => publicationError || commentsError, [publicationError, commentsError])
+  const loading = useMemo(
+    () => publicationLoading || commentsLoading,
+    [publicationLoading, commentsLoading],
+  );
+  const error = useMemo(() => publicationError || commentsError, [publicationError, commentsError]);
 
   if (loading) return <Loading />;
 

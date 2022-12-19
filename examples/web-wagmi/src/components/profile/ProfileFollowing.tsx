@@ -1,8 +1,8 @@
-import { useProfileFollowing } from "@lens-protocol/react";
+import { useProfileFollowing } from '@lens-protocol/react';
 
-import { GenericError } from "../error/GenericError";
-import { Loading } from "../loading/Loading";
-import { ProfileCard } from "./ProfileCard";
+import { GenericError } from '../error/GenericError';
+import { Loading } from '../loading/Loading';
+import { ProfileCard } from './ProfileCard';
 
 type ProfileFollowingProps = {
   walletAddress: string;

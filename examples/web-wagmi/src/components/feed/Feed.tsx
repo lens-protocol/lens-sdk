@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import { FeedItemFragment, isPostPublication, useFeed } from '@lens-protocol/react';
+import { Link } from 'react-router-dom';
 
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { Loading } from '../loading/Loading';
@@ -16,7 +16,7 @@ function Publication({ feedItem: { root: publication, comments } }: PublicationP
       key={publication.id}
       style={{
         color: 'inherit',
-        margin: '1rem'
+        margin: '1rem',
       }}
     >
       <PublicationCard publication={publication} />
