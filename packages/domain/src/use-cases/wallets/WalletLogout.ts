@@ -1,9 +1,7 @@
-import { assertNever } from '@lens-protocol/shared-kernel';
-
 import { IActiveProfilePresenter } from '../profile';
 import { ActiveWallet } from './ActiveWallet';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
-import { ILoginPresenter } from './ILoginPresenter';
+import { ILogoutPresenter, LogoutReason } from './ILogoutPresenter';
 
 export interface IResettableCredentialsGateway {
   invalidate(): Promise<void>;
@@ -11,11 +9,6 @@ export interface IResettableCredentialsGateway {
 
 export interface IResettableWalletGateway {
   reset(): Promise<void>;
-}
-
-export enum LogoutReason {
-  TOKEN_EXPIRED = 'token_expired',
-  USER_INITIATED = 'user_initiated',
 }
 
 export interface IActiveProfileGateway {
@@ -30,7 +23,7 @@ export class WalletLogout {
     private activeProfileGateway: IActiveProfileGateway,
     private activeProfilePresenter: IActiveProfilePresenter,
     private activeWalletPresenter: IActiveWalletPresenter,
-    private loginPresenter: ILoginPresenter,
+    private logoutPresenter: ILogoutPresenter,
   ) {}
 
   async logout(reason: LogoutReason): Promise<void> {
@@ -44,17 +37,6 @@ export class WalletLogout {
 
     await this.credentialsGateway.invalidate();
 
-    switch (reason) {
-      case LogoutReason.TOKEN_EXPIRED:
-        // TODO pass a DTO to the presenter, not the entity
-        this.loginPresenter.presentLoginOptions(activeWallet);
-        break;
-      case LogoutReason.USER_INITIATED:
-        // Stay on the same page and remove all parts that require connected wallet
-        // which is done by just removing active wallet from presenter
-        break;
-      default:
-        assertNever(reason, `Logout reason not handled. Reason "${String(reason)}".`);
-    }
+    this.logoutPresenter.presentLogout({ lastLoggedInWallet: activeWallet, logoutReason: reason });
   }
 }

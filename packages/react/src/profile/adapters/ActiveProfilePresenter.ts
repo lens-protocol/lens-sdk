@@ -47,6 +47,6 @@ export class ActiveProfilePresenter implements IActiveProfilePresenter {
   }
 }
 
-export function useActiveProfile() {
+export function useActiveProfileVar() {
   return useReactiveVar(activeProfileVar);
 }

@@ -1,4 +1,3 @@
-import { IAccessTokenStorage } from '@lens-protocol/api';
 import {
   BaseStorageSchema,
   IStorage,
@@ -24,7 +23,7 @@ const authStorageSchema = new BaseStorageSchema('lens.credentials', AuthData);
  * Access token is kept in memory.
  * Refresh token is persisted permanently.
  */
-export class CredentialsStorage implements IStorage<Credentials>, IAccessTokenStorage {
+export class CredentialsStorage implements IStorage<Credentials> {
   refreshTokenStorage: IStorage<AuthData>;
   accessToken: string | null = null;
 

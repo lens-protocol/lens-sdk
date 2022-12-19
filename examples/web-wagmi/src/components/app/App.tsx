@@ -24,10 +24,10 @@ const client = createClient({
 });
 
 const lensConfig: LensConfig = {
-  environment: staging,
-  storage: localStorage(),
-  sources: [sources.lenster, sources.orb, 'any-other-app-id'],
   bindings: wagmiBindings(),
+  environment: staging,
+  sources: [sources.lenster, sources.orb, 'any-other-app-id'],
+  storage: localStorage(),
 };
 
 export function App() {

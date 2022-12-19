@@ -1,6 +1,7 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { createApolloClient } from '@lens-protocol/api';
+import { createAnonymousApolloClient, createApolloClient } from '@lens-protocol/api';
 import { ActiveProfile } from '@lens-protocol/domain/use-cases/profile';
+import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
 import { invariant } from '@lens-protocol/shared-kernel';
 import React, { useContext, ReactNode } from 'react';
 
@@ -11,9 +12,13 @@ import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
+import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
 import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
+import { LogoutHandler, LogoutPresenter } from './wallet/adapters/LogoutPresenter';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
+import { AccessTokenStorage } from './wallet/infrastructure/AccessTokenStorage';
+import { AuthApi } from './wallet/infrastructure/AuthApi';
 import { CredentialsStorage } from './wallet/infrastructure/CredentialsStorage';
 import { ProviderFactory } from './wallet/infrastructure/ProviderFactory';
 import { SignerFactory } from './wallet/infrastructure/SignerFactory';
@@ -21,22 +26,37 @@ import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
 
 export type SharedDependencies = {
   activeProfile: ActiveProfile;
+  activeWallet: ActiveWallet;
   apolloClient: ApolloClient<NormalizedCacheObject>;
-  sources: string[];
+  authApi: AuthApi;
+  credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
-  walletGateway: WalletGateway;
+  logoutPresenter: LogoutPresenter;
+  sources: string[];
   walletFactory: WalletFactory;
+  walletGateway: WalletGateway;
 };
 
-export function createSharedDependencies(config: LensConfig) {
-  const apolloClient = createApolloClient({
-    backendURL: config.environment.backend,
-  });
+export type Handlers = {
+  onLogout: LogoutHandler;
+};
 
+export function createSharedDependencies(config: LensConfig, { onLogout }: Handlers) {
   // storages
   const activeProfileStorage = createActiveProfileStorage(config.storage);
   const credentialsStorage = new CredentialsStorage(config.storage);
   const walletStorage = createWalletStorage(config.storage);
+
+  // apollo client
+  const anonymousApolloClient = createAnonymousApolloClient({
+    backendURL: config.environment.backend,
+  });
+  const authApi = new AuthApi(anonymousApolloClient);
+  const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
+  const apolloClient = createApolloClient({
+    backendURL: config.environment.backend,
+    accessTokenStorage,
+  });
 
   // adapters
   const providerFactory = new ProviderFactory(config.bindings, config.environment.chains);
@@ -47,6 +67,7 @@ export function createSharedDependencies(config: LensConfig) {
   );
   const transactionFactory = new TransactionFactory(transactionObserver);
   const signerFactory = new SignerFactory(config.bindings, config.environment.chains);
+  const credentialsFactory = new CredentialsFactory(authApi);
   const credentialsGateway = new CredentialsGateway(credentialsStorage);
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
@@ -55,17 +76,25 @@ export function createSharedDependencies(config: LensConfig) {
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
   const activeProfilePresenter = new ActiveProfilePresenter(apolloClient);
 
+  const logoutPresenter = new LogoutPresenter(onLogout);
+
+  // common interactors
   const activeProfile = new ActiveProfile(
     profileGateway,
     activeProfileGateway,
     activeProfilePresenter,
   );
+  const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
 
   return {
     activeProfile,
+    activeWallet,
     apolloClient,
-    sources: config.sources ?? [],
+    authApi,
+    credentialsFactory,
     credentialsGateway,
+    logoutPresenter,
+    sources: config.sources ?? [],
     walletFactory,
     walletGateway,
   };
