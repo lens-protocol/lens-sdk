@@ -7,17 +7,18 @@ export function Header() {
   const login = useWalletLogin();
   const logout = useWalletLogout();
 
-  const { connector, isDisconnected } = useAccount();
+  const { isConnected, isDisconnected } = useAccount();
   const { connectAsync } = useConnect({
     connector: new InjectedConnector(),
   });
   const onLoginClick = async () => {
     if (isDisconnected) {
-      await connectAsync();
-    }
-    if (connector instanceof InjectedConnector) {
-      const signer = await connector.getSigner();
-      login(signer);
+      const { connector } = await connectAsync();
+
+      if (connector instanceof InjectedConnector) {
+        const signer = await connector.getSigner();
+        login(signer);
+      }
     }
   };
 
@@ -53,14 +54,29 @@ export function Header() {
         <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
           <span style={{ fontWeight: 'bold' }}>@lens-protocol/react - wagmi</span>
         </Link>
-        {!loading &&
-          (profile ? (
-            <button onClick={onLogoutClick}>
-              <strong>{profile.handle}</strong>
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
+          }}
+        >
+          {profile && <strong>{profile.handle}</strong>}
+
+          {isDisconnected && (
+            <button onClick={onLoginClick}>
+              <strong>Log in</strong>
             </button>
-          ) : (
-            <button onClick={onLoginClick}>Log in</button>
-          ))}
+          )}
+          {isConnected && loading && <p>Loading…</p>}
+          {isConnected && (
+            <button onClick={onLogoutClick}>
+              <strong>Log out</strong>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

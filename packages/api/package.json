@@ -48,7 +48,8 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@apollo/client": "^3.7.1"
+    "@apollo/client": "^3.7.1",
+    "@lens-protocol/domain": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

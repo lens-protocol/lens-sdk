@@ -48,6 +48,7 @@ export type SharedDependencies = {
   logoutPresenter: LogoutPresenter;
   onError: ErrorHandler;
   sources: string[];
+  transactionFactory: TransactionFactory;
   transactionQueue: TransactionQueue<SupportedTransactionRequest>;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
@@ -139,6 +140,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     logoutPresenter,
     onError,
     sources: config.sources ?? [],
+    transactionFactory,
     transactionQueue,
     walletFactory,
     walletGateway,
