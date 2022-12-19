@@ -43,7 +43,7 @@ export function App() {
               <Route path="/publication/:publicationId" element={<Publication />} />
               <Route path="/profile">
                 <Route path="handle/:handle" element={<ProfileByHandle />} />
-                <Route path="id/:id" element={<ProfileById />} />
+                <Route path="id/:profileId" element={<ProfileById />} />
               </Route>
             </Routes>
           </div>

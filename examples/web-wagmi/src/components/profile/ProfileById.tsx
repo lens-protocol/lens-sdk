@@ -6,11 +6,11 @@ import { Loading } from '../loading/Loading';
 import { ProfileCard } from './ProfileCard';
 
 type HandleIdProps = {
-  id: string;
+  profileId: string;
 };
 
-export function Handle({ id }: HandleIdProps) {
-  const { data: profile, loading, error } = useProfile({ id });
+export function Handle({ profileId }: HandleIdProps) {
+  const { data: profile, loading, error } = useProfile({ profileId: profileId });
 
   if (loading) return <Loading />;
 
@@ -27,7 +27,7 @@ export function Handle({ id }: HandleIdProps) {
 }
 
 export function ProfileById() {
-  const { id } = useParams();
-  if (!id) return <GenericError error={new Error('Page not found')} />;
-  return <Handle id={id} />;
+  const { profileId } = useParams();
+  if (!profileId) return <GenericError error={new Error('Page not found')} />;
+  return <Handle profileId={profileId} />;
 }
