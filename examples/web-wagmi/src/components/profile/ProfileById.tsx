@@ -10,7 +10,7 @@ type HandleIdProps = {
 };
 
 export function Handle({ profileId }: HandleIdProps) {
-  const { data: profile, loading, error } = useProfile({ profileId: profileId });
+  const { data: profile, loading, error } = useProfile({ profileId });
 
   if (loading) return <Loading />;
 
