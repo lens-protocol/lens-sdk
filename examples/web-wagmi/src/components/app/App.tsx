@@ -1,6 +1,7 @@
 import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
 import { localStorage } from '@lens-protocol/react/web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
+import toast, { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { optimism, polygon } from 'wagmi/chains';
@@ -30,10 +31,12 @@ const lensConfig: LensConfig = {
   storage: localStorage(),
 };
 
+const toastNotification = (error: Error) => toast(error.message);
+
 export function App() {
   return (
     <WagmiConfig client={client}>
-      <LensProvider config={lensConfig}>
+      <LensProvider config={lensConfig} onError={toastNotification}>
         <Router>
           <Header />
           <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
@@ -46,6 +49,7 @@ export function App() {
               <Route path="/profile-by-id" element={<ProfileById />} />
               <Route path="/profile-by-handle" element={<ProfileByHandle />} />
             </Routes>
+            <Toaster />
           </div>
         </Router>
       </LensProvider>

@@ -5,12 +5,18 @@ import { ActiveWalletPresenter } from './ActiveWalletPresenter';
 import { ConnectionErrorPresenter } from './ConnectionErrorPresenter';
 
 export function useWalletLoginController() {
-  const { activeProfile, credentialsFactory, credentialsGateway, walletFactory, walletGateway } =
-    useSharedDependencies();
+  const {
+    activeProfile,
+    credentialsFactory,
+    credentialsGateway,
+    onError,
+    walletFactory,
+    walletGateway,
+  } = useSharedDependencies();
 
   return (request: WalletLoginRequest) => {
     const activeWalletPresenter = new ActiveWalletPresenter();
-    const connectionErrorPresenter = new ConnectionErrorPresenter();
+    const connectionErrorPresenter = new ConnectionErrorPresenter(onError);
     const walletLogin = new WalletLogin(
       walletFactory,
       walletGateway,

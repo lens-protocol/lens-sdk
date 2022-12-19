@@ -27,7 +27,7 @@ import { z } from 'zod';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 import { TypedData } from '../../transactions/adapters/TypedData';
-import { assertErrorObjectWithCode, ProviderErrorCode, ProviderErrors } from './errors';
+import { assertErrorObjectWithCode } from './errors';
 
 export type RequiredSigner = Omit<Signer, 'provider'> &
   TypedDataSigner & {
@@ -110,10 +110,10 @@ export class ConcreteWallet extends Wallet {
       });
       return success(signedCall);
     } catch (err) {
-      assertErrorObjectWithCode<ProviderErrors>(err);
+      assertErrorObjectWithCode<errors>(err);
 
-      if (err.code === ProviderErrorCode.userRejectedRequest) {
-        return failure(new UserRejectedError(err.message));
+      if (err.code === errors.ACTION_REJECTED) {
+        return failure(new UserRejectedError());
       }
 
       throw err;
@@ -142,8 +142,9 @@ export class ConcreteWallet extends Wallet {
     try {
       return success(await signer.signMessage(message));
     } catch (err) {
-      assertErrorObjectWithCode<ProviderErrors>(err);
-      if (err.code === ProviderErrorCode.userRejectedRequest) {
+      assertErrorObjectWithCode<errors>(err);
+
+      if (err.code === errors.ACTION_REJECTED) {
         return failure(new UserRejectedError());
       }
       throw err;
@@ -185,10 +186,10 @@ export class ConcreteWallet extends Wallet {
 
       return success(transaction);
     } catch (err) {
-      assertErrorObjectWithCode<ProviderErrors | errors>(err);
+      assertErrorObjectWithCode<errors>(err);
 
       switch (err.code) {
-        case ProviderErrorCode.userRejectedRequest:
+        case errors.ACTION_REJECTED:
           return failure(new UserRejectedError(err.message));
         case errors.INSUFFICIENT_FUNDS:
           return failure(new InsufficientGasError(matic()));

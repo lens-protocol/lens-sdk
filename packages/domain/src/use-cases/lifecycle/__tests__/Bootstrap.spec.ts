@@ -4,6 +4,7 @@ import { when } from 'jest-when';
 
 import { TransactionRequestModel } from '../../../entities';
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
+import { mockTransactionQueue } from '../../../mocks';
 import { ActiveProfile } from '../../profile/ActiveProfile';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
 import { ActiveWallet } from '../../wallets/ActiveWallet';
@@ -38,7 +39,7 @@ const setupBootstrapInteractor = ({
   const walletPresenter = mock<IActiveWalletPresenter>();
   const applicationPresenter = mock<IApplicationPresenter>();
   const logoutPresenter = mock<ILogoutPresenter>();
-  // transactionQueue = mockTransactionQueue()
+  const transactionQueue = mockTransactionQueue();
 
   const bootstrap = new Bootstrap(
     activeWallet,
@@ -48,10 +49,17 @@ const setupBootstrapInteractor = ({
     applicationPresenter,
     logoutPresenter,
     activeProfile,
-    // transactionQueue,
+    transactionQueue,
   );
 
-  return { bootstrap, activeProfile, walletPresenter, applicationPresenter, logoutPresenter };
+  return {
+    bootstrap,
+    activeProfile,
+    walletPresenter,
+    applicationPresenter,
+    logoutPresenter,
+    transactionQueue,
+  };
 };
 
 describe(`Given the ${Bootstrap.name} interactor`, () => {
@@ -83,12 +91,17 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
           when(credentialsRenewer.renewCredentials).mockResolvedValue(success(mockCredentials()));
           when(credentialsGateway.getCredentials).mockResolvedValue(mockCredentials());
 
-          const { activeProfile, applicationPresenter, bootstrap, walletPresenter } =
-            setupBootstrapInteractor({
-              activeWallet,
-              credentialsGateway,
-              credentialsRenewer,
-            });
+          const {
+            activeProfile,
+            applicationPresenter,
+            bootstrap,
+            walletPresenter,
+            transactionQueue,
+          } = setupBootstrapInteractor({
+            activeWallet,
+            credentialsGateway,
+            credentialsRenewer,
+          });
 
           await bootstrap.start();
 
@@ -97,7 +110,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
             wallet.address,
           );
           expect(applicationPresenter.signalReady).toHaveBeenCalled();
-          // expect(transactionQueue.init).toHaveBeenCalled();
+          expect(transactionQueue.init).toHaveBeenCalled();
         });
 
         it(`should renew the credentials if expired and then:
@@ -117,12 +130,17 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
             .calledWith(oldCredentials)
             .mockResolvedValue(success(newCredentials));
 
-          const { bootstrap, activeProfile, applicationPresenter, walletPresenter } =
-            setupBootstrapInteractor({
-              activeWallet,
-              credentialsGateway,
-              credentialsRenewer,
-            });
+          const {
+            bootstrap,
+            activeProfile,
+            applicationPresenter,
+            walletPresenter,
+            transactionQueue,
+          } = setupBootstrapInteractor({
+            activeWallet,
+            credentialsGateway,
+            credentialsRenewer,
+          });
 
           await bootstrap.start();
 
@@ -131,7 +149,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
             wallet.address,
           );
           expect(applicationPresenter.signalReady).toHaveBeenCalled();
-          // expect(transactionQueue.init).toHaveBeenCalled();
+          expect(transactionQueue.init).toHaveBeenCalled();
         });
 
         it(`should:
