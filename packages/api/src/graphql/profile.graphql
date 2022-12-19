@@ -101,14 +101,16 @@ query ProfilesToFollow($observerId: ProfileId) {
   }
 }
 
-query GetProfileByHandle($handle: Handle!, $observerId: ProfileId) {
-  result: profile(request: { handle: $handle }) {
+query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+  result: profile(request: $request) {
     ...ProfileFields
   }
 }
 
-query GetProfileById($id: ProfileId!, $observerId: ProfileId) {
-  result: profile(request: { profileId: $id }) {
-    ...ProfileFields
+query GetAllProfilesByOwnerAddress($address: EthereumAddress!, $observerId: ProfileId) {
+  profilesByOwner: profiles(request: { ownedBy: [$address] }) {
+    items {
+      ...ProfileFields
+    }
   }
 }

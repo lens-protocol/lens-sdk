@@ -4208,22 +4208,22 @@ export type ProfilesToFollowQuery = {
   recommendedProfiles: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
 };
 
-export type GetProfileByHandleQueryVariables = Exact<{
-  handle: Scalars['Handle'];
+export type GetProfileQueryVariables = Exact<{
+  request: SingleProfileQueryRequest;
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
-export type GetProfileByHandleQuery = {
-  result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment>;
-};
+export type GetProfileQuery = { result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment> };
 
-export type GetProfileByIdQueryVariables = Exact<{
-  id: Scalars['ProfileId'];
+export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
+  address: Scalars['EthereumAddress'];
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
-export type GetProfileByIdQuery = {
-  result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+export type GetAllProfilesByOwnerAddressQuery = {
+  profilesByOwner: { __typename: 'PaginatedProfileResult' } & {
+    items: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+  };
 };
 
 export type FollowerFragment = { __typename: 'Follower' } & {
@@ -4934,9 +4934,9 @@ export type ProfilesToFollowQueryResult = Apollo.QueryResult<
   ProfilesToFollowQuery,
   ProfilesToFollowQueryVariables
 >;
-export const GetProfileByHandleDocument = gql`
-  query GetProfileByHandle($handle: Handle!, $observerId: ProfileId) {
-    result: profile(request: { handle: $handle }) {
+export const GetProfileDocument = gql`
+  query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+    result: profile(request: $request) {
       ...ProfileFields
     }
   }
@@ -4944,100 +4944,101 @@ export const GetProfileByHandleDocument = gql`
 `;
 
 /**
- * __useGetProfileByHandleQuery__
+ * __useGetProfileQuery__
  *
- * To run a query within a React component, call `useGetProfileByHandleQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetProfileByHandleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetProfileByHandleQuery({
+ * const { data, loading, error } = useGetProfileQuery({
  *   variables: {
- *      handle: // value for 'handle'
+ *      request: // value for 'request'
  *      observerId: // value for 'observerId'
  *   },
  * });
  */
-export function useGetProfileByHandleQuery(
-  baseOptions: Apollo.QueryHookOptions<GetProfileByHandleQuery, GetProfileByHandleQueryVariables>,
+export function useGetProfileQuery(
+  baseOptions: Apollo.QueryHookOptions<GetProfileQuery, GetProfileQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetProfileByHandleQuery, GetProfileByHandleQueryVariables>(
-    GetProfileByHandleDocument,
+  return Apollo.useQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
+}
+export function useGetProfileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetProfileQuery, GetProfileQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetProfileQuery, GetProfileQueryVariables>(
+    GetProfileDocument,
     options,
   );
 }
-export function useGetProfileByHandleLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetProfileByHandleQuery,
-    GetProfileByHandleQueryVariables
+export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
+export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
+export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
+export const GetAllProfilesByOwnerAddressDocument = gql`
+  query GetAllProfilesByOwnerAddress($address: EthereumAddress!, $observerId: ProfileId) {
+    profilesByOwner: profiles(request: { ownedBy: [$address] }) {
+      items {
+        ...ProfileFields
+      }
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
+
+/**
+ * __useGetAllProfilesByOwnerAddressQuery__
+ *
+ * To run a query within a React component, call `useGetAllProfilesByOwnerAddressQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllProfilesByOwnerAddressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllProfilesByOwnerAddressQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useGetAllProfilesByOwnerAddressQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetAllProfilesByOwnerAddressQuery,
+    GetAllProfilesByOwnerAddressQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetProfileByHandleQuery, GetProfileByHandleQueryVariables>(
-    GetProfileByHandleDocument,
-    options,
-  );
+  return Apollo.useQuery<
+    GetAllProfilesByOwnerAddressQuery,
+    GetAllProfilesByOwnerAddressQueryVariables
+  >(GetAllProfilesByOwnerAddressDocument, options);
 }
-export type GetProfileByHandleQueryHookResult = ReturnType<typeof useGetProfileByHandleQuery>;
-export type GetProfileByHandleLazyQueryHookResult = ReturnType<
-  typeof useGetProfileByHandleLazyQuery
->;
-export type GetProfileByHandleQueryResult = Apollo.QueryResult<
-  GetProfileByHandleQuery,
-  GetProfileByHandleQueryVariables
->;
-export const GetProfileByIdDocument = gql`
-  query GetProfileById($id: ProfileId!, $observerId: ProfileId) {
-    result: profile(request: { profileId: $id }) {
-      ...ProfileFields
-    }
-  }
-  ${ProfileFieldsFragmentDoc}
-`;
-
-/**
- * __useGetProfileByIdQuery__
- *
- * To run a query within a React component, call `useGetProfileByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetProfileByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetProfileByIdQuery({
- *   variables: {
- *      id: // value for 'id'
- *      observerId: // value for 'observerId'
- *   },
- * });
- */
-export function useGetProfileByIdQuery(
-  baseOptions: Apollo.QueryHookOptions<GetProfileByIdQuery, GetProfileByIdQueryVariables>,
+export function useGetAllProfilesByOwnerAddressLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllProfilesByOwnerAddressQuery,
+    GetAllProfilesByOwnerAddressQueryVariables
+  >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetProfileByIdQuery, GetProfileByIdQueryVariables>(
-    GetProfileByIdDocument,
-    options,
-  );
+  return Apollo.useLazyQuery<
+    GetAllProfilesByOwnerAddressQuery,
+    GetAllProfilesByOwnerAddressQueryVariables
+  >(GetAllProfilesByOwnerAddressDocument, options);
 }
-export function useGetProfileByIdLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetProfileByIdQuery, GetProfileByIdQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetProfileByIdQuery, GetProfileByIdQueryVariables>(
-    GetProfileByIdDocument,
-    options,
-  );
-}
-export type GetProfileByIdQueryHookResult = ReturnType<typeof useGetProfileByIdQuery>;
-export type GetProfileByIdLazyQueryHookResult = ReturnType<typeof useGetProfileByIdLazyQuery>;
-export type GetProfileByIdQueryResult = Apollo.QueryResult<
-  GetProfileByIdQuery,
-  GetProfileByIdQueryVariables
+export type GetAllProfilesByOwnerAddressQueryHookResult = ReturnType<
+  typeof useGetAllProfilesByOwnerAddressQuery
+>;
+export type GetAllProfilesByOwnerAddressLazyQueryHookResult = ReturnType<
+  typeof useGetAllProfilesByOwnerAddressLazyQuery
+>;
+export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
+  GetAllProfilesByOwnerAddressQuery,
+  GetAllProfilesByOwnerAddressQueryVariables
 >;
 export const ProfileFollowersDocument = gql`
   query ProfileFollowers(
