@@ -2,7 +2,7 @@ import { BaseStorageSchema, IStorageProvider, Storage } from '@lens-protocol/sto
 
 import { WalletStorageSchema } from '../adapters/WalletGateway';
 
-const walletStorageDataSchema = new BaseStorageSchema('LENS_WALLETS', WalletStorageSchema);
+const walletStorageDataSchema = new BaseStorageSchema('lens.wallets', WalletStorageSchema);
 
 export function createWalletStorage(storageProvider: IStorageProvider) {
   return Storage.createForSchema(walletStorageDataSchema, storageProvider);

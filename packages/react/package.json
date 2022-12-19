@@ -28,6 +28,7 @@
   },
   "types": "./dist/cjs/index.d.ts",
   "main": "./dist/cjs/index.js",
+  "sideEffects": false,
   "files": [
     "dist",
     "web"

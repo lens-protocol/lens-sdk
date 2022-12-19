@@ -1,8 +1,5 @@
-import {
-  IWalletFactory,
-  WalletLoginRequest,
-} from '@lens-protocol/domain/dist/esm/use-cases/wallets';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { IWalletFactory, WalletLoginRequest } from '@lens-protocol/domain/use-cases/wallets';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 import { ConcreteWallet, ISignerFactory, WalletDataSchema } from './ConcreteWallet';
