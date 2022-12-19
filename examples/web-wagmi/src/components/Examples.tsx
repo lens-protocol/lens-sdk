@@ -9,14 +9,6 @@ const examples = [
     label: 'Profiles to follow',
     path: '/profiles-to-follow',
   },
-  {
-    label: 'Profile by ID',
-    path: '/profile-by-id',
-  },
-  {
-    label: 'Profile by Handle',
-    path: '/profile-by-handle',
-  },
 ];
 
 export function Examples() {

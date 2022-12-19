@@ -1,8 +1,9 @@
 import { FeedItemFragment, useFeed } from '@lens-protocol/react';
+import { Link } from 'react-router-dom';
 
 import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
-import { ProfilePicture } from '../profile/ProfilePicture';
+import { PublicationCard } from '../publication/PublicationCard';
 
 type FeedItemProps = {
   feedItems: FeedItemFragment[];
@@ -12,13 +13,17 @@ function FeedItems({ feedItems }: FeedItemProps) {
   return (
     <div>
       {feedItems.map(({ root: publication, comments }) => (
-        <div key={publication.id}>
-          <ProfilePicture picture={publication.profile.picture} />
-          <h2>{publication.profile.name ?? `@${publication.profile.handle}`}</h2>
-          <p>{publication.metadata.content}</p>
+        <Link
+          to={`/publication/${publication.id}`}
+          key={publication.id}
+          style={{
+            color: 'inherit',
+          }}
+        >
+          <PublicationCard publication={publication} />
           <p>Total comments: {comments?.length ?? 0}</p>
           <hr />
-        </div>
+        </Link>
       ))}
     </div>
   );

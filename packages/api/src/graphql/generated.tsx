@@ -3787,6 +3787,29 @@ export type WorldcoinIdentity = {
   isHuman: Scalars['Boolean'];
 };
 
+export type CommentWithFirstCommentFragment = { __typename: 'Comment' } & {
+  firstComment: Maybe<{ __typename: 'Comment' } & CommentFragment>;
+} & CommentFragment;
+
+export type CommentsQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  commentsOf: Scalars['InternalPublicationId'];
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+}>;
+
+export type CommentsQuery = {
+  result: { __typename: 'PaginatedPublicationResult' } & {
+    items: Array<
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Comment' } & CommentWithFirstCommentFragment)
+      | ({ __typename: 'Mirror' } & MirrorFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  };
+};
+
 export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
   Erc20,
   'name' | 'symbol' | 'decimals' | 'address'
@@ -4203,6 +4226,55 @@ export type GetProfileByIdQuery = {
   result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment>;
 };
 
+export type FollowerFragment = { __typename: 'Follower' } & {
+  wallet: { __typename: 'Wallet' } & WalletFragment;
+};
+
+export type FollowingFragment = { __typename: 'Following' } & {
+  profile: { __typename: 'Profile' } & ProfileFieldsFragment;
+};
+
+export type ProfileFollowersQueryVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type ProfileFollowersQuery = {
+  result: { __typename: 'PaginatedFollowersResult' } & {
+    items: Array<{ __typename: 'Follower' } & FollowerFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  };
+};
+
+export type ProfileFollowingQueryVariables = Exact<{
+  walletAddress: Scalars['EthereumAddress'];
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type ProfileFollowingQuery = {
+  result: { __typename: 'PaginatedFollowingResult' } & {
+    items: Array<{ __typename: 'Following' } & FollowingFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  };
+};
+
+export type PublicationQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  publicationId: Scalars['InternalPublicationId'];
+}>;
+
+export type PublicationQuery = {
+  result: Maybe<
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Comment' } & CommentFragment)
+    | ({ __typename: 'Mirror' } & MirrorFragment)
+  >;
+};
+
 export const PublicationStatsFragmentDoc = gql`
   fragment PublicationStats on PublicationStats {
     totalAmountOfMirrors
@@ -4358,6 +4430,15 @@ export const ProfileFieldsFragmentDoc = gql`
   ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
 `;
+export const WalletFragmentDoc = gql`
+  fragment Wallet on Wallet {
+    address
+    defaultProfile {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
 export const FreeCollectModuleSettingsFragmentDoc = gql`
   fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
     contractAddress
@@ -4457,8 +4538,8 @@ export const ReferenceModuleFragmentDoc = gql`
     }
   }
 `;
-export const MirrorBaseFragmentDoc = gql`
-  fragment MirrorBase on Mirror {
+export const CommentBaseFragmentDoc = gql`
+  fragment CommentBase on Comment {
     __typename
     id
     stats {
@@ -4469,6 +4550,9 @@ export const MirrorBaseFragmentDoc = gql`
     }
     profile {
       ...ProfileFields
+    }
+    collectedBy {
+      ...Wallet
     }
     collectModule {
       ...CollectModule
@@ -4487,6 +4571,7 @@ export const MirrorBaseFragmentDoc = gql`
     canMirror(profileId: $observerId) {
       result
     }
+    mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     ownedByMe @client
@@ -4494,17 +4579,9 @@ export const MirrorBaseFragmentDoc = gql`
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
   ${ProfileFieldsFragmentDoc}
+  ${WalletFragmentDoc}
   ${CollectModuleFragmentDoc}
   ${ReferenceModuleFragmentDoc}
-`;
-export const WalletFragmentDoc = gql`
-  fragment Wallet on Wallet {
-    address
-    defaultProfile {
-      ...ProfileFields
-    }
-  }
-  ${ProfileFieldsFragmentDoc}
 `;
 export const PostFragmentDoc = gql`
   fragment Post on Post {
@@ -4551,8 +4628,8 @@ export const PostFragmentDoc = gql`
   ${CollectModuleFragmentDoc}
   ${ReferenceModuleFragmentDoc}
 `;
-export const CommentBaseFragmentDoc = gql`
-  fragment CommentBase on Comment {
+export const MirrorBaseFragmentDoc = gql`
+  fragment MirrorBase on Mirror {
     __typename
     id
     stats {
@@ -4563,9 +4640,6 @@ export const CommentBaseFragmentDoc = gql`
     }
     profile {
       ...ProfileFields
-    }
-    collectedBy {
-      ...Wallet
     }
     collectModule {
       ...CollectModule
@@ -4584,7 +4658,6 @@ export const CommentBaseFragmentDoc = gql`
     canMirror(profileId: $observerId) {
       result
     }
-    mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     ownedByMe @client
@@ -4592,7 +4665,6 @@ export const CommentBaseFragmentDoc = gql`
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
   ${ProfileFieldsFragmentDoc}
-  ${WalletFragmentDoc}
   ${CollectModuleFragmentDoc}
   ${ReferenceModuleFragmentDoc}
 `;
@@ -4623,6 +4695,15 @@ export const CommentFragmentDoc = gql`
   ${CommentBaseFragmentDoc}
   ${PostFragmentDoc}
   ${MirrorBaseFragmentDoc}
+`;
+export const CommentWithFirstCommentFragmentDoc = gql`
+  fragment CommentWithFirstComment on Comment {
+    ...Comment
+    firstComment {
+      ...Comment
+    }
+  }
+  ${CommentFragmentDoc}
 `;
 export const MirrorFragmentDoc = gql`
   fragment Mirror on Mirror {
@@ -4664,6 +4745,90 @@ export const FeedItemFragmentDoc = gql`
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
+export const FollowerFragmentDoc = gql`
+  fragment Follower on Follower {
+    wallet {
+      ...Wallet
+    }
+  }
+  ${WalletFragmentDoc}
+`;
+export const FollowingFragmentDoc = gql`
+  fragment Following on Following {
+    profile {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
+export const CommentsDocument = gql`
+  query Comments(
+    $observerId: ProfileId
+    $commentsOf: InternalPublicationId!
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $sources: [Sources!]
+  ) {
+    result: publications(
+      request: { limit: $limit, cursor: $cursor, commentsOf: $commentsOf, sources: $sources }
+    ) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+        ... on Comment {
+          ...CommentWithFirstComment
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentWithFirstCommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useCommentsQuery__
+ *
+ * To run a query within a React component, call `useCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentsQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      commentsOf: // value for 'commentsOf'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
+ *   },
+ * });
+ */
+export function useCommentsQuery(
+  baseOptions: Apollo.QueryHookOptions<CommentsQuery, CommentsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<CommentsQuery, CommentsQueryVariables>(CommentsDocument, options);
+}
+export function useCommentsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<CommentsQuery, CommentsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<CommentsQuery, CommentsQueryVariables>(CommentsDocument, options);
+}
+export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>;
+export type CommentsLazyQueryHookResult = ReturnType<typeof useCommentsLazyQuery>;
+export type CommentsQueryResult = Apollo.QueryResult<CommentsQuery, CommentsQueryVariables>;
 export const FeedDocument = gql`
   query Feed(
     $profileId: ProfileId!
@@ -4873,6 +5038,189 @@ export type GetProfileByIdLazyQueryHookResult = ReturnType<typeof useGetProfileB
 export type GetProfileByIdQueryResult = Apollo.QueryResult<
   GetProfileByIdQuery,
   GetProfileByIdQueryVariables
+>;
+export const ProfileFollowersDocument = gql`
+  query ProfileFollowers(
+    $profileId: ProfileId!
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $observerId: ProfileId
+  ) {
+    result: followers(request: { profileId: $profileId, limit: $limit, cursor: $cursor }) {
+      items {
+        ...Follower
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${FollowerFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useProfileFollowersQuery__
+ *
+ * To run a query within a React component, call `useProfileFollowersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileFollowersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileFollowersQuery({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useProfileFollowersQuery(
+  baseOptions: Apollo.QueryHookOptions<ProfileFollowersQuery, ProfileFollowersQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileFollowersQuery, ProfileFollowersQueryVariables>(
+    ProfileFollowersDocument,
+    options,
+  );
+}
+export function useProfileFollowersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfileFollowersQuery, ProfileFollowersQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileFollowersQuery, ProfileFollowersQueryVariables>(
+    ProfileFollowersDocument,
+    options,
+  );
+}
+export type ProfileFollowersQueryHookResult = ReturnType<typeof useProfileFollowersQuery>;
+export type ProfileFollowersLazyQueryHookResult = ReturnType<typeof useProfileFollowersLazyQuery>;
+export type ProfileFollowersQueryResult = Apollo.QueryResult<
+  ProfileFollowersQuery,
+  ProfileFollowersQueryVariables
+>;
+export const ProfileFollowingDocument = gql`
+  query ProfileFollowing(
+    $walletAddress: EthereumAddress!
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $observerId: ProfileId
+  ) {
+    result: following(request: { address: $walletAddress, limit: $limit, cursor: $cursor }) {
+      items {
+        ...Following
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${FollowingFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useProfileFollowingQuery__
+ *
+ * To run a query within a React component, call `useProfileFollowingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileFollowingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileFollowingQuery({
+ *   variables: {
+ *      walletAddress: // value for 'walletAddress'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useProfileFollowingQuery(
+  baseOptions: Apollo.QueryHookOptions<ProfileFollowingQuery, ProfileFollowingQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileFollowingQuery, ProfileFollowingQueryVariables>(
+    ProfileFollowingDocument,
+    options,
+  );
+}
+export function useProfileFollowingLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfileFollowingQuery, ProfileFollowingQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileFollowingQuery, ProfileFollowingQueryVariables>(
+    ProfileFollowingDocument,
+    options,
+  );
+}
+export type ProfileFollowingQueryHookResult = ReturnType<typeof useProfileFollowingQuery>;
+export type ProfileFollowingLazyQueryHookResult = ReturnType<typeof useProfileFollowingLazyQuery>;
+export type ProfileFollowingQueryResult = Apollo.QueryResult<
+  ProfileFollowingQuery,
+  ProfileFollowingQueryVariables
+>;
+export const PublicationDocument = gql`
+  query Publication($observerId: ProfileId, $publicationId: InternalPublicationId!) {
+    result: publication(request: { publicationId: $publicationId }) {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+`;
+
+/**
+ * __usePublicationQuery__
+ *
+ * To run a query within a React component, call `usePublicationQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      publicationId: // value for 'publicationId'
+ *   },
+ * });
+ */
+export function usePublicationQuery(
+  baseOptions: Apollo.QueryHookOptions<PublicationQuery, PublicationQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationQuery, PublicationQueryVariables>(PublicationDocument, options);
+}
+export function usePublicationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<PublicationQuery, PublicationQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationQuery, PublicationQueryVariables>(
+    PublicationDocument,
+    options,
+  );
+}
+export type PublicationQueryHookResult = ReturnType<typeof usePublicationQuery>;
+export type PublicationLazyQueryHookResult = ReturnType<typeof usePublicationLazyQuery>;
+export type PublicationQueryResult = Apollo.QueryResult<
+  PublicationQuery,
+  PublicationQueryVariables
 >;
 export type AccessConditionOutputKeySpecifier = (
   | 'nft'

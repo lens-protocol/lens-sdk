@@ -11,6 +11,7 @@ import { Header } from '../header/Header';
 import { ProfileByHandle } from '../profile/ProfileByHandle';
 import { ProfileById } from '../profile/ProfileById';
 import { ProfilesToFollow } from '../profiles-to-follow/ProfilesToFollow';
+import { Publication } from '../publication/Publication';
 
 const { provider, webSocketProvider } = configureChains([chain.polygon], [publicProvider()]);
 
@@ -39,8 +40,11 @@ export function App() {
               <Route path="/" element={<Examples />} />
               <Route path="/feed" element={<Feed />} />
               <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
-              <Route path="/profile-by-id" element={<ProfileById />} />
-              <Route path="/profile-by-handle" element={<ProfileByHandle />} />
+              <Route path="/publication/:publicationId" element={<Publication />} />
+              <Route path="/profile">
+                <Route path="handle/:handle" element={<ProfileByHandle />} />
+                <Route path="id/:id" element={<ProfileById />} />
+              </Route>
             </Routes>
           </div>
         </Router>
