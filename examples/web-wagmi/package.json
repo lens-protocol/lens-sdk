@@ -16,6 +16,7 @@
     "@lens-protocol/react": "workspace:*",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
+    "react-cool-inview": "^3.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.5",
     "wagmi": "^0.8.10"

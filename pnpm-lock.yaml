@@ -24,6 +24,7 @@ importers:
       ethers: ^5.7.2
       prettier: ^2.8.1
       react: ^18.2.0
+      react-cool-inview: ^3.0.1
       react-dom: ^18.2.0
       react-router-dom: ^6.4.5
       typescript: ^4.6.4
@@ -33,6 +34,7 @@ importers:
       '@lens-protocol/react': link:../../packages/react
       ethers: 5.7.2
       react: 18.2.0
+      react-cool-inview: 3.0.1_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-router-dom: 6.4.5_biqbaboplfbrettd7655fr4n2y
       wagmi: 0.8.10_j2ypj35ch2jv6b3hllmh4dxtwm
@@ -11246,6 +11248,14 @@ packages:
       minimist: 1.2.7
       strip-json-comments: 2.0.1
     dev: true
+
+  /react-cool-inview/3.0.1_react@18.2.0:
+    resolution: {integrity: sha512-ly6i3Pv5p0fvm12NmJGfKS34eOhA+iU43Th+gZ6t3G6UwsxQsWoITHTHzA9pdkOc/3VmnReqvC/hJkQUDGhQFA==}
+    peerDependencies:
+      react: '>= 16.8.0'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}

@@ -8,6 +8,7 @@ import { Examples } from '../Examples';
 import { Feed } from '../feed/Feed';
 import { BackButton } from '../header/BackButton';
 import { Header } from '../header/Header';
+import { ExploreProfiles } from '../profile/ExploreProfiles';
 import { ProfileByHandle } from '../profile/ProfileByHandle';
 import { ProfileById } from '../profile/ProfileById';
 import { ProfilesToFollow } from '../profiles-to-follow/ProfilesToFollow';
@@ -38,6 +39,7 @@ export function App() {
             <Routes>
               <Route path="/" element={<Examples />} />
               <Route path="/feed" element={<Feed />} />
+              <Route path="/explore-profiles" element={<ExploreProfiles />} />
               <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
               <Route path="/profile-by-id" element={<ProfileById />} />
               <Route path="/profile-by-handle" element={<ProfileByHandle />} />
