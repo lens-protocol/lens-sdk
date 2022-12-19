@@ -5,9 +5,7 @@ import { Loading } from '../loading/Loading';
 import { ProfilePicture } from './ProfilePicture';
 
 export function ExploreProfiles() {
-  const exploreProfiles = useExploreProfiles({});
-
-  const infiniteScroll = useInfiniteScroll(exploreProfiles);
+  const infiniteScroll = useInfiniteScroll(useExploreProfiles());
 
   if (infiniteScroll.loading) return <Loading />;
 
