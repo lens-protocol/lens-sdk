@@ -13,8 +13,6 @@ export function ExploreProfiles() {
 
   if (infiniteScroll.data.length === 0) return <p>No items</p>;
 
-  const hasMoreItems = infiniteScroll.nextCursor !== null;
-
   return (
     <div>
       <>
@@ -30,7 +28,7 @@ export function ExploreProfiles() {
           </>
         ))}
 
-        {hasMoreItems && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
+        {infiniteScroll.hasMore && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
       </>
     </div>
   );

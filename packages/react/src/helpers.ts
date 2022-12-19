@@ -35,8 +35,7 @@ export type PaginatedArgs<T> = T & {
 
 export type LensResponseWithPagination<T> = LensResponse<T> & {
   totalCount: number | null;
-  previousCursor: string | null;
-  nextCursor: string | null;
+  hasMore: boolean;
   next: () => Promise<void>;
 };
 
@@ -48,8 +47,7 @@ export function useLensResponseWithPagination<
   return {
     ...buildLensResponse<K>(data?.result.items, loading, error),
     totalCount: data?.result.pageInfo.totalCount ?? null,
-    previousCursor: data?.result.pageInfo.prev ?? null,
-    nextCursor: data?.result.pageInfo.next ?? null,
+    hasMore: data?.result.pageInfo.next ? true : false,
     next: async () => {
       await fetchMore({
         variables: {

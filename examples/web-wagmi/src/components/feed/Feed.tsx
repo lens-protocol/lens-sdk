@@ -10,7 +10,7 @@ type PublicationProps = {
 
 function Publication({ feedItem: { root: publication, comments } }: PublicationProps) {
   return (
-    <div>
+    <div style={{ margin: '1rem' }}>
       <ProfilePicture picture={publication.profile.picture} />
       <h2>{publication.profile.name ?? `@${publication.profile.handle}`}</h2>
       <p>{publication.metadata.content}</p>
@@ -31,8 +31,6 @@ export function Feed() {
 
   if (infiniteScroll.data.length === 0) return <p>No items</p>;
 
-  const hasMoreItems = infiniteScroll.nextCursor !== null;
-
   return (
     <div>
       <h1>Feed</h1>
@@ -43,7 +41,7 @@ export function Feed() {
           <Publication key={`${item.root.id}-${i}`} feedItem={item} />
         ))}
 
-      {hasMoreItems && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
+      {infiniteScroll.hasMore && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
     </div>
   );
 }
