@@ -4,3 +4,5 @@ export type {
   ISerializableNativeTransaction,
   ISerializableProxyTransaction,
 } from './ISerializableTransactionFactory';
+export { PendingTransactionGateway } from './PendingTransactionGateway';
+export { TransactionStorageSchema } from './schema';

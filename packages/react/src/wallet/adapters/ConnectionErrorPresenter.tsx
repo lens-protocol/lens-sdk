@@ -1,4 +1,3 @@
-import { makeVar, useReactiveVar } from '@apollo/client';
 import {
   WalletConnectionError,
   WalletConnectionErrorReason,
@@ -6,10 +5,6 @@ import {
   PendingSigningRequestError,
 } from '@lens-protocol/domain/entities';
 import { IConnectionErrorPresenter } from '@lens-protocol/domain/use-cases/wallets';
-
-const connectionErrorVar = makeVar<
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError | null
->(null);
 
 function isConnectionRequestCancelled(
   error: PendingSigningRequestError | UserRejectedError | WalletConnectionError,
@@ -27,16 +22,18 @@ function isSigningRequestCancelled(
 }
 
 export class ConnectionErrorPresenter implements IConnectionErrorPresenter {
+  constructor(
+    private readonly errorHandler: (
+      error: PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+    ) => void,
+  ) {}
+
   presentConnectionError(
     error: PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   ): void {
     if (isSigningRequestCancelled(error) || isConnectionRequestCancelled(error)) {
       return;
     }
-    connectionErrorVar(error);
+    this.errorHandler(error);
   }
-}
-
-export function useConnectionError() {
-  return useReactiveVar(connectionErrorVar);
 }
