@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import { useProfileById } from '@lens-protocol/react';
-import { useParams } from 'react-router-dom';
-=======
 import { useProfile } from '@lens-protocol/react';
->>>>>>> main
+import { useParams } from 'react-router-dom';
 
 import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
@@ -14,7 +10,7 @@ type HandleIdProps = {
 };
 
 export function Handle({ id }: HandleIdProps) {
-  const { data: profile, loading, error } = useProfileById({ id });
+  const { data: profile, loading, error } = useProfile({ id });
 
   if (loading) return <Loading />;
 

@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import { useProfileByHandle, useProfileFollowers, useProfileFollowing } from '@lens-protocol/react';
+import { useProfile, useProfileFollowers, useProfileFollowing } from '@lens-protocol/react';
 import { useParams } from 'react-router-dom';
-=======
-import { useProfile } from '@lens-protocol/react';
->>>>>>> main
 
 import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
@@ -56,7 +52,7 @@ export function ProfilesFollowing({ walletAddress }: ProfileFollowingProps) {
 }
 
 export function Handle({ handle }: HandleProps) {
-  const { data: profile, loading, error } = useProfileByHandle({ handle });
+  const { data: profile, loading, error } = useProfile({ handle });
 
   if (loading) return <Loading />;
 
