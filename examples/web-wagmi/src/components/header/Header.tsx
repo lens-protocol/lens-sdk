@@ -1,3 +1,4 @@
+import { useWalletLogin } from '@lens-protocol/react';
 import { Link } from 'react-router-dom';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
@@ -7,9 +8,19 @@ function truncateAddress(address: string, chars = 4) {
 }
 
 export function Header() {
+  const login = useWalletLogin();
+
   const { connect } = useConnect({
     connector: new InjectedConnector(),
+
+    async onSuccess({ connector }) {
+      if (connector instanceof InjectedConnector) {
+        const signer = await connector.getSigner();
+        login(signer);
+      }
+    },
   });
+
   const { disconnect } = useDisconnect();
   const { address } = useAccount();
 

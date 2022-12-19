@@ -3,7 +3,7 @@ import { BaseStorageSchema, IStorageProvider, Storage } from '@lens-protocol/sto
 import { StoredActiveProfileData } from '../adapters/ActiveProfileGateway';
 
 const ActiveProfileStorageDataSchema = new BaseStorageSchema(
-  'LENS_ACTIVE_PROFILE',
+  'lens.activeProfile',
   StoredActiveProfileData,
 );
 

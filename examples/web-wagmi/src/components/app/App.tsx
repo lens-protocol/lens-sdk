@@ -1,7 +1,9 @@
 import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
 import { localStorage } from '@lens-protocol/react/web';
+import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { optimism, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Examples } from '../Examples';
@@ -13,7 +15,7 @@ import { ProfileByHandle } from '../profile/ProfileByHandle';
 import { ProfileById } from '../profile/ProfileById';
 import { ProfilesToFollow } from '../profiles-to-follow/ProfilesToFollow';
 
-const { provider, webSocketProvider } = configureChains([chain.polygon], [publicProvider()]);
+const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
 const client = createClient({
   autoConnect: true,
@@ -22,10 +24,10 @@ const client = createClient({
 });
 
 const lensConfig: LensConfig = {
-  provider: client.provider,
   environment: staging,
   storage: localStorage(),
   sources: [sources.lenster, sources.orb, 'any-other-app-id'],
+  bindings: wagmiBindings(),
 };
 
 export function App() {
