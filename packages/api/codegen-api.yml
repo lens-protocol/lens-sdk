@@ -40,7 +40,7 @@ config:
 generates:
   src/graphql/generated.tsx:
     schema:
-      - https://api.lens.dev/graphql
+      - https://api-mumbai.lens.dev/graphql
       - src/graphql/client.graphql
     documents:
       - src/graphql/*.graphql

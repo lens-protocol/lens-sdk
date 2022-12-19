@@ -31,7 +31,7 @@ const lensConfig: LensConfig = {
   storage: localStorage(),
 };
 
-const toastNotification = (error: Error) => toast(error.message);
+const toastNotification = (error: Error) => toast.error(error.message);
 
 export function App() {
   return (

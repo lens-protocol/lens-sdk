@@ -21,6 +21,8 @@ import {
   TransactionErrorReasons,
   HasTxHashBeenIndexedQueryVariables,
   HasTxHashBeenIndexedDocument,
+  RelayResult,
+  CreateProfileMutation,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -172,5 +174,11 @@ export function mockProxyActionStatusMockedResponse(instructions: {
             : mockProxyActionStatusResult(instructions.result),
       },
     },
+  };
+}
+
+export function mockCreateProfileMutation(result: Required<RelayResult>): CreateProfileMutation {
+  return {
+    result,
   };
 }

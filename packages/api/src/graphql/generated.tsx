@@ -680,6 +680,16 @@ export type CreatePostEip712TypedDataValue = {
   referenceModuleInitData: Scalars['ReferenceModuleData'];
 };
 
+export type CreateProfileRequest = {
+  handle: Scalars['CreateHandle'];
+  /** The profile picture uri */
+  profilePictureUri?: Maybe<Scalars['Url']>;
+  /** The follow module */
+  followModule?: Maybe<FollowModuleParams>;
+  /** The follow NFT URI is the NFT metadata your followers will mint when they follow you. This can be updated at all times. If you do not pass in anything it will create a super cool changing NFT which will show the last publication of your profile as the NFT which looks awesome! This means people do not have to worry about writing this logic but still have the ability to customise it for their followers */
+  followNFTURI?: Maybe<Scalars['Url']>;
+};
+
 export type CreatePublicCommentRequest = {
   /** Profile id */
   profileId: Scalars['ProfileId'];
@@ -1912,6 +1922,7 @@ export type Mutation = {
   createMirrorViaDispatcher: RelayResult;
   createAttachMediaData: PublicMediaResults;
   claim: RelayResult;
+  createProfile: RelayResult;
   /** Adds profile interests to the given profile */
   addProfileInterests: Maybe<Scalars['Void']>;
   /** Removes profile interests from the given profile */
@@ -2029,6 +2040,10 @@ export type MutationCreateAttachMediaDataArgs = {
 
 export type MutationClaimArgs = {
   request: ClaimHandleRequest;
+};
+
+export type MutationCreateProfileArgs = {
+  request: CreateProfileRequest;
 };
 
 export type MutationAddProfileInterestsArgs = {
@@ -4247,6 +4262,16 @@ export type GetAllProfilesByOwnerAddressQuery = {
   };
 };
 
+export type CreateProfileMutationVariables = Exact<{
+  request: CreateProfileRequest;
+}>;
+
+export type CreateProfileMutation = {
+  result:
+    | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
+    | ({ __typename: 'RelayError' } & RelayErrorFragment);
+};
+
 export type ProxyActionStatusResultFragment = { __typename: 'ProxyActionStatusResult' } & Pick<
   ProxyActionStatusResult,
   'txHash' | 'txId' | 'status'
@@ -4278,6 +4303,13 @@ export type ProxyActionMutationVariables = Exact<{
 }>;
 
 export type ProxyActionMutation = { result: Mutation['proxyAction'] };
+
+export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
+  RelayerResult,
+  'txHash' | 'txId'
+>;
+
+export type RelayErrorFragment = { __typename: 'RelayError' } & Pick<RelayError, 'reason'>;
 
 export type HasTxHashBeenIndexedQueryVariables = Exact<{
   request: HasTxHashBeenIndexedRequest;
@@ -4771,6 +4803,19 @@ export const ProxyActionQueuedFragmentDoc = gql`
     queuedAt
   }
 `;
+export const RelayerResultFragmentDoc = gql`
+  fragment RelayerResult on RelayerResult {
+    __typename
+    txHash
+    txId
+  }
+`;
+export const RelayErrorFragmentDoc = gql`
+  fragment RelayError on RelayError {
+    __typename
+    reason
+  }
+`;
 export const AuthChallengeDocument = gql`
   query AuthChallenge($address: EthereumAddress!) {
     result: challenge(request: { address: $address }) {
@@ -5182,6 +5227,58 @@ export type GetAllProfilesByOwnerAddressLazyQueryHookResult = ReturnType<
 export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
   GetAllProfilesByOwnerAddressQuery,
   GetAllProfilesByOwnerAddressQueryVariables
+>;
+export const CreateProfileDocument = gql`
+  mutation CreateProfile($request: CreateProfileRequest!) {
+    result: createProfile(request: $request) {
+      __typename
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export type CreateProfileMutationFn = Apollo.MutationFunction<
+  CreateProfileMutation,
+  CreateProfileMutationVariables
+>;
+
+/**
+ * __useCreateProfileMutation__
+ *
+ * To run a mutation, you first call `useCreateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProfileMutation, { data, loading, error }] = useCreateProfileMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateProfileMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateProfileMutation, CreateProfileMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateProfileMutation, CreateProfileMutationVariables>(
+    CreateProfileDocument,
+    options,
+  );
+}
+export type CreateProfileMutationHookResult = ReturnType<typeof useCreateProfileMutation>;
+export type CreateProfileMutationResult = Apollo.MutationResult<CreateProfileMutation>;
+export type CreateProfileMutationOptions = Apollo.BaseMutationOptions<
+  CreateProfileMutation,
+  CreateProfileMutationVariables
 >;
 export const ProxyActionStatusDocument = gql`
   query ProxyActionStatus($proxyActionId: ProxyActionId!) {
@@ -6631,6 +6728,7 @@ export type MutationKeySpecifier = (
   | 'createMirrorViaDispatcher'
   | 'createAttachMediaData'
   | 'claim'
+  | 'createProfile'
   | 'addProfileInterests'
   | 'removeProfileInterests'
   | 'createSetProfileMetadataTypedData'
@@ -6667,6 +6765,7 @@ export type MutationFieldPolicy = {
   createMirrorViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
   createAttachMediaData?: FieldPolicy<any> | FieldReadFunction<any>;
   claim?: FieldPolicy<any> | FieldReadFunction<any>;
+  createProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   addProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   removeProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetProfileMetadataTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
