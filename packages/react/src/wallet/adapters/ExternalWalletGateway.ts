@@ -1,8 +1,8 @@
 import { Wallet, WalletConnectionError, WalletType } from '@lens-protocol/domain/entities';
 import {
-  IExternalWalletGateway,
+  IReadableWalletGateway,
   IResettableWalletGateway,
-  IWalletGateway,
+  IWritableWalletGateway,
 } from '@lens-protocol/domain/use-cases/wallets';
 import {
   ChainType,
@@ -30,7 +30,7 @@ export const WalletStorageSchema = z.array(WalletDataSchema);
 export type WalletStorageSchema = z.infer<typeof WalletStorageSchema>;
 
 export class ExternalWalletGateway
-  implements IWalletGateway, IExternalWalletGateway, IResettableWalletGateway
+  implements IReadableWalletGateway, IWritableWalletGateway, IResettableWalletGateway
 {
   private inMemoryCache: Record<EthereumAddress, ExternalWallet> = {};
 
@@ -38,6 +38,10 @@ export class ExternalWalletGateway
     private readonly storage: IStorage<WalletStorageSchema>,
     private readonly factory: IExternalWalletFactory,
   ) {}
+
+  save(_: Wallet): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 
   async connect(
     walletType: WalletType,

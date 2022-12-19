@@ -16,3 +16,10 @@ export function createMockApolloClientWithMultipleResponses<TData>(
     }),
   });
 }
+
+export function createMockApolloCache(): InMemoryCache {
+  return new InMemoryCache({
+    addTypename: true,
+    possibleTypes: generatedIntrospection.possibleTypes,
+  });
+}

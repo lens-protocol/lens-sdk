@@ -6,14 +6,14 @@ export interface ICredentialsReader {
   getCredentials(): Promise<ICredentials | null>;
 }
 
-export interface IWalletGateway {
+export interface IReadableWalletGateway {
   getByAddress(address: string): Promise<Wallet | null>;
 }
 
 export class ActiveWallet {
   constructor(
     private credentialsReader: ICredentialsReader,
-    private walletGateway: IWalletGateway,
+    private walletGateway: IReadableWalletGateway,
   ) {}
 
   async getActiveWallet(): Promise<Wallet | null> {

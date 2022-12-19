@@ -38,3 +38,5 @@ export function createApolloClient({ backendURL }: ApolloClientConfig) {
     uri,
   });
 }
+
+export * from './IAccessTokenStorage';
