@@ -4134,6 +4134,12 @@ export type PostFragment = { __typename: 'Post' } & Pick<
     canMirror: { __typename: 'CanMirrorResponse' } & Pick<CanMirrorResponse, 'result'>;
   };
 
+export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type EnabledModuleCurrenciesQuery = {
+  result: Array<{ __typename: 'Erc20' } & Erc20Fragment>;
+};
+
 export type FeedItemFragment = { __typename: 'FeedItem' } & {
   root: ({ __typename: 'Post' } & PostFragment) | ({ __typename: 'Comment' } & CommentFragment);
   comments: Maybe<Array<{ __typename: 'Comment' } & CommentFragment>>;
@@ -4241,7 +4247,7 @@ export type ProfilesToFollowQueryVariables = Exact<{
 }>;
 
 export type ProfilesToFollowQuery = {
-  recommendedProfiles: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+  result: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
 };
 
 export type GetProfileQueryVariables = Exact<{
@@ -4958,6 +4964,64 @@ export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
   AuthRefreshMutation,
   AuthRefreshMutationVariables
 >;
+export const EnabledModuleCurrenciesDocument = gql`
+  query EnabledModuleCurrencies {
+    result: enabledModuleCurrencies {
+      ...Erc20
+    }
+  }
+  ${Erc20FragmentDoc}
+`;
+
+/**
+ * __useEnabledModuleCurrenciesQuery__
+ *
+ * To run a query within a React component, call `useEnabledModuleCurrenciesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEnabledModuleCurrenciesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEnabledModuleCurrenciesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useEnabledModuleCurrenciesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    EnabledModuleCurrenciesQuery,
+    EnabledModuleCurrenciesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<EnabledModuleCurrenciesQuery, EnabledModuleCurrenciesQueryVariables>(
+    EnabledModuleCurrenciesDocument,
+    options,
+  );
+}
+export function useEnabledModuleCurrenciesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    EnabledModuleCurrenciesQuery,
+    EnabledModuleCurrenciesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<EnabledModuleCurrenciesQuery, EnabledModuleCurrenciesQueryVariables>(
+    EnabledModuleCurrenciesDocument,
+    options,
+  );
+}
+export type EnabledModuleCurrenciesQueryHookResult = ReturnType<
+  typeof useEnabledModuleCurrenciesQuery
+>;
+export type EnabledModuleCurrenciesLazyQueryHookResult = ReturnType<
+  typeof useEnabledModuleCurrenciesLazyQuery
+>;
+export type EnabledModuleCurrenciesQueryResult = Apollo.QueryResult<
+  EnabledModuleCurrenciesQuery,
+  EnabledModuleCurrenciesQueryVariables
+>;
 export const FeedDocument = gql`
   query Feed(
     $profileId: ProfileId!
@@ -5075,7 +5139,7 @@ export type ExploreProfilesQueryResult = Apollo.QueryResult<
 >;
 export const ProfilesToFollowDocument = gql`
   query ProfilesToFollow($observerId: ProfileId) {
-    recommendedProfiles {
+    result: recommendedProfiles {
       ...ProfileFields
     }
   }
