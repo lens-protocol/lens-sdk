@@ -1,6 +1,6 @@
-import { usePublicationQuery } from '@lens-protocol/api';
+import { CommentFragment, MirrorFragment, PostFragment, usePublicationQuery } from '@lens-protocol/api';
 
-import { useLensResponse } from '../helpers';
+import { ReadResult, useReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type UsePublicationArgs = {
@@ -8,10 +8,10 @@ type UsePublicationArgs = {
   observerId?: string;
 };
 
-export function usePublication({ publicationId, observerId }: UsePublicationArgs) {
+export function usePublication({ publicationId, observerId }: UsePublicationArgs) : ReadResult<CommentFragment | MirrorFragment | PostFragment> {
   const { apolloClient } = useSharedDependencies();
 
-  const response = useLensResponse(
+  return useReadResult(
     usePublicationQuery({
       variables: {
         publicationId,
@@ -20,9 +20,4 @@ export function usePublication({ publicationId, observerId }: UsePublicationArgs
       client: apolloClient,
     }),
   );
-
-  return {
-    ...response,
-    data: response.data?.result ?? null,
-  };
 }

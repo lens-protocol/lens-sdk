@@ -19,6 +19,16 @@
   "resolutions": {
     "ethereumjs-abi": "https://registry.npmjs.org/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz"
   },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "react-native",
+        "@babel/core",
+        "@tanstack/query-core",
+        "csstype"
+      ]
+    }
+  },
   "engines": {
     "node": "^18.12.1",
     "pnpm": "^7.17.0"

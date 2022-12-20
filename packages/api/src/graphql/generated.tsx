@@ -680,6 +680,16 @@ export type CreatePostEip712TypedDataValue = {
   referenceModuleInitData: Scalars['ReferenceModuleData'];
 };
 
+export type CreateProfileRequest = {
+  handle: Scalars['CreateHandle'];
+  /** The profile picture uri */
+  profilePictureUri?: Maybe<Scalars['Url']>;
+  /** The follow module */
+  followModule?: Maybe<FollowModuleParams>;
+  /** The follow NFT URI is the NFT metadata your followers will mint when they follow you. This can be updated at all times. If you do not pass in anything it will create a super cool changing NFT which will show the last publication of your profile as the NFT which looks awesome! This means people do not have to worry about writing this logic but still have the ability to customise it for their followers */
+  followNFTURI?: Maybe<Scalars['Url']>;
+};
+
 export type CreatePublicCommentRequest = {
   /** Profile id */
   profileId: Scalars['ProfileId'];
@@ -1912,6 +1922,7 @@ export type Mutation = {
   createMirrorViaDispatcher: RelayResult;
   createAttachMediaData: PublicMediaResults;
   claim: RelayResult;
+  createProfile: RelayResult;
   /** Adds profile interests to the given profile */
   addProfileInterests: Maybe<Scalars['Void']>;
   /** Removes profile interests from the given profile */
@@ -2029,6 +2040,10 @@ export type MutationCreateAttachMediaDataArgs = {
 
 export type MutationClaimArgs = {
   request: ClaimHandleRequest;
+};
+
+export type MutationCreateProfileArgs = {
+  request: CreateProfileRequest;
 };
 
 export type MutationAddProfileInterestsArgs = {
@@ -3787,6 +3802,37 @@ export type WorldcoinIdentity = {
   isHuman: Scalars['Boolean'];
 };
 
+export type AuthChallengeQueryVariables = Exact<{
+  address: Scalars['EthereumAddress'];
+}>;
+
+export type AuthChallengeQuery = {
+  result: { __typename: 'AuthChallengeResult' } & Pick<AuthChallengeResult, 'text'>;
+};
+
+export type AuthAuthenticateMutationVariables = Exact<{
+  address: Scalars['EthereumAddress'];
+  signature: Scalars['Signature'];
+}>;
+
+export type AuthAuthenticateMutation = {
+  result: { __typename: 'AuthenticationResult' } & Pick<
+    AuthenticationResult,
+    'accessToken' | 'refreshToken'
+  >;
+};
+
+export type AuthRefreshMutationVariables = Exact<{
+  refreshToken: Scalars['Jwt'];
+}>;
+
+export type AuthRefreshMutation = {
+  result: { __typename: 'AuthenticationResult' } & Pick<
+    AuthenticationResult,
+    'accessToken' | 'refreshToken'
+  >;
+};
+
 export type CommentWithFirstCommentFragment = { __typename: 'Comment' } & {
   firstComment: Maybe<{ __typename: 'Comment' } & CommentFragment>;
 } & CommentFragment;
@@ -4111,6 +4157,12 @@ export type PostFragment = { __typename: 'Post' } & Pick<
     canMirror: { __typename: 'CanMirrorResponse' } & Pick<CanMirrorResponse, 'result'>;
   };
 
+export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type EnabledModuleCurrenciesQuery = {
+  result: Array<{ __typename: 'Erc20' } & Erc20Fragment>;
+};
+
 export type FeedItemFragment = { __typename: 'FeedItem' } & {
   root: ({ __typename: 'Post' } & PostFragment) | ({ __typename: 'Comment' } & CommentFragment);
   comments: Maybe<Array<{ __typename: 'Comment' } & CommentFragment>>;
@@ -4218,7 +4270,7 @@ export type ProfilesToFollowQueryVariables = Exact<{
 }>;
 
 export type ProfilesToFollowQuery = {
-  recommendedProfiles: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+  result: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
 };
 
 export type GetProfileQueryVariables = Exact<{
@@ -4237,6 +4289,16 @@ export type GetAllProfilesByOwnerAddressQuery = {
   profilesByOwner: { __typename: 'PaginatedProfileResult' } & {
     items: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
   };
+};
+
+export type CreateProfileMutationVariables = Exact<{
+  request: CreateProfileRequest;
+}>;
+
+export type CreateProfileMutation = {
+  result:
+    | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
+    | ({ __typename: 'RelayError' } & RelayErrorFragment);
 };
 
 export type FollowerFragment = { __typename: 'Follower' } & {
@@ -4275,6 +4337,38 @@ export type ProfileFollowingQuery = {
   };
 };
 
+export type ProxyActionStatusResultFragment = { __typename: 'ProxyActionStatusResult' } & Pick<
+  ProxyActionStatusResult,
+  'txHash' | 'txId' | 'status'
+>;
+
+export type ProxyActionErrorFragment = { __typename: 'ProxyActionError' } & Pick<
+  ProxyActionError,
+  'reason' | 'lastKnownTxId'
+>;
+
+export type ProxyActionQueuedFragment = { __typename: 'ProxyActionQueued' } & Pick<
+  ProxyActionQueued,
+  'queuedAt'
+>;
+
+export type ProxyActionStatusQueryVariables = Exact<{
+  proxyActionId: Scalars['ProxyActionId'];
+}>;
+
+export type ProxyActionStatusQuery = {
+  result:
+    | ({ __typename: 'ProxyActionStatusResult' } & ProxyActionStatusResultFragment)
+    | ({ __typename: 'ProxyActionError' } & ProxyActionErrorFragment)
+    | ({ __typename: 'ProxyActionQueued' } & ProxyActionQueuedFragment);
+};
+
+export type ProxyActionMutationVariables = Exact<{
+  request: ProxyActionRequest;
+}>;
+
+export type ProxyActionMutation = { result: Mutation['proxyAction'] };
+
 export type PublicationQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   publicationId: Scalars['InternalPublicationId'];
@@ -4286,6 +4380,26 @@ export type PublicationQuery = {
     | ({ __typename: 'Comment' } & CommentFragment)
     | ({ __typename: 'Mirror' } & MirrorFragment)
   >;
+};
+
+export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
+  RelayerResult,
+  'txHash' | 'txId'
+>;
+
+export type RelayErrorFragment = { __typename: 'RelayError' } & Pick<RelayError, 'reason'>;
+
+export type HasTxHashBeenIndexedQueryVariables = Exact<{
+  request: HasTxHashBeenIndexedRequest;
+}>;
+
+export type HasTxHashBeenIndexedQuery = {
+  result:
+    | ({ __typename: 'TransactionIndexedResult' } & Pick<
+        TransactionIndexedResult,
+        'indexed' | 'txHash'
+      >)
+    | ({ __typename: 'TransactionError' } & Pick<TransactionError, 'reason'>);
 };
 
 export const PublicationStatsFragmentDoc = gql`
@@ -4774,6 +4888,179 @@ export const FollowingFragmentDoc = gql`
   }
   ${ProfileFieldsFragmentDoc}
 `;
+export const ProxyActionStatusResultFragmentDoc = gql`
+  fragment ProxyActionStatusResult on ProxyActionStatusResult {
+    txHash
+    txId
+    status
+  }
+`;
+export const ProxyActionErrorFragmentDoc = gql`
+  fragment ProxyActionError on ProxyActionError {
+    reason
+    lastKnownTxId
+  }
+`;
+export const ProxyActionQueuedFragmentDoc = gql`
+  fragment ProxyActionQueued on ProxyActionQueued {
+    queuedAt
+  }
+`;
+export const RelayerResultFragmentDoc = gql`
+  fragment RelayerResult on RelayerResult {
+    __typename
+    txHash
+    txId
+  }
+`;
+export const RelayErrorFragmentDoc = gql`
+  fragment RelayError on RelayError {
+    __typename
+    reason
+  }
+`;
+export const AuthChallengeDocument = gql`
+  query AuthChallenge($address: EthereumAddress!) {
+    result: challenge(request: { address: $address }) {
+      text
+    }
+  }
+`;
+
+/**
+ * __useAuthChallengeQuery__
+ *
+ * To run a query within a React component, call `useAuthChallengeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAuthChallengeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAuthChallengeQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useAuthChallengeQuery(
+  baseOptions: Apollo.QueryHookOptions<AuthChallengeQuery, AuthChallengeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<AuthChallengeQuery, AuthChallengeQueryVariables>(
+    AuthChallengeDocument,
+    options,
+  );
+}
+export function useAuthChallengeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<AuthChallengeQuery, AuthChallengeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<AuthChallengeQuery, AuthChallengeQueryVariables>(
+    AuthChallengeDocument,
+    options,
+  );
+}
+export type AuthChallengeQueryHookResult = ReturnType<typeof useAuthChallengeQuery>;
+export type AuthChallengeLazyQueryHookResult = ReturnType<typeof useAuthChallengeLazyQuery>;
+export type AuthChallengeQueryResult = Apollo.QueryResult<
+  AuthChallengeQuery,
+  AuthChallengeQueryVariables
+>;
+export const AuthAuthenticateDocument = gql`
+  mutation AuthAuthenticate($address: EthereumAddress!, $signature: Signature!) {
+    result: authenticate(request: { address: $address, signature: $signature }) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+export type AuthAuthenticateMutationFn = Apollo.MutationFunction<
+  AuthAuthenticateMutation,
+  AuthAuthenticateMutationVariables
+>;
+
+/**
+ * __useAuthAuthenticateMutation__
+ *
+ * To run a mutation, you first call `useAuthAuthenticateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthAuthenticateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [authAuthenticateMutation, { data, loading, error }] = useAuthAuthenticateMutation({
+ *   variables: {
+ *      address: // value for 'address'
+ *      signature: // value for 'signature'
+ *   },
+ * });
+ */
+export function useAuthAuthenticateMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AuthAuthenticateMutation,
+    AuthAuthenticateMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AuthAuthenticateMutation, AuthAuthenticateMutationVariables>(
+    AuthAuthenticateDocument,
+    options,
+  );
+}
+export type AuthAuthenticateMutationHookResult = ReturnType<typeof useAuthAuthenticateMutation>;
+export type AuthAuthenticateMutationResult = Apollo.MutationResult<AuthAuthenticateMutation>;
+export type AuthAuthenticateMutationOptions = Apollo.BaseMutationOptions<
+  AuthAuthenticateMutation,
+  AuthAuthenticateMutationVariables
+>;
+export const AuthRefreshDocument = gql`
+  mutation AuthRefresh($refreshToken: Jwt!) {
+    result: refresh(request: { refreshToken: $refreshToken }) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+export type AuthRefreshMutationFn = Apollo.MutationFunction<
+  AuthRefreshMutation,
+  AuthRefreshMutationVariables
+>;
+
+/**
+ * __useAuthRefreshMutation__
+ *
+ * To run a mutation, you first call `useAuthRefreshMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthRefreshMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [authRefreshMutation, { data, loading, error }] = useAuthRefreshMutation({
+ *   variables: {
+ *      refreshToken: // value for 'refreshToken'
+ *   },
+ * });
+ */
+export function useAuthRefreshMutation(
+  baseOptions?: Apollo.MutationHookOptions<AuthRefreshMutation, AuthRefreshMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AuthRefreshMutation, AuthRefreshMutationVariables>(
+    AuthRefreshDocument,
+    options,
+  );
+}
+export type AuthRefreshMutationHookResult = ReturnType<typeof useAuthRefreshMutation>;
+export type AuthRefreshMutationResult = Apollo.MutationResult<AuthRefreshMutation>;
+export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
+  AuthRefreshMutation,
+  AuthRefreshMutationVariables
+>;
 export const CommentsDocument = gql`
   query Comments(
     $observerId: ProfileId
@@ -4842,6 +5129,64 @@ export function useCommentsLazyQuery(
 export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>;
 export type CommentsLazyQueryHookResult = ReturnType<typeof useCommentsLazyQuery>;
 export type CommentsQueryResult = Apollo.QueryResult<CommentsQuery, CommentsQueryVariables>;
+export const EnabledModuleCurrenciesDocument = gql`
+  query EnabledModuleCurrencies {
+    result: enabledModuleCurrencies {
+      ...Erc20
+    }
+  }
+  ${Erc20FragmentDoc}
+`;
+
+/**
+ * __useEnabledModuleCurrenciesQuery__
+ *
+ * To run a query within a React component, call `useEnabledModuleCurrenciesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEnabledModuleCurrenciesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEnabledModuleCurrenciesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useEnabledModuleCurrenciesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    EnabledModuleCurrenciesQuery,
+    EnabledModuleCurrenciesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<EnabledModuleCurrenciesQuery, EnabledModuleCurrenciesQueryVariables>(
+    EnabledModuleCurrenciesDocument,
+    options,
+  );
+}
+export function useEnabledModuleCurrenciesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    EnabledModuleCurrenciesQuery,
+    EnabledModuleCurrenciesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<EnabledModuleCurrenciesQuery, EnabledModuleCurrenciesQueryVariables>(
+    EnabledModuleCurrenciesDocument,
+    options,
+  );
+}
+export type EnabledModuleCurrenciesQueryHookResult = ReturnType<
+  typeof useEnabledModuleCurrenciesQuery
+>;
+export type EnabledModuleCurrenciesLazyQueryHookResult = ReturnType<
+  typeof useEnabledModuleCurrenciesLazyQuery
+>;
+export type EnabledModuleCurrenciesQueryResult = Apollo.QueryResult<
+  EnabledModuleCurrenciesQuery,
+  EnabledModuleCurrenciesQueryVariables
+>;
 export const FeedDocument = gql`
   query Feed(
     $profileId: ProfileId!
@@ -4959,7 +5304,7 @@ export type ExploreProfilesQueryResult = Apollo.QueryResult<
 >;
 export const ProfilesToFollowDocument = gql`
   query ProfilesToFollow($observerId: ProfileId) {
-    recommendedProfiles {
+    result: recommendedProfiles {
       ...ProfileFields
     }
   }
@@ -5112,6 +5457,58 @@ export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
   GetAllProfilesByOwnerAddressQuery,
   GetAllProfilesByOwnerAddressQueryVariables
 >;
+export const CreateProfileDocument = gql`
+  mutation CreateProfile($request: CreateProfileRequest!) {
+    result: createProfile(request: $request) {
+      __typename
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export type CreateProfileMutationFn = Apollo.MutationFunction<
+  CreateProfileMutation,
+  CreateProfileMutationVariables
+>;
+
+/**
+ * __useCreateProfileMutation__
+ *
+ * To run a mutation, you first call `useCreateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProfileMutation, { data, loading, error }] = useCreateProfileMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateProfileMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateProfileMutation, CreateProfileMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateProfileMutation, CreateProfileMutationVariables>(
+    CreateProfileDocument,
+    options,
+  );
+}
+export type CreateProfileMutationHookResult = ReturnType<typeof useCreateProfileMutation>;
+export type CreateProfileMutationResult = Apollo.MutationResult<CreateProfileMutation>;
+export type CreateProfileMutationOptions = Apollo.BaseMutationOptions<
+  CreateProfileMutation,
+  CreateProfileMutationVariables
+>;
 export const ProfileFollowersDocument = gql`
   query ProfileFollowers(
     $profileId: ProfileId!
@@ -5238,6 +5635,110 @@ export type ProfileFollowingQueryResult = Apollo.QueryResult<
   ProfileFollowingQuery,
   ProfileFollowingQueryVariables
 >;
+export const ProxyActionStatusDocument = gql`
+  query ProxyActionStatus($proxyActionId: ProxyActionId!) {
+    result: proxyActionStatus(proxyActionId: $proxyActionId) {
+      ... on ProxyActionStatusResult {
+        ...ProxyActionStatusResult
+      }
+      ... on ProxyActionError {
+        ...ProxyActionError
+      }
+      ... on ProxyActionQueued {
+        ...ProxyActionQueued
+      }
+    }
+  }
+  ${ProxyActionStatusResultFragmentDoc}
+  ${ProxyActionErrorFragmentDoc}
+  ${ProxyActionQueuedFragmentDoc}
+`;
+
+/**
+ * __useProxyActionStatusQuery__
+ *
+ * To run a query within a React component, call `useProxyActionStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProxyActionStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProxyActionStatusQuery({
+ *   variables: {
+ *      proxyActionId: // value for 'proxyActionId'
+ *   },
+ * });
+ */
+export function useProxyActionStatusQuery(
+  baseOptions: Apollo.QueryHookOptions<ProxyActionStatusQuery, ProxyActionStatusQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProxyActionStatusQuery, ProxyActionStatusQueryVariables>(
+    ProxyActionStatusDocument,
+    options,
+  );
+}
+export function useProxyActionStatusLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProxyActionStatusQuery,
+    ProxyActionStatusQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProxyActionStatusQuery, ProxyActionStatusQueryVariables>(
+    ProxyActionStatusDocument,
+    options,
+  );
+}
+export type ProxyActionStatusQueryHookResult = ReturnType<typeof useProxyActionStatusQuery>;
+export type ProxyActionStatusLazyQueryHookResult = ReturnType<typeof useProxyActionStatusLazyQuery>;
+export type ProxyActionStatusQueryResult = Apollo.QueryResult<
+  ProxyActionStatusQuery,
+  ProxyActionStatusQueryVariables
+>;
+export const ProxyActionDocument = gql`
+  mutation ProxyAction($request: ProxyActionRequest!) {
+    result: proxyAction(request: $request)
+  }
+`;
+export type ProxyActionMutationFn = Apollo.MutationFunction<
+  ProxyActionMutation,
+  ProxyActionMutationVariables
+>;
+
+/**
+ * __useProxyActionMutation__
+ *
+ * To run a mutation, you first call `useProxyActionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useProxyActionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [proxyActionMutation, { data, loading, error }] = useProxyActionMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useProxyActionMutation(
+  baseOptions?: Apollo.MutationHookOptions<ProxyActionMutation, ProxyActionMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ProxyActionMutation, ProxyActionMutationVariables>(
+    ProxyActionDocument,
+    options,
+  );
+}
+export type ProxyActionMutationHookResult = ReturnType<typeof useProxyActionMutation>;
+export type ProxyActionMutationResult = Apollo.MutationResult<ProxyActionMutation>;
+export type ProxyActionMutationOptions = Apollo.BaseMutationOptions<
+  ProxyActionMutation,
+  ProxyActionMutationVariables
+>;
 export const PublicationDocument = gql`
   query Publication($observerId: ProfileId, $publicationId: InternalPublicationId!) {
     result: publication(request: { publicationId: $publicationId }) {
@@ -5294,6 +5795,68 @@ export type PublicationLazyQueryHookResult = ReturnType<typeof usePublicationLaz
 export type PublicationQueryResult = Apollo.QueryResult<
   PublicationQuery,
   PublicationQueryVariables
+>;
+export const HasTxHashBeenIndexedDocument = gql`
+  query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
+    result: hasTxHashBeenIndexed(request: $request) {
+      ... on TransactionIndexedResult {
+        indexed
+        txHash
+      }
+      ... on TransactionError {
+        reason
+      }
+    }
+  }
+`;
+
+/**
+ * __useHasTxHashBeenIndexedQuery__
+ *
+ * To run a query within a React component, call `useHasTxHashBeenIndexedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHasTxHashBeenIndexedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHasTxHashBeenIndexedQuery({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useHasTxHashBeenIndexedQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    HasTxHashBeenIndexedQuery,
+    HasTxHashBeenIndexedQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<HasTxHashBeenIndexedQuery, HasTxHashBeenIndexedQueryVariables>(
+    HasTxHashBeenIndexedDocument,
+    options,
+  );
+}
+export function useHasTxHashBeenIndexedLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    HasTxHashBeenIndexedQuery,
+    HasTxHashBeenIndexedQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<HasTxHashBeenIndexedQuery, HasTxHashBeenIndexedQueryVariables>(
+    HasTxHashBeenIndexedDocument,
+    options,
+  );
+}
+export type HasTxHashBeenIndexedQueryHookResult = ReturnType<typeof useHasTxHashBeenIndexedQuery>;
+export type HasTxHashBeenIndexedLazyQueryHookResult = ReturnType<
+  typeof useHasTxHashBeenIndexedLazyQuery
+>;
+export type HasTxHashBeenIndexedQueryResult = Apollo.QueryResult<
+  HasTxHashBeenIndexedQuery,
+  HasTxHashBeenIndexedQueryVariables
 >;
 export type AccessConditionOutputKeySpecifier = (
   | 'nft'
@@ -6577,6 +7140,7 @@ export type MutationKeySpecifier = (
   | 'createMirrorViaDispatcher'
   | 'createAttachMediaData'
   | 'claim'
+  | 'createProfile'
   | 'addProfileInterests'
   | 'removeProfileInterests'
   | 'createSetProfileMetadataTypedData'
@@ -6613,6 +7177,7 @@ export type MutationFieldPolicy = {
   createMirrorViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
   createAttachMediaData?: FieldPolicy<any> | FieldReadFunction<any>;
   claim?: FieldPolicy<any> | FieldReadFunction<any>;
+  createProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   addProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   removeProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetProfileMetadataTypedData?: FieldPolicy<any> | FieldReadFunction<any>;

@@ -14,12 +14,14 @@
   },
   "dependencies": {
     "@lens-protocol/react": "workspace:*",
+    "@lens-protocol/wagmi": "workspace:*",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
     "react-cool-inview": "^3.0.1",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.0",
     "react-router-dom": "^6.4.5",
-    "wagmi": "^0.8.10"
+    "wagmi": "0.9.2"
   },
   "devDependencies": {
     "@lens-protocol/eslint-config": "workspace:*",

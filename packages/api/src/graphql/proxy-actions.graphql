@@ -1,0 +1,33 @@
+fragment ProxyActionStatusResult on ProxyActionStatusResult {
+  txHash
+  txId
+  status
+}
+
+fragment ProxyActionError on ProxyActionError {
+  reason
+  lastKnownTxId
+}
+
+fragment ProxyActionQueued on ProxyActionQueued {
+  queuedAt
+}
+
+query ProxyActionStatus($proxyActionId: ProxyActionId!) {
+  result: proxyActionStatus(proxyActionId: $proxyActionId) {
+    ... on ProxyActionStatusResult {
+      ...ProxyActionStatusResult
+    }
+    ... on ProxyActionError {
+      ...ProxyActionError
+    }
+
+    ... on ProxyActionQueued {
+      ...ProxyActionQueued
+    }
+  }
+}
+
+mutation ProxyAction($request: ProxyActionRequest!) {
+  result: proxyAction(request: $request)
+}

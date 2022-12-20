@@ -1,11 +1,16 @@
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { ICredentials, TransactionRequestModel, Wallet } from '../../entities';
-import { ActiveProfile } from '../profile/ActiveProfile';
-import { TransactionQueue } from '../transactions/TransactionQueue';
-import { ActiveWallet } from '../wallets/ActiveWallet';
-import { IActiveWalletPresenter } from '../wallets/IActiveWalletPresenter';
-import { ILoginPresenter } from '../wallets/ILoginPresenter';
+import { ActiveProfile } from '../profile';
+import { TransactionQueue } from '../transactions';
+import {
+  ActiveWallet,
+  ICredentialsReader,
+  IActiveWalletPresenter,
+  ILogoutPresenter,
+  LogoutReason,
+  ICredentialsWriter,
+} from '../wallets';
 
 export class CredentialsExpiredError extends Error {
   name = 'CredentialsExpiredError' as const;
@@ -16,10 +21,7 @@ export interface IApplicationPresenter {
   signalReady(): void;
 }
 
-export interface ICredentialsGateway {
-  getCredentials(wallet: Wallet): Promise<ICredentials | null>;
-  save(credentials: ICredentials): Promise<void>;
-}
+export interface ICredentialsGateway extends ICredentialsReader, ICredentialsWriter {}
 
 export interface ICredentialsRenewer {
   renewCredentials(credentials: ICredentials): PromiseResult<ICredentials, CredentialsExpiredError>;
@@ -32,7 +34,7 @@ export class Bootstrap<T extends TransactionRequestModel> {
     private readonly credentialsRenewer: ICredentialsRenewer,
     private readonly activeWalletPresenter: IActiveWalletPresenter,
     private readonly applicationPresenter: IApplicationPresenter,
-    private readonly loginPresenter: ILoginPresenter,
+    private readonly logoutPresenter: ILogoutPresenter,
     private readonly activeProfile: ActiveProfile,
     private readonly transactionQueue: TransactionQueue<T>,
   ) {}
@@ -45,7 +47,7 @@ export class Bootstrap<T extends TransactionRequestModel> {
       return;
     }
 
-    const credentials = await this.credentialsGateway.getCredentials(wallet);
+    const credentials = await this.credentialsGateway.getCredentials();
     if (!credentials) {
       await this.startWithExpCredentials(wallet);
       return;
@@ -75,7 +77,10 @@ export class Bootstrap<T extends TransactionRequestModel> {
   }
 
   private async startWithExpCredentials(wallet: Wallet) {
-    this.loginPresenter.presentLoginOptions(wallet);
+    this.logoutPresenter.presentLogout({
+      lastLoggedInWallet: wallet,
+      logoutReason: LogoutReason.CREDENTIALS_EXPIRED,
+    });
 
     this.applicationPresenter.signalReady();
   }

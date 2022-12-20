@@ -96,7 +96,7 @@ fragment ProfileFields on Profile {
 }
 
 query ProfilesToFollow($observerId: ProfileId) {
-  recommendedProfiles {
+  result: recommendedProfiles {
     ...ProfileFields
   }
 }
@@ -111,6 +111,20 @@ query GetAllProfilesByOwnerAddress($address: EthereumAddress!, $observerId: Prof
   profilesByOwner: profiles(request: { ownedBy: [$address] }) {
     items {
       ...ProfileFields
+    }
+  }
+}
+
+mutation CreateProfile($request: CreateProfileRequest!) {
+  result: createProfile(request: $request) {
+    __typename
+
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
     }
   }
 }

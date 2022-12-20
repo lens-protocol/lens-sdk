@@ -1,7 +1,6 @@
 import { useProfile } from '@lens-protocol/react';
 import { useParams } from 'react-router-dom';
 
-import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
 import { ProfileCard } from './ProfileCard';
 
@@ -10,11 +9,9 @@ type ProfileByIdLayoutProps = {
 };
 
 export function ProfileByIdLayout({ profileId }: ProfileByIdLayoutProps) {
-  const { data: profile, loading, error } = useProfile({ profileId });
+  const { data: profile, loading } = useProfile({ profileId });
 
   if (loading) return <Loading />;
-
-  if (error || !profile) return <GenericError error={error} />;
 
   return (
     <div>

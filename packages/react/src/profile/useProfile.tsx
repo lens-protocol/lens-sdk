@@ -1,7 +1,7 @@
 import { ProfileFieldsFragment, useGetProfileQuery } from '@lens-protocol/api';
 import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
-import { LensResponse, useLensResponse } from '../helpers';
+import { ReadResult, useReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type BaseUseProfileArgs = {
@@ -22,7 +22,7 @@ export function useProfile({
   profileId,
   handle,
   observerId,
-}: UseProfileArgs): LensResponse<ProfileFieldsFragment> {
+}: UseProfileArgs): ReadResult<ProfileFieldsFragment> {
   const { apolloClient } = useSharedDependencies();
 
   invariant(
@@ -30,7 +30,7 @@ export function useProfile({
     "Only one of 'id' or 'handle' should be provided to useProfile",
   );
 
-  const response = useLensResponse(
+  return useReadResult(
     useGetProfileQuery({
       variables: {
         request: {
@@ -42,9 +42,4 @@ export function useProfile({
       client: apolloClient,
     }),
   );
-
-  return {
-    ...response,
-    data: response.data?.result ?? null,
-  };
 }

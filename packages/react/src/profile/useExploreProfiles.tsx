@@ -1,10 +1,6 @@
 import { ProfileFieldsFragment, useExploreProfilesQuery } from '@lens-protocol/api';
 
-import {
-  LensResponseWithPagination,
-  PaginatedArgs,
-  useLensResponseWithPagination,
-} from '../helpers';
+import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type UseFeedArgs = PaginatedArgs<{
@@ -13,10 +9,10 @@ type UseFeedArgs = PaginatedArgs<{
 
 export function useExploreProfiles(
   args?: UseFeedArgs,
-): LensResponseWithPagination<ProfileFieldsFragment[]> {
+): PaginatedReadResult<ProfileFieldsFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
-  return useLensResponseWithPagination(
+  return usePaginatedReadResult(
     useExploreProfilesQuery({
       variables: {
         observerId: args?.observerId,

@@ -1,6 +1,6 @@
 import { useCommentsQuery } from '@lens-protocol/api';
 
-import { useLensResponseWithPagination } from '../helpers';
+import { usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type UseCommentsArgs = {
@@ -13,7 +13,7 @@ type UseCommentsArgs = {
 export function useComments({ commentsOf, limit, observerId, cursor }: UseCommentsArgs) {
   const { apolloClient, sources } = useSharedDependencies();
 
-  return useLensResponseWithPagination(
+  return usePaginatedReadResult(
     useCommentsQuery({
       variables: {
         commentsOf,

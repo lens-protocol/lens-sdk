@@ -28,6 +28,7 @@
   },
   "types": "./dist/cjs/index.d.ts",
   "main": "./dist/cjs/index.js",
+  "sideEffects": false,
   "files": [
     "dist",
     "web"
@@ -46,17 +47,19 @@
     "test:watch": "jest --watch",
     "tsc": "tsc --noEmit"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@apollo/client": "^3.7.1",
+    "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@lens-protocol/api": "workspace:*",
     "@lens-protocol/domain": "workspace:^0.0.1",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
-    "eth-rpc-errors": "^4.0.3",
     "graphql": "15.5.1",
+    "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
+    "uuid": "^9.0.0",
     "zod": "^3.19.1"
   },
   "devDependencies": {
@@ -68,6 +71,7 @@
     "@types/jest-when": "^3.5.2",
     "@types/lodash": "^4.14.191",
     "@types/react": "^18.0.26",
+    "@types/uuid": "^9.0.0",
     "eslint": "^8.28.0",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",

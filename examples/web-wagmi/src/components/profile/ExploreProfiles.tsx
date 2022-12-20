@@ -5,18 +5,18 @@ import { Loading } from '../loading/Loading';
 import { ProfilePicture } from './ProfilePicture';
 
 export function ExploreProfiles() {
-  const infiniteScroll = useInfiniteScroll(useExploreProfiles());
+  const { data, loading, hasMore, observeRef } = useInfiniteScroll(useExploreProfiles());
 
-  if (infiniteScroll.loading) return <Loading />;
+  if (loading) return <Loading />;
 
-  if (infiniteScroll.data.length === 0) return <p>No items</p>;
+  if (data.length === 0) return <p>No items</p>;
 
   return (
     <div>
       <>
         <h1>Explore Profiles</h1>
 
-        {infiniteScroll.data.map((item) => (
+        {data.map((item) => (
           <>
             <div key={item.id} style={{ margin: '1rem' }}>
               <ProfilePicture picture={item.picture} />
@@ -26,7 +26,7 @@ export function ExploreProfiles() {
           </>
         ))}
 
-        {infiniteScroll.hasMore && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
+        {hasMore && <p ref={observeRef}>Loading more...</p>}
       </>
     </div>
   );

@@ -1,6 +1,6 @@
-import { useProfileFollowersQuery } from '@lens-protocol/api';
+import { FollowerFragment, useProfileFollowersQuery } from '@lens-protocol/api';
 
-import { useLensResponseWithPagination } from '../helpers';
+import { PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type UseProfileFollowersArgs = {
@@ -15,10 +15,10 @@ export function useProfileFollowers({
   limit,
   cursor,
   observerId,
-}: UseProfileFollowersArgs) {
+}: UseProfileFollowersArgs): PaginatedReadResult<FollowerFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
-  return useLensResponseWithPagination(
+  return usePaginatedReadResult(
     useProfileFollowersQuery({
       variables: {
         profileId,
