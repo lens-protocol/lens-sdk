@@ -46,7 +46,7 @@
     "tsc": "tsc --noEmit",
     "gql-codegen": "graphql-codegen --config codegen-api.yml"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@apollo/client": "^3.7.1",
     "@lens-protocol/domain": "workspace:*"

@@ -34,7 +34,7 @@
     "prettier": "prettier --check .",
     "tsc": "tsc --noEmit"
   },
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",

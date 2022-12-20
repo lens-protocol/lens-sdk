@@ -47,7 +47,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "tsc": "tsc --noEmit"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "decimal.js": "^10.4.3",
     "ethers": "^5.7.2",
