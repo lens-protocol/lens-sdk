@@ -47,7 +47,7 @@
     "test:watch": "jest --watch",
     "tsc": "tsc --noEmit"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@apollo/client": "^3.7.1",
     "@ethersproject/abstract-signer": "^5.7.0",
