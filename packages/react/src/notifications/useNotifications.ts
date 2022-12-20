@@ -24,13 +24,11 @@ export type Notification =
   | NewMentionNotificationFieldsFragment
   | NewReactionNotificationFieldsFragment;
 
-@Authenticated()
 export function useNotifications({
   profileId,
   limit,
   cursor,
 }: UseNotificationsArgs): PaginatedReadResult<Notification[]> {
-  isAuthenticated();
   const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
@@ -44,8 +42,4 @@ export function useNotifications({
       client: apolloClient,
     }),
   );
-}
-
-function isAuthenticated() {
-  const { profile  } = useActiveProfile()
 }
