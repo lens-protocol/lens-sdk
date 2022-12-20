@@ -1,7 +1,7 @@
 import { ProfileFieldsFragment, useNotifications } from '@lens-protocol/react';
 
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
-import { AuthButton } from '../auth/LoginButton';
+import { LoginButton } from '../auth/LoginButton';
 import { WhenLoggedIn, WhenLoggedOut } from '../auth/auth';
 import { NotificationItem } from './NotificationItem';
 
@@ -44,7 +44,7 @@ export function Notifications() {
       <WhenLoggedOut>
         <div>
           <p>You must be logged in to use this example.</p>
-          <AuthButton />
+          <LoginButton />
         </div>
       </WhenLoggedOut>
     </>

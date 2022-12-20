@@ -1,7 +1,7 @@
 import { useActiveProfile } from '@lens-protocol/react';
 import { Link } from 'react-router-dom';
 
-import { AuthButton } from '../auth/LoginButton';
+import { LoginButton } from '../auth/LoginButton';
 
 export function Header() {
   const { profile } = useActiveProfile();
@@ -41,7 +41,7 @@ export function Header() {
         >
           {profile && <strong>{profile.handle}</strong>}
 
-          <AuthButton />
+          <LoginButton />
         </div>
       </div>
     </div>

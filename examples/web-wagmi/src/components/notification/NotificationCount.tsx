@@ -1,6 +1,6 @@
 import { ProfileFieldsFragment, useUnreadNotificationCount } from '@lens-protocol/react';
 
-import { AuthButton } from '../auth/LoginButton';
+import { LoginButton } from '../auth/LoginButton';
 import { WhenLoggedIn, WhenLoggedOut } from '../auth/auth';
 import { GenericError } from '../error/GenericError';
 
@@ -39,7 +39,7 @@ export function NotificationCount() {
       <WhenLoggedOut>
         <div>
           <p>You must be logged in to use this example.</p>
-          <AuthButton />
+          <LoginButton />
         </div>
       </WhenLoggedOut>
     </>

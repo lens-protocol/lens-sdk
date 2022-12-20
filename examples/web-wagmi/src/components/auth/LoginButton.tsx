@@ -4,7 +4,7 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 
 import { useIsLoggedIn } from './auth';
 
-export function AuthButton() {
+export function LoginButton() {
   const login = useWalletLogin();
   const logout = useWalletLogout();
   const isLoggedIn = useIsLoggedIn();
