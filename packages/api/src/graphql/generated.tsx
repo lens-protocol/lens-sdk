@@ -3848,9 +3848,9 @@ export type CommentsQueryVariables = Exact<{
 export type CommentsQuery = {
   result: { __typename: 'PaginatedPublicationResult' } & {
     items: Array<
-      | ({ __typename: 'Post' } & PostFragment)
+      | { __typename: 'Post' }
       | ({ __typename: 'Comment' } & CommentWithFirstCommentFragment)
-      | ({ __typename: 'Mirror' } & MirrorFragment)
+      | { __typename: 'Mirror' }
     >;
     pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
   };
@@ -5074,10 +5074,10 @@ export const CommentsDocument = gql`
     ) {
       items {
         ... on Post {
-          ...Post
+          __typename
         }
         ... on Mirror {
-          ...Mirror
+          __typename
         }
         ... on Comment {
           ...CommentWithFirstComment
@@ -5088,8 +5088,6 @@ export const CommentsDocument = gql`
       }
     }
   }
-  ${PostFragmentDoc}
-  ${MirrorFragmentDoc}
   ${CommentWithFirstCommentFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;

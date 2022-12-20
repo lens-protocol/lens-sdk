@@ -1,6 +1,7 @@
 import { useProfile } from '@lens-protocol/react';
 import { useParams } from 'react-router-dom';
 
+import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
 import { ProfileCard } from './ProfileCard';
 

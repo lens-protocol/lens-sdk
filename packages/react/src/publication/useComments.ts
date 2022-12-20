@@ -1,28 +1,45 @@
-import { useCommentsQuery } from '@lens-protocol/api';
+import { useCommentsQuery, CommentWithFirstCommentFragment } from '@lens-protocol/api';
 
-import { usePaginatedReadResult } from '../helpers';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
-type UseCommentsArgs = {
+type UseCommentsArgs = PaginatedArgs<{
   commentsOf: string;
-  limit?: number;
   observerId?: string;
-  cursor?: string;
-};
+}>;
 
-export function useComments({ commentsOf, limit, observerId, cursor }: UseCommentsArgs) {
+export function useComments({
+  commentsOf,
+  limit,
+  observerId,
+}: UseCommentsArgs): PaginatedReadResult<CommentWithFirstCommentFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
-  return usePaginatedReadResult(
+  const {
+    loading,
+    data,
+    ...rest
+  }: PaginatedReadResult<
+    (CommentWithFirstCommentFragment | { __typename: 'Mirror' } | { __typename: 'Post' })[]
+  > = usePaginatedReadResult(
     useCommentsQuery({
       variables: {
         commentsOf,
         limit: limit ?? 10,
         observerId,
-        cursor,
         sources,
       },
       client: apolloClient,
     }),
   );
+
+  if (loading) return { loading: true, data: undefined, ...rest };
+  return {
+    loading: false,
+    data: data.filter(
+      (publication): publication is CommentWithFirstCommentFragment =>
+        publication.__typename === 'Comment',
+    ),
+    ...rest,
+  };
 }

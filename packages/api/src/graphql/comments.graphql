@@ -17,14 +17,11 @@ query Comments(
   ) {
     items {
       ... on Post {
-        # not possible to receive given we narrow to only comments
-        # TODO: Remove fragment spread
-        ...Post
+        __typename
       }
 
       ... on Mirror {
-        # not possible to receive given we narrow to only comments
-        ...Mirror
+        __typename
       }
 
       ... on Comment {

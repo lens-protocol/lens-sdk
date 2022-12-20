@@ -1,19 +1,16 @@
 import { FollowingFragment, useProfileFollowingQuery } from '@lens-protocol/api';
 
-import { PaginatedReadResult, usePaginatedReadResult } from '../helpers';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
-type UseProfileFollowingArgs = {
+type UseProfileFollowingArgs = PaginatedArgs<{
   walletAddress: string;
-  limit?: number;
-  cursor?: string;
   observerId?: string;
-};
+}>;
 
 export function useProfileFollowing({
   walletAddress,
   limit,
-  cursor,
   observerId,
 }: UseProfileFollowingArgs): PaginatedReadResult<FollowingFragment[]> {
   const { apolloClient } = useSharedDependencies();
@@ -23,7 +20,6 @@ export function useProfileFollowing({
       variables: {
         walletAddress,
         limit: limit ?? 10,
-        cursor,
         observerId,
       },
       client: apolloClient,
