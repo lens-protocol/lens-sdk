@@ -7,4 +7,4 @@ export * from './transactions';
 export * from './wallet';
 export * from './utils';
 
-export type { LensResponse, LensResponseWithPagination } from './helpers';
+export type { ReadResult, PaginatedReadResult } from './helpers';
