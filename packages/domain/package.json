@@ -68,7 +68,7 @@
     "test": "jest",
     "tsc": "tsc --noEmit"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@lens-protocol/shared-kernel": "workspace:*"
   },
