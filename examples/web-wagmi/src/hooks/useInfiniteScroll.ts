@@ -1,9 +1,9 @@
-import { LensResponseWithPagination } from '@lens-protocol/react';
+import { PaginatedReadResult } from '@lens-protocol/react';
 import { useInView } from 'react-cool-inview';
 
 import { nonErrored } from '../utils/nonErrored';
 
-export function useInfiniteScroll<T>(queryResult: LensResponseWithPagination<T>) {
+export function useInfiniteScroll<T>(queryResult: PaginatedReadResult<T>) {
   const nonErroredQueryResult = nonErrored(queryResult);
 
   const { observe: observeRef } = useInView({

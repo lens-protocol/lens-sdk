@@ -1,15 +1,15 @@
-import { LensResponseWithPagination } from '@lens-protocol/react';
+import { PaginatedReadResult } from '@lens-protocol/react';
 
 type NarrowedQueryData<T> = { loading: true; data: undefined } | { loading: false; data: T };
 type NarrowedQueryResult<T> = NarrowedQueryData<T> &
-  Omit<LensResponseWithPagination<T>, 'error' | 'loading' | 'data'>;
+  Omit<PaginatedReadResult<T>, 'error' | 'loading' | 'data'>;
 
 export const nonErrored = <T>({
   error,
   loading,
   data,
   ...rest
-}: LensResponseWithPagination<T>): NarrowedQueryResult<T> => {
+}: PaginatedReadResult<T>): NarrowedQueryResult<T> => {
   if (error) {
     throw error;
   }

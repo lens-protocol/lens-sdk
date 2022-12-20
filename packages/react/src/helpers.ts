@@ -2,11 +2,17 @@ import { ApolloError, QueryResult } from '@apollo/client';
 import { CommonPaginatedResultInfoFragment } from '@lens-protocol/api';
 import { CausedError } from '@lens-protocol/shared-kernel';
 
-function buildLensResponse<T>(
+export type ReadResult<T> = {
+  data: T | null;
+  loading: boolean;
+  error: Error | null;
+};
+
+function buildReadResult<T>(
   data: T | undefined,
   loading: boolean,
   error: ApolloError | undefined,
-): LensResponse<T> {
+): ReadResult<T> {
   return {
     data: data ?? null,
     loading,
@@ -14,18 +20,8 @@ function buildLensResponse<T>(
   };
 }
 
-export type LensResponse<T> = {
-  data: T | null;
-  loading: boolean;
-  error: Error | null;
-};
-
-export function useLensResponse<T, V>({
-  error,
-  data,
-  loading,
-}: QueryResult<T, V>): LensResponse<T> {
-  return buildLensResponse<T>(data, loading, error);
+export function useReadResult<T, V>({ error, data, loading }: QueryResult<T, V>): ReadResult<T> {
+  return buildReadResult<T>(data, loading, error);
 }
 
 export type PaginatedArgs<T> = T & {
@@ -33,19 +29,19 @@ export type PaginatedArgs<T> = T & {
   cursor?: string;
 };
 
-export type LensResponseWithPagination<T> = LensResponse<T> & {
+export type PaginatedReadResult<T> = ReadResult<T> & {
   totalCount: number | null;
   hasMore: boolean;
   next: () => Promise<void>;
 };
 
-export function useLensResponseWithPagination<
+export function usePaginatedReadResult<
   K,
   T extends { result: { pageInfo: CommonPaginatedResultInfoFragment; items: K } },
   V,
->({ error, data, loading, fetchMore }: QueryResult<T, V>): LensResponseWithPagination<K> {
+>({ error, data, loading, fetchMore }: QueryResult<T, V>): PaginatedReadResult<K> {
   return {
-    ...buildLensResponse<K>(data?.result.items, loading, error),
+    ...buildReadResult<K>(data?.result.items, loading, error),
     totalCount: data?.result.pageInfo.totalCount ?? null,
     hasMore: data?.result.pageInfo.next ? true : false,
     next: async () => {
