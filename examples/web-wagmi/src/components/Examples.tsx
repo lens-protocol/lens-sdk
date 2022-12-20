@@ -25,6 +25,10 @@ const examples = [
     label: 'Unread Notification Count',
     path: '/unread-notification-count',
   },
+  {
+    label: 'Notifications',
+    path: '/notifications',
+  },
 ];
 
 export function Examples() {

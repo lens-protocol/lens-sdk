@@ -12,6 +12,7 @@ import { Feed } from '../feed/Feed';
 import { BackButton } from '../header/BackButton';
 import { Header } from '../header/Header';
 import { NotificationCount } from '../notification/NotificationCount';
+import { Notifications } from '../notification/Notifications';
 import { ExploreProfiles } from '../profile/ExploreProfiles';
 import { ProfileByHandle } from '../profile/ProfileByHandle';
 import { ProfileById } from '../profile/ProfileById';
@@ -50,6 +51,7 @@ export function App() {
               <Route path="/profile-by-id" element={<ProfileById />} />
               <Route path="/profile-by-handle" element={<ProfileByHandle />} />
               <Route path="/unread-notification-count" element={<NotificationCount />} />
+              <Route path="/notifications" element={<Notifications />} />
             </Routes>
             <Toaster />
           </div>

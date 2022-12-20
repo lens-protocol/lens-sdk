@@ -1,34 +1,10 @@
-import { useWalletLogin, useWalletLogout, useActiveProfile } from '@lens-protocol/react';
+import { useActiveProfile } from '@lens-protocol/react';
 import { Link } from 'react-router-dom';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
+
+import { AuthButton } from '../auth/LoginButton';
 
 export function Header() {
-  const login = useWalletLogin();
-  const logout = useWalletLogout();
-
-  const { isConnected, isDisconnected } = useAccount();
-  const { connectAsync } = useConnect({
-    connector: new InjectedConnector(),
-  });
-  const onLoginClick = async () => {
-    if (isDisconnected) {
-      const { connector } = await connectAsync();
-
-      if (connector instanceof InjectedConnector) {
-        const signer = await connector.getSigner();
-        login(signer);
-      }
-    }
-  };
-
-  const { disconnect } = useDisconnect();
-  const onLogoutClick = () => {
-    logout();
-    disconnect();
-  };
-
-  const { loading, profile } = useActiveProfile();
+  const { profile } = useActiveProfile();
 
   return (
     <div
@@ -65,17 +41,7 @@ export function Header() {
         >
           {profile && <strong>{profile.handle}</strong>}
 
-          {isDisconnected && (
-            <button onClick={onLoginClick}>
-              <strong>Log in</strong>
-            </button>
-          )}
-          {isConnected && loading && <p>Loading…</p>}
-          {isConnected && (
-            <button onClick={onLogoutClick}>
-              <strong>Log out</strong>
-            </button>
-          )}
+          <AuthButton />
         </div>
       </div>
     </div>

@@ -1,34 +1,47 @@
-import { useProfile, useUnreadNotificationCount } from '@lens-protocol/react';
+import { ProfileFieldsFragment, useUnreadNotificationCount } from '@lens-protocol/react';
 
+import { AuthButton } from '../auth/LoginButton';
+import { WhenLoggedIn, WhenLoggedOut } from '../auth/auth';
 import { GenericError } from '../error/GenericError';
 
-export function NotificationCount() {
+type NotificationCountInnerProps = {
+  profile: ProfileFieldsFragment;
+};
+
+function NotificationCountInner({ profile }: NotificationCountInnerProps) {
   const {
     data: unreadNotificationCount,
     loading: notificationCountLoading,
     error: notificationCountError,
-  } = useUnreadNotificationCount({ profileId: '0x3a2a' });
-  const {
-    data: profile,
-    loading: profileLoading,
-    error: profileError,
-  } = useProfile({ handle: 'lensprotocol' });
+  } = useUnreadNotificationCount({ profileId: profile.id });
 
-  if (notificationCountLoading || profileLoading) return <div>Loading...</div>;
+  if (notificationCountLoading) return <div>Loading...</div>;
 
-  if (notificationCountError || profileError || !unreadNotificationCount || !profile) {
-    return <GenericError error={notificationCountError || profileError} />;
+  if (notificationCountError || !unreadNotificationCount) {
+    return <GenericError error={notificationCountError} />;
   }
 
   return (
     <div>
-      <h1>Notification count</h1>
       <p>
-        Unread notification count: <span>{unreadNotificationCount}</span>
+        Unread notification count for {profile.handle}: <span>{unreadNotificationCount}</span>
       </p>
-      <p>Profile handle: {profile?.handle}</p>
       <hr />
-      <pre>{JSON.stringify({ unreadNotificationCount, profile }, null, 2)}</pre>
     </div>
+  );
+}
+
+export function NotificationCount() {
+  return (
+    <>
+      <h1>Notification count</h1>
+      <WhenLoggedIn>{({ profile }) => <NotificationCountInner profile={profile} />}</WhenLoggedIn>
+      <WhenLoggedOut>
+        <div>
+          <p>You must be logged in to use this example.</p>
+          <AuthButton />
+        </div>
+      </WhenLoggedOut>
+    </>
   );
 }
