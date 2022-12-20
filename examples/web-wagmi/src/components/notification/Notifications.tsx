@@ -10,28 +10,29 @@ type NotificationsInnerProps = {
 };
 
 function NotificationsInner({ profile }: NotificationsInnerProps) {
-  const notificationsInfiniteScroll = useInfiniteScroll(
-    useNotifications({ profileId: profile.id }),
-  );
+  const {
+    loading,
+    data: notifications,
+    hasMore,
+    observeRef,
+  } = useInfiniteScroll(useNotifications({ profileId: profile.id }));
 
-  if (notificationsInfiniteScroll.loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
 
-  if (notificationsInfiniteScroll.data.length === 0) {
+  if (notifications.length === 0) {
     return <p>No notifcations</p>;
   }
 
   return (
     <div>
-      {notificationsInfiniteScroll.data.map((notification) => (
+      {notifications.map((notification) => (
         <div key={notification.notificationId}>
           <NotificationItem notification={notification} />
           <hr />
         </div>
       ))}
 
-      {notificationsInfiniteScroll.hasMore && (
-        <p ref={notificationsInfiniteScroll.observeRef}>Loading more...</p>
-      )}
+      {hasMore && <p ref={observeRef}>Loading more...</p>}
     </div>
   );
 }
