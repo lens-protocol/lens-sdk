@@ -8,6 +8,8 @@ import { optimism, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Examples } from '../Examples';
+import { GenericErrorBoundary } from '../GenericErrorBoundary';
+import { GenericError } from '../error/GenericError';
 import { Feed } from '../feed/Feed';
 import { BackButton } from '../header/BackButton';
 import { Header } from '../header/Header';
@@ -41,14 +43,16 @@ export function App() {
           <Header />
           <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
             <BackButton />
-            <Routes>
-              <Route path="/" element={<Examples />} />
-              <Route path="/feed" element={<Feed />} />
-              <Route path="/explore-profiles" element={<ExploreProfiles />} />
-              <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
-              <Route path="/profile-by-id" element={<ProfileById />} />
-              <Route path="/profile-by-handle" element={<ProfileByHandle />} />
-            </Routes>
+            <GenericErrorBoundary fallback={GenericError}>
+              <Routes>
+                <Route path="/" element={<Examples />} />
+                <Route path="/feed" element={<Feed />} />
+                <Route path="/explore-profiles" element={<ExploreProfiles />} />
+                <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
+                <Route path="/profile-by-id" element={<ProfileById />} />
+                <Route path="/profile-by-handle" element={<ProfileByHandle />} />
+              </Routes>
+            </GenericErrorBoundary>
             <Toaster />
           </div>
         </Router>

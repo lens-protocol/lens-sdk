@@ -30,7 +30,7 @@ export function useProfile({
     "Only one of 'id' or 'handle' should be provided to useProfile",
   );
 
-  const response = useReadResult(
+  return useReadResult(
     useGetProfileQuery({
       variables: {
         request: {
@@ -42,9 +42,4 @@ export function useProfile({
       client: apolloClient,
     }),
   );
-
-  return {
-    ...response,
-    data: response.data?.result ?? null,
-  };
 }

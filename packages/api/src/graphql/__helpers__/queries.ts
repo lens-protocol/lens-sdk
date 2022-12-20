@@ -1,5 +1,5 @@
 import { MockedResponse } from '@apollo/client/testing';
-import { EthereumAddress } from '@lens-protocol/shared-kernel';
+import { Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   ProfileFieldsFragment,
@@ -23,6 +23,8 @@ import {
   HasTxHashBeenIndexedDocument,
   RelayResult,
   CreateProfileMutation,
+  EnabledModuleCurrenciesQuery,
+  EnabledModuleCurrenciesDocument,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -35,7 +37,7 @@ export function mockProfilesToFollowQueryMockedResponse(args: {
     },
     result: {
       data: {
-        recommendedProfiles: args.profiles,
+        result: args.profiles,
       },
     },
   };
@@ -180,5 +182,26 @@ export function mockProxyActionStatusMockedResponse(instructions: {
 export function mockCreateProfileMutation(result: Required<RelayResult>): CreateProfileMutation {
   return {
     result,
+  };
+}
+
+export function mockEnabledModuleCurrenciesQueryMockedResponse(
+  currencies: Erc20[],
+): MockedResponse<EnabledModuleCurrenciesQuery> {
+  return {
+    request: {
+      query: EnabledModuleCurrenciesDocument,
+    },
+    result: {
+      data: {
+        result: currencies.map((currency) => ({
+          __typename: 'Erc20',
+          address: currency.address,
+          decimals: currency.decimals,
+          name: currency.name,
+          symbol: currency.symbol,
+        })),
+      },
+    },
   };
 }

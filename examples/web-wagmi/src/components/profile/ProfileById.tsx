@@ -1,15 +1,12 @@
 import { useProfile } from '@lens-protocol/react';
 
-import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
 import { ProfilePicture } from './ProfilePicture';
 
 export function ProfileById() {
-  const { data: profile, loading, error } = useProfile({ handle: 'lens' });
+  const { data: profile, loading } = useProfile({ profileId: '0x01' });
 
   if (loading) return <Loading />;
-
-  if (error || !profile) return <GenericError error={error} />;
 
   return (
     <div>

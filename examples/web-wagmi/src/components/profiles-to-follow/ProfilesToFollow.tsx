@@ -1,6 +1,5 @@
 import { useProfilesToFollow, ProfileFieldsFragment } from '@lens-protocol/react';
 
-import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
 import { ProfilePicture } from '../profile/ProfilePicture';
 
@@ -24,11 +23,9 @@ function ProfileList({ profiles }: ProfileListProps) {
 }
 
 export function ProfilesToFollow() {
-  const { data: profilesToFollow, error, loading } = useProfilesToFollow();
+  const { data: profilesToFollow, loading } = useProfilesToFollow();
 
   if (loading) return <Loading />;
-
-  if (error || !profilesToFollow) return <GenericError error={error} />;
 
   return (
     <div>
