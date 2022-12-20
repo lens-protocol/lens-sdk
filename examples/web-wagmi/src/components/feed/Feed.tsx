@@ -1,8 +1,9 @@
 import { FeedItemFragment, isPostPublication, useFeed } from '@lens-protocol/react';
+import { Link } from 'react-router-dom';
 
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { Loading } from '../loading/Loading';
-import { ProfilePicture } from '../profile/ProfilePicture';
+import { PublicationCard } from '../publication/PublicationCard';
 
 type PublicationProps = {
   feedItem: FeedItemFragment;
@@ -10,13 +11,17 @@ type PublicationProps = {
 
 function Publication({ feedItem: { root: publication, comments } }: PublicationProps) {
   return (
-    <div style={{ margin: '1rem' }}>
-      <ProfilePicture picture={publication.profile.picture} />
-      <h2>{publication.profile.name ?? `@${publication.profile.handle}`}</h2>
-      <p>{publication.metadata.content}</p>
+    <Link
+      to={`/publication/${publication.id}`}
+      style={{
+        color: 'inherit',
+        margin: '1rem',
+      }}
+    >
+      <PublicationCard publication={publication} />
       <p>Total comments: {comments?.length ?? 0}</p>
       <hr />
-    </div>
+    </Link>
   );
 }
 

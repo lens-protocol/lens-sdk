@@ -1,0 +1,35 @@
+fragment CommentWithFirstComment on Comment {
+  ...Comment
+  firstComment {
+    ...Comment
+  }
+}
+
+query Comments(
+  $observerId: ProfileId
+  $commentsOf: InternalPublicationId!
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $sources: [Sources!]
+) {
+  result: publications(
+    request: { limit: $limit, cursor: $cursor, commentsOf: $commentsOf, sources: $sources }
+  ) {
+    items {
+      ... on Post {
+        __typename
+      }
+
+      ... on Mirror {
+        __typename
+      }
+
+      ... on Comment {
+        ...CommentWithFirstComment
+      }
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

@@ -50,7 +50,6 @@ export function useReadResult<
 
 export type PaginatedArgs<T> = T & {
   limit?: number;
-  cursor?: string;
 };
 
 export type PaginatedReadResult<T> = ReadResult<T> & {
