@@ -1,10 +1,14 @@
 import { faker } from '@faker-js/faker';
+import { mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   MediaFieldsFragment,
   ProfileFieldsFragment,
   ProfileMediaFieldsFragment,
+  RelayerResultFragment,
+  RelayErrorFragment,
+  RelayErrorReasons,
 } from '../generated';
 
 function mockMedia(): MediaFieldsFragment {
@@ -83,5 +87,22 @@ export function mockProfileFieldsFragment(
 
     ...overrides,
     __typename: 'Profile',
+  };
+}
+
+export function mockRelayerResultFragment(
+  txHash: string = mockTransactionHash(),
+): Required<RelayerResultFragment> {
+  return {
+    __typename: 'RelayerResult',
+    txHash,
+    txId: faker.datatype.uuid(),
+  };
+}
+
+export function mockRelayErrorFragment(reason: RelayErrorReasons): Required<RelayErrorFragment> {
+  return {
+    __typename: 'RelayError',
+    reason,
   };
 }

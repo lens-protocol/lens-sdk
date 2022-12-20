@@ -1,5 +1,5 @@
+import { TypedDataSigner } from '@ethersproject/abstract-signer';
 import { TransactionRequest } from '@ethersproject/providers';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/dist/esm/use-cases/transactions';
 import {
   InsufficientGasError,
   Wallet,
@@ -13,14 +13,35 @@ import {
   UnsignedTransaction,
   NativeTransaction,
 } from '@lens-protocol/domain/entities';
-import { ChainType, failure, matic, PromiseResult, success } from '@lens-protocol/shared-kernel';
-import { errors } from 'ethers';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  ChainType,
+  EthereumAddress,
+  failure,
+  matic,
+  PromiseResult,
+  success,
+} from '@lens-protocol/shared-kernel';
+import { errors, providers, Signer } from 'ethers';
 import { z } from 'zod';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 import { TypedData } from '../../transactions/adapters/TypedData';
-import { ISignerFactory } from './ISignerFactory';
-import { assertErrorObjectWithCode, ProviderErrorCode, ProviderErrors } from './errors';
+import { assertErrorObjectWithCode } from './errors';
+
+export type RequiredSigner = Omit<Signer, 'provider'> &
+  TypedDataSigner & {
+    provider: providers.JsonRpcProvider;
+  };
+
+export type CreateSignerConfig = {
+  address: EthereumAddress;
+  chainType?: ChainType;
+};
+
+export interface ISignerFactory {
+  createSigner(config: CreateSignerConfig): PromiseResult<RequiredSigner, WalletConnectionError>;
+}
 
 export const WalletDataSchema = z.object({
   address: z.string(),
@@ -43,7 +64,7 @@ export interface ITransactionRequest {
   get transactionRequest(): TransactionRequest;
 }
 
-export class ExternalWallet extends Wallet {
+export class ConcreteWallet extends Wallet {
   private signingInProgress = false;
 
   private constructor(
@@ -61,9 +82,7 @@ export class ExternalWallet extends Wallet {
     PendingSigningRequestError | UserRejectedError | WalletConnectionError
   > {
     const result = await this.signerFactory.createSigner({
-      walletType: this.type,
-      chainType: ChainType.POLYGON,
-      walletAddress: this.address,
+      address: this.address,
     });
 
     if (result.isFailure()) {
@@ -91,10 +110,10 @@ export class ExternalWallet extends Wallet {
       });
       return success(signedCall);
     } catch (err) {
-      assertErrorObjectWithCode<ProviderErrors>(err);
+      assertErrorObjectWithCode<errors>(err);
 
-      if (err.code === ProviderErrorCode.userRejectedRequest) {
-        return failure(new UserRejectedError(err.message));
+      if (err.code === errors.ACTION_REJECTED) {
+        return failure(new UserRejectedError());
       }
 
       throw err;
@@ -107,8 +126,7 @@ export class ExternalWallet extends Wallet {
     message: string,
   ): PromiseResult<string, PendingSigningRequestError | WalletConnectionError | UserRejectedError> {
     const result = await this.signerFactory.createSigner({
-      walletType: this.type,
-      walletAddress: this.address,
+      address: this.address,
     });
 
     if (result.isFailure()) {
@@ -124,8 +142,9 @@ export class ExternalWallet extends Wallet {
     try {
       return success(await signer.signMessage(message));
     } catch (err) {
-      assertErrorObjectWithCode<ProviderErrors>(err);
-      if (err.code === ProviderErrorCode.userRejectedRequest) {
+      assertErrorObjectWithCode<errors>(err);
+
+      if (err.code === errors.ACTION_REJECTED) {
         return failure(new UserRejectedError());
       }
       throw err;
@@ -141,9 +160,8 @@ export class ExternalWallet extends Wallet {
     InsufficientGasError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
   > {
     const result = await this.signerFactory.createSigner({
-      walletType: this.type,
+      address: this.address,
       chainType: unsignedTransaction.chainType,
-      walletAddress: this.address,
     });
 
     if (result.isFailure()) {
@@ -168,10 +186,10 @@ export class ExternalWallet extends Wallet {
 
       return success(transaction);
     } catch (err) {
-      assertErrorObjectWithCode<ProviderErrors | errors>(err);
+      assertErrorObjectWithCode<errors>(err);
 
       switch (err.code) {
-        case ProviderErrorCode.userRejectedRequest:
+        case errors.ACTION_REJECTED:
           return failure(new UserRejectedError(err.message));
         case errors.INSUFFICIENT_FUNDS:
           return failure(new InsufficientGasError(matic()));
@@ -195,6 +213,6 @@ export class ExternalWallet extends Wallet {
     signerFactory: ISignerFactory,
     transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
   ) {
-    return new ExternalWallet(data, signerFactory, transactionFactory);
+    return new ConcreteWallet(data, signerFactory, transactionFactory);
   }
 }

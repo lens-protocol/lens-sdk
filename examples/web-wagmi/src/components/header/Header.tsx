@@ -1,17 +1,34 @@
+import { useWalletLogin, useWalletLogout, useActiveProfile } from '@lens-protocol/react';
 import { Link } from 'react-router-dom';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
-function truncateAddress(address: string, chars = 4) {
-  return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`;
-}
-
 export function Header() {
-  const { connect } = useConnect({
+  const login = useWalletLogin();
+  const logout = useWalletLogout();
+
+  const { isConnected, isDisconnected } = useAccount();
+  const { connectAsync } = useConnect({
     connector: new InjectedConnector(),
   });
+  const onLoginClick = async () => {
+    if (isDisconnected) {
+      const { connector } = await connectAsync();
+
+      if (connector instanceof InjectedConnector) {
+        const signer = await connector.getSigner();
+        login(signer);
+      }
+    }
+  };
+
   const { disconnect } = useDisconnect();
-  const { address } = useAccount();
+  const onLogoutClick = () => {
+    logout();
+    disconnect();
+  };
+
+  const { loading, profile } = useActiveProfile();
 
   return (
     <div
@@ -37,8 +54,29 @@ export function Header() {
         <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
           <span style={{ fontWeight: 'bold' }}>@lens-protocol/react - wagmi</span>
         </Link>
-        {!address && <button onClick={() => connect()}>Connect Wallet</button>}
-        {address && <button onClick={() => disconnect()}>{truncateAddress(address)}</button>}
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
+          }}
+        >
+          {profile && <strong>{profile.handle}</strong>}
+
+          {isDisconnected && (
+            <button onClick={onLoginClick}>
+              <strong>Log in</strong>
+            </button>
+          )}
+          {isConnected && loading && <p>Loading…</p>}
+          {isConnected && (
+            <button onClick={onLogoutClick}>
+              <strong>Log out</strong>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

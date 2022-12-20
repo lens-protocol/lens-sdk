@@ -26,32 +26,30 @@ import {
   mockITransactionFactory,
   mockTypedData,
 } from '../../../transactions/adapters/__helpers__/mocks';
-import { ExternalWallet, UnsignedLensProtocolCall } from '../ExternalWallet';
-import { ISignerFactory } from '../ISignerFactory';
+import { ConcreteWallet, ISignerFactory, UnsignedLensProtocolCall } from '../ConcreteWallet';
 import {
   mockErrorWithCode,
   mockISignerFactory,
   mockUnsignedLensProtocolCall,
   mockUnsignedTransactionRequest,
 } from '../__helpers__/mocks';
-import { ProviderErrorCode } from '../errors';
 
+const address = mockEthereumAddress();
 const chainType = ChainType.POLYGON;
-const walletType = WalletType.INJECTED;
 
-function setupExternalWallet({ signerFactory }: { signerFactory: ISignerFactory }) {
+function setupWalletInstance({ signerFactory }: { signerFactory: ISignerFactory }) {
   const transactionFactory = mockITransactionFactory();
-  return ExternalWallet.create(
+  return ConcreteWallet.create(
     {
-      address: mockEthereumAddress(),
-      type: walletType,
+      address,
+      type: WalletType.UNSPECIFIED,
     },
     signerFactory,
     transactionFactory,
   );
 }
 
-describe(`Given an instance of ${ExternalWallet.name}`, () => {
+describe(`Given an instance of ${ConcreteWallet.name}`, () => {
   describe(`when signing an ${UnsignedLensProtocolCall.name}`, () => {
     const typedData = mockTypedData();
     const request = mockTransactionRequestModel();
@@ -65,12 +63,11 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
         .mockResolvedValue(signature);
 
       const signerFactory = mockISignerFactory({
-        chainType,
-        walletType,
+        address,
         signerResult: success(signer),
       });
 
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
       const result = await wallet.signProtocolCall(unsignedCall);
 
       expect(result.unwrap()).toBeInstanceOf(SignedProtocolCall);
@@ -89,14 +86,13 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
         .mockResolvedValue(signature);
 
       const signerFactory = mockISignerFactory({
-        chainType,
-        walletType,
+        address,
         signerResult: success(signer),
       });
 
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
 
-      void wallet.signProtocolCall(unsignedCall);
+      void wallet.signProtocolCall(unsignedCall); // previous signing request
       const result = await wallet.signProtocolCall(unsignedCall);
 
       expect(() => result.unwrap()).toThrow(PendingSigningRequestError);
@@ -104,17 +100,14 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
 
     it(`should fail with ${UserRejectedError.name} in case the user refuse the operation`, async () => {
       const signer = mock<providers.JsonRpcSigner>();
-      when(signer._signTypedData).mockRejectedValue(
-        mockErrorWithCode(ProviderErrorCode.userRejectedRequest),
-      );
+      when(signer._signTypedData).mockRejectedValue(mockErrorWithCode(errors.ACTION_REJECTED));
 
       const signerFactory = mockISignerFactory({
-        chainType,
-        walletType,
+        address,
         signerResult: success(signer),
       });
 
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
       const result = await wallet.signProtocolCall(unsignedCall);
 
       expect(() => result.unwrap()).toThrow(UserRejectedError);
@@ -123,12 +116,11 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
     it(`should forward any ${WalletConnectionError.name}`, async () => {
       const error = new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN);
       const signerFactory = mockISignerFactory({
-        chainType,
-        walletType,
+        address,
         signerResult: failure(error),
       });
 
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
       const result = await wallet.signProtocolCall(unsignedCall);
 
       expect(() => result.unwrap()).toThrow(error);
@@ -144,10 +136,10 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
       when(signer.signMessage).calledWith(message).mockResolvedValue(signature);
 
       const signerFactory = mockISignerFactory({
-        walletType,
+        address,
         signerResult: success(signer),
       });
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
 
       const result = await wallet.signMessage(message);
 
@@ -160,12 +152,12 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
       when(signer.signMessage).calledWith(message).mockResolvedValue(signature);
 
       const signerFactory = mockISignerFactory({
-        walletType,
+        address,
         signerResult: success(signer),
       });
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
 
-      void wallet.signMessage(message);
+      void wallet.signMessage(message); // previous signing request
       const result = await wallet.signMessage(message);
 
       expect(() => result.unwrap()).toThrow(PendingSigningRequestError);
@@ -175,13 +167,13 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
       const signer = mock<providers.JsonRpcSigner>();
       when(signer.signMessage)
         .calledWith(message)
-        .mockRejectedValue(mockErrorWithCode(ProviderErrorCode.userRejectedRequest));
+        .mockRejectedValue(mockErrorWithCode(errors.ACTION_REJECTED));
 
       const signerFactory = mockISignerFactory({
-        walletType,
+        address,
         signerResult: success(signer),
       });
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
 
       const result = await wallet.signMessage(message);
 
@@ -201,11 +193,11 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
         value: utils.parseEther('1'),
       });
       const signerFactory = mockISignerFactory({
+        address,
         chainType,
-        walletType,
         signerResult: success(provider.getSigner()),
       });
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
       const receiverBalanceBefore = await receiver.getBalance();
 
       const unsignedTransaction = mockUnsignedTransactionRequest({ chainType, txRequest });
@@ -235,14 +227,14 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
         value: utils.parseEther('1'),
       });
       const signerFactory = mockISignerFactory({
+        address,
         chainType,
-        walletType,
         signerResult: success(provider.getSigner()),
       });
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
 
       const unsignedTransaction = mockUnsignedTransactionRequest({ chainType, txRequest });
-      void wallet.sendTransaction(unsignedTransaction);
+      void wallet.sendTransaction(unsignedTransaction); // previous signing request
       const result = await wallet.sendTransaction(unsignedTransaction);
 
       expect(() => result.unwrap()).toThrow(PendingSigningRequestError);
@@ -253,11 +245,11 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
       when(signer.sendTransaction).mockRejectedValue(mockErrorWithCode(errors.INSUFFICIENT_FUNDS));
 
       const signerFactory = mockISignerFactory({
+        address,
         chainType,
-        walletType,
         signerResult: success(signer),
       });
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
 
       const unsignedTransaction = mockUnsignedTransactionRequest({ chainType, txRequest: {} });
       const result = await wallet.sendTransaction(unsignedTransaction);
@@ -268,16 +260,14 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
     it(`should fail with ${UserRejectedError.name} in case the user refuse the operation`, async () => {
       const signer = mock<providers.JsonRpcSigner>();
 
-      when(signer.sendTransaction).mockRejectedValue(
-        mockErrorWithCode(ProviderErrorCode.userRejectedRequest),
-      );
+      when(signer.sendTransaction).mockRejectedValue(mockErrorWithCode(errors.ACTION_REJECTED));
 
       const signerFactory = mockISignerFactory({
+        address,
         chainType,
-        walletType,
         signerResult: success(signer),
       });
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
 
       const unsignedTransaction = mockUnsignedTransactionRequest({
         chainType,
@@ -288,15 +278,15 @@ describe(`Given an instance of ${ExternalWallet.name}`, () => {
       expect(() => result.unwrap()).toThrow(UserRejectedError);
     });
 
-    it(`should fail with ${WalletConnectionError.name} in case the IsignerFactory fails with it`, async () => {
+    it(`should fail with ${WalletConnectionError.name} in case the ISignerFactory fails with it`, async () => {
       const signerFactory = mockISignerFactory({
+        address,
         chainType,
-        walletType,
         signerResult: failure(
           new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN),
         ),
       });
-      const wallet = setupExternalWallet({ signerFactory });
+      const wallet = setupWalletInstance({ signerFactory });
 
       const unsignedTransaction = mockUnsignedTransactionRequest({
         chainType,

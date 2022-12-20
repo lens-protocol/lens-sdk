@@ -1,5 +1,5 @@
 export * from './IActiveWalletPresenter';
-export * from './ILoginPresenter';
+export * from './ILogoutPresenter';
 export * from './TokenAllowance';
 export * from './WalletLogin';
 export * from './WalletLogout';
