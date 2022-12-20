@@ -1,4 +1,4 @@
-import { useWalletLogin, useWalletLogout } from '@lens-protocol/react';
+import { useWalletLogin, useWalletLogout, WalletType } from '@lens-protocol/react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
@@ -19,7 +19,7 @@ export function LoginButton() {
 
       if (connector instanceof InjectedConnector) {
         const signer = await connector.getSigner();
-        login(signer);
+        login(signer, WalletType.INJECTED);
       }
     }
   };
