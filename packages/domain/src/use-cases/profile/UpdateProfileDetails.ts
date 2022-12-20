@@ -1,7 +1,7 @@
 import { TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
-  IProtocolCallGateway,
+  IDelegableProtocolCallGateway,
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IProtocolCallPresenter } from '../transactions/ProtocolCallUseCase';
 
@@ -20,7 +20,7 @@ export type UpdateProfileDetailsRequest = {
   delegate: boolean;
 };
 
-export type IProfileDetailsCallGateway = IProtocolCallGateway<UpdateProfileDetailsRequest>;
+export type IProfileDetailsCallGateway = IDelegableProtocolCallGateway<UpdateProfileDetailsRequest>;
 
 export type IUpdateProfileDetailsPresenter = IProtocolCallPresenter;
 

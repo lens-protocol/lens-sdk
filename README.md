@@ -74,8 +74,8 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 - [ ] `usePublications`
 - [ ] `useCreatePost`
   - [ ] sign-less, gas-less, instant (via Data Availability)
-  - [ ] sign-less, gas-less
-  - [ ] signed, gas-less
+  - [x] sign-less, gas-less
+  - [x] signed, gas-less
   - [ ] signed, paid gas (fallback)
 - [ ] `useCreateComment`
   - [ ] sign-less, gas-less, instant (via Data Availability)

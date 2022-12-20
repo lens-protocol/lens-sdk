@@ -12,6 +12,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
+import { ConsoleLogger } from './ConsoleLogger';
 import { NoopResponder } from './NoopResponder';
 import { LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
@@ -19,6 +20,7 @@ import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresente
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
+import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
@@ -52,8 +54,10 @@ export type SharedDependencies = {
   credentialsGateway: CredentialsGateway;
   logoutPresenter: LogoutPresenter;
   onError: ErrorHandler;
+  protocolCallRelayer: ProtocolCallRelayer;
   sources: string[];
   transactionFactory: TransactionFactory;
+  transactionGateway: PendingTransactionGateway<SupportedTransactionRequest>;
   transactionQueue: TransactionQueue<SupportedTransactionRequest>;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
@@ -66,6 +70,8 @@ export type Handlers = {
 };
 
 export function createSharedDependencies(config: LensConfig, { onLogout, onError }: Handlers) {
+  const logger = config.logger ?? new ConsoleLogger();
+
   // storages
   const activeProfileStorage = createActiveProfileStorage(config.storage);
   const credentialsStorage = new CredentialsStorage(config.storage);
@@ -122,6 +128,8 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   };
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);
 
+  const protocolCallRelayer = new ProtocolCallRelayer(apolloClient, transactionFactory, logger);
+
   // common interactors
   const activeProfile = new ActiveProfile(
     profileGateway,
@@ -147,7 +155,9 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     logoutPresenter,
     onError,
     sources: config.sources ?? [],
+    protocolCallRelayer,
     transactionFactory,
+    transactionGateway,
     transactionQueue,
     walletFactory,
     walletGateway,

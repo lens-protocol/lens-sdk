@@ -6,7 +6,7 @@ import { MockedProxyTransaction } from '../../../entities/__helpers__/mocks';
 import { mockUnconstrainedFollowRequest } from '../../profile/__helpers__/mocks';
 import { mockFreeCollectRequest } from '../../publications/__helpers__/mocks';
 import {
-  ISignlessProtocolCallRelayerCallPresenter,
+  ISignlessProtocolCallPresenter,
   ISignlessProtocolCallRelayer,
   SignlessProtocolCallUseCase,
 } from '../SignlessProtocolCallUseCase';
@@ -16,11 +16,11 @@ import { mockISignlessProtocolCallRelayer, mockTransactionQueue } from '../__hel
 function setup<T extends TransactionRequestModel>({
   relayer,
   transactionQueue = mockTransactionQueue(),
-  presenter = mock<ISignlessProtocolCallRelayerCallPresenter>(),
+  presenter = mock<ISignlessProtocolCallPresenter>(),
 }: {
   relayer: ISignlessProtocolCallRelayer<T>;
   transactionQueue?: TransactionQueue<T>;
-  presenter?: ISignlessProtocolCallRelayerCallPresenter;
+  presenter?: ISignlessProtocolCallPresenter;
 }) {
   const useCase = new SignlessProtocolCallUseCase(relayer, transactionQueue, presenter);
 

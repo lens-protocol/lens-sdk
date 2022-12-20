@@ -3,7 +3,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
-  IProtocolCallGateway,
+  IDelegableProtocolCallGateway,
   IProtocolCallPresenter,
 } from '../transactions/DelegableProtocolCallUseCase';
 import { CollectPolicy, ContentFocus, Locale, Media, ReferencePolicy } from './types';
@@ -21,7 +21,7 @@ export type CreatePostRequest = {
   delegate: boolean;
 };
 
-export type ICreatePostCallGateway = IProtocolCallGateway<CreatePostRequest>;
+export type ICreatePostCallGateway = IDelegableProtocolCallGateway<CreatePostRequest>;
 
 export type ICreatePostPresenter = IProtocolCallPresenter;
 

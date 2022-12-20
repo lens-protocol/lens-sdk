@@ -1,62 +1,35 @@
 import { success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
-import { when } from 'jest-when';
 
-import {
-  Wallet,
-  MetaTransaction,
-  NativeTransaction,
-  SignedProtocolCall,
-  TransactionRequestModel,
-} from '../../../entities';
-import {
-  MockedMetaTransaction,
-  MockedNativeTransaction,
-  mockNonce,
-  mockSignedProtocolCall,
-  mockWallet,
-} from '../../../entities/__helpers__/mocks';
-import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
+import { NativeTransaction, TransactionRequestModel } from '../../../entities';
+import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
 import {
   DelegableProtocolCallUseCase,
-  IProtocolCallGateway,
-  WithDelegateFlag,
-} from '../DelegableProtocolCallUseCase';
-import {
+  IDelegableProtocolCallGateway,
   IProtocolCallPresenter,
-  IMetaTransactionNonceGateway,
-  IProtocolCallRelayer,
-} from '../ProtocolCallUseCase';
+} from '../DelegableProtocolCallUseCase';
+import { ProtocolCallUseCase } from '../ProtocolCallUseCase';
 import { TransactionQueue } from '../TransactionQueue';
 import {
-  mockIMetaTransactionNonceGateway,
-  mockIProtocolCallRelayer,
-  mockIProtocolCallTransactionGateway,
+  mockIDelegableProtocolCallGateway,
   mockTransactionQueue,
   mockTransactionRequestModelWithDelegateFlag,
 } from '../__helpers__/mocks';
 
 function setupDelegableProtocolCallUseCase<T extends TransactionRequestModel>({
-  metaTransactionNonceGateway = mockIMetaTransactionNonceGateway(),
-  protocolCallGateway,
-  protocolCallRelayer = mock<IProtocolCallRelayer<T>>(),
+  protocolCallUseCase = mock<ProtocolCallUseCase<T>>(),
+  protocolCallGateway = mock<IDelegableProtocolCallGateway<T>>(),
   transactionQueue = mockTransactionQueue<T>(),
-  presenter,
-  wallet = mockWallet(),
+  presenter = mock<IProtocolCallPresenter>(),
 }: {
-  metaTransactionNonceGateway?: IMetaTransactionNonceGateway;
-  protocolCallGateway: IProtocolCallGateway<T>;
-  protocolCallRelayer?: IProtocolCallRelayer<T>;
-  transactionQueue?: TransactionQueue<T>;
-  presenter: IProtocolCallPresenter;
-  wallet?: Wallet;
+  protocolCallUseCase?: ProtocolCallUseCase<T>;
+  protocolCallGateway?: IDelegableProtocolCallGateway<T>;
+  transactionQueue?: TransactionQueue<TransactionRequestModel>;
+  presenter?: IProtocolCallPresenter;
 }) {
-  const activeWallet = mockActiveWallet({ wallet });
   return new DelegableProtocolCallUseCase(
-    activeWallet,
-    metaTransactionNonceGateway,
+    protocolCallUseCase,
     protocolCallGateway,
-    protocolCallRelayer,
     transactionQueue,
     presenter,
   );
@@ -67,45 +40,15 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
     describe('with a SupportedRequestModel that has the "delegate" flag unset', () => {
       const request = mockTransactionRequestModelWithDelegateFlag({ delegate: false });
 
-      it(`should:
-          - create an IUnsignedProtocolCall<T> passing the Nonce override from the IPendingTransactionGateway
-          - sign it with the user's ${Wallet.name}
-          - relay the resulting ${SignedProtocolCall.name}<T>
-          - push the resulting ${MetaTransaction.name}<T> into the ${TransactionQueue.name}`, async () => {
-        const nonce = mockNonce();
-
-        const metaTransactionNonceGateway = mockIMetaTransactionNonceGateway({ nonce });
-
-        const protocolCallGateway = mockIProtocolCallTransactionGateway({
-          request,
-          nonce,
-        });
-
-        const wallet = mockWallet();
-        const signedCall = mockSignedProtocolCall(request);
-        when(wallet.signProtocolCall).mockResolvedValue(success(signedCall));
-
-        const transaction = MockedMetaTransaction.fromSignedCall(signedCall);
-        const protocolCallRelayer = mockIProtocolCallRelayer({ signedCall, transaction });
-
-        const transactionQueue = mockTransactionQueue<WithDelegateFlag<TransactionRequestModel>>();
-
-        const presenter = mock<IProtocolCallPresenter>();
-
+      it(`should execute the ${ProtocolCallUseCase.name}<T>`, async () => {
+        const protocolCallUseCase = mock<ProtocolCallUseCase<TransactionRequestModel>>();
         const useCase = setupDelegableProtocolCallUseCase({
-          metaTransactionNonceGateway,
-          protocolCallGateway: protocolCallGateway,
-          protocolCallRelayer,
-          transactionQueue,
-          presenter,
-          wallet,
+          protocolCallUseCase,
         });
 
         await useCase.execute(request);
 
-        expect(transactionQueue.push).toHaveBeenCalledWith(transaction);
-        expect(presenter.present).toHaveBeenCalledWith(success());
-        expect(protocolCallGateway.createDelegatedTransaction).not.toHaveBeenCalled();
+        expect(protocolCallUseCase.execute).toHaveBeenCalledWith(request);
       });
     });
 
@@ -117,7 +60,7 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
           - queue it into the ${TransactionQueue.name}
           - present successful result`, async () => {
         const transaction = MockedNativeTransaction.fromRequest(request);
-        const protocolCallGateway = mockIProtocolCallTransactionGateway({
+        const protocolCallGateway = mockIDelegableProtocolCallGateway({
           request,
           delegatedTransaction: transaction,
         });

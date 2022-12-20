@@ -21,3 +21,15 @@ query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
     }
   }
 }
+
+mutation BroadcastProtocolCall($request: BroadcastRequest!) {
+  result: broadcast(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
