@@ -1,6 +1,6 @@
 import { useProfileFollowingQuery } from '@lens-protocol/api';
 
-import { useLensResponse } from '../helpers';
+import { useLensResponseWithPagination } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type UseProfileFollowingArgs = {
@@ -18,7 +18,7 @@ export function useProfileFollowing({
 }: UseProfileFollowingArgs) {
   const { apolloClient } = useSharedDependencies();
 
-  const response = useLensResponse(
+  return useLensResponseWithPagination(
     useProfileFollowingQuery({
       variables: {
         walletAddress,
@@ -29,9 +29,4 @@ export function useProfileFollowing({
       client: apolloClient,
     }),
   );
-
-  return {
-    ...response,
-    data: response.data?.result ?? null,
-  };
 }
