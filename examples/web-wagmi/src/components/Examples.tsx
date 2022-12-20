@@ -21,6 +21,10 @@ const examples = [
     label: 'Profile by Handle',
     path: '/profile-by-handle',
   },
+  {
+    label: 'Unread Notification Count',
+    path: '/unread-notification-count',
+  },
 ];
 
 export function Examples() {

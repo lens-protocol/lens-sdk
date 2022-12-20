@@ -4121,6 +4121,100 @@ export type ExploreProfilesQuery = {
   };
 };
 
+export type CommentWithCommentedPublicationFieldsFragment = { __typename: 'Comment' } & {
+  commentOn: Maybe<
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Comment' } & CommentFragment)
+    | ({ __typename: 'Mirror' } & MirrorFragment)
+  >;
+} & CommentFragment;
+
+export type NewFollowerNotificationFieldsFragment = {
+  __typename: 'NewFollowerNotification';
+} & Pick<NewFollowerNotification, 'notificationId' | 'createdAt' | 'isFollowedByMe'> & {
+    wallet: { __typename: 'Wallet' } & WalletFragment;
+  };
+
+export type NewCollectNotificationFieldsFragment = { __typename: 'NewCollectNotification' } & Pick<
+  NewCollectNotification,
+  'notificationId' | 'createdAt'
+> & {
+    wallet: { __typename: 'Wallet' } & WalletFragment;
+    collectedPublication:
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Comment' } & CommentFragment)
+      | ({ __typename: 'Mirror' } & MirrorFragment);
+  };
+
+export type NewMirrorNotificationFieldsFragment = { __typename: 'NewMirrorNotification' } & Pick<
+  NewMirrorNotification,
+  'notificationId' | 'createdAt'
+> & {
+    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
+    publication:
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Comment' } & CommentFragment);
+  };
+
+export type NewCommentNotificationFieldsFragment = { __typename: 'NewCommentNotification' } & Pick<
+  NewCommentNotification,
+  'notificationId' | 'createdAt'
+> & {
+    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
+    comment: { __typename: 'Comment' } & CommentWithCommentedPublicationFieldsFragment;
+  };
+
+export type NewMentionNotificationFieldsFragment = { __typename: 'NewMentionNotification' } & Pick<
+  NewMentionNotification,
+  'notificationId' | 'createdAt'
+> & {
+    mentionPublication:
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Comment' } & CommentFragment);
+  };
+
+export type NewReactionNotificationFieldsFragment = {
+  __typename: 'NewReactionNotification';
+} & Pick<NewReactionNotification, 'notificationId' | 'createdAt' | 'reaction'> & {
+    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
+    publication:
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Comment' } & CommentFragment)
+      | ({ __typename: 'Mirror' } & MirrorFragment);
+  };
+
+export type NotificationsQueryVariables = Exact<{
+  observerId: Scalars['ProfileId'];
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+}>;
+
+export type NotificationsQuery = {
+  result: { __typename: 'PaginatedNotificationResult' } & {
+    items: Array<
+      | ({ __typename: 'NewFollowerNotification' } & NewFollowerNotificationFieldsFragment)
+      | ({ __typename: 'NewCollectNotification' } & NewCollectNotificationFieldsFragment)
+      | ({ __typename: 'NewCommentNotification' } & NewCommentNotificationFieldsFragment)
+      | ({ __typename: 'NewMirrorNotification' } & NewMirrorNotificationFieldsFragment)
+      | ({ __typename: 'NewMentionNotification' } & NewMentionNotificationFieldsFragment)
+      | ({ __typename: 'NewReactionNotification' } & NewReactionNotificationFieldsFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  };
+};
+
+export type UnreadNotificationCountQueryVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+}>;
+
+export type UnreadNotificationCountQuery = {
+  result: { __typename: 'PaginatedNotificationResult' } & {
+    pageInfo: { __typename: 'PaginatedResultInfo' } & Pick<PaginatedResultInfo, 'totalCount'>;
+  };
+};
+
 export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
 
 export type MediaSetFragment = { __typename: 'MediaSet' } & {
@@ -4216,6 +4310,13 @@ export type GetAllProfilesByOwnerAddressQuery = {
   };
 };
 
+export const CommonPaginatedResultInfoFragmentDoc = gql`
+  fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+    prev
+    next
+    totalCount
+  }
+`;
 export const PublicationStatsFragmentDoc = gql`
   fragment PublicationStats on PublicationStats {
     totalAmountOfMirrors
@@ -4371,6 +4472,15 @@ export const ProfileFieldsFragmentDoc = gql`
   ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
 `;
+export const WalletFragmentDoc = gql`
+  fragment Wallet on Wallet {
+    address
+    defaultProfile {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
 export const FreeCollectModuleSettingsFragmentDoc = gql`
   fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
     contractAddress
@@ -4470,55 +4580,6 @@ export const ReferenceModuleFragmentDoc = gql`
     }
   }
 `;
-export const MirrorBaseFragmentDoc = gql`
-  fragment MirrorBase on Mirror {
-    __typename
-    id
-    stats {
-      ...PublicationStats
-    }
-    metadata {
-      ...Metadata
-    }
-    profile {
-      ...ProfileFields
-    }
-    collectModule {
-      ...CollectModule
-    }
-    referenceModule {
-      ...ReferenceModule
-    }
-    createdAt
-    hidden
-    isGated
-    reaction(request: { profileId: $observerId })
-    hasCollectedByMe(isFinalisedOnChain: true)
-    canComment(profileId: $observerId) {
-      result
-    }
-    canMirror(profileId: $observerId) {
-      result
-    }
-    hasOptimisticCollectedByMe @client
-    isOptimisticMirroredByMe @client
-    ownedByMe @client
-  }
-  ${PublicationStatsFragmentDoc}
-  ${MetadataFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
-  ${CollectModuleFragmentDoc}
-  ${ReferenceModuleFragmentDoc}
-`;
-export const WalletFragmentDoc = gql`
-  fragment Wallet on Wallet {
-    address
-    defaultProfile {
-      ...ProfileFields
-    }
-  }
-  ${ProfileFieldsFragmentDoc}
-`;
 export const PostFragmentDoc = gql`
   fragment Post on Post {
     __typename
@@ -4609,6 +4670,46 @@ export const CommentBaseFragmentDoc = gql`
   ${CollectModuleFragmentDoc}
   ${ReferenceModuleFragmentDoc}
 `;
+export const MirrorBaseFragmentDoc = gql`
+  fragment MirrorBase on Mirror {
+    __typename
+    id
+    stats {
+      ...PublicationStats
+    }
+    metadata {
+      ...Metadata
+    }
+    profile {
+      ...ProfileFields
+    }
+    collectModule {
+      ...CollectModule
+    }
+    referenceModule {
+      ...ReferenceModule
+    }
+    createdAt
+    hidden
+    isGated
+    reaction(request: { profileId: $observerId })
+    hasCollectedByMe(isFinalisedOnChain: true)
+    canComment(profileId: $observerId) {
+      result
+    }
+    canMirror(profileId: $observerId) {
+      result
+    }
+    hasOptimisticCollectedByMe @client
+    isOptimisticMirroredByMe @client
+    ownedByMe @client
+  }
+  ${PublicationStatsFragmentDoc}
+  ${MetadataFragmentDoc}
+  ${ProfileFieldsFragmentDoc}
+  ${CollectModuleFragmentDoc}
+  ${ReferenceModuleFragmentDoc}
+`;
 export const CommentFragmentDoc = gql`
   fragment Comment on Comment {
     __typename
@@ -4637,29 +4738,6 @@ export const CommentFragmentDoc = gql`
   ${PostFragmentDoc}
   ${MirrorBaseFragmentDoc}
 `;
-export const MirrorFragmentDoc = gql`
-  fragment Mirror on Mirror {
-    ...MirrorBase
-    mirrorOf {
-      ... on Post {
-        ...Post
-      }
-      ... on Comment {
-        ...Comment
-      }
-    }
-  }
-  ${MirrorBaseFragmentDoc}
-  ${PostFragmentDoc}
-  ${CommentFragmentDoc}
-`;
-export const CommonPaginatedResultInfoFragmentDoc = gql`
-  fragment CommonPaginatedResultInfo on PaginatedResultInfo {
-    prev
-    next
-    totalCount
-  }
-`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     root {
@@ -4676,6 +4754,157 @@ export const FeedItemFragmentDoc = gql`
   }
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
+`;
+export const NewFollowerNotificationFieldsFragmentDoc = gql`
+  fragment NewFollowerNotificationFields on NewFollowerNotification {
+    __typename
+    notificationId
+    createdAt
+    isFollowedByMe
+    wallet {
+      ...Wallet
+    }
+  }
+  ${WalletFragmentDoc}
+`;
+export const MirrorFragmentDoc = gql`
+  fragment Mirror on Mirror {
+    ...MirrorBase
+    mirrorOf {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${MirrorBaseFragmentDoc}
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+`;
+export const NewCollectNotificationFieldsFragmentDoc = gql`
+  fragment NewCollectNotificationFields on NewCollectNotification {
+    __typename
+    notificationId
+    createdAt
+    wallet {
+      ...Wallet
+    }
+    collectedPublication {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${WalletFragmentDoc}
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+`;
+export const NewMirrorNotificationFieldsFragmentDoc = gql`
+  fragment NewMirrorNotificationFields on NewMirrorNotification {
+    __typename
+    notificationId
+    createdAt
+    profile {
+      ...ProfileFields
+    }
+    publication {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+`;
+export const CommentWithCommentedPublicationFieldsFragmentDoc = gql`
+  fragment CommentWithCommentedPublicationFields on Comment {
+    ...Comment
+    commentOn {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${CommentFragmentDoc}
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+`;
+export const NewCommentNotificationFieldsFragmentDoc = gql`
+  fragment NewCommentNotificationFields on NewCommentNotification {
+    __typename
+    notificationId
+    createdAt
+    profile {
+      ...ProfileFields
+    }
+    comment {
+      ...CommentWithCommentedPublicationFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+  ${CommentWithCommentedPublicationFieldsFragmentDoc}
+`;
+export const NewMentionNotificationFieldsFragmentDoc = gql`
+  fragment NewMentionNotificationFields on NewMentionNotification {
+    __typename
+    notificationId
+    createdAt
+    mentionPublication {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+`;
+export const NewReactionNotificationFieldsFragmentDoc = gql`
+  fragment NewReactionNotificationFields on NewReactionNotification {
+    __typename
+    notificationId
+    createdAt
+    profile {
+      ...ProfileFields
+    }
+    reaction
+    publication {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+  ${MirrorFragmentDoc}
 `;
 export const FeedDocument = gql`
   query Feed(
@@ -4791,6 +5020,154 @@ export type ExploreProfilesLazyQueryHookResult = ReturnType<typeof useExplorePro
 export type ExploreProfilesQueryResult = Apollo.QueryResult<
   ExploreProfilesQuery,
   ExploreProfilesQueryVariables
+>;
+export const NotificationsDocument = gql`
+  query Notifications(
+    $observerId: ProfileId!
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $sources: [Sources!]
+  ) {
+    result: notifications(
+      request: { profileId: $observerId, limit: $limit, cursor: $cursor, sources: $sources }
+    ) {
+      items {
+        ... on NewFollowerNotification {
+          ...NewFollowerNotificationFields
+        }
+        ... on NewMirrorNotification {
+          ...NewMirrorNotificationFields
+        }
+        ... on NewCollectNotification {
+          ...NewCollectNotificationFields
+        }
+        ... on NewCommentNotification {
+          ...NewCommentNotificationFields
+        }
+        ... on NewMentionNotification {
+          ...NewMentionNotificationFields
+        }
+        ... on NewReactionNotification {
+          ...NewReactionNotificationFields
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${NewFollowerNotificationFieldsFragmentDoc}
+  ${NewMirrorNotificationFieldsFragmentDoc}
+  ${NewCollectNotificationFieldsFragmentDoc}
+  ${NewCommentNotificationFieldsFragmentDoc}
+  ${NewMentionNotificationFieldsFragmentDoc}
+  ${NewReactionNotificationFieldsFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useNotificationsQuery__
+ *
+ * To run a query within a React component, call `useNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationsQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
+ *   },
+ * });
+ */
+export function useNotificationsQuery(
+  baseOptions: Apollo.QueryHookOptions<NotificationsQuery, NotificationsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<NotificationsQuery, NotificationsQueryVariables>(
+    NotificationsDocument,
+    options,
+  );
+}
+export function useNotificationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<NotificationsQuery, NotificationsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<NotificationsQuery, NotificationsQueryVariables>(
+    NotificationsDocument,
+    options,
+  );
+}
+export type NotificationsQueryHookResult = ReturnType<typeof useNotificationsQuery>;
+export type NotificationsLazyQueryHookResult = ReturnType<typeof useNotificationsLazyQuery>;
+export type NotificationsQueryResult = Apollo.QueryResult<
+  NotificationsQuery,
+  NotificationsQueryVariables
+>;
+export const UnreadNotificationCountDocument = gql`
+  query UnreadNotificationCount($profileId: ProfileId!, $sources: [Sources!]) {
+    result: notifications(request: { profileId: $profileId, sources: $sources }) {
+      pageInfo {
+        totalCount
+      }
+    }
+  }
+`;
+
+/**
+ * __useUnreadNotificationCountQuery__
+ *
+ * To run a query within a React component, call `useUnreadNotificationCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUnreadNotificationCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUnreadNotificationCountQuery({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *      sources: // value for 'sources'
+ *   },
+ * });
+ */
+export function useUnreadNotificationCountQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    UnreadNotificationCountQuery,
+    UnreadNotificationCountQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<UnreadNotificationCountQuery, UnreadNotificationCountQueryVariables>(
+    UnreadNotificationCountDocument,
+    options,
+  );
+}
+export function useUnreadNotificationCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    UnreadNotificationCountQuery,
+    UnreadNotificationCountQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<UnreadNotificationCountQuery, UnreadNotificationCountQueryVariables>(
+    UnreadNotificationCountDocument,
+    options,
+  );
+}
+export type UnreadNotificationCountQueryHookResult = ReturnType<
+  typeof useUnreadNotificationCountQuery
+>;
+export type UnreadNotificationCountLazyQueryHookResult = ReturnType<
+  typeof useUnreadNotificationCountLazyQuery
+>;
+export type UnreadNotificationCountQueryResult = Apollo.QueryResult<
+  UnreadNotificationCountQuery,
+  UnreadNotificationCountQueryVariables
 >;
 export const ProfilesToFollowDocument = gql`
   query ProfilesToFollow($observerId: ProfileId) {

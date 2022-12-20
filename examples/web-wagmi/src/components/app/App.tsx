@@ -8,6 +8,7 @@ import { Examples } from '../Examples';
 import { Feed } from '../feed/Feed';
 import { BackButton } from '../header/BackButton';
 import { Header } from '../header/Header';
+import { NotificationCount } from '../notification/NotificationCount';
 import { ExploreProfiles } from '../profile/ExploreProfiles';
 import { ProfileByHandle } from '../profile/ProfileByHandle';
 import { ProfileById } from '../profile/ProfileById';
@@ -43,6 +44,7 @@ export function App() {
               <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
               <Route path="/profile-by-id" element={<ProfileById />} />
               <Route path="/profile-by-handle" element={<ProfileByHandle />} />
+              <Route path="/unread-notification-count" element={<NotificationCount />} />
             </Routes>
           </div>
         </Router>

@@ -5,7 +5,7 @@ import { Loading } from '../loading/Loading';
 import { ProfilePicture } from './ProfilePicture';
 
 export function ProfileById() {
-  const { data: profile, loading, error } = useProfile({ handle: 'lens', observerId: 'lens' });
+  const { data: profile, loading, error } = useProfile({ handle: 'lens' });
 
   if (loading) return <Loading />;
 
