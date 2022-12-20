@@ -8,8 +8,7 @@ import {
   useNotificationsQuery,
 } from '@lens-protocol/api';
 
-import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
-import { useActiveProfile } from '../profile';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type UseNotificationsArgs = PaginatedArgs<{
