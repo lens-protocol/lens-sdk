@@ -8,11 +8,7 @@ import {
   useNotificationsQuery,
 } from '@lens-protocol/api';
 
-import {
-  LensResponseWithPagination,
-  PaginatedArgs,
-  useLensResponseWithPagination,
-} from '../helpers';
+import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type UseNotificationsArgs = PaginatedArgs<{
@@ -31,10 +27,10 @@ export function useNotifications({
   profileId,
   limit,
   cursor,
-}: UseNotificationsArgs): LensResponseWithPagination<Notification[]> {
+}: UseNotificationsArgs): PaginatedReadResult<Notification[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
-  return useLensResponseWithPagination(
+  return usePaginatedReadResult(
     useNotificationsQuery({
       variables: {
         observerId: profileId,

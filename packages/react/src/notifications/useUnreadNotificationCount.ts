@@ -1,6 +1,6 @@
 import { useUnreadNotificationCountQuery } from '@lens-protocol/api';
 
-import { useLensResponse } from '../helpers';
+import { useReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type UseUnreadNotificationCountArgs = {
@@ -10,7 +10,7 @@ type UseUnreadNotificationCountArgs = {
 export function useUnreadNotificationCount({ profileId }: UseUnreadNotificationCountArgs) {
   const { apolloClient, sources } = useSharedDependencies();
 
-  const response = useLensResponse(
+  const response = useReadResult(
     useUnreadNotificationCountQuery({
       variables: {
         profileId,
