@@ -12,7 +12,7 @@ export function ProfileFollowers({ profileId }: ProfileFollowersProps) {
   if (loading) return <Loading />;
   return (
     <div>
-      <h2>Followers</h2>
+      <h3>Followers</h3>
       <div>
         {followers.map((follower) =>
           follower.wallet.defaultProfile ? (

@@ -18,13 +18,13 @@ export function ProfileByHandleLayout({ handle }: ProfileByHandleLayoutProps) {
 
   return (
     <div>
-      <h1>Profile by Handle</h1>
+      <h2>Profile by Handle</h2>
       <ProfileCard profile={profile} />
-      <hr />
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '1rem',
           width: '100%',
         }}
       >

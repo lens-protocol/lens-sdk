@@ -7,19 +7,18 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { optimism, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
-import { Examples } from '../Examples';
-import { GenericErrorBoundary } from '../GenericErrorBoundary';
-import { GenericError } from '../error/GenericError';
-import { Feed } from '../feed/Feed';
-import { BackButton } from '../header/BackButton';
-import { Header } from '../header/Header';
-import { NotificationCount } from '../notification/NotificationCount';
-import { Notifications } from '../notification/Notifications';
-import { ExploreProfiles } from '../profile/ExploreProfiles';
-import { ProfileByHandle } from '../profile/ProfileByHandle';
-import { ProfileById } from '../profile/ProfileById';
-import { ProfilesToFollow } from '../profiles-to-follow/ProfilesToFollow';
-import { Publication } from '../publication/Publication';
+import { GenericErrorBoundary } from './components/GenericErrorBoundary';
+import { GenericError } from './components/error/GenericError';
+import { Feed } from './components/feed/Feed';
+import { Header } from './components/header/Header';
+import { Home } from './components/home';
+import { NotificationCount } from './components/notification/NotificationCount';
+import { Notifications } from './components/notification/Notifications';
+import { ExploreProfiles } from './components/profile/ExploreProfiles';
+import { ProfileByHandle } from './components/profile/ProfileByHandle';
+import { ProfileById } from './components/profile/ProfileById';
+import { ProfilesToFollow } from './components/profiles-to-follow/ProfilesToFollow';
+import { Publication } from './components/publication/Publication';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
@@ -44,11 +43,10 @@ export function App() {
       <LensProvider config={lensConfig} onError={toastNotification}>
         <Router>
           <Header />
-          <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
-            <BackButton />
+          <main>
             <GenericErrorBoundary fallback={GenericError}>
               <Routes>
-                <Route path="/" element={<Examples />} />
+                <Route path="/" element={<Home />} />
                 <Route path="/feed" element={<Feed />} />
                 <Route path="/explore-profiles" element={<ExploreProfiles />} />
                 <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
@@ -62,7 +60,7 @@ export function App() {
               </Routes>
             </GenericErrorBoundary>
             <Toaster />
-          </div>
+          </main>
         </Router>
       </LensProvider>
     </WagmiConfig>

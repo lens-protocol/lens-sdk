@@ -10,7 +10,7 @@ import {
 import { ReactNode } from 'react';
 
 function NotificationItemWrapper({ children }: { children: ReactNode }) {
-  return <div style={{ margin: '5rem' }}>{children}</div>;
+  return <article>{children}</article>;
 }
 
 function NewReactionNotification({
