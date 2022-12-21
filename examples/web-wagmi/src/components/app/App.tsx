@@ -8,6 +8,8 @@ import { optimism, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Examples } from '../Examples';
+import { GenericErrorBoundary } from '../GenericErrorBoundary';
+import { GenericError } from '../error/GenericError';
 import { Feed } from '../feed/Feed';
 import { BackButton } from '../header/BackButton';
 import { Header } from '../header/Header';
@@ -17,6 +19,7 @@ import { ExploreProfiles } from '../profile/ExploreProfiles';
 import { ProfileByHandle } from '../profile/ProfileByHandle';
 import { ProfileById } from '../profile/ProfileById';
 import { ProfilesToFollow } from '../profiles-to-follow/ProfilesToFollow';
+import { Publication } from '../publication/Publication';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
@@ -43,16 +46,21 @@ export function App() {
           <Header />
           <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
             <BackButton />
-            <Routes>
-              <Route path="/" element={<Examples />} />
-              <Route path="/feed" element={<Feed />} />
-              <Route path="/explore-profiles" element={<ExploreProfiles />} />
-              <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
-              <Route path="/profile-by-id" element={<ProfileById />} />
-              <Route path="/profile-by-handle" element={<ProfileByHandle />} />
-              <Route path="/unread-notification-count" element={<NotificationCount />} />
+            <GenericErrorBoundary fallback={GenericError}>
+              <Routes>
+                <Route path="/" element={<Examples />} />
+                <Route path="/feed" element={<Feed />} />
+                <Route path="/explore-profiles" element={<ExploreProfiles />} />
+                <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
+                <Route path="/publication/:publicationId" element={<Publication />} />
+                <Route path="/profile">
+                  <Route path="handle/:handle" element={<ProfileByHandle />} />
+                  <Route path="id/:profileId" element={<ProfileById />} />
+                </Route>
+                <Route path="/unread-notification-count" element={<NotificationCount />} />
               <Route path="/notifications" element={<Notifications />} />
             </Routes>
+            </GenericErrorBoundary>
             <Toaster />
           </div>
         </Router>

@@ -14,14 +14,6 @@ const examples = [
     path: '/profiles-to-follow',
   },
   {
-    label: 'Profile by ID',
-    path: '/profile-by-id',
-  },
-  {
-    label: 'Profile by Handle',
-    path: '/profile-by-handle',
-  },
-  {
     label: 'Unread Notification Count',
     path: '/unread-notification-count',
   },

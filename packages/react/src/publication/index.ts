@@ -4,8 +4,12 @@ import {
   isMirrorPublication,
   PostFragment,
   CommentFragment,
+  CommentWithFirstCommentFragment,
   MirrorFragment,
 } from '@lens-protocol/api';
 
-export type { PostFragment, CommentFragment, MirrorFragment };
+export * from './useComments';
+export * from './usePublication';
+
+export type { PostFragment, CommentFragment, MirrorFragment, CommentWithFirstCommentFragment };
 export { isPostPublication, isCommentPublication, isMirrorPublication };

@@ -1,25 +1,31 @@
 import { useProfile } from '@lens-protocol/react';
+import { useParams } from 'react-router-dom';
 
 import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
-import { ProfilePicture } from './ProfilePicture';
+import { ProfileCard } from './ProfileCard';
 
-export function ProfileById() {
-  const { data: profile, loading, error } = useProfile({ handle: 'lens' });
+type ProfileByIdLayoutProps = {
+  profileId: string;
+};
+
+export function ProfileByIdLayout({ profileId }: ProfileByIdLayoutProps) {
+  const { data: profile, loading } = useProfile({ profileId });
 
   if (loading) return <Loading />;
-
-  if (error || !profile) return <GenericError error={error} />;
 
   return (
     <div>
       <h1>Profile by ID</h1>
-      <ProfilePicture picture={profile.picture} />
-      <p>Handle: {profile?.handle}</p>
-      <p>Name: {profile?.name}</p>
-      <p>Bio: {profile?.bio}</p>
+      <ProfileCard profile={profile} />
       <hr />
       <pre>{JSON.stringify(profile, null, 2)}</pre>
     </div>
   );
+}
+
+export function ProfileById() {
+  const { profileId } = useParams();
+  if (!profileId) return <GenericError error={new Error('Page not found')} />;
+  return <ProfileByIdLayout profileId={profileId} />;
 }

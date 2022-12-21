@@ -16,7 +16,7 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 ### Collect/follow modules support
 
 - [ ] `useApproveModule` - signed, paid gas
-- [ ] `useCurrencies`
+- [x] `useCurrencies`
 
 ### Profile
 

@@ -1,25 +1,42 @@
 import { useProfile } from '@lens-protocol/react';
+import { useParams } from 'react-router-dom';
 
 import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
-import { ProfilePicture } from './ProfilePicture';
+import { ProfileCard } from './ProfileCard';
+import { ProfileFollowers } from './ProfileFollowers';
+import { ProfilesFollowing } from './ProfileFollowing';
 
-export function ProfileByHandle() {
-  const { data: profile, loading, error } = useProfile({ handle: 'lensprotocol.test' });
+type ProfileByHandleLayoutProps = {
+  handle: string;
+};
+
+export function ProfileByHandleLayout({ handle }: ProfileByHandleLayoutProps) {
+  const { data: profile, loading } = useProfile({ handle });
 
   if (loading) return <Loading />;
-
-  if (error || !profile) return <GenericError error={error} />;
 
   return (
     <div>
       <h1>Profile by Handle</h1>
-      <ProfilePicture picture={profile.picture} />
-      <p>Handle: {profile?.handle}</p>
-      <p>Name: {profile?.name}</p>
-      <p>Bio: {profile?.bio}</p>
+      <ProfileCard profile={profile} />
       <hr />
-      <pre>{JSON.stringify(profile, null, 2)}</pre>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          width: '100%',
+        }}
+      >
+        <ProfileFollowers profileId={profile.id} />
+        <ProfilesFollowing walletAddress={profile.ownedBy} />
+      </div>
     </div>
   );
+}
+
+export function ProfileByHandle() {
+  const { handle } = useParams();
+  if (!handle) return <GenericError error={new Error('Profile not found')} />;
+  return <ProfileByHandleLayout handle={handle} />;
 }

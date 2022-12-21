@@ -17,7 +17,6 @@ export function useExploreProfiles(
       variables: {
         observerId: args?.observerId,
         limit: args?.limit ?? 10,
-        cursor: args?.cursor,
       },
       client: apolloClient,
     }),

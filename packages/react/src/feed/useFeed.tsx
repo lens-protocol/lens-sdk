@@ -12,7 +12,6 @@ export function useFeed({
   profileId,
   observerId,
   limit,
-  cursor,
 }: UseFeedArgs): PaginatedReadResult<FeedItemFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
@@ -23,7 +22,6 @@ export function useFeed({
         observerId,
         sources,
         limit: limit ?? 10,
-        cursor: cursor ?? undefined,
       },
       client: apolloClient,
     }),

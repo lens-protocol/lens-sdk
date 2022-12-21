@@ -1,0 +1,43 @@
+fragment Follower on Follower {
+  wallet {
+    ...Wallet
+  }
+}
+
+fragment Following on Following {
+  profile {
+    ...ProfileFields
+  }
+}
+
+query ProfileFollowers(
+  $profileId: ProfileId!
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $observerId: ProfileId
+) {
+  result: followers(request: { profileId: $profileId, limit: $limit, cursor: $cursor }) {
+    items {
+      ...Follower
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query ProfileFollowing(
+  $walletAddress: EthereumAddress!
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $observerId: ProfileId
+) {
+  result: following(request: { address: $walletAddress, limit: $limit, cursor: $cursor }) {
+    items {
+      ...Following
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
