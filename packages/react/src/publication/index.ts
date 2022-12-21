@@ -10,6 +10,8 @@ import {
 
 export * from './useComments';
 export * from './usePublication';
+export * from './usePublications';
 
+export type { Publication } from './types';
 export type { PostFragment, CommentFragment, MirrorFragment, CommentWithFirstCommentFragment };
 export { isPostPublication, isCommentPublication, isMirrorPublication };

@@ -1,12 +1,8 @@
-import {
-  CommentFragment,
-  MirrorFragment,
-  PostFragment,
-  usePublicationQuery,
-} from '@lens-protocol/api';
+import { usePublicationQuery } from '@lens-protocol/api';
 
 import { ReadResult, useReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
+import { Publication } from './types';
 
 type UsePublicationArgs = {
   publicationId: string;
@@ -16,7 +12,7 @@ type UsePublicationArgs = {
 export function usePublication({
   publicationId,
   observerId,
-}: UsePublicationArgs): ReadResult<CommentFragment | MirrorFragment | PostFragment> {
+}: UsePublicationArgs): ReadResult<Publication> {
   const { apolloClient } = useSharedDependencies();
 
   return useReadResult(
