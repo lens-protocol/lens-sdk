@@ -26,7 +26,6 @@ export type Notification =
 export function useNotifications({
   profileId,
   limit,
-  cursor,
 }: UseNotificationsArgs): PaginatedReadResult<Notification[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
@@ -35,7 +34,6 @@ export function useNotifications({
       variables: {
         observerId: profileId,
         limit: limit ?? 10,
-        cursor,
         sources,
       },
       client: apolloClient,
