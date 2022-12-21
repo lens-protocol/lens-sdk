@@ -31,7 +31,7 @@ const examples = [
 ];
 
 export function Header() {
-  const { profile } = useActiveProfile();
+  const { data: profile } = useActiveProfile();
 
   return (
     <header>

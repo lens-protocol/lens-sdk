@@ -96,12 +96,12 @@ function setupTestScenario({
   return { gateway, uploadSpy };
 }
 
-const expectedFallbackMetadata = (request: CreatePostRequest) => ({
+const mandatoryFallbackMetadata = (request: CreatePostRequest) => ({
   metadata_id: expect.any(String),
   version: '2.0.0',
 
   attributes: [],
-  name: '',
+  name: 'none', // although "name" is not needed when a publication is not collectable, out Publication Metadata V2 schema requires it ¯\_(ツ)_/¯
 
   locale: request.locale,
   mainContentFocus: PublicationMainFocus[request.contentFocus],
@@ -121,7 +121,7 @@ describe(`Given an instance of ${PublicationCallGateway.name}`, () => {
       };
       expectedMetadata: Omit<
         PublicationMetadataV2Input,
-        keyof ReturnType<typeof expectedFallbackMetadata>
+        keyof ReturnType<typeof mandatoryFallbackMetadata>
       >;
       expectedMutationRequestDetails: {
         collectModule: CollectModuleParams;
@@ -225,7 +225,10 @@ describe(`Given an instance of ${PublicationCallGateway.name}`, () => {
             collect: mockNoCollectPolicy(),
             reference: ReferencePolicy.FOLLOWERS_ONLY,
           },
-          expectedMetadata: { content },
+          expectedMetadata: {
+            content,
+            name: 'none',
+          },
           expectedMutationRequestDetails: {
             collectModule: {
               revertCollectModule: true,
@@ -245,6 +248,7 @@ describe(`Given an instance of ${PublicationCallGateway.name}`, () => {
           requestVars: {
             content,
             collect: mockNoCollectPolicy(),
+            name: 'none',
           },
           expectedMetadata: { content },
           expectedMutationRequestDetails: {
@@ -605,7 +609,7 @@ describe(`Given an instance of ${PublicationCallGateway.name}`, () => {
           const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
           expect(uploadSpy).toHaveBeenCalledWith({
-            ...expectedFallbackMetadata(request),
+            ...mandatoryFallbackMetadata(request),
             ...expectedMetadata,
           });
           expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);

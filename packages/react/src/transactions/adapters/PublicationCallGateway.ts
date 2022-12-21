@@ -81,7 +81,7 @@ function createPublicationMetadata(request: CreatePostRequest): PublicationMetad
       return {
         ...sharedMetadata,
 
-        name: '',
+        name: 'none', // although "name" is not needed when a publication is not collectable, out Publication Metadata V2 schema requires it ¯\_(ツ)_/¯
         attributes: [],
       };
   }

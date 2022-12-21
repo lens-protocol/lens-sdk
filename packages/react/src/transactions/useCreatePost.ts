@@ -26,20 +26,21 @@ export function useCreatePost({ profile, upload }: UseCreatePostArgs) {
   const createPost = useCreatePostController({ upload });
 
   return {
-    create: (args: CreatePostArgs) => {
+    create: async (args: CreatePostArgs) => {
       setIsPending(true);
 
-      void createPost({
-        kind: TransactionKind.CREATE_POST,
-        delegate: profile.dispatcher !== null,
-        ...args,
-      })
-        .then((result) => {
-          if (result.isFailure()) {
-            setError(result.error);
-          }
-        })
-        .finally(() => setIsPending(false));
+      try {
+        const result = await createPost({
+          kind: TransactionKind.CREATE_POST,
+          delegate: profile.dispatcher !== null,
+          ...args,
+        });
+        if (result.isFailure()) {
+          setError(result.error);
+        }
+      } finally {
+        setIsPending(false);
+      }
     },
     error,
     isPending,

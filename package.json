@@ -25,8 +25,12 @@
         "react-native",
         "@babel/core",
         "@tanstack/query-core",
-        "csstype"
-      ]
+        "csstype",
+        "rollup"
+      ],
+      "allowedVersions": {
+        "@solana/web3.js": "1.52.0"
+      }
     }
   },
   "engines": {

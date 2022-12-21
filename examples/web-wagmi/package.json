@@ -13,6 +13,7 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "@bundlr-network/client": "^0.9.11",
     "@lens-protocol/react": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
     "ethers": "^5.7.2",
@@ -31,7 +32,8 @@
     "@vitejs/plugin-react": "^2.2.0",
     "prettier": "^2.8.1",
     "typescript": "^4.6.4",
-    "vite": "^3.2.3"
+    "vite": "^3.2.3",
+    "vite-plugin-node-polyfills": "^0.5.0"
   },
   "prettier": "@lens-protocol/prettier-config"
 }
