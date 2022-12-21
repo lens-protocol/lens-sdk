@@ -4,12 +4,13 @@ import { TransactionKind } from '@lens-protocol/domain/entities';
 import { ActiveProfile } from '@lens-protocol/domain/use-cases/profile';
 import {
   SupportedTransactionRequest,
-  TransactionResponders,
   TransactionQueue,
+  TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
 import { invariant } from '@lens-protocol/shared-kernel';
-import React, { useContext, ReactNode } from 'react';
+import { IStorage } from '@lens-protocol/storage';
+import React, { ReactNode, useContext } from 'react';
 
 import { NoopResponder } from './NoopResponder';
 import { LensConfig } from './config';
@@ -30,6 +31,10 @@ import { WalletGateway } from './wallet/adapters/WalletGateway';
 import { AccessTokenStorage } from './wallet/infrastructure/AccessTokenStorage';
 import { AuthApi } from './wallet/infrastructure/AuthApi';
 import { CredentialsStorage } from './wallet/infrastructure/CredentialsStorage';
+import {
+  createNotificationStorage,
+  UnreadNotificationsData,
+} from './wallet/infrastructure/NotificationStorage';
 import { ProviderFactory } from './wallet/infrastructure/ProviderFactory';
 import { SignerFactory } from './wallet/infrastructure/SignerFactory';
 import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
@@ -52,6 +57,7 @@ export type SharedDependencies = {
   transactionQueue: TransactionQueue<SupportedTransactionRequest>;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
+  notificationStorage: IStorage<UnreadNotificationsData>;
 };
 
 export type Handlers = {
@@ -64,6 +70,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const activeProfileStorage = createActiveProfileStorage(config.storage);
   const credentialsStorage = new CredentialsStorage(config.storage);
   const walletStorage = createWalletStorage(config.storage);
+  const notificationStorage = createNotificationStorage(config.storage);
   const transactionStorage = createTransactionStorage(config.storage);
 
   // apollo client
@@ -144,6 +151,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     transactionQueue,
     walletFactory,
     walletGateway,
+    notificationStorage,
   };
 }
 

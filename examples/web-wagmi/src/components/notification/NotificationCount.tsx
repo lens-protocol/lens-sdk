@@ -2,30 +2,25 @@ import { ProfileFieldsFragment, useUnreadNotificationCount } from '@lens-protoco
 
 import { LoginButton } from '../auth/LoginButton';
 import { WhenLoggedIn, WhenLoggedOut } from '../auth/auth';
-import { GenericError } from '../error/GenericError';
 
 type NotificationCountInnerProps = {
   profile: ProfileFieldsFragment;
 };
 
 function NotificationCountInner({ profile }: NotificationCountInnerProps) {
-  const {
-    data: unreadNotificationCount,
-    loading: notificationCountLoading,
-    error: notificationCountError,
-  } = useUnreadNotificationCount({ profileId: profile.id });
+  const { unreadNotificationCount, loading, clear } = useUnreadNotificationCount({
+    profileId: profile.id,
+  });
 
-  if (notificationCountLoading) return <div>Loading...</div>;
-
-  if (notificationCountError || !unreadNotificationCount) {
-    return <GenericError error={notificationCountError} />;
-  }
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       <p>
         Unread notification count for {profile.handle}: <span>{unreadNotificationCount}</span>
       </p>
+
+      <button onClick={clear}>Mark all notifications as read</button>
       <hr />
     </div>
   );
