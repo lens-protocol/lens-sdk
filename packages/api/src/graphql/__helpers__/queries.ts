@@ -21,8 +21,6 @@ import {
   TransactionErrorReasons,
   HasTxHashBeenIndexedQueryVariables,
   HasTxHashBeenIndexedDocument,
-  RelayResult,
-  CreateProfileMutation,
   EnabledModuleCurrenciesQuery,
   EnabledModuleCurrenciesDocument,
 } from '../generated';
@@ -176,12 +174,6 @@ export function mockProxyActionStatusMockedResponse(instructions: {
             : mockProxyActionStatusResult(instructions.result),
       },
     },
-  };
-}
-
-export function mockCreateProfileMutation(result: Required<RelayResult>): CreateProfileMutation {
-  return {
-    result,
   };
 }
 

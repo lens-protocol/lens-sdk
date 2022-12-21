@@ -3,7 +3,7 @@ import { PublicationType } from '../../entities/Publication';
 import {
   DelegableProtocolCallUseCase,
   IProtocolCallPresenter,
-  IProtocolCallGateway,
+  IDelegableProtocolCallGateway,
 } from '../transactions/DelegableProtocolCallUseCase';
 
 export type CreateMirrorRequest = {
@@ -14,7 +14,7 @@ export type CreateMirrorRequest = {
   delegate: boolean;
 };
 
-export type IMirrorCallGateway = IProtocolCallGateway<CreateMirrorRequest>;
+export type IMirrorCallGateway = IDelegableProtocolCallGateway<CreateMirrorRequest>;
 
 export type IMirrorCreationPresenter = IProtocolCallPresenter;
 

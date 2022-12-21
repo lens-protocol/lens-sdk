@@ -4157,6 +4157,11 @@ export type PostFragment = { __typename: 'Post' } & Pick<
     canMirror: { __typename: 'CanMirrorResponse' } & Pick<CanMirrorResponse, 'result'>;
   };
 
+export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain' } & Pick<
+  Eip712TypedDataDomain,
+  'name' | 'chainId' | 'version' | 'verifyingContract'
+>;
+
 export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type EnabledModuleCurrenciesQuery = {
@@ -4288,6 +4293,48 @@ export type UnreadNotificationCountQuery = {
   result: { __typename: 'PaginatedNotificationResult' } & {
     pageInfo: { __typename: 'PaginatedResultInfo' } & Pick<PaginatedResultInfo, 'totalCount'>;
   };
+};
+
+export type CreatePostTypedDataMutationVariables = Exact<{
+  request: CreatePublicPostRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreatePostTypedDataMutation = {
+  result: { __typename: 'CreatePostBroadcastItemResult' } & Pick<
+    CreatePostBroadcastItemResult,
+    'id' | 'expiresAt'
+  > & {
+      typedData: { __typename: 'CreatePostEIP712TypedData' } & {
+        types: { __typename: 'CreatePostEIP712TypedDataTypes' } & {
+          PostWithSig: Array<
+            { __typename: 'EIP712TypedDataField' } & Pick<Eip712TypedDataField, 'name' | 'type'>
+          >;
+        };
+        domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
+        value: { __typename: 'CreatePostEIP712TypedDataValue' } & Pick<
+          CreatePostEip712TypedDataValue,
+          | 'nonce'
+          | 'deadline'
+          | 'profileId'
+          | 'contentURI'
+          | 'collectModule'
+          | 'collectModuleInitData'
+          | 'referenceModule'
+          | 'referenceModuleInitData'
+        >;
+      };
+    };
+};
+
+export type CreatePostViaDispatcherMutationVariables = Exact<{
+  request: CreatePublicPostRequest;
+}>;
+
+export type CreatePostViaDispatcherMutation = {
+  result:
+    | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
+    | ({ __typename: 'RelayError' } & RelayErrorFragment);
 };
 
 export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
@@ -4494,6 +4541,16 @@ export type HasTxHashBeenIndexedQuery = {
         'indexed' | 'txHash'
       >)
     | ({ __typename: 'TransactionError' } & Pick<TransactionError, 'reason'>);
+};
+
+export type BroadcastProtocolCallMutationVariables = Exact<{
+  request: BroadcastRequest;
+}>;
+
+export type BroadcastProtocolCallMutation = {
+  result:
+    | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
+    | ({ __typename: 'RelayError' } & RelayErrorFragment);
 };
 
 export const PublicationStatsFragmentDoc = gql`
@@ -4931,6 +4988,14 @@ export const CommonPaginatedResultInfoFragmentDoc = gql`
     prev
     next
     totalCount
+  }
+`;
+export const Eip712TypedDataDomainFragmentDoc = gql`
+  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    name
+    chainId
+    version
+    verifyingContract
   }
 `;
 export const FeedItemFragmentDoc = gql`
@@ -5677,6 +5742,136 @@ export type UnreadNotificationCountQueryResult = Apollo.QueryResult<
   UnreadNotificationCountQuery,
   UnreadNotificationCountQueryVariables
 >;
+export const CreatePostTypedDataDocument = gql`
+  mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
+    result: createPostTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          PostWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          contentURI
+          collectModule
+          collectModuleInitData
+          referenceModule
+          referenceModuleInitData
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export type CreatePostTypedDataMutationFn = Apollo.MutationFunction<
+  CreatePostTypedDataMutation,
+  CreatePostTypedDataMutationVariables
+>;
+
+/**
+ * __useCreatePostTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreatePostTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostTypedDataMutation, { data, loading, error }] = useCreatePostTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreatePostTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePostTypedDataMutation,
+    CreatePostTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePostTypedDataMutation, CreatePostTypedDataMutationVariables>(
+    CreatePostTypedDataDocument,
+    options,
+  );
+}
+export type CreatePostTypedDataMutationHookResult = ReturnType<
+  typeof useCreatePostTypedDataMutation
+>;
+export type CreatePostTypedDataMutationResult = Apollo.MutationResult<CreatePostTypedDataMutation>;
+export type CreatePostTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreatePostTypedDataMutation,
+  CreatePostTypedDataMutationVariables
+>;
+export const CreatePostViaDispatcherDocument = gql`
+  mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
+    result: createPostViaDispatcher(request: $request) {
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export type CreatePostViaDispatcherMutationFn = Apollo.MutationFunction<
+  CreatePostViaDispatcherMutation,
+  CreatePostViaDispatcherMutationVariables
+>;
+
+/**
+ * __useCreatePostViaDispatcherMutation__
+ *
+ * To run a mutation, you first call `useCreatePostViaDispatcherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostViaDispatcherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostViaDispatcherMutation, { data, loading, error }] = useCreatePostViaDispatcherMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreatePostViaDispatcherMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePostViaDispatcherMutation,
+    CreatePostViaDispatcherMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreatePostViaDispatcherMutation,
+    CreatePostViaDispatcherMutationVariables
+  >(CreatePostViaDispatcherDocument, options);
+}
+export type CreatePostViaDispatcherMutationHookResult = ReturnType<
+  typeof useCreatePostViaDispatcherMutation
+>;
+export type CreatePostViaDispatcherMutationResult =
+  Apollo.MutationResult<CreatePostViaDispatcherMutation>;
+export type CreatePostViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
+  CreatePostViaDispatcherMutation,
+  CreatePostViaDispatcherMutationVariables
+>;
 export const ProfilesToFollowDocument = gql`
   query ProfilesToFollow($observerId: ProfileId) {
     result: recommendedProfiles {
@@ -6232,6 +6427,63 @@ export type HasTxHashBeenIndexedLazyQueryHookResult = ReturnType<
 export type HasTxHashBeenIndexedQueryResult = Apollo.QueryResult<
   HasTxHashBeenIndexedQuery,
   HasTxHashBeenIndexedQueryVariables
+>;
+export const BroadcastProtocolCallDocument = gql`
+  mutation BroadcastProtocolCall($request: BroadcastRequest!) {
+    result: broadcast(request: $request) {
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export type BroadcastProtocolCallMutationFn = Apollo.MutationFunction<
+  BroadcastProtocolCallMutation,
+  BroadcastProtocolCallMutationVariables
+>;
+
+/**
+ * __useBroadcastProtocolCallMutation__
+ *
+ * To run a mutation, you first call `useBroadcastProtocolCallMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBroadcastProtocolCallMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [broadcastProtocolCallMutation, { data, loading, error }] = useBroadcastProtocolCallMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useBroadcastProtocolCallMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    BroadcastProtocolCallMutation,
+    BroadcastProtocolCallMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<BroadcastProtocolCallMutation, BroadcastProtocolCallMutationVariables>(
+    BroadcastProtocolCallDocument,
+    options,
+  );
+}
+export type BroadcastProtocolCallMutationHookResult = ReturnType<
+  typeof useBroadcastProtocolCallMutation
+>;
+export type BroadcastProtocolCallMutationResult =
+  Apollo.MutationResult<BroadcastProtocolCallMutation>;
+export type BroadcastProtocolCallMutationOptions = Apollo.BaseMutationOptions<
+  BroadcastProtocolCallMutation,
+  BroadcastProtocolCallMutationVariables
 >;
 export type AccessConditionOutputKeySpecifier = (
   | 'nft'

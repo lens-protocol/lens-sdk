@@ -289,3 +289,10 @@ fragment Post on Post {
   isOptimisticMirroredByMe @client
   ownedByMe @client
 }
+
+fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+  name
+  chainId
+  version
+  verifyingContract
+}

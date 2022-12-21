@@ -19,7 +19,7 @@ import {
   mockTransactionHash,
   mockUnsignedProtocolCall,
 } from '../../../entities/__helpers__/mocks';
-import { IProtocolCallGateway, WithDelegateFlag } from '../DelegableProtocolCallUseCase';
+import { IDelegableProtocolCallGateway, WithDelegateFlag } from '../DelegableProtocolCallUseCase';
 import {
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
@@ -107,31 +107,18 @@ export function mockIUnsignedProtocolCallGateway<T extends TransactionRequestMod
   return gateway;
 }
 
-export function mockIProtocolCallTransactionGateway<T extends TransactionRequestModel>({
+export function mockIDelegableProtocolCallGateway<T extends TransactionRequestModel>({
   request,
-  nonce,
-  unsignedCall = mockUnsignedProtocolCall(request),
   delegatedTransaction,
 }: {
   request: T;
-  nonce?: Nonce;
-  unsignedCall?: IUnsignedProtocolCall<T>;
+  delegatedTransaction: NativeTransaction<T>;
+}): IDelegableProtocolCallGateway<T> {
+  const gateway = mock<IDelegableProtocolCallGateway<T>>();
 
-  delegatedTransaction?: NativeTransaction<T>;
-}): IProtocolCallGateway<T> {
-  const gateway = mock<IProtocolCallGateway<T>>();
-
-  if (unsignedCall) {
-    when(gateway.createUnsignedProtocolCall)
-      .calledWith(request, nonce)
-      .mockResolvedValue(unsignedCall);
-  }
-
-  if (delegatedTransaction) {
-    when(gateway.createDelegatedTransaction)
-      .calledWith(request)
-      .mockResolvedValue(delegatedTransaction);
-  }
+  when(gateway.createDelegatedTransaction)
+    .calledWith(request)
+    .mockResolvedValue(delegatedTransaction);
 
   return gateway;
 }

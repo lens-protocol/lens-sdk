@@ -92,7 +92,7 @@ export function mockProfileFieldsFragment(
 
 export function mockRelayerResultFragment(
   txHash: string = mockTransactionHash(),
-): Required<RelayerResultFragment> {
+): RelayerResultFragment {
   return {
     __typename: 'RelayerResult',
     txHash,
@@ -100,7 +100,7 @@ export function mockRelayerResultFragment(
   };
 }
 
-export function mockRelayErrorFragment(reason: RelayErrorReasons): Required<RelayErrorFragment> {
+export function mockRelayErrorFragment(reason: RelayErrorReasons): RelayErrorFragment {
   return {
     __typename: 'RelayError',
     reason,

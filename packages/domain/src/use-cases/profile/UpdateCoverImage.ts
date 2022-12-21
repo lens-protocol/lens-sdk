@@ -1,7 +1,7 @@
 import { TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
-  IProtocolCallGateway,
+  IDelegableProtocolCallGateway,
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IProtocolCallPresenter } from '../transactions/ProtocolCallUseCase';
 
@@ -12,7 +12,7 @@ export type UpdateCoverImageRequest = {
   delegate: boolean;
 };
 
-export type ICoverImageCallGateway = IProtocolCallGateway<UpdateCoverImageRequest>;
+export type ICoverImageCallGateway = IDelegableProtocolCallGateway<UpdateCoverImageRequest>;
 
 export type IUpdateCoverImagePresenter = IProtocolCallPresenter;
 

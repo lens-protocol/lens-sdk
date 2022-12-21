@@ -8,13 +8,13 @@ export interface ISignlessProtocolCallRelayer<T extends TransactionRequestModel>
   relaySignlessProtocolCall(request: T): Promise<ProxyTransaction<T>>;
 }
 
-export type ISignlessProtocolCallRelayerCallPresenter = IGenericResultPresenter<void, Error>;
+export type ISignlessProtocolCallPresenter = IGenericResultPresenter<void, Error>;
 
 export class SignlessProtocolCallUseCase<T extends TransactionRequestModel> {
   constructor(
     protected readonly relayer: ISignlessProtocolCallRelayer<T>,
     protected readonly transactionQueue: TransactionQueue<TransactionRequestModel>,
-    protected readonly presenter: ISignlessProtocolCallRelayerCallPresenter,
+    protected readonly presenter: ISignlessProtocolCallPresenter,
   ) {}
 
   async execute(request: T) {

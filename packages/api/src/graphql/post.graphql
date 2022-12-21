@@ -1,0 +1,39 @@
+mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
+  result: createPostTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        PostWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        collectModule
+        collectModuleInitData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+}
+
+mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
+  result: createPostViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
