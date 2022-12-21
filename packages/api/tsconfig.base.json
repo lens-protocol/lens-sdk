@@ -6,8 +6,11 @@
     "declarationMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
     "isolatedModules": false,
     "jsx": "react-jsx",
+    "lib": ["dom", "esnext"],
+    "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
@@ -16,9 +19,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "lib": ["dom", "esnext"],
-    "target": "esnext",
-    "moduleResolution": "node"
+    "target": "esnext"
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src"]
