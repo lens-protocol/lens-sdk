@@ -71,7 +71,7 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 
 - [x] `usePublication`
 - [x] `usePublicationComments`
-- [ ] `usePublications`
+- [x] `usePublications`
 - [ ] `useCreatePost`
   - [ ] sign-less, gas-less, instant (via Data Availability)
   - [ ] sign-less, gas-less
