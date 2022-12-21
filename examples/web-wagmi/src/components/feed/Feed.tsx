@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { Loading } from '../loading/Loading';
 import { PublicationCard } from '../publication/PublicationCard';
+import { CreatePost } from './CreatePost';
 
 type PublicationProps = {
   feedItem: FeedItemFragment;
@@ -36,6 +37,8 @@ export function Feed() {
 
   return (
     <div>
+      <CreatePost />
+
       <h2>Feed</h2>
 
       {infiniteScroll.data

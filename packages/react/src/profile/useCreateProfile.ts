@@ -9,16 +9,18 @@ export function useCreateProfile() {
   const createProfile = useCreateProfileController();
 
   return {
-    create: (handle: string) => {
+    create: async (handle: string) => {
       setIsPending(true);
 
-      void createProfile(handle)
-        .then((result) => {
-          if (result.isFailure()) {
-            setError(result.error);
-          }
-        })
-        .finally(() => setIsPending(false));
+      try {
+        const result = await createProfile(handle);
+
+        if (result.isFailure()) {
+          setError(result.error);
+        }
+      } finally {
+        setIsPending(false);
+      }
     },
     error,
     isPending,

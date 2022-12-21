@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 
 export function useIsLoggedIn() {
   const { address } = useAccount();
-  const { profile } = useActiveProfile();
+  const { data: profile } = useActiveProfile();
 
   return Boolean(address && profile);
 }
@@ -20,7 +20,7 @@ export type WhenLoggedInProps = {
 
 export function WhenLoggedIn({ children }: WhenLoggedInProps) {
   const { address: walletAddress } = useAccount();
-  const { profile } = useActiveProfile();
+  const { data: profile } = useActiveProfile();
 
   if (!walletAddress || !profile) {
     return null;
