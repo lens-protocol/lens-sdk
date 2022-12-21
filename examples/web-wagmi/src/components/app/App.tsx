@@ -58,8 +58,8 @@ export function App() {
                   <Route path="id/:profileId" element={<ProfileById />} />
                 </Route>
                 <Route path="/unread-notification-count" element={<NotificationCount />} />
-              <Route path="/notifications" element={<Notifications />} />
-            </Routes>
+                <Route path="/notifications" element={<Notifications />} />
+              </Routes>
             </GenericErrorBoundary>
             <Toaster />
           </div>
