@@ -4523,6 +4523,25 @@ export type PublicationQuery = {
   >;
 };
 
+export type PublicationsQueryVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
+}>;
+
+export type PublicationsQuery = {
+  result: { __typename: 'PaginatedPublicationResult' } & {
+    items: Array<
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Comment' } & CommentFragment)
+      | ({ __typename: 'Mirror' } & MirrorFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  };
+};
+
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
   RelayerResult,
   'txHash' | 'txId'
@@ -6365,6 +6384,88 @@ export type PublicationLazyQueryHookResult = ReturnType<typeof usePublicationLaz
 export type PublicationQueryResult = Apollo.QueryResult<
   PublicationQuery,
   PublicationQueryVariables
+>;
+export const PublicationsDocument = gql`
+  query Publications(
+    $profileId: ProfileId!
+    $observerId: ProfileId
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $publicationTypes: [PublicationTypes!]
+  ) {
+    result: publications(
+      request: {
+        profileId: $profileId
+        limit: $limit
+        cursor: $cursor
+        publicationTypes: $publicationTypes
+      }
+    ) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __usePublicationsQuery__
+ *
+ * To run a query within a React component, call `usePublicationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationsQuery({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *      observerId: // value for 'observerId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      publicationTypes: // value for 'publicationTypes'
+ *   },
+ * });
+ */
+export function usePublicationsQuery(
+  baseOptions: Apollo.QueryHookOptions<PublicationsQuery, PublicationsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationsQuery, PublicationsQueryVariables>(
+    PublicationsDocument,
+    options,
+  );
+}
+export function usePublicationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<PublicationsQuery, PublicationsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationsQuery, PublicationsQueryVariables>(
+    PublicationsDocument,
+    options,
+  );
+}
+export type PublicationsQueryHookResult = ReturnType<typeof usePublicationsQuery>;
+export type PublicationsLazyQueryHookResult = ReturnType<typeof usePublicationsLazyQuery>;
+export type PublicationsQueryResult = Apollo.QueryResult<
+  PublicationsQuery,
+  PublicationsQueryVariables
 >;
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {

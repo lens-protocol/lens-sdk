@@ -13,3 +13,5 @@ export function assertRequiredSigner(signer: Signer): asserts signer is Required
     'The provided signer is not supported. Make sure the Signer implements TypedDataSigner and is connected to a JsonRpcProvider.',
   );
 }
+
+export const DEFAULT_PAGINATED_QUERY_LIMIT = 10;
