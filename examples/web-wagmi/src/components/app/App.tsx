@@ -13,6 +13,8 @@ import { GenericError } from '../error/GenericError';
 import { Feed } from '../feed/Feed';
 import { BackButton } from '../header/BackButton';
 import { Header } from '../header/Header';
+import { NotificationCount } from '../notification/NotificationCount';
+import { Notifications } from '../notification/Notifications';
 import { ExploreProfiles } from '../profile/ExploreProfiles';
 import { ProfileByHandle } from '../profile/ProfileByHandle';
 import { ProfileById } from '../profile/ProfileById';
@@ -55,6 +57,8 @@ export function App() {
                   <Route path="handle/:handle" element={<ProfileByHandle />} />
                   <Route path="id/:profileId" element={<ProfileById />} />
                 </Route>
+                <Route path="/unread-notification-count" element={<NotificationCount />} />
+                <Route path="/notifications" element={<Notifications />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

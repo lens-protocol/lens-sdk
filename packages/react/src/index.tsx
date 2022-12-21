@@ -8,4 +8,5 @@ export * from './transactions';
 export * from './wallet';
 export * from './utils';
 
+export * from './notifications';
 export type { ReadResult, PaginatedReadResult } from './helpers';

@@ -6,6 +6,7 @@ import { createApolloCache, TypePolicies } from './createApolloCache';
 import { createAuthLink } from './createAuthLink';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
+import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 
@@ -20,6 +21,7 @@ function createTypePolicies(): TypePolicies {
       fields: {
         feed: createFeedFieldPolicy(),
         exploreProfiles: createExploreProfilesFieldPolicy(),
+        notifications: createNotificationsFieldPolicy(),
       },
     },
   };

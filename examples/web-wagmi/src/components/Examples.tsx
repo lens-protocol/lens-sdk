@@ -13,6 +13,14 @@ const examples = [
     label: 'Profiles to Follow',
     path: '/profiles-to-follow',
   },
+  {
+    label: 'Unread Notification Count',
+    path: '/unread-notification-count',
+  },
+  {
+    label: 'Notifications',
+    path: '/notifications',
+  },
 ];
 
 export function Examples() {
