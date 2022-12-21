@@ -9,12 +9,12 @@ type PublicationProps = {
 
 export function PublicationCard({ publication }: PublicationProps) {
   return (
-    <div>
+    <article>
       <Link to={`/profile/handle/${publication.profile.handle}`}>
         <ProfilePicture picture={publication.profile.picture} />
       </Link>
-      <h2>{publication.profile.name ?? `@${publication.profile.handle}`}</h2>
+      <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
       <p>{publication.metadata.content}</p>
-    </div>
+    </article>
   );
 }

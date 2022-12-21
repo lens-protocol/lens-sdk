@@ -2,7 +2,7 @@ import { useExploreProfiles } from '@lens-protocol/react';
 
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { Loading } from '../loading/Loading';
-import { ProfilePicture } from './ProfilePicture';
+import { ProfileCard } from './ProfileCard';
 
 export function ExploreProfiles() {
   const { data, loading, hasMore, observeRef } = useInfiniteScroll(useExploreProfiles());
@@ -14,16 +14,10 @@ export function ExploreProfiles() {
   return (
     <div>
       <>
-        <h1>Explore Profiles</h1>
+        <h2>Explore Profiles</h2>
 
         {data.map((item) => (
-          <>
-            <div key={item.id} style={{ margin: '1rem' }}>
-              <ProfilePicture picture={item.picture} />
-              <p>{item.handle}</p>
-            </div>
-            <hr />
-          </>
+          <ProfileCard key={item.id} profile={item} />
         ))}
 
         {hasMore && <p ref={observeRef}>Loading more...</p>}

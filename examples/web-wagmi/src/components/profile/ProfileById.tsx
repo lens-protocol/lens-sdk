@@ -16,9 +16,8 @@ export function ProfileByIdLayout({ profileId }: ProfileByIdLayoutProps) {
 
   return (
     <div>
-      <h1>Profile by ID</h1>
+      <h2>Profile by ID</h2>
       <ProfileCard profile={profile} />
-      <hr />
       <pre>{JSON.stringify(profile, null, 2)}</pre>
     </div>
   );

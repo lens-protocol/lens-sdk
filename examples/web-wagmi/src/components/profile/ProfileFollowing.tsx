@@ -12,7 +12,7 @@ export function ProfilesFollowing({ walletAddress }: ProfileFollowingProps) {
   if (loading) return <Loading />;
   return (
     <div>
-      <h2>Following</h2>
+      <h3>Following</h3>
       <div>
         {followings.map((following) => (
           <ProfileCard key={following.profile.handle} profile={following.profile} />

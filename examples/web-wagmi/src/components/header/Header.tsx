@@ -1,49 +1,75 @@
 import { useActiveProfile } from '@lens-protocol/react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { LoginButton } from '../auth/LoginButton';
+
+const examples = [
+  {
+    label: 'Home',
+    path: '/',
+  },
+  {
+    label: 'Feed',
+    path: '/feed',
+  },
+  {
+    label: 'Explore Profiles',
+    path: '/explore-profiles',
+  },
+  {
+    label: 'Profiles to Follow',
+    path: '/profiles-to-follow',
+  },
+  {
+    label: 'Unread Notification Count',
+    path: '/unread-notification-count',
+  },
+  {
+    label: 'Notifications',
+    path: '/notifications',
+  },
+];
 
 export function Header() {
   const { profile } = useActiveProfile();
 
   return (
-    <div
-      style={{
-        backgroundColor: '#eeee',
-        color: '#242424',
-        padding: '1.5rem',
-        position: 'sticky',
-        top: 0,
-        width: '100%',
-        boxSizing: 'border-box',
-      }}
-    >
+    <header>
+      <h1>Lens SDK</h1>
+
+      <p>
+        Example app that demonstrates a possible integration strategy with&nbsp;
+        <a href="https://wagmi.sh/">wagmi</a>.
+      </p>
+
       <div
         style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          gap: '1rem',
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem',
+          width: 'auto',
         }}
       >
-        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <span style={{ fontWeight: 'bold' }}>@lens-protocol/react - wagmi</span>
-        </Link>
+        {profile && <strong>{profile.handle}</strong>}
 
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1rem',
-          }}
-        >
-          {profile && <strong>{profile.handle}</strong>}
-
-          <LoginButton />
-        </div>
+        <LoginButton />
       </div>
-    </div>
+
+      <nav>
+        {examples.map(({ path, label }) => (
+          <NavLink
+            key={path}
+            to={path}
+            className={({ isActive }) => (isActive ? 'current' : undefined)}
+          >
+            {label}
+          </NavLink>
+        ))}
+      </nav>
+    </header>
   );
 }

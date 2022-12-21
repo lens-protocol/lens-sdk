@@ -29,7 +29,7 @@ function NotificationCountInner({ profile }: NotificationCountInnerProps) {
 export function NotificationCount() {
   return (
     <>
-      <h1>Notification count</h1>
+      <h2>Notification count</h2>
       <WhenLoggedIn>{({ profile }) => <NotificationCountInner profile={profile} />}</WhenLoggedIn>
       <WhenLoggedOut>
         <div>

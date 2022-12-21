@@ -26,10 +26,7 @@ function NotificationsInner({ profile }: NotificationsInnerProps) {
   return (
     <div>
       {notifications.map((notification) => (
-        <div key={notification.notificationId}>
-          <NotificationItem notification={notification} />
-          <hr />
-        </div>
+        <NotificationItem key={notification.notificationId} notification={notification} />
       ))}
 
       {hasMore && <p ref={observeRef}>Loading more...</p>}
@@ -40,7 +37,7 @@ function NotificationsInner({ profile }: NotificationsInnerProps) {
 export function Notifications() {
   return (
     <>
-      <h1>Notifications</h1>
+      <h2>Notifications</h2>
       <WhenLoggedIn>{({ profile }) => <NotificationsInner profile={profile} />}</WhenLoggedIn>
       <WhenLoggedOut>
         <div>

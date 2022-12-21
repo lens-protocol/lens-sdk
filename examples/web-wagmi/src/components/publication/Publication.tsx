@@ -16,9 +16,9 @@ function PublicationLayout({ publicationId }: PublicationLayoutProps) {
   if (publicationLoading || commentsLoading) return <Loading />;
   return (
     <div>
-      <h1>Publication</h1>
+      <h2>Publication</h2>
       <PublicationCard publication={publication} />
-      <h2>Comments</h2>
+      <h3>Comments</h3>
       {comments.map((comment) => (
         <PublicationCard key={comment.id} publication={comment} />
       ))}

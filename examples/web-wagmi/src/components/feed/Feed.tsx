@@ -9,7 +9,7 @@ type PublicationProps = {
   feedItem: FeedItemFragment;
 };
 
-function Publication({ feedItem: { root: publication, comments } }: PublicationProps) {
+function Publication({ feedItem: { root: publication } }: PublicationProps) {
   return (
     <Link
       to={`/publication/${publication.id}`}
@@ -19,8 +19,6 @@ function Publication({ feedItem: { root: publication, comments } }: PublicationP
       }}
     >
       <PublicationCard publication={publication} />
-      <p>Total comments: {comments?.length ?? 0}</p>
-      <hr />
     </Link>
   );
 }
@@ -38,7 +36,7 @@ export function Feed() {
 
   return (
     <div>
-      <h1>Feed</h1>
+      <h2>Feed</h2>
 
       {infiniteScroll.data
         .filter((i) => isPostPublication(i.root))
