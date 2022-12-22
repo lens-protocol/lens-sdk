@@ -8,7 +8,7 @@ import { waitFor } from '@testing-library/react';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useFeed } from '../useFeed';
 
-describe('Given the useFeed hook', () => {
+describe(`Given the ${useFeed.name} hook`, () => {
   const profileId = '0x2001';
   const mockFeed = [mockFeedItem({}), mockFeedItem({})];
 

@@ -9,7 +9,7 @@ import { waitFor } from '@testing-library/react';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { usePublications } from '../usePublications';
 
-describe('Given the usePublications hook', () => {
+describe(`Given the ${usePublications.name} hook`, () => {
   const mockPublication: PostFragment = mockPost();
 
   describe('when the query returns data successfully', () => {
