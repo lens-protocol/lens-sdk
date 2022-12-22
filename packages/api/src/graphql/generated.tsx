@@ -3862,7 +3862,7 @@ export type AuthRefreshMutation = {
   result: Pick<AuthenticationResult, 'accessToken' | 'refreshToken'>;
 };
 
-export type CommentWithFirstCommentFragment = {
+export type CommentWithFirstCommentFragment = { __typename: 'Comment' } & {
   firstComment: Maybe<CommentFragment>;
 } & CommentFragment;
 
@@ -3881,50 +3881,64 @@ export type CommentsQuery = {
   };
 };
 
-export type Erc20Fragment = Pick<Erc20, 'name' | 'symbol' | 'decimals' | 'address'>;
-
-export type ModuleFeeAmountFragment = Pick<ModuleFeeAmount, 'value'> & { asset: Erc20Fragment };
-
-type ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment = Pick<
-  FollowOnlyReferenceModuleSettings,
-  'contractAddress'
+export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
+  Erc20,
+  'name' | 'symbol' | 'decimals' | 'address'
 >;
 
-type ReferenceModule_UnknownReferenceModuleSettings_Fragment = {};
+export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
+  ModuleFeeAmount,
+  'value'
+> & { asset: Erc20Fragment };
 
-type ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment = {};
+type ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment = {
+  __typename: 'FollowOnlyReferenceModuleSettings';
+} & Pick<FollowOnlyReferenceModuleSettings, 'contractAddress'>;
+
+type ReferenceModule_UnknownReferenceModuleSettings_Fragment = {
+  __typename: 'UnknownReferenceModuleSettings';
+};
+
+type ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment = {
+  __typename: 'DegreesOfSeparationReferenceModuleSettings';
+};
 
 export type ReferenceModuleFragment =
   | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
   | ReferenceModule_UnknownReferenceModuleSettings_Fragment
   | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment;
 
-export type FreeCollectModuleSettingsFragment = Pick<
+export type FreeCollectModuleSettingsFragment = { __typename: 'FreeCollectModuleSettings' } & Pick<
   FreeCollectModuleSettings,
   'contractAddress' | 'followerOnly'
 >;
 
-export type FeeCollectModuleSettingsFragment = Pick<
+export type FeeCollectModuleSettingsFragment = { __typename: 'FeeCollectModuleSettings' } & Pick<
   FeeCollectModuleSettings,
   'contractAddress' | 'followerOnly' | 'recipient' | 'referralFee'
 > & { amount: ModuleFeeAmountFragment };
 
-export type LimitedFeeCollectModuleSettingsFragment = Pick<
+export type LimitedFeeCollectModuleSettingsFragment = {
+  __typename: 'LimitedFeeCollectModuleSettings';
+} & Pick<
   LimitedFeeCollectModuleSettings,
   'collectLimit' | 'contractAddress' | 'followerOnly' | 'recipient' | 'referralFee'
 > & { amount: ModuleFeeAmountFragment };
 
-export type LimitedTimedFeeCollectModuleSettingsFragment = Pick<
+export type LimitedTimedFeeCollectModuleSettingsFragment = {
+  __typename: 'LimitedTimedFeeCollectModuleSettings';
+} & Pick<
   LimitedTimedFeeCollectModuleSettings,
   'collectLimit' | 'contractAddress' | 'followerOnly' | 'endTimestamp' | 'recipient' | 'referralFee'
 > & { amount: ModuleFeeAmountFragment };
 
-export type RevertCollectModuleSettingsFragment = Pick<
-  RevertCollectModuleSettings,
-  'contractAddress'
->;
+export type RevertCollectModuleSettingsFragment = {
+  __typename: 'RevertCollectModuleSettings';
+} & Pick<RevertCollectModuleSettings, 'contractAddress'>;
 
-export type TimedFeeCollectModuleSettingsFragment = Pick<
+export type TimedFeeCollectModuleSettingsFragment = {
+  __typename: 'TimedFeeCollectModuleSettings';
+} & Pick<
   TimedFeeCollectModuleSettings,
   'contractAddress' | 'followerOnly' | 'endTimestamp' | 'recipient' | 'referralFee'
 > & { amount: ModuleFeeAmountFragment };
@@ -3966,16 +3980,19 @@ export type CollectModuleFragment =
   | CollectModule_TimedFeeCollectModuleSettings_Fragment
   | CollectModule_UnknownCollectModuleSettings_Fragment;
 
-export type WalletFragment = Pick<Wallet, 'address'> & {
-  defaultProfile: Maybe<ProfileFieldsFragment>;
-};
+export type WalletFragment = { __typename: 'Wallet' } & Pick<Wallet, 'address'> & {
+    defaultProfile: Maybe<ProfileFieldsFragment>;
+  };
 
 export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
   MetadataOutput,
   'name' | 'description' | 'mainContentFocus' | 'content'
 > & { media: Array<MediaSetFragment>; attributes: Array<MetadataAttributeOutputFragment> };
 
-export type MetadataAttributeOutputFragment = Pick<MetadataAttributeOutput, 'traitType' | 'value'>;
+export type MetadataAttributeOutputFragment = { __typename: 'MetadataAttributeOutput' } & Pick<
+  MetadataAttributeOutput,
+  'traitType' | 'value'
+>;
 
 export type PublicationStatsFragment = { __typename: 'PublicationStats' } & Pick<
   PublicationStats,
@@ -4014,7 +4031,9 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
     canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
-export type MirrorFragment = { mirrorOf: PostFragment | CommentFragment } & MirrorBaseFragment;
+export type MirrorFragment = { __typename: 'Mirror' } & {
+  mirrorOf: PostFragment | CommentFragment;
+} & MirrorBaseFragment;
 
 export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
   Comment,
@@ -4050,7 +4069,7 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
     canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
-export type CommonPaginatedResultInfoFragment = Pick<
+export type CommonPaginatedResultInfoFragment = { __typename: 'PaginatedResultInfo' } & Pick<
   PaginatedResultInfo,
   'prev' | 'next' | 'totalCount'
 >;
@@ -4094,7 +4113,7 @@ export type PostFragment = { __typename: 'Post' } & Pick<
     canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
-export type Eip712TypedDataDomainFragment = Pick<
+export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain' } & Pick<
   Eip712TypedDataDomain,
   'name' | 'chainId' | 'version' | 'verifyingContract'
 >;
@@ -4130,7 +4149,7 @@ export type ExploreProfilesQuery = {
   result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
-export type CommentWithCommentedPublicationFieldsFragment = {
+export type CommentWithCommentedPublicationFieldsFragment = { __typename: 'Comment' } & {
   commentOn: Maybe<PostFragment | CommentFragment | MirrorFragment>;
 } & CommentFragment;
 
@@ -4321,15 +4340,11 @@ export type CreateProfileMutationVariables = Exact<{
   request: CreateProfileRequest;
 }>;
 
-export type CreateProfileMutation = {
-  result:
-    | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
-    | ({ __typename: 'RelayError' } & RelayErrorFragment);
-};
+export type CreateProfileMutation = { result: RelayerResultFragment | RelayErrorFragment };
 
-export type FollowerFragment = { wallet: WalletFragment };
+export type FollowerFragment = { __typename: 'Follower' } & { wallet: WalletFragment };
 
-export type FollowingFragment = { profile: ProfileFieldsFragment };
+export type FollowingFragment = { __typename: 'Following' } & { profile: ProfileFieldsFragment };
 
 export type ProfileFollowersQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
@@ -4353,24 +4368,27 @@ export type ProfileFollowingQuery = {
   result: { items: Array<FollowingFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
-export type ProxyActionStatusResultFragment = Pick<
+export type ProxyActionStatusResultFragment = { __typename: 'ProxyActionStatusResult' } & Pick<
   ProxyActionStatusResult,
   'txHash' | 'txId' | 'status'
 >;
 
-export type ProxyActionErrorFragment = Pick<ProxyActionError, 'reason' | 'lastKnownTxId'>;
+export type ProxyActionErrorFragment = { __typename: 'ProxyActionError' } & Pick<
+  ProxyActionError,
+  'reason' | 'lastKnownTxId'
+>;
 
-export type ProxyActionQueuedFragment = Pick<ProxyActionQueued, 'queuedAt'>;
+export type ProxyActionQueuedFragment = { __typename: 'ProxyActionQueued' } & Pick<
+  ProxyActionQueued,
+  'queuedAt'
+>;
 
 export type ProxyActionStatusQueryVariables = Exact<{
   proxyActionId: Scalars['ProxyActionId'];
 }>;
 
 export type ProxyActionStatusQuery = {
-  result:
-    | ({ __typename: 'ProxyActionStatusResult' } & ProxyActionStatusResultFragment)
-    | ({ __typename: 'ProxyActionError' } & ProxyActionErrorFragment)
-    | ({ __typename: 'ProxyActionQueued' } & ProxyActionQueuedFragment);
+  result: ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment;
 };
 
 export type ProxyActionMutationVariables = Exact<{
@@ -4408,17 +4426,22 @@ export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
 
 export type RelayErrorFragment = { __typename: 'RelayError' } & Pick<RelayError, 'reason'>;
 
+export type TransactionIndexedResultFragment = { __typename: 'TransactionIndexedResult' } & Pick<
+  TransactionIndexedResult,
+  'indexed' | 'txHash'
+>;
+
+export type TransactionErrorFragment = { __typename: 'TransactionError' } & Pick<
+  TransactionError,
+  'reason'
+>;
+
 export type HasTxHashBeenIndexedQueryVariables = Exact<{
   request: HasTxHashBeenIndexedRequest;
 }>;
 
 export type HasTxHashBeenIndexedQuery = {
-  result:
-    | ({ __typename: 'TransactionIndexedResult' } & Pick<
-        TransactionIndexedResult,
-        'indexed' | 'txHash'
-      >)
-    | ({ __typename: 'TransactionError' } & Pick<TransactionError, 'reason'>);
+  result: TransactionIndexedResultFragment | TransactionErrorFragment;
 };
 
 export type BroadcastProtocolCallMutationVariables = Exact<{
@@ -4454,6 +4477,7 @@ export const MediaSetFragmentDoc = gql`
 `;
 export const MetadataAttributeOutputFragmentDoc = gql`
   fragment MetadataAttributeOutput on MetadataAttributeOutput {
+    __typename
     traitType
     value
   }
@@ -4499,6 +4523,7 @@ export const ProfileMediaFieldsFragmentDoc = gql`
 `;
 export const Erc20FragmentDoc = gql`
   fragment Erc20 on Erc20 {
+    __typename
     name
     symbol
     decimals
@@ -4507,6 +4532,7 @@ export const Erc20FragmentDoc = gql`
 `;
 export const ModuleFeeAmountFragmentDoc = gql`
   fragment ModuleFeeAmount on ModuleFeeAmount {
+    __typename
     asset {
       ...Erc20
     }
@@ -4591,6 +4617,7 @@ export const ProfileFieldsFragmentDoc = gql`
 `;
 export const WalletFragmentDoc = gql`
   fragment Wallet on Wallet {
+    __typename
     address
     defaultProfile {
       ...ProfileFields
@@ -4600,12 +4627,14 @@ export const WalletFragmentDoc = gql`
 `;
 export const FreeCollectModuleSettingsFragmentDoc = gql`
   fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
+    __typename
     contractAddress
     followerOnly
   }
 `;
 export const FeeCollectModuleSettingsFragmentDoc = gql`
   fragment FeeCollectModuleSettings on FeeCollectModuleSettings {
+    __typename
     amount {
       ...ModuleFeeAmount
     }
@@ -4618,6 +4647,7 @@ export const FeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LimitedFeeCollectModuleSettingsFragmentDoc = gql`
   fragment LimitedFeeCollectModuleSettings on LimitedFeeCollectModuleSettings {
+    __typename
     amount {
       ...ModuleFeeAmount
     }
@@ -4631,6 +4661,7 @@ export const LimitedFeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LimitedTimedFeeCollectModuleSettingsFragmentDoc = gql`
   fragment LimitedTimedFeeCollectModuleSettings on LimitedTimedFeeCollectModuleSettings {
+    __typename
     amount {
       ...ModuleFeeAmount
     }
@@ -4645,11 +4676,13 @@ export const LimitedTimedFeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const RevertCollectModuleSettingsFragmentDoc = gql`
   fragment RevertCollectModuleSettings on RevertCollectModuleSettings {
+    __typename
     contractAddress
   }
 `;
 export const TimedFeeCollectModuleSettingsFragmentDoc = gql`
   fragment TimedFeeCollectModuleSettings on TimedFeeCollectModuleSettings {
+    __typename
     amount {
       ...ModuleFeeAmount
     }
@@ -4692,6 +4725,7 @@ export const CollectModuleFragmentDoc = gql`
 `;
 export const ReferenceModuleFragmentDoc = gql`
   fragment ReferenceModule on ReferenceModule {
+    __typename
     ... on FollowOnlyReferenceModuleSettings {
       contractAddress
     }
@@ -4857,6 +4891,7 @@ export const CommentFragmentDoc = gql`
 `;
 export const CommentWithFirstCommentFragmentDoc = gql`
   fragment CommentWithFirstComment on Comment {
+    __typename
     ...Comment
     firstComment {
       ...Comment
@@ -4866,6 +4901,7 @@ export const CommentWithFirstCommentFragmentDoc = gql`
 `;
 export const CommonPaginatedResultInfoFragmentDoc = gql`
   fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+    __typename
     prev
     next
     totalCount
@@ -4873,6 +4909,7 @@ export const CommonPaginatedResultInfoFragmentDoc = gql`
 `;
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    __typename
     name
     chainId
     version
@@ -4911,6 +4948,7 @@ export const NewFollowerNotificationFieldsFragmentDoc = gql`
 `;
 export const MirrorFragmentDoc = gql`
   fragment Mirror on Mirror {
+    __typename
     ...MirrorBase
     mirrorOf {
       ... on Post {
@@ -4973,6 +5011,7 @@ export const NewMirrorNotificationFieldsFragmentDoc = gql`
 `;
 export const CommentWithCommentedPublicationFieldsFragmentDoc = gql`
   fragment CommentWithCommentedPublicationFields on Comment {
+    __typename
     ...Comment
     commentOn {
       ... on Post {
@@ -5050,6 +5089,7 @@ export const NewReactionNotificationFieldsFragmentDoc = gql`
 `;
 export const FollowerFragmentDoc = gql`
   fragment Follower on Follower {
+    __typename
     wallet {
       ...Wallet
     }
@@ -5058,6 +5098,7 @@ export const FollowerFragmentDoc = gql`
 `;
 export const FollowingFragmentDoc = gql`
   fragment Following on Following {
+    __typename
     profile {
       ...ProfileFields
     }
@@ -5066,6 +5107,7 @@ export const FollowingFragmentDoc = gql`
 `;
 export const ProxyActionStatusResultFragmentDoc = gql`
   fragment ProxyActionStatusResult on ProxyActionStatusResult {
+    __typename
     txHash
     txId
     status
@@ -5073,12 +5115,14 @@ export const ProxyActionStatusResultFragmentDoc = gql`
 `;
 export const ProxyActionErrorFragmentDoc = gql`
   fragment ProxyActionError on ProxyActionError {
+    __typename
     reason
     lastKnownTxId
   }
 `;
 export const ProxyActionQueuedFragmentDoc = gql`
   fragment ProxyActionQueued on ProxyActionQueued {
+    __typename
     queuedAt
   }
 `;
@@ -5091,6 +5135,19 @@ export const RelayerResultFragmentDoc = gql`
 `;
 export const RelayErrorFragmentDoc = gql`
   fragment RelayError on RelayError {
+    __typename
+    reason
+  }
+`;
+export const TransactionIndexedResultFragmentDoc = gql`
+  fragment TransactionIndexedResult on TransactionIndexedResult {
+    __typename
+    indexed
+    txHash
+  }
+`;
+export const TransactionErrorFragmentDoc = gql`
+  fragment TransactionError on TransactionError {
     __typename
     reason
   }
@@ -5906,7 +5963,6 @@ export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
 export const CreateProfileDocument = gql`
   mutation CreateProfile($request: CreateProfileRequest!) {
     result: createProfile(request: $request) {
-      __typename
       ... on RelayerResult {
         ...RelayerResult
       }
@@ -6084,7 +6140,6 @@ export type ProfileFollowingQueryResult = Apollo.QueryResult<
 export const ProxyActionStatusDocument = gql`
   query ProxyActionStatus($proxyActionId: ProxyActionId!) {
     result: proxyActionStatus(proxyActionId: $proxyActionId) {
-      __typename
       ... on ProxyActionStatusResult {
         ...ProxyActionStatusResult
       }
@@ -6328,16 +6383,16 @@ export type PublicationsQueryResult = Apollo.QueryResult<
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
     result: hasTxHashBeenIndexed(request: $request) {
-      __typename
       ... on TransactionIndexedResult {
-        indexed
-        txHash
+        ...TransactionIndexedResult
       }
       ... on TransactionError {
-        reason
+        ...TransactionError
       }
     }
   }
+  ${TransactionIndexedResultFragmentDoc}
+  ${TransactionErrorFragmentDoc}
 `;
 
 /**

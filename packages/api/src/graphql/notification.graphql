@@ -1,4 +1,5 @@
 fragment CommentWithCommentedPublicationFields on Comment {
+  __typename
   ...Comment
   commentOn {
     ... on Post {

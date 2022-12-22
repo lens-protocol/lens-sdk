@@ -122,8 +122,6 @@ query GetAllProfilesByOwnerAddress($address: EthereumAddress!, $observerId: Prof
 
 mutation CreateProfile($request: CreateProfileRequest!) {
   result: createProfile(request: $request) {
-    __typename
-
     ... on RelayerResult {
       ...RelayerResult
     }

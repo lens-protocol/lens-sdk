@@ -9,16 +9,25 @@ fragment RelayError on RelayError {
   reason
 }
 
+fragment TransactionIndexedResult on TransactionIndexedResult {
+  __typename
+  indexed
+  txHash
+}
+
+fragment TransactionError on TransactionError {
+  __typename
+  reason
+}
+
 query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
   result: hasTxHashBeenIndexed(request: $request) {
-    __typename
     ... on TransactionIndexedResult {
-      indexed
-      txHash
+      ...TransactionIndexedResult
     }
 
     ... on TransactionError {
-      reason
+      ...TransactionError
     }
   }
 }
