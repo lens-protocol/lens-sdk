@@ -23,6 +23,9 @@ import {
   HasTxHashBeenIndexedDocument,
   EnabledModuleCurrenciesQuery,
   EnabledModuleCurrenciesDocument,
+  MutualFollowersProfilesQuery,
+  MutualFollowersProfilesDocument,
+  MutualFollowersProfilesQueryVariables,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -193,6 +196,32 @@ export function mockEnabledModuleCurrenciesQueryMockedResponse(
           name: currency.name,
           symbol: currency.symbol,
         })),
+      },
+    },
+  };
+}
+
+export function mockMutualFollowersQuery(args: {
+  variables: MutualFollowersProfilesQueryVariables;
+  profiles: ProfileFieldsFragment[];
+}): MockedResponse<MutualFollowersProfilesQuery> {
+  return {
+    request: {
+      query: MutualFollowersProfilesDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          __typename: 'PaginatedProfileResult',
+          items: args.profiles,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.profiles.length,
+          },
+        },
       },
     },
   };
