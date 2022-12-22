@@ -15,13 +15,7 @@ export function useComments({
 }: UseCommentsArgs): PaginatedReadResult<CommentWithFirstCommentFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
-  const {
-    loading,
-    data,
-    ...rest
-  }: PaginatedReadResult<
-    (CommentWithFirstCommentFragment | { __typename: 'Mirror' } | { __typename: 'Post' })[]
-  > = usePaginatedReadResult(
+  return usePaginatedReadResult(
     useCommentsQuery({
       variables: {
         commentsOf,
@@ -32,14 +26,4 @@ export function useComments({
       client: apolloClient,
     }),
   );
-
-  if (loading) return { loading: true, data: undefined, ...rest };
-  return {
-    loading: false,
-    data: data.filter(
-      (publication): publication is CommentWithFirstCommentFragment =>
-        publication.__typename === 'Comment',
-    ),
-    ...rest,
-  };
 }

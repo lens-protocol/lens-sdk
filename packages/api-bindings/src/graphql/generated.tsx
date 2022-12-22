@@ -244,6 +244,7 @@ export type CanDecryptResponse = {
   __typename: 'CanDecryptResponse';
   result: Scalars['Boolean'];
   reasons: Maybe<Array<DecryptFailReason>>;
+  extraDetails: Maybe<Scalars['String']>;
 };
 
 export type CanMirrorResponse = {
@@ -326,8 +327,11 @@ export enum CollectModules {
   FeeCollectModule = 'FeeCollectModule',
   LimitedTimedFeeCollectModule = 'LimitedTimedFeeCollectModule',
   TimedFeeCollectModule = 'TimedFeeCollectModule',
+  AaveFeeCollectModule = 'AaveFeeCollectModule',
   RevertCollectModule = 'RevertCollectModule',
   FreeCollectModule = 'FreeCollectModule',
+  MultirecipientFeeCollectModule = 'MultirecipientFeeCollectModule',
+  Erc4626FeeCollectModule = 'ERC4626FeeCollectModule',
   UnknownCollectModule = 'UnknownCollectModule',
 }
 
@@ -359,6 +363,7 @@ export type Comment = {
   commentOn: Maybe<Publication>;
   /** The date the post was created on */
   createdAt: Scalars['DateTime'];
+  /** The data availability proofs you can fetch from */
   dataAvailabilityProofs: Maybe<Scalars['String']>;
   /** This will bring back the first comment of a comment and only be defined if using `publication` query and `commentOf` */
   firstComment: Maybe<Comment>;
@@ -1002,6 +1007,7 @@ export enum DecryptFailReason {
   MissingEncryptionParams = 'MISSING_ENCRYPTION_PARAMS',
   FollowNotFinalisedOnChain = 'FOLLOW_NOT_FINALISED_ON_CHAIN',
   CollectNotFinalisedOnChain = 'COLLECT_NOT_FINALISED_ON_CHAIN',
+  CanNotDecrypt = 'CAN_NOT_DECRYPT',
 }
 
 export type DefaultProfileRequest = {
@@ -1602,6 +1608,17 @@ export type HidePublicationRequest = {
   publicationId: Scalars['InternalPublicationId'];
 };
 
+export type IdKitPhoneVerifyWebhookRequest = {
+  sharedSecret: Scalars['String'];
+  worldcoin?: Maybe<WorldcoinPhoneVerifyWebhookRequest>;
+};
+
+/** The verify webhook result status type */
+export enum IdKitPhoneVerifyWebhookResultStatusType {
+  Success = 'SUCCESS',
+  AlreadyVerified = 'ALREADY_VERIFIED',
+}
+
 export type IllegalReasonInputParams = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingIllegalSubreason;
@@ -1814,6 +1831,7 @@ export type Mirror = {
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
   /** The date the post was created on */
   createdAt: Scalars['DateTime'];
+  /** The data availability proofs you can fetch from */
   dataAvailabilityProofs: Maybe<Scalars['String']>;
   hasCollectedByMe: Scalars['Boolean'];
   hasOptimisticCollectedByMe: Scalars['Boolean'];
@@ -1908,6 +1926,7 @@ export type Mutation = {
   createSetFollowModuleTypedData: CreateSetFollowModuleBroadcastItemResult;
   createSetFollowNFTUriTypedData: CreateSetFollowNftUriBroadcastItemResult;
   createToggleFollowTypedData: CreateToggleFollowBroadcastItemResult;
+  createAttachMediaData: PublicMediaResults;
   createCollectTypedData: CreateCollectBroadcastItemResult;
   createSetDefaultProfileTypedData: SetDefaultProfileBroadcastItemResult;
   createSetProfileImageURITypedData: CreateSetProfileImageUriBroadcastItemResult;
@@ -1920,8 +1939,8 @@ export type Mutation = {
   createMirrorTypedData: CreateMirrorBroadcastItemResult;
   hidePublication: Maybe<Scalars['Void']>;
   createMirrorViaDispatcher: RelayResult;
-  createAttachMediaData: PublicMediaResults;
   claim: RelayResult;
+  idKitPhoneVerifyWebhook: IdKitPhoneVerifyWebhookResultStatusType;
   createProfile: RelayResult;
   /** Adds profile interests to the given profile */
   addProfileInterests: Maybe<Scalars['Void']>;
@@ -1979,6 +1998,10 @@ export type MutationCreateToggleFollowTypedDataArgs = {
   request: CreateToggleFollowRequest;
 };
 
+export type MutationCreateAttachMediaDataArgs = {
+  request: PublicMediaRequest;
+};
+
 export type MutationCreateCollectTypedDataArgs = {
   options?: Maybe<TypedDataOptions>;
   request: CreateCollectRequest;
@@ -2034,12 +2057,12 @@ export type MutationCreateMirrorViaDispatcherArgs = {
   request: CreateMirrorRequest;
 };
 
-export type MutationCreateAttachMediaDataArgs = {
-  request: PublicMediaRequest;
-};
-
 export type MutationClaimArgs = {
   request: ClaimHandleRequest;
+};
+
+export type MutationIdKitPhoneVerifyWebhookArgs = {
+  request: IdKitPhoneVerifyWebhookRequest;
 };
 
 export type MutationCreateProfileArgs = {
@@ -2405,7 +2428,7 @@ export type PaginatedResultInfo = {
   prev: Maybe<Scalars['Cursor']>;
   /** Cursor to query next results */
   next: Maybe<Scalars['Cursor']>;
-  /** The total number of entities the pagination iterates over. If null it means it can not work it out due to dynamic or aggregated query e.g. For a query that requests all nfts with more than 10 likes, this field gives the total amount of nfts with more than 10 likes, not the total amount of nfts */
+  /** The total number of entities the pagination iterates over. If its null then its not been worked out due to it being an expensive query and not really needed for the client. All main counters are in counter tables to allow them to be faster fetching. */
   totalCount: Maybe<Scalars['Int']>;
 };
 
@@ -2460,6 +2483,7 @@ export type Post = {
   collectedBy: Maybe<Wallet>;
   /** The date the post was created on */
   createdAt: Scalars['DateTime'];
+  /** The data availability proofs you can fetch from */
   dataAvailabilityProofs: Maybe<Scalars['String']>;
   hasCollectedByMe: Scalars['Boolean'];
   hasOptimisticCollectedByMe: Scalars['Boolean'];
@@ -3129,6 +3153,7 @@ export type Query = {
   userSigNonces: UserSigNonces;
   claimableHandles: ClaimableHandles;
   claimableStatus: ClaimStatus;
+  isIDKitPhoneVerified: Scalars['Boolean'];
   internalPublicationFilter: PaginatedPublicationResult;
   profileOnChainIdentity: Array<OnChainIdentity>;
   /** Get the list of profile interests */
@@ -3802,13 +3827,23 @@ export type WorldcoinIdentity = {
   isHuman: Scalars['Boolean'];
 };
 
+/** The worldcoin signal type */
+export enum WorldcoinPhoneVerifyType {
+  Phone = 'PHONE',
+  Orb = 'ORB',
+}
+
+export type WorldcoinPhoneVerifyWebhookRequest = {
+  nullifierHash: Scalars['String'];
+  signalType: WorldcoinPhoneVerifyType;
+  signal: Scalars['EthereumAddress'];
+};
+
 export type AuthChallengeQueryVariables = Exact<{
   address: Scalars['EthereumAddress'];
 }>;
 
-export type AuthChallengeQuery = {
-  result: { __typename: 'AuthChallengeResult' } & Pick<AuthChallengeResult, 'text'>;
-};
+export type AuthChallengeQuery = { result: Pick<AuthChallengeResult, 'text'> };
 
 export type AuthAuthenticateMutationVariables = Exact<{
   address: Scalars['EthereumAddress'];
@@ -3816,10 +3851,7 @@ export type AuthAuthenticateMutationVariables = Exact<{
 }>;
 
 export type AuthAuthenticateMutation = {
-  result: { __typename: 'AuthenticationResult' } & Pick<
-    AuthenticationResult,
-    'accessToken' | 'refreshToken'
-  >;
+  result: Pick<AuthenticationResult, 'accessToken' | 'refreshToken'>;
 };
 
 export type AuthRefreshMutationVariables = Exact<{
@@ -3827,14 +3859,11 @@ export type AuthRefreshMutationVariables = Exact<{
 }>;
 
 export type AuthRefreshMutation = {
-  result: { __typename: 'AuthenticationResult' } & Pick<
-    AuthenticationResult,
-    'accessToken' | 'refreshToken'
-  >;
+  result: Pick<AuthenticationResult, 'accessToken' | 'refreshToken'>;
 };
 
 export type CommentWithFirstCommentFragment = { __typename: 'Comment' } & {
-  firstComment: Maybe<{ __typename: 'Comment' } & CommentFragment>;
+  firstComment: Maybe<CommentFragment>;
 } & CommentFragment;
 
 export type CommentsQueryVariables = Exact<{
@@ -3846,13 +3875,9 @@ export type CommentsQueryVariables = Exact<{
 }>;
 
 export type CommentsQuery = {
-  result: { __typename: 'PaginatedPublicationResult' } & {
-    items: Array<
-      | { __typename: 'Post' }
-      | ({ __typename: 'Comment' } & CommentWithFirstCommentFragment)
-      | { __typename: 'Mirror' }
-    >;
-    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  result: {
+    items: Array<CommentWithFirstCommentFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
   };
 };
 
@@ -3864,7 +3889,7 @@ export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
 export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
   ModuleFeeAmount,
   'value'
-> & { asset: { __typename: 'Erc20' } & Erc20Fragment };
+> & { asset: Erc20Fragment };
 
 type ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment = {
   __typename: 'FollowOnlyReferenceModuleSettings';
@@ -3891,21 +3916,21 @@ export type FreeCollectModuleSettingsFragment = { __typename: 'FreeCollectModule
 export type FeeCollectModuleSettingsFragment = { __typename: 'FeeCollectModuleSettings' } & Pick<
   FeeCollectModuleSettings,
   'contractAddress' | 'followerOnly' | 'recipient' | 'referralFee'
-> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+> & { amount: ModuleFeeAmountFragment };
 
 export type LimitedFeeCollectModuleSettingsFragment = {
   __typename: 'LimitedFeeCollectModuleSettings';
 } & Pick<
   LimitedFeeCollectModuleSettings,
   'collectLimit' | 'contractAddress' | 'followerOnly' | 'recipient' | 'referralFee'
-> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+> & { amount: ModuleFeeAmountFragment };
 
 export type LimitedTimedFeeCollectModuleSettingsFragment = {
   __typename: 'LimitedTimedFeeCollectModuleSettings';
 } & Pick<
   LimitedTimedFeeCollectModuleSettings,
   'collectLimit' | 'contractAddress' | 'followerOnly' | 'endTimestamp' | 'recipient' | 'referralFee'
-> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+> & { amount: ModuleFeeAmountFragment };
 
 export type RevertCollectModuleSettingsFragment = {
   __typename: 'RevertCollectModuleSettings';
@@ -3916,7 +3941,7 @@ export type TimedFeeCollectModuleSettingsFragment = {
 } & Pick<
   TimedFeeCollectModuleSettings,
   'contractAddress' | 'followerOnly' | 'endTimestamp' | 'recipient' | 'referralFee'
-> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+> & { amount: ModuleFeeAmountFragment };
 
 type CollectModule_FreeCollectModuleSettings_Fragment = {
   __typename: 'FreeCollectModuleSettings';
@@ -3956,16 +3981,13 @@ export type CollectModuleFragment =
   | CollectModule_UnknownCollectModuleSettings_Fragment;
 
 export type WalletFragment = { __typename: 'Wallet' } & Pick<Wallet, 'address'> & {
-    defaultProfile: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment>;
+    defaultProfile: Maybe<ProfileFieldsFragment>;
   };
 
 export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
   MetadataOutput,
   'name' | 'description' | 'mainContentFocus' | 'content'
-> & {
-    media: Array<{ __typename: 'MediaSet' } & MediaSetFragment>;
-    attributes: Array<{ __typename: 'MetadataAttributeOutput' } & MetadataAttributeOutputFragment>;
-  };
+> & { media: Array<MediaSetFragment>; attributes: Array<MetadataAttributeOutputFragment> };
 
 export type MetadataAttributeOutputFragment = { __typename: 'MetadataAttributeOutput' } & Pick<
   MetadataAttributeOutput,
@@ -3989,48 +4011,28 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
   | 'isOptimisticMirroredByMe'
   | 'ownedByMe'
 > & {
-    stats: { __typename: 'PublicationStats' } & PublicationStatsFragment;
-    metadata: { __typename: 'MetadataOutput' } & MetadataFragment;
-    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
+    stats: PublicationStatsFragment;
+    metadata: MetadataFragment;
+    profile: ProfileFieldsFragment;
     collectModule:
-      | ({
-          __typename: 'FreeCollectModuleSettings';
-        } & CollectModule_FreeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'FeeCollectModuleSettings';
-        } & CollectModule_FeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'LimitedFeeCollectModuleSettings';
-        } & CollectModule_LimitedFeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'LimitedTimedFeeCollectModuleSettings';
-        } & CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'RevertCollectModuleSettings';
-        } & CollectModule_RevertCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'TimedFeeCollectModuleSettings';
-        } & CollectModule_TimedFeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'UnknownCollectModuleSettings';
-        } & CollectModule_UnknownCollectModuleSettings_Fragment);
+      | CollectModule_FreeCollectModuleSettings_Fragment
+      | CollectModule_FeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+      | CollectModule_RevertCollectModuleSettings_Fragment
+      | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_UnknownCollectModuleSettings_Fragment;
     referenceModule: Maybe<
-      | ({
-          __typename: 'FollowOnlyReferenceModuleSettings';
-        } & ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment)
-      | ({
-          __typename: 'UnknownReferenceModuleSettings';
-        } & ReferenceModule_UnknownReferenceModuleSettings_Fragment)
-      | ({
-          __typename: 'DegreesOfSeparationReferenceModuleSettings';
-        } & ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment)
+      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
     >;
-    canComment: { __typename: 'CanCommentResponse' } & Pick<CanCommentResponse, 'result'>;
-    canMirror: { __typename: 'CanMirrorResponse' } & Pick<CanMirrorResponse, 'result'>;
+    canComment: Pick<CanCommentResponse, 'result'>;
+    canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
 export type MirrorFragment = { __typename: 'Mirror' } & {
-  mirrorOf: ({ __typename: 'Post' } & PostFragment) | ({ __typename: 'Comment' } & CommentFragment);
+  mirrorOf: PostFragment | CommentFragment;
 } & MirrorBaseFragment;
 
 export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
@@ -4046,45 +4048,25 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
   | 'isOptimisticMirroredByMe'
   | 'ownedByMe'
 > & {
-    stats: { __typename: 'PublicationStats' } & PublicationStatsFragment;
-    metadata: { __typename: 'MetadataOutput' } & MetadataFragment;
-    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
-    collectedBy: Maybe<{ __typename: 'Wallet' } & WalletFragment>;
+    stats: PublicationStatsFragment;
+    metadata: MetadataFragment;
+    profile: ProfileFieldsFragment;
+    collectedBy: Maybe<WalletFragment>;
     collectModule:
-      | ({
-          __typename: 'FreeCollectModuleSettings';
-        } & CollectModule_FreeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'FeeCollectModuleSettings';
-        } & CollectModule_FeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'LimitedFeeCollectModuleSettings';
-        } & CollectModule_LimitedFeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'LimitedTimedFeeCollectModuleSettings';
-        } & CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'RevertCollectModuleSettings';
-        } & CollectModule_RevertCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'TimedFeeCollectModuleSettings';
-        } & CollectModule_TimedFeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'UnknownCollectModuleSettings';
-        } & CollectModule_UnknownCollectModuleSettings_Fragment);
+      | CollectModule_FreeCollectModuleSettings_Fragment
+      | CollectModule_FeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+      | CollectModule_RevertCollectModuleSettings_Fragment
+      | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_UnknownCollectModuleSettings_Fragment;
     referenceModule: Maybe<
-      | ({
-          __typename: 'FollowOnlyReferenceModuleSettings';
-        } & ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment)
-      | ({
-          __typename: 'UnknownReferenceModuleSettings';
-        } & ReferenceModule_UnknownReferenceModuleSettings_Fragment)
-      | ({
-          __typename: 'DegreesOfSeparationReferenceModuleSettings';
-        } & ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment)
+      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
     >;
-    canComment: { __typename: 'CanCommentResponse' } & Pick<CanCommentResponse, 'result'>;
-    canMirror: { __typename: 'CanMirrorResponse' } & Pick<CanMirrorResponse, 'result'>;
+    canComment: Pick<CanCommentResponse, 'result'>;
+    canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
 export type CommonPaginatedResultInfoFragment = { __typename: 'PaginatedResultInfo' } & Pick<
@@ -4093,14 +4075,8 @@ export type CommonPaginatedResultInfoFragment = { __typename: 'PaginatedResultIn
 >;
 
 export type CommentFragment = { __typename: 'Comment' } & {
-  commentOn: Maybe<
-    | ({ __typename: 'Post' } & PostFragment)
-    | ({ __typename: 'Comment' } & CommentBaseFragment)
-    | ({ __typename: 'Mirror' } & MirrorBaseFragment)
-  >;
-  mainPost:
-    | ({ __typename: 'Post' } & PostFragment)
-    | ({ __typename: 'Mirror' } & MirrorBaseFragment);
+  commentOn: Maybe<PostFragment | CommentBaseFragment | MirrorBaseFragment>;
+  mainPost: PostFragment | MirrorBaseFragment;
 } & CommentBaseFragment;
 
 export type PostFragment = { __typename: 'Post' } & Pick<
@@ -4116,45 +4092,25 @@ export type PostFragment = { __typename: 'Post' } & Pick<
   | 'isOptimisticMirroredByMe'
   | 'ownedByMe'
 > & {
-    stats: { __typename: 'PublicationStats' } & PublicationStatsFragment;
-    metadata: { __typename: 'MetadataOutput' } & MetadataFragment;
-    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
-    collectedBy: Maybe<{ __typename: 'Wallet' } & WalletFragment>;
+    stats: PublicationStatsFragment;
+    metadata: MetadataFragment;
+    profile: ProfileFieldsFragment;
+    collectedBy: Maybe<WalletFragment>;
     collectModule:
-      | ({
-          __typename: 'FreeCollectModuleSettings';
-        } & CollectModule_FreeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'FeeCollectModuleSettings';
-        } & CollectModule_FeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'LimitedFeeCollectModuleSettings';
-        } & CollectModule_LimitedFeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'LimitedTimedFeeCollectModuleSettings';
-        } & CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'RevertCollectModuleSettings';
-        } & CollectModule_RevertCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'TimedFeeCollectModuleSettings';
-        } & CollectModule_TimedFeeCollectModuleSettings_Fragment)
-      | ({
-          __typename: 'UnknownCollectModuleSettings';
-        } & CollectModule_UnknownCollectModuleSettings_Fragment);
+      | CollectModule_FreeCollectModuleSettings_Fragment
+      | CollectModule_FeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+      | CollectModule_RevertCollectModuleSettings_Fragment
+      | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_UnknownCollectModuleSettings_Fragment;
     referenceModule: Maybe<
-      | ({
-          __typename: 'FollowOnlyReferenceModuleSettings';
-        } & ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment)
-      | ({
-          __typename: 'UnknownReferenceModuleSettings';
-        } & ReferenceModule_UnknownReferenceModuleSettings_Fragment)
-      | ({
-          __typename: 'DegreesOfSeparationReferenceModuleSettings';
-        } & ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment)
+      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
     >;
-    canComment: { __typename: 'CanCommentResponse' } & Pick<CanCommentResponse, 'result'>;
-    canMirror: { __typename: 'CanMirrorResponse' } & Pick<CanMirrorResponse, 'result'>;
+    canComment: Pick<CanCommentResponse, 'result'>;
+    canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
 export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain' } & Pick<
@@ -4164,13 +4120,11 @@ export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain
 
 export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never }>;
 
-export type EnabledModuleCurrenciesQuery = {
-  result: Array<{ __typename: 'Erc20' } & Erc20Fragment>;
-};
+export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
 
 export type FeedItemFragment = { __typename: 'FeedItem' } & {
-  root: ({ __typename: 'Post' } & PostFragment) | ({ __typename: 'Comment' } & CommentFragment);
-  comments: Maybe<Array<{ __typename: 'Comment' } & CommentFragment>>;
+  root: PostFragment | CommentFragment;
+  comments: Maybe<Array<CommentFragment>>;
 };
 
 export type FeedQueryVariables = Exact<{
@@ -4182,10 +4136,7 @@ export type FeedQueryVariables = Exact<{
 }>;
 
 export type FeedQuery = {
-  result: { __typename: 'PaginatedFeedResult' } & {
-    items: Array<{ __typename: 'FeedItem' } & FeedItemFragment>;
-    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
-  };
+  result: { items: Array<FeedItemFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type ExploreProfilesQueryVariables = Exact<{
@@ -4195,72 +4146,47 @@ export type ExploreProfilesQueryVariables = Exact<{
 }>;
 
 export type ExploreProfilesQuery = {
-  result: { __typename: 'ExploreProfileResult' } & {
-    items: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
-    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
-  };
+  result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type CommentWithCommentedPublicationFieldsFragment = { __typename: 'Comment' } & {
-  commentOn: Maybe<
-    | ({ __typename: 'Post' } & PostFragment)
-    | ({ __typename: 'Comment' } & CommentFragment)
-    | ({ __typename: 'Mirror' } & MirrorFragment)
-  >;
+  commentOn: Maybe<PostFragment | CommentFragment | MirrorFragment>;
 } & CommentFragment;
 
 export type NewFollowerNotificationFieldsFragment = {
   __typename: 'NewFollowerNotification';
 } & Pick<NewFollowerNotification, 'notificationId' | 'createdAt' | 'isFollowedByMe'> & {
-    wallet: { __typename: 'Wallet' } & WalletFragment;
+    wallet: WalletFragment;
   };
 
 export type NewCollectNotificationFieldsFragment = { __typename: 'NewCollectNotification' } & Pick<
   NewCollectNotification,
   'notificationId' | 'createdAt'
 > & {
-    wallet: { __typename: 'Wallet' } & WalletFragment;
-    collectedPublication:
-      | ({ __typename: 'Post' } & PostFragment)
-      | ({ __typename: 'Comment' } & CommentFragment)
-      | ({ __typename: 'Mirror' } & MirrorFragment);
+    wallet: WalletFragment;
+    collectedPublication: PostFragment | CommentFragment | MirrorFragment;
   };
 
 export type NewMirrorNotificationFieldsFragment = { __typename: 'NewMirrorNotification' } & Pick<
   NewMirrorNotification,
   'notificationId' | 'createdAt'
-> & {
-    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
-    publication:
-      | ({ __typename: 'Post' } & PostFragment)
-      | ({ __typename: 'Comment' } & CommentFragment);
-  };
+> & { profile: ProfileFieldsFragment; publication: PostFragment | CommentFragment };
 
 export type NewCommentNotificationFieldsFragment = { __typename: 'NewCommentNotification' } & Pick<
   NewCommentNotification,
   'notificationId' | 'createdAt'
-> & {
-    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
-    comment: { __typename: 'Comment' } & CommentWithCommentedPublicationFieldsFragment;
-  };
+> & { profile: ProfileFieldsFragment; comment: CommentWithCommentedPublicationFieldsFragment };
 
 export type NewMentionNotificationFieldsFragment = { __typename: 'NewMentionNotification' } & Pick<
   NewMentionNotification,
   'notificationId' | 'createdAt'
-> & {
-    mentionPublication:
-      | ({ __typename: 'Post' } & PostFragment)
-      | ({ __typename: 'Comment' } & CommentFragment);
-  };
+> & { mentionPublication: PostFragment | CommentFragment };
 
 export type NewReactionNotificationFieldsFragment = {
   __typename: 'NewReactionNotification';
 } & Pick<NewReactionNotification, 'notificationId' | 'createdAt' | 'reaction'> & {
-    profile: { __typename: 'Profile' } & ProfileFieldsFragment;
-    publication:
-      | ({ __typename: 'Post' } & PostFragment)
-      | ({ __typename: 'Comment' } & CommentFragment)
-      | ({ __typename: 'Mirror' } & MirrorFragment);
+    profile: ProfileFieldsFragment;
+    publication: PostFragment | CommentFragment | MirrorFragment;
   };
 
 export type NotificationsQueryVariables = Exact<{
@@ -4271,16 +4197,16 @@ export type NotificationsQueryVariables = Exact<{
 }>;
 
 export type NotificationsQuery = {
-  result: { __typename: 'PaginatedNotificationResult' } & {
+  result: {
     items: Array<
-      | ({ __typename: 'NewFollowerNotification' } & NewFollowerNotificationFieldsFragment)
-      | ({ __typename: 'NewCollectNotification' } & NewCollectNotificationFieldsFragment)
-      | ({ __typename: 'NewCommentNotification' } & NewCommentNotificationFieldsFragment)
-      | ({ __typename: 'NewMirrorNotification' } & NewMirrorNotificationFieldsFragment)
-      | ({ __typename: 'NewMentionNotification' } & NewMentionNotificationFieldsFragment)
-      | ({ __typename: 'NewReactionNotification' } & NewReactionNotificationFieldsFragment)
+      | NewFollowerNotificationFieldsFragment
+      | NewCollectNotificationFieldsFragment
+      | NewCommentNotificationFieldsFragment
+      | NewMirrorNotificationFieldsFragment
+      | NewMentionNotificationFieldsFragment
+      | NewReactionNotificationFieldsFragment
     >;
-    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+    pageInfo: CommonPaginatedResultInfoFragment;
   };
 };
 
@@ -4290,9 +4216,7 @@ export type UnreadNotificationCountQueryVariables = Exact<{
 }>;
 
 export type UnreadNotificationCountQuery = {
-  result: { __typename: 'PaginatedNotificationResult' } & {
-    pageInfo: { __typename: 'PaginatedResultInfo' } & Pick<PaginatedResultInfo, 'totalCount'>;
-  };
+  result: { pageInfo: Pick<PaginatedResultInfo, 'totalCount'> };
 };
 
 export type CreatePostTypedDataMutationVariables = Exact<{
@@ -4301,30 +4225,23 @@ export type CreatePostTypedDataMutationVariables = Exact<{
 }>;
 
 export type CreatePostTypedDataMutation = {
-  result: { __typename: 'CreatePostBroadcastItemResult' } & Pick<
-    CreatePostBroadcastItemResult,
-    'id' | 'expiresAt'
-  > & {
-      typedData: { __typename: 'CreatePostEIP712TypedData' } & {
-        types: { __typename: 'CreatePostEIP712TypedDataTypes' } & {
-          PostWithSig: Array<
-            { __typename: 'EIP712TypedDataField' } & Pick<Eip712TypedDataField, 'name' | 'type'>
-          >;
-        };
-        domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
-        value: { __typename: 'CreatePostEIP712TypedDataValue' } & Pick<
-          CreatePostEip712TypedDataValue,
-          | 'nonce'
-          | 'deadline'
-          | 'profileId'
-          | 'contentURI'
-          | 'collectModule'
-          | 'collectModuleInitData'
-          | 'referenceModule'
-          | 'referenceModuleInitData'
-        >;
-      };
+  result: Pick<CreatePostBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { PostWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Eip712TypedDataDomainFragment;
+      value: Pick<
+        CreatePostEip712TypedDataValue,
+        | 'nonce'
+        | 'deadline'
+        | 'profileId'
+        | 'contentURI'
+        | 'collectModule'
+        | 'collectModuleInitData'
+        | 'referenceModule'
+        | 'referenceModuleInitData'
+      >;
     };
+  };
 };
 
 export type CreatePostViaDispatcherMutationVariables = Exact<{
@@ -4332,21 +4249,17 @@ export type CreatePostViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreatePostViaDispatcherMutation = {
-  result:
-    | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
-    | ({ __typename: 'RelayError' } & RelayErrorFragment);
+  result: RelayerResultFragment | RelayErrorFragment;
 };
 
 export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
 
-export type MediaSetFragment = { __typename: 'MediaSet' } & {
-  original: { __typename: 'Media' } & MediaFieldsFragment;
-};
+export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFieldsFragment };
 
 export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
   FeeFollowModuleSettings,
   'contractAddress' | 'recipient'
-> & { amount: { __typename: 'ModuleFeeAmount' } & ModuleFeeAmountFragment };
+> & { amount: ModuleFeeAmountFragment };
 
 export type ProfileFollowModuleSettingsFragment = {
   __typename: 'ProfileFollowModuleSettings';
@@ -4361,7 +4274,7 @@ type ProfileMediaFields_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
   'contractAddress' | 'tokenId' | 'uri' | 'verified'
 >;
 
-type ProfileMediaFields_MediaSet_Fragment = { __typename: 'MediaSet' } & MediaSetFragment;
+type ProfileMediaFields_MediaSet_Fragment = MediaSetFragment;
 
 export type ProfileMediaFieldsFragment =
   | ProfileMediaFields_NftImage_Fragment
@@ -4384,42 +4297,35 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   | 'website'
   | 'ownedByMe'
 > & {
-    attributes: Maybe<Array<{ __typename: 'Attribute' } & AttributeFragment>>;
-    picture: Maybe<
-      | ({ __typename: 'NftImage' } & ProfileMediaFields_NftImage_Fragment)
-      | ({ __typename: 'MediaSet' } & ProfileMediaFields_MediaSet_Fragment)
-    >;
+    attributes: Maybe<Array<AttributeFragment>>;
+    picture: Maybe<ProfileMediaFields_NftImage_Fragment | ProfileMediaFields_MediaSet_Fragment>;
     coverPicture: Maybe<
-      | ({ __typename: 'NftImage' } & ProfileMediaFields_NftImage_Fragment)
-      | ({ __typename: 'MediaSet' } & ProfileMediaFields_MediaSet_Fragment)
+      ProfileMediaFields_NftImage_Fragment | ProfileMediaFields_MediaSet_Fragment
     >;
     stats: { __typename: 'ProfileStats' } & Pick<
       ProfileStats,
       'totalFollowers' | 'totalFollowing' | 'totalPosts'
     >;
     followModule: Maybe<
-      | ({ __typename: 'FeeFollowModuleSettings' } & FeeFollowModuleSettingsFragment)
-      | ({ __typename: 'ProfileFollowModuleSettings' } & ProfileFollowModuleSettingsFragment)
-      | ({ __typename: 'RevertFollowModuleSettings' } & RevertFollowModuleSettingsFragment)
-      | { __typename: 'UnknownFollowModuleSettings' }
+      | FeeFollowModuleSettingsFragment
+      | ProfileFollowModuleSettingsFragment
+      | RevertFollowModuleSettingsFragment
     >;
-    dispatcher: Maybe<{ __typename: 'Dispatcher' } & Pick<Dispatcher, 'address' | 'canUseRelay'>>;
+    dispatcher: Maybe<Pick<Dispatcher, 'address' | 'canUseRelay'>>;
   };
 
 export type ProfilesToFollowQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
-export type ProfilesToFollowQuery = {
-  result: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
-};
+export type ProfilesToFollowQuery = { result: Array<ProfileFieldsFragment> };
 
 export type GetProfileQueryVariables = Exact<{
   request: SingleProfileQueryRequest;
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
-export type GetProfileQuery = { result: Maybe<{ __typename: 'Profile' } & ProfileFieldsFragment> };
+export type GetProfileQuery = { result: Maybe<ProfileFieldsFragment> };
 
 export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
   address: Scalars['EthereumAddress'];
@@ -4427,28 +4333,18 @@ export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
 }>;
 
 export type GetAllProfilesByOwnerAddressQuery = {
-  profilesByOwner: { __typename: 'PaginatedProfileResult' } & {
-    items: Array<{ __typename: 'Profile' } & ProfileFieldsFragment>;
-  };
+  profilesByOwner: { items: Array<ProfileFieldsFragment> };
 };
 
 export type CreateProfileMutationVariables = Exact<{
   request: CreateProfileRequest;
 }>;
 
-export type CreateProfileMutation = {
-  result:
-    | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
-    | ({ __typename: 'RelayError' } & RelayErrorFragment);
-};
+export type CreateProfileMutation = { result: RelayerResultFragment | RelayErrorFragment };
 
-export type FollowerFragment = { __typename: 'Follower' } & {
-  wallet: { __typename: 'Wallet' } & WalletFragment;
-};
+export type FollowerFragment = { __typename: 'Follower' } & { wallet: WalletFragment };
 
-export type FollowingFragment = { __typename: 'Following' } & {
-  profile: { __typename: 'Profile' } & ProfileFieldsFragment;
-};
+export type FollowingFragment = { __typename: 'Following' } & { profile: ProfileFieldsFragment };
 
 export type ProfileFollowersQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
@@ -4458,10 +4354,7 @@ export type ProfileFollowersQueryVariables = Exact<{
 }>;
 
 export type ProfileFollowersQuery = {
-  result: { __typename: 'PaginatedFollowersResult' } & {
-    items: Array<{ __typename: 'Follower' } & FollowerFragment>;
-    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
-  };
+  result: { items: Array<FollowerFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type ProfileFollowingQueryVariables = Exact<{
@@ -4472,10 +4365,7 @@ export type ProfileFollowingQueryVariables = Exact<{
 }>;
 
 export type ProfileFollowingQuery = {
-  result: { __typename: 'PaginatedFollowingResult' } & {
-    items: Array<{ __typename: 'Following' } & FollowingFragment>;
-    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
-  };
+  result: { items: Array<FollowingFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type ProxyActionStatusResultFragment = { __typename: 'ProxyActionStatusResult' } & Pick<
@@ -4498,10 +4388,7 @@ export type ProxyActionStatusQueryVariables = Exact<{
 }>;
 
 export type ProxyActionStatusQuery = {
-  result:
-    | ({ __typename: 'ProxyActionStatusResult' } & ProxyActionStatusResultFragment)
-    | ({ __typename: 'ProxyActionError' } & ProxyActionErrorFragment)
-    | ({ __typename: 'ProxyActionQueued' } & ProxyActionQueuedFragment);
+  result: ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment;
 };
 
 export type ProxyActionMutationVariables = Exact<{
@@ -4515,13 +4402,7 @@ export type PublicationQueryVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
 }>;
 
-export type PublicationQuery = {
-  result: Maybe<
-    | ({ __typename: 'Post' } & PostFragment)
-    | ({ __typename: 'Comment' } & CommentFragment)
-    | ({ __typename: 'Mirror' } & MirrorFragment)
-  >;
-};
+export type PublicationQuery = { result: Maybe<PostFragment | CommentFragment | MirrorFragment> };
 
 export type PublicationsQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
@@ -4532,13 +4413,9 @@ export type PublicationsQueryVariables = Exact<{
 }>;
 
 export type PublicationsQuery = {
-  result: { __typename: 'PaginatedPublicationResult' } & {
-    items: Array<
-      | ({ __typename: 'Post' } & PostFragment)
-      | ({ __typename: 'Comment' } & CommentFragment)
-      | ({ __typename: 'Mirror' } & MirrorFragment)
-    >;
-    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  result: {
+    items: Array<PostFragment | CommentFragment | MirrorFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
   };
 };
 
@@ -4549,31 +4426,33 @@ export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
 
 export type RelayErrorFragment = { __typename: 'RelayError' } & Pick<RelayError, 'reason'>;
 
+export type TransactionIndexedResultFragment = { __typename: 'TransactionIndexedResult' } & Pick<
+  TransactionIndexedResult,
+  'indexed' | 'txHash'
+>;
+
+export type TransactionErrorFragment = { __typename: 'TransactionError' } & Pick<
+  TransactionError,
+  'reason'
+>;
+
 export type HasTxHashBeenIndexedQueryVariables = Exact<{
   request: HasTxHashBeenIndexedRequest;
 }>;
 
 export type HasTxHashBeenIndexedQuery = {
-  result:
-    | ({ __typename: 'TransactionIndexedResult' } & Pick<
-        TransactionIndexedResult,
-        'indexed' | 'txHash'
-      >)
-    | ({ __typename: 'TransactionError' } & Pick<TransactionError, 'reason'>);
+  result: TransactionIndexedResultFragment | TransactionErrorFragment;
 };
 
 export type BroadcastProtocolCallMutationVariables = Exact<{
   request: BroadcastRequest;
 }>;
 
-export type BroadcastProtocolCallMutation = {
-  result:
-    | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
-    | ({ __typename: 'RelayError' } & RelayErrorFragment);
-};
+export type BroadcastProtocolCallMutation = { result: RelayerResultFragment | RelayErrorFragment };
 
 export const PublicationStatsFragmentDoc = gql`
   fragment PublicationStats on PublicationStats {
+    __typename
     totalAmountOfMirrors
     totalUpvotes
     totalAmountOfCollects
@@ -4582,12 +4461,14 @@ export const PublicationStatsFragmentDoc = gql`
 `;
 export const MediaFieldsFragmentDoc = gql`
   fragment MediaFields on Media {
+    __typename
     url
     mimeType
   }
 `;
 export const MediaSetFragmentDoc = gql`
   fragment MediaSet on MediaSet {
+    __typename
     original {
       ...MediaFields
     }
@@ -4596,12 +4477,14 @@ export const MediaSetFragmentDoc = gql`
 `;
 export const MetadataAttributeOutputFragmentDoc = gql`
   fragment MetadataAttributeOutput on MetadataAttributeOutput {
+    __typename
     traitType
     value
   }
 `;
 export const MetadataFragmentDoc = gql`
   fragment Metadata on MetadataOutput {
+    __typename
     name
     description
     mainContentFocus
@@ -4626,6 +4509,7 @@ export const AttributeFragmentDoc = gql`
 export const ProfileMediaFieldsFragmentDoc = gql`
   fragment ProfileMediaFields on ProfileMedia {
     ... on NftImage {
+      __typename
       contractAddress
       tokenId
       uri
@@ -4639,6 +4523,7 @@ export const ProfileMediaFieldsFragmentDoc = gql`
 `;
 export const Erc20FragmentDoc = gql`
   fragment Erc20 on Erc20 {
+    __typename
     name
     symbol
     decimals
@@ -4647,6 +4532,7 @@ export const Erc20FragmentDoc = gql`
 `;
 export const ModuleFeeAmountFragmentDoc = gql`
   fragment ModuleFeeAmount on ModuleFeeAmount {
+    __typename
     asset {
       ...Erc20
     }
@@ -4679,6 +4565,7 @@ export const RevertFollowModuleSettingsFragmentDoc = gql`
 `;
 export const ProfileFieldsFragmentDoc = gql`
   fragment ProfileFields on Profile {
+    __typename
     id
     name
     bio
@@ -4694,6 +4581,7 @@ export const ProfileFieldsFragmentDoc = gql`
       ...ProfileMediaFields
     }
     stats {
+      __typename
       totalFollowers
       totalFollowing
       totalPosts
@@ -4729,6 +4617,7 @@ export const ProfileFieldsFragmentDoc = gql`
 `;
 export const WalletFragmentDoc = gql`
   fragment Wallet on Wallet {
+    __typename
     address
     defaultProfile {
       ...ProfileFields
@@ -4738,12 +4627,14 @@ export const WalletFragmentDoc = gql`
 `;
 export const FreeCollectModuleSettingsFragmentDoc = gql`
   fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
+    __typename
     contractAddress
     followerOnly
   }
 `;
 export const FeeCollectModuleSettingsFragmentDoc = gql`
   fragment FeeCollectModuleSettings on FeeCollectModuleSettings {
+    __typename
     amount {
       ...ModuleFeeAmount
     }
@@ -4756,6 +4647,7 @@ export const FeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LimitedFeeCollectModuleSettingsFragmentDoc = gql`
   fragment LimitedFeeCollectModuleSettings on LimitedFeeCollectModuleSettings {
+    __typename
     amount {
       ...ModuleFeeAmount
     }
@@ -4769,6 +4661,7 @@ export const LimitedFeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LimitedTimedFeeCollectModuleSettingsFragmentDoc = gql`
   fragment LimitedTimedFeeCollectModuleSettings on LimitedTimedFeeCollectModuleSettings {
+    __typename
     amount {
       ...ModuleFeeAmount
     }
@@ -4783,11 +4676,13 @@ export const LimitedTimedFeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const RevertCollectModuleSettingsFragmentDoc = gql`
   fragment RevertCollectModuleSettings on RevertCollectModuleSettings {
+    __typename
     contractAddress
   }
 `;
 export const TimedFeeCollectModuleSettingsFragmentDoc = gql`
   fragment TimedFeeCollectModuleSettings on TimedFeeCollectModuleSettings {
+    __typename
     amount {
       ...ModuleFeeAmount
     }
@@ -4830,6 +4725,7 @@ export const CollectModuleFragmentDoc = gql`
 `;
 export const ReferenceModuleFragmentDoc = gql`
   fragment ReferenceModule on ReferenceModule {
+    __typename
     ... on FollowOnlyReferenceModuleSettings {
       contractAddress
     }
@@ -4995,6 +4891,7 @@ export const CommentFragmentDoc = gql`
 `;
 export const CommentWithFirstCommentFragmentDoc = gql`
   fragment CommentWithFirstComment on Comment {
+    __typename
     ...Comment
     firstComment {
       ...Comment
@@ -5004,6 +4901,7 @@ export const CommentWithFirstCommentFragmentDoc = gql`
 `;
 export const CommonPaginatedResultInfoFragmentDoc = gql`
   fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+    __typename
     prev
     next
     totalCount
@@ -5011,6 +4909,7 @@ export const CommonPaginatedResultInfoFragmentDoc = gql`
 `;
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    __typename
     name
     chainId
     version
@@ -5019,6 +4918,7 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
 `;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
+    __typename
     root {
       ... on Post {
         ...Post
@@ -5048,6 +4948,7 @@ export const NewFollowerNotificationFieldsFragmentDoc = gql`
 `;
 export const MirrorFragmentDoc = gql`
   fragment Mirror on Mirror {
+    __typename
     ...MirrorBase
     mirrorOf {
       ... on Post {
@@ -5110,6 +5011,7 @@ export const NewMirrorNotificationFieldsFragmentDoc = gql`
 `;
 export const CommentWithCommentedPublicationFieldsFragmentDoc = gql`
   fragment CommentWithCommentedPublicationFields on Comment {
+    __typename
     ...Comment
     commentOn {
       ... on Post {
@@ -5187,6 +5089,7 @@ export const NewReactionNotificationFieldsFragmentDoc = gql`
 `;
 export const FollowerFragmentDoc = gql`
   fragment Follower on Follower {
+    __typename
     wallet {
       ...Wallet
     }
@@ -5195,6 +5098,7 @@ export const FollowerFragmentDoc = gql`
 `;
 export const FollowingFragmentDoc = gql`
   fragment Following on Following {
+    __typename
     profile {
       ...ProfileFields
     }
@@ -5203,6 +5107,7 @@ export const FollowingFragmentDoc = gql`
 `;
 export const ProxyActionStatusResultFragmentDoc = gql`
   fragment ProxyActionStatusResult on ProxyActionStatusResult {
+    __typename
     txHash
     txId
     status
@@ -5210,12 +5115,14 @@ export const ProxyActionStatusResultFragmentDoc = gql`
 `;
 export const ProxyActionErrorFragmentDoc = gql`
   fragment ProxyActionError on ProxyActionError {
+    __typename
     reason
     lastKnownTxId
   }
 `;
 export const ProxyActionQueuedFragmentDoc = gql`
   fragment ProxyActionQueued on ProxyActionQueued {
+    __typename
     queuedAt
   }
 `;
@@ -5228,6 +5135,19 @@ export const RelayerResultFragmentDoc = gql`
 `;
 export const RelayErrorFragmentDoc = gql`
   fragment RelayError on RelayError {
+    __typename
+    reason
+  }
+`;
+export const TransactionIndexedResultFragmentDoc = gql`
+  fragment TransactionIndexedResult on TransactionIndexedResult {
+    __typename
+    indexed
+    txHash
+  }
+`;
+export const TransactionErrorFragmentDoc = gql`
+  fragment TransactionError on TransactionError {
     __typename
     reason
   }
@@ -5386,12 +5306,6 @@ export const CommentsDocument = gql`
       request: { limit: $limit, cursor: $cursor, commentsOf: $commentsOf, sources: $sources }
     ) {
       items {
-        ... on Post {
-          __typename
-        }
-        ... on Mirror {
-          __typename
-        }
         ... on Comment {
           ...CommentWithFirstComment
         }
@@ -6049,7 +5963,6 @@ export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
 export const CreateProfileDocument = gql`
   mutation CreateProfile($request: CreateProfileRequest!) {
     result: createProfile(request: $request) {
-      __typename
       ... on RelayerResult {
         ...RelayerResult
       }
@@ -6471,14 +6384,15 @@ export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
     result: hasTxHashBeenIndexed(request: $request) {
       ... on TransactionIndexedResult {
-        indexed
-        txHash
+        ...TransactionIndexedResult
       }
       ... on TransactionError {
-        reason
+        ...TransactionError
       }
     }
   }
+  ${TransactionIndexedResultFragmentDoc}
+  ${TransactionErrorFragmentDoc}
 `;
 
 /**
@@ -6657,11 +6571,13 @@ export type CanCommentResponseFieldPolicy = {
 export type CanDecryptResponseKeySpecifier = (
   | 'result'
   | 'reasons'
+  | 'extraDetails'
   | CanDecryptResponseKeySpecifier
 )[];
 export type CanDecryptResponseFieldPolicy = {
   result?: FieldPolicy<any> | FieldReadFunction<any>;
   reasons?: FieldPolicy<any> | FieldReadFunction<any>;
+  extraDetails?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type CanMirrorResponseKeySpecifier = ('result' | CanMirrorResponseKeySpecifier)[];
 export type CanMirrorResponseFieldPolicy = {
@@ -7854,6 +7770,7 @@ export type MutationKeySpecifier = (
   | 'createSetFollowModuleTypedData'
   | 'createSetFollowNFTUriTypedData'
   | 'createToggleFollowTypedData'
+  | 'createAttachMediaData'
   | 'createCollectTypedData'
   | 'createSetDefaultProfileTypedData'
   | 'createSetProfileImageURITypedData'
@@ -7866,8 +7783,8 @@ export type MutationKeySpecifier = (
   | 'createMirrorTypedData'
   | 'hidePublication'
   | 'createMirrorViaDispatcher'
-  | 'createAttachMediaData'
   | 'claim'
+  | 'idKitPhoneVerifyWebhook'
   | 'createProfile'
   | 'addProfileInterests'
   | 'removeProfileInterests'
@@ -7891,6 +7808,7 @@ export type MutationFieldPolicy = {
   createSetFollowModuleTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetFollowNFTUriTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createToggleFollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createAttachMediaData?: FieldPolicy<any> | FieldReadFunction<any>;
   createCollectTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetDefaultProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetProfileImageURITypedData?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -7903,8 +7821,8 @@ export type MutationFieldPolicy = {
   createMirrorTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
   createMirrorViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
-  createAttachMediaData?: FieldPolicy<any> | FieldReadFunction<any>;
   claim?: FieldPolicy<any> | FieldReadFunction<any>;
+  idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
   createProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   addProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   removeProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -8526,6 +8444,7 @@ export type QueryKeySpecifier = (
   | 'userSigNonces'
   | 'claimableHandles'
   | 'claimableStatus'
+  | 'isIDKitPhoneVerified'
   | 'internalPublicationFilter'
   | 'profileOnChainIdentity'
   | 'profileInterests'
@@ -8580,6 +8499,7 @@ export type QueryFieldPolicy = {
   userSigNonces?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableHandles?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  isIDKitPhoneVerified?: FieldPolicy<any> | FieldReadFunction<any>;
   internalPublicationFilter?: FieldPolicy<any> | FieldReadFunction<any>;
   profileOnChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
   profileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
