@@ -57,9 +57,6 @@
     "wagmi": "0.9.2"
   },
   "prettier": "@lens-protocol/prettier-config",
-  "publishConfig": {
-    "registry": "http://localhost:8081/repository/npm-private/"
-  },
   "dependencies": {
     "@lens-protocol/shared-kernel": "workspace:*"
   }
