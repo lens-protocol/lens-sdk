@@ -6,7 +6,7 @@ import {
   GetAllProfilesByOwnerAddressDocument,
   GetAllProfilesByOwnerAddressQuery,
   GetAllProfilesByOwnerAddressQueryVariables,
-} from '@lens-protocol/api';
+} from '@lens-protocol/api-bindings';
 import { Profile } from '@lens-protocol/domain/entities';
 import { IProfileGateway } from '@lens-protocol/domain/use-cases/profile';
 import { invariant } from '@lens-protocol/shared-kernel';

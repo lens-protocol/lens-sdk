@@ -5,7 +5,7 @@ import {
   mockGetAllProfilesByOwnerAddressQueryMockedResponse,
   mockGetProfileQueryMockedResponse,
   mockProfileFieldsFragment,
-} from '@lens-protocol/api/mocks';
+} from '@lens-protocol/api-bindings/mocks';
 import { Profile } from '@lens-protocol/domain/entities';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 

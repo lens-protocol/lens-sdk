@@ -4,7 +4,7 @@ import {
   GetProfileQuery,
   GetProfileQueryVariables,
   ProfileFieldsFragment,
-} from '@lens-protocol/api';
+} from '@lens-protocol/api-bindings';
 import { IActiveProfilePresenter, ProfileData } from '@lens-protocol/domain/use-cases/profile';
 
 export const activeProfileVar = makeVar<ProfileFieldsFragment | null>(null);

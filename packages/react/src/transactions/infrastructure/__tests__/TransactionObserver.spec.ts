@@ -4,13 +4,13 @@
 
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { faker } from '@faker-js/faker';
-import { ProxyActionStatusTypes, TransactionErrorReasons } from '@lens-protocol/api';
+import { ProxyActionStatusTypes, TransactionErrorReasons } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockHasTxHashBeenIndexedQuery,
   mockHasTxHashBeenIndexedQueryMockedResponse,
   mockProxyActionStatusMockedResponse,
-} from '@lens-protocol/api/mocks';
+} from '@lens-protocol/api-bindings/mocks';
 import {
   ProxyActionStatus,
   TransactionError,
