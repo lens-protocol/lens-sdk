@@ -2,6 +2,11 @@
   "name": "@lens-protocol/react",
   "version": "0.0.1",
   "description": "Interacting with the Lens Protocol API using React.",
+  "repository": {
+    "directory": "packages/react",
+    "type": "git",
+    "url": "git://github.com/lens-protocol/lens-sdk.git"
+  },
   "type": "module",
   "exports": {
     ".": {

@@ -2,6 +2,11 @@
   "name": "@lens-protocol/domain",
   "version": "0.0.1",
   "description": "Critical Business Rules and Application-specific Business Rules",
+  "repository": {
+    "directory": "packages/domain",
+    "type": "git",
+    "url": "git://github.com/lens-protocol/lens-sdk.git"
+  },
   "type": "module",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",

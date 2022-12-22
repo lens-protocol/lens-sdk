@@ -2,6 +2,11 @@
   "name": "@lens-protocol/wagmi",
   "version": "0.0.1",
   "description": "wagmi bindings for @lens-protocol/react",
+  "repository": {
+    "directory": "packages/wagmi",
+    "type": "git",
+    "url": "git://github.com/lens-protocol/lens-sdk.git"
+  },
   "type": "module",
   "exports": {
     ".": {

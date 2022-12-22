@@ -1,7 +1,12 @@
 {
   "name": "@lens-protocol/api",
   "version": "0.0.1",
-  "description": "",
+  "description": "Graphql fragments, react hooks, typescript types of lens API.",
+  "repository": {
+    "directory": "packages/api",
+    "type": "git",
+    "url": "git://github.com/lens-protocol/lens-sdk.git"
+  },
   "type": "module",
   "exports": {
     ".": {
