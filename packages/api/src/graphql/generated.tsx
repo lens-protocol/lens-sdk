@@ -3970,14 +3970,14 @@ export type WalletFragment = Pick<Wallet, 'address'> & {
   defaultProfile: Maybe<ProfileFieldsFragment>;
 };
 
-export type MetadataFragment = Pick<
+export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
   MetadataOutput,
   'name' | 'description' | 'mainContentFocus' | 'content'
 > & { media: Array<MediaSetFragment>; attributes: Array<MetadataAttributeOutputFragment> };
 
 export type MetadataAttributeOutputFragment = Pick<MetadataAttributeOutput, 'traitType' | 'value'>;
 
-export type PublicationStatsFragment = Pick<
+export type PublicationStatsFragment = { __typename: 'PublicationStats' } & Pick<
   PublicationStats,
   'totalAmountOfMirrors' | 'totalUpvotes' | 'totalAmountOfCollects' | 'totalAmountOfComments'
 >;
@@ -4103,7 +4103,7 @@ export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never
 
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
 
-export type FeedItemFragment = {
+export type FeedItemFragment = { __typename: 'FeedItem' } & {
   root: PostFragment | CommentFragment;
   comments: Maybe<Array<CommentFragment>>;
 };
@@ -4283,7 +4283,10 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
     coverPicture: Maybe<
       ProfileMediaFields_NftImage_Fragment | ProfileMediaFields_MediaSet_Fragment
     >;
-    stats: Pick<ProfileStats, 'totalFollowers' | 'totalFollowing' | 'totalPosts'>;
+    stats: { __typename: 'ProfileStats' } & Pick<
+      ProfileStats,
+      'totalFollowers' | 'totalFollowing' | 'totalPosts'
+    >;
     followModule: Maybe<
       | FeeFollowModuleSettingsFragment
       | ProfileFollowModuleSettingsFragment
@@ -4426,6 +4429,7 @@ export type BroadcastProtocolCallMutation = { result: RelayerResultFragment | Re
 
 export const PublicationStatsFragmentDoc = gql`
   fragment PublicationStats on PublicationStats {
+    __typename
     totalAmountOfMirrors
     totalUpvotes
     totalAmountOfCollects
@@ -4456,6 +4460,7 @@ export const MetadataAttributeOutputFragmentDoc = gql`
 `;
 export const MetadataFragmentDoc = gql`
   fragment Metadata on MetadataOutput {
+    __typename
     name
     description
     mainContentFocus
@@ -4550,6 +4555,7 @@ export const ProfileFieldsFragmentDoc = gql`
       ...ProfileMediaFields
     }
     stats {
+      __typename
       totalFollowers
       totalFollowing
       totalPosts
@@ -4875,6 +4881,7 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
 `;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
+    __typename
     root {
       ... on Post {
         ...Post

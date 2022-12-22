@@ -73,6 +73,7 @@ export function mockProfileFieldsFragment(
     coverPicture: mockProfileMediaFieldsFragment(),
 
     stats: {
+      __typename: 'ProfileStats',
       totalFollowers: 0,
       totalFollowing: 0,
       totalPosts: 0,
@@ -121,6 +122,7 @@ export function mockPublicationStats(
     totalAmountOfComments: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     totalUpvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     ...overrides,
+    __typename: 'PublicationStats',
   };
 }
 
@@ -140,6 +142,7 @@ export function mockPost(overrides?: Partial<PostFragment>): PostFragment {
     createdAt: faker.datatype.datetime().toISOString(),
     stats: mockPublicationStats(),
     metadata: {
+      __typename: 'MetadataOutput',
       mainContentFocus: PublicationMainFocus.TextOnly,
       name: faker.name.fullName(),
       description: null,
@@ -177,6 +180,7 @@ export function mockComment(
     id: faker.datatype.uuid(),
     stats: mockPublicationStats(),
     metadata: {
+      __typename: 'MetadataOutput',
       mainContentFocus: PublicationMainFocus.TextOnly,
       name: null,
       description: null,
@@ -218,6 +222,7 @@ export function mockFeedItem({
   comments?: CommentFragment[];
 }): FeedItemFragment {
   return {
+    __typename: 'FeedItem',
     root,
     comments,
   };

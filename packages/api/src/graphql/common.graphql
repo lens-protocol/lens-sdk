@@ -107,6 +107,7 @@ fragment Wallet on Wallet {
 }
 
 fragment Metadata on MetadataOutput {
+  __typename
   name
   description
   mainContentFocus
@@ -125,6 +126,7 @@ fragment MetadataAttributeOutput on MetadataAttributeOutput {
 }
 
 fragment PublicationStats on PublicationStats {
+  __typename
   totalAmountOfMirrors
   totalUpvotes
   totalAmountOfCollects
