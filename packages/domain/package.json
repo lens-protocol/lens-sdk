@@ -1,7 +1,6 @@
 {
   "name": "@lens-protocol/domain",
   "version": "0.1.0",
-  "private": true,
   "description": "Critical Business Rules and Application-specific Business Rules",
   "repository": {
     "directory": "packages/domain",
