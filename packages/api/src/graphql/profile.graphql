@@ -1,9 +1,11 @@
 fragment MediaFields on Media {
+  __typename
   url
   mimeType
 }
 
 fragment MediaSet on MediaSet {
+  __typename
   original {
     ...MediaFields
   }
@@ -30,6 +32,7 @@ fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
 
 fragment ProfileMediaFields on ProfileMedia {
   ... on NftImage {
+    __typename
     contractAddress
     tokenId
     uri
@@ -48,6 +51,7 @@ fragment Attribute on Attribute {
 }
 
 fragment ProfileFields on Profile {
+  __typename
   id
   name
   bio

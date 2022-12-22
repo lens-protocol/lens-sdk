@@ -11,6 +11,7 @@ fragment RelayError on RelayError {
 
 query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
   result: hasTxHashBeenIndexed(request: $request) {
+    __typename
     ... on TransactionIndexedResult {
       indexed
       txHash

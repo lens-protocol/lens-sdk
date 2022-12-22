@@ -67,7 +67,6 @@ export function mockProfileFieldsFragment(
     coverPicture: mockProfileMediaFieldsFragment(),
 
     stats: {
-      __typename: 'ProfileStats',
       totalFollowers: 0,
       totalFollowing: 0,
       totalPosts: 0,

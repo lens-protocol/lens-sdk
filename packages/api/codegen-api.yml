@@ -6,8 +6,6 @@ watch: false
 config:
   gqlImport: graphql-tag
   defaultScalarType: unknown
-  nonOptionalTypename: true
-  skipTypeNameForRoot: true
 
   scalars:
     Attach: string
@@ -45,8 +43,10 @@ generates:
     documents:
       - src/graphql/*.graphql
     plugins:
-      - 'typescript'
-      - 'typescript-operations'
+      - 'typescript':
+          nonOptionalTypename: true
+      - 'typescript-operations':
+          skipTypename: true
       - 'typescript-react-apollo'
       - 'typescript-apollo-client-helpers'
       - 'fragment-matcher'

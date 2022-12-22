@@ -75,7 +75,6 @@ function mockGetAllProfilesByOwnerAddressQuery(
 ): GetAllProfilesByOwnerAddressQuery {
   return {
     profilesByOwner: {
-      __typename: 'PaginatedProfileResult',
       items: profiles,
     },
   };

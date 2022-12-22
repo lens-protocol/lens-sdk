@@ -15,6 +15,7 @@ fragment ProxyActionQueued on ProxyActionQueued {
 
 query ProxyActionStatus($proxyActionId: ProxyActionId!) {
   result: proxyActionStatus(proxyActionId: $proxyActionId) {
+    __typename
     ... on ProxyActionStatusResult {
       ...ProxyActionStatusResult
     }
