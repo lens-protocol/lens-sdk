@@ -238,10 +238,8 @@ export function mockPublicationsQuery(args: {
     result: {
       data: {
         result: {
-          __typename: 'PaginatedPublicationResult',
           items: args.publications,
           pageInfo: {
-            __typename: 'PaginatedResultInfo',
             prev: null,
             next: null,
             totalCount: args.publications.length,
@@ -264,10 +262,8 @@ export function mockFeedQuery(args: {
     result: {
       data: {
         result: {
-          __typename: 'PaginatedFeedResult',
           items: args.items,
           pageInfo: {
-            __typename: 'PaginatedResultInfo',
             prev: null,
             next: null,
             totalCount: args.items.length,
