@@ -8,7 +8,7 @@ import { waitFor } from '@testing-library/react';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { ProfileFieldsFragment, useProfilesToFollow } from '../useProfilesToFollow';
 
-describe('Given the useProfilesToFollow hook', () => {
+describe(`Given the ${useProfilesToFollow.name} hook`, () => {
   const mockProfiles: ProfileFieldsFragment[] = [mockProfileFieldsFragment()];
 
   describe('when the query returns data successfully', () => {
