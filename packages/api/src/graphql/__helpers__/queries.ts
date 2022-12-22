@@ -2,27 +2,38 @@ import { MockedResponse } from '@apollo/client/testing';
 import { Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
-  ProfileFieldsFragment,
-  ProfilesToFollowQuery,
-  ProfilesToFollowDocument,
-  Maybe,
-  GetProfileQuery,
-  GetProfileDocument,
-  SingleProfileQueryRequest,
-  GetAllProfilesByOwnerAddressQuery,
+  CommentFragment,
+  EnabledModuleCurrenciesDocument,
+  EnabledModuleCurrenciesQuery,
+  FeedDocument,
+  FeedItemFragment,
+  FeedQuery,
+  FeedQueryVariables,
   GetAllProfilesByOwnerAddressDocument,
+  GetAllProfilesByOwnerAddressQuery,
+  GetProfileDocument,
+  GetProfileQuery,
+  HasTxHashBeenIndexedDocument,
+  HasTxHashBeenIndexedQuery,
+  HasTxHashBeenIndexedQueryVariables,
+  Maybe,
+  PostFragment,
+  ProfileFieldsFragment,
+  ProfilesToFollowDocument,
+  ProfilesToFollowQuery,
   ProxyActionError,
+  ProxyActionStatusDocument,
+  ProxyActionStatusQuery,
+  ProxyActionStatusQueryVariables,
   ProxyActionStatusResult,
   ProxyActionStatusTypes,
-  ProxyActionStatusQueryVariables,
-  ProxyActionStatusQuery,
-  ProxyActionStatusDocument,
-  HasTxHashBeenIndexedQuery,
+  PublicationDocument,
+  PublicationQuery,
+  PublicationsDocument,
+  PublicationsQuery,
+  PublicationsQueryVariables,
+  SingleProfileQueryRequest,
   TransactionErrorReasons,
-  HasTxHashBeenIndexedQueryVariables,
-  HasTxHashBeenIndexedDocument,
-  EnabledModuleCurrenciesQuery,
-  EnabledModuleCurrenciesDocument,
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesDocument,
   MutualFollowersProfilesQueryVariables,
@@ -220,6 +231,76 @@ export function mockMutualFollowersQuery(args: {
             prev: null,
             next: null,
             totalCount: args.profiles.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function mockPublicationQueryMockedResponse(
+  publication: PostFragment,
+): MockedResponse<PublicationQuery> {
+  return {
+    request: {
+      query: PublicationDocument,
+      variables: {
+        publicationId: publication.id,
+      },
+    },
+    result: {
+      data: {
+        result: publication,
+      },
+    },
+  };
+}
+
+export function mockPublicationsQuery(args: {
+  variables: PublicationsQueryVariables;
+  publications: Array<CommentFragment | PostFragment>;
+}): MockedResponse<PublicationsQuery> {
+  return {
+    request: {
+      query: PublicationsDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          __typename: 'PaginatedPublicationResult',
+          items: args.publications,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.publications.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function mockFeedQuery(args: {
+  variables: FeedQueryVariables;
+  items: FeedItemFragment[];
+}): MockedResponse<FeedQuery> {
+  return {
+    request: {
+      query: FeedDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          __typename: 'PaginatedFeedResult',
+          items: args.items,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
           },
         },
       },
