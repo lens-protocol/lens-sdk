@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/shared-kernel",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Shared kernel",
   "repository": {
     "directory": "packages/shared-kernel",
@@ -73,6 +73,9 @@
   },
   "peerDependencies": {
     "ethers": "^5.7.2"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:8081/repository/npm-private/"
   },
   "prettier": "@lens-protocol/prettier-config"
 }

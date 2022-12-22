@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/storage",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Storage",
   "repository": {
     "directory": "packages/storage",
@@ -68,6 +68,9 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
     "typescript": "^4.9.3"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:8081/repository/npm-private/"
   },
   "prettier": "@lens-protocol/prettier-config"
 }

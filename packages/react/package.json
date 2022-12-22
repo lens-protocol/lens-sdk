@@ -1,12 +1,18 @@
 {
   "name": "@lens-protocol/react",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Interacting with the Lens Protocol API using React.",
   "repository": {
     "directory": "packages/react",
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
+  "bundledDependencies": [
+    "@lens-protocol/api",
+    "@lens-protocol/domain",
+    "@lens-protocol/shared-kernel",
+    "@lens-protocol/storage"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -58,7 +64,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@lens-protocol/api": "workspace:*",
-    "@lens-protocol/domain": "workspace:^0.0.1",
+    "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
     "graphql": "15.5.1",
@@ -97,6 +103,9 @@
   "peerDependencies": {
     "ethers": "^5.7.2",
     "react": "^18.2.0"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:8081/repository/npm-private/"
   },
   "prettier": "@lens-protocol/prettier-config"
 }
