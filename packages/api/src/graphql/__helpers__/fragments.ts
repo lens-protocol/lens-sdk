@@ -163,11 +163,9 @@ export function mockPost(overrides?: Partial<PostFragment>): PostFragment {
     hidden: false,
     isGated: false,
     canComment: {
-      __typename: 'CanCommentResponse',
       result: true,
     },
     canMirror: {
-      __typename: 'CanMirrorResponse',
       result: true,
     },
     ...overrides,
@@ -206,11 +204,9 @@ export function mockComment(
     hidden: false,
     isGated: false,
     canComment: {
-      __typename: 'CanCommentResponse',
       result: true,
     },
     canMirror: {
-      __typename: 'CanMirrorResponse',
       result: true,
     },
     ...overrides,
