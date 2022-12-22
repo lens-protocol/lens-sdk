@@ -21,7 +21,7 @@ importers:
       '@bundlr-network/client': ^0.9.11
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
-      '@lens-protocol/react': file:../../packages/react/lens-protocol-react-0.1.0.tgz
+      '@lens-protocol/react': workspace:*
       '@lens-protocol/wagmi': workspace:*
       '@types/react': ^18.0.24
       '@types/react-dom': ^18.0.8
@@ -39,7 +39,7 @@ importers:
       wagmi: 0.9.2
     dependencies:
       '@bundlr-network/client': 0.9.11
-      '@lens-protocol/react': file:packages/react/lens-protocol-react-0.1.0.tgz_n2cgurg25g7cgftjzlbstkeb2y
+      '@lens-protocol/react': link:../../packages/react
       '@lens-protocol/wagmi': link:../../packages/wagmi
       ethers: 5.7.2
       react: 18.2.0
@@ -88,6 +88,7 @@ importers:
     dependencies:
       '@apollo/client': 3.7.1_graphql@15.5.1
       '@lens-protocol/domain': link:../domain
+      '@lens-protocol/shared-kernel': link:../shared-kernel
       tslib: 2.4.1
     devDependencies:
       '@babel/core': 7.20.5
@@ -101,7 +102,6 @@ importers:
       '@graphql-codegen/typescript-react-apollo': 2.3.1_jfpubfhwwmn23kvmm2lm4dvp6q
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
-      '@lens-protocol/shared-kernel': link:../shared-kernel
       '@types/jest': 29.2.3
       babel-plugin-graphql-tag: 3.3.0_dfknw6xjzvbhkris5p74ndxuwy
       eslint: 8.28.0
@@ -187,7 +187,7 @@ importers:
       '@ethersproject/providers': ^5.7.2
       '@faker-js/faker': ^7.6.0
       '@lens-protocol/api': workspace:*
-      '@lens-protocol/domain': workspace:^0.0.1
+      '@lens-protocol/domain': workspace:*
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/shared-kernel': workspace:*
@@ -328,7 +328,7 @@ importers:
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/react': workspace:*
-      '@lens-protocol/shared-kernel': workspace:^0.0.1
+      '@lens-protocol/shared-kernel': workspace:*
       ethers: ^5.7.2
       prettier: ^2.8.1
       react: ^18.2.0
@@ -15536,43 +15536,6 @@ packages:
     dependencies:
       react: 18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
-
-  file:packages/react/lens-protocol-react-0.1.0.tgz_n2cgurg25g7cgftjzlbstkeb2y:
-    resolution: {integrity: sha512-97qfQhulJ3kHlCIzfV2rFgtEDFePzS+uTS5WajBQ7Bad2IdLKxVesQeF/snij3tyvSIQnbJzJsasoAJXQ/14FA==, tarball: file:packages/react/lens-protocol-react-0.1.0.tgz}
-    id: file:packages/react/lens-protocol-react-0.1.0.tgz
-    name: '@lens-protocol/react'
-    version: 0.1.0
-    peerDependencies:
-      ethers: ^5.7.2
-      react: ^18.2.0
-    dependencies:
-      '@apollo/client': 3.7.1_47swblzip3hkvavljfwh7ztgne
-      '@ethersproject/abstract-signer': 5.7.0
-      '@ethersproject/providers': 5.7.2
-      '@lens-protocol/api': link:packages/api
-      '@lens-protocol/domain': link:packages/domain
-      '@lens-protocol/shared-kernel': link:packages/shared-kernel
-      '@lens-protocol/storage': link:packages/storage
-      ethers: 5.7.2
-      graphql: 15.5.1
-      jwt-decode: 3.1.2
-      lodash: 4.17.21
-      react: 18.2.0
-      tslib: 2.4.1
-      uuid: 9.0.0
-      zod: 3.19.1
-    transitivePeerDependencies:
-      - bufferutil
-      - graphql-ws
-      - react-dom
-      - subscriptions-transport-ws
-      - utf-8-validate
-    dev: false
-    bundledDependencies:
-      - '@lens-protocol/api'
-      - '@lens-protocol/domain'
-      - '@lens-protocol/shared-kernel'
-      - '@lens-protocol/storage'
 
   github.com/Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef:
     resolution: {tarball: https://codeload.github.com/Bundlr-Network/avsc/tar.gz/a730cc8018b79e114b6a3381bbb57760a24c6cef}
