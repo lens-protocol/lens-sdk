@@ -1,4 +1,8 @@
-import { ProfileFieldsFragment, FollowingFragment, FollowerFragment } from '@lens-protocol/api-bindings';
+import {
+  ProfileFieldsFragment,
+  FollowingFragment,
+  FollowerFragment,
+} from '@lens-protocol/api-bindings';
 
 export * from './useActiveProfile';
 export * from './useCreateProfile';
