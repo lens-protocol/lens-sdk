@@ -244,6 +244,7 @@ export type CanDecryptResponse = {
   __typename: 'CanDecryptResponse';
   result: Scalars['Boolean'];
   reasons: Maybe<Array<DecryptFailReason>>;
+  extraDetails: Maybe<Scalars['String']>;
 };
 
 export type CanMirrorResponse = {
@@ -326,8 +327,11 @@ export enum CollectModules {
   FeeCollectModule = 'FeeCollectModule',
   LimitedTimedFeeCollectModule = 'LimitedTimedFeeCollectModule',
   TimedFeeCollectModule = 'TimedFeeCollectModule',
+  AaveFeeCollectModule = 'AaveFeeCollectModule',
   RevertCollectModule = 'RevertCollectModule',
   FreeCollectModule = 'FreeCollectModule',
+  MultirecipientFeeCollectModule = 'MultirecipientFeeCollectModule',
+  Erc4626FeeCollectModule = 'ERC4626FeeCollectModule',
   UnknownCollectModule = 'UnknownCollectModule',
 }
 
@@ -359,6 +363,7 @@ export type Comment = {
   commentOn: Maybe<Publication>;
   /** The date the post was created on */
   createdAt: Scalars['DateTime'];
+  /** The data availability proofs you can fetch from */
   dataAvailabilityProofs: Maybe<Scalars['String']>;
   /** This will bring back the first comment of a comment and only be defined if using `publication` query and `commentOf` */
   firstComment: Maybe<Comment>;
@@ -1002,6 +1007,7 @@ export enum DecryptFailReason {
   MissingEncryptionParams = 'MISSING_ENCRYPTION_PARAMS',
   FollowNotFinalisedOnChain = 'FOLLOW_NOT_FINALISED_ON_CHAIN',
   CollectNotFinalisedOnChain = 'COLLECT_NOT_FINALISED_ON_CHAIN',
+  CanNotDecrypt = 'CAN_NOT_DECRYPT',
 }
 
 export type DefaultProfileRequest = {
@@ -1602,6 +1608,17 @@ export type HidePublicationRequest = {
   publicationId: Scalars['InternalPublicationId'];
 };
 
+export type IdKitPhoneVerifyWebhookRequest = {
+  sharedSecret: Scalars['String'];
+  worldcoin?: Maybe<WorldcoinPhoneVerifyWebhookRequest>;
+};
+
+/** The verify webhook result status type */
+export enum IdKitPhoneVerifyWebhookResultStatusType {
+  Success = 'SUCCESS',
+  AlreadyVerified = 'ALREADY_VERIFIED',
+}
+
 export type IllegalReasonInputParams = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingIllegalSubreason;
@@ -1814,6 +1831,7 @@ export type Mirror = {
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
   /** The date the post was created on */
   createdAt: Scalars['DateTime'];
+  /** The data availability proofs you can fetch from */
   dataAvailabilityProofs: Maybe<Scalars['String']>;
   hasCollectedByMe: Scalars['Boolean'];
   hasOptimisticCollectedByMe: Scalars['Boolean'];
@@ -1908,6 +1926,7 @@ export type Mutation = {
   createSetFollowModuleTypedData: CreateSetFollowModuleBroadcastItemResult;
   createSetFollowNFTUriTypedData: CreateSetFollowNftUriBroadcastItemResult;
   createToggleFollowTypedData: CreateToggleFollowBroadcastItemResult;
+  createAttachMediaData: PublicMediaResults;
   createCollectTypedData: CreateCollectBroadcastItemResult;
   createSetDefaultProfileTypedData: SetDefaultProfileBroadcastItemResult;
   createSetProfileImageURITypedData: CreateSetProfileImageUriBroadcastItemResult;
@@ -1920,8 +1939,8 @@ export type Mutation = {
   createMirrorTypedData: CreateMirrorBroadcastItemResult;
   hidePublication: Maybe<Scalars['Void']>;
   createMirrorViaDispatcher: RelayResult;
-  createAttachMediaData: PublicMediaResults;
   claim: RelayResult;
+  idKitPhoneVerifyWebhook: IdKitPhoneVerifyWebhookResultStatusType;
   createProfile: RelayResult;
   /** Adds profile interests to the given profile */
   addProfileInterests: Maybe<Scalars['Void']>;
@@ -1979,6 +1998,10 @@ export type MutationCreateToggleFollowTypedDataArgs = {
   request: CreateToggleFollowRequest;
 };
 
+export type MutationCreateAttachMediaDataArgs = {
+  request: PublicMediaRequest;
+};
+
 export type MutationCreateCollectTypedDataArgs = {
   options?: Maybe<TypedDataOptions>;
   request: CreateCollectRequest;
@@ -2034,12 +2057,12 @@ export type MutationCreateMirrorViaDispatcherArgs = {
   request: CreateMirrorRequest;
 };
 
-export type MutationCreateAttachMediaDataArgs = {
-  request: PublicMediaRequest;
-};
-
 export type MutationClaimArgs = {
   request: ClaimHandleRequest;
+};
+
+export type MutationIdKitPhoneVerifyWebhookArgs = {
+  request: IdKitPhoneVerifyWebhookRequest;
 };
 
 export type MutationCreateProfileArgs = {
@@ -2405,7 +2428,7 @@ export type PaginatedResultInfo = {
   prev: Maybe<Scalars['Cursor']>;
   /** Cursor to query next results */
   next: Maybe<Scalars['Cursor']>;
-  /** The total number of entities the pagination iterates over. If null it means it can not work it out due to dynamic or aggregated query e.g. For a query that requests all nfts with more than 10 likes, this field gives the total amount of nfts with more than 10 likes, not the total amount of nfts */
+  /** The total number of entities the pagination iterates over. If its null then its not been worked out due to it being an expensive query and not really needed for the client. All main counters are in counter tables to allow them to be faster fetching. */
   totalCount: Maybe<Scalars['Int']>;
 };
 
@@ -2460,6 +2483,7 @@ export type Post = {
   collectedBy: Maybe<Wallet>;
   /** The date the post was created on */
   createdAt: Scalars['DateTime'];
+  /** The data availability proofs you can fetch from */
   dataAvailabilityProofs: Maybe<Scalars['String']>;
   hasCollectedByMe: Scalars['Boolean'];
   hasOptimisticCollectedByMe: Scalars['Boolean'];
@@ -3129,6 +3153,7 @@ export type Query = {
   userSigNonces: UserSigNonces;
   claimableHandles: ClaimableHandles;
   claimableStatus: ClaimStatus;
+  isIDKitPhoneVerified: Scalars['Boolean'];
   internalPublicationFilter: PaginatedPublicationResult;
   profileOnChainIdentity: Array<OnChainIdentity>;
   /** Get the list of profile interests */
@@ -3800,6 +3825,18 @@ export type WorldcoinIdentity = {
   __typename: 'WorldcoinIdentity';
   /** If the profile has verified as a user */
   isHuman: Scalars['Boolean'];
+};
+
+/** The worldcoin signal type */
+export enum WorldcoinPhoneVerifyType {
+  Phone = 'PHONE',
+  Orb = 'ORB',
+}
+
+export type WorldcoinPhoneVerifyWebhookRequest = {
+  nullifierHash: Scalars['String'];
+  signalType: WorldcoinPhoneVerifyType;
+  signal: Scalars['EthereumAddress'];
 };
 
 export type AuthChallengeQueryVariables = Exact<{
@@ -4570,6 +4607,25 @@ export type BroadcastProtocolCallMutation = {
   result:
     | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
     | ({ __typename: 'RelayError' } & RelayErrorFragment);
+};
+
+export type WalletCollectedPublicationsQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  walletAddress: Scalars['EthereumAddress'];
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+}>;
+
+export type WalletCollectedPublicationsQuery = {
+  result: { __typename: 'PaginatedPublicationResult' } & {
+    items: Array<
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Comment' } & CommentFragment)
+      | ({ __typename: 'Mirror' } & MirrorFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  };
 };
 
 export const PublicationStatsFragmentDoc = gql`
@@ -6586,6 +6642,99 @@ export type BroadcastProtocolCallMutationOptions = Apollo.BaseMutationOptions<
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables
 >;
+export const WalletCollectedPublicationsDocument = gql`
+  query WalletCollectedPublications(
+    $observerId: ProfileId
+    $walletAddress: EthereumAddress!
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $sources: [Sources!]
+  ) {
+    result: publications(
+      request: {
+        collectedBy: $walletAddress
+        limit: $limit
+        cursor: $cursor
+        publicationTypes: [POST, COMMENT]
+        sources: $sources
+      }
+    ) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useWalletCollectedPublicationsQuery__
+ *
+ * To run a query within a React component, call `useWalletCollectedPublicationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWalletCollectedPublicationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWalletCollectedPublicationsQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      walletAddress: // value for 'walletAddress'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
+ *   },
+ * });
+ */
+export function useWalletCollectedPublicationsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    WalletCollectedPublicationsQuery,
+    WalletCollectedPublicationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    WalletCollectedPublicationsQuery,
+    WalletCollectedPublicationsQueryVariables
+  >(WalletCollectedPublicationsDocument, options);
+}
+export function useWalletCollectedPublicationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    WalletCollectedPublicationsQuery,
+    WalletCollectedPublicationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    WalletCollectedPublicationsQuery,
+    WalletCollectedPublicationsQueryVariables
+  >(WalletCollectedPublicationsDocument, options);
+}
+export type WalletCollectedPublicationsQueryHookResult = ReturnType<
+  typeof useWalletCollectedPublicationsQuery
+>;
+export type WalletCollectedPublicationsLazyQueryHookResult = ReturnType<
+  typeof useWalletCollectedPublicationsLazyQuery
+>;
+export type WalletCollectedPublicationsQueryResult = Apollo.QueryResult<
+  WalletCollectedPublicationsQuery,
+  WalletCollectedPublicationsQueryVariables
+>;
 export type AccessConditionOutputKeySpecifier = (
   | 'nft'
   | 'token'
@@ -6657,11 +6806,13 @@ export type CanCommentResponseFieldPolicy = {
 export type CanDecryptResponseKeySpecifier = (
   | 'result'
   | 'reasons'
+  | 'extraDetails'
   | CanDecryptResponseKeySpecifier
 )[];
 export type CanDecryptResponseFieldPolicy = {
   result?: FieldPolicy<any> | FieldReadFunction<any>;
   reasons?: FieldPolicy<any> | FieldReadFunction<any>;
+  extraDetails?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type CanMirrorResponseKeySpecifier = ('result' | CanMirrorResponseKeySpecifier)[];
 export type CanMirrorResponseFieldPolicy = {
@@ -7854,6 +8005,7 @@ export type MutationKeySpecifier = (
   | 'createSetFollowModuleTypedData'
   | 'createSetFollowNFTUriTypedData'
   | 'createToggleFollowTypedData'
+  | 'createAttachMediaData'
   | 'createCollectTypedData'
   | 'createSetDefaultProfileTypedData'
   | 'createSetProfileImageURITypedData'
@@ -7866,8 +8018,8 @@ export type MutationKeySpecifier = (
   | 'createMirrorTypedData'
   | 'hidePublication'
   | 'createMirrorViaDispatcher'
-  | 'createAttachMediaData'
   | 'claim'
+  | 'idKitPhoneVerifyWebhook'
   | 'createProfile'
   | 'addProfileInterests'
   | 'removeProfileInterests'
@@ -7891,6 +8043,7 @@ export type MutationFieldPolicy = {
   createSetFollowModuleTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetFollowNFTUriTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createToggleFollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createAttachMediaData?: FieldPolicy<any> | FieldReadFunction<any>;
   createCollectTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetDefaultProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetProfileImageURITypedData?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -7903,8 +8056,8 @@ export type MutationFieldPolicy = {
   createMirrorTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
   createMirrorViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
-  createAttachMediaData?: FieldPolicy<any> | FieldReadFunction<any>;
   claim?: FieldPolicy<any> | FieldReadFunction<any>;
+  idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
   createProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   addProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   removeProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -8526,6 +8679,7 @@ export type QueryKeySpecifier = (
   | 'userSigNonces'
   | 'claimableHandles'
   | 'claimableStatus'
+  | 'isIDKitPhoneVerified'
   | 'internalPublicationFilter'
   | 'profileOnChainIdentity'
   | 'profileInterests'
@@ -8580,6 +8734,7 @@ export type QueryFieldPolicy = {
   userSigNonces?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableHandles?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  isIDKitPhoneVerified?: FieldPolicy<any> | FieldReadFunction<any>;
   internalPublicationFilter?: FieldPolicy<any> | FieldReadFunction<any>;
   profileOnChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
   profileInterests?: FieldPolicy<any> | FieldReadFunction<any>;

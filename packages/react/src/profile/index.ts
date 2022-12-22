@@ -7,5 +7,6 @@ export * from './useProfileFollowers';
 export * from './useProfileFollowing';
 export * from './useProfile';
 export * from './useExploreProfiles';
+export * from './useCollectables';
 
 export type { ProfileFieldsFragment, FollowingFragment, FollowerFragment };

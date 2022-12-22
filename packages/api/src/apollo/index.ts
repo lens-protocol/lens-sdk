@@ -22,6 +22,7 @@ function createTypePolicies(): TypePolicies {
         feed: createFeedFieldPolicy(),
         exploreProfiles: createExploreProfilesFieldPolicy(),
         notifications: createNotificationsFieldPolicy(),
+        publications: createPublicationTypePolicy(),
       },
     },
   };
