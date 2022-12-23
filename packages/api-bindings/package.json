@@ -38,14 +38,15 @@
     "mocks"
   ],
   "scripts": {
-    "build:cjs": "tsc -p ./tsconfig.cjs.json",
-    "build:esm": "tsc -p ./tsconfig.json",
+    "build:cjs": "tsc -p ./tsconfig.build-cjs.json",
+    "build:esm": "tsc -p ./tsconfig.build.json",
     "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
     "clean": "rimraf ./dist",
     "test": "jest --passWithNoTests",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
     "tsc": "tsc --noEmit",
