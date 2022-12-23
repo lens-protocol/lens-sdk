@@ -23,7 +23,7 @@
   --border: #d8dae1;
   --accent: #00501e;
   --accent-light: #00501ed9;
-  --code: #d81b60;
+  --code: #ffffff;
   --preformatted: #444;
   --marked: #ffdd33;
   --disabled: #efefef;
@@ -38,7 +38,7 @@
     --border: #666;
     --accent: #aafe2c;
     --accent-light: #abfe2cd9;
-    --code: #f06292;
+    --code: #ffffff;
     --preformatted: #ccc;
     --disabled: #111;
   }
@@ -47,4 +47,20 @@
 nav a.current {
   color: var(--accent) !important;
   border-color: var(--accent) !important;
+}
+
+#root > header {
+  padding: 1rem 0.5rem 1rem 0.5rem;
+}
+
+article {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+article h3,
+article p {
+  margin: 0;
 }

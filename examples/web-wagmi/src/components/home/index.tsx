@@ -1,38 +1,30 @@
 import { Link } from 'react-router-dom';
 
-const examples = [
-  {
-    label: 'Feed',
-    path: '/feed',
-  },
-  {
-    label: 'Explore Profiles',
-    path: '/explore-profiles',
-  },
-  {
-    label: 'Profiles to Follow',
-    path: '/profiles-to-follow',
-  },
-];
+import { CATEGORIES } from '../../config';
 
 export function Home() {
   return (
-    <div
-      style={{
-        display: 'grid',
-        gap: '2rem',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        width: '100%',
-        margin: '0 auto',
-      }}
-    >
-      {examples.map(({ path, label }) => (
-        <article key={path} style={{ aspectRatio: 1.5 }}>
-          <Link to={path}>
-            <button>{label}</button>
-          </Link>
-        </article>
-      ))}
-    </div>
+    <>
+      <h1>Home</h1>
+
+      <div
+        style={{
+          display: 'grid',
+          gap: '2rem',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          width: '100%',
+          margin: '0 auto',
+        }}
+      >
+        {CATEGORIES.map(({ path, label }) => (
+          <article key={path}>
+            <h6>{label}</h6>
+            <Link to={path}>
+              <a>View</a>
+            </Link>
+          </article>
+        ))}
+      </div>
+    </>
   );
 }

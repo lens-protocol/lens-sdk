@@ -1,44 +1,18 @@
 import { useActiveProfile } from '@lens-protocol/react';
 import { NavLink } from 'react-router-dom';
 
+import { CATEGORIES } from '../../config';
 import { LoginButton } from '../auth/LoginButton';
-
-const examples = [
-  {
-    label: 'Home',
-    path: '/',
-  },
-  {
-    label: 'Feed',
-    path: '/feed',
-  },
-  {
-    label: 'Explore Profiles',
-    path: '/explore-profiles',
-  },
-  {
-    label: 'Profiles to Follow',
-    path: '/profiles-to-follow',
-  },
-  {
-    label: 'Unread Notification Count',
-    path: '/unread-notification-count',
-  },
-  {
-    label: 'Notifications',
-    path: '/notifications',
-  },
-];
 
 export function Header() {
   const { data: profile } = useActiveProfile();
 
   return (
     <header>
-      <h1>Lens SDK</h1>
+      <h1>Lens SDK 🌿</h1>
 
       <p>
-        Example app that demonstrates a possible integration strategy with&nbsp;
+        Examples of each hook used demonstrating a possible integration with&nbsp;
         <a href="https://wagmi.sh/">wagmi</a>.
       </p>
 
@@ -60,7 +34,7 @@ export function Header() {
       </div>
 
       <nav>
-        {examples.map(({ path, label }) => (
+        {CATEGORIES.map(({ path, label }) => (
           <NavLink
             key={path}
             to={path}

@@ -2,11 +2,13 @@ import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react
 import { localStorage } from '@lens-protocol/react/web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { optimism, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
+import { AuthenticationPage } from './authentication/AuthenticationPage';
+import { Breadcrumbs } from './components/Breadcrumbs';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
 import { GenericError } from './components/error/GenericError';
 import { Feed } from './components/feed/Feed';
@@ -14,11 +16,14 @@ import { Header } from './components/header/Header';
 import { Home } from './components/home';
 import { NotificationCount } from './components/notification/NotificationCount';
 import { Notifications } from './components/notification/Notifications';
-import { ExploreProfiles } from './components/profile/ExploreProfiles';
 import { ProfileByHandle } from './components/profile/ProfileByHandle';
 import { ProfileById } from './components/profile/ProfileById';
+import { UseExploreProfiles } from './components/profile/UseExploreProfiles';
+import { UseProfile } from './components/profile/UseProfile';
 import { ProfilesToFollow } from './components/profiles-to-follow/ProfilesToFollow';
 import { Publication } from './components/publication/Publication';
+import { ProfilesPage } from './profiles/ProfilesPage';
+import { PublicationsPage } from './publications/PublicationsPage';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
@@ -44,17 +49,30 @@ export function App() {
         <Router>
           <Header />
           <main>
+            <Breadcrumbs />
             <GenericErrorBoundary fallback={GenericError}>
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/authentication" element={<AuthenticationPage />} />
+
+                <Route path="/publications" element={<PublicationsPage />} />
+                <Route path="/publications/usePublication" element={<Publication />} />
+
+                <Route path="/profiles" element={<ProfilesPage />}></Route>
+                <Route path="/profiles/useProfile" element={<UseProfile />}>
+                  <Route path="/profiles/useProfile/handle" element={<ProfileByHandle />} />
+                </Route>
+
+                <Route path="/profiles/useExploreProfiles" element={<UseExploreProfiles />} />
+
                 <Route path="/feed" element={<Feed />} />
-                <Route path="/explore-profiles" element={<ExploreProfiles />} />
+                <Route path="/explore-profiles" element={<UseExploreProfiles />} />
                 <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
                 <Route path="/publication/:publicationId" element={<Publication />} />
-                <Route path="/profile">
+                {/* <Route path="/profile">
                   <Route path="handle/:handle" element={<ProfileByHandle />} />
                   <Route path="id/:profileId" element={<ProfileById />} />
-                </Route>
+                </Route> */}
                 <Route path="/unread-notification-count" element={<NotificationCount />} />
                 <Route path="/notifications" element={<Notifications />} />
               </Routes>
