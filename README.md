@@ -1,117 +1,27 @@
-# Lens SDK 🌿 (alpha)
+# Lens SDK 🌿 - Developer Preview
 
 The official SDK for the Lens Protocol.
+
+> **Warning**
+>
+> The Lens SDK is still in its initial development phase. Anything MAY change at any time.
+> This is a Developer Preview aimed primarily at existing integrators so to gather [early feedback](https://github.com/lens-protocol/lens-sdk/discussions/48).
 
 ## Documentation
 
 All Lens Protocol documentation, including this SDK documentation can be found at: https://docs.lens.xyz/docs
 
-## Planned React hooks
+- [Introduction](https://docs.lens.xyz/docs/sdk-react-intro)
+- [Getting Started](https://docs.lens.xyz/docs/sdk-react-getting-started)
 
-### Authentication
+## Road Map
 
-- [x] `useWalletLogin`
-- [x] `useWalletLogout`
+- Release 1.0: initial stable release.
+- Release 1.1: Low-level API abstraction client (name to be decided).
+- Release 1.2: support for Data Availability posts.
+- Release 1.3: integration with Lens Gated SDK.
 
-### Collect/follow modules support
-
-- [ ] `useApproveModule` - signed, paid gas
-- [x] `useCurrencies`
-
-### Profile
-
-- [x] `useActiveProfile`
-- [x] `useProfile`
-- [x] `useProfilesToFollow`
-- [ ] `useProfileFollowers`
-- [ ] `useProfileFollowing`
-- [ ] `useFollow`
-  - [ ] sign-less, gas-less (via proxy action)
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- [ ] `useUnfollow`
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- `useUpdateProfileImage` - upload
-  - [ ] sign-less, gas-less (via dispatcher)
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- `useUpdateProfileImage` - NFT
-  - [ ] sign-less, gas-less (via dispatcher)
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- `useUpdateCoverImage`
-  - [ ] sign-less, gas-less (via dispatcher)
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- `useUpdateProfileDetails`
-  - [ ] sign-less, gas-less (via dispatcher)
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- `useUpdateFollowPolicy`
-  - [ ] sign-less, gas-less (via dispatcher)
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- `useUpdateDispatcherConfig`
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- [x] `useCollectedPublications`
-- [x] `useMutualFollowers`
-
-### Explore
-
-- [x] `useExploreProfiles`
-- [ ] `useExplorePublications`
-
-### Feed
-
-- [x] `useFeed`
-
-### Publication
-
-- [x] `usePublication`
-- [x] `usePublicationComments`
-- [x] `usePublications`
-- [ ] `useCreatePost`
-  - [ ] sign-less, gas-less, instant (via Data Availability)
-  - [x] sign-less, gas-less
-  - [x] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- [ ] `useCreateComment`
-  - [ ] sign-less, gas-less, instant (via Data Availability)
-  - [ ] sign-less, gas-less
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- [ ] `useMirror`
-  - [ ] sign-less, gas-less
-  - [ ] signed, gas-less
-  - [ ] signed, paid (fallback)
-- [ ] `useCollect`
-  - [ ] sign-less, gas-less (via proxy action)
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
-- [ ] `useReaction`
-- [ ] `useWhoReacted`
-
-### Revenue
-
-- [ ] `usePublicationRevenue`
-- [ ] `useProfilePublicationsRevenue`
-- [ ] `useProfileFollowsRevenue`
-
-### Search
-
-- [ ] `useSearchPublications`
-- [ ] `useSearchProfiles`
-
-### Notifications
-
-- [ ] `useNotifications`
-- [ ] `useUnreadNotifications`
-
-### NFTs
-
-- [ ] `useNfts`
+**Note**: This road map is subject to change and is provided for informational purposes only.
 
 ## Setup
 
@@ -137,12 +47,11 @@ pnpm test
 
 ## Contributing
 
-**NOTE** at this time we are going to ask the community to hold on any pull request with new features until we reach an initial stable release.
+> **Note**
+>
+> At this time we are going to ask the community to hold on any pull requests until we reach an initial stable release (1.x).
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change (issues template will be provided)
 
 ## Releasing new version
 
@@ -153,12 +62,15 @@ All publishable monorepo packages follow [`fixed`](https://github.com/changesets
 To release a new version follow the steps below:
 
 1. Document new public facing changes during development.
+
 ```bash
 changeset add
 ```
+
 The command will ask a series of questions related to the introduced changes and the version bump that's required to follow semver range.
 
 2. Once ready to do a release make sure that all libs are properly built (`dist` folders have the most up-to-date code) and the tests/lints are passing.
+
 ```bash
 ## run all from monorepo root
 pnpm build
@@ -169,6 +81,7 @@ pnpm lint
 ```
 
 3. Update relevant `package.json`'s versions and update `CHANGELOG.md` for each package.
+
 ```bash
 changeset version
 ```
@@ -177,20 +90,24 @@ changeset version
 
 5. Once all the steps above are done we are ready to publish a new release to the registry
 
-*Note: Before publishing make sure that you are logged in to the correct npm account (run `pnpm whoami`). If not, follow prompts from `pnpm login`.*
+_Note: Before publishing make sure that you are logged in to the correct npm account (run `pnpm whoami`). If not, follow prompts from `pnpm login`._
 
 ```bash
 changeset publish
 ```
 
-*Note: Because this command assumes that the last commit is the release commit, you should not commit any changes between calling version and publish.*
+_Note: Because this command assumes that the last commit is the release commit, you should not commit any changes between calling version and publish._
 
 6. Don't forget to push git tags after publishing to registry.
+
 ```bash
 git push --follow-tags
 ```
 
-
 ## License
 
 Lens SDK is [MIT licensed](./LICENSE)
+
+## Support
+
+See the Lens API channel on our [Discord](https://discord.gg/lensprotocol)

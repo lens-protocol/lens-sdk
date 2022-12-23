@@ -9,7 +9,7 @@ import {
   AuthRefreshDocument,
   AuthRefreshMutation,
   AuthRefreshMutationVariables,
-} from '@lens-protocol/api';
+} from '@lens-protocol/api-bindings';
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { Credentials } from '../adapters/Credentials';

@@ -57,7 +57,7 @@
     "@apollo/client": "^3.7.1",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
-    "@lens-protocol/api": "workspace:*",
+    "@lens-protocol/api-bindings": "workspace:*",
     "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",

@@ -1,4 +1,4 @@
-import { FeedItemFragment, useFeedQuery } from '@lens-protocol/api';
+import { FeedItemFragment, useFeedQuery } from '@lens-protocol/api-bindings';
 
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';

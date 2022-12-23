@@ -11,7 +11,7 @@ import {
   TransactionIndexedResult,
   isProxyActionError,
   isTransactionError,
-} from '@lens-protocol/api';
+} from '@lens-protocol/api-bindings';
 import {
   ProxyActionStatus,
   TransactionError,

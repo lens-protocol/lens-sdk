@@ -1,5 +1,5 @@
 import { ApolloError, QueryResult } from '@apollo/client';
-import { CommonPaginatedResultInfoFragment, Maybe } from '@lens-protocol/api';
+import { CommonPaginatedResultInfoFragment, Maybe } from '@lens-protocol/api-bindings';
 import { CausedError } from '@lens-protocol/shared-kernel';
 
 export type ReadResult<T> =

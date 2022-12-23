@@ -1,4 +1,4 @@
-import { useUnreadNotificationCountQuery } from '@lens-protocol/api';
+import { useUnreadNotificationCountQuery } from '@lens-protocol/api-bindings';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { useEffect, useState } from 'react';
 

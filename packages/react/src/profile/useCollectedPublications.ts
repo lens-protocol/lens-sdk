@@ -1,4 +1,4 @@
-import { useWalletCollectedPublicationsQuery } from '@lens-protocol/api';
+import { useWalletCollectedPublicationsQuery } from '@lens-protocol/api-bindings';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { Publication } from '../publication';

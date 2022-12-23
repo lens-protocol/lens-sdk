@@ -4,7 +4,7 @@ import {
   CreateProfileMutation,
   CreateProfileMutationVariables,
   RelayErrorReasons,
-} from '@lens-protocol/api';
+} from '@lens-protocol/api-bindings';
 import {
   Transaction,
   TransactionError,

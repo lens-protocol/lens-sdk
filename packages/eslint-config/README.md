@@ -2,6 +2,8 @@
 
 Project's [ESLint](https://eslint.org/) config.
 
+It is not published or released anywhere directly.
+
 ## Usage
 
 **Install**:
