@@ -9,7 +9,7 @@ type UseCollectablesArgs = PaginatedArgs<{
   walletAddress: string;
 }>;
 
-export function useCollectables({
+export function useCollectedPublications({
   walletAddress,
   limit,
 }: UseCollectablesArgs): PaginatedReadResult<Publication[]> {
