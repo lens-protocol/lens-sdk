@@ -19,6 +19,7 @@ import { Notifications } from './components/notification/Notifications';
 import { MutualFollowers } from './components/profile/MutualFollowers';
 import { ProfileByHandle } from './components/profile/ProfileByHandle';
 import { ProfileById } from './components/profile/ProfileById';
+import { UseCollectedPublications } from './components/profile/UseCollectedPublications';
 import { UseExploreProfiles } from './components/profile/UseExploreProfiles';
 import { UseProfile } from './components/profile/UseProfile';
 import { ProfilesToFollow } from './components/profiles-to-follow/ProfilesToFollow';
@@ -77,6 +78,7 @@ export function App() {
                 <Route path="/unread-notification-count" element={<NotificationCount />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/mutual-followers" element={<MutualFollowers />} />
+                <Route path="/collected-publications" element={<UseCollectedPublications />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />
