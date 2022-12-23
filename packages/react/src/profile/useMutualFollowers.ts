@@ -1,12 +1,13 @@
 import { ProfileFieldsFragment, useMutualFollowersProfilesQuery } from '@lens-protocol/api';
+import { ProfileId } from '@lens-protocol/domain/entities';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 type UseMutualFollowersArgs = PaginatedArgs<{
-  observerId: string;
-  viewingProfileId: string;
+  observerId: ProfileId;
+  viewingProfileId: ProfileId;
 }>;
 
 export function useMutualFollowers({

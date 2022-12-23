@@ -223,7 +223,6 @@ export function mockMutualFollowersQuery(args: {
     result: {
       data: {
         result: {
-          __typename: 'PaginatedProfileResult',
           items: args.profiles,
           pageInfo: {
             __typename: 'PaginatedResultInfo',
