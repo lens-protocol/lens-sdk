@@ -40,7 +40,7 @@ import {
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
-export function mockProfilesToFollowQueryMockedResponse(args: {
+export function createProfilesToFollowQueryMockedResponse(args: {
   profiles: ProfileFieldsFragment[];
 }): MockedResponse<ProfilesToFollowQuery> {
   return {
@@ -61,7 +61,7 @@ export function mockGetProfileQuery(profile: Maybe<ProfileFieldsFragment>): GetP
   };
 }
 
-export function mockGetProfileQueryMockedResponse({
+export function createGetProfileQueryMockedResponse({
   profile = mockProfileFieldsFragment(),
   request,
   observerId,
@@ -95,7 +95,7 @@ function mockGetAllProfilesByOwnerAddressQuery(
   };
 }
 
-export function mockGetAllProfilesByOwnerAddressQueryMockedResponse({
+export function createGetAllProfilesByOwnerAddressQueryMockedResponse({
   address,
   profiles = [mockProfileFieldsFragment()],
 }: {
@@ -132,7 +132,7 @@ export function mockHasTxHashBeenIndexedQuery(
   };
 }
 
-export function mockHasTxHashBeenIndexedQueryMockedResponse({
+export function createHasTxHashBeenIndexedQueryMockedResponse({
   variables,
   data,
 }: {
@@ -171,7 +171,7 @@ function mockProxyActionStatusResult(
   };
 }
 
-export function mockProxyActionStatusMockedResponse(instructions: {
+export function createProxyActionStatusMockedResponse(instructions: {
   result: { reason: string; lastKnownTxId: string } | Partial<ProxyActionStatusResult>;
   variables: ProxyActionStatusQueryVariables;
 }): MockedResponse<ProxyActionStatusQuery> {
@@ -191,7 +191,7 @@ export function mockProxyActionStatusMockedResponse(instructions: {
   };
 }
 
-export function mockEnabledModuleCurrenciesQueryMockedResponse(
+export function createEnabledModuleCurrenciesQueryMockedResponse(
   currencies: Erc20[],
 ): MockedResponse<EnabledModuleCurrenciesQuery> {
   return {
@@ -238,7 +238,7 @@ export function mockMutualFollowersQuery(args: {
   };
 }
 
-export function mockPublicationQueryMockedResponse(
+export function createPublicationQueryMockedResponse(
   publication: PostFragment,
 ): MockedResponse<PublicationQuery> {
   return {
@@ -256,7 +256,7 @@ export function mockPublicationQueryMockedResponse(
   };
 }
 
-export function mockPublicationsQuery(args: {
+export function createPublicationsQueryMockedResponse(args: {
   variables: PublicationsQueryVariables;
   publications: Array<CommentFragment | PostFragment>;
 }): MockedResponse<PublicationsQuery> {
@@ -282,7 +282,7 @@ export function mockPublicationsQuery(args: {
   };
 }
 
-export function mockFeedQuery(args: {
+export function createFeedQueryMockedResponse(args: {
   variables: FeedQueryVariables;
   items: FeedItemFragment[];
 }): MockedResponse<FeedQuery> {
