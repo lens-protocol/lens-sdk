@@ -158,7 +158,7 @@ changeset add
 ```
 The command will ask a series of questions related to the introduced changes and the version bump that's required to follow semver range.
 
-2. Once ready to do a release make sure that the tests/lints are passing and all libs are properly build (`dist` folders have the most up-to-date code).
+2. Once ready to do a release make sure that the tests/lints are passing and all libs are properly built (`dist` folders have the most up-to-date code).
 ```bash
 ## run all from monorepo root
 
