@@ -1,4 +1,4 @@
-import { ProfileFieldsFragment } from '@lens-protocol/api';
+import { ProfileFieldsFragment } from '@lens-protocol/api-bindings';
 
 import { ReadResult } from '../helpers';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';

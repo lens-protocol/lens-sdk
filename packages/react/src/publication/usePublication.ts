@@ -1,4 +1,4 @@
-import { usePublicationQuery } from '@lens-protocol/api';
+import { usePublicationQuery } from '@lens-protocol/api-bindings';
 
 import { ReadResult, useReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';

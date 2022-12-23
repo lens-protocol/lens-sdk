@@ -1,4 +1,4 @@
-import { Erc20Fragment, useEnabledModuleCurrenciesQuery } from '@lens-protocol/api';
+import { Erc20Fragment, useEnabledModuleCurrenciesQuery } from '@lens-protocol/api-bindings';
 import { ChainType, erc20, Erc20 } from '@lens-protocol/shared-kernel';
 
 import { ReadResult, useReadResult } from '../helpers';

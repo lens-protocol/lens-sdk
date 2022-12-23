@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/wagmi",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "wagmi bindings for @lens-protocol/react",
   "repository": {
     "directory": "packages/wagmi",
@@ -28,13 +28,14 @@
     "dist"
   ],
   "scripts": {
-    "build:cjs": "tsc -p ./tsconfig.cjs.json",
-    "build:esm": "tsc -p ./tsconfig.json",
+    "build:cjs": "tsc -p ./tsconfig.build-cjs.json",
+    "build:esm": "tsc -p ./tsconfig.build.json",
     "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
     "clean": "rimraf ./dist",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
     "tsc": "tsc --noEmit"
@@ -58,6 +59,6 @@
   },
   "prettier": "@lens-protocol/prettier-config",
   "dependencies": {
-    "@lens-protocol/shared-kernel": "workspace:^0.0.1"
+    "@lens-protocol/shared-kernel": "workspace:*"
   }
 }

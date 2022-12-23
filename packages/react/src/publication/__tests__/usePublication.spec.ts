@@ -1,9 +1,9 @@
-import { PostFragment } from '@lens-protocol/api';
+import { PostFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPost,
-  mockPublicationQueryMockedResponse,
-} from '@lens-protocol/api/mocks';
+  createPublicationQueryMockedResponse,
+} from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
@@ -23,7 +23,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
           {
             mocks: {
               apolloClient: createMockApolloClientWithMultipleResponses([
-                mockPublicationQueryMockedResponse(mockPublication),
+                createPublicationQueryMockedResponse(mockPublication),
               ]),
             },
           },

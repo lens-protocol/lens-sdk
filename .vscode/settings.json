@@ -1,7 +1,7 @@
 {
   "eslint.workingDirectories": [
     "examples/web-wagmi",
-    "packages/api",
+    "packages/api-bindings",
     "packages/domain",
     "packages/eslint-config",
     "packages/prettier-config",

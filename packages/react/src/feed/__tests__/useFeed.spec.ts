@@ -1,8 +1,8 @@
 import {
   createMockApolloClientWithMultipleResponses,
   mockFeedItem,
-  mockFeedQuery,
-} from '@lens-protocol/api/mocks';
+  createFeedQueryMockedResponse,
+} from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
@@ -22,7 +22,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
         {
           mocks: {
             apolloClient: createMockApolloClientWithMultipleResponses([
-              mockFeedQuery({
+              createFeedQueryMockedResponse({
                 variables: {
                   profileId,
                   limit: 10,

@@ -3,7 +3,7 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockBroadcastProtocolCallMutationMockedResponse,
   mockRelayerResultFragment,
-} from '@lens-protocol/api/mocks';
+} from '@lens-protocol/api-bindings/mocks';
 import { SignedProtocolCall, MetaTransaction } from '@lens-protocol/domain/entities';
 import { mockSignedProtocolCall } from '@lens-protocol/domain/mocks';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';

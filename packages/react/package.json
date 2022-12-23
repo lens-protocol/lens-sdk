@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Interacting with the Lens Protocol API using React.",
   "repository": {
     "directory": "packages/react",
@@ -39,13 +39,14 @@
     "web"
   ],
   "scripts": {
-    "build:cjs": "tsc -p ./tsconfig.cjs.json",
-    "build:esm": "tsc -p ./tsconfig.json",
+    "build:cjs": "tsc -p ./tsconfig.build-cjs.json",
+    "build:esm": "tsc -p ./tsconfig.build.json",
     "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
     "clean": "rimraf ./dist",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
     "test": "jest",
@@ -57,8 +58,8 @@
     "@apollo/client": "^3.7.1",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
-    "@lens-protocol/api": "workspace:*",
-    "@lens-protocol/domain": "workspace:^0.0.1",
+    "@lens-protocol/api-bindings": "workspace:*",
+    "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
     "graphql": "15.5.1",

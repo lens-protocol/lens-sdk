@@ -14,7 +14,7 @@ import {
   PublicationMetadataMediaInput,
   PublicationMetadataV2Input,
   ReferenceModuleParams,
-} from '@lens-protocol/api';
+} from '@lens-protocol/api-bindings';
 import {
   NativeTransaction,
   Nonce,

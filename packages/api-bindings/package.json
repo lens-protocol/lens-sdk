@@ -1,9 +1,9 @@
 {
-  "name": "@lens-protocol/api",
-  "version": "0.0.1",
+  "name": "@lens-protocol/api-bindings",
+  "version": "0.1.0",
   "description": "Graphql fragments, react hooks, typescript types of lens API.",
   "repository": {
-    "directory": "packages/api",
+    "directory": "packages/api-bindings",
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
@@ -38,14 +38,15 @@
     "mocks"
   ],
   "scripts": {
-    "build:cjs": "tsc -p ./tsconfig.cjs.json",
-    "build:esm": "tsc -p ./tsconfig.json",
+    "build:cjs": "tsc -p ./tsconfig.build-cjs.json",
+    "build:esm": "tsc -p ./tsconfig.build.json",
     "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
     "clean": "rimraf ./dist",
     "test": "jest --passWithNoTests",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
     "tsc": "tsc --noEmit",
@@ -55,6 +56,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.1",
     "@lens-protocol/domain": "workspace:*",
+    "@lens-protocol/shared-kernel": "workspace:*",
     "tslib": "^2.4.1"
   },
   "devDependencies": {
@@ -69,7 +71,6 @@
     "@graphql-codegen/typescript-react-apollo": "^2.3.1",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
-    "@lens-protocol/shared-kernel": "workspace:*",
     "@types/jest": "^29.2.3",
     "babel-plugin-graphql-tag": "^3.3.0",
     "eslint": "^8.28.0",

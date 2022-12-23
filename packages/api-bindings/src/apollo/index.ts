@@ -23,7 +23,8 @@ function createTypePolicies(): TypePolicies {
         feed: createFeedFieldPolicy(),
         exploreProfiles: createExploreProfilesFieldPolicy(),
         notifications: createNotificationsFieldPolicy(),
-        search: createSearchFieldPolicy()
+        publications: createPublicationTypePolicy(),
+        search: createSearchFieldPolicy(),
       },
     },
   };

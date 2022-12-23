@@ -1,10 +1,10 @@
 import { ApolloClient } from '@apollo/client';
-import { GetProfileDocument, ProfileFieldsFragment } from '@lens-protocol/api';
+import { GetProfileDocument, ProfileFieldsFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
   mockGetProfileQuery,
   mockProfileFieldsFragment,
-} from '@lens-protocol/api/mocks';
+} from '@lens-protocol/api-bindings/mocks';
 
 import { ActiveProfilePresenter, activeProfileVar } from '../ActiveProfilePresenter';
 

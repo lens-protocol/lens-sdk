@@ -1,4 +1,4 @@
-import { ProfileFieldsFragment, useGetProfileQuery } from '@lens-protocol/api';
+import { ProfileFieldsFragment, useGetProfileQuery } from '@lens-protocol/api-bindings';
 import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
 import { ReadResult, useReadResult } from '../helpers';

@@ -14,12 +14,12 @@ import {
   PublicationMetadataDisplayTypes,
   PublicationMetadataV2Input,
   ReferenceModuleParams,
-} from '@lens-protocol/api';
+} from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockCreatePostTypedDataMutation,
   mockRelayerResultFragment,
-} from '@lens-protocol/api/mocks';
+} from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import {
   mockNonce,
