@@ -2,31 +2,45 @@ import { MockedResponse } from '@apollo/client/testing';
 import { Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
-  ProfileFieldsFragment,
-  ProfilesToFollowQuery,
-  ProfilesToFollowDocument,
-  Maybe,
-  GetProfileQuery,
-  GetProfileDocument,
-  SingleProfileQueryRequest,
-  GetAllProfilesByOwnerAddressQuery,
+  CommentFragment,
+  EnabledModuleCurrenciesDocument,
+  EnabledModuleCurrenciesQuery,
+  FeedDocument,
+  FeedItemFragment,
+  FeedQuery,
+  FeedQueryVariables,
   GetAllProfilesByOwnerAddressDocument,
+  GetAllProfilesByOwnerAddressQuery,
+  GetProfileDocument,
+  GetProfileQuery,
+  HasTxHashBeenIndexedDocument,
+  HasTxHashBeenIndexedQuery,
+  HasTxHashBeenIndexedQueryVariables,
+  Maybe,
+  PostFragment,
+  ProfileFieldsFragment,
+  ProfilesToFollowDocument,
+  ProfilesToFollowQuery,
   ProxyActionError,
+  ProxyActionStatusDocument,
+  ProxyActionStatusQuery,
+  ProxyActionStatusQueryVariables,
   ProxyActionStatusResult,
   ProxyActionStatusTypes,
-  ProxyActionStatusQueryVariables,
-  ProxyActionStatusQuery,
-  ProxyActionStatusDocument,
-  HasTxHashBeenIndexedQuery,
+  PublicationDocument,
+  PublicationQuery,
+  PublicationsDocument,
+  PublicationsQuery,
+  PublicationsQueryVariables,
+  SingleProfileQueryRequest,
   TransactionErrorReasons,
-  HasTxHashBeenIndexedQueryVariables,
-  HasTxHashBeenIndexedDocument,
-  EnabledModuleCurrenciesQuery,
-  EnabledModuleCurrenciesDocument,
+  MutualFollowersProfilesQuery,
+  MutualFollowersProfilesDocument,
+  MutualFollowersProfilesQueryVariables,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
-export function mockProfilesToFollowQueryMockedResponse(args: {
+export function createProfilesToFollowQueryMockedResponse(args: {
   profiles: ProfileFieldsFragment[];
 }): MockedResponse<ProfilesToFollowQuery> {
   return {
@@ -47,7 +61,7 @@ export function mockGetProfileQuery(profile: Maybe<ProfileFieldsFragment>): GetP
   };
 }
 
-export function mockGetProfileQueryMockedResponse({
+export function createGetProfileQueryMockedResponse({
   profile = mockProfileFieldsFragment(),
   request,
   observerId,
@@ -75,13 +89,12 @@ function mockGetAllProfilesByOwnerAddressQuery(
 ): GetAllProfilesByOwnerAddressQuery {
   return {
     profilesByOwner: {
-      __typename: 'PaginatedProfileResult',
       items: profiles,
     },
   };
 }
 
-export function mockGetAllProfilesByOwnerAddressQueryMockedResponse({
+export function createGetAllProfilesByOwnerAddressQueryMockedResponse({
   address,
   profiles = [mockProfileFieldsFragment()],
 }: {
@@ -118,7 +131,7 @@ export function mockHasTxHashBeenIndexedQuery(
   };
 }
 
-export function mockHasTxHashBeenIndexedQueryMockedResponse({
+export function createHasTxHashBeenIndexedQueryMockedResponse({
   variables,
   data,
 }: {
@@ -157,7 +170,7 @@ function mockProxyActionStatusResult(
   };
 }
 
-export function mockProxyActionStatusMockedResponse(instructions: {
+export function createProxyActionStatusMockedResponse(instructions: {
   result: { reason: string; lastKnownTxId: string } | Partial<ProxyActionStatusResult>;
   variables: ProxyActionStatusQueryVariables;
 }): MockedResponse<ProxyActionStatusQuery> {
@@ -177,7 +190,7 @@ export function mockProxyActionStatusMockedResponse(instructions: {
   };
 }
 
-export function mockEnabledModuleCurrenciesQueryMockedResponse(
+export function createEnabledModuleCurrenciesQueryMockedResponse(
   currencies: Erc20[],
 ): MockedResponse<EnabledModuleCurrenciesQuery> {
   return {
@@ -193,6 +206,99 @@ export function mockEnabledModuleCurrenciesQueryMockedResponse(
           name: currency.name,
           symbol: currency.symbol,
         })),
+      },
+    },
+  };
+}
+
+export function mockMutualFollowersQuery(args: {
+  variables: MutualFollowersProfilesQueryVariables;
+  profiles: ProfileFieldsFragment[];
+}): MockedResponse<MutualFollowersProfilesQuery> {
+  return {
+    request: {
+      query: MutualFollowersProfilesDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: args.profiles,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.profiles.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function createPublicationQueryMockedResponse(
+  publication: PostFragment,
+): MockedResponse<PublicationQuery> {
+  return {
+    request: {
+      query: PublicationDocument,
+      variables: {
+        publicationId: publication.id,
+      },
+    },
+    result: {
+      data: {
+        result: publication,
+      },
+    },
+  };
+}
+
+export function createPublicationsQueryMockedResponse(args: {
+  variables: PublicationsQueryVariables;
+  publications: Array<CommentFragment | PostFragment>;
+}): MockedResponse<PublicationsQuery> {
+  return {
+    request: {
+      query: PublicationsDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: args.publications,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.publications.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function createFeedQueryMockedResponse(args: {
+  variables: FeedQueryVariables;
+  items: FeedItemFragment[];
+}): MockedResponse<FeedQuery> {
+  return {
+    request: {
+      query: FeedDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: args.items,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+        },
       },
     },
   };

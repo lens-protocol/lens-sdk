@@ -18,3 +18,6 @@ coverage
 
 # turbo
 .turbo
+
+# Jetbrains
+.idea

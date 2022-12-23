@@ -8,5 +8,6 @@ export * from './useProfileFollowing';
 export * from './useProfile';
 export * from './useExploreProfiles';
 export * from './useCollectedPublications';
+export * from './useMutualFollowers';
 
 export type { ProfileFieldsFragment, FollowingFragment, FollowerFragment };

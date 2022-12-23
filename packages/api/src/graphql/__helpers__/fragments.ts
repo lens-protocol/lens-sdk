@@ -3,9 +3,15 @@ import { mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
+  CollectModuleFragment,
+  CommentFragment,
+  FeedItemFragment,
   MediaFieldsFragment,
+  PostFragment,
   ProfileFieldsFragment,
   ProfileMediaFieldsFragment,
+  PublicationMainFocus,
+  PublicationStatsFragment,
   RelayerResultFragment,
   RelayErrorFragment,
   RelayErrorReasons,
@@ -104,5 +110,120 @@ export function mockRelayErrorFragment(reason: RelayErrorReasons): RelayErrorFra
   return {
     __typename: 'RelayError',
     reason,
+  };
+}
+
+export function mockPublicationStats(
+  overrides?: Partial<PublicationStatsFragment>,
+): PublicationStatsFragment {
+  return {
+    totalAmountOfMirrors: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
+    totalAmountOfCollects: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
+    totalAmountOfComments: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
+    totalUpvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
+    ...overrides,
+    __typename: 'PublicationStats',
+  };
+}
+
+export function mockFreeCollectModuleSettings({
+  followerOnly = false,
+} = {}): CollectModuleFragment {
+  return {
+    __typename: 'FreeCollectModuleSettings',
+    contractAddress: '0x96351D3cE872903EBf4c2D77dd625992CCFdf8c9',
+    followerOnly,
+  };
+}
+
+export function mockPost(overrides?: Partial<PostFragment>): PostFragment {
+  return {
+    id: faker.datatype.uuid(),
+    createdAt: faker.datatype.datetime().toISOString(),
+    stats: mockPublicationStats(),
+    metadata: {
+      __typename: 'MetadataOutput',
+      mainContentFocus: PublicationMainFocus.TextOnly,
+      name: faker.name.fullName(),
+      description: null,
+      attributes: [],
+      content: faker.lorem.words(5),
+      media: [],
+    },
+    profile: mockProfileFieldsFragment(),
+    collectedBy: null,
+    ownedByMe: false,
+    collectModule: mockFreeCollectModuleSettings(),
+    referenceModule: null,
+    hasCollectedByMe: false,
+    hasOptimisticCollectedByMe: false,
+    isOptimisticMirroredByMe: false,
+    mirrors: [],
+    reaction: null,
+    hidden: false,
+    isGated: false,
+    canComment: {
+      result: true,
+    },
+    canMirror: {
+      result: true,
+    },
+    ...overrides,
+    __typename: 'Post',
+  };
+}
+
+export function mockComment(
+  overrides?: Partial<Omit<CommentFragment, '__typename'>>,
+): CommentFragment {
+  return {
+    id: faker.datatype.uuid(),
+    stats: mockPublicationStats(),
+    metadata: {
+      __typename: 'MetadataOutput',
+      mainContentFocus: PublicationMainFocus.TextOnly,
+      name: null,
+      description: null,
+      attributes: [],
+      content: faker.lorem.paragraph(1),
+      media: [],
+    },
+    profile: mockProfileFieldsFragment(),
+    createdAt: faker.date.past().toISOString(),
+    collectedBy: null,
+    commentOn: mockPost(),
+    mainPost: mockPost(),
+    ownedByMe: false,
+    collectModule: mockFreeCollectModuleSettings(),
+    referenceModule: null,
+    hasCollectedByMe: false,
+    hasOptimisticCollectedByMe: false,
+    isOptimisticMirroredByMe: false,
+    mirrors: [],
+    reaction: null,
+    hidden: false,
+    isGated: false,
+    canComment: {
+      result: true,
+    },
+    canMirror: {
+      result: true,
+    },
+    ...overrides,
+    __typename: 'Comment',
+  };
+}
+
+export function mockFeedItem({
+  root = mockPost(),
+  comments = [mockComment(), mockComment()],
+}: {
+  root?: PostFragment | CommentFragment;
+  comments?: CommentFragment[];
+}): FeedItemFragment {
+  return {
+    __typename: 'FeedItem',
+    root,
+    comments,
   };
 }
