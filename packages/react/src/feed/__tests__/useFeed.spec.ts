@@ -2,7 +2,7 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockFeedItem,
   createFeedQueryMockedResponse,
-} from '@lens-protocol/api/mocks';
+} from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';

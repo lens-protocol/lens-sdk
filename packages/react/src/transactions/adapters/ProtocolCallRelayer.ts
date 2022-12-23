@@ -3,7 +3,7 @@ import {
   BroadcastProtocolCallDocument,
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables,
-} from '@lens-protocol/api';
+} from '@lens-protocol/api-bindings';
 import {
   MetaTransaction,
   SignedProtocolCall,

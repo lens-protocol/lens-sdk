@@ -6,7 +6,7 @@ import {
   CommentFragment,
   CommentWithFirstCommentFragment,
   MirrorFragment,
-} from '@lens-protocol/api';
+} from '@lens-protocol/api-bindings';
 
 export * from './useComments';
 export * from './usePublication';

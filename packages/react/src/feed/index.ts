@@ -1,4 +1,4 @@
-import { FeedItemFragment } from '@lens-protocol/api';
+import { FeedItemFragment } from '@lens-protocol/api-bindings';
 
 export type { FeedItemFragment };
 

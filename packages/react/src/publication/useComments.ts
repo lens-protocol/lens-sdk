@@ -1,4 +1,4 @@
-import { useCommentsQuery, CommentWithFirstCommentFragment } from '@lens-protocol/api';
+import { useCommentsQuery, CommentWithFirstCommentFragment } from '@lens-protocol/api-bindings';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';

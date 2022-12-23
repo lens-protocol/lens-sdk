@@ -1,4 +1,4 @@
-import { usePublicationsQuery } from '@lens-protocol/api';
+import { usePublicationsQuery } from '@lens-protocol/api-bindings';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';

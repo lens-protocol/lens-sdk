@@ -1,4 +1,4 @@
-import { ProfileFieldsFragment, useExploreProfilesQuery } from '@lens-protocol/api';
+import { ProfileFieldsFragment, useExploreProfilesQuery } from '@lens-protocol/api-bindings';
 
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';

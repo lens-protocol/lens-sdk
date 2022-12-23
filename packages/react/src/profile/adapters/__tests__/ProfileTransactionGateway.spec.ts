@@ -1,11 +1,11 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { createMockClient } from '@apollo/client/testing';
-import { CreateProfileDocument, RelayErrorReasons } from '@lens-protocol/api';
+import { CreateProfileDocument, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   mockRelayerResultFragment,
   mockCreateProfileMutation,
   mockRelayErrorFragment,
-} from '@lens-protocol/api/mocks';
+} from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction, TransactionError } from '@lens-protocol/domain/entities';
 import { mockCreateProfileRequest } from '@lens-protocol/domain/mocks';
 import { DuplicatedHandleError } from '@lens-protocol/domain/use-cases/profile';
