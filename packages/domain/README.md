@@ -9,3 +9,8 @@ With reference to the Clean Architecture canonical layers:
 this packages contains ALL Entities and the Use Cases.
 
 With exception of the `@lens-protocol/shared-kernel` dependency this package MUST NOT have code dependency on other packages.
+
+**It is not intended to be used directly.**
+
+
+
