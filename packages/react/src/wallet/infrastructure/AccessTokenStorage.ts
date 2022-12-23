@@ -1,4 +1,4 @@
-import { IAccessTokenStorage } from '@lens-protocol/api';
+import { IAccessTokenStorage } from '@lens-protocol/api-bindings';
 import { CredentialsExpiredError } from '@lens-protocol/domain/use-cases/lifecycle';
 import { Deferred } from '@lens-protocol/shared-kernel';
 

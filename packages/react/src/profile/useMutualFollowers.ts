@@ -1,4 +1,7 @@
-import { ProfileFieldsFragment, useMutualFollowersProfilesQuery } from '@lens-protocol/api';
+import {
+  ProfileFieldsFragment,
+  useMutualFollowersProfilesQuery,
+} from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';

@@ -1,5 +1,5 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { createAnonymousApolloClient, createApolloClient } from '@lens-protocol/api';
+import { createAnonymousApolloClient, createApolloClient } from '@lens-protocol/api-bindings';
 import { TransactionKind } from '@lens-protocol/domain/entities';
 import { ActiveProfile } from '@lens-protocol/domain/use-cases/profile';
 import {

@@ -5,7 +5,7 @@ import {
   NewMentionNotificationFieldsFragment,
   NewMirrorNotificationFieldsFragment,
   NewReactionNotificationFieldsFragment,
-} from '@lens-protocol/api';
+} from '@lens-protocol/api-bindings';
 
 export { useUnreadNotificationCount } from './useUnreadNotificationCount';
 export { useNotifications } from './useNotifications';
