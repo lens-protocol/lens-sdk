@@ -1,13 +1,12 @@
 {
   "name": "@lens-protocol/shared-kernel",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Shared kernel",
   "repository": {
     "directory": "packages/shared-kernel",
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
-  "private": true,
   "type": "module",
   "exports": {
     ".": {

@@ -1,13 +1,12 @@
 {
   "name": "@lens-protocol/storage",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Storage",
   "repository": {
     "directory": "packages/storage",
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
-  "private": true,
   "type": "module",
   "exports": {
     ".": {

@@ -1,5 +1,6 @@
 {
   "name": "@lens-protocol/prettier-config",
+  "version": "0.1.0",
   "private": true,
   "main": "./index.json",
   "devDependencies": {
