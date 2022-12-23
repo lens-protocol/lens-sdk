@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Interacting with the Lens Protocol API using React.",
   "repository": {
     "directory": "packages/react",
@@ -58,7 +58,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@lens-protocol/api-bindings": "workspace:*",
-    "@lens-protocol/domain": "workspace:^0.0.1",
+    "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
     "graphql": "15.5.1",
