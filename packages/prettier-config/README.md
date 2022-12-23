@@ -2,6 +2,8 @@
 
 Project's [Prettier](https://prettier.io) config.
 
+It is not published or released anywhere directly.
+
 ## Usage
 
 **Install**:
