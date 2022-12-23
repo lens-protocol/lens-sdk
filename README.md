@@ -150,7 +150,7 @@ Release flow is managed by [changesets](https://github.com/changesets/changesets
 
 All publishable monorepo packages follow [`fixed`](https://github.com/changesets/changesets/blob/main/docs/fixed-packages.md) versioning scheme to keep things simple.
 
-To release a new version follow the below steps:
+To release a new version follow the steps below:
 
 1. Document new public facing changes during development.
 ```bash
