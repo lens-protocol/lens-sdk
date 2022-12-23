@@ -8,6 +8,7 @@ import { optimism, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
+import { SearchProfiles } from './components/Search/SearchProfiles';
 import { GenericError } from './components/error/GenericError';
 import { Feed } from './components/feed/Feed';
 import { Header } from './components/header/Header';
@@ -57,6 +58,10 @@ export function App() {
                 </Route>
                 <Route path="/unread-notification-count" element={<NotificationCount />} />
                 <Route path="/notifications" element={<Notifications />} />
+                <Route path="/search">
+                  <Route path="profiles" element={<SearchProfiles />} />
+                  <Route path="publications" />
+                </Route>
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

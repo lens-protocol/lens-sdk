@@ -1,6 +1,7 @@
 import { useComments, usePublication } from '@lens-protocol/react';
 import { useParams } from 'react-router-dom';
 
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { GenericError } from '../error/GenericError';
 import { Loading } from '../loading/Loading';
 import { PublicationCard } from './PublicationCard';
@@ -11,7 +12,7 @@ type PublicationLayoutProps = {
 
 function PublicationLayout({ publicationId }: PublicationLayoutProps) {
   const { data: publication, loading: publicationLoading } = usePublication({ publicationId });
-  const { data: comments, loading: commentsLoading } = useComments({ commentsOf: publicationId });
+  const { data: comments, loading: commentsLoading, hasMore, observeRef } = useInfiniteScroll(useComments({ commentsOf: publicationId }));
 
   if (publicationLoading || commentsLoading) return <Loading />;
   return (
@@ -22,6 +23,7 @@ function PublicationLayout({ publicationId }: PublicationLayoutProps) {
       {comments.map((comment) => (
         <PublicationCard key={comment.id} publication={comment} />
       ))}
+      {hasMore && <p ref={observeRef}>Loading more...</p>}
     </div>
   );
 }

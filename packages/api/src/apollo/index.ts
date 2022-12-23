@@ -9,6 +9,7 @@ import { createFeedFieldPolicy } from './createFeedFieldPolicy';
 import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
+import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 
 function createTypePolicies(): TypePolicies {
   return {
@@ -22,6 +23,7 @@ function createTypePolicies(): TypePolicies {
         feed: createFeedFieldPolicy(),
         exploreProfiles: createExploreProfilesFieldPolicy(),
         notifications: createNotificationsFieldPolicy(),
+        search: createSearchFieldPolicy()
       },
     },
   };
