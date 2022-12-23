@@ -1,4 +1,5 @@
 fragment Erc20 on Erc20 {
+  __typename
   name
   symbol
   decimals
@@ -6,6 +7,7 @@ fragment Erc20 on Erc20 {
 }
 
 fragment ModuleFeeAmount on ModuleFeeAmount {
+  __typename
   asset {
     ...Erc20
   }
@@ -13,17 +15,20 @@ fragment ModuleFeeAmount on ModuleFeeAmount {
 }
 
 fragment ReferenceModule on ReferenceModule {
+  __typename
   ... on FollowOnlyReferenceModuleSettings {
     contractAddress
   }
 }
 
 fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
+  __typename
   contractAddress
   followerOnly
 }
 
 fragment FeeCollectModuleSettings on FeeCollectModuleSettings {
+  __typename
   amount {
     ...ModuleFeeAmount
   }
@@ -34,6 +39,7 @@ fragment FeeCollectModuleSettings on FeeCollectModuleSettings {
 }
 
 fragment LimitedFeeCollectModuleSettings on LimitedFeeCollectModuleSettings {
+  __typename
   amount {
     ...ModuleFeeAmount
   }
@@ -45,6 +51,7 @@ fragment LimitedFeeCollectModuleSettings on LimitedFeeCollectModuleSettings {
 }
 
 fragment LimitedTimedFeeCollectModuleSettings on LimitedTimedFeeCollectModuleSettings {
+  __typename
   amount {
     ...ModuleFeeAmount
   }
@@ -57,10 +64,12 @@ fragment LimitedTimedFeeCollectModuleSettings on LimitedTimedFeeCollectModuleSet
 }
 
 fragment RevertCollectModuleSettings on RevertCollectModuleSettings {
+  __typename
   contractAddress
 }
 
 fragment TimedFeeCollectModuleSettings on TimedFeeCollectModuleSettings {
+  __typename
   amount {
     ...ModuleFeeAmount
   }
@@ -100,6 +109,7 @@ fragment CollectModule on CollectModule {
 }
 
 fragment Wallet on Wallet {
+  __typename
   address
   defaultProfile {
     ...ProfileFields
@@ -107,6 +117,7 @@ fragment Wallet on Wallet {
 }
 
 fragment Metadata on MetadataOutput {
+  __typename
   name
   description
   mainContentFocus
@@ -120,11 +131,13 @@ fragment Metadata on MetadataOutput {
 }
 
 fragment MetadataAttributeOutput on MetadataAttributeOutput {
+  __typename
   traitType
   value
 }
 
 fragment PublicationStats on PublicationStats {
+  __typename
   totalAmountOfMirrors
   totalUpvotes
   totalAmountOfCollects
@@ -167,6 +180,7 @@ fragment MirrorBase on Mirror {
 }
 
 fragment Mirror on Mirror {
+  __typename
   ...MirrorBase
   mirrorOf {
     ... on Post {
@@ -219,6 +233,7 @@ fragment CommentBase on Comment {
 }
 
 fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+  __typename
   prev
   next
   totalCount
@@ -291,6 +306,7 @@ fragment Post on Post {
 }
 
 fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+  __typename
   name
   chainId
   version

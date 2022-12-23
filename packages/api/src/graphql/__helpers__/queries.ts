@@ -89,7 +89,6 @@ function mockGetAllProfilesByOwnerAddressQuery(
 ): GetAllProfilesByOwnerAddressQuery {
   return {
     profilesByOwner: {
-      __typename: 'PaginatedProfileResult',
       items: profiles,
     },
   };
@@ -268,7 +267,6 @@ export function createPublicationsQueryMockedResponse(args: {
     result: {
       data: {
         result: {
-          __typename: 'PaginatedPublicationResult',
           items: args.publications,
           pageInfo: {
             __typename: 'PaginatedResultInfo',
@@ -294,7 +292,6 @@ export function createFeedQueryMockedResponse(args: {
     result: {
       data: {
         result: {
-          __typename: 'PaginatedFeedResult',
           items: args.items,
           pageInfo: {
             __typename: 'PaginatedResultInfo',
