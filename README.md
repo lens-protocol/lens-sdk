@@ -158,15 +158,14 @@ changeset add
 ```
 The command will ask a series of questions related to the introduced changes and the version bump that's required to follow semver range.
 
-2. Once ready to do a release make sure that the tests/lints are passing and all libs are properly build (`dist` folders have the most up-to-date code).
+2. Once ready to do a release make sure that all libs are properly build (`dist` folders have the most up-to-date code) and the tests/lints are passing.
 ```bash
 ## run all from monorepo root
+pnpm build
 
 pnpm test
 
 pnpm lint
-
-pnpm build
 ```
 
 3. Update relevant `package.json`'s versions and update `CHANGELOG.md` for each package.
@@ -177,11 +176,14 @@ changeset version
 4. Review and commit new release. Create a PR to `main`.
 
 5. Once all the steps above are done we are ready to publish a new release to the registry
+
+*Note: Before publishing make sure that you are logged in to the correct npm account (run `pnpm whoami`). If not, follow prompts from `pnpm login`.*
+
 ```bash
 changeset publish
 ```
 
-Note: Because this command assumes that the last commit is the release commit, you should not commit any changes between calling version and publish.
+*Note: Because this command assumes that the last commit is the release commit, you should not commit any changes between calling version and publish.*
 
 6. Don't forget to push git tags after publishing to registry.
 ```bash
