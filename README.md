@@ -55,8 +55,8 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 - `useUpdateDispatcherConfig`
   - [ ] signed, gas-less
   - [ ] signed, paid gas (fallback)
-- [ ] `useCollectables`
-- [ ] `useMutualFollowers`
+- [x] `useCollectedPublications`
+- [x] `useMutualFollowers`
 
 ### Explore
 
