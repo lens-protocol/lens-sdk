@@ -4461,6 +4461,25 @@ export type BroadcastProtocolCallMutationVariables = Exact<{
 
 export type BroadcastProtocolCallMutation = { result: RelayerResultFragment | RelayErrorFragment };
 
+export type WalletCollectedPublicationsQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  walletAddress: Scalars['EthereumAddress'];
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+}>;
+
+export type WalletCollectedPublicationsQuery = {
+  result: { __typename: 'PaginatedPublicationResult' } & {
+    items: Array<
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Comment' } & CommentFragment)
+      | ({ __typename: 'Mirror' } & MirrorFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  };
+};
+
 export const PublicationStatsFragmentDoc = gql`
   fragment PublicationStats on PublicationStats {
     __typename
@@ -6590,6 +6609,99 @@ export type BroadcastProtocolCallMutationResult =
 export type BroadcastProtocolCallMutationOptions = Apollo.BaseMutationOptions<
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables
+>;
+export const WalletCollectedPublicationsDocument = gql`
+  query WalletCollectedPublications(
+    $observerId: ProfileId
+    $walletAddress: EthereumAddress!
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $sources: [Sources!]
+  ) {
+    result: publications(
+      request: {
+        collectedBy: $walletAddress
+        limit: $limit
+        cursor: $cursor
+        publicationTypes: [POST, COMMENT]
+        sources: $sources
+      }
+    ) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useWalletCollectedPublicationsQuery__
+ *
+ * To run a query within a React component, call `useWalletCollectedPublicationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWalletCollectedPublicationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWalletCollectedPublicationsQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      walletAddress: // value for 'walletAddress'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
+ *   },
+ * });
+ */
+export function useWalletCollectedPublicationsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    WalletCollectedPublicationsQuery,
+    WalletCollectedPublicationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    WalletCollectedPublicationsQuery,
+    WalletCollectedPublicationsQueryVariables
+  >(WalletCollectedPublicationsDocument, options);
+}
+export function useWalletCollectedPublicationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    WalletCollectedPublicationsQuery,
+    WalletCollectedPublicationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    WalletCollectedPublicationsQuery,
+    WalletCollectedPublicationsQueryVariables
+  >(WalletCollectedPublicationsDocument, options);
+}
+export type WalletCollectedPublicationsQueryHookResult = ReturnType<
+  typeof useWalletCollectedPublicationsQuery
+>;
+export type WalletCollectedPublicationsLazyQueryHookResult = ReturnType<
+  typeof useWalletCollectedPublicationsLazyQuery
+>;
+export type WalletCollectedPublicationsQueryResult = Apollo.QueryResult<
+  WalletCollectedPublicationsQuery,
+  WalletCollectedPublicationsQueryVariables
 >;
 export type AccessConditionOutputKeySpecifier = (
   | 'nft'
