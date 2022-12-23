@@ -11,5 +11,6 @@ export * from './useProfileFollowers';
 export * from './useProfileFollowing';
 export * from './useProfile';
 export * from './useExploreProfiles';
+export * from './useMutualFollowers';
 
 export type { ProfileFieldsFragment, FollowingFragment, FollowerFragment };

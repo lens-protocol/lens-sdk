@@ -2,7 +2,7 @@ import { PostFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPost,
-  mockPublicationsQuery,
+  createPublicationsQueryMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
@@ -22,7 +22,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
         {
           mocks: {
             apolloClient: createMockApolloClientWithMultipleResponses([
-              mockPublicationsQuery({
+              createPublicationsQueryMockedResponse({
                 variables: {
                   profileId: mockPublication.profile.id,
                   limit: 10,
