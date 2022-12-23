@@ -150,7 +150,7 @@ Release flow is managed by [changesets](https://github.com/changesets/changesets
 
 All publishable monorepo packages follow [`fixed`](https://github.com/changesets/changesets/blob/main/docs/fixed-packages.md) versioning scheme to keep things simple.
 
-To release a new version follow the below steps:
+To release a new version follow the steps below:
 
 1. Document new public facing changes during development.
 ```bash
@@ -158,7 +158,7 @@ changeset add
 ```
 The command will ask a series of questions related to the introduced changes and the version bump that's required to follow semver range.
 
-2. Once ready to do a release make sure that all libs are properly build (`dist` folders have the most up-to-date code) and the tests/lints are passing.
+2. Once ready to do a release make sure that all libs are properly built (`dist` folders have the most up-to-date code) and the tests/lints are passing.
 ```bash
 ## run all from monorepo root
 pnpm build
