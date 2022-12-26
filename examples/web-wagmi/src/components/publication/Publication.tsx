@@ -12,7 +12,12 @@ type PublicationLayoutProps = {
 
 function PublicationLayout({ publicationId }: PublicationLayoutProps) {
   const { data: publication, loading: publicationLoading } = usePublication({ publicationId });
-  const { data: comments, loading: commentsLoading, hasMore, observeRef } = useInfiniteScroll(useComments({ commentsOf: publicationId }));
+  const {
+    data: comments,
+    loading: commentsLoading,
+    hasMore,
+    observeRef,
+  } = useInfiniteScroll(useComments({ commentsOf: publicationId }));
 
   if (publicationLoading || commentsLoading) return <Loading />;
   return (

@@ -1,31 +1,33 @@
-import { useSearchProfiles } from '@lens-protocol/react';
+import { useSearchPublications } from '@lens-protocol/react';
 import { ChangeEvent, useState } from 'react';
 
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { Loading } from '../loading/Loading';
-import { ProfileCard } from '../profile/ProfileCard';
+import { PublicationCard } from '../publication/PublicationCard';
 
 type SearchResultsProps = {
   query: string;
 };
 
 function SearchResults({ query }: SearchResultsProps) {
-  const { data, loading, hasMore, observeRef } = useInfiniteScroll(useSearchProfiles({ query }));
+  const { data, loading, hasMore, observeRef } = useInfiniteScroll(
+    useSearchPublications({ query }),
+  );
   if (loading) return <Loading />;
   if (data.length === 0) {
-    return <p>No profiles found</p>;
+    return <p>No publications found</p>;
   }
   return (
     <div>
-      {data.map((profile) => (
-        <ProfileCard key={profile.id} profile={profile} />
+      {data.map((publication) => (
+        <PublicationCard key={publication.id} publication={publication} />
       ))}
       {hasMore && <p ref={observeRef}>Loading more...</p>}
     </div>
   );
 }
 
-export function SearchProfiles() {
+export function SearchPublications() {
   const [inputValue, setInputValue] = useState('');
   const [selectedQuery, setSelectedQuery] = useState<string>();
 
@@ -39,7 +41,7 @@ export function SearchProfiles() {
 
   return (
     <div>
-      <h2>Search Profiles</h2>
+      <h2>Search Publications</h2>
       <div>
         <input onChange={handleChange} />
         <button onClick={handleSubmit}>Search</button>

@@ -9,6 +9,7 @@ import { publicProvider } from 'wagmi/providers/public';
 
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
 import { SearchProfiles } from './components/Search/SearchProfiles';
+import { SearchPublications } from './components/Search/SearchPublications';
 import { GenericError } from './components/error/GenericError';
 import { Feed } from './components/feed/Feed';
 import { Header } from './components/header/Header';
@@ -62,7 +63,7 @@ export function App() {
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/search">
                   <Route path="profiles" element={<SearchProfiles />} />
-                  <Route path="publications" />
+                  <Route path="publications" element={<SearchPublications />} />
                 </Route>
                 <Route path="/mutual-followers" element={<MutualFollowers />} />
                 <Route path="/collected-publications" element={<UseCollectedPublications />} />

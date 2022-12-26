@@ -9,6 +9,7 @@ query SearchPublications(
     request: { query: $query, type: PUBLICATION, limit: $limit, cursor: $cursor, sources: $sources }
   ) {
     ... on PublicationSearchResult {
+      __typename
       items {
         ... on Post {
           ...Post
@@ -33,6 +34,7 @@ query SearchProfiles(
 ) {
   result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
     ... on ProfileSearchResult {
+      __typename
       items {
         ...ProfileFields
       }

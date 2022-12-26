@@ -4439,7 +4439,7 @@ export type SearchPublicationsQueryVariables = Exact<{
 }>;
 
 export type SearchPublicationsQuery = {
-  result: {
+  result: { __typename: 'PublicationSearchResult' } & {
     items: Array<PostFragment | CommentFragment>;
     pageInfo: CommonPaginatedResultInfoFragment;
   };
@@ -4453,7 +4453,10 @@ export type SearchProfilesQueryVariables = Exact<{
 }>;
 
 export type SearchProfilesQuery = {
-  result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+  result: { __typename: 'ProfileSearchResult' } & {
+    items: Array<ProfileFieldsFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
 };
 
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
@@ -4496,13 +4499,9 @@ export type WalletCollectedPublicationsQueryVariables = Exact<{
 }>;
 
 export type WalletCollectedPublicationsQuery = {
-  result: { __typename: 'PaginatedPublicationResult' } & {
-    items: Array<
-      | ({ __typename: 'Post' } & PostFragment)
-      | ({ __typename: 'Comment' } & CommentFragment)
-      | ({ __typename: 'Mirror' } & MirrorFragment)
-    >;
-    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  result: {
+    items: Array<PostFragment | CommentFragment | MirrorFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
   };
 };
 
@@ -6534,6 +6533,7 @@ export const SearchPublicationsDocument = gql`
       }
     ) {
       ... on PublicationSearchResult {
+        __typename
         items {
           ... on Post {
             ...Post
@@ -6611,6 +6611,7 @@ export const SearchProfilesDocument = gql`
   ) {
     result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
       ... on ProfileSearchResult {
+        __typename
         items {
           ...ProfileFields
         }

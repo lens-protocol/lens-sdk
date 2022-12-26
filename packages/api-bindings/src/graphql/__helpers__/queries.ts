@@ -37,6 +37,12 @@ import {
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesDocument,
   MutualFollowersProfilesQueryVariables,
+  SearchPublicationsQueryVariables,
+  SearchProfilesQuery,
+  SearchProfilesDocument,
+  SearchProfilesQueryVariables,
+  SearchPublicationsQuery,
+  SearchPublicationsDocument,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -291,6 +297,58 @@ export function createFeedQueryMockedResponse(args: {
     result: {
       data: {
         result: {
+          items: args.items,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function createSearchProfilesQueryMockedResponse(args: {
+  variables: SearchProfilesQueryVariables;
+  items: ProfileFieldsFragment[];
+}): MockedResponse<SearchProfilesQuery> {
+  return {
+    request: {
+      query: SearchProfilesDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          __typename: 'ProfileSearchResult',
+          items: args.items,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function createSearchPublicationsQueryMockedResponse(args: {
+  variables: SearchPublicationsQueryVariables;
+  items: Array<CommentFragment | PostFragment>;
+}): MockedResponse<SearchPublicationsQuery> {
+  return {
+    request: {
+      query: SearchPublicationsDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          __typename: 'PublicationSearchResult',
           items: args.items,
           pageInfo: {
             __typename: 'PaginatedResultInfo',

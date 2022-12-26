@@ -28,6 +28,14 @@ const examples = [
     label: 'Notifications',
     path: '/notifications',
   },
+  {
+    label: 'Search Publications',
+    path: '/search/publications',
+  },
+  {
+    label: 'Search Profiles',
+    path: '/search/profiles',
+  },
 ];
 
 export function Header() {

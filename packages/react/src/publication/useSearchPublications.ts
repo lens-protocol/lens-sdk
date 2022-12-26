@@ -1,7 +1,12 @@
-import { CommentFragment, PostFragment, useSearchPublicationsQuery } from '@lens-protocol/api';
+import {
+  CommentFragment,
+  PostFragment,
+  useSearchPublicationsQuery,
+} from '@lens-protocol/api-bindings';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 type UseSearchPublicationsArgs = PaginatedArgs<{
   query: string;
@@ -11,7 +16,7 @@ type UseSearchPublicationsArgs = PaginatedArgs<{
 
 export function useSearchPublications({
   query,
-  limit = 10,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
 }: UseSearchPublicationsArgs): PaginatedReadResult<(PostFragment | CommentFragment)[]> {
   const { sources, apolloClient } = useSharedDependencies();

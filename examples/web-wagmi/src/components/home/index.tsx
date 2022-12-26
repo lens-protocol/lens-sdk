@@ -13,6 +13,14 @@ const examples = [
     label: 'Profiles to Follow',
     path: '/profiles-to-follow',
   },
+  {
+    label: 'Search Publications',
+    path: '/search/publications',
+  },
+  {
+    label: 'Search Profiles',
+    path: '/search/profiles',
+  },
 ];
 
 export function Home() {
