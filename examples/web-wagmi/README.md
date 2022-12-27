@@ -4,6 +4,8 @@ This package is an example app showcasing the `@lens-protocol/react` capabilitie
 
 It is not published or released anywhere directly.
 
+## Getting Started
+
 You can run the dev server via:
 
 ```bash
