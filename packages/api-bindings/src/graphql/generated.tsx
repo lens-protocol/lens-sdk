@@ -4430,6 +4430,25 @@ export type PublicationsQuery = {
   };
 };
 
+export type ExplorePublicationsQueryVariables = Exact<{
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  timestamp?: Maybe<Scalars['TimestampScalar']>;
+  sortCriteria: PublicationSortCriteria;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
+  noRandomize?: Maybe<Scalars['Boolean']>;
+  excludeProfileIds?: Maybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type ExplorePublicationsQuery = {
+  result: {
+    items: Array<PostFragment | CommentFragment | MirrorFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
+};
+
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
   RelayerResult,
   'txHash' | 'txId'
@@ -4470,13 +4489,9 @@ export type WalletCollectedPublicationsQueryVariables = Exact<{
 }>;
 
 export type WalletCollectedPublicationsQuery = {
-  result: { __typename: 'PaginatedPublicationResult' } & {
-    items: Array<
-      | ({ __typename: 'Post' } & PostFragment)
-      | ({ __typename: 'Comment' } & CommentFragment)
-      | ({ __typename: 'Mirror' } & MirrorFragment)
-    >;
-    pageInfo: { __typename: 'PaginatedResultInfo' } & CommonPaginatedResultInfoFragment;
+  result: {
+    items: Array<PostFragment | CommentFragment | MirrorFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
   };
 };
 
@@ -6489,6 +6504,105 @@ export type PublicationsLazyQueryHookResult = ReturnType<typeof usePublicationsL
 export type PublicationsQueryResult = Apollo.QueryResult<
   PublicationsQuery,
   PublicationsQueryVariables
+>;
+export const ExplorePublicationsDocument = gql`
+  query ExplorePublications(
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $timestamp: TimestampScalar
+    $sortCriteria: PublicationSortCriteria!
+    $sources: [Sources!]
+    $publicationTypes: [PublicationTypes!]
+    $noRandomize: Boolean
+    $excludeProfileIds: [ProfileId!]
+    $observerId: ProfileId
+  ) {
+    result: explorePublications(
+      request: {
+        limit: $limit
+        cursor: $cursor
+        timestamp: $timestamp
+        sortCriteria: $sortCriteria
+        sources: $sources
+        publicationTypes: $publicationTypes
+        noRandomize: $noRandomize
+        excludeProfileIds: $excludeProfileIds
+      }
+    ) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useExplorePublicationsQuery__
+ *
+ * To run a query within a React component, call `useExplorePublicationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExplorePublicationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useExplorePublicationsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      timestamp: // value for 'timestamp'
+ *      sortCriteria: // value for 'sortCriteria'
+ *      sources: // value for 'sources'
+ *      publicationTypes: // value for 'publicationTypes'
+ *      noRandomize: // value for 'noRandomize'
+ *      excludeProfileIds: // value for 'excludeProfileIds'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useExplorePublicationsQuery(
+  baseOptions: Apollo.QueryHookOptions<ExplorePublicationsQuery, ExplorePublicationsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ExplorePublicationsQuery, ExplorePublicationsQueryVariables>(
+    ExplorePublicationsDocument,
+    options,
+  );
+}
+export function useExplorePublicationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ExplorePublicationsQuery,
+    ExplorePublicationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ExplorePublicationsQuery, ExplorePublicationsQueryVariables>(
+    ExplorePublicationsDocument,
+    options,
+  );
+}
+export type ExplorePublicationsQueryHookResult = ReturnType<typeof useExplorePublicationsQuery>;
+export type ExplorePublicationsLazyQueryHookResult = ReturnType<
+  typeof useExplorePublicationsLazyQuery
+>;
+export type ExplorePublicationsQueryResult = Apollo.QueryResult<
+  ExplorePublicationsQuery,
+  ExplorePublicationsQueryVariables
 >;
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
