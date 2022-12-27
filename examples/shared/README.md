@@ -9,5 +9,5 @@ It is not published or released anywhere directly.
 **Install**:
 
 ```bash
-$ pnpm add -D @lens-protocol/example-shared
+$ pnpm add -D example-shared
 ```

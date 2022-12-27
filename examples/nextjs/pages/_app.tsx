@@ -1,4 +1,4 @@
-import '@lens-protocol/example-shared';
+import 'example-shared';
 import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
 import { localStorage } from '@lens-protocol/react/web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
