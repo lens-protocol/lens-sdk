@@ -1,4 +1,4 @@
-## `@lens-protocol/example-shared`
+## Shared examples code
 
 Shared code between monorepo examples.
 
