@@ -1,5 +1,5 @@
 {
-  "name": "@lens-protocol/nextjs",
+  "name": "example-nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,12 +14,12 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@lens-protocol/example-shared": "workspace:*",
     "@lens-protocol/react": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
     "eslint": "^8.28.0",
     "eslint-config-next": "13.1.1",
     "ethers": "^5.7.2",
+    "example-shared": "workspace:*",
     "next": "13.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -19,7 +19,6 @@ importers:
   examples/nextjs:
     specifiers:
       '@lens-protocol/eslint-config': workspace:*
-      '@lens-protocol/example-shared': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/react': workspace:*
       '@lens-protocol/wagmi': workspace:*
@@ -29,6 +28,7 @@ importers:
       eslint: ^8.28.0
       eslint-config-next: 13.1.1
       ethers: ^5.7.2
+      example-shared: workspace:*
       next: 13.1.1
       prettier: ^2.8.1
       react: ^18.2.0
@@ -36,12 +36,12 @@ importers:
       typescript: ^4.6.4
       wagmi: 0.9.2
     dependencies:
-      '@lens-protocol/example-shared': link:../shared
       '@lens-protocol/react': link:../../packages/react
       '@lens-protocol/wagmi': link:../../packages/wagmi
       eslint: 8.28.0
       eslint-config-next: 13.1.1_wy4udjehnvkneqnogzx5kughki
       ethers: 5.7.2
+      example-shared: link:../shared
       next: 13.1.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -62,7 +62,6 @@ importers:
     specifiers:
       '@bundlr-network/client': ^0.9.11
       '@lens-protocol/eslint-config': workspace:*
-      '@lens-protocol/example-shared': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/react': workspace:*
       '@lens-protocol/wagmi': workspace:*
@@ -70,6 +69,7 @@ importers:
       '@types/react-dom': ^18.0.8
       '@vitejs/plugin-react': ^2.2.0
       ethers: ^5.7.2
+      example-shared: workspace:*
       prettier: ^2.8.1
       react: ^18.2.0
       react-cool-inview: ^3.0.1
@@ -82,10 +82,10 @@ importers:
       wagmi: 0.9.2
     dependencies:
       '@bundlr-network/client': 0.9.11
-      '@lens-protocol/example-shared': link:../shared
       '@lens-protocol/react': link:../../packages/react
       '@lens-protocol/wagmi': link:../../packages/wagmi
       ethers: 5.7.2
+      example-shared: link:../shared
       react: 18.2.0
       react-cool-inview: 3.0.1_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
