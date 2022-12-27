@@ -50,3 +50,18 @@ generates:
       - 'typescript-react-apollo'
       - 'typescript-apollo-client-helpers'
       - 'fragment-matcher'
+  src/graphql/client.ts:
+    schema:
+      - https://api-mumbai.lens.dev/graphql
+      - src/graphql/client.graphql
+    documents:
+      - src/graphql/*.graphql
+    plugins:
+      - 'typescript':
+          nonOptionalTypename: true
+      - 'typescript-operations':
+          skipTypename: true
+      - 'typescript-graphql-request':
+          namingConvention: 'change-case-all#camelCase'
+          omitOperationSuffix: true
+          omitResultSuffix: true

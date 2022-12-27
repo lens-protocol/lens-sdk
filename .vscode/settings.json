@@ -1,5 +1,7 @@
 {
   "eslint.workingDirectories": [
+    "examples/nextjs",
+    "examples/shared",
     "examples/web-wagmi",
     "packages/api-bindings",
     "packages/domain",
@@ -9,5 +11,12 @@
     "packages/shared-kernel",
     "packages/storage",
     "packages/wagmi"
-  ]
+  ],
+  "eslint.packageManager": "pnpm",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
