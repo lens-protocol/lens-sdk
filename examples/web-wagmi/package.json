@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@bundlr-network/client": "^0.9.11",
+    "@lens-protocol/example-shared": "workspace:*",
     "@lens-protocol/react": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
     "ethers": "^5.7.2",

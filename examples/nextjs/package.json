@@ -1,13 +1,12 @@
 {
-  "name": "nextjs",
+  "name": "@lens-protocol/nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "_lint": "next lint",
     "build": "next build",
     "dev": "next dev",
     "eslint:fix": "pnpm run eslint --fix",
-    "eslint": "eslint src",
+    "eslint": "eslint pages",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
@@ -15,9 +14,9 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "@lens-protocol/example-shared": "workspace:*",
     "@lens-protocol/react": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
-    "@next/font": "13.1.1",
     "eslint": "^8.28.0",
     "eslint-config-next": "13.1.1",
     "ethers": "^5.7.2",

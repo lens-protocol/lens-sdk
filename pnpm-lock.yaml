@@ -19,10 +19,10 @@ importers:
   examples/nextjs:
     specifiers:
       '@lens-protocol/eslint-config': workspace:*
+      '@lens-protocol/example-shared': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/react': workspace:*
       '@lens-protocol/wagmi': workspace:*
-      '@next/font': 13.1.1
       '@types/node': ^18.11.11
       '@types/react': 18.0.26
       '@types/react-dom': ^18.0.8
@@ -36,9 +36,9 @@ importers:
       typescript: ^4.6.4
       wagmi: 0.9.2
     dependencies:
+      '@lens-protocol/example-shared': link:../shared
       '@lens-protocol/react': link:../../packages/react
       '@lens-protocol/wagmi': link:../../packages/wagmi
-      '@next/font': 13.1.1
       eslint: 8.28.0
       eslint-config-next: 13.1.1_wy4udjehnvkneqnogzx5kughki
       ethers: 5.7.2
@@ -55,10 +55,14 @@ importers:
       prettier: 2.8.1
       typescript: 4.9.4
 
+  examples/shared:
+    specifiers: {}
+
   examples/web-wagmi:
     specifiers:
       '@bundlr-network/client': ^0.9.11
       '@lens-protocol/eslint-config': workspace:*
+      '@lens-protocol/example-shared': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/react': workspace:*
       '@lens-protocol/wagmi': workspace:*
@@ -78,6 +82,7 @@ importers:
       wagmi: 0.9.2
     dependencies:
       '@bundlr-network/client': 0.9.11
+      '@lens-protocol/example-shared': link:../shared
       '@lens-protocol/react': link:../../packages/react
       '@lens-protocol/wagmi': link:../../packages/wagmi
       ethers: 5.7.2
@@ -2993,10 +2998,6 @@ packages:
     resolution: {integrity: sha512-SBrOFS8PC3nQ5aeZmawJkjKkWjwK9RoxvBSv/86nZp0ubdoVQoko8r8htALd9ufp16NhacCdqhu9bzZLDWtALQ==}
     dependencies:
       glob: 7.1.7
-    dev: false
-
-  /@next/font/13.1.1:
-    resolution: {integrity: sha512-amygRorS05hYK1/XQRZo5qBl7l2fpHnezeKU/cNveWU5QJg+sg8gMGkUXHtvesNKpiKIJshBRH1TzvO+2sKpvQ==}
     dev: false
 
   /@next/swc-android-arm-eabi/13.1.1:
