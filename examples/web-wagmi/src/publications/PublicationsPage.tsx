@@ -26,6 +26,11 @@ const publicationHooks = [
     description: `Fetch comments of a publications.`,
     path: '/publications/useComments',
   },
+  {
+    label: 'useExplorePublications',
+    description: `Fetch an array of publications explore criteria.`,
+    path: '/publications/useExplorePublications'
+  }
 ];
 
 export function PublicationsPage() {

@@ -5,11 +5,11 @@ import {
   useExplorePublications,
 } from '@lens-protocol/react';
 
-import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
-import { Loading } from '../loading/Loading';
-import { PublicationCard } from './PublicationCard';
+import { Loading } from '../components/loading/Loading';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { PublicationCard } from './components/PublicationCard';
 
-export function ExplorePublications() {
+export function UseExplorePublications() {
   const {
     data: publications,
     loading,
@@ -27,7 +27,9 @@ export function ExplorePublications() {
 
   return (
     <div>
-      <h2>Explore Publications</h2>
+      <h1>
+        <code>Explore Publications</code>
+      </h1>
       <div>
         {publications.map((publication) => (
           <PublicationCard key={publication.id} publication={publication} />
