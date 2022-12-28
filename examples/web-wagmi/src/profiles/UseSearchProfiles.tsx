@@ -1,9 +1,9 @@
 import { useSearchProfiles } from '@lens-protocol/react';
 import { ChangeEvent, useState } from 'react';
 
-import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
-import { Loading } from '../loading/Loading';
-import { ProfileCard } from '../profile/ProfileCard';
+import { Loading } from '../components/loading/Loading';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { ProfileCard } from './components/ProfileCard';
 
 type SearchResultsProps = {
   query: string;
@@ -25,7 +25,7 @@ function SearchResults({ query }: SearchResultsProps) {
   );
 }
 
-export function SearchProfiles() {
+export function UseSearchProfiles() {
   const [inputValue, setInputValue] = useState('');
   const [selectedQuery, setSelectedQuery] = useState<string>();
 
@@ -39,7 +39,9 @@ export function SearchProfiles() {
 
   return (
     <div>
-      <h2>Search Profiles</h2>
+      <h1>
+        <code>Search Profiles</code>
+      </h1>
       <div>
         <input onChange={handleChange} />
         <button onClick={handleSubmit}>Search</button>

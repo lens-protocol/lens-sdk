@@ -26,9 +26,11 @@ import { UseMutualFollowers } from './profiles/UseMutualFollowers';
 import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
+import { UseSearchProfiles } from './profiles/UseSearchProfiles';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
+import { UseSearchPublications } from './publications/UseSearchPublications';
 import { CreatePost } from './publications/components/CreatePost';
 import { RevenuePage } from './revenue/RevenuePage';
 
@@ -71,6 +73,10 @@ export function App() {
                   path="/publications/useCollectedPublications"
                   element={<UseCollectedPublications />}
                 />
+                <Route 
+                  path="/publications/useSearchPublications"
+                  element={<UseSearchPublications />}
+                />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useProfile-handle" element={<ProfileByHandle />} />
@@ -78,6 +84,7 @@ export function App() {
                 <Route path="/profiles/useExploreProfiles" element={<UseExploreProfiles />} />
                 <Route path="/profiles/useProfilesToFollow" element={<ProfilesToFollow />} />
                 <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
+                <Route path="/profiles/useSearchProfiles" element={<UseSearchProfiles />} />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
                 <Route path="/discovery/useFeed" element={<Feed />} />

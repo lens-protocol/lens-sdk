@@ -1,9 +1,9 @@
 import { useSearchPublications } from '@lens-protocol/react';
 import { ChangeEvent, useState } from 'react';
 
-import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
-import { Loading } from '../loading/Loading';
-import { PublicationCard } from '../publication/PublicationCard';
+import { Loading } from '../components/loading/Loading';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { PublicationCard } from './components/PublicationCard';
 
 type SearchResultsProps = {
   query: string;
@@ -27,7 +27,7 @@ function SearchResults({ query }: SearchResultsProps) {
   );
 }
 
-export function SearchPublications() {
+export function UseSearchPublications() {
   const [inputValue, setInputValue] = useState('');
   const [selectedQuery, setSelectedQuery] = useState<string>();
 
@@ -41,7 +41,9 @@ export function SearchPublications() {
 
   return (
     <div>
-      <h2>Search Publications</h2>
+      <h1>
+        <code>Search Publications</code>
+      </h1>
       <div>
         <input onChange={handleChange} />
         <button onClick={handleSubmit}>Search</button>
