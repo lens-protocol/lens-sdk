@@ -4431,15 +4431,7 @@ export type PublicationsQuery = {
 };
 
 export type ExplorePublicationsQueryVariables = Exact<{
-  limit: Scalars['LimitScalar'];
-  cursor?: Maybe<Scalars['Cursor']>;
-  timestamp?: Maybe<Scalars['TimestampScalar']>;
-  sortCriteria: PublicationSortCriteria;
-  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
-  publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
-  noRandomize?: Maybe<Scalars['Boolean']>;
-  excludeProfileIds?: Maybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
-  customFilters?: Maybe<Array<CustomFiltersTypes> | CustomFiltersTypes>;
+  request: ExplorePublicationRequest;
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
@@ -6507,31 +6499,8 @@ export type PublicationsQueryResult = Apollo.QueryResult<
   PublicationsQueryVariables
 >;
 export const ExplorePublicationsDocument = gql`
-  query ExplorePublications(
-    $limit: LimitScalar!
-    $cursor: Cursor
-    $timestamp: TimestampScalar
-    $sortCriteria: PublicationSortCriteria!
-    $sources: [Sources!]
-    $publicationTypes: [PublicationTypes!]
-    $noRandomize: Boolean
-    $excludeProfileIds: [ProfileId!]
-    $customFilters: [CustomFiltersTypes!]
-    $observerId: ProfileId
-  ) {
-    result: explorePublications(
-      request: {
-        limit: $limit
-        cursor: $cursor
-        timestamp: $timestamp
-        sortCriteria: $sortCriteria
-        sources: $sources
-        publicationTypes: $publicationTypes
-        noRandomize: $noRandomize
-        excludeProfileIds: $excludeProfileIds
-        customFilters: $customFilters
-      }
-    ) {
+  query ExplorePublications($request: ExplorePublicationRequest!, $observerId: ProfileId) {
+    result: explorePublications(request: $request) {
       items {
         ... on Post {
           ...Post
@@ -6566,15 +6535,7 @@ export const ExplorePublicationsDocument = gql`
  * @example
  * const { data, loading, error } = useExplorePublicationsQuery({
  *   variables: {
- *      limit: // value for 'limit'
- *      cursor: // value for 'cursor'
- *      timestamp: // value for 'timestamp'
- *      sortCriteria: // value for 'sortCriteria'
- *      sources: // value for 'sources'
- *      publicationTypes: // value for 'publicationTypes'
- *      noRandomize: // value for 'noRandomize'
- *      excludeProfileIds: // value for 'excludeProfileIds'
- *      customFilters: // value for 'customFilters'
+ *      request: // value for 'request'
  *      observerId: // value for 'observerId'
  *   },
  * });

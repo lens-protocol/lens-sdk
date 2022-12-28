@@ -8,7 +8,7 @@ import {
   MirrorFragment,
   PublicationSortCriteria,
   PublicationTypes,
-  CustomFiltersTypes
+  CustomFiltersTypes,
 } from '@lens-protocol/api-bindings';
 
 export * from './useComments';
@@ -24,5 +24,5 @@ export {
   isMirrorPublication,
   PublicationSortCriteria,
   PublicationTypes,
-  CustomFiltersTypes
+  CustomFiltersTypes,
 };

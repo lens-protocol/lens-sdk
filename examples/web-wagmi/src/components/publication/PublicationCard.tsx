@@ -7,20 +7,6 @@ type PublicationProps = {
   publication: PostFragment | CommentFragment | MirrorFragment;
 };
 
-export function LinkedPublicationCard({ publication }: PublicationProps) {
-  return (
-    <Link
-      to={`/publication/${publication.id}`}
-      style={{
-        color: 'inherit',
-        margin: '1rem',
-      }}
-    >
-      <PublicationCard publication={publication} />
-    </Link>
-  );
-}
-
 export function PublicationCard({ publication }: PublicationProps) {
   return (
     <article>

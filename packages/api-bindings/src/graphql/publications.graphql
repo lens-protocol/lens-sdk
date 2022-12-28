@@ -49,31 +49,8 @@ query Publications(
   }
 }
 
-query ExplorePublications(
-  $limit: LimitScalar!
-  $cursor: Cursor
-  $timestamp: TimestampScalar
-  $sortCriteria: PublicationSortCriteria!
-  $sources: [Sources!]
-  $publicationTypes: [PublicationTypes!]
-  $noRandomize: Boolean
-  $excludeProfileIds: [ProfileId!]
-  $customFilters: [CustomFiltersTypes!]
-  $observerId: ProfileId
-) {
-  result: explorePublications(
-    request: {
-      limit: $limit
-      cursor: $cursor
-      timestamp: $timestamp
-      sortCriteria: $sortCriteria
-      sources: $sources
-      publicationTypes: $publicationTypes
-      noRandomize: $noRandomize
-      excludeProfileIds: $excludeProfileIds
-      customFilters: $customFilters
-    }
-  ) {
+query ExplorePublications($request: ExplorePublicationRequest!, $observerId: ProfileId) {
+  result: explorePublications(request: $request) {
     items {
       ... on Post {
         ...Post

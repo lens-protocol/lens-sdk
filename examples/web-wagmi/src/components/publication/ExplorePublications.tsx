@@ -7,7 +7,7 @@ import {
 
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { Loading } from '../loading/Loading';
-import { LinkedPublicationCard } from './PublicationCard';
+import { PublicationCard } from './PublicationCard';
 
 export function ExplorePublications() {
   const {
@@ -30,7 +30,7 @@ export function ExplorePublications() {
       <h2>Explore Publications</h2>
       <div>
         {publications.map((publication) => (
-          <LinkedPublicationCard key={publication.id} publication={publication} />
+          <PublicationCard key={publication.id} publication={publication} />
         ))}
         {hasMore && <p ref={observeRef}>Loading more...</p>}
       </div>

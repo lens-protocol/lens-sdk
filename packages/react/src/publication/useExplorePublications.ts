@@ -7,7 +7,7 @@ import {
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
-import { DEFAULT_PAGINATED_QUERY_LIMIT, DEFAULT_PUBLICATION_SORT_CRITERIA } from '../utils';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { Publication } from './types';
 
 type UseExplorePublicationsArgs = PaginatedArgs<{
@@ -17,33 +17,35 @@ type UseExplorePublicationsArgs = PaginatedArgs<{
   noRandomize?: boolean;
   publicationTypes?: Array<PublicationTypes>;
   excludeProfileIds?: Array<string>;
-  customFilters?: Array<CustomFiltersTypes>
+  customFilters?: Array<CustomFiltersTypes>;
 }>;
 
 export function useExplorePublications({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-  sortCriteria = DEFAULT_PUBLICATION_SORT_CRITERIA,
+  sortCriteria = PublicationSortCriteria.Latest,
   timestamp,
   noRandomize,
   publicationTypes,
   excludeProfileIds,
-  customFilters
+  customFilters,
 }: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<Publication>> {
   const { sources, apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useExplorePublicationsQuery({
       variables: {
+        request: {
+          limit,
+          sortCriteria,
+          sources,
+          timestamp,
+          noRandomize,
+          publicationTypes,
+          excludeProfileIds,
+          customFilters,
+        },
         observerId,
-        limit,
-        sortCriteria,
-        sources,
-        timestamp,
-        noRandomize,
-        publicationTypes,
-        excludeProfileIds,
-        customFilters
       },
       client: apolloClient,
     }),
