@@ -1,11 +1,11 @@
 import { useProfile } from '@lens-protocol/react';
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 
-import { GenericError } from '../error/GenericError';
-import { Loading } from '../loading/Loading';
-import { ProfileCard } from './ProfileCard';
-import { ProfileFollowers } from './ProfileFollowers';
-import { ProfilesFollowing } from './ProfileFollowing';
+import { Loading } from '../components/loading/Loading';
+import { ProfileCard } from './components/ProfileCard';
+import { ProfileFollowers } from './components/ProfileFollowers';
+import { ProfilesFollowing } from './components/ProfileFollowing';
+import { SelectProfileHandle } from './components/ProfileSelector';
 
 type ProfileByHandleLayoutProps = {
   handle: string;
@@ -36,7 +36,16 @@ export function ProfileByHandleLayout({ handle }: ProfileByHandleLayoutProps) {
 }
 
 export function ProfileByHandle() {
-  const { handle } = useParams();
-  if (!handle) return <GenericError error={new Error('Profile not found')} />;
-  return <ProfileByHandleLayout handle={handle} />;
+  const [handle, setHandle] = useState<string | null>(null);
+  return (
+    <>
+      <p>Select a handle:</p>
+      <SelectProfileHandle
+        onProfileSelected={(h: string) => {
+          return setHandle(h);
+        }}
+      />
+      {handle && handle !== 'default' && <ProfileByHandleLayout handle={handle} />}
+    </>
+  );
 }

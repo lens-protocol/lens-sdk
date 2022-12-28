@@ -8,8 +8,8 @@ import {
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
+import { Loading } from '../../components/loading/Loading';
 import { upload } from '../../upload';
-import { Loading } from '../loading/Loading';
 
 type ComposerProps = {
   profile: ProfileFieldsFragment;

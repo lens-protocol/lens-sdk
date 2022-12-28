@@ -7,20 +7,30 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { optimism, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
+import { Home } from './HomePage';
+import { AuthenticationPage } from './authentication/AuthenticationPage';
+import { Breadcrumbs } from './components/Breadcrumbs';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
 import { GenericError } from './components/error/GenericError';
-import { Feed } from './components/feed/Feed';
 import { Header } from './components/header/Header';
-import { Home } from './components/home';
-import { NotificationCount } from './components/notification/NotificationCount';
-import { Notifications } from './components/notification/Notifications';
-import { ExploreProfiles } from './components/profile/ExploreProfiles';
-import { MutualFollowers } from './components/profile/MutualFollowers';
-import { ProfileByHandle } from './components/profile/ProfileByHandle';
-import { ProfileById } from './components/profile/ProfileById';
-import { UseCollectedPublications } from './components/profile/UseCollectedPublications';
-import { ProfilesToFollow } from './components/profiles-to-follow/ProfilesToFollow';
-import { Publication } from './components/publication/Publication';
+import { DiscoveryPage } from './discovery/DiscoveryPage';
+import { Feed } from './discovery/UseFeed';
+import { MiscPage } from './misc/MiscPage';
+import { UseCurrencies } from './misc/UseCurrencies';
+import { Notifications } from './misc/UseNotifications';
+import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
+import { ProfilesPage } from './profiles/ProfilesPage';
+import { UseCollectedPublications } from './profiles/UseCollectedPublications';
+import { UseExploreProfiles } from './profiles/UseExploreProfiles';
+import { UseMutualFollowers } from './profiles/UseMutualFollowers';
+import { ProfileByHandle } from './profiles/UseProfileByHandle';
+import { ProfileById } from './profiles/UseProfileById';
+import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
+import { PublicationsPage } from './publications/PublicationsPage';
+import { UsePublication } from './publications/UsePublication';
+import { UsePublications } from './publications/UsePublications';
+import { CreatePost } from './publications/components/CreatePost';
+import { RevenuePage } from './revenue/RevenuePage';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
@@ -46,21 +56,41 @@ export function App() {
         <Router>
           <Header />
           <main>
+            <Breadcrumbs />
             <GenericErrorBoundary fallback={GenericError}>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/feed" element={<Feed />} />
-                <Route path="/explore-profiles" element={<ExploreProfiles />} />
-                <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
-                <Route path="/publication/:publicationId" element={<Publication />} />
-                <Route path="/profile">
-                  <Route path="handle/:handle" element={<ProfileByHandle />} />
-                  <Route path="id/:profileId" element={<ProfileById />} />
-                </Route>
-                <Route path="/unread-notification-count" element={<NotificationCount />} />
-                <Route path="/notifications" element={<Notifications />} />
-                <Route path="/mutual-followers" element={<MutualFollowers />} />
-                <Route path="/collected-publications" element={<UseCollectedPublications />} />
+                <Route path="/authentication" element={<AuthenticationPage />} />
+
+                <Route path="/publications" element={<PublicationsPage />} />
+                <Route path="/publications/usePublication" element={<UsePublication />} />
+                <Route path="/publications/useComments" element={<UsePublication />} />
+                <Route path="/publications/usePublications" element={<UsePublications />} />
+                <Route path="/publications/useCreatePost" element={<CreatePost />} />
+                <Route
+                  path="/publications/useCollectedPublications"
+                  element={<UseCollectedPublications />}
+                />
+
+                <Route path="/profiles" element={<ProfilesPage />} />
+                <Route path="/profiles/useProfile-handle" element={<ProfileByHandle />} />
+                <Route path="/profiles/useProfile-id" element={<ProfileById />} />
+                <Route path="/profiles/useExploreProfiles" element={<UseExploreProfiles />} />
+                <Route path="/profiles/useProfilesToFollow" element={<ProfilesToFollow />} />
+                <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
+
+                <Route path="/discovery" element={<DiscoveryPage />} />
+                <Route path="/discovery/useFeed" element={<Feed />} />
+
+                <Route path="/revenue" element={<RevenuePage />} />
+
+                <Route path="/misc" element={<MiscPage />} />
+                <Route path="/misc/useNotifications" element={<Notifications />} />
+                <Route
+                  path="/misc/useUnreadNotificationCount"
+                  element={<UseUnreadNotificationCount />}
+                />
+                <Route path="/misc/useCurrencies" element={<UseCurrencies />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

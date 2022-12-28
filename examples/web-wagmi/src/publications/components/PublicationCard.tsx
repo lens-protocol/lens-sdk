@@ -1,7 +1,7 @@
 import { CommentFragment, MirrorFragment, PostFragment } from '@lens-protocol/react';
 import { Link } from 'react-router-dom';
 
-import { ProfilePicture } from '../profile/ProfilePicture';
+import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 
 type PublicationProps = {
   publication: PostFragment | CommentFragment | MirrorFragment;

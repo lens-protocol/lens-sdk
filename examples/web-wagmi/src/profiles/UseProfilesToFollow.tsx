@@ -1,7 +1,7 @@
 import { useProfilesToFollow, ProfileFieldsFragment } from '@lens-protocol/react';
 
-import { Loading } from '../loading/Loading';
-import { ProfileCard } from '../profile/ProfileCard';
+import { Loading } from '../components/loading/Loading';
+import { ProfileCard } from './components/ProfileCard';
 
 type ProfileListProps = {
   profiles: ProfileFieldsFragment[];
@@ -24,7 +24,7 @@ export function ProfilesToFollow() {
 
   return (
     <div>
-      <h2>Recommend Followers</h2>
+      <h2>Profiles To Follow</h2>
       <ProfileList profiles={profilesToFollow} />
     </div>
   );
