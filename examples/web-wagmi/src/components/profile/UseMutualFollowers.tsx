@@ -1,4 +1,4 @@
-import { useExploreProfiles, useMutualFollowers, useProfile } from '@lens-protocol/react';
+import { useMutualFollowers, useProfile } from '@lens-protocol/react';
 import { useState } from 'react';
 
 import { SelectProfileId } from '../ProfileSelector';

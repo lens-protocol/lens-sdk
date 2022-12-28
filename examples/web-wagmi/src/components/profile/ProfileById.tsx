@@ -1,7 +1,7 @@
 import { useProfile } from '@lens-protocol/react';
 import { useState } from 'react';
 
-import { SelectProfileHandle, SelectProfileId } from '../ProfileSelector';
+import { SelectProfileId } from '../ProfileSelector';
 import { Loading } from '../loading/Loading';
 import { ProfileCard } from './ProfileCard';
 
