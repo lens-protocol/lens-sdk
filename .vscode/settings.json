@@ -1,5 +1,7 @@
 {
   "eslint.workingDirectories": [
+    "examples/nextjs",
+    "examples/shared",
     "examples/web-wagmi",
     "packages/api-bindings",
     "packages/domain",

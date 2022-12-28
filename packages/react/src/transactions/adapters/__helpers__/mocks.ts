@@ -52,7 +52,7 @@ export function mockTypedData(): TypedData {
       CreateProfileWithSig: [{ name: 'foo', type: 'string' }],
     },
     domain: {
-      name: 'Bean',
+      name: 'none',
       version: '1',
       chainId: mockUint256HexString(),
       verifyingContract: mockEthereumAddress(),

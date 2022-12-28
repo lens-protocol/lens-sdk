@@ -110,7 +110,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
   describe(`when invoking ${TransactionObserver.prototype.waitForNextIndexingEvent.name} with a tx indexing ID`, () => {
     const txId = faker.datatype.uuid();
 
-    it('should succeed with the expected IndexingEvent if the tx has been indexed by the Bean BE', async () => {
+    it('should succeed with the expected IndexingEvent if the tx has been indexed by the BE', async () => {
       const txHash = mockTransactionHash();
       const responses = [
         createHasTxHashBeenIndexedQueryMockedResponse({

@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Interacting with the Lens Protocol API using React.",
   "repository": {
     "directory": "packages/react",
@@ -21,12 +21,12 @@
     },
     "./web": {
       "import": {
-        "types": "./dist/esm/web.d.ts",
-        "default": "./dist/esm/web.js"
+        "types": "./dist/esm/web/index.d.ts",
+        "default": "./dist/esm/web/index.js"
       },
       "require": {
-        "types": "./dist/cjs/web.d.ts",
-        "default": "./dist/cjs/web.js"
+        "types": "./dist/cjs/web/index.d.ts",
+        "default": "./dist/cjs/web/index.js"
       }
     },
     "./package.json": "./package.json"

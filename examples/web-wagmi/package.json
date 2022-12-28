@@ -1,5 +1,5 @@
 {
-  "name": "web-wagmi",
+  "name": "example-wagmi",
   "private": true,
   "version": "0.1.0",
   "scripts": {
@@ -18,6 +18,7 @@
     "@lens-protocol/react": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
     "ethers": "^5.7.2",
+    "example-shared": "workspace:*",
     "react": "^18.2.0",
     "react-cool-inview": "^3.0.1",
     "react-dom": "^18.2.0",

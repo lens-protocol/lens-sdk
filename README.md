@@ -7,6 +7,15 @@ The official SDK for the Lens Protocol.
 > The Lens SDK is still in its initial development phase. Anything MAY change at any time.
 > This is a Developer Preview aimed primarily at existing integrators so to gather [early feedback](https://github.com/lens-protocol/lens-sdk/discussions/48).
 
+- [Documentation](#documentation)
+- [Road Map](#road-map)
+- [Contributing](#contributing)
+  - [Setup](#setup)
+  - [Running tests](#running-tests)
+- [Releasing new version](#releasing-new-version)
+- [License](#license)
+- [Support](#support)
+
 ## Documentation
 
 All Lens Protocol documentation, including this SDK documentation can be found at: https://docs.lens.xyz/docs
@@ -23,7 +32,15 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 
 **Note**: This road map is subject to change and is provided for informational purposes only.
 
-## Setup
+## Contributing
+
+> **Note**
+>
+> At this time we are going to ask the community to hold on any pull requests until we reach an initial stable release (1.x).
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change (issues template will be provided)
+
+### Setup
 
 Install monorepo dependencies by running this command in the root of the project:
 
@@ -37,21 +54,13 @@ Still in the root of the project, run the following command to build the package
 pnpm build
 ```
 
-## Running tests
+### Running tests
 
 To run the tests for all packages, run the following command in the repo root:
 
 ```bash
 pnpm test
 ```
-
-## Contributing
-
-> **Note**
->
-> At this time we are going to ask the community to hold on any pull requests until we reach an initial stable release (1.x).
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change (issues template will be provided)
 
 ## Releasing new version
 
