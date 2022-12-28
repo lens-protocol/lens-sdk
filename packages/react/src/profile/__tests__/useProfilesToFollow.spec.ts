@@ -1,7 +1,7 @@
 import {
   createMockApolloClientWithMultipleResponses,
   mockProfileFieldsFragment,
-  mockProfilesToFollowQueryMockedResponse,
+  createProfilesToFollowQueryMockedResponse,
 } from '@lens-protocol/api/mocks';
 import { waitFor } from '@testing-library/react';
 
@@ -16,7 +16,7 @@ describe(`Given the ${useProfilesToFollow.name} hook`, () => {
       const { result } = renderHookWithMocks(() => useProfilesToFollow(), {
         mocks: {
           apolloClient: createMockApolloClientWithMultipleResponses([
-            mockProfilesToFollowQueryMockedResponse({ profiles: mockProfiles }),
+            createProfilesToFollowQueryMockedResponse({ profiles: mockProfiles }),
           ]),
         },
       });

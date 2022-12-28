@@ -4342,6 +4342,17 @@ export type CreateProfileMutationVariables = Exact<{
 
 export type CreateProfileMutation = { result: RelayerResultFragment | RelayErrorFragment };
 
+export type MutualFollowersProfilesQueryVariables = Exact<{
+  observerId: Scalars['ProfileId'];
+  viewingProfileId: Scalars['ProfileId'];
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+}>;
+
+export type MutualFollowersProfilesQuery = {
+  result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
 export type FollowerFragment = { __typename: 'Follower' } & { wallet: WalletFragment };
 
 export type FollowingFragment = { __typename: 'Following' } & { profile: ProfileFieldsFragment };
@@ -6010,6 +6021,86 @@ export type CreateProfileMutationResult = Apollo.MutationResult<CreateProfileMut
 export type CreateProfileMutationOptions = Apollo.BaseMutationOptions<
   CreateProfileMutation,
   CreateProfileMutationVariables
+>;
+export const MutualFollowersProfilesDocument = gql`
+  query MutualFollowersProfiles(
+    $observerId: ProfileId!
+    $viewingProfileId: ProfileId!
+    $limit: LimitScalar!
+    $cursor: Cursor
+  ) {
+    result: mutualFollowersProfiles(
+      request: {
+        yourProfileId: $observerId
+        viewingProfileId: $viewingProfileId
+        limit: $limit
+        cursor: $cursor
+      }
+    ) {
+      items {
+        ...ProfileFields
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useMutualFollowersProfilesQuery__
+ *
+ * To run a query within a React component, call `useMutualFollowersProfilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMutualFollowersProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMutualFollowersProfilesQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      viewingProfileId: // value for 'viewingProfileId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useMutualFollowersProfilesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    MutualFollowersProfilesQuery,
+    MutualFollowersProfilesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<MutualFollowersProfilesQuery, MutualFollowersProfilesQueryVariables>(
+    MutualFollowersProfilesDocument,
+    options,
+  );
+}
+export function useMutualFollowersProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    MutualFollowersProfilesQuery,
+    MutualFollowersProfilesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<MutualFollowersProfilesQuery, MutualFollowersProfilesQueryVariables>(
+    MutualFollowersProfilesDocument,
+    options,
+  );
+}
+export type MutualFollowersProfilesQueryHookResult = ReturnType<
+  typeof useMutualFollowersProfilesQuery
+>;
+export type MutualFollowersProfilesLazyQueryHookResult = ReturnType<
+  typeof useMutualFollowersProfilesLazyQuery
+>;
+export type MutualFollowersProfilesQueryResult = Apollo.QueryResult<
+  MutualFollowersProfilesQuery,
+  MutualFollowersProfilesQueryVariables
 >;
 export const ProfileFollowersDocument = gql`
   query ProfileFollowers(

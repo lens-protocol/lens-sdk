@@ -19,3 +19,16 @@ export function ProfileCard({ profile }: ProfileCardProps) {
     </article>
   );
 }
+
+type ProfileButtonProps = {
+  profile: ProfileFieldsFragment;
+};
+
+export function SmallProfileCard({ profile }: ProfileButtonProps) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <ProfilePicture picture={profile.picture} />
+      <p>{profile?.handle}</p>
+    </div>
+  );
+}
