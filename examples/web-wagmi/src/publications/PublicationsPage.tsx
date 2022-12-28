@@ -21,6 +21,11 @@ const publicationHooks = [
     description: `Fetch publications collected by a wallet address.`,
     path: '/publications/useCollectedPublications',
   },
+  {
+    label: 'useComments',
+    description: `Fetch comments of a publications.`,
+    path: '/publications/useComments',
+  },
 ];
 
 export function PublicationsPage() {

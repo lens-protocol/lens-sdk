@@ -18,7 +18,9 @@ function PublicationLayout({ publicationId }: PublicationLayoutProps) {
         <code>usePublication</code>
       </h1>
       <PublicationCard publication={publication} />
-      <h3>Comments</h3>
+      <h3>
+        <code>useComments</code>
+      </h3>
       {comments.map((comment) => (
         <PublicationCard key={comment.id} publication={comment} />
       ))}
