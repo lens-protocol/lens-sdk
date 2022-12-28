@@ -1,5 +1,4 @@
 import {
-  CustomFiltersTypes,
   PublicationSortCriteria,
   PublicationTypes,
   useExplorePublicationsQuery,
@@ -14,10 +13,8 @@ type UseExplorePublicationsArgs = PaginatedArgs<{
   observerId?: string;
   sortCriteria?: PublicationSortCriteria;
   timestamp?: number;
-  noRandomize?: boolean;
   publicationTypes?: Array<PublicationTypes>;
   excludeProfileIds?: Array<string>;
-  customFilters?: Array<CustomFiltersTypes>;
 }>;
 
 export function useExplorePublications({
@@ -25,10 +22,8 @@ export function useExplorePublications({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   sortCriteria = PublicationSortCriteria.Latest,
   timestamp,
-  noRandomize,
   publicationTypes,
   excludeProfileIds,
-  customFilters,
 }: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<Publication>> {
   const { sources, apolloClient } = useSharedDependencies();
 
@@ -40,10 +35,8 @@ export function useExplorePublications({
           sortCriteria,
           sources,
           timestamp,
-          noRandomize,
           publicationTypes,
           excludeProfileIds,
-          customFilters,
         },
         observerId,
       },

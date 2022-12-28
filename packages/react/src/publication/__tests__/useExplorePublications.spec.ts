@@ -1,8 +1,4 @@
-import {
-  CustomFiltersTypes,
-  PublicationSortCriteria,
-  PublicationTypes,
-} from '@lens-protocol/api-bindings';
+import { PublicationSortCriteria, PublicationTypes } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPost,
@@ -41,7 +37,6 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
     });
     it('should return publications that match the explore with custom parameters', async () => {
       const customParams = {
-        customFilters: [CustomFiltersTypes.Gardeners],
         sortCriteria: PublicationSortCriteria.TopCollected,
         limit: 20,
         publicationTypes: [PublicationTypes.Comment, PublicationTypes.Post],

@@ -33,4 +33,3 @@ export type {
   FiatAmount,
   Matic,
 } from '@lens-protocol/shared-kernel';
-export { CustomFiltersTypes } from '@lens-protocol/api-bindings';
