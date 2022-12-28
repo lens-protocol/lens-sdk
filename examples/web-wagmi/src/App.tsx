@@ -26,6 +26,7 @@ import { Publication } from './components/publication/UsePublication';
 import { UsePublications } from './components/publication/UsePublications';
 import { ProfilesPage } from './profiles/ProfilesPage';
 import { PublicationsPage } from './publications/PublicationsPage';
+import { UseCreatePost } from './publications/UseCreatePost';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
@@ -60,6 +61,7 @@ export function App() {
                 <Route path="/publications" element={<PublicationsPage />} />
                 <Route path="/publications/usePublication" element={<Publication />} />
                 <Route path="/publications/usePublications" element={<UsePublications />} />
+                <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useProfile-handle" element={<ProfileByHandle />} />

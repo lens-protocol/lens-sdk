@@ -11,6 +11,11 @@ const publicationHooks = [
     description: `Fetch an array of publications that match certain criteria.`,
     path: '/publications/usePublications',
   },
+  {
+    label: 'useCreatePost',
+    description: `Create a publication post.`,
+    path: '/publications/useCreatePost',
+  },
 ];
 
 export function PublicationsPage() {
