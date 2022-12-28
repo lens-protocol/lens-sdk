@@ -12,8 +12,8 @@ export const CATEGORIES = [
     path: '/publications',
   },
   {
-    label: 'Feed & Explore',
-    path: '/explore',
+    label: 'Discovery',
+    path: '/discovery',
   },
   {
     label: 'Revenue',
