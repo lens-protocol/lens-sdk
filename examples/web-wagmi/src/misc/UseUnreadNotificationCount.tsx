@@ -1,7 +1,7 @@
 import { ProfileFieldsFragment, useUnreadNotificationCount } from '@lens-protocol/react';
 
-import { LoginButton } from '../auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../auth/auth';
+import { LoginButton } from '../components/auth/LoginButton';
+import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
 
 type NotificationCountInnerProps = {
   profile: ProfileFieldsFragment;
@@ -26,7 +26,7 @@ function NotificationCountInner({ profile }: NotificationCountInnerProps) {
   );
 }
 
-export function NotificationCount() {
+export function UseUnreadNotificationCount() {
   return (
     <>
       <h2>Notification count</h2>

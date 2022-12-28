@@ -1,9 +1,9 @@
 import { ProfileFieldsFragment, useNotifications } from '@lens-protocol/react';
 
-import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
-import { LoginButton } from '../auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../auth/auth';
-import { NotificationItem } from './NotificationItem';
+import { LoginButton } from '../components/auth/LoginButton';
+import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { NotificationItem } from './components/NotificationItem';
 
 type NotificationsInnerProps = {
   profile: ProfileFieldsFragment;

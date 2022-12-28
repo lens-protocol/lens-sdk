@@ -1,9 +1,9 @@
 import { isPostPublication, useFeed } from '@lens-protocol/react';
 
-import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
-import { Loading } from '../loading/Loading';
-import { PublicationCard } from '../publication/PublicationCard';
-import { CreatePost } from './CreatePost';
+import { Loading } from '../components/loading/Loading';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { CreatePost } from '../publications/components/CreatePost';
+import { PublicationCard } from '../publications/components/PublicationCard';
 
 export function Feed() {
   const infiniteScroll = useInfiniteScroll(
@@ -18,9 +18,11 @@ export function Feed() {
 
   return (
     <div>
-      <CreatePost />
+      <h1>
+        <code>useFeed</code>
+      </h1>
 
-      <h2>Feed</h2>
+      <CreatePost />
 
       {infiniteScroll.data
         .filter((i) => isPostPublication(i.root))
