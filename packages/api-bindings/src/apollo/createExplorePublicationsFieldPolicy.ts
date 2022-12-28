@@ -5,7 +5,6 @@ export function createExplorePublicationsFieldPolicy() {
     [
       'request',
       [
-        'profileId',
         'sortCriteria',
         'timestamp',
         'publicationTypes',
