@@ -14,7 +14,11 @@ const examples = [
   },
   {
     label: 'Explore Profiles',
-    path: '/explore-profiles',
+    path: '/explore/profiles',
+  },
+  {
+    label: 'Explore Publications',
+    path: '/explore/publications',
   },
   {
     label: 'Profiles to Follow',

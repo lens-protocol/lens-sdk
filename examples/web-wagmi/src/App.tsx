@@ -20,6 +20,7 @@ import { ProfileByHandle } from './components/profile/ProfileByHandle';
 import { ProfileById } from './components/profile/ProfileById';
 import { UseCollectedPublications } from './components/profile/UseCollectedPublications';
 import { ProfilesToFollow } from './components/profiles-to-follow/ProfilesToFollow';
+import { ExplorePublications } from './components/publication/ExplorePublications';
 import { Publication } from './components/publication/Publication';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
@@ -50,12 +51,15 @@ export function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/feed" element={<Feed />} />
-                <Route path="/explore-profiles" element={<ExploreProfiles />} />
                 <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
                 <Route path="/publication/:publicationId" element={<Publication />} />
                 <Route path="/profile">
                   <Route path="handle/:handle" element={<ProfileByHandle />} />
                   <Route path="id/:profileId" element={<ProfileById />} />
+                </Route>
+                <Route path="/explore">
+                  <Route path="publications" element={<ExplorePublications />} />
+                  <Route path="profiles" element={<ExploreProfiles />} />
                 </Route>
                 <Route path="/unread-notification-count" element={<NotificationCount />} />
                 <Route path="/notifications" element={<Notifications />} />

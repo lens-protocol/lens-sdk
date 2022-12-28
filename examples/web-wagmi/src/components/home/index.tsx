@@ -6,12 +6,16 @@ const examples = [
     path: '/feed',
   },
   {
+    label: 'Profiles to Follow',
+    path: '/profiles-to-follow',
+  },
+  {
     label: 'Explore Profiles',
     path: '/explore-profiles',
   },
   {
-    label: 'Profiles to Follow',
-    path: '/profiles-to-follow',
+    label: 'Explore Publications',
+    path: '/explore/publications',
   },
 ];
 
