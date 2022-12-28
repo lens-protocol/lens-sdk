@@ -35,7 +35,7 @@ export function SelectProfileId({ onProfileSelected }: ProfileSelectorLinkProps)
       <option value="default">Select a profile</option>
       {data.map((item) => (
         <option key={item.id} value={item.id}>
-          {item.id}
+          {item.id} ({item.handle})
         </option>
       ))}
     </select>

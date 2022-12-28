@@ -1,5 +1,7 @@
 import { useProfile } from '@lens-protocol/react';
+import { useState } from 'react';
 
+import { SelectProfileHandle, SelectProfileId } from '../ProfileSelector';
 import { Loading } from '../loading/Loading';
 import { ProfileCard } from './ProfileCard';
 
@@ -7,7 +9,7 @@ type ProfileByIdProps = {
   profileId: string;
 };
 
-export function ProfileById({ profileId }: ProfileByIdProps) {
+function ProfileByIdLayout({ profileId }: ProfileByIdProps) {
   const { data: profile, loading } = useProfile({ profileId });
 
   if (loading) return <Loading />;
@@ -18,5 +20,20 @@ export function ProfileById({ profileId }: ProfileByIdProps) {
       <ProfileCard profile={profile} />
       <pre>{JSON.stringify(profile, null, 2)}</pre>
     </div>
+  );
+}
+
+export function ProfileById() {
+  const [profileId, setProfileId] = useState<string | null>(null);
+  return (
+    <>
+      <p>Select an id:</p>
+      <SelectProfileId
+        onProfileSelected={(h: string) => {
+          return setProfileId(h);
+        }}
+      />
+      {profileId && profileId !== 'default' && <ProfileByIdLayout profileId={profileId} />}
+    </>
   );
 }

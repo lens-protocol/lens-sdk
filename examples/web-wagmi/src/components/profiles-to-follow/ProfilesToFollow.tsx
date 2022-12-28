@@ -24,7 +24,7 @@ export function ProfilesToFollow() {
 
   return (
     <div>
-      <h2>Recommend Followers</h2>
+      <h2>Profiles To Follow</h2>
       <ProfileList profiles={profilesToFollow} />
     </div>
   );

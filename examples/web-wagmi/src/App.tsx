@@ -16,14 +16,14 @@ import { Header } from './components/header/Header';
 import { Home } from './components/home';
 import { NotificationCount } from './components/notification/NotificationCount';
 import { Notifications } from './components/notification/Notifications';
-import { MutualFollowers } from './components/profile/MutualFollowers';
 import { ProfileByHandle } from './components/profile/ProfileByHandle';
 import { ProfileById } from './components/profile/ProfileById';
 import { UseCollectedPublications } from './components/profile/UseCollectedPublications';
 import { UseExploreProfiles } from './components/profile/UseExploreProfiles';
-import { UseProfile } from './components/profile/UseProfile';
+import { UseMutualFollowers } from './components/profile/UseMutualFollowers';
 import { ProfilesToFollow } from './components/profiles-to-follow/ProfilesToFollow';
-import { Publication } from './components/publication/Publication';
+import { Publication } from './components/publication/UsePublication';
+import { UsePublications } from './components/publication/UsePublications';
 import { ProfilesPage } from './profiles/ProfilesPage';
 import { PublicationsPage } from './publications/PublicationsPage';
 
@@ -59,25 +59,20 @@ export function App() {
 
                 <Route path="/publications" element={<PublicationsPage />} />
                 <Route path="/publications/usePublication" element={<Publication />} />
+                <Route path="/publications/usePublications" element={<UsePublications />} />
 
-                <Route path="/profiles" element={<ProfilesPage />}></Route>
-                <Route path="/profiles/useProfile" element={<UseProfile />}>
-                  <Route path="/profiles/useProfile/handle" element={<ProfileByHandle />} />
-                </Route>
-
+                <Route path="/profiles" element={<ProfilesPage />} />
+                <Route path="/profiles/useProfile-handle" element={<ProfileByHandle />} />
+                <Route path="/profiles/useProfile-id" element={<ProfileById />} />
                 <Route path="/profiles/useExploreProfiles" element={<UseExploreProfiles />} />
+                <Route path="/profiles/useProfilesToFollow" element={<ProfilesToFollow />} />
+                <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
 
                 <Route path="/feed" element={<Feed />} />
-                <Route path="/explore-profiles" element={<UseExploreProfiles />} />
-                <Route path="/profiles-to-follow" element={<ProfilesToFollow />} />
-                <Route path="/publication/:publicationId" element={<Publication />} />
-                {/* <Route path="/profile">
-                  <Route path="handle/:handle" element={<ProfileByHandle />} />
-                  <Route path="id/:profileId" element={<ProfileById />} />
-                </Route> */}
+
                 <Route path="/unread-notification-count" element={<NotificationCount />} />
                 <Route path="/notifications" element={<Notifications />} />
-                <Route path="/mutual-followers" element={<MutualFollowers />} />
+                <Route path="/mutual-followers" element={<UseMutualFollowers />} />
                 <Route path="/collected-publications" element={<UseCollectedPublications />} />
               </Routes>
             </GenericErrorBoundary>
