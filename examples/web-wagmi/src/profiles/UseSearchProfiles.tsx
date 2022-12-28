@@ -1,4 +1,4 @@
-import { useSearchProfiles } from '@lens-protocol/react';
+import { CustomFiltersTypes, useSearchProfiles } from '@lens-protocol/react';
 import { ChangeEvent, useState } from 'react';
 
 import { Loading } from '../components/loading/Loading';
@@ -10,7 +10,9 @@ type SearchResultsProps = {
 };
 
 function SearchResults({ query }: SearchResultsProps) {
-  const { data, loading, hasMore, observeRef } = useInfiniteScroll(useSearchProfiles({ query }));
+  const { data, loading, hasMore, observeRef } = useInfiniteScroll(
+    useSearchProfiles({ query, customFilters: [CustomFiltersTypes.Gardeners] }),
+  );
   if (loading) return <Loading />;
   if (data.length === 0) {
     return <p>No profiles found</p>;

@@ -4435,6 +4435,7 @@ export type SearchPublicationsQueryVariables = Exact<{
   cursor?: Maybe<Scalars['Cursor']>;
   query: Scalars['Search'];
   sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  customFilters?: Maybe<Array<CustomFiltersTypes> | CustomFiltersTypes>;
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
@@ -4449,6 +4450,7 @@ export type SearchProfilesQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   query: Scalars['Search'];
+  customFilters?: Maybe<Array<CustomFiltersTypes> | CustomFiltersTypes>;
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
@@ -6521,6 +6523,7 @@ export const SearchPublicationsDocument = gql`
     $cursor: Cursor
     $query: Search!
     $sources: [Sources!]
+    $customFilters: [CustomFiltersTypes!]
     $observerId: ProfileId
   ) {
     result: search(
@@ -6530,6 +6533,7 @@ export const SearchPublicationsDocument = gql`
         limit: $limit
         cursor: $cursor
         sources: $sources
+        customFilters: $customFilters
       }
     ) {
       ... on PublicationSearchResult {
@@ -6569,6 +6573,7 @@ export const SearchPublicationsDocument = gql`
  *      cursor: // value for 'cursor'
  *      query: // value for 'query'
  *      sources: // value for 'sources'
+ *      customFilters: // value for 'customFilters'
  *      observerId: // value for 'observerId'
  *   },
  * });
@@ -6607,9 +6612,18 @@ export const SearchProfilesDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $query: Search!
+    $customFilters: [CustomFiltersTypes!]
     $observerId: ProfileId
   ) {
-    result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
+    result: search(
+      request: {
+        query: $query
+        type: PROFILE
+        limit: $limit
+        cursor: $cursor
+        customFilters: $customFilters
+      }
+    ) {
       ... on ProfileSearchResult {
         __typename
         items {
@@ -6640,6 +6654,7 @@ export const SearchProfilesDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      query: // value for 'query'
+ *      customFilters: // value for 'customFilters'
  *      observerId: // value for 'observerId'
  *   },
  * });

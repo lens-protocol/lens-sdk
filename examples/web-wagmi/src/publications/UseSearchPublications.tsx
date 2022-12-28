@@ -1,4 +1,4 @@
-import { useSearchPublications } from '@lens-protocol/react';
+import { CustomFiltersTypes, useSearchPublications } from '@lens-protocol/react';
 import { ChangeEvent, useState } from 'react';
 
 import { Loading } from '../components/loading/Loading';
@@ -11,7 +11,7 @@ type SearchResultsProps = {
 
 function SearchResults({ query }: SearchResultsProps) {
   const { data, loading, hasMore, observeRef } = useInfiniteScroll(
-    useSearchPublications({ query }),
+    useSearchPublications({ query, customFilters: [CustomFiltersTypes.Gardeners] }),
   );
   if (loading) return <Loading />;
   if (data.length === 0) {

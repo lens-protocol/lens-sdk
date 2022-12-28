@@ -1,5 +1,6 @@
 import {
   CommentFragment,
+  CustomFiltersTypes,
   PostFragment,
   useSearchPublicationsQuery,
 } from '@lens-protocol/api-bindings';
@@ -12,12 +13,14 @@ type UseSearchPublicationsArgs = PaginatedArgs<{
   query: string;
   limit?: number;
   observerId?: string;
+  customFilters?: Array<CustomFiltersTypes>;
 }>;
 
 export function useSearchPublications({
   query,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
+  customFilters,
 }: UseSearchPublicationsArgs): PaginatedReadResult<(PostFragment | CommentFragment)[]> {
   const { sources, apolloClient } = useSharedDependencies();
 
@@ -27,6 +30,7 @@ export function useSearchPublications({
         query,
         sources,
         limit,
+        customFilters,
         observerId,
       },
       client: apolloClient,

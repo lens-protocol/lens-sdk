@@ -29,8 +29,8 @@ const profileHooks = [
   {
     label: 'useSearchProfiles',
     description: `Fetch a list of profiles that match a query`,
-    path: '/profiles/useSearchProfiles'
-  }
+    path: '/profiles/useSearchProfiles',
+  },
 ];
 
 export function ProfilesPage() {

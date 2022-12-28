@@ -3,10 +3,18 @@ query SearchPublications(
   $cursor: Cursor
   $query: Search!
   $sources: [Sources!]
+  $customFilters: [CustomFiltersTypes!]
   $observerId: ProfileId
 ) {
   result: search(
-    request: { query: $query, type: PUBLICATION, limit: $limit, cursor: $cursor, sources: $sources }
+    request: {
+      query: $query
+      type: PUBLICATION
+      limit: $limit
+      cursor: $cursor
+      sources: $sources
+      customFilters: $customFilters
+    }
   ) {
     ... on PublicationSearchResult {
       __typename
@@ -30,9 +38,18 @@ query SearchProfiles(
   $limit: LimitScalar!
   $cursor: Cursor
   $query: Search!
+  $customFilters: [CustomFiltersTypes!]
   $observerId: ProfileId
 ) {
-  result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
+  result: search(
+    request: {
+      query: $query
+      type: PROFILE
+      limit: $limit
+      cursor: $cursor
+      customFilters: $customFilters
+    }
+  ) {
     ... on ProfileSearchResult {
       __typename
       items {

@@ -73,7 +73,7 @@ export function App() {
                   path="/publications/useCollectedPublications"
                   element={<UseCollectedPublications />}
                 />
-                <Route 
+                <Route
                   path="/publications/useSearchPublications"
                   element={<UseSearchPublications />}
                 />

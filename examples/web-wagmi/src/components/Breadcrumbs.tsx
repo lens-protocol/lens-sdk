@@ -11,9 +11,7 @@ export function Breadcrumbs() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row', gap: '.5rem' }}>
-      <Link to="/">
-        Home
-      </Link>
+      <Link to="/">Home</Link>
 
       {paths.map((path, index) => {
         const to = `/${paths.slice(0, index + 1).join('/')}`;
