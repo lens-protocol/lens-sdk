@@ -29,8 +29,8 @@ const publicationHooks = [
   {
     label: 'useExplorePublications',
     description: `Fetch an array of publications that match certain explore criteria.`,
-    path: '/publications/useExplorePublications'
-  }
+    path: '/publications/useExplorePublications',
+  },
 ];
 
 export function PublicationsPage() {
