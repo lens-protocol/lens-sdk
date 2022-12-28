@@ -1,4 +1,5 @@
 import {
+  CustomFiltersTypes,
   PublicationSortCriteria,
   PublicationTypes,
   useExplorePublicationsQuery,
@@ -16,6 +17,7 @@ type UseExplorePublicationsArgs = PaginatedArgs<{
   noRandomize?: boolean;
   publicationTypes?: Array<PublicationTypes>;
   excludeProfileIds?: Array<string>;
+  customFilters?: Array<CustomFiltersTypes>
 }>;
 
 export function useExplorePublications({
@@ -26,6 +28,7 @@ export function useExplorePublications({
   noRandomize,
   publicationTypes,
   excludeProfileIds,
+  customFilters
 }: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<Publication>> {
   const { sources, apolloClient } = useSharedDependencies();
 
@@ -40,6 +43,7 @@ export function useExplorePublications({
         noRandomize,
         publicationTypes,
         excludeProfileIds,
+        customFilters
       },
       client: apolloClient,
     }),

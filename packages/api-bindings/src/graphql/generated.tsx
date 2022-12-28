@@ -4439,6 +4439,7 @@ export type ExplorePublicationsQueryVariables = Exact<{
   publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
   noRandomize?: Maybe<Scalars['Boolean']>;
   excludeProfileIds?: Maybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
+  customFilters?: Maybe<Array<CustomFiltersTypes> | CustomFiltersTypes>;
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
@@ -6515,6 +6516,7 @@ export const ExplorePublicationsDocument = gql`
     $publicationTypes: [PublicationTypes!]
     $noRandomize: Boolean
     $excludeProfileIds: [ProfileId!]
+    $customFilters: [CustomFiltersTypes!]
     $observerId: ProfileId
   ) {
     result: explorePublications(
@@ -6527,6 +6529,7 @@ export const ExplorePublicationsDocument = gql`
         publicationTypes: $publicationTypes
         noRandomize: $noRandomize
         excludeProfileIds: $excludeProfileIds
+        customFilters: $customFilters
       }
     ) {
       items {
@@ -6571,6 +6574,7 @@ export const ExplorePublicationsDocument = gql`
  *      publicationTypes: // value for 'publicationTypes'
  *      noRandomize: // value for 'noRandomize'
  *      excludeProfileIds: // value for 'excludeProfileIds'
+ *      customFilters: // value for 'customFilters'
  *      observerId: // value for 'observerId'
  *   },
  * });

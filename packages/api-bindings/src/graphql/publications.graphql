@@ -58,6 +58,7 @@ query ExplorePublications(
   $publicationTypes: [PublicationTypes!]
   $noRandomize: Boolean
   $excludeProfileIds: [ProfileId!]
+  $customFilters: [CustomFiltersTypes!]
   $observerId: ProfileId
 ) {
   result: explorePublications(
@@ -70,6 +71,7 @@ query ExplorePublications(
       publicationTypes: $publicationTypes
       noRandomize: $noRandomize
       excludeProfileIds: $excludeProfileIds
+      customFilters: $customFilters
     }
   ) {
     items {

@@ -1,4 +1,5 @@
 import {
+  CustomFiltersTypes,
   PublicationSortCriteria,
   PublicationTypes,
   useExplorePublications,
@@ -18,6 +19,7 @@ export function ExplorePublications() {
     useExplorePublications({
       sortCriteria: PublicationSortCriteria.TopCommented,
       publicationTypes: [PublicationTypes.Comment, PublicationTypes.Post],
+      customFilters: [CustomFiltersTypes.Gardeners]
     }),
   );
 

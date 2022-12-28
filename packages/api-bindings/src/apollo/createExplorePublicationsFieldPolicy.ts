@@ -4,7 +4,7 @@ export function createExplorePublicationsFieldPolicy() {
   return cursorBasedPagination([
     [
       'request',
-      ['sortCriteria', 'timestamp', 'publicationTypes', 'excludeProfileIds', 'noRandomize'],
+      ['sortCriteria', 'timestamp', 'publicationTypes', 'excludeProfileIds', 'noRandomize', 'customFilters'],
     ],
   ]);
 }
