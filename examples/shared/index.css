@@ -48,3 +48,7 @@ nav a.current {
   color: var(--accent) !important;
   border-color: var(--accent) !important;
 }
+
+article h3 {
+  margin-top: .5rem;
+}
