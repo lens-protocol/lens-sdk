@@ -23,7 +23,7 @@
   --border: #d8dae1;
   --accent: #00501e;
   --accent-light: #00501ed9;
-  --code: #d81b60;
+  --code: #212121;
   --preformatted: #444;
   --marked: #ffdd33;
   --disabled: #efefef;
@@ -38,7 +38,7 @@
     --border: #666;
     --accent: #aafe2c;
     --accent-light: #abfe2cd9;
-    --code: #f06292;
+    --code: #ffffff;
     --preformatted: #ccc;
     --disabled: #111;
   }
