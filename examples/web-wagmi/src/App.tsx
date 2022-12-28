@@ -24,9 +24,12 @@ import { UseMutualFollowers } from './components/profile/UseMutualFollowers';
 import { ProfilesToFollow } from './components/profiles-to-follow/ProfilesToFollow';
 import { Publication } from './components/publication/UsePublication';
 import { UsePublications } from './components/publication/UsePublications';
+import { UseCurrencies } from './components/revenue/UseCurrencies';
+import { DiscoveryPage } from './discovery/DiscoveryPage';
 import { ProfilesPage } from './profiles/ProfilesPage';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCreatePost } from './publications/UseCreatePost';
+import { RevenuePage } from './revenue/RevenuePage';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
@@ -75,7 +78,11 @@ export function App() {
                 <Route path="/profiles/useProfilesToFollow" element={<ProfilesToFollow />} />
                 <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
 
-                <Route path="/feed" element={<Feed />} />
+                <Route path="/discovery" element={<DiscoveryPage />} />
+                <Route path="/discovery/useFeed" element={<Feed />} />
+
+                <Route path="/revenue" element={<RevenuePage />} />
+                <Route path="/revenue/useCurrencies" element={<UseCurrencies />} />
 
                 <Route path="/unread-notification-count" element={<NotificationCount />} />
                 <Route path="/notifications" element={<Notifications />} />

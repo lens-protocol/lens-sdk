@@ -37,9 +37,11 @@ export function Feed() {
 
   return (
     <div>
-      <CreatePost />
+      <h1>
+        <code>useFeed</code>
+      </h1>
 
-      <h2>Feed</h2>
+      <CreatePost />
 
       {infiniteScroll.data
         .filter((i) => isPostPublication(i.root))
