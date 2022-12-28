@@ -8,7 +8,7 @@ const publicationHooks = [
   },
   {
     label: 'usePublications',
-    description: `Fetch an array of publications from a profile that match certain criteria.`,
+    description: `Fetch an array of publications, that match certain criteria, from a profile.`,
     path: '/publications/usePublications',
   },
   {
