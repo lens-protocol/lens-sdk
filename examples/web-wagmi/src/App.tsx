@@ -26,6 +26,7 @@ import { Publication } from './components/publication/UsePublication';
 import { UsePublications } from './components/publication/UsePublications';
 import { UseCurrencies } from './components/revenue/UseCurrencies';
 import { DiscoveryPage } from './discovery/DiscoveryPage';
+import { MiscPage } from './misc/MiscPage';
 import { ProfilesPage } from './profiles/ProfilesPage';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCreatePost } from './publications/UseCreatePost';
@@ -82,11 +83,11 @@ export function App() {
                 <Route path="/discovery/useFeed" element={<Feed />} />
 
                 <Route path="/revenue" element={<RevenuePage />} />
-                <Route path="/revenue/useCurrencies" element={<UseCurrencies />} />
 
-                <Route path="/unread-notification-count" element={<NotificationCount />} />
-                <Route path="/notifications" element={<Notifications />} />
-                <Route path="/mutual-followers" element={<UseMutualFollowers />} />
+                <Route path="/misc" element={<MiscPage />} />
+                <Route path="/misc/useNotifications" element={<Notifications />} />
+                <Route path="/misc/useUnreadNotificationCount" element={<NotificationCount />} />
+                <Route path="/misc/useCurrencies" element={<UseCurrencies />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />
