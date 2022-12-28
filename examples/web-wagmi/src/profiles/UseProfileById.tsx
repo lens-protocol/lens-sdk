@@ -1,9 +1,9 @@
 import { useProfile } from '@lens-protocol/react';
 import { useState } from 'react';
 
-import { SelectProfileId } from '../ProfileSelector';
-import { Loading } from '../loading/Loading';
-import { ProfileCard } from './ProfileCard';
+import { Loading } from '../components/loading/Loading';
+import { ProfileCard } from './components/ProfileCard';
+import { SelectProfileId } from './components/ProfileSelector';
 
 type ProfileByIdProps = {
   profileId: string;

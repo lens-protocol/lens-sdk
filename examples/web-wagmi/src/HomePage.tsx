@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { CATEGORIES } from '../../config';
+import { CATEGORIES } from './config';
 
 export function Home() {
   return (

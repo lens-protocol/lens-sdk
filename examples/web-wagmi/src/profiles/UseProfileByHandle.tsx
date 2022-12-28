@@ -1,11 +1,11 @@
 import { useProfile } from '@lens-protocol/react';
 import { useState } from 'react';
 
-import { SelectProfileHandle } from '../ProfileSelector';
-import { Loading } from '../loading/Loading';
-import { ProfileCard } from './ProfileCard';
-import { ProfileFollowers } from './ProfileFollowers';
-import { ProfilesFollowing } from './ProfileFollowing';
+import { Loading } from '../components/loading/Loading';
+import { ProfileCard } from './components/ProfileCard';
+import { ProfileFollowers } from './components/ProfileFollowers';
+import { ProfilesFollowing } from './components/ProfileFollowing';
+import { SelectProfileHandle } from './components/ProfileSelector';
 
 type ProfileByHandleLayoutProps = {
   handle: string;

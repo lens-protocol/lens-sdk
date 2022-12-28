@@ -1,6 +1,6 @@
 import { useCurrencies } from '@lens-protocol/react';
 
-import { Loading } from '../loading/Loading';
+import { Loading } from '../components/loading/Loading';
 
 export function UseCurrencies() {
   const { data: currencies, loading } = useCurrencies();

@@ -1,8 +1,8 @@
 import { useMutualFollowers, useProfile } from '@lens-protocol/react';
 import { useState } from 'react';
 
-import { SelectProfileId } from '../ProfileSelector';
-import { SmallProfileCard } from './ProfileCard';
+import { SmallProfileCard } from './components/ProfileCard';
+import { SelectProfileId } from './components/ProfileSelector';
 
 type ViewMutualFollowersProps = {
   profileToCompareOne: string;

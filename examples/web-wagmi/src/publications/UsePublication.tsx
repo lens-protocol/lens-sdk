@@ -1,7 +1,7 @@
 import { useComments, usePublication } from '@lens-protocol/react';
 
-import { Loading } from '../loading/Loading';
-import { PublicationCard } from './PublicationCard';
+import { Loading } from '../components/loading/Loading';
+import { PublicationCard } from './components/PublicationCard';
 
 type PublicationLayoutProps = {
   publicationId: string;
@@ -28,7 +28,7 @@ function PublicationLayout({ publicationId }: PublicationLayoutProps) {
   );
 }
 
-export function Publication() {
+export function UsePublication() {
   // TODO: use the useExplorePublications hook to get a list of publications to select an id from
   return <PublicationLayout publicationId="0x1b-0x0118" />;
 }

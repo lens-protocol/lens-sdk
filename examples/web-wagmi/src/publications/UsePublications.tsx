@@ -1,6 +1,6 @@
 import { usePublications } from '@lens-protocol/react';
 
-import { PublicationCard } from './PublicationCard';
+import { PublicationCard } from './components/PublicationCard';
 
 export function UsePublications() {
   const { data, loading } = usePublications({ profileId: '0x1b' });
