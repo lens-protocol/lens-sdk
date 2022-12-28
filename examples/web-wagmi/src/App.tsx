@@ -62,6 +62,10 @@ export function App() {
                 <Route path="/publications/usePublication" element={<Publication />} />
                 <Route path="/publications/usePublications" element={<UsePublications />} />
                 <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
+                <Route
+                  path="/publications/useCollectedPublications"
+                  element={<UseCollectedPublications />}
+                />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useProfile-handle" element={<ProfileByHandle />} />
@@ -75,7 +79,6 @@ export function App() {
                 <Route path="/unread-notification-count" element={<NotificationCount />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/mutual-followers" element={<UseMutualFollowers />} />
-                <Route path="/collected-publications" element={<UseCollectedPublications />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

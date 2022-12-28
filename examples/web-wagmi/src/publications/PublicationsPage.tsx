@@ -16,6 +16,11 @@ const publicationHooks = [
     description: `Create a publication post.`,
     path: '/publications/useCreatePost',
   },
+  {
+    label: 'useCollectedPublications',
+    description: `Fetch publications collected by a wallet address.`,
+    path: '/publications/useCollectedPublications',
+  },
 ];
 
 export function PublicationsPage() {

@@ -1,16 +1,16 @@
 import { useCollectedPublications } from '@lens-protocol/react';
 
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
+import { PublicationCard } from '../publication/PublicationCard';
 
 export function UseCollectedPublications() {
+  const walletAddress = '0x42a578e3557f5854B27D48E7d753fEb2f428546D';
   const {
     loading,
     data: publications,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(
-    useCollectedPublications({ walletAddress: '0x42a578e3557f5854B27D48E7d753fEb2f428546D' }),
-  );
+  } = useInfiniteScroll(useCollectedPublications({ walletAddress }));
 
   if (loading) return <div>Loading...</div>;
 
@@ -20,11 +20,12 @@ export function UseCollectedPublications() {
 
   return (
     <div>
-      <h2>useCollectedPublications</h2>
+      <h1>
+        <code>useCollectedPublications</code>
+      </h1>
+      <p>Publications collected by {walletAddress}</p>
       {publications.map((publication) => (
-        <div key={publication.id}>
-          <p>{publication.id}</p>
-        </div>
+        <PublicationCard key={publication.id} publication={publication} />
       ))}
 
       {hasMore && <p ref={observeRef}>Loading more...</p>}
