@@ -5,4 +5,5 @@ module.exports = {
     project: './tsconfig.json',
   },
   extends: ['@lens-protocol/eslint-config'],
+  ignorePatterns: ['**/types/*.ts'],
 };
