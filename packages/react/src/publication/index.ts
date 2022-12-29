@@ -14,6 +14,7 @@ export * from './useComments';
 export * from './usePublication';
 export * from './usePublications';
 export * from './useExplorePublications';
+export * from './useReaction';
 
 export type { Publication } from './types';
 export type { PostFragment, CommentFragment, MirrorFragment, CommentWithFirstCommentFragment };

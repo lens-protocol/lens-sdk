@@ -34,7 +34,7 @@ function NotificationsInner({ profile }: NotificationsInnerProps) {
   );
 }
 
-export function Notifications() {
+export function UseNotifications() {
   return (
     <>
       <h2>Notifications</h2>

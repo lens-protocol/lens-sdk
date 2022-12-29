@@ -9,11 +9,11 @@ import {
 import { PublicationType, ReactionType, TransactionKind } from '../../../entities';
 import { mockProfileId } from '../../profile/__helpers__/mocks';
 import { ImageType } from '../../types';
-import { AddReactionRequest } from '../AddReaction';
 import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
 import { CreatePostRequest } from '../CreatePost';
+import { ReactionRequest } from '../Reaction';
 import {
   ChargeCollectPolicy,
   CollectPolicyType,
@@ -158,12 +158,11 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
   };
 }
 
-export function mockReactionRequest(overrides?: Partial<AddReactionRequest>): AddReactionRequest {
+export function mockReactionRequest(overrides?: Partial<ReactionRequest>): ReactionRequest {
   return {
     publicationId: faker.datatype.uuid(),
     profileId: faker.datatype.uuid(),
     reactionType: ReactionType.UPVOTE,
-    publicationType: PublicationType.POST,
     ...overrides,
   };
 }
