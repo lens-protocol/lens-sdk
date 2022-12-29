@@ -4430,6 +4430,18 @@ export type PublicationsQuery = {
   };
 };
 
+export type ExplorePublicationsQueryVariables = Exact<{
+  request: ExplorePublicationRequest;
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type ExplorePublicationsQuery = {
+  result: {
+    items: Array<PostFragment | CommentFragment | MirrorFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
+};
+
 export type SearchPublicationsQueryVariables = Exact<{
   limit?: Maybe<Scalars['LimitScalar']>;
   cursor?: Maybe<Scalars['Cursor']>;
@@ -6514,6 +6526,77 @@ export type PublicationsLazyQueryHookResult = ReturnType<typeof usePublicationsL
 export type PublicationsQueryResult = Apollo.QueryResult<
   PublicationsQuery,
   PublicationsQueryVariables
+>;
+export const ExplorePublicationsDocument = gql`
+  query ExplorePublications($request: ExplorePublicationRequest!, $observerId: ProfileId) {
+    result: explorePublications(request: $request) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useExplorePublicationsQuery__
+ *
+ * To run a query within a React component, call `useExplorePublicationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExplorePublicationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useExplorePublicationsQuery({
+ *   variables: {
+ *      request: // value for 'request'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useExplorePublicationsQuery(
+  baseOptions: Apollo.QueryHookOptions<ExplorePublicationsQuery, ExplorePublicationsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ExplorePublicationsQuery, ExplorePublicationsQueryVariables>(
+    ExplorePublicationsDocument,
+    options,
+  );
+}
+export function useExplorePublicationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ExplorePublicationsQuery,
+    ExplorePublicationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ExplorePublicationsQuery, ExplorePublicationsQueryVariables>(
+    ExplorePublicationsDocument,
+    options,
+  );
+}
+export type ExplorePublicationsQueryHookResult = ReturnType<typeof useExplorePublicationsQuery>;
+export type ExplorePublicationsLazyQueryHookResult = ReturnType<
+  typeof useExplorePublicationsLazyQuery
+>;
+export type ExplorePublicationsQueryResult = Apollo.QueryResult<
+  ExplorePublicationsQuery,
+  ExplorePublicationsQueryVariables
 >;
 export const SearchPublicationsDocument = gql`
   query SearchPublications(

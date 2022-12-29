@@ -53,7 +53,7 @@
 ## Explore
 
 - [x] `useExploreProfiles`
-- [ ] `useExplorePublications`
+- [x] `useExplorePublications`
 
 ## Feed
 

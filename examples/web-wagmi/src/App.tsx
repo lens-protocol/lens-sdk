@@ -28,6 +28,7 @@ import { ProfileById } from './profiles/UseProfileById';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseSearchProfiles } from './profiles/UseSearchProfiles';
 import { PublicationsPage } from './publications/PublicationsPage';
+import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseSearchPublications } from './publications/UseSearchPublications';
@@ -76,6 +77,10 @@ export function App() {
                 <Route
                   path="/publications/useSearchPublications"
                   element={<UseSearchPublications />}
+                />
+                <Route
+                  path="/publications/useExplorePublications"
+                  element={<UseExplorePublications />}
                 />
 
                 <Route path="/profiles" element={<ProfilesPage />} />

@@ -43,6 +43,10 @@ import {
   SearchProfilesQueryVariables,
   SearchPublicationsQuery,
   SearchPublicationsDocument,
+  ExplorePublicationsQueryVariables,
+  MirrorFragment,
+  ExplorePublicationsQuery,
+  ExplorePublicationsDocument,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -292,6 +296,31 @@ export function createFeedQueryMockedResponse(args: {
   return {
     request: {
       query: FeedDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: args.items,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function createExplorePublicationsQueryMockedResponse(args: {
+  variables: ExplorePublicationsQueryVariables;
+  items: Array<PostFragment | CommentFragment | MirrorFragment>;
+}): MockedResponse<ExplorePublicationsQuery> {
+  return {
+    request: {
+      query: ExplorePublicationsDocument,
       variables: args.variables,
     },
     result: {

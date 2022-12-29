@@ -8,7 +8,7 @@ const publicationHooks = [
   },
   {
     label: 'usePublications',
-    description: `Fetch an array of publications that match certain criteria.`,
+    description: `Fetch an array of publications, that match certain criteria, from a profile.`,
     path: '/publications/usePublications',
   },
   {
@@ -30,6 +30,11 @@ const publicationHooks = [
     label: 'useSearchPublications',
     description: `Fetch publications that match a query`,
     path: '/publications/useSearchPublications',
+  },
+  {
+    label: 'useExplorePublications',
+    description: `Fetch an array of publications that match certain explore criteria.`,
+    path: '/publications/useExplorePublications',
   },
 ];
 
