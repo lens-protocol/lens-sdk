@@ -12,7 +12,6 @@ export * from './notifications';
 export type { ReadResult, PaginatedReadResult } from './helpers';
 
 export { ReactionType } from '@lens-protocol/domain/entities';
-export { ReactionTypes } from '@lens-protocol/api-bindings';
 
 export {
   Amount,

@@ -160,8 +160,9 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
 
 export function mockReactionRequest(overrides?: Partial<ReactionRequest>): ReactionRequest {
   return {
-    publicationId: faker.datatype.uuid(),
     profileId: faker.datatype.uuid(),
+    publicationId: faker.datatype.uuid(),
+    publicationType: PublicationType.POST,
     reactionType: ReactionType.UPVOTE,
     ...overrides,
   };

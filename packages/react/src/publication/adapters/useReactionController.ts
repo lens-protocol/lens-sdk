@@ -7,16 +7,24 @@ import { ReactionPresenter } from './ReactionPresenter';
 export function useReactionController() {
   const { apolloClient } = useSharedDependencies();
 
-  const presenter = new ReactionPresenter(apolloClient.cache);
-  const gateway = new ReactionGateway(apolloClient);
-  const reaction = new Reaction(gateway, presenter);
-
   const add = async (request: ReactionRequest) => {
-    return reaction.add(request);
+    const presenter = new ReactionPresenter(apolloClient.cache);
+    const gateway = new ReactionGateway(apolloClient);
+    const reaction = new Reaction(gateway, presenter);
+
+    void reaction.add(request);
+
+    return presenter.asResult();
   };
 
   const remove = async (request: ReactionRequest) => {
-    return reaction.remove(request);
+    const presenter = new ReactionPresenter(apolloClient.cache);
+    const gateway = new ReactionGateway(apolloClient);
+    const reaction = new Reaction(gateway, presenter);
+
+    void reaction.remove(request);
+
+    return presenter.asResult();
   };
 
   return {

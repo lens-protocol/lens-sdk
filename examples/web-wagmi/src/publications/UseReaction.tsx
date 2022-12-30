@@ -1,7 +1,7 @@
 import {
   ProfileFieldsFragment,
+  Publication,
   ReactionType,
-  ReactionTypes,
   usePublication,
   useReaction,
 } from '@lens-protocol/react';
@@ -11,6 +11,48 @@ import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
+type ReactionButtonProps = {
+  publication: Publication;
+  profileId: string;
+  reactionType: ReactionType;
+};
+
+function ReactionButton({ publication, profileId, reactionType }: ReactionButtonProps) {
+  const { addReaction, removeReaction, hasReaction, isPending, error } = useReaction({
+    profileId,
+  });
+
+  const hasReactionType = hasReaction({
+    reactionType,
+    publication,
+  });
+
+  const toggleReaction = async () => {
+    if (!publication) return;
+
+    if (hasReactionType) {
+      await removeReaction({
+        reactionType,
+        publication,
+      });
+    } else {
+      await addReaction({
+        reactionType,
+        publication,
+      });
+    }
+  };
+
+  return (
+    <>
+      {error && <p>{error.message}</p>}
+      <button onClick={toggleReaction} disabled={isPending}>
+        <strong>{hasReactionType ? `Remove ${reactionType}` : `Add ${reactionType}`}</strong>
+      </button>
+    </>
+  );
+}
+
 type ReactionInnerProps = {
   profile: ProfileFieldsFragment;
 };
@@ -18,41 +60,21 @@ type ReactionInnerProps = {
 function ReactionInner({ profile }: ReactionInnerProps) {
   const { data: publication, loading: publicationLoading } = usePublication({
     publicationId: '0x1b-0x0118',
-    observerId: profile.id,
+    observerId: profile.id, // important!
   });
-  const { addReaction, removeReaction, isPending, error } = useReaction({
-    profileId: profile.id,
-  });
-
-  const toggleReaction = async () => {
-    if (!publication) return;
-
-    if (publication.reaction === ReactionTypes.Upvote) {
-      await removeReaction({
-        reactionType: ReactionType.UPVOTE, // TODO normalize
-        publicationId: publication.id,
-      });
-    } else {
-      await addReaction({
-        reactionType: ReactionType.UPVOTE,
-        publicationId: publication.id,
-      });
-    }
-  };
 
   if (publicationLoading) return <Loading />;
-
-  const hasUpvote = publication.reaction === ReactionTypes.Upvote;
 
   return (
     <div>
       <PublicationCard publication={publication} />
       <div>Total Upvotes: {publication.stats.totalUpvotes}</div>
       <div>
-        {error && <p>{error.message}</p>}
-        <button onClick={toggleReaction} disabled={isPending}>
-          <strong>{hasUpvote ? 'Remove Upvote' : 'Add Upvote'}</strong>
-        </button>
+        <ReactionButton
+          publication={publication}
+          profileId={profile.id}
+          reactionType={ReactionType.UPVOTE}
+        />
       </div>
     </div>
   );

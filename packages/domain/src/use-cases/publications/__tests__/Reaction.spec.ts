@@ -2,8 +2,7 @@ import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { NetworkError } from '../NetworkError';
-import { Reaction, IReactionGateway, IReactionPresenter } from '../Reaction';
+import { Reaction, IReactionGateway, IReactionPresenter, ReactionError } from '../Reaction';
 import { mockReactionRequest } from '../__helpers__/mocks';
 
 describe(`Given the ${Reaction.name} use-case interactor`, () => {
@@ -33,7 +32,7 @@ describe(`Given the ${Reaction.name} use-case interactor`, () => {
       const gateway = mock<IReactionGateway>();
       when(gateway.add)
         .calledWith(request)
-        .mockResolvedValue(failure(new NetworkError(new Error())));
+        .mockResolvedValue(failure(new ReactionError('')));
 
       const reaction = new Reaction(gateway, presenter);
 
@@ -70,7 +69,7 @@ describe(`Given the ${Reaction.name} use-case interactor`, () => {
       const gateway = mock<IReactionGateway>();
       when(gateway.remove)
         .calledWith(request)
-        .mockResolvedValue(failure(new NetworkError(new Error())));
+        .mockResolvedValue(failure(new ReactionError('')));
 
       const reaction = new Reaction(gateway, presenter);
 

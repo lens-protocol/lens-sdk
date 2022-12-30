@@ -1,10 +1,25 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
-import { PublicationStats, ReactionTypes } from '@lens-protocol/api-bindings';
+import {
+  getPublicationTypename,
+  PublicationStats,
+  ReactionTypes,
+} from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import { ReactionRequest, IReactionPresenter } from '@lens-protocol/domain/use-cases/publications';
+import { Deferred, Result } from '@lens-protocol/shared-kernel';
 
 export class ReactionPresenter implements IReactionPresenter {
   constructor(private cache: ApolloCache<NormalizedCacheObject>) {}
+
+  private deferredResult = new Deferred<Result<void, Error>>();
+
+  present(result: Result<void, Error>): void {
+    this.deferredResult.resolve(result);
+  }
+
+  asResult(): Promise<Result<void, Error>> {
+    return this.deferredResult.promise;
+  }
 
   async presentOptimisticAdd(request: ReactionRequest): Promise<void> {
     await this.addReaction(request);
@@ -27,7 +42,7 @@ export class ReactionPresenter implements IReactionPresenter {
       case ReactionType.UPVOTE:
         {
           const id = this.cache.identify({
-            // __typename: getPublicationTypename(request.publicationType),
+            __typename: getPublicationTypename(request.publicationType),
             id: request.publicationId,
           });
 
@@ -44,11 +59,12 @@ export class ReactionPresenter implements IReactionPresenter {
             },
           });
         }
-
         break;
+
       case ReactionType.DOWNVOTE:
-      default:
         throw new Error('Downvotes support not implemented');
+      default:
+        throw new Error('Unknown reaction type');
     }
   }
 
@@ -57,7 +73,7 @@ export class ReactionPresenter implements IReactionPresenter {
       case ReactionType.UPVOTE:
         {
           const id = this.cache.identify({
-            // __typename: getPublicationTypename(request.publicationType),
+            __typename: getPublicationTypename(request.publicationType),
             id: request.publicationId,
           });
 
@@ -74,11 +90,12 @@ export class ReactionPresenter implements IReactionPresenter {
             },
           });
         }
-
         break;
+
       case ReactionType.DOWNVOTE:
-      default:
         throw new Error('Downvotes support not implemented');
+      default:
+        throw new Error('Unknown reaction type');
     }
   }
 }
