@@ -17,10 +17,10 @@
 - [x] `useProfilesToFollow`
 - [ ] `useProfileFollowers`
 - [ ] `useProfileFollowing`
-- [ ] `useFollow`
-  - [ ] sign-less, gas-less (via proxy action)
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
+- [x] `useFollow`
+  - [x] sign-less, gas-less (via proxy action)
+  - [x] signed, gas-less
+  - [x] signed, paid gas (fallback)
 - [ ] `useUnfollow`
   - [ ] signed, gas-less
   - [ ] signed, paid gas (fallback)

@@ -86,7 +86,6 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const transactionStorage = createTransactionStorage(config.storage);
 
   // apollo client
-
   const anonymousApolloClient = createAnonymousApolloClient({
     backendURL: config.environment.backend,
   });
