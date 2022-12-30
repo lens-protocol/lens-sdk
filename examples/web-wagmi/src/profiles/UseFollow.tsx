@@ -12,7 +12,7 @@ type ProfileFollowProps = {
 function FollowButton({ profile }: ProfileFollowProps) {
   const { follow, isPending } = useFollow({ profile });
 
-  if (profile.isFollowedByMe) return <p>Following</p>;
+  if (profile.isFollowedByMe || profile.isOptimisticFollowedByMe) return <p>Following</p>;
 
   return (
     <button onClick={follow} disabled={isPending}>
@@ -31,7 +31,7 @@ function ProfileFollow({ profile }: ProfileFollowProps) {
 }
 
 function UseFollowInner({ activeProfile }: { activeProfile: ProfileFieldsFragment }) {
-  const { data, loading } = useExploreProfiles({ observerId: activeProfile.id });
+  const { data, loading } = useExploreProfiles({ observerId: activeProfile.id, limit: 50 });
 
   if (loading) return <Loading />;
 
