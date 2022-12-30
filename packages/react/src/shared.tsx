@@ -13,6 +13,7 @@ import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
+import { FollowProfilesResponder } from './FollowProfilesResponder';
 import { NoopResponder } from './NoopResponder';
 import { LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
@@ -85,6 +86,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const transactionStorage = createTransactionStorage(config.storage);
 
   // apollo client
+
   const anonymousApolloClient = createAnonymousApolloClient({
     backendURL: config.environment.backend,
   });
@@ -124,7 +126,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
     [TransactionKind.CREATE_POST]: new NoopResponder(),
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
-    [TransactionKind.FOLLOW_PROFILES]: new NoopResponder(),
+    [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
     [TransactionKind.UNFOLLOW_PROFILE]: new NoopResponder(),
     [TransactionKind.UPDATE_COVER_IMAGE]: new NoopResponder(),
