@@ -7,7 +7,7 @@ import {
   TransactionQueue,
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
+import { ActiveWallet, TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
@@ -21,13 +21,16 @@ import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
+import { SignlessProtocolCallRelayer } from './transactions/adapters/SignlessProtocolCallRelayer';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
+import { BalanceGateway } from './wallet/adapters/BalanceGateway';
 import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
 import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
 import { LogoutHandler, LogoutPresenter } from './wallet/adapters/LogoutPresenter';
+import { TokenGateway } from './wallet/adapters/TokenGateway';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
 import { AccessTokenStorage } from './wallet/infrastructure/AccessTokenStorage';
@@ -59,9 +62,11 @@ export type SharedDependencies = {
   transactionFactory: TransactionFactory;
   transactionGateway: PendingTransactionGateway<SupportedTransactionRequest>;
   transactionQueue: TransactionQueue<SupportedTransactionRequest>;
+  tokenAvailability: TokenAvailability;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
   notificationStorage: IStorage<UnreadNotificationsData>;
+  signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
 };
 
 export type Handlers = {
@@ -104,6 +109,8 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const credentialsGateway = new CredentialsGateway(credentialsStorage);
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
+  const balanceGateway = new BalanceGateway(providerFactory);
+  const tokenGateway = new TokenGateway(providerFactory);
 
   const profileGateway = new ProfileGateway(apolloClient);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
@@ -129,6 +136,11 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);
 
   const protocolCallRelayer = new ProtocolCallRelayer(apolloClient, transactionFactory, logger);
+  const signlessProtocolCallRelayer = new SignlessProtocolCallRelayer(
+    apolloClient,
+    transactionFactory,
+    logger,
+  );
 
   // common interactors
   const activeProfile = new ActiveProfile(
@@ -142,6 +154,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     transactionGateway,
     transactionQueuePresenter,
   );
+  const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
 
   return {
     activeProfile,
@@ -156,9 +169,11 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     onError,
     sources: config.sources ?? [],
     protocolCallRelayer,
+    signlessProtocolCallRelayer,
     transactionFactory,
     transactionGateway,
     transactionQueue,
+    tokenAvailability,
     walletFactory,
     walletGateway,
     notificationStorage,

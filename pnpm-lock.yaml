@@ -348,6 +348,7 @@ importers:
       '@lens-protocol/prettier-config': workspace:*
       '@types/jest': ^29.2.3
       '@types/lodash': ^4.14.191
+      '@types/uuid': ^9.0.0
       decimal.js: ^10.4.3
       eslint: ^8.28.0
       ethers: ^5.7.2
@@ -358,15 +359,18 @@ importers:
       ts-jest: ^29.0.3
       tslib: ^2.4.1
       typescript: ^4.9.3
+      uuid: ^9.0.0
     dependencies:
       decimal.js: 10.4.3
       lodash: 4.17.21
       tslib: 2.4.1
+      uuid: 9.0.0
     devDependencies:
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
       '@types/jest': 29.2.3
       '@types/lodash': 4.14.191
+      '@types/uuid': 9.0.0
       eslint: 8.28.0
       ethers: 5.7.2
       jest: 29.3.1
