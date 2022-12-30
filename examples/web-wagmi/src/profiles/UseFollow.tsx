@@ -10,8 +10,6 @@ type ProfileFollowProps = {
 function ProfileFollow({ profile }: ProfileFollowProps) {
   const { follow } = useFollow({ profile });
 
-  console.log({ profile });
-
   return (
     <article>
       <ProfileCard profile={profile} />

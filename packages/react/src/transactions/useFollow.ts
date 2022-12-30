@@ -6,13 +6,28 @@ import {
   erc20Amount,
   FeeFollowModuleSettingsFragment,
 } from '@lens-protocol/api-bindings';
-import { TransactionKind } from '@lens-protocol/domain/entities';
-import { FollowPolicyType, FollowRequestFee } from '@lens-protocol/domain/use-cases/profile';
-import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
+import {
+  PendingSigningRequestError,
+  TransactionKind,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
+import {
+  FollowPolicyType,
+  FollowRequest,
+  FollowRequestFee,
+} from '@lens-protocol/domain/use-cases/profile';
+import {
+  InsufficientAllowanceError,
+  InsufficientFundsError,
+  WalletData,
+} from '@lens-protocol/domain/use-cases/wallets';
 import { assertNever, EthereumAddress, invariant } from '@lens-protocol/shared-kernel';
+import { useState } from 'react';
 
 import { useActiveProfile } from '../profile';
 import { useActiveWallet } from '../wallet';
+import { TransactionState, useHasPendingTransaction } from './adapters/TransactionQueuePresenter';
 import { useFollowController } from './adapters/useFollowController';
 
 type FollowProfilesFlowRequest = {
@@ -74,9 +89,23 @@ export type UseFollowArgs = {
 };
 
 export function useFollow({ profile }: UseFollowArgs) {
+  const [error, setError] = useState<
+    | InsufficientAllowanceError
+    | InsufficientFundsError
+    | PendingSigningRequestError
+    | UserRejectedError
+    | WalletConnectionError
+    | null
+  >(null);
   const follow = useFollowController();
   const activeWallet = useActiveWallet();
   const { data: activeProfile } = useActiveProfile();
+
+  const hasPendingTx = useHasPendingTransaction(
+    (transaction): transaction is TransactionState<FollowRequest> =>
+      transaction.request.kind === TransactionKind.FOLLOW_PROFILES &&
+      transaction.request.profileId === profile.id,
+  );
 
   return {
     follow: async () => {
@@ -84,15 +113,19 @@ export function useFollow({ profile }: UseFollowArgs) {
 
       const request = createFollowProfilesFlowRequest(profile, activeWallet, activeProfile);
 
-      await follow({
+      const result = await follow({
         profileId: request.profileId,
         followerAddress: request.followerAddress,
         followerProfileId: request.followerProfileId,
         fee: request.fee,
         kind: TransactionKind.FOLLOW_PROFILES,
       });
+
+      if (result.isFailure()) {
+        setError(result.error);
+      }
     },
-    error: null,
-    isPending: false,
+    error,
+    isPending: hasPendingTx,
   };
 }

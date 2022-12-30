@@ -32,40 +32,42 @@ export function useFollowController() {
     signlessProtocolCallRelayer,
   } = useSharedDependencies();
 
-  const presenter = new PromiseResultPresenter<
-    void,
-    | InsufficientAllowanceError
-    | InsufficientFundsError
-    | PendingSigningRequestError
-    | UserRejectedError
-    | WalletConnectionError
-  >();
-
-  const followProfilesCallGateway = new FollowProfilesCallGateway(apolloClient);
-
-  const signedFollow = new ProtocolCallUseCase<FollowRequest>(
-    activeWallet,
-    transactionGateway,
-    followProfilesCallGateway,
-    protocolCallRelayer,
-    transactionQueue,
-    presenter,
-  );
-
-  const signlessFollow = new SignlessProtocolCallUseCase<UnconstrainedFollowRequest>(
-    signlessProtocolCallRelayer,
-    transactionQueue,
-    presenter,
-  );
-
-  const followProfiles = new FollowProfiles(
-    tokenAvailability,
-    signedFollow,
-    signlessFollow,
-    presenter,
-  );
-
   return async (request: FollowRequest) => {
-    void (await followProfiles.execute(request));
+    const presenter = new PromiseResultPresenter<
+      void,
+      | InsufficientAllowanceError
+      | InsufficientFundsError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
+    >();
+
+    const followProfilesCallGateway = new FollowProfilesCallGateway(apolloClient);
+
+    const signedFollow = new ProtocolCallUseCase<FollowRequest>(
+      activeWallet,
+      transactionGateway,
+      followProfilesCallGateway,
+      protocolCallRelayer,
+      transactionQueue,
+      presenter,
+    );
+
+    const signlessFollow = new SignlessProtocolCallUseCase<UnconstrainedFollowRequest>(
+      signlessProtocolCallRelayer,
+      transactionQueue,
+      presenter,
+    );
+
+    const followProfiles = new FollowProfiles(
+      tokenAvailability,
+      signedFollow,
+      signlessFollow,
+      presenter,
+    );
+
+    void followProfiles.execute(request);
+
+    return presenter.asResult();
   };
 }
