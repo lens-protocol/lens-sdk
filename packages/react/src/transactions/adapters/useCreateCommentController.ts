@@ -33,7 +33,7 @@ export function useCreateCommentController({ upload }: UseCreateCommentControlle
       PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
-    const signedCreatePost = new ProtocolCallUseCase<CreateCommentRequest>(
+    const signedCreateComment = new ProtocolCallUseCase<CreateCommentRequest>(
       activeWallet,
       transactionGateway,
       gateway,
@@ -42,9 +42,14 @@ export function useCreateCommentController({ upload }: UseCreateCommentControlle
       presenter,
     );
 
-    const createPost = new CreateComment(signedCreatePost, gateway, transactionQueue, presenter);
+    const createComment = new CreateComment(
+      signedCreateComment,
+      gateway,
+      transactionQueue,
+      presenter,
+    );
 
-    void createPost.execute(request);
+    void createComment.execute(request);
 
     return presenter.asResult();
   };

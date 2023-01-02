@@ -3,6 +3,12 @@ import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 import {
   CollectModuleParams,
+  CreateCommentTypedDataDocument,
+  CreateCommentTypedDataMutation,
+  CreateCommentTypedDataMutationVariables,
+  CreateCommentViaDispatcherDocument,
+  CreateCommentViaDispatcherMutation,
+  CreateCommentViaDispatcherMutationVariables,
   CreatePostTypedDataDocument,
   CreatePostTypedDataMutation,
   CreatePostTypedDataMutationVariables,
@@ -19,6 +25,7 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockCreatePostTypedDataMutation,
   mockRelayerResultFragment,
+  mockCreateCommentTypedDataMutation,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import {
@@ -32,6 +39,7 @@ import {
   mockNoCollectPolicy,
   mockNumberNftAttribute,
   mockStringNftAttribute,
+  mockCreateCommentRequest,
 } from '@lens-protocol/domain/mocks';
 import {
   CollectPolicy,
@@ -74,6 +82,42 @@ function mockCreatePostViaDispatcherMutationMockedResponse({
   return {
     request: {
       query: CreatePostViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+function mockCreateCommentTypedDataMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreateCommentTypedDataMutationVariables;
+  data: CreateCommentTypedDataMutation;
+}): MockedResponse<CreateCommentTypedDataMutation> {
+  return {
+    request: {
+      query: CreateCommentTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+function mockCreateCommentViaDispatcherMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreateCommentViaDispatcherMutationVariables;
+  data: CreateCommentViaDispatcherMutation;
+}): MockedResponse<CreateCommentViaDispatcherMutation> {
+  return {
+    request: {
+      query: CreateCommentViaDispatcherDocument,
       variables,
     },
     result: {
@@ -659,6 +703,100 @@ describe(`Given an instance of ${PublicationCallGateway.name}`, () => {
               },
             }),
           ]);
+          const { gateway } = setupTestScenario({ apolloClient, contentURI });
+
+          const transaction = await gateway.createDelegatedTransaction(request);
+
+          await transaction.waitNextEvent();
+          expect(transaction).toBeInstanceOf(NativeTransaction);
+          expect(transaction).toEqual(
+            expect.objectContaining({
+              chainType: ChainType.POLYGON,
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              id: expect.any(String),
+              request,
+            }),
+          );
+        });
+      });
+    });
+
+    describe(`when creating a comment`, () => {
+      const { requestVars, expectedMutationRequestDetails } = createExerciseData();
+      const request = mockCreateCommentRequest(requestVars);
+      const contentURI = faker.internet.url();
+
+      describe(`via the "${PublicationCallGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
+        it(`should create an instance of the ${UnsignedLensProtocolCall.name} with the expected typed data`, async () => {
+          const createCommentTypedDataMutation = mockCreateCommentTypedDataMutation();
+          const apolloClient = createMockApolloClientWithMultipleResponses([
+            mockCreateCommentTypedDataMutationMockedResponse({
+              variables: {
+                request: {
+                  contentURI,
+                  profileId: request.profileId,
+                  publicationId: request.publicationId,
+                  ...expectedMutationRequestDetails,
+                },
+              },
+              data: createCommentTypedDataMutation,
+            }),
+          ]);
+          const { gateway } = setupTestScenario({ apolloClient, contentURI });
+
+          const unsignedCall = await gateway.createUnsignedProtocolCall(request);
+
+          expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
+          expect(unsignedCall.typedData).toEqual(
+            omitTypename(createCommentTypedDataMutation.result.typedData),
+          );
+        });
+
+        it(`should be possible to override the signature nonce`, async () => {
+          const nonce = mockNonce();
+          const apolloClient = createMockApolloClientWithMultipleResponses([
+            mockCreateCommentTypedDataMutationMockedResponse({
+              variables: {
+                request: {
+                  contentURI,
+                  profileId: request.profileId,
+                  publicationId: request.publicationId,
+                  ...expectedMutationRequestDetails,
+                },
+                options: {
+                  overrideSigNonce: nonce,
+                },
+              },
+              data: mockCreateCommentTypedDataMutation({ nonce }),
+            }),
+          ]);
+          const { gateway } = setupTestScenario({ apolloClient, contentURI });
+
+          const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
+
+          expect(unsignedCall.nonce).toEqual(nonce);
+        });
+      });
+
+      describe(`via the "${PublicationCallGateway.prototype.createDelegatedTransaction.name}" method`, () => {
+        it(`should create an instance of the ${NativeTransaction.name}`, async () => {
+          const apolloClient = createMockApolloClientWithMultipleResponses([
+            mockCreateCommentViaDispatcherMutationMockedResponse({
+              variables: {
+                request: {
+                  contentURI,
+                  profileId: request.profileId,
+                  publicationId: request.publicationId,
+
+                  ...expectedMutationRequestDetails,
+                },
+              },
+              data: {
+                result: mockRelayerResultFragment(),
+              },
+            }),
+          ]);
+
           const { gateway } = setupTestScenario({ apolloClient, contentURI });
 
           const transaction = await gateway.createDelegatedTransaction(request);
