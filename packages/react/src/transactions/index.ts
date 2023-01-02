@@ -1,5 +1,6 @@
 export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 export * from './useCreatePost';
+export * from './useCreateComment';
 export type { UploadHandler } from './adapters/UploadHandler';
 export {
   CollectPolicyType,

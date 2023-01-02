@@ -1,23 +1,14 @@
-import {
-  ProfileFieldsFragment,
-  useActiveProfile,
-  useCreatePost,
-  ContentFocus,
-  CollectPolicyType,
-  ReferencePolicy,
-} from '@lens-protocol/react';
-import { useState } from 'react';
+import { useState } from "react";
+import { upload } from "../../upload";
+import { CollectPolicyType, ContentFocus, ProfileFieldsFragment, ReferencePolicy, useCreatePost } from '@lens-protocol/react';
 
-import { Loading } from '../../components/loading/Loading';
-import { upload } from '../../upload';
-
-type ComposerProps = {
-  profile: ProfileFieldsFragment;
+type CreatePostProps = {
+  activeProfile: ProfileFieldsFragment;
 };
 
-function Composer({ profile }: ComposerProps) {
+export function CreatePost({ activeProfile }: CreatePostProps) {
   const [content, setContent] = useState<string>('');
-  const { create, error, isPending } = useCreatePost({ profile, upload });
+  const { create, error, isPending } = useCreatePost({ profile: activeProfile, upload });
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,7 +16,7 @@ function Composer({ profile }: ComposerProps) {
       return;
     }
     await create({
-      profileId: profile.id,
+      profileId: activeProfile.id,
       content,
       contentFocus: ContentFocus.TEXT,
       locale: 'en',
@@ -43,27 +34,17 @@ function Composer({ profile }: ComposerProps) {
       {error && <p>{error.message}</p>}
 
       <textarea
-        rows={3}
-        placeholder="What's happening?"
-        style={{ resize: 'none' }}
-        disabled={isPending}
-        onChange={(event) => setContent(event.target.value)}
-        value={content}
-      ></textarea>
+  rows={3}
+  placeholder="What's happening?"
+  style={{ resize: 'none' }}
+  disabled={isPending}
+  onChange={(event) => setContent(event.target.value)}
+  value={content}
+    ></textarea>
 
-      <button type="submit" disabled={isPending}>
-        Post
-      </button>
+    <button type="submit" disabled={isPending}>
+    Post
+    </button>
     </form>
-  );
-}
-
-export function CreatePost() {
-  const { data: profile, loading } = useActiveProfile();
-
-  if (loading) return <Loading />;
-
-  if (!profile) return null;
-
-  return <Composer profile={profile} />;
+);
 }

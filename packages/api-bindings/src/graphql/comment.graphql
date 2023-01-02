@@ -1,0 +1,42 @@
+mutation CreateCommentTypedData($request: CreatePublicCommentRequest!, $options: TypedDataOptions) {
+  result: createCommentTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        CommentWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        profileIdPointed
+        pubIdPointed
+        collectModule
+        collectModuleInitData
+        referenceModuleData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+}
+
+mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
+  result: createCommentViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}

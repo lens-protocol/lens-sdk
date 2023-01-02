@@ -15,8 +15,8 @@
 - [x] `useActiveProfile`
 - [x] `useProfile`
 - [x] `useProfilesToFollow`
-- [ ] `useProfileFollowers`
-- [ ] `useProfileFollowing`
+- [x] `useProfileFollowers`
+- [x] `useProfileFollowing`
 - [ ] `useFollow`
   - [ ] sign-less, gas-less (via proxy action)
   - [ ] signed, gas-less
@@ -71,8 +71,8 @@
   - [ ] signed, paid gas (fallback)
 - [ ] `useCreateComment`
   - [ ] sign-less, gas-less, instant (via Data Availability)
-  - [ ] sign-less, gas-less
-  - [ ] signed, gas-less
+  - [x] sign-less, gas-less
+  - [x] signed, gas-less
   - [ ] signed, paid gas (fallback)
 - [ ] `useMirror`
   - [ ] sign-less, gas-less

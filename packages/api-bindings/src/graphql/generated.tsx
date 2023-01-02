@@ -3862,6 +3862,42 @@ export type AuthRefreshMutation = {
   result: Pick<AuthenticationResult, 'accessToken' | 'refreshToken'>;
 };
 
+export type CreateCommentTypedDataMutationVariables = Exact<{
+  request: CreatePublicCommentRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateCommentTypedDataMutation = {
+  result: Pick<CreateCommentBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { CommentWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Eip712TypedDataDomainFragment;
+      value: Pick<
+        CreateCommentEip712TypedDataValue,
+        | 'nonce'
+        | 'deadline'
+        | 'profileId'
+        | 'contentURI'
+        | 'profileIdPointed'
+        | 'pubIdPointed'
+        | 'collectModule'
+        | 'collectModuleInitData'
+        | 'referenceModuleData'
+        | 'referenceModule'
+        | 'referenceModuleInitData'
+      >;
+    };
+  };
+};
+
+export type CreateCommentViaDispatcherMutationVariables = Exact<{
+  request: CreatePublicCommentRequest;
+}>;
+
+export type CreateCommentViaDispatcherMutation = {
+  result: RelayerResultFragment | RelayErrorFragment;
+};
+
 export type CommentWithFirstCommentFragment = { __typename: 'Comment' } & {
   firstComment: Maybe<CommentFragment>;
 } & CommentFragment;
@@ -5331,6 +5367,143 @@ export type AuthRefreshMutationResult = Apollo.MutationResult<AuthRefreshMutatio
 export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
   AuthRefreshMutation,
   AuthRefreshMutationVariables
+>;
+export const CreateCommentTypedDataDocument = gql`
+  mutation CreateCommentTypedData(
+    $request: CreatePublicCommentRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createCommentTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          CommentWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          contentURI
+          profileIdPointed
+          pubIdPointed
+          collectModule
+          collectModuleInitData
+          referenceModuleData
+          referenceModule
+          referenceModuleInitData
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export type CreateCommentTypedDataMutationFn = Apollo.MutationFunction<
+  CreateCommentTypedDataMutation,
+  CreateCommentTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateCommentTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentTypedDataMutation, { data, loading, error }] = useCreateCommentTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateCommentTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCommentTypedDataMutation,
+    CreateCommentTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateCommentTypedDataMutation,
+    CreateCommentTypedDataMutationVariables
+  >(CreateCommentTypedDataDocument, options);
+}
+export type CreateCommentTypedDataMutationHookResult = ReturnType<
+  typeof useCreateCommentTypedDataMutation
+>;
+export type CreateCommentTypedDataMutationResult =
+  Apollo.MutationResult<CreateCommentTypedDataMutation>;
+export type CreateCommentTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateCommentTypedDataMutation,
+  CreateCommentTypedDataMutationVariables
+>;
+export const CreateCommentViaDispatcherDocument = gql`
+  mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
+    result: createCommentViaDispatcher(request: $request) {
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export type CreateCommentViaDispatcherMutationFn = Apollo.MutationFunction<
+  CreateCommentViaDispatcherMutation,
+  CreateCommentViaDispatcherMutationVariables
+>;
+
+/**
+ * __useCreateCommentViaDispatcherMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentViaDispatcherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentViaDispatcherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentViaDispatcherMutation, { data, loading, error }] = useCreateCommentViaDispatcherMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateCommentViaDispatcherMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCommentViaDispatcherMutation,
+    CreateCommentViaDispatcherMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateCommentViaDispatcherMutation,
+    CreateCommentViaDispatcherMutationVariables
+  >(CreateCommentViaDispatcherDocument, options);
+}
+export type CreateCommentViaDispatcherMutationHookResult = ReturnType<
+  typeof useCreateCommentViaDispatcherMutation
+>;
+export type CreateCommentViaDispatcherMutationResult =
+  Apollo.MutationResult<CreateCommentViaDispatcherMutation>;
+export type CreateCommentViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
+  CreateCommentViaDispatcherMutation,
+  CreateCommentViaDispatcherMutationVariables
 >;
 export const CommentsDocument = gql`
   query Comments(

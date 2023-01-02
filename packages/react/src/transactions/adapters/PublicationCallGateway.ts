@@ -2,6 +2,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CollectModuleParams,
   CreatePublicPostRequest as CreatePublicPostRequestArg,
+  CreatePublicCommentRequest as CreatePublicCommentRequestArg,
   CreatePostTypedDataDocument,
   CreatePostTypedDataMutation,
   CreatePostTypedDataMutationVariables,
@@ -14,17 +15,25 @@ import {
   PublicationMetadataMediaInput,
   PublicationMetadataV2Input,
   ReferenceModuleParams,
+  CreateCommentViaDispatcherDocument,
+  CreateCommentViaDispatcherMutation,
+  CreateCommentViaDispatcherMutationVariables,
+  CreateCommentTypedDataMutationVariables,
+  CreateCommentTypedDataDocument,
+  CreateCommentTypedDataMutation,
 } from '@lens-protocol/api-bindings';
 import {
   NativeTransaction,
   Nonce,
   TransactionError,
   TransactionErrorReason,
+  TransactionKind,
 } from '@lens-protocol/domain/entities';
 import {
   ChargeCollectPolicy,
   CollectPolicyType,
   CreatePostRequest,
+  CreateCommentRequest,
   ICreatePostCallGateway,
   Media,
   NftAttribute,
@@ -55,7 +64,9 @@ function mapMedia(media: Media): PublicationMetadataMediaInput {
   };
 }
 
-function createPublicationMetadata(request: CreatePostRequest): PublicationMetadataV2Input {
+function createPublicationMetadata(
+  request: CreatePostRequest | CreateCommentRequest,
+): PublicationMetadataV2Input {
   const sharedMetadata = {
     version: '2.0.0',
     metadata_id: v4(),
@@ -126,7 +137,9 @@ function resolveChargeCollectModule(collect: ChargeCollectPolicy): CollectModule
   };
 }
 
-function resolveCollectModule(request: CreatePostRequest): CollectModuleParams {
+function resolveCollectModule(
+  request: CreatePostRequest | CreateCommentRequest,
+): CollectModuleParams {
   switch (request.collect.type) {
     case CollectPolicyType.FREE:
       return {
@@ -145,7 +158,9 @@ function resolveCollectModule(request: CreatePostRequest): CollectModuleParams {
   }
 }
 
-function resolveReferenceModule(request: CreatePostRequest): ReferenceModuleParams | undefined {
+function resolveReferenceModule(
+  request: CreatePostRequest | CreateCommentRequest,
+): ReferenceModuleParams | undefined {
   if (request.reference === ReferencePolicy.FOLLOWERS_ONLY) {
     return {
       followerOnlyReferenceModule: true,
@@ -161,22 +176,48 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
     private readonly upload: UploadHandler,
   ) {}
 
-  async createDelegatedTransaction<T extends CreatePostRequest>(
+  async createDelegatedTransaction<T extends CreatePostRequest | CreateCommentRequest>(
     request: T,
   ): Promise<NativeTransaction<T>> {
     return this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiatePostCreation(request),
+      asyncRelayReceipt: this.initiatePublicationCreation(request),
     });
   }
 
+  async createUnsignedProtocolCall<T extends CreateCommentRequest>(
+    request: T,
+    nonce?: Nonce,
+  ): Promise<UnsignedLensProtocolCall<T>>;
   async createUnsignedProtocolCall<T extends CreatePostRequest>(
     request: T,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>> {
-    return this.createPostCall(request, nonce);
+  ): Promise<UnsignedLensProtocolCall<T>>;
+  async createUnsignedProtocolCall(
+    request: CreateCommentRequest | CreatePostRequest,
+    nonce?: Nonce,
+  ): Promise<UnsignedLensProtocolCall<CreateCommentRequest | CreatePostRequest>> {
+    switch (request.kind) {
+      case TransactionKind.CREATE_POST:
+        return this.createPostCall(request, nonce);
+
+      case TransactionKind.CREATE_COMMENT:
+        return this.createCommentCall(request, nonce);
+    }
+  }
+
+  private async initiatePublicationCreation(
+    request: CreatePostRequest | CreateCommentRequest,
+  ): AsyncRelayReceipt {
+    switch (request.kind) {
+      case TransactionKind.CREATE_POST:
+        return this.initiatePostCreation(request);
+
+      case TransactionKind.CREATE_COMMENT:
+        return this.initiateCommentCreation(request);
+    }
   }
 
   private async initiatePostCreation(request: CreatePostRequest): AsyncRelayReceipt {
@@ -191,6 +232,29 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
     });
 
     invariant(data, 'Cannot create post via dispatcher');
+
+    if (data.result.__typename === 'RelayError') {
+      return failure(new TransactionError(TransactionErrorReason.REJECTED));
+    }
+
+    return success({
+      indexingId: data.result.txId,
+      txHash: data.result.txHash,
+    });
+  }
+
+  private async initiateCommentCreation(request: CreateCommentRequest): AsyncRelayReceipt {
+    const { data } = await this.apolloClient.mutate<
+      CreateCommentViaDispatcherMutation,
+      CreateCommentViaDispatcherMutationVariables
+    >({
+      mutation: CreateCommentViaDispatcherDocument,
+      variables: {
+        request: await this.resolveCreateCommentRequestArg(request),
+      },
+    });
+
+    invariant(data, 'Cannot create comment via dispatcher');
 
     if (data.result.__typename === 'RelayError') {
       return failure(new TransactionError(TransactionErrorReason.REJECTED));
@@ -226,6 +290,30 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
     );
   }
 
+  private async createCommentCall<T extends CreateCommentRequest>(
+    request: T,
+    nonce?: Nonce,
+  ): Promise<UnsignedLensProtocolCall<T>> {
+    const { data } = await this.apolloClient.mutate<
+      CreateCommentTypedDataMutation,
+      CreateCommentTypedDataMutationVariables
+    >({
+      mutation: CreateCommentTypedDataDocument,
+      variables: {
+        request: await this.resolveCreateCommentRequestArg(request),
+        options: nonce ? { overrideSigNonce: nonce } : undefined,
+      },
+    });
+
+    invariant(data, 'Cannot generate typed data for comment creation');
+
+    return new UnsignedLensProtocolCall(
+      data.result.id,
+      request,
+      omitTypename(data.result.typedData),
+    );
+  }
+
   private async resolveCreatePostRequestArg(
     request: CreatePostRequest,
   ): Promise<CreatePublicPostRequestArg> {
@@ -237,7 +325,21 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
     };
   }
 
-  private async uploadPublicationMetadata(request: CreatePostRequest): Promise<string> {
+  private async resolveCreateCommentRequestArg(
+    request: CreateCommentRequest,
+  ): Promise<CreatePublicCommentRequestArg> {
+    return {
+      profileId: request.profileId,
+      publicationId: request.publicationId,
+      contentURI: await this.uploadPublicationMetadata(request),
+      collectModule: resolveCollectModule(request),
+      referenceModule: resolveReferenceModule(request),
+    };
+  }
+
+  private async uploadPublicationMetadata(
+    request: CreatePostRequest | CreateCommentRequest,
+  ): Promise<string> {
     return this.upload(createPublicationMetadata(request));
   }
 }
