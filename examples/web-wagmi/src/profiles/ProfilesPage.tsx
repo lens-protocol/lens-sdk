@@ -26,6 +26,11 @@ const profileHooks = [
     description: `Get a list of mutual followers between accounts.`,
     path: '/profiles/useMutualFollowers',
   },
+  {
+    label: 'useFollow',
+    description: `Follow a profile.`,
+    path: '/profiles/useFollow',
+  },
 ];
 
 export function ProfilesPage() {

@@ -1,3 +1,4 @@
+import { AddEthereumChainParameter } from '@lens-protocol/blockchain-bindings';
 import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protocol/domain/entities';
 import {
   ChainType,
@@ -10,7 +11,6 @@ import { utils } from 'ethers';
 
 import { ChainConfigRegistry } from '../../chains';
 import { CreateSignerConfig, ISignerFactory, RequiredSigner } from '../adapters/ConcreteWallet';
-import { AddEthereumChainParameter } from './AddEthereumChainParameter';
 
 export type GetSigner = (config: { chainId?: number }) => Promise<RequiredSigner>;
 
