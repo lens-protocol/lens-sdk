@@ -1,11 +1,11 @@
 import { FeedItemFragment, isPostPublication, useFeed } from '@lens-protocol/react';
 import { Link } from 'react-router-dom';
 
+import { WhenLoggedIn } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { CreatePost } from '../publications/components/CreatePost';
 import { PublicationCard } from '../publications/components/PublicationCard';
-import { WhenLoggedIn } from '../components/auth/auth';
 
 type PublicationProps = {
   feedItem: FeedItemFragment;

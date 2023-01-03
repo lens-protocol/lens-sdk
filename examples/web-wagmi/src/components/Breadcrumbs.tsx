@@ -1,4 +1,4 @@
-import { Fragment } from 'React';
+import { Fragment } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 function capitalizeFirstLetter(string: string) {

@@ -1,9 +1,15 @@
-import { CollectPolicyType, ContentFocus, ProfileFieldsFragment, ReferencePolicy, useCreateComment } from '@lens-protocol/react';
-import { useState } from "react";
+import {
+  CollectPolicyType,
+  ContentFocus,
+  ProfileFieldsFragment,
+  ReferencePolicy,
+  useCreateComment,
+} from '@lens-protocol/react';
+import { useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from "../components/auth/auth";
-import { upload } from "../upload";
+import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { upload } from '../upload';
 
 type CreatePostProps = {
   activeProfile: ProfileFieldsFragment;
@@ -41,7 +47,13 @@ export function CreateComment({ activeProfile }: CreatePostProps) {
 
       <p>
         <label htmlFor="publicationId">Publication id</label>
-        <input id="publicationId" type="text" disabled={isPending} value={publicationId} onChange={event => setPublicationId(event.target.value)}  />
+        <input
+          id="publicationId"
+          type="text"
+          disabled={isPending}
+          value={publicationId}
+          onChange={(event) => setPublicationId(event.target.value)}
+        />
       </p>
 
       <textarea

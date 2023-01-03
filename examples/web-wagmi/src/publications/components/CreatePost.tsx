@@ -1,6 +1,13 @@
-import { useState } from "react";
-import { upload } from "../../upload";
-import { CollectPolicyType, ContentFocus, ProfileFieldsFragment, ReferencePolicy, useCreatePost } from '@lens-protocol/react';
+import {
+  CollectPolicyType,
+  ContentFocus,
+  ProfileFieldsFragment,
+  ReferencePolicy,
+  useCreatePost,
+} from '@lens-protocol/react';
+import { useState } from 'react';
+
+import { upload } from '../../upload';
 
 type CreatePostProps = {
   activeProfile: ProfileFieldsFragment;
@@ -34,17 +41,17 @@ export function CreatePost({ activeProfile }: CreatePostProps) {
       {error && <p>{error.message}</p>}
 
       <textarea
-  rows={3}
-  placeholder="What's happening?"
-  style={{ resize: 'none' }}
-  disabled={isPending}
-  onChange={(event) => setContent(event.target.value)}
-  value={content}
-    ></textarea>
+        rows={3}
+        placeholder="What's happening?"
+        style={{ resize: 'none' }}
+        disabled={isPending}
+        onChange={(event) => setContent(event.target.value)}
+        value={content}
+      ></textarea>
 
-    <button type="submit" disabled={isPending}>
-    Post
-    </button>
+      <button type="submit" disabled={isPending}>
+        Post
+      </button>
     </form>
-);
+  );
 }
