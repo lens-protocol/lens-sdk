@@ -47,7 +47,7 @@ import {
   SingleProfileQueryRequest,
   TransactionErrorReasons,
 } from '../generated';
-import { mockFeedItem, mockPostFragment, mockProfileFieldsFragment } from './fragments';
+import { mockFeedItemFragment, mockPostFragment, mockProfileFieldsFragment } from './fragments';
 
 export function createProfilesToFollowQueryMockedResponse(args: {
   profiles: ProfileFieldsFragment[];
@@ -70,7 +70,7 @@ export function mockGetProfileQuery(profile: Maybe<ProfileFieldsFragment>): GetP
   };
 }
 
-export function createGetProfileQueryMockedResponse({
+export function mockGetProfileQueryMockedResponse({
   profile = mockProfileFieldsFragment(),
   request,
   observerId,
@@ -251,7 +251,7 @@ export type MockFeedQueryArgs = {
 };
 
 export function mockFeedQuery({
-  items = [mockFeedItem(), mockFeedItem()],
+  items = [mockFeedItemFragment(), mockFeedItemFragment()],
   pageInfo = {
     prev: null,
     next: null,

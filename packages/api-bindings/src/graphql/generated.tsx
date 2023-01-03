@@ -3994,9 +3994,9 @@ export type WalletFragment = { __typename: 'Wallet' } & Pick<Wallet, 'address'> 
     defaultProfile: Maybe<ProfileFieldsFragment>;
   };
 
-export type MediaFieldsFragment = Pick<Media, 'url' | 'mimeType'>;
+export type MediaFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
 
-export type MediaSetFragment = { original: MediaFieldsFragment };
+export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFragment };
 
 export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
   MetadataOutput,
@@ -4127,10 +4127,10 @@ export type PostFragment = { __typename: 'Post' } & Pick<
     canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
-export type PendingPostFragment = Pick<
+export type PendingPostFragment = { __typename: 'PendingPost' } & Pick<
   PendingPost,
   'id' | 'content' | 'locale' | 'mainContentFocus'
-> & { media: Maybe<Array<MediaFieldsFragment>>; profile: ProfileFieldsFragment };
+> & { media: Maybe<Array<MediaFragment>>; profile: ProfileFieldsFragment };
 
 export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain' } & Pick<
   Eip712TypedDataDomain,
@@ -4284,16 +4284,14 @@ export type RevertFollowModuleSettingsFragment = {
   __typename: 'RevertFollowModuleSettings';
 } & Pick<RevertFollowModuleSettings, 'contractAddress'>;
 
-type ProfileMediaFields_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
+type ProfileMedia_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
   NftImage,
   'contractAddress' | 'tokenId' | 'uri' | 'verified'
 >;
 
-type ProfileMediaFields_MediaSet_Fragment = MediaSetFragment;
+type ProfileMedia_MediaSet_Fragment = MediaSetFragment;
 
-export type ProfileMediaFieldsFragment =
-  | ProfileMediaFields_NftImage_Fragment
-  | ProfileMediaFields_MediaSet_Fragment;
+export type ProfileMediaFragment = ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment;
 
 export type AttributeFragment = { __typename: 'Attribute' } & Pick<Attribute, 'key' | 'value'>;
 
@@ -4313,10 +4311,8 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   | 'ownedByMe'
 > & {
     attributes: Maybe<Array<AttributeFragment>>;
-    picture: Maybe<ProfileMediaFields_NftImage_Fragment | ProfileMediaFields_MediaSet_Fragment>;
-    coverPicture: Maybe<
-      ProfileMediaFields_NftImage_Fragment | ProfileMediaFields_MediaSet_Fragment
-    >;
+    picture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
+    coverPicture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     stats: { __typename: 'ProfileStats' } & Pick<
       ProfileStats,
       'totalFollowers' | 'totalFollowing' | 'totalPosts'
@@ -4521,19 +4517,21 @@ export const PublicationStatsFragmentDoc = gql`
     totalAmountOfComments
   }
 `;
-export const MediaFieldsFragmentDoc = gql`
-  fragment MediaFields on Media {
+export const MediaFragmentDoc = gql`
+  fragment Media on Media {
+    __typename
     url
     mimeType
   }
 `;
 export const MediaSetFragmentDoc = gql`
   fragment MediaSet on MediaSet {
+    __typename
     original {
-      ...MediaFields
+      ...Media
     }
   }
-  ${MediaFieldsFragmentDoc}
+  ${MediaFragmentDoc}
 `;
 export const MetadataAttributeOutputFragmentDoc = gql`
   fragment MetadataAttributeOutput on MetadataAttributeOutput {
@@ -4566,8 +4564,8 @@ export const AttributeFragmentDoc = gql`
     value
   }
 `;
-export const ProfileMediaFieldsFragmentDoc = gql`
-  fragment ProfileMediaFields on ProfileMedia {
+export const ProfileMediaFragmentDoc = gql`
+  fragment ProfileMedia on ProfileMedia {
     ... on NftImage {
       __typename
       contractAddress
@@ -4635,10 +4633,10 @@ export const ProfileFieldsFragmentDoc = gql`
       ...Attribute
     }
     picture {
-      ...ProfileMediaFields
+      ...ProfileMedia
     }
     coverPicture {
-      ...ProfileMediaFields
+      ...ProfileMedia
     }
     stats {
       __typename
@@ -4670,7 +4668,7 @@ export const ProfileFieldsFragmentDoc = gql`
     ownedByMe @client
   }
   ${AttributeFragmentDoc}
-  ${ProfileMediaFieldsFragmentDoc}
+  ${ProfileMediaFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}
   ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
@@ -4978,10 +4976,11 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
 `;
 export const PendingPostFragmentDoc = gql`
   fragment PendingPost on PendingPost {
+    __typename
     id
     content
     media {
-      ...MediaFields
+      ...Media
     }
     profile {
       ...ProfileFields
@@ -4989,7 +4988,7 @@ export const PendingPostFragmentDoc = gql`
     locale
     mainContentFocus
   }
-  ${MediaFieldsFragmentDoc}
+  ${MediaFragmentDoc}
   ${ProfileFieldsFragmentDoc}
 `;
 export const FeedItemFragmentDoc = gql`

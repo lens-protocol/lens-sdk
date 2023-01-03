@@ -6,11 +6,11 @@ import {
   CollectModuleFragment,
   CommentFragment,
   FeedItemFragment,
-  MediaFieldsFragment,
+  MediaFragment,
   MetadataFragment,
   PostFragment,
   ProfileFieldsFragment,
-  ProfileMediaFieldsFragment,
+  ProfileMediaFragment,
   PublicationMainFocus,
   PublicationStatsFragment,
   RelayerResultFragment,
@@ -18,16 +18,18 @@ import {
   RelayErrorReasons,
 } from '../generated';
 
-function mockMediaFragment(): MediaFieldsFragment {
+function mockMediaFragment(): MediaFragment {
   return {
     url: faker.image.imageUrl(),
     mimeType: 'image/jpeg',
+    __typename: 'Media',
   };
 }
 
-function mockProfileMediaFieldsFragment(): ProfileMediaFieldsFragment {
+function mockProfileMediaFragment(): ProfileMediaFragment {
   return {
     original: mockMediaFragment(),
+    __typename: 'MediaSet',
   };
 }
 
@@ -68,8 +70,8 @@ export function mockProfileFieldsFragment(
     ],
     handle: faker.internet.userName(firstName, lastName),
     ownedBy: mockEthereumAddress(),
-    picture: mockProfileMediaFieldsFragment(),
-    coverPicture: mockProfileMediaFieldsFragment(),
+    picture: mockProfileMediaFragment(),
+    coverPicture: mockProfileMediaFragment(),
 
     stats: {
       __typename: 'ProfileStats',
@@ -145,7 +147,9 @@ function mockMetadataFragment(): MetadataFragment {
   };
 }
 
-export function mockPostFragment(overrides?: Partial<PostFragment>): PostFragment {
+export function mockPostFragment(
+  overrides?: Partial<Omit<PostFragment, '__typename'>>,
+): PostFragment {
   return {
     id: faker.datatype.uuid(),
     createdAt: faker.datatype.datetime().toISOString(),
@@ -177,6 +181,8 @@ export function mockPostFragment(overrides?: Partial<PostFragment>): PostFragmen
 export function mockCommentFragment(
   overrides?: Partial<Omit<CommentFragment, '__typename'>>,
 ): CommentFragment {
+  const mainPost = mockPostFragment();
+
   return {
     id: faker.datatype.uuid(),
     stats: mockPublicationStatsFragment(),
@@ -192,8 +198,8 @@ export function mockCommentFragment(
     profile: mockProfileFieldsFragment(),
     createdAt: faker.date.past().toISOString(),
     collectedBy: null,
-    commentOn: mockPostFragment(),
-    mainPost: mockPostFragment(),
+    commentOn: mainPost,
+    mainPost: mainPost,
     ownedByMe: false,
     collectModule: mockFreeCollectModuleSettings(),
     referenceModule: null,
@@ -215,11 +221,11 @@ export function mockCommentFragment(
   };
 }
 
-export function mockFeedItem(overrides?: Partial<FeedItemFragment>): FeedItemFragment {
+export function mockFeedItemFragment(overrides?: Partial<FeedItemFragment>): FeedItemFragment {
   return {
-    __typename: 'FeedItem',
     root: mockPostFragment(),
     comments: null,
     ...overrides,
+    __typename: 'FeedItem',
   };
 }

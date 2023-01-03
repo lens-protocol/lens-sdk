@@ -116,14 +116,16 @@ fragment Wallet on Wallet {
   }
 }
 
-fragment MediaFields on Media {
+fragment Media on Media {
+  __typename
   url
   mimeType
 }
 
 fragment MediaSet on MediaSet {
+  __typename
   original {
-    ...MediaFields
+    ...Media
   }
 }
 
@@ -317,10 +319,11 @@ fragment Post on Post {
 }
 
 fragment PendingPost on PendingPost {
+  __typename
   id
   content
   media {
-    ...MediaFields
+    ...Media
   }
   profile {
     ...ProfileFields

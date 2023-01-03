@@ -17,7 +17,7 @@ fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
   contractAddress
 }
 
-fragment ProfileMediaFields on ProfileMedia {
+fragment ProfileMedia on ProfileMedia {
   ... on NftImage {
     __typename
     contractAddress
@@ -48,10 +48,10 @@ fragment ProfileFields on Profile {
     ...Attribute
   }
   picture {
-    ...ProfileMediaFields
+    ...ProfileMedia
   }
   coverPicture {
-    ...ProfileMediaFields
+    ...ProfileMedia
   }
   stats {
     __typename
