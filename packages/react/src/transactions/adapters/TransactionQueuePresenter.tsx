@@ -28,7 +28,7 @@ export type TransactionState<T extends SupportedTransactionRequest> =
   | PendingTransactionState<T>
   | BroadcastedTransactionState<T>;
 
-type PartialTransactionState<T extends SupportedTransactionRequest> =
+type PartialTransactionStateUpdate<T extends SupportedTransactionRequest> =
   | Partial<PendingTransactionState<T>>
   | Partial<BroadcastedTransactionState<T>>;
 
@@ -96,7 +96,10 @@ export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
     recentTransactions([data, ...transactions]);
   }
 
-  private updateById(id: string, update: PartialTransactionState<SupportedTransactionRequest>) {
+  private updateById(
+    id: string,
+    update: PartialTransactionStateUpdate<SupportedTransactionRequest>,
+  ) {
     const transactions = recentTransactions();
 
     recentTransactions(

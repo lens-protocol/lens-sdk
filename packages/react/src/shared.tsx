@@ -13,7 +13,6 @@ import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
-import { NoopResponder } from './NoopResponder';
 import { LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
@@ -22,6 +21,8 @@ import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfi
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
+import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
+import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
@@ -115,7 +116,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.COLLECT_PUBLICATION]: new NoopResponder(),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
-    [TransactionKind.CREATE_POST]: new NoopResponder(),
+    [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient),
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
     [TransactionKind.FOLLOW_PROFILES]: new NoopResponder(),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),

@@ -1,14 +1,16 @@
 import {
-  isPostPublication,
-  isCommentPublication,
-  isMirrorPublication,
-  PostFragment,
   CommentFragment,
   CommentWithFirstCommentFragment,
+  isCommentPublication,
+  isMirrorPublication,
+  isPostPublication,
   MirrorFragment,
   PublicationSortCriteria,
   PublicationTypes,
 } from '@lens-protocol/api-bindings';
+  PendingPostFragment,
+  PostFragment,
+} from '@lens-protocol/api';
 
 export * from './useComments';
 export * from './usePublication';
@@ -24,3 +26,11 @@ export {
   PublicationSortCriteria,
   PublicationTypes,
 };
+export type {
+  CommentFragment,
+  CommentWithFirstCommentFragment,
+  MirrorFragment,
+  PendingPostFragment,
+  PostFragment,
+};
+export { isPostPublication, isCommentPublication, isMirrorPublication };
