@@ -1,16 +1,3 @@
-fragment MediaFields on Media {
-  __typename
-  url
-  mimeType
-}
-
-fragment MediaSet on MediaSet {
-  __typename
-  original {
-    ...MediaFields
-  }
-}
-
 fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
   __typename
   amount {

@@ -52,7 +52,7 @@ export type Scalars = {
   /** limit custom scalar type */
   LimitScalar: number;
   /** Locale scalar type */
-  Locale: unknown;
+  Locale: string;
   /** Markdown scalar type */
   Markdown: string;
   /** mimetype custom scalar type */
@@ -1374,7 +1374,7 @@ export type FeedItem = {
   comments: Maybe<Array<Comment>>;
 };
 
-export type FeedItemRoot = Post | Comment;
+export type FeedItemRoot = Comment | PendingPost | Post;
 
 export type FeedRequest = {
   limit?: Maybe<Scalars['LimitScalar']>;
@@ -2462,6 +2462,16 @@ export type PendingApproveFollowsResult = {
   __typename: 'PendingApproveFollowsResult';
   items: Array<Profile>;
   pageInfo: PaginatedResultInfo;
+};
+
+export type PendingPost = {
+  __typename: 'PendingPost';
+  id: Scalars['InternalPublicationId'];
+  content: Maybe<Scalars['String']>;
+  media: Maybe<Array<Media>>;
+  profile: Profile;
+  locale: Scalars['Locale'];
+  mainContentFocus: PublicationMainFocus;
 };
 
 /** The social post */
@@ -3984,6 +3994,10 @@ export type WalletFragment = { __typename: 'Wallet' } & Pick<Wallet, 'address'> 
     defaultProfile: Maybe<ProfileFieldsFragment>;
   };
 
+export type MediaFieldsFragment = Pick<Media, 'url' | 'mimeType'>;
+
+export type MediaSetFragment = { original: MediaFieldsFragment };
+
 export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
   MetadataOutput,
   'name' | 'description' | 'mainContentFocus' | 'content'
@@ -4113,6 +4127,11 @@ export type PostFragment = { __typename: 'Post' } & Pick<
     canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
+export type PendingPostFragment = Pick<
+  PendingPost,
+  'id' | 'content' | 'locale' | 'mainContentFocus'
+> & { media: Maybe<Array<MediaFieldsFragment>>; profile: ProfileFieldsFragment };
+
 export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain' } & Pick<
   Eip712TypedDataDomain,
   'name' | 'chainId' | 'version' | 'verifyingContract'
@@ -4123,7 +4142,7 @@ export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
 
 export type FeedItemFragment = { __typename: 'FeedItem' } & {
-  root: PostFragment | CommentFragment;
+  root: CommentFragment | PendingPostFragment | PostFragment;
   comments: Maybe<Array<CommentFragment>>;
 };
 
@@ -4251,10 +4270,6 @@ export type CreatePostViaDispatcherMutationVariables = Exact<{
 export type CreatePostViaDispatcherMutation = {
   result: RelayerResultFragment | RelayErrorFragment;
 };
-
-export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
-
-export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFieldsFragment };
 
 export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
   FeeFollowModuleSettings,
@@ -4442,6 +4457,15 @@ export type ExplorePublicationsQuery = {
   };
 };
 
+export type PublicationByTxHashQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  txHash: Scalars['TxHash'];
+}>;
+
+export type PublicationByTxHashQuery = {
+  result: Maybe<PostFragment | CommentWithFirstCommentFragment | MirrorFragment>;
+};
+
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
   RelayerResult,
   'txHash' | 'txId'
@@ -4499,14 +4523,12 @@ export const PublicationStatsFragmentDoc = gql`
 `;
 export const MediaFieldsFragmentDoc = gql`
   fragment MediaFields on Media {
-    __typename
     url
     mimeType
   }
 `;
 export const MediaSetFragmentDoc = gql`
   fragment MediaSet on MediaSet {
-    __typename
     original {
       ...MediaFields
     }
@@ -4954,10 +4976,29 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     verifyingContract
   }
 `;
+export const PendingPostFragmentDoc = gql`
+  fragment PendingPost on PendingPost {
+    id
+    content
+    media {
+      ...MediaFields
+    }
+    profile {
+      ...ProfileFields
+    }
+    locale
+    mainContentFocus
+  }
+  ${MediaFieldsFragmentDoc}
+  ${ProfileFieldsFragmentDoc}
+`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
     root {
+      ... on PendingPost {
+        ...PendingPost
+      }
       ... on Post {
         ...Post
       }
@@ -4969,6 +5010,7 @@ export const FeedItemFragmentDoc = gql`
       ...Comment
     }
   }
+  ${PendingPostFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
@@ -6568,6 +6610,71 @@ export type ExplorePublicationsLazyQueryHookResult = ReturnType<
 export type ExplorePublicationsQueryResult = Apollo.QueryResult<
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables
+>;
+export const PublicationByTxHashDocument = gql`
+  query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
+    result: publication(request: { txHash: $txHash }) {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...CommentWithFirstComment
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentWithFirstCommentFragmentDoc}
+`;
+
+/**
+ * __usePublicationByTxHashQuery__
+ *
+ * To run a query within a React component, call `usePublicationByTxHashQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationByTxHashQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationByTxHashQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      txHash: // value for 'txHash'
+ *   },
+ * });
+ */
+export function usePublicationByTxHashQuery(
+  baseOptions: Apollo.QueryHookOptions<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
+    PublicationByTxHashDocument,
+    options,
+  );
+}
+export function usePublicationByTxHashLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PublicationByTxHashQuery,
+    PublicationByTxHashQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
+    PublicationByTxHashDocument,
+    options,
+  );
+}
+export type PublicationByTxHashQueryHookResult = ReturnType<typeof usePublicationByTxHashQuery>;
+export type PublicationByTxHashLazyQueryHookResult = ReturnType<
+  typeof usePublicationByTxHashLazyQuery
+>;
+export type PublicationByTxHashQueryResult = Apollo.QueryResult<
+  PublicationByTxHashQuery,
+  PublicationByTxHashQueryVariables
 >;
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
@@ -8420,6 +8527,23 @@ export type PendingApproveFollowsResultFieldPolicy = {
   items?: FieldPolicy<any> | FieldReadFunction<any>;
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PendingPostKeySpecifier = (
+  | 'id'
+  | 'content'
+  | 'media'
+  | 'profile'
+  | 'locale'
+  | 'mainContentFocus'
+  | PendingPostKeySpecifier
+)[];
+export type PendingPostFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  content?: FieldPolicy<any> | FieldReadFunction<any>;
+  media?: FieldPolicy<any> | FieldReadFunction<any>;
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  locale?: FieldPolicy<any> | FieldReadFunction<any>;
+  mainContentFocus?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type PostKeySpecifier = (
   | 'appId'
   | 'canComment'
@@ -9922,6 +10046,10 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | PendingApproveFollowsResultKeySpecifier);
     fields?: PendingApproveFollowsResultFieldPolicy;
   };
+  PendingPost?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | PendingPostKeySpecifier | (() => undefined | PendingPostKeySpecifier);
+    fields?: PendingPostFieldPolicy;
+  };
   Post?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | PostKeySpecifier | (() => undefined | PostKeySpecifier);
     fields?: PostFieldPolicy;
@@ -10218,7 +10346,7 @@ const result: PossibleTypesResultData = {
       'TimedFeeCollectModuleSettings',
       'UnknownCollectModuleSettings',
     ],
-    FeedItemRoot: ['Post', 'Comment'],
+    FeedItemRoot: ['Comment', 'PendingPost', 'Post'],
     FollowModule: [
       'FeeFollowModuleSettings',
       'ProfileFollowModuleSettings',

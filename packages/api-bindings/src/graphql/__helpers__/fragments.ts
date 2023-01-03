@@ -7,6 +7,7 @@ import {
   CommentFragment,
   FeedItemFragment,
   MediaFieldsFragment,
+  MetadataFragment,
   PostFragment,
   ProfileFieldsFragment,
   ProfileMediaFieldsFragment,
@@ -17,18 +18,16 @@ import {
   RelayErrorReasons,
 } from '../generated';
 
-function mockMedia(): MediaFieldsFragment {
+function mockMediaFragment(): MediaFieldsFragment {
   return {
-    __typename: 'Media',
     url: faker.image.imageUrl(),
     mimeType: 'image/jpeg',
   };
 }
 
-export function mockProfileMediaFieldsFragment(): ProfileMediaFieldsFragment {
+function mockProfileMediaFieldsFragment(): ProfileMediaFieldsFragment {
   return {
-    __typename: 'MediaSet',
-    original: mockMedia(),
+    original: mockMediaFragment(),
   };
 }
 
@@ -113,7 +112,7 @@ export function mockRelayErrorFragment(reason: RelayErrorReasons): RelayErrorFra
   };
 }
 
-export function mockPublicationStats(
+export function mockPublicationStatsFragment(
   overrides?: Partial<PublicationStatsFragment>,
 ): PublicationStatsFragment {
   return {
@@ -126,9 +125,7 @@ export function mockPublicationStats(
   };
 }
 
-export function mockFreeCollectModuleSettings({
-  followerOnly = false,
-} = {}): CollectModuleFragment {
+function mockFreeCollectModuleSettings({ followerOnly = false } = {}): CollectModuleFragment {
   return {
     __typename: 'FreeCollectModuleSettings',
     contractAddress: '0x96351D3cE872903EBf4c2D77dd625992CCFdf8c9',
@@ -136,20 +133,24 @@ export function mockFreeCollectModuleSettings({
   };
 }
 
-export function mockPost(overrides?: Partial<PostFragment>): PostFragment {
+function mockMetadataFragment(): MetadataFragment {
+  return {
+    __typename: 'MetadataOutput',
+    mainContentFocus: PublicationMainFocus.TextOnly,
+    name: faker.commerce.productName(),
+    description: null,
+    attributes: [],
+    content: faker.lorem.words(5),
+    media: [],
+  };
+}
+
+export function mockPostFragment(overrides?: Partial<PostFragment>): PostFragment {
   return {
     id: faker.datatype.uuid(),
     createdAt: faker.datatype.datetime().toISOString(),
-    stats: mockPublicationStats(),
-    metadata: {
-      __typename: 'MetadataOutput',
-      mainContentFocus: PublicationMainFocus.TextOnly,
-      name: faker.name.fullName(),
-      description: null,
-      attributes: [],
-      content: faker.lorem.words(5),
-      media: [],
-    },
+    stats: mockPublicationStatsFragment(),
+    metadata: mockMetadataFragment(),
     profile: mockProfileFieldsFragment(),
     collectedBy: null,
     ownedByMe: false,
@@ -173,12 +174,12 @@ export function mockPost(overrides?: Partial<PostFragment>): PostFragment {
   };
 }
 
-export function mockComment(
+export function mockCommentFragment(
   overrides?: Partial<Omit<CommentFragment, '__typename'>>,
 ): CommentFragment {
   return {
     id: faker.datatype.uuid(),
-    stats: mockPublicationStats(),
+    stats: mockPublicationStatsFragment(),
     metadata: {
       __typename: 'MetadataOutput',
       mainContentFocus: PublicationMainFocus.TextOnly,
@@ -191,8 +192,8 @@ export function mockComment(
     profile: mockProfileFieldsFragment(),
     createdAt: faker.date.past().toISOString(),
     collectedBy: null,
-    commentOn: mockPost(),
-    mainPost: mockPost(),
+    commentOn: mockPostFragment(),
+    mainPost: mockPostFragment(),
     ownedByMe: false,
     collectModule: mockFreeCollectModuleSettings(),
     referenceModule: null,
@@ -214,16 +215,11 @@ export function mockComment(
   };
 }
 
-export function mockFeedItem({
-  root = mockPost(),
-  comments = [mockComment(), mockComment()],
-}: {
-  root?: PostFragment | CommentFragment;
-  comments?: CommentFragment[];
-}): FeedItemFragment {
+export function mockFeedItem(overrides?: Partial<FeedItemFragment>): FeedItemFragment {
   return {
     __typename: 'FeedItem',
-    root,
-    comments,
+    root: mockPostFragment(),
+    comments: null,
+    ...overrides,
   };
 }
