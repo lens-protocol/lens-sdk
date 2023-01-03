@@ -2,8 +2,8 @@ import { CommentFragment, PostFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createSearchPublicationsQueryMockedResponse,
-  mockComment,
-  mockPost,
+  mockCommentFragment,
+  mockPostFragment,
   mockProfileFieldsFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
@@ -15,7 +15,10 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
   const observer = mockProfileFieldsFragment();
   const query = 'query_test';
 
-  const mockPublications: (PostFragment | CommentFragment)[] = [mockPost(), mockComment()];
+  const mockPublications: (PostFragment | CommentFragment)[] = [
+    mockPostFragment(),
+    mockCommentFragment(),
+  ];
 
   describe('when the query returns data successfully', () => {
     it('should return publications that match the search result', async () => {

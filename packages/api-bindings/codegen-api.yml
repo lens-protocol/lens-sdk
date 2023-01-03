@@ -19,11 +19,15 @@ config:
     InternalPublicationId: string
     Jwt: string
     LimitScalar: number
+    Locale: string
     Markdown: string
     Media: string
     MimeType: string
-    ProfileId: string
+    NftOwnershipId: string
+    Nonce: number
     NotificationId: string
+    ProfileId: string
+    ProxyActionId: string
     Search: string
     Signature: string
     String: string
@@ -31,9 +35,6 @@ config:
     TxId: string
     Url: string
     Void: string
-    NftOwnershipId: string
-    Nonce: number
-    ProxyActionId: string
   avoidOptionals:
     field: true
 generates:

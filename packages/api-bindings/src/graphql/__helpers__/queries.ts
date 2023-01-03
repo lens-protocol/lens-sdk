@@ -1,10 +1,16 @@
 import { MockedResponse } from '@apollo/client/testing';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   CommentFragment,
+  CommentWithFirstCommentFragment,
+  CommonPaginatedResultInfoFragment,
   EnabledModuleCurrenciesDocument,
   EnabledModuleCurrenciesQuery,
+  ExplorePublicationsDocument,
+  ExplorePublicationsQuery,
+  ExplorePublicationsQueryVariables,
   FeedDocument,
   FeedItemFragment,
   FeedQuery,
@@ -17,6 +23,10 @@ import {
   HasTxHashBeenIndexedQuery,
   HasTxHashBeenIndexedQueryVariables,
   Maybe,
+  MirrorFragment,
+  MutualFollowersProfilesDocument,
+  MutualFollowersProfilesQuery,
+  MutualFollowersProfilesQueryVariables,
   PostFragment,
   ProfileFieldsFragment,
   ProfilesToFollowDocument,
@@ -27,36 +37,31 @@ import {
   ProxyActionStatusQueryVariables,
   ProxyActionStatusResult,
   ProxyActionStatusTypes,
+  PublicationByTxHashDocument,
+  PublicationByTxHashQuery,
   PublicationDocument,
   PublicationQuery,
+  PublicationRevenueDocument,
+  PublicationRevenueQuery,
+  PublicationRevenueQueryVariables,
   PublicationsDocument,
   PublicationsQuery,
   PublicationsQueryVariables,
+  RevenueFragment,
+  SearchProfilesDocument,
+  SearchProfilesQuery,
+  SearchProfilesQueryVariables,
+  SearchPublicationsDocument,
+  SearchPublicationsQuery,
+  SearchPublicationsQueryVariables,
   SingleProfileQueryRequest,
   TransactionErrorReasons,
-  MutualFollowersProfilesQuery,
-  MutualFollowersProfilesDocument,
-  MutualFollowersProfilesQueryVariables,
-  SearchPublicationsQueryVariables,
-  SearchProfilesQuery,
-  SearchProfilesDocument,
-  SearchProfilesQueryVariables,
-  SearchPublicationsQuery,
-  SearchPublicationsDocument,
-  ExplorePublicationsQueryVariables,
-  MirrorFragment,
-  ExplorePublicationsQuery,
-  ExplorePublicationsDocument,
-  PublicationRevenueQueryVariables,
-  PublicationRevenueQuery,
-  PublicationRevenueDocument,
-  RevenueFragment,
+  WhoReactedPublicationDocument,
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables,
-  WhoReactedPublicationDocument,
   WhoReactedResultFragment,
 } from '../generated';
-import { mockProfileFieldsFragment } from './fragments';
+import { mockFeedItemFragment, mockPostFragment, mockProfileFieldsFragment } from './fragments';
 
 export function createProfilesToFollowQueryMockedResponse(args: {
   profiles: ProfileFieldsFragment[];
@@ -79,7 +84,7 @@ export function mockGetProfileQuery(profile: Maybe<ProfileFieldsFragment>): GetP
   };
 }
 
-export function createGetProfileQueryMockedResponse({
+export function mockGetProfileQueryMockedResponse({
   profile = mockProfileFieldsFragment(),
   request,
   observerId,
@@ -249,6 +254,30 @@ export function mockMutualFollowersQuery(args: {
             totalCount: args.profiles.length,
           },
         },
+      },
+    },
+  };
+}
+
+export type MockFeedQueryArgs = {
+  items?: Array<FeedItemFragment>;
+  pageInfo?: Pick<CommonPaginatedResultInfoFragment, 'next' | 'prev'>;
+};
+
+export function mockFeedQuery({
+  items = [mockFeedItemFragment(), mockFeedItemFragment()],
+  pageInfo = {
+    prev: null,
+    next: null,
+  },
+}: MockFeedQueryArgs = {}): FeedQuery {
+  return {
+    result: {
+      items,
+      pageInfo: {
+        __typename: 'PaginatedResultInfo',
+        totalCount: null,
+        ...pageInfo,
       },
     },
   };
@@ -437,6 +466,34 @@ export function createSearchPublicationsQueryMockedResponse(args: {
           },
         },
       },
+    },
+  };
+}
+
+function mockPublicationByTxHash(
+  publication: CommentWithFirstCommentFragment | PostFragment | MirrorFragment = mockPostFragment(),
+): PublicationByTxHashQuery {
+  return {
+    result: publication,
+  };
+}
+
+export function mockPublicationByTxHashMockedResponse({
+  publication,
+  observerId,
+  txHash,
+}: {
+  publication: CommentWithFirstCommentFragment | PostFragment | MirrorFragment;
+  observerId?: ProfileId;
+  txHash: string;
+}): MockedResponse<PublicationByTxHashQuery> {
+  return {
+    request: {
+      query: PublicationByTxHashDocument,
+      variables: { txHash, observerId },
+    },
+    result: {
+      data: mockPublicationByTxHash(publication),
     },
   };
 }

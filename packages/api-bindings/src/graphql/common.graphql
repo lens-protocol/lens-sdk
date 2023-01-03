@@ -124,6 +124,19 @@ fragment Wallet on Wallet {
   }
 }
 
+fragment Media on Media {
+  __typename
+  url
+  mimeType
+}
+
+fragment MediaSet on MediaSet {
+  __typename
+  original {
+    ...Media
+  }
+}
+
 fragment Metadata on MetadataOutput {
   __typename
   name
@@ -311,6 +324,20 @@ fragment Post on Post {
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
   ownedByMe @client
+}
+
+fragment PendingPost on PendingPost {
+  __typename
+  id
+  content
+  media {
+    ...Media
+  }
+  profile {
+    ...ProfileFields
+  }
+  locale
+  mainContentFocus
 }
 
 fragment EIP712TypedDataDomain on EIP712TypedDataDomain {

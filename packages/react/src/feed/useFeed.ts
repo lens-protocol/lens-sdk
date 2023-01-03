@@ -3,7 +3,7 @@ import { FeedItemFragment, useFeedQuery } from '@lens-protocol/api-bindings';
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
-type UseFeedArgs = PaginatedArgs<{
+export type UseFeedArgs = PaginatedArgs<{
   profileId: string;
   observerId?: string;
 }>;
