@@ -27,12 +27,12 @@ import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { PublicationsPage } from './publications/PublicationsPage';
+import { UseCreateComment } from './publications/UseCreateComment';
+import { UseCreatePost } from './publications/UseCreatePost';
 import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { RevenuePage } from './revenue/RevenuePage';
-import { UseCreatePost } from "./publications/UseCreatePost";
-import { UseCreateComment } from "./publications/UseCreateComment";
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
