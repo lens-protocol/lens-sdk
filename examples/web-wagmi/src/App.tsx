@@ -27,10 +27,10 @@ import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { PublicationsPage } from './publications/PublicationsPage';
+import { UseCreatePost } from './publications/UseCreatePost';
 import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
-import { CreatePost } from './publications/components/CreatePost';
 import { RevenuePage } from './revenue/RevenuePage';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
@@ -67,7 +67,7 @@ export function App() {
                 <Route path="/publications/usePublication" element={<UsePublication />} />
                 <Route path="/publications/useComments" element={<UsePublication />} />
                 <Route path="/publications/usePublications" element={<UsePublications />} />
-                <Route path="/publications/useCreatePost" element={<CreatePost />} />
+                <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
                 <Route
                   path="/publications/useCollectedPublications"
                   element={<UseCollectedPublications />}

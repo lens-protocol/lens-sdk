@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 function capitalizeFirstLetter(string: string) {
@@ -18,12 +19,12 @@ export function Breadcrumbs() {
         const to = `/${paths.slice(0, index + 1).join('/')}`;
 
         return (
-          <>
+          <React.Fragment key={to}>
             <span>/</span>
             <span key={to}>
               <Link to={to}>{capitalizeFirstLetter(path)}</Link>
             </span>
-          </>
+          </React.Fragment>
         );
       })}
     </div>

@@ -9,28 +9,32 @@ export function Header() {
 
   return (
     <header>
-      <h1>Lens SDK 🌿</h1>
-
-      <p>
-        Examples of each hook used demonstrating a possible integration with&nbsp;
-        <a href="https://wagmi.sh/">wagmi</a>.
-      </p>
-
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '1rem',
-          position: 'absolute',
-          top: '1rem',
-          right: '1rem',
-          width: 'auto',
+          width: '100%',
+          maxWidth: '1600px',
+          margin: 'auto',
+          padding: '1rem',
         }}
       >
-        {profile && <strong>{profile.handle}</strong>}
+        <span>
+          <strong>🌿 Lens SDK</strong>
+        </span>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
+          }}
+        >
+          {profile && <strong>{profile.handle}</strong>}
 
-        <LoginButton />
+          <LoginButton />
+        </div>
       </div>
 
       <nav>

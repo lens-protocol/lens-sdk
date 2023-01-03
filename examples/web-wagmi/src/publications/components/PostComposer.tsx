@@ -1,6 +1,5 @@
 import {
   ProfileFieldsFragment,
-  useActiveProfile,
   useCreatePost,
   ContentFocus,
   CollectPolicyType,
@@ -8,14 +7,13 @@ import {
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
-import { Loading } from '../../components/loading/Loading';
 import { upload } from '../../upload';
 
-type ComposerProps = {
+export type PostComposerProps = {
   profile: ProfileFieldsFragment;
 };
 
-function Composer({ profile }: ComposerProps) {
+export function PostComposer({ profile }: PostComposerProps) {
   const [content, setContent] = useState<string>('');
   const { create, error, isPending } = useCreatePost({ profile, upload });
 
@@ -42,28 +40,20 @@ function Composer({ profile }: ComposerProps) {
     <form onSubmit={submit}>
       {error && <p>{error.message}</p>}
 
-      <textarea
-        rows={3}
-        placeholder="What's happening?"
-        style={{ resize: 'none' }}
-        disabled={isPending}
-        onChange={(event) => setContent(event.target.value)}
-        value={content}
-      ></textarea>
+      <fieldset>
+        <textarea
+          rows={3}
+          placeholder="What's happening?"
+          style={{ resize: 'none' }}
+          disabled={isPending}
+          onChange={(event) => setContent(event.target.value)}
+          value={content}
+        ></textarea>
 
-      <button type="submit" disabled={isPending}>
-        Post
-      </button>
+        <button type="submit" disabled={isPending}>
+          Post
+        </button>
+      </fieldset>
     </form>
   );
-}
-
-export function CreatePost() {
-  const { data: profile, loading } = useActiveProfile();
-
-  if (loading) return <Loading />;
-
-  if (!profile) return null;
-
-  return <Composer profile={profile} />;
 }

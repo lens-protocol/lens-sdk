@@ -1,18 +1,30 @@
-import { CommentFragment, MirrorFragment, PostFragment } from '@lens-protocol/react';
-import { Link } from 'react-router-dom';
+import {
+  CommentFragment,
+  MirrorFragment,
+  PostFragment,
+  PendingPostFragment,
+} from '@lens-protocol/react';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 
-type PublicationProps = {
-  publication: PostFragment | CommentFragment | MirrorFragment;
+type PublicationCardProps = {
+  publication: PostFragment | CommentFragment | MirrorFragment | PendingPostFragment;
 };
 
-export function PublicationCard({ publication }: PublicationProps) {
+export function PublicationCard({ publication }: PublicationCardProps) {
+  if (publication.__typename === 'PendingPost') {
+    return (
+      <article>
+        <ProfilePicture picture={publication.profile.picture} />
+        <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
+        <p>{publication.content}</p>
+      </article>
+    );
+  }
+
   return (
     <article>
-      <Link to={`/profile/handle/${publication.profile.handle}`}>
-        <ProfilePicture picture={publication.profile.picture} />
-      </Link>
+      <ProfilePicture picture={publication.profile.picture} />
       <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
       <p>{publication.metadata.content}</p>
     </article>
