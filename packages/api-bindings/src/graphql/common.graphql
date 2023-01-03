@@ -6,6 +6,14 @@ fragment Erc20 on Erc20 {
   address
 }
 
+fragment Erc20Amount on Erc20Amount {
+  __typename
+  asset {
+    ...Erc20
+  }
+  value
+}
+
 fragment ModuleFeeAmount on ModuleFeeAmount {
   __typename
   asset {

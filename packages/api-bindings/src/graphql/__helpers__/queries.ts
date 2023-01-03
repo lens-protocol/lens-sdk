@@ -41,6 +41,10 @@ import {
   MirrorFragment,
   ExplorePublicationsQuery,
   ExplorePublicationsDocument,
+  PublicationRevenueQueryVariables,
+  Erc20AmountFragment,
+  PublicationRevenueQuery,
+  PublicationRevenueDocument,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -326,6 +330,29 @@ export function createExplorePublicationsQueryMockedResponse(args: {
             prev: null,
             next: null,
             totalCount: args.items.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function createPublicationRevenueQueryMockedResponse(args: {
+  variables: PublicationRevenueQueryVariables;
+  publication: PostFragment | CommentFragment | MirrorFragment;
+  totalRevenue: Erc20AmountFragment;
+}): MockedResponse<PublicationRevenueQuery> {
+  return {
+    request: {
+      query: PublicationRevenueDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          publication: args.publication,
+          revenue: {
+            total: args.totalRevenue,
           },
         },
       },

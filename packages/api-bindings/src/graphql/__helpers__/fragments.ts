@@ -1,10 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   CollectModuleFragment,
   CommentFragment,
+  Erc20AmountFragment,
+  Erc20Fragment,
   FeedItemFragment,
   MediaFieldsFragment,
   PostFragment,
@@ -225,5 +227,28 @@ export function mockFeedItem({
     __typename: 'FeedItem',
     root,
     comments,
+  };
+}
+
+export function mockErc20Fragment(
+  overrides?: Partial<Omit<Erc20Fragment, '__typename'>>,
+): Erc20Fragment {
+  return {
+    __typename: 'Erc20',
+    name: 'Wrapped MATIC',
+    symbol: 'WMATIC',
+    decimals: 18,
+    address: mockEthereumAddress(),
+    ...overrides,
+  };
+}
+
+export function mockErc20AmountFragment(
+  amount: Amount<Erc20> = mockDaiAmount(42),
+): Erc20AmountFragment {
+  return {
+    __typename: 'Erc20Amount',
+    asset: mockErc20Fragment(amount.asset),
+    value: amount.toSignificantDigits(),
   };
 }

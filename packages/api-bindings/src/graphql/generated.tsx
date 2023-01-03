@@ -3886,6 +3886,10 @@ export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
   'name' | 'symbol' | 'decimals' | 'address'
 >;
 
+export type Erc20AmountFragment = { __typename: 'Erc20Amount' } & Pick<Erc20Amount, 'value'> & {
+    asset: Erc20Fragment;
+  };
+
 export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
   ModuleFeeAmount,
   'value'
@@ -4442,6 +4446,18 @@ export type ExplorePublicationsQuery = {
   };
 };
 
+export type PublicationRevenueQueryVariables = Exact<{
+  request: PublicationRevenueQueryRequest;
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type PublicationRevenueQuery = {
+  result: Maybe<{
+    publication: PostFragment | CommentFragment | MirrorFragment;
+    revenue: { total: Erc20AmountFragment };
+  }>;
+};
+
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
   RelayerResult,
   'txHash' | 'txId'
@@ -4936,6 +4952,16 @@ export const CommentWithFirstCommentFragmentDoc = gql`
     }
   }
   ${CommentFragmentDoc}
+`;
+export const Erc20AmountFragmentDoc = gql`
+  fragment Erc20Amount on Erc20Amount {
+    __typename
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
 `;
 export const CommonPaginatedResultInfoFragmentDoc = gql`
   fragment CommonPaginatedResultInfo on PaginatedResultInfo {
@@ -6568,6 +6594,79 @@ export type ExplorePublicationsLazyQueryHookResult = ReturnType<
 export type ExplorePublicationsQueryResult = Apollo.QueryResult<
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables
+>;
+export const PublicationRevenueDocument = gql`
+  query PublicationRevenue($request: PublicationRevenueQueryRequest!, $observerId: ProfileId) {
+    result: publicationRevenue(request: $request) {
+      publication {
+        ... on Post {
+          ...Post
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      revenue {
+        total {
+          ...Erc20Amount
+        }
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+  ${Erc20AmountFragmentDoc}
+`;
+
+/**
+ * __usePublicationRevenueQuery__
+ *
+ * To run a query within a React component, call `usePublicationRevenueQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationRevenueQuery({
+ *   variables: {
+ *      request: // value for 'request'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function usePublicationRevenueQuery(
+  baseOptions: Apollo.QueryHookOptions<PublicationRevenueQuery, PublicationRevenueQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationRevenueQuery, PublicationRevenueQueryVariables>(
+    PublicationRevenueDocument,
+    options,
+  );
+}
+export function usePublicationRevenueLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PublicationRevenueQuery,
+    PublicationRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationRevenueQuery, PublicationRevenueQueryVariables>(
+    PublicationRevenueDocument,
+    options,
+  );
+}
+export type PublicationRevenueQueryHookResult = ReturnType<typeof usePublicationRevenueQuery>;
+export type PublicationRevenueLazyQueryHookResult = ReturnType<
+  typeof usePublicationRevenueLazyQuery
+>;
+export type PublicationRevenueQueryResult = Apollo.QueryResult<
+  PublicationRevenueQuery,
+  PublicationRevenueQueryVariables
 >;
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
