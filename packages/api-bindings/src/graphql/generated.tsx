@@ -4475,6 +4475,24 @@ export type RemoveReactionMutationVariables = Exact<{
 
 export type RemoveReactionMutation = Pick<Mutation, 'removeReaction'>;
 
+export type WhoReactedPublicationQueryVariables = Exact<{
+  limit?: Maybe<Scalars['LimitScalar']>;
+  cursor?: Maybe<Scalars['Cursor']>;
+  publicationId: Scalars['InternalPublicationId'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type WhoReactedPublicationQuery = {
+  result: {
+    items: Array<
+      Pick<WhoReactedResult, 'reactionId' | 'reaction' | 'reactionAt'> & {
+        profile: ProfileFieldsFragment;
+      }
+    >;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
+};
+
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
   RelayerResult,
   'txHash' | 'txId'
@@ -6780,6 +6798,84 @@ export type RemoveReactionMutationResult = Apollo.MutationResult<RemoveReactionM
 export type RemoveReactionMutationOptions = Apollo.BaseMutationOptions<
   RemoveReactionMutation,
   RemoveReactionMutationVariables
+>;
+export const WhoReactedPublicationDocument = gql`
+  query WhoReactedPublication(
+    $limit: LimitScalar
+    $cursor: Cursor
+    $publicationId: InternalPublicationId!
+    $observerId: ProfileId
+  ) {
+    result: whoReactedPublication(
+      request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }
+    ) {
+      items {
+        reactionId
+        reaction
+        reactionAt
+        profile {
+          ...ProfileFields
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useWhoReactedPublicationQuery__
+ *
+ * To run a query within a React component, call `useWhoReactedPublicationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWhoReactedPublicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWhoReactedPublicationQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      publicationId: // value for 'publicationId'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useWhoReactedPublicationQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    WhoReactedPublicationQuery,
+    WhoReactedPublicationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<WhoReactedPublicationQuery, WhoReactedPublicationQueryVariables>(
+    WhoReactedPublicationDocument,
+    options,
+  );
+}
+export function useWhoReactedPublicationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    WhoReactedPublicationQuery,
+    WhoReactedPublicationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<WhoReactedPublicationQuery, WhoReactedPublicationQueryVariables>(
+    WhoReactedPublicationDocument,
+    options,
+  );
+}
+export type WhoReactedPublicationQueryHookResult = ReturnType<typeof useWhoReactedPublicationQuery>;
+export type WhoReactedPublicationLazyQueryHookResult = ReturnType<
+  typeof useWhoReactedPublicationLazyQuery
+>;
+export type WhoReactedPublicationQueryResult = Apollo.QueryResult<
+  WhoReactedPublicationQuery,
+  WhoReactedPublicationQueryVariables
 >;
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {

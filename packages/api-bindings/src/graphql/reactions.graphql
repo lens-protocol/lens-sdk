@@ -17,3 +17,27 @@ mutation RemoveReaction(
     request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
   )
 }
+
+query WhoReactedPublication(
+  $limit: LimitScalar
+  $cursor: Cursor
+  $publicationId: InternalPublicationId!
+  $observerId: ProfileId
+) {
+  result: whoReactedPublication(
+    request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }
+  ) {
+    items {
+      reactionId
+      reaction
+      reactionAt
+      profile {
+        ...ProfileFields
+      }
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
