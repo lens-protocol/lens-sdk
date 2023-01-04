@@ -4122,8 +4122,6 @@ export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain
   'name' | 'chainId' | 'version' | 'verifyingContract'
 >;
 
-export type Erc20AmountFragment = Pick<Erc20Amount, 'value'> & { asset: Erc20Fragment };
-
 export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
@@ -4992,15 +4990,6 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     version
     verifyingContract
   }
-`;
-export const Erc20AmountFragmentDoc = gql`
-  fragment Erc20Amount on Erc20Amount {
-    asset {
-      ...Erc20
-    }
-    value
-  }
-  ${Erc20FragmentDoc}
 `;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
