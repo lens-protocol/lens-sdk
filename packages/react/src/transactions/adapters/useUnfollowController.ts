@@ -1,9 +1,9 @@
-import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/dist/esm/use-cases/profile';
 import {
   PendingSigningRequestError,
   WalletConnectionError,
   UserRejectedError,
 } from '@lens-protocol/domain/entities';
+import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { IEquatableError } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';

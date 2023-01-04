@@ -4,8 +4,8 @@ import {
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
-} from '@lens-protocol/domain/dist/esm/entities';
-import { UnfollowRequest } from '@lens-protocol/domain/dist/esm/use-cases/profile';
+} from '@lens-protocol/domain/entities';
+import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { IEquatableError } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
