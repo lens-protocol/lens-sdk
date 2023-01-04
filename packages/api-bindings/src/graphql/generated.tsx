@@ -4446,17 +4446,23 @@ export type ExplorePublicationsQuery = {
   };
 };
 
+export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & {
+  total: Erc20AmountFragment;
+};
+
+export type PublicationRevenueFragment = { __typename: 'PublicationRevenue' } & {
+  publication: PostFragment | CommentFragment | MirrorFragment;
+} & RevenueFragment;
+
+export type RevenueFragment = { __typename: 'PublicationRevenue' } & {
+  revenue: RevenueAggregateFragment;
+};
+
 export type PublicationRevenueQueryVariables = Exact<{
   request: PublicationRevenueQueryRequest;
-  observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
-export type PublicationRevenueQuery = {
-  result: Maybe<{
-    publication: PostFragment | CommentFragment | MirrorFragment;
-    revenue: { total: Erc20AmountFragment };
-  }>;
-};
+export type PublicationRevenueQuery = { result: Maybe<RevenueFragment> };
 
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
   RelayerResult,
@@ -4953,16 +4959,6 @@ export const CommentWithFirstCommentFragmentDoc = gql`
   }
   ${CommentFragmentDoc}
 `;
-export const Erc20AmountFragmentDoc = gql`
-  fragment Erc20Amount on Erc20Amount {
-    __typename
-    asset {
-      ...Erc20
-    }
-    value
-  }
-  ${Erc20FragmentDoc}
-`;
 export const CommonPaginatedResultInfoFragmentDoc = gql`
   fragment CommonPaginatedResultInfo on PaginatedResultInfo {
     __typename
@@ -5189,6 +5185,55 @@ export const ProxyActionQueuedFragmentDoc = gql`
     __typename
     queuedAt
   }
+`;
+export const Erc20AmountFragmentDoc = gql`
+  fragment Erc20Amount on Erc20Amount {
+    __typename
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
+`;
+export const RevenueAggregateFragmentDoc = gql`
+  fragment RevenueAggregate on RevenueAggregate {
+    __typename
+    total {
+      ...Erc20Amount
+    }
+  }
+  ${Erc20AmountFragmentDoc}
+`;
+export const RevenueFragmentDoc = gql`
+  fragment Revenue on PublicationRevenue {
+    __typename
+    revenue {
+      ...RevenueAggregate
+    }
+  }
+  ${RevenueAggregateFragmentDoc}
+`;
+export const PublicationRevenueFragmentDoc = gql`
+  fragment PublicationRevenue on PublicationRevenue {
+    __typename
+    publication {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+    ...Revenue
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+  ${RevenueFragmentDoc}
 `;
 export const RelayerResultFragmentDoc = gql`
   fragment RelayerResult on RelayerResult {
@@ -6596,30 +6641,12 @@ export type ExplorePublicationsQueryResult = Apollo.QueryResult<
   ExplorePublicationsQueryVariables
 >;
 export const PublicationRevenueDocument = gql`
-  query PublicationRevenue($request: PublicationRevenueQueryRequest!, $observerId: ProfileId) {
+  query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
     result: publicationRevenue(request: $request) {
-      publication {
-        ... on Post {
-          ...Post
-        }
-        ... on Mirror {
-          ...Mirror
-        }
-        ... on Comment {
-          ...Comment
-        }
-      }
-      revenue {
-        total {
-          ...Erc20Amount
-        }
-      }
+      ...Revenue
     }
   }
-  ${PostFragmentDoc}
-  ${MirrorFragmentDoc}
-  ${CommentFragmentDoc}
-  ${Erc20AmountFragmentDoc}
+  ${RevenueFragmentDoc}
 `;
 
 /**
@@ -6635,7 +6662,6 @@ export const PublicationRevenueDocument = gql`
  * const { data, loading, error } = usePublicationRevenueQuery({
  *   variables: {
  *      request: // value for 'request'
- *      observerId: // value for 'observerId'
  *   },
  * });
  */

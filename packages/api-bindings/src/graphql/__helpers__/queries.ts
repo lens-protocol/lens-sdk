@@ -42,9 +42,9 @@ import {
   ExplorePublicationsQuery,
   ExplorePublicationsDocument,
   PublicationRevenueQueryVariables,
-  Erc20AmountFragment,
   PublicationRevenueQuery,
   PublicationRevenueDocument,
+  RevenueFragment,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -339,8 +339,7 @@ export function createExplorePublicationsQueryMockedResponse(args: {
 
 export function createPublicationRevenueQueryMockedResponse(args: {
   variables: PublicationRevenueQueryVariables;
-  publication: PostFragment | CommentFragment | MirrorFragment;
-  totalRevenue: Erc20AmountFragment;
+  revenue: RevenueFragment;
 }): MockedResponse<PublicationRevenueQuery> {
   return {
     request: {
@@ -349,12 +348,7 @@ export function createPublicationRevenueQueryMockedResponse(args: {
     },
     result: {
       data: {
-        result: {
-          publication: args.publication,
-          revenue: {
-            total: args.totalRevenue,
-          },
-        },
+        result: args.revenue,
       },
     },
   };
