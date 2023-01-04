@@ -22,6 +22,7 @@ import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
 import { ProfilesPage } from './profiles/ProfilesPage';
 import { UseCollectedPublications } from './profiles/UseCollectedPublications';
 import { UseExploreProfiles } from './profiles/UseExploreProfiles';
+import { UseFollow } from './profiles/UseFollow';
 import { UseMutualFollowers } from './profiles/UseMutualFollowers';
 import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
@@ -84,6 +85,7 @@ export function App() {
                 <Route path="/profiles/useExploreProfiles" element={<UseExploreProfiles />} />
                 <Route path="/profiles/useProfilesToFollow" element={<ProfilesToFollow />} />
                 <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
+                <Route path="/profiles/useFollow" element={<UseFollow />} />
 
                 <Route path="/revenue/usePublicationRevenue" element={<UsePublicationRevenue />} />
 

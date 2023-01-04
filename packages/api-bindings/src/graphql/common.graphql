@@ -320,3 +320,10 @@ fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
   version
   verifyingContract
 }
+
+fragment Erc20Amount on Erc20Amount {
+  asset {
+    ...Erc20
+  }
+  value
+}

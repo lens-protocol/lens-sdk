@@ -4122,6 +4122,8 @@ export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain
   'name' | 'chainId' | 'version' | 'verifyingContract'
 >;
 
+export type Erc20AmountFragment = Pick<Erc20Amount, 'value'> & { asset: Erc20Fragment };
+
 export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
@@ -4151,6 +4153,21 @@ export type ExploreProfilesQueryVariables = Exact<{
 
 export type ExploreProfilesQuery = {
   result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type CreateFollowTypedDataMutationVariables = Exact<{
+  request: FollowRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateFollowTypedDataMutation = {
+  result: Pick<CreateFollowBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { FollowWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Eip712TypedDataDomainFragment;
+      value: Pick<CreateFollowEip712TypedDataValue, 'nonce' | 'deadline' | 'profileIds' | 'datas'>;
+    };
+  };
 };
 
 export type CommentWithCommentedPublicationFieldsFragment = { __typename: 'Comment' } & {
@@ -4976,6 +4993,15 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     verifyingContract
   }
 `;
+export const Erc20AmountFragmentDoc = gql`
+  fragment Erc20Amount on Erc20Amount {
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
+`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
@@ -5635,6 +5661,76 @@ export type ExploreProfilesLazyQueryHookResult = ReturnType<typeof useExplorePro
 export type ExploreProfilesQueryResult = Apollo.QueryResult<
   ExploreProfilesQuery,
   ExploreProfilesQueryVariables
+>;
+export const CreateFollowTypedDataDocument = gql`
+  mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
+    result: createFollowTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          FollowWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileIds
+          datas
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export type CreateFollowTypedDataMutationFn = Apollo.MutationFunction<
+  CreateFollowTypedDataMutation,
+  CreateFollowTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateFollowTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateFollowTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFollowTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFollowTypedDataMutation, { data, loading, error }] = useCreateFollowTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateFollowTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateFollowTypedDataMutation,
+    CreateFollowTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateFollowTypedDataMutation, CreateFollowTypedDataMutationVariables>(
+    CreateFollowTypedDataDocument,
+    options,
+  );
+}
+export type CreateFollowTypedDataMutationHookResult = ReturnType<
+  typeof useCreateFollowTypedDataMutation
+>;
+export type CreateFollowTypedDataMutationResult =
+  Apollo.MutationResult<CreateFollowTypedDataMutation>;
+export type CreateFollowTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateFollowTypedDataMutation,
+  CreateFollowTypedDataMutationVariables
 >;
 export const NotificationsDocument = gql`
   query Notifications(
