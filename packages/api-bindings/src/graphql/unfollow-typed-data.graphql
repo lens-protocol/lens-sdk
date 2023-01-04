@@ -1,10 +1,10 @@
-mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
-  result: createFollowTypedData(request: $request, options: $options) {
+mutation CreateUnfollowTypedData($request: UnfollowRequest!) {
+  result: createUnfollowTypedData(request: $request) {
     id
     expiresAt
     typedData {
       types {
-        FollowWithSig {
+        BurnWithSig {
           name
           type
         }
@@ -15,8 +15,7 @@ mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOpti
       value {
         nonce
         deadline
-        profileIds
-        datas
+        tokenId
       }
     }
   }
