@@ -99,6 +99,7 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
       );
     });
   });
+
   describe(`when "${CreatePostResponder.prototype.commit.name}" method is invoked`, () => {
     const post = mockPostFragment();
     const transactionData = mockBroadcastedTransactionData({
@@ -127,6 +128,29 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
           id: post.id,
         },
       });
+    });
+  });
+
+  describe(`when "${CreatePostResponder.prototype.rollback.name}" method is invoked`, () => {
+    const post = mockPostFragment();
+    const transactionData = mockBroadcastedTransactionData({
+      request: mockCreatePostRequest({
+        profileId: author.id,
+      }),
+    });
+
+    it(`should remove the FeedItem with the PendingPostFragment added during the "${CreatePostResponder.prototype.prepare.name}" method call`, async () => {
+      const scenario = setupTestScenario({
+        cachedFeedData,
+        author,
+        post,
+        transactionData,
+      });
+      await scenario.responder.prepare(transactionData);
+
+      await scenario.responder.rollback(transactionData);
+
+      expect(scenario.updatedFeedQuery).toMatchObject(cachedFeedData);
     });
   });
 });

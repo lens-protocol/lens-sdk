@@ -1,6 +1,11 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { createAnonymousApolloClient, createApolloClient } from '@lens-protocol/api-bindings';
-import { TransactionKind } from '@lens-protocol/domain/entities';
+import {
+  PendingSigningRequestError,
+  TransactionKind,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
 import { ActiveProfile } from '@lens-protocol/domain/use-cases/profile';
 import {
   SupportedTransactionRequest,
@@ -13,6 +18,7 @@ import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
+import { ErrorHandler } from './ErrorHandler';
 import { LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
@@ -20,7 +26,10 @@ import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
-import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
+import {
+  FailedTransactionError,
+  TransactionQueuePresenter,
+} from './transactions/adapters/TransactionQueuePresenter';
 import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
@@ -42,7 +51,12 @@ import { ProviderFactory } from './wallet/infrastructure/ProviderFactory';
 import { SignerFactory } from './wallet/infrastructure/SignerFactory';
 import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
 
-export type ErrorHandler = (error: Error) => void;
+export type Handlers = {
+  onLogout: LogoutHandler;
+  onError: ErrorHandler<
+    PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedTransactionError
+  >;
+};
 
 export type SharedDependencies = {
   activeProfile: ActiveProfile;
@@ -54,7 +68,7 @@ export type SharedDependencies = {
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   logoutPresenter: LogoutPresenter;
-  onError: ErrorHandler;
+  onError: Handlers['onError'];
   protocolCallRelayer: ProtocolCallRelayer;
   sources: string[];
   transactionFactory: TransactionFactory;
@@ -63,11 +77,6 @@ export type SharedDependencies = {
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
   notificationStorage: IStorage<UnreadNotificationsData>;
-};
-
-export type Handlers = {
-  onLogout: LogoutHandler;
-  onError: ErrorHandler;
 };
 
 export function createSharedDependencies(config: LensConfig, { onLogout, onError }: Handlers) {

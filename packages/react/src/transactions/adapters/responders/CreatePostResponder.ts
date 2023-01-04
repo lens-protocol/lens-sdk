@@ -159,4 +159,25 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
       },
     });
   }
+
+  async rollback({ id, request }: TransactionData<CreatePostRequest>) {
+    const authorFeedCacheKey = resolveFeedQueryCacheKey({
+      profileId: request.profileId,
+    });
+
+    this.client.cache.modify({
+      id: this.client.cache.identify(makeReference('ROOT_QUERY')),
+      fields: {
+        [authorFeedCacheKey]: (previous: PaginatedFeedResultEntry, { readField }) => {
+          return {
+            ...previous,
+            items: previous.items.filter((item) => {
+              const itemId = readField<string>('id', item.root);
+              return itemId !== id;
+            }),
+          };
+        },
+      },
+    });
+  }
 }

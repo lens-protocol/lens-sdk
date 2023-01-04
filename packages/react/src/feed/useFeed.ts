@@ -15,30 +15,15 @@ export function useFeed({
 }: UseFeedArgs): PaginatedReadResult<FeedItemFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
-  const { data, loading, ...rest }: PaginatedReadResult<FeedItemFragment[]> =
-    usePaginatedReadResult(
-      useFeedQuery({
-        variables: {
-          profileId,
-          observerId,
-          sources,
-          limit: limit ?? 10,
-        },
-        client: apolloClient,
-      }),
-    );
-
-  if (loading) {
-    return {
-      loading: true,
-      data: undefined,
-      ...rest,
-    };
-  }
-
-  return {
-    loading: false,
-    data,
-    ...rest,
-  };
+  return usePaginatedReadResult(
+    useFeedQuery({
+      variables: {
+        profileId,
+        observerId,
+        sources,
+        limit: limit ?? 10,
+      },
+      client: apolloClient,
+    }),
+  );
 }

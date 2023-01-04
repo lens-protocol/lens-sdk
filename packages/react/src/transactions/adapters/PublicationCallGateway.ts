@@ -31,12 +31,23 @@ import {
   ReferencePolicy,
 } from '@lens-protocol/domain/use-cases/publications';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, invariant, success } from '@lens-protocol/shared-kernel';
+import {
+  assertError,
+  CausedError,
+  ChainType,
+  failure,
+  invariant,
+  success,
+} from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { AsyncRelayReceipt, ITransactionFactory } from './ITransactionFactory';
 import { UploadHandler } from './UploadHandler';
+
+export class FailedUploadError extends CausedError {
+  name = 'FailedUploadError' as const;
+}
 
 function mapMetaAttributes(attributes: NftAttribute[]) {
   return attributes.map(({ displayType, value, ...rest }) => {
@@ -168,7 +179,10 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiatePostCreation(request),
+      asyncRelayReceipt: this.initiatePostCreation(
+        request,
+        await this.uploadPublicationMetadata(request),
+      ),
     });
   }
 
@@ -179,14 +193,17 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
     return this.createPostCall(request, nonce);
   }
 
-  private async initiatePostCreation(request: CreatePostRequest): AsyncRelayReceipt {
+  private async initiatePostCreation(
+    request: CreatePostRequest,
+    contentURI: string,
+  ): AsyncRelayReceipt {
     const { data } = await this.apolloClient.mutate<
       CreatePostViaDispatcherMutation,
       CreatePostViaDispatcherMutationVariables
     >({
       mutation: CreatePostViaDispatcherDocument,
       variables: {
-        request: await this.resolveCreatePostRequestArg(request),
+        request: this.resolveCreatePostRequestArg(request, contentURI),
       },
     });
 
@@ -212,7 +229,10 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
     >({
       mutation: CreatePostTypedDataDocument,
       variables: {
-        request: await this.resolveCreatePostRequestArg(request),
+        request: this.resolveCreatePostRequestArg(
+          request,
+          await this.uploadPublicationMetadata(request),
+        ),
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },
     });
@@ -226,18 +246,24 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
     );
   }
 
-  private async resolveCreatePostRequestArg(
+  private resolveCreatePostRequestArg(
     request: CreatePostRequest,
-  ): Promise<CreatePublicPostRequestArg> {
+    contentURI: string,
+  ): CreatePublicPostRequestArg {
     return {
       profileId: request.profileId,
-      contentURI: await this.uploadPublicationMetadata(request),
+      contentURI,
       collectModule: resolveCollectModule(request),
       referenceModule: resolveReferenceModule(request),
     };
   }
 
   private async uploadPublicationMetadata(request: CreatePostRequest): Promise<string> {
-    return this.upload(createPublicationMetadata(request));
+    try {
+      return await this.upload(createPublicationMetadata(request));
+    } catch (err: unknown) {
+      assertError(err);
+      throw new FailedUploadError('Cannot upload Publication Metadata', { cause: err });
+    }
   }
 }

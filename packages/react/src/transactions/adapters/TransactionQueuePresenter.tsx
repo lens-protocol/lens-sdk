@@ -9,6 +9,8 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { CausedError } from '@lens-protocol/shared-kernel';
 
+import { ErrorHandler } from '../../ErrorHandler';
+
 export enum TxStatus {
   BROADCASTING = 'broadcasting',
   MINING = 'mining',
@@ -47,7 +49,7 @@ export class FailedTransactionError extends CausedError {
 export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
   implements ITransactionQueuePresenter<T>
 {
-  constructor(private readonly errorHandler: (error: FailedTransactionError) => void) {}
+  constructor(private readonly errorHandler: ErrorHandler<FailedTransactionError>) {}
 
   clearRecent(): void {
     const transactions = recentTransactions();

@@ -38,8 +38,6 @@ export function PostComposer({ profile }: PostComposerProps) {
 
   return (
     <form onSubmit={submit}>
-      {error && <p>{error.message}</p>}
-
       <fieldset>
         <textarea
           rows={3}
@@ -53,6 +51,8 @@ export function PostComposer({ profile }: PostComposerProps) {
         <button type="submit" disabled={isPending}>
           Post
         </button>
+
+        {error && <p>{error.message}</p>}
       </fieldset>
     </form>
   );
