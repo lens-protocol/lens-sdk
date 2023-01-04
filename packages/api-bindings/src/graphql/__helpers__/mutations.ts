@@ -3,8 +3,12 @@ import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { mockNonce } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { GraphQLError } from 'graphql';
 
 import {
+  AddReactionDocument,
+  AddReactionMutation,
+  AddReactionMutationVariables,
   BroadcastProtocolCallDocument,
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables,
@@ -13,6 +17,9 @@ import {
   Eip712TypedDataDomain,
   Eip712TypedDataField,
   RelayResult,
+  RemoveReactionDocument,
+  RemoveReactionMutation,
+  RemoveReactionMutationVariables,
 } from '../generated';
 
 export function mockCreateProfileMutation(result: Required<RelayResult>): CreateProfileMutation {
@@ -113,5 +120,77 @@ export function mockCreatePostTypedDataMutation({
         referenceModuleInitData: '0x',
       },
     }),
+  };
+}
+
+export function mockAddReactionMutationResponse(args: {
+  variables: AddReactionMutationVariables;
+}): MockedResponse<AddReactionMutation> {
+  return {
+    request: {
+      query: AddReactionDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: { addReaction: null },
+    },
+  };
+}
+
+export function mockRemoveReactionMutationResponse(args: {
+  variables: RemoveReactionMutationVariables;
+}): MockedResponse<RemoveReactionMutation> {
+  return {
+    request: {
+      query: RemoveReactionDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: { removeReaction: null },
+    },
+  };
+}
+
+export function mockAddReactionMutationWithGraphqlValidationErrorResponse(args: {
+  variables: AddReactionMutationVariables;
+}): MockedResponse<AddReactionMutation> {
+  return {
+    request: {
+      query: AddReactionDocument,
+      variables: args.variables,
+    },
+    result: {
+      errors: [
+        new GraphQLError('Wrong vars', undefined, undefined, undefined, undefined, undefined, {
+          code: 'GRAPHQL_VALIDATION_FAILED',
+        }),
+      ],
+    },
+  };
+}
+
+export function mockRemoveReactionMutationWithGraphqlValidationErrorResponse(args: {
+  variables: RemoveReactionMutationVariables;
+}): MockedResponse<RemoveReactionMutation> {
+  return {
+    request: {
+      query: AddReactionDocument,
+      variables: args.variables,
+    },
+    result: {
+      errors: [
+        new GraphQLError(
+          'You have not reacted to this publication with action UPVOTE',
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          {
+            code: 'GRAPHQL_VALIDATION_FAILED',
+          },
+        ),
+      ],
+    },
   };
 }

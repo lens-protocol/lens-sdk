@@ -5,19 +5,23 @@ import {
   ReactionTypes,
 } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
-import { ReactionRequest, IReactionPresenter } from '@lens-protocol/domain/use-cases/publications';
+import {
+  ReactionRequest,
+  IReactionPresenter,
+  ReactionError,
+} from '@lens-protocol/domain/use-cases/publications';
 import { Deferred, Result } from '@lens-protocol/shared-kernel';
 
 export class ReactionPresenter implements IReactionPresenter {
   constructor(private cache: ApolloCache<NormalizedCacheObject>) {}
 
-  private deferredResult = new Deferred<Result<void, Error>>();
+  private deferredResult = new Deferred<Result<void, ReactionError>>();
 
-  present(result: Result<void, Error>): void {
+  present(result: Result<void, ReactionError>): void {
     this.deferredResult.resolve(result);
   }
 
-  asResult(): Promise<Result<void, Error>> {
+  asResult(): Promise<Result<void, ReactionError>> {
     return this.deferredResult.promise;
   }
 

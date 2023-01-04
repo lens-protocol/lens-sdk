@@ -1,26 +1,37 @@
-import { PostFragment } from '@lens-protocol/api-bindings';
+import { PostFragment, ReactionTypes } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
+  mockAddReactionMutationResponse,
   mockPost,
+  mockRemoveReactionMutationResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { ReactionType } from '@lens-protocol/domain/entities';
-import { act, waitFor } from '@testing-library/react';
+import { act } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useReaction } from '../useReaction';
 
-describe.skip(`Given the ${useReaction.name} hook`, () => {
+describe(`Given the ${useReaction.name} hook`, () => {
   const mockPublication: PostFragment = mockPost();
+  const profileId = mockPublication.profile.id;
 
-  it("should return addReaction action that when triggered won't throw an error", async () => {
+  it('should provide addReaction action', async () => {
     const { result } = renderHookWithMocks(
       () =>
         useReaction({
-          profileId: mockPublication.profile.id,
+          profileId,
         }),
       {
         mocks: {
-          apolloClient: createMockApolloClientWithMultipleResponses([]),
+          apolloClient: createMockApolloClientWithMultipleResponses([
+            mockAddReactionMutationResponse({
+              variables: {
+                publicationId: mockPublication.id,
+                profileId,
+                reaction: ReactionTypes.Upvote,
+              },
+            }),
+          ]),
         },
       },
     );
@@ -32,21 +43,56 @@ describe.skip(`Given the ${useReaction.name} hook`, () => {
       });
     });
 
-    await waitFor(() => expect(result.current.isPending).toBeFalsy());
-
-    // TODO fix the test
-    expect(result.current.error).toBeInstanceOf(Error);
+    expect(result.current.error).toBe(null);
   });
 
-  // use publication, use reaction, addReaction,
-  // - check if publication has optimistic reaction,
-  // - check if api call was triggered
+  it('should provide removeReaction action', async () => {
+    const { result } = renderHookWithMocks(
+      () =>
+        useReaction({
+          profileId,
+        }),
+      {
+        mocks: {
+          apolloClient: createMockApolloClientWithMultipleResponses([
+            mockRemoveReactionMutationResponse({
+              variables: {
+                publicationId: mockPublication.id,
+                profileId,
+                reaction: ReactionTypes.Upvote,
+              },
+            }),
+          ]),
+        },
+      },
+    );
 
-  // the same for removeReaction
+    await act(async () => {
+      await result.current.removeReaction({
+        publication: mockPublication,
+        reactionType: ReactionType.UPVOTE,
+      });
+    });
 
-  // test for hasReaction
+    expect(result.current.error).toBe(null);
+  });
 
-  // handle errors when removing non-existing reaction
+  it('should provide hasReaction action', async () => {
+    const mockPublicationWithReaction: PostFragment = mockPost({
+      reaction: ReactionTypes.Upvote,
+    });
 
-  // handle api connection error ?
+    const { result } = renderHookWithMocks(() =>
+      useReaction({
+        profileId,
+      }),
+    );
+
+    const hasReactionResult = result.current.hasReaction({
+      publication: mockPublicationWithReaction,
+      reactionType: ReactionType.UPVOTE,
+    });
+
+    expect(hasReactionResult).toBe(true);
+  });
 });
