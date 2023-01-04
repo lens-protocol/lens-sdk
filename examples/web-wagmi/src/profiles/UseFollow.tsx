@@ -1,4 +1,9 @@
-import { ProfileFieldsFragment, useExploreProfiles, useFollow } from '@lens-protocol/react';
+import {
+  ProfileFieldsFragment,
+  useExploreProfiles,
+  useFollow,
+  useUnfollow,
+} from '@lens-protocol/react';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
@@ -10,13 +15,19 @@ type ProfileFollowProps = {
 };
 
 function FollowButton({ profile }: ProfileFollowProps) {
-  const { follow, isPending } = useFollow({ profile });
+  const { follow, isPending: isFollowing } = useFollow({ profile });
+  const { unfollow, isPending: isUnfollowing } = useUnfollow({ profile });
 
-  if (profile.isFollowedByMe || profile.isOptimisticFollowedByMe) return <p>Following</p>;
+  if (profile.isFollowedByMe || profile.isOptimisticFollowedByMe)
+    return (
+      <button onClick={unfollow} disabled={isUnfollowing || profile.isOptimisticFollowedByMe}>
+        {isUnfollowing ? 'Unfollowing...' : 'Unfollow'}
+      </button>
+    );
 
   return (
-    <button onClick={follow} disabled={isPending}>
-      {isPending ? 'Following...' : 'Follow'}
+    <button onClick={follow} disabled={isFollowing}>
+      {isFollowing ? 'Following...' : 'Follow'}
     </button>
   );
 }

@@ -40,6 +40,6 @@ export function useUnfollow({ profile }: UseUnfollowArgs) {
       }
     },
     error,
-    hasPendingTx,
+    isPending: hasPendingTx,
   };
 }
