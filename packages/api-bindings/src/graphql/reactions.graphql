@@ -18,6 +18,16 @@ mutation RemoveReaction(
   )
 }
 
+fragment WhoReactedResult on WhoReactedResult {
+  __typename
+  reactionId
+  reaction
+  reactionAt
+  profile {
+    ...ProfileFields
+  }
+}
+
 query WhoReactedPublication(
   $limit: LimitScalar
   $cursor: Cursor
@@ -28,12 +38,7 @@ query WhoReactedPublication(
     request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }
   ) {
     items {
-      reactionId
-      reaction
-      reactionAt
-      profile {
-        ...ProfileFields
-      }
+      ...WhoReactedResult
     }
 
     pageInfo {

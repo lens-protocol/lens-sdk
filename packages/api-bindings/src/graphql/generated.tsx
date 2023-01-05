@@ -4475,6 +4475,11 @@ export type RemoveReactionMutationVariables = Exact<{
 
 export type RemoveReactionMutation = Pick<Mutation, 'removeReaction'>;
 
+export type WhoReactedResultFragment = { __typename: 'WhoReactedResult' } & Pick<
+  WhoReactedResult,
+  'reactionId' | 'reaction' | 'reactionAt'
+> & { profile: ProfileFieldsFragment };
+
 export type WhoReactedPublicationQueryVariables = Exact<{
   limit?: Maybe<Scalars['LimitScalar']>;
   cursor?: Maybe<Scalars['Cursor']>;
@@ -4483,14 +4488,7 @@ export type WhoReactedPublicationQueryVariables = Exact<{
 }>;
 
 export type WhoReactedPublicationQuery = {
-  result: {
-    items: Array<
-      Pick<WhoReactedResult, 'reactionId' | 'reaction' | 'reactionAt'> & {
-        profile: ProfileFieldsFragment;
-      }
-    >;
-    pageInfo: CommonPaginatedResultInfoFragment;
-  };
+  result: { items: Array<WhoReactedResultFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
@@ -5223,6 +5221,18 @@ export const ProxyActionQueuedFragmentDoc = gql`
     __typename
     queuedAt
   }
+`;
+export const WhoReactedResultFragmentDoc = gql`
+  fragment WhoReactedResult on WhoReactedResult {
+    __typename
+    reactionId
+    reaction
+    reactionAt
+    profile {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
 `;
 export const RelayerResultFragmentDoc = gql`
   fragment RelayerResult on RelayerResult {
@@ -6810,19 +6820,14 @@ export const WhoReactedPublicationDocument = gql`
       request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }
     ) {
       items {
-        reactionId
-        reaction
-        reactionAt
-        profile {
-          ...ProfileFields
-        }
+        ...WhoReactedResult
       }
       pageInfo {
         ...CommonPaginatedResultInfo
       }
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${WhoReactedResultFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 

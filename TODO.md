@@ -83,7 +83,7 @@
   - [ ] signed, gas-less
   - [ ] signed, paid gas (fallback)
 - [x] `useReaction`
-- [ ] `useWhoReacted`
+- [x] `useWhoReacted`
 
 ## Revenue
 

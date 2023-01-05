@@ -32,6 +32,7 @@ import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
+import { UseWhoReacted } from './publications/UseWhoReacted';
 import { CreatePost } from './publications/components/CreatePost';
 import { RevenuePage } from './revenue/RevenuePage';
 
@@ -79,6 +80,7 @@ export function App() {
                   element={<UseExplorePublications />}
                 />
                 <Route path="/publications/useReaction" element={<UseReaction />} />
+                <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useProfile-handle" element={<ProfileByHandle />} />
