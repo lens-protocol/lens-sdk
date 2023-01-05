@@ -99,7 +99,7 @@
 ## Notifications
 
 - [x] `useNotifications`
-- [x] `useUnreadNotifications`
+- [x] `useUnreadNotificationCount`
 
 ## NFTs
 
