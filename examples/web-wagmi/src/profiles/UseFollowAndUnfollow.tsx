@@ -55,10 +55,12 @@ function UseFollowInner({ activeProfile }: { activeProfile: ProfileFieldsFragmen
   );
 }
 
-export function UseFollow() {
+export function UseFollowAndUnfollow() {
   return (
     <div>
-      <h1>UseFollow</h1>
+      <h1>
+        <code>useFollow / useUnFollow</code>
+      </h1>
       <WhenLoggedIn>{({ profile }) => <UseFollowInner activeProfile={profile} />}</WhenLoggedIn>
       <WhenLoggedOut>
         <div>

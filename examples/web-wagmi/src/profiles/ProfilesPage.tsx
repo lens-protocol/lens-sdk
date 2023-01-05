@@ -27,8 +27,8 @@ const profileHooks = [
     path: '/profiles/useMutualFollowers',
   },
   {
-    label: 'useFollow',
-    description: `Follow a profile.`,
+    label: 'useFollow / useUnfollow',
+    description: `Follow or unfollow a profile.`,
     path: '/profiles/useFollow',
   },
 ];
