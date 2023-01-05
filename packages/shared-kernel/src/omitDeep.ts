@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any */
-import isObjectLike from 'lodash/isObjectLike';
+import isObjectLike from 'lodash/isObjectLike.js';
 
 import { Primitive, UnknownObject } from './ts-helpers/types';
 

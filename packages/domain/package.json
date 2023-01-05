@@ -8,48 +8,28 @@
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
   "type": "module",
-  "main": "./dist/cjs/index.js",
-  "types": "./dist/cjs/index.d.ts",
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     "./entities": {
-      "import": {
-        "types": "./dist/esm/entities/index.d.ts",
-        "default": "./dist/esm/entities/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/entities/index.d.ts",
-        "default": "./dist/cjs/entities/index.js"
-      }
+      "types": "./dist/entities/index.d.ts",
+      "import": "./dist/entities/index.js",
+      "require": "./dist/entities/index.cjs"
     },
     "./use-cases": {
-      "import": {
-        "types": "./dist/esm/use-cases/index.d.ts",
-        "default": "./dist/esm/use-cases/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/use-cases/index.d.ts",
-        "default": "./dist/cjs/use-cases/index.js"
-      }
+      "types": "./dist/use-cases/index.d.ts",
+      "import": "./dist/use-cases/index.js",
+      "require": "./dist/use-cases/index.cjs"
     },
     "./use-cases/*": {
-      "import": {
-        "types": "./dist/esm/use-cases/*/index.d.ts",
-        "default": "./dist/esm/use-cases/*/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/use-cases/*/index.d.ts",
-        "default": "./dist/cjs/use-cases/*/index.js"
-      }
+      "types": "./dist/use-cases/*/index.d.ts",
+      "import": "./dist/use-cases/*/index.js",
+      "require": "./dist/use-cases/*/index.cjs"
     },
     "./mocks": {
-      "import": {
-        "types": "./dist/esm/mocks.d.ts",
-        "default": "./dist/esm/mocks.js"
-      },
-      "require": {
-        "types": "./dist/cjs/mocks.d.ts",
-        "default": "./dist/cjs/mocks.js"
-      }
+      "types": "./dist/mocks.d.ts",
+      "import": "./dist/mocks.js",
+      "require": "./dist/mocks.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -61,9 +41,7 @@
     "mocks"
   ],
   "scripts": {
-    "build:cjs": "tsc -p tsconfig.build-cjs.json",
-    "build:esm": "tsc -p tsconfig.build.json",
-    "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
+    "build": "pnpm clean && tsup",
     "clean": "rimraf ./dist",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
@@ -94,6 +72,7 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
     "typescript": "^4.9.3",
+    "tsup": "^6.5.0",
     "wait-for-expect": "^3.0.2"
   },
   "prettier": "@lens-protocol/prettier-config"
