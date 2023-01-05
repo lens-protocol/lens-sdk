@@ -47,8 +47,8 @@
 - [ ] `useUpdateDispatcherConfig`
   - [ ] signed, gas-less
   - [ ] signed, paid gas (fallback)
-- [ ] `useCollectables` - to be renamed
-- [ ] `useMutualFollowers`
+- [x] `useCollectedPublications`
+- [x] `useMutualFollowers`
 
 ## Explore
 
@@ -74,7 +74,7 @@
   - [ ] sign-less, gas-less
   - [ ] signed, gas-less
   - [ ] signed, paid gas (fallback)
-- [ ] `useMirror`
+- [ ] `useCreateMirror`
   - [ ] sign-less, gas-less
   - [ ] signed, gas-less
   - [ ] signed, paid (fallback)
@@ -98,8 +98,8 @@
 
 ## Notifications
 
-- [ ] `useNotifications`
-- [ ] `useUnreadNotifications`
+- [x] `useNotifications`
+- [x] `useUnreadNotifications`
 
 ## NFTs
 
