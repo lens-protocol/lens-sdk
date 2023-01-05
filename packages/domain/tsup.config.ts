@@ -11,7 +11,7 @@ export default defineConfig({
     'src/use-cases/**/index.ts',
   ],
 
-  format: ['esm', 'cjs'],
+  format: ['esm'],
   dts: true,
   external: [
     ...Object.keys(dependencies),

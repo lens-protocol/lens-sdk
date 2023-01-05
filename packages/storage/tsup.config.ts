@@ -4,7 +4,7 @@ import { dependencies, devDependencies, peerDependencies } from './package.json'
 
 export default defineConfig({
   entry: ['src/index.ts', 'src/mocks.ts'],
-  format: ['esm', 'cjs'],
+  format: ['esm'],
   dts: true,
   external: [
     ...Object.keys(dependencies),

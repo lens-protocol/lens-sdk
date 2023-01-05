@@ -8,28 +8,24 @@
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
   "type": "module",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     "./entities": {
       "types": "./dist/entities/index.d.ts",
-      "import": "./dist/entities/index.js",
-      "require": "./dist/entities/index.cjs"
+      "default": "./dist/entities/index.js"
     },
     "./use-cases": {
       "types": "./dist/use-cases/index.d.ts",
-      "import": "./dist/use-cases/index.js",
-      "require": "./dist/use-cases/index.cjs"
+      "default": "./dist/use-cases/index.js"
     },
     "./use-cases/*": {
       "types": "./dist/use-cases/*/index.d.ts",
-      "import": "./dist/use-cases/*/index.js",
-      "require": "./dist/use-cases/*/index.cjs"
+      "default": "./dist/use-cases/*/index.js"
     },
     "./mocks": {
       "types": "./dist/mocks.d.ts",
-      "import": "./dist/mocks.js",
-      "require": "./dist/mocks.cjs"
+      "default": "./dist/mocks.js"
     },
     "./package.json": "./package.json"
   },
