@@ -41,6 +41,10 @@ import {
   MirrorFragment,
   ExplorePublicationsQuery,
   ExplorePublicationsDocument,
+  WhoReactedPublicationQuery,
+  WhoReactedPublicationQueryVariables,
+  WhoReactedPublicationDocument,
+  WhoReactedResultFragment,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -315,6 +319,31 @@ export function createExplorePublicationsQueryMockedResponse(args: {
   return {
     request: {
       query: ExplorePublicationsDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: args.items,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function createWhoReactedPublicationQueryMockedResponse(args: {
+  variables: WhoReactedPublicationQueryVariables;
+  items: Array<WhoReactedResultFragment>;
+}): MockedResponse<WhoReactedPublicationQuery> {
+  return {
+    request: {
+      query: WhoReactedPublicationDocument,
       variables: args.variables,
     },
     result: {
