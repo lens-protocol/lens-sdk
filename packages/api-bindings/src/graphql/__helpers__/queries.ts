@@ -373,7 +373,6 @@ export function createProfileFollowRevenueQueryMockedResponse({
   variables: ProfileFollowRevenueQueryVariables;
   revenues: { total: Erc20AmountFragment }[];
 }): MockedResponse<ProfileFollowRevenueQuery> {
-  console.log({ revenues });
   return {
     request: {
       query: ProfileFollowRevenueDocument,

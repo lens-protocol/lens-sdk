@@ -13,12 +13,12 @@ export function useProfileFollowRevenue({
 }: UseProfileFollowRevenueArgs): ReadResult<{ revenues: { total: Erc20AmountFragment }[] }> {
   const { apolloClient } = useSharedDependencies();
 
-  const newLocal = useProfileFollowRevenueQuery({
-    variables: {
-      profileId,
-    },
-    client: apolloClient,
-  });
-  console.log({ newLocal: JSON.stringify(newLocal.data, null, 2) });
-  return useReadResult(newLocal);
+  return useReadResult(
+    useProfileFollowRevenueQuery({
+      variables: {
+        profileId,
+      },
+      client: apolloClient,
+    }),
+  );
 }
