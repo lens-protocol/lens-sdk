@@ -21,7 +21,7 @@ import { ChainType } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { mockITransactionFactory } from '../../__helpers__/mocks';
-import { CommentCallGateway } from "../CommentCallGateway";
+import { CommentCallGateway } from '../CommentCallGateway';
 import {
   createBasicExerciseData,
   createFeeCollectModuleExcerciseData,
