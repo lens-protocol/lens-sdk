@@ -16,7 +16,7 @@ mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOpti
         nonce
         deadline
         profileIds
-        data
+        datas
       }
     }
   }

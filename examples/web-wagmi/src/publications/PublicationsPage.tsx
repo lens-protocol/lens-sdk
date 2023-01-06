@@ -36,6 +36,11 @@ const publicationHooks = [
     description: `React to publications.`,
     path: '/publications/useReaction',
   },
+  {
+    label: 'useWhoReacted',
+    description: `Check who reacted to a publication.`,
+    path: '/publications/useWhoReacted',
+  },
 ];
 
 export function PublicationsPage() {
