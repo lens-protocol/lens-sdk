@@ -1,5 +1,4 @@
 import { CommentFragment, MirrorFragment, PostFragment } from '@lens-protocol/react';
-import { Link } from 'react-router-dom';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 
@@ -10,9 +9,7 @@ type PublicationProps = {
 export function PublicationCard({ publication }: PublicationProps) {
   return (
     <article>
-      <Link to={`/profile/handle/${publication.profile.handle}`}>
-        <ProfilePicture picture={publication.profile.picture} />
-      </Link>
+      <ProfilePicture picture={publication.profile.picture} />
       <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
       <p>{publication.metadata.content}</p>
     </article>
