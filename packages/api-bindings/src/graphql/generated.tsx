@@ -4459,6 +4459,22 @@ export type ExplorePublicationsQuery = {
   };
 };
 
+export type AddReactionMutationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  reaction: ReactionTypes;
+  profileId: Scalars['ProfileId'];
+}>;
+
+export type AddReactionMutation = Pick<Mutation, 'addReaction'>;
+
+export type RemoveReactionMutationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  reaction: ReactionTypes;
+  profileId: Scalars['ProfileId'];
+}>;
+
+export type RemoveReactionMutation = Pick<Mutation, 'removeReaction'>;
+
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
   RelayerResult,
   'txHash' | 'txId'
@@ -6664,6 +6680,106 @@ export type ExplorePublicationsLazyQueryHookResult = ReturnType<
 export type ExplorePublicationsQueryResult = Apollo.QueryResult<
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables
+>;
+export const AddReactionDocument = gql`
+  mutation AddReaction(
+    $publicationId: InternalPublicationId!
+    $reaction: ReactionTypes!
+    $profileId: ProfileId!
+  ) {
+    addReaction(
+      request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
+    )
+  }
+`;
+export type AddReactionMutationFn = Apollo.MutationFunction<
+  AddReactionMutation,
+  AddReactionMutationVariables
+>;
+
+/**
+ * __useAddReactionMutation__
+ *
+ * To run a mutation, you first call `useAddReactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddReactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addReactionMutation, { data, loading, error }] = useAddReactionMutation({
+ *   variables: {
+ *      publicationId: // value for 'publicationId'
+ *      reaction: // value for 'reaction'
+ *      profileId: // value for 'profileId'
+ *   },
+ * });
+ */
+export function useAddReactionMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddReactionMutation, AddReactionMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddReactionMutation, AddReactionMutationVariables>(
+    AddReactionDocument,
+    options,
+  );
+}
+export type AddReactionMutationHookResult = ReturnType<typeof useAddReactionMutation>;
+export type AddReactionMutationResult = Apollo.MutationResult<AddReactionMutation>;
+export type AddReactionMutationOptions = Apollo.BaseMutationOptions<
+  AddReactionMutation,
+  AddReactionMutationVariables
+>;
+export const RemoveReactionDocument = gql`
+  mutation RemoveReaction(
+    $publicationId: InternalPublicationId!
+    $reaction: ReactionTypes!
+    $profileId: ProfileId!
+  ) {
+    removeReaction(
+      request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
+    )
+  }
+`;
+export type RemoveReactionMutationFn = Apollo.MutationFunction<
+  RemoveReactionMutation,
+  RemoveReactionMutationVariables
+>;
+
+/**
+ * __useRemoveReactionMutation__
+ *
+ * To run a mutation, you first call `useRemoveReactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveReactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeReactionMutation, { data, loading, error }] = useRemoveReactionMutation({
+ *   variables: {
+ *      publicationId: // value for 'publicationId'
+ *      reaction: // value for 'reaction'
+ *      profileId: // value for 'profileId'
+ *   },
+ * });
+ */
+export function useRemoveReactionMutation(
+  baseOptions?: Apollo.MutationHookOptions<RemoveReactionMutation, RemoveReactionMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveReactionMutation, RemoveReactionMutationVariables>(
+    RemoveReactionDocument,
+    options,
+  );
+}
+export type RemoveReactionMutationHookResult = ReturnType<typeof useRemoveReactionMutation>;
+export type RemoveReactionMutationResult = Apollo.MutationResult<RemoveReactionMutation>;
+export type RemoveReactionMutationOptions = Apollo.BaseMutationOptions<
+  RemoveReactionMutation,
+  RemoveReactionMutationVariables
 >;
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {

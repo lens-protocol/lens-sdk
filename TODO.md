@@ -15,8 +15,8 @@
 - [x] `useActiveProfile`
 - [x] `useProfile`
 - [x] `useProfilesToFollow`
-- [ ] `useProfileFollowers`
-- [ ] `useProfileFollowing`
+- [x] `useProfileFollowers`
+- [x] `useProfileFollowing`
 - [x] `useFollow`
   - [x] sign-less, gas-less (via proxy action)
   - [x] signed, gas-less
@@ -62,7 +62,7 @@
 ## Publication
 
 - [x] `usePublication`
-- [x] `usePublicationComments`
+- [x] `useComments`
 - [x] `usePublications`
 - [ ] `useCreatePost`
   - [ ] sign-less, gas-less, instant (via Data Availability)
@@ -82,7 +82,7 @@
   - [ ] sign-less, gas-less (via proxy action)
   - [ ] signed, gas-less
   - [ ] signed, paid gas (fallback)
-- [ ] `useReaction`
+- [x] `useReaction`
 - [ ] `useWhoReacted`
 
 ## Revenue
