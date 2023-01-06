@@ -5,6 +5,7 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
 import {
   CollectModuleFragment,
   CommentFragment,
+  Erc20AmountFragment,
   FeedItemFragment,
   MediaFieldsFragment,
   PostFragment,
@@ -240,5 +241,22 @@ export function mockWhoReactedResultFragment(
     reactionAt: faker.date.past().toISOString(),
     profile: mockProfileFieldsFragment(),
     ...overrides,
+  };
+}
+
+export function mockErc20AmountFragment(
+  overrides?: Partial<Erc20AmountFragment>,
+): Erc20AmountFragment {
+  return {
+    value: faker.datatype.number({ max: 42000, min: 0, precision: 1 }).toString(),
+    ...overrides,
+    asset: {
+      __typename: 'Erc20',
+      address: mockEthereumAddress(),
+      name: faker.name.firstName(),
+      symbol: faker.finance.currencyCode(),
+      decimals: 18,
+      ...overrides?.asset,
+    },
   };
 }

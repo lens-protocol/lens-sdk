@@ -45,6 +45,10 @@ import {
   WhoReactedPublicationQueryVariables,
   WhoReactedPublicationDocument,
   WhoReactedResultFragment,
+  ProfileFollowRevenueQuery,
+  ProfileFollowRevenueDocument,
+  Erc20AmountFragment,
+  ProfileFollowRevenueQueryVariables,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -356,6 +360,30 @@ export function createWhoReactedPublicationQueryMockedResponse(args: {
             next: null,
             totalCount: args.items.length,
           },
+        },
+      },
+    },
+  };
+}
+
+export function createProfileFollowRevenueQueryMockedResponse({
+  variables,
+  revenues,
+}: {
+  variables: ProfileFollowRevenueQueryVariables;
+  revenues: { total: Erc20AmountFragment }[];
+}): MockedResponse<ProfileFollowRevenueQuery> {
+  console.log({ revenues });
+  return {
+    request: {
+      query: ProfileFollowRevenueDocument,
+      variables,
+    },
+    result: {
+      data: {
+        result: {
+          __typename: 'FollowRevenueResult',
+          revenues,
         },
       },
     },

@@ -4269,6 +4269,16 @@ export type CreatePostViaDispatcherMutation = {
   result: RelayerResultFragment | RelayErrorFragment;
 };
 
+export type ProfileFollowRevenueQueryVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+}>;
+
+export type ProfileFollowRevenueQuery = {
+  result: { __typename: 'FollowRevenueResult' } & {
+    revenues: Array<{ total: Erc20AmountFragment }>;
+  };
+};
+
 export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
 
 export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFieldsFragment };
@@ -5982,6 +5992,68 @@ export type CreatePostViaDispatcherMutationResult =
 export type CreatePostViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
   CreatePostViaDispatcherMutation,
   CreatePostViaDispatcherMutationVariables
+>;
+export const ProfileFollowRevenueDocument = gql`
+  query ProfileFollowRevenue($profileId: ProfileId!) {
+    result: profileFollowRevenue(request: { profileId: $profileId }) {
+      __typename
+      revenues {
+        total {
+          ...Erc20Amount
+        }
+      }
+    }
+  }
+  ${Erc20AmountFragmentDoc}
+`;
+
+/**
+ * __useProfileFollowRevenueQuery__
+ *
+ * To run a query within a React component, call `useProfileFollowRevenueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileFollowRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileFollowRevenueQuery({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *   },
+ * });
+ */
+export function useProfileFollowRevenueQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ProfileFollowRevenueQuery,
+    ProfileFollowRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileFollowRevenueQuery, ProfileFollowRevenueQueryVariables>(
+    ProfileFollowRevenueDocument,
+    options,
+  );
+}
+export function useProfileFollowRevenueLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfileFollowRevenueQuery,
+    ProfileFollowRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileFollowRevenueQuery, ProfileFollowRevenueQueryVariables>(
+    ProfileFollowRevenueDocument,
+    options,
+  );
+}
+export type ProfileFollowRevenueQueryHookResult = ReturnType<typeof useProfileFollowRevenueQuery>;
+export type ProfileFollowRevenueLazyQueryHookResult = ReturnType<
+  typeof useProfileFollowRevenueLazyQuery
+>;
+export type ProfileFollowRevenueQueryResult = Apollo.QueryResult<
+  ProfileFollowRevenueQuery,
+  ProfileFollowRevenueQueryVariables
 >;
 export const ProfilesToFollowDocument = gql`
   query ProfilesToFollow($observerId: ProfileId) {

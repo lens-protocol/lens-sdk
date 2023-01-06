@@ -1,0 +1,10 @@
+query ProfileFollowRevenue($profileId: ProfileId!) {
+  result: profileFollowRevenue(request: { profileId: $profileId }) {
+    __typename
+    revenues {
+      total {
+        ...Erc20Amount
+      }
+    }
+  }
+}
