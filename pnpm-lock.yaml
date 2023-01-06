@@ -156,6 +156,43 @@ importers:
       ts-jest: 29.0.3_gruvivcimsmdfhnjphbo3uejz4
       typescript: 4.9.3
 
+  packages/blockchain-bindings:
+    specifiers:
+      '@babel/core': ^7.0.0
+      '@ethersproject/providers': ^5.7.2
+      '@lens-protocol/domain': workspace:*
+      '@lens-protocol/eslint-config': workspace:*
+      '@lens-protocol/prettier-config': workspace:*
+      '@lens-protocol/shared-kernel': workspace:*
+      '@types/jest': ^29.2.3
+      eslint: ^8.28.0
+      eth-rpc-errors: ^4.0.3
+      ethereum-abi-types-generator: ^1.3.2
+      ethers: ^5.7.2
+      jest: ^29.3.1
+      rimraf: ^3.0.2
+      ts-jest: ^29.0.3
+      tslib: ^2.4.1
+      typescript: ^4.9.3
+    dependencies:
+      '@ethersproject/providers': 5.7.2
+      '@lens-protocol/domain': link:../domain
+      '@lens-protocol/shared-kernel': link:../shared-kernel
+      eth-rpc-errors: 4.0.3
+      ethers: 5.7.2
+      tslib: 2.4.1
+    devDependencies:
+      '@babel/core': 7.20.5
+      '@lens-protocol/eslint-config': link:../eslint-config
+      '@lens-protocol/prettier-config': link:../prettier-config
+      '@types/jest': 29.2.3
+      eslint: 8.28.0
+      ethereum-abi-types-generator: 1.3.2
+      jest: 29.3.1
+      rimraf: 3.0.2
+      ts-jest: 29.0.3_orsjflytm5zjweotzi5qijesea
+      typescript: 4.9.4
+
   packages/domain:
     specifiers:
       '@faker-js/faker': ^7.6.0
@@ -231,6 +268,7 @@ importers:
       '@ethersproject/providers': ^5.7.2
       '@faker-js/faker': ^7.6.0
       '@lens-protocol/api-bindings': workspace:*
+      '@lens-protocol/blockchain-bindings': workspace:*
       '@lens-protocol/domain': workspace:*
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
@@ -268,6 +306,7 @@ importers:
       '@ethersproject/abstract-signer': 5.7.0
       '@ethersproject/providers': 5.7.2
       '@lens-protocol/api-bindings': link:../api-bindings
+      '@lens-protocol/blockchain-bindings': link:../blockchain-bindings
       '@lens-protocol/domain': link:../domain
       '@lens-protocol/shared-kernel': link:../shared-kernel
       '@lens-protocol/storage': link:../storage
@@ -309,6 +348,7 @@ importers:
       '@lens-protocol/prettier-config': workspace:*
       '@types/jest': ^29.2.3
       '@types/lodash': ^4.14.191
+      '@types/uuid': ^9.0.0
       decimal.js: ^10.4.3
       eslint: ^8.28.0
       ethers: ^5.7.2
@@ -319,15 +359,18 @@ importers:
       ts-jest: ^29.0.3
       tslib: ^2.4.1
       typescript: ^4.9.3
+      uuid: ^9.0.0
     dependencies:
       decimal.js: 10.4.3
       lodash: 4.17.21
       tslib: 2.4.1
+      uuid: 9.0.0
     devDependencies:
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
       '@types/jest': 29.2.3
       '@types/lodash': 4.14.191
+      '@types/uuid': 9.0.0
       eslint: 8.28.0
       ethers: 5.7.2
       jest: 29.3.1
@@ -4707,6 +4750,11 @@ packages:
   /asynckit/0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
+  /at-least-node/1.0.0:
+    resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
+    engines: {node: '>= 4.0.0'}
+    dev: true
+
   /atob/2.1.2:
     resolution: {integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==}
     engines: {node: '>= 4.5.0'}
@@ -6254,6 +6302,11 @@ packages:
 
   /color-name/1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+
+  /colors/1.4.0:
+    resolution: {integrity: sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==}
+    engines: {node: '>=0.1.90'}
+    dev: true
 
   /combined-stream/1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
@@ -8019,6 +8072,25 @@ packages:
       miller-rabin: 4.0.1
     dev: true
 
+  /ethereum-abi-types-generator/1.3.2:
+    resolution: {integrity: sha512-hoAwuxXYLZpnmBByN8fLLqlY4o5KEI8WSY9g2bC0x83sQVsrihickY1siVVcmjdOa4NPin2Bwtj4vYHcfI2jLQ==}
+    hasBin: true
+    dependencies:
+      '@types/bn.js': 4.11.6
+      bignumber.js: 9.1.1
+      colors: 1.4.0
+      dotenv: 8.6.0
+      ethers: 4.0.49
+      ethersv5: /ethers/5.7.2
+      fs-extra: 9.1.0
+      prettier: 2.8.1
+      reflect-metadata: 0.1.13
+      yargs: 15.4.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: true
+
   /ethereum-bloom-filters/1.0.10:
     resolution: {integrity: sha512-rxJ5OFN3RwjQxDcFP2Z5+Q9ho4eIdEmSc2ht0fCu8Se9nbXjZ7/031uXoUYJ87KHCOdVeiUuwSnoS7hmYAGVHA==}
     dependencies:
@@ -8238,6 +8310,20 @@ packages:
       uuid: 3.4.0
     dev: true
     optional: true
+
+  /ethers/4.0.49:
+    resolution: {integrity: sha512-kPltTvWiyu+OktYy1IStSO16i2e7cS9D9OxZ81q2UUaiNPVrm/RTcbxamCXF9VUSKzJIdJV68EAIhTEVBalRWg==}
+    dependencies:
+      aes-js: 3.0.0
+      bn.js: 4.12.0
+      elliptic: 6.5.4
+      hash.js: 1.1.3
+      js-sha3: 0.5.7
+      scrypt-js: 2.0.4
+      setimmediate: 1.0.4
+      uuid: 2.0.1
+      xmlhttprequest: 1.8.0
+    dev: true
 
   /ethers/5.7.2:
     resolution: {integrity: sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==}
@@ -8778,6 +8864,16 @@ packages:
       universalify: 0.1.2
     dev: false
 
+  /fs-extra/9.1.0:
+    resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}
+    engines: {node: '>=10'}
+    dependencies:
+      at-least-node: 1.0.0
+      graceful-fs: 4.2.10
+      jsonfile: 6.1.0
+      universalify: 2.0.0
+    dev: true
+
   /fs-minipass/1.2.7:
     resolution: {integrity: sha512-GWSSJGFy4e9GUeCcbIkED+bgAoFyj7XF1mV8rma3QW4NIqX9Kyx79N/PF61H5udOV3aY1IaMLs6pGbH71nlCTA==}
     dependencies:
@@ -9238,6 +9334,13 @@ packages:
       inherits: 2.0.4
       readable-stream: 3.6.0
       safe-buffer: 5.2.1
+
+  /hash.js/1.1.3:
+    resolution: {integrity: sha512-/UETyP0W22QILqS+6HowevwhEFJ3MBJnwTf75Qob9Wz9t0DPuisL8kW8YZMK62dHAKE1c1p+gY1TtOLY+USEHA==}
+    dependencies:
+      inherits: 2.0.4
+      minimalistic-assert: 1.0.1
+    dev: true
 
   /hash.js/1.1.7:
     resolution: {integrity: sha512-taOaskGt4z4SOANNseOviYDvjEJinIkRgmp7LbKP2YTTmVxWBl87s/uzK9r+44BclBSp2X7K1hqeNfz9JbBeXA==}
@@ -10813,6 +10916,14 @@ packages:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
     optionalDependencies:
       graceful-fs: 4.2.10
+
+  /jsonfile/6.1.0:
+    resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
+    dependencies:
+      universalify: 2.0.0
+    optionalDependencies:
+      graceful-fs: 4.2.10
+    dev: true
 
   /jsonify/0.0.1:
     resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
@@ -13098,6 +13209,10 @@ packages:
       strip-indent: 3.0.0
     dev: false
 
+  /reflect-metadata/0.1.13:
+    resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
+    dev: true
+
   /regenerate/1.4.2:
     resolution: {integrity: sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==}
     dev: true
@@ -13478,6 +13593,10 @@ packages:
     dependencies:
       loose-envify: 1.4.0
 
+  /scrypt-js/2.0.4:
+    resolution: {integrity: sha512-4KsaGcPnuhtCZQCxFxN3GVYIhKFPTdLd8PLC552XwbMndtD0cjRFAhDuuydXQ0h08ZfPgzqe6EKHozpuH74iDw==}
+    dev: true
+
   /scrypt-js/3.0.1:
     resolution: {integrity: sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==}
 
@@ -13603,6 +13722,10 @@ packages:
       is-extendable: 0.1.1
       is-plain-object: 2.0.4
       split-string: 3.1.0
+    dev: true
+
+  /setimmediate/1.0.4:
+    resolution: {integrity: sha512-/TjEmXQVEzdod/FFskf3o7oOAsGhHf2j1dZqRFbDzq4F3mvvxflIIi4Hd3bLQE9y/CpwqfSQam5JakI/mi3Pog==}
     dev: true
 
   /setimmediate/1.0.5:
@@ -14590,6 +14713,40 @@ packages:
       yargs-parser: 21.1.1
     dev: true
 
+  /ts-jest/29.0.3_orsjflytm5zjweotzi5qijesea:
+    resolution: {integrity: sha512-Ibygvmuyq1qp/z3yTh9QTwVVAbFdDy/+4BtIQR2sp6baF2SJU/8CKK/hhnGIDY2L90Az2jIqTwZPnN2p+BweiQ==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      '@babel/core': '>=7.0.0-beta.0 <8'
+      '@jest/types': ^29.0.0
+      babel-jest: ^29.0.0
+      esbuild: '*'
+      jest: ^29.0.0
+      typescript: '>=4.3'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@jest/types':
+        optional: true
+      babel-jest:
+        optional: true
+      esbuild:
+        optional: true
+    dependencies:
+      '@babel/core': 7.20.5
+      bs-logger: 0.2.6
+      fast-json-stable-stringify: 2.1.0
+      jest: 29.3.1
+      jest-util: 29.3.1
+      json5: 2.2.1
+      lodash.memoize: 4.1.2
+      make-error: 1.3.6
+      semver: 7.3.8
+      typescript: 4.9.4
+      yargs-parser: 21.1.1
+    dev: true
+
   /ts-log/2.2.5:
     resolution: {integrity: sha512-PGcnJoTBnVGy6yYNFxWVNkdcAuAMstvutN9MgDJIV6L0oG8fB+ZNNy1T+wJzah8RPGor1mZuPQkVfXNDpy9eHA==}
     dev: true
@@ -14918,6 +15075,11 @@ packages:
     engines: {node: '>= 4.0.0'}
     dev: true
 
+  /universalify/2.0.0:
+    resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
+    engines: {node: '>= 10.0.0'}
+    dev: true
+
   /unixify/1.0.0:
     resolution: {integrity: sha512-6bc58dPYhCMHHuwxldQxO3RRNZ4eCogZ/st++0+fcC1nr0jiGUtAdBJ2qzmLQWSxbtz42pWt4QQMiZ9HvZf5cg==}
     engines: {node: '>=0.10.0'}
@@ -15052,6 +15214,11 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: true
     optional: true
+
+  /uuid/2.0.1:
+    resolution: {integrity: sha512-nWg9+Oa3qD2CQzHIP4qKUqwNfzKn8P0LtFhotaCTFchsV7ZfDhAybeip/HZVeMIpZi9JgY1E3nUlwaCmZT1sEg==}
+    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    dev: true
 
   /uuid/3.3.2:
     resolution: {integrity: sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==}
@@ -15950,6 +16117,11 @@ packages:
 
   /xmlchars/2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
+    dev: true
+
+  /xmlhttprequest/1.8.0:
+    resolution: {integrity: sha512-58Im/U0mlVBLM38NdZjHyhuMtCqa61469k2YP/AaPbvCoV9aQGUpbJBj1QRm2ytRiVQBD/fsw7L2bJGDVQswBA==}
+    engines: {node: '>=0.4.0'}
     dev: true
 
   /xtend/2.1.2:

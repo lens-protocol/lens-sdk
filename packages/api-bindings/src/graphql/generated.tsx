@@ -4154,6 +4154,8 @@ export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain
   'name' | 'chainId' | 'version' | 'verifyingContract'
 >;
 
+export type Erc20AmountFragment = Pick<Erc20Amount, 'value'> & { asset: Erc20Fragment };
+
 export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
@@ -4183,6 +4185,21 @@ export type ExploreProfilesQueryVariables = Exact<{
 
 export type ExploreProfilesQuery = {
   result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type CreateFollowTypedDataMutationVariables = Exact<{
+  request: FollowRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateFollowTypedDataMutation = {
+  result: Pick<CreateFollowBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { FollowWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Eip712TypedDataDomainFragment;
+      value: Pick<CreateFollowEip712TypedDataValue, 'nonce' | 'deadline' | 'profileIds' | 'datas'>;
+    };
+  };
 };
 
 export type CommentWithCommentedPublicationFieldsFragment = { __typename: 'Comment' } & {
@@ -4476,6 +4493,38 @@ export type ExplorePublicationsQuery = {
     items: Array<PostFragment | CommentFragment | MirrorFragment>;
     pageInfo: CommonPaginatedResultInfoFragment;
   };
+};
+
+export type AddReactionMutationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  reaction: ReactionTypes;
+  profileId: Scalars['ProfileId'];
+}>;
+
+export type AddReactionMutation = Pick<Mutation, 'addReaction'>;
+
+export type RemoveReactionMutationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  reaction: ReactionTypes;
+  profileId: Scalars['ProfileId'];
+}>;
+
+export type RemoveReactionMutation = Pick<Mutation, 'removeReaction'>;
+
+export type WhoReactedResultFragment = { __typename: 'WhoReactedResult' } & Pick<
+  WhoReactedResult,
+  'reactionId' | 'reaction' | 'reactionAt'
+> & { profile: ProfileFieldsFragment };
+
+export type WhoReactedPublicationQueryVariables = Exact<{
+  limit?: Maybe<Scalars['LimitScalar']>;
+  cursor?: Maybe<Scalars['Cursor']>;
+  publicationId: Scalars['InternalPublicationId'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type WhoReactedPublicationQuery = {
+  result: { items: Array<WhoReactedResultFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
@@ -4990,6 +5039,15 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     verifyingContract
   }
 `;
+export const Erc20AmountFragmentDoc = gql`
+  fragment Erc20Amount on Erc20Amount {
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
+`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
@@ -5199,6 +5257,18 @@ export const ProxyActionQueuedFragmentDoc = gql`
     __typename
     queuedAt
   }
+`;
+export const WhoReactedResultFragmentDoc = gql`
+  fragment WhoReactedResult on WhoReactedResult {
+    __typename
+    reactionId
+    reaction
+    reactionAt
+    profile {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
 `;
 export const RelayerResultFragmentDoc = gql`
   fragment RelayerResult on RelayerResult {
@@ -5737,6 +5807,76 @@ export type ExploreProfilesLazyQueryHookResult = ReturnType<typeof useExplorePro
 export type ExploreProfilesQueryResult = Apollo.QueryResult<
   ExploreProfilesQuery,
   ExploreProfilesQueryVariables
+>;
+export const CreateFollowTypedDataDocument = gql`
+  mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
+    result: createFollowTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          FollowWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileIds
+          datas
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export type CreateFollowTypedDataMutationFn = Apollo.MutationFunction<
+  CreateFollowTypedDataMutation,
+  CreateFollowTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateFollowTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateFollowTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFollowTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFollowTypedDataMutation, { data, loading, error }] = useCreateFollowTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateFollowTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateFollowTypedDataMutation,
+    CreateFollowTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateFollowTypedDataMutation, CreateFollowTypedDataMutationVariables>(
+    CreateFollowTypedDataDocument,
+    options,
+  );
+}
+export type CreateFollowTypedDataMutationHookResult = ReturnType<
+  typeof useCreateFollowTypedDataMutation
+>;
+export type CreateFollowTypedDataMutationResult =
+  Apollo.MutationResult<CreateFollowTypedDataMutation>;
+export type CreateFollowTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateFollowTypedDataMutation,
+  CreateFollowTypedDataMutationVariables
 >;
 export const NotificationsDocument = gql`
   query Notifications(
@@ -6741,6 +6881,179 @@ export type ExplorePublicationsLazyQueryHookResult = ReturnType<
 export type ExplorePublicationsQueryResult = Apollo.QueryResult<
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables
+>;
+export const AddReactionDocument = gql`
+  mutation AddReaction(
+    $publicationId: InternalPublicationId!
+    $reaction: ReactionTypes!
+    $profileId: ProfileId!
+  ) {
+    addReaction(
+      request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
+    )
+  }
+`;
+export type AddReactionMutationFn = Apollo.MutationFunction<
+  AddReactionMutation,
+  AddReactionMutationVariables
+>;
+
+/**
+ * __useAddReactionMutation__
+ *
+ * To run a mutation, you first call `useAddReactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddReactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addReactionMutation, { data, loading, error }] = useAddReactionMutation({
+ *   variables: {
+ *      publicationId: // value for 'publicationId'
+ *      reaction: // value for 'reaction'
+ *      profileId: // value for 'profileId'
+ *   },
+ * });
+ */
+export function useAddReactionMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddReactionMutation, AddReactionMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddReactionMutation, AddReactionMutationVariables>(
+    AddReactionDocument,
+    options,
+  );
+}
+export type AddReactionMutationHookResult = ReturnType<typeof useAddReactionMutation>;
+export type AddReactionMutationResult = Apollo.MutationResult<AddReactionMutation>;
+export type AddReactionMutationOptions = Apollo.BaseMutationOptions<
+  AddReactionMutation,
+  AddReactionMutationVariables
+>;
+export const RemoveReactionDocument = gql`
+  mutation RemoveReaction(
+    $publicationId: InternalPublicationId!
+    $reaction: ReactionTypes!
+    $profileId: ProfileId!
+  ) {
+    removeReaction(
+      request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
+    )
+  }
+`;
+export type RemoveReactionMutationFn = Apollo.MutationFunction<
+  RemoveReactionMutation,
+  RemoveReactionMutationVariables
+>;
+
+/**
+ * __useRemoveReactionMutation__
+ *
+ * To run a mutation, you first call `useRemoveReactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveReactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeReactionMutation, { data, loading, error }] = useRemoveReactionMutation({
+ *   variables: {
+ *      publicationId: // value for 'publicationId'
+ *      reaction: // value for 'reaction'
+ *      profileId: // value for 'profileId'
+ *   },
+ * });
+ */
+export function useRemoveReactionMutation(
+  baseOptions?: Apollo.MutationHookOptions<RemoveReactionMutation, RemoveReactionMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveReactionMutation, RemoveReactionMutationVariables>(
+    RemoveReactionDocument,
+    options,
+  );
+}
+export type RemoveReactionMutationHookResult = ReturnType<typeof useRemoveReactionMutation>;
+export type RemoveReactionMutationResult = Apollo.MutationResult<RemoveReactionMutation>;
+export type RemoveReactionMutationOptions = Apollo.BaseMutationOptions<
+  RemoveReactionMutation,
+  RemoveReactionMutationVariables
+>;
+export const WhoReactedPublicationDocument = gql`
+  query WhoReactedPublication(
+    $limit: LimitScalar
+    $cursor: Cursor
+    $publicationId: InternalPublicationId!
+    $observerId: ProfileId
+  ) {
+    result: whoReactedPublication(
+      request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }
+    ) {
+      items {
+        ...WhoReactedResult
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${WhoReactedResultFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useWhoReactedPublicationQuery__
+ *
+ * To run a query within a React component, call `useWhoReactedPublicationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWhoReactedPublicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWhoReactedPublicationQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      publicationId: // value for 'publicationId'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useWhoReactedPublicationQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    WhoReactedPublicationQuery,
+    WhoReactedPublicationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<WhoReactedPublicationQuery, WhoReactedPublicationQueryVariables>(
+    WhoReactedPublicationDocument,
+    options,
+  );
+}
+export function useWhoReactedPublicationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    WhoReactedPublicationQuery,
+    WhoReactedPublicationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<WhoReactedPublicationQuery, WhoReactedPublicationQueryVariables>(
+    WhoReactedPublicationDocument,
+    options,
+  );
+}
+export type WhoReactedPublicationQueryHookResult = ReturnType<typeof useWhoReactedPublicationQuery>;
+export type WhoReactedPublicationLazyQueryHookResult = ReturnType<
+  typeof useWhoReactedPublicationLazyQuery
+>;
+export type WhoReactedPublicationQueryResult = Apollo.QueryResult<
+  WhoReactedPublicationQuery,
+  WhoReactedPublicationQueryVariables
 >;
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {

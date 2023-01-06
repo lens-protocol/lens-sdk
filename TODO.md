@@ -17,10 +17,10 @@
 - [x] `useProfilesToFollow`
 - [x] `useProfileFollowers`
 - [x] `useProfileFollowing`
-- [ ] `useFollow`
-  - [ ] sign-less, gas-less (via proxy action)
-  - [ ] signed, gas-less
-  - [ ] signed, paid gas (fallback)
+- [x] `useFollow`
+  - [x] sign-less, gas-less (via proxy action)
+  - [x] signed, gas-less
+  - [x] signed, paid gas (fallback)
 - [ ] `useUnfollow`
   - [ ] signed, gas-less
   - [ ] signed, paid gas (fallback)
@@ -47,8 +47,8 @@
 - [ ] `useUpdateDispatcherConfig`
   - [ ] signed, gas-less
   - [ ] signed, paid gas (fallback)
-- [ ] `useCollectables` - to be renamed
-- [ ] `useMutualFollowers`
+- [x] `useCollectedPublications`
+- [x] `useMutualFollowers`
 
 ## Explore
 
@@ -62,7 +62,7 @@
 ## Publication
 
 - [x] `usePublication`
-- [x] `usePublicationComments`
+- [x] `useComments`
 - [x] `usePublications`
 - [ ] `useCreatePost`
   - [ ] sign-less, gas-less, instant (via Data Availability)
@@ -74,7 +74,7 @@
   - [x] sign-less, gas-less
   - [x] signed, gas-less
   - [ ] signed, paid gas (fallback)
-- [ ] `useMirror`
+- [ ] `useCreateMirror`
   - [ ] sign-less, gas-less
   - [ ] signed, gas-less
   - [ ] signed, paid (fallback)
@@ -82,8 +82,8 @@
   - [ ] sign-less, gas-less (via proxy action)
   - [ ] signed, gas-less
   - [ ] signed, paid gas (fallback)
-- [ ] `useReaction`
-- [ ] `useWhoReacted`
+- [x] `useReaction`
+- [x] `useWhoReacted`
 
 ## Revenue
 
@@ -98,8 +98,8 @@
 
 ## Notifications
 
-- [ ] `useNotifications`
-- [ ] `useUnreadNotifications`
+- [x] `useNotifications`
+- [x] `useUnreadNotificationCount`
 
 ## NFTs
 
