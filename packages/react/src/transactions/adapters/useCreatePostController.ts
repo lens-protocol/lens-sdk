@@ -8,8 +8,8 @@ import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transaction
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { PublicationCallGateway } from './PublicationCallGateway';
 import { UploadHandler } from './UploadHandler';
+import { PostCallGateway } from './publication-call-gateways/PostCallGateway';
 
 export type UseCreatePostControllerArgs = {
   upload: UploadHandler;
@@ -26,7 +26,7 @@ export function useCreatePostController({ upload }: UseCreatePostControllerArgs)
   } = useSharedDependencies();
 
   return async (request: CreatePostRequest) => {
-    const gateway = new PublicationCallGateway(apolloClient, transactionFactory, upload);
+    const gateway = new PostCallGateway(apolloClient, transactionFactory, upload);
 
     const presenter = new PromiseResultPresenter<
       void,
