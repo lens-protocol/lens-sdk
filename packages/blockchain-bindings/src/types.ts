@@ -1,3 +1,5 @@
+export type ChainId = number;
+
 // https://eips.ethereum.org/EIPS/eip-3085
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface AddEthereumChainParameter {

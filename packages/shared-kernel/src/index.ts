@@ -8,6 +8,7 @@ export * from './crypto/types';
 export * from './crypto/__helpers__/mocks';
 export * from './DateUtils';
 export * from './get';
+export * from './id';
 export * from './logger/ILogger';
 export * from './Result';
 export * from './Deferred';
