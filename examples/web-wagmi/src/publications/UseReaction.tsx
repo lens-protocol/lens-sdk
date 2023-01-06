@@ -28,8 +28,6 @@ function ReactionButton({ publication, profileId, reactionType }: ReactionButton
   });
 
   const toggleReaction = async () => {
-    if (!publication) return;
-
     if (hasReactionType) {
       await removeReaction({
         reactionType,
