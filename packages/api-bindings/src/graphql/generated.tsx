@@ -2832,7 +2832,7 @@ export enum PublicationMediaSource {
   Lens = 'LENS',
 }
 
-/** Publication metadata content waring filters */
+/** Publication metadata content warning filters */
 export type PublicationMetadataContentWarningFilter = {
   /** By default all content warnings will be hidden you can include them in your query by adding them to this array. */
   includeOneOf?: Maybe<Array<PublicationContentWarning>>;
@@ -3385,7 +3385,7 @@ export type ReferenceModuleParams = {
   followerOnlyReferenceModule?: Maybe<Scalars['Boolean']>;
   /** A unknown reference module */
   unknownReferenceModule?: Maybe<UnknownReferenceModuleParams>;
-  /** The degrees of seperation reference module */
+  /** The degrees of separation reference module */
   degreesOfSeparationReferenceModule?: Maybe<DegreesOfSeparationReferenceModuleParams>;
 };
 
