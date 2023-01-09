@@ -20,7 +20,7 @@ function NotificationsInner({ profile }: NotificationsInnerProps) {
   if (loading) return <div>Loading...</div>;
 
   if (notifications.length === 0) {
-    return <p>No notifcations</p>;
+    return <p>No notifications</p>;
   }
 
   return (
