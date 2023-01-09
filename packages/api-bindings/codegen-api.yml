@@ -24,6 +24,7 @@ config:
     MimeType: string
     ProfileId: string
     NotificationId: string
+    Search: string
     Signature: string
     String: string
     TxHash: string

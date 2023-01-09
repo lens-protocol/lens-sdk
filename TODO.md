@@ -93,8 +93,8 @@
 
 ## Search
 
-- [ ] `useSearchPublications`
-- [ ] `useSearchProfiles`
+- [x] `useSearchPublications`
+- [x] `useSearchProfiles`
 
 ## Notifications
 

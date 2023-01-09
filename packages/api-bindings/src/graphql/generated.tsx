@@ -80,7 +80,7 @@ export type Scalars = {
   /** reference module data scalar type */
   ReferenceModuleData: unknown;
   /** Query search */
-  Search: unknown;
+  Search: string;
   /** Relayer signature */
   Signature: string;
   /** Sources custom scalar type */
@@ -4511,6 +4511,35 @@ export type PublicationRevenueQueryVariables = Exact<{
 
 export type PublicationRevenueQuery = { result: Maybe<RevenueFragment> };
 
+export type SearchPublicationsQueryVariables = Exact<{
+  limit?: Maybe<Scalars['LimitScalar']>;
+  cursor?: Maybe<Scalars['Cursor']>;
+  query: Scalars['Search'];
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type SearchPublicationsQuery = {
+  result: { __typename: 'PublicationSearchResult' } & {
+    items: Array<PostFragment | CommentFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
+};
+
+export type SearchProfilesQueryVariables = Exact<{
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  query: Scalars['Search'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type SearchProfilesQuery = {
+  result: { __typename: 'ProfileSearchResult' } & {
+    items: Array<ProfileFieldsFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
+};
+
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
   RelayerResult,
   'txHash' | 'txId'
@@ -6995,6 +7024,159 @@ export type PublicationRevenueLazyQueryHookResult = ReturnType<
 export type PublicationRevenueQueryResult = Apollo.QueryResult<
   PublicationRevenueQuery,
   PublicationRevenueQueryVariables
+>;
+export const SearchPublicationsDocument = gql`
+  query SearchPublications(
+    $limit: LimitScalar
+    $cursor: Cursor
+    $query: Search!
+    $sources: [Sources!]
+    $observerId: ProfileId
+  ) {
+    result: search(
+      request: {
+        query: $query
+        type: PUBLICATION
+        limit: $limit
+        cursor: $cursor
+        sources: $sources
+      }
+    ) {
+      ... on PublicationSearchResult {
+        __typename
+        items {
+          ... on Post {
+            ...Post
+          }
+          ... on Comment {
+            ...Comment
+          }
+        }
+        pageInfo {
+          ...CommonPaginatedResultInfo
+        }
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useSearchPublicationsQuery__
+ *
+ * To run a query within a React component, call `useSearchPublicationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchPublicationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchPublicationsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      query: // value for 'query'
+ *      sources: // value for 'sources'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useSearchPublicationsQuery(
+  baseOptions: Apollo.QueryHookOptions<SearchPublicationsQuery, SearchPublicationsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SearchPublicationsQuery, SearchPublicationsQueryVariables>(
+    SearchPublicationsDocument,
+    options,
+  );
+}
+export function useSearchPublicationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SearchPublicationsQuery,
+    SearchPublicationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SearchPublicationsQuery, SearchPublicationsQueryVariables>(
+    SearchPublicationsDocument,
+    options,
+  );
+}
+export type SearchPublicationsQueryHookResult = ReturnType<typeof useSearchPublicationsQuery>;
+export type SearchPublicationsLazyQueryHookResult = ReturnType<
+  typeof useSearchPublicationsLazyQuery
+>;
+export type SearchPublicationsQueryResult = Apollo.QueryResult<
+  SearchPublicationsQuery,
+  SearchPublicationsQueryVariables
+>;
+export const SearchProfilesDocument = gql`
+  query SearchProfiles(
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $query: Search!
+    $observerId: ProfileId
+  ) {
+    result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
+      ... on ProfileSearchResult {
+        __typename
+        items {
+          ...ProfileFields
+        }
+        pageInfo {
+          ...CommonPaginatedResultInfo
+        }
+      }
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useSearchProfilesQuery__
+ *
+ * To run a query within a React component, call `useSearchProfilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchProfilesQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      query: // value for 'query'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useSearchProfilesQuery(
+  baseOptions: Apollo.QueryHookOptions<SearchProfilesQuery, SearchProfilesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SearchProfilesQuery, SearchProfilesQueryVariables>(
+    SearchProfilesDocument,
+    options,
+  );
+}
+export function useSearchProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SearchProfilesQuery, SearchProfilesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SearchProfilesQuery, SearchProfilesQueryVariables>(
+    SearchProfilesDocument,
+    options,
+  );
+}
+export type SearchProfilesQueryHookResult = ReturnType<typeof useSearchProfilesQuery>;
+export type SearchProfilesLazyQueryHookResult = ReturnType<typeof useSearchProfilesLazyQuery>;
+export type SearchProfilesQueryResult = Apollo.QueryResult<
+  SearchProfilesQuery,
+  SearchProfilesQueryVariables
 >;
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
