@@ -3886,6 +3886,10 @@ export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
   'name' | 'symbol' | 'decimals' | 'address'
 >;
 
+export type Erc20AmountFragment = { __typename: 'Erc20Amount' } & Pick<Erc20Amount, 'value'> & {
+    asset: Erc20Fragment;
+  };
+
 export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
   ModuleFeeAmount,
   'value'
@@ -4117,8 +4121,6 @@ export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain
   Eip712TypedDataDomain,
   'name' | 'chainId' | 'version' | 'verifyingContract'
 >;
-
-export type Erc20AmountFragment = Pick<Erc20Amount, 'value'> & { asset: Erc20Fragment };
 
 export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -4490,6 +4492,24 @@ export type WhoReactedPublicationQueryVariables = Exact<{
 export type WhoReactedPublicationQuery = {
   result: { items: Array<WhoReactedResultFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
+
+export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & {
+  total: Erc20AmountFragment;
+};
+
+export type PublicationRevenueFragment = { __typename: 'PublicationRevenue' } & {
+  publication: PostFragment | CommentFragment | MirrorFragment;
+} & RevenueFragment;
+
+export type RevenueFragment = { __typename: 'PublicationRevenue' } & {
+  revenue: RevenueAggregateFragment;
+};
+
+export type PublicationRevenueQueryVariables = Exact<{
+  request: PublicationRevenueQueryRequest;
+}>;
+
+export type PublicationRevenueQuery = { result: Maybe<RevenueFragment> };
 
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
   RelayerResult,
@@ -5003,15 +5023,6 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     verifyingContract
   }
 `;
-export const Erc20AmountFragmentDoc = gql`
-  fragment Erc20Amount on Erc20Amount {
-    asset {
-      ...Erc20
-    }
-    value
-  }
-  ${Erc20FragmentDoc}
-`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
@@ -5233,6 +5244,55 @@ export const WhoReactedResultFragmentDoc = gql`
     }
   }
   ${ProfileFieldsFragmentDoc}
+`;
+export const Erc20AmountFragmentDoc = gql`
+  fragment Erc20Amount on Erc20Amount {
+    __typename
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
+`;
+export const RevenueAggregateFragmentDoc = gql`
+  fragment RevenueAggregate on RevenueAggregate {
+    __typename
+    total {
+      ...Erc20Amount
+    }
+  }
+  ${Erc20AmountFragmentDoc}
+`;
+export const RevenueFragmentDoc = gql`
+  fragment Revenue on PublicationRevenue {
+    __typename
+    revenue {
+      ...RevenueAggregate
+    }
+  }
+  ${RevenueAggregateFragmentDoc}
+`;
+export const PublicationRevenueFragmentDoc = gql`
+  fragment PublicationRevenue on PublicationRevenue {
+    __typename
+    publication {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+    ...Revenue
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+  ${RevenueFragmentDoc}
 `;
 export const RelayerResultFragmentDoc = gql`
   fragment RelayerResult on RelayerResult {
@@ -6881,6 +6941,60 @@ export type WhoReactedPublicationLazyQueryHookResult = ReturnType<
 export type WhoReactedPublicationQueryResult = Apollo.QueryResult<
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables
+>;
+export const PublicationRevenueDocument = gql`
+  query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
+    result: publicationRevenue(request: $request) {
+      ...Revenue
+    }
+  }
+  ${RevenueFragmentDoc}
+`;
+
+/**
+ * __usePublicationRevenueQuery__
+ *
+ * To run a query within a React component, call `usePublicationRevenueQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationRevenueQuery({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function usePublicationRevenueQuery(
+  baseOptions: Apollo.QueryHookOptions<PublicationRevenueQuery, PublicationRevenueQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationRevenueQuery, PublicationRevenueQueryVariables>(
+    PublicationRevenueDocument,
+    options,
+  );
+}
+export function usePublicationRevenueLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PublicationRevenueQuery,
+    PublicationRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationRevenueQuery, PublicationRevenueQueryVariables>(
+    PublicationRevenueDocument,
+    options,
+  );
+}
+export type PublicationRevenueQueryHookResult = ReturnType<typeof usePublicationRevenueQuery>;
+export type PublicationRevenueLazyQueryHookResult = ReturnType<
+  typeof usePublicationRevenueLazyQuery
+>;
+export type PublicationRevenueQueryResult = Apollo.QueryResult<
+  PublicationRevenueQuery,
+  PublicationRevenueQueryVariables
 >;
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {

@@ -1,21 +1,27 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   CollectModuleFragment,
   CommentFragment,
+  Erc20AmountFragment,
+  Erc20Fragment,
   FeedItemFragment,
   MediaFieldsFragment,
+  MirrorFragment,
   PostFragment,
   ProfileFieldsFragment,
   ProfileMediaFieldsFragment,
   PublicationMainFocus,
+  PublicationRevenueFragment,
   PublicationStatsFragment,
   ReactionTypes,
   RelayerResultFragment,
   RelayErrorFragment,
   RelayErrorReasons,
+  RevenueAggregateFragment,
+  RevenueFragment,
   WhoReactedResultFragment,
 } from '../generated';
 
@@ -230,6 +236,62 @@ export function mockFeedItem({
   };
 }
 
+function mockErc20Fragment(overrides?: Partial<Omit<Erc20Fragment, '__typename'>>): Erc20Fragment {
+  return {
+    __typename: 'Erc20',
+    name: 'Wrapped MATIC',
+    symbol: 'WMATIC',
+    decimals: 18,
+    address: mockEthereumAddress(),
+    ...overrides,
+  };
+}
+
+function mockErc20AmountFragment(amount = mockDaiAmount(42)): Erc20AmountFragment {
+  return {
+    __typename: 'Erc20Amount',
+    asset: mockErc20Fragment({
+      name: amount.asset.name,
+      symbol: amount.asset.symbol,
+      decimals: amount.asset.decimals,
+      address: amount.asset.address,
+    }),
+    value: amount.toSignificantDigits(),
+  };
+}
+
+function mockRevenueAggregateFragment(amount?: Amount<Erc20>): RevenueAggregateFragment {
+  return {
+    __typename: 'RevenueAggregate',
+    total: mockErc20AmountFragment(amount),
+  };
+}
+
+export function mockPublicationRevenueFragment({
+  publication = mockPost(),
+  amount,
+}: {
+  publication?: CommentFragment | PostFragment | MirrorFragment;
+  amount?: Amount<Erc20>;
+} = {}): PublicationRevenueFragment {
+  return {
+    __typename: 'PublicationRevenue',
+    publication: publication,
+    revenue: mockRevenueAggregateFragment(amount),
+  };
+}
+
+export function mockRevenueFragment({
+  amount,
+}: {
+  publication?: CommentFragment | PostFragment | MirrorFragment;
+  amount?: Amount<Erc20>;
+} = {}): RevenueFragment {
+  return {
+    __typename: 'PublicationRevenue',
+    revenue: mockRevenueAggregateFragment(amount),
+  };
+}
 export function mockWhoReactedResultFragment(
   overrides?: Partial<Omit<WhoReactedResultFragment, '__typename'>>,
 ): WhoReactedResultFragment {

@@ -41,6 +41,10 @@ import {
   MirrorFragment,
   ExplorePublicationsQuery,
   ExplorePublicationsDocument,
+  PublicationRevenueQueryVariables,
+  PublicationRevenueQuery,
+  PublicationRevenueDocument,
+  RevenueFragment,
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables,
   WhoReactedPublicationDocument,
@@ -332,6 +336,23 @@ export function createExplorePublicationsQueryMockedResponse(args: {
             totalCount: args.items.length,
           },
         },
+      },
+    },
+  };
+}
+
+export function createPublicationRevenueQueryMockedResponse(args: {
+  variables: PublicationRevenueQueryVariables;
+  revenue: RevenueFragment;
+}): MockedResponse<PublicationRevenueQuery> {
+  return {
+    request: {
+      query: PublicationRevenueDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: args.revenue,
       },
     },
   };
