@@ -62,11 +62,12 @@ type PaginatedQueryResult<K> = {
   result: { pageInfo: CommonPaginatedResultInfoFragment; items: K };
 };
 
-export function usePaginatedReadResult<
-  K,
-  V,
-  T extends PaginatedQueryResult<K> = PaginatedQueryResult<K>,
->({ error, data, loading, fetchMore }: QueryResult<T, V>): PaginatedReadResult<K> {
+export function usePaginatedReadResult<K, V>({
+  error,
+  data,
+  loading,
+  fetchMore,
+}: QueryResult<PaginatedQueryResult<K>, V>): PaginatedReadResult<K> {
   return {
     ...buildReadResult<K>(data?.result.items, loading, error),
     totalCount: data?.result.pageInfo.totalCount ?? null,

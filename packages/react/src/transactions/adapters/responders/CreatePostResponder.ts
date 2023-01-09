@@ -26,12 +26,12 @@ import { invariant, never } from '@lens-protocol/shared-kernel';
 type FeedItemFragmentEntry = {
   __typename: 'FeedItem';
   root: Reference;
-  comments: Maybe<Array<Reference>>;
+  comments: Maybe<Reference[]>;
 };
 
 type PaginatedFeedResultEntry = {
   __typename: 'PaginatedFeedResult';
-  items: Array<FeedItemFragmentEntry>;
+  items: FeedItemFragmentEntry[];
   pageInfo: PaginatedResultInfo;
 };
 

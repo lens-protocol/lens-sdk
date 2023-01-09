@@ -14,7 +14,6 @@ export function Header() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          width: '100%',
           maxWidth: '1600px',
           margin: 'auto',
           padding: '1rem',

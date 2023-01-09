@@ -179,10 +179,7 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiatePostCreation(
-        request,
-        await this.uploadPublicationMetadata(request),
-      ),
+      asyncRelayReceipt: this.initiatePostCreation(await this.resolveCreatePostRequestArg(request)),
     });
   }
 
@@ -193,17 +190,14 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
     return this.createPostCall(request, nonce);
   }
 
-  private async initiatePostCreation(
-    request: CreatePostRequest,
-    contentURI: string,
-  ): AsyncRelayReceipt {
+  private async initiatePostCreation(requestArg: CreatePublicPostRequestArg): AsyncRelayReceipt {
     const { data } = await this.apolloClient.mutate<
       CreatePostViaDispatcherMutation,
       CreatePostViaDispatcherMutationVariables
     >({
       mutation: CreatePostViaDispatcherDocument,
       variables: {
-        request: this.resolveCreatePostRequestArg(request, contentURI),
+        request: requestArg,
       },
     });
 
@@ -229,10 +223,7 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
     >({
       mutation: CreatePostTypedDataDocument,
       variables: {
-        request: this.resolveCreatePostRequestArg(
-          request,
-          await this.uploadPublicationMetadata(request),
-        ),
+        request: await this.resolveCreatePostRequestArg(request),
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },
     });
@@ -246,13 +237,12 @@ export class PublicationCallGateway implements ICreatePostCallGateway {
     );
   }
 
-  private resolveCreatePostRequestArg(
+  private async resolveCreatePostRequestArg(
     request: CreatePostRequest,
-    contentURI: string,
-  ): CreatePublicPostRequestArg {
+  ): Promise<CreatePublicPostRequestArg> {
     return {
       profileId: request.profileId,
-      contentURI,
+      contentURI: await this.uploadPublicationMetadata(request),
       collectModule: resolveCollectModule(request),
       referenceModule: resolveReferenceModule(request),
     };
