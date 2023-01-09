@@ -4429,6 +4429,24 @@ export type MutualFollowersProfilesQuery = {
   result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
+export type CreateSetProfileImageUriTypedDataMutationVariables = Exact<{
+  request: UpdateProfileImageRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateSetProfileImageUriTypedDataMutation = {
+  result: Pick<CreateSetProfileImageUriBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { SetProfileImageURIWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Pick<Eip712TypedDataDomain, 'name' | 'chainId' | 'version' | 'verifyingContract'>;
+      value: Pick<
+        CreateSetProfileImageUriEip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'imageURI'
+      >;
+    };
+  };
+};
+
 export type FollowerFragment = { __typename: 'Follower' } & { wallet: WalletFragment };
 
 export type FollowingFragment = { __typename: 'Following' } & { profile: ProfileFieldsFragment };
@@ -6661,6 +6679,81 @@ export type MutualFollowersProfilesLazyQueryHookResult = ReturnType<
 export type MutualFollowersProfilesQueryResult = Apollo.QueryResult<
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesQueryVariables
+>;
+export const CreateSetProfileImageUriTypedDataDocument = gql`
+  mutation CreateSetProfileImageURITypedData(
+    $request: UpdateProfileImageRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createSetProfileImageURITypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          SetProfileImageURIWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          imageURI
+        }
+      }
+    }
+  }
+`;
+export type CreateSetProfileImageUriTypedDataMutationFn = Apollo.MutationFunction<
+  CreateSetProfileImageUriTypedDataMutation,
+  CreateSetProfileImageUriTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateSetProfileImageUriTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateSetProfileImageUriTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetProfileImageUriTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetProfileImageUriTypedDataMutation, { data, loading, error }] = useCreateSetProfileImageUriTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateSetProfileImageUriTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetProfileImageUriTypedDataMutation,
+    CreateSetProfileImageUriTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetProfileImageUriTypedDataMutation,
+    CreateSetProfileImageUriTypedDataMutationVariables
+  >(CreateSetProfileImageUriTypedDataDocument, options);
+}
+export type CreateSetProfileImageUriTypedDataMutationHookResult = ReturnType<
+  typeof useCreateSetProfileImageUriTypedDataMutation
+>;
+export type CreateSetProfileImageUriTypedDataMutationResult =
+  Apollo.MutationResult<CreateSetProfileImageUriTypedDataMutation>;
+export type CreateSetProfileImageUriTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetProfileImageUriTypedDataMutation,
+  CreateSetProfileImageUriTypedDataMutationVariables
 >;
 export const ProfileFollowersDocument = gql`
   query ProfileFollowers(

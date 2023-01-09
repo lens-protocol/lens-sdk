@@ -17,6 +17,9 @@ import {
   CreatePostTypedDataMutation,
   CreateProfileMutation,
   CreateUnfollowTypedDataMutation,
+  CreateSetProfileImageUriTypedDataDocument,
+  CreateSetProfileImageUriTypedDataMutation,
+  CreateSetProfileImageUriTypedDataMutationVariables,
   Eip712TypedDataDomain,
   Eip712TypedDataField,
   ProxyActionDocument,
@@ -284,6 +287,46 @@ export function createBroadcastProxyActionCallMutationMockedResponse(instruction
     },
     result: {
       data: { result: instructions.result },
+    },
+  };
+}
+
+export function mockCreateSetProfileImageUriTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateSetProfileImageUriTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateSetProfileImageUriBroadcastItemResult', {
+      __typename: 'CreateSetProfileImageUriEIP712TypedData',
+      types: {
+        __typename: 'CreateSetProfileImageUriEIP712TypedDataTypes',
+        SetProfileImageURIWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateSetProfileImageUriEIP712TypedDataValue',
+        nonce,
+        deadline: 1644303500,
+        profileId: '0x0132',
+        imageURI: faker.internet.url(),
+      },
+    }),
+  };
+}
+
+export function mockCreateSetProfileImageUriTypedDataMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreateSetProfileImageUriTypedDataMutationVariables;
+  data: CreateSetProfileImageUriTypedDataMutation;
+}): MockedResponse<CreateSetProfileImageUriTypedDataMutation> {
+  return {
+    request: {
+      query: CreateSetProfileImageUriTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
     },
   };
 }
