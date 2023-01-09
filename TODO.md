@@ -87,7 +87,7 @@
 
 ## Revenue
 
-- [ ] `usePublicationRevenue`
+- [x] `usePublicationRevenue`
 - [ ] `useProfilePublicationsRevenue`
 - [ ] `useProfileFollowsRevenue`
 
