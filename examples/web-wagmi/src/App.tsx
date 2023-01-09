@@ -17,7 +17,7 @@ import { DiscoveryPage } from './discovery/DiscoveryPage';
 import { Feed } from './discovery/UseFeed';
 import { MiscPage } from './misc/MiscPage';
 import { UseCurrencies } from './misc/UseCurrencies';
-import { Notifications } from './misc/UseNotifications';
+import { UseNotifications } from './misc/UseNotifications';
 import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
 import { ProfilesPage } from './profiles/ProfilesPage';
 import { UseCollectedPublications } from './profiles/UseCollectedPublications';
@@ -32,7 +32,9 @@ import { PublicationsPage } from './publications/PublicationsPage';
 import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
+import { UseReaction } from './publications/UseReaction';
 import { UseSearchPublications } from './publications/UseSearchPublications';
+import { UseWhoReacted } from './publications/UseWhoReacted';
 import { CreatePost } from './publications/components/CreatePost';
 import { RevenuePage } from './revenue/RevenuePage';
 
@@ -83,6 +85,8 @@ export function App() {
                   path="/publications/useExplorePublications"
                   element={<UseExplorePublications />}
                 />
+                <Route path="/publications/useReaction" element={<UseReaction />} />
+                <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useProfile-handle" element={<ProfileByHandle />} />
@@ -99,7 +103,7 @@ export function App() {
                 <Route path="/revenue" element={<RevenuePage />} />
 
                 <Route path="/misc" element={<MiscPage />} />
-                <Route path="/misc/useNotifications" element={<Notifications />} />
+                <Route path="/misc/useNotifications" element={<UseNotifications />} />
                 <Route
                   path="/misc/useUnreadNotificationCount"
                   element={<UseUnreadNotificationCount />}

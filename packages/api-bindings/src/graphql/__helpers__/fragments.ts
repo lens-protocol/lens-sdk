@@ -12,9 +12,11 @@ import {
   ProfileMediaFieldsFragment,
   PublicationMainFocus,
   PublicationStatsFragment,
+  ReactionTypes,
   RelayerResultFragment,
   RelayErrorFragment,
   RelayErrorReasons,
+  WhoReactedResultFragment,
 } from '../generated';
 
 function mockMedia(): MediaFieldsFragment {
@@ -225,5 +227,18 @@ export function mockFeedItem({
     __typename: 'FeedItem',
     root,
     comments,
+  };
+}
+
+export function mockWhoReactedResultFragment(
+  overrides?: Partial<Omit<WhoReactedResultFragment, '__typename'>>,
+): WhoReactedResultFragment {
+  return {
+    __typename: 'WhoReactedResult',
+    reactionId: faker.datatype.uuid(),
+    reaction: ReactionTypes.Upvote,
+    reactionAt: faker.date.past().toISOString(),
+    profile: mockProfileFieldsFragment(),
+    ...overrides,
   };
 }

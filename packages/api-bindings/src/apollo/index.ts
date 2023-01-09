@@ -11,6 +11,7 @@ import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
+import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
 
 function createTypePolicies(): TypePolicies {
   return {
@@ -27,6 +28,7 @@ function createTypePolicies(): TypePolicies {
         notifications: createNotificationsFieldPolicy(),
         publications: createPublicationTypePolicy(),
         search: createSearchFieldPolicy(),
+        whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
       },
     },
   };
