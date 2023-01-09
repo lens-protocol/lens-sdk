@@ -45,6 +45,10 @@ import {
   PublicationRevenueQuery,
   PublicationRevenueDocument,
   RevenueFragment,
+  WhoReactedPublicationQuery,
+  WhoReactedPublicationQueryVariables,
+  WhoReactedPublicationDocument,
+  WhoReactedResultFragment,
 } from '../generated';
 import { mockProfileFieldsFragment } from './fragments';
 
@@ -349,6 +353,31 @@ export function createPublicationRevenueQueryMockedResponse(args: {
     result: {
       data: {
         result: args.revenue,
+      },
+    },
+  };
+}
+
+export function createWhoReactedPublicationQueryMockedResponse(args: {
+  variables: WhoReactedPublicationQueryVariables;
+  items: Array<WhoReactedResultFragment>;
+}): MockedResponse<WhoReactedPublicationQuery> {
+  return {
+    request: {
+      query: WhoReactedPublicationDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: args.items,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+        },
       },
     },
   };

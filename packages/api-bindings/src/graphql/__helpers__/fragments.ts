@@ -16,11 +16,13 @@ import {
   PublicationMainFocus,
   PublicationRevenueFragment,
   PublicationStatsFragment,
+  ReactionTypes,
   RelayerResultFragment,
   RelayErrorFragment,
   RelayErrorReasons,
   RevenueAggregateFragment,
   RevenueFragment,
+  WhoReactedResultFragment,
 } from '../generated';
 
 function mockMedia(): MediaFieldsFragment {
@@ -288,5 +290,17 @@ export function mockRevenueFragment({
   return {
     __typename: 'PublicationRevenue',
     revenue: mockRevenueAggregateFragment(amount),
+  };
+}
+export function mockWhoReactedResultFragment(
+  overrides?: Partial<Omit<WhoReactedResultFragment, '__typename'>>,
+): WhoReactedResultFragment {
+  return {
+    __typename: 'WhoReactedResult',
+    reactionId: faker.datatype.uuid(),
+    reaction: ReactionTypes.Upvote,
+    reactionAt: faker.date.past().toISOString(),
+    profile: mockProfileFieldsFragment(),
+    ...overrides,
   };
 }
