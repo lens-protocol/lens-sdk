@@ -4,21 +4,21 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
+import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
 import { useState } from 'react';
 
 import { ProfileFieldsFragment } from '../profile';
-import { MetadataUploadHandler, FailedUploadError } from './adapters/MetadataUploadAdapter';
-import { useCreatePostController } from './adapters/useCreatePostController';
+import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
+import { useCreateCommentController } from './adapters/useCreateCommentController';
 
-export type UseCreatePostArgs = {
+export type UseCreateCommentArgs = {
   profile: ProfileFieldsFragment;
   upload: MetadataUploadHandler;
 };
 
-export type CreatePostArgs = Omit<CreatePostRequest, 'kind' | 'delegate'>;
+export type CreateCommentArgs = Omit<CreateCommentRequest, 'kind' | 'delegate'>;
 
-export function useCreatePost({ profile, upload }: UseCreatePostArgs) {
+export function useCreateComment({ profile, upload }: UseCreateCommentArgs) {
   const [error, setError] = useState<
     | PendingSigningRequestError
     | UserRejectedError
@@ -27,16 +27,16 @@ export function useCreatePost({ profile, upload }: UseCreatePostArgs) {
     | null
   >(null);
   const [isPending, setIsPending] = useState(false);
-  const createPost = useCreatePostController({ upload });
+  const createComment = useCreateCommentController({ upload });
 
   return {
-    create: async (args: CreatePostArgs) => {
+    create: async (args: CreateCommentArgs) => {
       setError(null);
       setIsPending(true);
 
       try {
-        const result = await createPost({
-          kind: TransactionKind.CREATE_POST,
+        const result = await createComment({
+          kind: TransactionKind.CREATE_COMMENT,
           delegate: profile.dispatcher !== null,
           ...args,
         });

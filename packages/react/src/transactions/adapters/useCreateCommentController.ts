@@ -3,19 +3,19 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { CreatePost, CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
+import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { MetadataUploadAdapter, MetadataUploadHandler } from './MetadataUploadAdapter';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { PostCallGateway } from './publication-call-gateways/PostCallGateway';
+import { CommentCallGateway } from './publication-call-gateways/CommentCallGateway';
 
-export type UseCreatePostControllerArgs = {
+export type UseCreateCommentControllerArgs = {
   upload: MetadataUploadHandler;
 };
 
-export function useCreatePostController({ upload }: UseCreatePostControllerArgs) {
+export function useCreateCommentController({ upload }: UseCreateCommentControllerArgs) {
   const {
     apolloClient,
     transactionFactory,
@@ -25,16 +25,16 @@ export function useCreatePostController({ upload }: UseCreatePostControllerArgs)
     transactionQueue,
   } = useSharedDependencies();
 
-  return async (request: CreatePostRequest) => {
+  return async (request: CreateCommentRequest) => {
     const uploadAdapter = new MetadataUploadAdapter(upload);
-    const gateway = new PostCallGateway(apolloClient, transactionFactory, uploadAdapter);
+    const gateway = new CommentCallGateway(apolloClient, transactionFactory, uploadAdapter);
 
     const presenter = new PromiseResultPresenter<
       void,
       PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
-    const signedCreatePost = new ProtocolCallUseCase<CreatePostRequest>(
+    const signedCreateComment = new ProtocolCallUseCase<CreateCommentRequest>(
       activeWallet,
       transactionGateway,
       gateway,
@@ -43,9 +43,14 @@ export function useCreatePostController({ upload }: UseCreatePostControllerArgs)
       presenter,
     );
 
-    const createPost = new CreatePost(signedCreatePost, gateway, transactionQueue, presenter);
+    const createComment = new CreateComment(
+      signedCreateComment,
+      gateway,
+      transactionQueue,
+      presenter,
+    );
 
-    await createPost.execute(request);
+    await createComment.execute(request);
 
     return presenter.asResult();
   };

@@ -5,6 +5,7 @@ import {
   IProtocolCallPresenter,
   IDelegableProtocolCallGateway,
 } from '../transactions/DelegableProtocolCallUseCase';
+import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
 
 export type CreateMirrorRequest = {
   profileId: string;
@@ -14,8 +15,9 @@ export type CreateMirrorRequest = {
   delegate: boolean;
 };
 
-export type IMirrorCallGateway = IDelegableProtocolCallGateway<CreateMirrorRequest>;
+export type ICreateMirrorCallGateway = IDelegableProtocolCallGateway<CreateMirrorRequest> &
+  IUnsignedProtocolCallGateway<CreateMirrorRequest>;
 
-export type IMirrorCreationPresenter = IProtocolCallPresenter;
+export type ICreateMirrorPresenter = IProtocolCallPresenter;
 
 export class CreateMirror extends DelegableProtocolCallUseCase<CreateMirrorRequest> {}

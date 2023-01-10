@@ -35,7 +35,7 @@ export const polygon: ChainConfig = {
 export const mumbai: ChainConfig = {
   chainId: 80001,
   name: 'Polygon Testnet Mumbai',
-  rpcUrl: 'https://matic-mumbai.chainstacklabs.com',
+  rpcUrl: 'https://rpc-mumbai.maticvigil.com/',
   blockExplorer: 'https://mumbai.polygonscan.com/',
   nativeCurrency: matic(),
 };

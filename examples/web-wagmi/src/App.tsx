@@ -30,6 +30,7 @@ import { ProfileById } from './profiles/UseProfileById';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseSearchProfiles } from './profiles/UseSearchProfiles';
 import { PublicationsPage } from './publications/PublicationsPage';
+import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
@@ -75,6 +76,7 @@ export function App() {
                 <Route path="/publications/useComments" element={<UsePublication />} />
                 <Route path="/publications/usePublications" element={<UsePublications />} />
                 <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
+                <Route path="/publications/useCreateComment" element={<UseCreateComment />} />
                 <Route
                   path="/publications/useCollectedPublications"
                   element={<UseCollectedPublications />}

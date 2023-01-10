@@ -12,6 +12,7 @@ import {
   BroadcastProtocolCallDocument,
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables,
+  CreateCommentTypedDataMutation,
   CreatePostTypedDataMutation,
   CreateProfileMutation,
   Eip712TypedDataDomain,
@@ -116,6 +117,35 @@ export function mockCreatePostTypedDataMutation({
         contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
         collectModule: '0xd6072BB2ABc0a9d1331c7d0B83AE6C47f2Cb86A3',
         collectModuleInitData: '0x',
+        referenceModule: '0x0000000000000000000000000000000000000000',
+        referenceModuleInitData: '0x',
+      },
+    }),
+  };
+}
+
+export function mockCreateCommentTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateCommentTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateCommentBroadcastItemResult', {
+      __typename: 'CreateCommentEIP712TypedData',
+      types: {
+        __typename: 'CreateCommentEIP712TypedDataTypes',
+        CommentWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateCommentEIP712TypedDataValue',
+        profileIdPointed: '',
+        pubIdPointed: '',
+        nonce,
+        deadline: 1644303500,
+        profileId: '0x0132',
+        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        collectModule: '0xd6072BB2ABc0a9d1331c7d0B83AE6C47f2Cb86A3',
+        collectModuleInitData: '0x',
+        referenceModuleData: '0x0000000000000000000000000000000000000000',
         referenceModule: '0x0000000000000000000000000000000000000000',
         referenceModuleInitData: '0x',
       },

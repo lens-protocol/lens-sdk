@@ -1,8 +1,9 @@
 export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 export * from './useCreatePost';
+export * from './useCreateComment';
 export * from './useFollow';
 export * from './useUnfollow';
-export type { UploadHandler } from './adapters/UploadHandler';
+export type { MetadataUploadAdapter } from './adapters/MetadataUploadAdapter';
 export {
   CollectPolicyType,
   ContentFocus,
