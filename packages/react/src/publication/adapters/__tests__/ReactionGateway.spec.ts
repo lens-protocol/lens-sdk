@@ -2,10 +2,10 @@ import { faker } from '@faker-js/faker';
 import { ReactionTypes } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockAddReactionMutationResponse,
-  mockAddReactionMutationWithGraphqlValidationErrorResponse,
-  mockRemoveReactionMutationResponse,
-  mockRemoveReactionMutationWithGraphqlValidationErrorResponse,
+  createAddReactionMutationMockedResponse,
+  createAddReactionMutationWithGraphqlValidationErrorResponse,
+  createRemoveReactionMutationMockedResponse,
+  createRemoveReactionMutationWithGraphqlValidationErrorResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockReactionRequest } from '@lens-protocol/domain/mocks';
 import { NetworkError, ReactionError } from '@lens-protocol/domain/use-cases/publications';
@@ -19,7 +19,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        mockAddReactionMutationResponse({
+        createAddReactionMutationMockedResponse({
           variables: {
             publicationId,
             profileId,
@@ -43,7 +43,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        mockAddReactionMutationWithGraphqlValidationErrorResponse({
+        createAddReactionMutationWithGraphqlValidationErrorResponse({
           variables: {
             publicationId,
             profileId,
@@ -83,7 +83,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        mockRemoveReactionMutationResponse({
+        createRemoveReactionMutationMockedResponse({
           variables: {
             publicationId,
             profileId,
@@ -107,7 +107,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        mockRemoveReactionMutationWithGraphqlValidationErrorResponse({
+        createRemoveReactionMutationWithGraphqlValidationErrorResponse({
           variables: {
             publicationId,
             profileId,

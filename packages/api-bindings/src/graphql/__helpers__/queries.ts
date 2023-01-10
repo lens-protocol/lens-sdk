@@ -246,7 +246,7 @@ export function createEnabledModuleCurrenciesQueryMockedResponse(
   };
 }
 
-export function mockMutualFollowersQuery(args: {
+export function createMutualFollowersQueryMockedResponse(args: {
   variables: MutualFollowersProfilesQueryVariables;
   profiles: ProfileFieldsFragment[];
 }): MockedResponse<MutualFollowersProfilesQuery> {

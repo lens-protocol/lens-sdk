@@ -13,7 +13,7 @@ export function useCreateProfileController() {
     const gateway = new ProfileTransactionGateway(apolloClient, transactionFactory);
     const createProfile = new CreateProfile(gateway, presenter, transactionQueue);
 
-    void createProfile.create({
+    await createProfile.create({
       handle,
       kind: TransactionKind.CREATE_PROFILE,
     });
