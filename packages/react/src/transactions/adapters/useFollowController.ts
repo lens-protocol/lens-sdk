@@ -2,11 +2,7 @@ import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
-} from '@lens-protocol/domain/dist/esm/entities';
-import {
-  InsufficientAllowanceError,
-  InsufficientFundsError,
-} from '@lens-protocol/domain/dist/esm/use-cases/wallets';
+} from '@lens-protocol/domain/entities';
 import {
   FollowProfiles,
   FollowRequest,
@@ -16,6 +12,10 @@ import {
   ProtocolCallUseCase,
   SignlessProtocolCallUseCase,
 } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  InsufficientAllowanceError,
+  InsufficientFundsError,
+} from '@lens-protocol/domain/use-cases/wallets';
 
 import { useSharedDependencies } from '../../shared';
 import { FollowProfilesCallGateway } from './FollowProfilesCallGateway';

@@ -59,6 +59,7 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
         data: {
           ...snapshot,
           isFollowedByMe: true,
+          isOptimisticFollowedByMe: false,
         },
       });
     }
