@@ -4627,6 +4627,20 @@ export type BroadcastProtocolCallMutationVariables = Exact<{
 
 export type BroadcastProtocolCallMutation = { result: RelayerResultFragment | RelayErrorFragment };
 
+export type CreateUnfollowTypedDataMutationVariables = Exact<{
+  request: UnfollowRequest;
+}>;
+
+export type CreateUnfollowTypedDataMutation = {
+  result: Pick<CreateUnfollowBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { BurnWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Eip712TypedDataDomainFragment;
+      value: Pick<CreateBurnEip712TypedDataValue, 'nonce' | 'deadline' | 'tokenId'>;
+    };
+  };
+};
+
 export type WalletCollectedPublicationsQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   walletAddress: Scalars['EthereumAddress'];
@@ -7576,6 +7590,74 @@ export type BroadcastProtocolCallMutationResult =
 export type BroadcastProtocolCallMutationOptions = Apollo.BaseMutationOptions<
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables
+>;
+export const CreateUnfollowTypedDataDocument = gql`
+  mutation CreateUnfollowTypedData($request: UnfollowRequest!) {
+    result: createUnfollowTypedData(request: $request) {
+      id
+      expiresAt
+      typedData {
+        types {
+          BurnWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          tokenId
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export type CreateUnfollowTypedDataMutationFn = Apollo.MutationFunction<
+  CreateUnfollowTypedDataMutation,
+  CreateUnfollowTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateUnfollowTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateUnfollowTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUnfollowTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUnfollowTypedDataMutation, { data, loading, error }] = useCreateUnfollowTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateUnfollowTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateUnfollowTypedDataMutation,
+    CreateUnfollowTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateUnfollowTypedDataMutation,
+    CreateUnfollowTypedDataMutationVariables
+  >(CreateUnfollowTypedDataDocument, options);
+}
+export type CreateUnfollowTypedDataMutationHookResult = ReturnType<
+  typeof useCreateUnfollowTypedDataMutation
+>;
+export type CreateUnfollowTypedDataMutationResult =
+  Apollo.MutationResult<CreateUnfollowTypedDataMutation>;
+export type CreateUnfollowTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateUnfollowTypedDataMutation,
+  CreateUnfollowTypedDataMutationVariables
 >;
 export const WalletCollectedPublicationsDocument = gql`
   query WalletCollectedPublications(

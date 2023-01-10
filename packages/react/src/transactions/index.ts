@@ -2,6 +2,7 @@ export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/
 export * from './useCreatePost';
 export * from './useCreateComment';
 export * from './useFollow';
+export * from './useUnfollow';
 export type { MetadataUploadAdapter } from './adapters/MetadataUploadAdapter';
 export {
   CollectPolicyType,
