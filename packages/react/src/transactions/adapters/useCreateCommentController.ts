@@ -50,7 +50,7 @@ export function useCreateCommentController({ upload }: UseCreateCommentControlle
       presenter,
     );
 
-    void createComment.execute(request);
+    await createComment.execute(request);
 
     return presenter.asResult();
   };
