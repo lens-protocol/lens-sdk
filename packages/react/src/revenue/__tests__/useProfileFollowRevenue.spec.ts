@@ -6,7 +6,7 @@ import {
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { useProfileFollowRevenue } from '../../revenue/useProfileFollowRevenue';
+import { useProfileFollowRevenue } from '../useProfileFollowRevenue';
 
 describe(`Given the ${useProfileFollowRevenue.name} hook`, () => {
   describe('when the query returns data successfully', () => {
