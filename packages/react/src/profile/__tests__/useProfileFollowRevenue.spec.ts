@@ -11,6 +11,7 @@ import { useProfileFollowRevenue } from '../useProfileFollowRevenue';
 describe(`Given the ${useProfileFollowRevenue.name} hook`, () => {
   describe('when the query returns data successfully', () => {
     const profileId = '0x2001';
+    const mockRevenues = [{ total: mockErc20AmountFragment() }];
 
     it('should return profiles to follow', async () => {
       const { result } = renderHookWithMocks(() => useProfileFollowRevenue({ profileId }), {
@@ -18,14 +19,17 @@ describe(`Given the ${useProfileFollowRevenue.name} hook`, () => {
           apolloClient: createMockApolloClientWithMultipleResponses([
             createProfileFollowRevenueQueryMockedResponse({
               variables: { profileId },
-              revenues: [{ total: mockErc20AmountFragment() }],
+              revenues: mockRevenues,
             }),
           ]),
         },
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual({ __typename: 'FollowRevenueResult', revenues: [] });
+      expect(result.current.data).toEqual({
+        __typename: 'FollowRevenueResult',
+        revenues: mockRevenues,
+      });
     });
   });
 });
