@@ -2,7 +2,7 @@ export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/
 export * from './useCreatePost';
 export * from './useCreateComment';
 export * from './useFollow';
-export type { UploadHandler } from './adapters/UploadHandler';
+export type { MetadataUploadAdapter } from './adapters/MetadataUploadAdapter';
 export {
   CollectPolicyType,
   ContentFocus,

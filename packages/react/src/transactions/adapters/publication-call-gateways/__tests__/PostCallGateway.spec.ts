@@ -22,6 +22,7 @@ import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications'
 import { ChainType } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
+import { FailedUploadError, MetadataUploadAdapter } from '../../MetadataUploadAdapter';
 import { mockITransactionFactory } from '../../__helpers__/mocks';
 import { PostCallGateway } from '../PostCallGateway';
 import {
@@ -83,11 +84,22 @@ function setupTestScenario({
   contentURI,
 }: {
   apolloClient: ApolloClient<NormalizedCacheObject>;
-  contentURI: string;
+  contentURI?: string;
 }) {
   const transactionFactory = mockITransactionFactory();
-  const uploadSpy = jest.fn().mockResolvedValue(contentURI);
-  const gateway = new PostCallGateway(apolloClient, transactionFactory, uploadSpy);
+  const uploadSpy = jest.fn();
+
+  if (contentURI) {
+    uploadSpy.mockResolvedValue(contentURI);
+  } else {
+    uploadSpy.mockRejectedValue(new Error('Unknown error'));
+  }
+
+  const gateway = new PostCallGateway(
+    apolloClient,
+    transactionFactory,
+    new MetadataUploadAdapter(uploadSpy),
+  );
 
   return { gateway, uploadSpy };
 }
@@ -166,99 +178,114 @@ describe(`Given an instance of ${PostCallGateway.name}`, () => {
       createExerciseData: createLimitedTimedFeeCollectModuleFollowersOnlyExcerciseData,
     },
   ])(`and $description`, ({ createExerciseData }) => {
-    describe(`when creating a post`, () => {
-      const { requestVars, expectedMutationRequestDetails, expectedMetadata } =
-        createExerciseData();
-      const request = mockCreatePostRequest(requestVars);
-      const contentURI = faker.internet.url();
+    const { requestVars, expectedMutationRequestDetails, expectedMetadata } = createExerciseData();
+    const request = mockCreatePostRequest(requestVars);
+    const contentURI = faker.internet.url();
 
-      describe(`via the "${PostCallGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
-        it(`should:
+    describe(`when creating an ${UnsignedLensProtocolCall.name}<CreatePostRequest>`, () => {
+      it(`should:
             - upload the expected publication metadata
             - create an instance of the ${UnsignedLensProtocolCall.name} with the expected typed data`, async () => {
-          const createPostTypedDataMutation = mockCreatePostTypedDataMutation();
-          const apolloClient = createMockApolloClientWithMultipleResponses([
-            mockCreatePostTypedDataMutationMockedResponse({
-              variables: {
-                request: {
-                  profileId: request.profileId,
-                  contentURI,
-                  ...expectedMutationRequestDetails,
-                },
+        const createPostTypedDataMutation = mockCreatePostTypedDataMutation();
+        const apolloClient = createMockApolloClientWithMultipleResponses([
+          mockCreatePostTypedDataMutationMockedResponse({
+            variables: {
+              request: {
+                profileId: request.profileId,
+                contentURI,
+                ...expectedMutationRequestDetails,
               },
-              data: createPostTypedDataMutation,
-            }),
-          ]);
-          const { gateway, uploadSpy } = setupTestScenario({ apolloClient, contentURI });
+            },
+            data: createPostTypedDataMutation,
+          }),
+        ]);
+        const { gateway, uploadSpy } = setupTestScenario({ apolloClient, contentURI });
 
-          const unsignedCall = await gateway.createUnsignedProtocolCall(request);
+        const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
-          expect(uploadSpy).toHaveBeenCalledWith({
-            ...mandatoryFallbackMetadata(request),
-            ...expectedMetadata,
-          });
-          expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-          expect(unsignedCall.typedData).toEqual(
-            omitTypename(createPostTypedDataMutation.result.typedData),
-          );
+        expect(uploadSpy).toHaveBeenCalledWith({
+          ...mandatoryFallbackMetadata(request),
+          ...expectedMetadata,
         });
-
-        it(`should be possible to override the signature nonce`, async () => {
-          const nonce = mockNonce();
-          const apolloClient = createMockApolloClientWithMultipleResponses([
-            mockCreatePostTypedDataMutationMockedResponse({
-              variables: {
-                request: {
-                  profileId: request.profileId,
-                  contentURI,
-                  ...expectedMutationRequestDetails,
-                },
-                options: {
-                  overrideSigNonce: nonce,
-                },
-              },
-              data: mockCreatePostTypedDataMutation({ nonce }),
-            }),
-          ]);
-          const { gateway } = setupTestScenario({ apolloClient, contentURI });
-
-          const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
-
-          expect(unsignedCall.nonce).toEqual(nonce);
-        });
+        expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
+        expect(unsignedCall.typedData).toEqual(
+          omitTypename(createPostTypedDataMutation.result.typedData),
+        );
       });
 
-      describe(`via the "${PostCallGateway.prototype.createDelegatedTransaction.name}" method`, () => {
-        it(`should create an instance of the ${NativeTransaction.name}`, async () => {
-          const apolloClient = createMockApolloClientWithMultipleResponses([
-            mockCreatePostViaDispatcherMutationMockedResponse({
-              variables: {
-                request: {
-                  profileId: request.profileId,
-                  contentURI,
-                  ...expectedMutationRequestDetails,
-                },
+      it(`should be possible to override the signature nonce`, async () => {
+        const nonce = mockNonce();
+        const apolloClient = createMockApolloClientWithMultipleResponses([
+          mockCreatePostTypedDataMutationMockedResponse({
+            variables: {
+              request: {
+                profileId: request.profileId,
+                contentURI,
+                ...expectedMutationRequestDetails,
               },
-              data: {
-                result: mockRelayerResultFragment(),
+              options: {
+                overrideSigNonce: nonce,
               },
-            }),
-          ]);
-          const { gateway } = setupTestScenario({ apolloClient, contentURI });
+            },
+            data: mockCreatePostTypedDataMutation({ nonce }),
+          }),
+        ]);
+        const { gateway } = setupTestScenario({ apolloClient, contentURI });
 
-          const transaction = await gateway.createDelegatedTransaction(request);
+        const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
 
-          await transaction.waitNextEvent();
-          expect(transaction).toBeInstanceOf(NativeTransaction);
-          expect(transaction).toEqual(
-            expect.objectContaining({
-              chainType: ChainType.POLYGON,
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              id: expect.any(String),
-              request,
-            }),
-          );
-        });
+        expect(unsignedCall.nonce).toEqual(nonce);
+      });
+
+      it(`should throw a ${FailedUploadError.name} if the Publication Metadata upload fails`, async () => {
+        const apolloClient = createMockApolloClientWithMultipleResponses([]);
+        const { gateway } = setupTestScenario({ apolloClient });
+
+        await expect(() => gateway.createUnsignedProtocolCall(request)).rejects.toThrow(
+          FailedUploadError,
+        );
+      });
+    });
+
+    describe(`when creating a ${NativeTransaction.name}<CreatePostRequest>}" method`, () => {
+      it(`should create an instance of the ${NativeTransaction.name}`, async () => {
+        const apolloClient = createMockApolloClientWithMultipleResponses([
+          mockCreatePostViaDispatcherMutationMockedResponse({
+            variables: {
+              request: {
+                profileId: request.profileId,
+                contentURI,
+                ...expectedMutationRequestDetails,
+              },
+            },
+            data: {
+              result: mockRelayerResultFragment(),
+            },
+          }),
+        ]);
+        const { gateway } = setupTestScenario({ apolloClient, contentURI });
+
+        const transaction = await gateway.createDelegatedTransaction(request);
+
+        await transaction.waitNextEvent();
+        expect(transaction).toBeInstanceOf(NativeTransaction);
+        expect(transaction).toEqual(
+          expect.objectContaining({
+            chainType: ChainType.POLYGON,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            id: expect.any(String),
+            request,
+          }),
+        );
+      });
+
+      it(`should throw a ${FailedUploadError.name} if the Publication Metadata upload fails`, async () => {
+        const apolloClient = createMockApolloClientWithMultipleResponses([]);
+        const { gateway } = setupTestScenario({ apolloClient });
+
+        await expect(() => gateway.createDelegatedTransaction(request)).rejects.toThrow(
+          FailedUploadError,
+        );
       });
     });
   });

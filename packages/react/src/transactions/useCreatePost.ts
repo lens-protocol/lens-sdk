@@ -8,13 +8,12 @@ import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications'
 import { useState } from 'react';
 
 import { ProfileFieldsFragment } from '../profile';
-import { FailedUploadError } from './adapters/PublicationCallGateway';
-import { UploadHandler } from './adapters/UploadHandler';
+import { MetadataUploadHandler, FailedUploadError } from './adapters/MetadataUploadAdapter';
 import { useCreatePostController } from './adapters/useCreatePostController';
 
 export type UseCreatePostArgs = {
   profile: ProfileFieldsFragment;
-  upload: UploadHandler;
+  upload: MetadataUploadHandler;
 };
 
 export type CreatePostArgs = Omit<CreatePostRequest, 'kind' | 'delegate'>;

@@ -1,12 +1,12 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
-  CreatePublicPostRequest as CreatePublicPostRequestArg,
   CreatePostTypedDataDocument,
   CreatePostTypedDataMutation,
   CreatePostTypedDataMutationVariables,
   CreatePostViaDispatcherDocument,
   CreatePostViaDispatcherMutation,
   CreatePostViaDispatcherMutationVariables,
+  CreatePublicPostRequest as CreatePublicPostRequestArg,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/dist/esm/use-cases/transactions';
@@ -25,14 +25,14 @@ import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
-import { UploadHandler } from '../UploadHandler';
+import { MetadataUploadAdapter } from '../MetadataUploadAdapter';
 import { createPublicationMetadata, resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class PostCallGateway implements ICreatePostCallGateway {
   constructor(
     private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
-    private readonly upload: UploadHandler,
+    private readonly uploadAdapter: MetadataUploadAdapter,
   ) {}
 
   async createDelegatedTransaction<T extends CreatePostRequest>(
@@ -42,7 +42,7 @@ export class PostCallGateway implements ICreatePostCallGateway {
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiatePostCreation(request),
+      asyncRelayReceipt: this.initiatePostCreation(await this.resolveCreatePostRequestArg(request)),
     });
   }
 
@@ -70,14 +70,14 @@ export class PostCallGateway implements ICreatePostCallGateway {
     );
   }
 
-  private async initiatePostCreation(request: CreatePostRequest): AsyncRelayReceipt {
+  private async initiatePostCreation(requestArgs: CreatePublicPostRequestArg): AsyncRelayReceipt {
     const { data } = await this.apolloClient.mutate<
       CreatePostViaDispatcherMutation,
       CreatePostViaDispatcherMutationVariables
     >({
       mutation: CreatePostViaDispatcherDocument,
       variables: {
-        request: await this.resolveCreatePostRequestArg(request),
+        request: requestArgs,
       },
     });
 
@@ -96,15 +96,12 @@ export class PostCallGateway implements ICreatePostCallGateway {
   private async resolveCreatePostRequestArg(
     request: CreatePostRequest,
   ): Promise<CreatePublicPostRequestArg> {
+    const contentURI = await this.uploadAdapter.upload(createPublicationMetadata(request));
     return {
+      contentURI,
       profileId: request.profileId,
-      contentURI: await this.uploadPublicationMetadata(request),
       collectModule: resolveCollectModule(request),
       referenceModule: resolveReferenceModule(request),
     };
-  }
-
-  private async uploadPublicationMetadata(request: CreatePostRequest): Promise<string> {
-    return this.upload(createPublicationMetadata(request));
   }
 }

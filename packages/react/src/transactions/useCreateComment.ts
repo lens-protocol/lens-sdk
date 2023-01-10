@@ -8,12 +8,12 @@ import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publicatio
 import { useState } from 'react';
 
 import { ProfileFieldsFragment } from '../profile';
-import { UploadHandler } from './adapters/UploadHandler';
+import { MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
 import { useCreateCommentController } from './adapters/useCreateCommentController';
 
 export type UseCreateCommentArgs = {
   profile: ProfileFieldsFragment;
-  upload: UploadHandler;
+  upload: MetadataUploadHandler;
 };
 
 export type CreateCommentArgs = Omit<CreateCommentRequest, 'kind' | 'delegate'>;

@@ -1,13 +1,13 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
-  CreatePublicCommentRequest as CreatePublicCommentRequestArg,
-  omitTypename,
+  CreateCommentTypedDataDocument,
+  CreateCommentTypedDataMutation,
+  CreateCommentTypedDataMutationVariables,
   CreateCommentViaDispatcherDocument,
   CreateCommentViaDispatcherMutation,
   CreateCommentViaDispatcherMutationVariables,
-  CreateCommentTypedDataMutationVariables,
-  CreateCommentTypedDataDocument,
-  CreateCommentTypedDataMutation,
+  CreatePublicCommentRequest as CreatePublicCommentRequestArg,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   NativeTransaction,
@@ -25,14 +25,14 @@ import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
-import { UploadHandler } from '../UploadHandler';
+import { MetadataUploadAdapter } from '../MetadataUploadAdapter';
 import { createPublicationMetadata, resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class CommentCallGateway implements ICreateCommentCallGateway {
   constructor(
     private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
-    private readonly upload: UploadHandler,
+    private readonly uploadAdapter: MetadataUploadAdapter,
   ) {}
 
   async createDelegatedTransaction<T extends CreateCommentRequest>(
@@ -42,7 +42,9 @@ export class CommentCallGateway implements ICreateCommentCallGateway {
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiateCommentCreation(request),
+      asyncRelayReceipt: this.initiateCommentCreation(
+        await this.resolveCreateCommentRequestArg(request),
+      ),
     });
   }
 
@@ -70,14 +72,16 @@ export class CommentCallGateway implements ICreateCommentCallGateway {
     );
   }
 
-  private async initiateCommentCreation(request: CreateCommentRequest): AsyncRelayReceipt {
+  private async initiateCommentCreation(
+    requestArg: CreatePublicCommentRequestArg,
+  ): AsyncRelayReceipt {
     const { data } = await this.apolloClient.mutate<
       CreateCommentViaDispatcherMutation,
       CreateCommentViaDispatcherMutationVariables
     >({
       mutation: CreateCommentViaDispatcherDocument,
       variables: {
-        request: await this.resolveCreateCommentRequestArg(request),
+        request: requestArg,
       },
     });
 
@@ -96,16 +100,14 @@ export class CommentCallGateway implements ICreateCommentCallGateway {
   private async resolveCreateCommentRequestArg(
     request: CreateCommentRequest,
   ): Promise<CreatePublicCommentRequestArg> {
+    const contentURI = await this.uploadAdapter.upload(createPublicationMetadata(request));
+
     return {
+      contentURI,
       profileId: request.profileId,
       publicationId: request.publicationId,
-      contentURI: await this.uploadPublicationMetadata(request),
       collectModule: resolveCollectModule(request),
       referenceModule: resolveReferenceModule(request),
     };
-  }
-
-  private async uploadPublicationMetadata(request: CreateCommentRequest): Promise<string> {
-    return this.upload(createPublicationMetadata(request));
   }
 }
