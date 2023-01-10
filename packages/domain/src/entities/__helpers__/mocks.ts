@@ -253,8 +253,8 @@ export function mockProfile() {
   });
 }
 
-export function mockTransactionError(txHash: string = mockTransactionHash()) {
-  return new TransactionError(TransactionErrorReason.MINING_TIMEOUT, txHash);
+export function mockTransactionError() {
+  return new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
 }
 
 export function mockNftOwnershipChallenge(): NftOwnershipChallenge {

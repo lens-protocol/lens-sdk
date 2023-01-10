@@ -1,10 +1,8 @@
 import { FeedItemFragment, isPostPublication, useFeed } from '@lens-protocol/react';
 import { Link } from 'react-router-dom';
 
-import { WhenLoggedIn } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { CreatePost } from '../publications/components/CreatePost';
 import { PublicationCard } from '../publications/components/PublicationCard';
 
 type PublicationProps = {
@@ -34,26 +32,21 @@ export function Feed() {
 
   if (infiniteScroll.loading) return <Loading />;
 
+  if (infiniteScroll.data.length === 0) return <p>No items</p>;
+
   return (
     <div>
       <h1>
         <code>useFeed</code>
       </h1>
 
-      <WhenLoggedIn>{({ profile }) => <CreatePost activeProfile={profile} />}</WhenLoggedIn>
+      {infiniteScroll.data
+        .filter((i) => isPostPublication(i.root))
+        .map((item, i) => (
+          <Publication key={`${item.root.id}-${i}`} feedItem={item} />
+        ))}
 
-      {infiniteScroll.data.length > 0 ? (
-        <>
-          {infiniteScroll.data
-            .filter((i) => isPostPublication(i.root))
-            .map((item, i) => (
-              <Publication key={`${item.root.id}-${i}`} feedItem={item} />
-            ))}
-          {infiniteScroll.hasMore && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
-        </>
-      ) : (
-        <p>No items</p>
-      )}
+      {infiniteScroll.hasMore && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
     </div>
   );
 }

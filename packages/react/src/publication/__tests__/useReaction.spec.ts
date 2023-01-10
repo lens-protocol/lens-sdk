@@ -2,7 +2,7 @@ import { PostFragment, ReactionTypes } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockAddReactionMutationResponse,
-  mockPost,
+  mockPostFragment,
   mockRemoveReactionMutationResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { ReactionType } from '@lens-protocol/domain/entities';
@@ -12,7 +12,7 @@ import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useReaction } from '../useReaction';
 
 describe(`Given the ${useReaction.name} hook`, () => {
-  const mockPublication: PostFragment = mockPost();
+  const mockPublication: PostFragment = mockPostFragment();
   const profileId = mockPublication.profile.id;
 
   it('should provide addReaction action', async () => {
@@ -78,7 +78,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
   });
 
   it('should provide hasReaction action', async () => {
-    const mockPublicationWithReaction: PostFragment = mockPost({
+    const mockPublicationWithReaction: PostFragment = mockPostFragment({
       reaction: ReactionTypes.Upvote,
     });
 

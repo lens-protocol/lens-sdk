@@ -52,7 +52,7 @@ export type Scalars = {
   /** limit custom scalar type */
   LimitScalar: number;
   /** Locale scalar type */
-  Locale: unknown;
+  Locale: string;
   /** Markdown scalar type */
   Markdown: string;
   /** mimetype custom scalar type */
@@ -80,7 +80,7 @@ export type Scalars = {
   /** reference module data scalar type */
   ReferenceModuleData: unknown;
   /** Query search */
-  Search: unknown;
+  Search: string;
   /** Relayer signature */
   Signature: string;
   /** Sources custom scalar type */
@@ -1374,7 +1374,7 @@ export type FeedItem = {
   comments: Maybe<Array<Comment>>;
 };
 
-export type FeedItemRoot = Post | Comment;
+export type FeedItemRoot = Comment | PendingPost | Post;
 
 export type FeedRequest = {
   limit?: Maybe<Scalars['LimitScalar']>;
@@ -2462,6 +2462,16 @@ export type PendingApproveFollowsResult = {
   __typename: 'PendingApproveFollowsResult';
   items: Array<Profile>;
   pageInfo: PaginatedResultInfo;
+};
+
+export type PendingPost = {
+  __typename: 'PendingPost';
+  id: Scalars['InternalPublicationId'];
+  content: Maybe<Scalars['String']>;
+  media: Maybe<Array<Media>>;
+  profile: Profile;
+  locale: Scalars['Locale'];
+  mainContentFocus: PublicationMainFocus;
 };
 
 /** The social post */
@@ -3922,6 +3932,10 @@ export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
   'name' | 'symbol' | 'decimals' | 'address'
 >;
 
+export type Erc20AmountFragment = { __typename: 'Erc20Amount' } & Pick<Erc20Amount, 'value'> & {
+    asset: Erc20Fragment;
+  };
+
 export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
   ModuleFeeAmount,
   'value'
@@ -4019,6 +4033,10 @@ export type CollectModuleFragment =
 export type WalletFragment = { __typename: 'Wallet' } & Pick<Wallet, 'address'> & {
     defaultProfile: Maybe<ProfileFieldsFragment>;
   };
+
+export type MediaFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
+
+export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFragment };
 
 export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
   MetadataOutput,
@@ -4149,19 +4167,22 @@ export type PostFragment = { __typename: 'Post' } & Pick<
     canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
+export type PendingPostFragment = { __typename: 'PendingPost' } & Pick<
+  PendingPost,
+  'id' | 'content' | 'locale' | 'mainContentFocus'
+> & { media: Maybe<Array<MediaFragment>>; profile: ProfileFieldsFragment };
+
 export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain' } & Pick<
   Eip712TypedDataDomain,
   'name' | 'chainId' | 'version' | 'verifyingContract'
 >;
-
-export type Erc20AmountFragment = Pick<Erc20Amount, 'value'> & { asset: Erc20Fragment };
 
 export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
 
 export type FeedItemFragment = { __typename: 'FeedItem' } & {
-  root: PostFragment | CommentFragment;
+  root: CommentFragment | PendingPostFragment | PostFragment;
   comments: Maybe<Array<CommentFragment>>;
 };
 
@@ -4305,10 +4326,6 @@ export type CreatePostViaDispatcherMutation = {
   result: RelayerResultFragment | RelayErrorFragment;
 };
 
-export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
-
-export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFieldsFragment };
-
 export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
   FeeFollowModuleSettings,
   'contractAddress' | 'recipient'
@@ -4322,16 +4339,14 @@ export type RevertFollowModuleSettingsFragment = {
   __typename: 'RevertFollowModuleSettings';
 } & Pick<RevertFollowModuleSettings, 'contractAddress'>;
 
-type ProfileMediaFields_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
+type ProfileMedia_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
   NftImage,
   'contractAddress' | 'tokenId' | 'uri' | 'verified'
 >;
 
-type ProfileMediaFields_MediaSet_Fragment = MediaSetFragment;
+type ProfileMedia_MediaSet_Fragment = MediaSetFragment;
 
-export type ProfileMediaFieldsFragment =
-  | ProfileMediaFields_NftImage_Fragment
-  | ProfileMediaFields_MediaSet_Fragment;
+export type ProfileMediaFragment = ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment;
 
 export type AttributeFragment = { __typename: 'Attribute' } & Pick<Attribute, 'key' | 'value'>;
 
@@ -4351,10 +4366,8 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   | 'ownedByMe'
 > & {
     attributes: Maybe<Array<AttributeFragment>>;
-    picture: Maybe<ProfileMediaFields_NftImage_Fragment | ProfileMediaFields_MediaSet_Fragment>;
-    coverPicture: Maybe<
-      ProfileMediaFields_NftImage_Fragment | ProfileMediaFields_MediaSet_Fragment
-    >;
+    picture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
+    coverPicture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     stats: { __typename: 'ProfileStats' } & Pick<
       ProfileStats,
       'totalFollowers' | 'totalFollowing' | 'totalPosts'
@@ -4495,6 +4508,15 @@ export type ExplorePublicationsQuery = {
   };
 };
 
+export type PublicationByTxHashQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  txHash: Scalars['TxHash'];
+}>;
+
+export type PublicationByTxHashQuery = {
+  result: Maybe<PostFragment | CommentWithFirstCommentFragment | MirrorFragment>;
+};
+
 export type AddReactionMutationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
   reaction: ReactionTypes;
@@ -4525,6 +4547,53 @@ export type WhoReactedPublicationQueryVariables = Exact<{
 
 export type WhoReactedPublicationQuery = {
   result: { items: Array<WhoReactedResultFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & {
+  total: Erc20AmountFragment;
+};
+
+export type PublicationRevenueFragment = { __typename: 'PublicationRevenue' } & {
+  publication: PostFragment | CommentFragment | MirrorFragment;
+} & RevenueFragment;
+
+export type RevenueFragment = { __typename: 'PublicationRevenue' } & {
+  revenue: RevenueAggregateFragment;
+};
+
+export type PublicationRevenueQueryVariables = Exact<{
+  request: PublicationRevenueQueryRequest;
+}>;
+
+export type PublicationRevenueQuery = { result: Maybe<RevenueFragment> };
+
+export type SearchPublicationsQueryVariables = Exact<{
+  limit?: Maybe<Scalars['LimitScalar']>;
+  cursor?: Maybe<Scalars['Cursor']>;
+  query: Scalars['Search'];
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type SearchPublicationsQuery = {
+  result: { __typename: 'PublicationSearchResult' } & {
+    items: Array<PostFragment | CommentFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
+};
+
+export type SearchProfilesQueryVariables = Exact<{
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  query: Scalars['Search'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type SearchProfilesQuery = {
+  result: { __typename: 'ProfileSearchResult' } & {
+    items: Array<ProfileFieldsFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
 };
 
 export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
@@ -4582,8 +4651,8 @@ export const PublicationStatsFragmentDoc = gql`
     totalAmountOfComments
   }
 `;
-export const MediaFieldsFragmentDoc = gql`
-  fragment MediaFields on Media {
+export const MediaFragmentDoc = gql`
+  fragment Media on Media {
     __typename
     url
     mimeType
@@ -4593,10 +4662,10 @@ export const MediaSetFragmentDoc = gql`
   fragment MediaSet on MediaSet {
     __typename
     original {
-      ...MediaFields
+      ...Media
     }
   }
-  ${MediaFieldsFragmentDoc}
+  ${MediaFragmentDoc}
 `;
 export const MetadataAttributeOutputFragmentDoc = gql`
   fragment MetadataAttributeOutput on MetadataAttributeOutput {
@@ -4629,8 +4698,8 @@ export const AttributeFragmentDoc = gql`
     value
   }
 `;
-export const ProfileMediaFieldsFragmentDoc = gql`
-  fragment ProfileMediaFields on ProfileMedia {
+export const ProfileMediaFragmentDoc = gql`
+  fragment ProfileMedia on ProfileMedia {
     ... on NftImage {
       __typename
       contractAddress
@@ -4698,10 +4767,10 @@ export const ProfileFieldsFragmentDoc = gql`
       ...Attribute
     }
     picture {
-      ...ProfileMediaFields
+      ...ProfileMedia
     }
     coverPicture {
-      ...ProfileMediaFields
+      ...ProfileMedia
     }
     stats {
       __typename
@@ -4733,7 +4802,7 @@ export const ProfileFieldsFragmentDoc = gql`
     ownedByMe @client
   }
   ${AttributeFragmentDoc}
-  ${ProfileMediaFieldsFragmentDoc}
+  ${ProfileMediaFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}
   ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
@@ -5039,19 +5108,30 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     verifyingContract
   }
 `;
-export const Erc20AmountFragmentDoc = gql`
-  fragment Erc20Amount on Erc20Amount {
-    asset {
-      ...Erc20
+export const PendingPostFragmentDoc = gql`
+  fragment PendingPost on PendingPost {
+    __typename
+    id
+    content
+    media {
+      ...Media
     }
-    value
+    profile {
+      ...ProfileFields
+    }
+    locale
+    mainContentFocus
   }
-  ${Erc20FragmentDoc}
+  ${MediaFragmentDoc}
+  ${ProfileFieldsFragmentDoc}
 `;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
     root {
+      ... on PendingPost {
+        ...PendingPost
+      }
       ... on Post {
         ...Post
       }
@@ -5063,6 +5143,7 @@ export const FeedItemFragmentDoc = gql`
       ...Comment
     }
   }
+  ${PendingPostFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
@@ -5269,6 +5350,55 @@ export const WhoReactedResultFragmentDoc = gql`
     }
   }
   ${ProfileFieldsFragmentDoc}
+`;
+export const Erc20AmountFragmentDoc = gql`
+  fragment Erc20Amount on Erc20Amount {
+    __typename
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
+`;
+export const RevenueAggregateFragmentDoc = gql`
+  fragment RevenueAggregate on RevenueAggregate {
+    __typename
+    total {
+      ...Erc20Amount
+    }
+  }
+  ${Erc20AmountFragmentDoc}
+`;
+export const RevenueFragmentDoc = gql`
+  fragment Revenue on PublicationRevenue {
+    __typename
+    revenue {
+      ...RevenueAggregate
+    }
+  }
+  ${RevenueAggregateFragmentDoc}
+`;
+export const PublicationRevenueFragmentDoc = gql`
+  fragment PublicationRevenue on PublicationRevenue {
+    __typename
+    publication {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+    ...Revenue
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+  ${RevenueFragmentDoc}
 `;
 export const RelayerResultFragmentDoc = gql`
   fragment RelayerResult on RelayerResult {
@@ -6882,6 +7012,71 @@ export type ExplorePublicationsQueryResult = Apollo.QueryResult<
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables
 >;
+export const PublicationByTxHashDocument = gql`
+  query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
+    result: publication(request: { txHash: $txHash }) {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...CommentWithFirstComment
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentWithFirstCommentFragmentDoc}
+`;
+
+/**
+ * __usePublicationByTxHashQuery__
+ *
+ * To run a query within a React component, call `usePublicationByTxHashQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationByTxHashQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationByTxHashQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      txHash: // value for 'txHash'
+ *   },
+ * });
+ */
+export function usePublicationByTxHashQuery(
+  baseOptions: Apollo.QueryHookOptions<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
+    PublicationByTxHashDocument,
+    options,
+  );
+}
+export function usePublicationByTxHashLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PublicationByTxHashQuery,
+    PublicationByTxHashQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
+    PublicationByTxHashDocument,
+    options,
+  );
+}
+export type PublicationByTxHashQueryHookResult = ReturnType<typeof usePublicationByTxHashQuery>;
+export type PublicationByTxHashLazyQueryHookResult = ReturnType<
+  typeof usePublicationByTxHashLazyQuery
+>;
+export type PublicationByTxHashQueryResult = Apollo.QueryResult<
+  PublicationByTxHashQuery,
+  PublicationByTxHashQueryVariables
+>;
 export const AddReactionDocument = gql`
   mutation AddReaction(
     $publicationId: InternalPublicationId!
@@ -7054,6 +7249,213 @@ export type WhoReactedPublicationLazyQueryHookResult = ReturnType<
 export type WhoReactedPublicationQueryResult = Apollo.QueryResult<
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables
+>;
+export const PublicationRevenueDocument = gql`
+  query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
+    result: publicationRevenue(request: $request) {
+      ...Revenue
+    }
+  }
+  ${RevenueFragmentDoc}
+`;
+
+/**
+ * __usePublicationRevenueQuery__
+ *
+ * To run a query within a React component, call `usePublicationRevenueQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationRevenueQuery({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function usePublicationRevenueQuery(
+  baseOptions: Apollo.QueryHookOptions<PublicationRevenueQuery, PublicationRevenueQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationRevenueQuery, PublicationRevenueQueryVariables>(
+    PublicationRevenueDocument,
+    options,
+  );
+}
+export function usePublicationRevenueLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PublicationRevenueQuery,
+    PublicationRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationRevenueQuery, PublicationRevenueQueryVariables>(
+    PublicationRevenueDocument,
+    options,
+  );
+}
+export type PublicationRevenueQueryHookResult = ReturnType<typeof usePublicationRevenueQuery>;
+export type PublicationRevenueLazyQueryHookResult = ReturnType<
+  typeof usePublicationRevenueLazyQuery
+>;
+export type PublicationRevenueQueryResult = Apollo.QueryResult<
+  PublicationRevenueQuery,
+  PublicationRevenueQueryVariables
+>;
+export const SearchPublicationsDocument = gql`
+  query SearchPublications(
+    $limit: LimitScalar
+    $cursor: Cursor
+    $query: Search!
+    $sources: [Sources!]
+    $observerId: ProfileId
+  ) {
+    result: search(
+      request: {
+        query: $query
+        type: PUBLICATION
+        limit: $limit
+        cursor: $cursor
+        sources: $sources
+      }
+    ) {
+      ... on PublicationSearchResult {
+        __typename
+        items {
+          ... on Post {
+            ...Post
+          }
+          ... on Comment {
+            ...Comment
+          }
+        }
+        pageInfo {
+          ...CommonPaginatedResultInfo
+        }
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useSearchPublicationsQuery__
+ *
+ * To run a query within a React component, call `useSearchPublicationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchPublicationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchPublicationsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      query: // value for 'query'
+ *      sources: // value for 'sources'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useSearchPublicationsQuery(
+  baseOptions: Apollo.QueryHookOptions<SearchPublicationsQuery, SearchPublicationsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SearchPublicationsQuery, SearchPublicationsQueryVariables>(
+    SearchPublicationsDocument,
+    options,
+  );
+}
+export function useSearchPublicationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SearchPublicationsQuery,
+    SearchPublicationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SearchPublicationsQuery, SearchPublicationsQueryVariables>(
+    SearchPublicationsDocument,
+    options,
+  );
+}
+export type SearchPublicationsQueryHookResult = ReturnType<typeof useSearchPublicationsQuery>;
+export type SearchPublicationsLazyQueryHookResult = ReturnType<
+  typeof useSearchPublicationsLazyQuery
+>;
+export type SearchPublicationsQueryResult = Apollo.QueryResult<
+  SearchPublicationsQuery,
+  SearchPublicationsQueryVariables
+>;
+export const SearchProfilesDocument = gql`
+  query SearchProfiles(
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $query: Search!
+    $observerId: ProfileId
+  ) {
+    result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
+      ... on ProfileSearchResult {
+        __typename
+        items {
+          ...ProfileFields
+        }
+        pageInfo {
+          ...CommonPaginatedResultInfo
+        }
+      }
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useSearchProfilesQuery__
+ *
+ * To run a query within a React component, call `useSearchProfilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchProfilesQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      query: // value for 'query'
+ *      observerId: // value for 'observerId'
+ *   },
+ * });
+ */
+export function useSearchProfilesQuery(
+  baseOptions: Apollo.QueryHookOptions<SearchProfilesQuery, SearchProfilesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SearchProfilesQuery, SearchProfilesQueryVariables>(
+    SearchProfilesDocument,
+    options,
+  );
+}
+export function useSearchProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SearchProfilesQuery, SearchProfilesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SearchProfilesQuery, SearchProfilesQueryVariables>(
+    SearchProfilesDocument,
+    options,
+  );
+}
+export type SearchProfilesQueryHookResult = ReturnType<typeof useSearchProfilesQuery>;
+export type SearchProfilesLazyQueryHookResult = ReturnType<typeof useSearchProfilesLazyQuery>;
+export type SearchProfilesQueryResult = Apollo.QueryResult<
+  SearchProfilesQuery,
+  SearchProfilesQueryVariables
 >;
 export const HasTxHashBeenIndexedDocument = gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
@@ -8906,6 +9308,23 @@ export type PendingApproveFollowsResultFieldPolicy = {
   items?: FieldPolicy<any> | FieldReadFunction<any>;
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PendingPostKeySpecifier = (
+  | 'id'
+  | 'content'
+  | 'media'
+  | 'profile'
+  | 'locale'
+  | 'mainContentFocus'
+  | PendingPostKeySpecifier
+)[];
+export type PendingPostFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  content?: FieldPolicy<any> | FieldReadFunction<any>;
+  media?: FieldPolicy<any> | FieldReadFunction<any>;
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  locale?: FieldPolicy<any> | FieldReadFunction<any>;
+  mainContentFocus?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type PostKeySpecifier = (
   | 'appId'
   | 'canComment'
@@ -10408,6 +10827,10 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | PendingApproveFollowsResultKeySpecifier);
     fields?: PendingApproveFollowsResultFieldPolicy;
   };
+  PendingPost?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | PendingPostKeySpecifier | (() => undefined | PendingPostKeySpecifier);
+    fields?: PendingPostFieldPolicy;
+  };
   Post?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | PostKeySpecifier | (() => undefined | PostKeySpecifier);
     fields?: PostFieldPolicy;
@@ -10704,7 +11127,7 @@ const result: PossibleTypesResultData = {
       'TimedFeeCollectModuleSettings',
       'UnknownCollectModuleSettings',
     ],
-    FeedItemRoot: ['Post', 'Comment'],
+    FeedItemRoot: ['Comment', 'PendingPost', 'Post'],
     FollowModule: [
       'FeeFollowModuleSettings',
       'ProfileFollowModuleSettings',
