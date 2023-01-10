@@ -1,20 +1,12 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
-import {
-  CreatePostTypedDataDocument,
-  CreatePostTypedDataMutation,
-  CreatePostTypedDataMutationVariables,
-  CreatePostViaDispatcherDocument,
-  CreatePostViaDispatcherMutation,
-  CreatePostViaDispatcherMutationVariables,
-  omitTypename,
-  PublicationMainFocus,
-} from '@lens-protocol/api-bindings';
+import { omitTypename, PublicationMainFocus } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockCreatePostTypedDataMutation,
   mockRelayerResultFragment,
+  createCreatePostTypedDataMutationMockedResponse,
+  createCreatePostViaDispatcherMutationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockCreatePostRequest } from '@lens-protocol/domain/mocks';
@@ -42,42 +34,6 @@ import {
   createTimedFeeCollectModuleFollowersOnlyExcerciseData,
   PublicationExerciseData,
 } from '../__helpers__/publication-exercise-data';
-
-function mockCreatePostTypedDataMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreatePostTypedDataMutationVariables;
-  data: CreatePostTypedDataMutation;
-}): MockedResponse<CreatePostTypedDataMutation> {
-  return {
-    request: {
-      query: CreatePostTypedDataDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-function mockCreatePostViaDispatcherMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreatePostViaDispatcherMutationVariables;
-  data: CreatePostViaDispatcherMutation;
-}): MockedResponse<CreatePostViaDispatcherMutation> {
-  return {
-    request: {
-      query: CreatePostViaDispatcherDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
 
 function setupTestScenario({
   apolloClient,
@@ -188,7 +144,7 @@ describe(`Given an instance of ${PostCallGateway.name}`, () => {
             - create an instance of the ${UnsignedLensProtocolCall.name} with the expected typed data`, async () => {
         const createPostTypedDataMutation = mockCreatePostTypedDataMutation();
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          mockCreatePostTypedDataMutationMockedResponse({
+          createCreatePostTypedDataMutationMockedResponse({
             variables: {
               request: {
                 profileId: request.profileId,
@@ -216,7 +172,7 @@ describe(`Given an instance of ${PostCallGateway.name}`, () => {
       it(`should be possible to override the signature nonce`, async () => {
         const nonce = mockNonce();
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          mockCreatePostTypedDataMutationMockedResponse({
+          createCreatePostTypedDataMutationMockedResponse({
             variables: {
               request: {
                 profileId: request.profileId,
@@ -250,7 +206,7 @@ describe(`Given an instance of ${PostCallGateway.name}`, () => {
     describe(`when creating a ${NativeTransaction.name}<CreatePostRequest>}" method`, () => {
       it(`should create an instance of the ${NativeTransaction.name}`, async () => {
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          mockCreatePostViaDispatcherMutationMockedResponse({
+          createCreatePostViaDispatcherMutationMockedResponse({
             variables: {
               request: {
                 profileId: request.profileId,

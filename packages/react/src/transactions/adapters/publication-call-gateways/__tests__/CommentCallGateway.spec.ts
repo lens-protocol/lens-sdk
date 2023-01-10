@@ -1,19 +1,12 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
-import {
-  CreateCommentTypedDataDocument,
-  CreateCommentTypedDataMutation,
-  CreateCommentTypedDataMutationVariables,
-  CreateCommentViaDispatcherDocument,
-  CreateCommentViaDispatcherMutation,
-  CreateCommentViaDispatcherMutationVariables,
-  omitTypename,
-} from '@lens-protocol/api-bindings';
+import { omitTypename } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockRelayerResultFragment,
   mockCreateCommentTypedDataMutation,
+  createCreateCommentTypedDataMutationMockedResponse,
+  createCreateCommentViaDispatcherMutationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockCreateCommentRequest } from '@lens-protocol/domain/mocks';
@@ -40,42 +33,6 @@ import {
   createTimedFeeCollectModuleExcerciseData,
   createTimedFeeCollectModuleFollowersOnlyExcerciseData,
 } from '../__helpers__/publication-exercise-data';
-
-function mockCreateCommentTypedDataMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreateCommentTypedDataMutationVariables;
-  data: CreateCommentTypedDataMutation;
-}): MockedResponse<CreateCommentTypedDataMutation> {
-  return {
-    request: {
-      query: CreateCommentTypedDataDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-function mockCreateCommentViaDispatcherMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreateCommentViaDispatcherMutationVariables;
-  data: CreateCommentViaDispatcherMutation;
-}): MockedResponse<CreateCommentViaDispatcherMutation> {
-  return {
-    request: {
-      query: CreateCommentViaDispatcherDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
 
 function setupTestScenario({
   apolloClient,
@@ -173,7 +130,7 @@ describe(`Given an instance of ${CommentCallGateway.name}`, () => {
       it(`should create an instance of the ${UnsignedLensProtocolCall.name} with the expected typed data`, async () => {
         const createCommentTypedDataMutation = mockCreateCommentTypedDataMutation();
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          mockCreateCommentTypedDataMutationMockedResponse({
+          createCreateCommentTypedDataMutationMockedResponse({
             variables: {
               request: {
                 contentURI,
@@ -198,7 +155,7 @@ describe(`Given an instance of ${CommentCallGateway.name}`, () => {
       it(`should be possible to override the signature nonce`, async () => {
         const nonce = mockNonce();
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          mockCreateCommentTypedDataMutationMockedResponse({
+          createCreateCommentTypedDataMutationMockedResponse({
             variables: {
               request: {
                 contentURI,
@@ -233,7 +190,7 @@ describe(`Given an instance of ${CommentCallGateway.name}`, () => {
     describe(`when creating a ${NativeTransaction.name}<CreateCommentRequest>}" method`, () => {
       it(`should create an instance of the ${NativeTransaction.name}`, async () => {
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          mockCreateCommentViaDispatcherMutationMockedResponse({
+          createCreateCommentViaDispatcherMutationMockedResponse({
             variables: {
               request: {
                 contentURI,
