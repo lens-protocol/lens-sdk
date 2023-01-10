@@ -1,34 +1,9 @@
-import { ApolloClient, from, HttpLink } from '@apollo/client';
+import { ApolloClient, ApolloLink, from, HttpLink } from '@apollo/client';
 
-import generatedIntrospection from '../graphql/generated';
 import { IAccessTokenStorage } from './IAccessTokenStorage';
-import { createApolloCache, TypePolicies } from './createApolloCache';
+import { createApolloCache } from './createApolloCache';
 import { createAuthLink } from './createAuthLink';
-import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
-import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
-import { createFeedFieldPolicy } from './createFeedFieldPolicy';
-import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
-import { createProfileTypePolicy } from './createProfileTypePolicy';
-import { createPublicationTypePolicy } from './createPublicationTypePolicy';
-
-function createTypePolicies(): TypePolicies {
-  return {
-    Profile: createProfileTypePolicy(),
-    Post: createPublicationTypePolicy(),
-    Comment: createPublicationTypePolicy(),
-    Mirror: createPublicationTypePolicy(),
-
-    Query: {
-      fields: {
-        feed: createFeedFieldPolicy(),
-        exploreProfiles: createExploreProfilesFieldPolicy(),
-        explorePublications: createExplorePublicationsFieldPolicy(),
-        notifications: createNotificationsFieldPolicy(),
-        publications: createPublicationTypePolicy(),
-      },
-    },
-  };
-}
+import { removeClientTypeFromExtendedUnion } from './transforms';
 
 export type ApolloClientConfig = {
   accessTokenStorage: IAccessTokenStorage;
@@ -38,6 +13,12 @@ export type ApolloClientConfig = {
 export function createApolloClient({ backendURL, accessTokenStorage }: ApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
 
+  const cleanerLink = new ApolloLink((operation, forward) => {
+    operation.query = removeClientTypeFromExtendedUnion('PendingPost', operation.query);
+
+    return forward(operation);
+  });
+
   const authLink = createAuthLink(accessTokenStorage);
 
   const httpLink = new HttpLink({
@@ -45,11 +26,9 @@ export function createApolloClient({ backendURL, accessTokenStorage }: ApolloCli
   });
 
   return new ApolloClient({
-    cache: createApolloCache({
-      possibleTypes: generatedIntrospection.possibleTypes,
-      typePolicies: createTypePolicies(),
-    }),
-    link: from([authLink, httpLink]),
+    cache: createApolloCache(),
+    link: from([cleanerLink, authLink, httpLink]),
+    connectToDevTools: true,
   });
 }
 
@@ -61,12 +40,11 @@ export function createAnonymousApolloClient({ backendURL }: AnonymousApolloClien
   const uri = `${backendURL}/graphql`;
 
   return new ApolloClient({
-    cache: createApolloCache({
-      possibleTypes: generatedIntrospection.possibleTypes,
-      typePolicies: createTypePolicies(),
-    }),
+    cache: createApolloCache(),
     uri,
   });
 }
 
 export { IAccessTokenStorage };
+
+export { resolveFeedQueryCacheKey } from './createFeedFieldPolicy';

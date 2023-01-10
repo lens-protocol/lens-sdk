@@ -64,7 +64,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
         txHash: data.result.txHash,
       });
     } catch (err) {
-      this.logger.error(err, 'It was not possible to relay the transaction');
+      this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);
       return failure(new TransactionError(TransactionErrorReason.CANNOT_EXECUTE));
     }
   }

@@ -32,6 +32,11 @@ const profileHooks = [
     path: '/profiles/useMutualFollowers',
   },
   {
+    label: 'useSearchProfiles',
+    description: `Fetch a list of profiles that match a query`,
+    path: '/profiles/useSearchProfiles',
+  },
+  {
     label: 'useFollow',
     description: `Follow a profile.`,
     path: '/profiles/useFollow',

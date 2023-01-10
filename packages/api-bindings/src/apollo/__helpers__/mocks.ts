@@ -1,25 +1,19 @@
-import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
+import { ApolloCache, ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 
-import generatedIntrospection from '../../graphql/generated';
+import { createApolloCache } from '../createApolloCache';
 
-export function createMockApolloClientWithMultipleResponses<TData>(
-  mocks: ReadonlyArray<MockedResponse<TData>>,
+export function createMockApolloCache(): ApolloCache<NormalizedCacheObject> {
+  return createApolloCache();
+}
+
+export function createMockApolloClientWithMultipleResponses(
+  mocks: ReadonlyArray<MockedResponse<unknown>>,
 ): ApolloClient<NormalizedCacheObject> {
   return new ApolloClient({
     link: mockSingleLink(...mocks).setOnError((error) => {
       throw error;
     }),
-    cache: new InMemoryCache({
-      addTypename: true,
-      possibleTypes: generatedIntrospection.possibleTypes,
-    }),
-  });
-}
-
-export function createMockApolloCache(): InMemoryCache {
-  return new InMemoryCache({
-    addTypename: true,
-    possibleTypes: generatedIntrospection.possibleTypes,
+    cache: createMockApolloCache(),
   });
 }

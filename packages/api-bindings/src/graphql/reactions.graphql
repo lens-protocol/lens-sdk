@@ -1,0 +1,48 @@
+mutation AddReaction(
+  $publicationId: InternalPublicationId!
+  $reaction: ReactionTypes!
+  $profileId: ProfileId!
+) {
+  addReaction(
+    request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
+  )
+}
+
+mutation RemoveReaction(
+  $publicationId: InternalPublicationId!
+  $reaction: ReactionTypes!
+  $profileId: ProfileId!
+) {
+  removeReaction(
+    request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
+  )
+}
+
+fragment WhoReactedResult on WhoReactedResult {
+  __typename
+  reactionId
+  reaction
+  reactionAt
+  profile {
+    ...ProfileFields
+  }
+}
+
+query WhoReactedPublication(
+  $limit: LimitScalar
+  $cursor: Cursor
+  $publicationId: InternalPublicationId!
+  $observerId: ProfileId
+) {
+  result: whoReactedPublication(
+    request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }
+  ) {
+    items {
+      ...WhoReactedResult
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

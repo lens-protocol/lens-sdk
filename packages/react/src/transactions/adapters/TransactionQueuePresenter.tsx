@@ -9,6 +9,8 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { CausedError } from '@lens-protocol/shared-kernel';
 
+import { ErrorHandler } from '../../ErrorHandler';
+
 export enum TxStatus {
   BROADCASTING = 'broadcasting',
   MINING = 'mining',
@@ -28,7 +30,7 @@ export type TransactionState<T extends SupportedTransactionRequest> =
   | PendingTransactionState<T>
   | BroadcastedTransactionState<T>;
 
-type PartialTransactionState<T extends SupportedTransactionRequest> =
+type PartialTransactionStateUpdate<T extends SupportedTransactionRequest> =
   | Partial<PendingTransactionState<T>>
   | Partial<BroadcastedTransactionState<T>>;
 
@@ -47,7 +49,7 @@ export class FailedTransactionError extends CausedError {
 export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
   implements ITransactionQueuePresenter<T>
 {
-  constructor(private readonly errorHandler: (error: FailedTransactionError) => void) {}
+  constructor(private readonly errorHandler: ErrorHandler<FailedTransactionError>) {}
 
   clearRecent(): void {
     const transactions = recentTransactions();
@@ -96,7 +98,10 @@ export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
     recentTransactions([data, ...transactions]);
   }
 
-  private updateById(id: string, update: PartialTransactionState<SupportedTransactionRequest>) {
+  private updateById(
+    id: string,
+    update: PartialTransactionStateUpdate<SupportedTransactionRequest>,
+  ) {
     const transactions = recentTransactions();
 
     recentTransactions(
