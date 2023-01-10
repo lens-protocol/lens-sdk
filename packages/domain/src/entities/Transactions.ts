@@ -120,6 +120,6 @@ export class TransactionError extends Error {
   name = 'TransactionError' as const;
 
   constructor(readonly reason: TransactionErrorReason, readonly txHash?: string) {
-    super(`Transaction "${txHash as string}" failed due to: ${reason}`);
+    super(`Transaction ${txHash ? `"${txHash}" ` : ''}failed due to: ${reason}`);
   }
 }

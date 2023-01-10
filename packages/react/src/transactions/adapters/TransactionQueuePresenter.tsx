@@ -1,5 +1,5 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { TransactionError } from '@lens-protocol/domain/entities';
+import { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 import {
   BroadcastedTransactionData,
   ITransactionQueuePresenter,
@@ -113,33 +113,61 @@ export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
   }
 }
 
-export const useRecentTransactionsVar = () => {
+export function useRecentTransactionsVar() {
   return useReactiveVar(recentTransactions);
-};
+}
 
 type Predicate<T extends SupportedTransactionRequest> = (
   txState: TransactionState<SupportedTransactionRequest>,
 ) => txState is TransactionState<T>;
 
-const useHasTransactionWith = <T extends SupportedTransactionRequest>(
+function hasTransactionWith<T extends SupportedTransactionRequest>(
+  transactions: TransactionState<SupportedTransactionRequest>[],
   statuses: ReadonlyArray<TxStatus>,
   predicate: Predicate<T>,
-) => {
-  const transactions = useRecentTransactionsVar();
+) {
   const index = transactions.findIndex(
     (txState) => statuses.includes(txState.status) && predicate(txState),
   );
   return index > -1;
-};
+}
 
-export const useHasPendingTransaction = <T extends SupportedTransactionRequest>(
-  predicate: Predicate<T>,
-) => {
-  return useHasTransactionWith([TxStatus.BROADCASTING, TxStatus.MINING], predicate);
-};
+function delay(waitInMs: number) {
+  return new Promise((resolve) => setTimeout(resolve, waitInMs));
+}
 
-export const useHasSettledTransaction = <T extends SupportedTransactionRequest>(
+export function useHasPendingTransaction<T extends SupportedTransactionRequest>(
   predicate: Predicate<T>,
-) => {
-  return useHasTransactionWith([TxStatus.SETTLED], predicate);
-};
+) {
+  const transactions = useRecentTransactionsVar();
+  return hasTransactionWith(transactions, [TxStatus.BROADCASTING, TxStatus.MINING], predicate);
+}
+
+const FIFTEEN_SECONDS = 1000 * 15; // ms
+
+export function useWaitUntilTransactionSettled<T extends SupportedTransactionRequest>(
+  waitTimeInMs: number = FIFTEEN_SECONDS,
+) {
+  return async (predicate: Predicate<T>) => {
+    const resolveWhenNoPendingTransactions = new Promise<void>((resolve) => {
+      const resolver = (value: TransactionState<SupportedTransactionRequest>[]) => {
+        if (hasTransactionWith(value, [TxStatus.SETTLED], predicate)) {
+          return resolve();
+        }
+        return recentTransactions.onNextChange(resolver);
+      };
+      recentTransactions.onNextChange(resolver);
+    });
+    const waitForSpecifiedTime = delay(waitTimeInMs).then(() => {
+      throw new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
+    });
+    await Promise.race([resolveWhenNoPendingTransactions, waitForSpecifiedTime]);
+  };
+}
+
+export function useHasSettledTransaction<T extends SupportedTransactionRequest>(
+  predicate: Predicate<T>,
+) {
+  const transactions = useRecentTransactionsVar();
+  return hasTransactionWith(transactions, [TxStatus.SETTLED], predicate);
+}

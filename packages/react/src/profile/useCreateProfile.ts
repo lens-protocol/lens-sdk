@@ -1,4 +1,4 @@
-import { TransactionKind } from '@lens-protocol/domain/entities';
+import { TransactionError, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
@@ -7,40 +7,46 @@ import { useState } from 'react';
 
 import {
   TransactionState,
-  useHasPendingTransaction,
+  useWaitUntilTransactionSettled,
 } from '../transactions/adapters/TransactionQueuePresenter';
 import { useCreateProfileController } from './adapters/useCreateProfileController';
 
 export function useCreateProfile() {
-  const [error, setError] = useState<DuplicatedHandleError | null>(null);
+  const [error, setError] = useState<DuplicatedHandleError | TransactionError | null>(null);
   const [isPending, setIsPending] = useState<boolean>(false);
-  const [handle, setHandle] = useState<string>('');
+
   const createProfile = useCreateProfileController();
 
-  const hasPendingTx = useHasPendingTransaction(
-    (transaction): transaction is TransactionState<CreateProfileRequest> =>
-      transaction.request.kind === TransactionKind.CREATE_PROFILE &&
-      transaction.request.handle === handle,
-  );
+  const waitUntilTransactionIsSettled = useWaitUntilTransactionSettled();
 
   return {
-    create: async (_handle: string) => {
+    create: async (handle: string) => {
       try {
-        setHandle(_handle);
         setIsPending(true);
         setError(null);
 
-        const result = await createProfile(_handle);
+        const result = await createProfile(handle);
 
         if (result.isFailure()) {
           setError(result.error);
         }
+
+        await waitUntilTransactionIsSettled(
+          (transaction): transaction is TransactionState<CreateProfileRequest> =>
+            transaction.request.kind === TransactionKind.CREATE_PROFILE &&
+            transaction.request.handle === handle,
+        );
+      } catch (e) {
+        if (e instanceof TransactionError) {
+          setError(e);
+        }
+        throw e;
       } finally {
         setIsPending(false);
       }
     },
     error,
-    isPending: isPending || hasPendingTx,
+    isPending,
   };
 }
 

@@ -14,7 +14,7 @@ function ShowProfile({ handle }: { handle: string }) {
 export function UseCreateProfile() {
   const [handle, setHandle] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [isViewCreatedProfileOpen, setIsViewCreatedProfileOpen] = useState(false);
+
   const { create, error, isPending } = useCreateProfile();
 
   return (
@@ -52,15 +52,9 @@ export function UseCreateProfile() {
       </form>
 
       <div>
-        {handle && !isPending && submitted && !error && !isViewCreatedProfileOpen && (
-          <button onClick={() => setIsViewCreatedProfileOpen(true)}>View created profile</button>
-        )}
-
         {error && <p>{error.message}</p>}
 
-        {isViewCreatedProfileOpen && handle && submitted && !error && (
-          <ShowProfile handle={handle} />
-        )}
+        {handle && submitted && error === null && <ShowProfile handle={handle} />}
       </div>
       <style>
         {`
