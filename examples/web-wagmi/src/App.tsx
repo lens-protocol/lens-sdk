@@ -101,6 +101,7 @@ export function App() {
                 <Route path="/profiles/useFollow" element={<UseFollow />} />
 
                 <Route path="/revenue/usePublicationRevenue" element={<UsePublicationRevenue />} />
+                <Route path="/revenue/useProfileFollowRevenue" element={<UsePublicationRevenue />} />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
                 <Route path="/discovery/useFeed" element={<Feed />} />
