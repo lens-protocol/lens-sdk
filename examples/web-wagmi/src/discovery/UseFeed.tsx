@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { CreatePost } from '../publications/components/CreatePost';
 import { PublicationCard } from '../publications/components/PublicationCard';
 
 type PublicationProps = {
@@ -40,8 +39,6 @@ export function Feed() {
       <h1>
         <code>useFeed</code>
       </h1>
-
-      <CreatePost />
 
       {infiniteScroll.data
         .filter((i) => isPostPublication(i.root))

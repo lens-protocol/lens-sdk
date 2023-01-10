@@ -23,3 +23,14 @@ extend type Mirror {
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean! # just to keep Publication type consistent, that will never be used
 }
+
+type PendingPost {
+  id: InternalPublicationId!
+  content: String
+  media: [Media!]
+  profile: Profile!
+  locale: Locale!
+  mainContentFocus: PublicationMainFocus!
+}
+
+extend union FeedItemRoot = PendingPost

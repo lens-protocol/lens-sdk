@@ -1,7 +1,7 @@
 import { PostFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockPost,
+  mockPostFragment,
   createPublicationQueryMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
@@ -10,7 +10,7 @@ import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { usePublication } from '../usePublication';
 
 describe(`Given the ${usePublication.name} hook`, () => {
-  const mockPublication: PostFragment = mockPost();
+  const mockPublication: PostFragment = mockPostFragment();
 
   describe('when supplied with a publication id', () => {
     describe('and the query returns data successfully', () => {

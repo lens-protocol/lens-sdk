@@ -1,9 +1,9 @@
 /**
  * Thrown exceptions are historically difficult to trace. They require implicit knowledge
- * of the implementation details of the code that might throw expections. This might go
+ * of the implementation details of the code that might throw exceptions. This might go
  * several layers down and lead to tight coupling between modules.
  *
- * There are good reasons to leave thrown expections only for exceptional (i.e. unexpected) failure
+ * There are good reasons to leave thrown exceptions only for exceptional (i.e. unexpected) failure
  * scenarios and model known failure modes in way that allows traditional control flow.
  *
  * Result<T, E> is a minimalistic implementation of a value that can be a "success" or a "failure".

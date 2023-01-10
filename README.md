@@ -73,7 +73,7 @@ To release a new version follow the steps below:
 1. Document new public facing changes during development.
 
 ```bash
-changeset add
+pnpm changeset add
 ```
 
 The command will ask a series of questions related to the introduced changes and the version bump that's required to follow semver range.
@@ -92,7 +92,7 @@ pnpm lint
 3. Update relevant `package.json`'s versions and update `CHANGELOG.md` for each package.
 
 ```bash
-changeset version
+pnpm changeset version
 ```
 
 4. Review and commit new release. Create a PR to `main`.
@@ -102,7 +102,7 @@ changeset version
 _Note: Before publishing make sure that you are logged in to the correct npm account (run `pnpm whoami`). If not, follow prompts from `pnpm login`._
 
 ```bash
-changeset publish
+pnpm changeset publish
 ```
 
 _Note: Because this command assumes that the last commit is the release commit, you should not commit any changes between calling version and publish._

@@ -119,7 +119,7 @@ export enum TransactionErrorReason {
 export class TransactionError extends Error {
   name = 'TransactionError' as const;
 
-  constructor(readonly reason: TransactionErrorReason, readonly txHash?: string) {
-    super(`Transaction "${txHash as string}" failed due to: ${reason}`);
+  constructor(readonly reason: TransactionErrorReason) {
+    super(`Transaction failed due to: ${reason}`);
   }
 }

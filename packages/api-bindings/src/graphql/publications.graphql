@@ -69,3 +69,19 @@ query ExplorePublications($request: ExplorePublicationRequest!, $observerId: Pro
     }
   }
 }
+
+query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
+  result: publication(request: { txHash: $txHash }) {
+    ... on Post {
+      ...Post
+    }
+
+    ... on Mirror {
+      ...Mirror
+    }
+
+    ... on Comment {
+      ...CommentWithFirstComment
+    }
+  }
+}
