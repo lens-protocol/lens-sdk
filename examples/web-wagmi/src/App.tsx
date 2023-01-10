@@ -21,20 +21,24 @@ import { UseNotifications } from './misc/UseNotifications';
 import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
 import { ProfilesPage } from './profiles/ProfilesPage';
 import { UseCollectedPublications } from './profiles/UseCollectedPublications';
+import { UseCreateProfile } from './profiles/UseCreateProfile';
 import { UseExploreProfiles } from './profiles/UseExploreProfiles';
 import { UseFollow } from './profiles/UseFollow';
 import { UseMutualFollowers } from './profiles/UseMutualFollowers';
 import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
+import { UseSearchProfiles } from './profiles/UseSearchProfiles';
 import { PublicationsPage } from './publications/PublicationsPage';
+import { UseCreatePost } from './publications/UseCreatePost';
 import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
+import { UseSearchPublications } from './publications/UseSearchPublications';
 import { UseWhoReacted } from './publications/UseWhoReacted';
-import { CreatePost } from './publications/components/CreatePost';
 import { RevenuePage } from './revenue/RevenuePage';
+import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
@@ -70,10 +74,14 @@ export function App() {
                 <Route path="/publications/usePublication" element={<UsePublication />} />
                 <Route path="/publications/useComments" element={<UsePublication />} />
                 <Route path="/publications/usePublications" element={<UsePublications />} />
-                <Route path="/publications/useCreatePost" element={<CreatePost />} />
+                <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
                 <Route
                   path="/publications/useCollectedPublications"
                   element={<UseCollectedPublications />}
+                />
+                <Route
+                  path="/publications/useSearchPublications"
+                  element={<UseSearchPublications />}
                 />
                 <Route
                   path="/publications/useExplorePublications"
@@ -83,12 +91,16 @@ export function App() {
                 <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
+                <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />
                 <Route path="/profiles/useProfile-handle" element={<ProfileByHandle />} />
                 <Route path="/profiles/useProfile-id" element={<ProfileById />} />
                 <Route path="/profiles/useExploreProfiles" element={<UseExploreProfiles />} />
                 <Route path="/profiles/useProfilesToFollow" element={<ProfilesToFollow />} />
                 <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
+                <Route path="/profiles/useSearchProfiles" element={<UseSearchProfiles />} />
                 <Route path="/profiles/useFollow" element={<UseFollow />} />
+
+                <Route path="/revenue/usePublicationRevenue" element={<UsePublicationRevenue />} />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
                 <Route path="/discovery/useFeed" element={<Feed />} />

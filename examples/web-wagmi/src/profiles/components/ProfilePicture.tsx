@@ -18,11 +18,11 @@ function FallbackProfilePicture() {
   );
 }
 
-type ProfilePictureInnerProps = {
+type RemoteProfilePictureProps = {
   url: string;
 };
 
-function IPFSProfilePicture({ url }: ProfilePictureInnerProps) {
+function RemoteProfilePicture({ url }: RemoteProfilePictureProps) {
   const src = useBuildResourceSrc(url);
   return (
     <img
@@ -45,7 +45,7 @@ export function ProfilePicture({ picture }: ProfilePictureProps) {
 
   switch (picture.__typename) {
     case 'MediaSet':
-      return <IPFSProfilePicture url={picture.original.url} />;
+      return <RemoteProfilePicture url={picture.original.url} />;
     default:
       return <FallbackProfilePicture />;
   }

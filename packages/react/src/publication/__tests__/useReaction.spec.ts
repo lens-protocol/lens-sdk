@@ -1,9 +1,9 @@
 import { PostFragment, ReactionTypes } from '@lens-protocol/api-bindings';
 import {
+  createAddReactionMutationMockedResponse,
   createMockApolloClientWithMultipleResponses,
-  mockAddReactionMutationResponse,
-  mockPost,
-  mockRemoveReactionMutationResponse,
+  createRemoveReactionMutationMockedResponse,
+  mockPostFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import { act } from '@testing-library/react';
@@ -12,87 +12,96 @@ import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useReaction } from '../useReaction';
 
 describe(`Given the ${useReaction.name} hook`, () => {
-  const mockPublication: PostFragment = mockPost();
-  const profileId = mockPublication.profile.id;
+  describe(`when adding a reaction`, () => {
+    it('should call correct mutation and resolve without errors', async () => {
+      const mockPublication: PostFragment = mockPostFragment();
+      const profileId = mockPublication.profile.id;
 
-  it('should provide addReaction action', async () => {
-    const { result } = renderHookWithMocks(
-      () =>
-        useReaction({
-          profileId,
-        }),
-      {
-        mocks: {
-          apolloClient: createMockApolloClientWithMultipleResponses([
-            mockAddReactionMutationResponse({
-              variables: {
-                publicationId: mockPublication.id,
-                profileId,
-                reaction: ReactionTypes.Upvote,
-              },
-            }),
-          ]),
+      const { result } = renderHookWithMocks(
+        () =>
+          useReaction({
+            profileId,
+          }),
+        {
+          mocks: {
+            apolloClient: createMockApolloClientWithMultipleResponses([
+              createAddReactionMutationMockedResponse({
+                variables: {
+                  publicationId: mockPublication.id,
+                  profileId,
+                  reaction: ReactionTypes.Upvote,
+                },
+              }),
+            ]),
+          },
         },
-      },
-    );
+      );
 
-    await act(async () => {
-      await result.current.addReaction({
-        publication: mockPublication,
-        reactionType: ReactionType.UPVOTE,
+      await act(async () => {
+        await result.current.addReaction({
+          publication: mockPublication,
+          reactionType: ReactionType.UPVOTE,
+        });
       });
-    });
 
-    expect(result.current.error).toBe(null);
+      expect(result.current.error).toBe(null);
+    });
   });
 
-  it('should provide removeReaction action', async () => {
-    const { result } = renderHookWithMocks(
-      () =>
-        useReaction({
-          profileId,
-        }),
-      {
-        mocks: {
-          apolloClient: createMockApolloClientWithMultipleResponses([
-            mockRemoveReactionMutationResponse({
-              variables: {
-                publicationId: mockPublication.id,
-                profileId,
-                reaction: ReactionTypes.Upvote,
-              },
-            }),
-          ]),
+  describe(`when removing a reaction`, () => {
+    it('should call correct mutation and resolve without errors', async () => {
+      const mockPublication: PostFragment = mockPostFragment();
+      const profileId = mockPublication.profile.id;
+
+      const { result } = renderHookWithMocks(
+        () =>
+          useReaction({
+            profileId,
+          }),
+        {
+          mocks: {
+            apolloClient: createMockApolloClientWithMultipleResponses([
+              createRemoveReactionMutationMockedResponse({
+                variables: {
+                  publicationId: mockPublication.id,
+                  profileId,
+                  reaction: ReactionTypes.Upvote,
+                },
+              }),
+            ]),
+          },
         },
-      },
-    );
+      );
 
-    await act(async () => {
-      await result.current.removeReaction({
-        publication: mockPublication,
-        reactionType: ReactionType.UPVOTE,
+      await act(async () => {
+        await result.current.removeReaction({
+          publication: mockPublication,
+          reactionType: ReactionType.UPVOTE,
+        });
       });
-    });
 
-    expect(result.current.error).toBe(null);
+      expect(result.current.error).toBe(null);
+    });
   });
 
-  it('should provide hasReaction action', async () => {
-    const mockPublicationWithReaction: PostFragment = mockPost({
-      reaction: ReactionTypes.Upvote,
+  describe(`when checking if a profile has reacted to a given publication`, () => {
+    it('should verify the provided reaction matches the reaction in the publication object', async () => {
+      const mockPublicationWithReaction: PostFragment = mockPostFragment({
+        reaction: ReactionTypes.Upvote,
+      });
+
+      const { result } = renderHookWithMocks(() =>
+        useReaction({
+          profileId: '',
+        }),
+      );
+
+      const hasReactionResult = result.current.hasReaction({
+        publication: mockPublicationWithReaction,
+        reactionType: ReactionType.UPVOTE,
+      });
+
+      expect(hasReactionResult).toBe(true);
     });
-
-    const { result } = renderHookWithMocks(() =>
-      useReaction({
-        profileId,
-      }),
-    );
-
-    const hasReactionResult = result.current.hasReaction({
-      publication: mockPublicationWithReaction,
-      reactionType: ReactionType.UPVOTE,
-    });
-
-    expect(hasReactionResult).toBe(true);
   });
 });

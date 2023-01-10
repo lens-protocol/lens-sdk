@@ -27,6 +27,11 @@ const publicationHooks = [
     path: '/publications/useComments',
   },
   {
+    label: 'useSearchPublications',
+    description: `Fetch publications that match a query`,
+    path: '/publications/useSearchPublications',
+  },
+  {
     label: 'useExplorePublications',
     description: `Fetch an array of publications that match certain explore criteria.`,
     path: '/publications/useExplorePublications',

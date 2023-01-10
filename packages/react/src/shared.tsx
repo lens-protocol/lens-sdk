@@ -1,6 +1,11 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { createAnonymousApolloClient, createApolloClient } from '@lens-protocol/api-bindings';
-import { TransactionKind } from '@lens-protocol/domain/entities';
+import {
+  PendingSigningRequestError,
+  TransactionKind,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
 import { ActiveProfile } from '@lens-protocol/domain/use-cases/profile';
 import {
   SupportedTransactionRequest,
@@ -13,8 +18,7 @@ import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
-import { FollowProfilesResponder } from './FollowProfilesResponder';
-import { NoopResponder } from './NoopResponder';
+import { ErrorHandler } from './ErrorHandler';
 import { LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
@@ -23,7 +27,13 @@ import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfi
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
 import { SignlessProtocolCallRelayer } from './transactions/adapters/SignlessProtocolCallRelayer';
-import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
+import {
+  TransactionQueuePresenter,
+  FailedTransactionError,
+} from './transactions/adapters/TransactionQueuePresenter';
+import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
+import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
+import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
@@ -45,7 +55,12 @@ import { ProviderFactory } from './wallet/infrastructure/ProviderFactory';
 import { SignerFactory } from './wallet/infrastructure/SignerFactory';
 import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
 
-export type ErrorHandler = (error: Error) => void;
+export type Handlers = {
+  onLogout: LogoutHandler;
+  onError: ErrorHandler<
+    PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedTransactionError
+  >;
+};
 
 export type SharedDependencies = {
   activeProfile: ActiveProfile;
@@ -57,7 +72,7 @@ export type SharedDependencies = {
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   logoutPresenter: LogoutPresenter;
-  onError: ErrorHandler;
+  onError: Handlers['onError'];
   protocolCallRelayer: ProtocolCallRelayer;
   sources: string[];
   transactionFactory: TransactionFactory;
@@ -68,11 +83,6 @@ export type SharedDependencies = {
   walletGateway: WalletGateway;
   notificationStorage: IStorage<UnreadNotificationsData>;
   signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
-};
-
-export type Handlers = {
-  onLogout: LogoutHandler;
-  onError: ErrorHandler;
 };
 
 export function createSharedDependencies(config: LensConfig, { onLogout, onError }: Handlers) {
@@ -123,7 +133,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.COLLECT_PUBLICATION]: new NoopResponder(),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
-    [TransactionKind.CREATE_POST]: new NoopResponder(),
+    [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient),
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),

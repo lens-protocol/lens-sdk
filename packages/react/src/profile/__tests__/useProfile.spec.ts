@@ -1,6 +1,6 @@
 import {
   createMockApolloClientWithMultipleResponses,
-  createGetProfileQueryMockedResponse,
+  mockGetProfileQueryMockedResponse,
   mockProfileFieldsFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
@@ -20,7 +20,7 @@ describe(`Given the ${useProfile.name} hook`, () => {
         const { result } = renderHookWithMocks(() => useProfile({ profileId: profileId }), {
           mocks: {
             apolloClient: createMockApolloClientWithMultipleResponses([
-              createGetProfileQueryMockedResponse({
+              mockGetProfileQueryMockedResponse({
                 profile: mockProfile,
                 request: {
                   profileId,
@@ -43,7 +43,7 @@ describe(`Given the ${useProfile.name} hook`, () => {
         const { result } = renderHookWithMocks(() => useProfile({ handle }), {
           mocks: {
             apolloClient: createMockApolloClientWithMultipleResponses([
-              createGetProfileQueryMockedResponse({
+              mockGetProfileQueryMockedResponse({
                 profile: mockProfile,
                 request: { handle },
               }),

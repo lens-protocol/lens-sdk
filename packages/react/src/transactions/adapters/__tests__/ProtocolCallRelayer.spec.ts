@@ -1,7 +1,7 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockBroadcastProtocolCallMutationMockedResponse,
+  createBroadcastProtocolCallMutationMockedResponse,
   mockRelayerResultFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { SignedProtocolCall, MetaTransaction } from '@lens-protocol/domain/entities';
@@ -31,7 +31,7 @@ describe(`Given an instance of the ${ProtocolCallRelayer.name}`, () => {
     it(`should resolve with ${MetaTransaction.name} on Polygon`, async () => {
       const relayResult = mockRelayerResultFragment();
       const apollo = createMockApolloClientWithMultipleResponses([
-        mockBroadcastProtocolCallMutationMockedResponse({
+        createBroadcastProtocolCallMutationMockedResponse({
           result: relayResult,
           variables: {
             request: {

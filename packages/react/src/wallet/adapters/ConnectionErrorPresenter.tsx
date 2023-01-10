@@ -6,6 +6,7 @@ import {
 } from '@lens-protocol/domain/entities';
 import { IConnectionErrorPresenter } from '@lens-protocol/domain/use-cases/wallets';
 
+import { ErrorHandler } from '../../ErrorHandler';
 function isConnectionRequestCancelled(
   error: PendingSigningRequestError | UserRejectedError | WalletConnectionError,
 ) {
@@ -23,9 +24,9 @@ function isSigningRequestCancelled(
 
 export class ConnectionErrorPresenter implements IConnectionErrorPresenter {
   constructor(
-    private readonly errorHandler: (
-      error: PendingSigningRequestError | UserRejectedError | WalletConnectionError,
-    ) => void,
+    private readonly errorHandler: ErrorHandler<
+      PendingSigningRequestError | UserRejectedError | WalletConnectionError
+    >,
   ) {}
 
   presentConnectionError(

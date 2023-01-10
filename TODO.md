@@ -87,14 +87,14 @@
 
 ## Revenue
 
-- [ ] `usePublicationRevenue`
+- [x] `usePublicationRevenue`
 - [ ] `useProfilePublicationsRevenue`
 - [ ] `useProfileFollowsRevenue`
 
 ## Search
 
-- [ ] `useSearchPublications`
-- [ ] `useSearchProfiles`
+- [x] `useSearchPublications`
+- [x] `useSearchProfiles`
 
 ## Notifications
 

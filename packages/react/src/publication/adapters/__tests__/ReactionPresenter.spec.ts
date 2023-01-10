@@ -1,8 +1,8 @@
 import { PostFragment, PostFragmentDoc, ReactionTypes } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
-  mockPost,
-  mockPublicationStats,
+  mockPostFragment,
+  mockPublicationStatsFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockReactionRequest } from '@lens-protocol/domain/mocks';
 import { ReactionRequest } from '@lens-protocol/domain/use-cases/publications';
@@ -43,9 +43,9 @@ function setupTestScenario({ post, request }: { post: PostFragment; request: Rea
 describe(`Given the ${ReactionPresenter.name}`, () => {
   describe(`when "${ReactionPresenter.prototype.presentOptimisticAdd.name}" method is invoked`, () => {
     it(`should update apollo cache with added reaction`, async () => {
-      const post = mockPost({
+      const post = mockPostFragment({
         reaction: null,
-        stats: mockPublicationStats({ totalUpvotes: 1 }),
+        stats: mockPublicationStatsFragment({ totalUpvotes: 1 }),
       });
       const request = mockReactionRequest({
         publicationId: post.id,
@@ -72,9 +72,9 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
 
   describe(`when "${ReactionPresenter.prototype.presentOptimisticRemove.name}" method is invoked`, () => {
     it(`should update apollo cache with removed reaction`, async () => {
-      const post = mockPost({
+      const post = mockPostFragment({
         reaction: ReactionTypes.Upvote,
-        stats: mockPublicationStats({ totalUpvotes: 1 }),
+        stats: mockPublicationStatsFragment({ totalUpvotes: 1 }),
       });
       const request = mockReactionRequest({
         publicationId: post.id,
@@ -103,9 +103,9 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
     it(`should:
           - update revert apollo cache update with added reaction
           - present error toast`, async () => {
-      const post = mockPost({
+      const post = mockPostFragment({
         reaction: ReactionTypes.Upvote,
-        stats: mockPublicationStats({ totalUpvotes: 1 }),
+        stats: mockPublicationStatsFragment({ totalUpvotes: 1 }),
       });
       const request = mockReactionRequest({
         publicationId: post.id,
@@ -134,9 +134,9 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
     it(`should:
           - update revert apollo cache update with removed reaction
           - present error toast`, async () => {
-      const post = mockPost({
+      const post = mockPostFragment({
         reaction: null,
-        stats: mockPublicationStats({ totalUpvotes: 1 }),
+        stats: mockPublicationStatsFragment({ totalUpvotes: 1 }),
       });
       const request = mockReactionRequest({
         publicationId: post.id,

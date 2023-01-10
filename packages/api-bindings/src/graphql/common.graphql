@@ -6,6 +6,14 @@ fragment Erc20 on Erc20 {
   address
 }
 
+fragment Erc20Amount on Erc20Amount {
+  __typename
+  asset {
+    ...Erc20
+  }
+  value
+}
+
 fragment ModuleFeeAmount on ModuleFeeAmount {
   __typename
   asset {
@@ -113,6 +121,19 @@ fragment Wallet on Wallet {
   address
   defaultProfile {
     ...ProfileFields
+  }
+}
+
+fragment Media on Media {
+  __typename
+  url
+  mimeType
+}
+
+fragment MediaSet on MediaSet {
+  __typename
+  original {
+    ...Media
   }
 }
 
@@ -305,17 +326,24 @@ fragment Post on Post {
   ownedByMe @client
 }
 
+fragment PendingPost on PendingPost {
+  __typename
+  id
+  content
+  media {
+    ...Media
+  }
+  profile {
+    ...ProfileFields
+  }
+  locale
+  mainContentFocus
+}
+
 fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
   __typename
   name
   chainId
   version
   verifyingContract
-}
-
-fragment Erc20Amount on Erc20Amount {
-  asset {
-    ...Erc20
-  }
-  value
 }
