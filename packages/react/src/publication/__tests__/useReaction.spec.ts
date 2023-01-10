@@ -1,9 +1,9 @@
 import { PostFragment, ReactionTypes } from '@lens-protocol/api-bindings';
 import {
+  createAddReactionMutationMockedResponse,
   createMockApolloClientWithMultipleResponses,
-  mockAddReactionMutationResponse,
+  createRemoveReactionMutationMockedResponse,
   mockPostFragment,
-  mockRemoveReactionMutationResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import { act } from '@testing-library/react';
@@ -24,7 +24,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
       {
         mocks: {
           apolloClient: createMockApolloClientWithMultipleResponses([
-            mockAddReactionMutationResponse({
+            createAddReactionMutationMockedResponse({
               variables: {
                 publicationId: mockPublication.id,
                 profileId,
@@ -55,7 +55,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
       {
         mocks: {
           apolloClient: createMockApolloClientWithMultipleResponses([
-            mockRemoveReactionMutationResponse({
+            createRemoveReactionMutationMockedResponse({
               variables: {
                 publicationId: mockPublication.id,
                 profileId,

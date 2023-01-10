@@ -36,7 +36,7 @@ function mockBroadcastProtocolCallMutation(
   };
 }
 
-export function mockBroadcastProtocolCallMutationMockedResponse(
+export function createBroadcastProtocolCallMutationMockedResponse(
   instructions:
     | {
         error: Error;
@@ -123,7 +123,7 @@ export function mockCreatePostTypedDataMutation({
   };
 }
 
-export function mockAddReactionMutationResponse(args: {
+export function createAddReactionMutationMockedResponse(args: {
   variables: AddReactionMutationVariables;
 }): MockedResponse<AddReactionMutation> {
   return {
@@ -137,7 +137,7 @@ export function mockAddReactionMutationResponse(args: {
   };
 }
 
-export function mockRemoveReactionMutationResponse(args: {
+export function createRemoveReactionMutationMockedResponse(args: {
   variables: RemoveReactionMutationVariables;
 }): MockedResponse<RemoveReactionMutation> {
   return {
@@ -151,7 +151,7 @@ export function mockRemoveReactionMutationResponse(args: {
   };
 }
 
-export function mockAddReactionMutationWithGraphqlValidationErrorResponse(args: {
+export function createAddReactionMutationWithGraphqlValidationErrorResponse(args: {
   variables: AddReactionMutationVariables;
 }): MockedResponse<AddReactionMutation> {
   return {
@@ -169,7 +169,7 @@ export function mockAddReactionMutationWithGraphqlValidationErrorResponse(args: 
   };
 }
 
-export function mockRemoveReactionMutationWithGraphqlValidationErrorResponse(args: {
+export function createRemoveReactionMutationWithGraphqlValidationErrorResponse(args: {
   variables: RemoveReactionMutationVariables;
 }): MockedResponse<RemoveReactionMutation> {
   return {
