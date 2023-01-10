@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import {
   createMockApolloClientWithMultipleResponses,
   createGetAllProfilesByOwnerAddressQueryMockedResponse,
-  createGetProfileQueryMockedResponse,
+  mockGetProfileQueryMockedResponse,
   mockProfileFieldsFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { Profile } from '@lens-protocol/domain/entities';
@@ -46,7 +46,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
     it('should return the Profile entity associated with the given handle', async () => {
       const profileDataFragment = mockProfileFieldsFragment();
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        createGetProfileQueryMockedResponse({
+        mockGetProfileQueryMockedResponse({
           request: { handle: profileDataFragment.handle },
           profile: profileDataFragment,
         }),
@@ -65,7 +65,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
     it('should return null if the Profile does not exist', async () => {
       const handle = faker.internet.userName();
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        createGetProfileQueryMockedResponse({ request: { handle }, profile: null }),
+        mockGetProfileQueryMockedResponse({ request: { handle }, profile: null }),
       ]);
       const gateway = setupProfileGateway({ apolloClient });
 

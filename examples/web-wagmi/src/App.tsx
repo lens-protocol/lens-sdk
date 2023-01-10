@@ -29,13 +29,13 @@ import { ProfileById } from './profiles/UseProfileById';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseSearchProfiles } from './profiles/UseSearchProfiles';
 import { PublicationsPage } from './publications/PublicationsPage';
+import { UseCreatePost } from './publications/UseCreatePost';
 import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
 import { UseSearchPublications } from './publications/UseSearchPublications';
 import { UseWhoReacted } from './publications/UseWhoReacted';
-import { CreatePost } from './publications/components/CreatePost';
 import { RevenuePage } from './revenue/RevenuePage';
 import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
 
@@ -73,7 +73,7 @@ export function App() {
                 <Route path="/publications/usePublication" element={<UsePublication />} />
                 <Route path="/publications/useComments" element={<UsePublication />} />
                 <Route path="/publications/usePublications" element={<UsePublications />} />
-                <Route path="/publications/useCreatePost" element={<CreatePost />} />
+                <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
                 <Route
                   path="/publications/useCollectedPublications"
                   element={<UseCollectedPublications />}

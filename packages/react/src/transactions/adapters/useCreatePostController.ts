@@ -44,7 +44,7 @@ export function useCreatePostController({ upload }: UseCreatePostControllerArgs)
 
     const createPost = new CreatePost(signedCreatePost, gateway, transactionQueue, presenter);
 
-    void createPost.execute(request);
+    await createPost.execute(request);
 
     return presenter.asResult();
   };

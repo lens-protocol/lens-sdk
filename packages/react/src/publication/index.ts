@@ -1,11 +1,12 @@
 import {
-  isPostPublication,
-  isCommentPublication,
-  isMirrorPublication,
-  PostFragment,
   CommentFragment,
   CommentWithFirstCommentFragment,
+  isCommentPublication,
+  isMirrorPublication,
+  isPostPublication,
   MirrorFragment,
+  PendingPostFragment,
+  PostFragment,
   PublicationSortCriteria,
   PublicationTypes,
   RevenueAggregateFragment,
@@ -21,17 +22,18 @@ export * from './useReaction';
 export * from './useWhoReacted';
 
 export type { Publication } from './types';
-export type {
-  PostFragment,
-  CommentFragment,
-  MirrorFragment,
-  CommentWithFirstCommentFragment,
-  RevenueAggregateFragment,
-};
 export {
   isPostPublication,
   isCommentPublication,
   isMirrorPublication,
   PublicationSortCriteria,
   PublicationTypes,
+};
+export type {
+  CommentFragment,
+  CommentWithFirstCommentFragment,
+  MirrorFragment,
+  PendingPostFragment,
+  PostFragment,
+  RevenueAggregateFragment,
 };
