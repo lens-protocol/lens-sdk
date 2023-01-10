@@ -14,5 +14,6 @@ export * from './useExploreProfiles';
 export * from './useSearchProfiles';
 export * from './useCollectedPublications';
 export * from './useMutualFollowers';
+export * from './useUpdateProfileImage';
 
 export type { ProfileFieldsFragment, FollowingFragment, FollowerFragment };

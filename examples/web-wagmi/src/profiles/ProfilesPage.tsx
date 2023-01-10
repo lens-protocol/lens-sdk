@@ -33,18 +33,18 @@ const profileHooks = [
   },
   {
     label: 'useSearchProfiles',
-    description: `Fetch a list of profiles that match a query`,
-    path: '/profiles/useSearchProfiles',
-  },
-  {
-    label: 'useSearchProfiles',
-    description: `Fetch a list of profiles that match a query`,
+    description: `Fetch a list of profiles that match a query.`,
     path: '/profiles/useSearchProfiles',
   },
   {
     label: 'useFollow / useUnfollow',
     description: `Follow or unfollow a profile.`,
     path: '/profiles/useFollow',
+  },
+  {
+    label: 'useUpdateProfileImage',
+    description: `Update your profile image.`,
+    path: '/profiles/useUpdateProfileImage',
   },
 ];
 

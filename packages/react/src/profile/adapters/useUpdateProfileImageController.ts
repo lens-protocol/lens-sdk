@@ -16,7 +16,6 @@ export function useUpdateProfileImageController() {
   const { activeWallet, apolloClient, transactionGateway, protocolCallRelayer, transactionQueue } =
     useSharedDependencies();
 
-  // TODO use only UpdateOffChainProfileImageRequest
   return async (request: UpdateProfileImageRequest) => {
     const profileImageCallGateway = new ProfileImageCallGateway(apolloClient);
 
@@ -34,7 +33,7 @@ export function useUpdateProfileImageController() {
       presenter,
     );
 
-    void updateProfileImage.execute(request);
+    await updateProfileImage.execute(request);
 
     return presenter.asResult();
   };

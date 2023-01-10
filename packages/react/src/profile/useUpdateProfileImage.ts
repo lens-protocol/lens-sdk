@@ -42,6 +42,7 @@ export function useUpdateProfileImage({ profileId }: UseUpdateProfileImageArgs) 
 
   const update = useCallback(
     async (fileUrl: string) => {
+      setError(null);
       setIsPending(true);
 
       try {
