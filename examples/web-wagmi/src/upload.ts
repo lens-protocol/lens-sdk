@@ -22,7 +22,7 @@ You can get some Mumbai MATIC from the Mumbai Faucet: https://mumbaifaucet.com/`
   const signer = await fetchSigner();
 
   const bundlr = new WebBundlr('https://devnet.bundlr.network', 'matic', signer?.provider, {
-    providerUrl: 'https://matic-mumbai.chainstacklabs.com',
+    providerUrl: 'https://rpc-mumbai.maticvigil.com/',
   });
 
   await bundlr.ready();
