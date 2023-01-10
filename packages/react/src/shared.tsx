@@ -15,6 +15,7 @@ import React, { ReactNode, useContext } from 'react';
 import { ConsoleLogger } from './ConsoleLogger';
 import { FollowProfilesResponder } from './FollowProfilesResponder';
 import { NoopResponder } from './NoopResponder';
+import { UnfollowProfileResponder } from './UnfollowProfileResponder';
 import { LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
@@ -127,7 +128,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
-    [TransactionKind.UNFOLLOW_PROFILE]: new NoopResponder(),
+    [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
     [TransactionKind.UPDATE_COVER_IMAGE]: new NoopResponder(),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new NoopResponder(),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),

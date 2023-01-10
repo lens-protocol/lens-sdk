@@ -10,11 +10,11 @@ import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
-type ProfileFollowProps = {
+type FollowButtonProps = {
   profile: ProfileFieldsFragment;
 };
 
-function FollowButton({ profile }: ProfileFollowProps) {
+function FollowButton({ profile }: FollowButtonProps) {
   const { follow, isPending: isFollowing } = useFollow({ profile });
   const { unfollow, isPending: isUnfollowing } = useUnfollow({ profile });
 
@@ -32,6 +32,10 @@ function FollowButton({ profile }: ProfileFollowProps) {
   );
 }
 
+type ProfileFollowProps = {
+  profile: ProfileFieldsFragment;
+};
+
 function ProfileFollow({ profile }: ProfileFollowProps) {
   return (
     <article>
@@ -41,7 +45,11 @@ function ProfileFollow({ profile }: ProfileFollowProps) {
   );
 }
 
-function UseFollowInner({ activeProfile }: { activeProfile: ProfileFieldsFragment }) {
+type UseFollowInnerProps = {
+  activeProfile: ProfileFieldsFragment;
+};
+
+function UseFollowInner({ activeProfile }: UseFollowInnerProps) {
   const { data, loading } = useExploreProfiles({ observerId: activeProfile.id, limit: 50 });
 
   if (loading) return <Loading />;
