@@ -6,6 +6,7 @@ import {
   useCreateComment,
 } from '@lens-protocol/react';
 import { useState } from 'react';
+
 import { upload } from '../../upload';
 
 type CommentComposerProps = {

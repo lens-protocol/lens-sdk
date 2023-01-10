@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
-import { PublicationComments } from './components/PublicationComments';
 import { CommentComposer } from './components/CommentComposer';
+import { PublicationComments } from './components/PublicationComments';
 
 export function UseCreateComment() {
   const [publicationId, setPublicationId] = useState<string>('0x1b-0x0118');
