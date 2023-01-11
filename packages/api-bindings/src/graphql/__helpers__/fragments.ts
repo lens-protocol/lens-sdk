@@ -54,28 +54,6 @@ export function mockProfileFieldsFragment(
     id: faker.datatype.uuid(),
     name: `${firstName} ${lastName}`,
     bio: faker.lorem.sentence(),
-    attributes: [
-      {
-        __typename: 'Attribute',
-        key: 'something',
-        value: '42',
-      },
-      {
-        __typename: 'Attribute',
-        key: 'location',
-        value: location,
-      },
-      {
-        __typename: 'Attribute',
-        key: 'website',
-        value: website,
-      },
-      {
-        __typename: 'Attribute',
-        key: 'twitter',
-        value: twitter,
-      },
-    ],
     handle: faker.internet.userName(firstName, lastName),
     ownedBy: mockEthereumAddress(),
     picture: mockProfileMediaFragment(),
@@ -99,6 +77,30 @@ export function mockProfileFieldsFragment(
     website: website,
     twitter: twitter,
     ownedByMe: false,
+
+    __attributes: [
+      {
+        __typename: 'Attribute',
+        key: 'something',
+        value: '42',
+      },
+      {
+        __typename: 'Attribute',
+        key: 'location',
+        value: location,
+      },
+      {
+        __typename: 'Attribute',
+        key: 'website',
+        value: website,
+      },
+      {
+        __typename: 'Attribute',
+        key: 'twitter',
+        value: twitter,
+      },
+    ],
+    attributes: {},
 
     ...overrides,
     __typename: 'Profile',

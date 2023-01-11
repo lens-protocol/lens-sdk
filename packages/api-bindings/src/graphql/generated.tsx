@@ -1,3 +1,4 @@
+import type { ProfileAttributes } from './ProfileAttributes';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
@@ -63,6 +64,7 @@ export type Scalars = {
   Nonce: number;
   /** The notification id */
   NotificationId: string;
+  ProfileAttributes: ProfileAttributes;
   /** ProfileId custom scalar type */
   ProfileId: string;
   /** ProfileInterest custom scalar type */
@@ -2557,6 +2559,7 @@ export type Profile = {
   __typename: 'Profile';
   /** Optionals param to add extra attributes on the metadata */
   attributes: Maybe<Array<Attribute>>;
+  attributesMap: Scalars['ProfileAttributes'];
   /** Bio of the profile */
   bio: Maybe<Scalars['String']>;
   /** The cover picture for the profile */
@@ -4360,12 +4363,11 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   | 'isFollowedByMe'
   | 'isFollowing'
   | 'isOptimisticFollowedByMe'
+  | 'ownedByMe'
   | 'location'
   | 'twitter'
   | 'website'
-  | 'ownedByMe'
-> & {
-    attributes: Maybe<Array<AttributeFragment>>;
+> & { attributes: Profile['attributesMap'] } & {
     picture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     coverPicture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     stats: { __typename: 'ProfileStats' } & Pick<
@@ -4377,6 +4379,7 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
       | ProfileFollowModuleSettingsFragment
       | RevertFollowModuleSettingsFragment
     >;
+    __attributes: Maybe<Array<AttributeFragment>>;
     dispatcher: Maybe<Pick<Dispatcher, 'address' | 'canUseRelay'>>;
   };
 
@@ -4417,6 +4420,34 @@ export type MutualFollowersProfilesQueryVariables = Exact<{
 
 export type MutualFollowersProfilesQuery = {
   result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type CreateSetProfileMetadataTypedDataMutationVariables = Exact<{
+  request: CreatePublicSetProfileMetadataUriRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateSetProfileMetadataTypedDataMutation = {
+  result: Pick<CreateSetProfileMetadataUriBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { SetProfileMetadataURIWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Pick<Eip712TypedDataDomain, 'name' | 'chainId' | 'version' | 'verifyingContract'>;
+      value: Pick<
+        CreateSetProfileMetadataUrieip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'metadata'
+      >;
+    };
+  };
+};
+
+export type CreateSetProfileMetadataViaDispatcherMutationVariables = Exact<{
+  request: CreatePublicSetProfileMetadataUriRequest;
+}>;
+
+export type CreateSetProfileMetadataViaDispatcherMutation = {
+  result:
+    | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
+    | ({ __typename: 'RelayError' } & RelayErrorFragment);
 };
 
 export type FollowerFragment = { __typename: 'Follower' } & { wallet: WalletFragment };
@@ -4705,13 +4736,6 @@ export const MetadataFragmentDoc = gql`
   ${MediaSetFragmentDoc}
   ${MetadataAttributeOutputFragmentDoc}
 `;
-export const AttributeFragmentDoc = gql`
-  fragment Attribute on Attribute {
-    __typename
-    key
-    value
-  }
-`;
 export const ProfileMediaFragmentDoc = gql`
   fragment ProfileMedia on ProfileMedia {
     ... on NftImage {
@@ -4769,6 +4793,13 @@ export const RevertFollowModuleSettingsFragmentDoc = gql`
     contractAddress
   }
 `;
+export const AttributeFragmentDoc = gql`
+  fragment Attribute on Attribute {
+    __typename
+    key
+    value
+  }
+`;
 export const ProfileFieldsFragmentDoc = gql`
   fragment ProfileFields on Profile {
     __typename
@@ -4777,9 +4808,6 @@ export const ProfileFieldsFragmentDoc = gql`
     bio
     handle
     ownedBy
-    attributes {
-      ...Attribute
-    }
     picture {
       ...ProfileMedia
     }
@@ -4803,6 +4831,10 @@ export const ProfileFieldsFragmentDoc = gql`
         ...RevertFollowModuleSettings
       }
     }
+    __attributes: attributes {
+      ...Attribute
+    }
+    attributes: attributesMap @client
     dispatcher {
       address
       canUseRelay
@@ -4810,16 +4842,16 @@ export const ProfileFieldsFragmentDoc = gql`
     isFollowedByMe(isFinalisedOnChain: true)
     isFollowing(who: $observerId)
     isOptimisticFollowedByMe @client
+    ownedByMe @client
     location @client
     twitter @client
     website @client
-    ownedByMe @client
   }
-  ${AttributeFragmentDoc}
   ${ProfileMediaFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}
   ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
+  ${AttributeFragmentDoc}
 `;
 export const WalletFragmentDoc = gql`
   fragment Wallet on Wallet {
@@ -6585,6 +6617,141 @@ export type MutualFollowersProfilesLazyQueryHookResult = ReturnType<
 export type MutualFollowersProfilesQueryResult = Apollo.QueryResult<
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesQueryVariables
+>;
+export const CreateSetProfileMetadataTypedDataDocument = gql`
+  mutation CreateSetProfileMetadataTypedData(
+    $request: CreatePublicSetProfileMetadataURIRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createSetProfileMetadataTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          SetProfileMetadataURIWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          metadata
+        }
+      }
+    }
+  }
+`;
+export type CreateSetProfileMetadataTypedDataMutationFn = Apollo.MutationFunction<
+  CreateSetProfileMetadataTypedDataMutation,
+  CreateSetProfileMetadataTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateSetProfileMetadataTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateSetProfileMetadataTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetProfileMetadataTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetProfileMetadataTypedDataMutation, { data, loading, error }] = useCreateSetProfileMetadataTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateSetProfileMetadataTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetProfileMetadataTypedDataMutation,
+    CreateSetProfileMetadataTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetProfileMetadataTypedDataMutation,
+    CreateSetProfileMetadataTypedDataMutationVariables
+  >(CreateSetProfileMetadataTypedDataDocument, options);
+}
+export type CreateSetProfileMetadataTypedDataMutationHookResult = ReturnType<
+  typeof useCreateSetProfileMetadataTypedDataMutation
+>;
+export type CreateSetProfileMetadataTypedDataMutationResult =
+  Apollo.MutationResult<CreateSetProfileMetadataTypedDataMutation>;
+export type CreateSetProfileMetadataTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetProfileMetadataTypedDataMutation,
+  CreateSetProfileMetadataTypedDataMutationVariables
+>;
+export const CreateSetProfileMetadataViaDispatcherDocument = gql`
+  mutation CreateSetProfileMetadataViaDispatcher(
+    $request: CreatePublicSetProfileMetadataURIRequest!
+  ) {
+    result: createSetProfileMetadataViaDispatcher(request: $request) {
+      __typename
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export type CreateSetProfileMetadataViaDispatcherMutationFn = Apollo.MutationFunction<
+  CreateSetProfileMetadataViaDispatcherMutation,
+  CreateSetProfileMetadataViaDispatcherMutationVariables
+>;
+
+/**
+ * __useCreateSetProfileMetadataViaDispatcherMutation__
+ *
+ * To run a mutation, you first call `useCreateSetProfileMetadataViaDispatcherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetProfileMetadataViaDispatcherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetProfileMetadataViaDispatcherMutation, { data, loading, error }] = useCreateSetProfileMetadataViaDispatcherMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateSetProfileMetadataViaDispatcherMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetProfileMetadataViaDispatcherMutation,
+    CreateSetProfileMetadataViaDispatcherMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetProfileMetadataViaDispatcherMutation,
+    CreateSetProfileMetadataViaDispatcherMutationVariables
+  >(CreateSetProfileMetadataViaDispatcherDocument, options);
+}
+export type CreateSetProfileMetadataViaDispatcherMutationHookResult = ReturnType<
+  typeof useCreateSetProfileMetadataViaDispatcherMutation
+>;
+export type CreateSetProfileMetadataViaDispatcherMutationResult =
+  Apollo.MutationResult<CreateSetProfileMetadataViaDispatcherMutation>;
+export type CreateSetProfileMetadataViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetProfileMetadataViaDispatcherMutation,
+  CreateSetProfileMetadataViaDispatcherMutationVariables
 >;
 export const ProfileFollowersDocument = gql`
   query ProfileFollowers(
@@ -9462,6 +9629,7 @@ export type PostFieldPolicy = {
 };
 export type ProfileKeySpecifier = (
   | 'attributes'
+  | 'attributesMap'
   | 'bio'
   | 'coverPicture'
   | 'dispatcher'
@@ -9488,6 +9656,7 @@ export type ProfileKeySpecifier = (
 )[];
 export type ProfileFieldPolicy = {
   attributes?: FieldPolicy<any> | FieldReadFunction<any>;
+  attributesMap?: FieldPolicy<any> | FieldReadFunction<any>;
   bio?: FieldPolicy<any> | FieldReadFunction<any>;
   coverPicture?: FieldPolicy<any> | FieldReadFunction<any>;
   dispatcher?: FieldPolicy<any> | FieldReadFunction<any>;

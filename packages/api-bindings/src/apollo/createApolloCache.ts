@@ -9,9 +9,13 @@ import {
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
 import generatedIntrospection from '../graphql/generated';
+import { createAttributeTypePolicy } from './createAttributeTypePolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
+import { createMediaSetTypePolicy } from './createMediaSetTypePolicy';
+import { createMediaTypePolicy } from './createMediaTypePolicy';
+import { createNftImageTypePolicy } from './createNftImageTypePolicy';
 import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
@@ -56,6 +60,11 @@ function createTypePolicies(): TypePolicies {
     FeedItem: {
       keyFields: false,
     },
+
+    Attribute: createAttributeTypePolicy(),
+    MediaSet: createMediaSetTypePolicy(),
+    NftImage: createNftImageTypePolicy(),
+    Media: createMediaTypePolicy(),
 
     Query: {
       fields: {

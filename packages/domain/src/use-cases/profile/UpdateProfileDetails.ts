@@ -5,12 +5,17 @@ import {
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IProtocolCallPresenter } from '../transactions/ProtocolCallUseCase';
 
+export type ProfileAttributeValue = Date | string | number | null;
+
+export type PartialAttributesUpdate = Record<string, ProfileAttributeValue>;
+
 export type ProfileDetails = {
-  name: string;
+  // attributes: PartialAttributesUpdate;
   bio: string | null;
   location: string | null;
-  website: string | null;
+  name: string;
   twitter: string | null;
+  website: string | null;
 };
 
 export type UpdateProfileDetailsRequest = {
