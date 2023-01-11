@@ -57,6 +57,13 @@ function UpdateProfileImageInner({ profile }: { profile: ProfileFieldsFragment }
     }
   };
 
+  const handleUpdatePredefinedImage = async () => {
+    const url = 'https://arweave.net/dOKOqiZVvSs14n54GIRH9nkSlLKArzK7-SPc2sBVmAM';
+    // const url = 'https://arweave.net/uiNDIjXbrgaSclOjgo0ia1gs9RKqY6XoUsdlqSBTKDI';
+
+    await update(url);
+  };
+
   const handleUpdateProfileImage = async () => {
     const url = await uploadImageCandidate();
 
@@ -70,16 +77,21 @@ function UpdateProfileImageInner({ profile }: { profile: ProfileFieldsFragment }
       <SmallProfileCard profile={profile} />
 
       <div>
-        <button onClick={handleUploadCandidateFileClick}>Upload a new profile image</button>
+        <button onClick={handleUploadCandidateFileClick}>Upload a new profile image</button>{' '}
+        <button onClick={handleUpdatePredefinedImage} disabled={isPending}>
+          Save predefined image
+        </button>
+        {updateError && <p>{updateError.message}</p>}
+        {isPending && <p>Updating your Lens profile's image...</p>}
         {previewUrl && (
           <div>
             {uploadError && <p>{uploadError}</p>}
-            {updateError && <p>{updateError.message}</p>}
-            {isPending && <p>Updating your Lens profile's image...</p>}
             {isUploading && <p>Uploading image to Arweave...</p>}
             <img src={previewUrl} alt="Your new avatar" width="300px" />
             <div>
-              <button onClick={handleUpdateProfileImage}>Save</button>{' '}
+              <button onClick={handleUpdateProfileImage} disabled={isUploading || isPending}>
+                Upload and update
+              </button>{' '}
               <button onClick={handleDismissCandidateFileClick}>Cancel</button>
             </div>
           </div>
