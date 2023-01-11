@@ -10,6 +10,12 @@ export type UnfollowRequest = {
   kind: TransactionKind.UNFOLLOW_PROFILE;
 };
 
+export class OptimisticUnfollowError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 export type IUnfollowProfileCallGateway = IUnsignedProtocolCallGateway<UnfollowRequest>;
 
 export type IUnfollowProfilePresenter = IProtocolCallPresenter;

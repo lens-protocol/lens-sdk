@@ -5,7 +5,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
+import { OptimisticUnfollowError, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { IEquatableError } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
@@ -18,7 +18,12 @@ export type UseUnfollowArgs = {
 
 export function useUnfollow({ profile }: UseUnfollowArgs) {
   const [error, setError] = useState<
-    PendingSigningRequestError | WalletConnectionError | UserRejectedError | IEquatableError | null
+    | PendingSigningRequestError
+    | WalletConnectionError
+    | UserRejectedError
+    | IEquatableError
+    | OptimisticUnfollowError
+    | null
   >(null);
   const unfollow = useUnfollowController();
 
@@ -30,6 +35,15 @@ export function useUnfollow({ profile }: UseUnfollowArgs) {
 
   return {
     unfollow: async () => {
+      if (!profile.isFollowedByMe && profile.isOptimisticFollowedByMe) {
+        setError(
+          new OptimisticUnfollowError(
+            `Your follow request for ${profile.handle} is still pending.`,
+          ),
+        );
+        return;
+      }
+
       const result = await unfollow({
         kind: TransactionKind.UNFOLLOW_PROFILE,
         profileId: profile.id,
