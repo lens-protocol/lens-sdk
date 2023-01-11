@@ -11,7 +11,7 @@ import { ReferencePolicy } from './types';
 export type CreateMirrorRequest = {
   profileId: string;
   publicationId: string;
-  publicationType: PublicationType.COMMENT | PublicationType.POST;
+  publicationType: PublicationType;
   kind: TransactionKind.MIRROR_PUBLICATION;
   delegate: boolean;
   reference: ReferencePolicy;

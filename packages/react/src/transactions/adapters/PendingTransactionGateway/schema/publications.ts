@@ -104,9 +104,10 @@ export const CreateCommentRequestSchema = z.object({
 export const CreateMirrorRequestSchema = z.object({
   profileId: z.string(),
   publicationId: z.string(),
-  publicationType: z.union([z.literal(PublicationType.COMMENT), z.literal(PublicationType.POST)]),
+  publicationType: z.nativeEnum(PublicationType),
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   delegate: z.boolean(),
+  reference: z.nativeEnum(ReferencePolicy),
 });
 
 export const FreeCollectRequestSchema = z.object({

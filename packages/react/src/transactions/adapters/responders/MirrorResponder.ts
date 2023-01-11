@@ -8,33 +8,36 @@ import {
   PublicationByTxHashDocument,
   PublicationByTxHashQuery,
   PublicationByTxHashQueryVariables,
-  PostFragment,
   PostFragmentDoc,
+  getPublicationTypename,
+  PublicationFragment,
 } from '@lens-protocol/api-bindings';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
+import {} from '@lens-protocol/api-bindings/dist/esm';
 
 export class MirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
   constructor(private client: ApolloClient<NormalizedCacheObject>) {}
 
   async prepare({ request }: TransactionData<CreateMirrorRequest>) {
-    const postIdentifier = this.client.cache.identify({
-      __typename: 'Post',
+    const publicationIdentifier = this.client.cache.identify({
+      __typename: getPublicationTypename(request.publicationType),
       id: request.publicationId,
     });
 
-    const snapshot = this.client.cache.readFragment<PostFragment>({
-      id: postIdentifier,
-      fragmentName: 'Post',
+    const snapshot = this.client.cache.readFragment<PublicationFragment>({
+      id: publicationIdentifier,
+      fragmentName: getPublicationTypename(request.publicationType),
       fragment: PostFragmentDoc,
     });
 
     if (snapshot) {
-      this.client.cache.writeFragment({
-        id: postIdentifier,
-        fragmentName: 'Post',
+      this.client.cache.writeFragment<PublicationFragment>({
+        id: publicationIdentifier,
+        fragmentName: getPublicationTypename(request.publicationType),
         fragment: PostFragmentDoc,
         data: {
           ...snapshot,
+          isOptimisticMirroredByMe: true,
           stats: {
             ...snapshot.stats,
             totalAmountOfMirrors: snapshot.stats.totalAmountOfMirrors + 1,
@@ -45,12 +48,34 @@ export class MirrorResponder implements ITransactionResponder<CreateMirrorReques
   }
 
   async commit({ request, txHash }: BroadcastedTransactionData<CreateMirrorRequest>) {
-    // updates Publication in cache
-    // need to refresh the publication to get new mirror id
+    // refresh the publication to get new mirror id from API
     await this.client.query<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>({
       query: PublicationByTxHashDocument,
       variables: { txHash, observerId: request.profileId },
       fetchPolicy: 'network-only',
     });
+
+    const publicationIdentifier = this.client.cache.identify({
+      __typename: getPublicationTypename(request.publicationType),
+      id: request.publicationId,
+    });
+
+    const snapshot = this.client.cache.readFragment<PublicationFragment>({
+      id: publicationIdentifier,
+      fragmentName: getPublicationTypename(request.publicationType),
+      fragment: PostFragmentDoc,
+    });
+
+    if (snapshot) {
+      this.client.cache.writeFragment<PublicationFragment>({
+        id: publicationIdentifier,
+        fragmentName: getPublicationTypename(request.publicationType),
+        fragment: PostFragmentDoc,
+        data: {
+          ...snapshot,
+          isOptimisticMirroredByMe: false,
+        },
+      });
+    }
   }
 }
