@@ -35,7 +35,7 @@ function FollowButton({ profile }: FollowButtonProps) {
 
   return (
     <button onClick={follow} disabled={isFollowing}>
-      {isFollowing ? 'Following...' : 'Follow'}
+      Follow
     </button>
   );
 }
