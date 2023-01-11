@@ -4290,15 +4290,15 @@ export type CreatePostViaDispatcherMutation = {
   result: RelayerResultFragment | RelayErrorFragment;
 };
 
+export type ProfileFollowRevenueFragment = { __typename: 'FollowRevenueResult' } & {
+  revenues: Array<RevenueAggregateFragment>;
+};
+
 export type ProfileFollowRevenueQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
 }>;
 
-export type ProfileFollowRevenueQuery = {
-  result: { __typename: 'FollowRevenueResult' } & {
-    revenues: Array<{ total: Erc20AmountFragment }>;
-  };
-};
+export type ProfileFollowRevenueQuery = { result: ProfileFollowRevenueFragment };
 
 export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
   FeeFollowModuleSettings,
@@ -5274,6 +5274,34 @@ export const NewReactionNotificationFieldsFragmentDoc = gql`
   ${CommentFragmentDoc}
   ${MirrorFragmentDoc}
 `;
+export const Erc20AmountFragmentDoc = gql`
+  fragment Erc20Amount on Erc20Amount {
+    __typename
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
+`;
+export const RevenueAggregateFragmentDoc = gql`
+  fragment RevenueAggregate on RevenueAggregate {
+    __typename
+    total {
+      ...Erc20Amount
+    }
+  }
+  ${Erc20AmountFragmentDoc}
+`;
+export const ProfileFollowRevenueFragmentDoc = gql`
+  fragment ProfileFollowRevenue on FollowRevenueResult {
+    __typename
+    revenues {
+      ...RevenueAggregate
+    }
+  }
+  ${RevenueAggregateFragmentDoc}
+`;
 export const FollowerFragmentDoc = gql`
   fragment Follower on Follower {
     __typename
@@ -5324,25 +5352,6 @@ export const WhoReactedResultFragmentDoc = gql`
     }
   }
   ${ProfileFieldsFragmentDoc}
-`;
-export const Erc20AmountFragmentDoc = gql`
-  fragment Erc20Amount on Erc20Amount {
-    __typename
-    asset {
-      ...Erc20
-    }
-    value
-  }
-  ${Erc20FragmentDoc}
-`;
-export const RevenueAggregateFragmentDoc = gql`
-  fragment RevenueAggregate on RevenueAggregate {
-    __typename
-    total {
-      ...Erc20Amount
-    }
-  }
-  ${Erc20AmountFragmentDoc}
 `;
 export const RevenueFragmentDoc = gql`
   fragment Revenue on PublicationRevenue {
@@ -6126,15 +6135,10 @@ export type CreatePostViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
 export const ProfileFollowRevenueDocument = gql`
   query ProfileFollowRevenue($profileId: ProfileId!) {
     result: profileFollowRevenue(request: { profileId: $profileId }) {
-      __typename
-      revenues {
-        total {
-          ...Erc20Amount
-        }
-      }
+      ...ProfileFollowRevenue
     }
   }
-  ${Erc20AmountFragmentDoc}
+  ${ProfileFollowRevenueFragmentDoc}
 `;
 
 /**

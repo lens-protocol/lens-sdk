@@ -13,6 +13,7 @@ import {
   MirrorFragment,
   PostFragment,
   ProfileFieldsFragment,
+  ProfileFollowRevenueFragment,
   ProfileMediaFragment,
   PublicationMainFocus,
   PublicationRevenueFragment,
@@ -294,6 +295,19 @@ export function mockRevenueFragment({
     revenue: mockRevenueAggregateFragment(amount),
   };
 }
+
+export function mockProfileFollowRevenueFragment({
+  amount,
+}: {
+  publication?: CommentFragment | PostFragment | MirrorFragment;
+  amount?: Amount<Erc20>;
+} = {}): ProfileFollowRevenueFragment {
+  return {
+    __typename: 'FollowRevenueResult',
+    revenues: [mockRevenueAggregateFragment(amount)],
+  };
+}
+
 export function mockWhoReactedResultFragment(
   overrides?: Partial<Omit<WhoReactedResultFragment, '__typename'>>,
 ): WhoReactedResultFragment {

@@ -1,4 +1,10 @@
-import { Erc20AmountFragment, useProfileFollowRevenueQuery } from '@lens-protocol/api-bindings';
+import {
+  ProfileFollowRevenueQuery,
+  ProfileFollowRevenueQueryVariables,
+  RevenueAggregateFragment,
+  useProfileFollowRevenueQuery,
+  ProfileFollowRevenueFragment,
+} from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import { ReadResult, useReadResult } from '../helpers';
@@ -10,10 +16,14 @@ type UseProfileFollowRevenueArgs = {
 
 export function useProfileFollowRevenue({
   profileId,
-}: UseProfileFollowRevenueArgs): ReadResult<{ revenues: { total: Erc20AmountFragment }[] }> {
+}: UseProfileFollowRevenueArgs): ReadResult<RevenueAggregateFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
-  return useReadResult(
+  const { data, loading } = useReadResult<
+    ProfileFollowRevenueFragment,
+    ProfileFollowRevenueQuery,
+    ProfileFollowRevenueQueryVariables
+  >(
     useProfileFollowRevenueQuery({
       variables: {
         profileId,
@@ -21,4 +31,15 @@ export function useProfileFollowRevenue({
       client: apolloClient,
     }),
   );
+
+  if (loading)
+    return {
+      loading: true,
+      data: undefined,
+    };
+
+  return {
+    data: data.revenues,
+    loading: false,
+  };
 }

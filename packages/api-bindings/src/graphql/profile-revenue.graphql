@@ -1,10 +1,12 @@
+fragment ProfileFollowRevenue on FollowRevenueResult {
+  __typename
+  revenues {
+    ...RevenueAggregate
+  }
+}
+
 query ProfileFollowRevenue($profileId: ProfileId!) {
   result: profileFollowRevenue(request: { profileId: $profileId }) {
-    __typename
-    revenues {
-      total {
-        ...Erc20Amount
-      }
-    }
+    ...ProfileFollowRevenue
   }
 }

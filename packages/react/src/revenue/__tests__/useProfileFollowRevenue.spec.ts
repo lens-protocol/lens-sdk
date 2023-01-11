@@ -1,7 +1,7 @@
 import {
   createMockApolloClientWithMultipleResponses,
   createProfileFollowRevenueQueryMockedResponse,
-  mockErc20AmountFragment,
+  mockProfileFollowRevenueFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
@@ -11,7 +11,8 @@ import { useProfileFollowRevenue } from '../useProfileFollowRevenue';
 describe(`Given the ${useProfileFollowRevenue.name} hook`, () => {
   describe('when the query returns data successfully', () => {
     const profileId = '0x2001';
-    const mockRevenues = [{ total: mockErc20AmountFragment() }];
+
+    const mockRevenues = mockProfileFollowRevenueFragment();
 
     it('should return profiles to follow', async () => {
       const { result } = renderHookWithMocks(() => useProfileFollowRevenue({ profileId }), {
@@ -26,10 +27,7 @@ describe(`Given the ${useProfileFollowRevenue.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual({
-        __typename: 'FollowRevenueResult',
-        revenues: mockRevenues,
-      });
+      expect(result.current.data).toEqual(mockRevenues.revenues);
     });
   });
 });

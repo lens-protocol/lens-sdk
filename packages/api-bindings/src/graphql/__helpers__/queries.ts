@@ -29,6 +29,10 @@ import {
   MutualFollowersProfilesQueryVariables,
   PostFragment,
   ProfileFieldsFragment,
+  ProfileFollowRevenueDocument,
+  ProfileFollowRevenueFragment,
+  ProfileFollowRevenueQuery,
+  ProfileFollowRevenueQueryVariables,
   ProfilesToFollowDocument,
   ProfilesToFollowQuery,
   ProxyActionError,
@@ -60,10 +64,6 @@ import {
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables,
   WhoReactedResultFragment,
-  ProfileFollowRevenueQuery,
-  ProfileFollowRevenueDocument,
-  Erc20AmountFragment,
-  ProfileFollowRevenueQueryVariables,
 } from '../generated';
 import { mockFeedItemFragment, mockPostFragment, mockProfileFieldsFragment } from './fragments';
 
@@ -427,7 +427,7 @@ export function createProfileFollowRevenueQueryMockedResponse({
   revenues,
 }: {
   variables: ProfileFollowRevenueQueryVariables;
-  revenues: { total: Erc20AmountFragment }[];
+  revenues: ProfileFollowRevenueFragment;
 }): MockedResponse<ProfileFollowRevenueQuery> {
   return {
     request: {
@@ -436,10 +436,7 @@ export function createProfileFollowRevenueQueryMockedResponse({
     },
     result: {
       data: {
-        result: {
-          __typename: 'FollowRevenueResult',
-          revenues,
-        },
+        result: revenues,
       },
     },
   };

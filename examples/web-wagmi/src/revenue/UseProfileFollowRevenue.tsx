@@ -1,27 +1,51 @@
-import { useProfileFollowRevenue, usePublication } from '@lens-protocol/react';
+import { useProfile, useProfileFollowRevenue } from '@lens-protocol/react';
+import { useState } from 'react';
 
 import { Loading } from '../components/loading/Loading';
-import { PublicationCard } from '../publications/components/PublicationCard';
+import { ProfileCard } from '../profiles/components/ProfileCard';
+import { SelectProfileId } from '../profiles/components/ProfileSelector';
+import { RevenueCard } from './components/RevenueCard';
 
-const publicationId = '0x4f90-0x02';
-
-export function UseProfileFollowRevenue() {
+function UseProfileFollowRevenueInner({ profileId }: { profileId: string }) {
+  const { data: profile, loading: profileLoading } = useProfile({ profileId });
   const { data: publicationRevenue, loading: publicationRevenueLoading } = useProfileFollowRevenue({
-    profileId: '0x4f90-0x01',
+    profileId,
   });
-  const { data: publication, loading: publicationLoading } = usePublication({ publicationId });
 
-  if (publicationRevenueLoading || publicationLoading) return <Loading />;
-
-  console.log({ publicationRevenue });
+  if (publicationRevenueLoading || profileLoading) return <Loading />;
 
   return (
     <div>
+      <h3>Profile</h3>
+      <ProfileCard profile={profile} />
+      <h3>Follow revenue</h3>
+      {publicationRevenue.length ? (
+        publicationRevenue.map((revenue) => (
+          <RevenueCard key={revenue.total.asset.symbol} revenue={revenue} />
+        ))
+      ) : (
+        <p>No revenue from following.</p>
+      )}
+    </div>
+  );
+}
+
+export function UseProfileFollowRevenue() {
+  const [profileId, setProfileId] = useState<string | null>(null);
+  return (
+    <>
       <h1>
         <code>useProfileFollowRevenue</code>
       </h1>
-      <PublicationCard publication={publication} />
-      <h3>Follow revenue</h3>
-    </div>
+      <p>Select a profile to see their follow revenue:</p>
+      <SelectProfileId
+        onProfileSelected={(h: string) => {
+          return setProfileId(h);
+        }}
+      />
+      {profileId && profileId !== 'default' && (
+        <UseProfileFollowRevenueInner profileId={profileId} />
+      )}
+    </>
   );
 }
