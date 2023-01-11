@@ -39,8 +39,8 @@ export function UseProfileFollowRevenue() {
       </h1>
       <p>Select a profile to see their follow revenue:</p>
       <SelectProfileId
-        onProfileSelected={(h: string) => {
-          return setProfileId(h);
+        onProfileSelected={(id: string) => {
+          return setProfileId(id);
         }}
       />
       {profileId && profileId !== 'default' && (
