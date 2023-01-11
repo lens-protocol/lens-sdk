@@ -134,6 +134,7 @@ export function mockCreateMirrorRequest(
     profileId: mockProfileId(),
     publicationId: faker.datatype.uuid(),
     publicationType: PublicationType.COMMENT,
+    reference: ReferencePolicy.ANYBODY,
     ...overrides,
     kind: TransactionKind.MIRROR_PUBLICATION,
     delegate: false,

@@ -33,6 +33,7 @@ import {
   FailedTransactionError,
 } from './transactions/adapters/TransactionQueuePresenter';
 import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
+import { MirrorResponder } from './transactions/adapters/responders/MirrorResponder';
 import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
@@ -137,7 +138,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient),
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
-    [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
+    [TransactionKind.MIRROR_PUBLICATION]: new MirrorResponder(apolloClient),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
     [TransactionKind.UPDATE_COVER_IMAGE]: new NoopResponder(),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new NoopResponder(),
