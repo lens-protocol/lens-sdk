@@ -44,9 +44,7 @@ fragment ProfileFields on Profile {
   bio
   handle
   ownedBy
-  attributes {
-    ...Attribute
-  }
+
   picture {
     ...ProfileMedia
   }
@@ -72,6 +70,12 @@ fragment ProfileFields on Profile {
       ...RevertFollowModuleSettings
     }
   }
+
+  __attributes: attributes {
+    ...Attribute
+  }
+  attributes: attributesMap @client
+
   dispatcher {
     address
     canUseRelay
@@ -81,10 +85,10 @@ fragment ProfileFields on Profile {
   isFollowing(who: $observerId)
 
   isOptimisticFollowedByMe @client
+  ownedByMe @client
   location @client
   twitter @client
   website @client
-  ownedByMe @client
 }
 
 query ProfilesToFollow($observerId: ProfileId) {
@@ -146,6 +150,52 @@ query MutualFollowersProfiles(
     }
     pageInfo {
       ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+mutation CreateSetProfileMetadataTypedData(
+  $request: CreatePublicSetProfileMetadataURIRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetProfileMetadataTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetProfileMetadataURIWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        metadata
+      }
+    }
+  }
+}
+
+mutation CreateSetProfileMetadataViaDispatcher(
+  $request: CreatePublicSetProfileMetadataURIRequest!
+) {
+  result: createSetProfileMetadataViaDispatcher(request: $request) {
+    __typename
+
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
     }
   }
 }

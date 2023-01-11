@@ -1,4 +1,4 @@
-import { Maybe, Profile } from '../graphql/generated';
+import { ProfileAttributes, Maybe, Profile, ProfileAttributeReader } from '../graphql';
 import { TypePolicy } from './TypePolicy';
 
 export function createProfileTypePolicy(): TypePolicy<Profile> {
@@ -16,12 +16,17 @@ export function createProfileTypePolicy(): TypePolicy<Profile> {
         return existing ?? false;
       },
 
-      attributes: {
+      coverPicture: {
         merge(_, incoming) {
-          // Attributes are not merged, but replaced cause they are not normalized.
-          // (see createAttributeTypePolicy).
           return incoming;
         },
+      },
+
+      attributesMap(_: unknown, { readField }) {
+        return (readField('attributes') ?? []).reduce((acc, attribute) => {
+          acc[attribute.key] = new ProfileAttributeReader(attribute);
+          return acc;
+        }, {} as ProfileAttributes);
       },
 
       location(_: Maybe<string> | undefined, { readField }) {
