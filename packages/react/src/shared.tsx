@@ -19,7 +19,7 @@ import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
 import { ErrorHandler } from './ErrorHandler';
-import { UnfollowProfileResponder } from './UnfollowProfileResponder';
+import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
 import { LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
