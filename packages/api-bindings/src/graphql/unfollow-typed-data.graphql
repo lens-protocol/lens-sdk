@@ -1,0 +1,22 @@
+mutation CreateUnfollowTypedData($request: UnfollowRequest!) {
+  result: createUnfollowTypedData(request: $request) {
+    id
+    expiresAt
+    typedData {
+      types {
+        BurnWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        tokenId
+      }
+    }
+  }
+}

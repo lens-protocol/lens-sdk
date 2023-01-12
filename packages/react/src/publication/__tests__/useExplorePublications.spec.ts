@@ -1,7 +1,7 @@
 import { PublicationSortCriteria, PublicationTypes } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockPost,
+  mockPostFragment,
   createExplorePublicationsQueryMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
@@ -12,7 +12,7 @@ import { Publication } from '../types';
 import { useExplorePublications } from '../useExplorePublications';
 
 describe(`Given the ${useExplorePublications.name} hook`, () => {
-  const mockPublications: Publication[] = [mockPost()];
+  const mockPublications: Publication[] = [mockPostFragment()];
 
   describe('when the query returns data successfully', () => {
     it('should return publications that match the explore with default parameters', async () => {

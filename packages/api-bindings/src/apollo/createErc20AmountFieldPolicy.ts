@@ -1,7 +1,7 @@
 import { Erc20Amount, erc20Amount } from '../graphql';
 import { TypePolicy } from './TypePolicy';
 
-export function CreateErc20AmountFieldPolicy(): TypePolicy<Erc20Amount> {
+export function createErc20AmountFieldPolicy(): TypePolicy<Erc20Amount> {
   return {
     fields: {
       asAmount(_, { readField }) {

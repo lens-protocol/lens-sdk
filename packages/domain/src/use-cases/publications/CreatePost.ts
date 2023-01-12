@@ -6,6 +6,7 @@ import {
   IDelegableProtocolCallGateway,
   IProtocolCallPresenter,
 } from '../transactions/DelegableProtocolCallUseCase';
+import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
 import { CollectPolicy, ContentFocus, Locale, Media, ReferencePolicy } from './types';
 
 export type CreatePostRequest = {
@@ -21,7 +22,8 @@ export type CreatePostRequest = {
   delegate: boolean;
 };
 
-export type ICreatePostCallGateway = IDelegableProtocolCallGateway<CreatePostRequest>;
+export type ICreatePostCallGateway = IDelegableProtocolCallGateway<CreatePostRequest> &
+  IUnsignedProtocolCallGateway<CreatePostRequest>;
 
 export type ICreatePostPresenter = IProtocolCallPresenter;
 

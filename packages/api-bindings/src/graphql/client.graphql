@@ -33,3 +33,14 @@ extend type Erc20Amount {
 extend type ModuleFeeAmount {
   asAmount: ClientErc20Amount!
 }
+
+type PendingPost {
+  id: InternalPublicationId!
+  content: String
+  media: [Media!]
+  profile: Profile!
+  locale: Locale!
+  mainContentFocus: PublicationMainFocus!
+}
+
+extend union FeedItemRoot = PendingPost

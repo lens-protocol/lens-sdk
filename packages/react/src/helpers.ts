@@ -58,10 +58,14 @@ export type PaginatedReadResult<T> = ReadResult<T> & {
   next: () => Promise<void>;
 };
 
+type PaginatedQueryResult<K> = {
+  result: { pageInfo: CommonPaginatedResultInfoFragment; items: K };
+};
+
 export function usePaginatedReadResult<
   K,
-  T extends { result: { pageInfo: CommonPaginatedResultInfoFragment; items: K } },
   V,
+  T extends PaginatedQueryResult<K> = PaginatedQueryResult<K>,
 >({ error, data, loading, fetchMore }: QueryResult<T, V>): PaginatedReadResult<K> {
   return {
     ...buildReadResult<K>(data?.result.items, loading, error),

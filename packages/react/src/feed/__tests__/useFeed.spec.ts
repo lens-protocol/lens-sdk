@@ -1,6 +1,6 @@
 import {
   createMockApolloClientWithMultipleResponses,
-  mockFeedItem,
+  mockFeedItemFragment,
   createFeedQueryMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
@@ -10,7 +10,7 @@ import { useFeed } from '../useFeed';
 
 describe(`Given the ${useFeed.name} hook`, () => {
   const profileId = '0x2001';
-  const mockFeed = [mockFeedItem({}), mockFeedItem({})];
+  const mockFeed = [mockFeedItemFragment(), mockFeedItemFragment()];
 
   describe('when the query returns data successfully', () => {
     it('should return the feed', async () => {

@@ -54,7 +54,7 @@ export type Scalars = {
   /** limit custom scalar type */
   LimitScalar: number;
   /** Locale scalar type */
-  Locale: unknown;
+  Locale: string;
   /** Markdown scalar type */
   Markdown: string;
   /** mimetype custom scalar type */
@@ -1377,7 +1377,7 @@ export type FeedItem = {
   comments: Maybe<Array<Comment>>;
 };
 
-export type FeedItemRoot = Post | Comment;
+export type FeedItemRoot = Comment | PendingPost | Post;
 
 export type FeedRequest = {
   limit?: Maybe<Scalars['LimitScalar']>;
@@ -2466,6 +2466,16 @@ export type PendingApproveFollowsResult = {
   __typename: 'PendingApproveFollowsResult';
   items: Array<Profile>;
   pageInfo: PaginatedResultInfo;
+};
+
+export type PendingPost = {
+  __typename: 'PendingPost';
+  id: Scalars['InternalPublicationId'];
+  content: Maybe<Scalars['String']>;
+  media: Maybe<Array<Media>>;
+  profile: Profile;
+  locale: Scalars['Locale'];
+  mainContentFocus: PublicationMainFocus;
 };
 
 /** The social post */
@@ -3866,6 +3876,42 @@ export type AuthRefreshMutation = {
   result: Pick<AuthenticationResult, 'accessToken' | 'refreshToken'>;
 };
 
+export type CreateCommentTypedDataMutationVariables = Exact<{
+  request: CreatePublicCommentRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateCommentTypedDataMutation = {
+  result: Pick<CreateCommentBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { CommentWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Eip712TypedDataDomainFragment;
+      value: Pick<
+        CreateCommentEip712TypedDataValue,
+        | 'nonce'
+        | 'deadline'
+        | 'profileId'
+        | 'contentURI'
+        | 'profileIdPointed'
+        | 'pubIdPointed'
+        | 'collectModule'
+        | 'collectModuleInitData'
+        | 'referenceModuleData'
+        | 'referenceModule'
+        | 'referenceModuleInitData'
+      >;
+    };
+  };
+};
+
+export type CreateCommentViaDispatcherMutationVariables = Exact<{
+  request: CreatePublicCommentRequest;
+}>;
+
+export type CreateCommentViaDispatcherMutation = {
+  result: RelayerResultFragment | RelayErrorFragment;
+};
+
 export type CommentWithFirstCommentFragment = { __typename: 'Comment' } & {
   firstComment: Maybe<CommentFragment>;
 } & CommentFragment;
@@ -3991,6 +4037,10 @@ export type CollectModuleFragment =
 export type WalletFragment = { __typename: 'Wallet' } & Pick<Wallet, 'address'> & {
     defaultProfile: Maybe<ProfileFieldsFragment>;
   };
+
+export type MediaFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
+
+export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFragment };
 
 export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
   MetadataOutput,
@@ -4121,6 +4171,11 @@ export type PostFragment = { __typename: 'Post' } & Pick<
     canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
+export type PendingPostFragment = { __typename: 'PendingPost' } & Pick<
+  PendingPost,
+  'id' | 'content' | 'locale' | 'mainContentFocus'
+> & { media: Maybe<Array<MediaFragment>>; profile: ProfileFieldsFragment };
+
 export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain' } & Pick<
   Eip712TypedDataDomain,
   'name' | 'chainId' | 'version' | 'verifyingContract'
@@ -4131,7 +4186,7 @@ export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
 
 export type FeedItemFragment = { __typename: 'FeedItem' } & {
-  root: PostFragment | CommentFragment;
+  root: CommentFragment | PendingPostFragment | PostFragment;
   comments: Maybe<Array<CommentFragment>>;
 };
 
@@ -4275,9 +4330,15 @@ export type CreatePostViaDispatcherMutation = {
   result: RelayerResultFragment | RelayErrorFragment;
 };
 
-export type MediaFieldsFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
+export type ProfileFollowRevenueFragment = { __typename: 'FollowRevenueResult' } & {
+  revenues: Array<RevenueAggregateFragment>;
+};
 
-export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFieldsFragment };
+export type ProfileFollowRevenueQueryVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+}>;
+
+export type ProfileFollowRevenueQuery = { result: ProfileFollowRevenueFragment };
 
 export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
   FeeFollowModuleSettings,
@@ -4292,16 +4353,14 @@ export type RevertFollowModuleSettingsFragment = {
   __typename: 'RevertFollowModuleSettings';
 } & Pick<RevertFollowModuleSettings, 'contractAddress'>;
 
-type ProfileMediaFields_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
+type ProfileMedia_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
   NftImage,
   'contractAddress' | 'tokenId' | 'uri' | 'verified'
 >;
 
-type ProfileMediaFields_MediaSet_Fragment = MediaSetFragment;
+type ProfileMedia_MediaSet_Fragment = MediaSetFragment;
 
-export type ProfileMediaFieldsFragment =
-  | ProfileMediaFields_NftImage_Fragment
-  | ProfileMediaFields_MediaSet_Fragment;
+export type ProfileMediaFragment = ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment;
 
 export type AttributeFragment = { __typename: 'Attribute' } & Pick<Attribute, 'key' | 'value'>;
 
@@ -4321,10 +4380,8 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   | 'ownedByMe'
 > & {
     attributes: Maybe<Array<AttributeFragment>>;
-    picture: Maybe<ProfileMediaFields_NftImage_Fragment | ProfileMediaFields_MediaSet_Fragment>;
-    coverPicture: Maybe<
-      ProfileMediaFields_NftImage_Fragment | ProfileMediaFields_MediaSet_Fragment
-    >;
+    picture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
+    coverPicture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     stats: { __typename: 'ProfileStats' } & Pick<
       ProfileStats,
       'totalFollowers' | 'totalFollowing' | 'totalPosts'
@@ -4465,6 +4522,15 @@ export type ExplorePublicationsQuery = {
   };
 };
 
+export type PublicationByTxHashQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  txHash: Scalars['TxHash'];
+}>;
+
+export type PublicationByTxHashQuery = {
+  result: Maybe<PostFragment | CommentWithFirstCommentFragment | MirrorFragment>;
+};
+
 export type AddReactionMutationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
   reaction: ReactionTypes;
@@ -4575,6 +4641,20 @@ export type BroadcastProtocolCallMutationVariables = Exact<{
 
 export type BroadcastProtocolCallMutation = { result: RelayerResultFragment | RelayErrorFragment };
 
+export type CreateUnfollowTypedDataMutationVariables = Exact<{
+  request: UnfollowRequest;
+}>;
+
+export type CreateUnfollowTypedDataMutation = {
+  result: Pick<CreateUnfollowBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { BurnWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Eip712TypedDataDomainFragment;
+      value: Pick<CreateBurnEip712TypedDataValue, 'nonce' | 'deadline' | 'tokenId'>;
+    };
+  };
+};
+
 export type WalletCollectedPublicationsQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   walletAddress: Scalars['EthereumAddress'];
@@ -4599,8 +4679,8 @@ export const PublicationStatsFragmentDoc = gql`
     totalAmountOfComments
   }
 `;
-export const MediaFieldsFragmentDoc = gql`
-  fragment MediaFields on Media {
+export const MediaFragmentDoc = gql`
+  fragment Media on Media {
     __typename
     url
     mimeType
@@ -4610,10 +4690,10 @@ export const MediaSetFragmentDoc = gql`
   fragment MediaSet on MediaSet {
     __typename
     original {
-      ...MediaFields
+      ...Media
     }
   }
-  ${MediaFieldsFragmentDoc}
+  ${MediaFragmentDoc}
 `;
 export const MetadataAttributeOutputFragmentDoc = gql`
   fragment MetadataAttributeOutput on MetadataAttributeOutput {
@@ -4646,8 +4726,8 @@ export const AttributeFragmentDoc = gql`
     value
   }
 `;
-export const ProfileMediaFieldsFragmentDoc = gql`
-  fragment ProfileMediaFields on ProfileMedia {
+export const ProfileMediaFragmentDoc = gql`
+  fragment ProfileMedia on ProfileMedia {
     ... on NftImage {
       __typename
       contractAddress
@@ -4716,10 +4796,10 @@ export const ProfileFieldsFragmentDoc = gql`
       ...Attribute
     }
     picture {
-      ...ProfileMediaFields
+      ...ProfileMedia
     }
     coverPicture {
-      ...ProfileMediaFields
+      ...ProfileMedia
     }
     stats {
       __typename
@@ -4751,7 +4831,7 @@ export const ProfileFieldsFragmentDoc = gql`
     ownedByMe @client
   }
   ${AttributeFragmentDoc}
-  ${ProfileMediaFieldsFragmentDoc}
+  ${ProfileMediaFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}
   ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
@@ -5057,10 +5137,30 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     verifyingContract
   }
 `;
+export const PendingPostFragmentDoc = gql`
+  fragment PendingPost on PendingPost {
+    __typename
+    id
+    content
+    media {
+      ...Media
+    }
+    profile {
+      ...ProfileFields
+    }
+    locale
+    mainContentFocus
+  }
+  ${MediaFragmentDoc}
+  ${ProfileFieldsFragmentDoc}
+`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
     root {
+      ... on PendingPost {
+        ...PendingPost
+      }
       ... on Post {
         ...Post
       }
@@ -5072,6 +5172,7 @@ export const FeedItemFragmentDoc = gql`
       ...Comment
     }
   }
+  ${PendingPostFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
@@ -5228,6 +5329,35 @@ export const NewReactionNotificationFieldsFragmentDoc = gql`
   ${CommentFragmentDoc}
   ${MirrorFragmentDoc}
 `;
+export const Erc20AmountFragmentDoc = gql`
+  fragment Erc20Amount on Erc20Amount {
+    __typename
+    __asset: asset {
+      ...Erc20
+    }
+    __value: value
+    asAmount @client
+  }
+  ${Erc20FragmentDoc}
+`;
+export const RevenueAggregateFragmentDoc = gql`
+  fragment RevenueAggregate on RevenueAggregate {
+    __typename
+    total {
+      ...Erc20Amount
+    }
+  }
+  ${Erc20AmountFragmentDoc}
+`;
+export const ProfileFollowRevenueFragmentDoc = gql`
+  fragment ProfileFollowRevenue on FollowRevenueResult {
+    __typename
+    revenues {
+      ...RevenueAggregate
+    }
+  }
+  ${RevenueAggregateFragmentDoc}
+`;
 export const FollowerFragmentDoc = gql`
   fragment Follower on Follower {
     __typename
@@ -5278,26 +5408,6 @@ export const WhoReactedResultFragmentDoc = gql`
     }
   }
   ${ProfileFieldsFragmentDoc}
-`;
-export const Erc20AmountFragmentDoc = gql`
-  fragment Erc20Amount on Erc20Amount {
-    __typename
-    __asset: asset {
-      ...Erc20
-    }
-    __value: value
-    asAmount @client
-  }
-  ${Erc20FragmentDoc}
-`;
-export const RevenueAggregateFragmentDoc = gql`
-  fragment RevenueAggregate on RevenueAggregate {
-    __typename
-    total {
-      ...Erc20Amount
-    }
-  }
-  ${Erc20AmountFragmentDoc}
 `;
 export const RevenueFragmentDoc = gql`
   fragment Revenue on PublicationRevenue {
@@ -5496,6 +5606,143 @@ export type AuthRefreshMutationResult = Apollo.MutationResult<AuthRefreshMutatio
 export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
   AuthRefreshMutation,
   AuthRefreshMutationVariables
+>;
+export const CreateCommentTypedDataDocument = gql`
+  mutation CreateCommentTypedData(
+    $request: CreatePublicCommentRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createCommentTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          CommentWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          contentURI
+          profileIdPointed
+          pubIdPointed
+          collectModule
+          collectModuleInitData
+          referenceModuleData
+          referenceModule
+          referenceModuleInitData
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export type CreateCommentTypedDataMutationFn = Apollo.MutationFunction<
+  CreateCommentTypedDataMutation,
+  CreateCommentTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateCommentTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentTypedDataMutation, { data, loading, error }] = useCreateCommentTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateCommentTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCommentTypedDataMutation,
+    CreateCommentTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateCommentTypedDataMutation,
+    CreateCommentTypedDataMutationVariables
+  >(CreateCommentTypedDataDocument, options);
+}
+export type CreateCommentTypedDataMutationHookResult = ReturnType<
+  typeof useCreateCommentTypedDataMutation
+>;
+export type CreateCommentTypedDataMutationResult =
+  Apollo.MutationResult<CreateCommentTypedDataMutation>;
+export type CreateCommentTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateCommentTypedDataMutation,
+  CreateCommentTypedDataMutationVariables
+>;
+export const CreateCommentViaDispatcherDocument = gql`
+  mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
+    result: createCommentViaDispatcher(request: $request) {
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export type CreateCommentViaDispatcherMutationFn = Apollo.MutationFunction<
+  CreateCommentViaDispatcherMutation,
+  CreateCommentViaDispatcherMutationVariables
+>;
+
+/**
+ * __useCreateCommentViaDispatcherMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentViaDispatcherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentViaDispatcherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentViaDispatcherMutation, { data, loading, error }] = useCreateCommentViaDispatcherMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateCommentViaDispatcherMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCommentViaDispatcherMutation,
+    CreateCommentViaDispatcherMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateCommentViaDispatcherMutation,
+    CreateCommentViaDispatcherMutationVariables
+  >(CreateCommentViaDispatcherDocument, options);
+}
+export type CreateCommentViaDispatcherMutationHookResult = ReturnType<
+  typeof useCreateCommentViaDispatcherMutation
+>;
+export type CreateCommentViaDispatcherMutationResult =
+  Apollo.MutationResult<CreateCommentViaDispatcherMutation>;
+export type CreateCommentViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
+  CreateCommentViaDispatcherMutation,
+  CreateCommentViaDispatcherMutationVariables
 >;
 export const CommentsDocument = gql`
   query Comments(
@@ -6077,6 +6324,63 @@ export type CreatePostViaDispatcherMutationResult =
 export type CreatePostViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
   CreatePostViaDispatcherMutation,
   CreatePostViaDispatcherMutationVariables
+>;
+export const ProfileFollowRevenueDocument = gql`
+  query ProfileFollowRevenue($profileId: ProfileId!) {
+    result: profileFollowRevenue(request: { profileId: $profileId }) {
+      ...ProfileFollowRevenue
+    }
+  }
+  ${ProfileFollowRevenueFragmentDoc}
+`;
+
+/**
+ * __useProfileFollowRevenueQuery__
+ *
+ * To run a query within a React component, call `useProfileFollowRevenueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileFollowRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileFollowRevenueQuery({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *   },
+ * });
+ */
+export function useProfileFollowRevenueQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ProfileFollowRevenueQuery,
+    ProfileFollowRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileFollowRevenueQuery, ProfileFollowRevenueQueryVariables>(
+    ProfileFollowRevenueDocument,
+    options,
+  );
+}
+export function useProfileFollowRevenueLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfileFollowRevenueQuery,
+    ProfileFollowRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileFollowRevenueQuery, ProfileFollowRevenueQueryVariables>(
+    ProfileFollowRevenueDocument,
+    options,
+  );
+}
+export type ProfileFollowRevenueQueryHookResult = ReturnType<typeof useProfileFollowRevenueQuery>;
+export type ProfileFollowRevenueLazyQueryHookResult = ReturnType<
+  typeof useProfileFollowRevenueLazyQuery
+>;
+export type ProfileFollowRevenueQueryResult = Apollo.QueryResult<
+  ProfileFollowRevenueQuery,
+  ProfileFollowRevenueQueryVariables
 >;
 export const ProfilesToFollowDocument = gql`
   query ProfilesToFollow($observerId: ProfileId) {
@@ -6804,6 +7108,71 @@ export type ExplorePublicationsQueryResult = Apollo.QueryResult<
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables
 >;
+export const PublicationByTxHashDocument = gql`
+  query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
+    result: publication(request: { txHash: $txHash }) {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...CommentWithFirstComment
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentWithFirstCommentFragmentDoc}
+`;
+
+/**
+ * __usePublicationByTxHashQuery__
+ *
+ * To run a query within a React component, call `usePublicationByTxHashQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationByTxHashQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationByTxHashQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      txHash: // value for 'txHash'
+ *   },
+ * });
+ */
+export function usePublicationByTxHashQuery(
+  baseOptions: Apollo.QueryHookOptions<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
+    PublicationByTxHashDocument,
+    options,
+  );
+}
+export function usePublicationByTxHashLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PublicationByTxHashQuery,
+    PublicationByTxHashQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
+    PublicationByTxHashDocument,
+    options,
+  );
+}
+export type PublicationByTxHashQueryHookResult = ReturnType<typeof usePublicationByTxHashQuery>;
+export type PublicationByTxHashLazyQueryHookResult = ReturnType<
+  typeof usePublicationByTxHashLazyQuery
+>;
+export type PublicationByTxHashQueryResult = Apollo.QueryResult<
+  PublicationByTxHashQuery,
+  PublicationByTxHashQueryVariables
+>;
 export const AddReactionDocument = gql`
   mutation AddReaction(
     $publicationId: InternalPublicationId!
@@ -7303,6 +7672,74 @@ export type BroadcastProtocolCallMutationResult =
 export type BroadcastProtocolCallMutationOptions = Apollo.BaseMutationOptions<
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables
+>;
+export const CreateUnfollowTypedDataDocument = gql`
+  mutation CreateUnfollowTypedData($request: UnfollowRequest!) {
+    result: createUnfollowTypedData(request: $request) {
+      id
+      expiresAt
+      typedData {
+        types {
+          BurnWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          tokenId
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export type CreateUnfollowTypedDataMutationFn = Apollo.MutationFunction<
+  CreateUnfollowTypedDataMutation,
+  CreateUnfollowTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateUnfollowTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateUnfollowTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUnfollowTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUnfollowTypedDataMutation, { data, loading, error }] = useCreateUnfollowTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateUnfollowTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateUnfollowTypedDataMutation,
+    CreateUnfollowTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateUnfollowTypedDataMutation,
+    CreateUnfollowTypedDataMutationVariables
+  >(CreateUnfollowTypedDataDocument, options);
+}
+export type CreateUnfollowTypedDataMutationHookResult = ReturnType<
+  typeof useCreateUnfollowTypedDataMutation
+>;
+export type CreateUnfollowTypedDataMutationResult =
+  Apollo.MutationResult<CreateUnfollowTypedDataMutation>;
+export type CreateUnfollowTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateUnfollowTypedDataMutation,
+  CreateUnfollowTypedDataMutationVariables
 >;
 export const WalletCollectedPublicationsDocument = gql`
   query WalletCollectedPublications(
@@ -9042,6 +9479,23 @@ export type PendingApproveFollowsResultFieldPolicy = {
   items?: FieldPolicy<any> | FieldReadFunction<any>;
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PendingPostKeySpecifier = (
+  | 'id'
+  | 'content'
+  | 'media'
+  | 'profile'
+  | 'locale'
+  | 'mainContentFocus'
+  | PendingPostKeySpecifier
+)[];
+export type PendingPostFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  content?: FieldPolicy<any> | FieldReadFunction<any>;
+  media?: FieldPolicy<any> | FieldReadFunction<any>;
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  locale?: FieldPolicy<any> | FieldReadFunction<any>;
+  mainContentFocus?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type PostKeySpecifier = (
   | 'appId'
   | 'canComment'
@@ -10544,6 +10998,10 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | PendingApproveFollowsResultKeySpecifier);
     fields?: PendingApproveFollowsResultFieldPolicy;
   };
+  PendingPost?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | PendingPostKeySpecifier | (() => undefined | PendingPostKeySpecifier);
+    fields?: PendingPostFieldPolicy;
+  };
   Post?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | PostKeySpecifier | (() => undefined | PostKeySpecifier);
     fields?: PostFieldPolicy;
@@ -10840,7 +11298,7 @@ const result: PossibleTypesResultData = {
       'TimedFeeCollectModuleSettings',
       'UnknownCollectModuleSettings',
     ],
-    FeedItemRoot: ['Post', 'Comment'],
+    FeedItemRoot: ['Comment', 'PendingPost', 'Post'],
     FollowModule: [
       'FeeFollowModuleSettings',
       'ProfileFollowModuleSettings',

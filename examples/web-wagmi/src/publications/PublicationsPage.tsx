@@ -27,6 +27,11 @@ const publicationHooks = [
     path: '/publications/useComments',
   },
   {
+    label: 'useCreateComment',
+    description: `Create a publication comment.`,
+    path: '/publications/useCreateComment',
+  },
+  {
     label: 'useSearchPublications',
     description: `Fetch publications that match a query`,
     path: '/publications/useSearchPublications',
