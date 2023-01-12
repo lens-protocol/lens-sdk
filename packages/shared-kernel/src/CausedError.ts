@@ -1,5 +1,5 @@
-import defaultTo from 'lodash/defaultTo';
-import isObject from 'lodash/isObject';
+import defaultTo from 'lodash/defaultTo.js';
+import isObject from 'lodash/isObject.js';
 
 /**
  * This subclass of Error supports chaining.

@@ -1,4 +1,4 @@
 {
   "type": "module",
-  "main": "../dist/esm/use-cases/index.js"
+  "main": "../dist/use-cases/index.js"
 }

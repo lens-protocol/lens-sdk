@@ -10,38 +10,24 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/index.d.ts",
-        "default": "./dist/cjs/index.js"
-      }
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./web": {
-      "import": {
-        "types": "./dist/esm/web/index.d.ts",
-        "default": "./dist/esm/web/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/web/index.d.ts",
-        "default": "./dist/cjs/web/index.js"
-      }
+      "types": "./dist/web/index.d.ts",
+      "default": "./dist/web/index.js"
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/cjs/index.d.ts",
-  "main": "./dist/cjs/index.js",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
   "sideEffects": false,
   "files": [
     "dist",
     "web"
   ],
   "scripts": {
-    "build:cjs": "tsc -p ./tsconfig.build-cjs.json",
-    "build:esm": "tsc -p ./tsconfig.build.json",
-    "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
+    "build": "pnpm clean && tsup && tsc --emitDeclarationOnly",
     "clean": "rimraf ./dist",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
@@ -94,7 +80,8 @@
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "tsup": "^6.5.0"
   },
   "peerDependencies": {
     "ethers": "^5.7.2",

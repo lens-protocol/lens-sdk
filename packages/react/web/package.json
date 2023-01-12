@@ -1,4 +1,4 @@
 {
   "type": "module",
-  "main": "../dist/esm/web/index.js"
+  "main": "../dist/web/index.js"
 }

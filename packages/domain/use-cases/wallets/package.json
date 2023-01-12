@@ -1,4 +1,4 @@
 {
   "type": "module",
-  "main": "../../dist/esm/use-cases/wallets/index.js"
+  "main": "../../dist/use-cases/wallets/index.js"
 }
