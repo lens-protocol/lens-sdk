@@ -15,6 +15,12 @@ import {
   CreateCommentTypedDataMutation,
   CreatePostTypedDataMutation,
   CreateProfileMutation,
+  CreatePublicSetProfileMetadataUriRequest,
+  CreateSetProfileMetadataTypedDataDocument,
+  CreateSetProfileMetadataTypedDataMutation,
+  CreateSetProfileMetadataViaDispatcherDocument,
+  CreateSetProfileMetadataViaDispatcherMutation,
+  CreateSetProfileMetadataViaDispatcherMutationVariables,
   Eip712TypedDataDomain,
   Eip712TypedDataField,
   RelayResult,
@@ -222,5 +228,64 @@ export function createRemoveReactionMutationWithGraphqlValidationErrorResponse(a
         ),
       ],
     },
+  };
+}
+
+export function mockCreateSetProfileMetadataTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateSetProfileMetadataTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateSetProfileMetadataURIBroadcastItemResult', {
+      __typename: 'CreateSetProfileMetadataURIEIP712TypedData',
+      types: {
+        __typename: 'CreateSetProfileMetadataURIEIP712TypedDataTypes',
+        SetProfileMetadataURIWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateSetProfileMetadataURIEIP712TypedDataValue',
+        nonce,
+        deadline: '0',
+        profileId: faker.datatype.uuid(),
+        metadata: faker.internet.url(),
+      },
+    }),
+  };
+}
+
+export function createCreateSetProfileMetadataTypedDataMutationMockedResponse({
+  request,
+  overrideSigNonce,
+  data = mockCreateSetProfileMetadataTypedDataMutation({ nonce: overrideSigNonce }),
+}: {
+  request: CreatePublicSetProfileMetadataUriRequest;
+  overrideSigNonce?: Nonce;
+  data?: CreateSetProfileMetadataTypedDataMutation;
+}): MockedResponse<CreateSetProfileMetadataTypedDataMutation> {
+  return {
+    request: {
+      query: CreateSetProfileMetadataTypedDataDocument,
+      variables: {
+        request,
+        options: overrideSigNonce ? { overrideSigNonce } : undefined,
+      },
+    },
+    result: { data },
+  };
+}
+
+export function createCreateSetProfileMetadataViaDispatcherMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreateSetProfileMetadataViaDispatcherMutationVariables;
+  data: CreateSetProfileMetadataViaDispatcherMutation;
+}): MockedResponse<CreateSetProfileMetadataViaDispatcherMutation> {
+  return {
+    request: {
+      query: CreateSetProfileMetadataViaDispatcherDocument,
+      variables,
+    },
+    result: { data },
   };
 }

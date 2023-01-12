@@ -4,6 +4,7 @@ import { Amount, Erc20, mockDaiAmount, mockEthereumAddress } from '@lens-protoco
 
 import { ProfileAttributes } from '../ProfileAttributes';
 import {
+  AttributeFragment,
   CollectModuleFragment,
   CommentFragment,
   Erc20AmountFragment,
@@ -39,6 +40,16 @@ function mockProfileMediaFragment(): ProfileMediaFragment {
   return {
     original: mockMediaFragment(),
     __typename: 'MediaSet',
+  };
+}
+
+export function mockAttributeFragment(overrides?: Partial<AttributeFragment>): AttributeFragment {
+  return {
+    key: 'answer',
+    value: '42',
+    displayType: 'string',
+    ...overrides,
+    __typename: 'Attribute',
   };
 }
 
