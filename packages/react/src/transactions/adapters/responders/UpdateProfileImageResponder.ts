@@ -35,7 +35,6 @@ export class UpdateProfileImageResponder
               original: {
                 ...oldPicture.original,
                 url: request.url,
-                mimeType: '',
               },
             };
           },
