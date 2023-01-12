@@ -5,7 +5,7 @@ type RevenueCardProps = {
 };
 
 export function RevenueCard({ revenue }: RevenueCardProps) {
-  const amount = revenue.total.asAmount
+  const amount = revenue.total.asAmount;
   return (
     <article>
       <p>{`Currency: ${amount.asset.name} `}</p>

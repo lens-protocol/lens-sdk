@@ -9,7 +9,7 @@ import {
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
 import generatedIntrospection from '../graphql/generated';
-import { createErc20AmountFieldPolicy } from './createErc20AmountFieldPolicy';
+import { createAsAmountFieldPolicy } from './createAsAmountFieldPolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
@@ -53,7 +53,8 @@ function createTypePolicies(): TypePolicies {
     Post: createPublicationTypePolicy(),
     Comment: createPublicationTypePolicy(),
     Mirror: createPublicationTypePolicy(),
-    Erc20Amount: createErc20AmountFieldPolicy(),
+    Erc20Amount: createAsAmountFieldPolicy(),
+    ModuleFeeAmount: createAsAmountFieldPolicy(),
     FeedItem: {
       keyFields: false,
     },

@@ -3,7 +3,6 @@ import {
   ProfileFieldsFragment,
   isProfileFieldsFragmentWithFeeFollowModule,
   getFollowPolicyTypeFromProfileFieldsFragment,
-  erc20Amount,
   FeeFollowModuleSettingsFragment,
 } from '@lens-protocol/api-bindings';
 import {
@@ -39,7 +38,7 @@ type FollowProfilesFlowRequest = {
 
 function createFollowRequestFee(followModule: FeeFollowModuleSettingsFragment): FollowRequestFee {
   return {
-    amount: erc20Amount({ from: followModule.amount }),
+    amount: followModule.amount.asAmount,
     contractAddress: followModule.contractAddress,
     recipient: followModule.recipient,
   };
