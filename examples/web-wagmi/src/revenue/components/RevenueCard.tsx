@@ -5,11 +5,12 @@ type RevenueCardProps = {
 };
 
 export function RevenueCard({ revenue }: RevenueCardProps) {
+  const amount = revenue.total.asAmount
   return (
     <article>
-      <p>{`Currency: ${revenue.total.asset.name} `}</p>
-      <p>{`Symbol: ${revenue.total.asset.symbol}`}</p>
-      <p>{`Amount: ${revenue.total.value}`}</p>
+      <p>{`Currency: ${amount.asset.name} `}</p>
+      <p>{`Symbol: ${amount.asset.symbol}`}</p>
+      <p>{`Amount: ${amount.toFixed(2)}`}</p>
     </article>
   );
 }

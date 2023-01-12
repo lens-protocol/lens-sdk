@@ -1,3 +1,4 @@
+import { ClientErc20Amount } from './utils/types';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
@@ -19,6 +20,7 @@ export type Scalars = {
   BroadcastId: string;
   /** ChainId custom scalar type */
   ChainId: number;
+  ClientErc20Amount: ClientErc20Amount;
   /** collect module data scalar type */
   CollectModuleData: unknown;
   /** ContentEncryptionKey scalar type */
@@ -1217,6 +1219,7 @@ export type Erc20 = {
 
 export type Erc20Amount = {
   __typename: 'Erc20Amount';
+  asAmount: Scalars['ClientErc20Amount'];
   /** The erc20 token info */
   asset: Erc20;
   /** Floating point number as string (e.g. 42.009837). It could have the entire precision of the Asset or be truncated to the last significant decimal. */
@@ -1896,6 +1899,7 @@ export type MirrorablePublication = Post | Comment;
 
 export type ModuleFeeAmount = {
   __typename: 'ModuleFeeAmount';
+  asAmount: Scalars['ClientErc20Amount'];
   /** The erc20 token info */
   asset: Erc20;
   /** Floating point number as string (e.g. 42.009837). It could have the entire precision of the Asset or be truncated to the last significant decimal. */
@@ -2832,7 +2836,7 @@ export enum PublicationMediaSource {
   Lens = 'LENS',
 }
 
-/** Publication metadata content warning filters */
+/** Publication metadata content waring filters */
 export type PublicationMetadataContentWarningFilter = {
   /** By default all content warnings will be hidden you can include them in your query by adding them to this array. */
   includeOneOf?: Maybe<Array<PublicationContentWarning>>;
@@ -3385,7 +3389,7 @@ export type ReferenceModuleParams = {
   followerOnlyReferenceModule?: Maybe<Scalars['Boolean']>;
   /** A unknown reference module */
   unknownReferenceModule?: Maybe<UnknownReferenceModuleParams>;
-  /** The degrees of separation reference module */
+  /** The degrees of seperation reference module */
   degreesOfSeparationReferenceModule?: Maybe<DegreesOfSeparationReferenceModuleParams>;
 };
 
@@ -3886,14 +3890,14 @@ export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
   'name' | 'symbol' | 'decimals' | 'address'
 >;
 
-export type Erc20AmountFragment = { __typename: 'Erc20Amount' } & Pick<Erc20Amount, 'value'> & {
-    asset: Erc20Fragment;
-  };
+export type Erc20AmountFragment = { __typename: 'Erc20Amount' } & Pick<Erc20Amount, 'asAmount'> & {
+    __value: Erc20Amount['value'];
+  } & { __asset: Erc20Fragment };
 
 export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
   ModuleFeeAmount,
-  'value'
-> & { asset: Erc20Fragment };
+  'asAmount'
+> & { __value: ModuleFeeAmount['value'] } & { __asset: Erc20Fragment };
 
 type ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment = {
   __typename: 'FollowOnlyReferenceModuleSettings';
@@ -4669,10 +4673,11 @@ export const Erc20FragmentDoc = gql`
 export const ModuleFeeAmountFragmentDoc = gql`
   fragment ModuleFeeAmount on ModuleFeeAmount {
     __typename
-    asset {
+    __asset: asset {
       ...Erc20
     }
-    value
+    __value: value
+    asAmount @client
   }
   ${Erc20FragmentDoc}
 `;
@@ -5277,10 +5282,11 @@ export const WhoReactedResultFragmentDoc = gql`
 export const Erc20AmountFragmentDoc = gql`
   fragment Erc20Amount on Erc20Amount {
     __typename
-    asset {
+    __asset: asset {
       ...Erc20
     }
-    value
+    __value: value
+    asAmount @client
   }
   ${Erc20FragmentDoc}
 `;
@@ -8268,8 +8274,9 @@ export type Erc20FieldPolicy = {
   decimals?: FieldPolicy<any> | FieldReadFunction<any>;
   address?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type Erc20AmountKeySpecifier = ('asset' | 'value' | Erc20AmountKeySpecifier)[];
+export type Erc20AmountKeySpecifier = ('asAmount' | 'asset' | 'value' | Erc20AmountKeySpecifier)[];
 export type Erc20AmountFieldPolicy = {
+  asAmount?: FieldPolicy<any> | FieldReadFunction<any>;
   asset?: FieldPolicy<any> | FieldReadFunction<any>;
   value?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -8641,8 +8648,14 @@ export type MirrorEventFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   timestamp?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type ModuleFeeAmountKeySpecifier = ('asset' | 'value' | ModuleFeeAmountKeySpecifier)[];
+export type ModuleFeeAmountKeySpecifier = (
+  | 'asAmount'
+  | 'asset'
+  | 'value'
+  | ModuleFeeAmountKeySpecifier
+)[];
 export type ModuleFeeAmountFieldPolicy = {
+  asAmount?: FieldPolicy<any> | FieldReadFunction<any>;
   asset?: FieldPolicy<any> | FieldReadFunction<any>;
   value?: FieldPolicy<any> | FieldReadFunction<any>;
 };

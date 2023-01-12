@@ -34,6 +34,7 @@ config:
     NftOwnershipId: string
     Nonce: number
     ProxyActionId: string
+    ClientErc20Amount: ClientErc20Amount
   avoidOptionals:
     field: true
 generates:
@@ -48,6 +49,8 @@ generates:
           nonOptionalTypename: true
       - 'typescript-operations':
           skipTypename: true
+      - add:
+          content: "import { ClientErc20Amount } from './utils/types' "
       - 'typescript-react-apollo'
       - 'typescript-apollo-client-helpers'
       - 'fragment-matcher'

@@ -250,13 +250,14 @@ function mockErc20Fragment(overrides?: Partial<Omit<Erc20Fragment, '__typename'>
 function mockErc20AmountFragment(amount = mockDaiAmount(42)): Erc20AmountFragment {
   return {
     __typename: 'Erc20Amount',
-    asset: mockErc20Fragment({
+    __asset: mockErc20Fragment({
       name: amount.asset.name,
       symbol: amount.asset.symbol,
       decimals: amount.asset.decimals,
       address: amount.asset.address,
     }),
-    value: amount.toSignificantDigits(),
+    __value: amount.toSignificantDigits(),
+    asAmount: amount,
   };
 }
 

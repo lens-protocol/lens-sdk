@@ -4,6 +4,7 @@ import generatedIntrospection from '../graphql/generated';
 import { IAccessTokenStorage } from './IAccessTokenStorage';
 import { createApolloCache, TypePolicies } from './createApolloCache';
 import { createAuthLink } from './createAuthLink';
+import { CreateErc20AmountFieldPolicy } from './createErc20AmountFieldPolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
@@ -19,7 +20,7 @@ function createTypePolicies(): TypePolicies {
     Post: createPublicationTypePolicy(),
     Comment: createPublicationTypePolicy(),
     Mirror: createPublicationTypePolicy(),
-
+    Erc20Amount: CreateErc20AmountFieldPolicy(),
     Query: {
       fields: {
         feed: createFeedFieldPolicy(),
@@ -54,6 +55,7 @@ export function createApolloClient({ backendURL, accessTokenStorage }: ApolloCli
       typePolicies: createTypePolicies(),
     }),
     link: from([authLink, httpLink]),
+    connectToDevTools: true,
   });
 }
 

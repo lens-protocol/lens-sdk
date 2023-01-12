@@ -1,3 +1,5 @@
+scalar ClientErc20Amount
+
 extend type Profile {
   ownedByMe: Boolean!
   location: String
@@ -22,4 +24,12 @@ extend type Mirror {
   ownedByMe: Boolean!
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean! # just to keep Publication type consistent, that will never be used
+}
+
+extend type Erc20Amount {
+  asAmount: ClientErc20Amount!
+}
+
+extend type ModuleFeeAmount {
+  asAmount: ClientErc20Amount!
 }

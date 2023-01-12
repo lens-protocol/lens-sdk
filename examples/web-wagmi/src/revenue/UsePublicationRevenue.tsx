@@ -13,7 +13,6 @@ export function UsePublicationRevenue() {
   const { data: publication, loading: publicationLoading } = usePublication({ publicationId });
 
   if (publicationRevenueLoading || publicationLoading) return <Loading />;
-
   return (
     <div>
       <h1>

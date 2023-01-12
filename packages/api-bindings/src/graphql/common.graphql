@@ -8,18 +8,20 @@ fragment Erc20 on Erc20 {
 
 fragment Erc20Amount on Erc20Amount {
   __typename
-  asset {
+  __asset: asset {
     ...Erc20
   }
-  value
+  __value: value
+  asAmount @client
 }
 
 fragment ModuleFeeAmount on ModuleFeeAmount {
   __typename
-  asset {
+  __asset: asset {
     ...Erc20
   }
-  value
+  __value: value
+  asAmount @client
 }
 
 fragment ReferenceModule on ReferenceModule {
