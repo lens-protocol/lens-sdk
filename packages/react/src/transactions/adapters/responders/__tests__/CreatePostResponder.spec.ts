@@ -13,9 +13,9 @@ import {
   mockProfileFieldsFragment,
   mockPublicationByTxHashMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { CreatePostRequest } from '@lens-protocol/domain/dist/esm/use-cases/publications';
-import { BroadcastedTransactionData } from '@lens-protocol/domain/dist/esm/use-cases/transactions';
 import { mockCreatePostRequest, mockBroadcastedTransactionData } from '@lens-protocol/domain/mocks';
+import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
+import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import { nonNullable } from '@lens-protocol/shared-kernel';
 
 import { CreatePostResponder } from '../CreatePostResponder';

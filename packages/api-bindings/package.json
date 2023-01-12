@@ -27,7 +27,7 @@
     "mocks"
   ],
   "scripts": {
-    "build": "pnpm clean && tsup",
+    "build": "pnpm clean && tsup && tsc --emitDeclarationOnly",
     "clean": "rimraf ./dist",
     "test": "jest --passWithNoTests",
     "eslint:fix": "pnpm run eslint --fix",

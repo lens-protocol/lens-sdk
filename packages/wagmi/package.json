@@ -22,7 +22,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm clean && tsup",
+    "build": "pnpm clean && tsup && tsc --emitDeclarationOnly",
     "clean": "rimraf ./dist",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
