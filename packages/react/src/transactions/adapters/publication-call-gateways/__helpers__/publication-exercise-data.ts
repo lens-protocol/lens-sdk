@@ -75,7 +75,7 @@ export const createBasicExerciseData = (): PublicationExerciseData => {
   };
 };
 
-export const createSupportedNFTAttributesExcerciseData = (): PublicationExerciseData => {
+export const createSupportedNFTAttributesExerciseData = (): PublicationExerciseData => {
   const content = faker.lorem.sentence();
   const dateNftAttribute = mockDateNftAttribute();
   const numberNftAttribute = mockNumberNftAttribute();
@@ -119,7 +119,7 @@ export const createSupportedNFTAttributesExcerciseData = (): PublicationExercise
   };
 };
 
-export const createFollowerOnlyReferenceModuleExcerciseData = (): PublicationExerciseData => {
+export const createFollowerOnlyReferenceModuleExerciseData = (): PublicationExerciseData => {
   const content = faker.lorem.sentence();
 
   return {
@@ -143,7 +143,7 @@ export const createFollowerOnlyReferenceModuleExcerciseData = (): PublicationExe
   };
 };
 
-export const createFevertCollectModuleExcerciseData = (): PublicationExerciseData => {
+export const createRevertCollectModuleExerciseData = (): PublicationExerciseData => {
   const content = faker.lorem.sentence();
   return {
     requestVars: {
@@ -159,7 +159,7 @@ export const createFevertCollectModuleExcerciseData = (): PublicationExerciseDat
   };
 };
 
-export const createFreeCollectModuleExcerciseData = (): PublicationExerciseData => {
+export const createFreeCollectModuleExerciseData = (): PublicationExerciseData => {
   const content = faker.lorem.sentence();
   const metadata = mockNftMetadata();
   return {
@@ -185,7 +185,7 @@ export const createFreeCollectModuleExcerciseData = (): PublicationExerciseData 
   };
 };
 
-export const createFreeCollectModuleFollowersOnlyExcerciseData = (): PublicationExerciseData => {
+export const createFreeCollectModuleFollowersOnlyExerciseData = (): PublicationExerciseData => {
   const content = faker.lorem.sentence();
   const metadata = mockNftMetadata();
   return {
@@ -211,7 +211,7 @@ export const createFreeCollectModuleFollowersOnlyExcerciseData = (): Publication
   };
 };
 
-export const createFeeCollectModuleExcerciseData = (): PublicationExerciseData => {
+export const createFeeCollectModuleExerciseData = (): PublicationExerciseData => {
   const content = faker.lorem.sentence();
   const collect = mockChargeCollectPolicy({ followersOnly: false });
   return {
@@ -240,7 +240,7 @@ export const createFeeCollectModuleExcerciseData = (): PublicationExerciseData =
   };
 };
 
-export const createFeeCollectModuleFollowersOnlyExcerciseData = (): PublicationExerciseData => {
+export const createFeeCollectModuleFollowersOnlyExerciseData = (): PublicationExerciseData => {
   const content = faker.lorem.sentence();
   const collect = mockChargeCollectPolicy({ followersOnly: true });
   return {
@@ -269,7 +269,7 @@ export const createFeeCollectModuleFollowersOnlyExcerciseData = (): PublicationE
   };
 };
 
-export const createLimitedFeeCollectModuleExcerciseData = (): PublicationExerciseData => {
+export const createLimitedFeeCollectModuleExerciseData = (): PublicationExerciseData => {
   const content = faker.lorem.sentence();
   const collectLimit = faker.datatype.number(10_000);
   const collect = mockChargeCollectPolicy({ followersOnly: false, collectLimit });
@@ -301,7 +301,7 @@ export const createLimitedFeeCollectModuleExcerciseData = (): PublicationExercis
   };
 };
 
-export const createLimitedFeeCollectModuleFollowersOnlyExcerciseData =
+export const createLimitedFeeCollectModuleFollowersOnlyExerciseData =
   (): PublicationExerciseData => {
     const content = faker.lorem.sentence();
     const collectLimit = faker.datatype.number(10_000);
@@ -333,7 +333,7 @@ export const createLimitedFeeCollectModuleFollowersOnlyExcerciseData =
     };
   };
 
-export const createTimedFeeCollectModuleExcerciseData = (): PublicationExerciseData => {
+export const createTimedFeeCollectModuleExerciseData = (): PublicationExerciseData => {
   const content = faker.lorem.sentence();
   const collect = mockChargeCollectPolicy({ followersOnly: false, timeLimited: true });
   return {
@@ -362,37 +362,36 @@ export const createTimedFeeCollectModuleExcerciseData = (): PublicationExerciseD
   };
 };
 
-export const createTimedFeeCollectModuleFollowersOnlyExcerciseData =
-  (): PublicationExerciseData => {
-    const content = faker.lorem.sentence();
-    const collect = mockChargeCollectPolicy({ followersOnly: true, timeLimited: true });
-    return {
-      requestVars: {
-        content,
-        collect,
-      },
-      expectedMetadata: {
-        attributes: [],
-        content,
-        name: collect.metadata.name,
-      },
-      expectedMutationRequestDetails: {
-        collectModule: {
-          timedFeeCollectModule: {
-            amount: {
-              currency: collect.fee.asset.address,
-              value: collect.fee.toSignificantDigits(),
-            },
-            followerOnly: true,
-            recipient: collect.recipient,
-            referralFee: collect.mirrorReward,
+export const createTimedFeeCollectModuleFollowersOnlyExerciseData = (): PublicationExerciseData => {
+  const content = faker.lorem.sentence();
+  const collect = mockChargeCollectPolicy({ followersOnly: true, timeLimited: true });
+  return {
+    requestVars: {
+      content,
+      collect,
+    },
+    expectedMetadata: {
+      attributes: [],
+      content,
+      name: collect.metadata.name,
+    },
+    expectedMutationRequestDetails: {
+      collectModule: {
+        timedFeeCollectModule: {
+          amount: {
+            currency: collect.fee.asset.address,
+            value: collect.fee.toSignificantDigits(),
           },
+          followerOnly: true,
+          recipient: collect.recipient,
+          referralFee: collect.mirrorReward,
         },
       },
-    };
+    },
   };
+};
 
-export const createLimitedTimedFeeCollectModuleExcerciseData = (): PublicationExerciseData => {
+export const createLimitedTimedFeeCollectModuleExerciseData = (): PublicationExerciseData => {
   const content = faker.lorem.sentence();
   const collectLimit = faker.datatype.number(10_000);
   const collect = mockChargeCollectPolicy({
@@ -427,7 +426,7 @@ export const createLimitedTimedFeeCollectModuleExcerciseData = (): PublicationEx
   };
 };
 
-export const createLimitedTimedFeeCollectModuleFollowersOnlyExcerciseData =
+export const createLimitedTimedFeeCollectModuleFollowersOnlyExerciseData =
   (): PublicationExerciseData => {
     const content = faker.lorem.sentence();
     const collectLimit = faker.datatype.number(10_000);
