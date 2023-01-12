@@ -1,22 +1,23 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
-  BroadcastedTransactionData,
-  ITransactionResponder,
-} from '@lens-protocol/domain/use-cases/transactions';
-import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
-import {
   PublicationByTxHashDocument,
   PublicationByTxHashQuery,
   PublicationByTxHashQueryVariables,
 } from '@lens-protocol/api-bindings';
-import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
-import { PublicationCacheModifier } from '../PublicationCacheModifier';
+import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
+import {
+  BroadcastedTransactionData,
+  ITransactionResponder,
+  TransactionData,
+} from '@lens-protocol/domain/use-cases/transactions';
+
+import { PublicationCacheManager } from '../PublicationCacheManager';
 
 export class MirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
-  readonly publicationCacheManager: PublicationCacheModifier;
+  readonly publicationCacheManager: PublicationCacheManager;
 
   constructor(private client: ApolloClient<NormalizedCacheObject>) {
-    this.publicationCacheManager = new PublicationCacheModifier(client.cache);
+    this.publicationCacheManager = new PublicationCacheManager(client.cache);
   }
 
   async prepare({ request }: TransactionData<CreateMirrorRequest>) {
@@ -45,7 +46,6 @@ export class MirrorResponder implements ITransactionResponder<CreateMirrorReques
   }
 
   async rollback({ request }: TransactionData<CreateMirrorRequest>) {
-    debugger;
     this.publicationCacheManager.update(request.publicationId, (current) => ({
       ...current,
       isOptimisticMirroredByMe: false,

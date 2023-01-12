@@ -9,12 +9,12 @@ import {
   mockBroadcastedTransactionData,
   mockCreateMirrorRequest,
 } from '@lens-protocol/domain/mocks';
-import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
-
-import { MirrorResponder } from '../MirrorResponder';
-import { PublicationCacheModifier } from '../../PublicationCacheModifier';
+import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
+
+import { PublicationCacheManager } from '../../PublicationCacheManager';
+import { MirrorResponder } from '../MirrorResponder';
 
 function setupTestScenario({
   post,
@@ -31,8 +31,8 @@ function setupTestScenario({
     }),
   ]);
 
-  const publicationCacheModifier = new PublicationCacheModifier(apolloClient.cache);
-  publicationCacheModifier.write(post);
+  const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
+  publicationCacheManager.write(post);
 
   const responder = new MirrorResponder(apolloClient);
 
@@ -40,7 +40,7 @@ function setupTestScenario({
     responder,
 
     get updatedPost() {
-      const result = publicationCacheModifier.read(post.id);
+      const result = publicationCacheManager.read(post.id);
 
       const publication = result.unwrap();
 

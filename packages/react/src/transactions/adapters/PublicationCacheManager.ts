@@ -25,7 +25,7 @@ export const getFragmentDoc = (publication: JustTypename<PublicationFragment>): 
   }
 };
 
-export class PublicationCacheModifier {
+export class PublicationCacheManager {
   constructor(private cache: ApolloCache<NormalizedCacheObject>) {}
 
   write(publication: PublicationFragment): void {

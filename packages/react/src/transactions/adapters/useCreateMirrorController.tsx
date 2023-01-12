@@ -1,13 +1,14 @@
-import { CreateMirror, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
-import { useSharedDependencies } from '../../shared';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
 import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { MirrorCallGateway } from './publication-call-gateways/MirrorCallGateway';
+import { CreateMirror, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
+
+import { useSharedDependencies } from '../../shared';
+import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { MirrorCallGateway } from './publication-call-gateways/MirrorCallGateway';
 
 export function useCreateMirrorController() {
   const {
@@ -45,6 +46,6 @@ export function useCreateMirrorController() {
 
     await createMirror.execute(request);
 
-    return await presenter.asResult();
+    return presenter.asResult();
   };
 }

@@ -1,14 +1,14 @@
-import { ProfileFieldsFragment } from '@lens-protocol/api-bindings';
+import { ProfileFieldsFragment, CommentFragment, PostFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { useState } from 'react';
-import { useCreateMirrorController } from './adapters/useCreateMirrorController';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
-import { CommentFragment, PostFragment } from '@lens-protocol/api-bindings';
+import { useState } from 'react';
+
+import { useCreateMirrorController } from './adapters/useCreateMirrorController';
 
 export type CreateMirrorArgs = Omit<
   CreateMirrorRequest,

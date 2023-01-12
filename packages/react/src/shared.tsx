@@ -33,8 +33,8 @@ import {
   FailedTransactionError,
 } from './transactions/adapters/TransactionQueuePresenter';
 import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
-import { MirrorResponder } from './transactions/adapters/responders/MirrorResponder';
 import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
+import { MirrorResponder } from './transactions/adapters/responders/MirrorResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
