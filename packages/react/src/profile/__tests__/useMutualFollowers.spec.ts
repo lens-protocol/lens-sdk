@@ -1,6 +1,6 @@
 import {
   createMockApolloClientWithMultipleResponses,
-  mockMutualFollowersQuery,
+  createMutualFollowersQueryMockedResponse,
   mockProfileFieldsFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
@@ -26,7 +26,7 @@ describe('Given the useMutualFollowers hook', () => {
         {
           mocks: {
             apolloClient: createMockApolloClientWithMultipleResponses([
-              mockMutualFollowersQuery({
+              createMutualFollowersQueryMockedResponse({
                 variables: {
                   observerId: observer.id,
                   viewingProfileId: viewingProfile.id,

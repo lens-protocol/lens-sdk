@@ -79,7 +79,7 @@ export class TransactionObserver implements ITransactionObserver {
           txResponse.wait(1),
 
           delay(this.timings.maxMiningWaitTime).then(() => {
-            throw new TransactionError(TransactionErrorReason.MINING_TIMEOUT, txHash);
+            throw new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
           }),
         ]);
         return success();
@@ -90,7 +90,7 @@ export class TransactionObserver implements ITransactionObserver {
         throw e;
       }
     }
-    return failure(new TransactionError(TransactionErrorReason.MINING_TIMEOUT, txHash));
+    return failure(new TransactionError(TransactionErrorReason.MINING_TIMEOUT));
   }
 
   async waitForNextIndexingEvent(
@@ -148,7 +148,6 @@ export class TransactionObserver implements ITransactionObserver {
                 failure(
                   new TransactionError(
                     resolveTransactionErrorReason(nextResponse.data.result.reason),
-                    initialTxHash,
                   ),
                 ),
               );
@@ -157,9 +156,7 @@ export class TransactionObserver implements ITransactionObserver {
           if (Date.now() - startedAt > this.timings.maxIndexingWaitTime) {
             subscription.unsubscribe();
 
-            resolve(
-              failure(new TransactionError(TransactionErrorReason.INDEXING_TIMEOUT, initialTxHash)),
-            );
+            resolve(failure(new TransactionError(TransactionErrorReason.INDEXING_TIMEOUT)));
           }
         },
         error: reject,

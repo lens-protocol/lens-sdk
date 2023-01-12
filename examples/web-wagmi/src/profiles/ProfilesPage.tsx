@@ -2,6 +2,11 @@ import { LinkCard } from '../components/LinkCard';
 
 const profileHooks = [
   {
+    label: 'useCreateProfile',
+    description: `Create a profile.`,
+    path: '/profiles/useCreateProfile',
+  },
+  {
     label: 'useExploreProfiles',
     description: `Explore different profiles.`,
     path: '/profiles/useExploreProfiles',
@@ -27,8 +32,18 @@ const profileHooks = [
     path: '/profiles/useMutualFollowers',
   },
   {
-    label: 'useFollow',
-    description: `Follow a profile.`,
+    label: 'useSearchProfiles',
+    description: `Fetch a list of profiles that match a query`,
+    path: '/profiles/useSearchProfiles',
+  },
+  {
+    label: 'useSearchProfiles',
+    description: `Fetch a list of profiles that match a query`,
+    path: '/profiles/useSearchProfiles',
+  },
+  {
+    label: 'useFollow / useUnfollow',
+    description: `Follow or unfollow a profile.`,
     path: '/profiles/useFollow',
   },
 ];

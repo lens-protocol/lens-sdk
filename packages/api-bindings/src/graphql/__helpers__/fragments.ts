@@ -1,34 +1,43 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   CollectModuleFragment,
   CommentFragment,
+  Erc20AmountFragment,
+  Erc20Fragment,
   FeedItemFragment,
-  MediaFieldsFragment,
+  MediaFragment,
+  MetadataFragment,
+  MirrorFragment,
   PostFragment,
   ProfileFieldsFragment,
-  ProfileMediaFieldsFragment,
+  ProfileMediaFragment,
   PublicationMainFocus,
+  PublicationRevenueFragment,
   PublicationStatsFragment,
+  ReactionTypes,
   RelayerResultFragment,
   RelayErrorFragment,
   RelayErrorReasons,
+  RevenueAggregateFragment,
+  RevenueFragment,
+  WhoReactedResultFragment,
 } from '../generated';
 
-function mockMedia(): MediaFieldsFragment {
+function mockMediaFragment(): MediaFragment {
   return {
-    __typename: 'Media',
     url: faker.image.imageUrl(),
     mimeType: 'image/jpeg',
+    __typename: 'Media',
   };
 }
 
-export function mockProfileMediaFieldsFragment(): ProfileMediaFieldsFragment {
+function mockProfileMediaFragment(): ProfileMediaFragment {
   return {
+    original: mockMediaFragment(),
     __typename: 'MediaSet',
-    original: mockMedia(),
   };
 }
 
@@ -69,8 +78,8 @@ export function mockProfileFieldsFragment(
     ],
     handle: faker.internet.userName(firstName, lastName),
     ownedBy: mockEthereumAddress(),
-    picture: mockProfileMediaFieldsFragment(),
-    coverPicture: mockProfileMediaFieldsFragment(),
+    picture: mockProfileMediaFragment(),
+    coverPicture: mockProfileMediaFragment(),
 
     stats: {
       __typename: 'ProfileStats',
@@ -113,7 +122,7 @@ export function mockRelayErrorFragment(reason: RelayErrorReasons): RelayErrorFra
   };
 }
 
-export function mockPublicationStats(
+export function mockPublicationStatsFragment(
   overrides?: Partial<PublicationStatsFragment>,
 ): PublicationStatsFragment {
   return {
@@ -126,9 +135,7 @@ export function mockPublicationStats(
   };
 }
 
-export function mockFreeCollectModuleSettings({
-  followerOnly = false,
-} = {}): CollectModuleFragment {
+function mockFreeCollectModuleSettings({ followerOnly = false } = {}): CollectModuleFragment {
   return {
     __typename: 'FreeCollectModuleSettings',
     contractAddress: '0x96351D3cE872903EBf4c2D77dd625992CCFdf8c9',
@@ -136,20 +143,26 @@ export function mockFreeCollectModuleSettings({
   };
 }
 
-export function mockPost(overrides?: Partial<PostFragment>): PostFragment {
+function mockMetadataFragment(): MetadataFragment {
+  return {
+    __typename: 'MetadataOutput',
+    mainContentFocus: PublicationMainFocus.TextOnly,
+    name: faker.commerce.productName(),
+    description: null,
+    attributes: [],
+    content: faker.lorem.words(5),
+    media: [],
+  };
+}
+
+export function mockPostFragment(
+  overrides?: Partial<Omit<PostFragment, '__typename'>>,
+): PostFragment {
   return {
     id: faker.datatype.uuid(),
     createdAt: faker.datatype.datetime().toISOString(),
-    stats: mockPublicationStats(),
-    metadata: {
-      __typename: 'MetadataOutput',
-      mainContentFocus: PublicationMainFocus.TextOnly,
-      name: faker.name.fullName(),
-      description: null,
-      attributes: [],
-      content: faker.lorem.words(5),
-      media: [],
-    },
+    stats: mockPublicationStatsFragment(),
+    metadata: mockMetadataFragment(),
     profile: mockProfileFieldsFragment(),
     collectedBy: null,
     ownedByMe: false,
@@ -173,12 +186,14 @@ export function mockPost(overrides?: Partial<PostFragment>): PostFragment {
   };
 }
 
-export function mockComment(
+export function mockCommentFragment(
   overrides?: Partial<Omit<CommentFragment, '__typename'>>,
 ): CommentFragment {
+  const mainPost = mockPostFragment();
+
   return {
     id: faker.datatype.uuid(),
-    stats: mockPublicationStats(),
+    stats: mockPublicationStatsFragment(),
     metadata: {
       __typename: 'MetadataOutput',
       mainContentFocus: PublicationMainFocus.TextOnly,
@@ -191,8 +206,8 @@ export function mockComment(
     profile: mockProfileFieldsFragment(),
     createdAt: faker.date.past().toISOString(),
     collectedBy: null,
-    commentOn: mockPost(),
-    mainPost: mockPost(),
+    commentOn: mainPost,
+    mainPost: mainPost,
     ownedByMe: false,
     collectModule: mockFreeCollectModuleSettings(),
     referenceModule: null,
@@ -214,16 +229,80 @@ export function mockComment(
   };
 }
 
-export function mockFeedItem({
-  root = mockPost(),
-  comments = [mockComment(), mockComment()],
-}: {
-  root?: PostFragment | CommentFragment;
-  comments?: CommentFragment[];
-}): FeedItemFragment {
+export function mockFeedItemFragment(overrides?: Partial<FeedItemFragment>): FeedItemFragment {
   return {
+    root: mockPostFragment(),
+    comments: null,
+    ...overrides,
     __typename: 'FeedItem',
-    root,
-    comments,
+  };
+}
+
+function mockErc20Fragment(overrides?: Partial<Omit<Erc20Fragment, '__typename'>>): Erc20Fragment {
+  return {
+    __typename: 'Erc20',
+    name: 'Wrapped MATIC',
+    symbol: 'WMATIC',
+    decimals: 18,
+    address: mockEthereumAddress(),
+    ...overrides,
+  };
+}
+
+function mockErc20AmountFragment(amount = mockDaiAmount(42)): Erc20AmountFragment {
+  return {
+    __typename: 'Erc20Amount',
+    asset: mockErc20Fragment({
+      name: amount.asset.name,
+      symbol: amount.asset.symbol,
+      decimals: amount.asset.decimals,
+      address: amount.asset.address,
+    }),
+    value: amount.toSignificantDigits(),
+  };
+}
+
+function mockRevenueAggregateFragment(amount?: Amount<Erc20>): RevenueAggregateFragment {
+  return {
+    __typename: 'RevenueAggregate',
+    total: mockErc20AmountFragment(amount),
+  };
+}
+
+export function mockPublicationRevenueFragment({
+  publication = mockPostFragment(),
+  amount,
+}: {
+  publication?: CommentFragment | PostFragment | MirrorFragment;
+  amount?: Amount<Erc20>;
+} = {}): PublicationRevenueFragment {
+  return {
+    __typename: 'PublicationRevenue',
+    publication: publication,
+    revenue: mockRevenueAggregateFragment(amount),
+  };
+}
+
+export function mockRevenueFragment({
+  amount,
+}: {
+  publication?: CommentFragment | PostFragment | MirrorFragment;
+  amount?: Amount<Erc20>;
+} = {}): RevenueFragment {
+  return {
+    __typename: 'PublicationRevenue',
+    revenue: mockRevenueAggregateFragment(amount),
+  };
+}
+export function mockWhoReactedResultFragment(
+  overrides?: Partial<Omit<WhoReactedResultFragment, '__typename'>>,
+): WhoReactedResultFragment {
+  return {
+    __typename: 'WhoReactedResult',
+    reactionId: faker.datatype.uuid(),
+    reaction: ReactionTypes.Upvote,
+    reactionAt: faker.date.past().toISOString(),
+    profile: mockProfileFieldsFragment(),
+    ...overrides,
   };
 }

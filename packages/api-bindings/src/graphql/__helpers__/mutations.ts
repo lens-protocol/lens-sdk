@@ -3,16 +3,24 @@ import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { mockNonce } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { GraphQLError } from 'graphql';
 
 import {
+  AddReactionDocument,
+  AddReactionMutation,
+  AddReactionMutationVariables,
   BroadcastProtocolCallDocument,
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables,
+  CreateCommentTypedDataMutation,
   CreatePostTypedDataMutation,
   CreateProfileMutation,
   Eip712TypedDataDomain,
   Eip712TypedDataField,
   RelayResult,
+  RemoveReactionDocument,
+  RemoveReactionMutation,
+  RemoveReactionMutationVariables,
 } from '../generated';
 
 export function mockCreateProfileMutation(result: Required<RelayResult>): CreateProfileMutation {
@@ -29,7 +37,7 @@ function mockBroadcastProtocolCallMutation(
   };
 }
 
-export function mockBroadcastProtocolCallMutationMockedResponse(
+export function createBroadcastProtocolCallMutationMockedResponse(
   instructions:
     | {
         error: Error;
@@ -113,5 +121,106 @@ export function mockCreatePostTypedDataMutation({
         referenceModuleInitData: '0x',
       },
     }),
+  };
+}
+
+export function mockCreateCommentTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateCommentTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateCommentBroadcastItemResult', {
+      __typename: 'CreateCommentEIP712TypedData',
+      types: {
+        __typename: 'CreateCommentEIP712TypedDataTypes',
+        CommentWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateCommentEIP712TypedDataValue',
+        profileIdPointed: '',
+        pubIdPointed: '',
+        nonce,
+        deadline: 1644303500,
+        profileId: '0x0132',
+        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        collectModule: '0xd6072BB2ABc0a9d1331c7d0B83AE6C47f2Cb86A3',
+        collectModuleInitData: '0x',
+        referenceModuleData: '0x0000000000000000000000000000000000000000',
+        referenceModule: '0x0000000000000000000000000000000000000000',
+        referenceModuleInitData: '0x',
+      },
+    }),
+  };
+}
+
+export function createAddReactionMutationMockedResponse(args: {
+  variables: AddReactionMutationVariables;
+}): MockedResponse<AddReactionMutation> {
+  return {
+    request: {
+      query: AddReactionDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: { addReaction: null },
+    },
+  };
+}
+
+export function createRemoveReactionMutationMockedResponse(args: {
+  variables: RemoveReactionMutationVariables;
+}): MockedResponse<RemoveReactionMutation> {
+  return {
+    request: {
+      query: RemoveReactionDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: { removeReaction: null },
+    },
+  };
+}
+
+export function createAddReactionMutationWithGraphqlValidationErrorResponse(args: {
+  variables: AddReactionMutationVariables;
+}): MockedResponse<AddReactionMutation> {
+  return {
+    request: {
+      query: AddReactionDocument,
+      variables: args.variables,
+    },
+    result: {
+      errors: [
+        new GraphQLError('Wrong vars', undefined, undefined, undefined, undefined, undefined, {
+          code: 'GRAPHQL_VALIDATION_FAILED',
+        }),
+      ],
+    },
+  };
+}
+
+export function createRemoveReactionMutationWithGraphqlValidationErrorResponse(args: {
+  variables: RemoveReactionMutationVariables;
+}): MockedResponse<RemoveReactionMutation> {
+  return {
+    request: {
+      query: AddReactionDocument,
+      variables: args.variables,
+    },
+    result: {
+      errors: [
+        new GraphQLError(
+          'You have not reacted to this publication with action UPVOTE',
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          {
+            code: 'GRAPHQL_VALIDATION_FAILED',
+          },
+        ),
+      ],
+    },
   };
 }
