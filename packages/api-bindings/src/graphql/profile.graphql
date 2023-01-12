@@ -86,9 +86,6 @@ fragment ProfileFields on Profile {
 
   isOptimisticFollowedByMe @client
   ownedByMe @client
-  location @client
-  twitter @client
-  website @client
 }
 
 query ProfilesToFollow($observerId: ProfileId) {

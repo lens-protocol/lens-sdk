@@ -1,7 +1,7 @@
 import type { AttributeFragment } from './generated';
 
 export class ProfileAttributeReader {
-  constructor(private attribute: AttributeFragment) {}
+  constructor(private readonly attribute: AttributeFragment) {}
 
   toBoolean(): boolean | null {
     const parsed: unknown = this.jsonParse(this.attribute.value);

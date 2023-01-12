@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { Amount, Erc20, mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel';
 
+import { ProfileAttributes } from '../ProfileAttributes';
 import {
   CollectModuleFragment,
   CommentFragment,
@@ -46,9 +47,6 @@ export function mockProfileFieldsFragment(
 ): ProfileFieldsFragment {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
-  const location = faker.address.cityName();
-  const website = faker.internet.url();
-  const twitter = faker.internet.userName(firstName, lastName);
 
   return {
     id: faker.datatype.uuid(),
@@ -73,34 +71,10 @@ export function mockProfileFieldsFragment(
     isFollowing: false,
     isOptimisticFollowedByMe: false,
 
-    location: location,
-    website: website,
-    twitter: twitter,
     ownedByMe: false,
 
-    __attributes: [
-      {
-        __typename: 'Attribute',
-        key: 'something',
-        value: '42',
-      },
-      {
-        __typename: 'Attribute',
-        key: 'location',
-        value: location,
-      },
-      {
-        __typename: 'Attribute',
-        key: 'website',
-        value: website,
-      },
-      {
-        __typename: 'Attribute',
-        key: 'twitter',
-        value: twitter,
-      },
-    ],
-    attributes: {},
+    __attributes: [],
+    attributes: {} as ProfileAttributes,
 
     ...overrides,
     __typename: 'Profile',

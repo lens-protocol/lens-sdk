@@ -1,3 +1,3 @@
-import type { ProfileAttributeReader } from './ProfileAttributeReader';
+import { ProfileAttributeReader } from './ProfileAttributeReader';
 
 export type ProfileAttributes = Record<string, ProfileAttributeReader>;
