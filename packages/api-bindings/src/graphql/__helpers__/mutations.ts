@@ -13,10 +13,15 @@ import {
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables,
   CreateCommentTypedDataMutation,
+  CreateFollowTypedDataMutation,
   CreatePostTypedDataMutation,
   CreateProfileMutation,
+  CreateUnfollowTypedDataMutation,
   Eip712TypedDataDomain,
   Eip712TypedDataField,
+  ProxyActionDocument,
+  ProxyActionMutation,
+  ProxyActionMutationVariables,
   RelayResult,
   RemoveReactionDocument,
   RemoveReactionMutation,
@@ -221,6 +226,64 @@ export function createRemoveReactionMutationWithGraphqlValidationErrorResponse(a
           },
         ),
       ],
+    },
+  };
+}
+
+export function mockCreateFollowTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateFollowTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateFollowBroadcastItemResult', {
+      __typename: 'CreateFollowEIP712TypedData',
+      types: {
+        __typename: 'CreateFollowEIP712TypedDataTypes',
+        FollowWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateFollowEIP712TypedDataValue',
+        nonce,
+        deadline: '0',
+        profileIds: [faker.datatype.uuid()],
+        datas: ['0x00'],
+      },
+    }),
+  };
+}
+
+export function mockCreateUnfollowTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateUnfollowTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateUnfollowBroadcastItemResult', {
+      __typename: 'CreateBurnEIP712TypedData',
+      types: {
+        __typename: 'CreateBurnEIP712TypedDataTypes',
+        BurnWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateBurnEIP712TypedDataValue',
+        nonce,
+        deadline: '0',
+        tokenId: faker.datatype.uuid(),
+      },
+    }),
+  };
+}
+
+export function createBroadcastProxyActionCallMutationMockedResponse(instructions: {
+  result: string;
+  variables: ProxyActionMutationVariables;
+}): MockedResponse<ProxyActionMutation> {
+  return {
+    request: {
+      query: ProxyActionDocument,
+      variables: instructions.variables,
+    },
+    result: {
+      data: { result: instructions.result },
     },
   };
 }
