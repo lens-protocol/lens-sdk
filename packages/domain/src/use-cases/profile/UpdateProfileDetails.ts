@@ -5,9 +5,9 @@ import {
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IProtocolCallPresenter } from '../transactions/ProtocolCallUseCase';
 
-export type ProfileAttributeValue = boolean | Date | string | number | null;
+export type ProfileAttributeValue = boolean | Date | string | number;
 
-export type PartialAttributesUpdate = Record<string, ProfileAttributeValue>;
+export type PartialAttributesUpdate = Record<string, ProfileAttributeValue | null>;
 
 export type ProfileDetails = {
   attributes: PartialAttributesUpdate;

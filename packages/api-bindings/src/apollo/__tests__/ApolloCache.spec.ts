@@ -2,7 +2,7 @@ import { ApolloCache } from '@apollo/client';
 import { never } from '@lens-protocol/shared-kernel';
 
 import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '../../graphql';
-import { mockProfileFieldsFragment } from '../../mocks';
+import { mockAttributeFragment, mockProfileFieldsFragment } from '../../mocks';
 import { createApolloCache } from '../createApolloCache';
 
 describe(`Given an instance of the ${ApolloCache.name}`, () => {
@@ -10,41 +10,34 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
     const date = new Date();
     const profile = mockProfileFieldsFragment({
       __attributes: [
-        {
-          __typename: 'Attribute',
+        mockAttributeFragment({
           key: 'validDate',
           value: date.toISOString(),
-        },
-        {
-          __typename: 'Attribute',
+        }),
+        mockAttributeFragment({
           key: 'invalidDate',
           value: 'invalid',
-        },
-        {
-          __typename: 'Attribute',
+        }),
+        mockAttributeFragment({
           key: 'validNumber',
           value: '42',
-        },
-        {
-          __typename: 'Attribute',
+        }),
+        mockAttributeFragment({
           key: 'invalidNumber',
           value: '',
-        },
-        {
-          __typename: 'Attribute',
+        }),
+        mockAttributeFragment({
           key: 'string',
           value: 'NY',
-        },
-        {
-          __typename: 'Attribute',
+        }),
+        mockAttributeFragment({
           key: 'validBoolean',
           value: 'true',
-        },
-        {
-          __typename: 'Attribute',
+        }),
+        mockAttributeFragment({
           key: 'invalidBoolean',
           value: '1',
-        },
+        }),
       ],
     });
     const cache = createApolloCache();

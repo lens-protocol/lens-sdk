@@ -4391,7 +4391,10 @@ type ProfileMedia_MediaSet_Fragment = MediaSetFragment;
 
 export type ProfileMediaFragment = ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment;
 
-export type AttributeFragment = { __typename: 'Attribute' } & Pick<Attribute, 'key' | 'value'>;
+export type AttributeFragment = { __typename: 'Attribute' } & Pick<
+  Attribute,
+  'displayType' | 'key' | 'value'
+>;
 
 export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   Profile,
@@ -4835,6 +4838,7 @@ export const RevertFollowModuleSettingsFragmentDoc = gql`
 export const AttributeFragmentDoc = gql`
   fragment Attribute on Attribute {
     __typename
+    displayType
     key
     value
   }

@@ -112,7 +112,7 @@ export function mockUpdateCoverImageRequest(
   };
 }
 
-function mockProfileDetails(overrides?: Partial<ProfileDetails>): ProfileDetails {
+export function mockProfileDetails(overrides?: Partial<ProfileDetails>): ProfileDetails {
   return {
     name: faker.name.firstName(),
     bio: faker.lorem.sentence(),

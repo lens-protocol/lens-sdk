@@ -33,6 +33,7 @@ fragment ProfileMedia on ProfileMedia {
 
 fragment Attribute on Attribute {
   __typename
+  displayType
   key
   value
 }
