@@ -1,23 +1,17 @@
-import { InMemoryCache } from '@apollo/client';
 import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '@lens-protocol/api-bindings';
 import {
+  createMockApolloCache,
   mockProfileFieldsFragment,
-  createProfileTypePolicy,
 } from '@lens-protocol/api-bindings/mocks';
 import {
-  mockUnconstrainedFollowRequest,
   mockBroadcastedTransactionData,
+  mockUnconstrainedFollowRequest,
 } from '@lens-protocol/domain/mocks';
 
 import { FollowProfilesResponder } from '../FollowProfilesResponder';
 
 function setupTestScenario({ existingProfile }: { existingProfile: ProfileFieldsFragment }) {
-  const apolloCache = new InMemoryCache({
-    addTypename: true,
-    typePolicies: {
-      Profile: createProfileTypePolicy(),
-    },
-  });
+  const apolloCache = createMockApolloCache();
 
   apolloCache.writeFragment({
     id: apolloCache.identify({
