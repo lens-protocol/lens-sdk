@@ -8,7 +8,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import { failure, invariant, never, Result, success } from '@lens-protocol/shared-kernel';
 
-class FragmentNotFoundError extends Error {
+export class FragmentNotFoundError extends Error {
   name = 'FragmentNotFoundError' as const;
 }
 
