@@ -112,13 +112,11 @@ export function mockUpdateCoverImageRequest(
   };
 }
 
-export function mockProfileDetails(overrides?: Partial<ProfileDetails>): ProfileDetails {
+function mockProfileDetails(overrides?: Partial<ProfileDetails>): ProfileDetails {
   return {
     name: faker.name.firstName(),
     bio: faker.lorem.sentence(),
-    location: faker.address.city(),
-    website: faker.internet.url(),
-    twitter: faker.internet.userName(),
+    attributes: {},
     ...overrides,
   };
 }

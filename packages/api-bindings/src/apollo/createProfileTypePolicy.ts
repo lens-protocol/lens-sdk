@@ -1,4 +1,4 @@
-import { ProfileAttributes, Maybe, Profile, ProfileAttributeReader } from '../graphql';
+import { ProfileAttributes, Profile, ProfileAttributeReader } from '../graphql';
 import { TypePolicy } from './TypePolicy';
 
 export function createProfileTypePolicy(): TypePolicy<Profile> {
@@ -27,18 +27,6 @@ export function createProfileTypePolicy(): TypePolicy<Profile> {
           acc[attribute.key] = new ProfileAttributeReader(attribute);
           return acc;
         }, {} as ProfileAttributes);
-      },
-
-      location(_: Maybe<string> | undefined, { readField }) {
-        return (readField('attributes') ?? []).find(({ key }) => key === 'location')?.value ?? null;
-      },
-
-      twitter(_: Maybe<string> | undefined, { readField }) {
-        return (readField('attributes') ?? []).find(({ key }) => key === 'twitter')?.value ?? null;
-      },
-
-      website(_: Maybe<string> | undefined, { readField }) {
-        return (readField('attributes') ?? []).find(({ key }) => key === 'website')?.value ?? null;
       },
 
       ownedByMe() {

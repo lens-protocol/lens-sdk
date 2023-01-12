@@ -2581,7 +2581,6 @@ export type Profile = {
   isFollowedByMe: Scalars['Boolean'];
   isFollowing: Scalars['Boolean'];
   isOptimisticFollowedByMe: Scalars['Boolean'];
-  location: Maybe<Scalars['String']>;
   /** Metadata url */
   metadata: Maybe<Scalars['Url']>;
   /** Name of the profile */
@@ -2595,8 +2594,6 @@ export type Profile = {
   picture: Maybe<ProfileMedia>;
   /** Profile stats */
   stats: ProfileStats;
-  twitter: Maybe<Scalars['String']>;
-  website: Maybe<Scalars['String']>;
 };
 
 /** The Profile */
@@ -4407,9 +4404,6 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   | 'isFollowing'
   | 'isOptimisticFollowedByMe'
   | 'ownedByMe'
-  | 'location'
-  | 'twitter'
-  | 'website'
 > & { attributes: Profile['attributesMap'] } & {
     picture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     coverPicture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
@@ -4888,9 +4882,6 @@ export const ProfileFieldsFragmentDoc = gql`
     isFollowing(who: $observerId)
     isOptimisticFollowedByMe @client
     ownedByMe @client
-    location @client
-    twitter @client
-    website @client
   }
   ${ProfileMediaFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}
@@ -9895,7 +9886,6 @@ export type ProfileKeySpecifier = (
   | 'isFollowedByMe'
   | 'isFollowing'
   | 'isOptimisticFollowedByMe'
-  | 'location'
   | 'metadata'
   | 'name'
   | 'onChainIdentity'
@@ -9903,8 +9893,6 @@ export type ProfileKeySpecifier = (
   | 'ownedByMe'
   | 'picture'
   | 'stats'
-  | 'twitter'
-  | 'website'
   | ProfileKeySpecifier
 )[];
 export type ProfileFieldPolicy = {
@@ -9922,7 +9910,6 @@ export type ProfileFieldPolicy = {
   isFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowing?: FieldPolicy<any> | FieldReadFunction<any>;
   isOptimisticFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
-  location?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   name?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9930,8 +9917,6 @@ export type ProfileFieldPolicy = {
   ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   picture?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
-  twitter?: FieldPolicy<any> | FieldReadFunction<any>;
-  website?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileFollowModuleSettingsKeySpecifier = (
   | 'type'

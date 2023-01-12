@@ -73,12 +73,14 @@ export const UpdateFollowPolicyRequestSchema = z.object({
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
 });
 
+const PartialAttributesUpdateSchema = z.record(
+  z.union([z.boolean(), z.date(), z.number(), z.string(), z.null()]),
+);
+
 const ProfileDetailsSchema = z.object({
+  attributes: PartialAttributesUpdateSchema,
   name: z.string(),
   bio: z.string().nullable(),
-  location: z.string().nullable(),
-  website: z.string().nullable(),
-  twitter: z.string().nullable(),
 });
 
 export const UpdateProfileDetailsRequestSchema = z.object({
