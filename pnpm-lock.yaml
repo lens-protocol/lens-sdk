@@ -74,6 +74,7 @@ importers:
       react: ^18.2.0
       react-cool-inview: ^3.0.1
       react-dom: ^18.2.0
+      react-hook-form: ^7.41.5
       react-hot-toast: ^2.4.0
       react-router-dom: ^6.4.5
       typescript: ^4.6.4
@@ -89,6 +90,7 @@ importers:
       react: 18.2.0
       react-cool-inview: 3.0.1_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-hook-form: 7.41.5_react@18.2.0
       react-hot-toast: 2.4.0_biqbaboplfbrettd7655fr4n2y
       react-router-dom: 6.4.5_biqbaboplfbrettd7655fr4n2y
       wagmi: 0.9.2_j2ypj35ch2jv6b3hllmh4dxtwm
@@ -13187,6 +13189,15 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+
+  /react-hook-form/7.41.5_react@18.2.0:
+    resolution: {integrity: sha512-DAKjSJ7X9f16oQrP3TW2/eD9N6HOgrmIahP4LOdFphEWVfGZ2LulFd6f6AQ/YS/0cx/5oc4j8a1PXxuaurWp/Q==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /react-hot-toast/2.4.0_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-qnnVbXropKuwUpriVVosgo8QrB+IaPJCpL8oBI6Ov84uvHZ5QQcTp2qg6ku2wNfgJl6rlQXJIQU5q+5lmPOutA==}

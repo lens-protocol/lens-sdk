@@ -46,6 +46,11 @@ const profileHooks = [
     description: `Follow or unfollow a profile.`,
     path: '/profiles/useFollow',
   },
+  {
+    label: 'useUpdateProfileDetails',
+    description: `Updates profile details.`,
+    path: '/profiles/useUpdateProfileDetails',
+  },
 ];
 
 export function ProfilesPage() {
