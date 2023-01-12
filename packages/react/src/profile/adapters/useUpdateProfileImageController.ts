@@ -33,7 +33,7 @@ export function useUpdateProfileImageController() {
       presenter,
     );
 
-    void updateProfileImage.execute(request);
+    await updateProfileImage.execute(request);
 
     return presenter.asResult();
   };
