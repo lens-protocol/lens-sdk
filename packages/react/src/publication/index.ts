@@ -17,7 +17,6 @@ export * from './usePublication';
 export * from './usePublications';
 export * from './useSearchPublications';
 export * from './useExplorePublications';
-export * from './usePublicationRevenue';
 export * from './useReaction';
 export * from './useWhoReacted';
 

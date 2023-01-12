@@ -41,6 +41,10 @@ import {
   MutualFollowersProfilesQueryVariables,
   PostFragment,
   ProfileFieldsFragment,
+  ProfileFollowRevenueDocument,
+  ProfileFollowRevenueFragment,
+  ProfileFollowRevenueQuery,
+  ProfileFollowRevenueQueryVariables,
   ProfilesToFollowDocument,
   ProfilesToFollowQuery,
   ProxyActionError,
@@ -425,6 +429,26 @@ export function createWhoReactedPublicationQueryMockedResponse(args: {
             totalCount: args.items.length,
           },
         },
+      },
+    },
+  };
+}
+
+export function createProfileFollowRevenueQueryMockedResponse({
+  variables,
+  revenues,
+}: {
+  variables: ProfileFollowRevenueQueryVariables;
+  revenues: ProfileFollowRevenueFragment;
+}): MockedResponse<ProfileFollowRevenueQuery> {
+  return {
+    request: {
+      query: ProfileFollowRevenueDocument,
+      variables,
+    },
+    result: {
+      data: {
+        result: revenues,
       },
     },
   };
