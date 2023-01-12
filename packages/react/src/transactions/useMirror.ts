@@ -8,7 +8,7 @@ import {
 import { useState } from 'react';
 import { useMirrorController } from './adapters/useMirrorController';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
-import { CommentFragment, PostFragment } from '@lens-protocol/api-bindings/dist/esm';
+import { CommentFragment, PostFragment } from '@lens-protocol/api-bindings';
 
 export type CreateMirrorArgs = Omit<
   CreateMirrorRequest,

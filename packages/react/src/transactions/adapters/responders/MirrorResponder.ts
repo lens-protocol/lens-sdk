@@ -13,7 +13,6 @@ import {
   PublicationFragment,
 } from '@lens-protocol/api-bindings';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
-import {} from '@lens-protocol/api-bindings/dist/esm';
 
 export class MirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
   constructor(private client: ApolloClient<NormalizedCacheObject>) {}

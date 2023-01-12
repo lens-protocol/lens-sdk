@@ -19,7 +19,7 @@ function MirrorInner({ profile }: MirrorInnerProps) {
     publicationId: '0x1b-0x0118',
     observerId: profile.id, // important!
   });
-  const { mirror, isPending, error } = useMirror({});
+  const { mirror, isPending, error } = useMirror();
 
   if (publicationLoading) return <Loading />;
 

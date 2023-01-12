@@ -9,7 +9,7 @@ import {
   CreateMirrorTypedDataMutation,
   CreateMirrorTypedDataMutationVariables,
 } from '@lens-protocol/api-bindings';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/dist/esm/use-cases/transactions';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
   NativeTransaction,
   Nonce,
