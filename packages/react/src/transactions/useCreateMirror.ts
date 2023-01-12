@@ -10,10 +10,7 @@ import { useState } from 'react';
 
 import { useCreateMirrorController } from './adapters/useCreateMirrorController';
 
-export type CreateMirrorArgs = Omit<
-  CreateMirrorRequest,
-  'kind' | 'delegate' | 'profileId' | 'publicationId' | 'publicationType'
-> & {
+export type CreateMirrorArgs = Pick<CreateMirrorRequest, 'reference'> & {
   publication: PostFragment | CommentFragment;
   profile: ProfileFieldsFragment;
 };

@@ -74,7 +74,7 @@
   - [x] sign-less, gas-less
   - [x] signed, gas-less
   - [ ] signed, paid gas (fallback)
-- [ ] `useMirror`
+- [ ] `useCreateMirror`
   - [x] sign-less, gas-less
   - [x] signed, gas-less
   - [ ] signed, paid (fallback)
