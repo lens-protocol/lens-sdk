@@ -36,7 +36,7 @@ import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
-import { UseMirror } from './publications/UseMirror';
+import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseSearchPublications } from './publications/UseSearchPublications';
 import { UseWhoReacted } from './publications/UseWhoReacted';
 import { RevenuePage } from './revenue/RevenuePage';
@@ -91,7 +91,7 @@ export function App() {
                   element={<UseExplorePublications />}
                 />
                 <Route path="/publications/useReaction" element={<UseReaction />} />
-                <Route path="/publications/UseMirror" element={<UseMirror />} />
+                <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
                 <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />

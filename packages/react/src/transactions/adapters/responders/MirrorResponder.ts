@@ -8,42 +8,26 @@ import {
   PublicationByTxHashDocument,
   PublicationByTxHashQuery,
   PublicationByTxHashQueryVariables,
-  PostFragmentDoc,
-  getPublicationTypename,
-  PublicationFragment,
 } from '@lens-protocol/api-bindings';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
+import { PublicationCacheModifier } from '../PublicationCacheModifier';
 
 export class MirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
-  constructor(private client: ApolloClient<NormalizedCacheObject>) {}
+  readonly publicationCacheManager: PublicationCacheModifier;
+
+  constructor(private client: ApolloClient<NormalizedCacheObject>) {
+    this.publicationCacheManager = new PublicationCacheModifier(client.cache);
+  }
 
   async prepare({ request }: TransactionData<CreateMirrorRequest>) {
-    const publicationIdentifier = this.client.cache.identify({
-      __typename: getPublicationTypename(request.publicationType),
-      id: request.publicationId,
-    });
-
-    const snapshot = this.client.cache.readFragment<PublicationFragment>({
-      id: publicationIdentifier,
-      fragmentName: getPublicationTypename(request.publicationType),
-      fragment: PostFragmentDoc,
-    });
-
-    if (snapshot) {
-      this.client.cache.writeFragment<PublicationFragment>({
-        id: publicationIdentifier,
-        fragmentName: getPublicationTypename(request.publicationType),
-        fragment: PostFragmentDoc,
-        data: {
-          ...snapshot,
-          isOptimisticMirroredByMe: true,
-          stats: {
-            ...snapshot.stats,
-            totalAmountOfMirrors: snapshot.stats.totalAmountOfMirrors + 1,
-          },
-        },
-      });
-    }
+    this.publicationCacheManager.update(request.publicationId, (current) => ({
+      ...current,
+      isOptimisticMirroredByMe: true,
+      stats: {
+        ...current.stats,
+        totalAmountOfMirrors: current.stats.totalAmountOfMirrors + 1,
+      },
+    }));
   }
 
   async commit({ request, txHash }: BroadcastedTransactionData<CreateMirrorRequest>) {
@@ -54,27 +38,21 @@ export class MirrorResponder implements ITransactionResponder<CreateMirrorReques
       fetchPolicy: 'network-only',
     });
 
-    const publicationIdentifier = this.client.cache.identify({
-      __typename: getPublicationTypename(request.publicationType),
-      id: request.publicationId,
-    });
+    this.publicationCacheManager.update(request.publicationId, (current) => ({
+      ...current,
+      isOptimisticMirroredByMe: false,
+    }));
+  }
 
-    const snapshot = this.client.cache.readFragment<PublicationFragment>({
-      id: publicationIdentifier,
-      fragmentName: getPublicationTypename(request.publicationType),
-      fragment: PostFragmentDoc,
-    });
-
-    if (snapshot) {
-      this.client.cache.writeFragment<PublicationFragment>({
-        id: publicationIdentifier,
-        fragmentName: getPublicationTypename(request.publicationType),
-        fragment: PostFragmentDoc,
-        data: {
-          ...snapshot,
-          isOptimisticMirroredByMe: false,
-        },
-      });
-    }
+  async rollback({ request }: TransactionData<CreateMirrorRequest>) {
+    debugger;
+    this.publicationCacheManager.update(request.publicationId, (current) => ({
+      ...current,
+      isOptimisticMirroredByMe: false,
+      stats: {
+        ...current.stats,
+        totalAmountOfMirrors: current.stats.totalAmountOfMirrors - 1,
+      },
+    }));
   }
 }

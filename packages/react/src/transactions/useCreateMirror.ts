@@ -1,4 +1,4 @@
-import { getPublicationType, ProfileFieldsFragment } from '@lens-protocol/api-bindings';
+import { ProfileFieldsFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -6,7 +6,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { useState } from 'react';
-import { useMirrorController } from './adapters/useMirrorController';
+import { useCreateMirrorController } from './adapters/useCreateMirrorController';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { CommentFragment, PostFragment } from '@lens-protocol/api-bindings';
 
@@ -18,22 +18,21 @@ export type CreateMirrorArgs = Omit<
   profile: ProfileFieldsFragment;
 };
 
-export function useMirror() {
+export function useCreateMirror() {
   const [error, setError] = useState<
     PendingSigningRequestError | UserRejectedError | WalletConnectionError | null
   >(null);
   const [isPending, setIsPending] = useState(false);
-  const createMirror = useMirrorController();
+  const createMirror = useCreateMirrorController();
 
   return {
-    mirror: async ({ profile, publication, ...args }: CreateMirrorArgs) => {
+    create: async ({ profile, publication, ...args }: CreateMirrorArgs) => {
       setError(null);
       setIsPending(true);
 
       try {
         const result = await createMirror({
           kind: TransactionKind.MIRROR_PUBLICATION,
-          publicationType: getPublicationType(publication),
           publicationId: publication.id,
           profileId: profile.id,
           delegate: profile.dispatcher !== null,

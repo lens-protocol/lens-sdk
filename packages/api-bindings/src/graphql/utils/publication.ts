@@ -4,13 +4,17 @@ import { never } from '@lens-protocol/shared-kernel';
 import {
   Comment,
   CommentFragment,
+  CommentFragmentDoc,
   Mirror,
   MirrorFragment,
+  MirrorFragmentDoc,
   Post,
   PostFragment,
+  PostFragmentDoc,
   ReactionTypes,
 } from '../generated';
 import { Typename, PickByTypename, JustTypename } from './types';
+import { DocumentNode } from '@apollo/client';
 
 type PublicationTypename = JustTypename<Mirror> | JustTypename<Comment> | JustTypename<Post>;
 

@@ -9,7 +9,7 @@ import {
 import { MirrorCallGateway } from './publication-call-gateways/MirrorCallGateway';
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
 
-export function useMirrorController() {
+export function useCreateMirrorController() {
   const {
     activeWallet,
     apolloClient,

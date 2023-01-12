@@ -1,8 +1,9 @@
 import {
   ProfileFieldsFragment,
   usePublication,
-  useMirror,
+  useCreateMirror,
   ReferencePolicy,
+  isMirrorPublication,
 } from '@lens-protocol/react';
 
 import { LoginButton } from '../components/auth/LoginButton';
@@ -19,9 +20,13 @@ function MirrorInner({ profile }: MirrorInnerProps) {
     publicationId: '0x1b-0x0118',
     observerId: profile.id, // important!
   });
-  const { mirror, isPending, error } = useMirror();
+  const { create, isPending, error } = useCreateMirror();
 
   if (publicationLoading) return <Loading />;
+
+  if (isMirrorPublication(publication)) {
+    return <p>Can't mirror a mirror</p>;
+  }
 
   const isMirroredByMe = publication.isOptimisticMirroredByMe || publication.mirrors.length > 0;
 
@@ -36,7 +41,7 @@ function MirrorInner({ profile }: MirrorInnerProps) {
         {error && <p>{error.message}</p>}
         <button
           onClick={() =>
-            mirror({
+            create({
               publication,
               profile,
               reference: ReferencePolicy.ANYBODY,
@@ -51,7 +56,7 @@ function MirrorInner({ profile }: MirrorInnerProps) {
   );
 }
 
-export function UseMirror() {
+export function UseCreateMirror() {
   return (
     <>
       <h1>

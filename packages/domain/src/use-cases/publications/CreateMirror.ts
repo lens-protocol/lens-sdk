@@ -1,5 +1,4 @@
 import { TransactionKind } from '../../entities';
-import { PublicationType } from '../../entities/Publication';
 import {
   DelegableProtocolCallUseCase,
   IProtocolCallPresenter,
@@ -11,7 +10,6 @@ import { ReferencePolicy } from './types';
 export type CreateMirrorRequest = {
   profileId: string;
   publicationId: string;
-  publicationType: PublicationType;
   kind: TransactionKind.MIRROR_PUBLICATION;
   delegate: boolean;
   reference: ReferencePolicy;
