@@ -12,7 +12,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { assertNever, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
-import differenceBy from 'lodash/differenceBy';
+import differenceBy from 'lodash/differenceBy.js';
 
 import {
   ISerializableMetaTransaction,

@@ -1,7 +1,7 @@
 /**
  * Inspired by https://dev.to/tipsy_dev/advanced-typescript-reinventing-lodash-get-4fhe
  */
-import lodashGet from 'lodash/get';
+import lodashGet from 'lodash/get.js';
 
 type GetFieldType<Obj, Path> = Path extends `${infer Left}.${infer Right}`
   ? Left extends keyof Obj

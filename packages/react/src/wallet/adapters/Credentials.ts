@@ -1,7 +1,7 @@
 import { ICredentials } from '@lens-protocol/domain/entities';
 import { DateUtils, invariant, InvariantError } from '@lens-protocol/shared-kernel';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
-import isObject from 'lodash/isObject';
+import isObject from 'lodash/isObject.js';
 
 type ParsedJwt = {
   id: string;

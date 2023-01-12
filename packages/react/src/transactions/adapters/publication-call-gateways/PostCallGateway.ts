@@ -9,7 +9,6 @@ import {
   CreatePublicPostRequest as CreatePublicPostRequestArg,
   omitTypename,
 } from '@lens-protocol/api-bindings';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/dist/esm/use-cases/transactions';
 import {
   NativeTransaction,
   Nonce,
@@ -20,6 +19,7 @@ import {
   CreatePostRequest,
   ICreatePostCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, invariant, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
