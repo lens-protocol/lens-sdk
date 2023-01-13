@@ -75,6 +75,8 @@ describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
   describe(`when "${UpdateProfileImageResponder.prototype.rollback.name}" method is invoked`, () => {
     it(`should restore the original profile picture from the server`, async () => {
       const scenario = setupTestScenario({ profile });
+
+      await scenario.responder.prepare(transactionData);
       await scenario.responder.rollback(transactionData);
 
       expect(scenario.profileFromCache).toMatchObject(profile);
