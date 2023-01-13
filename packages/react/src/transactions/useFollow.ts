@@ -1,10 +1,10 @@
 import {
-  ProfileFieldsFragmentWithSupportedFollowModule,
-  ProfileFieldsFragment,
-  isProfileFieldsFragmentWithFeeFollowModule,
-  getFollowPolicyTypeFromProfileFieldsFragment,
   erc20Amount,
   FeeFollowModuleSettingsFragment,
+  getFollowPolicyTypeFromProfileFieldsFragment,
+  isProfileFieldsFragmentWithFeeFollowModule,
+  ProfileFieldsFragment,
+  ProfileFieldsFragmentWithSupportedFollowModule,
 } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
@@ -12,11 +12,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  FollowPolicyType,
-  FollowRequest,
-  FollowRequestFee,
-} from '@lens-protocol/domain/use-cases/profile';
+import { FollowPolicyType, FollowRequestFee } from '@lens-protocol/domain/use-cases/profile';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -27,7 +23,6 @@ import { useState } from 'react';
 
 import { useActiveProfile } from '../profile';
 import { useActiveWallet } from '../wallet';
-import { TransactionState, useHasPendingTransaction } from './adapters/TransactionQueuePresenter';
 import { useFollowController } from './adapters/useFollowController';
 
 type FollowProfilesFlowRequest = {
@@ -97,35 +92,36 @@ export function useFollow({ profile }: UseFollowArgs) {
     | WalletConnectionError
     | null
   >(null);
+  const [isPending, setIsPending] = useState<boolean>(false);
   const follow = useFollowController();
   const activeWallet = useActiveWallet();
   const { data: activeProfile } = useActiveProfile();
 
-  const hasPendingTx = useHasPendingTransaction(
-    (transaction): transaction is TransactionState<FollowRequest> =>
-      transaction.request.kind === TransactionKind.FOLLOW_PROFILES &&
-      transaction.request.profileId === profile.id,
-  );
-
   return {
     follow: async () => {
-      invariant(activeWallet && activeProfile, 'You must be logged in to follow a profile');
+      try {
+        invariant(activeWallet && activeProfile, 'You must be logged in to follow a profile');
+        setIsPending(true);
+        setError(null);
 
-      const request = createFollowProfilesFlowRequest(profile, activeWallet, activeProfile);
+        const request = createFollowProfilesFlowRequest(profile, activeWallet, activeProfile);
 
-      const result = await follow({
-        profileId: request.profileId,
-        followerAddress: request.followerAddress,
-        followerProfileId: request.followerProfileId,
-        fee: request.fee,
-        kind: TransactionKind.FOLLOW_PROFILES,
-      });
+        const result = await follow({
+          profileId: request.profileId,
+          followerAddress: request.followerAddress,
+          followerProfileId: request.followerProfileId,
+          fee: request.fee,
+          kind: TransactionKind.FOLLOW_PROFILES,
+        });
 
-      if (result.isFailure()) {
-        setError(result.error);
+        if (result.isFailure()) {
+          setError(result.error);
+        }
+      } finally {
+        setIsPending(false);
       }
     },
     error,
-    isPending: hasPendingTx,
+    isPending,
   };
 }

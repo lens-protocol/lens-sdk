@@ -4,6 +4,8 @@ import {
   useFollow,
   useUnfollow,
 } from '@lens-protocol/react';
+import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
@@ -14,20 +16,26 @@ type FollowButtonProps = {
   profile: ProfileFieldsFragment;
 };
 
+const toastNotification = (error: Error) => toast.error(error.message);
+
 function FollowButton({ profile }: FollowButtonProps) {
   const { follow, isPending: isFollowing } = useFollow({ profile });
-  const { unfollow, isPending: isUnfollowing } = useUnfollow({ profile });
+  const { unfollow, isPending: isUnfollowing, error } = useUnfollow({ profile });
+
+  useEffect(() => {
+    if (error && 'message' in error) toastNotification(error);
+  }, [error]);
 
   if (profile.isFollowedByMe || profile.isOptimisticFollowedByMe)
     return (
-      <button onClick={unfollow} disabled={isUnfollowing || profile.isOptimisticFollowedByMe}>
-        {isUnfollowing ? 'Unfollowing...' : 'Unfollow'}
+      <button onClick={unfollow} disabled={isUnfollowing}>
+        Unfollow
       </button>
     );
 
   return (
     <button onClick={follow} disabled={isFollowing}>
-      {isFollowing ? 'Following...' : 'Follow'}
+      Follow
     </button>
   );
 }
