@@ -144,7 +144,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new NoopResponder(),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new NoopResponder(),
-    [TransactionKind.UPDATE_PROFILE_IMAGE]: new UpdateProfileImageResponder(apolloClient.cache),
+    [TransactionKind.UPDATE_PROFILE_IMAGE]: new UpdateProfileImageResponder(apolloClient),
   };
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);
 

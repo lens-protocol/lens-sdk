@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloCache,
+  createMockApolloClientWithMultipleResponses,
+  mockGetProfileQueryMockedResponse,
   mockProfileFieldsFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import {
@@ -12,23 +13,30 @@ import {
 import { UpdateProfileImageResponder } from '../UpdateProfileImageResponder';
 
 function setupTestScenario({ profile }: { profile: ProfileFieldsFragment }) {
-  const apolloCache = createMockApolloCache();
+  const apolloClient = createMockApolloClientWithMultipleResponses([
+    mockGetProfileQueryMockedResponse({
+      profile,
+      request: {
+        profileId: profile.id,
+      },
+    }),
+  ]);
 
-  apolloCache.writeFragment({
-    id: apolloCache.identify(profile),
+  apolloClient.cache.writeFragment({
+    id: apolloClient.cache.identify(profile),
     fragment: ProfileFieldsFragmentDoc,
     fragmentName: 'ProfileFields',
     data: profile,
   });
 
-  const responder = new UpdateProfileImageResponder(apolloCache);
+  const responder = new UpdateProfileImageResponder(apolloClient);
 
   return {
     responder,
 
     get profileFromCache() {
-      return apolloCache.readFragment({
-        id: apolloCache.identify(profile),
+      return apolloClient.cache.readFragment({
+        id: apolloClient.cache.identify(profile),
         fragment: ProfileFieldsFragmentDoc,
         fragmentName: 'ProfileFields',
       });
@@ -38,21 +46,20 @@ function setupTestScenario({ profile }: { profile: ProfileFieldsFragment }) {
 
 describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
   const profile = mockProfileFieldsFragment();
+  const newImageUrl = faker.image.imageUrl(600, 600, 'cat', true);
 
-  describe(`when "${UpdateProfileImageResponder.prototype.commit.name}" method is invoked`, () => {
-    const newImageUrl = faker.image.imageUrl(600, 600, 'cat', true);
+  const transactionData = mockBroadcastedTransactionData({
+    request: mockUpdateOffChainProfileImageRequest({
+      profileId: profile.id,
+      url: newImageUrl,
+    }),
+  });
 
-    const transactionData = mockBroadcastedTransactionData({
-      request: mockUpdateOffChainProfileImageRequest({
-        profileId: profile.id,
-        url: newImageUrl,
-      }),
-    });
-
+  describe(`when "${UpdateProfileImageResponder.prototype.prepare.name}" method is invoked`, () => {
     it(`should update profile picture to the latest one`, async () => {
       const scenario = setupTestScenario({ profile });
 
-      await scenario.responder.commit(transactionData);
+      await scenario.responder.prepare(transactionData);
 
       expect(scenario.profileFromCache).toMatchObject({
         ...profile,
@@ -62,6 +69,15 @@ describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
           },
         },
       });
+    });
+  });
+
+  describe(`when "${UpdateProfileImageResponder.prototype.rollback.name}" method is invoked`, () => {
+    it(`should restore the original profile picture from the server`, async () => {
+      const scenario = setupTestScenario({ profile });
+      await scenario.responder.rollback(transactionData);
+
+      expect(scenario.profileFromCache).toMatchObject(profile);
     });
   });
 });

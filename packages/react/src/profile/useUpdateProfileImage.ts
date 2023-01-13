@@ -4,7 +4,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import { useUpdateProfileImageController } from './adapters/useUpdateProfileImageController';
 
@@ -20,27 +20,24 @@ export function useUpdateProfileImage({ profileId }: UseUpdateProfileImageArgs) 
 
   const updateImage = useUpdateProfileImageController();
 
-  const update = useCallback(
-    async (fileUrl: string) => {
-      setError(null);
-      setIsPending(true);
+  const update = async (fileUrl: string) => {
+    setError(null);
+    setIsPending(true);
 
-      try {
-        const result = await updateImage({
-          kind: TransactionKind.UPDATE_PROFILE_IMAGE,
-          profileId,
-          url: fileUrl,
-        });
+    try {
+      const result = await updateImage({
+        kind: TransactionKind.UPDATE_PROFILE_IMAGE,
+        profileId,
+        url: fileUrl,
+      });
 
-        if (result.isFailure()) {
-          setError(result.error);
-        }
-      } finally {
-        setIsPending(false);
+      if (result.isFailure()) {
+        setError(result.error);
       }
-    },
-    [updateImage, profileId],
-  );
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return {
     update,
