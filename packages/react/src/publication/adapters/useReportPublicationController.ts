@@ -1,8 +1,8 @@
-import { ReportReason } from '@lens-protocol/domain/entities';
 import {
   AlreadyReportedError,
   NetworkError,
   ReportPublication,
+  ReportPublicationRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { useState } from 'react';
 
@@ -23,11 +23,7 @@ export function useReportPublicationController() {
 
   const reportPublicationGateway = new ReportPublicationGateway(apolloClient);
 
-  const report = async (
-    publicationId: string,
-    reason: ReportReason,
-    additionalComments: string | null,
-  ) => {
+  const report = async (request: ReportPublicationRequest) => {
     setState(ReportState.REPORTING);
 
     const reportPublicationUseCase = new ReportPublication(reportPublicationGateway, {
@@ -44,7 +40,7 @@ export function useReportPublicationController() {
       },
     });
 
-    await reportPublicationUseCase.report({ publicationId, reason, additionalComments });
+    await reportPublicationUseCase.report(request);
   };
 
   return {
