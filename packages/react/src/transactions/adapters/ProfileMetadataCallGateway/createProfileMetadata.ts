@@ -1,22 +1,10 @@
 import { AttributeFragment, ProfileFieldsFragment } from '@lens-protocol/api-bindings';
-import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   PartialAttributesUpdate,
   ProfileAttributeValue,
-  UpdateCoverImageRequest,
   UpdateProfileDetailsRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { UnknownObject } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
-
-function createProfileMetadataWrapper(data: UnknownObject) {
-  return {
-    version: '1.0.0',
-    metadata_id: v4(),
-
-    ...data,
-  };
-}
 
 type AttributeData = {
   displayType?: string | null;
@@ -39,6 +27,16 @@ function newAttribute(key: string, value: ProfileAttributeValue): AttributeData 
     value: value.toString(),
     displayType: typeof value,
   };
+}
+
+function extractCoverImageUrl(existingProfile: ProfileFieldsFragment): string | null {
+  return existingProfile.coverPicture?.__typename === 'MediaSet'
+    ? existingProfile.coverPicture.original.url
+    : null;
+}
+
+function coalesce<T>(lhs: T | undefined, rhs: T): T {
+  return lhs !== undefined ? lhs : rhs;
 }
 
 function isProfileAttributeValue(
@@ -77,33 +75,15 @@ function resolveAttributes(attributes: AttributeFragment[], update: PartialAttri
 
 export function createProfileMetadata(
   existingProfile: ProfileFieldsFragment,
-  request: UpdateCoverImageRequest | UpdateProfileDetailsRequest,
+  request: UpdateProfileDetailsRequest,
 ) {
-  switch (request.kind) {
-    case TransactionKind.UPDATE_COVER_IMAGE:
-      return createProfileMetadataWrapper({
-        cover_picture: request.url,
+  return {
+    version: '1.0.0',
+    metadata_id: v4(),
 
-        // supports partial updates
-        attributes: resolveAttributes(existingProfile.__attributes ?? []),
-        name: existingProfile.name,
-        bio: existingProfile.bio,
-      });
-    case TransactionKind.UPDATE_PROFILE_DETAILS:
-      return createProfileMetadataWrapper({
-        name: request.details.name,
-        bio: request.details.bio,
-
-        attributes: resolveAttributes(
-          existingProfile.__attributes ?? [],
-          request.details.attributes,
-        ),
-
-        // supports partial updates
-        cover_picture:
-          existingProfile.coverPicture?.__typename === 'MediaSet'
-            ? existingProfile.coverPicture.original.url
-            : null,
-      });
-  }
+    attributes: resolveAttributes(existingProfile.__attributes ?? [], request.attributes),
+    bio: coalesce(request.bio, existingProfile.bio),
+    cover_picture: coalesce(request.coverPicture, extractCoverImageUrl(existingProfile)),
+    name: request.name,
+  };
 }

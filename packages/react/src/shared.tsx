@@ -141,7 +141,6 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(apolloClient),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
-    [TransactionKind.UPDATE_COVER_IMAGE]: new NoopResponder(),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new NoopResponder(),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new UpdateProfileMetadataResponder(apolloClient),
