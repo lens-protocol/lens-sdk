@@ -40,7 +40,7 @@ describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
   const profile = mockProfileFieldsFragment();
 
   describe(`when "${UpdateProfileImageResponder.prototype.commit.name}" method is invoked`, () => {
-    const newImageUrl = faker.image.imageUrl();
+    const newImageUrl = faker.image.imageUrl(600, 600, 'cat', true);
 
     const transactionData = mockBroadcastedTransactionData({
       request: mockUpdateOffChainProfileImageRequest({
@@ -54,7 +54,14 @@ describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
 
       await scenario.responder.commit(transactionData);
 
-      expect(scenario.profileFromCache).toEqual(profile);
+      expect(scenario.profileFromCache).toMatchObject({
+        ...profile,
+        picture: {
+          original: {
+            url: newImageUrl,
+          },
+        },
+      });
     });
   });
 });

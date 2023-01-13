@@ -6,6 +6,7 @@ import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
 import { useFilePreview } from '../hooks/useFilePreview';
 import { ILocalFile, ImageType, useFileSelect } from '../hooks/useFileSelect';
 import { uploadImage } from '../upload';
+import { invariant } from '../utils';
 import { SmallProfileCard } from './components/ProfileCard';
 
 function UpdateUploadedImage({ profile }: { profile: ProfileFieldsFragment }) {
@@ -26,8 +27,9 @@ function UpdateUploadedImage({ profile }: { profile: ProfileFieldsFragment }) {
 
   return (
     <div style={{ paddingTop: '2rem' }}>
-      <label>Image URL</label>
+      <label htmlFor="imageUrl">Image URL</label>
       <input
+        id="imageUrl"
         onChange={handleInputChange}
         value={inputValue}
         style={{ width: '90%', margin: '0' }}
@@ -43,7 +45,7 @@ function UpdateUploadedImage({ profile }: { profile: ProfileFieldsFragment }) {
 
 function UploadAndUpdateNewImage({ profile }: { profile: ProfileFieldsFragment }) {
   const [candidateFile, setCandidateFile] = useState<ILocalFile<ImageType> | null>(null);
-  const [uploadError, setUploadError] = useState<string>();
+  const [uploadError, setUploadError] = useState<Error | null>();
   const [isUploading, setIsUploading] = useState(false);
 
   const openFileSelector = useFileSelect({
@@ -73,32 +75,32 @@ function UploadAndUpdateNewImage({ profile }: { profile: ProfileFieldsFragment }
   };
 
   const uploadImageCandidate = async () => {
-    if (candidateFile) {
-      setUploadError('');
-      setIsUploading(true);
+    invariant(candidateFile, 'Image to upload is not defined');
 
-      try {
-        const url = await uploadImage(candidateFile);
-        setIsUploading(false);
-        return url;
-      } catch (e) {
-        setIsUploading(false);
-        if (e instanceof Error) {
-          setUploadError(`Upload error: ${e.message}`);
-        }
+    setUploadError(null);
+    setIsUploading(true);
+
+    try {
+      const url = await uploadImage(candidateFile);
+      return url;
+    } catch (e) {
+      if (e instanceof Error) {
+        setUploadError(e);
       }
+    } finally {
+      setIsUploading(false);
     }
   };
 
   const handleUpdateProfileImage = async () => {
     const url = await uploadImageCandidate();
 
-    if (url) {
-      await update(url);
+    invariant(url, 'Image URL not provided');
 
-      if (!isPending) {
-        setCandidateFile(null);
-      }
+    await update(url);
+
+    if (!isPending) {
+      setCandidateFile(null);
     }
   };
 
@@ -111,7 +113,7 @@ function UploadAndUpdateNewImage({ profile }: { profile: ProfileFieldsFragment }
         <div>
           {updateError && <p>{updateError.message}</p>}
           {isPending && <p>Updating your Lens profile's image...</p>}
-          {uploadError && <p>{uploadError}</p>}
+          {uploadError && <p>{uploadError.message}</p>}
           {isUploading && <p>Uploading image to Arweave...</p>}
           <img src={previewUrl} alt="Your new avatar" width="300px" />
           <div>

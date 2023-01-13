@@ -4,23 +4,9 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  UpdateOffChainProfileImageRequest,
-  UpdateProfileImageRequest,
-} from '@lens-protocol/domain/use-cases/profile';
 import { useCallback, useState } from 'react';
 
-import {
-  TransactionState,
-  useHasPendingTransaction,
-} from '../transactions/adapters/TransactionQueuePresenter';
 import { useUpdateProfileImageController } from './adapters/useUpdateProfileImageController';
-
-function isUpdateOffChainProfileImageRequest(
-  request: UpdateProfileImageRequest,
-): request is UpdateOffChainProfileImageRequest {
-  return 'url' in request;
-}
 
 export type UseUpdateProfileImageArgs = {
   profileId: string;
@@ -33,12 +19,6 @@ export function useUpdateProfileImage({ profileId }: UseUpdateProfileImageArgs) 
   const [isPending, setIsPending] = useState(false);
 
   const updateImage = useUpdateProfileImageController();
-
-  const hasPendingTx = useHasPendingTransaction(
-    (tx): tx is TransactionState<UpdateProfileImageRequest> =>
-      tx.request.kind === TransactionKind.UPDATE_PROFILE_IMAGE &&
-      isUpdateOffChainProfileImageRequest(tx.request),
-  );
 
   const update = useCallback(
     async (fileUrl: string) => {
@@ -65,6 +45,6 @@ export function useUpdateProfileImage({ profileId }: UseUpdateProfileImageArgs) 
   return {
     update,
     error,
-    isPending: isPending || hasPendingTx,
+    isPending: isPending,
   };
 }
