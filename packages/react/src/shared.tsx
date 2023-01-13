@@ -19,7 +19,6 @@ import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
 import { ErrorHandler } from './ErrorHandler';
-import { UnfollowProfileResponder } from './UnfollowProfileResponder';
 import { LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
@@ -35,6 +34,7 @@ import {
 import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
 import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
+import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
