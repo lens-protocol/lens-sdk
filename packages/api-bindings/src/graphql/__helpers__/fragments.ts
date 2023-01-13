@@ -27,17 +27,21 @@ import {
   WhoReactedResultFragment,
 } from '../generated';
 
-function mockMediaFragment(): MediaFragment {
+export function mockMediaFragment(overrides?: Partial<MediaFragment>): MediaFragment {
   return {
     url: faker.image.imageUrl(),
     mimeType: 'image/jpeg',
+    ...overrides,
     __typename: 'Media',
   };
 }
 
-function mockProfileMediaFragment(): ProfileMediaFragment {
+export function mockProfileMediaFragment(
+  overrides?: Partial<ProfileMediaFragment>,
+): ProfileMediaFragment {
   return {
     original: mockMediaFragment(),
+    ...overrides,
     __typename: 'MediaSet',
   };
 }

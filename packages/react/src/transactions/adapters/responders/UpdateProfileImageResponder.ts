@@ -48,20 +48,26 @@ export class UpdateProfileImageResponder
     }
   }
 
-  async commit(_: BroadcastedTransactionData<UpdateProfileImageRequest>) {
-    //
+  async commit({ request }: BroadcastedTransactionData<UpdateProfileImageRequest>) {
+    await this.client.query<GetProfileQuery, GetProfileQueryVariables>({
+      query: GetProfileDocument,
+      variables: {
+        request: { profileId: request.profileId },
+        observerId: request.profileId,
+      },
+      fetchPolicy: 'network-only',
+    });
   }
 
   async rollback({ request }: BroadcastedTransactionData<UpdateProfileImageRequest>) {
     // we don't know the previous profile image url, so just query the profile again
-    if (isUpdateOffChainProfileImageRequest(request)) {
-      await this.client.query<GetProfileQuery, GetProfileQueryVariables>({
-        query: GetProfileDocument,
-        variables: {
-          request: { profileId: request.profileId },
-        },
-        fetchPolicy: 'network-only',
-      });
-    }
+    await this.client.query<GetProfileQuery, GetProfileQueryVariables>({
+      query: GetProfileDocument,
+      variables: {
+        request: { profileId: request.profileId },
+        observerId: request.profileId,
+      },
+      fetchPolicy: 'network-only',
+    });
   }
 }
