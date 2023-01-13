@@ -20,9 +20,7 @@ import {
   TransactionErrorReason,
 } from '@lens-protocol/domain/entities';
 import {
-  ICoverImageCallGateway,
   IProfileDetailsCallGateway,
-  UpdateCoverImageRequest,
   UpdateProfileDetailsRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
@@ -38,11 +36,7 @@ import { MetadataUploadAdapter } from '../MetadataUploadAdapter';
 import { createProfileMetadata } from './createProfileMetadata';
 
 export class ProfileMetadataCallGateway
-  implements
-    ICoverImageCallGateway,
-    IProfileDetailsCallGateway,
-    IUnsignedProtocolCallGateway<UpdateCoverImageRequest>,
-    IUnsignedProtocolCallGateway<UpdateProfileDetailsRequest>
+  implements IProfileDetailsCallGateway, IUnsignedProtocolCallGateway<UpdateProfileDetailsRequest>
 {
   constructor(
     private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
@@ -50,7 +44,7 @@ export class ProfileMetadataCallGateway
     private readonly uploadAdapter: MetadataUploadAdapter,
   ) {}
 
-  async createDelegatedTransaction<T extends UpdateCoverImageRequest | UpdateProfileDetailsRequest>(
+  async createDelegatedTransaction<T extends UpdateProfileDetailsRequest>(
     request: T,
   ): Promise<NativeTransaction<T>> {
     return this.transactionFactory.createNativeTransaction({
@@ -63,18 +57,10 @@ export class ProfileMetadataCallGateway
     });
   }
 
-  createUnsignedProtocolCall<T extends UpdateCoverImageRequest>(
+  async createUnsignedProtocolCall<T extends UpdateProfileDetailsRequest>(
     request: T,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>>;
-  createUnsignedProtocolCall<T extends UpdateProfileDetailsRequest>(
-    request: T,
-    nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>>;
-  async createUnsignedProtocolCall(
-    request: UpdateCoverImageRequest | UpdateProfileDetailsRequest,
-    nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<UpdateCoverImageRequest | UpdateProfileDetailsRequest>> {
+  ): Promise<UnsignedLensProtocolCall<T>> {
     const result = await this.createSetProfileMetadataTypedData(
       await this.resolveCreateSetProfileMetadataUriRequest(request),
       nonce,
@@ -127,7 +113,7 @@ export class ProfileMetadataCallGateway
   }
 
   private async resolveCreateSetProfileMetadataUriRequest(
-    request: UpdateCoverImageRequest | UpdateProfileDetailsRequest,
+    request: UpdateProfileDetailsRequest,
   ): Promise<CreatePublicSetProfileMetadataUriRequest> {
     const existingProfile = await this.retrieveProfileDetails(request.profileId);
     const metadataURI = await this.uploadAdapter.upload(

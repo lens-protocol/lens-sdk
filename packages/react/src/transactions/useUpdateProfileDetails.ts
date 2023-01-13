@@ -5,7 +5,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { ProfileDetails } from '@lens-protocol/domain/use-cases/profile';
+import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
 import { useState } from 'react';
 
 import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
@@ -15,6 +15,11 @@ type UseUpdateProfileDetailsArgs = {
   profile: ProfileFieldsFragment;
   upload: MetadataUploadHandler;
 };
+
+export type ProfileDetails = Pick<
+  UpdateProfileDetailsRequest,
+  'attributes' | 'bio' | 'coverPicture' | 'name'
+>;
 
 export function useUpdateProfileDetails({ profile, upload }: UseUpdateProfileDetailsArgs) {
   const [error, setError] = useState<
@@ -37,7 +42,7 @@ export function useUpdateProfileDetails({ profile, upload }: UseUpdateProfileDet
           kind: TransactionKind.UPDATE_PROFILE_DETAILS,
           delegate: profile.dispatcher !== null,
           profileId: profile.id,
-          details,
+          ...details,
         });
         if (result.isFailure()) {
           setError(result.error);
