@@ -88,7 +88,10 @@ export type SharedDependencies = {
   signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
 };
 
-export function createSharedDependencies(config: LensConfig, { onLogout, onError }: Handlers) {
+export function createSharedDependencies(
+  config: LensConfig,
+  { onLogout, onError }: Handlers,
+): SharedDependencies {
   const logger = config.logger ?? new ConsoleLogger();
 
   // storages
@@ -125,7 +128,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
   const balanceGateway = new BalanceGateway(providerFactory);
   const tokenGateway = new TokenGateway(providerFactory);
-  const followPolicyGateway = new FollowPolicyCallGateway(apolloClient);
+  const followPolicyCallGateway = new FollowPolicyCallGateway(apolloClient);
 
   const profileGateway = new ProfileGateway(apolloClient);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
@@ -180,7 +183,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     authApi,
     credentialsFactory,
     credentialsGateway,
-    followPolicyGateway,
+    followPolicyCallGateway,
     logoutPresenter,
     notificationStorage,
     onError,
