@@ -1,4 +1,4 @@
-export * from './ActiveProfile';
+export * from './ActiveProfileLoader';
 export * from './CreateProfile';
 export * from './FollowProfiles';
 export * from './IActiveProfilePresenter';

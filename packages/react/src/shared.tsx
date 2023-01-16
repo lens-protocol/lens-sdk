@@ -6,7 +6,6 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { ActiveProfile } from '@lens-protocol/domain/use-cases/profile';
 import {
   SupportedTransactionRequest,
   TransactionQueue,
@@ -68,7 +67,6 @@ export type Handlers = {
 };
 
 export type SharedDependencies = {
-  activeProfile: ActiveProfile;
   activeProfileGateway: ActiveProfileGateway;
   activeProfilePresenter: ActiveProfilePresenter;
   activeWallet: ActiveWallet;
@@ -78,6 +76,7 @@ export type SharedDependencies = {
   credentialsGateway: CredentialsGateway;
   logoutPresenter: LogoutPresenter;
   onError: Handlers['onError'];
+  profileGateway: ProfileGateway;
   protocolCallRelayer: ProtocolCallRelayer;
   sources: string[];
   transactionFactory: TransactionFactory;
@@ -158,11 +157,6 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   );
 
   // common interactors
-  const activeProfile = new ActiveProfile(
-    profileGateway,
-    activeProfileGateway,
-    activeProfilePresenter,
-  );
   const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
   const transactionQueue = new TransactionQueue(
     responders,
@@ -172,7 +166,6 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
 
   return {
-    activeProfile,
     activeProfileGateway,
     activeProfilePresenter,
     activeWallet,
@@ -183,6 +176,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     logoutPresenter,
     onError,
     sources: config.sources ?? [],
+    profileGateway,
     protocolCallRelayer,
     signlessProtocolCallRelayer,
     transactionFactory,
