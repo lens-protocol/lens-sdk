@@ -56,7 +56,7 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
   );
 
   const { data: currencies, loading } = useCurrencies();
-  const { updateFollowPolicy } = useUpdateFollowPolicy();
+  const { updateFollowPolicy, isPending, error } = useUpdateFollowPolicy();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -155,8 +155,9 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
       )}
 
       <button disabled={currentFollowModule === followPolicyTypeToUpdate} type="submit">
-        Update
+        {isPending ? 'Updating...' : 'Update'}
       </button>
+      {error && <p>{error.message}</p>}
       <style>
         {`
           input[type=text] {

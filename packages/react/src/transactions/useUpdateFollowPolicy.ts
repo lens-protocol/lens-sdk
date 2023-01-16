@@ -1,4 +1,10 @@
-import { ProfileId, TransactionKind } from '@lens-protocol/domain/entities';
+import {
+  PendingSigningRequestError,
+  ProfileId,
+  TransactionKind,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
 import { ChargeFollowPolicy, NoFeeFollowPolicy } from '@lens-protocol/domain/use-cases/profile';
 import { useState } from 'react';
 
@@ -10,7 +16,9 @@ type UseUpdateFollowPolicyArgs = {
 };
 
 export function useUpdateFollowPolicy() {
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<
+    PendingSigningRequestError | UserRejectedError | WalletConnectionError | null
+  >(null);
   const [isPending, setIsPending] = useState<boolean>(false);
   const updateFollowPolicy = useUpdateFollowPolicyController();
 

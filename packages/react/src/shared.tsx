@@ -36,6 +36,7 @@ import { CreatePostResponder } from './transactions/adapters/responders/CreatePo
 import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
+import { UpdateProfileResponder } from './transactions/adapters/responders/UpdateProfileResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
@@ -147,7 +148,7 @@ export function createSharedDependencies(
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
     [TransactionKind.UPDATE_COVER_IMAGE]: new NoopResponder(),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new NoopResponder(),
-    [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),
+    [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateProfileResponder(apolloClient),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new NoopResponder(),
     [TransactionKind.UPDATE_PROFILE_IMAGE]: new NoopResponder(),
   };

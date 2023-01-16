@@ -1,4 +1,9 @@
 import {
+  PendingSigningRequestError,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
+import {
   UpdateFollowPolicy,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
@@ -16,7 +21,10 @@ export function useUpdateFollowPolicyController() {
   } = useSharedDependencies();
 
   return async (args: UpdateFollowPolicyRequest) => {
-    const presenter = new PromiseResultPresenter<void, never>();
+    const presenter = new PromiseResultPresenter<
+      void,
+      PendingSigningRequestError | UserRejectedError | WalletConnectionError
+    >();
     const updateFollowPolicy = new UpdateFollowPolicy(
       activeWallet,
       transactionGateway,
