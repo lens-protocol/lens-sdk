@@ -20,12 +20,12 @@ export class ProfileGateway implements IProfileGateway {
       GetAllProfilesByOwnerAddressQueryVariables
     >({
       query: GetAllProfilesByOwnerAddressDocument,
-      variables: { address },
+      variables: { address, limit: 10 },
     });
 
     invariant(data, `Could not query profiles by owner address: ${address}`);
 
-    return data.profilesByOwner.items.map(({ id, handle }) => Profile.create({ id, handle }));
+    return data.result.items.map(({ id, handle }) => Profile.create({ id, handle }));
   }
 
   async getProfileByHandle(handle: string): Promise<Profile | null> {
