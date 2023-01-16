@@ -4326,6 +4326,24 @@ export type CreatePostViaDispatcherMutation = {
   result: RelayerResultFragment | RelayErrorFragment;
 };
 
+export type CreateSetDispatcherTypedDataMutationVariables = Exact<{
+  request: SetDispatcherRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateSetDispatcherTypedDataMutation = {
+  result: Pick<CreateSetDispatcherBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { SetDispatcherWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Pick<Eip712TypedDataDomain, 'name' | 'chainId' | 'version' | 'verifyingContract'>;
+      value: Pick<
+        CreateSetDispatcherEip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'dispatcher'
+      >;
+    };
+  };
+};
+
 export type ProfileFollowRevenueFragment = { __typename: 'FollowRevenueResult' } & {
   revenues: Array<RevenueAggregateFragment>;
 };
@@ -6318,6 +6336,81 @@ export type CreatePostViaDispatcherMutationResult =
 export type CreatePostViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
   CreatePostViaDispatcherMutation,
   CreatePostViaDispatcherMutationVariables
+>;
+export const CreateSetDispatcherTypedDataDocument = gql`
+  mutation CreateSetDispatcherTypedData(
+    $request: SetDispatcherRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createSetDispatcherTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          SetDispatcherWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          dispatcher
+        }
+      }
+    }
+  }
+`;
+export type CreateSetDispatcherTypedDataMutationFn = Apollo.MutationFunction<
+  CreateSetDispatcherTypedDataMutation,
+  CreateSetDispatcherTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateSetDispatcherTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateSetDispatcherTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetDispatcherTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetDispatcherTypedDataMutation, { data, loading, error }] = useCreateSetDispatcherTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateSetDispatcherTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetDispatcherTypedDataMutation,
+    CreateSetDispatcherTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetDispatcherTypedDataMutation,
+    CreateSetDispatcherTypedDataMutationVariables
+  >(CreateSetDispatcherTypedDataDocument, options);
+}
+export type CreateSetDispatcherTypedDataMutationHookResult = ReturnType<
+  typeof useCreateSetDispatcherTypedDataMutation
+>;
+export type CreateSetDispatcherTypedDataMutationResult =
+  Apollo.MutationResult<CreateSetDispatcherTypedDataMutation>;
+export type CreateSetDispatcherTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetDispatcherTypedDataMutation,
+  CreateSetDispatcherTypedDataMutationVariables
 >;
 export const ProfileFollowRevenueDocument = gql`
   query ProfileFollowRevenue($profileId: ProfileId!) {
