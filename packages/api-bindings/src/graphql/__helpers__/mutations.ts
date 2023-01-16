@@ -16,6 +16,7 @@ import {
   CreateFollowTypedDataMutation,
   CreatePostTypedDataMutation,
   CreateProfileMutation,
+  CreateSetFollowModuleTypedDataMutation,
   CreateUnfollowTypedDataMutation,
   Eip712TypedDataDomain,
   Eip712TypedDataField,
@@ -285,5 +286,28 @@ export function createBroadcastProxyActionCallMutationMockedResponse(instruction
     result: {
       data: { result: instructions.result },
     },
+  };
+}
+
+export function mockCreateSetFollowModuleTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateSetFollowModuleTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateSetFollowModuleBroadcastItemResult', {
+      __typename: 'CreateSetFollowModuleEIP712TypedData',
+      types: {
+        __typename: 'CreateSetFollowModuleEIP712TypedDataTypes',
+        SetFollowModuleWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateSetFollowModuleEIP712TypedDataValue',
+        nonce,
+        deadline: '0',
+        profileId: faker.datatype.uuid(),
+        followModule: mockEthereumAddress(),
+        followModuleInitData: '0x00',
+      },
+    }),
   };
 }

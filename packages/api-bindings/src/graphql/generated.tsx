@@ -4429,6 +4429,24 @@ export type MutualFollowersProfilesQuery = {
   result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
+export type CreateSetFollowModuleTypedDataMutationVariables = Exact<{
+  request: CreateSetFollowModuleRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateSetFollowModuleTypedDataMutation = {
+  result: Pick<CreateSetFollowModuleBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { SetFollowModuleWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Pick<Eip712TypedDataDomain, 'name' | 'chainId' | 'version' | 'verifyingContract'>;
+      value: Pick<
+        CreateSetFollowModuleEip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'followModule' | 'followModuleInitData'
+      >;
+    };
+  };
+};
+
 export type FollowerFragment = { __typename: 'Follower' } & { wallet: WalletFragment };
 
 export type FollowingFragment = { __typename: 'Following' } & { profile: ProfileFieldsFragment };
@@ -6661,6 +6679,82 @@ export type MutualFollowersProfilesLazyQueryHookResult = ReturnType<
 export type MutualFollowersProfilesQueryResult = Apollo.QueryResult<
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesQueryVariables
+>;
+export const CreateSetFollowModuleTypedDataDocument = gql`
+  mutation CreateSetFollowModuleTypedData(
+    $request: CreateSetFollowModuleRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createSetFollowModuleTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          SetFollowModuleWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          followModule
+          followModuleInitData
+        }
+      }
+    }
+  }
+`;
+export type CreateSetFollowModuleTypedDataMutationFn = Apollo.MutationFunction<
+  CreateSetFollowModuleTypedDataMutation,
+  CreateSetFollowModuleTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateSetFollowModuleTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateSetFollowModuleTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetFollowModuleTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetFollowModuleTypedDataMutation, { data, loading, error }] = useCreateSetFollowModuleTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateSetFollowModuleTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetFollowModuleTypedDataMutation,
+    CreateSetFollowModuleTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetFollowModuleTypedDataMutation,
+    CreateSetFollowModuleTypedDataMutationVariables
+  >(CreateSetFollowModuleTypedDataDocument, options);
+}
+export type CreateSetFollowModuleTypedDataMutationHookResult = ReturnType<
+  typeof useCreateSetFollowModuleTypedDataMutation
+>;
+export type CreateSetFollowModuleTypedDataMutationResult =
+  Apollo.MutationResult<CreateSetFollowModuleTypedDataMutation>;
+export type CreateSetFollowModuleTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetFollowModuleTypedDataMutation,
+  CreateSetFollowModuleTypedDataMutationVariables
 >;
 export const ProfileFollowersDocument = gql`
   query ProfileFollowers(

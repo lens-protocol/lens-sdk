@@ -141,3 +141,34 @@ query MutualFollowersProfiles(
     }
   }
 }
+
+mutation CreateSetFollowModuleTypedData(
+  $request: CreateSetFollowModuleRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetFollowModuleTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetFollowModuleWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        followModule
+        followModuleInitData
+      }
+    }
+  }
+}
