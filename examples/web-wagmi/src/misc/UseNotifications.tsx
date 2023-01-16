@@ -1,7 +1,7 @@
 import { ProfileFieldsFragment, useNotifications } from '@lens-protocol/react';
 
 import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { NotificationItem } from './components/NotificationItem';
 
@@ -38,7 +38,9 @@ export function UseNotifications() {
   return (
     <>
       <h2>Notifications</h2>
-      <WhenLoggedIn>{({ profile }) => <NotificationsInner profile={profile} />}</WhenLoggedIn>
+      <WhenLoggedInWithProfile>
+        {({ profile }) => <NotificationsInner profile={profile} />}
+      </WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>
           <p>You must be logged in to use this example.</p>

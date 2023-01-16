@@ -6,7 +6,7 @@ import {
 } from '@lens-protocol/react';
 
 import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
@@ -60,7 +60,9 @@ export function UseCreateMirror() {
       <h1>
         <code>useMirror</code>
       </h1>
-      <WhenLoggedIn>{({ profile }) => <MirrorInner profile={profile} />}</WhenLoggedIn>
+      <WhenLoggedInWithProfile>
+        {({ profile }) => <MirrorInner profile={profile} />}
+      </WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>
           <p>You must be logged in to use this example.</p>

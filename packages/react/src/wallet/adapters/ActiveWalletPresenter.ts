@@ -9,6 +9,6 @@ export class ActiveWalletPresenter implements IActiveWalletPresenter {
   }
 }
 
-export const useActiveWallet = () => {
+export function useActiveWalletVar() {
   return useReactiveVar(activeWalletVar);
-};
+}
