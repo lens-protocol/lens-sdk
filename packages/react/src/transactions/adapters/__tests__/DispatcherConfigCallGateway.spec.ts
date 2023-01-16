@@ -14,7 +14,6 @@ import { mockNonce, mockUpdateDispatcherConfigRequest } from '@lens-protocol/dom
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { DispatcherConfigCallGateway } from '../DispatcherConfigCallGateway';
 
-
 function mockCreateSetDispatcherTypedDataMutationMockedResponse({
   variables,
   data,
