@@ -7,11 +7,6 @@ const profileHooks = [
     path: '/profiles/useCreateProfile',
   },
   {
-    label: 'useExploreProfiles',
-    description: `Explore different profiles.`,
-    path: '/profiles/useExploreProfiles',
-  },
-  {
     label: 'useProfile (by handle)',
     description: `Fetch a profile by the profile handle.`,
     path: '/profiles/useProfile-handle',
@@ -22,24 +17,14 @@ const profileHooks = [
     path: '/profiles/useProfile-id',
   },
   {
-    label: 'useProfilesToFollow',
-    description: `Get a list of recommended profiles.`,
-    path: '/profiles/useProfilesToFollow',
-  },
-  {
     label: 'useMutualFollowers',
     description: `Get a list of mutual followers between accounts.`,
     path: '/profiles/useMutualFollowers',
   },
   {
-    label: 'useSearchProfiles',
-    description: `Fetch a list of profiles that match a query`,
-    path: '/profiles/useSearchProfiles',
-  },
-  {
-    label: 'useSearchProfiles',
-    description: `Fetch a list of profiles that match a query`,
-    path: '/profiles/useSearchProfiles',
+    label: 'useProfilesToFollow',
+    description: `Get a list of recommended profiles.`,
+    path: '/profiles/useProfilesToFollow',
   },
   {
     label: 'useFollow / useUnfollow',

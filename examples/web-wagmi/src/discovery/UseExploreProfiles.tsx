@@ -2,7 +2,7 @@ import { useExploreProfiles } from '@lens-protocol/react';
 
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { ProfileCard } from './components/ProfileCard';
+import { ProfileCard } from '../profiles/components/ProfileCard';
 
 export function UseExploreProfiles() {
   const { data, loading, hasMore, observeRef } = useInfiniteScroll(useExploreProfiles());
