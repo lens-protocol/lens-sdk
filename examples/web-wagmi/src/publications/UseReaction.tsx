@@ -6,8 +6,8 @@ import {
   useReaction,
 } from '@lens-protocol/react';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
+import { WhenLoggedIn } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
@@ -85,12 +85,7 @@ export function UseReaction() {
         <code>useReaction</code>
       </h1>
       <WhenLoggedIn>{({ profile }) => <ReactionInner profile={profile} />}</WhenLoggedIn>
-      <WhenLoggedOut>
-        <div>
-          <p>You must be logged in to use this example.</p>
-          <LoginButton />
-        </div>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback message="Log in to react to a publication" />
     </>
   );
 }

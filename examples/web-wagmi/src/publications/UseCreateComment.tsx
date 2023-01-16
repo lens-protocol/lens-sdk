@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
+import { WhenLoggedIn } from '../components/auth/auth';
 import { CommentComposer } from './components/CommentComposer';
 import { PublicationComments } from './components/PublicationComments';
 
@@ -37,12 +37,7 @@ export function UseCreateComment() {
           </>
         )}
       </WhenLoggedIn>
-      <WhenLoggedOut>
-        <div>
-          <p>Log in to create a post.</p>
-          <LoginButton />
-        </div>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback message="Log in to create a comment." />
     </div>
   );
 }

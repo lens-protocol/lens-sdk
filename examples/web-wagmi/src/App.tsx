@@ -29,6 +29,7 @@ import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseSearchProfiles } from './profiles/UseSearchProfiles';
+import { UseUpdateFollowPolicy } from './profiles/UseUpdateFollowPolicy';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreatePost } from './publications/UseCreatePost';
@@ -102,6 +103,7 @@ export function App() {
                 <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
                 <Route path="/profiles/useSearchProfiles" element={<UseSearchProfiles />} />
                 <Route path="/profiles/useFollow" element={<UseFollowAndUnfollow />} />
+                <Route path="/profiles/useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
 
                 <Route path="/revenue/usePublicationRevenue" element={<UsePublicationRevenue />} />
                 <Route

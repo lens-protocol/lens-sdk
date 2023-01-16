@@ -1,5 +1,5 @@
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
+import { WhenLoggedIn } from '../components/auth/auth';
 import { MyFeed } from './components/MyFeed';
 import { PostComposer } from './components/PostComposer';
 
@@ -19,12 +19,7 @@ export function UseCreatePost() {
           </>
         )}
       </WhenLoggedIn>
-      <WhenLoggedOut>
-        <div>
-          <p>Log in to create a post.</p>
-          <LoginButton />
-        </div>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback message="Log in to create a post." />
     </div>
   );
 }

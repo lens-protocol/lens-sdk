@@ -1,7 +1,7 @@
 import { ProfileFieldsFragment, useNotifications } from '@lens-protocol/react';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
+import { WhenLoggedIn } from '../components/auth/auth';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { NotificationItem } from './components/NotificationItem';
 
@@ -39,12 +39,7 @@ export function UseNotifications() {
     <>
       <h2>Notifications</h2>
       <WhenLoggedIn>{({ profile }) => <NotificationsInner profile={profile} />}</WhenLoggedIn>
-      <WhenLoggedOut>
-        <div>
-          <p>You must be logged in to use this example.</p>
-          <LoginButton />
-        </div>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback message="Log in to view notifications." />
     </>
   );
 }

@@ -7,8 +7,8 @@ import {
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
+import { WhenLoggedIn } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
@@ -78,12 +78,7 @@ export function UseFollowAndUnfollow() {
         <code>useFollow / useUnFollow</code>
       </h1>
       <WhenLoggedIn>{({ profile }) => <UseFollowInner activeProfile={profile} />}</WhenLoggedIn>
-      <WhenLoggedOut>
-        <div>
-          <p>Log in to follow profiles.</p>
-          <LoginButton />
-        </div>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback message="Log in to follow or unfollow profiles" />
     </div>
   );
 }

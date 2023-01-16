@@ -1,7 +1,7 @@
 import { ProfileFieldsFragment, useUnreadNotificationCount } from '@lens-protocol/react';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
+import { WhenLoggedIn } from '../components/auth/auth';
 
 type NotificationCountInnerProps = {
   profile: ProfileFieldsFragment;
@@ -31,12 +31,7 @@ export function UseUnreadNotificationCount() {
     <>
       <h2>Notification count</h2>
       <WhenLoggedIn>{({ profile }) => <NotificationCountInner profile={profile} />}</WhenLoggedIn>
-      <WhenLoggedOut>
-        <div>
-          <p>You must be logged in to use this example.</p>
-          <LoginButton />
-        </div>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback message="Login to view notification count" />
     </>
   );
 }
