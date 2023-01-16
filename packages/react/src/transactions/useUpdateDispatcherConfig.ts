@@ -24,8 +24,8 @@ export function useUpdateDispatcherConfig({ profile }: UseUpdateDispatcherConfig
     PendingSigningRequestError | UserRejectedError | WalletConnectionError | null
   >(null);
 
-  // note: this is one of the hooks that we need to wait for tx to be mined
-  // as it's affecting the way how we handle all tx after this one is done
+  // note: this is one of the hooks for which we need to wait for the corresponding tx to be mined
+  // as it's affecting the way we would handle all tx after this one is done.
   const isPending = useHasPendingTransaction(
     (tx): tx is TransactionState<UpdateDispatcherConfigRequest> =>
       tx.request.kind === TransactionKind.UPDATE_DISPATCHER_CONFIG &&
