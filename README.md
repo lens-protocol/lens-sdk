@@ -1,10 +1,15 @@
-# Lens SDK 🌿 - Developer Preview
+<p>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/logo/white-with-text.svg">
+    <img alt="Lens SDK logo" src="./assets/logo/green-with-text.svg" width="auto" height="80">
+  </picture>
+</p>
 
-The official SDK for the Lens Protocol.
+The official SDK for the [Lens Protocol](https://www.lens.xyz/) 🌿.
 
 > **Warning**
 >
-> The Lens SDK is still in its initial development phase. Anything MAY change at any time.
+> **The Lens SDK is still in its initial development phase**. Anything MAY change at any time.
 > This is a Developer Preview aimed primarily at existing integrators so to gather [early feedback](https://github.com/lens-protocol/lens-sdk/discussions/48).
 
 - [Documentation](#documentation)

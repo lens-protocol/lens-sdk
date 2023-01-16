@@ -4,9 +4,10 @@ export * from './LensProvider';
 export * from './modules';
 export * from './profile';
 export * from './publication';
+export * from './revenue';
 export * from './transactions';
-export * from './wallet';
 export * from './utils';
+export * from './wallet';
 
 export * from './notifications';
 export type { ReadResult, PaginatedReadResult } from './helpers';

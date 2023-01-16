@@ -31,7 +31,7 @@ export function useUnfollowController() {
       presenter,
     );
 
-    void unfollowProfiles.execute(request);
+    await unfollowProfiles.execute(request);
 
     return presenter.asResult();
   };

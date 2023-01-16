@@ -6,6 +6,11 @@ const revenueHooks = [
     description: `Fetch the revenue of a publication`,
     path: '/revenue/usePublicationRevenue',
   },
+  {
+    label: 'useProfileFollowRevenue',
+    description: `Fetch the revenue of a profile made through it's following`,
+    path: '/revenue/useProfileFollowRevenue',
+  },
 ];
 
 export function RevenuePage() {

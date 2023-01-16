@@ -13,6 +13,7 @@ import {
   MirrorFragment,
   PostFragment,
   ProfileFieldsFragment,
+  ProfileFollowRevenueFragment,
   ProfileMediaFragment,
   PublicationMainFocus,
   PublicationRevenueFragment,
@@ -289,7 +290,7 @@ function mockErc20Fragment(overrides?: Partial<Omit<Erc20Fragment, '__typename'>
   };
 }
 
-function mockErc20AmountFragment(amount = mockDaiAmount(42)): Erc20AmountFragment {
+export function mockErc20AmountFragment(amount = mockDaiAmount(42)): Erc20AmountFragment {
   return {
     __typename: 'Erc20Amount',
     asset: mockErc20Fragment({
@@ -334,6 +335,19 @@ export function mockRevenueFragment({
     revenue: mockRevenueAggregateFragment(amount),
   };
 }
+
+export function mockProfileFollowRevenueFragment({
+  amount,
+}: {
+  publication?: CommentFragment | PostFragment | MirrorFragment;
+  amount?: Amount<Erc20>;
+} = {}): ProfileFollowRevenueFragment {
+  return {
+    __typename: 'FollowRevenueResult',
+    revenues: [mockRevenueAggregateFragment(amount)],
+  };
+}
+
 export function mockWhoReactedResultFragment(
   overrides?: Partial<Omit<WhoReactedResultFragment, '__typename'>>,
 ): WhoReactedResultFragment {
