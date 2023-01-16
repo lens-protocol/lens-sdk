@@ -153,7 +153,7 @@ export class ReportPublicationGateway implements IReportPublicationGateway {
     additionalComments,
     publicationId,
     reason,
-  }: ReportPublicationRequest): PromiseResult<void, NetworkError | AlreadyReportedError> {
+  }: ReportPublicationRequest): PromiseResult<void, AlreadyReportedError> {
     try {
       await this.apolloClient.mutate<ReportPublicationMutation, ReportPublicationMutationVariables>(
         {
@@ -178,7 +178,7 @@ export class ReportPublicationGateway implements IReportPublicationGateway {
         }
       }
 
-      return failure(new NetworkError(e));
+      throw new NetworkError(e);
     }
   }
 }

@@ -1,38 +1,14 @@
-import { useReportPublication, ReportReason, ReportState } from '@lens-protocol/react';
-import { ChangeEvent, useState } from 'react';
+import { useReportPublication, ReportReason } from '@lens-protocol/react';
+import { useState } from 'react';
 
-import { invariant, never } from '../utils';
-
-function reportStateToText(state: ReportState): string {
-  switch (state) {
-    case ReportState.PREPARING:
-      return 'Preparing';
-    case ReportState.REPORTING:
-      return 'Reporting';
-    case ReportState.REPORTED:
-      return 'Reported';
-    case ReportState.ALREADY_REPORTED:
-      return 'Already Reported';
-    case ReportState.FAILED:
-      return 'Failed';
-    default:
-      never("Can't infer report state type");
-  }
-}
+import { invariant } from '../utils';
 
 export function UseReportPublication() {
-  const [inputPublicationId, setInputInputPublicationId] = useState('0x15-0x0271');
+  const [inputPublicationId, setInputPublicationId] = useState('0x15-0x0271');
   const [inputReason, setInputReason] = useState<ReportReason | ''>('');
+  const [additionalComments, setAdditionalComments] = useState<string>();
 
-  const { report, state } = useReportPublication();
-
-  const handlePublicationIdChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputInputPublicationId(e.target.value);
-  };
-
-  const handleReasonChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setInputReason(e.target.value as ReportReason);
-  };
+  const { report, isPending, error } = useReportPublication();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,8 +18,11 @@ export function UseReportPublication() {
     await report({
       publicationId: inputPublicationId,
       reason: inputReason,
-      additionalComments: null,
+      additionalComments: additionalComments || null,
     });
+
+    setInputReason('');
+    setAdditionalComments('');
   };
 
   return (
@@ -53,7 +32,11 @@ export function UseReportPublication() {
       </h1>
       <div>
         <label htmlFor="publicationId">Publication ID</label>
-        <input id="publicationId" value={inputPublicationId} onChange={handlePublicationIdChange} />
+        <input
+          id="publicationId"
+          value={inputPublicationId}
+          onChange={(event) => setInputPublicationId(event.target.value)}
+        />
       </div>
       <form onSubmit={handleSubmit}>
         <h3>Report publication</h3>
@@ -61,10 +44,12 @@ export function UseReportPublication() {
         <div>
           <p>Why are you reporting this publication?</p>
 
-          <select value={inputReason} onChange={handleReasonChange}>
-            <option value="" disabled={true}>
-              Select one
-            </option>
+          <select
+            value={inputReason}
+            onChange={(event) => setInputReason(event.target.value as ReportReason)}
+            disabled={isPending}
+          >
+            <option value="">Select one</option>
             <optgroup label="Illegal">
               <option value={ReportReason.HARASSMENT}>Bullying or harassment</option>
               <option value={ReportReason.VIOLENCE}>Violence</option>
@@ -96,8 +81,19 @@ export function UseReportPublication() {
           </select>
         </div>
 
-        <button disabled={inputReason === ''}>Report</button>
-        <p>Report state: {reportStateToText(state)}</p>
+        <div>
+          <textarea
+            rows={3}
+            placeholder="Optional comment"
+            disabled={inputReason === '' || isPending}
+            onChange={(event) => setAdditionalComments(event.target.value)}
+            value={additionalComments}
+          />
+        </div>
+
+        <button disabled={inputReason === '' || isPending}>Report</button>
+
+        {error && <p>{error.message}</p>}
       </form>
     </div>
   );

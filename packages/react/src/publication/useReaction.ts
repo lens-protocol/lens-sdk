@@ -22,6 +22,7 @@ export function useReaction({ profileId }: UseReactionArgs) {
 
   const addReaction = async (args: ReactionArgs) => {
     setIsPending(true);
+    setError(null);
 
     try {
       const result = await add({
@@ -40,6 +41,7 @@ export function useReaction({ profileId }: UseReactionArgs) {
 
   const removeReaction = async (args: ReactionArgs) => {
     setIsPending(true);
+    setError(null);
 
     try {
       const result = await remove({
