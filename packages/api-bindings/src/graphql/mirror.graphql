@@ -1,0 +1,39 @@
+mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDataOptions) {
+  result: createMirrorTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        MirrorWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        profileIdPointed
+        pubIdPointed
+        referenceModuleData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+}
+
+mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
+  result: createMirrorViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}

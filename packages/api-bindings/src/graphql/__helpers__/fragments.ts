@@ -230,6 +230,46 @@ export function mockCommentFragment(
   };
 }
 
+export function mockMirrorFragment(
+  overrides?: Partial<Omit<MirrorFragment, '__typename'>>,
+): MirrorFragment {
+  const mainPost = mockPostFragment();
+
+  return {
+    id: faker.datatype.uuid(),
+    stats: mockPublicationStatsFragment(),
+    metadata: {
+      __typename: 'MetadataOutput',
+      mainContentFocus: PublicationMainFocus.TextOnly,
+      name: null,
+      description: null,
+      attributes: [],
+      content: faker.lorem.paragraph(1),
+      media: [],
+    },
+    profile: mockProfileFieldsFragment(),
+    createdAt: faker.date.past().toISOString(),
+    ownedByMe: false,
+    collectModule: mockFreeCollectModuleSettings(),
+    referenceModule: null,
+    hasCollectedByMe: false,
+    hasOptimisticCollectedByMe: false,
+    isOptimisticMirroredByMe: false,
+    mirrorOf: mainPost,
+    reaction: null,
+    hidden: false,
+    isGated: false,
+    canComment: {
+      result: true,
+    },
+    canMirror: {
+      result: true,
+    },
+    ...overrides,
+    __typename: 'Mirror',
+  };
+}
+
 export function mockFeedItemFragment(overrides?: Partial<FeedItemFragment>): FeedItemFragment {
   return {
     root: mockPostFragment(),
