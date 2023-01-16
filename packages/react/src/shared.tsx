@@ -24,6 +24,7 @@ import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
+import { FollowPolicyCallGateway } from './transactions/adapters/FollowPolicyCallGateway';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
 import { SignlessProtocolCallRelayer } from './transactions/adapters/SignlessProtocolCallRelayer';
@@ -72,6 +73,7 @@ export type SharedDependencies = {
   authApi: AuthApi;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
+  followPolicyCallGateway: FollowPolicyCallGateway;
   logoutPresenter: LogoutPresenter;
   onError: Handlers['onError'];
   protocolCallRelayer: ProtocolCallRelayer;
@@ -123,6 +125,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
   const balanceGateway = new BalanceGateway(providerFactory);
   const tokenGateway = new TokenGateway(providerFactory);
+  const followPolicyGateway = new FollowPolicyCallGateway(apolloClient);
 
   const profileGateway = new ProfileGateway(apolloClient);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
@@ -177,18 +180,19 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     authApi,
     credentialsFactory,
     credentialsGateway,
+    followPolicyGateway,
     logoutPresenter,
+    notificationStorage,
     onError,
-    sources: config.sources ?? [],
     protocolCallRelayer,
     signlessProtocolCallRelayer,
+    sources: config.sources ?? [],
+    tokenAvailability,
     transactionFactory,
     transactionGateway,
     transactionQueue,
-    tokenAvailability,
     walletFactory,
     walletGateway,
-    notificationStorage,
   };
 }
 
