@@ -21,3 +21,9 @@ export type {
   NoCollectPolicy,
   SupportedPublicationMediaType,
 } from '@lens-protocol/domain/use-cases/publications';
+export type {
+  ChargeFollowPolicy,
+  NoFeeFollowPolicy,
+} from '@lens-protocol/domain/use-cases/profile';
+export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+export { getFollowPolicyTypeFromProfileFieldsFragment } from '@lens-protocol/api-bindings';
