@@ -1,16 +1,17 @@
-import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
-  UpdateDispatcherConfig,
-  UpdateDispatcherConfigRequest,
-} from '@lens-protocol/domain/use-cases/profile';
-import { useSharedDependencies } from '../../shared';
-import { DispatcherConfigCallGateway } from './DispatcherConfigCallGateway';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
-import {
+  TransactionKind,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
+import {
+  UpdateDispatcherConfig,
+  UpdateDispatcherConfigRequest,
+} from '@lens-protocol/domain/use-cases/profile';
+
+import { useSharedDependencies } from '../../shared';
+import { DispatcherConfigCallGateway } from './DispatcherConfigCallGateway';
+import { PromiseResultPresenter } from './PromiseResultPresenter';
 
 export function useUpdateDispatcherConfigController() {
   const { activeWallet, transactionGateway, protocolCallRelayer, transactionQueue, apolloClient } =

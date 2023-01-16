@@ -15,7 +15,7 @@ function UpdateDispatcherConfigForm({ activeProfile }: UpdateDispatcherConfigFor
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    update({ enabled: isEnabled });
+    await update({ enabled: isEnabled });
   };
 
   return (

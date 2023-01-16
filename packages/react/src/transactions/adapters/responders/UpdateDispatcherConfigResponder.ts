@@ -1,14 +1,14 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
-import {
-  BroadcastedTransactionData,
-  ITransactionResponder,
-} from '@lens-protocol/domain/use-cases/transactions';
 import {
   GetProfileDocument,
   GetProfileQuery,
   GetProfileQueryVariables,
 } from '@lens-protocol/api-bindings';
+import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
+import {
+  BroadcastedTransactionData,
+  ITransactionResponder,
+} from '@lens-protocol/domain/use-cases/transactions';
 
 export class UpdateDispatcherConfigResponder
   implements ITransactionResponder<UpdateDispatcherConfigRequest>

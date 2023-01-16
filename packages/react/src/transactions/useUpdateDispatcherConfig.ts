@@ -1,10 +1,10 @@
-import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   PendingSigningRequestError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
+import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
 import { useState } from 'react';
 
 import { ProfileFieldsFragment } from '../profile';
