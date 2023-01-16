@@ -8,7 +8,7 @@ import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transaction
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { MirrorCallGateway } from './publication-call-gateways/MirrorCallGateway';
+import { CreateMirrorCallGateway } from './publication-call-gateways/CreateMirrorCallGateway';
 
 export function useCreateMirrorController() {
   const {
@@ -26,7 +26,7 @@ export function useCreateMirrorController() {
       PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
-    const mirrorCallGateway = new MirrorCallGateway(apolloClient, transactionFactory);
+    const mirrorCallGateway = new CreateMirrorCallGateway(apolloClient, transactionFactory);
 
     const signedCreatePost = new ProtocolCallUseCase<CreateMirrorRequest>(
       activeWallet,

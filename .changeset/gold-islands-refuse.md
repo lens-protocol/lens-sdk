@@ -2,4 +2,4 @@
 "@lens-protocol/react": minor
 ---
 
-Add `useCreateMirror` hook
+Added `useCreateMirror` hook

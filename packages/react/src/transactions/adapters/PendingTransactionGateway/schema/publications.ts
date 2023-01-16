@@ -106,7 +106,6 @@ export const CreateMirrorRequestSchema = z.object({
   publicationId: z.string(),
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   delegate: z.boolean(),
-  reference: z.nativeEnum(ReferencePolicy),
 });
 
 export const FreeCollectRequestSchema = z.object({

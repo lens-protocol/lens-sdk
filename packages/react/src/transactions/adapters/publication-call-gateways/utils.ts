@@ -11,7 +11,6 @@ import {
   CollectPolicyType,
   CreatePostRequest,
   CreateCommentRequest,
-  CreateMirrorRequest,
   Media,
   NftAttribute,
   ReferencePolicy,
@@ -130,7 +129,7 @@ export function resolveCollectModule(
 }
 
 export function resolveReferenceModule(
-  request: CreatePostRequest | CreateCommentRequest | CreateMirrorRequest,
+  request: CreatePostRequest | CreateCommentRequest,
 ): ReferenceModuleParams | undefined {
   if (request.reference === ReferencePolicy.FOLLOWERS_ONLY) {
     return {

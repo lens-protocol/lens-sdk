@@ -25,9 +25,8 @@ import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
-import { resolveReferenceModule } from './utils';
 
-export class MirrorCallGateway implements ICreateMirrorCallGateway {
+export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
   constructor(
     private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
@@ -99,7 +98,6 @@ export class MirrorCallGateway implements ICreateMirrorCallGateway {
     return {
       profileId: request.profileId,
       publicationId: request.publicationId,
-      referenceModule: resolveReferenceModule(request),
     };
   }
 }

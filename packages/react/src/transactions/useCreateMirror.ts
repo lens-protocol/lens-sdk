@@ -5,12 +5,11 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { useState } from 'react';
 
 import { useCreateMirrorController } from './adapters/useCreateMirrorController';
 
-export type CreateMirrorArgs = Pick<CreateMirrorRequest, 'reference'> & {
+export type CreateMirrorArgs = {
   publication: PostFragment | CommentFragment;
   profile: ProfileFieldsFragment;
 };

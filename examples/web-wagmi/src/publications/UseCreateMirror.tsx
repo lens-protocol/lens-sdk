@@ -2,7 +2,6 @@ import {
   ProfileFieldsFragment,
   usePublication,
   useCreateMirror,
-  ReferencePolicy,
   isMirrorPublication,
 } from '@lens-protocol/react';
 
@@ -44,7 +43,6 @@ function MirrorInner({ profile }: MirrorInnerProps) {
             create({
               publication,
               profile,
-              reference: ReferencePolicy.ANYBODY,
             })
           }
           disabled={isPending}

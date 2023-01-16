@@ -13,7 +13,7 @@ import {
 
 import { PublicationCacheManager } from '../PublicationCacheManager';
 
-export class MirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
+export class CreateMirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
   readonly publicationCacheManager: PublicationCacheManager;
 
   constructor(private client: ApolloClient<NormalizedCacheObject>) {

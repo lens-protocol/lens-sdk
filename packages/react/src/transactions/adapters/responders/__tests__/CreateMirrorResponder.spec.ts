@@ -1,4 +1,4 @@
-import { isMirrorPublication, PostFragment } from '@lens-protocol/api-bindings';
+import { PostFragment, PostFragmentDoc } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
@@ -11,10 +11,9 @@ import {
 } from '@lens-protocol/domain/mocks';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
-import { invariant } from '@lens-protocol/shared-kernel';
+import { nonNullable } from '@lens-protocol/shared-kernel';
 
-import { PublicationCacheManager } from '../../PublicationCacheManager';
-import { MirrorResponder } from '../MirrorResponder';
+import { CreateMirrorResponder } from '../CreateMirrorResponder';
 
 function setupTestScenario({
   post,
@@ -31,30 +30,41 @@ function setupTestScenario({
     }),
   ]);
 
-  const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
-  publicationCacheManager.write(post);
+  apolloClient.cache.writeFragment({
+    id: apolloClient.cache.identify({
+      __typename: 'Post',
+      id: post.id,
+    }),
+    fragment: PostFragmentDoc,
+    fragmentName: 'Post',
+    data: post,
+  });
 
-  const responder = new MirrorResponder(apolloClient);
+  const responder = new CreateMirrorResponder(apolloClient);
 
   return {
     responder,
 
     get updatedPost() {
-      const result = publicationCacheManager.read(post.id);
-
-      const publication = result.unwrap();
-
-      invariant(!isMirrorPublication(publication), "Mirrors can't be mirrored");
-
-      return publication;
+      return nonNullable(
+        apolloClient.cache.readFragment<PostFragment>({
+          id: apolloClient.cache.identify({
+            __typename: 'Post',
+            id: post.id,
+          }),
+          fragment: PostFragmentDoc,
+          fragmentName: 'Post',
+        }),
+        "Can't find post in cache",
+      );
     },
   };
 }
 
-describe(`Given an instance of the ${MirrorResponder.name}`, () => {
+describe(`Given an instance of the ${CreateMirrorResponder.name}`, () => {
   const author = mockProfileFieldsFragment();
 
-  describe(`when "${MirrorResponder.prototype.prepare.name}" method is invoked`, () => {
+  describe(`when "${CreateMirrorResponder.prototype.prepare.name}" method is invoked`, () => {
     it(`should mark as optimistically mirrored by me and update total mirrors count`, async () => {
       const post = mockPostFragment({
         isOptimisticMirroredByMe: false,
@@ -82,7 +92,7 @@ describe(`Given an instance of the ${MirrorResponder.name}`, () => {
     });
   });
 
-  describe(`when "${MirrorResponder.prototype.commit.name}" method is invoked`, () => {
+  describe(`when "${CreateMirrorResponder.prototype.commit.name}" method is invoked`, () => {
     it(`should update the publication 'mirrors' list and unmark optimistically mirrored by me`, async () => {
       const post = mockPostFragment({
         isOptimisticMirroredByMe: true,
@@ -108,7 +118,7 @@ describe(`Given an instance of the ${MirrorResponder.name}`, () => {
     });
   });
 
-  describe(`when "${MirrorResponder.prototype.rollback.name}" method is invoked`, () => {
+  describe(`when "${CreateMirrorResponder.prototype.rollback.name}" method is invoked`, () => {
     it(`should rollback optimistically mirrored by me and total mirrors count`, async () => {
       const post = mockPostFragment({
         isOptimisticMirroredByMe: true,

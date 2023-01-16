@@ -133,7 +133,6 @@ export function mockCreateMirrorRequest(
   return {
     profileId: mockProfileId(),
     publicationId: faker.datatype.uuid(),
-    reference: ReferencePolicy.ANYBODY,
     ...overrides,
     kind: TransactionKind.MIRROR_PUBLICATION,
     delegate: false,
