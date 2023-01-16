@@ -1,32 +1,38 @@
-import { ProfileFieldsFragment, useActiveProfile } from '@lens-protocol/react';
+import {
+  ProfileFieldsFragment,
+  useActiveProfile,
+  useActiveWallet,
+  WalletData,
+} from '@lens-protocol/react';
 import { ReactNode } from 'react';
-import { useAccount } from 'wagmi';
-
-export function useIsLoggedIn() {
-  const { address } = useAccount();
-  const { data: profile } = useActiveProfile();
-
-  return Boolean(address && profile);
-}
 
 type LoggedInConfig = {
-  walletAddress: `0x${string}`;
+  wallet: WalletData;
   profile: ProfileFieldsFragment;
 };
 
-export type WhenLoggedInProps = {
+export type WhenLoggedInWithProfileProps = {
   children: (config: LoggedInConfig) => ReactNode;
 };
 
-export function WhenLoggedIn({ children }: WhenLoggedInProps) {
-  const { address: walletAddress } = useAccount();
-  const { data: profile } = useActiveProfile();
+export function WhenLoggedInWithProfile({ children }: WhenLoggedInWithProfileProps) {
+  const { data: wallet, loading: walletLoading } = useActiveWallet();
+  const { data: profile, loading: profileLoading } = useActiveProfile();
 
-  if (!walletAddress || !profile) {
+  if (walletLoading || profileLoading) {
     return null;
   }
 
-  return <>{children({ walletAddress, profile })}</>;
+  if (wallet === null) {
+    return null;
+  }
+
+  if (profile === null) {
+    // TODO guide user to create profile
+    return null;
+  }
+
+  return <>{children({ wallet, profile })}</>;
 }
 
 export type WhenLoggedOutProps = {
@@ -34,9 +40,9 @@ export type WhenLoggedOutProps = {
 };
 
 export function WhenLoggedOut({ children }: WhenLoggedOutProps) {
-  const isLoggedIn = useIsLoggedIn();
+  const { data: wallet, loading } = useActiveWallet();
 
-  if (isLoggedIn) {
+  if (loading || wallet !== null) {
     return null;
   }
 
