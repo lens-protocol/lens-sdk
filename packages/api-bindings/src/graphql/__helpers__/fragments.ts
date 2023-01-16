@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { Amount, Erc20, mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
+import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
   CollectModuleFragment,
