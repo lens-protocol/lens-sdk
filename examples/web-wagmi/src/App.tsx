@@ -24,6 +24,7 @@ import { UseCurrencies } from './misc/UseCurrencies';
 import { UseNotifications } from './misc/UseNotifications';
 import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
 import { ProfilesPage } from './profiles/ProfilesPage';
+import { UseActiveProfileSwitch } from './profiles/UseActiveProfileSwitch';
 import { UseCreateProfile } from './profiles/UseCreateProfile';
 import { UseFollowAndUnfollow } from './profiles/UseFollowAndUnfollow';
 import { UseMutualFollowers } from './profiles/UseMutualFollowers';
@@ -112,6 +113,10 @@ export function App() {
                 <Route
                   path="/profiles/useUpdateProfileDetails"
                   element={<UseUpdateProfileDetails />}
+                />
+                <Route
+                  path="/profiles/useActiveProfileSwitch"
+                  element={<UseActiveProfileSwitch />}
                 />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
