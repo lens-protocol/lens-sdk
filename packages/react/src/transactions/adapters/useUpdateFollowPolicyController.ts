@@ -1,7 +1,7 @@
 import {
   UpdateFollowPolicy,
   UpdateFollowPolicyRequest,
-} from '@lens-protocol/domain/dist/use-cases/profile';
+} from '@lens-protocol/domain/use-cases/profile';
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';

@@ -1,4 +1,4 @@
-import { UpdateFollowPolicyRequest } from '@lens-protocol/domain/dist/use-cases/profile';
+import { UpdateFollowPolicyRequest } from '@lens-protocol/domain/use-cases/profile';
 import { useState } from 'react';
 
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
