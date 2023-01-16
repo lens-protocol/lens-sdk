@@ -2,12 +2,10 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { mockProfile, mockWallet } from '../../../entities/__helpers__/mocks';
-import {
-  IProfileGateway,
-  ActiveProfileLoader,
-  IActiveProfileGateway,
-} from '../ActiveProfileLoader';
+import { ActiveProfileLoader } from '../ActiveProfileLoader';
+import { IActiveProfileGateway } from '../IActiveProfileGateway';
 import { IActiveProfilePresenter } from '../IActiveProfilePresenter';
+import { IProfileGateway } from '../IProfileGateway';
 
 describe(`Given the ${ActiveProfileLoader.name} interactor`, () => {
   describe(`when "${ActiveProfileLoader.prototype.loadActiveProfileByOwnerAddress.name}" method is invoked`, () => {

@@ -1,18 +1,9 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { Profile } from '../../entities';
+import { IActiveProfileGateway } from './IActiveProfileGateway';
 import { IActiveProfilePresenter } from './IActiveProfilePresenter';
-
-export interface IProfileGateway {
-  getAllProfilesByOwnerAddress(address: string): Promise<Profile[]>;
-
-  getProfileByHandle(handle: string): Promise<Profile | null>;
-}
-
-export interface IActiveProfileGateway {
-  setActiveProfile(profile: Profile): Promise<void>;
-  getActiveProfile(): Promise<Profile | null>;
-}
+import { IProfileGateway } from './IProfileGateway';
 
 export class ActiveProfileLoader {
   constructor(
