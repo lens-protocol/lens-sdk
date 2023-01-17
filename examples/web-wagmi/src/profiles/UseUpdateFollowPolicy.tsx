@@ -45,6 +45,26 @@ function resolveFollowPolicy({
   };
 }
 
+type UpdateButtonTextProps = {
+  isTxPending: boolean;
+  currentFollowModule: FollowPolicyType | null;
+  followPolicyTypeToUpdate: FollowPolicyType | null;
+};
+
+function UpdateButtonText({
+  isTxPending,
+  currentFollowModule,
+  followPolicyTypeToUpdate,
+}: UpdateButtonTextProps) {
+  if (isTxPending) return <>Updating...</>;
+
+  if (currentFollowModule === followPolicyTypeToUpdate) {
+    return <>This is your current follow policy</>;
+  }
+
+  return <>Update</>;
+}
+
 type UpdateFollowPolicyProps = {
   profile: ProfileFieldsFragment;
 };
@@ -156,8 +176,15 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
         </div>
       )}
 
-      <button disabled={currentFollowModule === followPolicyTypeToUpdate} type="submit">
-        {isPending ? 'Updating...' : 'Update'}
+      <button
+        disabled={currentFollowModule === followPolicyTypeToUpdate || isPending}
+        type="submit"
+      >
+        <UpdateButtonText
+          isTxPending={isPending}
+          currentFollowModule={currentFollowModule}
+          followPolicyTypeToUpdate={followPolicyTypeToUpdate}
+        />
       </button>
       {error && <p>{error.message}</p>}
       <style>
