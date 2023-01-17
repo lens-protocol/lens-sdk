@@ -98,7 +98,7 @@ export type Scalars = {
   /** Url scalar type */
   Url: string;
   /** Represents NULL values */
-  Void: string;
+  Void: void;
 };
 
 /** The access conditions for the publication */
@@ -140,15 +140,6 @@ export type AccessConditionOutput = {
   and: Maybe<AndConditionOutput>;
   /** OR condition */
   or: Maybe<OrConditionOutput>;
-};
-
-export type AchRequest = {
-  secret: Scalars['String'];
-  ethereumAddress: Scalars['EthereumAddress'];
-  handle?: Maybe<Scalars['CreateHandle']>;
-  freeTextHandle?: Maybe<Scalars['Boolean']>;
-  overrideTradeMark: Scalars['Boolean'];
-  overrideAlreadyClaimed: Scalars['Boolean'];
 };
 
 /** The request object to add interests to a profile */
@@ -986,10 +977,6 @@ export type CreateUnfollowBroadcastItemResult = {
   typedData: CreateBurnEip712TypedData;
 };
 
-export type CurRequest = {
-  secret: Scalars['String'];
-};
-
 /** The custom filters types */
 export enum CustomFiltersTypes {
   Gardeners = 'GARDENERS',
@@ -1597,12 +1584,6 @@ export type HasTxHashBeenIndexedRequest = {
   txId?: Maybe<Scalars['TxId']>;
 };
 
-export type HelRequest = {
-  secret: Scalars['String'];
-  handle: Scalars['Handle'];
-  remove: Scalars['Boolean'];
-};
-
 export type HidePublicationRequest = {
   /** Publication id */
   publicationId: Scalars['InternalPublicationId'];
@@ -1952,8 +1933,6 @@ export type Mutation = {
   addReaction: Maybe<Scalars['Void']>;
   removeReaction: Maybe<Scalars['Void']>;
   reportPublication: Maybe<Scalars['Void']>;
-  ach: Maybe<Scalars['Void']>;
-  hel: Maybe<Scalars['Void']>;
 };
 
 export type MutationAuthenticateArgs = {
@@ -2100,14 +2079,6 @@ export type MutationRemoveReactionArgs = {
 
 export type MutationReportPublicationArgs = {
   request: ReportPublicationRequest;
-};
-
-export type MutationAchArgs = {
-  request: AchRequest;
-};
-
-export type MutationHelArgs = {
-  request: HelRequest;
 };
 
 export type MutualFollowersProfilesQueryRequest = {
@@ -3175,8 +3146,6 @@ export type Query = {
   profilePublicationRevenue: ProfilePublicationRevenueResult;
   publicationRevenue: Maybe<PublicationRevenue>;
   profileFollowRevenue: FollowRevenueResult;
-  rel: Maybe<Scalars['Void']>;
-  cur: Array<Scalars['String']>;
 };
 
 export type QueryChallengeArgs = {
@@ -3343,14 +3312,6 @@ export type QueryProfileFollowRevenueArgs = {
   request: ProfileFollowRevenueQueryRequest;
 };
 
-export type QueryRelArgs = {
-  request: RelRequest;
-};
-
-export type QueryCurArgs = {
-  request: CurRequest;
-};
-
 export type ReactionEvent = {
   __typename: 'ReactionEvent';
   profile: Profile;
@@ -3410,11 +3371,6 @@ export enum ReferenceModules {
 export type RefreshRequest = {
   /** The refresh token */
   refreshToken: Scalars['Jwt'];
-};
-
-export type RelRequest = {
-  secret: Scalars['String'];
-  ethereumAddress: Scalars['EthereumAddress'];
 };
 
 export type RelayError = {
@@ -4524,6 +4480,21 @@ export type PublicationQueryVariables = Exact<{
 
 export type PublicationQuery = { result: Maybe<PostFragment | CommentFragment | MirrorFragment> };
 
+export type PublicationByTxHashQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  txHash: Scalars['TxHash'];
+}>;
+
+export type PublicationByTxHashQuery = {
+  result: Maybe<PostFragment | CommentWithFirstCommentFragment | MirrorFragment>;
+};
+
+export type HidePublicationMutationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+}>;
+
+export type HidePublicationMutation = Pick<Mutation, 'hidePublication'>;
+
 export type PublicationsQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
   observerId?: Maybe<Scalars['ProfileId']>;
@@ -4549,15 +4520,6 @@ export type ExplorePublicationsQuery = {
     items: Array<PostFragment | CommentFragment | MirrorFragment>;
     pageInfo: CommonPaginatedResultInfoFragment;
   };
-};
-
-export type PublicationByTxHashQueryVariables = Exact<{
-  observerId?: Maybe<Scalars['ProfileId']>;
-  txHash: Scalars['TxHash'];
-}>;
-
-export type PublicationByTxHashQuery = {
-  result: Maybe<PostFragment | CommentWithFirstCommentFragment | MirrorFragment>;
 };
 
 export type AddReactionMutationVariables = Exact<{
@@ -7113,6 +7075,116 @@ export type PublicationQueryResult = Apollo.QueryResult<
   PublicationQuery,
   PublicationQueryVariables
 >;
+export const PublicationByTxHashDocument = gql`
+  query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
+    result: publication(request: { txHash: $txHash }) {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...CommentWithFirstComment
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentWithFirstCommentFragmentDoc}
+`;
+
+/**
+ * __usePublicationByTxHashQuery__
+ *
+ * To run a query within a React component, call `usePublicationByTxHashQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationByTxHashQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationByTxHashQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      txHash: // value for 'txHash'
+ *   },
+ * });
+ */
+export function usePublicationByTxHashQuery(
+  baseOptions: Apollo.QueryHookOptions<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
+    PublicationByTxHashDocument,
+    options,
+  );
+}
+export function usePublicationByTxHashLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PublicationByTxHashQuery,
+    PublicationByTxHashQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
+    PublicationByTxHashDocument,
+    options,
+  );
+}
+export type PublicationByTxHashQueryHookResult = ReturnType<typeof usePublicationByTxHashQuery>;
+export type PublicationByTxHashLazyQueryHookResult = ReturnType<
+  typeof usePublicationByTxHashLazyQuery
+>;
+export type PublicationByTxHashQueryResult = Apollo.QueryResult<
+  PublicationByTxHashQuery,
+  PublicationByTxHashQueryVariables
+>;
+export const HidePublicationDocument = gql`
+  mutation HidePublication($publicationId: InternalPublicationId!) {
+    hidePublication(request: { publicationId: $publicationId })
+  }
+`;
+export type HidePublicationMutationFn = Apollo.MutationFunction<
+  HidePublicationMutation,
+  HidePublicationMutationVariables
+>;
+
+/**
+ * __useHidePublicationMutation__
+ *
+ * To run a mutation, you first call `useHidePublicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useHidePublicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [hidePublicationMutation, { data, loading, error }] = useHidePublicationMutation({
+ *   variables: {
+ *      publicationId: // value for 'publicationId'
+ *   },
+ * });
+ */
+export function useHidePublicationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    HidePublicationMutation,
+    HidePublicationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<HidePublicationMutation, HidePublicationMutationVariables>(
+    HidePublicationDocument,
+    options,
+  );
+}
+export type HidePublicationMutationHookResult = ReturnType<typeof useHidePublicationMutation>;
+export type HidePublicationMutationResult = Apollo.MutationResult<HidePublicationMutation>;
+export type HidePublicationMutationOptions = Apollo.BaseMutationOptions<
+  HidePublicationMutation,
+  HidePublicationMutationVariables
+>;
 export const PublicationsDocument = gql`
   query Publications(
     $profileId: ProfileId!
@@ -7265,71 +7337,6 @@ export type ExplorePublicationsLazyQueryHookResult = ReturnType<
 export type ExplorePublicationsQueryResult = Apollo.QueryResult<
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables
->;
-export const PublicationByTxHashDocument = gql`
-  query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
-    result: publication(request: { txHash: $txHash }) {
-      ... on Post {
-        ...Post
-      }
-      ... on Mirror {
-        ...Mirror
-      }
-      ... on Comment {
-        ...CommentWithFirstComment
-      }
-    }
-  }
-  ${PostFragmentDoc}
-  ${MirrorFragmentDoc}
-  ${CommentWithFirstCommentFragmentDoc}
-`;
-
-/**
- * __usePublicationByTxHashQuery__
- *
- * To run a query within a React component, call `usePublicationByTxHashQuery` and pass it any options that fit your needs.
- * When your component renders, `usePublicationByTxHashQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePublicationByTxHashQuery({
- *   variables: {
- *      observerId: // value for 'observerId'
- *      txHash: // value for 'txHash'
- *   },
- * });
- */
-export function usePublicationByTxHashQuery(
-  baseOptions: Apollo.QueryHookOptions<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
-    PublicationByTxHashDocument,
-    options,
-  );
-}
-export function usePublicationByTxHashLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    PublicationByTxHashQuery,
-    PublicationByTxHashQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
-    PublicationByTxHashDocument,
-    options,
-  );
-}
-export type PublicationByTxHashQueryHookResult = ReturnType<typeof usePublicationByTxHashQuery>;
-export type PublicationByTxHashLazyQueryHookResult = ReturnType<
-  typeof usePublicationByTxHashLazyQuery
->;
-export type PublicationByTxHashQueryResult = Apollo.QueryResult<
-  PublicationByTxHashQuery,
-  PublicationByTxHashQueryVariables
 >;
 export const AddReactionDocument = gql`
   mutation AddReaction(
@@ -9286,8 +9293,6 @@ export type MutationKeySpecifier = (
   | 'addReaction'
   | 'removeReaction'
   | 'reportPublication'
-  | 'ach'
-  | 'hel'
   | MutationKeySpecifier
 )[];
 export type MutationFieldPolicy = {
@@ -9324,8 +9329,6 @@ export type MutationFieldPolicy = {
   addReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   removeReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   reportPublication?: FieldPolicy<any> | FieldReadFunction<any>;
-  ach?: FieldPolicy<any> | FieldReadFunction<any>;
-  hel?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type NFTKeySpecifier = (
   | 'contractName'
@@ -9964,8 +9967,6 @@ export type QueryKeySpecifier = (
   | 'profilePublicationRevenue'
   | 'publicationRevenue'
   | 'profileFollowRevenue'
-  | 'rel'
-  | 'cur'
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
@@ -10019,8 +10020,6 @@ export type QueryFieldPolicy = {
   profilePublicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   publicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
-  rel?: FieldPolicy<any> | FieldReadFunction<any>;
-  cur?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ReactionEventKeySpecifier = (
   | 'profile'

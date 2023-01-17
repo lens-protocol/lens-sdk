@@ -19,6 +19,9 @@ import {
   CreateUnfollowTypedDataMutation,
   Eip712TypedDataDomain,
   Eip712TypedDataField,
+  HidePublicationDocument,
+  HidePublicationMutation,
+  HidePublicationMutationVariables,
   ProxyActionDocument,
   ProxyActionMutation,
   ProxyActionMutationVariables,
@@ -155,6 +158,20 @@ export function mockCreateCommentTypedDataMutation({
         referenceModuleInitData: '0x',
       },
     }),
+  };
+}
+
+export function createHidePublicationMutationMockedResponse(args: {
+  variables: HidePublicationMutationVariables;
+}): MockedResponse<HidePublicationMutation> {
+  return {
+    request: {
+      query: HidePublicationDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: { hidePublication: null },
+    },
   };
 }
 

@@ -10,6 +10,7 @@ import {
   PublicationSortCriteria,
   PublicationTypes,
   RevenueAggregateFragment,
+  PublicationFragment,
 } from '@lens-protocol/api-bindings';
 
 export * from './useComments';
@@ -19,6 +20,7 @@ export * from './useSearchPublications';
 export * from './useExplorePublications';
 export * from './useReaction';
 export * from './useWhoReacted';
+export * from './useHidePublication';
 
 export type { Publication } from './types';
 export {
@@ -35,4 +37,5 @@ export type {
   PendingPostFragment,
   PostFragment,
   RevenueAggregateFragment,
+  PublicationFragment,
 };
