@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
-import { WhenLoggedIn } from '../components/auth/auth';
+import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { CommentComposer } from './components/CommentComposer';
 import { PublicationComments } from './components/PublicationComments';
 
@@ -13,7 +13,7 @@ export function UseCreateComment() {
       <h1>
         <code>useCreateComment</code>
       </h1>
-      <WhenLoggedIn>
+      <WhenLoggedInWithProfile>
         {({ profile }) => (
           <>
             <p>
@@ -36,7 +36,7 @@ export function UseCreateComment() {
             )}
           </>
         )}
-      </WhenLoggedIn>
+      </WhenLoggedInWithProfile>
       <UnauthenticatedFallback message="Log in to create a comment." />
     </div>
   );

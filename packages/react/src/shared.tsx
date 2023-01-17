@@ -32,6 +32,7 @@ import {
   TransactionQueuePresenter,
   FailedTransactionError,
 } from './transactions/adapters/TransactionQueuePresenter';
+import { CreateMirrorResponder } from './transactions/adapters/responders/CreateMirrorResponder';
 import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
 import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
@@ -144,7 +145,7 @@ export function createSharedDependencies(
     [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient),
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
-    [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
+    [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(apolloClient),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
     [TransactionKind.UPDATE_COVER_IMAGE]: new NoopResponder(),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new NoopResponder(),

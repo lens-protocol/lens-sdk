@@ -131,10 +131,7 @@ function hasTransactionWith<T extends SupportedTransactionRequest>(
   statuses: ReadonlyArray<TxStatus>,
   predicate: Predicate<T>,
 ) {
-  const index = transactions.findIndex(
-    (txState) => statuses.includes(txState.status) && predicate(txState),
-  );
-  return index > -1;
+  return transactions.some((txState) => statuses.includes(txState.status) && predicate(txState));
 }
 
 function delay(waitInMs: number) {

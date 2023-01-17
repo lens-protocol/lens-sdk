@@ -32,6 +32,11 @@ const publicationHooks = [
     path: '/publications/useCreateComment',
   },
   {
+    label: 'useCreateMirror',
+    description: `Mirror a publication.`,
+    path: '/publications/useCreateMirror',
+  },
+  {
     label: 'useSearchPublications',
     description: `Fetch publications that match a query`,
     path: '/publications/useSearchPublications',
