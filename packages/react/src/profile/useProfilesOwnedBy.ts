@@ -1,28 +1,31 @@
-import { usePublicationsQuery } from '@lens-protocol/api-bindings';
+import {
+  ProfileFieldsFragment,
+  useGetAllProfilesByOwnerAddressQuery,
+} from '@lens-protocol/api-bindings';
+import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
-import { Publication } from './types';
 
-type UsePublicationArgs = PaginatedArgs<{
-  profileId: string;
+type UseProfilesOwnedByArgs = PaginatedArgs<{
+  address: EthereumAddress;
   observerId?: string;
 }>;
 
-export function usePublications({
-  profileId,
+export function useProfilesOwnedBy({
+  address,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UsePublicationArgs): PaginatedReadResult<Publication[]> {
+}: UseProfilesOwnedByArgs): PaginatedReadResult<ProfileFieldsFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(
-    usePublicationsQuery({
+    useGetAllProfilesByOwnerAddressQuery({
       variables: {
-        profileId,
+        address,
         observerId,
-        limit: limit,
+        limit,
       },
       client: apolloClient,
     }),

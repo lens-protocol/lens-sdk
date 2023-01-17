@@ -46,6 +46,11 @@ const profileHooks = [
     description: `Follow or unfollow a profile.`,
     path: '/profiles/useFollow',
   },
+  {
+    label: 'useProfilesOwnedBy',
+    description: `Fetch a list of profiles owed by a given address.`,
+    path: '/profiles/useProfilesOwnedBy',
+  },
 ];
 
 export function ProfilesPage() {
