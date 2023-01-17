@@ -39,7 +39,6 @@
     "@ethersproject/providers": "^5.7.2",
     "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
-    "eth-rpc-errors": "^4.0.3",
     "ethers": "^5.7.2",
     "tslib": "^2.4.1"
   },

@@ -47,6 +47,11 @@ const profileHooks = [
     path: '/profiles/useFollow',
   },
   {
+    label: 'useProfilesOwnedBy',
+    description: `Fetch a list of profiles owed by a given address.`,
+    path: '/profiles/useProfilesOwnedBy',
+  },
+  {
     label: 'useUpdateDispatcherConfig',
     description: `Update profile dispatcher configuration.`,
     path: '/profiles/useUpdateDispatcherConfig',

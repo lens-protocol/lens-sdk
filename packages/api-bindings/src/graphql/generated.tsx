@@ -4223,6 +4223,39 @@ export type CreateFollowTypedDataMutation = {
   };
 };
 
+export type CreateMirrorTypedDataMutationVariables = Exact<{
+  request: CreateMirrorRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateMirrorTypedDataMutation = {
+  result: Pick<CreateMirrorBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { MirrorWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Eip712TypedDataDomainFragment;
+      value: Pick<
+        CreateMirrorEip712TypedDataValue,
+        | 'nonce'
+        | 'deadline'
+        | 'profileId'
+        | 'profileIdPointed'
+        | 'pubIdPointed'
+        | 'referenceModuleData'
+        | 'referenceModule'
+        | 'referenceModuleInitData'
+      >;
+    };
+  };
+};
+
+export type CreateMirrorViaDispatcherMutationVariables = Exact<{
+  request: CreateMirrorRequest;
+}>;
+
+export type CreateMirrorViaDispatcherMutation = {
+  result: RelayerResultFragment | RelayErrorFragment;
+};
+
 export type CommentWithCommentedPublicationFieldsFragment = { __typename: 'Comment' } & {
   commentOn: Maybe<PostFragment | CommentFragment | MirrorFragment>;
 } & CommentFragment;
@@ -4424,10 +4457,12 @@ export type GetProfileQuery = { result: Maybe<ProfileFieldsFragment> };
 export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
   address: Scalars['EthereumAddress'];
   observerId?: Maybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
 }>;
 
 export type GetAllProfilesByOwnerAddressQuery = {
-  profilesByOwner: { items: Array<ProfileFieldsFragment> };
+  result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type CreateProfileMutationVariables = Exact<{
@@ -6059,6 +6094,137 @@ export type CreateFollowTypedDataMutationOptions = Apollo.BaseMutationOptions<
   CreateFollowTypedDataMutation,
   CreateFollowTypedDataMutationVariables
 >;
+export const CreateMirrorTypedDataDocument = gql`
+  mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDataOptions) {
+    result: createMirrorTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          MirrorWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          profileIdPointed
+          pubIdPointed
+          referenceModuleData
+          referenceModule
+          referenceModuleInitData
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export type CreateMirrorTypedDataMutationFn = Apollo.MutationFunction<
+  CreateMirrorTypedDataMutation,
+  CreateMirrorTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateMirrorTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateMirrorTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMirrorTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMirrorTypedDataMutation, { data, loading, error }] = useCreateMirrorTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateMirrorTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateMirrorTypedDataMutation,
+    CreateMirrorTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateMirrorTypedDataMutation, CreateMirrorTypedDataMutationVariables>(
+    CreateMirrorTypedDataDocument,
+    options,
+  );
+}
+export type CreateMirrorTypedDataMutationHookResult = ReturnType<
+  typeof useCreateMirrorTypedDataMutation
+>;
+export type CreateMirrorTypedDataMutationResult =
+  Apollo.MutationResult<CreateMirrorTypedDataMutation>;
+export type CreateMirrorTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateMirrorTypedDataMutation,
+  CreateMirrorTypedDataMutationVariables
+>;
+export const CreateMirrorViaDispatcherDocument = gql`
+  mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
+    result: createMirrorViaDispatcher(request: $request) {
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export type CreateMirrorViaDispatcherMutationFn = Apollo.MutationFunction<
+  CreateMirrorViaDispatcherMutation,
+  CreateMirrorViaDispatcherMutationVariables
+>;
+
+/**
+ * __useCreateMirrorViaDispatcherMutation__
+ *
+ * To run a mutation, you first call `useCreateMirrorViaDispatcherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMirrorViaDispatcherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMirrorViaDispatcherMutation, { data, loading, error }] = useCreateMirrorViaDispatcherMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateMirrorViaDispatcherMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateMirrorViaDispatcherMutation,
+    CreateMirrorViaDispatcherMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateMirrorViaDispatcherMutation,
+    CreateMirrorViaDispatcherMutationVariables
+  >(CreateMirrorViaDispatcherDocument, options);
+}
+export type CreateMirrorViaDispatcherMutationHookResult = ReturnType<
+  typeof useCreateMirrorViaDispatcherMutation
+>;
+export type CreateMirrorViaDispatcherMutationResult =
+  Apollo.MutationResult<CreateMirrorViaDispatcherMutation>;
+export type CreateMirrorViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
+  CreateMirrorViaDispatcherMutation,
+  CreateMirrorViaDispatcherMutationVariables
+>;
 export const NotificationsDocument = gql`
   query Notifications(
     $observerId: ProfileId!
@@ -6563,14 +6729,23 @@ export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
 export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
 export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
 export const GetAllProfilesByOwnerAddressDocument = gql`
-  query GetAllProfilesByOwnerAddress($address: EthereumAddress!, $observerId: ProfileId) {
-    profilesByOwner: profiles(request: { ownedBy: [$address] }) {
+  query GetAllProfilesByOwnerAddress(
+    $address: EthereumAddress!
+    $observerId: ProfileId
+    $limit: LimitScalar!
+    $cursor: Cursor
+  ) {
+    result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
       items {
         ...ProfileFields
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
       }
     }
   }
   ${ProfileFieldsFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
 `;
 
 /**
@@ -6587,6 +6762,8 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
  *   variables: {
  *      address: // value for 'address'
  *      observerId: // value for 'observerId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */

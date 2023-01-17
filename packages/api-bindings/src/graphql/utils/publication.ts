@@ -1,7 +1,15 @@
 import { PublicationType, ReactionType } from '@lens-protocol/domain/entities';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { Comment, Mirror, Post, ReactionTypes } from '../generated';
+import {
+  Comment,
+  CommentFragment,
+  Mirror,
+  MirrorFragment,
+  Post,
+  PostFragment,
+  ReactionTypes,
+} from '../generated';
 import { Typename, PickByTypename, JustTypename } from './types';
 
 type PublicationTypename = JustTypename<Mirror> | JustTypename<Comment> | JustTypename<Post>;
@@ -76,3 +84,5 @@ export const getApiReactionType = (reaction: ReactionType): ReactionTypes => {
       never("Can't infer reaction type");
   }
 };
+
+export type PublicationFragment = PostFragment | CommentFragment | MirrorFragment;

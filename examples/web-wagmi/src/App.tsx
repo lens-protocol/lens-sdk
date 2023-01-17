@@ -27,11 +27,13 @@ import { UseFollowAndUnfollow } from './profiles/UseFollowAndUnfollow';
 import { UseMutualFollowers } from './profiles/UseMutualFollowers';
 import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
+import { UseProfilesOwnedBy } from './profiles/UseProfileOwnedBy';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseSearchProfiles } from './profiles/UseSearchProfiles';
 import { UseUpdateDispatcherConfig } from './profiles/UseUpdateDispatcherConfig';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCreateComment } from './publications/UseCreateComment';
+import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
@@ -92,6 +94,7 @@ export function App() {
                   element={<UseExplorePublications />}
                 />
                 <Route path="/publications/useReaction" element={<UseReaction />} />
+                <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
                 <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
@@ -107,6 +110,7 @@ export function App() {
                 <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
                 <Route path="/profiles/useSearchProfiles" element={<UseSearchProfiles />} />
                 <Route path="/profiles/useFollow" element={<UseFollowAndUnfollow />} />
+                <Route path="/profiles/useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
 
                 <Route path="/revenue/usePublicationRevenue" element={<UsePublicationRevenue />} />
                 <Route

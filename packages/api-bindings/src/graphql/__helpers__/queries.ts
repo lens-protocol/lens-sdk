@@ -127,8 +127,14 @@ function mockGetAllProfilesByOwnerAddressQuery(
   profiles: ProfileFieldsFragment[],
 ): GetAllProfilesByOwnerAddressQuery {
   return {
-    profilesByOwner: {
+    result: {
       items: profiles,
+      pageInfo: {
+        __typename: 'PaginatedResultInfo',
+        totalCount: null,
+        next: null,
+        prev: null,
+      },
     },
   };
 }
@@ -136,15 +142,24 @@ function mockGetAllProfilesByOwnerAddressQuery(
 export function createGetAllProfilesByOwnerAddressQueryMockedResponse({
   address,
   profiles = [mockProfileFieldsFragment()],
+  observerId,
+  limit = 10,
+  cursor,
 }: {
   address: EthereumAddress;
   profiles?: ProfileFieldsFragment[];
+  observerId?: string;
+  limit?: number;
+  cursor?: string;
 }): MockedResponse<GetAllProfilesByOwnerAddressQuery> {
   return {
     request: {
       query: GetAllProfilesByOwnerAddressDocument,
       variables: {
         address,
+        observerId,
+        limit,
+        cursor,
       },
     },
     result: {

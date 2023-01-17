@@ -14,6 +14,7 @@ import { createExplorePublicationsFieldPolicy } from './createExplorePublication
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
 import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
+import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
@@ -63,6 +64,7 @@ function createTypePolicies(): TypePolicies {
         exploreProfiles: createExploreProfilesFieldPolicy(),
         explorePublications: createExplorePublicationsFieldPolicy(),
         notifications: createNotificationsFieldPolicy(),
+        profiles: createProfilesFieldPolicy(),
         publications: createPublicationTypePolicy(),
         search: createSearchFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
