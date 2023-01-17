@@ -71,6 +71,7 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
 
       const erc20 = currencies.find((c) => c.symbol === currency) ?? never();
       const fee = Amount.erc20(erc20, amount);
+
       await updateFollowPolicy({
         followPolicy: resolveFollowPolicy({
           amount: fee,
@@ -117,6 +118,7 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
         <div>
           <label htmlFor="chargeCurrency">Fee Currency</label>
           <select
+            name="chargeCurrency"
             defaultValue={
               profile.followModule?.__typename === 'FeeFollowModuleSettings'
                 ? profile.followModule.amount.value
@@ -136,7 +138,7 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
                 ? profile.followModule.amount.value
                 : undefined
             }
-            id="chargeFee"
+            name="chargeFee"
             type="text"
             placeholder="Enter a fee"
           />
@@ -147,7 +149,7 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
                 ? profile.followModule.recipient
                 : profile.ownedBy
             }
-            id="chargeFeeRecipient"
+            name="chargeFeeRecipient"
             type="text"
             placeholder="Enter a follow fee recipient address"
           />
