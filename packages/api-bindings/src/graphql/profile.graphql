@@ -99,10 +99,18 @@ query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
   }
 }
 
-query GetAllProfilesByOwnerAddress($address: EthereumAddress!, $observerId: ProfileId) {
-  profilesByOwner: profiles(request: { ownedBy: [$address] }) {
+query GetAllProfilesByOwnerAddress(
+  $address: EthereumAddress!
+  $observerId: ProfileId
+  $limit: LimitScalar!
+  $cursor: Cursor
+) {
+  result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
     items {
       ...ProfileFields
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
     }
   }
 }

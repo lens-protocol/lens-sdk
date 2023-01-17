@@ -32,7 +32,6 @@ import { UseSearchProfiles } from './profiles/UseSearchProfiles';
 import { UseUpdateFollowPolicy } from './profiles/UseUpdateFollowPolicy';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCreateComment } from './publications/UseCreateComment';
-import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseExplorePublications } from './publications/UseExplorePublications';
 import { UsePublication } from './publications/UsePublication';
@@ -93,7 +92,6 @@ export function App() {
                   element={<UseExplorePublications />}
                 />
                 <Route path="/publications/useReaction" element={<UseReaction />} />
-                <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
                 <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />

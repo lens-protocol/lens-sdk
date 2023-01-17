@@ -28,6 +28,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
         createGetAllProfilesByOwnerAddressQueryMockedResponse({
           address,
           profiles: [profileDataFragment],
+          limit: 10,
         }),
       ]);
       const gateway = setupProfileGateway({ apolloClient });

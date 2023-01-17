@@ -4439,10 +4439,12 @@ export type GetProfileQuery = { result: Maybe<ProfileFieldsFragment> };
 export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
   address: Scalars['EthereumAddress'];
   observerId?: Maybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
 }>;
 
 export type GetAllProfilesByOwnerAddressQuery = {
-  profilesByOwner: { items: Array<ProfileFieldsFragment> };
+  result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type CreateProfileMutationVariables = Exact<{
@@ -6652,14 +6654,23 @@ export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
 export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
 export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
 export const GetAllProfilesByOwnerAddressDocument = gql`
-  query GetAllProfilesByOwnerAddress($address: EthereumAddress!, $observerId: ProfileId) {
-    profilesByOwner: profiles(request: { ownedBy: [$address] }) {
+  query GetAllProfilesByOwnerAddress(
+    $address: EthereumAddress!
+    $observerId: ProfileId
+    $limit: LimitScalar!
+    $cursor: Cursor
+  ) {
+    result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
       items {
         ...ProfileFields
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
       }
     }
   }
   ${ProfileFieldsFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
 `;
 
 /**
@@ -6676,6 +6687,8 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
  *   variables: {
  *      address: // value for 'address'
  *      observerId: // value for 'observerId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */
