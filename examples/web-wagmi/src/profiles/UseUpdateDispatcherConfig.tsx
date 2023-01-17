@@ -2,7 +2,7 @@ import { ProfileFieldsFragment, useUpdateDispatcherConfig } from '@lens-protocol
 import { useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 
 type UpdateDispatcherConfigFormProps = {
   activeProfile: ProfileFieldsFragment;
@@ -48,9 +48,9 @@ export function UseUpdateDispatcherConfig() {
       <h1>
         <code>useUpdateDispatcherConfig</code>
       </h1>
-      <WhenLoggedIn>
+      <WhenLoggedInWithProfile>
         {({ profile }) => <UpdateDispatcherConfigForm activeProfile={profile} />}
-      </WhenLoggedIn>
+      </WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>
           <p>Log in to update dispatcher configuration.</p>
