@@ -33,10 +33,7 @@ const lensHubTransactionKinds = [
   TransactionKind.UPDATE_FOLLOW_POLICY,
 ];
 
-const lensPeripheryTransactionKinds = [
-  TransactionKind.UPDATE_COVER_IMAGE,
-  TransactionKind.UPDATE_PROFILE_DETAILS,
-];
+const lensPeripheryTransactionKinds = [TransactionKind.UPDATE_PROFILE_DETAILS];
 
 const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] } = {
   [TransactionKind.COLLECT_PUBLICATION]: lensHubTransactionKinds,
@@ -48,7 +45,6 @@ const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] 
   [TransactionKind.UPDATE_PROFILE_IMAGE]: lensHubTransactionKinds,
   [TransactionKind.UPDATE_FOLLOW_POLICY]: lensHubTransactionKinds,
 
-  [TransactionKind.UPDATE_COVER_IMAGE]: lensPeripheryTransactionKinds,
   [TransactionKind.UPDATE_PROFILE_DETAILS]: lensPeripheryTransactionKinds,
 
   [TransactionKind.APPROVE_MODULE]: [],
