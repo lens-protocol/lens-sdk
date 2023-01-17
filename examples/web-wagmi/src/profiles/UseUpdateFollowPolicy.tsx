@@ -12,7 +12,7 @@ import {
 import { useState } from 'react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
-import { WhenLoggedIn } from '../components/auth/auth';
+import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { never } from '../utils';
 
@@ -204,7 +204,9 @@ export function UseUpdateFollowPolicy() {
       <h1>
         <code>useUpdateFollowPolicy</code>
       </h1>
-      <WhenLoggedIn>{({ profile }) => <UpdateFollowPolicy profile={profile} />}</WhenLoggedIn>
+      <WhenLoggedInWithProfile>
+        {({ profile }) => <UpdateFollowPolicy profile={profile} />}
+      </WhenLoggedInWithProfile>
       <UnauthenticatedFallback message="Log in to update your follow policy." />
     </>
   );
