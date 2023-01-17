@@ -29,6 +29,7 @@ import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseSearchProfiles } from './profiles/UseSearchProfiles';
+import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreatePost } from './publications/UseCreatePost';
@@ -92,15 +93,18 @@ export function App() {
                 <Route path="/publications/useReaction" element={<UseReaction />} />
                 <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
 
-                <Route path="/profiles" element={<ProfilesPage />} />
-                <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />
-                <Route path="/profiles/useProfile-handle" element={<ProfileByHandle />} />
-                <Route path="/profiles/useProfile-id" element={<ProfileById />} />
-                <Route path="/profiles/useExploreProfiles" element={<UseExploreProfiles />} />
-                <Route path="/profiles/useProfilesToFollow" element={<ProfilesToFollow />} />
-                <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
-                <Route path="/profiles/useSearchProfiles" element={<UseSearchProfiles />} />
-                <Route path="/profiles/useFollow" element={<UseFollowAndUnfollow />} />
+                <Route path="/profiles">
+                  <Route index element={<ProfilesPage />} />
+                  <Route path="useCreateProfile" element={<UseCreateProfile />} />
+                  <Route path="useProfile-handle" element={<ProfileByHandle />} />
+                  <Route path="useProfile-id" element={<ProfileById />} />
+                  <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
+                  <Route path="useProfilesToFollow" element={<ProfilesToFollow />} />
+                  <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
+                  <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
+                  <Route path="useFollow" element={<UseFollowAndUnfollow />} />
+                  <Route path="useUpdateProfileDetails" element={<UseUpdateProfileDetails />} />
+                </Route>
 
                 <Route path="/revenue/usePublicationRevenue" element={<UsePublicationRevenue />} />
 

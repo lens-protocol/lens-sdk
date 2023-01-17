@@ -9,10 +9,8 @@ import {
   ProfileFieldsFragment,
   ProfileFieldsFragmentDoc,
 } from '@lens-protocol/api-bindings';
-import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   ProfileAttributeValue,
-  UpdateCoverImageRequest,
   UpdateProfileDetailsRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
@@ -40,12 +38,9 @@ function newAttributeFragment(key: string, value: ProfileAttributeValue): Attrib
 }
 
 export class UpdateProfileMetadataResponder
-  implements ITransactionResponder<UpdateCoverImageRequest | UpdateProfileDetailsRequest>
+  implements ITransactionResponder<UpdateProfileDetailsRequest>
 {
-  private snapshots = new Map<
-    UpdateCoverImageRequest | UpdateProfileDetailsRequest,
-    ProfileFieldsFragment | null
-  >();
+  private snapshots = new Map<UpdateProfileDetailsRequest, ProfileFieldsFragment | null>();
 
   constructor(private readonly apolloClient: ApolloClient<NormalizedCacheObject>) {}
 
@@ -53,9 +48,7 @@ export class UpdateProfileMetadataResponder
     return this.apolloClient.cache;
   }
 
-  async prepare({
-    request,
-  }: TransactionData<UpdateCoverImageRequest | UpdateProfileDetailsRequest>) {
+  async prepare({ request }: TransactionData<UpdateProfileDetailsRequest>) {
     const profileIdentifier = this.apolloCache.identify({
       __typename: 'Profile',
       id: request.profileId,
@@ -76,9 +69,7 @@ export class UpdateProfileMetadataResponder
     });
   }
 
-  async rollback({
-    request,
-  }: TransactionData<UpdateCoverImageRequest | UpdateProfileDetailsRequest>) {
+  async rollback({ request }: TransactionData<UpdateProfileDetailsRequest>) {
     const profileIdentifier = this.apolloCache.identify({
       __typename: 'Profile',
       id: request.profileId,
@@ -96,10 +87,8 @@ export class UpdateProfileMetadataResponder
     }
   }
 
-  async commit({
-    request,
-  }: BroadcastedTransactionData<UpdateCoverImageRequest | UpdateProfileDetailsRequest>) {
-    // updates Profile in cache
+  async commit({ request }: BroadcastedTransactionData<UpdateProfileDetailsRequest>) {
+    // ensure update of Profile in cache
     await this.apolloClient.query<GetProfileQuery, GetProfileQueryVariables>({
       query: GetProfileDocument,
       variables: {
@@ -114,52 +103,44 @@ export class UpdateProfileMetadataResponder
     this.snapshots.delete(request);
   }
 
-  private resolveOptimisticCacheUpdate(
-    request: UpdateCoverImageRequest | UpdateProfileDetailsRequest,
-  ): Modifiers {
-    switch (request.kind) {
-      case TransactionKind.UPDATE_COVER_IMAGE:
+  private resolveOptimisticCacheUpdate(request: UpdateProfileDetailsRequest): Modifiers {
+    return {
+      name: () => {
+        return request.name;
+      },
+      bio: () => {
+        return request.bio;
+      },
+      coverPicture: () => {
         return {
-          coverPicture: () => {
-            return {
-              __typename: 'MediaSet',
-              original: {
-                __typename: 'Media',
-                url: request.url,
-                width: null,
-                height: null,
-                mimeType: null,
-              },
-              medium: null,
-              small: null,
-            };
+          __typename: 'MediaSet',
+          original: {
+            __typename: 'Media',
+            url: request.coverPicture,
+            width: null,
+            height: null,
+            mimeType: null,
           },
+          medium: null,
+          small: null,
         };
-      case TransactionKind.UPDATE_PROFILE_DETAILS:
-        return {
-          name: () => {
-            return request.details.name;
-          },
-          bio: () => {
-            return request.details.bio;
-          },
-          attributes: (existing: Maybe<AttributeFragment[]>) => {
-            const acc = new Map<string, AttributeFragment>();
+      },
+      attributes: (existing: Maybe<AttributeFragment[]>) => {
+        const acc = new Map<string, AttributeFragment>();
 
-            (existing ?? []).forEach((attr) => {
-              acc.set(attr.key, attr);
-            });
+        (existing ?? []).forEach((attr) => {
+          acc.set(attr.key, attr);
+        });
 
-            for (const [key, value] of Object.entries(request.details.attributes)) {
-              if (value === null) {
-                acc.delete(key);
-              } else {
-                acc.set(key, newAttributeFragment(key, value));
-              }
-            }
-            return Array.from(acc.values());
-          },
-        };
-    }
+        for (const [key, value] of Object.entries(request.attributes ?? {})) {
+          if (value === null) {
+            acc.delete(key);
+          } else {
+            acc.set(key, newAttributeFragment(key, value));
+          }
+        }
+        return Array.from(acc.values());
+      },
+    };
   }
 }
