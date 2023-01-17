@@ -27,6 +27,10 @@ function UseWhoCollectedPublicationLayout({
       </h1>
 
       {whoCollected.map((wallet) => {
+        if (!wallet.defaultProfile) {
+          return null;
+        }
+
         return <ProfileCard key={wallet.address} profile={wallet.defaultProfile} />;
       })}
 
