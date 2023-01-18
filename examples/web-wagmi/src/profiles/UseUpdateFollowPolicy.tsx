@@ -65,26 +65,26 @@ function UpdateButtonText({
   return <>Update</>;
 }
 
-type UpdateFollowPolicyProps = {
+type UpdateFollowPolicyFormProps = {
   profile: ProfileFieldsFragment;
+  currentFollowModule: FollowPolicyType;
+  currencies: Erc20[];
 };
 
-function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
-  const currentFollowModule = getFollowPolicyTypeFromProfileFieldsFragment(profile);
-  const [followPolicyTypeToUpdate, setFollowPolicyTypeToUpdate] = useState<FollowPolicyType | null>(
-    currentFollowModule,
-  );
-
-  const { data: currencies, loading } = useCurrencies();
+function UpdateFollowPolicyForm({
+  profile,
+  currencies,
+  currentFollowModule,
+}: UpdateFollowPolicyFormProps) {
   const { updateFollowPolicy, isPending, error } = useUpdateFollowPolicy();
+  const [selectedFollowPolicyType, setSelectedFollowPolicyType] =
+    useState<FollowPolicyType>(currentFollowModule);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!followPolicyTypeToUpdate || !currencies) return;
-
     const formData = new FormData(event.currentTarget);
 
-    if (followPolicyTypeToUpdate === FollowPolicyType.CHARGE) {
+    if (selectedFollowPolicyType === FollowPolicyType.CHARGE) {
       const amount = formData.get('chargeFee') as string;
       const currency = formData.get('chargeCurrency') as string;
       const recipient = formData.get('chargeFeeRecipient') as string;
@@ -95,7 +95,7 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
       await updateFollowPolicy({
         followPolicy: resolveFollowPolicy({
           amount: fee,
-          followPolicyType: followPolicyTypeToUpdate,
+          followPolicyType: selectedFollowPolicyType,
           recipient,
         }),
         profileId: profile.id,
@@ -104,14 +104,10 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
     }
 
     await updateFollowPolicy({
-      followPolicy: resolveFollowPolicy({ followPolicyType: followPolicyTypeToUpdate }),
+      followPolicy: resolveFollowPolicy({ followPolicyType: selectedFollowPolicyType }),
       profileId: profile.id,
     });
   }
-
-  if (loading) return <Loading />;
-
-  if (!currencies) return <p>Error</p>;
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -124,8 +120,8 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
               id={followPolicyType}
               name="followPolicyType"
               value={followPolicyType}
-              onChange={() => setFollowPolicyTypeToUpdate(followPolicyType as FollowPolicyType)}
-              checked={followPolicyTypeToUpdate === followPolicyType}
+              onChange={() => setSelectedFollowPolicyType(followPolicyType as FollowPolicyType)}
+              checked={selectedFollowPolicyType === followPolicyType}
             />
             <label htmlFor={followPolicyType}>
               {followPolicyTypeToDescriptionMap[followPolicyType as FollowPolicyType]}
@@ -134,7 +130,7 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
         ))}
       </div>
 
-      {followPolicyTypeToUpdate === FollowPolicyType.CHARGE && (
+      {selectedFollowPolicyType === FollowPolicyType.CHARGE && (
         <div>
           <label htmlFor="chargeCurrency">Fee Currency</label>
           <select
@@ -177,13 +173,13 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
       )}
 
       <button
-        disabled={currentFollowModule === followPolicyTypeToUpdate || isPending}
+        disabled={currentFollowModule === selectedFollowPolicyType || isPending}
         type="submit"
       >
         <UpdateButtonText
           isTxPending={isPending}
           currentFollowModule={currentFollowModule}
-          followPolicyTypeToUpdate={followPolicyTypeToUpdate}
+          followPolicyTypeToUpdate={selectedFollowPolicyType}
         />
       </button>
       {error && <p>{error.message}</p>}
@@ -195,6 +191,28 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
         `}
       </style>
     </form>
+  );
+}
+
+type UpdateFollowPolicyProps = {
+  profile: ProfileFieldsFragment;
+};
+
+function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
+  const currentFollowModule = getFollowPolicyTypeFromProfileFieldsFragment(profile);
+
+  const { data: currencies, loading } = useCurrencies();
+
+  if (loading) return <Loading />;
+
+  if (!currencies || !currentFollowModule) return <p>Error</p>;
+
+  return (
+    <UpdateFollowPolicyForm
+      profile={profile}
+      currencies={currencies}
+      currentFollowModule={currentFollowModule}
+    />
   );
 }
 
