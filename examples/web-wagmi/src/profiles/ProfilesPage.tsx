@@ -52,6 +52,11 @@ const profileHooks = [
     path: '/profiles/useProfilesOwnedBy',
   },
   {
+    label: 'useUpdateProfileDetails',
+    description: `Updates profile details.`,
+    path: '/profiles/useUpdateProfileDetails',
+  },
+  {
     label: 'useUpdateDispatcherConfig',
     description: `Update profile dispatcher configuration.`,
     path: '/profiles/useUpdateDispatcherConfig',

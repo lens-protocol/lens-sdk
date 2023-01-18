@@ -18,20 +18,20 @@ import { mockITransactionFactory } from '../../__helpers__/mocks';
 import { CommentCallGateway } from '../CommentCallGateway';
 import {
   createBasicExerciseData,
-  createFeeCollectModuleExcerciseData,
-  createFeeCollectModuleFollowersOnlyExcerciseData,
-  createFollowerOnlyReferenceModuleExcerciseData,
-  createFreeCollectModuleExcerciseData,
-  createFreeCollectModuleFollowersOnlyExcerciseData,
-  createLimitedFeeCollectModuleExcerciseData,
-  createLimitedFeeCollectModuleFollowersOnlyExcerciseData,
-  createLimitedTimedFeeCollectModuleExcerciseData,
-  createLimitedTimedFeeCollectModuleFollowersOnlyExcerciseData,
+  createFeeCollectModuleExerciseData,
+  createFeeCollectModuleFollowersOnlyExerciseData,
+  createFollowerOnlyReferenceModuleExerciseData,
+  createFreeCollectModuleExerciseData,
+  createFreeCollectModuleFollowersOnlyExerciseData,
+  createLimitedFeeCollectModuleExerciseData,
+  createLimitedFeeCollectModuleFollowersOnlyExerciseData,
+  createLimitedTimedFeeCollectModuleExerciseData,
+  createLimitedTimedFeeCollectModuleFollowersOnlyExerciseData,
   PublicationExerciseData,
-  createFevertCollectModuleExcerciseData,
-  createSupportedNFTAttributesExcerciseData,
-  createTimedFeeCollectModuleExcerciseData,
-  createTimedFeeCollectModuleFollowersOnlyExcerciseData,
+  createRevertCollectModuleExerciseData,
+  createSupportedNFTAttributesExerciseData,
+  createTimedFeeCollectModuleExerciseData,
+  createTimedFeeCollectModuleFollowersOnlyExerciseData,
 } from '../__helpers__/publication-exercise-data';
 
 function setupTestScenario({
@@ -71,55 +71,55 @@ describe(`Given an instance of ${CommentCallGateway.name}`, () => {
     },
     {
       description: 'all supported NFT attribute types',
-      createExerciseData: createSupportedNFTAttributesExcerciseData,
+      createExerciseData: createSupportedNFTAttributesExerciseData,
     },
     {
       description: 'Follower Only Reference Module',
-      createExerciseData: createFollowerOnlyReferenceModuleExcerciseData,
+      createExerciseData: createFollowerOnlyReferenceModuleExerciseData,
     },
     {
       description: 'Revert Collect Module',
-      createExerciseData: createFevertCollectModuleExcerciseData,
+      createExerciseData: createRevertCollectModuleExerciseData,
     },
     {
       description: 'Free Collect Module (anybody)',
-      createExerciseData: createFreeCollectModuleExcerciseData,
+      createExerciseData: createFreeCollectModuleExerciseData,
     },
     {
       description: 'Free Collect Module (followers only)',
-      createExerciseData: createFreeCollectModuleFollowersOnlyExcerciseData,
+      createExerciseData: createFreeCollectModuleFollowersOnlyExerciseData,
     },
     {
       description: 'Fee Collect Module (anybody)',
-      createExerciseData: createFeeCollectModuleExcerciseData,
+      createExerciseData: createFeeCollectModuleExerciseData,
     },
     {
       description: 'Fee Collect Module (followers only)',
-      createExerciseData: createFeeCollectModuleFollowersOnlyExcerciseData,
+      createExerciseData: createFeeCollectModuleFollowersOnlyExerciseData,
     },
     {
       description: 'Limited Fee Collect Module (anybody)',
-      createExerciseData: createLimitedFeeCollectModuleExcerciseData,
+      createExerciseData: createLimitedFeeCollectModuleExerciseData,
     },
     {
       description: 'Limited Fee Collect Module (followers only)',
-      createExerciseData: createLimitedFeeCollectModuleFollowersOnlyExcerciseData,
+      createExerciseData: createLimitedFeeCollectModuleFollowersOnlyExerciseData,
     },
     {
       description: 'Timed Fee Collect Module (anybody)',
-      createExerciseData: createTimedFeeCollectModuleExcerciseData,
+      createExerciseData: createTimedFeeCollectModuleExerciseData,
     },
     {
       description: 'Timed Fee Collect Module (followers only)',
-      createExerciseData: createTimedFeeCollectModuleFollowersOnlyExcerciseData,
+      createExerciseData: createTimedFeeCollectModuleFollowersOnlyExerciseData,
     },
     {
       description: 'Limited Timed Fee Collect Module (anybody)',
-      createExerciseData: createLimitedTimedFeeCollectModuleExcerciseData,
+      createExerciseData: createLimitedTimedFeeCollectModuleExerciseData,
     },
     {
       description: 'Limited Timed Fee Collect Module (followers only)',
-      createExerciseData: createLimitedTimedFeeCollectModuleFollowersOnlyExcerciseData,
+      createExerciseData: createLimitedTimedFeeCollectModuleFollowersOnlyExerciseData,
     },
   ])(`and $description`, ({ createExerciseData }) => {
     const { requestVars, expectedMutationRequestDetails } = createExerciseData();

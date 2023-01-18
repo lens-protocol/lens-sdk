@@ -30,6 +30,7 @@ import { ProfileById } from './profiles/UseProfileById';
 import { UseProfilesOwnedBy } from './profiles/UseProfileOwnedBy';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseSearchProfiles } from './profiles/UseSearchProfiles';
+import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
 import { UseUpdateDispatcherConfig } from './profiles/UseUpdateDispatcherConfig';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCreateComment } from './publications/UseCreateComment';
@@ -111,6 +112,10 @@ export function App() {
                 <Route path="/profiles/useSearchProfiles" element={<UseSearchProfiles />} />
                 <Route path="/profiles/useFollow" element={<UseFollowAndUnfollow />} />
                 <Route path="/profiles/useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
+                <Route
+                  path="/profiles/useUpdateProfileDetails"
+                  element={<UseUpdateProfileDetails />}
+                />
 
                 <Route path="/revenue/usePublicationRevenue" element={<UsePublicationRevenue />} />
                 <Route

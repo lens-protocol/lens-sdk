@@ -3,7 +3,6 @@ import {
   mockCreateProfileRequest,
   mockUnconstrainedFollowRequest,
   mockUnfollowRequest,
-  mockUpdateCoverImageRequest,
   mockUpdateDispatcherConfigRequest,
   mockUpdateFollowPolicyRequest,
   mockUpdateOffChainProfileImageRequest,
@@ -51,7 +50,6 @@ const requests: TransactionRequest = {
   [TransactionKind.CREATE_POST]: mockCreatePostRequest(),
   [TransactionKind.FOLLOW_PROFILES]: mockUnconstrainedFollowRequest(),
   [TransactionKind.MIRROR_PUBLICATION]: mockCreateMirrorRequest(),
-  [TransactionKind.UPDATE_COVER_IMAGE]: mockUpdateCoverImageRequest(),
   [TransactionKind.UPDATE_FOLLOW_POLICY]: mockUpdateFollowPolicyRequest(),
   [TransactionKind.UPDATE_PROFILE_DETAILS]: mockUpdateProfileDetailsRequest(),
   [TransactionKind.UPDATE_PROFILE_IMAGE]: mockUpdateOffChainProfileImageRequest(),
@@ -71,10 +69,7 @@ const lensHubTransactionKinds = [
   TransactionKind.UPDATE_PROFILE_IMAGE,
 ] as const;
 
-const lensPeripheryTransactionKinds = [
-  TransactionKind.UPDATE_COVER_IMAGE,
-  TransactionKind.UPDATE_PROFILE_DETAILS,
-] as const;
+const lensPeripheryTransactionKinds = [TransactionKind.UPDATE_PROFILE_DETAILS] as const;
 
 describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
   const factory = mockITransactionFactory();
@@ -286,7 +281,7 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
           await gateway.save(tx);
 
           expect(
-            await gateway.getNextMetaTransactionNonceFor(TransactionKind.UPDATE_COVER_IMAGE),
+            await gateway.getNextMetaTransactionNonceFor(TransactionKind.UPDATE_PROFILE_DETAILS),
           ).toBe(tx.nonce + 1);
         }
       });
@@ -299,7 +294,7 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
         await gateway.save(tx);
 
         const nonce = await gateway.getNextMetaTransactionNonceFor(
-          TransactionKind.UPDATE_COVER_IMAGE,
+          TransactionKind.UPDATE_PROFILE_DETAILS,
         );
 
         expect(nonce).toBeUndefined();
