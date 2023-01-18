@@ -13,9 +13,7 @@ export function LinkCard({ path, label, description }: LinkCardProps) {
         <code>{label}</code>
       </h3>
       <p>{description}</p>
-      <Link to={path}>
-        <a>View example</a>
-      </Link>
+      <Link to={path}>View example</Link>
     </article>
   );
 }

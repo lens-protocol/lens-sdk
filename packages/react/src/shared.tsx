@@ -37,6 +37,7 @@ import { FollowProfilesResponder } from './transactions/adapters/responders/Foll
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
 import { UpdateDispatcherConfigResponder } from './transactions/adapters/responders/UpdateDispatcherConfigResponder';
+import { UpdateProfileImageResponder } from './transactions/adapters/responders/UpdateProfileImageResponder';
 import { UpdateProfileMetadataResponder } from './transactions/adapters/responders/UpdateProfileMetadataResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
@@ -145,7 +146,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(apolloClient),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new UpdateProfileMetadataResponder(apolloClient),
-    [TransactionKind.UPDATE_PROFILE_IMAGE]: new NoopResponder(),
+    [TransactionKind.UPDATE_PROFILE_IMAGE]: new UpdateProfileImageResponder(apolloClient),
   };
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);
 

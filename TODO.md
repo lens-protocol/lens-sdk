@@ -26,7 +26,7 @@
   - [ ] signed, paid gas (fallback)
 - [ ] `useUpdateProfileImage` - upload
   - [ ] sign-less, gas-less (via dispatcher)
-  - [ ] signed, gas-less
+  - [x] signed, gas-less
   - [ ] signed, paid gas (fallback)
 - [ ] `useUpdateProfileImage` - NFT
   - [ ] sign-less, gas-less (via dispatcher)

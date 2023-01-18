@@ -144,15 +144,6 @@ export type AccessConditionOutput = {
   or: Maybe<OrConditionOutput>;
 };
 
-export type AchRequest = {
-  secret: Scalars['String'];
-  ethereumAddress: Scalars['EthereumAddress'];
-  handle?: Maybe<Scalars['CreateHandle']>;
-  freeTextHandle?: Maybe<Scalars['Boolean']>;
-  overrideTradeMark: Scalars['Boolean'];
-  overrideAlreadyClaimed: Scalars['Boolean'];
-};
-
 /** The request object to add interests to a profile */
 export type AddProfileInterestsRequest = {
   /** The profile interest to add */
@@ -988,10 +979,6 @@ export type CreateUnfollowBroadcastItemResult = {
   typedData: CreateBurnEip712TypedData;
 };
 
-export type CurRequest = {
-  secret: Scalars['String'];
-};
-
 /** The custom filters types */
 export enum CustomFiltersTypes {
   Gardeners = 'GARDENERS',
@@ -1599,12 +1586,6 @@ export type HasTxHashBeenIndexedRequest = {
   txId?: Maybe<Scalars['TxId']>;
 };
 
-export type HelRequest = {
-  secret: Scalars['String'];
-  handle: Scalars['Handle'];
-  remove: Scalars['Boolean'];
-};
-
 export type HidePublicationRequest = {
   /** Publication id */
   publicationId: Scalars['InternalPublicationId'];
@@ -1954,8 +1935,6 @@ export type Mutation = {
   addReaction: Maybe<Scalars['Void']>;
   removeReaction: Maybe<Scalars['Void']>;
   reportPublication: Maybe<Scalars['Void']>;
-  ach: Maybe<Scalars['Void']>;
-  hel: Maybe<Scalars['Void']>;
 };
 
 export type MutationAuthenticateArgs = {
@@ -2102,14 +2081,6 @@ export type MutationRemoveReactionArgs = {
 
 export type MutationReportPublicationArgs = {
   request: ReportPublicationRequest;
-};
-
-export type MutationAchArgs = {
-  request: AchRequest;
-};
-
-export type MutationHelArgs = {
-  request: HelRequest;
 };
 
 export type MutualFollowersProfilesQueryRequest = {
@@ -3175,8 +3146,6 @@ export type Query = {
   profilePublicationRevenue: ProfilePublicationRevenueResult;
   publicationRevenue: Maybe<PublicationRevenue>;
   profileFollowRevenue: FollowRevenueResult;
-  rel: Maybe<Scalars['Void']>;
-  cur: Array<Scalars['String']>;
 };
 
 export type QueryChallengeArgs = {
@@ -3343,14 +3312,6 @@ export type QueryProfileFollowRevenueArgs = {
   request: ProfileFollowRevenueQueryRequest;
 };
 
-export type QueryRelArgs = {
-  request: RelRequest;
-};
-
-export type QueryCurArgs = {
-  request: CurRequest;
-};
-
 export type ReactionEvent = {
   __typename: 'ReactionEvent';
   profile: Profile;
@@ -3410,11 +3371,6 @@ export enum ReferenceModules {
 export type RefreshRequest = {
   /** The refresh token */
   refreshToken: Scalars['Jwt'];
-};
-
-export type RelRequest = {
-  secret: Scalars['String'];
-  ethereumAddress: Scalars['EthereumAddress'];
 };
 
 export type RelayError = {
@@ -4480,6 +4436,24 @@ export type MutualFollowersProfilesQueryVariables = Exact<{
 
 export type MutualFollowersProfilesQuery = {
   result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type CreateSetProfileImageUriTypedDataMutationVariables = Exact<{
+  request: UpdateProfileImageRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateSetProfileImageUriTypedDataMutation = {
+  result: Pick<CreateSetProfileImageUriBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { SetProfileImageURIWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Pick<Eip712TypedDataDomain, 'name' | 'chainId' | 'version' | 'verifyingContract'>;
+      value: Pick<
+        CreateSetProfileImageUriEip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'imageURI'
+      >;
+    };
+  };
 };
 
 export type CreateSetProfileMetadataTypedDataMutationVariables = Exact<{
@@ -6958,6 +6932,81 @@ export type MutualFollowersProfilesLazyQueryHookResult = ReturnType<
 export type MutualFollowersProfilesQueryResult = Apollo.QueryResult<
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesQueryVariables
+>;
+export const CreateSetProfileImageUriTypedDataDocument = gql`
+  mutation CreateSetProfileImageURITypedData(
+    $request: UpdateProfileImageRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createSetProfileImageURITypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          SetProfileImageURIWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          imageURI
+        }
+      }
+    }
+  }
+`;
+export type CreateSetProfileImageUriTypedDataMutationFn = Apollo.MutationFunction<
+  CreateSetProfileImageUriTypedDataMutation,
+  CreateSetProfileImageUriTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateSetProfileImageUriTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateSetProfileImageUriTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetProfileImageUriTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetProfileImageUriTypedDataMutation, { data, loading, error }] = useCreateSetProfileImageUriTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateSetProfileImageUriTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetProfileImageUriTypedDataMutation,
+    CreateSetProfileImageUriTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetProfileImageUriTypedDataMutation,
+    CreateSetProfileImageUriTypedDataMutationVariables
+  >(CreateSetProfileImageUriTypedDataDocument, options);
+}
+export type CreateSetProfileImageUriTypedDataMutationHookResult = ReturnType<
+  typeof useCreateSetProfileImageUriTypedDataMutation
+>;
+export type CreateSetProfileImageUriTypedDataMutationResult =
+  Apollo.MutationResult<CreateSetProfileImageUriTypedDataMutation>;
+export type CreateSetProfileImageUriTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetProfileImageUriTypedDataMutation,
+  CreateSetProfileImageUriTypedDataMutationVariables
 >;
 export const CreateSetProfileMetadataTypedDataDocument = gql`
   mutation CreateSetProfileMetadataTypedData(
@@ -9554,8 +9603,6 @@ export type MutationKeySpecifier = (
   | 'addReaction'
   | 'removeReaction'
   | 'reportPublication'
-  | 'ach'
-  | 'hel'
   | MutationKeySpecifier
 )[];
 export type MutationFieldPolicy = {
@@ -9592,8 +9639,6 @@ export type MutationFieldPolicy = {
   addReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   removeReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   reportPublication?: FieldPolicy<any> | FieldReadFunction<any>;
-  ach?: FieldPolicy<any> | FieldReadFunction<any>;
-  hel?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type NFTKeySpecifier = (
   | 'contractName'
@@ -10228,8 +10273,6 @@ export type QueryKeySpecifier = (
   | 'profilePublicationRevenue'
   | 'publicationRevenue'
   | 'profileFollowRevenue'
-  | 'rel'
-  | 'cur'
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
@@ -10283,8 +10326,6 @@ export type QueryFieldPolicy = {
   profilePublicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   publicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
-  rel?: FieldPolicy<any> | FieldReadFunction<any>;
-  cur?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ReactionEventKeySpecifier = (
   | 'profile'

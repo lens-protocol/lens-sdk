@@ -32,6 +32,7 @@ import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseSearchProfiles } from './profiles/UseSearchProfiles';
 import { UseUpdateDispatcherConfig } from './profiles/UseUpdateDispatcherConfig';
 import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
+import { UseUpdateProfileImage } from './profiles/UseUpdateProfileImage';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreateMirror } from './publications/UseCreateMirror';
@@ -111,6 +112,7 @@ export function App() {
                 <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
                 <Route path="/profiles/useSearchProfiles" element={<UseSearchProfiles />} />
                 <Route path="/profiles/useFollow" element={<UseFollowAndUnfollow />} />
+                <Route path="/profiles/useUpdateProfileImage" element={<UseUpdateProfileImage />} />
                 <Route path="/profiles/useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
                 <Route
                   path="/profiles/useUpdateProfileDetails"
