@@ -1365,7 +1365,7 @@ export type FeedItem = {
   comments: Maybe<Array<Comment>>;
 };
 
-export type FeedItemRoot = Comment | PendingPost | Post;
+export type FeedItemRoot = Post | Comment;
 
 export type FeedRequest = {
   limit?: Maybe<Scalars['LimitScalar']>;
@@ -4141,7 +4141,7 @@ export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
 
 export type FeedItemFragment = { __typename: 'FeedItem' } & {
-  root: CommentFragment | PendingPostFragment | PostFragment;
+  root: PostFragment | CommentFragment;
   comments: Maybe<Array<CommentFragment>>;
 };
 
@@ -5189,15 +5189,6 @@ export const CommonPaginatedResultInfoFragmentDoc = gql`
     totalCount
   }
 `;
-export const Eip712TypedDataDomainFragmentDoc = gql`
-  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    __typename
-    name
-    chainId
-    version
-    verifyingContract
-  }
-`;
 export const PendingPostFragmentDoc = gql`
   fragment PendingPost on PendingPost {
     __typename
@@ -5215,13 +5206,19 @@ export const PendingPostFragmentDoc = gql`
   ${MediaFragmentDoc}
   ${ProfileFieldsFragmentDoc}
 `;
+export const Eip712TypedDataDomainFragmentDoc = gql`
+  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    __typename
+    name
+    chainId
+    version
+    verifyingContract
+  }
+`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
     root {
-      ... on PendingPost {
-        ...PendingPost
-      }
       ... on Post {
         ...Post
       }
@@ -5233,7 +5230,6 @@ export const FeedItemFragmentDoc = gql`
       ...Comment
     }
   }
-  ${PendingPostFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
@@ -11829,7 +11825,7 @@ const result: PossibleTypesResultData = {
       'TimedFeeCollectModuleSettings',
       'UnknownCollectModuleSettings',
     ],
-    FeedItemRoot: ['Comment', 'PendingPost', 'Post'],
+    FeedItemRoot: ['Post', 'Comment'],
     FollowModule: [
       'FeeFollowModuleSettings',
       'ProfileFollowModuleSettings',

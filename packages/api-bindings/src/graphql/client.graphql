@@ -34,8 +34,6 @@ type PendingPost {
   mainContentFocus: PublicationMainFocus!
 }
 
-extend union FeedItemRoot = PendingPost
-
 extend type RevenueAggregate {
   totalAmount: ClientErc20Amount!
 }

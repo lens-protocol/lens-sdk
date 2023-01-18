@@ -1,10 +1,6 @@
 fragment FeedItem on FeedItem {
   __typename
   root {
-    ... on PendingPost {
-      ...PendingPost
-    }
-
     ... on Post {
       ...Post
     }
