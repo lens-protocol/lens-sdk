@@ -1,8 +1,10 @@
 fragment RevenueAggregate on RevenueAggregate {
   __typename
-  total {
+  __total: total {
     ...Erc20Amount
   }
+
+  totalAmount
 }
 
 fragment PublicationRevenue on PublicationRevenue {

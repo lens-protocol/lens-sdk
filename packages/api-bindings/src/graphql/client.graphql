@@ -1,3 +1,4 @@
+scalar ClientErc20Amount
 scalar ProfileAttributes
 
 extend type Profile {
@@ -34,3 +35,7 @@ type PendingPost {
 }
 
 extend union FeedItemRoot = PendingPost
+
+extend type RevenueAggregate {
+  totalAmount: ClientErc20Amount!
+}

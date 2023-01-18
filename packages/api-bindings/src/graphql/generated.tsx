@@ -1,3 +1,4 @@
+import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
@@ -20,6 +21,7 @@ export type Scalars = {
   BroadcastId: string;
   /** ChainId custom scalar type */
   ChainId: number;
+  ClientErc20Amount: ClientErc20Amount;
   /** collect module data scalar type */
   CollectModuleData: unknown;
   /** ContentEncryptionKey scalar type */
@@ -3430,6 +3432,7 @@ export type ReservedClaimableHandle = {
 export type RevenueAggregate = {
   __typename: 'RevenueAggregate';
   total: Erc20Amount;
+  totalAmount: Scalars['ClientErc20Amount'];
 };
 
 export type RevertCollectModuleSettings = {
@@ -4622,9 +4625,10 @@ export type ReportPublicationMutationVariables = Exact<{
 
 export type ReportPublicationMutation = Pick<Mutation, 'reportPublication'>;
 
-export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & {
-  total: Erc20AmountFragment;
-};
+export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & Pick<
+  RevenueAggregate,
+  'totalAmount'
+> & { __total: Erc20AmountFragment };
 
 export type PublicationRevenueFragment = { __typename: 'PublicationRevenue' } & {
   publication: PostFragment | CommentFragment | MirrorFragment;
@@ -5399,9 +5403,10 @@ export const Erc20AmountFragmentDoc = gql`
 export const RevenueAggregateFragmentDoc = gql`
   fragment RevenueAggregate on RevenueAggregate {
     __typename
-    total {
+    __total: total {
       ...Erc20Amount
     }
+    totalAmount
   }
   ${Erc20AmountFragmentDoc}
 `;
@@ -10425,9 +10430,14 @@ export type ReservedClaimableHandleFieldPolicy = {
   source?: FieldPolicy<any> | FieldReadFunction<any>;
   expiry?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type RevenueAggregateKeySpecifier = ('total' | RevenueAggregateKeySpecifier)[];
+export type RevenueAggregateKeySpecifier = (
+  | 'total'
+  | 'totalAmount'
+  | RevenueAggregateKeySpecifier
+)[];
 export type RevenueAggregateFieldPolicy = {
   total?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalAmount?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type RevertCollectModuleSettingsKeySpecifier = (
   | 'type'

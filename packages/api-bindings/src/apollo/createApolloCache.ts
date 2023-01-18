@@ -21,6 +21,7 @@ import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
+import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
 
@@ -67,6 +68,8 @@ function createTypePolicies(): TypePolicies {
     MediaSet: createMediaSetTypePolicy(),
     NftImage: createNftImageTypePolicy(),
     Media: createMediaTypePolicy(),
+
+    RevenueAggregate: createRevenueAggregateTypePolicy(),
 
     Query: {
       fields: {
