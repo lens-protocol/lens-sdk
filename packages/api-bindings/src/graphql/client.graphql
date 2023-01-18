@@ -1,9 +1,9 @@
+scalar ProfileAttributes
+
 extend type Profile {
   ownedByMe: Boolean!
-  location: String
-  twitter: String
-  website: String
   isOptimisticFollowedByMe: Boolean!
+  attributesMap: ProfileAttributes!
 }
 
 extend type Post {
