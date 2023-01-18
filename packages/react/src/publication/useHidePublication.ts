@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { useHidePublicationController } from './adapters/useHidePublicationController';
 
-export type PublicationArgs = {
+export type HidePublicationRequest = {
   publication: PublicationOwnedByMeFragment;
 };
 
@@ -12,7 +12,7 @@ export function useHidePublication() {
   const [isPending, setIsPending] = useState(false);
   const { hide: hidePublication } = useHidePublicationController();
 
-  const hide = async ({ publication }: PublicationArgs) => {
+  const hide = async ({ publication }: HidePublicationRequest) => {
     invariant(
       publication.ownedByMe,
       'Publication not owned by the active profile. Make sure that publication is owned by the active profile (for .e.g. by calling `isPublicationOwnedByMe`) before trying to hide it?',
