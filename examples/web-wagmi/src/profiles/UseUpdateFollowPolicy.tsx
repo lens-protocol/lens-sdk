@@ -67,7 +67,7 @@ function UpdateButtonText({
 
 type UpdateFollowPolicyFormProps = {
   profile: ProfileFieldsFragment;
-  currentFollowPolicy: FollowPolicy;
+  currentFollowPolicy: FollowPolicy | null;
   currencies: Erc20[];
 };
 
@@ -77,8 +77,8 @@ function UpdateFollowPolicyForm({
   currentFollowPolicy,
 }: UpdateFollowPolicyFormProps) {
   const { updateFollowPolicy, isPending, error } = useUpdateFollowPolicy();
-  const [selectedFollowPolicyType, setSelectedFollowPolicyType] = useState<FollowPolicyType>(
-    currentFollowPolicy.type,
+  const [selectedFollowPolicyType, setSelectedFollowPolicyType] = useState<FollowPolicyType | null>(
+    currentFollowPolicy?.type ?? null,
   );
   const [hasSuccessfulUpdatedFollowPolicy, setHasSuccessfulUpdatedFollowPolicy] =
     useState<boolean>(false);
@@ -108,7 +108,7 @@ function UpdateFollowPolicyForm({
     }
 
     await updateFollowPolicy({
-      followPolicy: resolveFollowPolicy({ followPolicyType: selectedFollowPolicyType }),
+      followPolicy: resolveFollowPolicy({ followPolicyType: selectedFollowPolicyType ?? never() }),
       profileId: profile.id,
     });
     setHasSuccessfulUpdatedFollowPolicy(true);
@@ -179,12 +179,12 @@ function UpdateFollowPolicyForm({
 
       {!hasSuccessfulUpdatedFollowPolicy && (
         <button
-          disabled={currentFollowPolicy.type === selectedFollowPolicyType || isPending}
+          disabled={currentFollowPolicy?.type === selectedFollowPolicyType || isPending}
           type="submit"
         >
           <UpdateButtonText
             isTxPending={isPending}
-            currentFollowModule={currentFollowPolicy.type}
+            currentFollowModule={currentFollowPolicy?.type ?? null}
             followPolicyTypeToUpdate={selectedFollowPolicyType}
           />
         </button>
@@ -212,7 +212,7 @@ function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
 
   if (loading) return <Loading />;
 
-  if (!currencies || !currentFollowPolicy) return <p>Error</p>;
+  if (!currencies) return <p>Error</p>;
 
   return (
     <UpdateFollowPolicyForm
