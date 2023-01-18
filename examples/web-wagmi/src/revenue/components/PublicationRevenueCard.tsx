@@ -1,4 +1,5 @@
 import { PublicationRevenueFragment } from '@lens-protocol/react';
+
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 
 type RevenueCardProps = {
