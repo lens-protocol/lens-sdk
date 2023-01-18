@@ -45,6 +45,7 @@ import { UseReaction } from './publications/UseReaction';
 import { UseWhoReacted } from './publications/UseWhoReacted';
 import { RevenuePage } from './revenue/RevenuePage';
 import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
+import { UseProfilePublicationRevenue } from './revenue/UseProfilePublicationRevenue';
 import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
@@ -127,6 +128,10 @@ export function App() {
                 <Route
                   path="/revenue/useProfileFollowRevenue"
                   element={<UseProfileFollowRevenue />}
+                />
+                <Route
+                  path="/revenue/useProfilePublicationRevenue"
+                  element={<UseProfilePublicationRevenue />}
                 />
 
                 <Route path="/misc" element={<MiscPage />} />

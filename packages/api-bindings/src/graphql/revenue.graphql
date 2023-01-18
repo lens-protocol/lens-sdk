@@ -36,3 +36,30 @@ query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
     ...Revenue
   }
 }
+
+query ProfilePublicationRevenue(
+  $profileId: ProfileId!
+  $observerId: ProfileId
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $publicationTypes: [PublicationTypes!]
+  $sources: [Sources!]
+) {
+  result: profilePublicationRevenue(
+    request: {
+      profileId: $profileId
+      limit: $limit
+      cursor: $cursor
+      types: $publicationTypes
+      sources: $sources
+    }
+  ) {
+    items {
+      ...PublicationRevenue
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

@@ -45,6 +45,9 @@ import {
   ProfileFollowRevenueFragment,
   ProfileFollowRevenueQuery,
   ProfileFollowRevenueQueryVariables,
+  ProfilePublicationRevenueDocument,
+  ProfilePublicationRevenueQuery,
+  ProfilePublicationRevenueQueryVariables,
   ProfilesToFollowDocument,
   ProfilesToFollowQuery,
   ProxyActionError,
@@ -58,6 +61,7 @@ import {
   PublicationDocument,
   PublicationQuery,
   PublicationRevenueDocument,
+  PublicationRevenueFragment,
   PublicationRevenueQuery,
   PublicationRevenueQueryVariables,
   PublicationsDocument,
@@ -419,6 +423,31 @@ export function createPublicationRevenueQueryMockedResponse(args: {
     result: {
       data: {
         result: args.revenue,
+      },
+    },
+  };
+}
+
+export function createProfilePublicationRevenueQueryMockedResponse(args: {
+  variables: ProfilePublicationRevenueQueryVariables;
+  items: PublicationRevenueFragment[];
+}): MockedResponse<ProfilePublicationRevenueQuery> {
+  return {
+    request: {
+      query: ProfilePublicationRevenueDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+          items: args.items,
+        },
       },
     },
   };
