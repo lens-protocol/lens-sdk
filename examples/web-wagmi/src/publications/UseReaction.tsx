@@ -7,7 +7,7 @@ import {
 } from '@lens-protocol/react';
 
 import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
@@ -84,7 +84,9 @@ export function UseReaction() {
       <h1>
         <code>useReaction</code>
       </h1>
-      <WhenLoggedIn>{({ profile }) => <ReactionInner profile={profile} />}</WhenLoggedIn>
+      <WhenLoggedInWithProfile>
+        {({ profile }) => <ReactionInner profile={profile} />}
+      </WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>
           <p>You must be logged in to use this example.</p>

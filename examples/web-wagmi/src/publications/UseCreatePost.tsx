@@ -1,5 +1,5 @@
 import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { MyFeed } from './components/MyFeed';
 import { PostComposer } from './components/PostComposer';
 
@@ -10,7 +10,7 @@ export function UseCreatePost() {
         <code>useCreatePost</code>
       </h1>
 
-      <WhenLoggedIn>
+      <WhenLoggedInWithProfile>
         {({ profile }) => (
           <>
             <PostComposer profile={profile} />
@@ -18,7 +18,7 @@ export function UseCreatePost() {
             <MyFeed profileId={profile.id} />
           </>
         )}
-      </WhenLoggedIn>
+      </WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>
           <p>Log in to create a post.</p>

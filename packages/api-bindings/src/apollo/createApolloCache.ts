@@ -9,12 +9,18 @@ import {
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
 import generatedIntrospection from '../graphql/generated';
+import { createAttributeTypePolicy } from './createAttributeTypePolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
+import { createMediaSetTypePolicy } from './createMediaSetTypePolicy';
+import { createMediaTypePolicy } from './createMediaTypePolicy';
+import { createNftImageTypePolicy } from './createNftImageTypePolicy';
 import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
+import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
+import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
 
@@ -57,13 +63,19 @@ function createTypePolicies(): TypePolicies {
       keyFields: false,
     },
 
+    Attribute: createAttributeTypePolicy(),
+    MediaSet: createMediaSetTypePolicy(),
+    NftImage: createNftImageTypePolicy(),
+    Media: createMediaTypePolicy(),
+
     Query: {
       fields: {
         feed: createFeedFieldPolicy(),
         exploreProfiles: createExploreProfilesFieldPolicy(),
         explorePublications: createExplorePublicationsFieldPolicy(),
         notifications: createNotificationsFieldPolicy(),
-        publications: createPublicationTypePolicy(),
+        profiles: createProfilesFieldPolicy(),
+        publications: createPublicationsFieldPolicy(),
         search: createSearchFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
       },

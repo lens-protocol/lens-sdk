@@ -31,6 +31,26 @@ const profileHooks = [
     description: `Follow or unfollow a profile.`,
     path: '/profiles/useFollow',
   },
+  {
+    label: 'useUpdateProfileImage',
+    description: `Update your profile image.`,
+    path: '/profiles/useUpdateProfileImage',
+  },
+  {
+    label: 'useProfilesOwnedBy',
+    description: `Fetch a list of profiles owed by a given address.`,
+    path: '/profiles/useProfilesOwnedBy',
+  },
+  {
+    label: 'useUpdateProfileDetails',
+    description: `Updates profile details.`,
+    path: '/profiles/useUpdateProfileDetails',
+  },
+  {
+    label: 'useUpdateDispatcherConfig',
+    description: `Update profile dispatcher configuration.`,
+    path: '/profiles/useUpdateDispatcherConfig',
+  },
 ];
 
 export function ProfilesPage() {

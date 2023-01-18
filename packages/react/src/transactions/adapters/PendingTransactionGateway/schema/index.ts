@@ -9,7 +9,6 @@ import {
   PaidFollowRequestSchema,
   ProfileOwnerFollowRequestSchema,
   UnfollowRequestSchema,
-  UpdateCoverImageRequestSchema,
   UpdateDispatcherConfigRequestSchema,
   UpdateFollowPolicyRequestSchema,
   UpdateNftProfileImageRequestSchema,
@@ -45,8 +44,6 @@ const SupportedRequestModelSchema = z.union([
   TokenAllowanceRequestSchema,
 
   UnfollowRequestSchema,
-
-  UpdateCoverImageRequestSchema,
 
   UpdateDispatcherConfigRequestSchema,
 

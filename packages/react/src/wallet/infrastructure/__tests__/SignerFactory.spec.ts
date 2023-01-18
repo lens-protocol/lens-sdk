@@ -1,5 +1,6 @@
 import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protocol/domain/entities';
-import { ChainType, mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { ChainType } from '@lens-protocol/shared-kernel';
+import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { errors, logger, providers, utils, VoidSigner } from 'ethers';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';

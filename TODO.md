@@ -26,7 +26,7 @@
   - [ ] signed, paid gas (fallback)
 - [ ] `useUpdateProfileImage` - upload
   - [ ] sign-less, gas-less (via dispatcher)
-  - [ ] signed, gas-less
+  - [x] signed, gas-less
   - [ ] signed, paid gas (fallback)
 - [ ] `useUpdateProfileImage` - NFT
   - [ ] sign-less, gas-less (via dispatcher)
@@ -75,8 +75,8 @@
   - [x] signed, gas-less
   - [ ] signed, paid gas (fallback)
 - [ ] `useCreateMirror`
-  - [ ] sign-less, gas-less
-  - [ ] signed, gas-less
+  - [x] sign-less, gas-less
+  - [x] signed, gas-less
   - [ ] signed, paid (fallback)
 - [ ] `useCollect`
   - [ ] sign-less, gas-less (via proxy action)

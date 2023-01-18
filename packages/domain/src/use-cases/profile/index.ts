@@ -4,7 +4,6 @@ export * from './FollowProfiles';
 export * from './IActiveProfilePresenter';
 export * from './ProveNftOwnership';
 export * from './UnfollowProfile';
-export * from './UpdateCoverImage';
 export * from './UpdateDispatcherConfig';
 export * from './UpdateFollowPolicy';
 export * from './UpdateProfileDetails';

@@ -3,6 +3,10 @@ export * from './useCreatePost';
 export * from './useCreateComment';
 export * from './useFollow';
 export * from './useUnfollow';
+export * from './useUpdateDispatcherConfig';
+export * from './useCreateMirror';
+export * from './useUpdateProfileDetails';
+
 export type { MetadataUploadAdapter } from './adapters/MetadataUploadAdapter';
 export {
   CollectPolicyType,

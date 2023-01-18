@@ -2,12 +2,11 @@ import { useWalletLogin, useWalletLogout, WalletType } from '@lens-protocol/reac
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
-import { useIsLoggedIn } from './auth';
+import { WhenLoggedInWithProfile, WhenLoggedOut } from './auth';
 
 export function LoginButton() {
   const login = useWalletLogin();
   const logout = useWalletLogout();
-  const isLoggedIn = useIsLoggedIn();
 
   const { isDisconnected } = useAccount();
   const { connectAsync } = useConnect({
@@ -32,17 +31,19 @@ export function LoginButton() {
 
   return (
     <>
-      {!isLoggedIn && (
+      <WhenLoggedInWithProfile>
+        {() => (
+          <button onClick={onLogoutClick}>
+            <strong>Log out</strong>
+          </button>
+        )}
+      </WhenLoggedInWithProfile>
+
+      <WhenLoggedOut>
         <button onClick={onLoginClick}>
           <strong>Log in</strong>
         </button>
-      )}
-
-      {isLoggedIn && (
-        <button onClick={onLogoutClick}>
-          <strong>Log out</strong>
-        </button>
-      )}
+      </WhenLoggedOut>
     </>
   );
 }
