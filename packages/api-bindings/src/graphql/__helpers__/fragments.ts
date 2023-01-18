@@ -82,6 +82,7 @@ export function mockProfileFieldsFragment(
     isFollowedByMe: false,
     isFollowing: false,
     isOptimisticFollowedByMe: false,
+    followPolicy: null,
 
     ownedByMe: false,
 

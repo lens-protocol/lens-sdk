@@ -3,7 +3,7 @@ import {
   ChargeFollowPolicy,
   Erc20,
   FollowPolicyType,
-  getFollowPolicyTypeFromProfileFieldsFragment,
+  FollowPolicy,
   NoFeeFollowPolicy,
   ProfileFieldsFragment,
   useCurrencies,
@@ -67,18 +67,19 @@ function UpdateButtonText({
 
 type UpdateFollowPolicyFormProps = {
   profile: ProfileFieldsFragment;
-  currentFollowModule: FollowPolicyType;
+  currentFollowPolicy: FollowPolicy;
   currencies: Erc20[];
 };
 
 function UpdateFollowPolicyForm({
   profile,
   currencies,
-  currentFollowModule,
+  currentFollowPolicy,
 }: UpdateFollowPolicyFormProps) {
   const { updateFollowPolicy, isPending, error } = useUpdateFollowPolicy();
-  const [selectedFollowPolicyType, setSelectedFollowPolicyType] =
-    useState<FollowPolicyType>(currentFollowModule);
+  const [selectedFollowPolicyType, setSelectedFollowPolicyType] = useState<FollowPolicyType>(
+    currentFollowPolicy.type,
+  );
   const [hasSuccessfulUpdatedFollowPolicy, setHasSuccessfulUpdatedFollowPolicy] =
     useState<boolean>(false);
 
@@ -178,12 +179,12 @@ function UpdateFollowPolicyForm({
 
       {!hasSuccessfulUpdatedFollowPolicy && (
         <button
-          disabled={currentFollowModule === selectedFollowPolicyType || isPending}
+          disabled={currentFollowPolicy.type === selectedFollowPolicyType || isPending}
           type="submit"
         >
           <UpdateButtonText
             isTxPending={isPending}
-            currentFollowModule={currentFollowModule}
+            currentFollowModule={currentFollowPolicy.type}
             followPolicyTypeToUpdate={selectedFollowPolicyType}
           />
         </button>
@@ -206,19 +207,18 @@ type UpdateFollowPolicyProps = {
 };
 
 function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
-  const currentFollowModule = getFollowPolicyTypeFromProfileFieldsFragment(profile);
-
   const { data: currencies, loading } = useCurrencies();
+  const currentFollowPolicy = profile.followPolicy;
 
   if (loading) return <Loading />;
 
-  if (!currencies || !currentFollowModule) return <p>Error</p>;
+  if (!currencies || !currentFollowPolicy) return <p>Error</p>;
 
   return (
     <UpdateFollowPolicyForm
       profile={profile}
       currencies={currencies}
-      currentFollowModule={currentFollowModule}
+      currentFollowPolicy={currentFollowPolicy}
     />
   );
 }

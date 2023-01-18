@@ -24,9 +24,11 @@ export type NoFeeFollowPolicy = {
   type: FollowPolicyType.ANYONE | FollowPolicyType.ONLY_PROFILE_OWNERS | FollowPolicyType.NO_ONE;
 };
 
+export type FollowPolicy = ChargeFollowPolicy | NoFeeFollowPolicy;
+
 export type UpdateFollowPolicyRequest = {
   profileId: string;
-  policy: ChargeFollowPolicy | NoFeeFollowPolicy;
+  policy: FollowPolicy;
   kind: TransactionKind.UPDATE_FOLLOW_POLICY;
 };
 

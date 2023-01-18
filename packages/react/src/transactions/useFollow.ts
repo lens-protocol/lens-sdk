@@ -45,7 +45,7 @@ function createFollowProfilesFlowRequest(
   activeWallet: WalletData,
   activeProfile: ProfileFieldsFragment,
 ): FollowProfilesFlowRequest {
-  const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(profile);
+  const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(profile.followModule);
 
   const baseRequest: Pick<FollowProfilesFlowRequest, 'profileId' | 'followerAddress'> = {
     profileId: profile.id,

@@ -27,6 +27,7 @@ export type {
 export type {
   ChargeFollowPolicy,
   NoFeeFollowPolicy,
+  FollowPolicy,
 } from '@lens-protocol/domain/use-cases/profile';
 export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 export { getFollowPolicyTypeFromProfileFieldsFragment } from '@lens-protocol/api-bindings';

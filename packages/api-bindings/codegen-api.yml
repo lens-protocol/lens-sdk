@@ -27,6 +27,7 @@ config:
     Nonce: number
     NotificationId: string
     ProfileAttributes: ProfileAttributes
+    FollowPolicy: FollowPolicy
     ProfileId: string
     ProxyActionId: string
     Search: string
@@ -49,7 +50,8 @@ generates:
       - 'typescript':
           nonOptionalTypename: true
       - add:
-          content: "import type { ProfileAttributes } from './ProfileAttributes';"
+          content: "import type { ProfileAttributes } from './ProfileAttributes';
+            import type { FollowPolicy } from '@lens-protocol/domain/use-cases/profile';"
       - 'typescript-operations':
           skipTypename: true
       - 'typescript-react-apollo'

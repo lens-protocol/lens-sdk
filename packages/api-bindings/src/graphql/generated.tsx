@@ -1,4 +1,5 @@
 import type { ProfileAttributes } from './ProfileAttributes';
+import type { FollowPolicy } from '@lens-protocol/domain/use-cases/profile';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
@@ -40,6 +41,7 @@ export type Scalars = {
   EthereumAddress: string;
   /** follow module data scalar type */
   FollowModuleData: unknown;
+  FollowPolicy: FollowPolicy;
   /** handle custom scalar type */
   Handle: string;
   /** handle claim id custom scalar type */
@@ -2541,6 +2543,7 @@ export type Profile = {
   followModule: Maybe<FollowModule>;
   /** Follow nft address */
   followNftAddress: Maybe<Scalars['ContractAddress']>;
+  followPolicy: Maybe<Scalars['FollowPolicy']>;
   /** The profile handle */
   handle: Scalars['Handle'];
   /** The profile id */
@@ -4363,6 +4366,7 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   | 'isFollowing'
   | 'isOptimisticFollowedByMe'
   | 'ownedByMe'
+  | 'followPolicy'
 > & { attributes: Profile['attributesMap'] } & {
     picture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     coverPicture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
@@ -4860,6 +4864,7 @@ export const ProfileFieldsFragmentDoc = gql`
     isFollowing(who: $observerId)
     isOptimisticFollowedByMe @client
     ownedByMe @client
+    followPolicy @client
   }
   ${ProfileMediaFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}
@@ -9929,6 +9934,7 @@ export type ProfileKeySpecifier = (
   | 'dispatcher'
   | 'followModule'
   | 'followNftAddress'
+  | 'followPolicy'
   | 'handle'
   | 'id'
   | 'interests'
@@ -9953,6 +9959,7 @@ export type ProfileFieldPolicy = {
   dispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
   followModule?: FieldPolicy<any> | FieldReadFunction<any>;
   followNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  followPolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   handle?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   interests?: FieldPolicy<any> | FieldReadFunction<any>;

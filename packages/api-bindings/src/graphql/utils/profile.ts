@@ -32,38 +32,42 @@ export type ProfileFieldsFragmentWithFeeFollowModule = Overwrite<
 export function isProfileFieldsFragmentWithSupportedFollowModule(
   profile: ProfileFieldsFragment,
 ): profile is ProfileFieldsFragmentWithSupportedFollowModule {
-  const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(profile);
+  const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(profile.followModule);
   return followPolicyType !== null;
 }
 
 export function isProfileFieldsFragmentWithRevertFollowModule(
   profile: ProfileFieldsFragment,
 ): profile is ProfileFieldsFragmentWithRevertFollowModule {
-  return getFollowPolicyTypeFromProfileFieldsFragment(profile) === FollowPolicyType.NO_ONE;
+  return (
+    getFollowPolicyTypeFromProfileFieldsFragment(profile.followModule) === FollowPolicyType.NO_ONE
+  );
 }
 
 export function isProfileFieldsFragmentWithFeeFollowModule(
   profile: ProfileFieldsFragment,
 ): profile is ProfileFieldsFragmentWithFeeFollowModule {
-  return getFollowPolicyTypeFromProfileFieldsFragment(profile) === FollowPolicyType.CHARGE;
+  return (
+    getFollowPolicyTypeFromProfileFieldsFragment(profile.followModule) === FollowPolicyType.CHARGE
+  );
 }
 
 export function getFollowPolicyTypeFromProfileFieldsFragment(
-  profile: ProfileFieldsFragment,
+  followModule: ProfileFieldsFragment['followModule'],
 ): FollowPolicyType | null {
-  if (profile.followModule === null) {
+  if (followModule === null) {
     return FollowPolicyType.ANYONE;
   }
 
-  if (profile.followModule.__typename === 'FeeFollowModuleSettings') {
+  if (followModule.__typename === 'FeeFollowModuleSettings') {
     return FollowPolicyType.CHARGE;
   }
 
-  if (profile.followModule.__typename === 'ProfileFollowModuleSettings') {
+  if (followModule.__typename === 'ProfileFollowModuleSettings') {
     return FollowPolicyType.ONLY_PROFILE_OWNERS;
   }
 
-  if (profile.followModule.__typename === 'RevertFollowModuleSettings') {
+  if (followModule.__typename === 'RevertFollowModuleSettings') {
     return FollowPolicyType.NO_ONE;
   }
 
