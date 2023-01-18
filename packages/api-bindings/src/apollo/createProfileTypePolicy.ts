@@ -3,7 +3,7 @@ import {
   FollowPolicyType,
   NoFeeFollowPolicy,
 } from '@lens-protocol/domain/use-cases/profile';
-import { mockDaiAmount } from '@lens-protocol/shared-kernel';
+import { Amount, ChainType, erc20 } from '@lens-protocol/shared-kernel';
 
 import {
   FeeFollowModuleSettings,
@@ -30,9 +30,16 @@ function resolveFollowPolicy({
 
   if (followPolicyType === FollowPolicyType.CHARGE) {
     if (!isFeeModule(followModule)) return null;
+    const erc20Value = erc20({
+      name: followModule.amount.asset.name,
+      address: followModule.amount.asset.address,
+      chainType: ChainType.POLYGON,
+      decimals: followModule.amount.asset.decimals,
+      symbol: followModule.amount.asset.symbol,
+    });
     return {
       type: FollowPolicyType.CHARGE,
-      amount: mockDaiAmount(0),
+      amount: Amount.erc20(erc20Value, followModule.amount.value),
       recipient: followModule.recipient,
     };
   }
