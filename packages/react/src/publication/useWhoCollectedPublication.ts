@@ -17,9 +17,9 @@ export function useWhoCollectedPublication(
   return usePaginatedReadResult(
     useWhoCollectedPublicationQuery({
       variables: {
+        limit: args.limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
         publicationId: args.publicationId,
-        observerId: args?.observerId,
-        limit: args?.limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
+        observerId: args.observerId,
       },
       client: apolloClient,
     }),

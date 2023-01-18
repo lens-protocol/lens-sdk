@@ -17,7 +17,7 @@ describe('Given the useWhoCollectedPublication hook', () => {
   const mockWallets: WalletFragment[] = [mockWalletFragment()];
 
   describe('when the query returns data successfully', () => {
-    it.only('should return wallets who collected the publication', async () => {
+    it('should return wallets who collected the publication', async () => {
       const { result } = renderHookWithMocks(
         () =>
           useWhoCollectedPublication({
