@@ -1,7 +1,7 @@
 import { ReactiveVar } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
-import { Maybe, Profile } from '../graphql/generated';
+import { ProfileAttributes, Profile, ProfileAttributeReader } from '../graphql';
 import { TypePolicy } from './TypePolicy';
 
 export function createProfileTypePolicy(
@@ -21,24 +21,17 @@ export function createProfileTypePolicy(
         return existing ?? false;
       },
 
-      attributes: {
+      coverPicture: {
         merge(_, incoming) {
-          // Attributes are not merged, but replaced cause they are not normalized.
-          // (see createAttributeTypePolicy).
           return incoming;
         },
       },
 
-      location(_: Maybe<string> | undefined, { readField }) {
-        return (readField('attributes') ?? []).find(({ key }) => key === 'location')?.value ?? null;
-      },
-
-      twitter(_: Maybe<string> | undefined, { readField }) {
-        return (readField('attributes') ?? []).find(({ key }) => key === 'twitter')?.value ?? null;
-      },
-
-      website(_: Maybe<string> | undefined, { readField }) {
-        return (readField('attributes') ?? []).find(({ key }) => key === 'website')?.value ?? null;
+      attributesMap(_: unknown, { readField }) {
+        return (readField('attributes') ?? []).reduce((acc, attribute) => {
+          acc[attribute.key] = new ProfileAttributeReader(attribute);
+          return acc;
+        }, {} as ProfileAttributes);
       },
 
       ownedByMe(_: boolean | undefined, { readField }) {

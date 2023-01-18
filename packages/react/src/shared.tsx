@@ -39,6 +39,7 @@ import { CreatePostResponder } from './transactions/adapters/responders/CreatePo
 import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
+import { UpdateProfileMetadataResponder } from './transactions/adapters/responders/UpdateProfileMetadataResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
@@ -148,10 +149,9 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(apolloClient),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
-    [TransactionKind.UPDATE_COVER_IMAGE]: new NoopResponder(),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new NoopResponder(),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),
-    [TransactionKind.UPDATE_PROFILE_DETAILS]: new NoopResponder(),
+    [TransactionKind.UPDATE_PROFILE_DETAILS]: new UpdateProfileMetadataResponder(apolloClient),
     [TransactionKind.UPDATE_PROFILE_IMAGE]: new NoopResponder(),
   };
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);

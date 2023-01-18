@@ -26,6 +26,7 @@ config:
     NftOwnershipId: string
     Nonce: number
     NotificationId: string
+    ProfileAttributes: ProfileAttributes
     ProfileId: string
     ProxyActionId: string
     Search: string
@@ -47,6 +48,8 @@ generates:
     plugins:
       - 'typescript':
           nonOptionalTypename: true
+      - add:
+          content: "import type { ProfileAttributes } from './ProfileAttributes';"
       - 'typescript-operations':
           skipTypename: true
       - 'typescript-react-apollo'

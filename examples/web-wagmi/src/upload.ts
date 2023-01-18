@@ -1,4 +1,5 @@
 import { WebBundlr } from '@bundlr-network/client';
+import { providers, utils } from 'ethers';
 import { fetchSigner } from 'wagmi/actions';
 
 import { never } from './utils';
@@ -8,7 +9,7 @@ const MIN_FUNDS = 0.05;
 
 export async function upload(data: unknown): Promise<string> {
   const confirm = window.confirm(
-    `We will now upload metadata file via the Bundlr Network.
+    `In this example we will now upload metadata file via the Bundlr Network.
 
 Please make sure your wallet is connected to the Polygon Mumbai testnet.
 
@@ -19,15 +20,20 @@ You can get some Mumbai MATIC from the Mumbai Faucet: https://mumbaifaucet.com/`
     throw new Error('User cancelled');
   }
 
-  const signer = await fetchSigner();
+  const signer = (await fetchSigner()) ?? never('Cannot get signer');
+  const provider = signer?.provider ?? never('Cannot get provider');
 
-  const bundlr = new WebBundlr('https://devnet.bundlr.network', 'matic', signer?.provider, {
+  if (provider instanceof providers.JsonRpcProvider) {
+    await provider.send('wallet_switchEthereumChain', [{ chainId: utils.hexValue(80001) }]);
+  }
+
+  const bundlr = new WebBundlr('https://devnet.bundlr.network', 'matic', provider, {
     providerUrl: 'https://rpc-mumbai.maticvigil.com/',
   });
 
   await bundlr.ready();
 
-  const balance = await bundlr.getBalance((await signer?.getAddress()) ?? never());
+  const balance = await bundlr.getBalance(await signer.getAddress());
 
   if (bundlr.utils.unitConverter(balance).toNumber() < MIN_FUNDS) {
     await bundlr.fund(TOP_UP);

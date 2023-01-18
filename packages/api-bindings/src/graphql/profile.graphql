@@ -33,6 +33,7 @@ fragment ProfileMedia on ProfileMedia {
 
 fragment Attribute on Attribute {
   __typename
+  displayType
   key
   value
 }
@@ -44,9 +45,7 @@ fragment ProfileFields on Profile {
   bio
   handle
   ownedBy
-  attributes {
-    ...Attribute
-  }
+
   picture {
     ...ProfileMedia
   }
@@ -72,6 +71,12 @@ fragment ProfileFields on Profile {
       ...RevertFollowModuleSettings
     }
   }
+
+  __attributes: attributes {
+    ...Attribute
+  }
+  attributes: attributesMap @client
+
   dispatcher {
     address
     canUseRelay
@@ -81,9 +86,6 @@ fragment ProfileFields on Profile {
   isFollowing(who: $observerId)
 
   isOptimisticFollowedByMe @client
-  location @client
-  twitter @client
-  website @client
   ownedByMe @client
 }
 
@@ -99,10 +101,18 @@ query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
   }
 }
 
-query GetAllProfilesByOwnerAddress($address: EthereumAddress!, $observerId: ProfileId) {
-  profilesByOwner: profiles(request: { ownedBy: [$address] }) {
+query GetAllProfilesByOwnerAddress(
+  $address: EthereumAddress!
+  $observerId: ProfileId
+  $limit: LimitScalar!
+  $cursor: Cursor
+) {
+  result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
     items {
       ...ProfileFields
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
     }
   }
 }
@@ -138,6 +148,52 @@ query MutualFollowersProfiles(
     }
     pageInfo {
       ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+mutation CreateSetProfileMetadataTypedData(
+  $request: CreatePublicSetProfileMetadataURIRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetProfileMetadataTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetProfileMetadataURIWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        metadata
+      }
+    }
+  }
+}
+
+mutation CreateSetProfileMetadataViaDispatcher(
+  $request: CreatePublicSetProfileMetadataURIRequest!
+) {
+  result: createSetProfileMetadataViaDispatcher(request: $request) {
+    __typename
+
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
     }
   }
 }
