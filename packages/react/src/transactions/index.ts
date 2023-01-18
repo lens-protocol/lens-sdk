@@ -5,6 +5,8 @@ export * from './useFollow';
 export * from './useUnfollow';
 export * from './useCreateMirror';
 export * from './useUpdateFollowPolicy';
+export * from './useUpdateProfileDetails';
+
 export type { MetadataUploadAdapter } from './adapters/MetadataUploadAdapter';
 export {
   CollectPolicyType,

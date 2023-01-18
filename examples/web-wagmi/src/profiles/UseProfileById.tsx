@@ -18,7 +18,15 @@ function ProfileByIdLayout({ profileId }: ProfileByIdProps) {
     <div>
       <h2>Profile by ID</h2>
       <ProfileCard profile={profile} />
-      <pre>{JSON.stringify(profile, null, 2)}</pre>
+      <h3>Attributes</h3>
+      <ul>
+        {Object.entries(profile.attributes).map(([key, value]) => (
+          <li key={key}>
+            <b>{key}:</b>&nbsp;
+            {value.toString() ?? null}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
