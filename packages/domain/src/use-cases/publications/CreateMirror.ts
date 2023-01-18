@@ -1,5 +1,4 @@
 import { TransactionKind } from '../../entities';
-import { PublicationType } from '../../entities/Publication';
 import {
   DelegableProtocolCallUseCase,
   IProtocolCallPresenter,
@@ -10,7 +9,6 @@ import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCas
 export type CreateMirrorRequest = {
   profileId: string;
   publicationId: string;
-  publicationType: PublicationType.COMMENT | PublicationType.POST;
   kind: TransactionKind.MIRROR_PUBLICATION;
   delegate: boolean;
 };

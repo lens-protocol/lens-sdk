@@ -1,7 +1,6 @@
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest, UnconstrainedFollowRequest } from '../profile/FollowProfiles';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
-import { UpdateCoverImageRequest } from '../profile/UpdateCoverImage';
 import { UpdateDispatcherConfigRequest } from '../profile/UpdateDispatcherConfig';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
 import { UpdateProfileDetailsRequest } from '../profile/UpdateProfileDetails';
@@ -21,7 +20,6 @@ export type SupportedTransactionRequest =
   | FollowRequest
   | TokenAllowanceRequest
   | UnfollowRequest
-  | UpdateCoverImageRequest
   | UpdateDispatcherConfigRequest
   | UpdateFollowPolicyRequest
   | UpdateProfileDetailsRequest

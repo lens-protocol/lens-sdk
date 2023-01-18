@@ -40,13 +40,6 @@ export const UnfollowRequestSchema = z.object({
   kind: z.literal(TransactionKind.UNFOLLOW_PROFILE),
 });
 
-export const UpdateCoverImageRequestSchema = z.object({
-  profileId: z.string(),
-  url: z.string().nullable(),
-  delegate: z.boolean(),
-  kind: z.literal(TransactionKind.UPDATE_COVER_IMAGE),
-});
-
 export const UpdateDispatcherConfigRequestSchema = z.object({
   profileId: z.string(),
   enabled: z.boolean(),
@@ -73,17 +66,16 @@ export const UpdateFollowPolicyRequestSchema = z.object({
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
 });
 
-const ProfileDetailsSchema = z.object({
-  name: z.string(),
-  bio: z.string().nullable(),
-  location: z.string().nullable(),
-  website: z.string().nullable(),
-  twitter: z.string().nullable(),
-});
+const PartialAttributesUpdateSchema = z.record(
+  z.union([z.boolean(), z.date(), z.number(), z.string(), z.null()]),
+);
 
 export const UpdateProfileDetailsRequestSchema = z.object({
+  attributes: PartialAttributesUpdateSchema.optional(),
+  bio: z.string().nullable().optional(),
+  coverPicture: z.string().nullable().optional(),
+  name: z.string(),
   profileId: z.string(),
-  details: ProfileDetailsSchema,
   kind: z.literal(TransactionKind.UPDATE_PROFILE_DETAILS),
   delegate: z.boolean(),
 });

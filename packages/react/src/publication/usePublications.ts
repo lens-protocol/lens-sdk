@@ -13,7 +13,7 @@ type UsePublicationArgs = PaginatedArgs<{
 export function usePublications({
   profileId,
   observerId,
-  limit,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UsePublicationArgs): PaginatedReadResult<Publication[]> {
   const { apolloClient } = useSharedDependencies();
 
@@ -22,7 +22,7 @@ export function usePublications({
       variables: {
         profileId,
         observerId,
-        limit: limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
+        limit: limit,
       },
       client: apolloClient,
     }),

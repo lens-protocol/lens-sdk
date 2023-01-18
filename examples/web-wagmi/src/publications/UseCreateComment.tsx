@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { CommentComposer } from './components/CommentComposer';
 import { PublicationComments } from './components/PublicationComments';
 
@@ -13,7 +13,7 @@ export function UseCreateComment() {
       <h1>
         <code>useCreateComment</code>
       </h1>
-      <WhenLoggedIn>
+      <WhenLoggedInWithProfile>
         {({ profile }) => (
           <>
             <p>
@@ -36,7 +36,7 @@ export function UseCreateComment() {
             )}
           </>
         )}
-      </WhenLoggedIn>
+      </WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>
           <p>Log in to create a post.</p>

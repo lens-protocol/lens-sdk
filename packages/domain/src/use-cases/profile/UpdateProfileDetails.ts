@@ -5,19 +5,18 @@ import {
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IProtocolCallPresenter } from '../transactions/ProtocolCallUseCase';
 
-export type ProfileDetails = {
-  name: string;
-  bio: string | null;
-  location: string | null;
-  website: string | null;
-  twitter: string | null;
-};
+export type ProfileAttributeValue = boolean | Date | string | number;
+
+export type PartialAttributesUpdate = Record<string, ProfileAttributeValue | null>;
 
 export type UpdateProfileDetailsRequest = {
-  profileId: string;
-  details: ProfileDetails;
-  kind: TransactionKind.UPDATE_PROFILE_DETAILS;
+  attributes?: PartialAttributesUpdate;
+  bio?: string | null;
+  coverPicture?: string | null;
   delegate: boolean;
+  kind: TransactionKind.UPDATE_PROFILE_DETAILS;
+  name: string;
+  profileId: string;
 };
 
 export type IProfileDetailsCallGateway = IDelegableProtocolCallGateway<UpdateProfileDetailsRequest>;

@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker';
+import { ChainType } from '@lens-protocol/shared-kernel';
 import {
-  ChainType,
   mockDaiAmount,
   mockEthereumAddress,
   mockUsdcAmount,
-} from '@lens-protocol/shared-kernel';
+} from '@lens-protocol/shared-kernel/mocks';
 
 import { PublicationType, ReactionType, TransactionKind } from '../../../entities';
 import { mockProfileId } from '../../profile/__helpers__/mocks';
@@ -133,7 +133,6 @@ export function mockCreateMirrorRequest(
   return {
     profileId: mockProfileId(),
     publicationId: faker.datatype.uuid(),
-    publicationType: PublicationType.COMMENT,
     ...overrides,
     kind: TransactionKind.MIRROR_PUBLICATION,
     delegate: false,

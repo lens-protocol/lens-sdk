@@ -1,11 +1,10 @@
 import { faker } from '@faker-js/faker';
+import { ChainType, Result } from '@lens-protocol/shared-kernel';
 import {
-  ChainType,
-  Result,
   mockEthereumAddress,
   mockDaiAmount,
   mockUsdcAmount,
-} from '@lens-protocol/shared-kernel';
+} from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -28,7 +27,6 @@ import {
   ProveNftOwnershipRequest,
 } from '../ProveNftOwnership';
 import { UnfollowRequest } from '../UnfollowProfile';
-import { UpdateCoverImageRequest } from '../UpdateCoverImage';
 import { UpdateDispatcherConfigRequest } from '../UpdateDispatcherConfig';
 import {
   ChargeFollowPolicy,
@@ -36,7 +34,7 @@ import {
   NoFeeFollowPolicy,
   UpdateFollowPolicyRequest,
 } from '../UpdateFollowPolicy';
-import { UpdateProfileDetailsRequest, ProfileDetails } from '../UpdateProfileDetails';
+import { UpdateProfileDetailsRequest } from '../UpdateProfileDetails';
 import {
   UpdateNftProfileImageRequest,
   UpdateOffChainProfileImageRequest,
@@ -100,35 +98,15 @@ export function mockUpdateFollowPolicyRequest(
   };
 }
 
-export function mockUpdateCoverImageRequest(
-  overrides?: Partial<UpdateCoverImageRequest>,
-): UpdateCoverImageRequest {
-  return {
-    profileId: mockProfileId(),
-    url: faker.image.imageUrl(),
-    delegate: true,
-    ...overrides,
-    kind: TransactionKind.UPDATE_COVER_IMAGE,
-  };
-}
-
-export function mockProfileDetails(overrides?: Partial<ProfileDetails>): ProfileDetails {
-  return {
-    name: faker.name.firstName(),
-    bio: faker.lorem.sentence(),
-    location: faker.address.city(),
-    website: faker.internet.url(),
-    twitter: faker.internet.userName(),
-    ...overrides,
-  };
-}
-
 export function mockUpdateProfileDetailsRequest(
   overrides?: Partial<UpdateProfileDetailsRequest>,
 ): UpdateProfileDetailsRequest {
   return {
+    attributes: {},
+    bio: faker.lorem.sentence(),
+    coverPicture: faker.image.imageUrl(),
+    name: faker.name.firstName(),
     profileId: mockProfileId(),
-    details: mockProfileDetails(),
     delegate: true,
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_DETAILS,

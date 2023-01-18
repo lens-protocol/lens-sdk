@@ -1,9 +1,3 @@
-import {
-  ProfileFieldsFragment,
-  FollowingFragment,
-  FollowerFragment,
-} from '@lens-protocol/api-bindings';
-
 export * from './useActiveProfile';
 export * from './useCreateProfile';
 export * from './useProfilesToFollow';
@@ -15,5 +9,12 @@ export * from './useSearchProfiles';
 export * from './useCollectedPublications';
 export * from './useMutualFollowers';
 export * from './useUpdateProfileImage';
+export * from './useProfilesOwnedBy';
 
-export type { ProfileFieldsFragment, FollowingFragment, FollowerFragment };
+export type {
+  ProfileAttributes,
+  ProfileAttributeReader,
+  ProfileFieldsFragment,
+  FollowingFragment,
+  FollowerFragment,
+} from '@lens-protocol/api-bindings';

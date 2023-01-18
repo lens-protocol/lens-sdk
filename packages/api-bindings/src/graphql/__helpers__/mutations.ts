@@ -2,7 +2,7 @@ import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { mockNonce } from '@lens-protocol/domain/mocks';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { GraphQLError } from 'graphql';
 
 import {
@@ -16,10 +16,17 @@ import {
   CreateFollowTypedDataMutation,
   CreatePostTypedDataMutation,
   CreateProfileMutation,
+  CreateSetDispatcherTypedDataMutation,
   CreateUnfollowTypedDataMutation,
   CreateSetProfileImageUriTypedDataDocument,
   CreateSetProfileImageUriTypedDataMutation,
   CreateSetProfileImageUriTypedDataMutationVariables,
+  CreatePublicSetProfileMetadataUriRequest,
+  CreateSetProfileMetadataTypedDataDocument,
+  CreateSetProfileMetadataTypedDataMutation,
+  CreateSetProfileMetadataViaDispatcherDocument,
+  CreateSetProfileMetadataViaDispatcherMutation,
+  CreateSetProfileMetadataViaDispatcherMutationVariables,
   Eip712TypedDataDomain,
   Eip712TypedDataField,
   ProxyActionDocument,
@@ -255,6 +262,28 @@ export function mockCreateFollowTypedDataMutation({
   };
 }
 
+export function mockCreateSetProfileMetadataTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateSetProfileMetadataTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateSetProfileMetadataURIBroadcastItemResult', {
+      __typename: 'CreateSetProfileMetadataURIEIP712TypedData',
+      types: {
+        __typename: 'CreateSetProfileMetadataURIEIP712TypedDataTypes',
+        SetProfileMetadataURIWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateSetProfileMetadataURIEIP712TypedDataValue',
+        nonce,
+        deadline: '0',
+        profileId: faker.datatype.uuid(),
+        metadata: faker.internet.url(),
+      },
+    }),
+  };
+}
+
 export function mockCreateUnfollowTypedDataMutation({
   nonce = mockNonce(),
 }: { nonce?: Nonce } = {}): CreateUnfollowTypedDataMutation {
@@ -328,5 +357,64 @@ export function mockCreateSetProfileImageUriTypedDataMutationMockedResponse({
     result: {
       data,
     },
+  };
+}
+
+export function mockCreateSetDispatcherTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateSetDispatcherTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateSetDispatcherBroadcastItemResult', {
+      __typename: 'CreateSetDispatcherEIP712TypedData',
+      types: {
+        __typename: 'CreateSetDispatcherEIP712TypedDataTypes',
+        SetDispatcherWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateSetDispatcherEIP712TypedDataValue',
+        nonce,
+        deadline: '0',
+        profileId: faker.datatype.uuid(),
+        dispatcher: faker.datatype.uuid(),
+      },
+    }),
+  };
+}
+
+export function createCreateSetProfileMetadataTypedDataMutationMockedResponse({
+  request,
+  overrideSigNonce,
+  data = mockCreateSetProfileMetadataTypedDataMutation({ nonce: overrideSigNonce }),
+}: {
+  request: CreatePublicSetProfileMetadataUriRequest;
+  overrideSigNonce?: Nonce;
+  data?: CreateSetProfileMetadataTypedDataMutation;
+}): MockedResponse<CreateSetProfileMetadataTypedDataMutation> {
+  return {
+    request: {
+      query: CreateSetProfileMetadataTypedDataDocument,
+      variables: {
+        request,
+        options: overrideSigNonce ? { overrideSigNonce } : undefined,
+      },
+    },
+    result: { data },
+  };
+}
+
+export function createCreateSetProfileMetadataViaDispatcherMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreateSetProfileMetadataViaDispatcherMutationVariables;
+  data: CreateSetProfileMetadataViaDispatcherMutation;
+}): MockedResponse<CreateSetProfileMetadataViaDispatcherMutation> {
+  return {
+    request: {
+      query: CreateSetProfileMetadataViaDispatcherDocument,
+      variables,
+    },
+    result: { data },
   };
 }

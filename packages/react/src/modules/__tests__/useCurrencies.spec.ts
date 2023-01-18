@@ -2,7 +2,8 @@ import {
   createMockApolloClientWithMultipleResponses,
   createEnabledModuleCurrenciesQueryMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { ChainType, mockDaiAsset, mockUsdcAsset } from '@lens-protocol/shared-kernel';
+import { ChainType } from '@lens-protocol/shared-kernel';
+import { mockDaiAsset, mockUsdcAsset } from '@lens-protocol/shared-kernel/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';

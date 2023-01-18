@@ -1,8 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { Amount, Erc20, mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
+import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import { ProfileAttributes } from '../ProfileAttributes';
 import {
+  AttributeFragment,
   CollectModuleFragment,
   CommentFragment,
   Erc20AmountFragment,
@@ -46,41 +49,26 @@ export function mockProfileMediaFragment(
   };
 }
 
+export function mockAttributeFragment(overrides?: Partial<AttributeFragment>): AttributeFragment {
+  return {
+    key: 'answer',
+    value: '42',
+    displayType: 'string',
+    ...overrides,
+    __typename: 'Attribute',
+  };
+}
+
 export function mockProfileFieldsFragment(
   overrides?: Partial<ProfileFieldsFragment>,
 ): ProfileFieldsFragment {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
-  const location = faker.address.cityName();
-  const website = faker.internet.url();
-  const twitter = faker.internet.userName(firstName, lastName);
 
   return {
     id: faker.datatype.uuid(),
     name: `${firstName} ${lastName}`,
     bio: faker.lorem.sentence(),
-    attributes: [
-      {
-        __typename: 'Attribute',
-        key: 'something',
-        value: '42',
-      },
-      {
-        __typename: 'Attribute',
-        key: 'location',
-        value: location,
-      },
-      {
-        __typename: 'Attribute',
-        key: 'website',
-        value: website,
-      },
-      {
-        __typename: 'Attribute',
-        key: 'twitter',
-        value: twitter,
-      },
-    ],
     handle: faker.internet.userName(firstName, lastName),
     ownedBy: mockEthereumAddress(),
     picture: mockProfileMediaFragment(),
@@ -100,10 +88,10 @@ export function mockProfileFieldsFragment(
     isFollowing: false,
     isOptimisticFollowedByMe: false,
 
-    location: location,
-    website: website,
-    twitter: twitter,
     ownedByMe: false,
+
+    __attributes: [],
+    attributes: {} as ProfileAttributes,
 
     ...overrides,
     __typename: 'Profile',
@@ -231,6 +219,46 @@ export function mockCommentFragment(
     },
     ...overrides,
     __typename: 'Comment',
+  };
+}
+
+export function mockMirrorFragment(
+  overrides?: Partial<Omit<MirrorFragment, '__typename'>>,
+): MirrorFragment {
+  const mainPost = mockPostFragment();
+
+  return {
+    id: faker.datatype.uuid(),
+    stats: mockPublicationStatsFragment(),
+    metadata: {
+      __typename: 'MetadataOutput',
+      mainContentFocus: PublicationMainFocus.TextOnly,
+      name: null,
+      description: null,
+      attributes: [],
+      content: faker.lorem.paragraph(1),
+      media: [],
+    },
+    profile: mockProfileFieldsFragment(),
+    createdAt: faker.date.past().toISOString(),
+    ownedByMe: false,
+    collectModule: mockFreeCollectModuleSettings(),
+    referenceModule: null,
+    hasCollectedByMe: false,
+    hasOptimisticCollectedByMe: false,
+    isOptimisticMirroredByMe: false,
+    mirrorOf: mainPost,
+    reaction: null,
+    hidden: false,
+    isGated: false,
+    canComment: {
+      result: true,
+    },
+    canMirror: {
+      result: true,
+    },
+    ...overrides,
+    __typename: 'Mirror',
   };
 }
 
