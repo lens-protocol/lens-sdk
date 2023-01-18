@@ -2,8 +2,11 @@ import { ApolloCache } from '@apollo/client';
 import { never } from '@lens-protocol/shared-kernel';
 
 import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '../../graphql';
-import { mockAttributeFragment, mockProfileFieldsFragment } from '../../mocks';
-import { createApolloCache } from '../createApolloCache';
+import {
+  createMockApolloCache,
+  mockAttributeFragment,
+  mockProfileFieldsFragment,
+} from '../../mocks';
 
 describe(`Given an instance of the ${ApolloCache.name}`, () => {
   describe('when retrieving a ProfileFieldsFragment with attributes', () => {
@@ -40,7 +43,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
         }),
       ],
     });
-    const cache = createApolloCache();
+    const cache = createMockApolloCache();
     cache.writeFragment({
       data: profile,
       fragment: ProfileFieldsFragmentDoc,
