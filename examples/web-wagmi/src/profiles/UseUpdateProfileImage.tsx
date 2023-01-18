@@ -2,7 +2,7 @@ import { ProfileFieldsFragment, useUpdateProfileImage } from '@lens-protocol/rea
 import { ChangeEvent, useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth/auth';
+import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { useFilePreview } from '../hooks/useFilePreview';
 import { ILocalFile, ImageType, useFileSelect } from '../hooks/useFileSelect';
 import { uploadImage } from '../upload';
@@ -146,7 +146,9 @@ export function UseUpdateProfileImage() {
       <h1>
         <code>useUpdateProfileImage</code>
       </h1>
-      <WhenLoggedIn>{({ profile }) => <UpdateProfileImageInner profile={profile} />}</WhenLoggedIn>
+      <WhenLoggedInWithProfile>
+        {({ profile }) => <UpdateProfileImageInner profile={profile} />}
+      </WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>
           <p>You must be logged in to use this example.</p>

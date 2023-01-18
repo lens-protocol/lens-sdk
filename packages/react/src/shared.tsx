@@ -36,8 +36,8 @@ import { CreatePostResponder } from './transactions/adapters/responders/CreatePo
 import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
-import { UpdateProfileImageResponder } from './transactions/adapters/responders/UpdateProfileImageResponder';
 import { UpdateDispatcherConfigResponder } from './transactions/adapters/responders/UpdateDispatcherConfigResponder';
+import { UpdateProfileImageResponder } from './transactions/adapters/responders/UpdateProfileImageResponder';
 import { UpdateProfileMetadataResponder } from './transactions/adapters/responders/UpdateProfileMetadataResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';

@@ -1,8 +1,8 @@
 import { Readable } from 'stream';
 
 import { WebBundlr } from '@bundlr-network/client';
-import { ReadableWebToNodeStream } from 'readable-web-to-node-stream';
 import { providers, utils } from 'ethers';
+import { ReadableWebToNodeStream } from 'readable-web-to-node-stream';
 import { fetchSigner } from 'wagmi/actions';
 
 import { ILocalFile, ImageType } from './hooks/useFileSelect';
@@ -22,7 +22,6 @@ async function getBundlr() {
   const bundlr = new WebBundlr('https://devnet.bundlr.network', 'matic', signer?.provider, {
     providerUrl: 'https://rpc-mumbai.maticvigil.com/',
   });
-
 
   await bundlr.ready();
 
