@@ -20,10 +20,10 @@ function ProfileByIdLayout({ profileId }: ProfileByIdProps) {
       <ProfileCard profile={profile} />
       <h3>Attributes</h3>
       <ul>
-        {Object.keys(profile.attributes).map((key) => (
+        {Object.entries(profile.attributes).map(([key, value]) => (
           <li key={key}>
             <b>{key}:</b>&nbsp;
-            {profile.attributes[key].toString() ?? null}
+            {value.toString() ?? null}
           </li>
         ))}
       </ul>

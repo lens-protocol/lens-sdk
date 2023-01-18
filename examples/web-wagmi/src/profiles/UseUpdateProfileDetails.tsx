@@ -3,7 +3,6 @@ import {
   useActiveProfile,
   useUpdateProfileDetails,
 } from '@lens-protocol/react';
-import { useForm } from 'react-hook-form';
 
 import { upload } from '../upload';
 import { ProfileCard } from './components/ProfileCard';
@@ -12,22 +11,22 @@ type UpdateProfileFormProps = {
   profile: ProfileFieldsFragment;
 };
 
-type FormData = {
-  name: string;
-  bio: string | null;
-  attributes: {
-    location: string | null;
-    website: string | null;
-  };
-};
-
 function UpdateProfileForm({ profile }: UpdateProfileFormProps) {
-  const { register, handleSubmit } = useForm<FormData>();
   const { update, error, isPending } = useUpdateProfileDetails({ profile, upload });
 
-  const onSubmit = handleSubmit(async ({ name, bio, attributes }) => {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    const name = formData.get('name') as string;
+    const bio = formData.get('bio') as string | null;
+    const attributes = {
+      location: (formData.get('location') as string | null) || null,
+      website: (formData.get('website') as string | null) || null,
+    };
     await update({ name, bio, attributes });
-  });
+  }
 
   return (
     <form onSubmit={onSubmit}>
@@ -41,8 +40,8 @@ function UpdateProfileForm({ profile }: UpdateProfileFormProps) {
           type="text"
           placeholder="Your name"
           disabled={isPending}
+          name="name"
           defaultValue={profile.name ?? ''}
-          {...register('name')}
         />
       </label>
 
@@ -54,8 +53,8 @@ function UpdateProfileForm({ profile }: UpdateProfileFormProps) {
           placeholder="Write a line about you"
           style={{ resize: 'none' }}
           disabled={isPending}
+          name="bio"
           defaultValue={profile.bio ?? ''}
-          {...register('bio')}
         ></textarea>
       </label>
 
@@ -63,12 +62,11 @@ function UpdateProfileForm({ profile }: UpdateProfileFormProps) {
         Location:
         <br />
         <input
-          required
           type="text"
           placeholder="Where are you?"
           disabled={isPending}
-          defaultValue={profile.attributes.location.toString()}
-          {...register('attributes.location')}
+          name="location"
+          defaultValue={profile.attributes.location?.toString()}
         />
       </label>
 
@@ -76,12 +74,11 @@ function UpdateProfileForm({ profile }: UpdateProfileFormProps) {
         Website:
         <br />
         <input
-          required
           type="text"
           placeholder="https://example.com"
           disabled={isPending}
+          name="website"
           defaultValue={profile.attributes.website?.toString() ?? ''}
-          {...register('attributes.website')}
         />
       </label>
 
