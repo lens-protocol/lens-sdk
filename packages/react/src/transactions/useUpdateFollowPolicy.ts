@@ -5,17 +5,9 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  ChargeFollowPolicy,
-  NoFeeFollowPolicy,
-  UpdateFollowPolicyRequest,
-} from '@lens-protocol/domain/use-cases/profile';
+import { ChargeFollowPolicy, NoFeeFollowPolicy } from '@lens-protocol/domain/use-cases/profile';
 import { useState } from 'react';
 
-import {
-  TransactionState,
-  useWaitUntilTransactionSettled,
-} from './adapters/TransactionQueuePresenter';
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 
 type UseUpdateFollowPolicyArgs = {
@@ -29,7 +21,6 @@ export function useUpdateFollowPolicy() {
   >(null);
   const [isPending, setIsPending] = useState<boolean>(false);
   const updateFollowPolicy = useUpdateFollowPolicyController();
-  const waitUntilTransactionIsSettled = useWaitUntilTransactionSettled();
 
   return {
     updateFollowPolicy: async ({ profileId, followPolicy }: UseUpdateFollowPolicyArgs) => {
@@ -46,12 +37,6 @@ export function useUpdateFollowPolicy() {
         if (result.isFailure()) {
           setError(result.error);
         }
-
-        await waitUntilTransactionIsSettled(
-          (transaction): transaction is TransactionState<UpdateFollowPolicyRequest> =>
-            transaction.request.kind === TransactionKind.UPDATE_FOLLOW_POLICY &&
-            transaction.request.profileId === profileId,
-        );
       } finally {
         setIsPending(false);
       }
