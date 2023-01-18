@@ -6,7 +6,7 @@ import {
 
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { PublicationCard } from './components/PublicationCard';
+import { PublicationCard } from '../publications/components/PublicationCard';
 
 export function UseExplorePublications() {
   const {
