@@ -56,6 +56,11 @@ const profileHooks = [
     description: `Updates profile details.`,
     path: '/profiles/useUpdateProfileDetails',
   },
+  {
+    label: 'useUpdateDispatcherConfig',
+    description: `Update profile dispatcher configuration.`,
+    path: '/profiles/useUpdateDispatcherConfig',
+  },
 ];
 
 export function ProfilesPage() {

@@ -1,11 +1,10 @@
 import { faker } from '@faker-js/faker';
+import { ChainType, Result } from '@lens-protocol/shared-kernel';
 import {
-  ChainType,
-  Result,
   mockEthereumAddress,
   mockDaiAmount,
   mockUsdcAmount,
-} from '@lens-protocol/shared-kernel';
+} from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 

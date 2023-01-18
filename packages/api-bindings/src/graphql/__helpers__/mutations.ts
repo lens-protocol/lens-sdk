@@ -2,7 +2,7 @@ import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { mockNonce } from '@lens-protocol/domain/mocks';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { GraphQLError } from 'graphql';
 
 import {
@@ -16,6 +16,7 @@ import {
   CreateFollowTypedDataMutation,
   CreatePostTypedDataMutation,
   CreateProfileMutation,
+  CreateSetDispatcherTypedDataMutation,
   CreateUnfollowTypedDataMutation,
   CreatePublicSetProfileMetadataUriRequest,
   CreateSetProfileMetadataTypedDataDocument,
@@ -313,6 +314,28 @@ export function createBroadcastProxyActionCallMutationMockedResponse(instruction
     result: {
       data: { result: instructions.result },
     },
+  };
+}
+
+export function mockCreateSetDispatcherTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateSetDispatcherTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateSetDispatcherBroadcastItemResult', {
+      __typename: 'CreateSetDispatcherEIP712TypedData',
+      types: {
+        __typename: 'CreateSetDispatcherEIP712TypedDataTypes',
+        SetDispatcherWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateSetDispatcherEIP712TypedDataValue',
+        nonce,
+        deadline: '0',
+        profileId: faker.datatype.uuid(),
+        dispatcher: faker.datatype.uuid(),
+      },
+    }),
   };
 }
 
