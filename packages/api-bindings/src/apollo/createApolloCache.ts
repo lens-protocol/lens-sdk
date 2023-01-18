@@ -5,16 +5,19 @@ import {
   FieldFunctionOptions,
   FieldPolicy,
   TypePolicy as UnpatchedTypePolicy,
+  ReactiveVar,
 } from '@apollo/client';
+import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
-import generatedIntrospection from '../graphql/generated';
+import generatedIntrospection, { ProfileFieldsFragment } from '../graphql/generated';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
 import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
+import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
 
@@ -46,12 +49,17 @@ type TypePolicies = {
   [__typename: string]: TypePolicy<unknown>;
 };
 
-function createTypePolicies(): TypePolicies {
+type TypePoliciesArgs = {
+  activeProfileVar: ReactiveVar<ProfileFieldsFragment | null>;
+  activeWalletVar: ReactiveVar<WalletData | null>;
+};
+
+function createTypePolicies({ activeProfileVar, activeWalletVar }: TypePoliciesArgs): TypePolicies {
   return {
-    Profile: createProfileTypePolicy(),
-    Post: createPublicationTypePolicy(),
-    Comment: createPublicationTypePolicy(),
-    Mirror: createPublicationTypePolicy(),
+    Profile: createProfileTypePolicy(activeWalletVar),
+    Post: createPublicationTypePolicy(activeProfileVar),
+    Comment: createPublicationTypePolicy(activeProfileVar),
+    Mirror: createPublicationTypePolicy(activeProfileVar),
 
     FeedItem: {
       keyFields: false,
@@ -63,7 +71,7 @@ function createTypePolicies(): TypePolicies {
         exploreProfiles: createExploreProfilesFieldPolicy(),
         explorePublications: createExplorePublicationsFieldPolicy(),
         notifications: createNotificationsFieldPolicy(),
-        publications: createPublicationTypePolicy(),
+        publications: createPublicationsFieldPolicy(),
         search: createSearchFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
       },
@@ -71,10 +79,13 @@ function createTypePolicies(): TypePolicies {
   };
 }
 
-export function createApolloCache(): ApolloCache<NormalizedCacheObject> {
+export function createApolloCache({
+  activeProfileVar,
+  activeWalletVar,
+}: TypePoliciesArgs): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     possibleTypes: generatedIntrospection.possibleTypes,
     resultCaching: true,
-    typePolicies: createTypePolicies(),
+    typePolicies: createTypePolicies({ activeProfileVar, activeWalletVar }),
   });
 }

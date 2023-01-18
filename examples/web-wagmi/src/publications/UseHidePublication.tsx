@@ -2,7 +2,8 @@ import {
   ProfileFieldsFragment,
   usePublication,
   useHidePublication,
-  PublicationFragment,
+  PublicationOwnedByMeFragment,
+  isPublicationOwnedByMe,
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
@@ -13,7 +14,7 @@ import { PublicationCard } from './components/PublicationCard';
 import { SelectPublicationId } from './components/PublicationSelector';
 
 type HidePublicationButtonProps = {
-  publication: PublicationFragment;
+  publication: PublicationOwnedByMeFragment;
 };
 
 function HidePublicationButton({ publication }: HidePublicationButtonProps) {
@@ -46,7 +47,11 @@ function HidePublicationInner({ publicationId, profile }: HidePublicationInnerPr
   return (
     <>
       <PublicationCard publication={publication} />
-      <HidePublicationButton publication={publication} />
+      {isPublicationOwnedByMe(publication) ? (
+        <HidePublicationButton publication={publication} />
+      ) : (
+        "Can't hide publication that's not owned by you"
+      )}
     </>
   );
 }

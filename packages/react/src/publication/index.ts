@@ -11,6 +11,8 @@ import {
   PublicationTypes,
   RevenueAggregateFragment,
   PublicationFragment,
+  PublicationOwnedByMeFragment,
+  isPublicationOwnedByMe,
 } from '@lens-protocol/api-bindings';
 
 export * from './useComments';
@@ -29,6 +31,7 @@ export {
   isMirrorPublication,
   PublicationSortCriteria,
   PublicationTypes,
+  isPublicationOwnedByMe,
 };
 export type {
   CommentFragment,
@@ -38,4 +41,5 @@ export type {
   PostFragment,
   RevenueAggregateFragment,
   PublicationFragment,
+  PublicationOwnedByMeFragment,
 };

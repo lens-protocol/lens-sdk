@@ -21,7 +21,10 @@ import { ConsoleLogger } from './ConsoleLogger';
 import { ErrorHandler } from './ErrorHandler';
 import { LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
-import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
+import {
+  ActiveProfilePresenter,
+  activeProfileVar,
+} from './profile/adapters/ActiveProfilePresenter';
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
@@ -39,6 +42,7 @@ import { UnfollowProfileResponder } from './transactions/adapters/responders/Unf
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
+import { activeWalletVar } from './wallet/adapters/ActiveWalletPresenter';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
 import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
 import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
@@ -100,12 +104,16 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   // apollo client
   const anonymousApolloClient = createAnonymousApolloClient({
     backendURL: config.environment.backend,
+    activeProfileVar: activeProfileVar,
+    activeWalletVar: activeWalletVar,
   });
   const authApi = new AuthApi(anonymousApolloClient);
   const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
   const apolloClient = createApolloClient({
     backendURL: config.environment.backend,
     accessTokenStorage,
+    activeProfileVar: activeProfileVar,
+    activeWalletVar: activeWalletVar,
   });
 
   // adapters

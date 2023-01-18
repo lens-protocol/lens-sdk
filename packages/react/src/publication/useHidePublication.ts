@@ -1,10 +1,11 @@
-import { PublicationFragment } from '@lens-protocol/api-bindings';
+import { PublicationOwnedByMeFragment } from '@lens-protocol/api-bindings';
+import { invariant } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
 import { useHidePublicationController } from './adapters/useHidePublicationController';
 
 export type PublicationArgs = {
-  publication: PublicationFragment;
+  publication: PublicationOwnedByMeFragment;
 };
 
 export function useHidePublication() {
@@ -12,6 +13,11 @@ export function useHidePublication() {
   const { hide: hidePublication } = useHidePublicationController();
 
   const hide = async ({ publication }: PublicationArgs) => {
+    invariant(
+      publication.ownedByMe,
+      'Publication not owned by the active profile. Make sure that publication is owned by the active profile (for .e.g. by calling `isPublicationOwnedByMe`) before trying to hide it?',
+    );
+
     setIsPending(true);
 
     try {

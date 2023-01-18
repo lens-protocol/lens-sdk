@@ -1,5 +1,5 @@
 import { PublicationType, ReactionType } from '@lens-protocol/domain/entities';
-import { never } from '@lens-protocol/shared-kernel';
+import { never, Overwrite } from '@lens-protocol/shared-kernel';
 
 import {
   Comment,
@@ -86,3 +86,11 @@ export const getApiReactionType = (reaction: ReactionType): ReactionTypes => {
 };
 
 export type PublicationFragment = PostFragment | CommentFragment | MirrorFragment;
+
+export type PublicationOwnedByMeFragment = Overwrite<PublicationFragment, { ownedByMe: true }>;
+
+export const isPublicationOwnedByMe = (
+  publication: PublicationFragment,
+): publication is PublicationOwnedByMeFragment => {
+  return publication.ownedByMe;
+};

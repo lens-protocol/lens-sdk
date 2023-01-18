@@ -1,7 +1,12 @@
+import { ReactiveVar } from '@apollo/client';
+import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
+
 import { Maybe, Profile } from '../graphql/generated';
 import { TypePolicy } from './TypePolicy';
 
-export function createProfileTypePolicy(): TypePolicy<Profile> {
+export function createProfileTypePolicy(
+  activeWalletVar: ReactiveVar<WalletData | null>,
+): TypePolicy<Profile> {
   return {
     fields: {
       isFollowing: {
@@ -36,8 +41,11 @@ export function createProfileTypePolicy(): TypePolicy<Profile> {
         return (readField('attributes') ?? []).find(({ key }) => key === 'website')?.value ?? null;
       },
 
-      ownedByMe() {
-        // TODO: implement ownership check using active profile
+      ownedByMe(_: boolean | undefined, { readField }) {
+        const activeWallet = activeWalletVar();
+        if (activeWallet) {
+          return readField('ownedBy') === activeWallet.address;
+        }
         return false;
       },
     },

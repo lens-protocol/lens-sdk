@@ -1,9 +1,13 @@
-import { Comment, Mirror, Post } from '../graphql';
+import { ReactiveVar } from '@apollo/client';
+
+import { Comment, Mirror, Post, ProfileFieldsFragment } from '../graphql';
 import { TypePolicy } from './TypePolicy';
 
 type R = Post | Comment | Mirror;
 
-export function createPublicationTypePolicy(): TypePolicy<R> {
+export function createPublicationTypePolicy(
+  activeProfileVar: ReactiveVar<ProfileFieldsFragment | null>,
+): TypePolicy<R> {
   return {
     fields: {
       mirrors: {
@@ -44,9 +48,14 @@ export function createPublicationTypePolicy(): TypePolicy<R> {
         return existing ?? false;
       },
 
-      ownedByMe() {
-        // TODO: implement ownership check using active profile
-        return false;
+      ownedByMe: {
+        read(_: boolean | undefined, { readField }) {
+          const activeProfile = activeProfileVar();
+          if (activeProfile) {
+            return readField('id', readField('profile')) === activeProfile.id;
+          }
+          return false;
+        },
       },
     },
   };
