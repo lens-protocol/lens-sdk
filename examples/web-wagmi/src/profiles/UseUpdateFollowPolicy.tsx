@@ -8,15 +8,16 @@ import {
   ProfileFieldsFragment,
   useCurrencies,
   useUpdateFollowPolicy,
+  SupportedFollowPolicyType,
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
-import { never } from '../utils';
+import { invariant, never } from '../utils';
 
-const followPolicyTypeToDescriptionMap: Record<FollowPolicyType, string> = {
+const followPolicyTypeToDescriptionMap: Record<SupportedFollowPolicyType, string> = {
   [FollowPolicyType.ONLY_PROFILE_OWNERS]: 'Only holders of Lens profiles can follow',
   [FollowPolicyType.ANYONE]: 'Anyone can follow',
   [FollowPolicyType.NO_ONE]: 'No one can follow',
@@ -28,7 +29,7 @@ function resolveFollowPolicy({
   amount,
   recipient,
 }: {
-  followPolicyType: FollowPolicyType;
+  followPolicyType: SupportedFollowPolicyType;
   amount?: Amount<Erc20>;
   recipient?: string;
 }): ChargeFollowPolicy | NoFeeFollowPolicy {
@@ -41,7 +42,7 @@ function resolveFollowPolicy({
   }
 
   return {
-    type: followPolicyType,
+    type: FollowPolicyType[followPolicyType],
   };
 }
 
@@ -107,8 +108,11 @@ function UpdateFollowPolicyForm({
       return;
     }
 
+    invariant(selectedFollowPolicyType !== null, 'No follow policy type selected');
+    invariant(selectedFollowPolicyType !== FollowPolicyType.UNKNOWN, 'Unknown follow policy type');
+
     await updateFollowPolicy({
-      followPolicy: resolveFollowPolicy({ followPolicyType: selectedFollowPolicyType ?? never() }),
+      followPolicy: resolveFollowPolicy({ followPolicyType: selectedFollowPolicyType }),
       profileId: profile.id,
     });
     setHasSuccessfulUpdatedFollowPolicy(true);
@@ -118,7 +122,7 @@ function UpdateFollowPolicyForm({
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <div>
         <p>Select a follow policy:</p>
-        {Object.keys(FollowPolicyType).map((followPolicyType) => (
+        {Object.keys(SupportedFollowPolicyType).map((followPolicyType) => (
           <div key={followPolicyType}>
             <input
               type="radio"
@@ -129,7 +133,7 @@ function UpdateFollowPolicyForm({
               checked={selectedFollowPolicyType === followPolicyType}
             />
             <label htmlFor={followPolicyType}>
-              {followPolicyTypeToDescriptionMap[followPolicyType as FollowPolicyType]}
+              {followPolicyTypeToDescriptionMap[followPolicyType as SupportedFollowPolicyType]}
             </label>
           </div>
         ))}

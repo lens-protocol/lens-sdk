@@ -23,8 +23,7 @@ function resolveFollowPolicy({
   followModule,
 }: {
   followModule: FollowModule;
-}): ChargeFollowPolicy | NoFeeFollowPolicy | null {
-  if (followModule.__typename === 'UnknownFollowModuleSettings') return null;
+}): ChargeFollowPolicy | NoFeeFollowPolicy | { type: FollowPolicyType.UNKNOWN } | null {
   const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(followModule);
   if (!followPolicyType) return null;
 

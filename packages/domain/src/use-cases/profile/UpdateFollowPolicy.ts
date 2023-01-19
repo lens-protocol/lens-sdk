@@ -12,7 +12,16 @@ export enum FollowPolicyType {
   CHARGE = 'CHARGE',
   ANYONE = 'ANYONE',
   NO_ONE = 'NO_ONE',
+  UNKNOWN = 'UNKNOWN',
 }
+
+export const SupportedFollowPolicyType = {
+  ONLY_PROFILE_OWNERS: FollowPolicyType.ONLY_PROFILE_OWNERS,
+  CHARGE: FollowPolicyType.CHARGE,
+  ANYONE: FollowPolicyType.ANYONE,
+  NO_ONE: FollowPolicyType.NO_ONE,
+};
+export type SupportedFollowPolicyType = keyof typeof SupportedFollowPolicyType;
 
 export type ChargeFollowPolicy = {
   type: FollowPolicyType.CHARGE;
@@ -24,11 +33,17 @@ export type NoFeeFollowPolicy = {
   type: FollowPolicyType.ANYONE | FollowPolicyType.ONLY_PROFILE_OWNERS | FollowPolicyType.NO_ONE;
 };
 
-export type FollowPolicy = ChargeFollowPolicy | NoFeeFollowPolicy;
+export type UnknownFollowPolicy = {
+  type: FollowPolicyType.UNKNOWN;
+};
+
+export type FollowPolicy = ChargeFollowPolicy | NoFeeFollowPolicy | UnknownFollowPolicy;
+
+export type SupportedFollowPolicy = ChargeFollowPolicy | NoFeeFollowPolicy;
 
 export type UpdateFollowPolicyRequest = {
   profileId: string;
-  policy: FollowPolicy;
+  policy: SupportedFollowPolicy;
   kind: TransactionKind.UPDATE_FOLLOW_POLICY;
 };
 

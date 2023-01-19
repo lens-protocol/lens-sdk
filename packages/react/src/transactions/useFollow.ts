@@ -3,6 +3,7 @@ import {
   FeeFollowModuleSettingsFragment,
   getFollowPolicyTypeFromProfileFieldsFragment,
   isProfileFieldsFragmentWithFeeFollowModule,
+  isProfileFieldsFragmentWithSupportedFollowModule,
   ProfileFieldsFragment,
   ProfileFieldsFragmentWithSupportedFollowModule,
 } from '@lens-protocol/api-bindings';
@@ -74,6 +75,8 @@ function createFollowProfilesFlowRequest(
       throw new Error('Can`t follow with unsupported follow fee module');
     case FollowPolicyType.NO_ONE:
       throw new Error('Can`t follow with revert follow fee module');
+    case FollowPolicyType.UNKNOWN:
+      throw new Error('Can`t follow with unknown follow module');
     default:
       assertNever(followPolicyType, 'Unknown follow policy type');
   }
@@ -101,6 +104,10 @@ export function useFollow({ profile }: UseFollowArgs) {
     follow: async () => {
       try {
         invariant(activeWallet && activeProfile, 'You must be logged in to follow a profile');
+        invariant(
+          isProfileFieldsFragmentWithSupportedFollowModule(profile),
+          'Unsupported follow module',
+        );
         setIsPending(true);
         setError(null);
 

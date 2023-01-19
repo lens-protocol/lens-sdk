@@ -4362,6 +4362,8 @@ export type RevertFollowModuleSettingsFragment = {
   __typename: 'RevertFollowModuleSettings';
 } & Pick<RevertFollowModuleSettings, 'contractAddress'>;
 
+export type UnknownFollowModuleSettingsFragment = { __typename: 'UnknownFollowModuleSettings' };
+
 type ProfileMedia_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
   NftImage,
   'contractAddress' | 'tokenId' | 'uri' | 'verified'
@@ -4399,6 +4401,7 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
       | FeeFollowModuleSettingsFragment
       | ProfileFollowModuleSettingsFragment
       | RevertFollowModuleSettingsFragment
+      | UnknownFollowModuleSettingsFragment
     >;
     __attributes: Maybe<Array<AttributeFragment>>;
     dispatcher: Maybe<Pick<Dispatcher, 'address' | 'canUseRelay'>>;
@@ -4861,6 +4864,11 @@ export const RevertFollowModuleSettingsFragmentDoc = gql`
     contractAddress
   }
 `;
+export const UnknownFollowModuleSettingsFragmentDoc = gql`
+  fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+    __typename
+  }
+`;
 export const AttributeFragmentDoc = gql`
   fragment Attribute on Attribute {
     __typename
@@ -4899,6 +4907,9 @@ export const ProfileFieldsFragmentDoc = gql`
       ... on RevertFollowModuleSettings {
         ...RevertFollowModuleSettings
       }
+      ... on UnknownFollowModuleSettings {
+        ...UnknownFollowModuleSettings
+      }
     }
     __attributes: attributes {
       ...Attribute
@@ -4918,6 +4929,7 @@ export const ProfileFieldsFragmentDoc = gql`
   ${FeeFollowModuleSettingsFragmentDoc}
   ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
+  ${UnknownFollowModuleSettingsFragmentDoc}
   ${AttributeFragmentDoc}
 `;
 export const WalletFragmentDoc = gql`

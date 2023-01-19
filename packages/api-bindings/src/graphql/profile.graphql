@@ -17,6 +17,10 @@ fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
   contractAddress
 }
 
+fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+  __typename
+}
+
 fragment ProfileMedia on ProfileMedia {
   ... on NftImage {
     __typename
@@ -69,6 +73,9 @@ fragment ProfileFields on Profile {
 
     ... on RevertFollowModuleSettings {
       ...RevertFollowModuleSettings
+    }
+    ... on UnknownFollowModuleSettings {
+      ...UnknownFollowModuleSettings
     }
   }
 

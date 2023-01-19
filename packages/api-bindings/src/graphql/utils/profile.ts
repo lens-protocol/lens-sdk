@@ -6,6 +6,7 @@ import {
   ProfileFieldsFragment,
   ProfileFollowModuleSettingsFragment,
   RevertFollowModuleSettingsFragment,
+  UnknownFollowModuleSettingsFragment,
 } from '../generated';
 
 export type SupportedFollowModuleSettingsFragment =
@@ -27,6 +28,11 @@ export type ProfileFieldsFragmentWithRevertFollowModule = Overwrite<
 export type ProfileFieldsFragmentWithFeeFollowModule = Overwrite<
   ProfileFieldsFragment,
   { followModule: FeeFollowModuleSettingsFragment }
+>;
+
+export type ProfileFieldsFragmentWithUnknownFollowModule = Overwrite<
+  ProfileFieldsFragment,
+  { followModule: UnknownFollowModuleSettingsFragment }
 >;
 
 export function isProfileFieldsFragmentWithSupportedFollowModule(
@@ -71,5 +77,5 @@ export function getFollowPolicyTypeFromProfileFieldsFragment(
     return FollowPolicyType.NO_ONE;
   }
 
-  return null;
+  return FollowPolicyType.UNKNOWN;
 }
