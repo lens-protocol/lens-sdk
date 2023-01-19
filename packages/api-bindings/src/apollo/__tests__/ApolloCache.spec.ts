@@ -1,12 +1,10 @@
-import { ApolloCache } from '@apollo/client';
+import { ApolloCache, makeVar } from '@apollo/client';
+import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
 import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '../../graphql';
-import {
-  createMockApolloCache,
-  mockAttributeFragment,
-  mockProfileFieldsFragment,
-} from '../../mocks';
+import { mockAttributeFragment, mockProfileFieldsFragment } from '../../mocks';
+import { createApolloCache } from '../createApolloCache';
 
 describe(`Given an instance of the ${ApolloCache.name}`, () => {
   describe('when retrieving a ProfileFieldsFragment with attributes', () => {
@@ -43,7 +41,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
         }),
       ],
     });
-    const cache = createMockApolloCache();
+    const cache = createApolloCache({ activeWalletVar: makeVar<WalletData | null>(null) });
     cache.writeFragment({
       data: profile,
       fragment: ProfileFieldsFragmentDoc,
