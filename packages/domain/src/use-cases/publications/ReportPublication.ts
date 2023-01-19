@@ -1,7 +1,7 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { ReportReason } from '../../entities';
-import { NetworkError } from './NetworkError';
+import { IGenericResultPresenter } from '../transactions';
 
 export type ReportPublicationRequest = {
   publicationId: string;
@@ -18,29 +18,25 @@ export class AlreadyReportedError extends Error {
 }
 
 export interface IReportPublicationGateway {
-  report(data: ReportPublicationRequest): PromiseResult<void, NetworkError | AlreadyReportedError>;
+  report(data: ReportPublicationRequest): PromiseResult<void, AlreadyReportedError>;
 }
 
-export interface IReportPublicationPresenter {
-  presentError(error: NetworkError | AlreadyReportedError): Promise<void>;
-  presentSuccess(): Promise<void>;
-}
+export type IReportPublicationPresenter = IGenericResultPresenter<void, AlreadyReportedError>;
 
 export class ReportPublication {
   constructor(
-    private readonly reportPublicationGateway: IReportPublicationGateway,
-    private readonly reportPublicationPresenter: IReportPublicationPresenter,
+    private readonly gateway: IReportPublicationGateway,
+    private readonly presenter: IReportPublicationPresenter,
   ) {}
 
   async report(request: ReportPublicationRequest) {
-    const result = await this.reportPublicationGateway.report(request);
+    const result = await this.gateway.report(request);
 
     if (result.isFailure()) {
-      await this.reportPublicationPresenter.presentError(result.error);
-
+      this.presenter.present(failure(result.error));
       return;
     }
 
-    await this.reportPublicationPresenter.presentSuccess();
+    this.presenter.present(success());
   }
 }

@@ -4614,6 +4614,14 @@ export type WhoReactedPublicationQuery = {
   result: { items: Array<WhoReactedResultFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
+export type ReportPublicationMutationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  reason: ReportingReasonInputParams;
+  additionalComments?: Maybe<Scalars['String']>;
+}>;
+
+export type ReportPublicationMutation = Pick<Mutation, 'reportPublication'>;
+
 export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & {
   total: Erc20AmountFragment;
 };
@@ -7820,6 +7828,63 @@ export type WhoReactedPublicationLazyQueryHookResult = ReturnType<
 export type WhoReactedPublicationQueryResult = Apollo.QueryResult<
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables
+>;
+export const ReportPublicationDocument = gql`
+  mutation ReportPublication(
+    $publicationId: InternalPublicationId!
+    $reason: ReportingReasonInputParams!
+    $additionalComments: String
+  ) {
+    reportPublication(
+      request: {
+        publicationId: $publicationId
+        reason: $reason
+        additionalComments: $additionalComments
+      }
+    )
+  }
+`;
+export type ReportPublicationMutationFn = Apollo.MutationFunction<
+  ReportPublicationMutation,
+  ReportPublicationMutationVariables
+>;
+
+/**
+ * __useReportPublicationMutation__
+ *
+ * To run a mutation, you first call `useReportPublicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReportPublicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [reportPublicationMutation, { data, loading, error }] = useReportPublicationMutation({
+ *   variables: {
+ *      publicationId: // value for 'publicationId'
+ *      reason: // value for 'reason'
+ *      additionalComments: // value for 'additionalComments'
+ *   },
+ * });
+ */
+export function useReportPublicationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ReportPublicationMutation,
+    ReportPublicationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ReportPublicationMutation, ReportPublicationMutationVariables>(
+    ReportPublicationDocument,
+    options,
+  );
+}
+export type ReportPublicationMutationHookResult = ReturnType<typeof useReportPublicationMutation>;
+export type ReportPublicationMutationResult = Apollo.MutationResult<ReportPublicationMutation>;
+export type ReportPublicationMutationOptions = Apollo.BaseMutationOptions<
+  ReportPublicationMutation,
+  ReportPublicationMutationVariables
 >;
 export const PublicationRevenueDocument = gql`
   query PublicationRevenue($request: PublicationRevenueQueryRequest!) {

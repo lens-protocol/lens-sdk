@@ -10,19 +10,15 @@ import {
   IReactionPresenter,
   ReactionError,
 } from '@lens-protocol/domain/use-cases/publications';
-import { Deferred, Result } from '@lens-protocol/shared-kernel';
 
-export class ReactionPresenter implements IReactionPresenter {
-  constructor(private cache: ApolloCache<NormalizedCacheObject>) {}
+import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
 
-  private deferredResult = new Deferred<Result<void, ReactionError>>();
-
-  present(result: Result<void, ReactionError>): void {
-    this.deferredResult.resolve(result);
-  }
-
-  asResult(): Promise<Result<void, ReactionError>> {
-    return this.deferredResult.promise;
+export class ReactionPresenter
+  extends PromiseResultPresenter<void, ReactionError>
+  implements IReactionPresenter
+{
+  constructor(private cache: ApolloCache<NormalizedCacheObject>) {
+    super();
   }
 
   async presentOptimisticAdd(request: ReactionRequest): Promise<void> {
