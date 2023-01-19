@@ -22,6 +22,7 @@ export * from './useSearchPublications';
 export * from './useExplorePublications';
 export * from './useReaction';
 export * from './useWhoReacted';
+export * from './useReportPublication';
 export * from './useHidePublication';
 
 export type { Publication } from './types';

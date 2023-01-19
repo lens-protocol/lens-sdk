@@ -9,7 +9,7 @@ import {
   Wallet,
 } from '../../../entities';
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
-import { ActiveProfile } from '../../profile/ActiveProfile';
+import { ActiveProfileLoader } from '../../profile/ActiveProfileLoader';
 import { IActiveWalletPresenter } from '../IActiveWalletPresenter';
 import {
   WalletLogin,
@@ -32,7 +32,7 @@ function setupTestScenario({
   const credentialsWriter = mock<ICredentialsWriter>();
   const walletPresenter = mock<IActiveWalletPresenter>();
   const errorPresenter = mock<IConnectionErrorPresenter>();
-  const activeProfile = mock<ActiveProfile>();
+  const activeProfileLoader = mock<ActiveProfileLoader>();
 
   const walletLogin = new WalletLogin(
     walletFactory,
@@ -41,11 +41,11 @@ function setupTestScenario({
     credentialsWriter,
     walletPresenter,
     errorPresenter,
-    activeProfile,
+    activeProfileLoader,
   );
 
   return {
-    activeProfile,
+    activeProfileLoader,
     credentialsIssuer,
     credentialsWriter,
     errorPresenter,
@@ -76,18 +76,25 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
         .calledWith(wallet)
         .mockResolvedValue(success(credentials));
 
-      const { walletLogin, walletGateway, credentialsWriter, walletPresenter, activeProfile } =
-        setupTestScenario({
-          credentialsIssuer,
-          walletFactory,
-        });
+      const {
+        walletLogin,
+        walletGateway,
+        credentialsWriter,
+        walletPresenter,
+        activeProfileLoader,
+      } = setupTestScenario({
+        credentialsIssuer,
+        walletFactory,
+      });
 
       await walletLogin.login(request);
 
       expect(walletGateway.save).toHaveBeenCalledWith(wallet);
       expect(credentialsWriter.save).toHaveBeenCalledWith(credentials);
       expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
-      expect(activeProfile.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(wallet.address);
+      expect(activeProfileLoader.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
+        wallet.address,
+      );
     });
 
     it('should handle scenarios where the user cancels the challenge signing operation', async () => {

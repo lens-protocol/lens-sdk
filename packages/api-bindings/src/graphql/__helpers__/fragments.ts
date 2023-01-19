@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { Amount, Erc20, mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
+import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { ProfileAttributes } from '../ProfileAttributes';
 import {
@@ -28,18 +29,23 @@ import {
   RevenueFragment,
   WhoReactedResultFragment,
 } from '../generated';
+import { erc20Amount } from '../utils';
 
-function mockMediaFragment(): MediaFragment {
+export function mockMediaFragment(overrides?: Partial<MediaFragment>): MediaFragment {
   return {
     url: faker.image.imageUrl(),
     mimeType: 'image/jpeg',
+    ...overrides,
     __typename: 'Media',
   };
 }
 
-function mockProfileMediaFragment(): ProfileMediaFragment {
+export function mockProfileMediaFragment(
+  overrides?: Partial<ProfileMediaFragment>,
+): ProfileMediaFragment {
   return {
     original: mockMediaFragment(),
+    ...overrides,
     __typename: 'MediaSet',
   };
 }
@@ -291,9 +297,11 @@ export function mockErc20AmountFragment(amount = mockDaiAmount(42)): Erc20Amount
 }
 
 function mockRevenueAggregateFragment(amount?: Amount<Erc20>): RevenueAggregateFragment {
+  const total = mockErc20AmountFragment(amount);
   return {
     __typename: 'RevenueAggregate',
-    total: mockErc20AmountFragment(amount),
+    __total: total,
+    totalAmount: erc20Amount({ from: total }),
   };
 }
 

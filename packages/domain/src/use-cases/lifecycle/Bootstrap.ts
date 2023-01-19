@@ -1,7 +1,7 @@
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { ICredentials, TransactionRequestModel, Wallet } from '../../entities';
-import { ActiveProfile } from '../profile';
+import { ActiveProfileLoader } from '../profile';
 import { TransactionQueue } from '../transactions';
 import {
   ActiveWallet,
@@ -35,7 +35,7 @@ export class Bootstrap<T extends TransactionRequestModel> {
     private readonly activeWalletPresenter: IActiveWalletPresenter,
     private readonly applicationPresenter: IApplicationPresenter,
     private readonly logoutPresenter: ILogoutPresenter,
-    private readonly activeProfile: ActiveProfile,
+    private readonly activeProfileLoader: ActiveProfileLoader,
     private readonly transactionQueue: TransactionQueue<T>,
   ) {}
 
@@ -70,7 +70,7 @@ export class Bootstrap<T extends TransactionRequestModel> {
   private async startWithCredentials(wallet: Wallet) {
     this.activeWalletPresenter.presentActiveWallet(wallet);
 
-    await this.activeProfile.loadActiveProfileByOwnerAddress(wallet.address);
+    await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address);
 
     await this.transactionQueue.init();
     this.applicationPresenter.signalReady();

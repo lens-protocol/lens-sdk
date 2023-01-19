@@ -1,3 +1,4 @@
+import { ActiveProfileLoader } from '@lens-protocol/domain/use-cases/profile';
 import { WalletLogin, WalletLoginRequest } from '@lens-protocol/domain/use-cases/wallets';
 
 import { useSharedDependencies } from '../../shared';
@@ -6,10 +7,12 @@ import { ConnectionErrorPresenter } from './ConnectionErrorPresenter';
 
 export function useWalletLoginController() {
   const {
-    activeProfile,
+    activeProfileGateway,
+    activeProfilePresenter,
     credentialsFactory,
     credentialsGateway,
     onError,
+    profileGateway,
     walletFactory,
     walletGateway,
   } = useSharedDependencies();
@@ -17,6 +20,11 @@ export function useWalletLoginController() {
   return (request: WalletLoginRequest) => {
     const activeWalletPresenter = new ActiveWalletPresenter();
     const connectionErrorPresenter = new ConnectionErrorPresenter(onError);
+    const activeProfileLoader = new ActiveProfileLoader(
+      profileGateway,
+      activeProfileGateway,
+      activeProfilePresenter,
+    );
     const walletLogin = new WalletLogin(
       walletFactory,
       walletGateway,
@@ -24,7 +32,7 @@ export function useWalletLoginController() {
       credentialsGateway,
       activeWalletPresenter,
       connectionErrorPresenter,
-      activeProfile,
+      activeProfileLoader,
     );
 
     void walletLogin.login(request);

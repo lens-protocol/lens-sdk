@@ -11,9 +11,7 @@ export function Home() {
         {CATEGORIES.map(({ path, label }) => (
           <article key={path}>
             <h2>{label}</h2>
-            <Link to={path}>
-              <a>View</a>
-            </Link>
+            <Link to={path}>View</Link>
           </article>
         ))}
       </div>

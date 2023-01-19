@@ -12,9 +12,9 @@ const publicationHooks = [
     path: '/publications/usePublications',
   },
   {
-    label: 'useCreatePost',
-    description: `Create a publication post.`,
-    path: '/publications/useCreatePost',
+    label: 'useComments',
+    description: `Fetch comments of a publications.`,
+    path: '/publications/useComments',
   },
   {
     label: 'useCollectedPublications',
@@ -22,9 +22,9 @@ const publicationHooks = [
     path: '/publications/useCollectedPublications',
   },
   {
-    label: 'useComments',
-    description: `Fetch comments of a publications.`,
-    path: '/publications/useComments',
+    label: 'useCreatePost',
+    description: `Create a publication post.`,
+    path: '/publications/useCreatePost',
   },
   {
     label: 'useCreateComment',
@@ -37,16 +37,6 @@ const publicationHooks = [
     path: '/publications/useCreateMirror',
   },
   {
-    label: 'useSearchPublications',
-    description: `Fetch publications that match a query`,
-    path: '/publications/useSearchPublications',
-  },
-  {
-    label: 'useExplorePublications',
-    description: `Fetch an array of publications that match certain explore criteria.`,
-    path: '/publications/useExplorePublications',
-  },
-  {
     label: 'useReaction',
     description: `React to publications.`,
     path: '/publications/useReaction',
@@ -55,6 +45,11 @@ const publicationHooks = [
     label: 'useWhoReacted',
     description: `Check who reacted to a publication.`,
     path: '/publications/useWhoReacted',
+  },
+  {
+    label: 'useReportPublication',
+    description: `Report a publication.`,
+    path: '/publications/useReportPublication',
   },
   {
     label: 'useHidePublication',

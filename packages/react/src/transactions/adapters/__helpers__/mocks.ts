@@ -10,13 +10,8 @@ import {
   mockTransactionHash,
   mockTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
-import {
-  ChainType,
-  mockEthereumAddress,
-  mockUint256HexString,
-  Result,
-  success,
-} from '@lens-protocol/shared-kernel';
+import { ChainType, Result, success } from '@lens-protocol/shared-kernel';
+import { mockEthereumAddress, mockUint256HexString } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
