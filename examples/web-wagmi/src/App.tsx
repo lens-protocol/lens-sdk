@@ -40,6 +40,7 @@ import { UseCollectedPublications } from './publications/UseCollectedPublication
 import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
+import { UseHidePublication } from './publications/UseHidePublication';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
@@ -97,6 +98,7 @@ export function App() {
                   path="/publications/useReportPublication"
                   element={<UseReportPublication />}
                 />
+                <Route path="/publications/useHidePublication" element={<UseHidePublication />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />

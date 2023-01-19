@@ -1,17 +1,15 @@
-import { PromiseResult, Result, success, failure } from '@lens-protocol/shared-kernel';
-
-import { NetworkError } from './NetworkError';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 export type HidePublicationRequest = {
   publicationId: string;
 };
 
 export interface IHidePublicationGateway {
-  hide(request: HidePublicationRequest): PromiseResult<void, NetworkError>;
+  hide(request: HidePublicationRequest): PromiseResult<void, never>;
 }
 
 export interface IHidePublicationPresenter {
-  present(result: Result<string, NetworkError>): void;
+  present(publicationId: string): void;
 }
 
 export class HidePublication {
@@ -21,12 +19,8 @@ export class HidePublication {
   ) {}
 
   async hide(request: HidePublicationRequest) {
-    const result = await this.hidePublicationGateway.hide(request);
+    await this.hidePublicationGateway.hide(request);
 
-    this.hidePublicationPresenter.present(success(request.publicationId));
-
-    if (result.isFailure()) {
-      this.hidePublicationPresenter.present(failure(result.error));
-    }
+    this.hidePublicationPresenter.present(request.publicationId);
   }
 }

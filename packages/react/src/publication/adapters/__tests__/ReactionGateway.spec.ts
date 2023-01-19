@@ -8,8 +8,9 @@ import {
   createRemoveReactionMutationWithGraphqlValidationErrorResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockReactionRequest } from '@lens-protocol/domain/mocks';
-import { NetworkError, ReactionError } from '@lens-protocol/domain/use-cases/publications';
+import { ReactionError } from '@lens-protocol/domain/use-cases/publications';
 
+import { NetworkError } from '../NetworkError';
 import { ReactionGateway } from '../ReactionGateway';
 
 describe(`Given an instance of the ${ReactionGateway.name}`, () => {
