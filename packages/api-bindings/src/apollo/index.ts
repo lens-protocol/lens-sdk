@@ -1,14 +1,12 @@
 import { ApolloClient, ApolloLink, from, HttpLink, ReactiveVar } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
-import { ProfileFieldsFragment } from '../graphql';
 import { IAccessTokenStorage } from './IAccessTokenStorage';
 import { createApolloCache } from './createApolloCache';
 import { createAuthLink } from './createAuthLink';
 import { removeClientTypeFromExtendedUnion } from './transforms';
 
 export type ApolloClientConfig = {
-  activeProfileVar: ReactiveVar<ProfileFieldsFragment | null>;
   activeWalletVar: ReactiveVar<WalletData | null>;
   accessTokenStorage: IAccessTokenStorage;
   backendURL: string;
@@ -17,7 +15,6 @@ export type ApolloClientConfig = {
 export function createApolloClient({
   backendURL,
   accessTokenStorage,
-  activeProfileVar,
   activeWalletVar,
 }: ApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
@@ -35,7 +32,7 @@ export function createApolloClient({
   });
 
   return new ApolloClient({
-    cache: createApolloCache({ activeWalletVar, activeProfileVar }),
+    cache: createApolloCache({ activeWalletVar }),
     link: from([cleanerLink, authLink, httpLink]),
     connectToDevTools: true,
   });
@@ -43,19 +40,17 @@ export function createApolloClient({
 
 export type AnonymousApolloClientConfig = {
   backendURL: string;
-  activeProfileVar: ReactiveVar<ProfileFieldsFragment | null>;
   activeWalletVar: ReactiveVar<WalletData | null>;
 };
 
 export function createAnonymousApolloClient({
   backendURL,
-  activeProfileVar,
   activeWalletVar,
 }: AnonymousApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
 
   return new ApolloClient({
-    cache: createApolloCache({ activeWalletVar, activeProfileVar }),
+    cache: createApolloCache({ activeWalletVar }),
     uri,
   });
 }

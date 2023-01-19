@@ -4,12 +4,12 @@ import {
   createHidePublicationMutationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockHidePublicationRequest } from '@lens-protocol/domain/mocks';
-import { NetworkError } from '@lens-protocol/domain/use-cases/publications';
 
 import { HidePublicationGateway } from '../HidePublicationGateway';
+import { NetworkError } from '../NetworkError';
 
 describe(`Given an instance of the ${HidePublicationGateway.name}`, () => {
-  describe(`and the ${HidePublicationGateway.prototype.hide.name} method`, () => {
+  describe(`when the ${HidePublicationGateway.prototype.hide.name} method is invoked with an HidePublicationRequest`, () => {
     it(`should hide a publication`, async () => {
       const publicationId = faker.datatype.uuid();
 

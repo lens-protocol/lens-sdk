@@ -14,8 +14,8 @@ export function useHidePublication() {
 
   const hide = async ({ publication }: HidePublicationRequest) => {
     invariant(
-      publication.ownedByMe,
-      'Publication not owned by the active profile. Make sure that publication is owned by the active profile (for .e.g. by calling `isPublicationOwnedByMe`) before trying to hide it?',
+      publication.profile.ownedByMe,
+      'Publication not owned by the active wallet. Make sure that publication is owned by the wallet (for .e.g. by calling `isPublicationOwnedByMe`) before trying to hide it?',
     );
 
     setIsPending(true);

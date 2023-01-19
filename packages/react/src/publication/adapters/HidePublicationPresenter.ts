@@ -10,7 +10,7 @@ export class HidePublicationPresenter implements IHidePublicationPresenter {
     this.publicationCacheManager = new PublicationCacheManager(cache);
   }
 
-  async present(publicationId: string) {
+  present(publicationId: string) {
     this.publicationCacheManager.update(publicationId, (current) => ({ ...current, hidden: true }));
   }
 }

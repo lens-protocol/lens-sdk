@@ -146,6 +146,15 @@ export type AccessConditionOutput = {
   or: Maybe<OrConditionOutput>;
 };
 
+export type AchRequest = {
+  secret: Scalars['String'];
+  ethereumAddress: Scalars['EthereumAddress'];
+  handle?: Maybe<Scalars['CreateHandle']>;
+  freeTextHandle?: Maybe<Scalars['Boolean']>;
+  overrideTradeMark: Scalars['Boolean'];
+  overrideAlreadyClaimed: Scalars['Boolean'];
+};
+
 /** The request object to add interests to a profile */
 export type AddProfileInterestsRequest = {
   /** The profile interest to add */
@@ -380,7 +389,6 @@ export type Comment = {
   mirrors: Array<Scalars['InternalPublicationId']>;
   /** The on chain content uri could be `ipfs://` or `https` */
   onChainContentURI: Scalars['String'];
-  ownedByMe: Scalars['Boolean'];
   /** The profile ref */
   profile: Profile;
   reaction: Maybe<ReactionTypes>;
@@ -979,6 +987,10 @@ export type CreateUnfollowBroadcastItemResult = {
   expiresAt: Scalars['DateTime'];
   /** The typed data */
   typedData: CreateBurnEip712TypedData;
+};
+
+export type CurRequest = {
+  secret: Scalars['String'];
 };
 
 /** The custom filters types */
@@ -1588,6 +1600,12 @@ export type HasTxHashBeenIndexedRequest = {
   txId?: Maybe<Scalars['TxId']>;
 };
 
+export type HelRequest = {
+  secret: Scalars['String'];
+  handle: Scalars['Handle'];
+  remove: Scalars['Boolean'];
+};
+
 export type HidePublicationRequest = {
   /** Publication id */
   publicationId: Scalars['InternalPublicationId'];
@@ -1835,7 +1853,6 @@ export type Mirror = {
   mirrorOf: MirrorablePublication;
   /** The on chain content uri could be `ipfs://` or `https` */
   onChainContentURI: Scalars['String'];
-  ownedByMe: Scalars['Boolean'];
   /** The profile ref */
   profile: Profile;
   reaction: Maybe<ReactionTypes>;
@@ -1937,6 +1954,8 @@ export type Mutation = {
   addReaction: Maybe<Scalars['Void']>;
   removeReaction: Maybe<Scalars['Void']>;
   reportPublication: Maybe<Scalars['Void']>;
+  ach: Maybe<Scalars['Void']>;
+  hel: Maybe<Scalars['Void']>;
 };
 
 export type MutationAuthenticateArgs = {
@@ -2083,6 +2102,14 @@ export type MutationRemoveReactionArgs = {
 
 export type MutationReportPublicationArgs = {
   request: ReportPublicationRequest;
+};
+
+export type MutationAchArgs = {
+  request: AchRequest;
+};
+
+export type MutationHelArgs = {
+  request: HelRequest;
 };
 
 export type MutualFollowersProfilesQueryRequest = {
@@ -2486,7 +2513,6 @@ export type Post = {
   mirrors: Array<Scalars['InternalPublicationId']>;
   /** The on chain content uri could be `ipfs://` or `https` */
   onChainContentURI: Scalars['String'];
-  ownedByMe: Scalars['Boolean'];
   /** The profile ref */
   profile: Profile;
   reaction: Maybe<ReactionTypes>;
@@ -3148,6 +3174,8 @@ export type Query = {
   profilePublicationRevenue: ProfilePublicationRevenueResult;
   publicationRevenue: Maybe<PublicationRevenue>;
   profileFollowRevenue: FollowRevenueResult;
+  rel: Maybe<Scalars['Void']>;
+  cur: Array<Scalars['String']>;
 };
 
 export type QueryChallengeArgs = {
@@ -3314,6 +3342,14 @@ export type QueryProfileFollowRevenueArgs = {
   request: ProfileFollowRevenueQueryRequest;
 };
 
+export type QueryRelArgs = {
+  request: RelRequest;
+};
+
+export type QueryCurArgs = {
+  request: CurRequest;
+};
+
 export type ReactionEvent = {
   __typename: 'ReactionEvent';
   profile: Profile;
@@ -3373,6 +3409,11 @@ export enum ReferenceModules {
 export type RefreshRequest = {
   /** The refresh token */
   refreshToken: Scalars['Jwt'];
+};
+
+export type RelRequest = {
+  secret: Scalars['String'];
+  ethereumAddress: Scalars['EthereumAddress'];
 };
 
 export type RelayError = {
@@ -4022,7 +4063,6 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
   | 'hasCollectedByMe'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
-  | 'ownedByMe'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4059,7 +4099,6 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
-  | 'ownedByMe'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4103,7 +4142,6 @@ export type PostFragment = { __typename: 'Post' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
-  | 'ownedByMe'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -5055,7 +5093,6 @@ export const CommentBaseFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
-    ownedByMe @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5100,7 +5137,6 @@ export const PostFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
-    ownedByMe @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5141,7 +5177,6 @@ export const MirrorBaseFragmentDoc = gql`
     }
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
-    ownedByMe @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -8555,7 +8590,6 @@ export type CommentKeySpecifier = (
   | 'metadata'
   | 'mirrors'
   | 'onChainContentURI'
-  | 'ownedByMe'
   | 'profile'
   | 'reaction'
   | 'referenceModule'
@@ -8585,7 +8619,6 @@ export type CommentFieldPolicy = {
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
-  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9639,7 +9672,6 @@ export type MirrorKeySpecifier = (
   | 'metadata'
   | 'mirrorOf'
   | 'onChainContentURI'
-  | 'ownedByMe'
   | 'profile'
   | 'reaction'
   | 'referenceModule'
@@ -9665,7 +9697,6 @@ export type MirrorFieldPolicy = {
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOf?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
-  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9720,6 +9751,8 @@ export type MutationKeySpecifier = (
   | 'addReaction'
   | 'removeReaction'
   | 'reportPublication'
+  | 'ach'
+  | 'hel'
   | MutationKeySpecifier
 )[];
 export type MutationFieldPolicy = {
@@ -9756,6 +9789,8 @@ export type MutationFieldPolicy = {
   addReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   removeReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   reportPublication?: FieldPolicy<any> | FieldReadFunction<any>;
+  ach?: FieldPolicy<any> | FieldReadFunction<any>;
+  hel?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type NFTKeySpecifier = (
   | 'contractName'
@@ -10097,7 +10132,6 @@ export type PostKeySpecifier = (
   | 'metadata'
   | 'mirrors'
   | 'onChainContentURI'
-  | 'ownedByMe'
   | 'profile'
   | 'reaction'
   | 'referenceModule'
@@ -10124,7 +10158,6 @@ export type PostFieldPolicy = {
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
-  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10390,6 +10423,8 @@ export type QueryKeySpecifier = (
   | 'profilePublicationRevenue'
   | 'publicationRevenue'
   | 'profileFollowRevenue'
+  | 'rel'
+  | 'cur'
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
@@ -10443,6 +10478,8 @@ export type QueryFieldPolicy = {
   profilePublicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   publicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
+  rel?: FieldPolicy<any> | FieldReadFunction<any>;
+  cur?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ReactionEventKeySpecifier = (
   | 'profile'

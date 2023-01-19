@@ -8,6 +8,7 @@ import {
   MirrorFragment,
   Post,
   PostFragment,
+  ProfileFieldsFragment,
   ReactionTypes,
 } from '../generated';
 import { Typename, PickByTypename, JustTypename } from './types';
@@ -87,10 +88,13 @@ export const getApiReactionType = (reaction: ReactionType): ReactionTypes => {
 
 export type PublicationFragment = PostFragment | CommentFragment | MirrorFragment;
 
-export type PublicationOwnedByMeFragment = Overwrite<PublicationFragment, { ownedByMe: true }>;
+export type PublicationOwnedByMeFragment = Overwrite<
+  PublicationFragment,
+  { profile: Overwrite<ProfileFieldsFragment, { ownedByMe: true }> }
+>;
 
 export const isPublicationOwnedByMe = (
   publication: PublicationFragment,
 ): publication is PublicationOwnedByMeFragment => {
-  return publication.ownedByMe;
+  return publication.profile.ownedByMe;
 };

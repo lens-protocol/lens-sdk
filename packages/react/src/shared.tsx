@@ -20,10 +20,7 @@ import { ConsoleLogger } from './ConsoleLogger';
 import { ErrorHandler } from './ErrorHandler';
 import { LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
-import {
-  ActiveProfilePresenter,
-  activeProfileVar,
-} from './profile/adapters/ActiveProfilePresenter';
+import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
@@ -106,7 +103,6 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   // apollo client
   const anonymousApolloClient = createAnonymousApolloClient({
     backendURL: config.environment.backend,
-    activeProfileVar: activeProfileVar,
     activeWalletVar: activeWalletVar,
   });
   const authApi = new AuthApi(anonymousApolloClient);
@@ -114,7 +110,6 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const apolloClient = createApolloClient({
     backendURL: config.environment.backend,
     accessTokenStorage,
-    activeProfileVar: activeProfileVar,
     activeWalletVar: activeWalletVar,
   });
 

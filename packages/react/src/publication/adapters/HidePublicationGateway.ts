@@ -7,9 +7,10 @@ import {
 import {
   HidePublicationRequest,
   IHidePublicationGateway,
-  NetworkError,
 } from '@lens-protocol/domain/use-cases/publications';
 import { assertError, PromiseResult, success } from '@lens-protocol/shared-kernel';
+
+import { NetworkError } from './NetworkError';
 
 export class HidePublicationGateway implements IHidePublicationGateway {
   constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}

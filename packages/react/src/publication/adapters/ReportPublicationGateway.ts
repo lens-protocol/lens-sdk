@@ -14,7 +14,6 @@ import { ReportReason } from '@lens-protocol/domain/entities';
 import {
   AlreadyReportedError,
   IReportPublicationGateway,
-  NetworkError,
   ReportPublicationRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import {
@@ -24,6 +23,8 @@ import {
   PromiseResult,
   success,
 } from '@lens-protocol/shared-kernel';
+
+import { NetworkError } from './NetworkError';
 
 const mapReportReasonToInput = (reason: ReportReason): ReportingReasonInputParams => {
   switch (reason) {

@@ -50,7 +50,7 @@ describe(`Given the ${HidePublicationPresenter.name}`, () => {
         post,
       });
 
-      await scenario.presenter.present(post.id);
+      scenario.presenter.present(post.id);
 
       expect(scenario.updatedPostFragment).toEqual(
         expect.objectContaining({

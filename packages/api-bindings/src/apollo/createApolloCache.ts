@@ -10,7 +10,7 @@ import {
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
-import generatedIntrospection, { ProfileFieldsFragment } from '../graphql/generated';
+import generatedIntrospection from '../graphql/generated';
 import { createAttributeTypePolicy } from './createAttributeTypePolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
@@ -56,16 +56,15 @@ type TypePolicies = {
 };
 
 type TypePoliciesArgs = {
-  activeProfileVar: ReactiveVar<ProfileFieldsFragment | null>;
   activeWalletVar: ReactiveVar<WalletData | null>;
 };
 
-function createTypePolicies({ activeProfileVar, activeWalletVar }: TypePoliciesArgs): TypePolicies {
+function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies {
   return {
     Profile: createProfileTypePolicy(activeWalletVar),
-    Post: createPublicationTypePolicy(activeProfileVar),
-    Comment: createPublicationTypePolicy(activeProfileVar),
-    Mirror: createPublicationTypePolicy(activeProfileVar),
+    Post: createPublicationTypePolicy(),
+    Comment: createPublicationTypePolicy(),
+    Mirror: createPublicationTypePolicy(),
 
     FeedItem: {
       keyFields: false,
@@ -94,12 +93,11 @@ function createTypePolicies({ activeProfileVar, activeWalletVar }: TypePoliciesA
 }
 
 export function createApolloCache({
-  activeProfileVar,
   activeWalletVar,
 }: TypePoliciesArgs): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     possibleTypes: generatedIntrospection.possibleTypes,
     resultCaching: true,
-    typePolicies: createTypePolicies({ activeProfileVar, activeWalletVar }),
+    typePolicies: createTypePolicies({ activeWalletVar }),
   });
 }

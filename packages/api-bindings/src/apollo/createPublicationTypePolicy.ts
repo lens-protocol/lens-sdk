@@ -1,13 +1,9 @@
-import { ReactiveVar } from '@apollo/client';
-
-import { Comment, Mirror, Post, ProfileFieldsFragment } from '../graphql';
+import { Comment, Mirror, Post } from '../graphql';
 import { TypePolicy } from './TypePolicy';
 
 type R = Post | Comment | Mirror;
 
-export function createPublicationTypePolicy(
-  activeProfileVar: ReactiveVar<ProfileFieldsFragment | null>,
-): TypePolicy<R> {
+export function createPublicationTypePolicy(): TypePolicy<R> {
   return {
     fields: {
       mirrors: {
@@ -46,16 +42,6 @@ export function createPublicationTypePolicy(
 
       isOptimisticMirroredByMe(existing: boolean | undefined) {
         return existing ?? false;
-      },
-
-      ownedByMe: {
-        read(_: boolean | undefined, { readField }) {
-          const activeProfile = activeProfileVar();
-          if (activeProfile) {
-            return readField('id', readField('profile')) === activeProfile.id;
-          }
-          return false;
-        },
       },
     },
   };
