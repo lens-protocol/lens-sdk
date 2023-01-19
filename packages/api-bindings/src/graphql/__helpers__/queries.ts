@@ -6,18 +6,6 @@ import {
   CommentFragment,
   CommentWithFirstCommentFragment,
   CommonPaginatedResultInfoFragment,
-  CreateCommentTypedDataDocument,
-  CreateCommentTypedDataMutation,
-  CreateCommentTypedDataMutationVariables,
-  CreateCommentViaDispatcherDocument,
-  CreateCommentViaDispatcherMutation,
-  CreateCommentViaDispatcherMutationVariables,
-  CreatePostTypedDataDocument,
-  CreatePostTypedDataMutation,
-  CreatePostTypedDataMutationVariables,
-  CreatePostViaDispatcherDocument,
-  CreatePostViaDispatcherMutation,
-  CreatePostViaDispatcherMutationVariables,
   EnabledModuleCurrenciesDocument,
   EnabledModuleCurrenciesQuery,
   ExplorePublicationsDocument,
@@ -545,78 +533,6 @@ export function mockPublicationByTxHashMockedResponse({
     },
     result: {
       data: mockPublicationByTxHash(publication),
-    },
-  };
-}
-
-export function createCreateCommentTypedDataMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreateCommentTypedDataMutationVariables;
-  data: CreateCommentTypedDataMutation;
-}): MockedResponse<CreateCommentTypedDataMutation> {
-  return {
-    request: {
-      query: CreateCommentTypedDataDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-export function createCreateCommentViaDispatcherMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreateCommentViaDispatcherMutationVariables;
-  data: CreateCommentViaDispatcherMutation;
-}): MockedResponse<CreateCommentViaDispatcherMutation> {
-  return {
-    request: {
-      query: CreateCommentViaDispatcherDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-export function createCreatePostTypedDataMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreatePostTypedDataMutationVariables;
-  data: CreatePostTypedDataMutation;
-}): MockedResponse<CreatePostTypedDataMutation> {
-  return {
-    request: {
-      query: CreatePostTypedDataDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-export function createCreatePostViaDispatcherMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreatePostViaDispatcherMutationVariables;
-  data: CreatePostViaDispatcherMutation;
-}): MockedResponse<CreatePostViaDispatcherMutation> {
-  return {
-    request: {
-      query: CreatePostViaDispatcherDocument,
-      variables,
-    },
-    result: {
-      data,
     },
   };
 }

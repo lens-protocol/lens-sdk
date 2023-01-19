@@ -182,6 +182,20 @@ mutation CreateSetProfileImageURITypedData(
   }
 }
 
+mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
+  result: createSetProfileImageURIViaDispatcher(request: $request) {
+    __typename
+
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
 mutation CreateSetProfileMetadataTypedData(
   $request: CreatePublicSetProfileMetadataURIRequest!
   $options: TypedDataOptions

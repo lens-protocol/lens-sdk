@@ -16,7 +16,7 @@ import { ChainType } from '@lens-protocol/shared-kernel';
 import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { FailedUploadError, MetadataUploadAdapter } from '../../MetadataUploadAdapter';
 import { mockITransactionFactory } from '../../__helpers__/mocks';
-import { PostCallGateway } from '../PostCallGateway';
+import { CreatePostCallGateway } from '../CreatePostCallGateway';
 import {
   createBasicExerciseData,
   createFeeCollectModuleExerciseData,
@@ -51,7 +51,7 @@ function setupTestScenario({
     uploadSpy.mockRejectedValue(new Error('Unknown error'));
   }
 
-  const gateway = new PostCallGateway(
+  const gateway = new CreatePostCallGateway(
     apolloClient,
     transactionFactory,
     new MetadataUploadAdapter(uploadSpy),
@@ -71,7 +71,7 @@ const mandatoryFallbackMetadata = (request: CreatePostRequest) => ({
   mainContentFocus: PublicationMainFocus[request.contentFocus],
 });
 
-describe(`Given an instance of ${PostCallGateway.name}`, () => {
+describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
   describe.each<{
     description: string;
     createExerciseData: () => PublicationExerciseData;

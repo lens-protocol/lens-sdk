@@ -3,13 +3,18 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockCreateSetProfileImageUriTypedDataMutation,
   mockCreateSetProfileImageUriTypedDataMutationMockedResponse,
+  createSetProfileImageURIViaDispatcherMutationMockedResponse,
+  mockRelayerResultFragment,
 } from '@lens-protocol/api-bindings/mocks';
+import { NativeTransaction } from '@lens-protocol/domain/entities';
 import {
   mockNonce,
   mockUpdateNftProfileImageRequest,
   mockUpdateOffChainProfileImageRequest,
 } from '@lens-protocol/domain/mocks';
+import { ChainType } from '@lens-protocol/shared-kernel';
 
+import { mockITransactionFactory } from '../../../transactions/adapters/__helpers__/mocks';
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ProfileImageCallGateway } from '../ProfileImageCallGateway';
 
@@ -19,7 +24,6 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
       requestName: 'UpdateNftProfileImageRequest',
       createExerciseData: () => {
         const request = mockUpdateNftProfileImageRequest();
-
         return {
           request,
           expectedRequestVars: {
@@ -62,7 +66,9 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
             data: createSetProfileImageUriTypedDataMutation,
           }),
         ]);
-        const gateway = new ProfileImageCallGateway(apollo);
+        const transactionFactory = mockITransactionFactory();
+
+        const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
 
         const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
@@ -71,26 +77,60 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
           omitTypename(createSetProfileImageUriTypedDataMutation.result.typedData),
         );
       });
+
+      it(`should be possible to override the signature nonce`, async () => {
+        const nonce = mockNonce();
+        const apollo = createMockApolloClientWithMultipleResponses([
+          mockCreateSetProfileImageUriTypedDataMutationMockedResponse({
+            variables: {
+              request: expectedRequestVars,
+              options: {
+                overrideSigNonce: nonce,
+              },
+            },
+            data: mockCreateSetProfileImageUriTypedDataMutation({ nonce }),
+          }),
+        ]);
+
+        const transactionFactory = mockITransactionFactory();
+
+        const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
+
+        const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
+
+        expect(unsignedCall.nonce).toEqual(nonce);
+      });
     });
 
-    it(`should be possible to override the signature nonce`, async () => {
-      const nonce = mockNonce();
-      const apollo = createMockApolloClientWithMultipleResponses([
-        mockCreateSetProfileImageUriTypedDataMutationMockedResponse({
-          variables: {
-            request: expectedRequestVars,
-            options: {
-              overrideSigNonce: nonce,
+    describe(`when calling the "${ProfileImageCallGateway.prototype.createDelegatedTransaction.name}"`, () => {
+      it(`should create an instance of the ${NativeTransaction.name}`, async () => {
+        const apollo = createMockApolloClientWithMultipleResponses([
+          createSetProfileImageURIViaDispatcherMutationMockedResponse({
+            variables: {
+              request: expectedRequestVars,
             },
-          },
-          data: mockCreateSetProfileImageUriTypedDataMutation({ nonce }),
-        }),
-      ]);
-      const gateway = new ProfileImageCallGateway(apollo);
+            data: {
+              result: mockRelayerResultFragment(),
+            },
+          }),
+        ]);
+        const transactionFactory = mockITransactionFactory();
 
-      const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
+        const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
 
-      expect(unsignedCall.nonce).toEqual(nonce);
+        const transaction = await gateway.createDelegatedTransaction(request);
+
+        await transaction.waitNextEvent();
+        expect(transaction).toBeInstanceOf(NativeTransaction);
+        expect(transaction).toEqual(
+          expect.objectContaining({
+            chainType: ChainType.POLYGON,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            id: expect.any(String),
+            request,
+          }),
+        );
+      });
     });
   });
 });

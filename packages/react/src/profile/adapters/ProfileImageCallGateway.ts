@@ -3,24 +3,53 @@ import {
   CreateSetProfileImageUriTypedDataDocument,
   CreateSetProfileImageUriTypedDataMutation,
   CreateSetProfileImageUriTypedDataMutationVariables,
+  CreateSetProfileImageUriViaDispatcherDocument,
+  CreateSetProfileImageUriViaDispatcherMutation,
+  CreateSetProfileImageUriViaDispatcherMutationVariables,
   omitTypename,
+  UpdateProfileImageRequest as UpdateProfileImageRequestArgs,
 } from '@lens-protocol/api-bindings';
-import { Nonce } from '@lens-protocol/domain/entities';
+import {
+  NativeTransaction,
+  Nonce,
+  TransactionError,
+  TransactionErrorReason,
+} from '@lens-protocol/domain/entities';
 import {
   IProfileImageCallGateway,
   UpdateProfileImageRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { invariant } from '@lens-protocol/shared-kernel';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { ChainType, failure, invariant, success } from '@lens-protocol/shared-kernel';
+import { v4 } from 'uuid';
 
+import {
+  AsyncRelayReceipt,
+  ITransactionFactory,
+} from '../../transactions/adapters/ITransactionFactory';
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
 export class ProfileImageCallGateway implements IProfileImageCallGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(
+    private apolloClient: ApolloClient<NormalizedCacheObject>,
+    private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
+  ) {}
 
-  async createUnsignedProtocolCall<T extends UpdateProfileImageRequest>(
-    request: T,
+  async createDelegatedTransaction(
+    request: UpdateProfileImageRequest,
+  ): Promise<NativeTransaction<UpdateProfileImageRequest>> {
+    return this.transactionFactory.createNativeTransaction({
+      chainType: ChainType.POLYGON,
+      id: v4(),
+      request,
+      asyncRelayReceipt: this.initiateProfileImageUpdate(this.resolveMutationRequest(request)),
+    });
+  }
+
+  async createUnsignedProtocolCall(
+    request: UpdateProfileImageRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>> {
+  ): Promise<UnsignedLensProtocolCall<UpdateProfileImageRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateSetProfileImageUriTypedDataMutation,
       CreateSetProfileImageUriTypedDataMutationVariables
@@ -41,7 +70,34 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
     );
   }
 
-  private resolveMutationRequest(request: UpdateProfileImageRequest) {
+  private async initiateProfileImageUpdate(
+    requestArgs: UpdateProfileImageRequestArgs,
+  ): AsyncRelayReceipt {
+    const { data } = await this.apolloClient.mutate<
+      CreateSetProfileImageUriViaDispatcherMutation,
+      CreateSetProfileImageUriViaDispatcherMutationVariables
+    >({
+      mutation: CreateSetProfileImageUriViaDispatcherDocument,
+      variables: {
+        request: requestArgs,
+      },
+    });
+
+    invariant(data, 'Cannot update profile image via dispatcher');
+
+    if (data.result.__typename === 'RelayError') {
+      return failure(new TransactionError(TransactionErrorReason.REJECTED));
+    }
+
+    return success({
+      indexingId: data.result.txId,
+      txHash: data.result.txHash,
+    });
+  }
+
+  private resolveMutationRequest(
+    request: UpdateProfileImageRequest,
+  ): UpdateProfileImageRequestArgs {
     if ('signature' in request) {
       return {
         profileId: request.profileId,
