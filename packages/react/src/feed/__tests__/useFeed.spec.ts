@@ -1,3 +1,4 @@
+import { FeedEventItemType } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockFeedItemFragment,
@@ -18,6 +19,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
         () =>
           useFeed({
             profileId,
+            restrictEventTypesTo: [FeedEventItemType.Post],
           }),
         {
           mocks: {
@@ -25,6 +27,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
               createFeedQueryMockedResponse({
                 variables: {
                   profileId,
+                  restrictEventTypesTo: [FeedEventItemType.Post],
                   limit: 10,
                 },
                 items: mockFeed,
