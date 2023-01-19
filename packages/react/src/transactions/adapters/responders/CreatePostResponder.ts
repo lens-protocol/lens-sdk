@@ -1,19 +1,16 @@
-import { ApolloClient, makeReference, NormalizedCacheObject, Reference } from '@apollo/client';
+import { ApolloClient, makeVar, NormalizedCacheObject } from '@apollo/client';
 import {
-  PendingPostFragmentDoc,
   GetProfileDocument,
   GetProfileQuery,
   GetProfileQueryVariables,
   PendingPostFragment,
   PublicationMainFocus,
-  resolveFeedQueryCacheKey,
   PublicationByTxHashQuery,
   PublicationByTxHashQueryVariables,
   PublicationByTxHashDocument,
-  PostFragmentDoc,
   ProfileFieldsFragment,
-  Maybe,
-  PaginatedResultInfo,
+  PostFragment,
+  isPostPublication,
 } from '@lens-protocol/api-bindings';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
@@ -21,19 +18,7 @@ import {
   ITransactionResponder,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { invariant, never } from '@lens-protocol/shared-kernel';
-
-type FeedItemFragmentEntry = {
-  __typename: 'FeedItem';
-  root: Reference;
-  comments: Maybe<Reference[]>;
-};
-
-type PaginatedFeedResultEntry = {
-  __typename: 'PaginatedFeedResult';
-  items: FeedItemFragmentEntry[];
-  pageInfo: PaginatedResultInfo;
-};
+import { invariant } from '@lens-protocol/shared-kernel';
 
 function pendingPostFragment({
   id,
@@ -60,13 +45,7 @@ function pendingPostFragment({
   };
 }
 
-function feedItem(rootRef: Reference): FeedItemFragmentEntry {
-  return {
-    __typename: 'FeedItem',
-    root: rootRef,
-    comments: [],
-  };
-}
+export const recentPosts = makeVar<ReadonlyArray<PendingPostFragment | PostFragment>>([]);
 
 export class CreatePostResponder implements ITransactionResponder<CreatePostRequest> {
   constructor(private readonly client: ApolloClient<NormalizedCacheObject>) {}
@@ -87,29 +66,7 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
 
     const pendingPost = pendingPostFragment({ id, author, request });
 
-    const pendingPostRef =
-      this.client.cache.writeFragment({
-        data: pendingPost,
-        fragment: PendingPostFragmentDoc,
-        fragmentName: 'PendingPost',
-      }) ?? never();
-
-    const authorFeedCacheKey = resolveFeedQueryCacheKey({
-      profileId: request.profileId,
-    });
-    this.client.cache.modify({
-      id: this.client.cache.identify(makeReference('ROOT_QUERY')),
-      fields: {
-        [authorFeedCacheKey]: (previous: PaginatedFeedResultEntry) => {
-          const newFeedItem = feedItem(pendingPostRef);
-
-          return {
-            ...previous,
-            items: [newFeedItem, ...previous.items],
-          };
-        },
-      },
-    });
+    recentPosts([pendingPost, ...recentPosts()]);
   }
 
   async commit({ id, txHash, request }: BroadcastedTransactionData<CreatePostRequest>) {
@@ -127,57 +84,19 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
 
     const publication = publicationResult.data.result;
     invariant(publication, 'Publication by hash query should return data');
+    invariant(isPostPublication(publication), 'Publication should be a post');
 
-    const postRef =
-      this.client.cache.writeFragment({
-        data: publication,
-        fragment: PostFragmentDoc,
-        fragmentName: 'Post',
-      }) ?? never();
-
-    const authorFeedCacheKey = resolveFeedQueryCacheKey({
-      profileId: request.profileId,
-    });
-    this.client.cache.modify({
-      id: this.client.cache.identify(makeReference('ROOT_QUERY')),
-      fields: {
-        [authorFeedCacheKey]: (previous: PaginatedFeedResultEntry, { readField }) => {
-          const newFeedItem = feedItem(postRef);
-
-          return {
-            ...previous,
-            items: previous.items.map((item) => {
-              const itemId = readField<string>('id', item.root);
-
-              if (itemId === id) {
-                return newFeedItem;
-              }
-              return item;
-            }),
-          };
-        },
-      },
-    });
+    recentPosts(
+      recentPosts().map((post) => {
+        if (post.id === id) {
+          return publication;
+        }
+        return post;
+      }),
+    );
   }
 
-  async rollback({ id, request }: TransactionData<CreatePostRequest>) {
-    const authorFeedCacheKey = resolveFeedQueryCacheKey({
-      profileId: request.profileId,
-    });
-
-    this.client.cache.modify({
-      id: this.client.cache.identify(makeReference('ROOT_QUERY')),
-      fields: {
-        [authorFeedCacheKey]: (previous: PaginatedFeedResultEntry, { readField }) => {
-          return {
-            ...previous,
-            items: previous.items.filter((item) => {
-              const itemId = readField<string>('id', item.root);
-              return itemId !== id;
-            }),
-          };
-        },
-      },
-    });
+  async rollback({ id }: TransactionData<CreatePostRequest>) {
+    recentPosts(recentPosts().filter((post) => post.id !== id));
   }
 }

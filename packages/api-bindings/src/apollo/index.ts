@@ -46,5 +46,3 @@ export function createAnonymousApolloClient({ backendURL }: AnonymousApolloClien
 }
 
 export { IAccessTokenStorage };
-
-export { resolveFeedQueryCacheKey } from './createFeedFieldPolicy';

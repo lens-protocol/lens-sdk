@@ -29,6 +29,7 @@ import {
   RevenueFragment,
   WhoReactedResultFragment,
 } from '../generated';
+import { erc20Amount } from '../utils';
 
 export function mockMediaFragment(overrides?: Partial<MediaFragment>): MediaFragment {
   return {
@@ -296,9 +297,11 @@ export function mockErc20AmountFragment(amount = mockDaiAmount(42)): Erc20Amount
 }
 
 function mockRevenueAggregateFragment(amount?: Amount<Erc20>): RevenueAggregateFragment {
+  const total = mockErc20AmountFragment(amount);
   return {
     __typename: 'RevenueAggregate',
-    total: mockErc20AmountFragment(amount),
+    __total: total,
+    totalAmount: erc20Amount({ from: total }),
   };
 }
 

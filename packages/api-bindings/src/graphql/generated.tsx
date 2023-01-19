@@ -1,3 +1,4 @@
+import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
@@ -20,6 +21,7 @@ export type Scalars = {
   BroadcastId: string;
   /** ChainId custom scalar type */
   ChainId: number;
+  ClientErc20Amount: ClientErc20Amount;
   /** collect module data scalar type */
   CollectModuleData: unknown;
   /** ContentEncryptionKey scalar type */
@@ -1363,7 +1365,7 @@ export type FeedItem = {
   comments: Maybe<Array<Comment>>;
 };
 
-export type FeedItemRoot = Comment | PendingPost | Post;
+export type FeedItemRoot = Post | Comment;
 
 export type FeedRequest = {
   limit?: Maybe<Scalars['LimitScalar']>;
@@ -3430,6 +3432,7 @@ export type ReservedClaimableHandle = {
 export type RevenueAggregate = {
   __typename: 'RevenueAggregate';
   total: Erc20Amount;
+  totalAmount: Scalars['ClientErc20Amount'];
 };
 
 export type RevertCollectModuleSettings = {
@@ -4138,7 +4141,7 @@ export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
 
 export type FeedItemFragment = { __typename: 'FeedItem' } & {
-  root: CommentFragment | PendingPostFragment | PostFragment;
+  root: PostFragment | CommentFragment;
   comments: Maybe<Array<CommentFragment>>;
 };
 
@@ -4624,9 +4627,18 @@ export type WhoReactedPublicationQuery = {
   result: { items: Array<WhoReactedResultFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
-export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & {
-  total: Erc20AmountFragment;
-};
+export type ReportPublicationMutationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  reason: ReportingReasonInputParams;
+  additionalComments?: Maybe<Scalars['String']>;
+}>;
+
+export type ReportPublicationMutation = Pick<Mutation, 'reportPublication'>;
+
+export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & Pick<
+  RevenueAggregate,
+  'totalAmount'
+> & { __total: Erc20AmountFragment };
 
 export type PublicationRevenueFragment = { __typename: 'PublicationRevenue' } & {
   publication: PostFragment | CommentFragment | MirrorFragment;
@@ -5187,15 +5199,6 @@ export const CommonPaginatedResultInfoFragmentDoc = gql`
     totalCount
   }
 `;
-export const Eip712TypedDataDomainFragmentDoc = gql`
-  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    __typename
-    name
-    chainId
-    version
-    verifyingContract
-  }
-`;
 export const PendingPostFragmentDoc = gql`
   fragment PendingPost on PendingPost {
     __typename
@@ -5213,13 +5216,19 @@ export const PendingPostFragmentDoc = gql`
   ${MediaFragmentDoc}
   ${ProfileFieldsFragmentDoc}
 `;
+export const Eip712TypedDataDomainFragmentDoc = gql`
+  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    __typename
+    name
+    chainId
+    version
+    verifyingContract
+  }
+`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
     root {
-      ... on PendingPost {
-        ...PendingPost
-      }
       ... on Post {
         ...Post
       }
@@ -5231,7 +5240,6 @@ export const FeedItemFragmentDoc = gql`
       ...Comment
     }
   }
-  ${PendingPostFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
@@ -5401,9 +5409,10 @@ export const Erc20AmountFragmentDoc = gql`
 export const RevenueAggregateFragmentDoc = gql`
   fragment RevenueAggregate on RevenueAggregate {
     __typename
-    total {
+    __total: total {
       ...Erc20Amount
     }
+    totalAmount
   }
   ${Erc20AmountFragmentDoc}
 `;
@@ -7888,6 +7897,63 @@ export type WhoReactedPublicationLazyQueryHookResult = ReturnType<
 export type WhoReactedPublicationQueryResult = Apollo.QueryResult<
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables
+>;
+export const ReportPublicationDocument = gql`
+  mutation ReportPublication(
+    $publicationId: InternalPublicationId!
+    $reason: ReportingReasonInputParams!
+    $additionalComments: String
+  ) {
+    reportPublication(
+      request: {
+        publicationId: $publicationId
+        reason: $reason
+        additionalComments: $additionalComments
+      }
+    )
+  }
+`;
+export type ReportPublicationMutationFn = Apollo.MutationFunction<
+  ReportPublicationMutation,
+  ReportPublicationMutationVariables
+>;
+
+/**
+ * __useReportPublicationMutation__
+ *
+ * To run a mutation, you first call `useReportPublicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReportPublicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [reportPublicationMutation, { data, loading, error }] = useReportPublicationMutation({
+ *   variables: {
+ *      publicationId: // value for 'publicationId'
+ *      reason: // value for 'reason'
+ *      additionalComments: // value for 'additionalComments'
+ *   },
+ * });
+ */
+export function useReportPublicationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ReportPublicationMutation,
+    ReportPublicationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ReportPublicationMutation, ReportPublicationMutationVariables>(
+    ReportPublicationDocument,
+    options,
+  );
+}
+export type ReportPublicationMutationHookResult = ReturnType<typeof useReportPublicationMutation>;
+export type ReportPublicationMutationResult = Apollo.MutationResult<ReportPublicationMutation>;
+export type ReportPublicationMutationOptions = Apollo.BaseMutationOptions<
+  ReportPublicationMutation,
+  ReportPublicationMutationVariables
 >;
 export const PublicationRevenueDocument = gql`
   query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
@@ -10428,9 +10494,14 @@ export type ReservedClaimableHandleFieldPolicy = {
   source?: FieldPolicy<any> | FieldReadFunction<any>;
   expiry?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type RevenueAggregateKeySpecifier = ('total' | RevenueAggregateKeySpecifier)[];
+export type RevenueAggregateKeySpecifier = (
+  | 'total'
+  | 'totalAmount'
+  | RevenueAggregateKeySpecifier
+)[];
 export type RevenueAggregateFieldPolicy = {
   total?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalAmount?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type RevertCollectModuleSettingsKeySpecifier = (
   | 'type'
@@ -11822,7 +11893,7 @@ const result: PossibleTypesResultData = {
       'TimedFeeCollectModuleSettings',
       'UnknownCollectModuleSettings',
     ],
-    FeedItemRoot: ['Comment', 'PendingPost', 'Post'],
+    FeedItemRoot: ['Post', 'Comment'],
     FollowModule: [
       'FeeFollowModuleSettings',
       'ProfileFollowModuleSettings',
