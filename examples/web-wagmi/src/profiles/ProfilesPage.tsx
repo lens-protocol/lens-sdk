@@ -53,7 +53,7 @@ const profileHooks = [
   },
   {
     label: 'useActiveProfileSwitch',
-    description: `Switch active profile`,
+    description: `Switch active profile.`,
     path: '/profiles/useActiveProfileSwitch',
   },
 ];
