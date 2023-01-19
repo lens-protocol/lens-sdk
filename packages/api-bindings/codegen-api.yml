@@ -11,6 +11,7 @@ config:
     Attach: string
     BroadcastId: string
     ChainId: number
+    ClientErc20Amount: ClientErc20Amount
     ContractAddress: string
     Cursor: string
     DateTime: string
@@ -50,8 +51,11 @@ generates:
       - 'typescript':
           nonOptionalTypename: true
       - add:
-          content: "import type { ProfileAttributes } from './ProfileAttributes';
-            import type { FollowPolicy } from '@lens-protocol/domain/use-cases/profile';"
+          content: [
+              "import type { ClientErc20Amount } from './ClientErc20Amount';",
+              "import type { ProfileAttributes } from './ProfileAttributes';
+              import type { FollowPolicy } from '@lens-protocol/domain/use-cases/profile';",
+            ]
       - 'typescript-operations':
           skipTypename: true
       - 'typescript-react-apollo'

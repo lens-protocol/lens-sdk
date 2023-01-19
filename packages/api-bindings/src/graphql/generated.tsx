@@ -1,3 +1,4 @@
+import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from '@lens-protocol/domain/use-cases/profile';
 import gql from 'graphql-tag';
@@ -21,6 +22,7 @@ export type Scalars = {
   BroadcastId: string;
   /** ChainId custom scalar type */
   ChainId: number;
+  ClientErc20Amount: ClientErc20Amount;
   /** collect module data scalar type */
   CollectModuleData: unknown;
   /** ContentEncryptionKey scalar type */
@@ -3433,6 +3435,7 @@ export type ReservedClaimableHandle = {
 export type RevenueAggregate = {
   __typename: 'RevenueAggregate';
   total: Erc20Amount;
+  totalAmount: Scalars['ClientErc20Amount'];
 };
 
 export type RevertCollectModuleSettings = {
@@ -4442,6 +4445,42 @@ export type MutualFollowersProfilesQuery = {
   result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
+export type CreateSetFollowModuleTypedDataMutationVariables = Exact<{
+  request: CreateSetFollowModuleRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateSetFollowModuleTypedDataMutation = {
+  result: Pick<CreateSetFollowModuleBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { SetFollowModuleWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Pick<Eip712TypedDataDomain, 'name' | 'chainId' | 'version' | 'verifyingContract'>;
+      value: Pick<
+        CreateSetFollowModuleEip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'followModule' | 'followModuleInitData'
+      >;
+    };
+  };
+};
+
+export type CreateSetProfileImageUriTypedDataMutationVariables = Exact<{
+  request: UpdateProfileImageRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateSetProfileImageUriTypedDataMutation = {
+  result: Pick<CreateSetProfileImageUriBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { SetProfileImageURIWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Pick<Eip712TypedDataDomain, 'name' | 'chainId' | 'version' | 'verifyingContract'>;
+      value: Pick<
+        CreateSetProfileImageUriEip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'imageURI'
+      >;
+    };
+  };
+};
+
 export type CreateSetProfileMetadataTypedDataMutationVariables = Exact<{
   request: CreatePublicSetProfileMetadataUriRequest;
   options?: Maybe<TypedDataOptions>;
@@ -4608,9 +4647,10 @@ export type ReportPublicationMutationVariables = Exact<{
 
 export type ReportPublicationMutation = Pick<Mutation, 'reportPublication'>;
 
-export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & {
-  total: Erc20AmountFragment;
-};
+export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & Pick<
+  RevenueAggregate,
+  'totalAmount'
+> & { __total: Erc20AmountFragment };
 
 export type PublicationRevenueFragment = { __typename: 'PublicationRevenue' } & {
   publication: PostFragment | CommentFragment | MirrorFragment;
@@ -5386,9 +5426,10 @@ export const Erc20AmountFragmentDoc = gql`
 export const RevenueAggregateFragmentDoc = gql`
   fragment RevenueAggregate on RevenueAggregate {
     __typename
-    total {
+    __total: total {
       ...Erc20Amount
     }
+    totalAmount
   }
   ${Erc20AmountFragmentDoc}
 `;
@@ -6927,6 +6968,157 @@ export type MutualFollowersProfilesLazyQueryHookResult = ReturnType<
 export type MutualFollowersProfilesQueryResult = Apollo.QueryResult<
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesQueryVariables
+>;
+export const CreateSetFollowModuleTypedDataDocument = gql`
+  mutation CreateSetFollowModuleTypedData(
+    $request: CreateSetFollowModuleRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createSetFollowModuleTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          SetFollowModuleWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          followModule
+          followModuleInitData
+        }
+      }
+    }
+  }
+`;
+export type CreateSetFollowModuleTypedDataMutationFn = Apollo.MutationFunction<
+  CreateSetFollowModuleTypedDataMutation,
+  CreateSetFollowModuleTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateSetFollowModuleTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateSetFollowModuleTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetFollowModuleTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetFollowModuleTypedDataMutation, { data, loading, error }] = useCreateSetFollowModuleTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateSetFollowModuleTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetFollowModuleTypedDataMutation,
+    CreateSetFollowModuleTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetFollowModuleTypedDataMutation,
+    CreateSetFollowModuleTypedDataMutationVariables
+  >(CreateSetFollowModuleTypedDataDocument, options);
+}
+export type CreateSetFollowModuleTypedDataMutationHookResult = ReturnType<
+  typeof useCreateSetFollowModuleTypedDataMutation
+>;
+export type CreateSetFollowModuleTypedDataMutationResult =
+  Apollo.MutationResult<CreateSetFollowModuleTypedDataMutation>;
+export type CreateSetFollowModuleTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetFollowModuleTypedDataMutation,
+  CreateSetFollowModuleTypedDataMutationVariables
+>;
+export const CreateSetProfileImageUriTypedDataDocument = gql`
+  mutation CreateSetProfileImageURITypedData(
+    $request: UpdateProfileImageRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createSetProfileImageURITypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          SetProfileImageURIWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          imageURI
+        }
+      }
+    }
+  }
+`;
+export type CreateSetProfileImageUriTypedDataMutationFn = Apollo.MutationFunction<
+  CreateSetProfileImageUriTypedDataMutation,
+  CreateSetProfileImageUriTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateSetProfileImageUriTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateSetProfileImageUriTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetProfileImageUriTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetProfileImageUriTypedDataMutation, { data, loading, error }] = useCreateSetProfileImageUriTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateSetProfileImageUriTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetProfileImageUriTypedDataMutation,
+    CreateSetProfileImageUriTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetProfileImageUriTypedDataMutation,
+    CreateSetProfileImageUriTypedDataMutationVariables
+  >(CreateSetProfileImageUriTypedDataDocument, options);
+}
+export type CreateSetProfileImageUriTypedDataMutationHookResult = ReturnType<
+  typeof useCreateSetProfileImageUriTypedDataMutation
+>;
+export type CreateSetProfileImageUriTypedDataMutationResult =
+  Apollo.MutationResult<CreateSetProfileImageUriTypedDataMutation>;
+export type CreateSetProfileImageUriTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetProfileImageUriTypedDataMutation,
+  CreateSetProfileImageUriTypedDataMutationVariables
 >;
 export const CreateSetProfileMetadataTypedDataDocument = gql`
   mutation CreateSetProfileMetadataTypedData(
@@ -10339,9 +10531,14 @@ export type ReservedClaimableHandleFieldPolicy = {
   source?: FieldPolicy<any> | FieldReadFunction<any>;
   expiry?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type RevenueAggregateKeySpecifier = ('total' | RevenueAggregateKeySpecifier)[];
+export type RevenueAggregateKeySpecifier = (
+  | 'total'
+  | 'totalAmount'
+  | RevenueAggregateKeySpecifier
+)[];
 export type RevenueAggregateFieldPolicy = {
   total?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalAmount?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type RevertCollectModuleSettingsKeySpecifier = (
   | 'type'
