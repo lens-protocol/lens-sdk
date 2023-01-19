@@ -1,23 +1,28 @@
-import { FeedItemFragment, useFeedQuery } from '@lens-protocol/api-bindings';
+import { FeedEventItemType, FeedItemFragment, useFeedQuery } from '@lens-protocol/api-bindings';
 
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 export type UseFeedArgs = PaginatedArgs<{
-  profileId: string;
   observerId?: string;
+  profileId: string;
+  restrictEventTypesTo?: FeedEventItemType[];
 }>;
+
+export { FeedEventItemType };
 
 export function useFeed({
   profileId,
-  observerId,
   limit,
+  observerId,
+  restrictEventTypesTo,
 }: UseFeedArgs): PaginatedReadResult<FeedItemFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useFeedQuery({
       variables: {
+        restrictEventTypesTo,
         profileId,
         observerId,
         sources,

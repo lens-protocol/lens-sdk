@@ -4147,6 +4147,7 @@ export type FeedItemFragment = { __typename: 'FeedItem' } & {
 
 export type FeedQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
+  restrictEventTypesTo?: Maybe<Array<FeedEventItemType> | FeedEventItemType>;
   observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
@@ -5922,13 +5923,20 @@ export type EnabledModuleCurrenciesQueryResult = Apollo.QueryResult<
 export const FeedDocument = gql`
   query Feed(
     $profileId: ProfileId!
+    $restrictEventTypesTo: [FeedEventItemType!]
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]
   ) {
     result: feed(
-      request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
+      request: {
+        profileId: $profileId
+        feedEventItemTypes: $restrictEventTypesTo
+        limit: $limit
+        cursor: $cursor
+        sources: $sources
+      }
     ) {
       items {
         ...FeedItem
@@ -5955,6 +5963,7 @@ export const FeedDocument = gql`
  * const { data, loading, error } = useFeedQuery({
  *   variables: {
  *      profileId: // value for 'profileId'
+ *      restrictEventTypesTo: // value for 'restrictEventTypesTo'
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
