@@ -148,6 +148,15 @@ export type AccessConditionOutput = {
   or: Maybe<OrConditionOutput>;
 };
 
+export type AchRequest = {
+  secret: Scalars['String'];
+  ethereumAddress: Scalars['EthereumAddress'];
+  handle?: Maybe<Scalars['CreateHandle']>;
+  freeTextHandle?: Maybe<Scalars['Boolean']>;
+  overrideTradeMark: Scalars['Boolean'];
+  overrideAlreadyClaimed: Scalars['Boolean'];
+};
+
 /** The request object to add interests to a profile */
 export type AddProfileInterestsRequest = {
   /** The profile interest to add */
@@ -983,6 +992,10 @@ export type CreateUnfollowBroadcastItemResult = {
   typedData: CreateBurnEip712TypedData;
 };
 
+export type CurRequest = {
+  secret: Scalars['String'];
+};
+
 /** The custom filters types */
 export enum CustomFiltersTypes {
   Gardeners = 'GARDENERS',
@@ -1590,6 +1603,12 @@ export type HasTxHashBeenIndexedRequest = {
   txId?: Maybe<Scalars['TxId']>;
 };
 
+export type HelRequest = {
+  secret: Scalars['String'];
+  handle: Scalars['Handle'];
+  remove: Scalars['Boolean'];
+};
+
 export type HidePublicationRequest = {
   /** Publication id */
   publicationId: Scalars['InternalPublicationId'];
@@ -1939,6 +1958,8 @@ export type Mutation = {
   addReaction: Maybe<Scalars['Void']>;
   removeReaction: Maybe<Scalars['Void']>;
   reportPublication: Maybe<Scalars['Void']>;
+  ach: Maybe<Scalars['Void']>;
+  hel: Maybe<Scalars['Void']>;
 };
 
 export type MutationAuthenticateArgs = {
@@ -2085,6 +2106,14 @@ export type MutationRemoveReactionArgs = {
 
 export type MutationReportPublicationArgs = {
   request: ReportPublicationRequest;
+};
+
+export type MutationAchArgs = {
+  request: AchRequest;
+};
+
+export type MutationHelArgs = {
+  request: HelRequest;
 };
 
 export type MutualFollowersProfilesQueryRequest = {
@@ -3151,6 +3180,8 @@ export type Query = {
   profilePublicationRevenue: ProfilePublicationRevenueResult;
   publicationRevenue: Maybe<PublicationRevenue>;
   profileFollowRevenue: FollowRevenueResult;
+  rel: Maybe<Scalars['Void']>;
+  cur: Array<Scalars['String']>;
 };
 
 export type QueryChallengeArgs = {
@@ -3317,6 +3348,14 @@ export type QueryProfileFollowRevenueArgs = {
   request: ProfileFollowRevenueQueryRequest;
 };
 
+export type QueryRelArgs = {
+  request: RelRequest;
+};
+
+export type QueryCurArgs = {
+  request: CurRequest;
+};
+
 export type ReactionEvent = {
   __typename: 'ReactionEvent';
   profile: Profile;
@@ -3376,6 +3415,11 @@ export enum ReferenceModules {
 export type RefreshRequest = {
   /** The refresh token */
   refreshToken: Scalars['Jwt'];
+};
+
+export type RelRequest = {
+  secret: Scalars['String'];
+  ethereumAddress: Scalars['EthereumAddress'];
 };
 
 export type RelayError = {
@@ -4362,7 +4406,9 @@ export type RevertFollowModuleSettingsFragment = {
   __typename: 'RevertFollowModuleSettings';
 } & Pick<RevertFollowModuleSettings, 'contractAddress'>;
 
-export type UnknownFollowModuleSettingsFragment = { __typename: 'UnknownFollowModuleSettings' };
+export type UnknownFollowModuleSettingsFragment = {
+  __typename: 'UnknownFollowModuleSettings';
+} & Pick<UnknownFollowModuleSettings, 'contractAddress'>;
 
 type ProfileMedia_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
   NftImage,
@@ -4867,6 +4913,7 @@ export const RevertFollowModuleSettingsFragmentDoc = gql`
 export const UnknownFollowModuleSettingsFragmentDoc = gql`
   fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
     __typename
+    contractAddress
   }
 `;
 export const AttributeFragmentDoc = gql`
@@ -9784,6 +9831,8 @@ export type MutationKeySpecifier = (
   | 'addReaction'
   | 'removeReaction'
   | 'reportPublication'
+  | 'ach'
+  | 'hel'
   | MutationKeySpecifier
 )[];
 export type MutationFieldPolicy = {
@@ -9820,6 +9869,8 @@ export type MutationFieldPolicy = {
   addReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   removeReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   reportPublication?: FieldPolicy<any> | FieldReadFunction<any>;
+  ach?: FieldPolicy<any> | FieldReadFunction<any>;
+  hel?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type NFTKeySpecifier = (
   | 'contractName'
@@ -10456,6 +10507,8 @@ export type QueryKeySpecifier = (
   | 'profilePublicationRevenue'
   | 'publicationRevenue'
   | 'profileFollowRevenue'
+  | 'rel'
+  | 'cur'
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
@@ -10509,6 +10562,8 @@ export type QueryFieldPolicy = {
   profilePublicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   publicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
+  rel?: FieldPolicy<any> | FieldReadFunction<any>;
+  cur?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ReactionEventKeySpecifier = (
   | 'profile'

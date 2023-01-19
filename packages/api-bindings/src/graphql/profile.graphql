@@ -70,7 +70,6 @@ fragment ProfileFields on Profile {
     ... on ProfileFollowModuleSettings {
       ...ProfileFollowModuleSettings
     }
-
     ... on RevertFollowModuleSettings {
       ...RevertFollowModuleSettings
     }

@@ -15,14 +15,6 @@ export enum FollowPolicyType {
   UNKNOWN = 'UNKNOWN',
 }
 
-export const SupportedFollowPolicyType = {
-  ONLY_PROFILE_OWNERS: FollowPolicyType.ONLY_PROFILE_OWNERS,
-  CHARGE: FollowPolicyType.CHARGE,
-  ANYONE: FollowPolicyType.ANYONE,
-  NO_ONE: FollowPolicyType.NO_ONE,
-};
-export type SupportedFollowPolicyType = keyof typeof SupportedFollowPolicyType;
-
 export type ChargeFollowPolicy = {
   type: FollowPolicyType.CHARGE;
   amount: Amount<Erc20>;

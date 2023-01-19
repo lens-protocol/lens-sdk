@@ -8,7 +8,6 @@ import {
   ProfileFieldsFragment,
   useCurrencies,
   useUpdateFollowPolicy,
-  SupportedFollowPolicyType,
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
@@ -17,7 +16,9 @@ import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { invariant, never } from '../utils';
 
-const followPolicyTypeToDescriptionMap: Record<SupportedFollowPolicyType, string> = {
+type SupportedFollowPolicy = Exclude<FollowPolicyType, FollowPolicyType.UNKNOWN>;
+
+const followPolicyTypeToDescriptionMap: Record<SupportedFollowPolicy, string> = {
   [FollowPolicyType.ONLY_PROFILE_OWNERS]: 'Only holders of Lens profiles can follow',
   [FollowPolicyType.ANYONE]: 'Anyone can follow',
   [FollowPolicyType.NO_ONE]: 'No one can follow',
@@ -29,7 +30,7 @@ function resolveFollowPolicy({
   amount,
   recipient,
 }: {
-  followPolicyType: SupportedFollowPolicyType;
+  followPolicyType: SupportedFollowPolicy;
   amount?: Amount<Erc20>;
   recipient?: string;
 }): ChargeFollowPolicy | NoFeeFollowPolicy {
@@ -44,6 +45,30 @@ function resolveFollowPolicy({
   return {
     type: FollowPolicyType[followPolicyType],
   };
+}
+
+function FollowPolicyRadioButton({
+  followPolicyType,
+  selectedFollowPolicyType,
+  setSelectedFollowPolicyType,
+}: {
+  followPolicyType: SupportedFollowPolicy;
+  selectedFollowPolicyType: FollowPolicyType | null;
+  setSelectedFollowPolicyType: (followPolicyType: FollowPolicyType) => void;
+}) {
+  return (
+    <div>
+      <input
+        type="radio"
+        id={followPolicyType}
+        name="followPolicyType"
+        value={followPolicyType}
+        onChange={() => setSelectedFollowPolicyType(followPolicyType as FollowPolicyType)}
+        checked={selectedFollowPolicyType === followPolicyType}
+      />
+      <label htmlFor={followPolicyType}>{followPolicyTypeToDescriptionMap[followPolicyType]}</label>
+    </div>
+  );
 }
 
 type UpdateButtonTextProps = {
@@ -122,21 +147,34 @@ function UpdateFollowPolicyForm({
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <div>
         <p>Select a follow policy:</p>
-        {Object.keys(SupportedFollowPolicyType).map((followPolicyType) => (
-          <div key={followPolicyType}>
-            <input
-              type="radio"
-              id={followPolicyType}
-              name="followPolicyType"
-              value={followPolicyType}
-              onChange={() => setSelectedFollowPolicyType(followPolicyType as FollowPolicyType)}
-              checked={selectedFollowPolicyType === followPolicyType}
-            />
-            <label htmlFor={followPolicyType}>
-              {followPolicyTypeToDescriptionMap[followPolicyType as SupportedFollowPolicyType]}
-            </label>
-          </div>
-        ))}
+
+        <FollowPolicyRadioButton
+          followPolicyType={FollowPolicyType.ONLY_PROFILE_OWNERS}
+          selectedFollowPolicyType={selectedFollowPolicyType}
+          setSelectedFollowPolicyType={setSelectedFollowPolicyType}
+        />
+
+        <FollowPolicyRadioButton
+          followPolicyType={FollowPolicyType.ANYONE}
+          selectedFollowPolicyType={selectedFollowPolicyType}
+          setSelectedFollowPolicyType={setSelectedFollowPolicyType}
+        />
+
+        <FollowPolicyRadioButton
+          followPolicyType={FollowPolicyType.NO_ONE}
+          selectedFollowPolicyType={selectedFollowPolicyType}
+          setSelectedFollowPolicyType={setSelectedFollowPolicyType}
+        />
+
+        <FollowPolicyRadioButton
+          followPolicyType={FollowPolicyType.CHARGE}
+          selectedFollowPolicyType={selectedFollowPolicyType}
+          setSelectedFollowPolicyType={setSelectedFollowPolicyType}
+        />
+
+        {!selectedFollowPolicyType && profile.followPolicy?.type !== FollowPolicyType.UNKNOWN && (
+          <p>Your current follow policy is unsupported by the Lens SDK.</p>
+        )}
       </div>
 
       {selectedFollowPolicyType === FollowPolicyType.CHARGE && (
