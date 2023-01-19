@@ -27,11 +27,6 @@ const profileHooks = [
     path: '/profiles/useProfilesToFollow',
   },
   {
-    label: 'useSearchProfiles',
-    description: `Fetch a list of profiles that match a query`,
-    path: '/profiles/useSearchProfiles',
-  },
-  {
     label: 'useFollow / useUnfollow',
     description: `Follow or unfollow a profile.`,
     path: '/profiles/useFollow',
