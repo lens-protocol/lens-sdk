@@ -5,7 +5,7 @@ import { when } from 'jest-when';
 import { TransactionRequestModel } from '../../../entities';
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { mockTransactionQueue } from '../../../mocks';
-import { ActiveProfile } from '../../profile/ActiveProfile';
+import { ActiveProfileLoader } from '../../profile/ActiveProfileLoader';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
 import { ActiveWallet } from '../../wallets/ActiveWallet';
 import { IActiveWalletPresenter } from '../../wallets/IActiveWalletPresenter';
@@ -35,7 +35,7 @@ const setupBootstrapInteractor = ({
   credentialsGateway = mock<ICredentialsGateway>(),
   credentialsRenewer = mock<ICredentialsRenewer>(),
 }: BootstrapSetupConfig) => {
-  const activeProfile = mock<ActiveProfile>();
+  const activeProfileLoader = mock<ActiveProfileLoader>();
   const walletPresenter = mock<IActiveWalletPresenter>();
   const applicationPresenter = mock<IApplicationPresenter>();
   const logoutPresenter = mock<ILogoutPresenter>();
@@ -48,13 +48,13 @@ const setupBootstrapInteractor = ({
     walletPresenter,
     applicationPresenter,
     logoutPresenter,
-    activeProfile,
+    activeProfileLoader,
     transactionQueue,
   );
 
   return {
     bootstrap,
-    activeProfile,
+    activeProfileLoader,
     walletPresenter,
     applicationPresenter,
     logoutPresenter,
@@ -92,7 +92,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
           when(credentialsGateway.getCredentials).mockResolvedValue(mockCredentials());
 
           const {
-            activeProfile,
+            activeProfileLoader,
             applicationPresenter,
             bootstrap,
             walletPresenter,
@@ -106,7 +106,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
           await bootstrap.start();
 
           expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
-          expect(activeProfile.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
+          expect(activeProfileLoader.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
             wallet.address,
           );
           expect(applicationPresenter.signalReady).toHaveBeenCalled();
@@ -132,7 +132,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
 
           const {
             bootstrap,
-            activeProfile,
+            activeProfileLoader,
             applicationPresenter,
             walletPresenter,
             transactionQueue,
@@ -145,7 +145,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
           await bootstrap.start();
 
           expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
-          expect(activeProfile.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
+          expect(activeProfileLoader.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
             wallet.address,
           );
           expect(applicationPresenter.signalReady).toHaveBeenCalled();

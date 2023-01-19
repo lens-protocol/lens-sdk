@@ -51,6 +51,11 @@ const profileHooks = [
     description: `Update profile dispatcher configuration.`,
     path: '/profiles/useUpdateDispatcherConfig',
   },
+  {
+    label: 'useActiveProfileSwitch',
+    description: `Switch active profile.`,
+    path: '/profiles/useActiveProfileSwitch',
+  },
 ];
 
 export function ProfilesPage() {

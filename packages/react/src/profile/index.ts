@@ -1,4 +1,5 @@
 export * from './useActiveProfile';
+export * from './useActiveProfileSwitch';
 export * from './useCreateProfile';
 export * from './useProfilesToFollow';
 export * from './useProfileFollowers';

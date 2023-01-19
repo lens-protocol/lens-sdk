@@ -1,20 +1,11 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { Profile } from '../../entities';
+import { IActiveProfileGateway } from './IActiveProfileGateway';
 import { IActiveProfilePresenter } from './IActiveProfilePresenter';
+import { IProfileGateway } from './IProfileGateway';
 
-export interface IProfileGateway {
-  getAllProfilesByOwnerAddress(address: string): Promise<Profile[]>;
-
-  getProfileByHandle(handle: string): Promise<Profile | null>;
-}
-
-export interface IActiveProfileGateway {
-  setActiveProfile(profile: Profile): Promise<void>;
-  getActiveProfile(): Promise<Profile | null>;
-}
-
-export class ActiveProfile {
+export class ActiveProfileLoader {
   constructor(
     private readonly profileGateway: IProfileGateway,
     private readonly activeProfileGateway: IActiveProfileGateway,
@@ -47,14 +38,6 @@ export class ActiveProfile {
     invariant(profile, 'Profile not found');
 
     await this.storeAndPresent(profile);
-  }
-
-  async requireActiveProfile(): Promise<Profile> {
-    const activeProfile = await this.activeProfileGateway.getActiveProfile();
-
-    invariant(activeProfile, 'Active profile should be defined');
-
-    return activeProfile;
   }
 
   private async storeAndPresent(profile: Profile) {

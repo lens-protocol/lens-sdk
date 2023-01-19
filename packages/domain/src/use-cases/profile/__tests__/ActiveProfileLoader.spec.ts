@@ -1,13 +1,14 @@
-import { InvariantError } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { mockProfile, mockWallet } from '../../../entities/__helpers__/mocks';
-import { IProfileGateway, ActiveProfile, IActiveProfileGateway } from '../ActiveProfile';
+import { ActiveProfileLoader } from '../ActiveProfileLoader';
+import { IActiveProfileGateway } from '../IActiveProfileGateway';
 import { IActiveProfilePresenter } from '../IActiveProfilePresenter';
+import { IProfileGateway } from '../IProfileGateway';
 
-describe('Given the ActiveProfile interactor', () => {
-  describe('when "loadActiveProfileByOwnerAddress" method is invoked', () => {
+describe(`Given the ${ActiveProfileLoader.name} interactor`, () => {
+  describe(`when "${ActiveProfileLoader.prototype.loadActiveProfileByOwnerAddress.name}" method is invoked`, () => {
     it(`should:
         - retrieve the list of profiles owned by the provided address
         - store the first one as active profile
@@ -22,7 +23,7 @@ describe('Given the ActiveProfile interactor', () => {
         .calledWith(wallet.address)
         .mockResolvedValue([firstProfile, mockProfile()]);
 
-      const activeProfile = new ActiveProfile(
+      const activeProfile = new ActiveProfileLoader(
         profileGateway,
         activeProfileGateway,
         activeProfilePresenter,
@@ -43,7 +44,7 @@ describe('Given the ActiveProfile interactor', () => {
 
       when(activeProfileGateway.getActiveProfile).mockResolvedValue(profile);
 
-      const activeProfile = new ActiveProfile(
+      const activeProfile = new ActiveProfileLoader(
         profileGateway,
         activeProfileGateway,
         activeProfilePresenter,
@@ -66,7 +67,7 @@ describe('Given the ActiveProfile interactor', () => {
         .calledWith(wallet.address)
         .mockResolvedValue([]);
 
-      const activeProfile = new ActiveProfile(
+      const activeProfile = new ActiveProfileLoader(
         profileGateway,
         activeProfileGateway,
         activeProfilePresenter,
@@ -79,7 +80,7 @@ describe('Given the ActiveProfile interactor', () => {
     });
   });
 
-  describe('when "loadActiveProfileByHandle" method is invoked', () => {
+  describe(`when "${ActiveProfileLoader.prototype.loadActiveProfileByHandle.name}" method is invoked`, () => {
     it(`should:
           - retrieve the profile details
           - store it as active profile
@@ -92,7 +93,7 @@ describe('Given the ActiveProfile interactor', () => {
       when(activeProfileGateway.getActiveProfile).mockResolvedValue(null);
       when(profileGateway.getProfileByHandle).calledWith(profile.handle).mockResolvedValue(profile);
 
-      const activeProfile = new ActiveProfile(
+      const activeProfile = new ActiveProfileLoader(
         profileGateway,
         activeProfileGateway,
         activeProfilePresenter,
@@ -112,7 +113,7 @@ describe('Given the ActiveProfile interactor', () => {
 
       when(activeProfileGateway.getActiveProfile).mockResolvedValue(profile);
 
-      const activeProfile = new ActiveProfile(
+      const activeProfile = new ActiveProfileLoader(
         profileGateway,
         activeProfileGateway,
         activeProfilePresenter,
@@ -123,45 +124,6 @@ describe('Given the ActiveProfile interactor', () => {
       expect(profileGateway.getProfileByHandle).not.toHaveBeenCalled();
       expect(activeProfileGateway.setActiveProfile).not.toHaveBeenCalled();
       expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(profile);
-    });
-  });
-
-  describe('when requireActiveProfile is invoked', () => {
-    it('should retrieve the active profile from the gateway', async () => {
-      const profile = mockProfile();
-      const profileGateway = mock<IProfileGateway>();
-      const activeProfileGateway = mock<IActiveProfileGateway>();
-      const activeProfilePresenter = mock<IActiveProfilePresenter>();
-
-      when(activeProfileGateway.getActiveProfile).mockResolvedValue(profile);
-
-      const activeProfile = new ActiveProfile(
-        profileGateway,
-        activeProfileGateway,
-        activeProfilePresenter,
-      );
-
-      const result = await activeProfile.requireActiveProfile();
-
-      expect(activeProfileGateway.getActiveProfile).toHaveBeenCalled();
-      expect(result).toBe(profile);
-    });
-
-    it('should throw an InvariantError if the gateway does not contain an active profile', async () => {
-      const profileGateway = mock<IProfileGateway>();
-      const activeProfileGateway = mock<IActiveProfileGateway>();
-      const activeProfilePresenter = mock<IActiveProfilePresenter>();
-
-      const activeProfile = new ActiveProfile(
-        profileGateway,
-        activeProfileGateway,
-        activeProfilePresenter,
-      );
-
-      when(activeProfileGateway.getActiveProfile).mockResolvedValue(null);
-
-      await expect(() => activeProfile.requireActiveProfile()).rejects.toThrow(InvariantError);
-      expect(activeProfileGateway.getActiveProfile).toHaveBeenCalled();
     });
   });
 });
