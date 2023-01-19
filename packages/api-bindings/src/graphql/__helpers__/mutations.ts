@@ -2,7 +2,7 @@ import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { mockNonce } from '@lens-protocol/domain/mocks';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { GraphQLError } from 'graphql';
 
 import {
@@ -17,7 +17,11 @@ import {
   CreatePostTypedDataMutation,
   CreateProfileMutation,
   CreateSetFollowModuleTypedDataMutation,
+  CreateSetDispatcherTypedDataMutation,
   CreateUnfollowTypedDataMutation,
+  CreateSetProfileImageUriTypedDataDocument,
+  CreateSetProfileImageUriTypedDataMutation,
+  CreateSetProfileImageUriTypedDataMutationVariables,
   CreatePublicSetProfileMetadataUriRequest,
   CreateSetProfileMetadataTypedDataDocument,
   CreateSetProfileMetadataTypedDataMutation,
@@ -335,6 +339,68 @@ export function mockCreateSetFollowModuleTypedDataMutation({
         profileId: faker.datatype.uuid(),
         followModule: mockEthereumAddress(),
         followModuleInitData: '0x00',
+      },
+    }),
+  };
+}
+
+export function mockCreateSetProfileImageUriTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateSetProfileImageUriTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateSetProfileImageUriBroadcastItemResult', {
+      __typename: 'CreateSetProfileImageUriEIP712TypedData',
+      types: {
+        __typename: 'CreateSetProfileImageUriEIP712TypedDataTypes',
+        SetProfileImageURIWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateSetProfileImageUriEIP712TypedDataValue',
+        nonce,
+        deadline: 1644303500,
+        profileId: '0x0132',
+        imageURI: faker.internet.url(),
+      },
+    }),
+  };
+}
+
+export function mockCreateSetProfileImageUriTypedDataMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreateSetProfileImageUriTypedDataMutationVariables;
+  data: CreateSetProfileImageUriTypedDataMutation;
+}): MockedResponse<CreateSetProfileImageUriTypedDataMutation> {
+  return {
+    request: {
+      query: CreateSetProfileImageUriTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockCreateSetDispatcherTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateSetDispatcherTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateSetDispatcherBroadcastItemResult', {
+      __typename: 'CreateSetDispatcherEIP712TypedData',
+      types: {
+        __typename: 'CreateSetDispatcherEIP712TypedDataTypes',
+        SetDispatcherWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateSetDispatcherEIP712TypedDataValue',
+        nonce,
+        deadline: '0',
+        profileId: faker.datatype.uuid(),
+        dispatcher: faker.datatype.uuid(),
       },
     }),
   };

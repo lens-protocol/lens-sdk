@@ -1,11 +1,5 @@
-import {
-  mockDaiAmount,
-  mockEthereumAddress,
-  Amount,
-  Erc20,
-  EthereumAddress,
-  Result,
-} from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
+import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 

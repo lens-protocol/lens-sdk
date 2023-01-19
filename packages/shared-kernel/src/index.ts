@@ -5,7 +5,6 @@ export * from './crypto/Amount';
 export * from './crypto/Asset';
 export * from './crypto/ChainType';
 export * from './crypto/types';
-export * from './crypto/__helpers__/mocks';
 export * from './DateUtils';
 export * from './get';
 export * from './id';

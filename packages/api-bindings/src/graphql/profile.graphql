@@ -184,6 +184,36 @@ mutation CreateSetFollowModuleTypedData(
   }
 }
 
+mutation CreateSetProfileImageURITypedData(
+  $request: UpdateProfileImageRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetProfileImageURITypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetProfileImageURIWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        imageURI
+      }
+    }
+  }
+}
+
 mutation CreateSetProfileMetadataTypedData(
   $request: CreatePublicSetProfileMetadataURIRequest!
   $options: TypedDataOptions
