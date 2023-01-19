@@ -4646,6 +4646,19 @@ export type PublicationRevenueQueryVariables = Exact<{
 
 export type PublicationRevenueQuery = { result: Maybe<RevenueFragment> };
 
+export type ProfilePublicationRevenueQueryVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+}>;
+
+export type ProfilePublicationRevenueQuery = {
+  result: { items: Array<PublicationRevenueFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
 export type SearchPublicationsQueryVariables = Exact<{
   limit?: Maybe<Scalars['LimitScalar']>;
   cursor?: Maybe<Scalars['Cursor']>;
@@ -7953,6 +7966,91 @@ export type PublicationRevenueLazyQueryHookResult = ReturnType<
 export type PublicationRevenueQueryResult = Apollo.QueryResult<
   PublicationRevenueQuery,
   PublicationRevenueQueryVariables
+>;
+export const ProfilePublicationRevenueDocument = gql`
+  query ProfilePublicationRevenue(
+    $profileId: ProfileId!
+    $observerId: ProfileId
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $publicationTypes: [PublicationTypes!]
+    $sources: [Sources!]
+  ) {
+    result: profilePublicationRevenue(
+      request: {
+        profileId: $profileId
+        limit: $limit
+        cursor: $cursor
+        types: $publicationTypes
+        sources: $sources
+      }
+    ) {
+      items {
+        ...PublicationRevenue
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PublicationRevenueFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useProfilePublicationRevenueQuery__
+ *
+ * To run a query within a React component, call `useProfilePublicationRevenueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfilePublicationRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfilePublicationRevenueQuery({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *      observerId: // value for 'observerId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      publicationTypes: // value for 'publicationTypes'
+ *      sources: // value for 'sources'
+ *   },
+ * });
+ */
+export function useProfilePublicationRevenueQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ProfilePublicationRevenueQuery,
+    ProfilePublicationRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfilePublicationRevenueQuery, ProfilePublicationRevenueQueryVariables>(
+    ProfilePublicationRevenueDocument,
+    options,
+  );
+}
+export function useProfilePublicationRevenueLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfilePublicationRevenueQuery,
+    ProfilePublicationRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ProfilePublicationRevenueQuery,
+    ProfilePublicationRevenueQueryVariables
+  >(ProfilePublicationRevenueDocument, options);
+}
+export type ProfilePublicationRevenueQueryHookResult = ReturnType<
+  typeof useProfilePublicationRevenueQuery
+>;
+export type ProfilePublicationRevenueLazyQueryHookResult = ReturnType<
+  typeof useProfilePublicationRevenueLazyQuery
+>;
+export type ProfilePublicationRevenueQueryResult = Apollo.QueryResult<
+  ProfilePublicationRevenueQuery,
+  ProfilePublicationRevenueQueryVariables
 >;
 export const SearchPublicationsDocument = gql`
   query SearchPublications(
