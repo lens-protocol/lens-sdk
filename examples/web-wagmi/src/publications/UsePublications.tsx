@@ -9,7 +9,7 @@ export function UsePublications() {
     loading,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(usePublications({ profileId: '0x1b' }));
+  } = useInfiniteScroll(usePublications({ profileId: '0x15' }));
 
   if (loading) return <div>Loading...</div>;
 

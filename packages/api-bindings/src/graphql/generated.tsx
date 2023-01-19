@@ -4185,6 +4185,7 @@ export type FeedItemFragment = { __typename: 'FeedItem' } & {
 
 export type FeedQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
+  restrictEventTypesTo?: Maybe<Array<FeedEventItemType> | FeedEventItemType>;
   observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
@@ -4608,6 +4609,7 @@ export type PublicationsQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
 
 export type PublicationsQuery = {
@@ -5963,13 +5965,20 @@ export type EnabledModuleCurrenciesQueryResult = Apollo.QueryResult<
 export const FeedDocument = gql`
   query Feed(
     $profileId: ProfileId!
+    $restrictEventTypesTo: [FeedEventItemType!]
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]
   ) {
     result: feed(
-      request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
+      request: {
+        profileId: $profileId
+        feedEventItemTypes: $restrictEventTypesTo
+        limit: $limit
+        cursor: $cursor
+        sources: $sources
+      }
     ) {
       items {
         ...FeedItem
@@ -5996,6 +6005,7 @@ export const FeedDocument = gql`
  * const { data, loading, error } = useFeedQuery({
  *   variables: {
  *      profileId: // value for 'profileId'
+ *      restrictEventTypesTo: // value for 'restrictEventTypesTo'
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
@@ -7597,6 +7607,7 @@ export const PublicationsDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $publicationTypes: [PublicationTypes!]
+    $sources: [Sources!]
   ) {
     result: publications(
       request: {
@@ -7604,6 +7615,7 @@ export const PublicationsDocument = gql`
         limit: $limit
         cursor: $cursor
         publicationTypes: $publicationTypes
+        sources: $sources
       }
     ) {
       items {
@@ -7645,6 +7657,7 @@ export const PublicationsDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      publicationTypes: // value for 'publicationTypes'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
