@@ -4556,6 +4556,7 @@ export type PublicationsQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
 
 export type PublicationsQuery = {
@@ -7455,6 +7456,7 @@ export const PublicationsDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $publicationTypes: [PublicationTypes!]
+    $sources: [Sources!]
   ) {
     result: publications(
       request: {
@@ -7462,6 +7464,7 @@ export const PublicationsDocument = gql`
         limit: $limit
         cursor: $cursor
         publicationTypes: $publicationTypes
+        sources: $sources
       }
     ) {
       items {
@@ -7503,6 +7506,7 @@ export const PublicationsDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      publicationTypes: // value for 'publicationTypes'
+ *      sources: // value for 'sources'
  *   },
  * });
  */

@@ -20,6 +20,7 @@ query Publications(
   $limit: LimitScalar!
   $cursor: Cursor
   $publicationTypes: [PublicationTypes!]
+  $sources: [Sources!]
 ) {
   result: publications(
     request: {
@@ -27,6 +28,7 @@ query Publications(
       limit: $limit
       cursor: $cursor
       publicationTypes: $publicationTypes
+      sources: $sources
     }
   ) {
     items {
