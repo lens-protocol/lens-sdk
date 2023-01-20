@@ -128,15 +128,19 @@ importers:
       graphql: 15.5.1
       graphql-tag: ^2.12.6
       jest: ^29.3.1
+      react: ^18.2.0
+      react-dom: ^18.2.0
       rimraf: ^3.0.2
       ts-jest: ^29.0.3
       tslib: ^2.4.1
       tsup: ^6.5.0
       typescript: ^4.9.3
     dependencies:
-      '@apollo/client': 3.7.1_graphql@15.5.1
+      '@apollo/client': 3.7.1_47swblzip3hkvavljfwh7ztgne
       '@lens-protocol/domain': link:../domain
       '@lens-protocol/shared-kernel': link:../shared-kernel
+      graphql: 15.5.1
+      graphql-tag: 2.12.6_graphql@15.5.1
       tslib: 2.4.1
     devDependencies:
       '@babel/core': 7.20.5
@@ -154,9 +158,9 @@ importers:
       '@types/jest': 29.2.3
       babel-plugin-graphql-tag: 3.3.0_dfknw6xjzvbhkris5p74ndxuwy
       eslint: 8.28.0
-      graphql: 15.5.1
-      graphql-tag: 2.12.6_graphql@15.5.1
       jest: 29.3.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
       rimraf: 3.0.2
       ts-jest: 29.0.3_gruvivcimsmdfhnjphbo3uejz4
       tsup: 6.5.0_typescript@4.9.3
@@ -293,7 +297,7 @@ importers:
       eslint-plugin-react-hooks: ^4.6.0
       ethereum-waffle: ^3.4.4
       ethers: ^5.7.2
-      graphql: 15.5.1
+      graphql: ^15.5.1
       jest: ^29.3.1
       jest-environment-jsdom: ^29.3.1
       jest-mock-extended: ^3.0.1
@@ -490,40 +494,6 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      response-iterator: 0.2.6
-      symbol-observable: 4.0.0
-      ts-invariant: 0.10.3
-      tslib: 2.4.1
-      zen-observable-ts: 1.2.5
-    dev: false
-
-  /@apollo/client/3.7.1_graphql@15.5.1:
-    resolution: {integrity: sha512-xu5M/l7p9gT9Fx7nF3AQivp0XukjB7TM7tOd5wifIpI8RskYveL4I+rpTijzWrnqCPZabkbzJKH7WEAKdctt9w==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-      graphql-ws: ^5.5.5
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      subscriptions-transport-ws: ^0.9.0 || ^0.11.0
-    peerDependenciesMeta:
-      graphql-ws:
-        optional: true
-      react:
-        optional: true
-      react-dom:
-        optional: true
-      subscriptions-transport-ws:
-        optional: true
-    dependencies:
-      '@graphql-typed-document-node/core': 3.1.1_graphql@15.5.1
-      '@wry/context': 0.7.0
-      '@wry/equality': 0.5.3
-      '@wry/trie': 0.3.2
-      graphql: 15.5.1
-      graphql-tag: 2.12.6_graphql@15.5.1
-      hoist-non-react-statics: 3.3.2
-      optimism: 0.16.2
-      prop-types: 15.8.1
       response-iterator: 0.2.6
       symbol-observable: 4.0.0
       ts-invariant: 0.10.3
