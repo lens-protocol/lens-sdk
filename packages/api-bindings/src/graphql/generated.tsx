@@ -4193,6 +4193,7 @@ export type FeedQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  metadata: PublicationMetadataFilters;
 }>;
 
 export type FeedQuery = {
@@ -6110,6 +6111,7 @@ export const FeedDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]
+    $metadata: PublicationMetadataFilters!
   ) {
     result: feed(
       request: {
@@ -6118,6 +6120,7 @@ export const FeedDocument = gql`
         limit: $limit
         cursor: $cursor
         sources: $sources
+        metadata: $metadata
       }
     ) {
       items {
@@ -6150,6 +6153,7 @@ export const FeedDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      metadata: // value for 'metadata'
  *   },
  * });
  */
