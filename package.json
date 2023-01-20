@@ -12,7 +12,8 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint --parallel",
     "lint:fix": "turbo run lint:fix --parallel",
-    "deduplicate:check": "pnpm-deduplicate --list"
+    "deduplicate:check": "pnpm-deduplicate --list",
+    "deduplicate:fix": "pnpm-deduplicate"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
