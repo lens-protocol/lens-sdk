@@ -1,4 +1,5 @@
-import { ApolloCache } from '@apollo/client';
+import { ApolloCache, makeVar } from '@apollo/client';
+import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
 import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '../../graphql';
@@ -40,7 +41,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
         }),
       ],
     });
-    const cache = createApolloCache();
+    const cache = createApolloCache({ activeWalletVar: makeVar<WalletData | null>(null) });
     cache.writeFragment({
       data: profile,
       fragment: ProfileFieldsFragmentDoc,

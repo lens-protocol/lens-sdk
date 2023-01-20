@@ -53,7 +53,6 @@ export type PaginatedArgs<T> = T & {
 };
 
 export type PaginatedReadResult<T> = ReadResult<T> & {
-  totalCount: number | null;
   hasMore: boolean;
   next: () => Promise<void>;
 };
@@ -69,14 +68,15 @@ export function usePaginatedReadResult<
 >({ error, data, loading, fetchMore }: QueryResult<T, V>): PaginatedReadResult<K> {
   return {
     ...buildReadResult<K>(data?.result.items, loading, error),
-    totalCount: data?.result.pageInfo.totalCount ?? null,
     hasMore: data?.result.pageInfo.next ? true : false,
     next: async () => {
-      await fetchMore({
-        variables: {
-          cursor: data?.result.pageInfo.next,
-        },
-      });
+      if (data?.result.pageInfo.next) {
+        await fetchMore({
+          variables: {
+            cursor: data?.result.pageInfo.next,
+          },
+        });
+      }
     },
   };
 }

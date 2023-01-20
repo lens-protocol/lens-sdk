@@ -1,25 +1,10 @@
-query Publication($observerId: ProfileId, $publicationId: InternalPublicationId!) {
-  result: publication(request: { publicationId: $publicationId }) {
-    ... on Post {
-      ...Post
-    }
-
-    ... on Mirror {
-      ...Mirror
-    }
-
-    ... on Comment {
-      ...Comment
-    }
-  }
-}
-
 query Publications(
   $profileId: ProfileId!
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
   $publicationTypes: [PublicationTypes!]
+  $sources: [Sources!]
 ) {
   result: publications(
     request: {
@@ -27,6 +12,7 @@ query Publications(
       limit: $limit
       cursor: $cursor
       publicationTypes: $publicationTypes
+      sources: $sources
     }
   ) {
     items {
@@ -66,22 +52,6 @@ query ExplorePublications($request: ExplorePublicationRequest!, $observerId: Pro
     }
     pageInfo {
       ...CommonPaginatedResultInfo
-    }
-  }
-}
-
-query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
-  result: publication(request: { txHash: $txHash }) {
-    ... on Post {
-      ...Post
-    }
-
-    ... on Mirror {
-      ...Mirror
-    }
-
-    ... on Comment {
-      ...CommentWithFirstComment
     }
   }
 }
