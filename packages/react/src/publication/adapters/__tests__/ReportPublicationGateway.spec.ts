@@ -10,8 +10,9 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { ReportReason } from '@lens-protocol/domain/entities';
 import { mockReportPublicationRequest } from '@lens-protocol/domain/mocks';
-import { AlreadyReportedError, NetworkError } from '@lens-protocol/domain/use-cases/publications';
+import { AlreadyReportedError } from '@lens-protocol/domain/use-cases/publications';
 
+import { NetworkError } from '../NetworkError';
 import { ReportPublicationGateway } from '../ReportPublicationGateway';
 
 describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
@@ -46,7 +47,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
       expect(result.isSuccess()).toBe(true);
     });
 
-    it.skip(`should fail with AlreadyReportedError if publication was already reported`, async () => {
+    it(`should fail with AlreadyReportedError if publication was already reported`, async () => {
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
