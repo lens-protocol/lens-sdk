@@ -14,7 +14,7 @@ function UpdateUploadedImage({ profile }: { profile: ProfileFieldsFragment }) {
     'https://arweave.net/dOKOqiZVvSs14n54GIRH9nkSlLKArzK7-SPc2sBVmAM',
   );
   const { update, error, isPending } = useUpdateProfileImage({
-    profileId: profile.id,
+    profile,
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +63,7 @@ function UploadAndUpdateNewImage({ profile }: { profile: ProfileFieldsFragment }
     error: updateError,
     isPending,
   } = useUpdateProfileImage({
-    profileId: profile.id,
+    profile,
   });
 
   const handleUploadCandidateFileClick = () => {

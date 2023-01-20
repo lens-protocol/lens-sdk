@@ -15,7 +15,7 @@ import { ChainType } from '@lens-protocol/shared-kernel';
 import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { FailedUploadError, MetadataUploadAdapter } from '../../MetadataUploadAdapter';
 import { mockITransactionFactory } from '../../__helpers__/mocks';
-import { CommentCallGateway } from '../CommentCallGateway';
+import { CreateCommentCallGateway } from '../CreateCommentCallGateway';
 import {
   createBasicExerciseData,
   createFeeCollectModuleExerciseData,
@@ -50,7 +50,7 @@ function setupTestScenario({
     uploadSpy.mockRejectedValue(new Error('Unknown error'));
   }
 
-  const gateway = new CommentCallGateway(
+  const gateway = new CreateCommentCallGateway(
     apolloClient,
     transactionFactory,
     new MetadataUploadAdapter(uploadSpy),
@@ -59,7 +59,7 @@ function setupTestScenario({
   return { gateway, uploadSpy };
 }
 
-describe(`Given an instance of ${CommentCallGateway.name}`, () => {
+describe(`Given an instance of ${CreateCommentCallGateway.name}`, () => {
   describe.each<{
     description: string;
     createExerciseData: () => PublicationExerciseData;

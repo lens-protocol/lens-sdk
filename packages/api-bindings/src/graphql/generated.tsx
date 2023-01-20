@@ -4498,6 +4498,16 @@ export type CreateSetProfileImageUriTypedDataMutation = {
   };
 };
 
+export type CreateSetProfileImageUriViaDispatcherMutationVariables = Exact<{
+  request: UpdateProfileImageRequest;
+}>;
+
+export type CreateSetProfileImageUriViaDispatcherMutation = {
+  result:
+    | ({ __typename: 'RelayerResult' } & RelayerResultFragment)
+    | ({ __typename: 'RelayError' } & RelayErrorFragment);
+};
+
 export type CreateSetProfileMetadataTypedDataMutationVariables = Exact<{
   request: CreatePublicSetProfileMetadataUriRequest;
   options?: Maybe<TypedDataOptions>;
@@ -7080,6 +7090,64 @@ export type CreateSetProfileImageUriTypedDataMutationResult =
 export type CreateSetProfileImageUriTypedDataMutationOptions = Apollo.BaseMutationOptions<
   CreateSetProfileImageUriTypedDataMutation,
   CreateSetProfileImageUriTypedDataMutationVariables
+>;
+export const CreateSetProfileImageUriViaDispatcherDocument = gql`
+  mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
+    result: createSetProfileImageURIViaDispatcher(request: $request) {
+      __typename
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export type CreateSetProfileImageUriViaDispatcherMutationFn = Apollo.MutationFunction<
+  CreateSetProfileImageUriViaDispatcherMutation,
+  CreateSetProfileImageUriViaDispatcherMutationVariables
+>;
+
+/**
+ * __useCreateSetProfileImageUriViaDispatcherMutation__
+ *
+ * To run a mutation, you first call `useCreateSetProfileImageUriViaDispatcherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetProfileImageUriViaDispatcherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetProfileImageUriViaDispatcherMutation, { data, loading, error }] = useCreateSetProfileImageUriViaDispatcherMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateSetProfileImageUriViaDispatcherMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetProfileImageUriViaDispatcherMutation,
+    CreateSetProfileImageUriViaDispatcherMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetProfileImageUriViaDispatcherMutation,
+    CreateSetProfileImageUriViaDispatcherMutationVariables
+  >(CreateSetProfileImageUriViaDispatcherDocument, options);
+}
+export type CreateSetProfileImageUriViaDispatcherMutationHookResult = ReturnType<
+  typeof useCreateSetProfileImageUriViaDispatcherMutation
+>;
+export type CreateSetProfileImageUriViaDispatcherMutationResult =
+  Apollo.MutationResult<CreateSetProfileImageUriViaDispatcherMutation>;
+export type CreateSetProfileImageUriViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetProfileImageUriViaDispatcherMutation,
+  CreateSetProfileImageUriViaDispatcherMutationVariables
 >;
 export const CreateSetProfileMetadataTypedDataDocument = gql`
   mutation CreateSetProfileMetadataTypedData(

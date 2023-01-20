@@ -89,10 +89,12 @@ export const UpdateNftProfileImageRequestSchema = z.object({
   kind: z.literal(TransactionKind.UPDATE_PROFILE_IMAGE),
   profileId: z.string(),
   signature: NftOwnershipSignatureSchema,
+  delegate: z.boolean(),
 });
 
 export const UpdateOffChainProfileImageRequestSchema = z.object({
   url: z.string(),
   kind: z.literal(TransactionKind.UPDATE_PROFILE_IMAGE),
   profileId: z.string(),
+  delegate: z.boolean(),
 });
