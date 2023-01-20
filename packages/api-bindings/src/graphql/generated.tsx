@@ -2574,7 +2574,7 @@ export type Profile = {
   followModule: Maybe<FollowModule>;
   /** Follow nft address */
   followNftAddress: Maybe<Scalars['ContractAddress']>;
-  followPolicy: Maybe<Scalars['FollowPolicy']>;
+  followPolicy: Scalars['FollowPolicy'];
   /** The profile handle */
   handle: Scalars['Handle'];
   /** The profile id */

@@ -6,7 +6,7 @@ extend type Profile {
   ownedByMe: Boolean!
   isOptimisticFollowedByMe: Boolean!
   attributesMap: ProfileAttributes!
-  followPolicy: FollowPolicy
+  followPolicy: FollowPolicy!
 }
 
 extend type Post {

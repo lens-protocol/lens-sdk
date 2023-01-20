@@ -53,7 +53,7 @@ function createFollowProfilesFlowRequest(
     followerAddress: activeWallet.address,
   };
 
-  const followPolicyType = profile.followPolicy?.type ?? null;
+  const followPolicyType = profile.followPolicy.type;
 
   switch (followPolicyType) {
     case FollowPolicyType.CHARGE:
@@ -64,10 +64,7 @@ function createFollowProfilesFlowRequest(
 
       return {
         ...baseRequest,
-        fee: createFollowRequestFee(
-          profile.followPolicy as ChargeFollowPolicy,
-          profile.followModule.contractAddress,
-        ),
+        fee: createFollowRequestFee(profile.followPolicy, profile.__followModule.contractAddress),
       };
     case FollowPolicyType.ONLY_PROFILE_OWNERS:
       return {

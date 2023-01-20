@@ -1,34 +1,26 @@
-import {
-  ChargeFollowPolicy,
-  FollowPolicyType,
-  NoFeeFollowPolicy,
-} from '@lens-protocol/domain/use-cases/profile';
-import { Amount, ChainType, erc20 } from '@lens-protocol/shared-kernel';
+import { FollowPolicy, FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+import { Amount, ChainType, erc20, invariant } from '@lens-protocol/shared-kernel';
 
 import {
-  FeeFollowModuleSettings,
   FollowModule,
   getFollowPolicyTypeFromProfileFieldsFragment,
+  isFeeFollowModule,
   Profile,
   ProfileAttributeReader,
   ProfileAttributes,
 } from '../graphql';
 import { TypePolicy } from './TypePolicy';
 
-function isFeeModule(followModule: FollowModule): followModule is FeeFollowModuleSettings {
-  return followModule.__typename === 'FeeFollowModuleSettings';
-}
-
 function resolveFollowPolicy({
   followModule,
 }: {
-  followModule: FollowModule;
-}): ChargeFollowPolicy | NoFeeFollowPolicy | { type: FollowPolicyType.UNKNOWN } | null {
+  followModule: FollowModule | null;
+}): FollowPolicy {
   const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(followModule);
-  if (!followPolicyType) return null;
 
   if (followPolicyType === FollowPolicyType.CHARGE) {
-    if (!isFeeModule(followModule)) return null;
+    invariant(isFeeFollowModule(followModule), 'Profile must have the fee follow module');
+
     const erc20Value = erc20({
       name: followModule.amount.asset.name,
       address: followModule.amount.asset.address,
@@ -68,10 +60,8 @@ export function createProfileTypePolicy(): TypePolicy<Profile> {
 
         const followModule = readField('followModule');
 
-        if (!followModule) return null;
-
         return resolveFollowPolicy({
-          followModule,
+          followModule: followModule ?? null,
         });
       },
 
