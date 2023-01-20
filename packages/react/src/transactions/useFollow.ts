@@ -15,7 +15,7 @@ import {
   InsufficientFundsError,
   WalletData,
 } from '@lens-protocol/domain/use-cases/wallets';
-import { assertNever, EthereumAddress, invariant } from '@lens-protocol/shared-kernel';
+import { EthereumAddress, invariant } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
 import { useActiveProfileVar } from '../profile/adapters/ActiveProfilePresenter';
@@ -71,8 +71,6 @@ function createFollowProfilesFlowRequest(
       throw new Error('Can`t follow with revert follow fee module');
     case FollowPolicyType.UNKNOWN:
       throw new Error('Can`t follow with unknown follow module');
-    default:
-      assertNever(followPolicyType, 'Unknown follow policy type');
   }
 }
 
