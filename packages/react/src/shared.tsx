@@ -41,6 +41,7 @@ import { UpdateProfileMetadataResponder } from './transactions/adapters/responde
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
+import { activeWalletVar } from './wallet/adapters/ActiveWalletPresenter';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
 import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
 import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
@@ -102,12 +103,14 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   // apollo client
   const anonymousApolloClient = createAnonymousApolloClient({
     backendURL: config.environment.backend,
+    activeWalletVar: activeWalletVar,
   });
   const authApi = new AuthApi(anonymousApolloClient);
   const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
   const apolloClient = createApolloClient({
     backendURL: config.environment.backend,
     accessTokenStorage,
+    activeWalletVar: activeWalletVar,
   });
 
   // adapters

@@ -12,10 +12,11 @@ import {
 import {
   ReactionRequest,
   IReactionGateway,
-  NetworkError,
   ReactionError,
 } from '@lens-protocol/domain/use-cases/publications';
 import { PromiseResult, success, failure, assertError } from '@lens-protocol/shared-kernel';
+
+import { NetworkError } from './NetworkError';
 
 export class ReactionGateway implements IReactionGateway {
   constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
