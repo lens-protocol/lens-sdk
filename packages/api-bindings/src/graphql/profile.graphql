@@ -19,6 +19,7 @@ fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
 
 fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
   __typename
+  contractAddress
 }
 
 fragment ProfileMedia on ProfileMedia {
@@ -62,7 +63,7 @@ fragment ProfileFields on Profile {
     totalFollowing
     totalPosts
   }
-  followModule {
+  __followModule: followModule {
     ... on FeeFollowModuleSettings {
       ...FeeFollowModuleSettings
     }
@@ -77,6 +78,8 @@ fragment ProfileFields on Profile {
       ...UnknownFollowModuleSettings
     }
   }
+
+  followPolicy @client
 
   __attributes: attributes {
     ...Attribute
@@ -93,7 +96,6 @@ fragment ProfileFields on Profile {
 
   isOptimisticFollowedByMe @client
   ownedByMe @client
-  followPolicy @client
 }
 
 query ProfilesToFollow($observerId: ProfileId) {

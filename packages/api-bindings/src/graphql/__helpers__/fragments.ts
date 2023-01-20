@@ -84,11 +84,13 @@ export function mockProfileFieldsFragment(
     },
 
     dispatcher: null,
-    followModule: null,
+
+    __followModule: null,
+    followPolicy: null,
+
     isFollowedByMe: false,
     isFollowing: false,
     isOptimisticFollowedByMe: false,
-    followPolicy: null,
 
     ownedByMe: false,
 

@@ -1,11 +1,6 @@
 import {
-  erc20Amount,
-  FeeFollowModuleSettingsFragment,
-  getFollowPolicyTypeFromProfileFieldsFragment,
   isProfileFieldsFragmentWithFeeFollowModule,
-  isProfileFieldsFragmentWithSupportedFollowModule,
   ProfileFieldsFragment,
-  ProfileFieldsFragmentWithSupportedFollowModule,
 } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
@@ -13,7 +8,11 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { FollowPolicyType, FollowRequestFee } from '@lens-protocol/domain/use-cases/profile';
+import {
+  ChargeFollowPolicy,
+  FollowPolicyType,
+  FollowRequestFee,
+} from '@lens-protocol/domain/use-cases/profile';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -33,36 +32,42 @@ type FollowProfilesFlowRequest = {
   followerProfileId?: string;
 };
 
-function createFollowRequestFee(followModule: FeeFollowModuleSettingsFragment): FollowRequestFee {
+function createFollowRequestFee(
+  followModule: ChargeFollowPolicy,
+  contractAddress: string,
+): FollowRequestFee {
   return {
-    amount: erc20Amount({ from: followModule.amount }),
-    contractAddress: followModule.contractAddress,
+    amount: followModule.amount,
+    contractAddress,
     recipient: followModule.recipient,
   };
 }
 
 function createFollowProfilesFlowRequest(
-  profile: ProfileFieldsFragmentWithSupportedFollowModule,
+  profile: ProfileFieldsFragment,
   activeWallet: WalletData,
   activeProfile: ProfileFieldsFragment,
 ): FollowProfilesFlowRequest {
-  const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(profile.followModule);
-
   const baseRequest: Pick<FollowProfilesFlowRequest, 'profileId' | 'followerAddress'> = {
     profileId: profile.id,
     followerAddress: activeWallet.address,
   };
 
+  const followPolicyType = profile.followPolicy?.type ?? null;
+
   switch (followPolicyType) {
     case FollowPolicyType.CHARGE:
       invariant(
         isProfileFieldsFragmentWithFeeFollowModule(profile),
-        'Profile is not with a fee follow module',
+        'Profile must have fee follow module',
       );
 
       return {
         ...baseRequest,
-        fee: createFollowRequestFee(profile.followModule),
+        fee: createFollowRequestFee(
+          profile.followPolicy as ChargeFollowPolicy,
+          profile.followModule.contractAddress,
+        ),
       };
     case FollowPolicyType.ONLY_PROFILE_OWNERS:
       return {
@@ -105,7 +110,7 @@ export function useFollow({ profile }: UseFollowArgs) {
       try {
         invariant(activeWallet && activeProfile, 'You must be logged in to follow a profile');
         invariant(
-          isProfileFieldsFragmentWithSupportedFollowModule(profile),
+          profile.followPolicy?.type === FollowPolicyType.UNKNOWN,
           'Unsupported follow module',
         );
         setIsPending(true);

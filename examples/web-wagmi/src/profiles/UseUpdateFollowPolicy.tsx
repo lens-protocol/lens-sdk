@@ -183,8 +183,8 @@ function UpdateFollowPolicyForm({
           <select
             name="chargeCurrency"
             defaultValue={
-              profile.followModule?.__typename === 'FeeFollowModuleSettings'
-                ? profile.followModule.amount.value
+              profile.followPolicy?.type === FollowPolicyType.CHARGE
+                ? profile.followPolicy.amount.asset.symbol
                 : undefined
             }
           >
@@ -197,8 +197,8 @@ function UpdateFollowPolicyForm({
           <label htmlFor="chargeFee">Fee Amount</label>
           <input
             defaultValue={
-              profile.followModule?.__typename === 'FeeFollowModuleSettings'
-                ? profile.followModule.amount.value
+              profile.followPolicy?.type === FollowPolicyType.CHARGE
+                ? profile.followPolicy.amount.toNumber()
                 : undefined
             }
             name="chargeFee"
@@ -208,8 +208,8 @@ function UpdateFollowPolicyForm({
           <label htmlFor="chargeFeeRecipient">Follow Fee Recipient</label>
           <input
             defaultValue={
-              profile.followModule?.__typename === 'FeeFollowModuleSettings'
-                ? profile.followModule.recipient
+              profile.followPolicy?.type === FollowPolicyType.CHARGE
+                ? profile.followPolicy.recipient
                 : profile.ownedBy
             }
             name="chargeFeeRecipient"

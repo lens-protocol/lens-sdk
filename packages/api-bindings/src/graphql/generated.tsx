@@ -4431,11 +4431,11 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
   | 'bio'
   | 'handle'
   | 'ownedBy'
+  | 'followPolicy'
   | 'isFollowedByMe'
   | 'isFollowing'
   | 'isOptimisticFollowedByMe'
   | 'ownedByMe'
-  | 'followPolicy'
 > & { attributes: Profile['attributesMap'] } & {
     picture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     coverPicture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
@@ -4443,7 +4443,7 @@ export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
       ProfileStats,
       'totalFollowers' | 'totalFollowing' | 'totalPosts'
     >;
-    followModule: Maybe<
+    __followModule: Maybe<
       | FeeFollowModuleSettingsFragment
       | ProfileFollowModuleSettingsFragment
       | RevertFollowModuleSettingsFragment
@@ -4944,7 +4944,7 @@ export const ProfileFieldsFragmentDoc = gql`
       totalFollowing
       totalPosts
     }
-    followModule {
+    __followModule: followModule {
       ... on FeeFollowModuleSettings {
         ...FeeFollowModuleSettings
       }
@@ -4958,6 +4958,7 @@ export const ProfileFieldsFragmentDoc = gql`
         ...UnknownFollowModuleSettings
       }
     }
+    followPolicy @client
     __attributes: attributes {
       ...Attribute
     }
@@ -4970,7 +4971,6 @@ export const ProfileFieldsFragmentDoc = gql`
     isFollowing(who: $observerId)
     isOptimisticFollowedByMe @client
     ownedByMe @client
-    followPolicy @client
   }
   ${ProfileMediaFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}

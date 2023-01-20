@@ -38,7 +38,7 @@ export type ProfileFieldsFragmentWithUnknownFollowModule = Overwrite<
 export function isProfileFieldsFragmentWithSupportedFollowModule(
   profile: ProfileFieldsFragment,
 ): profile is ProfileFieldsFragmentWithSupportedFollowModule {
-  const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(profile.followModule);
+  const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(profile.__followModule);
   return followPolicyType !== null;
 }
 
@@ -46,7 +46,7 @@ export function isProfileFieldsFragmentWithRevertFollowModule(
   profile: ProfileFieldsFragment,
 ): profile is ProfileFieldsFragmentWithRevertFollowModule {
   return (
-    getFollowPolicyTypeFromProfileFieldsFragment(profile.followModule) === FollowPolicyType.NO_ONE
+    getFollowPolicyTypeFromProfileFieldsFragment(profile.__followModule) === FollowPolicyType.NO_ONE
   );
 }
 
@@ -54,12 +54,12 @@ export function isProfileFieldsFragmentWithFeeFollowModule(
   profile: ProfileFieldsFragment,
 ): profile is ProfileFieldsFragmentWithFeeFollowModule {
   return (
-    getFollowPolicyTypeFromProfileFieldsFragment(profile.followModule) === FollowPolicyType.CHARGE
+    getFollowPolicyTypeFromProfileFieldsFragment(profile.__followModule) === FollowPolicyType.CHARGE
   );
 }
 
 export function getFollowPolicyTypeFromProfileFieldsFragment(
-  followModule: ProfileFieldsFragment['followModule'],
+  followModule: ProfileFieldsFragment['__followModule'],
 ): FollowPolicyType | null {
   if (followModule === null) {
     return FollowPolicyType.ANYONE;
