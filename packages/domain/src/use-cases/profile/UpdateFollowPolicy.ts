@@ -31,11 +31,9 @@ export type UnknownFollowPolicy = {
 
 export type FollowPolicy = ChargeFollowPolicy | NoFeeFollowPolicy | UnknownFollowPolicy;
 
-export type SupportedFollowPolicy = ChargeFollowPolicy | NoFeeFollowPolicy;
-
 export type UpdateFollowPolicyRequest = {
   profileId: string;
-  policy: SupportedFollowPolicy;
+  policy: ChargeFollowPolicy | NoFeeFollowPolicy;
   kind: TransactionKind.UPDATE_FOLLOW_POLICY;
 };
 
