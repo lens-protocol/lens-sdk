@@ -64,6 +64,10 @@ import {
   SearchPublicationsQueryVariables,
   SingleProfileQueryRequest,
   TransactionErrorReasons,
+  WalletFragment,
+  WhoCollectedPublicationDocument,
+  WhoCollectedPublicationQuery,
+  WhoCollectedPublicationQueryVariables,
   WhoReactedPublicationDocument,
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables,
@@ -252,6 +256,31 @@ export function createEnabledModuleCurrenciesQueryMockedResponse(
           name: currency.name,
           symbol: currency.symbol,
         })),
+      },
+    },
+  };
+}
+
+export function createWhoCollectedPublicationQueryMockedResponse(args: {
+  variables: WhoCollectedPublicationQueryVariables;
+  wallets: WalletFragment[];
+}): MockedResponse<WhoCollectedPublicationQuery> {
+  return {
+    request: {
+      query: WhoCollectedPublicationDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: args.wallets,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.wallets.length,
+          },
+        },
       },
     },
   };

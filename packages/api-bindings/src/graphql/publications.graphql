@@ -55,3 +55,21 @@ query ExplorePublications($request: ExplorePublicationRequest!, $observerId: Pro
     }
   }
 }
+
+query WhoCollectedPublication(
+  $publicationId: InternalPublicationId!
+  $observerId: ProfileId
+  $limit: LimitScalar!
+  $cursor: Cursor
+) {
+  result: whoCollectedPublication(
+    request: { publicationId: $publicationId, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ...Wallet
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

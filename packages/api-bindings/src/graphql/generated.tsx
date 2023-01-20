@@ -4641,6 +4641,17 @@ export type ExplorePublicationsQuery = {
   };
 };
 
+export type WhoCollectedPublicationQueryVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+}>;
+
+export type WhoCollectedPublicationQuery = {
+  result: { items: Array<WalletFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
 export type AddReactionMutationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
   reaction: ReactionTypes;
@@ -7836,6 +7847,81 @@ export type ExplorePublicationsLazyQueryHookResult = ReturnType<
 export type ExplorePublicationsQueryResult = Apollo.QueryResult<
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables
+>;
+export const WhoCollectedPublicationDocument = gql`
+  query WhoCollectedPublication(
+    $publicationId: InternalPublicationId!
+    $observerId: ProfileId
+    $limit: LimitScalar!
+    $cursor: Cursor
+  ) {
+    result: whoCollectedPublication(
+      request: { publicationId: $publicationId, limit: $limit, cursor: $cursor }
+    ) {
+      items {
+        ...Wallet
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${WalletFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useWhoCollectedPublicationQuery__
+ *
+ * To run a query within a React component, call `useWhoCollectedPublicationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWhoCollectedPublicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWhoCollectedPublicationQuery({
+ *   variables: {
+ *      publicationId: // value for 'publicationId'
+ *      observerId: // value for 'observerId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useWhoCollectedPublicationQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    WhoCollectedPublicationQuery,
+    WhoCollectedPublicationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<WhoCollectedPublicationQuery, WhoCollectedPublicationQueryVariables>(
+    WhoCollectedPublicationDocument,
+    options,
+  );
+}
+export function useWhoCollectedPublicationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    WhoCollectedPublicationQuery,
+    WhoCollectedPublicationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<WhoCollectedPublicationQuery, WhoCollectedPublicationQueryVariables>(
+    WhoCollectedPublicationDocument,
+    options,
+  );
+}
+export type WhoCollectedPublicationQueryHookResult = ReturnType<
+  typeof useWhoCollectedPublicationQuery
+>;
+export type WhoCollectedPublicationLazyQueryHookResult = ReturnType<
+  typeof useWhoCollectedPublicationLazyQuery
+>;
+export type WhoCollectedPublicationQueryResult = Apollo.QueryResult<
+  WhoCollectedPublicationQuery,
+  WhoCollectedPublicationQueryVariables
 >;
 export const AddReactionDocument = gql`
   mutation AddReaction(
