@@ -49,6 +49,7 @@
     "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
+    "eth-rpc-errors": "^4.0.3",
     "graphql": "15.5.1",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
@@ -80,8 +81,8 @@
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
-    "typescript": "^4.9.3",
-    "tsup": "^6.5.0"
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.3"
   },
   "peerDependencies": {
     "ethers": "^5.7.2",

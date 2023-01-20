@@ -39,6 +39,7 @@ import { UnfollowProfileResponder } from './transactions/adapters/responders/Unf
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
+import { GasEstimator } from './transactions/infrastructure/blockchain/GasEstimator';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
 import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
 import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
@@ -85,6 +86,8 @@ export type SharedDependencies = {
   walletGateway: WalletGateway;
   notificationStorage: IStorage<UnreadNotificationsData>;
   signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
+  providerFactory: ProviderFactory;
+  gasEstimator: GasEstimator;
 };
 
 export function createSharedDependencies(config: LensConfig, { onLogout, onError }: Handlers) {
@@ -168,6 +171,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     transactionQueuePresenter,
   );
   const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
+  const gasEstimator = new GasEstimator();
 
   return {
     activeProfile,
@@ -190,6 +194,8 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     walletFactory,
     walletGateway,
     notificationStorage,
+    providerFactory,
+    gasEstimator
   };
 }
 

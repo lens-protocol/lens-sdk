@@ -287,6 +287,7 @@ importers:
       eslint: ^8.28.0
       eslint-plugin-react: ^7.31.11
       eslint-plugin-react-hooks: ^4.6.0
+      eth-rpc-errors: ^4.0.3
       ethereum-waffle: ^3.4.4
       ethers: ^5.7.2
       graphql: 15.5.1
@@ -315,6 +316,7 @@ importers:
       '@lens-protocol/domain': link:../domain
       '@lens-protocol/shared-kernel': link:../shared-kernel
       '@lens-protocol/storage': link:../storage
+      eth-rpc-errors: 4.0.3
       graphql: 15.5.1
       jwt-decode: 3.1.2
       lodash: 4.17.21
