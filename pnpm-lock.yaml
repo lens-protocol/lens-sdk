@@ -437,6 +437,7 @@ importers:
       ethers: ^5.7.2
       prettier: ^2.8.1
       react: ^18.2.0
+      react-dom: ^18.2.0
       rimraf: ^3.0.2
       tsup: ^6.5.0
       typescript: ^4.9.4
@@ -450,10 +451,11 @@ importers:
       ethers: 5.7.2
       prettier: 2.8.1
       react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
       rimraf: 3.0.2
       tsup: 6.5.0_typescript@4.9.4
       typescript: 4.9.4
-      wagmi: 0.9.2_2zmba3zh2lo2ye5dzgeckiacfa
+      wagmi: 0.9.2_5fkdkfy2bkgsnhvxgn477z7iae
 
 packages:
 
@@ -3467,23 +3469,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
-
-  /@tanstack/react-query/4.19.1_react@18.2.0:
-    resolution: {integrity: sha512-5dvHvmc0vrWI03AJugzvKfirxCyCLe+qawrWFCXdu8t7dklIhJ7D5ZhgTypv7mMtIpdHPcECtCiT/+V74wCn2A==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-    dependencies:
-      '@tanstack/query-core': 4.19.1
-      react: 18.2.0
-      use-sync-external-store: 1.2.0_react@18.2.0
-    dev: true
 
   /@testing-library/dom/8.19.0:
     resolution: {integrity: sha512-6YWYPPpxG3e/xOo6HIWwB/58HukkwIVTOaZ0VwdMVjhRUX/01E4FtQbck9GazOOj7MXHc5RBzMrU86iBJHbI+A==}
@@ -15594,37 +15579,6 @@ packages:
       xml-name-validator: 4.0.0
     dev: true
 
-  /wagmi/0.9.2_2zmba3zh2lo2ye5dzgeckiacfa:
-    resolution: {integrity: sha512-ZHmVXQ0U2650pBf0k168CZJ5pAotqefy5d5P9HpoW4oMaHoQ9+BvUjLcA0L2SEeUUY6L3MYRrOmoHHrcyTsToQ==}
-    peerDependencies:
-      ethers: '>=5.5.1'
-      react: '>=17.0.0'
-    dependencies:
-      '@coinbase/wallet-sdk': 3.6.2
-      '@tanstack/query-sync-storage-persister': 4.19.1
-      '@tanstack/react-query': 4.19.1_react@18.2.0
-      '@tanstack/react-query-persist-client': 4.19.1_tbzjkhe5jt5eajidrzbcozbyna
-      '@wagmi/core': 0.8.2_6s3hhsgcetktvjvubhzqo5q72u
-      '@walletconnect/ethereum-provider': 1.8.0
-      abitype: 0.2.5_typescript@4.9.4
-      ethers: 5.7.2
-      react: 18.2.0
-      use-sync-external-store: 1.2.0_react@18.2.0
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@tanstack/query-core'
-      - bufferutil
-      - debug
-      - encoding
-      - immer
-      - react-dom
-      - react-native
-      - supports-color
-      - typescript
-      - utf-8-validate
-      - zod
-    dev: true
-
   /wagmi/0.9.2_5fkdkfy2bkgsnhvxgn477z7iae:
     resolution: {integrity: sha512-ZHmVXQ0U2650pBf0k168CZJ5pAotqefy5d5P9HpoW4oMaHoQ9+BvUjLcA0L2SEeUUY6L3MYRrOmoHHrcyTsToQ==}
     peerDependencies:
@@ -15654,7 +15608,6 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: false
 
   /wagmi/0.9.2_j2ypj35ch2jv6b3hllmh4dxtwm:
     resolution: {integrity: sha512-ZHmVXQ0U2650pBf0k168CZJ5pAotqefy5d5P9HpoW4oMaHoQ9+BvUjLcA0L2SEeUUY6L3MYRrOmoHHrcyTsToQ==}

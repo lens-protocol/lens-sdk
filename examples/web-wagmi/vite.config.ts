@@ -9,8 +9,4 @@ export default defineConfig({
   define: {
     'process.env': {},
   },
-
-  resolve: {
-    dedupe: ['wagmi'],
-  },
 });
