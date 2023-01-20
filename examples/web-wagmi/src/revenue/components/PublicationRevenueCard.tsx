@@ -19,7 +19,7 @@ export function PublicationRevenueCard({ publicationRevenue }: RevenueCardProps)
         <p>{publicationRevenue.publication.metadata.content}</p>
       </div>
 
-      <p>{`Currency: ${publicationRevenue.revenue.totalAmount.asset.name} `}</p>
+      <p>{`Currency: ${publicationRevenue.revenue.totalAmount.asset.name}`}</p>
       <p>{`Symbol: ${publicationRevenue.revenue.totalAmount.asset.symbol}`}</p>
       <p>{`Amount: ${publicationRevenue.revenue.totalAmount.toFixed(2)}`}</p>
     </article>
