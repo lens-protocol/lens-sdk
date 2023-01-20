@@ -1,7 +1,4 @@
-import {
-  isProfileFieldsFragmentWithFeeFollowModule,
-  ProfileFieldsFragment,
-} from '@lens-protocol/api-bindings';
+import { ProfileFieldsFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -57,14 +54,9 @@ function createFollowProfilesFlowRequest(
 
   switch (followPolicyType) {
     case FollowPolicyType.CHARGE:
-      invariant(
-        isProfileFieldsFragmentWithFeeFollowModule(profile),
-        'Profile must have fee follow module',
-      );
-
       return {
         ...baseRequest,
-        fee: createFollowRequestFee(profile.followPolicy, profile.__followModule.contractAddress),
+        fee: createFollowRequestFee(profile.followPolicy, profile.followPolicy.contractAddress),
       };
     case FollowPolicyType.ONLY_PROFILE_OWNERS:
       return {

@@ -1,16 +1,15 @@
 import { ReactiveVar } from '@apollo/client';
-import { FollowPolicy, FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
-import { Amount, ChainType, erc20, invariant } from '@lens-protocol/shared-kernel';
 
 import {
+  erc20Amount,
   FollowModule,
-  getFollowPolicyTypeFromProfileFieldsFragment,
-  isFeeFollowModule,
   Profile,
   ProfileAttributeReader,
   ProfileAttributes,
 } from '../graphql';
+import { FollowPolicy } from '../graphql/FollowPolicy';
 import { TypePolicy } from './TypePolicy';
 
 function resolveFollowPolicy({
@@ -18,28 +17,36 @@ function resolveFollowPolicy({
 }: {
   followModule: FollowModule | null;
 }): FollowPolicy {
-  const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(followModule);
-
-  if (followPolicyType === FollowPolicyType.CHARGE) {
-    invariant(isFeeFollowModule(followModule), 'Profile must have the fee follow module');
-
-    const erc20Value = erc20({
-      name: followModule.amount.asset.name,
-      address: followModule.amount.asset.address,
-      chainType: ChainType.POLYGON,
-      decimals: followModule.amount.asset.decimals,
-      symbol: followModule.amount.asset.symbol,
-    });
+  if (followModule === null) {
     return {
-      type: FollowPolicyType.CHARGE,
-      amount: Amount.erc20(erc20Value, followModule.amount.value),
-      recipient: followModule.recipient,
+      type: FollowPolicyType.ANYONE,
     };
   }
 
-  return {
-    type: followPolicyType,
-  };
+  switch (followModule.__typename) {
+    case 'FeeFollowModuleSettings':
+      return {
+        type: FollowPolicyType.CHARGE,
+        amount: erc20Amount({ from: followModule.amount }),
+        recipient: followModule.recipient,
+        contractAddress: followModule.contractAddress,
+      };
+    case 'ProfileFollowModuleSettings':
+      return {
+        type: FollowPolicyType.ONLY_PROFILE_OWNERS,
+        contractAddress: followModule.contractAddress,
+      };
+    case 'RevertFollowModuleSettings':
+      return {
+        type: FollowPolicyType.NO_ONE,
+        contractAddress: followModule.contractAddress,
+      };
+    case 'UnknownFollowModuleSettings':
+      return {
+        type: FollowPolicyType.UNKNOWN,
+        contractAddress: followModule.contractAddress,
+      };
+  }
 }
 
 export function createProfileTypePolicy(

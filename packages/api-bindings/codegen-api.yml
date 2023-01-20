@@ -51,10 +51,11 @@ generates:
       - 'typescript':
           nonOptionalTypename: true
       - add:
-          content: [
+          content:
+            [
               "import type { ClientErc20Amount } from './ClientErc20Amount';",
-              "import type { ProfileAttributes } from './ProfileAttributes';
-              import type { FollowPolicy } from '@lens-protocol/domain/use-cases/profile';",
+              "import type { ProfileAttributes } from './ProfileAttributes';",
+              "import type { FollowPolicy } from './FollowPolicy';",
             ]
       - 'typescript-operations':
           skipTypename: true

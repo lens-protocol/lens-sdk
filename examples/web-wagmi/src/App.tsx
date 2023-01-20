@@ -30,6 +30,7 @@ import { UseFollowAndUnfollow } from './profiles/UseFollowAndUnfollow';
 import { UseMutualFollowers } from './profiles/UseMutualFollowers';
 import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
+import { UseProfilesOwnedBy } from './profiles/UseProfileOwnedBy';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseUpdateDispatcherConfig } from './profiles/UseUpdateDispatcherConfig';
 import { UseUpdateFollowPolicy } from './profiles/UseUpdateFollowPolicy';
@@ -38,6 +39,7 @@ import { UseUpdateProfileImage } from './profiles/UseUpdateProfileImage';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCollectedPublications } from './publications/UseCollectedPublications';
 import { UseCreateComment } from './publications/UseCreateComment';
+import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
 import { UsePublication } from './publications/UsePublication';
@@ -97,6 +99,7 @@ export function App() {
                   element={<UseReportPublication />}
                 />
                 <Route path="/publications/useHidePublication" element={<UseHidePublication />} />
+                <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />
@@ -119,6 +122,7 @@ export function App() {
                   path="/profiles/useActiveProfileSwitch"
                   element={<UseActiveProfileSwitch />}
                 />
+                <Route path="/profiles/useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
                 <Route path="/discovery/useFeed" element={<Feed />} />

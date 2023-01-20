@@ -1,8 +1,10 @@
 import { faker } from '@faker-js/faker';
-import { mockFreeFollowPolicy, mockTransactionHash } from '@lens-protocol/domain/mocks';
+import { FollowPolicyType } from '@lens-protocol/domain/dist/use-cases/profile';
+import { mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import { FollowPolicy } from '../FollowPolicy';
 import { ProfileAttributes } from '../ProfileAttributes';
 import {
   AttributeFragment,
@@ -60,6 +62,12 @@ export function mockAttributeFragment(overrides?: Partial<AttributeFragment>): A
   };
 }
 
+export function mockAnyoneFollowPolicy(): FollowPolicy {
+  return {
+    type: FollowPolicyType.ANYONE,
+  };
+}
+
 export function mockProfileFieldsFragment(
   overrides?: Partial<ProfileFieldsFragment>,
 ): ProfileFieldsFragment {
@@ -86,7 +94,7 @@ export function mockProfileFieldsFragment(
     dispatcher: null,
 
     __followModule: null,
-    followPolicy: mockFreeFollowPolicy(),
+    followPolicy: mockAnyoneFollowPolicy(),
 
     isFollowedByMe: false,
     isFollowing: false,

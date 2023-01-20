@@ -61,6 +61,11 @@ const profileHooks = [
     description: `Switch active profile.`,
     path: '/profiles/useActiveProfileSwitch',
   },
+  {
+    label: 'useProfilesOwnedBy',
+    description: `Fetch a list of profiles owed by a given address.`,
+    path: '/profiles/useProfilesOwnedBy',
+  },
 ];
 
 export function ProfilesPage() {

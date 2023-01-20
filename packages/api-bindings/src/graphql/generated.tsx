@@ -1,6 +1,6 @@
 import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
-import type { FollowPolicy } from '@lens-protocol/domain/use-cases/profile';
+import type { FollowPolicy } from './FollowPolicy';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';

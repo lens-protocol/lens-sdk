@@ -25,12 +25,6 @@ export type NoFeeFollowPolicy = {
   type: FollowPolicyType.ANYONE | FollowPolicyType.ONLY_PROFILE_OWNERS | FollowPolicyType.NO_ONE;
 };
 
-export type UnsupportedFollowPolicy = {
-  type: FollowPolicyType.UNKNOWN;
-};
-
-export type FollowPolicy = ChargeFollowPolicy | NoFeeFollowPolicy | UnsupportedFollowPolicy;
-
 export type UpdateFollowPolicyRequest = {
   profileId: string;
   policy: ChargeFollowPolicy | NoFeeFollowPolicy;

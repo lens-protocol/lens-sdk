@@ -3,11 +3,11 @@ import {
   ChargeFollowPolicy,
   Erc20,
   FollowPolicyType,
-  FollowPolicy,
   NoFeeFollowPolicy,
   ProfileFieldsFragment,
   useCurrencies,
   useUpdateFollowPolicy,
+  FollowPolicy,
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
