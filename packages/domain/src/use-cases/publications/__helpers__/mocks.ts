@@ -13,6 +13,7 @@ import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectP
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
 import { CreatePostRequest } from '../CreatePost';
+import { HidePublicationRequest } from '../HidePublication';
 import { ReactionRequest } from '../Reaction';
 import {
   ChargeCollectPolicy,
@@ -163,6 +164,15 @@ export function mockReactionRequest(overrides?: Partial<ReactionRequest>): React
     publicationId: faker.datatype.uuid(),
     publicationType: PublicationType.POST,
     reactionType: ReactionType.UPVOTE,
+    ...overrides,
+  };
+}
+
+export function mockHidePublicationRequest(
+  overrides?: Partial<HidePublicationRequest>,
+): HidePublicationRequest {
+  return {
+    publicationId: faker.datatype.uuid(),
     ...overrides,
   };
 }

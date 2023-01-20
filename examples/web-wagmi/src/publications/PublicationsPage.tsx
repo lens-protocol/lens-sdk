@@ -51,6 +51,11 @@ const publicationHooks = [
     description: `Report a publication.`,
     path: '/publications/useReportPublication',
   },
+  {
+    label: 'useHidePublication',
+    description: `Hide a publication.`,
+    path: '/publications/useHidePublication',
+  },
 ];
 
 export function PublicationsPage() {

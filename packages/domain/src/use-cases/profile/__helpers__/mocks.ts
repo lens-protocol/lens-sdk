@@ -8,9 +8,8 @@ import {
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { Transaction, TransactionKind, Profile, NftOwnershipChallenge } from '../../../entities';
+import { Transaction, TransactionKind, NftOwnershipChallenge } from '../../../entities';
 import { mockSignature } from '../../../entities/__helpers__/mocks';
-import { ActiveProfile } from '../ActiveProfile';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
@@ -122,14 +121,6 @@ export function mockUpdateDispatcherConfigRequest(
     ...overrides,
     kind: TransactionKind.UPDATE_DISPATCHER_CONFIG,
   };
-}
-
-export function mockActiveProfile({ profile }: { profile: Profile }) {
-  const activeProfile = mock<ActiveProfile>();
-
-  when(activeProfile.requireActiveProfile).mockResolvedValue(profile);
-
-  return activeProfile;
 }
 
 export function mockUnconstrainedFollowRequest(

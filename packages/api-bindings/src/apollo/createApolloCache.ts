@@ -5,7 +5,9 @@ import {
   FieldFunctionOptions,
   FieldPolicy,
   TypePolicy as UnpatchedTypePolicy,
+  ReactiveVar,
 } from '@apollo/client';
+import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
 import generatedIntrospection from '../graphql/generated';
@@ -53,9 +55,13 @@ type TypePolicies = {
   [__typename: string]: TypePolicy<unknown>;
 };
 
-function createTypePolicies(): TypePolicies {
+type TypePoliciesArgs = {
+  activeWalletVar: ReactiveVar<WalletData | null>;
+};
+
+function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies {
   return {
-    Profile: createProfileTypePolicy(),
+    Profile: createProfileTypePolicy(activeWalletVar),
     Post: createPublicationTypePolicy(),
     Comment: createPublicationTypePolicy(),
     Mirror: createPublicationTypePolicy(),
@@ -86,10 +92,12 @@ function createTypePolicies(): TypePolicies {
   };
 }
 
-export function createApolloCache(): ApolloCache<NormalizedCacheObject> {
+export function createApolloCache({
+  activeWalletVar,
+}: TypePoliciesArgs): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     possibleTypes: generatedIntrospection.possibleTypes,
     resultCaching: true,
-    typePolicies: createTypePolicies(),
+    typePolicies: createTypePolicies({ activeWalletVar }),
   });
 }

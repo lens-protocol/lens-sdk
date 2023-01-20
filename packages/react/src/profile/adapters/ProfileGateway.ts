@@ -44,4 +44,21 @@ export class ProfileGateway implements IProfileGateway {
       handle: data.result.handle,
     });
   }
+
+  async getProfileById(profileId: string): Promise<Profile | null> {
+    const { data } = await this.apolloClient.query<GetProfileQuery, GetProfileQueryVariables>({
+      query: GetProfileDocument,
+      variables: { request: { profileId } },
+    });
+
+    invariant(data, `Could not query profiles by id: ${profileId}`);
+
+    if (data.result === null) {
+      return null;
+    }
+    return Profile.create({
+      id: data.result.id,
+      handle: data.result.handle,
+    });
+  }
 }

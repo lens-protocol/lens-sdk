@@ -10,19 +10,16 @@ extend type Profile {
 }
 
 extend type Post {
-  ownedByMe: Boolean!
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean!
 }
 
 extend type Comment {
-  ownedByMe: Boolean!
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean!
 }
 
 extend type Mirror {
-  ownedByMe: Boolean!
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean! # just to keep Publication type consistent, that will never be used
 }
@@ -35,8 +32,6 @@ type PendingPost {
   locale: Locale!
   mainContentFocus: PublicationMainFocus!
 }
-
-extend union FeedItemRoot = PendingPost
 
 extend type RevenueAggregate {
   totalAmount: ClientErc20Amount!

@@ -1,4 +1,10 @@
-import { FeedItemFragment, isPostPublication, useFeed } from '@lens-protocol/react';
+import {
+  FeedEventItemType,
+  FeedItemFragment,
+  isPostPublication,
+  useFeed,
+} from '@lens-protocol/react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Loading } from '../components/loading/Loading';
@@ -24,15 +30,15 @@ function Publication({ feedItem: { root: publication } }: PublicationProps) {
 }
 
 export function Feed() {
+  const [restrictEventTypesTo, setRestrictEventTypesTo] = useState<FeedEventItemType[]>([
+    FeedEventItemType.Post,
+  ]);
   const infiniteScroll = useInfiniteScroll(
     useFeed({
       profileId: '0x3a2a',
+      restrictEventTypesTo,
     }),
   );
-
-  if (infiniteScroll.loading) return <Loading />;
-
-  if (infiniteScroll.data.length === 0) return <p>No items</p>;
 
   return (
     <div>
@@ -40,8 +46,34 @@ export function Feed() {
         <code>useFeed</code>
       </h1>
 
+      <fieldset>
+        <legend>Restrict event types to</legend>
+        {Object.entries(FeedEventItemType).map(([key, value]) => (
+          <label key={value}>
+            <input
+              type="checkbox"
+              checked={restrictEventTypesTo.includes(value)}
+              name="restrictEventTypesTo"
+              value={value}
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setRestrictEventTypesTo([...restrictEventTypesTo, value]);
+                } else {
+                  setRestrictEventTypesTo(restrictEventTypesTo.filter((i) => i !== value));
+                }
+              }}
+            />
+            &nbsp;{key}
+          </label>
+        ))}
+      </fieldset>
+
+      {infiniteScroll.data?.length === 0 && <p>No items</p>}
+
+      {infiniteScroll.loading && <Loading />}
+
       {infiniteScroll.data
-        .filter((i) => isPostPublication(i.root))
+        ?.filter((i) => isPostPublication(i.root))
         .map((item, i) => (
           <Publication key={`${item.root.id}-${i}`} feedItem={item} />
         ))}

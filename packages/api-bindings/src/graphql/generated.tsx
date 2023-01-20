@@ -104,7 +104,7 @@ export type Scalars = {
   /** Url scalar type */
   Url: string;
   /** Represents NULL values */
-  Void: string;
+  Void: void;
 };
 
 /** The access conditions for the publication */
@@ -391,7 +391,6 @@ export type Comment = {
   mirrors: Array<Scalars['InternalPublicationId']>;
   /** The on chain content uri could be `ipfs://` or `https` */
   onChainContentURI: Scalars['String'];
-  ownedByMe: Scalars['Boolean'];
   /** The profile ref */
   profile: Profile;
   reaction: Maybe<ReactionTypes>;
@@ -1380,7 +1379,7 @@ export type FeedItem = {
   comments: Maybe<Array<Comment>>;
 };
 
-export type FeedItemRoot = Comment | PendingPost | Post;
+export type FeedItemRoot = Post | Comment;
 
 export type FeedRequest = {
   limit?: Maybe<Scalars['LimitScalar']>;
@@ -1856,7 +1855,6 @@ export type Mirror = {
   mirrorOf: MirrorablePublication;
   /** The on chain content uri could be `ipfs://` or `https` */
   onChainContentURI: Scalars['String'];
-  ownedByMe: Scalars['Boolean'];
   /** The profile ref */
   profile: Profile;
   reaction: Maybe<ReactionTypes>;
@@ -2517,7 +2515,6 @@ export type Post = {
   mirrors: Array<Scalars['InternalPublicationId']>;
   /** The on chain content uri could be `ipfs://` or `https` */
   onChainContentURI: Scalars['String'];
-  ownedByMe: Scalars['Boolean'];
   /** The profile ref */
   profile: Profile;
   reaction: Maybe<ReactionTypes>;
@@ -4069,7 +4066,6 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
   | 'hasCollectedByMe'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
-  | 'ownedByMe'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4106,7 +4102,6 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
-  | 'ownedByMe'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4150,7 +4145,6 @@ export type PostFragment = { __typename: 'Post' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
-  | 'ownedByMe'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4188,12 +4182,13 @@ export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
 
 export type FeedItemFragment = { __typename: 'FeedItem' } & {
-  root: CommentFragment | PendingPostFragment | PostFragment;
+  root: PostFragment | CommentFragment;
   comments: Maybe<Array<CommentFragment>>;
 };
 
 export type FeedQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
+  restrictEventTypesTo?: Maybe<Array<FeedEventItemType> | FeedEventItemType>;
   observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
@@ -4620,12 +4615,28 @@ export type PublicationQueryVariables = Exact<{
 
 export type PublicationQuery = { result: Maybe<PostFragment | CommentFragment | MirrorFragment> };
 
+export type PublicationByTxHashQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  txHash: Scalars['TxHash'];
+}>;
+
+export type PublicationByTxHashQuery = {
+  result: Maybe<PostFragment | CommentWithFirstCommentFragment | MirrorFragment>;
+};
+
+export type HidePublicationMutationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+}>;
+
+export type HidePublicationMutation = Pick<Mutation, 'hidePublication'>;
+
 export type PublicationsQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
   observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
 
 export type PublicationsQuery = {
@@ -4645,15 +4656,6 @@ export type ExplorePublicationsQuery = {
     items: Array<PostFragment | CommentFragment | MirrorFragment>;
     pageInfo: CommonPaginatedResultInfoFragment;
   };
-};
-
-export type PublicationByTxHashQueryVariables = Exact<{
-  observerId?: Maybe<Scalars['ProfileId']>;
-  txHash: Scalars['TxHash'];
-}>;
-
-export type PublicationByTxHashQuery = {
-  result: Maybe<PostFragment | CommentWithFirstCommentFragment | MirrorFragment>;
 };
 
 export type AddReactionMutationVariables = Exact<{
@@ -4714,6 +4716,19 @@ export type PublicationRevenueQueryVariables = Exact<{
 }>;
 
 export type PublicationRevenueQuery = { result: Maybe<RevenueFragment> };
+
+export type ProfilePublicationRevenueQueryVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+  publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
+  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+}>;
+
+export type ProfilePublicationRevenueQuery = {
+  result: { items: Array<PublicationRevenueFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
 
 export type SearchPublicationsQueryVariables = Exact<{
   limit?: Maybe<Scalars['LimitScalar']>;
@@ -5131,7 +5146,6 @@ export const CommentBaseFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
-    ownedByMe @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5176,7 +5190,6 @@ export const PostFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
-    ownedByMe @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5217,7 +5230,6 @@ export const MirrorBaseFragmentDoc = gql`
     }
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
-    ownedByMe @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5271,15 +5283,6 @@ export const CommonPaginatedResultInfoFragmentDoc = gql`
     totalCount
   }
 `;
-export const Eip712TypedDataDomainFragmentDoc = gql`
-  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    __typename
-    name
-    chainId
-    version
-    verifyingContract
-  }
-`;
 export const PendingPostFragmentDoc = gql`
   fragment PendingPost on PendingPost {
     __typename
@@ -5297,13 +5300,19 @@ export const PendingPostFragmentDoc = gql`
   ${MediaFragmentDoc}
   ${ProfileFieldsFragmentDoc}
 `;
+export const Eip712TypedDataDomainFragmentDoc = gql`
+  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    __typename
+    name
+    chainId
+    version
+    verifyingContract
+  }
+`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
     root {
-      ... on PendingPost {
-        ...PendingPost
-      }
       ... on Post {
         ...Post
       }
@@ -5315,7 +5324,6 @@ export const FeedItemFragmentDoc = gql`
       ...Comment
     }
   }
-  ${PendingPostFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
@@ -6008,13 +6016,20 @@ export type EnabledModuleCurrenciesQueryResult = Apollo.QueryResult<
 export const FeedDocument = gql`
   query Feed(
     $profileId: ProfileId!
+    $restrictEventTypesTo: [FeedEventItemType!]
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]
   ) {
     result: feed(
-      request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
+      request: {
+        profileId: $profileId
+        feedEventItemTypes: $restrictEventTypesTo
+        limit: $limit
+        cursor: $cursor
+        sources: $sources
+      }
     ) {
       items {
         ...FeedItem
@@ -6041,6 +6056,7 @@ export const FeedDocument = gql`
  * const { data, loading, error } = useFeedQuery({
  *   variables: {
  *      profileId: // value for 'profileId'
+ *      restrictEventTypesTo: // value for 'restrictEventTypesTo'
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
@@ -7601,6 +7617,116 @@ export type PublicationQueryResult = Apollo.QueryResult<
   PublicationQuery,
   PublicationQueryVariables
 >;
+export const PublicationByTxHashDocument = gql`
+  query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
+    result: publication(request: { txHash: $txHash }) {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...CommentWithFirstComment
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentWithFirstCommentFragmentDoc}
+`;
+
+/**
+ * __usePublicationByTxHashQuery__
+ *
+ * To run a query within a React component, call `usePublicationByTxHashQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationByTxHashQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationByTxHashQuery({
+ *   variables: {
+ *      observerId: // value for 'observerId'
+ *      txHash: // value for 'txHash'
+ *   },
+ * });
+ */
+export function usePublicationByTxHashQuery(
+  baseOptions: Apollo.QueryHookOptions<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
+    PublicationByTxHashDocument,
+    options,
+  );
+}
+export function usePublicationByTxHashLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PublicationByTxHashQuery,
+    PublicationByTxHashQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
+    PublicationByTxHashDocument,
+    options,
+  );
+}
+export type PublicationByTxHashQueryHookResult = ReturnType<typeof usePublicationByTxHashQuery>;
+export type PublicationByTxHashLazyQueryHookResult = ReturnType<
+  typeof usePublicationByTxHashLazyQuery
+>;
+export type PublicationByTxHashQueryResult = Apollo.QueryResult<
+  PublicationByTxHashQuery,
+  PublicationByTxHashQueryVariables
+>;
+export const HidePublicationDocument = gql`
+  mutation HidePublication($publicationId: InternalPublicationId!) {
+    hidePublication(request: { publicationId: $publicationId })
+  }
+`;
+export type HidePublicationMutationFn = Apollo.MutationFunction<
+  HidePublicationMutation,
+  HidePublicationMutationVariables
+>;
+
+/**
+ * __useHidePublicationMutation__
+ *
+ * To run a mutation, you first call `useHidePublicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useHidePublicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [hidePublicationMutation, { data, loading, error }] = useHidePublicationMutation({
+ *   variables: {
+ *      publicationId: // value for 'publicationId'
+ *   },
+ * });
+ */
+export function useHidePublicationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    HidePublicationMutation,
+    HidePublicationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<HidePublicationMutation, HidePublicationMutationVariables>(
+    HidePublicationDocument,
+    options,
+  );
+}
+export type HidePublicationMutationHookResult = ReturnType<typeof useHidePublicationMutation>;
+export type HidePublicationMutationResult = Apollo.MutationResult<HidePublicationMutation>;
+export type HidePublicationMutationOptions = Apollo.BaseMutationOptions<
+  HidePublicationMutation,
+  HidePublicationMutationVariables
+>;
 export const PublicationsDocument = gql`
   query Publications(
     $profileId: ProfileId!
@@ -7608,6 +7734,7 @@ export const PublicationsDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $publicationTypes: [PublicationTypes!]
+    $sources: [Sources!]
   ) {
     result: publications(
       request: {
@@ -7615,6 +7742,7 @@ export const PublicationsDocument = gql`
         limit: $limit
         cursor: $cursor
         publicationTypes: $publicationTypes
+        sources: $sources
       }
     ) {
       items {
@@ -7656,6 +7784,7 @@ export const PublicationsDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      publicationTypes: // value for 'publicationTypes'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -7753,71 +7882,6 @@ export type ExplorePublicationsLazyQueryHookResult = ReturnType<
 export type ExplorePublicationsQueryResult = Apollo.QueryResult<
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables
->;
-export const PublicationByTxHashDocument = gql`
-  query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
-    result: publication(request: { txHash: $txHash }) {
-      ... on Post {
-        ...Post
-      }
-      ... on Mirror {
-        ...Mirror
-      }
-      ... on Comment {
-        ...CommentWithFirstComment
-      }
-    }
-  }
-  ${PostFragmentDoc}
-  ${MirrorFragmentDoc}
-  ${CommentWithFirstCommentFragmentDoc}
-`;
-
-/**
- * __usePublicationByTxHashQuery__
- *
- * To run a query within a React component, call `usePublicationByTxHashQuery` and pass it any options that fit your needs.
- * When your component renders, `usePublicationByTxHashQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePublicationByTxHashQuery({
- *   variables: {
- *      observerId: // value for 'observerId'
- *      txHash: // value for 'txHash'
- *   },
- * });
- */
-export function usePublicationByTxHashQuery(
-  baseOptions: Apollo.QueryHookOptions<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
-    PublicationByTxHashDocument,
-    options,
-  );
-}
-export function usePublicationByTxHashLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    PublicationByTxHashQuery,
-    PublicationByTxHashQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>(
-    PublicationByTxHashDocument,
-    options,
-  );
-}
-export type PublicationByTxHashQueryHookResult = ReturnType<typeof usePublicationByTxHashQuery>;
-export type PublicationByTxHashLazyQueryHookResult = ReturnType<
-  typeof usePublicationByTxHashLazyQuery
->;
-export type PublicationByTxHashQueryResult = Apollo.QueryResult<
-  PublicationByTxHashQuery,
-  PublicationByTxHashQueryVariables
 >;
 export const AddReactionDocument = gql`
   mutation AddReaction(
@@ -8102,6 +8166,91 @@ export type PublicationRevenueLazyQueryHookResult = ReturnType<
 export type PublicationRevenueQueryResult = Apollo.QueryResult<
   PublicationRevenueQuery,
   PublicationRevenueQueryVariables
+>;
+export const ProfilePublicationRevenueDocument = gql`
+  query ProfilePublicationRevenue(
+    $profileId: ProfileId!
+    $observerId: ProfileId
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $publicationTypes: [PublicationTypes!]
+    $sources: [Sources!]
+  ) {
+    result: profilePublicationRevenue(
+      request: {
+        profileId: $profileId
+        limit: $limit
+        cursor: $cursor
+        types: $publicationTypes
+        sources: $sources
+      }
+    ) {
+      items {
+        ...PublicationRevenue
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PublicationRevenueFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useProfilePublicationRevenueQuery__
+ *
+ * To run a query within a React component, call `useProfilePublicationRevenueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfilePublicationRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfilePublicationRevenueQuery({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *      observerId: // value for 'observerId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      publicationTypes: // value for 'publicationTypes'
+ *      sources: // value for 'sources'
+ *   },
+ * });
+ */
+export function useProfilePublicationRevenueQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ProfilePublicationRevenueQuery,
+    ProfilePublicationRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfilePublicationRevenueQuery, ProfilePublicationRevenueQueryVariables>(
+    ProfilePublicationRevenueDocument,
+    options,
+  );
+}
+export function useProfilePublicationRevenueLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfilePublicationRevenueQuery,
+    ProfilePublicationRevenueQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ProfilePublicationRevenueQuery,
+    ProfilePublicationRevenueQueryVariables
+  >(ProfilePublicationRevenueDocument, options);
+}
+export type ProfilePublicationRevenueQueryHookResult = ReturnType<
+  typeof useProfilePublicationRevenueQuery
+>;
+export type ProfilePublicationRevenueLazyQueryHookResult = ReturnType<
+  typeof useProfilePublicationRevenueLazyQuery
+>;
+export type ProfilePublicationRevenueQueryResult = Apollo.QueryResult<
+  ProfilePublicationRevenueQuery,
+  ProfilePublicationRevenueQueryVariables
 >;
 export const SearchPublicationsDocument = gql`
   query SearchPublications(
@@ -8666,7 +8815,6 @@ export type CommentKeySpecifier = (
   | 'metadata'
   | 'mirrors'
   | 'onChainContentURI'
-  | 'ownedByMe'
   | 'profile'
   | 'reaction'
   | 'referenceModule'
@@ -8696,7 +8844,6 @@ export type CommentFieldPolicy = {
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
-  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9750,7 +9897,6 @@ export type MirrorKeySpecifier = (
   | 'metadata'
   | 'mirrorOf'
   | 'onChainContentURI'
-  | 'ownedByMe'
   | 'profile'
   | 'reaction'
   | 'referenceModule'
@@ -9776,7 +9922,6 @@ export type MirrorFieldPolicy = {
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOf?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
-  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10212,7 +10357,6 @@ export type PostKeySpecifier = (
   | 'metadata'
   | 'mirrors'
   | 'onChainContentURI'
-  | 'ownedByMe'
   | 'profile'
   | 'reaction'
   | 'referenceModule'
@@ -10239,7 +10383,6 @@ export type PostFieldPolicy = {
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
-  ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -11997,7 +12140,7 @@ const result: PossibleTypesResultData = {
       'TimedFeeCollectModuleSettings',
       'UnknownCollectModuleSettings',
     ],
-    FeedItemRoot: ['Comment', 'PendingPost', 'Post'],
+    FeedItemRoot: ['Post', 'Comment'],
     FollowModule: [
       'FeeFollowModuleSettings',
       'ProfileFollowModuleSettings',

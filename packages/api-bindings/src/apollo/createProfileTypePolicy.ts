@@ -1,4 +1,6 @@
+import { ReactiveVar } from '@apollo/client';
 import { FollowPolicy, FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { Amount, ChainType, erc20, invariant } from '@lens-protocol/shared-kernel';
 
 import {
@@ -40,7 +42,9 @@ function resolveFollowPolicy({
   };
 }
 
-export function createProfileTypePolicy(): TypePolicy<Profile> {
+export function createProfileTypePolicy(
+  activeWalletVar: ReactiveVar<WalletData | null>,
+): TypePolicy<Profile> {
   return {
     fields: {
       isFollowing: {
@@ -78,8 +82,11 @@ export function createProfileTypePolicy(): TypePolicy<Profile> {
         }, {} as ProfileAttributes);
       },
 
-      ownedByMe() {
-        // TODO: implement ownership check using active profile
+      ownedByMe(_: boolean | undefined, { readField }) {
+        const activeWallet = activeWalletVar();
+        if (activeWallet) {
+          return readField('ownedBy') === activeWallet.address;
+        }
         return false;
       },
     },

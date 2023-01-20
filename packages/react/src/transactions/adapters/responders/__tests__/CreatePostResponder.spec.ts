@@ -1,13 +1,6 @@
-import {
-  FeedDocument,
-  FeedQuery,
-  FeedQueryVariables,
-  PostFragment,
-  ProfileFieldsFragment,
-} from '@lens-protocol/api-bindings';
+import { PostFragment, ProfileFieldsFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockFeedQuery,
   mockGetProfileQueryMockedResponse,
   mockPostFragment,
   mockProfileFieldsFragment,
@@ -16,18 +9,15 @@ import {
 import { mockCreatePostRequest, mockBroadcastedTransactionData } from '@lens-protocol/domain/mocks';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
-import { nonNullable } from '@lens-protocol/shared-kernel';
 
-import { CreatePostResponder } from '../CreatePostResponder';
+import { CreatePostResponder, recentPosts } from '../CreatePostResponder';
 
 function setupTestScenario({
   author,
-  cachedFeedData,
   post = mockPostFragment(),
   transactionData = mockBroadcastedTransactionData(),
 }: {
   author: ProfileFieldsFragment;
-  cachedFeedData: FeedQuery;
   post?: PostFragment;
   transactionData?: BroadcastedTransactionData<CreatePostRequest>;
 }) {
@@ -45,45 +35,19 @@ function setupTestScenario({
     }),
   ]);
 
-  apolloClient.cache.writeQuery({
-    query: FeedDocument,
-    data: cachedFeedData,
-    variables: {
-      profileId: author.id,
-      observerId: author.id,
-      limit: 10,
-    },
-  });
-
-  const responder = new CreatePostResponder(apolloClient);
-
-  return {
-    responder,
-
-    get updatedFeedQuery() {
-      return nonNullable(
-        apolloClient.cache.readQuery<FeedQuery, FeedQueryVariables>({
-          query: FeedDocument,
-          variables: {
-            profileId: author.id,
-            observerId: author.id,
-            limit: 10,
-          },
-        }),
-        'Invalid FeedQuery',
-      );
-    },
-  };
+  return new CreatePostResponder(apolloClient);
 }
 
 describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
   const author = mockProfileFieldsFragment();
-  const cachedFeedData = mockFeedQuery();
+
+  afterEach(() => {
+    recentPosts([]);
+  });
 
   describe(`when "${CreatePostResponder.prototype.prepare.name}" method is invoked`, () => {
-    it(`should optimistically add FeedItem with a PendingPostFragment at the top of the corresponding FeedQuery cache entry`, async () => {
-      const scenario = setupTestScenario({
-        cachedFeedData,
+    it(`should optimistically add a PendingPostFragment at the top of the provided recent posts ReactiveVar`, async () => {
+      const responder = setupTestScenario({
         author,
       });
 
@@ -92,11 +56,12 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
           profileId: author.id,
         }),
       });
-      await scenario.responder.prepare(transactionData);
+      await responder.prepare(transactionData);
 
-      expect(scenario.updatedFeedQuery.result.items).toHaveLength(
-        cachedFeedData.result.items.length + 1,
-      );
+      expect(recentPosts()[0]).toMatchObject({
+        __typename: 'PendingPost',
+        id: transactionData.id,
+      });
     });
   });
 
@@ -108,25 +73,19 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
       }),
     });
 
-    it(`should replace the FeedItem with the PendingPostFragment added during the "${CreatePostResponder.prototype.prepare.name}" method call with the actual PostFragment retrieved from the BE`, async () => {
-      const scenario = setupTestScenario({
-        cachedFeedData,
+    it(`should replace the PendingPostFragment added during the "${CreatePostResponder.prototype.prepare.name}" method call with the actual PostFragment retrieved from the BE`, async () => {
+      const responder = setupTestScenario({
         author,
         post,
         transactionData,
       });
-      await scenario.responder.prepare(transactionData);
+      await responder.prepare(transactionData);
 
-      await scenario.responder.commit(transactionData);
+      await responder.commit(transactionData);
 
-      expect(scenario.updatedFeedQuery.result.items).toHaveLength(
-        cachedFeedData.result.items.length + 1,
-      );
-      expect(scenario.updatedFeedQuery.result.items[0]).toMatchObject({
-        root: {
-          __typename: 'Post',
-          id: post.id,
-        },
+      expect(recentPosts()[0]).toMatchObject({
+        __typename: 'Post',
+        id: post.id,
       });
     });
   });
@@ -139,18 +98,17 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
       }),
     });
 
-    it(`should remove the FeedItem with the PendingPostFragment added during the "${CreatePostResponder.prototype.prepare.name}" method call`, async () => {
-      const scenario = setupTestScenario({
-        cachedFeedData,
+    it(`should remove the PendingPostFragment added during the "${CreatePostResponder.prototype.prepare.name}" method call`, async () => {
+      const responder = setupTestScenario({
         author,
         post,
         transactionData,
       });
-      await scenario.responder.prepare(transactionData);
+      await responder.prepare(transactionData);
 
-      await scenario.responder.rollback(transactionData);
+      await responder.rollback(transactionData);
 
-      expect(scenario.updatedFeedQuery).toMatchObject(cachedFeedData);
+      expect(recentPosts().length).toBe(0);
     });
   });
 });

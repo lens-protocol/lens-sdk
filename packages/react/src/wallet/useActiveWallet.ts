@@ -1,4 +1,4 @@
-import { WalletData } from '@lens-protocol/domain/dist/use-cases/wallets';
+import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
 import { ReadResult } from '../helpers';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';

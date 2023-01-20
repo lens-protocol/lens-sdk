@@ -24,6 +24,7 @@ import { UseCurrencies } from './misc/UseCurrencies';
 import { UseNotifications } from './misc/UseNotifications';
 import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
 import { ProfilesPage } from './profiles/ProfilesPage';
+import { UseActiveProfileSwitch } from './profiles/UseActiveProfileSwitch';
 import { UseCreateProfile } from './profiles/UseCreateProfile';
 import { UseFollowAndUnfollow } from './profiles/UseFollowAndUnfollow';
 import { UseMutualFollowers } from './profiles/UseMutualFollowers';
@@ -38,6 +39,7 @@ import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCollectedPublications } from './publications/UseCollectedPublications';
 import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreatePost } from './publications/UseCreatePost';
+import { UseHidePublication } from './publications/UseHidePublication';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
@@ -45,6 +47,7 @@ import { UseReportPublication } from './publications/UseReportPublication';
 import { UseWhoReacted } from './publications/UseWhoReacted';
 import { RevenuePage } from './revenue/RevenuePage';
 import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
+import { UseProfilePublicationRevenue } from './revenue/UseProfilePublicationRevenue';
 import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
@@ -93,6 +96,7 @@ export function App() {
                   path="/publications/useReportPublication"
                   element={<UseReportPublication />}
                 />
+                <Route path="/publications/useHidePublication" element={<UseHidePublication />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />
@@ -110,6 +114,10 @@ export function App() {
                 <Route
                   path="/profiles/useUpdateProfileDetails"
                   element={<UseUpdateProfileDetails />}
+                />
+                <Route
+                  path="/profiles/useActiveProfileSwitch"
+                  element={<UseActiveProfileSwitch />}
                 />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
@@ -130,6 +138,10 @@ export function App() {
                 <Route
                   path="/revenue/useProfileFollowRevenue"
                   element={<UseProfileFollowRevenue />}
+                />
+                <Route
+                  path="/revenue/useProfilePublicationRevenue"
+                  element={<UseProfilePublicationRevenue />}
                 />
 
                 <Route path="/misc" element={<MiscPage />} />

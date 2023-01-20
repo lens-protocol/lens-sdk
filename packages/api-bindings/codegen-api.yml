@@ -37,7 +37,7 @@ config:
     TxHash: string
     TxId: string
     Url: string
-    Void: string
+    Void: void
   avoidOptionals:
     field: true
 generates:

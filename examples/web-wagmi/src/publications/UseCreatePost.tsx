@@ -1,7 +1,38 @@
+import { useFeed, useRecentPosts } from '@lens-protocol/react';
+
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
-import { MyFeed } from './components/MyFeed';
+import { Loading } from '../components/loading/Loading';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PostComposer } from './components/PostComposer';
+import { PublicationCard } from './components/PublicationCard';
+
+type TimelineProps = {
+  profileId: string;
+};
+
+export function Timeline({ profileId }: TimelineProps) {
+  const recentPosts = useRecentPosts();
+  const infiniteScroll = useInfiniteScroll(useFeed({ profileId }));
+
+  if (infiniteScroll.loading) return <Loading />;
+
+  if (infiniteScroll.data.length === 0) return <p>No items</p>;
+
+  return (
+    <div>
+      {recentPosts.map((item, i) => (
+        <PublicationCard key={`${item.id}-${i}`} publication={item} />
+      ))}
+
+      {infiniteScroll.data.map((item, i) => (
+        <PublicationCard key={`${item.root.id}-${i}`} publication={item.root} />
+      ))}
+
+      {infiniteScroll.hasMore && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
+    </div>
+  );
+}
 
 export function UseCreatePost() {
   return (
@@ -14,8 +45,8 @@ export function UseCreatePost() {
         {({ profile }) => (
           <>
             <PostComposer profile={profile} />
-            <p>My feed:</p>
-            <MyFeed profileId={profile.id} />
+
+            <Timeline profileId={profile.id} />
           </>
         )}
       </WhenLoggedInWithProfile>
