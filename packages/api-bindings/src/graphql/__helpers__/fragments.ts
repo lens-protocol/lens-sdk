@@ -9,7 +9,6 @@ import {
   CollectModuleFragment,
   CommentFragment,
   EnabledModuleFragment,
-  EnabledModules,
   EnabledModulesFragment,
   Erc20AmountFragment,
   Erc20Fragment,
@@ -377,13 +376,13 @@ export function mockEnabledModuleFragment(
     contractAddress: mockEthereumAddress(),
     inputParams: [mockModuleInfoFragment()],
     redeemParams: [mockModuleInfoFragment()],
-    returnDataParms: [mockModuleInfoFragment()],
+    returnDataParams: [mockModuleInfoFragment()],
     ...overrides,
   };
 }
 
 export function mockEnabledModulesFragment(
-  overrides?: Partial<Omit<EnabledModules, '__typename'>>,
+  overrides?: Partial<Omit<EnabledModulesFragment, '__typename'>>,
 ): EnabledModulesFragment {
   return {
     __typename: 'EnabledModules',

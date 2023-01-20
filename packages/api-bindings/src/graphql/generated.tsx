@@ -4262,7 +4262,7 @@ export type EnabledModuleFragment = { __typename: 'EnabledModule' } & Pick<
 > & {
     inputParams: Array<ModuleInfoFragment>;
     redeemParams: Array<ModuleInfoFragment>;
-    returnDataParms: Array<ModuleInfoFragment>;
+    returnDataParams: Array<ModuleInfoFragment>;
   };
 
 export type EnabledModulesFragment = { __typename: 'EnabledModules' } & {
@@ -5328,7 +5328,7 @@ export const EnabledModuleFragmentDoc = gql`
     redeemParams {
       ...ModuleInfo
     }
-    returnDataParms {
+    returnDataParams: returnDataParms {
       ...ModuleInfo
     }
   }

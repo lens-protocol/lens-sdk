@@ -14,7 +14,7 @@ fragment EnabledModule on EnabledModule {
   redeemParams {
     ...ModuleInfo
   }
-  returnDataParms {
+  returnDataParams: returnDataParms {
     ...ModuleInfo
   }
 }
