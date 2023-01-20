@@ -20,6 +20,9 @@ import {
   CreatePostViaDispatcherMutationVariables,
   EnabledModuleCurrenciesDocument,
   EnabledModuleCurrenciesQuery,
+  EnabledModulesDocument,
+  EnabledModulesFragment,
+  EnabledModulesQuery,
   ExplorePublicationsDocument,
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables,
@@ -81,7 +84,12 @@ import {
   WhoReactedPublicationQueryVariables,
   WhoReactedResultFragment,
 } from '../generated';
-import { mockFeedItemFragment, mockPostFragment, mockProfileFieldsFragment } from './fragments';
+import {
+  mockEnabledModulesFragment,
+  mockFeedItemFragment,
+  mockPostFragment,
+  mockProfileFieldsFragment,
+} from './fragments';
 
 export function createProfilesToFollowQueryMockedResponse(args: {
   profiles: ProfileFieldsFragment[];
@@ -646,6 +654,23 @@ export function createCreatePostViaDispatcherMutationMockedResponse({
     },
     result: {
       data,
+    },
+  };
+}
+
+export function createEnabledModulesQueryMockedResponse({
+  data = mockEnabledModulesFragment(),
+}: {
+  data?: EnabledModulesFragment;
+} = {}): MockedResponse<EnabledModulesQuery> {
+  return {
+    request: {
+      query: EnabledModulesDocument,
+    },
+    result: {
+      data: {
+        result: data,
+      },
     },
   };
 }

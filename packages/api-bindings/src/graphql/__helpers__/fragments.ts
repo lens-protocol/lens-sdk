@@ -8,12 +8,16 @@ import {
   AttributeFragment,
   CollectModuleFragment,
   CommentFragment,
+  EnabledModuleFragment,
+  EnabledModules,
+  EnabledModulesFragment,
   Erc20AmountFragment,
   Erc20Fragment,
   FeedItemFragment,
   MediaFragment,
   MetadataFragment,
   MirrorFragment,
+  ModuleInfoFragment,
   PostFragment,
   ProfileFieldsFragment,
   ProfileFollowRevenueFragment,
@@ -349,6 +353,43 @@ export function mockWhoReactedResultFragment(
     reaction: ReactionTypes.Upvote,
     reactionAt: faker.date.past().toISOString(),
     profile: mockProfileFieldsFragment(),
+    ...overrides,
+  };
+}
+
+export function mockModuleInfoFragment(
+  overrides?: Partial<Omit<ModuleInfoFragment, '__typename'>>,
+): ModuleInfoFragment {
+  return {
+    __typename: 'ModuleInfo',
+    name: faker.datatype.string(),
+    type: faker.datatype.string(),
+    ...overrides,
+  };
+}
+
+export function mockEnabledModuleFragment(
+  overrides?: Partial<Omit<EnabledModuleFragment, '__typename'>>,
+): EnabledModuleFragment {
+  return {
+    __typename: 'EnabledModule',
+    moduleName: faker.datatype.string(),
+    contractAddress: mockEthereumAddress(),
+    inputParams: [mockModuleInfoFragment()],
+    redeemParams: [mockModuleInfoFragment()],
+    returnDataParms: [mockModuleInfoFragment()],
+    ...overrides,
+  };
+}
+
+export function mockEnabledModulesFragment(
+  overrides?: Partial<Omit<EnabledModules, '__typename'>>,
+): EnabledModulesFragment {
+  return {
+    __typename: 'EnabledModules',
+    collectModules: [mockEnabledModuleFragment()],
+    followModules: [mockEnabledModuleFragment()],
+    referenceModules: [mockEnabledModuleFragment()],
     ...overrides,
   };
 }

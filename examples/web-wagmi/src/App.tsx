@@ -21,6 +21,7 @@ import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
 import { MiscPage } from './misc/MiscPage';
 import { UseCurrencies } from './misc/UseCurrencies';
+import { UseEnabledModules } from './misc/UseEnabledModules';
 import { UseNotifications } from './misc/UseNotifications';
 import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
 import { ProfilesPage } from './profiles/ProfilesPage';
@@ -148,6 +149,7 @@ export function App() {
 
                 <Route path="/misc" element={<MiscPage />} />
                 <Route path="/misc/useCurrencies" element={<UseCurrencies />} />
+                <Route path="/misc/useEnabledModules" element={<UseEnabledModules />} />
                 <Route path="/misc/useNotifications" element={<UseNotifications />} />
                 <Route
                   path="/misc/useUnreadNotificationCount"
