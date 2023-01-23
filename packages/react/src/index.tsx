@@ -11,6 +11,7 @@ export * from './wallet';
 export * from './notifications';
 export type { ReadResult, PaginatedReadResult } from './helpers';
 
+export { isValidHandle } from '@lens-protocol/api-bindings';
 export { ReactionType } from '@lens-protocol/domain/entities';
 
 export {
