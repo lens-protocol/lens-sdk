@@ -1,7 +1,7 @@
 import {
   EthereumAddress,
   useProfilesOwnedBy,
-  ProfileFieldsFragment,
+  ProfileFragment,
   useActiveProfileSwitch,
 } from '@lens-protocol/react';
 import { useState } from 'react';
@@ -12,7 +12,7 @@ import { Loading } from '../components/loading/Loading';
 
 type ProfilesSwitcherProps = {
   address: EthereumAddress;
-  current: ProfileFieldsFragment;
+  current: ProfileFragment;
 };
 
 function ProfilesSwitcher({ address, current }: ProfilesSwitcherProps) {

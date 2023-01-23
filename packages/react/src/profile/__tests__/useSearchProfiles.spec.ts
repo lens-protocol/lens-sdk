@@ -1,19 +1,19 @@
 import {
   createMockApolloClientWithMultipleResponses,
   createSearchProfilesQueryMockedResponse,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { ProfileFieldsFragment } from '../useProfilesToFollow';
+import { ProfileFragment } from '../useProfilesToFollow';
 import { useSearchProfiles } from '../useSearchProfiles';
 
 describe(`Given the ${useSearchProfiles.name} hook`, () => {
-  const observer = mockProfileFieldsFragment();
+  const observer = mockProfileFragment();
   const query = 'query_test';
 
-  const mockProfiles: ProfileFieldsFragment[] = [mockProfileFieldsFragment()];
+  const mockProfiles: ProfileFragment[] = [mockProfileFragment()];
 
   describe('when the query returns data successfully', () => {
     it('should return profiles that match the search result', async () => {

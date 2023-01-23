@@ -1,7 +1,7 @@
 import {
   CollectPolicyType,
   ContentFocus,
-  ProfileFieldsFragment,
+  ProfileFragment,
   ReferencePolicy,
   useCreateComment,
 } from '@lens-protocol/react';
@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { upload } from '../../upload';
 
 type CommentComposerProps = {
-  activeProfile: ProfileFieldsFragment;
+  activeProfile: ProfileFragment;
   publicationId: string;
 };
 

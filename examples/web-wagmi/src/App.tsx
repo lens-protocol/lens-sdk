@@ -34,6 +34,7 @@ import { ProfileById } from './profiles/UseProfileById';
 import { UseProfilesOwnedBy } from './profiles/UseProfileOwnedBy';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseUpdateDispatcherConfig } from './profiles/UseUpdateDispatcherConfig';
+import { UseUpdateFollowPolicy } from './profiles/UseUpdateFollowPolicy';
 import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
 import { UseUpdateProfileImage } from './profiles/UseUpdateProfileImage';
 import { PublicationsPage } from './publications/PublicationsPage';
@@ -46,6 +47,7 @@ import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
 import { UseReportPublication } from './publications/UseReportPublication';
+import { UseWhoCollectedPublication } from './publications/UseWhoCollectedPublication';
 import { UseWhoReacted } from './publications/UseWhoReacted';
 import { RevenuePage } from './revenue/RevenuePage';
 import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
@@ -93,13 +95,17 @@ export function App() {
                 <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
                 <Route path="/publications/useCreateComment" element={<UseCreateComment />} />
                 <Route path="/publications/useReaction" element={<UseReaction />} />
-                <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
                 <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
                 <Route
                   path="/publications/useReportPublication"
                   element={<UseReportPublication />}
                 />
                 <Route path="/publications/useHidePublication" element={<UseHidePublication />} />
+                <Route
+                  path="/publications/useWhoCollectedPublication"
+                  element={<UseWhoCollectedPublication />}
+                />
+                <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />
@@ -113,7 +119,7 @@ export function App() {
                 <Route path="/profiles/useProfilesToFollow" element={<ProfilesToFollow />} />
                 <Route path="/profiles/useFollow" element={<UseFollowAndUnfollow />} />
                 <Route path="/profiles/useUpdateProfileImage" element={<UseUpdateProfileImage />} />
-                <Route path="/profiles/useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
+                <Route path="/profiles/useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
                 <Route
                   path="/profiles/useUpdateProfileDetails"
                   element={<UseUpdateProfileDetails />}
@@ -122,6 +128,7 @@ export function App() {
                   path="/profiles/useActiveProfileSwitch"
                   element={<UseActiveProfileSwitch />}
                 />
+                <Route path="/profiles/useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
                 <Route path="/discovery/useFeed" element={<Feed />} />

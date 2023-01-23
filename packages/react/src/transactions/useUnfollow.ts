@@ -1,4 +1,4 @@
-import { ProfileFieldsFragment } from '@lens-protocol/api-bindings';
+import { ProfileFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -19,7 +19,7 @@ export class PrematureUnfollowError extends Error {
 }
 
 export type UseUnfollowArgs = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 export function useUnfollow({ profile }: UseUnfollowArgs) {

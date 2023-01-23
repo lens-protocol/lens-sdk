@@ -1,9 +1,9 @@
 import { ApolloClient } from '@apollo/client';
-import { GetProfileDocument, ProfileFieldsFragment } from '@lens-protocol/api-bindings';
+import { GetProfileDocument, ProfileFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
   mockGetProfileQuery,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
 
 import { ActiveProfilePresenter, activeProfileVar } from '../ActiveProfilePresenter';
@@ -13,10 +13,10 @@ import { ActiveProfilePresenter, activeProfileVar } from '../ActiveProfilePresen
 // https://www.apollographql.com/docs/react/development-testing/testing/#testing-the-success-state
 const waitForResponse = () => new Promise((res) => setTimeout(res, 0));
 
-function setupApolloClient({ profile }: { profile: ProfileFieldsFragment }) {
+function setupApolloClient({ profile }: { profile: ProfileFragment }) {
   const cache = createMockApolloCache();
 
-  const updateProfileCache = (profilePatch: Omit<ProfileFieldsFragment, 'id'>) => {
+  const updateProfileCache = (profilePatch: Omit<ProfileFragment, 'id'>) => {
     cache.writeQuery({
       query: GetProfileDocument,
       data: mockGetProfileQuery({ ...profile, ...profilePatch }),
@@ -41,7 +41,7 @@ describe(`Given the ${ActiveProfilePresenter.name}`, () => {
     it(`should
         - set active profile reactive var
         - update the active profile reactive var on cache updates`, async () => {
-      const activeProfile = mockProfileFieldsFragment();
+      const activeProfile = mockProfileFragment();
 
       const { client, updateProfileCache } = setupApolloClient({
         profile: activeProfile,
@@ -52,7 +52,7 @@ describe(`Given the ${ActiveProfilePresenter.name}`, () => {
 
       expect(activeProfileVar()).toEqual(activeProfile);
 
-      const newActiveProfile = mockProfileFieldsFragment({ id: activeProfile.id });
+      const newActiveProfile = mockProfileFragment({ id: activeProfile.id });
       updateProfileCache(newActiveProfile);
 
       await waitForResponse();
@@ -64,7 +64,7 @@ describe(`Given the ${ActiveProfilePresenter.name}`, () => {
       it(`should
           - set the active profile to null
           - stops watching for cache updates`, async () => {
-        const activeProfile = mockProfileFieldsFragment();
+        const activeProfile = mockProfileFragment();
 
         const { client, updateProfileCache } = setupApolloClient({
           profile: activeProfile,
@@ -77,7 +77,7 @@ describe(`Given the ${ActiveProfilePresenter.name}`, () => {
 
         expect(activeProfileVar()).toBeNull();
 
-        const newActiveProfile = mockProfileFieldsFragment({ id: activeProfile.id });
+        const newActiveProfile = mockProfileFragment({ id: activeProfile.id });
         updateProfileCache(newActiveProfile);
 
         await waitForResponse();

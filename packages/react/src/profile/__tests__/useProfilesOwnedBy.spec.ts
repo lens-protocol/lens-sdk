@@ -1,7 +1,7 @@
 import {
   createGetAllProfilesByOwnerAddressQueryMockedResponse,
   createMockApolloClientWithMultipleResponses,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { waitFor } from '@testing-library/react';
@@ -11,10 +11,10 @@ import { useProfilesOwnedBy } from '../useProfilesOwnedBy';
 
 describe(`Given the ${useProfilesOwnedBy.name} hook`, () => {
   const address = mockEthereumAddress();
-  const observer = mockProfileFieldsFragment();
+  const observer = mockProfileFragment();
   const profiles = [
-    mockProfileFieldsFragment({ ownedBy: address }),
-    mockProfileFieldsFragment({ ownedBy: address }),
+    mockProfileFragment({ ownedBy: address }),
+    mockProfileFragment({ ownedBy: address }),
   ];
 
   describe('when the query returns data successfully', () => {

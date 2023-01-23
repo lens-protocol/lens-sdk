@@ -2,14 +2,14 @@ import { ApolloCache, makeVar } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '../../graphql';
-import { mockAttributeFragment, mockProfileFieldsFragment } from '../../mocks';
+import { ProfileFragment, ProfileFragmentDoc } from '../../graphql';
+import { mockAttributeFragment, mockProfileFragment } from '../../mocks';
 import { createApolloCache } from '../createApolloCache';
 
 describe(`Given an instance of the ${ApolloCache.name}`, () => {
-  describe('when retrieving a ProfileFieldsFragment with attributes', () => {
+  describe('when retrieving a ProfileFragment with attributes', () => {
     const date = new Date();
-    const profile = mockProfileFieldsFragment({
+    const profile = mockProfileFragment({
       __attributes: [
         mockAttributeFragment({
           key: 'validDate',
@@ -44,14 +44,14 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
     const cache = createApolloCache({ activeWalletVar: makeVar<WalletData | null>(null) });
     cache.writeFragment({
       data: profile,
-      fragment: ProfileFieldsFragmentDoc,
-      fragmentName: 'ProfileFields',
+      fragment: ProfileFragmentDoc,
+      fragmentName: 'Profile',
     });
 
     const read =
-      cache.readFragment<ProfileFieldsFragment>({
-        fragment: ProfileFieldsFragmentDoc,
-        fragmentName: 'ProfileFields',
+      cache.readFragment<ProfileFragment>({
+        fragment: ProfileFragmentDoc,
+        fragmentName: 'Profile',
         id: cache.identify(profile),
       }) ?? never();
 

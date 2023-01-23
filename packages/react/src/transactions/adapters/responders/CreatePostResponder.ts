@@ -8,7 +8,7 @@ import {
   PublicationByTxHashQuery,
   PublicationByTxHashQueryVariables,
   PublicationByTxHashDocument,
-  ProfileFieldsFragment,
+  ProfileFragment,
   PostFragment,
   isPostPublication,
 } from '@lens-protocol/api-bindings';
@@ -26,7 +26,7 @@ function pendingPostFragment({
   request,
 }: {
   id: string;
-  author: ProfileFieldsFragment;
+  author: ProfileFragment;
   request: CreatePostRequest;
 }): PendingPostFragment {
   return {

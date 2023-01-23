@@ -1,11 +1,11 @@
 import {
   Notification,
-  NewFollowerNotificationFieldsFragment,
-  NewCollectNotificationFieldsFragment,
-  NewCommentNotificationFieldsFragment,
-  NewMentionNotificationFieldsFragment,
-  NewMirrorNotificationFieldsFragment,
-  NewReactionNotificationFieldsFragment,
+  NewFollowerNotificationFragment,
+  NewCollectNotificationFragment,
+  NewCommentNotificationFragment,
+  NewMentionNotificationFragment,
+  NewMirrorNotificationFragment,
+  NewReactionNotificationFragment,
 } from '@lens-protocol/react';
 import { ReactNode } from 'react';
 
@@ -16,7 +16,7 @@ function NotificationItemWrapper({ children }: { children: ReactNode }) {
 function NewReactionNotification({
   notification,
 }: {
-  notification: NewReactionNotificationFieldsFragment;
+  notification: NewReactionNotificationFragment;
 }) {
   return (
     <NotificationItemWrapper>
@@ -27,11 +27,7 @@ function NewReactionNotification({
     </NotificationItemWrapper>
   );
 }
-function NewMirrorNotification({
-  notification,
-}: {
-  notification: NewMirrorNotificationFieldsFragment;
-}) {
+function NewMirrorNotification({ notification }: { notification: NewMirrorNotificationFragment }) {
   return (
     <NotificationItemWrapper>
       <p>
@@ -44,7 +40,7 @@ function NewMirrorNotification({
 function NewMentionNotification({
   notification,
 }: {
-  notification: NewMentionNotificationFieldsFragment;
+  notification: NewMentionNotificationFragment;
 }) {
   return (
     <NotificationItemWrapper>
@@ -59,7 +55,7 @@ function NewMentionNotification({
 function NewCommentNotification({
   notification,
 }: {
-  notification: NewCommentNotificationFieldsFragment;
+  notification: NewCommentNotificationFragment;
 }) {
   return (
     <NotificationItemWrapper>
@@ -74,7 +70,7 @@ function NewCommentNotification({
 function NewCollectNotification({
   notification,
 }: {
-  notification: NewCollectNotificationFieldsFragment;
+  notification: NewCollectNotificationFragment;
 }) {
   return (
     <NotificationItemWrapper>
@@ -89,7 +85,7 @@ function NewCollectNotification({
 function NewFollowerNotification({
   notification,
 }: {
-  notification: NewFollowerNotificationFieldsFragment;
+  notification: NewFollowerNotificationFragment;
 }) {
   return (
     <NotificationItemWrapper>

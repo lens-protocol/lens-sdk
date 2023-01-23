@@ -1,8 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
+import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import { FollowPolicy } from '../FollowPolicy';
 import { ProfileAttributes } from '../ProfileAttributes';
 import {
   AttributeFragment,
@@ -13,12 +15,14 @@ import {
   Erc20AmountFragment,
   Erc20Fragment,
   FeedItemFragment,
+  FollowModules,
   MediaFragment,
   MetadataFragment,
   MirrorFragment,
   ModuleInfoFragment,
   PostFragment,
-  ProfileFieldsFragment,
+  ProfileFragment,
+  ProfileFollowModuleSettings,
   ProfileFollowRevenueFragment,
   ProfileMediaFragment,
   PublicationMainFocus,
@@ -30,6 +34,7 @@ import {
   RelayErrorReasons,
   RevenueAggregateFragment,
   RevenueFragment,
+  WalletFragment,
   WhoReactedResultFragment,
 } from '../generated';
 import { erc20Amount } from '../utils';
@@ -63,9 +68,21 @@ export function mockAttributeFragment(overrides?: Partial<AttributeFragment>): A
   };
 }
 
-export function mockProfileFieldsFragment(
-  overrides?: Partial<ProfileFieldsFragment>,
-): ProfileFieldsFragment {
+export function mockAnyoneFollowPolicy(): FollowPolicy {
+  return {
+    type: FollowPolicyType.ANYONE,
+  };
+}
+
+export function mockWalletFragment(): WalletFragment {
+  return {
+    __typename: 'Wallet',
+    defaultProfile: mockProfileFragment(),
+    address: mockEthereumAddress(),
+  };
+}
+
+export function mockProfileFragment(overrides?: Partial<ProfileFragment>): ProfileFragment {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
 
@@ -87,7 +104,10 @@ export function mockProfileFieldsFragment(
     },
 
     dispatcher: null,
-    followModule: null,
+
+    __followModule: null,
+    followPolicy: mockAnyoneFollowPolicy(),
+
     isFollowedByMe: false,
     isFollowing: false,
     isOptimisticFollowedByMe: false,
@@ -99,6 +119,14 @@ export function mockProfileFieldsFragment(
 
     ...overrides,
     __typename: 'Profile',
+  };
+}
+
+export function mockProfileFollowFollowModuleFragment(): ProfileFollowModuleSettings {
+  return {
+    __typename: 'ProfileFollowModuleSettings',
+    contractAddress: mockEthereumAddress(),
+    type: FollowModules.ProfileFollowModule,
   };
 }
 
@@ -160,7 +188,7 @@ export function mockPostFragment(
     createdAt: faker.datatype.datetime().toISOString(),
     stats: mockPublicationStatsFragment(),
     metadata: mockMetadataFragment(),
-    profile: mockProfileFieldsFragment(),
+    profile: mockProfileFragment(),
     collectedBy: null,
     collectModule: mockFreeCollectModuleSettings(),
     referenceModule: null,
@@ -199,7 +227,7 @@ export function mockCommentFragment(
       content: faker.lorem.paragraph(1),
       media: [],
     },
-    profile: mockProfileFieldsFragment(),
+    profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
     collectedBy: null,
     commentOn: mainPost,
@@ -241,7 +269,7 @@ export function mockMirrorFragment(
       content: faker.lorem.paragraph(1),
       media: [],
     },
-    profile: mockProfileFieldsFragment(),
+    profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
     collectModule: mockFreeCollectModuleSettings(),
     referenceModule: null,
@@ -351,7 +379,7 @@ export function mockWhoReactedResultFragment(
     reactionId: faker.datatype.uuid(),
     reaction: ReactionTypes.Upvote,
     reactionAt: faker.date.past().toISOString(),
-    profile: mockProfileFieldsFragment(),
+    profile: mockProfileFragment(),
     ...overrides,
   };
 }

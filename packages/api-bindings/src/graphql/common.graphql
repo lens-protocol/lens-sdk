@@ -120,7 +120,7 @@ fragment Wallet on Wallet {
   __typename
   address
   defaultProfile {
-    ...ProfileFields
+    ...Profile
   }
 }
 
@@ -175,7 +175,7 @@ fragment MirrorBase on Mirror {
     ...Metadata
   }
   profile {
-    ...ProfileFields
+    ...Profile
   }
   collectModule {
     ...CollectModule
@@ -223,7 +223,7 @@ fragment CommentBase on Comment {
     ...Metadata
   }
   profile {
-    ...ProfileFields
+    ...Profile
   }
   collectedBy {
     ...Wallet
@@ -295,7 +295,7 @@ fragment Post on Post {
     ...Metadata
   }
   profile {
-    ...ProfileFields
+    ...Profile
   }
   collectedBy {
     ...Wallet
@@ -331,7 +331,7 @@ fragment PendingPost on PendingPost {
     ...Media
   }
   profile {
-    ...ProfileFields
+    ...Profile
   }
   locale
   mainContentFocus

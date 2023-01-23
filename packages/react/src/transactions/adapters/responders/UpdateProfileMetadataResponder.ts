@@ -6,8 +6,8 @@ import {
   GetProfileQuery,
   GetProfileQueryVariables,
   Maybe,
-  ProfileFieldsFragment,
-  ProfileFieldsFragmentDoc,
+  ProfileFragment,
+  ProfileFragmentDoc,
 } from '@lens-protocol/api-bindings';
 import {
   ProfileAttributeValue,
@@ -40,7 +40,7 @@ function newAttributeFragment(key: string, value: ProfileAttributeValue): Attrib
 export class UpdateProfileMetadataResponder
   implements ITransactionResponder<UpdateProfileDetailsRequest>
 {
-  private snapshots = new Map<UpdateProfileDetailsRequest, ProfileFieldsFragment | null>();
+  private snapshots = new Map<UpdateProfileDetailsRequest, ProfileFragment | null>();
 
   constructor(private readonly apolloClient: ApolloClient<NormalizedCacheObject>) {}
 
@@ -54,10 +54,10 @@ export class UpdateProfileMetadataResponder
       id: request.profileId,
     });
 
-    const snapshot = this.apolloCache.readFragment<ProfileFieldsFragment>({
+    const snapshot = this.apolloCache.readFragment<ProfileFragment>({
       id: profileIdentifier,
-      fragmentName: 'ProfileFields',
-      fragment: ProfileFieldsFragmentDoc,
+      fragmentName: 'Profile',
+      fragment: ProfileFragmentDoc,
     });
 
     this.snapshots.set(request, snapshot);
@@ -80,8 +80,8 @@ export class UpdateProfileMetadataResponder
     if (snapshot) {
       this.apolloCache.writeFragment({
         id: profileIdentifier,
-        fragment: ProfileFieldsFragmentDoc,
-        fragmentName: 'ProfileFields',
+        fragment: ProfileFragmentDoc,
+        fragmentName: 'Profile',
         data: snapshot,
       });
     }

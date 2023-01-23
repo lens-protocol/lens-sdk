@@ -17,6 +17,11 @@ fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
   contractAddress
 }
 
+fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+  __typename
+  contractAddress
+}
+
 fragment ProfileMedia on ProfileMedia {
   ... on NftImage {
     __typename
@@ -38,7 +43,7 @@ fragment Attribute on Attribute {
   value
 }
 
-fragment ProfileFields on Profile {
+fragment Profile on Profile {
   __typename
   id
   name
@@ -58,7 +63,7 @@ fragment ProfileFields on Profile {
     totalFollowing
     totalPosts
   }
-  followModule {
+  __followModule: followModule {
     ... on FeeFollowModuleSettings {
       ...FeeFollowModuleSettings
     }
@@ -66,11 +71,15 @@ fragment ProfileFields on Profile {
     ... on ProfileFollowModuleSettings {
       ...ProfileFollowModuleSettings
     }
-
     ... on RevertFollowModuleSettings {
       ...RevertFollowModuleSettings
     }
+    ... on UnknownFollowModuleSettings {
+      ...UnknownFollowModuleSettings
+    }
   }
+
+  followPolicy @client
 
   __attributes: attributes {
     ...Attribute
@@ -91,13 +100,13 @@ fragment ProfileFields on Profile {
 
 query ProfilesToFollow($observerId: ProfileId) {
   result: recommendedProfiles {
-    ...ProfileFields
+    ...Profile
   }
 }
 
 query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
   result: profile(request: $request) {
-    ...ProfileFields
+    ...Profile
   }
 }
 
@@ -109,7 +118,7 @@ query GetAllProfilesByOwnerAddress(
 ) {
   result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
     items {
-      ...ProfileFields
+      ...Profile
     }
     pageInfo {
       ...CommonPaginatedResultInfo
@@ -144,10 +153,41 @@ query MutualFollowersProfiles(
     }
   ) {
     items {
-      ...ProfileFields
+      ...Profile
     }
     pageInfo {
       ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+mutation CreateSetFollowModuleTypedData(
+  $request: CreateSetFollowModuleRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetFollowModuleTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetFollowModuleWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        followModule
+        followModuleInitData
+      }
     }
   }
 }

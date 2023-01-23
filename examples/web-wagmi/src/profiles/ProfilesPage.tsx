@@ -37,9 +37,14 @@ const profileHooks = [
     path: '/profiles/useUpdateProfileImage',
   },
   {
-    label: 'useProfilesOwnedBy',
-    description: `Fetch a list of profiles owed by a given address.`,
-    path: '/profiles/useProfilesOwnedBy',
+    label: 'useUpdateProfileImage',
+    description: `Update your profile image.`,
+    path: '/profiles/useUpdateProfileImage',
+  },
+  {
+    label: 'useUpdateFollowPolicy',
+    description: `Update the follow policy of a profile.`,
+    path: '/profiles/useUpdateFollowPolicy',
   },
   {
     label: 'useUpdateProfileDetails',
@@ -55,6 +60,11 @@ const profileHooks = [
     label: 'useActiveProfileSwitch',
     description: `Switch active profile.`,
     path: '/profiles/useActiveProfileSwitch',
+  },
+  {
+    label: 'useProfilesOwnedBy',
+    description: `Fetch a list of profiles owed by a given address.`,
+    path: '/profiles/useProfilesOwnedBy',
   },
 ];
 

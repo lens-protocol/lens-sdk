@@ -1,10 +1,10 @@
-import { ProfileFieldsFragment } from '@lens-protocol/api-bindings';
+import { ProfileFragment } from '@lens-protocol/api-bindings';
 
 import { ReadResult } from '../helpers';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
 import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
 
-export function useActiveProfile(): ReadResult<ProfileFieldsFragment | null> {
+export function useActiveProfile(): ReadResult<ProfileFragment | null> {
   const state = useAppState();
 
   const profile = useActiveProfileVar();
