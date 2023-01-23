@@ -1,4 +1,4 @@
-import { ProfileFieldsFragment } from '@lens-protocol/api-bindings';
+import { ProfileFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -41,9 +41,9 @@ function createFollowRequestFee(
 }
 
 function createFollowProfilesFlowRequest(
-  profile: ProfileFieldsFragment,
+  profile: ProfileFragment,
   activeWallet: WalletData,
-  activeProfile: ProfileFieldsFragment,
+  activeProfile: ProfileFragment,
 ): FollowProfilesFlowRequest {
   const baseRequest: Pick<FollowProfilesFlowRequest, 'profileId' | 'followerAddress'> = {
     profileId: profile.id,
@@ -75,7 +75,7 @@ function createFollowProfilesFlowRequest(
 }
 
 export type UseFollowArgs = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 export function useFollow({ profile }: UseFollowArgs) {

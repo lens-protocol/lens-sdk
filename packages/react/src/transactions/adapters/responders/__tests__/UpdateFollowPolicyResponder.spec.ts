@@ -1,10 +1,10 @@
 import { ApolloClient } from '@apollo/client';
 import { mockSingleLink } from '@apollo/client/testing';
-import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '@lens-protocol/api-bindings';
+import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
   mockGetProfileQueryMockedResponse,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
@@ -17,11 +17,11 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { UpdateFollowPolicyResponder } from '../UpdateFollowPolicyResponder';
 
 function setupUpdateFollowPolicyResponder({
-  existingProfile = mockProfileFieldsFragment(),
-  updatedProfile = mockProfileFieldsFragment(),
+  existingProfile = mockProfileFragment(),
+  updatedProfile = mockProfileFragment(),
 }: {
-  existingProfile?: ProfileFieldsFragment;
-  updatedProfile?: ProfileFieldsFragment;
+  existingProfile?: ProfileFragment;
+  updatedProfile?: ProfileFragment;
 }) {
   const cache = createMockApolloCache();
 
@@ -30,7 +30,7 @@ function setupUpdateFollowPolicyResponder({
       __typename: 'Profile',
       id: existingProfile.id,
     }),
-    fragment: ProfileFieldsFragmentDoc,
+    fragment: ProfileFragmentDoc,
     fragmentName: 'ProfileFields',
     data: existingProfile,
   });
@@ -58,7 +58,7 @@ function setupUpdateFollowPolicyResponder({
           __typename: 'Profile',
           id: profileId,
         }),
-        fragment: ProfileFieldsFragmentDoc,
+        fragment: ProfileFragmentDoc,
         fragmentName: 'ProfileFields',
       });
     },
@@ -68,7 +68,7 @@ function setupUpdateFollowPolicyResponder({
 describe(`Given the ${UpdateFollowPolicyResponder.name}`, () => {
   describe(`when "${UpdateFollowPolicyResponder.prototype.prepare.name}" method is invoked with TransactionData<UpdateFollowPolicyRequest>`, () => {
     it(`should update the profile's follow policy`, async () => {
-      const existingProfile = mockProfileFieldsFragment({
+      const existingProfile = mockProfileFragment({
         followPolicy: {
           type: FollowPolicyType.ANYONE,
         },
@@ -94,7 +94,7 @@ describe(`Given the ${UpdateFollowPolicyResponder.name}`, () => {
 
   describe(`when "${UpdateFollowPolicyResponder.prototype.commit.name}" method is invoked with BroadcastedTransactionData<UpdateFollowPolicyRequest>`, () => {
     it(`should update the correct Profile in the Apollo Cache`, async () => {
-      const updatedProfile = mockProfileFieldsFragment({
+      const updatedProfile = mockProfileFragment({
         followPolicy: {
           type: FollowPolicyType.ONLY_PROFILE_OWNERS,
           contractAddress: mockEthereumAddress(),
@@ -113,7 +113,7 @@ describe(`Given the ${UpdateFollowPolicyResponder.name}`, () => {
 
   describe(`when "${UpdateFollowPolicyResponder.prototype.rollback.name}" method is invoked with BroadcastedTransactionData<UpdateFollowPolicyRequest>`, () => {
     it(`should rollback the correct Profile in the Apollo Cache`, async () => {
-      const updatedProfile = mockProfileFieldsFragment({
+      const updatedProfile = mockProfileFragment({
         followPolicy: {
           type: FollowPolicyType.ONLY_PROFILE_OWNERS,
           contractAddress: mockEthereumAddress(),

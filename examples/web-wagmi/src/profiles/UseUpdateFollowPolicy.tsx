@@ -4,7 +4,7 @@ import {
   Erc20,
   FollowPolicyType,
   NoFeeFollowPolicy,
-  ProfileFieldsFragment,
+  ProfileFragment,
   useCurrencies,
   useUpdateFollowPolicy,
   FollowPolicy,
@@ -92,7 +92,7 @@ function UpdateButtonText({
 }
 
 type UpdateFollowPolicyFormProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
   currentFollowPolicy: FollowPolicy | null;
   currencies: Erc20[];
 };
@@ -240,7 +240,7 @@ function UpdateFollowPolicyForm({
 }
 
 type UpdateFollowPolicyProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {

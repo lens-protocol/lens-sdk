@@ -2,7 +2,7 @@ import { PostFragment, PostFragmentDoc } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
   mockPublicationByTxHashMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import {
@@ -62,7 +62,7 @@ function setupTestScenario({
 }
 
 describe(`Given an instance of the ${CreateMirrorResponder.name}`, () => {
-  const author = mockProfileFieldsFragment();
+  const author = mockProfileFragment();
 
   describe(`when "${CreateMirrorResponder.prototype.prepare.name}" method is invoked`, () => {
     it(`should mark as optimistically mirrored by me and update total mirrors count`, async () => {

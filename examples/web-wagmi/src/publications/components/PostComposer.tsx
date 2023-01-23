@@ -1,5 +1,5 @@
 import {
-  ProfileFieldsFragment,
+  ProfileFragment,
   useCreatePost,
   ContentFocus,
   CollectPolicyType,
@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { upload } from '../../upload';
 
 export type PostComposerProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 export function PostComposer({ profile }: PostComposerProps) {

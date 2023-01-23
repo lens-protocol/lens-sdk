@@ -1,3 +1,4 @@
+import { ProfileFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -9,10 +10,10 @@ import { useState } from 'react';
 import { useUpdateProfileImageController } from './adapters/useUpdateProfileImageController';
 
 export type UseUpdateProfileImageArgs = {
-  profileId: string;
+  profile: ProfileFragment;
 };
 
-export function useUpdateProfileImage({ profileId }: UseUpdateProfileImageArgs) {
+export function useUpdateProfileImage({ profile }: UseUpdateProfileImageArgs) {
   const [error, setError] = useState<
     PendingSigningRequestError | UserRejectedError | WalletConnectionError | null
   >(null);
@@ -27,8 +28,9 @@ export function useUpdateProfileImage({ profileId }: UseUpdateProfileImageArgs) 
     try {
       const result = await updateImage({
         kind: TransactionKind.UPDATE_PROFILE_IMAGE,
-        profileId,
+        profileId: profile.id,
         url: fileUrl,
+        delegate: profile.dispatcher !== null,
       });
 
       if (result.isFailure()) {

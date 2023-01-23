@@ -6,18 +6,6 @@ import {
   CommentFragment,
   CommentWithFirstCommentFragment,
   CommonPaginatedResultInfoFragment,
-  CreateCommentTypedDataDocument,
-  CreateCommentTypedDataMutation,
-  CreateCommentTypedDataMutationVariables,
-  CreateCommentViaDispatcherDocument,
-  CreateCommentViaDispatcherMutation,
-  CreateCommentViaDispatcherMutationVariables,
-  CreatePostTypedDataDocument,
-  CreatePostTypedDataMutation,
-  CreatePostTypedDataMutationVariables,
-  CreatePostViaDispatcherDocument,
-  CreatePostViaDispatcherMutation,
-  CreatePostViaDispatcherMutationVariables,
   EnabledModuleCurrenciesDocument,
   EnabledModuleCurrenciesQuery,
   ExplorePublicationsDocument,
@@ -40,7 +28,7 @@ import {
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesQueryVariables,
   PostFragment,
-  ProfileFieldsFragment,
+  ProfileFragment,
   ProfileFollowRevenueDocument,
   ProfileFollowRevenueFragment,
   ProfileFollowRevenueQuery,
@@ -76,15 +64,19 @@ import {
   SearchPublicationsQueryVariables,
   SingleProfileQueryRequest,
   TransactionErrorReasons,
+  WalletFragment,
+  WhoCollectedPublicationDocument,
+  WhoCollectedPublicationQuery,
+  WhoCollectedPublicationQueryVariables,
   WhoReactedPublicationDocument,
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables,
   WhoReactedResultFragment,
 } from '../generated';
-import { mockFeedItemFragment, mockPostFragment, mockProfileFieldsFragment } from './fragments';
+import { mockFeedItemFragment, mockPostFragment, mockProfileFragment } from './fragments';
 
 export function createProfilesToFollowQueryMockedResponse(args: {
-  profiles: ProfileFieldsFragment[];
+  profiles: ProfileFragment[];
 }): MockedResponse<ProfilesToFollowQuery> {
   return {
     request: {
@@ -98,18 +90,18 @@ export function createProfilesToFollowQueryMockedResponse(args: {
   };
 }
 
-export function mockGetProfileQuery(profile: Maybe<ProfileFieldsFragment>): GetProfileQuery {
+export function mockGetProfileQuery(profile: Maybe<ProfileFragment>): GetProfileQuery {
   return {
     result: profile,
   };
 }
 
 export function mockGetProfileQueryMockedResponse({
-  profile = mockProfileFieldsFragment(),
+  profile = mockProfileFragment(),
   request,
   observerId,
 }: {
-  profile?: Maybe<ProfileFieldsFragment>;
+  profile?: Maybe<ProfileFragment>;
   request: SingleProfileQueryRequest;
   observerId?: string;
 }): MockedResponse<GetProfileQuery> {
@@ -128,7 +120,7 @@ export function mockGetProfileQueryMockedResponse({
 }
 
 function mockGetAllProfilesByOwnerAddressQuery(
-  profiles: ProfileFieldsFragment[],
+  profiles: ProfileFragment[],
 ): GetAllProfilesByOwnerAddressQuery {
   return {
     result: {
@@ -145,13 +137,13 @@ function mockGetAllProfilesByOwnerAddressQuery(
 
 export function createGetAllProfilesByOwnerAddressQueryMockedResponse({
   address,
-  profiles = [mockProfileFieldsFragment()],
+  profiles = [mockProfileFragment()],
   observerId,
   limit = 10,
   cursor,
 }: {
   address: EthereumAddress;
-  profiles?: ProfileFieldsFragment[];
+  profiles?: ProfileFragment[];
   observerId?: string;
   limit?: number;
   cursor?: string;
@@ -269,9 +261,34 @@ export function createEnabledModuleCurrenciesQueryMockedResponse(
   };
 }
 
+export function createWhoCollectedPublicationQueryMockedResponse(args: {
+  variables: WhoCollectedPublicationQueryVariables;
+  wallets: WalletFragment[];
+}): MockedResponse<WhoCollectedPublicationQuery> {
+  return {
+    request: {
+      query: WhoCollectedPublicationDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: args.wallets,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.wallets.length,
+          },
+        },
+      },
+    },
+  };
+}
+
 export function createMutualFollowersQueryMockedResponse(args: {
   variables: MutualFollowersProfilesQueryVariables;
-  profiles: ProfileFieldsFragment[];
+  profiles: ProfileFragment[];
 }): MockedResponse<MutualFollowersProfilesQuery> {
   return {
     request: {
@@ -500,7 +517,7 @@ export function createProfileFollowRevenueQueryMockedResponse({
 
 export function createSearchProfilesQueryMockedResponse(args: {
   variables: SearchProfilesQueryVariables;
-  items: ProfileFieldsFragment[];
+  items: ProfileFragment[];
 }): MockedResponse<SearchProfilesQuery> {
   return {
     request: {
@@ -574,78 +591,6 @@ export function mockPublicationByTxHashMockedResponse({
     },
     result: {
       data: mockPublicationByTxHash(publication),
-    },
-  };
-}
-
-export function createCreateCommentTypedDataMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreateCommentTypedDataMutationVariables;
-  data: CreateCommentTypedDataMutation;
-}): MockedResponse<CreateCommentTypedDataMutation> {
-  return {
-    request: {
-      query: CreateCommentTypedDataDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-export function createCreateCommentViaDispatcherMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreateCommentViaDispatcherMutationVariables;
-  data: CreateCommentViaDispatcherMutation;
-}): MockedResponse<CreateCommentViaDispatcherMutation> {
-  return {
-    request: {
-      query: CreateCommentViaDispatcherDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-export function createCreatePostTypedDataMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreatePostTypedDataMutationVariables;
-  data: CreatePostTypedDataMutation;
-}): MockedResponse<CreatePostTypedDataMutation> {
-  return {
-    request: {
-      query: CreatePostTypedDataDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-export function createCreatePostViaDispatcherMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreatePostViaDispatcherMutationVariables;
-  data: CreatePostViaDispatcherMutation;
-}): MockedResponse<CreatePostViaDispatcherMutation> {
-  return {
-    request: {
-      query: CreatePostViaDispatcherDocument,
-      variables,
-    },
-    result: {
-      data,
     },
   };
 }

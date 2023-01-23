@@ -1,4 +1,4 @@
-import { ProfileFieldsFragment, useSearchProfilesQuery } from '@lens-protocol/api-bindings';
+import { ProfileFragment, useSearchProfilesQuery } from '@lens-protocol/api-bindings';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
@@ -14,7 +14,7 @@ export function useSearchProfiles({
   query,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
-}: UseSearchProfilesArgs): PaginatedReadResult<ProfileFieldsFragment[]> {
+}: UseSearchProfilesArgs): PaginatedReadResult<ProfileFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(

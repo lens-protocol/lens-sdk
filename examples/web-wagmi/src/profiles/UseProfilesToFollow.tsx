@@ -1,10 +1,10 @@
-import { useProfilesToFollow, ProfileFieldsFragment } from '@lens-protocol/react';
+import { useProfilesToFollow, ProfileFragment } from '@lens-protocol/react';
 
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
 type ProfileListProps = {
-  profiles: ProfileFieldsFragment[];
+  profiles: ProfileFragment[];
 };
 
 function ProfileList({ profiles }: ProfileListProps) {

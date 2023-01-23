@@ -1,4 +1,4 @@
-import { ProfileFieldsFragment, useUpdateProfileImage } from '@lens-protocol/react';
+import { ProfileFragment, useUpdateProfileImage } from '@lens-protocol/react';
 import { ChangeEvent, useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
@@ -9,12 +9,12 @@ import { uploadImage } from '../upload';
 import { invariant } from '../utils';
 import { SmallProfileCard } from './components/ProfileCard';
 
-function UpdateUploadedImage({ profile }: { profile: ProfileFieldsFragment }) {
+function UpdateUploadedImage({ profile }: { profile: ProfileFragment }) {
   const [inputValue, setInputValue] = useState(
     'https://arweave.net/dOKOqiZVvSs14n54GIRH9nkSlLKArzK7-SPc2sBVmAM',
   );
   const { update, error, isPending } = useUpdateProfileImage({
-    profileId: profile.id,
+    profile,
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +43,7 @@ function UpdateUploadedImage({ profile }: { profile: ProfileFieldsFragment }) {
   );
 }
 
-function UploadAndUpdateNewImage({ profile }: { profile: ProfileFieldsFragment }) {
+function UploadAndUpdateNewImage({ profile }: { profile: ProfileFragment }) {
   const [candidateFile, setCandidateFile] = useState<ILocalFile<ImageType> | null>(null);
   const [uploadError, setUploadError] = useState<Error | null>();
   const [isUploading, setIsUploading] = useState(false);
@@ -63,7 +63,7 @@ function UploadAndUpdateNewImage({ profile }: { profile: ProfileFieldsFragment }
     error: updateError,
     isPending,
   } = useUpdateProfileImage({
-    profileId: profile.id,
+    profile,
   });
 
   const handleUploadCandidateFileClick = () => {
@@ -128,7 +128,7 @@ function UploadAndUpdateNewImage({ profile }: { profile: ProfileFieldsFragment }
   );
 }
 
-function UpdateProfileImageInner({ profile }: { profile: ProfileFieldsFragment }) {
+function UpdateProfileImageInner({ profile }: { profile: ProfileFragment }) {
   return (
     <div>
       <SmallProfileCard profile={profile} />

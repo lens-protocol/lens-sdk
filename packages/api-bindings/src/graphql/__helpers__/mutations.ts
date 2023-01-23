@@ -40,6 +40,19 @@ import {
   RemoveReactionDocument,
   RemoveReactionMutation,
   RemoveReactionMutationVariables,
+  CreateCommentTypedDataMutationVariables,
+  CreateCommentTypedDataDocument,
+  CreateCommentViaDispatcherMutationVariables,
+  CreateCommentViaDispatcherMutation,
+  CreateCommentViaDispatcherDocument,
+  CreatePostTypedDataMutationVariables,
+  CreatePostTypedDataDocument,
+  CreatePostViaDispatcherMutationVariables,
+  CreatePostViaDispatcherMutation,
+  CreatePostViaDispatcherDocument,
+  CreateSetProfileImageUriViaDispatcherMutationVariables,
+  CreateSetProfileImageUriViaDispatcherMutation,
+  CreateSetProfileImageUriViaDispatcherDocument,
 } from '../generated';
 
 export function mockCreateProfileMutation(result: Required<RelayResult>): CreateProfileMutation {
@@ -457,5 +470,95 @@ export function createCreateSetProfileMetadataViaDispatcherMutationMockedRespons
       variables,
     },
     result: { data },
+  };
+}
+
+export function createCreateCommentTypedDataMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreateCommentTypedDataMutationVariables;
+  data: CreateCommentTypedDataMutation;
+}): MockedResponse<CreateCommentTypedDataMutation> {
+  return {
+    request: {
+      query: CreateCommentTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateCommentViaDispatcherMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreateCommentViaDispatcherMutationVariables;
+  data: CreateCommentViaDispatcherMutation;
+}): MockedResponse<CreateCommentViaDispatcherMutation> {
+  return {
+    request: {
+      query: CreateCommentViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreatePostTypedDataMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreatePostTypedDataMutationVariables;
+  data: CreatePostTypedDataMutation;
+}): MockedResponse<CreatePostTypedDataMutation> {
+  return {
+    request: {
+      query: CreatePostTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreatePostViaDispatcherMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreatePostViaDispatcherMutationVariables;
+  data: CreatePostViaDispatcherMutation;
+}): MockedResponse<CreatePostViaDispatcherMutation> {
+  return {
+    request: {
+      query: CreatePostViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createSetProfileImageURIViaDispatcherMutationMockedResponse({
+  variables,
+  data,
+}: {
+  variables: CreateSetProfileImageUriViaDispatcherMutationVariables;
+  data: CreateSetProfileImageUriViaDispatcherMutation;
+}): MockedResponse<CreateSetProfileImageUriViaDispatcherMutation> {
+  return {
+    request: {
+      query: CreateSetProfileImageUriViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
   };
 }

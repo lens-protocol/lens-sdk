@@ -1,5 +1,5 @@
 import {
-  ProfileFieldsFragment,
+  ProfileFragment,
   usePublication,
   useCreateMirror,
   isMirrorPublication,
@@ -11,7 +11,7 @@ import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
 type MirrorInnerProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 function MirrorInner({ profile }: MirrorInnerProps) {

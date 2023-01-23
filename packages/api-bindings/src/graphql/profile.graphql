@@ -43,7 +43,7 @@ fragment Attribute on Attribute {
   value
 }
 
-fragment ProfileFields on Profile {
+fragment Profile on Profile {
   __typename
   id
   name
@@ -100,13 +100,13 @@ fragment ProfileFields on Profile {
 
 query ProfilesToFollow($observerId: ProfileId) {
   result: recommendedProfiles {
-    ...ProfileFields
+    ...Profile
   }
 }
 
 query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
   result: profile(request: $request) {
-    ...ProfileFields
+    ...Profile
   }
 }
 
@@ -118,7 +118,7 @@ query GetAllProfilesByOwnerAddress(
 ) {
   result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
     items {
-      ...ProfileFields
+      ...Profile
     }
     pageInfo {
       ...CommonPaginatedResultInfo
@@ -153,7 +153,7 @@ query MutualFollowersProfiles(
     }
   ) {
     items {
-      ...ProfileFields
+      ...Profile
     }
     pageInfo {
       ...CommonPaginatedResultInfo
@@ -218,6 +218,20 @@ mutation CreateSetProfileImageURITypedData(
         profileId
         imageURI
       }
+    }
+  }
+}
+
+mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
+  result: createSetProfileImageURIViaDispatcher(request: $request) {
+    __typename
+
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
     }
   }
 }

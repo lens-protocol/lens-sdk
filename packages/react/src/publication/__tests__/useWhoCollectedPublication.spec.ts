@@ -1,43 +1,39 @@
-import { CommentFragment, PostFragment } from '@lens-protocol/api-bindings';
+import { PostFragment, WalletFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  createSearchPublicationsQueryMockedResponse,
-  mockCommentFragment,
   mockPostFragment,
   mockProfileFragment,
+  mockWalletFragment,
+  createWhoCollectedPublicationQueryMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { useSearchPublications } from '../useSearchPublications';
+import { useWhoCollectedPublication } from '../useWhoCollectedPublication';
 
-describe(`Given the ${useSearchPublications.name} hook`, () => {
+describe('Given the useWhoCollectedPublication hook', () => {
   const observer = mockProfileFragment();
-  const query = 'query_test';
-
-  const mockPublications: (PostFragment | CommentFragment)[] = [
-    mockPostFragment(),
-    mockCommentFragment(),
-  ];
+  const mockPublication: PostFragment = mockPostFragment();
+  const mockWallets: WalletFragment[] = [mockWalletFragment()];
 
   describe('when the query returns data successfully', () => {
-    it('should return publications that match the search result', async () => {
+    it('should return wallets who collected the publication', async () => {
       const { result } = renderHookWithMocks(
         () =>
-          useSearchPublications({
-            query,
+          useWhoCollectedPublication({
             observerId: observer.id,
+            publicationId: mockPublication.id,
           }),
         {
           mocks: {
             apolloClient: createMockApolloClientWithMultipleResponses([
-              createSearchPublicationsQueryMockedResponse({
+              createWhoCollectedPublicationQueryMockedResponse({
                 variables: {
+                  publicationId: mockPublication.id,
                   observerId: observer.id,
                   limit: 10,
-                  query,
                 },
-                items: mockPublications,
+                wallets: mockWallets,
               }),
             ]),
           },
@@ -46,7 +42,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
 
-      expect(result.current.data).toEqual(mockPublications);
+      expect(result.current.data).toEqual(mockWallets);
     });
   });
 });

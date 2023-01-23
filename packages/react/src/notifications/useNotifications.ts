@@ -1,10 +1,10 @@
 import {
-  NewCollectNotificationFieldsFragment,
-  NewCommentNotificationFieldsFragment,
-  NewFollowerNotificationFieldsFragment,
-  NewMentionNotificationFieldsFragment,
-  NewMirrorNotificationFieldsFragment,
-  NewReactionNotificationFieldsFragment,
+  NewCollectNotificationFragment,
+  NewCommentNotificationFragment,
+  NewFollowerNotificationFragment,
+  NewMentionNotificationFragment,
+  NewMirrorNotificationFragment,
+  NewReactionNotificationFragment,
   useNotificationsQuery,
 } from '@lens-protocol/api-bindings';
 
@@ -16,12 +16,12 @@ type UseNotificationsArgs = PaginatedArgs<{
 }>;
 
 export type Notification =
-  | NewFollowerNotificationFieldsFragment
-  | NewCollectNotificationFieldsFragment
-  | NewCommentNotificationFieldsFragment
-  | NewMirrorNotificationFieldsFragment
-  | NewMentionNotificationFieldsFragment
-  | NewReactionNotificationFieldsFragment;
+  | NewFollowerNotificationFragment
+  | NewCollectNotificationFragment
+  | NewCommentNotificationFragment
+  | NewMirrorNotificationFragment
+  | NewMentionNotificationFragment
+  | NewReactionNotificationFragment;
 
 export function useNotifications({
   profileId,

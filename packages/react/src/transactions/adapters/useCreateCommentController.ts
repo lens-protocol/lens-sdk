@@ -9,7 +9,7 @@ import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transaction
 import { useSharedDependencies } from '../../shared';
 import { MetadataUploadAdapter, MetadataUploadHandler } from './MetadataUploadAdapter';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { CommentCallGateway } from './publication-call-gateways/CommentCallGateway';
+import { CreateCommentCallGateway } from './publication-call-gateways/CreateCommentCallGateway';
 
 export type UseCreateCommentControllerArgs = {
   upload: MetadataUploadHandler;
@@ -27,7 +27,7 @@ export function useCreateCommentController({ upload }: UseCreateCommentControlle
 
   return async (request: CreateCommentRequest) => {
     const uploadAdapter = new MetadataUploadAdapter(upload);
-    const gateway = new CommentCallGateway(apolloClient, transactionFactory, uploadAdapter);
+    const gateway = new CreateCommentCallGateway(apolloClient, transactionFactory, uploadAdapter);
 
     const presenter = new PromiseResultPresenter<
       void,

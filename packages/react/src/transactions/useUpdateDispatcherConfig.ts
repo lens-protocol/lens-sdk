@@ -7,12 +7,12 @@ import {
 import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
 import { useState } from 'react';
 
-import { ProfileFieldsFragment } from '../profile';
+import { ProfileFragment } from '../profile';
 import { TransactionState, useHasPendingTransaction } from './adapters/TransactionQueuePresenter';
 import { useUpdateDispatcherConfigController } from './adapters/useUpdateDispatcherConfigController';
 
 export type UseUpdateDispatcherConfigArgs = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 export type UseUpdateDispatcherConfigParams = {

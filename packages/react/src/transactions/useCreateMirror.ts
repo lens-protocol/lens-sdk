@@ -1,4 +1,4 @@
-import { ProfileFieldsFragment, CommentFragment, PostFragment } from '@lens-protocol/api-bindings';
+import { ProfileFragment, CommentFragment, PostFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -11,7 +11,7 @@ import { useCreateMirrorController } from './adapters/useCreateMirrorController'
 
 export type CreateMirrorArgs = {
   publication: PostFragment | CommentFragment;
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 export function useCreateMirror() {

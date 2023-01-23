@@ -1,10 +1,10 @@
-import { ProfileFieldsFragment, useUnreadNotificationCount } from '@lens-protocol/react';
+import { ProfileFragment, useUnreadNotificationCount } from '@lens-protocol/react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
 
 type NotificationCountInnerProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 function NotificationCountInner({ profile }: NotificationCountInnerProps) {

@@ -1,8 +1,5 @@
-import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '@lens-protocol/api-bindings';
-import {
-  createMockApolloCache,
-  mockProfileFieldsFragment,
-} from '@lens-protocol/api-bindings/mocks';
+import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
+import { createMockApolloCache, mockProfileFragment } from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
   mockUnconstrainedFollowRequest,
@@ -10,7 +7,7 @@ import {
 
 import { FollowProfilesResponder } from '../FollowProfilesResponder';
 
-function setupTestScenario({ existingProfile }: { existingProfile: ProfileFieldsFragment }) {
+function setupTestScenario({ existingProfile }: { existingProfile: ProfileFragment }) {
   const apolloCache = createMockApolloCache();
 
   apolloCache.writeFragment({
@@ -18,8 +15,8 @@ function setupTestScenario({ existingProfile }: { existingProfile: ProfileFields
       __typename: 'Profile',
       id: existingProfile.id,
     }),
-    fragment: ProfileFieldsFragmentDoc,
-    fragmentName: 'ProfileFields',
+    fragment: ProfileFragmentDoc,
+    fragmentName: 'Profile',
     data: existingProfile,
   });
 
@@ -34,8 +31,8 @@ function setupTestScenario({ existingProfile }: { existingProfile: ProfileFields
           __typename: 'Profile',
           id: existingProfile.id,
         }),
-        fragment: ProfileFieldsFragmentDoc,
-        fragmentName: 'ProfileFields',
+        fragment: ProfileFragmentDoc,
+        fragmentName: 'Profile',
       });
     },
   };
@@ -46,7 +43,7 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
     it(`should update apollo cache with follow information`, async () => {
       const request = mockUnconstrainedFollowRequest();
       const transactionData = mockBroadcastedTransactionData({ request });
-      const existingProfile = mockProfileFieldsFragment({
+      const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
         stats: {
           __typename: 'ProfileStats',
@@ -77,7 +74,7 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
     it(`should update apollo cache with follow information`, async () => {
       const request = mockUnconstrainedFollowRequest();
       const transactionData = mockBroadcastedTransactionData({ request });
-      const existingProfile = mockProfileFieldsFragment({
+      const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
         isFollowedByMe: false,
         isOptimisticFollowedByMe: true,
@@ -100,7 +97,7 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
     it(`should update apollo cache with follow information`, async () => {
       const request = mockUnconstrainedFollowRequest();
       const transactionData = mockBroadcastedTransactionData({ request });
-      const existingProfile = mockProfileFieldsFragment({
+      const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
         isFollowedByMe: false,
         isOptimisticFollowedByMe: true,

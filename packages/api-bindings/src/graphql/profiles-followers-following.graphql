@@ -8,7 +8,7 @@ fragment Follower on Follower {
 fragment Following on Following {
   __typename
   profile {
-    ...ProfileFields
+    ...Profile
   }
 }
 
