@@ -1,4 +1,5 @@
-import { PublicationType, ReactionType } from '@lens-protocol/domain/entities';
+import { PublicationType, ReactionType, TransactionKind } from '@lens-protocol/domain/entities';
+import { CollectRequest, CollectType } from '@lens-protocol/domain/use-cases/publications';
 import { never, Overwrite } from '@lens-protocol/shared-kernel';
 
 import {
@@ -11,6 +12,7 @@ import {
   ProfileFragment,
   ReactionTypes,
 } from '../generated';
+import { erc20Amount } from './amount';
 import { Typename, PickByTypename, JustTypename } from './types';
 
 type PublicationTypename = JustTypename<Mirror> | JustTypename<Comment> | JustTypename<Post>;
@@ -98,3 +100,41 @@ export const isPublicationOwnedByMe = (
 ): publication is PublicationOwnedByMeFragment => {
   return publication.profile.ownedByMe;
 };
+
+export function createCollectRequest(
+  publication: PublicationFragment,
+  activeProfile: ProfileFragment,
+): CollectRequest {
+  switch (publication.collectModule.__typename) {
+    case 'FreeCollectModuleSettings':
+      return {
+        profileId: activeProfile.id,
+        kind: TransactionKind.COLLECT_PUBLICATION,
+        publicationId: publication.id,
+        publicationType: getPublicationType(publication),
+        type: CollectType.FREE,
+      };
+    case 'FeeCollectModuleSettings':
+    case 'LimitedFeeCollectModuleSettings':
+    case 'TimedFeeCollectModuleSettings':
+    case 'LimitedTimedFeeCollectModuleSettings':
+      return {
+        profileId: activeProfile.id,
+        kind: TransactionKind.COLLECT_PUBLICATION,
+        publicationId: publication.id,
+        publicationType: getPublicationType(publication),
+        type: CollectType.PAID,
+        fee: {
+          amount: erc20Amount({ from: publication.collectModule.amount }),
+          contractAddress: publication.collectModule.contractAddress,
+        },
+      };
+    case 'RevertCollectModuleSettings':
+    default:
+      never(
+        `Cannot collect publication with "${
+          publication.collectModule.__typename as string
+        }" collect module`,
+      );
+  }
+}
