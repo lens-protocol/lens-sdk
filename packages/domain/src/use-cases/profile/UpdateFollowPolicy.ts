@@ -12,6 +12,7 @@ export enum FollowPolicyType {
   CHARGE = 'CHARGE',
   ANYONE = 'ANYONE',
   NO_ONE = 'NO_ONE',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export type ChargeFollowPolicy = {

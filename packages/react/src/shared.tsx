@@ -23,12 +23,13 @@ import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
+import { FollowPolicyCallGateway } from './transactions/adapters/FollowPolicyCallGateway';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
 import { SignlessProtocolCallRelayer } from './transactions/adapters/SignlessProtocolCallRelayer';
 import {
-  TransactionQueuePresenter,
   FailedTransactionError,
+  TransactionQueuePresenter,
 } from './transactions/adapters/TransactionQueuePresenter';
 import { CreateMirrorResponder } from './transactions/adapters/responders/CreateMirrorResponder';
 import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
@@ -36,6 +37,7 @@ import { FollowProfilesResponder } from './transactions/adapters/responders/Foll
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
 import { UpdateDispatcherConfigResponder } from './transactions/adapters/responders/UpdateDispatcherConfigResponder';
+import { UpdateFollowPolicyResponder } from './transactions/adapters/responders/UpdateFollowPolicyResponder';
 import { UpdateProfileImageResponder } from './transactions/adapters/responders/UpdateProfileImageResponder';
 import { UpdateProfileMetadataResponder } from './transactions/adapters/responders/UpdateProfileMetadataResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
@@ -75,6 +77,7 @@ export type SharedDependencies = {
   authApi: AuthApi;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
+  followPolicyCallGateway: FollowPolicyCallGateway;
   logoutPresenter: LogoutPresenter;
   onError: Handlers['onError'];
   profileGateway: ProfileGateway;
@@ -90,7 +93,10 @@ export type SharedDependencies = {
   signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
 };
 
-export function createSharedDependencies(config: LensConfig, { onLogout, onError }: Handlers) {
+export function createSharedDependencies(
+  config: LensConfig,
+  { onLogout, onError }: Handlers,
+): SharedDependencies {
   const logger = config.logger ?? new ConsoleLogger();
 
   // storages
@@ -129,6 +135,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
   const balanceGateway = new BalanceGateway(providerFactory);
   const tokenGateway = new TokenGateway(providerFactory);
+  const followPolicyCallGateway = new FollowPolicyCallGateway(apolloClient);
 
   const profileGateway = new ProfileGateway(apolloClient);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
@@ -146,7 +153,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(apolloClient),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(apolloClient),
-    [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),
+    [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(apolloClient),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new UpdateProfileMetadataResponder(apolloClient),
     [TransactionKind.UPDATE_PROFILE_IMAGE]: new UpdateProfileImageResponder(apolloClient),
   };
@@ -176,19 +183,20 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     authApi,
     credentialsFactory,
     credentialsGateway,
+    followPolicyCallGateway,
     logoutPresenter,
+    notificationStorage,
     onError,
-    sources: config.sources ?? [],
     profileGateway,
     protocolCallRelayer,
     signlessProtocolCallRelayer,
+    sources: config.sources ?? [],
+    tokenAvailability,
     transactionFactory,
     transactionGateway,
     transactionQueue,
-    tokenAvailability,
     walletFactory,
     walletGateway,
-    notificationStorage,
   };
 }
 

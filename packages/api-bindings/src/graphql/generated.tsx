@@ -1,5 +1,6 @@
 import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
+import type { FollowPolicy } from './FollowPolicy';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
@@ -42,6 +43,7 @@ export type Scalars = {
   EthereumAddress: string;
   /** follow module data scalar type */
   FollowModuleData: unknown;
+  FollowPolicy: FollowPolicy;
   /** handle custom scalar type */
   Handle: string;
   /** handle claim id custom scalar type */
@@ -2569,6 +2571,7 @@ export type Profile = {
   followModule: Maybe<FollowModule>;
   /** Follow nft address */
   followNftAddress: Maybe<Scalars['ContractAddress']>;
+  followPolicy: Scalars['FollowPolicy'];
   /** The profile handle */
   handle: Scalars['Handle'];
   /** The profile id */
@@ -4395,6 +4398,10 @@ export type RevertFollowModuleSettingsFragment = {
   __typename: 'RevertFollowModuleSettings';
 } & Pick<RevertFollowModuleSettings, 'contractAddress'>;
 
+export type UnknownFollowModuleSettingsFragment = {
+  __typename: 'UnknownFollowModuleSettings';
+} & Pick<UnknownFollowModuleSettings, 'contractAddress'>;
+
 type ProfileMedia_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
   NftImage,
   'contractAddress' | 'tokenId' | 'uri' | 'verified'
@@ -4416,6 +4423,7 @@ export type ProfileFragment = { __typename: 'Profile' } & Pick<
   | 'bio'
   | 'handle'
   | 'ownedBy'
+  | 'followPolicy'
   | 'isFollowedByMe'
   | 'isFollowing'
   | 'isOptimisticFollowedByMe'
@@ -4427,10 +4435,11 @@ export type ProfileFragment = { __typename: 'Profile' } & Pick<
       ProfileStats,
       'totalFollowers' | 'totalFollowing' | 'totalPosts'
     >;
-    followModule: Maybe<
+    __followModule: Maybe<
       | FeeFollowModuleSettingsFragment
       | ProfileFollowModuleSettingsFragment
       | RevertFollowModuleSettingsFragment
+      | UnknownFollowModuleSettingsFragment
     >;
     __attributes: Maybe<Array<AttributeFragment>>;
     dispatcher: Maybe<Pick<Dispatcher, 'address' | 'canUseRelay'>>;
@@ -4475,6 +4484,24 @@ export type MutualFollowersProfilesQueryVariables = Exact<{
 
 export type MutualFollowersProfilesQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type CreateSetFollowModuleTypedDataMutationVariables = Exact<{
+  request: CreateSetFollowModuleRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateSetFollowModuleTypedDataMutation = {
+  result: Pick<CreateSetFollowModuleBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { SetFollowModuleWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Pick<Eip712TypedDataDomain, 'name' | 'chainId' | 'version' | 'verifyingContract'>;
+      value: Pick<
+        CreateSetFollowModuleEip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'followModule' | 'followModuleInitData'
+      >;
+    };
+  };
 };
 
 export type CreateSetProfileImageUriTypedDataMutationVariables = Exact<{
@@ -4916,6 +4943,12 @@ export const RevertFollowModuleSettingsFragmentDoc = gql`
     contractAddress
   }
 `;
+export const UnknownFollowModuleSettingsFragmentDoc = gql`
+  fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
 export const AttributeFragmentDoc = gql`
   fragment Attribute on Attribute {
     __typename
@@ -4944,7 +4977,7 @@ export const ProfileFragmentDoc = gql`
       totalFollowing
       totalPosts
     }
-    followModule {
+    __followModule: followModule {
       ... on FeeFollowModuleSettings {
         ...FeeFollowModuleSettings
       }
@@ -4954,7 +4987,11 @@ export const ProfileFragmentDoc = gql`
       ... on RevertFollowModuleSettings {
         ...RevertFollowModuleSettings
       }
+      ... on UnknownFollowModuleSettings {
+        ...UnknownFollowModuleSettings
+      }
     }
+    followPolicy @client
     __attributes: attributes {
       ...Attribute
     }
@@ -4972,6 +5009,7 @@ export const ProfileFragmentDoc = gql`
   ${FeeFollowModuleSettingsFragmentDoc}
   ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
+  ${UnknownFollowModuleSettingsFragmentDoc}
   ${AttributeFragmentDoc}
 `;
 export const WalletFragmentDoc = gql`
@@ -7023,6 +7061,82 @@ export type MutualFollowersProfilesLazyQueryHookResult = ReturnType<
 export type MutualFollowersProfilesQueryResult = Apollo.QueryResult<
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesQueryVariables
+>;
+export const CreateSetFollowModuleTypedDataDocument = gql`
+  mutation CreateSetFollowModuleTypedData(
+    $request: CreateSetFollowModuleRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createSetFollowModuleTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          SetFollowModuleWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          followModule
+          followModuleInitData
+        }
+      }
+    }
+  }
+`;
+export type CreateSetFollowModuleTypedDataMutationFn = Apollo.MutationFunction<
+  CreateSetFollowModuleTypedDataMutation,
+  CreateSetFollowModuleTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateSetFollowModuleTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateSetFollowModuleTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetFollowModuleTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetFollowModuleTypedDataMutation, { data, loading, error }] = useCreateSetFollowModuleTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateSetFollowModuleTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetFollowModuleTypedDataMutation,
+    CreateSetFollowModuleTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetFollowModuleTypedDataMutation,
+    CreateSetFollowModuleTypedDataMutationVariables
+  >(CreateSetFollowModuleTypedDataDocument, options);
+}
+export type CreateSetFollowModuleTypedDataMutationHookResult = ReturnType<
+  typeof useCreateSetFollowModuleTypedDataMutation
+>;
+export type CreateSetFollowModuleTypedDataMutationResult =
+  Apollo.MutationResult<CreateSetFollowModuleTypedDataMutation>;
+export type CreateSetFollowModuleTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetFollowModuleTypedDataMutation,
+  CreateSetFollowModuleTypedDataMutationVariables
 >;
 export const CreateSetProfileImageUriTypedDataDocument = gql`
   mutation CreateSetProfileImageURITypedData(
@@ -10433,6 +10547,7 @@ export type ProfileKeySpecifier = (
   | 'dispatcher'
   | 'followModule'
   | 'followNftAddress'
+  | 'followPolicy'
   | 'handle'
   | 'id'
   | 'interests'
@@ -10457,6 +10572,7 @@ export type ProfileFieldPolicy = {
   dispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
   followModule?: FieldPolicy<any> | FieldReadFunction<any>;
   followNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  followPolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   handle?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   interests?: FieldPolicy<any> | FieldReadFunction<any>;

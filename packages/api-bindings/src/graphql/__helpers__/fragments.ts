@@ -1,8 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
+import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import { FollowPolicy } from '../FollowPolicy';
 import { ProfileAttributes } from '../ProfileAttributes';
 import {
   AttributeFragment,
@@ -11,11 +13,13 @@ import {
   Erc20AmountFragment,
   Erc20Fragment,
   FeedItemFragment,
+  FollowModules,
   MediaFragment,
   MetadataFragment,
   MirrorFragment,
   PostFragment,
   ProfileFragment,
+  ProfileFollowModuleSettings,
   ProfileFollowRevenueFragment,
   ProfileMediaFragment,
   PublicationMainFocus,
@@ -61,6 +65,12 @@ export function mockAttributeFragment(overrides?: Partial<AttributeFragment>): A
   };
 }
 
+export function mockAnyoneFollowPolicy(): FollowPolicy {
+  return {
+    type: FollowPolicyType.ANYONE,
+  };
+}
+
 export function mockWalletFragment(): WalletFragment {
   return {
     __typename: 'Wallet',
@@ -91,7 +101,10 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
     },
 
     dispatcher: null,
-    followModule: null,
+
+    __followModule: null,
+    followPolicy: mockAnyoneFollowPolicy(),
+
     isFollowedByMe: false,
     isFollowing: false,
     isOptimisticFollowedByMe: false,
@@ -103,6 +116,14 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
 
     ...overrides,
     __typename: 'Profile',
+  };
+}
+
+export function mockProfileFollowFollowModuleFragment(): ProfileFollowModuleSettings {
+  return {
+    __typename: 'ProfileFollowModuleSettings',
+    contractAddress: mockEthereumAddress(),
+    type: FollowModules.ProfileFollowModule,
   };
 }
 

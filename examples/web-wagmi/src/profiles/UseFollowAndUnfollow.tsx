@@ -2,8 +2,8 @@ import { ProfileFragment, useExploreProfiles, useFollow, useUnfollow } from '@le
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
+import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
@@ -75,12 +75,7 @@ export function UseFollowAndUnfollow() {
       <WhenLoggedInWithProfile>
         {({ profile }) => <UseFollowInner activeProfile={profile} />}
       </WhenLoggedInWithProfile>
-      <WhenLoggedOut>
-        <div>
-          <p>Log in to follow profiles.</p>
-          <LoginButton />
-        </div>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback message="Log in to follow or unfollow profiles" />
     </div>
   );
 }

@@ -1,8 +1,53 @@
 import { ReactiveVar } from '@apollo/client';
+import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
-import { ProfileAttributes, Profile, ProfileAttributeReader } from '../graphql';
+import {
+  erc20Amount,
+  FollowModule,
+  Profile,
+  ProfileAttributeReader,
+  ProfileAttributes,
+} from '../graphql';
+import { FollowPolicy } from '../graphql/FollowPolicy';
 import { TypePolicy } from './TypePolicy';
+
+function resolveFollowPolicy({
+  followModule,
+}: {
+  followModule: FollowModule | null;
+}): FollowPolicy {
+  if (followModule === null) {
+    return {
+      type: FollowPolicyType.ANYONE,
+    };
+  }
+
+  switch (followModule.__typename) {
+    case 'FeeFollowModuleSettings':
+      return {
+        type: FollowPolicyType.CHARGE,
+        amount: erc20Amount({ from: followModule.amount }),
+        recipient: followModule.recipient,
+        contractAddress: followModule.contractAddress,
+      };
+    case 'ProfileFollowModuleSettings':
+      return {
+        type: FollowPolicyType.ONLY_PROFILE_OWNERS,
+        contractAddress: followModule.contractAddress,
+      };
+    case 'RevertFollowModuleSettings':
+      return {
+        type: FollowPolicyType.NO_ONE,
+        contractAddress: followModule.contractAddress,
+      };
+    case 'UnknownFollowModuleSettings':
+      return {
+        type: FollowPolicyType.UNKNOWN,
+        contractAddress: followModule.contractAddress,
+      };
+  }
+}
 
 export function createProfileTypePolicy(
   activeWalletVar: ReactiveVar<WalletData | null>,
@@ -19,6 +64,16 @@ export function createProfileTypePolicy(
 
       isOptimisticFollowedByMe(existing) {
         return existing ?? false;
+      },
+
+      followPolicy(existing, { readField }) {
+        if (existing) return existing;
+
+        const followModule = readField('followModule');
+
+        return resolveFollowPolicy({
+          followModule: followModule ?? null,
+        });
       },
 
       coverPicture: {
