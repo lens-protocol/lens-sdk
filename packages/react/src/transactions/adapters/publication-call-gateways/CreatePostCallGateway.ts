@@ -28,7 +28,7 @@ import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
 import { MetadataUploadAdapter } from '../MetadataUploadAdapter';
 import { createPublicationMetadata, resolveCollectModule, resolveReferenceModule } from './utils';
 
-export class PostCallGateway implements ICreatePostCallGateway {
+export class CreatePostCallGateway implements ICreatePostCallGateway {
   constructor(
     private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,

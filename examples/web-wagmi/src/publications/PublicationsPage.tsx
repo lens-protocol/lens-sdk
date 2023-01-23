@@ -56,6 +56,11 @@ const publicationHooks = [
     description: `Hide a publication.`,
     path: '/publications/useHidePublication',
   },
+  {
+    label: 'useWhoCollectedPublication',
+    description: `Check who collected a publication.`,
+    path: '/publications/useWhoCollectedPublication',
+  },
 ];
 
 export function PublicationsPage() {

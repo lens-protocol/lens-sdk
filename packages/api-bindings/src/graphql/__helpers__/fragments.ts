@@ -27,6 +27,7 @@ import {
   RelayErrorReasons,
   RevenueAggregateFragment,
   RevenueFragment,
+  WalletFragment,
   WhoReactedResultFragment,
 } from '../generated';
 import { erc20Amount } from '../utils';
@@ -57,6 +58,14 @@ export function mockAttributeFragment(overrides?: Partial<AttributeFragment>): A
     displayType: 'string',
     ...overrides,
     __typename: 'Attribute',
+  };
+}
+
+export function mockWalletFragment(): WalletFragment {
+  return {
+    __typename: 'Wallet',
+    defaultProfile: mockProfileFieldsFragment(),
+    address: mockEthereumAddress(),
   };
 }
 

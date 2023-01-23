@@ -197,11 +197,15 @@ export function mockINftOwnershipChallengeGateway({
   return gateway;
 }
 
-export function mockUpdateNftProfileImageRequest(): UpdateNftProfileImageRequest {
+export function mockUpdateNftProfileImageRequest(
+  overrides?: Partial<UpdateNftProfileImageRequest>,
+): UpdateNftProfileImageRequest {
   return {
     profileId: mockProfileId(),
-    kind: TransactionKind.UPDATE_PROFILE_IMAGE,
+    delegate: true,
     signature: mockNftOwnershipSignature(),
+    ...overrides,
+    kind: TransactionKind.UPDATE_PROFILE_IMAGE,
   };
 }
 
@@ -211,6 +215,7 @@ export function mockUpdateOffChainProfileImageRequest(
   return {
     profileId: mockProfileId(),
     url: faker.image.imageUrl(),
+    delegate: true,
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_IMAGE,
   };
