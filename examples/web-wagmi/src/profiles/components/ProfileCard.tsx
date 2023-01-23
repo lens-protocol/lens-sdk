@@ -1,9 +1,9 @@
-import { ProfileFieldsFragment } from '@lens-protocol/react';
+import { ProfileFragment } from '@lens-protocol/react';
 
 import { ProfilePicture } from './ProfilePicture';
 
 type ProfileCardProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 export function ProfileCard({ profile }: ProfileCardProps) {
@@ -18,7 +18,7 @@ export function ProfileCard({ profile }: ProfileCardProps) {
 }
 
 type ProfileButtonProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 export function SmallProfileCard({ profile }: ProfileButtonProps) {

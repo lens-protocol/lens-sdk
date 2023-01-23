@@ -1,9 +1,9 @@
-import { PostFragment, ProfileFieldsFragment } from '@lens-protocol/api-bindings';
+import { PostFragment, ProfileFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockGetProfileQueryMockedResponse,
   mockPostFragment,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
   mockPublicationByTxHashMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockCreatePostRequest, mockBroadcastedTransactionData } from '@lens-protocol/domain/mocks';
@@ -17,7 +17,7 @@ function setupTestScenario({
   post = mockPostFragment(),
   transactionData = mockBroadcastedTransactionData(),
 }: {
-  author: ProfileFieldsFragment;
+  author: ProfileFragment;
   post?: PostFragment;
   transactionData?: BroadcastedTransactionData<CreatePostRequest>;
 }) {
@@ -39,7 +39,7 @@ function setupTestScenario({
 }
 
 describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
-  const author = mockProfileFieldsFragment();
+  const author = mockProfileFragment();
 
   afterEach(() => {
     recentPosts([]);

@@ -1,9 +1,4 @@
-import {
-  ProfileFieldsFragment,
-  useExploreProfiles,
-  useFollow,
-  useUnfollow,
-} from '@lens-protocol/react';
+import { ProfileFragment, useExploreProfiles, useFollow, useUnfollow } from '@lens-protocol/react';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
@@ -13,7 +8,7 @@ import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
 type FollowButtonProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 const toastNotification = (error: Error) => toast.error(error.message);
@@ -41,7 +36,7 @@ function FollowButton({ profile }: FollowButtonProps) {
 }
 
 type ProfileFollowProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 function ProfileFollow({ profile }: ProfileFollowProps) {
@@ -54,7 +49,7 @@ function ProfileFollow({ profile }: ProfileFollowProps) {
 }
 
 type UseFollowInnerProps = {
-  activeProfile: ProfileFieldsFragment;
+  activeProfile: ProfileFragment;
 };
 
 function UseFollowInner({ activeProfile }: UseFollowInnerProps) {
@@ -64,7 +59,7 @@ function UseFollowInner({ activeProfile }: UseFollowInnerProps) {
 
   return (
     <>
-      {data.map((profile: ProfileFieldsFragment) => (
+      {data.map((profile: ProfileFragment) => (
         <ProfileFollow key={profile.handle} profile={profile} />
       ))}
     </>

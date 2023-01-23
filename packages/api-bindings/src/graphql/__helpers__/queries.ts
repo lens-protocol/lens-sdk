@@ -28,7 +28,7 @@ import {
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesQueryVariables,
   PostFragment,
-  ProfileFieldsFragment,
+  ProfileFragment,
   ProfileFollowRevenueDocument,
   ProfileFollowRevenueFragment,
   ProfileFollowRevenueQuery,
@@ -73,10 +73,10 @@ import {
   WhoReactedPublicationQueryVariables,
   WhoReactedResultFragment,
 } from '../generated';
-import { mockFeedItemFragment, mockPostFragment, mockProfileFieldsFragment } from './fragments';
+import { mockFeedItemFragment, mockPostFragment, mockProfileFragment } from './fragments';
 
 export function createProfilesToFollowQueryMockedResponse(args: {
-  profiles: ProfileFieldsFragment[];
+  profiles: ProfileFragment[];
 }): MockedResponse<ProfilesToFollowQuery> {
   return {
     request: {
@@ -90,18 +90,18 @@ export function createProfilesToFollowQueryMockedResponse(args: {
   };
 }
 
-export function mockGetProfileQuery(profile: Maybe<ProfileFieldsFragment>): GetProfileQuery {
+export function mockGetProfileQuery(profile: Maybe<ProfileFragment>): GetProfileQuery {
   return {
     result: profile,
   };
 }
 
 export function mockGetProfileQueryMockedResponse({
-  profile = mockProfileFieldsFragment(),
+  profile = mockProfileFragment(),
   request,
   observerId,
 }: {
-  profile?: Maybe<ProfileFieldsFragment>;
+  profile?: Maybe<ProfileFragment>;
   request: SingleProfileQueryRequest;
   observerId?: string;
 }): MockedResponse<GetProfileQuery> {
@@ -120,7 +120,7 @@ export function mockGetProfileQueryMockedResponse({
 }
 
 function mockGetAllProfilesByOwnerAddressQuery(
-  profiles: ProfileFieldsFragment[],
+  profiles: ProfileFragment[],
 ): GetAllProfilesByOwnerAddressQuery {
   return {
     result: {
@@ -137,13 +137,13 @@ function mockGetAllProfilesByOwnerAddressQuery(
 
 export function createGetAllProfilesByOwnerAddressQueryMockedResponse({
   address,
-  profiles = [mockProfileFieldsFragment()],
+  profiles = [mockProfileFragment()],
   observerId,
   limit = 10,
   cursor,
 }: {
   address: EthereumAddress;
-  profiles?: ProfileFieldsFragment[];
+  profiles?: ProfileFragment[];
   observerId?: string;
   limit?: number;
   cursor?: string;
@@ -288,7 +288,7 @@ export function createWhoCollectedPublicationQueryMockedResponse(args: {
 
 export function createMutualFollowersQueryMockedResponse(args: {
   variables: MutualFollowersProfilesQueryVariables;
-  profiles: ProfileFieldsFragment[];
+  profiles: ProfileFragment[];
 }): MockedResponse<MutualFollowersProfilesQuery> {
   return {
     request: {
@@ -517,7 +517,7 @@ export function createProfileFollowRevenueQueryMockedResponse({
 
 export function createSearchProfilesQueryMockedResponse(args: {
   variables: SearchProfilesQueryVariables;
-  items: ProfileFieldsFragment[];
+  items: ProfileFragment[];
 }): MockedResponse<SearchProfilesQuery> {
   return {
     request: {

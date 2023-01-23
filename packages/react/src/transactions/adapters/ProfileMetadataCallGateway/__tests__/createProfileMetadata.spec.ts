@@ -1,7 +1,4 @@
-import {
-  mockAttributeFragment,
-  mockProfileFieldsFragment,
-} from '@lens-protocol/api-bindings/mocks';
+import { mockAttributeFragment, mockProfileFragment } from '@lens-protocol/api-bindings/mocks';
 import { mockUpdateProfileDetailsRequest } from '@lens-protocol/domain/mocks';
 import { never, UnknownObject } from '@lens-protocol/shared-kernel';
 
@@ -19,7 +16,7 @@ function expectedMetadata(others: UnknownObject) {
 describe(`Given the ${createProfileMetadata.name} helper`, () => {
   describe(`when called with a profile data and a UpdateProfileDetailsRequest`, () => {
     it('should create profile metadata with the new details as specified in the request', () => {
-      const profile = mockProfileFieldsFragment({
+      const profile = mockProfileFragment({
         __attributes: [],
       });
       const request = mockUpdateProfileDetailsRequest({ profileId: profile.id });
@@ -37,7 +34,7 @@ describe(`Given the ${createProfileMetadata.name} helper`, () => {
     });
 
     it('should be able to preserve "bio" and "cover_picture" if they are not specified in the request', () => {
-      const profile = mockProfileFieldsFragment({
+      const profile = mockProfileFragment({
         __attributes: [],
       });
       const request = mockUpdateProfileDetailsRequest({
@@ -60,7 +57,7 @@ describe(`Given the ${createProfileMetadata.name} helper`, () => {
     });
 
     it('should be able to delete "bio" and "cover_picture" by passing "null" into the request', () => {
-      const profile = mockProfileFieldsFragment({
+      const profile = mockProfileFragment({
         __attributes: [],
       });
       const request = mockUpdateProfileDetailsRequest({
@@ -80,7 +77,7 @@ describe(`Given the ${createProfileMetadata.name} helper`, () => {
     });
 
     it('should create profile metadata adding attributes as specified in the request', () => {
-      const profile = mockProfileFieldsFragment({
+      const profile = mockProfileFragment({
         __attributes: [],
       });
       const request = mockUpdateProfileDetailsRequest({
@@ -124,7 +121,7 @@ describe(`Given the ${createProfileMetadata.name} helper`, () => {
     });
 
     it('should omit attributes that are marked with "null" in the request', () => {
-      const profile = mockProfileFieldsFragment({
+      const profile = mockProfileFragment({
         __attributes: [
           mockAttributeFragment({
             key: 'foo',
@@ -150,7 +147,7 @@ describe(`Given the ${createProfileMetadata.name} helper`, () => {
 
     it('should create profile metadata preserving attributes that might already have been there', () => {
       const existingAttribute = mockAttributeFragment();
-      const profile = mockProfileFieldsFragment({
+      const profile = mockProfileFragment({
         __attributes: [existingAttribute],
       });
       const request = mockUpdateProfileDetailsRequest({ profileId: profile.id });

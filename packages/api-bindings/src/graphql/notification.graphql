@@ -1,4 +1,4 @@
-fragment CommentWithCommentedPublicationFields on Comment {
+fragment CommentWithCommentedPublication on Comment {
   __typename
   ...Comment
   commentOn {
@@ -14,7 +14,7 @@ fragment CommentWithCommentedPublicationFields on Comment {
   }
 }
 
-fragment NewFollowerNotificationFields on NewFollowerNotification {
+fragment NewFollowerNotification on NewFollowerNotification {
   __typename
   notificationId
   createdAt
@@ -24,7 +24,7 @@ fragment NewFollowerNotificationFields on NewFollowerNotification {
   }
 }
 
-fragment NewCollectNotificationFields on NewCollectNotification {
+fragment NewCollectNotification on NewCollectNotification {
   __typename
   notificationId
   createdAt
@@ -46,12 +46,12 @@ fragment NewCollectNotificationFields on NewCollectNotification {
   }
 }
 
-fragment NewMirrorNotificationFields on NewMirrorNotification {
+fragment NewMirrorNotification on NewMirrorNotification {
   __typename
   notificationId
   createdAt
   profile {
-    ...ProfileFields
+    ...Profile
   }
   publication {
     ... on Post {
@@ -63,19 +63,19 @@ fragment NewMirrorNotificationFields on NewMirrorNotification {
   }
 }
 
-fragment NewCommentNotificationFields on NewCommentNotification {
+fragment NewCommentNotification on NewCommentNotification {
   __typename
   notificationId
   createdAt
   profile {
-    ...ProfileFields
+    ...Profile
   }
   comment {
-    ...CommentWithCommentedPublicationFields
+    ...CommentWithCommentedPublication
   }
 }
 
-fragment NewMentionNotificationFields on NewMentionNotification {
+fragment NewMentionNotification on NewMentionNotification {
   __typename
   notificationId
   createdAt
@@ -89,12 +89,12 @@ fragment NewMentionNotificationFields on NewMentionNotification {
   }
 }
 
-fragment NewReactionNotificationFields on NewReactionNotification {
+fragment NewReactionNotification on NewReactionNotification {
   __typename
   notificationId
   createdAt
   profile {
-    ...ProfileFields
+    ...Profile
   }
   reaction
   publication {
@@ -121,26 +121,26 @@ query Notifications(
   ) {
     items {
       ... on NewFollowerNotification {
-        ...NewFollowerNotificationFields
+        ...NewFollowerNotification
       }
 
       ... on NewMirrorNotification {
-        ...NewMirrorNotificationFields
+        ...NewMirrorNotification
       }
 
       ... on NewCollectNotification {
-        ...NewCollectNotificationFields
+        ...NewCollectNotification
       }
 
       ... on NewCommentNotification {
-        ...NewCommentNotificationFields
+        ...NewCommentNotification
       }
 
       ... on NewMentionNotification {
-        ...NewMentionNotificationFields
+        ...NewMentionNotification
       }
       ... on NewReactionNotification {
-        ...NewReactionNotificationFields
+        ...NewReactionNotification
       }
     }
     pageInfo {

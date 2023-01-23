@@ -1,7 +1,4 @@
-import {
-  ProfileFieldsFragment,
-  useMutualFollowersProfilesQuery,
-} from '@lens-protocol/api-bindings';
+import { ProfileFragment, useMutualFollowersProfilesQuery } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
@@ -17,7 +14,7 @@ export function useMutualFollowers({
   observerId,
   viewingProfileId,
   limit,
-}: UseMutualFollowersArgs): PaginatedReadResult<ProfileFieldsFragment[]> {
+}: UseMutualFollowersArgs): PaginatedReadResult<ProfileFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(

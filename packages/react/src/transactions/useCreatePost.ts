@@ -7,12 +7,12 @@ import {
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import { useState } from 'react';
 
-import { ProfileFieldsFragment } from '../profile';
+import { ProfileFragment } from '../profile';
 import { MetadataUploadHandler, FailedUploadError } from './adapters/MetadataUploadAdapter';
 import { useCreatePostController } from './adapters/useCreatePostController';
 
 export type UseCreatePostArgs = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
   upload: MetadataUploadHandler;
 };
 

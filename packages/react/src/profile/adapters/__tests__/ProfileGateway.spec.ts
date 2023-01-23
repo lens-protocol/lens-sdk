@@ -4,7 +4,7 @@ import {
   createMockApolloClientWithMultipleResponses,
   createGetAllProfilesByOwnerAddressQueryMockedResponse,
   mockGetProfileQueryMockedResponse,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { Profile } from '@lens-protocol/domain/entities';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
@@ -24,7 +24,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
   describe(`when "${ProfileGateway.prototype.getAllProfilesByOwnerAddress.name}" method is invoked`, () => {
     it('should return all Profile entities owned by the given address', async () => {
       const address = mockEthereumAddress();
-      const profileDataFragment = mockProfileFieldsFragment();
+      const profileDataFragment = mockProfileFragment();
       const apolloClient = createMockApolloClientWithMultipleResponses([
         createGetAllProfilesByOwnerAddressQueryMockedResponse({
           address,
@@ -46,7 +46,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
 
   describe(`when "${ProfileGateway.prototype.getProfileByHandle.name}" method is invoked`, () => {
     it('should return the Profile entity associated with the given handle', async () => {
-      const profileDataFragment = mockProfileFieldsFragment();
+      const profileDataFragment = mockProfileFragment();
       const apolloClient = createMockApolloClientWithMultipleResponses([
         mockGetProfileQueryMockedResponse({
           request: { handle: profileDataFragment.handle },
@@ -79,7 +79,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
 
   describe(`when "${ProfileGateway.prototype.getProfileById.name}" method is invoked`, () => {
     it('should return the corresponding Profile entity', async () => {
-      const profileDataFragment = mockProfileFieldsFragment();
+      const profileDataFragment = mockProfileFragment();
       const apolloClient = createMockApolloClientWithMultipleResponses([
         mockGetProfileQueryMockedResponse({
           request: { profileId: profileDataFragment.id },

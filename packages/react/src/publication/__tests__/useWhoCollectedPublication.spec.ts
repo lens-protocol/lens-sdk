@@ -2,7 +2,7 @@ import { PostFragment, WalletFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
   mockWalletFragment,
   createWhoCollectedPublicationQueryMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
@@ -12,7 +12,7 @@ import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useWhoCollectedPublication } from '../useWhoCollectedPublication';
 
 describe('Given the useWhoCollectedPublication hook', () => {
-  const observer = mockProfileFieldsFragment();
+  const observer = mockProfileFragment();
   const mockPublication: PostFragment = mockPostFragment();
   const mockWallets: WalletFragment[] = [mockWalletFragment()];
 

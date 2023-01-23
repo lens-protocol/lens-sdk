@@ -1,10 +1,10 @@
 import {
   erc20Amount,
   FeeFollowModuleSettingsFragment,
-  getFollowPolicyTypeFromProfileFieldsFragment,
-  isProfileFieldsFragmentWithFeeFollowModule,
-  ProfileFieldsFragment,
-  ProfileFieldsFragmentWithSupportedFollowModule,
+  getFollowPolicyTypeFromProfileFragment,
+  isProfileFragmentWithFeeFollowModule,
+  ProfileFragment,
+  ProfileFragmentWithSupportedFollowModule,
 } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
@@ -41,11 +41,11 @@ function createFollowRequestFee(followModule: FeeFollowModuleSettingsFragment): 
 }
 
 function createFollowProfilesFlowRequest(
-  profile: ProfileFieldsFragmentWithSupportedFollowModule,
+  profile: ProfileFragmentWithSupportedFollowModule,
   activeWallet: WalletData,
-  activeProfile: ProfileFieldsFragment,
+  activeProfile: ProfileFragment,
 ): FollowProfilesFlowRequest {
-  const followPolicyType = getFollowPolicyTypeFromProfileFieldsFragment(profile);
+  const followPolicyType = getFollowPolicyTypeFromProfileFragment(profile);
 
   const baseRequest: Pick<FollowProfilesFlowRequest, 'profileId' | 'followerAddress'> = {
     profileId: profile.id,
@@ -55,7 +55,7 @@ function createFollowProfilesFlowRequest(
   switch (followPolicyType) {
     case FollowPolicyType.CHARGE:
       invariant(
-        isProfileFieldsFragmentWithFeeFollowModule(profile),
+        isProfileFragmentWithFeeFollowModule(profile),
         'Profile is not with a fee follow module',
       );
 
@@ -80,7 +80,7 @@ function createFollowProfilesFlowRequest(
 }
 
 export type UseFollowArgs = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 export function useFollow({ profile }: UseFollowArgs) {

@@ -1,14 +1,10 @@
-import {
-  ProfileFieldsFragment,
-  useActiveProfile,
-  useUpdateProfileDetails,
-} from '@lens-protocol/react';
+import { ProfileFragment, useActiveProfile, useUpdateProfileDetails } from '@lens-protocol/react';
 
 import { upload } from '../upload';
 import { ProfileCard } from './components/ProfileCard';
 
 type UpdateProfileFormProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 function UpdateProfileForm({ profile }: UpdateProfileFormProps) {

@@ -4031,7 +4031,7 @@ export type CollectModuleFragment =
   | CollectModule_UnknownCollectModuleSettings_Fragment;
 
 export type WalletFragment = { __typename: 'Wallet' } & Pick<Wallet, 'address'> & {
-    defaultProfile: Maybe<ProfileFieldsFragment>;
+    defaultProfile: Maybe<ProfileFragment>;
   };
 
 export type MediaFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
@@ -4066,7 +4066,7 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
-    profile: ProfileFieldsFragment;
+    profile: ProfileFragment;
     collectModule:
       | CollectModule_FreeCollectModuleSettings_Fragment
       | CollectModule_FeeCollectModuleSettings_Fragment
@@ -4102,7 +4102,7 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
-    profile: ProfileFieldsFragment;
+    profile: ProfileFragment;
     collectedBy: Maybe<WalletFragment>;
     collectModule:
       | CollectModule_FreeCollectModuleSettings_Fragment
@@ -4145,7 +4145,7 @@ export type PostFragment = { __typename: 'Post' } & Pick<
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
-    profile: ProfileFieldsFragment;
+    profile: ProfileFragment;
     collectedBy: Maybe<WalletFragment>;
     collectModule:
       | CollectModule_FreeCollectModuleSettings_Fragment
@@ -4167,7 +4167,7 @@ export type PostFragment = { __typename: 'Post' } & Pick<
 export type PendingPostFragment = { __typename: 'PendingPost' } & Pick<
   PendingPost,
   'id' | 'content' | 'locale' | 'mainContentFocus'
-> & { media: Maybe<Array<MediaFragment>>; profile: ProfileFieldsFragment };
+> & { media: Maybe<Array<MediaFragment>>; profile: ProfileFragment };
 
 export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain' } & Pick<
   Eip712TypedDataDomain,
@@ -4203,7 +4203,7 @@ export type ExploreProfilesQueryVariables = Exact<{
 }>;
 
 export type ExploreProfilesQuery = {
-  result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+  result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type CreateFollowTypedDataMutationVariables = Exact<{
@@ -4254,17 +4254,16 @@ export type CreateMirrorViaDispatcherMutation = {
   result: RelayerResultFragment | RelayErrorFragment;
 };
 
-export type CommentWithCommentedPublicationFieldsFragment = { __typename: 'Comment' } & {
+export type CommentWithCommentedPublicationFragment = { __typename: 'Comment' } & {
   commentOn: Maybe<PostFragment | CommentFragment | MirrorFragment>;
 } & CommentFragment;
 
-export type NewFollowerNotificationFieldsFragment = {
-  __typename: 'NewFollowerNotification';
-} & Pick<NewFollowerNotification, 'notificationId' | 'createdAt' | 'isFollowedByMe'> & {
-    wallet: WalletFragment;
-  };
+export type NewFollowerNotificationFragment = { __typename: 'NewFollowerNotification' } & Pick<
+  NewFollowerNotification,
+  'notificationId' | 'createdAt' | 'isFollowedByMe'
+> & { wallet: WalletFragment };
 
-export type NewCollectNotificationFieldsFragment = { __typename: 'NewCollectNotification' } & Pick<
+export type NewCollectNotificationFragment = { __typename: 'NewCollectNotification' } & Pick<
   NewCollectNotification,
   'notificationId' | 'createdAt'
 > & {
@@ -4272,27 +4271,25 @@ export type NewCollectNotificationFieldsFragment = { __typename: 'NewCollectNoti
     collectedPublication: PostFragment | CommentFragment | MirrorFragment;
   };
 
-export type NewMirrorNotificationFieldsFragment = { __typename: 'NewMirrorNotification' } & Pick<
+export type NewMirrorNotificationFragment = { __typename: 'NewMirrorNotification' } & Pick<
   NewMirrorNotification,
   'notificationId' | 'createdAt'
-> & { profile: ProfileFieldsFragment; publication: PostFragment | CommentFragment };
+> & { profile: ProfileFragment; publication: PostFragment | CommentFragment };
 
-export type NewCommentNotificationFieldsFragment = { __typename: 'NewCommentNotification' } & Pick<
+export type NewCommentNotificationFragment = { __typename: 'NewCommentNotification' } & Pick<
   NewCommentNotification,
   'notificationId' | 'createdAt'
-> & { profile: ProfileFieldsFragment; comment: CommentWithCommentedPublicationFieldsFragment };
+> & { profile: ProfileFragment; comment: CommentWithCommentedPublicationFragment };
 
-export type NewMentionNotificationFieldsFragment = { __typename: 'NewMentionNotification' } & Pick<
+export type NewMentionNotificationFragment = { __typename: 'NewMentionNotification' } & Pick<
   NewMentionNotification,
   'notificationId' | 'createdAt'
 > & { mentionPublication: PostFragment | CommentFragment };
 
-export type NewReactionNotificationFieldsFragment = {
-  __typename: 'NewReactionNotification';
-} & Pick<NewReactionNotification, 'notificationId' | 'createdAt' | 'reaction'> & {
-    profile: ProfileFieldsFragment;
-    publication: PostFragment | CommentFragment | MirrorFragment;
-  };
+export type NewReactionNotificationFragment = { __typename: 'NewReactionNotification' } & Pick<
+  NewReactionNotification,
+  'notificationId' | 'createdAt' | 'reaction'
+> & { profile: ProfileFragment; publication: PostFragment | CommentFragment | MirrorFragment };
 
 export type NotificationsQueryVariables = Exact<{
   observerId: Scalars['ProfileId'];
@@ -4304,12 +4301,12 @@ export type NotificationsQueryVariables = Exact<{
 export type NotificationsQuery = {
   result: {
     items: Array<
-      | NewFollowerNotificationFieldsFragment
-      | NewCollectNotificationFieldsFragment
-      | NewCommentNotificationFieldsFragment
-      | NewMirrorNotificationFieldsFragment
-      | NewMentionNotificationFieldsFragment
-      | NewReactionNotificationFieldsFragment
+      | NewFollowerNotificationFragment
+      | NewCollectNotificationFragment
+      | NewCommentNotificationFragment
+      | NewMirrorNotificationFragment
+      | NewMentionNotificationFragment
+      | NewReactionNotificationFragment
     >;
     pageInfo: CommonPaginatedResultInfoFragment;
   };
@@ -4412,7 +4409,7 @@ export type AttributeFragment = { __typename: 'Attribute' } & Pick<
   'displayType' | 'key' | 'value'
 >;
 
-export type ProfileFieldsFragment = { __typename: 'Profile' } & Pick<
+export type ProfileFragment = { __typename: 'Profile' } & Pick<
   Profile,
   | 'id'
   | 'name'
@@ -4443,14 +4440,14 @@ export type ProfilesToFollowQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
-export type ProfilesToFollowQuery = { result: Array<ProfileFieldsFragment> };
+export type ProfilesToFollowQuery = { result: Array<ProfileFragment> };
 
 export type GetProfileQueryVariables = Exact<{
   request: SingleProfileQueryRequest;
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
-export type GetProfileQuery = { result: Maybe<ProfileFieldsFragment> };
+export type GetProfileQuery = { result: Maybe<ProfileFragment> };
 
 export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
   address: Scalars['EthereumAddress'];
@@ -4460,7 +4457,7 @@ export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
 }>;
 
 export type GetAllProfilesByOwnerAddressQuery = {
-  result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+  result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type CreateProfileMutationVariables = Exact<{
@@ -4477,7 +4474,7 @@ export type MutualFollowersProfilesQueryVariables = Exact<{
 }>;
 
 export type MutualFollowersProfilesQuery = {
-  result: { items: Array<ProfileFieldsFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+  result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type CreateSetProfileImageUriTypedDataMutationVariables = Exact<{
@@ -4538,7 +4535,7 @@ export type CreateSetProfileMetadataViaDispatcherMutation = {
 
 export type FollowerFragment = { __typename: 'Follower' } & { wallet: WalletFragment };
 
-export type FollowingFragment = { __typename: 'Following' } & { profile: ProfileFieldsFragment };
+export type FollowingFragment = { __typename: 'Following' } & { profile: ProfileFragment };
 
 export type ProfileFollowersQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
@@ -4671,7 +4668,7 @@ export type RemoveReactionMutation = Pick<Mutation, 'removeReaction'>;
 export type WhoReactedResultFragment = { __typename: 'WhoReactedResult' } & Pick<
   WhoReactedResult,
   'reactionId' | 'reaction' | 'reactionAt'
-> & { profile: ProfileFieldsFragment };
+> & { profile: ProfileFragment };
 
 export type WhoReactedPublicationQueryVariables = Exact<{
   limit?: Maybe<Scalars['LimitScalar']>;
@@ -4748,7 +4745,7 @@ export type SearchProfilesQueryVariables = Exact<{
 
 export type SearchProfilesQuery = {
   result: { __typename: 'ProfileSearchResult' } & {
-    items: Array<ProfileFieldsFragment>;
+    items: Array<ProfileFragment>;
     pageInfo: CommonPaginatedResultInfoFragment;
   };
 };
@@ -4927,8 +4924,8 @@ export const AttributeFragmentDoc = gql`
     value
   }
 `;
-export const ProfileFieldsFragmentDoc = gql`
-  fragment ProfileFields on Profile {
+export const ProfileFragmentDoc = gql`
+  fragment Profile on Profile {
     __typename
     id
     name
@@ -4982,10 +4979,10 @@ export const WalletFragmentDoc = gql`
     __typename
     address
     defaultProfile {
-      ...ProfileFields
+      ...Profile
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
 `;
 export const FreeCollectModuleSettingsFragmentDoc = gql`
   fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
@@ -5104,7 +5101,7 @@ export const CommentBaseFragmentDoc = gql`
       ...Metadata
     }
     profile {
-      ...ProfileFields
+      ...Profile
     }
     collectedBy {
       ...Wallet
@@ -5132,7 +5129,7 @@ export const CommentBaseFragmentDoc = gql`
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${WalletFragmentDoc}
   ${CollectModuleFragmentDoc}
   ${ReferenceModuleFragmentDoc}
@@ -5148,7 +5145,7 @@ export const PostFragmentDoc = gql`
       ...Metadata
     }
     profile {
-      ...ProfileFields
+      ...Profile
     }
     collectedBy {
       ...Wallet
@@ -5176,7 +5173,7 @@ export const PostFragmentDoc = gql`
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${WalletFragmentDoc}
   ${CollectModuleFragmentDoc}
   ${ReferenceModuleFragmentDoc}
@@ -5192,7 +5189,7 @@ export const MirrorBaseFragmentDoc = gql`
       ...Metadata
     }
     profile {
-      ...ProfileFields
+      ...Profile
     }
     collectModule {
       ...CollectModule
@@ -5216,7 +5213,7 @@ export const MirrorBaseFragmentDoc = gql`
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${CollectModuleFragmentDoc}
   ${ReferenceModuleFragmentDoc}
 `;
@@ -5275,13 +5272,13 @@ export const PendingPostFragmentDoc = gql`
       ...Media
     }
     profile {
-      ...ProfileFields
+      ...Profile
     }
     locale
     mainContentFocus
   }
   ${MediaFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
 `;
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
@@ -5310,8 +5307,8 @@ export const FeedItemFragmentDoc = gql`
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
-export const NewFollowerNotificationFieldsFragmentDoc = gql`
-  fragment NewFollowerNotificationFields on NewFollowerNotification {
+export const NewFollowerNotificationFragmentDoc = gql`
+  fragment NewFollowerNotification on NewFollowerNotification {
     __typename
     notificationId
     createdAt
@@ -5339,8 +5336,8 @@ export const MirrorFragmentDoc = gql`
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
-export const NewCollectNotificationFieldsFragmentDoc = gql`
-  fragment NewCollectNotificationFields on NewCollectNotification {
+export const NewCollectNotificationFragmentDoc = gql`
+  fragment NewCollectNotification on NewCollectNotification {
     __typename
     notificationId
     createdAt
@@ -5364,13 +5361,13 @@ export const NewCollectNotificationFieldsFragmentDoc = gql`
   ${MirrorFragmentDoc}
   ${CommentFragmentDoc}
 `;
-export const NewMirrorNotificationFieldsFragmentDoc = gql`
-  fragment NewMirrorNotificationFields on NewMirrorNotification {
+export const NewMirrorNotificationFragmentDoc = gql`
+  fragment NewMirrorNotification on NewMirrorNotification {
     __typename
     notificationId
     createdAt
     profile {
-      ...ProfileFields
+      ...Profile
     }
     publication {
       ... on Post {
@@ -5381,12 +5378,12 @@ export const NewMirrorNotificationFieldsFragmentDoc = gql`
       }
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
-export const CommentWithCommentedPublicationFieldsFragmentDoc = gql`
-  fragment CommentWithCommentedPublicationFields on Comment {
+export const CommentWithCommentedPublicationFragmentDoc = gql`
+  fragment CommentWithCommentedPublication on Comment {
     __typename
     ...Comment
     commentOn {
@@ -5405,23 +5402,23 @@ export const CommentWithCommentedPublicationFieldsFragmentDoc = gql`
   ${PostFragmentDoc}
   ${MirrorFragmentDoc}
 `;
-export const NewCommentNotificationFieldsFragmentDoc = gql`
-  fragment NewCommentNotificationFields on NewCommentNotification {
+export const NewCommentNotificationFragmentDoc = gql`
+  fragment NewCommentNotification on NewCommentNotification {
     __typename
     notificationId
     createdAt
     profile {
-      ...ProfileFields
+      ...Profile
     }
     comment {
-      ...CommentWithCommentedPublicationFields
+      ...CommentWithCommentedPublication
     }
   }
-  ${ProfileFieldsFragmentDoc}
-  ${CommentWithCommentedPublicationFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
+  ${CommentWithCommentedPublicationFragmentDoc}
 `;
-export const NewMentionNotificationFieldsFragmentDoc = gql`
-  fragment NewMentionNotificationFields on NewMentionNotification {
+export const NewMentionNotificationFragmentDoc = gql`
+  fragment NewMentionNotification on NewMentionNotification {
     __typename
     notificationId
     createdAt
@@ -5437,13 +5434,13 @@ export const NewMentionNotificationFieldsFragmentDoc = gql`
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
-export const NewReactionNotificationFieldsFragmentDoc = gql`
-  fragment NewReactionNotificationFields on NewReactionNotification {
+export const NewReactionNotificationFragmentDoc = gql`
+  fragment NewReactionNotification on NewReactionNotification {
     __typename
     notificationId
     createdAt
     profile {
-      ...ProfileFields
+      ...Profile
     }
     reaction
     publication {
@@ -5458,7 +5455,7 @@ export const NewReactionNotificationFieldsFragmentDoc = gql`
       }
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
   ${MirrorFragmentDoc}
@@ -5505,10 +5502,10 @@ export const FollowingFragmentDoc = gql`
   fragment Following on Following {
     __typename
     profile {
-      ...ProfileFields
+      ...Profile
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
 `;
 export const ProxyActionStatusResultFragmentDoc = gql`
   fragment ProxyActionStatusResult on ProxyActionStatusResult {
@@ -5538,10 +5535,10 @@ export const WhoReactedResultFragmentDoc = gql`
     reaction
     reactionAt
     profile {
-      ...ProfileFields
+      ...Profile
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
 `;
 export const RevenueFragmentDoc = gql`
   fragment Revenue on PublicationRevenue {
@@ -6066,14 +6063,14 @@ export const ExploreProfilesDocument = gql`
       request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
     ) {
       items {
-        ...ProfileFields
+        ...Profile
       }
       pageInfo {
         ...CommonPaginatedResultInfo
       }
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 
@@ -6332,22 +6329,22 @@ export const NotificationsDocument = gql`
     ) {
       items {
         ... on NewFollowerNotification {
-          ...NewFollowerNotificationFields
+          ...NewFollowerNotification
         }
         ... on NewMirrorNotification {
-          ...NewMirrorNotificationFields
+          ...NewMirrorNotification
         }
         ... on NewCollectNotification {
-          ...NewCollectNotificationFields
+          ...NewCollectNotification
         }
         ... on NewCommentNotification {
-          ...NewCommentNotificationFields
+          ...NewCommentNotification
         }
         ... on NewMentionNotification {
-          ...NewMentionNotificationFields
+          ...NewMentionNotification
         }
         ... on NewReactionNotification {
-          ...NewReactionNotificationFields
+          ...NewReactionNotification
         }
       }
       pageInfo {
@@ -6355,12 +6352,12 @@ export const NotificationsDocument = gql`
       }
     }
   }
-  ${NewFollowerNotificationFieldsFragmentDoc}
-  ${NewMirrorNotificationFieldsFragmentDoc}
-  ${NewCollectNotificationFieldsFragmentDoc}
-  ${NewCommentNotificationFieldsFragmentDoc}
-  ${NewMentionNotificationFieldsFragmentDoc}
-  ${NewReactionNotificationFieldsFragmentDoc}
+  ${NewFollowerNotificationFragmentDoc}
+  ${NewMirrorNotificationFragmentDoc}
+  ${NewCollectNotificationFragmentDoc}
+  ${NewCommentNotificationFragmentDoc}
+  ${NewMentionNotificationFragmentDoc}
+  ${NewReactionNotificationFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 
@@ -6733,10 +6730,10 @@ export type ProfileFollowRevenueQueryResult = Apollo.QueryResult<
 export const ProfilesToFollowDocument = gql`
   query ProfilesToFollow($observerId: ProfileId) {
     result: recommendedProfiles {
-      ...ProfileFields
+      ...Profile
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
 `;
 
 /**
@@ -6782,10 +6779,10 @@ export type ProfilesToFollowQueryResult = Apollo.QueryResult<
 export const GetProfileDocument = gql`
   query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
     result: profile(request: $request) {
-      ...ProfileFields
+      ...Profile
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
 `;
 
 /**
@@ -6832,14 +6829,14 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
   ) {
     result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
       items {
-        ...ProfileFields
+        ...Profile
       }
       pageInfo {
         ...CommonPaginatedResultInfo
       }
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 
@@ -6963,14 +6960,14 @@ export const MutualFollowersProfilesDocument = gql`
       }
     ) {
       items {
-        ...ProfileFields
+        ...Profile
       }
       pageInfo {
         ...CommonPaginatedResultInfo
       }
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 
@@ -8390,7 +8387,7 @@ export const SearchProfilesDocument = gql`
       ... on ProfileSearchResult {
         __typename
         items {
-          ...ProfileFields
+          ...Profile
         }
         pageInfo {
           ...CommonPaginatedResultInfo
@@ -8398,7 +8395,7 @@ export const SearchProfilesDocument = gql`
       }
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 

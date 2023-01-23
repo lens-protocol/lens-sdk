@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker';
-import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '@lens-protocol/api-bindings';
+import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockGetProfileQueryMockedResponse,
   mockMediaFragment,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
   mockProfileMediaFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import {
@@ -15,8 +15,8 @@ import {
 import { UpdateProfileImageResponder } from '../UpdateProfileImageResponder';
 
 type SetupTestScenarioArgs = {
-  cacheProfile: ProfileFieldsFragment;
-  responseProfile: ProfileFieldsFragment;
+  cacheProfile: ProfileFragment;
+  responseProfile: ProfileFragment;
 };
 
 function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioArgs) {
@@ -32,8 +32,8 @@ function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioA
 
   apolloClient.cache.writeFragment({
     id: apolloClient.cache.identify(cacheProfile),
-    fragment: ProfileFieldsFragmentDoc,
-    fragmentName: 'ProfileFields',
+    fragment: ProfileFragmentDoc,
+    fragmentName: 'Profile',
     data: cacheProfile,
   });
 
@@ -45,15 +45,15 @@ function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioA
     get profileFromCache() {
       return apolloClient.cache.readFragment({
         id: apolloClient.cache.identify(cacheProfile),
-        fragment: ProfileFieldsFragmentDoc,
-        fragmentName: 'ProfileFields',
+        fragment: ProfileFragmentDoc,
+        fragmentName: 'Profile',
       });
     },
   };
 }
 
 describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
-  const profile = mockProfileFieldsFragment();
+  const profile = mockProfileFragment();
   const newImageUrl = faker.image.imageUrl(600, 600, 'cat', true);
 
   const transactionData = mockBroadcastedTransactionData({
@@ -63,7 +63,7 @@ describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
     }),
   });
 
-  const profileWithNewImage: ProfileFieldsFragment = {
+  const profileWithNewImage: ProfileFragment = {
     ...profile,
     picture: mockProfileMediaFragment({
       original: mockMediaFragment({

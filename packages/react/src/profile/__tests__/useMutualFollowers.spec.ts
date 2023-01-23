@@ -1,19 +1,19 @@
 import {
   createMockApolloClientWithMultipleResponses,
   createMutualFollowersQueryMockedResponse,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useMutualFollowers } from '../useMutualFollowers';
-import { ProfileFieldsFragment } from '../useProfilesToFollow';
+import { ProfileFragment } from '../useProfilesToFollow';
 
 describe('Given the useMutualFollowers hook', () => {
-  const observer = mockProfileFieldsFragment();
-  const viewingProfile = mockProfileFieldsFragment();
+  const observer = mockProfileFragment();
+  const viewingProfile = mockProfileFragment();
 
-  const mockProfiles: ProfileFieldsFragment[] = [mockProfileFieldsFragment()];
+  const mockProfiles: ProfileFragment[] = [mockProfileFragment()];
 
   describe('when the query returns data successfully', () => {
     it('should return mutual followers profiles', async () => {
