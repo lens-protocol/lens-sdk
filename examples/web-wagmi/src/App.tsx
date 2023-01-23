@@ -35,6 +35,7 @@ import { UseProfileFollowers } from './profiles/UseProfileFollowers';
 import { UseProfileFollowing } from './profiles/UseProfileFollowing';
 import { UseProfilesOwnedBy } from './profiles/UseProfileOwnedBy';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
+import { UseProilesWhoMirroredPublication } from './profiles/UseProfilesWhoMirroredPublication';
 import { UseUpdateDispatcherConfig } from './profiles/UseUpdateDispatcherConfig';
 import { UseUpdateFollowPolicy } from './profiles/UseUpdateFollowPolicy';
 import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
@@ -133,6 +134,10 @@ export function App() {
                 <Route path="/profiles/useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
                 <Route path="/profiles/useProfileFollowers" element={<UseProfileFollowers />} />
                 <Route path="/profiles/useProfileFollowing" element={<UseProfileFollowing />} />
+                <Route
+                  path="/profiles/useProfilesWhoMirroredPublication"
+                  element={<UseProilesWhoMirroredPublication />}
+                />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
                 <Route path="/discovery/useFeed" element={<Feed />} />
