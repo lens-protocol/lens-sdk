@@ -1,9 +1,15 @@
 import { usePublications } from '@lens-protocol/react';
 
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from './components/PublicationCard';
 
 export function UsePublications() {
-  const { data, loading } = usePublications({ profileId: '0x1b' });
+  const {
+    data: publications,
+    loading,
+    hasMore,
+    observeRef,
+  } = useInfiniteScroll(usePublications({ profileId: '0x15' }));
 
   if (loading) return <div>Loading...</div>;
 
@@ -12,9 +18,12 @@ export function UsePublications() {
       <h1>
         <code>usePublications</code>
       </h1>
-      {data.map((publication) => (
-        <PublicationCard key={publication.id} publication={publication} />
-      ))}
+      <div>
+        {publications.map((publication) => (
+          <PublicationCard key={publication.id} publication={publication} />
+        ))}
+        {hasMore && <p ref={observeRef}>Loading more...</p>}
+      </div>
     </div>
   );
 }

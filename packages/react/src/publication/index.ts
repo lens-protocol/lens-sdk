@@ -10,6 +10,9 @@ import {
   PublicationSortCriteria,
   PublicationTypes,
   RevenueAggregateFragment,
+  PublicationFragment,
+  PublicationOwnedByMeFragment,
+  isPublicationOwnedByMe,
 } from '@lens-protocol/api-bindings';
 
 export * from './useComments';
@@ -19,6 +22,9 @@ export * from './useSearchPublications';
 export * from './useExplorePublications';
 export * from './useReaction';
 export * from './useWhoReacted';
+export * from './useReportPublication';
+export * from './useHidePublication';
+export * from './useWhoCollectedPublication';
 
 export type { Publication } from './types';
 export {
@@ -27,6 +33,7 @@ export {
   isMirrorPublication,
   PublicationSortCriteria,
   PublicationTypes,
+  isPublicationOwnedByMe,
 };
 export type {
   CommentFragment,
@@ -35,4 +42,6 @@ export type {
   PendingPostFragment,
   PostFragment,
   RevenueAggregateFragment,
+  PublicationFragment,
+  PublicationOwnedByMeFragment,
 };

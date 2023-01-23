@@ -1,17 +1,15 @@
 import { faker } from '@faker-js/faker';
+import { ChainType, Result } from '@lens-protocol/shared-kernel';
 import {
-  ChainType,
-  Result,
   mockEthereumAddress,
   mockDaiAmount,
   mockUsdcAmount,
-} from '@lens-protocol/shared-kernel';
+} from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { Transaction, TransactionKind, Profile, NftOwnershipChallenge } from '../../../entities';
+import { Transaction, TransactionKind, NftOwnershipChallenge } from '../../../entities';
 import { mockSignature } from '../../../entities/__helpers__/mocks';
-import { ActiveProfile } from '../ActiveProfile';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
@@ -28,7 +26,6 @@ import {
   ProveNftOwnershipRequest,
 } from '../ProveNftOwnership';
 import { UnfollowRequest } from '../UnfollowProfile';
-import { UpdateCoverImageRequest } from '../UpdateCoverImage';
 import { UpdateDispatcherConfigRequest } from '../UpdateDispatcherConfig';
 import {
   ChargeFollowPolicy,
@@ -36,7 +33,7 @@ import {
   NoFeeFollowPolicy,
   UpdateFollowPolicyRequest,
 } from '../UpdateFollowPolicy';
-import { UpdateProfileDetailsRequest, ProfileDetails } from '../UpdateProfileDetails';
+import { UpdateProfileDetailsRequest } from '../UpdateProfileDetails';
 import {
   UpdateNftProfileImageRequest,
   UpdateOffChainProfileImageRequest,
@@ -100,35 +97,15 @@ export function mockUpdateFollowPolicyRequest(
   };
 }
 
-export function mockUpdateCoverImageRequest(
-  overrides?: Partial<UpdateCoverImageRequest>,
-): UpdateCoverImageRequest {
-  return {
-    profileId: mockProfileId(),
-    url: faker.image.imageUrl(),
-    delegate: true,
-    ...overrides,
-    kind: TransactionKind.UPDATE_COVER_IMAGE,
-  };
-}
-
-export function mockProfileDetails(overrides?: Partial<ProfileDetails>): ProfileDetails {
-  return {
-    name: faker.name.firstName(),
-    bio: faker.lorem.sentence(),
-    location: faker.address.city(),
-    website: faker.internet.url(),
-    twitter: faker.internet.userName(),
-    ...overrides,
-  };
-}
-
 export function mockUpdateProfileDetailsRequest(
   overrides?: Partial<UpdateProfileDetailsRequest>,
 ): UpdateProfileDetailsRequest {
   return {
+    attributes: {},
+    bio: faker.lorem.sentence(),
+    coverPicture: faker.image.imageUrl(),
+    name: faker.name.firstName(),
     profileId: mockProfileId(),
-    details: mockProfileDetails(),
     delegate: true,
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_DETAILS,
@@ -144,14 +121,6 @@ export function mockUpdateDispatcherConfigRequest(
     ...overrides,
     kind: TransactionKind.UPDATE_DISPATCHER_CONFIG,
   };
-}
-
-export function mockActiveProfile({ profile }: { profile: Profile }) {
-  const activeProfile = mock<ActiveProfile>();
-
-  when(activeProfile.requireActiveProfile).mockResolvedValue(profile);
-
-  return activeProfile;
 }
 
 export function mockUnconstrainedFollowRequest(
@@ -228,11 +197,15 @@ export function mockINftOwnershipChallengeGateway({
   return gateway;
 }
 
-export function mockUpdateNftProfileImageRequest(): UpdateNftProfileImageRequest {
+export function mockUpdateNftProfileImageRequest(
+  overrides?: Partial<UpdateNftProfileImageRequest>,
+): UpdateNftProfileImageRequest {
   return {
     profileId: mockProfileId(),
-    kind: TransactionKind.UPDATE_PROFILE_IMAGE,
+    delegate: true,
     signature: mockNftOwnershipSignature(),
+    ...overrides,
+    kind: TransactionKind.UPDATE_PROFILE_IMAGE,
   };
 }
 
@@ -242,6 +215,7 @@ export function mockUpdateOffChainProfileImageRequest(
   return {
     profileId: mockProfileId(),
     url: faker.image.imageUrl(),
+    delegate: true,
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_IMAGE,
   };

@@ -1,7 +1,12 @@
-import { Maybe, Profile } from '../graphql/generated';
+import { ReactiveVar } from '@apollo/client';
+import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
+
+import { ProfileAttributes, Profile, ProfileAttributeReader } from '../graphql';
 import { TypePolicy } from './TypePolicy';
 
-export function createProfileTypePolicy(): TypePolicy<Profile> {
+export function createProfileTypePolicy(
+  activeWalletVar: ReactiveVar<WalletData | null>,
+): TypePolicy<Profile> {
   return {
     fields: {
       isFollowing: {
@@ -16,28 +21,24 @@ export function createProfileTypePolicy(): TypePolicy<Profile> {
         return existing ?? false;
       },
 
-      attributes: {
+      coverPicture: {
         merge(_, incoming) {
-          // Attributes are not merged, but replaced cause they are not normalized.
-          // (see createAttributeTypePolicy).
           return incoming;
         },
       },
 
-      location(_: Maybe<string> | undefined, { readField }) {
-        return (readField('attributes') ?? []).find(({ key }) => key === 'location')?.value ?? null;
+      attributesMap(_: unknown, { readField }) {
+        return (readField('attributes') ?? []).reduce((acc, attribute) => {
+          acc[attribute.key] = new ProfileAttributeReader(attribute);
+          return acc;
+        }, {} as ProfileAttributes);
       },
 
-      twitter(_: Maybe<string> | undefined, { readField }) {
-        return (readField('attributes') ?? []).find(({ key }) => key === 'twitter')?.value ?? null;
-      },
-
-      website(_: Maybe<string> | undefined, { readField }) {
-        return (readField('attributes') ?? []).find(({ key }) => key === 'website')?.value ?? null;
-      },
-
-      ownedByMe() {
-        // TODO: implement ownership check using active profile
+      ownedByMe(_: boolean | undefined, { readField }) {
+        const activeWallet = activeWalletVar();
+        if (activeWallet) {
+          return readField('ownedBy') === activeWallet.address;
+        }
         return false;
       },
     },

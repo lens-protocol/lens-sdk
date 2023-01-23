@@ -1,8 +1,10 @@
 fragment RevenueAggregate on RevenueAggregate {
   __typename
-  total {
+  __total: total {
     ...Erc20Amount
   }
+
+  totalAmount
 }
 
 fragment PublicationRevenue on PublicationRevenue {
@@ -34,5 +36,32 @@ fragment Revenue on PublicationRevenue {
 query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
   result: publicationRevenue(request: $request) {
     ...Revenue
+  }
+}
+
+query ProfilePublicationRevenue(
+  $profileId: ProfileId!
+  $observerId: ProfileId
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $publicationTypes: [PublicationTypes!]
+  $sources: [Sources!]
+) {
+  result: profilePublicationRevenue(
+    request: {
+      profileId: $profileId
+      limit: $limit
+      cursor: $cursor
+      types: $publicationTypes
+      sources: $sources
+    }
+  ) {
+    items {
+      ...PublicationRevenue
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
   }
 }

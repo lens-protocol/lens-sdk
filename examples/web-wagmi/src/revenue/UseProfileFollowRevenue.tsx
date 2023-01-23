@@ -21,7 +21,7 @@ function UseProfileFollowRevenueInner({ profileId }: { profileId: string }) {
       <h3>Follow revenue</h3>
       {publicationRevenue.length ? (
         publicationRevenue.map((revenue) => (
-          <RevenueCard key={revenue.total.asset.symbol} revenue={revenue} />
+          <RevenueCard key={revenue.totalAmount.asset.symbol} revenue={revenue} />
         ))
       ) : (
         <p>No revenue from following.</p>

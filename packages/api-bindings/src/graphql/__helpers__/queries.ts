@@ -6,18 +6,6 @@ import {
   CommentFragment,
   CommentWithFirstCommentFragment,
   CommonPaginatedResultInfoFragment,
-  CreateCommentTypedDataDocument,
-  CreateCommentTypedDataMutation,
-  CreateCommentTypedDataMutationVariables,
-  CreateCommentViaDispatcherDocument,
-  CreateCommentViaDispatcherMutation,
-  CreateCommentViaDispatcherMutationVariables,
-  CreatePostTypedDataDocument,
-  CreatePostTypedDataMutation,
-  CreatePostTypedDataMutationVariables,
-  CreatePostViaDispatcherDocument,
-  CreatePostViaDispatcherMutation,
-  CreatePostViaDispatcherMutationVariables,
   EnabledModuleCurrenciesDocument,
   EnabledModuleCurrenciesQuery,
   ExplorePublicationsDocument,
@@ -45,6 +33,9 @@ import {
   ProfileFollowRevenueFragment,
   ProfileFollowRevenueQuery,
   ProfileFollowRevenueQueryVariables,
+  ProfilePublicationRevenueDocument,
+  ProfilePublicationRevenueQuery,
+  ProfilePublicationRevenueQueryVariables,
   ProfilesToFollowDocument,
   ProfilesToFollowQuery,
   ProxyActionError,
@@ -58,6 +49,7 @@ import {
   PublicationDocument,
   PublicationQuery,
   PublicationRevenueDocument,
+  PublicationRevenueFragment,
   PublicationRevenueQuery,
   PublicationRevenueQueryVariables,
   PublicationsDocument,
@@ -72,6 +64,10 @@ import {
   SearchPublicationsQueryVariables,
   SingleProfileQueryRequest,
   TransactionErrorReasons,
+  WalletFragment,
+  WhoCollectedPublicationDocument,
+  WhoCollectedPublicationQuery,
+  WhoCollectedPublicationQueryVariables,
   WhoReactedPublicationDocument,
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables,
@@ -127,8 +123,14 @@ function mockGetAllProfilesByOwnerAddressQuery(
   profiles: ProfileFieldsFragment[],
 ): GetAllProfilesByOwnerAddressQuery {
   return {
-    profilesByOwner: {
+    result: {
       items: profiles,
+      pageInfo: {
+        __typename: 'PaginatedResultInfo',
+        totalCount: null,
+        next: null,
+        prev: null,
+      },
     },
   };
 }
@@ -136,15 +138,24 @@ function mockGetAllProfilesByOwnerAddressQuery(
 export function createGetAllProfilesByOwnerAddressQueryMockedResponse({
   address,
   profiles = [mockProfileFieldsFragment()],
+  observerId,
+  limit = 10,
+  cursor,
 }: {
   address: EthereumAddress;
   profiles?: ProfileFieldsFragment[];
+  observerId?: string;
+  limit?: number;
+  cursor?: string;
 }): MockedResponse<GetAllProfilesByOwnerAddressQuery> {
   return {
     request: {
       query: GetAllProfilesByOwnerAddressDocument,
       variables: {
         address,
+        observerId,
+        limit,
+        cursor,
       },
     },
     result: {
@@ -245,6 +256,31 @@ export function createEnabledModuleCurrenciesQueryMockedResponse(
           name: currency.name,
           symbol: currency.symbol,
         })),
+      },
+    },
+  };
+}
+
+export function createWhoCollectedPublicationQueryMockedResponse(args: {
+  variables: WhoCollectedPublicationQueryVariables;
+  wallets: WalletFragment[];
+}): MockedResponse<WhoCollectedPublicationQuery> {
+  return {
+    request: {
+      query: WhoCollectedPublicationDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: args.wallets,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.wallets.length,
+          },
+        },
       },
     },
   };
@@ -409,6 +445,31 @@ export function createPublicationRevenueQueryMockedResponse(args: {
   };
 }
 
+export function createProfilePublicationRevenueQueryMockedResponse(args: {
+  variables: ProfilePublicationRevenueQueryVariables;
+  items: PublicationRevenueFragment[];
+}): MockedResponse<ProfilePublicationRevenueQuery> {
+  return {
+    request: {
+      query: ProfilePublicationRevenueDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+          items: args.items,
+        },
+      },
+    },
+  };
+}
+
 export function createWhoReactedPublicationQueryMockedResponse(args: {
   variables: WhoReactedPublicationQueryVariables;
   items: Array<WhoReactedResultFragment>;
@@ -530,78 +591,6 @@ export function mockPublicationByTxHashMockedResponse({
     },
     result: {
       data: mockPublicationByTxHash(publication),
-    },
-  };
-}
-
-export function createCreateCommentTypedDataMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreateCommentTypedDataMutationVariables;
-  data: CreateCommentTypedDataMutation;
-}): MockedResponse<CreateCommentTypedDataMutation> {
-  return {
-    request: {
-      query: CreateCommentTypedDataDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-export function createCreateCommentViaDispatcherMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreateCommentViaDispatcherMutationVariables;
-  data: CreateCommentViaDispatcherMutation;
-}): MockedResponse<CreateCommentViaDispatcherMutation> {
-  return {
-    request: {
-      query: CreateCommentViaDispatcherDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-export function createCreatePostTypedDataMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreatePostTypedDataMutationVariables;
-  data: CreatePostTypedDataMutation;
-}): MockedResponse<CreatePostTypedDataMutation> {
-  return {
-    request: {
-      query: CreatePostTypedDataDocument,
-      variables,
-    },
-    result: {
-      data,
-    },
-  };
-}
-
-export function createCreatePostViaDispatcherMutationMockedResponse({
-  variables,
-  data,
-}: {
-  variables: CreatePostViaDispatcherMutationVariables;
-  data: CreatePostViaDispatcherMutation;
-}): MockedResponse<CreatePostViaDispatcherMutation> {
-  return {
-    request: {
-      query: CreatePostViaDispatcherDocument,
-      variables,
-    },
-    result: {
-      data,
     },
   };
 }

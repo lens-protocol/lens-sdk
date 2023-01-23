@@ -1,0 +1,13 @@
+mutation ReportPublication(
+  $publicationId: InternalPublicationId!
+  $reason: ReportingReasonInputParams!
+  $additionalComments: String
+) {
+  reportPublication(
+    request: {
+      publicationId: $publicationId
+      reason: $reason
+      additionalComments: $additionalComments
+    }
+  )
+}

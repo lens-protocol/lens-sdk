@@ -11,6 +11,7 @@ config:
     Attach: string
     BroadcastId: string
     ChainId: number
+    ClientErc20Amount: ClientErc20Amount
     ContractAddress: string
     Cursor: string
     DateTime: string
@@ -26,6 +27,7 @@ config:
     NftOwnershipId: string
     Nonce: number
     NotificationId: string
+    ProfileAttributes: ProfileAttributes
     ProfileId: string
     ProxyActionId: string
     Search: string
@@ -34,7 +36,7 @@ config:
     TxHash: string
     TxId: string
     Url: string
-    Void: string
+    Void: void
   avoidOptionals:
     field: true
 generates:
@@ -47,6 +49,12 @@ generates:
     plugins:
       - 'typescript':
           nonOptionalTypename: true
+      - add:
+          content:
+            [
+              "import type { ClientErc20Amount } from './ClientErc20Amount';",
+              "import type { ProfileAttributes } from './ProfileAttributes';",
+            ]
       - 'typescript-operations':
           skipTypename: true
       - 'typescript-react-apollo'

@@ -6,9 +6,8 @@ import {
   failure,
   PromiseResult,
   success,
-  mock32BytesHexString,
-  mockEthereumAddress,
 } from '@lens-protocol/shared-kernel';
+import { mock32BytesHexString, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 
 import { ICredentials } from '../Credentials';

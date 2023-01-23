@@ -7,6 +7,7 @@ import {
   mockProfileFieldsFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { Profile } from '@lens-protocol/domain/entities';
+import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { ProfileGateway } from '../ProfileGateway';
@@ -28,6 +29,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
         createGetAllProfilesByOwnerAddressQueryMockedResponse({
           address,
           profiles: [profileDataFragment],
+          limit: 10,
         }),
       ]);
       const gateway = setupProfileGateway({ apolloClient });
@@ -70,6 +72,39 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
       const gateway = setupProfileGateway({ apolloClient });
 
       const profile = await gateway.getProfileByHandle(handle);
+
+      expect(profile).toBeNull();
+    });
+  });
+
+  describe(`when "${ProfileGateway.prototype.getProfileById.name}" method is invoked`, () => {
+    it('should return the corresponding Profile entity', async () => {
+      const profileDataFragment = mockProfileFieldsFragment();
+      const apolloClient = createMockApolloClientWithMultipleResponses([
+        mockGetProfileQueryMockedResponse({
+          request: { profileId: profileDataFragment.id },
+          profile: profileDataFragment,
+        }),
+      ]);
+      const gateway = setupProfileGateway({ apolloClient });
+
+      const profile = await gateway.getProfileById(profileDataFragment.id);
+
+      expect(profile).toBeInstanceOf(Profile);
+      expect(profile).toEqual({
+        id: profileDataFragment.id,
+        handle: profileDataFragment.handle,
+      });
+    });
+
+    it('should return null if the Profile does not exist', async () => {
+      const profileId = mockProfileId();
+      const apolloClient = createMockApolloClientWithMultipleResponses([
+        mockGetProfileQueryMockedResponse({ request: { profileId }, profile: null }),
+      ]);
+      const gateway = setupProfileGateway({ apolloClient });
+
+      const profile = await gateway.getProfileById(profileId);
 
       expect(profile).toBeNull();
     });

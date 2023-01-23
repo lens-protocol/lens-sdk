@@ -10,9 +10,9 @@ export function ProfileCard({ profile }: ProfileCardProps) {
   return (
     <article>
       <ProfilePicture picture={profile.picture} />
-      <p>Handle: {profile?.handle}</p>
-      <p>Name: {profile?.name}</p>
-      <p>Bio: {profile?.bio}</p>
+      <p>Handle: {profile.handle}</p>
+      {profile?.name && <p>Name: {profile.name}</p>}
+      {profile?.bio && <p>Bio: {profile.bio}</p>}
     </article>
   );
 }

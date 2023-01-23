@@ -8,7 +8,7 @@ import {
   ICredentials,
   WalletType,
 } from '../../entities';
-import { ActiveProfile } from '../profile/ActiveProfile';
+import { ActiveProfileLoader } from '../profile/ActiveProfileLoader';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 
 export interface IWalletFactory {
@@ -51,7 +51,7 @@ export class WalletLogin {
     private readonly credentialsWriter: ICredentialsWriter,
     private readonly activeWalletPresenter: IActiveWalletPresenter,
     private readonly connectionErrorPresenter: IConnectionErrorPresenter,
-    private readonly activeProfile: ActiveProfile,
+    private readonly activeProfileLoader: ActiveProfileLoader,
   ) {}
 
   async login(request: WalletLoginRequest): Promise<void> {
@@ -66,6 +66,6 @@ export class WalletLogin {
     await this.credentialsWriter.save(result.value);
 
     this.activeWalletPresenter.presentActiveWallet(wallet);
-    await this.activeProfile.loadActiveProfileByOwnerAddress(wallet.address);
+    await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address);
   }
 }

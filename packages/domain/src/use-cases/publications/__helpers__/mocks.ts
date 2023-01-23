@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker';
+import { ChainType } from '@lens-protocol/shared-kernel';
 import {
-  ChainType,
   mockDaiAmount,
   mockEthereumAddress,
   mockUsdcAmount,
-} from '@lens-protocol/shared-kernel';
+} from '@lens-protocol/shared-kernel/mocks';
 
 import { PublicationType, ReactionType, TransactionKind } from '../../../entities';
 import { mockProfileId } from '../../profile/__helpers__/mocks';
@@ -13,6 +13,7 @@ import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectP
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
 import { CreatePostRequest } from '../CreatePost';
+import { HidePublicationRequest } from '../HidePublication';
 import { ReactionRequest } from '../Reaction';
 import {
   ChargeCollectPolicy,
@@ -163,6 +164,15 @@ export function mockReactionRequest(overrides?: Partial<ReactionRequest>): React
     publicationId: faker.datatype.uuid(),
     publicationType: PublicationType.POST,
     reactionType: ReactionType.UPVOTE,
+    ...overrides,
+  };
+}
+
+export function mockHidePublicationRequest(
+  overrides?: Partial<HidePublicationRequest>,
+): HidePublicationRequest {
+  return {
+    publicationId: faker.datatype.uuid(),
     ...overrides,
   };
 }

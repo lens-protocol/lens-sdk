@@ -1,8 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { Amount, Erc20, mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
+import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import { ProfileAttributes } from '../ProfileAttributes';
 import {
+  AttributeFragment,
   CollectModuleFragment,
   CommentFragment,
   Erc20AmountFragment,
@@ -24,21 +27,45 @@ import {
   RelayErrorReasons,
   RevenueAggregateFragment,
   RevenueFragment,
+  WalletFragment,
   WhoReactedResultFragment,
 } from '../generated';
+import { erc20Amount } from '../utils';
 
-function mockMediaFragment(): MediaFragment {
+export function mockMediaFragment(overrides?: Partial<MediaFragment>): MediaFragment {
   return {
     url: faker.image.imageUrl(),
     mimeType: 'image/jpeg',
+    ...overrides,
     __typename: 'Media',
   };
 }
 
-function mockProfileMediaFragment(): ProfileMediaFragment {
+export function mockProfileMediaFragment(
+  overrides?: Partial<ProfileMediaFragment>,
+): ProfileMediaFragment {
   return {
     original: mockMediaFragment(),
+    ...overrides,
     __typename: 'MediaSet',
+  };
+}
+
+export function mockAttributeFragment(overrides?: Partial<AttributeFragment>): AttributeFragment {
+  return {
+    key: 'answer',
+    value: '42',
+    displayType: 'string',
+    ...overrides,
+    __typename: 'Attribute',
+  };
+}
+
+export function mockWalletFragment(): WalletFragment {
+  return {
+    __typename: 'Wallet',
+    defaultProfile: mockProfileFieldsFragment(),
+    address: mockEthereumAddress(),
   };
 }
 
@@ -47,36 +74,11 @@ export function mockProfileFieldsFragment(
 ): ProfileFieldsFragment {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
-  const location = faker.address.cityName();
-  const website = faker.internet.url();
-  const twitter = faker.internet.userName(firstName, lastName);
 
   return {
     id: faker.datatype.uuid(),
     name: `${firstName} ${lastName}`,
     bio: faker.lorem.sentence(),
-    attributes: [
-      {
-        __typename: 'Attribute',
-        key: 'something',
-        value: '42',
-      },
-      {
-        __typename: 'Attribute',
-        key: 'location',
-        value: location,
-      },
-      {
-        __typename: 'Attribute',
-        key: 'website',
-        value: website,
-      },
-      {
-        __typename: 'Attribute',
-        key: 'twitter',
-        value: twitter,
-      },
-    ],
     handle: faker.internet.userName(firstName, lastName),
     ownedBy: mockEthereumAddress(),
     picture: mockProfileMediaFragment(),
@@ -96,10 +98,10 @@ export function mockProfileFieldsFragment(
     isFollowing: false,
     isOptimisticFollowedByMe: false,
 
-    location: location,
-    website: website,
-    twitter: twitter,
     ownedByMe: false,
+
+    __attributes: [],
+    attributes: {} as ProfileAttributes,
 
     ...overrides,
     __typename: 'Profile',
@@ -166,7 +168,6 @@ export function mockPostFragment(
     metadata: mockMetadataFragment(),
     profile: mockProfileFieldsFragment(),
     collectedBy: null,
-    ownedByMe: false,
     collectModule: mockFreeCollectModuleSettings(),
     referenceModule: null,
     hasCollectedByMe: false,
@@ -209,7 +210,6 @@ export function mockCommentFragment(
     collectedBy: null,
     commentOn: mainPost,
     mainPost: mainPost,
-    ownedByMe: false,
     collectModule: mockFreeCollectModuleSettings(),
     referenceModule: null,
     hasCollectedByMe: false,
@@ -249,7 +249,6 @@ export function mockMirrorFragment(
     },
     profile: mockProfileFieldsFragment(),
     createdAt: faker.date.past().toISOString(),
-    ownedByMe: false,
     collectModule: mockFreeCollectModuleSettings(),
     referenceModule: null,
     hasCollectedByMe: false,
@@ -304,9 +303,11 @@ export function mockErc20AmountFragment(amount = mockDaiAmount(42)): Erc20Amount
 }
 
 function mockRevenueAggregateFragment(amount?: Amount<Erc20>): RevenueAggregateFragment {
+  const total = mockErc20AmountFragment(amount);
   return {
     __typename: 'RevenueAggregate',
-    total: mockErc20AmountFragment(amount),
+    __total: total,
+    totalAmount: erc20Amount({ from: total }),
   };
 }
 

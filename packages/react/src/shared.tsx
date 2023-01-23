@@ -6,7 +6,6 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { ActiveProfile } from '@lens-protocol/domain/use-cases/profile';
 import {
   SupportedTransactionRequest,
   TransactionQueue,
@@ -36,10 +35,14 @@ import { CreatePostResponder } from './transactions/adapters/responders/CreatePo
 import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
+import { UpdateDispatcherConfigResponder } from './transactions/adapters/responders/UpdateDispatcherConfigResponder';
+import { UpdateProfileImageResponder } from './transactions/adapters/responders/UpdateProfileImageResponder';
+import { UpdateProfileMetadataResponder } from './transactions/adapters/responders/UpdateProfileMetadataResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
 import { GasEstimator } from './transactions/infrastructure/blockchain/GasEstimator';
+import { activeWalletVar } from './wallet/adapters/ActiveWalletPresenter';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
 import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
 import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
@@ -66,7 +69,6 @@ export type Handlers = {
 };
 
 export type SharedDependencies = {
-  activeProfile: ActiveProfile;
   activeProfileGateway: ActiveProfileGateway;
   activeProfilePresenter: ActiveProfilePresenter;
   activeWallet: ActiveWallet;
@@ -76,6 +78,7 @@ export type SharedDependencies = {
   credentialsGateway: CredentialsGateway;
   logoutPresenter: LogoutPresenter;
   onError: Handlers['onError'];
+  profileGateway: ProfileGateway;
   protocolCallRelayer: ProtocolCallRelayer;
   sources: string[];
   transactionFactory: TransactionFactory;
@@ -103,12 +106,14 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   // apollo client
   const anonymousApolloClient = createAnonymousApolloClient({
     backendURL: config.environment.backend,
+    activeWalletVar: activeWalletVar,
   });
   const authApi = new AuthApi(anonymousApolloClient);
   const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
   const apolloClient = createApolloClient({
     backendURL: config.environment.backend,
     accessTokenStorage,
+    activeWalletVar: activeWalletVar,
   });
 
   // adapters
@@ -143,11 +148,10 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(apolloClient),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
-    [TransactionKind.UPDATE_COVER_IMAGE]: new NoopResponder(),
-    [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new NoopResponder(),
+    [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(apolloClient),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),
-    [TransactionKind.UPDATE_PROFILE_DETAILS]: new NoopResponder(),
-    [TransactionKind.UPDATE_PROFILE_IMAGE]: new NoopResponder(),
+    [TransactionKind.UPDATE_PROFILE_DETAILS]: new UpdateProfileMetadataResponder(apolloClient),
+    [TransactionKind.UPDATE_PROFILE_IMAGE]: new UpdateProfileImageResponder(apolloClient),
   };
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);
 
@@ -159,11 +163,6 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   );
 
   // common interactors
-  const activeProfile = new ActiveProfile(
-    profileGateway,
-    activeProfileGateway,
-    activeProfilePresenter,
-  );
   const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
   const transactionQueue = new TransactionQueue(
     responders,
@@ -174,7 +173,6 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
   const gasEstimator = new GasEstimator();
 
   return {
-    activeProfile,
     activeProfileGateway,
     activeProfilePresenter,
     activeWallet,
@@ -185,6 +183,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     logoutPresenter,
     onError,
     sources: config.sources ?? [],
+    profileGateway,
     protocolCallRelayer,
     signlessProtocolCallRelayer,
     transactionFactory,

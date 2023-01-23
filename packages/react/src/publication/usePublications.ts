@@ -13,16 +13,17 @@ type UsePublicationArgs = PaginatedArgs<{
 export function usePublications({
   profileId,
   observerId,
-  limit,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UsePublicationArgs): PaginatedReadResult<Publication[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     usePublicationsQuery({
       variables: {
         profileId,
         observerId,
-        limit: limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
+        limit,
+        sources,
       },
       client: apolloClient,
     }),

@@ -1,25 +1,23 @@
+scalar ClientErc20Amount
+scalar ProfileAttributes
+
 extend type Profile {
   ownedByMe: Boolean!
-  location: String
-  twitter: String
-  website: String
   isOptimisticFollowedByMe: Boolean!
+  attributesMap: ProfileAttributes!
 }
 
 extend type Post {
-  ownedByMe: Boolean!
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean!
 }
 
 extend type Comment {
-  ownedByMe: Boolean!
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean!
 }
 
 extend type Mirror {
-  ownedByMe: Boolean!
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean! # just to keep Publication type consistent, that will never be used
 }
@@ -33,4 +31,6 @@ type PendingPost {
   mainContentFocus: PublicationMainFocus!
 }
 
-extend union FeedItemRoot = PendingPost
+extend type RevenueAggregate {
+  totalAmount: ClientErc20Amount!
+}

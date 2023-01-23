@@ -5,16 +5,25 @@ import {
   FieldFunctionOptions,
   FieldPolicy,
   TypePolicy as UnpatchedTypePolicy,
+  ReactiveVar,
 } from '@apollo/client';
+import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
 import generatedIntrospection from '../graphql/generated';
+import { createAttributeTypePolicy } from './createAttributeTypePolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
+import { createMediaSetTypePolicy } from './createMediaSetTypePolicy';
+import { createMediaTypePolicy } from './createMediaTypePolicy';
+import { createNftImageTypePolicy } from './createNftImageTypePolicy';
 import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
+import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
+import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
+import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
 
@@ -46,9 +55,13 @@ type TypePolicies = {
   [__typename: string]: TypePolicy<unknown>;
 };
 
-function createTypePolicies(): TypePolicies {
+type TypePoliciesArgs = {
+  activeWalletVar: ReactiveVar<WalletData | null>;
+};
+
+function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies {
   return {
-    Profile: createProfileTypePolicy(),
+    Profile: createProfileTypePolicy(activeWalletVar),
     Post: createPublicationTypePolicy(),
     Comment: createPublicationTypePolicy(),
     Mirror: createPublicationTypePolicy(),
@@ -57,13 +70,21 @@ function createTypePolicies(): TypePolicies {
       keyFields: false,
     },
 
+    Attribute: createAttributeTypePolicy(),
+    MediaSet: createMediaSetTypePolicy(),
+    NftImage: createNftImageTypePolicy(),
+    Media: createMediaTypePolicy(),
+
+    RevenueAggregate: createRevenueAggregateTypePolicy(),
+
     Query: {
       fields: {
         feed: createFeedFieldPolicy(),
         exploreProfiles: createExploreProfilesFieldPolicy(),
         explorePublications: createExplorePublicationsFieldPolicy(),
         notifications: createNotificationsFieldPolicy(),
-        publications: createPublicationTypePolicy(),
+        profiles: createProfilesFieldPolicy(),
+        publications: createPublicationsFieldPolicy(),
         search: createSearchFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
       },
@@ -71,10 +92,12 @@ function createTypePolicies(): TypePolicies {
   };
 }
 
-export function createApolloCache(): ApolloCache<NormalizedCacheObject> {
+export function createApolloCache({
+  activeWalletVar,
+}: TypePoliciesArgs): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     possibleTypes: generatedIntrospection.possibleTypes,
     resultCaching: true,
-    typePolicies: createTypePolicies(),
+    typePolicies: createTypePolicies({ activeWalletVar }),
   });
 }
