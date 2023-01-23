@@ -10,3 +10,7 @@
 
 - [GitHub monorepo](https://github.com/lens-protocol/lens-sdk)
 - [Getting Started](https://docs.lens.xyz/docs/sdk-react-getting-started)
+
+### Important notes
+
+`react` and `react-dom` is required to be in `devDependencies` to avoid having duplicated `wagmi` due to unmatched optional `peerDependencies` between `examples/web-wagmi` and `@lens-protocol/wagmi`. See https://github.com/pnpm/pnpm/issues/5351 for more details.
