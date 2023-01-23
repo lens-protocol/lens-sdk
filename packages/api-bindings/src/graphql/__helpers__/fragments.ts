@@ -15,7 +15,7 @@ import {
   MetadataFragment,
   MirrorFragment,
   PostFragment,
-  ProfileFieldsFragment,
+  ProfileFragment,
   ProfileFollowRevenueFragment,
   ProfileMediaFragment,
   PublicationMainFocus,
@@ -64,14 +64,12 @@ export function mockAttributeFragment(overrides?: Partial<AttributeFragment>): A
 export function mockWalletFragment(): WalletFragment {
   return {
     __typename: 'Wallet',
-    defaultProfile: mockProfileFieldsFragment(),
+    defaultProfile: mockProfileFragment(),
     address: mockEthereumAddress(),
   };
 }
 
-export function mockProfileFieldsFragment(
-  overrides?: Partial<ProfileFieldsFragment>,
-): ProfileFieldsFragment {
+export function mockProfileFragment(overrides?: Partial<ProfileFragment>): ProfileFragment {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
 
@@ -166,7 +164,7 @@ export function mockPostFragment(
     createdAt: faker.datatype.datetime().toISOString(),
     stats: mockPublicationStatsFragment(),
     metadata: mockMetadataFragment(),
-    profile: mockProfileFieldsFragment(),
+    profile: mockProfileFragment(),
     collectedBy: null,
     collectModule: mockFreeCollectModuleSettings(),
     referenceModule: null,
@@ -205,7 +203,7 @@ export function mockCommentFragment(
       content: faker.lorem.paragraph(1),
       media: [],
     },
-    profile: mockProfileFieldsFragment(),
+    profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
     collectedBy: null,
     commentOn: mainPost,
@@ -247,7 +245,7 @@ export function mockMirrorFragment(
       content: faker.lorem.paragraph(1),
       media: [],
     },
-    profile: mockProfileFieldsFragment(),
+    profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
     collectModule: mockFreeCollectModuleSettings(),
     referenceModule: null,
@@ -357,7 +355,7 @@ export function mockWhoReactedResultFragment(
     reactionId: faker.datatype.uuid(),
     reaction: ReactionTypes.Upvote,
     reactionAt: faker.date.past().toISOString(),
-    profile: mockProfileFieldsFragment(),
+    profile: mockProfileFragment(),
     ...overrides,
   };
 }

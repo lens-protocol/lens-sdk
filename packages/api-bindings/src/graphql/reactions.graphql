@@ -24,7 +24,7 @@ fragment WhoReactedResult on WhoReactedResult {
   reaction
   reactionAt
   profile {
-    ...ProfileFields
+    ...Profile
   }
 }
 
