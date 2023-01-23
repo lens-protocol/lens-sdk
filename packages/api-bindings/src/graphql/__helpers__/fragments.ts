@@ -13,11 +13,13 @@ import {
   Erc20AmountFragment,
   Erc20Fragment,
   FeedItemFragment,
+  FollowModules,
   MediaFragment,
   MetadataFragment,
   MirrorFragment,
   PostFragment,
   ProfileFieldsFragment,
+  ProfileFollowModuleSettings,
   ProfileFollowRevenueFragment,
   ProfileMediaFragment,
   PublicationMainFocus,
@@ -107,6 +109,14 @@ export function mockProfileFieldsFragment(
 
     ...overrides,
     __typename: 'Profile',
+  };
+}
+
+export function mockProfileFollowFollowModuleFragment(): ProfileFollowModuleSettings {
+  return {
+    __typename: 'ProfileFollowModuleSettings',
+    contractAddress: mockEthereumAddress(),
+    type: FollowModules.ProfileFollowModule,
   };
 }
 

@@ -106,8 +106,6 @@ function UpdateFollowPolicyForm({
   const [selectedFollowPolicyType, setSelectedFollowPolicyType] = useState<FollowPolicyType | null>(
     currentFollowPolicy?.type ?? null,
   );
-  const [hasSuccessfulUpdatedFollowPolicy, setHasSuccessfulUpdatedFollowPolicy] =
-    useState<boolean>(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -129,7 +127,7 @@ function UpdateFollowPolicyForm({
         }),
         profileId: profile.id,
       });
-      setHasSuccessfulUpdatedFollowPolicy(true);
+
       return;
     }
 
@@ -140,7 +138,6 @@ function UpdateFollowPolicyForm({
       followPolicy: resolveFollowPolicy({ followPolicyType: selectedFollowPolicyType }),
       profileId: profile.id,
     });
-    setHasSuccessfulUpdatedFollowPolicy(true);
   }
 
   return (
@@ -219,19 +216,17 @@ function UpdateFollowPolicyForm({
         </div>
       )}
 
-      {!hasSuccessfulUpdatedFollowPolicy && (
-        <button
-          disabled={currentFollowPolicy?.type === selectedFollowPolicyType || isPending}
-          type="submit"
-        >
-          <UpdateButtonText
-            isTxPending={isPending}
-            currentFollowModule={currentFollowPolicy?.type ?? null}
-            followPolicyTypeToUpdate={selectedFollowPolicyType}
-          />
-        </button>
-      )}
-      {hasSuccessfulUpdatedFollowPolicy && !error && <p>Follow policy updated!</p>}
+      <button
+        disabled={currentFollowPolicy?.type === selectedFollowPolicyType || isPending}
+        type="submit"
+      >
+        <UpdateButtonText
+          isTxPending={isPending}
+          currentFollowModule={currentFollowPolicy?.type ?? null}
+          followPolicyTypeToUpdate={selectedFollowPolicyType}
+        />
+      </button>
+
       {error && <p>{error.message}</p>}
       <style>
         {`
