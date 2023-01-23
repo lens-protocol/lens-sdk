@@ -6,7 +6,6 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
-import { IEquatableError } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
 import { TransactionState, useHasPendingTransaction } from './adapters/TransactionQueuePresenter';
@@ -27,7 +26,6 @@ export function useUnfollow({ profile }: UseUnfollowArgs) {
     | PendingSigningRequestError
     | WalletConnectionError
     | UserRejectedError
-    | IEquatableError
     | PrematureUnfollowError
     | null
   >(null);

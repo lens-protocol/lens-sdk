@@ -1,3 +1,4 @@
+import { IGenericResultPresenter } from '../transactions';
 import { WalletData } from './IActiveWalletPresenter';
 
 export enum LogoutReason {
@@ -10,6 +11,6 @@ export type LogoutData = {
   logoutReason: LogoutReason;
 };
 
-export interface ILogoutPresenter {
+export interface ILogoutPresenter extends IGenericResultPresenter<void, never> {
   presentLogout(data: LogoutData): void;
 }

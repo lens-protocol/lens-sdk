@@ -1,4 +1,4 @@
-import { EthereumAddress, PromiseResult } from '@lens-protocol/shared-kernel';
+import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import {
   Wallet,
@@ -9,6 +9,7 @@ import {
   WalletType,
 } from '../../entities';
 import { ActiveProfileLoader } from '../profile/ActiveProfileLoader';
+import { IGenericResultPresenter } from '../transactions';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 
 export interface IWalletFactory {
@@ -19,11 +20,10 @@ export interface IWritableWalletGateway {
   save(wallet: Wallet): Promise<void>;
 }
 
-export interface IConnectionErrorPresenter {
-  presentConnectionError(
-    error: PendingSigningRequestError | UserRejectedError | WalletConnectionError,
-  ): void;
-}
+export type IWalletLoginPresenter = IGenericResultPresenter<
+  void,
+  PendingSigningRequestError | UserRejectedError | WalletConnectionError
+>;
 
 export interface ICredentialsIssuer {
   issueCredentials(
@@ -50,7 +50,7 @@ export class WalletLogin {
     private readonly credentialsIssuer: ICredentialsIssuer,
     private readonly credentialsWriter: ICredentialsWriter,
     private readonly activeWalletPresenter: IActiveWalletPresenter,
-    private readonly connectionErrorPresenter: IConnectionErrorPresenter,
+    private readonly genericPresenter: IWalletLoginPresenter,
     private readonly activeProfileLoader: ActiveProfileLoader,
   ) {}
 
@@ -59,13 +59,16 @@ export class WalletLogin {
     const result = await this.credentialsIssuer.issueCredentials(wallet);
 
     if (result.isFailure()) {
-      this.connectionErrorPresenter.presentConnectionError(result.error);
+      this.genericPresenter.present(failure(result.error));
       return;
     }
+
     await this.walletGateway.save(wallet);
     await this.credentialsWriter.save(result.value);
 
     this.activeWalletPresenter.presentActiveWallet(wallet);
     await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address);
+
+    this.genericPresenter.present(success());
   }
 }
