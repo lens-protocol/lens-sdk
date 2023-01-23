@@ -31,7 +31,7 @@ function setupUpdateFollowPolicyResponder({
       id: existingProfile.id,
     }),
     fragment: ProfileFragmentDoc,
-    fragmentName: 'ProfileFields',
+    fragmentName: 'Profile',
     data: existingProfile,
   });
 
@@ -59,7 +59,7 @@ function setupUpdateFollowPolicyResponder({
           id: profileId,
         }),
         fragment: ProfileFragmentDoc,
-        fragmentName: 'ProfileFields',
+        fragmentName: 'Profile',
       });
     },
   };

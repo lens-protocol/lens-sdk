@@ -42,7 +42,7 @@ function setupUpdateProfileResponder({
     get profileFromCache() {
       return apolloClient.cache.readFragment({
         id: cache.identify(updatedProfile),
-        fragmentName: 'ProfileFields',
+        fragmentName: 'Profile',
         fragment: ProfileFragmentDoc,
       });
     },
