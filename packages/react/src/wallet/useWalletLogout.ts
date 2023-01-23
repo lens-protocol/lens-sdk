@@ -4,7 +4,6 @@ import { useState } from 'react';
 
 import { useWalletLogoutController } from './adapters/useWalletLogoutController';
 
-
 export function useWalletLogout() {
   const [isPending, setIsPending] = useState(false);
   const logoutWallet = useWalletLogoutController();

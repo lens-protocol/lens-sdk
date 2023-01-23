@@ -121,7 +121,7 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
     it('should handle scenarios where there is a wallet connection error', async () => {
       const walletFactory = mock<IWalletFactory>();
       const credentialsIssuer = mock<ICredentialsIssuer>();
-      const error = new WalletConnectionError(WalletConnectionErrorReason.CONNECTION_REFUSED);
+      const error = new WalletConnectionError(WalletConnectionErrorReason.WRONG_ACCOUNT);
 
       when(walletFactory.create).calledWith(request).mockResolvedValue(wallet);
       when(credentialsIssuer.issueCredentials).calledWith(wallet).mockResolvedValue(failure(error));

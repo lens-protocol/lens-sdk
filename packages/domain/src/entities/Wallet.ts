@@ -22,7 +22,6 @@ export class PendingSigningRequestError extends Error {
 }
 
 export enum WalletConnectionErrorReason {
-  CONNECTION_REFUSED = 'CONNECTION_REFUSED',
   INCORRECT_CHAIN = 'INCORRECT_CHAIN',
   /**
    * The connected account is not the one we expect

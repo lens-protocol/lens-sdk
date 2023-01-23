@@ -4,7 +4,7 @@ import { useAccount, useConnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
 export default function Home() {
-  const login = useWalletLogin();
+  const { login, isPending } = useWalletLogin();
   const { data: profile } = useActiveProfile();
 
   const { isDisconnected } = useAccount();
@@ -17,7 +17,7 @@ export default function Home() {
 
       if (connector instanceof InjectedConnector) {
         const signer = await connector.getSigner();
-        login(signer, WalletType.INJECTED);
+        await login(signer, WalletType.INJECTED);
       }
     }
   };
@@ -46,7 +46,11 @@ export default function Home() {
             Welcome <b>@{profile.handle}</b>
           </p>
         )}
-        {!profile && <button onClick={onLoginClick}>Log in</button>}
+        {!profile && (
+          <button disabled={isPending} onClick={onLoginClick}>
+            Log in
+          </button>
+        )}
       </main>
     </>
   );
