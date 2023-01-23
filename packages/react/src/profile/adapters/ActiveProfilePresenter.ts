@@ -3,11 +3,11 @@ import {
   GetProfileDocument,
   GetProfileQuery,
   GetProfileQueryVariables,
-  ProfileFieldsFragment,
+  ProfileFragment,
 } from '@lens-protocol/api-bindings';
 import { IActiveProfilePresenter, ProfileData } from '@lens-protocol/domain/use-cases/profile';
 
-export const activeProfileVar = makeVar<ProfileFieldsFragment | null>(null);
+export const activeProfileVar = makeVar<ProfileFragment | null>(null);
 
 export class ActiveProfilePresenter implements IActiveProfilePresenter {
   private activeProfileCacheSubscription: { unsubscribe: () => void } | null = null;

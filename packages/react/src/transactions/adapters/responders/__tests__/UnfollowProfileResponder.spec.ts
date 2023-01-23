@@ -1,6 +1,6 @@
 import { InMemoryCache } from '@apollo/client';
-import { ProfileFieldsFragmentDoc } from '@lens-protocol/api-bindings';
-import { mockProfileFieldsFragment } from '@lens-protocol/api-bindings/mocks';
+import { ProfileFragmentDoc } from '@lens-protocol/api-bindings';
+import { mockProfileFragment } from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
   mockUnfollowRequest,
@@ -22,7 +22,7 @@ function setupTestScenario({
     addTypename: true,
   });
 
-  const existingProfile = mockProfileFieldsFragment({
+  const existingProfile = mockProfileFragment({
     id: transactionData.request.profileId,
     isFollowedByMe: true,
     stats: {
@@ -38,8 +38,8 @@ function setupTestScenario({
       __typename: 'Profile',
       id: existingProfile.id,
     }),
-    fragment: ProfileFieldsFragmentDoc,
-    fragmentName: 'ProfileFields',
+    fragment: ProfileFragmentDoc,
+    fragmentName: 'Profile',
     data: existingProfile,
   });
 
@@ -56,8 +56,8 @@ function setupTestScenario({
           __typename: 'Profile',
           id: transactionData.request.profileId,
         }),
-        fragment: ProfileFieldsFragmentDoc,
-        fragmentName: 'ProfileFields',
+        fragment: ProfileFragmentDoc,
+        fragmentName: 'Profile',
       });
     },
   };

@@ -1,7 +1,7 @@
-import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '@lens-protocol/api-bindings';
+import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
 import {
   mockGetProfileQueryMockedResponse,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
   createMockApolloClientWithMultipleResponses,
 } from '@lens-protocol/api-bindings/mocks';
 import {
@@ -13,7 +13,7 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { UpdateDispatcherConfigResponder } from '../UpdateDispatcherConfigResponder';
 
-function setupTestScenario({ profile }: { profile: ProfileFieldsFragment }) {
+function setupTestScenario({ profile }: { profile: ProfileFragment }) {
   const apolloClient = createMockApolloClientWithMultipleResponses([
     mockGetProfileQueryMockedResponse({
       profile,
@@ -35,8 +35,8 @@ function setupTestScenario({ profile }: { profile: ProfileFieldsFragment }) {
             __typename: 'Profile',
             id: profile.id,
           }),
-          fragment: ProfileFieldsFragmentDoc,
-          fragmentName: 'ProfileFields',
+          fragment: ProfileFragmentDoc,
+          fragmentName: 'Profile',
         }),
         'Profile not found in cache',
       );
@@ -47,8 +47,8 @@ function setupTestScenario({ profile }: { profile: ProfileFieldsFragment }) {
 describe(`Given the ${UpdateDispatcherConfigResponder.name}`, () => {
   describe(`when "${UpdateDispatcherConfigResponder.prototype.commit.name}" method is invoked`, () => {
     it(`should update apollo cache with the new dispatcher configuration`, async () => {
-      const profileWithoutDispatcherConfig = mockProfileFieldsFragment({ dispatcher: null });
-      const profileWithDispatcherConfig = mockProfileFieldsFragment({
+      const profileWithoutDispatcherConfig = mockProfileFragment({ dispatcher: null });
+      const profileWithDispatcherConfig = mockProfileFragment({
         ...profileWithoutDispatcherConfig,
         dispatcher: { address: mockEthereumAddress(), canUseRelay: true },
       });

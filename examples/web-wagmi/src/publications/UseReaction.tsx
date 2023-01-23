@@ -1,5 +1,5 @@
 import {
-  ProfileFieldsFragment,
+  ProfileFragment,
   Publication,
   ReactionType,
   usePublication,
@@ -52,7 +52,7 @@ function ReactionButton({ publication, profileId, reactionType }: ReactionButton
 }
 
 type ReactionInnerProps = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 function ReactionInner({ profile }: ReactionInnerProps) {

@@ -7,7 +7,7 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockCreateSetProfileMetadataTypedDataMutation,
   mockGetProfileQueryMockedResponse,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
   mockRelayerResultFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
@@ -45,7 +45,7 @@ function setupTestScenario({
 }
 
 describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
-  const existingProfile = mockProfileFieldsFragment();
+  const existingProfile = mockProfileFragment();
   const getProfilesByIdQueryMockedResponse = mockGetProfileQueryMockedResponse({
     observerId: existingProfile.id,
     profile: existingProfile,

@@ -1,5 +1,5 @@
 import {
-  ProfileFieldsFragment,
+  ProfileFragment,
   usePublication,
   useHidePublication,
   PublicationOwnedByMeFragment,
@@ -33,7 +33,7 @@ function HidePublicationButton({ publication }: HidePublicationButtonProps) {
 
 type HidePublicationInnerProps = {
   publicationId: string;
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 function HidePublicationInner({ publicationId, profile }: HidePublicationInnerProps) {
