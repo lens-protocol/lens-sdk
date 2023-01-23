@@ -11,9 +11,13 @@
     "test": "turbo run test --no-cache",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint --parallel",
-    "lint:fix": "turbo run lint:fix --parallel"
+    "lint:fix": "turbo run lint:fix --parallel",
+    "deduplicate:check": "pnpm-deduplicate --list",
+    "deduplicate:fix": "pnpm-deduplicate"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.0",
+    "pnpm-deduplicate": "^0.4.1",
     "prettier": "latest",
     "turbo": "latest"
   },
@@ -38,8 +42,5 @@
     "node": "^18.12.1",
     "pnpm": "^7.17.0"
   },
-  "packageManager": "pnpm@7.17.1",
-  "dependencies": {
-    "@changesets/cli": "^2.26.0"
-  }
+  "packageManager": "pnpm@7.17.1"
 }
