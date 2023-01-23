@@ -53,6 +53,7 @@ import {
   CreateSetProfileImageUriViaDispatcherMutationVariables,
   CreateSetProfileImageUriViaDispatcherMutation,
   CreateSetProfileImageUriViaDispatcherDocument,
+  CreateCollectTypedDataMutation,
 } from '../generated';
 
 export function mockCreateProfileMutation(result: Required<RelayResult>): CreateProfileMutation {
@@ -560,5 +561,28 @@ export function createSetProfileImageURIViaDispatcherMutationMockedResponse({
     result: {
       data,
     },
+  };
+}
+
+export function mockCreateCollectTypedDataMutation({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateCollectTypedDataMutation {
+  return {
+    result: mockCreateTypedDataResult('CreateCollectBroadcastItemResult', {
+      __typename: 'CreateCollectEIP712TypedData',
+      types: {
+        __typename: 'CreateCollectEIP712TypedDataTypes',
+        CollectWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateCollectEIP712TypedDataValue',
+        nonce,
+        deadline: '0',
+        profileId: faker.datatype.uuid(),
+        pubId: faker.datatype.uuid(),
+        data: ['0x00'],
+      },
+    }),
   };
 }

@@ -3875,6 +3875,24 @@ export type AuthRefreshMutation = {
   result: Pick<AuthenticationResult, 'accessToken' | 'refreshToken'>;
 };
 
+export type CreateCollectTypedDataMutationVariables = Exact<{
+  request: CreateCollectRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateCollectTypedDataMutation = {
+  result: Pick<CreateCollectBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { CollectWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Eip712TypedDataDomainFragment;
+      value: Pick<
+        CreateCollectEip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'pubId' | 'data'
+      >;
+    };
+  };
+};
+
 export type CreateCommentTypedDataMutationVariables = Exact<{
   request: CreatePublicCommentRequest;
   options?: Maybe<TypedDataOptions>;
@@ -5775,6 +5793,77 @@ export type AuthRefreshMutationResult = Apollo.MutationResult<AuthRefreshMutatio
 export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
   AuthRefreshMutation,
   AuthRefreshMutationVariables
+>;
+export const CreateCollectTypedDataDocument = gql`
+  mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: TypedDataOptions) {
+    result: createCollectTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          CollectWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          pubId
+          data
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export type CreateCollectTypedDataMutationFn = Apollo.MutationFunction<
+  CreateCollectTypedDataMutation,
+  CreateCollectTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateCollectTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateCollectTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCollectTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCollectTypedDataMutation, { data, loading, error }] = useCreateCollectTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateCollectTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCollectTypedDataMutation,
+    CreateCollectTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateCollectTypedDataMutation,
+    CreateCollectTypedDataMutationVariables
+  >(CreateCollectTypedDataDocument, options);
+}
+export type CreateCollectTypedDataMutationHookResult = ReturnType<
+  typeof useCreateCollectTypedDataMutation
+>;
+export type CreateCollectTypedDataMutationResult =
+  Apollo.MutationResult<CreateCollectTypedDataMutation>;
+export type CreateCollectTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateCollectTypedDataMutation,
+  CreateCollectTypedDataMutationVariables
 >;
 export const CreateCommentTypedDataDocument = gql`
   mutation CreateCommentTypedData(
