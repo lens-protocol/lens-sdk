@@ -1,6 +1,6 @@
+import { TypePolicy } from './TypePolicy';
 import { Comment, Mirror, Post, PublicationFragment, resolveCollectPolicy } from '../graphql';
 import { CollectPolicy } from '../graphql/CollectPolicy';
-import { TypePolicy } from './TypePolicy';
 
 type R = Post | Comment | Mirror;
 

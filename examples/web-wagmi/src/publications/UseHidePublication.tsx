@@ -7,12 +7,12 @@ import {
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
+import { PublicationCard } from './components/PublicationCard';
+import { SelectPublicationId } from './components/PublicationSelector';
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { PublicationCard } from './components/PublicationCard';
-import { SelectPublicationId } from './components/PublicationSelector';
 
 type HidePublicationButtonProps = {
   publication: PublicationOwnedByMeFragment;

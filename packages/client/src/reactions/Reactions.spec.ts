@@ -1,7 +1,7 @@
 import { ReactionTypes } from '.';
+import { Reactions } from './Reactions';
 import { setupTestCredentials } from '../__helpers__/setupTestCredentials';
 import { mumbaiSandbox } from '../consts/environments';
-import { Reactions } from './Reactions';
 
 const testConfig = {
   environment: mumbaiSandbox,

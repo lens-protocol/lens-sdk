@@ -1,5 +1,6 @@
 import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
+import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 import {
   Wallet,
   WalletConnectionError,
@@ -9,7 +10,6 @@ import {
 } from '../../entities';
 import { ActiveProfileLoader } from '../profile/ActiveProfileLoader';
 import { IGenericResultPresenter } from '../transactions';
-import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 
 export interface IWalletFactory {
   create(request: WalletLoginRequest): Promise<Wallet>;

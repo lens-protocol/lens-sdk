@@ -1,6 +1,6 @@
+import { setupTestWallet } from './setupTestWallet';
 import { Authentication, Credentials } from '../authentication';
 import { mumbaiSandbox } from '../consts/environments';
-import { setupTestWallet } from './setupTestWallet';
 
 const testConfig = {
   environment: mumbaiSandbox,

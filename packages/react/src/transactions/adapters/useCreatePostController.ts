@@ -6,10 +6,10 @@ import {
 import { CreatePost, CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
 
-import { useSharedDependencies } from '../../shared';
 import { MetadataUploadAdapter, MetadataUploadHandler } from './MetadataUploadAdapter';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 import { CreatePostCallGateway } from './publication-call-gateways/CreatePostCallGateway';
+import { useSharedDependencies } from '../../shared';
 
 export type UseCreatePostControllerArgs = {
   upload: MetadataUploadHandler;

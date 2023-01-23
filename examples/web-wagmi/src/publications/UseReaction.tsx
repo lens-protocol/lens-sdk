@@ -6,11 +6,11 @@ import {
   useReaction,
 } from '@lens-protocol/react';
 
+import { PublicationCard } from './components/PublicationCard';
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { PublicationCard } from './components/PublicationCard';
 
 type ReactionButtonProps = {
   publication: Publication;

@@ -1,10 +1,10 @@
 import { GraphQLClient } from 'graphql-request';
 
+import { getSdk, Sdk } from './graphql/reactions.generated';
 import { Credentials } from '../authentication';
 import { LensConfig } from '../consts/config';
 import { NotAuthenticatedError } from '../consts/errors';
 import { ReactionRequest } from '../graphql/types.generated';
-import { getSdk, Sdk } from './graphql/reactions.generated';
 
 export class Reactions {
   private readonly sdk: Sdk;

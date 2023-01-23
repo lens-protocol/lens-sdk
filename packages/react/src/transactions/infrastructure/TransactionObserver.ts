@@ -16,8 +16,8 @@ import {
 } from '@lens-protocol/domain/entities';
 import { ChainType, failure, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
 
-import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
 import { IndexingEvent, ITransactionObserver, ProxyActionStatusEvent } from './TransactionFactory';
+import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
 
 const ONE_SECOND = 1000; // ms
 

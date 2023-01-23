@@ -1,5 +1,5 @@
-import { mumbaiSandbox } from '../consts/environments';
 import { Authentication } from './Authentication';
+import { mumbaiSandbox } from '../consts/environments';
 
 const testConfig = {
   environment: mumbaiSandbox,

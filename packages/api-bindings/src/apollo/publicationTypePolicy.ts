@@ -1,9 +1,9 @@
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 
-import { Comment, Maybe, Mirror, Post, ReferenceModule, Wallet } from '../graphql';
-import { ReferencePolicy } from '../graphql/ReferencePolicy';
 import { FieldPolicy, FieldReadFunction, TypePolicy } from './TypePolicy';
 import { noCachedField } from './noCachedField';
+import { Comment, Maybe, Mirror, Post, ReferenceModule, Wallet } from '../graphql';
+import { ReferencePolicy } from '../graphql/ReferencePolicy';
 
 function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
   if (module === null) {

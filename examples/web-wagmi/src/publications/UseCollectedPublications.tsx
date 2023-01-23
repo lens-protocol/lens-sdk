@@ -1,9 +1,9 @@
 import { useCollectedPublications } from '@lens-protocol/react';
 
+import { PublicationCard } from './components/PublicationCard';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { PublicationCard } from './components/PublicationCard';
 
 export function UseCollectedPublications() {
   const walletAddress = '0x42a578e3557f5854B27D48E7d753fEb2f428546D';

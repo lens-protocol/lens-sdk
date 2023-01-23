@@ -1,9 +1,9 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { ProfileId } from '../../entities';
 import { IActiveProfileGateway } from './IActiveProfileGateway';
 import { IActiveProfilePresenter } from './IActiveProfilePresenter';
 import { IProfileGateway } from './IProfileGateway';
+import { ProfileId } from '../../entities';
 
 export type SwitchActiveProfileRequest = {
   profileId: ProfileId;

@@ -30,10 +30,10 @@ import {
 import { ChainType, failure, never, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
+import { createProfileMetadata } from './createProfileMetadata';
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
 import { MetadataUploadAdapter } from '../MetadataUploadAdapter';
-import { createProfileMetadata } from './createProfileMetadata';
 
 export class ProfileMetadataCallGateway
   implements IProfileDetailsCallGateway, IUnsignedProtocolCallGateway<UpdateProfileDetailsRequest>

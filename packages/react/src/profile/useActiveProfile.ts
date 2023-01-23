@@ -1,9 +1,9 @@
 import { ProfileFragment, UnspecifiedError, useGetProfileQuery } from '@lens-protocol/api-bindings';
 
+import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
 import { ReadResult } from '../helpers';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
 import { useSharedDependencies } from '../shared';
-import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
 
 export function useActiveProfile(): ReadResult<ProfileFragment | null, UnspecifiedError> {
   const state = useAppState();

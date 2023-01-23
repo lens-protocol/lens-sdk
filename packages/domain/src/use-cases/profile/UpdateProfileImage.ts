@@ -1,3 +1,4 @@
+import { NftOwnershipSignature } from './ProveNftOwnership';
 import { TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
@@ -7,7 +8,6 @@ import {
   IUnsignedProtocolCallGateway,
   IProtocolCallPresenter,
 } from '../transactions/ProtocolCallUseCase';
-import { NftOwnershipSignature } from './ProveNftOwnership';
 
 export type UpdateNftProfileImageRequest = {
   kind: TransactionKind.UPDATE_PROFILE_IMAGE;

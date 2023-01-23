@@ -2,6 +2,7 @@ import { ReactiveVar } from '@apollo/client';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
+import { TypePolicy } from './TypePolicy';
 import {
   erc20Amount,
   FollowModule,
@@ -10,7 +11,6 @@ import {
   ProfileAttributes,
 } from '../graphql';
 import { FollowPolicy } from '../graphql/FollowPolicy';
-import { TypePolicy } from './TypePolicy';
 
 function resolveFollowPolicy({
   followModule,

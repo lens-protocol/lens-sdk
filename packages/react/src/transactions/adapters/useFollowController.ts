@@ -17,9 +17,9 @@ import {
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
 
-import { useSharedDependencies } from '../../shared';
 import { FollowProfilesCallGateway } from './FollowProfilesCallGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { useSharedDependencies } from '../../shared';
 
 export function useFollowController() {
   const {

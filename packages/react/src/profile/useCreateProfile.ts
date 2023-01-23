@@ -5,11 +5,11 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import { useState } from 'react';
 
+import { useCreateProfileController } from './adapters/useCreateProfileController';
 import {
   TransactionState,
   useWaitUntilTransactionSettled,
 } from '../transactions/adapters/TransactionQueuePresenter';
-import { useCreateProfileController } from './adapters/useCreateProfileController';
 
 export function useCreateProfile() {
   const [error, setError] = useState<DuplicatedHandleError | TransactionError | null>(null);

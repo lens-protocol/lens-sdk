@@ -10,8 +10,8 @@ import {
   UnfollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 
-import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { TypedData } from './TypedData';
+import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
 class UnsignedUnfollowCall<T extends UnfollowRequest> extends UnsignedLensProtocolCall<T> {
   constructor(data: { id: string; request: T; typedData: TypedData }) {

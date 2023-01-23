@@ -6,9 +6,9 @@ import {
 import { CreateMirror, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
 
-import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 import { CreateMirrorCallGateway } from './publication-call-gateways/CreateMirrorCallGateway';
+import { useSharedDependencies } from '../../shared';
 
 export function useCreateMirrorController() {
   const {

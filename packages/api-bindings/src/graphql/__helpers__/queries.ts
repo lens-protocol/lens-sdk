@@ -3,6 +3,12 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import { Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
+  mockEnabledModulesFragment,
+  mockFeedItemFragment,
+  mockPostFragment,
+  mockProfileFragment,
+} from './fragments';
+import {
   CommentFragment,
   CommentWithFirstCommentFragment,
   CommonPaginatedResultInfoFragment,
@@ -78,12 +84,6 @@ import {
   WhoReactedResultFragment,
   GetAllProfilesByWhoMirroredPublicationDocument,
 } from '../generated';
-import {
-  mockEnabledModulesFragment,
-  mockFeedItemFragment,
-  mockPostFragment,
-  mockProfileFragment,
-} from './fragments';
 
 export function createProfilesToFollowQueryMockedResponse(args: {
   profiles: ProfileFragment[];

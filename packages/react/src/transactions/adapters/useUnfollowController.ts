@@ -5,9 +5,9 @@ import {
 } from '@lens-protocol/domain/entities';
 import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 
-import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 import { UnfollowProfileCallGateway } from './UnfollowProfileCallGateway';
+import { useSharedDependencies } from '../../shared';
 
 export function useUnfollowController() {
   const { activeWallet, apolloClient, transactionGateway, protocolCallRelayer, transactionQueue } =

@@ -1,9 +1,9 @@
 import { useComments } from '@lens-protocol/react';
 
+import { PublicationCard } from './PublicationCard';
 import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { Loading } from '../../components/loading/Loading';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
-import { PublicationCard } from './PublicationCard';
 
 type PublicationCommentsProps = {
   publicationId: string;

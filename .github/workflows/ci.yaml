@@ -23,7 +23,7 @@ jobs:
 
       - run: pnpm install
 
-      - run: pnpm deduplicate:check
+      - run: pnpm dedupe
 
       - run: pnpm build
 

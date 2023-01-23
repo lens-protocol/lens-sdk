@@ -1,9 +1,9 @@
 import { useProfilePublicationRevenue } from '@lens-protocol/react';
 
+import { PublicationRevenueCard } from './components/PublicationRevenueCard';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { PublicationRevenueCard } from './components/PublicationRevenueCard';
 
 const profileId = '0x15';
 

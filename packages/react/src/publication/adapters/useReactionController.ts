@@ -1,8 +1,8 @@
 import { Reaction, ReactionRequest } from '@lens-protocol/domain/use-cases/publications';
 
-import { useSharedDependencies } from '../../shared';
 import { ReactionGateway } from './ReactionGateway';
 import { ReactionPresenter } from './ReactionPresenter';
+import { useSharedDependencies } from '../../shared';
 
 export function useReactionController() {
   const { apolloClient, publicationCacheManager } = useSharedDependencies();

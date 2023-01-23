@@ -1,8 +1,8 @@
 import { success } from '@lens-protocol/shared-kernel';
 
-import { ProxyTransaction, TransactionRequestModel } from '../../entities';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
+import { ProxyTransaction, TransactionRequestModel } from '../../entities';
 
 export interface ISignlessProtocolCallRelayer<T extends TransactionRequestModel> {
   relaySignlessProtocolCall(request: T): Promise<ProxyTransaction<T>>;

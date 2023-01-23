@@ -5,10 +5,10 @@ import {
 } from '@lens-protocol/api-bindings';
 import { nonNullable } from '@lens-protocol/shared-kernel';
 
+import { FeedEventItemType } from './FeedEventItemType';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { createPublicationMetadataFilters, PublicationMetadataFilters } from '../publication';
 import { useSharedDependencies } from '../shared';
-import { FeedEventItemType } from './FeedEventItemType';
 
 const SupportedFeedEvenTypesMap: Record<FeedEventItemType, LensFeedEventItemType> = {
   [FeedEventItemType.Comment]: LensFeedEventItemType.Comment,

@@ -10,9 +10,9 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { useState } from 'react';
 
-import { ProfileFragment } from '../profile';
 import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
 import { useCreateCommentController } from './adapters/useCreateCommentController';
+import { ProfileFragment } from '../profile';
 
 export type UseCreateCommentArgs = {
   profile: ProfileFragment;

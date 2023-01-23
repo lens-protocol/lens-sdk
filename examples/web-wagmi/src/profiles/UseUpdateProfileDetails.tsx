@@ -1,7 +1,7 @@
 import { ProfileFragment, useActiveProfile, useUpdateProfileDetails } from '@lens-protocol/react';
 
-import { upload } from '../upload';
 import { ProfileCard } from './components/ProfileCard';
+import { upload } from '../upload';
 
 type UpdateProfileFormProps = {
   profile: ProfileFragment;

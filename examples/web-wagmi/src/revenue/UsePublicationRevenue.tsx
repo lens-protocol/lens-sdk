@@ -1,9 +1,9 @@
 import { usePublication, usePublicationRevenue } from '@lens-protocol/react';
 
+import { RevenueCard } from './components/RevenueCard';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from '../publications/components/PublicationCard';
-import { RevenueCard } from './components/RevenueCard';
 
 const publicationId = '0x4f90-0x02';
 

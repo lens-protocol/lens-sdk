@@ -1,9 +1,9 @@
 import { useCreateProfile, useProfile, isValidHandle } from '@lens-protocol/react';
 import { FormEvent, useState } from 'react';
 
+import { ProfileCard } from './components/ProfileCard';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { invariant } from '../utils';
-import { ProfileCard } from './components/ProfileCard';
 
 function ShowProfile({ handle }: { handle: string }) {
   const { data: profile, error, loading } = useProfile({ handle: `${handle}.test` });

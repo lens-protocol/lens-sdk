@@ -9,9 +9,9 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
 
+import { ProfileImageCallGateway } from './ProfileImageCallGateway';
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
-import { ProfileImageCallGateway } from './ProfileImageCallGateway';
 
 export function useUpdateProfileImageController() {
   const {

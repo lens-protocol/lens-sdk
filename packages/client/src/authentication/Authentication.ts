@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 
-import { LensConfig } from '../consts/config';
 import { getSdk, Sdk } from './graphql/auth.generated';
+import { LensConfig } from '../consts/config';
 
 export type Credentials = { accessToken: string; refreshToken: string };
 

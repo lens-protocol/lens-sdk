@@ -1,8 +1,8 @@
 import { HidePublication } from '@lens-protocol/domain/use-cases/publications';
 
-import { useSharedDependencies } from '../../shared';
 import { HidePublicationGateway } from './HidePublicationGateway';
 import { HidePublicationPresenter } from './HidePublicationPresenter';
+import { useSharedDependencies } from '../../shared';
 
 export type HidePublicationControllerRequest = {
   publicationId: string;

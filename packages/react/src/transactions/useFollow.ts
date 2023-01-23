@@ -18,9 +18,9 @@ import {
 import { EthereumAddress, invariant } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
+import { useFollowController } from './adapters/useFollowController';
 import { useActiveProfile } from '../profile';
 import { useActiveWalletVar } from '../wallet/adapters/ActiveWalletPresenter';
-import { useFollowController } from './adapters/useFollowController';
 
 type FollowProfilesFlowRequest = {
   profileId: string;

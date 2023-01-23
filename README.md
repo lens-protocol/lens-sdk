@@ -62,15 +62,10 @@ pnpm test
 
 ### Deduplicating dependencies
 
-To check if there are unneeded duplicates run:
-
-```bash
-pnpm deduplicate:check
-```
-
 To fix all duplicates run:
+
 ```bash
-pnpm deduplicate:fix
+pnpm dedupe
 ```
 
 ## Releasing new version

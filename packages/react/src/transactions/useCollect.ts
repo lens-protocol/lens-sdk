@@ -7,8 +7,8 @@ import {
 import { invariant } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
-import { useActiveProfile } from '../profile';
 import { useCollectController } from './adapters/useCollectController';
+import { useActiveProfile } from '../profile';
 
 export type UseCollectArgs = {
   publication: PublicationFragment;

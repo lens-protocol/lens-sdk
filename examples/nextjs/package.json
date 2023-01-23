@@ -17,23 +17,23 @@
   "dependencies": {
     "@lens-protocol/react": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
-    "eslint": "^8.28.0",
-    "eslint-config-next": "13.1.1",
+    "eslint": "^8.33.0",
+    "eslint-config-next": "^13.1.6",
     "ethers": "^5.7.2",
     "example-shared": "workspace:*",
-    "next": "13.1.1",
+    "next": "^13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "wagmi": "0.9.2"
+    "wagmi": "^0.11.4"
   },
   "devDependencies": {
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
-    "@types/node": "^18.11.11",
-    "@types/react": "18.0.26",
-    "@types/react-dom": "^18.0.8",
-    "prettier": "^2.8.1",
-    "typescript": "^4.6.4"
+    "@types/node": "^18.13.0",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "prettier": "^2.8.3",
+    "typescript": "^4.9.5"
   },
   "prettier": "@lens-protocol/prettier-config"
 }
