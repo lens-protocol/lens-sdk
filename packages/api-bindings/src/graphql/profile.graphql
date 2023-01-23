@@ -126,6 +126,24 @@ query GetAllProfilesByOwnerAddress(
   }
 }
 
+query GetAllProfilesByWhoMirroredPublication(
+  $publicationId: InternalPublicationId!
+  $observerId: ProfileId
+  $limit: LimitScalar!
+  $cursor: Cursor
+) {
+  result: profiles(
+    request: { whoMirroredPublicationId: $publicationId, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ...ProfileFields
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
 mutation CreateProfile($request: CreateProfileRequest!) {
   result: createProfile(request: $request) {
     ... on RelayerResult {
