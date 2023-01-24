@@ -8,6 +8,9 @@ import {
   CommonPaginatedResultInfoFragment,
   EnabledModuleCurrenciesDocument,
   EnabledModuleCurrenciesQuery,
+  EnabledModulesDocument,
+  EnabledModulesFragment,
+  EnabledModulesQuery,
   ExplorePublicationsDocument,
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables,
@@ -73,7 +76,12 @@ import {
   WhoReactedPublicationQueryVariables,
   WhoReactedResultFragment,
 } from '../generated';
-import { mockFeedItemFragment, mockPostFragment, mockProfileFragment } from './fragments';
+import {
+  mockEnabledModulesFragment,
+  mockFeedItemFragment,
+  mockPostFragment,
+  mockProfileFragment,
+} from './fragments';
 
 export function createProfilesToFollowQueryMockedResponse(args: {
   profiles: ProfileFragment[];
@@ -591,6 +599,23 @@ export function mockPublicationByTxHashMockedResponse({
     },
     result: {
       data: mockPublicationByTxHash(publication),
+    },
+  };
+}
+
+export function createEnabledModulesQueryMockedResponse({
+  data = mockEnabledModulesFragment(),
+}: {
+  data?: EnabledModulesFragment;
+} = {}): MockedResponse<EnabledModulesQuery> {
+  return {
+    request: {
+      query: EnabledModulesDocument,
+    },
+    result: {
+      data: {
+        result: data,
+      },
     },
   };
 }

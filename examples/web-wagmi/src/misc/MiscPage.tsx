@@ -16,6 +16,11 @@ const miscHooks = [
     description: `View the total unread notification count for the active profile.`,
     path: '/misc/useUnreadNotificationCount',
   },
+  {
+    label: 'useEnabledModules',
+    description: `View all the modules supported by the Lens Protocol`,
+    path: '/misc/useEnabledModules',
+  },
 ];
 
 export function MiscPage() {

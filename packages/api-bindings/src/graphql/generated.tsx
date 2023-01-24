@@ -4257,6 +4257,27 @@ export type CreateMirrorViaDispatcherMutation = {
   result: RelayerResultFragment | RelayErrorFragment;
 };
 
+export type ModuleInfoFragment = { __typename: 'ModuleInfo' } & Pick<ModuleInfo, 'name' | 'type'>;
+
+export type EnabledModuleFragment = { __typename: 'EnabledModule' } & Pick<
+  EnabledModule,
+  'moduleName' | 'contractAddress'
+> & {
+    inputParams: Array<ModuleInfoFragment>;
+    redeemParams: Array<ModuleInfoFragment>;
+    returnDataParams: Array<ModuleInfoFragment>;
+  };
+
+export type EnabledModulesFragment = { __typename: 'EnabledModules' } & {
+  collectModules: Array<EnabledModuleFragment>;
+  followModules: Array<EnabledModuleFragment>;
+  referenceModules: Array<EnabledModuleFragment>;
+};
+
+export type EnabledModulesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type EnabledModulesQuery = { result: EnabledModulesFragment };
+
 export type CommentWithCommentedPublicationFragment = { __typename: 'Comment' } & {
   commentOn: Maybe<PostFragment | CommentFragment | MirrorFragment>;
 } & CommentFragment;
@@ -5345,6 +5366,45 @@ export const FeedItemFragmentDoc = gql`
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
+export const ModuleInfoFragmentDoc = gql`
+  fragment ModuleInfo on ModuleInfo {
+    __typename
+    name
+    type
+  }
+`;
+export const EnabledModuleFragmentDoc = gql`
+  fragment EnabledModule on EnabledModule {
+    __typename
+    moduleName
+    contractAddress
+    inputParams {
+      ...ModuleInfo
+    }
+    redeemParams {
+      ...ModuleInfo
+    }
+    returnDataParams: returnDataParms {
+      ...ModuleInfo
+    }
+  }
+  ${ModuleInfoFragmentDoc}
+`;
+export const EnabledModulesFragmentDoc = gql`
+  fragment EnabledModules on EnabledModules {
+    __typename
+    collectModules {
+      ...EnabledModule
+    }
+    followModules {
+      ...EnabledModule
+    }
+    referenceModules {
+      ...EnabledModule
+    }
+  }
+  ${EnabledModuleFragmentDoc}
+`;
 export const NewFollowerNotificationFragmentDoc = gql`
   fragment NewFollowerNotification on NewFollowerNotification {
     __typename
@@ -6354,6 +6414,54 @@ export type CreateMirrorViaDispatcherMutationResult =
 export type CreateMirrorViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
   CreateMirrorViaDispatcherMutation,
   CreateMirrorViaDispatcherMutationVariables
+>;
+export const EnabledModulesDocument = gql`
+  query EnabledModules {
+    result: enabledModules {
+      ...EnabledModules
+    }
+  }
+  ${EnabledModulesFragmentDoc}
+`;
+
+/**
+ * __useEnabledModulesQuery__
+ *
+ * To run a query within a React component, call `useEnabledModulesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEnabledModulesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEnabledModulesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useEnabledModulesQuery(
+  baseOptions?: Apollo.QueryHookOptions<EnabledModulesQuery, EnabledModulesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<EnabledModulesQuery, EnabledModulesQueryVariables>(
+    EnabledModulesDocument,
+    options,
+  );
+}
+export function useEnabledModulesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<EnabledModulesQuery, EnabledModulesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<EnabledModulesQuery, EnabledModulesQueryVariables>(
+    EnabledModulesDocument,
+    options,
+  );
+}
+export type EnabledModulesQueryHookResult = ReturnType<typeof useEnabledModulesQuery>;
+export type EnabledModulesLazyQueryHookResult = ReturnType<typeof useEnabledModulesLazyQuery>;
+export type EnabledModulesQueryResult = Apollo.QueryResult<
+  EnabledModulesQuery,
+  EnabledModulesQueryVariables
 >;
 export const NotificationsDocument = gql`
   query Notifications(

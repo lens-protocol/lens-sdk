@@ -53,6 +53,9 @@ import {
   CreateSetProfileImageUriViaDispatcherMutationVariables,
   CreateSetProfileImageUriViaDispatcherMutation,
   CreateSetProfileImageUriViaDispatcherDocument,
+  ReportPublicationMutationVariables,
+  ReportPublicationMutation,
+  ReportPublicationDocument,
 } from '../generated';
 
 export function mockCreateProfileMutation(result: Required<RelayResult>): CreateProfileMutation {
@@ -559,6 +562,32 @@ export function createSetProfileImageURIViaDispatcherMutationMockedResponse({
     },
     result: {
       data,
+    },
+  };
+}
+
+export function createReportPublicationMutationMockedResponse(args: {
+  variables: ReportPublicationMutationVariables;
+}): MockedResponse<ReportPublicationMutation> {
+  return {
+    request: {
+      query: ReportPublicationDocument,
+      variables: args.variables,
+    },
+    result: { data: { reportPublication: null } },
+  };
+}
+
+export function createReportPublicationMutationWithErrorMockedResponse(args: {
+  variables: ReportPublicationMutationVariables;
+}): MockedResponse<ReportPublicationMutation> {
+  return {
+    request: {
+      query: ReportPublicationDocument,
+      variables: args.variables,
+    },
+    result: {
+      errors: [new GraphQLError('Publication already reported')],
     },
   };
 }

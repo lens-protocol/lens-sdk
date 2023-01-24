@@ -9,6 +9,7 @@
 
 - [ ] `useApproveModule` - signed, paid gas
 - [x] `useCurrencies`
+- [x] `useEnabledModules`
 
 ## Profile
 
