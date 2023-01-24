@@ -1,9 +1,9 @@
-import { useProfile, useProfileFollowRevenue } from '@lens-protocol/react';
+import { ProfileFragment, useProfile, useProfileFollowRevenue } from '@lens-protocol/react';
 import { useState } from 'react';
 
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from '../profiles/components/ProfileCard';
-import { SelectProfileId } from '../profiles/components/ProfileSelector';
+import { SelectProfile } from '../profiles/components/ProfileSelector';
 import { RevenueCard } from './components/RevenueCard';
 
 function UseProfileFollowRevenueInner({ profileId }: { profileId: string }) {
@@ -31,21 +31,15 @@ function UseProfileFollowRevenueInner({ profileId }: { profileId: string }) {
 }
 
 export function UseProfileFollowRevenue() {
-  const [profileId, setProfileId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<ProfileFragment | null>(null);
   return (
     <>
       <h1>
         <code>useProfileFollowRevenue</code>
       </h1>
       <p>Select a profile to see their follow revenue:</p>
-      <SelectProfileId
-        onProfileSelected={(id: string) => {
-          return setProfileId(id);
-        }}
-      />
-      {profileId && profileId !== 'default' && (
-        <UseProfileFollowRevenueInner profileId={profileId} />
-      )}
+      <SelectProfile onProfileSelected={(profile) => setProfile(profile)} />
+      {profile && <UseProfileFollowRevenueInner profileId={profile.id} />}
     </>
   );
 }

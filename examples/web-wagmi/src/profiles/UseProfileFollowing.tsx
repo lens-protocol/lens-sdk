@@ -1,16 +1,16 @@
 import { useState } from 'react';
+import { ProfileFragment } from '@lens-protocol/react';
 
-import { ProfileFollowers } from './components/ProfileFollowers';
-import { SelectProfileId } from './components/ProfileSelector';
+import { SelectProfile } from './components/ProfileSelector';
 import { ProfilesFollowing } from './components/ProfileFollowing';
 
-export function UseProfileFollowers() {
-  const [profileId, setProfileId] = useState<string | null>(null);
+export function UseProfileFollowing() {
+  const [profile, setProfile] = useState<ProfileFragment | null>(null);
   return (
     <>
       <p>Select a profile:</p>
-      <SelectProfileId onProfileSelected={(h: string) => setProfileId(h)} />
-      {/*{profileId && <ProfilesFollowing walletAddress={profile.ownedBy} />}*/}
+      <SelectProfile onProfileSelected={(profile) => setProfile(profile)} />
+      {profile && <ProfilesFollowing walletAddress={profile.ownedBy} />}
     </>
   );
 }
