@@ -6,7 +6,7 @@ import { getSdk, Sdk } from './graphql/generated';
 import { Profile } from './profile';
 import { Publication } from './publication';
 
-type LensClientConfig = {
+export type LensClientConfig = {
   environment: EnvironmentConfig;
 };
 

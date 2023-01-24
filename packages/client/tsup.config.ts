@@ -1,9 +1,9 @@
 import { defineConfig } from 'tsup';
 
-import { dependencies, devDependencies, peerDependencies } from './package.json';
+import { dependencies, devDependencies } from './package.json';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/mocks.ts'],
+  entry: ['src/index.ts'],
   format: ['esm'],
   dts: true,
   external: [

@@ -22,7 +22,7 @@
     "dist/**/*"
   ],
   "scripts": {
-    "build": "pnpm clean && tsup && tsc --emitDeclarationOnly",
+    "build": "pnpm clean && tsup",
     "clean": "rimraf ./dist",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
@@ -36,7 +36,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "graphql": "^15.5.1",
     "graphql-request": "^5.1.0",
