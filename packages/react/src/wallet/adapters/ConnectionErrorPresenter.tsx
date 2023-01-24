@@ -7,6 +7,7 @@ import {
 import { IConnectionErrorPresenter } from '@lens-protocol/domain/use-cases/wallets';
 
 import { ErrorHandler } from '../../ErrorHandler';
+
 function isConnectionRequestCancelled(
   error: PendingSigningRequestError | UserRejectedError | WalletConnectionError,
 ) {
