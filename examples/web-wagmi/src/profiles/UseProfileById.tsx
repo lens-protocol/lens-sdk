@@ -1,9 +1,9 @@
-import { useProfile } from '@lens-protocol/react';
+import { ProfileFragment, useProfile } from '@lens-protocol/react';
 import { useState } from 'react';
 
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
-import { SelectProfileId } from './components/ProfileSelector';
+import { SelectProfile } from './components/ProfileSelector';
 
 type ProfileByIdProps = {
   profileId: string;
@@ -32,16 +32,12 @@ function ProfileByIdLayout({ profileId }: ProfileByIdProps) {
 }
 
 export function ProfileById() {
-  const [profileId, setProfileId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<ProfileFragment | null>(null);
   return (
     <>
       <p>Select an id:</p>
-      <SelectProfileId
-        onProfileSelected={(h: string) => {
-          return setProfileId(h);
-        }}
-      />
-      {profileId && profileId !== 'default' && <ProfileByIdLayout profileId={profileId} />}
+      <SelectProfile onProfileSelected={(p) => setProfile(p)} />
+      {profile && <ProfileByIdLayout profileId={profile.id} />}
     </>
   );
 }

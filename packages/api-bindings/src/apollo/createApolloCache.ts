@@ -19,6 +19,9 @@ import { createMediaSetTypePolicy } from './createMediaSetTypePolicy';
 import { createMediaTypePolicy } from './createMediaTypePolicy';
 import { createNftImageTypePolicy } from './createNftImageTypePolicy';
 import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
+import { createProfileFollowersFieldPolicy } from './createProfileFollowersFieldPolicy';
+import { createProfileFollowingFieldPolicy } from './createProfileFollowingFieldPolicy';
+import { createProfilePublicationRevenueFieldPolicy } from './createProfilePublicationRevenueFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
@@ -87,6 +90,9 @@ function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies
         publications: createPublicationsFieldPolicy(),
         search: createSearchFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
+        followers: createProfileFollowersFieldPolicy(),
+        following: createProfileFollowingFieldPolicy(),
+        profilePublicationRevenue: createProfilePublicationRevenueFieldPolicy(),
       },
     },
   };
