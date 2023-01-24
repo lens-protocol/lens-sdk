@@ -1,9 +1,9 @@
-import { useProfile } from '@lens-protocol/react';
+import { ProfileFragment, useProfile } from '@lens-protocol/react';
 import { useState } from 'react';
 
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
-import { SelectProfileHandle } from './components/ProfileSelector';
+import { SelectProfile } from './components/ProfileSelector';
 
 type ProfileByHandleLayoutProps = {
   handle: string;
@@ -23,16 +23,13 @@ export function ProfileByHandleLayout({ handle }: ProfileByHandleLayoutProps) {
 }
 
 export function ProfileByHandle() {
-  const [handle, setHandle] = useState<string | null>(null);
+  const [profile, setProfile] = useState<ProfileFragment | null>(null);
+
   return (
     <>
       <p>Select a handle:</p>
-      <SelectProfileHandle
-        onProfileSelected={(h: string) => {
-          return setHandle(h);
-        }}
-      />
-      {handle && handle !== 'default' && <ProfileByHandleLayout handle={handle} />}
+      <SelectProfile onProfileSelected={(profile) => setProfile(profile)} />
+      {profile && <ProfileByHandleLayout handle={profile.handle} />}
     </>
   );
 }
