@@ -1,5 +1,5 @@
-# `@lens-protocol/storage`
+# `@lens-protocol/client`
 
-This package contains functionality related to storage. **It is not intended to be used directly.**
+This package contains low level client for GraphQL Lens API.
 
 **Its interface will change without notice, use it at your own risk.**
