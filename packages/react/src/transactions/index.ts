@@ -7,6 +7,7 @@ export * from './useUpdateDispatcherConfig';
 export * from './useCreateMirror';
 export * from './useUpdateProfileDetails';
 export * from './useRecentPosts';
+export * from './useApproveModule';
 
 export type { MetadataUploadAdapter } from './adapters/MetadataUploadAdapter';
 export {

@@ -194,7 +194,7 @@ export function createSharedDependencies(config: LensConfig, { onLogout, onError
     walletGateway,
     notificationStorage,
     providerFactory,
-    gasEstimator
+    gasEstimator,
   };
 }
 

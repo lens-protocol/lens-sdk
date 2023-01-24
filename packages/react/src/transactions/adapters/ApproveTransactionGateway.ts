@@ -1,6 +1,10 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { Wallet, UnsignedTransaction } from '@lens-protocol/domain/entities';
-import { IApproveTransactionGateway, TokenAllowanceLimit, TokenAllowanceRequest} from '@lens-protocol/domain/use-cases/wallets'
+import {
+  IApproveTransactionGateway,
+  TokenAllowanceLimit,
+  TokenAllowanceRequest,
+} from '@lens-protocol/domain/use-cases/wallets';
 import {
   Amount,
   BigDecimal,

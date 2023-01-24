@@ -16,6 +16,11 @@ const miscHooks = [
     description: `View the total unread notification count for the active profile.`,
     path: '/misc/useUnreadNotificationCount',
   },
+  {
+    label: 'useApproveModule',
+    description: `Approve certain amount of an ERC20 Token to be used by a address`,
+    path: '/misc/useApproveModule'
+  }
 ];
 
 export function MiscPage() {

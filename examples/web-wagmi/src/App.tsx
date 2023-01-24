@@ -20,6 +20,7 @@ import { Feed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
 import { MiscPage } from './misc/MiscPage';
+import { UseApproveModule } from './misc/UseApproveModule';
 import { UseCurrencies } from './misc/UseCurrencies';
 import { UseNotifications } from './misc/UseNotifications';
 import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
@@ -157,6 +158,10 @@ export function App() {
                 <Route
                   path="/misc/useUnreadNotificationCount"
                   element={<UseUnreadNotificationCount />}
+                />
+                <Route 
+                  path="/misc/useApproveModule"
+                  element={<UseApproveModule />}
                 />
               </Routes>
             </GenericErrorBoundary>
