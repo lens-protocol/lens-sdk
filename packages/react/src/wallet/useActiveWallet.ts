@@ -6,27 +6,30 @@ import { useActiveWalletVar } from './adapters/ActiveWalletPresenter';
 
 export type { WalletData };
 
-export function useActiveWallet(): ReadResult<WalletData | null> {
+export function useActiveWallet(): ReadResult<WalletData | null, void> {
   const state = useAppState();
 
   const wallet = useActiveWalletVar();
 
   if (state === ApplicationsState.LOADING) {
     return {
-      loading: true,
       data: undefined,
+      error: undefined,
+      loading: true,
     };
   }
 
   if (!wallet) {
     return {
-      loading: false,
       data: null,
+      error: undefined,
+      loading: false,
     };
   }
 
   return {
-    loading: false,
     data: wallet,
+    error: undefined,
+    loading: false,
   };
 }
