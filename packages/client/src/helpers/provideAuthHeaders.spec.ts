@@ -1,10 +1,9 @@
+import { buildTestEnvironment, describeAuthenticatedScenario } from '../__helpers__';
 import { Authentication } from '../authentication';
-import { setupRandomAuthentication } from '../authentication/__helpers__/setupAuthentication';
-import { mumbaiSandbox } from '../consts/environments';
 import { provideAuthHeaders } from './provideAuthHeaders';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
 describe(`Given the "${provideAuthHeaders.name}" helper`, () => {
@@ -29,17 +28,17 @@ describe(`Given the "${provideAuthHeaders.name}" helper`, () => {
     });
   });
 
-  describe(`when the ${Authentication.name} is available and authenticated`, () => {
-    const getAuthentication = setupRandomAuthentication();
+  describeAuthenticatedScenario()((getTestSetup) => {
+    describe(`when the ${Authentication.name} is available and authenticated`, () => {
+      it(`should provide the authentication header`, async () => {
+        const { authentication } = getTestSetup();
+        const result = await provideAuthHeaders(authentication, (header) => {
+          return Promise.resolve(header);
+        });
 
-    it(`should provide the authentication header`, async () => {
-      const authentication = getAuthentication();
-      const result = await provideAuthHeaders(authentication, (header) => {
-        return Promise.resolve(header);
-      });
-
-      expect(result).toEqual({
-        authorization: expect.any(String),
+        expect(result).toEqual({
+          authorization: expect.any(String),
+        });
       });
     });
   });

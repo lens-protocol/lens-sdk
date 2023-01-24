@@ -1,11 +1,12 @@
 import { GraphQLClient } from 'graphql-request';
 
-import { mumbaiSandbox } from '../consts/environments';
+import { buildTestEnvironment } from '../__helpers__';
 import { getSdk } from '../profile/graphql/profile.generated';
 import { buildPaginatedQueryResult } from './buildPaginatedQueryResult';
 
 describe('Given a paginated query function and the paginated query result helper', () => {
-  const sdk = getSdk(new GraphQLClient(mumbaiSandbox.gqlEndpoint));
+  const environment = buildTestEnvironment();
+  const sdk = getSdk(new GraphQLClient(environment.gqlEndpoint));
 
   it('should be able to paginate forward', async () => {
     const result = await buildPaginatedQueryResult(

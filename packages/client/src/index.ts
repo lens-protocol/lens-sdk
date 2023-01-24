@@ -54,6 +54,7 @@ export type { IStorageProvider } from '@lens-protocol/storage';
 
 export type { Environment } from './consts/environments';
 export type { LensConfig } from './consts/config';
+export type { InferResultType, TypedData, TypedDataResponse } from './consts/types';
 export type { PublicationFragment } from './graphql/types';
 export type { PaginatedResult, PaginatedQueryData } from './helpers/buildPaginatedQueryResult';
 

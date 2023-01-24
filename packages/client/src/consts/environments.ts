@@ -1,16 +1,13 @@
 /**
  * @internal
- * @privateRemarks DO NOT export constructor, just the type and variables defined with it
  */
-class Environment {
+export class Environment {
   constructor(public readonly name: string, private url: string) {}
 
   get gqlEndpoint() {
     return this.url;
   }
 }
-
-export type { Environment };
 
 export const production = new Environment('production', 'https://api.lens.dev');
 
@@ -37,9 +34,3 @@ export const polygon = production;
  * It also helps to widen the meaning of these as we add features that are not limited to Polygon blockchain.
  */
 export const mumbai = development;
-
-/**
- * @internal
- * @privateRemarks not exposed from the package, used in tests ONLY
- */
-export const mumbaiSandbox = new Environment('sandbox', 'https://api-sandbox-mumbai.lens.dev');

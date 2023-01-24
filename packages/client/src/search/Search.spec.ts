@@ -1,11 +1,11 @@
-import { mumbaiSandbox } from '../consts/environments';
+import { buildTestEnvironment } from '../__helpers__';
 import { Search } from './Search';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
-describe(`Given the ${Search.name} configured to work with sandbox`, () => {
+describe(`Given the ${Search.name} configured to work with the test environment`, () => {
   describe(`when the method ${Search.prototype.profiles.name} is called`, () => {
     it('should execute with success', async () => {
       const search = new Search(testConfig);

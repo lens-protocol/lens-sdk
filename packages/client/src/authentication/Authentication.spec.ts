@@ -1,20 +1,17 @@
 import { DateUtils } from '@lens-protocol/shared-kernel';
 
-import { mumbaiSandbox } from '../consts/environments';
+import { Authentication } from '.';
+import { buildTestEnvironment, describeAuthenticatedScenario } from '../__helpers__';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { Authentication } from './Authentication';
-import { setupRandomAuthentication } from './__helpers__/setupAuthentication';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
-describe(`Given the ${Authentication.name} configured to work with sandbox`, () => {
+describe(`Given the ${Authentication.name} configured to work with the test environment`, () => {
   afterEach(() => {
     jest.useRealTimers();
   });
-
-  const getAuthentication = setupRandomAuthentication();
 
   describe(`when the method ${Authentication.prototype.generateChallenge.name} is called`, () => {
     it(`should return the challenge for an address`, async () => {
@@ -29,30 +26,28 @@ describe(`Given the ${Authentication.name} configured to work with sandbox`, () 
   describe(`when the method ${Authentication.prototype.isAuthenticated.name} is called`, () => {
     describe(`and there are no credentials stored`, () => {
       it(`should return false`, async () => {
-        const auth = new Authentication(testConfig);
-        const isAuth = await auth.isAuthenticated();
+        const authentication = new Authentication(testConfig);
 
-        expect(isAuth).toBe(false);
+        expect(await authentication.isAuthenticated()).toBe(false);
       });
     });
 
-    describe(`and credentials are expired and can't refresh`, () => {
-      it(`should return false`, async () => {
-        const auth = getAuthentication();
-        jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.hoursToMs(24 * 7)); // refreshToken is valid for 7 days
+    describeAuthenticatedScenario()((getTestSetup) => {
+      describe(`and credentials are expired and can't refresh`, () => {
+        it(`should return false`, async () => {
+          const { authentication } = getTestSetup();
+          jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.hoursToMs(24 * 7)); // refreshToken is valid for 7 days
 
-        const isAuth = await auth.isAuthenticated();
-
-        expect(isAuth).toBe(false);
+          expect(await authentication.isAuthenticated()).toBe(false);
+        });
       });
-    });
 
-    describe(`and credentials are good`, () => {
-      it(`should return true`, async () => {
-        const auth = getAuthentication();
-        const isAuth = await auth.isAuthenticated();
+      describe(`and credentials are good`, () => {
+        it(`should return true`, async () => {
+          const { authentication } = getTestSetup();
 
-        expect(isAuth).toBe(true);
+          expect(await authentication.isAuthenticated()).toBe(true);
+        });
       });
     });
   });
@@ -60,47 +55,49 @@ describe(`Given the ${Authentication.name} configured to work with sandbox`, () 
   describe(`when the method ${Authentication.prototype.getRequestHeader.name} is called`, () => {
     describe(`and there are no credentials stored`, () => {
       it(`should return a failure with an error`, async () => {
-        const auth = new Authentication(testConfig);
-        const result = await auth.getRequestHeader();
+        const authentication = new Authentication(testConfig);
+        const result = await authentication.getRequestHeader();
 
         expect(result.isFailure()).toBeTruthy();
         expect(() => result.unwrap()).toThrow(NotAuthenticatedError);
       });
     });
 
-    describe(`and credentials are expired and can't refresh`, () => {
-      it(`should return a failure with an error`, async () => {
-        const auth = getAuthentication();
-        jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.hoursToMs(24 * 7)); // refreshToken is valid for 7 days
+    describeAuthenticatedScenario()((getTestSetup) => {
+      describe(`and credentials are expired and can't refresh`, () => {
+        it(`should return a failure with an error`, async () => {
+          const { authentication } = getTestSetup();
+          jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.hoursToMs(24 * 7)); // refreshToken is valid for 7 days
 
-        const result = await auth.getRequestHeader();
+          const result = await authentication.getRequestHeader();
 
-        expect(result.isFailure()).toBeTruthy();
-        expect(() => result.unwrap()).toThrow(CredentialsExpiredError);
-      });
-    });
-
-    describe(`and credentials are good`, () => {
-      it(`should return the authenticated header`, async () => {
-        const auth = getAuthentication();
-        const result = await auth.getRequestHeader();
-
-        expect(result.isSuccess()).toBeTruthy();
-        expect(result.unwrap()).toMatchObject({
-          authorization: expect.any(String),
+          expect(result.isFailure()).toBeTruthy();
+          expect(() => result.unwrap()).toThrow(CredentialsExpiredError);
         });
       });
-    });
 
-    // throws ClockSkewedError if enabled
-    describe.skip(`and credentials are expired but can be refreshed`, () => {
-      it(`should return the authenticated header`, async () => {
-        const auth = getAuthentication();
-        jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.minutesToMs(31)); // accessToken is valid for 30min
+      describe(`and credentials are good`, () => {
+        it(`should return the authenticated header`, async () => {
+          const { authentication } = getTestSetup();
+          const result = await authentication.getRequestHeader();
 
-        const result = await auth.getRequestHeader();
+          expect(result.isSuccess()).toBeTruthy();
+          expect(result.unwrap()).toMatchObject({
+            authorization: expect.any(String),
+          });
+        });
+      });
 
-        expect(result.isSuccess()).toBeTruthy();
+      // skip unless we mock api token response, as it throws ClockSkewedError
+      describe.skip(`and credentials are expired but can be refreshed`, () => {
+        it(`should return the authenticated header`, async () => {
+          const { authentication } = getTestSetup();
+          jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.minutesToMs(31)); // accessToken is valid for 30min
+
+          const result = await authentication.getRequestHeader();
+
+          expect(result.isSuccess()).toBeTruthy();
+        });
       });
     });
   });

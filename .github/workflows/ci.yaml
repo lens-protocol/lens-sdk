@@ -35,6 +35,8 @@ jobs:
           SDK_GATED_TEST_PK: ${{secrets.SDK_GATED_TEST_PK}}
           SDK_GATED_TEST_PROFILE_ID: ${{secrets.SDK_GATED_TEST_PROFILE_ID}}
           SDK_GATED_TEST_PUBLICATION_ID: ${{secrets.SDK_GATED_TEST_PUBLICATION_ID}}
-          CLIENT_TEST_WALLET_PRIVATE_KEY: ${{secrets.CLIENT_TEST_WALLET_PRIVATE_KEY}}
+          TESTING_ENV_URL: ${{secrets.TESTING_ENV_URL}}
+          TESTING_HEADER_KEY: ${{secrets.TESTING_HEADER_KEY}}
+          TESTING_HEADER_VALUE: ${{secrets.TESTING_HEADER_VALUE}}
 
       - run: pnpm lint:examples

@@ -1,13 +1,13 @@
+import { Transaction } from '.';
+import { buildTestEnvironment } from '../__helpers__';
 import { Authentication } from '../authentication';
-import { mumbaiSandbox } from '../consts/environments';
 import { NotAuthenticatedError } from '../consts/errors';
-import { Transaction } from './Transaction';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
-describe(`Given the ${Transaction.name} configured to work with sandbox`, () => {
+describe(`Given the ${Transaction.name} configured to work with the test environment`, () => {
   describe(`and the instance is not authenticated`, () => {
     const authentication = new Authentication(testConfig);
     const transaction = new Transaction(testConfig, authentication);

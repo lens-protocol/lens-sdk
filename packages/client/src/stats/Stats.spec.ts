@@ -1,11 +1,11 @@
-import { mumbaiSandbox } from '../consts/environments';
+import { buildTestEnvironment } from '../__helpers__';
 import { Stats } from './Stats';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
-describe(`Given the ${Stats.name} configured to work with sandbox`, () => {
+describe(`Given the ${Stats.name} configured to work with the test environment`, () => {
   const stats = new Stats(testConfig);
 
   describe(`when the method ${Stats.prototype.fetch.name} is called`, () => {
