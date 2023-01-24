@@ -53,6 +53,7 @@ import { RevenuePage } from './revenue/RevenuePage';
 import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
 import { UseProfilePublicationRevenue } from './revenue/UseProfilePublicationRevenue';
 import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
+import { UseProfileFollowers } from './profiles/UseProfileFollowers';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
@@ -129,6 +130,7 @@ export function App() {
                   element={<UseActiveProfileSwitch />}
                 />
                 <Route path="/profiles/useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
+                <Route path="/profiles/useProfileFollowers" element={<UseProfileFollowers />} />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
                 <Route path="/discovery/useFeed" element={<Feed />} />

@@ -66,6 +66,11 @@ const profileHooks = [
     description: `Fetch a list of profiles owed by a given address.`,
     path: '/profiles/useProfilesOwnedBy',
   },
+  {
+    label: 'useProfileFollowers',
+    description: `Fetch a list of profile followers.`,
+    path: '/profiles/useProfileFollowers',
+  },
 ];
 
 export function ProfilesPage() {
