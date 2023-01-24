@@ -28,7 +28,7 @@ export function ProfileByHandle() {
   return (
     <>
       <p>Select a handle:</p>
-      <SelectProfile onProfileSelected={(profile) => setProfile(profile)} />
+      <SelectProfile onProfileSelected={(p) => setProfile(p)} />
       {profile && <ProfileByHandleLayout handle={profile.handle} />}
     </>
   );

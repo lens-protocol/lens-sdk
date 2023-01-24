@@ -1,4 +1,5 @@
 import { useExploreProfiles, ProfileFragment } from '@lens-protocol/react';
+
 import { invariant } from '../../utils';
 
 type SelectProfileProps = {

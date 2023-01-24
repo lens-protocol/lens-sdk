@@ -49,8 +49,8 @@ export function UseMutualFollowers() {
 
       <article>
         <p>Select two profiles to see their mutual followers:</p>
-        <SelectProfile onProfileSelected={(profile) => setSelectedProfileOne(profile)} />
-        <SelectProfile onProfileSelected={(profile) => setSelectedProfileTwo(profile)} />
+        <SelectProfile onProfileSelected={(p) => setSelectedProfileOne(p)} />
+        <SelectProfile onProfileSelected={(p) => setSelectedProfileTwo(p)} />
       </article>
 
       {selectedProfileOne && selectedProfileTwo && (

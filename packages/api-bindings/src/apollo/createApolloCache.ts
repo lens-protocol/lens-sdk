@@ -19,6 +19,9 @@ import { createMediaSetTypePolicy } from './createMediaSetTypePolicy';
 import { createMediaTypePolicy } from './createMediaTypePolicy';
 import { createNftImageTypePolicy } from './createNftImageTypePolicy';
 import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
+import { createProfileFollowersFieldPolicy } from './createProfileFollowersFieldPolicy';
+import { createProfileFollowingFieldPolicy } from './createProfileFollowingFieldPolicy';
+import { createProfilePublicationRevenueFieldPolicy } from './createProfilePublicationRevenueFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
@@ -26,9 +29,6 @@ import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
-import { createProfileFollowersFieldPolicy } from './createProfileFollowersFieldPolicy';
-import { createProfileFollowingFieldPolicy } from './createProfileFollowingFieldPolicy';
-import { createProfilePublicationRevenueFieldPolicy } from './createProfilePublicationRevenueFieldPolicy';
 
 type TypedFieldFunctionOptions<TAll> = Overwrite<
   FieldFunctionOptions,

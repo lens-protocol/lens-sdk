@@ -9,7 +9,7 @@ export function UseProfileFollowers() {
   return (
     <>
       <p>Select a profile:</p>
-      <SelectProfile onProfileSelected={(profile) => setProfile(profile)} />
+      <SelectProfile onProfileSelected={(p) => setProfile(p)} />
       {profile && <ProfileFollowers profileId={profile.id} />}
     </>
   );

@@ -36,7 +36,7 @@ export function ProfileById() {
   return (
     <>
       <p>Select an id:</p>
-      <SelectProfile onProfileSelected={(profile) => setProfile(profile)} />
+      <SelectProfile onProfileSelected={(p) => setProfile(p)} />
       {profile && <ProfileByIdLayout profileId={profile.id} />}
     </>
   );

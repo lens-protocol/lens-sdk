@@ -31,6 +31,8 @@ import { UseFollowAndUnfollow } from './profiles/UseFollowAndUnfollow';
 import { UseMutualFollowers } from './profiles/UseMutualFollowers';
 import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
+import { UseProfileFollowers } from './profiles/UseProfileFollowers';
+import { UseProfileFollowing } from './profiles/UseProfileFollowing';
 import { UseProfilesOwnedBy } from './profiles/UseProfileOwnedBy';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseUpdateDispatcherConfig } from './profiles/UseUpdateDispatcherConfig';
@@ -53,8 +55,6 @@ import { RevenuePage } from './revenue/RevenuePage';
 import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
 import { UseProfilePublicationRevenue } from './revenue/UseProfilePublicationRevenue';
 import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
-import { UseProfileFollowers } from './profiles/UseProfileFollowers';
-import { UseProfileFollowing } from './profiles/UseProfileFollowing';
 
 const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 

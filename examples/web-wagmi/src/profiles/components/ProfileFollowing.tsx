@@ -1,8 +1,8 @@
 import { useProfileFollowing } from '@lens-protocol/react';
 
 import { Loading } from '../../components/loading/Loading';
-import { ProfileCard } from './ProfileCard';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
+import { ProfileCard } from './ProfileCard';
 
 type ProfileFollowingProps = {
   walletAddress: string;

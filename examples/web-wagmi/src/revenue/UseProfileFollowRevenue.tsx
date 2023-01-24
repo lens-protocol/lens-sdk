@@ -38,7 +38,7 @@ export function UseProfileFollowRevenue() {
         <code>useProfileFollowRevenue</code>
       </h1>
       <p>Select a profile to see their follow revenue:</p>
-      <SelectProfile onProfileSelected={(profile) => setProfile(profile)} />
+      <SelectProfile onProfileSelected={(p) => setProfile(p)} />
       {profile && <UseProfileFollowRevenueInner profileId={profile.id} />}
     </>
   );
