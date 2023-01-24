@@ -14,6 +14,8 @@ describe(`Given the ${Authentication.name} configured to work with sandbox`, () 
     jest.useRealTimers();
   });
 
+  const getAuthentication = setupRandomAuthentication();
+
   describe(`when the method ${Authentication.prototype.generateChallenge.name} is called`, () => {
     it(`should return the challenge for an address`, async () => {
       const auth = new Authentication(testConfig);
@@ -26,7 +28,7 @@ describe(`Given the ${Authentication.name} configured to work with sandbox`, () 
 
   describe(`when the method ${Authentication.prototype.isAuthenticated.name} is called`, () => {
     it(`should return true if already authenticated`, async () => {
-      const auth = await setupRandomAuthentication();
+      const auth = getAuthentication();
       const isAuth = await auth.isAuthenticated();
 
       expect(isAuth).toBe(true);
@@ -53,7 +55,7 @@ describe(`Given the ${Authentication.name} configured to work with sandbox`, () 
 
     describe(`and credentials are expired and can't refresh`, () => {
       it(`should return a failure with an error`, async () => {
-        const auth = await setupRandomAuthentication();
+        const auth = getAuthentication();
         jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.hoursToMs(24 * 7)); // refreshToken is valid for 7 days
 
         const result = await auth.getRequestHeader();
@@ -65,7 +67,7 @@ describe(`Given the ${Authentication.name} configured to work with sandbox`, () 
 
     describe(`and credentials are good`, () => {
       it(`should return the authenticated header`, async () => {
-        const auth = await setupRandomAuthentication();
+        const auth = getAuthentication();
         const result = await auth.getRequestHeader();
 
         expect(result.isSuccess()).toBeTruthy();
@@ -77,7 +79,7 @@ describe(`Given the ${Authentication.name} configured to work with sandbox`, () 
 
     describe.skip(`and credentials are expired but can be refreshed`, () => {
       it(`should return the authenticated header`, async () => {
-        const auth = await setupRandomAuthentication();
+        const auth = getAuthentication();
         jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.minutesToMs(31)); // accessToken is valid for 30min
 
         const result = await auth.getRequestHeader();

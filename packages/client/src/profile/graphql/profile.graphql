@@ -1,0 +1,194 @@
+# queries
+query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+  result: profile(request: $request) {
+    ...Profile
+  }
+}
+
+query Profiles($request: ProfileQueryRequest!, $observerId: ProfileId) {
+  result: profiles(request: $request) {
+    items {
+      ...Profile
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query RecommendedProfiles($observerId: ProfileId) {
+  result: recommendedProfiles {
+    ...Profile
+  }
+}
+
+query MutualFollowersProfiles(
+  $request: MutualFollowersProfilesQueryRequest!
+  $observerId: ProfileId
+) {
+  result: mutualFollowersProfiles(request: $request) {
+    items {
+      ...Profile
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query DoesFollow($request: DoesFollowRequest!) {
+  result: doesFollow(request: $request) {
+    follows
+    followerAddress
+    profileId
+    isFinalisedOnChain
+    __typename
+  }
+}
+
+query Following($request: FollowingRequest!, $observerId: ProfileId) {
+  result: following(request: $request) {
+    items {
+      ...Following
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query Followers($request: FollowersRequest!, $observerId: ProfileId) {
+  result: followers(request: $request) {
+    items {
+      ...Follower
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query FollowerNftOwnedTokenIds($request: FollowerNftOwnedTokenIdsRequest!) {
+  followerNftOwnedTokenIds(request: $request) {
+    __typename
+    followerNftAddress
+    tokensIds
+  }
+}
+
+# mutations
+mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
+  result: createFollowTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        FollowWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileIds
+        datas
+      }
+    }
+  }
+}
+
+mutation CreateUnfollowTypedData($request: UnfollowRequest!, $options: TypedDataOptions) {
+  result: createUnfollowTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        BurnWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        tokenId
+      }
+    }
+  }
+}
+
+mutation CreateSetDispatcherTypedData($request: SetDispatcherRequest!, $options: TypedDataOptions) {
+  result: createSetDispatcherTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetDispatcherWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        dispatcher
+      }
+    }
+  }
+}
+
+mutation CreateProfile($request: CreateProfileRequest!) {
+  result: createProfile(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateBurnProfileTypedData($request: BurnProfileRequest!, $options: TypedDataOptions) {
+  result: createBurnProfileTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        BurnWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        tokenId
+      }
+    }
+  }
+}

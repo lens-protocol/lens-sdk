@@ -67,7 +67,7 @@ export class Publication {
     }, request);
   }
 
-  async allWhoCollected(
+  async allWalletsWhoCollected(
     request: WhoCollectedPublicationRequest,
     observerId?: string,
   ): Promise<PaginatedResult<WalletFragment>> {

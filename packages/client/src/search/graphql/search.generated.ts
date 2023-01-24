@@ -10,6 +10,9 @@ import {
   WalletFragment,
   FollowingFragment,
   FollowerFragment,
+  Eip712TypedDataDomainFragment,
+  RelayerResultFragment,
+  RelayErrorFragment,
   Erc20AmountFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -25,6 +28,9 @@ import {
   WalletFragmentDoc,
   FollowingFragmentDoc,
   FollowerFragmentDoc,
+  Eip712TypedDataDomainFragmentDoc,
+  RelayerResultFragmentDoc,
+  RelayErrorFragmentDoc,
   Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type SearchPublicationsQueryVariables = Types.Exact<{

@@ -70,13 +70,51 @@ const result = await lensClient.search.profiles({
   query: 'test',
 });
 
-const firstPageResults = result.items; // First page of results
+const firstPageResults = result.items; // first page of results
 
 const nextResult = await result.next();
 
-const secondPageResults = nextResult.items; // Second page of results
+const secondPageResults = nextResult.items; // second page of results
 
 const prevResult = await result.prev();
 
-prevResult.items; // <---- We are now back to the first page and this value is equal to firstPageResults.
+prevResult.items; // we are now back to the first page and this value is equal to firstPageResults.
+```
+
+### Set a dispatcher with gasless, signed data type
+
+```ts
+const typedDataResult = await lensClient.profile.createSetDispatcherTypedData({
+  profileId: '0x0185', // your profileId
+});
+
+// typedDataResult is a PromiseResult object
+const setDispatcherData = typedDataResult.unwrap();
+
+// use wallet to sign typed data
+const signedTypedData = await wallet._signTypedData(
+  setDispatcherData.typedData.domain,
+  setDispatcherData.typedData.types,
+  setDispatcherData.typedData.value,
+);
+
+await lensClient.transaction.broadcast({
+  id: setDispatcherData.id,
+  signature: signedTypedData,
+});
+```
+
+### Follow a profile with free proxy action
+
+```ts
+const followResult = await lensClient.proxyAction.freeFollow('0x53a8');
+const proxyActionId = followResult.unwrap();
+console.log(proxyActionId); // "7624f076-446d-4f38-8277-326b269fe8d8"
+
+const statusResult = await lensClient.proxyAction.checkStatus(proxyActionId);
+console.log(statusResult.unwrap());
+/*  {
+  __typename: 'ProxyActionQueued',
+  queuedAt: '2023-01-26T14:33:41.254Z'
+} */
 ```
