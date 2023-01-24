@@ -2,13 +2,16 @@ import { useProfilePublicationRevenue } from '@lens-protocol/react';
 
 import { Loading } from '../components/loading/Loading';
 import { PublicationRevenueCard } from './components/PublicationRevenueCard';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 
-const profileId = '0x4f90-0x02';
+const profileId = '0x15';
 
 export function UseProfilePublicationRevenue() {
-  const { data, loading } = useProfilePublicationRevenue({
-    profileId,
-  });
+  const { data, loading, hasMore, observeRef } = useInfiniteScroll(
+    useProfilePublicationRevenue({
+      profileId,
+    }),
+  );
 
   if (loading) {
     return <Loading />;
@@ -20,7 +23,7 @@ export function UseProfilePublicationRevenue() {
         <code>useProfilePublicationRevenue</code>
       </h1>
 
-      <h3>Profile Publication Revenue</h3>
+      <h2>Profile Publication Revenue</h2>
 
       {data.map((publicationRevenue) => {
         return (
@@ -30,6 +33,7 @@ export function UseProfilePublicationRevenue() {
           />
         );
       })}
+      {hasMore && <p ref={observeRef}>Loading more...</p>}
     </div>
   );
 }

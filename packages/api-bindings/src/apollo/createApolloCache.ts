@@ -28,6 +28,7 @@ import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
 import { createProfileFollowersFieldPolicy } from './createProfileFollowersFieldPolicy';
 import { createProfileFollowingFieldPolicy } from './createProfileFollowingFieldPolicy';
+import { createProfilePublicationRevenueFieldPolicy } from './createProfilePublicationRevenueFieldPolicy';
 
 type TypedFieldFunctionOptions<TAll> = Overwrite<
   FieldFunctionOptions,
@@ -91,6 +92,7 @@ function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
         followers: createProfileFollowersFieldPolicy(),
         following: createProfileFollowingFieldPolicy(),
+        profilePublicationRevenue: createProfilePublicationRevenueFieldPolicy(),
       },
     },
   };

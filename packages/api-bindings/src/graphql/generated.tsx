@@ -5574,7 +5574,7 @@ export const RevenueAggregateFragmentDoc = gql`
     __total: total {
       ...Erc20Amount
     }
-    totalAmount
+    totalAmount @client
   }
   ${Erc20AmountFragmentDoc}
 `;
