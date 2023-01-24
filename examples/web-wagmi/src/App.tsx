@@ -37,6 +37,7 @@ import { UseUpdateFollowPolicy } from './profiles/UseUpdateFollowPolicy';
 import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
 import { UseUpdateProfileImage } from './profiles/UseUpdateProfileImage';
 import { PublicationsPage } from './publications/PublicationsPage';
+import { UseCollect } from './publications/UseCollect';
 import { UseCollectedPublications } from './publications/UseCollectedPublications';
 import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreateMirror } from './publications/UseCreateMirror';
@@ -105,6 +106,7 @@ export function App() {
                   element={<UseWhoCollectedPublication />}
                 />
                 <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
+                <Route path="/publications/useCollect" element={<UseCollect />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />

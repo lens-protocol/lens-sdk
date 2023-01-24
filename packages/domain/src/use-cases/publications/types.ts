@@ -75,7 +75,7 @@ export type NoCollectPolicy = {
 
 export type CollectPolicy = ChargeCollectPolicy | FreeCollectPolicy | NoCollectPolicy;
 
-export type SupportedPublicationMediaType = (typeof SUPPORTED_PUBLICATION_MEDIA_TYPES)[number];
+export type SupportedPublicationMediaType = typeof SUPPORTED_PUBLICATION_MEDIA_TYPES[number];
 
 export type Media = {
   url: string;
