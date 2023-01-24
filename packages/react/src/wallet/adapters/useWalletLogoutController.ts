@@ -2,6 +2,7 @@ import { LogoutReason, WalletLogout } from '@lens-protocol/domain/use-cases/wall
 
 import { useSharedDependencies } from '../../shared';
 import { ActiveWalletPresenter } from './ActiveWalletPresenter';
+import { LogoutPresenter } from './LogoutPresenter';
 
 export function useWalletLogoutController() {
   const {
@@ -9,12 +10,13 @@ export function useWalletLogoutController() {
     activeProfileGateway,
     activeProfilePresenter,
     credentialsGateway,
-    logoutPresenter,
+    onLogout,
     walletGateway,
   } = useSharedDependencies();
 
-  return (reason: LogoutReason) => {
+  return async (reason: LogoutReason) => {
     const activeWalletPresenter = new ActiveWalletPresenter();
+    const logoutPresenter = new LogoutPresenter(onLogout);
     const walletLogout = new WalletLogout(
       walletGateway,
       credentialsGateway,
@@ -25,6 +27,8 @@ export function useWalletLogoutController() {
       logoutPresenter,
     );
 
-    void walletLogout.logout(reason);
+    await walletLogout.logout(reason);
+
+    return logoutPresenter.asResult();
   };
 }

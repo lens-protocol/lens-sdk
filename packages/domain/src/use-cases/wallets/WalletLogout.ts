@@ -1,3 +1,5 @@
+import { success } from '@lens-protocol/shared-kernel';
+
 import { IActiveProfilePresenter } from '../profile';
 import { ActiveWallet } from './ActiveWallet';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
@@ -37,6 +39,8 @@ export class WalletLogout {
 
     await this.credentialsGateway.invalidate();
 
-    this.logoutPresenter.presentLogout({ lastLoggedInWallet: activeWallet, logoutReason: reason });
+    this.logoutPresenter.present(
+      success({ lastLoggedInWallet: activeWallet, logoutReason: reason }),
+    );
   }
 }

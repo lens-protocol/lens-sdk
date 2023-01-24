@@ -11,14 +11,12 @@ type FollowButtonProps = {
   profile: ProfileFragment;
 };
 
-const toastNotification = (error: Error) => toast.error(error.message);
-
 function FollowButton({ profile }: FollowButtonProps) {
   const { follow, isPending: isFollowing } = useFollow({ profile });
   const { unfollow, isPending: isUnfollowing, error } = useUnfollow({ profile });
 
   useEffect(() => {
-    if (error && 'message' in error) toastNotification(error);
+    if (error) toast.error(error.message);
   }, [error]);
 
   if (profile.isFollowedByMe || profile.isOptimisticFollowedByMe)

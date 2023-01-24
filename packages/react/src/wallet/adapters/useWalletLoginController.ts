@@ -1,9 +1,14 @@
+import {
+  PendingSigningRequestError,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
 import { ActiveProfileLoader } from '@lens-protocol/domain/use-cases/profile';
 import { WalletLogin, WalletLoginRequest } from '@lens-protocol/domain/use-cases/wallets';
 
 import { useSharedDependencies } from '../../shared';
+import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
 import { ActiveWalletPresenter } from './ActiveWalletPresenter';
-import { ConnectionErrorPresenter } from './ConnectionErrorPresenter';
 
 export function useWalletLoginController() {
   const {
@@ -11,15 +16,17 @@ export function useWalletLoginController() {
     activeProfilePresenter,
     credentialsFactory,
     credentialsGateway,
-    onError,
     profileGateway,
     walletFactory,
     walletGateway,
   } = useSharedDependencies();
 
-  return (request: WalletLoginRequest) => {
+  return async (request: WalletLoginRequest) => {
     const activeWalletPresenter = new ActiveWalletPresenter();
-    const connectionErrorPresenter = new ConnectionErrorPresenter(onError);
+    const loginPresenter = new PromiseResultPresenter<
+      void,
+      PendingSigningRequestError | WalletConnectionError | UserRejectedError
+    >();
     const activeProfileLoader = new ActiveProfileLoader(
       profileGateway,
       activeProfileGateway,
@@ -31,10 +38,12 @@ export function useWalletLoginController() {
       credentialsFactory,
       credentialsGateway,
       activeWalletPresenter,
-      connectionErrorPresenter,
+      loginPresenter,
       activeProfileLoader,
     );
 
-    void walletLogin.login(request);
+    await walletLogin.login(request);
+
+    return loginPresenter.asResult();
   };
 }
