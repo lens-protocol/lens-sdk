@@ -28,6 +28,7 @@ config:
     Nonce: number
     NotificationId: string
     ProfileAttributes: ProfileAttributes
+    FollowPolicy: FollowPolicy
     ProfileId: string
     ProxyActionId: string
     Search: string
@@ -54,6 +55,7 @@ generates:
             [
               "import type { ClientErc20Amount } from './ClientErc20Amount';",
               "import type { ProfileAttributes } from './ProfileAttributes';",
+              "import type { FollowPolicy } from './FollowPolicy';",
             ]
       - 'typescript-operations':
           skipTypename: true

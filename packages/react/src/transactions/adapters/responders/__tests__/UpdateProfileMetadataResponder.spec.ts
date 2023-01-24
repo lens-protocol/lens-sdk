@@ -1,12 +1,12 @@
 import {
   ProfileAttributeReader,
-  ProfileFieldsFragment,
-  ProfileFieldsFragmentDoc,
+  ProfileFragment,
+  ProfileFragmentDoc,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockGetProfileQueryMockedResponse,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockUpdateProfileDetailsRequest,
@@ -21,11 +21,11 @@ import { UpdateProfileMetadataResponder } from '../UpdateProfileMetadataResponde
 function setupUpdateProfileMetadataResponder({
   transactionData,
   existingProfile,
-  updatedProfile = mockProfileFieldsFragment(),
+  updatedProfile = mockProfileFragment(),
 }: {
   transactionData: TransactionData<UpdateProfileDetailsRequest>;
-  existingProfile: ProfileFieldsFragment | null;
-  updatedProfile?: ProfileFieldsFragment;
+  existingProfile: ProfileFragment | null;
+  updatedProfile?: ProfileFragment;
 }) {
   const apolloClient = createMockApolloClientWithMultipleResponses([
     mockGetProfileQueryMockedResponse({
@@ -42,8 +42,8 @@ function setupUpdateProfileMetadataResponder({
 
   apolloClient.cache.writeFragment({
     id: profileIdentifier,
-    fragment: ProfileFieldsFragmentDoc,
-    fragmentName: 'ProfileFields',
+    fragment: ProfileFragmentDoc,
+    fragmentName: 'Profile',
     data: existingProfile,
   });
 
@@ -55,8 +55,8 @@ function setupUpdateProfileMetadataResponder({
     get profileFromCache() {
       return apolloClient.cache.readFragment({
         id: profileIdentifier,
-        fragmentName: 'ProfileFields',
-        fragment: ProfileFieldsFragmentDoc,
+        fragmentName: 'Profile',
+        fragment: ProfileFragmentDoc,
       });
     },
   };
@@ -72,7 +72,7 @@ describe(`Given the ${UpdateProfileMetadataResponder.name}`, () => {
 
   describe(`when "${UpdateProfileMetadataResponder.prototype.prepare.name}" method is invoked with PendingTransactionData<UpdateProfileDetailsRequest>`, () => {
     it(`should update the correct Profile in the Apollo Cache`, async () => {
-      const existingProfile = mockProfileFieldsFragment({ id: request.profileId });
+      const existingProfile = mockProfileFragment({ id: request.profileId });
       const scenario = setupUpdateProfileMetadataResponder({
         existingProfile,
         transactionData: pendingTransactionData,
@@ -104,7 +104,7 @@ describe(`Given the ${UpdateProfileMetadataResponder.name}`, () => {
 
   describe(`when "${UpdateProfileMetadataResponder.prototype.rollback.name}" method is invoked with TransactionData<UpdateProfileDetailsRequest>`, () => {
     it(`should revert the previous changes to the correct Profile in the Apollo Cache`, async () => {
-      const existingProfile = mockProfileFieldsFragment({ id: request.profileId });
+      const existingProfile = mockProfileFragment({ id: request.profileId });
       const scenario = setupUpdateProfileMetadataResponder({
         existingProfile,
         transactionData: pendingTransactionData,
@@ -134,8 +134,8 @@ describe(`Given the ${UpdateProfileMetadataResponder.name}`, () => {
     const transactionData = mockBroadcastedTransactionData({ request });
 
     it(`should confirm the cache changes on the correct Profile with fresh data from the server`, async () => {
-      const existingProfile = mockProfileFieldsFragment({ id: request.profileId });
-      const updatedProfile = mockProfileFieldsFragment({ id: request.profileId });
+      const existingProfile = mockProfileFragment({ id: request.profileId });
+      const updatedProfile = mockProfileFragment({ id: request.profileId });
       const scenario = setupUpdateProfileMetadataResponder({
         existingProfile,
         transactionData,
@@ -149,8 +149,8 @@ describe(`Given the ${UpdateProfileMetadataResponder.name}`, () => {
     });
 
     it('should clear any previous profile snapshot for the given request', async () => {
-      const existingProfile = mockProfileFieldsFragment({ id: request.profileId });
-      const updatedProfile = mockProfileFieldsFragment({ id: request.profileId });
+      const existingProfile = mockProfileFragment({ id: request.profileId });
+      const updatedProfile = mockProfileFragment({ id: request.profileId });
       const scenario = setupUpdateProfileMetadataResponder({
         existingProfile,
         transactionData,

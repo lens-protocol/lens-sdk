@@ -1,5 +1,5 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
-import { ProfileFieldsFragment, ProfileFieldsFragmentDoc } from '@lens-protocol/api-bindings';
+import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
 import { FollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastedTransactionData,
@@ -16,17 +16,17 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
       id: request.profileId,
     });
 
-    const snapshot = this.apolloCache.readFragment<ProfileFieldsFragment>({
+    const snapshot = this.apolloCache.readFragment<ProfileFragment>({
       id: profileIdentifier,
-      fragmentName: 'ProfileFields',
-      fragment: ProfileFieldsFragmentDoc,
+      fragmentName: 'Profile',
+      fragment: ProfileFragmentDoc,
     });
 
     if (snapshot) {
       this.apolloCache.writeFragment({
         id: profileIdentifier,
-        fragmentName: 'ProfileFields',
-        fragment: ProfileFieldsFragmentDoc,
+        fragmentName: 'Profile',
+        fragment: ProfileFragmentDoc,
         data: {
           ...snapshot,
           isOptimisticFollowedByMe: true,
@@ -45,17 +45,17 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
       id: request.profileId,
     });
 
-    const snapshot = this.apolloCache.readFragment<ProfileFieldsFragment>({
+    const snapshot = this.apolloCache.readFragment<ProfileFragment>({
       id: profileIdentifier,
-      fragmentName: 'ProfileFields',
-      fragment: ProfileFieldsFragmentDoc,
+      fragmentName: 'Profile',
+      fragment: ProfileFragmentDoc,
     });
 
     if (snapshot) {
       this.apolloCache.writeFragment({
         id: profileIdentifier,
-        fragmentName: 'ProfileFields',
-        fragment: ProfileFieldsFragmentDoc,
+        fragmentName: 'Profile',
+        fragment: ProfileFragmentDoc,
         data: {
           ...snapshot,
           isFollowedByMe: true,
@@ -71,17 +71,17 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
       id: request.profileId,
     });
 
-    const snapshot = this.apolloCache.readFragment<ProfileFieldsFragment>({
+    const snapshot = this.apolloCache.readFragment<ProfileFragment>({
       id: profileIdentifier,
-      fragmentName: 'ProfileFields',
-      fragment: ProfileFieldsFragmentDoc,
+      fragmentName: 'Profile',
+      fragment: ProfileFragmentDoc,
     });
 
     if (snapshot) {
       this.apolloCache.writeFragment({
         id: profileIdentifier,
-        fragmentName: 'ProfileFields',
-        fragment: ProfileFieldsFragmentDoc,
+        fragmentName: 'Profile',
+        fragment: ProfileFragmentDoc,
         data: {
           ...snapshot,
           isOptimisticFollowedByMe: false,

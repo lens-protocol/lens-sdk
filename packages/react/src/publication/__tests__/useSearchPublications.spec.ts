@@ -4,7 +4,7 @@ import {
   createSearchPublicationsQueryMockedResponse,
   mockCommentFragment,
   mockPostFragment,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
@@ -12,7 +12,7 @@ import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useSearchPublications } from '../useSearchPublications';
 
 describe(`Given the ${useSearchPublications.name} hook`, () => {
-  const observer = mockProfileFieldsFragment();
+  const observer = mockProfileFragment();
   const query = 'query_test';
 
   const mockPublications: (PostFragment | CommentFragment)[] = [

@@ -1,4 +1,4 @@
-import { ProfileFieldsFragment } from '@lens-protocol/api-bindings';
+import { ProfileFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { useUpdateProfileImageController } from './adapters/useUpdateProfileImageController';
 
 export type UseUpdateProfileImageArgs = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
 };
 
 export function useUpdateProfileImage({ profile }: UseUpdateProfileImageArgs) {

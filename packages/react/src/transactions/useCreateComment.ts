@@ -7,12 +7,12 @@ import {
 import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
 import { useState } from 'react';
 
-import { ProfileFieldsFragment } from '../profile';
+import { ProfileFragment } from '../profile';
 import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
 import { useCreateCommentController } from './adapters/useCreateCommentController';
 
 export type UseCreateCommentArgs = {
-  profile: ProfileFieldsFragment;
+  profile: ProfileFragment;
   upload: MetadataUploadHandler;
 };
 

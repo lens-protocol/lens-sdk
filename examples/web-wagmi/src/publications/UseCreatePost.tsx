@@ -1,7 +1,7 @@
 import { useFeed, useRecentPosts } from '@lens-protocol/react';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
+import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PostComposer } from './components/PostComposer';
@@ -50,12 +50,7 @@ export function UseCreatePost() {
           </>
         )}
       </WhenLoggedInWithProfile>
-      <WhenLoggedOut>
-        <div>
-          <p>Log in to create a post.</p>
-          <LoginButton />
-        </div>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback message="Log in to create a post." />
     </div>
   );
 }

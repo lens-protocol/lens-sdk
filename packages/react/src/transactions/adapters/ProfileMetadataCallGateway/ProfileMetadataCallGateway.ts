@@ -10,7 +10,7 @@ import {
   GetProfileQuery,
   GetProfileQueryVariables,
   omitTypename,
-  ProfileFieldsFragment,
+  ProfileFragment,
   CreatePublicSetProfileMetadataUriRequest,
 } from '@lens-protocol/api-bindings';
 import {
@@ -126,7 +126,7 @@ export class ProfileMetadataCallGateway
     };
   }
 
-  private async retrieveProfileDetails(profileId: string): Promise<ProfileFieldsFragment> {
+  private async retrieveProfileDetails(profileId: string): Promise<ProfileFragment> {
     const { data } = await this.apolloClient.query<GetProfileQuery, GetProfileQueryVariables>({
       fetchPolicy: 'cache-first',
       query: GetProfileDocument,

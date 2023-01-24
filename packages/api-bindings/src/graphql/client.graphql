@@ -1,10 +1,12 @@
 scalar ClientErc20Amount
 scalar ProfileAttributes
+scalar FollowPolicy
 
 extend type Profile {
   ownedByMe: Boolean!
   isOptimisticFollowedByMe: Boolean!
   attributesMap: ProfileAttributes!
+  followPolicy: FollowPolicy!
 }
 
 extend type Post {

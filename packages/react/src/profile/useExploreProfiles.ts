@@ -1,4 +1,4 @@
-import { ProfileFieldsFragment, useExploreProfilesQuery } from '@lens-protocol/api-bindings';
+import { ProfileFragment, useExploreProfilesQuery } from '@lens-protocol/api-bindings';
 
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
@@ -7,9 +7,7 @@ type UseFeedArgs = PaginatedArgs<{
   observerId?: string;
 }>;
 
-export function useExploreProfiles(
-  args?: UseFeedArgs,
-): PaginatedReadResult<ProfileFieldsFragment[]> {
+export function useExploreProfiles(args?: UseFeedArgs): PaginatedReadResult<ProfileFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(

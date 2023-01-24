@@ -46,7 +46,7 @@ query ExploreProfiles($observerId: ProfileId, $limit: LimitScalar!, $cursor: Cur
     request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
   ) {
     items {
-      ...ProfileFields
+      ...Profile
     }
     pageInfo {
       ...CommonPaginatedResultInfo

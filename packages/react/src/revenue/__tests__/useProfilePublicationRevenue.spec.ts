@@ -1,7 +1,7 @@
 import {
   createMockApolloClientWithMultipleResponses,
   createProfilePublicationRevenueQueryMockedResponse,
-  mockProfileFieldsFragment,
+  mockProfileFragment,
   mockPublicationRevenueFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
@@ -11,7 +11,7 @@ import { useProfilePublicationRevenue } from '../useProfilePublicationRevenue';
 
 describe(`Given the ${useProfilePublicationRevenue.name} hook`, () => {
   const mockPedublicationRevenueFragments = [mockPublicationRevenueFragment()];
-  const mockedProfile = mockProfileFieldsFragment();
+  const mockedProfile = mockProfileFragment();
 
   describe('when supplied with a profile id', () => {
     describe('and the query returns data successfully', () => {

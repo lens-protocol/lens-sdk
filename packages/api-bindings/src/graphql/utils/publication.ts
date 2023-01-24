@@ -8,7 +8,7 @@ import {
   MirrorFragment,
   Post,
   PostFragment,
-  ProfileFieldsFragment,
+  ProfileFragment,
   ReactionTypes,
 } from '../generated';
 import { Typename, PickByTypename, JustTypename } from './types';
@@ -90,7 +90,7 @@ export type PublicationFragment = PostFragment | CommentFragment | MirrorFragmen
 
 export type PublicationOwnedByMeFragment = Overwrite<
   PublicationFragment,
-  { profile: Overwrite<ProfileFieldsFragment, { ownedByMe: true }> }
+  { profile: Overwrite<ProfileFragment, { ownedByMe: true }> }
 >;
 
 export const isPublicationOwnedByMe = (
