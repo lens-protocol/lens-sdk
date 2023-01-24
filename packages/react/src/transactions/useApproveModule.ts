@@ -1,8 +1,3 @@
-import { SupportedTransactionRequest } from '@lens-protocol/domain/dist/use-cases/transactions';
-import {
-  TokenAllowanceLimit,
-  TokenAllowanceRequest,
-} from '@lens-protocol/domain/dist/use-cases/wallets';
 import {
   InsufficientGasError,
   PendingSigningRequestError,
@@ -10,6 +5,11 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  TokenAllowanceLimit,
+  TokenAllowanceRequest,
+} from '@lens-protocol/domain/use-cases/wallets';
 import { Amount, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
