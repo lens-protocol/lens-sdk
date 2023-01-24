@@ -11,6 +11,4 @@ export type LogoutData = {
   logoutReason: LogoutReason;
 };
 
-export interface ILogoutPresenter extends IGenericResultPresenter<void, never> {
-  presentLogout(data: LogoutData): void;
-}
+export type ILogoutPresenter = IGenericResultPresenter<LogoutData, never>;

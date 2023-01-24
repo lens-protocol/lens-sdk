@@ -50,7 +50,7 @@ export class WalletLogin {
     private readonly credentialsIssuer: ICredentialsIssuer,
     private readonly credentialsWriter: ICredentialsWriter,
     private readonly activeWalletPresenter: IActiveWalletPresenter,
-    private readonly genericPresenter: IWalletLoginPresenter,
+    private readonly walletLoginPresenter: IWalletLoginPresenter,
     private readonly activeProfileLoader: ActiveProfileLoader,
   ) {}
 
@@ -59,7 +59,7 @@ export class WalletLogin {
     const result = await this.credentialsIssuer.issueCredentials(wallet);
 
     if (result.isFailure()) {
-      this.genericPresenter.present(failure(result.error));
+      this.walletLoginPresenter.present(failure(result.error));
       return;
     }
 
@@ -69,6 +69,6 @@ export class WalletLogin {
     this.activeWalletPresenter.presentActiveWallet(wallet);
     await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address);
 
-    this.genericPresenter.present(success());
+    this.walletLoginPresenter.present(success());
   }
 }

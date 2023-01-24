@@ -1,3 +1,4 @@
+import { success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -76,10 +77,12 @@ describe(`Given the ${WalletLogout.name} interactor`, () => {
       expect(activeProfileGateway.reset).toHaveBeenCalled();
       expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(null);
       expect(activeWalletPresenter.presentActiveWallet).toHaveBeenCalledWith(null);
-      expect(logoutPresenter.presentLogout).toHaveBeenCalledWith({
-        lastLoggedInWallet: wallet,
-        logoutReason: LogoutReason.USER_INITIATED,
-      });
+      expect(logoutPresenter.present).toHaveBeenCalledWith(
+        success({
+          lastLoggedInWallet: wallet,
+          logoutReason: LogoutReason.USER_INITIATED,
+        }),
+      );
     });
   });
 });
