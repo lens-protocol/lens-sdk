@@ -6,6 +6,7 @@
     "examples/web-wagmi",
     "packages/api-bindings",
     "packages/blockchain-bindings",
+    "packages/client",
     "packages/domain",
     "packages/eslint-config",
     "packages/prettier-config",

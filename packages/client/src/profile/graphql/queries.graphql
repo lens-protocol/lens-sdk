@@ -1,0 +1,11 @@
+query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+  result: profile(request: $request) {
+    ...Profile
+  }
+}
+
+query DefaultProfile($address: EthereumAddress!, $observerId: ProfileId) {
+  result: defaultProfile(request: { ethereumAddress: $address }) {
+    ...Profile
+  }
+}
