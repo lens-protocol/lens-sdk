@@ -3848,6 +3848,743 @@ export type AuthRefreshMutation = {
   result: Pick<AuthenticationResult, 'accessToken' | 'refreshToken'>;
 };
 
+export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
+  FeeFollowModuleSettings,
+  'contractAddress' | 'recipient'
+> & { amount: ModuleFeeAmountFragment };
+
+export type ProfileFollowModuleSettingsFragment = {
+  __typename: 'ProfileFollowModuleSettings';
+} & Pick<ProfileFollowModuleSettings, 'contractAddress'>;
+
+export type RevertFollowModuleSettingsFragment = {
+  __typename: 'RevertFollowModuleSettings';
+} & Pick<RevertFollowModuleSettings, 'contractAddress'>;
+
+export type UnknownFollowModuleSettingsFragment = {
+  __typename: 'UnknownFollowModuleSettings';
+} & Pick<UnknownFollowModuleSettings, 'contractAddress'>;
+
+type ProfileMedia_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
+  NftImage,
+  'contractAddress' | 'tokenId' | 'uri' | 'verified'
+>;
+
+type ProfileMedia_MediaSet_Fragment = MediaSetFragment;
+
+export type ProfileMediaFragment = ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment;
+
+export type AttributeFragment = { __typename: 'Attribute' } & Pick<
+  Attribute,
+  'displayType' | 'key' | 'value'
+>;
+
+export type ProfileFragment = { __typename: 'Profile' } & Pick<
+  Profile,
+  'id' | 'name' | 'bio' | 'handle' | 'ownedBy' | 'isFollowedByMe' | 'isFollowing'
+> & {
+    picture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
+    coverPicture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
+    stats: { __typename: 'ProfileStats' } & Pick<
+      ProfileStats,
+      'totalFollowers' | 'totalFollowing' | 'totalPosts'
+    >;
+    followModule: Maybe<
+      | FeeFollowModuleSettingsFragment
+      | ProfileFollowModuleSettingsFragment
+      | RevertFollowModuleSettingsFragment
+      | UnknownFollowModuleSettingsFragment
+    >;
+    attributes: Maybe<Array<AttributeFragment>>;
+    dispatcher: Maybe<Pick<Dispatcher, 'address' | 'canUseRelay'>>;
+  };
+
+export type ProfileQueryVariables = Exact<{
+  request: SingleProfileQueryRequest;
+  observerId?: Maybe<Scalars['ProfileId']>;
+}>;
+
+export type ProfileQuery = { result: Maybe<ProfileFragment> };
+
+export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
+  Erc20,
+  'name' | 'symbol' | 'decimals' | 'address'
+>;
+
+export type Erc20AmountFragment = { __typename: 'Erc20Amount' } & Pick<Erc20Amount, 'value'> & {
+    asset: Erc20Fragment;
+  };
+
+export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
+  ModuleFeeAmount,
+  'value'
+> & { asset: Erc20Fragment };
+
+type ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment = {
+  __typename: 'FollowOnlyReferenceModuleSettings';
+} & Pick<FollowOnlyReferenceModuleSettings, 'contractAddress'>;
+
+type ReferenceModule_UnknownReferenceModuleSettings_Fragment = {
+  __typename: 'UnknownReferenceModuleSettings';
+};
+
+type ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment = {
+  __typename: 'DegreesOfSeparationReferenceModuleSettings';
+};
+
+export type ReferenceModuleFragment =
+  | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+  | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+  | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment;
+
+export type FreeCollectModuleSettingsFragment = { __typename: 'FreeCollectModuleSettings' } & Pick<
+  FreeCollectModuleSettings,
+  'contractAddress' | 'followerOnly'
+>;
+
+export type FeeCollectModuleSettingsFragment = { __typename: 'FeeCollectModuleSettings' } & Pick<
+  FeeCollectModuleSettings,
+  'contractAddress' | 'followerOnly' | 'recipient' | 'referralFee'
+> & { amount: ModuleFeeAmountFragment };
+
+export type LimitedFeeCollectModuleSettingsFragment = {
+  __typename: 'LimitedFeeCollectModuleSettings';
+} & Pick<
+  LimitedFeeCollectModuleSettings,
+  'collectLimit' | 'contractAddress' | 'followerOnly' | 'recipient' | 'referralFee'
+> & { amount: ModuleFeeAmountFragment };
+
+export type LimitedTimedFeeCollectModuleSettingsFragment = {
+  __typename: 'LimitedTimedFeeCollectModuleSettings';
+} & Pick<
+  LimitedTimedFeeCollectModuleSettings,
+  'collectLimit' | 'contractAddress' | 'followerOnly' | 'endTimestamp' | 'recipient' | 'referralFee'
+> & { amount: ModuleFeeAmountFragment };
+
+export type RevertCollectModuleSettingsFragment = {
+  __typename: 'RevertCollectModuleSettings';
+} & Pick<RevertCollectModuleSettings, 'contractAddress'>;
+
+export type TimedFeeCollectModuleSettingsFragment = {
+  __typename: 'TimedFeeCollectModuleSettings';
+} & Pick<
+  TimedFeeCollectModuleSettings,
+  'contractAddress' | 'followerOnly' | 'endTimestamp' | 'recipient' | 'referralFee'
+> & { amount: ModuleFeeAmountFragment };
+
+type CollectModule_FreeCollectModuleSettings_Fragment = {
+  __typename: 'FreeCollectModuleSettings';
+} & FreeCollectModuleSettingsFragment;
+
+type CollectModule_FeeCollectModuleSettings_Fragment = {
+  __typename: 'FeeCollectModuleSettings';
+} & FeeCollectModuleSettingsFragment;
+
+type CollectModule_LimitedFeeCollectModuleSettings_Fragment = {
+  __typename: 'LimitedFeeCollectModuleSettings';
+} & LimitedFeeCollectModuleSettingsFragment;
+
+type CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment = {
+  __typename: 'LimitedTimedFeeCollectModuleSettings';
+} & LimitedTimedFeeCollectModuleSettingsFragment;
+
+type CollectModule_RevertCollectModuleSettings_Fragment = {
+  __typename: 'RevertCollectModuleSettings';
+} & RevertCollectModuleSettingsFragment;
+
+type CollectModule_TimedFeeCollectModuleSettings_Fragment = {
+  __typename: 'TimedFeeCollectModuleSettings';
+} & TimedFeeCollectModuleSettingsFragment;
+
+type CollectModule_UnknownCollectModuleSettings_Fragment = {
+  __typename: 'UnknownCollectModuleSettings';
+};
+
+export type CollectModuleFragment =
+  | CollectModule_FreeCollectModuleSettings_Fragment
+  | CollectModule_FeeCollectModuleSettings_Fragment
+  | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+  | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+  | CollectModule_RevertCollectModuleSettings_Fragment
+  | CollectModule_TimedFeeCollectModuleSettings_Fragment
+  | CollectModule_UnknownCollectModuleSettings_Fragment;
+
+export type WalletFragment = { __typename: 'Wallet' } & Pick<Wallet, 'address'> & {
+    defaultProfile: Maybe<ProfileFragment>;
+  };
+
+export type MediaFragment = { __typename: 'Media' } & Pick<Media, 'url' | 'mimeType'>;
+
+export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFragment };
+
+export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
+  MetadataOutput,
+  'name' | 'description' | 'mainContentFocus' | 'content'
+> & { media: Array<MediaSetFragment>; attributes: Array<MetadataAttributeOutputFragment> };
+
+export type MetadataAttributeOutputFragment = { __typename: 'MetadataAttributeOutput' } & Pick<
+  MetadataAttributeOutput,
+  'traitType' | 'value'
+>;
+
+export type PublicationStatsFragment = { __typename: 'PublicationStats' } & Pick<
+  PublicationStats,
+  'totalAmountOfMirrors' | 'totalUpvotes' | 'totalAmountOfCollects' | 'totalAmountOfComments'
+>;
+
+export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
+  Mirror,
+  'id' | 'createdAt' | 'hidden' | 'isGated' | 'reaction' | 'hasCollectedByMe'
+> & {
+    stats: PublicationStatsFragment;
+    metadata: MetadataFragment;
+    profile: ProfileFragment;
+    collectModule:
+      | CollectModule_FreeCollectModuleSettings_Fragment
+      | CollectModule_FeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+      | CollectModule_RevertCollectModuleSettings_Fragment
+      | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_UnknownCollectModuleSettings_Fragment;
+    referenceModule: Maybe<
+      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
+    >;
+    canComment: Pick<CanCommentResponse, 'result'>;
+    canMirror: Pick<CanMirrorResponse, 'result'>;
+  };
+
+export type MirrorFragment = { __typename: 'Mirror' } & {
+  mirrorOf: PostFragment | CommentFragment;
+} & MirrorBaseFragment;
+
+export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
+  Comment,
+  'id' | 'createdAt' | 'hidden' | 'isGated' | 'reaction' | 'hasCollectedByMe' | 'mirrors'
+> & {
+    stats: PublicationStatsFragment;
+    metadata: MetadataFragment;
+    profile: ProfileFragment;
+    collectedBy: Maybe<WalletFragment>;
+    collectModule:
+      | CollectModule_FreeCollectModuleSettings_Fragment
+      | CollectModule_FeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+      | CollectModule_RevertCollectModuleSettings_Fragment
+      | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_UnknownCollectModuleSettings_Fragment;
+    referenceModule: Maybe<
+      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
+    >;
+    canComment: Pick<CanCommentResponse, 'result'>;
+    canMirror: Pick<CanMirrorResponse, 'result'>;
+  };
+
+export type CommentFragment = { __typename: 'Comment' } & {
+  commentOn: Maybe<PostFragment | CommentBaseFragment | MirrorBaseFragment>;
+  mainPost: PostFragment | MirrorBaseFragment;
+} & CommentBaseFragment;
+
+export type PostFragment = { __typename: 'Post' } & Pick<
+  Post,
+  'id' | 'createdAt' | 'hidden' | 'isGated' | 'reaction' | 'hasCollectedByMe' | 'mirrors'
+> & {
+    stats: PublicationStatsFragment;
+    metadata: MetadataFragment;
+    profile: ProfileFragment;
+    collectedBy: Maybe<WalletFragment>;
+    collectModule:
+      | CollectModule_FreeCollectModuleSettings_Fragment
+      | CollectModule_FeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+      | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+      | CollectModule_RevertCollectModuleSettings_Fragment
+      | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_UnknownCollectModuleSettings_Fragment;
+    referenceModule: Maybe<
+      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
+    >;
+    canComment: Pick<CanCommentResponse, 'result'>;
+    canMirror: Pick<CanMirrorResponse, 'result'>;
+  };
+
+export type PublicationQueryVariables = Exact<{
+  observerId?: Maybe<Scalars['ProfileId']>;
+  publicationId: Scalars['InternalPublicationId'];
+}>;
+
+export type PublicationQuery = { result: Maybe<PostFragment | CommentFragment | MirrorFragment> };
+
+export const Erc20FragmentDoc = gql`
+  fragment Erc20 on Erc20 {
+    __typename
+    name
+    symbol
+    decimals
+    address
+  }
+`;
+export const Erc20AmountFragmentDoc = gql`
+  fragment Erc20Amount on Erc20Amount {
+    __typename
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
+`;
+export const PublicationStatsFragmentDoc = gql`
+  fragment PublicationStats on PublicationStats {
+    __typename
+    totalAmountOfMirrors
+    totalUpvotes
+    totalAmountOfCollects
+    totalAmountOfComments
+  }
+`;
+export const MediaFragmentDoc = gql`
+  fragment Media on Media {
+    __typename
+    url
+    mimeType
+  }
+`;
+export const MediaSetFragmentDoc = gql`
+  fragment MediaSet on MediaSet {
+    __typename
+    original {
+      ...Media
+    }
+  }
+  ${MediaFragmentDoc}
+`;
+export const MetadataAttributeOutputFragmentDoc = gql`
+  fragment MetadataAttributeOutput on MetadataAttributeOutput {
+    __typename
+    traitType
+    value
+  }
+`;
+export const MetadataFragmentDoc = gql`
+  fragment Metadata on MetadataOutput {
+    __typename
+    name
+    description
+    mainContentFocus
+    content
+    media {
+      ...MediaSet
+    }
+    attributes {
+      ...MetadataAttributeOutput
+    }
+  }
+  ${MediaSetFragmentDoc}
+  ${MetadataAttributeOutputFragmentDoc}
+`;
+export const ProfileMediaFragmentDoc = gql`
+  fragment ProfileMedia on ProfileMedia {
+    ... on NftImage {
+      __typename
+      contractAddress
+      tokenId
+      uri
+      verified
+    }
+    ... on MediaSet {
+      ...MediaSet
+    }
+  }
+  ${MediaSetFragmentDoc}
+`;
+export const ModuleFeeAmountFragmentDoc = gql`
+  fragment ModuleFeeAmount on ModuleFeeAmount {
+    __typename
+    asset {
+      ...Erc20
+    }
+    value
+  }
+  ${Erc20FragmentDoc}
+`;
+export const FeeFollowModuleSettingsFragmentDoc = gql`
+  fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    contractAddress
+    recipient
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const ProfileFollowModuleSettingsFragmentDoc = gql`
+  fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const RevertFollowModuleSettingsFragmentDoc = gql`
+  fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const UnknownFollowModuleSettingsFragmentDoc = gql`
+  fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const AttributeFragmentDoc = gql`
+  fragment Attribute on Attribute {
+    __typename
+    displayType
+    key
+    value
+  }
+`;
+export const ProfileFragmentDoc = gql`
+  fragment Profile on Profile {
+    __typename
+    id
+    name
+    bio
+    handle
+    ownedBy
+    picture {
+      ...ProfileMedia
+    }
+    coverPicture {
+      ...ProfileMedia
+    }
+    stats {
+      __typename
+      totalFollowers
+      totalFollowing
+      totalPosts
+    }
+    followModule {
+      ... on FeeFollowModuleSettings {
+        ...FeeFollowModuleSettings
+      }
+      ... on ProfileFollowModuleSettings {
+        ...ProfileFollowModuleSettings
+      }
+      ... on RevertFollowModuleSettings {
+        ...RevertFollowModuleSettings
+      }
+      ... on UnknownFollowModuleSettings {
+        ...UnknownFollowModuleSettings
+      }
+    }
+    attributes {
+      ...Attribute
+    }
+    dispatcher {
+      address
+      canUseRelay
+    }
+    isFollowedByMe(isFinalisedOnChain: true)
+    isFollowing(who: $observerId)
+  }
+  ${ProfileMediaFragmentDoc}
+  ${FeeFollowModuleSettingsFragmentDoc}
+  ${ProfileFollowModuleSettingsFragmentDoc}
+  ${RevertFollowModuleSettingsFragmentDoc}
+  ${UnknownFollowModuleSettingsFragmentDoc}
+  ${AttributeFragmentDoc}
+`;
+export const FreeCollectModuleSettingsFragmentDoc = gql`
+  fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
+    __typename
+    contractAddress
+    followerOnly
+  }
+`;
+export const FeeCollectModuleSettingsFragmentDoc = gql`
+  fragment FeeCollectModuleSettings on FeeCollectModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    contractAddress
+    followerOnly
+    recipient
+    referralFee
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const LimitedFeeCollectModuleSettingsFragmentDoc = gql`
+  fragment LimitedFeeCollectModuleSettings on LimitedFeeCollectModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    collectLimit
+    contractAddress
+    followerOnly
+    recipient
+    referralFee
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const LimitedTimedFeeCollectModuleSettingsFragmentDoc = gql`
+  fragment LimitedTimedFeeCollectModuleSettings on LimitedTimedFeeCollectModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    collectLimit
+    contractAddress
+    followerOnly
+    endTimestamp
+    recipient
+    referralFee
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const RevertCollectModuleSettingsFragmentDoc = gql`
+  fragment RevertCollectModuleSettings on RevertCollectModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const TimedFeeCollectModuleSettingsFragmentDoc = gql`
+  fragment TimedFeeCollectModuleSettings on TimedFeeCollectModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    contractAddress
+    followerOnly
+    endTimestamp
+    recipient
+    referralFee
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const CollectModuleFragmentDoc = gql`
+  fragment CollectModule on CollectModule {
+    __typename
+    ... on FreeCollectModuleSettings {
+      ...FreeCollectModuleSettings
+    }
+    ... on FeeCollectModuleSettings {
+      ...FeeCollectModuleSettings
+    }
+    ... on LimitedFeeCollectModuleSettings {
+      ...LimitedFeeCollectModuleSettings
+    }
+    ... on LimitedTimedFeeCollectModuleSettings {
+      ...LimitedTimedFeeCollectModuleSettings
+    }
+    ... on RevertCollectModuleSettings {
+      ...RevertCollectModuleSettings
+    }
+    ... on TimedFeeCollectModuleSettings {
+      ...TimedFeeCollectModuleSettings
+    }
+  }
+  ${FreeCollectModuleSettingsFragmentDoc}
+  ${FeeCollectModuleSettingsFragmentDoc}
+  ${LimitedFeeCollectModuleSettingsFragmentDoc}
+  ${LimitedTimedFeeCollectModuleSettingsFragmentDoc}
+  ${RevertCollectModuleSettingsFragmentDoc}
+  ${TimedFeeCollectModuleSettingsFragmentDoc}
+`;
+export const ReferenceModuleFragmentDoc = gql`
+  fragment ReferenceModule on ReferenceModule {
+    __typename
+    ... on FollowOnlyReferenceModuleSettings {
+      contractAddress
+    }
+  }
+`;
+export const MirrorBaseFragmentDoc = gql`
+  fragment MirrorBase on Mirror {
+    __typename
+    id
+    stats {
+      ...PublicationStats
+    }
+    metadata {
+      ...Metadata
+    }
+    profile {
+      ...Profile
+    }
+    collectModule {
+      ...CollectModule
+    }
+    referenceModule {
+      ...ReferenceModule
+    }
+    createdAt
+    hidden
+    isGated
+    reaction(request: { profileId: $observerId })
+    hasCollectedByMe(isFinalisedOnChain: true)
+    canComment(profileId: $observerId) {
+      result
+    }
+    canMirror(profileId: $observerId) {
+      result
+    }
+  }
+  ${PublicationStatsFragmentDoc}
+  ${MetadataFragmentDoc}
+  ${ProfileFragmentDoc}
+  ${CollectModuleFragmentDoc}
+  ${ReferenceModuleFragmentDoc}
+`;
+export const WalletFragmentDoc = gql`
+  fragment Wallet on Wallet {
+    __typename
+    address
+    defaultProfile {
+      ...Profile
+    }
+  }
+  ${ProfileFragmentDoc}
+`;
+export const PostFragmentDoc = gql`
+  fragment Post on Post {
+    __typename
+    id
+    stats {
+      ...PublicationStats
+    }
+    metadata {
+      ...Metadata
+    }
+    profile {
+      ...Profile
+    }
+    collectedBy {
+      ...Wallet
+    }
+    collectModule {
+      ...CollectModule
+    }
+    referenceModule {
+      ...ReferenceModule
+    }
+    createdAt
+    hidden
+    isGated
+    reaction(request: { profileId: $observerId })
+    hasCollectedByMe(isFinalisedOnChain: true)
+    canComment(profileId: $observerId) {
+      result
+    }
+    canMirror(profileId: $observerId) {
+      result
+    }
+    mirrors(by: $observerId)
+  }
+  ${PublicationStatsFragmentDoc}
+  ${MetadataFragmentDoc}
+  ${ProfileFragmentDoc}
+  ${WalletFragmentDoc}
+  ${CollectModuleFragmentDoc}
+  ${ReferenceModuleFragmentDoc}
+`;
+export const CommentBaseFragmentDoc = gql`
+  fragment CommentBase on Comment {
+    __typename
+    id
+    stats {
+      ...PublicationStats
+    }
+    metadata {
+      ...Metadata
+    }
+    profile {
+      ...Profile
+    }
+    collectedBy {
+      ...Wallet
+    }
+    collectModule {
+      ...CollectModule
+    }
+    referenceModule {
+      ...ReferenceModule
+    }
+    createdAt
+    hidden
+    isGated
+    reaction(request: { profileId: $observerId })
+    hasCollectedByMe(isFinalisedOnChain: true)
+    canComment(profileId: $observerId) {
+      result
+    }
+    canMirror(profileId: $observerId) {
+      result
+    }
+    mirrors(by: $observerId)
+  }
+  ${PublicationStatsFragmentDoc}
+  ${MetadataFragmentDoc}
+  ${ProfileFragmentDoc}
+  ${WalletFragmentDoc}
+  ${CollectModuleFragmentDoc}
+  ${ReferenceModuleFragmentDoc}
+`;
+export const CommentFragmentDoc = gql`
+  fragment Comment on Comment {
+    __typename
+    ...CommentBase
+    commentOn {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...MirrorBase
+      }
+      ... on Comment {
+        ...CommentBase
+      }
+    }
+    mainPost {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...MirrorBase
+      }
+    }
+  }
+  ${CommentBaseFragmentDoc}
+  ${PostFragmentDoc}
+  ${MirrorBaseFragmentDoc}
+`;
+export const MirrorFragmentDoc = gql`
+  fragment Mirror on Mirror {
+    __typename
+    ...MirrorBase
+    mirrorOf {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${MirrorBaseFragmentDoc}
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+`;
 export const AuthChallengeDocument = gql`
   query AuthChallenge($address: EthereumAddress!) {
     result: challenge(request: { address: $address }) {
@@ -3871,6 +4608,32 @@ export const AuthRefreshDocument = gql`
     }
   }
 `;
+export const ProfileDocument = gql`
+  query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+    result: profile(request: $request) {
+      ...Profile
+    }
+  }
+  ${ProfileFragmentDoc}
+`;
+export const PublicationDocument = gql`
+  query Publication($observerId: ProfileId, $publicationId: InternalPublicationId!) {
+    result: publication(request: { publicationId: $publicationId }) {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommentFragmentDoc}
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -3882,6 +4645,8 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 const AuthChallengeDocumentString = print(AuthChallengeDocument);
 const AuthAuthenticateDocumentString = print(AuthAuthenticateDocument);
 const AuthRefreshDocumentString = print(AuthRefreshDocument);
+const ProfileDocumentString = print(ProfileDocument);
+const PublicationDocumentString = print(PublicationDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     AuthChallenge(
@@ -3939,6 +4704,34 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           }),
         'AuthRefresh',
         'mutation',
+      );
+    },
+    Profile(
+      variables: ProfileQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{ data: ProfileQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ProfileQuery>(ProfileDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'Profile',
+        'query',
+      );
+    },
+    Publication(
+      variables: PublicationQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{ data: PublicationQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PublicationQuery>(PublicationDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'Publication',
+        'query',
       );
     },
   };

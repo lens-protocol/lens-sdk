@@ -15,4 +15,26 @@ describe(`Given the ${LensClient.name} configured to work with staging environme
       expect(result).toContain('Sign in with ethereum to lens');
     });
   });
+
+  describe(`when a method from Profile module is called`, () => {
+    it(`returns the requested profile`, async () => {
+      const result = await lensClient.profile.getProfileByHandle('kristestnet.test');
+
+      expect(result).toMatchObject({
+        id: '0x53a8',
+        handle: 'kristestnet.test',
+      });
+    });
+  });
+
+  describe(`when a method from Publication module is called`, () => {
+    it(`returns the requested profile`, async () => {
+      const result = await lensClient.publication.getPublicationById('0x53a8-0x0f');
+
+      expect(result).toMatchObject({
+        __typename: 'Post',
+        id: '0x53a8-0x0f',
+      });
+    });
+  });
 });

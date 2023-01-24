@@ -1,0 +1,92 @@
+fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+  __typename
+  amount {
+    ...ModuleFeeAmount
+  }
+  contractAddress
+  recipient
+}
+
+fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
+  __typename
+  contractAddress
+}
+
+fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+  __typename
+  contractAddress
+}
+
+fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+  __typename
+  contractAddress
+}
+
+fragment ProfileMedia on ProfileMedia {
+  ... on NftImage {
+    __typename
+    contractAddress
+    tokenId
+    uri
+    verified
+  }
+
+  ... on MediaSet {
+    ...MediaSet
+  }
+}
+
+fragment Attribute on Attribute {
+  __typename
+  displayType
+  key
+  value
+}
+
+fragment Profile on Profile {
+  __typename
+  id
+  name
+  bio
+  handle
+  ownedBy
+
+  picture {
+    ...ProfileMedia
+  }
+  coverPicture {
+    ...ProfileMedia
+  }
+  stats {
+    __typename
+    totalFollowers
+    totalFollowing
+    totalPosts
+  }
+
+  followModule {
+    ... on FeeFollowModuleSettings {
+      ...FeeFollowModuleSettings
+    }
+    ... on ProfileFollowModuleSettings {
+      ...ProfileFollowModuleSettings
+    }
+    ... on RevertFollowModuleSettings {
+      ...RevertFollowModuleSettings
+    }
+    ... on UnknownFollowModuleSettings {
+      ...UnknownFollowModuleSettings
+    }
+  }
+  attributes {
+    ...Attribute
+  }
+
+  dispatcher {
+    address
+    canUseRelay
+  }
+
+  isFollowedByMe(isFinalisedOnChain: true)
+  isFollowing(who: $observerId)
+}
