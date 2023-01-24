@@ -1,6 +1,7 @@
 import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from './FollowPolicy';
+import type { CollectState } from './CollectState';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
@@ -25,6 +26,7 @@ export type Scalars = {
   ClientErc20Amount: ClientErc20Amount;
   /** collect module data scalar type */
   CollectModuleData: unknown;
+  CollectState: CollectState;
   /** ContentEncryptionKey scalar type */
   ContentEncryptionKey: unknown;
   /** Contract address custom scalar type */
@@ -363,6 +365,7 @@ export type Comment = {
   collectModule: CollectModule;
   /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
+  collectState: Scalars['CollectState'];
   /** Who collected it, this is used for timeline results and like this for better caching for the client */
   collectedBy: Maybe<Wallet>;
   /** Which comment this points to if its null the pointer too deep so do another query to find it out */
@@ -1834,6 +1837,7 @@ export type Mirror = {
   collectModule: CollectModule;
   /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
+  collectState: Scalars['CollectState'];
   /** The date the post was created on */
   createdAt: Scalars['DateTime'];
   /** The data availability proofs you can fetch from */
@@ -2490,6 +2494,7 @@ export type Post = {
   collectModule: CollectModule;
   /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
+  collectState: Scalars['CollectState'];
   /**
    * Who collected it, this is used for timeline results and like this for better caching for the client
    * @deprecated use `feed` query, timeline query will be killed on the 15th November. This includes this field.
@@ -4084,6 +4089,7 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
   | 'hasCollectedByMe'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
+  | 'collectState'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4120,6 +4126,7 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
+  | 'collectState'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4163,6 +4170,7 @@ export type PostFragment = { __typename: 'Post' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
+  | 'collectState'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -5182,6 +5190,7 @@ export const CommentBaseFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    collectState @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5226,6 +5235,7 @@ export const PostFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    collectState @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5266,6 +5276,7 @@ export const MirrorBaseFragmentDoc = gql`
     }
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    collectState @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -9039,6 +9050,7 @@ export type CommentKeySpecifier = (
   | 'canMirror'
   | 'collectModule'
   | 'collectNftAddress'
+  | 'collectState'
   | 'collectedBy'
   | 'commentOn'
   | 'createdAt'
@@ -9068,6 +9080,7 @@ export type CommentFieldPolicy = {
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
   collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
   collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectState?: FieldPolicy<any> | FieldReadFunction<any>;
   collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   commentOn?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10125,6 +10138,7 @@ export type MirrorKeySpecifier = (
   | 'canMirror'
   | 'collectModule'
   | 'collectNftAddress'
+  | 'collectState'
   | 'createdAt'
   | 'dataAvailabilityProofs'
   | 'hasCollectedByMe'
@@ -10150,6 +10164,7 @@ export type MirrorFieldPolicy = {
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
   collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
   collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectState?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
   hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10584,6 +10599,7 @@ export type PostKeySpecifier = (
   | 'canMirror'
   | 'collectModule'
   | 'collectNftAddress'
+  | 'collectState'
   | 'collectedBy'
   | 'createdAt'
   | 'dataAvailabilityProofs'
@@ -10610,6 +10626,7 @@ export type PostFieldPolicy = {
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
   collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
   collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectState?: FieldPolicy<any> | FieldReadFunction<any>;
   collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;

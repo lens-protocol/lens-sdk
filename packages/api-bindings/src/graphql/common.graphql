@@ -197,6 +197,7 @@ fragment MirrorBase on Mirror {
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client # just to keep Publication type consistent, that will never be used
+  collectState @client
 }
 
 fragment Mirror on Mirror {
@@ -249,6 +250,7 @@ fragment CommentBase on Comment {
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
+  collectState @client
 }
 
 fragment CommonPaginatedResultInfo on PaginatedResultInfo {
@@ -321,6 +323,7 @@ fragment Post on Post {
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
+  collectState @client
 }
 
 fragment PendingPost on PendingPost {

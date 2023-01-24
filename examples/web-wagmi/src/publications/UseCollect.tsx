@@ -1,4 +1,5 @@
 import {
+  CollectState,
   CommentFragment,
   isPostPublication,
   PostFragment,
@@ -22,11 +23,28 @@ function CollectButton({ publication }: CollectButtonProps) {
 
   const isCollected = publication.hasOptimisticCollectedByMe || publication.hasCollectedByMe;
 
-  return (
-    <button onClick={collect}>
-      {error ? 'Error' : isPending ? 'Collecting' : isCollected ? 'Collected' : 'Collect'}
-    </button>
-  );
+  switch (publication.collectState) {
+    case CollectState.COLLECT_TIME_EXPIRED:
+      return <button disabled={true}>Collecting ended</button>;
+    case CollectState.COLLECT_LIMIT_REACHED:
+      return <button disabled={true}>Collect limit reached</button>;
+    case CollectState.NOT_A_FOLLOWER:
+      return <button disabled={true}>Only followers can collect</button>;
+    case CollectState.CANNOT_BE_COLLECTED:
+      return <button disabled={true}>Cannot be collected</button>;
+    case CollectState.CAN_BE_COLLECTED:
+      return (
+        <button onClick={collect} disabled={isCollected || isPending}>
+          {error
+            ? 'Error'
+            : isPending
+            ? 'Collecting...'
+            : isCollected
+            ? `You've already collected`
+            : 'Collect'}
+        </button>
+      );
+  }
 }
 
 type UseCollectInnerProps = {
@@ -39,7 +57,7 @@ function Feed({ activeProfile }: UseCollectInnerProps) {
     loading,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(useFeed({ profileId: activeProfile.id }));
+  } = useInfiniteScroll(useFeed({ profileId: activeProfile.id, observerId: activeProfile.id }));
 
   if (loading) return <div>Loading...</div>;
 
@@ -52,11 +70,14 @@ function Feed({ activeProfile }: UseCollectInnerProps) {
       {publications
         .filter((i) => isPostPublication(i.root))
         .map((item, i) => (
-          <CollectablePublicationCard
-            key={`${item.root.id}-${i}`}
-            publication={item.root}
-            collectButton={<CollectButton publication={item.root} />}
-          />
+          <>
+            <CollectablePublicationCard
+              key={`${item.root.id}-${i}`}
+              publication={item.root}
+              collectButton={<CollectButton publication={item.root} />}
+            />
+            <p>{item.root.collectModule.__typename}</p>
+          </>
         ))}
 
       {hasMore && <p ref={observeRef}>Loading more...</p>}

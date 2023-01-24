@@ -20,6 +20,7 @@ config:
     InternalPublicationId: string
     Jwt: string
     LimitScalar: number
+    CollectState: CollectState
     Locale: string
     Markdown: string
     Media: string
@@ -56,6 +57,7 @@ generates:
               "import type { ClientErc20Amount } from './ClientErc20Amount';",
               "import type { ProfileAttributes } from './ProfileAttributes';",
               "import type { FollowPolicy } from './FollowPolicy';",
+              "import type { CollectState } from './CollectState';",
             ]
       - 'typescript-operations':
           skipTypename: true

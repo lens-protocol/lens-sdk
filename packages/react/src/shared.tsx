@@ -31,6 +31,7 @@ import {
   FailedTransactionError,
   TransactionQueuePresenter,
 } from './transactions/adapters/TransactionQueuePresenter';
+import { CollectPublicationResponder } from './transactions/adapters/responders/CollectPublicationResponder';
 import { CreateMirrorResponder } from './transactions/adapters/responders/CreateMirrorResponder';
 import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
 import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
@@ -145,7 +146,7 @@ export function createSharedDependencies(
 
   const responders: TransactionResponders<SupportedTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
-    [TransactionKind.COLLECT_PUBLICATION]: new NoopResponder(),
+    [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(apolloClient.cache),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
     [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient),
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),

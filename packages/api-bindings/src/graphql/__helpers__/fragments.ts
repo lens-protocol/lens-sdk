@@ -34,7 +34,7 @@ import {
   WalletFragment,
   WhoReactedResultFragment,
 } from '../generated';
-import { erc20Amount } from '../utils';
+import { CollectState, erc20Amount } from '../utils';
 
 export function mockMediaFragment(overrides?: Partial<MediaFragment>): MediaFragment {
   return {
@@ -188,6 +188,7 @@ export function mockPostFragment(
     profile: mockProfileFragment(),
     collectedBy: null,
     collectModule: mockFreeCollectModuleSettings(),
+    collectState: CollectState.CAN_BE_COLLECTED,
     referenceModule: null,
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
@@ -230,6 +231,7 @@ export function mockCommentFragment(
     commentOn: mainPost,
     mainPost: mainPost,
     collectModule: mockFreeCollectModuleSettings(),
+    collectState: CollectState.CAN_BE_COLLECTED,
     referenceModule: null,
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
@@ -269,6 +271,7 @@ export function mockMirrorFragment(
     profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
     collectModule: mockFreeCollectModuleSettings(),
+    collectState: CollectState.CAN_BE_COLLECTED,
     referenceModule: null,
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,

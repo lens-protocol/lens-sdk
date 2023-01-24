@@ -47,3 +47,5 @@ export function useCollect({ publication }: UseCollectArgs) {
     isPending,
   };
 }
+
+export { CollectState } from '@lens-protocol/api-bindings';
