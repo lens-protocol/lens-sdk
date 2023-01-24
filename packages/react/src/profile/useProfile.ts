@@ -2,6 +2,7 @@ import { ProfileFragment, useGetProfileQuery } from '@lens-protocol/api-bindings
 import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
 import { ReadResult, useReadResult } from '../helpers';
+import { NetworkError } from '../publication/adapters/NetworkError';
 import { useSharedDependencies } from '../shared';
 
 type BaseUseProfileArgs = {
@@ -22,7 +23,7 @@ export function useProfile({
   profileId,
   handle,
   observerId,
-}: UseProfileArgs): ReadResult<ProfileFragment> {
+}: UseProfileArgs): ReadResult<ProfileFragment, NetworkError> {
   const { apolloClient } = useSharedDependencies();
 
   invariant(

@@ -4,27 +4,22 @@ import { ReadResult } from '../helpers';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
 import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
 
-export function useActiveProfile(): ReadResult<ProfileFragment | null> {
+export function useActiveProfile(): ReadResult<ProfileFragment | null, void> {
   const state = useAppState();
 
   const profile = useActiveProfileVar();
 
   if (state === ApplicationsState.LOADING) {
     return {
-      loading: true,
       data: undefined,
-    };
-  }
-
-  if (!profile) {
-    return {
-      loading: false,
-      data: null,
+      error: undefined,
+      loading: true,
     };
   }
 
   return {
+    data: profile ?? null,
+    error: undefined,
     loading: false,
-    data: profile,
   };
 }
