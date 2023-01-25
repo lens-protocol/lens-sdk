@@ -8,7 +8,6 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
 import { useActiveProfile } from '../profile';
-import { FailedUploadError } from './adapters/MetadataUploadAdapter';
 import { useCollectController } from './adapters/useCollectController';
 
 export type UseCollectArgs = {
@@ -17,11 +16,7 @@ export type UseCollectArgs = {
 
 export function useCollect({ publication }: UseCollectArgs) {
   const [error, setError] = useState<
-    | PendingSigningRequestError
-    | UserRejectedError
-    | WalletConnectionError
-    | FailedUploadError
-    | null
+    PendingSigningRequestError | UserRejectedError | WalletConnectionError | null
   >(null);
   const [isPending, setIsPending] = useState(false);
   const collect = useCollectController();

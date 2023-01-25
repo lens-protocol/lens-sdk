@@ -1,4 +1,9 @@
 import {
+  PendingSigningRequestError,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
+import {
   CollectPublication,
   CollectRequest,
   FreeCollectRequest,
@@ -26,7 +31,10 @@ export function useCollectController() {
   return async (request: CollectRequest) => {
     const collectPublicationCallGateway = new CollectPublicationCallGateway(apolloClient);
 
-    const presenter = new PromiseResultPresenter<void, never>();
+    const presenter = new PromiseResultPresenter<
+      void,
+      PendingSigningRequestError | UserRejectedError | WalletConnectionError
+    >();
 
     const signedFlow = new ProtocolCallUseCase<CollectRequest>(
       activeWallet,
