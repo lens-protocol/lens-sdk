@@ -76,11 +76,6 @@ const profileHooks = [
     description: `Fetch a list of profile following.`,
     path: '/profiles/useProfileFollowing',
   },
-  {
-    label: 'useProfilesWhoMirroredPublication',
-    description: 'Fetch profiles that have mirrored a specific publication',
-    path: '/discovery/useProfilesWhoMirroredPublication',
-  },
 ];
 
 export function ProfilesPage() {
