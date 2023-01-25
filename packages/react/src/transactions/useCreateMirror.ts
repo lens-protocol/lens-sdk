@@ -5,12 +5,14 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
+import { ReferencePolicy, ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 import { useState } from 'react';
 
 import { useCreateMirrorController } from './adapters/useCreateMirrorController';
 
 export type CreateMirrorArgs = {
   publication: PostFragment | CommentFragment;
+  reference?: ReferencePolicy;
   profile: ProfileFragment;
 };
 
@@ -22,7 +24,7 @@ export function useCreateMirror() {
   const createMirror = useCreateMirrorController();
 
   return {
-    create: async ({ profile, publication, ...args }: CreateMirrorArgs) => {
+    create: async ({ profile, publication, reference, ...args }: CreateMirrorArgs) => {
       setError(null);
       setIsPending(true);
 
@@ -31,6 +33,7 @@ export function useCreateMirror() {
           kind: TransactionKind.MIRROR_PUBLICATION,
           publicationId: publication.id,
           profileId: profile.id,
+          reference: reference || { type: ReferencePolicyType.ANYONE },
           delegate: profile.dispatcher !== null,
           ...args,
         });

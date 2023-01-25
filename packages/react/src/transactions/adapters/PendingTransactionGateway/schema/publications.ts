@@ -4,9 +4,9 @@ import {
   CollectType,
   ContentFocus,
   NftAttributeDisplayType,
-  ReferencePolicy,
   SupportedPublicationMediaType,
   SUPPORTED_PUBLICATION_MEDIA_TYPES,
+  ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { z } from 'zod';
 
@@ -76,11 +76,43 @@ const MediaSchema = z.object({
     ),
 });
 
+const AnyoneReferencePolicySchema = z.object({
+  type: z.literal(ReferencePolicyType.ANYONE),
+});
+
+const DegreesOfSeperationReferencePolicySchema = z.object({
+  type: z.literal(ReferencePolicyType.DEGREES_OF_SEPARATION),
+  params: z.object({
+    commentsRestricted: z.boolean(),
+    mirrorsRestricted: z.boolean(),
+    degreesOfSeparation: z.number(),
+  }),
+});
+
+const FollowersOnlyReferencePolicySchema = z.object({
+  type: z.literal(ReferencePolicyType.FOLLOWERS_ONLY),
+});
+
+const UnknownReferencePolicySchema = z.object({
+  type: z.literal(ReferencePolicyType.UNKNOWN),
+  params: z.object({
+    contractAddress: z.string(),
+    data: z.string(),
+  }),
+});
+
+const ReferencePolicySchema = z.union([
+  AnyoneReferencePolicySchema,
+  DegreesOfSeperationReferencePolicySchema,
+  FollowersOnlyReferencePolicySchema,
+  UnknownReferencePolicySchema,
+]);
+
 export const CreatePostRequestSchema = z.object({
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),
   media: z.array(MediaSchema).optional(),
-  reference: z.nativeEnum(ReferencePolicy),
+  reference: ReferencePolicySchema,
   collect: CollectPolicySchema,
   profileId: z.string(),
   kind: z.literal(TransactionKind.CREATE_POST),
@@ -93,7 +125,7 @@ export const CreateCommentRequestSchema = z.object({
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),
   media: z.array(MediaSchema).optional(),
-  reference: z.nativeEnum(ReferencePolicy),
+  reference: ReferencePolicySchema,
   collect: CollectPolicySchema,
   profileId: z.string(),
   kind: z.literal(TransactionKind.CREATE_COMMENT),
@@ -106,6 +138,7 @@ export const CreateMirrorRequestSchema = z.object({
   publicationId: z.string(),
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   delegate: z.boolean(),
+  reference: ReferencePolicySchema,
 });
 
 export const FreeCollectRequestSchema = z.object({

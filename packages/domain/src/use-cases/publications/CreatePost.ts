@@ -7,12 +7,12 @@ import {
   IProtocolCallPresenter,
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
-import { CollectPolicy, ContentFocus, Locale, Media, ReferencePolicy } from './types';
+import { ReferencePolicy } from './ReferencePolicy';
+import { CollectPolicy, ContentFocus, Locale, Media } from './types';
 
 export type CreatePostRequest = {
   content?: string;
   contentFocus: ContentFocus;
-
   media?: Media[];
   reference: ReferencePolicy;
   collect: CollectPolicy;

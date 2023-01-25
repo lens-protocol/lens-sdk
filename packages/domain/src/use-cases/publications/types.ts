@@ -41,11 +41,6 @@ export type NftMetadata = {
   attributes: NftAttribute[];
 };
 
-export enum ReferencePolicy {
-  ANYBODY = 'ANYBODY',
-  FOLLOWERS_ONLY = 'FOLLOWERS_ONLY',
-}
-
 export enum CollectPolicyType {
   CHARGE = 'CHARGE',
   FREE = 'FREE',
@@ -75,7 +70,7 @@ export type NoCollectPolicy = {
 
 export type CollectPolicy = ChargeCollectPolicy | FreeCollectPolicy | NoCollectPolicy;
 
-export type SupportedPublicationMediaType = (typeof SUPPORTED_PUBLICATION_MEDIA_TYPES)[number];
+export type SupportedPublicationMediaType = typeof SUPPORTED_PUBLICATION_MEDIA_TYPES[number];
 
 export type Media = {
   url: string;

@@ -38,6 +38,7 @@ import {
   WhoReactedResultFragment,
 } from '../generated';
 import { erc20Amount } from '../utils';
+import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 
 export function mockMediaFragment(overrides?: Partial<MediaFragment>): MediaFragment {
   return {
@@ -205,6 +206,9 @@ export function mockPostFragment(
     canMirror: {
       result: true,
     },
+    referencePolicy: {
+      type: ReferencePolicyType.ANYONE,
+    },
     ...overrides,
     __typename: 'Post',
   };
@@ -247,6 +251,9 @@ export function mockCommentFragment(
     canMirror: {
       result: true,
     },
+    referencePolicy: {
+      type: ReferencePolicyType.ANYONE,
+    },
     ...overrides,
     __typename: 'Comment',
   };
@@ -285,6 +292,9 @@ export function mockMirrorFragment(
     },
     canMirror: {
       result: true,
+    },
+    referencePolicy: {
+      type: ReferencePolicyType.ANYONE,
     },
     ...overrides,
     __typename: 'Mirror',

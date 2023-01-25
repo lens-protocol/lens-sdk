@@ -9,11 +9,12 @@ import {
 import {
   ChargeCollectPolicy,
   CollectPolicyType,
+  ReferencePolicyType,
   CreatePostRequest,
   CreateCommentRequest,
   Media,
+  CreateMirrorRequest,
   NftAttribute,
-  ReferencePolicy,
 } from '@lens-protocol/domain/use-cases/publications';
 import { v4 } from 'uuid';
 
@@ -129,12 +130,25 @@ export function resolveCollectModule(
 }
 
 export function resolveReferenceModule(
-  request: CreatePostRequest | CreateCommentRequest,
+  request: CreatePostRequest | CreateCommentRequest | CreateMirrorRequest,
 ): ReferenceModuleParams | undefined {
-  if (request.reference === ReferencePolicy.FOLLOWERS_ONLY) {
+  if (request.reference.type === ReferencePolicyType.FOLLOWERS_ONLY) {
     return {
       followerOnlyReferenceModule: true,
     };
   }
+
+  if (request.reference.type === ReferencePolicyType.DEGREES_OF_SEPARATION) {
+    return {
+      degreesOfSeparationReferenceModule: request.reference.params,
+    };
+  }
+
+  if (request.reference.type === ReferencePolicyType.UNKNOWN) {
+    return {
+      unknownReferenceModule: request.reference.params,
+    };
+  }
+
   return undefined;
 }

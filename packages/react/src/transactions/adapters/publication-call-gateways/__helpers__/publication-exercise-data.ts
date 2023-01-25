@@ -21,6 +21,7 @@ import {
   ContentFocus,
   Media,
   ReferencePolicy,
+  ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 
 export type PublicationExerciseData = {
@@ -126,7 +127,9 @@ export const createFollowerOnlyReferenceModuleExerciseData = (): PublicationExer
     requestVars: {
       content,
       collect: mockNoCollectPolicy(),
-      reference: ReferencePolicy.FOLLOWERS_ONLY,
+      reference: {
+        type: ReferencePolicyType.FOLLOWERS_ONLY,
+      },
     },
     expectedMetadata: {
       content,

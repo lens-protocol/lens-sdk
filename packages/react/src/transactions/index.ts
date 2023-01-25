@@ -14,8 +14,9 @@ export {
   CollectPolicyType,
   ContentFocus,
   NftAttributeDisplayType,
-  ReferencePolicy,
+  ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
+export type { ReferencePolicy } from '@lens-protocol/domain/use-cases/publications';
 export type {
   ChargeCollectPolicy,
   CollectPolicy,

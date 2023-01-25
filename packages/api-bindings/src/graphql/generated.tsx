@@ -85,6 +85,7 @@ export type Scalars = {
   ReactionId: unknown;
   /** reference module data scalar type */
   ReferenceModuleData: unknown;
+  ReferencePolicy: unknown;
   /** Query search */
   Search: string;
   /** Relayer signature */
@@ -396,6 +397,7 @@ export type Comment = {
   reaction: Maybe<ReactionTypes>;
   /** The reference module */
   referenceModule: Maybe<ReferenceModule>;
+  referencePolicy: Scalars['ReferencePolicy'];
   /** The publication stats */
   stats: PublicationStats;
 };
@@ -1860,6 +1862,7 @@ export type Mirror = {
   reaction: Maybe<ReactionTypes>;
   /** The reference module */
   referenceModule: Maybe<ReferenceModule>;
+  referencePolicy: Scalars['ReferencePolicy'];
   /** The publication stats */
   stats: PublicationStats;
 };
@@ -2520,6 +2523,7 @@ export type Post = {
   reaction: Maybe<ReactionTypes>;
   /** The reference module */
   referenceModule: Maybe<ReferenceModule>;
+  referencePolicy: Scalars['ReferencePolicy'];
   /** The publication stats */
   stats: PublicationStats;
 };
@@ -4066,6 +4070,7 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
   | 'hasCollectedByMe'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
+  | 'referencePolicy'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4102,6 +4107,7 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
+  | 'referencePolicy'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4145,6 +4151,7 @@ export type PostFragment = { __typename: 'Post' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
+  | 'referencePolicy'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -5196,6 +5203,7 @@ export const CommentBaseFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    referencePolicy @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5240,6 +5248,7 @@ export const PostFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    referencePolicy @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5280,6 +5289,7 @@ export const MirrorBaseFragmentDoc = gql`
     }
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    referencePolicy @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -9163,6 +9173,7 @@ export type CommentKeySpecifier = (
   | 'profile'
   | 'reaction'
   | 'referenceModule'
+  | 'referencePolicy'
   | 'stats'
   | CommentKeySpecifier
 )[];
@@ -9192,6 +9203,7 @@ export type CommentFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  referencePolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type CreateBurnEIP712TypedDataKeySpecifier = (
@@ -10245,6 +10257,7 @@ export type MirrorKeySpecifier = (
   | 'profile'
   | 'reaction'
   | 'referenceModule'
+  | 'referencePolicy'
   | 'stats'
   | MirrorKeySpecifier
 )[];
@@ -10270,6 +10283,7 @@ export type MirrorFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  referencePolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MirrorEventKeySpecifier = ('profile' | 'timestamp' | MirrorEventKeySpecifier)[];
@@ -10705,6 +10719,7 @@ export type PostKeySpecifier = (
   | 'profile'
   | 'reaction'
   | 'referenceModule'
+  | 'referencePolicy'
   | 'stats'
   | PostKeySpecifier
 )[];
@@ -10731,6 +10746,7 @@ export type PostFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  referencePolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileKeySpecifier = (

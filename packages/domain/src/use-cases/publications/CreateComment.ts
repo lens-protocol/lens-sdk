@@ -7,7 +7,8 @@ import {
   IProtocolCallPresenter,
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
-import { CollectPolicy, Media, ContentFocus, ReferencePolicy, Locale } from './types';
+import { ReferencePolicy } from './ReferencePolicy';
+import { CollectPolicy, Media, ContentFocus, Locale } from './types';
 
 export type CreateCommentRequest = {
   publicationId: string;
