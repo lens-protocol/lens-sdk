@@ -8,13 +8,15 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@ethersproject/shims": "^5.7.0",
     "@lens-protocol/react": "link:../../packages/react",
     "expo": "~47.0.12",
     "expo-splash-screen": "~0.17.5",
-    "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
     "react-native": "0.70.5",
-    "react-native-mmkv": "^2.6.1"
+    "react-native-mmkv": "^2.6.1",
+    "react-native-get-random-values": "^1.8.0",
+    "ethers": "^5.7.2"
   },
   "devDependencies": {
     "@types/react": "~18.0.24",

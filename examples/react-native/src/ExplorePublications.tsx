@@ -3,7 +3,7 @@ import {
   PublicationTypes,
   useExplorePublications,
 } from "@lens-protocol/react";
-import { View, Text } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export function ExplorePublications() {
   const { data: publications, loading } = useExplorePublications({
@@ -14,8 +14,30 @@ export function ExplorePublications() {
   if (loading) return <Text>Loading</Text>;
 
   return (
-    <View>
-      <Text>{JSON.stringify(publications)}</Text>
-    </View>
+    <SafeAreaView style={styles.wrapper}>
+      <Text style={styles.header}>Publications to explore:</Text>
+      <ScrollView>
+        {publications.map((publication) => (
+          <View style={styles.publication}>
+            <Text>Author: {publication.profile.handle}</Text>
+            <Text>{publication.metadata.content}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    margin: 15,
+
+    flex: 1,
+  },
+  header: {
+    fontSize: 24,
+  },
+  publication: {
+    marginVertical: 10,
+  },
+});

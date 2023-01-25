@@ -1,5 +1,5 @@
 // Changes in the metro config are only required for the example app to work in our monorepo setup
-// They are NOT required to be done when using `@lens-protocol/react`
+// They are NOT needed when using `@lens-protocol/react` outside our monorepo
 
 const { getDefaultConfig } = require("expo/metro-config");
 const path = require("path");
