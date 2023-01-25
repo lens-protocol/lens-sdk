@@ -3,15 +3,18 @@ import { usePublicationsQuery } from '@lens-protocol/api-bindings';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
+import { createPublicationMetadataFilters, StandardPublicationMetadataFilter } from './filters';
 import { Publication } from './types';
 
 type UsePublicationArgs = PaginatedArgs<{
+  metadataFilter?: StandardPublicationMetadataFilter;
   profileId: string;
   observerId?: string;
 }>;
 
 export function usePublications({
   profileId,
+  metadataFilter,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UsePublicationArgs): PaginatedReadResult<Publication[]> {
@@ -23,6 +26,7 @@ export function usePublications({
         profileId,
         observerId,
         limit,
+        metadata: createPublicationMetadataFilters(metadataFilter),
         sources,
       },
       client: apolloClient,

@@ -21,7 +21,7 @@ query Feed(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!]
-  $metadata: PublicationMetadataFilters!
+  $metadata: PublicationMetadataFilters
 ) {
   result: feed(
     request: {

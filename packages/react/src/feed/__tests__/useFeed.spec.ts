@@ -13,7 +13,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
   const profileId = '0x2001';
   const mockFeed = [mockFeedItemFragment(), mockFeedItemFragment()];
 
-  describe('when the query returns data successfully', () => {
+  describe('when the query returns data successfully!', () => {
     it('should return the feed', async () => {
       const { result } = renderHookWithMocks(
         () =>

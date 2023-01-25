@@ -4193,7 +4193,7 @@ export type FeedQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
-  metadata: PublicationMetadataFilters;
+  metadata?: Maybe<PublicationMetadataFilters>;
 }>;
 
 export type FeedQuery = {
@@ -4666,6 +4666,7 @@ export type PublicationsQueryVariables = Exact<{
   cursor?: Maybe<Scalars['Cursor']>;
   publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
   sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  metadata?: Maybe<PublicationMetadataFilters>;
 }>;
 
 export type PublicationsQuery = {
@@ -6111,7 +6112,7 @@ export const FeedDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]
-    $metadata: PublicationMetadataFilters!
+    $metadata: PublicationMetadataFilters
   ) {
     result: feed(
       request: {
@@ -7934,6 +7935,7 @@ export const PublicationsDocument = gql`
     $cursor: Cursor
     $publicationTypes: [PublicationTypes!]
     $sources: [Sources!]
+    $metadata: PublicationMetadataFilters
   ) {
     result: publications(
       request: {
@@ -7942,6 +7944,7 @@ export const PublicationsDocument = gql`
         cursor: $cursor
         publicationTypes: $publicationTypes
         sources: $sources
+        metadata: $metadata
       }
     ) {
       items {
@@ -7984,6 +7987,7 @@ export const PublicationsDocument = gql`
  *      cursor: // value for 'cursor'
  *      publicationTypes: // value for 'publicationTypes'
  *      sources: // value for 'sources'
+ *      metadata: // value for 'metadata'
  *   },
  * });
  */
