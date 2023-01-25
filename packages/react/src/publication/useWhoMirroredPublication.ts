@@ -1,5 +1,5 @@
 import {
-  ProfileFieldsFragment,
+  ProfileFragment,
   useGetAllProfilesByWhoMirroredPublicationQuery,
 } from '@lens-protocol/api-bindings';
 
@@ -17,7 +17,7 @@ export function useWhoMirroredPublication({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   publicationId,
   observerId,
-}: UseWhoMirroredPublicationArgs): PaginatedReadResult<ProfileFieldsFragment[]> {
+}: UseWhoMirroredPublicationArgs): PaginatedReadResult<ProfileFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(

@@ -84,7 +84,7 @@ query GetAllProfilesByWhoMirroredPublication(
     request: { whoMirroredPublicationId: $publicationId, limit: $limit, cursor: $cursor }
   ) {
     items {
-      ...ProfileFields
+      ...Profile
     }
     pageInfo {
       ...CommonPaginatedResultInfo

@@ -553,7 +553,7 @@ export function createSearchProfilesQueryMockedResponse(args: {
 
 export function createProfilesWhoMirroredPublicationMockedResponse(args: {
   variables: GetAllProfilesByWhoMirroredPublicationQueryVariables;
-  items: ProfileFieldsFragment[];
+  items: ProfileFragment[];
 }): MockedResponse<SearchProfilesQuery> {
   return {
     request: {
