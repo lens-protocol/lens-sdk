@@ -1,7 +1,7 @@
 import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
 import { CommonPaginatedResultInfoFragment, Maybe } from '@lens-protocol/api-bindings';
 
-import { NetworkError } from './publication/adapters/NetworkError';
+import { UnspecifiedError } from './UnspecifiedError';
 
 type ReadResultWithoutError<T> =
   | {
@@ -30,7 +30,7 @@ type ReadResultWithError<T, E> =
       loading: false;
     };
 
-export type ReadResult<T, E = NetworkError> = E extends Error
+export type ReadResult<T, E = UnspecifiedError> = E extends Error
   ? ReadResultWithError<T, E>
   : ReadResultWithoutError<T>;
 
@@ -38,7 +38,7 @@ function buildReadResult<T>(
   data: T | undefined,
   loading: boolean,
   error: ApolloError | undefined,
-): ReadResult<T, NetworkError> {
+): ReadResult<T, UnspecifiedError> {
   if (data && !loading) {
     return {
       data,
@@ -50,7 +50,7 @@ function buildReadResult<T>(
   if (error) {
     return {
       data: undefined,
-      error: new NetworkError(error),
+      error: new UnspecifiedError(error),
       loading: false,
     };
   }
@@ -68,13 +68,13 @@ export function useReadResult<
   R,
   T extends QueryData<R> | QueryData<Maybe<R>> = QueryData<R>,
   V = { [key: string]: never },
->({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, NetworkError>;
+>({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError>;
 export function useReadResult<
   U,
   R extends Maybe<U>,
   T extends QueryData<R> = QueryData<R>,
   V = { [key: string]: never },
->({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, NetworkError> {
+>({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
   return buildReadResult(data?.result, loading, error);
 }
 
@@ -82,7 +82,7 @@ export type PaginatedArgs<T> = T & {
   limit?: number;
 };
 
-export type PaginatedReadResult<T> = ReadResult<T, NetworkError> & {
+export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
   hasMore: boolean;
   next: () => Promise<void>;
 };

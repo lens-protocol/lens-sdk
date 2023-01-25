@@ -10,7 +10,7 @@ import {
 import { mockReactionRequest } from '@lens-protocol/domain/mocks';
 import { ReactionError } from '@lens-protocol/domain/use-cases/publications';
 
-import { NetworkError } from '../NetworkError';
+import { UnspecifiedError } from '../../../UnspecifiedError';
 import { ReactionGateway } from '../ReactionGateway';
 
 describe(`Given an instance of the ${ReactionGateway.name}`, () => {
@@ -74,7 +74,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const gateway = new ReactionGateway(apolloClient);
       const request = mockReactionRequest();
 
-      await expect(gateway.add(request)).rejects.toThrow(NetworkError);
+      await expect(gateway.add(request)).rejects.toThrow(UnspecifiedError);
     });
   });
 
@@ -138,7 +138,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const gateway = new ReactionGateway(apolloClient);
       const request = mockReactionRequest();
 
-      await expect(gateway.remove(request)).rejects.toThrow(NetworkError);
+      await expect(gateway.remove(request)).rejects.toThrow(UnspecifiedError);
     });
   });
 });
