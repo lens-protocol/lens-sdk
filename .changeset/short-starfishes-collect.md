@@ -2,4 +2,4 @@
 "@lens-protocol/react": minor
 ---
 
-Added `useProfilesWhoMirroredPublication` hook
+Added `useWhoMirroredPublication` hook

@@ -7,17 +7,17 @@ import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../h
 import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseProfilesWhoMirroredPublicationArgs = PaginatedArgs<{
+type UseWhoMirroredPublicationArgs = PaginatedArgs<{
   limit?: number;
   observerId?: string;
   publicationId: string;
 }>;
 
-export function useProfilesWhoMirroredPublication({
+export function useWhoMirroredPublication({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   publicationId,
   observerId,
-}: UseProfilesWhoMirroredPublicationArgs): PaginatedReadResult<ProfileFieldsFragment[]> {
+}: UseWhoMirroredPublicationArgs): PaginatedReadResult<ProfileFieldsFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(

@@ -7,10 +7,10 @@ import {
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { ProfileFieldsFragment } from '../useProfilesToFollow';
-import { useProfilesWhoMirroredPublication } from '../useProfilesWhoMirroredPublication';
+import { ProfileFieldsFragment } from '../../profile/useProfilesToFollow';
+import { useWhoMirroredPublication } from '../useWhoMirroredPublication';
 
-describe(`Given the ${useProfilesWhoMirroredPublication.name} hook`, () => {
+describe(`Given the ${useWhoMirroredPublication.name} hook`, () => {
   const observer = mockProfileFieldsFragment();
   const publication = mockPostFragment();
 
@@ -20,7 +20,7 @@ describe(`Given the ${useProfilesWhoMirroredPublication.name} hook`, () => {
     it('should return profiles that mirrored the queried publication', async () => {
       const { result } = renderHookWithMocks(
         () =>
-          useProfilesWhoMirroredPublication({
+          useWhoMirroredPublication({
             publicationId: publication.id,
             observerId: observer.id,
           }),

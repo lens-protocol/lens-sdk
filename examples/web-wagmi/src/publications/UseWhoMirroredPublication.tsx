@@ -1,14 +1,14 @@
-import { useProfilesWhoMirroredPublication } from '@lens-protocol/react';
+import { useWhoMirroredPublication } from '@lens-protocol/react';
 
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { ProfileCard } from './components/ProfileCard';
+import { ProfileCard } from '../profiles/components/ProfileCard';
 
 const publicationId = '0x1b-0x0118';
 
-export function UseProilesWhoMirroredPublication() {
+export function UseWhoMirroredPublication() {
   const { data, loading, hasMore, observeRef } = useInfiniteScroll(
-    useProfilesWhoMirroredPublication({ publicationId }),
+    useWhoMirroredPublication({ publicationId }),
   );
 
   return (

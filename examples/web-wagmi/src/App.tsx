@@ -31,11 +31,7 @@ import { UseFollowAndUnfollow } from './profiles/UseFollowAndUnfollow';
 import { UseMutualFollowers } from './profiles/UseMutualFollowers';
 import { ProfileByHandle } from './profiles/UseProfileByHandle';
 import { ProfileById } from './profiles/UseProfileById';
-import { UseProfileFollowers } from './profiles/UseProfileFollowers';
-import { UseProfileFollowing } from './profiles/UseProfileFollowing';
-import { UseProfilesOwnedBy } from './profiles/UseProfileOwnedBy';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
-import { UseProilesWhoMirroredPublication } from './profiles/UseProfilesWhoMirroredPublication';
 import { UseUpdateDispatcherConfig } from './profiles/UseUpdateDispatcherConfig';
 import { UseUpdateFollowPolicy } from './profiles/UseUpdateFollowPolicy';
 import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
@@ -51,6 +47,7 @@ import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
 import { UseReportPublication } from './publications/UseReportPublication';
 import { UseWhoCollectedPublication } from './publications/UseWhoCollectedPublication';
+import { UseWhoMirroredPublication } from './publications/UseWhoMirroredPublication';
 import { UseWhoReacted } from './publications/UseWhoReacted';
 import { RevenuePage } from './revenue/RevenuePage';
 import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
@@ -109,6 +106,10 @@ export function App() {
                   element={<UseWhoCollectedPublication />}
                 />
                 <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
+                <Route
+                  path="/publications/useWhoMirroredPublication"
+                  element={<UseWhoMirroredPublication />}
+                />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />
@@ -130,13 +131,6 @@ export function App() {
                 <Route
                   path="/profiles/useActiveProfileSwitch"
                   element={<UseActiveProfileSwitch />}
-                />
-                <Route path="/profiles/useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
-                <Route path="/profiles/useProfileFollowers" element={<UseProfileFollowers />} />
-                <Route path="/profiles/useProfileFollowing" element={<UseProfileFollowing />} />
-                <Route
-                  path="/profiles/useProfilesWhoMirroredPublication"
-                  element={<UseProilesWhoMirroredPublication />}
                 />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
