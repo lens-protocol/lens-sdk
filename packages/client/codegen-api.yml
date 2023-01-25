@@ -36,15 +36,22 @@ config:
     Void: void
   avoidOptionals:
     field: true
+
+schema:
+  - https://api-mumbai.lens.dev/graphql
+documents:
+  - src/**/*.graphql
 generates:
-  src/graphql/generated.ts:
-    schema:
-      - https://api-mumbai.lens.dev/graphql
-    documents:
-      - src/graphql/*.graphql
+  src/graphql/types.generated.ts:
     plugins:
       - 'typescript':
           nonOptionalTypename: true
+  ./:
+    preset: near-operation-file
+    presetConfig:
+      extension: .generated.ts
+      baseTypesPath: src/graphql/types.generated.ts
+    plugins:
       - 'typescript-operations':
           skipTypename: true
       - 'typescript-graphql-request':

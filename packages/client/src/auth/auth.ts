@@ -1,11 +1,16 @@
 import { invariant } from '@lens-protocol/shared-kernel';
+import { GraphQLClient } from 'graphql-request';
 
-import { Sdk } from './graphql/generated';
+import { getSdk, Sdk } from './graphql/auth.generated';
 
 export type CredentialsResult = { accessToken: string; refreshToken: string };
 
 export class Auth {
-  constructor(private readonly sdk: Sdk) {}
+  private readonly sdk: Sdk;
+
+  constructor(gqlClient: GraphQLClient) {
+    this.sdk = getSdk(gqlClient);
+  }
 
   async generateChallenge(address: string): Promise<string> {
     const result = await this.sdk.AuthChallenge({ address });

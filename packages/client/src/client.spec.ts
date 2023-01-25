@@ -1,5 +1,4 @@
-import { staging } from './environments';
-import { LensClient } from './index';
+import { LensClient, staging } from './index';
 
 describe(`Given the ${LensClient.name} configured to work with staging environment`, () => {
   const config = {
