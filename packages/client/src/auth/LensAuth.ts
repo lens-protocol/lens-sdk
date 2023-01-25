@@ -1,15 +1,26 @@
 import { invariant } from '@lens-protocol/shared-kernel';
-import { GraphQLClient } from 'graphql-request';
 
+import { LensClient } from '../LensClient';
 import { getSdk, Sdk } from './graphql/auth.generated';
 
 export type CredentialsResult = { accessToken: string; refreshToken: string };
 
-export class Auth {
+export class LensAuth {
   private readonly sdk: Sdk;
 
-  constructor(gqlClient: GraphQLClient) {
-    this.sdk = getSdk(gqlClient);
+  private __accessToken: string | undefined = undefined;
+  private __refreshToken: string | undefined = undefined;
+
+  constructor(lensClient: LensClient) {
+    this.sdk = getSdk(lensClient.client);
+  }
+
+  get accessToken(): string | undefined {
+    return this.__accessToken;
+  }
+
+  get refreshToken(): string | undefined {
+    return this.__refreshToken;
   }
 
   async generateChallenge(address: string): Promise<string> {
@@ -23,7 +34,12 @@ export class Auth {
 
     invariant(result.data, 'Not able to generate credentials. Credentials data not found.');
 
-    return result.data.result;
+    const credentials = result.data.result;
+
+    this.__accessToken = credentials.accessToken;
+    this.__refreshToken = credentials.refreshToken;
+
+    return credentials;
   }
 
   async refreshCredentials(refreshToken: string): Promise<CredentialsResult> {
@@ -31,6 +47,11 @@ export class Auth {
 
     invariant(result.data, 'Not able to refresh credentials. Credentials data not found.');
 
-    return result.data.result;
+    const credentials = result.data.result;
+
+    this.__accessToken = credentials.accessToken;
+    this.__refreshToken = credentials.refreshToken;
+
+    return credentials;
   }
 }
