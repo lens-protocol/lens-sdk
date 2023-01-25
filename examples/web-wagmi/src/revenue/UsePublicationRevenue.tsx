@@ -1,5 +1,6 @@
 import { usePublication, usePublicationRevenue } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from '../publications/components/PublicationCard';
 import { RevenueCard } from './components/RevenueCard';
@@ -7,12 +8,23 @@ import { RevenueCard } from './components/RevenueCard';
 const publicationId = '0x4f90-0x02';
 
 export function UsePublicationRevenue() {
-  const { data: publicationRevenue, loading: publicationRevenueLoading } = usePublicationRevenue({
+  const {
+    data: publicationRevenue,
+    error: revenueError,
+    loading: publicationRevenueLoading,
+  } = usePublicationRevenue({
     publicationId,
   });
-  const { data: publication, loading: publicationLoading } = usePublication({ publicationId });
+  const {
+    data: publication,
+    error: publicationError,
+    loading: publicationLoading,
+  } = usePublication({ publicationId });
 
   if (publicationRevenueLoading || publicationLoading) return <Loading />;
+
+  if (revenueError) return <ErrorMessage error={revenueError} />;
+  if (publicationError) return <ErrorMessage error={publicationError} />;
 
   return (
     <div>

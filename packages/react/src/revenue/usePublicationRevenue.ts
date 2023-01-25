@@ -7,7 +7,6 @@ import {
 } from '@lens-protocol/api-bindings';
 
 import { ReadResult, useReadResult } from '../helpers';
-import { NetworkError } from '../publication/adapters/NetworkError';
 import { useSharedDependencies } from '../shared';
 
 type UsePublicationRevenueArgs = {
@@ -16,7 +15,7 @@ type UsePublicationRevenueArgs = {
 
 export function usePublicationRevenue({
   publicationId,
-}: UsePublicationRevenueArgs): ReadResult<RevenueAggregateFragment, NetworkError> {
+}: UsePublicationRevenueArgs): ReadResult<RevenueAggregateFragment> {
   const { apolloClient } = useSharedDependencies();
 
   const { data, error, loading } = useReadResult<

@@ -3,24 +3,36 @@ import { CommonPaginatedResultInfoFragment, Maybe } from '@lens-protocol/api-bin
 
 import { NetworkError } from './publication/adapters/NetworkError';
 
-export type ReadResult<T, E> =
+type ReadResultWithoutError<T> =
+  | {
+      data: undefined;
+      loading: true;
+    }
+  | {
+      data: T;
+      loading: false;
+    };
+
+type ReadResultWithError<T, E> =
   | {
       data: undefined;
       error: undefined;
       loading: true;
     }
-  | ({
+  | {
+      data: T;
+      error: undefined;
       loading: false;
-    } & (
-      | {
-          data: undefined;
-          error: E;
-        }
-      | {
-          data: T;
-          error: undefined;
-        }
-    ));
+    }
+  | {
+      data: undefined;
+      error: E;
+      loading: false;
+    };
+
+export type ReadResult<T, E = NetworkError> = E extends Error
+  ? ReadResultWithError<T, E>
+  : ReadResultWithoutError<T>;
 
 function buildReadResult<T>(
   data: T | undefined,

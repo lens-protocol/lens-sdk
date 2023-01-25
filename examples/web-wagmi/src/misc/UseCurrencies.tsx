@@ -2,11 +2,15 @@ import { useCurrencies } from '@lens-protocol/react';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 
 function UseCurrenciesInner() {
-  const { data: currencies, loading } = useCurrencies();
+  const { data: currencies, error, loading } = useCurrencies();
+
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   if (currencies.length === 0) return <p>No enabled currencies</p>;
 

@@ -1,13 +1,16 @@
 import { useCreateProfile, useProfile, isValidHandle } from '@lens-protocol/react';
 import { FormEvent, useState } from 'react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { invariant } from '../utils';
 import { ProfileCard } from './components/ProfileCard';
 
 function ShowProfile({ handle }: { handle: string }) {
-  const { data: profile, loading } = useProfile({ handle: `${handle}.test` });
+  const { data: profile, error, loading } = useProfile({ handle: `${handle}.test` });
 
   if (loading) return null;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return <ProfileCard profile={profile} />;
 }

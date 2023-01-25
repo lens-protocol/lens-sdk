@@ -11,7 +11,7 @@ import { Home } from './HomePage';
 import { AuthenticationPage } from './authentication/AuthenticationPage';
 import { Breadcrumbs } from './components/Breadcrumbs';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
-import { GenericError } from './components/error/GenericError';
+import { ErrorMessage } from './components/error/ErrorMessage';
 import { Header } from './components/header/Header';
 import { DiscoveryPage } from './discovery/DiscoveryPage';
 import { UseExploreProfiles } from './discovery/UseExploreProfiles';
@@ -81,7 +81,7 @@ export function App() {
           <Header />
           <main>
             <Breadcrumbs />
-            <GenericErrorBoundary fallback={GenericError}>
+            <GenericErrorBoundary fallback={ErrorMessage}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/authentication" element={<AuthenticationPage />} />

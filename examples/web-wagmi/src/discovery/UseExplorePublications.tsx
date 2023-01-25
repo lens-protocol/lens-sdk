@@ -4,6 +4,7 @@ import {
   useExplorePublications,
 } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from '../publications/components/PublicationCard';
@@ -11,6 +12,7 @@ import { PublicationCard } from '../publications/components/PublicationCard';
 export function UseExplorePublications() {
   const {
     data: publications,
+    error,
     loading,
     hasMore,
     observeRef,
@@ -22,6 +24,8 @@ export function UseExplorePublications() {
   );
 
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>

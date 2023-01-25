@@ -2,6 +2,7 @@ import { EthereumAddress, useProfilesOwnedBy } from '@lens-protocol/react';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from './components/ProfileCard';
@@ -11,9 +12,13 @@ type UseProfilesOwnedByProps = {
 };
 
 function UseProfilesOwnedByActiveWallet({ address }: UseProfilesOwnedByProps) {
-  const { data, loading, hasMore, observeRef } = useInfiniteScroll(useProfilesOwnedBy({ address }));
+  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
+    useProfilesOwnedBy({ address }),
+  );
 
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   if (data.length === 0) {
     return <p>No profiles found</p>;

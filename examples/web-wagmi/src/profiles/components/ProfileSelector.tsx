@@ -1,15 +1,18 @@
 import { useExploreProfiles, ProfileFragment } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { invariant } from '../../utils';
 
-type SelectProfileProps = {
+type ProfileSelectorProps = {
   onProfileSelected: (profile: ProfileFragment | null) => void;
 };
 
-export function SelectProfile({ onProfileSelected }: SelectProfileProps) {
-  const { data, loading } = useExploreProfiles({ limit: 30 });
+export function ProfileSelector({ onProfileSelected }: ProfileSelectorProps) {
+  const { data, error, loading } = useExploreProfiles({ limit: 30 });
 
   if (loading) return null;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <select

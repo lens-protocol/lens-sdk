@@ -12,14 +12,12 @@ export function useActiveProfile(): ReadResult<ProfileFragment | null, void> {
   if (state === ApplicationsState.LOADING) {
     return {
       data: undefined,
-      error: undefined,
       loading: true,
     };
   }
 
   return {
     data: profile ?? null,
-    error: undefined,
     loading: false,
   };
 }
