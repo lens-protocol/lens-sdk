@@ -115,7 +115,7 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       },
       {
         ErrorCtor: WalletConnectionError,
-        error: new WalletConnectionError(WalletConnectionErrorReason.CONNECTION_REFUSED),
+        error: new WalletConnectionError(WalletConnectionErrorReason.WRONG_ACCOUNT),
       },
       {
         ErrorCtor: UserRejectedError,

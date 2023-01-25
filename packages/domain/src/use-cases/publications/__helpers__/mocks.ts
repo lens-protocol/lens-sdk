@@ -6,7 +6,7 @@ import {
   mockUsdcAmount,
 } from '@lens-protocol/shared-kernel/mocks';
 
-import { PublicationType, ReactionType, TransactionKind } from '../../../entities';
+import { PublicationType, ReactionType, ReportReason, TransactionKind } from '../../../entities';
 import { mockProfileId } from '../../profile/__helpers__/mocks';
 import { ImageType } from '../../types';
 import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
@@ -15,6 +15,7 @@ import { CreateMirrorRequest } from '../CreateMirror';
 import { CreatePostRequest } from '../CreatePost';
 import { HidePublicationRequest } from '../HidePublication';
 import { ReactionRequest } from '../Reaction';
+import { ReportPublicationRequest } from '../ReportPublication';
 import {
   ChargeCollectPolicy,
   CollectPolicyType,
@@ -204,5 +205,16 @@ export function mockPaidCollectRequest(
     },
     ...overrides,
     kind: TransactionKind.COLLECT_PUBLICATION,
+  };
+}
+
+export function mockReportPublicationRequest(
+  overrides?: Partial<ReportPublicationRequest>,
+): ReportPublicationRequest {
+  return {
+    publicationId: faker.datatype.uuid(),
+    reason: ReportReason.FAKE_ENGAGEMENT,
+    additionalComments: faker.lorem.sentence(),
+    ...overrides,
   };
 }

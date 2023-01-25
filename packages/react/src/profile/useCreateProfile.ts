@@ -29,6 +29,7 @@ export function useCreateProfile() {
 
         if (result.isFailure()) {
           setError(result.error);
+          return;
         }
 
         await waitUntilTransactionIsSettled(

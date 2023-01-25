@@ -19,7 +19,7 @@ export function useProfilePublicationRevenue({
   profileId,
   observerId,
   sources,
-  limit,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   publicationTypes,
 }: UseProfilePublicationRevenueArgs): PaginatedReadResult<PublicationRevenueFragment[]> {
   const { apolloClient } = useSharedDependencies();
@@ -27,7 +27,7 @@ export function useProfilePublicationRevenue({
   return usePaginatedReadResult(
     useProfilePublicationRevenueQuery({
       variables: {
-        limit: limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
+        limit,
         publicationTypes,
         observerId,
         profileId,

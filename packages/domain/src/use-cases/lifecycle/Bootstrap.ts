@@ -1,4 +1,4 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { ICredentials, TransactionRequestModel, Wallet } from '../../entities';
 import { ActiveProfileLoader } from '../profile';
@@ -77,10 +77,12 @@ export class Bootstrap<T extends TransactionRequestModel> {
   }
 
   private async startWithExpCredentials(wallet: Wallet) {
-    this.logoutPresenter.presentLogout({
-      lastLoggedInWallet: wallet,
-      logoutReason: LogoutReason.CREDENTIALS_EXPIRED,
-    });
+    this.logoutPresenter.present(
+      success({
+        lastLoggedInWallet: wallet,
+        logoutReason: LogoutReason.CREDENTIALS_EXPIRED,
+      }),
+    );
 
     this.applicationPresenter.signalReady();
   }

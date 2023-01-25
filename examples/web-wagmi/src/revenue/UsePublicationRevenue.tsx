@@ -20,7 +20,7 @@ export function UsePublicationRevenue() {
         <code>usePublicationRevenue</code>
       </h1>
       <PublicationCard publication={publication} />
-      <h3>Revenue</h3>
+      <h2>Revenue</h2>
       <RevenueCard revenue={publicationRevenue} />
     </div>
   );

@@ -1,36 +1,30 @@
-import { useExploreProfiles } from '@lens-protocol/react';
+import { useExploreProfiles, ProfileFragment } from '@lens-protocol/react';
 
-type ProfileSelectorLinkProps = {
-  onProfileSelected: (profileHandle: string) => void;
+import { invariant } from '../../utils';
+
+type SelectProfileProps = {
+  onProfileSelected: (profile: ProfileFragment | null) => void;
 };
 
-export function SelectProfileHandle({ onProfileSelected }: ProfileSelectorLinkProps) {
+export function SelectProfile({ onProfileSelected }: SelectProfileProps) {
   const { data, loading } = useExploreProfiles({ limit: 30 });
 
   if (loading) return null;
 
   return (
     <select
-      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onProfileSelected(e.target.value)}
-    >
-      <option value="default">Select a profile</option>
-      {data.map((item) => (
-        <option key={item.id} value={item.handle}>
-          {item.handle}
-        </option>
-      ))}
-    </select>
-  );
-}
+      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+        if (e.target.value === 'default') {
+          onProfileSelected(null);
+          return;
+        }
 
-export function SelectProfileId({ onProfileSelected }: ProfileSelectorLinkProps) {
-  const { data, loading } = useExploreProfiles({ limit: 30 });
+        const profile = data.find((p) => p.id === e.target.value);
 
-  if (loading) return null;
+        invariant(profile, 'Profile with the given id should exist');
 
-  return (
-    <select
-      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onProfileSelected(e.target.value)}
+        onProfileSelected(profile);
+      }}
     >
       <option value="default">Select a profile</option>
       {data.map((item) => (

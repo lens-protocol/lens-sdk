@@ -172,10 +172,12 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
 
           await bootstrap.start();
 
-          expect(logoutPresenter.presentLogout).toHaveBeenCalledWith({
-            lastLoggedInWallet: wallet,
-            logoutReason: LogoutReason.CREDENTIALS_EXPIRED,
-          });
+          expect(logoutPresenter.present).toHaveBeenCalledWith(
+            success({
+              lastLoggedInWallet: wallet,
+              logoutReason: LogoutReason.CREDENTIALS_EXPIRED,
+            }),
+          );
           expect(applicationPresenter.signalReady).toHaveBeenCalled();
         });
       });
