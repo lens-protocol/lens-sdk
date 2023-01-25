@@ -12,6 +12,11 @@ export * from './notifications';
 export type { ReadResult, PaginatedReadResult } from './helpers';
 
 export { isValidHandle } from '@lens-protocol/api-bindings';
+export type {
+  StorageSubscription,
+  StorageProviderSubscriber,
+  IStorageProvider,
+} from '@lens-protocol/storage';
 export { ReactionType } from '@lens-protocol/domain/entities';
 
 export {

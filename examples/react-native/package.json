@@ -8,15 +8,20 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@lens-protocol/react": "link:../../packages/react",
     "expo": "~47.0.12",
+    "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
     "react-native": "0.70.5",
-    "react-native-mmkv": "^2.6.1",
-    "expo-splash-screen": "~0.17.5"
+    "react-native-mmkv": "^2.6.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@types/react": "~18.0.24",
+    "@types/react-native": "~0.70.6",
+    "@babel/core": "^7.12.9",
+    "@rnx-kit/metro-resolver-symlinks": "^0.1.24",
+    "typescript": "^4.6.3"
   },
   "private": true
 }
