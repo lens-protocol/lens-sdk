@@ -25,6 +25,7 @@ export * from './useWhoReacted';
 export * from './useReportPublication';
 export * from './useHidePublication';
 export * from './useWhoCollectedPublication';
+export * from './useWhoMirroredPublication';
 
 export type { Publication } from './types';
 export {
