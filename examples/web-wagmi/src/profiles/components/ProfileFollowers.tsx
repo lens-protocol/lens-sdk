@@ -1,5 +1,6 @@
 import { useProfileFollowers } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { Loading } from '../../components/loading/Loading';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { ProfileCard } from './ProfileCard';
@@ -11,12 +12,15 @@ type ProfileFollowersProps = {
 export function ProfileFollowers({ profileId }: ProfileFollowersProps) {
   const {
     data: followers,
+    error,
     loading,
     hasMore,
     observeRef,
   } = useInfiniteScroll(useProfileFollowers({ profileId }));
 
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>

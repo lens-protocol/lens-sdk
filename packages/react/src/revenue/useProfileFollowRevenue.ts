@@ -8,7 +8,6 @@ import {
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import { ReadResult, useReadResult } from '../helpers';
-import { NetworkError } from '../publication/adapters/NetworkError';
 import { useSharedDependencies } from '../shared';
 
 type UseProfileFollowRevenueArgs = {
@@ -17,7 +16,7 @@ type UseProfileFollowRevenueArgs = {
 
 export function useProfileFollowRevenue({
   profileId,
-}: UseProfileFollowRevenueArgs): ReadResult<RevenueAggregateFragment[], NetworkError> {
+}: UseProfileFollowRevenueArgs): ReadResult<RevenueAggregateFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
   const { data, error, loading } = useReadResult<

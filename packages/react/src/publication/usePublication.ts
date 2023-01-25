@@ -2,7 +2,6 @@ import { usePublicationQuery } from '@lens-protocol/api-bindings';
 
 import { ReadResult, useReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
-import { NetworkError } from './adapters/NetworkError';
 import { Publication } from './types';
 
 type UsePublicationArgs = {
@@ -13,7 +12,7 @@ type UsePublicationArgs = {
 export function usePublication({
   publicationId,
   observerId,
-}: UsePublicationArgs): ReadResult<Publication, NetworkError> {
+}: UsePublicationArgs): ReadResult<Publication> {
   const { apolloClient } = useSharedDependencies();
 
   return useReadResult(

@@ -1,6 +1,7 @@
 import { useSearchProfiles } from '@lens-protocol/react';
 import { ChangeEvent, useState } from 'react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from '../profiles/components/ProfileCard';
@@ -10,8 +11,14 @@ type SearchResultsProps = {
 };
 
 function SearchResults({ query }: SearchResultsProps) {
-  const { data, loading, hasMore, observeRef } = useInfiniteScroll(useSearchProfiles({ query }));
+  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
+    useSearchProfiles({ query }),
+  );
+
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
+
   if (data.length === 0) {
     return <p>No profiles found</p>;
   }

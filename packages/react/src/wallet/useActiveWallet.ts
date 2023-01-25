@@ -14,7 +14,6 @@ export function useActiveWallet(): ReadResult<WalletData | null, void> {
   if (state === ApplicationsState.LOADING) {
     return {
       data: undefined,
-      error: undefined,
       loading: true,
     };
   }
@@ -22,14 +21,12 @@ export function useActiveWallet(): ReadResult<WalletData | null, void> {
   if (!wallet) {
     return {
       data: null,
-      error: undefined,
       loading: false,
     };
   }
 
   return {
     data: wallet,
-    error: undefined,
     loading: false,
   };
 }

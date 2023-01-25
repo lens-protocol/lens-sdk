@@ -1,5 +1,7 @@
 import { useCollectedPublications } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
+import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from './components/PublicationCard';
 
@@ -8,11 +10,14 @@ export function UseCollectedPublications() {
   const {
     loading,
     data: publications,
+    error,
     hasMore,
     observeRef,
   } = useInfiniteScroll(useCollectedPublications({ walletAddress }));
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   if (publications.length === 0) {
     return <p>No publications collected</p>;

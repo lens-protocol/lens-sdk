@@ -1,15 +1,19 @@
 import { useWhoReacted } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from '../profiles/components/ProfileCard';
 
 export function UseWhoReacted() {
-  const { data, loading, hasMore, observeRef } = useInfiniteScroll(
+  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
     useWhoReacted({ publicationId: '0x02-0x1a' }),
   );
 
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
+
   if (data.length === 0) {
     return <p>No profiles found</p>;
   }
