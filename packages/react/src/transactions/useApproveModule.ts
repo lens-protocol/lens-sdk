@@ -50,7 +50,7 @@ export function useApproveModule({ amount, spender }: UseApproveModuleArgs) {
   const isApproved = useHasSettledTransaction(isApproveTransaction);
 
   return {
-    setAllowance: async () => {
+    approve: async () => {
       setIsPending(true);
       setError(null);
       const result = await setAllowance({

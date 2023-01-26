@@ -1,4 +1,5 @@
 import { TransactionRequest } from '@ethersproject/providers';
+import { erc20, bigNumber } from '@lens-protocol/blockchain-bindings';
 import { Wallet, UnsignedTransaction } from '@lens-protocol/domain/entities';
 import {
   IApproveTransactionGateway,
@@ -18,8 +19,6 @@ import { BigNumber, constants, providers } from 'ethers';
 import { ITransactionRequest } from '../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
 import { Eip1559GasEstimate } from '../infrastructure/blockchain/Eip1559GasEstimate';
-import { bigNumber } from '../infrastructure/blockchain/ethers';
-import { erc20 } from '../infrastructure/ethers.js/contracts';
 
 export class UnsignedApproveTransaction<
     Request extends TokenAllowanceRequest = TokenAllowanceRequest,
