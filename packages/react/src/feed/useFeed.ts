@@ -1,17 +1,14 @@
 import { FeedEventItemType, FeedItemFragment, useFeedQuery } from '@lens-protocol/api-bindings';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
-import {
-  createPublicationMetadataFilters,
-  StandardPublicationMetadataFilter,
-} from '../publication';
+import { createPublicationMetadataFilters, PublicationMetadataFilters } from '../publication';
 import { useSharedDependencies } from '../shared';
 
 export type UseFeedArgs = PaginatedArgs<{
   observerId?: string;
   profileId: string;
   restrictEventTypesTo?: FeedEventItemType[];
-  metadataFilter?: StandardPublicationMetadataFilter;
+  metadataFilter?: PublicationMetadataFilters;
 }>;
 
 export { FeedEventItemType };

@@ -1,10 +1,10 @@
 import {
   PublicationContentWarning,
   PublicationMainFocus,
-  PublicationMetadataFilters,
+  PublicationMetadataFilters as LensPublicationMetadataFilters,
 } from '@lens-protocol/api-bindings';
 
-export type StandardPublicationMetadataFilter = {
+export type PublicationMetadataFilters = {
   restrictPublicationMainFocusTo?: PublicationMainFocus[];
   restrictPublicationTagsTo?: {
     all?: string[];
@@ -17,19 +17,19 @@ export type StandardPublicationMetadataFilter = {
 };
 
 export function createPublicationMetadataFilters(
-  standardFilters: StandardPublicationMetadataFilter | undefined,
-): PublicationMetadataFilters | undefined {
-  if (!standardFilters) {
+  filters: PublicationMetadataFilters | undefined,
+): LensPublicationMetadataFilters | undefined {
+  if (!filters) {
     return undefined;
   }
 
   return {
-    locale: standardFilters.restrictPublicationLocaleTo,
-    mainContentFocus: standardFilters.restrictPublicationMainFocusTo,
-    tags: standardFilters.restrictPublicationTagsTo,
-    ...(!!standardFilters.showPublicationsWithContentWarnings?.oneOf && {
+    locale: filters.restrictPublicationLocaleTo,
+    mainContentFocus: filters.restrictPublicationMainFocusTo,
+    tags: filters.restrictPublicationTagsTo,
+    ...(!!filters.showPublicationsWithContentWarnings?.oneOf && {
       contentWarnings: {
-        includeOneOf: standardFilters.showPublicationsWithContentWarnings.oneOf,
+        includeOneOf: filters.showPublicationsWithContentWarnings.oneOf,
       },
     }),
   };

@@ -7,7 +7,7 @@ import {
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
-import { createPublicationMetadataFilters, StandardPublicationMetadataFilter } from './filters';
+import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 import { Publication } from './types';
 
 type UseExplorePublicationsArgs = PaginatedArgs<{
@@ -16,7 +16,7 @@ type UseExplorePublicationsArgs = PaginatedArgs<{
   timestamp?: number;
   publicationTypes?: Array<PublicationTypes>;
   excludeProfileIds?: Array<string>;
-  metadataFilter?: StandardPublicationMetadataFilter;
+  metadataFilter?: PublicationMetadataFilters;
 }>;
 
 export function useExplorePublications({

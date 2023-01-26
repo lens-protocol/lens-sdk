@@ -3,11 +3,11 @@ import { usePublicationsQuery } from '@lens-protocol/api-bindings';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
-import { createPublicationMetadataFilters, StandardPublicationMetadataFilter } from './filters';
+import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 import { Publication } from './types';
 
 type UsePublicationArgs = PaginatedArgs<{
-  metadataFilter?: StandardPublicationMetadataFilter;
+  metadataFilter?: PublicationMetadataFilters;
   profileId: string;
   observerId?: string;
 }>;

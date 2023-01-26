@@ -3921,6 +3921,7 @@ export type CommentsQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  metadata?: Maybe<PublicationMetadataFilters>;
 }>;
 
 export type CommentsQuery = {
@@ -5993,9 +5994,16 @@ export const CommentsDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]
+    $metadata: PublicationMetadataFilters
   ) {
     result: publications(
-      request: { limit: $limit, cursor: $cursor, commentsOf: $commentsOf, sources: $sources }
+      request: {
+        limit: $limit
+        cursor: $cursor
+        commentsOf: $commentsOf
+        sources: $sources
+        metadata: $metadata
+      }
     ) {
       items {
         ... on Comment {
@@ -6028,6 +6036,7 @@ export const CommentsDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      metadata: // value for 'metadata'
  *   },
  * });
  */
