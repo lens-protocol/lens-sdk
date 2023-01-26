@@ -12,7 +12,7 @@ export class LensProfileWithAuth {
     this.sdk = getSdk(gqlClient);
   }
 
-  async enableDispatcher(request: SetDispatcherRequest) {
+  async createSetDispatcherTypedData(request: SetDispatcherRequest) {
     const result = await this.sdk.CreateSetDispatcherTypedData({
       request,
     });
@@ -20,7 +20,7 @@ export class LensProfileWithAuth {
     return result.data.result;
   }
 
-  async follow(profileId: string) {
+  async createFollowTypedData(profileId: string) {
     const result = await this.sdk.CreateFollowTypedData({
       request: {
         follow: [{ profile: profileId }],
@@ -30,7 +30,7 @@ export class LensProfileWithAuth {
     return result.data.result;
   }
 
-  async unfollow(profileId: string) {
+  async createUnfollowTypedData(profileId: string) {
     const result = await this.sdk.CreateUnfollowTypedData({
       request: {
         profile: profileId,
