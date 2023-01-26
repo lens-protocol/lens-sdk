@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 
 import { SharedDependencies } from '../../shared';
 import { ActiveWalletPresenter } from '../../wallet/adapters/ActiveWalletPresenter';
+import { LogoutPresenter } from '../../wallet/adapters/LogoutPresenter';
 import { ApplicationPresenter } from './ApplicationPresenter';
 
 export function useBootstrapController({
@@ -12,12 +13,13 @@ export function useBootstrapController({
   activeWallet,
   credentialsFactory,
   credentialsGateway,
-  logoutPresenter,
+  onLogout,
   profileGateway,
   transactionQueue,
 }: SharedDependencies) {
   return useCallback(() => {
     const activeWalletPresenter = new ActiveWalletPresenter();
+    const logoutPresenter = new LogoutPresenter(onLogout);
     const applicationPresenter = new ApplicationPresenter();
     const activeProfileLoader = new ActiveProfileLoader(
       profileGateway,
@@ -42,7 +44,6 @@ export function useBootstrapController({
     activeWallet,
     credentialsFactory,
     credentialsGateway,
-    logoutPresenter,
     profileGateway,
     transactionQueue,
   ]);

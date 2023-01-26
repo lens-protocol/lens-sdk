@@ -4,7 +4,7 @@ fragment RevenueAggregate on RevenueAggregate {
     ...Erc20Amount
   }
 
-  totalAmount
+  totalAmount @client
 }
 
 fragment PublicationRevenue on PublicationRevenue {

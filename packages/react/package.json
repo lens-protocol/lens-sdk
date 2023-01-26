@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Interacting with the Lens Protocol API using React.",
   "repository": {
     "directory": "packages/react",

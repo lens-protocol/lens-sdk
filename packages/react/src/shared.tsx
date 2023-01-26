@@ -1,11 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { createAnonymousApolloClient, createApolloClient } from '@lens-protocol/api-bindings';
-import {
-  PendingSigningRequestError,
-  TransactionKind,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
+import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   SupportedTransactionRequest,
   TransactionQueue,
@@ -48,7 +43,7 @@ import { activeWalletVar } from './wallet/adapters/ActiveWalletPresenter';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
 import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
 import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
-import { LogoutHandler, LogoutPresenter } from './wallet/adapters/LogoutPresenter';
+import { LogoutHandler } from './wallet/adapters/LogoutPresenter';
 import { TokenGateway } from './wallet/adapters/TokenGateway';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
@@ -65,9 +60,7 @@ import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
 
 export type Handlers = {
   onLogout: LogoutHandler;
-  onError: ErrorHandler<
-    PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedTransactionError
-  >;
+  onError: ErrorHandler<FailedTransactionError>;
 };
 
 export type SharedDependencies = {
@@ -79,7 +72,7 @@ export type SharedDependencies = {
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   followPolicyCallGateway: FollowPolicyCallGateway;
-  logoutPresenter: LogoutPresenter;
+  onLogout: Handlers['onLogout'];
   onError: Handlers['onError'];
   profileGateway: ProfileGateway;
   protocolCallRelayer: ProtocolCallRelayer;
@@ -144,8 +137,6 @@ export function createSharedDependencies(
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
   const activeProfilePresenter = new ActiveProfilePresenter(apolloClient);
 
-  const logoutPresenter = new LogoutPresenter(onLogout);
-
   const responders: TransactionResponders<SupportedTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.COLLECT_PUBLICATION]: new NoopResponder(),
@@ -188,9 +179,9 @@ export function createSharedDependencies(
     credentialsFactory,
     credentialsGateway,
     followPolicyCallGateway,
-    logoutPresenter,
     notificationStorage,
     onError,
+    onLogout,
     profileGateway,
     protocolCallRelayer,
     signlessProtocolCallRelayer,

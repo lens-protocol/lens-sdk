@@ -1,8 +1,8 @@
-import { useMutualFollowers, useProfile } from '@lens-protocol/react';
+import { useMutualFollowers, useProfile, ProfileFragment } from '@lens-protocol/react';
 import { useState } from 'react';
 
 import { SmallProfileCard } from './components/ProfileCard';
-import { SelectProfileId } from './components/ProfileSelector';
+import { SelectProfile } from './components/ProfileSelector';
 
 type ViewMutualFollowersProps = {
   profileToCompareOne: string;
@@ -38,8 +38,8 @@ function ViewMutualFollowers({
 }
 
 export function UseMutualFollowers() {
-  const [selectedProfileOne, setSelectedProfileOne] = useState<string | null>(null);
-  const [selectedProfileTwo, setSelectedProfileTwo] = useState<string | null>(null);
+  const [selectedProfileOne, setSelectedProfileOne] = useState<ProfileFragment | null>(null);
+  const [selectedProfileTwo, setSelectedProfileTwo] = useState<ProfileFragment | null>(null);
 
   return (
     <div>
@@ -49,14 +49,14 @@ export function UseMutualFollowers() {
 
       <article>
         <p>Select two profiles to see their mutual followers:</p>
-        <SelectProfileId onProfileSelected={(profile) => setSelectedProfileOne(profile)} />
-        <SelectProfileId onProfileSelected={(profile) => setSelectedProfileTwo(profile)} />
+        <SelectProfile onProfileSelected={(p) => setSelectedProfileOne(p)} />
+        <SelectProfile onProfileSelected={(p) => setSelectedProfileTwo(p)} />
       </article>
 
       {selectedProfileOne && selectedProfileTwo && (
         <ViewMutualFollowers
-          profileToCompareOne={selectedProfileOne}
-          profileToCompareTwo={selectedProfileTwo}
+          profileToCompareOne={selectedProfileOne.id}
+          profileToCompareTwo={selectedProfileTwo.id}
         />
       )}
     </div>

@@ -1,6 +1,7 @@
 import { useProfileFollowing } from '@lens-protocol/react';
 
 import { Loading } from '../../components/loading/Loading';
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { ProfileCard } from './ProfileCard';
 
 type ProfileFollowingProps = {
@@ -8,8 +9,15 @@ type ProfileFollowingProps = {
 };
 
 export function ProfilesFollowing({ walletAddress }: ProfileFollowingProps) {
-  const { data: followings, loading } = useProfileFollowing({ walletAddress });
+  const {
+    data: followings,
+    loading,
+    hasMore,
+    observeRef,
+  } = useInfiniteScroll(useProfileFollowing({ walletAddress }));
+
   if (loading) return <Loading />;
+
   return (
     <div>
       <h3>Following</h3>
@@ -17,6 +25,7 @@ export function ProfilesFollowing({ walletAddress }: ProfileFollowingProps) {
         {followings.map((following) => (
           <ProfileCard key={following.profile.handle} profile={following.profile} />
         ))}
+        {hasMore && <p ref={observeRef}>Loading more...</p>}
       </div>
     </div>
   );

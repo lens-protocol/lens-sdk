@@ -1,5 +1,11 @@
 # @lens-protocol/storage
 
+## 0.3.0
+
+### Patch Changes
+
+- @lens-protocol/shared-kernel@0.3.0
+
 ## 0.2.0
 
 ### Patch Changes

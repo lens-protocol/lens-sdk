@@ -79,7 +79,7 @@ describe(`Given the ${ProveNftOwnership.name} interactor`, () => {
       },
       {
         ErrorCtor: WalletConnectionError,
-        error: new WalletConnectionError(WalletConnectionErrorReason.CONNECTION_REFUSED),
+        error: new WalletConnectionError(WalletConnectionErrorReason.WRONG_ACCOUNT),
       },
       {
         ErrorCtor: UserRejectedError,
