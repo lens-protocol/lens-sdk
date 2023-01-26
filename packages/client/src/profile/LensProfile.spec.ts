@@ -11,7 +11,7 @@ describe(`Given the ${LensProfile.name} configured to work with staging environm
 
   describe(`when a method ${LensProfile.prototype.getProfileById.name} is called`, () => {
     it(`returns the requested profile`, async () => {
-      const result = await profile.getProfileById('0x53a8');
+      const result = await profile.getProfileById({ profileId: '0x53a8' });
 
       expect(result).toMatchObject({
         id: '0x53a8',
@@ -22,7 +22,7 @@ describe(`Given the ${LensProfile.name} configured to work with staging environm
 
   describe(`when a method ${LensProfile.prototype.getProfileByHandle.name} is called`, () => {
     it(`returns the requested profile`, async () => {
-      const result = await profile.getProfileByHandle('kristestnet.test');
+      const result = await profile.getProfileByHandle({ handle: 'kristestnet.test' });
 
       expect(result).toMatchObject({
         id: '0x53a8',
@@ -33,7 +33,9 @@ describe(`Given the ${LensProfile.name} configured to work with staging environm
 
   describe(`when a method ${LensProfile.prototype.getDefaultProfile.name} is called`, () => {
     it(`returns the requested profile`, async () => {
-      const result = await profile.getDefaultProfile('0x3fC47cdDcFd59dce20694b575AFc1D94186775b0');
+      const result = await profile.getDefaultProfile({
+        address: '0x3fC47cdDcFd59dce20694b575AFc1D94186775b0',
+      });
 
       expect(result).toMatchObject({
         id: '0x53a8',
