@@ -17,6 +17,7 @@ const config = makeMetroConfig({
       // // '@lens-protocol/react': path.resolve(__dirname, 'node_modules/@lens-protocol/react'),
       // // point for `@lens-protocol/react` how to resolve react without having 2 duplicated versions
       react: path.resolve(__dirname, 'node_modules/react'),
+      ethers: path.resolve(__dirname, 'node_modules/ethers'),
     },
   },
   transformer: {

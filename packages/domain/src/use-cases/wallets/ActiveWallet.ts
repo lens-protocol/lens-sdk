@@ -33,7 +33,11 @@ export class ActiveWallet {
   async requireActiveWallet(): Promise<Wallet> {
     const wallet = await this.getActiveWallet();
 
-    invariant(wallet, 'Active wallet should be defined');
+    invariant(
+      wallet,
+      `Active wallet is not defined.
+       Make sure that the storage configuration (IStorageProvider) properly persists saves`,
+    );
 
     return wallet;
   }

@@ -1,71 +1,28 @@
-import { IStorageProvider, StorageProviderSubscriber } from "@lens-protocol/react";
+import {IStorageProvider, StorageProviderSubscriber} from '@lens-protocol/react';
+import {MMKV} from 'react-native-mmkv';
 
 class MmkvStorageProvider implements IStorageProvider {
-  // private subscribers = new Map<string, StorageProviderSubscriber[]>();
+  private storage = new MMKV();
 
-  getItem(key: string) {
-    return null;
-    // return window.localStorage.getItem(key);
+  async getItem(key: string) {
+    const result = await this.storage.getString(key);
+
+    return result ?? null;
   }
 
   setItem(key: string, value: string) {
-    // window.localStorage.setItem(key, value);
+    this.storage.set(key, value);
   }
 
   removeItem(key: string) {
-    // window.localStorage.removeItem(key);
+    this.storage.delete(key);
   }
 
   subscribe(key: string, subscriber: StorageProviderSubscriber) {
-    // if (this.subscribers.has(key)) {
-    //   this.subscribers.get(key)?.push(subscriber);
-    // } else {
-    //   this.subscribers.set(key, [subscriber]);
-    // }
-    //
-    // if (this.subscribers.size === 1) {
-    //   this.listenToStorageEvent();
-    // }
-
     return {
-      unsubscribe: () => {
-        // const subscribers = this.subscribers.get(key) ?? [];
-        //
-        // const index = subscribers.indexOf(subscriber);
-        //
-        // if (index > -1) {
-        //   subscribers.splice(index, 1);
-        // }
-        //
-        // if (subscribers.length === 0) {
-        //   this.subscribers.delete(key);
-        // }
-        //
-        // if (this.subscribers.size === 0) {
-        //   this.stopListeningToStorageEvent();
-        // }
-      },
+      unsubscribe: () => {},
     };
   }
-
-  // private onStorageEvent = (event: StorageEvent) => {
-  //   if (event.storageArea !== window.localStorage) {
-  //     return;
-  //   }
-  //
-  //   if (event.key && this.subscribers.has(event.key)) {
-  //     const subscribers = this.subscribers.get(event.key) ?? [];
-  //     subscribers.forEach((subscriber) => subscriber(event.newValue, event.oldValue));
-  //   }
-  // };
-  //
-  // private listenToStorageEvent() {
-  //   window.addEventListener("storage", this.onStorageEvent);
-  // }
-  //
-  // private stopListeningToStorageEvent() {
-  //   window.removeEventListener("storage", this.onStorageEvent);
-  // }
 }
 
 export function mmkvStorageProvider(): IStorageProvider {

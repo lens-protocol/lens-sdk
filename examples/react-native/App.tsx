@@ -1,20 +1,12 @@
 import './shims';
 
-import {IBindings, LensConfig, LensProvider, sources, staging} from '@lens-protocol/react';
+import {LensConfig, LensProvider, sources, staging} from '@lens-protocol/react';
 
 import {ExplorePublications} from './src/ExplorePublications';
 import {mmkvStorageProvider} from './src/mmkvStorageProvider';
-
-export function bindings(): IBindings {
-  return {
-    getProvider: async ({}) => {
-      throw new Error('NOT SUPPORTED');
-    },
-    getSigner: async ({}) => {
-      throw new Error('NOT SUPPORTED');
-    },
-  };
-}
+import {bindings} from './src/wallet';
+import {LoginButton} from './src/LoginButton';
+import {SafeAreaView, StyleSheet} from 'react-native';
 
 const lensConfig: LensConfig = {
   bindings: bindings(),
@@ -26,7 +18,17 @@ const lensConfig: LensConfig = {
 export default function App() {
   return (
     <LensProvider config={lensConfig}>
-      <ExplorePublications />
+      <SafeAreaView style={styles.wrapper}>
+        <LoginButton />
+        <ExplorePublications />
+      </SafeAreaView>
     </LensProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    margin: 15,
+  },
+});
