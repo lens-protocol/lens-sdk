@@ -1,5 +1,6 @@
 import { useProfilesToFollow, ProfileFragment } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
@@ -18,9 +19,11 @@ function ProfileList({ profiles }: ProfileListProps) {
 }
 
 export function ProfilesToFollow() {
-  const { data: profilesToFollow, loading } = useProfilesToFollow();
+  const { data: profilesToFollow, error, loading } = useProfilesToFollow();
 
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>

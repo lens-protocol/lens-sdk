@@ -7,6 +7,7 @@ import {
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
@@ -15,13 +16,19 @@ type MirrorInnerProps = {
 };
 
 function MirrorInner({ profile }: MirrorInnerProps) {
-  const { data: publication, loading: publicationLoading } = usePublication({
+  const {
+    data: publication,
+    error: loadingError,
+    loading: publicationLoading,
+  } = usePublication({
     publicationId: '0x1b-0x0118',
     observerId: profile.id, // important!
   });
-  const { create, isPending, error } = useCreateMirror();
+  const { create, isPending, error: mirroringError } = useCreateMirror();
 
   if (publicationLoading) return <Loading />;
+
+  if (loadingError) return <ErrorMessage error={loadingError} />;
 
   if (isMirrorPublication(publication)) {
     return <p>Can't mirror a mirror</p>;
@@ -37,7 +44,7 @@ function MirrorInner({ profile }: MirrorInnerProps) {
       <div>Is Mirrored by Me: {isMirroredByMe ? 'true' : 'false'}</div>
 
       <div>
-        {error && <p>{error.message}</p>}
+        {mirroringError && <p>{mirroringError.message}</p>}
         <button
           onClick={() =>
             create({

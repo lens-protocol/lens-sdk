@@ -1,7 +1,10 @@
 import { PaginatedReadResult } from '@lens-protocol/react';
+import { RefCallback } from 'react';
 import { useInView } from 'react-cool-inview';
 
-export function useInfiniteScroll<T>(queryResult: PaginatedReadResult<T>) {
+export function useInfiniteScroll<T>(
+  queryResult: PaginatedReadResult<T>,
+): PaginatedReadResult<T> & { observeRef: RefCallback<unknown> } {
   const { observe: observeRef } = useInView({
     // Grow the root margin so the data will be loaded earlier
     rootMargin: '20% 0px',

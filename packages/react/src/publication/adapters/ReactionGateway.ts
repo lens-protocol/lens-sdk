@@ -16,7 +16,7 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { PromiseResult, success, failure, assertError } from '@lens-protocol/shared-kernel';
 
-import { NetworkError } from './NetworkError';
+import { UnspecifiedError } from '../../UnspecifiedError';
 
 export class ReactionGateway implements IReactionGateway {
   constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
@@ -43,7 +43,7 @@ export class ReactionGateway implements IReactionGateway {
         return failure(new ReactionError(e.message));
       }
 
-      throw new NetworkError(e);
+      throw new UnspecifiedError(e);
     }
   }
 
@@ -70,7 +70,7 @@ export class ReactionGateway implements IReactionGateway {
         return failure(new ReactionError(e.message));
       }
 
-      throw new NetworkError(e);
+      throw new UnspecifiedError(e);
     }
   }
 }

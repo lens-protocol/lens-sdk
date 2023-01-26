@@ -9,6 +9,7 @@ import { useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 import { SelectPublicationId } from './components/PublicationSelector';
@@ -37,12 +38,18 @@ type HidePublicationInnerProps = {
 };
 
 function HidePublicationInner({ publicationId, profile }: HidePublicationInnerProps) {
-  const { data: publication, loading: publicationLoading } = usePublication({
+  const {
+    data: publication,
+    error,
+    loading: publicationLoading,
+  } = usePublication({
     publicationId,
     observerId: profile.id, // important!
   });
 
   if (publicationLoading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <>

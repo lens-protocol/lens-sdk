@@ -13,6 +13,7 @@ import { useState } from 'react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { invariant, never } from '../utils';
 
@@ -244,12 +245,12 @@ type UpdateFollowPolicyProps = {
 };
 
 function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
-  const { data: currencies, loading } = useCurrencies();
+  const { data: currencies, error, loading } = useCurrencies();
   const currentFollowPolicy = profile.followPolicy;
 
   if (loading) return <Loading />;
 
-  if (!currencies) return <p>Error</p>;
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <UpdateFollowPolicyForm

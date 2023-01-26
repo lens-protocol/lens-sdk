@@ -7,6 +7,7 @@ import {
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
+import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { upload } from '../../upload';
 
 type CommentComposerProps = {
@@ -56,7 +57,7 @@ export function CommentComposer({ activeProfile, publicationId }: CommentCompose
           Comment
         </button>
 
-        {error && <p>{error.message}</p>}
+        {error && <ErrorMessage error={error} />}
       </fieldset>
     </form>
   );

@@ -24,7 +24,7 @@ import {
   success,
 } from '@lens-protocol/shared-kernel';
 
-import { NetworkError } from './NetworkError';
+import { UnspecifiedError } from '../../UnspecifiedError';
 
 const mapReportReasonToInput = (reason: ReportReason): ReportingReasonInputParams => {
   switch (reason) {
@@ -179,7 +179,7 @@ export class ReportPublicationGateway implements IReportPublicationGateway {
         }
       }
 
-      throw new NetworkError(e);
+      throw new UnspecifiedError(e);
     }
   }
 }
