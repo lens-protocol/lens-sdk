@@ -1,4 +1,5 @@
 import { LensClient } from '../LensClient';
+import { SetDispatcherRequest } from '../graphql/types.generated';
 import { getSdk, Sdk } from './graphql/mutations.generated';
 
 export class LensProfileWithAuth {
@@ -11,19 +12,31 @@ export class LensProfileWithAuth {
     this.sdk = getSdk(gqlClient);
   }
 
+  async enableDispatcher(request: SetDispatcherRequest) {
+    const result = await this.sdk.CreateSetDispatcherTypedData({
+      request,
+    });
+
+    return result.data.result;
+  }
+
   async follow(profileId: string) {
-    await this.sdk.CreateFollowTypedData({
+    const result = await this.sdk.CreateFollowTypedData({
       request: {
         follow: [{ profile: profileId }],
       },
     });
+
+    return result.data.result;
   }
 
   async unfollow(profileId: string) {
-    await this.sdk.CreateUnfollowTypedData({
+    const result = await this.sdk.CreateUnfollowTypedData({
       request: {
         profile: profileId,
       },
     });
+
+    return result.data.result;
   }
 }

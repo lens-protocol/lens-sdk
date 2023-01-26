@@ -87,6 +87,7 @@ fragment Profile on Profile {
     canUseRelay
   }
 
+  isDefault
   isFollowedByMe(isFinalisedOnChain: true)
   isFollowing(who: $observerId)
 }
@@ -406,4 +407,11 @@ fragment Post on Post {
     result
   }
   mirrors(by: $observerId)
+}
+
+fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+  __typename
+  prev
+  next
+  totalCount
 }

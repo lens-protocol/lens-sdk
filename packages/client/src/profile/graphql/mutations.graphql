@@ -45,10 +45,29 @@ mutation CreateUnfollowTypedData($request: UnfollowRequest!) {
   }
 }
 
-fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-  __typename
-  name
-  chainId
-  version
-  verifyingContract
+mutation CreateSetDispatcherTypedData($request: SetDispatcherRequest!, $options: TypedDataOptions) {
+  result: createSetDispatcherTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetDispatcherWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        dispatcher
+      }
+    }
+  }
 }

@@ -3,3 +3,25 @@ query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
     ...Profile
   }
 }
+
+query DefaultProfile($address: EthereumAddress!, $observerId: ProfileId) {
+  result: defaultProfile(request: { ethereumAddress: $address }) {
+    ...Profile
+  }
+}
+
+query AllProfilesByOwnerAddress(
+  $address: EthereumAddress!
+  $observerId: ProfileId
+  $limit: LimitScalar!
+  $cursor: Cursor
+) {
+  result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

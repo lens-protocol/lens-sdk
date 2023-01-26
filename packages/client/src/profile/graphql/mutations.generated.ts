@@ -1,9 +1,11 @@
 import * as Types from '../../graphql/types.generated.js';
 
+import { Eip712TypedDataDomainFragment } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
+import { Eip712TypedDataDomainFragmentDoc } from '../../graphql/fragments.generated';
 export type CreateFollowTypedDataMutationVariables = Types.Exact<{
   request: Types.FollowRequest;
   options?: Types.Maybe<Types.TypedDataOptions>;
@@ -36,20 +38,27 @@ export type CreateUnfollowTypedDataMutation = {
   };
 };
 
-export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain' } & Pick<
-  Types.Eip712TypedDataDomain,
-  'name' | 'chainId' | 'version' | 'verifyingContract'
->;
+export type CreateSetDispatcherTypedDataMutationVariables = Types.Exact<{
+  request: Types.SetDispatcherRequest;
+  options?: Types.Maybe<Types.TypedDataOptions>;
+}>;
 
-export const Eip712TypedDataDomainFragmentDoc = gql`
-  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    __typename
-    name
-    chainId
-    version
-    verifyingContract
-  }
-`;
+export type CreateSetDispatcherTypedDataMutation = {
+  result: Pick<Types.CreateSetDispatcherBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { SetDispatcherWithSig: Array<Pick<Types.Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Pick<
+        Types.Eip712TypedDataDomain,
+        'name' | 'chainId' | 'version' | 'verifyingContract'
+      >;
+      value: Pick<
+        Types.CreateSetDispatcherEip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'dispatcher'
+      >;
+    };
+  };
+};
+
 export const CreateFollowTypedDataDocument = gql`
   mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
     result: createFollowTypedData(request: $request, options: $options) {
@@ -101,6 +110,37 @@ export const CreateUnfollowTypedDataDocument = gql`
   }
   ${Eip712TypedDataDomainFragmentDoc}
 `;
+export const CreateSetDispatcherTypedDataDocument = gql`
+  mutation CreateSetDispatcherTypedData(
+    $request: SetDispatcherRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createSetDispatcherTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          SetDispatcherWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          dispatcher
+        }
+      }
+    }
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -111,6 +151,7 @@ export type SdkFunctionWrapper = <T>(
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const CreateFollowTypedDataDocumentString = print(CreateFollowTypedDataDocument);
 const CreateUnfollowTypedDataDocumentString = print(CreateUnfollowTypedDataDocument);
+const CreateSetDispatcherTypedDataDocumentString = print(CreateSetDispatcherTypedDataDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     CreateFollowTypedData(
@@ -150,6 +191,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'CreateUnfollowTypedData',
+        'mutation',
+      );
+    },
+    CreateSetDispatcherTypedData(
+      variables: CreateSetDispatcherTypedDataMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateSetDispatcherTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateSetDispatcherTypedDataMutation>(
+            CreateSetDispatcherTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateSetDispatcherTypedData',
         'mutation',
       );
     },

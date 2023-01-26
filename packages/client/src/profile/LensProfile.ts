@@ -1,6 +1,6 @@
 import { LensClient } from '../LensClient';
 import { ProfileFragment } from '../graphql/fragments.generated';
-import { getSdk, Sdk } from './graphql/queries.generated';
+import { AllProfilesByOwnerAddressQueryVariables, getSdk, Sdk } from './graphql/queries.generated';
 
 export class LensProfile {
   private readonly sdk: Sdk;
@@ -25,6 +25,20 @@ export class LensProfile {
         handle,
       },
     });
+
+    return result.data.result;
+  }
+
+  async getDefaultProfile(address: string): Promise<ProfileFragment | null> {
+    const result = await this.sdk.DefaultProfile({
+      address,
+    });
+
+    return result.data.result;
+  }
+
+  async getAllProfilesByOwnerAddress(vars: AllProfilesByOwnerAddressQueryVariables) {
+    const result = await this.sdk.AllProfilesByOwnerAddress(vars);
 
     return result.data.result;
   }

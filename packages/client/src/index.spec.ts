@@ -2,7 +2,7 @@ import { Wallet } from 'ethers';
 
 import { LensAuth, LensClient, LensProfile, LensProfileWithAuth, staging } from '.';
 
-describe.skip(`Given the staging environment and a wallet`, () => {
+describe(`Given the staging environment and a wallet`, () => {
   const lens = new LensClient({
     environment: staging,
   });
@@ -22,15 +22,28 @@ describe.skip(`Given the staging environment and a wallet`, () => {
       const credentials = await auth.generateCredentials(address, signature);
 
       const profileClientAuth = new LensProfileWithAuth(lens, credentials.accessToken);
-      await profileClientAuth.follow('0x53a8'); // still not working
 
       const profileClient = new LensProfile(lens);
-      const profile = await profileClient.getProfileByHandle('redditcompromised.test');
 
-      expect(profile).toMatchObject({
-        id: '0x63ef',
-        handle: 'redditcompromised.test',
-      });
+      const defaultProfile = await profileClient.getDefaultProfile(address);
+
+      console.log(profileClientAuth, defaultProfile?.id);
+      // get profiles owned by address
+      // set default profile
+      // get default profile
+      // enable dispatcher
+      // follow
+
+      // await profileClientAuth.enableDispatcher()
+      // await profileClientAuth.follow('0x53a8'); // still not working
+
+      // const profileClient = new LensProfile(lens);
+      // const profile = await profileClient.getProfileByHandle('redditcompromised.test');
+
+      // expect(profile).toMatchObject({
+      //   id: '0x63ef',
+      //   handle: 'redditcompromised.test',
+      // });
     });
   });
 });

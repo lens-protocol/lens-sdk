@@ -9,6 +9,17 @@ describe(`Given the ${LensProfile.name} configured to work with staging environm
 
   const profile = new LensProfile(client);
 
+  describe(`when a method ${LensProfile.prototype.getProfileById.name} is called`, () => {
+    it(`returns the requested profile`, async () => {
+      const result = await profile.getProfileById('0x53a8');
+
+      expect(result).toMatchObject({
+        id: '0x53a8',
+        handle: 'kristestnet.test',
+      });
+    });
+  });
+
   describe(`when a method ${LensProfile.prototype.getProfileByHandle.name} is called`, () => {
     it(`returns the requested profile`, async () => {
       const result = await profile.getProfileByHandle('kristestnet.test');
@@ -17,6 +28,28 @@ describe(`Given the ${LensProfile.name} configured to work with staging environm
         id: '0x53a8',
         handle: 'kristestnet.test',
       });
+    });
+  });
+
+  describe(`when a method ${LensProfile.prototype.getDefaultProfile.name} is called`, () => {
+    it(`returns the requested profile`, async () => {
+      const result = await profile.getDefaultProfile('0x3fC47cdDcFd59dce20694b575AFc1D94186775b0');
+
+      expect(result).toMatchObject({
+        id: '0x53a8',
+        handle: 'kristestnet.test',
+      });
+    });
+  });
+
+  describe(`when a method ${LensProfile.prototype.getAllProfilesByOwnerAddress.name} is called`, () => {
+    it(`returns the requested profile`, async () => {
+      const result = await profile.getAllProfilesByOwnerAddress({
+        address: '0x3fC47cdDcFd59dce20694b575AFc1D94186775b0',
+        limit: 10,
+      });
+
+      expect(result.items.length).toBeGreaterThan(2);
     });
   });
 });

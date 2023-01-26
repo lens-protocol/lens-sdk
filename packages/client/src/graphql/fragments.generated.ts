@@ -37,7 +37,7 @@ export type AttributeFragment = { __typename: 'Attribute' } & Pick<
 
 export type ProfileFragment = { __typename: 'Profile' } & Pick<
   Types.Profile,
-  'id' | 'name' | 'bio' | 'handle' | 'ownedBy' | 'isFollowedByMe' | 'isFollowing'
+  'id' | 'name' | 'bio' | 'handle' | 'ownedBy' | 'isDefault' | 'isFollowedByMe' | 'isFollowing'
 > & {
     picture: Types.Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     coverPicture: Types.Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
@@ -270,6 +270,11 @@ export type PostFragment = { __typename: 'Post' } & Pick<
     canMirror: Pick<Types.CanMirrorResponse, 'result'>;
   };
 
+export type CommonPaginatedResultInfoFragment = { __typename: 'PaginatedResultInfo' } & Pick<
+  Types.PaginatedResultInfo,
+  'prev' | 'next' | 'totalCount'
+>;
+
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
     __typename
@@ -450,6 +455,7 @@ export const ProfileFragmentDoc = gql`
       address
       canUseRelay
     }
+    isDefault
     isFollowedByMe(isFinalisedOnChain: true)
     isFollowing(who: $observerId)
   }
@@ -741,6 +747,14 @@ export const MirrorFragmentDoc = gql`
   ${MirrorBaseFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
+`;
+export const CommonPaginatedResultInfoFragmentDoc = gql`
+  fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+    __typename
+    prev
+    next
+    totalCount
+  }
 `;
 
 export type SdkFunctionWrapper = <T>(
