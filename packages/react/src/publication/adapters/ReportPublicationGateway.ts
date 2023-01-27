@@ -1,4 +1,4 @@
-import { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client';
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   PublicationReportingFraudSubreason,
   PublicationReportingIllegalSubreason,
@@ -12,19 +12,10 @@ import {
 } from '@lens-protocol/api-bindings';
 import { ReportReason } from '@lens-protocol/domain/entities';
 import {
-  AlreadyReportedError,
   IReportPublicationGateway,
   ReportPublicationRequest,
 } from '@lens-protocol/domain/use-cases/publications';
-import {
-  assertError,
-  assertNever,
-  failure,
-  PromiseResult,
-  success,
-} from '@lens-protocol/shared-kernel';
-
-import { UnspecifiedError } from '../../UnspecifiedError';
+import { assertNever } from '@lens-protocol/shared-kernel';
 
 const mapReportReasonToInput = (reason: ReportReason): ReportingReasonInputParams => {
   switch (reason) {
@@ -150,36 +141,16 @@ const mapReportReasonToInput = (reason: ReportReason): ReportingReasonInputParam
 export class ReportPublicationGateway implements IReportPublicationGateway {
   constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
 
-  async report({
-    additionalComments,
-    publicationId,
-    reason,
-  }: ReportPublicationRequest): PromiseResult<void, AlreadyReportedError> {
-    try {
-      await this.apolloClient.mutate<ReportPublicationMutation, ReportPublicationMutationVariables>(
-        {
-          mutation: ReportPublicationDocument,
-          variables: {
-            publicationId,
-            additionalComments,
-            reason: {
-              ...mapReportReasonToInput(reason),
-            },
-          },
+  async report({ additionalComments, publicationId, reason }: ReportPublicationRequest) {
+    await this.apolloClient.mutate<ReportPublicationMutation, ReportPublicationMutationVariables>({
+      mutation: ReportPublicationDocument,
+      variables: {
+        publicationId,
+        additionalComments,
+        reason: {
+          ...mapReportReasonToInput(reason),
         },
-      );
-
-      return success();
-    } catch (e) {
-      assertError(e);
-
-      if (e instanceof ApolloError) {
-        if (e.graphQLErrors.some((error) => error.message === 'Publication already reported')) {
-          return failure(new AlreadyReportedError());
-        }
-      }
-
-      throw new UnspecifiedError(e);
-    }
+      },
+    });
   }
 }

@@ -577,17 +577,3 @@ export function createReportPublicationMutationMockedResponse(args: {
     result: { data: { reportPublication: null } },
   };
 }
-
-export function createReportPublicationMutationWithErrorMockedResponse(args: {
-  variables: ReportPublicationMutationVariables;
-}): MockedResponse<ReportPublicationMutation> {
-  return {
-    request: {
-      query: ReportPublicationDocument,
-      variables: args.variables,
-    },
-    result: {
-      errors: [new GraphQLError('Publication already reported')],
-    },
-  };
-}
