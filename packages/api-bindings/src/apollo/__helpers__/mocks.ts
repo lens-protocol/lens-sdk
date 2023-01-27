@@ -15,11 +15,9 @@ type MockCacheConfiguration = {
 };
 
 export function createMockApolloCache({
-  activeWalletVar,
+  activeWalletVar = makeVar<WalletData | null>(null),
 }: MockCacheConfiguration = {}): ApolloCache<NormalizedCacheObject> {
-  return createApolloCache({
-    activeWalletVar: activeWalletVar ?? makeVar<WalletData | null>(null),
-  });
+  return createApolloCache({ activeWalletVar });
 }
 
 export function createMockApolloClientWithMultipleResponses(
@@ -27,9 +25,12 @@ export function createMockApolloClientWithMultipleResponses(
   cacheConfiguration: MockCacheConfiguration = {},
 ): ApolloClient<NormalizedCacheObject> {
   return new ApolloClient({
+    cache: createMockApolloCache(cacheConfiguration),
+
     link: mockSingleLink(...mocks).setOnError((error) => {
       throw error;
     }),
-    cache: createMockApolloCache(cacheConfiguration),
+  });
+}
   });
 }

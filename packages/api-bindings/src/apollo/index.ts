@@ -1,10 +1,9 @@
-import { ApolloClient, ApolloLink, from, HttpLink, ReactiveVar } from '@apollo/client';
+import { ApolloClient, from, HttpLink, ReactiveVar } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
 import { IAccessTokenStorage } from './IAccessTokenStorage';
 import { createApolloCache } from './createApolloCache';
 import { createAuthLink } from './createAuthLink';
-import { removeClientTypeFromExtendedUnion } from './transforms';
 
 export type ApolloClientConfig = {
   activeWalletVar: ReactiveVar<WalletData | null>;
@@ -19,12 +18,6 @@ export function createApolloClient({
 }: ApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
 
-  const cleanerLink = new ApolloLink((operation, forward) => {
-    operation.query = removeClientTypeFromExtendedUnion('PendingPost', operation.query);
-
-    return forward(operation);
-  });
-
   const authLink = createAuthLink(accessTokenStorage);
 
   const httpLink = new HttpLink({
@@ -33,7 +26,7 @@ export function createApolloClient({
 
   return new ApolloClient({
     cache: createApolloCache({ activeWalletVar }),
-    link: from([cleanerLink, authLink, httpLink]),
+    link: from([authLink, httpLink]),
     connectToDevTools: true,
   });
 }
