@@ -7,6 +7,7 @@ import {
 } from '@apollo/client';
 import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
+import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
 import { createApolloCache } from '../createApolloCache';
 
@@ -32,5 +33,50 @@ export function createMockApolloClientWithMultipleResponses(
     }),
   });
 }
+
+export function createGraphQLError({
+  code,
+  message = 'No pings please!',
+}: {
+  code: string;
+  message: string;
+}) {
+  return new GraphQLError(message, undefined, undefined, undefined, undefined, undefined, { code });
+}
+
+export function createGenericErrorMockedResponse(document: DocumentNode): MockedResponse<unknown> {
+  return {
+    request: {
+      query: document,
+    },
+    result: {
+      errors: [
+        createGraphQLError({
+          message: 'No pings please!',
+          code: 'GRAPHQL_VALIDATION_FAILED',
+        }),
+      ],
+    },
+  };
+}
+
+function createJSONResponse(status: number, body: ExecutionResult<unknown>) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export function createUnauthenticatedResponse() {
+  return createJSONResponse(401, {
+    data: null,
+    errors: [
+      createGraphQLError({
+        message: 'Authentication required',
+        code: 'UNAUTHENTICATED',
+      }),
+    ],
   });
 }
