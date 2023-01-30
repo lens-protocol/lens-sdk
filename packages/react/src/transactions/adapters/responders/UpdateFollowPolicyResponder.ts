@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   GetProfileDocument,
   GetProfileQuery,
   GetProfileQueryVariables,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import { UpdateFollowPolicyRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
@@ -14,7 +14,7 @@ import {
 export class UpdateFollowPolicyResponder
   implements ITransactionResponder<UpdateFollowPolicyRequest>
 {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async prepare({ request }: TransactionData<UpdateFollowPolicyRequest>) {
     const profileIdentifier = this.apolloClient.cache.identify({

@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   HidePublicationDocument,
   HidePublicationMutation,
   HidePublicationMutationVariables,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
   HidePublicationRequest,
@@ -13,7 +13,7 @@ import { assertError, PromiseResult, success } from '@lens-protocol/shared-kerne
 import { UnspecifiedError } from '../../UnspecifiedError';
 
 export class HidePublicationGateway implements IHidePublicationGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async hide(request: HidePublicationRequest): PromiseResult<void, never> {
     try {

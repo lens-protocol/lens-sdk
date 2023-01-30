@@ -1,5 +1,5 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
+  LensApolloClient,
   PublicationReportingFraudSubreason,
   PublicationReportingIllegalSubreason,
   PublicationReportingReason,
@@ -139,7 +139,7 @@ const mapReportReasonToInput = (reason: ReportReason): ReportingReasonInputParam
 };
 
 export class ReportPublicationGateway implements IReportPublicationGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async report({ additionalComments, publicationId, reason }: ReportPublicationRequest) {
     await this.apolloClient.mutate<ReportPublicationMutation, ReportPublicationMutationVariables>({

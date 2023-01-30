@@ -31,6 +31,12 @@ module.exports = {
             name: 'lodash/fp',
             message: 'Please use lodash submodules imports.',
           },
+          {
+            name: '@apollo/client/testing',
+            importNames: ['createMockClient'],
+            message:
+              'Please import "createMockApolloClientWithMultipleResponses" from @lens-protocol/api-bindings.',
+          },
         ],
       },
     ],

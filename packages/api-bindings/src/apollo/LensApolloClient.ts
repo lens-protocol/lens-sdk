@@ -17,26 +17,36 @@ import {
   GraphQLClientQueryResult,
   IGraphQLClient,
 } from './IGraphQLClient';
-import { UnspecifiedError } from './UnspecifiedError';
+import { UnspecifiedError, ValidationError } from './errors';
+import { isGraphQLValidationError } from './isGraphQLValidationError';
 
 export type LensApolloClientOptions<TCacheShape> = {
   cache: ApolloCache<TCacheShape>;
   link: ApolloLink;
-  pollingPeriod?: number;
+  pollingInterval?: number;
 };
 
-const defaultPollingPeriod = 3000;
+const defaultPollingInterval = 3000;
+
+function resolveError(error: unknown) {
+  assertError(error);
+
+  if (isGraphQLValidationError(error)) {
+    return new ValidationError(error);
+  }
+  return new UnspecifiedError(error);
+}
 
 export class LensApolloClient<TCacheShape extends NormalizedCacheObject = NormalizedCacheObject>
   extends ApolloClient<TCacheShape>
   implements IGraphQLClient<TCacheShape>
 {
-  private pollingPeriod: number;
+  private pollingInterval: number;
 
   constructor({
     cache,
     link,
-    pollingPeriod = defaultPollingPeriod,
+    pollingInterval = defaultPollingInterval,
   }: LensApolloClientOptions<TCacheShape>) {
     super({
       cache,
@@ -53,7 +63,7 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
       },
       link,
     });
-    this.pollingPeriod = pollingPeriod;
+    this.pollingInterval = pollingInterval;
   }
 
   async query<TData = unknown, TVariables = OperationVariables>(
@@ -69,8 +79,7 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
 
       return result;
     } catch (error) {
-      assertError(error);
-      throw new UnspecifiedError(error);
+      throw resolveError(error);
     }
   }
 
@@ -87,8 +96,7 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
 
       return result;
     } catch (error) {
-      assertError(error);
-      throw new UnspecifiedError(error);
+      throw resolveError(error);
     }
   }
 
@@ -97,7 +105,7 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
   ): Observable<TData> {
     const observable = super.watchQuery<TData, TVariables>(options);
 
-    observable.startPolling(this.pollingPeriod);
+    observable.startPolling(this.pollingInterval);
 
     return new Observable((observer) =>
       observable.subscribe({
@@ -105,8 +113,7 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
           observer.next(data);
         },
         error(err) {
-          assertError(err);
-          observer.error(new UnspecifiedError(err));
+          observer.error(resolveError(err));
         },
         complete() {
           observer.complete();

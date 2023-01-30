@@ -11,7 +11,7 @@ type UseCollectablesArgs = PaginatedArgs<{
 
 export function useCollectedPublications({
   walletAddress,
-  limit,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseCollectablesArgs): PaginatedReadResult<Publication[]> {
   const { apolloClient } = useSharedDependencies();
 
@@ -19,7 +19,7 @@ export function useCollectedPublications({
     useWalletCollectedPublicationsQuery({
       variables: {
         walletAddress,
-        limit: limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
+        limit: limit,
       },
       client: apolloClient,
     }),

@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateMirrorTypedDataDocument,
   CreateMirrorViaDispatcherDocument,
@@ -8,6 +7,7 @@ import {
   omitTypename,
   CreateMirrorTypedDataMutation,
   CreateMirrorTypedDataMutationVariables,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
   NativeTransaction,
@@ -28,7 +28,7 @@ import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
 
 export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
   constructor(
-    private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
+    private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
   ) {}
 
