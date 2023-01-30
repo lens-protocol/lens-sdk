@@ -12,6 +12,7 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint --parallel",
     "lint:fix": "turbo run lint:fix --parallel",
+    "lint:examples": "sh ./scripts/lint-examples.sh",
     "deduplicate:check": "pnpm-deduplicate --list",
     "deduplicate:fix": "pnpm-deduplicate"
   },
