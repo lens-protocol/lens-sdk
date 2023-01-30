@@ -46,6 +46,7 @@ export class Storage<Data> implements IStorage<Data> {
     // not all implementations needs to support an observable storage
     if (!('subscribe' in this.provider)) {
       return {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         unsubscribe() {},
       };
     }
