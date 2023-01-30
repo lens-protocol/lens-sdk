@@ -1,8 +1,12 @@
-import {IStorageProvider, StorageProviderSubscriber} from '@lens-protocol/react';
+import {IStorageProvider} from '@lens-protocol/react';
 import {MMKV} from 'react-native-mmkv';
 
 class MmkvStorageProvider implements IStorageProvider {
-  private storage = new MMKV();
+  private readonly storage;
+
+  constructor() {
+    this.storage = new MMKV({id: 'lens-sdk-storage'});
+  }
 
   async getItem(key: string) {
     const result = await this.storage.getString(key);
@@ -18,7 +22,8 @@ class MmkvStorageProvider implements IStorageProvider {
     this.storage.delete(key);
   }
 
-  subscribe(key: string, subscriber: StorageProviderSubscriber) {
+  // Required only when multiple threads modify the storage to make sure lens-sdk is in sync across tabs/devices
+  subscribe() {
     return {
       unsubscribe: () => {},
     };

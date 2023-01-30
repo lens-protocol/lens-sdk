@@ -12,11 +12,11 @@ const config = makeMetroConfig({
     // makes sure that metro resolves the symlinks used by linked packages
     resolveRequest: MetroSymlinksResolver(),
     extraNodeModules: {
-      // // point for `@lens-protocol` linked packages how to resolve `@babel/runtime`
+      // point how `@lens-protocol` linked packages should resolve `@babel/runtime`
       '@babel/runtime': path.resolve(__dirname, './node_modules/@babel/runtime'),
-      // // '@lens-protocol/react': path.resolve(__dirname, 'node_modules/@lens-protocol/react'),
-      // // point for `@lens-protocol/react` how to resolve react without having 2 duplicated versions
+      // point how  `@lens-protocol` linked packages should resolve react without having 2 duplicated versions
       react: path.resolve(__dirname, 'node_modules/react'),
+      // point how  `@lens-protocol` linked packages should resolve ethers without having 2 duplicated versions
       ethers: path.resolve(__dirname, 'node_modules/ethers'),
     },
   },
@@ -30,7 +30,5 @@ const config = makeMetroConfig({
   },
   watchFolders: [path.resolve(__dirname, '../..')],
 });
-
-console.log(config);
 
 module.exports = config;
