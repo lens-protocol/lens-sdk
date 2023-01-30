@@ -7,13 +7,21 @@ import {
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 export function ExplorePublications() {
-  const {data: publications, loading} = useExplorePublications({
+  const {
+    data: publications,
+    loading,
+    error,
+  } = useExplorePublications({
     sortCriteria: PublicationSortCriteria.TopCommented,
     publicationTypes: [PublicationTypes.Comment, PublicationTypes.Post],
   });
 
   if (loading) {
     return <Text>Loading</Text>;
+  }
+
+  if (error) {
+    throw error;
   }
 
   return (
