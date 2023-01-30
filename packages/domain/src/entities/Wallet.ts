@@ -46,14 +46,8 @@ export class UserRejectedError extends Error {
   message = 'User rejected the request';
 }
 
-export enum WalletType {
-  INJECTED = 'injected',
-  WALLET_CONNECT = 'wallet-connect',
-  UNSPECIFIED = 'unspecified',
-}
-
 export abstract class Wallet {
-  constructor(readonly address: EthereumAddress, readonly type: WalletType) {}
+  constructor(readonly address: EthereumAddress) {}
 
   abstract signProtocolCall<T extends TransactionRequestModel>(
     unsignedCall: IUnsignedProtocolCall<T>,

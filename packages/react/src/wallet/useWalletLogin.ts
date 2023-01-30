@@ -2,7 +2,6 @@ import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
-  WalletType,
 } from '@lens-protocol/domain/entities';
 import { Signer } from 'ethers';
 import { useState } from 'react';
@@ -17,7 +16,7 @@ export function useWalletLogin() {
   const loginWallet = useWalletLoginController();
 
   return {
-    login: async (signer: Signer, walletType: WalletType = WalletType.UNSPECIFIED) => {
+    login: async (signer: Signer) => {
       setError(null);
       setIsPending(true);
 
@@ -26,7 +25,6 @@ export function useWalletLogin() {
 
         const result = await loginWallet({
           address,
-          type: walletType,
         });
 
         if (result.isFailure()) {

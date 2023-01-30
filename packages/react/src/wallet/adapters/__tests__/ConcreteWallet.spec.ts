@@ -10,7 +10,6 @@ import {
   InsufficientGasError,
   WalletConnectionError,
   WalletConnectionErrorReason,
-  WalletType,
   UserRejectedError,
   PendingSigningRequestError,
 } from '@lens-protocol/domain/entities';
@@ -42,7 +41,6 @@ function setupWalletInstance({ signerFactory }: { signerFactory: ISignerFactory 
   return ConcreteWallet.create(
     {
       address,
-      type: WalletType.UNSPECIFIED,
     },
     signerFactory,
     transactionFactory,
