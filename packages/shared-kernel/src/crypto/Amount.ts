@@ -80,12 +80,8 @@ export class Amount<T extends Asset> {
     return new Amount(this.asset, this.value.mul(factor));
   }
 
-  div(amount: Amount<T>) {
-    invariant(
-      this.asset === amount.asset,
-      `Cannot divide ${this.asset.symbol} Amount with ${amount.asset.symbol} Amount`,
-    );
-    return new Amount(this.asset, this.value.div(amount.value));
+  div(divisor: AmountValue) {
+    return new Amount(this.asset, this.value.div(divisor));
   }
 
   /**
