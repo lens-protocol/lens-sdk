@@ -6,20 +6,18 @@ export type StorageSubscriber<Data> = (newData: Data | null, oldData: Data | nul
 
 export type StorageProviderSubscriber = StorageSubscriber<string>;
 
-export interface ISingleThreadedStorageProvider {
+export interface IStorageProvider {
   getItem(key: string): Promise<string | null> | string | null;
   setItem(key: string, value: string): Promise<string> | Promise<void> | void | string;
   removeItem(key: string): Promise<string> | Promise<void> | void;
 }
 
-export interface IMultiThreadedStorageProvider {
-  getItem(key: string): Promise<string | null> | string | null;
-  setItem(key: string, value: string): Promise<string> | Promise<void> | void | string;
-  removeItem(key: string): Promise<string> | Promise<void> | void;
+/**
+ * A storage implementation that observes external updates (e.g. updating from another tab, updating from another devices)
+ */
+export interface IObservableStorageProvider extends IStorageProvider {
   subscribe(key: string, subscriber: StorageProviderSubscriber): StorageSubscription;
 }
-
-export type IStorageProvider = ISingleThreadedStorageProvider | IMultiThreadedStorageProvider;
 
 export interface IStorage<Data> {
   set(data: Data): Promise<void>;

@@ -16,6 +16,7 @@ export type {
   StorageSubscription,
   StorageProviderSubscriber,
   IStorageProvider,
+  IObservableStorageProvider,
 } from '@lens-protocol/storage';
 export { ReactionType } from '@lens-protocol/domain/entities';
 

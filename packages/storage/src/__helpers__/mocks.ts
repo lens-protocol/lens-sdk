@@ -1,12 +1,12 @@
 import {
   IStorage,
-  IStorageProvider,
+  IObservableStorageProvider,
   StorageProviderSubscriber,
   StorageSubscriber,
   StorageSubscription,
 } from '../IStorage';
 
-export function mockStorageProvider(initial: string | null = null): IStorageProvider {
+export function mockStorageProvider(initial: string | null = null): IObservableStorageProvider {
   let internalStorage: string | null = initial;
 
   return {

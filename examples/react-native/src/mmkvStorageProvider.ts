@@ -21,13 +21,6 @@ class MmkvStorageProvider implements IStorageProvider {
   removeItem(key: string) {
     this.storage.delete(key);
   }
-
-  // Required only when multiple threads modify the storage to make sure lens-sdk is in sync across tabs/devices
-  subscribe() {
-    return {
-      unsubscribe: () => {},
-    };
-  }
 }
 
 export function mmkvStorageProvider(): IStorageProvider {

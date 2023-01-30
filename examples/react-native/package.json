@@ -5,10 +5,13 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "eslint": "eslint src",
+    "eslint:fix": "pnpm run eslint --fix",
+    "lint": "pnpm run eslint && pnpm run tsc",
+    "lint:fix": "pnpm run eslint:fix && pnpm run tsc",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@ethersproject/shims": "^5.7.0",
