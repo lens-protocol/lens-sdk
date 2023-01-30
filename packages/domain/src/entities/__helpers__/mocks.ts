@@ -31,13 +31,12 @@ import {
   TransactionRequestModel,
   UnsignedTransaction,
 } from '../Transactions';
-import { Wallet, WalletType } from '../Wallet';
+import { Wallet } from '../Wallet';
 
 export function mockWallet({
   address = mockEthereumAddress(),
-  type = WalletType.INJECTED,
-}: { address?: EthereumAddress; type?: WalletType } = {}) {
-  return mock<Wallet>({ address, type });
+}: { address?: EthereumAddress } = {}) {
+  return mock<Wallet>({ address });
 }
 
 export function mockCredentials(overrides?: Partial<ICredentials>) {

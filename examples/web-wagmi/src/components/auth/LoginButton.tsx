@@ -1,4 +1,4 @@
-import { useWalletLogin, useWalletLogout, WalletType } from '@lens-protocol/react';
+import { useWalletLogin, useWalletLogout } from '@lens-protocol/react';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
@@ -26,7 +26,7 @@ export function LoginButton() {
 
     if (connector instanceof InjectedConnector) {
       const signer = await connector.getSigner();
-      await login(signer, WalletType.INJECTED);
+      await login(signer);
     }
   };
 

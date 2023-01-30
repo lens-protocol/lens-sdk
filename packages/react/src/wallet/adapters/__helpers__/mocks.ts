@@ -4,7 +4,6 @@ import {
   TransactionRequestModel,
   UnsignedTransaction,
   WalletConnectionError,
-  WalletType,
 } from '@lens-protocol/domain/entities';
 import { mockTransactionRequestModel } from '@lens-protocol/domain/mocks';
 import { ChainType, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
@@ -102,7 +101,7 @@ export function mockUnsignedTransactionRequest({
 
 export function mockConcreteWallet() {
   return ConcreteWallet.create(
-    { address: mockEthereumAddress(), type: WalletType.UNSPECIFIED },
+    { address: mockEthereumAddress() },
     mock<ISignerFactory>(),
     mock<ITransactionFactory<TransactionRequestModel>>(),
   );
