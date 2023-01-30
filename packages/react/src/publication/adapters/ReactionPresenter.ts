@@ -1,9 +1,5 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
-import {
-  getPublicationTypename,
-  PublicationStats,
-  ReactionTypes,
-} from '@lens-protocol/api-bindings';
+import { ReactionTypes } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import {
   ReactionRequest,
@@ -12,13 +8,18 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
+import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
 
 export class ReactionPresenter
   extends PromiseResultPresenter<void, ReactionError>
   implements IReactionPresenter
 {
-  constructor(private cache: ApolloCache<NormalizedCacheObject>) {
+  readonly publicationCacheManager: PublicationCacheManager;
+
+  constructor(cache: ApolloCache<NormalizedCacheObject>) {
     super();
+
+    this.publicationCacheManager = new PublicationCacheManager(cache);
   }
 
   async presentOptimisticAdd(request: ReactionRequest): Promise<void> {
@@ -41,23 +42,14 @@ export class ReactionPresenter
     switch (request.reactionType) {
       case ReactionType.UPVOTE:
         {
-          const id = this.cache.identify({
-            __typename: getPublicationTypename(request.publicationType),
-            id: request.publicationId,
-          });
-
-          this.cache.modify({
-            id,
-            fields: {
-              stats(oldStats: PublicationStats) {
-                return {
-                  ...oldStats,
-                  totalUpvotes: oldStats.totalUpvotes + 1,
-                };
-              },
-              reaction: () => ReactionTypes.Upvote,
+          this.publicationCacheManager.update(request.publicationId, (current) => ({
+            ...current,
+            stats: {
+              ...current.stats,
+              totalUpvotes: current.stats.totalUpvotes + 1,
             },
-          });
+            reaction: ReactionTypes.Upvote,
+          }));
         }
         break;
 
@@ -72,23 +64,14 @@ export class ReactionPresenter
     switch (request.reactionType) {
       case ReactionType.UPVOTE:
         {
-          const id = this.cache.identify({
-            __typename: getPublicationTypename(request.publicationType),
-            id: request.publicationId,
-          });
-
-          this.cache.modify({
-            id,
-            fields: {
-              stats(oldStats: PublicationStats) {
-                return {
-                  ...oldStats,
-                  totalUpvotes: oldStats.totalUpvotes - 1,
-                };
-              },
-              reaction: () => null,
+          this.publicationCacheManager.update(request.publicationId, (current) => ({
+            ...current,
+            stats: {
+              ...current.stats,
+              totalUpvotes: current.stats.totalUpvotes - 1,
             },
-          });
+            reaction: null,
+          }));
         }
         break;
 
