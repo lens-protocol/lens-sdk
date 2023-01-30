@@ -1,6 +1,5 @@
 ---
-"@lens-protocol/domain": minor
 "@lens-protocol/react": minor
 ---
 
-Removed WalletType
+Removed the `walletType` argument from the `login` method of `useWalletLogin` hook
