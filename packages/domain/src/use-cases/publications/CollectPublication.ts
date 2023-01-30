@@ -1,7 +1,6 @@
 import { Amount, Erc20, EthereumAddress, failure } from '@lens-protocol/shared-kernel';
 
 import {
-  PublicationType,
   TransactionKind,
   PendingSigningRequestError,
   UserRejectedError,
@@ -28,7 +27,6 @@ export type FreeCollectRequest = {
   profileId: string;
   type: CollectType.FREE;
   publicationId: string;
-  publicationType: PublicationType;
   kind: TransactionKind.COLLECT_PUBLICATION;
 };
 
@@ -41,7 +39,6 @@ export type PaidCollectRequest = {
   profileId: string;
   type: CollectType.PAID;
   publicationId: string;
-  publicationType: PublicationType;
   fee: CollectFee;
   kind: TransactionKind.COLLECT_PUBLICATION;
 };

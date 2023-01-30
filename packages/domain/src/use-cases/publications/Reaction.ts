@@ -1,12 +1,11 @@
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
-import { PublicationType, ReactionType } from '../../entities';
+import { ReactionType } from '../../entities';
 import { IGenericResultPresenter } from '../transactions';
 
 export type ReactionRequest = {
   profileId: string;
   publicationId: string;
-  publicationType: PublicationType;
   reactionType: ReactionType;
 };
 
