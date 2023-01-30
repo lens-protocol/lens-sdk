@@ -1,9 +1,10 @@
+import React from 'react';
 import {
   PublicationSortCriteria,
   PublicationTypes,
   useExplorePublications,
 } from '@lens-protocol/react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 export function ExplorePublications() {
   const {data: publications, loading} = useExplorePublications({
@@ -11,7 +12,9 @@ export function ExplorePublications() {
     publicationTypes: [PublicationTypes.Comment, PublicationTypes.Post],
   });
 
-  if (loading) return <Text>Loading</Text>;
+  if (loading) {
+    return <Text>Loading</Text>;
+  }
 
   return (
     <View style={styles.wrapper}>

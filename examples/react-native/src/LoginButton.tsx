@@ -1,3 +1,4 @@
+import React from 'react';
 import {useActiveProfile, useWalletLogout, WalletType} from '@lens-protocol/react';
 import {useWalletLogin} from '@lens-protocol/react';
 import {Button, Text, View} from 'react-native';

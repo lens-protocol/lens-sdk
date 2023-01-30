@@ -1,5 +1,6 @@
 import './shims';
 
+import React from 'react';
 import {LensConfig, LensProvider, sources, staging} from '@lens-protocol/react';
 
 import {ExplorePublications} from './src/ExplorePublications';
