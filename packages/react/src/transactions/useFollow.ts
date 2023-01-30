@@ -18,7 +18,7 @@ import {
 import { EthereumAddress, invariant } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
-import { useActiveProfileVar } from '../profile/adapters/ActiveProfilePresenter';
+import { useActiveProfile } from '../profile';
 import { useActiveWalletVar } from '../wallet/adapters/ActiveWalletPresenter';
 import { useFollowController } from './adapters/useFollowController';
 
@@ -90,7 +90,7 @@ export function useFollow({ profile }: UseFollowArgs) {
   const [isPending, setIsPending] = useState<boolean>(false);
   const follow = useFollowController();
   const activeWallet = useActiveWalletVar();
-  const activeProfile = useActiveProfileVar();
+  const { data: activeProfile } = useActiveProfile();
 
   return {
     follow: async () => {

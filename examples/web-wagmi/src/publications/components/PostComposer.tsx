@@ -7,6 +7,7 @@ import {
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
+import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { upload } from '../../upload';
 
 export type PostComposerProps = {
@@ -52,7 +53,7 @@ export function PostComposer({ profile }: PostComposerProps) {
           Post
         </button>
 
-        {error && <p>{error.message}</p>}
+        {error && <ErrorMessage error={error} />}
       </fieldset>
     </form>
   );

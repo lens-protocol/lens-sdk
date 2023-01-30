@@ -2,12 +2,16 @@ import { useEnabledModules } from '@lens-protocol/react';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ModuleCard } from './components/ModuleCard';
 
 function UseEnabledModulesInner() {
-  const { data: enabledModules, loading } = useEnabledModules();
+  const { data: enabledModules, error, loading } = useEnabledModules();
+
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <>

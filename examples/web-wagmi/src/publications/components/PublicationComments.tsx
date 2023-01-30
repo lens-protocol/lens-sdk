@@ -1,5 +1,6 @@
 import { useComments } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { Loading } from '../../components/loading/Loading';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { PublicationCard } from './PublicationCard';
@@ -9,19 +10,23 @@ type PublicationCommentsProps = {
 };
 
 export function PublicationComments({ publicationId }: PublicationCommentsProps) {
-  const infiniteScroll = useInfiniteScroll(useComments({ commentsOf: publicationId }));
+  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
+    useComments({ commentsOf: publicationId }),
+  );
 
-  if (infiniteScroll.loading) return <Loading />;
+  if (loading) return <Loading />;
 
-  if (infiniteScroll.data.length === 0) return <p>No items</p>;
+  if (error) return <ErrorMessage error={error} />;
+
+  if (data.length === 0) return <p>No items</p>;
 
   return (
     <div>
-      {infiniteScroll.data.map((item, i) => (
+      {data.map((item, i) => (
         <PublicationCard key={`${item.id}-${i}`} publication={item} />
       ))}
 
-      {infiniteScroll.hasMore && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
+      {hasMore && <p ref={observeRef}>Loading more...</p>}
     </div>
   );
 }

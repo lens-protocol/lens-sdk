@@ -40,6 +40,7 @@ export function useCreateProfile() {
       } catch (e) {
         if (e instanceof TransactionError) {
           setError(e);
+          return;
         }
         throw e;
       } finally {

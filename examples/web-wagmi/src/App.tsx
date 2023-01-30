@@ -11,7 +11,7 @@ import { Home } from './HomePage';
 import { AuthenticationPage } from './authentication/AuthenticationPage';
 import { Breadcrumbs } from './components/Breadcrumbs';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
-import { GenericError } from './components/error/GenericError';
+import { ErrorMessage } from './components/error/ErrorMessage';
 import { Header } from './components/header/Header';
 import { DiscoveryPage } from './discovery/DiscoveryPage';
 import { UseExploreProfiles } from './discovery/UseExploreProfiles';
@@ -50,6 +50,7 @@ import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
 import { UseReportPublication } from './publications/UseReportPublication';
 import { UseWhoCollectedPublication } from './publications/UseWhoCollectedPublication';
+import { UseWhoMirroredPublication } from './publications/UseWhoMirroredPublication';
 import { UseWhoReacted } from './publications/UseWhoReacted';
 import { RevenuePage } from './revenue/RevenuePage';
 import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
@@ -81,7 +82,7 @@ export function App() {
           <Header />
           <main>
             <Breadcrumbs />
-            <GenericErrorBoundary fallback={GenericError}>
+            <GenericErrorBoundary fallback={ErrorMessage}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/authentication" element={<AuthenticationPage />} />
@@ -108,6 +109,10 @@ export function App() {
                   element={<UseWhoCollectedPublication />}
                 />
                 <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
+                <Route
+                  path="/publications/useWhoMirroredPublication"
+                  element={<UseWhoMirroredPublication />}
+                />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />

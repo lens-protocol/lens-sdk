@@ -2,6 +2,7 @@ import { ProfileFragment, useUnreadNotificationCount } from '@lens-protocol/reac
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { Loading } from '../components/loading/Loading';
 
 type NotificationCountInnerProps = {
   profile: ProfileFragment;
@@ -12,7 +13,7 @@ function NotificationCountInner({ profile }: NotificationCountInnerProps) {
     profileId: profile.id,
   });
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
   return (
     <div>

@@ -1,5 +1,12 @@
 # @lens-protocol/wagmi
 
+## 0.3.0
+
+### Patch Changes
+
+- @lens-protocol/react@0.3.0
+- @lens-protocol/shared-kernel@0.3.0
+
 ## 0.2.0
 
 ### Patch Changes

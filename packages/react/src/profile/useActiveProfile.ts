@@ -1,30 +1,35 @@
-import { ProfileFragment } from '@lens-protocol/api-bindings';
+import { ProfileFragment, useGetProfileQuery } from '@lens-protocol/api-bindings';
 
 import { ReadResult } from '../helpers';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
+import { useSharedDependencies } from '../shared';
 import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
 
-export function useActiveProfile(): ReadResult<ProfileFragment | null> {
+export function useActiveProfile(): ReadResult<ProfileFragment | null, void> {
   const state = useAppState();
-
+  const { apolloClient } = useSharedDependencies();
   const profile = useActiveProfileVar();
 
-  if (state === ApplicationsState.LOADING) {
-    return {
-      loading: true,
-      data: undefined,
-    };
-  }
+  const { data, loading } = useGetProfileQuery({
+    variables: {
+      request: {
+        profileId: profile?.id,
+      },
+    },
+    fetchPolicy: 'cache-first',
+    skip: state !== ApplicationsState.READY || !profile,
+    client: apolloClient,
+  });
 
-  if (!profile) {
+  if (loading) {
     return {
-      loading: false,
-      data: null,
+      data: undefined,
+      loading: true,
     };
   }
 
   return {
+    data: data?.result ?? null,
     loading: false,
-    data: profile,
   };
 }

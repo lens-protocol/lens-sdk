@@ -2,6 +2,8 @@ import { ProfileFragment, useNotifications } from '@lens-protocol/react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
+import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { NotificationItem } from './components/NotificationItem';
 
@@ -11,13 +13,16 @@ type NotificationsInnerProps = {
 
 function NotificationsInner({ profile }: NotificationsInnerProps) {
   const {
-    loading,
     data: notifications,
+    error,
+    loading,
     hasMore,
     observeRef,
   } = useInfiniteScroll(useNotifications({ profileId: profile.id }));
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   if (notifications.length === 0) {
     return <p>No notifications</p>;

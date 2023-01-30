@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 
 type ProfilesSwitcherProps = {
@@ -18,7 +19,7 @@ type ProfilesSwitcherProps = {
 function ProfilesSwitcher({ address, current }: ProfilesSwitcherProps) {
   const { isPending, switchProfile } = useActiveProfileSwitch();
   const [selected, setSelected] = useState<string>(current.id);
-  const { data, loading } = useProfilesOwnedBy({ address, limit: 50 });
+  const { data, error, loading } = useProfilesOwnedBy({ address, limit: 50 });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,6 +27,8 @@ function ProfilesSwitcher({ address, current }: ProfilesSwitcherProps) {
   };
 
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   if (data.length === 0) {
     return <p>No profiles found</p>;

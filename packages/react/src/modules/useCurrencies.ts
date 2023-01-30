@@ -6,19 +6,29 @@ import { useSharedDependencies } from '../shared';
 
 export function useCurrencies(): ReadResult<Erc20[]> {
   const { apolloClient } = useSharedDependencies();
-  const { data, loading } = useReadResult<Erc20Fragment[]>(
+  const { data, error, loading } = useReadResult<Erc20Fragment[]>(
     useEnabledModuleCurrenciesQuery({ client: apolloClient }),
   );
 
   if (loading) {
     return {
-      loading: true,
       data: undefined,
+      error: undefined,
+      loading: true,
+    };
+  }
+
+  if (error) {
+    return {
+      data: undefined,
+      error: error,
+      loading: false,
     };
   }
 
   return {
-    loading: false,
     data: (data ?? []).map((currency) => erc20({ ...currency, chainType: ChainType.POLYGON })),
+    error: undefined,
+    loading: false,
   };
 }

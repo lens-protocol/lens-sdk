@@ -61,6 +61,11 @@ const publicationHooks = [
     description: `Check who collected a publication.`,
     path: '/publications/useWhoCollectedPublication',
   },
+  {
+    label: 'useWhoMirroredPublication',
+    description: 'Fetch profiles that have mirrored a specific publication',
+    path: '/publications/useWhoMirroredPublication',
+  },
 ];
 
 export function PublicationsPage() {

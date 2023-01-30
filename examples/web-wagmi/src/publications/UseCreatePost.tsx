@@ -2,6 +2,7 @@ import { useFeed, useRecentPosts } from '@lens-protocol/react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PostComposer } from './components/PostComposer';
@@ -13,11 +14,13 @@ type TimelineProps = {
 
 export function Timeline({ profileId }: TimelineProps) {
   const recentPosts = useRecentPosts();
-  const infiniteScroll = useInfiniteScroll(useFeed({ profileId }));
+  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(useFeed({ profileId }));
 
-  if (infiniteScroll.loading) return <Loading />;
+  if (loading) return <Loading />;
 
-  if (infiniteScroll.data.length === 0) return <p>No items</p>;
+  if (error) return <ErrorMessage error={error} />;
+
+  if (data.length === 0) return <p>No items</p>;
 
   return (
     <div>
@@ -25,11 +28,11 @@ export function Timeline({ profileId }: TimelineProps) {
         <PublicationCard key={`${item.id}-${i}`} publication={item} />
       ))}
 
-      {infiniteScroll.data.map((item, i) => (
+      {data.map((item, i) => (
         <PublicationCard key={`${item.root.id}-${i}`} publication={item.root} />
       ))}
 
-      {infiniteScroll.hasMore && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
+      {hasMore && <p ref={observeRef}>Loading more...</p>}
     </div>
   );
 }

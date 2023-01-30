@@ -132,7 +132,7 @@ export function createSharedDependencies(
 
   const profileGateway = new ProfileGateway(apolloClient);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
-  const activeProfilePresenter = new ActiveProfilePresenter(apolloClient);
+  const activeProfilePresenter = new ActiveProfilePresenter();
 
   const responders: TransactionResponders<SupportedTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),

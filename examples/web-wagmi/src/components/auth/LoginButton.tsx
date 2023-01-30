@@ -10,26 +10,29 @@ export function LoginButton() {
   const { login, error: loginError, isPending: isLoginPending } = useWalletLogin();
   const { logout, isPending: isLogoutPending } = useWalletLogout();
 
-  const { isDisconnected } = useAccount();
+  const { isConnected } = useAccount();
+  const { disconnectAsync } = useDisconnect();
+
   const { connectAsync } = useConnect({
     connector: new InjectedConnector(),
   });
 
   const onLoginClick = async () => {
-    if (isDisconnected) {
-      const { connector } = await connectAsync();
+    if (isConnected) {
+      await disconnectAsync();
+    }
 
-      if (connector instanceof InjectedConnector) {
-        const signer = await connector.getSigner();
-        await login(signer, WalletType.INJECTED);
-      }
+    const { connector } = await connectAsync();
+
+    if (connector instanceof InjectedConnector) {
+      const signer = await connector.getSigner();
+      await login(signer, WalletType.INJECTED);
     }
   };
 
-  const { disconnect } = useDisconnect();
   const onLogoutClick = async () => {
     await logout();
-    disconnect();
+    await disconnectAsync();
   };
 
   useEffect(() => {
