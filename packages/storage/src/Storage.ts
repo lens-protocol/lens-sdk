@@ -37,6 +37,13 @@ export class Storage<Data> implements IStorage<Data> {
   }
 
   subscribe(subscriber: StorageSubscriber<Data>): StorageSubscription {
+    // not all implementations need support for modifying storage across threads
+    if (!this.provider.subscribe) {
+      return {
+        unsubscribe() {},
+      };
+    }
+
     return this.provider.subscribe(this.getStorageKey(), async (newValue, oldValue) => {
       const newItem = newValue ? await this.parse(newValue) : { data: null };
       const oldItem = oldValue ? await this.parse(oldValue) : { data: null };
