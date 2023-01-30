@@ -7,6 +7,7 @@ import {
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from '../publications/components/PublicationCard';
@@ -33,7 +34,7 @@ export function Feed() {
   const [restrictEventTypesTo, setRestrictEventTypesTo] = useState<FeedEventItemType[]>([
     FeedEventItemType.Post,
   ]);
-  const infiniteScroll = useInfiniteScroll(
+  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
     useFeed({
       profileId: '0x3a2a',
       restrictEventTypesTo,
@@ -68,17 +69,19 @@ export function Feed() {
         ))}
       </fieldset>
 
-      {infiniteScroll.data?.length === 0 && <p>No items</p>}
+      {data?.length === 0 && <p>No items</p>}
 
-      {infiniteScroll.loading && <Loading />}
+      {loading && <Loading />}
 
-      {infiniteScroll.data
+      {error && <ErrorMessage error={error} />}
+
+      {data
         ?.filter((i) => isPostPublication(i.root))
         .map((item, i) => (
           <Publication key={`${item.root.id}-${i}`} feedItem={item} />
         ))}
 
-      {infiniteScroll.hasMore && <p ref={infiniteScroll.observeRef}>Loading more...</p>}
+      {hasMore && <p ref={observeRef}>Loading more...</p>}
     </div>
   );
 }

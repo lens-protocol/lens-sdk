@@ -1,50 +1,80 @@
-import { ApolloError, QueryResult } from '@apollo/client';
+import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
 import { CommonPaginatedResultInfoFragment, Maybe } from '@lens-protocol/api-bindings';
-import { CausedError } from '@lens-protocol/shared-kernel';
 
-export type ReadResult<T> =
+import { UnspecifiedError } from './UnspecifiedError';
+
+type ReadResultWithoutError<T> =
   | {
-      loading: true;
       data: undefined;
+      loading: true;
     }
   | {
-      loading: false;
       data: T;
+      loading: false;
     };
+
+type ReadResultWithError<T, E> =
+  | {
+      data: undefined;
+      error: undefined;
+      loading: true;
+    }
+  | {
+      data: T;
+      error: undefined;
+      loading: false;
+    }
+  | {
+      data: undefined;
+      error: E;
+      loading: false;
+    };
+
+export type ReadResult<T, E = UnspecifiedError> = E extends Error
+  ? ReadResultWithError<T, E>
+  : ReadResultWithoutError<T>;
 
 function buildReadResult<T>(
   data: T | undefined,
   loading: boolean,
   error: ApolloError | undefined,
-): ReadResult<T> {
-  if (error) {
-    throw new CausedError(error.message, { cause: error });
-  }
-
+): ReadResult<T, UnspecifiedError> {
   if (data && !loading) {
     return {
-      loading: false,
       data,
+      error: undefined,
+      loading: false,
+    };
+  }
+
+  if (error) {
+    return {
+      data: undefined,
+      error: new UnspecifiedError(error),
+      loading: false,
     };
   }
 
   return {
-    loading: true,
     data: undefined,
+    error: undefined,
+    loading: true,
   };
 }
 
+export type QueryData<R> = { result: R };
+
 export function useReadResult<
   R,
-  T extends { result: R } | { result: Maybe<R> } = { result: R },
+  T extends QueryData<R> | QueryData<Maybe<R>> = QueryData<R>,
   V = { [key: string]: never },
->({ error, data, loading }: QueryResult<T, V>): ReadResult<R>;
+>({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError>;
 export function useReadResult<
   U,
   R extends Maybe<U>,
-  T extends { result: R } = { result: R },
+  T extends QueryData<R> = QueryData<R>,
   V = { [key: string]: never },
->({ error, data, loading }: QueryResult<T, V>): ReadResult<R> {
+>({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
   return buildReadResult(data?.result, loading, error);
 }
 
@@ -52,20 +82,20 @@ export type PaginatedArgs<T> = T & {
   limit?: number;
 };
 
-export type PaginatedReadResult<T> = ReadResult<T> & {
+export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
   hasMore: boolean;
   next: () => Promise<void>;
 };
 
-type PaginatedQueryResult<K> = {
+export type PaginatedQueryData<K> = {
   result: { pageInfo: CommonPaginatedResultInfoFragment; items: K };
 };
 
 export function usePaginatedReadResult<
   K,
   V,
-  T extends PaginatedQueryResult<K> = PaginatedQueryResult<K>,
->({ error, data, loading, fetchMore }: QueryResult<T, V>): PaginatedReadResult<K> {
+  T extends PaginatedQueryData<K> = PaginatedQueryData<K>,
+>({ error, data, loading, fetchMore }: ApolloQueryResult<T, V>): PaginatedReadResult<K> {
   return {
     ...buildReadResult<K>(data?.result.items, loading, error),
     hasMore: data?.result.pageInfo.next ? true : false,

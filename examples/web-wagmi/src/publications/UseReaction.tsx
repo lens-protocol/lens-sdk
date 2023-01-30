@@ -8,6 +8,7 @@ import {
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
@@ -56,12 +57,18 @@ type ReactionInnerProps = {
 };
 
 function ReactionInner({ profile }: ReactionInnerProps) {
-  const { data: publication, loading: publicationLoading } = usePublication({
+  const {
+    data: publication,
+    error,
+    loading,
+  } = usePublication({
     publicationId: '0x1b-0x0118',
     observerId: profile.id, // important!
   });
 
-  if (publicationLoading) return <Loading />;
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>

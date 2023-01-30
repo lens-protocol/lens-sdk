@@ -1,18 +1,21 @@
 import { ProfileFragment, useProfile } from '@lens-protocol/react';
 import { useState } from 'react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
-import { SelectProfile } from './components/ProfileSelector';
+import { ProfileSelector } from './components/ProfileSelector';
 
 type ProfileByIdProps = {
   profileId: string;
 };
 
 function ProfileByIdLayout({ profileId }: ProfileByIdProps) {
-  const { data: profile, loading } = useProfile({ profileId });
+  const { data: profile, error, loading } = useProfile({ profileId });
 
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>
@@ -36,7 +39,7 @@ export function ProfileById() {
   return (
     <>
       <p>Select an id:</p>
-      <SelectProfile onProfileSelected={(p) => setProfile(p)} />
+      <ProfileSelector onProfileSelected={(p) => setProfile(p)} />
       {profile && <ProfileByIdLayout profileId={profile.id} />}
     </>
   );

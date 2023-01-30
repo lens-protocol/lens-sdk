@@ -5,8 +5,8 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { mockHidePublicationRequest } from '@lens-protocol/domain/mocks';
 
+import { UnspecifiedError } from '../../../UnspecifiedError';
 import { HidePublicationGateway } from '../HidePublicationGateway';
-import { NetworkError } from '../NetworkError';
 
 describe(`Given an instance of the ${HidePublicationGateway.name}`, () => {
   describe(`when the ${HidePublicationGateway.prototype.hide.name} method is invoked with an HidePublicationRequest`, () => {
@@ -38,7 +38,7 @@ describe(`Given an instance of the ${HidePublicationGateway.name}`, () => {
       const gateway = new HidePublicationGateway(apolloClient);
       const request = mockHidePublicationRequest();
 
-      await expect(gateway.hide(request)).rejects.toThrow(NetworkError);
+      await expect(gateway.hide(request)).rejects.toThrow(UnspecifiedError);
     });
   });
 });

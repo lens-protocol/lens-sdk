@@ -5,7 +5,7 @@ import { ApplicationsState, useAppState } from '../lifecycle/adapters/Applicatio
 import { useSharedDependencies } from '../shared';
 import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
 
-export function useActiveProfile(): ReadResult<ProfileFragment | null> {
+export function useActiveProfile(): ReadResult<ProfileFragment | null, void> {
   const state = useAppState();
   const { apolloClient } = useSharedDependencies();
   const profile = useActiveProfileVar();
@@ -23,20 +23,13 @@ export function useActiveProfile(): ReadResult<ProfileFragment | null> {
 
   if (loading) {
     return {
-      loading: true,
       data: undefined,
-    };
-  }
-
-  if (!data?.result) {
-    return {
-      loading: false,
-      data: null,
+      loading: true,
     };
   }
 
   return {
+    data: data?.result ?? null,
     loading: false,
-    data: data.result,
   };
 }
