@@ -17,7 +17,7 @@ import {
   mockChargeCollectPolicy,
 } from '@lens-protocol/domain/mocks';
 import {
-  CollectPolicy,
+  CollectPolicyRequest,
   ContentFocus,
   Media,
   ReferencePolicy,
@@ -30,7 +30,7 @@ export type PublicationExerciseData = {
     contentFocus?: ContentFocus;
     locale?: string;
     reference?: ReferencePolicy;
-    collect?: CollectPolicy;
+    collect?: CollectPolicyRequest;
   };
   expectedMetadata: Partial<Omit<PublicationMetadataV2Input, 'metadata_id' | 'version'>>;
   expectedMutationRequestDetails: {

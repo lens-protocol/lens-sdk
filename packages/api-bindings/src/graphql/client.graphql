@@ -1,7 +1,7 @@
 scalar ClientErc20Amount
 scalar ProfileAttributes
 scalar FollowPolicy
-scalar CollectState
+scalar CollectPolicy
 
 extend type Profile {
   ownedByMe: Boolean!
@@ -13,19 +13,19 @@ extend type Profile {
 extend type Post {
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean!
-  collectState: CollectState!
+  collectPolicy: CollectPolicy!
 }
 
 extend type Comment {
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean!
-  collectState: CollectState!
+  collectPolicy: CollectPolicy!
 }
 
 extend type Mirror {
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean! # just to keep Publication type consistent, that will never be used
-  collectState: CollectState!
+  collectPolicy: CollectPolicy!
 }
 
 type PendingPost {

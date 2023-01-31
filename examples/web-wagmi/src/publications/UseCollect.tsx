@@ -23,7 +23,7 @@ function CollectButton({ publication }: CollectButtonProps) {
 
   const isCollected = publication.hasOptimisticCollectedByMe || publication.hasCollectedByMe;
 
-  switch (publication.collectState) {
+  switch (publication.collectPolicy.state) {
     case CollectState.COLLECT_TIME_EXPIRED:
       return <button disabled={true}>Collecting ended</button>;
     case CollectState.COLLECT_LIMIT_REACHED:
@@ -76,7 +76,6 @@ function Feed({ activeProfile }: UseCollectInnerProps) {
               publication={item.root}
               collectButton={<CollectButton publication={item.root} />}
             />
-            <p>{item.root.collectModule.__typename}</p>
           </>
         ))}
 

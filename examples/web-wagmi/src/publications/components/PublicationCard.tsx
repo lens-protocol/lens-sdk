@@ -51,6 +51,15 @@ export function CollectablePublicationCard({
         {publication.hidden ? 'This publication has been hidden' : publication.metadata.content}
       </p>
       {collectButton}
+      {'collectLimit' in publication.collectPolicy && (
+        <p>
+          {publication.stats.totalAmountOfCollects}/{publication.collectPolicy.collectLimit}{' '}
+          collected
+        </p>
+      )}
+      {'endTimestamp' in publication.collectPolicy && (
+        <p>Collectable until: {publication.collectPolicy.endTimestamp}</p>
+      )}
     </article>
   );
 }

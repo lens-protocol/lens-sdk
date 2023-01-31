@@ -19,7 +19,7 @@ export {
 } from '@lens-protocol/domain/use-cases/publications';
 export type {
   ChargeCollectPolicy,
-  CollectPolicy,
+  CollectPolicyRequest,
   FreeCollectPolicy,
   Media,
   NftAttribute,

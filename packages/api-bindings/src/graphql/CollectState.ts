@@ -1,1 +1,0 @@
-export { CollectState } from '.';

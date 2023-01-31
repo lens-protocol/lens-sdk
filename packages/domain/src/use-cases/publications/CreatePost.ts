@@ -7,7 +7,7 @@ import {
   IProtocolCallPresenter,
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
-import { CollectPolicy, ContentFocus, Locale, Media, ReferencePolicy } from './types';
+import { CollectPolicyRequest, ContentFocus, Locale, Media, ReferencePolicy } from './types';
 
 export type CreatePostRequest = {
   content?: string;
@@ -15,7 +15,7 @@ export type CreatePostRequest = {
 
   media?: Media[];
   reference: ReferencePolicy;
-  collect: CollectPolicy;
+  collect: CollectPolicyRequest;
   profileId: string;
   kind: TransactionKind.CREATE_POST;
   locale: Locale;

@@ -1,7 +1,12 @@
 import { PublicationType, ReactionType, TransactionKind } from '@lens-protocol/domain/entities';
-import { CollectRequest, CollectType } from '@lens-protocol/domain/use-cases/publications';
-import { Amount, DateUtils, Erc20, never, Overwrite } from '@lens-protocol/shared-kernel';
+import {
+  CollectPolicyType,
+  CollectRequest,
+  CollectType,
+} from '@lens-protocol/domain/use-cases/publications';
+import { DateUtils, never, Overwrite } from '@lens-protocol/shared-kernel';
 
+import { CollectPolicy, CollectState } from '../CollectPolicy';
 import {
   Comment,
   CommentFragment,
@@ -18,7 +23,7 @@ import {
   TimedFeeCollectModuleSettingsFragment,
 } from '../generated';
 import { erc20Amount } from './amount';
-import { Typename, PickByTypename, JustTypename } from './types';
+import { JustTypename, PickByTypename, Typename } from './types';
 
 type PublicationTypename = JustTypename<Mirror> | JustTypename<Comment> | JustTypename<Post>;
 
@@ -108,7 +113,7 @@ export function createCollectRequest(
   publication: PublicationFragment,
   collector: ProfileFragment,
 ): CollectRequest {
-  switch (publication.collectModule.__typename) {
+  switch (publication.__collectModule.__typename) {
     case 'FreeCollectModuleSettings':
       return {
         profileId: collector.id,
@@ -128,15 +133,15 @@ export function createCollectRequest(
         publicationType: getPublicationType(publication),
         type: CollectType.PAID,
         fee: {
-          amount: erc20Amount({ from: publication.collectModule.amount }),
-          contractAddress: publication.collectModule.contractAddress,
+          amount: erc20Amount({ from: publication.__collectModule.amount }),
+          contractAddress: publication.__collectModule.contractAddress,
         },
       };
     case 'RevertCollectModuleSettings':
     case 'UnknownCollectModuleSettings':
       never(
         `Cannot collect publication with "${
-          publication.collectModule.__typename as string
+          publication.__collectModule.__typename as string
         }" collect module`,
       );
   }
@@ -153,31 +158,19 @@ export type PublicationFragmentWithCollectableCollectModule = PublicationFragmen
   collectModule: CollectableCollectModuleSettingsFragment;
 };
 
-export enum CollectState {
-  CAN_BE_COLLECTED = 'CAN_BE_COLLECTED',
-  CANNOT_BE_COLLECTED = 'CANNOT_BE_COLLECTED',
-  NOT_A_FOLLOWER = 'NOT_A_FOLLOWER',
-  COLLECT_LIMIT_REACHED = 'COLLECT_LIMIT_REACHED',
-  COLLECT_TIME_EXPIRED = 'COLLECT_TIME_EXPIRED',
-}
-
 export function resolveCollectState({
-  collectModule,
+  followerOnly,
   profile,
   publicationStats,
+  collectLimit,
+  endTimestamp,
 }: {
-  collectModule: PublicationFragment['collectModule'];
   profile: PublicationFragment['profile'];
   publicationStats: PublicationFragmentWithCollectableCollectModule['stats'];
+  followerOnly?: boolean;
+  collectLimit?: number;
+  endTimestamp?: string;
 }): CollectState {
-  const collectModuleProperties = resolveCollectModuleProperties(collectModule);
-
-  if (!collectModuleProperties) {
-    return CollectState.CANNOT_BE_COLLECTED;
-  }
-
-  const { followerOnly, collectLimit, endTimestamp } = collectModuleProperties;
-
   if (followerOnly && !profile.isFollowedByMe) {
     return CollectState.NOT_A_FOLLOWER;
   }
@@ -193,45 +186,67 @@ export function resolveCollectState({
   return CollectState.CAN_BE_COLLECTED;
 }
 
-type CollectModuleProperties = {
-  fee: Amount<Erc20> | null;
-  followerOnly: boolean | null;
-  referralFee: number | null;
-  collectLimit: number | null;
-  endTimestamp: string | null;
-};
-
-export function resolveCollectModuleProperties(
-  collectModule: NonNullable<PublicationFragment['collectModule']>,
-): CollectModuleProperties | null {
+export function resolveCollectPolicy({
+  profile,
+  collectModule,
+  publicationStats,
+}: {
+  collectModule: NonNullable<PublicationFragment['__collectModule']>;
+  profile: PublicationFragment['profile'];
+  publicationStats: PublicationFragmentWithCollectableCollectModule['stats'];
+}): CollectPolicy {
   switch (collectModule.__typename) {
     case 'FeeCollectModuleSettings':
       return {
-        fee: erc20Amount({ from: collectModule.amount }),
+        type: CollectPolicyType.CHARGE,
+        state: resolveCollectState({
+          followerOnly: collectModule.followerOnly,
+          profile,
+          publicationStats,
+        }),
+        amount: erc20Amount({ from: collectModule.amount }),
         referralFee: collectModule.referralFee,
         followerOnly: collectModule.followerOnly,
-        collectLimit: null,
-        endTimestamp: null,
       };
     case 'LimitedFeeCollectModuleSettings':
       return {
-        fee: erc20Amount({ from: collectModule.amount }),
+        type: CollectPolicyType.CHARGE,
+        state: resolveCollectState({
+          followerOnly: collectModule.followerOnly,
+          profile,
+          publicationStats,
+          collectLimit: parseInt(collectModule.collectLimit),
+        }),
+        amount: erc20Amount({ from: collectModule.amount }),
         referralFee: collectModule.referralFee,
         collectLimit: parseInt(collectModule.collectLimit),
         followerOnly: collectModule.followerOnly,
-        endTimestamp: null,
       };
     case 'TimedFeeCollectModuleSettings':
       return {
-        fee: erc20Amount({ from: collectModule.amount }),
+        type: CollectPolicyType.CHARGE,
+        state: resolveCollectState({
+          followerOnly: collectModule.followerOnly,
+          profile,
+          publicationStats,
+          endTimestamp: collectModule.endTimestamp,
+        }),
+        amount: erc20Amount({ from: collectModule.amount }),
         referralFee: collectModule.referralFee,
         endTimestamp: collectModule.endTimestamp,
         followerOnly: collectModule.followerOnly,
-        collectLimit: null,
       };
     case 'LimitedTimedFeeCollectModuleSettings':
       return {
-        fee: erc20Amount({ from: collectModule.amount }),
+        type: CollectPolicyType.CHARGE,
+        state: resolveCollectState({
+          followerOnly: collectModule.followerOnly,
+          profile,
+          publicationStats,
+          collectLimit: parseInt(collectModule.collectLimit),
+          endTimestamp: collectModule.endTimestamp,
+        }),
+        amount: erc20Amount({ from: collectModule.amount }),
         referralFee: collectModule.referralFee,
         collectLimit: parseInt(collectModule.collectLimit),
         endTimestamp: collectModule.endTimestamp,
@@ -239,15 +254,19 @@ export function resolveCollectModuleProperties(
       };
     case 'FreeCollectModuleSettings':
       return {
-        fee: null,
+        type: CollectPolicyType.FREE,
+        state: resolveCollectState({
+          followerOnly: collectModule.followerOnly,
+          profile,
+          publicationStats,
+        }),
         followerOnly: collectModule.followerOnly,
-        referralFee: null,
-        collectLimit: null,
-        endTimestamp: null,
       };
     case 'RevertCollectModuleSettings':
-    default:
-      // default makes sure we don't throw on unknown collect modules
-      return null;
+    case 'UnknownCollectModuleSettings':
+      return {
+        type: CollectPolicyType.NO_COLLECT,
+        state: CollectState.CANNOT_BE_COLLECTED,
+      };
   }
 }

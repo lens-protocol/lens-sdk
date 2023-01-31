@@ -1,9 +1,11 @@
 import { faker } from '@faker-js/faker';
+import { CollectPolicyType } from '@lens-protocol/domain/dist/use-cases/publications';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import { CollectState, NoFeeCollectPolicy } from '../CollectPolicy';
 import { FollowPolicy } from '../FollowPolicy';
 import { ProfileAttributes } from '../ProfileAttributes';
 import {
@@ -21,9 +23,9 @@ import {
   MirrorFragment,
   ModuleInfoFragment,
   PostFragment,
-  ProfileFragment,
   ProfileFollowModuleSettings,
   ProfileFollowRevenueFragment,
+  ProfileFragment,
   ProfileMediaFragment,
   PublicationMainFocus,
   PublicationRevenueFragment,
@@ -37,7 +39,7 @@ import {
   WalletFragment,
   WhoReactedResultFragment,
 } from '../generated';
-import { CollectState, erc20Amount } from '../utils';
+import { erc20Amount } from '../utils';
 
 export function mockMediaFragment(overrides?: Partial<MediaFragment>): MediaFragment {
   return {
@@ -180,6 +182,15 @@ function mockMetadataFragment(): MetadataFragment {
   };
 }
 
+function mockNoFeeCollectPolicy(overrides?: Partial<NoFeeCollectPolicy>): NoFeeCollectPolicy {
+  return {
+    type: CollectPolicyType.FREE,
+    state: CollectState.CAN_BE_COLLECTED,
+    followerOnly: false,
+    ...overrides,
+  };
+}
+
 export function mockPostFragment(
   overrides?: Partial<Omit<PostFragment, '__typename'>>,
 ): PostFragment {
@@ -190,8 +201,8 @@ export function mockPostFragment(
     metadata: mockMetadataFragment(),
     profile: mockProfileFragment(),
     collectedBy: null,
-    collectModule: mockFreeCollectModuleSettings(),
-    collectState: CollectState.CAN_BE_COLLECTED,
+    __collectModule: mockFreeCollectModuleSettings(),
+    collectPolicy: mockNoFeeCollectPolicy(),
     referenceModule: null,
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
@@ -233,8 +244,8 @@ export function mockCommentFragment(
     collectedBy: null,
     commentOn: mainPost,
     mainPost: mainPost,
-    collectModule: mockFreeCollectModuleSettings(),
-    collectState: CollectState.CAN_BE_COLLECTED,
+    __collectModule: mockFreeCollectModuleSettings(),
+    collectPolicy: mockNoFeeCollectPolicy(),
     referenceModule: null,
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
@@ -273,8 +284,8 @@ export function mockMirrorFragment(
     },
     profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
-    collectModule: mockFreeCollectModuleSettings(),
-    collectState: CollectState.CAN_BE_COLLECTED,
+    __collectModule: mockFreeCollectModuleSettings(),
+    collectPolicy: mockNoFeeCollectPolicy(),
     referenceModule: null,
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,

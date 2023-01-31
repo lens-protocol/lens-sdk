@@ -1,11 +1,5 @@
-import {
-  CollectState,
-  Comment,
-  Mirror,
-  Post,
-  PublicationFragment,
-  resolveCollectState,
-} from '../graphql';
+import { Comment, Mirror, Post, PublicationFragment, resolveCollectPolicy } from '../graphql';
+import { CollectPolicy } from '../graphql/CollectPolicy';
 import { TypePolicy } from './TypePolicy';
 
 type R = Post | Comment | Mirror;
@@ -51,16 +45,16 @@ export function createPublicationTypePolicy(): TypePolicy<R> {
         return existing ?? false;
       },
 
-      collectState(
-        existing: CollectState | undefined,
+      collectPolicy(
+        existing: CollectPolicy | undefined,
         { readField }: { readField: (field: keyof R) => Readonly<unknown> | undefined },
       ) {
         if (existing) return existing;
         const profile = readField('profile') as PublicationFragment['profile'];
-        const collectModule = readField('collectModule') as PublicationFragment['collectModule'];
+        const collectModule = readField('collectModule') as PublicationFragment['__collectModule'];
         const publicationStats = readField('stats') as PublicationFragment['stats'];
 
-        return resolveCollectState({ profile, collectModule, publicationStats });
+        return resolveCollectPolicy({ profile, collectModule, publicationStats });
       },
     },
   };

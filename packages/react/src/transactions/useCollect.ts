@@ -44,3 +44,4 @@ export function useCollect({ publication }: UseCollectArgs) {
 }
 
 export { CollectState } from '@lens-protocol/api-bindings';
+export type { CollectPolicy } from '@lens-protocol/api-bindings';
