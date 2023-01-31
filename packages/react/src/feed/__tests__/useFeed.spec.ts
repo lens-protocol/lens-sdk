@@ -1,5 +1,4 @@
 import { FeedEventItemType as LensFeedEventItemType } from '@lens-protocol/api-bindings';
-import { FeedEventItemType } from '../FeedEventItemType';
 import {
   createMockApolloClientWithMultipleResponses,
   mockFeedItemFragment,
@@ -8,6 +7,7 @@ import {
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { FeedEventItemType } from '../FeedEventItemType';
 import { useFeed } from '../useFeed';
 
 describe(`Given the ${useFeed.name} hook`, () => {
