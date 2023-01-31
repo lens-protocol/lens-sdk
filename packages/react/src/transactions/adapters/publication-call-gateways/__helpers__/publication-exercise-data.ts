@@ -20,7 +20,7 @@ import {
   CollectPolicy,
   ContentFocus,
   Media,
-  ReferencePolicy,
+  ReferencePolicyConfig,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 
@@ -30,7 +30,7 @@ export type PublicationExerciseData = {
     media?: Media[];
     contentFocus?: ContentFocus;
     locale?: string;
-    reference?: ReferencePolicy;
+    reference?: ReferencePolicyConfig;
     collect?: CollectPolicy;
   };
   expectedMetadata: Partial<Omit<PublicationMetadataV2Input, 'metadata_id' | 'version'>>;

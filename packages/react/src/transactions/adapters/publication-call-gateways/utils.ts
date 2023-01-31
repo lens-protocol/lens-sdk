@@ -13,7 +13,6 @@ import {
   CreatePostRequest,
   CreateCommentRequest,
   Media,
-  CreateMirrorRequest,
   NftAttribute,
 } from '@lens-protocol/domain/use-cases/publications';
 import { v4 } from 'uuid';
@@ -130,7 +129,7 @@ export function resolveCollectModule(
 }
 
 export function resolveReferenceModule(
-  request: CreatePostRequest | CreateCommentRequest | CreateMirrorRequest,
+  request: CreatePostRequest | CreateCommentRequest,
 ): ReferenceModuleParams | undefined {
   if (request.reference.type === ReferencePolicyType.FOLLOWERS_ONLY) {
     return {
@@ -141,12 +140,6 @@ export function resolveReferenceModule(
   if (request.reference.type === ReferencePolicyType.DEGREES_OF_SEPARATION) {
     return {
       degreesOfSeparationReferenceModule: request.reference.params,
-    };
-  }
-
-  if (request.reference.type === ReferencePolicyType.UNKNOWN) {
-    return {
-      unknownReferenceModule: request.reference.params,
     };
   }
 

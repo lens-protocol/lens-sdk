@@ -9,15 +9,7 @@ type FollowersOnlyPolicy = {
   type: ReferencePolicyType.FOLLOWERS_ONLY;
 };
 
-type UnknownPolicy = {
-  type: ReferencePolicyType.UNKNOWN;
-  params: {
-    contractAddress: string;
-    data: string;
-  };
-};
-
-type DegreesOfSeperationPolicy = {
+type DegreesOfSeparationPolicy = {
   type: ReferencePolicyType.DEGREES_OF_SEPARATION;
   params: {
     commentsRestricted: boolean;
@@ -30,8 +22,4 @@ type AnyonePolicy = {
   type: ReferencePolicyType.ANYONE;
 };
 
-export type ReferencePolicy =
-  | FollowersOnlyPolicy
-  | UnknownPolicy
-  | DegreesOfSeperationPolicy
-  | AnyonePolicy;
+export type ReferencePolicyConfig = FollowersOnlyPolicy | DegreesOfSeparationPolicy | AnyonePolicy;

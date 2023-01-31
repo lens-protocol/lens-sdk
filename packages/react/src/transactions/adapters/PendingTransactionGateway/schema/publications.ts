@@ -80,7 +80,7 @@ const AnyoneReferencePolicySchema = z.object({
   type: z.literal(ReferencePolicyType.ANYONE),
 });
 
-const DegreesOfSeperationReferencePolicySchema = z.object({
+const DegreesOfSeparationReferencePolicySchema = z.object({
   type: z.literal(ReferencePolicyType.DEGREES_OF_SEPARATION),
   params: z.object({
     commentsRestricted: z.boolean(),
@@ -93,26 +93,17 @@ const FollowersOnlyReferencePolicySchema = z.object({
   type: z.literal(ReferencePolicyType.FOLLOWERS_ONLY),
 });
 
-const UnknownReferencePolicySchema = z.object({
-  type: z.literal(ReferencePolicyType.UNKNOWN),
-  params: z.object({
-    contractAddress: z.string(),
-    data: z.string(),
-  }),
-});
-
-const ReferencePolicySchema = z.union([
+const ReferencePolicyConfigSchema = z.union([
   AnyoneReferencePolicySchema,
-  DegreesOfSeperationReferencePolicySchema,
+  DegreesOfSeparationReferencePolicySchema,
   FollowersOnlyReferencePolicySchema,
-  UnknownReferencePolicySchema,
 ]);
 
 export const CreatePostRequestSchema = z.object({
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),
   media: z.array(MediaSchema).optional(),
-  reference: ReferencePolicySchema,
+  reference: ReferencePolicyConfigSchema,
   collect: CollectPolicySchema,
   profileId: z.string(),
   kind: z.literal(TransactionKind.CREATE_POST),
@@ -125,7 +116,7 @@ export const CreateCommentRequestSchema = z.object({
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),
   media: z.array(MediaSchema).optional(),
-  reference: ReferencePolicySchema,
+  reference: ReferencePolicyConfigSchema,
   collect: CollectPolicySchema,
   profileId: z.string(),
   kind: z.literal(TransactionKind.CREATE_COMMENT),
@@ -138,7 +129,6 @@ export const CreateMirrorRequestSchema = z.object({
   publicationId: z.string(),
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   delegate: z.boolean(),
-  reference: ReferencePolicySchema,
 });
 
 export const FreeCollectRequestSchema = z.object({

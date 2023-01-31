@@ -15,7 +15,7 @@ import { CreateMirrorRequest } from '../CreateMirror';
 import { CreatePostRequest } from '../CreatePost';
 import { HidePublicationRequest } from '../HidePublication';
 import { ReactionRequest } from '../Reaction';
-import { ReferencePolicyType } from '../ReferencePolicy';
+import { ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
 import {
   ChargeCollectPolicy,
@@ -140,7 +140,6 @@ export function mockCreateMirrorRequest(
     ...overrides,
     kind: TransactionKind.MIRROR_PUBLICATION,
     delegate: false,
-    reference: { type: ReferencePolicyType.ANYONE },
   };
 }
 

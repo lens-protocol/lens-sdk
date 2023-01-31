@@ -1,6 +1,7 @@
 import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from './FollowPolicy';
+import type { ReferencePolicy } from './ReferencePolicy';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
@@ -84,8 +85,8 @@ export type Scalars = {
   /** The reaction id */
   ReactionId: unknown;
   /** reference module data scalar type */
-  ReferenceModuleData: unknown;
-  ReferencePolicy: unknown;
+  ReferenceModuleData: string;
+  ReferencePolicy: ReferencePolicy;
   /** Query search */
   Search: string;
   /** Relayer signature */
@@ -1850,7 +1851,6 @@ export type Mirror = {
   isDataAvailability: Scalars['Boolean'];
   /** Indicates if the publication is gated behind some access criteria */
   isGated: Scalars['Boolean'];
-  isOptimisticMirroredByMe: Scalars['Boolean'];
   /** The metadata for the post */
   metadata: MetadataOutput;
   /** The mirror publication */
@@ -1862,7 +1862,6 @@ export type Mirror = {
   reaction: Maybe<ReactionTypes>;
   /** The reference module */
   referenceModule: Maybe<ReferenceModule>;
-  referencePolicy: Scalars['ReferencePolicy'];
   /** The publication stats */
   stats: PublicationStats;
 };
@@ -4069,8 +4068,6 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
   | 'reaction'
   | 'hasCollectedByMe'
   | 'hasOptimisticCollectedByMe'
-  | 'isOptimisticMirroredByMe'
-  | 'referencePolicy'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4083,13 +4080,6 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
       | CollectModule_RevertCollectModuleSettings_Fragment
       | CollectModule_TimedFeeCollectModuleSettings_Fragment
       | CollectModule_UnknownCollectModuleSettings_Fragment;
-    referenceModule: Maybe<
-      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
-      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
-      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
-    >;
-    canComment: Pick<CanCommentResponse, 'result'>;
-    canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
 export type MirrorFragment = { __typename: 'Mirror' } & {
@@ -5273,29 +5263,17 @@ export const MirrorBaseFragmentDoc = gql`
     collectModule {
       ...CollectModule
     }
-    referenceModule {
-      ...ReferenceModule
-    }
     createdAt
     hidden
     isGated
     reaction(request: { profileId: $observerId })
     hasCollectedByMe(isFinalisedOnChain: true)
-    canComment(profileId: $observerId) {
-      result
-    }
-    canMirror(profileId: $observerId) {
-      result
-    }
     hasOptimisticCollectedByMe @client
-    isOptimisticMirroredByMe @client
-    referencePolicy @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
   ${ProfileFragmentDoc}
   ${CollectModuleFragmentDoc}
-  ${ReferenceModuleFragmentDoc}
 `;
 export const CommentFragmentDoc = gql`
   fragment Comment on Comment {
@@ -10250,14 +10228,12 @@ export type MirrorKeySpecifier = (
   | 'id'
   | 'isDataAvailability'
   | 'isGated'
-  | 'isOptimisticMirroredByMe'
   | 'metadata'
   | 'mirrorOf'
   | 'onChainContentURI'
   | 'profile'
   | 'reaction'
   | 'referenceModule'
-  | 'referencePolicy'
   | 'stats'
   | MirrorKeySpecifier
 )[];
@@ -10276,14 +10252,12 @@ export type MirrorFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
   isGated?: FieldPolicy<any> | FieldReadFunction<any>;
-  isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOf?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
-  referencePolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MirrorEventKeySpecifier = ('profile' | 'timestamp' | MirrorEventKeySpecifier)[];

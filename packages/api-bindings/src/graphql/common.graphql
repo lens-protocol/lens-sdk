@@ -180,24 +180,13 @@ fragment MirrorBase on Mirror {
   collectModule {
     ...CollectModule
   }
-  referenceModule {
-    ...ReferenceModule
-  }
   createdAt
   hidden
   isGated
   reaction(request: { profileId: $observerId })
   hasCollectedByMe(isFinalisedOnChain: true)
-  canComment(profileId: $observerId) {
-    result
-  }
-  canMirror(profileId: $observerId) {
-    result
-  }
 
   hasOptimisticCollectedByMe @client
-  isOptimisticMirroredByMe @client # just to keep Publication type consistent, that will never be used
-  referencePolicy @client
 }
 
 fragment Mirror on Mirror {

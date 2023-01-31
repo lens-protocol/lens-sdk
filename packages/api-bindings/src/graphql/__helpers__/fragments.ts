@@ -279,23 +279,12 @@ export function mockMirrorFragment(
     profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
     collectModule: mockFreeCollectModuleSettings(),
-    referenceModule: null,
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
-    isOptimisticMirroredByMe: false,
     mirrorOf: mainPost,
     reaction: null,
     hidden: false,
     isGated: false,
-    canComment: {
-      result: true,
-    },
-    canMirror: {
-      result: true,
-    },
-    referencePolicy: {
-      type: ReferencePolicyType.ANYONE,
-    },
     ...overrides,
     __typename: 'Mirror',
   };
