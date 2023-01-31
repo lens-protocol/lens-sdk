@@ -2,12 +2,12 @@ import './shims';
 
 import React from 'react';
 import {LensConfig, LensProvider, sources, staging} from '@lens-protocol/react';
+import {View, StyleSheet, SafeAreaView} from 'react-native';
 
 import {ExplorePublications} from './src/ExplorePublications';
 import {mmkvStorageProvider} from './src/mmkvStorageProvider';
 import {bindings} from './src/wallet';
 import {LoginButton} from './src/LoginButton';
-import {SafeAreaView, StyleSheet} from 'react-native';
 
 const lensConfig: LensConfig = {
   bindings: bindings(),
@@ -20,8 +20,10 @@ export default function App() {
   return (
     <LensProvider config={lensConfig}>
       <SafeAreaView style={styles.wrapper}>
-        <LoginButton />
-        <ExplorePublications />
+        <View style={styles.container}>
+          <LoginButton />
+          <ExplorePublications />
+        </View>
       </SafeAreaView>
     </LensProvider>
   );
@@ -29,7 +31,11 @@ export default function App() {
 
 const styles = StyleSheet.create({
   wrapper: {
+    backgroundColor: '#FFF',
     flex: 1,
-    margin: 15,
+  },
+  container: {
+    flex: 1,
+    padding: 15,
   },
 });
