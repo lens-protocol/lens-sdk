@@ -106,12 +106,12 @@ export function isPublicationOwnedByMe(
 
 export function createCollectRequest(
   publication: PublicationFragment,
-  activeProfile: ProfileFragment,
+  collector: ProfileFragment,
 ): CollectRequest {
   switch (publication.collectModule.__typename) {
     case 'FreeCollectModuleSettings':
       return {
-        profileId: activeProfile.id,
+        profileId: collector.id,
         kind: TransactionKind.COLLECT_PUBLICATION,
         publicationId: publication.id,
         publicationType: getPublicationType(publication),
@@ -122,7 +122,7 @@ export function createCollectRequest(
     case 'TimedFeeCollectModuleSettings':
     case 'LimitedTimedFeeCollectModuleSettings':
       return {
-        profileId: activeProfile.id,
+        profileId: collector.id,
         kind: TransactionKind.COLLECT_PUBLICATION,
         publicationId: publication.id,
         publicationType: getPublicationType(publication),
