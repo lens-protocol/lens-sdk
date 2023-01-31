@@ -4082,7 +4082,11 @@ export type MetadataAttributeOutputFragment = { __typename: 'MetadataAttributeOu
 
 export type PublicationStatsFragment = { __typename: 'PublicationStats' } & Pick<
   PublicationStats,
-  'totalAmountOfMirrors' | 'totalUpvotes' | 'totalAmountOfCollects' | 'totalAmountOfComments'
+  | 'totalAmountOfMirrors'
+  | 'totalUpvotes'
+  | 'totalDownvotes'
+  | 'totalAmountOfCollects'
+  | 'totalAmountOfComments'
 >;
 
 export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
@@ -4909,6 +4913,7 @@ export const PublicationStatsFragmentDoc = gql`
     __typename
     totalAmountOfMirrors
     totalUpvotes
+    totalDownvotes
     totalAmountOfCollects
     totalAmountOfComments
   }

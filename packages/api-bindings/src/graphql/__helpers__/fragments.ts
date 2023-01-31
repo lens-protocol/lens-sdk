@@ -176,6 +176,7 @@ export function mockPublicationStatsFragment(
     totalAmountOfCollects: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     totalAmountOfComments: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     totalUpvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
+    totalDownvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     ...overrides,
     __typename: 'PublicationStats',
   };
