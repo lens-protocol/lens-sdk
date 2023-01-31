@@ -4,7 +4,7 @@ import { ReferencePolicy, ReferencePolicyType } from '@lens-protocol/domain/use-
 import { Comment, Mirror, Post, ReferenceModule } from '../graphql';
 import { TypePolicy } from './TypePolicy';
 
-function resolveReferenceModule(module: ReferenceModule | null): ReferencePolicy {
+function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
   if (module === null) {
     return {
       type: ReferencePolicyType.ANYONE,
@@ -50,7 +50,7 @@ export function createPublicationTypePolicy(): TypePolicy<R> {
 
         const module = readField<ReferenceModule>('referenceModule');
 
-        return resolveReferenceModule(module ?? null);
+        return resolveReferencePolicy(module ?? null);
       },
 
       mirrors: {
