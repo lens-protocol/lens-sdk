@@ -133,7 +133,7 @@ export function createCollectRequest(
         },
       };
     case 'RevertCollectModuleSettings':
-    default:
+    case 'UnknownCollectModuleSettings':
       never(
         `Cannot collect publication with "${
           publication.collectModule.__typename as string
