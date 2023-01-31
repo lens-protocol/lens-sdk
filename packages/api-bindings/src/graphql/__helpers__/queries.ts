@@ -20,6 +20,7 @@ import {
   FeedQueryVariables,
   GetAllProfilesByOwnerAddressDocument,
   GetAllProfilesByOwnerAddressQuery,
+  GetAllProfilesByWhoMirroredPublicationQueryVariables,
   GetProfileDocument,
   GetProfileQuery,
   HasTxHashBeenIndexedDocument,
@@ -75,6 +76,7 @@ import {
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables,
   WhoReactedResultFragment,
+  GetAllProfilesByWhoMirroredPublicationDocument,
 } from '../generated';
 import {
   mockEnabledModulesFragment,
@@ -530,6 +532,32 @@ export function createSearchProfilesQueryMockedResponse(args: {
   return {
     request: {
       query: SearchProfilesDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          __typename: 'ProfileSearchResult',
+          items: args.items,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function createProfilesWhoMirroredPublicationMockedResponse(args: {
+  variables: GetAllProfilesByWhoMirroredPublicationQueryVariables;
+  items: ProfileFragment[];
+}): MockedResponse<SearchProfilesQuery> {
+  return {
+    request: {
+      query: GetAllProfilesByWhoMirroredPublicationDocument,
       variables: args.variables,
     },
     result: {

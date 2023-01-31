@@ -18,7 +18,7 @@ export function usePublicationRevenue({
 }: UsePublicationRevenueArgs): ReadResult<RevenueAggregateFragment> {
   const { apolloClient } = useSharedDependencies();
 
-  const { data, loading } = useReadResult<
+  const { data, error, loading } = useReadResult<
     RevenueFragment,
     PublicationRevenueQuery,
     PublicationRevenueQueryVariables
@@ -26,14 +26,25 @@ export function usePublicationRevenue({
     usePublicationRevenueQuery({ variables: { request: { publicationId } }, client: apolloClient }),
   );
 
-  if (loading)
+  if (loading) {
     return {
-      loading: true,
       data: undefined,
+      error: undefined,
+      loading: true,
     };
+  }
+
+  if (error) {
+    return {
+      data: undefined,
+      error: error,
+      loading: false,
+    };
+  }
 
   return {
     data: data.revenue,
+    error: undefined,
     loading: false,
   };
 }

@@ -1,5 +1,42 @@
 # @lens-protocol/react
 
+## 0.3.0
+
+### Minor Changes
+
+- fc53150: Added `useProfilesOwnedBy` hook
+- e830624: Removed `PendingSigningRequestError | UserRejectedError | WalletConnectionError` from `LensProvider` `onError` handler
+  Changed `useWalletLogin` to return an object with `login`, `error` and `isPending` keys
+  Changed `useWalletLogout` to return an object with `logout` and `isPending``
+- 275f811: Added `useReportPublication` hook
+- fb53a70: Added `useWhoCollectedPublication` hook
+- b2c5ab5: Removes `Fields` suffix from GQL fragments type definitions
+- 751d066: Added `useCreateMirror` hook
+- c75bb6d: Added `useActiveProfileSwitcher`
+- eb010f1: Added `useProfilePublicationRevenue` hook
+- e6ba141: Added `useUpdateDispatcherConfig` hook
+- cad27c4: Added `useHidePublication` hook
+- b5c0427: Added ability to update profile follow policy
+- 828089a: Added `useUpdateProfileImage` hook
+- ab034e9: Added `RevenueAggregate.totalAmount: Amount<Erc20>`
+- e3cc08e: Removed `totalCount` from paginated queries
+- 2f15aa8: Added `useEnabledModules` hook
+- 8bfd767: Added `isValidHandle` helper
+- 1b3d049: Changed `useUpdatedProfileImage` to support dispatcher
+- 6613321: Fixed duplicated `@apollo/client` package when using `pnpm` package manager
+- 0236b7c: Changed return type of `useActiveWallet` hook.
+- 422e571: Added capability to filter by event type in `useFeed` hook.
+- bd33559: Fixed `usePublications` pagination support
+
+### Patch Changes
+
+- Updated dependencies
+  - @lens-protocol/api-bindings@0.3.0
+  - @lens-protocol/blockchain-bindings@0.3.0
+  - @lens-protocol/domain@0.3.0
+  - @lens-protocol/shared-kernel@0.3.0
+  - @lens-protocol/storage@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

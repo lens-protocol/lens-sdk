@@ -1,5 +1,6 @@
 import { useProfilePublicationRevenue } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationRevenueCard } from './components/PublicationRevenueCard';
@@ -7,15 +8,15 @@ import { PublicationRevenueCard } from './components/PublicationRevenueCard';
 const profileId = '0x15';
 
 export function UseProfilePublicationRevenue() {
-  const { data, loading, hasMore, observeRef } = useInfiniteScroll(
+  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
     useProfilePublicationRevenue({
       profileId,
     }),
   );
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>

@@ -1,32 +1,29 @@
 import { useComments, usePublication } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from './components/PublicationCard';
 
-type PublicationLayoutProps = {
-  publicationId: string;
+type CommentsProps = {
+  commentsOf: string;
 };
 
-function PublicationLayout({ publicationId }: PublicationLayoutProps) {
-  const { data: publication, loading: publicationLoading } = usePublication({ publicationId });
+function Comments({ commentsOf }: CommentsProps) {
   const {
     data: comments,
-    loading: commentsLoading,
+    error,
+    loading,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(useComments({ commentsOf: publicationId }));
+  } = useInfiniteScroll(useComments({ commentsOf }));
 
-  if (publicationLoading || commentsLoading) return <Loading />;
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
+
   return (
     <div>
-      <h1>
-        <code>usePublication</code>
-      </h1>
-      <PublicationCard publication={publication} />
-      <h3>
-        <code>useComments</code>
-      </h3>
       {comments.map((comment) => (
         <PublicationCard key={comment.id} publication={comment} />
       ))}
@@ -36,6 +33,23 @@ function PublicationLayout({ publicationId }: PublicationLayoutProps) {
 }
 
 export function UsePublication() {
-  // TODO: use the useExplorePublications hook to get a list of publications to select an id from
-  return <PublicationLayout publicationId="0x1b-0x0118" />;
+  const { data: publication, error, loading } = usePublication({ publicationId: '0x1b-0x0118' });
+
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
+
+  return (
+    <div>
+      <h1>
+        <code>usePublication</code>
+      </h1>
+      <PublicationCard publication={publication} />
+      <h3>
+        <code>useComments</code>
+      </h3>
+
+      <Comments commentsOf={publication.id} />
+    </div>
+  );
 }

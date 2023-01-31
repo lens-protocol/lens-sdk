@@ -3,7 +3,7 @@ import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { Wallet, TransactionKind, WalletType } from '../../../entities';
+import { Wallet, TransactionKind } from '../../../entities';
 import { mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveWallet } from '../ActiveWallet';
 import { WalletData } from '../IActiveWalletPresenter';
@@ -132,7 +132,6 @@ export function mockWalletLoginRequest(
 ): WalletLoginRequest {
   return {
     address: mockEthereumAddress(),
-    type: WalletType.UNSPECIFIED,
     ...overrides,
   };
 }

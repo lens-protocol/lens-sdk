@@ -1,4 +1,4 @@
-import { PublicationType, TransactionKind } from '@lens-protocol/domain/entities';
+import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   CollectPolicyType,
   CollectType,
@@ -112,7 +112,6 @@ export const FreeCollectRequestSchema = z.object({
   profileId: z.string(),
   type: z.literal(CollectType.FREE),
   publicationId: z.string(),
-  publicationType: z.nativeEnum(PublicationType),
   kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
 });
 
@@ -125,7 +124,6 @@ export const PaidCollectRequestSchema = z.object({
   profileId: z.string(),
   type: z.literal(CollectType.PAID),
   publicationId: z.string(),
-  publicationType: z.nativeEnum(PublicationType),
   fee: CollectFeeSchema,
   kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
 });

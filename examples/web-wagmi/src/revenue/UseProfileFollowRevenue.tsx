@@ -1,18 +1,28 @@
-import { ProfileFragment, useProfile, useProfileFollowRevenue } from '@lens-protocol/react';
+import { ProfileFragment, useProfileFollowRevenue } from '@lens-protocol/react';
 import { useState } from 'react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from '../profiles/components/ProfileCard';
-import { SelectProfile } from '../profiles/components/ProfileSelector';
+import { ProfileSelector } from '../profiles/components/ProfileSelector';
 import { RevenueCard } from './components/RevenueCard';
 
-function UseProfileFollowRevenueInner({ profileId }: { profileId: string }) {
-  const { data: profile, loading: profileLoading } = useProfile({ profileId });
-  const { data: publicationRevenue, loading: publicationRevenueLoading } = useProfileFollowRevenue({
-    profileId,
+type UseProfileFollowRevenueInnerProps = {
+  profile: ProfileFragment;
+};
+
+function UseProfileFollowRevenueInner({ profile }: UseProfileFollowRevenueInnerProps) {
+  const {
+    data: publicationRevenue,
+    error,
+    loading,
+  } = useProfileFollowRevenue({
+    profileId: profile.id,
   });
 
-  if (publicationRevenueLoading || profileLoading) return <Loading />;
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>
@@ -38,8 +48,8 @@ export function UseProfileFollowRevenue() {
         <code>useProfileFollowRevenue</code>
       </h1>
       <p>Select a profile to see their follow revenue:</p>
-      <SelectProfile onProfileSelected={(p) => setProfile(p)} />
-      {profile && <UseProfileFollowRevenueInner profileId={profile.id} />}
+      <ProfileSelector onProfileSelected={(p) => setProfile(p)} />
+      {profile && <UseProfileFollowRevenueInner profile={profile} />}
     </>
   );
 }

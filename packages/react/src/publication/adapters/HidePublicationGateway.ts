@@ -10,7 +10,7 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { assertError, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
-import { NetworkError } from './NetworkError';
+import { UnspecifiedError } from '../../UnspecifiedError';
 
 export class HidePublicationGateway implements IHidePublicationGateway {
   constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
@@ -28,7 +28,7 @@ export class HidePublicationGateway implements IHidePublicationGateway {
     } catch (e) {
       assertError(e);
 
-      throw new NetworkError(e);
+      throw new UnspecifiedError(e);
     }
   }
 }

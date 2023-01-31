@@ -1,5 +1,7 @@
 import { usePublications } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../../components/error/ErrorMessage';
+
 type SelectPublicationIdProps = {
   onPublicationSelected: (publicationId: string) => void;
   profileId: string;
@@ -9,9 +11,11 @@ export function SelectPublicationId({
   onPublicationSelected,
   profileId,
 }: SelectPublicationIdProps) {
-  const { data: publications, loading } = usePublications({ profileId, limit: 30 });
+  const { data: publications, error, loading } = usePublications({ profileId, limit: 30 });
 
   if (loading) return null;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <select

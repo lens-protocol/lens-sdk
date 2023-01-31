@@ -12,7 +12,7 @@ import { ReportReason } from '@lens-protocol/domain/entities';
 import { mockReportPublicationRequest } from '@lens-protocol/domain/mocks';
 import { AlreadyReportedError } from '@lens-protocol/domain/use-cases/publications';
 
-import { NetworkError } from '../NetworkError';
+import { UnspecifiedError } from '../../../UnspecifiedError';
 import { ReportPublicationGateway } from '../ReportPublicationGateway';
 
 describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
@@ -87,7 +87,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
       const gateway = new ReportPublicationGateway(apolloClient);
       const request = mockReportPublicationRequest();
 
-      await expect(gateway.report(request)).rejects.toThrow(NetworkError);
+      await expect(gateway.report(request)).rejects.toThrow(UnspecifiedError);
     });
   });
 });

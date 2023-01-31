@@ -1,6 +1,7 @@
 import { useSearchPublications } from '@lens-protocol/react';
 import { ChangeEvent, useState } from 'react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from '../publications/components/PublicationCard';
@@ -10,13 +11,18 @@ type SearchResultsProps = {
 };
 
 function SearchResults({ query }: SearchResultsProps) {
-  const { data, loading, hasMore, observeRef } = useInfiniteScroll(
+  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
     useSearchPublications({ query }),
   );
+
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
+
   if (data.length === 0) {
     return <p>No publications found</p>;
   }
+
   return (
     <div>
       {data.map((publication) => (

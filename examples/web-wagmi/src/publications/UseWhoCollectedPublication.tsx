@@ -1,5 +1,6 @@
 import { useWhoCollectedPublication } from '@lens-protocol/react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from '../profiles/components/ProfileCard';
@@ -13,12 +14,15 @@ function UseWhoCollectedPublicationLayout({
 }: UseWhoCollectedPublicationLayoutProps) {
   const {
     data: whoCollected,
-    loading: whoCollectedLoading,
+    error,
+    loading,
     hasMore,
     observeRef,
   } = useInfiniteScroll(useWhoCollectedPublication({ publicationId }));
 
-  if (whoCollectedLoading) return <Loading />;
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import { getApiReactionType, getPublicationType } from '@lens-protocol/api-bindings';
+import { getApiReactionType } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import { ReactionError } from '@lens-protocol/domain/use-cases/publications';
 import { useState } from 'react';
@@ -27,7 +27,6 @@ export function useReaction({ profileId }: UseReactionArgs) {
     try {
       const result = await add({
         publicationId: args.publication.id,
-        publicationType: getPublicationType(args.publication),
         reactionType: args.reactionType,
         profileId,
       });
@@ -46,7 +45,6 @@ export function useReaction({ profileId }: UseReactionArgs) {
     try {
       const result = await remove({
         publicationId: args.publication.id,
-        publicationType: getPublicationType(args.publication),
         reactionType: args.reactionType,
         profileId,
       });

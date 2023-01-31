@@ -2,8 +2,8 @@ import { makeVar, useReactiveVar } from '@apollo/client';
 import { IApplicationPresenter } from '@lens-protocol/domain/use-cases/lifecycle';
 
 export enum ApplicationsState {
-  LOADING,
-  READY,
+  LOADING = 'LOADING',
+  READY = 'READY',
 }
 
 const applicationState = makeVar<ApplicationsState>(ApplicationsState.LOADING);
