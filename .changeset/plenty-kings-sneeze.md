@@ -1,7 +1,5 @@
 ---
-"@lens-protocol/api-bindings": minor
-"@lens-protocol/domain": minor
 "@lens-protocol/react": minor
 ---
 
-add ability to collect a publication
+Added ability to collect a publication
