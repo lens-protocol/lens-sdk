@@ -1,5 +1,5 @@
 import React from 'react';
-import {useActiveProfile, useWalletLogout, WalletType} from '@lens-protocol/react';
+import {useActiveProfile, useWalletLogout} from '@lens-protocol/react';
 import {useWalletLogin} from '@lens-protocol/react';
 import {Button, Text, View} from 'react-native';
 
@@ -11,7 +11,7 @@ export function LoginButton() {
   const {data: profile} = useActiveProfile();
 
   const onLoginPress = async () => {
-    await login(wallet, WalletType.UNSPECIFIED);
+    await login(wallet);
   };
 
   const onLogoutPress = async () => {
