@@ -6,14 +6,17 @@ import {
 
 export type PublicationMetadataFilters = {
   restrictPublicationMainFocusTo?: PublicationMainFocus[];
-  restrictPublicationTagsTo?: {
-    all?: string[];
-    oneOf?: string[];
-  };
   restrictPublicationLocaleTo?: string;
   showPublicationsWithContentWarnings?: {
-    oneOf?: PublicationContentWarning[];
+    oneOf: PublicationContentWarning[];
   };
+  restrictPublicationTagsTo?:
+    | {
+        all: string[];
+      }
+    | {
+        oneOf: string[];
+      };
 };
 
 export function createPublicationMetadataFilters(
