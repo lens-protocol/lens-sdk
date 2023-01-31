@@ -1,10 +1,10 @@
-import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
+import { LensConfig, LensProvider, staging } from '@lens-protocol/react';
 import { localStorage } from '@lens-protocol/react/web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { optimism, polygon } from 'wagmi/chains';
+import { polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Home } from './HomePage';
@@ -57,7 +57,7 @@ import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
 import { UseProfilePublicationRevenue } from './revenue/UseProfilePublicationRevenue';
 import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
 
-const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
+const { provider, webSocketProvider } = configureChains([polygon], [publicProvider()]);
 
 const client = createClient({
   autoConnect: true,
@@ -68,7 +68,9 @@ const client = createClient({
 const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
   environment: staging,
-  sources: [sources.lenster, sources.orb, 'any-other-app-id'],
+  sources: [],
+  // or narrow to the one you are interested in
+  // sources: [sources.lenster, sources.orb, 'any-other-app-id'],
   storage: localStorage(),
 };
 

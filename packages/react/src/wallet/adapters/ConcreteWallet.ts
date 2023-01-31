@@ -4,7 +4,6 @@ import {
   InsufficientGasError,
   Wallet,
   WalletConnectionError,
-  WalletType,
   UserRejectedError,
   PendingSigningRequestError,
   TransactionRequestModel,
@@ -45,7 +44,6 @@ export interface ISignerFactory {
 
 export const WalletDataSchema = z.object({
   address: z.string(),
-  type: z.nativeEnum(WalletType),
 });
 
 export type WalletDataSchema = z.infer<typeof WalletDataSchema>;
@@ -72,7 +70,7 @@ export class ConcreteWallet extends Wallet {
     private readonly signerFactory: ISignerFactory,
     private readonly transactionFactory: ITransactionFactory<TransactionRequestModel>,
   ) {
-    super(data.address, data.type);
+    super(data.address);
   }
 
   async signProtocolCall<T extends TransactionRequestModel>(
@@ -204,7 +202,6 @@ export class ConcreteWallet extends Wallet {
   toWalletData(): WalletDataSchema {
     return {
       address: this.address,
-      type: this.type,
     };
   }
 

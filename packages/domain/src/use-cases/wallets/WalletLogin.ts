@@ -6,7 +6,6 @@ import {
   UserRejectedError,
   PendingSigningRequestError,
   ICredentials,
-  WalletType,
 } from '../../entities';
 import { ActiveProfileLoader } from '../profile/ActiveProfileLoader';
 import { IGenericResultPresenter } from '../transactions';
@@ -40,7 +39,6 @@ export interface ICredentialsWriter {
 
 export type WalletLoginRequest = {
   address: EthereumAddress;
-  type: WalletType;
 };
 
 export class WalletLogin {
