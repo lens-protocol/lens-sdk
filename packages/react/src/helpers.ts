@@ -37,7 +37,7 @@ function buildReadResult<T>(
   loading: boolean,
   error: ApolloError | undefined,
 ): ReadResult<T, UnspecifiedError> {
-  if (data && !loading) {
+  if (data !== undefined && !loading) {
     return {
       data,
       error: undefined,

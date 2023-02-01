@@ -1,5 +1,10 @@
-import { RevenueAggregateFragment, usePublicationRevenueQuery } from '@lens-protocol/api-bindings';
+import {
+  UnspecifiedError,
+  RevenueAggregateFragment,
+  usePublicationRevenueQuery,
+} from '@lens-protocol/api-bindings';
 
+import { NotFoundError } from '../NotFoundError';
 import { ReadResult, useReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
@@ -9,7 +14,10 @@ type UsePublicationRevenueArgs = {
 
 export function usePublicationRevenue({
   publicationId,
-}: UsePublicationRevenueArgs): ReadResult<RevenueAggregateFragment | null> {
+}: UsePublicationRevenueArgs): ReadResult<
+  RevenueAggregateFragment,
+  NotFoundError | UnspecifiedError
+> {
   const { apolloClient } = useSharedDependencies();
 
   const { data, error, loading } = useReadResult(
@@ -27,13 +35,21 @@ export function usePublicationRevenue({
   if (error) {
     return {
       data: undefined,
-      error: error,
+      error,
+      loading: false,
+    };
+  }
+
+  if (data === null) {
+    return {
+      data: undefined,
+      error: new NotFoundError(`Publication with id: ${publicationId}`),
       loading: false,
     };
   }
 
   return {
-    data: data?.revenue ?? null,
+    data: data.revenue,
     error: undefined,
     loading: false,
   };
