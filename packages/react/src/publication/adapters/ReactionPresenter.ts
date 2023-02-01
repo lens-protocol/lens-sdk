@@ -1,10 +1,9 @@
-import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
 import { ReactionTypes } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import {
-  ReactionRequest,
   IReactionPresenter,
   ReactionError,
+  ReactionRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
@@ -14,12 +13,8 @@ export class ReactionPresenter
   extends PromiseResultPresenter<void, ReactionError>
   implements IReactionPresenter
 {
-  readonly publicationCacheManager: PublicationCacheManager;
-
-  constructor(cache: ApolloCache<NormalizedCacheObject>) {
+  constructor(private readonly publicationCacheManager: PublicationCacheManager) {
     super();
-
-    this.publicationCacheManager = new PublicationCacheManager(cache);
   }
 
   async presentOptimisticAdd(request: ReactionRequest): Promise<void> {

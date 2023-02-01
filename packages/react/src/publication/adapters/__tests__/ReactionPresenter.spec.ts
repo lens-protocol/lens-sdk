@@ -7,6 +7,7 @@ import {
 import { mockReactionRequest } from '@lens-protocol/domain/mocks';
 import { ReactionRequest } from '@lens-protocol/domain/use-cases/publications';
 
+import { PublicationCacheManager } from '../../../transactions/adapters/PublicationCacheManager';
 import { ReactionPresenter } from '../ReactionPresenter';
 
 function setupTestScenario({ post, request }: { post: PostFragment; request: ReactionRequest }) {
@@ -22,7 +23,8 @@ function setupTestScenario({ post, request }: { post: PostFragment; request: Rea
     data: post,
   });
 
-  const presenter = new ReactionPresenter(apolloCache);
+  const publicationCacheManager = new PublicationCacheManager(apolloCache);
+  const presenter = new ReactionPresenter(publicationCacheManager);
 
   return {
     presenter,

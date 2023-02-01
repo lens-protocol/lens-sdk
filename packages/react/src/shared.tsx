@@ -73,19 +73,20 @@ export type SharedDependencies = {
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   followPolicyCallGateway: FollowPolicyCallGateway;
-  onLogout: Handlers['onLogout'];
+  notificationStorage: IStorage<UnreadNotificationsData>;
   onError: Handlers['onError'];
+  onLogout: Handlers['onLogout'];
   profileGateway: ProfileGateway;
   protocolCallRelayer: ProtocolCallRelayer;
+  publicationCacheManager: PublicationCacheManager;
+  signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
   sources: string[];
+  tokenAvailability: TokenAvailability;
   transactionFactory: TransactionFactory;
   transactionGateway: PendingTransactionGateway<SupportedTransactionRequest>;
   transactionQueue: TransactionQueue<SupportedTransactionRequest>;
-  tokenAvailability: TokenAvailability;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
-  notificationStorage: IStorage<UnreadNotificationsData>;
-  signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
 };
 
 export function createSharedDependencies(
@@ -186,6 +187,7 @@ export function createSharedDependencies(
     onLogout,
     profileGateway,
     protocolCallRelayer,
+    publicationCacheManager,
     signlessProtocolCallRelayer,
     sources: config.sources ?? [],
     tokenAvailability,

@@ -5,10 +5,10 @@ import { ReactionGateway } from './ReactionGateway';
 import { ReactionPresenter } from './ReactionPresenter';
 
 export function useReactionController() {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, publicationCacheManager } = useSharedDependencies();
 
   const add = async (request: ReactionRequest) => {
-    const presenter = new ReactionPresenter(apolloClient.cache);
+    const presenter = new ReactionPresenter(publicationCacheManager);
     const gateway = new ReactionGateway(apolloClient);
     const reaction = new Reaction(gateway, presenter);
 
@@ -18,7 +18,7 @@ export function useReactionController() {
   };
 
   const remove = async (request: ReactionRequest) => {
-    const presenter = new ReactionPresenter(apolloClient.cache);
+    const presenter = new ReactionPresenter(publicationCacheManager);
     const gateway = new ReactionGateway(apolloClient);
     const reaction = new Reaction(gateway, presenter);
 
