@@ -1,3 +1,5 @@
 packages:
   - "packages/*"
-  - "examples/*"
+  - "examples/web-wagmi"
+  - "examples/shared"
+  - "examples/nextjs"

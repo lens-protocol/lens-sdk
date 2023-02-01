@@ -130,4 +130,4 @@ Lens SDK is [MIT licensed](./LICENSE)
 
 ## Support
 
-See the Lens API channel on our [Discord](https://discord.gg/lensprotocol)
+See the Lens API and SDK channel on our [Discord](https://discord.gg/lensprotocol)
