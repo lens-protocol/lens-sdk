@@ -5,6 +5,7 @@ query Publications(
   $cursor: Cursor
   $publicationTypes: [PublicationTypes!]
   $sources: [Sources!]
+  $metadata: PublicationMetadataFilters
 ) {
   result: publications(
     request: {
@@ -13,6 +14,7 @@ query Publications(
       cursor: $cursor
       publicationTypes: $publicationTypes
       sources: $sources
+      metadata: $metadata
     }
   ) {
     items {
