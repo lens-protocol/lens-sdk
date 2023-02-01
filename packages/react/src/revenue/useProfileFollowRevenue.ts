@@ -1,9 +1,6 @@
 import {
-  ProfileFollowRevenueQuery,
-  ProfileFollowRevenueQueryVariables,
   RevenueAggregateFragment,
   useProfileFollowRevenueQuery,
-  ProfileFollowRevenueFragment,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
@@ -19,11 +16,7 @@ export function useProfileFollowRevenue({
 }: UseProfileFollowRevenueArgs): ReadResult<RevenueAggregateFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
-  const { data, error, loading } = useReadResult<
-    ProfileFollowRevenueFragment,
-    ProfileFollowRevenueQuery,
-    ProfileFollowRevenueQueryVariables
-  >(
+  const { data, error, loading } = useReadResult(
     useProfileFollowRevenueQuery({
       variables: {
         profileId,

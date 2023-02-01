@@ -1,7 +1,7 @@
-import { ProfileFragment, useGetProfileQuery } from '@lens-protocol/api-bindings';
+import { useGetProfileQuery } from '@lens-protocol/api-bindings';
 import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
-import { ReadResult, useReadResult } from '../helpers';
+import { useReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 type BaseUseProfileArgs = {
@@ -18,11 +18,7 @@ type UseProfileByHandleArgs = BaseUseProfileArgs & {
 
 type UseProfileArgs = XOR<UseProfileByIdArgs, UseProfileByHandleArgs>;
 
-export function useProfile({
-  profileId,
-  handle,
-  observerId,
-}: UseProfileArgs): ReadResult<ProfileFragment> {
+export function useProfile({ profileId, handle, observerId }: UseProfileArgs) {
   const { apolloClient } = useSharedDependencies();
 
   invariant(

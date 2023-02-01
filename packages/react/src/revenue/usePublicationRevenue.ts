@@ -1,10 +1,4 @@
-import {
-  PublicationRevenueQuery,
-  PublicationRevenueQueryVariables,
-  RevenueAggregateFragment,
-  RevenueFragment,
-  usePublicationRevenueQuery,
-} from '@lens-protocol/api-bindings';
+import { RevenueAggregateFragment, usePublicationRevenueQuery } from '@lens-protocol/api-bindings';
 
 import { ReadResult, useReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
@@ -15,14 +9,10 @@ type UsePublicationRevenueArgs = {
 
 export function usePublicationRevenue({
   publicationId,
-}: UsePublicationRevenueArgs): ReadResult<RevenueAggregateFragment> {
+}: UsePublicationRevenueArgs): ReadResult<RevenueAggregateFragment | null> {
   const { apolloClient } = useSharedDependencies();
 
-  const { data, error, loading } = useReadResult<
-    RevenueFragment,
-    PublicationRevenueQuery,
-    PublicationRevenueQueryVariables
-  >(
+  const { data, error, loading } = useReadResult(
     usePublicationRevenueQuery({ variables: { request: { publicationId } }, client: apolloClient }),
   );
 
@@ -43,7 +33,7 @@ export function usePublicationRevenue({
   }
 
   return {
-    data: data.revenue,
+    data: data?.revenue ?? null,
     error: undefined,
     loading: false,
   };

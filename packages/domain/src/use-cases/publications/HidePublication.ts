@@ -1,11 +1,9 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
-
 export type HidePublicationRequest = {
   publicationId: string;
 };
 
 export interface IHidePublicationGateway {
-  hide(request: HidePublicationRequest): PromiseResult<void, never>;
+  hide(request: HidePublicationRequest): Promise<void>;
 }
 
 export interface IHidePublicationPresenter {
