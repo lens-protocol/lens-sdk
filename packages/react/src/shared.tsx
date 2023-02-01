@@ -1,5 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { createAnonymousApolloClient, createApolloClient } from '@lens-protocol/api-bindings';
+import {
+  createAnonymousApolloClient,
+  createApolloClient,
+  LensApolloClient,
+} from '@lens-protocol/api-bindings';
 import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   SupportedTransactionRequest,
@@ -66,7 +69,7 @@ export type SharedDependencies = {
   activeProfileGateway: ActiveProfileGateway;
   activeProfilePresenter: ActiveProfilePresenter;
   activeWallet: ActiveWallet;
-  apolloClient: ApolloClient<NormalizedCacheObject>;
+  apolloClient: LensApolloClient;
   authApi: AuthApi;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
@@ -110,6 +113,7 @@ export function createSharedDependencies(
     backendURL: config.environment.backend,
     accessTokenStorage,
     activeWalletVar: activeWalletVar,
+    pollingInterval: config.environment.timings.pollingInterval,
   });
 
   // adapters

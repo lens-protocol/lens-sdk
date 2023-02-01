@@ -7,3 +7,11 @@ export class UnspecifiedError extends CausedError {
     super('An unspecified error occurred', { cause });
   }
 }
+
+export class ValidationError extends CausedError {
+  name = 'ValidationError' as const;
+
+  constructor(cause: Error) {
+    super('A validation error occurred', { cause });
+  }
+}

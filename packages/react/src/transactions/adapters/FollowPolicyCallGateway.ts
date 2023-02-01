@@ -1,9 +1,9 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   omitTypename,
   CreateSetFollowModuleTypedDataDocument,
   CreateSetFollowModuleTypedDataMutation,
   CreateSetFollowModuleTypedDataMutationVariables,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import {
@@ -43,7 +43,7 @@ function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
 }
 
 export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall<T extends UpdateFollowPolicyRequest>(
     request: T,

@@ -1,7 +1,4 @@
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
-
 import { ReactionType } from '../../entities';
-import { IGenericResultPresenter } from '../transactions';
 
 export type ReactionRequest = {
   profileId: string;
@@ -10,23 +7,13 @@ export type ReactionRequest = {
 };
 
 export interface IReactionGateway {
-  add(data: ReactionRequest): PromiseResult<void, ReactionError>;
-  remove(data: ReactionRequest): PromiseResult<void, ReactionError>;
+  add(data: ReactionRequest): Promise<void>;
+  remove(data: ReactionRequest): Promise<void>;
 }
 
-export interface IReactionPresenter extends IGenericResultPresenter<void, ReactionError> {
-  presentOptimisticAdd(request: ReactionRequest): Promise<void>;
-  revertOptimisticAdd(request: ReactionRequest): Promise<void>;
-  presentOptimisticRemove(request: ReactionRequest): Promise<void>;
-  revertOptimisticRemove(request: ReactionRequest): Promise<void>;
-}
-
-export class ReactionError extends Error {
-  name = 'ReactionError' as const;
-
-  constructor(readonly reason: string) {
-    super(reason);
-  }
+export interface IReactionPresenter {
+  add(request: ReactionRequest): Promise<void>;
+  remove(request: ReactionRequest): Promise<void>;
 }
 
 export class Reaction {
@@ -36,30 +23,24 @@ export class Reaction {
   ) {}
 
   async add(request: ReactionRequest) {
-    await this.presenter.presentOptimisticAdd(request);
+    await this.presenter.add(request);
 
-    const result = await this.gateway.add(request);
-
-    if (result.isFailure()) {
-      await this.presenter.revertOptimisticAdd(request);
-      this.presenter.present(failure(result.error));
-      return;
+    try {
+      await this.gateway.add(request);
+    } catch (e) {
+      await this.presenter.remove(request);
+      throw e;
     }
-
-    this.presenter.present(success());
   }
 
   async remove(request: ReactionRequest) {
-    await this.presenter.presentOptimisticRemove(request);
+    await this.presenter.remove(request);
 
-    const result = await this.gateway.remove(request);
-
-    if (result.isFailure()) {
-      await this.presenter.revertOptimisticRemove(request);
-      this.presenter.present(failure(result.error));
-      return;
+    try {
+      await this.gateway.remove(request);
+    } catch (e) {
+      await this.presenter.add(request);
+      throw e;
     }
-
-    this.presenter.present(success());
   }
 }

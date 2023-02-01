@@ -2,9 +2,12 @@
  * @jest-environment node
  */
 
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { faker } from '@faker-js/faker';
-import { ProxyActionStatusTypes, TransactionErrorReasons } from '@lens-protocol/api-bindings';
+import {
+  LensApolloClient,
+  ProxyActionStatusTypes,
+  TransactionErrorReasons,
+} from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockHasTxHashBeenIndexedQuery,
@@ -23,21 +26,21 @@ import { providers, utils, Wallet } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
 import { mockIProviderFactory } from '../../../wallet/adapters/__helpers__/mocks';
-import { TransactionObserver, Timings } from '../TransactionObserver';
+import { TransactionObserver, TransactionObserverTimings } from '../TransactionObserver';
 
 const chainType = ChainType.POLYGON;
 
 function setupTransactionObserver({
-  apolloClient = mock<ApolloClient<NormalizedCacheObject>>(),
+  apolloClient = mock<LensApolloClient>(),
   timings = {
-    pollingPeriod: 1,
+    pollingInterval: 1,
     maxIndexingWaitTime: 1000,
     maxMiningWaitTime: 1000,
   },
   provider = mock<providers.JsonRpcProvider>(),
 }: {
-  apolloClient?: ApolloClient<NormalizedCacheObject>;
-  timings?: Timings;
+  apolloClient?: LensApolloClient;
+  timings?: TransactionObserverTimings;
   provider?: providers.JsonRpcProvider;
 }) {
   const providerFactory = mockIProviderFactory({
@@ -92,7 +95,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       });
       const transaction = setupTransactionObserver({
         timings: {
-          pollingPeriod: 1,
+          pollingInterval: 1,
           maxMiningWaitTime: 1000, // ms
           maxIndexingWaitTime: 120_000, // ms
         },
@@ -252,7 +255,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       const transaction = setupTransactionObserver({
         apolloClient,
         timings: {
-          pollingPeriod: 1,
+          pollingInterval: 1,
           maxMiningWaitTime: 1000, // ms
           maxIndexingWaitTime: 1, // ms
         },
@@ -287,22 +290,21 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       expect(event.unwrap()).toEqual({
         status: ProxyActionStatus.COMPLETE,
         txHash,
-        txId,
       });
     });
 
     it(`should succeed with the expected ProxyActionStatusEvent if the txHash changes before the action reaches ${ProxyActionStatusTypes.Complete} status`, async () => {
+      const txId = faker.datatype.uuid();
       const initialTxHash = mockTransactionHash();
-      const initialTxId = faker.datatype.uuid();
       const upgradedTxHash = mockTransactionHash();
-      const upgradedTxId = faker.datatype.uuid();
+      const lastTxHash = mockTransactionHash();
       const responses = [
         createProxyActionStatusMockedResponse({
           variables: { proxyActionId: proxyId },
           result: {
             status: ProxyActionStatusTypes.Minting,
             txHash: initialTxHash,
-            txId: initialTxId,
+            txId,
           },
         }),
         createProxyActionStatusMockedResponse({
@@ -310,15 +312,15 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           result: {
             status: ProxyActionStatusTypes.Minting,
             txHash: upgradedTxHash,
-            txId: initialTxHash,
+            txId,
           },
         }),
         createProxyActionStatusMockedResponse({
           variables: { proxyActionId: proxyId },
           result: {
             status: ProxyActionStatusTypes.Complete,
-            txHash: upgradedTxHash,
-            txId: upgradedTxId,
+            txHash: lastTxHash,
+            txId,
           },
         }),
       ];
@@ -332,7 +334,6 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       expect(event.unwrap()).toEqual({
         status: ProxyActionStatus.COMPLETE,
         txHash: upgradedTxHash,
-        txId: upgradedTxId,
       });
     });
 
@@ -372,7 +373,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       const transaction = setupTransactionObserver({
         apolloClient,
         timings: {
-          pollingPeriod: 1,
+          pollingInterval: 1,
           maxMiningWaitTime: 1000, // ms
           maxIndexingWaitTime: 0.5, // ms
         },

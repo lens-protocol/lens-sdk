@@ -1,6 +1,5 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { faker } from '@faker-js/faker';
-import { omitTypename } from '@lens-protocol/api-bindings';
+import { LensApolloClient, omitTypename } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockRelayerResultFragment,
@@ -38,7 +37,7 @@ function setupTestScenario({
   apolloClient,
   contentURI,
 }: {
-  apolloClient: ApolloClient<NormalizedCacheObject>;
+  apolloClient: LensApolloClient;
   contentURI?: string;
 }) {
   const transactionFactory = mockITransactionFactory();

@@ -1,6 +1,5 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { faker } from '@faker-js/faker';
-import { omitTypename } from '@lens-protocol/api-bindings';
+import { LensApolloClient, omitTypename } from '@lens-protocol/api-bindings';
 import {
   createCreateSetProfileMetadataTypedDataMutationMockedResponse,
   createCreateSetProfileMetadataViaDispatcherMutationMockedResponse,
@@ -23,7 +22,7 @@ function setupTestScenario({
   apolloClient,
   metadataURI,
 }: {
-  apolloClient: ApolloClient<NormalizedCacheObject>;
+  apolloClient: LensApolloClient;
   metadataURI?: string;
 }) {
   const uploadHandler = jest.fn();

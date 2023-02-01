@@ -345,20 +345,20 @@ export function mockFeedQuery({
   };
 }
 
-export function createPublicationQueryMockedResponse(
-  publication: PostFragment,
-): MockedResponse<PublicationQuery> {
+export function createPublicationQueryMockedResponse({
+  publicationId,
+  result,
+}: {
+  publicationId: string;
+  result: PostFragment | null;
+}): MockedResponse<PublicationQuery> {
   return {
     request: {
       query: PublicationDocument,
-      variables: {
-        publicationId: publication.id,
-      },
+      variables: { publicationId },
     },
     result: {
-      data: {
-        result: publication,
-      },
+      data: { result },
     },
   };
 }
@@ -440,7 +440,7 @@ export function createExplorePublicationsQueryMockedResponse(args: {
 
 export function createPublicationRevenueQueryMockedResponse(args: {
   variables: PublicationRevenueQueryVariables;
-  revenue: RevenueFragment;
+  revenue: RevenueFragment | null;
 }): MockedResponse<PublicationRevenueQuery> {
   return {
     request: {

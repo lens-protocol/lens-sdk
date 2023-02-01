@@ -1,16 +1,13 @@
 import { faker } from '@faker-js/faker';
-import { ReactionTypes } from '@lens-protocol/api-bindings';
+import { ReactionTypes, ValidationError } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createAddReactionMutationMockedResponse,
-  createAddReactionMutationWithGraphqlValidationErrorResponse,
   createRemoveReactionMutationMockedResponse,
   createRemoveReactionMutationWithGraphqlValidationErrorResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockReactionRequest } from '@lens-protocol/domain/mocks';
-import { ReactionError } from '@lens-protocol/domain/use-cases/publications';
 
-import { UnspecifiedError } from '../../../UnspecifiedError';
 import { ReactionGateway } from '../ReactionGateway';
 
 describe(`Given an instance of the ${ReactionGateway.name}`, () => {
@@ -34,47 +31,8 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
         publicationId,
         profileId,
       });
-      const result = await gateway.add(request);
 
-      expect(result.isSuccess()).toBe(true);
-    });
-
-    it(`should fail with ReactionError if isGraphqlValidationError`, async () => {
-      const profileId = faker.datatype.uuid();
-      const publicationId = faker.datatype.uuid();
-
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        createAddReactionMutationWithGraphqlValidationErrorResponse({
-          variables: {
-            publicationId,
-            profileId,
-            reaction: ReactionTypes.Upvote,
-          },
-        }),
-      ]);
-
-      const gateway = new ReactionGateway(apolloClient);
-      const request = mockReactionRequest({
-        publicationId,
-        profileId,
-      });
-      const result = await gateway.add(request);
-
-      expect(result.isFailure()).toBe(true);
-      if (result.isFailure()) {
-        expect(result.error).toBeInstanceOf(ReactionError);
-      }
-    });
-
-    it(`should throw NetworkError if unknown reason`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        // no mocks on purpose to trigger network issue
-      ]);
-
-      const gateway = new ReactionGateway(apolloClient);
-      const request = mockReactionRequest();
-
-      await expect(gateway.add(request)).rejects.toThrow(UnspecifiedError);
+      await gateway.add(request);
     });
   });
 
@@ -98,15 +56,13 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
         publicationId,
         profileId,
       });
-      const result = await gateway.remove(request);
 
-      expect(result.isSuccess()).toBe(true);
+      await gateway.remove(request);
     });
 
-    it(`should fail with ReactionError if isGraphqlValidationError`, async () => {
+    it(`should be resilient to ${ValidationError.name} and resolve the promise`, async () => {
       const profileId = faker.datatype.uuid();
       const publicationId = faker.datatype.uuid();
-
       const apolloClient = createMockApolloClientWithMultipleResponses([
         createRemoveReactionMutationWithGraphqlValidationErrorResponse({
           variables: {
@@ -122,15 +78,11 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
         publicationId,
         profileId,
       });
-      const result = await gateway.add(request);
 
-      expect(result.isFailure()).toBe(true);
-      if (result.isFailure()) {
-        expect(result.error).toBeInstanceOf(ReactionError);
-      }
+      await gateway.remove(request);
     });
 
-    it(`should throw NetworkError if unknown reason`, async () => {
+    it(`should propagate any other error`, async () => {
       const apolloClient = createMockApolloClientWithMultipleResponses([
         // no mocks on purpose to trigger network issue
       ]);
@@ -138,7 +90,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const gateway = new ReactionGateway(apolloClient);
       const request = mockReactionRequest();
 
-      await expect(gateway.remove(request)).rejects.toThrow(UnspecifiedError);
+      await expect(gateway.remove(request)).rejects.toThrow();
     });
   });
 });

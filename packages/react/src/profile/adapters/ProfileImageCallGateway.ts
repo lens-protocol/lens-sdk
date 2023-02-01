@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateSetProfileImageUriTypedDataDocument,
   CreateSetProfileImageUriTypedDataMutation,
@@ -8,6 +7,7 @@ import {
   CreateSetProfileImageUriViaDispatcherMutationVariables,
   omitTypename,
   UpdateProfileImageRequest as UpdateProfileImageRequestArgs,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
   NativeTransaction,
@@ -31,7 +31,7 @@ import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
 export class ProfileImageCallGateway implements IProfileImageCallGateway {
   constructor(
-    private apolloClient: ApolloClient<NormalizedCacheObject>,
+    private apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
   ) {}
 

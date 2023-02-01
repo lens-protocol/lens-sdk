@@ -1,44 +1,18 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
 import { ReactionTypes } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
-import {
-  ReactionRequest,
-  IReactionPresenter,
-  ReactionError,
-} from '@lens-protocol/domain/use-cases/publications';
+import { ReactionRequest, IReactionPresenter } from '@lens-protocol/domain/use-cases/publications';
 
-import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
 import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
 
-export class ReactionPresenter
-  extends PromiseResultPresenter<void, ReactionError>
-  implements IReactionPresenter
-{
+export class ReactionPresenter implements IReactionPresenter {
   readonly publicationCacheManager: PublicationCacheManager;
 
   constructor(cache: ApolloCache<NormalizedCacheObject>) {
-    super();
-
     this.publicationCacheManager = new PublicationCacheManager(cache);
   }
 
-  async presentOptimisticAdd(request: ReactionRequest): Promise<void> {
-    await this.addReaction(request);
-  }
-
-  async presentOptimisticRemove(request: ReactionRequest): Promise<void> {
-    await this.removeReaction(request);
-  }
-
-  async revertOptimisticAdd(request: ReactionRequest): Promise<void> {
-    await this.removeReaction(request);
-  }
-
-  async revertOptimisticRemove(request: ReactionRequest): Promise<void> {
-    await this.addReaction(request);
-  }
-
-  private async addReaction(request: ReactionRequest): Promise<void> {
+  async add(request: ReactionRequest): Promise<void> {
     switch (request.reactionType) {
       case ReactionType.UPVOTE:
         {
@@ -60,7 +34,7 @@ export class ReactionPresenter
     }
   }
 
-  private async removeReaction(request: ReactionRequest): Promise<void> {
+  async remove(request: ReactionRequest): Promise<void> {
     switch (request.reactionType) {
       case ReactionType.UPVOTE:
         {

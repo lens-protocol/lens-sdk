@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   BroadcastProtocolCallDocument,
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
   MetaTransaction,
@@ -21,7 +21,7 @@ import { AsyncRelayReceipt, ITransactionFactory } from './ITransactionFactory';
 
 export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransactionRequest> {
   constructor(
-    private apolloClient: ApolloClient<NormalizedCacheObject>,
+    private apolloClient: LensApolloClient,
     private factory: ITransactionFactory<SupportedTransactionRequest>,
     private logger: ILogger,
   ) {}

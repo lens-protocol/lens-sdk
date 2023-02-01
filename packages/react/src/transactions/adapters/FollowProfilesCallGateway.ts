@@ -1,9 +1,9 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateFollowTypedDataDocument,
   CreateFollowTypedDataMutation,
   CreateFollowTypedDataMutationVariables,
   Follow,
+  LensApolloClient,
   moduleFeeAmountParams,
   omitTypename,
 } from '@lens-protocol/api-bindings';
@@ -47,7 +47,7 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
 }
 
 export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall<T extends FollowRequest>(
     request: T,
