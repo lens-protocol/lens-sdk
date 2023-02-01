@@ -17,7 +17,7 @@ export type WhenLoggedInWithProfileProps = {
 
 export function WhenLoggedInWithProfile({ children }: WhenLoggedInWithProfileProps) {
   const { data: wallet, loading: walletLoading } = useActiveWallet();
-  const { data: profile, loading: profileLoading } = useActiveProfile();
+  const { data: profile, error, loading: profileLoading } = useActiveProfile();
 
   if (walletLoading || profileLoading) {
     return null;
@@ -27,7 +27,7 @@ export function WhenLoggedInWithProfile({ children }: WhenLoggedInWithProfilePro
     return null;
   }
 
-  if (profile === null) {
+  if (profile === null || error) {
     // TODO guide user to create profile
     return null;
   }
