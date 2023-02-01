@@ -13,6 +13,7 @@ import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publication
 import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import { nonNullable } from '@lens-protocol/shared-kernel';
 
+import { PublicationCacheManager } from '../../PublicationCacheManager';
 import { CreateMirrorResponder } from '../CreateMirrorResponder';
 
 function setupTestScenario({
@@ -40,7 +41,8 @@ function setupTestScenario({
     data: post,
   });
 
-  const responder = new CreateMirrorResponder(apolloClient);
+  const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
+  const responder = new CreateMirrorResponder(apolloClient, publicationCacheManager);
 
   return {
     responder,

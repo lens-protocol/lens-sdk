@@ -21,6 +21,7 @@ import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfi
 import { FollowPolicyCallGateway } from './transactions/adapters/FollowPolicyCallGateway';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
+import { PublicationCacheManager } from './transactions/adapters/PublicationCacheManager';
 import { SignlessProtocolCallRelayer } from './transactions/adapters/SignlessProtocolCallRelayer';
 import {
   FailedTransactionError,
@@ -134,15 +135,19 @@ export function createSharedDependencies(
   const profileGateway = new ProfileGateway(apolloClient);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
   const activeProfilePresenter = new ActiveProfilePresenter();
+  const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
 
   const responders: TransactionResponders<SupportedTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
-    [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(apolloClient.cache),
+    [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(publicationCacheManager),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
     [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient),
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
-    [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(apolloClient),
+    [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
+      apolloClient,
+      publicationCacheManager,
+    ),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(apolloClient),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(apolloClient),

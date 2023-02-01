@@ -2,7 +2,6 @@ import { DocumentNode } from '@apollo/client';
 import {
   CommentFragment,
   CommentFragmentDoc,
-  getPublicationType,
   MirrorFragment,
   MirrorFragmentDoc,
   PostFragment,
@@ -23,6 +22,7 @@ import {
 import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
 
+import { PublicationCacheManager } from '../../PublicationCacheManager';
 import { CollectPublicationResponder } from '../CollectPublicationResponder';
 
 type PubType = PublicationFragment['__typename'];
@@ -54,7 +54,8 @@ function setupTestScenario({
     data,
   });
 
-  const responder = new CollectPublicationResponder(apolloCache);
+  const publicationCacheManager = new PublicationCacheManager(apolloCache);
+  const responder = new CollectPublicationResponder(publicationCacheManager);
 
   return {
     responder,
@@ -90,7 +91,6 @@ describe(`Given the ${CollectPublicationResponder.name}`, () => {
 
         const request = mockPaidCollectRequest({
           publicationId: publication.id,
-          publicationType: getPublicationType({ __typename: publicationType }),
         });
         const transactionData = mockBroadcastedTransactionData({ request });
         const scenario = setupTestScenario({
@@ -125,7 +125,6 @@ describe(`Given the ${CollectPublicationResponder.name}`, () => {
         });
         const request = mockPaidCollectRequest({
           publicationId: publication.id,
-          publicationType: getPublicationType({ __typename: publicationType }),
         });
         const transactionData = mockBroadcastedTransactionData({ request });
         const scenario = setupTestScenario({
@@ -161,7 +160,6 @@ describe(`Given the ${CollectPublicationResponder.name}`, () => {
         });
         const request = mockPaidCollectRequest({
           publicationId: publication.id,
-          publicationType: getPublicationType({ __typename: publicationType }),
         });
         const transactionData = mockBroadcastedTransactionData({ request });
         const scenario = setupTestScenario({

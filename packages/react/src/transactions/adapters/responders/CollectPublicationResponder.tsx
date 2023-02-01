@@ -1,12 +1,8 @@
-import { ApolloCache, DocumentNode, NormalizedCacheObject } from '@apollo/client';
+import { DocumentNode } from '@apollo/client';
 import {
-  getPublicationTypename,
-  PostFragmentDoc,
   CommentFragmentDoc,
   MirrorFragmentDoc,
-  PostFragment,
-  CommentFragment,
-  MirrorFragment,
+  PostFragmentDoc,
   PublicationFragment,
 } from '@lens-protocol/api-bindings';
 import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
@@ -16,8 +12,10 @@ import {
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
+import { PublicationCacheManager } from '../PublicationCacheManager';
+
 export class CollectPublicationResponder implements ITransactionResponder<CollectRequest> {
-  constructor(private apolloCache: ApolloCache<NormalizedCacheObject>) {}
+  constructor(private readonly publicationCacheManager: PublicationCacheManager) {}
 
   typeToFragmentMap: Record<PublicationFragment['__typename'], DocumentNode> = {
     Post: PostFragmentDoc,
@@ -26,82 +24,31 @@ export class CollectPublicationResponder implements ITransactionResponder<Collec
   };
 
   async prepare({ request }: TransactionData<CollectRequest>) {
-    const typeName = getPublicationTypename(request.publicationType);
-
-    const id = this.apolloCache.identify({
-      __typename: typeName,
-      id: request.publicationId,
-    });
-
-    this.apolloCache.updateFragment<PostFragment | CommentFragment | MirrorFragment>(
-      {
-        id,
-        fragmentName: typeName,
-        fragment: this.typeToFragmentMap[typeName],
+    this.publicationCacheManager.update(request.publicationId, (current) => ({
+      ...current,
+      hasOptimisticCollectedByMe: true,
+      stats: {
+        ...current.stats,
+        totalAmountOfCollects: current.stats.totalAmountOfCollects + 1,
       },
-      (data) =>
-        data
-          ? {
-              ...data,
-              hasOptimisticCollectedByMe: true,
-              stats: {
-                ...data.stats,
-                totalAmountOfCollects: data.stats.totalAmountOfCollects + 1,
-              },
-            }
-          : undefined,
-    );
+    }));
   }
 
   async commit({ request }: BroadcastedTransactionData<CollectRequest>) {
-    const typeName = getPublicationTypename(request.publicationType);
-
-    const id = this.apolloCache.identify({
-      __typename: typeName,
-      id: request.publicationId,
-    });
-
-    this.apolloCache.updateFragment<PostFragment | CommentFragment | MirrorFragment>(
-      {
-        id,
-        fragmentName: typeName,
-        fragment: this.typeToFragmentMap[typeName],
-      },
-      (data) =>
-        data
-          ? {
-              ...data,
-              hasCollectedByMe: true,
-            }
-          : undefined,
-    );
+    this.publicationCacheManager.update(request.publicationId, (current) => ({
+      ...current,
+      hasCollectedByMe: true,
+    }));
   }
 
   async rollback({ request }: TransactionData<CollectRequest>) {
-    const typeName = getPublicationTypename(request.publicationType);
-
-    const id = this.apolloCache.identify({
-      __typename: typeName,
-      id: request.publicationId,
-    });
-
-    this.apolloCache.updateFragment<PostFragment | CommentFragment | MirrorFragment>(
-      {
-        id,
-        fragmentName: typeName,
-        fragment: this.typeToFragmentMap[typeName],
+    this.publicationCacheManager.update(request.publicationId, (current) => ({
+      ...current,
+      hasOptimisticCollectedByMe: false,
+      stats: {
+        ...current.stats,
+        totalAmountOfCollects: current.stats.totalAmountOfCollects - 1,
       },
-      (data) =>
-        data
-          ? {
-              ...data,
-              hasOptimisticCollectedByMe: false,
-              stats: {
-                ...data.stats,
-                totalAmountOfCollects: data.stats.totalAmountOfCollects - 1,
-              },
-            }
-          : undefined,
-    );
+    }));
   }
 }

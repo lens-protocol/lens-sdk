@@ -14,11 +14,10 @@ import {
 import { PublicationCacheManager } from '../PublicationCacheManager';
 
 export class CreateMirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
-  readonly publicationCacheManager: PublicationCacheManager;
-
-  constructor(private client: ApolloClient<NormalizedCacheObject>) {
-    this.publicationCacheManager = new PublicationCacheManager(client.cache);
-  }
+  constructor(
+    private readonly client: ApolloClient<NormalizedCacheObject>,
+    private readonly publicationCacheManager: PublicationCacheManager,
+  ) {}
 
   async prepare({ request }: TransactionData<CreateMirrorRequest>) {
     this.publicationCacheManager.update(request.publicationId, (current) => ({

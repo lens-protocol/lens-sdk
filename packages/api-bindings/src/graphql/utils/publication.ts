@@ -1,4 +1,4 @@
-import { PublicationType, ReactionType, TransactionKind } from '@lens-protocol/domain/entities';
+import { ReactionType, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   CollectPolicyType,
   CollectRequest,
@@ -8,24 +8,19 @@ import { DateUtils, never, Overwrite } from '@lens-protocol/shared-kernel';
 
 import { CollectPolicy, CollectState } from '../CollectPolicy';
 import {
-  Comment,
   CommentFragment,
   FeeCollectModuleSettingsFragment,
   FreeCollectModuleSettingsFragment,
   LimitedFeeCollectModuleSettingsFragment,
   LimitedTimedFeeCollectModuleSettingsFragment,
-  Mirror,
   MirrorFragment,
-  Post,
   PostFragment,
   ProfileFragment,
   ReactionTypes,
   TimedFeeCollectModuleSettingsFragment,
 } from '../generated';
 import { erc20Amount } from './amount';
-import { JustTypename, PickByTypename, Typename } from './types';
-
-type PublicationTypename = JustTypename<Mirror> | JustTypename<Comment> | JustTypename<Post>;
+import { PickByTypename, Typename } from './types';
 
 export function isPostPublication<T extends Typename<string>>(
   publication: T,
@@ -43,35 +38,6 @@ export function isMirrorPublication<T extends Typename<string>>(
   publication: T,
 ): publication is PickByTypename<T, 'Mirror'> {
   return publication.__typename === 'Mirror';
-}
-
-export function getPublicationType<T extends PublicationTypename>(publication: T): PublicationType {
-  switch (publication.__typename) {
-    case 'Mirror':
-      return PublicationType.MIRROR;
-    case 'Comment':
-      return PublicationType.COMMENT;
-    case 'Post':
-      return PublicationType.POST;
-
-    default:
-      never("Can't infer publication type");
-  }
-}
-
-export function getPublicationTypename<T extends PublicationType>(
-  publication: T,
-): PublicationTypename['__typename'] {
-  switch (publication) {
-    case PublicationType.MIRROR:
-      return 'Mirror';
-    case PublicationType.POST:
-      return 'Post';
-    case PublicationType.COMMENT:
-      return 'Comment';
-    default:
-      never("Can't infer publication typename");
-  }
 }
 
 export function getDomainReactionType(reaction: ReactionTypes): ReactionType {
@@ -119,7 +85,7 @@ export function createCollectRequest(
         profileId: collector.id,
         kind: TransactionKind.COLLECT_PUBLICATION,
         publicationId: publication.id,
-        publicationType: getPublicationType(publication),
+
         type: CollectType.FREE,
       };
     case 'FeeCollectModuleSettings':
@@ -130,7 +96,6 @@ export function createCollectRequest(
         profileId: collector.id,
         kind: TransactionKind.COLLECT_PUBLICATION,
         publicationId: publication.id,
-        publicationType: getPublicationType(publication),
         type: CollectType.PAID,
         fee: {
           amount: erc20Amount({ from: publication.__collectModule.amount }),

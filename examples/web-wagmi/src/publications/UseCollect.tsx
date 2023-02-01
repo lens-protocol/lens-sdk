@@ -63,21 +63,22 @@ function Feed({ activeProfile }: UseCollectInnerProps) {
 
   return (
     <>
-      {publications?.length === 0 && <p>No items</p>}
+      {(publications?.length === 0 || !publications) && <p>No items</p>}
 
       {loading && <Loading />}
 
-      {publications
-        .filter((i) => isPostPublication(i.root))
-        .map((item, i) => (
-          <>
-            <CollectablePublicationCard
-              key={`${item.root.id}-${i}`}
-              publication={item.root}
-              collectButton={<CollectButton publication={item.root} />}
-            />
-          </>
-        ))}
+      {publications &&
+        publications
+          .filter((i) => isPostPublication(i.root))
+          .map((item, i) => (
+            <>
+              <CollectablePublicationCard
+                key={`${item.root.id}-${i}`}
+                publication={item.root}
+                collectButton={<CollectButton publication={item.root} />}
+              />
+            </>
+          ))}
 
       {hasMore && <p ref={observeRef}>Loading more...</p>}
     </>
