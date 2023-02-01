@@ -1,0 +1,30 @@
+{
+  "include": ["./src/**/*.ts"],
+  "exclude": [
+    "./src/**/__mocks__/*",
+    "tests/*.ts",
+    "cypress",
+    "../../e2e/node_modules",
+    "../../e2e/cypress.config.ts"
+  ],
+  "compilerOptions": {
+    "target": "es5" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "allowJs": true,
+    "lib": [
+      "es2015",
+      "dom"
+    ] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
+    "module": "esnext" /* Specify what module code is generated. */,
+    "rootDir": "./src" /* Specify the root folder within your source files. */,
+    "outDir": "./dist" /* Specify the output folder for generated files. */,
+    "sourceMap": true,
+    "declaration": true /* Generate .d.ts files from TypeScript and JavaScript files in your project. */,
+    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
+    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+    "strict": true /* Enable all strict type-checking options. */,
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "types": ["node", "jest", "pako"]
+  }
+}
