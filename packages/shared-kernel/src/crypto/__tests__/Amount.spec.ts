@@ -33,6 +33,23 @@ describe('Given the Amount type', () => {
     });
   });
 
+  describe('when subtracting an Amount by another', () => {
+    it('should return a new Amount that is the difference of the 2 amounts', () => {
+      const amount1 = Amount.usd(2);
+      const amount2 = Amount.usd(3);
+
+      const expected = Amount.usd(-1);
+      expect(amount1.sub(amount2)).toEqual(expected);
+    });
+
+    it('should throw an InvariantError if the Amount asset is different', () => {
+      const amount1 = mockDaiAmount(2);
+      const amount2 = mockUsdcAmount(2);
+
+      expect(() => amount1.sub(amount2)).toThrow(InvariantError);
+    });
+  });
+
   describe('when multiplying an Amount for a scalar', () => {
     it('should return the expected Amount', () => {
       const amount = Amount.usd(42);
@@ -40,6 +57,17 @@ describe('Given the Amount type', () => {
       const actual = amount.mul(2);
 
       const expected = Amount.usd(84);
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('when dividing an Amount by a scalar', () => {
+    it('should return the expected Amount', () => {
+      const amount = Amount.usd(42);
+
+      const actual = amount.div(2);
+
+      const expected = Amount.usd(21);
       expect(actual).toEqual(expected);
     });
   });
