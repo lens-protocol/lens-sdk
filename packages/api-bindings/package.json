@@ -10,24 +10,24 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "module": "./dist/lens-protocol-api-bindings.esm.js",
+      "default": "./dist/lens-protocol-api-bindings.cjs.js"
     },
     "./mocks": {
-      "types": "./dist/mocks.d.ts",
-      "default": "./dist/mocks.js"
+      "module": "./mocks/dist/lens-protocol-api-bindings-mocks.esm.js",
+      "default": "./mocks/dist/lens-protocol-api-bindings-mocks.cjs.js"
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
+  "main": "dist/lens-protocol-api-bindings.cjs.js",
+  "module": "dist/lens-protocol-api-bindings.esm.js",
   "sideEffects": false,
   "files": [
     "dist/**/*",
     "mocks"
   ],
   "scripts": {
-    "build": "pnpm clean && tsup && tsc --emitDeclarationOnly",
+    "build": "pnpm clean && preconstruct build",
     "clean": "rimraf ./dist",
     "test": "jest --passWithNoTests",
     "eslint:fix": "pnpm run eslint --fix",
@@ -73,7 +73,15 @@
     "tsup": "^6.5.0"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "@faker-js/faker": "^7.6.0"
   },
-  "prettier": "@lens-protocol/prettier-config"
+  "prettier": "@lens-protocol/prettier-config",
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "mocks.ts"
+    ],
+    "exports": true
+  }
 }

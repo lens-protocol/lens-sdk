@@ -41,7 +41,7 @@ export function Header() {
           <NavLink
             key={path}
             to={path}
-            className={({ isActive }) => (isActive ? 'current' : undefined)}
+            className={({ isActive }: { isActive: boolean }) => (isActive ? 'current' : undefined)}
           >
             {label}
           </NavLink>

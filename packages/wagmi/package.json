@@ -8,21 +8,21 @@
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
   "type": "module",
+  "main": "dist/lens-protocol-wagmi.cjs.js",
+  "module": "dist/lens-protocol-wagmi.esm.js",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "module": "./dist/lens-protocol-wagmi.esm.js",
+      "default": "./dist/lens-protocol-wagmi.cjs.js"
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
   "sideEffects": false,
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "pnpm clean && tsup && tsc --emitDeclarationOnly",
+    "build": "pnpm clean && preconstruct build",
     "clean": "rimraf ./dist",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
@@ -54,5 +54,11 @@
   "prettier": "@lens-protocol/prettier-config",
   "dependencies": {
     "@lens-protocol/shared-kernel": "workspace:*"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ],
+    "exports": true
   }
 }

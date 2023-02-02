@@ -46,5 +46,6 @@ export function useBootstrapController({
     credentialsGateway,
     profileGateway,
     transactionQueue,
+    onLogout,
   ]);
 }

@@ -8,26 +8,26 @@
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
   "type": "module",
+  "main": "dist/lens-protocol-shared-kernel.cjs.js",
+  "module": "dist/lens-protocol-shared-kernel.esm.js",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "module": "./dist/lens-protocol-shared-kernel.esm.js",
+      "default": "./dist/lens-protocol-shared-kernel.cjs.js"
     },
     "./mocks": {
-      "types": "./dist/mocks.d.ts",
-      "default": "./dist/mocks.js"
+      "module": "./mocks/dist/lens-protocol-shared-kernel-mocks.esm.js",
+      "default": "./mocks/dist/lens-protocol-shared-kernel-mocks.cjs.js"
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
   "sideEffects": false,
   "files": [
     "dist",
     "mocks"
   ],
   "scripts": {
-    "build": "pnpm clean && tsup && tsc --emitDeclarationOnly",
+    "build": "pnpm clean && preconstruct build",
     "clean": "rimraf ./dist",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
@@ -63,5 +63,12 @@
   "peerDependencies": {
     "ethers": "^5.7.2"
   },
-  "prettier": "@lens-protocol/prettier-config"
+  "prettier": "@lens-protocol/prettier-config",
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "mocks.ts"
+    ],
+    "exports": true
+  }
 }
