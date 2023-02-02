@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 
+import { Environment } from '../consts/environments';
 import { ProfileFragment } from '../graphql/fragments.generated';
 import { SingleProfileQueryRequest } from '../graphql/types.generated';
 import { getSdk, Sdk } from './graphql/queries.generated';
@@ -7,8 +8,8 @@ import { getSdk, Sdk } from './graphql/queries.generated';
 export class Profile {
   private readonly sdk: Sdk;
 
-  constructor(backendUrl: string) {
-    const client = new GraphQLClient(backendUrl);
+  constructor(env: Environment) {
+    const client = new GraphQLClient(env.gqlEndpoint);
     this.sdk = getSdk(client);
   }
 

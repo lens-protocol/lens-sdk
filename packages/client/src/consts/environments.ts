@@ -1,15 +1,13 @@
-export type Environment = {
-  url: string;
-};
+export class Environment {
+  constructor(private url: string) {}
 
-export const polygon: Environment = {
-  url: 'https://api.lens.dev',
-};
+  get gqlEndpoint() {
+    return `${this.url}/graphql`;
+  }
+}
 
-export const mumbai: Environment = {
-  url: 'https://api-mumbai.lens.dev',
-};
+export const polygon = new Environment('https://api.lens.dev');
+export const mumbai = new Environment('https://api-mumbai.lens.dev');
 
-export const mumbaiSandbox: Environment = {
-  url: 'https://api-sandbox-mumbai.lens.dev',
-};
+// not exposed from the package, used in tests
+export const mumbaiSandbox = new Environment('https://api-sandbox-mumbai.lens.dev');

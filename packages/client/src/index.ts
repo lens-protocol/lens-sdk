@@ -1,7 +1,7 @@
 import { LensClient } from './LensClient';
 
 export * from './authentication';
-export * from './consts/environments';
+export { polygon, mumbai } from './consts/environments';
 export * from './profile';
 export * from './reaction';
 

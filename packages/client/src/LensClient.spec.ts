@@ -1,6 +1,7 @@
 import { Wallet } from 'ethers';
 
-import LensClient, { Credentials, mumbai, Profile, Reaction } from '.';
+import LensClient, { Credentials, Profile, Reaction } from '.';
+import { mumbaiSandbox } from './consts/environments';
 
 let credentialsVar: Credentials;
 let authenticatedClientVar: LensClient;
@@ -13,7 +14,7 @@ async function setupTest(wallet: Wallet) {
     };
   }
 
-  authenticatedClientVar = LensClient.init(mumbai);
+  authenticatedClientVar = LensClient.init(mumbaiSandbox);
   const address = await wallet.getAddress();
   const challenge = await authenticatedClientVar.generateChallenge(address);
   const signature = await wallet.signMessage(challenge);
@@ -47,7 +48,7 @@ describe(`Given a LensClient configured for testnet and a wallet`, () => {
       const {
         credentials: { refreshToken: storedRefreshToken },
       } = await setupTest(wallet);
-      const client = LensClient.init(mumbai);
+      const client = LensClient.init(mumbaiSandbox);
 
       const { accessToken, refreshToken } = await client.refreshCredentials(storedRefreshToken);
 
@@ -61,7 +62,7 @@ describe(`Given a LensClient configured for testnet and a wallet`, () => {
       const {
         credentials: { accessToken },
       } = await setupTest(wallet);
-      const client = LensClient.init(mumbai);
+      const client = LensClient.init(mumbaiSandbox);
 
       const isValid = await client.isAccessTokenValid(accessToken);
 
@@ -71,7 +72,7 @@ describe(`Given a LensClient configured for testnet and a wallet`, () => {
 
   describe(`when accessing the Profile module`, () => {
     it(`should return a new instance of Profile`, async () => {
-      const client = LensClient.init(mumbai);
+      const client = LensClient.init(mumbaiSandbox);
 
       expect(client.profile).toBeInstanceOf(Profile);
     });
@@ -87,7 +88,7 @@ describe(`Given a LensClient configured for testnet and a wallet`, () => {
 
   describe(`when accessing the Reaction module from not authenticated client`, () => {
     it(`should throw a Not authenticated error`, async () => {
-      const client = LensClient.init(mumbai);
+      const client = LensClient.init(mumbaiSandbox);
 
       expect(() => client.reaction).toThrow('Not authenticated');
     });

@@ -11,7 +11,7 @@ export class LensClient {
   private environment: Environment;
 
   private constructor(environment: Environment) {
-    this.authentication = new Authentication(environment.url);
+    this.authentication = new Authentication(environment);
     this.credentials = null;
     this.environment = environment;
   }
@@ -43,13 +43,13 @@ export class LensClient {
   }
 
   get profile(): Profile {
-    return new Profile(this.environment.url);
+    return new Profile(this.environment);
   }
 
   get reaction(): Reaction {
     if (!this.credentials) {
       throw new Error('Not authenticated');
     }
-    return new Reaction(this.environment.url, this.credentials.accessToken);
+    return new Reaction(this.environment, this.credentials.accessToken);
   }
 }
