@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateSetDispatcherTypedDataDocument,
   CreateSetDispatcherTypedDataMutation,
   CreateSetDispatcherTypedDataMutationVariables,
+  LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
@@ -15,7 +15,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
 export class DispatcherConfigCallGateway implements IDispatcherConfigCallGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall<T extends UpdateDispatcherConfigRequest>(
     request: T,

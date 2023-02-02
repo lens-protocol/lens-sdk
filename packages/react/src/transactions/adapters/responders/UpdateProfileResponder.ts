@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   GetProfileDocument,
   GetProfileQuery,
   GetProfileQueryVariables,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
   UpdateFollowPolicyRequest,
@@ -16,7 +16,7 @@ import {
 export class UpdateProfileResponder
   implements ITransactionResponder<UpdateProfileImageRequest | UpdateFollowPolicyRequest>
 {
-  constructor(private readonly apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private readonly apolloClient: LensApolloClient) {}
 
   async commit({
     request,

@@ -1,4 +1,4 @@
-import { createMockClient, MockedResponse } from '@apollo/client/testing';
+import { MockedResponse } from '@apollo/client/testing';
 import {
   CreateFollowTypedDataDocument,
   CreateFollowTypedDataMutation,
@@ -19,7 +19,7 @@ import {
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { FollowProfilesCallGateway } from '../FollowProfilesCallGateway';
 
-function mockCreateFollowTypedDataMutationMockedResponse({
+function createCreateFollowTypedDataMutationMockedResponse({
   variables,
   data,
 }: {
@@ -44,19 +44,20 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         const request = mockUnconstrainedFollowRequest();
         const createFollowTypedDataMutation = mockCreateFollowTypedDataMutation();
 
-        const apollo = createMockClient(
-          createFollowTypedDataMutation,
-          CreateFollowTypedDataDocument,
-          {
-            request: {
-              follow: [
-                {
-                  profile: request.profileId,
-                },
-              ],
+        const apollo = createMockApolloClientWithMultipleResponses([
+          createCreateFollowTypedDataMutationMockedResponse({
+            variables: {
+              request: {
+                follow: [
+                  {
+                    profile: request.profileId,
+                  },
+                ],
+              },
             },
-          },
-        );
+            data: createFollowTypedDataMutation,
+          }),
+        ]);
         const followFeeTransactionGateway = new FollowProfilesCallGateway(apollo);
 
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
@@ -73,24 +74,25 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         const request = mockProfileOwnerFollowRequest();
         const createFollowTypedDataMutation = mockCreateFollowTypedDataMutation();
 
-        const apollo = createMockClient(
-          createFollowTypedDataMutation,
-          CreateFollowTypedDataDocument,
-          {
-            request: {
-              follow: [
-                {
-                  profile: request.profileId,
-                  followModule: {
-                    profileFollowModule: {
-                      profileId: request.followerProfileId,
+        const apollo = createMockApolloClientWithMultipleResponses([
+          createCreateFollowTypedDataMutationMockedResponse({
+            variables: {
+              request: {
+                follow: [
+                  {
+                    profile: request.profileId,
+                    followModule: {
+                      profileFollowModule: {
+                        profileId: request.followerProfileId,
+                      },
                     },
                   },
-                },
-              ],
+                ],
+              },
             },
-          },
-        );
+            data: createFollowTypedDataMutation,
+          }),
+        ]);
         const followFeeTransactionGateway = new FollowProfilesCallGateway(apollo);
 
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
@@ -107,27 +109,28 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         const request = mockPaidFollowRequest();
         const createFollowTypedDataMutation = mockCreateFollowTypedDataMutation();
 
-        const apollo = createMockClient(
-          createFollowTypedDataMutation,
-          CreateFollowTypedDataDocument,
-          {
-            request: {
-              follow: [
-                {
-                  profile: request.profileId,
-                  followModule: {
-                    feeFollowModule: {
-                      amount: {
-                        currency: request.fee.amount.asset.address,
-                        value: request.fee.amount.toFixed(),
+        const apollo = createMockApolloClientWithMultipleResponses([
+          createCreateFollowTypedDataMutationMockedResponse({
+            variables: {
+              request: {
+                follow: [
+                  {
+                    profile: request.profileId,
+                    followModule: {
+                      feeFollowModule: {
+                        amount: {
+                          currency: request.fee.amount.asset.address,
+                          value: request.fee.amount.toFixed(),
+                        },
                       },
                     },
                   },
-                },
-              ],
+                ],
+              },
             },
-          },
-        );
+            data: createFollowTypedDataMutation,
+          }),
+        ]);
         const followProfilesCallGateway = new FollowProfilesCallGateway(apollo);
 
         const unsignedCall = await followProfilesCallGateway.createUnsignedProtocolCall(request);
@@ -143,7 +146,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
       const request = mockUnconstrainedFollowRequest();
       const nonce = mockNonce();
       const apollo = createMockApolloClientWithMultipleResponses([
-        mockCreateFollowTypedDataMutationMockedResponse({
+        createCreateFollowTypedDataMutationMockedResponse({
           variables: {
             request: {
               follow: [

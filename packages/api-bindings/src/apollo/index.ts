@@ -1,29 +1,25 @@
-import { ApolloClient, ApolloLink, from, HttpLink, ReactiveVar } from '@apollo/client';
+import { from, HttpLink, ReactiveVar } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
 import type { IAccessTokenStorage } from './IAccessTokenStorage';
+import { LensApolloClient } from './LensApolloClient';
 import { createApolloCache } from './createApolloCache';
 import { createAuthLink } from './createAuthLink';
-import { removeClientTypeFromExtendedUnion } from './transforms';
 
 export type ApolloClientConfig = {
   activeWalletVar: ReactiveVar<WalletData | null>;
   accessTokenStorage: IAccessTokenStorage;
   backendURL: string;
+  pollingInterval: number;
 };
 
 export function createApolloClient({
   backendURL,
   accessTokenStorage,
   activeWalletVar,
+  pollingInterval,
 }: ApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
-
-  const cleanerLink = new ApolloLink((operation, forward) => {
-    operation.query = removeClientTypeFromExtendedUnion('PendingPost', operation.query);
-
-    return forward(operation);
-  });
 
   const authLink = createAuthLink(accessTokenStorage);
 
@@ -31,10 +27,10 @@ export function createApolloClient({
     uri,
   });
 
-  return new ApolloClient({
+  return new LensApolloClient({
     cache: createApolloCache({ activeWalletVar }),
-    link: from([cleanerLink, authLink, httpLink]),
-    connectToDevTools: true,
+    link: from([authLink, httpLink]),
+    pollingInterval,
   });
 }
 
@@ -49,10 +45,13 @@ export function createAnonymousApolloClient({
 }: AnonymousApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
 
-  return new ApolloClient({
+  return new LensApolloClient({
     cache: createApolloCache({ activeWalletVar }),
-    uri,
+    link: new HttpLink({ uri }),
   });
 }
 
-export { IAccessTokenStorage };
+export type { IAccessTokenStorage };
+export type { IGraphQLClient } from './IGraphQLClient';
+export * from './errors';
+export type { LensApolloClient };

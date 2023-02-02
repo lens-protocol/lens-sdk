@@ -8,7 +8,7 @@ export function UseReportPublication() {
   const [inputReason, setInputReason] = useState<ReportReason | ''>('');
   const [additionalComments, setAdditionalComments] = useState<string>();
 
-  const { report, isPending, error } = useReportPublication();
+  const { report, isPending } = useReportPublication();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -92,8 +92,6 @@ export function UseReportPublication() {
         </div>
 
         <button disabled={inputReason === '' || isPending}>Report</button>
-
-        {error && <p>{error.message}</p>}
       </form>
     </div>
   );

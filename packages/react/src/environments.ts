@@ -1,12 +1,12 @@
 import { ChainType } from '@lens-protocol/shared-kernel';
 
 import { ChainConfigRegistry, goerli, mainnet, mumbai, polygon } from './chains';
-import { Timings } from './transactions/infrastructure/TransactionObserver';
+import { TransactionObserverTimings } from './transactions/infrastructure/TransactionObserver';
 
 export type EnvironmentConfig = {
   backend: string;
   chains: ChainConfigRegistry;
-  timings: Timings;
+  timings: TransactionObserverTimings;
 };
 
 export const production: EnvironmentConfig = {
@@ -16,7 +16,7 @@ export const production: EnvironmentConfig = {
     [ChainType.POLYGON]: polygon,
   },
   timings: {
-    pollingPeriod: 3000,
+    pollingInterval: 3000,
     maxIndexingWaitTime: 120000,
     maxMiningWaitTime: 60000,
   },
@@ -29,7 +29,7 @@ export const staging: EnvironmentConfig = {
     [ChainType.POLYGON]: mumbai,
   },
   timings: {
-    pollingPeriod: 3000,
+    pollingInterval: 3000,
     maxIndexingWaitTime: 240000,
     maxMiningWaitTime: 120000,
   },

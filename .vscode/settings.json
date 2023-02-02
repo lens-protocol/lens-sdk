@@ -3,6 +3,7 @@
     "examples/nextjs",
     "examples/shared",
     "examples/web-wagmi",
+    "examples/react-native",
     "packages/api-bindings",
     "packages/blockchain-bindings",
     "packages/domain",

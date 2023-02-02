@@ -1,4 +1,4 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import { LensApolloClient } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createBroadcastProtocolCallMutationMockedResponse,
@@ -18,7 +18,7 @@ function mockProtocolCallRelayer({
   apollo,
   factory,
 }: {
-  apollo: ApolloClient<NormalizedCacheObject>;
+  apollo: LensApolloClient;
   factory: ITransactionFactory<SupportedTransactionRequest>;
 }) {
   return new ProtocolCallRelayer(apollo, factory, mock<ILogger>());

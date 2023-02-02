@@ -1,6 +1,7 @@
 import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from './FollowPolicy';
+import type { ReferencePolicy } from './ReferencePolicy';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
@@ -84,7 +85,8 @@ export type Scalars = {
   /** The reaction id */
   ReactionId: unknown;
   /** reference module data scalar type */
-  ReferenceModuleData: unknown;
+  ReferenceModuleData: string;
+  ReferencePolicy: ReferencePolicy;
   /** Query search */
   Search: string;
   /** Relayer signature */
@@ -396,6 +398,7 @@ export type Comment = {
   reaction: Maybe<ReactionTypes>;
   /** The reference module */
   referenceModule: Maybe<ReferenceModule>;
+  referencePolicy: Scalars['ReferencePolicy'];
   /** The publication stats */
   stats: PublicationStats;
 };
@@ -1848,7 +1851,6 @@ export type Mirror = {
   isDataAvailability: Scalars['Boolean'];
   /** Indicates if the publication is gated behind some access criteria */
   isGated: Scalars['Boolean'];
-  isOptimisticMirroredByMe: Scalars['Boolean'];
   /** The metadata for the post */
   metadata: MetadataOutput;
   /** The mirror publication */
@@ -2520,6 +2522,7 @@ export type Post = {
   reaction: Maybe<ReactionTypes>;
   /** The reference module */
   referenceModule: Maybe<ReferenceModule>;
+  referencePolicy: Scalars['ReferencePolicy'];
   /** The publication stats */
   stats: PublicationStats;
 };
@@ -3921,6 +3924,7 @@ export type CommentsQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  metadata?: Maybe<PublicationMetadataFilters>;
 }>;
 
 export type CommentsQuery = {
@@ -4065,7 +4069,6 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
   | 'reaction'
   | 'hasCollectedByMe'
   | 'hasOptimisticCollectedByMe'
-  | 'isOptimisticMirroredByMe'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4078,13 +4081,6 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
       | CollectModule_RevertCollectModuleSettings_Fragment
       | CollectModule_TimedFeeCollectModuleSettings_Fragment
       | CollectModule_UnknownCollectModuleSettings_Fragment;
-    referenceModule: Maybe<
-      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
-      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
-      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
-    >;
-    canComment: Pick<CanCommentResponse, 'result'>;
-    canMirror: Pick<CanMirrorResponse, 'result'>;
   };
 
 export type MirrorFragment = { __typename: 'Mirror' } & {
@@ -4102,6 +4098,7 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
+  | 'referencePolicy'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4145,6 +4142,7 @@ export type PostFragment = { __typename: 'Post' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
+  | 'referencePolicy'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4193,6 +4191,7 @@ export type FeedQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  metadata?: Maybe<PublicationMetadataFilters>;
 }>;
 
 export type FeedQuery = {
@@ -4665,6 +4664,7 @@ export type PublicationsQueryVariables = Exact<{
   cursor?: Maybe<Scalars['Cursor']>;
   publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
   sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  metadata?: Maybe<PublicationMetadataFilters>;
 }>;
 
 export type PublicationsQuery = {
@@ -5196,6 +5196,7 @@ export const CommentBaseFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    referencePolicy @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5240,6 +5241,7 @@ export const PostFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    referencePolicy @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5264,28 +5266,17 @@ export const MirrorBaseFragmentDoc = gql`
     collectModule {
       ...CollectModule
     }
-    referenceModule {
-      ...ReferenceModule
-    }
     createdAt
     hidden
     isGated
     reaction(request: { profileId: $observerId })
     hasCollectedByMe(isFinalisedOnChain: true)
-    canComment(profileId: $observerId) {
-      result
-    }
-    canMirror(profileId: $observerId) {
-      result
-    }
     hasOptimisticCollectedByMe @client
-    isOptimisticMirroredByMe @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
   ${ProfileFragmentDoc}
   ${CollectModuleFragmentDoc}
-  ${ReferenceModuleFragmentDoc}
 `;
 export const CommentFragmentDoc = gql`
   fragment Comment on Comment {
@@ -5991,9 +5982,16 @@ export const CommentsDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]
+    $metadata: PublicationMetadataFilters
   ) {
     result: publications(
-      request: { limit: $limit, cursor: $cursor, commentsOf: $commentsOf, sources: $sources }
+      request: {
+        limit: $limit
+        cursor: $cursor
+        commentsOf: $commentsOf
+        sources: $sources
+        metadata: $metadata
+      }
     ) {
       items {
         ... on Comment {
@@ -6026,6 +6024,7 @@ export const CommentsDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      metadata: // value for 'metadata'
  *   },
  * });
  */
@@ -6110,6 +6109,7 @@ export const FeedDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]
+    $metadata: PublicationMetadataFilters
   ) {
     result: feed(
       request: {
@@ -6118,6 +6118,7 @@ export const FeedDocument = gql`
         limit: $limit
         cursor: $cursor
         sources: $sources
+        metadata: $metadata
       }
     ) {
       items {
@@ -6150,6 +6151,7 @@ export const FeedDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      metadata: // value for 'metadata'
  *   },
  * });
  */
@@ -7930,6 +7932,7 @@ export const PublicationsDocument = gql`
     $cursor: Cursor
     $publicationTypes: [PublicationTypes!]
     $sources: [Sources!]
+    $metadata: PublicationMetadataFilters
   ) {
     result: publications(
       request: {
@@ -7938,6 +7941,7 @@ export const PublicationsDocument = gql`
         cursor: $cursor
         publicationTypes: $publicationTypes
         sources: $sources
+        metadata: $metadata
       }
     ) {
       items {
@@ -7980,6 +7984,7 @@ export const PublicationsDocument = gql`
  *      cursor: // value for 'cursor'
  *      publicationTypes: // value for 'publicationTypes'
  *      sources: // value for 'sources'
+ *      metadata: // value for 'metadata'
  *   },
  * });
  */
@@ -9163,6 +9168,7 @@ export type CommentKeySpecifier = (
   | 'profile'
   | 'reaction'
   | 'referenceModule'
+  | 'referencePolicy'
   | 'stats'
   | CommentKeySpecifier
 )[];
@@ -9192,6 +9198,7 @@ export type CommentFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  referencePolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type CreateBurnEIP712TypedDataKeySpecifier = (
@@ -10238,7 +10245,6 @@ export type MirrorKeySpecifier = (
   | 'id'
   | 'isDataAvailability'
   | 'isGated'
-  | 'isOptimisticMirroredByMe'
   | 'metadata'
   | 'mirrorOf'
   | 'onChainContentURI'
@@ -10263,7 +10269,6 @@ export type MirrorFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
   isGated?: FieldPolicy<any> | FieldReadFunction<any>;
-  isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOf?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10705,6 +10710,7 @@ export type PostKeySpecifier = (
   | 'profile'
   | 'reaction'
   | 'referenceModule'
+  | 'referencePolicy'
   | 'stats'
   | PostKeySpecifier
 )[];
@@ -10731,6 +10737,7 @@ export type PostFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  referencePolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileKeySpecifier = (

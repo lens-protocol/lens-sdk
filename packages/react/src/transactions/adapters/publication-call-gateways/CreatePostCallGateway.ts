@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreatePostTypedDataDocument,
   CreatePostTypedDataMutation,
@@ -7,6 +6,7 @@ import {
   CreatePostViaDispatcherMutation,
   CreatePostViaDispatcherMutationVariables,
   CreatePublicPostRequest as CreatePublicPostRequestArg,
+  LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
@@ -30,7 +30,7 @@ import { createPublicationMetadata, resolveCollectModule, resolveReferenceModule
 
 export class CreatePostCallGateway implements ICreatePostCallGateway {
   constructor(
-    private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
+    private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
     private readonly uploadAdapter: MetadataUploadAdapter,
   ) {}

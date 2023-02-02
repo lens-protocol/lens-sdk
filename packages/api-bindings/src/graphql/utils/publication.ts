@@ -1,19 +1,14 @@
-import { PublicationType, ReactionType } from '@lens-protocol/domain/entities';
+import { ReactionType } from '@lens-protocol/domain/entities';
 import { never, Overwrite } from '@lens-protocol/shared-kernel';
 
 import {
-  Comment,
   CommentFragment,
-  Mirror,
   MirrorFragment,
-  Post,
   PostFragment,
   ProfileFragment,
   ReactionTypes,
 } from '../generated';
-import { JustTypename, PickByTypename, Typename } from './types';
-
-type PublicationTypename = JustTypename<Mirror> | JustTypename<Comment> | JustTypename<Post>;
+import { Typename, PickByTypename } from './types';
 
 export const isPostPublication = <T extends Typename<string>>(
   publication: T,
@@ -31,37 +26,6 @@ export const isMirrorPublication = <T extends Typename<string>>(
   publication: T,
 ): publication is PickByTypename<T, 'Mirror'> => {
   return publication.__typename === 'Mirror';
-};
-
-export const getPublicationType = <T extends PublicationTypename>(
-  publication: T,
-): PublicationType => {
-  switch (publication.__typename) {
-    case 'Mirror':
-      return PublicationType.MIRROR;
-    case 'Comment':
-      return PublicationType.COMMENT;
-    case 'Post':
-      return PublicationType.POST;
-
-    default:
-      never("Can't infer publication type");
-  }
-};
-
-export const getPublicationTypename = <T extends PublicationType>(
-  publication: T,
-): PublicationTypename['__typename'] => {
-  switch (publication) {
-    case PublicationType.MIRROR:
-      return 'Mirror';
-    case PublicationType.POST:
-      return 'Post';
-    case PublicationType.COMMENT:
-      return 'Comment';
-    default:
-      never("Can't infer publication typename");
-  }
 };
 
 export const getDomainReactionType = (reaction: ReactionTypes): ReactionType => {

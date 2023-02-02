@@ -1,5 +1,5 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
+  LensApolloClient,
   ProxyActionDocument,
   ProxyActionMutation,
   ProxyActionMutationVariables,
@@ -26,7 +26,7 @@ export class SignlessProtocolCallRelayer
   implements ISignlessProtocolCallRelayer<SignlessProtocolCallRequestModel>
 {
   constructor(
-    private apolloClient: ApolloClient<NormalizedCacheObject>,
+    private apolloClient: LensApolloClient,
     private factory: ITransactionFactory<SupportedTransactionRequest>,
     private logger: ILogger,
   ) {}

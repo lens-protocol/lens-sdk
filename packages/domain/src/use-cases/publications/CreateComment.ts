@@ -7,14 +7,15 @@ import {
   IProtocolCallPresenter,
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
-import { CollectPolicy, Media, ContentFocus, ReferencePolicy, Locale } from './types';
+import { ReferencePolicyConfig } from './ReferencePolicyConfig';
+import { CollectPolicy, Media, ContentFocus, Locale } from './types';
 
 export type CreateCommentRequest = {
   publicationId: string;
   content?: string;
   contentFocus: ContentFocus;
   media?: Media[];
-  reference: ReferencePolicy;
+  reference: ReferencePolicyConfig;
   collect: CollectPolicy;
   profileId: string;
   kind: TransactionKind.CREATE_COMMENT;

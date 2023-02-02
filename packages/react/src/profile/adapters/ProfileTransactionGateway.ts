@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateProfileDocument,
   CreateProfileMutation,
   CreateProfileMutationVariables,
+  LensApolloClient,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
 import {
@@ -42,7 +42,7 @@ async function asyncRelayReceipt(data: CreateProfileMutation): AsyncRelayReceipt
 
 export class ProfileTransactionGateway implements IProfileTransactionGateway {
   constructor(
-    private apolloClient: ApolloClient<NormalizedCacheObject>,
+    private apolloClient: LensApolloClient,
     private factory: ITransactionFactory<SupportedTransactionRequest>,
   ) {}
 

@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateSetProfileMetadataTypedDataDocument,
   CreateSetProfileMetadataTypedDataMutation,
@@ -12,6 +11,7 @@ import {
   omitTypename,
   ProfileFragment,
   CreatePublicSetProfileMetadataUriRequest,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
   NativeTransaction,
@@ -39,7 +39,7 @@ export class ProfileMetadataCallGateway
   implements IProfileDetailsCallGateway, IUnsignedProtocolCallGateway<UpdateProfileDetailsRequest>
 {
   constructor(
-    private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
+    private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
     private readonly uploadAdapter: MetadataUploadAdapter,
   ) {}

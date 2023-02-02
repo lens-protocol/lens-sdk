@@ -1,16 +1,13 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   HasTxHashBeenIndexedDocument,
   HasTxHashBeenIndexedQuery,
   HasTxHashBeenIndexedQueryVariables,
+  LensApolloClient,
   ProxyActionStatusDocument,
   ProxyActionStatusQuery,
   ProxyActionStatusQueryVariables,
   ProxyActionStatusTypes,
   TransactionErrorReasons,
-  TransactionIndexedResult,
-  isProxyActionError,
-  isTransactionError,
 } from '@lens-protocol/api-bindings';
 import {
   ProxyActionStatus,
@@ -24,24 +21,14 @@ import { IndexingEvent, ITransactionObserver, ProxyActionStatusEvent } from './T
 
 const ONE_SECOND = 1000; // ms
 
-export type Timings = {
-  pollingPeriod: number; // ms
+export type TransactionObserverTimings = {
+  pollingInterval: number; // ms // TODO delete this
   maxMiningWaitTime: number; // ms
   maxIndexingWaitTime: number; // ms
 };
 
 function delay(waitInMs: number) {
   return new Promise((resolve) => setTimeout(resolve, waitInMs));
-}
-
-function indexingEvent({
-  indexed,
-  txHash,
-}: Pick<TransactionIndexedResult, 'indexed' | 'txHash'>): IndexingEvent {
-  return {
-    indexed,
-    txHash,
-  };
 }
 
 function resolveTransactionErrorReason(reason: TransactionErrorReasons) {
@@ -56,8 +43,8 @@ function resolveTransactionErrorReason(reason: TransactionErrorReasons) {
 export class TransactionObserver implements ITransactionObserver {
   constructor(
     private readonly providerFactory: IProviderFactory,
-    private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
-    private readonly timings: Timings,
+    private readonly apolloClient: LensApolloClient,
+    private readonly timings: TransactionObserverTimings,
   ) {}
 
   async waitForExecuted(
@@ -97,7 +84,7 @@ export class TransactionObserver implements ITransactionObserver {
     indexingId: string,
   ): PromiseResult<IndexingEvent, TransactionError> {
     const startedAt = Date.now();
-    const observable = this.apolloClient.watchQuery<
+    const observable = this.apolloClient.poll<
       HasTxHashBeenIndexedQuery,
       HasTxHashBeenIndexedQueryVariables
     >({
@@ -106,51 +93,32 @@ export class TransactionObserver implements ITransactionObserver {
         request: { txId: indexingId },
       },
     });
-
-    const firstResponse = await observable.result();
-    if (isTransactionError(firstResponse.data.result)) {
-      return failure(
-        new TransactionError(resolveTransactionErrorReason(firstResponse.data.result.reason)),
-      );
-    }
-
-    if (firstResponse.data.result.indexed) {
-      return success(indexingEvent(firstResponse.data.result));
-    }
-    const initialTxHash = firstResponse.data.result.txHash;
-
-    observable.startPolling(this.timings.pollingPeriod);
+    let previousTxHash: string | null = null;
 
     return new Promise<Result<IndexingEvent, TransactionError>>((resolve, reject) => {
       const subscription = observable.subscribe({
-        next: async (nextResponse) => {
-          if (nextResponse.error) {
-            subscription.unsubscribe();
-            reject(nextResponse.error);
-            return;
-          }
-
-          switch (nextResponse.data.result.__typename) {
+        next: async ({ result }) => {
+          switch (result.__typename) {
             case 'TransactionIndexedResult':
-              if (
-                initialTxHash !== nextResponse.data.result.txHash ||
-                nextResponse.data.result.indexed
-              ) {
+              if (previousTxHash === null) {
+                previousTxHash = result.txHash;
+              }
+
+              if (previousTxHash !== result.txHash || result.indexed) {
                 subscription.unsubscribe();
-                resolve(success(indexingEvent(nextResponse.data.result)));
+                resolve(
+                  success({
+                    indexed: result.indexed,
+                    txHash: result.txHash,
+                  }),
+                );
                 return;
               }
               break;
 
             case 'TransactionError':
               subscription.unsubscribe();
-              resolve(
-                failure(
-                  new TransactionError(
-                    resolveTransactionErrorReason(nextResponse.data.result.reason),
-                  ),
-                ),
-              );
+              resolve(failure(new TransactionError(resolveTransactionErrorReason(result.reason))));
           }
 
           if (Date.now() - startedAt > this.timings.maxIndexingWaitTime) {
@@ -168,67 +136,42 @@ export class TransactionObserver implements ITransactionObserver {
     proxyId: string,
   ): PromiseResult<ProxyActionStatusEvent, TransactionError> {
     const startedAt = Date.now();
-    const observable = this.apolloClient.watchQuery<
+    const observable = this.apolloClient.poll<
       ProxyActionStatusQuery,
       ProxyActionStatusQueryVariables
     >({
       query: ProxyActionStatusDocument,
       variables: { proxyActionId: proxyId },
     });
-
-    const firstResponse = await observable.result();
-
-    if (isProxyActionError(firstResponse.data.result)) {
-      return failure(new TransactionError(TransactionErrorReason.UNKNOWN));
-    }
-
-    if (
-      firstResponse.data.result.__typename === 'ProxyActionStatusResult' &&
-      firstResponse.data.result.status === ProxyActionStatusTypes.Complete
-    ) {
-      return success({
-        txHash: firstResponse.data.result.txHash,
-        status: ProxyActionStatus.COMPLETE,
-        txId: firstResponse.data.result.txId,
-      });
-    }
-
-    observable.startPolling(this.timings.pollingPeriod);
+    let previousTxHash: string | null = null;
 
     return new Promise<Result<ProxyActionStatusEvent, TransactionError>>((resolve, reject) => {
       const subscription = observable.subscribe({
-        next: async (nextResponse) => {
-          if (nextResponse.error) {
-            subscription.unsubscribe();
-            reject(nextResponse.error);
-            return;
-          }
-
-          switch (nextResponse.data.result.__typename) {
+        next: async ({ result }) => {
+          switch (result.__typename) {
             case 'ProxyActionStatusResult':
-              if (nextResponse.data.result.status === ProxyActionStatusTypes.Complete) {
+              if (previousTxHash === null) {
+                previousTxHash = result.txHash;
+              }
+
+              if (
+                previousTxHash !== result.txHash ||
+                result.status === ProxyActionStatusTypes.Complete
+              ) {
                 subscription.unsubscribe();
                 resolve(
                   success({
-                    txHash: nextResponse.data.result.txHash,
+                    txHash: result.txHash,
                     status: ProxyActionStatus.COMPLETE,
-                    txId: nextResponse.data.result.txId,
                   }),
                 );
                 return;
               }
-
               break;
 
             case 'ProxyActionError':
               subscription.unsubscribe();
-              resolve(
-                failure(
-                  new TransactionError(
-                    resolveTransactionErrorReason(TransactionErrorReasons.Reverted),
-                  ),
-                ),
-              );
+              resolve(failure(new TransactionError(TransactionErrorReason.UNKNOWN)));
           }
 
           // handle timeout as the last possible case, otherwise can fail with timeout on Complete tx
