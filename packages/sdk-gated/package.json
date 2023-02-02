@@ -14,9 +14,13 @@
     "CHANGELOG.md"
   ],
   "scripts": {
+    "build": "pnpm clean && pnpm rollup:prod",
     "clean": "rimraf ./dist",
     "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "prettier -c -w ./src",
+    "lint": "pnpm run prettier && pnpm run tsc",
+    "lint:fix": "pnpm run prettier:fix && pnpm run tsc",
+    "prettier:fix": "prettier --write .",
+    "prettier": "prettier --check .",
     "rollup": "pnpm run clean && rollup -c rollup.config.mjs",
     "rollup:prod": "pnpm run clean && NODE_ENV=production rollup -c rollup.config.mjs",
     "codegen": "graphql-codegen",
@@ -62,6 +66,7 @@
     "@types/node": "^16.11.66",
     "@types/pako": "^2.0.0",
     "dotenv": "^16.0.3",
+    "blob-polyfill": "^7.0.20220408",
     "husky": "^8.0.2",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",

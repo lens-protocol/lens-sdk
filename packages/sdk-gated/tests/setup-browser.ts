@@ -1,10 +1,13 @@
+// all of these just polyfill `jsdom` to have everything sdk needs
+
 import 'cross-fetch/polyfill';
+import 'blob-polyfill';
+
 import { TextDecoder, TextEncoder } from 'util';
-import { Crypto } from '@peculiar/webcrypto';
-(global as any).TextEncoder = TextEncoder;
-(global as any).TextDecoder = TextDecoder;
-(global as any).window = {
-  crypto: new Crypto(),
-};
-// (global as any).ArrayBuffer = ArrayBuffer;
-// (global as any).Uint8Array = Uint8Array;
+import { webcrypto } from 'crypto';
+
+Object.defineProperties(globalThis, {
+  crypto: { value: webcrypto },
+  TextDecoder: { value: TextDecoder },
+  TextEncoder: { value: TextEncoder },
+});

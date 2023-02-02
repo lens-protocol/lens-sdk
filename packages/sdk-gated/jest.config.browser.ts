@@ -10,6 +10,6 @@ export default {
     `${path.join(
       __dirname,
       '../..'
-    )}/node_modules/.pnpm/(?!(uint8arrays|multiformats|@ethersproject|cross-blob|fetch-blob))`,
+    )}/node_modules/.pnpm/(?!(uint8arrays|multiformats|@ethersproject))`,
   ],
 };
