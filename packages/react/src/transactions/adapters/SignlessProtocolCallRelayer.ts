@@ -18,7 +18,7 @@ import {
   SignlessProtocolCallRequestModel,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, getID, ILogger, invariant } from '@lens-protocol/shared-kernel';
+import { ChainType, getID, ILogger } from '@lens-protocol/shared-kernel';
 
 import { ITransactionFactory, RelayProxyReceipt } from './ITransactionFactory';
 
@@ -90,8 +90,6 @@ export class SignlessProtocolCallRelayer
         request,
       },
     });
-
-    invariant(data, `Cannot relay proxy transaction`);
 
     return { proxyId: data.result };
   }

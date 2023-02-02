@@ -16,13 +16,7 @@ import {
   IProfileTransactionGateway,
 } from '@lens-protocol/domain/use-cases/profile';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import {
-  ChainType,
-  failure,
-  invariant,
-  PromiseResult,
-  success,
-} from '@lens-protocol/shared-kernel';
+import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import {
@@ -60,8 +54,6 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
         },
       },
     });
-
-    invariant(data, 'Cannot create profile');
 
     if (data.result.__typename === 'RelayError') {
       if (data.result.reason === RelayErrorReasons.HandleTaken) {

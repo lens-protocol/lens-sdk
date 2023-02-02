@@ -27,7 +27,7 @@ import {
   IUnsignedProtocolCallGateway,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, invariant, never, success } from '@lens-protocol/shared-kernel';
+import { ChainType, failure, never, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -84,8 +84,6 @@ export class ProfileMetadataCallGateway
       },
     });
 
-    invariant(data, 'Cannot generate typed data for setting profile metadata call');
-
     return data.result;
   }
 
@@ -99,8 +97,6 @@ export class ProfileMetadataCallGateway
       mutation: CreateSetProfileMetadataViaDispatcherDocument,
       variables: { request },
     });
-
-    invariant(data, 'Cannot create update profile request via dispatcher');
 
     if (data.result.__typename === 'RelayError') {
       return failure(new TransactionError(TransactionErrorReason.REJECTED));
