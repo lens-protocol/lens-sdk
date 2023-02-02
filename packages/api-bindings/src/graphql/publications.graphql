@@ -93,3 +93,26 @@ query GetAllProfilesByWhoMirroredPublication(
     }
   }
 }
+
+query ProfilePublicationsForSale(
+  $profileId: ProfileId!
+  $observerId: ProfileId
+  $limit: LimitScalar!
+  $cursor: Cursor
+) {
+  result: profilePublicationsForSale(
+    request: { profileId: $profileId, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
