@@ -71,6 +71,7 @@ const publicationHooks = [
     description: `Collect a publication.`,
     path: '/publications/useCollect',
   },
+  {
     label: 'useProfilePublicationsForSale',
     description: 'Fetch profile publications for sale.',
     path: '/publications/useProfilePublicationsForSale',
