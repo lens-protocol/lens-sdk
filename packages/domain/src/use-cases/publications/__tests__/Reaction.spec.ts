@@ -1,8 +1,7 @@
-import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { Reaction, IReactionGateway, IReactionPresenter, ReactionError } from '../Reaction';
+import { Reaction, IReactionGateway, IReactionPresenter } from '../Reaction';
 import { mockReactionRequest } from '../__helpers__/mocks';
 
 describe(`Given the ${Reaction.name} use-case interactor`, () => {
@@ -13,33 +12,26 @@ describe(`Given the ${Reaction.name} use-case interactor`, () => {
         - present optimistic update
         - add new reaction`, async () => {
       const presenter = mock<IReactionPresenter>();
-
       const gateway = mock<IReactionGateway>();
-      when(gateway.add).calledWith(request).mockResolvedValue(success());
-
       const reaction = new Reaction(gateway, presenter);
 
       await reaction.add(request);
 
-      expect(presenter.presentOptimisticAdd).toHaveBeenCalledWith(request);
+      expect(presenter.add).toHaveBeenCalledWith(request);
     });
 
-    it(`should:
-        - present optimistic update
-        - revert optimistic update`, async () => {
+    it(`should revert the optimistic update in case of errors and propagate the error`, async () => {
       const presenter = mock<IReactionPresenter>();
 
       const gateway = mock<IReactionGateway>();
-      when(gateway.add)
-        .calledWith(request)
-        .mockResolvedValue(failure(new ReactionError('')));
+      when(gateway.add).calledWith(request).mockRejectedValue(new Error(''));
 
       const reaction = new Reaction(gateway, presenter);
 
-      await reaction.add(request);
+      await expect(reaction.add(request)).rejects.toThrow();
 
-      expect(presenter.presentOptimisticAdd).toHaveBeenCalledWith(request);
-      expect(presenter.revertOptimisticAdd).toHaveBeenCalledWith(request);
+      expect(presenter.add).toHaveBeenCalledWith(request);
+      expect(presenter.remove).toHaveBeenCalledWith(request);
     });
   });
 
@@ -50,33 +42,25 @@ describe(`Given the ${Reaction.name} use-case interactor`, () => {
         - present optimistic update
         - remove reaction`, async () => {
       const presenter = mock<IReactionPresenter>();
-
       const gateway = mock<IReactionGateway>();
-      when(gateway.remove).calledWith(request).mockResolvedValue(success());
-
       const reaction = new Reaction(gateway, presenter);
 
       await reaction.remove(request);
 
-      expect(presenter.presentOptimisticRemove).toHaveBeenCalledWith(request);
+      expect(presenter.remove).toHaveBeenCalledWith(request);
     });
 
-    it(`should:
-        - present optimistic update
-        - revert optimistic update`, async () => {
+    it(`should revert the optimistic update in case of errors and propagate the error`, async () => {
       const presenter = mock<IReactionPresenter>();
 
       const gateway = mock<IReactionGateway>();
-      when(gateway.remove)
-        .calledWith(request)
-        .mockResolvedValue(failure(new ReactionError('')));
-
+      when(gateway.remove).calledWith(request).mockRejectedValue(new Error(''));
       const reaction = new Reaction(gateway, presenter);
 
-      await reaction.remove(request);
+      await expect(reaction.remove(request)).rejects.toThrow();
 
-      expect(presenter.presentOptimisticRemove).toHaveBeenCalledWith(request);
-      expect(presenter.revertOptimisticRemove).toHaveBeenCalledWith(request);
+      expect(presenter.remove).toHaveBeenCalledWith(request);
+      expect(presenter.add).toHaveBeenCalledWith(request);
     });
   });
 });

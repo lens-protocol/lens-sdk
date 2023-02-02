@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
@@ -51,9 +52,11 @@ type UseFollowInnerProps = {
 };
 
 function UseFollowInner({ activeProfile }: UseFollowInnerProps) {
-  const { data, loading } = useExploreProfiles({ observerId: activeProfile.id, limit: 50 });
+  const { data, error, loading } = useExploreProfiles({ observerId: activeProfile.id, limit: 50 });
 
   if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <>

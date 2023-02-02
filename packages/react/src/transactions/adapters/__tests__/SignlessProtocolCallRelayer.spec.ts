@@ -1,4 +1,4 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import { LensApolloClient } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createBroadcastProxyActionCallMutationMockedResponse,
@@ -40,7 +40,7 @@ function mockSignlessProtocolCallRelayer({
   apollo,
   factory,
 }: {
-  apollo: ApolloClient<NormalizedCacheObject>;
+  apollo: LensApolloClient;
   factory: ITransactionFactory<SupportedTransactionRequest>;
 }) {
   return new SignlessProtocolCallRelayer(apollo, factory, mock<ILogger>());

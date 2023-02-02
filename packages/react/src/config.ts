@@ -1,5 +1,5 @@
 import { ILogger } from '@lens-protocol/shared-kernel';
-import { IStorageProvider } from '@lens-protocol/storage';
+import { IStorageProvider, IObservableStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
 import { IProviderBinding } from './wallet/infrastructure/ProviderFactory';
@@ -16,6 +16,6 @@ export type LensConfig = {
   bindings: IBindings;
   environment: EnvironmentConfig;
   logger?: ILogger;
-  storage: IStorageProvider;
+  storage: IStorageProvider | IObservableStorageProvider;
   sources?: string[];
 };

@@ -1,12 +1,12 @@
-import { PublicationType, TransactionKind } from '@lens-protocol/domain/entities';
+import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   CollectPolicyType,
   CollectType,
   ContentFocus,
   NftAttributeDisplayType,
-  ReferencePolicy,
   SupportedPublicationMediaType,
   SUPPORTED_PUBLICATION_MEDIA_TYPES,
+  ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { z } from 'zod';
 
@@ -76,11 +76,34 @@ const MediaSchema = z.object({
     ),
 });
 
+const AnyoneReferencePolicySchema = z.object({
+  type: z.literal(ReferencePolicyType.ANYONE),
+});
+
+const DegreesOfSeparationReferencePolicySchema = z.object({
+  type: z.literal(ReferencePolicyType.DEGREES_OF_SEPARATION),
+  params: z.object({
+    commentsRestricted: z.boolean(),
+    mirrorsRestricted: z.boolean(),
+    degreesOfSeparation: z.number(),
+  }),
+});
+
+const FollowersOnlyReferencePolicySchema = z.object({
+  type: z.literal(ReferencePolicyType.FOLLOWERS_ONLY),
+});
+
+const ReferencePolicyConfigSchema = z.union([
+  AnyoneReferencePolicySchema,
+  DegreesOfSeparationReferencePolicySchema,
+  FollowersOnlyReferencePolicySchema,
+]);
+
 export const CreatePostRequestSchema = z.object({
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),
   media: z.array(MediaSchema).optional(),
-  reference: z.nativeEnum(ReferencePolicy),
+  reference: ReferencePolicyConfigSchema,
   collect: CollectPolicySchema,
   profileId: z.string(),
   kind: z.literal(TransactionKind.CREATE_POST),
@@ -93,7 +116,7 @@ export const CreateCommentRequestSchema = z.object({
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),
   media: z.array(MediaSchema).optional(),
-  reference: z.nativeEnum(ReferencePolicy),
+  reference: ReferencePolicyConfigSchema,
   collect: CollectPolicySchema,
   profileId: z.string(),
   kind: z.literal(TransactionKind.CREATE_COMMENT),
@@ -112,7 +135,6 @@ export const FreeCollectRequestSchema = z.object({
   profileId: z.string(),
   type: z.literal(CollectType.FREE),
   publicationId: z.string(),
-  publicationType: z.nativeEnum(PublicationType),
   kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
 });
 
@@ -125,7 +147,6 @@ export const PaidCollectRequestSchema = z.object({
   profileId: z.string(),
   type: z.literal(CollectType.PAID),
   publicationId: z.string(),
-  publicationType: z.nativeEnum(PublicationType),
   fee: CollectFeeSchema,
   kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
 });

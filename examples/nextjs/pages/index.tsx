@@ -1,4 +1,4 @@
-import { useActiveProfile, useWalletLogin, WalletType } from '@lens-protocol/react';
+import { useActiveProfile, useWalletLogin } from '@lens-protocol/react';
 import Head from 'next/head';
 import { useAccount, useConnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
@@ -17,7 +17,7 @@ export default function Home() {
 
       if (connector instanceof InjectedConnector) {
         const signer = await connector.getSigner();
-        await login(signer, WalletType.INJECTED);
+        await login(signer);
       }
     }
   };

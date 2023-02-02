@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateCommentTypedDataDocument,
   CreateCommentTypedDataMutation,
@@ -7,6 +6,7 @@ import {
   CreateCommentViaDispatcherMutation,
   CreateCommentViaDispatcherMutationVariables,
   CreatePublicCommentRequest as CreatePublicCommentRequestArg,
+  LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
@@ -30,7 +30,7 @@ import { createPublicationMetadata, resolveCollectModule, resolveReferenceModule
 
 export class CreateCommentCallGateway implements ICreateCommentCallGateway {
   constructor(
-    private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
+    private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
     private readonly uploadAdapter: MetadataUploadAdapter,
   ) {}

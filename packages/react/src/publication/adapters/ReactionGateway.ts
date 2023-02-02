@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   AddReactionDocument,
   AddReactionMutation,
@@ -7,51 +6,27 @@ import {
   RemoveReactionMutation,
   RemoveReactionMutationVariables,
   getApiReactionType,
-  isGraphqlValidationError,
+  ValidationError,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
-import {
-  ReactionRequest,
-  IReactionGateway,
-  ReactionError,
-} from '@lens-protocol/domain/use-cases/publications';
-import { PromiseResult, success, failure, assertError } from '@lens-protocol/shared-kernel';
-
-import { NetworkError } from './NetworkError';
+import { ReactionRequest, IReactionGateway } from '@lens-protocol/domain/use-cases/publications';
+import { assertError } from '@lens-protocol/shared-kernel';
 
 export class ReactionGateway implements IReactionGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
-  async add({
-    profileId,
-    publicationId,
-    reactionType,
-  }: ReactionRequest): PromiseResult<void, ReactionError> {
-    try {
-      await this.apolloClient.mutate<AddReactionMutation, AddReactionMutationVariables>({
-        mutation: AddReactionDocument,
-        variables: {
-          publicationId,
-          profileId,
-          reaction: getApiReactionType(reactionType),
-        },
-      });
-
-      return success();
-    } catch (e) {
-      assertError(e);
-      if (isGraphqlValidationError(e)) {
-        return failure(new ReactionError(e.message));
-      }
-
-      throw new NetworkError(e);
-    }
+  async add({ profileId, publicationId, reactionType }: ReactionRequest) {
+    await this.apolloClient.mutate<AddReactionMutation, AddReactionMutationVariables>({
+      mutation: AddReactionDocument,
+      variables: {
+        publicationId,
+        profileId,
+        reaction: getApiReactionType(reactionType),
+      },
+    });
   }
 
-  async remove({
-    profileId,
-    publicationId,
-    reactionType,
-  }: ReactionRequest): PromiseResult<void, ReactionError> {
+  async remove({ profileId, publicationId, reactionType }: ReactionRequest) {
     try {
       await this.apolloClient.mutate<RemoveReactionMutation, RemoveReactionMutationVariables>({
         mutation: RemoveReactionDocument,
@@ -61,16 +36,14 @@ export class ReactionGateway implements IReactionGateway {
           reaction: getApiReactionType(reactionType),
         },
       });
-
-      return success();
     } catch (e) {
       assertError(e);
 
-      if (isGraphqlValidationError(e)) {
-        return failure(new ReactionError(e.message));
+      if (e instanceof ValidationError) {
+        return;
       }
 
-      throw new NetworkError(e);
+      throw e;
     }
   }
 }

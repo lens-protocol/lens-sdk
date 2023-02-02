@@ -2,11 +2,11 @@ import {
   CollectPolicyType,
   ContentFocus,
   ProfileFragment,
-  ReferencePolicy,
   useCreateComment,
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
+import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { upload } from '../../upload';
 
 type CommentComposerProps = {
@@ -34,7 +34,6 @@ export function CommentComposer({ activeProfile, publicationId }: CommentCompose
       collect: {
         type: CollectPolicyType.NO_COLLECT,
       },
-      reference: ReferencePolicy.ANYBODY,
     });
 
     setContent('');
@@ -56,7 +55,7 @@ export function CommentComposer({ activeProfile, publicationId }: CommentCompose
           Comment
         </button>
 
-        {error && <p>{error.message}</p>}
+        {error && <ErrorMessage error={error} />}
       </fieldset>
     </form>
   );

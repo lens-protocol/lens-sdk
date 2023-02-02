@@ -1,93 +1,210 @@
 import { faker } from '@faker-js/faker';
 import {
+  PublicationReportingFraudSubreason,
+  PublicationReportingIllegalSubreason,
   PublicationReportingReason,
+  PublicationReportingSensitiveSubreason,
   PublicationReportingSpamSubreason,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createReportPublicationMutationMockedResponse,
-  createReportPublicationMutationWithErrorMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { ReportReason } from '@lens-protocol/domain/entities';
 import { mockReportPublicationRequest } from '@lens-protocol/domain/mocks';
-import { AlreadyReportedError } from '@lens-protocol/domain/use-cases/publications';
 
-import { NetworkError } from '../NetworkError';
 import { ReportPublicationGateway } from '../ReportPublicationGateway';
 
 describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
-  describe(`and the ${ReportPublicationGateway.prototype.report.name} method`, () => {
-    it(`should report a publication with success`, async () => {
-      const publicationId = faker.datatype.uuid();
-      const additionalComments = faker.lorem.sentence();
-
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        createReportPublicationMutationMockedResponse({
-          variables: {
-            publicationId,
-            reason: {
-              spamReason: {
-                reason: PublicationReportingReason.Spam,
-                subreason: PublicationReportingSpamSubreason.FakeEngagement,
-              },
-            },
-            additionalComments,
+  describe(`when invoking the ${ReportPublicationGateway.prototype.report.name} method`, () => {
+    it.each([
+      {
+        reason: ReportReason.VIOLENCE,
+        expectedRequestReason: {
+          illegalReason: {
+            reason: PublicationReportingReason.Illegal,
+            subreason: PublicationReportingIllegalSubreason.Violence,
           },
-        }),
-      ]);
-
-      const gateway = new ReportPublicationGateway(apolloClient);
-      const request = mockReportPublicationRequest({
-        publicationId,
-        reason: ReportReason.FAKE_ENGAGEMENT,
-        additionalComments,
-      });
-      const result = await gateway.report(request);
-
-      expect(result.isSuccess()).toBe(true);
-    });
-
-    it(`should fail with AlreadyReportedError if publication was already reported`, async () => {
-      const publicationId = faker.datatype.uuid();
-
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        createReportPublicationMutationWithErrorMockedResponse({
-          variables: {
-            publicationId,
-            reason: {
-              spamReason: {
-                reason: PublicationReportingReason.Spam,
-                subreason: PublicationReportingSpamSubreason.FakeEngagement,
-              },
-            },
-            additionalComments: '',
+        },
+      },
+      {
+        reason: ReportReason.SELF_HARM,
+        expectedRequestReason: {
+          illegalReason: {
+            reason: PublicationReportingReason.Illegal,
+            subreason: PublicationReportingIllegalSubreason.ThreatIndividual,
           },
-        }),
-      ]);
-
-      const gateway = new ReportPublicationGateway(apolloClient);
-      const request = mockReportPublicationRequest({
-        publicationId,
+        },
+      },
+      {
+        reason: ReportReason.DIRECT_THREAT,
+        expectedRequestReason: {
+          illegalReason: {
+            reason: PublicationReportingReason.Illegal,
+            subreason: PublicationReportingIllegalSubreason.DirectThreat,
+          },
+        },
+      },
+      {
+        reason: ReportReason.HARASSMENT,
+        expectedRequestReason: {
+          illegalReason: {
+            reason: PublicationReportingReason.Illegal,
+            subreason: PublicationReportingIllegalSubreason.HumanAbuse,
+          },
+        },
+      },
+      {
+        reason: ReportReason.HATE_SPEECH,
+        expectedRequestReason: {
+          illegalReason: {
+            reason: PublicationReportingReason.Illegal,
+            subreason: PublicationReportingIllegalSubreason.HumanAbuse,
+          },
+        },
+      },
+      {
+        reason: ReportReason.ANIMAL_ABUSE,
+        expectedRequestReason: {
+          illegalReason: {
+            reason: PublicationReportingReason.Illegal,
+            subreason: PublicationReportingIllegalSubreason.AnimalAbuse,
+          },
+        },
+      },
+      {
+        reason: ReportReason.SCAM,
+        expectedRequestReason: {
+          fraudReason: {
+            reason: PublicationReportingReason.Fraud,
+            subreason: PublicationReportingFraudSubreason.Scam,
+          },
+        },
+      },
+      {
+        reason: ReportReason.UNAUTHORIZED_SALE,
+        expectedRequestReason: {
+          fraudReason: {
+            reason: PublicationReportingReason.Fraud,
+            subreason: PublicationReportingFraudSubreason.Scam,
+          },
+        },
+      },
+      {
+        reason: ReportReason.IMPERSONATION,
+        expectedRequestReason: {
+          fraudReason: {
+            reason: PublicationReportingReason.Fraud,
+            subreason: PublicationReportingFraudSubreason.Impersonation,
+          },
+        },
+      },
+      {
+        reason: ReportReason.NUDITY,
+        expectedRequestReason: {
+          sensitiveReason: {
+            reason: PublicationReportingReason.Sensitive,
+            subreason: PublicationReportingSensitiveSubreason.Nsfw,
+          },
+        },
+      },
+      {
+        reason: ReportReason.OFFENSIVE,
+        expectedRequestReason: {
+          sensitiveReason: {
+            reason: PublicationReportingReason.Sensitive,
+            subreason: PublicationReportingSensitiveSubreason.Offensive,
+          },
+        },
+      },
+      {
+        reason: ReportReason.MISLEADING,
+        expectedRequestReason: {
+          spamReason: {
+            reason: PublicationReportingReason.Spam,
+            subreason: PublicationReportingSpamSubreason.Misleading,
+          },
+        },
+      },
+      {
+        reason: ReportReason.MISUSE_HASHTAGS,
+        expectedRequestReason: {
+          spamReason: {
+            reason: PublicationReportingReason.Spam,
+            subreason: PublicationReportingSpamSubreason.MisuseHashtags,
+          },
+        },
+      },
+      {
+        reason: ReportReason.UNRELATED,
+        expectedRequestReason: {
+          spamReason: {
+            reason: PublicationReportingReason.Spam,
+            subreason: PublicationReportingSpamSubreason.Unrelated,
+          },
+        },
+      },
+      {
+        reason: ReportReason.REPETITIVE,
+        expectedRequestReason: {
+          spamReason: {
+            reason: PublicationReportingReason.Spam,
+            subreason: PublicationReportingSpamSubreason.Repetitive,
+          },
+        },
+      },
+      {
         reason: ReportReason.FAKE_ENGAGEMENT,
-        additionalComments: '',
-      });
-      const result = await gateway.report(request);
+        expectedRequestReason: {
+          spamReason: {
+            reason: PublicationReportingReason.Spam,
+            subreason: PublicationReportingSpamSubreason.FakeEngagement,
+          },
+        },
+      },
+      {
+        reason: ReportReason.MANIPULATION_ALGO,
+        expectedRequestReason: {
+          spamReason: {
+            reason: PublicationReportingReason.Spam,
+            subreason: PublicationReportingSpamSubreason.ManipulationAlgo,
+          },
+        },
+      },
+      {
+        reason: ReportReason.SOMETHING_ELSE,
+        expectedRequestReason: {
+          spamReason: {
+            reason: PublicationReportingReason.Spam,
+            subreason: PublicationReportingSpamSubreason.SomethingElse,
+          },
+        },
+      },
+    ])(
+      `should report the publication mapping the ReportReason.$reason to the expected request`,
+      async ({ reason, expectedRequestReason }) => {
+        const publicationId = faker.datatype.uuid();
+        const additionalComments = faker.lorem.sentence();
 
-      expect(result.isFailure()).toBe(true);
-      if (result.isFailure()) {
-        expect(result.error).toBeInstanceOf(AlreadyReportedError);
-      }
-    });
+        const apolloClient = createMockApolloClientWithMultipleResponses([
+          createReportPublicationMutationMockedResponse({
+            variables: {
+              publicationId,
+              reason: expectedRequestReason,
+              additionalComments,
+            },
+          }),
+        ]);
 
-    it(`should throw NetworkError if unknown reason`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        // no mocks on purpose to trigger network issue
-      ]);
+        const gateway = new ReportPublicationGateway(apolloClient);
+        const request = mockReportPublicationRequest({
+          publicationId,
+          reason,
+          additionalComments,
+        });
 
-      const gateway = new ReportPublicationGateway(apolloClient);
-      const request = mockReportPublicationRequest();
-
-      await expect(gateway.report(request)).rejects.toThrow(NetworkError);
-    });
+        return expect(gateway.report(request)).resolves.toBeUndefined();
+      },
+    );
   });
 });

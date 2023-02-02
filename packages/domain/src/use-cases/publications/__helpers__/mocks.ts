@@ -6,7 +6,7 @@ import {
   mockUsdcAmount,
 } from '@lens-protocol/shared-kernel/mocks';
 
-import { PublicationType, ReactionType, ReportReason, TransactionKind } from '../../../entities';
+import { ReactionType, ReportReason, TransactionKind } from '../../../entities';
 import { mockProfileId } from '../../profile/__helpers__/mocks';
 import { ImageType } from '../../types';
 import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
@@ -15,6 +15,7 @@ import { CreateMirrorRequest } from '../CreateMirror';
 import { CreatePostRequest } from '../CreatePost';
 import { HidePublicationRequest } from '../HidePublication';
 import { ReactionRequest } from '../Reaction';
+import { ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
 import {
   ChargeCollectPolicy,
@@ -26,7 +27,6 @@ import {
   NftAttributeDisplayType,
   NftMetadata,
   NoCollectPolicy,
-  ReferencePolicy,
 } from '../types';
 
 export function mockCreateCommentRequest(
@@ -38,7 +38,9 @@ export function mockCreateCommentRequest(
     contentFocus: ContentFocus.TEXT,
     publicationId: faker.datatype.uuid(),
     content: faker.lorem.paragraph(),
-    reference: ReferencePolicy.ANYBODY,
+    reference: {
+      type: ReferencePolicyType.ANYONE,
+    },
     collect: {
       type: CollectPolicyType.NO_COLLECT,
     },
@@ -147,7 +149,9 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
 
     contentFocus: ContentFocus.TEXT,
     content: faker.lorem.paragraph(),
-    reference: ReferencePolicy.ANYBODY,
+    reference: {
+      type: ReferencePolicyType.ANYONE,
+    },
     collect: {
       type: CollectPolicyType.NO_COLLECT,
     },
@@ -163,7 +167,6 @@ export function mockReactionRequest(overrides?: Partial<ReactionRequest>): React
   return {
     profileId: faker.datatype.uuid(),
     publicationId: faker.datatype.uuid(),
-    publicationType: PublicationType.POST,
     reactionType: ReactionType.UPVOTE,
     ...overrides,
   };
@@ -185,7 +188,6 @@ export function mockFreeCollectRequest(
     profileId: mockProfileId(),
     type: CollectType.FREE,
     publicationId: faker.datatype.uuid(),
-    publicationType: PublicationType.POST,
     ...overrides,
     kind: TransactionKind.COLLECT_PUBLICATION,
   };
@@ -198,7 +200,6 @@ export function mockPaidCollectRequest(
     profileId: mockProfileId(),
     type: CollectType.PAID,
     publicationId: faker.datatype.uuid(),
-    publicationType: PublicationType.POST,
     fee: {
       amount: mockDaiAmount(1, ChainType.POLYGON),
       contractAddress: mockEthereumAddress(),

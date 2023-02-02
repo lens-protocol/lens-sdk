@@ -1,5 +1,11 @@
 import { IStorageItem, IStorageSchema, StorageMetadata } from './BaseStorageSchema';
-import { IStorage, IStorageProvider, StorageSubscriber, StorageSubscription } from './IStorage';
+import {
+  IObservableStorageProvider,
+  IStorage,
+  IStorageProvider,
+  StorageSubscriber,
+  StorageSubscription,
+} from './IStorage';
 
 /**
  * An implementation of `IStorage` with support for migration strategies
@@ -7,7 +13,7 @@ import { IStorage, IStorageProvider, StorageSubscriber, StorageSubscription } fr
 export class Storage<Data> implements IStorage<Data> {
   protected constructor(
     protected readonly schema: IStorageSchema<Data>,
-    protected readonly provider: IStorageProvider,
+    protected readonly provider: IStorageProvider | IObservableStorageProvider,
   ) {}
 
   async get(): Promise<Data | null> {
@@ -37,6 +43,14 @@ export class Storage<Data> implements IStorage<Data> {
   }
 
   subscribe(subscriber: StorageSubscriber<Data>): StorageSubscription {
+    // not all implementations needs to support an observable storage
+    if (!('subscribe' in this.provider)) {
+      return {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        unsubscribe() {},
+      };
+    }
+
     return this.provider.subscribe(this.getStorageKey(), async (newValue, oldValue) => {
       const newItem = newValue ? await this.parse(newValue) : { data: null };
       const oldItem = oldValue ? await this.parse(oldValue) : { data: null };

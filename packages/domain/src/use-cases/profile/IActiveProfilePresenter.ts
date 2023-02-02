@@ -1,8 +1,8 @@
-export type ProfileData = {
+export type ProfileIdentifier = {
   id: string;
   handle: string;
 };
 
 export interface IActiveProfilePresenter {
-  presentActiveProfile(profile: ProfileData | null): Promise<void>;
+  presentActiveProfile(profileIdentifier: ProfileIdentifier | null): Promise<void>;
 }

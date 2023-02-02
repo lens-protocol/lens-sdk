@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   GetProfileDocument,
   GetProfileQuery,
   GetProfileQueryVariables,
+  LensApolloClient,
   MediaSetFragment,
 } from '@lens-protocol/api-bindings';
 import {
@@ -23,7 +23,7 @@ function isUpdateOffChainProfileImageRequest(
 export class UpdateProfileImageResponder
   implements ITransactionResponder<UpdateProfileImageRequest>
 {
-  constructor(private readonly client: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private readonly client: LensApolloClient) {}
 
   async prepare({ request }: BroadcastedTransactionData<UpdateProfileImageRequest>) {
     if (isUpdateOffChainProfileImageRequest(request)) {

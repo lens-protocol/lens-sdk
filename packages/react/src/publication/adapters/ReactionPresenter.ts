@@ -1,63 +1,29 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
-import {
-  getPublicationTypename,
-  PublicationStats,
-  ReactionTypes,
-} from '@lens-protocol/api-bindings';
+import { ReactionTypes } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
-import {
-  ReactionRequest,
-  IReactionPresenter,
-  ReactionError,
-} from '@lens-protocol/domain/use-cases/publications';
+import { ReactionRequest, IReactionPresenter } from '@lens-protocol/domain/use-cases/publications';
 
-import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
+import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
 
-export class ReactionPresenter
-  extends PromiseResultPresenter<void, ReactionError>
-  implements IReactionPresenter
-{
-  constructor(private cache: ApolloCache<NormalizedCacheObject>) {
-    super();
+export class ReactionPresenter implements IReactionPresenter {
+  readonly publicationCacheManager: PublicationCacheManager;
+
+  constructor(cache: ApolloCache<NormalizedCacheObject>) {
+    this.publicationCacheManager = new PublicationCacheManager(cache);
   }
 
-  async presentOptimisticAdd(request: ReactionRequest): Promise<void> {
-    await this.addReaction(request);
-  }
-
-  async presentOptimisticRemove(request: ReactionRequest): Promise<void> {
-    await this.removeReaction(request);
-  }
-
-  async revertOptimisticAdd(request: ReactionRequest): Promise<void> {
-    await this.removeReaction(request);
-  }
-
-  async revertOptimisticRemove(request: ReactionRequest): Promise<void> {
-    await this.addReaction(request);
-  }
-
-  private async addReaction(request: ReactionRequest): Promise<void> {
+  async add(request: ReactionRequest): Promise<void> {
     switch (request.reactionType) {
       case ReactionType.UPVOTE:
         {
-          const id = this.cache.identify({
-            __typename: getPublicationTypename(request.publicationType),
-            id: request.publicationId,
-          });
-
-          this.cache.modify({
-            id,
-            fields: {
-              stats(oldStats: PublicationStats) {
-                return {
-                  ...oldStats,
-                  totalUpvotes: oldStats.totalUpvotes + 1,
-                };
-              },
-              reaction: () => ReactionTypes.Upvote,
+          this.publicationCacheManager.update(request.publicationId, (current) => ({
+            ...current,
+            stats: {
+              ...current.stats,
+              totalUpvotes: current.stats.totalUpvotes + 1,
             },
-          });
+            reaction: ReactionTypes.Upvote,
+          }));
         }
         break;
 
@@ -68,27 +34,18 @@ export class ReactionPresenter
     }
   }
 
-  private async removeReaction(request: ReactionRequest): Promise<void> {
+  async remove(request: ReactionRequest): Promise<void> {
     switch (request.reactionType) {
       case ReactionType.UPVOTE:
         {
-          const id = this.cache.identify({
-            __typename: getPublicationTypename(request.publicationType),
-            id: request.publicationId,
-          });
-
-          this.cache.modify({
-            id,
-            fields: {
-              stats(oldStats: PublicationStats) {
-                return {
-                  ...oldStats,
-                  totalUpvotes: oldStats.totalUpvotes - 1,
-                };
-              },
-              reaction: () => null,
+          this.publicationCacheManager.update(request.publicationId, (current) => ({
+            ...current,
+            stats: {
+              ...current.stats,
+              totalUpvotes: current.stats.totalUpvotes - 1,
             },
-          });
+            reaction: null,
+          }));
         }
         break;
 

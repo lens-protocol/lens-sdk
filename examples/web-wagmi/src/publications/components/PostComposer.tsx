@@ -3,10 +3,10 @@ import {
   useCreatePost,
   ContentFocus,
   CollectPolicyType,
-  ReferencePolicy,
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
+import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { upload } from '../../upload';
 
 export type PostComposerProps = {
@@ -30,7 +30,6 @@ export function PostComposer({ profile }: PostComposerProps) {
       collect: {
         type: CollectPolicyType.NO_COLLECT,
       },
-      reference: ReferencePolicy.ANYBODY,
     });
 
     setContent('');
@@ -52,7 +51,7 @@ export function PostComposer({ profile }: PostComposerProps) {
           Post
         </button>
 
-        {error && <p>{error.message}</p>}
+        {error && <ErrorMessage error={error} />}
       </fieldset>
     </form>
   );

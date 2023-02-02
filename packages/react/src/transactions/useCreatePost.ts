@@ -4,7 +4,10 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
+import {
+  CreatePostRequest,
+  ReferencePolicyType,
+} from '@lens-protocol/domain/use-cases/publications';
 import { useState } from 'react';
 
 import { ProfileFragment } from '../profile';
@@ -16,7 +19,8 @@ export type UseCreatePostArgs = {
   upload: MetadataUploadHandler;
 };
 
-export type CreatePostArgs = Omit<CreatePostRequest, 'kind' | 'delegate'>;
+export type CreatePostArgs = Omit<CreatePostRequest, 'kind' | 'delegate' | 'reference'> &
+  Partial<Pick<CreatePostRequest, 'reference'>>;
 
 export function useCreatePost({ profile, upload }: UseCreatePostArgs) {
   const [error, setError] = useState<
@@ -30,13 +34,14 @@ export function useCreatePost({ profile, upload }: UseCreatePostArgs) {
   const createPost = useCreatePostController({ upload });
 
   return {
-    create: async (args: CreatePostArgs) => {
+    create: async ({ reference, ...args }: CreatePostArgs) => {
       setError(null);
       setIsPending(true);
 
       try {
         const result = await createPost({
           kind: TransactionKind.CREATE_POST,
+          reference: reference || { type: ReferencePolicyType.ANYONE },
           delegate: profile.dispatcher !== null,
           ...args,
         });

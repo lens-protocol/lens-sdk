@@ -1,10 +1,10 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { Modifiers } from '@apollo/client/cache/core/types/common';
 import {
   AttributeFragment,
   GetProfileDocument,
   GetProfileQuery,
   GetProfileQueryVariables,
+  LensApolloClient,
   Maybe,
   ProfileFragment,
   ProfileFragmentDoc,
@@ -42,7 +42,7 @@ export class UpdateProfileMetadataResponder
 {
   private snapshots = new Map<UpdateProfileDetailsRequest, ProfileFragment | null>();
 
-  constructor(private readonly apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private readonly apolloClient: LensApolloClient) {}
 
   private get apolloCache() {
     return this.apolloClient.cache;

@@ -6,11 +6,10 @@ import {
 import { mockHidePublicationRequest } from '@lens-protocol/domain/mocks';
 
 import { HidePublicationGateway } from '../HidePublicationGateway';
-import { NetworkError } from '../NetworkError';
 
 describe(`Given an instance of the ${HidePublicationGateway.name}`, () => {
-  describe(`when the ${HidePublicationGateway.prototype.hide.name} method is invoked with an HidePublicationRequest`, () => {
-    it(`should hide a publication`, async () => {
+  describe(`when the ${HidePublicationGateway.prototype.hide.name} method is invoked`, () => {
+    it(`should perform the expected mutation request`, async () => {
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
@@ -25,20 +24,8 @@ describe(`Given an instance of the ${HidePublicationGateway.name}`, () => {
       const request = mockHidePublicationRequest({
         publicationId,
       });
-      const result = await gateway.hide(request);
 
-      expect(result.isSuccess()).toBe(true);
-    });
-
-    it(`should throw NetworkError if unknown reason`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        // no mocks on purpose to trigger network issue
-      ]);
-
-      const gateway = new HidePublicationGateway(apolloClient);
-      const request = mockHidePublicationRequest();
-
-      await expect(gateway.hide(request)).rejects.toThrow(NetworkError);
+      return expect(gateway.hide(request)).resolves.toBeUndefined();
     });
   });
 });

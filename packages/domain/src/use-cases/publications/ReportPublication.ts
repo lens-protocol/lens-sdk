@@ -1,4 +1,4 @@
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { success } from '@lens-protocol/shared-kernel';
 
 import { ReportReason } from '../../entities';
 import { IGenericResultPresenter } from '../transactions';
@@ -9,19 +9,11 @@ export type ReportPublicationRequest = {
   additionalComments: string | null;
 };
 
-export class AlreadyReportedError extends Error {
-  name = 'AlreadyReportedError' as const;
-
-  constructor() {
-    super('Publication was already reported');
-  }
-}
-
 export interface IReportPublicationGateway {
-  report(data: ReportPublicationRequest): PromiseResult<void, AlreadyReportedError>;
+  report(data: ReportPublicationRequest): Promise<void>;
 }
 
-export type IReportPublicationPresenter = IGenericResultPresenter<void, AlreadyReportedError>;
+export type IReportPublicationPresenter = IGenericResultPresenter<void, never>;
 
 export class ReportPublication {
   constructor(
@@ -30,12 +22,7 @@ export class ReportPublication {
   ) {}
 
   async report(request: ReportPublicationRequest) {
-    const result = await this.gateway.report(request);
-
-    if (result.isFailure()) {
-      this.presenter.present(failure(result.error));
-      return;
-    }
+    await this.gateway.report(request);
 
     this.presenter.present(success());
   }

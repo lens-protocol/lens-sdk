@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   GetProfileQuery,
   GetProfileQueryVariables,
@@ -6,13 +5,14 @@ import {
   GetAllProfilesByOwnerAddressDocument,
   GetAllProfilesByOwnerAddressQuery,
   GetAllProfilesByOwnerAddressQueryVariables,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import { Profile } from '@lens-protocol/domain/entities';
 import { IProfileGateway } from '@lens-protocol/domain/use-cases/profile';
 import { invariant } from '@lens-protocol/shared-kernel';
 
 export class ProfileGateway implements IProfileGateway {
-  constructor(private readonly apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private readonly apolloClient: LensApolloClient) {}
 
   async getAllProfilesByOwnerAddress(address: string): Promise<Profile[]> {
     const { data } = await this.apolloClient.query<

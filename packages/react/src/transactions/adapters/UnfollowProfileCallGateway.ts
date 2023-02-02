@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateUnfollowTypedDataDocument,
   CreateUnfollowTypedDataMutation,
   CreateUnfollowTypedDataMutationVariables,
+  LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
@@ -21,7 +21,7 @@ class UnsignedUnfollowCall<T extends UnfollowRequest> extends UnsignedLensProtoc
 }
 
 export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall<T extends UnfollowRequest>(
     request: T,
