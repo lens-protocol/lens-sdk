@@ -1,4 +1,4 @@
-import { ApolloClient, makeVar, NormalizedCacheObject } from '@apollo/client';
+import { makeVar } from '@apollo/client';
 import {
   GetProfileDocument,
   GetProfileQuery,
@@ -11,6 +11,7 @@ import {
   ProfileFragment,
   PostFragment,
   isPostPublication,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
@@ -48,7 +49,7 @@ function pendingPostFragment({
 export const recentPosts = makeVar<ReadonlyArray<PendingPostFragment | PostFragment>>([]);
 
 export class CreatePostResponder implements ITransactionResponder<CreatePostRequest> {
-  constructor(private readonly client: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private readonly client: LensApolloClient) {}
 
   async prepare({ id, request }: TransactionData<CreatePostRequest>) {
     const result = await this.client.query<GetProfileQuery, GetProfileQueryVariables>({

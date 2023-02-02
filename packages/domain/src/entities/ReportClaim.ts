@@ -2,28 +2,28 @@
 
 export enum ReportReason {
   // Illegal
-  ANIMAL_ABUSE = 'animal-abuse',
-  HARASSMENT = 'harassment',
-  VIOLENCE = 'violence',
-  SELF_HARM = 'self-harm',
-  DIRECT_THREAT = 'direct-threat',
-  HATE_SPEECH = 'hate-speech',
+  ANIMAL_ABUSE = 'ANIMAL_ABUSE',
+  HARASSMENT = 'HARASSMENT',
+  VIOLENCE = 'VIOLENCE',
+  SELF_HARM = 'SELF_HARM',
+  DIRECT_THREAT = 'DIRECT_THREAT',
+  HATE_SPEECH = 'HATE_SPEECH',
 
   // Sensitive content
-  NUDITY = 'nudity',
-  OFFENSIVE = 'offensive',
+  NUDITY = 'NUDITY',
+  OFFENSIVE = 'OFFENSIVE',
 
   // Fraud
-  SCAM = 'scam',
-  UNAUTHORIZED_SALE = 'unauthorized-sale',
-  IMPERSONATION = 'impersonation',
+  SCAM = 'SCAM',
+  UNAUTHORIZED_SALE = 'UNAUTHORIZED_SALE',
+  IMPERSONATION = 'IMPERSONATION',
 
   // Spam
-  MISLEADING = 'misleading',
-  MISUSE_HASHTAGS = 'misuse-hashtags',
-  UNRELATED = 'unrelated',
-  REPETITIVE = 'repetitive',
-  FAKE_ENGAGEMENT = 'fake-engagement',
-  MANIPULATION_ALGO = 'manipulation-algo',
-  SOMETHING_ELSE = 'something-else',
+  MISLEADING = 'MISLEADING',
+  MISUSE_HASHTAGS = 'MISUSE_HASHTAGS',
+  UNRELATED = 'UNRELATED',
+  REPETITIVE = 'REPETITIVE',
+  FAKE_ENGAGEMENT = 'FAKE_ENGAGEMENT',
+  MANIPULATION_ALGO = 'MANIPULATION_ALGO',
+  SOMETHING_ELSE = 'SOMETHING_ELSE',
 }

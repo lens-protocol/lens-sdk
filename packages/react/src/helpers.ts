@@ -1,7 +1,5 @@
 import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
-import { CommonPaginatedResultInfoFragment, Maybe } from '@lens-protocol/api-bindings';
-
-import { UnspecifiedError } from './UnspecifiedError';
+import { CommonPaginatedResultInfoFragment, UnspecifiedError } from '@lens-protocol/api-bindings';
 
 type ReadResultWithoutError<T> =
   | {
@@ -39,7 +37,7 @@ function buildReadResult<T>(
   loading: boolean,
   error: ApolloError | undefined,
 ): ReadResult<T, UnspecifiedError> {
-  if (data && !loading) {
+  if (data !== undefined && !loading) {
     return {
       data,
       error: undefined,
@@ -64,15 +62,11 @@ function buildReadResult<T>(
 
 export type QueryData<R> = { result: R };
 
+type InferResult<T extends QueryData<unknown>> = T extends QueryData<infer R> ? R : never;
+
 export function useReadResult<
-  R,
-  T extends QueryData<R> | QueryData<Maybe<R>> = QueryData<R>,
-  V = { [key: string]: never },
->({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError>;
-export function useReadResult<
-  U,
-  R extends Maybe<U>,
-  T extends QueryData<R> = QueryData<R>,
+  T extends QueryData<R>,
+  R = InferResult<T>,
   V = { [key: string]: never },
 >({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
   return buildReadResult(data?.result, loading, error);
@@ -91,10 +85,16 @@ export type PaginatedQueryData<K> = {
   result: { pageInfo: CommonPaginatedResultInfoFragment; items: K };
 };
 
+type InferPaginatedItemsType<T extends PaginatedQueryData<unknown>> = T extends PaginatedQueryData<
+  infer R
+>
+  ? R
+  : never;
+
 export function usePaginatedReadResult<
-  K,
   V,
-  T extends PaginatedQueryData<K> = PaginatedQueryData<K>,
+  T extends PaginatedQueryData<K>,
+  K = InferPaginatedItemsType<T>,
 >({ error, data, loading, fetchMore }: ApolloQueryResult<T, V>): PaginatedReadResult<K> {
   return {
     ...buildReadResult<K>(data?.result.items, loading, error),

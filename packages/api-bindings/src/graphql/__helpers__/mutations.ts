@@ -3,8 +3,8 @@ import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { mockNonce } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
-import { GraphQLError } from 'graphql';
 
+import { createGraphQLValidationError } from '../../apollo/__helpers__/mocks';
 import {
   AddReactionDocument,
   AddReactionMutation,
@@ -56,11 +56,25 @@ import {
   ReportPublicationMutationVariables,
   ReportPublicationMutation,
   ReportPublicationDocument,
+  CreateProfileDocument,
+  CreateProfileMutationVariables,
 } from '../generated';
 
-export function mockCreateProfileMutation(result: Required<RelayResult>): CreateProfileMutation {
+export function createCreateProfileMutationMockedResponse({
+  request,
+  result,
+}: {
+  request: CreateProfileMutationVariables['request'];
+  result: Required<RelayResult>;
+}): MockedResponse<CreateProfileMutation> {
   return {
-    result,
+    request: {
+      query: CreateProfileDocument,
+      variables: { request },
+    },
+    result: {
+      data: { result },
+    },
   };
 }
 
@@ -230,44 +244,18 @@ export function createRemoveReactionMutationMockedResponse(args: {
   };
 }
 
-export function createAddReactionMutationWithGraphqlValidationErrorResponse(args: {
-  variables: AddReactionMutationVariables;
-}): MockedResponse<AddReactionMutation> {
-  return {
-    request: {
-      query: AddReactionDocument,
-      variables: args.variables,
-    },
-    result: {
-      errors: [
-        new GraphQLError('Wrong vars', undefined, undefined, undefined, undefined, undefined, {
-          code: 'GRAPHQL_VALIDATION_FAILED',
-        }),
-      ],
-    },
-  };
-}
-
 export function createRemoveReactionMutationWithGraphqlValidationErrorResponse(args: {
   variables: RemoveReactionMutationVariables;
 }): MockedResponse<RemoveReactionMutation> {
   return {
     request: {
-      query: AddReactionDocument,
+      query: RemoveReactionDocument,
       variables: args.variables,
     },
     result: {
       errors: [
-        new GraphQLError(
-          'You have not reacted to this publication with action UPVOTE',
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          {
-            code: 'GRAPHQL_VALIDATION_FAILED',
-          },
+        createGraphQLValidationError(
+          `You have not reacted to this publication with action ${args.variables.reaction}}`,
         ),
       ],
     },
@@ -575,19 +563,5 @@ export function createReportPublicationMutationMockedResponse(args: {
       variables: args.variables,
     },
     result: { data: { reportPublication: null } },
-  };
-}
-
-export function createReportPublicationMutationWithErrorMockedResponse(args: {
-  variables: ReportPublicationMutationVariables;
-}): MockedResponse<ReportPublicationMutation> {
-  return {
-    request: {
-      query: ReportPublicationDocument,
-      variables: args.variables,
-    },
-    result: {
-      errors: [new GraphQLError('Publication already reported')],
-    },
   };
 }

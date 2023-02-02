@@ -1,12 +1,12 @@
 import {
-  FieldFunctionOptions,
-  FieldPolicy,
+  FieldFunctionOptions as UnpatchedFieldFunctionOptions,
+  FieldPolicy as UnpatchedFieldPolicy,
   TypePolicy as UnpatchedTypePolicy,
 } from '@apollo/client';
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
-type TypedFieldFunctionOptions<TAll> = Overwrite<
-  FieldFunctionOptions,
+type FieldFunctionOptions<TAll> = Overwrite<
+  UnpatchedFieldFunctionOptions,
   {
     readField: <T extends keyof NO, O = TAll, NO = NonNullable<O>>(
       fieldName: T,
@@ -15,16 +15,23 @@ type TypedFieldFunctionOptions<TAll> = Overwrite<
   }
 >;
 
-type TypedFieldReadFunction<TExisting, TAll> = (
+export type FieldReadFunction<TExisting, TAll> = (
   existing: Readonly<TExisting> | undefined,
-  options: TypedFieldFunctionOptions<TAll>,
+  options: FieldFunctionOptions<TAll>,
 ) => TExisting | undefined;
+
+export type FieldPolicy<TExisting, TAll> = Overwrite<
+  UnpatchedFieldPolicy<TExisting>,
+  { read?: FieldReadFunction<TExisting, TAll> }
+>;
+
+type FieldPolicies<T> = Partial<{
+  [key in keyof T]: FieldPolicy<T[key], T> | FieldReadFunction<T[key], T>;
+}>;
 
 export type TypePolicy<T> = Overwrite<
   UnpatchedTypePolicy,
   {
-    fields?: Partial<{
-      [key in keyof T]: FieldPolicy<T[key]> | TypedFieldReadFunction<T[key], T>;
-    }>;
+    fields?: FieldPolicies<T>;
   }
 >;

@@ -1,10 +1,9 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { createMockClient } from '@apollo/client/testing';
-import { CreateProfileDocument, RelayErrorReasons } from '@lens-protocol/api-bindings';
+import { LensApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   mockRelayerResultFragment,
-  mockCreateProfileMutation,
   mockRelayErrorFragment,
+  createMockApolloClientWithMultipleResponses,
+  createCreateProfileMutationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction, TransactionError } from '@lens-protocol/domain/entities';
 import { mockCreateProfileRequest } from '@lens-protocol/domain/mocks';
@@ -14,11 +13,7 @@ import { ChainType } from '@lens-protocol/shared-kernel';
 import { mockITransactionFactory } from '../../../transactions/adapters/__helpers__/mocks';
 import { ProfileTransactionGateway } from '../ProfileTransactionGateway';
 
-function setupProfileTransactionGateway({
-  apollo,
-}: {
-  apollo: ApolloClient<NormalizedCacheObject>;
-}) {
+function setupProfileTransactionGateway({ apollo }: { apollo: LensApolloClient }) {
   const factory = mockITransactionFactory();
   return new ProfileTransactionGateway(apollo, factory);
 }
@@ -28,13 +23,15 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
     it(`should create the expected "${NativeTransaction.name}"`, async () => {
       const request = mockCreateProfileRequest();
       const relayerResult = mockRelayerResultFragment();
-      const createProfileResult = mockCreateProfileMutation(relayerResult);
 
-      const apollo = createMockClient(createProfileResult, CreateProfileDocument, {
-        request: {
-          handle: request.handle,
-        },
-      });
+      const apollo = createMockApolloClientWithMultipleResponses([
+        createCreateProfileMutationMockedResponse({
+          request: {
+            handle: request.handle,
+          },
+          result: relayerResult,
+        }),
+      ]);
 
       const profileTransactionGateway = setupProfileTransactionGateway({ apollo });
 
@@ -56,15 +53,16 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
 
     it(`should fail w/ a "${DuplicatedHandleError.name}" in case of duplicated handle response`, async () => {
       const request = mockCreateProfileRequest();
-      const createProfileResult = mockCreateProfileMutation(
-        mockRelayErrorFragment(RelayErrorReasons.HandleTaken),
-      );
+      const relayerResult = mockRelayErrorFragment(RelayErrorReasons.HandleTaken);
 
-      const apollo = createMockClient(createProfileResult, CreateProfileDocument, {
-        request: {
-          handle: request.handle,
-        },
-      });
+      const apollo = createMockApolloClientWithMultipleResponses([
+        createCreateProfileMutationMockedResponse({
+          request: {
+            handle: request.handle,
+          },
+          result: relayerResult,
+        }),
+      ]);
       const profileTransactionGateway = setupProfileTransactionGateway({ apollo });
 
       const result = await profileTransactionGateway.createProfileTransaction(request);
@@ -74,15 +72,16 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
 
     it(`should propagate any other relay error as transaction event error scenario`, async () => {
       const request = mockCreateProfileRequest();
-      const createProfileResult = mockCreateProfileMutation(
-        mockRelayErrorFragment(RelayErrorReasons.Rejected),
-      );
+      const relayerResult = mockRelayErrorFragment(RelayErrorReasons.Rejected);
 
-      const apollo = createMockClient(createProfileResult, CreateProfileDocument, {
-        request: {
-          handle: request.handle,
-        },
-      });
+      const apollo = createMockApolloClientWithMultipleResponses([
+        createCreateProfileMutationMockedResponse({
+          request: {
+            handle: request.handle,
+          },
+          result: relayerResult,
+        }),
+      ]);
       const profileTransactionGateway = setupProfileTransactionGateway({ apollo });
 
       const result = await profileTransactionGateway.createProfileTransaction(request);

@@ -3,7 +3,6 @@ import {
   useCreatePost,
   ContentFocus,
   CollectPolicyType,
-  ReferencePolicy,
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
@@ -31,7 +30,6 @@ export function PostComposer({ profile }: PostComposerProps) {
       collect: {
         type: CollectPolicyType.NO_COLLECT,
       },
-      reference: ReferencePolicy.ANYBODY,
     });
 
     setContent('');

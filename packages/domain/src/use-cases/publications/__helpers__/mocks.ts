@@ -15,6 +15,7 @@ import { CreateMirrorRequest } from '../CreateMirror';
 import { CreatePostRequest } from '../CreatePost';
 import { HidePublicationRequest } from '../HidePublication';
 import { ReactionRequest } from '../Reaction';
+import { ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
 import {
   ChargeCollectPolicy,
@@ -26,7 +27,6 @@ import {
   NftAttributeDisplayType,
   NftMetadata,
   NoCollectPolicy,
-  ReferencePolicy,
 } from '../types';
 
 export function mockCreateCommentRequest(
@@ -38,7 +38,9 @@ export function mockCreateCommentRequest(
     contentFocus: ContentFocus.TEXT,
     publicationId: faker.datatype.uuid(),
     content: faker.lorem.paragraph(),
-    reference: ReferencePolicy.ANYBODY,
+    reference: {
+      type: ReferencePolicyType.ANYONE,
+    },
     collect: {
       type: CollectPolicyType.NO_COLLECT,
     },
@@ -147,7 +149,9 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
 
     contentFocus: ContentFocus.TEXT,
     content: faker.lorem.paragraph(),
-    reference: ReferencePolicy.ANYBODY,
+    reference: {
+      type: ReferencePolicyType.ANYONE,
+    },
     collect: {
       type: CollectPolicyType.NO_COLLECT,
     },

@@ -1,11 +1,11 @@
 import { ProfileFragment, useProfilesToFollowQuery } from '@lens-protocol/api-bindings';
 
-import { useReadResult, ReadResult } from '../helpers';
+import { useReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 
 export type { ProfileFragment };
 
-export function useProfilesToFollow(): ReadResult<ProfileFragment[]> {
+export function useProfilesToFollow() {
   const { apolloClient } = useSharedDependencies();
 
   return useReadResult(useProfilesToFollowQuery({ client: apolloClient }));

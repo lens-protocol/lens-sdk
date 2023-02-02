@@ -1,6 +1,5 @@
 import { getApiReactionType } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
-import { ReactionError } from '@lens-protocol/domain/use-cases/publications';
 import { useState } from 'react';
 
 import { useReactionController } from './adapters/useReactionController';
@@ -16,23 +15,18 @@ export type ReactionArgs = {
 };
 
 export function useReaction({ profileId }: UseReactionArgs) {
-  const [error, setError] = useState<ReactionError | null>(null);
   const [isPending, setIsPending] = useState(false);
   const { add, remove } = useReactionController();
 
   const addReaction = async (args: ReactionArgs) => {
     setIsPending(true);
-    setError(null);
 
     try {
-      const result = await add({
+      await add({
         publicationId: args.publication.id,
         reactionType: args.reactionType,
         profileId,
       });
-      if (result.isFailure()) {
-        setError(result.error);
-      }
     } finally {
       setIsPending(false);
     }
@@ -40,17 +34,13 @@ export function useReaction({ profileId }: UseReactionArgs) {
 
   const removeReaction = async (args: ReactionArgs) => {
     setIsPending(true);
-    setError(null);
 
     try {
-      const result = await remove({
+      await remove({
         publicationId: args.publication.id,
         reactionType: args.reactionType,
         profileId,
       });
-      if (result.isFailure()) {
-        setError(result.error);
-      }
     } finally {
       setIsPending(false);
     }
@@ -64,7 +54,6 @@ export function useReaction({ profileId }: UseReactionArgs) {
     addReaction,
     removeReaction,
     hasReaction,
-    error,
     isPending,
   };
 }

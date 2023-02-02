@@ -1,7 +1,7 @@
 import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
+import { UnspecifiedError } from '@lens-protocol/api-bindings';
 import { renderHook } from '@testing-library/react';
 
-import { UnspecifiedError } from '../UnspecifiedError';
 import { PaginatedQueryData, QueryData, usePaginatedReadResult, useReadResult } from '../helpers';
 
 describe(`Given the hook helpers`, () => {
