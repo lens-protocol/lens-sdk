@@ -55,7 +55,8 @@
       "packages/shared-kernel",
       "packages/api-bindings",
       "packages/wagmi",
-      "packages/blockchain-bindings"
+      "packages/blockchain-bindings",
+      "packages/storage"
     ],
     "exports": true,
     "globals": {
