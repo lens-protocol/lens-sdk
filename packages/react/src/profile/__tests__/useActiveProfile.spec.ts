@@ -3,7 +3,7 @@ import {
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
-import { ProfileIdentifier } from '@lens-protocol/domain/dist/use-cases/profile';
+import { ProfileIdentifier } from '@lens-protocol/domain/use-cases/profile';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';

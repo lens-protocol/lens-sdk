@@ -24,11 +24,14 @@ import { createProfileFollowingFieldPolicy } from './createProfileFollowingField
 import { createProfilePublicationRevenueFieldPolicy } from './createProfilePublicationRevenueFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
-import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
+import {
+  createMirrorablePublicationTypePolicy,
+  createMirrorTypePolicy,
+} from './publicationTypePolicy';
 
 type TypedFieldFunctionOptions<TAll> = Overwrite<
   FieldFunctionOptions,
@@ -65,9 +68,9 @@ type TypePoliciesArgs = {
 function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies {
   return {
     Profile: createProfileTypePolicy(activeWalletVar),
-    Post: createPublicationTypePolicy(),
-    Comment: createPublicationTypePolicy(),
-    Mirror: createPublicationTypePolicy(),
+    Post: createMirrorablePublicationTypePolicy(),
+    Comment: createMirrorablePublicationTypePolicy(),
+    Mirror: createMirrorTypePolicy(),
 
     FeedItem: {
       keyFields: false,
