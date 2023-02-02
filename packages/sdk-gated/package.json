@@ -1,6 +1,7 @@
 {
   "name": "@lens-protocol/sdk-gated",
   "version": "1.2.0",
+  "private": true,
   "description": "SDK for encrypting and decrypting gated content on Lens Protocol",
   "author": "zannis@aave.com",
   "main": "./dist/index.js",
