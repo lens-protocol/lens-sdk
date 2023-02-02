@@ -25,9 +25,9 @@
 
 # 1.1.3 - 9th December 2022
 
-- Handle internally collect conditions with `thisPublication = true` and remove optional `publicationId` parameter from 
-`decryptMetadata` method.
- 
+- Handle internally collect conditions with `thisPublication = true` and remove optional `publicationId` parameter from
+  `decryptMetadata` method.
+
 # 1.1.2 - 1st December 2022
 
 ## Bug fixes

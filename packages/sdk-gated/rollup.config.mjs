@@ -38,7 +38,7 @@ export default [
       json(),
       nodeGlobals(),
       nodePolyfills(),
-      isProduction && terser({sourceMap: true}),
+      isProduction && terser({ sourceMap: true }),
       bundleSize(),
     ],
   },
@@ -72,9 +72,10 @@ export default [
       nodePolyfills({
         exclude: ['crypto'],
       }),
-      isProduction && terser({
-        sourceMap: true,
-      }),
+      isProduction &&
+        terser({
+          sourceMap: true,
+        }),
       bundleSize(),
     ],
   },
