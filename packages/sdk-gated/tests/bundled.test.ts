@@ -12,9 +12,10 @@ const SDK_UMD = require('../dist/browser.js');
     const sdk = SDK.LensGatedSDK;
     const provider = new JsonRpcProvider('http://localhost:8545');
     const signer = new Wallet(process.env.PK as string).connect(provider);
-    // const handle = 'testing.lens';
-    const profileId = '0x44c1';
-    const pubId = '0x40';
+
+    const profileId = process.env.PROFILE_ID as string;
+    const pubId = process.env.PUTLICATION_ID as string;
+
     let client: LensGatedSDK;
     const metadata: MetadataV2 = {
       version: '2.0.0',
@@ -162,10 +163,7 @@ const SDK_UMD = require('../dist/browser.js');
         encryptionParams: {
           accessCondition: {
             or: {
-              criteria: [
-                { profile: { profileId } },
-                { collect: { publicationId: `${profileId}-${pubId}` } },
-              ],
+              criteria: [{ profile: { profileId } }, { collect: { publicationId: pubId } }],
             },
           },
           encryptionProvider: 'LIT_PROTOCOL',
@@ -223,10 +221,7 @@ const SDK_UMD = require('../dist/browser.js');
                 { profile: { profileId } },
                 {
                   and: {
-                    criteria: [
-                      { collect: { publicationId: `${profileId}-${pubId}` } },
-                      { follow: { profileId } },
-                    ],
+                    criteria: [{ collect: { publicationId: pubId } }, { follow: { profileId } }],
                   },
                 },
               ],
