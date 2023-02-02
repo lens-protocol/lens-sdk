@@ -1,4 +1,4 @@
-import { PublicationType, ReactionType } from '@lens-protocol/domain/entities';
+import { PublicationType, ReactionType, TransactionKind } from '@lens-protocol/domain/entities';
 import { never, Overwrite } from '@lens-protocol/shared-kernel';
 
 import {
@@ -98,3 +98,32 @@ export const isPublicationOwnedByMe = (
 ): publication is PublicationOwnedByMeFragment => {
   return publication.profile.ownedByMe;
 };
+
+export function exhaustiveTest(transactionKind: TransactionKind): string {
+  switch (transactionKind) {
+    case TransactionKind.APPROVE_MODULE:
+      return 'APPROVE_MODULE';
+    case TransactionKind.COLLECT_PUBLICATION:
+      return 'COLLECT_PUBLICATION';
+    case TransactionKind.CREATE_COMMENT:
+      return 'CREATE_COMMENT';
+    case TransactionKind.CREATE_POST:
+      return 'CREATE_POST';
+    case TransactionKind.CREATE_PROFILE:
+      return 'CREATE_PROFILE';
+    case TransactionKind.FOLLOW_PROFILES:
+      return 'FOLLOW_PROFILES';
+    case TransactionKind.MIRROR_PUBLICATION:
+      return 'MIRROR_PUBLICATION';
+    case TransactionKind.UPDATE_PROFILE_IMAGE:
+      return 'UPDATE_PROFILE_IMAGE';
+    case TransactionKind.UNFOLLOW_PROFILE:
+      return 'UNFOLLOW_PROFILE';
+    case TransactionKind.UPDATE_PROFILE_DETAILS:
+      return 'UPDATE_PROFILE_DETAILS';
+    case TransactionKind.UPDATE_FOLLOW_POLICY:
+      return 'UPDATE_FOLLOW_POLICY';
+    case TransactionKind.UPDATE_DISPATCHER_CONFIG:
+      return 'UPDATE_DISPATCHER_CONFIG';
+  }
+}

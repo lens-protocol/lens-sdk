@@ -1,4 +1,4 @@
 {
-  "type": "module",
-  "main": "../../dist/use-cases/transactions/index.js"
+  "main": "dist/lens-protocol-domain-use-cases-transactions.cjs.js",
+  "module": "dist/lens-protocol-domain-use-cases-transactions.esm.js"
 }
