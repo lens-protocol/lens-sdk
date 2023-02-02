@@ -1,4 +1,4 @@
-# Lens SDK
+# `@lens-protocol/sdk-gated`
 
 This package enables gated encrypting and decrypting publication metadata compatible with the Lens API. Works on Node.js 18+ and the browser.
 
@@ -165,3 +165,8 @@ The currently supported access control models are:
 - EOA ownership: decrypts content exclusively to a given EOA address
 - Boolean combinations of the above (using AND and OR operators)
   - Please note that boolean combinations are limited to 5 conditions at a time and cannot be nested.
+
+## Documentation
+
+- [GitHub monorepo](https://github.com/lens-protocol/lens-sdk)
+- [Gated publications](https://docs.lens.xyz/docs/gated)
