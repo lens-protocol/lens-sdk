@@ -48,6 +48,7 @@ import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
+import { UseProfilePublicationsForSale } from './publications/UseProfilePublicationsForSale';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
@@ -100,6 +101,10 @@ export function App() {
                 />
                 <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
                 <Route path="/publications/useCreateComment" element={<UseCreateComment />} />
+                <Route
+                  path="/publications/useProfilePublicationsForSale"
+                  element={<UseProfilePublicationsForSale />}
+                />
                 <Route path="/publications/useReaction" element={<UseReaction />} />
                 <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
                 <Route

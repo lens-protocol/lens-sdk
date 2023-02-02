@@ -26,6 +26,7 @@ export * from './useReportPublication';
 export * from './useHidePublication';
 export * from './useWhoCollectedPublication';
 export * from './useWhoMirroredPublication';
+export * from './useProfilePublicationsForSale';
 export * from './filters';
 
 export type { Publication } from './types';
