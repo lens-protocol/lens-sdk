@@ -35,6 +35,31 @@ describe(`Given the ${ActiveProfileLoader.name} interactor`, () => {
       expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(firstProfile);
     });
 
+    it('should just present first profile if the requested profile to log in to is not found', async () => {
+      const wallet = mockWallet();
+      const firstProfile = mockProfile();
+      const profileGateway = mock<IProfileGateway>();
+      const activeProfileGateway = mock<IActiveProfileGateway>();
+      const activeProfilePresenter = mock<IActiveProfilePresenter>();
+
+      when(profileGateway.getAllProfilesByOwnerAddress)
+        .calledWith(wallet.address)
+        .mockResolvedValue([firstProfile, mockProfile()]);
+
+      const invalidProfileId = 'invalid-profile-id';
+
+      const activeProfile = new ActiveProfileLoader(
+        profileGateway,
+        activeProfileGateway,
+        activeProfilePresenter,
+      );
+
+      await activeProfile.loadActiveProfileByOwnerAddress(wallet.address, invalidProfileId);
+
+      expect(activeProfileGateway.setActiveProfile).toHaveBeenCalledWith(firstProfile);
+      expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(firstProfile);
+    });
+
     it('should just present the profile already loaded into the ActiveProfileGateway', async () => {
       const wallet = mockWallet();
       const profile = mockProfile();

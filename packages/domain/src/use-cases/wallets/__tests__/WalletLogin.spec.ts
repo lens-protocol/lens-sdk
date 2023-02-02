@@ -96,7 +96,9 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
       expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
       expect(activeProfileLoader.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
         wallet.address,
+        undefined,
       );
+
       expect(genericPresenter.present).toBeCalledWith(success());
     });
 
@@ -134,6 +136,41 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
       await walletLogin.login(request);
 
       expect(genericPresenter.present).toHaveBeenCalledWith(failure(error));
+    });
+  });
+
+  describe(`when "${WalletLogin.prototype.login.name}" is invoked requesting a specific profile id`, () => {
+    const profileId = 'profileId';
+    const request = mockWalletLoginRequest({
+      profileId,
+    });
+    const wallet = mockWallet(request);
+
+    it(`should:
+        - use the IWalletFactory to create the specified ${Wallet.name} entity
+        - load the requested profile associated with the wallet
+      `, async () => {
+      const walletFactory = mock<IWalletFactory>();
+      const credentialsIssuer = mock<ICredentialsIssuer>();
+
+      const credentials = mockCredentials({ address: wallet.address });
+
+      when(walletFactory.create).calledWith(request).mockResolvedValue(wallet);
+      when(credentialsIssuer.issueCredentials)
+        .calledWith(wallet)
+        .mockResolvedValue(success(credentials));
+
+      const { walletLogin, activeProfileLoader } = setupTestScenario({
+        credentialsIssuer,
+        walletFactory,
+      });
+
+      await walletLogin.login(request);
+
+      expect(activeProfileLoader.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
+        wallet.address,
+        profileId,
+      );
     });
   });
 });

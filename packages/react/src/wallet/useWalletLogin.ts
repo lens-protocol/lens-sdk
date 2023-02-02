@@ -16,7 +16,7 @@ export function useWalletLogin() {
   const loginWallet = useWalletLoginController();
 
   return {
-    login: async (signer: Signer) => {
+    login: async (signer: Signer, profileId?: string) => {
       setError(null);
       setIsPending(true);
 
@@ -25,6 +25,7 @@ export function useWalletLogin() {
 
         const result = await loginWallet({
           address,
+          profileId,
         });
 
         if (result.isFailure()) {

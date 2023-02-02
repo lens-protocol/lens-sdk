@@ -39,6 +39,7 @@ export interface ICredentialsWriter {
 
 export type WalletLoginRequest = {
   address: EthereumAddress;
+  profileId?: string;
 };
 
 export class WalletLogin {
@@ -65,7 +66,10 @@ export class WalletLogin {
     await this.credentialsWriter.save(result.value);
 
     this.activeWalletPresenter.presentActiveWallet(wallet);
-    await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address);
+    await this.activeProfileLoader.loadActiveProfileByOwnerAddress(
+      wallet.address,
+      request.profileId,
+    );
 
     this.walletLoginPresenter.present(success());
   }
