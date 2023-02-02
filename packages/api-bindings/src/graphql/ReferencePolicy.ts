@@ -1,4 +1,4 @@
-import { ReferencePolicyType } from '@lens-protocol/domain/src/use-cases/publications';
+import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 
 type FollowersOnlyPolicy = {
   type: ReferencePolicyType.FOLLOWERS_ONLY;
