@@ -1,4 +1,3 @@
-import { invariant } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
 import { getSdk, Sdk } from './graphql/auth.generated';
@@ -28,15 +27,11 @@ export class Authentication {
   async authenticate(address: string, signature: string): Promise<Credentials> {
     const result = await this.sdk.AuthAuthenticate({ address, signature });
 
-    invariant(result.data, 'Not able to generate credentials. Credentials data not found.');
-
     return result.data.result;
   }
 
   async refresh(refreshToken: string): Promise<Credentials> {
     const result = await this.sdk.AuthRefresh({ refreshToken });
-
-    invariant(result.data, 'Not able to refresh credentials. Credentials data not found.');
 
     return result.data.result;
   }

@@ -10,37 +10,37 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** Blockchain data scalar type */
-  BlockchainData: unknown;
+  BlockchainData: string;
   /** Broadcast scalar id type */
   BroadcastId: string;
   /** ChainId custom scalar type */
   ChainId: number;
   /** collect module data scalar type */
-  CollectModuleData: unknown;
+  CollectModuleData: string;
   /** ContentEncryptionKey scalar type */
-  ContentEncryptionKey: unknown;
+  ContentEncryptionKey: string;
   /** Contract address custom scalar type */
   ContractAddress: string;
   /** create handle custom scalar type */
-  CreateHandle: unknown;
+  CreateHandle: string;
   /** Cursor custom scalar type */
   Cursor: string;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: string;
   /** EncryptedValue custom scalar type */
-  EncryptedValueScalar: unknown;
+  EncryptedValueScalar: string;
   /** Ens custom scalar type */
-  Ens: unknown;
+  Ens: string;
   /** Ethereum address custom scalar type */
   EthereumAddress: string;
   /** follow module data scalar type */
-  FollowModuleData: unknown;
+  FollowModuleData: string;
   /** handle custom scalar type */
   Handle: string;
   /** handle claim id custom scalar type */
-  HandleClaimIdScalar: unknown;
+  HandleClaimIdScalar: string;
   /** IfpsCid scalar type */
-  IfpsCid: unknown;
+  IfpsCid: string;
   /** Internal publication id custom scalar type */
   InternalPublicationId: string;
   /** jwt custom scalar type */
@@ -62,35 +62,35 @@ export type Scalars = {
   /** ProfileId custom scalar type */
   ProfileId: string;
   /** ProfileInterest custom scalar type */
-  ProfileInterest: unknown;
+  ProfileInterest: string;
   /** proxy action scalar id type */
   ProxyActionId: string;
   /** Publication id custom scalar type */
-  PublicationId: unknown;
+  PublicationId: string;
   /** The publication tag */
-  PublicationTag: unknown;
+  PublicationTag: string;
   /** Publication url scalar type */
-  PublicationUrl: unknown;
+  PublicationUrl: string;
   /** The reaction id */
-  ReactionId: unknown;
+  ReactionId: string;
   /** reference module data scalar type */
-  ReferenceModuleData: unknown;
+  ReferenceModuleData: string;
   /** Query search */
   Search: string;
   /** Relayer signature */
   Signature: string;
   /** Sources custom scalar type */
-  Sources: unknown;
+  Sources: string;
   /** timestamp date custom scalar type */
-  TimestampScalar: unknown;
+  TimestampScalar: string;
   /** The NFT token id */
-  TokenId: unknown;
+  TokenId: string;
   /** The tx hash */
   TxHash: string;
   /** The tx id */
   TxId: string;
   /** UnixTimestamp custom scalar type */
-  UnixTimestamp: unknown;
+  UnixTimestamp: string;
   /** Url scalar type */
   Url: string;
   /** Represents NULL values */

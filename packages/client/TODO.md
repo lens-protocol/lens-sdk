@@ -10,7 +10,7 @@
 
 ## Environments
 
-- polygon, mumbai, mumbaiSandbox
+- polygon, mumbai
 
 ## Client and Authentication
 

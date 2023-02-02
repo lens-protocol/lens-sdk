@@ -1,8 +1,13 @@
 # `@lens-protocol/client`
 
-This package contains low level client for GraphQL Lens API.
+The official framework-agnostic Lens API Client.
 
-**Its interface will change without notice, use it at your own risk.**
+This package enables you to interact with the Lens API via a type safe interface that abstracts away some of the GraphQL intricacies.
+
+> **Warning**
+>
+> The Lens SDK is still in its initial development phase. Anything MAY change at any time.
+> This is a Developer Preview aimed primarily at existing integrators so to gather [early feedback](https://github.com/lens-protocol/lens-sdk/discussions/48).
 
 ## Examples
 
