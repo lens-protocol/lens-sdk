@@ -138,5 +138,3 @@ export class LensGatedSDK {
     return LensGatedSDK._instance;
   }
 }
-
-export function createEncryptionProvider() {}
