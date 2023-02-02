@@ -9,10 +9,4 @@ export default defineConfig({
   define: {
     'process.env': {},
   },
-
-  build: {
-    rollupOptions: {
-      external: ['@tanstack/query-core'],
-    },
-  },
 });
