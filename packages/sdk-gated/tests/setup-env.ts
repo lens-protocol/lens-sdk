@@ -1,2 +1,6 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
+
+// on CI, we inject env's directly into `process.env`
+if (!process.env.CI) {
+  dotenv.config();
+}
