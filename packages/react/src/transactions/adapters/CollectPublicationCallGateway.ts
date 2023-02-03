@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateCollectTypedDataDocument,
   CreateCollectTypedDataMutation,
   CreateCollectTypedDataMutationVariables,
+  LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
@@ -15,7 +15,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
 export class CollectPublicationCallGateway implements ICollectPublicationCallGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall<T extends CollectRequest>(
     request: T,

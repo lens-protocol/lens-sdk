@@ -1,8 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-import { CollectPolicyType } from '@lens-protocol/domain/use-cases/publications';
-import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
+import {
+  CollectPolicyType,
+  ReferencePolicyType,
+} from '@lens-protocol/domain/use-cases/publications';
 import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 

@@ -1,4 +1,4 @@
-import { createMockClient, MockedResponse } from '@apollo/client/testing';
+import { MockedResponse } from '@apollo/client/testing';
 import {
   CreateCollectTypedDataDocument,
   CreateCollectTypedDataMutation,
@@ -39,15 +39,16 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
     it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
       const createCollectTypedDataMutation = mockCreateCollectTypedDataMutation();
 
-      const apollo = createMockClient(
-        createCollectTypedDataMutation,
-        CreateCollectTypedDataDocument,
-        {
-          request: {
-            publicationId: request.publicationId,
+      const apollo = createMockApolloClientWithMultipleResponses([
+        mockCreateCollectTypedDatMutationMockedResponse({
+          variables: {
+            request: {
+              publicationId: request.publicationId,
+            },
           },
-        },
-      );
+          data: createCollectTypedDataMutation,
+        }),
+      ]);
       const collectPublicationCallGateway = new CollectPublicationCallGateway(apollo);
 
       const unsignedCall = await collectPublicationCallGateway.createUnsignedProtocolCall(request);
