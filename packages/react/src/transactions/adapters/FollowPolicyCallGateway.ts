@@ -1,9 +1,9 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   omitTypename,
   CreateSetFollowModuleTypedDataDocument,
   CreateSetFollowModuleTypedDataMutation,
   CreateSetFollowModuleTypedDataMutationVariables,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import {
@@ -11,7 +11,6 @@ import {
   IFollowPolicyCallGateway,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
@@ -43,7 +42,7 @@ function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
 }
 
 export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall<T extends UpdateFollowPolicyRequest>(
     request: T,
@@ -62,8 +61,6 @@ export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },
     });
-
-    invariant(data, 'Cannot generate typed data for setting profile follow fee');
 
     return new UnsignedLensProtocolCall(
       data.result.id,

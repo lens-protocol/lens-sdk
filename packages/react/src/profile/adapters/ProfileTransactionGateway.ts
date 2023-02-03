@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateProfileDocument,
   CreateProfileMutation,
   CreateProfileMutationVariables,
+  LensApolloClient,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
 import {
@@ -16,13 +16,7 @@ import {
   IProfileTransactionGateway,
 } from '@lens-protocol/domain/use-cases/profile';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import {
-  ChainType,
-  failure,
-  invariant,
-  PromiseResult,
-  success,
-} from '@lens-protocol/shared-kernel';
+import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import {
@@ -42,7 +36,7 @@ async function asyncRelayReceipt(data: CreateProfileMutation): AsyncRelayReceipt
 
 export class ProfileTransactionGateway implements IProfileTransactionGateway {
   constructor(
-    private apolloClient: ApolloClient<NormalizedCacheObject>,
+    private apolloClient: LensApolloClient,
     private factory: ITransactionFactory<SupportedTransactionRequest>,
   ) {}
 
@@ -60,8 +54,6 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
         },
       },
     });
-
-    invariant(data, 'Cannot create profile');
 
     if (data.result.__typename === 'RelayError') {
       if (data.result.reason === RelayErrorReasons.HandleTaken) {

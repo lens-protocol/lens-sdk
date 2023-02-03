@@ -1,5 +1,4 @@
 import {
-  AlreadyReportedError,
   ReportPublication,
   ReportPublicationRequest,
 } from '@lens-protocol/domain/use-cases/publications';
@@ -11,18 +10,14 @@ import { ReportPublicationGateway } from './ReportPublicationGateway';
 export function useReportPublicationController() {
   const { apolloClient } = useSharedDependencies();
 
-  const report = async (request: ReportPublicationRequest) => {
+  return async (request: ReportPublicationRequest) => {
     const gateway = new ReportPublicationGateway(apolloClient);
-    const presenter = new PromiseResultPresenter<void, AlreadyReportedError>();
+    const presenter = new PromiseResultPresenter<void, never>();
 
     const reportPublication = new ReportPublication(gateway, presenter);
 
     await reportPublication.report(request);
 
     return presenter.asResult();
-  };
-
-  return {
-    report,
   };
 }

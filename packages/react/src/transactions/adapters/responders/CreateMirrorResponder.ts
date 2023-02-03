@@ -1,5 +1,5 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
+  LensApolloClient,
   PublicationByTxHashDocument,
   PublicationByTxHashQuery,
   PublicationByTxHashQueryVariables,
@@ -15,7 +15,7 @@ import { PublicationCacheManager } from '../PublicationCacheManager';
 
 export class CreateMirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
   constructor(
-    private readonly client: ApolloClient<NormalizedCacheObject>,
+    private readonly client: LensApolloClient,
     private readonly publicationCacheManager: PublicationCacheManager,
   ) {}
 

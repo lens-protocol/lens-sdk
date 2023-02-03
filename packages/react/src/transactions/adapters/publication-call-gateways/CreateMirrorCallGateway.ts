@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateMirrorTypedDataDocument,
   CreateMirrorViaDispatcherDocument,
@@ -8,6 +7,7 @@ import {
   omitTypename,
   CreateMirrorTypedDataMutation,
   CreateMirrorTypedDataMutationVariables,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
   NativeTransaction,
@@ -20,7 +20,7 @@ import {
   ICreateMirrorCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, invariant, success } from '@lens-protocol/shared-kernel';
+import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -28,7 +28,7 @@ import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
 
 export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
   constructor(
-    private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
+    private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
   ) {}
 
@@ -60,8 +60,6 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
       },
     });
 
-    invariant(data, 'Cannot generate typed data for post creation');
-
     return new UnsignedLensProtocolCall(
       data.result.id,
       request,
@@ -79,8 +77,6 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
         request: requestArgs,
       },
     });
-
-    invariant(data, 'Cannot create mirror via dispatcher');
 
     if (data.result.__typename === 'RelayError') {
       return failure(new TransactionError(TransactionErrorReason.REJECTED));

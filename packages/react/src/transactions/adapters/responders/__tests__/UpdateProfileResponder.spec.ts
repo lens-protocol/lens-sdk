@@ -1,8 +1,6 @@
-import { ApolloClient } from '@apollo/client';
-import { mockSingleLink } from '@apollo/client/testing';
 import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloCache,
+  createMockApolloClientWithMultipleResponses,
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -20,19 +18,12 @@ function setupUpdateProfileResponder({
 }: {
   updatedProfile?: ProfileFragment;
 }) {
-  const cache = createMockApolloCache();
-
-  const apolloClient = new ApolloClient({
-    link: mockSingleLink(
-      mockGetProfileQueryMockedResponse({
-        request: { profileId: updatedProfile.id },
-        profile: updatedProfile,
-      }),
-    ).setOnError((error) => {
-      throw error;
+  const apolloClient = createMockApolloClientWithMultipleResponses([
+    mockGetProfileQueryMockedResponse({
+      request: { profileId: updatedProfile.id },
+      profile: updatedProfile,
     }),
-    cache,
-  });
+  ]);
 
   const responder = new UpdateProfileResponder(apolloClient);
 
@@ -41,7 +32,7 @@ function setupUpdateProfileResponder({
 
     get profileFromCache() {
       return apolloClient.cache.readFragment({
-        id: cache.identify(updatedProfile),
+        id: apolloClient.cache.identify(updatedProfile),
         fragmentName: 'Profile',
         fragment: ProfileFragmentDoc,
       });

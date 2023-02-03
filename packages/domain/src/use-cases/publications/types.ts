@@ -41,11 +41,6 @@ export type NftMetadata = {
   attributes: NftAttribute[];
 };
 
-export enum ReferencePolicy {
-  ANYBODY = 'ANYBODY',
-  FOLLOWERS_ONLY = 'FOLLOWERS_ONLY',
-}
-
 export enum CollectPolicyType {
   CHARGE = 'CHARGE',
   FREE = 'FREE',

@@ -43,7 +43,7 @@ function setupTestScenario({ post, request }: { post: PostFragment; request: Rea
 }
 
 describe(`Given the ${ReactionPresenter.name}`, () => {
-  describe(`when "${ReactionPresenter.prototype.presentOptimisticAdd.name}" method is invoked`, () => {
+  describe(`when the "${ReactionPresenter.prototype.add.name}" method is invoked`, () => {
     it(`should update apollo cache with added reaction`, async () => {
       const post = mockPostFragment({
         reaction: null,
@@ -58,7 +58,7 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
         request,
       });
 
-      await scenario.presenter.presentOptimisticAdd(request);
+      await scenario.presenter.add(request);
 
       expect(scenario.updatedPostFragment).toEqual(
         expect.objectContaining({
@@ -72,7 +72,7 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
     });
   });
 
-  describe(`when "${ReactionPresenter.prototype.presentOptimisticRemove.name}" method is invoked`, () => {
+  describe(`when the "${ReactionPresenter.prototype.remove.name}" method is invoked`, () => {
     it(`should update apollo cache with removed reaction`, async () => {
       const post = mockPostFragment({
         reaction: ReactionTypes.Upvote,
@@ -87,7 +87,7 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
         request,
       });
 
-      await scenario.presenter.presentOptimisticRemove(request);
+      await scenario.presenter.remove(request);
 
       expect(scenario.updatedPostFragment).toEqual(
         expect.objectContaining({
@@ -96,68 +96,6 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
             totalUpvotes: post.stats.totalUpvotes - 1,
           }),
           reaction: null,
-        }),
-      );
-    });
-  });
-
-  describe(`when "${ReactionPresenter.prototype.revertOptimisticAdd.name}" method is invoked`, () => {
-    it(`should:
-          - update revert apollo cache update with added reaction
-          - present error toast`, async () => {
-      const post = mockPostFragment({
-        reaction: ReactionTypes.Upvote,
-        stats: mockPublicationStatsFragment({ totalUpvotes: 1 }),
-      });
-      const request = mockReactionRequest({
-        publicationId: post.id,
-      });
-
-      const scenario = setupTestScenario({
-        post,
-        request,
-      });
-
-      await scenario.presenter.revertOptimisticAdd(request);
-
-      expect(scenario.updatedPostFragment).toEqual(
-        expect.objectContaining({
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          stats: expect.objectContaining({
-            totalUpvotes: post.stats.totalUpvotes - 1,
-          }),
-          reaction: null,
-        }),
-      );
-    });
-  });
-
-  describe(`when "${ReactionPresenter.prototype.revertOptimisticRemove.name}" method is invoked`, () => {
-    it(`should:
-          - update revert apollo cache update with removed reaction
-          - present error toast`, async () => {
-      const post = mockPostFragment({
-        reaction: null,
-        stats: mockPublicationStatsFragment({ totalUpvotes: 1 }),
-      });
-      const request = mockReactionRequest({
-        publicationId: post.id,
-      });
-
-      const scenario = setupTestScenario({
-        post,
-        request,
-      });
-
-      await scenario.presenter.revertOptimisticRemove(request);
-
-      expect(scenario.updatedPostFragment).toEqual(
-        expect.objectContaining({
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          stats: expect.objectContaining({
-            totalUpvotes: post.stats.totalUpvotes + 1,
-          }),
-          reaction: ReactionTypes.Upvote,
         }),
       );
     });

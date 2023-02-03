@@ -37,11 +37,6 @@ const profileHooks = [
     path: '/profiles/useUpdateProfileImage',
   },
   {
-    label: 'useUpdateProfileImage',
-    description: `Update your profile image.`,
-    path: '/profiles/useUpdateProfileImage',
-  },
-  {
     label: 'useUpdateFollowPolicy',
     description: `Update the follow policy of a profile.`,
     path: '/profiles/useUpdateFollowPolicy',

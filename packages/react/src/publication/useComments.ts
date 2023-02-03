@@ -2,13 +2,16 @@ import { useCommentsQuery, CommentWithFirstCommentFragment } from '@lens-protoco
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
+import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 
 type UseCommentsArgs = PaginatedArgs<{
   commentsOf: string;
   observerId?: string;
+  metadataFilter?: PublicationMetadataFilters;
 }>;
 
 export function useComments({
+  metadataFilter,
   commentsOf,
   limit,
   observerId,
@@ -18,6 +21,7 @@ export function useComments({
   return usePaginatedReadResult(
     useCommentsQuery({
       variables: {
+        metadata: createPublicationMetadataFilters(metadataFilter),
         commentsOf,
         limit: limit ?? 10,
         observerId,

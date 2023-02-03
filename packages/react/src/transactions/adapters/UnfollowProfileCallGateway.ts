@@ -1,15 +1,14 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateUnfollowTypedDataDocument,
   CreateUnfollowTypedDataMutation,
   CreateUnfollowTypedDataMutationVariables,
+  LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   IUnfollowProfileCallGateway,
   UnfollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { TypedData } from './TypedData';
@@ -21,7 +20,7 @@ class UnsignedUnfollowCall<T extends UnfollowRequest> extends UnsignedLensProtoc
 }
 
 export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall<T extends UnfollowRequest>(
     request: T,
@@ -37,8 +36,6 @@ export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
         },
       },
     });
-
-    invariant(data, 'Cannot generate typed data for unfollow');
 
     return new UnsignedUnfollowCall({
       id: data.result.id,

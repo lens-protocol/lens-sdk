@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateCommentTypedDataDocument,
   CreateCommentTypedDataMutation,
@@ -7,6 +6,7 @@ import {
   CreateCommentViaDispatcherMutation,
   CreateCommentViaDispatcherMutationVariables,
   CreatePublicCommentRequest as CreatePublicCommentRequestArg,
+  LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
@@ -20,7 +20,7 @@ import {
   ICreateCommentCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, invariant, success } from '@lens-protocol/shared-kernel';
+import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -30,7 +30,7 @@ import { createPublicationMetadata, resolveCollectModule, resolveReferenceModule
 
 export class CreateCommentCallGateway implements ICreateCommentCallGateway {
   constructor(
-    private readonly apolloClient: ApolloClient<NormalizedCacheObject>,
+    private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
     private readonly uploadAdapter: MetadataUploadAdapter,
   ) {}
@@ -63,8 +63,6 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
       },
     });
 
-    invariant(data, 'Cannot generate typed data for comment creation');
-
     return new UnsignedLensProtocolCall(
       data.result.id,
       request,
@@ -84,8 +82,6 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
         request: requestArg,
       },
     });
-
-    invariant(data, 'Cannot create comment via dispatcher');
 
     if (data.result.__typename === 'RelayError') {
       return failure(new TransactionError(TransactionErrorReason.REJECTED));

@@ -63,7 +63,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
         });
       });
 
-      expect(result.current.error).toBe(null);
+      expect(result.current.isPending).toBe(false);
     });
   });
 
@@ -90,7 +90,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
         });
       });
 
-      expect(result.current.error).toBe(null);
+      expect(result.current.isPending).toBe(false);
     });
   });
 

@@ -12,7 +12,7 @@ function assertQueryPublicationsArgs(
 export function getPublicationsFieldName(
   request: Pick<
     PublicationsQueryRequest,
-    'profileId' | 'publicationTypes' | 'commentsOf' | 'collectedBy'
+    'profileId' | 'publicationTypes' | 'commentsOf' | 'collectedBy' | 'metadata'
   >,
 ) {
   // TODO: Find a way so we can generate field name using apollo methods
@@ -22,7 +22,7 @@ export function getPublicationsFieldName(
 function getPublicationsId(
   request: Pick<
     PublicationsQueryRequest,
-    'profileId' | 'publicationTypes' | 'commentsOf' | 'collectedBy'
+    'profileId' | 'publicationTypes' | 'commentsOf' | 'collectedBy' | 'metadata'
   >,
 ) {
   return JSON.stringify({
@@ -30,6 +30,7 @@ function getPublicationsId(
     publicationTypes: request.publicationTypes,
     commentsOf: request.commentsOf,
     collectedBy: request.collectedBy,
+    metadata: request.metadata,
   });
 }
 

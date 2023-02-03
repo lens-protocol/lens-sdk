@@ -32,6 +32,8 @@ config:
     FollowPolicy: FollowPolicy
     ProfileId: string
     ProxyActionId: string
+    ReferenceModuleData: string
+    ReferencePolicy: ReferencePolicy
     Search: string
     Signature: string
     String: string
@@ -58,6 +60,7 @@ generates:
               "import type { ProfileAttributes } from './ProfileAttributes';",
               "import type { FollowPolicy } from './FollowPolicy';",
               "import type { CollectPolicy } from './CollectPolicy';",
+              "import type { ReferencePolicy } from './ReferencePolicy';",
             ]
       - 'typescript-operations':
           skipTypename: true

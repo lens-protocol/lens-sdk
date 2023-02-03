@@ -44,6 +44,7 @@ export function useBootstrapController({
     activeWallet,
     credentialsFactory,
     credentialsGateway,
+    onLogout,
     profileGateway,
     transactionQueue,
   ]);

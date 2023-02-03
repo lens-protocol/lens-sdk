@@ -1,5 +1,5 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { faker } from '@faker-js/faker';
+import { LensApolloClient } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createGetAllProfilesByOwnerAddressQueryMockedResponse,
@@ -12,11 +12,7 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { ProfileGateway } from '../ProfileGateway';
 
-function setupProfileGateway({
-  apolloClient,
-}: {
-  apolloClient: ApolloClient<NormalizedCacheObject>;
-}) {
+function setupProfileGateway({ apolloClient }: { apolloClient: LensApolloClient }) {
   return new ProfileGateway(apolloClient);
 }
 

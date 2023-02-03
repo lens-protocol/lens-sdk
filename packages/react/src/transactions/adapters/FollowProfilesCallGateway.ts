@@ -1,9 +1,9 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   CreateFollowTypedDataDocument,
   CreateFollowTypedDataMutation,
   CreateFollowTypedDataMutationVariables,
   Follow,
+  LensApolloClient,
   moduleFeeAmountParams,
   omitTypename,
 } from '@lens-protocol/api-bindings';
@@ -14,7 +14,6 @@ import {
   isPaidFollowRequest,
   isProfileOwnerFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
@@ -47,7 +46,7 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
 }
 
 export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
-  constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+  constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall<T extends FollowRequest>(
     request: T,
@@ -65,8 +64,6 @@ export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },
     });
-
-    invariant(data, 'Cannot generate typed data for follow');
 
     return new UnsignedLensProtocolCall(
       data.result.id,

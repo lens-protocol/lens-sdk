@@ -1,6 +1,6 @@
-import { IStorageProvider, StorageProviderSubscriber } from '@lens-protocol/storage';
+import { IObservableStorageProvider, StorageProviderSubscriber } from '@lens-protocol/storage';
 
-class LocalStorageProvider implements IStorageProvider {
+class LocalStorageProvider implements IObservableStorageProvider {
   private subscribers = new Map<string, StorageProviderSubscriber[]>();
 
   getItem(key: string) {
@@ -67,6 +67,6 @@ class LocalStorageProvider implements IStorageProvider {
   }
 }
 
-export function localStorage(): IStorageProvider {
+export function localStorage(): IObservableStorageProvider {
   return new LocalStorageProvider();
 }

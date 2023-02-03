@@ -12,9 +12,16 @@ query Comments(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!]
+  $metadata: PublicationMetadataFilters
 ) {
   result: publications(
-    request: { limit: $limit, cursor: $cursor, commentsOf: $commentsOf, sources: $sources }
+    request: {
+      limit: $limit
+      cursor: $cursor
+      commentsOf: $commentsOf
+      sources: $sources
+      metadata: $metadata
+    }
   ) {
     items {
       ... on Comment {

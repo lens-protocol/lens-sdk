@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { CollectPolicyType } from '@lens-protocol/domain/use-cases/publications';
+import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
@@ -106,6 +107,22 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
     },
 
     dispatcher: null,
+
+    onChainIdentity: {
+      proofOfHumanity: false,
+      ens: null,
+      sybilDotOrg: {
+        verified: false,
+        source: {
+          twitter: {
+            handle: null,
+          },
+        },
+      },
+      worldcoin: {
+        isHuman: false,
+      },
+    },
 
     __followModule: null,
     followPolicy: mockAnyoneFollowPolicy(),
@@ -217,6 +234,9 @@ export function mockPostFragment(
     canMirror: {
       result: true,
     },
+    referencePolicy: {
+      type: ReferencePolicyType.ANYONE,
+    },
     ...overrides,
     __typename: 'Post',
   };
@@ -260,6 +280,9 @@ export function mockCommentFragment(
     canMirror: {
       result: true,
     },
+    referencePolicy: {
+      type: ReferencePolicyType.ANYONE,
+    },
     ...overrides,
     __typename: 'Comment',
   };
@@ -286,20 +309,12 @@ export function mockMirrorFragment(
     createdAt: faker.date.past().toISOString(),
     __collectModule: mockFreeCollectModuleSettings(),
     collectPolicy: mockNoFeeCollectPolicy(),
-    referenceModule: null,
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
-    isOptimisticMirroredByMe: false,
     mirrorOf: mainPost,
     reaction: null,
     hidden: false,
     isGated: false,
-    canComment: {
-      result: true,
-    },
-    canMirror: {
-      result: true,
-    },
     ...overrides,
     __typename: 'Mirror',
   };

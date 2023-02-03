@@ -19,7 +19,7 @@ type ReactionButtonProps = {
 };
 
 function ReactionButton({ publication, profileId, reactionType }: ReactionButtonProps) {
-  const { addReaction, removeReaction, hasReaction, isPending, error } = useReaction({
+  const { addReaction, removeReaction, hasReaction, isPending } = useReaction({
     profileId,
   });
 
@@ -44,7 +44,6 @@ function ReactionButton({ publication, profileId, reactionType }: ReactionButton
 
   return (
     <>
-      {error && <p>{error.message}</p>}
       <button onClick={toggleReaction} disabled={isPending}>
         <strong>{hasReactionType ? `Remove ${reactionType}` : `Add ${reactionType}`}</strong>
       </button>

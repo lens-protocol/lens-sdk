@@ -97,7 +97,7 @@ export function useFollow({ profile }: UseFollowArgs) {
       try {
         invariant(activeWallet && activeProfile, 'You must be logged in to follow a profile');
         invariant(
-          profile.followPolicy?.type === FollowPolicyType.UNKNOWN,
+          profile.followPolicy?.type !== FollowPolicyType.UNKNOWN,
           'Unsupported follow module',
         );
         setIsPending(true);

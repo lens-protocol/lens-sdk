@@ -12,9 +12,7 @@ export function useReactionController() {
     const gateway = new ReactionGateway(apolloClient);
     const reaction = new Reaction(gateway, presenter);
 
-    void reaction.add(request);
-
-    return presenter.asResult();
+    await reaction.add(request);
   };
 
   const remove = async (request: ReactionRequest) => {
@@ -22,9 +20,7 @@ export function useReactionController() {
     const gateway = new ReactionGateway(apolloClient);
     const reaction = new Reaction(gateway, presenter);
 
-    void reaction.remove(request);
-
-    return presenter.asResult();
+    await reaction.remove(request);
   };
 
   return {

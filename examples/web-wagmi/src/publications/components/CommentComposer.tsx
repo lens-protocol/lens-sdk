@@ -2,7 +2,6 @@ import {
   CollectPolicyType,
   ContentFocus,
   ProfileFragment,
-  ReferencePolicy,
   useCreateComment,
 } from '@lens-protocol/react';
 import { useState } from 'react';
@@ -35,7 +34,6 @@ export function CommentComposer({ activeProfile, publicationId }: CommentCompose
       collect: {
         type: CollectPolicyType.NO_COLLECT,
       },
-      reference: ReferencePolicy.ANYBODY,
     });
 
     setContent('');

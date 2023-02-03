@@ -1,8 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   BroadcastProtocolCallDocument,
   BroadcastProtocolCallMutation,
   BroadcastProtocolCallMutationVariables,
+  LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
   MetaTransaction,
@@ -15,13 +15,13 @@ import {
   IProtocolCallRelayer,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, ILogger, invariant, success } from '@lens-protocol/shared-kernel';
+import { ChainType, failure, ILogger, success } from '@lens-protocol/shared-kernel';
 
 import { AsyncRelayReceipt, ITransactionFactory } from './ITransactionFactory';
 
 export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransactionRequest> {
   constructor(
-    private apolloClient: ApolloClient<NormalizedCacheObject>,
+    private apolloClient: LensApolloClient,
     private factory: ITransactionFactory<SupportedTransactionRequest>,
     private logger: ILogger,
   ) {}
@@ -52,8 +52,6 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
           },
         },
       });
-
-      invariant(data, `Cannot relay transaction: ${signedCall.id}`);
 
       if (data.result.__typename === 'RelayError') {
         return failure(new TransactionError(TransactionErrorReason.REJECTED));

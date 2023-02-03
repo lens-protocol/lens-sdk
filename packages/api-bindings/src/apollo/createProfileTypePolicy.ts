@@ -82,6 +82,12 @@ export function createProfileTypePolicy(
         },
       },
 
+      attributes: {
+        merge(_, incoming) {
+          return incoming;
+        },
+      },
+
       attributesMap(_: unknown, { readField }) {
         return (readField('attributes') ?? []).reduce((acc, attribute) => {
           acc[attribute.key] = new ProfileAttributeReader(attribute);

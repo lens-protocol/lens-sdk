@@ -7,3 +7,4 @@ export * from './HidePublication';
 export * from './Reaction';
 export * from './ReportPublication';
 export * from './types';
+export * from './ReferencePolicyConfig';
