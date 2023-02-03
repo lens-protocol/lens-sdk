@@ -41,7 +41,6 @@ import { UpdateProfileMetadataResponder } from './transactions/adapters/responde
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
-import { GasEstimator } from './transactions/infrastructure/blockchain/GasEstimator';
 import { activeWalletVar } from './wallet/adapters/ActiveWalletPresenter';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
 import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
@@ -89,7 +88,6 @@ export type SharedDependencies = {
   notificationStorage: IStorage<UnreadNotificationsData>;
   signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
   providerFactory: ProviderFactory;
-  gasEstimator: GasEstimator;
 };
 
 export function createSharedDependencies(
@@ -172,7 +170,6 @@ export function createSharedDependencies(
     transactionQueuePresenter,
   );
   const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
-  const gasEstimator = new GasEstimator();
 
   return {
     activeProfileGateway,
@@ -197,7 +194,6 @@ export function createSharedDependencies(
     walletFactory,
     walletGateway,
     providerFactory,
-    gasEstimator,
   };
 }
 

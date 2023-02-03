@@ -14,11 +14,14 @@ import {
   CryptoNativeAsset,
   getID,
 } from '@lens-protocol/shared-kernel';
-import { BigNumber, constants, providers } from 'ethers';
+import { BigNumber, constants } from 'ethers';
 
 import { ITransactionRequest } from '../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
-import { Eip1559GasEstimate } from '../infrastructure/blockchain/Eip1559GasEstimate';
+import {
+  Eip1559GasPriceEstimator,
+  TransactionExecutionSpeed,
+} from '../infrastructure/Eip1559GasPriceEstimator';
 
 export class UnsignedApproveTransaction<
     Request extends TokenAllowanceRequest = TokenAllowanceRequest,
@@ -46,28 +49,9 @@ function createCryptoNativeAmountFactoryFor(
   }
 }
 
-export enum TransactionExecutionSpeed {
-  FAST = 'fast',
-  AVERAGE = 'average',
-  SLOW = 'slow',
-}
-
 export type CryptoNativeAmountFactory<T extends CryptoNativeAsset> = (
   value: BigDecimal,
 ) => Amount<T>;
-
-export type GasEstimationRequest<T extends CryptoNativeAsset> = {
-  createAmount: CryptoNativeAmountFactory<T>;
-  limit: number;
-  speed: TransactionExecutionSpeed;
-};
-
-export interface IGasEstimator {
-  estimate<T extends CryptoNativeAsset>(
-    request: GasEstimationRequest<T>,
-    provider: providers.JsonRpcProvider,
-  ): Promise<Eip1559GasEstimate<T>>;
-}
 
 function resolveApproveAmount(request: TokenAllowanceRequest): BigNumber {
   switch (request.limit) {
@@ -79,10 +63,7 @@ function resolveApproveAmount(request: TokenAllowanceRequest): BigNumber {
 }
 
 export class ApproveTransactionGateway implements IApproveTransactionGateway {
-  constructor(
-    private readonly providerFactory: IProviderFactory,
-    private readonly gasEstimator: IGasEstimator,
-  ) {}
+  constructor(private readonly providerFactory: IProviderFactory) {}
 
   async createApproveTransaction(
     request: TokenAllowanceRequest,
@@ -99,18 +80,18 @@ export class ApproveTransactionGateway implements IApproveTransactionGateway {
       from: wallet.address,
     });
 
-    const estimateRequest = {
-      createAmount: createCryptoNativeAmountFactoryFor(request.amount.asset),
-      limit: gasLimit.toNumber(),
-      speed: TransactionExecutionSpeed.FAST,
-    };
-    const gasEstimate = await this.gasEstimator.estimate(estimateRequest, provider);
+    const gasEstimator = new Eip1559GasPriceEstimator(
+      provider,
+      createCryptoNativeAmountFactoryFor(request.amount.asset),
+    );
+
+    const gasPriceEstimate = await gasEstimator.estimate(TransactionExecutionSpeed.FAST);
 
     const transactionRequest = await contract.populateTransaction.approve(request.spender, amount, {
       from: wallet.address,
       gasLimit,
-      maxFeePerGas: bigNumber(gasEstimate.maxFeePerGas),
-      maxPriorityFeePerGas: bigNumber(gasEstimate.maxPriorityFeePerGas),
+      maxFeePerGas: bigNumber(gasPriceEstimate.maxFeePerGas),
+      maxPriorityFeePerGas: bigNumber(gasPriceEstimate.maxPriorityFeePerGas),
       type: 2, // EIP-1559
     });
 

@@ -1,5 +1,3 @@
-import { EthereumAddress } from '@lens-protocol/shared-kernel';
-import { BigNumber, CallOverrides, PopulatedTransaction } from 'ethers';
 export type ChainId = number;
 
 // https://eips.ethereum.org/EIPS/eip-3085
@@ -17,17 +15,11 @@ export interface AddEthereumChainParameter {
   rpcUrls?: string[];
 }
 
-interface IErc20Methods<T> {
-  approve(spender: EthereumAddress, amount: BigNumber, overrides?: CallOverrides): Promise<T>;
-  allowance(
-    owner: EthereumAddress,
-    spender: EthereumAddress,
-    overrides?: CallOverrides,
-  ): Promise<T>;
-  balanceOf(owner: EthereumAddress, overrides?: CallOverrides): Promise<T>;
-}
+export type RewardPercentiles = string[];
 
-export interface IErc20Contract extends IErc20Methods<BigNumber> {
-  estimateGas: IErc20Methods<BigNumber>;
-  populateTransaction: IErc20Methods<PopulatedTransaction>;
-}
+export type FeeHistoryResult = {
+  baseFeePerGas: string[];
+  gasUsedRatio: number[];
+  oldestBlock: number;
+  reward: RewardPercentiles[];
+};
