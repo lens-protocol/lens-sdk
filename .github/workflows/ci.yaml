@@ -32,8 +32,8 @@ jobs:
       - name: "Run tests"
         run: pnpm test
         env:
-          GATED_SKD_TEST_PK:  ${{ secrets.GATED_SKD_TEST_PK }}
-          GATED_SKD_TEST_PROFILE_ID:  ${{ secrets.GATED_SKD_TEST_PROFILE_ID }}
-          GATED_SKD_TEST_PUBLICATION_ID:  ${{ secrets.GATED_SKD_TEST_PUBLICATION_ID }}
+          GATED_SDK_TEST_PK:  ${{ secrets.GATED_SDK_TEST_PK }}
+          GATED_SDK_TEST_PROFILE_ID:  ${{ secrets.GATED_SDK_TEST_PROFILE_ID }}
+          GATED_SDK_TEST_PUBLICATION_ID:  ${{ secrets.GATED_SDK_TEST_PUBLICATION_ID }}
 
       - run: pnpm lint:examples
