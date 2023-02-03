@@ -1,8 +1,12 @@
 import { mumbaiSandbox } from '../consts/environments';
 import { Profile } from './Profile';
 
+const testConfig = {
+  environment: mumbaiSandbox,
+};
+
 describe(`Given the ${Profile.name} configured to work with testnet`, () => {
-  const profile = new Profile(mumbaiSandbox);
+  const profile = new Profile(testConfig);
 
   describe(`when a method ${Profile.prototype.fetch.name} is called`, () => {
     it(`should return the requested profile`, async () => {

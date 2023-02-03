@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 
-import { Environment } from '../consts/environments';
+import { LensConfig } from '../consts/config';
 import { ProfileFragment } from '../graphql/fragments.generated';
 import { SingleProfileQueryRequest } from '../graphql/types.generated';
 import { getSdk, Sdk } from './graphql/queries.generated';
@@ -8,8 +8,8 @@ import { getSdk, Sdk } from './graphql/queries.generated';
 export class Profile {
   private readonly sdk: Sdk;
 
-  constructor(env: Environment) {
-    const client = new GraphQLClient(env.gqlEndpoint);
+  constructor(config: LensConfig) {
+    const client = new GraphQLClient(config.environment.gqlEndpoint);
     this.sdk = getSdk(client);
   }
 
@@ -19,15 +19,6 @@ export class Profile {
   ): Promise<ProfileFragment | null> {
     const result = await this.sdk.Profile({
       request,
-      observerId,
-    });
-
-    return result.data.result;
-  }
-
-  async fetchDefault(address: string, observerId?: string): Promise<ProfileFragment | null> {
-    const result = await this.sdk.DefaultProfile({
-      address,
       observerId,
     });
 

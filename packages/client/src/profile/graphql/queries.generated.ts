@@ -13,24 +13,9 @@ export type ProfileQueryVariables = Types.Exact<{
 
 export type ProfileQuery = { result: Types.Maybe<ProfileFragment> };
 
-export type DefaultProfileQueryVariables = Types.Exact<{
-  address: Types.Scalars['EthereumAddress'];
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
-}>;
-
-export type DefaultProfileQuery = { result: Types.Maybe<ProfileFragment> };
-
 export const ProfileDocument = gql`
   query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
     result: profile(request: $request) {
-      ...Profile
-    }
-  }
-  ${ProfileFragmentDoc}
-`;
-export const DefaultProfileDocument = gql`
-  query DefaultProfile($address: EthereumAddress!, $observerId: ProfileId) {
-    result: defaultProfile(request: { ethereumAddress: $address }) {
       ...Profile
     }
   }
@@ -45,7 +30,6 @@ export type SdkFunctionWrapper = <T>(
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const ProfileDocumentString = print(ProfileDocument);
-const DefaultProfileDocumentString = print(DefaultProfileDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -59,25 +43,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'Profile',
-        'query',
-      );
-    },
-    DefaultProfile(
-      variables: DefaultProfileQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: DefaultProfileQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<DefaultProfileQuery>(DefaultProfileDocumentString, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'DefaultProfile',
         'query',
       );
     },

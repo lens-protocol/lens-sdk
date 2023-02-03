@@ -4,6 +4,10 @@ import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
+export type QueryQueryVariables = Types.Exact<{ [key: string]: never }>;
+
+export type QueryQuery = Pick<Types.Query, 'ping'>;
+
 export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
   Types.FeeFollowModuleSettings,
   'contractAddress' | 'recipient'
@@ -756,6 +760,11 @@ export const CommonPaginatedResultInfoFragmentDoc = gql`
     totalCount
   }
 `;
+export const QueryDocument = gql`
+  query Query {
+    ping
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -764,8 +773,23 @@ export type SdkFunctionWrapper = <T>(
 ) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
-
+const QueryDocumentString = print(QueryDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
-  return {};
+  return {
+    Query(
+      variables?: QueryQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{ data: QueryQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<QueryQuery>(QueryDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'Query',
+        'query',
+      );
+    },
+  };
 }
 export type Sdk = ReturnType<typeof getSdk>;

@@ -1,96 +1,40 @@
-import { Wallet } from 'ethers';
-
-import LensClient, { Credentials, Profile, Reaction } from '.';
+import LensClient, { Profile, Reactions } from '.';
 import { mumbaiSandbox } from './consts/environments';
 
-let credentialsVar: Credentials;
-let authenticatedClientVar: LensClient;
+const testConfig = {
+  environment: mumbaiSandbox,
+};
 
-async function setupTest(wallet: Wallet) {
-  if (authenticatedClientVar && credentialsVar) {
-    return {
-      authenticatedClient: authenticatedClientVar,
-      credentials: credentialsVar,
-    };
-  }
+describe(`Given the LensClient configured for sandbox`, () => {
+  // BE CAREFUL, below test causes race condition
+  // with setupTestCredentials helper used in other tests
+  // the same wallet is authenticated twice
 
-  authenticatedClientVar = LensClient.init(mumbaiSandbox);
-  const address = await wallet.getAddress();
-  const challenge = await authenticatedClientVar.generateChallenge(address);
-  const signature = await wallet.signMessage(challenge);
+  // describe(`when authenticating with wallet signature`, () => {
+  //   it(`should authenticate without throwing`, async () => {
+  //     const wallet = setupTestWallet();
+  //     const client = LensClient.init(testConfig);
+  //     const address = await wallet.getAddress();
+  //     const challenge = await client.generateChallenge(address);
+  //     const signature = await wallet.signMessage(challenge);
 
-  credentialsVar = await authenticatedClientVar.authenticate(address, signature);
-
-  return {
-    authenticatedClient: authenticatedClientVar,
-    credentials: credentialsVar,
-  };
-}
-
-describe(`Given a LensClient configured for testnet and a wallet`, () => {
-  const wallet = new Wallet(
-    'ca9a3a3d4026e6228713e683a9c45ef65a538b2f9336813bd597f5effa38668d', // found on reddit
-  );
-
-  describe(`when authenticating with wallet signature`, () => {
-    it(`should authenticate with success`, async () => {
-      const {
-        credentials: { accessToken, refreshToken },
-      } = await setupTest(wallet);
-
-      expect(accessToken.length).toBeGreaterThan(1);
-      expect(refreshToken.length).toBeGreaterThan(1);
-    });
-  });
-
-  describe(`when refreshing authentication from stored credentials`, () => {
-    it(`should authenticate with success`, async () => {
-      const {
-        credentials: { refreshToken: storedRefreshToken },
-      } = await setupTest(wallet);
-      const client = LensClient.init(mumbaiSandbox);
-
-      const { accessToken, refreshToken } = await client.refreshCredentials(storedRefreshToken);
-
-      expect(accessToken.length).toBeGreaterThan(1);
-      expect(refreshToken.length).toBeGreaterThan(1);
-    });
-  });
-
-  describe(`when validating an existing accessToken`, () => {
-    it(`should pass the validation`, async () => {
-      const {
-        credentials: { accessToken },
-      } = await setupTest(wallet);
-      const client = LensClient.init(mumbaiSandbox);
-
-      const isValid = await client.isAccessTokenValid(accessToken);
-
-      expect(isValid).toBe(true);
-    });
-  });
+  //     await expect(client.authenticate(address, signature)).resolves.not.toThrow();
+  //   });
+  // });
 
   describe(`when accessing the Profile module`, () => {
     it(`should return a new instance of Profile`, async () => {
-      const client = LensClient.init(mumbaiSandbox);
+      const client = LensClient.init(testConfig);
 
       expect(client.profile).toBeInstanceOf(Profile);
     });
   });
 
-  describe(`when accessing the Reaction module and it requires authentication`, () => {
+  describe(`when accessing the Reaction module`, () => {
     it(`should return a new instance of Reaction`, async () => {
-      const { authenticatedClient } = await setupTest(wallet);
+      const client = LensClient.init(testConfig);
 
-      expect(authenticatedClient.reaction).toBeInstanceOf(Reaction);
-    });
-  });
-
-  describe(`when accessing the Reaction module from not authenticated client`, () => {
-    it(`should throw a Not authenticated error`, async () => {
-      const client = LensClient.init(mumbaiSandbox);
-
-      expect(() => client.reaction).toThrow('Not authenticated');
+      expect(client.reactions).toBeInstanceOf(Reactions);
     });
   });
 });

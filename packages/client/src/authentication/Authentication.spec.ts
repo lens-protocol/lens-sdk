@@ -1,8 +1,12 @@
 import { mumbaiSandbox } from '../consts/environments';
 import { Authentication } from './Authentication';
 
-describe(`Given the ${Authentication.name} configured to work with testnet`, () => {
-  const auth = new Authentication(mumbaiSandbox);
+const testConfig = {
+  environment: mumbaiSandbox,
+};
+
+describe(`Given the ${Authentication.name} configured to work with sandbox`, () => {
+  const auth = new Authentication(testConfig);
 
   describe(`when a method ${Authentication.prototype.challenge.name} is called`, () => {
     it(`should return the challenge for an address`, async () => {

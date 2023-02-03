@@ -14,11 +14,12 @@
 
 ## Client and Authentication
 
-- [x] LensClient.init(environment)
-- [x] [Q] client.generateChallenge(address)
-- [x] [M] client.authenticate(address, signature)
-- [x] [M] client.refreshCredentials(refreshToken?)
-- [x] [Q] client.isAccessTokenValid(accessToken)
+Client manages the token lifecycle and storage
+
+- LensClient.init({ environment, storage })
+- [Q] client.generateChallenge(address)
+- [M] client.authenticate(address, signature)
+- [H] client.isAuthenticated()
 
 ## Broadcast / Transaction
 
@@ -52,7 +53,6 @@
 
 ### Query profile
 
-- [Q] client.profile.fetchDefault(address)
 - [Q] client.profile.fetch(request) (by id or handle, forSources) or client.profiles.fetchOne()
 - [PQ] client.profile.fetchAll(request) (by ids, ownedBy, handles, whoMirroredPublicationId)
 - [Q] client.profile.fetchRecommended()
@@ -131,11 +131,11 @@
 - [AM] client.proxyActions.freeCollect({ publicationId })
 - [AQ] client.proxyActions.checkStatus({ proxyActionId })
 
-## Reaction(s)
+## Reactions
 
-- [x] [AM] client.reaction.add(request)
-- [x] [AM] client.reaction.remove(request)
-- [PQ] client.reaction(s).toPublication({ publicationId })
+- [AM] client.reactions.add(request)
+- [AM] client.reactions.remove(request)
+- [PQ] client.reactions.toPublication({ publicationId })
 
 ## Reporting
 

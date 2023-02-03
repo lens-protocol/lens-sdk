@@ -2,7 +2,7 @@ export class Environment {
   constructor(private url: string) {}
 
   get gqlEndpoint() {
-    return `${this.url}/graphql`;
+    return this.url;
   }
 }
 
