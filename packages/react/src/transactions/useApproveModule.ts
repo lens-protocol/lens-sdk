@@ -5,7 +5,6 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
   TokenAllowanceLimit,
   TokenAllowanceRequest,
@@ -15,17 +14,17 @@ import { useState } from 'react';
 
 import {
   TransactionState,
-  useHasPendingTransaction,
-  useHasSettledTransaction,
+  useWaitUntilTransactionSettled,
 } from './adapters/TransactionQueuePresenter';
 import { useApproveModuleController } from './adapters/useApproveModuleController';
 
-export type UseApproveModuleArgs = {
+export type ApproveModuleArgs = {
   amount: Amount<Erc20>;
+  limit: TokenAllowanceLimit;
   spender: EthereumAddress;
 };
 
-export function useApproveModule({ amount, spender }: UseApproveModuleArgs) {
+export function useApproveModule() {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<
     | InsufficientGasError
@@ -36,36 +35,37 @@ export function useApproveModule({ amount, spender }: UseApproveModuleArgs) {
   >(null);
   const setAllowance = useApproveModuleController();
 
-  function isApproveTransaction(
-    transaction: TransactionState<SupportedTransactionRequest>,
-  ): transaction is TransactionState<TokenAllowanceRequest> {
-    return (
-      transaction.request.kind === TransactionKind.APPROVE_MODULE &&
-      transaction.request.spender === spender &&
-      transaction.request.amount.asset === amount.asset
-    );
-  }
-
-  const hasPendingTx = useHasPendingTransaction(isApproveTransaction);
-  const isApproved = useHasSettledTransaction(isApproveTransaction);
+  const waitUntilTransactionIsSettled = useWaitUntilTransactionSettled();
 
   return {
-    approve: async () => {
+    approve: async ({ amount, limit, spender }: ApproveModuleArgs) => {
       setIsPending(true);
       setError(null);
-      const result = await setAllowance({
-        amount,
-        spender,
-        kind: TransactionKind.APPROVE_MODULE,
-        limit: TokenAllowanceLimit.EXACT,
-      });
-      if (result.isFailure()) {
-        setError(result.error);
+
+      try {
+        const result = await setAllowance({
+          amount,
+          kind: TransactionKind.APPROVE_MODULE,
+          limit,
+          spender,
+        });
+
+        if (result.isFailure()) {
+          setError(result.error);
+          return;
+        }
+
+        await waitUntilTransactionIsSettled(
+          (transaction): transaction is TransactionState<TokenAllowanceRequest> =>
+            transaction.request.kind === TransactionKind.APPROVE_MODULE &&
+            transaction.request.spender === spender &&
+            transaction.request.amount.asset === amount.asset,
+        );
+      } finally {
+        setIsPending(false);
       }
-      setIsPending(false);
     },
     error,
-    isPending: isPending || hasPendingTx,
-    isApproved,
+    isPending,
   };
 }

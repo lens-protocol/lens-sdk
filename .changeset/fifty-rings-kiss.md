@@ -4,4 +4,4 @@
 "@lens-protocol/react": minor
 ---
 
-useApproveModule react hook and blockchain utils
+Added `useApproveModule` and internal toolings for EIP-1559 gas estimation

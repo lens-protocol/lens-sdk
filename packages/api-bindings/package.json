@@ -29,7 +29,7 @@
   "scripts": {
     "build": "pnpm clean && tsup && tsc --emitDeclarationOnly",
     "clean": "rimraf ./dist",
-    "test": "jest --passWithNoTests",
+    "test": "jest",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",

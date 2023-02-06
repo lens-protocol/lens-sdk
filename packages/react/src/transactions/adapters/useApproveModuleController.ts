@@ -11,14 +11,14 @@ import { ApproveTransactionGateway } from './ApproveTransactionGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 
 export function useApproveModuleController() {
-  const { providerFactory, gasEstimator, activeWallet, transactionQueue } = useSharedDependencies();
+  const { providerFactory, activeWallet, transactionQueue } = useSharedDependencies();
 
   return async (request: TokenAllowanceRequest) => {
     const presenter = new PromiseResultPresenter<
       void,
       InsufficientGasError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
-    const approveTransactionGateway = new ApproveTransactionGateway(providerFactory, gasEstimator);
+    const approveTransactionGateway = new ApproveTransactionGateway(providerFactory);
 
     const tokenAllowance = new TokenAllowance(
       activeWallet,
@@ -27,7 +27,7 @@ export function useApproveModuleController() {
       transactionQueue,
     );
 
-    void tokenAllowance.increaseAllowance(request);
+    await tokenAllowance.increaseAllowance(request);
 
     return presenter.asResult();
   };

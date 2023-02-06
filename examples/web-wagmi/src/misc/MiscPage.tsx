@@ -18,7 +18,7 @@ const miscHooks = [
   },
   {
     label: 'useApproveModule',
-    description: `Approve certain amount of an ERC20 Token to be used by a address`,
+    description: `Approve a certain amount of an ERC20 Token to be used by a address`,
     path: '/misc/useApproveModule',
   },
   {
