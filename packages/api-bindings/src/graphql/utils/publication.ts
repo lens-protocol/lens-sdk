@@ -8,6 +8,7 @@ import { DateUtils, never, Overwrite } from '@lens-protocol/shared-kernel';
 
 import { CollectPolicy, CollectState } from '../CollectPolicy';
 import {
+  CollectModuleFragment,
   CommentFragment,
   FeeCollectModuleSettingsFragment,
   FreeCollectModuleSettingsFragment,
@@ -16,6 +17,7 @@ import {
   MirrorFragment,
   PostFragment,
   ProfileFragment,
+  PublicationStatsFragment,
   ReactionTypes,
   TimedFeeCollectModuleSettingsFragment,
 } from '../generated';
@@ -123,32 +125,43 @@ export type PublicationFragmentWithCollectableCollectModule = PublicationFragmen
   collectModule: CollectableCollectModuleSettingsFragment;
 };
 
-export function resolveCollectState({
-  followerOnly,
-  profile,
-  publicationStats,
-  collectLimit,
-  endTimestamp,
-}: {
-  profile: PublicationFragment['profile'];
-  publicationStats: PublicationFragmentWithCollectableCollectModule['stats'];
-  followerOnly?: boolean;
-  collectLimit?: number;
-  endTimestamp?: string;
-}): CollectState {
-  if (followerOnly && !profile.isFollowedByMe) {
-    return CollectState.NOT_A_FOLLOWER;
+function resolveTimeLimitReached(
+  collectModule:
+    | LimitedTimedFeeCollectModuleSettingsFragment
+    | TimedFeeCollectModuleSettingsFragment,
+) {
+  if (DateUtils.unix() > DateUtils.toUnix(collectModule.endTimestamp)) {
+    return CollectState.COLLECT_TIME_EXPIRED;
   }
+  return null;
+}
 
-  if (collectLimit && publicationStats.totalAmountOfCollects >= collectLimit) {
+function resolveLimitReached(
+  collectModule:
+    | LimitedFeeCollectModuleSettingsFragment
+    | LimitedTimedFeeCollectModuleSettingsFragment,
+  publicationStats: PublicationStatsFragment,
+) {
+  if (publicationStats.totalAmountOfCollects >= parseInt(collectModule.collectLimit)) {
     return CollectState.COLLECT_LIMIT_REACHED;
   }
 
-  if (endTimestamp && DateUtils.unix() > DateUtils.toUnix(endTimestamp)) {
-    return CollectState.COLLECT_TIME_EXPIRED;
-  }
+  return null;
+}
 
-  return CollectState.CAN_BE_COLLECTED;
+function resolveNotFollower(
+  collectModule:
+    | FreeCollectModuleSettingsFragment
+    | FeeCollectModuleSettingsFragment
+    | LimitedFeeCollectModuleSettingsFragment
+    | TimedFeeCollectModuleSettingsFragment
+    | LimitedTimedFeeCollectModuleSettingsFragment,
+  author: ProfileFragment,
+) {
+  if (collectModule.followerOnly && !author.isFollowedByMe) {
+    return CollectState.NOT_A_FOLLOWER;
+  }
+  return null;
 }
 
 export function resolveCollectPolicy({
@@ -156,19 +169,15 @@ export function resolveCollectPolicy({
   collectModule,
   publicationStats,
 }: {
-  collectModule: NonNullable<PublicationFragment['__collectModule']>;
-  profile: PublicationFragment['profile'];
-  publicationStats: PublicationFragmentWithCollectableCollectModule['stats'];
+  collectModule: CollectModuleFragment;
+  profile: ProfileFragment;
+  publicationStats: PublicationStatsFragment;
 }): CollectPolicy {
   switch (collectModule.__typename) {
     case 'FeeCollectModuleSettings':
       return {
         type: CollectPolicyType.CHARGE,
-        state: resolveCollectState({
-          followerOnly: collectModule.followerOnly,
-          profile,
-          publicationStats,
-        }),
+        state: resolveNotFollower(collectModule, profile) ?? CollectState.CAN_BE_COLLECTED,
         amount: erc20Amount({ from: collectModule.amount }),
         referralFee: collectModule.referralFee,
         followerOnly: collectModule.followerOnly,
@@ -176,12 +185,10 @@ export function resolveCollectPolicy({
     case 'LimitedFeeCollectModuleSettings':
       return {
         type: CollectPolicyType.CHARGE,
-        state: resolveCollectState({
-          followerOnly: collectModule.followerOnly,
-          profile,
-          publicationStats,
-          collectLimit: parseInt(collectModule.collectLimit),
-        }),
+        state:
+          resolveNotFollower(collectModule, profile) ??
+          resolveLimitReached(collectModule, publicationStats) ??
+          CollectState.CAN_BE_COLLECTED,
         amount: erc20Amount({ from: collectModule.amount }),
         referralFee: collectModule.referralFee,
         collectLimit: parseInt(collectModule.collectLimit),
@@ -190,12 +197,10 @@ export function resolveCollectPolicy({
     case 'TimedFeeCollectModuleSettings':
       return {
         type: CollectPolicyType.CHARGE,
-        state: resolveCollectState({
-          followerOnly: collectModule.followerOnly,
-          profile,
-          publicationStats,
-          endTimestamp: collectModule.endTimestamp,
-        }),
+        state:
+          resolveNotFollower(collectModule, profile) ??
+          resolveTimeLimitReached(collectModule) ??
+          CollectState.CAN_BE_COLLECTED,
         amount: erc20Amount({ from: collectModule.amount }),
         referralFee: collectModule.referralFee,
         endTimestamp: collectModule.endTimestamp,
@@ -204,13 +209,11 @@ export function resolveCollectPolicy({
     case 'LimitedTimedFeeCollectModuleSettings':
       return {
         type: CollectPolicyType.CHARGE,
-        state: resolveCollectState({
-          followerOnly: collectModule.followerOnly,
-          profile,
-          publicationStats,
-          collectLimit: parseInt(collectModule.collectLimit),
-          endTimestamp: collectModule.endTimestamp,
-        }),
+        state:
+          resolveNotFollower(collectModule, profile) ??
+          resolveLimitReached(collectModule, publicationStats) ??
+          resolveTimeLimitReached(collectModule) ??
+          CollectState.CAN_BE_COLLECTED,
         amount: erc20Amount({ from: collectModule.amount }),
         referralFee: collectModule.referralFee,
         collectLimit: parseInt(collectModule.collectLimit),
@@ -220,11 +223,7 @@ export function resolveCollectPolicy({
     case 'FreeCollectModuleSettings':
       return {
         type: CollectPolicyType.FREE,
-        state: resolveCollectState({
-          followerOnly: collectModule.followerOnly,
-          profile,
-          publicationStats,
-        }),
+        state: resolveNotFollower(collectModule, profile) ?? CollectState.CAN_BE_COLLECTED,
         followerOnly: collectModule.followerOnly,
       };
     case 'RevertCollectModuleSettings':

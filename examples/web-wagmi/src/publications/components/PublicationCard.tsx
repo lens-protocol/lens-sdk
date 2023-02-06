@@ -3,6 +3,7 @@ import {
   MirrorFragment,
   PostFragment,
   PendingPostFragment,
+  CollectState,
 } from '@lens-protocol/react';
 import { ReactNode } from 'react';
 
@@ -51,13 +52,13 @@ export function CollectablePublicationCard({
         {publication.hidden ? 'This publication has been hidden' : publication.metadata.content}
       </p>
       {collectButton}
-      {'collectLimit' in publication.collectPolicy && (
+      {publication.collectPolicy.state === CollectState.COLLECT_LIMIT_REACHED && (
         <p>
           {publication.stats.totalAmountOfCollects}/{publication.collectPolicy.collectLimit}{' '}
           collected
         </p>
       )}
-      {'endTimestamp' in publication.collectPolicy && (
+      {publication.collectPolicy.state === CollectState.COLLECT_TIME_EXPIRED && (
         <p>Collectable until: {publication.collectPolicy.endTimestamp}</p>
       )}
     </article>

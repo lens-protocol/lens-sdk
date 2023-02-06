@@ -12,7 +12,7 @@ export enum CollectState {
 
 type FeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
-  state: CollectState;
+  state: CollectState.CAN_BE_COLLECTED | CollectState.NOT_A_FOLLOWER;
   amount: ClientErc20Amount;
   referralFee: number;
   followerOnly: boolean;
@@ -20,13 +20,16 @@ type FeeCollectPolicy = {
 
 export type NoFeeCollectPolicy = {
   type: CollectPolicyType.FREE;
-  state: CollectState;
+  state: CollectState.CAN_BE_COLLECTED | CollectState.NOT_A_FOLLOWER;
   followerOnly: boolean;
 };
 
 type LimitedFeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
-  state: CollectState;
+  state:
+    | CollectState.CAN_BE_COLLECTED
+    | CollectState.NOT_A_FOLLOWER
+    | CollectState.COLLECT_LIMIT_REACHED;
   amount: ClientErc20Amount;
   referralFee: number;
   followerOnly: boolean;
@@ -35,7 +38,10 @@ type LimitedFeeCollectPolicy = {
 
 type TimedFeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
-  state: CollectState;
+  state:
+    | CollectState.CAN_BE_COLLECTED
+    | CollectState.NOT_A_FOLLOWER
+    | CollectState.COLLECT_TIME_EXPIRED;
   amount: ClientErc20Amount;
   referralFee: number;
   followerOnly: boolean;
@@ -44,7 +50,11 @@ type TimedFeeCollectPolicy = {
 
 type LimitedTimedFeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
-  state: CollectState;
+  state:
+    | CollectState.CAN_BE_COLLECTED
+    | CollectState.NOT_A_FOLLOWER
+    | CollectState.COLLECT_LIMIT_REACHED
+    | CollectState.COLLECT_TIME_EXPIRED;
   amount: ClientErc20Amount;
   referralFee: number;
   followerOnly: boolean;
@@ -53,7 +63,7 @@ type LimitedTimedFeeCollectPolicy = {
 };
 
 type NoCollectPolicy = {
-  state: CollectState;
+  state: CollectState.CANNOT_BE_COLLECTED;
   type: CollectPolicyType.NO_COLLECT;
 };
 
