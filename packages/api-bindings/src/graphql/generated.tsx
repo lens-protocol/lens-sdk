@@ -4463,6 +4463,13 @@ export type ProfileFragment = { __typename: 'Profile' } & Pick<
     >;
     __attributes: Maybe<Array<AttributeFragment>>;
     dispatcher: Maybe<Pick<Dispatcher, 'address' | 'canUseRelay'>>;
+    onChainIdentity: Pick<OnChainIdentity, 'proofOfHumanity'> & {
+      ens: Maybe<Pick<EnsOnChainIdentity, 'name'>>;
+      sybilDotOrg: Pick<SybilDotOrgIdentity, 'verified'> & {
+        source: { twitter: Pick<SybilDotOrgTwitterIdentity, 'handle'> };
+      };
+      worldcoin: Pick<WorldcoinIdentity, 'isHuman'>;
+    };
   };
 
 export type ProfilesToFollowQueryVariables = Exact<{
@@ -5031,6 +5038,23 @@ export const ProfileFragmentDoc = gql`
     dispatcher {
       address
       canUseRelay
+    }
+    onChainIdentity {
+      proofOfHumanity
+      ens {
+        name
+      }
+      sybilDotOrg {
+        verified
+        source {
+          twitter {
+            handle
+          }
+        }
+      }
+      worldcoin {
+        isHuman
+      }
     }
     isFollowedByMe(isFinalisedOnChain: true)
     isFollowing(who: $observerId)

@@ -10,7 +10,6 @@ import {
   AuthRefreshMutationVariables,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 import { Credentials } from '../adapters/Credentials';
 
@@ -34,8 +33,6 @@ export class AuthApi {
       AuthAuthenticateMutationVariables
     >({ mutation: AuthAuthenticateDocument, variables: { address, signature } });
 
-    invariant(result.data, 'Not able to generate credentials. Credentials data not found.');
-
     const { accessToken, refreshToken } = result.data.result;
 
     return new Credentials(accessToken, refreshToken);
@@ -46,8 +43,6 @@ export class AuthApi {
       AuthRefreshMutation,
       AuthRefreshMutationVariables
     >({ mutation: AuthRefreshDocument, variables: { refreshToken } });
-
-    invariant(result.data, 'Not able to refresh credentials. Credentials data not found.');
 
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.data.result;
 

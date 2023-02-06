@@ -106,6 +106,22 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
 
     dispatcher: null,
 
+    onChainIdentity: {
+      proofOfHumanity: false,
+      ens: null,
+      sybilDotOrg: {
+        verified: false,
+        source: {
+          twitter: {
+            handle: null,
+          },
+        },
+      },
+      worldcoin: {
+        isHuman: false,
+      },
+    },
+
     __followModule: null,
     followPolicy: mockAnyoneFollowPolicy(),
 

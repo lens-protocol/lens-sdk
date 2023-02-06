@@ -91,6 +91,24 @@ fragment Profile on Profile {
     canUseRelay
   }
 
+  onChainIdentity {
+    proofOfHumanity
+    ens {
+      name
+    }
+    sybilDotOrg {
+      verified
+      source {
+        twitter {
+          handle
+        }
+      }
+    }
+    worldcoin {
+      isHuman
+    }
+  }
+
   isFollowedByMe(isFinalisedOnChain: true)
   isFollowing(who: $observerId)
 

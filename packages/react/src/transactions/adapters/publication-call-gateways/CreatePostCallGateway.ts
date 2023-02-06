@@ -20,7 +20,7 @@ import {
   ICreatePostCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, invariant, success } from '@lens-protocol/shared-kernel';
+import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -61,8 +61,6 @@ export class CreatePostCallGateway implements ICreatePostCallGateway {
       },
     });
 
-    invariant(data, 'Cannot generate typed data for post creation');
-
     return new UnsignedLensProtocolCall(
       data.result.id,
       request,
@@ -80,8 +78,6 @@ export class CreatePostCallGateway implements ICreatePostCallGateway {
         request: requestArgs,
       },
     });
-
-    invariant(data, 'Cannot create post via dispatcher');
 
     if (data.result.__typename === 'RelayError') {
       return failure(new TransactionError(TransactionErrorReason.REJECTED));

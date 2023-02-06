@@ -14,7 +14,6 @@ import {
   isPaidFollowRequest,
   isProfileOwnerFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
@@ -65,8 +64,6 @@ export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },
     });
-
-    invariant(data, 'Cannot generate typed data for follow');
 
     return new UnsignedLensProtocolCall(
       data.result.id,
