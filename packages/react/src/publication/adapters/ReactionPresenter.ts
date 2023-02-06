@@ -1,16 +1,11 @@
-import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
 import { ReactionTypes } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
-import { ReactionRequest, IReactionPresenter } from '@lens-protocol/domain/use-cases/publications';
+import { IReactionPresenter, ReactionRequest } from '@lens-protocol/domain/use-cases/publications';
 
 import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
 
 export class ReactionPresenter implements IReactionPresenter {
-  readonly publicationCacheManager: PublicationCacheManager;
-
-  constructor(cache: ApolloCache<NormalizedCacheObject>) {
-    this.publicationCacheManager = new PublicationCacheManager(cache);
-  }
+  constructor(private readonly publicationCacheManager: PublicationCacheManager) {}
 
   async add(request: ReactionRequest): Promise<void> {
     switch (request.reactionType) {

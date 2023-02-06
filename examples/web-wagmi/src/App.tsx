@@ -1,10 +1,10 @@
-import { LensConfig, LensProvider, staging } from '@lens-protocol/react';
+import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
 import { localStorage } from '@lens-protocol/react/web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { polygon } from 'wagmi/chains';
+import { optimism, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Home } from './HomePage';
@@ -40,6 +40,7 @@ import { UseUpdateFollowPolicy } from './profiles/UseUpdateFollowPolicy';
 import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
 import { UseUpdateProfileImage } from './profiles/UseUpdateProfileImage';
 import { PublicationsPage } from './publications/PublicationsPage';
+import { UseCollect } from './publications/UseCollect';
 import { UseCollectedPublications } from './publications/UseCollectedPublications';
 import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreateMirror } from './publications/UseCreateMirror';
@@ -57,7 +58,7 @@ import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
 import { UseProfilePublicationRevenue } from './revenue/UseProfilePublicationRevenue';
 import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
 
-const { provider, webSocketProvider } = configureChains([polygon], [publicProvider()]);
+const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
 
 const client = createClient({
   autoConnect: true,
@@ -68,9 +69,7 @@ const client = createClient({
 const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
   environment: staging,
-  sources: [],
-  // or narrow to the one you are interested in
-  // sources: [sources.lenster, sources.orb, 'any-other-app-id'],
+  sources: [sources.lenster, sources.orb, 'any-other-app-id'],
   storage: localStorage(),
 };
 
@@ -115,6 +114,7 @@ export function App() {
                   path="/publications/useWhoMirroredPublication"
                   element={<UseWhoMirroredPublication />}
                 />
+                <Route path="/publications/useCollect" element={<UseCollect />} />
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />

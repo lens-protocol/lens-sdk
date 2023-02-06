@@ -9,11 +9,11 @@ export type HidePublicationControllerRequest = {
 };
 
 export function useHidePublicationController() {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, publicationCacheManager } = useSharedDependencies();
 
   return {
     hide: async ({ publicationId }: HidePublicationControllerRequest) => {
-      const presenter = new HidePublicationPresenter(apolloClient.cache);
+      const presenter = new HidePublicationPresenter(publicationCacheManager);
       const gateway = new HidePublicationGateway(apolloClient);
       const hidePublication = new HidePublication(gateway, presenter);
 

@@ -1,14 +1,15 @@
-export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
-export * from './useCreatePost';
+export * from './useCollect';
 export * from './useCreateComment';
+export * from './useCreateMirror';
+export * from './useCreatePost';
 export * from './useFollow';
+export * from './useRecentPosts';
 export * from './useUnfollow';
 export * from './useUpdateDispatcherConfig';
-export * from './useCreateMirror';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileDetails';
-export * from './useRecentPosts';
 
+export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 export type { MetadataUploadAdapter } from './adapters/MetadataUploadAdapter';
 export {
   CollectPolicyType,
@@ -18,7 +19,7 @@ export {
 } from '@lens-protocol/domain/use-cases/publications';
 export type {
   ChargeCollectPolicy,
-  CollectPolicy,
+  CollectPolicyRequest,
   FreeCollectPolicy,
   Media,
   NftAttribute,

@@ -5,6 +5,7 @@ import {
   mockPublicationStatsFragment,
 } from '@lens-protocol/api-bindings/mocks';
 
+import { PublicationCacheManager } from '../../../transactions/adapters/PublicationCacheManager';
 import { HidePublicationPresenter } from '../HidePublicationPresenter';
 
 function setupTestScenario({ post }: { post: PostFragment }) {
@@ -20,7 +21,8 @@ function setupTestScenario({ post }: { post: PostFragment }) {
     data: post,
   });
 
-  const presenter = new HidePublicationPresenter(apolloCache);
+  const publicationCacheManager = new PublicationCacheManager(apolloCache);
+  const presenter = new HidePublicationPresenter(publicationCacheManager);
 
   return {
     presenter,

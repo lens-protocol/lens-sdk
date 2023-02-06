@@ -1,6 +1,7 @@
 scalar ClientErc20Amount
 scalar ProfileAttributes
 scalar FollowPolicy
+scalar CollectPolicy
 scalar ReferencePolicy
 
 extend type Profile {
@@ -13,17 +14,20 @@ extend type Profile {
 extend type Post {
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean!
+  collectPolicy: CollectPolicy!
   referencePolicy: ReferencePolicy!
 }
 
 extend type Comment {
   hasOptimisticCollectedByMe: Boolean!
   isOptimisticMirroredByMe: Boolean!
+  collectPolicy: CollectPolicy!
   referencePolicy: ReferencePolicy!
 }
 
 extend type Mirror {
   hasOptimisticCollectedByMe: Boolean!
+  collectPolicy: CollectPolicy!
 }
 
 type PendingPost {

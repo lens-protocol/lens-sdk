@@ -9,8 +9,8 @@ export * from './transactions';
 export * from './utils';
 export * from './wallet';
 export * from './notifications';
-export type { ReadResult, PaginatedReadResult } from './helpers';
 
+export type { ReadResult, PaginatedReadResult } from './helpers';
 export { isValidHandle } from '@lens-protocol/api-bindings';
 export type {
   StorageSubscription,

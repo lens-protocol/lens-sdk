@@ -177,7 +177,7 @@ fragment MirrorBase on Mirror {
   profile {
     ...Profile
   }
-  collectModule {
+  __collectModule: collectModule {
     ...CollectModule
   }
   createdAt
@@ -187,6 +187,7 @@ fragment MirrorBase on Mirror {
   hasCollectedByMe(isFinalisedOnChain: true)
 
   hasOptimisticCollectedByMe @client
+  collectPolicy @client
 }
 
 fragment Mirror on Mirror {
@@ -218,7 +219,7 @@ fragment CommentBase on Comment {
   collectedBy {
     ...Wallet
   }
-  collectModule {
+  __collectModule: collectModule {
     ...CollectModule
   }
   referenceModule {
@@ -239,6 +240,7 @@ fragment CommentBase on Comment {
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
+  collectPolicy @client
   referencePolicy @client
 }
 
@@ -291,7 +293,7 @@ fragment Post on Post {
   collectedBy {
     ...Wallet
   }
-  collectModule {
+  __collectModule: collectModule {
     ...CollectModule
   }
   referenceModule {
@@ -312,6 +314,7 @@ fragment Post on Post {
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
+  collectPolicy @client
   referencePolicy @client
 }
 
