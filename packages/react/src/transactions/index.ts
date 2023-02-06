@@ -9,7 +9,7 @@ export * from './useUnfollow';
 export * from './useUpdateDispatcherConfig';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileDetails';
-export * from './useClearRecentTransactions';
+export * from './useRecentTransactions';
 
 export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 export type { MetadataUploadAdapter } from './adapters/MetadataUploadAdapter';
