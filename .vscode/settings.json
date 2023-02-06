@@ -1,15 +1,16 @@
 {
   "eslint.workingDirectories": [
     "examples/nextjs",
+    "examples/react-native",
     "examples/shared",
     "examples/web-wagmi",
-    "examples/react-native",
     "packages/api-bindings",
     "packages/blockchain-bindings",
     "packages/domain",
     "packages/eslint-config",
     "packages/prettier-config",
     "packages/react",
+    "packages/sdk-gated",
     "packages/shared-kernel",
     "packages/storage",
     "packages/wagmi"
