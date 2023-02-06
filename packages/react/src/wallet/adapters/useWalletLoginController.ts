@@ -40,6 +40,7 @@ export function useWalletLoginController() {
       activeWalletPresenter,
       loginPresenter,
       activeProfileLoader,
+      profileGateway,
     );
 
     await walletLogin.login(request);

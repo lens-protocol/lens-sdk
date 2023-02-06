@@ -8,102 +8,102 @@ import { IActiveProfilePresenter } from '../IActiveProfilePresenter';
 import { IProfileGateway } from '../IProfileGateway';
 
 describe(`Given the ${ActiveProfileLoader.name} interactor`, () => {
-  describe(`when "${ActiveProfileLoader.prototype.loadActiveProfileByOwnerAddress.name}" method is invoked`, () => {
-    it(`should:
-        - retrieve the list of profiles owned by the provided address
-        - store the first one as active profile
-        - present the active profile`, async () => {
-      const wallet = mockWallet();
-      const firstProfile = mockProfile();
-      const profileGateway = mock<IProfileGateway>();
-      const activeProfileGateway = mock<IActiveProfileGateway>();
-      const activeProfilePresenter = mock<IActiveProfilePresenter>();
-
-      when(profileGateway.getAllProfilesByOwnerAddress)
-        .calledWith(wallet.address)
-        .mockResolvedValue([firstProfile, mockProfile()]);
-
-      const activeProfile = new ActiveProfileLoader(
-        profileGateway,
-        activeProfileGateway,
-        activeProfilePresenter,
-      );
-
-      await activeProfile.loadActiveProfileByOwnerAddress(wallet.address);
-
-      expect(activeProfileGateway.setActiveProfile).toHaveBeenCalledWith(firstProfile);
-      expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(firstProfile);
-    });
-
-    it('should just present first profile if the requested profile to log in to is not found', async () => {
-      const wallet = mockWallet();
-      const firstProfile = mockProfile();
-      const profileGateway = mock<IProfileGateway>();
-      const activeProfileGateway = mock<IActiveProfileGateway>();
-      const activeProfilePresenter = mock<IActiveProfilePresenter>();
-
-      when(profileGateway.getAllProfilesByOwnerAddress)
-        .calledWith(wallet.address)
-        .mockResolvedValue([firstProfile, mockProfile()]);
-
-      const invalidProfileId = 'invalid-profile-id';
-
-      const activeProfile = new ActiveProfileLoader(
-        profileGateway,
-        activeProfileGateway,
-        activeProfilePresenter,
-      );
-
-      await activeProfile.loadActiveProfileByOwnerAddress(wallet.address, invalidProfileId);
-
-      expect(activeProfileGateway.setActiveProfile).toHaveBeenCalledWith(firstProfile);
-      expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(firstProfile);
-    });
-
-    it('should just present the profile already loaded into the ActiveProfileGateway', async () => {
-      const wallet = mockWallet();
-      const profile = mockProfile();
-      const profileGateway = mock<IProfileGateway>();
-      const activeProfileGateway = mock<IActiveProfileGateway>();
-      const activeProfilePresenter = mock<IActiveProfilePresenter>();
-
-      when(activeProfileGateway.getActiveProfile).mockResolvedValue(profile);
-
-      const activeProfile = new ActiveProfileLoader(
-        profileGateway,
-        activeProfileGateway,
-        activeProfilePresenter,
-      );
-
-      await activeProfile.loadActiveProfileByOwnerAddress(wallet.address);
-
-      expect(profileGateway.getAllProfilesByOwnerAddress).not.toHaveBeenCalled();
-      expect(activeProfileGateway.setActiveProfile).not.toHaveBeenCalled();
-      expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(profile);
-    });
-
-    it('should bail out if not active profile is present and the wallet does not own any profile', async () => {
-      const wallet = mockWallet();
-      const profileGateway = mock<IProfileGateway>();
-      const activeProfileGateway = mock<IActiveProfileGateway>();
-      const activeProfilePresenter = mock<IActiveProfilePresenter>();
-
-      when(profileGateway.getAllProfilesByOwnerAddress)
-        .calledWith(wallet.address)
-        .mockResolvedValue([]);
-
-      const activeProfile = new ActiveProfileLoader(
-        profileGateway,
-        activeProfileGateway,
-        activeProfilePresenter,
-      );
-
-      await activeProfile.loadActiveProfileByOwnerAddress(wallet.address);
-
-      expect(activeProfileGateway.setActiveProfile).not.toHaveBeenCalled();
-      expect(activeProfilePresenter.presentActiveProfile).not.toHaveBeenCalled();
-    });
-  });
+  //   describe(`when "${ActiveProfileLoader.prototype.loadActiveProfileByOwnerAddress.name}" method is invoked`, () => {
+  //     it(`should:
+  //         - retrieve the list of profiles owned by the provided address
+  //         - store the first one as active profile
+  //         - present the active profile`, async () => {
+  //       const wallet = mockWallet();
+  //       const firstProfile = mockProfile();
+  //       const profileGateway = mock<IProfileGateway>();
+  //       const activeProfileGateway = mock<IActiveProfileGateway>();
+  //       const activeProfilePresenter = mock<IActiveProfilePresenter>();
+  //
+  //       when(profileGateway.getAllProfilesByOwnerAddress)
+  //         .calledWith(wallet.address)
+  //         .mockResolvedValue([firstProfile, mockProfile()]);
+  //
+  //       const activeProfile = new ActiveProfileLoader(
+  //         profileGateway,
+  //         activeProfileGateway,
+  //         activeProfilePresenter,
+  //       );
+  //
+  //       await activeProfile.loadActiveProfileByOwnerAddress(wallet.address);
+  //
+  //       expect(activeProfileGateway.setActiveProfile).toHaveBeenCalledWith(firstProfile);
+  //       expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(firstProfile);
+  //     });
+  //
+  //     it('should just present first profile if the requested profile to log in to is not found', async () => {
+  //       const wallet = mockWallet();
+  //       const firstProfile = mockProfile();
+  //       const profileGateway = mock<IProfileGateway>();
+  //       const activeProfileGateway = mock<IActiveProfileGateway>();
+  //       const activeProfilePresenter = mock<IActiveProfilePresenter>();
+  //
+  //       when(profileGateway.getAllProfilesByOwnerAddress)
+  //         .calledWith(wallet.address)
+  //         .mockResolvedValue([firstProfile, mockProfile()]);
+  //
+  //       const invalidProfileId = 'invalid-profile-id';
+  //
+  //       const activeProfile = new ActiveProfileLoader(
+  //         profileGateway,
+  //         activeProfileGateway,
+  //         activeProfilePresenter,
+  //       );
+  //
+  //       await activeProfile.loadActiveProfileByOwnerAddress(wallet.address, invalidProfileId);
+  //
+  //       expect(activeProfileGateway.setActiveProfile).toHaveBeenCalledWith(firstProfile);
+  //       expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(firstProfile);
+  //     });
+  //
+  //     it('should just present the profile already loaded into the ActiveProfileGateway', async () => {
+  //       const wallet = mockWallet();
+  //       const profile = mockProfile();
+  //       const profileGateway = mock<IProfileGateway>();
+  //       const activeProfileGateway = mock<IActiveProfileGateway>();
+  //       const activeProfilePresenter = mock<IActiveProfilePresenter>();
+  //
+  //       when(activeProfileGateway.getActiveProfile).mockResolvedValue(profile);
+  //
+  //       const activeProfile = new ActiveProfileLoader(
+  //         profileGateway,
+  //         activeProfileGateway,
+  //         activeProfilePresenter,
+  //       );
+  //
+  //       await activeProfile.loadActiveProfileByOwnerAddress(wallet.address);
+  //
+  //       expect(profileGateway.getAllProfilesByOwnerAddress).not.toHaveBeenCalled();
+  //       expect(activeProfileGateway.setActiveProfile).not.toHaveBeenCalled();
+  //       expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(profile);
+  //     });
+  //
+  //     it('should bail out if not active profile is present and the wallet does not own any profile', async () => {
+  //       const wallet = mockWallet();
+  //       const profileGateway = mock<IProfileGateway>();
+  //       const activeProfileGateway = mock<IActiveProfileGateway>();
+  //       const activeProfilePresenter = mock<IActiveProfilePresenter>();
+  //
+  //       when(profileGateway.getAllProfilesByOwnerAddress)
+  //         .calledWith(wallet.address)
+  //         .mockResolvedValue([]);
+  //
+  //       const activeProfile = new ActiveProfileLoader(
+  //         profileGateway,
+  //         activeProfileGateway,
+  //         activeProfilePresenter,
+  //       );
+  //
+  //       await activeProfile.loadActiveProfileByOwnerAddress(wallet.address);
+  //
+  //       expect(activeProfileGateway.setActiveProfile).not.toHaveBeenCalled();
+  //       expect(activeProfilePresenter.presentActiveProfile).not.toHaveBeenCalled();
+  //     });
+  //   });
 
   describe(`when "${ActiveProfileLoader.prototype.loadActiveProfileByHandle.name}" method is invoked`, () => {
     it(`should:

@@ -1,4 +1,10 @@
-import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import {
+  EthereumAddress,
+  failure,
+  invariant,
+  PromiseResult,
+  success,
+} from '@lens-protocol/shared-kernel';
 
 import {
   Wallet,
@@ -7,6 +13,7 @@ import {
   PendingSigningRequestError,
   ICredentials,
 } from '../../entities';
+import { IProfileGateway } from '../profile';
 import { ActiveProfileLoader } from '../profile/ActiveProfileLoader';
 import { IGenericResultPresenter } from '../transactions';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
@@ -39,7 +46,7 @@ export interface ICredentialsWriter {
 
 export type WalletLoginRequest = {
   address: EthereumAddress;
-  profileId?: string;
+  handle?: string;
 };
 
 export class WalletLogin {
@@ -51,6 +58,7 @@ export class WalletLogin {
     private readonly activeWalletPresenter: IActiveWalletPresenter,
     private readonly walletLoginPresenter: IWalletLoginPresenter,
     private readonly activeProfileLoader: ActiveProfileLoader,
+    private readonly profileGateway: IProfileGateway,
   ) {}
 
   async login(request: WalletLoginRequest): Promise<void> {
@@ -66,10 +74,22 @@ export class WalletLogin {
     await this.credentialsWriter.save(result.value);
 
     this.activeWalletPresenter.presentActiveWallet(wallet);
-    await this.activeProfileLoader.loadActiveProfileByOwnerAddress(
-      wallet.address,
-      request.profileId,
-    );
+
+    const profiles = await this.profileGateway.getAllProfilesByOwnerAddress(wallet.address);
+
+    let profile = profiles[0];
+
+    if (request.handle) {
+      const requestedProfile = profiles.find(
+        (currentProfile) => currentProfile.handle === request.handle,
+      );
+
+      invariant(requestedProfile, 'Profile not found');
+
+      profile = requestedProfile;
+    }
+
+    await this.activeProfileLoader.loadActiveProfileByHandle(profile.handle);
 
     this.walletLoginPresenter.present(success());
   }

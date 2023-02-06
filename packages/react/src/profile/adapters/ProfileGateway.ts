@@ -22,7 +22,9 @@ export class ProfileGateway implements IProfileGateway {
       variables: { address, limit: 10 },
     });
 
-    return data.result.items.map(({ id, handle }) => Profile.create({ id, handle }));
+    return data.result.items.map(({ id, handle, ownedBy: address }) =>
+      Profile.create({ id, handle, address }),
+    );
   }
 
   async getProfileByHandle(handle: string): Promise<Profile | null> {
@@ -37,6 +39,7 @@ export class ProfileGateway implements IProfileGateway {
     return Profile.create({
       id: data.result.id,
       handle: data.result.handle,
+      address: data.result.ownedBy,
     });
   }
 
@@ -52,6 +55,7 @@ export class ProfileGateway implements IProfileGateway {
     return Profile.create({
       id: data.result.id,
       handle: data.result.handle,
+      address: data.result.ownedBy,
     });
   }
 }
