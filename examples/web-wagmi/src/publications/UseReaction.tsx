@@ -72,12 +72,21 @@ function ReactionInner({ profile }: ReactionInnerProps) {
   return (
     <div>
       <PublicationCard publication={publication} />
+
       <div>Total Upvotes: {publication.stats.totalUpvotes}</div>
+      <div>Total Upvotes: {publication.stats.totalDownvotes}</div>
+
       <div>
         <ReactionButton
           publication={publication}
           profileId={profile.id}
           reactionType={ReactionType.UPVOTE}
+        />
+
+        <ReactionButton
+          publication={publication}
+          profileId={profile.id}
+          reactionType={ReactionType.DOWNVOTE}
         />
       </div>
     </div>

@@ -161,6 +161,7 @@ fragment PublicationStats on PublicationStats {
   __typename
   totalAmountOfMirrors
   totalUpvotes
+  totalDownvotes
   totalAmountOfCollects
   totalAmountOfComments
 }
