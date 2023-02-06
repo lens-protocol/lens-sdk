@@ -15,7 +15,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "pnpm clean && pnpm rollup:prod",
+    "build": "pnpm rollup:prod",
     "clean": "rimraf ./dist",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "pnpm run prettier && pnpm run tsc",

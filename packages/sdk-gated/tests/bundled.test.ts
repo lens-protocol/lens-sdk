@@ -11,10 +11,10 @@ const SDK_UMD = require('../dist/browser.js');
     // @ts-ignore
     const sdk = SDK.LensGatedSDK;
     const provider = new JsonRpcProvider('http://localhost:8545');
-    const signer = new Wallet(process.env.GATED_SDK_TEST_PK as string).connect(provider);
+    const signer = new Wallet(process.env.SDK_GATED_TEST_PK as string).connect(provider);
 
-    const profileId = process.env.GATED_SDK_TEST_PROFILE_ID as string;
-    const pubId = process.env.GATED_SDK_TEST_PUBLICATION_ID as string;
+    const profileId = process.env.SDK_GATED_TEST_PROFILE_ID as string;
+    const pubId = process.env.SDK_GATED_TEST_PUBLICATION_ID as string;
 
     console.log('DATA', profileId, pubId);
 
