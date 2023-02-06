@@ -1,4 +1,5 @@
-import { uniqBy } from 'lodash';
+import uniqBy from 'lodash/uniqBy';
+
 import { useSharedDependencies } from '../shared';
 import { TxStatus, useRecentTransactionsVar } from './adapters/TransactionQueuePresenter';
 

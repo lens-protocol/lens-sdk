@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
 import { useRecentTransactions } from '@lens-protocol/react';
+import { Link } from 'react-router-dom';
+
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 
 function UseRecentTransactionsInner() {
-  const { transactions, clearCompleted } = useRecentTransactions();
+  const recentTransactions = useRecentTransactions();
 
   return (
     <>
@@ -16,19 +17,19 @@ function UseRecentTransactionsInner() {
         <Link to="/publications/useCreateMirror">mirroring a post.</Link>
       </p>
 
-      {transactions.length === 0 && <p>No recent transactions</p>}
+      {recentTransactions.transactions.length === 0 && <p>No recent transactions</p>}
 
-      {transactions.length > 0 && (
+      {recentTransactions.transactions.length > 0 && (
         <button
           onClick={() => {
-            clearCompleted();
+            recentTransactions.clearCompleted();
           }}
         >
           Clear completed transactions
         </button>
       )}
 
-      {transactions.map((t) => {
+      {recentTransactions.transactions.map((t) => {
         return (
           <div key={t.id}>
             <p>Type: {t.request.kind}</p>
