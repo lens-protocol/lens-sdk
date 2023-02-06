@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "build:packages": "turbo run build:packages",
     "test": "turbo run test --no-cache",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint --parallel",
