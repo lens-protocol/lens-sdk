@@ -1,7 +1,6 @@
-import { ReactionTypes } from '.';
-import { setupTestCredentials } from '../__helpers__/setupTestCredentials';
+import { ReactionTypes, Reactions } from '.';
+import { setupAuthentication } from '../authentication/__helpers__/setupAuthentication';
 import { mumbaiSandbox } from '../consts/environments';
-import { Reactions } from './Reactions';
 
 const testConfig = {
   environment: mumbaiSandbox,
@@ -24,8 +23,8 @@ describe(`Given the ${Reactions.name} configured to work with sandbox`, () => {
 
   describe(`when the instance is authenticated and method ${Reactions.prototype.add.name} is called`, () => {
     it(`should execute with success`, async () => {
-      const credentials = await setupTestCredentials();
-      const reactions = new Reactions(testConfig, credentials);
+      const authentication = await setupAuthentication();
+      const reactions = new Reactions(testConfig, authentication);
 
       const reactionRequest = {
         profileId: '0x0185',
