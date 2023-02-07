@@ -10,7 +10,6 @@ import {
   IDispatcherConfigCallGateway,
   UpdateDispatcherConfigRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
@@ -34,8 +33,6 @@ export class DispatcherConfigCallGateway implements IDispatcherConfigCallGateway
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },
     });
-
-    invariant(data, 'Cannot generate typed data for setting dispatcher config');
 
     return new UnsignedLensProtocolCall(
       data.result.id,

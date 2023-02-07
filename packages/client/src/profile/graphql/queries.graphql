@@ -1,0 +1,5 @@
+query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+  result: profile(request: $request) {
+    ...Profile
+  }
+}

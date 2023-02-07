@@ -9,7 +9,6 @@ import {
 } from '@lens-protocol/api-bindings';
 import { Profile } from '@lens-protocol/domain/entities';
 import { IProfileGateway } from '@lens-protocol/domain/use-cases/profile';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 export class ProfileGateway implements IProfileGateway {
   constructor(private readonly apolloClient: LensApolloClient) {}
@@ -23,8 +22,6 @@ export class ProfileGateway implements IProfileGateway {
       variables: { address, limit: 10 },
     });
 
-    invariant(data, `Could not query profiles by owner address: ${address}`);
-
     return data.result.items.map(({ id, handle }) => Profile.create({ id, handle }));
   }
 
@@ -33,8 +30,6 @@ export class ProfileGateway implements IProfileGateway {
       query: GetProfileDocument,
       variables: { request: { handle } },
     });
-
-    invariant(data, `Could not query profiles by handle: ${handle}`);
 
     if (data.result === null) {
       return null;
@@ -50,8 +45,6 @@ export class ProfileGateway implements IProfileGateway {
       query: GetProfileDocument,
       variables: { request: { profileId } },
     });
-
-    invariant(data, `Could not query profiles by id: ${profileId}`);
 
     if (data.result === null) {
       return null;

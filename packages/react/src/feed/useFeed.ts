@@ -1,8 +1,28 @@
-import { FeedEventItemType, FeedItemFragment, useFeedQuery } from '@lens-protocol/api-bindings';
+import {
+  FeedEventItemType as LensFeedEventItemType,
+  FeedItemFragment,
+  useFeedQuery,
+} from '@lens-protocol/api-bindings';
+import { nonNullable } from '@lens-protocol/shared-kernel';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { createPublicationMetadataFilters, PublicationMetadataFilters } from '../publication';
 import { useSharedDependencies } from '../shared';
+import { FeedEventItemType } from './FeedEventItemType';
+
+const SupportedFeedEvenTypesMap: Record<FeedEventItemType, LensFeedEventItemType> = {
+  [FeedEventItemType.Comment]: LensFeedEventItemType.Comment,
+  [FeedEventItemType.Post]: LensFeedEventItemType.Post,
+  [FeedEventItemType.Mirror]: LensFeedEventItemType.Mirror,
+  [FeedEventItemType.CollectComment]: LensFeedEventItemType.CollectComment,
+  [FeedEventItemType.CollectPost]: LensFeedEventItemType.CollectPost,
+};
+
+const mapRestrictEventTypesToLensTypes = (restrictEventTypesTo?: FeedEventItemType[]) => {
+  return restrictEventTypesTo?.map((type) =>
+    nonNullable(SupportedFeedEvenTypesMap[type], "Can't map the feed event type"),
+  );
+};
 
 export type UseFeedArgs = PaginatedArgs<{
   observerId?: string;
@@ -10,8 +30,6 @@ export type UseFeedArgs = PaginatedArgs<{
   restrictEventTypesTo?: FeedEventItemType[];
   metadataFilter?: PublicationMetadataFilters;
 }>;
-
-export { FeedEventItemType };
 
 export function useFeed({
   metadataFilter,
@@ -26,11 +44,11 @@ export function useFeed({
     useFeedQuery({
       variables: {
         metadata: createPublicationMetadataFilters(metadataFilter),
-        restrictEventTypesTo,
-        limit: limit ?? 10,
-        observerId,
+        restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
         profileId,
+        observerId,
         sources,
+        limit: limit ?? 10,
       },
       client: apolloClient,
     }),

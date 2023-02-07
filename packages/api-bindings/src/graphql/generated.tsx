@@ -1,6 +1,7 @@
 import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from './FollowPolicy';
+import type { CollectPolicy } from './CollectPolicy';
 import type { ReferencePolicy } from './ReferencePolicy';
 import gql from 'graphql-tag';
 import * as Apollo from '@apollo/client';
@@ -26,6 +27,7 @@ export type Scalars = {
   ClientErc20Amount: ClientErc20Amount;
   /** collect module data scalar type */
   CollectModuleData: unknown;
+  CollectPolicy: CollectPolicy;
   /** ContentEncryptionKey scalar type */
   ContentEncryptionKey: unknown;
   /** Contract address custom scalar type */
@@ -365,6 +367,7 @@ export type Comment = {
   collectModule: CollectModule;
   /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
+  collectPolicy: Scalars['CollectPolicy'];
   /** Who collected it, this is used for timeline results and like this for better caching for the client */
   collectedBy: Maybe<Wallet>;
   /** Which comment this points to if its null the pointer too deep so do another query to find it out */
@@ -1837,6 +1840,7 @@ export type Mirror = {
   collectModule: CollectModule;
   /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
+  collectPolicy: Scalars['CollectPolicy'];
   /** The date the post was created on */
   createdAt: Scalars['DateTime'];
   /** The data availability proofs you can fetch from */
@@ -2321,7 +2325,6 @@ export type NotificationRequest = {
   notificationTypes?: Maybe<Array<NotificationTypes>>;
   /** The App Id */
   sources?: Maybe<Array<Scalars['Sources']>>;
-  metadata?: Maybe<PublicationMetadataFilters>;
   customFilters?: Maybe<Array<CustomFiltersTypes>>;
 };
 
@@ -2434,7 +2437,10 @@ export type PaginatedResultInfo = {
   prev: Maybe<Scalars['Cursor']>;
   /** Cursor to query next results */
   next: Maybe<Scalars['Cursor']>;
-  /** The total number of entities the pagination iterates over. If its null then its not been worked out due to it being an expensive query and not really needed for the client. All main counters are in counter tables to allow them to be faster fetching. */
+  /**
+   * The total number of entities the pagination iterates over. If its null then its not been worked out due to it being an expensive query and not really needed for the client. All main counters are in counter tables to allow them to be faster fetching.
+   * @deprecated Total counts is expensive and in dynamic nature of queries it slows stuff down. Most the time you do not need this you can just use the `next` property to see if there is more data. This will be removed soon. The only use case anyone is using this right now is on notification query, this should be changed to query the notifications and cache the last notification id. You can then keep checking if the id changes you know more notifications.
+   */
   totalCount: Maybe<Scalars['Int']>;
 };
 
@@ -2492,6 +2498,7 @@ export type Post = {
   collectModule: CollectModule;
   /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
   collectNftAddress: Maybe<Scalars['ContractAddress']>;
+  collectPolicy: Scalars['CollectPolicy'];
   /**
    * Who collected it, this is used for timeline results and like this for better caching for the client
    * @deprecated use `feed` query, timeline query will be killed on the 15th November. This includes this field.
@@ -3878,6 +3885,24 @@ export type AuthRefreshMutation = {
   result: Pick<AuthenticationResult, 'accessToken' | 'refreshToken'>;
 };
 
+export type CreateCollectTypedDataMutationVariables = Exact<{
+  request: CreateCollectRequest;
+  options?: Maybe<TypedDataOptions>;
+}>;
+
+export type CreateCollectTypedDataMutation = {
+  result: Pick<CreateCollectBroadcastItemResult, 'id' | 'expiresAt'> & {
+    typedData: {
+      types: { CollectWithSig: Array<Pick<Eip712TypedDataField, 'name' | 'type'>> };
+      domain: Eip712TypedDataDomainFragment;
+      value: Pick<
+        CreateCollectEip712TypedDataValue,
+        'nonce' | 'deadline' | 'profileId' | 'pubId' | 'data'
+      >;
+    };
+  };
+};
+
 export type CreateCommentTypedDataMutationVariables = Exact<{
   request: CreatePublicCommentRequest;
   options?: Maybe<TypedDataOptions>;
@@ -4057,7 +4082,11 @@ export type MetadataAttributeOutputFragment = { __typename: 'MetadataAttributeOu
 
 export type PublicationStatsFragment = { __typename: 'PublicationStats' } & Pick<
   PublicationStats,
-  'totalAmountOfMirrors' | 'totalUpvotes' | 'totalAmountOfCollects' | 'totalAmountOfComments'
+  | 'totalAmountOfMirrors'
+  | 'totalUpvotes'
+  | 'totalDownvotes'
+  | 'totalAmountOfCollects'
+  | 'totalAmountOfComments'
 >;
 
 export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
@@ -4069,11 +4098,12 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
   | 'reaction'
   | 'hasCollectedByMe'
   | 'hasOptimisticCollectedByMe'
+  | 'collectPolicy'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
     profile: ProfileFragment;
-    collectModule:
+    __collectModule:
       | CollectModule_FreeCollectModuleSettings_Fragment
       | CollectModule_FeeCollectModuleSettings_Fragment
       | CollectModule_LimitedFeeCollectModuleSettings_Fragment
@@ -4098,13 +4128,14 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
+  | 'collectPolicy'
   | 'referencePolicy'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
     profile: ProfileFragment;
     collectedBy: Maybe<WalletFragment>;
-    collectModule:
+    __collectModule:
       | CollectModule_FreeCollectModuleSettings_Fragment
       | CollectModule_FeeCollectModuleSettings_Fragment
       | CollectModule_LimitedFeeCollectModuleSettings_Fragment
@@ -4142,13 +4173,14 @@ export type PostFragment = { __typename: 'Post' } & Pick<
   | 'mirrors'
   | 'hasOptimisticCollectedByMe'
   | 'isOptimisticMirroredByMe'
+  | 'collectPolicy'
   | 'referencePolicy'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
     profile: ProfileFragment;
     collectedBy: Maybe<WalletFragment>;
-    collectModule:
+    __collectModule:
       | CollectModule_FreeCollectModuleSettings_Fragment
       | CollectModule_FeeCollectModuleSettings_Fragment
       | CollectModule_LimitedFeeCollectModuleSettings_Fragment
@@ -4463,6 +4495,13 @@ export type ProfileFragment = { __typename: 'Profile' } & Pick<
     >;
     __attributes: Maybe<Array<AttributeFragment>>;
     dispatcher: Maybe<Pick<Dispatcher, 'address' | 'canUseRelay'>>;
+    onChainIdentity: Pick<OnChainIdentity, 'proofOfHumanity'> & {
+      ens: Maybe<Pick<EnsOnChainIdentity, 'name'>>;
+      sybilDotOrg: Pick<SybilDotOrgIdentity, 'verified'> & {
+        source: { twitter: Pick<SybilDotOrgTwitterIdentity, 'handle'> };
+      };
+      worldcoin: Pick<WorldcoinIdentity, 'isHuman'>;
+    };
   };
 
 export type ProfilesToFollowQueryVariables = Exact<{
@@ -4874,6 +4913,7 @@ export const PublicationStatsFragmentDoc = gql`
     __typename
     totalAmountOfMirrors
     totalUpvotes
+    totalDownvotes
     totalAmountOfCollects
     totalAmountOfComments
   }
@@ -5032,6 +5072,23 @@ export const ProfileFragmentDoc = gql`
       address
       canUseRelay
     }
+    onChainIdentity {
+      proofOfHumanity
+      ens {
+        name
+      }
+      sybilDotOrg {
+        verified
+        source {
+          twitter {
+            handle
+          }
+        }
+      }
+      worldcoin {
+        isHuman
+      }
+    }
     isFollowedByMe(isFinalisedOnChain: true)
     isFollowing(who: $observerId)
     isOptimisticFollowedByMe @client
@@ -5176,7 +5233,7 @@ export const CommentBaseFragmentDoc = gql`
     collectedBy {
       ...Wallet
     }
-    collectModule {
+    __collectModule: collectModule {
       ...CollectModule
     }
     referenceModule {
@@ -5196,6 +5253,7 @@ export const CommentBaseFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    collectPolicy @client
     referencePolicy @client
   }
   ${PublicationStatsFragmentDoc}
@@ -5221,7 +5279,7 @@ export const PostFragmentDoc = gql`
     collectedBy {
       ...Wallet
     }
-    collectModule {
+    __collectModule: collectModule {
       ...CollectModule
     }
     referenceModule {
@@ -5241,6 +5299,7 @@ export const PostFragmentDoc = gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    collectPolicy @client
     referencePolicy @client
   }
   ${PublicationStatsFragmentDoc}
@@ -5263,7 +5322,7 @@ export const MirrorBaseFragmentDoc = gql`
     profile {
       ...Profile
     }
-    collectModule {
+    __collectModule: collectModule {
       ...CollectModule
     }
     createdAt
@@ -5272,6 +5331,7 @@ export const MirrorBaseFragmentDoc = gql`
     reaction(request: { profileId: $observerId })
     hasCollectedByMe(isFinalisedOnChain: true)
     hasOptimisticCollectedByMe @client
+    collectPolicy @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5837,6 +5897,77 @@ export type AuthRefreshMutationResult = Apollo.MutationResult<AuthRefreshMutatio
 export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
   AuthRefreshMutation,
   AuthRefreshMutationVariables
+>;
+export const CreateCollectTypedDataDocument = gql`
+  mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: TypedDataOptions) {
+    result: createCollectTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          CollectWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          pubId
+          data
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export type CreateCollectTypedDataMutationFn = Apollo.MutationFunction<
+  CreateCollectTypedDataMutation,
+  CreateCollectTypedDataMutationVariables
+>;
+
+/**
+ * __useCreateCollectTypedDataMutation__
+ *
+ * To run a mutation, you first call `useCreateCollectTypedDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCollectTypedDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCollectTypedDataMutation, { data, loading, error }] = useCreateCollectTypedDataMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateCollectTypedDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCollectTypedDataMutation,
+    CreateCollectTypedDataMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateCollectTypedDataMutation,
+    CreateCollectTypedDataMutationVariables
+  >(CreateCollectTypedDataDocument, options);
+}
+export type CreateCollectTypedDataMutationHookResult = ReturnType<
+  typeof useCreateCollectTypedDataMutation
+>;
+export type CreateCollectTypedDataMutationResult =
+  Apollo.MutationResult<CreateCollectTypedDataMutation>;
+export type CreateCollectTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateCollectTypedDataMutation,
+  CreateCollectTypedDataMutationVariables
 >;
 export const CreateCommentTypedDataDocument = gql`
   mutation CreateCommentTypedData(
@@ -9149,6 +9280,7 @@ export type CommentKeySpecifier = (
   | 'canMirror'
   | 'collectModule'
   | 'collectNftAddress'
+  | 'collectPolicy'
   | 'collectedBy'
   | 'commentOn'
   | 'createdAt'
@@ -9179,6 +9311,7 @@ export type CommentFieldPolicy = {
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
   collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
   collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectPolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   commentOn?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10237,6 +10370,7 @@ export type MirrorKeySpecifier = (
   | 'canMirror'
   | 'collectModule'
   | 'collectNftAddress'
+  | 'collectPolicy'
   | 'createdAt'
   | 'dataAvailabilityProofs'
   | 'hasCollectedByMe'
@@ -10261,6 +10395,7 @@ export type MirrorFieldPolicy = {
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
   collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
   collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectPolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
   hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10694,6 +10829,7 @@ export type PostKeySpecifier = (
   | 'canMirror'
   | 'collectModule'
   | 'collectNftAddress'
+  | 'collectPolicy'
   | 'collectedBy'
   | 'createdAt'
   | 'dataAvailabilityProofs'
@@ -10721,6 +10857,7 @@ export type PostFieldPolicy = {
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
   collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
   collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectPolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;

@@ -1,0 +1,19 @@
+mutation AddReaction(
+  $publicationId: InternalPublicationId!
+  $reaction: ReactionTypes!
+  $profileId: ProfileId!
+) {
+  addReaction(
+    request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
+  )
+}
+
+mutation RemoveReaction(
+  $publicationId: InternalPublicationId!
+  $reaction: ReactionTypes!
+  $profileId: ProfileId!
+) {
+  removeReaction(
+    request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
+  )
+}

@@ -1,3 +1,4 @@
+import { MockedResponse } from '@apollo/client/testing';
 import { PostFragment, ReactionTypes } from '@lens-protocol/api-bindings';
 import {
   createAddReactionMutationMockedResponse,
@@ -9,7 +10,30 @@ import { ReactionType } from '@lens-protocol/domain/entities';
 import { act } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
 import { useReaction } from '../useReaction';
+
+function setupUseReaction({
+  mocks = [],
+  profileId,
+}: {
+  profileId: string;
+  mocks?: ReadonlyArray<MockedResponse<unknown>>;
+}) {
+  const apolloClient = createMockApolloClientWithMultipleResponses(mocks);
+  return renderHookWithMocks(
+    () =>
+      useReaction({
+        profileId: profileId,
+      }),
+    {
+      mocks: {
+        apolloClient: apolloClient,
+        publicationCacheManager: new PublicationCacheManager(apolloClient.cache),
+      },
+    },
+  );
+}
 
 describe(`Given the ${useReaction.name} hook`, () => {
   describe(`when adding a reaction`, () => {
@@ -17,25 +41,20 @@ describe(`Given the ${useReaction.name} hook`, () => {
       const mockPublication: PostFragment = mockPostFragment();
       const profileId = mockPublication.profile.id;
 
-      const { result } = renderHookWithMocks(
-        () =>
-          useReaction({
+      const mocks = [
+        createAddReactionMutationMockedResponse({
+          variables: {
+            publicationId: mockPublication.id,
             profileId,
-          }),
-        {
-          mocks: {
-            apolloClient: createMockApolloClientWithMultipleResponses([
-              createAddReactionMutationMockedResponse({
-                variables: {
-                  publicationId: mockPublication.id,
-                  profileId,
-                  reaction: ReactionTypes.Upvote,
-                },
-              }),
-            ]),
+            reaction: ReactionTypes.Upvote,
           },
-        },
-      );
+        }),
+      ];
+
+      const { result } = setupUseReaction({
+        mocks,
+        profileId,
+      });
 
       await act(async () => {
         await result.current.addReaction({
@@ -53,25 +72,16 @@ describe(`Given the ${useReaction.name} hook`, () => {
       const mockPublication: PostFragment = mockPostFragment();
       const profileId = mockPublication.profile.id;
 
-      const { result } = renderHookWithMocks(
-        () =>
-          useReaction({
+      const mocks = [
+        createRemoveReactionMutationMockedResponse({
+          variables: {
+            publicationId: mockPublication.id,
             profileId,
-          }),
-        {
-          mocks: {
-            apolloClient: createMockApolloClientWithMultipleResponses([
-              createRemoveReactionMutationMockedResponse({
-                variables: {
-                  publicationId: mockPublication.id,
-                  profileId,
-                  reaction: ReactionTypes.Upvote,
-                },
-              }),
-            ]),
+            reaction: ReactionTypes.Upvote,
           },
-        },
-      );
+        }),
+      ];
+      const { result } = setupUseReaction({ profileId, mocks });
 
       await act(async () => {
         await result.current.removeReaction({
@@ -90,11 +100,9 @@ describe(`Given the ${useReaction.name} hook`, () => {
         reaction: ReactionTypes.Upvote,
       });
 
-      const { result } = renderHookWithMocks(() =>
-        useReaction({
-          profileId: '',
-        }),
-      );
+      const { result } = setupUseReaction({
+        profileId: mockPublicationWithReaction.profile.id,
+      });
 
       const hasReactionResult = result.current.hasReaction({
         publication: mockPublicationWithReaction,

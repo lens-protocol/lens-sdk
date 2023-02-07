@@ -20,7 +20,7 @@ import {
   UpdateProfileImageRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, invariant, success } from '@lens-protocol/shared-kernel';
+import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import {
@@ -61,8 +61,6 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
       },
     });
 
-    invariant(data, 'Cannot set profile image uri');
-
     return new UnsignedLensProtocolCall(
       data.result.id,
       request,
@@ -82,8 +80,6 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
         request: requestArgs,
       },
     });
-
-    invariant(data, 'Cannot update profile image via dispatcher');
 
     if (data.result.__typename === 'RelayError') {
       return failure(new TransactionError(TransactionErrorReason.REJECTED));

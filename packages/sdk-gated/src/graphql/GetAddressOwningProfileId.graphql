@@ -1,0 +1,5 @@
+query AddressOwningProfile($profileId: ProfileId) {
+  profile(request: { profileId: $profileId }) {
+    ownedBy
+  }
+}
