@@ -2,13 +2,15 @@ import {
   Amount,
   EnabledModuleFragment,
   Erc20,
+  TokenAllowanceLimit,
   useApproveModule,
   useCurrencies,
   useEnabledModules,
 } from '@lens-protocol/react';
-import { ChangeEvent, useState } from 'react';
 
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { never } from '../utils';
 
 type UseApproveModuleFormProps = {
   currencies: Erc20[];
@@ -16,58 +18,71 @@ type UseApproveModuleFormProps = {
 };
 
 function UseApproveModuleForm({ currencies, modules }: UseApproveModuleFormProps) {
-  const [amount, setAmount] = useState(0);
-  const [selectedCurrency, setSelectedCurrency] = useState(0);
-  const [selectedModule, setSelectedModule] = useState(0);
+  const { approve, isPending } = useApproveModule();
 
-  const { approve, isPending, isApproved } = useApproveModule({
-    spender: modules[selectedModule].contractAddress,
-    amount: Amount.erc20(currencies[selectedCurrency], amount),
-  });
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.value) setAmount(0);
-    else setAmount(e.target.valueAsNumber);
+    const formData = new FormData(event.currentTarget);
+    const value = (formData.get('value') as string | null) ?? never();
+    const currencyAddress = (formData.get('currency') as string | null) ?? never();
+    const spender = (formData.get('spender') as string | null) ?? never();
+
+    const currency = currencies.find(({ address }) => address === currencyAddress) ?? never();
+
+    await approve({
+      amount: Amount.erc20(currency, value),
+      spender,
+      limit: TokenAllowanceLimit.EXACT,
+    });
   };
 
-  const handleCurrencyChange = (e: ChangeEvent<HTMLSelectElement>) =>
-    setSelectedCurrency(Number(e.target.value));
-
-  const handleModuleChange = (e: ChangeEvent<HTMLSelectElement>) =>
-    setSelectedModule(Number(e.target.value));
-
-  const handleApprove = () => approve();
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <span>Amount</span>
-      <input type="number" min={0} value={amount} onChange={handleAmountChange} />
-      <span>Currency</span>
-      <select value={selectedCurrency} onChange={handleCurrencyChange}>
-        {currencies.map((currency, index) => (
-          <option key={currency.address} value={index}>
-            {currency.symbol}
-          </option>
-        ))}
-      </select>
-      <span>Module</span>
-      <select value={selectedModule} onChange={handleModuleChange}>
-        {modules.map((module) => (
-          <option key={module.contractAddress}>{module.moduleName}</option>
-        ))}
-      </select>
-      <button disabled={isApproved || isPending} onClick={handleApprove}>
-        {isApproved ? 'Approved' : isPending ? 'Loading' : 'Approve'}
+    <form onSubmit={submit}>
+      <label>
+        Amount
+        <br />
+        <input name="value" type="number" min={0} defaultValue={0} disabled={isPending} />
+      </label>
+
+      <label>
+        Currency
+        <br />
+        <select name="currency" disabled={isPending}>
+          {currencies.map((currency) => (
+            <option key={currency.address} value={currency.address}>
+              {currency.symbol}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label>
+        Module
+        <br />
+        <select name="spender" disabled={isPending}>
+          {modules.map((module) => (
+            <option key={module.contractAddress} value={module.contractAddress}>
+              {module.moduleName}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button type="submit" disabled={isPending}>
+        {isPending ? 'Loading' : 'Approve'}
       </button>
-    </div>
+    </form>
   );
 }
 
 export function UseApproveModule() {
-  const { data: currencies, loading: currenciesLoading } = useCurrencies();
-  const { data: modules, loading: modulesLoading } = useEnabledModules();
+  const { data: currencies, error: currenciesError, loading: currenciesLoading } = useCurrencies();
+  const { data: modules, error: modulesError, loading: modulesLoading } = useEnabledModules();
 
   if (currenciesLoading || modulesLoading) return <Loading />;
+
+  if (currenciesError) return <ErrorMessage error={currenciesError} />;
+  if (modulesError) return <ErrorMessage error={modulesError} />;
 
   const allModules = [
     ...modules.collectModules,

@@ -24,6 +24,8 @@ export type ApproveModuleArgs = {
   spender: EthereumAddress;
 };
 
+export { TokenAllowanceLimit };
+
 export function useApproveModule() {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<

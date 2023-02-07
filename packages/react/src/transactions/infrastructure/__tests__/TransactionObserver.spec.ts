@@ -90,7 +90,9 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     it(`should resolve with Failure<${TransactionError.name}> with ${TransactionErrorReason.MINING_TIMEOUT} reason if the tx is found but not mined within a reasonable time`, async () => {
       const provider = new MockProvider({
         ganacheOptions: {
-          blockTime: 60, // seconds
+          miner: {
+            blockTime: 60, // seconds
+          },
         },
       });
       const transaction = setupTransactionObserver({
