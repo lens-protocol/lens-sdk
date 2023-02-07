@@ -10,9 +10,11 @@ import {
   QueryOptions,
 } from '@apollo/client';
 import { getOperationName } from '@apollo/client/utilities';
-import { assertError, invariant } from '@lens-protocol/shared-kernel';
+import { assertError } from '@lens-protocol/shared-kernel';
 
 import {
+  assertGraphQLClientMutationResult,
+  assertGraphQLClientQueryResult,
   GraphQLClientMutationResult,
   GraphQLClientQueryResult,
   IGraphQLClient,
@@ -72,10 +74,7 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
     try {
       const result = await super.query(options);
 
-      invariant(
-        result.data,
-        `No data received for: ${getOperationName(options.query) ?? 'unnamed query'}`,
-      );
+      assertGraphQLClientQueryResult(result, getOperationName(options.query) ?? 'unknown');
 
       return result;
     } catch (error) {
@@ -89,10 +88,7 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
     try {
       const result = await super.mutate(options);
 
-      invariant(
-        result.data,
-        `No data received for: ${getOperationName(options.mutation) ?? 'unnamed mutation'}`,
-      );
+      assertGraphQLClientMutationResult(result, getOperationName(options.mutation) ?? 'unknown');
 
       return result;
     } catch (error) {

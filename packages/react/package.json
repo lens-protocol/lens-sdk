@@ -59,8 +59,8 @@
   "devDependencies": {
     "@ensdomains/ens": "0.4.4",
     "@ensdomains/resolver": "0.2.4",
-    "@ethersproject/abi": "^5.7.0",
-    "@ethersproject/bytes": "^5.7.0",
+    "@ethersproject/abi": "5.7.0",
+    "@ethersproject/bytes": "5.7.0",
     "@faker-js/faker": "^7.6.0",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
@@ -83,6 +83,7 @@
     "prettier": "^2.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "resolver:@0.2.4": "link:@ensdomains/resolver:@0.2.4",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
     "tsup": "^6.5.0",

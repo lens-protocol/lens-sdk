@@ -4,9 +4,11 @@ import {
   mockPostFragment,
   mockPublicationStatsFragment,
 } from '@lens-protocol/api-bindings/mocks';
+import { ReactionType } from '@lens-protocol/domain/entities';
 import { mockReactionRequest } from '@lens-protocol/domain/mocks';
 import { ReactionRequest } from '@lens-protocol/domain/use-cases/publications';
 
+import { PublicationCacheManager } from '../../../transactions/adapters/PublicationCacheManager';
 import { ReactionPresenter } from '../ReactionPresenter';
 
 function setupTestScenario({ post, request }: { post: PostFragment; request: ReactionRequest }) {
@@ -22,7 +24,8 @@ function setupTestScenario({ post, request }: { post: PostFragment; request: Rea
     data: post,
   });
 
-  const presenter = new ReactionPresenter(apolloCache);
+  const publicationCacheManager = new PublicationCacheManager(apolloCache);
+  const presenter = new ReactionPresenter(publicationCacheManager);
 
   return {
     presenter,
@@ -42,7 +45,7 @@ function setupTestScenario({ post, request }: { post: PostFragment; request: Rea
 
 describe(`Given the ${ReactionPresenter.name}`, () => {
   describe(`when the "${ReactionPresenter.prototype.add.name}" method is invoked`, () => {
-    it(`should update apollo cache with added reaction`, async () => {
+    it(`should update apollo cache with added upvote reaction`, async () => {
       const post = mockPostFragment({
         reaction: null,
         stats: mockPublicationStatsFragment({ totalUpvotes: 1 }),
@@ -65,6 +68,67 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
             totalUpvotes: post.stats.totalUpvotes + 1,
           }),
           reaction: ReactionTypes.Upvote,
+        }),
+      );
+    });
+
+    it(`should update apollo cache with added downvote reaction`, async () => {
+      const post = mockPostFragment({
+        reaction: null,
+        stats: mockPublicationStatsFragment({ totalDownvotes: 1 }),
+      });
+
+      const request = mockReactionRequest({
+        publicationId: post.id,
+        reactionType: ReactionType.DOWNVOTE,
+      });
+
+      const scenario = setupTestScenario({
+        post,
+        request,
+      });
+
+      await scenario.presenter.add(request);
+
+      expect(scenario.updatedPostFragment).toEqual(
+        expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          stats: expect.objectContaining({
+            totalDownvotes: post.stats.totalDownvotes + 1,
+          }),
+          reaction: ReactionTypes.Downvote,
+        }),
+      );
+    });
+
+    it(`should update apollo cache with added reaction update the stats based on the previous reaction`, async () => {
+      const post = mockPostFragment({
+        reaction: ReactionTypes.Upvote,
+        stats: mockPublicationStatsFragment({
+          totalUpvotes: 1,
+          totalDownvotes: 0,
+        }),
+      });
+      const request = mockReactionRequest({
+        publicationId: post.id,
+        reactionType: ReactionType.DOWNVOTE,
+      });
+
+      const scenario = setupTestScenario({
+        post,
+        request,
+      });
+
+      await scenario.presenter.add(request);
+
+      expect(scenario.updatedPostFragment).toEqual(
+        expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          stats: expect.objectContaining({
+            totalUpvotes: 0,
+            totalDownvotes: 1,
+          }),
+          reaction: ReactionTypes.Downvote,
         }),
       );
     });

@@ -11,7 +11,6 @@ import {
   IFollowPolicyCallGateway,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
@@ -62,8 +61,6 @@ export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },
     });
-
-    invariant(data, 'Cannot generate typed data for setting profile follow fee');
 
     return new UnsignedLensProtocolCall(
       data.result.id,

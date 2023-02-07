@@ -1,10 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
+import {
+  CollectPolicyType,
+  ReferencePolicyType,
+} from '@lens-protocol/domain/use-cases/publications';
 import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import { CollectState, NoFeeCollectPolicy } from '../CollectPolicy';
 import { FollowPolicy } from '../FollowPolicy';
 import { ProfileAttributes } from '../ProfileAttributes';
 import {
@@ -22,9 +26,9 @@ import {
   MirrorFragment,
   ModuleInfoFragment,
   PostFragment,
-  ProfileFragment,
   ProfileFollowModuleSettings,
   ProfileFollowRevenueFragment,
+  ProfileFragment,
   ProfileMediaFragment,
   PublicationMainFocus,
   PublicationRevenueFragment,
@@ -106,6 +110,22 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
 
     dispatcher: null,
 
+    onChainIdentity: {
+      proofOfHumanity: false,
+      ens: null,
+      sybilDotOrg: {
+        verified: false,
+        source: {
+          twitter: {
+            handle: null,
+          },
+        },
+      },
+      worldcoin: {
+        isHuman: false,
+      },
+    },
+
     __followModule: null,
     followPolicy: mockAnyoneFollowPolicy(),
 
@@ -156,6 +176,7 @@ export function mockPublicationStatsFragment(
     totalAmountOfCollects: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     totalAmountOfComments: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     totalUpvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
+    totalDownvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     ...overrides,
     __typename: 'PublicationStats',
   };
@@ -181,6 +202,15 @@ function mockMetadataFragment(): MetadataFragment {
   };
 }
 
+function mockNoFeeCollectPolicy(overrides?: Partial<NoFeeCollectPolicy>): NoFeeCollectPolicy {
+  return {
+    type: CollectPolicyType.FREE,
+    state: CollectState.CAN_BE_COLLECTED,
+    followerOnly: false,
+    ...overrides,
+  };
+}
+
 export function mockPostFragment(
   overrides?: Partial<Omit<PostFragment, '__typename'>>,
 ): PostFragment {
@@ -191,7 +221,8 @@ export function mockPostFragment(
     metadata: mockMetadataFragment(),
     profile: mockProfileFragment(),
     collectedBy: null,
-    collectModule: mockFreeCollectModuleSettings(),
+    __collectModule: mockFreeCollectModuleSettings(),
+    collectPolicy: mockNoFeeCollectPolicy(),
     referenceModule: null,
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
@@ -236,7 +267,8 @@ export function mockCommentFragment(
     collectedBy: null,
     commentOn: mainPost,
     mainPost: mainPost,
-    collectModule: mockFreeCollectModuleSettings(),
+    __collectModule: mockFreeCollectModuleSettings(),
+    collectPolicy: mockNoFeeCollectPolicy(),
     referenceModule: null,
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
@@ -278,7 +310,8 @@ export function mockMirrorFragment(
     },
     profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
-    collectModule: mockFreeCollectModuleSettings(),
+    __collectModule: mockFreeCollectModuleSettings(),
+    collectPolicy: mockNoFeeCollectPolicy(),
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
     mirrorOf: mainPost,

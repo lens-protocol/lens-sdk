@@ -1,58 +1,55 @@
-import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
-import { ReactionTypes } from '@lens-protocol/api-bindings';
+import { getApiReactionType, getDomainReactionType } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import { ReactionRequest, IReactionPresenter } from '@lens-protocol/domain/use-cases/publications';
+import { invariant, never } from '@lens-protocol/shared-kernel';
 
 import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
 
-export class ReactionPresenter implements IReactionPresenter {
-  readonly publicationCacheManager: PublicationCacheManager;
-
-  constructor(cache: ApolloCache<NormalizedCacheObject>) {
-    this.publicationCacheManager = new PublicationCacheManager(cache);
+const getReactionStatKey = (reactionType: ReactionType) => {
+  if (reactionType === ReactionType.UPVOTE) {
+    return 'totalUpvotes' as const;
+  } else if (reactionType === ReactionType.DOWNVOTE) {
+    return 'totalDownvotes' as const;
   }
 
-  async add(request: ReactionRequest): Promise<void> {
-    switch (request.reactionType) {
-      case ReactionType.UPVOTE:
-        {
-          this.publicationCacheManager.update(request.publicationId, (current) => ({
-            ...current,
-            stats: {
-              ...current.stats,
-              totalUpvotes: current.stats.totalUpvotes + 1,
-            },
-            reaction: ReactionTypes.Upvote,
-          }));
-        }
-        break;
+  never('Unknown reaction type');
+};
 
-      case ReactionType.DOWNVOTE:
-        throw new Error('Downvotes support not implemented');
-      default:
-        throw new Error('Unknown reaction type');
-    }
+export class ReactionPresenter implements IReactionPresenter {
+  constructor(private readonly publicationCacheManager: PublicationCacheManager) {}
+
+  async add(request: ReactionRequest): Promise<void> {
+    this.publicationCacheManager.update(request.publicationId, (current) => {
+      const removedStatKey = current.reaction
+        ? getReactionStatKey(getDomainReactionType(current.reaction))
+        : undefined;
+
+      const currentStatsValue = current.stats[getReactionStatKey(request.reactionType)];
+
+      invariant(typeof currentStatsValue === 'number', 'Invalid stats value');
+
+      return {
+        ...current,
+        stats: {
+          ...current.stats,
+          ...(removedStatKey && { [removedStatKey]: current.stats[removedStatKey] - 1 }),
+          [getReactionStatKey(request.reactionType)]: currentStatsValue + 1,
+        },
+        reaction: getApiReactionType(request.reactionType),
+      };
+    });
   }
 
   async remove(request: ReactionRequest): Promise<void> {
-    switch (request.reactionType) {
-      case ReactionType.UPVOTE:
-        {
-          this.publicationCacheManager.update(request.publicationId, (current) => ({
-            ...current,
-            stats: {
-              ...current.stats,
-              totalUpvotes: current.stats.totalUpvotes - 1,
-            },
-            reaction: null,
-          }));
-        }
-        break;
+    const statKey = getReactionStatKey(request.reactionType);
 
-      case ReactionType.DOWNVOTE:
-        throw new Error('Downvotes support not implemented');
-      default:
-        throw new Error('Unknown reaction type');
-    }
+    this.publicationCacheManager.update(request.publicationId, (current) => ({
+      ...current,
+      stats: {
+        ...current.stats,
+        [statKey]: current.stats[statKey] - 1,
+      },
+      reaction: null,
+    }));
   }
 }

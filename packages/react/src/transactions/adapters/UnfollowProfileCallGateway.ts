@@ -9,7 +9,6 @@ import {
   IUnfollowProfileCallGateway,
   UnfollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { TypedData } from './TypedData';
@@ -37,8 +36,6 @@ export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
         },
       },
     });
-
-    invariant(data, 'Cannot generate typed data for unfollow');
 
     return new UnsignedUnfollowCall({
       id: data.result.id,
