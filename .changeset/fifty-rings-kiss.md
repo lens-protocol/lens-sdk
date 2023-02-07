@@ -1,6 +1,4 @@
 ---
-"@lens-protocol/blockchain-bindings": minor
-"@lens-protocol/shared-kernel": minor
 "@lens-protocol/react": minor
 ---
 
