@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers';
 import { AddEthereumChainParameter, isTheSameAddress } from '@lens-protocol/blockchain-bindings';
 import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protocol/domain/entities';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -70,7 +71,9 @@ export class SignerFactory implements ISignerFactory {
 
   private async addChain(signer: RequiredSigner, chainConfig: AddEthereumChainParameter) {
     try {
-      await signer.provider.send('wallet_addEthereumChain', [chainConfig]);
+      if (signer.provider && signer.provider instanceof JsonRpcProvider) {
+        await signer.provider?.send('wallet_addEthereumChain', [chainConfig]);
+      }
     } catch {
       // noop
     }
@@ -81,7 +84,11 @@ export class SignerFactory implements ISignerFactory {
     chainConfig: AddEthereumChainParameter,
   ): PromiseResult<void, WalletConnectionError> {
     try {
-      await signer.provider.send('wallet_switchEthereumChain', [{ chainId: chainConfig.chainId }]);
+      if (signer.provider && signer.provider instanceof JsonRpcProvider) {
+        await signer.provider?.send('wallet_switchEthereumChain', [
+          { chainId: chainConfig.chainId },
+        ]);
+      }
 
       return success();
     } catch {
