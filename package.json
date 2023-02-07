@@ -58,6 +58,7 @@
       "packages/wagmi",
       "packages/blockchain-bindings",
       "packages/storage"
-    ]
+    ],
+    "exports": true
   }
 }

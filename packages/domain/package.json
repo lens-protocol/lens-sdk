@@ -101,7 +101,6 @@
       "use-cases/transactions/index.ts",
       "use-cases/wallets/index.ts",
       "mocks.ts"
-    ],
-    "exports": true
+    ]
   }
 }

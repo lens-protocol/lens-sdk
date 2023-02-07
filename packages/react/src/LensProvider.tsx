@@ -1,5 +1,5 @@
 import { invariant } from '@lens-protocol/shared-kernel';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { LensConfig } from './config';
 import { useBootstrapController } from './lifecycle/adapters/useBootstrapController';
@@ -9,7 +9,7 @@ import { createSharedDependencies, Handlers, SharedDependenciesProvider } from '
 function noop() {}
 
 export type LensProviderProps = Partial<Handlers> & {
-  children: ReactNode;
+  children: React.ReactNode;
   config: LensConfig;
 };
 
