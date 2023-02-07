@@ -21,3 +21,6 @@ coverage
 
 # Jetbrains
 .idea
+
+# env vars
+.env

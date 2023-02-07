@@ -1,0 +1,78 @@
+overwrite: true
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+watch: false
+config:
+  strictScalars: true
+
+  scalars:
+    Attach: string
+    BlockchainData: string
+    BroadcastId: string
+    ChainId: number
+    CollectModuleData: string
+    ContentEncryptionKey: string
+    ContractAddress: string
+    CreateHandle: string
+    Cursor: string
+    DateTime: string
+    EncryptedValueScalar: string
+    Ens: string
+    EthereumAddress: string
+    FollowModuleData: string
+    Handle: string
+    HandleClaimIdScalar: string
+    IfpsCid: string
+    InternalPublicationId: string
+    Jwt: string
+    LimitScalar: number
+    Locale: string
+    Markdown: string
+    Media: string
+    MimeType: string
+    NftOwnershipId: string
+    Nonce: number
+    NotificationId: string
+    ProfileId: string
+    ProfileInterest: string
+    ProxyActionId: string
+    PublicationId: string
+    PublicationTag: string
+    PublicationUrl: string
+    ReactionId: string
+    ReferenceModuleData: string
+    Search: string
+    Signature: string
+    Sources: string
+    String: string
+    TimestampScalar: string
+    TokenId: string
+    TxHash: string
+    TxId: string
+    UnixTimestamp: string
+    Url: string
+    Void: void
+
+  avoidOptionals:
+    field: true
+
+schema:
+  - https://api-mumbai.lens.dev/graphql
+documents:
+  - src/**/*.graphql
+generates:
+  src/graphql/types.generated.ts:
+    plugins:
+      - 'typescript':
+          nonOptionalTypename: true
+  ./:
+    preset: near-operation-file
+    presetConfig:
+      extension: .generated.ts
+      baseTypesPath: src/graphql/types.generated.ts
+    plugins:
+      - 'typescript-operations':
+          skipTypename: true
+      - 'typescript-graphql-request':
+          rawRequest: true
