@@ -58,10 +58,6 @@
       "packages/wagmi",
       "packages/blockchain-bindings",
       "packages/storage"
-    ],
-    "exports": true,
-    "globals": {
-      "react": "React"
-    }
+    ]
   }
 }
