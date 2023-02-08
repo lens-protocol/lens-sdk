@@ -7,7 +7,7 @@ const testConfig = {
 };
 
 describe(`Given the ${Explore.name} configured to work with sandbox`, () => {
-  describe(`when the instance is not authenticated and method ${Explore.prototype.explorePublications.name} is called`, () => {
+  describe(`when the method ${Explore.prototype.explorePublications.name} is called`, () => {
     it(`should execute successfully`, async () => {
       const explore = new Explore(testConfig);
 
@@ -19,7 +19,7 @@ describe(`Given the ${Explore.name} configured to work with sandbox`, () => {
     });
   });
 
-  describe(`when the instance is authenticated and method ${Explore.prototype.exploreProfiles.name} is called`, () => {
+  describe(`when the method ${Explore.prototype.exploreProfiles.name} is called`, () => {
     it(`should execute successfully`, async () => {
       const explore = new Explore(testConfig);
 
