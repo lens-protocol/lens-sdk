@@ -27,7 +27,7 @@
     "codegen": "graphql-codegen",
     "test:browser": "jest -c jest.config.browser.ts",
     "test:node": "jest -c jest.config.node.ts",
-    "_test": "pnpm run test:browser && pnpm run test:node",
+    "test": "pnpm run test:browser && pnpm run test:node",
     "tsc": "tsc --noEmit"
   },
   "engines": {
