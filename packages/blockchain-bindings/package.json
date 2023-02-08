@@ -14,11 +14,16 @@
       "module": "./dist/lens-protocol-blockchain-bindings.esm.js",
       "default": "./dist/lens-protocol-blockchain-bindings.cjs.js"
     },
+    "./mocks": {
+      "module": "./mocks/dist/lens-protocol-blockchain-bindings-mocks.esm.js",
+      "default": "./mocks/dist/lens-protocol-blockchain-bindings-mocks.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "mocks"
   ],
   "scripts": {
     "build": "preconstruct build",
@@ -63,6 +68,10 @@
     ]
   },
   "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "mocks.ts"
+    ],
     "exports": true
   }
 }
