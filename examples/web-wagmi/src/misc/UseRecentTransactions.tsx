@@ -1,4 +1,4 @@
-import { useRecentTransactions } from '@lens-protocol/react';
+import { TxStatus, useRecentTransactions } from '@lens-protocol/react';
 import { Link } from 'react-router-dom';
 
 import { LoginButton } from '../components/auth/LoginButton';
@@ -35,7 +35,7 @@ function UseRecentTransactionsInner() {
             <p>Type: {t.request.kind}</p>
             <p>
               Status: {t.status}
-              {t.completed && ' (Will be cleared)'}
+              {t.status === TxStatus.SETTLED && ' (Will be cleared)'}
             </p>
 
             <code>{JSON.stringify(t.request, null, 2)}</code>

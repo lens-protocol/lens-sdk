@@ -1,7 +1,5 @@
-import uniqBy from 'lodash/uniqBy';
-
 import { useSharedDependencies } from '../shared';
-import { TxStatus, useRecentTransactionsVar } from './adapters/TransactionQueuePresenter';
+import { useRecentTransactionsVar } from './adapters/TransactionQueuePresenter';
 
 export function useRecentTransactions() {
   const { transactionQueue } = useSharedDependencies();
@@ -12,9 +10,6 @@ export function useRecentTransactions() {
     clearCompleted() {
       transactionQueue.clearRecent();
     },
-    transactions: uniqBy(transactions, (t) => JSON.stringify(t.request)).map((transaction) => ({
-      ...transaction,
-      completed: transaction.status === TxStatus.SETTLED,
-    })),
+    transactions,
   };
 }
