@@ -36,16 +36,12 @@ describe(`Given the LensClient configured for sandbox`, () => {
 
   describe(`when accessing the Search module`, () => {
     it(`should return a new instance of Search`, async () => {
-      const client = LensClient.init(testConfig);
-
       expect(client.search).toBeInstanceOf(Search);
     });
   });
 
   describe(`when accessing the Explore module`, () => {
     it(`should return a new instance of Explore`, async () => {
-      const client = LensClient.init(testConfig);
-
       expect(client.explore).toBeInstanceOf(Explore);
     });
   });

@@ -3,7 +3,7 @@ import jwtDecode, { JwtPayload } from 'jwt-decode';
 
 // Threshold in seconds that will mark token as expired even it's still valid
 // Adds some time for all communications that's required to refresh tokens
-const TOKEN_EXP_THRESHOLD = DateUtils.secondsToMs(3);
+const TOKEN_EXP_THRESHOLD = DateUtils.secondsToMs(30);
 
 export class Credentials {
   constructor(readonly accessToken: string | undefined, readonly refreshToken: string) {}

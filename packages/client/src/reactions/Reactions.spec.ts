@@ -1,6 +1,7 @@
 import { ReactionTypes, Reactions } from '.';
 import { setupAuthentication } from '../authentication/__helpers__/setupAuthentication';
 import { mumbaiSandbox } from '../consts/environments';
+import { NotAuthenticatedError } from '../consts/errors';
 
 const testConfig = {
   environment: mumbaiSandbox,
@@ -17,7 +18,7 @@ describe(`Given the ${Reactions.name} configured to work with sandbox`, () => {
         reaction: ReactionTypes.Upvote,
       };
 
-      await expect(reactions.add(reactionRequest)).rejects.toThrow('Not Authenticated');
+      await expect(reactions.add(reactionRequest)).rejects.toThrow(NotAuthenticatedError);
     });
   });
 
