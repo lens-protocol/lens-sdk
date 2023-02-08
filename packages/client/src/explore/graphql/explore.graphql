@@ -1,0 +1,33 @@
+query ExplorePublications($request: ExplorePublicationRequest!, $observerId: ProfileId) {
+  result: explorePublications(request: $request) {
+    items {
+      ... on Post {
+        ...Post
+      }
+
+      ... on Mirror {
+        ...Mirror
+      }
+
+      ... on Comment {
+        ...Comment
+      }
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query ExploreProfiles($observerId: ProfileId, $limit: LimitScalar!, $cursor: Cursor) {
+  result: exploreProfiles(
+    request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
+  ) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

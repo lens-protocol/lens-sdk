@@ -1,0 +1,1 @@
+export const DEFAULT_PAGINATED_QUERY_LIMIT = 10;
