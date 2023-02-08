@@ -19,10 +19,8 @@ query ExplorePublications($request: ExplorePublicationRequest!, $observerId: Pro
   }
 }
 
-query ExploreProfiles($observerId: ProfileId, $limit: LimitScalar!, $cursor: Cursor) {
-  result: exploreProfiles(
-    request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
-  ) {
+query ExploreProfiles($request: ExploreProfilesRequest!, $observerId: ProfileId) {
+  result: exploreProfiles(request: $request) {
     items {
       ...Profile
     }

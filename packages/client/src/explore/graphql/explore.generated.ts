@@ -31,9 +31,8 @@ export type ExplorePublicationsQuery = {
 };
 
 export type ExploreProfilesQueryVariables = Types.Exact<{
+  request: Types.ExploreProfilesRequest;
   observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
-  limit: Types.Scalars['LimitScalar'];
-  cursor?: Types.Maybe<Types.Scalars['Cursor']>;
 }>;
 
 export type ExploreProfilesQuery = {
@@ -65,10 +64,8 @@ export const ExplorePublicationsDocument = gql`
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 export const ExploreProfilesDocument = gql`
-  query ExploreProfiles($observerId: ProfileId, $limit: LimitScalar!, $cursor: Cursor) {
-    result: exploreProfiles(
-      request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
-    ) {
+  query ExploreProfiles($request: ExploreProfilesRequest!, $observerId: ProfileId) {
+    result: exploreProfiles(request: $request) {
       items {
         ...Profile
       }
