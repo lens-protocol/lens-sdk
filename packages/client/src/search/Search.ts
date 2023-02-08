@@ -1,6 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
+import { buildPaginatedQueryResult } from '../helpers';
 import {
   getSdk,
   Sdk,
@@ -18,10 +19,13 @@ export class Search {
   }
 
   async searchProfiles(request: SearchProfilesQueryVariables) {
-    return this.sdk.SearchProfiles(request);
+    return buildPaginatedQueryResult((variables) => this.sdk.SearchProfiles(variables), request);
   }
 
   async searchPublications(request: SearchPublicationsQueryVariables) {
-    return this.sdk.SearchPublications(request);
+    return buildPaginatedQueryResult(
+      (variables) => this.sdk.SearchPublications(variables),
+      request,
+    );
   }
 }
