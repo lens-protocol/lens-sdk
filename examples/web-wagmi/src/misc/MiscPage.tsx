@@ -17,6 +17,11 @@ const miscHooks = [
     path: '/misc/useUnreadNotificationCount',
   },
   {
+    label: 'useApproveModule',
+    description: `Approve a certain amount of an ERC20 Token to be used by a address`,
+    path: '/misc/useApproveModule',
+  },
+  {
     label: 'useEnabledModules',
     description: `View all the modules supported by the Lens Protocol`,
     path: '/misc/useEnabledModules',

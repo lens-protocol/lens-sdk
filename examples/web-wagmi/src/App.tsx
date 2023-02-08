@@ -4,7 +4,7 @@ import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { optimism, polygon } from 'wagmi/chains';
+import { polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Home } from './HomePage';
@@ -20,6 +20,7 @@ import { Feed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
 import { MiscPage } from './misc/MiscPage';
+import { UseApproveModule } from './misc/UseApproveModule';
 import { UseCurrencies } from './misc/UseCurrencies';
 import { UseEnabledModules } from './misc/UseEnabledModules';
 import { UseNotifications } from './misc/UseNotifications';
@@ -58,7 +59,7 @@ import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
 import { UseProfilePublicationRevenue } from './revenue/UseProfilePublicationRevenue';
 import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
 
-const { provider, webSocketProvider } = configureChains([polygon, optimism], [publicProvider()]);
+const { provider, webSocketProvider } = configureChains([polygonMumbai], [publicProvider()]);
 
 const client = createClient({
   autoConnect: true,
@@ -173,6 +174,7 @@ export function App() {
                   path="/misc/useUnreadNotificationCount"
                   element={<UseUnreadNotificationCount />}
                 />
+                <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

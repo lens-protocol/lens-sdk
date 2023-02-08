@@ -7,7 +7,7 @@
 
 ## Collect/follow modules support
 
-- [ ] `useApproveModule` - signed, paid gas
+- [x] `useApproveModule` - signed, paid gas
 - [x] `useCurrencies`
 - [x] `useEnabledModules`
 

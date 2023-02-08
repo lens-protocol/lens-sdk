@@ -1,12 +1,6 @@
-import { AddEthereumChainParameter } from '@lens-protocol/blockchain-bindings';
+import { AddEthereumChainParameter, isTheSameAddress } from '@lens-protocol/blockchain-bindings';
 import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protocol/domain/entities';
-import {
-  ChainType,
-  EthereumAddress,
-  failure,
-  PromiseResult,
-  success,
-} from '@lens-protocol/shared-kernel';
+import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { utils } from 'ethers';
 
 import { ChainConfigRegistry } from '../../chains';
@@ -22,11 +16,6 @@ export type SignerFactoryConfig = {
   getSigner: GetSigner;
   chains: ChainConfigRegistry;
 };
-
-function isTheSameAddress(address1: EthereumAddress, address2: EthereumAddress) {
-  // lowercase before comparing to avoid comparing checksum address with a normal one
-  return address1.toLowerCase() === address2.toLowerCase();
-}
 
 export class SignerFactory implements ISignerFactory {
   constructor(
