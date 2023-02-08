@@ -2,10 +2,11 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 import { AddEthereumChainParameter, isTheSameAddress } from '@lens-protocol/blockchain-bindings';
 import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protocol/domain/entities';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
-import { utils } from 'ethers';
+import { errors, utils } from 'ethers';
 
 import { ChainConfigRegistry } from '../../chains';
 import { CreateSignerConfig, ISignerFactory, RequiredSigner } from '../adapters/ConcreteWallet';
+import { assertErrorObjectWithCode } from '../adapters/errors';
 
 export type GetSigner = (config: { chainId?: number }) => Promise<RequiredSigner>;
 
@@ -39,9 +40,13 @@ export class SignerFactory implements ISignerFactory {
 
     if (chainType) {
       try {
-        signer._checkProvider('switchChain');
-      } catch {
-        return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
+        await signer.getChainId();
+      } catch (err) {
+        assertErrorObjectWithCode<errors>(err);
+
+        if (err.code === errors.UNSUPPORTED_OPERATION) {
+          return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
+        }
       }
 
       const signerChainId = await signer.getChainId();
