@@ -55,6 +55,10 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
+    "@ensdomains/ens": "0.4.4",
+    "@ensdomains/resolver": "0.2.4",
+    "@ethersproject/abi": "5.7.0",
+    "@ethersproject/bytes": "5.7.0",
     "@faker-js/faker": "^7.6.0",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
@@ -67,8 +71,9 @@
     "eslint": "^8.28.0",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "ethereum-waffle": "^3.4.4",
+    "ethereum-waffle": "^4.0.9",
     "ethers": "^5.7.2",
+    "ganache": "7.7.4",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
     "jest-mock-extended": "^3.0.1",
@@ -76,6 +81,7 @@
     "prettier": "^2.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "resolver:@0.2.4": "link:@ensdomains/resolver:@0.2.4",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
     "typescript": "^4.9.3"

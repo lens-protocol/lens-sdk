@@ -1,3 +1,4 @@
+export * from './useApproveModule';
 export * from './useCollect';
 export * from './useCreateComment';
 export * from './useCreateMirror';

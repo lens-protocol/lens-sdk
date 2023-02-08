@@ -81,6 +81,7 @@ export type SharedDependencies = {
   onLogout: Handlers['onLogout'];
   profileGateway: ProfileGateway;
   protocolCallRelayer: ProtocolCallRelayer;
+  providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
   signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
   sources: string[];
@@ -200,6 +201,7 @@ export function createSharedDependencies(
     transactionQueue,
     walletFactory,
     walletGateway,
+    providerFactory,
   };
 }
 
