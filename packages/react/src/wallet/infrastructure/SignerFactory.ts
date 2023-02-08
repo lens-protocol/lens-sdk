@@ -102,10 +102,10 @@ export class SignerFactory implements ISignerFactory {
 
         return success();
       }
-
-      return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
     } catch {
-      return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
+      // noop
     }
+
+    return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
   }
 }
