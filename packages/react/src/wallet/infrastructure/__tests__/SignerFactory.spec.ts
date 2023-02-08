@@ -128,13 +128,13 @@ describe(`Given an instance of the ${SignerFactory.name}`, () => {
     });
 
     describe('with a wallet', () => {
-      it('should retrieve the signer', async () => {
-        // This is the private key of the `@jsisthebest.test` profile
-        // It's a public private key so anyone can modify the profile
-        // For your own convenience change to the private key of a new wallet
-        const testWalletPrivateKey =
-          '6c434da5e5c0e3a8e0db5cf835d23e04c7592037854f0700c26836be7581c68c';
+      // This is the private key of the `@jsisthebest.test` profile
+      // It's a public private key so anyone can modify the profile
+      // For your own convenience change to the private key of a new wallet
+      const testWalletPrivateKey =
+        '6c434da5e5c0e3a8e0db5cf835d23e04c7592037854f0700c26836be7581c68c';
 
+      it('should retrieve the signer', async () => {
         const wallet = new Wallet(testWalletPrivateKey);
 
         const { signerFactory } = setupTestScenario({ signer: wallet });
@@ -142,6 +142,23 @@ describe(`Given an instance of the ${SignerFactory.name}`, () => {
         const result = await signerFactory.createSigner({ address: wallet.address });
 
         expect(result.unwrap()).toBe(wallet);
+      });
+
+      it.only(`should fail with ${WalletConnectionError.name}(${WalletConnectionErrorReason.INCORRECT_CHAIN}) since it cannot switch chains`, async () => {
+        const wallet = new Wallet(testWalletPrivateKey);
+
+        const { signerFactory } = setupTestScenario({
+          signer: wallet,
+          chainType: ChainType.POLYGON,
+        });
+
+        const result = await signerFactory.createSigner({
+          address: wallet.address,
+          chainType: ChainType.POLYGON,
+        });
+
+        const error = new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN);
+        expect(() => result.unwrap()).toThrowError(error);
       });
     });
   });

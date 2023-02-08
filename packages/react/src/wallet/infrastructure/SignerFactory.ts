@@ -38,6 +38,12 @@ export class SignerFactory implements ISignerFactory {
     }
 
     if (chainType) {
+      try {
+        signer._checkProvider('switchChain');
+      } catch {
+        return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
+      }
+
       const signerChainId = await signer.getChainId();
       if (signerChainId !== chainId) {
         const chainConfig = this.createAddEthereumChainParameter(chainType);
@@ -72,7 +78,7 @@ export class SignerFactory implements ISignerFactory {
   private async addChain(signer: RequiredSigner, chainConfig: AddEthereumChainParameter) {
     try {
       if (signer.provider && signer.provider instanceof JsonRpcProvider) {
-        await signer.provider?.send('wallet_addEthereumChain', [chainConfig]);
+        await signer.provider.send('wallet_addEthereumChain', [chainConfig]);
       }
     } catch {
       // noop
@@ -85,12 +91,14 @@ export class SignerFactory implements ISignerFactory {
   ): PromiseResult<void, WalletConnectionError> {
     try {
       if (signer.provider && signer.provider instanceof JsonRpcProvider) {
-        await signer.provider?.send('wallet_switchEthereumChain', [
+        await signer.provider.send('wallet_switchEthereumChain', [
           { chainId: chainConfig.chainId },
         ]);
+
+        return success();
       }
 
-      return success();
+      return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
     } catch {
       return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
     }
