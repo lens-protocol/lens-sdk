@@ -2,6 +2,7 @@ import { Authentication, Credentials } from './authentication';
 import { LensConfig } from './consts/config';
 import { Profile } from './profile';
 import { Reactions } from './reactions';
+import { Search } from './search';
 
 export class LensClient {
   private authentication: Authentication;
@@ -31,5 +32,9 @@ export class LensClient {
 
   get reactions(): Reactions {
     return new Reactions(this.config, this.credentials);
+  }
+
+  get search(): Search {
+    return new Search(this.config);
   }
 }
