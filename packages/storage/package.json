@@ -7,7 +7,6 @@
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
-  "type": "module",
   "main": "dist/lens-protocol-storage.cjs.js",
   "module": "dist/lens-protocol-storage.esm.js",
   "exports": {
@@ -27,8 +26,7 @@
     "mocks"
   ],
   "scripts": {
-    "build": "pnpm clean && preconstruct build",
-    "clean": "rimraf ./dist",
+    "build": "preconstruct build",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
@@ -57,6 +55,12 @@
     "typescript": "^4.9.3"
   },
   "prettier": "@lens-protocol/prettier-config",
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript"
+    ]
+  },
   "preconstruct": {
     "entrypoints": [
       "index.ts",

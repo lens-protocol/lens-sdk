@@ -15,5 +15,6 @@
     "packages/shared-kernel",
     "packages/storage",
     "packages/wagmi"
-  ]
+  ],
+  "cSpell.words": ["HELLOYESHAUIS"]
 }

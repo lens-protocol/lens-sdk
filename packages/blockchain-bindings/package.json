@@ -7,7 +7,6 @@
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
-  "type": "module",
   "main": "dist/lens-protocol-blockchain-bindings.cjs.js",
   "module": "dist/lens-protocol-blockchain-bindings.esm.js",
   "exports": {
@@ -22,8 +21,7 @@
     "dist/**/*"
   ],
   "scripts": {
-    "build": "pnpm clean && preconstruct build",
-    "clean": "rimraf ./dist",
+    "build": "preconstruct build",
     "test": "jest --passWithNoTests",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
@@ -58,10 +56,13 @@
   "peerDependencies": {
     "ethers": "^5.7.2"
   },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript"
+    ]
+  },
   "preconstruct": {
-    "entrypoints": [
-      "index.ts"
-    ],
     "exports": true
   }
 }

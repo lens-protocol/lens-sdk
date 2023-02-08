@@ -7,42 +7,6 @@
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
-  "type": "module",
-  "exports": {
-    "./mocks": {
-      "module": "./mocks/dist/lens-protocol-domain-mocks.esm.js",
-      "default": "./mocks/dist/lens-protocol-domain-mocks.cjs.js"
-    },
-    "./entities": {
-      "module": "./entities/dist/lens-protocol-domain-entities.esm.js",
-      "default": "./entities/dist/lens-protocol-domain-entities.cjs.js"
-    },
-    "./use-cases": {
-      "module": "./use-cases/dist/lens-protocol-domain-use-cases.esm.js",
-      "default": "./use-cases/dist/lens-protocol-domain-use-cases.cjs.js"
-    },
-    "./use-cases/profile": {
-      "module": "./use-cases/profile/dist/lens-protocol-domain-use-cases-profile.esm.js",
-      "default": "./use-cases/profile/dist/lens-protocol-domain-use-cases-profile.cjs.js"
-    },
-    "./use-cases/wallets": {
-      "module": "./use-cases/wallets/dist/lens-protocol-domain-use-cases-wallets.esm.js",
-      "default": "./use-cases/wallets/dist/lens-protocol-domain-use-cases-wallets.cjs.js"
-    },
-    "./use-cases/lifecycle": {
-      "module": "./use-cases/lifecycle/dist/lens-protocol-domain-use-cases-lifecycle.esm.js",
-      "default": "./use-cases/lifecycle/dist/lens-protocol-domain-use-cases-lifecycle.cjs.js"
-    },
-    "./use-cases/publications": {
-      "module": "./use-cases/publications/dist/lens-protocol-domain-use-cases-publications.esm.js",
-      "default": "./use-cases/publications/dist/lens-protocol-domain-use-cases-publications.cjs.js"
-    },
-    "./use-cases/transactions": {
-      "module": "./use-cases/transactions/dist/lens-protocol-domain-use-cases-transactions.esm.js",
-      "default": "./use-cases/transactions/dist/lens-protocol-domain-use-cases-transactions.cjs.js"
-    },
-    "./package.json": "./package.json"
-  },
   "sideEffects": false,
   "files": [
     "dist",
@@ -51,8 +15,7 @@
     "mocks"
   ],
   "scripts": {
-    "build": "pnpm clean && preconstruct build",
-    "clean": "rimraf ./dist",
+    "build": "preconstruct build",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
@@ -91,6 +54,12 @@
     "jest-when": "^3.5.2"
   },
   "prettier": "@lens-protocol/prettier-config",
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript"
+    ]
+  },
   "preconstruct": {
     "entrypoints": [
       "entities/index.ts",

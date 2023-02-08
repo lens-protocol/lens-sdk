@@ -7,7 +7,8 @@
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
-  "type": "module",
+  "main": "dist/lens-protocol-api-bindings.cjs.js",
+  "module": "dist/lens-protocol-api-bindings.esm.js",
   "exports": {
     ".": {
       "module": "./dist/lens-protocol-api-bindings.esm.js",
@@ -19,16 +20,13 @@
     },
     "./package.json": "./package.json"
   },
-  "main": "dist/lens-protocol-api-bindings.cjs.js",
-  "module": "dist/lens-protocol-api-bindings.esm.js",
   "sideEffects": false,
   "files": [
     "dist/**/*",
     "mocks"
   ],
   "scripts": {
-    "build": "pnpm clean && preconstruct build",
-    "clean": "rimraf ./dist",
+    "build": "preconstruct build",
     "test": "jest --passWithNoTests",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
@@ -81,6 +79,12 @@
     }
   },
   "prettier": "@lens-protocol/prettier-config",
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript"
+    ]
+  },
   "preconstruct": {
     "entrypoints": [
       "index.ts",

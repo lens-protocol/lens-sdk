@@ -1,9 +1,14 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
+    "//#dev:link": {
+      "cache": false
+    },
+
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "*/dist/**"],
+      "outputMode": "new-only"
     },
     "build:packages": {
       "dependsOn": ["^build"],
@@ -23,6 +28,7 @@
       "inputs": ["src/**/*.tsx", "src/**/*.ts"]
     },
     "dev": {
+      "dependsOn": ["//#dev:link"],
       "cache": false
     }
   }
