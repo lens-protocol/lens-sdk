@@ -1,8 +1,8 @@
-import { useCreateProfile, useProfile, isValidHandle } from '@lens-protocol/react';
-import { FormEvent, useState } from 'react';
+import { useCreateProfile, useProfile } from '@lens-protocol/react';
+import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
-import { invariant } from '../utils';
+import { never } from '../utils';
 import { ProfileCard } from './components/ProfileCard';
 
 function ShowProfile({ handle }: { handle: string }) {
@@ -16,16 +16,23 @@ function ShowProfile({ handle }: { handle: string }) {
 }
 
 export function UseCreateProfile() {
-  const [handle, setHandle] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [newProfileHandle, setNewProfileHandle] = useState<string | null>(null);
 
-  const { create, error, isPending } = useCreateProfile();
+  const { execute: create, error, isPending } = useCreateProfile();
 
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    invariant(handle, 'handle should be set');
-    await create(handle);
-    setSubmitted(true);
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setNewProfileHandle(null);
+
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const handle = (formData.get('handle') as string) ?? never();
+
+    const result = await create(handle);
+
+    if (result.isSuccess()) {
+      setNewProfileHandle(handle);
+    }
   };
 
   return (
@@ -40,22 +47,16 @@ export function UseCreateProfile() {
             Enter a profile handle:
             <br />
             <input
+              name="handle"
               minLength={5}
               maxLength={31}
               required
               type="text"
               disabled={isPending}
-              onChange={(e) => {
-                if (isValidHandle(e.target.value)) {
-                  setHandle(e.target.value);
-                } else {
-                  setHandle(null);
-                }
-              }}
             />
           </label>
 
-          <button type="submit" disabled={!handle || isPending}>
+          <button type="submit" disabled={isPending}>
             {isPending ? 'Creating...' : 'Create profile'}
           </button>
         </fieldset>
@@ -63,7 +64,7 @@ export function UseCreateProfile() {
         {error && <p>{error.message}</p>}
       </form>
 
-      <div>{handle && submitted && error === null && <ShowProfile handle={handle} />}</div>
+      <div>{newProfileHandle && <ShowProfile handle={newProfileHandle} />}</div>
     </div>
   );
 }
