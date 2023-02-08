@@ -21,7 +21,7 @@ export class Search {
     return this.sdk.SearchProfiles(request);
   }
 
-  async remove(request: SearchPublicationsQueryVariables) {
+  async searchPublications(request: SearchPublicationsQueryVariables) {
     return this.sdk.SearchPublications(request);
   }
 }
