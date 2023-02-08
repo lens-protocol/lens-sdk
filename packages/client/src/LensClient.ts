@@ -1,5 +1,6 @@
 import { Authentication, Credentials } from './authentication';
 import { LensConfig } from './consts/config';
+import { Explore } from './explore';
 import { Profile } from './profile';
 import { Reactions } from './reactions';
 import { Search } from './search';
@@ -36,5 +37,9 @@ export class LensClient {
 
   get search(): Search {
     return new Search(this.config);
+  }
+
+  get explore(): Explore {
+    return new Explore(this.config);
   }
 }
