@@ -7,13 +7,12 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useMutualFollowers } from '../useMutualFollowers';
-import { ProfileFragment } from '../useProfilesToFollow';
 
 describe('Given the useMutualFollowers hook', () => {
   const observer = mockProfileFragment();
   const viewingProfile = mockProfileFragment();
 
-  const mockProfiles: ProfileFragment[] = [mockProfileFragment()];
+  const mockProfiles = [mockProfileFragment()];
 
   describe('when the query returns data successfully', () => {
     it('should return mutual followers profiles', async () => {

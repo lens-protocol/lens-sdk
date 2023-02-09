@@ -1,5 +1,5 @@
 import {
-  ProfileFragment,
+  ProfileOwnedByMeFragment,
   useActiveProfile,
   useActiveWallet,
   WalletData,
@@ -8,7 +8,7 @@ import { ReactNode } from 'react';
 
 type LoggedInConfig = {
   wallet: WalletData;
-  profile: ProfileFragment;
+  profile: ProfileOwnedByMeFragment;
 };
 
 export type WhenLoggedInWithProfileProps = {

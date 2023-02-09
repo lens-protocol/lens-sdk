@@ -22,6 +22,7 @@ import {
   TimedFeeCollectModuleSettingsFragment,
 } from '../generated';
 import { erc20Amount } from './amount';
+import { isProfileOwnedByMe, ProfileOwnedByMeFragment } from './profile';
 import { PickByTypename, Typename } from './types';
 
 export function isPostPublication<T extends Typename<string>>(
@@ -68,13 +69,13 @@ export type PublicationFragment = PostFragment | CommentFragment | MirrorFragmen
 
 export type PublicationOwnedByMeFragment = Overwrite<
   PublicationFragment,
-  { profile: Overwrite<ProfileFragment, { ownedByMe: true }> }
+  { profile: ProfileOwnedByMeFragment }
 >;
 
 export function isPublicationOwnedByMe(
   publication: PublicationFragment,
 ): publication is PublicationOwnedByMeFragment {
-  return publication.profile.ownedByMe;
+  return isProfileOwnedByMe(publication.profile);
 }
 
 export function createCollectRequest(

@@ -5,14 +5,14 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { ChargeFollowPolicy, NoFeeFollowPolicy } from '@lens-protocol/domain/use-cases/profile';
+import { ChargeFollowConfig, NoFeeFollowConfig } from '@lens-protocol/domain/use-cases/profile';
 import { useState } from 'react';
 
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 
 type UseUpdateFollowPolicyArgs = {
   profileId: ProfileId;
-  followPolicy: ChargeFollowPolicy | NoFeeFollowPolicy;
+  followPolicy: ChargeFollowConfig | NoFeeFollowConfig;
 };
 
 export function useUpdateFollowPolicy() {

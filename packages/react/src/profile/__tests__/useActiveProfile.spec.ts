@@ -1,3 +1,4 @@
+import { ProfileFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockGetProfileQueryMockedResponse,
@@ -10,7 +11,6 @@ import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { ApplicationsState, useAppState } from '../../lifecycle/adapters/ApplicationPresenter';
 import { activeProfileVar } from '../adapters/ActiveProfilePresenter';
 import { useActiveProfile } from '../useActiveProfile';
-import { ProfileFragment } from '../useProfilesToFollow';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('../../lifecycle/adapters/ApplicationPresenter');

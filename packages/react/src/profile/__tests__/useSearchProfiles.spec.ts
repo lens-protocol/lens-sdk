@@ -6,14 +6,13 @@ import {
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { ProfileFragment } from '../useProfilesToFollow';
 import { useSearchProfiles } from '../useSearchProfiles';
 
 describe(`Given the ${useSearchProfiles.name} hook`, () => {
   const observer = mockProfileFragment();
   const query = 'query_test';
 
-  const mockProfiles: ProfileFragment[] = [mockProfileFragment()];
+  const mockProfiles = [mockProfileFragment()];
 
   describe('when the query returns data successfully', () => {
     it('should return profiles that match the search result', async () => {

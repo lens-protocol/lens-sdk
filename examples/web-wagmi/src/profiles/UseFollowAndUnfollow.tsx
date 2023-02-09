@@ -1,6 +1,9 @@
-import { ProfileFragment, useExploreProfiles, useFollow, useUnfollow } from '@lens-protocol/react';
-import { useEffect } from 'react';
-import toast from 'react-hot-toast';
+import {
+  ProfileFragment,
+  ProfileOwnedByMeFragment,
+  useExploreProfiles,
+  useFollow,
+} from '@lens-protocol/react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
@@ -9,50 +12,29 @@ import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
 type FollowButtonProps = {
+  disabled: boolean;
   profile: ProfileFragment;
+  onFollow: () => void;
 };
 
-function FollowButton({ profile }: FollowButtonProps) {
-  const { follow, isPending: isFollowing } = useFollow({ profile });
-  const { unfollow, isPending: isUnfollowing, error } = useUnfollow({ profile });
-
-  useEffect(() => {
-    if (error) toast.error(error.message);
-  }, [error]);
-
+function FollowButton({ disabled, profile, onFollow }: FollowButtonProps) {
   if (profile.isFollowedByMe || profile.isOptimisticFollowedByMe)
-    return (
-      <button onClick={unfollow} disabled={isUnfollowing}>
-        Unfollow
-      </button>
-    );
+    return <button disabled={disabled}>Unfollow</button>;
 
   return (
-    <button onClick={follow} disabled={isFollowing}>
+    <button onClick={onFollow} disabled={disabled}>
       Follow
     </button>
   );
 }
 
-type ProfileFollowProps = {
-  profile: ProfileFragment;
-};
-
-function ProfileFollow({ profile }: ProfileFollowProps) {
-  return (
-    <article>
-      <ProfileCard profile={profile} />
-      <FollowButton profile={profile} />
-    </article>
-  );
-}
-
 type UseFollowInnerProps = {
-  activeProfile: ProfileFragment;
+  activeProfile: ProfileOwnedByMeFragment;
 };
 
 function UseFollowInner({ activeProfile }: UseFollowInnerProps) {
   const { data, error, loading } = useExploreProfiles({ observerId: activeProfile.id, limit: 50 });
+  const { execute: follow, isPending: isFollowPending } = useFollow({ follower: activeProfile });
 
   if (loading) return <Loading />;
 
@@ -60,8 +42,15 @@ function UseFollowInner({ activeProfile }: UseFollowInnerProps) {
 
   return (
     <>
-      {data.map((profile: ProfileFragment) => (
-        <ProfileFollow key={profile.handle} profile={profile} />
+      {data.map((profile) => (
+        <section key={profile.handle}>
+          <ProfileCard profile={profile} />
+          <FollowButton
+            disabled={isFollowPending}
+            onFollow={() => follow({ followee: profile })}
+            profile={profile}
+          />
+        </section>
       ))}
     </>
   );

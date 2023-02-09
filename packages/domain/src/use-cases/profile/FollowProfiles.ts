@@ -44,11 +44,6 @@ export type ProfileOwnerFollowRequest = {
   followerProfileId: string;
 };
 
-export type SingleFollowRequest =
-  | UnconstrainedFollowRequest
-  | ProfileOwnerFollowRequest
-  | PaidFollowRequest;
-
 export type FollowRequest =
   | UnconstrainedFollowRequest
   | ProfileOwnerFollowRequest

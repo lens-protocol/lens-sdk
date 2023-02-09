@@ -6,7 +6,7 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
-  mockChargeFollowPolicy,
+  mockChargeFollowConfig,
   mockUpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
@@ -64,7 +64,7 @@ describe(`Given the ${UpdateFollowPolicyResponder.name}`, () => {
           type: FollowPolicyType.ANYONE,
         },
       });
-      const updatedFollowPolicy = mockChargeFollowPolicy();
+      const updatedFollowPolicy = mockChargeFollowConfig();
 
       const scenario = setupUpdateFollowPolicyResponder({ existingProfile });
 
