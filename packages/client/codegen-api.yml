@@ -72,6 +72,8 @@ generates:
       extension: .generated.ts
       baseTypesPath: src/graphql/types.generated.ts
     plugins:
+      - add: 
+          content: '// @ts-nocheck'
       - 'typescript-operations':
           skipTypename: true
       - 'typescript-graphql-request':

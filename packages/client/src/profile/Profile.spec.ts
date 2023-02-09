@@ -18,4 +18,26 @@ describe(`Given the ${Profile.name} configured to work with testnet`, () => {
       });
     });
   });
+
+  describe(`when a method ${Profile.prototype.fetchAll.name} is called`, () => {
+    it(`should return requested profiles`, async () => {
+      const result = await profile.fetchAll({ profileIds: ['0x0185', '0x0186'] });
+
+      expect(result.data.result.items.length).toBe(2);
+    });
+  });
+
+  describe(`when a method ${Profile.prototype.recommendedProfiles.name} is called`, () => {
+    it(`should run successfully`, async () => {
+      await expect(profile.recommendedProfiles()).resolves.not.toThrow();
+    });
+  });
+
+  describe(`when a method ${Profile.prototype.mutualFollowersProfiles.name} is called`, () => {
+    it(`should run successfully`, async () => {
+      await expect(
+        profile.mutualFollowersProfiles({ viewingProfileId: '0x0185', yourProfileId: '0x0186' }),
+      ).resolves.not.toThrow();
+    });
+  });
 });
