@@ -21,7 +21,7 @@ export type UseCreateCommentArg = {
   upload: MetadataUploadHandler;
 };
 
-export type CreateCommentArg = Prettify<
+export type CreateCommentArgs = Prettify<
   Omit<CreateCommentRequest, 'kind' | 'delegate' | 'collect' | 'reference'> &
     Partial<Pick<CreateCommentRequest, 'collect' | 'reference'>>
 >;
@@ -29,7 +29,7 @@ export type CreateCommentArg = Prettify<
 export type CreateCommentOperation = Operation<
   void,
   PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
-  [CreateCommentArg]
+  [CreateCommentArgs]
 >;
 
 export function useCreateComment({ profile, upload }: UseCreateCommentArg): CreateCommentOperation {
@@ -40,7 +40,7 @@ export function useCreateComment({ profile, upload }: UseCreateCommentArg): Crea
       collect = { type: CollectPolicyType.NO_COLLECT },
       reference = { type: ReferencePolicyType.ANYONE },
       ...args
-    }: CreateCommentArg): PromiseResult<
+    }: CreateCommentArgs): PromiseResult<
       void,
       PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
     > => {

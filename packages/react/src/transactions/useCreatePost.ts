@@ -21,7 +21,7 @@ export type UseCreatePostArgs = {
   upload: MetadataUploadHandler;
 };
 
-export type CreatePostArg = Prettify<
+export type CreatePostArgs = Prettify<
   Omit<CreatePostRequest, 'kind' | 'delegate' | 'collect' | 'reference'> &
     Partial<Pick<CreatePostRequest, 'collect' | 'reference'>>
 >;
@@ -29,7 +29,7 @@ export type CreatePostArg = Prettify<
 export type CreatePostOperation = Operation<
   void,
   PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
-  [CreatePostArg]
+  [CreatePostArgs]
 >;
 
 export function useCreatePost({ profile, upload }: UseCreatePostArgs): CreatePostOperation {
@@ -40,7 +40,7 @@ export function useCreatePost({ profile, upload }: UseCreatePostArgs): CreatePos
       collect = { type: CollectPolicyType.NO_COLLECT },
       reference = { type: ReferencePolicyType.ANYONE },
       ...args
-    }: CreatePostArg): PromiseResult<
+    }: CreatePostArgs): PromiseResult<
       void,
       PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
     > => {
