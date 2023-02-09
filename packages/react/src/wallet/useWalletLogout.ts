@@ -1,7 +1,9 @@
-import { LogoutReason } from '@lens-protocol/domain/dist/use-cases/wallets';
+import { LogoutReason } from '@lens-protocol/domain/use-cases/wallets';
 
-import { useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers';
 import { useWalletLogoutController } from './adapters/useWalletLogoutController';
+
+export type WalletLogoutOperation = Operation<void>;
 
 export function useWalletLogout() {
   const logout = useWalletLogoutController();

@@ -1,9 +1,20 @@
+import {
+  PendingSigningRequestError,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/dist/entities';
 import { Signer } from 'ethers';
 
-import { useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers';
 import { useWalletLoginController } from './adapters/useWalletLoginController';
 
-export function useWalletLogin() {
+export type WalletLoginOperation = Operation<
+  void,
+  PendingSigningRequestError | WalletConnectionError | UserRejectedError,
+  [Signer]
+>;
+
+export function useWalletLogin(): WalletLoginOperation {
   const loginWallet = useWalletLoginController();
 
   return useOperation(async (signer: Signer) => {

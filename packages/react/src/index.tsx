@@ -18,7 +18,16 @@ export type {
   IStorageProvider,
   IObservableStorageProvider,
 } from '@lens-protocol/storage';
-export { ReactionType } from '@lens-protocol/domain/entities';
+export {
+  InsufficientGasError,
+  PendingSigningRequestError,
+  ReactionType,
+  TransactionError,
+  TransactionErrorReason,
+  UserRejectedError,
+  WalletConnectionError,
+  WalletConnectionErrorReason,
+} from '@lens-protocol/domain/entities';
 
 export {
   Amount,
@@ -41,4 +50,6 @@ export type {
   Fiat,
   FiatAmount,
   Matic,
+  Result,
+  PromiseResult,
 } from '@lens-protocol/shared-kernel';

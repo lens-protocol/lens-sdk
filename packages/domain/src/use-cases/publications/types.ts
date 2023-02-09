@@ -68,7 +68,7 @@ export type NoCollectPolicy = {
   type: CollectPolicyType.NO_COLLECT;
 };
 
-export type CollectPolicyRequest = ChargeCollectPolicy | FreeCollectPolicy | NoCollectPolicy;
+export type CollectPolicyConfig = ChargeCollectPolicy | FreeCollectPolicy | NoCollectPolicy;
 
 export type SupportedPublicationMediaType = (typeof SUPPORTED_PUBLICATION_MEDIA_TYPES)[number];
 

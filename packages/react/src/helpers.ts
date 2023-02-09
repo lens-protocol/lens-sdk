@@ -119,7 +119,11 @@ export type OperationHandler<
   TArgs extends unknown[] = never,
 > = (...args: TArgs) => PromiseResult<TResult, TError>;
 
-export type Operation<TResult, TError extends IEquatableError, TArgs extends unknown[]> = {
+export type Operation<
+  TResult,
+  TError extends IEquatableError = never,
+  TArgs extends unknown[] = [],
+> = {
   error: TError | undefined;
   execute: (...args: TArgs) => PromiseResult<TResult, TError>;
   isPending: boolean;

@@ -20,7 +20,7 @@ export {
 } from '@lens-protocol/domain/use-cases/publications';
 export type {
   ChargeCollectPolicy,
-  CollectPolicyRequest,
+  CollectPolicyConfig,
   FreeCollectPolicy,
   Media,
   NftAttribute,
@@ -35,3 +35,4 @@ export type {
 } from '@lens-protocol/domain/use-cases/profile';
 export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 export type { FollowPolicy } from '@lens-protocol/api-bindings';
+export { FailedUploadError } from './adapters/MetadataUploadAdapter';
