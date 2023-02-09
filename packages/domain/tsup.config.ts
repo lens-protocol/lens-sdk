@@ -4,7 +4,6 @@ import { dependencies, devDependencies } from './package.json';
 
 export default defineConfig({
   entry: [
-    'src/index.ts',
     'src/mocks.ts',
     'src/entities/index.ts',
     'src/use-cases/index.ts',

@@ -8,7 +8,6 @@ import {
 
 import { ReactionType, ReportReason, TransactionKind } from '../../../entities';
 import { mockProfileId } from '../../profile/__helpers__/mocks';
-import { ImageType } from '../../types';
 import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
@@ -17,6 +16,7 @@ import { HidePublicationRequest } from '../HidePublication';
 import { ReactionRequest } from '../Reaction';
 import { ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
+import { ImageType } from '../config';
 import {
   ChargeCollectPolicy,
   CollectPolicyType,

@@ -1,8 +1,8 @@
 import {
+  CollectPolicyType,
+  ContentFocus,
   ProfileFragment,
   useCreatePost,
-  ContentFocus,
-  CollectPolicyType,
 } from '@lens-protocol/react';
 import { useState } from 'react';
 

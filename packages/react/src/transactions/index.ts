@@ -19,6 +19,7 @@ export {
   NftAttributeDisplayType,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
+export { SupportedFileType } from '@lens-protocol/domain/use-cases/publications';
 export type {
   ChargeCollectPolicy,
   CollectPolicyRequest,
