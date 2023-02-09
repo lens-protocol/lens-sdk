@@ -4,8 +4,35 @@ query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
   }
 }
 
-query Profiles($request: ProfilesQueryRequest!, $observerId: ProfileId) {
+query Profiles($request: ProfileQueryRequest!, $observerId: ProfileId) {
   result: profiles(request: $request) {
+    items {
+      ...Profile
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query RecommendedProfiles($observerId: ProfileId) {
+  result: recommendedProfiles {
     ...Profile
+  }
+}
+
+query MutualFollowersProfiles(
+  $request: MutualFollowersProfilesQueryRequest!
+  $observerId: ProfileId
+) {
+  result: mutualFollowersProfiles(request: $request) {
+    items {
+      ...Profile
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
   }
 }

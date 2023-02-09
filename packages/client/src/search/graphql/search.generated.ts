@@ -3,6 +3,7 @@ import * as Types from '../../graphql/types.generated.js';
 import {
   PostFragment,
   ProfileFragment,
+  MirrorFragment,
   CommentFragment,
   CommonPaginatedResultInfoFragment,
 } from '../../graphql/fragments.generated';
@@ -13,6 +14,7 @@ import gql from 'graphql-tag';
 import {
   PostFragmentDoc,
   ProfileFragmentDoc,
+  MirrorFragmentDoc,
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
 } from '../../graphql/fragments.generated';
