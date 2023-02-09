@@ -1,6 +1,6 @@
 <p>
   <picture>
-    <img alt="Lens SDK logo" src="./assets/logo.svg" width="auto" height="150">
+    <img alt="Lens SDK logo" src="./assets/logo-full.svg" width="100%">
   </picture>
 </p>
 
