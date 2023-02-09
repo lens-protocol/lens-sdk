@@ -23,7 +23,7 @@ describe(`Given the ${Profile.name} configured to work with testnet`, () => {
     it(`should return requested profiles`, async () => {
       const result = await profile.fetchAll({ profileIds: ['0x0185', '0x0186'] });
 
-      expect(result.data.result.items.length).toBe(2);
+      expect(result.items.length).toBe(2);
     });
   });
 

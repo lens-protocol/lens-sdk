@@ -35,7 +35,7 @@ export class Profile {
       observerId,
     });
 
-    return result;
+    return result.data.result;
   }
 
   async recommendedProfiles(observerId?: string) {
@@ -43,7 +43,7 @@ export class Profile {
       observerId,
     });
 
-    return result;
+    return result.data.result;
   }
 
   async mutualFollowersProfiles(request: MutualFollowersProfilesQueryRequest, observerId?: string) {
@@ -52,6 +52,6 @@ export class Profile {
       observerId,
     });
 
-    return result;
+    return result.data.result;
   }
 }
