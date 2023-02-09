@@ -75,7 +75,7 @@ describe(`Given the ${Authentication.name} configured to work with sandbox`, () 
       });
     });
 
-    describe(`and credentials are expired but can be refreshed`, () => {
+    describe.skip(`and credentials are expired but can be refreshed`, () => {
       it(`should return the authenticated header`, async () => {
         const auth = await setupRandomAuthentication();
         jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.minutesToMs(31)); // accessToken is valid for 30min

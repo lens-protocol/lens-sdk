@@ -1,4 +1,4 @@
-import { assertError, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
 import { Authentication } from '../authentication';
@@ -20,7 +20,7 @@ export class Reactions {
 
   async add(
     request: ReactionRequest,
-  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError | Error> {
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     if (!this.authentication) {
       return failure(new NotAuthenticatedError());
     }
@@ -28,27 +28,17 @@ export class Reactions {
     const headerResult = await this.authentication.getRequestHeader();
 
     if (headerResult.isFailure()) {
-      try {
-        headerResult.unwrap();
-      } catch (error) {
-        assertError(error);
-        return failure(error);
-      }
+      return failure(headerResult.error);
     }
 
-    try {
-      await this.sdk.AddReaction(request, headerResult.unwrap());
-    } catch (error) {
-      assertError(error);
-      return failure(error);
-    }
+    await this.sdk.AddReaction(request, headerResult.value);
 
     return success();
   }
 
   async remove(
     request: ReactionRequest,
-  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError | Error> {
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     if (!this.authentication) {
       return failure(new NotAuthenticatedError());
     }
@@ -56,20 +46,10 @@ export class Reactions {
     const headerResult = await this.authentication.getRequestHeader();
 
     if (headerResult.isFailure()) {
-      try {
-        headerResult.unwrap();
-      } catch (error) {
-        assertError(error);
-        return failure(error);
-      }
+      return failure(headerResult.error);
     }
 
-    try {
-      await this.sdk.RemoveReaction(request, headerResult.unwrap());
-    } catch (error) {
-      assertError(error);
-      return failure(error);
-    }
+    await this.sdk.RemoveReaction(request, headerResult.value);
 
     return success();
   }

@@ -16,25 +16,22 @@ describe(`Given the ${Credentials.name} class`, () => {
 
   describe(`when ${Credentials.prototype.canRefresh.name} is invoked`, () => {
     it(`should return true if refresh token is not yet expired`, async () => {
-      jest.useFakeTimers().setSystemTime(refreshTokenExp - DateUtils.minutesToMs(1));
-
       const credentials = new Credentials(undefined, refreshToken);
+      jest.useFakeTimers().setSystemTime(refreshTokenExp - DateUtils.minutesToMs(1));
 
       expect(credentials.canRefresh()).toBeTruthy();
     });
 
     it(`should return false if refresh token is 30 seconds before expiring`, async () => {
-      jest.useFakeTimers().setSystemTime(refreshTokenExp - DateUtils.secondsToMs(30));
-
       const credentials = new Credentials(undefined, refreshToken);
+      jest.useFakeTimers().setSystemTime(refreshTokenExp - DateUtils.secondsToMs(30));
 
       expect(credentials.canRefresh()).toBeFalsy();
     });
 
     it(`should return false if refresh token already expired`, async () => {
-      jest.useFakeTimers().setSystemTime(refreshTokenExp + DateUtils.secondsToMs(1));
-
       const credentials = new Credentials(undefined, refreshToken);
+      jest.useFakeTimers().setSystemTime(refreshTokenExp + DateUtils.secondsToMs(1));
 
       expect(credentials.canRefresh()).toBeFalsy();
     });
@@ -48,25 +45,22 @@ describe(`Given the ${Credentials.name} class`, () => {
     });
 
     it(`should return true if access token is 30 seconds before expiring`, async () => {
-      jest.useFakeTimers().setSystemTime(accessTokenExp - DateUtils.secondsToMs(30));
-
       const credentials = new Credentials(accessToken, refreshToken);
+      jest.useFakeTimers().setSystemTime(accessTokenExp - DateUtils.secondsToMs(30));
 
       expect(credentials.isExpired()).toBeTruthy();
     });
 
     it(`should return true if access token already expired`, async () => {
-      jest.useFakeTimers().setSystemTime(accessTokenExp + DateUtils.secondsToMs(1));
-
       const credentials = new Credentials(accessToken, refreshToken);
+      jest.useFakeTimers().setSystemTime(accessTokenExp + DateUtils.secondsToMs(1));
 
       expect(credentials.isExpired()).toBeTruthy();
     });
 
     it(`should return false if access token is not yet expired`, async () => {
-      jest.useFakeTimers().setSystemTime(accessTokenExp - DateUtils.minutesToMs(1));
-
       const credentials = new Credentials(accessToken, refreshToken);
+      jest.useFakeTimers().setSystemTime(accessTokenExp - DateUtils.minutesToMs(1));
 
       expect(credentials.isExpired()).toBeFalsy();
     });

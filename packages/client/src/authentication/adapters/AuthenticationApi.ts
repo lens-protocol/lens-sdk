@@ -28,13 +28,19 @@ export class AuthenticationApi {
     const result = await this.sdk.AuthAuthenticate({ address, signature });
     const { accessToken, refreshToken } = result.data.result;
 
-    return new Credentials(accessToken, refreshToken);
+    const credentials = new Credentials(accessToken, refreshToken);
+    credentials.checkClock();
+
+    return credentials;
   }
 
   async refresh(refreshToken: string): Promise<Credentials> {
     const result = await this.sdk.AuthRefresh({ refreshToken });
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.data.result;
 
-    return new Credentials(newAccessToken, newRefreshToken);
+    const credentials = new Credentials(newAccessToken, newRefreshToken);
+    credentials.checkClock();
+
+    return credentials;
   }
 }
