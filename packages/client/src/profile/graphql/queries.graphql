@@ -3,3 +3,9 @@ query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
     ...Profile
   }
 }
+
+query Profiles($request: ProfilesQueryRequest!, $observerId: ProfileId) {
+  result: profiles(request: $request) {
+    ...Profile
+  }
+}
