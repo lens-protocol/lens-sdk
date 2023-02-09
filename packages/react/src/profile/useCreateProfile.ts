@@ -5,14 +5,20 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers';
 import {
   TransactionState,
   useWaitUntilTransactionSettled,
 } from '../transactions/adapters/TransactionQueuePresenter';
 import { useCreateProfileController } from './adapters/useCreateProfileController';
 
-export function useCreateProfile() {
+export type CreateProfileOperation = Operation<
+  void,
+  DuplicatedHandleError | TransactionError,
+  [string]
+>;
+
+export function useCreateProfile(): CreateProfileOperation {
   const createProfile = useCreateProfileController();
 
   const waitUntilTransactionIsSettled = useWaitUntilTransactionSettled();
