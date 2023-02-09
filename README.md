@@ -1,7 +1,6 @@
 <p>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/logo.svg">
-    <img alt="Lens SDK logo" src="./assets/logo/green-with-text.svg" width="auto" height="150">
+    <img alt="Lens SDK logo" src="./assets/logo.svg" width="auto" height="150">
   </picture>
 </p>
 
