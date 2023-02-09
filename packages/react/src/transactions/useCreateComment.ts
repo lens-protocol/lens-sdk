@@ -5,60 +5,59 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import {
+  CollectPolicyType,
   CreateCommentRequest,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
-import { useState } from 'react';
+import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
+import { Operation, useOperation } from '../helpers';
 import { ProfileFragment } from '../profile';
 import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
 import { useCreateCommentController } from './adapters/useCreateCommentController';
 
-export type UseCreateCommentArgs = {
+export type UseCreateCommentArg = {
   profile: ProfileFragment;
   upload: MetadataUploadHandler;
 };
 
-export type CreateCommentArgs = Omit<CreateCommentRequest, 'kind' | 'delegate' | 'reference'> &
-  Partial<Pick<CreateCommentRequest, 'reference'>>;
+export type CreateCommentArg = Prettify<
+  Omit<CreateCommentRequest, 'kind' | 'delegate' | 'collect' | 'reference'> &
+    Partial<Pick<CreateCommentRequest, 'collect' | 'reference'>>
+>;
 
-export function useCreateComment({ profile, upload }: UseCreateCommentArgs) {
-  const [error, setError] = useState<
-    | PendingSigningRequestError
-    | UserRejectedError
-    | WalletConnectionError
-    | FailedUploadError
-    | null
-  >(null);
-  const [isPending, setIsPending] = useState(false);
+export type CreateCommentOperation = Operation<
+  void,
+  PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
+  [CreateCommentArg]
+>;
+
+export function useCreateComment({ profile, upload }: UseCreateCommentArg): CreateCommentOperation {
   const createComment = useCreateCommentController({ upload });
 
-  return {
-    create: async ({ reference, ...args }: CreateCommentArgs) => {
-      setError(null);
-      setIsPending(true);
-
+  return useOperation(
+    async ({
+      collect = { type: CollectPolicyType.NO_COLLECT },
+      reference = { type: ReferencePolicyType.ANYONE },
+      ...args
+    }: CreateCommentArg): PromiseResult<
+      void,
+      PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
+    > => {
       try {
-        const result = await createComment({
+        return await createComment({
           kind: TransactionKind.CREATE_COMMENT,
           delegate: profile.dispatcher !== null,
-          reference: reference || { type: ReferencePolicyType.ANYONE },
+          collect,
+          reference,
           ...args,
         });
-        if (result.isFailure()) {
-          setError(result.error);
-        }
       } catch (err: unknown) {
         if (err instanceof FailedUploadError) {
-          setError(err);
-          return;
+          return failure(err);
         }
         throw err;
-      } finally {
-        setIsPending(false);
       }
     },
-    error,
-    isPending,
-  };
+  );
 }
