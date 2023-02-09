@@ -1,13 +1,7 @@
+import { ImageType } from '@lens-protocol/react';
 import { useRef, useEffect, useCallback } from 'react';
 
 import { never } from '../utils';
-
-export enum ImageType {
-  JPEG = 'image/jpeg',
-  PNG = 'image/png',
-  WEBP = 'image/webp',
-  GIF = 'image/gif',
-}
 
 export interface ILocalFile<T extends ImageType> extends File {
   type: T;

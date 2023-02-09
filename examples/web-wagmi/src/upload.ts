@@ -1,11 +1,12 @@
 import { Readable } from 'stream';
 
 import { WebBundlr } from '@bundlr-network/client';
+import { ImageType } from '@lens-protocol/react';
 import { providers, utils } from 'ethers';
 import { ReadableWebToNodeStream } from 'readable-web-to-node-stream';
 import { fetchSigner } from 'wagmi/actions';
 
-import { ILocalFile, ImageType } from './hooks/useFileSelect';
+import { ILocalFile } from './hooks/useFileSelect';
 import { never } from './utils';
 
 const TOP_UP = '200000000000000000'; // 0.2 MATIC
