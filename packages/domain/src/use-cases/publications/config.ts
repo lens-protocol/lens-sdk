@@ -17,14 +17,3 @@ export enum AudioType {
 
 export const SupportedFileType = { ...ImageType, ...VideoType, ...AudioType };
 export type SupportedFileType = ImageType | VideoType | AudioType;
-
-export const SUPPORTED_PUBLICATION_MEDIA_TYPES = [
-  ImageType.PNG,
-  ImageType.JPEG,
-  ImageType.GIF,
-  ImageType.WEBP,
-  VideoType.MP4,
-  AudioType.MP3,
-  AudioType.OGG,
-  AudioType.WAV,
-] as const;
