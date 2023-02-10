@@ -8,20 +8,6 @@ const testConfig = {
 describe(`Given the LensClient configured for sandbox`, () => {
   const client = new LensClient(testConfig);
 
-  describe(`when checking authentication features exposed by the client`, () => {
-    it(`should offer ${LensClient.prototype.generateChallenge.name} function`, async () => {
-      expect(typeof client.generateChallenge).toEqual('function');
-    });
-
-    it(`should offer ${LensClient.prototype.authenticate.name} function`, async () => {
-      expect(typeof client.authenticate).toEqual('function');
-    });
-
-    it(`should offer ${LensClient.prototype.isAuthenticated.name} function`, async () => {
-      expect(typeof client.isAuthenticated).toEqual('function');
-    });
-  });
-
   describe(`when accessing the Profile module`, () => {
     it(`should return a new instance of Profile`, async () => {
       expect(client.profile).toBeInstanceOf(Profile);

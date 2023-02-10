@@ -6,7 +6,13 @@ import { AuthenticationApi } from './adapters/AuthenticationApi';
 import { CredentialsStorage } from './adapters/CredentialsStorage';
 import { InMemoryStorageProvider } from './adapters/InMemoryStorageProvider';
 
-export class Authentication {
+export interface IAuthentication {
+  generateChallenge(address: string): Promise<string>;
+  authenticate(address: string, signature: string): Promise<void>;
+  isAuthenticated(): Promise<boolean>;
+}
+
+export class Authentication implements IAuthentication {
   private readonly api: AuthenticationApi;
   private readonly storage: CredentialsStorage;
 
