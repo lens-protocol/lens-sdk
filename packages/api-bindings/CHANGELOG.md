@@ -1,5 +1,12 @@
 # @lens-protocol/api-bindings
 
+## 0.4.0
+
+### Patch Changes
+
+- @lens-protocol/domain@0.4.0
+- @lens-protocol/shared-kernel@0.4.0
+
 ## 0.3.0
 
 ### Patch Changes
