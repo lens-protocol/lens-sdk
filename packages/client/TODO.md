@@ -16,7 +16,7 @@
 
 Client manages the token lifecycle and storage
 
-- LensClient.init({ environment, storage })
+- new LensClient({ environment, storage? })
 - [Q] client.generateChallenge(address)
 - [M] client.authenticate(address, signature)
 - [H] client.isAuthenticated()

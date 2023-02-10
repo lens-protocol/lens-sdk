@@ -1,39 +1,70 @@
-import { ReactionTypes } from '.';
-import { setupTestCredentials } from '../__helpers__/setupTestCredentials';
+import { ReactionTypes, Reactions } from '.';
+import { setupAuthentication } from '../authentication/__helpers__/setupAuthentication';
 import { mumbaiSandbox } from '../consts/environments';
-import { Reactions } from './Reactions';
+import { NotAuthenticatedError } from '../consts/errors';
 
 const testConfig = {
   environment: mumbaiSandbox,
 };
 
 describe(`Given the ${Reactions.name} configured to work with sandbox`, () => {
-  describe(`when the instance is not authenticated and method ${Reactions.prototype.add.name} is called`, () => {
-    it(`should throw an error`, async () => {
-      const reactions = new Reactions(testConfig);
+  describe(`and the instance is not authenticated`, () => {
+    const reactions = new Reactions(testConfig);
 
-      const reactionRequest = {
-        profileId: '0x0185',
-        publicationId: '0x05-0x04',
-        reaction: ReactionTypes.Upvote,
-      };
+    const reactionRequest = {
+      profileId: '0x0185',
+      publicationId: '0x05-0x04',
+      reaction: ReactionTypes.Upvote,
+    };
 
-      await expect(reactions.add(reactionRequest)).rejects.toThrow('Not Authenticated');
+    describe(`when ${Reactions.prototype.add.name} method is called`, () => {
+      it(`should return a failure`, async () => {
+        const result = await reactions.add(reactionRequest);
+
+        expect(result.isFailure()).toBeTruthy();
+        expect(() => result.unwrap()).toThrow(NotAuthenticatedError);
+      });
+    });
+
+    describe(`when ${Reactions.prototype.remove.name} method is called`, () => {
+      it(`should return a failure`, async () => {
+        const result = await reactions.remove(reactionRequest);
+
+        expect(result.isFailure()).toBeTruthy();
+        expect(() => result.unwrap()).toThrow(NotAuthenticatedError);
+      });
     });
   });
 
-  describe(`when the instance is authenticated and method ${Reactions.prototype.add.name} is called`, () => {
-    it(`should execute with success`, async () => {
-      const credentials = await setupTestCredentials();
-      const reactions = new Reactions(testConfig, credentials);
+  describe(`and the instance is authenticated`, () => {
+    const reactionRequest = {
+      profileId: '0x0185',
+      publicationId: '0x05-0x04',
+      reaction: ReactionTypes.Upvote,
+    };
 
-      const reactionRequest = {
-        profileId: '0x0185',
-        publicationId: '0x05-0x04',
-        reaction: ReactionTypes.Upvote,
-      };
+    describe(`when ${Reactions.prototype.add.name} method is called`, () => {
+      it(`should execute with success`, async () => {
+        const authentication = await setupAuthentication();
+        const reactions = new Reactions(testConfig, authentication);
 
-      await expect(reactions.add(reactionRequest)).resolves.not.toThrow();
+        const result = await reactions.add(reactionRequest);
+
+        expect(result.isSuccess()).toBeTruthy();
+        expect(result.unwrap()).toBe(undefined);
+      });
+    });
+
+    describe(`when ${Reactions.prototype.remove.name} method is called`, () => {
+      it(`should execute with success`, async () => {
+        const authentication = await setupAuthentication();
+        const reactions = new Reactions(testConfig, authentication);
+
+        const result = await reactions.remove(reactionRequest);
+
+        expect(result.isSuccess()).toBeTruthy();
+        expect(result.unwrap()).toBe(undefined);
+      });
     });
   });
 });
