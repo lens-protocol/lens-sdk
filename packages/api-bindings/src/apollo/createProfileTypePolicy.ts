@@ -1,6 +1,7 @@
 import { ReactiveVar } from '@apollo/client';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
+import { never } from '@lens-protocol/shared-kernel';
 
 import {
   erc20Amount,
@@ -11,6 +12,11 @@ import {
 } from '../graphql';
 import { FollowPolicy } from '../graphql/FollowPolicy';
 import { TypePolicy } from './TypePolicy';
+import {
+  getAllPendingTransactions,
+  isFollowTransactionFor,
+  isUnfollowTransactionFor,
+} from './transactions';
 
 function resolveFollowPolicy({
   followModule,
@@ -58,12 +64,41 @@ export function createProfileTypePolicy(
         keyArgs: false,
       },
 
-      isFollowedByMe: {
-        keyArgs: false,
-      },
-
       isOptimisticFollowedByMe(existing) {
         return existing ?? false;
+      },
+
+      isFollowedByMe: {
+        keyArgs: false,
+
+        read(existing = false, { readField }) {
+          const activeWallet = activeWalletVar();
+
+          if (!activeWallet) {
+            return existing ?? false;
+          }
+
+          const profileId = readField('id') ?? never();
+          const isFollowTransactionForCurrentProfile = isFollowTransactionFor({
+            profileId,
+            followerAddress: activeWallet.address,
+          });
+          const isUnfollowTransactionForCurrentProfile = isUnfollowTransactionFor({
+            profileId,
+          });
+
+          return getAllPendingTransactions().reduce((result, transaction) => {
+            if (isFollowTransactionForCurrentProfile(transaction)) {
+              return true;
+            }
+
+            if (isUnfollowTransactionForCurrentProfile(transaction)) {
+              return false;
+            }
+
+            return result;
+          }, existing);
+        },
       },
 
       followPolicy(existing, { readField }) {

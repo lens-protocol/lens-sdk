@@ -144,7 +144,7 @@ class SerializableProxyTransaction<T extends SupportedTransactionRequest>
   }
 
   toTransactionData(): ProxyTransactionData<T> | null {
-    if (this.state.txHash && this.state.proxyId) {
+    if (this.state.proxyId) {
       return {
         chainType: this.state.chainType,
         id: this.state.id,

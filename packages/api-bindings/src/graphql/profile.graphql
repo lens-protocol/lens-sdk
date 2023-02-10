@@ -109,8 +109,8 @@ fragment Profile on Profile {
     }
   }
 
-  isFollowedByMe(isFinalisedOnChain: true)
-  isFollowing(who: $observerId)
+  isFollowedByMe
+  isFollowingMe: isFollowing(who: $observerId)
 
   isOptimisticFollowedByMe @client
   ownedByMe @client

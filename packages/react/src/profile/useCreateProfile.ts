@@ -1,3 +1,4 @@
+import { TransactionState, useWaitUntilTransactionSettled } from '@lens-protocol/api-bindings';
 import { TransactionError, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   CreateProfileRequest,
@@ -6,10 +7,7 @@ import {
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers';
-import {
-  TransactionState,
-  useWaitUntilTransactionSettled,
-} from '../transactions/adapters/TransactionQueuePresenter';
+import {} from '../transactions/adapters/TransactionQueuePresenter';
 import { useCreateProfileController } from './adapters/useCreateProfileController';
 
 export type CreateProfileOperation = Operation<

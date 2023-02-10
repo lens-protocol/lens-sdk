@@ -1,4 +1,9 @@
-import { ProfileOwnedByMeFragment, ProfileFragment } from '@lens-protocol/api-bindings';
+import {
+  ProfileOwnedByMeFragment,
+  ProfileFragment,
+  isUnfollowTransactionFor,
+  useHasPendingTransaction,
+} from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -10,10 +15,14 @@ import {
   InsufficientAllowanceError,
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
-import { InvariantError } from '@lens-protocol/shared-kernel';
+import { failure, InvariantError, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers';
 import { useFollowController } from './adapters/useFollowController';
+
+export class PrematureFollowError extends Error {
+  name = 'PrematureFollowError' as const;
+}
 
 function createFollowRequest(followee: ProfileFragment, follower: ProfileFragment): FollowRequest {
   const followPolicy = followee.followPolicy;
@@ -54,11 +63,8 @@ function createFollowRequest(followee: ProfileFragment, follower: ProfileFragmen
 }
 
 export type UseFollowArgs = {
-  follower: ProfileOwnedByMeFragment;
-};
-
-export type FollowArgs = {
   followee: ProfileFragment;
+  follower: ProfileOwnedByMeFragment;
 };
 
 export type FollowOperation = Operation<
@@ -66,16 +72,38 @@ export type FollowOperation = Operation<
   | InsufficientAllowanceError
   | InsufficientFundsError
   | PendingSigningRequestError
+  | PrematureFollowError
   | UserRejectedError
-  | WalletConnectionError,
-  [FollowArgs]
+  | WalletConnectionError
 >;
 
-export function useFollow({ follower }: UseFollowArgs): FollowOperation {
+export function useFollow({ followee, follower }: UseFollowArgs): FollowOperation {
   const follow = useFollowController();
 
-  return useOperation(async ({ followee }: FollowArgs) => {
-    const request = createFollowRequest(followee, follower);
-    return follow(request);
-  });
+  const hasPendingUnfollowTx = useHasPendingTransaction(
+    isUnfollowTransactionFor({ profileId: followee.id }),
+  );
+
+  return useOperation(
+    async (): PromiseResult<
+      void,
+      | InsufficientAllowanceError
+      | InsufficientFundsError
+      | PendingSigningRequestError
+      | PrematureFollowError
+      | UserRejectedError
+      | WalletConnectionError
+    > => {
+      if (hasPendingUnfollowTx) {
+        return failure(
+          new PrematureFollowError(
+            `Your unfollow request for ${followee.handle} is still pending.`,
+          ),
+        );
+      }
+
+      const request = createFollowRequest(followee, follower);
+      return follow(request);
+    },
+  );
 }
