@@ -36,3 +36,43 @@ query MutualFollowersProfiles(
     }
   }
 }
+
+query DoesFollow($request: DoesFollowRequest!) {
+  result: doesFollow(request: $request) {
+    follows
+    followerAddress
+    profileId
+    isFinalisedOnChain
+  }
+}
+
+query Following($request: FollowingRequest!, $observerId: ProfileId) {
+  result: following(request: $request) {
+    items {
+      ...Following
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query Followers($request: FollowersRequest!, $observerId: ProfileId) {
+  result: followers(request: $request) {
+    items {
+      ...Follower
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query FollowerNftOwnedTokenIds($request: FollowerNftOwnedTokenIdsRequest!) {
+  followerNftOwnedTokenIds(request: $request) {
+    followerNftAddress
+    tokensIds
+  }
+}

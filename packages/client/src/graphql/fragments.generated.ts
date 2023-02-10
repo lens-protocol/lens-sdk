@@ -280,6 +280,10 @@ export type CommonPaginatedResultInfoFragment = { __typename: 'PaginatedResultIn
   'prev' | 'next' | 'totalCount'
 >;
 
+export type FollowingFragment = { __typename: 'Following' } & { profile: ProfileFragment };
+
+export type FollowerFragment = { __typename: 'Follower' } & { wallet: WalletFragment };
+
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
     __typename
@@ -760,6 +764,24 @@ export const CommonPaginatedResultInfoFragmentDoc = gql`
     next
     totalCount
   }
+`;
+export const FollowingFragmentDoc = gql`
+  fragment Following on Following {
+    __typename
+    profile {
+      ...Profile
+    }
+  }
+  ${ProfileFragmentDoc}
+`;
+export const FollowerFragmentDoc = gql`
+  fragment Follower on Follower {
+    __typename
+    wallet {
+      ...Wallet
+    }
+  }
+  ${WalletFragmentDoc}
 `;
 export const QueryDocument = gql`
   query Query {

@@ -3,6 +3,10 @@ import { GraphQLClient } from 'graphql-request';
 import { LensConfig } from '../consts/config';
 import { ProfileFragment } from '../graphql/fragments.generated';
 import {
+  DoesFollowRequest,
+  FollowerNftOwnedTokenIdsRequest,
+  FollowersRequest,
+  FollowingRequest,
   MutualFollowersProfilesQueryRequest,
   ProfileQueryRequest,
   SingleProfileQueryRequest,
@@ -38,7 +42,7 @@ export class Profile {
     return result.data.result;
   }
 
-  async recommendedProfiles(observerId?: string) {
+  async allRecommended(observerId?: string) {
     const result = await this.sdk.RecommendedProfiles({
       observerId,
     });
@@ -46,12 +50,46 @@ export class Profile {
     return result.data.result;
   }
 
-  async mutualFollowersProfiles(request: MutualFollowersProfilesQueryRequest, observerId?: string) {
+  async mutualFollowers(request: MutualFollowersProfilesQueryRequest, observerId?: string) {
     const result = await this.sdk.MutualFollowersProfiles({
       request,
       observerId,
     });
 
     return result.data.result;
+  }
+
+  async doesFollow(request: DoesFollowRequest) {
+    const result = await this.sdk.DoesFollow({
+      request,
+    });
+
+    return result.data.result;
+  }
+
+  async allFollowing(request: FollowingRequest, observerId?: string) {
+    const result = await this.sdk.Following({
+      request,
+      observerId,
+    });
+
+    return result.data.result;
+  }
+
+  async allFollowers(request: FollowersRequest, observerId?: string) {
+    const result = await this.sdk.Followers({
+      observerId,
+      request,
+    });
+
+    return result.data.result;
+  }
+
+  async followerNftOwnedTokenIds(request: FollowerNftOwnedTokenIdsRequest) {
+    const result = await this.sdk.FollowerNftOwnedTokenIds({
+      request,
+    });
+
+    return result.data.followerNftOwnedTokenIds;
   }
 }

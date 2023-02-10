@@ -4,6 +4,8 @@ import * as Types from '../../graphql/types.generated.js';
 import {
   ProfileFragment,
   CommonPaginatedResultInfoFragment,
+  FollowingFragment,
+  FollowerFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -12,6 +14,8 @@ import gql from 'graphql-tag';
 import {
   ProfileFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
+  FollowingFragmentDoc,
+  FollowerFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type ProfileQueryVariables = Types.Exact<{
   request: Types.SingleProfileQueryRequest;
@@ -42,6 +46,47 @@ export type MutualFollowersProfilesQueryVariables = Types.Exact<{
 
 export type MutualFollowersProfilesQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type DoesFollowQueryVariables = Types.Exact<{
+  request: Types.DoesFollowRequest;
+}>;
+
+export type DoesFollowQuery = {
+  result: Array<
+    Pick<
+      Types.DoesFollowResponse,
+      'follows' | 'followerAddress' | 'profileId' | 'isFinalisedOnChain'
+    >
+  >;
+};
+
+export type FollowingQueryVariables = Types.Exact<{
+  request: Types.FollowingRequest;
+  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+}>;
+
+export type FollowingQuery = {
+  result: { items: Array<FollowingFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type FollowersQueryVariables = Types.Exact<{
+  request: Types.FollowersRequest;
+  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+}>;
+
+export type FollowersQuery = {
+  result: { items: Array<FollowerFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type FollowerNftOwnedTokenIdsQueryVariables = Types.Exact<{
+  request: Types.FollowerNftOwnedTokenIdsRequest;
+}>;
+
+export type FollowerNftOwnedTokenIdsQuery = {
+  followerNftOwnedTokenIds: Types.Maybe<
+    Pick<Types.FollowerNftOwnedTokenIds, 'followerNftAddress' | 'tokensIds'>
+  >;
 };
 
 export const ProfileDocument = gql`
@@ -91,6 +136,52 @@ export const MutualFollowersProfilesDocument = gql`
   ${ProfileFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
+export const DoesFollowDocument = gql`
+  query DoesFollow($request: DoesFollowRequest!) {
+    result: doesFollow(request: $request) {
+      follows
+      followerAddress
+      profileId
+      isFinalisedOnChain
+    }
+  }
+`;
+export const FollowingDocument = gql`
+  query Following($request: FollowingRequest!, $observerId: ProfileId) {
+    result: following(request: $request) {
+      items {
+        ...Following
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${FollowingFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+export const FollowersDocument = gql`
+  query Followers($request: FollowersRequest!, $observerId: ProfileId) {
+    result: followers(request: $request) {
+      items {
+        ...Follower
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${FollowerFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+export const FollowerNftOwnedTokenIdsDocument = gql`
+  query FollowerNftOwnedTokenIds($request: FollowerNftOwnedTokenIdsRequest!) {
+    followerNftOwnedTokenIds(request: $request) {
+      followerNftAddress
+      tokensIds
+    }
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -103,6 +194,10 @@ const ProfileDocumentString = print(ProfileDocument);
 const ProfilesDocumentString = print(ProfilesDocument);
 const RecommendedProfilesDocumentString = print(RecommendedProfilesDocument);
 const MutualFollowersProfilesDocumentString = print(MutualFollowersProfilesDocument);
+const DoesFollowDocumentString = print(DoesFollowDocument);
+const FollowingDocumentString = print(FollowingDocument);
+const FollowersDocumentString = print(FollowersDocument);
+const FollowerNftOwnedTokenIdsDocumentString = print(FollowerNftOwnedTokenIdsDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -170,6 +265,68 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'MutualFollowersProfiles',
+        'query',
+      );
+    },
+    DoesFollow(
+      variables: DoesFollowQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{ data: DoesFollowQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<DoesFollowQuery>(DoesFollowDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'DoesFollow',
+        'query',
+      );
+    },
+    Following(
+      variables: FollowingQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{ data: FollowingQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<FollowingQuery>(FollowingDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'Following',
+        'query',
+      );
+    },
+    Followers(
+      variables: FollowersQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{ data: FollowersQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<FollowersQuery>(FollowersDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'Followers',
+        'query',
+      );
+    },
+    FollowerNftOwnedTokenIds(
+      variables: FollowerNftOwnedTokenIdsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: FollowerNftOwnedTokenIdsQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<FollowerNftOwnedTokenIdsQuery>(
+            FollowerNftOwnedTokenIdsDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'FollowerNftOwnedTokenIds',
         'query',
       );
     },
