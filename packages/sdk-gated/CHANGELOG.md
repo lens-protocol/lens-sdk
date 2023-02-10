@@ -1,7 +1,5 @@
 # 1.2.0 - 20th January 2023
 
-## 1.2.0
-
 - Remove `cross-blob` and `cross-fetch` dependencies
 - Package now only supports Node 18+.
 
