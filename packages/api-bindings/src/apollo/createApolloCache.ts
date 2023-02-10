@@ -21,6 +21,7 @@ import { createNftImageTypePolicy } from './createNftImageTypePolicy';
 import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
 import { createProfileFollowersFieldPolicy } from './createProfileFollowersFieldPolicy';
 import { createProfileFollowingFieldPolicy } from './createProfileFollowingFieldPolicy';
+import { createProfilePublicationsForSaleFieldPolicy } from './createProfilePublicationsForSaleFieldPolicy';
 import { createProfilePublicationRevenueFieldPolicy } from './createProfilePublicationRevenueFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
@@ -90,6 +91,7 @@ function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies
         explorePublications: createExplorePublicationsFieldPolicy(),
         notifications: createNotificationsFieldPolicy(),
         profiles: createProfilesFieldPolicy(),
+        profilePublicationsForSale: createProfilePublicationsForSaleFieldPolicy(),
         publications: createPublicationsFieldPolicy(),
         search: createSearchFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
