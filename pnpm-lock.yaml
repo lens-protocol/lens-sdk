@@ -140,7 +140,6 @@ importers:
       jest: ^29.3.1
       react: ^18.2.0
       react-dom: ^18.2.0
-      rimraf: ^3.0.2
       ts-jest: ^29.0.3
       tslib: ^2.4.1
       typescript: ^4.9.3
@@ -169,7 +168,6 @@ importers:
       jest: 29.3.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      rimraf: 3.0.2
       ts-jest: 29.0.3_p6ekqnroyms5nhqbfxosryz7rm
       typescript: 4.9.4
 
@@ -185,7 +183,6 @@ importers:
       eslint: ^8.28.0
       ethers: ^5.7.2
       jest: ^29.3.1
-      rimraf: ^3.0.2
       ts-jest: ^29.0.3
       tslib: ^2.4.1
       typechain: ^8.1.1
@@ -203,7 +200,6 @@ importers:
       '@types/jest': 29.2.3
       eslint: 8.28.0
       jest: 29.3.1
-      rimraf: 3.0.2
       ts-jest: 29.0.3_p6ekqnroyms5nhqbfxosryz7rm
       typechain: 8.1.1_p6ekqnroyms5nhqbfxosryz7rm
       typescript: 4.9.4
@@ -273,7 +269,6 @@ importers:
       jest-mock-extended: ^3.0.1
       jest-when: ^3.5.2
       prettier: ^2.8.0
-      rimraf: ^3.0.2
       ts-jest: ^29.0.3
       tslib: ^2.4.1
       typescript: ^4.9.3
@@ -293,7 +288,6 @@ importers:
       jest-mock-extended: 3.0.1_p6ekqnroyms5nhqbfxosryz7rm
       jest-when: 3.5.2_jest@29.3.1
       prettier: 2.8.4
-      rimraf: 3.0.2
       ts-jest: 29.0.3_p6ekqnroyms5nhqbfxosryz7rm
       typescript: 4.9.4
       wait-for-expect: 3.0.2
@@ -367,7 +361,6 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
       resolver:@0.2.4: link:@ensdomains/resolver:@0.2.4
-      rimraf: ^3.0.2
       ts-jest: ^29.0.3
       tslib: ^2.4.1
       typescript: ^4.9.3
@@ -416,7 +409,6 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       resolver:@0.2.4: link:@ensdomains/resolver:@0.2.4
-      rimraf: 3.0.2
       ts-jest: 29.0.3_p6ekqnroyms5nhqbfxosryz7rm
       typescript: 4.9.4
 
@@ -456,7 +448,6 @@ importers:
       jest-environment-jsdom: ^29.3.1
       pako: ^2.0.4
       prettier: ^2.8.1
-      rimraf: ^3.0.2
       rollup: ^3.9.1
       rollup-plugin-bundle-size: ^1.0.3
       rollup-plugin-node-builtins: ^2.1.2
@@ -505,7 +496,6 @@ importers:
       jest: 29.3.1_@types+node@16.18.12
       jest-environment-jsdom: 29.3.1
       prettier: 2.8.4
-      rimraf: 3.0.2
       rollup: 3.14.0
       rollup-plugin-bundle-size: 1.0.3
       rollup-plugin-node-builtins: 2.1.2
@@ -528,7 +518,6 @@ importers:
       jest: ^29.3.1
       lodash: ^4.17.21
       prettier: ^2.8.0
-      rimraf: ^3.0.2
       ts-jest: ^29.0.3
       tslib: ^2.4.1
       typescript: ^4.9.3
@@ -548,7 +537,6 @@ importers:
       ethers: 5.7.2
       jest: 29.3.1
       prettier: 2.8.4
-      rimraf: 3.0.2
       ts-jest: 29.0.3_p6ekqnroyms5nhqbfxosryz7rm
       typescript: 4.9.4
 
@@ -562,7 +550,6 @@ importers:
       eslint: ^8.28.0
       jest: ^29.3.1
       prettier: ^2.8.0
-      rimraf: ^3.0.2
       ts-jest: ^29.0.3
       tslib: ^2.4.1
       typescript: ^4.9.3
@@ -579,7 +566,6 @@ importers:
       eslint: 8.28.0
       jest: 29.3.1_@types+node@18.11.11
       prettier: 2.8.4
-      rimraf: 3.0.2
       ts-jest: 29.0.3_p6ekqnroyms5nhqbfxosryz7rm
       typescript: 4.9.4
 
@@ -593,7 +579,6 @@ importers:
       prettier: ^2.8.1
       react: ^18.2.0
       react-dom: ^18.2.0
-      rimraf: ^3.0.2
       typescript: ^4.9.4
       wagmi: 0.9.2
     dependencies:
@@ -606,7 +591,6 @@ importers:
       prettier: 2.8.4
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      rimraf: 3.0.2
       typescript: 4.9.4
       wagmi: 0.9.2_5fkdkfy2bkgsnhvxgn477z7iae
 
@@ -17670,7 +17654,7 @@ packages:
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.3.1
+      jest: 29.3.1_@types+node@18.11.11
       jest-util: 29.3.1
       json5: 2.2.3
       lodash.memoize: 4.1.2
