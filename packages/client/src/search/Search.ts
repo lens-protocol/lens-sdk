@@ -1,7 +1,13 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
-import { buildPaginatedQueryResult } from '../helpers';
+import {
+  CommentFragment,
+  CommonPaginatedResultInfoFragment,
+  PostFragment,
+  ProfileFragment,
+} from '../graphql/fragments.generated';
+import { buildPaginatedQueryResult, PaginatedResult } from '../helpers';
 import {
   getSdk,
   Sdk,
@@ -18,14 +24,29 @@ export class Search {
     this.sdk = getSdk(client);
   }
 
-  async searchProfiles(request: SearchProfilesQueryVariables) {
-    return buildPaginatedQueryResult((variables) => this.sdk.SearchProfiles(variables), request);
+  async searchProfiles(request: SearchProfilesQueryVariables): Promise<
+    PaginatedResult<{
+      items: ProfileFragment[];
+      pageInfo: CommonPaginatedResultInfoFragment;
+    }>
+  > {
+    return buildPaginatedQueryResult(async (variables) => {
+      const result = await this.sdk.SearchProfiles(variables);
+
+      return result.data.result;
+    }, request);
   }
 
-  async searchPublications(request: SearchPublicationsQueryVariables) {
-    return buildPaginatedQueryResult(
-      (variables) => this.sdk.SearchPublications(variables),
-      request,
-    );
+  async searchPublications(request: SearchPublicationsQueryVariables): Promise<
+    PaginatedResult<{
+      items: (CommentFragment | PostFragment)[];
+      pageInfo: CommonPaginatedResultInfoFragment;
+    }>
+  > {
+    return buildPaginatedQueryResult(async (variables) => {
+      const result = await this.sdk.SearchPublications(variables);
+
+      return result.data.result;
+    }, request);
   }
 }
