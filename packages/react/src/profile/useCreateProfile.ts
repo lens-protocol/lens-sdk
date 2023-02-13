@@ -7,7 +7,6 @@ import {
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers';
-import {} from '../transactions/adapters/TransactionQueuePresenter';
 import { useCreateProfileController } from './adapters/useCreateProfileController';
 
 export type CreateProfileOperation = Operation<

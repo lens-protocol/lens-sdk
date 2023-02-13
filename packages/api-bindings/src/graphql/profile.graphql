@@ -109,10 +109,10 @@ fragment Profile on Profile {
     }
   }
 
-  isFollowedByMe
-  isFollowingMe: isFollowing(who: $observerId)
+  __isFollowedByMe: isFollowedByMe
+  isFollowingObserver: isFollowing(who: $observerId)
 
-  isOptimisticFollowedByMe @client
+  followStatus @client
   ownedByMe @client
 }
 

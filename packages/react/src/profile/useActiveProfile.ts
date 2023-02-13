@@ -27,7 +27,7 @@ export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, 
     client: apolloClient,
   });
 
-  if (state !== ApplicationsState.READY || loading) {
+  if (state !== ApplicationsState.READY || loading || data === undefined) {
     return {
       data: undefined,
       error: undefined,
@@ -43,7 +43,7 @@ export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, 
     };
   }
 
-  invariant(data?.result, 'Profile not found.');
+  invariant(data.result, 'Profile not found.');
   invariant(isProfileOwnedByMe(data.result), 'Profile not owned by the active wallet.');
 
   return {

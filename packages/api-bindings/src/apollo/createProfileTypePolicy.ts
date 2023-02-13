@@ -6,6 +6,7 @@ import { never } from '@lens-protocol/shared-kernel';
 import {
   erc20Amount,
   FollowModule,
+  FollowStatus,
   Profile,
   ProfileAttributeReader,
   ProfileAttributes,
@@ -64,40 +65,60 @@ export function createProfileTypePolicy(
         keyArgs: false,
       },
 
-      isOptimisticFollowedByMe(existing) {
-        return existing ?? false;
-      },
-
       isFollowedByMe: {
         keyArgs: false,
 
-        read(existing = false, { readField }) {
+        merge(_, incoming) {
+          return incoming;
+        },
+      },
+
+      followStatus: {
+        read(_, { readField }) {
           const activeWallet = activeWalletVar();
 
           if (!activeWallet) {
-            return existing ?? false;
+            return null;
           }
 
-          const profileId = readField('id') ?? never();
-          const isFollowTransactionForCurrentProfile = isFollowTransactionFor({
+          const profileId = readField('id') ?? never('Cannot read profile id');
+          const isFollowedByMe =
+            readField('isFollowedByMe') ?? never('Cannot read profile isFollowedByMe');
+
+          const isFollowTransactionForThisProfile = isFollowTransactionFor({
             profileId,
             followerAddress: activeWallet.address,
           });
-          const isUnfollowTransactionForCurrentProfile = isUnfollowTransactionFor({
+          const isUnfollowTransactionForThisProfile = isUnfollowTransactionFor({
             profileId,
           });
 
-          return getAllPendingTransactions().reduce((result, transaction) => {
-            if (isFollowTransactionForCurrentProfile(transaction)) {
-              return true;
-            }
+          return getAllPendingTransactions().reduce(
+            (status, transaction) => {
+              if (isFollowTransactionForThisProfile(transaction)) {
+                return {
+                  isFollowedByMe: true,
+                  canFollow: false,
+                  canUnfollow: false,
+                };
+              }
 
-            if (isUnfollowTransactionForCurrentProfile(transaction)) {
-              return false;
-            }
+              if (isUnfollowTransactionForThisProfile(transaction)) {
+                return {
+                  isFollowedByMe: false,
+                  canFollow: false,
+                  canUnfollow: false,
+                };
+              }
 
-            return result;
-          }, existing);
+              return status;
+            },
+            {
+              isFollowedByMe,
+              canFollow: !isFollowedByMe,
+              canUnfollow: isFollowedByMe,
+            } as FollowStatus,
+          );
         },
       },
 

@@ -29,19 +29,40 @@ function FollowButton({ followee, follower }: FollowButtonProps) {
     isPending: isUnfollowPending,
   } = useUnfollow({ follower, followee });
 
-  if (followee.isFollowedByMe)
+  if (followee.followStatus === null) {
+    return null;
+  }
+
+  if (followee.followStatus.isFollowedByMe) {
     return (
       <>
-        <button onClick={unfollow} disabled={isUnfollowPending}>
+        <button
+          onClick={unfollow}
+          disabled={isUnfollowPending || !followee.followStatus.canUnfollow}
+          title={
+            !followee.followStatus.canUnfollow
+              ? 'The previous follow request is not finalized on-chain just yet.'
+              : undefined
+          }
+        >
           Unfollow
         </button>
         {unfollowError && <p>{unfollowError.message}</p>}
       </>
     );
+  }
 
   return (
     <>
-      <button onClick={follow} disabled={isFollowPending}>
+      <button
+        onClick={follow}
+        disabled={isFollowPending || !followee.followStatus.canFollow}
+        title={
+          !followee.followStatus.canFollow
+            ? 'The previous unfollow request is not finalized on-chain just yet.'
+            : undefined
+        }
+      >
         Follow
       </button>
       {followError && <p>{followError.message}</p>}

@@ -159,7 +159,7 @@ function resolveNotFollower(
     | LimitedTimedFeeCollectModuleSettingsFragment,
   author: ProfileFragment,
 ) {
-  if (collectModule.followerOnly && !author.isFollowedByMe) {
+  if (collectModule.followerOnly && !author.__isFollowedByMe) {
     return CollectState.NOT_A_FOLLOWER;
   }
   return null;

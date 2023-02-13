@@ -3,12 +3,13 @@ scalar ProfileAttributes
 scalar FollowPolicy
 scalar CollectPolicy
 scalar ReferencePolicy
+scalar FollowStatus
 
 extend type Profile {
   ownedByMe: Boolean!
-  isOptimisticFollowedByMe: Boolean!
   attributesMap: ProfileAttributes!
   followPolicy: FollowPolicy!
+  followStatus: FollowStatus
 }
 
 extend type Post {

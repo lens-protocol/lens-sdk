@@ -26,6 +26,8 @@ export class UpdateFollowPolicyResponder
       id: profileIdentifier,
       fields: {
         followPolicy() {
+          // Apollo types makes this operation unsafe
+          // make sure the shape is correct with a test
           return request.policy;
         },
       },
