@@ -1,13 +1,13 @@
 import {
   Amount,
-  ChargeFollowPolicy,
   Erc20,
   FollowPolicyType,
-  NoFeeFollowPolicy,
   ProfileFragment,
   useCurrencies,
   useUpdateFollowPolicy,
   FollowPolicy,
+  ChargeFollowConfig,
+  NoFeeFollowConfig,
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
@@ -34,7 +34,7 @@ function resolveFollowPolicy({
   followPolicyType: SupportedFollowPolicy;
   amount?: Amount<Erc20>;
   recipient?: string;
-}): ChargeFollowPolicy | NoFeeFollowPolicy {
+}): ChargeFollowConfig | NoFeeFollowConfig {
   if (followPolicyType === FollowPolicyType.CHARGE) {
     return {
       type: FollowPolicyType.CHARGE,
