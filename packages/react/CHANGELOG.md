@@ -1,5 +1,16 @@
 # @lens-protocol/react
 
+## 0.4.1
+
+### Patch Changes
+
+- 58c9d8e: Fixes the pagination support on the publication related queries
+  - @lens-protocol/api-bindings@0.4.1
+  - @lens-protocol/blockchain-bindings@0.4.1
+  - @lens-protocol/domain@0.4.1
+  - @lens-protocol/shared-kernel@0.4.1
+  - @lens-protocol/storage@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes
