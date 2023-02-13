@@ -1,14 +1,14 @@
-import { ProfileFragment, useCreatePost, ContentFocus } from '@lens-protocol/react';
+import { ProfileOwnedByMeFragment, useCreatePost, ContentFocus } from '@lens-protocol/react';
 
 import { upload } from '../../upload';
 import { never } from '../../utils';
 
 export type PostComposerProps = {
-  profile: ProfileFragment;
+  publisher: ProfileOwnedByMeFragment;
 };
 
-export function PostComposer({ profile }: PostComposerProps) {
-  const { execute: create, error, isPending } = useCreatePost({ profile, upload });
+export function PostComposer({ publisher }: PostComposerProps) {
+  const { execute: create, error, isPending } = useCreatePost({ publisher, upload });
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -19,7 +19,6 @@ export function PostComposer({ profile }: PostComposerProps) {
     const content = (formData.get('content') as string | null) ?? never();
 
     await create({
-      profileId: profile.id,
       content,
       contentFocus: ContentFocus.TEXT,
       locale: 'en',

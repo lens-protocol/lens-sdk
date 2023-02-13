@@ -1,3 +1,4 @@
+import { ProfileOwnedByMeFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -12,17 +13,16 @@ import {
 import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers';
-import { ProfileFragment } from '../profile';
 import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
 import { useCreateCommentController } from './adapters/useCreateCommentController';
 
 export type UseCreateCommentArg = {
-  profile: ProfileFragment;
+  publisher: ProfileOwnedByMeFragment;
   upload: MetadataUploadHandler;
 };
 
 export type CreateCommentArgs = Prettify<
-  Omit<CreateCommentRequest, 'kind' | 'delegate' | 'collect' | 'reference'> &
+  Omit<CreateCommentRequest, 'kind' | 'delegate' | 'collect' | 'profileId' | 'reference'> &
     Partial<Pick<CreateCommentRequest, 'collect' | 'reference'>>
 >;
 
@@ -32,7 +32,10 @@ export type CreateCommentOperation = Operation<
   [CreateCommentArgs]
 >;
 
-export function useCreateComment({ profile, upload }: UseCreateCommentArg): CreateCommentOperation {
+export function useCreateComment({
+  publisher,
+  upload,
+}: UseCreateCommentArg): CreateCommentOperation {
   const createComment = useCreateCommentController({ upload });
 
   return useOperation(
@@ -47,8 +50,9 @@ export function useCreateComment({ profile, upload }: UseCreateCommentArg): Crea
       try {
         return await createComment({
           kind: TransactionKind.CREATE_COMMENT,
-          delegate: profile.dispatcher !== null,
+          delegate: publisher.dispatcher !== null,
           collect,
+          profileId: publisher.id,
           reference,
           ...args,
         });

@@ -1,8 +1,8 @@
 import {
-  ProfileFragment,
   usePublication,
   useCreateMirror,
   isMirrorPublication,
+  ProfileOwnedByMeFragment,
 } from '@lens-protocol/react';
 
 import { LoginButton } from '../components/auth/LoginButton';
@@ -12,19 +12,19 @@ import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
 type MirrorInnerProps = {
-  profile: ProfileFragment;
+  publisher: ProfileOwnedByMeFragment;
 };
 
-function MirrorInner({ profile }: MirrorInnerProps) {
+function MirrorInner({ publisher }: MirrorInnerProps) {
   const {
     data: publication,
     error: loadingError,
     loading: publicationLoading,
   } = usePublication({
     publicationId: '0x15-0x028e',
-    observerId: profile.id, // important!
+    observerId: publisher.id, // important!
   });
-  const { create, isPending, error: mirroringError } = useCreateMirror();
+  const { execute: create, isPending, error: mirroringError } = useCreateMirror({ publisher });
 
   if (publicationLoading) return <Loading />;
 
@@ -49,7 +49,6 @@ function MirrorInner({ profile }: MirrorInnerProps) {
           onClick={() =>
             create({
               publication,
-              profile,
             })
           }
           disabled={isPending}
@@ -68,7 +67,7 @@ export function UseCreateMirror() {
         <code>useMirror</code>
       </h1>
       <WhenLoggedInWithProfile>
-        {({ profile }) => <MirrorInner profile={profile} />}
+        {({ profile }) => <MirrorInner publisher={profile} />}
       </WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>

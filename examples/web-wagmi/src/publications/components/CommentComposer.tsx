@@ -1,7 +1,7 @@
 import {
   CollectPolicyType,
   ContentFocus,
-  ProfileFragment,
+  ProfileOwnedByMeFragment,
   useCreateComment,
 } from '@lens-protocol/react';
 
@@ -9,16 +9,12 @@ import { upload } from '../../upload';
 import { never } from '../../utils';
 
 type CommentComposerProps = {
-  activeProfile: ProfileFragment;
+  publisher: ProfileOwnedByMeFragment;
   publicationId: string;
 };
 
-export function CommentComposer({ activeProfile, publicationId }: CommentComposerProps) {
-  const {
-    execute: create,
-    error,
-    isPending,
-  } = useCreateComment({ profile: activeProfile, upload });
+export function CommentComposer({ publisher, publicationId }: CommentComposerProps) {
+  const { execute: create, error, isPending } = useCreateComment({ publisher, upload });
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,7 +27,6 @@ export function CommentComposer({ activeProfile, publicationId }: CommentCompose
     await create({
       publicationId,
       content,
-      profileId: activeProfile.id,
       contentFocus: ContentFocus.TEXT,
       locale: 'en',
       collect: {

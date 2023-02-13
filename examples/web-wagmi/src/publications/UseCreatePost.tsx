@@ -47,7 +47,7 @@ export function UseCreatePost() {
       <WhenLoggedInWithProfile>
         {({ profile }) => (
           <>
-            <PostComposer profile={profile} />
+            <PostComposer publisher={profile} />
 
             <Timeline profileId={profile.id} />
           </>
