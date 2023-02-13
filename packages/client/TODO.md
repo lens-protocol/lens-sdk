@@ -55,7 +55,7 @@ Client manages the token lifecycle and storage
 
 - [x] client.profile.fetch(request) (by id or handle, forSources) or client.profiles.fetchOne()
 - [x] client.profile.fetchAll(request) (by ids, ownedBy, handles, whoMirroredPublicationId)
-- [x] client.profile.fetchRecommended()
+- [x] client.profile.allRecommended()
 - [x] client.profile.mutualFollowers({ viewingProfileId, yourProfileId })
 
 ### Edit profile
@@ -85,8 +85,8 @@ Client manages the token lifecycle and storage
 - [APQ] client.profile.pendingApprovalFollows(request)
 
 - [x] client.profile.doesFollow(request)
-- [x] client.profile(s).following({ address })
-- [x] client.profile.fetchFollowers({ profileId })
+- [x] client.profile(s).allFollowing({ address })
+- [x] client.profile.allFollowers({ profileId })
 - [x] client.profile.followerNftOwnedTokenIds({ address, profileId })
 
 ## Publication(s)
