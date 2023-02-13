@@ -448,6 +448,7 @@ importers:
       jest-environment-jsdom: ^29.3.1
       pako: ^2.0.4
       prettier: ^2.8.1
+      rimraf: ^3.0.2
       rollup: ^3.9.1
       rollup-plugin-bundle-size: ^1.0.3
       rollup-plugin-node-builtins: ^2.1.2
@@ -496,6 +497,7 @@ importers:
       jest: 29.3.1_@types+node@16.18.12
       jest-environment-jsdom: 29.3.1
       prettier: 2.8.4
+      rimraf: 3.0.2
       rollup: 3.14.0
       rollup-plugin-bundle-size: 1.0.3
       rollup-plugin-node-builtins: 2.1.2
@@ -17654,7 +17656,7 @@ packages:
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.3.1_@types+node@18.11.11
+      jest: 29.3.1
       jest-util: 29.3.1
       json5: 2.2.3
       lodash.memoize: 4.1.2
