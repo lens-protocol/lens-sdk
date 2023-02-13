@@ -1,3 +1,9 @@
+<p>
+  <picture>
+    <img alt="Lens SDK logo" src="./assets/logo-full.svg" width="100%">
+  </picture>
+</p>
+
 The official SDK for the [Lens Protocol](https://www.lens.xyz/) 🌿.
 
 > **Warning**
@@ -69,6 +75,7 @@ pnpm deduplicate:check
 ```
 
 To fix all duplicates run:
+
 ```bash
 pnpm deduplicate:fix
 ```
