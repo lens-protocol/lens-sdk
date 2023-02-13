@@ -80,7 +80,7 @@ export function isPublicationOwnedByMe(
 
 export function createCollectRequest(
   publication: PublicationFragment,
-  collector: ProfileFragment,
+  collector: ProfileOwnedByMeFragment,
 ): CollectRequest {
   switch (publication.__collectModule.__typename) {
     case 'FreeCollectModuleSettings':

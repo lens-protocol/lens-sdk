@@ -15,6 +15,8 @@ type UseUpdateFollowPolicyArgs = {
   followPolicy: ChargeFollowConfig | NoFeeFollowConfig;
 };
 
+export type { ChargeFollowConfig, NoFeeFollowConfig };
+
 export function useUpdateFollowPolicy() {
   const [error, setError] = useState<
     PendingSigningRequestError | UserRejectedError | WalletConnectionError | null

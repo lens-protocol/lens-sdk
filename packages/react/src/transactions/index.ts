@@ -30,10 +30,5 @@ export type {
   SupportedPublicationMediaType,
   ReferencePolicyConfig,
 } from '@lens-protocol/domain/use-cases/publications';
-export type {
-  ChargeFollowConfig as ChargeFollowPolicy,
-  NoFeeFollowConfig as NoFeeFollowPolicy,
-} from '@lens-protocol/domain/use-cases/profile';
 export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-export type { FollowPolicy } from '@lens-protocol/api-bindings';
 export { FailedUploadError } from './adapters/MetadataUploadAdapter';

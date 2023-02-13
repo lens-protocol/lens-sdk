@@ -19,4 +19,5 @@ export type {
   ProfileOwnedByMeFragment,
   FollowingFragment,
   FollowerFragment,
+  FollowPolicy,
 } from '@lens-protocol/api-bindings';
