@@ -1,5 +1,27 @@
 # @lens-protocol/react
 
+## 0.4.0
+
+### Minor Changes
+
+- b5350d9: Removed the `walletType` argument from the `login` method of `useWalletLogin` hook
+- f0897b1: Added `useApproveModule` and internal toolings for EIP-1559 gas estimation
+- 169352f: Added `metadataFilter` to `useFeed`, `useExplorePublications` and `useComments`.
+- fa654d3: Added ability to collect a publication
+- daad9ed: Added `useWhoMirroredPublication` hook
+
+### Patch Changes
+
+- de56baf: Added `IStorageProvider` `StorageSubscription` `StorageProviderSubscriber` and `IObservableStorageProvider` to the package exports
+
+  Removed `IStorageProvider.subscribe` method (use `IObservableStorageProvider` when custom subscription logic is required)
+
+  - @lens-protocol/api-bindings@0.4.0
+  - @lens-protocol/blockchain-bindings@0.4.0
+  - @lens-protocol/domain@0.4.0
+  - @lens-protocol/shared-kernel@0.4.0
+  - @lens-protocol/storage@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes

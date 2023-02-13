@@ -9,6 +9,7 @@ export * from './useUnfollow';
 export * from './useUpdateDispatcherConfig';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileDetails';
+export * from './useRecentTransactions';
 
 export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 export type { MetadataUploadAdapter } from './adapters/MetadataUploadAdapter';
@@ -35,3 +36,4 @@ export type {
 } from '@lens-protocol/domain/use-cases/profile';
 export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 export type { FollowPolicy } from '@lens-protocol/api-bindings';
+export { TxStatus } from './adapters/TransactionQueuePresenter';

@@ -24,6 +24,7 @@ import { UseApproveModule } from './misc/UseApproveModule';
 import { UseCurrencies } from './misc/UseCurrencies';
 import { UseEnabledModules } from './misc/UseEnabledModules';
 import { UseNotifications } from './misc/UseNotifications';
+import { UseRecentTransactions } from './misc/UseRecentTransactions';
 import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
 import { ProfilesPage } from './profiles/ProfilesPage';
 import { UseActiveProfileSwitch } from './profiles/UseActiveProfileSwitch';
@@ -175,6 +176,7 @@ export function App() {
                   element={<UseUnreadNotificationCount />}
                 />
                 <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
+                <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />
