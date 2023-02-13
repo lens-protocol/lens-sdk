@@ -53,10 +53,10 @@ Client manages the token lifecycle and storage
 
 ### Query profile
 
-- [Q] client.profile.fetch(request) (by id or handle, forSources) or client.profiles.fetchOne()
-- [PQ] client.profile.fetchAll(request) (by ids, ownedBy, handles, whoMirroredPublicationId)
-- [Q] client.profile.fetchRecommended()
-- [PQ] client.profile.mutualFollowers({ viewingProfileId, yourProfileId })
+- [x] client.profile.fetch(request) (by id or handle, forSources) or client.profiles.fetchOne()
+- [x] client.profile.fetchAll(request) (by ids, ownedBy, handles, whoMirroredPublicationId)
+- [x] client.profile.fetchRecommended()
+- [x] client.profile.mutualFollowers({ viewingProfileId, yourProfileId })
 
 ### Edit profile
 
@@ -84,10 +84,10 @@ Client manages the token lifecycle and storage
 - [AM] client.profile.createSetFollowNFTUriTypedData(request)
 - [APQ] client.profile.pendingApprovalFollows(request)
 
-- [Q] client.profile.doesFollow(request)
-- [PQ] client.profile(s).following({ address })
-- [PQ] client.profile.fetchFollowers({ profileId })
-- [Q] client.profile.followerNftOwnedTokenIds({ address, profileId })
+- [x] client.profile.doesFollow(request)
+- [x] client.profile(s).following({ address })
+- [x] client.profile.fetchFollowers({ profileId })
+- [x] client.profile.followerNftOwnedTokenIds({ address, profileId })
 
 ## Publication(s)
 

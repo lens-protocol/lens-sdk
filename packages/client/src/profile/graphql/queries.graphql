@@ -43,6 +43,7 @@ query DoesFollow($request: DoesFollowRequest!) {
     followerAddress
     profileId
     isFinalisedOnChain
+    __typename
   }
 }
 
@@ -72,6 +73,7 @@ query Followers($request: FollowersRequest!, $observerId: ProfileId) {
 
 query FollowerNftOwnedTokenIds($request: FollowerNftOwnedTokenIdsRequest!) {
   followerNftOwnedTokenIds(request: $request) {
+    __typename
     followerNftAddress
     tokensIds
   }

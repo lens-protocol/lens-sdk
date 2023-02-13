@@ -54,7 +54,7 @@ export type DoesFollowQueryVariables = Types.Exact<{
 
 export type DoesFollowQuery = {
   result: Array<
-    Pick<
+    { __typename: 'DoesFollowResponse' } & Pick<
       Types.DoesFollowResponse,
       'follows' | 'followerAddress' | 'profileId' | 'isFinalisedOnChain'
     >
@@ -85,7 +85,10 @@ export type FollowerNftOwnedTokenIdsQueryVariables = Types.Exact<{
 
 export type FollowerNftOwnedTokenIdsQuery = {
   followerNftOwnedTokenIds: Types.Maybe<
-    Pick<Types.FollowerNftOwnedTokenIds, 'followerNftAddress' | 'tokensIds'>
+    { __typename: 'FollowerNftOwnedTokenIds' } & Pick<
+      Types.FollowerNftOwnedTokenIds,
+      'followerNftAddress' | 'tokensIds'
+    >
   >;
 };
 
@@ -143,6 +146,7 @@ export const DoesFollowDocument = gql`
       followerAddress
       profileId
       isFinalisedOnChain
+      __typename
     }
   }
 `;
@@ -177,6 +181,7 @@ export const FollowersDocument = gql`
 export const FollowerNftOwnedTokenIdsDocument = gql`
   query FollowerNftOwnedTokenIds($request: FollowerNftOwnedTokenIdsRequest!) {
     followerNftOwnedTokenIds(request: $request) {
+      __typename
       followerNftAddress
       tokensIds
     }

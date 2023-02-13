@@ -1,9 +1,16 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
-import { ProfileFragment } from '../graphql/fragments.generated';
+import {
+  CommonPaginatedResultInfoFragment,
+  FollowerFragment,
+  FollowingFragment,
+  ProfileFragment,
+} from '../graphql/fragments.generated';
 import {
   DoesFollowRequest,
+  DoesFollowResponse,
+  FollowerNftOwnedTokenIds,
   FollowerNftOwnedTokenIdsRequest,
   FollowersRequest,
   FollowingRequest,
@@ -33,7 +40,13 @@ export class Profile {
     return result.data.result;
   }
 
-  async fetchAll(request: ProfileQueryRequest, observerId?: string) {
+  async fetchAll(
+    request: ProfileQueryRequest,
+    observerId?: string,
+  ): Promise<{
+    items: ProfileFragment[];
+    pageInfo: CommonPaginatedResultInfoFragment;
+  }> {
     const result = await this.sdk.Profiles({
       request,
       observerId,
@@ -42,7 +55,7 @@ export class Profile {
     return result.data.result;
   }
 
-  async allRecommended(observerId?: string) {
+  async allRecommended(observerId?: string): Promise<ProfileFragment[]> {
     const result = await this.sdk.RecommendedProfiles({
       observerId,
     });
@@ -50,7 +63,10 @@ export class Profile {
     return result.data.result;
   }
 
-  async mutualFollowers(request: MutualFollowersProfilesQueryRequest, observerId?: string) {
+  async mutualFollowers(
+    request: MutualFollowersProfilesQueryRequest,
+    observerId?: string,
+  ): Promise<{ items: ProfileFragment[]; pageInfo: CommonPaginatedResultInfoFragment }> {
     const result = await this.sdk.MutualFollowersProfiles({
       request,
       observerId,
@@ -59,7 +75,7 @@ export class Profile {
     return result.data.result;
   }
 
-  async doesFollow(request: DoesFollowRequest) {
+  async doesFollow(request: DoesFollowRequest): Promise<DoesFollowResponse[]> {
     const result = await this.sdk.DoesFollow({
       request,
     });
@@ -67,7 +83,13 @@ export class Profile {
     return result.data.result;
   }
 
-  async allFollowing(request: FollowingRequest, observerId?: string) {
+  async allFollowing(
+    request: FollowingRequest,
+    observerId?: string,
+  ): Promise<{
+    items: FollowingFragment[];
+    pageInfo: CommonPaginatedResultInfoFragment;
+  }> {
     const result = await this.sdk.Following({
       request,
       observerId,
@@ -76,7 +98,13 @@ export class Profile {
     return result.data.result;
   }
 
-  async allFollowers(request: FollowersRequest, observerId?: string) {
+  async allFollowers(
+    request: FollowersRequest,
+    observerId?: string,
+  ): Promise<{
+    items: FollowerFragment[];
+    pageInfo: CommonPaginatedResultInfoFragment;
+  }> {
     const result = await this.sdk.Followers({
       observerId,
       request,
@@ -85,7 +113,9 @@ export class Profile {
     return result.data.result;
   }
 
-  async followerNftOwnedTokenIds(request: FollowerNftOwnedTokenIdsRequest) {
+  async followerNftOwnedTokenIds(
+    request: FollowerNftOwnedTokenIdsRequest,
+  ): Promise<FollowerNftOwnedTokenIds | null> {
     const result = await this.sdk.FollowerNftOwnedTokenIds({
       request,
     });
