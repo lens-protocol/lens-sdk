@@ -1,10 +1,14 @@
+// @ts-nocheck
 import * as Types from '../../graphql/types.generated.js';
 
 import {
   PostFragment,
   ProfileFragment,
+  MirrorFragment,
   CommentFragment,
   CommonPaginatedResultInfoFragment,
+  FollowingFragment,
+  FollowerFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -13,8 +17,11 @@ import gql from 'graphql-tag';
 import {
   PostFragmentDoc,
   ProfileFragmentDoc,
+  MirrorFragmentDoc,
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
+  FollowingFragmentDoc,
+  FollowerFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type SearchPublicationsQueryVariables = Types.Exact<{
   limit?: Types.Maybe<Types.Scalars['LimitScalar']>;
