@@ -1,16 +1,20 @@
-import { ProfileFragment, useUpdateDispatcherConfig } from '@lens-protocol/react';
+import { ProfileOwnedByMeFragment, useUpdateDispatcherConfig } from '@lens-protocol/react';
 import { useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 
 type UpdateDispatcherConfigFormProps = {
-  activeProfile: ProfileFragment;
+  activeProfile: ProfileOwnedByMeFragment;
 };
 
 function UpdateDispatcherConfigForm({ activeProfile }: UpdateDispatcherConfigFormProps) {
   const [isEnabled, setIsEnabled] = useState(activeProfile.dispatcher !== null);
-  const { update, error, isPending } = useUpdateDispatcherConfig({ profile: activeProfile });
+  const {
+    execute: update,
+    error,
+    isPending,
+  } = useUpdateDispatcherConfig({ profile: activeProfile });
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
