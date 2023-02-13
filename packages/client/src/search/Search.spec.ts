@@ -19,6 +19,19 @@ describe(`Given the ${Search.name} configured to work with sandbox`, () => {
     });
   });
 
+  describe(`when the method ${Search.prototype.searchProfiles.name} is called with pagination`, () => {
+    it('should execute with success', async () => {
+      const search = new Search(testConfig);
+
+      const result = await search.searchProfiles({
+        query: 'test',
+        limit: 3,
+      });
+
+      await expect(result.next()).resolves.not.toThrow();
+    });
+  });
+
   describe(`when the method ${Search.prototype.searchPublications.name} is called`, () => {
     it('should execute with success', async () => {
       const search = new Search(testConfig);
