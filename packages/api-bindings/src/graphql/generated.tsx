@@ -4747,6 +4747,20 @@ export type GetAllProfilesByWhoMirroredPublicationQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
+export type ProfilePublicationsForSaleQueryVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+}>;
+
+export type ProfilePublicationsForSaleQuery = {
+  result: {
+    items: Array<PostFragment | CommentFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
+};
+
 export type AddReactionMutationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
   reaction: ReactionTypes;
@@ -8363,6 +8377,87 @@ export type GetAllProfilesByWhoMirroredPublicationLazyQueryHookResult = ReturnTy
 export type GetAllProfilesByWhoMirroredPublicationQueryResult = Apollo.QueryResult<
   GetAllProfilesByWhoMirroredPublicationQuery,
   GetAllProfilesByWhoMirroredPublicationQueryVariables
+>;
+export const ProfilePublicationsForSaleDocument = gql`
+  query ProfilePublicationsForSale(
+    $profileId: ProfileId!
+    $observerId: ProfileId
+    $limit: LimitScalar!
+    $cursor: Cursor
+  ) {
+    result: profilePublicationsForSale(
+      request: { profileId: $profileId, limit: $limit, cursor: $cursor }
+    ) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useProfilePublicationsForSaleQuery__
+ *
+ * To run a query within a React component, call `useProfilePublicationsForSaleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfilePublicationsForSaleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfilePublicationsForSaleQuery({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *      observerId: // value for 'observerId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useProfilePublicationsForSaleQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ProfilePublicationsForSaleQuery,
+    ProfilePublicationsForSaleQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfilePublicationsForSaleQuery, ProfilePublicationsForSaleQueryVariables>(
+    ProfilePublicationsForSaleDocument,
+    options,
+  );
+}
+export function useProfilePublicationsForSaleLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfilePublicationsForSaleQuery,
+    ProfilePublicationsForSaleQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ProfilePublicationsForSaleQuery,
+    ProfilePublicationsForSaleQueryVariables
+  >(ProfilePublicationsForSaleDocument, options);
+}
+export type ProfilePublicationsForSaleQueryHookResult = ReturnType<
+  typeof useProfilePublicationsForSaleQuery
+>;
+export type ProfilePublicationsForSaleLazyQueryHookResult = ReturnType<
+  typeof useProfilePublicationsForSaleLazyQuery
+>;
+export type ProfilePublicationsForSaleQueryResult = Apollo.QueryResult<
+  ProfilePublicationsForSaleQuery,
+  ProfilePublicationsForSaleQueryVariables
 >;
 export const AddReactionDocument = gql`
   mutation AddReaction(

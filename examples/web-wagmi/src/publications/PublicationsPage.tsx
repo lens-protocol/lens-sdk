@@ -63,13 +63,18 @@ const publicationHooks = [
   },
   {
     label: 'useWhoMirroredPublication',
-    description: 'Fetch profiles that have mirrored a specific publication',
+    description: 'Fetch profiles that have mirrored a specific publication.',
     path: '/publications/useWhoMirroredPublication',
   },
   {
     label: 'useCollect',
     description: `Collect a publication.`,
     path: '/publications/useCollect',
+  },
+  {
+    label: 'useProfilePublicationsForSale',
+    description: 'Fetch profile publications for sale.',
+    path: '/publications/useProfilePublicationsForSale',
   },
 ];
 
