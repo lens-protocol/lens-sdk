@@ -14,10 +14,6 @@
       "module": "./dist/lens-protocol-api-bindings.esm.js",
       "default": "./dist/lens-protocol-api-bindings.cjs.js"
     },
-    "./mocks": {
-      "module": "./mocks/dist/lens-protocol-api-bindings-mocks.esm.js",
-      "default": "./mocks/dist/lens-protocol-api-bindings-mocks.cjs.js"
-    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -68,13 +64,7 @@
     "typescript": "^4.9.3"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "@faker-js/faker": "^7.6.0"
-  },
-  "peerDependenciesMeta": {
-    "@faker-js/faker": {
-      "optional": true
-    }
+    "react": "^18.2.0"
   },
   "prettier": "@lens-protocol/prettier-config",
   "babel": {
@@ -85,8 +75,7 @@
   },
   "preconstruct": {
     "entrypoints": [
-      "index.ts",
-      "mocks.ts"
+      "index.ts"
     ],
     "exports": true
   }

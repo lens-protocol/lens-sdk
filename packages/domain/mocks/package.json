@@ -1,4 +1,3 @@
 {
-  "main": "dist/lens-protocol-domain-mocks.cjs.js",
-  "module": "dist/lens-protocol-domain-mocks.esm.js"
+  "main": "../src/mocks.ts"
 }
