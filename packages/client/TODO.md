@@ -16,10 +16,10 @@
 
 Client manages the token lifecycle and storage
 
-- new LensClient({ environment, storage? })
-- [Q] client.authentication.generateChallenge(address)
-- [M] client.authentication.authenticate(address, signature)
-- [H] client.authentication.isAuthenticated()
+- [x] new LensClient({ environment, storage? })
+- [x] [Q] client.authentication.generateChallenge(address)
+- [x] [M] client.authentication.authenticate(address, signature)
+- [x] [H] client.authentication.isAuthenticated()
 
 ## Broadcast / Transaction
 
@@ -28,8 +28,8 @@ Client manages the token lifecycle and storage
 
 ## Explore
 
-- [PQ] client.explore.publications(request)
-- [PQ] client.explore.profiles(request)
+- [x] [PQ] client.explore.publications(request)
+- [x] [PQ] client.explore.profiles(request)
 
 ## Module
 
@@ -53,10 +53,10 @@ Client manages the token lifecycle and storage
 
 ### Query profile
 
-- [x] client.profile.fetch(request) (by id or handle, forSources) or client.profiles.fetchOne()
-- [x] client.profile.fetchAll(request) (by ids, ownedBy, handles, whoMirroredPublicationId)
-- [x] client.profile.allRecommended()
-- [x] client.profile.mutualFollowers({ viewingProfileId, yourProfileId })
+- [x] [Q] client.profile.fetch(request)
+- [x] [PQ] client.profile.fetchAll(request)
+- [x] [Q] client.profile.allRecommended()
+- [x] [PQ] client.profile.mutualFollowers({ viewingProfileId, yourProfileId })
 
 ### Edit profile
 
@@ -84,10 +84,10 @@ Client manages the token lifecycle and storage
 - [AM] client.profile.createSetFollowNFTUriTypedData(request)
 - [APQ] client.profile.pendingApprovalFollows(request)
 
-- [x] client.profile.doesFollow(request)
-- [x] client.profile(s).allFollowing({ address })
-- [x] client.profile.allFollowers({ profileId })
-- [x] client.profile.followerNftOwnedTokenIds({ address, profileId })
+- [x] [Q] client.profile.doesFollow(request)
+- [x] [PQ] client.profile.allFollowing({ address })
+- [x] [PQ] client.profile.allFollowers({ profileId })
+- [x] [Q] client.profile.followerNftOwnedTokenIds({ address, profileId })
 
 ## Publication(s)
 
@@ -133,9 +133,9 @@ Client manages the token lifecycle and storage
 
 ## Reactions
 
-- [AM] client.reactions.add(request)
-- [AM] client.reactions.remove(request)
-- [PQ] client.reactions.toPublication({ publicationId })
+- [x] [AM] client.reactions.add(request)
+- [x] [AM] client.reactions.remove(request)
+- [ ] [PQ] client.reactions.toPublication({ publicationId })
 
 ## Reporting
 
@@ -149,8 +149,8 @@ Client manages the token lifecycle and storage
 
 ## Search
 
-- [PQ] client.search.profiles({ query, limit })
-- [PQ] client.search.publications({ query, limit })
+- [x] [PQ] client.search.profiles({ query, limit })
+- [x] [PQ] client.search.publications({ query, limit })
 
 ## Feed
 
@@ -160,8 +160,6 @@ Client manages the token lifecycle and storage
 
 - paginated response helper
 - more helpers like `isValidHandle`
-- how to split a group that has both authenticated and public requests?
-- authentication required error thrown on a group or on a method call?
 - allow for custom gql queries or compose query from subqueries (like profile base, profile interests, profile onChainIdentity etc.) (is that possible?)
 
 ```ts
