@@ -40,25 +40,23 @@ export class SignerFactory implements ISignerFactory {
 
     if (chainType) {
       try {
-        await signer.getChainId();
+        const signerChainId = await signer.getChainId();
+        if (signerChainId !== chainId) {
+          const chainConfig = this.createAddEthereumChainParameter(chainType);
+
+          await this.addChain(signer, chainConfig);
+
+          const result = await this.switchChain(signer, chainConfig);
+
+          if (result.isFailure()) {
+            return failure(result.error);
+          }
+        }
       } catch (err) {
         assertErrorObjectWithCode<errors>(err);
 
         if (err.code === errors.UNSUPPORTED_OPERATION) {
           return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
-        }
-      }
-
-      const signerChainId = await signer.getChainId();
-      if (signerChainId !== chainId) {
-        const chainConfig = this.createAddEthereumChainParameter(chainType);
-
-        await this.addChain(signer, chainConfig);
-
-        const result = await this.switchChain(signer, chainConfig);
-
-        if (result.isFailure()) {
-          return failure(result.error);
         }
       }
     }
