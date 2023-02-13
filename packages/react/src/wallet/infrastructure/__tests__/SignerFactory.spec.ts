@@ -144,7 +144,7 @@ describe(`Given an instance of the ${SignerFactory.name}`, () => {
         expect(result.unwrap()).toBe(wallet);
       });
 
-      it.only(`should fail with ${WalletConnectionError.name}(${WalletConnectionErrorReason.INCORRECT_CHAIN}) since it cannot switch chains`, async () => {
+      it(`should fail with ${WalletConnectionError.name}(${WalletConnectionErrorReason.INCORRECT_CHAIN}) since it cannot switch chains`, async () => {
         const wallet = new Wallet(testWalletPrivateKey);
 
         const { signerFactory } = setupTestScenario({
