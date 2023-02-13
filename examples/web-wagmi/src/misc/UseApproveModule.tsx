@@ -18,7 +18,7 @@ type UseApproveModuleFormProps = {
 };
 
 function UseApproveModuleForm({ currencies, modules }: UseApproveModuleFormProps) {
-  const { approve, isPending } = useApproveModule();
+  const { execute: approve, error, isPending } = useApproveModule();
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -71,6 +71,7 @@ function UseApproveModuleForm({ currencies, modules }: UseApproveModuleFormProps
       <button type="submit" disabled={isPending}>
         {isPending ? 'Loading' : 'Approve'}
       </button>
+      {error && <ErrorMessage error={error} />}
     </form>
   );
 }
