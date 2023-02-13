@@ -47,6 +47,7 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
+    "@graphql-codegen/add": "^3.2.3",
     "@graphql-codegen/cli": "^1.21.7",
     "@graphql-codegen/near-operation-file-preset": "^2.5.0",
     "@graphql-codegen/typescript": "^1.23.0",

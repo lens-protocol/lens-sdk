@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as Types from '../../graphql/types.generated.js';
 
 import {
@@ -6,6 +7,8 @@ import {
   MirrorFragment,
   CommentFragment,
   CommonPaginatedResultInfoFragment,
+  FollowingFragment,
+  FollowerFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -17,6 +20,8 @@ import {
   MirrorFragmentDoc,
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
+  FollowingFragmentDoc,
+  FollowerFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type ExplorePublicationsQueryVariables = Types.Exact<{
   request: Types.ExplorePublicationRequest;
