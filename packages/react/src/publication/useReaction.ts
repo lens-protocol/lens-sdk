@@ -1,16 +1,15 @@
-import { getApiReactionType } from '@lens-protocol/api-bindings';
+import { getApiReactionType, PublicationFragment } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import { useState } from 'react';
 
 import { useReactionController } from './adapters/useReactionController';
-import { Publication } from './types';
 
 export type UseReactionArgs = {
   profileId: string;
 };
 
 export type ReactionArgs = {
-  publication: Publication;
+  publication: PublicationFragment;
   reactionType: ReactionType;
 };
 

@@ -31,7 +31,6 @@ export * from './useWhoMirroredPublication';
 export * from './useProfilePublicationsForSale';
 export * from './filters';
 
-export type { Publication } from './types';
 export {
   CollectState,
   isPostPublication,

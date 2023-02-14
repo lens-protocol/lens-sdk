@@ -1,4 +1,5 @@
 import {
+  PublicationFragment,
   PublicationSortCriteria,
   PublicationTypes,
   useExplorePublicationsQuery,
@@ -8,7 +9,6 @@ import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../h
 import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
-import { Publication } from './types';
 
 type UseExplorePublicationsArgs = PaginatedArgs<{
   observerId?: string;
@@ -27,7 +27,7 @@ export function useExplorePublications({
   publicationTypes,
   excludeProfileIds,
   metadataFilter,
-}: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<Publication>> {
+}: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<PublicationFragment>> {
   const { sources, apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(
