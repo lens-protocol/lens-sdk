@@ -27,7 +27,23 @@ export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, 
     client: apolloClient,
   });
 
-  if (state !== ApplicationsState.READY || loading || data === undefined) {
+  if (state !== ApplicationsState.READY) {
+    return {
+      data: undefined,
+      error: undefined,
+      loading: true,
+    };
+  }
+
+  if (profile === null) {
+    return {
+      data: null,
+      error: undefined,
+      loading: false,
+    };
+  }
+
+  if (loading || data === undefined) {
     return {
       data: undefined,
       error: undefined,

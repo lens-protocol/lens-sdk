@@ -20,6 +20,7 @@ import {
   PaidFollowRequest,
   ProfileOwnerFollowRequest,
 } from '../FollowProfiles';
+import { ProfileIdentifier } from '../IActiveProfilePresenter';
 import {
   INftOwnershipChallengeGateway,
   NftOwnershipSignature,
@@ -67,6 +68,14 @@ export function mockIProfileTransactionGateway({
 
 export function mockProfileId() {
   return faker.datatype.uuid();
+}
+
+export function mockProfileIdentifier(overrides?: Partial<ProfileIdentifier>): ProfileIdentifier {
+  return {
+    id: mockProfileId(),
+    handle: faker.internet.userName(),
+    ...overrides,
+  };
 }
 
 export function mockChargeFollowConfig(
