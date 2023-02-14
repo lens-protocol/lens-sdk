@@ -3,6 +3,7 @@ import { LensConfig } from './consts/config';
 import { Explore } from './explore';
 import { Profile } from './profile';
 import { Reactions } from './reactions';
+import { Revenue } from './revenue';
 import { Search } from './search';
 
 export class LensClient {
@@ -32,5 +33,9 @@ export class LensClient {
 
   get explore(): Explore {
     return new Explore(this.config);
+  }
+
+  get revenue(): Revenue {
+    return new Revenue(this.config);
   }
 }

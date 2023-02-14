@@ -9,6 +9,7 @@ import {
   CommonPaginatedResultInfoFragment,
   FollowingFragment,
   FollowerFragment,
+  Erc20AmountFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -20,8 +21,7 @@ import {
   MirrorFragmentDoc,
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
-  FollowingFragmentDoc,
-  FollowerFragmentDoc,
+  Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type SearchPublicationsQueryVariables = Types.Exact<{
   limit?: Types.Maybe<Types.Scalars['LimitScalar']>;
