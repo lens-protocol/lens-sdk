@@ -10,6 +10,7 @@ import {
   FollowingFragment,
   FollowerFragment,
   Erc20AmountFragment,
+  WalletFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -24,6 +25,7 @@ import {
   FollowingFragmentDoc,
   FollowerFragmentDoc,
   Erc20AmountFragmentDoc,
+  WalletFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type ExplorePublicationsQueryVariables = Types.Exact<{
   request: Types.ExplorePublicationRequest;

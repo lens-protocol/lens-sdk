@@ -2,6 +2,7 @@ import { Authentication, IAuthentication } from './authentication';
 import { LensConfig } from './consts/config';
 import { Explore } from './explore';
 import { Profile } from './profile';
+import { Publication } from './publication';
 import { Reactions } from './reactions';
 import { Revenue } from './revenue';
 import { Search } from './search';
@@ -37,5 +38,9 @@ export class LensClient {
 
   get revenue(): Revenue {
     return new Revenue(this.config);
+  }
+
+  get publication(): Publication {
+    return new Publication(this.config);
   }
 }
