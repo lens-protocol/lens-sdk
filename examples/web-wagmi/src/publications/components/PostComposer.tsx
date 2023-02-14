@@ -15,7 +15,7 @@ export function PostComposer({ publisher }: PostComposerProps) {
 
     const form = event.currentTarget;
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     const content = (formData.get('content') as string | null) ?? never();
 
     await create({

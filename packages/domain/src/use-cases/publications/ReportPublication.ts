@@ -6,7 +6,7 @@ import { IGenericResultPresenter } from '../transactions';
 export type ReportPublicationRequest = {
   publicationId: string;
   reason: ReportReason;
-  additionalComments: string | null;
+  additionalComments?: string;
 };
 
 export interface IReportPublicationGateway {

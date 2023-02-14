@@ -21,7 +21,7 @@ export function CommentComposer({ publisher, publicationId }: CommentComposerPro
 
     const form = event.currentTarget;
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     const content = (formData.get('content') as string | null) ?? never();
 
     await create({
