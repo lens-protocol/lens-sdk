@@ -2,7 +2,7 @@
 // It's a developer responsibility to provide a secure wallet implementation.
 // The purpose of the `react-native` example is to just showcase on the `@lens-protocol/react` integration.
 
-import {assertRequiredSigner, IBindings} from '@lens-protocol/react';
+import {IBindings} from '@lens-protocol/react';
 import {providers, Wallet} from 'ethers';
 
 const provider = new providers.InfuraProvider('maticmum');
@@ -17,10 +17,6 @@ export const wallet = new Wallet(testWalletPrivateKey, provider);
 export function bindings(): IBindings {
   return {
     getProvider: async () => provider,
-    getSigner: async () => {
-      assertRequiredSigner(wallet);
-
-      return wallet;
-    },
+    getSigner: async () => wallet,
   };
 }

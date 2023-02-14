@@ -21,17 +21,14 @@ import {
   PromiseResult,
   success,
 } from '@lens-protocol/shared-kernel';
-import { errors, providers, Signer } from 'ethers';
+import { errors, Signer } from 'ethers';
 import { z } from 'zod';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 import { TypedData } from '../../transactions/adapters/TypedData';
 import { assertErrorObjectWithCode } from './errors';
 
-export type RequiredSigner = Omit<Signer, 'provider'> &
-  TypedDataSigner & {
-    provider: providers.JsonRpcProvider;
-  };
+export type RequiredSigner = Signer & TypedDataSigner;
 
 export type CreateSignerConfig = {
   address: EthereumAddress;
