@@ -143,9 +143,9 @@ Client manages the token lifecycle and storage
 
 ## Revenue
 
-- [PQ] client.revenue.profilePublications({ profileId, limit })
-- [Q] client.revenue.profileFollow({ profileId })
-- [Q] client.revenue.publication({ publicationId })
+- [x] [PQ] client.revenue.profilePublications({ profileId, limit })
+- [x] [Q] client.revenue.profileFollow({ profileId })
+- [x] [Q] client.revenue.publication({ publicationId })
 
 ## Search
 
