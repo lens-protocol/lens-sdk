@@ -1,4 +1,4 @@
-import { CommonPaginatedResultInfoFragment } from './graphql/fragments.generated';
+import { CommonPaginatedResultInfoFragment } from '../graphql/fragments.generated';
 
 type PaginatedQueryData<Item> = {
   pageInfo: CommonPaginatedResultInfoFragment;

@@ -2,7 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
 import { CommentFragment, PostFragment, ProfileFragment } from '../graphql/fragments.generated';
-import { buildPaginatedQueryResult, PaginatedResult } from '../helpers';
+import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 import {
   getSdk,
   Sdk,
@@ -19,9 +19,7 @@ export class Search {
     this.sdk = getSdk(client);
   }
 
-  async searchProfiles(
-    request: SearchProfilesQueryVariables,
-  ): Promise<PaginatedResult<ProfileFragment>> {
+  async profiles(request: SearchProfilesQueryVariables): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (variables) => {
       const result = await this.sdk.SearchProfiles(variables);
 
@@ -29,7 +27,7 @@ export class Search {
     }, request);
   }
 
-  async searchPublications(
+  async publications(
     request: SearchPublicationsQueryVariables,
   ): Promise<PaginatedResult<CommentFragment | PostFragment>> {
     return buildPaginatedQueryResult(async (variables) => {
