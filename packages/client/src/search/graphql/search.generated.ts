@@ -21,6 +21,8 @@ import {
   MirrorFragmentDoc,
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
+  FollowingFragmentDoc,
+  FollowerFragmentDoc,
   Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type SearchPublicationsQueryVariables = Types.Exact<{
