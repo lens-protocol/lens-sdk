@@ -6,12 +6,12 @@ const testConfig = {
 };
 
 describe(`Given the ${Search.name} configured to work with sandbox`, () => {
-  describe(`when the method ${Search.prototype.searchProfiles.name} is called`, () => {
+  describe(`when the method ${Search.prototype.profiles.name} is called`, () => {
     it('should execute with success', async () => {
       const search = new Search(testConfig);
 
       await expect(
-        search.searchProfiles({
+        search.profiles({
           query: 'test',
           limit: 10,
         }),
@@ -19,12 +19,12 @@ describe(`Given the ${Search.name} configured to work with sandbox`, () => {
     });
   });
 
-  describe(`when the method ${Search.prototype.searchPublications.name} is called`, () => {
+  describe(`when the method ${Search.prototype.publications.name} is called`, () => {
     it('should execute with success', async () => {
       const search = new Search(testConfig);
 
       await expect(
-        search.searchPublications({
+        search.publications({
           query: 'test',
           limit: 10,
         }),

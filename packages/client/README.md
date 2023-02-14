@@ -39,10 +39,10 @@ const address = await wallet.getAddress();
 ### Authenticate with Lens API
 
 ```ts
-const challenge = await lensClient.generateChallenge(address);
+const challenge = await lensClient.authentication.generateChallenge(address);
 const signature = await wallet.signMessage(challenge);
 
-await lensClient.authenticate(address, signature);
+await lensClient.authentication.authenticate(address, signature);
 ```
 
 ### Add a reaction

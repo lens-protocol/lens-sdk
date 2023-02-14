@@ -1,4 +1,4 @@
-import { Authentication } from './authentication';
+import { Authentication, IAuthentication } from './authentication';
 import { LensConfig } from './consts/config';
 import { Explore } from './explore';
 import { Profile } from './profile';
@@ -6,24 +6,16 @@ import { Reactions } from './reactions';
 import { Search } from './search';
 
 export class LensClient {
-  private readonly authentication: Authentication;
+  private readonly _authentication: Authentication;
   private readonly config: LensConfig;
 
   constructor(config: LensConfig) {
-    this.authentication = new Authentication(config);
+    this._authentication = new Authentication(config);
     this.config = config;
   }
 
-  async generateChallenge(address: string) {
-    return this.authentication.generateChallenge(address);
-  }
-
-  async authenticate(address: string, signature: string) {
-    await this.authentication.authenticate(address, signature);
-  }
-
-  async isAuthenticated() {
-    return this.authentication.isAuthenticated();
+  get authentication(): IAuthentication {
+    return this._authentication;
   }
 
   get profile(): Profile {
@@ -31,7 +23,7 @@ export class LensClient {
   }
 
   get reactions(): Reactions {
-    return new Reactions(this.config, this.authentication);
+    return new Reactions(this.config, this._authentication);
   }
 
   get search(): Search {

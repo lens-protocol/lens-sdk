@@ -2,6 +2,12 @@ import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
 import {
+  CommentFragment,
+  CommonPaginatedResultInfoFragment,
+  PostFragment,
+  ProfileFragment,
+} from '../graphql/fragments.generated';
+import {
   getSdk,
   Sdk,
   SearchProfilesQueryVariables,
@@ -17,11 +23,19 @@ export class Search {
     this.sdk = getSdk(client);
   }
 
-  async searchProfiles(request: SearchProfilesQueryVariables) {
-    return this.sdk.SearchProfiles(request);
+  async profiles(request: SearchProfilesQueryVariables): Promise<{
+    items: Array<ProfileFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  }> {
+    const result = await this.sdk.SearchProfiles(request);
+    return result.data.result;
   }
 
-  async searchPublications(request: SearchPublicationsQueryVariables) {
-    return this.sdk.SearchPublications(request);
+  async publications(request: SearchPublicationsQueryVariables): Promise<{
+    items: Array<PostFragment | CommentFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  }> {
+    const result = await this.sdk.SearchPublications(request);
+    return result.data.result;
   }
 }
