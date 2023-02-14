@@ -29,7 +29,6 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
         fragment: ProfileFragmentDoc,
         data: {
           ...snapshot,
-          isOptimisticFollowedByMe: true,
           stats: {
             ...snapshot.stats,
             totalFollowers: snapshot.stats.totalFollowers + 1,
@@ -58,8 +57,11 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
         fragment: ProfileFragmentDoc,
         data: {
           ...snapshot,
-          isFollowedByMe: true,
-          isOptimisticFollowedByMe: false,
+          __isFollowedByMe: true,
+          stats: {
+            ...snapshot.stats,
+            totalFollowers: snapshot.stats.totalFollowers + 1,
+          },
         },
       });
     }
@@ -84,7 +86,6 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
         fragment: ProfileFragmentDoc,
         data: {
           ...snapshot,
-          isOptimisticFollowedByMe: false,
           stats: {
             ...snapshot.stats,
             totalFollowers: snapshot.stats.totalFollowers - 1,

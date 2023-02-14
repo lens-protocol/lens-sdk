@@ -15,19 +15,19 @@ export enum FollowPolicyType {
   UNKNOWN = 'UNKNOWN',
 }
 
-export type ChargeFollowPolicy = {
+export type ChargeFollowConfig = {
   type: FollowPolicyType.CHARGE;
   amount: Amount<Erc20>;
   recipient: string;
 };
 
-export type NoFeeFollowPolicy = {
+export type NoFeeFollowConfig = {
   type: FollowPolicyType.ANYONE | FollowPolicyType.ONLY_PROFILE_OWNERS | FollowPolicyType.NO_ONE;
 };
 
 export type UpdateFollowPolicyRequest = {
   profileId: string;
-  policy: ChargeFollowPolicy | NoFeeFollowPolicy;
+  policy: ChargeFollowConfig | NoFeeFollowConfig;
   kind: TransactionKind.UPDATE_FOLLOW_POLICY;
 };
 

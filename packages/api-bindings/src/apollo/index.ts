@@ -54,4 +54,5 @@ export function createAnonymousApolloClient({
 export type { IAccessTokenStorage };
 export type { IGraphQLClient } from './IGraphQLClient';
 export * from './errors';
+export * from './transactions';
 export type { LensApolloClient };

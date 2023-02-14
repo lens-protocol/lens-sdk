@@ -1,3 +1,4 @@
+import { TransactionState, useHasPendingTransaction } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -8,7 +9,6 @@ import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/p
 import { useState } from 'react';
 
 import { ProfileFragment } from '../profile';
-import { TransactionState, useHasPendingTransaction } from './adapters/TransactionQueuePresenter';
 import { useUpdateDispatcherConfigController } from './adapters/useUpdateDispatcherConfigController';
 
 export type UseUpdateDispatcherConfigArgs = {

@@ -1,11 +1,15 @@
 import { ApolloCache, makeVar, NormalizedCacheObject, ReactiveVar } from '@apollo/client';
 import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
+import { faker } from '@faker-js/faker';
+import { mockCreatePostRequest } from '@lens-protocol/domain/mocks';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
 import { LensApolloClient } from '../LensApolloClient';
 import { createApolloCache } from '../createApolloCache';
 import { ApolloServerErrorCode } from '../isGraphQLValidationError';
+import { PendingTransactionState, TxStatus } from '../transactions';
 
 type MockCacheConfiguration = {
   activeWalletVar?: ReactiveVar<WalletData | null>;
@@ -97,4 +101,15 @@ export function createUnauthenticatedResponse() {
       }),
     ],
   });
+}
+
+export function mockPendingTransactionState<T extends SupportedTransactionRequest>(
+  partial: Partial<PendingTransactionState<T>>,
+): PendingTransactionState<T> {
+  return {
+    id: faker.datatype.uuid(),
+    status: TxStatus.BROADCASTING,
+    request: mockCreatePostRequest() as T,
+    ...partial,
+  };
 }

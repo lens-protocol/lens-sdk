@@ -16,6 +16,7 @@ config:
     Cursor: string
     DateTime: string
     EthereumAddress: string
+    FollowStatus: FollowStatus
     Handle: string
     InternalPublicationId: string
     Jwt: string
@@ -59,6 +60,7 @@ generates:
               "import type { ClientErc20Amount } from './ClientErc20Amount';",
               "import type { ProfileAttributes } from './ProfileAttributes';",
               "import type { FollowPolicy } from './FollowPolicy';",
+              "import type { FollowStatus } from './FollowStatus';",
               "import type { CollectPolicy } from './CollectPolicy';",
               "import type { ReferencePolicy } from './ReferencePolicy';",
             ]

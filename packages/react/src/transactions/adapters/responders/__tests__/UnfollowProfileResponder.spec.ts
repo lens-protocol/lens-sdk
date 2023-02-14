@@ -24,7 +24,6 @@ function setupTestScenario({
 
   const existingProfile = mockProfileFragment({
     id: transactionData.request.profileId,
-    isFollowedByMe: true,
     stats: {
       __typename: 'ProfileStats',
       totalFollowers: 1,
@@ -76,7 +75,6 @@ describe(`Given the ${UnfollowProfileResponder.name}`, () => {
       expect(scenario.profileCache).toEqual(
         expect.objectContaining({
           id: scenario.existingProfile.id,
-          isFollowedByMe: false,
           stats: {
             ...scenario.existingProfile.stats,
             totalFollowers: scenario.existingProfile.stats.totalFollowers - 1,

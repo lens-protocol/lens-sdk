@@ -11,8 +11,8 @@ import {
   mockCreateSetFollowModuleTypedDataMutation,
 } from '@lens-protocol/api-bindings/mocks';
 import {
-  mockChargeFollowPolicy,
-  mockFreeFollowPolicy,
+  mockChargeFollowConfig,
+  mockNoFeeFollowConfig,
   mockNonce,
   mockUpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/mocks';
@@ -51,7 +51,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
   }>([
     {
       description: 'to enable follow fees',
-      policy: mockChargeFollowPolicy(),
+      policy: mockChargeFollowConfig(),
       expectedFollowModule: (policy) => ({
         feeFollowModule:
           policy.type === FollowPolicyType.CHARGE
@@ -67,7 +67,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
     },
     {
       description: 'to disable follow fees',
-      policy: mockFreeFollowPolicy(),
+      policy: mockNoFeeFollowConfig(),
       expectedFollowModule: () => ({
         freeFollowModule: true,
       }),

@@ -1,126 +1,109 @@
-import { ProfileFragment } from '@lens-protocol/api-bindings';
+import {
+  ProfileOwnedByMeFragment,
+  ProfileFragment,
+  isUnfollowTransactionFor,
+  useHasPendingTransaction,
+} from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  ChargeFollowPolicy,
-  FollowPolicyType,
-  FollowRequestFee,
-} from '@lens-protocol/domain/use-cases/profile';
+import { FollowPolicyType, FollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
-  WalletData,
 } from '@lens-protocol/domain/use-cases/wallets';
-import { EthereumAddress, invariant } from '@lens-protocol/shared-kernel';
-import { useState } from 'react';
+import { failure, InvariantError, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { useActiveProfile } from '../profile';
-import { useActiveWalletVar } from '../wallet/adapters/ActiveWalletPresenter';
+import { Operation, useOperation } from '../helpers';
 import { useFollowController } from './adapters/useFollowController';
 
-type FollowProfilesFlowRequest = {
-  profileId: string;
-  followerAddress: EthereumAddress;
-  fee?: FollowRequestFee;
-  followerProfileId?: string;
-};
-
-function createFollowRequestFee(
-  followModule: ChargeFollowPolicy,
-  contractAddress: string,
-): FollowRequestFee {
-  return {
-    amount: followModule.amount,
-    contractAddress,
-    recipient: followModule.recipient,
-  };
+export class PrematureFollowError extends Error {
+  name = 'PrematureFollowError' as const;
 }
 
-function createFollowProfilesFlowRequest(
-  profile: ProfileFragment,
-  activeWallet: WalletData,
-  activeProfile: ProfileFragment,
-): FollowProfilesFlowRequest {
-  const baseRequest: Pick<FollowProfilesFlowRequest, 'profileId' | 'followerAddress'> = {
-    profileId: profile.id,
-    followerAddress: activeWallet.address,
-  };
-
-  const followPolicyType = profile.followPolicy.type;
-
-  switch (followPolicyType) {
+function createFollowRequest(followee: ProfileFragment, follower: ProfileFragment): FollowRequest {
+  const followPolicy = followee.followPolicy;
+  switch (followPolicy.type) {
     case FollowPolicyType.CHARGE:
       return {
-        ...baseRequest,
-        fee: createFollowRequestFee(profile.followPolicy, profile.followPolicy.contractAddress),
+        fee: {
+          amount: followPolicy.amount,
+          contractAddress: followPolicy.contractAddress,
+          recipient: followPolicy.recipient,
+        },
+        kind: TransactionKind.FOLLOW_PROFILES,
+        profileId: followee.id,
+        followerAddress: follower.ownedBy,
       };
     case FollowPolicyType.ONLY_PROFILE_OWNERS:
       return {
-        ...baseRequest,
-        followerProfileId: activeProfile.id,
+        kind: TransactionKind.FOLLOW_PROFILES,
+        profileId: followee.id,
+        followerAddress: follower.ownedBy,
+        followerProfileId: follower.id,
       };
     case FollowPolicyType.ANYONE:
-      return baseRequest;
-    case null:
-      throw new Error('Can`t follow with unsupported follow fee module');
+      return {
+        kind: TransactionKind.FOLLOW_PROFILES,
+        profileId: followee.id,
+        followerAddress: follower.ownedBy,
+      };
     case FollowPolicyType.NO_ONE:
-      throw new Error('Can`t follow with revert follow fee module');
+      throw new InvariantError(
+        `The profile is configured so that nobody can follow it. Check 'profile.followPolicy.type' beforehand.`,
+      );
     case FollowPolicyType.UNKNOWN:
-      throw new Error('Can`t follow with unknown follow module');
+      throw new InvariantError(
+        `The profile is configured with an unknown follow module. Check 'profile.followPolicy.type' beforehand.`,
+      );
   }
 }
 
 export type UseFollowArgs = {
-  profile: ProfileFragment;
+  followee: ProfileFragment;
+  follower: ProfileOwnedByMeFragment;
 };
 
-export function useFollow({ profile }: UseFollowArgs) {
-  const [error, setError] = useState<
-    | InsufficientAllowanceError
-    | InsufficientFundsError
-    | PendingSigningRequestError
-    | UserRejectedError
-    | WalletConnectionError
-    | null
-  >(null);
-  const [isPending, setIsPending] = useState<boolean>(false);
+export type FollowOperation = Operation<
+  void,
+  | InsufficientAllowanceError
+  | InsufficientFundsError
+  | PendingSigningRequestError
+  | PrematureFollowError
+  | UserRejectedError
+  | WalletConnectionError
+>;
+
+export function useFollow({ followee, follower }: UseFollowArgs): FollowOperation {
   const follow = useFollowController();
-  const activeWallet = useActiveWalletVar();
-  const { data: activeProfile } = useActiveProfile();
 
-  return {
-    follow: async () => {
-      try {
-        invariant(activeWallet && activeProfile, 'You must be logged in to follow a profile');
-        invariant(
-          profile.followPolicy?.type !== FollowPolicyType.UNKNOWN,
-          'Unsupported follow module',
+  const hasPendingUnfollowTx = useHasPendingTransaction(
+    isUnfollowTransactionFor({ profileId: followee.id }),
+  );
+
+  return useOperation(
+    async (): PromiseResult<
+      void,
+      | InsufficientAllowanceError
+      | InsufficientFundsError
+      | PendingSigningRequestError
+      | PrematureFollowError
+      | UserRejectedError
+      | WalletConnectionError
+    > => {
+      if (hasPendingUnfollowTx) {
+        return failure(
+          new PrematureFollowError(
+            `Your unfollow request for ${followee.handle} is still pending.`,
+          ),
         );
-        setIsPending(true);
-        setError(null);
-
-        const request = createFollowProfilesFlowRequest(profile, activeWallet, activeProfile);
-
-        const result = await follow({
-          profileId: request.profileId,
-          followerAddress: request.followerAddress,
-          followerProfileId: request.followerProfileId,
-          fee: request.fee,
-          kind: TransactionKind.FOLLOW_PROFILES,
-        });
-
-        if (result.isFailure()) {
-          setError(result.error);
-        }
-      } finally {
-        setIsPending(false);
       }
+
+      const request = createFollowRequest(followee, follower);
+      return follow(request);
     },
-    error,
-    isPending,
-  };
+  );
 }

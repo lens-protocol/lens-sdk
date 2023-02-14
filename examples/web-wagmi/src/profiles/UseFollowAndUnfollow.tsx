@@ -1,6 +1,10 @@
-import { ProfileFragment, useExploreProfiles, useFollow, useUnfollow } from '@lens-protocol/react';
-import { useEffect } from 'react';
-import toast from 'react-hot-toast';
+import {
+  ProfileOwnedByMeFragment,
+  useExploreProfiles,
+  useFollow,
+  useUnfollow,
+  ProfileFragment,
+} from '@lens-protocol/react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
@@ -9,46 +13,65 @@ import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
 type FollowButtonProps = {
-  profile: ProfileFragment;
+  follower: ProfileOwnedByMeFragment;
+  followee: ProfileFragment;
 };
 
-function FollowButton({ profile }: FollowButtonProps) {
-  const { follow, isPending: isFollowing } = useFollow({ profile });
-  const { unfollow, isPending: isUnfollowing, error } = useUnfollow({ profile });
+function FollowButton({ followee, follower }: FollowButtonProps) {
+  const {
+    execute: follow,
+    error: followError,
+    isPending: isFollowPending,
+  } = useFollow({ follower, followee });
+  const {
+    execute: unfollow,
+    error: unfollowError,
+    isPending: isUnfollowPending,
+  } = useUnfollow({ follower, followee });
 
-  useEffect(() => {
-    if (error) toast.error(error.message);
-  }, [error]);
+  if (followee.followStatus === null) {
+    return null;
+  }
 
-  if (profile.isFollowedByMe || profile.isOptimisticFollowedByMe)
+  if (followee.followStatus.isFollowedByMe) {
     return (
-      <button onClick={unfollow} disabled={isUnfollowing}>
-        Unfollow
-      </button>
+      <>
+        <button
+          onClick={unfollow}
+          disabled={isUnfollowPending || !followee.followStatus.canUnfollow}
+          title={
+            !followee.followStatus.canUnfollow
+              ? 'The previous follow request is not finalized on-chain just yet.'
+              : undefined
+          }
+        >
+          Unfollow
+        </button>
+        {unfollowError && <p>{unfollowError.message}</p>}
+      </>
     );
+  }
 
   return (
-    <button onClick={follow} disabled={isFollowing}>
-      Follow
-    </button>
-  );
-}
-
-type ProfileFollowProps = {
-  profile: ProfileFragment;
-};
-
-function ProfileFollow({ profile }: ProfileFollowProps) {
-  return (
-    <article>
-      <ProfileCard profile={profile} />
-      <FollowButton profile={profile} />
-    </article>
+    <>
+      <button
+        onClick={follow}
+        disabled={isFollowPending || !followee.followStatus.canFollow}
+        title={
+          !followee.followStatus.canFollow
+            ? 'The previous unfollow request is not finalized on-chain just yet.'
+            : undefined
+        }
+      >
+        Follow
+      </button>
+      {followError && <p>{followError.message}</p>}
+    </>
   );
 }
 
 type UseFollowInnerProps = {
-  activeProfile: ProfileFragment;
+  activeProfile: ProfileOwnedByMeFragment;
 };
 
 function UseFollowInner({ activeProfile }: UseFollowInnerProps) {
@@ -60,8 +83,12 @@ function UseFollowInner({ activeProfile }: UseFollowInnerProps) {
 
   return (
     <>
-      {data.map((profile: ProfileFragment) => (
-        <ProfileFollow key={profile.handle} profile={profile} />
+      {data.map((profile) => (
+        <section key={profile.handle}>
+          <ProfileCard profile={profile} />
+
+          <FollowButton followee={profile} follower={activeProfile} />
+        </section>
       ))}
     </>
   );

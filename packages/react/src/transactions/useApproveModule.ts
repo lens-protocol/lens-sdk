@@ -1,3 +1,4 @@
+import { TransactionState, useWaitUntilTransactionSettled } from '@lens-protocol/api-bindings';
 import {
   InsufficientGasError,
   PendingSigningRequestError,
@@ -12,10 +13,6 @@ import {
 import { Amount, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
-import {
-  TransactionState,
-  useWaitUntilTransactionSettled,
-} from './adapters/TransactionQueuePresenter';
 import { useApproveModuleController } from './adapters/useApproveModuleController';
 
 export type ApproveModuleArgs = {

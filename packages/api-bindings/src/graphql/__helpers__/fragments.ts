@@ -129,9 +129,9 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
     __followModule: null,
     followPolicy: mockAnyoneFollowPolicy(),
 
-    isFollowedByMe: false,
-    isFollowing: false,
-    isOptimisticFollowedByMe: false,
+    __isFollowedByMe: false,
+    isFollowingObserver: false,
+    followStatus: null,
 
     ownedByMe: false,
 

@@ -1,3 +1,4 @@
+import { recentTransactionsVar, TxStatus } from '@lens-protocol/api-bindings';
 import { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 import {
   mockTransactionError,
@@ -9,12 +10,7 @@ import {
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 
-import {
-  FailedTransactionError,
-  recentTransactions,
-  TransactionQueuePresenter,
-  TxStatus,
-} from '../TransactionQueuePresenter';
+import { FailedTransactionError, TransactionQueuePresenter } from '../TransactionQueuePresenter';
 
 function setupTransactionQueuePresenter() {
   const errorHandler = jest.fn();
@@ -26,7 +22,7 @@ function setupTransactionQueuePresenter() {
 
 describe(`Given the ${TransactionQueuePresenter.name}`, () => {
   afterEach(() => {
-    recentTransactions([]);
+    recentTransactionsVar([]);
   });
 
   describe(`when invoking "${TransactionQueuePresenter.prototype.broadcasting.name}" method`, () => {
@@ -36,7 +32,7 @@ describe(`Given the ${TransactionQueuePresenter.name}`, () => {
       const transaction = mockPendingTransactionData();
       presenter.broadcasting(transaction);
 
-      expect(recentTransactions()).toEqual([{ status: TxStatus.BROADCASTING, ...transaction }]);
+      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.BROADCASTING, ...transaction }]);
     });
   });
 
@@ -47,7 +43,7 @@ describe(`Given the ${TransactionQueuePresenter.name}`, () => {
       const transaction = mockBroadcastedTransactionData();
       presenter.mining(transaction);
 
-      expect(recentTransactions()).toEqual([{ status: TxStatus.MINING, ...transaction }]);
+      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.MINING, ...transaction }]);
     });
 
     it('should update the status of an existing transaction', () => {
@@ -57,7 +53,7 @@ describe(`Given the ${TransactionQueuePresenter.name}`, () => {
 
       presenter.mining(transaction);
 
-      expect(recentTransactions()).toEqual([{ status: TxStatus.MINING, ...transaction }]);
+      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.MINING, ...transaction }]);
     });
   });
 
@@ -70,7 +66,7 @@ describe(`Given the ${TransactionQueuePresenter.name}`, () => {
 
       presenter.failed(mockTransactionError(), transaction);
 
-      expect(recentTransactions()).toEqual([{ status: TxStatus.FAILED, ...transaction }]);
+      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.FAILED, ...transaction }]);
     });
 
     it(`should use the provided errorHandler to propagate the error to the user`, () => {
@@ -100,7 +96,7 @@ describe(`Given the ${TransactionQueuePresenter.name}`, () => {
 
       presenter.clearRecent();
 
-      expect(recentTransactions()).toEqual(
+      expect(recentTransactionsVar()).toEqual(
         toKeep.reverse().map((data) => ({
           ...data,
           status: TxStatus.MINING,
