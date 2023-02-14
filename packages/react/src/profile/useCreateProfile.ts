@@ -3,53 +3,48 @@ import {
   CreateProfileRequest,
   DuplicatedHandleError,
 } from '@lens-protocol/domain/use-cases/profile';
-import { useState } from 'react';
+import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
+import { Operation, useOperation } from '../helpers';
 import {
   TransactionState,
   useWaitUntilTransactionSettled,
 } from '../transactions/adapters/TransactionQueuePresenter';
 import { useCreateProfileController } from './adapters/useCreateProfileController';
 
-export function useCreateProfile() {
-  const [error, setError] = useState<DuplicatedHandleError | TransactionError | null>(null);
-  const [isPending, setIsPending] = useState<boolean>(false);
+export type CreateProfileOperation = Operation<
+  void,
+  DuplicatedHandleError | TransactionError,
+  [string]
+>;
 
+export function useCreateProfile(): CreateProfileOperation {
   const createProfile = useCreateProfileController();
 
   const waitUntilTransactionIsSettled = useWaitUntilTransactionSettled();
 
-  return {
-    create: async (handle: string) => {
+  return useOperation(
+    async (handle: string): PromiseResult<void, DuplicatedHandleError | TransactionError> => {
       try {
-        setIsPending(true);
-        setError(null);
-
         const result = await createProfile(handle);
 
-        if (result.isFailure()) {
-          setError(result.error);
-          return;
+        if (result.isSuccess()) {
+          await waitUntilTransactionIsSettled(
+            (transaction): transaction is TransactionState<CreateProfileRequest> =>
+              transaction.request.kind === TransactionKind.CREATE_PROFILE &&
+              transaction.request.handle === handle,
+          );
         }
 
-        await waitUntilTransactionIsSettled(
-          (transaction): transaction is TransactionState<CreateProfileRequest> =>
-            transaction.request.kind === TransactionKind.CREATE_PROFILE &&
-            transaction.request.handle === handle,
-        );
+        return result;
       } catch (e) {
         if (e instanceof TransactionError) {
-          setError(e);
-          return;
+          return failure(e);
         }
         throw e;
-      } finally {
-        setIsPending(false);
       }
     },
-    error,
-    isPending,
-  };
+  );
 }
 
 export { DuplicatedHandleError };

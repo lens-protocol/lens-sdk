@@ -7,8 +7,8 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from './auth';
 
 export function LoginButton() {
-  const { login, error: loginError, isPending: isLoginPending } = useWalletLogin();
-  const { logout, isPending: isLogoutPending } = useWalletLogout();
+  const { execute: login, error: loginError, isPending: isLoginPending } = useWalletLogin();
+  const { execute: logout, isPending: isLogoutPending } = useWalletLogout();
 
   const { isConnected } = useAccount();
   const { disconnectAsync } = useDisconnect();

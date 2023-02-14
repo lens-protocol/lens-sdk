@@ -95,3 +95,13 @@ export type NonEmptyArray<T> = Overwrite<
     ): NonEmptyArray<U>;
   }
 >;
+
+/**
+ * Beautify the  readout of all of the members of that intersection.
+ *
+ * As seen on tv: https://twitter.com/mattpocockuk/status/1622730173446557697
+ */
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+  // eslint-disable-next-line @typescript-eslint/ban-types
+} & {};
