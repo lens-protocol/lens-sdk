@@ -39,7 +39,7 @@ describe(`Given the LensClient configured for sandbox`, () => {
   });
 
   describe(`when accessing the Publication module`, () => {
-    it(`should return a new instance of Explore`, () => {
+    it(`should return a new instance of Publication`, () => {
       expect(client.publication).toBeInstanceOf(Publication);
     });
   });
