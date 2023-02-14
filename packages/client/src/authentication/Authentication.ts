@@ -1,39 +1,67 @@
-import { GraphQLClient } from 'graphql-request';
+import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { LensConfig } from '../consts/config';
-import { getSdk, Sdk } from './graphql/auth.generated';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import { AuthenticationApi } from './adapters/AuthenticationApi';
+import { CredentialsStorage } from './adapters/CredentialsStorage';
+import { InMemoryStorageProvider } from './adapters/InMemoryStorageProvider';
 
-export type Credentials = { accessToken: string; refreshToken: string };
+export interface IAuthentication {
+  generateChallenge(address: string): Promise<string>;
+  authenticate(address: string, signature: string): Promise<void>;
+  isAuthenticated(): Promise<boolean>;
+}
 
-export class Authentication {
-  private readonly sdk: Sdk;
+export class Authentication implements IAuthentication {
+  private readonly api: AuthenticationApi;
+  private readonly storage: CredentialsStorage;
 
   constructor(config: LensConfig) {
-    const client = new GraphQLClient(config.environment.gqlEndpoint);
-    this.sdk = getSdk(client);
+    this.api = new AuthenticationApi(config);
+    this.storage = new CredentialsStorage(config.storage || new InMemoryStorageProvider());
   }
 
-  async challenge(address: string): Promise<string> {
-    const result = await this.sdk.AuthChallenge({ address });
-
-    return result.data.result.text;
+  async generateChallenge(address: string): Promise<string> {
+    return this.api.challenge(address);
   }
 
-  async verify(accessToken: string): Promise<boolean> {
-    const result = await this.sdk.AuthVerify({ accessToken });
-
-    return result.data.result;
+  async authenticate(address: string, signature: string): Promise<void> {
+    const credentials = await this.api.authenticate(address, signature);
+    await this.storage.set(credentials);
   }
 
-  async authenticate(address: string, signature: string): Promise<Credentials> {
-    const result = await this.sdk.AuthAuthenticate({ address, signature });
-
-    return result.data.result;
+  async isAuthenticated(): Promise<boolean> {
+    const credentials = await this.storage.get();
+    return credentials ? !credentials.isExpired() : false;
   }
 
-  async refresh(refreshToken: string): Promise<Credentials> {
-    const result = await this.sdk.AuthRefresh({ refreshToken });
+  async getRequestHeader(): PromiseResult<
+    Record<string, string>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    const credentials = await this.storage.get();
 
-    return result.data.result;
+    if (!credentials) {
+      return failure(new NotAuthenticatedError());
+    }
+
+    // if not expired
+    if (!credentials.isExpired()) {
+      return success(this.buildHeader(credentials.accessToken));
+    }
+
+    // if expired but can refresh
+    if (credentials.canRefresh()) {
+      const newCredentials = await this.api.refresh(credentials.refreshToken);
+      await this.storage.set(newCredentials);
+      return success(this.buildHeader(newCredentials.accessToken));
+    }
+
+    // otherwise
+    return failure(new CredentialsExpiredError());
+  }
+
+  private buildHeader(accessToken: string | undefined) {
+    return { authorization: `Bearer ${accessToken || ''}` };
   }
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as Types from '../../graphql/types.generated.js';
 
 import { GraphQLClient } from 'graphql-request';

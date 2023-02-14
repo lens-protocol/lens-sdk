@@ -89,7 +89,7 @@ export class TransactionQueue<T extends TransactionRequestModel> {
     private readonly transactionQueuePresenter: ITransactionQueuePresenter<T>,
   ) {}
 
-  async clearRecent() {
+  clearRecent() {
     // This method might seem a bit weird, but it's actually a precursor to the
     // fully fledged solution which will store the transactions in the localStorage (at first).
     this.transactionQueuePresenter.clearRecent();

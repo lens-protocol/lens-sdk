@@ -24,6 +24,7 @@ import { UseApproveModule } from './misc/UseApproveModule';
 import { UseCurrencies } from './misc/UseCurrencies';
 import { UseEnabledModules } from './misc/UseEnabledModules';
 import { UseNotifications } from './misc/UseNotifications';
+import { UseRecentTransactions } from './misc/UseRecentTransactions';
 import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
 import { ProfilesPage } from './profiles/ProfilesPage';
 import { UseActiveProfileSwitch } from './profiles/UseActiveProfileSwitch';
@@ -47,6 +48,7 @@ import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
+import { UseProfilePublicationsForSale } from './publications/UseProfilePublicationsForSale';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
@@ -99,6 +101,10 @@ export function App() {
                 />
                 <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
                 <Route path="/publications/useCreateComment" element={<UseCreateComment />} />
+                <Route
+                  path="/publications/useProfilePublicationsForSale"
+                  element={<UseProfilePublicationsForSale />}
+                />
                 <Route path="/publications/useReaction" element={<UseReaction />} />
                 <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
                 <Route
@@ -175,6 +181,7 @@ export function App() {
                   element={<UseUnreadNotificationCount />}
                 />
                 <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
+                <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

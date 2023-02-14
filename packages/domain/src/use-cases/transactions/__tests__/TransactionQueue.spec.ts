@@ -365,7 +365,7 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
     it('should present the result', async () => {
       const { transactionQueuePresenter, transactionQueue } = setupTestScenario();
 
-      await transactionQueue.clearRecent();
+      transactionQueue.clearRecent();
 
       expect(transactionQueuePresenter.clearRecent).toHaveBeenCalled();
     });

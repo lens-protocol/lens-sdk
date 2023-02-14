@@ -38,12 +38,16 @@
   "license": "MIT",
   "dependencies": {
     "@lens-protocol/shared-kernel": "workspace:*",
+    "@lens-protocol/storage": "workspace:*",
     "graphql": "^15.5.1",
     "graphql-request": "^5.1.0",
     "graphql-tag": "^2.12.6",
-    "tslib": "^2.4.1"
+    "jwt-decode": "^3.1.2",
+    "tslib": "^2.4.1",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
+    "@graphql-codegen/add": "^3.2.3",
     "@graphql-codegen/cli": "^1.21.7",
     "@graphql-codegen/near-operation-file-preset": "^2.5.0",
     "@graphql-codegen/typescript": "^1.23.0",

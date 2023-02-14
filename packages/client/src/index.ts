@@ -6,5 +6,7 @@ export * from './consts/config';
 export * from './consts/errors';
 export * from './profile';
 export * from './reactions';
+export * from './search';
+export * from './explore';
 
 export default LensClient; // eslint-disable-line

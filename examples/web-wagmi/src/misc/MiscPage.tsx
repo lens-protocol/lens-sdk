@@ -26,6 +26,11 @@ const miscHooks = [
     description: `View all the modules supported by the Lens Protocol`,
     path: '/misc/useEnabledModules',
   },
+  {
+    label: 'useRecentTransactions',
+    description: `Example of listing + clearing recent completed transactions.`,
+    path: '/misc/useRecentTransactions',
+  },
 ];
 
 export function MiscPage() {
