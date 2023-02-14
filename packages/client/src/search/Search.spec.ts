@@ -17,6 +17,40 @@ describe(`Given the ${Search.name} configured to work with sandbox`, () => {
         }),
       ).resolves.not.toThrow();
     });
+
+    it('should paginate to the next page if there are more results', async () => {
+      const search = new Search(testConfig);
+
+      const result = await search.searchProfiles({
+        query: 'test',
+        limit: 10,
+      });
+
+      expect(result.items.length).not.toBe(0);
+
+      const nextResult = await result.next();
+
+      expect(nextResult).not.toBe(null);
+      expect(nextResult?.items.length).not.toBe(0);
+    });
+
+    it('should paginate between pages with the same instance of results', async () => {
+      const search = new Search(testConfig);
+
+      const result = await search.searchProfiles({
+        query: 'test',
+        limit: 10,
+      });
+
+      const nextResult = await result.next();
+
+      expect(nextResult).not.toBe(null);
+      expect(nextResult?.items.length).not.toBe(0);
+
+      const prevResult = await result?.prev();
+
+      expect(prevResult?.items).toEqual(result.items);
+    });
   });
 
   describe(`when the method ${Search.prototype.publications.name} is called`, () => {
