@@ -37,4 +37,3 @@ export type {
 export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 export type { FollowPolicy } from '@lens-protocol/api-bindings';
 export { FailedUploadError } from './adapters/MetadataUploadAdapter';
-export { TxStatus } from './adapters/TransactionQueuePresenter';

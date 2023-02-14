@@ -68,7 +68,7 @@ function delay(waitInMs: number) {
   return new Promise((resolve) => setTimeout(resolve, waitInMs));
 }
 
-function useRecentTransactionsVar() {
+export function useRecentTransactionsVar() {
   return useReactiveVar(recentTransactionsVar);
 }
 
