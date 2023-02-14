@@ -8,6 +8,8 @@ import {
   CommentFragment,
   CommonPaginatedResultInfoFragment,
   WalletFragment,
+  FollowingFragment,
+  FollowerFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -20,6 +22,8 @@ import {
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
   WalletFragmentDoc,
+  FollowingFragmentDoc,
+  FollowerFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type PublicationQueryVariables = Types.Exact<{
   observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
