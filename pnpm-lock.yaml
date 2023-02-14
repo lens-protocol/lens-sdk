@@ -7,9 +7,6 @@ importers:
 
   .:
     specifiers:
-      '@babel/preset-env': ^7.20.2
-      '@babel/preset-react': ^7.18.6
-      '@babel/preset-typescript': ^7.18.6
       '@changesets/cli': ^2.26.0
       '@preconstruct/cli': ^2.3.0
       pnpm-deduplicate: ^0.4.1
@@ -17,9 +14,6 @@ importers:
       rimraf: ^3.0.2
       turbo: latest
     devDependencies:
-      '@babel/preset-env': 7.20.2
-      '@babel/preset-react': 7.18.6
-      '@babel/preset-typescript': 7.18.6
       '@changesets/cli': 2.26.0
       '@preconstruct/cli': 2.3.0
       pnpm-deduplicate: 0.4.1
@@ -119,6 +113,8 @@ importers:
   packages/api-bindings:
     specifiers:
       '@apollo/client': ^3.7.1
+      '@babel/preset-env': ^7.20.2
+      '@babel/preset-typescript': ^7.18.6
       '@faker-js/faker': ^7.6.0
       '@graphql-codegen/add': ^3.2.3
       '@graphql-codegen/cli': ^1.21.7
@@ -151,6 +147,8 @@ importers:
       graphql-tag: 2.12.6_graphql@15.5.1
       tslib: 2.5.0
     devDependencies:
+      '@babel/preset-env': 7.20.2
+      '@babel/preset-typescript': 7.18.6
       '@faker-js/faker': 7.6.0
       '@graphql-codegen/add': 3.2.3_graphql@15.5.1
       '@graphql-codegen/cli': 1.21.8_5askwkelwxne6flcr5p7vasbk4
@@ -173,6 +171,8 @@ importers:
 
   packages/blockchain-bindings:
     specifiers:
+      '@babel/preset-env': ^7.20.2
+      '@babel/preset-typescript': ^7.18.6
       '@ethersproject/abi': ^5.7.0
       '@ethersproject/providers': ^5.7.2
       '@lens-protocol/domain': workspace:*
@@ -195,6 +195,8 @@ importers:
       ethers: 5.7.2
       tslib: 2.5.0
     devDependencies:
+      '@babel/preset-env': 7.20.2
+      '@babel/preset-typescript': 7.18.6
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
       '@types/jest': 29.2.3
@@ -265,6 +267,8 @@ importers:
 
   packages/domain:
     specifiers:
+      '@babel/preset-env': ^7.20.2
+      '@babel/preset-typescript': ^7.18.6
       '@faker-js/faker': ^7.6.0
       '@jest/globals': ^29.3.1
       '@lens-protocol/eslint-config': workspace:*
@@ -285,6 +289,8 @@ importers:
       '@lens-protocol/shared-kernel': link:../shared-kernel
       tslib: 2.5.0
     devDependencies:
+      '@babel/preset-env': 7.20.2
+      '@babel/preset-typescript': 7.18.6
       '@faker-js/faker': 7.6.0
       '@jest/globals': 29.3.1
       '@lens-protocol/eslint-config': link:../eslint-config
@@ -332,6 +338,9 @@ importers:
   packages/react:
     specifiers:
       '@apollo/client': ^3.7.1
+      '@babel/preset-env': ^7.20.2
+      '@babel/preset-react': ^7.18.6
+      '@babel/preset-typescript': ^7.18.6
       '@ensdomains/ens': 0.4.4
       '@ensdomains/resolver': 0.2.4
       '@ethersproject/abi': 5.7.0
@@ -390,6 +399,9 @@ importers:
       uuid: 9.0.0
       zod: 3.19.1
     devDependencies:
+      '@babel/preset-env': 7.20.2
+      '@babel/preset-react': 7.18.6
+      '@babel/preset-typescript': 7.18.6
       '@ensdomains/ens': 0.4.4
       '@ensdomains/resolver': 0.2.4
       '@ethersproject/abi': 5.7.0
@@ -517,6 +529,9 @@ importers:
 
   packages/shared-kernel:
     specifiers:
+      '@babel/preset-env': ^7.20.2
+      '@babel/preset-react': ^7.18.6
+      '@babel/preset-typescript': ^7.18.6
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@types/jest': ^29.2.3
@@ -538,6 +553,9 @@ importers:
       tslib: 2.5.0
       uuid: 9.0.0
     devDependencies:
+      '@babel/preset-env': 7.20.2
+      '@babel/preset-react': 7.18.6
+      '@babel/preset-typescript': 7.18.6
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
       '@types/jest': 29.2.3
@@ -552,6 +570,8 @@ importers:
 
   packages/storage:
     specifiers:
+      '@babel/preset-env': ^7.20.2
+      '@babel/preset-typescript': ^7.18.6
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/shared-kernel': workspace:*
@@ -569,6 +589,8 @@ importers:
       tslib: 2.5.0
       zod: 3.19.1
     devDependencies:
+      '@babel/preset-env': 7.20.2
+      '@babel/preset-typescript': 7.18.6
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
       '@types/jest': 29.2.3
@@ -581,6 +603,8 @@ importers:
 
   packages/wagmi:
     specifiers:
+      '@babel/preset-env': ^7.20.2
+      '@babel/preset-typescript': ^7.18.6
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/react': workspace:*
@@ -594,6 +618,8 @@ importers:
     dependencies:
       '@lens-protocol/shared-kernel': link:../shared-kernel
     devDependencies:
+      '@babel/preset-env': 7.20.2
+      '@babel/preset-typescript': 7.18.6
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
       '@lens-protocol/react': link:../react
@@ -899,7 +925,7 @@ packages:
         optional: true
     dependencies:
       '@babel/helper-annotate-as-pure': 7.18.6
-      regexpu-core: 5.2.2
+      regexpu-core: 5.3.0
     dev: true
 
   /@babel/helper-define-polyfill-provider/0.3.3:
@@ -2730,6 +2756,10 @@ packages:
       '@babel/plugin-transform-typescript': 7.20.13
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@babel/regjsgen/0.8.0:
+    resolution: {integrity: sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==}
     dev: true
 
   /@babel/runtime-corejs3/7.20.7:
@@ -16168,13 +16198,13 @@ packages:
     resolution: {integrity: sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==}
     engines: {node: '>=8'}
 
-  /regexpu-core/5.2.2:
-    resolution: {integrity: sha512-T0+1Zp2wjF/juXMrMxHxidqGYn8U4R+zleSJhX9tQ1PUsS8a9UtYfbsF9LdiVgNX3kiX8RNaKM42nfSgvFJjmw==}
+  /regexpu-core/5.3.0:
+    resolution: {integrity: sha512-ZdhUQlng0RoscyW7jADnUZ25F5eVtHdMyXSb2PiwafvteRAOJUjFoUPEYZSIfP99fBIs3maLIRfpEddT78wAAQ==}
     engines: {node: '>=4'}
     dependencies:
+      '@babel/regjsgen': 0.8.0
       regenerate: 1.4.2
       regenerate-unicode-properties: 10.1.0
-      regjsgen: 0.7.1
       regjsparser: 0.9.1
       unicode-match-property-ecmascript: 2.0.0
       unicode-match-property-value-ecmascript: 2.1.0
@@ -16192,10 +16222,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       rc: 1.2.8
-    dev: true
-
-  /regjsgen/0.7.1:
-    resolution: {integrity: sha512-RAt+8H2ZEzHeYWxZ3H2z6tF18zyyOnlcdaafLrm21Bguj7uZy6ULibiAFdXEtKQY4Sy7wDTwDiOazasMLc4KPA==}
     dev: true
 
   /regjsparser/0.9.1:
@@ -17664,7 +17690,7 @@ packages:
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.3.1
+      jest: 29.3.1_@types+node@18.11.11
       jest-util: 29.3.1
       json5: 2.2.3
       lodash.memoize: 4.1.2

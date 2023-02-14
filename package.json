@@ -22,9 +22,6 @@
     "deduplicate:fix": "pnpm-deduplicate"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.20.2",
-    "@babel/preset-react": "^7.18.6",
-    "@babel/preset-typescript": "^7.18.6",
     "@changesets/cli": "^2.26.0",
     "@preconstruct/cli": "^2.3.0",
     "pnpm-deduplicate": "^0.4.1",
