@@ -49,4 +49,14 @@ describe(`Given the ${Publication.name} configured to work with testnet`, () => 
       expect(result).toMatchObject({ valid: true });
     });
   });
+
+  describe(`when a method ${Publication.prototype.forSale.name} is called`, () => {
+    it(`should run successfully`, async () => {
+      await expect(
+        publication.forSale({
+          profileId: '0x014e',
+        }),
+      ).resolves.not.toThrow();
+    });
+  });
 });

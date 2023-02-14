@@ -93,12 +93,11 @@ Client manages the token lifecycle and storage
 
 ### Query publications
 
-- [Q] client.publication.fetch(request) or client.publications.fetchOne()
-- [PQ] client.publication.fetchAll(request)
-- [Q] client.publication.validateMetadata(request)
-- [PQ] client.publication.whoCollected({ publicationId })
-
-- [PQ] client.publication(s).forSale({ profileId })
+- [x] [Q] client.publication.fetch(request) or client.publications.fetchOne()
+- [x] [PQ] client.publication.fetchAll(request)
+- [x] [Q] client.publication.validateMetadata(request)
+- [x] [PQ] client.publication.whoCollected({ publicationId })
+- [x] [PQ] client.publication(s).forSale({ profileId })
 - [Q] client.publication.metadataStatus(request)
 
 ### Create or edit publications

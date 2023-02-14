@@ -66,6 +66,18 @@ export type WhoCollectedPublicationQuery = {
   result: { items: Array<WalletFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
+export type ProfilePublicationsForSaleQueryVariables = Types.Exact<{
+  request: Types.ProfilePublicationsForSaleRequest;
+  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+}>;
+
+export type ProfilePublicationsForSaleQuery = {
+  result: {
+    items: Array<PostFragment | CommentFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
+};
+
 export const PublicationDocument = gql`
   query Publication($observerId: ProfileId, $request: PublicationQueryRequest!) {
     result: publication(request: $request) {
@@ -131,6 +143,29 @@ export const WhoCollectedPublicationDocument = gql`
   ${WalletFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
+export const ProfilePublicationsForSaleDocument = gql`
+  query ProfilePublicationsForSale(
+    $request: ProfilePublicationsForSaleRequest!
+    $observerId: ProfileId
+  ) {
+    result: profilePublicationsForSale(request: $request) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -143,6 +178,7 @@ const PublicationDocumentString = print(PublicationDocument);
 const PublicationsDocumentString = print(PublicationsDocument);
 const ValidatePublicationMetadataDocumentString = print(ValidatePublicationMetadataDocument);
 const WhoCollectedPublicationDocumentString = print(WhoCollectedPublicationDocument);
+const ProfilePublicationsForSaleDocumentString = print(ProfilePublicationsForSaleDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Publication(
@@ -215,6 +251,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'WhoCollectedPublication',
+        'query',
+      );
+    },
+    ProfilePublicationsForSale(
+      variables: ProfilePublicationsForSaleQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: ProfilePublicationsForSaleQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ProfilePublicationsForSaleQuery>(
+            ProfilePublicationsForSaleDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'ProfilePublicationsForSale',
         'query',
       );
     },

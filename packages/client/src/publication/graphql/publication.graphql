@@ -54,3 +54,23 @@ query WhoCollectedPublication($request: WhoCollectedPublicationRequest!, $observ
     }
   }
 }
+
+query ProfilePublicationsForSale(
+  $request: ProfilePublicationsForSaleRequest!
+  $observerId: ProfileId
+) {
+  result: profilePublicationsForSale(request: $request) {
+    items {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

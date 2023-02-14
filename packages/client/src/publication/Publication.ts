@@ -9,6 +9,7 @@ import {
   WalletFragment,
 } from '../graphql/fragments.generated';
 import {
+  ProfilePublicationsForSaleRequest,
   PublicationMetadataV2Input,
   PublicationQueryRequest,
   PublicationsQueryRequest,
@@ -62,6 +63,21 @@ export class Publication {
     pageInfo: CommonPaginatedResultInfoFragment;
   }> {
     const result = await this.sdk.WhoCollectedPublication({ request });
+
+    return result.data.result;
+  }
+
+  async forSale(
+    request: ProfilePublicationsForSaleRequest,
+    observerId?: string,
+  ): Promise<{
+    items: (PostFragment | CommentFragment)[];
+    pageInfo: CommonPaginatedResultInfoFragment;
+  }> {
+    const result = await this.sdk.ProfilePublicationsForSale({
+      request,
+      observerId,
+    });
 
     return result.data.result;
   }
