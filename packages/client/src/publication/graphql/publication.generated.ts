@@ -80,6 +80,17 @@ export type ProfilePublicationsForSaleQuery = {
   };
 };
 
+export type PublicationMetadataStatusQueryVariables = Types.Exact<{
+  request: Types.GetPublicationMetadataStatusRequest;
+}>;
+
+export type PublicationMetadataStatusQuery = {
+  result: { __typename: 'PublicationMetadataStatus' } & Pick<
+    Types.PublicationMetadataStatus,
+    'reason' | 'status'
+  >;
+};
+
 export const PublicationDocument = gql`
   query Publication($observerId: ProfileId, $request: PublicationQueryRequest!) {
     result: publication(request: $request) {
@@ -168,6 +179,15 @@ export const ProfilePublicationsForSaleDocument = gql`
   ${CommentFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
+export const PublicationMetadataStatusDocument = gql`
+  query PublicationMetadataStatus($request: GetPublicationMetadataStatusRequest!) {
+    result: publicationMetadataStatus(request: $request) {
+      __typename
+      reason
+      status
+    }
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -181,6 +201,7 @@ const PublicationsDocumentString = print(PublicationsDocument);
 const ValidatePublicationMetadataDocumentString = print(ValidatePublicationMetadataDocument);
 const WhoCollectedPublicationDocumentString = print(WhoCollectedPublicationDocument);
 const ProfilePublicationsForSaleDocumentString = print(ProfilePublicationsForSaleDocument);
+const PublicationMetadataStatusDocumentString = print(PublicationMetadataStatusDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Publication(
@@ -273,6 +294,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'ProfilePublicationsForSale',
+        'query',
+      );
+    },
+    PublicationMetadataStatus(
+      variables: PublicationMetadataStatusQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: PublicationMetadataStatusQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PublicationMetadataStatusQuery>(
+            PublicationMetadataStatusDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'PublicationMetadataStatus',
         'query',
       );
     },

@@ -59,4 +59,14 @@ describe(`Given the ${Publication.name} configured to work with testnet`, () => 
       ).resolves.not.toThrow();
     });
   });
+
+  describe(`when a method ${Publication.prototype.metadataStatus.name} is called`, () => {
+    it(`should run successfully`, async () => {
+      await expect(
+        publication.metadataStatus({
+          publicationId: '0x014e-0x0a',
+        }),
+      ).resolves.not.toThrow();
+    });
+  });
 });

@@ -9,7 +9,9 @@ import {
   WalletFragment,
 } from '../graphql/fragments.generated';
 import {
+  GetPublicationMetadataStatusRequest,
   ProfilePublicationsForSaleRequest,
+  PublicationMetadataStatus,
   PublicationMetadataV2Input,
   PublicationQueryRequest,
   PublicationsQueryRequest,
@@ -78,6 +80,14 @@ export class Publication {
       request,
       observerId,
     });
+
+    return result.data.result;
+  }
+
+  async metadataStatus(
+    request: GetPublicationMetadataStatusRequest,
+  ): Promise<PublicationMetadataStatus | null> {
+    const result = await this.sdk.PublicationMetadataStatus({ request });
 
     return result.data.result;
   }

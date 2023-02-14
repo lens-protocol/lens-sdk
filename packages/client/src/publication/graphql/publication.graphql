@@ -74,3 +74,11 @@ query ProfilePublicationsForSale(
     }
   }
 }
+
+query PublicationMetadataStatus($request: GetPublicationMetadataStatusRequest!) {
+  result: publicationMetadataStatus(request: $request) {
+    __typename
+    reason
+    status
+  }
+}

@@ -98,7 +98,7 @@ Client manages the token lifecycle and storage
 - [x] [Q] client.publication.validateMetadata(request)
 - [x] [PQ] client.publication.whoCollected({ publicationId })
 - [x] [PQ] client.publication(s).forSale({ profileId })
-- [Q] client.publication.metadataStatus(request)
+- [x] [Q] client.publication.metadataStatus(request)
 
 ### Create or edit publications
 
