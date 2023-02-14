@@ -1,6 +1,16 @@
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 
-import { Comment, Maybe, Mirror, Post, ReferenceModule, Wallet } from '../graphql';
+import {
+  CollectPolicy,
+  Comment,
+  Maybe,
+  Mirror,
+  Post,
+  PublicationFragment,
+  ReferenceModule,
+  resolveCollectPolicy,
+  Wallet,
+} from '../graphql';
 import { ReferencePolicy } from '../graphql/ReferencePolicy';
 import { FieldPolicy, FieldReadFunction, TypePolicy } from './TypePolicy';
 import { noCachedField } from './noCachedField';
@@ -50,6 +60,19 @@ const collectedBy: FieldPolicy<Maybe<Wallet>, Post | Comment> = {
   },
 };
 
+const collectPolicy = <T extends Post | Mirror | Comment>(
+  existing: CollectPolicy | undefined,
+  { readField }: { readField: (field: keyof T) => Readonly<unknown> | undefined },
+) => {
+  if (existing) return existing;
+
+  const profile = readField('profile') as PublicationFragment['profile'];
+  const collectModule = readField('collectModule') as PublicationFragment['__collectModule'];
+  const publicationStats = readField('stats') as PublicationFragment['stats'];
+
+  return resolveCollectPolicy({ profile, collectModule, publicationStats });
+};
+
 const hasOptimisticCollectedByMe: FieldReadFunction<boolean, Post | Comment | Mirror> = (
   existing: boolean | undefined,
 ) => {
@@ -68,6 +91,8 @@ export function createMirrorTypePolicy(): TypePolicy<Mirror> {
       hasCollectedByMe: noCachedField(),
 
       hasOptimisticCollectedByMe,
+
+      collectPolicy,
     },
   };
 }
@@ -92,6 +117,8 @@ export function createMirrorablePublicationTypePolicy(): TypePolicy<Comment | Po
       hasOptimisticCollectedByMe,
 
       isOptimisticMirroredByMe,
+
+      collectPolicy,
     },
   };
 }
