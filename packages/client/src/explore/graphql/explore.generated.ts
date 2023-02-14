@@ -9,6 +9,7 @@ import {
   CommonPaginatedResultInfoFragment,
   FollowingFragment,
   FollowerFragment,
+  Erc20AmountFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -22,6 +23,7 @@ import {
   CommonPaginatedResultInfoFragmentDoc,
   FollowingFragmentDoc,
   FollowerFragmentDoc,
+  Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type ExplorePublicationsQueryVariables = Types.Exact<{
   request: Types.ExplorePublicationRequest;

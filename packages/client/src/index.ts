@@ -8,5 +8,6 @@ export * from './profile';
 export * from './reactions';
 export * from './search';
 export * from './explore';
+export * from './revenue';
 
 export default LensClient; // eslint-disable-line

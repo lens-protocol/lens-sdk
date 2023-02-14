@@ -1,4 +1,4 @@
-import LensClient, { Profile, Reactions, Search, Explore } from '.';
+import LensClient, { Profile, Reactions, Search, Explore, Revenue } from '.';
 import { mumbaiSandbox } from './consts/environments';
 
 const testConfig = {
@@ -29,6 +29,12 @@ describe(`Given the LensClient configured for sandbox`, () => {
   describe(`when accessing the Explore module`, () => {
     it(`should return a new instance of Explore`, async () => {
       expect(client.explore).toBeInstanceOf(Explore);
+    });
+  });
+
+  describe(`when accessing the Revenue module`, () => {
+    it(`should return a new instance of Revenue`, async () => {
+      expect(client.revenue).toBeInstanceOf(Revenue);
     });
   });
 });
