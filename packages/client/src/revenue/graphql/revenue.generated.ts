@@ -8,6 +8,7 @@ import {
   ProfileFragment,
   MirrorFragment,
   CommentFragment,
+  WalletFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -20,6 +21,7 @@ import {
   ProfileFragmentDoc,
   MirrorFragmentDoc,
   CommentFragmentDoc,
+  WalletFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type ProfilePublicationRevenueQueryVariables = Types.Exact<{
   request: Types.ProfilePublicationRevenueQueryRequest;
