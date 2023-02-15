@@ -1,5 +1,7 @@
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 
+import { FieldPolicy, FieldReadFunction, TypePolicy } from './TypePolicy';
+import { noCachedField } from './noCachedField';
 import {
   CollectPolicy,
   Comment,
@@ -12,8 +14,6 @@ import {
   Wallet,
 } from '../graphql';
 import { ReferencePolicy } from '../graphql/ReferencePolicy';
-import { FieldPolicy, FieldReadFunction, TypePolicy } from './TypePolicy';
-import { noCachedField } from './noCachedField';
 
 function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
   if (module === null) {

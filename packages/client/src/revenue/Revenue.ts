@@ -1,12 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
 
-import { LensConfig } from '../consts/config';
-import { CommonPaginatedResultInfoFragment } from '../graphql/fragments.generated';
-import {
-  ProfileFollowRevenueQueryRequest,
-  ProfilePublicationRevenueQueryRequest,
-  PublicationRevenueQueryRequest,
-} from '../graphql/types.generated';
 import {
   getSdk,
   PublicationRevenueFragment,
@@ -14,6 +7,13 @@ import {
   RevenueFragment,
   Sdk,
 } from './graphql/revenue.generated';
+import { LensConfig } from '../consts/config';
+import { CommonPaginatedResultInfoFragment } from '../graphql/fragments.generated';
+import {
+  ProfileFollowRevenueQueryRequest,
+  ProfilePublicationRevenueQueryRequest,
+  PublicationRevenueQueryRequest,
+} from '../graphql/types.generated';
 
 export class Revenue {
   private readonly sdk: Sdk;

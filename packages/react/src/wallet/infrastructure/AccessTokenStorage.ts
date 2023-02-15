@@ -2,10 +2,10 @@ import { IAccessTokenStorage } from '@lens-protocol/api-bindings';
 import { CredentialsExpiredError } from '@lens-protocol/domain/use-cases/lifecycle';
 import { Deferred } from '@lens-protocol/shared-kernel';
 
-import { Credentials } from '../adapters/Credentials';
-import { Callback, ICredentialsExpiryEmitter } from '../adapters/CredentialsExpiryController';
 import { AuthApi } from './AuthApi';
 import { CredentialsStorage } from './CredentialsStorage';
+import { Credentials } from '../adapters/Credentials';
+import { Callback, ICredentialsExpiryEmitter } from '../adapters/CredentialsExpiryController';
 
 export class AccessTokenStorage implements IAccessTokenStorage, ICredentialsExpiryEmitter {
   private isRefreshing = false;

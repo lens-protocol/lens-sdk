@@ -6,9 +6,9 @@ import {
 } from '@lens-protocol/domain/entities';
 import { TokenAllowance, TokenAllowanceRequest } from '@lens-protocol/domain/use-cases/wallets';
 
-import { useSharedDependencies } from '../../shared';
 import { ApproveTransactionGateway } from './ApproveTransactionGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { useSharedDependencies } from '../../shared';
 
 export function useApproveModuleController() {
   const { providerFactory, activeWallet, transactionQueue } = useSharedDependencies();

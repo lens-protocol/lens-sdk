@@ -1,8 +1,8 @@
 import { GraphQLClient } from 'graphql-request';
 
+import { buildPaginatedQueryResult } from './buildPaginatedQueryResult';
 import { mumbaiSandbox } from '../consts/environments';
 import { getSdk } from '../search/graphql/search.generated';
-import { buildPaginatedQueryResult } from './buildPaginatedQueryResult';
 
 describe('Given a paginated query function and the paginated query result helper', () => {
   const sdk = getSdk(new GraphQLClient(mumbaiSandbox.gqlEndpoint));

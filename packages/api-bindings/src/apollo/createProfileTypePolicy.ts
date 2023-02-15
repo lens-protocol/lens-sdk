@@ -3,6 +3,12 @@ import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
+import { TypePolicy } from './TypePolicy';
+import {
+  getAllPendingTransactions,
+  isFollowTransactionFor,
+  isUnfollowTransactionFor,
+} from './transactions';
 import {
   erc20Amount,
   FollowModule,
@@ -12,12 +18,6 @@ import {
   ProfileAttributes,
 } from '../graphql';
 import { FollowPolicy } from '../graphql/FollowPolicy';
-import { TypePolicy } from './TypePolicy';
-import {
-  getAllPendingTransactions,
-  isFollowTransactionFor,
-  isUnfollowTransactionFor,
-} from './transactions';
 
 function resolveFollowPolicy({
   followModule,

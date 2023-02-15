@@ -10,7 +10,6 @@ import {
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
-import generatedIntrospection from '../graphql/generated';
 import { createAttributeTypePolicy } from './createAttributeTypePolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
@@ -33,6 +32,7 @@ import {
   createMirrorablePublicationTypePolicy,
   createMirrorTypePolicy,
 } from './publicationTypePolicy';
+import generatedIntrospection from '../graphql/generated';
 
 type TypedFieldFunctionOptions<TAll> = Overwrite<
   FieldFunctionOptions,

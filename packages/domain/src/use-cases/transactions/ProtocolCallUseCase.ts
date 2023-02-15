@@ -1,5 +1,7 @@
 import { failure, success } from '@lens-protocol/shared-kernel';
 
+import { IGenericResultPresenter } from './IGenericResultPresenter';
+import { TransactionQueue } from './TransactionQueue';
 import {
   IUnsignedProtocolCall,
   Nonce,
@@ -12,8 +14,6 @@ import {
   WalletConnectionError,
 } from '../../entities';
 import { ActiveWallet } from '../wallets/ActiveWallet';
-import { IGenericResultPresenter } from './IGenericResultPresenter';
-import { TransactionQueue } from './TransactionQueue';
 
 export interface IMetaTransactionNonceGateway {
   getNextMetaTransactionNonceFor(kind: TransactionKind): Promise<Nonce | undefined>;

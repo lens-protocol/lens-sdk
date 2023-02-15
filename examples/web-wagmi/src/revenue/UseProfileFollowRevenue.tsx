@@ -1,11 +1,11 @@
 import { ProfileFragment, useProfileFollowRevenue } from '@lens-protocol/react';
 import { useState } from 'react';
 
+import { RevenueCard } from './components/RevenueCard';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from '../profiles/components/ProfileCard';
 import { ProfileSelector } from '../profiles/components/ProfileSelector';
-import { RevenueCard } from './components/RevenueCard';
 
 type UseProfileFollowRevenueInnerProps = {
   profile: ProfileFragment;

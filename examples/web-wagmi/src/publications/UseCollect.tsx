@@ -8,12 +8,12 @@ import {
   useFeed,
 } from '@lens-protocol/react';
 
+import { CollectablePublicationCard } from './components/PublicationCard';
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { CollectablePublicationCard } from './components/PublicationCard';
 
 type CollectButtonProps = {
   collector: ProfileOwnedByMeFragment;

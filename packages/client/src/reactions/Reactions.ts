@@ -1,12 +1,12 @@
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
+import { getSdk, Sdk } from './graphql/reactions.generated';
 import { Authentication } from '../authentication';
 import { LensConfig } from '../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { ReactionRequest } from '../graphql/types.generated';
 import { execute } from '../helpers/execute';
-import { getSdk, Sdk } from './graphql/reactions.generated';
 
 export class Reactions {
   private readonly authentication: Authentication | undefined;

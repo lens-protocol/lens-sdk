@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 
+import { getSdk, Sdk } from './graphql/queries.generated';
 import { LensConfig } from '../consts/config';
 import {
   CommonPaginatedResultInfoFragment,
@@ -18,7 +19,6 @@ import {
   ProfileQueryRequest,
   SingleProfileQueryRequest,
 } from '../graphql/types.generated';
-import { getSdk, Sdk } from './graphql/queries.generated';
 
 export class Profile {
   private readonly sdk: Sdk;

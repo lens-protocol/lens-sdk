@@ -1,5 +1,6 @@
 import { Amount, Erc20, EthereumAddress, failure, success } from '@lens-protocol/shared-kernel';
 
+import { ActiveWallet } from './ActiveWallet';
 import {
   UnsignedTransaction,
   TransactionKind,
@@ -12,7 +13,6 @@ import {
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
-import { ActiveWallet } from './ActiveWallet';
 
 export enum TokenAllowanceLimit {
   EXACT,

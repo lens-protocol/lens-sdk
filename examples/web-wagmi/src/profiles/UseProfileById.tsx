@@ -1,10 +1,10 @@
 import { ProfileFragment, useProfile } from '@lens-protocol/react';
 import { useState } from 'react';
 
-import { ErrorMessage } from '../components/error/ErrorMessage';
-import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 import { ProfileSelector } from './components/ProfileSelector';
+import { ErrorMessage } from '../components/error/ErrorMessage';
+import { Loading } from '../components/loading/Loading';
 
 type ProfileByIdProps = {
   profileId: string;

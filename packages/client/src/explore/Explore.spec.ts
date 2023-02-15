@@ -1,6 +1,6 @@
+import { Explore } from './Explore';
 import { mumbaiSandbox } from '../consts/environments';
 import { ProfileSortCriteria, PublicationSortCriteria } from '../graphql/types.generated';
-import { Explore } from './Explore';
 
 const testConfig = {
   environment: mumbaiSandbox,

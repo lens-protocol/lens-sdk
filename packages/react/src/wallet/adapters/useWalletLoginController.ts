@@ -6,9 +6,9 @@ import {
 import { ActiveProfileLoader } from '@lens-protocol/domain/use-cases/profile';
 import { WalletLogin, WalletLoginRequest } from '@lens-protocol/domain/use-cases/wallets';
 
+import { ActiveWalletPresenter } from './ActiveWalletPresenter';
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
-import { ActiveWalletPresenter } from './ActiveWalletPresenter';
 
 export function useWalletLoginController() {
   const {

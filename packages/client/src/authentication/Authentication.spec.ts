@@ -1,9 +1,9 @@
 import { DateUtils } from '@lens-protocol/shared-kernel';
 
-import { mumbaiSandbox } from '../consts/environments';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { Authentication } from './Authentication';
 import { setupRandomAuthentication } from './__helpers__/setupAuthentication';
+import { mumbaiSandbox } from '../consts/environments';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 
 const testConfig = {
   environment: mumbaiSandbox,

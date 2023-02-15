@@ -3,6 +3,7 @@ import {
   useProfilePublicationsForSaleQuery,
 } from '@lens-protocol/api-bindings';
 
+import { Publication } from './types';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';

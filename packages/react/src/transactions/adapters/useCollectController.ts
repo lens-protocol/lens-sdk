@@ -13,9 +13,9 @@ import {
   SignlessProtocolCallUseCase,
 } from '@lens-protocol/domain/use-cases/transactions';
 
-import { useSharedDependencies } from '../../shared';
 import { CollectPublicationCallGateway } from './CollectPublicationCallGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { useSharedDependencies } from '../../shared';
 
 export function useCollectController() {
   const {

@@ -9,9 +9,9 @@ import {
   UpdateDispatcherConfigRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 
-import { useSharedDependencies } from '../../shared';
 import { DispatcherConfigCallGateway } from './DispatcherConfigCallGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { useSharedDependencies } from '../../shared';
 
 export function useUpdateDispatcherConfigController() {
   const { activeWallet, transactionGateway, protocolCallRelayer, transactionQueue, apolloClient } =

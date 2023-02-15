@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
-import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { CommentComposer } from './components/CommentComposer';
 import { PublicationComments } from './components/PublicationComments';
+import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
+import { WhenLoggedInWithProfile } from '../components/auth/auth';
 
 export function UseCreateComment() {
   const [publicationId, setPublicationId] = useState<string>('0x1b-0x0118');

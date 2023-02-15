@@ -24,9 +24,9 @@ import {
 import { errors, Signer } from 'ethers';
 import { z } from 'zod';
 
+import { assertErrorObjectWithCode } from './errors';
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 import { TypedData } from '../../transactions/adapters/TypedData';
-import { assertErrorObjectWithCode } from './errors';
 
 export type RequiredSigner = Signer & TypedDataSigner;
 

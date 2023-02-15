@@ -6,10 +6,10 @@ import {
 import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
 
-import { useSharedDependencies } from '../../shared';
 import { MetadataUploadAdapter, MetadataUploadHandler } from './MetadataUploadAdapter';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 import { CreateCommentCallGateway } from './publication-call-gateways/CreateCommentCallGateway';
+import { useSharedDependencies } from '../../shared';
 
 export type UseCreateCommentControllerArgs = {
   upload: MetadataUploadHandler;

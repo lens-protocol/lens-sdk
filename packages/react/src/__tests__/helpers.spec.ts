@@ -63,7 +63,7 @@ describe(`Given the hook helpers`, () => {
 
       expect(result.current.isPending).toBe(false);
 
-      await act(() => {
+      act(() => {
         void result.current.execute();
       });
 

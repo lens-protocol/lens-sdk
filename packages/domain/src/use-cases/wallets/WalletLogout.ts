@@ -1,9 +1,9 @@
 import { success } from '@lens-protocol/shared-kernel';
 
-import { IActiveProfilePresenter } from '../profile';
 import { ActiveWallet } from './ActiveWallet';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 import { ILogoutPresenter, LogoutReason } from './ILogoutPresenter';
+import { IActiveProfilePresenter } from '../profile';
 
 export interface IResettableCredentialsGateway {
   invalidate(): Promise<void>;

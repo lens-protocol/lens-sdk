@@ -1,8 +1,8 @@
 import { GraphQLClient } from 'graphql-request';
 
+import { Credentials } from './Credentials';
 import { LensConfig } from '../../consts/config';
 import { getSdk, Sdk } from '../graphql/auth.generated';
-import { Credentials } from './Credentials';
 
 export class AuthenticationApi {
   private readonly sdk: Sdk;

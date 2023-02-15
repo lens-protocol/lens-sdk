@@ -1,5 +1,5 @@
-import { mumbaiSandbox } from '../consts/environments';
 import { Search } from './Search';
+import { mumbaiSandbox } from '../consts/environments';
 
 const testConfig = {
   environment: mumbaiSandbox,

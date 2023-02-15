@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 
+import { getSdk, Sdk } from './graphql/explore.generated';
 import { LensConfig } from '../consts/config';
 import {
   CommentFragment,
@@ -9,7 +10,6 @@ import {
   ProfileFragment,
 } from '../graphql/fragments.generated';
 import { ExploreProfilesRequest, ExplorePublicationRequest } from '../graphql/types.generated';
-import { getSdk, Sdk } from './graphql/explore.generated';
 
 export class Explore {
   private readonly sdk: Sdk;

@@ -1,9 +1,9 @@
 import { useProfileFollowers } from '@lens-protocol/react';
 
+import { ProfileCard } from './ProfileCard';
 import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { Loading } from '../../components/loading/Loading';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
-import { ProfileCard } from './ProfileCard';
 
 type ProfileFollowersProps = {
   profileId: string;

@@ -8,8 +8,8 @@ import {
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 
-import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { useSharedDependencies } from '../../shared';
 
 export function useUpdateFollowPolicyController() {
   const {
