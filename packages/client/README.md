@@ -59,3 +59,24 @@ const reactionRequest = {
 // lensClient is already authenticated from the previous step
 await lensClient.reactions.add(reactionRequest);
 ```
+
+### Paginated Queries
+
+On queries that have paginated results, you can call the `next` or `prev` functions on the return value to get the results of the next or previous page.
+
+```ts
+const result = await lensClient.search.profiles({
+  limit: 10,
+  query: 'test',
+});
+
+const firstPageResults = result.items; // First page of results
+
+const nextResult = await result.next();
+
+const secondPageResults = nextResult.items; // Second page of results
+
+const prevResult = await result.prev();
+
+prevResult.items; // <---- We are now back to the first page and this value is equal to firstPageResults.
+```
