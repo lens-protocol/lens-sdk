@@ -2,33 +2,31 @@
   "name": "@lens-protocol/react",
   "version": "0.4.1",
   "description": "Interacting with the Lens Protocol API using React.",
+  "main": "dist/lens-protocol-react.cjs.js",
+  "module": "dist/lens-protocol-react.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/lens-protocol-react.esm.js",
+      "default": "./dist/lens-protocol-react.cjs.js"
+    },
+    "./web": {
+      "module": "./web/dist/lens-protocol-react-web.esm.js",
+      "default": "./web/dist/lens-protocol-react-web.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
   "repository": {
     "directory": "packages/react",
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./web": {
-      "types": "./dist/web/index.d.ts",
-      "default": "./dist/web/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
   "sideEffects": false,
   "files": [
     "dist",
     "web"
   ],
   "scripts": {
-    "build": "pnpm clean && tsup && tsc --emitDeclarationOnly",
-    "clean": "rimraf ./dist",
+    "build": "preconstruct build",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
@@ -57,6 +55,9 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.18.6",
     "@ensdomains/ens": "0.4.4",
     "@ensdomains/resolver": "0.2.4",
     "@ethersproject/abi": "5.7.0",
@@ -84,14 +85,26 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "resolver:@0.2.4": "link:@ensdomains/resolver:@0.2.4",
-    "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
-    "tsup": "^6.5.0",
     "typescript": "^4.9.3"
   },
   "peerDependencies": {
     "ethers": "^5.7.2",
     "react": "^18.2.0"
   },
-  "prettier": "@lens-protocol/prettier-config"
+  "prettier": "@lens-protocol/prettier-config",
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react",
+      "@babel/preset-typescript"
+    ]
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "index.tsx",
+      "web/index.ts"
+    ],
+    "exports": true
+  }
 }

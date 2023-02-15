@@ -1,7 +1,7 @@
 import { from, HttpLink, ReactiveVar } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
-import { IAccessTokenStorage } from './IAccessTokenStorage';
+import type { IAccessTokenStorage } from './IAccessTokenStorage';
 import { LensApolloClient } from './LensApolloClient';
 import { createApolloCache } from './createApolloCache';
 import { createAuthLink } from './createAuthLink';
