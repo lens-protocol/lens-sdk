@@ -1,4 +1,4 @@
-import { ProfileFragment } from '@lens-protocol/api-bindings';
+import { ProfileOwnedByMeFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -6,58 +6,54 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
-import { useState } from 'react';
+import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
+import { Operation, useOperation } from '../helpers';
 import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
 import { useUpdateProfileDetailsController } from './adapters/useUpdateProfileDetailsController';
 
 type UseUpdateProfileDetailsArgs = {
-  profile: ProfileFragment;
+  profile: ProfileOwnedByMeFragment;
   upload: MetadataUploadHandler;
 };
 
-export type ProfileDetails = Pick<
+export type UpdateProfileDetailsArgs = Pick<
   UpdateProfileDetailsRequest,
   'attributes' | 'bio' | 'coverPicture' | 'name'
 >;
 
-export function useUpdateProfileDetails({ profile, upload }: UseUpdateProfileDetailsArgs) {
-  const [error, setError] = useState<
-    | PendingSigningRequestError
-    | UserRejectedError
-    | WalletConnectionError
-    | FailedUploadError
-    | null
-  >(null);
-  const [isPending, setIsPending] = useState(false);
+export type UpdateProfileDetailsOperation = Operation<
+  void,
+  PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
+  [UpdateProfileDetailsArgs]
+>;
+
+export function useUpdateProfileDetails({
+  profile,
+  upload,
+}: UseUpdateProfileDetailsArgs): UpdateProfileDetailsOperation {
   const update = useUpdateProfileDetailsController({ upload });
 
-  return {
-    update: async (details: ProfileDetails) => {
-      setError(null);
-      setIsPending(true);
-
+  return useOperation(
+    async (
+      details: UpdateProfileDetailsArgs,
+    ): PromiseResult<
+      void,
+      PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
+    > => {
       try {
-        const result = await update({
+        return await update({
           kind: TransactionKind.UPDATE_PROFILE_DETAILS,
           delegate: profile.dispatcher !== null,
           profileId: profile.id,
           ...details,
         });
-        if (result.isFailure()) {
-          setError(result.error);
-        }
       } catch (err: unknown) {
         if (err instanceof FailedUploadError) {
-          setError(err);
-          return;
+          return failure(err);
         }
         throw err;
-      } finally {
-        setIsPending(false);
       }
     },
-    error,
-    isPending,
-  };
+  );
 }

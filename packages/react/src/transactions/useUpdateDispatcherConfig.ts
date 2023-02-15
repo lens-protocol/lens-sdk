@@ -1,4 +1,8 @@
-import { TransactionState, useHasPendingTransaction } from '@lens-protocol/api-bindings';
+import {
+  ProfileOwnedByMeFragment,
+  TransactionState,
+  useHasPendingTransaction,
+} from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -6,48 +10,47 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
-import { useState } from 'react';
 
-import { ProfileFragment } from '../profile';
+import { Operation, useOperation } from '../helpers';
 import { useUpdateDispatcherConfigController } from './adapters/useUpdateDispatcherConfigController';
 
 export type UseUpdateDispatcherConfigArgs = {
-  profile: ProfileFragment;
+  profile: ProfileOwnedByMeFragment;
 };
 
-export type UseUpdateDispatcherConfigParams = {
+export type UpdateDispatcherConfigArgs = {
   enabled: boolean;
 };
 
-export function useUpdateDispatcherConfig({ profile }: UseUpdateDispatcherConfigArgs) {
-  const [error, setError] = useState<
-    PendingSigningRequestError | UserRejectedError | WalletConnectionError | null
-  >(null);
+export type UpdateDispatcherConfigOperation = Operation<
+  void,
+  PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  [UpdateDispatcherConfigArgs]
+>;
 
+export function useUpdateDispatcherConfig({
+  profile,
+}: UseUpdateDispatcherConfigArgs): UpdateDispatcherConfigOperation {
   // note: this is one of the hooks for which we need to wait for the corresponding tx to be mined
   // as it's affecting the way we would handle all tx after this one is done.
-  const isPending = useHasPendingTransaction(
+  const hasPendingUpdateTransaction = useHasPendingTransaction(
     (tx): tx is TransactionState<UpdateDispatcherConfigRequest> =>
       tx.request.kind === TransactionKind.UPDATE_DISPATCHER_CONFIG &&
       tx.request.profileId === profile.id,
   );
-
   const update = useUpdateDispatcherConfigController();
 
-  return {
-    update: async ({ enabled }: UseUpdateDispatcherConfigParams) => {
-      setError(null);
-
-      const result = await update({
+  const { execute, error, isPending } = useOperation(
+    async ({ enabled }: UpdateDispatcherConfigArgs) =>
+      update({
         enabled,
         profileId: profile.id,
-      });
+      }),
+  );
 
-      if (result.isFailure()) {
-        setError(result.error);
-      }
-    },
+  return {
+    execute,
     error,
-    isPending,
+    isPending: isPending || hasPendingUpdateTransaction,
   };
 }

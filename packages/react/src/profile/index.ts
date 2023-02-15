@@ -9,7 +9,7 @@ export * from './useExploreProfiles';
 export * from './useSearchProfiles';
 export * from './useCollectedPublications';
 export * from './useMutualFollowers';
-export * from './useUpdateProfileImage';
+export * from '../transactions/useUpdateProfileImage';
 export * from './useProfilesOwnedBy';
 
 export type {
@@ -19,4 +19,5 @@ export type {
   ProfileOwnedByMeFragment,
   FollowingFragment,
   FollowerFragment,
+  FollowPolicy,
 } from '@lens-protocol/api-bindings';

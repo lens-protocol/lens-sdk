@@ -8,11 +8,10 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
-import { Publication } from '../types';
 import { useExplorePublications } from '../useExplorePublications';
 
 describe(`Given the ${useExplorePublications.name} hook`, () => {
-  const mockPublications: Publication[] = [mockPostFragment()];
+  const mockPublications = [mockPostFragment()];
 
   describe('when the query returns data successfully', () => {
     it('should return publications that match the explore with default parameters', async () => {

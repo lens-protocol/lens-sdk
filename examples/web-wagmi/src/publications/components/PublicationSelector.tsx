@@ -1,26 +1,35 @@
-import { usePublications } from '@lens-protocol/react';
+import {
+  CommentFragment,
+  MirrorFragment,
+  PostFragment,
+  usePublications,
+} from '@lens-protocol/react';
 
 import { ErrorMessage } from '../../components/error/ErrorMessage';
+import { never } from '../../utils';
 
-type SelectPublicationIdProps = {
-  onPublicationSelected: (publicationId: string) => void;
+type PublicationSelectorProps = {
+  onPublicationSelected: (publication: CommentFragment | MirrorFragment | PostFragment) => void;
   profileId: string;
 };
 
-export function SelectPublicationId({
+export function PublicationSelector({
   onPublicationSelected,
   profileId,
-}: SelectPublicationIdProps) {
+}: PublicationSelectorProps) {
   const { data: publications, error, loading } = usePublications({ profileId, limit: 30 });
 
   if (loading) return null;
 
   if (error) return <ErrorMessage error={error} />;
 
+  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const publication = publications.find(({ id }) => id === e.target.value) ?? never();
+    onPublicationSelected(publication);
+  };
+
   return (
-    <select
-      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onPublicationSelected(e.target.value)}
-    >
+    <select onChange={onChange}>
       <option value="default">Select a publication</option>
       {publications.map((publication) => (
         <option key={publication.id} value={publication.id}>

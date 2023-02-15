@@ -1,13 +1,13 @@
 import {
   Amount,
-  ChargeFollowPolicy,
   Erc20,
   FollowPolicyType,
-  NoFeeFollowPolicy,
-  ProfileFragment,
   useCurrencies,
   useUpdateFollowPolicy,
   FollowPolicy,
+  ChargeFollowConfig,
+  NoFeeFollowConfig,
+  ProfileOwnedByMeFragment,
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
@@ -34,7 +34,7 @@ function resolveFollowPolicy({
   followPolicyType: SupportedFollowPolicy;
   amount?: Amount<Erc20>;
   recipient?: string;
-}): ChargeFollowPolicy | NoFeeFollowPolicy {
+}): ChargeFollowConfig | NoFeeFollowConfig {
   if (followPolicyType === FollowPolicyType.CHARGE) {
     return {
       type: FollowPolicyType.CHARGE,
@@ -93,7 +93,7 @@ function UpdateButtonText({
 }
 
 type UpdateFollowPolicyFormProps = {
-  profile: ProfileFragment;
+  profile: ProfileOwnedByMeFragment;
   currentFollowPolicy: FollowPolicy | null;
   currencies: Erc20[];
 };
@@ -103,7 +103,7 @@ function UpdateFollowPolicyForm({
   currencies,
   currentFollowPolicy,
 }: UpdateFollowPolicyFormProps) {
-  const { updateFollowPolicy, isPending, error } = useUpdateFollowPolicy();
+  const { execute: updateFollowPolicy, isPending, error } = useUpdateFollowPolicy({ profile });
   const [selectedFollowPolicyType, setSelectedFollowPolicyType] = useState<FollowPolicyType | null>(
     currentFollowPolicy?.type ?? null,
   );
@@ -126,7 +126,6 @@ function UpdateFollowPolicyForm({
           followPolicyType: selectedFollowPolicyType,
           recipient,
         }),
-        profileId: profile.id,
       });
 
       return;
@@ -137,7 +136,6 @@ function UpdateFollowPolicyForm({
 
     await updateFollowPolicy({
       followPolicy: resolveFollowPolicy({ followPolicyType: selectedFollowPolicyType }),
-      profileId: profile.id,
     });
   }
 
@@ -241,7 +239,7 @@ function UpdateFollowPolicyForm({
 }
 
 type UpdateFollowPolicyProps = {
-  profile: ProfileFragment;
+  profile: ProfileOwnedByMeFragment;
 };
 
 function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {

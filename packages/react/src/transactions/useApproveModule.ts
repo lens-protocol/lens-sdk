@@ -11,8 +11,8 @@ import {
   TokenAllowanceRequest,
 } from '@lens-protocol/domain/use-cases/wallets';
 import { Amount, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
-import { useState } from 'react';
 
+import { Operation, useOperation } from '../helpers';
 import { useApproveModuleController } from './adapters/useApproveModuleController';
 
 export type ApproveModuleArgs = {
@@ -23,48 +23,34 @@ export type ApproveModuleArgs = {
 
 export { TokenAllowanceLimit };
 
-export function useApproveModule() {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<
-    | InsufficientGasError
-    | PendingSigningRequestError
-    | UserRejectedError
-    | WalletConnectionError
-    | null
-  >(null);
+export type ApproveModuleOperation = Operation<
+  void,
+  InsufficientGasError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  [ApproveModuleArgs]
+>;
+
+export function useApproveModule(): ApproveModuleOperation {
   const setAllowance = useApproveModuleController();
 
   const waitUntilTransactionIsSettled = useWaitUntilTransactionSettled();
 
-  return {
-    approve: async ({ amount, limit, spender }: ApproveModuleArgs) => {
-      setIsPending(true);
-      setError(null);
+  return useOperation(async ({ amount, limit, spender }: ApproveModuleArgs) => {
+    const result = await setAllowance({
+      amount,
+      kind: TransactionKind.APPROVE_MODULE,
+      limit,
+      spender,
+    });
 
-      try {
-        const result = await setAllowance({
-          amount,
-          kind: TransactionKind.APPROVE_MODULE,
-          limit,
-          spender,
-        });
+    if (result.isSuccess()) {
+      await waitUntilTransactionIsSettled(
+        (transaction): transaction is TransactionState<TokenAllowanceRequest> =>
+          transaction.request.kind === TransactionKind.APPROVE_MODULE &&
+          transaction.request.spender === spender &&
+          transaction.request.amount.asset === amount.asset,
+      );
+    }
 
-        if (result.isFailure()) {
-          setError(result.error);
-          return;
-        }
-
-        await waitUntilTransactionIsSettled(
-          (transaction): transaction is TransactionState<TokenAllowanceRequest> =>
-            transaction.request.kind === TransactionKind.APPROVE_MODULE &&
-            transaction.request.spender === spender &&
-            transaction.request.amount.asset === amount.asset,
-        );
-      } finally {
-        setIsPending(false);
-      }
-    },
-    error,
-    isPending,
-  };
+    return result;
+  });
 }

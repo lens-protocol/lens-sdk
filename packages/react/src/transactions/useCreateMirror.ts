@@ -1,47 +1,41 @@
-import { ProfileFragment, CommentFragment, PostFragment } from '@lens-protocol/api-bindings';
+import {
+  CommentFragment,
+  PostFragment,
+  ProfileOwnedByMeFragment,
+} from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { useState } from 'react';
 
+import { Operation, useOperation } from '../helpers';
 import { useCreateMirrorController } from './adapters/useCreateMirrorController';
+
+export type UseCreateMirrorArgs = {
+  publisher: ProfileOwnedByMeFragment;
+};
 
 export type CreateMirrorArgs = {
   publication: PostFragment | CommentFragment;
-  profile: ProfileFragment;
 };
 
-export function useCreateMirror() {
-  const [error, setError] = useState<
-    PendingSigningRequestError | UserRejectedError | WalletConnectionError | null
-  >(null);
-  const [isPending, setIsPending] = useState(false);
+export type CreateMirrorOperation = Operation<
+  void,
+  PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  [CreateMirrorArgs]
+>;
+
+export function useCreateMirror({ publisher }: UseCreateMirrorArgs): CreateMirrorOperation {
   const createMirror = useCreateMirrorController();
 
-  return {
-    create: async ({ profile, publication, ...args }: CreateMirrorArgs) => {
-      setError(null);
-      setIsPending(true);
-
-      try {
-        const result = await createMirror({
-          kind: TransactionKind.MIRROR_PUBLICATION,
-          publicationId: publication.id,
-          profileId: profile.id,
-          delegate: profile.dispatcher !== null,
-          ...args,
-        });
-        if (result.isFailure()) {
-          setError(result.error);
-        }
-      } finally {
-        setIsPending(false);
-      }
-    },
-    error,
-    isPending,
-  };
+  return useOperation(async ({ publication }: CreateMirrorArgs) =>
+    createMirror({
+      kind: TransactionKind.MIRROR_PUBLICATION,
+      publicationId: publication.id,
+      profileId: publisher.id,
+      delegate: publisher.dispatcher !== null,
+    }),
+  );
 }

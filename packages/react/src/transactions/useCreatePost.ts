@@ -1,3 +1,4 @@
+import { ProfileOwnedByMeFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -12,17 +13,16 @@ import {
 import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers';
-import { ProfileFragment } from '../profile';
 import { MetadataUploadHandler, FailedUploadError } from './adapters/MetadataUploadAdapter';
 import { useCreatePostController } from './adapters/useCreatePostController';
 
 export type UseCreatePostArgs = {
-  profile: ProfileFragment;
+  publisher: ProfileOwnedByMeFragment;
   upload: MetadataUploadHandler;
 };
 
 export type CreatePostArgs = Prettify<
-  Omit<CreatePostRequest, 'kind' | 'delegate' | 'collect' | 'reference'> &
+  Omit<CreatePostRequest, 'kind' | 'delegate' | 'collect' | 'profileId' | 'reference'> &
     Partial<Pick<CreatePostRequest, 'collect' | 'reference'>>
 >;
 
@@ -32,7 +32,7 @@ export type CreatePostOperation = Operation<
   [CreatePostArgs]
 >;
 
-export function useCreatePost({ profile, upload }: UseCreatePostArgs): CreatePostOperation {
+export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreatePostOperation {
   const createPost = useCreatePostController({ upload });
 
   return useOperation(
@@ -48,8 +48,9 @@ export function useCreatePost({ profile, upload }: UseCreatePostArgs): CreatePos
         return await createPost({
           kind: TransactionKind.CREATE_POST,
           collect,
+          delegate: publisher.dispatcher !== null,
+          profileId: publisher.id,
           reference,
-          delegate: profile.dispatcher !== null,
           ...args,
         });
       } catch (err: unknown) {

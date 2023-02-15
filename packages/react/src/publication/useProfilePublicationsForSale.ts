@@ -1,9 +1,11 @@
-import { useProfilePublicationsForSaleQuery } from '@lens-protocol/api-bindings';
+import {
+  PublicationFragment,
+  useProfilePublicationsForSaleQuery,
+} from '@lens-protocol/api-bindings';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
-import { Publication } from './types';
 
 type UseProfilePublicationsForSaleArgs = PaginatedArgs<{
   profileId: string;
@@ -14,7 +16,7 @@ export function useProfilePublicationsForSale({
   profileId,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseProfilePublicationsForSaleArgs): PaginatedReadResult<Publication[]> {
+}: UseProfilePublicationsForSaleArgs): PaginatedReadResult<PublicationFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(

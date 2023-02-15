@@ -3,23 +3,25 @@ import {
   CommentFragment,
   isPostPublication,
   PostFragment,
-  ProfileFragment,
+  ProfileOwnedByMeFragment,
   useCollect,
   useFeed,
 } from '@lens-protocol/react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { CollectablePublicationCard } from './components/PublicationCard';
 
 type CollectButtonProps = {
+  collector: ProfileOwnedByMeFragment;
   publication: PostFragment | CommentFragment;
 };
 
-function CollectButton({ publication }: CollectButtonProps) {
-  const { collect, error, isPending } = useCollect({ publication });
+function CollectButton({ collector, publication }: CollectButtonProps) {
+  const { execute: collect, error, isPending } = useCollect({ collector, publication });
 
   const isCollected = publication.hasOptimisticCollectedByMe || publication.hasCollectedByMe;
 
@@ -47,38 +49,36 @@ function CollectButton({ publication }: CollectButtonProps) {
   }
 }
 
-type UseCollectInnerProps = {
-  activeProfile: ProfileFragment;
+type FeedProps = {
+  activeProfile: ProfileOwnedByMeFragment;
 };
 
-function Feed({ activeProfile }: UseCollectInnerProps) {
+function Feed({ activeProfile }: FeedProps) {
   const {
     data: publications,
+    error,
     loading,
     hasMore,
     observeRef,
   } = useInfiniteScroll(useFeed({ profileId: activeProfile.id, observerId: activeProfile.id }));
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
+
+  if (publications.length === 0) return <p>No items</p>;
 
   return (
     <>
-      {(publications?.length === 0 || !publications) && <p>No items</p>}
-
-      {loading && <Loading />}
-
-      {publications &&
-        publications
-          .filter((i) => isPostPublication(i.root))
-          .map((item, i) => (
-            <>
-              <CollectablePublicationCard
-                key={`${item.root.id}-${i}`}
-                publication={item.root}
-                collectButton={<CollectButton publication={item.root} />}
-              />
-            </>
-          ))}
+      {publications
+        .filter((i) => isPostPublication(i.root))
+        .map((item, i) => (
+          <CollectablePublicationCard
+            key={`${item.root.id}-${i}`}
+            publication={item.root}
+            collectButton={<CollectButton collector={activeProfile} publication={item.root} />}
+          />
+        ))}
 
       {hasMore && <p ref={observeRef}>Loading more...</p>}
     </>

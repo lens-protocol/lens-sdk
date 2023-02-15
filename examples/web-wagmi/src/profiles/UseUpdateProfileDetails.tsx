@@ -1,14 +1,19 @@
-import { ProfileFragment, useActiveProfile, useUpdateProfileDetails } from '@lens-protocol/react';
+import {
+  ProfileOwnedByMeFragment,
+  useActiveProfile,
+  useUpdateProfileDetails,
+} from '@lens-protocol/react';
 
+import { Loading } from '../components/loading/Loading';
 import { upload } from '../upload';
 import { ProfileCard } from './components/ProfileCard';
 
 type UpdateProfileFormProps = {
-  profile: ProfileFragment;
+  profile: ProfileOwnedByMeFragment;
 };
 
 function UpdateProfileForm({ profile }: UpdateProfileFormProps) {
-  const { update, error, isPending } = useUpdateProfileDetails({ profile, upload });
+  const { execute: update, error, isPending } = useUpdateProfileDetails({ profile, upload });
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -96,7 +101,7 @@ export function UseUpdateProfileDetails() {
         <code>useUpdateProfileDetails</code>
       </h1>
 
-      {loading && <p>Loading...</p>}
+      {loading && <Loading />}
 
       {profile && <UpdateProfileForm profile={profile} />}
     </div>

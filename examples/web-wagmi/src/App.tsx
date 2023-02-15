@@ -1,4 +1,4 @@
-import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
+import { LensConfig, LensProvider, staging } from '@lens-protocol/react';
 import { localStorage } from '@lens-protocol/react/web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
@@ -72,7 +72,6 @@ const client = createClient({
 const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
   environment: staging,
-  sources: [sources.lenster, sources.orb, 'any-other-app-id'],
   storage: localStorage(),
 };
 

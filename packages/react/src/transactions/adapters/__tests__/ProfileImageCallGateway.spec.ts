@@ -14,9 +14,9 @@ import {
 } from '@lens-protocol/domain/mocks';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
-import { mockITransactionFactory } from '../../../transactions/adapters/__helpers__/mocks';
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ProfileImageCallGateway } from '../ProfileImageCallGateway';
+import { mockITransactionFactory } from '../__helpers__/mocks';
 
 describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
   describe.each([
