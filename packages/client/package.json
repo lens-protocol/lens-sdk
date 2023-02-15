@@ -55,7 +55,7 @@
     "@graphql-codegen/typescript-operations": "^3.0.0",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
-    "@types/jest": "^29.2.3",
+    "@types/jest": "29.2.3",
     "@types/node": "^18.13.0",
     "dotenv": "^16.0.3",
     "eslint": "^8.34.0",

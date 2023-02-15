@@ -6,8 +6,8 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 
-import { Operation, useOperation } from '../helpers';
 import { useUpdateProfileImageController } from './adapters/useUpdateProfileImageController';
+import { Operation, useOperation } from '../helpers';
 
 export type UseUpdateProfileImageArgs = {
   profile: ProfileFragment;

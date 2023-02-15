@@ -66,7 +66,7 @@
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
     "@testing-library/react": "^13.4.0",
-    "@types/jest": "^29.2.3",
+    "@types/jest": "29.2.3",
     "@types/jest-when": "^3.5.2",
     "@types/lodash": "^4.14.191",
     "@types/react": "^18.0.28",

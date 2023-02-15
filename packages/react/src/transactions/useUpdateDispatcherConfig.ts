@@ -11,8 +11,8 @@ import {
 } from '@lens-protocol/domain/entities';
 import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
 
-import { Operation, useOperation } from '../helpers';
 import { useUpdateDispatcherConfigController } from './adapters/useUpdateDispatcherConfigController';
+import { Operation, useOperation } from '../helpers';
 
 export type UseUpdateDispatcherConfigArgs = {
   profile: ProfileOwnedByMeFragment;

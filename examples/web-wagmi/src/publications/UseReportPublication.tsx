@@ -7,10 +7,10 @@ import {
   usePublication,
 } from '@lens-protocol/react';
 
+import { PublicationCard } from './components/PublicationCard';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { never } from '../utils';
-import { PublicationCard } from './components/PublicationCard';
 
 type ReportPublicationFormProps = {
   publication: CommentFragment | MirrorFragment | PostFragment;

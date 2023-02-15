@@ -5,10 +5,10 @@ import {
   useExplorePublicationsQuery,
 } from '@lens-protocol/api-bindings';
 
+import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
-import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 
 type UseExplorePublicationsArgs = PaginatedArgs<{
   observerId?: string;

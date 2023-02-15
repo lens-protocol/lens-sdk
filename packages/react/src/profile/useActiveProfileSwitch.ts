@@ -1,8 +1,8 @@
 import { ProfileId } from '@lens-protocol/domain/dist/entities';
 import { success } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers';
 import { useSwitchActiveProfileController } from './adapters/useSwitchActiveProfileController';
+import { Operation, useOperation } from '../helpers';
 
 export type ActiveProfileSwitchOperation = Operation<void, never, [ProfileId]>;
 

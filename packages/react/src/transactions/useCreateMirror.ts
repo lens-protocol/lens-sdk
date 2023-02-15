@@ -10,8 +10,8 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 
-import { Operation, useOperation } from '../helpers';
 import { useCreateMirrorController } from './adapters/useCreateMirrorController';
+import { Operation, useOperation } from '../helpers';
 
 export type UseCreateMirrorArgs = {
   publisher: ProfileOwnedByMeFragment;

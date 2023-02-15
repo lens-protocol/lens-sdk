@@ -12,9 +12,9 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers';
 import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
 import { useCreateCommentController } from './adapters/useCreateCommentController';
+import { Operation, useOperation } from '../helpers';
 
 export type UseCreateCommentArg = {
   publisher: ProfileOwnedByMeFragment;

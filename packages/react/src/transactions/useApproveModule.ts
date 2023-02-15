@@ -12,8 +12,8 @@ import {
 } from '@lens-protocol/domain/use-cases/wallets';
 import { Amount, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers';
 import { useApproveModuleController } from './adapters/useApproveModuleController';
+import { Operation, useOperation } from '../helpers';
 
 export type ApproveModuleArgs = {
   amount: Amount<Erc20>;

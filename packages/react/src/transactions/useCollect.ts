@@ -9,8 +9,8 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 
-import { Operation, useOperation } from '../helpers';
 import { useCollectController } from './adapters/useCollectController';
+import { Operation, useOperation } from '../helpers';
 
 export type UseCollectArgs = {
   collector: ProfileOwnedByMeFragment;

@@ -1,6 +1,6 @@
+import { Publication } from './Publication';
 import { mumbaiSandbox } from '../consts/environments';
 import { PublicationMainFocus } from '../graphql/types.generated';
-import { Publication } from './Publication';
 
 const testConfig = {
   environment: mumbaiSandbox,

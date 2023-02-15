@@ -1,8 +1,8 @@
 import { PublicationOwnedByMeFragment } from '@lens-protocol/api-bindings';
 import { invariant, success } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers';
 import { useHidePublicationController } from './adapters/useHidePublicationController';
+import { Operation, useOperation } from '../helpers';
 
 export type UseHidePublicationArgs = {
   publication: PublicationOwnedByMeFragment;

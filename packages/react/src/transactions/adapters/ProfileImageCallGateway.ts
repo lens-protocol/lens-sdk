@@ -23,8 +23,8 @@ import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/tra
 import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { AsyncRelayReceipt, ITransactionFactory } from './ITransactionFactory';
+import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
 export class ProfileImageCallGateway implements IProfileImageCallGateway {
   constructor(
