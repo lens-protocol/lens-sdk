@@ -2,7 +2,7 @@ import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
-} from '@lens-protocol/domain/dist/entities';
+} from '@lens-protocol/domain/entities';
 import { Signer } from 'ethers';
 
 import { Operation, useOperation } from '../helpers';
