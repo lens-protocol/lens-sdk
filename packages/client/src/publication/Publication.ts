@@ -3,7 +3,6 @@ import { GraphQLClient } from 'graphql-request';
 import { LensConfig } from '../consts/config';
 import {
   CommentFragment,
-  CommonPaginatedResultInfoFragment,
   MirrorFragment,
   PostFragment,
   WalletFragment,
@@ -18,6 +17,7 @@ import {
   PublicationValidateMetadataResult,
   WhoCollectedPublicationRequest,
 } from '../graphql/types.generated';
+import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 import { getSdk, Sdk } from './graphql/publication.generated';
 
 export type PublicationFragment = PostFragment | CommentFragment | MirrorFragment;
@@ -40,18 +40,6 @@ export class Publication {
     return result.data.result;
   }
 
-  async fetchAll(
-    request: PublicationsQueryRequest,
-    observerId?: string,
-  ): Promise<{
-    items: PublicationFragment[];
-    pageInfo: CommonPaginatedResultInfoFragment;
-  }> {
-    const result = await this.sdk.Publications({ request, observerId });
-
-    return result.data.result;
-  }
-
   async validateMetadata(
     metadata: PublicationMetadataV2Input,
   ): Promise<PublicationValidateMetadataResult> {
@@ -60,35 +48,47 @@ export class Publication {
     return result.data.validatePublicationMetadata;
   }
 
-  async allWhoCollected(request: WhoCollectedPublicationRequest): Promise<{
-    items: WalletFragment[];
-    pageInfo: CommonPaginatedResultInfoFragment;
-  }> {
-    const result = await this.sdk.WhoCollectedPublication({ request });
-
-    return result.data.result;
-  }
-
-  async allForSale(
-    request: ProfilePublicationsForSaleRequest,
-    observerId?: string,
-  ): Promise<{
-    items: (PostFragment | CommentFragment)[];
-    pageInfo: CommonPaginatedResultInfoFragment;
-  }> {
-    const result = await this.sdk.ProfilePublicationsForSale({
-      request,
-      observerId,
-    });
-
-    return result.data.result;
-  }
-
   async metadataStatus(
     request: GetPublicationMetadataStatusRequest,
   ): Promise<PublicationMetadataStatus | null> {
     const result = await this.sdk.PublicationMetadataStatus({ request });
 
     return result.data.result;
+  }
+
+  async fetchAll(
+    request: PublicationsQueryRequest,
+    observerId?: string,
+  ): Promise<PaginatedResult<PublicationFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.Publications({ request: currRequest, observerId });
+
+      return result.data.result;
+    }, request);
+  }
+
+  async allWhoCollected(
+    request: WhoCollectedPublicationRequest,
+    observerId?: string,
+  ): Promise<PaginatedResult<WalletFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.WhoCollectedPublication({ request: currRequest, observerId });
+
+      return result.data.result;
+    }, request);
+  }
+
+  async allForSale(
+    request: ProfilePublicationsForSaleRequest,
+    observerId?: string,
+  ): Promise<PaginatedResult<CommentFragment | PostFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ProfilePublicationsForSale({
+        request: currRequest,
+        observerId,
+      });
+
+      return result.data.result;
+    }, request);
   }
 }
