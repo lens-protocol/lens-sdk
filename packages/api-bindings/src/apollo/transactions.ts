@@ -1,11 +1,11 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/dist/use-cases/profile';
 import {
   ProfileId,
   TransactionError,
   TransactionErrorReason,
   TransactionKind,
 } from '@lens-protocol/domain/entities';
+import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastedTransactionData,
   PendingTransactionData,
