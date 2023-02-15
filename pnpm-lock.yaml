@@ -5439,6 +5439,7 @@ packages:
     engines: {node: '>=12.20.0'}
     dependencies:
       '@babel/runtime': 7.20.13
+      '@ethersproject/sha2': 5.7.0
       '@noble/ed25519': 1.7.3
       '@noble/hashes': 1.2.0
       '@noble/secp256k1': 1.7.1
