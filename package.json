@@ -36,7 +36,6 @@
     "peerDependencyRules": {
       "ignoreMissing": [
         "react-native",
-        "@babel/core",
         "@tanstack/query-core",
         "csstype",
         "rollup"
@@ -63,7 +62,8 @@
       "packages/api-bindings",
       "packages/wagmi",
       "packages/blockchain-bindings",
-      "packages/storage"
+      "packages/storage",
+      "packages/client"
     ]
   }
 }
