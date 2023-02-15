@@ -26,10 +26,10 @@ describe(`Given the ${Publication.name} configured to work with testnet`, () => 
     });
   });
 
-  describe(`when a method ${Publication.prototype.whoCollected.name} is called`, () => {
+  describe(`when a method ${Publication.prototype.allWhoCollected.name} is called`, () => {
     it(`should run successfully`, async () => {
       await expect(
-        publication.whoCollected({ publicationId: '0x014e-0x0a' }),
+        publication.allWhoCollected({ publicationId: '0x014e-0x0a' }),
       ).resolves.not.toThrow();
     });
   });
@@ -50,10 +50,10 @@ describe(`Given the ${Publication.name} configured to work with testnet`, () => 
     });
   });
 
-  describe(`when a method ${Publication.prototype.forSale.name} is called`, () => {
+  describe(`when a method ${Publication.prototype.allForSale.name} is called`, () => {
     it(`should run successfully`, async () => {
       await expect(
-        publication.forSale({
+        publication.allForSale({
           profileId: '0x014e',
         }),
       ).resolves.not.toThrow();

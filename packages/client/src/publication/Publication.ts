@@ -60,7 +60,7 @@ export class Publication {
     return result.data.validatePublicationMetadata;
   }
 
-  async whoCollected(request: WhoCollectedPublicationRequest): Promise<{
+  async allWhoCollected(request: WhoCollectedPublicationRequest): Promise<{
     items: WalletFragment[];
     pageInfo: CommonPaginatedResultInfoFragment;
   }> {
@@ -69,7 +69,7 @@ export class Publication {
     return result.data.result;
   }
 
-  async forSale(
+  async allForSale(
     request: ProfilePublicationsForSaleRequest,
     observerId?: string,
   ): Promise<{
