@@ -5,7 +5,7 @@ const testConfig = {
   environment: mumbaiSandbox,
 };
 
-describe(`Given the ${Revenue.name} configured to work with testnet`, () => {
+describe(`Given the ${Revenue.name} configured to work with sandbox`, () => {
   const revenue = new Revenue(testConfig);
 
   describe(`when the method ${Revenue.prototype.publication.name} is called`, () => {

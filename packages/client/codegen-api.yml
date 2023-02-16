@@ -31,6 +31,8 @@ config:
     Markdown: string
     Media: string
     MimeType: string
+    NftGalleryId: string
+    NftGalleryName: string
     NftOwnershipId: string
     Nonce: number
     NotificationId: string

@@ -2,10 +2,12 @@ import { Authentication, IAuthentication } from './authentication';
 import { LensConfig } from './consts/config';
 import { Explore } from './explore';
 import { Profile } from './profile';
+import { ProxyAction } from './proxy-action';
 import { Publication } from './publication';
 import { Reactions } from './reactions';
 import { Revenue } from './revenue';
 import { Search } from './search';
+import { Transaction } from './transaction';
 
 export class LensClient {
   private readonly _authentication: Authentication;
@@ -20,27 +22,35 @@ export class LensClient {
     return this._authentication;
   }
 
+  get explore(): Explore {
+    return new Explore(this.config);
+  }
+
   get profile(): Profile {
-    return new Profile(this.config);
+    return new Profile(this.config, this._authentication);
+  }
+
+  get proxyAction(): ProxyAction {
+    return new ProxyAction(this.config, this._authentication);
+  }
+
+  get publication(): Publication {
+    return new Publication(this.config);
   }
 
   get reactions(): Reactions {
     return new Reactions(this.config, this._authentication);
   }
 
-  get search(): Search {
-    return new Search(this.config);
-  }
-
-  get explore(): Explore {
-    return new Explore(this.config);
-  }
-
   get revenue(): Revenue {
     return new Revenue(this.config);
   }
 
-  get publication(): Publication {
-    return new Publication(this.config);
+  get search(): Search {
+    return new Search(this.config);
+  }
+
+  get transaction(): Transaction {
+    return new Transaction(this.config, this._authentication);
   }
 }

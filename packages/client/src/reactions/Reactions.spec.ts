@@ -1,5 +1,6 @@
 import { ReactionTypes, Reactions } from '.';
 import { setupAuthentication } from '../authentication/__helpers__/setupAuthentication';
+import { testWalletProfileId } from '../authentication/__helpers__/setupTestWallet';
 import { mumbaiSandbox } from '../consts/environments';
 import { NotAuthenticatedError } from '../consts/errors';
 
@@ -12,7 +13,7 @@ describe(`Given the ${Reactions.name} configured to work with sandbox`, () => {
     const reactions = new Reactions(testConfig);
 
     const reactionRequest = {
-      profileId: '0x0185',
+      profileId: testWalletProfileId,
       publicationId: '0x05-0x04',
       reaction: ReactionTypes.Upvote,
     };
@@ -37,15 +38,16 @@ describe(`Given the ${Reactions.name} configured to work with sandbox`, () => {
   });
 
   describe(`and the instance is authenticated`, () => {
+    const getAuthentication = setupAuthentication();
     const reactionRequest = {
-      profileId: '0x0185',
+      profileId: testWalletProfileId,
       publicationId: '0x05-0x04',
       reaction: ReactionTypes.Upvote,
     };
 
     describe(`when ${Reactions.prototype.add.name} method is called`, () => {
       it(`should execute with success`, async () => {
-        const authentication = await setupAuthentication();
+        const authentication = getAuthentication();
         const reactions = new Reactions(testConfig, authentication);
 
         const result = await reactions.add(reactionRequest);
@@ -57,7 +59,7 @@ describe(`Given the ${Reactions.name} configured to work with sandbox`, () => {
 
     describe(`when ${Reactions.prototype.remove.name} method is called`, () => {
       it(`should execute with success`, async () => {
-        const authentication = await setupAuthentication();
+        const authentication = getAuthentication();
         const reactions = new Reactions(testConfig, authentication);
 
         const result = await reactions.remove(reactionRequest);

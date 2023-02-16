@@ -8,38 +8,34 @@ const testConfig = {
   environment: mumbaiSandbox,
 };
 
-let auth: Authentication;
+export function setupAuthentication() {
+  let auth: Authentication;
 
-export async function setupAuthentication(): Promise<Authentication> {
-  if (auth) {
-    return auth;
-  }
+  beforeAll(async () => {
+    const wallet = setupTestWallet();
+    auth = new Authentication(testConfig);
+    const address = await wallet.getAddress();
+    const challenge = await auth.generateChallenge(address);
+    const signature = await wallet.signMessage(challenge);
 
-  const wallet = setupTestWallet();
-  auth = new Authentication(testConfig);
-  const address = await wallet.getAddress();
-  const challenge = await auth.generateChallenge(address);
-  const signature = await wallet.signMessage(challenge);
+    await auth.authenticate(address, signature);
+  });
 
-  await auth.authenticate(address, signature);
-
-  return auth;
+  return () => auth;
 }
 
-let authRandom: Authentication;
+export function setupRandomAuthentication() {
+  let authRandom: Authentication;
 
-export async function setupRandomAuthentication(): Promise<Authentication> {
-  if (authRandom) {
-    return authRandom;
-  }
+  beforeAll(async () => {
+    const wallet = Wallet.createRandom();
+    authRandom = new Authentication(testConfig);
+    const address = await wallet.getAddress();
+    const challenge = await authRandom.generateChallenge(address);
+    const signature = await wallet.signMessage(challenge);
 
-  const wallet = Wallet.createRandom();
-  authRandom = new Authentication(testConfig);
-  const address = await wallet.getAddress();
-  const challenge = await authRandom.generateChallenge(address);
-  const signature = await wallet.signMessage(challenge);
+    await authRandom.authenticate(address, signature);
+  });
 
-  await authRandom.authenticate(address, signature);
-
-  return authRandom;
+  return () => authRandom;
 }

@@ -5,7 +5,7 @@ const testConfig = {
   environment: mumbaiSandbox,
 };
 
-describe(`Given the ${Profile.name} configured to work with testnet`, () => {
+describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
   const profile = new Profile(testConfig);
 
   describe(`when a method ${Profile.prototype.fetch.name} is called`, () => {

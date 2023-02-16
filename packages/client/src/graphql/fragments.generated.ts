@@ -5,10 +5,6 @@ import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-export type QueryQueryVariables = Types.Exact<{ [key: string]: never }>;
-
-export type QueryQuery = Pick<Types.Query, 'ping'>;
-
 export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
   Types.FeeFollowModuleSettings,
   'contractAddress' | 'recipient'
@@ -156,6 +152,18 @@ export type CollectModule_TimedFeeCollectModuleSettings_Fragment = {
   __typename: 'TimedFeeCollectModuleSettings';
 } & TimedFeeCollectModuleSettingsFragment;
 
+export type CollectModule_MultirecipientFeeCollectModuleSettings_Fragment = {
+  __typename: 'MultirecipientFeeCollectModuleSettings';
+};
+
+export type CollectModule_Erc4626FeeCollectModuleSettings_Fragment = {
+  __typename: 'ERC4626FeeCollectModuleSettings';
+};
+
+export type CollectModule_AaveFeeCollectModuleSettings_Fragment = {
+  __typename: 'AaveFeeCollectModuleSettings';
+};
+
 export type CollectModule_UnknownCollectModuleSettings_Fragment = {
   __typename: 'UnknownCollectModuleSettings';
 };
@@ -167,6 +175,9 @@ export type CollectModuleFragment =
   | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
   | CollectModule_RevertCollectModuleSettings_Fragment
   | CollectModule_TimedFeeCollectModuleSettings_Fragment
+  | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+  | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+  | CollectModule_AaveFeeCollectModuleSettings_Fragment
   | CollectModule_UnknownCollectModuleSettings_Fragment;
 
 export type WalletFragment = { __typename: 'Wallet' } & Pick<Types.Wallet, 'address'> & {
@@ -206,6 +217,9 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
       | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
       | CollectModule_RevertCollectModuleSettings_Fragment
       | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+      | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+      | CollectModule_AaveFeeCollectModuleSettings_Fragment
       | CollectModule_UnknownCollectModuleSettings_Fragment;
     referenceModule: Types.Maybe<
       | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
@@ -235,6 +249,9 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
       | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
       | CollectModule_RevertCollectModuleSettings_Fragment
       | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+      | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+      | CollectModule_AaveFeeCollectModuleSettings_Fragment
       | CollectModule_UnknownCollectModuleSettings_Fragment;
     referenceModule: Types.Maybe<
       | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
@@ -265,6 +282,9 @@ export type PostFragment = { __typename: 'Post' } & Pick<
       | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
       | CollectModule_RevertCollectModuleSettings_Fragment
       | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+      | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+      | CollectModule_AaveFeeCollectModuleSettings_Fragment
       | CollectModule_UnknownCollectModuleSettings_Fragment;
     referenceModule: Types.Maybe<
       | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
@@ -283,6 +303,13 @@ export type CommonPaginatedResultInfoFragment = { __typename: 'PaginatedResultIn
 export type FollowingFragment = { __typename: 'Following' } & { profile: ProfileFragment };
 
 export type FollowerFragment = { __typename: 'Follower' } & { wallet: WalletFragment };
+
+export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
+  Types.RelayerResult,
+  'txHash' | 'txId'
+>;
+
+export type RelayErrorFragment = { __typename: 'RelayError' } & Pick<Types.RelayError, 'reason'>;
 
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
@@ -783,9 +810,17 @@ export const FollowerFragmentDoc = gql`
   }
   ${WalletFragmentDoc}
 `;
-export const QueryDocument = gql`
-  query Query {
-    ping
+export const RelayerResultFragmentDoc = gql`
+  fragment RelayerResult on RelayerResult {
+    __typename
+    txHash
+    txId
+  }
+`;
+export const RelayErrorFragmentDoc = gql`
+  fragment RelayError on RelayError {
+    __typename
+    reason
   }
 `;
 
@@ -796,23 +831,8 @@ export type SdkFunctionWrapper = <T>(
 ) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
-const QueryDocumentString = print(QueryDocument);
+
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
-  return {
-    Query(
-      variables?: QueryQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{ data: QueryQuery; extensions?: any; headers: Dom.Headers; status: number }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<QueryQuery>(QueryDocumentString, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'Query',
-        'query',
-      );
-    },
-  };
+  return {};
 }
 export type Sdk = ReturnType<typeof getSdk>;

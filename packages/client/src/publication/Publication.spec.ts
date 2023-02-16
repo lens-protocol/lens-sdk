@@ -6,7 +6,7 @@ const testConfig = {
   environment: mumbaiSandbox,
 };
 
-describe(`Given the ${Publication.name} configured to work with testnet`, () => {
+describe(`Given the ${Publication.name} configured to work with sandbox`, () => {
   const publication = new Publication(testConfig);
 
   describe(`when a method ${Publication.prototype.fetch.name} is called`, () => {
@@ -26,10 +26,10 @@ describe(`Given the ${Publication.name} configured to work with testnet`, () => 
     });
   });
 
-  describe(`when a method ${Publication.prototype.allWhoCollected.name} is called`, () => {
+  describe(`when a method ${Publication.prototype.allWalletsWhoCollected.name} is called`, () => {
     it(`should run successfully`, async () => {
       await expect(
-        publication.allWhoCollected({ publicationId: '0x014e-0x0a' }),
+        publication.allWalletsWhoCollected({ publicationId: '0x014e-0x0a' }),
       ).resolves.not.toThrow();
     });
   });

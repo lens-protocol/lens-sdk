@@ -1,8 +1,3 @@
-# dummy query to fix typescript checks in generated file
-query Query {
-  ping
-}
-
 fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
   __typename
   amount {
@@ -433,4 +428,15 @@ fragment Follower on Follower {
   wallet {
     ...Wallet
   }
+}
+
+fragment RelayerResult on RelayerResult {
+  __typename
+  txHash
+  txId
+}
+
+fragment RelayError on RelayError {
+  __typename
+  reason
 }

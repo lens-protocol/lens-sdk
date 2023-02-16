@@ -23,8 +23,8 @@ Client manages the token lifecycle and storage
 
 ## Broadcast / Transaction
 
-- [AM] client.transaction.broadcast(request)
-- [AQ] client.transaction.wasIndexed({ txId })
+- [x] [AM] client.transaction.broadcast(request)
+- [x] [AQ] client.transaction.wasIndexed({ txId })
 
 ## Explore
 
@@ -60,7 +60,7 @@ Client manages the token lifecycle and storage
 
 ### Edit profile
 
-- [AM] client.profile.create(request)
+- [x] [AM] client.profile.create(request)
 - [H] client.profile.isValidHandle(handle)
 
 - [AM] client.profile.createSetProfileMetadataTypedData(request)
@@ -69,17 +69,17 @@ Client manages the token lifecycle and storage
 - [AM] client.profile.createSetProfileImageURITypedData(request)
 - [AM] client.profile.createSetProfileImageURIViaDispatcher(request)
 
-- [AM] client.profile.createBurnProfileTypedData(request)
+- [x] [AM] client.profile.createBurnProfileTypedData(request)
 - [AM] client.profile.createSetDefaultProfileTypedData(request)
-- [AM] client.profile.createSetDispatcherTypedData(request)
+- [x] [AM] client.profile.createSetDispatcherTypedData(request)
 
 - [AM] client.profile.addInterests(request)
 - [AM] client.profile.removeInterests(request)
 
 ### Follow profile
 
-- [AM] client.profile.createFollowTypedData(request)
-- [AM] client.profile.createUnfollowTypedData(request)
+- [x] [AM] client.profile.createFollowTypedData(request)
+- [x] [AM] client.profile.createUnfollowTypedData(request)
 - [AM] client.profile.createSetFollowModuleTypedData(request)
 - [AM] client.profile.createSetFollowNFTUriTypedData(request)
 - [APQ] client.profile.pendingApprovalFollows(request)
@@ -93,11 +93,11 @@ Client manages the token lifecycle and storage
 
 ### Query publications
 
-- [x] [Q] client.publication.fetch(request) or client.publications.fetchOne()
+- [x] [Q] client.publication.fetch(request)
 - [x] [PQ] client.publication.fetchAll(request)
 - [x] [Q] client.publication.validateMetadata(request)
-- [x] [PQ] client.publication.allWhoCollected({ publicationId })
-- [x] [PQ] client.publication(s).allForSale({ profileId })
+- [x] [PQ] client.publication.allWalletsWhoCollected({ publicationId })
+- [x] [PQ] client.publication.allForSale({ profileId })
 - [x] [Q] client.publication.metadataStatus(request)
 
 ### Create or edit publications
@@ -126,9 +126,9 @@ Client manages the token lifecycle and storage
 
 ## Proxy actions
 
-- [AM] client.proxyActions.freeFollow({ profileId })
-- [AM] client.proxyActions.freeCollect({ publicationId })
-- [AQ] client.proxyActions.checkStatus({ proxyActionId })
+- [x] [AM] client.proxyAction.freeFollow({ profileId })
+- [x] [AM] client.proxyAction.freeCollect({ publicationId })
+- [x] [AQ] client.proxyAction.checkStatus({ proxyActionId })
 
 ## Reactions
 

@@ -9,3 +9,5 @@ export function setupTestWallet() {
 
   return new Wallet(process.env.CLIENT_TEST_WALLET_PRIVATE_KEY);
 }
+
+export const testWalletProfileId = '0x0185';
