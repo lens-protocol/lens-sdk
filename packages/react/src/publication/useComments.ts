@@ -1,8 +1,8 @@
 import { useCommentsQuery, CommentWithFirstCommentFragment } from '@lens-protocol/api-bindings';
 
-import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
+import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 
 type UseCommentsArgs = PaginatedArgs<{
   commentsOf: string;

@@ -1,11 +1,11 @@
 import { EthereumAddress, useProfilesOwnedBy } from '@lens-protocol/react';
 
-import { ProfileCard } from './components/ProfileCard';
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { ProfileCard } from './components/ProfileCard';
 
 type UseProfilesOwnedByProps = {
   address: EthereumAddress;

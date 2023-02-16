@@ -1,5 +1,5 @@
-import { Profile } from './Profile';
 import { mumbaiSandbox } from '../consts/environments';
+import { Profile } from './Profile';
 
 const testConfig = {
   environment: mumbaiSandbox,

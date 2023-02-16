@@ -1,7 +1,5 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { ReferencePolicyConfig } from './ReferencePolicyConfig';
-import { CollectPolicyConfig, Media, ContentFocus, Locale } from './types';
 import { TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
@@ -9,6 +7,8 @@ import {
   IProtocolCallPresenter,
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
+import { ReferencePolicyConfig } from './ReferencePolicyConfig';
+import { CollectPolicyConfig, Media, ContentFocus, Locale } from './types';
 
 export type CreateCommentRequest = {
   publicationId: string;

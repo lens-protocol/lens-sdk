@@ -9,10 +9,10 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
 
+import { useSharedDependencies } from '../../shared';
 import { MetadataUploadAdapter, MetadataUploadHandler } from './MetadataUploadAdapter';
 import { ProfileMetadataCallGateway } from './ProfileMetadataCallGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { useSharedDependencies } from '../../shared';
 
 export type UseUpdateProfileDetailsControllerArgs = {
   upload: MetadataUploadHandler;

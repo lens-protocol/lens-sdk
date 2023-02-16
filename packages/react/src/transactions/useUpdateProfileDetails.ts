@@ -8,9 +8,9 @@ import {
 import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
+import { Operation, useOperation } from '../helpers';
 import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
 import { useUpdateProfileDetailsController } from './adapters/useUpdateProfileDetailsController';
-import { Operation, useOperation } from '../helpers';
 
 type UseUpdateProfileDetailsArgs = {
   profile: ProfileOwnedByMeFragment;

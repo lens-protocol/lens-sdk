@@ -1,5 +1,5 @@
-import { WalletData } from './IActiveWalletPresenter';
 import { IGenericResultPresenter } from '../transactions';
+import { WalletData } from './IActiveWalletPresenter';
 
 export enum LogoutReason {
   CREDENTIALS_EXPIRED = 'credentials-expired',

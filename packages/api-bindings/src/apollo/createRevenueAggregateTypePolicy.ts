@@ -1,7 +1,7 @@
 import { never } from '@lens-protocol/shared-kernel';
 
-import { TypePolicy } from './TypePolicy';
 import { erc20Amount, RevenueAggregate } from '../graphql';
+import { TypePolicy } from './TypePolicy';
 
 export function createRevenueAggregateTypePolicy(): TypePolicy<RevenueAggregate> {
   return {

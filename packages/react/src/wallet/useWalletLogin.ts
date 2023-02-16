@@ -5,8 +5,8 @@ import {
 } from '@lens-protocol/domain/entities';
 import { Signer } from 'ethers';
 
-import { useWalletLoginController } from './adapters/useWalletLoginController';
 import { Operation, useOperation } from '../helpers';
+import { useWalletLoginController } from './adapters/useWalletLoginController';
 
 export type WalletLoginOperation = Operation<
   void,

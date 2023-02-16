@@ -6,9 +6,6 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { DateUtils, never, Overwrite } from '@lens-protocol/shared-kernel';
 
-import { erc20Amount } from './amount';
-import { isProfileOwnedByMe, ProfileOwnedByMeFragment } from './profile';
-import { PickByTypename, Typename } from './types';
 import { CollectPolicy, CollectState } from '../CollectPolicy';
 import {
   CollectModuleFragment,
@@ -24,6 +21,9 @@ import {
   ReactionTypes,
   TimedFeeCollectModuleSettingsFragment,
 } from '../generated';
+import { erc20Amount } from './amount';
+import { isProfileOwnedByMe, ProfileOwnedByMeFragment } from './profile';
+import { PickByTypename, Typename } from './types';
 
 export function isPostPublication<T extends Typename<string>>(
   publication: T,

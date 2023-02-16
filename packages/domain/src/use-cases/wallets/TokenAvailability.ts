@@ -7,8 +7,8 @@ import {
   success,
 } from '@lens-protocol/shared-kernel';
 
-import { ActiveWallet } from './ActiveWallet';
 import { Wallet } from '../../entities';
+import { ActiveWallet } from './ActiveWallet';
 
 export interface IBalanceGateway {
   getBalanceFor<T extends Erc20>(wallet: Wallet, asset: T): Promise<Amount<T>>;

@@ -1,8 +1,8 @@
 import { Wallet } from 'ethers';
 
-import { setupTestWallet } from './setupTestWallet';
 import { mumbaiSandbox } from '../../consts/environments';
 import { Authentication } from '../Authentication';
+import { setupTestWallet } from './setupTestWallet';
 
 const testConfig = {
   environment: mumbaiSandbox,

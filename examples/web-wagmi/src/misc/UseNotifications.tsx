@@ -1,11 +1,11 @@
 import { ProfileFragment, useNotifications } from '@lens-protocol/react';
 
-import { NotificationItem } from './components/NotificationItem';
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { NotificationItem } from './components/NotificationItem';
 
 type NotificationsInnerProps = {
   profile: ProfileFragment;

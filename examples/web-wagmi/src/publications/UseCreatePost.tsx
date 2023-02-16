@@ -1,12 +1,12 @@
 import { useFeed, useRecentPosts } from '@lens-protocol/react';
 
-import { PostComposer } from './components/PostComposer';
-import { PublicationCard } from './components/PublicationCard';
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { PostComposer } from './components/PostComposer';
+import { PublicationCard } from './components/PublicationCard';
 
 type TimelineProps = {
   profileId: string;

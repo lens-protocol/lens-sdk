@@ -7,8 +7,8 @@ import {
 } from '@lens-protocol/domain/entities';
 import { ChargeFollowConfig, NoFeeFollowConfig } from '@lens-protocol/domain/use-cases/profile';
 
-import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 import { Operation, useOperation } from '../helpers';
+import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 
 export type UseUpdateFollowPolicyArgs = {
   profile: ProfileOwnedByMeFragment;

@@ -3,9 +3,9 @@ import {
   ReportPublicationRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 
-import { ReportPublicationGateway } from './ReportPublicationGateway';
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
+import { ReportPublicationGateway } from './ReportPublicationGateway';
 
 export function useReportPublicationController() {
   const { apolloClient } = useSharedDependencies();

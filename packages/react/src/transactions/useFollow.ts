@@ -17,8 +17,8 @@ import {
 } from '@lens-protocol/domain/use-cases/wallets';
 import { failure, InvariantError, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { useFollowController } from './adapters/useFollowController';
 import { Operation, useOperation } from '../helpers';
+import { useFollowController } from './adapters/useFollowController';
 
 export class PrematureFollowError extends Error {
   name = 'PrematureFollowError' as const;

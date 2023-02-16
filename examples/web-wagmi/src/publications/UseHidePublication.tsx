@@ -7,12 +7,12 @@ import {
   PublicationFragment,
 } from '@lens-protocol/react';
 
-import { PublicationCard } from './components/PublicationCard';
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { PublicationCard } from './components/PublicationCard';
 
 type HidePublicationButtonProps = {
   publication: PublicationOwnedByMeFragment;

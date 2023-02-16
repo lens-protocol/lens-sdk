@@ -1,14 +1,14 @@
 import { GraphQLClient } from 'graphql-request';
 
+import { LensConfig } from '../consts/config';
+import { CommentFragment, PostFragment, ProfileFragment } from '../graphql/fragments.generated';
+import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 import {
   getSdk,
   Sdk,
   SearchProfilesQueryVariables,
   SearchPublicationsQueryVariables,
 } from './graphql/search.generated';
-import { LensConfig } from '../consts/config';
-import { CommentFragment, PostFragment, ProfileFragment } from '../graphql/fragments.generated';
-import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 
 export class Search {
   private readonly sdk: Sdk;

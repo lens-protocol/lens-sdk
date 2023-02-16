@@ -2,10 +2,10 @@ import { Bootstrap } from '@lens-protocol/domain/use-cases/lifecycle';
 import { ActiveProfileLoader } from '@lens-protocol/domain/use-cases/profile';
 import { useCallback } from 'react';
 
-import { ApplicationPresenter } from './ApplicationPresenter';
 import { SharedDependencies } from '../../shared';
 import { ActiveWalletPresenter } from '../../wallet/adapters/ActiveWalletPresenter';
 import { LogoutPresenter } from '../../wallet/adapters/LogoutPresenter';
+import { ApplicationPresenter } from './ApplicationPresenter';
 
 export function useBootstrapController({
   activeProfileGateway,

@@ -4,9 +4,9 @@ import {
   useUpdateProfileDetails,
 } from '@lens-protocol/react';
 
-import { ProfileCard } from './components/ProfileCard';
 import { Loading } from '../components/loading/Loading';
 import { upload } from '../upload';
+import { ProfileCard } from './components/ProfileCard';
 
 type UpdateProfileFormProps = {
   profile: ProfileOwnedByMeFragment;

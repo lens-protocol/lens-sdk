@@ -1,9 +1,9 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
 import { CreateProfile, DuplicatedHandleError } from '@lens-protocol/domain/use-cases/profile';
 
-import { ProfileTransactionGateway } from './ProfileTransactionGateway';
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
+import { ProfileTransactionGateway } from './ProfileTransactionGateway';
 
 export function useCreateProfileController() {
   const { apolloClient, transactionFactory, transactionQueue } = useSharedDependencies();

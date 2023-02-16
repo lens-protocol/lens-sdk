@@ -1,8 +1,8 @@
 import { LogoutReason, WalletLogout } from '@lens-protocol/domain/use-cases/wallets';
 
+import { useSharedDependencies } from '../../shared';
 import { ActiveWalletPresenter } from './ActiveWalletPresenter';
 import { LogoutPresenter } from './LogoutPresenter';
-import { useSharedDependencies } from '../../shared';
 
 export function useWalletLogoutController() {
   const {

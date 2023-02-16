@@ -6,10 +6,10 @@ import {
 } from '@lens-protocol/api-bindings';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
 import { ReadResult } from '../helpers';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
 import { useSharedDependencies } from '../shared';
+import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
 
 export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, UnspecifiedError> {
   const state = useAppState();

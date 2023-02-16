@@ -16,6 +16,14 @@ type PublicationProps = {
   feedItem: FeedItemFragment;
 };
 
+const allFeedEventTypes = [
+  FeedEventItemType.Comment,
+  FeedEventItemType.Post,
+  FeedEventItemType.Mirror,
+  FeedEventItemType.CollectComment,
+  FeedEventItemType.CollectPost,
+];
+
 function Publication({ feedItem: { root: publication } }: PublicationProps) {
   return (
     <Link
@@ -49,7 +57,7 @@ export function Feed() {
 
       <fieldset>
         <legend>Restrict event types to</legend>
-        {Object.entries(FeedEventItemType).map(([key, value]) => (
+        {allFeedEventTypes.map((value) => (
           <label key={value}>
             <input
               type="checkbox"
@@ -64,7 +72,7 @@ export function Feed() {
                 }
               }}
             />
-            &nbsp;{key}
+            &nbsp;{value}
           </label>
         ))}
       </fieldset>

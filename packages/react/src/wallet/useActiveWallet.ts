@@ -1,8 +1,8 @@
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
-import { useActiveWalletVar } from './adapters/ActiveWalletPresenter';
 import { ReadResult } from '../helpers';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
+import { useActiveWalletVar } from './adapters/ActiveWalletPresenter';
 
 export type { WalletData };
 

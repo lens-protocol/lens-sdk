@@ -6,8 +6,8 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { useCreateProfileController } from './adapters/useCreateProfileController';
 import { Operation, useOperation } from '../helpers';
+import { useCreateProfileController } from './adapters/useCreateProfileController';
 
 export type CreateProfileOperation = Operation<
   void,

@@ -1,6 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
 
-import { getSdk, Sdk } from './graphql/publication.generated';
 import { LensConfig } from '../consts/config';
 import {
   CommentFragment,
@@ -19,6 +18,7 @@ import {
   WhoCollectedPublicationRequest,
 } from '../graphql/types.generated';
 import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
+import { getSdk, Sdk } from './graphql/publication.generated';
 
 export type PublicationFragment = PostFragment | CommentFragment | MirrorFragment;
 

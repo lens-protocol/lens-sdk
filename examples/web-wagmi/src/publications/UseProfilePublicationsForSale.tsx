@@ -1,9 +1,9 @@
 import { useProfilePublicationsForSale } from '@lens-protocol/react';
 
-import { PublicationCard } from './components/PublicationCard';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { PublicationCard } from './components/PublicationCard';
 
 export function UseProfilePublicationsForSale() {
   const {

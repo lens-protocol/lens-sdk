@@ -1,9 +1,9 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
+import { Profile } from '../../entities';
 import { IActiveProfileGateway } from './IActiveProfileGateway';
 import { IActiveProfilePresenter } from './IActiveProfilePresenter';
 import { IProfileGateway } from './IProfileGateway';
-import { Profile } from '../../entities';
 
 export class ActiveProfileLoader {
   constructor(

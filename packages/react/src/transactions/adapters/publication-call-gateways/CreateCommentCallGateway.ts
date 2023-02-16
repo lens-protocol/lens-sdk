@@ -23,10 +23,10 @@ import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/tra
 import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { createPublicationMetadata, resolveCollectModule, resolveReferenceModule } from './utils';
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
 import { MetadataUploadAdapter } from '../MetadataUploadAdapter';
+import { createPublicationMetadata, resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class CreateCommentCallGateway implements ICreateCommentCallGateway {
   constructor(
