@@ -1,6 +1,6 @@
 import { Amount, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 
-import { SUPPORTED_PUBLICATION_MEDIA_TYPES } from './config';
+import { AudioType, ImageType, VideoType } from './config';
 
 export type Locale = string;
 
@@ -70,7 +70,15 @@ export type NoCollectPolicy = {
 
 export type CollectPolicyConfig = ChargeCollectPolicy | FreeCollectPolicy | NoCollectPolicy;
 
-export type SupportedPublicationMediaType = (typeof SUPPORTED_PUBLICATION_MEDIA_TYPES)[number];
+export type SupportedPublicationMediaType =
+  | ImageType.PNG
+  | ImageType.JPEG
+  | ImageType.GIF
+  | ImageType.WEBP
+  | VideoType.MP4
+  | AudioType.MP3
+  | AudioType.OGG
+  | AudioType.WAV;
 
 export type Media = {
   url: string;
