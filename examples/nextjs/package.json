@@ -18,20 +18,20 @@
     "@lens-protocol/react": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
     "eslint": "^8.34.0",
-    "eslint-config-next": "13.1.6",
+    "eslint-config-next": "^13.1.6",
     "ethers": "^5.7.2",
     "example-shared": "workspace:*",
-    "next": "13.1.6",
+    "next": "^13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "wagmi": "0.11.5"
+    "wagmi": "^0.11.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
     "@types/node": "^18.13.0",
-    "@types/react": "18.0.28",
+    "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "prettier": "^2.8.4",
     "typescript": "^4.9.5"

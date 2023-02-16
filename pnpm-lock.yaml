@@ -29,18 +29,18 @@ importers:
       '@lens-protocol/react': workspace:*
       '@lens-protocol/wagmi': workspace:*
       '@types/node': ^18.13.0
-      '@types/react': 18.0.28
+      '@types/react': ^18.0.28
       '@types/react-dom': ^18.0.11
       eslint: ^8.34.0
-      eslint-config-next: 13.1.6
+      eslint-config-next: ^13.1.6
       ethers: ^5.7.2
       example-shared: workspace:*
-      next: 13.1.6
+      next: ^13.1.6
       prettier: ^2.8.4
       react: ^18.2.0
       react-dom: ^18.2.0
       typescript: ^4.9.5
-      wagmi: 0.11.5
+      wagmi: ^0.11.5
     dependencies:
       '@lens-protocol/react': link:../../packages/react
       '@lens-protocol/wagmi': link:../../packages/wagmi
@@ -102,7 +102,7 @@ importers:
       typescript: ^4.9.5
       vite: ^4.1.1
       vite-plugin-node-polyfills: ^0.7.0
-      wagmi: 0.11.5
+      wagmi: ^0.11.5
     dependencies:
       '@bundlr-network/client': 0.10.3
       '@lens-protocol/react': link:../../packages/react
@@ -342,7 +342,7 @@ importers:
       '@typescript-eslint/parser': ^5.52.0
       eslint: ^8.34.0
       eslint-config-prettier: ^8.6.0
-      eslint-config-turbo: 0.0.7
+      eslint-config-turbo: ^0.0.7
       eslint-plugin-import: 2.26.0
       prettier: ^2.8.4
       typescript: ^4.9.5
@@ -371,11 +371,11 @@ importers:
       '@babel/preset-env': ^7.20.2
       '@babel/preset-react': ^7.18.6
       '@babel/preset-typescript': ^7.18.6
-      '@ensdomains/ens': 0.6.2
-      '@ensdomains/resolver': 0.3.1
-      '@ethersproject/abi': 5.7.0
+      '@ensdomains/ens': ^0.6.2
+      '@ensdomains/resolver': ^0.3.1
+      '@ethersproject/abi': ^5.7.0
       '@ethersproject/abstract-signer': ^5.7.0
-      '@ethersproject/bytes': 5.7.0
+      '@ethersproject/bytes': ^5.7.0
       '@ethersproject/providers': ^5.7.2
       '@faker-js/faker': ^7.6.0
       '@lens-protocol/api-bindings': workspace:*
@@ -649,7 +649,7 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
       typescript: ^4.9.5
-      wagmi: 0.11.5
+      wagmi: ^0.11.5
     dependencies:
       '@lens-protocol/shared-kernel': link:../shared-kernel
     devDependencies:
@@ -4140,7 +4140,7 @@ packages:
     resolution: {integrity: sha512-57VJIflP8eR2xXa9cD1LUawh+Gh+BVQfVu0n6GALyg/AqV/Nz25kDRvws3i9kIe1PTrbsZZOYpsYp6bXPd6nVA==}
     peerDependencies:
       jasmine: 2.x || 3.x || 4.x
-      jest: 26.x || 27.x || 28.x || 29.3.1
+      jest: 26.x || 27.x || 28.x
       typescript: '>=4.2'
     peerDependenciesMeta:
       jasmine:
@@ -10869,7 +10869,7 @@ packages:
   /jest-mock-extended/3.0.1_orzzknleilowtsz34rkaotjvzm:
     resolution: {integrity: sha512-RF4Ow8pXvbRuEcCTj56oYHmig5311BSFvbEGxPNYL51wGKGu93MvVQgx0UpFmjqyBXIcElkZo2Rke88kR1iSKQ==}
     peerDependencies:
-      jest: ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0 || 29.3.1
+      jest: ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0
       typescript: ^3.0.0 || ^4.0.0
     dependencies:
       jest: 29.4.3
@@ -11060,7 +11060,7 @@ packages:
   /jest-when/3.5.2_jest@29.4.3:
     resolution: {integrity: sha512-4rDvnhaWh08RcPsoEVXgxRnUIE9wVIbZtGqZ5x2Wm9Ziz9aQs89PipQFmOK0ycbEhVAgiV3MUeTXp3Ar4s2FcQ==}
     peerDependencies:
-      jest: '>= 25 || 29.3.1'
+      jest: '>= 25'
     dependencies:
       jest: 29.4.3
     dev: true
@@ -14505,7 +14505,7 @@ packages:
       '@jest/types': ^29.0.0
       babel-jest: ^29.0.0
       esbuild: '*'
-      jest: ^29.0.0 || 29.3.1
+      jest: ^29.0.0
       typescript: '>=4.3'
     peerDependenciesMeta:
       '@babel/core':
@@ -14520,7 +14520,7 @@ packages:
       '@babel/core': 7.20.12
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.4.3_@types+node@18.13.0
+      jest: 29.4.3
       jest-util: 29.4.3
       json5: 2.2.3
       lodash.memoize: 4.1.2

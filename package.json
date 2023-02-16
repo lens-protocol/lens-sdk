@@ -41,8 +41,7 @@
         "rollup"
       ],
       "allowedVersions": {
-        "@solana/web3.js": "1.52.0",
-        "jest": "29.3.1"
+        "@solana/web3.js": "1.52.0"
       }
     },
     "overrides": {
