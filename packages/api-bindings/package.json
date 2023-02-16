@@ -83,7 +83,6 @@
   "prettier": "@lens-protocol/prettier-config",
   "babel": {
     "presets": [
-      "@babel/core",
       "@babel/preset-env",
       "@babel/preset-typescript"
     ]
