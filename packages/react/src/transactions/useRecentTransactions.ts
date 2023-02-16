@@ -1,5 +1,8 @@
+import { useRecentTransactionsVar } from '@lens-protocol/api-bindings';
+
 import { useSharedDependencies } from '../shared';
-import { useRecentTransactionsVar } from './adapters/TransactionQueuePresenter';
+
+export { TxStatus } from '@lens-protocol/api-bindings';
 
 export function useRecentTransactions() {
   const { transactionQueue } = useSharedDependencies();

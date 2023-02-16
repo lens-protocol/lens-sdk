@@ -1,37 +1,37 @@
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
-import { Credentials } from '../authentication';
+import { Authentication } from '../authentication';
 import { LensConfig } from '../consts/config';
-import { NotAuthenticatedError } from '../consts/errors';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { ReactionRequest } from '../graphql/types.generated';
+import { execute } from '../helpers/execute';
 import { getSdk, Sdk } from './graphql/reactions.generated';
 
 export class Reactions {
+  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, private readonly credentials?: Credentials) {
+  constructor(config: LensConfig, authentication?: Authentication) {
     const client = new GraphQLClient(config.environment.gqlEndpoint);
 
-    if (credentials) {
-      client.setHeader('authorization', `Bearer ${credentials.accessToken}`);
-    }
-
     this.sdk = getSdk(client);
+    this.authentication = authentication;
   }
 
-  async add(request: ReactionRequest) {
-    if (!this.credentials) {
-      throw new NotAuthenticatedError();
-    }
-
-    return this.sdk.AddReaction(request);
+  async add(
+    request: ReactionRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return execute(this.authentication, async (headers) => {
+      await this.sdk.AddReaction(request, headers);
+    });
   }
 
-  async remove(request: ReactionRequest) {
-    if (!this.credentials) {
-      throw new NotAuthenticatedError();
-    }
-
-    return this.sdk.RemoveReaction(request);
+  async remove(
+    request: ReactionRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return execute(this.authentication, async (headers) => {
+      await this.sdk.RemoveReaction(request, headers);
+    });
   }
 }

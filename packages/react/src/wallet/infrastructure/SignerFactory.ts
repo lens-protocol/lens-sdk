@@ -1,10 +1,12 @@
+import { JsonRpcProvider } from '@ethersproject/providers';
 import { AddEthereumChainParameter, isTheSameAddress } from '@lens-protocol/blockchain-bindings';
 import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protocol/domain/entities';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
-import { utils } from 'ethers';
+import { errors, utils } from 'ethers';
 
 import { ChainConfigRegistry } from '../../chains';
 import { CreateSignerConfig, ISignerFactory, RequiredSigner } from '../adapters/ConcreteWallet';
+import { assertErrorObjectWithCode } from '../adapters/errors';
 
 export type GetSigner = (config: { chainId?: number }) => Promise<RequiredSigner>;
 
@@ -37,16 +39,24 @@ export class SignerFactory implements ISignerFactory {
     }
 
     if (chainType) {
-      const signerChainId = await signer.getChainId();
-      if (signerChainId !== chainId) {
-        const chainConfig = this.createAddEthereumChainParameter(chainType);
+      try {
+        const signerChainId = await signer.getChainId();
+        if (signerChainId !== chainId) {
+          const chainConfig = this.createAddEthereumChainParameter(chainType);
 
-        await this.addChain(signer, chainConfig);
+          await this.addChain(signer, chainConfig);
 
-        const result = await this.switchChain(signer, chainConfig);
+          const result = await this.switchChain(signer, chainConfig);
 
-        if (result.isFailure()) {
-          return failure(result.error);
+          if (result.isFailure()) {
+            return failure(result.error);
+          }
+        }
+      } catch (err) {
+        assertErrorObjectWithCode<errors>(err);
+
+        if (err.code === errors.UNSUPPORTED_OPERATION) {
+          return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
         }
       }
     }
@@ -70,7 +80,9 @@ export class SignerFactory implements ISignerFactory {
 
   private async addChain(signer: RequiredSigner, chainConfig: AddEthereumChainParameter) {
     try {
-      await signer.provider.send('wallet_addEthereumChain', [chainConfig]);
+      if (signer.provider && signer.provider instanceof JsonRpcProvider) {
+        await signer.provider.send('wallet_addEthereumChain', [chainConfig]);
+      }
     } catch {
       // noop
     }
@@ -81,11 +93,17 @@ export class SignerFactory implements ISignerFactory {
     chainConfig: AddEthereumChainParameter,
   ): PromiseResult<void, WalletConnectionError> {
     try {
-      await signer.provider.send('wallet_switchEthereumChain', [{ chainId: chainConfig.chainId }]);
+      if (signer.provider && signer.provider instanceof JsonRpcProvider) {
+        await signer.provider.send('wallet_switchEthereumChain', [
+          { chainId: chainConfig.chainId },
+        ]);
 
-      return success();
+        return success();
+      }
     } catch {
-      return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
+      // noop
     }
+
+    return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
   }
 }

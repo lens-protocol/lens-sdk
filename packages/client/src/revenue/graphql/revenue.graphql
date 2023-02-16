@@ -1,0 +1,61 @@
+query ProfilePublicationRevenue(
+  $request: ProfilePublicationRevenueQueryRequest!
+  $observerId: ProfileId
+) {
+  result: profilePublicationRevenue(request: $request) {
+    items {
+      ...PublicationRevenue
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
+  result: publicationRevenue(request: $request) {
+    ...Revenue
+  }
+}
+
+query ProfileFollowRevenue($request: ProfileFollowRevenueQueryRequest!) {
+  result: profileFollowRevenue(request: $request) {
+    revenues {
+      ...RevenueAggregate
+    }
+  }
+}
+
+fragment RevenueAggregate on RevenueAggregate {
+  __typename
+  total {
+    ...Erc20Amount
+  }
+}
+
+fragment PublicationRevenue on PublicationRevenue {
+  __typename
+  publication {
+    ... on Post {
+      ...Post
+    }
+
+    ... on Mirror {
+      ...Mirror
+    }
+
+    ... on Comment {
+      ...Comment
+    }
+  }
+
+  ...Revenue
+}
+
+fragment Revenue on PublicationRevenue {
+  __typename
+  revenue {
+    ...RevenueAggregate
+  }
+}

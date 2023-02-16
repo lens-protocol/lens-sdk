@@ -1,91 +1,89 @@
 import {
-  ProfileFragment,
-  usePublication,
   useHidePublication,
-  PublicationOwnedByMeFragment,
   isPublicationOwnedByMe,
+  PublicationOwnedByMeFragment,
+  usePublications,
+  ProfileOwnedByMeFragment,
+  PublicationFragment,
 } from '@lens-protocol/react';
-import { useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from './components/PublicationCard';
-import { SelectPublicationId } from './components/PublicationSelector';
 
 type HidePublicationButtonProps = {
   publication: PublicationOwnedByMeFragment;
 };
 
 function HidePublicationButton({ publication }: HidePublicationButtonProps) {
-  const { hide, isPending } = useHidePublication();
+  const { execute: hide, isPending } = useHidePublication({ publication });
 
-  const hidePublication = async () => {
-    await hide({ publication });
-  };
+  if (publication.hidden) return null;
 
   return (
-    <button onClick={hidePublication} disabled={isPending || publication.hidden}>
+    <button onClick={hide} disabled={isPending}>
       Hide
     </button>
   );
 }
 
-type HidePublicationInnerProps = {
-  publicationId: string;
-  profile: ProfileFragment;
-};
-
-function HidePublicationInner({ publicationId, profile }: HidePublicationInnerProps) {
-  const {
-    data: publication,
-    error,
-    loading: publicationLoading,
-  } = usePublication({
-    publicationId,
-    observerId: profile.id, // important!
-  });
-
-  if (publicationLoading) return <Loading />;
-
-  if (error) return <ErrorMessage error={error} />;
-
+function FeedItem({ publication }: { publication: PublicationFragment }) {
   return (
-    <>
+    <section>
       <PublicationCard publication={publication} />
+
       {isPublicationOwnedByMe(publication) ? (
         <HidePublicationButton publication={publication} />
       ) : (
         "Can't hide publication that's not owned by you"
       )}
+    </section>
+  );
+}
+
+type FeedProps = {
+  activeProfile: ProfileOwnedByMeFragment;
+};
+
+function Feed({ activeProfile }: FeedProps) {
+  const {
+    data: publications,
+    error,
+    loading,
+    hasMore,
+    observeRef,
+  } = useInfiniteScroll(
+    usePublications({ profileId: activeProfile.id, observerId: activeProfile.id }),
+  );
+
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
+
+  if (publications.length === 0) return <p>No items</p>;
+
+  return (
+    <>
+      {publications.map((publication) => (
+        <FeedItem key={publication.id} publication={publication} />
+      ))}
+
+      {hasMore && <p ref={observeRef}>Loading more...</p>}
     </>
   );
 }
 
 export function UseHidePublication() {
-  const [publicationId, setPublicationId] = useState<string | null>();
-
   return (
     <>
       <h1>
         <code>useHidePublication</code>
       </h1>
       <WhenLoggedInWithProfile>
-        {({ profile }) => {
-          return (
-            <>
-              <SelectPublicationId
-                onPublicationSelected={(id) => setPublicationId(id)}
-                profileId={profile.id}
-              />
-
-              {publicationId && (
-                <HidePublicationInner profile={profile} publicationId={publicationId} />
-              )}
-            </>
-          );
-        }}
+        {({ profile }) => <Feed activeProfile={profile} />}
       </WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>

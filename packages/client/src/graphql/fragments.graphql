@@ -420,3 +420,17 @@ fragment CommonPaginatedResultInfo on PaginatedResultInfo {
   next
   totalCount
 }
+
+fragment Following on Following {
+  __typename
+  profile {
+    ...Profile
+  }
+}
+
+fragment Follower on Follower {
+  __typename
+  wallet {
+    ...Wallet
+  }
+}

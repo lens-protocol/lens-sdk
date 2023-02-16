@@ -1,4 +1,5 @@
 {
   "type": "module",
-  "main": "../dist/mocks.js"
+  "main": "dist/lens-protocol-blockchain-bindings-mocks.cjs.js",
+  "module": "dist/lens-protocol-blockchain-bindings-mocks.esm.js"
 }

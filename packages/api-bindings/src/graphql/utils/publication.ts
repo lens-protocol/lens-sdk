@@ -22,6 +22,7 @@ import {
   TimedFeeCollectModuleSettingsFragment,
 } from '../generated';
 import { erc20Amount } from './amount';
+import { isProfileOwnedByMe, ProfileOwnedByMeFragment } from './profile';
 import { PickByTypename, Typename } from './types';
 
 export function isPostPublication<T extends Typename<string>>(
@@ -68,18 +69,18 @@ export type PublicationFragment = PostFragment | CommentFragment | MirrorFragmen
 
 export type PublicationOwnedByMeFragment = Overwrite<
   PublicationFragment,
-  { profile: Overwrite<ProfileFragment, { ownedByMe: true }> }
+  { profile: ProfileOwnedByMeFragment }
 >;
 
 export function isPublicationOwnedByMe(
   publication: PublicationFragment,
 ): publication is PublicationOwnedByMeFragment {
-  return publication.profile.ownedByMe;
+  return isProfileOwnedByMe(publication.profile);
 }
 
 export function createCollectRequest(
   publication: PublicationFragment,
-  collector: ProfileFragment,
+  collector: ProfileOwnedByMeFragment,
 ): CollectRequest {
   switch (publication.__collectModule.__typename) {
     case 'FreeCollectModuleSettings':
@@ -158,7 +159,7 @@ function resolveNotFollower(
     | LimitedTimedFeeCollectModuleSettingsFragment,
   author: ProfileFragment,
 ) {
-  if (collectModule.followerOnly && !author.isFollowedByMe) {
+  if (collectModule.followerOnly && !author.__isFollowedByMe) {
     return CollectState.NOT_A_FOLLOWER;
   }
   return null;

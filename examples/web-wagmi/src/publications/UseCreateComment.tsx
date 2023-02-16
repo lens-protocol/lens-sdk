@@ -28,7 +28,7 @@ export function UseCreateComment() {
 
             {publicationId && (
               <>
-                <CommentComposer activeProfile={profile} publicationId={publicationId} />
+                <CommentComposer publisher={profile} publicationId={publicationId} />
 
                 <p>Publication comments:</p>
                 <PublicationComments publicationId={publicationId} />

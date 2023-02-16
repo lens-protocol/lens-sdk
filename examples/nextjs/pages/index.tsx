@@ -4,7 +4,7 @@ import { useAccount, useConnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
 export default function Home() {
-  const { login, isPending } = useWalletLogin();
+  const { execute: login, isPending } = useWalletLogin();
   const { data: profile } = useActiveProfile();
 
   const { isDisconnected } = useAccount();

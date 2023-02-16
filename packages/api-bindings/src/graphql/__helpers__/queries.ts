@@ -37,6 +37,9 @@ import {
   ProfileFollowRevenueFragment,
   ProfileFollowRevenueQuery,
   ProfileFollowRevenueQueryVariables,
+  ProfilePublicationsForSaleDocument,
+  ProfilePublicationsForSaleQuery,
+  ProfilePublicationsForSaleQueryVariables,
   ProfilePublicationRevenueDocument,
   ProfilePublicationRevenueQuery,
   ProfilePublicationRevenueQueryVariables,
@@ -462,6 +465,31 @@ export function createProfilePublicationRevenueQueryMockedResponse(args: {
   return {
     request: {
       query: ProfilePublicationRevenueDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+          items: args.items,
+        },
+      },
+    },
+  };
+}
+
+export function createProfilePublicationsForSaleQueryMockedResponse(args: {
+  variables: ProfilePublicationsForSaleQueryVariables;
+  items: PostFragment[];
+}): MockedResponse<ProfilePublicationsForSaleQuery> {
+  return {
+    request: {
+      query: ProfilePublicationsForSaleDocument,
       variables: args.variables,
     },
     result: {

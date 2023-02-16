@@ -6,21 +6,27 @@
     "packages/*",
     "examples/*"
   ],
+  "type": "module",
   "scripts": {
-    "build": "turbo run build",
+    "build": "pnpm clean && turbo build",
+    "postinstall": "preconstruct dev",
+    "clean": "rimraf packages/*/*/dist packages/*/dist",
     "build:packages": "turbo run build:packages",
     "test": "turbo run test --no-cache",
-    "dev": "turbo run dev --parallel",
+    "dev": "turbo dev",
+    "dev:packages": "pnpm preconstruct dev",
     "lint": "turbo run lint --parallel",
-    "lint:fix": "turbo run lint:fix --parallel",
+    "lint:fix": "turbo run lint:fix --parallel --no-cache",
     "lint:examples": "sh ./scripts/lint-examples.sh",
     "deduplicate:check": "pnpm-deduplicate --list",
     "deduplicate:fix": "pnpm-deduplicate"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
+    "@preconstruct/cli": "^2.3.0",
     "pnpm-deduplicate": "^0.4.1",
     "prettier": "latest",
+    "rimraf": "^3.0.2",
     "turbo": "latest"
   },
   "resolutions": {
@@ -30,7 +36,6 @@
     "peerDependencyRules": {
       "ignoreMissing": [
         "react-native",
-        "@babel/core",
         "@tanstack/query-core",
         "csstype",
         "rollup"
@@ -48,5 +53,17 @@
     "node": "^18.12.1",
     "pnpm": "^7.17.0"
   },
-  "packageManager": "pnpm@7.17.1"
+  "packageManager": "pnpm@7.17.1",
+  "preconstruct": {
+    "packages": [
+      "packages/domain",
+      "packages/react",
+      "packages/shared-kernel",
+      "packages/api-bindings",
+      "packages/wagmi",
+      "packages/blockchain-bindings",
+      "packages/storage",
+      "packages/client"
+    ]
+  }
 }

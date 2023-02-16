@@ -1,16 +1,23 @@
 import { ReactiveVar } from '@apollo/client';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
+import { never } from '@lens-protocol/shared-kernel';
 
 import {
   erc20Amount,
   FollowModule,
+  FollowStatus,
   Profile,
   ProfileAttributeReader,
   ProfileAttributes,
 } from '../graphql';
 import { FollowPolicy } from '../graphql/FollowPolicy';
 import { TypePolicy } from './TypePolicy';
+import {
+  getAllPendingTransactions,
+  isFollowTransactionFor,
+  isUnfollowTransactionFor,
+} from './transactions';
 
 function resolveFollowPolicy({
   followModule,
@@ -60,10 +67,59 @@ export function createProfileTypePolicy(
 
       isFollowedByMe: {
         keyArgs: false,
+
+        merge(_, incoming) {
+          return incoming;
+        },
       },
 
-      isOptimisticFollowedByMe(existing) {
-        return existing ?? false;
+      followStatus: {
+        read(_, { readField }) {
+          const activeWallet = activeWalletVar();
+
+          if (!activeWallet) {
+            return null;
+          }
+
+          const profileId = readField('id') ?? never('Cannot read profile id');
+          const isFollowedByMe =
+            readField('isFollowedByMe') ?? never('Cannot read profile isFollowedByMe');
+
+          const isFollowTransactionForThisProfile = isFollowTransactionFor({
+            profileId,
+            followerAddress: activeWallet.address,
+          });
+          const isUnfollowTransactionForThisProfile = isUnfollowTransactionFor({
+            profileId,
+          });
+
+          return getAllPendingTransactions().reduce(
+            (status, transaction) => {
+              if (isFollowTransactionForThisProfile(transaction)) {
+                return {
+                  isFollowedByMe: true,
+                  canFollow: false,
+                  canUnfollow: false,
+                };
+              }
+
+              if (isUnfollowTransactionForThisProfile(transaction)) {
+                return {
+                  isFollowedByMe: false,
+                  canFollow: false,
+                  canUnfollow: false,
+                };
+              }
+
+              return status;
+            },
+            {
+              isFollowedByMe,
+              canFollow: !isFollowedByMe,
+              canUnfollow: isFollowedByMe,
+            } as FollowStatus,
+          );
+        },
       },
 
       followPolicy(existing, { readField }) {

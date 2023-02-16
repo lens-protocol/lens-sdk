@@ -1,3 +1,4 @@
+import { ProfileOwnedByMeFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -5,60 +6,59 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import {
+  CollectPolicyType,
   CreatePostRequest,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
-import { useState } from 'react';
+import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { ProfileFragment } from '../profile';
+import { Operation, useOperation } from '../helpers';
 import { MetadataUploadHandler, FailedUploadError } from './adapters/MetadataUploadAdapter';
 import { useCreatePostController } from './adapters/useCreatePostController';
 
 export type UseCreatePostArgs = {
-  profile: ProfileFragment;
+  publisher: ProfileOwnedByMeFragment;
   upload: MetadataUploadHandler;
 };
 
-export type CreatePostArgs = Omit<CreatePostRequest, 'kind' | 'delegate' | 'reference'> &
-  Partial<Pick<CreatePostRequest, 'reference'>>;
+export type CreatePostArgs = Prettify<
+  Omit<CreatePostRequest, 'kind' | 'delegate' | 'collect' | 'profileId' | 'reference'> &
+    Partial<Pick<CreatePostRequest, 'collect' | 'reference'>>
+>;
 
-export function useCreatePost({ profile, upload }: UseCreatePostArgs) {
-  const [error, setError] = useState<
-    | PendingSigningRequestError
-    | UserRejectedError
-    | WalletConnectionError
-    | FailedUploadError
-    | null
-  >(null);
-  const [isPending, setIsPending] = useState(false);
+export type CreatePostOperation = Operation<
+  void,
+  PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
+  [CreatePostArgs]
+>;
+
+export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreatePostOperation {
   const createPost = useCreatePostController({ upload });
 
-  return {
-    create: async ({ reference, ...args }: CreatePostArgs) => {
-      setError(null);
-      setIsPending(true);
-
+  return useOperation(
+    async ({
+      collect = { type: CollectPolicyType.NO_COLLECT },
+      reference = { type: ReferencePolicyType.ANYONE },
+      ...args
+    }: CreatePostArgs): PromiseResult<
+      void,
+      PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
+    > => {
       try {
-        const result = await createPost({
+        return await createPost({
           kind: TransactionKind.CREATE_POST,
-          reference: reference || { type: ReferencePolicyType.ANYONE },
-          delegate: profile.dispatcher !== null,
+          collect,
+          delegate: publisher.dispatcher !== null,
+          profileId: publisher.id,
+          reference,
           ...args,
         });
-        if (result.isFailure()) {
-          setError(result.error);
-        }
       } catch (err: unknown) {
         if (err instanceof FailedUploadError) {
-          setError(err);
-          return;
+          return failure(err);
         }
         throw err;
-      } finally {
-        setIsPending(false);
       }
     },
-    error,
-    isPending,
-  };
+  );
 }

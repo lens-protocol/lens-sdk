@@ -17,7 +17,7 @@ type ProfilesSwitcherProps = {
 };
 
 function ProfilesSwitcher({ address, current }: ProfilesSwitcherProps) {
-  const { isPending, switchProfile } = useActiveProfileSwitch();
+  const { execute: switchProfile, isPending } = useActiveProfileSwitch();
   const [selected, setSelected] = useState<string>(current.id);
   const { data, error, loading } = useProfilesOwnedBy({ address, limit: 50 });
 

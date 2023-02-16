@@ -3,3 +3,4 @@ packages:
   - "examples/web-wagmi"
   - "examples/shared"
   - "examples/nextjs"
+  - "examples/node"

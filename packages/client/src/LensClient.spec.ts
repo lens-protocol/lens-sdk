@@ -1,4 +1,4 @@
-import LensClient, { Profile, Reactions, Search, Explore } from '.';
+import LensClient, { Explore, Profile, Publication, Reactions, Revenue, Search } from '.';
 import { mumbaiSandbox } from './consts/environments';
 
 const testConfig = {
@@ -6,51 +6,41 @@ const testConfig = {
 };
 
 describe(`Given the LensClient configured for sandbox`, () => {
-  // BE CAREFUL, below test causes race condition
-  // with setupTestCredentials helper used in other tests
-  // the same wallet is authenticated twice
-
-  // describe(`when authenticating with wallet signature`, () => {
-  //   it(`should authenticate without throwing`, async () => {
-  //     const wallet = setupTestWallet();
-  //     const client = LensClient.init(testConfig);
-  //     const address = await wallet.getAddress();
-  //     const challenge = await client.generateChallenge(address);
-  //     const signature = await wallet.signMessage(challenge);
-
-  //     await expect(client.authenticate(address, signature)).resolves.not.toThrow();
-  //   });
-  // });
+  const client = new LensClient(testConfig);
 
   describe(`when accessing the Profile module`, () => {
-    it(`should return a new instance of Profile`, async () => {
-      const client = LensClient.init(testConfig);
-
+    it(`should return a new instance of Profile`, () => {
       expect(client.profile).toBeInstanceOf(Profile);
     });
   });
 
   describe(`when accessing the Reaction module`, () => {
-    it(`should return a new instance of Reaction`, async () => {
-      const client = LensClient.init(testConfig);
-
+    it(`should return a new instance of Reaction`, () => {
       expect(client.reactions).toBeInstanceOf(Reactions);
     });
   });
 
   describe(`when accessing the Search module`, () => {
-    it(`should return a new instance of Search`, async () => {
-      const client = LensClient.init(testConfig);
-
+    it(`should return a new instance of Search`, () => {
       expect(client.search).toBeInstanceOf(Search);
     });
   });
 
   describe(`when accessing the Explore module`, () => {
-    it(`should return a new instance of Explore`, async () => {
-      const client = LensClient.init(testConfig);
-
+    it(`should return a new instance of Explore`, () => {
       expect(client.explore).toBeInstanceOf(Explore);
+    });
+  });
+
+  describe(`when accessing the Revenue module`, () => {
+    it(`should return a new instance of Revenue`, () => {
+      expect(client.revenue).toBeInstanceOf(Revenue);
+    });
+  });
+
+  describe(`when accessing the Publication module`, () => {
+    it(`should return a new instance of Publication`, () => {
+      expect(client.publication).toBeInstanceOf(Publication);
     });
   });
 });

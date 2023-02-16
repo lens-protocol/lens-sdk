@@ -1,47 +1,41 @@
+import { ProfileOwnedByMeFragment } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
-  ProfileId,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { ChargeFollowPolicy, NoFeeFollowPolicy } from '@lens-protocol/domain/use-cases/profile';
-import { useState } from 'react';
+import { ChargeFollowConfig, NoFeeFollowConfig } from '@lens-protocol/domain/use-cases/profile';
 
+import { Operation, useOperation } from '../helpers';
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 
-type UseUpdateFollowPolicyArgs = {
-  profileId: ProfileId;
-  followPolicy: ChargeFollowPolicy | NoFeeFollowPolicy;
+export type UseUpdateFollowPolicyArgs = {
+  profile: ProfileOwnedByMeFragment;
 };
 
-export function useUpdateFollowPolicy() {
-  const [error, setError] = useState<
-    PendingSigningRequestError | UserRejectedError | WalletConnectionError | null
-  >(null);
-  const [isPending, setIsPending] = useState<boolean>(false);
+export type { ChargeFollowConfig, NoFeeFollowConfig };
+
+export type UpdateFollowPolicyArgs = {
+  followPolicy: ChargeFollowConfig | NoFeeFollowConfig;
+};
+
+export type UpdateFollowPolicyOperation = Operation<
+  void,
+  PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  [UpdateFollowPolicyArgs]
+>;
+
+export function useUpdateFollowPolicy({
+  profile,
+}: UseUpdateFollowPolicyArgs): UpdateFollowPolicyOperation {
   const updateFollowPolicy = useUpdateFollowPolicyController();
 
-  return {
-    updateFollowPolicy: async ({ profileId, followPolicy }: UseUpdateFollowPolicyArgs) => {
-      setError(null);
-      setIsPending(true);
-
-      try {
-        const result = await updateFollowPolicy({
-          profileId,
-          policy: followPolicy,
-          kind: TransactionKind.UPDATE_FOLLOW_POLICY,
-        });
-
-        if (result.isFailure()) {
-          setError(result.error);
-        }
-      } finally {
-        setIsPending(false);
-      }
-    },
-    error,
-    isPending,
-  };
+  return useOperation(async ({ followPolicy }: UpdateFollowPolicyArgs) =>
+    updateFollowPolicy({
+      profileId: profile.id,
+      policy: followPolicy,
+      kind: TransactionKind.UPDATE_FOLLOW_POLICY,
+    }),
+  );
 }

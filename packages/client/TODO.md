@@ -16,10 +16,10 @@
 
 Client manages the token lifecycle and storage
 
-- LensClient.init({ environment, storage })
-- [Q] client.generateChallenge(address)
-- [M] client.authenticate(address, signature)
-- [H] client.isAuthenticated()
+- [x] new LensClient({ environment, storage? })
+- [x] [Q] client.authentication.generateChallenge(address)
+- [x] [M] client.authentication.authenticate(address, signature)
+- [x] [H] client.authentication.isAuthenticated()
 
 ## Broadcast / Transaction
 
@@ -28,8 +28,8 @@ Client manages the token lifecycle and storage
 
 ## Explore
 
-- [PQ] client.explore.publications(request)
-- [PQ] client.explore.profiles(request)
+- [x] [PQ] client.explore.publications(request)
+- [x] [PQ] client.explore.profiles(request)
 
 ## Module
 
@@ -53,10 +53,10 @@ Client manages the token lifecycle and storage
 
 ### Query profile
 
-- [Q] client.profile.fetch(request) (by id or handle, forSources) or client.profiles.fetchOne()
-- [PQ] client.profile.fetchAll(request) (by ids, ownedBy, handles, whoMirroredPublicationId)
-- [Q] client.profile.fetchRecommended()
-- [PQ] client.profile.mutualFollowers({ viewingProfileId, yourProfileId })
+- [x] [Q] client.profile.fetch(request)
+- [x] [PQ] client.profile.fetchAll(request)
+- [x] [Q] client.profile.allRecommended()
+- [x] [PQ] client.profile.mutualFollowers({ viewingProfileId, yourProfileId })
 
 ### Edit profile
 
@@ -84,22 +84,21 @@ Client manages the token lifecycle and storage
 - [AM] client.profile.createSetFollowNFTUriTypedData(request)
 - [APQ] client.profile.pendingApprovalFollows(request)
 
-- [Q] client.profile.doesFollow(request)
-- [PQ] client.profile(s).following({ address })
-- [PQ] client.profile.fetchFollowers({ profileId })
-- [Q] client.profile.followerNftOwnedTokenIds({ address, profileId })
+- [x] [Q] client.profile.doesFollow(request)
+- [x] [PQ] client.profile.allFollowing({ address })
+- [x] [PQ] client.profile.allFollowers({ profileId })
+- [x] [Q] client.profile.followerNftOwnedTokenIds({ address, profileId })
 
 ## Publication(s)
 
 ### Query publications
 
-- [Q] client.publication.fetch(request) or client.publications.fetchOne()
-- [PQ] client.publication.fetchAll(request)
-- [Q] client.publication.validateMetadata(request)
-- [PQ] client.publication.whoCollected({ publicationId })
-
-- [PQ] client.publication(s).forSale({ profileId })
-- [Q] client.publication.metadataStatus(request)
+- [x] [Q] client.publication.fetch(request) or client.publications.fetchOne()
+- [x] [PQ] client.publication.fetchAll(request)
+- [x] [Q] client.publication.validateMetadata(request)
+- [x] [PQ] client.publication.allWhoCollected({ publicationId })
+- [x] [PQ] client.publication(s).allForSale({ profileId })
+- [x] [Q] client.publication.metadataStatus(request)
 
 ### Create or edit publications
 
@@ -133,9 +132,9 @@ Client manages the token lifecycle and storage
 
 ## Reactions
 
-- [AM] client.reactions.add(request)
-- [AM] client.reactions.remove(request)
-- [PQ] client.reactions.toPublication({ publicationId })
+- [x] [AM] client.reactions.add(request)
+- [x] [AM] client.reactions.remove(request)
+- [ ] [PQ] client.reactions.toPublication({ publicationId })
 
 ## Reporting
 
@@ -143,14 +142,14 @@ Client manages the token lifecycle and storage
 
 ## Revenue
 
-- [PQ] client.revenue.profilePublications({ profileId, limit })
-- [Q] client.revenue.profileFollow({ profileId })
-- [Q] client.revenue.publication({ publicationId })
+- [x] [PQ] client.revenue.profilePublications({ profileId, limit })
+- [x] [Q] client.revenue.profileFollow({ profileId })
+- [x] [Q] client.revenue.publication({ publicationId })
 
 ## Search
 
-- [PQ] client.search.profiles({ query, limit })
-- [PQ] client.search.publications({ query, limit })
+- [x] [PQ] client.search.profiles({ query, limit })
+- [x] [PQ] client.search.publications({ query, limit })
 
 ## Feed
 
@@ -160,8 +159,6 @@ Client manages the token lifecycle and storage
 
 - paginated response helper
 - more helpers like `isValidHandle`
-- how to split a group that has both authenticated and public requests?
-- authentication required error thrown on a group or on a method call?
 - allow for custom gql queries or compose query from subqueries (like profile base, profile interests, profile onChainIdentity etc.) (is that possible?)
 
 ```ts

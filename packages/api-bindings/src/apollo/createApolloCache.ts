@@ -22,6 +22,7 @@ import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy
 import { createProfileFollowersFieldPolicy } from './createProfileFollowersFieldPolicy';
 import { createProfileFollowingFieldPolicy } from './createProfileFollowingFieldPolicy';
 import { createProfilePublicationRevenueFieldPolicy } from './createProfilePublicationRevenueFieldPolicy';
+import { createProfilePublicationsForSaleFieldPolicy } from './createProfilePublicationsForSaleFieldPolicy';
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
@@ -90,6 +91,7 @@ function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies
         explorePublications: createExplorePublicationsFieldPolicy(),
         notifications: createNotificationsFieldPolicy(),
         profiles: createProfilesFieldPolicy(),
+        profilePublicationsForSale: createProfilePublicationsForSaleFieldPolicy(),
         publications: createPublicationsFieldPolicy(),
         search: createSearchFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),

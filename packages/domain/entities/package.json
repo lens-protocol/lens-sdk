@@ -1,4 +1,4 @@
 {
-  "type": "module",
-  "main": "../dist/entities/index.js"
+  "main": "dist/lens-protocol-domain-entities.cjs.js",
+  "module": "dist/lens-protocol-domain-entities.esm.js"
 }

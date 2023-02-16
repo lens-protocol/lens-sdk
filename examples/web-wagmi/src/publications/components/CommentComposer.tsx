@@ -1,34 +1,32 @@
 import {
   CollectPolicyType,
   ContentFocus,
-  ProfileFragment,
+  ProfileOwnedByMeFragment,
   useCreateComment,
 } from '@lens-protocol/react';
-import { useState } from 'react';
 
-import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { upload } from '../../upload';
+import { never } from '../../utils';
 
 type CommentComposerProps = {
-  activeProfile: ProfileFragment;
+  publisher: ProfileOwnedByMeFragment;
   publicationId: string;
 };
 
-export function CommentComposer({ activeProfile, publicationId }: CommentComposerProps) {
-  const [content, setContent] = useState<string>('');
+export function CommentComposer({ publisher, publicationId }: CommentComposerProps) {
+  const { execute: create, error, isPending } = useCreateComment({ publisher, upload });
 
-  const { create, error, isPending } = useCreateComment({ profile: activeProfile, upload });
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    const form = event.currentTarget;
 
-    if (content.length === 0) {
-      return;
-    }
+    const formData = new FormData(form);
+    const content = (formData.get('content') as string | null) ?? never();
+
     await create({
       publicationId,
       content,
-      profileId: activeProfile.id,
       contentFocus: ContentFocus.TEXT,
       locale: 'en',
       collect: {
@@ -36,26 +34,26 @@ export function CommentComposer({ activeProfile, publicationId }: CommentCompose
       },
     });
 
-    setContent('');
+    form.reset();
   };
 
   return (
     <form onSubmit={submit}>
       <fieldset>
         <textarea
+          name="content"
           rows={3}
+          required
           placeholder="Say gm...?"
           style={{ resize: 'none' }}
           disabled={isPending}
-          onChange={(event) => setContent(event.target.value)}
-          value={content}
         ></textarea>
 
         <button type="submit" disabled={isPending}>
           Comment
         </button>
 
-        {error && <ErrorMessage error={error} />}
+        {error && <pre>{error.message}</pre>}
       </fieldset>
     </form>
   );

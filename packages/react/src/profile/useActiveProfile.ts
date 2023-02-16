@@ -1,11 +1,17 @@
-import { ProfileFragment, UnspecifiedError, useGetProfileQuery } from '@lens-protocol/api-bindings';
+import {
+  isProfileOwnedByMe,
+  ProfileOwnedByMeFragment,
+  UnspecifiedError,
+  useGetProfileQuery,
+} from '@lens-protocol/api-bindings';
+import { invariant } from '@lens-protocol/shared-kernel';
 
 import { ReadResult } from '../helpers';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
 import { useSharedDependencies } from '../shared';
 import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
 
-export function useActiveProfile(): ReadResult<ProfileFragment | null, UnspecifiedError> {
+export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, UnspecifiedError> {
   const state = useAppState();
   const { apolloClient } = useSharedDependencies();
   const profile = useActiveProfileVar();
@@ -21,7 +27,23 @@ export function useActiveProfile(): ReadResult<ProfileFragment | null, Unspecifi
     client: apolloClient,
   });
 
-  if (state !== ApplicationsState.READY || loading) {
+  if (state !== ApplicationsState.READY) {
+    return {
+      data: undefined,
+      error: undefined,
+      loading: true,
+    };
+  }
+
+  if (profile === null) {
+    return {
+      data: null,
+      error: undefined,
+      loading: false,
+    };
+  }
+
+  if (loading || data === undefined) {
     return {
       data: undefined,
       error: undefined,
@@ -37,8 +59,11 @@ export function useActiveProfile(): ReadResult<ProfileFragment | null, Unspecifi
     };
   }
 
+  invariant(data.result, 'Profile not found.');
+  invariant(isProfileOwnedByMe(data.result), 'Profile not owned by the active wallet.');
+
   return {
-    data: data?.result ?? null,
+    data: data.result,
     error: undefined,
     loading: false,
   };

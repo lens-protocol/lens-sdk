@@ -24,19 +24,20 @@
     "react-cool-inview": "^3.0.1",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",
-    "react-router-dom": "^6.4.5",
+    "react-router-dom": "^6.8.1",
     "readable-web-to-node-stream": "^3.0.2",
     "wagmi": "0.9.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.12",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
-    "@types/react": "^18.0.24",
-    "@types/react-dom": "^18.0.8",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^2.2.0",
-    "prettier": "^2.8.1",
-    "typescript": "^4.6.4",
-    "vite": "^3.2.3",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5",
+    "vite": "^3.2.5",
     "vite-plugin-node-polyfills": "^0.5.0"
   },
   "prettier": "@lens-protocol/prettier-config"

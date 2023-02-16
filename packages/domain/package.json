@@ -1,33 +1,46 @@
 {
   "name": "@lens-protocol/domain",
-  "version": "0.3.0",
+  "version": "0.4.1",
   "description": "Critical Business Rules and Application-specific Business Rules",
+  "exports": {
+    "./mocks": {
+      "module": "./mocks/dist/lens-protocol-domain-mocks.esm.js",
+      "default": "./mocks/dist/lens-protocol-domain-mocks.cjs.js"
+    },
+    "./entities": {
+      "module": "./entities/dist/lens-protocol-domain-entities.esm.js",
+      "default": "./entities/dist/lens-protocol-domain-entities.cjs.js"
+    },
+    "./use-cases": {
+      "module": "./use-cases/dist/lens-protocol-domain-use-cases.esm.js",
+      "default": "./use-cases/dist/lens-protocol-domain-use-cases.cjs.js"
+    },
+    "./use-cases/profile": {
+      "module": "./use-cases/profile/dist/lens-protocol-domain-use-cases-profile.esm.js",
+      "default": "./use-cases/profile/dist/lens-protocol-domain-use-cases-profile.cjs.js"
+    },
+    "./use-cases/wallets": {
+      "module": "./use-cases/wallets/dist/lens-protocol-domain-use-cases-wallets.esm.js",
+      "default": "./use-cases/wallets/dist/lens-protocol-domain-use-cases-wallets.cjs.js"
+    },
+    "./use-cases/lifecycle": {
+      "module": "./use-cases/lifecycle/dist/lens-protocol-domain-use-cases-lifecycle.esm.js",
+      "default": "./use-cases/lifecycle/dist/lens-protocol-domain-use-cases-lifecycle.cjs.js"
+    },
+    "./use-cases/publications": {
+      "module": "./use-cases/publications/dist/lens-protocol-domain-use-cases-publications.esm.js",
+      "default": "./use-cases/publications/dist/lens-protocol-domain-use-cases-publications.cjs.js"
+    },
+    "./use-cases/transactions": {
+      "module": "./use-cases/transactions/dist/lens-protocol-domain-use-cases-transactions.esm.js",
+      "default": "./use-cases/transactions/dist/lens-protocol-domain-use-cases-transactions.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
   "repository": {
     "directory": "packages/domain",
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
-  },
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    "./entities": {
-      "types": "./dist/entities/index.d.ts",
-      "default": "./dist/entities/index.js"
-    },
-    "./use-cases": {
-      "types": "./dist/use-cases/index.d.ts",
-      "default": "./dist/use-cases/index.js"
-    },
-    "./use-cases/*": {
-      "types": "./dist/use-cases/*/index.d.ts",
-      "default": "./dist/use-cases/*/index.js"
-    },
-    "./mocks": {
-      "types": "./dist/mocks.d.ts",
-      "default": "./dist/mocks.js"
-    },
-    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
@@ -37,8 +50,7 @@
     "mocks"
   ],
   "scripts": {
-    "build": "pnpm clean && tsup && tsc --emitDeclarationOnly",
-    "clean": "rimraf ./dist",
+    "build": "preconstruct build",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
@@ -51,25 +63,51 @@
   "license": "MIT",
   "dependencies": {
     "@lens-protocol/shared-kernel": "workspace:*",
-    "tslib": "^2.4.1"
+    "tslib": "^2.5.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-typescript": "^7.18.6",
     "@faker-js/faker": "^7.6.0",
-    "@jest/globals": "^29.3.1",
+    "@jest/globals": "^29.4.3",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
-    "@types/jest": "^29.2.3",
+    "@types/jest": "29.2.3",
     "@types/jest-when": "^3.5.2",
-    "eslint": "^8.28.0",
+    "eslint": "^8.34.0",
     "jest": "^29.3.1",
     "jest-mock-extended": "^3.0.1",
     "jest-when": "^3.5.2",
-    "prettier": "^2.8.0",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^29.0.3",
-    "typescript": "^4.9.3",
-    "tsup": "^6.5.0",
+    "prettier": "^2.8.4",
+    "ts-jest": "^29.0.5",
+    "typescript": "^4.9.5",
     "wait-for-expect": "^3.0.2"
   },
-  "prettier": "@lens-protocol/prettier-config"
+  "peerDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@jest/globals": "^29.3.1",
+    "jest-mock-extended": "^3.0.1",
+    "jest-when": "^3.5.2"
+  },
+  "prettier": "@lens-protocol/prettier-config",
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript"
+    ]
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "entities/index.ts",
+      "use-cases/index.ts",
+      "use-cases/lifecycle/index.ts",
+      "use-cases/profile/index.ts",
+      "use-cases/publications/index.ts",
+      "use-cases/transactions/index.ts",
+      "use-cases/wallets/index.ts",
+      "mocks.ts"
+    ],
+    "exports": true
+  }
 }

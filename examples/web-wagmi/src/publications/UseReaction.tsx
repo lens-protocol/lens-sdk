@@ -1,6 +1,6 @@
 import {
   ProfileFragment,
-  Publication,
+  PublicationFragment,
   ReactionType,
   usePublication,
   useReaction,
@@ -13,7 +13,7 @@ import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
 type ReactionButtonProps = {
-  publication: Publication;
+  publication: PublicationFragment;
   profileId: string;
   reactionType: ReactionType;
 };

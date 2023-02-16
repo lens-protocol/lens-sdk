@@ -56,17 +56,13 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
 
       await scenario.responder.prepare(transactionData);
 
-      expect(scenario.updatedProfile).toEqual(
-        expect.objectContaining({
-          id: existingProfile.id,
-          isFollowedByMe: false,
-          isOptimisticFollowedByMe: true,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          stats: expect.objectContaining({
-            totalFollowers: 3,
-          }),
-        }),
-      );
+      expect(scenario.updatedProfile).toMatchObject({
+        id: existingProfile.id,
+
+        stats: {
+          totalFollowers: 3,
+        },
+      });
     });
   });
 
@@ -76,20 +72,25 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
       const transactionData = mockBroadcastedTransactionData({ request });
       const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
-        isFollowedByMe: false,
-        isOptimisticFollowedByMe: true,
+        __isFollowedByMe: false,
+        stats: {
+          __typename: 'ProfileStats',
+          totalFollowers: 2,
+          totalFollowing: 0,
+          totalPosts: 0,
+        },
       });
       const scenario = setupTestScenario({ existingProfile });
 
       await scenario.responder.commit(transactionData);
 
-      expect(scenario.updatedProfile).toEqual(
-        expect.objectContaining({
-          id: existingProfile.id,
-          isFollowedByMe: true,
-          isOptimisticFollowedByMe: false,
-        }),
-      );
+      expect(scenario.updatedProfile).toMatchObject({
+        id: existingProfile.id,
+        __isFollowedByMe: true,
+        stats: {
+          totalFollowers: 3,
+        },
+      });
     });
   });
 
@@ -99,8 +100,6 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
       const transactionData = mockBroadcastedTransactionData({ request });
       const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
-        isFollowedByMe: false,
-        isOptimisticFollowedByMe: true,
         stats: {
           __typename: 'ProfileStats',
           totalFollowers: 2,
@@ -112,17 +111,12 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
 
       await scenario.responder.rollback(transactionData);
 
-      expect(scenario.updatedProfile).toEqual(
-        expect.objectContaining({
-          id: existingProfile.id,
-          isFollowedByMe: false,
-          isOptimisticFollowedByMe: false,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          stats: expect.objectContaining({
-            totalFollowers: 1,
-          }),
-        }),
-      );
+      expect(scenario.updatedProfile).toMatchObject({
+        id: existingProfile.id,
+        stats: {
+          totalFollowers: 1,
+        },
+      });
     });
   });
 });

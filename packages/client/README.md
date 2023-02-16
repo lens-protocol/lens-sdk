@@ -9,6 +9,14 @@ This package enables you to interact with the Lens API via a type safe interface
 > The Lens SDK is still in its initial development phase. Anything MAY change at any time.
 > This is a Developer Preview aimed primarily at existing integrators so to gather [early feedback](https://github.com/lens-protocol/lens-sdk/discussions/48).
 
+## Running tests
+
+Tests are using a real wallet created from a private key stored in `.env` file. Test are run against Mumbai Sandbox API. The private key is set as a secret for Github Actions (our CI). Ask if you need it for local tests.
+
+```
+CLIENT_TEST_WALLET_PRIVATE_KEY=
+```
+
 ## Examples
 
 For all exaples below we require the same setup, we need a LensClient instance and an ethers.js Wallet as a signer.
@@ -17,7 +25,7 @@ For all exaples below we require the same setup, we need a LensClient instance a
 import LensClient, { mumbai } from '@lens-protocol/client';
 import { Wallet } from 'ethers';
 
-const lensClient = LensClient.init({
+const lensClient = new LensClient({
   environment: mumbai,
 });
 
@@ -31,10 +39,10 @@ const address = await wallet.getAddress();
 ### Authenticate with Lens API
 
 ```ts
-const challenge = await lensClient.generateChallenge(address);
+const challenge = await lensClient.authentication.generateChallenge(address);
 const signature = await wallet.signMessage(challenge);
 
-await lensClient.authenticate(address, signature);
+await lensClient.authentication.authenticate(address, signature);
 ```
 
 ### Add a reaction
@@ -50,4 +58,25 @@ const reactionRequest = {
 
 // lensClient is already authenticated from the previous step
 await lensClient.reactions.add(reactionRequest);
+```
+
+### Paginated Queries
+
+On queries that have paginated results, you can call the `next` or `prev` functions on the return value to get the results of the next or previous page.
+
+```ts
+const result = await lensClient.search.profiles({
+  limit: 10,
+  query: 'test',
+});
+
+const firstPageResults = result.items; // First page of results
+
+const nextResult = await result.next();
+
+const secondPageResults = nextResult.items; // Second page of results
+
+const prevResult = await result.prev();
+
+prevResult.items; // <---- We are now back to the first page and this value is equal to firstPageResults.
 ```

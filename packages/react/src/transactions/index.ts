@@ -27,7 +27,7 @@ export {
 } from '@lens-protocol/domain/use-cases/publications';
 export type {
   ChargeCollectPolicy,
-  CollectPolicyRequest,
+  CollectPolicyConfig,
   FreeCollectPolicy,
   Media,
   NftAttribute,
@@ -36,10 +36,5 @@ export type {
   SupportedPublicationMediaType,
   ReferencePolicyConfig,
 } from '@lens-protocol/domain/use-cases/publications';
-export type {
-  ChargeFollowPolicy,
-  NoFeeFollowPolicy,
-} from '@lens-protocol/domain/use-cases/profile';
 export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-export type { FollowPolicy } from '@lens-protocol/api-bindings';
-export { TxStatus } from './adapters/TransactionQueuePresenter';
+export { FailedUploadError } from './adapters/MetadataUploadAdapter';

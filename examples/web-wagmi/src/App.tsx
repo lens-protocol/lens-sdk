@@ -1,4 +1,4 @@
-import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
+import { LensConfig, LensProvider, staging } from '@lens-protocol/react';
 import { localStorage } from '@lens-protocol/react/web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
@@ -48,6 +48,7 @@ import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
+import { UseProfilePublicationsForSale } from './publications/UseProfilePublicationsForSale';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { UseReaction } from './publications/UseReaction';
@@ -71,7 +72,6 @@ const client = createClient({
 const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
   environment: staging,
-  sources: [sources.lenster, sources.orb, 'any-other-app-id'],
   storage: localStorage(),
 };
 
@@ -100,6 +100,10 @@ export function App() {
                 />
                 <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
                 <Route path="/publications/useCreateComment" element={<UseCreateComment />} />
+                <Route
+                  path="/publications/useProfilePublicationsForSale"
+                  element={<UseProfilePublicationsForSale />}
+                />
                 <Route path="/publications/useReaction" element={<UseReaction />} />
                 <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
                 <Route

@@ -1,4 +1,4 @@
 {
-  "type": "module",
-  "main": "../../dist/use-cases/wallets/index.js"
+  "main": "dist/lens-protocol-domain-use-cases-wallets.cjs.js",
+  "module": "dist/lens-protocol-domain-use-cases-wallets.esm.js"
 }

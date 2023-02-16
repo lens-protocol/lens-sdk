@@ -1,23 +1,16 @@
-import { useState } from 'react';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import { success } from '@lens-protocol/shared-kernel';
 
+import { Operation, useOperation } from '../helpers';
 import { useSwitchActiveProfileController } from './adapters/useSwitchActiveProfileController';
 
-export function useActiveProfileSwitch() {
-  const [isPending, setIsPending] = useState(false);
+export type ActiveProfileSwitchOperation = Operation<void, never, [ProfileId]>;
+
+export function useActiveProfileSwitch(): ActiveProfileSwitchOperation {
   const switchActiveProfile = useSwitchActiveProfileController();
 
-  async function switchProfile(profileId: string) {
-    setIsPending(true);
-
-    try {
-      await switchActiveProfile({ profileId });
-    } finally {
-      setIsPending(false);
-    }
-  }
-
-  return {
-    isPending,
-    switchProfile,
-  };
+  return useOperation(async (profileId: ProfileId) => {
+    await switchActiveProfile({ profileId });
+    return success();
+  });
 }

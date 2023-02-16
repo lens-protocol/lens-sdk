@@ -1,6 +1,7 @@
 import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from './FollowPolicy';
+import type { FollowStatus } from './FollowStatus';
 import type { CollectPolicy } from './CollectPolicy';
 import type { ReferencePolicy } from './ReferencePolicy';
 import gql from 'graphql-tag';
@@ -47,6 +48,7 @@ export type Scalars = {
   /** follow module data scalar type */
   FollowModuleData: unknown;
   FollowPolicy: FollowPolicy;
+  FollowStatus: FollowStatus;
   /** handle custom scalar type */
   Handle: string;
   /** handle claim id custom scalar type */
@@ -2582,6 +2584,7 @@ export type Profile = {
   /** Follow nft address */
   followNftAddress: Maybe<Scalars['ContractAddress']>;
   followPolicy: Scalars['FollowPolicy'];
+  followStatus: Maybe<Scalars['FollowStatus']>;
   /** The profile handle */
   handle: Scalars['Handle'];
   /** The profile id */
@@ -2592,7 +2595,6 @@ export type Profile = {
   isDefault: Scalars['Boolean'];
   isFollowedByMe: Scalars['Boolean'];
   isFollowing: Scalars['Boolean'];
-  isOptimisticFollowedByMe: Scalars['Boolean'];
   /** Metadata url */
   metadata: Maybe<Scalars['Url']>;
   /** Name of the profile */
@@ -4470,17 +4472,12 @@ export type AttributeFragment = { __typename: 'Attribute' } & Pick<
 
 export type ProfileFragment = { __typename: 'Profile' } & Pick<
   Profile,
-  | 'id'
-  | 'name'
-  | 'bio'
-  | 'handle'
-  | 'ownedBy'
-  | 'followPolicy'
-  | 'isFollowedByMe'
-  | 'isFollowing'
-  | 'isOptimisticFollowedByMe'
-  | 'ownedByMe'
-> & { attributes: Profile['attributesMap'] } & {
+  'id' | 'name' | 'bio' | 'handle' | 'ownedBy' | 'followPolicy' | 'followStatus' | 'ownedByMe'
+> & {
+    attributes: Profile['attributesMap'];
+    __isFollowedByMe: Profile['isFollowedByMe'];
+    isFollowingObserver: Profile['isFollowing'];
+  } & {
     picture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     coverPicture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     stats: { __typename: 'ProfileStats' } & Pick<
@@ -4745,6 +4742,20 @@ export type GetAllProfilesByWhoMirroredPublicationQueryVariables = Exact<{
 
 export type GetAllProfilesByWhoMirroredPublicationQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type ProfilePublicationsForSaleQueryVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  observerId?: Maybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: Maybe<Scalars['Cursor']>;
+}>;
+
+export type ProfilePublicationsForSaleQuery = {
+  result: {
+    items: Array<PostFragment | CommentFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
 };
 
 export type AddReactionMutationVariables = Exact<{
@@ -5089,9 +5100,9 @@ export const ProfileFragmentDoc = gql`
         isHuman
       }
     }
-    isFollowedByMe(isFinalisedOnChain: true)
-    isFollowing(who: $observerId)
-    isOptimisticFollowedByMe @client
+    __isFollowedByMe: isFollowedByMe
+    isFollowingObserver: isFollowing(who: $observerId)
+    followStatus @client
     ownedByMe @client
   }
   ${ProfileMediaFragmentDoc}
@@ -8364,6 +8375,87 @@ export type GetAllProfilesByWhoMirroredPublicationQueryResult = Apollo.QueryResu
   GetAllProfilesByWhoMirroredPublicationQuery,
   GetAllProfilesByWhoMirroredPublicationQueryVariables
 >;
+export const ProfilePublicationsForSaleDocument = gql`
+  query ProfilePublicationsForSale(
+    $profileId: ProfileId!
+    $observerId: ProfileId
+    $limit: LimitScalar!
+    $cursor: Cursor
+  ) {
+    result: profilePublicationsForSale(
+      request: { profileId: $profileId, limit: $limit, cursor: $cursor }
+    ) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+
+/**
+ * __useProfilePublicationsForSaleQuery__
+ *
+ * To run a query within a React component, call `useProfilePublicationsForSaleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfilePublicationsForSaleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfilePublicationsForSaleQuery({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *      observerId: // value for 'observerId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useProfilePublicationsForSaleQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ProfilePublicationsForSaleQuery,
+    ProfilePublicationsForSaleQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfilePublicationsForSaleQuery, ProfilePublicationsForSaleQueryVariables>(
+    ProfilePublicationsForSaleDocument,
+    options,
+  );
+}
+export function useProfilePublicationsForSaleLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfilePublicationsForSaleQuery,
+    ProfilePublicationsForSaleQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ProfilePublicationsForSaleQuery,
+    ProfilePublicationsForSaleQueryVariables
+  >(ProfilePublicationsForSaleDocument, options);
+}
+export type ProfilePublicationsForSaleQueryHookResult = ReturnType<
+  typeof useProfilePublicationsForSaleQuery
+>;
+export type ProfilePublicationsForSaleLazyQueryHookResult = ReturnType<
+  typeof useProfilePublicationsForSaleLazyQuery
+>;
+export type ProfilePublicationsForSaleQueryResult = Apollo.QueryResult<
+  ProfilePublicationsForSaleQuery,
+  ProfilePublicationsForSaleQueryVariables
+>;
 export const AddReactionDocument = gql`
   mutation AddReaction(
     $publicationId: InternalPublicationId!
@@ -10886,13 +10978,13 @@ export type ProfileKeySpecifier = (
   | 'followModule'
   | 'followNftAddress'
   | 'followPolicy'
+  | 'followStatus'
   | 'handle'
   | 'id'
   | 'interests'
   | 'isDefault'
   | 'isFollowedByMe'
   | 'isFollowing'
-  | 'isOptimisticFollowedByMe'
   | 'metadata'
   | 'name'
   | 'onChainIdentity'
@@ -10911,13 +11003,13 @@ export type ProfileFieldPolicy = {
   followModule?: FieldPolicy<any> | FieldReadFunction<any>;
   followNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
   followPolicy?: FieldPolicy<any> | FieldReadFunction<any>;
+  followStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   handle?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   interests?: FieldPolicy<any> | FieldReadFunction<any>;
   isDefault?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowing?: FieldPolicy<any> | FieldReadFunction<any>;
-  isOptimisticFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   name?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;

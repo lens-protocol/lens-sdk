@@ -6,8 +6,8 @@ import {Button, Text, View} from 'react-native';
 import {wallet} from './wallet';
 
 export function LoginButton() {
-  const {login, isPending: loginPending} = useWalletLogin();
-  const {logout, isPending: logoutPending} = useWalletLogout();
+  const {execute: login, isPending: loginPending} = useWalletLogin();
+  const {execute: logout, isPending: logoutPending} = useWalletLogout();
   const {data: profile} = useActiveProfile();
 
   const onLoginPress = async () => {

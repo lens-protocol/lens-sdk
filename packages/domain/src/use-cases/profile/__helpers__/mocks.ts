@@ -20,6 +20,7 @@ import {
   PaidFollowRequest,
   ProfileOwnerFollowRequest,
 } from '../FollowProfiles';
+import { ProfileIdentifier } from '../IActiveProfilePresenter';
 import {
   INftOwnershipChallengeGateway,
   NftOwnershipSignature,
@@ -28,9 +29,9 @@ import {
 import { UnfollowRequest } from '../UnfollowProfile';
 import { UpdateDispatcherConfigRequest } from '../UpdateDispatcherConfig';
 import {
-  ChargeFollowPolicy,
+  ChargeFollowConfig,
   FollowPolicyType,
-  NoFeeFollowPolicy,
+  NoFeeFollowConfig,
   UpdateFollowPolicyRequest,
 } from '../UpdateFollowPolicy';
 import { UpdateProfileDetailsRequest } from '../UpdateProfileDetails';
@@ -69,9 +70,17 @@ export function mockProfileId() {
   return faker.datatype.uuid();
 }
 
-export function mockChargeFollowPolicy(
-  overrides?: Partial<ChargeFollowPolicy>,
-): ChargeFollowPolicy {
+export function mockProfileIdentifier(overrides?: Partial<ProfileIdentifier>): ProfileIdentifier {
+  return {
+    id: mockProfileId(),
+    handle: faker.internet.userName(),
+    ...overrides,
+  };
+}
+
+export function mockChargeFollowConfig(
+  overrides?: Partial<ChargeFollowConfig>,
+): ChargeFollowConfig {
   return {
     amount: mockUsdcAmount(42),
     recipient: mockEthereumAddress(),
@@ -80,7 +89,7 @@ export function mockChargeFollowPolicy(
   };
 }
 
-export function mockFreeFollowPolicy(): NoFeeFollowPolicy {
+export function mockNoFeeFollowConfig(): NoFeeFollowConfig {
   return {
     type: FollowPolicyType.ANYONE,
   };
@@ -91,7 +100,7 @@ export function mockUpdateFollowPolicyRequest(
 ): UpdateFollowPolicyRequest {
   return {
     profileId: mockProfileId(),
-    policy: mockChargeFollowPolicy(),
+    policy: mockChargeFollowConfig(),
     ...overrides,
     kind: TransactionKind.UPDATE_FOLLOW_POLICY,
   };

@@ -1,6 +1,8 @@
 import {
   CommentFragment,
   CommentWithFirstCommentFragment,
+  CollectPolicy,
+  CollectState,
   isCommentPublication,
   isMirrorPublication,
   isPostPublication,
@@ -26,10 +28,11 @@ export * from './useReportPublication';
 export * from './useHidePublication';
 export * from './useWhoCollectedPublication';
 export * from './useWhoMirroredPublication';
+export * from './useProfilePublicationsForSale';
 export * from './filters';
 
-export type { Publication } from './types';
 export {
+  CollectState,
   isPostPublication,
   isCommentPublication,
   isMirrorPublication,
@@ -40,6 +43,7 @@ export {
 export type {
   CommentFragment,
   CommentWithFirstCommentFragment,
+  CollectPolicy,
   MirrorFragment,
   PendingPostFragment,
   PostFragment,
