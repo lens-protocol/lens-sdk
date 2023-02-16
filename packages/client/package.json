@@ -9,6 +9,13 @@
   },
   "main": "dist/lens-protocol-client.cjs.js",
   "module": "dist/lens-protocol-client.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/lens-protocol-client.esm.js",
+      "default": "./dist/lens-protocol-client.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
   "private": true,
   "sideEffects": false,
   "files": [
@@ -69,6 +76,7 @@
   "preconstruct": {
     "entrypoints": [
       "index.ts"
-    ]
+    ],
+    "exports": true
   }
 }
