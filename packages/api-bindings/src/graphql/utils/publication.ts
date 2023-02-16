@@ -107,6 +107,9 @@ export function createCollectRequest(
       };
     case 'RevertCollectModuleSettings':
     case 'UnknownCollectModuleSettings':
+    case 'AaveFeeCollectModuleSettings':
+    case 'ERC4626FeeCollectModuleSettings':
+    case 'MultirecipientFeeCollectModuleSettings':
       never(
         `Cannot collect publication with "${
           publication.__collectModule.__typename as string
@@ -228,6 +231,9 @@ export function resolveCollectPolicy({
         followerOnly: collectModule.followerOnly,
       };
     case 'RevertCollectModuleSettings':
+    case 'AaveFeeCollectModuleSettings':
+    case 'ERC4626FeeCollectModuleSettings':
+    case 'MultirecipientFeeCollectModuleSettings':
     case 'UnknownCollectModuleSettings':
       return {
         type: CollectPolicyType.NO_COLLECT,

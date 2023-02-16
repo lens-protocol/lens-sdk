@@ -1,0 +1,132 @@
+fragment NftOwnership on NftOwnershipOutput {
+  contractAddress
+  chainID
+  contractType
+  tokenIds
+}
+
+fragment Erc20Ownership on Erc20OwnershipOutput {
+  # TODO add __value: value once available in the API.
+  # value: Erc20Amount will be used by amountValue field policy to return a Amount<Erc20>
+  amount: amountValue @client
+  condition
+}
+
+fragment AddressOwnership on EoaOwnershipOutput {
+  address
+}
+
+fragment ProfileOwnership on ProfileOwnershipOutput {
+  profileId
+}
+
+fragment FollowCondition on FollowConditionOutput {
+  profileId
+}
+
+fragment CollectCondition on CollectConditionOutput {
+  publicationId
+}
+
+fragment LeafCriterion on AccessConditionOutput {
+  nft {
+    ...NftOwnership
+  }
+
+  token {
+    ...Erc20Ownership
+  }
+
+  eoa {
+    ...AddressOwnership
+  }
+
+  profile {
+    ...ProfileOwnership
+  }
+
+  follow {
+    ...FollowCondition
+  }
+
+  collect {
+    ...CollectCondition
+  }
+}
+
+fragment OrCriterion on OrConditionOutput {
+  criteria {
+    ...LeafCriterion
+  }
+}
+fragment AndCriterion on AndConditionOutput {
+  criteria {
+    ...LeafCriterion
+  }
+}
+
+fragment RootCriterion on AccessConditionOutput {
+  nft {
+    ...NftOwnership
+  }
+
+  token {
+    ...Erc20Ownership
+  }
+
+  eoa {
+    ...AddressOwnership
+  }
+
+  profile {
+    ...ProfileOwnership
+  }
+
+  follow {
+    ...FollowCondition
+  }
+
+  collect {
+    ...CollectCondition
+  }
+
+  or {
+    ...OrCriterion
+  }
+
+  and {
+    ...AndCriterion
+  }
+}
+
+fragment AccessCondition on AccessConditionOutput {
+  or {
+    criteria {
+      ...RootCriterion
+    }
+  }
+}
+
+fragment EncryptedMedia on EncryptedMedia {
+  __typename
+  url
+  mimeType
+}
+
+fragment EncryptionParams on EncryptionParamsOutput {
+  accessCondition {
+    ...AccessCondition
+  }
+  encryptionProvider
+  encryptedFields {
+    animation_url
+    content
+    external_url
+    image
+    media {
+      original {
+        ...EncryptedMedia
+      }
+    }
+  }
+}

@@ -149,6 +149,9 @@ fragment Metadata on MetadataOutput {
   attributes {
     ...MetadataAttributeOutput
   }
+  __encryptionParams: encryptionParams {
+    ...EncryptionParams
+  }
 }
 
 fragment MetadataAttributeOutput on MetadataAttributeOutput {
@@ -237,6 +240,10 @@ fragment CommentBase on Comment {
   canMirror(profileId: $observerId) {
     result
   }
+  canObserverDecrypt: canDecrypt(profileId: $observerId) {
+    result
+    reasons
+  }
   mirrors(by: $observerId)
 
   hasOptimisticCollectedByMe @client
@@ -312,6 +319,10 @@ fragment Post on Post {
     result
   }
   mirrors(by: $observerId)
+  canObserverDecrypt: canDecrypt(profileId: $observerId) {
+    result
+    reasons
+  }
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
