@@ -15,9 +15,9 @@ export * from './useProfilesOwnedBy';
 export type {
   ProfileAttributes,
   ProfileAttributeReader,
-  ProfileFragment,
-  ProfileOwnedByMeFragment,
-  FollowingFragment,
-  FollowerFragment,
+  ProfileFragment as Profile,
+  ProfileOwnedByMeFragment as ProfileOwnedByMe,
+  FollowingFragment as Following,
+  FollowerFragment as Follower,
   FollowPolicy,
 } from '@lens-protocol/api-bindings';

@@ -4,4 +4,4 @@ export * from './useProfileFollowRevenue';
 export * from './usePublicationRevenue';
 export * from './useProfilePublicationRevenue';
 
-export type { PublicationRevenueFragment };
+export type { PublicationRevenueFragment as PublicationRevenue };
