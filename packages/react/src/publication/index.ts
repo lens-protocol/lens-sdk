@@ -1,22 +1,3 @@
-import {
-  CommentFragment,
-  CommentWithFirstCommentFragment,
-  CollectPolicy,
-  CollectState,
-  isCommentPublication,
-  isMirrorPublication,
-  isPostPublication,
-  MirrorFragment,
-  PendingPostFragment,
-  PostFragment,
-  PublicationSortCriteria,
-  PublicationTypes,
-  RevenueAggregateFragment,
-  PublicationFragment,
-  PublicationOwnedByMeFragment,
-  isPublicationOwnedByMe,
-} from '@lens-protocol/api-bindings';
-
 export * from './useComments';
 export * from './usePublication';
 export * from './usePublications';
@@ -39,15 +20,19 @@ export {
   PublicationSortCriteria,
   PublicationTypes,
   isPublicationOwnedByMe,
-};
+} from '@lens-protocol/api-bindings';
+
 export type {
   CommentFragment,
   CommentWithFirstCommentFragment,
   CollectPolicy,
+  MediaFragment,
+  MediaSetFragment,
   MirrorFragment,
   PendingPostFragment,
   PostFragment,
   RevenueAggregateFragment,
   PublicationFragment,
   PublicationOwnedByMeFragment,
-};
+  WhoReactedResultFragment,
+} from '@lens-protocol/api-bindings';
