@@ -1,12 +1,3 @@
-import {
-  NewCollectNotificationFragment,
-  NewCommentNotificationFragment,
-  NewFollowerNotificationFragment,
-  NewMentionNotificationFragment,
-  NewMirrorNotificationFragment,
-  NewReactionNotificationFragment,
-} from '@lens-protocol/api-bindings';
-
 export { useUnreadNotificationCount } from './useUnreadNotificationCount';
 export { useNotifications } from './useNotifications';
 
@@ -18,4 +9,4 @@ export type {
   NewMentionNotificationFragment,
   NewMirrorNotificationFragment,
   NewReactionNotificationFragment,
-};
+} from '@lens-protocol/api-bindings';
