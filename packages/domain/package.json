@@ -11,10 +11,6 @@
       "module": "./entities/dist/lens-protocol-domain-entities.esm.js",
       "default": "./entities/dist/lens-protocol-domain-entities.cjs.js"
     },
-    "./use-cases": {
-      "module": "./use-cases/dist/lens-protocol-domain-use-cases.esm.js",
-      "default": "./use-cases/dist/lens-protocol-domain-use-cases.cjs.js"
-    },
     "./use-cases/profile": {
       "module": "./use-cases/profile/dist/lens-protocol-domain-use-cases-profile.esm.js",
       "default": "./use-cases/profile/dist/lens-protocol-domain-use-cases-profile.cjs.js"
@@ -100,7 +96,6 @@
   "preconstruct": {
     "entrypoints": [
       "entities/index.ts",
-      "use-cases/index.ts",
       "use-cases/lifecycle/index.ts",
       "use-cases/profile/index.ts",
       "use-cases/publications/index.ts",
