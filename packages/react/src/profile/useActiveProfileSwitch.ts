@@ -1,4 +1,4 @@
-import { ProfileId } from '@lens-protocol/domain/dist/entities';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { success } from '@lens-protocol/shared-kernel';
 
 import { useSwitchActiveProfileController } from './adapters/useSwitchActiveProfileController';
