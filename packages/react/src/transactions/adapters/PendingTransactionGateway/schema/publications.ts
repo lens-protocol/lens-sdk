@@ -1,11 +1,10 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
+  SupportedFileType,
   CollectPolicyType,
   CollectType,
   ContentFocus,
   NftAttributeDisplayType,
-  SupportedPublicationMediaType,
-  SUPPORTED_PUBLICATION_MEDIA_TYPES,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { z } from 'zod';
@@ -65,15 +64,7 @@ const CollectPolicySchema = z.union([
 
 const MediaSchema = z.object({
   url: z.string(),
-  mimeType: z
-    .string()
-    .refine(
-      (val): val is SupportedPublicationMediaType =>
-        SUPPORTED_PUBLICATION_MEDIA_TYPES.some((media) => media === val),
-      {
-        message: 'Media type not supported',
-      },
-    ),
+  mimeType: z.nativeEnum(SupportedFileType),
 });
 
 const AnyoneReferencePolicySchema = z.object({

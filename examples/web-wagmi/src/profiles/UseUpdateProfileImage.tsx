@@ -1,10 +1,10 @@
-import { ProfileFragment, useUpdateProfileImage } from '@lens-protocol/react';
+import { ImageType, ProfileFragment, useUpdateProfileImage } from '@lens-protocol/react';
 import { ChangeEvent, useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
 import { useFilePreview } from '../hooks/useFilePreview';
-import { ILocalFile, ImageType, useFileSelect } from '../hooks/useFileSelect';
+import { ILocalFile, useFileSelect } from '../hooks/useFileSelect';
 import { uploadImage } from '../upload';
 import { invariant } from '../utils';
 import { SmallProfileCard } from './components/ProfileCard';

@@ -1,4 +1,4 @@
-import { ProfileOwnedByMeFragment, useCreatePost, ContentFocus } from '@lens-protocol/react';
+import { ContentFocus, ProfileOwnedByMeFragment, useCreatePost } from '@lens-protocol/react';
 
 import { upload } from '../../upload';
 import { never } from '../../utils';
