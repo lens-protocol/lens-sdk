@@ -2,4 +2,4 @@ export * from './useProfileFollowRevenue';
 export * from './usePublicationRevenue';
 export * from './useProfilePublicationRevenue';
 
-export { PublicationRevenueFragment } from '@lens-protocol/api-bindings';
+export type { PublicationRevenueFragment } from '@lens-protocol/api-bindings';
