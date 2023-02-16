@@ -40,7 +40,7 @@ export type Scalars = {
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: string;
   /** EncryptedValue custom scalar type */
-  EncryptedValueScalar: unknown;
+  EncryptedValueScalar: string;
   /** Ens custom scalar type */
   Ens: unknown;
   /** Ethereum address custom scalar type */
@@ -67,6 +67,10 @@ export type Scalars = {
   Markdown: string;
   /** mimetype custom scalar type */
   MimeType: string;
+  /** Nft gallery id type */
+  NftGalleryId: unknown;
+  /** Nft gallery name type */
+  NftGalleryName: unknown;
   /** Nft ownership id type */
   NftOwnershipId: string;
   /** Nonce custom scalar type */
@@ -100,7 +104,7 @@ export type Scalars = {
   /** timestamp date custom scalar type */
   TimestampScalar: unknown;
   /** The NFT token id */
-  TokenId: unknown;
+  TokenId: string;
   /** The tx hash */
   TxHash: string;
   /** The tx id */
@@ -111,6 +115,40 @@ export type Scalars = {
   Url: string;
   /** Represents NULL values */
   Void: void;
+};
+
+export type AaveFeeCollectModuleParams = {
+  /** The collect module limit */
+  collectLimit: Scalars['String'];
+  /** The collect module amount info */
+  amount: ModuleFeeAmountParams;
+  /** The collect module recipient address */
+  recipient: Scalars['EthereumAddress'];
+  /** The collect module referral fee */
+  referralFee: Scalars['Float'];
+  /** Follower only */
+  followerOnly: Scalars['Boolean'];
+  /** The timestamp that this collect module will expire */
+  endTimestamp?: Maybe<Scalars['DateTime']>;
+};
+
+export type AaveFeeCollectModuleSettings = {
+  __typename: 'AaveFeeCollectModuleSettings';
+  /** The collect modules enum */
+  type: CollectModules;
+  contractAddress: Scalars['ContractAddress'];
+  /** The collect module amount info */
+  amount: ModuleFeeAmount;
+  /** The maximum number of collects for this publication. Omit for no limit. */
+  collectLimit: Maybe<Scalars['String']>;
+  /** The referral fee associated with this publication. */
+  referralFee: Scalars['Float'];
+  /** True if only followers of publisher may collect the post. */
+  followerOnly: Scalars['Boolean'];
+  /** The end timestamp after which collecting is impossible. No expiry if missing. */
+  endTimestamp: Maybe<Scalars['DateTime']>;
+  /** Recipient of collect fees. */
+  recipient: Scalars['EthereumAddress'];
 };
 
 /** The access conditions for the publication */
@@ -314,6 +352,9 @@ export type CollectModule =
   | LimitedTimedFeeCollectModuleSettings
   | RevertCollectModuleSettings
   | TimedFeeCollectModuleSettings
+  | MultirecipientFeeCollectModuleSettings
+  | Erc4626FeeCollectModuleSettings
+  | AaveFeeCollectModuleSettings
   | UnknownCollectModuleSettings;
 
 export type CollectModuleParams = {
@@ -329,6 +370,12 @@ export type CollectModuleParams = {
   limitedTimedFeeCollectModule?: Maybe<LimitedTimedFeeCollectModuleParams>;
   /** The collect timed fee collect module */
   timedFeeCollectModule?: Maybe<TimedFeeCollectModuleParams>;
+  /** The multirecipient fee collect module */
+  multirecipientFeeCollectModule?: Maybe<MultirecipientFeeCollectModuleParams>;
+  /** The collect aave fee collect module */
+  aaveFeeCollectModule?: Maybe<AaveFeeCollectModuleParams>;
+  /** The collect ERC4626 fee collect module */
+  erc4626FeeCollectModule?: Maybe<Erc4626FeeCollectModuleParams>;
   /** A unknown collect module */
   unknownCollectModule?: Maybe<UnknownCollectModuleParams>;
 };
@@ -1049,6 +1096,10 @@ export type DegreesOfSeparationReferenceModuleSettings = {
   degreesOfSeparation: Scalars['Int'];
 };
 
+export type DismissRecommendedProfilesRequest = {
+  profileIds: Array<Scalars['ProfileId']>;
+};
+
 /** The dispatcher */
 export type Dispatcher = {
   __typename: 'Dispatcher';
@@ -1103,6 +1154,40 @@ export type Eip712TypedDataField = {
   name: Scalars['String'];
   /** The type of the typed data field */
   type: Scalars['String'];
+};
+
+export type Erc4626FeeCollectModuleParams = {
+  /** The maximum number of collects for this publication. Omit for no limit. */
+  collectLimit?: Maybe<Scalars['String']>;
+  /** The collecting cost associated with this publication. 0 for free collect. */
+  amount: ModuleFeeAmountParams;
+  /** The address of the ERC4626 vault to deposit funds to. */
+  vault: Scalars['ContractAddress'];
+  /** The address of the recipient who will recieve vault shares after depositing is completed. */
+  recipient: Scalars['EthereumAddress'];
+  /** The referral fee associated with this publication. */
+  referralFee?: Maybe<Scalars['Float']>;
+  /** True if only followers of publisher may collect the post. */
+  followerOnly: Scalars['Boolean'];
+  /** The end timestamp after which collecting is impossible. Omit for no expiry. */
+  endTimestamp?: Maybe<Scalars['DateTime']>;
+};
+
+export type Erc4626FeeCollectModuleSettings = {
+  __typename: 'ERC4626FeeCollectModuleSettings';
+  /** The collect modules enum */
+  type: CollectModules;
+  contractAddress: Scalars['ContractAddress'];
+  /** The collect module amount info */
+  amount: ModuleFeeAmount;
+  /** The maximum number of collects for this publication. 0 for no limit. */
+  collectLimit: Maybe<Scalars['String']>;
+  /** The referral fee associated with this publication. */
+  referralFee: Scalars['Float'];
+  /** True if only followers of publisher may collect the post. */
+  followerOnly: Scalars['Boolean'];
+  /** The end timestamp after which collecting is impossible. 0 for no expiry. */
+  endTimestamp: Maybe<Scalars['DateTime']>;
 };
 
 export type ElectedMirror = {
@@ -1251,16 +1336,17 @@ export type Erc20OwnershipInput = {
 
 export type Erc20OwnershipOutput = {
   __typename: 'Erc20OwnershipOutput';
-  /** The ERC20 token's ethereum address */
-  contractAddress: Scalars['ContractAddress'];
-  /** The amount of tokens required to access the content */
-  chainID: Scalars['ChainId'];
   /** The amount of tokens required to access the content */
   amount: Scalars['String'];
-  /** The amount of decimals of the ERC20 contract */
-  decimals: Scalars['Float'];
+  amountValue: Scalars['ClientErc20Amount'];
+  /** The amount of tokens required to access the content */
+  chainID: Scalars['ChainId'];
   /** The operator to use when comparing the amount of tokens */
   condition: ScalarOperator;
+  /** The ERC20 token's ethereum address */
+  contractAddress: Scalars['ContractAddress'];
+  /** The amount of decimals of the ERC20 contract */
+  decimals: Scalars['Float'];
 };
 
 /** The paginated publication result */
@@ -1927,32 +2013,66 @@ export type ModuleInfo = {
   type: Scalars['String'];
 };
 
+export type MultirecipientFeeCollectModuleParams = {
+  /** The collecting cost associated with this publication. 0 for free collect. */
+  amount: ModuleFeeAmountParams;
+  /** The maximum number of collects for this publication. Omit for no limit. */
+  collectLimit?: Maybe<Scalars['String']>;
+  /** The referral fee associated with this publication. */
+  referralFee?: Maybe<Scalars['Float']>;
+  /** True if only followers of publisher may collect the post. */
+  followerOnly: Scalars['Boolean'];
+  /** The end timestamp after which collecting is impossible. Omit for no expiry. */
+  endTimestamp?: Maybe<Scalars['DateTime']>;
+  /** Recipient of collect fees. */
+  recipients: Array<RecipientDataInput>;
+};
+
+export type MultirecipientFeeCollectModuleSettings = {
+  __typename: 'MultirecipientFeeCollectModuleSettings';
+  /** The collect modules enum */
+  type: CollectModules;
+  contractAddress: Scalars['ContractAddress'];
+  /** The collect module amount info */
+  amount: ModuleFeeAmount;
+  /** The maximum number of collects for this publication. 0 for no limit. */
+  collectLimit: Maybe<Scalars['String']>;
+  /** The referral fee associated with this publication. */
+  referralFee: Scalars['Float'];
+  /** True if only followers of publisher may collect the post. */
+  followerOnly: Scalars['Boolean'];
+  /** The end timestamp after which collecting is impossible. 0 for no expiry. */
+  endTimestamp: Maybe<Scalars['DateTime']>;
+  /** Recipient of collect fees. */
+  recipients: Array<RecipientDataOutput>;
+};
+
 export type Mutation = {
   __typename: 'Mutation';
+  createAttachMediaData: PublicMediaResults;
   authenticate: AuthenticationResult;
   refresh: AuthenticationResult;
   broadcast: RelayResult;
+  claim: RelayResult;
+  idKitPhoneVerifyWebhook: IdKitPhoneVerifyWebhookResultStatusType;
   createSetDispatcherTypedData: CreateSetDispatcherBroadcastItemResult;
   createFollowTypedData: CreateFollowBroadcastItemResult;
   createUnfollowTypedData: CreateUnfollowBroadcastItemResult;
   createSetFollowModuleTypedData: CreateSetFollowModuleBroadcastItemResult;
   createSetFollowNFTUriTypedData: CreateSetFollowNftUriBroadcastItemResult;
   createToggleFollowTypedData: CreateToggleFollowBroadcastItemResult;
-  createAttachMediaData: PublicMediaResults;
+  createSetFollowNFTUriViaDispatcher: RelayResult;
   createCollectTypedData: CreateCollectBroadcastItemResult;
-  createSetDefaultProfileTypedData: SetDefaultProfileBroadcastItemResult;
-  createSetProfileImageURITypedData: CreateSetProfileImageUriBroadcastItemResult;
-  createSetProfileImageURIViaDispatcher: RelayResult;
-  createBurnProfileTypedData: CreateBurnProfileBroadcastItemResult;
-  createPostTypedData: CreatePostBroadcastItemResult;
-  createPostViaDispatcher: RelayResult;
-  createCommentTypedData: CreateCommentBroadcastItemResult;
-  createCommentViaDispatcher: RelayResult;
-  createMirrorTypedData: CreateMirrorBroadcastItemResult;
-  hidePublication: Maybe<Scalars['Void']>;
-  createMirrorViaDispatcher: RelayResult;
-  claim: RelayResult;
-  idKitPhoneVerifyWebhook: IdKitPhoneVerifyWebhookResultStatusType;
+  /** Create a new NFT gallery */
+  createNftGallery: Scalars['NftGalleryId'];
+  /** Update the name of an NFT gallery */
+  updateNftGalleryInfo: Maybe<Scalars['Void']>;
+  /** Update the order of NFTs in a gallery */
+  updateNftGalleryOrder: Maybe<Scalars['Void']>;
+  /** Add and/or remove NFTs to a gallery */
+  updateNftGalleryItems: Maybe<Scalars['Void']>;
+  /** Delete an NFT Gallery */
+  deleteNftGallery: Maybe<Scalars['Void']>;
   createProfile: RelayResult;
   /** Adds profile interests to the given profile */
   addProfileInterests: Maybe<Scalars['Void']>;
@@ -1960,12 +2080,28 @@ export type Mutation = {
   removeProfileInterests: Maybe<Scalars['Void']>;
   createSetProfileMetadataTypedData: CreateSetProfileMetadataUriBroadcastItemResult;
   createSetProfileMetadataViaDispatcher: RelayResult;
+  createSetDefaultProfileTypedData: SetDefaultProfileBroadcastItemResult;
+  dismissRecommendedProfiles: Scalars['Void'];
+  createSetProfileImageURITypedData: CreateSetProfileImageUriBroadcastItemResult;
+  createSetProfileImageURIViaDispatcher: RelayResult;
+  createBurnProfileTypedData: CreateBurnProfileBroadcastItemResult;
   proxyAction: Scalars['ProxyActionId'];
+  createMirrorTypedData: CreateMirrorBroadcastItemResult;
+  hidePublication: Maybe<Scalars['Void']>;
+  createPostTypedData: CreatePostBroadcastItemResult;
+  createPostViaDispatcher: RelayResult;
+  createCommentTypedData: CreateCommentBroadcastItemResult;
+  createCommentViaDispatcher: RelayResult;
+  createMirrorViaDispatcher: RelayResult;
   addReaction: Maybe<Scalars['Void']>;
   removeReaction: Maybe<Scalars['Void']>;
   reportPublication: Maybe<Scalars['Void']>;
   ach: Maybe<Scalars['Void']>;
   hel: Maybe<Scalars['Void']>;
+};
+
+export type MutationCreateAttachMediaDataArgs = {
+  request: PublicMediaRequest;
 };
 
 export type MutationAuthenticateArgs = {
@@ -1978,6 +2114,14 @@ export type MutationRefreshArgs = {
 
 export type MutationBroadcastArgs = {
   request: BroadcastRequest;
+};
+
+export type MutationClaimArgs = {
+  request: ClaimHandleRequest;
+};
+
+export type MutationIdKitPhoneVerifyWebhookArgs = {
+  request: IdKitPhoneVerifyWebhookRequest;
 };
 
 export type MutationCreateSetDispatcherTypedDataArgs = {
@@ -2010,8 +2154,8 @@ export type MutationCreateToggleFollowTypedDataArgs = {
   request: CreateToggleFollowRequest;
 };
 
-export type MutationCreateAttachMediaDataArgs = {
-  request: PublicMediaRequest;
+export type MutationCreateSetFollowNftUriViaDispatcherArgs = {
+  request: CreateSetFollowNftUriRequest;
 };
 
 export type MutationCreateCollectTypedDataArgs = {
@@ -2019,62 +2163,24 @@ export type MutationCreateCollectTypedDataArgs = {
   request: CreateCollectRequest;
 };
 
-export type MutationCreateSetDefaultProfileTypedDataArgs = {
-  options?: Maybe<TypedDataOptions>;
-  request: CreateSetDefaultProfileRequest;
+export type MutationCreateNftGalleryArgs = {
+  request: NftGalleryCreateRequest;
 };
 
-export type MutationCreateSetProfileImageUriTypedDataArgs = {
-  options?: Maybe<TypedDataOptions>;
-  request: UpdateProfileImageRequest;
+export type MutationUpdateNftGalleryInfoArgs = {
+  request: NftGalleryUpdateInfoRequest;
 };
 
-export type MutationCreateSetProfileImageUriViaDispatcherArgs = {
-  request: UpdateProfileImageRequest;
+export type MutationUpdateNftGalleryOrderArgs = {
+  request: NftGalleryUpdateItemOrderRequest;
 };
 
-export type MutationCreateBurnProfileTypedDataArgs = {
-  options?: Maybe<TypedDataOptions>;
-  request: BurnProfileRequest;
+export type MutationUpdateNftGalleryItemsArgs = {
+  request: NftGalleryUpdateItemsRequest;
 };
 
-export type MutationCreatePostTypedDataArgs = {
-  options?: Maybe<TypedDataOptions>;
-  request: CreatePublicPostRequest;
-};
-
-export type MutationCreatePostViaDispatcherArgs = {
-  request: CreatePublicPostRequest;
-};
-
-export type MutationCreateCommentTypedDataArgs = {
-  options?: Maybe<TypedDataOptions>;
-  request: CreatePublicCommentRequest;
-};
-
-export type MutationCreateCommentViaDispatcherArgs = {
-  request: CreatePublicCommentRequest;
-};
-
-export type MutationCreateMirrorTypedDataArgs = {
-  options?: Maybe<TypedDataOptions>;
-  request: CreateMirrorRequest;
-};
-
-export type MutationHidePublicationArgs = {
-  request: HidePublicationRequest;
-};
-
-export type MutationCreateMirrorViaDispatcherArgs = {
-  request: CreateMirrorRequest;
-};
-
-export type MutationClaimArgs = {
-  request: ClaimHandleRequest;
-};
-
-export type MutationIdKitPhoneVerifyWebhookArgs = {
-  request: IdKitPhoneVerifyWebhookRequest;
+export type MutationDeleteNftGalleryArgs = {
+  request: NftGalleryDeleteRequest;
 };
 
 export type MutationCreateProfileArgs = {
@@ -2098,8 +2204,62 @@ export type MutationCreateSetProfileMetadataViaDispatcherArgs = {
   request: CreatePublicSetProfileMetadataUriRequest;
 };
 
+export type MutationCreateSetDefaultProfileTypedDataArgs = {
+  options?: Maybe<TypedDataOptions>;
+  request: CreateSetDefaultProfileRequest;
+};
+
+export type MutationDismissRecommendedProfilesArgs = {
+  request: DismissRecommendedProfilesRequest;
+};
+
+export type MutationCreateSetProfileImageUriTypedDataArgs = {
+  options?: Maybe<TypedDataOptions>;
+  request: UpdateProfileImageRequest;
+};
+
+export type MutationCreateSetProfileImageUriViaDispatcherArgs = {
+  request: UpdateProfileImageRequest;
+};
+
+export type MutationCreateBurnProfileTypedDataArgs = {
+  options?: Maybe<TypedDataOptions>;
+  request: BurnProfileRequest;
+};
+
 export type MutationProxyActionArgs = {
   request: ProxyActionRequest;
+};
+
+export type MutationCreateMirrorTypedDataArgs = {
+  options?: Maybe<TypedDataOptions>;
+  request: CreateMirrorRequest;
+};
+
+export type MutationHidePublicationArgs = {
+  request: HidePublicationRequest;
+};
+
+export type MutationCreatePostTypedDataArgs = {
+  options?: Maybe<TypedDataOptions>;
+  request: CreatePublicPostRequest;
+};
+
+export type MutationCreatePostViaDispatcherArgs = {
+  request: CreatePublicPostRequest;
+};
+
+export type MutationCreateCommentTypedDataArgs = {
+  options?: Maybe<TypedDataOptions>;
+  request: CreatePublicCommentRequest;
+};
+
+export type MutationCreateCommentViaDispatcherArgs = {
+  request: CreatePublicCommentRequest;
+};
+
+export type MutationCreateMirrorViaDispatcherArgs = {
+  request: CreateMirrorRequest;
 };
 
 export type MutationAddReactionArgs = {
@@ -2247,6 +2407,79 @@ export type NewReactionNotification = {
   publication: Publication;
 };
 
+/** The NFT gallery input */
+export type NftGalleriesRequest = {
+  /** The profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+/** The NFT gallery */
+export type NftGallery = {
+  __typename: 'NftGallery';
+  /** The NFT gallery id */
+  id: Scalars['NftGalleryId'];
+  /** The NFT gallery name */
+  name: Scalars['String'];
+  /** The owning profile id */
+  profileId: Scalars['ProfileId'];
+  /** The NFTs in the gallery */
+  items: Array<Nft>;
+  /** The creation date */
+  createdAt: Scalars['DateTime'];
+  /** The last update date */
+  updatedAt: Scalars['DateTime'];
+};
+
+/** The input for creating a new NFT gallery */
+export type NftGalleryCreateRequest = {
+  /** The owner profile id */
+  profileId: Scalars['ProfileId'];
+  /** The name of the NFT gallery */
+  name: Scalars['NftGalleryName'];
+  /** The NFTs in the gallery */
+  items: Array<NftInput>;
+};
+
+/** The input for deleting gallery */
+export type NftGalleryDeleteRequest = {
+  /** The NFT gallery id */
+  galleryId: Scalars['NftGalleryId'];
+  /** The profile id of the gallery owner */
+  profileId: Scalars['ProfileId'];
+};
+
+/** The input for updating NFT gallery name */
+export type NftGalleryUpdateInfoRequest = {
+  /** The NFT gallery id */
+  galleryId: Scalars['NftGalleryId'];
+  /** The profile id of the gallery owner */
+  profileId: Scalars['ProfileId'];
+  /** The name of the NFT gallery */
+  name: Scalars['NftGalleryName'];
+};
+
+/** The input for reordering gallery items */
+export type NftGalleryUpdateItemOrderRequest = {
+  /** The NFT gallery id */
+  galleryId: Scalars['NftGalleryId'];
+  /** The profile id of the gallery owner */
+  profileId: Scalars['ProfileId'];
+  /** The order of the NFTs in the gallery */
+  updates: Array<NftUpdateItemOrder>;
+};
+
+/** The input for adding/removing gallery items */
+export type NftGalleryUpdateItemsRequest = {
+  /** The NFT gallery id */
+  galleryId: Scalars['NftGalleryId'];
+  /** The profile id of the gallery owner */
+  profileId: Scalars['ProfileId'];
+  /** The contents of the NFT gallery */
+  toAdd?: Maybe<Array<NftInput>>;
+  /** The contents of the NFT gallery */
+  toRemove?: Maybe<Array<NftInput>>;
+};
+
 /** The NFT image */
 export type NftImage = {
   __typename: 'NftImage';
@@ -2260,6 +2493,16 @@ export type NftImage = {
   chainId: Scalars['Int'];
   /** If the NFT is verified */
   verified: Scalars['Boolean'];
+};
+
+/** The NFT input for gallery */
+export type NftInput = {
+  /** The contract address of the NFT */
+  contractAddress: Scalars['ContractAddress'];
+  /** The token ID of the NFT */
+  tokenId: Scalars['String'];
+  /** The chain ID of the NFT */
+  chainId: Scalars['ChainId'];
 };
 
 export type NftOwnershipChallenge = {
@@ -2308,6 +2551,18 @@ export type NftOwnershipOutput = {
   contractType: ContractType;
   /** The optional token ID(s) to check for ownership */
   tokenIds: Maybe<Array<Scalars['TokenId']>>;
+};
+
+/** The input for updating the order of a NFT gallery item */
+export type NftUpdateItemOrder = {
+  /** The contract address of the NFT */
+  contractAddress: Scalars['ContractAddress'];
+  /** The token ID of the NFT */
+  tokenId: Scalars['String'];
+  /** The chain ID of the NFT */
+  chainId: Scalars['ChainId'];
+  /** The new order of the NFT in the gallery */
+  newOrder: Scalars['Int'];
 };
 
 export type Notification =
@@ -2446,7 +2701,7 @@ export type PaginatedResultInfo = {
   totalCount: Maybe<Scalars['Int']>;
 };
 
-/** The paginated timeline result */
+/** The paginated result */
 export type PaginatedTimelineResult = {
   __typename: 'PaginatedTimelineResult';
   items: Array<Publication>;
@@ -2856,7 +3111,7 @@ export enum PublicationMediaSource {
   Lens = 'LENS',
 }
 
-/** Publication metadata content waring filters */
+/** Publication metadata content warning filters */
 export type PublicationMetadataContentWarningFilter = {
   /** By default all content warnings will be hidden you can include them in your query by adding them to this array. */
   includeOneOf?: Maybe<Array<PublicationContentWarning>>;
@@ -3140,12 +3395,13 @@ export type Query = {
   challenge: AuthChallengeResult;
   verify: Scalars['Boolean'];
   txIdToTxHash: Scalars['TxHash'];
+  claimableHandles: ClaimableHandles;
+  claimableStatus: ClaimStatus;
+  isIDKitPhoneVerified: Scalars['Boolean'];
   explorePublications: ExplorePublicationResult;
   exploreProfiles: ExploreProfileResult;
   feed: PaginatedFeedResult;
   feedHighlights: PaginatedTimelineResult;
-  /** @deprecated You should be using feed, this will not be supported after 15th November 2021, please migrate. */
-  timeline: PaginatedTimelineResult;
   pendingApprovalFollows: PendingApproveFollowsResult;
   doesFollow: Array<DoesFollowResponse>;
   following: PaginatedFollowingResult;
@@ -3154,41 +3410,40 @@ export type Query = {
   mutualFollowersProfiles: PaginatedProfileResult;
   ping: Scalars['String'];
   hasTxHashBeenIndexed: TransactionResult;
+  internalPublicationFilter: PaginatedPublicationResult;
   enabledModuleCurrencies: Array<Erc20>;
   approvedModuleAllowanceAmount: Array<ApprovedAllowanceAmount>;
   generateModuleCurrencyApprovalData: GenerateModuleCurrencyApproval;
   profileFollowModuleBeenRedeemed: Scalars['Boolean'];
   enabledModules: EnabledModules;
   unknownEnabledModules: EnabledModules;
+  /** Get all NFT galleries for a profile */
+  nftGalleries: Array<NftGallery>;
   nfts: NfTsResult;
   nftOwnershipChallenge: NftOwnershipChallengeResult;
   notifications: PaginatedNotificationResult;
+  profileOnChainIdentity: Array<OnChainIdentity>;
+  /** Get the list of profile interests */
+  profileInterests: Array<Scalars['ProfileInterest']>;
   profiles: PaginatedProfileResult;
   profile: Maybe<Profile>;
   recommendedProfiles: Array<Profile>;
   defaultProfile: Maybe<Profile>;
   globalProtocolStats: GlobalProtocolStats;
+  proxyActionStatus: ProxyActionStatusResultUnion;
+  validatePublicationMetadata: PublicationValidateMetadataResult;
+  publicationMetadataStatus: PublicationMetadataStatus;
   publications: PaginatedPublicationResult;
   publication: Maybe<Publication>;
   whoCollectedPublication: PaginatedWhoCollectedResult;
   profilePublicationsForSale: PaginatedProfilePublicationsForSaleResult;
   allPublicationsTags: PaginatedAllPublicationsTagsResult;
-  search: SearchResult;
-  userSigNonces: UserSigNonces;
-  claimableHandles: ClaimableHandles;
-  claimableStatus: ClaimStatus;
-  isIDKitPhoneVerified: Scalars['Boolean'];
-  internalPublicationFilter: PaginatedPublicationResult;
-  profileOnChainIdentity: Array<OnChainIdentity>;
-  /** Get the list of profile interests */
-  profileInterests: Array<Scalars['ProfileInterest']>;
-  proxyActionStatus: ProxyActionStatusResultUnion;
-  validatePublicationMetadata: PublicationValidateMetadataResult;
-  publicationMetadataStatus: PublicationMetadataStatus;
   whoReactedPublication: PaginatedWhoReactedResult;
   profilePublicationRevenue: ProfilePublicationRevenueResult;
   publicationRevenue: Maybe<PublicationRevenue>;
   profileFollowRevenue: FollowRevenueResult;
+  search: SearchResult;
+  userSigNonces: UserSigNonces;
   rel: Maybe<Scalars['Void']>;
   cur: Array<Scalars['String']>;
 };
@@ -3221,10 +3476,6 @@ export type QueryFeedHighlightsArgs = {
   request: FeedHighlightsRequest;
 };
 
-export type QueryTimelineArgs = {
-  request: TimelineRequest;
-};
-
 export type QueryPendingApprovalFollowsArgs = {
   request: PendingApprovalFollowsRequest;
 };
@@ -3253,6 +3504,10 @@ export type QueryHasTxHashBeenIndexedArgs = {
   request: HasTxHashBeenIndexedRequest;
 };
 
+export type QueryInternalPublicationFilterArgs = {
+  request: InternalPublicationsFilterRequest;
+};
+
 export type QueryApprovedModuleAllowanceAmountArgs = {
   request: ApprovedModuleAllowanceAmountRequest;
 };
@@ -3265,6 +3520,10 @@ export type QueryProfileFollowModuleBeenRedeemedArgs = {
   request: ProfileFollowModuleBeenRedeemedRequest;
 };
 
+export type QueryNftGalleriesArgs = {
+  request: NftGalleriesRequest;
+};
+
 export type QueryNftsArgs = {
   request: NfTsRequest;
 };
@@ -3275,6 +3534,10 @@ export type QueryNftOwnershipChallengeArgs = {
 
 export type QueryNotificationsArgs = {
   request: NotificationRequest;
+};
+
+export type QueryProfileOnChainIdentityArgs = {
+  request: ProfileOnChainIdentityRequest;
 };
 
 export type QueryProfilesArgs = {
@@ -3297,6 +3560,18 @@ export type QueryGlobalProtocolStatsArgs = {
   request?: Maybe<GlobalProtocolStatsRequest>;
 };
 
+export type QueryProxyActionStatusArgs = {
+  proxyActionId: Scalars['ProxyActionId'];
+};
+
+export type QueryValidatePublicationMetadataArgs = {
+  request: ValidatePublicationMetadataRequest;
+};
+
+export type QueryPublicationMetadataStatusArgs = {
+  request: GetPublicationMetadataStatusRequest;
+};
+
 export type QueryPublicationsArgs = {
   request: PublicationsQueryRequest;
 };
@@ -3317,30 +3592,6 @@ export type QueryAllPublicationsTagsArgs = {
   request: AllPublicationsTagsRequest;
 };
 
-export type QuerySearchArgs = {
-  request: SearchQueryRequest;
-};
-
-export type QueryInternalPublicationFilterArgs = {
-  request: InternalPublicationsFilterRequest;
-};
-
-export type QueryProfileOnChainIdentityArgs = {
-  request: ProfileOnChainIdentityRequest;
-};
-
-export type QueryProxyActionStatusArgs = {
-  proxyActionId: Scalars['ProxyActionId'];
-};
-
-export type QueryValidatePublicationMetadataArgs = {
-  request: ValidatePublicationMetadataRequest;
-};
-
-export type QueryPublicationMetadataStatusArgs = {
-  request: GetPublicationMetadataStatusRequest;
-};
-
 export type QueryWhoReactedPublicationArgs = {
   request: WhoReactedPublicationRequest;
 };
@@ -3355,6 +3606,10 @@ export type QueryPublicationRevenueArgs = {
 
 export type QueryProfileFollowRevenueArgs = {
   request: ProfileFollowRevenueQueryRequest;
+};
+
+export type QuerySearchArgs = {
+  request: SearchQueryRequest;
 };
 
 export type QueryRelArgs = {
@@ -3392,6 +3647,21 @@ export enum ReactionTypes {
   Downvote = 'DOWNVOTE',
 }
 
+export type RecipientDataInput = {
+  /** Recipient of collect fees. */
+  recipient: Scalars['EthereumAddress'];
+  /** Split %, should be between 1 and 100. All % should add up to 100 */
+  split: Scalars['Float'];
+};
+
+export type RecipientDataOutput = {
+  __typename: 'RecipientDataOutput';
+  /** Recipient of collect fees. */
+  recipient: Scalars['EthereumAddress'];
+  /** Split %, should be between 1 and 100. All % should add up to 100 */
+  split: Scalars['Float'];
+};
+
 export type RecommendedProfileOptions = {
   /** If you wish to turn ML off */
   disableML?: Maybe<Scalars['Boolean']>;
@@ -3409,7 +3679,7 @@ export type ReferenceModuleParams = {
   followerOnlyReferenceModule?: Maybe<Scalars['Boolean']>;
   /** A unknown reference module */
   unknownReferenceModule?: Maybe<UnknownReferenceModuleParams>;
-  /** The degrees of seperation reference module */
+  /** The degrees of separation reference module */
   degreesOfSeparationReferenceModule?: Maybe<DegreesOfSeparationReferenceModuleParams>;
 };
 
@@ -3664,27 +3934,6 @@ export type TimedFeeCollectModuleSettings = {
   /** The collect module end timestamp */
   endTimestamp: Scalars['DateTime'];
 };
-
-export type TimelineRequest = {
-  limit?: Maybe<Scalars['LimitScalar']>;
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The profile id */
-  profileId: Scalars['ProfileId'];
-  /** The App Id */
-  sources?: Maybe<Array<Scalars['Sources']>>;
-  /** The timeline types you wish to include, if nothing passed in will bring back all */
-  timelineTypes?: Maybe<Array<TimelineType>>;
-  metadata?: Maybe<PublicationMetadataFilters>;
-};
-
-/** Timeline types */
-export enum TimelineType {
-  Post = 'POST',
-  Comment = 'COMMENT',
-  Mirror = 'MIRROR',
-  CollectPost = 'COLLECT_POST',
-  CollectComment = 'COLLECT_COMMENT',
-}
 
 export type TransactionError = {
   __typename: 'TransactionError';
@@ -4051,6 +4300,18 @@ type CollectModule_TimedFeeCollectModuleSettings_Fragment = {
   __typename: 'TimedFeeCollectModuleSettings';
 } & TimedFeeCollectModuleSettingsFragment;
 
+type CollectModule_MultirecipientFeeCollectModuleSettings_Fragment = {
+  __typename: 'MultirecipientFeeCollectModuleSettings';
+};
+
+type CollectModule_Erc4626FeeCollectModuleSettings_Fragment = {
+  __typename: 'ERC4626FeeCollectModuleSettings';
+};
+
+type CollectModule_AaveFeeCollectModuleSettings_Fragment = {
+  __typename: 'AaveFeeCollectModuleSettings';
+};
+
 type CollectModule_UnknownCollectModuleSettings_Fragment = {
   __typename: 'UnknownCollectModuleSettings';
 };
@@ -4062,6 +4323,9 @@ export type CollectModuleFragment =
   | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
   | CollectModule_RevertCollectModuleSettings_Fragment
   | CollectModule_TimedFeeCollectModuleSettings_Fragment
+  | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+  | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+  | CollectModule_AaveFeeCollectModuleSettings_Fragment
   | CollectModule_UnknownCollectModuleSettings_Fragment;
 
 export type WalletFragment = { __typename: 'Wallet' } & Pick<Wallet, 'address'> & {
@@ -4075,7 +4339,11 @@ export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFra
 export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
   MetadataOutput,
   'name' | 'description' | 'mainContentFocus' | 'content'
-> & { media: Array<MediaSetFragment>; attributes: Array<MetadataAttributeOutputFragment> };
+> & {
+    media: Array<MediaSetFragment>;
+    attributes: Array<MetadataAttributeOutputFragment>;
+    __encryptionParams: Maybe<EncryptionParamsFragment>;
+  };
 
 export type MetadataAttributeOutputFragment = { __typename: 'MetadataAttributeOutput' } & Pick<
   MetadataAttributeOutput,
@@ -4112,6 +4380,9 @@ export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
       | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
       | CollectModule_RevertCollectModuleSettings_Fragment
       | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+      | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+      | CollectModule_AaveFeeCollectModuleSettings_Fragment
       | CollectModule_UnknownCollectModuleSettings_Fragment;
   };
 
@@ -4144,6 +4415,9 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
       | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
       | CollectModule_RevertCollectModuleSettings_Fragment
       | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+      | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+      | CollectModule_AaveFeeCollectModuleSettings_Fragment
       | CollectModule_UnknownCollectModuleSettings_Fragment;
     referenceModule: Maybe<
       | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
@@ -4152,6 +4426,7 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
     >;
     canComment: Pick<CanCommentResponse, 'result'>;
     canMirror: Pick<CanMirrorResponse, 'result'>;
+    canObserverDecrypt: Pick<CanDecryptResponse, 'result' | 'reasons'>;
   };
 
 export type CommonPaginatedResultInfoFragment = { __typename: 'PaginatedResultInfo' } & Pick<
@@ -4189,6 +4464,9 @@ export type PostFragment = { __typename: 'Post' } & Pick<
       | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
       | CollectModule_RevertCollectModuleSettings_Fragment
       | CollectModule_TimedFeeCollectModuleSettings_Fragment
+      | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+      | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+      | CollectModule_AaveFeeCollectModuleSettings_Fragment
       | CollectModule_UnknownCollectModuleSettings_Fragment;
     referenceModule: Maybe<
       | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
@@ -4197,6 +4475,7 @@ export type PostFragment = { __typename: 'Post' } & Pick<
     >;
     canComment: Pick<CanCommentResponse, 'result'>;
     canMirror: Pick<CanMirrorResponse, 'result'>;
+    canObserverDecrypt: Pick<CanDecryptResponse, 'result' | 'reasons'>;
   };
 
 export type PendingPostFragment = { __typename: 'PendingPost' } & Pick<
@@ -4255,6 +4534,62 @@ export type CreateFollowTypedDataMutation = {
       value: Pick<CreateFollowEip712TypedDataValue, 'nonce' | 'deadline' | 'profileIds' | 'datas'>;
     };
   };
+};
+
+export type NftOwnershipFragment = Pick<
+  NftOwnershipOutput,
+  'contractAddress' | 'chainID' | 'contractType' | 'tokenIds'
+>;
+
+export type Erc20OwnershipFragment = Pick<Erc20OwnershipOutput, 'condition'> & {
+  amount: Erc20OwnershipOutput['amountValue'];
+};
+
+export type AddressOwnershipFragment = Pick<EoaOwnershipOutput, 'address'>;
+
+export type ProfileOwnershipFragment = Pick<ProfileOwnershipOutput, 'profileId'>;
+
+export type FollowConditionFragment = Pick<FollowConditionOutput, 'profileId'>;
+
+export type CollectConditionFragment = Pick<CollectConditionOutput, 'publicationId'>;
+
+export type LeafCriterionFragment = {
+  nft: Maybe<NftOwnershipFragment>;
+  token: Maybe<Erc20OwnershipFragment>;
+  eoa: Maybe<AddressOwnershipFragment>;
+  profile: Maybe<ProfileOwnershipFragment>;
+  follow: Maybe<FollowConditionFragment>;
+  collect: Maybe<CollectConditionFragment>;
+};
+
+export type OrCriterionFragment = { criteria: Array<LeafCriterionFragment> };
+
+export type AndCriterionFragment = { criteria: Array<LeafCriterionFragment> };
+
+export type RootCriterionFragment = {
+  nft: Maybe<NftOwnershipFragment>;
+  token: Maybe<Erc20OwnershipFragment>;
+  eoa: Maybe<AddressOwnershipFragment>;
+  profile: Maybe<ProfileOwnershipFragment>;
+  follow: Maybe<FollowConditionFragment>;
+  collect: Maybe<CollectConditionFragment>;
+  or: Maybe<OrCriterionFragment>;
+  and: Maybe<AndCriterionFragment>;
+};
+
+export type AccessConditionFragment = { or: Maybe<{ criteria: Array<RootCriterionFragment> }> };
+
+export type EncryptedMediaFragment = { __typename: 'EncryptedMedia' } & Pick<
+  EncryptedMedia,
+  'url' | 'mimeType'
+>;
+
+export type EncryptionParamsFragment = Pick<EncryptionParamsOutput, 'encryptionProvider'> & {
+  accessCondition: AccessConditionFragment;
+  encryptedFields: Pick<
+    EncryptedFieldsOutput,
+    'animation_url' | 'content' | 'external_url' | 'image'
+  > & { media: Maybe<Array<{ original: EncryptedMediaFragment }>> };
 };
 
 export type CreateMirrorTypedDataMutationVariables = Exact<{
@@ -4952,6 +5287,158 @@ export const MetadataAttributeOutputFragmentDoc = gql`
     value
   }
 `;
+export const NftOwnershipFragmentDoc = gql`
+  fragment NftOwnership on NftOwnershipOutput {
+    contractAddress
+    chainID
+    contractType
+    tokenIds
+  }
+`;
+export const Erc20OwnershipFragmentDoc = gql`
+  fragment Erc20Ownership on Erc20OwnershipOutput {
+    amount: amountValue @client
+    condition
+  }
+`;
+export const AddressOwnershipFragmentDoc = gql`
+  fragment AddressOwnership on EoaOwnershipOutput {
+    address
+  }
+`;
+export const ProfileOwnershipFragmentDoc = gql`
+  fragment ProfileOwnership on ProfileOwnershipOutput {
+    profileId
+  }
+`;
+export const FollowConditionFragmentDoc = gql`
+  fragment FollowCondition on FollowConditionOutput {
+    profileId
+  }
+`;
+export const CollectConditionFragmentDoc = gql`
+  fragment CollectCondition on CollectConditionOutput {
+    publicationId
+  }
+`;
+export const LeafCriterionFragmentDoc = gql`
+  fragment LeafCriterion on AccessConditionOutput {
+    nft {
+      ...NftOwnership
+    }
+    token {
+      ...Erc20Ownership
+    }
+    eoa {
+      ...AddressOwnership
+    }
+    profile {
+      ...ProfileOwnership
+    }
+    follow {
+      ...FollowCondition
+    }
+    collect {
+      ...CollectCondition
+    }
+  }
+  ${NftOwnershipFragmentDoc}
+  ${Erc20OwnershipFragmentDoc}
+  ${AddressOwnershipFragmentDoc}
+  ${ProfileOwnershipFragmentDoc}
+  ${FollowConditionFragmentDoc}
+  ${CollectConditionFragmentDoc}
+`;
+export const OrCriterionFragmentDoc = gql`
+  fragment OrCriterion on OrConditionOutput {
+    criteria {
+      ...LeafCriterion
+    }
+  }
+  ${LeafCriterionFragmentDoc}
+`;
+export const AndCriterionFragmentDoc = gql`
+  fragment AndCriterion on AndConditionOutput {
+    criteria {
+      ...LeafCriterion
+    }
+  }
+  ${LeafCriterionFragmentDoc}
+`;
+export const RootCriterionFragmentDoc = gql`
+  fragment RootCriterion on AccessConditionOutput {
+    nft {
+      ...NftOwnership
+    }
+    token {
+      ...Erc20Ownership
+    }
+    eoa {
+      ...AddressOwnership
+    }
+    profile {
+      ...ProfileOwnership
+    }
+    follow {
+      ...FollowCondition
+    }
+    collect {
+      ...CollectCondition
+    }
+    or {
+      ...OrCriterion
+    }
+    and {
+      ...AndCriterion
+    }
+  }
+  ${NftOwnershipFragmentDoc}
+  ${Erc20OwnershipFragmentDoc}
+  ${AddressOwnershipFragmentDoc}
+  ${ProfileOwnershipFragmentDoc}
+  ${FollowConditionFragmentDoc}
+  ${CollectConditionFragmentDoc}
+  ${OrCriterionFragmentDoc}
+  ${AndCriterionFragmentDoc}
+`;
+export const AccessConditionFragmentDoc = gql`
+  fragment AccessCondition on AccessConditionOutput {
+    or {
+      criteria {
+        ...RootCriterion
+      }
+    }
+  }
+  ${RootCriterionFragmentDoc}
+`;
+export const EncryptedMediaFragmentDoc = gql`
+  fragment EncryptedMedia on EncryptedMedia {
+    __typename
+    url
+    mimeType
+  }
+`;
+export const EncryptionParamsFragmentDoc = gql`
+  fragment EncryptionParams on EncryptionParamsOutput {
+    accessCondition {
+      ...AccessCondition
+    }
+    encryptionProvider
+    encryptedFields {
+      animation_url
+      content
+      external_url
+      image
+      media {
+        original {
+          ...EncryptedMedia
+        }
+      }
+    }
+  }
+  ${AccessConditionFragmentDoc}
+  ${EncryptedMediaFragmentDoc}
+`;
 export const MetadataFragmentDoc = gql`
   fragment Metadata on MetadataOutput {
     __typename
@@ -4965,9 +5452,13 @@ export const MetadataFragmentDoc = gql`
     attributes {
       ...MetadataAttributeOutput
     }
+    __encryptionParams: encryptionParams {
+      ...EncryptionParams
+    }
   }
   ${MediaSetFragmentDoc}
   ${MetadataAttributeOutputFragmentDoc}
+  ${EncryptionParamsFragmentDoc}
 `;
 export const ProfileMediaFragmentDoc = gql`
   fragment ProfileMedia on ProfileMedia {
@@ -5261,6 +5752,10 @@ export const CommentBaseFragmentDoc = gql`
     canMirror(profileId: $observerId) {
       result
     }
+    canObserverDecrypt: canDecrypt(profileId: $observerId) {
+      result
+      reasons
+    }
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
@@ -5308,6 +5803,10 @@ export const PostFragmentDoc = gql`
       result
     }
     mirrors(by: $observerId)
+    canObserverDecrypt: canDecrypt(profileId: $observerId) {
+      result
+      reasons
+    }
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     collectPolicy @client
@@ -9259,6 +9758,27 @@ export type WalletCollectedPublicationsQueryResult = Apollo.QueryResult<
   WalletCollectedPublicationsQuery,
   WalletCollectedPublicationsQueryVariables
 >;
+export type AaveFeeCollectModuleSettingsKeySpecifier = (
+  | 'type'
+  | 'contractAddress'
+  | 'amount'
+  | 'collectLimit'
+  | 'referralFee'
+  | 'followerOnly'
+  | 'endTimestamp'
+  | 'recipient'
+  | AaveFeeCollectModuleSettingsKeySpecifier
+)[];
+export type AaveFeeCollectModuleSettingsFieldPolicy = {
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
+  contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  amount?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectLimit?: FieldPolicy<any> | FieldReadFunction<any>;
+  referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
+  endTimestamp?: FieldPolicy<any> | FieldReadFunction<any>;
+  recipient?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type AccessConditionOutputKeySpecifier = (
   | 'nft'
   | 'token'
@@ -10028,6 +10548,25 @@ export type EIP712TypedDataFieldFieldPolicy = {
   name?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type ERC4626FeeCollectModuleSettingsKeySpecifier = (
+  | 'type'
+  | 'contractAddress'
+  | 'amount'
+  | 'collectLimit'
+  | 'referralFee'
+  | 'followerOnly'
+  | 'endTimestamp'
+  | ERC4626FeeCollectModuleSettingsKeySpecifier
+)[];
+export type ERC4626FeeCollectModuleSettingsFieldPolicy = {
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
+  contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  amount?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectLimit?: FieldPolicy<any> | FieldReadFunction<any>;
+  referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
+  endTimestamp?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type ElectedMirrorKeySpecifier = (
   | 'mirrorId'
   | 'profile'
@@ -10144,19 +10683,21 @@ export type Erc20AmountFieldPolicy = {
   value?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type Erc20OwnershipOutputKeySpecifier = (
-  | 'contractAddress'
-  | 'chainID'
   | 'amount'
-  | 'decimals'
+  | 'amountValue'
+  | 'chainID'
   | 'condition'
+  | 'contractAddress'
+  | 'decimals'
   | Erc20OwnershipOutputKeySpecifier
 )[];
 export type Erc20OwnershipOutputFieldPolicy = {
-  contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
-  chainID?: FieldPolicy<any> | FieldReadFunction<any>;
   amount?: FieldPolicy<any> | FieldReadFunction<any>;
-  decimals?: FieldPolicy<any> | FieldReadFunction<any>;
+  amountValue?: FieldPolicy<any> | FieldReadFunction<any>;
+  chainID?: FieldPolicy<any> | FieldReadFunction<any>;
   condition?: FieldPolicy<any> | FieldReadFunction<any>;
+  contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  decimals?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ExploreProfileResultKeySpecifier = (
   | 'items'
@@ -10519,37 +11060,65 @@ export type ModuleInfoFieldPolicy = {
   name?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type MultirecipientFeeCollectModuleSettingsKeySpecifier = (
+  | 'type'
+  | 'contractAddress'
+  | 'amount'
+  | 'collectLimit'
+  | 'referralFee'
+  | 'followerOnly'
+  | 'endTimestamp'
+  | 'recipients'
+  | MultirecipientFeeCollectModuleSettingsKeySpecifier
+)[];
+export type MultirecipientFeeCollectModuleSettingsFieldPolicy = {
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
+  contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  amount?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectLimit?: FieldPolicy<any> | FieldReadFunction<any>;
+  referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
+  endTimestamp?: FieldPolicy<any> | FieldReadFunction<any>;
+  recipients?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type MutationKeySpecifier = (
+  | 'createAttachMediaData'
   | 'authenticate'
   | 'refresh'
   | 'broadcast'
+  | 'claim'
+  | 'idKitPhoneVerifyWebhook'
   | 'createSetDispatcherTypedData'
   | 'createFollowTypedData'
   | 'createUnfollowTypedData'
   | 'createSetFollowModuleTypedData'
   | 'createSetFollowNFTUriTypedData'
   | 'createToggleFollowTypedData'
-  | 'createAttachMediaData'
+  | 'createSetFollowNFTUriViaDispatcher'
   | 'createCollectTypedData'
-  | 'createSetDefaultProfileTypedData'
-  | 'createSetProfileImageURITypedData'
-  | 'createSetProfileImageURIViaDispatcher'
-  | 'createBurnProfileTypedData'
-  | 'createPostTypedData'
-  | 'createPostViaDispatcher'
-  | 'createCommentTypedData'
-  | 'createCommentViaDispatcher'
-  | 'createMirrorTypedData'
-  | 'hidePublication'
-  | 'createMirrorViaDispatcher'
-  | 'claim'
-  | 'idKitPhoneVerifyWebhook'
+  | 'createNftGallery'
+  | 'updateNftGalleryInfo'
+  | 'updateNftGalleryOrder'
+  | 'updateNftGalleryItems'
+  | 'deleteNftGallery'
   | 'createProfile'
   | 'addProfileInterests'
   | 'removeProfileInterests'
   | 'createSetProfileMetadataTypedData'
   | 'createSetProfileMetadataViaDispatcher'
+  | 'createSetDefaultProfileTypedData'
+  | 'dismissRecommendedProfiles'
+  | 'createSetProfileImageURITypedData'
+  | 'createSetProfileImageURIViaDispatcher'
+  | 'createBurnProfileTypedData'
   | 'proxyAction'
+  | 'createMirrorTypedData'
+  | 'hidePublication'
+  | 'createPostTypedData'
+  | 'createPostViaDispatcher'
+  | 'createCommentTypedData'
+  | 'createCommentViaDispatcher'
+  | 'createMirrorViaDispatcher'
   | 'addReaction'
   | 'removeReaction'
   | 'reportPublication'
@@ -10558,36 +11127,43 @@ export type MutationKeySpecifier = (
   | MutationKeySpecifier
 )[];
 export type MutationFieldPolicy = {
+  createAttachMediaData?: FieldPolicy<any> | FieldReadFunction<any>;
   authenticate?: FieldPolicy<any> | FieldReadFunction<any>;
   refresh?: FieldPolicy<any> | FieldReadFunction<any>;
   broadcast?: FieldPolicy<any> | FieldReadFunction<any>;
+  claim?: FieldPolicy<any> | FieldReadFunction<any>;
+  idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetDispatcherTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createFollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createUnfollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetFollowModuleTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetFollowNFTUriTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createToggleFollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createAttachMediaData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createSetFollowNFTUriViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
   createCollectTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createSetDefaultProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createSetProfileImageURITypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createSetProfileImageURIViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
-  createBurnProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createPostTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createPostViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
-  createCommentTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createCommentViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
-  createMirrorTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
-  createMirrorViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
-  claim?: FieldPolicy<any> | FieldReadFunction<any>;
-  idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
+  createNftGallery?: FieldPolicy<any> | FieldReadFunction<any>;
+  updateNftGalleryInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+  updateNftGalleryOrder?: FieldPolicy<any> | FieldReadFunction<any>;
+  updateNftGalleryItems?: FieldPolicy<any> | FieldReadFunction<any>;
+  deleteNftGallery?: FieldPolicy<any> | FieldReadFunction<any>;
   createProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   addProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   removeProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetProfileMetadataTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetProfileMetadataViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
+  createSetDefaultProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  dismissRecommendedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
+  createSetProfileImageURITypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createSetProfileImageURIViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
+  createBurnProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   proxyAction?: FieldPolicy<any> | FieldReadFunction<any>;
+  createMirrorTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
+  createPostTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createPostViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
+  createCommentTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createCommentViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
+  createMirrorViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
   addReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   removeReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   reportPublication?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10716,6 +11292,23 @@ export type NewReactionNotificationFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   publication?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type NftGalleryKeySpecifier = (
+  | 'id'
+  | 'name'
+  | 'profileId'
+  | 'items'
+  | 'createdAt'
+  | 'updatedAt'
+  | NftGalleryKeySpecifier
+)[];
+export type NftGalleryFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  name?: FieldPolicy<any> | FieldReadFunction<any>;
+  profileId?: FieldPolicy<any> | FieldReadFunction<any>;
+  items?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type NftImageKeySpecifier = (
   | 'contractAddress'
@@ -11184,11 +11777,13 @@ export type QueryKeySpecifier = (
   | 'challenge'
   | 'verify'
   | 'txIdToTxHash'
+  | 'claimableHandles'
+  | 'claimableStatus'
+  | 'isIDKitPhoneVerified'
   | 'explorePublications'
   | 'exploreProfiles'
   | 'feed'
   | 'feedHighlights'
-  | 'timeline'
   | 'pendingApprovalFollows'
   | 'doesFollow'
   | 'following'
@@ -11197,40 +11792,38 @@ export type QueryKeySpecifier = (
   | 'mutualFollowersProfiles'
   | 'ping'
   | 'hasTxHashBeenIndexed'
+  | 'internalPublicationFilter'
   | 'enabledModuleCurrencies'
   | 'approvedModuleAllowanceAmount'
   | 'generateModuleCurrencyApprovalData'
   | 'profileFollowModuleBeenRedeemed'
   | 'enabledModules'
   | 'unknownEnabledModules'
+  | 'nftGalleries'
   | 'nfts'
   | 'nftOwnershipChallenge'
   | 'notifications'
+  | 'profileOnChainIdentity'
+  | 'profileInterests'
   | 'profiles'
   | 'profile'
   | 'recommendedProfiles'
   | 'defaultProfile'
   | 'globalProtocolStats'
+  | 'proxyActionStatus'
+  | 'validatePublicationMetadata'
+  | 'publicationMetadataStatus'
   | 'publications'
   | 'publication'
   | 'whoCollectedPublication'
   | 'profilePublicationsForSale'
   | 'allPublicationsTags'
-  | 'search'
-  | 'userSigNonces'
-  | 'claimableHandles'
-  | 'claimableStatus'
-  | 'isIDKitPhoneVerified'
-  | 'internalPublicationFilter'
-  | 'profileOnChainIdentity'
-  | 'profileInterests'
-  | 'proxyActionStatus'
-  | 'validatePublicationMetadata'
-  | 'publicationMetadataStatus'
   | 'whoReactedPublication'
   | 'profilePublicationRevenue'
   | 'publicationRevenue'
   | 'profileFollowRevenue'
+  | 'search'
+  | 'userSigNonces'
   | 'rel'
   | 'cur'
   | QueryKeySpecifier
@@ -11239,11 +11832,13 @@ export type QueryFieldPolicy = {
   challenge?: FieldPolicy<any> | FieldReadFunction<any>;
   verify?: FieldPolicy<any> | FieldReadFunction<any>;
   txIdToTxHash?: FieldPolicy<any> | FieldReadFunction<any>;
+  claimableHandles?: FieldPolicy<any> | FieldReadFunction<any>;
+  claimableStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  isIDKitPhoneVerified?: FieldPolicy<any> | FieldReadFunction<any>;
   explorePublications?: FieldPolicy<any> | FieldReadFunction<any>;
   exploreProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   feed?: FieldPolicy<any> | FieldReadFunction<any>;
   feedHighlights?: FieldPolicy<any> | FieldReadFunction<any>;
-  timeline?: FieldPolicy<any> | FieldReadFunction<any>;
   pendingApprovalFollows?: FieldPolicy<any> | FieldReadFunction<any>;
   doesFollow?: FieldPolicy<any> | FieldReadFunction<any>;
   following?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -11252,40 +11847,38 @@ export type QueryFieldPolicy = {
   mutualFollowersProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   ping?: FieldPolicy<any> | FieldReadFunction<any>;
   hasTxHashBeenIndexed?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalPublicationFilter?: FieldPolicy<any> | FieldReadFunction<any>;
   enabledModuleCurrencies?: FieldPolicy<any> | FieldReadFunction<any>;
   approvedModuleAllowanceAmount?: FieldPolicy<any> | FieldReadFunction<any>;
   generateModuleCurrencyApprovalData?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowModuleBeenRedeemed?: FieldPolicy<any> | FieldReadFunction<any>;
   enabledModules?: FieldPolicy<any> | FieldReadFunction<any>;
   unknownEnabledModules?: FieldPolicy<any> | FieldReadFunction<any>;
+  nftGalleries?: FieldPolicy<any> | FieldReadFunction<any>;
   nfts?: FieldPolicy<any> | FieldReadFunction<any>;
   nftOwnershipChallenge?: FieldPolicy<any> | FieldReadFunction<any>;
   notifications?: FieldPolicy<any> | FieldReadFunction<any>;
+  profileOnChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
+  profileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   profiles?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   recommendedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   defaultProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   globalProtocolStats?: FieldPolicy<any> | FieldReadFunction<any>;
+  proxyActionStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  validatePublicationMetadata?: FieldPolicy<any> | FieldReadFunction<any>;
+  publicationMetadataStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   publications?: FieldPolicy<any> | FieldReadFunction<any>;
   publication?: FieldPolicy<any> | FieldReadFunction<any>;
   whoCollectedPublication?: FieldPolicy<any> | FieldReadFunction<any>;
   profilePublicationsForSale?: FieldPolicy<any> | FieldReadFunction<any>;
   allPublicationsTags?: FieldPolicy<any> | FieldReadFunction<any>;
-  search?: FieldPolicy<any> | FieldReadFunction<any>;
-  userSigNonces?: FieldPolicy<any> | FieldReadFunction<any>;
-  claimableHandles?: FieldPolicy<any> | FieldReadFunction<any>;
-  claimableStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-  isIDKitPhoneVerified?: FieldPolicy<any> | FieldReadFunction<any>;
-  internalPublicationFilter?: FieldPolicy<any> | FieldReadFunction<any>;
-  profileOnChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
-  profileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
-  proxyActionStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-  validatePublicationMetadata?: FieldPolicy<any> | FieldReadFunction<any>;
-  publicationMetadataStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   whoReactedPublication?: FieldPolicy<any> | FieldReadFunction<any>;
   profilePublicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   publicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
+  search?: FieldPolicy<any> | FieldReadFunction<any>;
+  userSigNonces?: FieldPolicy<any> | FieldReadFunction<any>;
   rel?: FieldPolicy<any> | FieldReadFunction<any>;
   cur?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -11299,6 +11892,15 @@ export type ReactionEventFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   timestamp?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type RecipientDataOutputKeySpecifier = (
+  | 'recipient'
+  | 'split'
+  | RecipientDataOutputKeySpecifier
+)[];
+export type RecipientDataOutputFieldPolicy = {
+  recipient?: FieldPolicy<any> | FieldReadFunction<any>;
+  split?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type RelayErrorKeySpecifier = ('reason' | RelayErrorKeySpecifier)[];
 export type RelayErrorFieldPolicy = {
@@ -11564,6 +12166,13 @@ export type WorldcoinIdentityFieldPolicy = {
   isHuman?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type TypedTypePolicies = TypePolicies & {
+  AaveFeeCollectModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | AaveFeeCollectModuleSettingsKeySpecifier
+      | (() => undefined | AaveFeeCollectModuleSettingsKeySpecifier);
+    fields?: AaveFeeCollectModuleSettingsFieldPolicy;
+  };
   AccessConditionOutput?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -12021,6 +12630,13 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | EIP712TypedDataFieldKeySpecifier);
     fields?: EIP712TypedDataFieldFieldPolicy;
   };
+  ERC4626FeeCollectModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | ERC4626FeeCollectModuleSettingsKeySpecifier
+      | (() => undefined | ERC4626FeeCollectModuleSettingsKeySpecifier);
+    fields?: ERC4626FeeCollectModuleSettingsFieldPolicy;
+  };
   ElectedMirror?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | ElectedMirrorKeySpecifier | (() => undefined | ElectedMirrorKeySpecifier);
     fields?: ElectedMirrorFieldPolicy;
@@ -12236,6 +12852,13 @@ export type TypedTypePolicies = TypePolicies & {
     keyFields?: false | ModuleInfoKeySpecifier | (() => undefined | ModuleInfoKeySpecifier);
     fields?: ModuleInfoFieldPolicy;
   };
+  MultirecipientFeeCollectModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | MultirecipientFeeCollectModuleSettingsKeySpecifier
+      | (() => undefined | MultirecipientFeeCollectModuleSettingsKeySpecifier);
+    fields?: MultirecipientFeeCollectModuleSettingsFieldPolicy;
+  };
   Mutation?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | MutationKeySpecifier | (() => undefined | MutationKeySpecifier);
     fields?: MutationFieldPolicy;
@@ -12293,6 +12916,10 @@ export type TypedTypePolicies = TypePolicies & {
       | NewReactionNotificationKeySpecifier
       | (() => undefined | NewReactionNotificationKeySpecifier);
     fields?: NewReactionNotificationFieldPolicy;
+  };
+  NftGallery?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | NftGalleryKeySpecifier | (() => undefined | NftGalleryKeySpecifier);
+    fields?: NftGalleryFieldPolicy;
   };
   NftImage?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | NftImageKeySpecifier | (() => undefined | NftImageKeySpecifier);
@@ -12543,6 +13170,13 @@ export type TypedTypePolicies = TypePolicies & {
     keyFields?: false | ReactionEventKeySpecifier | (() => undefined | ReactionEventKeySpecifier);
     fields?: ReactionEventFieldPolicy;
   };
+  RecipientDataOutput?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | RecipientDataOutputKeySpecifier
+      | (() => undefined | RecipientDataOutputKeySpecifier);
+    fields?: RecipientDataOutputFieldPolicy;
+  };
   RelayError?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | RelayErrorKeySpecifier | (() => undefined | RelayErrorKeySpecifier);
     fields?: RelayErrorFieldPolicy;
@@ -12719,6 +13353,9 @@ const result: PossibleTypesResultData = {
       'LimitedTimedFeeCollectModuleSettings',
       'RevertCollectModuleSettings',
       'TimedFeeCollectModuleSettings',
+      'MultirecipientFeeCollectModuleSettings',
+      'ERC4626FeeCollectModuleSettings',
+      'AaveFeeCollectModuleSettings',
       'UnknownCollectModuleSettings',
     ],
     FeedItemRoot: ['Post', 'Comment'],

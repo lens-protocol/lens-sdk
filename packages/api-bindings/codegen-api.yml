@@ -15,6 +15,7 @@ config:
     ContractAddress: string
     Cursor: string
     DateTime: string
+    EncryptedValueScalar: string
     EthereumAddress: string
     FollowStatus: FollowStatus
     Handle: string
@@ -38,6 +39,7 @@ config:
     Search: string
     Signature: string
     String: string
+    TokenId: string
     TxHash: string
     TxId: string
     Url: string

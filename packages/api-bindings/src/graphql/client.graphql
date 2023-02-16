@@ -43,3 +43,7 @@ type PendingPost {
 extend type RevenueAggregate {
   totalAmount: ClientErc20Amount!
 }
+
+extend type Erc20OwnershipOutput {
+  amountValue: ClientErc20Amount!
+}

@@ -199,6 +199,7 @@ function mockMetadataFragment(): MetadataFragment {
     attributes: [],
     content: faker.lorem.words(5),
     media: [],
+    __encryptionParams: null,
   };
 }
 
@@ -237,6 +238,10 @@ export function mockPostFragment(
     canMirror: {
       result: true,
     },
+    canObserverDecrypt: {
+      result: true,
+      reasons: null,
+    },
     referencePolicy: {
       type: ReferencePolicyType.ANYONE,
     },
@@ -253,15 +258,7 @@ export function mockCommentFragment(
   return {
     id: faker.datatype.uuid(),
     stats: mockPublicationStatsFragment(),
-    metadata: {
-      __typename: 'MetadataOutput',
-      mainContentFocus: PublicationMainFocus.TextOnly,
-      name: null,
-      description: null,
-      attributes: [],
-      content: faker.lorem.paragraph(1),
-      media: [],
-    },
+    metadata: mockMetadataFragment(),
     profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
     collectedBy: null,
@@ -283,6 +280,10 @@ export function mockCommentFragment(
     canMirror: {
       result: true,
     },
+    canObserverDecrypt: {
+      result: false,
+      reasons: null,
+    },
     referencePolicy: {
       type: ReferencePolicyType.ANYONE,
     },
@@ -299,15 +300,7 @@ export function mockMirrorFragment(
   return {
     id: faker.datatype.uuid(),
     stats: mockPublicationStatsFragment(),
-    metadata: {
-      __typename: 'MetadataOutput',
-      mainContentFocus: PublicationMainFocus.TextOnly,
-      name: null,
-      description: null,
-      attributes: [],
-      content: faker.lorem.paragraph(1),
-      media: [],
-    },
+    metadata: mainPost.metadata,
     profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
     __collectModule: mockFreeCollectModuleSettings(),
