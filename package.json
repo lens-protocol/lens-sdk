@@ -16,7 +16,7 @@
     "dev": "turbo dev",
     "dev:packages": "pnpm preconstruct dev",
     "lint": "turbo run lint --parallel",
-    "lint:fix": "turbo run lint:fix --parallel",
+    "lint:fix": "turbo run lint:fix --parallel --no-cache",
     "lint:examples": "sh ./scripts/lint-examples.sh",
     "deduplicate:check": "pnpm-deduplicate --list",
     "deduplicate:fix": "pnpm-deduplicate"
