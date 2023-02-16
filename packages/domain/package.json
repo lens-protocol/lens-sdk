@@ -2,6 +2,41 @@
   "name": "@lens-protocol/domain",
   "version": "0.4.1",
   "description": "Critical Business Rules and Application-specific Business Rules",
+  "exports": {
+    "./mocks": {
+      "module": "./mocks/dist/lens-protocol-domain-mocks.esm.js",
+      "default": "./mocks/dist/lens-protocol-domain-mocks.cjs.js"
+    },
+    "./entities": {
+      "module": "./entities/dist/lens-protocol-domain-entities.esm.js",
+      "default": "./entities/dist/lens-protocol-domain-entities.cjs.js"
+    },
+    "./use-cases": {
+      "module": "./use-cases/dist/lens-protocol-domain-use-cases.esm.js",
+      "default": "./use-cases/dist/lens-protocol-domain-use-cases.cjs.js"
+    },
+    "./use-cases/profile": {
+      "module": "./use-cases/profile/dist/lens-protocol-domain-use-cases-profile.esm.js",
+      "default": "./use-cases/profile/dist/lens-protocol-domain-use-cases-profile.cjs.js"
+    },
+    "./use-cases/wallets": {
+      "module": "./use-cases/wallets/dist/lens-protocol-domain-use-cases-wallets.esm.js",
+      "default": "./use-cases/wallets/dist/lens-protocol-domain-use-cases-wallets.cjs.js"
+    },
+    "./use-cases/lifecycle": {
+      "module": "./use-cases/lifecycle/dist/lens-protocol-domain-use-cases-lifecycle.esm.js",
+      "default": "./use-cases/lifecycle/dist/lens-protocol-domain-use-cases-lifecycle.cjs.js"
+    },
+    "./use-cases/publications": {
+      "module": "./use-cases/publications/dist/lens-protocol-domain-use-cases-publications.esm.js",
+      "default": "./use-cases/publications/dist/lens-protocol-domain-use-cases-publications.cjs.js"
+    },
+    "./use-cases/transactions": {
+      "module": "./use-cases/transactions/dist/lens-protocol-domain-use-cases-transactions.esm.js",
+      "default": "./use-cases/transactions/dist/lens-protocol-domain-use-cases-transactions.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
   "repository": {
     "directory": "packages/domain",
     "type": "git",
@@ -31,6 +66,7 @@
     "tslib": "^2.5.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.12",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.18.6",
     "@faker-js/faker": "^7.6.0",
@@ -71,6 +107,7 @@
       "use-cases/transactions/index.ts",
       "use-cases/wallets/index.ts",
       "mocks.ts"
-    ]
+    ],
+    "exports": true
   }
 }
