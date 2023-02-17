@@ -4,6 +4,7 @@ import {
   PostFragment,
   PendingPostFragment,
   CollectState,
+  isMirrorPublication,
 } from '@lens-protocol/react';
 import { ReactNode } from 'react';
 
@@ -29,7 +30,11 @@ export function PublicationCard({ publication }: PublicationCardProps) {
       <ProfilePicture picture={publication.profile.picture} />
       <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
       <p>
-        {publication.hidden ? 'This publication has been hidden' : publication.metadata.content}
+        {publication.hidden
+          ? 'This publication has been hidden'
+          : isMirrorPublication(publication)
+          ? publication.mirrorOf.metadata.content
+          : publication.metadata.content}
       </p>
     </article>
   );

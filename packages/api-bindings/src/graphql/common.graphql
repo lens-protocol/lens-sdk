@@ -172,26 +172,11 @@ fragment PublicationStats on PublicationStats {
 fragment MirrorBase on Mirror {
   __typename
   id
-  stats {
-    ...PublicationStats
-  }
-  metadata {
-    ...Metadata
-  }
+  createdAt
   profile {
     ...Profile
   }
-  __collectModule: collectModule {
-    ...CollectModule
-  }
-  createdAt
-  hidden
-  isGated
-  reaction(request: { profileId: $observerId })
-  hasCollectedByMe(isFinalisedOnChain: true)
-
-  hasOptimisticCollectedByMe @client
-  collectPolicy @client
+  hidden # this is currently used by HidePublication use case, keeping it for now
 }
 
 fragment Mirror on Mirror {
@@ -267,6 +252,7 @@ fragment Comment on Comment {
       ...Post
     }
 
+    # we do not want to promote comments on mirrors, should we remove this?
     ... on Mirror {
       ...MirrorBase
     }
@@ -280,6 +266,7 @@ fragment Comment on Comment {
       ...Post
     }
 
+    # we do not want to promote comments on mirrors, should we remove this?
     ... on Mirror {
       ...MirrorBase
     }

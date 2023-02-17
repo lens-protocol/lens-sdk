@@ -299,18 +299,10 @@ export function mockMirrorFragment(
 
   return {
     id: faker.datatype.uuid(),
-    stats: mockPublicationStatsFragment(),
-    metadata: mainPost.metadata,
     profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
-    __collectModule: mockFreeCollectModuleSettings(),
-    collectPolicy: mockNoFeeCollectPolicy(),
-    hasCollectedByMe: false,
-    hasOptimisticCollectedByMe: false,
     mirrorOf: mainPost,
-    reaction: null,
     hidden: false,
-    isGated: false,
     ...overrides,
     __typename: 'Mirror',
   };

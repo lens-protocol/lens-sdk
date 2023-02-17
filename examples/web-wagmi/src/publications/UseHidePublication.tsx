@@ -4,7 +4,7 @@ import {
   PublicationOwnedByMeFragment,
   usePublications,
   ProfileOwnedByMeFragment,
-  PublicationFragment,
+  AnyPublicationFragment,
 } from '@lens-protocol/react';
 
 import { LoginButton } from '../components/auth/LoginButton';
@@ -30,7 +30,7 @@ function HidePublicationButton({ publication }: HidePublicationButtonProps) {
   );
 }
 
-function FeedItem({ publication }: { publication: PublicationFragment }) {
+function FeedItem({ publication }: { publication: AnyPublicationFragment }) {
   return (
     <section>
       <PublicationCard publication={publication} />

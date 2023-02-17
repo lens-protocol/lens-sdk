@@ -14,12 +14,13 @@ export * from './filters';
 
 export {
   CollectState,
-  isPostPublication,
   isCommentPublication,
+  isContentPublication,
   isMirrorPublication,
+  isPostPublication,
+  isPublicationOwnedByMe,
   PublicationSortCriteria,
   PublicationTypes,
-  isPublicationOwnedByMe,
 } from '@lens-protocol/api-bindings';
 
 export type {
@@ -32,7 +33,8 @@ export type {
   PendingPostFragment,
   PostFragment,
   RevenueAggregateFragment,
-  PublicationFragment,
+  AnyPublicationFragment,
+  ContentPublicationFragment,
   PublicationOwnedByMeFragment,
   WhoReactedResultFragment,
 } from '@lens-protocol/api-bindings';

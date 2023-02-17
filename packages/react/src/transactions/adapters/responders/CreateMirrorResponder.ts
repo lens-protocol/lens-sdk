@@ -1,4 +1,5 @@
 import {
+  isContentPublication,
   LensApolloClient,
   PublicationByTxHashDocument,
   PublicationByTxHashQuery,
@@ -10,6 +11,7 @@ import {
   ITransactionResponder,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
+import { invariant } from '@lens-protocol/shared-kernel';
 
 import { PublicationCacheManager } from '../PublicationCacheManager';
 
@@ -20,14 +22,18 @@ export class CreateMirrorResponder implements ITransactionResponder<CreateMirror
   ) {}
 
   async prepare({ request }: TransactionData<CreateMirrorRequest>) {
-    this.publicationCacheManager.update(request.publicationId, (current) => ({
-      ...current,
-      isOptimisticMirroredByMe: true,
-      stats: {
-        ...current.stats,
-        totalAmountOfMirrors: current.stats.totalAmountOfMirrors + 1,
-      },
-    }));
+    this.publicationCacheManager.update(request.publicationId, (current) => {
+      invariant(isContentPublication(current), `Cannot mirror a ${current.__typename}`);
+
+      return {
+        ...current,
+        isOptimisticMirroredByMe: true,
+        stats: {
+          ...current.stats,
+          totalAmountOfMirrors: current.stats.totalAmountOfMirrors + 1,
+        },
+      };
+    });
   }
 
   async commit({ request, txHash }: BroadcastedTransactionData<CreateMirrorRequest>) {
@@ -38,20 +44,28 @@ export class CreateMirrorResponder implements ITransactionResponder<CreateMirror
       fetchPolicy: 'network-only',
     });
 
-    this.publicationCacheManager.update(request.publicationId, (current) => ({
-      ...current,
-      isOptimisticMirroredByMe: false,
-    }));
+    this.publicationCacheManager.update(request.publicationId, (current) => {
+      invariant(isContentPublication(current), `Cannot mirror a ${current.__typename}`);
+
+      return {
+        ...current,
+        isOptimisticMirroredByMe: false,
+      };
+    });
   }
 
   async rollback({ request }: TransactionData<CreateMirrorRequest>) {
-    this.publicationCacheManager.update(request.publicationId, (current) => ({
-      ...current,
-      isOptimisticMirroredByMe: false,
-      stats: {
-        ...current.stats,
-        totalAmountOfMirrors: current.stats.totalAmountOfMirrors - 1,
-      },
-    }));
+    this.publicationCacheManager.update(request.publicationId, (current) => {
+      invariant(isContentPublication(current), `Cannot mirror a ${current.__typename}`);
+
+      return {
+        ...current,
+        isOptimisticMirroredByMe: false,
+        stats: {
+          ...current.stats,
+          totalAmountOfMirrors: current.stats.totalAmountOfMirrors - 1,
+        },
+      };
+    });
   }
 }
