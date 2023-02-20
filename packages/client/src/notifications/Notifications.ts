@@ -4,20 +4,11 @@ import { GraphQLClient } from 'graphql-request';
 import { Authentication } from '../authentication';
 import { LensConfig } from '../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { CommonPaginatedResultInfoFragment } from '../graphql/fragments.generated';
+import { InferResultType } from '../consts/types';
 import { NotificationRequest } from '../graphql/types.generated';
 import { buildPaginatedQueryResult } from '../helpers/buildPaginatedQueryResult';
 import { execute } from '../helpers/execute';
-import {
-  getSdk,
-  NewCollectNotificationFragment,
-  NewCommentNotificationFragment,
-  NewFollowerNotificationFragment,
-  NewMentionNotificationFragment,
-  NewMirrorNotificationFragment,
-  NewReactionNotificationFragment,
-  Sdk,
-} from './graphql/notifications.generated';
+import { getSdk, NotificationsQuery, Sdk } from './graphql/notifications.generated';
 
 export class Notifications {
   private readonly authentication: Authentication | undefined;
@@ -34,17 +25,7 @@ export class Notifications {
     request: NotificationRequest,
     observerId?: string,
   ): PromiseResult<
-    {
-      items: Array<
-        | NewCollectNotificationFragment
-        | NewCommentNotificationFragment
-        | NewFollowerNotificationFragment
-        | NewMentionNotificationFragment
-        | NewMirrorNotificationFragment
-        | NewReactionNotificationFragment
-      >;
-      pageInfo: CommonPaginatedResultInfoFragment;
-    },
+    InferResultType<NotificationsQuery>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return execute(this.authentication, async (headers) => {

@@ -4,7 +4,7 @@ import { GraphQLClient } from 'graphql-request';
 import { Authentication } from '../authentication';
 import { LensConfig } from '../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { TypedDataResult } from '../consts/types';
+import { InferResultType } from '../consts/types';
 import {
   CommonPaginatedResultInfoFragment,
   FollowerFragment,
@@ -168,7 +168,7 @@ export class Profile {
     request: SetDispatcherRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    TypedDataResult<CreateSetDispatcherTypedDataMutation>,
+    InferResultType<CreateSetDispatcherTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return execute(this.authentication, async (headers) => {
@@ -188,7 +188,7 @@ export class Profile {
     request: BurnProfileRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    TypedDataResult<CreateBurnProfileTypedDataMutation>,
+    InferResultType<CreateBurnProfileTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return execute(this.authentication, async (headers) => {
@@ -208,7 +208,7 @@ export class Profile {
     request: FollowRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    TypedDataResult<CreateFollowTypedDataMutation>,
+    InferResultType<CreateFollowTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return execute(this.authentication, async (headers) => {
@@ -227,7 +227,7 @@ export class Profile {
     request: UnfollowRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    TypedDataResult<CreateUnfollowTypedDataMutation>,
+    InferResultType<CreateUnfollowTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return execute(this.authentication, async (headers) => {

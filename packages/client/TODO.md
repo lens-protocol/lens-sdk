@@ -117,7 +117,7 @@ Client manages the token lifecycle and storage
 
 ## ProtocolStats
 
-- [Q] client.protocolStats.fetch(request)
+- [x] [Q] client.stats.fetch(request)
 
 ## UserSigNonces
 
@@ -152,12 +152,11 @@ Client manages the token lifecycle and storage
 
 ## Feed
 
-- [x] [PQ] client.feed.fetch(request)
-- [x] [PQ] client.feed.fetchHighlights(request)
+- [x] [APQ] client.feed.fetch(request)
+- [x] [APQ] client.feed.fetchHighlights(request)
 
 ## Other considerations
 
-- paginated response helper
 - more helpers like `isValidHandle`
 - allow for custom gql queries or compose query from subqueries (like profile base, profile interests, profile onChainIdentity etc.) (is that possible?)
 
