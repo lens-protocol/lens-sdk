@@ -31,13 +31,13 @@ Client manages the token lifecycle and storage
 - [x] [PQ] client.explore.publications(request)
 - [x] [PQ] client.explore.profiles(request)
 
-## Module
+## Modules
 
-- [AM] client.module.createCollectTypedData(request)
-- [AQ] client.module.enabledCurrencies()
-- [AQ] client.module.fetchEnabled()
-- [AQ] client.module.approvedAllowanceAmount(request)
-- [AQ] client.module.generateCurrencyApprovalData(request)
+- [AM] client.modules.createCollectTypedData(request)
+- [AQ] client.modules.enabledCurrencies()
+- [AQ] client.modules.fetchEnabled()
+- [AQ] client.modules.approvedAllowanceAmount(request)
+- [AQ] client.modules.generateCurrencyApprovalData(request)
 
 ## NFTs
 
@@ -134,7 +134,7 @@ Client manages the token lifecycle and storage
 
 - [x] [AM] client.reactions.add(request)
 - [x] [AM] client.reactions.remove(request)
-- [ ] [PQ] client.reactions.toPublication({ publicationId })
+- [x] [PQ] client.reactions.toPublication({ publicationId })
 
 ## Reporting
 
