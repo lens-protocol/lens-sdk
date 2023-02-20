@@ -30,6 +30,8 @@ export {
   WalletConnectionErrorReason,
 } from '@lens-protocol/domain/entities';
 
+export type { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+
 export {
   Amount,
   ChainType,
