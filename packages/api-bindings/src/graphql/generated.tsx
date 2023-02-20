@@ -4526,7 +4526,7 @@ export type NftOwnershipFragment = { __typename: 'NftOwnershipOutput' } & Pick<
 
 export type Erc20OwnershipFragment = { __typename: 'Erc20OwnershipOutput' } & Pick<
   Erc20OwnershipOutput,
-  'contractAddress' | 'condition'
+  'amount' | 'chainID' | 'condition' | 'contractAddress' | 'decimals'
 >;
 
 export type AddressOwnershipFragment = { __typename: 'EoaOwnershipOutput' } & Pick<
@@ -4546,7 +4546,7 @@ export type FollowConditionFragment = { __typename: 'FollowConditionOutput' } & 
 
 export type CollectConditionFragment = { __typename: 'CollectConditionOutput' } & Pick<
   CollectConditionOutput,
-  'publicationId'
+  'publicationId' | 'thisPublication'
 >;
 
 export type LeafCriterionFragment = { __typename: 'AccessConditionOutput' } & {
@@ -5294,8 +5294,11 @@ export const NftOwnershipFragmentDoc = gql`
 export const Erc20OwnershipFragmentDoc = gql`
   fragment Erc20Ownership on Erc20OwnershipOutput {
     __typename
-    contractAddress
+    amount
+    chainID
     condition
+    contractAddress
+    decimals
   }
 `;
 export const AddressOwnershipFragmentDoc = gql`
@@ -5320,6 +5323,7 @@ export const CollectConditionFragmentDoc = gql`
   fragment CollectCondition on CollectConditionOutput {
     __typename
     publicationId
+    thisPublication
   }
 `;
 export const LeafCriterionFragmentDoc = gql`

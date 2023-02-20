@@ -15,6 +15,7 @@ import { ProfileAttributes } from '../ProfileAttributes';
 import {
   AccessConditionFragment,
   AttributeFragment,
+  CollectConditionOutput,
   CollectModuleFragment,
   CommentFragment,
   ContractType,
@@ -26,6 +27,7 @@ import {
   Erc20Fragment,
   FeedItemFragment,
   FollowModules,
+  LeafCriterionFragment,
   MediaFragment,
   MetadataFragment,
   MirrorFragment,
@@ -453,7 +455,7 @@ export function mockEnabledModulesFragment(
   };
 }
 
-export function mockNftOwnershipCriterion(): RootCriterionFragment {
+export function mockNftOwnershipAccessConditionOutput(): RootCriterionFragment {
   return {
     __typename: 'AccessConditionOutput',
     nft: {
@@ -473,13 +475,16 @@ export function mockNftOwnershipCriterion(): RootCriterionFragment {
   };
 }
 
-export function mockErc20OwnershipCriterion(): RootCriterionFragment {
+export function mockErc20OwnershipAccessConditionOutput(): RootCriterionFragment {
   return {
     __typename: 'AccessConditionOutput',
     token: {
       __typename: 'Erc20OwnershipOutput',
-      condition: ScalarOperator.Equal,
+      amount: '100',
+      chainID: 1,
       contractAddress: mockEthereumAddress(),
+      decimals: 18,
+      condition: ScalarOperator.Equal,
     },
     and: null,
     collect: null,
@@ -491,7 +496,7 @@ export function mockErc20OwnershipCriterion(): RootCriterionFragment {
   };
 }
 
-export function mockAddressOwnershipCriterion(): RootCriterionFragment {
+export function mockAddressOwnershipAccessConditionOutput(): RootCriterionFragment {
   return {
     __typename: 'AccessConditionOutput',
     eoa: { __typename: 'EoaOwnershipOutput', address: mockEthereumAddress() },
@@ -505,7 +510,7 @@ export function mockAddressOwnershipCriterion(): RootCriterionFragment {
   };
 }
 
-export function mockProfileOwnershipCriterion(): RootCriterionFragment {
+export function mockProfileOwnershipAccessConditionOutput(): RootCriterionFragment {
   return {
     __typename: 'AccessConditionOutput',
     profile: { __typename: 'ProfileOwnershipOutput', profileId: mockProfileId() },
@@ -519,7 +524,7 @@ export function mockProfileOwnershipCriterion(): RootCriterionFragment {
   };
 }
 
-export function mockFollowConditionCriterion(): RootCriterionFragment {
+export function mockFollowConditionAccessConditionOutput(): RootCriterionFragment {
   return {
     __typename: 'AccessConditionOutput',
     follow: { __typename: 'FollowConditionOutput', profileId: mockProfileId() },
@@ -533,10 +538,18 @@ export function mockFollowConditionCriterion(): RootCriterionFragment {
   };
 }
 
-export function mockCollectConditionCriterion(): RootCriterionFragment {
+export function mockCollectConditionAccessConditionOutput(
+  condition: Omit<CollectConditionOutput, '__typename'> = {
+    publicationId: mockPublicationId(),
+    thisPublication: null,
+  },
+): RootCriterionFragment {
   return {
     __typename: 'AccessConditionOutput',
-    collect: { __typename: 'CollectConditionOutput', publicationId: mockPublicationId() },
+    collect: {
+      ...condition,
+      __typename: 'CollectConditionOutput',
+    },
     and: null,
     eoa: null,
     follow: null,
@@ -547,10 +560,12 @@ export function mockCollectConditionCriterion(): RootCriterionFragment {
   };
 }
 
-export function mockOrCriterion(): RootCriterionFragment {
+export function mockOrAccessConditionOutput(
+  criteria: LeafCriterionFragment[] = [],
+): RootCriterionFragment {
   return {
     __typename: 'AccessConditionOutput',
-    or: { __typename: 'OrConditionOutput', criteria: [] },
+    or: { __typename: 'OrConditionOutput', criteria },
     and: null,
     collect: null,
     eoa: null,
@@ -561,10 +576,12 @@ export function mockOrCriterion(): RootCriterionFragment {
   };
 }
 
-export function mockAndCriterion(): RootCriterionFragment {
+export function mockAndAccessConditionOutput(
+  criteria: LeafCriterionFragment[] = [],
+): RootCriterionFragment {
   return {
     __typename: 'AccessConditionOutput',
-    and: { __typename: 'AndConditionOutput', criteria: [] },
+    and: { __typename: 'AndConditionOutput', criteria },
     collect: null,
     eoa: null,
     follow: null,
@@ -575,7 +592,7 @@ export function mockAndCriterion(): RootCriterionFragment {
   };
 }
 
-function mockPublicationOwnerCriterion(
+function mockPublicationOwnerAccessConditionOutput(
   overrides?: Partial<ProfileOwnershipFragment>,
 ): RootCriterionFragment {
   return {
@@ -591,7 +608,7 @@ function mockPublicationOwnerCriterion(
   };
 }
 
-export function mockRootAccessConditionFragment({
+function mockRootAccessConditionOutput({
   others,
   ownerId,
 }: {
@@ -601,7 +618,7 @@ export function mockRootAccessConditionFragment({
   return {
     __typename: 'AccessConditionOutput',
     or: {
-      criteria: [mockPublicationOwnerCriterion({ profileId: ownerId }), ...others],
+      criteria: [mockPublicationOwnerAccessConditionOutput({ profileId: ownerId }), ...others],
     },
   };
 }
@@ -615,7 +632,7 @@ export function mockEncryptionParamsFragment({
 }): EncryptionParamsFragment {
   return {
     __typename: 'EncryptionParamsOutput',
-    accessCondition: mockRootAccessConditionFragment({
+    accessCondition: mockRootAccessConditionOutput({
       others,
       ownerId,
     }),

@@ -1,7 +1,6 @@
 import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 import { EthereumAddress, NonEmptyArray, Overwrite } from '@lens-protocol/shared-kernel';
 
-import { ClientErc20Amount } from './ClientErc20Amount';
 import { ContractType, ScalarOperator } from './generated';
 
 export enum ConditionType {
@@ -19,14 +18,17 @@ export enum ConditionType {
 export type NftOwnership = {
   type: ConditionType.NFT_OWNERSHIP;
   contractAddress: EthereumAddress;
-  chainID: number;
+  chainId: number;
   contractType: ContractType.Erc721 | ContractType.Erc1155;
   tokenIds?: NonEmptyArray<string>;
 };
 
 export type Erc20Ownership = {
   type: ConditionType.ERC20_OWNERSHIP;
-  amount: ClientErc20Amount;
+  amount: string;
+  chainId: number;
+  contractAddress: EthereumAddress;
+  decimals: number;
   condition: ScalarOperator;
 };
 
@@ -52,7 +54,6 @@ export type CollectPublication = {
 
 export type CollectThisPublication = {
   type: ConditionType.COLLECT_THIS_PUBLICATION;
-  publicationId: PublicationId;
 };
 
 export type Condition =

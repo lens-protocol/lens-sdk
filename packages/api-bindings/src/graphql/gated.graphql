@@ -8,8 +8,11 @@ fragment NftOwnership on NftOwnershipOutput {
 
 fragment Erc20Ownership on Erc20OwnershipOutput {
   __typename
-  contractAddress
+  amount
+  chainID
   condition
+  contractAddress
+  decimals
 }
 
 fragment AddressOwnership on EoaOwnershipOutput {
@@ -30,6 +33,7 @@ fragment FollowCondition on FollowConditionOutput {
 fragment CollectCondition on CollectConditionOutput {
   __typename
   publicationId
+  thisPublication
 }
 
 fragment LeafCriterion on AccessConditionOutput {

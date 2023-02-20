@@ -16,13 +16,21 @@ import {
 } from '../../graphql';
 import { ConditionType } from '../../graphql/DecryptionCriteria';
 import {
+  mockAddressOwnershipAccessConditionOutput,
+  mockAndAccessConditionOutput,
   mockAttributeFragment,
+  mockCollectConditionAccessConditionOutput,
+  mockCommentFragment,
   mockEncryptionParamsFragment,
+  mockErc20OwnershipAccessConditionOutput,
+  mockFollowConditionAccessConditionOutput,
   mockMetadataFragment,
-  mockNftOwnershipCriterion,
+  mockNftOwnershipAccessConditionOutput,
+  mockOrAccessConditionOutput,
   mockPendingTransactionState,
   mockPostFragment,
   mockProfileFragment,
+  mockProfileOwnershipAccessConditionOutput,
 } from '../../mocks';
 import { createApolloCache } from '../createApolloCache';
 import { recentTransactionsVar } from '../transactions';
@@ -77,14 +85,17 @@ function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}
 }
 
 describe(`Given an instance of the ${ApolloCache.name}`, () => {
-  describe.only.each([
+  describe.each([
     {
       typename: 'Post',
       mockPublicationFragment: mockPostFragment,
     },
-  ])(
-    'when reading "decryptionCriteria" for not token-gated $typename',
-    ({ mockPublicationFragment }) => {
+    {
+      typename: 'Comment',
+      mockPublicationFragment: mockCommentFragment,
+    },
+  ])('when reading "decryptionCriteria"', ({ mockPublicationFragment, typename }) => {
+    describe(`for a not token-gated "${typename}"`, () => {
       const publication = mockPublicationFragment({
         isGated: false,
       });
@@ -97,21 +108,136 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
 
         expect(read.decryptionCriteria).toBe(null);
       });
-    },
-  );
+    });
 
-  describe.only.each([
-    {
-      typename: 'Post',
-      mockPublicationFragment: mockPostFragment,
-    },
-  ])(
-    'when reading "decryptionCriteria" for a token-gated $typename',
-    ({ mockPublicationFragment }) => {
+    describe(`for a token-gated "${typename}"`, () => {
       const author = mockProfileFragment();
 
-      describe('with NFT Ownership access condition', () => {
-        const criterion = mockNftOwnershipCriterion();
+      const nftCondition = mockNftOwnershipAccessConditionOutput();
+      const erc20Condition = mockErc20OwnershipAccessConditionOutput();
+      const eoaCondition = mockAddressOwnershipAccessConditionOutput();
+      const profileCondition = mockProfileOwnershipAccessConditionOutput();
+      const followCondition = mockFollowConditionAccessConditionOutput();
+      const collectCondition = mockCollectConditionAccessConditionOutput();
+
+      describe.each([
+        {
+          description: 'with a NFT Ownership access condition',
+          criterion: nftCondition,
+          expectations: {
+            type: ConditionType.NFT_OWNERSHIP,
+            contractAddress: nftCondition.nft?.contractAddress ?? never(),
+            chainId: nftCondition.nft?.chainID ?? never(),
+            contractType: nftCondition.nft?.contractType ?? never(),
+            tokenIds: nftCondition.nft?.tokenIds ?? never(),
+          },
+        },
+        {
+          description: 'with an ERC20 Ownership access condition',
+          criterion: erc20Condition,
+          expectations: {
+            type: ConditionType.ERC20_OWNERSHIP,
+            amount: erc20Condition.token?.amount ?? never(),
+            chainId: erc20Condition.token?.chainID ?? never(),
+            contractAddress: erc20Condition.token?.contractAddress ?? never(),
+            decimals: erc20Condition.token?.decimals ?? never(),
+            condition: erc20Condition.token?.condition ?? never(),
+          },
+        },
+        {
+          description: 'with an Address Ownership access condition',
+          criterion: eoaCondition,
+          expectations: {
+            type: ConditionType.ADDRESS_OWNERSHIP,
+            address: eoaCondition.eoa?.address ?? never(),
+          },
+        },
+        {
+          description: 'with a Profile Ownership access condition',
+          criterion: profileCondition,
+          expectations: {
+            type: ConditionType.PROFILE_OWNERSHIP,
+            profileId: profileCondition.profile?.profileId ?? never(),
+          },
+        },
+        {
+          description: 'with a Follow access condition',
+          criterion: followCondition,
+          expectations: {
+            type: ConditionType.FOLLOW_PROFILE,
+            profileId: followCondition.follow?.profileId ?? never(),
+          },
+        },
+        {
+          description: 'with a Collect access condition',
+          criterion: collectCondition,
+          expectations: {
+            type: ConditionType.COLLECT_PUBLICATION,
+            publicationId: collectCondition.collect?.publicationId ?? never(),
+          },
+        },
+        {
+          description: 'with some criteria in AND condition',
+          criterion: mockAndAccessConditionOutput([followCondition, collectCondition]),
+          expectations: {
+            type: ConditionType.AND,
+            and: [
+              {
+                type: ConditionType.FOLLOW_PROFILE,
+                profileId: followCondition.follow?.profileId ?? never(),
+              },
+              {
+                type: ConditionType.COLLECT_PUBLICATION,
+                publicationId: collectCondition.collect?.publicationId ?? never(),
+              },
+            ],
+          },
+        },
+        {
+          description: 'with some criteria in OR condition',
+          criterion: mockOrAccessConditionOutput([followCondition, collectCondition]),
+          expectations: {
+            type: ConditionType.OR,
+            or: [
+              {
+                type: ConditionType.FOLLOW_PROFILE,
+                profileId: followCondition.follow?.profileId ?? never(),
+              },
+              {
+                type: ConditionType.COLLECT_PUBLICATION,
+                publicationId: collectCondition.collect?.publicationId ?? never(),
+              },
+            ],
+          },
+        },
+      ])('$description', ({ criterion, expectations }) => {
+        const metadata = mockMetadataFragment({
+          __encryptionParams: mockEncryptionParamsFragment({
+            ownerId: author.id,
+            others: [criterion],
+          }),
+        });
+        const publication = mockPublicationFragment({
+          isGated: true,
+          metadata,
+          profile: author,
+        });
+
+        it('should return the expected "DecryptionCriteria"', () => {
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+
+          const read = readPublication(publication);
+
+          expect(read.decryptionCriteria).toEqual(expectations);
+        });
+      });
+
+      describe('with a Collect access condition for the current publication', () => {
+        const criterion = mockCollectConditionAccessConditionOutput({
+          publicationId: null,
+          thisPublication: true,
+        });
         const metadata = mockMetadataFragment({
           __encryptionParams: mockEncryptionParamsFragment({
             ownerId: author.id,
@@ -131,16 +257,12 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           const read = readPublication(publication);
 
           expect(read.decryptionCriteria).toEqual({
-            type: ConditionType.NFT_OWNERSHIP,
-            contractAddress: criterion.nft?.contractAddress ?? never(),
-            chainID: criterion.nft?.chainID ?? never(),
-            contractType: criterion.nft?.contractType ?? never(),
-            tokenIds: criterion.nft?.tokenIds ?? never(),
+            type: ConditionType.COLLECT_THIS_PUBLICATION,
           });
         });
       });
-    },
-  );
+    });
+  });
 
   describe('and a ProfileFragment', () => {
     describe('when retrieving its attributes', () => {
@@ -317,32 +439,6 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
               canUnfollow: false,
             });
           });
-        });
-      });
-
-      xdescribe(`when checking the 'isFollowedByMe field`, () => {
-        it('should return true if there is a pending follow transaction more recent than the pending unfollow transaction for the same profile', () => {
-          const profile = mockProfileFragment({
-            __isFollowedByMe: false,
-          });
-          writeProfileFragment(profile);
-          recentTransactionsVar([
-            mockPendingTransactionState({
-              request: mockUnconstrainedFollowRequest({
-                profileId: profile.id,
-                followerAddress: wallet.address,
-              }),
-            }),
-            mockPendingTransactionState({
-              request: mockUnfollowRequest({
-                profileId: profile.id,
-              }),
-            }),
-          ]);
-
-          // const { isFollowedByMe } = readProfileFragment(profile);
-
-          // expect(isFollowedByMe).toBe(false);
         });
       });
     });
