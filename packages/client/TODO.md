@@ -121,7 +121,7 @@ Client manages the token lifecycle and storage
 
 ## UserSigNonces
 
-- [AQ] client.nonces.fetch()
+- [x] [AQ] client.nonces.fetch()
 
 ## Proxy actions
 
