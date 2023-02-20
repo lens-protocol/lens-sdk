@@ -4,6 +4,7 @@ scalar FollowPolicy
 scalar CollectPolicy
 scalar ReferencePolicy
 scalar FollowStatus
+scalar DecryptionCriteria
 
 extend type Profile {
   ownedByMe: Boolean!
@@ -39,6 +40,10 @@ extend type RevenueAggregate {
   totalAmount: ClientErc20Amount!
 }
 
-extend type Erc20OwnershipOutput {
-  amountValue: ClientErc20Amount!
+extend type Post {
+  decryptionCriteria: DecryptionCriteria
+}
+
+extend type Comment {
+  decryptionCriteria: DecryptionCriteria
 }

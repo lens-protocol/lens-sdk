@@ -15,11 +15,12 @@ config:
     ContractAddress: string
     Cursor: string
     DateTime: string
+    DecryptionCriteria: DecryptionCriteria
     EncryptedValueScalar: string
-    EthereumAddress: string
+    EthereumAddress: EthereumAddress
     FollowStatus: FollowStatus
     Handle: string
-    InternalPublicationId: string
+    InternalPublicationId: PublicationId
     Jwt: string
     LimitScalar: number
     CollectPolicy: CollectPolicy
@@ -32,7 +33,7 @@ config:
     NotificationId: string
     ProfileAttributes: ProfileAttributes
     FollowPolicy: FollowPolicy
-    ProfileId: string
+    ProfileId: ProfileId
     ProxyActionId: string
     ReferenceModuleData: string
     ReferencePolicy: ReferencePolicy
@@ -59,7 +60,10 @@ generates:
       - add:
           content:
             [
+              "import type { ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
+              "import type { EthereumAddress } from '@lens-protocol/shared-kernel'",
               "import type { ClientErc20Amount } from './ClientErc20Amount';",
+              "import type { DecryptionCriteria } from './DecryptionCriteria';",
               "import type { ProfileAttributes } from './ProfileAttributes';",
               "import type { FollowPolicy } from './FollowPolicy';",
               "import type { FollowStatus } from './FollowStatus';",

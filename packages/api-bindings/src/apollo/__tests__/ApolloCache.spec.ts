@@ -1,4 +1,4 @@
-import { ApolloCache, makeVar } from '@apollo/client';
+import { ApolloCache, DocumentNode, makeVar } from '@apollo/client';
 import {
   mockUnconstrainedFollowRequest,
   mockUnfollowRequest,
@@ -7,20 +7,55 @@ import {
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { ProfileFragment, ProfileFragmentDoc } from '../../graphql';
+import {
+  CommentFragmentDoc,
+  ContentPublicationFragment,
+  PostFragmentDoc,
+  ProfileFragment,
+  ProfileFragmentDoc,
+} from '../../graphql';
+import { ConditionType } from '../../graphql/DecryptionCriteria';
 import {
   mockAttributeFragment,
+  mockEncryptionParamsFragment,
+  mockMetadataFragment,
+  mockNftOwnershipCriterion,
   mockPendingTransactionState,
+  mockPostFragment,
   mockProfileFragment,
 } from '../../mocks';
 import { createApolloCache } from '../createApolloCache';
 import { recentTransactionsVar } from '../transactions';
+
+const typeToFragmentMap: Record<ContentPublicationFragment['__typename'], DocumentNode> = {
+  Post: PostFragmentDoc,
+  Comment: CommentFragmentDoc,
+};
 
 function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}) {
   const activeWalletVar = makeVar<WalletData | null>(wallet);
   const cache = createApolloCache({ activeWalletVar });
 
   return {
+    writePublication(publication: ContentPublicationFragment) {
+      cache.writeFragment({
+        id: cache.identify(publication),
+        fragment: typeToFragmentMap[publication.__typename],
+        fragmentName: publication.__typename,
+        data: publication,
+      });
+    },
+
+    readPublication(publication: ContentPublicationFragment) {
+      return (
+        cache.readFragment<ContentPublicationFragment>({
+          id: cache.identify(publication),
+          fragment: typeToFragmentMap[publication.__typename],
+          fragmentName: publication.__typename,
+        }) ?? never()
+      );
+    },
+
     writeProfileFragment(profile: ProfileFragment) {
       cache.writeFragment({
         data: profile,
@@ -42,6 +77,71 @@ function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}
 }
 
 describe(`Given an instance of the ${ApolloCache.name}`, () => {
+  describe.only.each([
+    {
+      typename: 'Post',
+      mockPublicationFragment: mockPostFragment,
+    },
+  ])(
+    'when reading "decryptionCriteria" for not token-gated $typename',
+    ({ mockPublicationFragment }) => {
+      const publication = mockPublicationFragment({
+        isGated: false,
+      });
+
+      it('should return "null"', () => {
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
+
+        const read = readPublication(publication);
+
+        expect(read.decryptionCriteria).toBe(null);
+      });
+    },
+  );
+
+  describe.only.each([
+    {
+      typename: 'Post',
+      mockPublicationFragment: mockPostFragment,
+    },
+  ])(
+    'when reading "decryptionCriteria" for a token-gated $typename',
+    ({ mockPublicationFragment }) => {
+      const author = mockProfileFragment();
+
+      describe('with NFT Ownership access condition', () => {
+        const criterion = mockNftOwnershipCriterion();
+        const metadata = mockMetadataFragment({
+          __encryptionParams: mockEncryptionParamsFragment({
+            ownerId: author.id,
+            others: [criterion],
+          }),
+        });
+        const publication = mockPublicationFragment({
+          isGated: true,
+          metadata,
+          profile: author,
+        });
+
+        it('should return the expected "DecryptionCriteria"', () => {
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+
+          const read = readPublication(publication);
+
+          expect(read.decryptionCriteria).toEqual({
+            type: ConditionType.NFT_OWNERSHIP,
+            contractAddress: criterion.nft?.contractAddress ?? never(),
+            chainID: criterion.nft?.chainID ?? never(),
+            contractType: criterion.nft?.contractType ?? never(),
+            tokenIds: criterion.nft?.tokenIds ?? never(),
+          });
+        });
+      });
+    },
+  );
+
   describe('and a ProfileFragment', () => {
     describe('when retrieving its attributes', () => {
       const date = new Date();

@@ -1,4 +1,5 @@
 fragment NftOwnership on NftOwnershipOutput {
+  __typename
   contractAddress
   chainID
   contractType
@@ -6,29 +7,33 @@ fragment NftOwnership on NftOwnershipOutput {
 }
 
 fragment Erc20Ownership on Erc20OwnershipOutput {
-  # TODO add __value: value once available in the API.
-  # value: Erc20Amount will be used by amountValue field policy to return a Amount<Erc20>
-  amount: amountValue @client
+  __typename
+  contractAddress
   condition
 }
 
 fragment AddressOwnership on EoaOwnershipOutput {
+  __typename
   address
 }
 
 fragment ProfileOwnership on ProfileOwnershipOutput {
+  __typename
   profileId
 }
 
 fragment FollowCondition on FollowConditionOutput {
+  __typename
   profileId
 }
 
 fragment CollectCondition on CollectConditionOutput {
+  __typename
   publicationId
 }
 
 fragment LeafCriterion on AccessConditionOutput {
+  __typename
   nft {
     ...NftOwnership
   }
@@ -55,40 +60,21 @@ fragment LeafCriterion on AccessConditionOutput {
 }
 
 fragment OrCriterion on OrConditionOutput {
+  __typename
   criteria {
     ...LeafCriterion
   }
 }
 fragment AndCriterion on AndConditionOutput {
+  __typename
   criteria {
     ...LeafCriterion
   }
 }
 
 fragment RootCriterion on AccessConditionOutput {
-  nft {
-    ...NftOwnership
-  }
-
-  token {
-    ...Erc20Ownership
-  }
-
-  eoa {
-    ...AddressOwnership
-  }
-
-  profile {
-    ...ProfileOwnership
-  }
-
-  follow {
-    ...FollowCondition
-  }
-
-  collect {
-    ...CollectCondition
-  }
+  __typename
+  ...LeafCriterion
 
   or {
     ...OrCriterion
@@ -100,6 +86,7 @@ fragment RootCriterion on AccessConditionOutput {
 }
 
 fragment AccessCondition on AccessConditionOutput {
+  __typename
   or {
     criteria {
       ...RootCriterion
@@ -114,11 +101,13 @@ fragment EncryptedMedia on EncryptedMedia {
 }
 
 fragment EncryptionParams on EncryptionParamsOutput {
+  __typename
   accessCondition {
     ...AccessCondition
   }
   encryptionProvider
   encryptedFields {
+    __typename
     animation_url
     content
     external_url
