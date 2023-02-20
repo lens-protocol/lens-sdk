@@ -5,3 +5,4 @@ export * from './FollowPolicy';
 export * from './FollowStatus';
 export * from './CollectPolicy';
 export * from './utils';
+export * from './DecryptionCriteria';

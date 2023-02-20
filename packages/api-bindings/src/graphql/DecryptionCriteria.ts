@@ -3,7 +3,7 @@ import { EthereumAddress, NonEmptyArray, Overwrite } from '@lens-protocol/shared
 
 import { ContractType, ScalarOperator } from './generated';
 
-export enum ConditionType {
+export enum DecryptionCriteriaType {
   NFT_OWNERSHIP = 'nft-ownership',
   ERC20_OWNERSHIP = 'erc20-ownership',
   ADDRESS_OWNERSHIP = 'address-ownership',
@@ -16,7 +16,7 @@ export enum ConditionType {
 }
 
 export type NftOwnership = {
-  type: ConditionType.NFT_OWNERSHIP;
+  type: DecryptionCriteriaType.NFT_OWNERSHIP;
   contractAddress: EthereumAddress;
   chainId: number;
   contractType: ContractType.Erc721 | ContractType.Erc1155;
@@ -24,7 +24,7 @@ export type NftOwnership = {
 };
 
 export type Erc20Ownership = {
-  type: ConditionType.ERC20_OWNERSHIP;
+  type: DecryptionCriteriaType.ERC20_OWNERSHIP;
   amount: string;
   chainId: number;
   contractAddress: EthereumAddress;
@@ -33,30 +33,30 @@ export type Erc20Ownership = {
 };
 
 export type AddressOwnership = {
-  type: ConditionType.ADDRESS_OWNERSHIP;
+  type: DecryptionCriteriaType.ADDRESS_OWNERSHIP;
   address: EthereumAddress;
 };
 
 export type ProfileOwnership = {
-  type: ConditionType.PROFILE_OWNERSHIP;
+  type: DecryptionCriteriaType.PROFILE_OWNERSHIP;
   profileId: ProfileId;
 };
 
 export type FollowProfile = {
-  type: ConditionType.FOLLOW_PROFILE;
+  type: DecryptionCriteriaType.FOLLOW_PROFILE;
   profileId: ProfileId;
 };
 
 export type CollectPublication = {
-  type: ConditionType.COLLECT_PUBLICATION;
+  type: DecryptionCriteriaType.COLLECT_PUBLICATION;
   publicationId: PublicationId;
 };
 
 export type CollectThisPublication = {
-  type: ConditionType.COLLECT_THIS_PUBLICATION;
+  type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION;
 };
 
-export type Condition =
+export type SimpleCriterion =
   | NftOwnership
   | Erc20Ownership
   | AddressOwnership
@@ -75,38 +75,41 @@ export type TwoAtLeastArray<T> = Overwrite<
   }
 >;
 
-export type OrCondition<T> = { type: ConditionType.OR; or: TwoAtLeastArray<T> };
+export type OrCriterion<T> = { type: DecryptionCriteriaType.OR; or: TwoAtLeastArray<T> };
 
-export type AndCondition<T> = { type: ConditionType.AND; and: TwoAtLeastArray<T> };
+export type AndCriterion<T> = { type: DecryptionCriteriaType.AND; and: TwoAtLeastArray<T> };
 
-export type AnyCondition = Condition | OrCondition<Condition> | AndCondition<Condition>;
+export type AnyCriterion =
+  | SimpleCriterion
+  | OrCriterion<SimpleCriterion>
+  | AndCriterion<SimpleCriterion>;
 
 /**
  * The criteria to decrypt a gated publication.
  *
  * @example a formatting function for the criteria:
  *
- * function format(condition: AnyCondition): string {
- *   switch (condition.type) {
- *     case ConditionType.NFT_OWNERSHIP:
- *       return `own_nft(${condition.contractAddress})`;
- *     case ConditionType.ERC20_OWNERSHIP:
- *       return `have_erc20(${condition.condition} than ${condition.amount})`;
- *     case ConditionType.ADDRESS_OWNERSHIP:
- *       return `own_address(${condition.address})`;
- *     case ConditionType.PROFILE_OWNERSHIP:
- *       return `own_profile(${condition.profileId})`;
- *     case ConditionType.FOLLOW_PROFILE:
- *       return `follow_profile(${condition.profileId})`;
- *     case ConditionType.COLLECT_PUBLICATION:
- *       return `have_collected(${condition.publicationId})`;
- *     case ConditionType.COLLECT_THIS_PUBLICATION:
- *       return `have_collected_this_publication(${condition.publicationId})`;
- *     case ConditionType.OR:
- *       return `or(${condition.or.map(format).join(', ')})`;
- *     case ConditionType.AND:
- *       return `and(${condition.and.map(format).join(', ')})`;
+ * function format(criterion: AnyCriterion): string {
+ *   switch (criterion.type) {
+ *     case DecryptionCriteriaType.NFT_OWNERSHIP:
+ *       return `own_nft(${criterion.contractAddress})`;
+ *     case DecryptionCriteriaType.ERC20_OWNERSHIP:
+ *       return `have_erc20(${criterion.criterion} than ${criterion.amount})`;
+ *     case DecryptionCriteriaType.ADDRESS_OWNERSHIP:
+ *       return `own_address(${criterion.address})`;
+ *     case DecryptionCriteriaType.PROFILE_OWNERSHIP:
+ *       return `own_profile(${criterion.profileId})`;
+ *     case DecryptionCriteriaType.FOLLOW_PROFILE:
+ *       return `follow_profile(${criterion.profileId})`;
+ *     case DecryptionCriteriaType.COLLECT_PUBLICATION:
+ *       return `have_collected(${criterion.publicationId})`;
+ *     case DecryptionCriteriaType.COLLECT_THIS_PUBLICATION:
+ *       return `have_collected_this_publication(${criterion.publicationId})`;
+ *     case DecryptionCriteriaType.OR:
+ *       return `or(${criterion.or.map(format).join(', ')})`;
+ *     case DecryptionCriteriaType.AND:
+ *       return `and(${criterion.and.map(format).join(', ')})`;
  *   }
  * }
  */
-export type DecryptionCriteria = AnyCondition;
+export type DecryptionCriteria = AnyCriterion;

@@ -14,7 +14,7 @@ import {
   ProfileFragment,
   ProfileFragmentDoc,
 } from '../../graphql';
-import { ConditionType } from '../../graphql/DecryptionCriteria';
+import { DecryptionCriteriaType } from '../../graphql/DecryptionCriteria';
 import {
   mockAddressOwnershipAccessConditionOutput,
   mockAndAccessConditionOutput,
@@ -125,7 +125,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           description: 'with a NFT Ownership access condition',
           criterion: nftCondition,
           expectations: {
-            type: ConditionType.NFT_OWNERSHIP,
+            type: DecryptionCriteriaType.NFT_OWNERSHIP,
             contractAddress: nftCondition.nft?.contractAddress ?? never(),
             chainId: nftCondition.nft?.chainID ?? never(),
             contractType: nftCondition.nft?.contractType ?? never(),
@@ -136,7 +136,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           description: 'with an ERC20 Ownership access condition',
           criterion: erc20Condition,
           expectations: {
-            type: ConditionType.ERC20_OWNERSHIP,
+            type: DecryptionCriteriaType.ERC20_OWNERSHIP,
             amount: erc20Condition.token?.amount ?? never(),
             chainId: erc20Condition.token?.chainID ?? never(),
             contractAddress: erc20Condition.token?.contractAddress ?? never(),
@@ -148,7 +148,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           description: 'with an Address Ownership access condition',
           criterion: eoaCondition,
           expectations: {
-            type: ConditionType.ADDRESS_OWNERSHIP,
+            type: DecryptionCriteriaType.ADDRESS_OWNERSHIP,
             address: eoaCondition.eoa?.address ?? never(),
           },
         },
@@ -156,7 +156,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           description: 'with a Profile Ownership access condition',
           criterion: profileCondition,
           expectations: {
-            type: ConditionType.PROFILE_OWNERSHIP,
+            type: DecryptionCriteriaType.PROFILE_OWNERSHIP,
             profileId: profileCondition.profile?.profileId ?? never(),
           },
         },
@@ -164,7 +164,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           description: 'with a Follow access condition',
           criterion: followCondition,
           expectations: {
-            type: ConditionType.FOLLOW_PROFILE,
+            type: DecryptionCriteriaType.FOLLOW_PROFILE,
             profileId: followCondition.follow?.profileId ?? never(),
           },
         },
@@ -172,7 +172,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           description: 'with a Collect access condition',
           criterion: collectCondition,
           expectations: {
-            type: ConditionType.COLLECT_PUBLICATION,
+            type: DecryptionCriteriaType.COLLECT_PUBLICATION,
             publicationId: collectCondition.collect?.publicationId ?? never(),
           },
         },
@@ -180,14 +180,14 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           description: 'with some criteria in AND condition',
           criterion: mockAndAccessConditionOutput([followCondition, collectCondition]),
           expectations: {
-            type: ConditionType.AND,
+            type: DecryptionCriteriaType.AND,
             and: [
               {
-                type: ConditionType.FOLLOW_PROFILE,
+                type: DecryptionCriteriaType.FOLLOW_PROFILE,
                 profileId: followCondition.follow?.profileId ?? never(),
               },
               {
-                type: ConditionType.COLLECT_PUBLICATION,
+                type: DecryptionCriteriaType.COLLECT_PUBLICATION,
                 publicationId: collectCondition.collect?.publicationId ?? never(),
               },
             ],
@@ -197,14 +197,14 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           description: 'with some criteria in OR condition',
           criterion: mockOrAccessConditionOutput([followCondition, collectCondition]),
           expectations: {
-            type: ConditionType.OR,
+            type: DecryptionCriteriaType.OR,
             or: [
               {
-                type: ConditionType.FOLLOW_PROFILE,
+                type: DecryptionCriteriaType.FOLLOW_PROFILE,
                 profileId: followCondition.follow?.profileId ?? never(),
               },
               {
-                type: ConditionType.COLLECT_PUBLICATION,
+                type: DecryptionCriteriaType.COLLECT_PUBLICATION,
                 publicationId: collectCondition.collect?.publicationId ?? never(),
               },
             ],
@@ -257,7 +257,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           const read = readPublication(publication);
 
           expect(read.decryptionCriteria).toEqual({
-            type: ConditionType.COLLECT_THIS_PUBLICATION,
+            type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
           });
         });
       });

@@ -19,17 +19,17 @@ import {
 } from '../graphql';
 import {
   AddressOwnership,
-  AndCondition,
-  AnyCondition,
+  AndCriterion,
+  AnyCriterion,
   CollectPublication,
   CollectThisPublication,
-  Condition,
-  ConditionType,
+  SimpleCriterion,
+  DecryptionCriteriaType,
   DecryptionCriteria,
   Erc20Ownership,
   FollowProfile,
   NftOwnership,
-  OrCondition,
+  OrCriterion,
   ProfileOwnership,
   TwoAtLeastArray,
 } from '../graphql/DecryptionCriteria';
@@ -59,7 +59,7 @@ function nftOwnership({
 
   if (tokenIds && hasAtLeastOne(tokenIds)) {
     return {
-      type: ConditionType.NFT_OWNERSHIP,
+      type: DecryptionCriteriaType.NFT_OWNERSHIP,
       chainId: chainID,
       contractAddress: contractAddress,
       contractType: contractType,
@@ -68,7 +68,7 @@ function nftOwnership({
   }
 
   return {
-    type: ConditionType.NFT_OWNERSHIP,
+    type: DecryptionCriteriaType.NFT_OWNERSHIP,
     chainId: chainID,
     contractAddress: contractAddress,
     contractType: contractType,
@@ -77,7 +77,7 @@ function nftOwnership({
 
 function erc20Ownership(condition: Erc20OwnershipOutput): Erc20Ownership {
   return {
-    type: ConditionType.ERC20_OWNERSHIP,
+    type: DecryptionCriteriaType.ERC20_OWNERSHIP,
     amount: condition.amount,
     chainId: condition.chainID,
     condition: condition.condition,
@@ -88,21 +88,21 @@ function erc20Ownership(condition: Erc20OwnershipOutput): Erc20Ownership {
 
 function addressOwnership(condition: EoaOwnershipOutput): AddressOwnership {
   return {
-    type: ConditionType.ADDRESS_OWNERSHIP,
+    type: DecryptionCriteriaType.ADDRESS_OWNERSHIP,
     address: condition.address,
   };
 }
 
 function profileOwnership(condition: ProfileOwnershipOutput): ProfileOwnership {
   return {
-    type: ConditionType.PROFILE_OWNERSHIP,
+    type: DecryptionCriteriaType.PROFILE_OWNERSHIP,
     profileId: condition.profileId,
   };
 }
 
 function followProfile(condition: FollowConditionOutput): FollowProfile {
   return {
-    type: ConditionType.FOLLOW_PROFILE,
+    type: DecryptionCriteriaType.FOLLOW_PROFILE,
     profileId: condition.profileId,
   };
 }
@@ -112,11 +112,11 @@ function collectPublication(
 ): CollectPublication | CollectThisPublication {
   if (condition.thisPublication) {
     return {
-      type: ConditionType.COLLECT_THIS_PUBLICATION,
+      type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
     };
   }
   return {
-    type: ConditionType.COLLECT_PUBLICATION,
+    type: DecryptionCriteriaType.COLLECT_PUBLICATION,
     publicationId: condition.publicationId ?? never('Expected publicationId to be defined'),
   };
 }
@@ -131,7 +131,7 @@ function sanitize({ __typename, ...accessCondition }: AccessConditionOutput) {
   return conditions[0];
 }
 
-function resolveSimpleCondition(accessCondition: AccessConditionOutput): Condition | null {
+function resolveSimpleCriterion(accessCondition: AccessConditionOutput): SimpleCriterion | null {
   const condition = sanitize(accessCondition);
 
   switch (condition.__typename) {
@@ -155,29 +155,29 @@ function hasTwoOrMore<T>(items: ReadonlyArray<T>): items is TwoAtLeastArray<T> {
   return items.length >= 2;
 }
 
-function andCondition({ criteria }: AndConditionOutput): AndCondition<Condition> | null {
-  const conditions = criteria.map(resolveSimpleCondition).filter(isNonNullable);
+function andCondition({ criteria }: AndConditionOutput): AndCriterion<SimpleCriterion> | null {
+  const conditions = criteria.map(resolveSimpleCriterion).filter(isNonNullable);
 
   if (!hasTwoOrMore(conditions)) return null;
 
   return {
-    type: ConditionType.AND,
+    type: DecryptionCriteriaType.AND,
     and: conditions,
   };
 }
 
-function orCondition({ criteria }: OrConditionOutput): OrCondition<Condition> | null {
-  const conditions = criteria.map(resolveSimpleCondition).filter(isNonNullable);
+function orCondition({ criteria }: OrConditionOutput): OrCriterion<SimpleCriterion> | null {
+  const conditions = criteria.map(resolveSimpleCriterion).filter(isNonNullable);
 
   if (!hasTwoOrMore(conditions)) return null;
 
   return {
-    type: ConditionType.OR,
+    type: DecryptionCriteriaType.OR,
     or: conditions,
   };
 }
 
-function resolveRootCondition(accessCondition: AccessConditionOutput): Maybe<AnyCondition> {
+function resolveRootCriterion(accessCondition: AccessConditionOutput): Maybe<AnyCriterion> {
   const condition = sanitize(accessCondition);
 
   switch (condition.__typename) {
@@ -187,7 +187,7 @@ function resolveRootCondition(accessCondition: AccessConditionOutput): Maybe<Any
       return orCondition(condition);
   }
 
-  return resolveSimpleCondition(accessCondition);
+  return resolveSimpleCriterion(accessCondition);
 }
 
 export const decryptionCriteria: FieldReadFunction<Maybe<DecryptionCriteria>, Comment | Post> = (
@@ -216,5 +216,5 @@ export const decryptionCriteria: FieldReadFunction<Maybe<DecryptionCriteria>, Co
 
   assertJustOne(criteria);
 
-  return resolveRootCondition(criteria[0]);
+  return resolveRootCriterion(criteria[0]);
 };
