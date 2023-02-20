@@ -4,11 +4,9 @@ import { never } from '../utils';
 import { ProfileCard } from './components/ProfileCard';
 
 function OwnedProfiles({ activeWalletAddress }: { activeWalletAddress: string }) {
-  const { data, loading } = useProfilesOwnedBy({
+  const { data } = useProfilesOwnedBy({
     address: activeWalletAddress,
   });
-
-  console.log(loading);
 
   return (
     <div>
