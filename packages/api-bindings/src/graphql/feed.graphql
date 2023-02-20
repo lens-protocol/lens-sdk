@@ -20,7 +20,7 @@ query Feed(
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
-  $sources: [Sources!]
+  $sources: [Sources!]!
   $metadata: PublicationMetadataFilters
 ) {
   result: feed(

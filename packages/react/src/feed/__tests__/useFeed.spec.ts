@@ -30,6 +30,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
                   profileId,
                   restrictEventTypesTo: [LensFeedEventItemType.Post],
                   limit: 10,
+                  sources: [],
                 },
                 items: mockFeed,
               }),

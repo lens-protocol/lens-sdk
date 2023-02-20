@@ -36,6 +36,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
                   observerId: observer.id,
                   limit: 10,
                   query,
+                  sources: [],
                 },
                 items: mockPublications,
               }),

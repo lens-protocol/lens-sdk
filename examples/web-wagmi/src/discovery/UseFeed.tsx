@@ -1,20 +1,10 @@
-import {
-  FeedEventItemType,
-  FeedItemFragment,
-  isPostPublication,
-  useFeed,
-} from '@lens-protocol/react';
+import { FeedEventItemType, isPostPublication, useFeed } from '@lens-protocol/react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from '../publications/components/PublicationCard';
-
-type PublicationProps = {
-  feedItem: FeedItemFragment;
-};
 
 const allFeedEventTypes = [
   FeedEventItemType.Comment,
@@ -23,20 +13,6 @@ const allFeedEventTypes = [
   FeedEventItemType.CollectComment,
   FeedEventItemType.CollectPost,
 ];
-
-function Publication({ feedItem: { root: publication } }: PublicationProps) {
-  return (
-    <Link
-      to={`/publication/${publication.id}`}
-      style={{
-        color: 'inherit',
-        margin: '1rem',
-      }}
-    >
-      <PublicationCard publication={publication} />
-    </Link>
-  );
-}
 
 export function Feed() {
   const [restrictEventTypesTo, setRestrictEventTypesTo] = useState<FeedEventItemType[]>([
@@ -86,7 +62,7 @@ export function Feed() {
       {data
         ?.filter((i) => isPostPublication(i.root))
         .map((item, i) => (
-          <Publication key={`${item.root.id}-${i}`} feedItem={item} />
+          <PublicationCard key={`${item.root.id}-${i}`} publication={item.root} />
         ))}
 
       {hasMore && <p ref={observeRef}>Loading more...</p>}

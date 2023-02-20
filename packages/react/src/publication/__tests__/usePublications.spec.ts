@@ -26,6 +26,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
                 variables: {
                   profileId: mockPublication.profile.id,
                   limit: 10,
+                  sources: [],
                 },
                 publications: [mockPublication],
               }),

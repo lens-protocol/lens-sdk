@@ -2,7 +2,7 @@ query SearchPublications(
   $limit: LimitScalar
   $cursor: Cursor
   $query: Search!
-  $sources: [Sources!]
+  $sources: [Sources!]!
   $observerId: ProfileId
 ) {
   result: search(

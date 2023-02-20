@@ -4,7 +4,7 @@ query Publications(
   $limit: LimitScalar!
   $cursor: Cursor
   $publicationTypes: [PublicationTypes!]
-  $sources: [Sources!]
+  $sources: [Sources!]!
   $metadata: PublicationMetadataFilters
 ) {
   result: publications(
@@ -37,8 +37,29 @@ query Publications(
   }
 }
 
-query ExplorePublications($request: ExplorePublicationRequest!, $observerId: ProfileId) {
-  result: explorePublications(request: $request) {
+query ExplorePublications(
+  $cursor: Cursor
+  $excludeProfileIds: [ProfileId!]
+  $limit: LimitScalar!
+  $metadata: PublicationMetadataFilters
+  $observerId: ProfileId
+  $publicationTypes: [PublicationTypes!]
+  $sortCriteria: PublicationSortCriteria!
+  $sources: [Sources!]!
+  $timestamp: TimestampScalar
+) {
+  result: explorePublications(
+    request: {
+      cursor: $cursor
+      excludeProfileIds: $excludeProfileIds
+      limit: $limit
+      metadata: $metadata
+      publicationTypes: $publicationTypes
+      sortCriteria: $sortCriteria
+      sources: $sources
+      timestamp: $timestamp
+    }
+  ) {
     items {
       ... on Post {
         ...Post
@@ -99,9 +120,10 @@ query ProfilePublicationsForSale(
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
+  $sources: [Sources!]!
 ) {
   result: profilePublicationsForSale(
-    request: { profileId: $profileId, limit: $limit, cursor: $cursor }
+    request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
   ) {
     items {
       ... on Post {

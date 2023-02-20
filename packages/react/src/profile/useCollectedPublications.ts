@@ -15,13 +15,14 @@ export function useCollectedPublications({
   walletAddress,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseCollectablesArgs): PaginatedReadResult<AnyPublicationFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useWalletCollectedPublicationsQuery({
       variables: {
         walletAddress,
         limit: limit,
+        sources,
       },
       client: apolloClient,
     }),

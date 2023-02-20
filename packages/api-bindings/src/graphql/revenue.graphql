@@ -45,7 +45,7 @@ query ProfilePublicationRevenue(
   $limit: LimitScalar!
   $cursor: Cursor
   $publicationTypes: [PublicationTypes!]
-  $sources: [Sources!]
+  $sources: [Sources!]!
 ) {
   result: profilePublicationRevenue(
     request: {

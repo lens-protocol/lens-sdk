@@ -31,6 +31,7 @@ describe(`Given the ${useProfilePublicationsForSale.name} hook`, () => {
                   profileId: profile.id,
                   observerId: observer.id,
                   limit: 10,
+                  sources: [],
                 },
                 items: [mockPublication],
               }),

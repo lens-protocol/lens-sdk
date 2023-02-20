@@ -17,7 +17,7 @@ export function useProfilePublicationsForSale({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseProfilePublicationsForSaleArgs): PaginatedReadResult<AnyPublicationFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useProfilePublicationsForSaleQuery({
@@ -25,6 +25,7 @@ export function useProfilePublicationsForSale({
         profileId,
         observerId,
         limit,
+        sources,
       },
       client: apolloClient,
     }),

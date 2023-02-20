@@ -4202,7 +4202,7 @@ export type CommentsQueryVariables = Exact<{
   commentsOf: Scalars['InternalPublicationId'];
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
-  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
   metadata?: Maybe<PublicationMetadataFilters>;
 }>;
 
@@ -4486,7 +4486,7 @@ export type FeedQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
-  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
   metadata?: Maybe<PublicationMetadataFilters>;
 }>;
 
@@ -4682,7 +4682,7 @@ export type NotificationsQueryVariables = Exact<{
   observerId: Scalars['ProfileId'];
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
-  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type NotificationsQuery = {
@@ -5029,7 +5029,7 @@ export type PublicationsQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
-  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
   metadata?: Maybe<PublicationMetadataFilters>;
 }>;
 
@@ -5041,8 +5041,15 @@ export type PublicationsQuery = {
 };
 
 export type ExplorePublicationsQueryVariables = Exact<{
-  request: ExplorePublicationRequest;
+  cursor?: Maybe<Scalars['Cursor']>;
+  excludeProfileIds?: Maybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  metadata?: Maybe<PublicationMetadataFilters>;
   observerId?: Maybe<Scalars['ProfileId']>;
+  publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
+  sortCriteria: PublicationSortCriteria;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  timestamp?: Maybe<Scalars['TimestampScalar']>;
 }>;
 
 export type ExplorePublicationsQuery = {
@@ -5079,6 +5086,7 @@ export type ProfilePublicationsForSaleQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type ProfilePublicationsForSaleQuery = {
@@ -5153,7 +5161,7 @@ export type ProfilePublicationRevenueQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   publicationTypes?: Maybe<Array<PublicationTypes> | PublicationTypes>;
-  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type ProfilePublicationRevenueQuery = {
@@ -5164,7 +5172,7 @@ export type SearchPublicationsQueryVariables = Exact<{
   limit?: Maybe<Scalars['LimitScalar']>;
   cursor?: Maybe<Scalars['Cursor']>;
   query: Scalars['Search'];
-  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
   observerId?: Maybe<Scalars['ProfileId']>;
 }>;
 
@@ -5239,7 +5247,7 @@ export type WalletCollectedPublicationsQueryVariables = Exact<{
   walletAddress: Scalars['EthereumAddress'];
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
-  sources?: Maybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type WalletCollectedPublicationsQuery = {
@@ -6577,7 +6585,7 @@ export const CommentsDocument = gql`
     $commentsOf: InternalPublicationId!
     $limit: LimitScalar!
     $cursor: Cursor
-    $sources: [Sources!]
+    $sources: [Sources!]!
     $metadata: PublicationMetadataFilters
   ) {
     result: publications(
@@ -6704,7 +6712,7 @@ export const FeedDocument = gql`
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
-    $sources: [Sources!]
+    $sources: [Sources!]!
     $metadata: PublicationMetadataFilters
   ) {
     result: feed(
@@ -7077,7 +7085,7 @@ export const NotificationsDocument = gql`
     $observerId: ProfileId!
     $limit: LimitScalar!
     $cursor: Cursor
-    $sources: [Sources!]
+    $sources: [Sources!]!
   ) {
     result: notifications(
       request: { profileId: $observerId, limit: $limit, cursor: $cursor, sources: $sources }
@@ -8527,7 +8535,7 @@ export const PublicationsDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $publicationTypes: [PublicationTypes!]
-    $sources: [Sources!]
+    $sources: [Sources!]!
     $metadata: PublicationMetadataFilters
   ) {
     result: publications(
@@ -8609,8 +8617,29 @@ export type PublicationsQueryResult = Apollo.QueryResult<
   PublicationsQueryVariables
 >;
 export const ExplorePublicationsDocument = gql`
-  query ExplorePublications($request: ExplorePublicationRequest!, $observerId: ProfileId) {
-    result: explorePublications(request: $request) {
+  query ExplorePublications(
+    $cursor: Cursor
+    $excludeProfileIds: [ProfileId!]
+    $limit: LimitScalar!
+    $metadata: PublicationMetadataFilters
+    $observerId: ProfileId
+    $publicationTypes: [PublicationTypes!]
+    $sortCriteria: PublicationSortCriteria!
+    $sources: [Sources!]!
+    $timestamp: TimestampScalar
+  ) {
+    result: explorePublications(
+      request: {
+        cursor: $cursor
+        excludeProfileIds: $excludeProfileIds
+        limit: $limit
+        metadata: $metadata
+        publicationTypes: $publicationTypes
+        sortCriteria: $sortCriteria
+        sources: $sources
+        timestamp: $timestamp
+      }
+    ) {
       items {
         ... on Post {
           ...Post
@@ -8645,8 +8674,15 @@ export const ExplorePublicationsDocument = gql`
  * @example
  * const { data, loading, error } = useExplorePublicationsQuery({
  *   variables: {
- *      request: // value for 'request'
+ *      cursor: // value for 'cursor'
+ *      excludeProfileIds: // value for 'excludeProfileIds'
+ *      limit: // value for 'limit'
+ *      metadata: // value for 'metadata'
  *      observerId: // value for 'observerId'
+ *      publicationTypes: // value for 'publicationTypes'
+ *      sortCriteria: // value for 'sortCriteria'
+ *      sources: // value for 'sources'
+ *      timestamp: // value for 'timestamp'
  *   },
  * });
  */
@@ -8835,9 +8871,10 @@ export const ProfilePublicationsForSaleDocument = gql`
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
+    $sources: [Sources!]!
   ) {
     result: profilePublicationsForSale(
-      request: { profileId: $profileId, limit: $limit, cursor: $cursor }
+      request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
     ) {
       items {
         ... on Post {
@@ -8873,6 +8910,7 @@ export const ProfilePublicationsForSaleDocument = gql`
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -9201,7 +9239,7 @@ export const ProfilePublicationRevenueDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $publicationTypes: [PublicationTypes!]
-    $sources: [Sources!]
+    $sources: [Sources!]!
   ) {
     result: profilePublicationRevenue(
       request: {
@@ -9284,7 +9322,7 @@ export const SearchPublicationsDocument = gql`
     $limit: LimitScalar
     $cursor: Cursor
     $query: Search!
-    $sources: [Sources!]
+    $sources: [Sources!]!
     $observerId: ProfileId
   ) {
     result: search(
@@ -9626,7 +9664,7 @@ export const WalletCollectedPublicationsDocument = gql`
     $walletAddress: EthereumAddress!
     $limit: LimitScalar!
     $cursor: Cursor
-    $sources: [Sources!]
+    $sources: [Sources!]!
   ) {
     result: publications(
       request: {

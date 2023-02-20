@@ -20,10 +20,9 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
           apolloClient: createMockApolloClientWithMultipleResponses([
             createExplorePublicationsQueryMockedResponse({
               variables: {
-                request: {
-                  limit: DEFAULT_PAGINATED_QUERY_LIMIT,
-                  sortCriteria: PublicationSortCriteria.Latest,
-                },
+                limit: DEFAULT_PAGINATED_QUERY_LIMIT,
+                sortCriteria: PublicationSortCriteria.Latest,
+                sources: [],
               },
               items: mockPublications,
             }),
@@ -34,6 +33,7 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
 
       expect(result.current.data).toEqual(mockPublications);
     });
+
     it('should return publications that match the explore with custom parameters', async () => {
       const customParams = {
         sortCriteria: PublicationSortCriteria.TopCollected,
@@ -45,7 +45,8 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
           apolloClient: createMockApolloClientWithMultipleResponses([
             createExplorePublicationsQueryMockedResponse({
               variables: {
-                request: customParams,
+                ...customParams,
+                sources: [],
               },
               items: mockPublications,
             }),
