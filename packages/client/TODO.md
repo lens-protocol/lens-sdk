@@ -46,8 +46,7 @@ Client manages the token lifecycle and storage
 
 ## Notifications
 
-- [AQ] client.notifications.fetch(request)
-- [AQ] client.notifications.unreadCount(request)
+- [x] [APQ] client.notifications.fetch(request)
 
 ## Profile + Dispatcher
 

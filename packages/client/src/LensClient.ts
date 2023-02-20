@@ -1,6 +1,7 @@
 import { Authentication, IAuthentication } from './authentication';
 import { LensConfig } from './consts/config';
 import { Explore } from './explore';
+import { Notifications } from './notifications';
 import { Profile } from './profile';
 import { ProxyAction } from './proxy-action';
 import { Publication } from './publication';
@@ -24,6 +25,10 @@ export class LensClient {
 
   get explore(): Explore {
     return new Explore(this.config);
+  }
+
+  get notifications(): Notifications {
+    return new Notifications(this.config, this._authentication);
   }
 
   get profile(): Profile {

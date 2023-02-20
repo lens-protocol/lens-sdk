@@ -1,0 +1,143 @@
+fragment CommentWithCommentedPublication on Comment {
+  __typename
+  ...Comment
+  commentOn {
+    ... on Post {
+      ...Post
+    }
+    ... on Mirror {
+      ...Mirror
+    }
+    ... on Comment {
+      ...Comment
+    }
+  }
+}
+
+fragment NewFollowerNotification on NewFollowerNotification {
+  __typename
+  notificationId
+  createdAt
+  isFollowedByMe
+  wallet {
+    ...Wallet
+  }
+}
+
+fragment NewCollectNotification on NewCollectNotification {
+  __typename
+  notificationId
+  createdAt
+  wallet {
+    ...Wallet
+  }
+  collectedPublication {
+    ... on Post {
+      ...Post
+    }
+
+    ... on Mirror {
+      ...Mirror
+    }
+
+    ... on Comment {
+      ...Comment
+    }
+  }
+}
+
+fragment NewMirrorNotification on NewMirrorNotification {
+  __typename
+  notificationId
+  createdAt
+  profile {
+    ...Profile
+  }
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+  }
+}
+
+fragment NewCommentNotification on NewCommentNotification {
+  __typename
+  notificationId
+  createdAt
+  profile {
+    ...Profile
+  }
+  comment {
+    ...CommentWithCommentedPublication
+  }
+}
+
+fragment NewMentionNotification on NewMentionNotification {
+  __typename
+  notificationId
+  createdAt
+  mentionPublication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+  }
+}
+
+fragment NewReactionNotification on NewReactionNotification {
+  __typename
+  notificationId
+  createdAt
+  profile {
+    ...Profile
+  }
+  reaction
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Mirror {
+      ...Mirror
+    }
+  }
+}
+
+query Notifications($request: NotificationRequest!, $observerId: ProfileId) {
+  result: notifications(request: $request) {
+    items {
+      ... on NewFollowerNotification {
+        ...NewFollowerNotification
+      }
+
+      ... on NewMirrorNotification {
+        ...NewMirrorNotification
+      }
+
+      ... on NewCollectNotification {
+        ...NewCollectNotification
+      }
+
+      ... on NewCommentNotification {
+        ...NewCommentNotification
+      }
+
+      ... on NewMentionNotification {
+        ...NewMentionNotification
+      }
+      ... on NewReactionNotification {
+        ...NewReactionNotification
+      }
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

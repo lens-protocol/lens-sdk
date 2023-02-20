@@ -1,140 +1,191 @@
 // @ts-nocheck
-import * as Types from './types.generated.js';
+import * as Types from './types.generated';
 
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-export type FeeFollowModuleSettingsFragment = { __typename: 'FeeFollowModuleSettings' } & Pick<
-  Types.FeeFollowModuleSettings,
-  'contractAddress' | 'recipient'
-> & { amount: ModuleFeeAmountFragment };
+export type FeeFollowModuleSettingsFragment = {
+  __typename: 'FeeFollowModuleSettings';
+  contractAddress: string;
+  recipient: string;
+  amount: ModuleFeeAmountFragment;
+};
 
 export type ProfileFollowModuleSettingsFragment = {
   __typename: 'ProfileFollowModuleSettings';
-} & Pick<Types.ProfileFollowModuleSettings, 'contractAddress'>;
+  contractAddress: string;
+};
 
 export type RevertFollowModuleSettingsFragment = {
   __typename: 'RevertFollowModuleSettings';
-} & Pick<Types.RevertFollowModuleSettings, 'contractAddress'>;
+  contractAddress: string;
+};
 
 export type UnknownFollowModuleSettingsFragment = {
   __typename: 'UnknownFollowModuleSettings';
-} & Pick<Types.UnknownFollowModuleSettings, 'contractAddress'>;
-
-export type ProfileMedia_NftImage_Fragment = { __typename: 'NftImage' } & Pick<
-  Types.NftImage,
-  'contractAddress' | 'tokenId' | 'uri' | 'verified'
->;
+  contractAddress: string;
+};
 
 export type ProfileMedia_MediaSet_Fragment = MediaSetFragment;
 
-export type ProfileMediaFragment = ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment;
+export type ProfileMedia_NftImage_Fragment = {
+  __typename: 'NftImage';
+  contractAddress: string;
+  tokenId: string;
+  uri: string;
+  verified: boolean;
+};
 
-export type AttributeFragment = { __typename: 'Attribute' } & Pick<
-  Types.Attribute,
-  'displayType' | 'key' | 'value'
->;
+export type ProfileMediaFragment = ProfileMedia_MediaSet_Fragment | ProfileMedia_NftImage_Fragment;
 
-export type ProfileFragment = { __typename: 'Profile' } & Pick<
-  Types.Profile,
-  'id' | 'name' | 'bio' | 'handle' | 'ownedBy' | 'isDefault' | 'isFollowedByMe' | 'isFollowing'
-> & {
-    picture: Types.Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
-    coverPicture: Types.Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
-    stats: { __typename: 'ProfileStats' } & Pick<
-      Types.ProfileStats,
-      'totalFollowers' | 'totalFollowing' | 'totalPosts'
-    >;
-    followModule: Types.Maybe<
-      | FeeFollowModuleSettingsFragment
-      | ProfileFollowModuleSettingsFragment
-      | RevertFollowModuleSettingsFragment
-      | UnknownFollowModuleSettingsFragment
-    >;
-    attributes: Types.Maybe<Array<AttributeFragment>>;
-    dispatcher: Types.Maybe<Pick<Types.Dispatcher, 'address' | 'canUseRelay'>>;
+export type AttributeFragment = {
+  __typename: 'Attribute';
+  displayType: string | null;
+  key: string;
+  value: string;
+};
+
+export type ProfileFragment = {
+  __typename: 'Profile';
+  id: string;
+  name: string | null;
+  bio: string | null;
+  handle: string;
+  ownedBy: string;
+  isDefault: boolean;
+  isFollowedByMe: boolean;
+  isFollowing: boolean;
+  picture: ProfileMedia_MediaSet_Fragment | ProfileMedia_NftImage_Fragment | null;
+  coverPicture: ProfileMedia_MediaSet_Fragment | ProfileMedia_NftImage_Fragment | null;
+  stats: {
+    __typename: 'ProfileStats';
+    totalFollowers: number;
+    totalFollowing: number;
+    totalPosts: number;
   };
+  followModule:
+    | FeeFollowModuleSettingsFragment
+    | ProfileFollowModuleSettingsFragment
+    | RevertFollowModuleSettingsFragment
+    | UnknownFollowModuleSettingsFragment
+    | null;
+  attributes: Array<AttributeFragment> | null;
+  dispatcher: { address: string; canUseRelay: boolean } | null;
+};
 
-export type Eip712TypedDataDomainFragment = { __typename: 'EIP712TypedDataDomain' } & Pick<
-  Types.Eip712TypedDataDomain,
-  'name' | 'chainId' | 'version' | 'verifyingContract'
->;
+export type Eip712TypedDataDomainFragment = {
+  __typename: 'EIP712TypedDataDomain';
+  name: string;
+  chainId: number;
+  version: string;
+  verifyingContract: string;
+};
 
-export type Erc20Fragment = { __typename: 'Erc20' } & Pick<
-  Types.Erc20,
-  'name' | 'symbol' | 'decimals' | 'address'
->;
+export type Erc20Fragment = {
+  __typename: 'Erc20';
+  name: string;
+  symbol: string;
+  decimals: number;
+  address: string;
+};
 
-export type Erc20AmountFragment = { __typename: 'Erc20Amount' } & Pick<
-  Types.Erc20Amount,
-  'value'
-> & { asset: Erc20Fragment };
+export type Erc20AmountFragment = {
+  __typename: 'Erc20Amount';
+  value: string;
+  asset: Erc20Fragment;
+};
 
-export type ModuleFeeAmountFragment = { __typename: 'ModuleFeeAmount' } & Pick<
-  Types.ModuleFeeAmount,
-  'value'
-> & { asset: Erc20Fragment };
-
-export type ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment = {
-  __typename: 'FollowOnlyReferenceModuleSettings';
-} & Pick<Types.FollowOnlyReferenceModuleSettings, 'contractAddress'>;
-
-export type ReferenceModule_UnknownReferenceModuleSettings_Fragment = {
-  __typename: 'UnknownReferenceModuleSettings';
+export type ModuleFeeAmountFragment = {
+  __typename: 'ModuleFeeAmount';
+  value: string;
+  asset: Erc20Fragment;
 };
 
 export type ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment = {
   __typename: 'DegreesOfSeparationReferenceModuleSettings';
 };
 
+export type ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment = {
+  __typename: 'FollowOnlyReferenceModuleSettings';
+  contractAddress: string;
+};
+
+export type ReferenceModule_UnknownReferenceModuleSettings_Fragment = {
+  __typename: 'UnknownReferenceModuleSettings';
+};
+
 export type ReferenceModuleFragment =
+  | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
   | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
-  | ReferenceModule_UnknownReferenceModuleSettings_Fragment
-  | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment;
+  | ReferenceModule_UnknownReferenceModuleSettings_Fragment;
 
-export type FreeCollectModuleSettingsFragment = { __typename: 'FreeCollectModuleSettings' } & Pick<
-  Types.FreeCollectModuleSettings,
-  'contractAddress' | 'followerOnly'
->;
+export type FreeCollectModuleSettingsFragment = {
+  __typename: 'FreeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+};
 
-export type FeeCollectModuleSettingsFragment = { __typename: 'FeeCollectModuleSettings' } & Pick<
-  Types.FeeCollectModuleSettings,
-  'contractAddress' | 'followerOnly' | 'recipient' | 'referralFee'
-> & { amount: ModuleFeeAmountFragment };
+export type FeeCollectModuleSettingsFragment = {
+  __typename: 'FeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: string;
+  referralFee: number;
+  amount: ModuleFeeAmountFragment;
+};
 
 export type LimitedFeeCollectModuleSettingsFragment = {
   __typename: 'LimitedFeeCollectModuleSettings';
-} & Pick<
-  Types.LimitedFeeCollectModuleSettings,
-  'collectLimit' | 'contractAddress' | 'followerOnly' | 'recipient' | 'referralFee'
-> & { amount: ModuleFeeAmountFragment };
+  collectLimit: string;
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: string;
+  referralFee: number;
+  amount: ModuleFeeAmountFragment;
+};
 
 export type LimitedTimedFeeCollectModuleSettingsFragment = {
   __typename: 'LimitedTimedFeeCollectModuleSettings';
-} & Pick<
-  Types.LimitedTimedFeeCollectModuleSettings,
-  'collectLimit' | 'contractAddress' | 'followerOnly' | 'endTimestamp' | 'recipient' | 'referralFee'
-> & { amount: ModuleFeeAmountFragment };
+  collectLimit: string;
+  contractAddress: string;
+  followerOnly: boolean;
+  endTimestamp: string;
+  recipient: string;
+  referralFee: number;
+  amount: ModuleFeeAmountFragment;
+};
 
 export type RevertCollectModuleSettingsFragment = {
   __typename: 'RevertCollectModuleSettings';
-} & Pick<Types.RevertCollectModuleSettings, 'contractAddress'>;
+  contractAddress: string;
+};
 
 export type TimedFeeCollectModuleSettingsFragment = {
   __typename: 'TimedFeeCollectModuleSettings';
-} & Pick<
-  Types.TimedFeeCollectModuleSettings,
-  'contractAddress' | 'followerOnly' | 'endTimestamp' | 'recipient' | 'referralFee'
-> & { amount: ModuleFeeAmountFragment };
+  contractAddress: string;
+  followerOnly: boolean;
+  endTimestamp: string;
+  recipient: string;
+  referralFee: number;
+  amount: ModuleFeeAmountFragment;
+};
 
-export type CollectModule_FreeCollectModuleSettings_Fragment = {
-  __typename: 'FreeCollectModuleSettings';
-} & FreeCollectModuleSettingsFragment;
+export type CollectModule_AaveFeeCollectModuleSettings_Fragment = {
+  __typename: 'AaveFeeCollectModuleSettings';
+};
+
+export type CollectModule_Erc4626FeeCollectModuleSettings_Fragment = {
+  __typename: 'ERC4626FeeCollectModuleSettings';
+};
 
 export type CollectModule_FeeCollectModuleSettings_Fragment = {
   __typename: 'FeeCollectModuleSettings';
 } & FeeCollectModuleSettingsFragment;
+
+export type CollectModule_FreeCollectModuleSettings_Fragment = {
+  __typename: 'FreeCollectModuleSettings';
+} & FreeCollectModuleSettingsFragment;
 
 export type CollectModule_LimitedFeeCollectModuleSettings_Fragment = {
   __typename: 'LimitedFeeCollectModuleSettings';
@@ -144,6 +195,10 @@ export type CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment = {
   __typename: 'LimitedTimedFeeCollectModuleSettings';
 } & LimitedTimedFeeCollectModuleSettingsFragment;
 
+export type CollectModule_MultirecipientFeeCollectModuleSettings_Fragment = {
+  __typename: 'MultirecipientFeeCollectModuleSettings';
+};
+
 export type CollectModule_RevertCollectModuleSettings_Fragment = {
   __typename: 'RevertCollectModuleSettings';
 } & RevertCollectModuleSettingsFragment;
@@ -152,164 +207,178 @@ export type CollectModule_TimedFeeCollectModuleSettings_Fragment = {
   __typename: 'TimedFeeCollectModuleSettings';
 } & TimedFeeCollectModuleSettingsFragment;
 
-export type CollectModule_MultirecipientFeeCollectModuleSettings_Fragment = {
-  __typename: 'MultirecipientFeeCollectModuleSettings';
-};
-
-export type CollectModule_Erc4626FeeCollectModuleSettings_Fragment = {
-  __typename: 'ERC4626FeeCollectModuleSettings';
-};
-
-export type CollectModule_AaveFeeCollectModuleSettings_Fragment = {
-  __typename: 'AaveFeeCollectModuleSettings';
-};
-
 export type CollectModule_UnknownCollectModuleSettings_Fragment = {
   __typename: 'UnknownCollectModuleSettings';
 };
 
 export type CollectModuleFragment =
-  | CollectModule_FreeCollectModuleSettings_Fragment
+  | CollectModule_AaveFeeCollectModuleSettings_Fragment
+  | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
   | CollectModule_FeeCollectModuleSettings_Fragment
+  | CollectModule_FreeCollectModuleSettings_Fragment
   | CollectModule_LimitedFeeCollectModuleSettings_Fragment
   | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+  | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
   | CollectModule_RevertCollectModuleSettings_Fragment
   | CollectModule_TimedFeeCollectModuleSettings_Fragment
-  | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
-  | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
-  | CollectModule_AaveFeeCollectModuleSettings_Fragment
   | CollectModule_UnknownCollectModuleSettings_Fragment;
 
-export type WalletFragment = { __typename: 'Wallet' } & Pick<Types.Wallet, 'address'> & {
-    defaultProfile: Types.Maybe<ProfileFragment>;
-  };
+export type WalletFragment = {
+  __typename: 'Wallet';
+  address: string;
+  defaultProfile: ProfileFragment | null;
+};
 
-export type MediaFragment = { __typename: 'Media' } & Pick<Types.Media, 'url' | 'mimeType'>;
+export type MediaFragment = { __typename: 'Media'; url: string; mimeType: string | null };
 
-export type MediaSetFragment = { __typename: 'MediaSet' } & { original: MediaFragment };
+export type MediaSetFragment = { __typename: 'MediaSet'; original: MediaFragment };
 
-export type MetadataFragment = { __typename: 'MetadataOutput' } & Pick<
-  Types.MetadataOutput,
-  'name' | 'description' | 'mainContentFocus' | 'content'
-> & { media: Array<MediaSetFragment>; attributes: Array<MetadataAttributeOutputFragment> };
+export type MetadataFragment = {
+  __typename: 'MetadataOutput';
+  name: string | null;
+  description: string | null;
+  mainContentFocus: Types.PublicationMainFocus;
+  content: string | null;
+  media: Array<MediaSetFragment>;
+  attributes: Array<MetadataAttributeOutputFragment>;
+};
 
-export type MetadataAttributeOutputFragment = { __typename: 'MetadataAttributeOutput' } & Pick<
-  Types.MetadataAttributeOutput,
-  'traitType' | 'value'
->;
+export type MetadataAttributeOutputFragment = {
+  __typename: 'MetadataAttributeOutput';
+  traitType: string | null;
+  value: string | null;
+};
 
-export type PublicationStatsFragment = { __typename: 'PublicationStats' } & Pick<
-  Types.PublicationStats,
-  'totalAmountOfMirrors' | 'totalUpvotes' | 'totalAmountOfCollects' | 'totalAmountOfComments'
->;
+export type PublicationStatsFragment = {
+  __typename: 'PublicationStats';
+  totalAmountOfMirrors: number;
+  totalUpvotes: number;
+  totalAmountOfCollects: number;
+  totalAmountOfComments: number;
+};
 
-export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
-  Types.Mirror,
-  'id' | 'createdAt' | 'hidden' | 'isGated' | 'reaction' | 'hasCollectedByMe'
-> & {
-    stats: PublicationStatsFragment;
-    metadata: MetadataFragment;
-    profile: ProfileFragment;
-    collectModule:
-      | CollectModule_FreeCollectModuleSettings_Fragment
-      | CollectModule_FeeCollectModuleSettings_Fragment
-      | CollectModule_LimitedFeeCollectModuleSettings_Fragment
-      | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
-      | CollectModule_RevertCollectModuleSettings_Fragment
-      | CollectModule_TimedFeeCollectModuleSettings_Fragment
-      | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
-      | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
-      | CollectModule_AaveFeeCollectModuleSettings_Fragment
-      | CollectModule_UnknownCollectModuleSettings_Fragment;
-    referenceModule: Types.Maybe<
-      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
-      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
-      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
-    >;
-    canComment: Pick<Types.CanCommentResponse, 'result'>;
-    canMirror: Pick<Types.CanMirrorResponse, 'result'>;
-  };
+export type MirrorBaseFragment = {
+  __typename: 'Mirror';
+  id: string;
+  createdAt: string;
+  hidden: boolean;
+  isGated: boolean;
+  reaction: Types.ReactionTypes | null;
+  hasCollectedByMe: boolean;
+  stats: PublicationStatsFragment;
+  metadata: MetadataFragment;
+  profile: ProfileFragment;
+  collectModule:
+    | CollectModule_AaveFeeCollectModuleSettings_Fragment
+    | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+    | CollectModule_FeeCollectModuleSettings_Fragment
+    | CollectModule_FreeCollectModuleSettings_Fragment
+    | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+    | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+    | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+    | CollectModule_RevertCollectModuleSettings_Fragment
+    | CollectModule_TimedFeeCollectModuleSettings_Fragment
+    | CollectModule_UnknownCollectModuleSettings_Fragment;
+  referenceModule:
+    | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
+    | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+    | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+    | null;
+  canComment: { result: boolean };
+  canMirror: { result: boolean };
+};
 
-export type MirrorFragment = { __typename: 'Mirror' } & {
-  mirrorOf: PostFragment | CommentFragment;
+export type MirrorFragment = {
+  __typename: 'Mirror';
+  mirrorOf: CommentFragment | PostFragment;
 } & MirrorBaseFragment;
 
-export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
-  Types.Comment,
-  'id' | 'createdAt' | 'hidden' | 'isGated' | 'reaction' | 'hasCollectedByMe' | 'mirrors'
-> & {
-    stats: PublicationStatsFragment;
-    metadata: MetadataFragment;
-    profile: ProfileFragment;
-    collectedBy: Types.Maybe<WalletFragment>;
-    collectModule:
-      | CollectModule_FreeCollectModuleSettings_Fragment
-      | CollectModule_FeeCollectModuleSettings_Fragment
-      | CollectModule_LimitedFeeCollectModuleSettings_Fragment
-      | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
-      | CollectModule_RevertCollectModuleSettings_Fragment
-      | CollectModule_TimedFeeCollectModuleSettings_Fragment
-      | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
-      | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
-      | CollectModule_AaveFeeCollectModuleSettings_Fragment
-      | CollectModule_UnknownCollectModuleSettings_Fragment;
-    referenceModule: Types.Maybe<
-      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
-      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
-      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
-    >;
-    canComment: Pick<Types.CanCommentResponse, 'result'>;
-    canMirror: Pick<Types.CanMirrorResponse, 'result'>;
-  };
+export type CommentBaseFragment = {
+  __typename: 'Comment';
+  id: string;
+  createdAt: string;
+  hidden: boolean;
+  isGated: boolean;
+  reaction: Types.ReactionTypes | null;
+  hasCollectedByMe: boolean;
+  mirrors: Array<string>;
+  stats: PublicationStatsFragment;
+  metadata: MetadataFragment;
+  profile: ProfileFragment;
+  collectedBy: WalletFragment | null;
+  collectModule:
+    | CollectModule_AaveFeeCollectModuleSettings_Fragment
+    | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+    | CollectModule_FeeCollectModuleSettings_Fragment
+    | CollectModule_FreeCollectModuleSettings_Fragment
+    | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+    | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+    | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+    | CollectModule_RevertCollectModuleSettings_Fragment
+    | CollectModule_TimedFeeCollectModuleSettings_Fragment
+    | CollectModule_UnknownCollectModuleSettings_Fragment;
+  referenceModule:
+    | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
+    | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+    | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+    | null;
+  canComment: { result: boolean };
+  canMirror: { result: boolean };
+};
 
-export type CommentFragment = { __typename: 'Comment' } & {
-  commentOn: Types.Maybe<PostFragment | CommentBaseFragment | MirrorBaseFragment>;
-  mainPost: PostFragment | MirrorBaseFragment;
+export type CommentFragment = {
+  __typename: 'Comment';
+  commentOn: CommentBaseFragment | MirrorBaseFragment | PostFragment | null;
+  mainPost: MirrorBaseFragment | PostFragment;
 } & CommentBaseFragment;
 
-export type PostFragment = { __typename: 'Post' } & Pick<
-  Types.Post,
-  'id' | 'createdAt' | 'hidden' | 'isGated' | 'reaction' | 'hasCollectedByMe' | 'mirrors'
-> & {
-    stats: PublicationStatsFragment;
-    metadata: MetadataFragment;
-    profile: ProfileFragment;
-    collectedBy: Types.Maybe<WalletFragment>;
-    collectModule:
-      | CollectModule_FreeCollectModuleSettings_Fragment
-      | CollectModule_FeeCollectModuleSettings_Fragment
-      | CollectModule_LimitedFeeCollectModuleSettings_Fragment
-      | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
-      | CollectModule_RevertCollectModuleSettings_Fragment
-      | CollectModule_TimedFeeCollectModuleSettings_Fragment
-      | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
-      | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
-      | CollectModule_AaveFeeCollectModuleSettings_Fragment
-      | CollectModule_UnknownCollectModuleSettings_Fragment;
-    referenceModule: Types.Maybe<
-      | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
-      | ReferenceModule_UnknownReferenceModuleSettings_Fragment
-      | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
-    >;
-    canComment: Pick<Types.CanCommentResponse, 'result'>;
-    canMirror: Pick<Types.CanMirrorResponse, 'result'>;
-  };
+export type PostFragment = {
+  __typename: 'Post';
+  id: string;
+  createdAt: string;
+  hidden: boolean;
+  isGated: boolean;
+  reaction: Types.ReactionTypes | null;
+  hasCollectedByMe: boolean;
+  mirrors: Array<string>;
+  stats: PublicationStatsFragment;
+  metadata: MetadataFragment;
+  profile: ProfileFragment;
+  collectedBy: WalletFragment | null;
+  collectModule:
+    | CollectModule_AaveFeeCollectModuleSettings_Fragment
+    | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
+    | CollectModule_FeeCollectModuleSettings_Fragment
+    | CollectModule_FreeCollectModuleSettings_Fragment
+    | CollectModule_LimitedFeeCollectModuleSettings_Fragment
+    | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
+    | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
+    | CollectModule_RevertCollectModuleSettings_Fragment
+    | CollectModule_TimedFeeCollectModuleSettings_Fragment
+    | CollectModule_UnknownCollectModuleSettings_Fragment;
+  referenceModule:
+    | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
+    | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
+    | ReferenceModule_UnknownReferenceModuleSettings_Fragment
+    | null;
+  canComment: { result: boolean };
+  canMirror: { result: boolean };
+};
 
-export type CommonPaginatedResultInfoFragment = { __typename: 'PaginatedResultInfo' } & Pick<
-  Types.PaginatedResultInfo,
-  'prev' | 'next' | 'totalCount'
->;
+export type CommonPaginatedResultInfoFragment = {
+  __typename: 'PaginatedResultInfo';
+  prev: string | null;
+  next: string | null;
+  totalCount: number | null;
+};
 
-export type FollowingFragment = { __typename: 'Following' } & { profile: ProfileFragment };
+export type FollowingFragment = { __typename: 'Following'; profile: ProfileFragment };
 
-export type FollowerFragment = { __typename: 'Follower' } & { wallet: WalletFragment };
+export type FollowerFragment = { __typename: 'Follower'; wallet: WalletFragment };
 
-export type RelayerResultFragment = { __typename: 'RelayerResult' } & Pick<
-  Types.RelayerResult,
-  'txHash' | 'txId'
->;
+export type RelayerResultFragment = { __typename: 'RelayerResult'; txHash: string; txId: string };
 
-export type RelayErrorFragment = { __typename: 'RelayError' } & Pick<Types.RelayError, 'reason'>;
+export type RelayErrorFragment = { __typename: 'RelayError'; reason: Types.RelayErrorReasons };
 
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {

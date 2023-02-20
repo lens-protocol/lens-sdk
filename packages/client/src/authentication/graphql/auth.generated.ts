@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as Types from '../../graphql/types.generated.js';
+import * as Types from '../../graphql/types.generated';
 
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -9,30 +9,26 @@ export type AuthChallengeQueryVariables = Types.Exact<{
   address: Types.Scalars['EthereumAddress'];
 }>;
 
-export type AuthChallengeQuery = { result: Pick<Types.AuthChallengeResult, 'text'> };
+export type AuthChallengeQuery = { result: { text: string } };
 
 export type AuthVerifyQueryVariables = Types.Exact<{
   accessToken: Types.Scalars['Jwt'];
 }>;
 
-export type AuthVerifyQuery = { result: Types.Query['verify'] };
+export type AuthVerifyQuery = { result: boolean };
 
 export type AuthAuthenticateMutationVariables = Types.Exact<{
   address: Types.Scalars['EthereumAddress'];
   signature: Types.Scalars['Signature'];
 }>;
 
-export type AuthAuthenticateMutation = {
-  result: Pick<Types.AuthenticationResult, 'accessToken' | 'refreshToken'>;
-};
+export type AuthAuthenticateMutation = { result: { accessToken: string; refreshToken: string } };
 
 export type AuthRefreshMutationVariables = Types.Exact<{
   refreshToken: Types.Scalars['Jwt'];
 }>;
 
-export type AuthRefreshMutation = {
-  result: Pick<Types.AuthenticationResult, 'accessToken' | 'refreshToken'>;
-};
+export type AuthRefreshMutation = { result: { accessToken: string; refreshToken: string } };
 
 export const AuthChallengeDocument = gql`
   query AuthChallenge($address: EthereumAddress!) {

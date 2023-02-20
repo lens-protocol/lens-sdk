@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as Types from '../../graphql/types.generated.js';
+import * as Types from '../../graphql/types.generated';
 
 import {
   PostFragment,
@@ -35,19 +35,19 @@ import {
 } from '../../graphql/fragments.generated';
 export type ExplorePublicationsQueryVariables = Types.Exact<{
   request: Types.ExplorePublicationRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type ExplorePublicationsQuery = {
   result: {
-    items: Array<PostFragment | CommentFragment | MirrorFragment>;
+    items: Array<CommentFragment | MirrorFragment | PostFragment>;
     pageInfo: CommonPaginatedResultInfoFragment;
   };
 };
 
 export type ExploreProfilesQueryVariables = Types.Exact<{
   request: Types.ExploreProfilesRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type ExploreProfilesQuery = {

@@ -1,6 +1,15 @@
 // @ts-nocheck
 import * as Types from '../../graphql/types.generated';
 
+import {
+  ProfileFragment,
+  CommonPaginatedResultInfoFragment,
+  FollowingFragment,
+  FollowerFragment,
+  Eip712TypedDataDomainFragment,
+  RelayerResultFragment,
+  RelayErrorFragment,
+} from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
@@ -35,77 +44,7 @@ export type WhoReactedResultFragment = {
   reactionId: string;
   reaction: Types.ReactionTypes;
   reactionAt: string;
-  profile: {
-    __typename: 'Profile';
-    id: string;
-    name: string | null;
-    bio: string | null;
-    handle: string;
-    ownedBy: string;
-    isDefault: boolean;
-    isFollowedByMe: boolean;
-    isFollowing: boolean;
-    picture:
-      | {
-          __typename: 'MediaSet';
-          original: { __typename: 'Media'; url: string; mimeType: string | null };
-        }
-      | {
-          __typename: 'NftImage';
-          contractAddress: string;
-          tokenId: string;
-          uri: string;
-          verified: boolean;
-        }
-      | null;
-    coverPicture:
-      | {
-          __typename: 'MediaSet';
-          original: { __typename: 'Media'; url: string; mimeType: string | null };
-        }
-      | {
-          __typename: 'NftImage';
-          contractAddress: string;
-          tokenId: string;
-          uri: string;
-          verified: boolean;
-        }
-      | null;
-    stats: {
-      __typename: 'ProfileStats';
-      totalFollowers: number;
-      totalFollowing: number;
-      totalPosts: number;
-    };
-    followModule:
-      | {
-          __typename: 'FeeFollowModuleSettings';
-          contractAddress: string;
-          recipient: string;
-          amount: {
-            __typename: 'ModuleFeeAmount';
-            value: string;
-            asset: {
-              __typename: 'Erc20';
-              name: string;
-              symbol: string;
-              decimals: number;
-              address: string;
-            };
-          };
-        }
-      | { __typename: 'ProfileFollowModuleSettings'; contractAddress: string }
-      | { __typename: 'RevertFollowModuleSettings'; contractAddress: string }
-      | { __typename: 'UnknownFollowModuleSettings'; contractAddress: string }
-      | null;
-    attributes: Array<{
-      __typename: 'Attribute';
-      displayType: string | null;
-      key: string;
-      value: string;
-    }> | null;
-    dispatcher: { address: string; canUseRelay: boolean } | null;
-  };
+  profile: ProfileFragment;
 };
 
 export type WhoReactedPublicationQueryVariables = Types.Exact<{
@@ -114,91 +53,7 @@ export type WhoReactedPublicationQueryVariables = Types.Exact<{
 }>;
 
 export type WhoReactedPublicationQuery = {
-  result: {
-    items: Array<{
-      __typename: 'WhoReactedResult';
-      reactionId: string;
-      reaction: Types.ReactionTypes;
-      reactionAt: string;
-      profile: {
-        __typename: 'Profile';
-        id: string;
-        name: string | null;
-        bio: string | null;
-        handle: string;
-        ownedBy: string;
-        isDefault: boolean;
-        isFollowedByMe: boolean;
-        isFollowing: boolean;
-        picture:
-          | {
-              __typename: 'MediaSet';
-              original: { __typename: 'Media'; url: string; mimeType: string | null };
-            }
-          | {
-              __typename: 'NftImage';
-              contractAddress: string;
-              tokenId: string;
-              uri: string;
-              verified: boolean;
-            }
-          | null;
-        coverPicture:
-          | {
-              __typename: 'MediaSet';
-              original: { __typename: 'Media'; url: string; mimeType: string | null };
-            }
-          | {
-              __typename: 'NftImage';
-              contractAddress: string;
-              tokenId: string;
-              uri: string;
-              verified: boolean;
-            }
-          | null;
-        stats: {
-          __typename: 'ProfileStats';
-          totalFollowers: number;
-          totalFollowing: number;
-          totalPosts: number;
-        };
-        followModule:
-          | {
-              __typename: 'FeeFollowModuleSettings';
-              contractAddress: string;
-              recipient: string;
-              amount: {
-                __typename: 'ModuleFeeAmount';
-                value: string;
-                asset: {
-                  __typename: 'Erc20';
-                  name: string;
-                  symbol: string;
-                  decimals: number;
-                  address: string;
-                };
-              };
-            }
-          | { __typename: 'ProfileFollowModuleSettings'; contractAddress: string }
-          | { __typename: 'RevertFollowModuleSettings'; contractAddress: string }
-          | { __typename: 'UnknownFollowModuleSettings'; contractAddress: string }
-          | null;
-        attributes: Array<{
-          __typename: 'Attribute';
-          displayType: string | null;
-          key: string;
-          value: string;
-        }> | null;
-        dispatcher: { address: string; canUseRelay: boolean } | null;
-      };
-    }>;
-    pageInfo: {
-      __typename: 'PaginatedResultInfo';
-      prev: string | null;
-      next: string | null;
-      totalCount: number | null;
-    };
-  };
+  result: { items: Array<WhoReactedResultFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export const WhoReactedResultFragmentDoc = gql`
