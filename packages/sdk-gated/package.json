@@ -64,7 +64,7 @@
     "@rollup/plugin-terser": "^0.4.0",
     "@rollup/plugin-typescript": "^11.0.0",
     "@types/jest": "29.2.3",
-    "@types/node": "^18.13.0",
+    "@types/node": "^18.14.0",
     "@types/pako": "^2.0.0",
     "blob-polyfill": "^7.0.20220408",
     "dotenv": "^16.0.3",
