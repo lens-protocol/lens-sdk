@@ -4,15 +4,22 @@ import { never } from '../utils';
 import { ProfileCard } from './components/ProfileCard';
 
 function OwnedProfiles({ activeWalletAddress }: { activeWalletAddress: string }) {
-  const { data } = useProfilesOwnedBy({
+  const { data, loading } = useProfilesOwnedBy({
     address: activeWalletAddress,
   });
 
+  console.log(loading);
+
   return (
     <div>
-      {data?.map((profile) => (
-        <ProfileCard key={profile.id} profile={profile} />
-      ))}
+      <h3>Owned Profiles</h3>
+
+      {data
+        ?.slice()
+        .reverse()
+        .map((profile) => (
+          <ProfileCard key={profile.id} profile={profile} />
+        ))}
     </div>
   );
 }
