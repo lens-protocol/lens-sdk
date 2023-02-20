@@ -5,6 +5,7 @@ export * from './authentication';
 export * from './consts/config';
 export * from './consts/errors';
 export * from './explore';
+export * from './feed';
 export * from './notifications';
 export * from './profile';
 export * from './proxy-action';

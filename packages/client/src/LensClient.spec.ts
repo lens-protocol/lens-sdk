@@ -8,6 +8,7 @@ import LensClient, {
   Search,
   Transaction,
   Notifications,
+  Feed,
 } from '.';
 import { mumbaiSandbox } from './consts/environments';
 
@@ -21,6 +22,12 @@ describe(`Given the LensClient configured for sandbox`, () => {
   describe(`when accessing the ${Explore.name} module`, () => {
     it(`should return a new instance of ${Explore.name}`, () => {
       expect(client.explore).toBeInstanceOf(Explore);
+    });
+  });
+
+  describe(`when accessing the ${Feed.name} module`, () => {
+    it(`should return a new instance of ${Feed.name}`, () => {
+      expect(client.feed).toBeInstanceOf(Feed);
     });
   });
 

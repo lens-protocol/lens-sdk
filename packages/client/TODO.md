@@ -152,7 +152,8 @@ Client manages the token lifecycle and storage
 
 ## Feed
 
-- [PQ] client.feed.fetch({ profileId })
+- [x] [PQ] client.feed.fetch(request)
+- [x] [PQ] client.feed.fetchHighlights(request)
 
 ## Other considerations
 
