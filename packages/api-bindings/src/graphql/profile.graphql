@@ -66,6 +66,10 @@ fragment Profile on Profile {
     totalMirrors
     totalPosts
     totalPublications
+
+    commentsCount: commentsTotal(forSources: $sources)
+    postsCount: postsTotal(forSources: $sources)
+    mirrorsCount: mirrorsTotal(forSources: $sources)
   }
   __followModule: followModule {
     ... on FeeFollowModuleSettings {
@@ -120,13 +124,17 @@ fragment Profile on Profile {
   ownedByMe @client
 }
 
-query ProfilesToFollow($observerId: ProfileId) {
+query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {
   result: recommendedProfiles {
     ...Profile
   }
 }
 
-query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+query GetProfile(
+  $request: SingleProfileQueryRequest!
+  $observerId: ProfileId
+  $sources: [Sources!]!
+) {
   result: profile(request: $request) {
     ...Profile
   }
@@ -137,6 +145,7 @@ query GetAllProfilesByOwnerAddress(
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
+  $sources: [Sources!]!
 ) {
   result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
     items {
@@ -165,6 +174,7 @@ query MutualFollowersProfiles(
   $viewingProfileId: ProfileId!
   $limit: LimitScalar!
   $cursor: Cursor
+  $sources: [Sources!]!
 ) {
   result: mutualFollowersProfiles(
     request: {

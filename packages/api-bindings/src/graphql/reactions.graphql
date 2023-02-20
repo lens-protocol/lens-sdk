@@ -33,6 +33,7 @@ query WhoReactedPublication(
   $cursor: Cursor
   $publicationId: InternalPublicationId!
   $observerId: ProfileId
+  $sources: [Sources!]!
 ) {
   result: whoReactedPublication(
     request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }

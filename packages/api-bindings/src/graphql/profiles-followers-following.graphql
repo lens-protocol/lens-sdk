@@ -17,6 +17,7 @@ query ProfileFollowers(
   $limit: LimitScalar!
   $cursor: Cursor
   $observerId: ProfileId
+  $sources: [Sources!]!
 ) {
   result: followers(request: { profileId: $profileId, limit: $limit, cursor: $cursor }) {
     items {
@@ -33,6 +34,7 @@ query ProfileFollowing(
   $limit: LimitScalar!
   $cursor: Cursor
   $observerId: ProfileId
+  $sources: [Sources!]!
 ) {
   result: following(request: { address: $walletAddress, limit: $limit, cursor: $cursor }) {
     items {

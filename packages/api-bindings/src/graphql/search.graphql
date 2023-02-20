@@ -31,6 +31,7 @@ query SearchProfiles(
   $cursor: Cursor
   $query: Search!
   $observerId: ProfileId
+  $sources: [Sources!]!
 ) {
   result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
     ... on ProfileSearchResult {

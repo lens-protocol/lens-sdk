@@ -167,6 +167,7 @@ fragment PublicationStats on PublicationStats {
   totalDownvotes
   totalAmountOfCollects
   totalAmountOfComments
+  commentsCount: commentsTotal(forSources: $sources)
 }
 
 fragment MirrorBase on Mirror {

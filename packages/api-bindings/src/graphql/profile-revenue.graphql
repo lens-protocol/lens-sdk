@@ -5,7 +5,7 @@ fragment ProfileFollowRevenue on FollowRevenueResult {
   }
 }
 
-query ProfileFollowRevenue($profileId: ProfileId!) {
+query ProfileFollowRevenue($profileId: ProfileId!, $sources: [Sources!]!) {
   result: profileFollowRevenue(request: { profileId: $profileId }) {
     ...ProfileFollowRevenue
   }

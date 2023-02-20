@@ -4360,7 +4360,7 @@ export type PublicationStatsFragment = { __typename: 'PublicationStats' } & Pick
   | 'totalDownvotes'
   | 'totalAmountOfCollects'
   | 'totalAmountOfComments'
->;
+> & { commentsCount: PublicationStats['commentsTotal'] };
 
 export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
   Mirror,
@@ -4498,6 +4498,7 @@ export type ExploreProfilesQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type ExploreProfilesQuery = {
@@ -4765,6 +4766,7 @@ export type ProfileFollowRevenueFragment = { __typename: 'FollowRevenueResult' }
 
 export type ProfileFollowRevenueQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type ProfileFollowRevenueQuery = { result: ProfileFollowRevenueFragment };
@@ -4819,7 +4821,11 @@ export type ProfileFragment = { __typename: 'Profile' } & Pick<
       | 'totalMirrors'
       | 'totalPosts'
       | 'totalPublications'
-    >;
+    > & {
+        commentsCount: ProfileStats['commentsTotal'];
+        postsCount: ProfileStats['postsTotal'];
+        mirrorsCount: ProfileStats['mirrorsTotal'];
+      };
     __followModule: Maybe<
       | FeeFollowModuleSettingsFragment
       | ProfileFollowModuleSettingsFragment
@@ -4839,6 +4845,7 @@ export type ProfileFragment = { __typename: 'Profile' } & Pick<
 
 export type ProfilesToFollowQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type ProfilesToFollowQuery = { result: Array<ProfileFragment> };
@@ -4846,6 +4853,7 @@ export type ProfilesToFollowQuery = { result: Array<ProfileFragment> };
 export type GetProfileQueryVariables = Exact<{
   request: SingleProfileQueryRequest;
   observerId?: Maybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type GetProfileQuery = { result: Maybe<ProfileFragment> };
@@ -4855,6 +4863,7 @@ export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type GetAllProfilesByOwnerAddressQuery = {
@@ -4872,6 +4881,7 @@ export type MutualFollowersProfilesQueryVariables = Exact<{
   viewingProfileId: Scalars['ProfileId'];
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type MutualFollowersProfilesQuery = {
@@ -4961,6 +4971,7 @@ export type ProfileFollowersQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   observerId?: Maybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type ProfileFollowersQuery = {
@@ -4972,6 +4983,7 @@ export type ProfileFollowingQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
   observerId?: Maybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type ProfileFollowingQuery = {
@@ -5010,6 +5022,7 @@ export type ProxyActionMutation = { result: Mutation['proxyAction'] };
 export type PublicationQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   publicationId: Scalars['InternalPublicationId'];
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type PublicationQuery = { result: Maybe<PostFragment | CommentFragment | MirrorFragment> };
@@ -5017,6 +5030,7 @@ export type PublicationQuery = { result: Maybe<PostFragment | CommentFragment | 
 export type PublicationByTxHashQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   txHash: Scalars['TxHash'];
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type PublicationByTxHashQuery = {
@@ -5070,6 +5084,7 @@ export type WhoCollectedPublicationQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type WhoCollectedPublicationQuery = {
@@ -5081,6 +5096,7 @@ export type GetAllProfilesByWhoMirroredPublicationQueryVariables = Exact<{
   observerId?: Maybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: Maybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type GetAllProfilesByWhoMirroredPublicationQuery = {
@@ -5128,6 +5144,7 @@ export type WhoReactedPublicationQueryVariables = Exact<{
   cursor?: Maybe<Scalars['Cursor']>;
   publicationId: Scalars['InternalPublicationId'];
   observerId?: Maybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type WhoReactedPublicationQuery = {
@@ -5157,6 +5174,7 @@ export type RevenueFragment = { __typename: 'PublicationRevenue' } & {
 
 export type PublicationRevenueQueryVariables = Exact<{
   request: PublicationRevenueQueryRequest;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type PublicationRevenueQuery = { result: Maybe<RevenueFragment> };
@@ -5194,6 +5212,7 @@ export type SearchProfilesQueryVariables = Exact<{
   cursor?: Maybe<Scalars['Cursor']>;
   query: Scalars['Search'];
   observerId?: Maybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
 export type SearchProfilesQuery = {
@@ -5271,6 +5290,7 @@ export const PublicationStatsFragmentDoc = gql`
     totalDownvotes
     totalAmountOfCollects
     totalAmountOfComments
+    commentsCount: commentsTotal(forSources: $sources)
   }
 `;
 export const MediaFragmentDoc = gql`
@@ -5558,6 +5578,9 @@ export const ProfileFragmentDoc = gql`
       totalMirrors
       totalPosts
       totalPublications
+      commentsCount: commentsTotal(forSources: $sources)
+      postsCount: postsTotal(forSources: $sources)
+      mirrorsCount: mirrorsTotal(forSources: $sources)
     }
     __followModule: followModule {
       ... on FeeFollowModuleSettings {
@@ -6783,7 +6806,12 @@ export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
 export type FeedQueryResult = Apollo.QueryResult<FeedQuery, FeedQueryVariables>;
 export const ExploreProfilesDocument = gql`
-  query ExploreProfiles($observerId: ProfileId, $limit: LimitScalar!, $cursor: Cursor) {
+  query ExploreProfiles(
+    $observerId: ProfileId
+    $limit: LimitScalar!
+    $cursor: Cursor
+    $sources: [Sources!]!
+  ) {
     result: exploreProfiles(
       request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
     ) {
@@ -6814,6 +6842,7 @@ export const ExploreProfilesDocument = gql`
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -7444,7 +7473,7 @@ export type CreateSetDispatcherTypedDataMutationOptions = Apollo.BaseMutationOpt
   CreateSetDispatcherTypedDataMutationVariables
 >;
 export const ProfileFollowRevenueDocument = gql`
-  query ProfileFollowRevenue($profileId: ProfileId!) {
+  query ProfileFollowRevenue($profileId: ProfileId!, $sources: [Sources!]!) {
     result: profileFollowRevenue(request: { profileId: $profileId }) {
       ...ProfileFollowRevenue
     }
@@ -7465,6 +7494,7 @@ export const ProfileFollowRevenueDocument = gql`
  * const { data, loading, error } = useProfileFollowRevenueQuery({
  *   variables: {
  *      profileId: // value for 'profileId'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -7501,7 +7531,7 @@ export type ProfileFollowRevenueQueryResult = Apollo.QueryResult<
   ProfileFollowRevenueQueryVariables
 >;
 export const ProfilesToFollowDocument = gql`
-  query ProfilesToFollow($observerId: ProfileId) {
+  query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {
     result: recommendedProfiles {
       ...Profile
     }
@@ -7522,11 +7552,12 @@ export const ProfilesToFollowDocument = gql`
  * const { data, loading, error } = useProfilesToFollowQuery({
  *   variables: {
  *      observerId: // value for 'observerId'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
 export function useProfilesToFollowQuery(
-  baseOptions?: Apollo.QueryHookOptions<ProfilesToFollowQuery, ProfilesToFollowQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<ProfilesToFollowQuery, ProfilesToFollowQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<ProfilesToFollowQuery, ProfilesToFollowQueryVariables>(
@@ -7550,7 +7581,11 @@ export type ProfilesToFollowQueryResult = Apollo.QueryResult<
   ProfilesToFollowQueryVariables
 >;
 export const GetProfileDocument = gql`
-  query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+  query GetProfile(
+    $request: SingleProfileQueryRequest!
+    $observerId: ProfileId
+    $sources: [Sources!]!
+  ) {
     result: profile(request: $request) {
       ...Profile
     }
@@ -7572,6 +7607,7 @@ export const GetProfileDocument = gql`
  *   variables: {
  *      request: // value for 'request'
  *      observerId: // value for 'observerId'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -7599,6 +7635,7 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
+    $sources: [Sources!]!
   ) {
     result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
       items {
@@ -7629,6 +7666,7 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -7723,6 +7761,7 @@ export const MutualFollowersProfilesDocument = gql`
     $viewingProfileId: ProfileId!
     $limit: LimitScalar!
     $cursor: Cursor
+    $sources: [Sources!]!
   ) {
     result: mutualFollowersProfiles(
       request: {
@@ -7760,6 +7799,7 @@ export const MutualFollowersProfilesDocument = gql`
  *      viewingProfileId: // value for 'viewingProfileId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -8147,6 +8187,7 @@ export const ProfileFollowersDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $observerId: ProfileId
+    $sources: [Sources!]!
   ) {
     result: followers(request: { profileId: $profileId, limit: $limit, cursor: $cursor }) {
       items {
@@ -8177,6 +8218,7 @@ export const ProfileFollowersDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      observerId: // value for 'observerId'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -8210,6 +8252,7 @@ export const ProfileFollowingDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $observerId: ProfileId
+    $sources: [Sources!]!
   ) {
     result: following(request: { address: $walletAddress, limit: $limit, cursor: $cursor }) {
       items {
@@ -8240,6 +8283,7 @@ export const ProfileFollowingDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      observerId: // value for 'observerId'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -8372,7 +8416,11 @@ export type ProxyActionMutationOptions = Apollo.BaseMutationOptions<
   ProxyActionMutationVariables
 >;
 export const PublicationDocument = gql`
-  query Publication($observerId: ProfileId, $publicationId: InternalPublicationId!) {
+  query Publication(
+    $observerId: ProfileId
+    $publicationId: InternalPublicationId!
+    $sources: [Sources!]!
+  ) {
     result: publication(request: { publicationId: $publicationId }) {
       ... on Post {
         ...Post
@@ -8404,6 +8452,7 @@ export const PublicationDocument = gql`
  *   variables: {
  *      observerId: // value for 'observerId'
  *      publicationId: // value for 'publicationId'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -8429,7 +8478,7 @@ export type PublicationQueryResult = Apollo.QueryResult<
   PublicationQueryVariables
 >;
 export const PublicationByTxHashDocument = gql`
-  query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
+  query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!, $sources: [Sources!]!) {
     result: publication(request: { txHash: $txHash }) {
       ... on Post {
         ...Post
@@ -8461,6 +8510,7 @@ export const PublicationByTxHashDocument = gql`
  *   variables: {
  *      observerId: // value for 'observerId'
  *      txHash: // value for 'txHash'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -8731,6 +8781,7 @@ export const WhoCollectedPublicationDocument = gql`
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
+    $sources: [Sources!]!
   ) {
     result: whoCollectedPublication(
       request: { publicationId: $publicationId, limit: $limit, cursor: $cursor }
@@ -8763,6 +8814,7 @@ export const WhoCollectedPublicationDocument = gql`
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -8806,6 +8858,7 @@ export const GetAllProfilesByWhoMirroredPublicationDocument = gql`
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
+    $sources: [Sources!]!
   ) {
     result: profiles(
       request: { whoMirroredPublicationId: $publicationId, limit: $limit, cursor: $cursor }
@@ -8838,6 +8891,7 @@ export const GetAllProfilesByWhoMirroredPublicationDocument = gql`
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -9064,6 +9118,7 @@ export const WhoReactedPublicationDocument = gql`
     $cursor: Cursor
     $publicationId: InternalPublicationId!
     $observerId: ProfileId
+    $sources: [Sources!]!
   ) {
     result: whoReactedPublication(
       request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }
@@ -9096,6 +9151,7 @@ export const WhoReactedPublicationDocument = gql`
  *      cursor: // value for 'cursor'
  *      publicationId: // value for 'publicationId'
  *      observerId: // value for 'observerId'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -9189,7 +9245,7 @@ export type ReportPublicationMutationOptions = Apollo.BaseMutationOptions<
   ReportPublicationMutationVariables
 >;
 export const PublicationRevenueDocument = gql`
-  query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
+  query PublicationRevenue($request: PublicationRevenueQueryRequest!, $sources: [Sources!]!) {
     result: publicationRevenue(request: $request) {
       ...Revenue
     }
@@ -9210,6 +9266,7 @@ export const PublicationRevenueDocument = gql`
  * const { data, loading, error } = usePublicationRevenueQuery({
  *   variables: {
  *      request: // value for 'request'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -9420,6 +9477,7 @@ export const SearchProfilesDocument = gql`
     $cursor: Cursor
     $query: Search!
     $observerId: ProfileId
+    $sources: [Sources!]!
   ) {
     result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
       ... on ProfileSearchResult {
@@ -9453,6 +9511,7 @@ export const SearchProfilesDocument = gql`
  *      cursor: // value for 'cursor'
  *      query: // value for 'query'
  *      observerId: // value for 'observerId'
+ *      sources: // value for 'sources'
  *   },
  * });
  */

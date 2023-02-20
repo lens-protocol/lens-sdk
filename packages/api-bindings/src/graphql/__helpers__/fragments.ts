@@ -118,6 +118,9 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
       totalMirrors: 0,
       totalPosts: 0,
       totalPublications: 0,
+      commentsCount: 0,
+      mirrorsCount: 0,
+      postsCount: 0,
       ...overrides?.stats,
       __typename: 'ProfileStats',
     },
@@ -191,6 +194,7 @@ export function mockPublicationStatsFragment(
     totalAmountOfComments: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     totalUpvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     totalDownvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
+    commentsCount: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     ...overrides,
     __typename: 'PublicationStats',
   };

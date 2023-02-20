@@ -84,6 +84,7 @@ query WhoCollectedPublication(
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
+  $sources: [Sources!]!
 ) {
   result: whoCollectedPublication(
     request: { publicationId: $publicationId, limit: $limit, cursor: $cursor }
@@ -102,6 +103,7 @@ query GetAllProfilesByWhoMirroredPublication(
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
+  $sources: [Sources!]!
 ) {
   result: profiles(
     request: { whoMirroredPublicationId: $publicationId, limit: $limit, cursor: $cursor }

@@ -33,7 +33,7 @@ fragment Revenue on PublicationRevenue {
   }
 }
 
-query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
+query PublicationRevenue($request: PublicationRevenueQueryRequest!, $sources: [Sources!]!) {
   result: publicationRevenue(request: $request) {
     ...Revenue
   }
