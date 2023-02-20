@@ -18,19 +18,19 @@ import {
   RootCriterionFragment,
 } from '../graphql';
 import {
-  AddressOwnership,
+  AddressOwnershipCriterion,
   AndCriterion,
   AnyCriterion,
-  CollectPublication,
-  CollectThisPublication,
+  CollectPublicationCriterion,
+  CollectThisPublicationCriterion,
   SimpleCriterion,
   DecryptionCriteriaType,
   DecryptionCriteria,
-  Erc20Ownership,
-  FollowProfile,
-  NftOwnership,
+  Erc20OwnershipCriterion,
+  FollowProfileCriterion,
+  NftOwnershipCriterion,
   OrCriterion,
-  ProfileOwnership,
+  ProfileOwnershipCriterion,
   TwoAtLeastArray,
 } from '../graphql/DecryptionCriteria';
 import { FieldReadFunction } from './TypePolicy';
@@ -47,12 +47,12 @@ function isSupportedNFTContractType(
   return [ContractType.Erc721, ContractType.Erc1155].includes(contractType);
 }
 
-function nftOwnership({
+function nftOwnershipCriterion({
   chainID,
   contractAddress,
   contractType,
   tokenIds,
-}: NftOwnershipOutput): NftOwnership | null {
+}: NftOwnershipOutput): NftOwnershipCriterion | null {
   if (!isSupportedNFTContractType(contractType)) {
     return null;
   }
@@ -75,7 +75,7 @@ function nftOwnership({
   };
 }
 
-function erc20Ownership(condition: Erc20OwnershipOutput): Erc20Ownership {
+function erc20OwnershipCriterion(condition: Erc20OwnershipOutput): Erc20OwnershipCriterion {
   return {
     type: DecryptionCriteriaType.ERC20_OWNERSHIP,
     amount: condition.amount,
@@ -86,21 +86,21 @@ function erc20Ownership(condition: Erc20OwnershipOutput): Erc20Ownership {
   };
 }
 
-function addressOwnership(condition: EoaOwnershipOutput): AddressOwnership {
+function addressOwnershipCriterion(condition: EoaOwnershipOutput): AddressOwnershipCriterion {
   return {
     type: DecryptionCriteriaType.ADDRESS_OWNERSHIP,
     address: condition.address,
   };
 }
 
-function profileOwnership(condition: ProfileOwnershipOutput): ProfileOwnership {
+function profileOwnershipCriterion(condition: ProfileOwnershipOutput): ProfileOwnershipCriterion {
   return {
     type: DecryptionCriteriaType.PROFILE_OWNERSHIP,
     profileId: condition.profileId,
   };
 }
 
-function followProfile(condition: FollowConditionOutput): FollowProfile {
+function followProfile(condition: FollowConditionOutput): FollowProfileCriterion {
   return {
     type: DecryptionCriteriaType.FOLLOW_PROFILE,
     profileId: condition.profileId,
@@ -109,7 +109,7 @@ function followProfile(condition: FollowConditionOutput): FollowProfile {
 
 function collectPublication(
   condition: CollectConditionOutput,
-): CollectPublication | CollectThisPublication {
+): CollectPublicationCriterion | CollectThisPublicationCriterion {
   if (condition.thisPublication) {
     return {
       type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
@@ -136,13 +136,13 @@ function resolveSimpleCriterion(accessCondition: AccessConditionOutput): SimpleC
 
   switch (condition.__typename) {
     case 'EoaOwnershipOutput':
-      return addressOwnership(condition);
+      return addressOwnershipCriterion(condition);
     case 'Erc20OwnershipOutput':
-      return erc20Ownership(condition);
+      return erc20OwnershipCriterion(condition);
     case 'NftOwnershipOutput':
-      return nftOwnership(condition);
+      return nftOwnershipCriterion(condition);
     case 'ProfileOwnershipOutput':
-      return profileOwnership(condition);
+      return profileOwnershipCriterion(condition);
     case 'FollowConditionOutput':
       return followProfile(condition);
     case 'CollectConditionOutput':

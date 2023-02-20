@@ -15,7 +15,7 @@ export enum DecryptionCriteriaType {
   AND = 'and',
 }
 
-export type NftOwnership = {
+export type NftOwnershipCriterion = {
   type: DecryptionCriteriaType.NFT_OWNERSHIP;
   contractAddress: EthereumAddress;
   chainId: number;
@@ -23,7 +23,7 @@ export type NftOwnership = {
   tokenIds?: NonEmptyArray<string>;
 };
 
-export type Erc20Ownership = {
+export type Erc20OwnershipCriterion = {
   type: DecryptionCriteriaType.ERC20_OWNERSHIP;
   amount: string;
   chainId: number;
@@ -32,38 +32,38 @@ export type Erc20Ownership = {
   condition: ScalarOperator;
 };
 
-export type AddressOwnership = {
+export type AddressOwnershipCriterion = {
   type: DecryptionCriteriaType.ADDRESS_OWNERSHIP;
   address: EthereumAddress;
 };
 
-export type ProfileOwnership = {
+export type ProfileOwnershipCriterion = {
   type: DecryptionCriteriaType.PROFILE_OWNERSHIP;
   profileId: ProfileId;
 };
 
-export type FollowProfile = {
+export type FollowProfileCriterion = {
   type: DecryptionCriteriaType.FOLLOW_PROFILE;
   profileId: ProfileId;
 };
 
-export type CollectPublication = {
+export type CollectPublicationCriterion = {
   type: DecryptionCriteriaType.COLLECT_PUBLICATION;
   publicationId: PublicationId;
 };
 
-export type CollectThisPublication = {
+export type CollectThisPublicationCriterion = {
   type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION;
 };
 
 export type SimpleCriterion =
-  | NftOwnership
-  | Erc20Ownership
-  | AddressOwnership
-  | ProfileOwnership
-  | FollowProfile
-  | CollectPublication
-  | CollectThisPublication;
+  | NftOwnershipCriterion
+  | Erc20OwnershipCriterion
+  | AddressOwnershipCriterion
+  | ProfileOwnershipCriterion
+  | FollowProfileCriterion
+  | CollectPublicationCriterion
+  | CollectThisPublicationCriterion;
 
 export type TwoAtLeastArray<T> = Overwrite<
   [T, T, ...T[]],
