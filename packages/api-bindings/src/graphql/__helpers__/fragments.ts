@@ -111,11 +111,15 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
     coverPicture: mockProfileMediaFragment(),
 
     stats: {
-      __typename: 'ProfileStats',
+      totalCollects: 0,
+      totalComments: 0,
       totalFollowers: 0,
       totalFollowing: 0,
+      totalMirrors: 0,
       totalPosts: 0,
+      totalPublications: 0,
       ...overrides?.stats,
+      __typename: 'ProfileStats',
     },
 
     dispatcher: null,

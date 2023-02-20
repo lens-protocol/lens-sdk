@@ -59,9 +59,13 @@ fragment Profile on Profile {
   }
   stats {
     __typename
+    totalCollects
+    totalComments
     totalFollowers
     totalFollowing
+    totalMirrors
     totalPosts
+    totalPublications
   }
   __followModule: followModule {
     ... on FeeFollowModuleSettings {

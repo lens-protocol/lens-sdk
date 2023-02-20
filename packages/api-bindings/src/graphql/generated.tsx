@@ -4812,7 +4812,13 @@ export type ProfileFragment = { __typename: 'Profile' } & Pick<
     coverPicture: Maybe<ProfileMedia_NftImage_Fragment | ProfileMedia_MediaSet_Fragment>;
     stats: { __typename: 'ProfileStats' } & Pick<
       ProfileStats,
-      'totalFollowers' | 'totalFollowing' | 'totalPosts'
+      | 'totalCollects'
+      | 'totalComments'
+      | 'totalFollowers'
+      | 'totalFollowing'
+      | 'totalMirrors'
+      | 'totalPosts'
+      | 'totalPublications'
     >;
     __followModule: Maybe<
       | FeeFollowModuleSettingsFragment
@@ -5545,9 +5551,13 @@ export const ProfileFragmentDoc = gql`
     }
     stats {
       __typename
+      totalCollects
+      totalComments
       totalFollowers
       totalFollowing
+      totalMirrors
       totalPosts
+      totalPublications
     }
     __followModule: followModule {
       ... on FeeFollowModuleSettings {
