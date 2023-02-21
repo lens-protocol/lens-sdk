@@ -3,6 +3,7 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
@@ -21,9 +22,13 @@ function setupUpdateFollowPolicyResponder({
   existingProfile?: ProfileFragment;
   updatedProfile?: ProfileFragment;
 }) {
+  const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
     mockGetProfileQueryMockedResponse({
-      request: { profileId: updatedProfile.id },
+      variables: {
+        request: { profileId: updatedProfile.id },
+        sources,
+      },
       profile: updatedProfile,
     }),
   ]);
@@ -38,7 +43,7 @@ function setupUpdateFollowPolicyResponder({
     data: existingProfile,
   });
 
-  const responder = new UpdateFollowPolicyResponder(apolloClient);
+  const responder = new UpdateFollowPolicyResponder(apolloClient, sources);
 
   return {
     responder,

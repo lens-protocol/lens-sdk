@@ -1,6 +1,6 @@
 import { MockedResponse } from '@apollo/client/testing';
-import { ProfileId } from '@lens-protocol/domain/entities';
-import { Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
+import { AppId } from '@lens-protocol/domain/entities';
+import { Erc20 } from '@lens-protocol/shared-kernel';
 
 import {
   CommentFragment,
@@ -55,6 +55,7 @@ import {
   PublicationByTxHashQuery,
   PublicationDocument,
   PublicationQuery,
+  PublicationQueryVariables,
   PublicationRevenueDocument,
   PublicationRevenueFragment,
   PublicationRevenueQuery,
@@ -69,7 +70,6 @@ import {
   SearchPublicationsDocument,
   SearchPublicationsQuery,
   SearchPublicationsQueryVariables,
-  SingleProfileQueryRequest,
   TransactionErrorReasons,
   WalletFragment,
   WhoCollectedPublicationDocument,
@@ -80,13 +80,21 @@ import {
   WhoReactedPublicationQueryVariables,
   WhoReactedResultFragment,
   GetAllProfilesByWhoMirroredPublicationDocument,
+  GetAllProfilesByOwnerAddressQueryVariables,
+  GetProfileQueryVariables,
+  PublicationByTxHashQueryVariables,
 } from '../generated';
+import { Sources } from '../sources';
 import {
   mockEnabledModulesFragment,
   mockFeedItemFragment,
   mockPostFragment,
   mockProfileFragment,
 } from './fragments';
+
+export function mockSources(): Sources {
+  return ['foobar' as AppId];
+}
 
 export function createProfilesToFollowQueryMockedResponse(args: {
   profiles: ProfileFragment[];
@@ -110,21 +118,16 @@ export function mockGetProfileQuery(profile: Maybe<ProfileFragment>): GetProfile
 }
 
 export function mockGetProfileQueryMockedResponse({
+  variables,
   profile = mockProfileFragment(),
-  request,
-  observerId,
 }: {
+  variables: GetProfileQueryVariables;
   profile?: Maybe<ProfileFragment>;
-  request: SingleProfileQueryRequest;
-  observerId?: string;
 }): MockedResponse<GetProfileQuery> {
   return {
     request: {
       query: GetProfileDocument,
-      variables: {
-        request,
-        observerId,
-      },
+      variables,
     },
     result: {
       data: mockGetProfileQuery(profile),
@@ -149,27 +152,16 @@ function mockGetAllProfilesByOwnerAddressQuery(
 }
 
 export function createGetAllProfilesByOwnerAddressQueryMockedResponse({
-  address,
+  variables,
   profiles = [mockProfileFragment()],
-  observerId,
-  limit = 10,
-  cursor,
 }: {
-  address: EthereumAddress;
+  variables: GetAllProfilesByOwnerAddressQueryVariables;
   profiles?: ProfileFragment[];
-  observerId?: string;
-  limit?: number;
-  cursor?: string;
 }): MockedResponse<GetAllProfilesByOwnerAddressQuery> {
   return {
     request: {
       query: GetAllProfilesByOwnerAddressDocument,
-      variables: {
-        address,
-        observerId,
-        limit,
-        cursor,
-      },
+      variables,
     },
     result: {
       data: mockGetAllProfilesByOwnerAddressQuery(profiles),
@@ -349,16 +341,16 @@ export function mockFeedQuery({
 }
 
 export function createPublicationQueryMockedResponse({
-  publicationId,
+  variables,
   result,
 }: {
-  publicationId: string;
+  variables: PublicationQueryVariables;
   result: PostFragment | null;
 }): MockedResponse<PublicationQuery> {
   return {
     request: {
       query: PublicationDocument,
-      variables: { publicationId },
+      variables,
     },
     result: {
       data: { result },
@@ -640,18 +632,16 @@ function mockPublicationByTxHash(
 }
 
 export function mockPublicationByTxHashMockedResponse({
+  variables,
   publication,
-  observerId,
-  txHash,
 }: {
+  variables: PublicationByTxHashQueryVariables;
   publication: CommentWithFirstCommentFragment | PostFragment | MirrorFragment;
-  observerId?: ProfileId;
-  txHash: string;
 }): MockedResponse<PublicationByTxHashQuery> {
   return {
     request: {
       query: PublicationByTxHashDocument,
-      variables: { txHash, observerId },
+      variables,
     },
     result: {
       data: mockPublicationByTxHash(publication),

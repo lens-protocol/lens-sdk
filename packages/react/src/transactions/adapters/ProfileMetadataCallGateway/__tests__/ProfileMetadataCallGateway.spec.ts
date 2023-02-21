@@ -1,5 +1,6 @@
+import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
-import { LensApolloClient, omitTypename } from '@lens-protocol/api-bindings';
+import { omitTypename, ProfileFragment } from '@lens-protocol/api-bindings';
 import {
   createCreateSetProfileMetadataTypedDataMutationMockedResponse,
   createCreateSetProfileMetadataViaDispatcherMutationMockedResponse,
@@ -8,75 +9,92 @@ import {
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
   mockRelayerResultFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockUpdateProfileDetailsRequest } from '@lens-protocol/domain/mocks';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
-import { FailedUploadError, MetadataUploadAdapter } from '../../MetadataUploadAdapter';
+import {
+  FailedUploadError,
+  MetadataUploadAdapter,
+  MetadataUploadHandler,
+} from '../../MetadataUploadAdapter';
 import { mockITransactionFactory } from '../../__helpers__/mocks';
 import { ProfileMetadataCallGateway } from '../ProfileMetadataCallGateway';
 
 function setupTestScenario({
-  apolloClient,
-  metadataURI,
+  existingProfile,
+  uploadHandler,
+  otherMockedResponses = [],
 }: {
-  apolloClient: LensApolloClient;
-  metadataURI?: string;
+  existingProfile: ProfileFragment;
+  uploadHandler: MetadataUploadHandler;
+  otherMockedResponses?: MockedResponse<unknown>[];
 }) {
-  const uploadHandler = jest.fn();
+  const sources = mockSources();
+  const getProfilesByIdQueryMockedResponse = mockGetProfileQueryMockedResponse({
+    variables: {
+      request: { profileId: existingProfile.id },
+      observerId: existingProfile.id,
+      sources,
+    },
+    profile: existingProfile,
+  });
 
-  if (metadataURI) {
-    uploadHandler.mockResolvedValue(metadataURI);
-  } else {
-    uploadHandler.mockRejectedValue(new Error('Unknown error'));
-  }
+  const apolloClient = createMockApolloClientWithMultipleResponses([
+    getProfilesByIdQueryMockedResponse,
+    ...otherMockedResponses,
+  ]);
 
   const transactionFactory = mockITransactionFactory();
-  const gateway = new ProfileMetadataCallGateway(
+
+  return new ProfileMetadataCallGateway(
     apolloClient,
     transactionFactory,
     new MetadataUploadAdapter(uploadHandler),
+    sources,
   );
-
-  return { gateway, uploadHandler };
 }
 
-describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
-  const existingProfile = mockProfileFragment();
-  const getProfilesByIdQueryMockedResponse = mockGetProfileQueryMockedResponse({
-    observerId: existingProfile.id,
-    profile: existingProfile,
-    request: { profileId: existingProfile.id },
-  });
-  const metadataURI = faker.internet.url();
+const existingProfile = mockProfileFragment();
+const metadataURI = faker.internet.url();
+const successfulUploadHandler = jest.fn().mockResolvedValue(metadataURI);
+const failingUploadHandler = jest.fn().mockRejectedValue(new Error('Unknown error'));
+const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
 
-  const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
+describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
+  afterEach(() => {
+    successfulUploadHandler.mockClear();
+    failingUploadHandler.mockClear();
+  });
 
   describe(`when creating an ${UnsignedLensProtocolCall.name}<UpdateProfileDetailsRequest> via the "${ProfileMetadataCallGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
     it(`should:
-          - create a new Profile Metadata updating the profile details
-          - upload it via the ${MetadataUploadAdapter.name}
-          - create an instance of the ${UnsignedLensProtocolCall.name} w/ the expected typed data`, async () => {
+        - create a new Profile Metadata updating the profile details
+        - upload it via the ${MetadataUploadAdapter.name}
+        - create an instance of the ${UnsignedLensProtocolCall.name} w/ the expected typed data`, async () => {
       const createSetProfileMetadataTypedDataMutation =
         mockCreateSetProfileMetadataTypedDataMutation();
 
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        getProfilesByIdQueryMockedResponse,
-        createCreateSetProfileMetadataTypedDataMutationMockedResponse({
-          request: {
-            profileId: request.profileId,
-            metadata: metadataURI,
-          },
-          data: createSetProfileMetadataTypedDataMutation,
-        }),
-      ]);
+      const gateway = setupTestScenario({
+        existingProfile,
+        uploadHandler: successfulUploadHandler,
+        otherMockedResponses: [
+          createCreateSetProfileMetadataTypedDataMutationMockedResponse({
+            request: {
+              profileId: request.profileId,
+              metadata: metadataURI,
+            },
+            data: createSetProfileMetadataTypedDataMutation,
+          }),
+        ],
+      });
 
-      const { gateway, uploadHandler } = setupTestScenario({ apolloClient, metadataURI });
       const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
-      expect(uploadHandler).toHaveBeenCalledWith(
+      expect(successfulUploadHandler).toHaveBeenCalledWith(
         expect.objectContaining({
           version: '1.0.0',
           metadata_id: expect.any(String),
@@ -91,19 +109,21 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
     });
 
     it(`should be possible to override the signature nonce`, async () => {
+      const uploadHandler = jest.fn().mockResolvedValue(metadataURI);
       const nonce = mockNonce();
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        getProfilesByIdQueryMockedResponse,
-        createCreateSetProfileMetadataTypedDataMutationMockedResponse({
-          request: {
-            profileId: request.profileId,
-            metadata: metadataURI,
-          },
-          overrideSigNonce: nonce,
-        }),
-      ]);
-
-      const { gateway } = setupTestScenario({ apolloClient, metadataURI });
+      const gateway = setupTestScenario({
+        existingProfile,
+        uploadHandler,
+        otherMockedResponses: [
+          createCreateSetProfileMetadataTypedDataMutationMockedResponse({
+            request: {
+              profileId: request.profileId,
+              metadata: metadataURI,
+            },
+            overrideSigNonce: nonce,
+          }),
+        ],
+      });
 
       const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
 
@@ -111,10 +131,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
     });
 
     it(`should throw a ${FailedUploadError.name} if the Profile Metadata upload fails`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        getProfilesByIdQueryMockedResponse,
-      ]);
-      const { gateway } = setupTestScenario({ apolloClient });
+      const gateway = setupTestScenario({ existingProfile, uploadHandler: failingUploadHandler });
 
       await expect(() => gateway.createUnsignedProtocolCall(request)).rejects.toThrow(
         FailedUploadError,
@@ -129,28 +146,28 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
           - create a ${NativeTransaction.name} instance`, async () => {
       const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
 
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        getProfilesByIdQueryMockedResponse,
-        createCreateSetProfileMetadataViaDispatcherMutationMockedResponse({
-          variables: {
-            request: {
-              profileId: request.profileId,
-              metadata: metadataURI,
+      const gateway = setupTestScenario({
+        existingProfile,
+        uploadHandler: successfulUploadHandler,
+        otherMockedResponses: [
+          createCreateSetProfileMetadataViaDispatcherMutationMockedResponse({
+            variables: {
+              request: {
+                profileId: request.profileId,
+                metadata: metadataURI,
+              },
             },
-          },
-          data: {
-            result: mockRelayerResultFragment(),
-          },
-        }),
-      ]);
-
-      const { gateway, uploadHandler } = setupTestScenario({ apolloClient, metadataURI });
+            data: {
+              result: mockRelayerResultFragment(),
+            },
+          }),
+        ],
+      });
 
       const transaction = await gateway.createDelegatedTransaction(request);
 
       await transaction.waitNextEvent();
-
-      expect(uploadHandler).toHaveBeenCalledWith(
+      expect(successfulUploadHandler).toHaveBeenCalledWith(
         expect.objectContaining({
           version: '1.0.0',
           metadata_id: expect.any(String),
@@ -167,10 +184,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
     });
 
     it(`should throw a ${FailedUploadError.name} if the Profile Metadata upload fails`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
-        getProfilesByIdQueryMockedResponse,
-      ]);
-      const { gateway } = setupTestScenario({ apolloClient });
+      const gateway = setupTestScenario({ existingProfile, uploadHandler: failingUploadHandler });
 
       await expect(() => gateway.createDelegatedTransaction(request)).rejects.toThrow(
         FailedUploadError,

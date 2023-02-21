@@ -39,6 +39,7 @@ config:
     ReferencePolicy: ReferencePolicy
     Search: string
     Signature: string
+    Sources: AppId
     String: string
     TokenId: string
     TxHash: string
@@ -60,7 +61,7 @@ generates:
       - add:
           content:
             [
-              "import type { ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
+              "import type { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
               "import type { EthereumAddress } from '@lens-protocol/shared-kernel'",
               "import type { ClientErc20Amount } from './ClientErc20Amount';",
               "import type { DecryptionCriteria } from './DecryptionCriteria';",
@@ -72,6 +73,7 @@ generates:
             ]
       - 'typescript-operations':
           skipTypename: true
+          immutableTypes: false
       - 'typescript-react-apollo'
       - 'typescript-apollo-client-helpers'
       - 'fragment-matcher'

@@ -6,6 +6,7 @@ import {
   mockMediaFragment,
   mockProfileFragment,
   mockProfileMediaFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
@@ -20,13 +21,17 @@ type SetupTestScenarioArgs = {
 };
 
 function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioArgs) {
+  const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
     mockGetProfileQueryMockedResponse({
       profile: responseProfile,
-      request: {
-        profileId: responseProfile.id,
+      variables: {
+        request: {
+          profileId: responseProfile.id,
+        },
+        observerId: responseProfile.id,
+        sources,
       },
-      observerId: responseProfile.id,
     }),
   ]);
 
@@ -37,7 +42,7 @@ function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioA
     data: cacheProfile,
   });
 
-  const responder = new UpdateProfileImageResponder(apolloClient);
+  const responder = new UpdateProfileImageResponder(apolloClient, sources);
 
   return {
     responder,

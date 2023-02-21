@@ -1,12 +1,15 @@
 import {
   createMockApolloClientWithMultipleResponses,
   createWhoReactedPublicationQueryMockedResponse,
+  mockSources,
   mockWhoReactedResultFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useWhoReacted } from '../useWhoReacted';
+
+const sources = mockSources();
 
 describe(`Given the ${useWhoReacted.name} hook`, () => {
   const mockWhoReacted = [mockWhoReactedResultFragment()];
@@ -21,11 +24,13 @@ describe(`Given the ${useWhoReacted.name} hook`, () => {
           }),
         {
           mocks: {
+            sources,
             apolloClient: createMockApolloClientWithMultipleResponses([
               createWhoReactedPublicationQueryMockedResponse({
                 variables: {
                   publicationId,
                   limit: 10,
+                  sources,
                 },
                 items: mockWhoReacted,
               }),

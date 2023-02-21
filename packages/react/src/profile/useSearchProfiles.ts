@@ -15,7 +15,7 @@ export function useSearchProfiles({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
 }: UseSearchProfilesArgs): PaginatedReadResult<ProfileFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useSearchProfilesQuery({
@@ -23,6 +23,7 @@ export function useSearchProfiles({
         query,
         limit,
         observerId,
+        sources,
       },
       client: apolloClient,
     }),

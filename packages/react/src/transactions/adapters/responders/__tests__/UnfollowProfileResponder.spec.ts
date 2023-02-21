@@ -1,6 +1,6 @@
 import { InMemoryCache } from '@apollo/client';
 import { ProfileFragmentDoc } from '@lens-protocol/api-bindings';
-import { mockProfileFragment } from '@lens-protocol/api-bindings/mocks';
+import { mockProfileFragment, mockProfileStatsFragment } from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
   mockUnfollowRequest,
@@ -24,12 +24,9 @@ function setupTestScenario({
 
   const existingProfile = mockProfileFragment({
     id: transactionData.request.profileId,
-    stats: {
-      __typename: 'ProfileStats',
+    stats: mockProfileStatsFragment({
       totalFollowers: 1,
-      totalFollowing: 0,
-      totalPosts: 3,
-    },
+    }),
   });
 
   apolloCache.writeFragment({

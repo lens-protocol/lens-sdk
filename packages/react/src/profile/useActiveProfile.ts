@@ -13,7 +13,7 @@ import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
 
 export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, UnspecifiedError> {
   const state = useAppState();
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
   const profile = useActiveProfileVar();
 
   const { data, error, loading } = useGetProfileQuery({
@@ -21,6 +21,7 @@ export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, 
       request: {
         profileId: profile?.id,
       },
+      sources,
     },
     fetchPolicy: 'cache-first',
     skip: state !== ApplicationsState.READY || profile === null,

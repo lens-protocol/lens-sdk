@@ -12,6 +12,7 @@ import {
   ProfileFragment,
   CreatePublicSetProfileMetadataUriRequest,
   LensApolloClient,
+  Sources,
 } from '@lens-protocol/api-bindings';
 import {
   NativeTransaction,
@@ -42,6 +43,7 @@ export class ProfileMetadataCallGateway
     private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
     private readonly uploadAdapter: MetadataUploadAdapter,
+    private readonly sources: Sources,
   ) {}
 
   async createDelegatedTransaction<T extends UpdateProfileDetailsRequest>(
@@ -129,6 +131,7 @@ export class ProfileMetadataCallGateway
       variables: {
         request: { profileId },
         observerId: profileId,
+        sources: this.sources,
       },
     });
 

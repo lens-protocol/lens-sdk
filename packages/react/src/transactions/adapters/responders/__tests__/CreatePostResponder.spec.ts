@@ -5,6 +5,7 @@ import {
   mockPostFragment,
   mockProfileFragment,
   mockPublicationByTxHashMockedResponse,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockCreatePostRequest, mockBroadcastedTransactionData } from '@lens-protocol/domain/mocks';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
@@ -21,21 +22,28 @@ function setupTestScenario({
   post?: PostFragment;
   transactionData?: BroadcastedTransactionData<CreatePostRequest>;
 }) {
+  const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
     mockGetProfileQueryMockedResponse({
       profile: author,
-      request: {
-        profileId: author.id,
+      variables: {
+        request: {
+          profileId: author.id,
+        },
+        sources,
       },
     }),
     mockPublicationByTxHashMockedResponse({
-      txHash: transactionData.txHash,
-      observerId: author.id,
+      variables: {
+        txHash: transactionData.txHash,
+        observerId: author.id,
+        sources,
+      },
       publication: post,
     }),
   ]);
 
-  return new CreatePostResponder(apolloClient);
+  return new CreatePostResponder(apolloClient, sources);
 }
 
 describe(`Given an instance of the ${CreatePostResponder.name}`, () => {

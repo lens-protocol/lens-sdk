@@ -15,7 +15,7 @@ export function useMutualFollowers({
   viewingProfileId,
   limit,
 }: UseMutualFollowersArgs): PaginatedReadResult<ProfileFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useMutualFollowersProfilesQuery({
@@ -23,6 +23,7 @@ export function useMutualFollowers({
         observerId,
         viewingProfileId,
         limit: limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
+        sources,
       },
       client: apolloClient,
     }),

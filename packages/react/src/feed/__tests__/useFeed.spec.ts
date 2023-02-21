@@ -3,12 +3,15 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockFeedItemFragment,
   createFeedQueryMockedResponse,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { FeedEventItemType } from '../FeedEventItemType';
 import { useFeed } from '../useFeed';
+
+const sources = mockSources();
 
 describe(`Given the ${useFeed.name} hook`, () => {
   const profileId = '0x2001';
@@ -24,13 +27,14 @@ describe(`Given the ${useFeed.name} hook`, () => {
           }),
         {
           mocks: {
+            sources,
             apolloClient: createMockApolloClientWithMultipleResponses([
               createFeedQueryMockedResponse({
                 variables: {
                   profileId,
                   restrictEventTypesTo: [LensFeedEventItemType.Post],
                   limit: 10,
-                  sources: [],
+                  sources,
                 },
                 items: mockFeed,
               }),

@@ -3,11 +3,14 @@ import {
   createProfilePublicationRevenueQueryMockedResponse,
   mockProfileFragment,
   mockPublicationRevenueFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useProfilePublicationRevenue } from '../useProfilePublicationRevenue';
+
+const sources = mockSources();
 
 describe(`Given the ${useProfilePublicationRevenue.name} hook`, () => {
   const mockedPublicationRevenueFragments = [mockPublicationRevenueFragment()];
@@ -23,9 +26,10 @@ describe(`Given the ${useProfilePublicationRevenue.name} hook`, () => {
             }),
           {
             mocks: {
+              sources,
               apolloClient: createMockApolloClientWithMultipleResponses([
                 createProfilePublicationRevenueQueryMockedResponse({
-                  variables: { profileId: mockedProfile.id, limit: 10, sources: [] },
+                  variables: { profileId: mockedProfile.id, limit: 10, sources },
                   items: mockedPublicationRevenueFragments,
                 }),
               ]),

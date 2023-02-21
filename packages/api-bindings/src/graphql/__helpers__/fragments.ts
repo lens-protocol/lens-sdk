@@ -38,6 +38,7 @@ import {
   ProfileFragment,
   ProfileMediaFragment,
   ProfileOwnershipFragment,
+  ProfileStatsFragment,
   PublicationMainFocus,
   PublicationRevenueFragment,
   PublicationStatsFragment,
@@ -97,6 +98,25 @@ export function mockWalletFragment(): WalletFragment {
   };
 }
 
+export function mockProfileStatsFragment(
+  overrides?: Partial<ProfileStatsFragment>,
+): ProfileStatsFragment {
+  return {
+    totalCollects: 0,
+    totalComments: 0,
+    totalFollowers: 0,
+    totalFollowing: 0,
+    totalMirrors: 0,
+    totalPosts: 0,
+    totalPublications: 0,
+    commentsCount: 0,
+    mirrorsCount: 0,
+    postsCount: 0,
+    ...overrides,
+    __typename: 'ProfileStats',
+  };
+}
+
 export function mockProfileFragment(overrides?: Partial<ProfileFragment>): ProfileFragment {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
@@ -110,20 +130,7 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
     picture: mockProfileMediaFragment(),
     coverPicture: mockProfileMediaFragment(),
 
-    stats: {
-      totalCollects: 0,
-      totalComments: 0,
-      totalFollowers: 0,
-      totalFollowing: 0,
-      totalMirrors: 0,
-      totalPosts: 0,
-      totalPublications: 0,
-      commentsCount: 0,
-      mirrorsCount: 0,
-      postsCount: 0,
-      ...overrides?.stats,
-      __typename: 'ProfileStats',
-    },
+    stats: mockProfileStatsFragment(overrides?.stats),
 
     dispatcher: null,
 

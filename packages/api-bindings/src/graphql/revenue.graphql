@@ -33,7 +33,7 @@ fragment Revenue on PublicationRevenue {
   }
 }
 
-query PublicationRevenue($request: PublicationRevenueQueryRequest!, $sources: [Sources!]!) {
+query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
   result: publicationRevenue(request: $request) {
     ...Revenue
   }
@@ -63,5 +63,18 @@ query ProfilePublicationRevenue(
     pageInfo {
       ...CommonPaginatedResultInfo
     }
+  }
+}
+
+fragment ProfileFollowRevenue on FollowRevenueResult {
+  __typename
+  revenues {
+    ...RevenueAggregate
+  }
+}
+
+query ProfileFollowRevenue($profileId: ProfileId!) {
+  result: profileFollowRevenue(request: { profileId: $profileId }) {
+    ...ProfileFollowRevenue
   }
 }

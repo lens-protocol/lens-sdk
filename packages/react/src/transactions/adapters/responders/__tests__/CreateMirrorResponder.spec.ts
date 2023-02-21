@@ -4,6 +4,7 @@ import {
   mockPostFragment,
   mockProfileFragment,
   mockPublicationByTxHashMockedResponse,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
@@ -23,10 +24,14 @@ function setupTestScenario({
   post: PostFragment;
   transactionData: BroadcastedTransactionData<CreateMirrorRequest>;
 }) {
+  const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
     mockPublicationByTxHashMockedResponse({
-      txHash: transactionData.txHash,
-      observerId: transactionData.request.profileId,
+      variables: {
+        txHash: transactionData.txHash,
+        observerId: transactionData.request.profileId,
+        sources,
+      },
       publication: { ...post, mirrors: post.mirrors.concat('<new-mirror-id>') },
     }),
   ]);
@@ -42,7 +47,7 @@ function setupTestScenario({
   });
 
   const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
-  const responder = new CreateMirrorResponder(apolloClient, publicationCacheManager);
+  const responder = new CreateMirrorResponder(apolloClient, publicationCacheManager, sources);
 
   return {
     responder,

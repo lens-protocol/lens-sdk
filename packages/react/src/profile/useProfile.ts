@@ -23,7 +23,7 @@ export function useProfile({
   observerId,
   ...request
 }: UseProfileArgs): ReadResult<ProfileFragment, NotFoundError | UnspecifiedError> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   invariant(
     request.profileId === undefined || request.handle === undefined,
@@ -35,6 +35,7 @@ export function useProfile({
       variables: {
         request,
         observerId,
+        sources,
       },
       client: apolloClient,
     }),

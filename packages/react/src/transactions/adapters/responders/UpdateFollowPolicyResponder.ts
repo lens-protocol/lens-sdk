@@ -3,6 +3,7 @@ import {
   GetProfileQuery,
   GetProfileQueryVariables,
   LensApolloClient,
+  Sources,
 } from '@lens-protocol/api-bindings';
 import { UpdateFollowPolicyRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
@@ -14,7 +15,7 @@ import {
 export class UpdateFollowPolicyResponder
   implements ITransactionResponder<UpdateFollowPolicyRequest>
 {
-  constructor(private apolloClient: LensApolloClient) {}
+  constructor(private apolloClient: LensApolloClient, private readonly sources: Sources) {}
 
   async prepare({ request }: TransactionData<UpdateFollowPolicyRequest>) {
     const profileIdentifier = this.apolloClient.cache.identify({
@@ -49,6 +50,7 @@ export class UpdateFollowPolicyResponder
         request: {
           profileId,
         },
+        sources: this.sources,
       },
       fetchPolicy: 'network-only',
     });

@@ -8,13 +8,14 @@ type UseFeedArgs = PaginatedArgs<{
 }>;
 
 export function useExploreProfiles(args?: UseFeedArgs): PaginatedReadResult<ProfileFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useExploreProfilesQuery({
       variables: {
         observerId: args?.observerId,
         limit: args?.limit ?? 10,
+        sources,
       },
       client: apolloClient,
     }),

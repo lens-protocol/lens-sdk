@@ -4,6 +4,7 @@ import {
   GetProfileQueryVariables,
   LensApolloClient,
   MediaSetFragment,
+  Sources,
 } from '@lens-protocol/api-bindings';
 import {
   UpdateOffChainProfileImageRequest,
@@ -23,7 +24,7 @@ function isUpdateOffChainProfileImageRequest(
 export class UpdateProfileImageResponder
   implements ITransactionResponder<UpdateProfileImageRequest>
 {
-  constructor(private readonly client: LensApolloClient) {}
+  constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
 
   async prepare({ request }: BroadcastedTransactionData<UpdateProfileImageRequest>) {
     if (isUpdateOffChainProfileImageRequest(request)) {
@@ -54,6 +55,7 @@ export class UpdateProfileImageResponder
       variables: {
         request: { profileId: request.profileId },
         observerId: request.profileId,
+        sources: this.sources,
       },
       fetchPolicy: 'network-only',
     });
@@ -66,6 +68,7 @@ export class UpdateProfileImageResponder
       variables: {
         request: { profileId: request.profileId },
         observerId: request.profileId,
+        sources: this.sources,
       },
       fetchPolicy: 'network-only',
     });

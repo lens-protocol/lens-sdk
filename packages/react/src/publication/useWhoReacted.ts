@@ -14,7 +14,7 @@ type UseWhoReactedArgs = PaginatedArgs<{
 export function useWhoReacted(
   args: UseWhoReactedArgs,
 ): PaginatedReadResult<WhoReactedResultFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useWhoReactedPublicationQuery({
@@ -22,6 +22,7 @@ export function useWhoReacted(
         publicationId: args.publicationId,
         observerId: args?.observerId,
         limit: args?.limit ?? 10,
+        sources,
       },
       client: apolloClient,
     }),

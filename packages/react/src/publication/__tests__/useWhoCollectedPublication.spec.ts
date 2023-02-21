@@ -5,11 +5,14 @@ import {
   mockProfileFragment,
   mockWalletFragment,
   createWhoCollectedPublicationQueryMockedResponse,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useWhoCollectedPublication } from '../useWhoCollectedPublication';
+
+const sources = mockSources();
 
 describe('Given the useWhoCollectedPublication hook', () => {
   const observer = mockProfileFragment();
@@ -26,12 +29,14 @@ describe('Given the useWhoCollectedPublication hook', () => {
           }),
         {
           mocks: {
+            sources,
             apolloClient: createMockApolloClientWithMultipleResponses([
               createWhoCollectedPublicationQueryMockedResponse({
                 variables: {
                   publicationId: mockPublication.id,
                   observerId: observer.id,
                   limit: 10,
+                  sources,
                 },
                 wallets: mockWallets,
               }),

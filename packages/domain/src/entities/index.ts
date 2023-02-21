@@ -1,3 +1,4 @@
+export * from './AppId';
 export * from './Credentials';
 export * from './Nft';
 export * from './Profile';

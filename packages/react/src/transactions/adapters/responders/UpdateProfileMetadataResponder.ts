@@ -8,6 +8,7 @@ import {
   Maybe,
   ProfileFragment,
   ProfileFragmentDoc,
+  Sources,
 } from '@lens-protocol/api-bindings';
 import {
   ProfileAttributeValue,
@@ -42,7 +43,7 @@ export class UpdateProfileMetadataResponder
 {
   private snapshots = new Map<UpdateProfileDetailsRequest, ProfileFragment | null>();
 
-  constructor(private readonly apolloClient: LensApolloClient) {}
+  constructor(private readonly apolloClient: LensApolloClient, private readonly sources: Sources) {}
 
   private get apolloCache() {
     return this.apolloClient.cache;
@@ -96,6 +97,7 @@ export class UpdateProfileMetadataResponder
           profileId: request.profileId,
         },
         observerId: request.profileId,
+        sources: this.sources,
       },
       fetchPolicy: 'network-only',
     });

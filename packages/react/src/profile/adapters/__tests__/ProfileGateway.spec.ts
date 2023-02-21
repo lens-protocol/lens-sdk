@@ -5,6 +5,7 @@ import {
   createGetAllProfilesByOwnerAddressQueryMockedResponse,
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { Profile } from '@lens-protocol/domain/entities';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
@@ -12,8 +13,10 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { ProfileGateway } from '../ProfileGateway';
 
+const sources = mockSources();
+
 function setupProfileGateway({ apolloClient }: { apolloClient: LensApolloClient }) {
-  return new ProfileGateway(apolloClient);
+  return new ProfileGateway(apolloClient, sources);
 }
 
 describe(`Given an instance of the ${ProfileGateway.name}`, () => {
@@ -23,9 +26,12 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
       const profileDataFragment = mockProfileFragment();
       const apolloClient = createMockApolloClientWithMultipleResponses([
         createGetAllProfilesByOwnerAddressQueryMockedResponse({
-          address,
+          variables: {
+            address,
+            limit: 10,
+            sources,
+          },
           profiles: [profileDataFragment],
-          limit: 10,
         }),
       ]);
       const gateway = setupProfileGateway({ apolloClient });
@@ -45,7 +51,10 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
       const profileDataFragment = mockProfileFragment();
       const apolloClient = createMockApolloClientWithMultipleResponses([
         mockGetProfileQueryMockedResponse({
-          request: { handle: profileDataFragment.handle },
+          variables: {
+            request: { handle: profileDataFragment.handle },
+            sources,
+          },
           profile: profileDataFragment,
         }),
       ]);
@@ -63,7 +72,10 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
     it('should return null if the Profile does not exist', async () => {
       const handle = faker.internet.userName();
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        mockGetProfileQueryMockedResponse({ request: { handle }, profile: null }),
+        mockGetProfileQueryMockedResponse({
+          variables: { request: { handle }, sources },
+          profile: null,
+        }),
       ]);
       const gateway = setupProfileGateway({ apolloClient });
 
@@ -78,7 +90,10 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
       const profileDataFragment = mockProfileFragment();
       const apolloClient = createMockApolloClientWithMultipleResponses([
         mockGetProfileQueryMockedResponse({
-          request: { profileId: profileDataFragment.id },
+          variables: {
+            request: { profileId: profileDataFragment.id },
+            sources,
+          },
           profile: profileDataFragment,
         }),
       ]);
@@ -96,7 +111,13 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
     it('should return null if the Profile does not exist', async () => {
       const profileId = mockProfileId();
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        mockGetProfileQueryMockedResponse({ request: { profileId }, profile: null }),
+        mockGetProfileQueryMockedResponse({
+          variables: {
+            request: { profileId },
+            sources,
+          },
+          profile: null,
+        }),
       ]);
       const gateway = setupProfileGateway({ apolloClient });
 

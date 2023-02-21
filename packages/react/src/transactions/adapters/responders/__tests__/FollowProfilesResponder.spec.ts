@@ -1,5 +1,9 @@
 import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
-import { createMockApolloCache, mockProfileFragment } from '@lens-protocol/api-bindings/mocks';
+import {
+  createMockApolloCache,
+  mockProfileFragment,
+  mockProfileStatsFragment,
+} from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
   mockUnconstrainedFollowRequest,
@@ -45,12 +49,9 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
       const transactionData = mockBroadcastedTransactionData({ request });
       const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
-        stats: {
-          __typename: 'ProfileStats',
+        stats: mockProfileStatsFragment({
           totalFollowers: 2,
-          totalFollowing: 0,
-          totalPosts: 0,
-        },
+        }),
       });
       const scenario = setupTestScenario({ existingProfile });
 
@@ -73,12 +74,9 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
       const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
         __isFollowedByMe: false,
-        stats: {
-          __typename: 'ProfileStats',
+        stats: mockProfileStatsFragment({
           totalFollowers: 2,
-          totalFollowing: 0,
-          totalPosts: 0,
-        },
+        }),
       });
       const scenario = setupTestScenario({ existingProfile });
 
@@ -100,12 +98,9 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
       const transactionData = mockBroadcastedTransactionData({ request });
       const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
-        stats: {
-          __typename: 'ProfileStats',
+        stats: mockProfileStatsFragment({
           totalFollowers: 2,
-          totalFollowing: 0,
-          totalPosts: 0,
-        },
+        }),
       });
       const scenario = setupTestScenario({ existingProfile });
 
