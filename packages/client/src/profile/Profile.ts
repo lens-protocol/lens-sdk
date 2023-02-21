@@ -4,9 +4,8 @@ import { GraphQLClient } from 'graphql-request';
 import { Authentication } from '../authentication';
 import { LensConfig } from '../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { TypedDataResult } from '../consts/types';
+import { InferResultType } from '../consts/types';
 import {
-  CommonPaginatedResultInfoFragment,
   FollowerFragment,
   FollowingFragment,
   ProfileFragment,
@@ -30,6 +29,7 @@ import {
   TypedDataOptions,
   UnfollowRequest,
 } from '../graphql/types.generated';
+import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 import { execute } from '../helpers/execute';
 import {
   CreateBurnProfileTypedDataMutation,
@@ -66,16 +66,15 @@ export class Profile {
   async fetchAll(
     request: ProfileQueryRequest,
     observerId?: string,
-  ): Promise<{
-    items: ProfileFragment[];
-    pageInfo: CommonPaginatedResultInfoFragment;
-  }> {
-    const result = await this.sdk.Profiles({
-      request,
-      observerId,
-    });
+  ): Promise<PaginatedResult<ProfileFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.Profiles({
+        request: currRequest,
+        observerId,
+      });
 
-    return result.data.result;
+      return result.data.result;
+    }, request);
   }
 
   async allRecommended(observerId?: string): Promise<ProfileFragment[]> {
@@ -89,13 +88,15 @@ export class Profile {
   async mutualFollowers(
     request: MutualFollowersProfilesQueryRequest,
     observerId?: string,
-  ): Promise<{ items: ProfileFragment[]; pageInfo: CommonPaginatedResultInfoFragment }> {
-    const result = await this.sdk.MutualFollowersProfiles({
-      request,
-      observerId,
-    });
+  ): Promise<PaginatedResult<ProfileFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.MutualFollowersProfiles({
+        request: currRequest,
+        observerId,
+      });
 
-    return result.data.result;
+      return result.data.result;
+    }, request);
   }
 
   async doesFollow(request: DoesFollowRequest): Promise<DoesFollowResponse[]> {
@@ -109,31 +110,29 @@ export class Profile {
   async allFollowing(
     request: FollowingRequest,
     observerId?: string,
-  ): Promise<{
-    items: FollowingFragment[];
-    pageInfo: CommonPaginatedResultInfoFragment;
-  }> {
-    const result = await this.sdk.Following({
-      request,
-      observerId,
-    });
+  ): Promise<PaginatedResult<FollowingFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.Following({
+        request: currRequest,
+        observerId,
+      });
 
-    return result.data.result;
+      return result.data.result;
+    }, request);
   }
 
   async allFollowers(
     request: FollowersRequest,
     observerId?: string,
-  ): Promise<{
-    items: FollowerFragment[];
-    pageInfo: CommonPaginatedResultInfoFragment;
-  }> {
-    const result = await this.sdk.Followers({
-      observerId,
-      request,
-    });
+  ): Promise<PaginatedResult<FollowerFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.Followers({
+        request: currRequest,
+        observerId,
+      });
 
-    return result.data.result;
+      return result.data.result;
+    }, request);
   }
 
   async followerNftOwnedTokenIds(
@@ -168,7 +167,7 @@ export class Profile {
     request: SetDispatcherRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    TypedDataResult<CreateSetDispatcherTypedDataMutation>,
+    InferResultType<CreateSetDispatcherTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return execute(this.authentication, async (headers) => {
@@ -188,7 +187,7 @@ export class Profile {
     request: BurnProfileRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    TypedDataResult<CreateBurnProfileTypedDataMutation>,
+    InferResultType<CreateBurnProfileTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return execute(this.authentication, async (headers) => {
@@ -208,7 +207,7 @@ export class Profile {
     request: FollowRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    TypedDataResult<CreateFollowTypedDataMutation>,
+    InferResultType<CreateFollowTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return execute(this.authentication, async (headers) => {
@@ -227,7 +226,7 @@ export class Profile {
     request: UnfollowRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    TypedDataResult<CreateUnfollowTypedDataMutation>,
+    InferResultType<CreateUnfollowTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return execute(this.authentication, async (headers) => {

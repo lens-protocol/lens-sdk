@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as Types from '../../graphql/types.generated.js';
+import * as Types from '../../graphql/types.generated';
 
 import {
   ProfileFragment,
@@ -25,14 +25,14 @@ import {
 } from '../../graphql/fragments.generated';
 export type ProfileQueryVariables = Types.Exact<{
   request: Types.SingleProfileQueryRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
-export type ProfileQuery = { result: Types.Maybe<ProfileFragment> };
+export type ProfileQuery = { result: ProfileFragment | null };
 
 export type ProfilesQueryVariables = Types.Exact<{
   request: Types.ProfileQueryRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type ProfilesQuery = {
@@ -40,14 +40,14 @@ export type ProfilesQuery = {
 };
 
 export type RecommendedProfilesQueryVariables = Types.Exact<{
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type RecommendedProfilesQuery = { result: Array<ProfileFragment> };
 
 export type MutualFollowersProfilesQueryVariables = Types.Exact<{
   request: Types.MutualFollowersProfilesQueryRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type MutualFollowersProfilesQuery = {
@@ -59,17 +59,18 @@ export type DoesFollowQueryVariables = Types.Exact<{
 }>;
 
 export type DoesFollowQuery = {
-  result: Array<
-    { __typename: 'DoesFollowResponse' } & Pick<
-      Types.DoesFollowResponse,
-      'follows' | 'followerAddress' | 'profileId' | 'isFinalisedOnChain'
-    >
-  >;
+  result: Array<{
+    __typename: 'DoesFollowResponse';
+    follows: boolean;
+    followerAddress: string;
+    profileId: string;
+    isFinalisedOnChain: boolean;
+  }>;
 };
 
 export type FollowingQueryVariables = Types.Exact<{
   request: Types.FollowingRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type FollowingQuery = {
@@ -78,7 +79,7 @@ export type FollowingQuery = {
 
 export type FollowersQueryVariables = Types.Exact<{
   request: Types.FollowersRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type FollowersQuery = {
@@ -90,64 +91,60 @@ export type FollowerNftOwnedTokenIdsQueryVariables = Types.Exact<{
 }>;
 
 export type FollowerNftOwnedTokenIdsQuery = {
-  followerNftOwnedTokenIds: Types.Maybe<
-    { __typename: 'FollowerNftOwnedTokenIds' } & Pick<
-      Types.FollowerNftOwnedTokenIds,
-      'followerNftAddress' | 'tokensIds'
-    >
-  >;
+  followerNftOwnedTokenIds: {
+    __typename: 'FollowerNftOwnedTokenIds';
+    followerNftAddress: string;
+    tokensIds: Array<string>;
+  } | null;
 };
 
 export type CreateFollowTypedDataMutationVariables = Types.Exact<{
   request: Types.FollowRequest;
-  options?: Types.Maybe<Types.TypedDataOptions>;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
 export type CreateFollowTypedDataMutation = {
-  result: Pick<Types.CreateFollowBroadcastItemResult, 'id' | 'expiresAt'> & {
+  result: {
+    id: string;
+    expiresAt: string;
     typedData: {
-      types: { FollowWithSig: Array<Pick<Types.Eip712TypedDataField, 'name' | 'type'>> };
+      types: { FollowWithSig: Array<{ name: string; type: string }> };
       domain: Eip712TypedDataDomainFragment;
-      value: Pick<
-        Types.CreateFollowEip712TypedDataValue,
-        'nonce' | 'deadline' | 'profileIds' | 'datas'
-      >;
+      value: { nonce: number; deadline: string; profileIds: Array<string>; datas: Array<string> };
     };
   };
 };
 
 export type CreateUnfollowTypedDataMutationVariables = Types.Exact<{
   request: Types.UnfollowRequest;
-  options?: Types.Maybe<Types.TypedDataOptions>;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
 export type CreateUnfollowTypedDataMutation = {
-  result: Pick<Types.CreateUnfollowBroadcastItemResult, 'id' | 'expiresAt'> & {
+  result: {
+    id: string;
+    expiresAt: string;
     typedData: {
-      types: { BurnWithSig: Array<Pick<Types.Eip712TypedDataField, 'name' | 'type'>> };
+      types: { BurnWithSig: Array<{ name: string; type: string }> };
       domain: Eip712TypedDataDomainFragment;
-      value: Pick<Types.CreateBurnEip712TypedDataValue, 'nonce' | 'deadline' | 'tokenId'>;
+      value: { nonce: number; deadline: string; tokenId: string };
     };
   };
 };
 
 export type CreateSetDispatcherTypedDataMutationVariables = Types.Exact<{
   request: Types.SetDispatcherRequest;
-  options?: Types.Maybe<Types.TypedDataOptions>;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
 export type CreateSetDispatcherTypedDataMutation = {
-  result: Pick<Types.CreateSetDispatcherBroadcastItemResult, 'id' | 'expiresAt'> & {
+  result: {
+    id: string;
+    expiresAt: string;
     typedData: {
-      types: { SetDispatcherWithSig: Array<Pick<Types.Eip712TypedDataField, 'name' | 'type'>> };
-      domain: Pick<
-        Types.Eip712TypedDataDomain,
-        'name' | 'chainId' | 'version' | 'verifyingContract'
-      >;
-      value: Pick<
-        Types.CreateSetDispatcherEip712TypedDataValue,
-        'nonce' | 'deadline' | 'profileId' | 'dispatcher'
-      >;
+      types: { SetDispatcherWithSig: Array<{ name: string; type: string }> };
+      domain: { name: string; chainId: number; version: string; verifyingContract: string };
+      value: { nonce: number; deadline: string; profileId: string; dispatcher: string };
     };
   };
 };
@@ -156,22 +153,21 @@ export type CreateProfileMutationVariables = Types.Exact<{
   request: Types.CreateProfileRequest;
 }>;
 
-export type CreateProfileMutation = { result: RelayerResultFragment | RelayErrorFragment };
+export type CreateProfileMutation = { result: RelayErrorFragment | RelayerResultFragment };
 
 export type CreateBurnProfileTypedDataMutationVariables = Types.Exact<{
   request: Types.BurnProfileRequest;
-  options?: Types.Maybe<Types.TypedDataOptions>;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
 export type CreateBurnProfileTypedDataMutation = {
-  result: Pick<Types.CreateBurnProfileBroadcastItemResult, 'id' | 'expiresAt'> & {
+  result: {
+    id: string;
+    expiresAt: string;
     typedData: {
-      types: { BurnWithSig: Array<Pick<Types.Eip712TypedDataField, 'name' | 'type'>> };
-      domain: Pick<
-        Types.Eip712TypedDataDomain,
-        'name' | 'chainId' | 'version' | 'verifyingContract'
-      >;
-      value: Pick<Types.CreateBurnEip712TypedDataValue, 'nonce' | 'deadline' | 'tokenId'>;
+      types: { BurnWithSig: Array<{ name: string; type: string }> };
+      domain: { name: string; chainId: number; version: string; verifyingContract: string };
+      value: { nonce: number; deadline: string; tokenId: string };
     };
   };
 };

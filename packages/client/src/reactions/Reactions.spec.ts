@@ -35,6 +35,16 @@ describe(`Given the ${Reactions.name} configured to work with sandbox`, () => {
         expect(() => result.unwrap()).toThrow(NotAuthenticatedError);
       });
     });
+
+    describe(`when ${Reactions.prototype.toPublication.name} method is called`, () => {
+      it(`should run successfully`, async () => {
+        await expect(
+          reactions.toPublication({
+            publicationId: '0x05-0x04',
+          }),
+        ).resolves.not.toThrow();
+      });
+    });
   });
 
   describe(`and the instance is authenticated`, () => {

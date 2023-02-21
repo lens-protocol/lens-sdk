@@ -33,30 +33,68 @@ import {
   RelayErrorFragmentDoc,
   Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
-export type ExplorePublicationsQueryVariables = Types.Exact<{
-  request: Types.ExplorePublicationRequest;
+export type FeedItemFragment = {
+  __typename: 'FeedItem';
+  root: CommentFragment | PostFragment;
+  comments: Array<CommentFragment> | null;
+};
+
+export type FeedQueryVariables = Types.Exact<{
+  request: Types.FeedRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
-export type ExplorePublicationsQuery = {
+export type FeedQuery = {
+  result: { items: Array<FeedItemFragment>; pageInfo: CommonPaginatedResultInfoFragment };
+};
+
+export type FeedHighlightsQueryVariables = Types.Exact<{
+  request: Types.FeedHighlightsRequest;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+}>;
+
+export type FeedHighlightsQuery = {
   result: {
     items: Array<CommentFragment | MirrorFragment | PostFragment>;
     pageInfo: CommonPaginatedResultInfoFragment;
   };
 };
 
-export type ExploreProfilesQueryVariables = Types.Exact<{
-  request: Types.ExploreProfilesRequest;
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-}>;
-
-export type ExploreProfilesQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
-};
-
-export const ExplorePublicationsDocument = gql`
-  query ExplorePublications($request: ExplorePublicationRequest!, $observerId: ProfileId) {
-    result: explorePublications(request: $request) {
+export const FeedItemFragmentDoc = gql`
+  fragment FeedItem on FeedItem {
+    __typename
+    root {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+    comments {
+      ...Comment
+    }
+  }
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+`;
+export const FeedDocument = gql`
+  query Feed($request: FeedRequest!, $observerId: ProfileId) {
+    result: feed(request: $request) {
+      items {
+        ...FeedItem
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${FeedItemFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
+export const FeedHighlightsDocument = gql`
+  query FeedHighlights($request: FeedHighlightsRequest!, $observerId: ProfileId) {
+    result: feedHighlights(request: $request) {
       items {
         ... on Post {
           ...Post
@@ -78,20 +116,6 @@ export const ExplorePublicationsDocument = gql`
   ${CommentFragmentDoc}
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
-export const ExploreProfilesDocument = gql`
-  query ExploreProfiles($request: ExploreProfilesRequest!, $observerId: ProfileId) {
-    result: exploreProfiles(request: $request) {
-      items {
-        ...Profile
-      }
-      pageInfo {
-        ...CommonPaginatedResultInfo
-      }
-    }
-  }
-  ${ProfileFragmentDoc}
-  ${CommonPaginatedResultInfoFragmentDoc}
-`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -100,46 +124,40 @@ export type SdkFunctionWrapper = <T>(
 ) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
-const ExplorePublicationsDocumentString = print(ExplorePublicationsDocument);
-const ExploreProfilesDocumentString = print(ExploreProfilesDocument);
+const FeedDocumentString = print(FeedDocument);
+const FeedHighlightsDocumentString = print(FeedHighlightsDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    ExplorePublications(
-      variables: ExplorePublicationsQueryVariables,
+    Feed(
+      variables: FeedQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: ExplorePublicationsQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
+    ): Promise<{ data: FeedQuery; extensions?: any; headers: Dom.Headers; status: number }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<ExplorePublicationsQuery>(
-            ExplorePublicationsDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'ExplorePublications',
-        'query',
-      );
-    },
-    ExploreProfiles(
-      variables: ExploreProfilesQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<{
-      data: ExploreProfilesQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<ExploreProfilesQuery>(ExploreProfilesDocumentString, variables, {
+          client.rawRequest<FeedQuery>(FeedDocumentString, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        'ExploreProfiles',
+        'Feed',
+        'query',
+      );
+    },
+    FeedHighlights(
+      variables: FeedHighlightsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: FeedHighlightsQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<FeedHighlightsQuery>(FeedHighlightsDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'FeedHighlights',
         'query',
       );
     },

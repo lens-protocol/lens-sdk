@@ -1,38 +1,38 @@
 // @ts-nocheck
-import * as Types from '../../graphql/types.generated.js';
+import * as Types from '../../graphql/types.generated';
 
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-export type ProxyActionStatusResultFragment = { __typename: 'ProxyActionStatusResult' } & Pick<
-  Types.ProxyActionStatusResult,
-  'txHash' | 'txId' | 'status'
->;
+export type ProxyActionStatusResultFragment = {
+  __typename: 'ProxyActionStatusResult';
+  txHash: string;
+  txId: string;
+  status: Types.ProxyActionStatusTypes;
+};
 
-export type ProxyActionErrorFragment = { __typename: 'ProxyActionError' } & Pick<
-  Types.ProxyActionError,
-  'reason' | 'lastKnownTxId'
->;
+export type ProxyActionErrorFragment = {
+  __typename: 'ProxyActionError';
+  reason: string;
+  lastKnownTxId: string | null;
+};
 
-export type ProxyActionQueuedFragment = { __typename: 'ProxyActionQueued' } & Pick<
-  Types.ProxyActionQueued,
-  'queuedAt'
->;
+export type ProxyActionQueuedFragment = { __typename: 'ProxyActionQueued'; queuedAt: string };
 
 export type ProxyActionStatusQueryVariables = Types.Exact<{
   proxyActionId: Types.Scalars['ProxyActionId'];
 }>;
 
 export type ProxyActionStatusQuery = {
-  result: ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment;
+  result: ProxyActionErrorFragment | ProxyActionQueuedFragment | ProxyActionStatusResultFragment;
 };
 
 export type ProxyActionMutationVariables = Types.Exact<{
   request: Types.ProxyActionRequest;
 }>;
 
-export type ProxyActionMutation = { result: Types.Mutation['proxyAction'] };
+export type ProxyActionMutation = { result: string };
 
 export const ProxyActionStatusResultFragmentDoc = gql`
   fragment ProxyActionStatusResult on ProxyActionStatusResult {

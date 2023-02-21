@@ -1,12 +1,8 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
-import {
-  CommentFragment,
-  MirrorFragment,
-  PostFragment,
-  WalletFragment,
-} from '../graphql/fragments.generated';
+import { CommentFragment, PostFragment, WalletFragment } from '../graphql/fragments.generated';
+import { PublicationFragment } from '../graphql/types';
 import {
   GetPublicationMetadataStatusRequest,
   ProfilePublicationsForSaleRequest,
@@ -19,8 +15,6 @@ import {
 } from '../graphql/types.generated';
 import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 import { getSdk, Sdk } from './graphql/publication.generated';
-
-export type PublicationFragment = PostFragment | CommentFragment | MirrorFragment;
 
 export class Publication {
   private readonly sdk: Sdk;
@@ -61,7 +55,10 @@ export class Publication {
     observerId?: string,
   ): Promise<PaginatedResult<PublicationFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
-      const result = await this.sdk.Publications({ request: currRequest, observerId });
+      const result = await this.sdk.Publications({
+        request: currRequest,
+        observerId,
+      });
 
       return result.data.result;
     }, request);
@@ -72,7 +69,10 @@ export class Publication {
     observerId?: string,
   ): Promise<PaginatedResult<WalletFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
-      const result = await this.sdk.WhoCollectedPublication({ request: currRequest, observerId });
+      const result = await this.sdk.WhoCollectedPublication({
+        request: currRequest,
+        observerId,
+      });
 
       return result.data.result;
     }, request);

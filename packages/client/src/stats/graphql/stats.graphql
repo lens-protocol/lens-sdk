@@ -1,0 +1,20 @@
+query GlobalProtocolStats($request: GlobalProtocolStatsRequest) {
+  result: globalProtocolStats(request: $request) {
+    totalProfiles
+    totalBurntProfiles
+    totalPosts
+    totalMirrors
+    totalComments
+    totalCollects
+    totalFollows
+    totalRevenue {
+      asset {
+        name
+        symbol
+        decimals
+        address
+      }
+      value
+    }
+  }
+}

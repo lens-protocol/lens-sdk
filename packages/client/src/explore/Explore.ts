@@ -1,14 +1,10 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
-import {
-  CommentFragment,
-  CommonPaginatedResultInfoFragment,
-  MirrorFragment,
-  PostFragment,
-  ProfileFragment,
-} from '../graphql/fragments.generated';
+import { ProfileFragment } from '../graphql/fragments.generated';
+import { PublicationFragment } from '../graphql/types';
 import { ExploreProfilesRequest, ExplorePublicationRequest } from '../graphql/types.generated';
+import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 import { getSdk, Sdk } from './graphql/explore.generated';
 
 export class Explore {
@@ -20,19 +16,31 @@ export class Explore {
     this.sdk = getSdk(client);
   }
 
-  async publications(request: ExplorePublicationRequest): Promise<{
-    items: Array<PostFragment | CommentFragment | MirrorFragment>;
-    pageInfo: CommonPaginatedResultInfoFragment;
-  }> {
-    const result = await this.sdk.ExplorePublications({ request });
-    return result.data.result;
+  async publications(
+    request: ExplorePublicationRequest,
+    observerId?: string,
+  ): Promise<PaginatedResult<PublicationFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ExplorePublications({
+        request: currRequest,
+        observerId,
+      });
+
+      return result.data.result;
+    }, request);
   }
 
-  async profiles(request: ExploreProfilesRequest): Promise<{
-    items: Array<ProfileFragment>;
-    pageInfo: CommonPaginatedResultInfoFragment;
-  }> {
-    const result = await this.sdk.ExploreProfiles({ request });
-    return result.data.result;
+  async profiles(
+    request: ExploreProfilesRequest,
+    observerId?: string,
+  ): Promise<PaginatedResult<ProfileFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ExploreProfiles({
+        request: currRequest,
+        observerId,
+      });
+
+      return result.data.result;
+    }, request);
   }
 }

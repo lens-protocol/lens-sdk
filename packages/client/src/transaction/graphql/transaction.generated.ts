@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as Types from '../../graphql/types.generated.js';
+import * as Types from '../../graphql/types.generated';
 
 import { RelayerResultFragment, RelayErrorFragment } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -7,29 +7,30 @@ import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
 import { RelayerResultFragmentDoc, RelayErrorFragmentDoc } from '../../graphql/fragments.generated';
-export type TransactionIndexedResultFragment = { __typename: 'TransactionIndexedResult' } & Pick<
-  Types.TransactionIndexedResult,
-  'indexed' | 'txHash'
->;
+export type TransactionIndexedResultFragment = {
+  __typename: 'TransactionIndexedResult';
+  indexed: boolean;
+  txHash: string;
+};
 
-export type TransactionErrorFragment = { __typename: 'TransactionError' } & Pick<
-  Types.TransactionError,
-  'reason'
->;
+export type TransactionErrorFragment = {
+  __typename: 'TransactionError';
+  reason: Types.TransactionErrorReasons;
+};
 
 export type HasTxHashBeenIndexedQueryVariables = Types.Exact<{
   request: Types.HasTxHashBeenIndexedRequest;
 }>;
 
 export type HasTxHashBeenIndexedQuery = {
-  result: TransactionIndexedResultFragment | TransactionErrorFragment;
+  result: TransactionErrorFragment | TransactionIndexedResultFragment;
 };
 
 export type BroadcastProtocolCallMutationVariables = Types.Exact<{
   request: Types.BroadcastRequest;
 }>;
 
-export type BroadcastProtocolCallMutation = { result: RelayerResultFragment | RelayErrorFragment };
+export type BroadcastProtocolCallMutation = { result: RelayErrorFragment | RelayerResultFragment };
 
 export const TransactionIndexedResultFragmentDoc = gql`
   fragment TransactionIndexedResult on TransactionIndexedResult {

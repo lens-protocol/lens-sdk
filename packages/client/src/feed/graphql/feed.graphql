@@ -1,0 +1,47 @@
+fragment FeedItem on FeedItem {
+  __typename
+  root {
+    ... on Post {
+      ...Post
+    }
+
+    ... on Comment {
+      ...Comment
+    }
+  }
+  comments {
+    ...Comment
+  }
+}
+
+query Feed($request: FeedRequest!, $observerId: ProfileId) {
+  result: feed(request: $request) {
+    items {
+      ...FeedItem
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query FeedHighlights($request: FeedHighlightsRequest!, $observerId: ProfileId) {
+  result: feedHighlights(request: $request) {
+    items {
+      ... on Post {
+        ...Post
+      }
+
+      ... on Mirror {
+        ...Mirror
+      }
+
+      ... on Comment {
+        ...Comment
+      }
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

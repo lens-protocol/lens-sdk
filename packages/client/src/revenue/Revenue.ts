@@ -1,12 +1,12 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
-import { CommonPaginatedResultInfoFragment } from '../graphql/fragments.generated';
 import {
   ProfileFollowRevenueQueryRequest,
   ProfilePublicationRevenueQueryRequest,
   PublicationRevenueQueryRequest,
 } from '../graphql/types.generated';
+import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 import {
   getSdk,
   PublicationRevenueFragment,
@@ -24,13 +24,18 @@ export class Revenue {
     this.sdk = getSdk(client);
   }
 
-  async profilePublication(request: ProfilePublicationRevenueQueryRequest): Promise<{
-    items: PublicationRevenueFragment[];
-    pageInfo: CommonPaginatedResultInfoFragment;
-  }> {
-    const result = await this.sdk.ProfilePublicationRevenue({ request });
+  async profilePublication(
+    request: ProfilePublicationRevenueQueryRequest,
+    observerId?: string,
+  ): Promise<PaginatedResult<PublicationRevenueFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ProfilePublicationRevenue({
+        request: currRequest,
+        observerId,
+      });
 
-    return result.data.result;
+      return result.data.result;
+    }, request);
   }
 
   async profileFollow(

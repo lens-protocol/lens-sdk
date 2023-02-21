@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as Types from '../../graphql/types.generated.js';
+import * as Types from '../../graphql/types.generated';
 
 import {
   CommonPaginatedResultInfoFragment,
@@ -25,7 +25,7 @@ import {
 } from '../../graphql/fragments.generated';
 export type ProfilePublicationRevenueQueryVariables = Types.Exact<{
   request: Types.ProfilePublicationRevenueQueryRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type ProfilePublicationRevenueQuery = {
@@ -36,7 +36,7 @@ export type PublicationRevenueQueryVariables = Types.Exact<{
   request: Types.PublicationRevenueQueryRequest;
 }>;
 
-export type PublicationRevenueQuery = { result: Types.Maybe<RevenueFragment> };
+export type PublicationRevenueQuery = { result: RevenueFragment | null };
 
 export type ProfileFollowRevenueQueryVariables = Types.Exact<{
   request: Types.ProfileFollowRevenueQueryRequest;
@@ -44,15 +44,18 @@ export type ProfileFollowRevenueQueryVariables = Types.Exact<{
 
 export type ProfileFollowRevenueQuery = { result: { revenues: Array<RevenueAggregateFragment> } };
 
-export type RevenueAggregateFragment = { __typename: 'RevenueAggregate' } & {
+export type RevenueAggregateFragment = {
+  __typename: 'RevenueAggregate';
   total: Erc20AmountFragment;
 };
 
-export type PublicationRevenueFragment = { __typename: 'PublicationRevenue' } & {
-  publication: PostFragment | CommentFragment | MirrorFragment;
+export type PublicationRevenueFragment = {
+  __typename: 'PublicationRevenue';
+  publication: CommentFragment | MirrorFragment | PostFragment;
 } & RevenueFragment;
 
-export type RevenueFragment = { __typename: 'PublicationRevenue' } & {
+export type RevenueFragment = {
+  __typename: 'PublicationRevenue';
   revenue: RevenueAggregateFragment;
 };
 

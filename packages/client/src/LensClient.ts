@@ -1,12 +1,16 @@
 import { Authentication, IAuthentication } from './authentication';
 import { LensConfig } from './consts/config';
 import { Explore } from './explore';
+import { Feed } from './feed';
+import { Nonces } from './nonces';
+import { Notifications } from './notifications';
 import { Profile } from './profile';
 import { ProxyAction } from './proxy-action';
 import { Publication } from './publication';
 import { Reactions } from './reactions';
 import { Revenue } from './revenue';
 import { Search } from './search';
+import { Stats } from './stats';
 import { Transaction } from './transaction';
 
 export class LensClient {
@@ -24,6 +28,18 @@ export class LensClient {
 
   get explore(): Explore {
     return new Explore(this.config);
+  }
+
+  get feed(): Feed {
+    return new Feed(this.config);
+  }
+
+  get nonces(): Nonces {
+    return new Nonces(this.config, this._authentication);
+  }
+
+  get notifications(): Notifications {
+    return new Notifications(this.config, this._authentication);
   }
 
   get profile(): Profile {
@@ -48,6 +64,10 @@ export class LensClient {
 
   get search(): Search {
     return new Search(this.config);
+  }
+
+  get stats(): Stats {
+    return new Stats(this.config);
   }
 
   get transaction(): Transaction {

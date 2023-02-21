@@ -31,13 +31,13 @@ Client manages the token lifecycle and storage
 - [x] [PQ] client.explore.publications(request)
 - [x] [PQ] client.explore.profiles(request)
 
-## Module
+## Modules
 
-- [AM] client.module.createCollectTypedData(request)
-- [AQ] client.module.enabledCurrencies()
-- [AQ] client.module.fetchEnabled()
-- [AQ] client.module.approvedAllowanceAmount(request)
-- [AQ] client.module.generateCurrencyApprovalData(request)
+- [AM] client.modules.createCollectTypedData(request)
+- [AQ] client.modules.enabledCurrencies()
+- [AQ] client.modules.fetchEnabled()
+- [AQ] client.modules.approvedAllowanceAmount(request)
+- [AQ] client.modules.generateCurrencyApprovalData(request)
 
 ## NFTs
 
@@ -46,8 +46,7 @@ Client manages the token lifecycle and storage
 
 ## Notifications
 
-- [AQ] client.notifications.fetch(request)
-- [AQ] client.notifications.unreadCount(request)
+- [x] [APQ] client.notifications.fetch(request)
 
 ## Profile + Dispatcher
 
@@ -118,11 +117,11 @@ Client manages the token lifecycle and storage
 
 ## ProtocolStats
 
-- [Q] client.protocolStats.fetch(request)
+- [x] [Q] client.stats.fetch(request)
 
 ## UserSigNonces
 
-- [AQ] client.nonces.fetch()
+- [x] [AQ] client.nonces.fetch()
 
 ## Proxy actions
 
@@ -134,7 +133,7 @@ Client manages the token lifecycle and storage
 
 - [x] [AM] client.reactions.add(request)
 - [x] [AM] client.reactions.remove(request)
-- [ ] [PQ] client.reactions.toPublication({ publicationId })
+- [x] [PQ] client.reactions.toPublication({ publicationId })
 
 ## Reporting
 
@@ -153,11 +152,11 @@ Client manages the token lifecycle and storage
 
 ## Feed
 
-- [PQ] client.feed.fetch({ profileId })
+- [x] [APQ] client.feed.fetch(request)
+- [x] [APQ] client.feed.fetchHighlights(request)
 
 ## Other considerations
 
-- paginated response helper
 - more helpers like `isValidHandle`
 - allow for custom gql queries or compose query from subqueries (like profile base, profile interests, profile onChainIdentity etc.) (is that possible?)
 

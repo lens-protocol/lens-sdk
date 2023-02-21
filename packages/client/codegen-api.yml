@@ -78,5 +78,6 @@ generates:
           content: '// @ts-nocheck'
       - 'typescript-operations':
           skipTypename: true
+          inlineFragmentTypes: combine
       - 'typescript-graphql-request':
           rawRequest: true

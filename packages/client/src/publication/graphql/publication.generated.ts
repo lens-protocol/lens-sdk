@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as Types from '../../graphql/types.generated.js';
+import * as Types from '../../graphql/types.generated';
 
 import {
   PostFragment,
@@ -10,6 +10,9 @@ import {
   WalletFragment,
   FollowingFragment,
   FollowerFragment,
+  Eip712TypedDataDomainFragment,
+  RelayerResultFragment,
+  RelayErrorFragment,
   Erc20AmountFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -25,25 +28,26 @@ import {
   WalletFragmentDoc,
   FollowingFragmentDoc,
   FollowerFragmentDoc,
+  Eip712TypedDataDomainFragmentDoc,
+  RelayerResultFragmentDoc,
+  RelayErrorFragmentDoc,
   Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type PublicationQueryVariables = Types.Exact<{
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
   request: Types.PublicationQueryRequest;
 }>;
 
-export type PublicationQuery = {
-  result: Types.Maybe<PostFragment | CommentFragment | MirrorFragment>;
-};
+export type PublicationQuery = { result: CommentFragment | MirrorFragment | PostFragment | null };
 
 export type PublicationsQueryVariables = Types.Exact<{
   request: Types.PublicationsQueryRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type PublicationsQuery = {
   result: {
-    items: Array<PostFragment | CommentFragment | MirrorFragment>;
+    items: Array<CommentFragment | MirrorFragment | PostFragment>;
     pageInfo: CommonPaginatedResultInfoFragment;
   };
 };
@@ -53,15 +57,16 @@ export type ValidatePublicationMetadataQueryVariables = Types.Exact<{
 }>;
 
 export type ValidatePublicationMetadataQuery = {
-  validatePublicationMetadata: { __typename: 'PublicationValidateMetadataResult' } & Pick<
-    Types.PublicationValidateMetadataResult,
-    'valid' | 'reason'
-  >;
+  validatePublicationMetadata: {
+    __typename: 'PublicationValidateMetadataResult';
+    valid: boolean;
+    reason: string | null;
+  };
 };
 
 export type WhoCollectedPublicationQueryVariables = Types.Exact<{
   request: Types.WhoCollectedPublicationRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type WhoCollectedPublicationQuery = {
@@ -70,12 +75,12 @@ export type WhoCollectedPublicationQuery = {
 
 export type ProfilePublicationsForSaleQueryVariables = Types.Exact<{
   request: Types.ProfilePublicationsForSaleRequest;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type ProfilePublicationsForSaleQuery = {
   result: {
-    items: Array<PostFragment | CommentFragment>;
+    items: Array<CommentFragment | PostFragment>;
     pageInfo: CommonPaginatedResultInfoFragment;
   };
 };
@@ -85,10 +90,11 @@ export type PublicationMetadataStatusQueryVariables = Types.Exact<{
 }>;
 
 export type PublicationMetadataStatusQuery = {
-  result: { __typename: 'PublicationMetadataStatus' } & Pick<
-    Types.PublicationMetadataStatus,
-    'reason' | 'status'
-  >;
+  result: {
+    __typename: 'PublicationMetadataStatus';
+    reason: string | null;
+    status: Types.PublicationMetadataStatusType;
+  };
 };
 
 export const PublicationDocument = gql`
