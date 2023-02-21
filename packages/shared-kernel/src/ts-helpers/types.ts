@@ -97,6 +97,19 @@ export type NonEmptyArray<T> = Overwrite<
 >;
 
 /**
+ * Declares an array of at least two elements of the specified type.
+ */
+export type TwoAtLeastArray<T> = Overwrite<
+  [T, T, ...T[]],
+  {
+    map<U>(
+      callbackfn: (value: T, index: number, array: T[]) => U,
+      thisArg?: unknown,
+    ): TwoAtLeastArray<U>;
+  }
+>;
+
+/**
  * Beautify the  readout of all of the members of that intersection.
  *
  * As seen on tv: https://twitter.com/mattpocockuk/status/1622730173446557697

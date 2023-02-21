@@ -1,3 +1,5 @@
+import { Amount, Asset } from '@lens-protocol/react';
+
 export function never(message = 'Unexpected call to never()'): never {
   throw new Error(message);
 }
@@ -6,4 +8,8 @@ export function invariant(condition: unknown, message: string): asserts conditio
   if (!condition) {
     throw new Error(message);
   }
+}
+
+export function formatAmount(amount: Amount<Asset>) {
+  return `${amount.toSignificantDigits()} ${amount.asset.symbol}`;
 }

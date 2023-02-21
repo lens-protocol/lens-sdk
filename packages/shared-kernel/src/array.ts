@@ -1,5 +1,5 @@
 import { invariant } from './ts-helpers/invariant';
-import { NonEmptyArray } from './ts-helpers/types';
+import { NonEmptyArray, TwoAtLeastArray } from './ts-helpers/types';
 
 export function hasAtLeastOne<T>(items: ReadonlyArray<T>): items is NonEmptyArray<T> {
   return items.length > 0;
@@ -22,4 +22,8 @@ export function assertJustOne<T>(items: ReadonlyArray<T>): asserts items is [T] 
 
 export function removeAtIndex<T>(items: T[], index: number): T[] {
   return items.slice(0, index).concat(items.slice(index + 1));
+}
+
+export function hasTwoOrMore<T>(items: ReadonlyArray<T>): items is TwoAtLeastArray<T> {
+  return items.length >= 2;
 }

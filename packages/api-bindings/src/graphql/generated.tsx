@@ -1,7 +1,11 @@
-import type { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+import type {
+  AppId,
+  DecryptionCriteria,
+  ProfileId,
+  PublicationId,
+} from '@lens-protocol/domain/entities';
 import type { EthereumAddress } from '@lens-protocol/shared-kernel';
 import type { ClientErc20Amount } from './ClientErc20Amount';
-import type { DecryptionCriteria } from './DecryptionCriteria';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from './FollowPolicy';
 import type { FollowStatus } from './FollowStatus';
