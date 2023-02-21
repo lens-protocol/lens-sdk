@@ -4,9 +4,9 @@ import { GraphQLClient } from 'graphql-request';
 import { Authentication } from '../authentication';
 import { LensConfig } from '../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { CommonPaginatedResultInfoFragment } from '../graphql/fragments.generated';
+import { PublicationFragment } from '../graphql/types';
 import { FeedHighlightsRequest, FeedRequest } from '../graphql/types.generated';
-import { buildPaginatedQueryResult } from '../helpers/buildPaginatedQueryResult';
+import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 import { execute } from '../helpers/execute';
 import { FeedItemFragment, getSdk, Sdk } from './graphql/feed.generated';
 
@@ -25,10 +25,7 @@ export class Feed {
     request: FeedRequest,
     observerId?: string,
   ): PromiseResult<
-    {
-      items: FeedItemFragment[];
-      pageInfo: CommonPaginatedResultInfoFragment;
-    },
+    PaginatedResult<FeedItemFragment>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return execute(this.authentication, async (headers) => {
@@ -46,7 +43,13 @@ export class Feed {
     });
   }
 
-  async fetchHighlights(request: FeedHighlightsRequest, observerId?: string) {
+  async fetchHighlights(
+    request: FeedHighlightsRequest,
+    observerId?: string,
+  ): PromiseResult<
+    PaginatedResult<PublicationFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
     return execute(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
         const result = await this.sdk.FeedHighlights(

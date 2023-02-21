@@ -24,7 +24,7 @@ export class Reactions {
     request: ReactionRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return execute(this.authentication, async (headers) => {
-      await this.sdk.AddReaction(request, headers);
+      await this.sdk.AddReaction({ request }, headers);
     });
   }
 
@@ -32,7 +32,7 @@ export class Reactions {
     request: ReactionRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return execute(this.authentication, async (headers) => {
-      await this.sdk.RemoveReaction(request, headers);
+      await this.sdk.RemoveReaction({ request }, headers);
     });
   }
 

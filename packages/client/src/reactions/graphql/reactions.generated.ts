@@ -24,17 +24,13 @@ import {
   RelayErrorFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type AddReactionMutationVariables = Types.Exact<{
-  publicationId: Types.Scalars['InternalPublicationId'];
-  reaction: Types.ReactionTypes;
-  profileId: Types.Scalars['ProfileId'];
+  request: Types.ReactionRequest;
 }>;
 
 export type AddReactionMutation = { addReaction: void | null };
 
 export type RemoveReactionMutationVariables = Types.Exact<{
-  publicationId: Types.Scalars['InternalPublicationId'];
-  reaction: Types.ReactionTypes;
-  profileId: Types.Scalars['ProfileId'];
+  request: Types.ReactionRequest;
 }>;
 
 export type RemoveReactionMutation = { removeReaction: void | null };
@@ -69,25 +65,13 @@ export const WhoReactedResultFragmentDoc = gql`
   ${ProfileFragmentDoc}
 `;
 export const AddReactionDocument = gql`
-  mutation AddReaction(
-    $publicationId: InternalPublicationId!
-    $reaction: ReactionTypes!
-    $profileId: ProfileId!
-  ) {
-    addReaction(
-      request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
-    )
+  mutation AddReaction($request: ReactionRequest!) {
+    addReaction(request: $request)
   }
 `;
 export const RemoveReactionDocument = gql`
-  mutation RemoveReaction(
-    $publicationId: InternalPublicationId!
-    $reaction: ReactionTypes!
-    $profileId: ProfileId!
-  ) {
-    removeReaction(
-      request: { publicationId: $publicationId, reaction: $reaction, profileId: $profileId }
-    )
+  mutation RemoveReaction($request: ReactionRequest!) {
+    removeReaction(request: $request)
   }
 `;
 export const WhoReactedPublicationDocument = gql`
