@@ -1,7 +1,32 @@
+# fragments
+fragment ProfileStats on ProfileStats {
+  __typename
+  totalCollects
+  totalComments
+  totalFollowers
+  totalFollowing
+  totalMirrors
+  totalPosts
+  totalPublications
+
+  commentsTotal(forSources: $sources)
+  postsTotal(forSources: $sources)
+  mirrorsTotal(forSources: $sources)
+  publicationsTotal(forSources: $sources)
+}
+
 # queries
 query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
   result: profile(request: $request) {
     ...Profile
+  }
+}
+
+query ProfileStats($request: SingleProfileQueryRequest!, $sources: [Sources!]!) {
+  result: profile(request: $request) {
+    stats {
+      ...ProfileStats
+    }
   }
 }
 
@@ -73,14 +98,215 @@ query Followers($request: FollowersRequest!, $observerId: ProfileId) {
 }
 
 query FollowerNftOwnedTokenIds($request: FollowerNftOwnedTokenIdsRequest!) {
-  followerNftOwnedTokenIds(request: $request) {
+  result: followerNftOwnedTokenIds(request: $request) {
     __typename
     followerNftAddress
     tokensIds
   }
 }
 
+query PendingApprovalFollows($request: PendingApprovalFollowsRequest!, $observerId: ProfileId) {
+  result: pendingApprovalFollows(request: $request) {
+    items {
+      ...Profile
+    }
+
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+query ProfileInterests {
+  result: profileInterests
+}
+
 # mutations
+mutation CreateProfile($request: CreateProfileRequest!) {
+  result: createProfile(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateBurnProfileTypedData($request: BurnProfileRequest!, $options: TypedDataOptions) {
+  result: createBurnProfileTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        BurnWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        tokenId
+      }
+    }
+  }
+}
+
+mutation CreateSetDefaultProfileTypedData(
+  $request: CreateSetDefaultProfileRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetDefaultProfileTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetDefaultProfileWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        wallet
+        profileId
+      }
+    }
+  }
+}
+
+mutation CreateSetProfileImageURITypedData(
+  $request: UpdateProfileImageRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetProfileImageURITypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetProfileImageURIWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        imageURI
+      }
+    }
+  }
+}
+
+mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
+  result: createSetProfileImageURIViaDispatcher(request: $request) {
+    __typename
+
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateSetProfileMetadataTypedData(
+  $request: CreatePublicSetProfileMetadataURIRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetProfileMetadataTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetProfileMetadataURIWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        metadata
+      }
+    }
+  }
+}
+
+mutation CreateSetProfileMetadataViaDispatcher(
+  $request: CreatePublicSetProfileMetadataURIRequest!
+) {
+  result: createSetProfileMetadataViaDispatcher(request: $request) {
+    __typename
+
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateSetDispatcherTypedData($request: SetDispatcherRequest!, $options: TypedDataOptions) {
+  result: createSetDispatcherTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetDispatcherWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        dispatcher
+      }
+    }
+  }
+}
+
 mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
   result: createFollowTypedData(request: $request, options: $options) {
     id
@@ -128,13 +354,16 @@ mutation CreateUnfollowTypedData($request: UnfollowRequest!, $options: TypedData
   }
 }
 
-mutation CreateSetDispatcherTypedData($request: SetDispatcherRequest!, $options: TypedDataOptions) {
-  result: createSetDispatcherTypedData(request: $request, options: $options) {
+mutation CreateSetFollowModuleTypedData(
+  $request: CreateSetFollowModuleRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetFollowModuleTypedData(request: $request, options: $options) {
     id
     expiresAt
     typedData {
       types {
-        SetDispatcherWithSig {
+        SetFollowModuleWithSig {
           name
           type
         }
@@ -149,31 +378,23 @@ mutation CreateSetDispatcherTypedData($request: SetDispatcherRequest!, $options:
         nonce
         deadline
         profileId
-        dispatcher
+        followModule
+        followModuleInitData
       }
     }
   }
 }
 
-mutation CreateProfile($request: CreateProfileRequest!) {
-  result: createProfile(request: $request) {
-    ... on RelayerResult {
-      ...RelayerResult
-    }
-
-    ... on RelayError {
-      ...RelayError
-    }
-  }
-}
-
-mutation CreateBurnProfileTypedData($request: BurnProfileRequest!, $options: TypedDataOptions) {
-  result: createBurnProfileTypedData(request: $request, options: $options) {
+mutation CreateSetFollowNFTUriTypedData(
+  $request: CreateSetFollowNFTUriRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetFollowNFTUriTypedData(request: $request, options: $options) {
     id
     expiresAt
     typedData {
       types {
-        BurnWithSig {
+        SetFollowNFTURIWithSig {
           name
           type
         }
@@ -186,9 +407,18 @@ mutation CreateBurnProfileTypedData($request: BurnProfileRequest!, $options: Typ
       }
       value {
         nonce
+        profileId
         deadline
-        tokenId
+        followNFTURI
       }
     }
   }
+}
+
+mutation AddProfileInterest($request: AddProfileInterestsRequest!) {
+  addProfileInterests(request: $request)
+}
+
+mutation RemoveProfileInterest($request: RemoveProfileInterestsRequest!) {
+  removeProfileInterests(request: $request)
 }

@@ -50,13 +50,16 @@ fragment Profile on Profile {
   bio
   handle
   ownedBy
+  interests
 
   picture {
     ...ProfileMedia
   }
+
   coverPicture {
     ...ProfileMedia
   }
+
   stats {
     __typename
     totalFollowers
@@ -78,6 +81,7 @@ fragment Profile on Profile {
       ...UnknownFollowModuleSettings
     }
   }
+
   attributes {
     ...Attribute
   }

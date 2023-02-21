@@ -13,8 +13,13 @@ import {
   RelayErrorFragment,
 } from '../graphql/fragments.generated';
 import {
+  AddProfileInterestsRequest,
   BurnProfileRequest,
   CreateProfileRequest,
+  CreatePublicSetProfileMetadataUriRequest,
+  CreateSetDefaultProfileRequest,
+  CreateSetFollowModuleRequest,
+  CreateSetFollowNftUriRequest,
   DoesFollowRequest,
   DoesFollowResponse,
   FollowerNftOwnedTokenIds,
@@ -23,22 +28,32 @@ import {
   FollowingRequest,
   FollowRequest,
   MutualFollowersProfilesQueryRequest,
+  PendingApprovalFollowsRequest,
   ProfileQueryRequest,
+  RemoveProfileInterestsRequest,
   SetDispatcherRequest,
   SingleProfileQueryRequest,
   TypedDataOptions,
   UnfollowRequest,
+  UpdateProfileImageRequest,
 } from '../graphql/types.generated';
 import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 import { execute } from '../helpers/execute';
 import {
   CreateBurnProfileTypedDataMutation,
   CreateFollowTypedDataMutation,
+  CreateSetDefaultProfileTypedDataMutation,
   CreateSetDispatcherTypedDataMutation,
+  CreateSetFollowModuleTypedDataMutation,
+  CreateSetFollowNftUriTypedDataMutation,
+  CreateSetProfileImageUriTypedDataMutation,
+  CreateSetProfileMetadataTypedDataMutation,
   CreateUnfollowTypedDataMutation,
   getSdk,
+  ProfileStatsFragment,
   Sdk,
 } from './graphql/profile.generated';
+import { isValidHandle } from './helpers';
 
 export class Profile {
   private readonly authentication: Authentication | undefined;
@@ -61,6 +76,18 @@ export class Profile {
     });
 
     return result.data.result;
+  }
+
+  async stats(
+    request: SingleProfileQueryRequest,
+    sources: string[],
+  ): Promise<ProfileStatsFragment | undefined> {
+    const result = await this.sdk.ProfileStats({
+      request,
+      sources,
+    });
+
+    return result.data.result?.stats;
   }
 
   async fetchAll(
@@ -142,7 +169,7 @@ export class Profile {
       request,
     });
 
-    return result.data.followerNftOwnedTokenIds;
+    return result.data.result;
   }
 
   async create(
@@ -163,6 +190,10 @@ export class Profile {
     });
   }
 
+  isValidHandle(handle: string): boolean {
+    return isValidHandle(handle);
+  }
+
   async createSetDispatcherTypedData(
     request: SetDispatcherRequest,
     options?: TypedDataOptions,
@@ -178,6 +209,92 @@ export class Profile {
         },
         headers,
       );
+
+      return result.data.result;
+    });
+  }
+
+  async createSetDefaultProfileTypedData(
+    request: CreateSetDefaultProfileRequest,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    InferResultType<CreateSetDefaultProfileTypedDataMutation>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return execute(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateSetDefaultProfileTypedData(
+        {
+          request,
+          options,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createSetProfileMetadataTypedData(
+    request: CreatePublicSetProfileMetadataUriRequest,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    InferResultType<CreateSetProfileMetadataTypedDataMutation>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return execute(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateSetProfileMetadataTypedData(
+        {
+          request,
+          options,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createSetProfileMetadataViaDispatcher(
+    request: CreatePublicSetProfileMetadataUriRequest,
+  ): PromiseResult<
+    RelayerResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return execute(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateSetProfileMetadataViaDispatcher({ request }, headers);
+
+      return result.data.result;
+    });
+  }
+
+  async createSetProfileImageURITypedData(
+    request: UpdateProfileImageRequest,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    InferResultType<CreateSetProfileImageUriTypedDataMutation>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return execute(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateSetProfileImageURITypedData(
+        {
+          request,
+          options,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createSetProfileImageURIViaDispatcher(
+    request: CreatePublicSetProfileMetadataUriRequest,
+  ): PromiseResult<
+    RelayerResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return execute(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateSetProfileMetadataViaDispatcher({ request }, headers);
 
       return result.data.result;
     });
@@ -222,6 +339,7 @@ export class Profile {
       return result.data.result;
     });
   }
+
   async createUnfollowTypedData(
     request: UnfollowRequest,
     options?: TypedDataOptions,
@@ -239,6 +357,90 @@ export class Profile {
       );
 
       return result.data.result;
+    });
+  }
+
+  async createSetFollowModuleTypedData(
+    request: CreateSetFollowModuleRequest,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    InferResultType<CreateSetFollowModuleTypedDataMutation>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return execute(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateSetFollowModuleTypedData(
+        {
+          request,
+          options,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createSetFollowNFTUriTypedData(
+    request: CreateSetFollowNftUriRequest,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    InferResultType<CreateSetFollowNftUriTypedDataMutation>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return execute(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateSetFollowNFTUriTypedData(
+        {
+          request,
+          options,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async pendingApprovalFollows(
+    request: PendingApprovalFollowsRequest,
+    observerId?: string,
+  ): PromiseResult<
+    PaginatedResult<ProfileFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return execute(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.PendingApprovalFollows(
+          {
+            request: currRequest,
+            observerId,
+          },
+          headers,
+        );
+
+        return result.data.result;
+      }, request);
+    });
+  }
+
+  async allInterests(): Promise<string[]> {
+    const result = await this.sdk.ProfileInterests();
+
+    return result.data.result;
+  }
+
+  async addInterests(
+    request: AddProfileInterestsRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return execute(this.authentication, async (headers) => {
+      await this.sdk.AddProfileInterest({ request }, headers);
+    });
+  }
+
+  async removeInterests(
+    request: RemoveProfileInterestsRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return execute(this.authentication, async (headers) => {
+      await this.sdk.RemoveProfileInterest({ request }, headers);
     });
   }
 }
