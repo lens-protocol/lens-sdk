@@ -1,16 +1,17 @@
 import LensClient, {
   Explore,
+  Feed,
+  Modules,
+  Nonces,
+  Notifications,
   Profile,
-  Publication,
   ProxyAction,
+  Publication,
   Reactions,
   Revenue,
   Search,
-  Transaction,
-  Notifications,
-  Feed,
   Stats,
-  Nonces,
+  Transaction,
 } from '.';
 import { mumbaiSandbox } from './consts/environments';
 
@@ -30,6 +31,12 @@ describe(`Given the LensClient configured for sandbox`, () => {
   describe(`when accessing the ${Feed.name} module`, () => {
     it(`should return a new instance of ${Feed.name}`, () => {
       expect(client.feed).toBeInstanceOf(Feed);
+    });
+  });
+
+  describe(`when accessing the ${Modules.name} module`, () => {
+    it(`should return a new instance of ${Modules.name}`, () => {
+      expect(client.modules).toBeInstanceOf(Modules);
     });
   });
 

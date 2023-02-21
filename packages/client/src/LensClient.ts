@@ -2,6 +2,7 @@ import { Authentication, IAuthentication } from './authentication';
 import { LensConfig } from './consts/config';
 import { Explore } from './explore';
 import { Feed } from './feed';
+import { Modules } from './modules';
 import { Nonces } from './nonces';
 import { Notifications } from './notifications';
 import { Profile } from './profile';
@@ -32,6 +33,10 @@ export class LensClient {
 
   get feed(): Feed {
     return new Feed(this.config);
+  }
+
+  get modules(): Modules {
+    return new Modules(this.config, this._authentication);
   }
 
   get nonces(): Nonces {

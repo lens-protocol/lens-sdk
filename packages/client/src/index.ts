@@ -6,6 +6,7 @@ export * from './consts/config';
 export * from './consts/errors';
 export * from './explore';
 export * from './feed';
+export * from './modules';
 export * from './nonces';
 export * from './notifications';
 export * from './profile';

@@ -1,0 +1,62 @@
+fragment ModuleInfo on ModuleInfo {
+  __typename
+  name
+  type
+}
+
+fragment EnabledModule on EnabledModule {
+  __typename
+  moduleName
+  contractAddress
+  inputParams {
+    ...ModuleInfo
+  }
+  redeemParams {
+    ...ModuleInfo
+  }
+  returnDataParams: returnDataParms {
+    ...ModuleInfo
+  }
+}
+
+fragment EnabledModules on EnabledModules {
+  __typename
+  collectModules {
+    ...EnabledModule
+  }
+  followModules {
+    ...EnabledModule
+  }
+  referenceModules {
+    ...EnabledModule
+  }
+}
+
+query EnabledModules {
+  result: enabledModules {
+    ...EnabledModules
+  }
+}
+
+query EnabledModuleCurrencies {
+  result: enabledModuleCurrencies {
+    ...Erc20
+  }
+}
+
+query ApprovedModuleAllowanceAmount($request: ApprovedModuleAllowanceAmountRequest!) {
+  result: approvedModuleAllowanceAmount(request: $request) {
+    currency
+    module
+    contractAddress
+    allowance
+  }
+}
+
+query GenerateModuleCurrencyApprovalData($request: GenerateModuleCurrencyApprovalDataRequest!) {
+  result: generateModuleCurrencyApprovalData(request: $request) {
+    to
+    from
+    data
+  }
+}
