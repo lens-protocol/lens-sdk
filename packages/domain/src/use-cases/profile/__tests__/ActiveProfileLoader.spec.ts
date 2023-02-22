@@ -57,7 +57,7 @@ describe(`Given the ${ActiveProfileLoader.name} interactor`, () => {
       expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(profile);
     });
 
-    it('should bail out if not active profile is present and the wallet does not own any profile', async () => {
+    it('should throw if not active profile is present and the wallet does not own any profile', async () => {
       const wallet = mockWallet();
       const profileGateway = mock<IProfileGateway>();
       const activeProfileGateway = mock<IActiveProfileGateway>();
@@ -73,10 +73,7 @@ describe(`Given the ${ActiveProfileLoader.name} interactor`, () => {
         activeProfilePresenter,
       );
 
-      await activeProfile.loadActiveProfileByOwnerAddress(wallet.address);
-
-      expect(activeProfileGateway.setActiveProfile).not.toHaveBeenCalled();
-      expect(activeProfilePresenter.presentActiveProfile).not.toHaveBeenCalled();
+      await expect(activeProfile.loadActiveProfileByOwnerAddress(wallet.address)).rejects.toThrow();
     });
   });
 

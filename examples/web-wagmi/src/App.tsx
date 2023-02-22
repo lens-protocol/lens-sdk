@@ -19,6 +19,7 @@ import { UseExplorePublications } from './discovery/UseExplorePublications';
 import { Feed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
+import { LoginSpecificProfile } from './misc/LoginSpecificProfile';
 import { MiscPage } from './misc/MiscPage';
 import { UseApproveModule } from './misc/UseApproveModule';
 import { UseCurrencies } from './misc/UseCurrencies';
@@ -181,6 +182,7 @@ export function App() {
                 />
                 <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
                 <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
+                <Route path="/misc/loginSpecificProfile" element={<LoginSpecificProfile />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

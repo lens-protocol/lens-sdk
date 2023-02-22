@@ -17,11 +17,12 @@ export type WalletLoginOperation = Operation<
 export function useWalletLogin(): WalletLoginOperation {
   const loginWallet = useWalletLoginController();
 
-  return useOperation(async (signer: Signer) => {
+  return useOperation(async (signer: Signer, handle?: string) => {
     const address = await signer.getAddress();
 
     return loginWallet({
       address,
+      handle,
     });
   });
 }

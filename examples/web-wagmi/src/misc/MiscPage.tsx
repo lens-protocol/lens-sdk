@@ -31,6 +31,11 @@ const miscHooks = [
     description: `Example of listing + clearing recent completed transactions.`,
     path: '/misc/useRecentTransactions',
   },
+  {
+    label: 'Login to specific profile',
+    description: `Login to a specific profile by handle`,
+    path: '/misc/loginSpecificProfile',
+  },
 ];
 
 export function MiscPage() {

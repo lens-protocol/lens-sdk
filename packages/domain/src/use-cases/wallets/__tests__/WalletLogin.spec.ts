@@ -3,21 +3,21 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import {
-  WalletConnectionError,
-  WalletConnectionErrorReason,
   UserRejectedError,
   Wallet,
+  WalletConnectionError,
+  WalletConnectionErrorReason,
 } from '../../../entities';
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveProfileLoader } from '../../profile/ActiveProfileLoader';
 import { IActiveWalletPresenter } from '../IActiveWalletPresenter';
 import {
-  WalletLogin,
   ICredentialsIssuer,
   ICredentialsWriter,
   IWalletFactory,
-  IWritableWalletGateway,
   IWalletLoginPresenter,
+  IWritableWalletGateway,
+  WalletLogin,
 } from '../WalletLogin';
 import { mockWalletLoginRequest } from '../__helpers__/mocks';
 
@@ -96,6 +96,7 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
       expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
       expect(activeProfileLoader.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
         wallet.address,
+        undefined,
       );
       expect(genericPresenter.present).toBeCalledWith(success());
     });
