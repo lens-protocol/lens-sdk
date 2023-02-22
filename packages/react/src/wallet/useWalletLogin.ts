@@ -11,7 +11,7 @@ import { useWalletLoginController } from './adapters/useWalletLoginController';
 export type WalletLoginOperation = Operation<
   void,
   PendingSigningRequestError | WalletConnectionError | UserRejectedError,
-  [Signer]
+  [Signer, string?]
 >;
 
 export function useWalletLogin(): WalletLoginOperation {
