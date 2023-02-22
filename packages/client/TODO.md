@@ -97,6 +97,7 @@ Client manages the token lifecycle and storage
 - [x] [PQ] client.publication.allWalletsWhoCollected({ publicationId })
 - [x] [PQ] client.publication.allForSale({ profileId })
 - [x] [Q] client.publication.metadataStatus(request)
+- [x] [Q] client.publication.stats(request)
 
 ### Create or edit publications
 

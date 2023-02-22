@@ -1,5 +1,16 @@
+#fragments
+fragment PublicationStats on PublicationStats {
+  __typename
+  totalAmountOfMirrors
+  totalAmountOfCollects
+  totalAmountOfComments
+  totalUpvotes
+  totalDownvotes
+  commentsTotal(forSources: $sources)
+}
+
 # queries
-query Publication($observerId: ProfileId, $request: PublicationQueryRequest!) {
+query Publication($request: PublicationQueryRequest!, $observerId: ProfileId) {
   result: publication(request: $request) {
     ... on Post {
       ...Post
@@ -11,6 +22,28 @@ query Publication($observerId: ProfileId, $request: PublicationQueryRequest!) {
 
     ... on Comment {
       ...Comment
+    }
+  }
+}
+
+query PublicationStats($request: PublicationQueryRequest!, $sources: [Sources!]!) {
+  result: publication(request: $request) {
+    ... on Post {
+      stats {
+        ...PublicationStats
+      }
+    }
+
+    ... on Mirror {
+      stats {
+        ...PublicationStats
+      }
+    }
+
+    ... on Comment {
+      stats {
+        ...PublicationStats
+      }
     }
   }
 }

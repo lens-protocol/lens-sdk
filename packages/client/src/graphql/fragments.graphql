@@ -259,19 +259,20 @@ fragment MetadataAttributeOutput on MetadataAttributeOutput {
   value
 }
 
-fragment PublicationStats on PublicationStats {
+fragment SimplePublicationStats on PublicationStats {
   __typename
   totalAmountOfMirrors
-  totalUpvotes
   totalAmountOfCollects
   totalAmountOfComments
+  totalUpvotes
+  totalDownvotes
 }
 
 fragment MirrorBase on Mirror {
   __typename
   id
   stats {
-    ...PublicationStats
+    ...SimplePublicationStats
   }
   metadata {
     ...Metadata
@@ -316,7 +317,7 @@ fragment CommentBase on Comment {
   __typename
   id
   stats {
-    ...PublicationStats
+    ...SimplePublicationStats
   }
   metadata {
     ...Metadata
@@ -378,7 +379,7 @@ fragment Post on Post {
   __typename
   id
   stats {
-    ...PublicationStats
+    ...SimplePublicationStats
   }
   metadata {
     ...Metadata

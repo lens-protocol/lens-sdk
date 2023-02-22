@@ -39,6 +39,7 @@ import {
   CreateMirrorTypedDataMutation,
   CreatePostTypedDataMutation,
   getSdk,
+  PublicationStatsFragment,
   Sdk,
 } from './graphql/publication.generated';
 
@@ -60,6 +61,18 @@ export class Publication {
     const result = await this.sdk.Publication({ request, observerId });
 
     return result.data.result;
+  }
+
+  async stats(
+    request: PublicationQueryRequest,
+    sources: string[],
+  ): Promise<PublicationStatsFragment | undefined> {
+    const result = await this.sdk.PublicationStats({
+      request,
+      sources,
+    });
+
+    return result.data.result?.stats;
   }
 
   async validateMetadata(

@@ -33,12 +33,35 @@ import {
   FollowerFragmentDoc,
   Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
+export type PublicationStatsFragment = {
+  __typename: 'PublicationStats';
+  totalAmountOfMirrors: number;
+  totalAmountOfCollects: number;
+  totalAmountOfComments: number;
+  totalUpvotes: number;
+  totalDownvotes: number;
+  commentsTotal: number;
+};
+
 export type PublicationQueryVariables = Types.Exact<{
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
   request: Types.PublicationQueryRequest;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type PublicationQuery = { result: CommentFragment | MirrorFragment | PostFragment | null };
+
+export type PublicationStatsQueryVariables = Types.Exact<{
+  request: Types.PublicationQueryRequest;
+  sources: Array<Types.Scalars['Sources']> | Types.Scalars['Sources'];
+}>;
+
+export type PublicationStatsQuery = {
+  result:
+    | { stats: PublicationStatsFragment }
+    | { stats: PublicationStatsFragment }
+    | { stats: PublicationStatsFragment }
+    | null;
+};
 
 export type PublicationsQueryVariables = Types.Exact<{
   request: Types.PublicationsQueryRequest;
@@ -242,8 +265,19 @@ export type CreateAttachMediaDataMutation = {
   };
 };
 
+export const PublicationStatsFragmentDoc = gql`
+  fragment PublicationStats on PublicationStats {
+    __typename
+    totalAmountOfMirrors
+    totalAmountOfCollects
+    totalAmountOfComments
+    totalUpvotes
+    totalDownvotes
+    commentsTotal(forSources: $sources)
+  }
+`;
 export const PublicationDocument = gql`
-  query Publication($observerId: ProfileId, $request: PublicationQueryRequest!) {
+  query Publication($request: PublicationQueryRequest!, $observerId: ProfileId) {
     result: publication(request: $request) {
       ... on Post {
         ...Post
@@ -259,6 +293,28 @@ export const PublicationDocument = gql`
   ${PostFragmentDoc}
   ${MirrorFragmentDoc}
   ${CommentFragmentDoc}
+`;
+export const PublicationStatsDocument = gql`
+  query PublicationStats($request: PublicationQueryRequest!, $sources: [Sources!]!) {
+    result: publication(request: $request) {
+      ... on Post {
+        stats {
+          ...PublicationStats
+        }
+      }
+      ... on Mirror {
+        stats {
+          ...PublicationStats
+        }
+      }
+      ... on Comment {
+        stats {
+          ...PublicationStats
+        }
+      }
+    }
+  }
+  ${PublicationStatsFragmentDoc}
 `;
 export const PublicationsDocument = gql`
   query Publications($request: PublicationsQueryRequest!, $observerId: ProfileId) {
@@ -532,6 +588,7 @@ export type SdkFunctionWrapper = <T>(
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const PublicationDocumentString = print(PublicationDocument);
+const PublicationStatsDocumentString = print(PublicationStatsDocument);
 const PublicationsDocumentString = print(PublicationsDocument);
 const ValidatePublicationMetadataDocumentString = print(ValidatePublicationMetadataDocument);
 const WhoCollectedPublicationDocumentString = print(WhoCollectedPublicationDocument);
@@ -559,6 +616,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'Publication',
+        'query',
+      );
+    },
+    PublicationStats(
+      variables: PublicationStatsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: PublicationStatsQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PublicationStatsQuery>(PublicationStatsDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'PublicationStats',
         'query',
       );
     },
