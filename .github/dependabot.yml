@@ -10,7 +10,62 @@ updates:
     open-pull-requests-limit: 2
 
   # Configuration for monorepo packages, one per directory
-  # - package-ecosystem: "npm"
-  #   directory: "/packages/client"
-  #   schedule:
-  #     interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/packages/api-bindings"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "npm"
+    directory: "/packages/blockchain-bindings"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "npm"
+    directory: "/packages/client"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "npm"
+    directory: "/packages/domain"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "npm"
+    directory: "/packages/eslint-config"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "npm"
+    directory: "/packages/prettier-config"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "npm"
+    directory: "/packages/react"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "npm"
+    directory: "/packages/shared-kernel"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "npm"
+    directory: "/packages/storage"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "npm"
+    directory: "/packages/wagmi"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
