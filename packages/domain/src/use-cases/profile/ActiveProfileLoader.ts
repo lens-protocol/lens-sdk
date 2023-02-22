@@ -22,9 +22,9 @@ export class ActiveProfileLoader {
     const profiles = await this.profileGateway.getAllProfilesByOwnerAddress(walletAddress);
     const profile = handle ? profiles.find((p) => p.handle === handle) : profiles[0];
 
-    invariant(profile, 'Profile not found');
-
-    await this.storeAndPresent(profile);
+    if (profile) {
+      await this.storeAndPresent(profile);
+    }
   }
 
   async loadActiveProfileByHandle(handle: string) {
