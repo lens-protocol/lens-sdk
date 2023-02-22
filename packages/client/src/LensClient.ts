@@ -56,7 +56,7 @@ export class LensClient {
   }
 
   get publication(): Publication {
-    return new Publication(this.config);
+    return new Publication(this.config, this._authentication);
   }
 
   get reactions(): Reactions {

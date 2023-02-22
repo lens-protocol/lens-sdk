@@ -1,3 +1,4 @@
+# queries
 query Publication($observerId: ProfileId, $request: PublicationQueryRequest!) {
   result: publication(request: $request) {
     ... on Post {
@@ -80,5 +81,171 @@ query PublicationMetadataStatus($request: GetPublicationMetadataStatusRequest!) 
     __typename
     reason
     status
+  }
+}
+
+# mutations
+mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
+  result: createPostTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        PostWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        collectModule
+        collectModuleInitData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+}
+
+mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
+  result: createPostViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateCommentTypedData($request: CreatePublicCommentRequest!, $options: TypedDataOptions) {
+  result: createCommentTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        CommentWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        profileIdPointed
+        pubIdPointed
+        collectModule
+        collectModuleInitData
+        referenceModuleData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+}
+
+mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
+  result: createCommentViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDataOptions) {
+  result: createMirrorTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        MirrorWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        profileIdPointed
+        pubIdPointed
+        referenceModuleData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+}
+
+mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
+  result: createMirrorViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: TypedDataOptions) {
+  result: createCollectTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        CollectWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        pubId
+        data
+      }
+    }
+  }
+}
+
+mutation HidePublication($request: HidePublicationRequest!) {
+  hidePublication(request: $request)
+}
+
+mutation CreateAttachMediaData($request: PublicMediaRequest!) {
+  result: createAttachMediaData(request: $request) {
+    media {
+      altTag
+      cover
+      item
+      source
+      type
+    }
+    signedUrl
   }
 }

@@ -100,21 +100,19 @@ Client manages the token lifecycle and storage
 
 ### Create or edit publications
 
-- [AM] client.publication.createPostTypedData(request)
-- [AM] client.publication.createPostViaDispatcher(request)
+- [x] [AM] client.publication.createPostTypedData(request)
+- [x] [AM] client.publication.createPostViaDispatcher(request)
 
-- [AM] client.publication.createCommentTypedData(request)
-- [AM] client.publication.createCommentViaDispatcher(request)
+- [x] [AM] client.publication.createCommentTypedData(request)
+- [x] [AM] client.publication.createCommentViaDispatcher(request)
 
-- [AM] client.publication.createMirrorTypedData(request)
-- [AM] client.publication.createMirrorViaDispatcher(request)
+- [x] [AM] client.publication.createMirrorTypedData(request)
+- [x] [AM] client.publication.createMirrorViaDispatcher(request)
 
-- [AM] client.publication.createCollectTypedData(request)
+- [x] [AM] client.publication.createCollectTypedData(request)
 
-- [AM] client.publication.hide({ publicationId })
-- [M] client.publication.createAttachMediaData(request)
-
-- gated publications TBD
+- [x] [AM] client.publication.hide({ publicationId })
+- [x] [M] client.publication.createAttachMediaData(request)
 
 ## ProtocolStats
 
