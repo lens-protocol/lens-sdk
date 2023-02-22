@@ -8,7 +8,7 @@
     "@typescript-eslint/parser": "^5.52.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-config-turbo": "^0.0.7",
-    "eslint-plugin-import": "2.26.0"
+    "eslint-plugin-import": "2.27.5"
   },
   "devDependencies": {
     "@lens-protocol/prettier-config": "workspace:*",
