@@ -11,6 +11,7 @@ export * from './useCollectedPublications';
 export * from './useMutualFollowers';
 export * from '../transactions/useUpdateProfileImage';
 export * from './useProfilesOwnedBy';
+export * from './useProfilesOwnedByMe';
 
 export { isProfileOwnedByMe } from '@lens-protocol/api-bindings';
 

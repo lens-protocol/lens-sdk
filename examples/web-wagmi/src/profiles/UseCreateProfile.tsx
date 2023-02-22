@@ -1,12 +1,10 @@
-import { useActiveWallet, useCreateProfile, useProfilesOwnedBy } from '@lens-protocol/react';
+import { useActiveWallet, useCreateProfile, useProfilesOwnedByMe } from '@lens-protocol/react';
 
 import { never } from '../utils';
 import { ProfileCard } from './components/ProfileCard';
 
-function OwnedProfiles({ activeWalletAddress }: { activeWalletAddress: string }) {
-  const { data } = useProfilesOwnedBy({
-    address: activeWalletAddress,
-  });
+function OwnedProfiles() {
+  const { data } = useProfilesOwnedByMe();
 
   return (
     <div>
@@ -64,7 +62,7 @@ export function UseCreateProfile() {
         {error && <p>{error.message}</p>}
       </form>
 
-      {activeWallet.data && <OwnedProfiles activeWalletAddress={activeWallet.data.address} />}
+      {activeWallet.data && <OwnedProfiles />}
     </div>
   );
 }
