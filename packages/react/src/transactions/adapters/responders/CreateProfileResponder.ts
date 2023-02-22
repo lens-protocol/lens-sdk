@@ -1,9 +1,5 @@
 import { makeVar } from '@apollo/client';
 import {
-  GetAllProfilesByOwnerAddressDocument,
-  GetProfileDocument,
-  GetProfileQuery,
-  GetProfileQueryVariables,
   LensApolloClient,
   ProfileFragment,
   SearchProfilesDocument,
