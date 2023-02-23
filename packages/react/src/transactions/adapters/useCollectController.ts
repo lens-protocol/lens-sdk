@@ -14,6 +14,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
+import { CollectProxyActionRelayer } from './CollectProxyActionRelayer';
 import { CollectPublicationCallGateway } from './CollectPublicationCallGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 
@@ -21,11 +22,12 @@ export function useCollectController() {
   const {
     activeWallet,
     apolloClient,
-    transactionGateway,
+    logger,
     protocolCallRelayer,
     tokenAvailability,
+    transactionFactory,
+    transactionGateway,
     transactionQueue,
-    signlessProtocolCallRelayer,
   } = useSharedDependencies();
 
   return async (request: CollectRequest) => {
@@ -45,8 +47,13 @@ export function useCollectController() {
       presenter,
     );
 
+    const collectProxyActionRelayer = new CollectProxyActionRelayer(
+      apolloClient,
+      transactionFactory,
+      logger,
+    );
     const signlessFlow = new SignlessProtocolCallUseCase<FreeCollectRequest>(
-      signlessProtocolCallRelayer,
+      collectProxyActionRelayer,
       transactionQueue,
       presenter,
     );

@@ -11,7 +11,7 @@ import {
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ActiveWallet, TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
-import { invariant } from '@lens-protocol/shared-kernel';
+import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
@@ -26,7 +26,6 @@ import { FollowPolicyCallGateway } from './transactions/adapters/FollowPolicyCal
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
 import { PublicationCacheManager } from './transactions/adapters/PublicationCacheManager';
-import { SignlessProtocolCallRelayer } from './transactions/adapters/SignlessProtocolCallRelayer';
 import {
   FailedTransactionError,
   TransactionQueuePresenter,
@@ -77,6 +76,7 @@ export type SharedDependencies = {
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   followPolicyCallGateway: FollowPolicyCallGateway;
+  logger: ILogger;
   notificationStorage: IStorage<UnreadNotificationsData>;
   onError: Handlers['onError'];
   onLogout: Handlers['onLogout'];
@@ -84,7 +84,6 @@ export type SharedDependencies = {
   protocolCallRelayer: ProtocolCallRelayer;
   providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
-  signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
   sources: Sources;
   tokenAvailability: TokenAvailability;
   transactionFactory: TransactionFactory;
@@ -172,11 +171,6 @@ export function createSharedDependencies(
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);
 
   const protocolCallRelayer = new ProtocolCallRelayer(apolloClient, transactionFactory, logger);
-  const signlessProtocolCallRelayer = new SignlessProtocolCallRelayer(
-    apolloClient,
-    transactionFactory,
-    logger,
-  );
 
   // common interactors
   const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
@@ -196,13 +190,13 @@ export function createSharedDependencies(
     credentialsFactory,
     credentialsGateway,
     followPolicyCallGateway,
+    logger,
     notificationStorage,
     onError,
     onLogout,
     profileGateway,
     protocolCallRelayer,
     publicationCacheManager,
-    signlessProtocolCallRelayer,
     sources,
     tokenAvailability,
     transactionFactory,

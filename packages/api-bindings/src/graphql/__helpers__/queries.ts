@@ -2,6 +2,7 @@ import { MockedResponse } from '@apollo/client/testing';
 import { AppId } from '@lens-protocol/domain/entities';
 import { Erc20 } from '@lens-protocol/shared-kernel';
 
+import { SearchProfilesQuery, SearchPublicationsQuery } from '..';
 import {
   CommentFragment,
   CommentWithFirstCommentFragment,
@@ -65,10 +66,8 @@ import {
   PublicationsQueryVariables,
   RevenueFragment,
   SearchProfilesDocument,
-  SearchProfilesQuery,
   SearchProfilesQueryVariables,
   SearchPublicationsDocument,
-  SearchPublicationsQuery,
   SearchPublicationsQueryVariables,
   TransactionErrorReasons,
   WalletFragment,
@@ -574,7 +573,7 @@ export function createSearchProfilesQueryMockedResponse(args: {
 export function createProfilesWhoMirroredPublicationMockedResponse(args: {
   variables: GetAllProfilesByWhoMirroredPublicationQueryVariables;
   items: ProfileFragment[];
-}): MockedResponse<SearchProfilesQuery> {
+}): MockedResponse<GetAllProfilesByOwnerAddressQuery> {
   return {
     request: {
       query: GetAllProfilesByWhoMirroredPublicationDocument,
@@ -583,7 +582,6 @@ export function createProfilesWhoMirroredPublicationMockedResponse(args: {
     result: {
       data: {
         result: {
-          __typename: 'ProfileSearchResult',
           items: args.items,
           pageInfo: {
             __typename: 'PaginatedResultInfo',

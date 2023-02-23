@@ -1,11 +1,11 @@
 import { CreateProfileRequest } from '../profile/CreateProfile';
-import { FollowRequest, UnconstrainedFollowRequest } from '../profile/FollowProfiles';
+import { FollowRequest } from '../profile/FollowProfiles';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
 import { UpdateDispatcherConfigRequest } from '../profile/UpdateDispatcherConfig';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
 import { UpdateProfileDetailsRequest } from '../profile/UpdateProfileDetails';
 import { UpdateProfileImageRequest } from '../profile/UpdateProfileImage';
-import { CollectRequest, FreeCollectRequest } from '../publications/CollectPublication';
+import { CollectRequest } from '../publications/CollectPublication';
 import { CreateCommentRequest } from '../publications/CreateComment';
 import { CreateMirrorRequest } from '../publications/CreateMirror';
 import { CreatePostRequest } from '../publications/CreatePost';
@@ -24,5 +24,3 @@ export type SupportedTransactionRequest =
   | UpdateFollowPolicyRequest
   | UpdateProfileDetailsRequest
   | UpdateProfileImageRequest;
-
-export type SignlessProtocolCallRequestModel = FreeCollectRequest | UnconstrainedFollowRequest;
