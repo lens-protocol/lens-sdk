@@ -19,17 +19,19 @@ import {
 
 import { useSharedDependencies } from '../../shared';
 import { FollowProfilesCallGateway } from './FollowProfilesCallGateway';
+import { FollowProxyActionRelayer } from './FollowProxyActionRelayer';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 
 export function useFollowController() {
   const {
     activeWallet,
     apolloClient,
-    tokenAvailability,
-    transactionGateway,
+    logger,
     protocolCallRelayer,
+    tokenAvailability,
+    transactionFactory,
+    transactionGateway,
     transactionQueue,
-    signlessProtocolCallRelayer,
   } = useSharedDependencies();
 
   return async (request: FollowRequest) => {
@@ -53,8 +55,13 @@ export function useFollowController() {
       presenter,
     );
 
+    const followProxyActionRelayer = new FollowProxyActionRelayer(
+      apolloClient,
+      transactionFactory,
+      logger,
+    );
     const signlessFollow = new SignlessProtocolCallUseCase<UnconstrainedFollowRequest>(
-      signlessProtocolCallRelayer,
+      followProxyActionRelayer,
       transactionQueue,
       presenter,
     );

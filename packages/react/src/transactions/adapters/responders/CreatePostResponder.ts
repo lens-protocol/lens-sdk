@@ -12,6 +12,7 @@ import {
   PostFragment,
   isPostPublication,
   LensApolloClient,
+  Sources,
 } from '@lens-protocol/api-bindings';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
@@ -49,7 +50,7 @@ function pendingPostFragment({
 export const recentPosts = makeVar<ReadonlyArray<PendingPostFragment | PostFragment>>([]);
 
 export class CreatePostResponder implements ITransactionResponder<CreatePostRequest> {
-  constructor(private readonly client: LensApolloClient) {}
+  constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
 
   async prepare({ id, request }: TransactionData<CreatePostRequest>) {
     const result = await this.client.query<GetProfileQuery, GetProfileQueryVariables>({
@@ -58,6 +59,7 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
         request: {
           profileId: request.profileId,
         },
+        sources: this.sources,
       },
       fetchPolicy: 'cache-first',
     });
@@ -79,6 +81,7 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
       variables: {
         txHash,
         observerId: request.profileId,
+        sources: this.sources,
       },
       fetchPolicy: 'network-only',
     });

@@ -12,7 +12,7 @@ type UseWhoCollectedPublicationArgs = PaginatedArgs<{
 export function useWhoCollectedPublication(
   args: UseWhoCollectedPublicationArgs,
 ): PaginatedReadResult<WalletFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useWhoCollectedPublicationQuery({
@@ -20,6 +20,7 @@ export function useWhoCollectedPublication(
         limit: args.limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
         publicationId: args.publicationId,
         observerId: args.observerId,
+        sources,
       },
       client: apolloClient,
     }),

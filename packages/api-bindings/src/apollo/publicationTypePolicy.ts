@@ -5,7 +5,6 @@ import {
   CollectPolicy,
   Comment,
   Maybe,
-  Mirror,
   Post,
   ProfileFragment,
   PublicationStatsFragment,
@@ -63,15 +62,15 @@ const collectedBy: FieldPolicy<Maybe<Wallet>, Comment | Post> = {
   },
 };
 
-const collectPolicy = <T extends Post | Mirror | Comment>(
-  existing: CollectPolicy | undefined,
-  { readField }: { readField: (field: keyof T) => Readonly<unknown> | undefined },
+const collectPolicy: FieldReadFunction<CollectPolicy, Comment | Post> = (
+  existing,
+  { readField },
 ) => {
   if (existing) return existing;
 
-  const profile = readField('profile') as ProfileFragment;
+  const profile = readField('profile') as unknown as ProfileFragment;
   const collectModule = readField('collectModule') as CollectModuleFragment;
-  const publicationStats = readField('stats') as PublicationStatsFragment;
+  const publicationStats = readField('stats') as unknown as PublicationStatsFragment;
 
   return resolveCollectPolicy({ profile, collectModule, publicationStats });
 };

@@ -20,7 +20,7 @@ query Feed(
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
-  $sources: [Sources!]
+  $sources: [Sources!]!
   $metadata: PublicationMetadataFilters
 ) {
   result: feed(
@@ -43,7 +43,12 @@ query Feed(
   }
 }
 
-query ExploreProfiles($observerId: ProfileId, $limit: LimitScalar!, $cursor: Cursor) {
+query ExploreProfiles(
+  $observerId: ProfileId
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $sources: [Sources!]!
+) {
   result: exploreProfiles(
     request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
   ) {

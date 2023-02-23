@@ -5,11 +5,14 @@ import {
   mockCommentFragment,
   mockPostFragment,
   mockProfileFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useSearchPublications } from '../useSearchPublications';
+
+const sources = mockSources();
 
 describe(`Given the ${useSearchPublications.name} hook`, () => {
   const observer = mockProfileFragment();
@@ -30,12 +33,14 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
           }),
         {
           mocks: {
+            sources,
             apolloClient: createMockApolloClientWithMultipleResponses([
               createSearchPublicationsQueryMockedResponse({
                 variables: {
                   observerId: observer.id,
                   limit: 10,
                   query,
+                  sources,
                 },
                 items: mockPublications,
               }),

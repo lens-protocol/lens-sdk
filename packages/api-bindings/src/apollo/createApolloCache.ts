@@ -29,6 +29,7 @@ import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
+import { noCachedField } from './noCachedField';
 import { notNormalizedType } from './notNormalizedType';
 import { createContentPublicationTypePolicy } from './publicationTypePolicy';
 
@@ -71,7 +72,20 @@ function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies
     Comment: createContentPublicationTypePolicy(),
 
     FeedItem: notNormalizedType(),
+
     MetadataOutput: notNormalizedType(),
+    PublicationStats: notNormalizedType({
+      fields: {
+        commentsTotal: noCachedField(),
+      },
+    }),
+    ProfileStats: notNormalizedType({
+      fields: {
+        commentsTotal: noCachedField(),
+        postsTotal: noCachedField(),
+        mirrorsTotal: noCachedField(),
+      },
+    }),
 
     AccessConditionOutput: notNormalizedType(),
     EncryptionParamsOutput: notNormalizedType(),

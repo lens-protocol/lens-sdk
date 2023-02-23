@@ -3,11 +3,14 @@ import {
   createProfilesWhoMirroredPublicationMockedResponse,
   mockPostFragment,
   mockProfileFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useWhoMirroredPublication } from '../useWhoMirroredPublication';
+
+const sources = mockSources();
 
 describe(`Given the ${useWhoMirroredPublication.name} hook`, () => {
   const observer = mockProfileFragment();
@@ -25,12 +28,14 @@ describe(`Given the ${useWhoMirroredPublication.name} hook`, () => {
           }),
         {
           mocks: {
+            sources,
             apolloClient: createMockApolloClientWithMultipleResponses([
               createProfilesWhoMirroredPublicationMockedResponse({
                 variables: {
                   publicationId: publication.id,
                   observerId: observer.id,
                   limit: 10,
+                  sources,
                 },
                 items: mockProfiles,
               }),

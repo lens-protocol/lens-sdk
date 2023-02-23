@@ -1,4 +1,8 @@
-query Publication($observerId: ProfileId, $publicationId: InternalPublicationId!) {
+query Publication(
+  $observerId: ProfileId
+  $publicationId: InternalPublicationId!
+  $sources: [Sources!]!
+) {
   result: publication(request: { publicationId: $publicationId }) {
     ... on Post {
       ...Post
@@ -14,7 +18,7 @@ query Publication($observerId: ProfileId, $publicationId: InternalPublicationId!
   }
 }
 
-query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!) {
+query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!, $sources: [Sources!]!) {
   result: publication(request: { txHash: $txHash }) {
     ... on Post {
       ...Post

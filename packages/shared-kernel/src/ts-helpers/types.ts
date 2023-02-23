@@ -105,3 +105,9 @@ export type Prettify<T> = {
   [K in keyof T]: T[K];
   // eslint-disable-next-line @typescript-eslint/ban-types
 } & {};
+
+declare const brand: unique symbol;
+/**
+ * Branding function
+ */
+export type Brand<T, TBrand> = T & { [brand]: TBrand };

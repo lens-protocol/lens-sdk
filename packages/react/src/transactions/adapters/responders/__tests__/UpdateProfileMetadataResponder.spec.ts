@@ -7,6 +7,7 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockUpdateProfileDetailsRequest,
@@ -27,11 +28,15 @@ function setupUpdateProfileMetadataResponder({
   existingProfile: ProfileFragment | null;
   updatedProfile?: ProfileFragment;
 }) {
+  const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
     mockGetProfileQueryMockedResponse({
       profile: updatedProfile,
-      request: { profileId: updatedProfile.id },
-      observerId: updatedProfile.id,
+      variables: {
+        request: { profileId: updatedProfile.id },
+        observerId: updatedProfile.id,
+        sources,
+      },
     }),
   ]);
 
@@ -47,7 +52,7 @@ function setupUpdateProfileMetadataResponder({
     data: existingProfile,
   });
 
-  const responder = new UpdateProfileMetadataResponder(apolloClient);
+  const responder = new UpdateProfileMetadataResponder(apolloClient, sources);
 
   return {
     responder,

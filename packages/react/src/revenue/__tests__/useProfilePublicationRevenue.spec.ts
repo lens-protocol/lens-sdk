@@ -3,14 +3,17 @@ import {
   createProfilePublicationRevenueQueryMockedResponse,
   mockProfileFragment,
   mockPublicationRevenueFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useProfilePublicationRevenue } from '../useProfilePublicationRevenue';
 
+const sources = mockSources();
+
 describe(`Given the ${useProfilePublicationRevenue.name} hook`, () => {
-  const mockPedublicationRevenueFragments = [mockPublicationRevenueFragment()];
+  const mockedPublicationRevenueFragments = [mockPublicationRevenueFragment()];
   const mockedProfile = mockProfileFragment();
 
   describe('when supplied with a profile id', () => {
@@ -23,10 +26,11 @@ describe(`Given the ${useProfilePublicationRevenue.name} hook`, () => {
             }),
           {
             mocks: {
+              sources,
               apolloClient: createMockApolloClientWithMultipleResponses([
                 createProfilePublicationRevenueQueryMockedResponse({
-                  variables: { profileId: mockedProfile.id, limit: 10 },
-                  items: mockPedublicationRevenueFragments,
+                  variables: { profileId: mockedProfile.id, limit: 10, sources },
+                  items: mockedPublicationRevenueFragments,
                 }),
               ]),
             },
@@ -35,7 +39,7 @@ describe(`Given the ${useProfilePublicationRevenue.name} hook`, () => {
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
 
-        expect(result.current.data).toEqual(mockPedublicationRevenueFragments);
+        expect(result.current.data).toEqual(mockedPublicationRevenueFragments);
       });
     });
   });

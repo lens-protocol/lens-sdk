@@ -17,13 +17,14 @@ export function usePublication({
   publicationId,
   observerId,
 }: UsePublicationArgs): ReadResult<AnyPublicationFragment, NotFoundError | UnspecifiedError> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   const { data, error, loading } = useReadResult(
     usePublicationQuery({
       variables: {
         publicationId,
         observerId,
+        sources,
       },
       client: apolloClient,
     }),

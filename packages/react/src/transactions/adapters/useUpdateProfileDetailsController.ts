@@ -28,11 +28,17 @@ export function useUpdateProfileDetailsController({
     protocolCallRelayer,
     transactionQueue,
     transactionFactory,
+    sources,
   } = useSharedDependencies();
 
   return async (request: UpdateProfileDetailsRequest) => {
     const uploadAdapter = new MetadataUploadAdapter(upload);
-    const gateway = new ProfileMetadataCallGateway(apolloClient, transactionFactory, uploadAdapter);
+    const gateway = new ProfileMetadataCallGateway(
+      apolloClient,
+      transactionFactory,
+      uploadAdapter,
+      sources,
+    );
 
     const presenter = new PromiseResultPresenter<
       void,

@@ -4,6 +4,7 @@ import {
   PublicationTypes,
   useExplorePublicationsQuery,
 } from '@lens-protocol/api-bindings';
+import { ProfileId } from '@lens-protocol/domain/entities';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
@@ -15,7 +16,7 @@ type UseExplorePublicationsArgs = PaginatedArgs<{
   sortCriteria?: PublicationSortCriteria;
   timestamp?: number;
   publicationTypes?: Array<PublicationTypes>;
-  excludeProfileIds?: Array<string>;
+  excludeProfileIds?: Array<ProfileId>;
   metadataFilter?: PublicationMetadataFilters;
 }>;
 
@@ -28,21 +29,19 @@ export function useExplorePublications({
   excludeProfileIds,
   metadataFilter,
 }: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<AnyPublicationFragment>> {
-  const { sources, apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useExplorePublicationsQuery({
       variables: {
-        request: {
-          metadata: createPublicationMetadataFilters(metadataFilter),
-          limit,
-          sortCriteria,
-          sources,
-          timestamp,
-          publicationTypes,
-          excludeProfileIds,
-        },
+        excludeProfileIds,
+        limit,
+        metadata: createPublicationMetadataFilters(metadataFilter),
+        publicationTypes,
+        sortCriteria,
+        timestamp,
         observerId,
+        sources,
       },
       client: apolloClient,
     }),

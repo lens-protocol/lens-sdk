@@ -4,7 +4,7 @@ export class UnspecifiedError extends CausedError {
   name = 'UnspecifiedError' as const;
 
   constructor(cause: Error) {
-    super('An unspecified error occurred', { cause });
+    super(cause.message, { cause });
   }
 }
 

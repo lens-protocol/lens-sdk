@@ -3,12 +3,15 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
   createExplorePublicationsQueryMockedResponse,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { useExplorePublications } from '../useExplorePublications';
+
+const sources = mockSources();
 
 describe(`Given the ${useExplorePublications.name} hook`, () => {
   const mockPublications = [mockPostFragment()];
@@ -17,13 +20,13 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
     it('should return publications that match the explore with default parameters', async () => {
       const { result } = renderHookWithMocks(() => useExplorePublications(), {
         mocks: {
+          sources,
           apolloClient: createMockApolloClientWithMultipleResponses([
             createExplorePublicationsQueryMockedResponse({
               variables: {
-                request: {
-                  limit: DEFAULT_PAGINATED_QUERY_LIMIT,
-                  sortCriteria: PublicationSortCriteria.Latest,
-                },
+                limit: DEFAULT_PAGINATED_QUERY_LIMIT,
+                sortCriteria: PublicationSortCriteria.Latest,
+                sources,
               },
               items: mockPublications,
             }),
@@ -34,6 +37,7 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
 
       expect(result.current.data).toEqual(mockPublications);
     });
+
     it('should return publications that match the explore with custom parameters', async () => {
       const customParams = {
         sortCriteria: PublicationSortCriteria.TopCollected,
@@ -42,10 +46,12 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
       };
       const { result } = renderHookWithMocks(() => useExplorePublications(customParams), {
         mocks: {
+          sources,
           apolloClient: createMockApolloClientWithMultipleResponses([
             createExplorePublicationsQueryMockedResponse({
               variables: {
-                request: customParams,
+                ...customParams,
+                sources,
               },
               items: mockPublications,
             }),

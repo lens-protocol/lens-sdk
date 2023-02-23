@@ -3,6 +3,7 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileIdentifier, mockWalletData } from '@lens-protocol/domain/mocks';
 import { ProfileIdentifier } from '@lens-protocol/domain/use-cases/profile';
@@ -21,17 +22,23 @@ function setupUseActiveProfile(args: {
   profile: ProfileFragment;
   activeProfile: ProfileIdentifier | null;
 }) {
+  const sources = mockSources();
+
   activeProfileVar(args.activeProfile);
   activeWalletVar(mockWalletData({ address: args.profile.ownedBy }));
 
   return renderHookWithMocks(() => useActiveProfile(), {
     mocks: {
+      sources,
       apolloClient: createMockApolloClientWithMultipleResponses(
         [
           mockGetProfileQueryMockedResponse({
             profile: args.profile,
-            request: {
-              profileId: args.profile.id,
+            variables: {
+              request: {
+                profileId: args.profile.id,
+              },
+              sources,
             },
           }),
         ],

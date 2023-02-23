@@ -13,7 +13,7 @@ export function useProfileFollowers({
   limit,
   observerId,
 }: UseProfileFollowersArgs): PaginatedReadResult<FollowerFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useProfileFollowersQuery({
@@ -21,6 +21,7 @@ export function useProfileFollowers({
         profileId,
         limit: limit ?? 10,
         observerId,
+        sources,
       },
       client: apolloClient,
     }),

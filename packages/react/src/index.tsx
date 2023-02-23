@@ -19,6 +19,7 @@ export type {
   IStorageProvider,
   IObservableStorageProvider,
 } from '@lens-protocol/storage';
+
 export {
   InsufficientGasError,
   PendingSigningRequestError,
@@ -29,6 +30,7 @@ export {
   WalletConnectionError,
   WalletConnectionErrorReason,
 } from '@lens-protocol/domain/entities';
+export type { AppId } from '@lens-protocol/domain/entities';
 
 export type { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 

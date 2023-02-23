@@ -1,5 +1,5 @@
 import 'example-shared';
-import { LensConfig, LensProvider, sources, staging } from '@lens-protocol/react';
+import { LensConfig, LensProvider, sources, staging, appId } from '@lens-protocol/react';
 import { localStorage } from '@lens-protocol/react/web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import type { AppProps } from 'next/app';
@@ -21,7 +21,7 @@ const client = createClient({
 const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
   environment: staging,
-  sources: [sources.lenster, sources.orb, 'any-other-app-id'],
+  sources: [sources.lenster, sources.orb, appId('any-other-app-id')],
   storage: localStorage(),
 };
 

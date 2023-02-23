@@ -18,7 +18,7 @@ export function useWhoMirroredPublication({
   publicationId,
   observerId,
 }: UseWhoMirroredPublicationArgs): PaginatedReadResult<ProfileFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useGetAllProfilesByWhoMirroredPublicationQuery({
@@ -26,6 +26,7 @@ export function useWhoMirroredPublication({
         publicationId,
         observerId,
         limit,
+        sources,
       },
       client: apolloClient,
     }),

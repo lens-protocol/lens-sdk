@@ -45,7 +45,7 @@ query ProfilePublicationRevenue(
   $limit: LimitScalar!
   $cursor: Cursor
   $publicationTypes: [PublicationTypes!]
-  $sources: [Sources!]
+  $sources: [Sources!]!
 ) {
   result: profilePublicationRevenue(
     request: {
@@ -63,5 +63,18 @@ query ProfilePublicationRevenue(
     pageInfo {
       ...CommonPaginatedResultInfo
     }
+  }
+}
+
+fragment ProfileFollowRevenue on FollowRevenueResult {
+  __typename
+  revenues {
+    ...RevenueAggregate
+  }
+}
+
+query ProfileFollowRevenue($profileId: ProfileId!) {
+  result: profileFollowRevenue(request: { profileId: $profileId }) {
+    ...ProfileFollowRevenue
   }
 }

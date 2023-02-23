@@ -2,6 +2,7 @@ import {
   createAnonymousApolloClient,
   createApolloClient,
   LensApolloClient,
+  Sources,
 } from '@lens-protocol/api-bindings';
 import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
@@ -10,7 +11,7 @@ import {
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ActiveWallet, TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
-import { invariant } from '@lens-protocol/shared-kernel';
+import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
@@ -25,7 +26,6 @@ import { FollowPolicyCallGateway } from './transactions/adapters/FollowPolicyCal
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
 import { PublicationCacheManager } from './transactions/adapters/PublicationCacheManager';
-import { SignlessProtocolCallRelayer } from './transactions/adapters/SignlessProtocolCallRelayer';
 import {
   FailedTransactionError,
   TransactionQueuePresenter,
@@ -76,6 +76,7 @@ export type SharedDependencies = {
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   followPolicyCallGateway: FollowPolicyCallGateway;
+  logger: ILogger;
   notificationStorage: IStorage<UnreadNotificationsData>;
   onError: Handlers['onError'];
   onLogout: Handlers['onLogout'];
@@ -83,8 +84,7 @@ export type SharedDependencies = {
   protocolCallRelayer: ProtocolCallRelayer;
   providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
-  signlessProtocolCallRelayer: SignlessProtocolCallRelayer;
-  sources: string[];
+  sources: Sources;
   tokenAvailability: TokenAvailability;
   transactionFactory: TransactionFactory;
   transactionGateway: PendingTransactionGateway<SupportedTransactionRequest>;
@@ -97,6 +97,7 @@ export function createSharedDependencies(
   config: LensConfig,
   { onLogout, onError }: Handlers,
 ): SharedDependencies {
+  const sources = (config.sources as Sources) ?? [];
   const logger = config.logger ?? new ConsoleLogger();
 
   // storages
@@ -138,7 +139,7 @@ export function createSharedDependencies(
   const tokenGateway = new TokenGateway(providerFactory);
   const followPolicyCallGateway = new FollowPolicyCallGateway(apolloClient);
 
-  const profileGateway = new ProfileGateway(apolloClient);
+  const profileGateway = new ProfileGateway(apolloClient, sources);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
   const activeProfilePresenter = new ActiveProfilePresenter();
   const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
@@ -147,27 +148,29 @@ export function createSharedDependencies(
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(publicationCacheManager),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
-    [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient),
+    [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient, sources),
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
       apolloClient,
       publicationCacheManager,
+      sources,
     ),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
-    [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(apolloClient),
-    [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(apolloClient),
-    [TransactionKind.UPDATE_PROFILE_DETAILS]: new UpdateProfileMetadataResponder(apolloClient),
-    [TransactionKind.UPDATE_PROFILE_IMAGE]: new UpdateProfileImageResponder(apolloClient),
+    [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(
+      apolloClient,
+      sources,
+    ),
+    [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(apolloClient, sources),
+    [TransactionKind.UPDATE_PROFILE_DETAILS]: new UpdateProfileMetadataResponder(
+      apolloClient,
+      sources,
+    ),
+    [TransactionKind.UPDATE_PROFILE_IMAGE]: new UpdateProfileImageResponder(apolloClient, sources),
   };
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);
 
   const protocolCallRelayer = new ProtocolCallRelayer(apolloClient, transactionFactory, logger);
-  const signlessProtocolCallRelayer = new SignlessProtocolCallRelayer(
-    apolloClient,
-    transactionFactory,
-    logger,
-  );
 
   // common interactors
   const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
@@ -187,14 +190,14 @@ export function createSharedDependencies(
     credentialsFactory,
     credentialsGateway,
     followPolicyCallGateway,
+    logger,
     notificationStorage,
     onError,
     onLogout,
     profileGateway,
     protocolCallRelayer,
     publicationCacheManager,
-    signlessProtocolCallRelayer,
-    sources: config.sources ?? [],
+    sources,
     tokenAvailability,
     transactionFactory,
     transactionGateway,

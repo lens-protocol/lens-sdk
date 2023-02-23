@@ -11,18 +11,16 @@ import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 type UseProfilePublicationRevenueArgs = PaginatedArgs<{
   profileId: string;
   observerId?: string;
-  sources?: string[];
   publicationTypes?: PublicationTypes[];
 }>;
 
 export function useProfilePublicationRevenue({
   profileId,
   observerId,
-  sources,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   publicationTypes,
 }: UseProfilePublicationRevenueArgs): PaginatedReadResult<PublicationRevenueFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(
     useProfilePublicationRevenueQuery({

@@ -11,7 +11,7 @@ query Comments(
   $commentsOf: InternalPublicationId!
   $limit: LimitScalar!
   $cursor: Cursor
-  $sources: [Sources!]
+  $sources: [Sources!]!
   $metadata: PublicationMetadataFilters
 ) {
   result: publications(

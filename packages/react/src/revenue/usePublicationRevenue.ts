@@ -21,7 +21,10 @@ export function usePublicationRevenue({
   const { apolloClient } = useSharedDependencies();
 
   const { data, error, loading } = useReadResult(
-    usePublicationRevenueQuery({ variables: { request: { publicationId } }, client: apolloClient }),
+    usePublicationRevenueQuery({
+      variables: { request: { publicationId } },
+      client: apolloClient,
+    }),
   );
 
   if (loading) {

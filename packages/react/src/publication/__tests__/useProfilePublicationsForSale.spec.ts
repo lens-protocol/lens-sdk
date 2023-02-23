@@ -4,11 +4,14 @@ import {
   mockPostFragment,
   mockProfileFragment,
   createProfilePublicationsForSaleQueryMockedResponse,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useProfilePublicationsForSale } from '../useProfilePublicationsForSale';
+
+const sources = mockSources();
 
 describe(`Given the ${useProfilePublicationsForSale.name} hook`, () => {
   const profile = mockProfileFragment();
@@ -25,12 +28,14 @@ describe(`Given the ${useProfilePublicationsForSale.name} hook`, () => {
           }),
         {
           mocks: {
+            sources,
             apolloClient: createMockApolloClientWithMultipleResponses([
               createProfilePublicationsForSaleQueryMockedResponse({
                 variables: {
                   profileId: profile.id,
                   observerId: observer.id,
                   limit: 10,
+                  sources,
                 },
                 items: [mockPublication],
               }),

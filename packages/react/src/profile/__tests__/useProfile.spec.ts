@@ -2,15 +2,19 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
+import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { useProfile } from '../useProfile';
 
+const sources = mockSources();
+
 describe(`Given the ${useProfile.name} hook`, () => {
-  const profileId = '0x2000';
+  const profileId = mockProfileId();
   const handle = 'aave.lens';
   const mockProfile = mockProfileFragment({ id: profileId, handle });
 
@@ -19,11 +23,15 @@ describe(`Given the ${useProfile.name} hook`, () => {
       it('should settle with the profile data', async () => {
         const { result } = renderHookWithMocks(() => useProfile({ profileId: profileId }), {
           mocks: {
+            sources,
             apolloClient: createMockApolloClientWithMultipleResponses([
               mockGetProfileQueryMockedResponse({
                 profile: mockProfile,
-                request: {
-                  profileId,
+                variables: {
+                  request: {
+                    profileId,
+                  },
+                  sources,
                 },
               }),
             ]),
@@ -42,10 +50,14 @@ describe(`Given the ${useProfile.name} hook`, () => {
       it('should settle with the profile data', async () => {
         const { result } = renderHookWithMocks(() => useProfile({ handle }), {
           mocks: {
+            sources,
             apolloClient: createMockApolloClientWithMultipleResponses([
               mockGetProfileQueryMockedResponse({
                 profile: mockProfile,
-                request: { handle },
+                variables: {
+                  request: { handle },
+                  sources,
+                },
               }),
             ]),
           },
@@ -62,10 +74,14 @@ describe(`Given the ${useProfile.name} hook`, () => {
     it(`should settle with a ${NotFoundError.name} state`, async () => {
       const { result } = renderHookWithMocks(() => useProfile({ handle }), {
         mocks: {
+          sources,
           apolloClient: createMockApolloClientWithMultipleResponses([
             mockGetProfileQueryMockedResponse({
               profile: null,
-              request: { handle },
+              variables: {
+                request: { handle },
+                sources,
+              },
             }),
           ]),
         },

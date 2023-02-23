@@ -3,6 +3,7 @@ import {
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
   createMockApolloClientWithMultipleResponses,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
@@ -14,16 +15,20 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { UpdateDispatcherConfigResponder } from '../UpdateDispatcherConfigResponder';
 
 function setupTestScenario({ profile }: { profile: ProfileFragment }) {
+  const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
     mockGetProfileQueryMockedResponse({
       profile,
-      request: {
-        profileId: profile.id,
+      variables: {
+        request: {
+          profileId: profile.id,
+        },
+        sources,
       },
     }),
   ]);
 
-  const responder = new UpdateDispatcherConfigResponder(apolloClient);
+  const responder = new UpdateDispatcherConfigResponder(apolloClient, sources);
 
   return {
     responder,

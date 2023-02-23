@@ -98,7 +98,7 @@ query Notifications(
   $observerId: ProfileId!
   $limit: LimitScalar!
   $cursor: Cursor
-  $sources: [Sources!]
+  $sources: [Sources!]!
 ) {
   result: notifications(
     request: { profileId: $observerId, limit: $limit, cursor: $cursor, sources: $sources }

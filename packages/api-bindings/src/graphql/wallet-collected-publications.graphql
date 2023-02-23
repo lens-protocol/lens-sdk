@@ -3,7 +3,7 @@ query WalletCollectedPublications(
   $walletAddress: EthereumAddress!
   $limit: LimitScalar!
   $cursor: Cursor
-  $sources: [Sources!]
+  $sources: [Sources!]!
 ) {
   result: publications(
     request: {

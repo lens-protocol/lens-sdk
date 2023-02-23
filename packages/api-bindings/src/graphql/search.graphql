@@ -2,7 +2,7 @@ query SearchPublications(
   $limit: LimitScalar
   $cursor: Cursor
   $query: Search!
-  $sources: [Sources!]
+  $sources: [Sources!]!
   $observerId: ProfileId
 ) {
   result: search(
@@ -31,6 +31,7 @@ query SearchProfiles(
   $cursor: Cursor
   $query: Search!
   $observerId: ProfileId
+  $sources: [Sources!]!
 ) {
   result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
     ... on ProfileSearchResult {

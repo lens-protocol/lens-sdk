@@ -3,12 +3,15 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
   createPublicationQueryMockedResponse,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { usePublication } from '../usePublication';
+
+const sources = mockSources();
 
 describe(`Given the ${usePublication.name} hook`, () => {
   const mockPublication: PostFragment = mockPostFragment();
@@ -22,9 +25,13 @@ describe(`Given the ${usePublication.name} hook`, () => {
           }),
         {
           mocks: {
+            sources,
             apolloClient: createMockApolloClientWithMultipleResponses([
               createPublicationQueryMockedResponse({
-                publicationId: mockPublication.id,
+                variables: {
+                  publicationId: mockPublication.id,
+                  sources,
+                },
                 result: mockPublication,
               }),
             ]),
@@ -47,9 +54,13 @@ describe(`Given the ${usePublication.name} hook`, () => {
           }),
         {
           mocks: {
+            sources,
             apolloClient: createMockApolloClientWithMultipleResponses([
               createPublicationQueryMockedResponse({
-                publicationId: mockPublication.id,
+                variables: {
+                  publicationId: mockPublication.id,
+                  sources,
+                },
                 result: null,
               }),
             ]),

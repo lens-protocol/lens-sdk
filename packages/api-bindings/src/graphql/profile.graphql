@@ -43,6 +43,21 @@ fragment Attribute on Attribute {
   value
 }
 
+fragment ProfileStats on ProfileStats {
+  __typename
+  totalCollects
+  totalComments
+  totalFollowers
+  totalFollowing
+  totalMirrors
+  totalPosts
+  totalPublications
+
+  commentsCount: commentsTotal(forSources: $sources)
+  postsCount: postsTotal(forSources: $sources)
+  mirrorsCount: mirrorsTotal(forSources: $sources)
+}
+
 fragment Profile on Profile {
   __typename
   id
@@ -58,10 +73,7 @@ fragment Profile on Profile {
     ...ProfileMedia
   }
   stats {
-    __typename
-    totalFollowers
-    totalFollowing
-    totalPosts
+    ...ProfileStats
   }
   __followModule: followModule {
     ... on FeeFollowModuleSettings {
@@ -116,13 +128,17 @@ fragment Profile on Profile {
   ownedByMe @client
 }
 
-query ProfilesToFollow($observerId: ProfileId) {
+query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {
   result: recommendedProfiles {
     ...Profile
   }
 }
 
-query GetProfile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+query GetProfile(
+  $request: SingleProfileQueryRequest!
+  $observerId: ProfileId
+  $sources: [Sources!]!
+) {
   result: profile(request: $request) {
     ...Profile
   }
@@ -133,6 +149,7 @@ query GetAllProfilesByOwnerAddress(
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
+  $sources: [Sources!]!
 ) {
   result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
     items {
@@ -161,6 +178,7 @@ query MutualFollowersProfiles(
   $viewingProfileId: ProfileId!
   $limit: LimitScalar!
   $cursor: Cursor
+  $sources: [Sources!]!
 ) {
   result: mutualFollowersProfiles(
     request: {
