@@ -15,7 +15,6 @@ import {
 } from './generated';
 
 export * from './CollectPolicy';
-export * from './DecryptionCriteria';
 export * from './FollowPolicy';
 export * from './FollowStatus';
 export * from './generated';

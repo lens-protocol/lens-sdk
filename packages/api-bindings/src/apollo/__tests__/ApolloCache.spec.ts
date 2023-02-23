@@ -1,4 +1,5 @@
 import { ApolloCache, DocumentNode, makeVar } from '@apollo/client';
+import { DecryptionCriteriaType } from '@lens-protocol/domain/entities';
 import {
   mockUnconstrainedFollowRequest,
   mockUnfollowRequest,
@@ -14,7 +15,6 @@ import {
   ProfileFragment,
   ProfileFragmentDoc,
 } from '../../graphql';
-import { DecryptionCriteriaType } from '../../graphql/DecryptionCriteria';
 import {
   mockAddressOwnershipAccessConditionOutput,
   mockAndAccessConditionOutput,
@@ -33,6 +33,7 @@ import {
   mockProfileOwnershipAccessConditionOutput,
 } from '../../mocks';
 import { createApolloCache } from '../createApolloCache';
+import { erc20Amount } from '../decryptionCriteria';
 import { recentTransactionsVar } from '../transactions';
 
 const typeToFragmentMap: Record<ContentPublicationFragment['__typename'], DocumentNode> = {
@@ -137,10 +138,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           criterion: erc20Condition,
           expectations: {
             type: DecryptionCriteriaType.ERC20_OWNERSHIP,
-            amount: erc20Condition.token?.amount ?? never(),
-            chainId: erc20Condition.token?.chainID ?? never(),
-            contractAddress: erc20Condition.token?.contractAddress ?? never(),
-            decimals: erc20Condition.token?.decimals ?? never(),
+            amount: erc20Amount({ from: erc20Condition.token ?? never() }),
             condition: erc20Condition.token?.condition ?? never(),
           },
         },
@@ -258,6 +256,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
 
           expect(read.decryptionCriteria).toEqual({
             type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
+            publicationId: publication.id,
           });
         });
       });

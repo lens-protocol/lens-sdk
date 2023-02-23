@@ -1,6 +1,6 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { TransactionKind } from '../../entities';
+import { DecryptionCriteria, TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -20,6 +20,7 @@ export type CreatePostRequest = {
   kind: TransactionKind.CREATE_POST;
   locale: Locale;
   delegate: boolean;
+  decryptionCriteria?: DecryptionCriteria;
 };
 
 export type ICreatePostCallGateway = IDelegableProtocolCallGateway<CreatePostRequest> &

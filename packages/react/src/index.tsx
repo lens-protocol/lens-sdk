@@ -32,7 +32,7 @@ export {
 } from '@lens-protocol/domain/entities';
 export type { AppId } from '@lens-protocol/domain/entities';
 
-export type { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+export type { NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
 export {
   Amount,

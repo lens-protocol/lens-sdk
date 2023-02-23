@@ -14,7 +14,6 @@ export * from './filters';
 
 export {
   CollectState,
-  DecryptionCriteriaType,
   isCommentPublication,
   isContentPublication,
   isMirrorPublication,
@@ -38,6 +37,15 @@ export type {
   ContentPublicationFragment,
   PublicationOwnedByMeFragment,
   WhoReactedResultFragment,
+} from '@lens-protocol/api-bindings';
+
+export {
+  DecryptionCriteriaType,
+  Erc20ComparisonOperator,
+  NftContractType,
+} from '@lens-protocol/domain/entities';
+
+export type {
   NftOwnershipCriterion,
   Erc20OwnershipCriterion,
   AddressOwnershipCriterion,
@@ -46,9 +54,10 @@ export type {
   CollectPublicationCriterion,
   CollectThisPublicationCriterion,
   SimpleCriterion,
-  TwoAtLeastArray,
   OrCriterion,
   AndCriterion,
   AnyCriterion,
   DecryptionCriteria,
-} from '@lens-protocol/api-bindings';
+} from '@lens-protocol/domain/entities';
+
+export type { TwoAtLeastArray } from '@lens-protocol/shared-kernel';

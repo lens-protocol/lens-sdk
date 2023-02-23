@@ -12,6 +12,7 @@ import {
 import { ReactNode } from 'react';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
+import { formatAmount } from '../../utils';
 
 function formatDecryptionCriterion(criterion: AnyCriterion): string {
   switch (criterion.type) {
@@ -19,7 +20,7 @@ function formatDecryptionCriterion(criterion: AnyCriterion): string {
       return `own NFT ${criterion.contractAddress}`;
 
     case DecryptionCriteriaType.ERC20_OWNERSHIP:
-      return `have ERC20 ${criterion.amount}@${criterion.contractAddress}`;
+      return `have ERC20 ${formatAmount(criterion.amount)}`;
 
     case DecryptionCriteriaType.ADDRESS_OWNERSHIP:
       return `own address ${criterion.address}`;

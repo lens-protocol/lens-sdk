@@ -1,5 +1,33 @@
-import { ProfileId } from '@lens-protocol/domain/entities';
-import { assertJustOne, hasAtLeastOne, invariant, never } from '@lens-protocol/shared-kernel';
+import {
+  AddressOwnershipCriterion,
+  AndCriterion,
+  AnyCriterion,
+  CollectPublicationCriterion,
+  CollectThisPublicationCriterion,
+  DecryptionCriteria,
+  DecryptionCriteriaType,
+  Erc20ComparisonOperator,
+  Erc20OwnershipCriterion,
+  FollowProfileCriterion,
+  NftContractType,
+  NftOwnershipCriterion,
+  OrCriterion,
+  ProfileId,
+  ProfileOwnershipCriterion,
+  PublicationId,
+  SimpleCriterion,
+} from '@lens-protocol/domain/entities';
+import {
+  Amount,
+  assertJustOne,
+  ChainType,
+  erc20,
+  hasAtLeastOne,
+  hasTwoOrMore,
+  invariant,
+  never,
+  TwoAtLeastArray,
+} from '@lens-protocol/shared-kernel';
 
 import {
   AccessConditionOutput,
@@ -8,6 +36,7 @@ import {
   Comment,
   ContractType,
   EoaOwnershipOutput,
+  Erc20OwnershipFragment,
   Erc20OwnershipOutput,
   FollowConditionOutput,
   Maybe,
@@ -16,23 +45,8 @@ import {
   Post,
   ProfileOwnershipOutput,
   RootCriterionFragment,
+  ScalarOperator,
 } from '../graphql';
-import {
-  AddressOwnershipCriterion,
-  AndCriterion,
-  AnyCriterion,
-  CollectPublicationCriterion,
-  CollectThisPublicationCriterion,
-  SimpleCriterion,
-  DecryptionCriteriaType,
-  DecryptionCriteria,
-  Erc20OwnershipCriterion,
-  FollowProfileCriterion,
-  NftOwnershipCriterion,
-  OrCriterion,
-  ProfileOwnershipCriterion,
-  TwoAtLeastArray,
-} from '../graphql/DecryptionCriteria';
 import { FieldReadFunction } from './TypePolicy';
 
 function allButPublicationAuthor(authorId: ProfileId) {
@@ -41,10 +55,14 @@ function allButPublicationAuthor(authorId: ProfileId) {
   };
 }
 
-function isSupportedNFTContractType(
-  contractType: ContractType,
-): contractType is ContractType.Erc721 | ContractType.Erc1155 {
-  return [ContractType.Erc721, ContractType.Erc1155].includes(contractType);
+function toNftContractType(contractType: ContractType): NftContractType | null {
+  switch (contractType) {
+    case ContractType.Erc721:
+      return NftContractType.Erc721;
+    case ContractType.Erc1155:
+      return NftContractType.Erc1155;
+  }
+  return null;
 }
 
 function nftOwnershipCriterion({
@@ -53,7 +71,9 @@ function nftOwnershipCriterion({
   contractType,
   tokenIds,
 }: NftOwnershipOutput): NftOwnershipCriterion | null {
-  if (!isSupportedNFTContractType(contractType)) {
+  const supportedNftContractType = toNftContractType(contractType);
+
+  if (!supportedNftContractType) {
     return null;
   }
 
@@ -62,7 +82,7 @@ function nftOwnershipCriterion({
       type: DecryptionCriteriaType.NFT_OWNERSHIP,
       chainId: chainID,
       contractAddress: contractAddress,
-      contractType: contractType,
+      contractType: supportedNftContractType,
       tokenIds: tokenIds,
     };
   }
@@ -71,18 +91,30 @@ function nftOwnershipCriterion({
     type: DecryptionCriteriaType.NFT_OWNERSHIP,
     chainId: chainID,
     contractAddress: contractAddress,
-    contractType: contractType,
+    contractType: supportedNftContractType,
   };
+}
+
+export function erc20Amount({ from }: { from: Erc20OwnershipFragment }) {
+  const asset = erc20({
+    chainType: ChainType.POLYGON, // temporary while BE works on returning an Erc20Amount node
+    address: from.contractAddress,
+    decimals: from.decimals,
+    name: 'Unspecified',
+    symbol: 'UNSPECIFIED',
+  });
+  return Amount.erc20(asset, from.amount);
+}
+
+function toErc20Comp(operator: ScalarOperator): Erc20ComparisonOperator {
+  return operator as string as Erc20ComparisonOperator;
 }
 
 function erc20OwnershipCriterion(condition: Erc20OwnershipOutput): Erc20OwnershipCriterion {
   return {
     type: DecryptionCriteriaType.ERC20_OWNERSHIP,
-    amount: condition.amount,
-    chainId: condition.chainID,
-    condition: condition.condition,
-    contractAddress: condition.contractAddress,
-    decimals: condition.decimals,
+    amount: erc20Amount({ from: condition }),
+    condition: toErc20Comp(condition.condition),
   };
 }
 
@@ -107,12 +139,18 @@ function followProfile(condition: FollowConditionOutput): FollowProfileCriterion
   };
 }
 
+type ContextBag = {
+  publicationId: PublicationId;
+};
+
 function collectPublication(
   condition: CollectConditionOutput,
+  { publicationId }: ContextBag,
 ): CollectPublicationCriterion | CollectThisPublicationCriterion {
   if (condition.thisPublication) {
     return {
       type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
+      publicationId,
     };
   }
   return {
@@ -131,7 +169,10 @@ function sanitize({ __typename, ...accessCondition }: AccessConditionOutput) {
   return conditions[0];
 }
 
-function resolveSimpleCriterion(accessCondition: AccessConditionOutput): SimpleCriterion | null {
+function resolveSimpleCriterion(
+  accessCondition: AccessConditionOutput,
+  context: ContextBag,
+): SimpleCriterion | null {
   const condition = sanitize(accessCondition);
 
   switch (condition.__typename) {
@@ -146,17 +187,18 @@ function resolveSimpleCriterion(accessCondition: AccessConditionOutput): SimpleC
     case 'FollowConditionOutput':
       return followProfile(condition);
     case 'CollectConditionOutput':
-      return collectPublication(condition);
+      return collectPublication(condition, context);
   }
   return null;
 }
 
-function hasTwoOrMore<T>(items: ReadonlyArray<T>): items is TwoAtLeastArray<T> {
-  return items.length >= 2;
-}
-
-function andCondition({ criteria }: AndConditionOutput): AndCriterion<SimpleCriterion> | null {
-  const conditions = criteria.map(resolveSimpleCriterion).filter(isNonNullable);
+function andCondition(
+  { criteria }: AndConditionOutput,
+  context: ContextBag,
+): AndCriterion<TwoAtLeastArray<SimpleCriterion>> | null {
+  const conditions = criteria
+    .map((condition) => resolveSimpleCriterion(condition, context))
+    .filter(isNonNullable);
 
   if (!hasTwoOrMore(conditions)) return null;
 
@@ -166,8 +208,13 @@ function andCondition({ criteria }: AndConditionOutput): AndCriterion<SimpleCrit
   };
 }
 
-function orCondition({ criteria }: OrConditionOutput): OrCriterion<SimpleCriterion> | null {
-  const conditions = criteria.map(resolveSimpleCriterion).filter(isNonNullable);
+function orCondition(
+  { criteria }: OrConditionOutput,
+  context: ContextBag,
+): OrCriterion<TwoAtLeastArray<SimpleCriterion>> | null {
+  const conditions = criteria
+    .map((condition) => resolveSimpleCriterion(condition, context))
+    .filter(isNonNullable);
 
   if (!hasTwoOrMore(conditions)) return null;
 
@@ -177,17 +224,20 @@ function orCondition({ criteria }: OrConditionOutput): OrCriterion<SimpleCriteri
   };
 }
 
-function resolveRootCriterion(accessCondition: AccessConditionOutput): Maybe<AnyCriterion> {
+function resolveRootCriterion(
+  accessCondition: AccessConditionOutput,
+  context: ContextBag,
+): Maybe<AnyCriterion> {
   const condition = sanitize(accessCondition);
 
   switch (condition.__typename) {
     case 'AndConditionOutput':
-      return andCondition(condition);
+      return andCondition(condition, context);
     case 'OrConditionOutput':
-      return orCondition(condition);
+      return orCondition(condition, context);
   }
 
-  return resolveSimpleCriterion(accessCondition);
+  return resolveSimpleCriterion(accessCondition, context);
 }
 
 export const decryptionCriteria: FieldReadFunction<Maybe<DecryptionCriteria>, Comment | Post> = (
@@ -216,5 +266,5 @@ export const decryptionCriteria: FieldReadFunction<Maybe<DecryptionCriteria>, Co
 
   assertJustOne(criteria);
 
-  return resolveRootCriterion(criteria[0]);
+  return resolveRootCriterion(criteria[0], { publicationId: readField('id') ?? never() });
 };
