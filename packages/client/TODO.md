@@ -115,6 +115,9 @@ Client manages the token lifecycle and storage
 - [x] [AM] client.publication.hide({ publicationId })
 - [x] [M] client.publication.createAttachMediaData(request)
 
+- [x] [AM] client.publication.report(request)
+- [x] [H] client.publication.buildReportReason(PublicationReportReason)
+
 ## ProtocolStats
 
 - [x] [Q] client.stats.fetch(request)
@@ -134,10 +137,6 @@ Client manages the token lifecycle and storage
 - [x] [AM] client.reactions.add(request)
 - [x] [AM] client.reactions.remove(request)
 - [x] [PQ] client.reactions.toPublication({ publicationId })
-
-## Reporting
-
-- [AM] client.report.publication({ publicationId, reason, additionalComments })
 
 ## Revenue
 

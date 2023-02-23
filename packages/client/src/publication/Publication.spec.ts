@@ -1,6 +1,7 @@
+import { Publication, PublicationReportReason } from '.';
+import { setupRandomAuthentication } from '../authentication/__helpers__/setupAuthentication';
 import { mumbaiSandbox } from '../consts/environments';
 import { PublicationMainFocus } from '../graphql/types.generated';
-import { Publication } from './Publication';
 
 const testConfig = {
   environment: mumbaiSandbox,
@@ -66,6 +67,25 @@ describe(`Given the ${Publication.name} configured to work with sandbox`, () => 
         await expect(
           publication.metadataStatus({
             publicationId: '0x014e-0x0a',
+          }),
+        ).resolves.not.toThrow();
+      });
+    });
+  });
+
+  describe(`and is authenticated`, () => {
+    const getAuthentication = setupRandomAuthentication();
+
+    describe(`when a method ${Publication.prototype.report.name} is called`, () => {
+      it(`should run successfully`, async () => {
+        const authentication = getAuthentication();
+        const publication = new Publication(testConfig, authentication);
+
+        await expect(
+          publication.report({
+            publicationId: '0x014e-0x0a',
+            reason: publication.buildReportReason(PublicationReportReason.FAKE_ENGAGEMENT),
+            additionalComments: 'comment',
           }),
         ).resolves.not.toThrow();
       });

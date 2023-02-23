@@ -242,12 +242,6 @@ export type CreateCollectTypedDataMutation = {
   };
 };
 
-export type HidePublicationMutationVariables = Types.Exact<{
-  request: Types.HidePublicationRequest;
-}>;
-
-export type HidePublicationMutation = { hidePublication: void | null };
-
 export type CreateAttachMediaDataMutationVariables = Types.Exact<{
   request: Types.PublicMediaRequest;
 }>;
@@ -264,6 +258,18 @@ export type CreateAttachMediaDataMutation = {
     };
   };
 };
+
+export type HidePublicationMutationVariables = Types.Exact<{
+  request: Types.HidePublicationRequest;
+}>;
+
+export type HidePublicationMutation = { hidePublication: void | null };
+
+export type ReportPublicationMutationVariables = Types.Exact<{
+  request: Types.ReportPublicationRequest;
+}>;
+
+export type ReportPublicationMutation = { reportPublication: void | null };
 
 export const PublicationStatsFragmentDoc = gql`
   fragment PublicationStats on PublicationStats {
@@ -560,11 +566,6 @@ export const CreateCollectTypedDataDocument = gql`
   }
   ${Eip712TypedDataDomainFragmentDoc}
 `;
-export const HidePublicationDocument = gql`
-  mutation HidePublication($request: HidePublicationRequest!) {
-    hidePublication(request: $request)
-  }
-`;
 export const CreateAttachMediaDataDocument = gql`
   mutation CreateAttachMediaData($request: PublicMediaRequest!) {
     result: createAttachMediaData(request: $request) {
@@ -577,6 +578,16 @@ export const CreateAttachMediaDataDocument = gql`
       }
       signedUrl
     }
+  }
+`;
+export const HidePublicationDocument = gql`
+  mutation HidePublication($request: HidePublicationRequest!) {
+    hidePublication(request: $request)
+  }
+`;
+export const ReportPublicationDocument = gql`
+  mutation ReportPublication($request: ReportPublicationRequest!) {
+    reportPublication(request: $request)
   }
 `;
 
@@ -601,8 +612,9 @@ const CreateCommentViaDispatcherDocumentString = print(CreateCommentViaDispatche
 const CreateMirrorTypedDataDocumentString = print(CreateMirrorTypedDataDocument);
 const CreateMirrorViaDispatcherDocumentString = print(CreateMirrorViaDispatcherDocument);
 const CreateCollectTypedDataDocumentString = print(CreateCollectTypedDataDocument);
-const HidePublicationDocumentString = print(HidePublicationDocument);
 const CreateAttachMediaDataDocumentString = print(CreateAttachMediaDataDocument);
+const HidePublicationDocumentString = print(HidePublicationDocument);
+const ReportPublicationDocumentString = print(ReportPublicationDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Publication(
@@ -877,6 +889,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
+    CreateAttachMediaData(
+      variables: CreateAttachMediaDataMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateAttachMediaDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateAttachMediaDataMutation>(
+            CreateAttachMediaDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateAttachMediaData',
+        'mutation',
+      );
+    },
     HidePublication(
       variables: HidePublicationMutationVariables,
       requestHeaders?: Dom.RequestInit['headers'],
@@ -896,23 +928,22 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
-    CreateAttachMediaData(
-      variables: CreateAttachMediaDataMutationVariables,
+    ReportPublication(
+      variables: ReportPublicationMutationVariables,
       requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<{
-      data: CreateAttachMediaDataMutation;
+      data: ReportPublicationMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<CreateAttachMediaDataMutation>(
-            CreateAttachMediaDataDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'CreateAttachMediaData',
+          client.rawRequest<ReportPublicationMutation>(ReportPublicationDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'ReportPublication',
         'mutation',
       );
     },

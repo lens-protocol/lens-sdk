@@ -266,10 +266,6 @@ mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: Typed
   }
 }
 
-mutation HidePublication($request: HidePublicationRequest!) {
-  hidePublication(request: $request)
-}
-
 mutation CreateAttachMediaData($request: PublicMediaRequest!) {
   result: createAttachMediaData(request: $request) {
     media {
@@ -281,4 +277,12 @@ mutation CreateAttachMediaData($request: PublicMediaRequest!) {
     }
     signedUrl
   }
+}
+
+mutation HidePublication($request: HidePublicationRequest!) {
+  hidePublication(request: $request)
+}
+
+mutation ReportPublication($request: ReportPublicationRequest!) {
+  reportPublication(request: $request)
 }

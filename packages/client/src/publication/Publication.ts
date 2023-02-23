@@ -27,6 +27,8 @@ import {
   PublicationsQueryRequest,
   PublicationValidateMetadataResult,
   PublicMediaRequest,
+  ReportingReasonInputParams,
+  ReportPublicationRequest,
   TypedDataOptions,
   WhoCollectedPublicationRequest,
 } from '../graphql/types.generated';
@@ -42,6 +44,7 @@ import {
   PublicationStatsFragment,
   Sdk,
 } from './graphql/publication.generated';
+import { buildReportReason, PublicationReportReason } from './helpers/buildReportReason';
 
 export class Publication {
   private readonly authentication: Authentication | undefined;
@@ -252,6 +255,14 @@ export class Publication {
     });
   }
 
+  async createAttachMediaData(
+    request: PublicMediaRequest,
+  ): Promise<InferResultType<CreateAttachMediaDataMutation>> {
+    const result = await this.sdk.CreateAttachMediaData({ request });
+
+    return result.data.result;
+  }
+
   async hide(
     request: HidePublicationRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
@@ -260,11 +271,15 @@ export class Publication {
     });
   }
 
-  async createAttachMediaData(
-    request: PublicMediaRequest,
-  ): Promise<InferResultType<CreateAttachMediaDataMutation>> {
-    const result = await this.sdk.CreateAttachMediaData({ request });
+  async report(
+    request: ReportPublicationRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return execute(this.authentication, async (headers) => {
+      await this.sdk.ReportPublication({ request }, headers);
+    });
+  }
 
-    return result.data.result;
+  buildReportReason(reason: PublicationReportReason): ReportingReasonInputParams {
+    return buildReportReason(reason);
   }
 }
