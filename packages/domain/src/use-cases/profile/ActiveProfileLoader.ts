@@ -12,17 +12,18 @@ export class ActiveProfileLoader {
     private readonly activeProfilePresenter: IActiveProfilePresenter,
   ) {}
 
-  async loadActiveProfileByOwnerAddress(walletAddress: string) {
+  async loadActiveProfileByOwnerAddress(walletAddress: string, handle?: string) {
     const activeProfile = await this.activeProfileGateway.getActiveProfile();
 
     if (activeProfile) {
       await this.activeProfilePresenter.presentActiveProfile(activeProfile);
       return;
     }
-    const [firstProfile] = await this.profileGateway.getAllProfilesByOwnerAddress(walletAddress);
+    const profiles = await this.profileGateway.getAllProfilesByOwnerAddress(walletAddress);
+    const profile = handle ? profiles.find((p) => p.handle === handle) : profiles[0];
 
-    if (firstProfile) {
-      await this.storeAndPresent(firstProfile);
+    if (profile) {
+      await this.storeAndPresent(profile);
     }
   }
 

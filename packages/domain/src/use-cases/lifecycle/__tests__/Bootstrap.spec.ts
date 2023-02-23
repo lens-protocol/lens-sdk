@@ -5,6 +5,7 @@ import { when } from 'jest-when';
 import { TransactionRequestModel } from '../../../entities';
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { mockTransactionQueue } from '../../../mocks';
+import { IActiveProfileGateway } from '../../profile';
 import { ActiveProfileLoader } from '../../profile/ActiveProfileLoader';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
 import { ActiveWallet } from '../../wallets/ActiveWallet';
@@ -40,6 +41,7 @@ const setupBootstrapInteractor = ({
   const applicationPresenter = mock<IApplicationPresenter>();
   const logoutPresenter = mock<ILogoutPresenter>();
   const transactionQueue = mockTransactionQueue();
+  const activeProfileGateway = mock<IActiveProfileGateway>();
 
   const bootstrap = new Bootstrap(
     activeWallet,
@@ -50,6 +52,7 @@ const setupBootstrapInteractor = ({
     logoutPresenter,
     activeProfileLoader,
     transactionQueue,
+    activeProfileGateway,
   );
 
   return {
@@ -108,6 +111,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
           expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
           expect(activeProfileLoader.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
             wallet.address,
+            undefined,
           );
           expect(applicationPresenter.signalReady).toHaveBeenCalled();
           expect(transactionQueue.init).toHaveBeenCalled();
@@ -147,6 +151,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
           expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
           expect(activeProfileLoader.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
             wallet.address,
+            undefined,
           );
           expect(applicationPresenter.signalReady).toHaveBeenCalled();
           expect(transactionQueue.init).toHaveBeenCalled();

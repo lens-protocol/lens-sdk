@@ -1,11 +1,11 @@
 import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import {
+  ICredentials,
+  PendingSigningRequestError,
+  UserRejectedError,
   Wallet,
   WalletConnectionError,
-  UserRejectedError,
-  PendingSigningRequestError,
-  ICredentials,
 } from '../../entities';
 import { ActiveProfileLoader } from '../profile/ActiveProfileLoader';
 import { IGenericResultPresenter } from '../transactions';
@@ -39,6 +39,7 @@ export interface ICredentialsWriter {
 
 export type WalletLoginRequest = {
   address: EthereumAddress;
+  handle?: string;
 };
 
 export class WalletLogin {
@@ -65,7 +66,8 @@ export class WalletLogin {
     await this.credentialsWriter.save(result.value);
 
     this.activeWalletPresenter.presentActiveWallet(wallet);
-    await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address);
+
+    await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address, request.handle);
 
     this.walletLoginPresenter.present(success());
   }

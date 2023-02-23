@@ -35,6 +35,7 @@ export function useBootstrapController({
       logoutPresenter,
       activeProfileLoader,
       transactionQueue,
+      activeProfileGateway,
     );
 
     void bootstrap.start();
