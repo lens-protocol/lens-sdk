@@ -73,6 +73,9 @@ function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies
     FeedItem: notNormalizedType(),
     MetadataOutput: notNormalizedType(),
 
+    AccessConditionOutput: notNormalizedType(),
+    EncryptionParamsOutput: notNormalizedType(),
+
     Attribute: createAttributeTypePolicy(),
     MediaSet: createMediaSetTypePolicy(),
     NftImage: createNftImageTypePolicy(),

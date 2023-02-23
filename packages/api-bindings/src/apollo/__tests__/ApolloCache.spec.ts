@@ -1,4 +1,4 @@
-import { ApolloCache, makeVar } from '@apollo/client';
+import { ApolloCache, DocumentNode, makeVar } from '@apollo/client';
 import {
   mockUnconstrainedFollowRequest,
   mockUnfollowRequest,
@@ -7,20 +7,63 @@ import {
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { ProfileFragment, ProfileFragmentDoc } from '../../graphql';
 import {
+  CommentFragmentDoc,
+  ContentPublicationFragment,
+  PostFragmentDoc,
+  ProfileFragment,
+  ProfileFragmentDoc,
+} from '../../graphql';
+import { DecryptionCriteriaType } from '../../graphql/DecryptionCriteria';
+import {
+  mockAddressOwnershipAccessConditionOutput,
+  mockAndAccessConditionOutput,
   mockAttributeFragment,
+  mockCollectConditionAccessConditionOutput,
+  mockCommentFragment,
+  mockEncryptionParamsFragment,
+  mockErc20OwnershipAccessConditionOutput,
+  mockFollowConditionAccessConditionOutput,
+  mockMetadataFragment,
+  mockNftOwnershipAccessConditionOutput,
+  mockOrAccessConditionOutput,
   mockPendingTransactionState,
+  mockPostFragment,
   mockProfileFragment,
+  mockProfileOwnershipAccessConditionOutput,
 } from '../../mocks';
 import { createApolloCache } from '../createApolloCache';
 import { recentTransactionsVar } from '../transactions';
+
+const typeToFragmentMap: Record<ContentPublicationFragment['__typename'], DocumentNode> = {
+  Post: PostFragmentDoc,
+  Comment: CommentFragmentDoc,
+};
 
 function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}) {
   const activeWalletVar = makeVar<WalletData | null>(wallet);
   const cache = createApolloCache({ activeWalletVar });
 
   return {
+    writePublication(publication: ContentPublicationFragment) {
+      cache.writeFragment({
+        id: cache.identify(publication),
+        fragment: typeToFragmentMap[publication.__typename],
+        fragmentName: publication.__typename,
+        data: publication,
+      });
+    },
+
+    readPublication(publication: ContentPublicationFragment) {
+      return (
+        cache.readFragment<ContentPublicationFragment>({
+          id: cache.identify(publication),
+          fragment: typeToFragmentMap[publication.__typename],
+          fragmentName: publication.__typename,
+        }) ?? never()
+      );
+    },
+
     writeProfileFragment(profile: ProfileFragment) {
       cache.writeFragment({
         data: profile,
@@ -42,6 +85,185 @@ function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}
 }
 
 describe(`Given an instance of the ${ApolloCache.name}`, () => {
+  describe.each([
+    {
+      typename: 'Post',
+      mockPublicationFragment: mockPostFragment,
+    },
+    {
+      typename: 'Comment',
+      mockPublicationFragment: mockCommentFragment,
+    },
+  ])('when reading "decryptionCriteria"', ({ mockPublicationFragment, typename }) => {
+    describe(`for a not token-gated "${typename}"`, () => {
+      const publication = mockPublicationFragment({
+        isGated: false,
+      });
+
+      it('should return "null"', () => {
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
+
+        const read = readPublication(publication);
+
+        expect(read.decryptionCriteria).toBe(null);
+      });
+    });
+
+    describe(`for a token-gated "${typename}"`, () => {
+      const author = mockProfileFragment();
+
+      const nftCondition = mockNftOwnershipAccessConditionOutput();
+      const erc20Condition = mockErc20OwnershipAccessConditionOutput();
+      const eoaCondition = mockAddressOwnershipAccessConditionOutput();
+      const profileCondition = mockProfileOwnershipAccessConditionOutput();
+      const followCondition = mockFollowConditionAccessConditionOutput();
+      const collectCondition = mockCollectConditionAccessConditionOutput();
+
+      describe.each([
+        {
+          description: 'with a NFT Ownership access condition',
+          criterion: nftCondition,
+          expectations: {
+            type: DecryptionCriteriaType.NFT_OWNERSHIP,
+            contractAddress: nftCondition.nft?.contractAddress ?? never(),
+            chainId: nftCondition.nft?.chainID ?? never(),
+            contractType: nftCondition.nft?.contractType ?? never(),
+            tokenIds: nftCondition.nft?.tokenIds ?? never(),
+          },
+        },
+        {
+          description: 'with an ERC20 Ownership access condition',
+          criterion: erc20Condition,
+          expectations: {
+            type: DecryptionCriteriaType.ERC20_OWNERSHIP,
+            amount: erc20Condition.token?.amount ?? never(),
+            chainId: erc20Condition.token?.chainID ?? never(),
+            contractAddress: erc20Condition.token?.contractAddress ?? never(),
+            decimals: erc20Condition.token?.decimals ?? never(),
+            condition: erc20Condition.token?.condition ?? never(),
+          },
+        },
+        {
+          description: 'with an Address Ownership access condition',
+          criterion: eoaCondition,
+          expectations: {
+            type: DecryptionCriteriaType.ADDRESS_OWNERSHIP,
+            address: eoaCondition.eoa?.address ?? never(),
+          },
+        },
+        {
+          description: 'with a Profile Ownership access condition',
+          criterion: profileCondition,
+          expectations: {
+            type: DecryptionCriteriaType.PROFILE_OWNERSHIP,
+            profileId: profileCondition.profile?.profileId ?? never(),
+          },
+        },
+        {
+          description: 'with a Follow access condition',
+          criterion: followCondition,
+          expectations: {
+            type: DecryptionCriteriaType.FOLLOW_PROFILE,
+            profileId: followCondition.follow?.profileId ?? never(),
+          },
+        },
+        {
+          description: 'with a Collect access condition',
+          criterion: collectCondition,
+          expectations: {
+            type: DecryptionCriteriaType.COLLECT_PUBLICATION,
+            publicationId: collectCondition.collect?.publicationId ?? never(),
+          },
+        },
+        {
+          description: 'with some criteria in AND condition',
+          criterion: mockAndAccessConditionOutput([followCondition, collectCondition]),
+          expectations: {
+            type: DecryptionCriteriaType.AND,
+            and: [
+              {
+                type: DecryptionCriteriaType.FOLLOW_PROFILE,
+                profileId: followCondition.follow?.profileId ?? never(),
+              },
+              {
+                type: DecryptionCriteriaType.COLLECT_PUBLICATION,
+                publicationId: collectCondition.collect?.publicationId ?? never(),
+              },
+            ],
+          },
+        },
+        {
+          description: 'with some criteria in OR condition',
+          criterion: mockOrAccessConditionOutput([followCondition, collectCondition]),
+          expectations: {
+            type: DecryptionCriteriaType.OR,
+            or: [
+              {
+                type: DecryptionCriteriaType.FOLLOW_PROFILE,
+                profileId: followCondition.follow?.profileId ?? never(),
+              },
+              {
+                type: DecryptionCriteriaType.COLLECT_PUBLICATION,
+                publicationId: collectCondition.collect?.publicationId ?? never(),
+              },
+            ],
+          },
+        },
+      ])('$description', ({ criterion, expectations }) => {
+        const metadata = mockMetadataFragment({
+          __encryptionParams: mockEncryptionParamsFragment({
+            ownerId: author.id,
+            others: [criterion],
+          }),
+        });
+        const publication = mockPublicationFragment({
+          isGated: true,
+          metadata,
+          profile: author,
+        });
+
+        it('should return the expected "DecryptionCriteria"', () => {
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+
+          const read = readPublication(publication);
+
+          expect(read.decryptionCriteria).toEqual(expectations);
+        });
+      });
+
+      describe('with a Collect access condition for the current publication', () => {
+        const criterion = mockCollectConditionAccessConditionOutput({
+          publicationId: null,
+          thisPublication: true,
+        });
+        const metadata = mockMetadataFragment({
+          __encryptionParams: mockEncryptionParamsFragment({
+            ownerId: author.id,
+            others: [criterion],
+          }),
+        });
+        const publication = mockPublicationFragment({
+          isGated: true,
+          metadata,
+          profile: author,
+        });
+
+        it('should return the expected "DecryptionCriteria"', () => {
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+
+          const read = readPublication(publication);
+
+          expect(read.decryptionCriteria).toEqual({
+            type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
+          });
+        });
+      });
+    });
+  });
+
   describe('and a ProfileFragment', () => {
     describe('when retrieving its attributes', () => {
       const date = new Date();
@@ -217,32 +439,6 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
               canUnfollow: false,
             });
           });
-        });
-      });
-
-      xdescribe(`when checking the 'isFollowedByMe field`, () => {
-        it('should return true if there is a pending follow transaction more recent than the pending unfollow transaction for the same profile', () => {
-          const profile = mockProfileFragment({
-            __isFollowedByMe: false,
-          });
-          writeProfileFragment(profile);
-          recentTransactionsVar([
-            mockPendingTransactionState({
-              request: mockUnconstrainedFollowRequest({
-                profileId: profile.id,
-                followerAddress: wallet.address,
-              }),
-            }),
-            mockPendingTransactionState({
-              request: mockUnfollowRequest({
-                profileId: profile.id,
-              }),
-            }),
-          ]);
-
-          // const { isFollowedByMe } = readProfileFragment(profile);
-
-          // expect(isFollowedByMe).toBe(false);
         });
       });
     });

@@ -235,6 +235,7 @@ fragment CommentBase on Comment {
   isOptimisticMirroredByMe @client
   collectPolicy @client
   referencePolicy @client
+  decryptionCriteria @client
 }
 
 fragment CommonPaginatedResultInfo on PaginatedResultInfo {
@@ -315,6 +316,7 @@ fragment Post on Post {
   isOptimisticMirroredByMe @client
   collectPolicy @client
   referencePolicy @client
+  decryptionCriteria @client
 }
 
 fragment PendingPost on PendingPost {

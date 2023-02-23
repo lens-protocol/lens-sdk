@@ -1,4 +1,7 @@
+import type { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+import type { EthereumAddress } from '@lens-protocol/shared-kernel';
 import type { ClientErc20Amount } from './ClientErc20Amount';
+import type { DecryptionCriteria } from './DecryptionCriteria';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from './FollowPolicy';
 import type { FollowStatus } from './FollowStatus';
@@ -39,12 +42,13 @@ export type Scalars = {
   Cursor: string;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: string;
+  DecryptionCriteria: DecryptionCriteria;
   /** EncryptedValue custom scalar type */
   EncryptedValueScalar: string;
   /** Ens custom scalar type */
   Ens: unknown;
   /** Ethereum address custom scalar type */
-  EthereumAddress: string;
+  EthereumAddress: EthereumAddress;
   /** follow module data scalar type */
   FollowModuleData: unknown;
   FollowPolicy: FollowPolicy;
@@ -56,7 +60,7 @@ export type Scalars = {
   /** IfpsCid scalar type */
   IfpsCid: unknown;
   /** Internal publication id custom scalar type */
-  InternalPublicationId: string;
+  InternalPublicationId: PublicationId;
   /** jwt custom scalar type */
   Jwt: string;
   /** limit custom scalar type */
@@ -79,7 +83,7 @@ export type Scalars = {
   NotificationId: string;
   ProfileAttributes: ProfileAttributes;
   /** ProfileId custom scalar type */
-  ProfileId: string;
+  ProfileId: ProfileId;
   /** ProfileInterest custom scalar type */
   ProfileInterest: unknown;
   /** proxy action scalar id type */
@@ -425,6 +429,7 @@ export type Comment = {
   createdAt: Scalars['DateTime'];
   /** The data availability proofs you can fetch from */
   dataAvailabilityProofs: Maybe<Scalars['String']>;
+  decryptionCriteria: Maybe<Scalars['DecryptionCriteria']>;
   /** This will bring back the first comment of a comment and only be defined if using `publication` query and `commentOf` */
   firstComment: Maybe<Comment>;
   hasCollectedByMe: Scalars['Boolean'];
@@ -1336,17 +1341,16 @@ export type Erc20OwnershipInput = {
 
 export type Erc20OwnershipOutput = {
   __typename: 'Erc20OwnershipOutput';
-  /** The amount of tokens required to access the content */
-  amount: Scalars['String'];
-  amountValue: Scalars['ClientErc20Amount'];
-  /** The amount of tokens required to access the content */
-  chainID: Scalars['ChainId'];
-  /** The operator to use when comparing the amount of tokens */
-  condition: ScalarOperator;
   /** The ERC20 token's ethereum address */
   contractAddress: Scalars['ContractAddress'];
+  /** The amount of tokens required to access the content */
+  chainID: Scalars['ChainId'];
+  /** The amount of tokens required to access the content */
+  amount: Scalars['String'];
   /** The amount of decimals of the ERC20 contract */
   decimals: Scalars['Float'];
+  /** The operator to use when comparing the amount of tokens */
+  condition: ScalarOperator;
 };
 
 /** The paginated publication result */
@@ -2763,6 +2767,7 @@ export type Post = {
   createdAt: Scalars['DateTime'];
   /** The data availability proofs you can fetch from */
   dataAvailabilityProofs: Maybe<Scalars['String']>;
+  decryptionCriteria: Maybe<Scalars['DecryptionCriteria']>;
   hasCollectedByMe: Scalars['Boolean'];
   hasOptimisticCollectedByMe: Scalars['Boolean'];
   /** If the publication has been hidden if it has then the content and media is not available */
@@ -4379,6 +4384,7 @@ export type CommentBaseFragment = { __typename: 'Comment' } & Pick<
   | 'isOptimisticMirroredByMe'
   | 'collectPolicy'
   | 'referencePolicy'
+  | 'decryptionCriteria'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4428,6 +4434,7 @@ export type PostFragment = { __typename: 'Post' } & Pick<
   | 'isOptimisticMirroredByMe'
   | 'collectPolicy'
   | 'referencePolicy'
+  | 'decryptionCriteria'
 > & {
     stats: PublicationStatsFragment;
     metadata: MetadataFragment;
@@ -4512,24 +4519,37 @@ export type CreateFollowTypedDataMutation = {
   };
 };
 
-export type NftOwnershipFragment = Pick<
+export type NftOwnershipFragment = { __typename: 'NftOwnershipOutput' } & Pick<
   NftOwnershipOutput,
   'contractAddress' | 'chainID' | 'contractType' | 'tokenIds'
 >;
 
-export type Erc20OwnershipFragment = Pick<Erc20OwnershipOutput, 'condition'> & {
-  amount: Erc20OwnershipOutput['amountValue'];
-};
+export type Erc20OwnershipFragment = { __typename: 'Erc20OwnershipOutput' } & Pick<
+  Erc20OwnershipOutput,
+  'amount' | 'chainID' | 'condition' | 'contractAddress' | 'decimals'
+>;
 
-export type AddressOwnershipFragment = Pick<EoaOwnershipOutput, 'address'>;
+export type AddressOwnershipFragment = { __typename: 'EoaOwnershipOutput' } & Pick<
+  EoaOwnershipOutput,
+  'address'
+>;
 
-export type ProfileOwnershipFragment = Pick<ProfileOwnershipOutput, 'profileId'>;
+export type ProfileOwnershipFragment = { __typename: 'ProfileOwnershipOutput' } & Pick<
+  ProfileOwnershipOutput,
+  'profileId'
+>;
 
-export type FollowConditionFragment = Pick<FollowConditionOutput, 'profileId'>;
+export type FollowConditionFragment = { __typename: 'FollowConditionOutput' } & Pick<
+  FollowConditionOutput,
+  'profileId'
+>;
 
-export type CollectConditionFragment = Pick<CollectConditionOutput, 'publicationId'>;
+export type CollectConditionFragment = { __typename: 'CollectConditionOutput' } & Pick<
+  CollectConditionOutput,
+  'publicationId' | 'thisPublication'
+>;
 
-export type LeafCriterionFragment = {
+export type LeafCriterionFragment = { __typename: 'AccessConditionOutput' } & {
   nft: Maybe<NftOwnershipFragment>;
   token: Maybe<Erc20OwnershipFragment>;
   eoa: Maybe<AddressOwnershipFragment>;
@@ -4538,35 +4558,38 @@ export type LeafCriterionFragment = {
   collect: Maybe<CollectConditionFragment>;
 };
 
-export type OrCriterionFragment = { criteria: Array<LeafCriterionFragment> };
+export type OrCriterionFragment = { __typename: 'OrConditionOutput' } & {
+  criteria: Array<LeafCriterionFragment>;
+};
 
-export type AndCriterionFragment = { criteria: Array<LeafCriterionFragment> };
+export type AndCriterionFragment = { __typename: 'AndConditionOutput' } & {
+  criteria: Array<LeafCriterionFragment>;
+};
 
-export type RootCriterionFragment = {
-  nft: Maybe<NftOwnershipFragment>;
-  token: Maybe<Erc20OwnershipFragment>;
-  eoa: Maybe<AddressOwnershipFragment>;
-  profile: Maybe<ProfileOwnershipFragment>;
-  follow: Maybe<FollowConditionFragment>;
-  collect: Maybe<CollectConditionFragment>;
+export type RootCriterionFragment = { __typename: 'AccessConditionOutput' } & {
   or: Maybe<OrCriterionFragment>;
   and: Maybe<AndCriterionFragment>;
-};
+} & LeafCriterionFragment;
 
-export type AccessConditionFragment = { or: Maybe<{ criteria: Array<RootCriterionFragment> }> };
+export type AccessConditionFragment = { __typename: 'AccessConditionOutput' } & {
+  or: Maybe<{ criteria: Array<RootCriterionFragment> }>;
+};
 
 export type EncryptedMediaFragment = { __typename: 'EncryptedMedia' } & Pick<
   EncryptedMedia,
   'url' | 'mimeType'
 >;
 
-export type EncryptionParamsFragment = Pick<EncryptionParamsOutput, 'encryptionProvider'> & {
-  accessCondition: AccessConditionFragment;
-  encryptedFields: Pick<
-    EncryptedFieldsOutput,
-    'animation_url' | 'content' | 'external_url' | 'image'
-  > & { media: Maybe<Array<{ original: EncryptedMediaFragment }>> };
-};
+export type EncryptionParamsFragment = { __typename: 'EncryptionParamsOutput' } & Pick<
+  EncryptionParamsOutput,
+  'encryptionProvider'
+> & {
+    accessCondition: AccessConditionFragment;
+    encryptedFields: { __typename: 'EncryptedFieldsOutput' } & Pick<
+      EncryptedFieldsOutput,
+      'animation_url' | 'content' | 'external_url' | 'image'
+    > & { media: Maybe<Array<{ original: EncryptedMediaFragment }>> };
+  };
 
 export type CreateMirrorTypedDataMutationVariables = Exact<{
   request: CreateMirrorRequest;
@@ -5261,6 +5284,7 @@ export const MetadataAttributeOutputFragmentDoc = gql`
 `;
 export const NftOwnershipFragmentDoc = gql`
   fragment NftOwnership on NftOwnershipOutput {
+    __typename
     contractAddress
     chainID
     contractType
@@ -5269,32 +5293,42 @@ export const NftOwnershipFragmentDoc = gql`
 `;
 export const Erc20OwnershipFragmentDoc = gql`
   fragment Erc20Ownership on Erc20OwnershipOutput {
-    amount: amountValue @client
+    __typename
+    amount
+    chainID
     condition
+    contractAddress
+    decimals
   }
 `;
 export const AddressOwnershipFragmentDoc = gql`
   fragment AddressOwnership on EoaOwnershipOutput {
+    __typename
     address
   }
 `;
 export const ProfileOwnershipFragmentDoc = gql`
   fragment ProfileOwnership on ProfileOwnershipOutput {
+    __typename
     profileId
   }
 `;
 export const FollowConditionFragmentDoc = gql`
   fragment FollowCondition on FollowConditionOutput {
+    __typename
     profileId
   }
 `;
 export const CollectConditionFragmentDoc = gql`
   fragment CollectCondition on CollectConditionOutput {
+    __typename
     publicationId
+    thisPublication
   }
 `;
 export const LeafCriterionFragmentDoc = gql`
   fragment LeafCriterion on AccessConditionOutput {
+    __typename
     nft {
       ...NftOwnership
     }
@@ -5323,6 +5357,7 @@ export const LeafCriterionFragmentDoc = gql`
 `;
 export const OrCriterionFragmentDoc = gql`
   fragment OrCriterion on OrConditionOutput {
+    __typename
     criteria {
       ...LeafCriterion
     }
@@ -5331,6 +5366,7 @@ export const OrCriterionFragmentDoc = gql`
 `;
 export const AndCriterionFragmentDoc = gql`
   fragment AndCriterion on AndConditionOutput {
+    __typename
     criteria {
       ...LeafCriterion
     }
@@ -5339,24 +5375,8 @@ export const AndCriterionFragmentDoc = gql`
 `;
 export const RootCriterionFragmentDoc = gql`
   fragment RootCriterion on AccessConditionOutput {
-    nft {
-      ...NftOwnership
-    }
-    token {
-      ...Erc20Ownership
-    }
-    eoa {
-      ...AddressOwnership
-    }
-    profile {
-      ...ProfileOwnership
-    }
-    follow {
-      ...FollowCondition
-    }
-    collect {
-      ...CollectCondition
-    }
+    __typename
+    ...LeafCriterion
     or {
       ...OrCriterion
     }
@@ -5364,17 +5384,13 @@ export const RootCriterionFragmentDoc = gql`
       ...AndCriterion
     }
   }
-  ${NftOwnershipFragmentDoc}
-  ${Erc20OwnershipFragmentDoc}
-  ${AddressOwnershipFragmentDoc}
-  ${ProfileOwnershipFragmentDoc}
-  ${FollowConditionFragmentDoc}
-  ${CollectConditionFragmentDoc}
+  ${LeafCriterionFragmentDoc}
   ${OrCriterionFragmentDoc}
   ${AndCriterionFragmentDoc}
 `;
 export const AccessConditionFragmentDoc = gql`
   fragment AccessCondition on AccessConditionOutput {
+    __typename
     or {
       criteria {
         ...RootCriterion
@@ -5392,11 +5408,13 @@ export const EncryptedMediaFragmentDoc = gql`
 `;
 export const EncryptionParamsFragmentDoc = gql`
   fragment EncryptionParams on EncryptionParamsOutput {
+    __typename
     accessCondition {
       ...AccessCondition
     }
     encryptionProvider
     encryptedFields {
+      __typename
       animation_url
       content
       external_url
@@ -5733,6 +5751,7 @@ export const CommentBaseFragmentDoc = gql`
     isOptimisticMirroredByMe @client
     collectPolicy @client
     referencePolicy @client
+    decryptionCriteria @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -5783,6 +5802,7 @@ export const PostFragmentDoc = gql`
     isOptimisticMirroredByMe @client
     collectPolicy @client
     referencePolicy @client
+    decryptionCriteria @client
   }
   ${PublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
@@ -9832,6 +9852,7 @@ export type CommentKeySpecifier = (
   | 'commentOn'
   | 'createdAt'
   | 'dataAvailabilityProofs'
+  | 'decryptionCriteria'
   | 'firstComment'
   | 'hasCollectedByMe'
   | 'hasOptimisticCollectedByMe'
@@ -9863,6 +9884,7 @@ export type CommentFieldPolicy = {
   commentOn?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
+  decryptionCriteria?: FieldPolicy<any> | FieldReadFunction<any>;
   firstComment?: FieldPolicy<any> | FieldReadFunction<any>;
   hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   hasOptimisticCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10618,21 +10640,19 @@ export type Erc20AmountFieldPolicy = {
   value?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type Erc20OwnershipOutputKeySpecifier = (
-  | 'amount'
-  | 'amountValue'
-  | 'chainID'
-  | 'condition'
   | 'contractAddress'
+  | 'chainID'
+  | 'amount'
   | 'decimals'
+  | 'condition'
   | Erc20OwnershipOutputKeySpecifier
 )[];
 export type Erc20OwnershipOutputFieldPolicy = {
-  amount?: FieldPolicy<any> | FieldReadFunction<any>;
-  amountValue?: FieldPolicy<any> | FieldReadFunction<any>;
-  chainID?: FieldPolicy<any> | FieldReadFunction<any>;
-  condition?: FieldPolicy<any> | FieldReadFunction<any>;
   contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  chainID?: FieldPolicy<any> | FieldReadFunction<any>;
+  amount?: FieldPolicy<any> | FieldReadFunction<any>;
   decimals?: FieldPolicy<any> | FieldReadFunction<any>;
+  condition?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ExploreProfileResultKeySpecifier = (
   | 'items'
@@ -11449,6 +11469,7 @@ export type PostKeySpecifier = (
   | 'collectedBy'
   | 'createdAt'
   | 'dataAvailabilityProofs'
+  | 'decryptionCriteria'
   | 'hasCollectedByMe'
   | 'hasOptimisticCollectedByMe'
   | 'hidden'
@@ -11477,6 +11498,7 @@ export type PostFieldPolicy = {
   collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
+  decryptionCriteria?: FieldPolicy<any> | FieldReadFunction<any>;
   hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   hasOptimisticCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   hidden?: FieldPolicy<any> | FieldReadFunction<any>;

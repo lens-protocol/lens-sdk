@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { mockTransactionHash } from '@lens-protocol/domain/mocks';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import { mockProfileId, mockPublicationId, mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import {
   CollectPolicyType,
@@ -12,15 +13,21 @@ import { CollectState, NoFeeCollectPolicy } from '../CollectPolicy';
 import { FollowPolicy } from '../FollowPolicy';
 import { ProfileAttributes } from '../ProfileAttributes';
 import {
+  AccessConditionFragment,
   AttributeFragment,
+  CollectConditionOutput,
   CollectModuleFragment,
   CommentFragment,
+  ContractType,
   EnabledModuleFragment,
   EnabledModulesFragment,
+  EncryptionParamsFragment,
+  EncryptionProvider,
   Erc20AmountFragment,
   Erc20Fragment,
   FeedItemFragment,
   FollowModules,
+  LeafCriterionFragment,
   MediaFragment,
   MetadataFragment,
   MirrorFragment,
@@ -30,6 +37,7 @@ import {
   ProfileFollowRevenueFragment,
   ProfileFragment,
   ProfileMediaFragment,
+  ProfileOwnershipFragment,
   PublicationMainFocus,
   PublicationRevenueFragment,
   PublicationStatsFragment,
@@ -39,6 +47,8 @@ import {
   RelayErrorReasons,
   RevenueAggregateFragment,
   RevenueFragment,
+  RootCriterionFragment,
+  ScalarOperator,
   WalletFragment,
   WhoReactedResultFragment,
 } from '../generated';
@@ -190,9 +200,8 @@ function mockFreeCollectModuleSettings({ followerOnly = false } = {}): CollectMo
   };
 }
 
-function mockMetadataFragment(): MetadataFragment {
+export function mockMetadataFragment(overrides?: Partial<MetadataFragment>): MetadataFragment {
   return {
-    __typename: 'MetadataOutput',
     mainContentFocus: PublicationMainFocus.TextOnly,
     name: faker.commerce.productName(),
     description: null,
@@ -200,6 +209,8 @@ function mockMetadataFragment(): MetadataFragment {
     content: faker.lorem.words(5),
     media: [],
     __encryptionParams: null,
+    ...overrides,
+    __typename: 'MetadataOutput',
   };
 }
 
@@ -231,7 +242,10 @@ export function mockPostFragment(
     mirrors: [],
     reaction: null,
     hidden: false,
+
     isGated: false,
+    decryptionCriteria: null,
+
     canComment: {
       result: true,
     },
@@ -273,7 +287,10 @@ export function mockCommentFragment(
     mirrors: [],
     reaction: null,
     hidden: false,
+
     isGated: false,
+    decryptionCriteria: null,
+
     canComment: {
       result: true,
     },
@@ -435,5 +452,198 @@ export function mockEnabledModulesFragment(
     followModules: [mockEnabledModuleFragment()],
     referenceModules: [mockEnabledModuleFragment()],
     ...overrides,
+  };
+}
+
+export function mockNftOwnershipAccessConditionOutput(): RootCriterionFragment {
+  return {
+    __typename: 'AccessConditionOutput',
+    nft: {
+      __typename: 'NftOwnershipOutput',
+      chainID: 1,
+      contractAddress: mockEthereumAddress(),
+      contractType: ContractType.Erc721,
+      tokenIds: [faker.datatype.number().toString()],
+    },
+    and: null,
+    collect: null,
+    eoa: null,
+    follow: null,
+    or: null,
+    profile: null,
+    token: null,
+  };
+}
+
+export function mockErc20OwnershipAccessConditionOutput(): RootCriterionFragment {
+  return {
+    __typename: 'AccessConditionOutput',
+    token: {
+      __typename: 'Erc20OwnershipOutput',
+      amount: '100',
+      chainID: 1,
+      contractAddress: mockEthereumAddress(),
+      decimals: 18,
+      condition: ScalarOperator.Equal,
+    },
+    and: null,
+    collect: null,
+    eoa: null,
+    follow: null,
+    nft: null,
+    or: null,
+    profile: null,
+  };
+}
+
+export function mockAddressOwnershipAccessConditionOutput(): RootCriterionFragment {
+  return {
+    __typename: 'AccessConditionOutput',
+    eoa: { __typename: 'EoaOwnershipOutput', address: mockEthereumAddress() },
+    and: null,
+    collect: null,
+    follow: null,
+    nft: null,
+    or: null,
+    profile: null,
+    token: null,
+  };
+}
+
+export function mockProfileOwnershipAccessConditionOutput(): RootCriterionFragment {
+  return {
+    __typename: 'AccessConditionOutput',
+    profile: { __typename: 'ProfileOwnershipOutput', profileId: mockProfileId() },
+    and: null,
+    collect: null,
+    eoa: null,
+    follow: null,
+    nft: null,
+    or: null,
+    token: null,
+  };
+}
+
+export function mockFollowConditionAccessConditionOutput(): RootCriterionFragment {
+  return {
+    __typename: 'AccessConditionOutput',
+    follow: { __typename: 'FollowConditionOutput', profileId: mockProfileId() },
+    and: null,
+    collect: null,
+    eoa: null,
+    nft: null,
+    or: null,
+    profile: null,
+    token: null,
+  };
+}
+
+export function mockCollectConditionAccessConditionOutput(
+  condition: Omit<CollectConditionOutput, '__typename'> = {
+    publicationId: mockPublicationId(),
+    thisPublication: null,
+  },
+): RootCriterionFragment {
+  return {
+    __typename: 'AccessConditionOutput',
+    collect: {
+      ...condition,
+      __typename: 'CollectConditionOutput',
+    },
+    and: null,
+    eoa: null,
+    follow: null,
+    nft: null,
+    or: null,
+    profile: null,
+    token: null,
+  };
+}
+
+export function mockOrAccessConditionOutput(
+  criteria: LeafCriterionFragment[] = [],
+): RootCriterionFragment {
+  return {
+    __typename: 'AccessConditionOutput',
+    or: { __typename: 'OrConditionOutput', criteria },
+    and: null,
+    collect: null,
+    eoa: null,
+    follow: null,
+    nft: null,
+    profile: null,
+    token: null,
+  };
+}
+
+export function mockAndAccessConditionOutput(
+  criteria: LeafCriterionFragment[] = [],
+): RootCriterionFragment {
+  return {
+    __typename: 'AccessConditionOutput',
+    and: { __typename: 'AndConditionOutput', criteria },
+    collect: null,
+    eoa: null,
+    follow: null,
+    nft: null,
+    or: null,
+    profile: null,
+    token: null,
+  };
+}
+
+function mockPublicationOwnerAccessConditionOutput(
+  overrides?: Partial<ProfileOwnershipFragment>,
+): RootCriterionFragment {
+  return {
+    __typename: 'AccessConditionOutput',
+    profile: { __typename: 'ProfileOwnershipOutput', profileId: mockProfileId(), ...overrides },
+    and: null,
+    collect: null,
+    eoa: null,
+    follow: null,
+    nft: null,
+    or: null,
+    token: null,
+  };
+}
+
+function mockRootAccessConditionOutput({
+  others,
+  ownerId,
+}: {
+  others: RootCriterionFragment[];
+  ownerId: ProfileId;
+}): AccessConditionFragment {
+  return {
+    __typename: 'AccessConditionOutput',
+    or: {
+      criteria: [mockPublicationOwnerAccessConditionOutput({ profileId: ownerId }), ...others],
+    },
+  };
+}
+
+export function mockEncryptionParamsFragment({
+  others,
+  ownerId,
+}: {
+  others: RootCriterionFragment[];
+  ownerId: ProfileId;
+}): EncryptionParamsFragment {
+  return {
+    __typename: 'EncryptionParamsOutput',
+    accessCondition: mockRootAccessConditionOutput({
+      others,
+      ownerId,
+    }),
+    encryptionProvider: EncryptionProvider.LitProtocol,
+    encryptedFields: {
+      __typename: 'EncryptedFieldsOutput',
+      animation_url: null,
+      content: null,
+      external_url: null,
+      image: null,
+      media: [],
+    },
   };
 }

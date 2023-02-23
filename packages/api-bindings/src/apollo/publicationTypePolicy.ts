@@ -15,6 +15,7 @@ import {
 } from '../graphql';
 import { ReferencePolicy } from '../graphql/ReferencePolicy';
 import { FieldPolicy, FieldReadFunction, TypePolicy } from './TypePolicy';
+import { decryptionCriteria } from './decryptionCriteria';
 import { noCachedField } from './noCachedField';
 
 function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
@@ -109,6 +110,8 @@ export function createContentPublicationTypePolicy(): TypePolicy<Comment | Post>
       isOptimisticMirroredByMe,
 
       collectPolicy,
+
+      decryptionCriteria,
     },
   };
 }
