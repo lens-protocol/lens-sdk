@@ -7,15 +7,15 @@ import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-c
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
-import { MetadataUploadAdapter, MetadataUploadHandler } from './MetadataUploadAdapter';
+import { IMetadataUploader } from './IMetadataUploader';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 import { CreateCommentCallGateway } from './publication-call-gateways/CreateCommentCallGateway';
 
 export type UseCreateCommentControllerArgs = {
-  upload: MetadataUploadHandler;
+  uploader: IMetadataUploader<CreateCommentRequest>;
 };
 
-export function useCreateCommentController({ upload }: UseCreateCommentControllerArgs) {
+export function useCreateCommentController({ uploader }: UseCreateCommentControllerArgs) {
   const {
     apolloClient,
     transactionFactory,
@@ -26,8 +26,7 @@ export function useCreateCommentController({ upload }: UseCreateCommentControlle
   } = useSharedDependencies();
 
   return async (request: CreateCommentRequest) => {
-    const uploadAdapter = new MetadataUploadAdapter(upload);
-    const gateway = new CreateCommentCallGateway(apolloClient, transactionFactory, uploadAdapter);
+    const gateway = new CreateCommentCallGateway(apolloClient, transactionFactory, uploader);
 
     const presenter = new PromiseResultPresenter<
       void,

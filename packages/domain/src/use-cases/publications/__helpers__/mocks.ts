@@ -97,7 +97,7 @@ export function mockNoCollectPolicy(): NoCollectPolicy {
   };
 }
 
-export function mockFreeCollectPolicy(overrides: Partial<FreeCollectPolicy>): FreeCollectPolicy {
+export function mockFreeCollectPolicy(overrides?: Partial<FreeCollectPolicy>): FreeCollectPolicy {
   return {
     metadata: mockNftMetadata(),
     followersOnly: true,
@@ -106,19 +106,13 @@ export function mockFreeCollectPolicy(overrides: Partial<FreeCollectPolicy>): Fr
   };
 }
 
-export function mockChargeCollectPolicy({
-  collectLimit,
-  followersOnly,
-  timeLimited = false,
-}: {
-  collectLimit?: number;
-  followersOnly: boolean;
-  timeLimited?: boolean;
-}): ChargeCollectPolicy {
+export function mockChargeCollectPolicy(
+  overrides?: Partial<ChargeCollectPolicy>,
+): ChargeCollectPolicy {
   return {
     type: CollectPolicyType.CHARGE,
     fee: mockUsdcAmount(42),
-    followersOnly,
+    followersOnly: false,
     metadata: mockNftMetadata(),
     mirrorReward: faker.datatype.float({
       min: 0,
@@ -126,8 +120,8 @@ export function mockChargeCollectPolicy({
       precision: 0.01,
     }),
     recipient: mockEthereumAddress(),
-    collectLimit,
-    timeLimited,
+    timeLimited: false,
+    ...overrides,
   };
 }
 

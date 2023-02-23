@@ -9,7 +9,8 @@ import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/pro
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers';
-import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
+import { FailedUploadError } from './adapters/IMetadataUploader';
+import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useUpdateProfileDetailsController } from './adapters/useUpdateProfileDetailsController';
 
 type UseUpdateProfileDetailsArgs = {

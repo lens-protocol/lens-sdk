@@ -4,7 +4,7 @@ import type {
   ProfileId,
   PublicationId,
 } from '@lens-protocol/domain/entities';
-import type { EthereumAddress } from '@lens-protocol/shared-kernel';
+import type { EthereumAddress, Url } from '@lens-protocol/shared-kernel';
 import type { ClientErc20Amount } from './ClientErc20Amount';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from './FollowPolicy';
@@ -121,7 +121,7 @@ export type Scalars = {
   /** UnixTimestamp custom scalar type */
   UnixTimestamp: unknown;
   /** Url scalar type */
-  Url: string;
+  Url: Url;
   /** Represents NULL values */
   Void: void;
 };
@@ -4372,7 +4372,7 @@ export type WalletFragment = {
   defaultProfile: ProfileFragment | null;
 };
 
-export type MediaFragment = { __typename: 'Media'; url: string; mimeType: string | null };
+export type MediaFragment = { __typename: 'Media'; url: Url; mimeType: string | null };
 
 export type MediaSetFragment = { __typename: 'MediaSet'; original: MediaFragment };
 
@@ -4650,7 +4650,7 @@ export type AccessConditionFragment = {
 
 export type EncryptedMediaFragment = {
   __typename: 'EncryptedMedia';
-  url: string;
+  url: Url;
   mimeType: string | null;
 };
 
@@ -4884,7 +4884,7 @@ type ProfileMedia_NftImage_Fragment = {
   __typename: 'NftImage';
   contractAddress: string;
   tokenId: string;
-  uri: string;
+  uri: Url;
   verified: boolean;
 };
 
@@ -5023,7 +5023,7 @@ export type CreateSetProfileImageUriTypedDataMutation = {
     typedData: {
       types: { SetProfileImageURIWithSig: Array<{ name: string; type: string }> };
       domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: { nonce: number; deadline: unknown; profileId: ProfileId; imageURI: string };
+      value: { nonce: number; deadline: unknown; profileId: ProfileId; imageURI: Url };
     };
   };
 };
@@ -5050,7 +5050,7 @@ export type CreateSetProfileMetadataTypedDataMutation = {
     typedData: {
       types: { SetProfileMetadataURIWithSig: Array<{ name: string; type: string }> };
       domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: { nonce: number; deadline: unknown; profileId: ProfileId; metadata: string };
+      value: { nonce: number; deadline: unknown; profileId: ProfileId; metadata: Url };
     };
   };
 };

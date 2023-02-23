@@ -13,25 +13,20 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockUpdateProfileDetailsRequest } from '@lens-protocol/domain/mocks';
-import { ChainType } from '@lens-protocol/shared-kernel';
+import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
-import {
-  FailedUploadError,
-  MetadataUploadAdapter,
-  MetadataUploadHandler,
-} from '../../MetadataUploadAdapter';
-import { mockITransactionFactory } from '../../__helpers__/mocks';
+import { mockIMetadataUploader, mockITransactionFactory } from '../../__helpers__/mocks';
 import { ProfileMetadataCallGateway } from '../ProfileMetadataCallGateway';
 
 function setupTestScenario({
   existingProfile,
-  uploadHandler,
   otherMockedResponses = [],
+  uploadUrl,
 }: {
   existingProfile: ProfileFragment;
-  uploadHandler: MetadataUploadHandler;
   otherMockedResponses?: MockedResponse<unknown>[];
+  uploadUrl: Url;
 }) {
   const sources = mockSources();
   const getProfilesByIdQueryMockedResponse = mockGetProfileQueryMockedResponse({
@@ -49,43 +44,39 @@ function setupTestScenario({
   ]);
 
   const transactionFactory = mockITransactionFactory();
+  const uploader = mockIMetadataUploader(uploadUrl);
 
-  return new ProfileMetadataCallGateway(
+  const gateway = new ProfileMetadataCallGateway(
     apolloClient,
     transactionFactory,
-    new MetadataUploadAdapter(uploadHandler),
+    uploader,
     sources,
   );
+
+  return { gateway, uploader };
 }
 
 const existingProfile = mockProfileFragment();
-const metadataURI = faker.internet.url();
-const successfulUploadHandler = jest.fn().mockResolvedValue(metadataURI);
-const failingUploadHandler = jest.fn().mockRejectedValue(new Error('Unknown error'));
+const uploadUrl = faker.internet.url();
 const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
 
 describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
-  afterEach(() => {
-    successfulUploadHandler.mockClear();
-    failingUploadHandler.mockClear();
-  });
-
   describe(`when creating an ${UnsignedLensProtocolCall.name}<UpdateProfileDetailsRequest> via the "${ProfileMetadataCallGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
     it(`should:
         - create a new Profile Metadata updating the profile details
-        - upload it via the ${MetadataUploadAdapter.name}
+        - upload it via the IMetadataUploader<ProfileMetadata>
         - create an instance of the ${UnsignedLensProtocolCall.name} w/ the expected typed data`, async () => {
       const createSetProfileMetadataTypedDataMutation =
         mockCreateSetProfileMetadataTypedDataMutation();
 
-      const gateway = setupTestScenario({
+      const { gateway, uploader } = setupTestScenario({
         existingProfile,
-        uploadHandler: successfulUploadHandler,
+        uploadUrl,
         otherMockedResponses: [
           createCreateSetProfileMetadataTypedDataMutationMockedResponse({
             request: {
               profileId: request.profileId,
-              metadata: metadataURI,
+              metadata: uploadUrl,
             },
             data: createSetProfileMetadataTypedDataMutation,
           }),
@@ -94,7 +85,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
 
       const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
-      expect(successfulUploadHandler).toHaveBeenCalledWith(
+      expect(uploader.upload).toHaveBeenCalledWith(
         expect.objectContaining({
           version: '1.0.0',
           metadata_id: expect.any(String),
@@ -109,16 +100,15 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
     });
 
     it(`should be possible to override the signature nonce`, async () => {
-      const uploadHandler = jest.fn().mockResolvedValue(metadataURI);
       const nonce = mockNonce();
-      const gateway = setupTestScenario({
+      const { gateway } = setupTestScenario({
         existingProfile,
-        uploadHandler,
+        uploadUrl,
         otherMockedResponses: [
           createCreateSetProfileMetadataTypedDataMutationMockedResponse({
             request: {
               profileId: request.profileId,
-              metadata: metadataURI,
+              metadata: uploadUrl,
             },
             overrideSigNonce: nonce,
           }),
@@ -129,32 +119,24 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
 
       expect(unsignedCall.nonce).toEqual(nonce);
     });
-
-    it(`should throw a ${FailedUploadError.name} if the Profile Metadata upload fails`, async () => {
-      const gateway = setupTestScenario({ existingProfile, uploadHandler: failingUploadHandler });
-
-      await expect(() => gateway.createUnsignedProtocolCall(request)).rejects.toThrow(
-        FailedUploadError,
-      );
-    });
   });
 
   describe(`when creating a ${NativeTransaction.name}<UpdateProfileDetailsRequest> via the "${ProfileMetadataCallGateway.prototype.createDelegatedTransaction.name}" method`, () => {
     it(`should:
-          - create a new Profile Metadata updating the profile details
-          - upload it via the ${MetadataUploadAdapter.name}
-          - create a ${NativeTransaction.name} instance`, async () => {
+        - create a new Profile Metadata updating the profile details
+        - upload it via the IMetadataUploader<ProfileMetadata>
+        - create a ${NativeTransaction.name} instance`, async () => {
       const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
 
-      const gateway = setupTestScenario({
+      const { gateway, uploader } = setupTestScenario({
         existingProfile,
-        uploadHandler: successfulUploadHandler,
+        uploadUrl,
         otherMockedResponses: [
           createCreateSetProfileMetadataViaDispatcherMutationMockedResponse({
             variables: {
               request: {
                 profileId: request.profileId,
-                metadata: metadataURI,
+                metadata: uploadUrl,
               },
             },
             data: {
@@ -167,7 +149,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
       const transaction = await gateway.createDelegatedTransaction(request);
 
       await transaction.waitNextEvent();
-      expect(successfulUploadHandler).toHaveBeenCalledWith(
+      expect(uploader.upload).toHaveBeenCalledWith(
         expect.objectContaining({
           version: '1.0.0',
           metadata_id: expect.any(String),
@@ -181,14 +163,6 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         chainType: ChainType.POLYGON,
         request,
       });
-    });
-
-    it(`should throw a ${FailedUploadError.name} if the Profile Metadata upload fails`, async () => {
-      const gateway = setupTestScenario({ existingProfile, uploadHandler: failingUploadHandler });
-
-      await expect(() => gateway.createDelegatedTransaction(request)).rejects.toThrow(
-        FailedUploadError,
-      );
     });
   });
 });

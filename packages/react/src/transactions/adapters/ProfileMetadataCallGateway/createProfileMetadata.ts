@@ -1,4 +1,9 @@
-import { AttributeFragment, ProfileFragment } from '@lens-protocol/api-bindings';
+import {
+  AttributeFragment,
+  ProfileFragment,
+  ProfileMetadataAttribute,
+  ProfileMetadata,
+} from '@lens-protocol/api-bindings';
 import {
   PartialAttributesUpdate,
   ProfileAttributeValue,
@@ -6,14 +11,7 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import { v4 } from 'uuid';
 
-type AttributeData = {
-  displayType?: string | null;
-  key: string;
-  traitType?: string;
-  value: string;
-};
-
-function newAttribute(key: string, value: ProfileAttributeValue): AttributeData {
+function newAttribute(key: string, value: ProfileAttributeValue): ProfileMetadataAttribute {
   if (value instanceof Date) {
     return {
       key,
@@ -60,7 +58,7 @@ function resolveAttributes(attributes: AttributeFragment[], update: PartialAttri
       acc.push(newAttribute(attribute.key, value));
     }
     return acc;
-  }, [] as AttributeData[]);
+  }, [] as ProfileMetadataAttribute[]);
 
   return [
     ...updated,
@@ -76,7 +74,7 @@ function resolveAttributes(attributes: AttributeFragment[], update: PartialAttri
 export function createProfileMetadata(
   existingProfile: ProfileFragment,
   request: UpdateProfileDetailsRequest,
-) {
+): ProfileMetadata {
   return {
     version: '1.0.0',
     metadata_id: v4(),

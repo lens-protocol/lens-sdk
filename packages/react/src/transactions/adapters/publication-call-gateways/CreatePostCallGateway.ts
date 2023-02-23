@@ -24,15 +24,15 @@ import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { IMetadataUploader } from '../IMetadataUploader';
 import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
-import { MetadataUploadAdapter } from '../MetadataUploadAdapter';
-import { createPublicationMetadata, resolveCollectModule, resolveReferenceModule } from './utils';
+import { resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class CreatePostCallGateway implements ICreatePostCallGateway {
   constructor(
     private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
-    private readonly uploadAdapter: MetadataUploadAdapter,
+    private readonly metadataUploader: IMetadataUploader<CreatePostRequest>,
   ) {}
 
   async createDelegatedTransaction<T extends CreatePostRequest>(
@@ -92,9 +92,8 @@ export class CreatePostCallGateway implements ICreatePostCallGateway {
   private async resolveCreatePostRequestArg(
     request: CreatePostRequest,
   ): Promise<CreatePublicPostRequestArg> {
-    const contentURI = await this.uploadAdapter.upload(createPublicationMetadata(request));
     return {
-      contentURI,
+      contentURI: await this.metadataUploader.upload(request),
       profileId: request.profileId,
       collectModule: resolveCollectModule(request),
       referenceModule: resolveReferenceModule(request),
