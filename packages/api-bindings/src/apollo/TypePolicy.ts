@@ -8,7 +8,7 @@ import { Overwrite } from '@lens-protocol/shared-kernel';
 type FieldFunctionOptions<TAll> = Overwrite<
   UnpatchedFieldFunctionOptions,
   {
-    readField: <T extends keyof NO, O = TAll, NO = NonNullable<O>>(
+    readField: <T extends keyof NO, O = TAll, NO = NonNullable<Partial<O>>>(
       fieldName: T,
       from?: O,
     ) => Readonly<NO[T]> | undefined;

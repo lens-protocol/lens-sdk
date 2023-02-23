@@ -1,19 +1,21 @@
 import {
   ProfileFragment,
-  PublicationFragment,
+  ContentPublicationFragment,
   ReactionType,
   usePublication,
   useReaction,
+  isMirrorPublication,
 } from '@lens-protocol/react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { invariant } from '../utils';
 import { PublicationCard } from './components/PublicationCard';
 
 type ReactionButtonProps = {
-  publication: PublicationFragment;
+  publication: ContentPublicationFragment;
   profileId: string;
   reactionType: ReactionType;
 };
@@ -68,6 +70,8 @@ function ReactionInner({ profile }: ReactionInnerProps) {
   if (loading) return <Loading />;
 
   if (error) return <ErrorMessage error={error} />;
+
+  invariant(!isMirrorPublication(publication), 'Publication is not a post or comment');
 
   return (
     <div>

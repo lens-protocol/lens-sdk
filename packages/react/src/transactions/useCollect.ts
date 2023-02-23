@@ -1,7 +1,7 @@
 import {
   createCollectRequest,
   ProfileOwnedByMeFragment,
-  PublicationFragment,
+  AnyPublicationFragment,
 } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
@@ -14,7 +14,7 @@ import { useCollectController } from './adapters/useCollectController';
 
 export type UseCollectArgs = {
   collector: ProfileOwnedByMeFragment;
-  publication: PublicationFragment;
+  publication: AnyPublicationFragment;
 };
 
 export type CollectOperation = Operation<

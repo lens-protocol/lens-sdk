@@ -1,12 +1,14 @@
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 
 import {
+  CollectModuleFragment,
   CollectPolicy,
   Comment,
   Maybe,
   Mirror,
   Post,
-  PublicationFragment,
+  ProfileFragment,
+  PublicationStatsFragment,
   ReferenceModule,
   resolveCollectPolicy,
   Wallet,
@@ -41,7 +43,7 @@ function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy
   }
 }
 
-const referencePolicy: FieldReadFunction<ReferencePolicy, Post | Comment> = (
+const referencePolicy: FieldReadFunction<ReferencePolicy, Comment | Post> = (
   existing,
   { readField },
 ) => {
@@ -52,7 +54,7 @@ const referencePolicy: FieldReadFunction<ReferencePolicy, Post | Comment> = (
   return resolveReferencePolicy(module ?? null);
 };
 
-const collectedBy: FieldPolicy<Maybe<Wallet>, Post | Comment> = {
+const collectedBy: FieldPolicy<Maybe<Wallet>, Comment | Post> = {
   merge: (existing, incoming) => {
     // workaround: try to retain the information even if the publication is updated in
     // cache as part of another query that does not have the collectedBy field
@@ -66,38 +68,26 @@ const collectPolicy = <T extends Post | Mirror | Comment>(
 ) => {
   if (existing) return existing;
 
-  const profile = readField('profile') as PublicationFragment['profile'];
-  const collectModule = readField('collectModule') as PublicationFragment['__collectModule'];
-  const publicationStats = readField('stats') as PublicationFragment['stats'];
+  const profile = readField('profile') as ProfileFragment;
+  const collectModule = readField('collectModule') as CollectModuleFragment;
+  const publicationStats = readField('stats') as PublicationStatsFragment;
 
   return resolveCollectPolicy({ profile, collectModule, publicationStats });
 };
 
-const hasOptimisticCollectedByMe: FieldReadFunction<boolean, Post | Comment | Mirror> = (
+const hasOptimisticCollectedByMe: FieldReadFunction<boolean, Comment | Post> = (
   existing: boolean | undefined,
 ) => {
   return existing ?? false;
 };
 
-const isOptimisticMirroredByMe: FieldReadFunction<boolean, Post | Comment | Mirror> = (
+const isOptimisticMirroredByMe: FieldReadFunction<boolean, Comment | Post> = (
   existing: boolean | undefined,
 ) => {
   return existing ?? false;
 };
 
-export function createMirrorTypePolicy(): TypePolicy<Mirror> {
-  return {
-    fields: {
-      hasCollectedByMe: noCachedField(),
-
-      hasOptimisticCollectedByMe,
-
-      collectPolicy,
-    },
-  };
-}
-
-export function createMirrorablePublicationTypePolicy(): TypePolicy<Comment | Post> {
+export function createContentPublicationTypePolicy(): TypePolicy<Comment | Post> {
   return {
     fields: {
       referencePolicy,

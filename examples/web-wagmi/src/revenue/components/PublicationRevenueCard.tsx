@@ -1,6 +1,6 @@
 import { PublicationRevenueFragment } from '@lens-protocol/react';
 
-import { ProfilePicture } from '../../profiles/components/ProfilePicture';
+import { PublicationCard } from '../../publications/components/PublicationCard';
 
 type RevenueCardProps = {
   publicationRevenue: PublicationRevenueFragment;
@@ -8,20 +8,12 @@ type RevenueCardProps = {
 
 export function PublicationRevenueCard({ publicationRevenue }: RevenueCardProps) {
   return (
-    <article>
-      <div style={{ borderBottom: '1px solid', borderBottomColor: 'var(--border)' }}>
-        <ProfilePicture picture={publicationRevenue.publication.profile.picture} />
-        <p>
-          {publicationRevenue.publication.profile.name ??
-            `@${publicationRevenue.publication.profile.handle}`}
-        </p>
-
-        <p>{publicationRevenue.publication.metadata.content}</p>
-      </div>
+    <section>
+      <PublicationCard publication={publicationRevenue.publication} />
 
       <p>{`Currency: ${publicationRevenue.revenue.totalAmount.asset.name}`}</p>
       <p>{`Symbol: ${publicationRevenue.revenue.totalAmount.asset.symbol}`}</p>
       <p>{`Amount: ${publicationRevenue.revenue.totalAmount.toFixed(2)}`}</p>
-    </article>
+    </section>
   );
 }

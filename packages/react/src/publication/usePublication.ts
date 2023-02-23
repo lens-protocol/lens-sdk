@@ -1,5 +1,5 @@
 import {
-  PublicationFragment,
+  AnyPublicationFragment,
   UnspecifiedError,
   usePublicationQuery,
 } from '@lens-protocol/api-bindings';
@@ -16,7 +16,7 @@ type UsePublicationArgs = {
 export function usePublication({
   publicationId,
   observerId,
-}: UsePublicationArgs): ReadResult<PublicationFragment, NotFoundError | UnspecifiedError> {
+}: UsePublicationArgs): ReadResult<AnyPublicationFragment, NotFoundError | UnspecifiedError> {
   const { apolloClient } = useSharedDependencies();
 
   const { data, error, loading } = useReadResult(

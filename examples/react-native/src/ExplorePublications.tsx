@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  isContentPublication,
   PublicationSortCriteria,
   PublicationTypes,
   useExplorePublications,
@@ -28,7 +29,7 @@ export function ExplorePublications() {
     <View style={styles.wrapper}>
       <Text style={styles.header}>Publications to explore:</Text>
       <ScrollView>
-        {publications.map(publication => (
+        {publications.filter(isContentPublication).map(publication => (
           <View key={publication.id} style={styles.publication}>
             <Text>Author: {publication.profile.handle}</Text>
             <Text>{publication.metadata.content}</Text>

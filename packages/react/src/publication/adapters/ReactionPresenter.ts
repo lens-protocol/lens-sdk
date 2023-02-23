@@ -1,4 +1,8 @@
-import { getApiReactionType, getDomainReactionType } from '@lens-protocol/api-bindings';
+import {
+  getApiReactionType,
+  getDomainReactionType,
+  isContentPublication,
+} from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import { ReactionRequest, IReactionPresenter } from '@lens-protocol/domain/use-cases/publications';
 import { invariant, never } from '@lens-protocol/shared-kernel';
@@ -20,6 +24,11 @@ export class ReactionPresenter implements IReactionPresenter {
 
   async add(request: ReactionRequest): Promise<void> {
     this.publicationCacheManager.update(request.publicationId, (current) => {
+      invariant(
+        isContentPublication(current),
+        `Reactions are not supported on ${current.__typename}`,
+      );
+
       const removedStatKey = current.reaction
         ? getReactionStatKey(getDomainReactionType(current.reaction))
         : undefined;
@@ -43,13 +52,20 @@ export class ReactionPresenter implements IReactionPresenter {
   async remove(request: ReactionRequest): Promise<void> {
     const statKey = getReactionStatKey(request.reactionType);
 
-    this.publicationCacheManager.update(request.publicationId, (current) => ({
-      ...current,
-      stats: {
-        ...current.stats,
-        [statKey]: current.stats[statKey] - 1,
-      },
-      reaction: null,
-    }));
+    this.publicationCacheManager.update(request.publicationId, (current) => {
+      invariant(
+        isContentPublication(current),
+        `Reactions are not supported on ${current.__typename}`,
+      );
+
+      return {
+        ...current,
+        stats: {
+          ...current.stats,
+          [statKey]: current.stats[statKey] - 1,
+        },
+        reaction: null,
+      };
+    });
   }
 }

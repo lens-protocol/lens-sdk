@@ -29,10 +29,8 @@ import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
-import {
-  createMirrorablePublicationTypePolicy,
-  createMirrorTypePolicy,
-} from './publicationTypePolicy';
+import { notNormalizedType } from './notNormalizedType';
+import { createContentPublicationTypePolicy } from './publicationTypePolicy';
 
 type TypedFieldFunctionOptions<TAll> = Overwrite<
   FieldFunctionOptions,
@@ -69,13 +67,11 @@ type TypePoliciesArgs = {
 function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies {
   return {
     Profile: createProfileTypePolicy(activeWalletVar),
-    Post: createMirrorablePublicationTypePolicy(),
-    Comment: createMirrorablePublicationTypePolicy(),
-    Mirror: createMirrorTypePolicy(),
+    Post: createContentPublicationTypePolicy(),
+    Comment: createContentPublicationTypePolicy(),
 
-    FeedItem: {
-      keyFields: false,
-    },
+    FeedItem: notNormalizedType(),
+    MetadataOutput: notNormalizedType(),
 
     Attribute: createAttributeTypePolicy(),
     MediaSet: createMediaSetTypePolicy(),

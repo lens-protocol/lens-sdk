@@ -1,5 +1,5 @@
 import {
-  PublicationFragment,
+  AnyPublicationFragment,
   PublicationSortCriteria,
   PublicationTypes,
   useExplorePublicationsQuery,
@@ -27,7 +27,7 @@ export function useExplorePublications({
   publicationTypes,
   excludeProfileIds,
   metadataFilter,
-}: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<PublicationFragment>> {
+}: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<AnyPublicationFragment>> {
   const { sources, apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(

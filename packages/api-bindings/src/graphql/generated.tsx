@@ -1919,59 +1919,46 @@ export type MetadataOutput = {
 /** The social mirror */
 export type Mirror = {
   __typename: 'Mirror';
-  /** ID of the source */
-  appId: Maybe<Scalars['Sources']>;
-  canComment: CanCommentResponse;
-  canDecrypt: CanDecryptResponse;
-  canMirror: CanMirrorResponse;
-  /** The collect module */
-  collectModule: CollectModule;
-  /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
-  collectNftAddress: Maybe<Scalars['ContractAddress']>;
-  collectPolicy: Scalars['CollectPolicy'];
-  /** The date the post was created on */
-  createdAt: Scalars['DateTime'];
-  /** The data availability proofs you can fetch from */
-  dataAvailabilityProofs: Maybe<Scalars['String']>;
-  hasCollectedByMe: Scalars['Boolean'];
-  hasOptimisticCollectedByMe: Scalars['Boolean'];
-  /** If the publication has been hidden if it has then the content and media is not available */
-  hidden: Scalars['Boolean'];
   /** The internal publication id */
   id: Scalars['InternalPublicationId'];
-  /** Indicates if the publication is data availability post */
-  isDataAvailability: Scalars['Boolean'];
-  /** Indicates if the publication is gated behind some access criteria */
-  isGated: Scalars['Boolean'];
-  /** The metadata for the post */
-  metadata: MetadataOutput;
-  /** The mirror publication */
-  mirrorOf: MirrorablePublication;
-  /** The on chain content uri could be `ipfs://` or `https` */
-  onChainContentURI: Scalars['String'];
   /** The profile ref */
   profile: Profile;
-  reaction: Maybe<ReactionTypes>;
-  /** The reference module */
-  referenceModule: Maybe<ReferenceModule>;
   /** The publication stats */
   stats: PublicationStats;
+  /** The metadata for the post */
+  metadata: MetadataOutput;
+  /** The on chain content uri could be `ipfs://` or `https` */
+  onChainContentURI: Scalars['String'];
+  /** The date the post was created on */
+  createdAt: Scalars['DateTime'];
+  /** The collect module */
+  collectModule: CollectModule;
+  /** The reference module */
+  referenceModule: Maybe<ReferenceModule>;
+  /** ID of the source */
+  appId: Maybe<Scalars['Sources']>;
+  /** If the publication has been hidden if it has then the content and media is not available */
+  hidden: Scalars['Boolean'];
+  /** The contract address for the collect nft.. if its null it means nobody collected yet as it lazy deployed */
+  collectNftAddress: Maybe<Scalars['ContractAddress']>;
+  /** Indicates if the publication is gated behind some access criteria */
+  isGated: Scalars['Boolean'];
+  /** Indicates if the publication is data availability post */
+  isDataAvailability: Scalars['Boolean'];
+  /** The data availability proofs you can fetch from */
+  dataAvailabilityProofs: Maybe<Scalars['String']>;
+  /** The mirror publication */
+  mirrorOf: MirrorablePublication;
+  reaction: Maybe<ReactionTypes>;
+  hasCollectedByMe: Scalars['Boolean'];
+  canComment: CanCommentResponse;
+  canMirror: CanMirrorResponse;
+  canDecrypt: CanDecryptResponse;
 };
 
 /** The social mirror */
-export type MirrorCanCommentArgs = {
-  profileId?: Maybe<Scalars['ProfileId']>;
-};
-
-/** The social mirror */
-export type MirrorCanDecryptArgs = {
-  profileId?: Maybe<Scalars['ProfileId']>;
-  address?: Maybe<Scalars['EthereumAddress']>;
-};
-
-/** The social mirror */
-export type MirrorCanMirrorArgs = {
-  profileId?: Maybe<Scalars['ProfileId']>;
+export type MirrorReactionArgs = {
+  request?: Maybe<ReactionFieldResolverRequest>;
 };
 
 /** The social mirror */
@@ -1980,8 +1967,19 @@ export type MirrorHasCollectedByMeArgs = {
 };
 
 /** The social mirror */
-export type MirrorReactionArgs = {
-  request?: Maybe<ReactionFieldResolverRequest>;
+export type MirrorCanCommentArgs = {
+  profileId?: Maybe<Scalars['ProfileId']>;
+};
+
+/** The social mirror */
+export type MirrorCanMirrorArgs = {
+  profileId?: Maybe<Scalars['ProfileId']>;
+};
+
+/** The social mirror */
+export type MirrorCanDecryptArgs = {
+  profileId?: Maybe<Scalars['ProfileId']>;
+  address?: Maybe<Scalars['EthereumAddress']>;
 };
 
 export type MirrorEvent = {
@@ -4361,30 +4359,8 @@ export type PublicationStatsFragment = { __typename: 'PublicationStats' } & Pick
 
 export type MirrorBaseFragment = { __typename: 'Mirror' } & Pick<
   Mirror,
-  | 'id'
-  | 'createdAt'
-  | 'hidden'
-  | 'isGated'
-  | 'reaction'
-  | 'hasCollectedByMe'
-  | 'hasOptimisticCollectedByMe'
-  | 'collectPolicy'
-> & {
-    stats: PublicationStatsFragment;
-    metadata: MetadataFragment;
-    profile: ProfileFragment;
-    __collectModule:
-      | CollectModule_FreeCollectModuleSettings_Fragment
-      | CollectModule_FeeCollectModuleSettings_Fragment
-      | CollectModule_LimitedFeeCollectModuleSettings_Fragment
-      | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
-      | CollectModule_RevertCollectModuleSettings_Fragment
-      | CollectModule_TimedFeeCollectModuleSettings_Fragment
-      | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
-      | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
-      | CollectModule_AaveFeeCollectModuleSettings_Fragment
-      | CollectModule_UnknownCollectModuleSettings_Fragment;
-  };
+  'id' | 'createdAt' | 'hidden'
+> & { profile: ProfileFragment };
 
 export type MirrorFragment = { __typename: 'Mirror' } & {
   mirrorOf: PostFragment | CommentFragment;
@@ -4646,10 +4622,6 @@ export type EnabledModulesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type EnabledModulesQuery = { result: EnabledModulesFragment };
 
-export type CommentWithCommentedPublicationFragment = { __typename: 'Comment' } & {
-  commentOn: Maybe<PostFragment | CommentFragment | MirrorFragment>;
-} & CommentFragment;
-
 export type NewFollowerNotificationFragment = { __typename: 'NewFollowerNotification' } & Pick<
   NewFollowerNotification,
   'notificationId' | 'createdAt' | 'isFollowedByMe'
@@ -4671,7 +4643,7 @@ export type NewMirrorNotificationFragment = { __typename: 'NewMirrorNotification
 export type NewCommentNotificationFragment = { __typename: 'NewCommentNotification' } & Pick<
   NewCommentNotification,
   'notificationId' | 'createdAt'
-> & { profile: ProfileFragment; comment: CommentWithCommentedPublicationFragment };
+> & { profile: ProfileFragment; comment: CommentFragment };
 
 export type NewMentionNotificationFragment = { __typename: 'NewMentionNotification' } & Pick<
   NewMentionNotification,
@@ -5823,30 +5795,13 @@ export const MirrorBaseFragmentDoc = gql`
   fragment MirrorBase on Mirror {
     __typename
     id
-    stats {
-      ...PublicationStats
-    }
-    metadata {
-      ...Metadata
-    }
+    createdAt
     profile {
       ...Profile
     }
-    __collectModule: collectModule {
-      ...CollectModule
-    }
-    createdAt
     hidden
-    isGated
-    reaction(request: { profileId: $observerId })
-    hasCollectedByMe(isFinalisedOnChain: true)
-    hasOptimisticCollectedByMe @client
-    collectPolicy @client
   }
-  ${PublicationStatsFragmentDoc}
-  ${MetadataFragmentDoc}
   ${ProfileFragmentDoc}
-  ${CollectModuleFragmentDoc}
 `;
 export const CommentFragmentDoc = gql`
   fragment Comment on Comment {
@@ -6052,26 +6007,6 @@ export const NewMirrorNotificationFragmentDoc = gql`
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
-export const CommentWithCommentedPublicationFragmentDoc = gql`
-  fragment CommentWithCommentedPublication on Comment {
-    __typename
-    ...Comment
-    commentOn {
-      ... on Post {
-        ...Post
-      }
-      ... on Mirror {
-        ...Mirror
-      }
-      ... on Comment {
-        ...Comment
-      }
-    }
-  }
-  ${CommentFragmentDoc}
-  ${PostFragmentDoc}
-  ${MirrorFragmentDoc}
-`;
 export const NewCommentNotificationFragmentDoc = gql`
   fragment NewCommentNotification on NewCommentNotification {
     __typename
@@ -6081,11 +6016,11 @@ export const NewCommentNotificationFragmentDoc = gql`
       ...Profile
     }
     comment {
-      ...CommentWithCommentedPublication
+      ...Comment
     }
   }
   ${ProfileFragmentDoc}
-  ${CommentWithCommentedPublicationFragmentDoc}
+  ${CommentFragmentDoc}
 `;
 export const NewMentionNotificationFragmentDoc = gql`
   fragment NewMentionNotification on NewMentionNotification {
@@ -10997,53 +10932,49 @@ export type MetadataOutputFieldPolicy = {
   encryptionParams?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MirrorKeySpecifier = (
-  | 'appId'
-  | 'canComment'
-  | 'canDecrypt'
-  | 'canMirror'
-  | 'collectModule'
-  | 'collectNftAddress'
-  | 'collectPolicy'
-  | 'createdAt'
-  | 'dataAvailabilityProofs'
-  | 'hasCollectedByMe'
-  | 'hasOptimisticCollectedByMe'
-  | 'hidden'
   | 'id'
-  | 'isDataAvailability'
-  | 'isGated'
-  | 'metadata'
-  | 'mirrorOf'
-  | 'onChainContentURI'
   | 'profile'
-  | 'reaction'
-  | 'referenceModule'
   | 'stats'
+  | 'metadata'
+  | 'onChainContentURI'
+  | 'createdAt'
+  | 'collectModule'
+  | 'referenceModule'
+  | 'appId'
+  | 'hidden'
+  | 'collectNftAddress'
+  | 'isGated'
+  | 'isDataAvailability'
+  | 'dataAvailabilityProofs'
+  | 'mirrorOf'
+  | 'reaction'
+  | 'hasCollectedByMe'
+  | 'canComment'
+  | 'canMirror'
+  | 'canDecrypt'
   | MirrorKeySpecifier
 )[];
 export type MirrorFieldPolicy = {
-  appId?: FieldPolicy<any> | FieldReadFunction<any>;
-  canComment?: FieldPolicy<any> | FieldReadFunction<any>;
-  canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
-  canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
-  collectPolicy?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
-  hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
-  hasOptimisticCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
-  hidden?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
-  isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
-  isGated?: FieldPolicy<any> | FieldReadFunction<any>;
-  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
-  mirrorOf?: FieldPolicy<any> | FieldReadFunction<any>;
-  onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
-  reaction?: FieldPolicy<any> | FieldReadFunction<any>;
-  referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
+  metadata?: FieldPolicy<any> | FieldReadFunction<any>;
+  onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
+  appId?: FieldPolicy<any> | FieldReadFunction<any>;
+  hidden?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  isGated?: FieldPolicy<any> | FieldReadFunction<any>;
+  isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
+  dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
+  mirrorOf?: FieldPolicy<any> | FieldReadFunction<any>;
+  reaction?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasCollectedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
+  canComment?: FieldPolicy<any> | FieldReadFunction<any>;
+  canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
+  canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MirrorEventKeySpecifier = ('profile' | 'timestamp' | MirrorEventKeySpecifier)[];
 export type MirrorEventFieldPolicy = {

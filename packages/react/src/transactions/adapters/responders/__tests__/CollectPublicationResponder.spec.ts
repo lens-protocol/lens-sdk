@@ -6,7 +6,8 @@ import {
   MirrorFragmentDoc,
   PostFragment,
   PostFragmentDoc,
-  PublicationFragment,
+  AnyPublicationFragment,
+  ContentPublicationFragment,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
@@ -19,39 +20,30 @@ import {
   mockBroadcastedTransactionData,
   mockPaidCollectRequest,
 } from '@lens-protocol/domain/mocks';
-import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
-import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
 
 import { PublicationCacheManager } from '../../PublicationCacheManager';
 import { CollectPublicationResponder } from '../CollectPublicationResponder';
 
-type PubType = PublicationFragment['__typename'];
+type AnyPublicationTypename = AnyPublicationFragment['__typename'];
 
-const typeToFragmentMap: Record<PubType, DocumentNode> = {
+const typeToFragmentMap: Record<AnyPublicationTypename, DocumentNode> = {
   Post: PostFragmentDoc,
   Comment: CommentFragmentDoc,
   Mirror: MirrorFragmentDoc,
 };
 
 function setupTestScenario({
-  typeName,
-  data,
-  transactionData,
+  publication,
 }: {
-  typeName: PubType;
-  data: PostFragment | CommentFragment | MirrorFragment;
-  transactionData: BroadcastedTransactionData<CollectRequest>;
+  publication: PostFragment | CommentFragment | MirrorFragment;
 }) {
   const apolloCache = createMockApolloCache();
 
   apolloCache.writeFragment({
-    id: apolloCache.identify({
-      __typename: typeName,
-      id: transactionData.request.publicationId,
-    }),
-    fragment: typeToFragmentMap[typeName],
-    fragmentName: typeName,
-    data,
+    id: apolloCache.identify(publication),
+    fragment: typeToFragmentMap[publication.__typename],
+    fragmentName: publication.__typename,
+    data: publication,
   });
 
   const publicationCacheManager = new PublicationCacheManager(apolloCache);
@@ -62,125 +54,155 @@ function setupTestScenario({
 
     get updatedPublicationFragment() {
       return apolloCache.readFragment({
-        id: apolloCache.identify({
-          __typename: typeName,
-          id: data.id,
-        }),
-        fragment: typeToFragmentMap[typeName],
-        fragmentName: typeName,
+        id: apolloCache.identify(publication),
+        fragment: typeToFragmentMap[publication.__typename],
+        fragmentName: publication.__typename,
       });
     },
   };
 }
 
-const typeToMockFnMap = {
-  Post: mockPostFragment,
-  Comment: mockCommentFragment,
-  Mirror: mockMirrorFragment,
-};
+const knownInitialPublicationStats = mockPublicationStatsFragment({ totalAmountOfCollects: 1 });
 
 describe(`Given the ${CollectPublicationResponder.name}`, () => {
-  describe(`when "${CollectPublicationResponder.prototype.prepare.name}" method is invoked`, () => {
-    it.each<PubType>(['Post', 'Comment', 'Mirror'])(
-      `should update apollo cache with %s collect information`,
-      async (publicationType) => {
-        const mockFn = typeToMockFnMap[publicationType];
-        const publication = mockFn({
-          stats: mockPublicationStatsFragment({ totalAmountOfCollects: 1 }),
-        });
+  describe.each<ContentPublicationFragment>([
+    mockPostFragment({
+      hasCollectedByMe: false,
+      hasOptimisticCollectedByMe: false,
+      stats: knownInitialPublicationStats,
+    }),
 
+    mockCommentFragment({
+      hasCollectedByMe: false,
+      hasOptimisticCollectedByMe: false,
+      stats: knownInitialPublicationStats,
+    }),
+  ])('and a $__typename', (publication) => {
+    describe(`when "${CollectPublicationResponder.prototype.prepare.name}" method is invoked`, () => {
+      it(`should optimistically update the publication with the new collect information`, async () => {
         const request = mockPaidCollectRequest({
           publicationId: publication.id,
         });
         const transactionData = mockBroadcastedTransactionData({ request });
-        const scenario = setupTestScenario({
-          typeName: publicationType,
-          data: publication,
-          transactionData,
-        });
+        const scenario = setupTestScenario({ publication });
 
         await scenario.responder.prepare(transactionData);
 
-        expect(scenario.updatedPublicationFragment).toEqual(
-          expect.objectContaining({
-            hasOptimisticCollectedByMe: true,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            stats: expect.objectContaining({
-              totalAmountOfCollects: 2,
-            }),
-          }),
-        );
-      },
-    );
-  });
-
-  describe(`when "${CollectPublicationResponder.prototype.commit.name}" method is invoked`, () => {
-    it.each<PubType>(['Post', 'Comment', 'Mirror'])(
-      `should update apollo cache with collect information`,
-      async (publicationType) => {
-        const mockFn = typeToMockFnMap[publicationType];
-        const publication = mockFn({
-          hasCollectedByMe: false,
-          stats: mockPublicationStatsFragment({ totalAmountOfCollects: 1 }),
+        expect(scenario.updatedPublicationFragment).toMatchObject({
+          hasOptimisticCollectedByMe: true,
+          stats: {
+            totalAmountOfCollects: 2,
+          },
         });
+      });
+
+      it('should optimistically update the publication also if collected via a mirror', async () => {
+        const mirror = mockMirrorFragment({
+          mirrorOf: publication,
+        });
+        const request = mockPaidCollectRequest({
+          publicationId: mirror.id,
+        });
+        const transactionData = mockBroadcastedTransactionData({ request });
+        const scenario = setupTestScenario({ publication: mirror });
+
+        await scenario.responder.prepare(transactionData);
+
+        expect(scenario.updatedPublicationFragment).toMatchObject({
+          mirrorOf: {
+            hasOptimisticCollectedByMe: true,
+            stats: {
+              totalAmountOfCollects: 2,
+            },
+          },
+        });
+      });
+    });
+
+    describe(`when "${CollectPublicationResponder.prototype.commit.name}" method is invoked`, () => {
+      it(`should confirm the changes done during the "${CollectPublicationResponder.prototype.prepare.name}" method call`, async () => {
         const request = mockPaidCollectRequest({
           publicationId: publication.id,
         });
         const transactionData = mockBroadcastedTransactionData({ request });
-        const scenario = setupTestScenario({
-          typeName: publicationType,
-          data: publication,
-          transactionData,
-        });
+        const scenario = setupTestScenario({ publication });
+        await scenario.responder.prepare(transactionData);
 
         await scenario.responder.commit(transactionData);
 
-        expect(scenario.updatedPublicationFragment).toEqual(
-          expect.objectContaining({
-            hasCollectedByMe: true,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            stats: expect.objectContaining({
-              totalAmountOfCollects: 1,
-            }),
-          }),
-        );
-      },
-    );
-  });
-
-  describe(`when "${CollectPublicationResponder.prototype.rollback.name}" method is invoked`, () => {
-    it.each<PubType>(['Post', 'Comment', 'Mirror'])(
-      `should update apollo cache with collect information`,
-      async (publicationType) => {
-        const mockFn = typeToMockFnMap[publicationType];
-        const publication = mockFn({
-          hasCollectedByMe: false,
-          hasOptimisticCollectedByMe: true,
-          stats: mockPublicationStatsFragment({ totalAmountOfCollects: 2 }),
+        expect(scenario.updatedPublicationFragment).toMatchObject({
+          hasCollectedByMe: true,
+          hasOptimisticCollectedByMe: false,
+          stats: {
+            totalAmountOfCollects: 2,
+          },
         });
+      });
+
+      it('should confirm the changes also if collected via a mirror', async () => {
+        const mirror = mockMirrorFragment({
+          mirrorOf: publication,
+        });
+        const request = mockPaidCollectRequest({
+          publicationId: mirror.id,
+        });
+        const transactionData = mockBroadcastedTransactionData({ request });
+        const scenario = setupTestScenario({ publication: mirror });
+        await scenario.responder.prepare(transactionData);
+
+        await scenario.responder.commit(transactionData);
+
+        expect(scenario.updatedPublicationFragment).toMatchObject({
+          mirrorOf: {
+            hasCollectedByMe: true,
+            hasOptimisticCollectedByMe: false,
+            stats: {
+              totalAmountOfCollects: 2,
+            },
+          },
+        });
+      });
+    });
+
+    describe(`when "${CollectPublicationResponder.prototype.rollback.name}" method is invoked`, () => {
+      it(`should revert the changes done during the "${CollectPublicationResponder.prototype.prepare.name}" method call`, async () => {
         const request = mockPaidCollectRequest({
           publicationId: publication.id,
         });
         const transactionData = mockBroadcastedTransactionData({ request });
-        const scenario = setupTestScenario({
-          typeName: publicationType,
-          data: publication,
-          transactionData,
-        });
+        const scenario = setupTestScenario({ publication });
+        await scenario.responder.prepare(transactionData);
 
         await scenario.responder.rollback(transactionData);
 
-        expect(scenario.updatedPublicationFragment).toEqual(
-          expect.objectContaining({
+        expect(scenario.updatedPublicationFragment).toMatchObject({
+          hasCollectedByMe: false,
+          hasOptimisticCollectedByMe: false,
+          stats: knownInitialPublicationStats,
+        });
+      });
+
+      it('should revert the changes also if collected via a mirror', async () => {
+        const mirror = mockMirrorFragment({
+          mirrorOf: publication,
+        });
+        const request = mockPaidCollectRequest({
+          publicationId: mirror.id,
+        });
+        const transactionData = mockBroadcastedTransactionData({ request });
+        const scenario = setupTestScenario({ publication: mirror });
+        await scenario.responder.prepare(transactionData);
+
+        await scenario.responder.rollback(transactionData);
+
+        expect(scenario.updatedPublicationFragment).toMatchObject({
+          mirrorOf: {
             hasCollectedByMe: false,
             hasOptimisticCollectedByMe: false,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            stats: expect.objectContaining({
-              totalAmountOfCollects: 1,
-            }),
-          }),
-        );
-      },
-    );
+            stats: knownInitialPublicationStats,
+          },
+        });
+      });
+    });
   });
 });

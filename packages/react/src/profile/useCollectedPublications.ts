@@ -1,5 +1,5 @@
 import {
-  PublicationFragment,
+  AnyPublicationFragment,
   useWalletCollectedPublicationsQuery,
 } from '@lens-protocol/api-bindings';
 
@@ -14,7 +14,7 @@ type UseCollectablesArgs = PaginatedArgs<{
 export function useCollectedPublications({
   walletAddress,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseCollectablesArgs): PaginatedReadResult<PublicationFragment[]> {
+}: UseCollectablesArgs): PaginatedReadResult<AnyPublicationFragment[]> {
   const { apolloClient } = useSharedDependencies();
 
   return usePaginatedReadResult(

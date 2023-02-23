@@ -26,11 +26,6 @@ extend type Comment {
   referencePolicy: ReferencePolicy!
 }
 
-extend type Mirror {
-  hasOptimisticCollectedByMe: Boolean!
-  collectPolicy: CollectPolicy!
-}
-
 type PendingPost {
   id: InternalPublicationId!
   content: String

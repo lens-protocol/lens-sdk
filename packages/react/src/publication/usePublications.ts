@@ -1,4 +1,4 @@
-import { PublicationFragment, usePublicationsQuery } from '@lens-protocol/api-bindings';
+import { AnyPublicationFragment, usePublicationsQuery } from '@lens-protocol/api-bindings';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useSharedDependencies } from '../shared';
@@ -16,7 +16,7 @@ export function usePublications({
   metadataFilter,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UsePublicationArgs): PaginatedReadResult<PublicationFragment[]> {
+}: UsePublicationArgs): PaginatedReadResult<AnyPublicationFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
   return usePaginatedReadResult(

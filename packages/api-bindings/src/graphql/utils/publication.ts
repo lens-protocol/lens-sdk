@@ -65,24 +65,37 @@ export function getApiReactionType(reaction: ReactionType): ReactionTypes {
   }
 }
 
-export type PublicationFragment = PostFragment | CommentFragment | MirrorFragment;
+export type AnyPublicationFragment = CommentFragment | MirrorFragment | PostFragment;
+
+export type ContentPublicationFragment = CommentFragment | PostFragment;
+
+export function isContentPublication(
+  publication: AnyPublicationFragment,
+): publication is ContentPublicationFragment {
+  return isPostPublication(publication) || isCommentPublication(publication);
+}
 
 export type PublicationOwnedByMeFragment = Overwrite<
-  PublicationFragment,
+  AnyPublicationFragment,
   { profile: ProfileOwnedByMeFragment }
 >;
 
 export function isPublicationOwnedByMe(
-  publication: PublicationFragment,
+  publication: AnyPublicationFragment,
 ): publication is PublicationOwnedByMeFragment {
   return isProfileOwnedByMe(publication.profile);
 }
 
 export function createCollectRequest(
-  publication: PublicationFragment,
+  publication: AnyPublicationFragment,
   collector: ProfileOwnedByMeFragment,
 ): CollectRequest {
-  switch (publication.__collectModule.__typename) {
+  const collectModule =
+    publication.__typename === 'Mirror'
+      ? publication.mirrorOf.__collectModule
+      : publication.__collectModule;
+
+  switch (collectModule.__typename) {
     case 'FreeCollectModuleSettings':
       return {
         profileId: collector.id,
@@ -101,8 +114,8 @@ export function createCollectRequest(
         publicationId: publication.id,
         type: CollectType.PAID,
         fee: {
-          amount: erc20Amount({ from: publication.__collectModule.amount }),
-          contractAddress: publication.__collectModule.contractAddress,
+          amount: erc20Amount({ from: collectModule.amount }),
+          contractAddress: collectModule.contractAddress,
         },
       };
     case 'RevertCollectModuleSettings':
@@ -111,8 +124,8 @@ export function createCollectRequest(
     case 'ERC4626FeeCollectModuleSettings':
     case 'MultirecipientFeeCollectModuleSettings':
       never(
-        `Cannot collect publication with "${
-          publication.__collectModule.__typename as string
+        `Cannot collect publication (${publication.id}) with "${
+          collectModule.__typename as string
         }" collect module`,
       );
   }
@@ -125,7 +138,7 @@ export type CollectableCollectModuleSettingsFragment =
   | TimedFeeCollectModuleSettingsFragment
   | LimitedTimedFeeCollectModuleSettingsFragment;
 
-export type PublicationFragmentWithCollectableCollectModule = PublicationFragment & {
+export type PublicationFragmentWithCollectableCollectModule = AnyPublicationFragment & {
   collectModule: CollectableCollectModuleSettingsFragment;
 };
 

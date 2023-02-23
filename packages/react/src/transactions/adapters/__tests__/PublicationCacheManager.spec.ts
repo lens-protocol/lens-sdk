@@ -1,4 +1,4 @@
-import { PublicationFragment } from '@lens-protocol/api-bindings';
+import { AnyPublicationFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
   mockPostFragment,
@@ -12,7 +12,7 @@ import {
   PublicationCacheManager,
 } from '../PublicationCacheManager';
 
-function setupTestScenario({ publication }: { publication: PublicationFragment }) {
+function setupTestScenario({ publication }: { publication: AnyPublicationFragment }) {
   const apolloCache = createMockApolloCache();
 
   apolloCache.writeFragment({
