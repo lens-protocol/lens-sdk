@@ -62,7 +62,7 @@ generates:
           content:
             [
               "import type { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
-              "import type { EthereumAddress } from '@lens-protocol/shared-kernel'",
+              "import type { EthereumAddress } from '@lens-protocol/shared-kernel';",
               "import type { ClientErc20Amount } from './ClientErc20Amount';",
               "import type { DecryptionCriteria } from './DecryptionCriteria';",
               "import type { ProfileAttributes } from './ProfileAttributes';",
@@ -74,6 +74,7 @@ generates:
       - 'typescript-operations':
           skipTypename: true
           immutableTypes: false
+          inlineFragmentTypes: combine
       - 'typescript-react-apollo'
       - 'typescript-apollo-client-helpers'
       - 'fragment-matcher'
