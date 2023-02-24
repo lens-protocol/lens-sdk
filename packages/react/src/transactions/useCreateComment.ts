@@ -11,10 +11,13 @@ import {
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
+import { useMemo } from 'react';
 
 import { Operation, useOperation } from '../helpers';
-import { FailedUploadError, MetadataUploadHandler } from './adapters/MetadataUploadAdapter';
+import { FailedUploadError } from './adapters/IMetadataUploader';
+import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreateCommentController } from './adapters/useCreateCommentController';
+import { PublicationMetadataUploader } from './infrastructure/PublicationMetadataUploader';
 
 export type UseCreateCommentArg = {
   publisher: ProfileOwnedByMeFragment;
@@ -36,7 +39,8 @@ export function useCreateComment({
   publisher,
   upload,
 }: UseCreateCommentArg): CreateCommentOperation {
-  const createComment = useCreateCommentController({ upload });
+  const uploader = useMemo(() => new PublicationMetadataUploader(upload), [upload]);
+  const createComment = useCreateCommentController({ uploader });
 
   return useOperation(
     async ({

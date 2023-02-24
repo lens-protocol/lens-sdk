@@ -10,11 +10,13 @@ import {
   mockTransactionHash,
   mockTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
-import { ChainType, Result, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Result, success, Url } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress, mockUint256HexString } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
+import { when } from 'jest-when';
 
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
+import { IMetadataUploader } from '../IMetadataUploader';
 import {
   AsyncRelayReceipt,
   DeferredMetaTransactionInit,
@@ -140,4 +142,16 @@ export function mockProxyTransactionData<T extends TransactionRequestModel>({
     txHash: mockTransactionHash(),
     ...others,
   };
+}
+
+export function mockIMetadataUploader(urlOrError: Url | Error): IMetadataUploader<unknown> {
+  const uploader = mock<IMetadataUploader<unknown>>();
+
+  if (urlOrError instanceof Error) {
+    when(uploader.upload).mockRejectedValue(urlOrError);
+  } else {
+    when(uploader.upload).mockResolvedValue(urlOrError);
+  }
+
+  return uploader;
 }

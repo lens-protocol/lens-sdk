@@ -13,6 +13,7 @@ import {
   CreatePublicSetProfileMetadataUriRequest,
   LensApolloClient,
   Sources,
+  ProfileMetadata,
 } from '@lens-protocol/api-bindings';
 import {
   NativeTransaction,
@@ -32,8 +33,8 @@ import { ChainType, failure, never, success } from '@lens-protocol/shared-kernel
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { IMetadataUploader } from '../IMetadataUploader';
 import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
-import { MetadataUploadAdapter } from '../MetadataUploadAdapter';
 import { createProfileMetadata } from './createProfileMetadata';
 
 export class ProfileMetadataCallGateway
@@ -42,7 +43,7 @@ export class ProfileMetadataCallGateway
   constructor(
     private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
-    private readonly uploadAdapter: MetadataUploadAdapter,
+    private readonly uploader: IMetadataUploader<ProfileMetadata>,
     private readonly sources: Sources,
   ) {}
 
@@ -114,9 +115,7 @@ export class ProfileMetadataCallGateway
     request: UpdateProfileDetailsRequest,
   ): Promise<CreatePublicSetProfileMetadataUriRequest> {
     const existingProfile = await this.retrieveProfileDetails(request.profileId);
-    const metadataURI = await this.uploadAdapter.upload(
-      createProfileMetadata(existingProfile, request),
-    );
+    const metadataURI = await this.uploader.upload(createProfileMetadata(existingProfile, request));
 
     return {
       profileId: request.profileId,

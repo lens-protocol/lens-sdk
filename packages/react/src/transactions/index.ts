@@ -12,7 +12,6 @@ export * from './useUpdateProfileDetails';
 export * from './useRecentTransactions';
 
 export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
-export type { MetadataUploadAdapter } from './adapters/MetadataUploadAdapter';
 export {
   CollectPolicyType,
   ContentFocus,
@@ -37,4 +36,5 @@ export type {
   ReferencePolicyConfig,
 } from '@lens-protocol/domain/use-cases/publications';
 export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-export { FailedUploadError } from './adapters/MetadataUploadAdapter';
+export type { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
+export { FailedUploadError } from './adapters/IMetadataUploader';

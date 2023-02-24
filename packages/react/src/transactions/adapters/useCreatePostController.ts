@@ -7,15 +7,15 @@ import { CreatePost, CreatePostRequest } from '@lens-protocol/domain/use-cases/p
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
-import { MetadataUploadAdapter, MetadataUploadHandler } from './MetadataUploadAdapter';
+import { IMetadataUploader } from './IMetadataUploader';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 import { CreatePostCallGateway } from './publication-call-gateways/CreatePostCallGateway';
 
 export type UseCreatePostControllerArgs = {
-  upload: MetadataUploadHandler;
+  uploader: IMetadataUploader<CreatePostRequest>;
 };
 
-export function useCreatePostController({ upload }: UseCreatePostControllerArgs) {
+export function useCreatePostController({ uploader }: UseCreatePostControllerArgs) {
   const {
     apolloClient,
     transactionFactory,
@@ -26,8 +26,7 @@ export function useCreatePostController({ upload }: UseCreatePostControllerArgs)
   } = useSharedDependencies();
 
   return async (request: CreatePostRequest) => {
-    const uploadAdapter = new MetadataUploadAdapter(upload);
-    const gateway = new CreatePostCallGateway(apolloClient, transactionFactory, uploadAdapter);
+    const gateway = new CreatePostCallGateway(apolloClient, transactionFactory, uploader);
 
     const presenter = new PromiseResultPresenter<
       void,
