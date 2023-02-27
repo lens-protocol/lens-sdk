@@ -7,6 +7,5 @@
       "matchPackageNames": ["ethers"],
       "allowedVersions": "<=5"
     }
-  ],
-  "includePaths": ["**/examples/**"]
+  ]
 }
