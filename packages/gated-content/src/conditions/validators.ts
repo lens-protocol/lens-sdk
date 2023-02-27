@@ -49,12 +49,16 @@ export function assertValidPublicationId(
   throw new InvalidAccessCriteriaError(`Invalid publication id: ${publicationId}`);
 }
 
-export function assertValidCompoundCondition<T extends AccessCondition>(
+export function assertAtLeastTwoCriteria<T extends AccessCondition>(
   criteria: T[],
 ): asserts criteria is TwoAtLeastArray<T> {
   if (criteria.length < 2) {
     throw new InvalidAccessCriteriaError('Compound condition must have at least 2 criteria.');
   }
+}
+export function assertNoMoreThanFiveCriteria<T extends AccessCondition>(
+  criteria: T[],
+): asserts criteria is TwoAtLeastArray<T> {
   if (criteria.length > 5) {
     throw new InvalidAccessCriteriaError('Compound conditions can only have up to 5 criteria.');
   }

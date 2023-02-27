@@ -280,7 +280,7 @@ describe(`Given the "${transform.name}" function`, () => {
       condition: mockProfileOwnershipAccessCondition(),
     },
     {
-      description: 'with an OR condition that has more than 2 criteria',
+      description: 'with an OR root condition that has more than 2 criteria',
       condition: mockOrAccessCondition([
         mockProfileOwnershipAccessCondition(),
         mockEoaOwnershipAccessCondition(),

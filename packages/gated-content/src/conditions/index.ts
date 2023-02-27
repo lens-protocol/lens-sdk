@@ -17,7 +17,11 @@ import {
   LitNestedAccessControlCondition,
 } from './types';
 import { insertObjectInBetweenArrayElements } from './utils';
-import { assertValidCompoundCondition, InvalidAccessCriteriaError } from './validators';
+import {
+  assertAtLeastTwoCriteria,
+  assertNoMoreThanFiveCriteria,
+  InvalidAccessCriteriaError,
+} from './validators';
 
 type UnwrapMaybe<T extends Maybe<unknown>> = T extends Maybe<infer V> ? NonNullable<V> : never;
 
@@ -80,7 +84,8 @@ function transformCompoundCondition(
   const [type, value] = entry;
 
   if (type === AccessConditionType.And || type === AccessConditionType.Or) {
-    assertValidCompoundCondition(value.criteria);
+    assertAtLeastTwoCriteria(value.criteria);
+    assertNoMoreThanFiveCriteria(value.criteria);
 
     try {
       const flat = flatten(
@@ -109,7 +114,11 @@ export function transform(
     throw new InvalidAccessCriteriaError('Root condition must be an OR condition');
   }
 
-  assertValidCompoundCondition(value.criteria);
+  if (value.criteria.length < 1) {
+    throw new InvalidAccessCriteriaError('Root condition must have at least one criteria');
+  }
+
+  assertNoMoreThanFiveCriteria(value.criteria);
 
   if (value.criteria.length > 2) {
     throw new InvalidAccessCriteriaError('Root conditions can only have up to 2 criteria.');
