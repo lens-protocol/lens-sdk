@@ -19,6 +19,7 @@ import {
   LitScalarOperator,
   SupportedChains,
 } from '../types';
+import { InvalidAccessCriteriaError } from '../validators';
 
 const ownerProfileId = mockProfileId();
 const knownAddress = mockEthereumAddress();
@@ -270,6 +271,87 @@ describe(`Given the "${transform.name}" function`, () => {
       const actual = transform(condition, testing);
 
       expect(actual).toMatchObject(expectedLitAccessConditions);
+    });
+  });
+
+  describe.each([
+    {
+      description: 'with a root condition that is not an OR condition',
+      condition: mockProfileOwnershipAccessCondition(),
+    },
+    {
+      description: 'with an OR condition that has more than 2 criteria',
+      condition: mockOrAccessCondition([
+        mockProfileOwnershipAccessCondition(),
+        mockEoaOwnershipAccessCondition(),
+        mockNftOwnershipAccessCondition(),
+      ]),
+    },
+    {
+      description: 'with an OR root condition that does not include a profile ownership condition',
+      condition: mockOrAccessCondition([
+        mockEoaOwnershipAccessCondition(),
+        mockNftOwnershipAccessCondition(),
+      ]),
+    },
+    {
+      description: 'a nested AND condition with less than 2 criteria',
+      condition: mockOrAccessCondition([
+        mockProfileOwnershipAccessCondition(),
+        mockAndAccessCondition([mockEoaOwnershipAccessCondition()]),
+      ]),
+    },
+    {
+      description: 'a nested AND condition with more than 5 criteria',
+      condition: mockOrAccessCondition([
+        mockProfileOwnershipAccessCondition(),
+        mockAndAccessCondition([
+          mockEoaOwnershipAccessCondition(),
+          mockEoaOwnershipAccessCondition(),
+          mockEoaOwnershipAccessCondition(),
+          mockEoaOwnershipAccessCondition(),
+          mockEoaOwnershipAccessCondition(),
+          mockEoaOwnershipAccessCondition(),
+        ]),
+      ]),
+    },
+    {
+      description: 'a nested OR condition with less than 2 criteria',
+      condition: mockOrAccessCondition([
+        mockProfileOwnershipAccessCondition(),
+        mockOrAccessCondition([mockEoaOwnershipAccessCondition()]),
+      ]),
+    },
+    {
+      description: 'a nested OR condition with more than 5 criteria',
+      condition: mockOrAccessCondition([
+        mockProfileOwnershipAccessCondition(),
+        mockOrAccessCondition([
+          mockEoaOwnershipAccessCondition(),
+          mockEoaOwnershipAccessCondition(),
+          mockEoaOwnershipAccessCondition(),
+          mockEoaOwnershipAccessCondition(),
+          mockEoaOwnershipAccessCondition(),
+          mockEoaOwnershipAccessCondition(),
+        ]),
+      ]),
+    },
+    {
+      description: 'with more than 2 nested levels AND and OR conditions ',
+      condition: mockOrAccessCondition([
+        mockProfileOwnershipAccessCondition(),
+        mockAndAccessCondition([
+          mockEoaOwnershipAccessCondition(),
+          mockOrAccessCondition([
+            mockEoaOwnershipAccessCondition(),
+            mockEoaOwnershipAccessCondition(),
+          ]),
+        ]),
+      ]),
+    },
+  ])('when called with $description', ({ condition }) => {
+    it(`should throw a ${InvalidAccessCriteriaError.name}`, () => {
+      expect(() => transform(condition, testing)).toThrow(InvalidAccessCriteriaError);
     });
   });
 });

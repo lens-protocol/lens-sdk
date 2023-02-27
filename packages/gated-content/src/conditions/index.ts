@@ -17,6 +17,7 @@ import {
   LitNestedAccessControlCondition,
 } from './types';
 import { insertObjectInBetweenArrayElements } from './utils';
+import { assertValidCompoundCondition, InvalidAccessCriteriaError } from './validators';
 
 type UnwrapMaybe<T extends Maybe<unknown>> = T extends Maybe<infer V> ? NonNullable<V> : never;
 
@@ -76,13 +77,24 @@ function transformCompoundCondition(
   entry: Entry<AccessCondition>,
   env: EnvironmentConfig,
 ): LitNestedAccessControlCondition<LitAccessControlCondition> {
-  if (entry[0] === AccessConditionType.And || entry[0] === AccessConditionType.Or) {
-    const flat = flatten(
-      entry[1].criteria.map((criterion) =>
-        transformCompoundCondition(extractConditionEntry(criterion), env),
-      ),
-    );
-    return insertObjectInBetweenArrayElements(flat, { operator: entry[0] });
+  const [type, value] = entry;
+
+  if (type === AccessConditionType.And || type === AccessConditionType.Or) {
+    assertValidCompoundCondition(value.criteria);
+
+    try {
+      const flat = flatten(
+        value.criteria.map((criterion) =>
+          transformSimpleCondition(extractConditionEntry(criterion), env),
+        ),
+      );
+      return insertObjectInBetweenArrayElements(flat, { operator: type });
+    } catch (err: unknown) {
+      if (err instanceof InvariantError) {
+        throw new InvalidAccessCriteriaError('Cannot nest conditions more than 2 levels deep.');
+      }
+      throw err;
+    }
   }
   return transformSimpleCondition(entry, env);
 }
@@ -91,5 +103,24 @@ export function transform(
   condition: AccessCondition,
   env: EnvironmentConfig,
 ): LitNestedAccessControlCondition<LitAccessControlCondition> {
-  return transformCompoundCondition(extractConditionEntry(condition), env);
+  const [type, value] = extractConditionEntry(condition);
+
+  if (type !== AccessConditionType.Or) {
+    throw new InvalidAccessCriteriaError('Root condition must be an OR condition');
+  }
+
+  assertValidCompoundCondition(value.criteria);
+
+  if (value.criteria.length > 2) {
+    throw new InvalidAccessCriteriaError('Root conditions can only have up to 2 criteria.');
+  }
+
+  const rootEntries = value.criteria.map(extractConditionEntry);
+
+  if (!rootEntries.some(([t]) => t === AccessConditionType.Profile)) {
+    throw new InvalidAccessCriteriaError('Root conditions must contain a profile condition');
+  }
+
+  const flat = flatten(rootEntries.map((entry) => transformCompoundCondition(entry, env)));
+  return insertObjectInBetweenArrayElements(flat, { operator: AccessConditionType.Or });
 }

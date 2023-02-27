@@ -1,9 +1,9 @@
 import { isAddress } from '@ethersproject/address';
 import { ContractType } from '@lens-protocol/api-bindings';
 import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-import { EthereumAddress } from '@lens-protocol/shared-kernel';
+import { EthereumAddress, TwoAtLeastArray } from '@lens-protocol/shared-kernel';
 
-import { isSupportedChainId, SupportedChainId } from './types';
+import { AccessCondition, isSupportedChainId, SupportedChainId } from './types';
 
 export class InvalidAccessCriteriaError extends Error {
   name = 'InvalidAccessCriteriaError' as const;
@@ -47,4 +47,15 @@ export function assertValidPublicationId(
   if (isValidLensId(profileId) && isValidLensId(pubId)) return;
 
   throw new InvalidAccessCriteriaError(`Invalid publication id: ${publicationId}`);
+}
+
+export function assertValidCompoundCondition<T extends AccessCondition>(
+  criteria: T[],
+): asserts criteria is TwoAtLeastArray<T> {
+  if (criteria.length < 2) {
+    throw new InvalidAccessCriteriaError('Compound condition must have at least 2 criteria.');
+  }
+  if (criteria.length > 5) {
+    throw new InvalidAccessCriteriaError('Compound conditions can only have up to 5 criteria.');
+  }
 }
