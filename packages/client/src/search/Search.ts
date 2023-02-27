@@ -1,3 +1,4 @@
+import { never } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
@@ -24,8 +25,9 @@ export class Search {
       const response = await this.sdk.SearchProfiles(variables);
       const result = response.data.result;
 
-      if (result.__typename === 'PublicationSearchResult')
-        throw new Error('This should never happen');
+      if (result.__typename === 'PublicationSearchResult') {
+        never('PublicationSearchResult are not expected in this query');
+      }
 
       return result;
     }, request);
@@ -38,7 +40,9 @@ export class Search {
       const response = await this.sdk.SearchPublications(variables);
       const result = response.data.result;
 
-      if (result.__typename === 'ProfileSearchResult') throw new Error('This should never happen');
+      if (result.__typename === 'ProfileSearchResult') {
+        never('ProfileSearchResult are not expected in this query');
+      }
 
       return result;
     }, request);
