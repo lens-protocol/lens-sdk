@@ -14,6 +14,7 @@
     "packages/sdk-gated",
     "packages/shared-kernel",
     "packages/storage",
-    "packages/wagmi"
+    "packages/wagmi",
+    "packages/gated-content"
   ]
 }

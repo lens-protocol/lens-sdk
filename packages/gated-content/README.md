@@ -1,0 +1,1 @@
+# `@lens-protocol/gated-content`
