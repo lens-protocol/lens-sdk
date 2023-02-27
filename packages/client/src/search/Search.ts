@@ -21,9 +21,13 @@ export class Search {
 
   async profiles(request: SearchProfilesQueryVariables): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (variables) => {
-      const result = await this.sdk.SearchProfiles(variables);
+      const response = await this.sdk.SearchProfiles(variables);
+      const result = response.data.result;
 
-      return result.data.result;
+      if (result.__typename === 'PublicationSearchResult')
+        throw new Error('This should never happen');
+
+      return result;
     }, request);
   }
 
@@ -31,9 +35,12 @@ export class Search {
     request: SearchPublicationsQueryVariables,
   ): Promise<PaginatedResult<CommentFragment | PostFragment>> {
     return buildPaginatedQueryResult(async (variables) => {
-      const result = await this.sdk.SearchPublications(variables);
+      const response = await this.sdk.SearchPublications(variables);
+      const result = response.data.result;
 
-      return result.data.result;
+      if (result.__typename === 'ProfileSearchResult') throw new Error('This should never happen');
+
+      return result;
     }, request);
   }
 }

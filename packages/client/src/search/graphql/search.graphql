@@ -23,6 +23,9 @@ query SearchPublications(
         ...CommonPaginatedResultInfo
       }
     }
+    ... on ProfileSearchResult {
+      __typename
+    }
   }
 }
 
@@ -41,6 +44,9 @@ query SearchProfiles(
       pageInfo {
         ...CommonPaginatedResultInfo
       }
+    }
+    ... on PublicationSearchResult {
+      __typename
     }
   }
 }

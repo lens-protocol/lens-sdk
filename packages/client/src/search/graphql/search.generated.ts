@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as Types from '../../graphql/types.generated.js';
+import * as Types from '../../graphql/types.generated';
 
 import {
   PostFragment,
@@ -34,32 +34,38 @@ import {
   Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type SearchPublicationsQueryVariables = Types.Exact<{
-  limit?: Types.Maybe<Types.Scalars['LimitScalar']>;
-  cursor?: Types.Maybe<Types.Scalars['Cursor']>;
+  limit?: Types.InputMaybe<Types.Scalars['LimitScalar']>;
+  cursor?: Types.InputMaybe<Types.Scalars['Cursor']>;
   query: Types.Scalars['Search'];
-  sources?: Types.Maybe<Array<Types.Scalars['Sources']> | Types.Scalars['Sources']>;
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  sources?: Types.InputMaybe<Array<Types.Scalars['Sources']> | Types.Scalars['Sources']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type SearchPublicationsQuery = {
-  result: { __typename: 'PublicationSearchResult' } & {
-    items: Array<PostFragment | CommentFragment>;
-    pageInfo: CommonPaginatedResultInfoFragment;
-  };
+  result:
+    | { __typename: 'ProfileSearchResult' }
+    | {
+        __typename: 'PublicationSearchResult';
+        items: Array<CommentFragment | PostFragment>;
+        pageInfo: CommonPaginatedResultInfoFragment;
+      };
 };
 
 export type SearchProfilesQueryVariables = Types.Exact<{
   limit: Types.Scalars['LimitScalar'];
-  cursor?: Types.Maybe<Types.Scalars['Cursor']>;
+  cursor?: Types.InputMaybe<Types.Scalars['Cursor']>;
   query: Types.Scalars['Search'];
-  observerId?: Types.Maybe<Types.Scalars['ProfileId']>;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type SearchProfilesQuery = {
-  result: { __typename: 'ProfileSearchResult' } & {
-    items: Array<ProfileFragment>;
-    pageInfo: CommonPaginatedResultInfoFragment;
-  };
+  result:
+    | {
+        __typename: 'ProfileSearchResult';
+        items: Array<ProfileFragment>;
+        pageInfo: CommonPaginatedResultInfoFragment;
+      }
+    | { __typename: 'PublicationSearchResult' };
 };
 
 export const SearchPublicationsDocument = gql`
@@ -93,6 +99,9 @@ export const SearchPublicationsDocument = gql`
           ...CommonPaginatedResultInfo
         }
       }
+      ... on ProfileSearchResult {
+        __typename
+      }
     }
   }
   ${PostFragmentDoc}
@@ -115,6 +124,9 @@ export const SearchProfilesDocument = gql`
         pageInfo {
           ...CommonPaginatedResultInfo
         }
+      }
+      ... on PublicationSearchResult {
+        __typename
       }
     }
   }
