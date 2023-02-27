@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
-  "branchConcurrentLimit": 3,
+  "prConcurrentLimit": 3,
   "packageRules": [
     {
       "matchPackageNames": ["ethers"],
