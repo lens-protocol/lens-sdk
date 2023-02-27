@@ -25,6 +25,7 @@ import {
   hasAtLeastOne,
   hasTwoOrMore,
   invariant,
+  isNonNullable,
   never,
   TwoAtLeastArray,
 } from '@lens-protocol/shared-kernel';
@@ -157,10 +158,6 @@ function collectPublication(
     type: DecryptionCriteriaType.COLLECT_PUBLICATION,
     publicationId: condition.publicationId ?? never('Expected publicationId to be defined'),
   };
-}
-
-function isNonNullable<T>(value: T): value is NonNullable<T> {
-  return value !== null && value !== undefined;
 }
 
 function sanitize({ __typename, ...accessCondition }: AccessConditionOutput) {

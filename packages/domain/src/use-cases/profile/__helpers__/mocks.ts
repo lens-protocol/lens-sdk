@@ -73,11 +73,11 @@ export function mockIProfileTransactionGateway({
 }
 
 export function mockProfileId(): ProfileId {
-  return faker.datatype.uuid();
+  return faker.datatype.hexadecimal({ length: 2 });
 }
 
-export function mockPublicationId(): PublicationId {
-  return faker.datatype.uuid();
+export function mockPublicationId(profileId: ProfileId = mockProfileId()): PublicationId {
+  return `${profileId}-${faker.datatype.hexadecimal({ length: 2 })}`;
 }
 
 export function mockProfileIdentifier(overrides?: Partial<ProfileIdentifier>): ProfileIdentifier {

@@ -1,9 +1,20 @@
-import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
+import { DeepOmit, Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 
-import type { PublicationMetadataV2Input } from './graphql';
+import type { EncryptionParamsOutput, PublicationMetadataV2Input } from './graphql';
 
 export type PublicationMetadata = Prettify<
   Overwrite<PublicationMetadataV2Input, { version: '2.0.0' }>
+>;
+
+type EncryptionParams = DeepOmit<EncryptionParamsOutput, '__typename'>;
+
+export type EncryptedPublicationMetadata = Prettify<
+  Overwrite<
+    PublicationMetadata,
+    {
+      encryptionParams: EncryptionParams;
+    }
+  >
 >;
 
 export type ProfileMetadataAttribute = {
