@@ -33,6 +33,7 @@ import {
 import { CollectPublicationResponder } from './transactions/adapters/responders/CollectPublicationResponder';
 import { CreateMirrorResponder } from './transactions/adapters/responders/CreateMirrorResponder';
 import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
+import { CreateProfileResponder } from './transactions/adapters/responders/CreateProfileResponder';
 import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
@@ -144,12 +145,14 @@ export function createSharedDependencies(
   const activeProfilePresenter = new ActiveProfilePresenter();
   const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
 
+  const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
+
   const responders: TransactionResponders<SupportedTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(publicationCacheManager),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
     [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient, sources),
-    [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
+    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(apolloClient, sources),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
       apolloClient,
@@ -173,7 +176,6 @@ export function createSharedDependencies(
   const protocolCallRelayer = new ProtocolCallRelayer(apolloClient, transactionFactory, logger);
 
   // common interactors
-  const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
   const transactionQueue = new TransactionQueue(
     responders,
     transactionGateway,
