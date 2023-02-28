@@ -1,4 +1,4 @@
-import { invariant, InvariantError } from './invariant';
+import { InvariantError } from './invariant';
 
 /**
  *  Cast a `value` to exclude `null` and `undefined`.
