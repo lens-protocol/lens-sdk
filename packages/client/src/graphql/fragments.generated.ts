@@ -53,6 +53,7 @@ export type ProfileFragment = {
   bio: string | null;
   handle: string;
   ownedBy: string;
+  interests: Array<string> | null;
   isDefault: boolean;
   isFollowedByMe: boolean;
   isFollowing: boolean;
@@ -529,6 +530,7 @@ export const ProfileFragmentDoc = gql`
     bio
     handle
     ownedBy
+    interests
     picture {
       ...ProfileMedia
     }

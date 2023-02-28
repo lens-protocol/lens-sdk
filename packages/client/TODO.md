@@ -55,32 +55,34 @@ Client manages the token lifecycle and storage
 - [x] [PQ] client.profile.fetchAll(request)
 - [x] [Q] client.profile.allRecommended()
 - [x] [PQ] client.profile.mutualFollowers({ viewingProfileId, yourProfileId })
+- [x] [Q] client.profile.stats(request)
 
 ### Edit profile
 
 - [x] [AM] client.profile.create(request)
-- [H] client.profile.isValidHandle(handle)
+- [x] [H] client.profile.isValidHandle(handle)
 
-- [AM] client.profile.createSetProfileMetadataTypedData(request)
-- [AM] client.profile.createSetProfileMetadataViaDispatcher(request)
+- [x] [AM] client.profile.createSetProfileMetadataTypedData(request)
+- [x] [AM] client.profile.createSetProfileMetadataViaDispatcher(request)
 
-- [AM] client.profile.createSetProfileImageURITypedData(request)
-- [AM] client.profile.createSetProfileImageURIViaDispatcher(request)
+- [x] [AM] client.profile.createSetProfileImageURITypedData(request)
+- [x] [AM] client.profile.createSetProfileImageURIViaDispatcher(request)
 
 - [x] [AM] client.profile.createBurnProfileTypedData(request)
-- [AM] client.profile.createSetDefaultProfileTypedData(request)
+- [x] [AM] client.profile.createSetDefaultProfileTypedData(request)
 - [x] [AM] client.profile.createSetDispatcherTypedData(request)
 
-- [AM] client.profile.addInterests(request)
-- [AM] client.profile.removeInterests(request)
+- [x] [Q] client.profile.allInterests()
+- [x] [AM] client.profile.addInterests(request)
+- [x] [AM] client.profile.removeInterests(request)
 
 ### Follow profile
 
 - [x] [AM] client.profile.createFollowTypedData(request)
 - [x] [AM] client.profile.createUnfollowTypedData(request)
-- [AM] client.profile.createSetFollowModuleTypedData(request)
-- [AM] client.profile.createSetFollowNFTUriTypedData(request)
-- [APQ] client.profile.pendingApprovalFollows(request)
+- [x] [AM] client.profile.createSetFollowModuleTypedData(request)
+- [x] [AM] client.profile.createSetFollowNFTUriTypedData(request)
+- [x] [APQ] client.profile.pendingApprovalFollows(request)
 
 - [x] [Q] client.profile.doesFollow(request)
 - [x] [PQ] client.profile.allFollowing({ address })

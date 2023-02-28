@@ -6,9 +6,9 @@ import {
   CommonPaginatedResultInfoFragment,
   FollowingFragment,
   FollowerFragment,
-  Eip712TypedDataDomainFragment,
   RelayerResultFragment,
   RelayErrorFragment,
+  Eip712TypedDataDomainFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -19,9 +19,9 @@ import {
   CommonPaginatedResultInfoFragmentDoc,
   FollowingFragmentDoc,
   FollowerFragmentDoc,
-  Eip712TypedDataDomainFragmentDoc,
   RelayerResultFragmentDoc,
   RelayErrorFragmentDoc,
+  Eip712TypedDataDomainFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type AddReactionMutationVariables = Types.Exact<{
   request: Types.ReactionRequest;
