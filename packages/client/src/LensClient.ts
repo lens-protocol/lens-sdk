@@ -3,6 +3,7 @@ import { LensConfig } from './consts/config';
 import { Explore } from './explore';
 import { Feed } from './feed';
 import { Modules } from './modules';
+import { Nfts } from './nfts';
 import { Nonces } from './nonces';
 import { Notifications } from './notifications';
 import { Profile } from './profile';
@@ -37,6 +38,10 @@ export class LensClient {
 
   get modules(): Modules {
     return new Modules(this.config, this._authentication);
+  }
+
+  get nfts(): Nfts {
+    return new Nfts(this.config, this._authentication);
   }
 
   get nonces(): Nonces {

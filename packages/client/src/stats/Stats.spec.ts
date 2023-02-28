@@ -8,7 +8,7 @@ const testConfig = {
 describe(`Given the ${Stats.name} configured to work with sandbox`, () => {
   const stats = new Stats(testConfig);
 
-  describe(`when a method ${Stats.prototype.fetch.name} is called`, () => {
+  describe(`when the method ${Stats.prototype.fetch.name} is called`, () => {
     it(`should return result`, async () => {
       const result = await stats.fetch();
 

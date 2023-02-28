@@ -9,19 +9,19 @@ describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
   describe(`and is not authenticated`, () => {
     const profile = new Profile(testConfig);
 
-    describe(`when a method ${Profile.prototype.fetch.name} is called`, () => {
+    describe(`when the method ${Profile.prototype.fetch.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(profile.fetch({ profileId: '0x0185' })).resolves.not.toThrow();
       });
     });
 
-    describe(`when a method ${Profile.prototype.stats.name} is called`, () => {
+    describe(`when the method ${Profile.prototype.stats.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(profile.stats({ profileId: '0x05' }, ['lenster'])).resolves.not.toThrow();
       });
     });
 
-    describe(`when a method ${Profile.prototype.fetchAll.name} is called`, () => {
+    describe(`when the method ${Profile.prototype.fetchAll.name} is called`, () => {
       it(`should run successfully`, async () => {
         const result = await profile.fetchAll({ profileIds: ['0x0185', '0x0186'] });
 
@@ -29,13 +29,13 @@ describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
       });
     });
 
-    describe(`when a method ${Profile.prototype.allRecommended.name} is called`, () => {
+    describe(`when the method ${Profile.prototype.allRecommended.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(profile.allRecommended()).resolves.not.toThrow();
       });
     });
 
-    describe(`when a method ${Profile.prototype.mutualFollowers.name} is called`, () => {
+    describe(`when the method ${Profile.prototype.mutualFollowers.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(
           profile.mutualFollowers({ viewingProfileId: '0x0185', yourProfileId: '0x0186' }),
@@ -43,7 +43,7 @@ describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
       });
     });
 
-    describe(`when a method ${Profile.prototype.doesFollow.name} is called`, () => {
+    describe(`when the method ${Profile.prototype.doesFollow.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(
           profile.doesFollow({
@@ -62,7 +62,7 @@ describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
       });
     });
 
-    describe(`when a method ${Profile.prototype.allFollowing.name} is called`, () => {
+    describe(`when the method ${Profile.prototype.allFollowing.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(
           profile.allFollowing({
@@ -72,7 +72,7 @@ describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
       });
     });
 
-    describe(`when a method ${Profile.prototype.allFollowers.name} is called`, () => {
+    describe(`when the method ${Profile.prototype.allFollowers.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(
           profile.allFollowers({
@@ -82,7 +82,7 @@ describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
       });
     });
 
-    describe(`when a method ${Profile.prototype.followerNftOwnedTokenIds.name} is called`, () => {
+    describe(`when the method ${Profile.prototype.followerNftOwnedTokenIds.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(
           profile.followerNftOwnedTokenIds({

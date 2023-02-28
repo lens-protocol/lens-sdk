@@ -40,8 +40,15 @@ Client manages the token lifecycle and storage
 
 ## NFTs
 
-- [Q] client.nfts.fetch(request)
-- [AQ] client.nfts.ownershipChallenge(request)
+- [x] [PQ] client.nfts.fetch(request)
+- [x] [AQ] client.nfts.ownershipChallenge(request)
+
+- [x] [Q] client.nfts.fetchGalleries(request)
+- [x] [AM] client.nfts.createGallery(request)
+- [x] [AM] client.nfts.updateGalleryInfo(request)
+- [x] [AM] client.nfts.updateGalleryItems(request)
+- [x] [AM] client.nfts.updateGalleryOrder(request)
+- [x] [AM] client.nfts.deleteGallery(request)
 
 ## Notifications
 
