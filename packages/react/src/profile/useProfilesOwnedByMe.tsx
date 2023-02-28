@@ -15,7 +15,7 @@ export function useProfilesOwnedByMe({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseProfilesOwnedByArgs = {}): PaginatedReadResult<ProfileFragment[]> {
-  const { apolloClient } = useSharedDependencies();
+  const { apolloClient, sources } = useSharedDependencies();
   const activeWallet = useActiveWallet();
   const createdProfiles = useReactiveVar(createdProfilesVar);
 
@@ -25,6 +25,7 @@ export function useProfilesOwnedByMe({
         address: activeWallet.data?.address || '',
         observerId,
         limit,
+        sources,
       },
       skip: activeWallet.loading,
       client: apolloClient,
