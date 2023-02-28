@@ -1,4 +1,4 @@
-import { never } from '@lens-protocol/shared-kernel';
+import { invariant } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
@@ -25,9 +25,10 @@ export class Search {
       const response = await this.sdk.SearchProfiles(variables);
       const result = response.data.result;
 
-      if (result.__typename === 'PublicationSearchResult') {
-        never('PublicationSearchResult are not expected in this query');
-      }
+      invariant(
+        result.__typename !== 'PublicationSearchResult',
+        'PublicationSearchResult is not expected in this query',
+      );
 
       return result;
     }, request);
@@ -40,9 +41,10 @@ export class Search {
       const response = await this.sdk.SearchPublications(variables);
       const result = response.data.result;
 
-      if (result.__typename === 'ProfileSearchResult') {
-        never('ProfileSearchResult are not expected in this query');
-      }
+      invariant(
+        result.__typename !== 'ProfileSearchResult',
+        'ProfileSearchResult is not expected in this query',
+      );
 
       return result;
     }, request);
