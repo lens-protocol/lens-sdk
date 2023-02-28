@@ -1,11 +1,11 @@
 import { makeVar } from '@apollo/client';
-import { Sources } from '@lens-protocol/api-bindings';
 import {
   LensApolloClient,
   ProfileFragment,
   SearchProfilesDocument,
   SearchProfilesQuery,
   SearchProfilesQueryVariables,
+  Sources,
 } from '@lens-protocol/api-bindings';
 import { CreateProfileRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
