@@ -10,7 +10,7 @@ describe(`Given the ${Nfts.name} configured to work with sandbox`, () => {
   describe(`and the instance is not authenticated`, () => {
     const nfts = new Nfts(testConfig);
 
-    describe(`when a method ${Nfts.prototype.fetch.name} is called`, () => {
+    describe(`when the method ${Nfts.prototype.fetch.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(
           nfts.fetch({
@@ -22,7 +22,7 @@ describe(`Given the ${Nfts.name} configured to work with sandbox`, () => {
       });
     });
 
-    describe(`when a method ${Nfts.prototype.fetchGalleries.name} is called`, () => {
+    describe(`when the method ${Nfts.prototype.fetchGalleries.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(
           nfts.fetchGalleries({
@@ -36,7 +36,7 @@ describe(`Given the ${Nfts.name} configured to work with sandbox`, () => {
   describe(`and the instance is authenticated`, () => {
     const getAuthentication = setupRandomAuthentication();
 
-    describe(`when a method ${Nfts.prototype.ownershipChallenge.name} is called`, () => {
+    describe(`when the method ${Nfts.prototype.ownershipChallenge.name} is called`, () => {
       it(`should run successfully`, async () => {
         const authentication = getAuthentication();
         const nfts = new Nfts(testConfig, authentication);

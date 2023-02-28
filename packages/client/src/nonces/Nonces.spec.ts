@@ -9,7 +9,7 @@ const testConfig = {
 describe(`Given the ${Nonces.name} configured to work with sandbox`, () => {
   const getAuthentication = setupRandomAuthentication();
 
-  describe(`when a method ${Nonces.prototype.fetch.name} is called`, () => {
+  describe(`when the method ${Nonces.prototype.fetch.name} is called`, () => {
     it(`should return result`, async () => {
       const auth = getAuthentication();
       const nonces = new Nonces(testConfig, auth);
