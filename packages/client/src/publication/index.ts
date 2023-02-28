@@ -1,3 +1,5 @@
+export { PublicationReportReason } from './helpers/buildReportReason';
+
 export * from './Publication';
 export {
   PublicationMetadataDisplayTypes,

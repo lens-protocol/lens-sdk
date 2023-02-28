@@ -8,11 +8,11 @@ import {
   CommentFragment,
   CommonPaginatedResultInfoFragment,
   WalletFragment,
-  FollowingFragment,
-  FollowerFragment,
   Eip712TypedDataDomainFragment,
   RelayerResultFragment,
   RelayErrorFragment,
+  FollowingFragment,
+  FollowerFragment,
   Erc20AmountFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -26,19 +26,42 @@ import {
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
   WalletFragmentDoc,
-  FollowingFragmentDoc,
-  FollowerFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
   RelayerResultFragmentDoc,
   RelayErrorFragmentDoc,
+  FollowingFragmentDoc,
+  FollowerFragmentDoc,
   Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
+export type PublicationStatsFragment = {
+  __typename: 'PublicationStats';
+  totalAmountOfMirrors: number;
+  totalAmountOfCollects: number;
+  totalAmountOfComments: number;
+  totalUpvotes: number;
+  totalDownvotes: number;
+  commentsTotal: number;
+};
+
 export type PublicationQueryVariables = Types.Exact<{
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
   request: Types.PublicationQueryRequest;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
 export type PublicationQuery = { result: CommentFragment | MirrorFragment | PostFragment | null };
+
+export type PublicationStatsQueryVariables = Types.Exact<{
+  request: Types.PublicationQueryRequest;
+  sources: Array<Types.Scalars['Sources']> | Types.Scalars['Sources'];
+}>;
+
+export type PublicationStatsQuery = {
+  result:
+    | { stats: PublicationStatsFragment }
+    | { stats: PublicationStatsFragment }
+    | { stats: PublicationStatsFragment }
+    | null;
+};
 
 export type PublicationsQueryVariables = Types.Exact<{
   request: Types.PublicationsQueryRequest;
@@ -97,8 +120,170 @@ export type PublicationMetadataStatusQuery = {
   };
 };
 
+export type CreatePostTypedDataMutationVariables = Types.Exact<{
+  request: Types.CreatePublicPostRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
+}>;
+
+export type CreatePostTypedDataMutation = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { PostWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomainFragment;
+      value: {
+        nonce: number;
+        deadline: string;
+        profileId: string;
+        contentURI: string;
+        collectModule: string;
+        collectModuleInitData: string;
+        referenceModule: string;
+        referenceModuleInitData: string;
+      };
+    };
+  };
+};
+
+export type CreatePostViaDispatcherMutationVariables = Types.Exact<{
+  request: Types.CreatePublicPostRequest;
+}>;
+
+export type CreatePostViaDispatcherMutation = {
+  result: RelayErrorFragment | RelayerResultFragment;
+};
+
+export type CreateCommentTypedDataMutationVariables = Types.Exact<{
+  request: Types.CreatePublicCommentRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
+}>;
+
+export type CreateCommentTypedDataMutation = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { CommentWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomainFragment;
+      value: {
+        nonce: number;
+        deadline: string;
+        profileId: string;
+        contentURI: string;
+        profileIdPointed: string;
+        pubIdPointed: string;
+        collectModule: string;
+        collectModuleInitData: string;
+        referenceModuleData: string;
+        referenceModule: string;
+        referenceModuleInitData: string;
+      };
+    };
+  };
+};
+
+export type CreateCommentViaDispatcherMutationVariables = Types.Exact<{
+  request: Types.CreatePublicCommentRequest;
+}>;
+
+export type CreateCommentViaDispatcherMutation = {
+  result: RelayErrorFragment | RelayerResultFragment;
+};
+
+export type CreateMirrorTypedDataMutationVariables = Types.Exact<{
+  request: Types.CreateMirrorRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
+}>;
+
+export type CreateMirrorTypedDataMutation = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { MirrorWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomainFragment;
+      value: {
+        nonce: number;
+        deadline: string;
+        profileId: string;
+        profileIdPointed: string;
+        pubIdPointed: string;
+        referenceModuleData: string;
+        referenceModule: string;
+        referenceModuleInitData: string;
+      };
+    };
+  };
+};
+
+export type CreateMirrorViaDispatcherMutationVariables = Types.Exact<{
+  request: Types.CreateMirrorRequest;
+}>;
+
+export type CreateMirrorViaDispatcherMutation = {
+  result: RelayErrorFragment | RelayerResultFragment;
+};
+
+export type CreateCollectTypedDataMutationVariables = Types.Exact<{
+  request: Types.CreateCollectRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
+}>;
+
+export type CreateCollectTypedDataMutation = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { CollectWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomainFragment;
+      value: { nonce: number; deadline: string; profileId: string; pubId: string; data: string };
+    };
+  };
+};
+
+export type CreateAttachMediaDataMutationVariables = Types.Exact<{
+  request: Types.PublicMediaRequest;
+}>;
+
+export type CreateAttachMediaDataMutation = {
+  result: {
+    signedUrl: string;
+    media: {
+      altTag: string | null;
+      cover: string | null;
+      item: string;
+      source: Types.PublicationMediaSource | null;
+      type: string | null;
+    };
+  };
+};
+
+export type HidePublicationMutationVariables = Types.Exact<{
+  request: Types.HidePublicationRequest;
+}>;
+
+export type HidePublicationMutation = { hidePublication: void | null };
+
+export type ReportPublicationMutationVariables = Types.Exact<{
+  request: Types.ReportPublicationRequest;
+}>;
+
+export type ReportPublicationMutation = { reportPublication: void | null };
+
+export const PublicationStatsFragmentDoc = gql`
+  fragment PublicationStats on PublicationStats {
+    __typename
+    totalAmountOfMirrors
+    totalAmountOfCollects
+    totalAmountOfComments
+    totalUpvotes
+    totalDownvotes
+    commentsTotal(forSources: $sources)
+  }
+`;
 export const PublicationDocument = gql`
-  query Publication($observerId: ProfileId, $request: PublicationQueryRequest!) {
+  query Publication($request: PublicationQueryRequest!, $observerId: ProfileId) {
     result: publication(request: $request) {
       ... on Post {
         ...Post
@@ -114,6 +299,28 @@ export const PublicationDocument = gql`
   ${PostFragmentDoc}
   ${MirrorFragmentDoc}
   ${CommentFragmentDoc}
+`;
+export const PublicationStatsDocument = gql`
+  query PublicationStats($request: PublicationQueryRequest!, $sources: [Sources!]!) {
+    result: publication(request: $request) {
+      ... on Post {
+        stats {
+          ...PublicationStats
+        }
+      }
+      ... on Mirror {
+        stats {
+          ...PublicationStats
+        }
+      }
+      ... on Comment {
+        stats {
+          ...PublicationStats
+        }
+      }
+    }
+  }
+  ${PublicationStatsFragmentDoc}
 `;
 export const PublicationsDocument = gql`
   query Publications($request: PublicationsQueryRequest!, $observerId: ProfileId) {
@@ -194,6 +401,195 @@ export const PublicationMetadataStatusDocument = gql`
     }
   }
 `;
+export const CreatePostTypedDataDocument = gql`
+  mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
+    result: createPostTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          PostWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          contentURI
+          collectModule
+          collectModuleInitData
+          referenceModule
+          referenceModuleInitData
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreatePostViaDispatcherDocument = gql`
+  mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
+    result: createPostViaDispatcher(request: $request) {
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export const CreateCommentTypedDataDocument = gql`
+  mutation CreateCommentTypedData(
+    $request: CreatePublicCommentRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createCommentTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          CommentWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          contentURI
+          profileIdPointed
+          pubIdPointed
+          collectModule
+          collectModuleInitData
+          referenceModuleData
+          referenceModule
+          referenceModuleInitData
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateCommentViaDispatcherDocument = gql`
+  mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
+    result: createCommentViaDispatcher(request: $request) {
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export const CreateMirrorTypedDataDocument = gql`
+  mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDataOptions) {
+    result: createMirrorTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          MirrorWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          profileIdPointed
+          pubIdPointed
+          referenceModuleData
+          referenceModule
+          referenceModuleInitData
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateMirrorViaDispatcherDocument = gql`
+  mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
+    result: createMirrorViaDispatcher(request: $request) {
+      ... on RelayerResult {
+        ...RelayerResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export const CreateCollectTypedDataDocument = gql`
+  mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: TypedDataOptions) {
+    result: createCollectTypedData(request: $request, options: $options) {
+      id
+      expiresAt
+      typedData {
+        types {
+          CollectWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          pubId
+          data
+        }
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateAttachMediaDataDocument = gql`
+  mutation CreateAttachMediaData($request: PublicMediaRequest!) {
+    result: createAttachMediaData(request: $request) {
+      media {
+        altTag
+        cover
+        item
+        source
+        type
+      }
+      signedUrl
+    }
+  }
+`;
+export const HidePublicationDocument = gql`
+  mutation HidePublication($request: HidePublicationRequest!) {
+    hidePublication(request: $request)
+  }
+`;
+export const ReportPublicationDocument = gql`
+  mutation ReportPublication($request: ReportPublicationRequest!) {
+    reportPublication(request: $request)
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -203,11 +599,22 @@ export type SdkFunctionWrapper = <T>(
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const PublicationDocumentString = print(PublicationDocument);
+const PublicationStatsDocumentString = print(PublicationStatsDocument);
 const PublicationsDocumentString = print(PublicationsDocument);
 const ValidatePublicationMetadataDocumentString = print(ValidatePublicationMetadataDocument);
 const WhoCollectedPublicationDocumentString = print(WhoCollectedPublicationDocument);
 const ProfilePublicationsForSaleDocumentString = print(ProfilePublicationsForSaleDocument);
 const PublicationMetadataStatusDocumentString = print(PublicationMetadataStatusDocument);
+const CreatePostTypedDataDocumentString = print(CreatePostTypedDataDocument);
+const CreatePostViaDispatcherDocumentString = print(CreatePostViaDispatcherDocument);
+const CreateCommentTypedDataDocumentString = print(CreateCommentTypedDataDocument);
+const CreateCommentViaDispatcherDocumentString = print(CreateCommentViaDispatcherDocument);
+const CreateMirrorTypedDataDocumentString = print(CreateMirrorTypedDataDocument);
+const CreateMirrorViaDispatcherDocumentString = print(CreateMirrorViaDispatcherDocument);
+const CreateCollectTypedDataDocumentString = print(CreateCollectTypedDataDocument);
+const CreateAttachMediaDataDocumentString = print(CreateAttachMediaDataDocument);
+const HidePublicationDocumentString = print(HidePublicationDocument);
+const ReportPublicationDocumentString = print(ReportPublicationDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Publication(
@@ -221,6 +628,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'Publication',
+        'query',
+      );
+    },
+    PublicationStats(
+      variables: PublicationStatsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: PublicationStatsQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PublicationStatsQuery>(PublicationStatsDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'PublicationStats',
         'query',
       );
     },
@@ -321,6 +747,204 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           ),
         'PublicationMetadataStatus',
         'query',
+      );
+    },
+    CreatePostTypedData(
+      variables: CreatePostTypedDataMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreatePostTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreatePostTypedDataMutation>(
+            CreatePostTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreatePostTypedData',
+        'mutation',
+      );
+    },
+    CreatePostViaDispatcher(
+      variables: CreatePostViaDispatcherMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreatePostViaDispatcherMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreatePostViaDispatcherMutation>(
+            CreatePostViaDispatcherDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreatePostViaDispatcher',
+        'mutation',
+      );
+    },
+    CreateCommentTypedData(
+      variables: CreateCommentTypedDataMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateCommentTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateCommentTypedDataMutation>(
+            CreateCommentTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateCommentTypedData',
+        'mutation',
+      );
+    },
+    CreateCommentViaDispatcher(
+      variables: CreateCommentViaDispatcherMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateCommentViaDispatcherMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateCommentViaDispatcherMutation>(
+            CreateCommentViaDispatcherDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateCommentViaDispatcher',
+        'mutation',
+      );
+    },
+    CreateMirrorTypedData(
+      variables: CreateMirrorTypedDataMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateMirrorTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateMirrorTypedDataMutation>(
+            CreateMirrorTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateMirrorTypedData',
+        'mutation',
+      );
+    },
+    CreateMirrorViaDispatcher(
+      variables: CreateMirrorViaDispatcherMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateMirrorViaDispatcherMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateMirrorViaDispatcherMutation>(
+            CreateMirrorViaDispatcherDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateMirrorViaDispatcher',
+        'mutation',
+      );
+    },
+    CreateCollectTypedData(
+      variables: CreateCollectTypedDataMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateCollectTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateCollectTypedDataMutation>(
+            CreateCollectTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateCollectTypedData',
+        'mutation',
+      );
+    },
+    CreateAttachMediaData(
+      variables: CreateAttachMediaDataMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateAttachMediaDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateAttachMediaDataMutation>(
+            CreateAttachMediaDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateAttachMediaData',
+        'mutation',
+      );
+    },
+    HidePublication(
+      variables: HidePublicationMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: HidePublicationMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<HidePublicationMutation>(HidePublicationDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'HidePublication',
+        'mutation',
+      );
+    },
+    ReportPublication(
+      variables: ReportPublicationMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: ReportPublicationMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ReportPublicationMutation>(ReportPublicationDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'ReportPublication',
+        'mutation',
       );
     },
   };
