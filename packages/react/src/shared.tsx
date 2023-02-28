@@ -152,7 +152,7 @@ export function createSharedDependencies(
     [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(publicationCacheManager),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
     [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient, sources),
-    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(apolloClient),
+    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(apolloClient, sources),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
       apolloClient,

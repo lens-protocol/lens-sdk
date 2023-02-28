@@ -1,4 +1,5 @@
 import { makeVar } from '@apollo/client';
+import { Sources } from '@lens-protocol/api-bindings';
 import {
   LensApolloClient,
   ProfileFragment,
@@ -15,12 +16,13 @@ import {
 export const createdProfilesVar = makeVar<ProfileFragment[]>([]);
 
 export class CreateProfileResponder implements ITransactionResponder<CreateProfileRequest> {
-  constructor(private readonly client: LensApolloClient) {}
+  constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
 
   async commit({ request }: BroadcastedTransactionData<CreateProfileRequest>) {
     const res = await this.client.query<SearchProfilesQuery, SearchProfilesQueryVariables>({
       query: SearchProfilesDocument,
       variables: {
+        sources: this.sources,
         query: request.handle,
         limit: 1,
       },
