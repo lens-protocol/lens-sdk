@@ -16,7 +16,6 @@
     },
     "./package.json": "./package.json"
   },
-  "private": true,
   "sideEffects": false,
   "files": [
     "dist/**/*"
