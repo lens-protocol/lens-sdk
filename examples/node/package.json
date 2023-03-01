@@ -1,6 +1,7 @@
 {
-  "name": "node",
+  "name": "example-node",
   "version": "0.0.1",
+  "private": true,
   "description": "",
   "scripts": {
     "dev": "ts-node ./index.ts"
