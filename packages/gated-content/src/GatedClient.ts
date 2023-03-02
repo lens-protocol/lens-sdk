@@ -23,9 +23,14 @@ import {
 } from './encryption';
 import { EnvironmentConfig } from './environments';
 
-export type GatedClientConfig = {
+type AuthenticationConfig = {
   domain: string;
+  statement?: string;
   uri: string;
+};
+
+export type GatedClientConfig = {
+  authentication: AuthenticationConfig;
   environment: EnvironmentConfig;
   signer: Signer;
   storageProvider: IStorageProvider;
@@ -39,8 +44,7 @@ function uint8arrayToHexString(buffer: Uint8Array): string {
 export type EncryptionParams = OmitTypename<EncryptionParamsFragment>;
 
 export class GatedClient {
-  private readonly domain: string;
-  private readonly uri: string;
+  private readonly authentication: AuthenticationConfig;
 
   private readonly environment: EnvironmentConfig;
 
@@ -53,15 +57,13 @@ export class GatedClient {
   private readonly encryptionProvider: IEncryptionProvider;
 
   constructor({
-    domain,
-    uri,
+    authentication,
     environment,
     signer,
     storageProvider,
     encryptionProvider,
   }: GatedClientConfig) {
-    this.domain = domain;
-    this.uri = uri;
+    this.authentication = authentication;
     this.environment = environment;
     this.signer = signer;
     this.storage = createAuthStorage(environment, storageProvider);
@@ -183,12 +185,10 @@ export class GatedClient {
 
   private async createSiweMessage() {
     return new SiweMessage({
-      domain: this.domain,
       address: await this.signer.getAddress(),
-      statement: 'This is a test statement.  You can put anything you want here.', // TODO either personalize or make generic
-      uri: this.uri,
       version: '1',
       chainId: this.environment.chainId,
+      ...this.authentication,
     });
   }
 }

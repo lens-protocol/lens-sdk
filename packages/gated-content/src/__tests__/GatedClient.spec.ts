@@ -41,8 +41,10 @@ const accessCondition = mockOrAccessCondition([
 
 function setupTestScenario() {
   const client = new GatedClient({
-    domain: 'localhost',
-    uri: 'https://localhost/login',
+    authentication: {
+      domain: 'localhost',
+      uri: 'https://localhost/login',
+    },
     signer,
     environment: testing,
     storageProvider: new InMemoryStorageProvider(),
@@ -53,7 +55,7 @@ function setupTestScenario() {
 }
 
 describe(`Given an instance of the ${GatedClient.name}`, () => {
-  describe(`when calling the ${GatedClient.prototype.encryptPublication.name} method`, () => {
+  describe(`when calling the "${GatedClient.prototype.encryptPublication.name}" method`, () => {
     it(`should return the expected GatedPublicationMetadata`, async () => {
       const { client } = setupTestScenario();
 
@@ -78,7 +80,7 @@ describe(`Given an instance of the ${GatedClient.name}`, () => {
     });
   });
 
-  describe(`when calling the ${GatedClient.prototype.decryptPublication.name} method`, () => {
+  describe(`when calling the "${GatedClient.prototype.decryptPublication.name}" method`, () => {
     it(`should be able to decrypt and return the expected MetadataFragment`, async () => {
       // setup
       const { client } = setupTestScenario();
