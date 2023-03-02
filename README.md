@@ -131,6 +131,8 @@ _Note: Because this command assumes that the last commit is the release commit, 
 git push --follow-tags
 ```
 
+7. It's important that the last commit, from which the release was made and the git tags are associated with, is correctly merged to the `main` branch. Use `"Create a merge commit"` option when merging the release branch to the `main`.
+
 ## License
 
 Lens SDK is [MIT licensed](./LICENSE)
