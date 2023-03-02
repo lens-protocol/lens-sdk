@@ -44,8 +44,7 @@ export class GatedClient {
 
   private readonly environment: EnvironmentConfig;
 
-  // @ts-ignore
-  private readonly _storage: IStorage<AuthSig>;
+  private readonly storage: IStorage<AuthSig>;
 
   private readonly signer: Signer;
 
@@ -65,7 +64,7 @@ export class GatedClient {
     this.uri = uri;
     this.environment = environment;
     this.signer = signer;
-    this._storage = createAuthStorage(environment, storageProvider);
+    this.storage = createAuthStorage(environment, storageProvider);
     this.encryptionProvider = encryptionProvider;
   }
 
@@ -117,6 +116,12 @@ export class GatedClient {
   }
 
   private async getOrCreateAuthSig(): Promise<AuthSig> {
+    const authSig = await this.storage.get();
+
+    if (authSig) {
+      return authSig;
+    }
+
     const siweMessage = await this.createSiweMessage();
     const messageToSign = siweMessage.prepareMessage();
 
@@ -124,12 +129,16 @@ export class GatedClient {
 
     const recoveredAddress = utils.verifyMessage(messageToSign, signature);
 
-    return {
+    const newAuthSig = {
       sig: signature,
       derivedVia: 'web3.eth.personal.sign',
       signedMessage: messageToSign,
       address: recoveredAddress,
     };
+
+    await this.storage.set(newAuthSig);
+
+    return newAuthSig;
   }
 
   private async ensureLitConnection() {
