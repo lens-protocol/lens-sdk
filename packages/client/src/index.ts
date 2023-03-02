@@ -1,5 +1,7 @@
 import { LensClient } from './LensClient';
 
+export { PromiseResult, Result } from '@lens-protocol/shared-kernel';
+
 export { polygon, mumbai } from './consts/environments';
 export * from './authentication';
 export * from './consts/config';

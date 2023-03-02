@@ -20,6 +20,7 @@ import {
   CreateSetDefaultProfileRequest,
   CreateSetFollowModuleRequest,
   CreateSetFollowNftUriRequest,
+  DismissRecommendedProfilesRequest,
   DoesFollowRequest,
   DoesFollowResponse,
   FollowerNftOwnedTokenIds,
@@ -30,6 +31,7 @@ import {
   MutualFollowersProfilesQueryRequest,
   PendingApprovalFollowsRequest,
   ProfileQueryRequest,
+  RecommendedProfileOptions,
   RemoveProfileInterestsRequest,
   SetDispatcherRequest,
   SingleProfileQueryRequest,
@@ -104,12 +106,24 @@ export class Profile {
     }, request);
   }
 
-  async allRecommended(observerId?: string): Promise<ProfileFragment[]> {
+  async allRecommended(
+    options: RecommendedProfileOptions = {},
+    observerId?: string,
+  ): Promise<ProfileFragment[]> {
     const result = await this.sdk.RecommendedProfiles({
+      options,
       observerId,
     });
 
     return result.data.result;
+  }
+
+  async dismissRecommended(
+    request: DismissRecommendedProfilesRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return execute(this.authentication, async (headers) => {
+      await this.sdk.DismissRecommendedProfiles({ request }, headers);
+    });
   }
 
   async mutualFollowers(

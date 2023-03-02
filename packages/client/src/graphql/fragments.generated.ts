@@ -76,7 +76,6 @@ export type ProfileFragment = {
 };
 
 export type Eip712TypedDataDomainFragment = {
-  __typename: 'EIP712TypedDataDomain';
   name: string;
   chainId: number;
   version: string;
@@ -384,7 +383,6 @@ export type RelayErrorFragment = { __typename: 'RelayError'; reason: Types.Relay
 
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    __typename
     name
     chainId
     version

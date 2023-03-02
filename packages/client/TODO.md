@@ -60,9 +60,11 @@ Client manages the token lifecycle and storage
 
 - [x] [Q] client.profile.fetch(request)
 - [x] [PQ] client.profile.fetchAll(request)
-- [x] [Q] client.profile.allRecommended()
 - [x] [PQ] client.profile.mutualFollowers({ viewingProfileId, yourProfileId })
 - [x] [Q] client.profile.stats(request)
+
+- [x] [Q] client.profile.allRecommended()
+- [x] [AM] client.profile.dismissRecommended(request)
 
 ### Edit profile
 

@@ -4,13 +4,16 @@
   "private": true,
   "description": "",
   "scripts": {
-    "dev": "ts-node ./index.ts"
+    "dev": "ts-node ./index.ts",
+    "ts-node": "ts-node"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lens-protocol/client": "workspace:*"
+    "@lens-protocol/client": "workspace:*",
+    "dotenv": "^16.0.3",
+    "ethers": "^5.7.2"
   },
   "devDependencies": {
     "@types/node": "^18.14.0",
