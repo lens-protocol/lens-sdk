@@ -16,21 +16,21 @@ import {
   ProfileFragmentDoc,
 } from '../../graphql';
 import {
-  mockAddressOwnershipAccessConditionOutput,
-  mockAndAccessConditionOutput,
+  mockEoaOwnershipAccessCondition,
+  mockAndAccessCondition,
   mockAttributeFragment,
-  mockCollectConditionAccessConditionOutput,
+  mockCollectConditionAccessCondition,
   mockCommentFragment,
   mockEncryptionParamsFragment,
-  mockErc20OwnershipAccessConditionOutput,
-  mockFollowConditionAccessConditionOutput,
+  mockErc20OwnershipAccessCondition,
+  mockFollowConditionAccessCondition,
   mockMetadataFragment,
-  mockNftOwnershipAccessConditionOutput,
-  mockOrAccessConditionOutput,
+  mockNftOwnershipAccessCondition,
+  mockOrAccessCondition,
   mockPendingTransactionState,
   mockPostFragment,
   mockProfileFragment,
-  mockProfileOwnershipAccessConditionOutput,
+  mockProfileOwnershipAccessCondition,
 } from '../../mocks';
 import { createApolloCache } from '../createApolloCache';
 import { erc20Amount } from '../decryptionCriteria';
@@ -61,7 +61,7 @@ function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}
           id: cache.identify(publication),
           fragment: typeToFragmentMap[publication.__typename],
           fragmentName: publication.__typename,
-        }) ?? never()
+        }) ?? never('cannot read publication')
       );
     },
 
@@ -79,7 +79,7 @@ function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}
           fragment: ProfileFragmentDoc,
           fragmentName: 'Profile',
           id: cache.identify(profile),
-        }) ?? never()
+        }) ?? never('cannot read profile')
       );
     },
   };
@@ -114,12 +114,12 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
     describe(`for a token-gated "${typename}"`, () => {
       const author = mockProfileFragment();
 
-      const nftCondition = mockNftOwnershipAccessConditionOutput();
-      const erc20Condition = mockErc20OwnershipAccessConditionOutput();
-      const eoaCondition = mockAddressOwnershipAccessConditionOutput();
-      const profileCondition = mockProfileOwnershipAccessConditionOutput();
-      const followCondition = mockFollowConditionAccessConditionOutput();
-      const collectCondition = mockCollectConditionAccessConditionOutput();
+      const nftCondition = mockNftOwnershipAccessCondition();
+      const erc20Condition = mockErc20OwnershipAccessCondition();
+      const eoaCondition = mockEoaOwnershipAccessCondition();
+      const profileCondition = mockProfileOwnershipAccessCondition();
+      const followCondition = mockFollowConditionAccessCondition();
+      const collectCondition = mockCollectConditionAccessCondition();
 
       describe.each([
         {
@@ -176,7 +176,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
         },
         {
           description: 'with some criteria in AND condition',
-          criterion: mockAndAccessConditionOutput([followCondition, collectCondition]),
+          criterion: mockAndAccessCondition([followCondition, collectCondition]),
           expectations: {
             type: DecryptionCriteriaType.AND,
             and: [
@@ -193,7 +193,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
         },
         {
           description: 'with some criteria in OR condition',
-          criterion: mockOrAccessConditionOutput([followCondition, collectCondition]),
+          criterion: mockOrAccessCondition([followCondition, collectCondition]),
           expectations: {
             type: DecryptionCriteriaType.OR,
             or: [
@@ -232,7 +232,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
       });
 
       describe('with a Collect access condition for the current publication', () => {
-        const criterion = mockCollectConditionAccessConditionOutput({
+        const criterion = mockCollectConditionAccessCondition({
           publicationId: null,
           thisPublication: true,
         });

@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber';
+import { CollectConditionInput } from '@lens-protocol/api-bindings';
 import { invariant, isNonNullable } from '@lens-protocol/shared-kernel';
 
 import { EnvironmentConfig } from '../environments';
 import {
-  CollectCondition,
   LitConditionType,
   LitEvmAccessCondition,
   LitKnownMethods,
@@ -14,7 +14,7 @@ import { toLitSupportedChainName } from './utils';
 import { assertValidPublicationId } from './validators';
 
 export const transformCollectCondition = (
-  condition: CollectCondition,
+  condition: CollectConditionInput,
   env: EnvironmentConfig,
 ): Array<LitEvmAccessCondition> => {
   invariant(isNonNullable(condition.publicationId), 'publicationId is missing');

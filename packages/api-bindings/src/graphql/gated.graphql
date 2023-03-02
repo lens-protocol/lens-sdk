@@ -76,7 +76,7 @@ fragment AndCriterion on AndConditionOutput {
   }
 }
 
-fragment RootCriterion on AccessConditionOutput {
+fragment AnyCriterion on AccessConditionOutput {
   __typename
   ...LeafCriterion
 
@@ -89,37 +89,53 @@ fragment RootCriterion on AccessConditionOutput {
   }
 }
 
-fragment AccessCondition on AccessConditionOutput {
+fragment RootCriterion on AccessConditionOutput {
   __typename
   or {
     criteria {
-      ...RootCriterion
+      ...AnyCriterion
     }
   }
 }
 
 fragment EncryptedMedia on EncryptedMedia {
   __typename
-  url
+  altTag
+  cover
   mimeType
+  url
+}
+
+fragment EncryptedMediaSet on EncryptedMediaSet {
+  __typename
+  original {
+    ...EncryptedMedia
+  }
+}
+
+fragment EncryptedFields on EncryptedFieldsOutput {
+  __typename
+  animation_url
+  content
+  external_url
+  image
+  media {
+    original {
+      ...EncryptedMedia
+    }
+  }
 }
 
 fragment EncryptionParams on EncryptionParamsOutput {
   __typename
   accessCondition {
-    ...AccessCondition
+    ...RootCriterion
   }
   encryptionProvider
   encryptedFields {
-    __typename
-    animation_url
-    content
-    external_url
-    image
-    media {
-      original {
-        ...EncryptedMedia
-      }
-    }
+    ...EncryptedFields
+  }
+  providerSpecificParams {
+    encryptionKey
   }
 }

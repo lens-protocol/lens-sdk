@@ -1,7 +1,13 @@
-import { Maybe } from '@lens-protocol/api-bindings';
-import { InvariantError, isNonNullable, never } from '@lens-protocol/shared-kernel';
+import {
+  AccessCondition,
+  AnyCriterionFragment,
+  LeafCriterionFragment,
+} from '@lens-protocol/api-bindings';
+import { InvariantError, isNonNullable, never, UnknownObject } from '@lens-protocol/shared-kernel';
+import { UnifiedAccessControlConditions } from '@lit-protocol/constants';
 
 import { EnvironmentConfig } from '../environments';
+import { Entry } from '../types';
 import { transformCollectCondition } from './collect-condition';
 import { transformEoaCondition } from './eoa-condition';
 import { transformErc20Condition } from './erc20-condition';
@@ -9,9 +15,7 @@ import { transformFollowCondition } from './follow-condition';
 import { transformNftCondition } from './nft-condition';
 import { transformProfileCondition } from './profile-condition';
 import {
-  AccessCondition,
   AccessConditionType,
-  CollectCondition,
   isAccessConditionType,
   LitAccessControlCondition,
   LitNestedAccessControlCondition,
@@ -23,19 +27,9 @@ import {
   InvalidAccessCriteriaError,
 } from './validators';
 
-type UnwrapMaybe<T extends Maybe<unknown>> = T extends Maybe<infer V> ? NonNullable<V> : never;
-
-type KeyValuePairs<T> = {
-  [K in keyof T]: T[K] extends null | undefined ? never : [K, UnwrapMaybe<T[K]>];
-};
-
-type Values<T> = T extends { [s: string]: infer V } ? V[] : never;
-
-type Entry<T> = Values<KeyValuePairs<T>>[number];
-
-function extractConditionEntry<T extends AccessCondition>(condition: T): Entry<T> {
+function extractConditionEntry<T extends UnknownObject>(condition: T): Entry<T> {
   for (const key in condition) {
-    if (isAccessConditionType(key) && isNonNullable(condition[key as keyof AccessCondition])) {
+    if (isAccessConditionType(key) && isNonNullable(condition[key as keyof T])) {
       return [key, condition[key] ?? never()];
     }
   }
@@ -56,7 +50,7 @@ function flatten<T>(conditions: T[]): T[] {
 }
 
 function transformSimpleCondition(
-  [type, value]: Entry<AccessCondition>,
+  [type, value]: Entry<LeafCriterionFragment>,
   env: EnvironmentConfig,
 ): LitNestedAccessControlCondition<LitAccessControlCondition> {
   switch (type) {
@@ -69,7 +63,7 @@ function transformSimpleCondition(
     case AccessConditionType.Profile:
       return transformProfileCondition(value, env);
     case AccessConditionType.Collect:
-      return transformCollectCondition(value as CollectCondition, env);
+      return transformCollectCondition(value, env);
     case AccessConditionType.Follow:
       return transformFollowCondition(value, env);
     default:
@@ -78,7 +72,7 @@ function transformSimpleCondition(
 }
 
 function transformCompoundCondition(
-  entry: Entry<AccessCondition>,
+  entry: Entry<AnyCriterionFragment>,
   env: EnvironmentConfig,
 ): LitNestedAccessControlCondition<LitAccessControlCondition> {
   const [type, value] = entry;
@@ -107,7 +101,7 @@ function transformCompoundCondition(
 export function transform(
   condition: AccessCondition,
   env: EnvironmentConfig,
-): LitNestedAccessControlCondition<LitAccessControlCondition> {
+): UnifiedAccessControlConditions {
   const [type, value] = extractConditionEntry(condition);
 
   if (type !== AccessConditionType.Or) {
@@ -130,6 +124,14 @@ export function transform(
     throw new InvalidAccessCriteriaError('Root conditions must contain a profile condition');
   }
 
-  const flat = flatten(rootEntries.map((entry) => transformCompoundCondition(entry, env)));
-  return insertObjectInBetweenArrayElements(flat, { operator: AccessConditionType.Or });
+  const flat = flatten(
+    rootEntries.map((entry) =>
+      transformCompoundCondition(entry as Entry<AnyCriterionFragment>, env),
+    ),
+  );
+
+  // the type assertion is needed because the Lit SDK typedef suggests nested conditions are not allowed but they are
+  return insertObjectInBetweenArrayElements(flat, {
+    operator: AccessConditionType.Or,
+  }) as UnifiedAccessControlConditions;
 }

@@ -6,6 +6,7 @@ import type {
 } from '@lens-protocol/domain/entities';
 import type { EthereumAddress, Url } from '@lens-protocol/shared-kernel';
 import type { ClientErc20Amount } from './ClientErc20Amount';
+import type { ContentEncryptionKey } from './ContentEncryptionKey';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from './FollowPolicy';
 import type { FollowStatus } from './FollowStatus';
@@ -38,7 +39,7 @@ export type Scalars = {
   CollectModuleData: unknown;
   CollectPolicy: CollectPolicy;
   /** ContentEncryptionKey scalar type */
-  ContentEncryptionKey: unknown;
+  ContentEncryptionKey: ContentEncryptionKey;
   /** Contract address custom scalar type */
   ContractAddress: string;
   /** create handle custom scalar type */
@@ -4372,16 +4373,24 @@ export type WalletFragment = {
   defaultProfile: ProfileFragment | null;
 };
 
-export type MediaFragment = { __typename: 'Media'; url: Url; mimeType: string | null };
+export type MediaFragment = {
+  __typename: 'Media';
+  altTag: string | null;
+  cover: Url | null;
+  mimeType: string | null;
+  url: Url;
+};
 
 export type MediaSetFragment = { __typename: 'MediaSet'; original: MediaFragment };
 
 export type MetadataFragment = {
   __typename: 'MetadataOutput';
+  animatedUrl: Url | null;
   name: string | null;
   description: string | null;
   mainContentFocus: PublicationMainFocus;
   content: string | null;
+  image: Url | null;
   media: Array<MediaSetFragment>;
   attributes: Array<MetadataAttributeOutputFragment>;
   __encryptionParams: EncryptionParamsFragment | null;
@@ -4637,35 +4646,45 @@ export type AndCriterionFragment = {
   criteria: Array<LeafCriterionFragment>;
 };
 
-export type RootCriterionFragment = {
+export type AnyCriterionFragment = {
   __typename: 'AccessConditionOutput';
   or: OrCriterionFragment | null;
   and: AndCriterionFragment | null;
 } & LeafCriterionFragment;
 
-export type AccessConditionFragment = {
+export type RootCriterionFragment = {
   __typename: 'AccessConditionOutput';
-  or: { criteria: Array<RootCriterionFragment> } | null;
+  or: { criteria: Array<AnyCriterionFragment> } | null;
 };
 
 export type EncryptedMediaFragment = {
   __typename: 'EncryptedMedia';
-  url: Url;
+  altTag: string | null;
+  cover: string | null;
   mimeType: string | null;
+  url: Url;
+};
+
+export type EncryptedMediaSetFragment = {
+  __typename: 'EncryptedMediaSet';
+  original: EncryptedMediaFragment;
+};
+
+export type EncryptedFieldsFragment = {
+  __typename: 'EncryptedFieldsOutput';
+  animation_url: string | null;
+  content: string | null;
+  external_url: string | null;
+  image: string | null;
+  media: Array<{ original: EncryptedMediaFragment }> | null;
 };
 
 export type EncryptionParamsFragment = {
   __typename: 'EncryptionParamsOutput';
   encryptionProvider: EncryptionProvider;
-  accessCondition: AccessConditionFragment;
-  encryptedFields: {
-    __typename: 'EncryptedFieldsOutput';
-    animation_url: string | null;
-    content: string | null;
-    external_url: string | null;
-    image: string | null;
-    media: Array<{ original: EncryptedMediaFragment }> | null;
-  };
+  accessCondition: RootCriterionFragment;
+  encryptedFields: EncryptedFieldsFragment;
+  providerSpecificParams: { encryptionKey: ContentEncryptionKey };
 };
 
 export type CreateMirrorTypedDataMutationVariables = Exact<{
@@ -5421,8 +5440,10 @@ export const PublicationStatsFragmentDoc = gql`
 export const MediaFragmentDoc = gql`
   fragment Media on Media {
     __typename
-    url
+    altTag
+    cover
     mimeType
+    url
   }
 `;
 export const MediaSetFragmentDoc = gql`
@@ -5532,8 +5553,8 @@ export const AndCriterionFragmentDoc = gql`
   }
   ${LeafCriterionFragmentDoc}
 `;
-export const RootCriterionFragmentDoc = gql`
-  fragment RootCriterion on AccessConditionOutput {
+export const AnyCriterionFragmentDoc = gql`
+  fragment AnyCriterion on AccessConditionOutput {
     __typename
     ...LeafCriterion
     or {
@@ -5547,54 +5568,67 @@ export const RootCriterionFragmentDoc = gql`
   ${OrCriterionFragmentDoc}
   ${AndCriterionFragmentDoc}
 `;
-export const AccessConditionFragmentDoc = gql`
-  fragment AccessCondition on AccessConditionOutput {
+export const RootCriterionFragmentDoc = gql`
+  fragment RootCriterion on AccessConditionOutput {
     __typename
     or {
       criteria {
-        ...RootCriterion
+        ...AnyCriterion
       }
     }
   }
-  ${RootCriterionFragmentDoc}
+  ${AnyCriterionFragmentDoc}
 `;
 export const EncryptedMediaFragmentDoc = gql`
   fragment EncryptedMedia on EncryptedMedia {
     __typename
-    url
+    altTag
+    cover
     mimeType
+    url
   }
+`;
+export const EncryptedFieldsFragmentDoc = gql`
+  fragment EncryptedFields on EncryptedFieldsOutput {
+    __typename
+    animation_url
+    content
+    external_url
+    image
+    media {
+      original {
+        ...EncryptedMedia
+      }
+    }
+  }
+  ${EncryptedMediaFragmentDoc}
 `;
 export const EncryptionParamsFragmentDoc = gql`
   fragment EncryptionParams on EncryptionParamsOutput {
     __typename
     accessCondition {
-      ...AccessCondition
+      ...RootCriterion
     }
     encryptionProvider
     encryptedFields {
-      __typename
-      animation_url
-      content
-      external_url
-      image
-      media {
-        original {
-          ...EncryptedMedia
-        }
-      }
+      ...EncryptedFields
+    }
+    providerSpecificParams {
+      encryptionKey
     }
   }
-  ${AccessConditionFragmentDoc}
-  ${EncryptedMediaFragmentDoc}
+  ${RootCriterionFragmentDoc}
+  ${EncryptedFieldsFragmentDoc}
 `;
 export const MetadataFragmentDoc = gql`
   fragment Metadata on MetadataOutput {
     __typename
+    animatedUrl
     name
     description
     mainContentFocus
     content
+    image
     media {
       ...MediaSet
     }
@@ -6084,6 +6118,15 @@ export const FeedItemFragmentDoc = gql`
   }
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
+`;
+export const EncryptedMediaSetFragmentDoc = gql`
+  fragment EncryptedMediaSet on EncryptedMediaSet {
+    __typename
+    original {
+      ...EncryptedMedia
+    }
+  }
+  ${EncryptedMediaFragmentDoc}
 `;
 export const ModuleInfoFragmentDoc = gql`
   fragment ModuleInfo on ModuleInfo {

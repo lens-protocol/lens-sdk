@@ -1,16 +1,4 @@
-import {
-  AndConditionInput,
-  CollectConditionInput,
-  ContractType,
-  EoaOwnershipInput,
-  Erc20OwnershipInput,
-  FollowConditionInput,
-  InputMaybe,
-  NftOwnershipInput,
-  OrConditionInput,
-  ProfileOwnershipInput,
-} from '@lens-protocol/api-bindings';
-import { PublicationId } from '@lens-protocol/domain/entities';
+import { ContractType } from '@lens-protocol/api-bindings';
 import { ConditionType } from '@lit-protocol/constants';
 
 export enum AccessConditionType {
@@ -29,23 +17,6 @@ const SUPPORTED_ACCESS_CONDITION_KEYS = Object.values(AccessConditionType);
 export function isAccessConditionType(key: string | symbol | number): key is AccessConditionType {
   return SUPPORTED_ACCESS_CONDITION_KEYS.includes(key as AccessConditionType);
 }
-
-export type CollectCondition = {
-  publicationId: PublicationId;
-  thisPublication?: InputMaybe<boolean>;
-};
-
-// TODO: use CollectCondition instead of CollectConditionInput
-export type AccessCondition = {
-  and?: InputMaybe<AndConditionInput>;
-  collect?: InputMaybe<CollectConditionInput>;
-  eoa?: InputMaybe<EoaOwnershipInput>;
-  follow?: InputMaybe<FollowConditionInput>;
-  nft?: InputMaybe<NftOwnershipInput>;
-  or?: InputMaybe<OrConditionInput>;
-  profile?: InputMaybe<ProfileOwnershipInput>;
-  token?: InputMaybe<Erc20OwnershipInput>;
-};
 
 export enum LitScalarOperator {
   EQUAL = '=',

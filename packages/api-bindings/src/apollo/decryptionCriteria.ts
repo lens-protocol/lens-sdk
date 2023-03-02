@@ -45,13 +45,13 @@ import {
   OrConditionOutput,
   Post,
   ProfileOwnershipOutput,
-  RootCriterionFragment,
+  AnyCriterionFragment,
   ScalarOperator,
 } from '../graphql';
 import { FieldReadFunction } from './TypePolicy';
 
 function allButPublicationAuthor(authorId: ProfileId) {
-  return (criterion: RootCriterionFragment): boolean => {
+  return (criterion: AnyCriterionFragment): boolean => {
     return criterion.profile?.profileId !== authorId;
   };
 }

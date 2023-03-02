@@ -1,14 +1,34 @@
 import { DeepOmit, Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 
-import type { EncryptionParamsOutput, PublicationMetadataV2Input } from './graphql';
+import type {
+  DeepOmitTypename,
+  EncryptionParamsOutput,
+  PublicationMetadataV2Input,
+  RootCriterionFragment,
+} from './graphql';
 
 export type PublicationMetadata = Prettify<
   Overwrite<PublicationMetadataV2Input, { version: '2.0.0' }>
 >;
 
-type EncryptionParams = DeepOmit<EncryptionParamsOutput, '__typename'>;
+export type AccessCondition = DeepOmitTypename<RootCriterionFragment>;
 
-export type EncryptedPublicationMetadata = Prettify<
+export type EncryptedFields = Pick<
+  PublicationMetadata,
+  'animation_url' | 'content' | 'external_url' | 'image' | 'media'
+>;
+
+type EncryptionParams = Prettify<
+  Overwrite<
+    DeepOmit<EncryptionParamsOutput, '__typename'>,
+    {
+      accessCondition: AccessCondition;
+      encryptedFields: EncryptedFields;
+    }
+  >
+>;
+
+export type GatedPublicationMetadata = Prettify<
   Overwrite<
     PublicationMetadata,
     {

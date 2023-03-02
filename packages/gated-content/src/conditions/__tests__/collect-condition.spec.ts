@@ -3,11 +3,10 @@ import { InvariantError } from '@lens-protocol/shared-kernel';
 import { BigNumber } from 'ethers';
 
 import { testing } from '../../__helpers__/env';
-import { mockCollectCondition } from '../__helpers__/mocks';
+import { mockCollectConditionInput } from '../__helpers__/mocks';
 import { transformCollectCondition } from '../collect-condition';
 import { transform } from '../index';
 import {
-  CollectCondition,
   LitConditionType,
   LitKnownMethods,
   LitKnownParams,
@@ -21,7 +20,7 @@ describe(`Given the "${transform.name}" function`, () => {
     const publicationId = mockPublicationId();
 
     it('should return the expected Lit AccessControlCondition for a given publication Id', () => {
-      const condition = mockCollectCondition({ publicationId });
+      const condition = mockCollectConditionInput({ publicationId });
 
       const actual = transformCollectCondition(condition, testing);
 
@@ -88,20 +87,23 @@ describe(`Given the "${transform.name}" function`, () => {
     it.each([
       {
         description: 'if with invalid publication Id',
-        condition: mockCollectCondition({
+        condition: mockCollectConditionInput({
           publicationId: 'a',
         }),
         expectedErrorCtor: InvalidAccessCriteriaError,
       },
       {
-        description: 'if with invalid input',
-        condition: mockCollectCondition({
+        description: 'if with missing publication Id',
+        condition: mockCollectConditionInput({
           thisPublication: null,
-        } as CollectCondition),
+        }),
         expectedErrorCtor: InvariantError,
       },
-    ])(`should throw an $expectedErrorCtor.name`, ({ condition, expectedErrorCtor }) => {
-      expect(() => transformCollectCondition(condition, testing)).toThrow(expectedErrorCtor);
-    });
+    ])(
+      `should throw an $expectedErrorCtor.name $description`,
+      ({ condition, expectedErrorCtor }) => {
+        expect(() => transformCollectCondition(condition, testing)).toThrow(expectedErrorCtor);
+      },
+    );
   });
 });

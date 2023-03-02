@@ -374,6 +374,7 @@ importers:
       '@lens-protocol/shared-kernel': workspace:*
       '@lens-protocol/storage': workspace:*
       '@lit-protocol/constants': ^2.1.42
+      '@lit-protocol/crypto': ^2.1.43
       '@lit-protocol/lit-node-client': ^2.1.42
       '@types/jest': 29.2.3
       '@types/jest-when': ^3.5.2
@@ -398,6 +399,7 @@ importers:
       '@lens-protocol/shared-kernel': link:../shared-kernel
       '@lens-protocol/storage': link:../storage
       '@lit-protocol/constants': 2.1.42
+      '@lit-protocol/crypto': 2.1.43
       '@lit-protocol/lit-node-client': 2.1.42_tncu2ai53lzgmizdedur7lbibe
       siwe: 1.1.6_ethers@5.7.2
       tslib: 2.5.0
@@ -4232,8 +4234,16 @@ packages:
     resolution: {integrity: sha512-ml/O2YHL/FW0NBqq87JHDn9qACPBsmDmPiXIp9djEao9HLz91bBLY0WmYwvYkJ+N2scHQIzI7lRQFOxujaLz3A==}
     dev: false
 
+  /@lit-protocol/bls-sdk/2.1.43:
+    resolution: {integrity: sha512-Qc6Ht9uj5DwwnFIgfWabhm2Z3J1lX3igzQbariIQ/iZcIdubyWdzVBTjDJcgzCroXPnHtJ7muIUxgO7W7i/FRQ==}
+    dev: false
+
   /@lit-protocol/constants/2.1.42:
     resolution: {integrity: sha512-6ewWmRkKtABpj+0gN3k5Wry7/TEIT+E42ZugQY+SmNjhAwV/ueJFHycNtF0Wlka4QnHEZLL/YhCRWp9UsrM0vg==}
+    dev: false
+
+  /@lit-protocol/constants/2.1.43:
+    resolution: {integrity: sha512-fkQRnxnKF6F3i8pwL+omr1OuZjRxodqgD8gHIQ/lu72cQIrmybDIxA17BngCp8L8VE6X5Vltgm2Z7jtBaNrcwA==}
     dev: false
 
   /@lit-protocol/crypto/2.1.42:
@@ -4252,8 +4262,28 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@lit-protocol/crypto/2.1.43:
+    resolution: {integrity: sha512-/WY8y8hUXKgaE2SWEV/j3sBLJHxVGPAGCIfQvBqL146f5GHDE69hvEhvxbGBjPkNlcRcuXScZmHaP8It1bqlHg==}
+    dependencies:
+      '@lit-protocol/bls-sdk': 2.1.43
+      '@lit-protocol/constants': 2.1.43
+      '@lit-protocol/ecdsa-sdk': 2.1.43
+      '@lit-protocol/misc': 2.1.43
+      '@lit-protocol/nacl': 2.1.43
+      '@lit-protocol/uint8arrays': 2.1.43
+      ethers: 5.7.2
+      tslib: 2.5.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
   /@lit-protocol/ecdsa-sdk/2.1.42:
     resolution: {integrity: sha512-zjLZj1ZZTHwvKTSj9ohTEz/DVjpfgppIh+dbOA/x49x+Jfe4MjMfZOnKL7xX74sd9JOnWaIEBeQbkldQuqy0ZQ==}
+    dev: false
+
+  /@lit-protocol/ecdsa-sdk/2.1.43:
+    resolution: {integrity: sha512-VVoNXmd9zM9b4YGiotj2FCCHxn6D5NzTYVbekA9mpRsH2AKxKi9Nl86TiWmunmMYErfngnMJo2AT35CLZzk8sg==}
     dev: false
 
   /@lit-protocol/encryption/2.1.42:
@@ -4340,12 +4370,27 @@ packages:
       tslib: 2.5.0
     dev: false
 
+  /@lit-protocol/misc/2.1.43:
+    resolution: {integrity: sha512-+l6QA/5FSrbaocx+8xjSm7hitjX0pm3UqS5B149vImHdnYPgzW3ARBGYW17oneSZ0aOvFN4+Aif0zARVyK24VA==}
+    dependencies:
+      '@lit-protocol/constants': 2.1.43
+      tslib: 2.5.0
+    dev: false
+
   /@lit-protocol/nacl/2.1.42:
     resolution: {integrity: sha512-diNPKyBMSfTNANZB7z88U9/mxhQhJ13YPQ8/JyHECEXcBT+XQulLNX9/v7fFWbukUqbmYxIKTNWPr9NgXvh4Yg==}
     dev: false
 
+  /@lit-protocol/nacl/2.1.43:
+    resolution: {integrity: sha512-gnoRA9M4piXK4/oI7fEL2DBFOce4i9qrq9b2K+UErttW0vn0G61iwnvceDB/UnZP9S5SErFH34KA0BqRopfUOQ==}
+    dev: false
+
   /@lit-protocol/uint8arrays/2.1.42:
     resolution: {integrity: sha512-wq29R67B1CWaZdZhCO45E7oVRcuc3PWgMYEF7oScjEoIaljwXINv823jTG6WI3WZoD39OEAmUF6FsIIm+t1hSA==}
+    dev: false
+
+  /@lit-protocol/uint8arrays/2.1.43:
+    resolution: {integrity: sha512-XTnFf04hrTfk73Yn7WTS4oPl3wRJhX3rWI5+5oMiH7yjajWOuUidrhOMRyQmo2WnaSYocNyf+4B8nq/ivGrSGQ==}
     dev: false
 
   /@lit/reactive-element/1.6.1:
