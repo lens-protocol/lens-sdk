@@ -26,7 +26,7 @@ const nftOwnershipCriterion = mockNftOwnershipCriterion({
   contractType: NftContractType.Erc1155,
 });
 
-describe(`Given the ${createAccessCondition.name} helper`, () => {
+describe(`Given the "${createAccessCondition.name}" helper`, () => {
   describe(`when called with a fully qualified decryption criteria`, () => {
     it(`should return the expected access condition using nested OR`, () => {
       const criteria = mockOrCriterion([
@@ -47,26 +47,26 @@ describe(`Given the ${createAccessCondition.name} helper`, () => {
       expect(actual).toMatchObject({
         or: {
           criteria: [
-            expect.objectContaining({
+            {
               profile: {
                 profileId: criteria.or[0].profileId,
               },
-            }),
-            expect.objectContaining({
+            },
+            {
               or: {
                 criteria: [
-                  expect.objectContaining({
+                  {
                     eoa: {
                       address: addressOwnershipCriterion.address,
                     },
-                  }),
-                  expect.objectContaining({
+                  },
+                  {
                     collect: {
                       publicationId: collectThisPublicationCriterion.publicationId,
                       thisPublication: true,
                     },
-                  }),
-                  expect.objectContaining({
+                  },
+                  {
                     token: {
                       amount: erc20OwnershipCriterion.amount
                         .toBigDecimal()
@@ -78,23 +78,23 @@ describe(`Given the ${createAccessCondition.name} helper`, () => {
                       decimals: erc20OwnershipCriterion.amount.asset.decimals,
                       condition: ScalarOperator.Equal,
                     },
-                  }),
-                  expect.objectContaining({
+                  },
+                  {
                     follow: {
                       profileId: followProfileCriterion.profileId,
                     },
-                  }),
-                  expect.objectContaining({
+                  },
+                  {
                     nft: {
                       chainID: nftOwnershipCriterion.chainId,
                       contractAddress: nftOwnershipCriterion.contractAddress,
                       contractType: ContractType.Erc1155,
                       tokenIds: nftOwnershipCriterion.tokenIds ?? null,
                     },
-                  }),
+                  },
                 ],
               },
-            }),
+            },
           ],
         },
       });
@@ -119,26 +119,26 @@ describe(`Given the ${createAccessCondition.name} helper`, () => {
       expect(actual).toMatchObject({
         or: {
           criteria: [
-            expect.objectContaining({
+            {
               profile: {
                 profileId: criteria.or[0].profileId,
               },
-            }),
-            expect.objectContaining({
+            },
+            {
               and: {
                 criteria: [
-                  expect.objectContaining({
+                  {
                     eoa: {
                       address: addressOwnershipCriterion.address,
                     },
-                  }),
-                  expect.objectContaining({
+                  },
+                  {
                     collect: {
                       publicationId: collectPublicationCriterion.publicationId,
                       thisPublication: false,
                     },
-                  }),
-                  expect.objectContaining({
+                  },
+                  {
                     token: {
                       amount: erc20OwnershipCriterion.amount
                         .toBigDecimal()
@@ -150,23 +150,23 @@ describe(`Given the ${createAccessCondition.name} helper`, () => {
                       decimals: erc20OwnershipCriterion.amount.asset.decimals,
                       condition: ScalarOperator.Equal,
                     },
-                  }),
-                  expect.objectContaining({
+                  },
+                  {
                     follow: {
                       profileId: followProfileCriterion.profileId,
                     },
-                  }),
-                  expect.objectContaining({
+                  },
+                  {
                     nft: {
                       chainID: nftOwnershipCriterion.chainId,
                       contractAddress: nftOwnershipCriterion.contractAddress,
                       contractType: ContractType.Erc1155,
                       tokenIds: nftOwnershipCriterion.tokenIds ?? null,
                     },
-                  }),
+                  },
                 ],
               },
-            }),
+            },
           ],
         },
       });

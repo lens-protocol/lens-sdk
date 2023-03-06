@@ -1,9 +1,10 @@
 import {
   AccessCondition,
-  AnyConditionFragment,
+  AndCondition,
+  AnyCondition,
   ContractType,
-  DeepOmitTypename,
-  LeafConditionFragment,
+  LeafCondition,
+  OrCondition,
   ScalarOperator,
 } from '@lens-protocol/api-bindings';
 import {
@@ -55,7 +56,7 @@ function toScalarOperator(operator: Erc20ComparisonOperator): ScalarOperator {
 function transformSimpleCriterion(
   criterion: SimpleCriterion,
   chains: ChainConfigRegistry,
-): DeepOmitTypename<AnyConditionFragment> {
+): LeafCondition {
   switch (criterion.type) {
     case DecryptionCriteriaType.NFT_OWNERSHIP:
       return {
@@ -65,13 +66,6 @@ function transformSimpleCriterion(
           contractType: toContractType(criterion.contractType),
           tokenIds: criterion.tokenIds ?? null,
         },
-        and: null,
-        collect: null,
-        eoa: null,
-        follow: null,
-        or: null,
-        profile: null,
-        token: null,
       };
     case DecryptionCriteriaType.ERC20_OWNERSHIP:
       return {
@@ -85,52 +79,24 @@ function transformSimpleCriterion(
           decimals: criterion.amount.asset.decimals,
           condition: toScalarOperator(criterion.condition),
         },
-        and: null,
-        collect: null,
-        eoa: null,
-        follow: null,
-        nft: null,
-        or: null,
-        profile: null,
       };
     case DecryptionCriteriaType.ADDRESS_OWNERSHIP:
       return {
         eoa: {
           address: criterion.address,
         },
-        and: null,
-        collect: null,
-        follow: null,
-        nft: null,
-        or: null,
-        profile: null,
-        token: null,
       };
     case DecryptionCriteriaType.PROFILE_OWNERSHIP:
       return {
         profile: {
           profileId: criterion.profileId,
         },
-        and: null,
-        collect: null,
-        eoa: null,
-        follow: null,
-        nft: null,
-        or: null,
-        token: null,
       };
     case DecryptionCriteriaType.FOLLOW_PROFILE:
       return {
         follow: {
           profileId: criterion.profileId,
         },
-        and: null,
-        collect: null,
-        eoa: null,
-        nft: null,
-        or: null,
-        profile: null,
-        token: null,
       };
 
     case DecryptionCriteriaType.COLLECT_PUBLICATION:
@@ -140,57 +106,32 @@ function transformSimpleCriterion(
           publicationId: criterion.publicationId,
           thisPublication: criterion.type === DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
         },
-        and: null,
-        eoa: null,
-        follow: null,
-        nft: null,
-        or: null,
-        profile: null,
-        token: null,
       };
   }
   // fail fast if type checking is bypassed (JS integration or brute-forced TS assertion)
   assertNever(criterion, 'Unknown DecryptionCriteriaType');
 }
 
-function or(
-  criteria: DeepOmitTypename<LeafConditionFragment>[],
-): DeepOmitTypename<AnyConditionFragment> {
+function or(criteria: LeafCondition[]): OrCondition<LeafCondition> {
   return {
     or: {
       criteria,
     },
-    and: null,
-    collect: null,
-    eoa: null,
-    follow: null,
-    nft: null,
-    profile: null,
-    token: null,
   };
 }
 
-function and(
-  criteria: DeepOmitTypename<LeafConditionFragment>[],
-): DeepOmitTypename<AnyConditionFragment> {
+function and(criteria: LeafCondition[]): AndCondition<LeafCondition> {
   return {
     and: {
       criteria,
     },
-    collect: null,
-    eoa: null,
-    follow: null,
-    nft: null,
-    or: null,
-    profile: null,
-    token: null,
   };
 }
 
 function transformAnyCriterion(
   criterion: AnyCriterion<SimpleCriterion>,
   chains: ChainConfigRegistry,
-): DeepOmitTypename<AnyConditionFragment> {
+): AnyCondition {
   switch (criterion.type) {
     case DecryptionCriteriaType.AND:
       return and(criterion.and.map((c) => transformSimpleCriterion(c, chains)));

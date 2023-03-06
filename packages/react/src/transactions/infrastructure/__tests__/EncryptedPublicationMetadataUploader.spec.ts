@@ -37,24 +37,20 @@ function setupTestScenario({ uploadHandler }: { uploadHandler: MetadataUploadHan
 
 const url = faker.internet.url();
 const successfulUploadHandler = jest.fn().mockResolvedValue(url);
-// const failingUploadHandler = jest.fn().mockRejectedValue(new Error('Unknown error'));
 
 function expectedAccessCondition(request: { profileId: ProfileId }) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return expect.objectContaining({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    or: expect.objectContaining({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      criteria: expect.arrayContaining([
-        expect.objectContaining({
+  return {
+    or: {
+      criteria: [
+        {
           profile: { profileId: request.profileId },
-        }),
-        expect.objectContaining({
+        },
+        {
           eoa: { address: signer.address },
-        }),
-      ]),
-    }),
-  });
+        },
+      ],
+    },
+  };
 }
 
 function assertHasDecryptionCriteria(request: {
