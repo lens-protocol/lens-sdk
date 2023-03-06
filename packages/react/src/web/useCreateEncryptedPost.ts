@@ -5,11 +5,17 @@ import {
   useCreateEncryptedPost as useCreateEncryptedPostBase,
 } from '../transactions/useCreateEncryptedPost';
 
-export type UseCreateEncryptedPostArgs = Omit<UseCreateEncryptedPostBaseArgs, 'encryptionProvider'>;
+export type UseCreateEncryptedPostArgs = Omit<UseCreateEncryptedPostBaseArgs, 'encryption'>;
 
 export function useCreateEncryptedPost(args: UseCreateEncryptedPostArgs) {
   return useCreateEncryptedPostBase({
     ...args,
-    encryptionProvider: webCryptoProvider(),
+    encryption: {
+      authentication: {
+        domain: location.host,
+        uri: location.href,
+      },
+      provider: webCryptoProvider(),
+    },
   });
 }

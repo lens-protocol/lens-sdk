@@ -10,7 +10,7 @@ import {
   CreatePostRequest,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
-import { IEncryptionProvider } from '@lens-protocol/gated-content';
+import { AuthenticationConfig, IEncryptionProvider } from '@lens-protocol/gated-content';
 import { failure, invariant, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers';
@@ -22,12 +22,13 @@ import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import {
   CreateEncryptedPostRequest,
   EncryptedPublicationMetadataUploader,
-  EncryptedPublicationMetadataUploaderConfig,
 } from './infrastructure/EncryptedMetadataUploader';
 
 export type UseCreateEncryptedPostArgs = {
-  config: EncryptedPublicationMetadataUploaderConfig;
-  encryptionProvider: IEncryptionProvider;
+  encryption: {
+    authentication: AuthenticationConfig;
+    provider: IEncryptionProvider;
+  };
   publisher: ProfileOwnedByMeFragment;
   upload: MetadataUploadHandler;
 };
@@ -48,8 +49,7 @@ export type CreateEncryptedPostOperation = Operation<
 >;
 
 export function useCreateEncryptedPost({
-  config,
-  encryptionProvider,
+  encryption,
   publisher,
   upload,
 }: UseCreateEncryptedPostArgs): CreateEncryptedPostOperation {
@@ -80,10 +80,10 @@ export function useCreateEncryptedPost({
       );
 
       const uploader = EncryptedPublicationMetadataUploader.create({
-        config,
+        config: encryption.authentication,
         storageProvider,
         signer,
-        encryptionProvider,
+        encryptionProvider: encryption.provider,
         environment,
         upload,
       });

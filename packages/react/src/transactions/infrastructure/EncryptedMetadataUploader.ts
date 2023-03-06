@@ -35,8 +35,6 @@ export type CreateEncryptedPostRequest = WithDecryptionCriteria<CreatePostReques
 
 export type CreateEncryptedCommentRequest = WithDecryptionCriteria<CreateCommentRequest>;
 
-export type EncryptedPublicationMetadataUploaderConfig = GatedContent.AuthenticationConfig;
-
 export type EncryptedPublicationMetadataUploaderArgs = {
   config: GatedContent.AuthenticationConfig;
   encryptionProvider: GatedContent.IEncryptionProvider;

@@ -188,6 +188,7 @@ export class GatedClient {
       address: await this.signer.getAddress(),
       version: '1',
       chainId: this.environment.chainId,
+      statement: 'Lens token-gated content needs you to log-in with the https://litprotocol.com/',
       ...this.authentication,
     });
   }
