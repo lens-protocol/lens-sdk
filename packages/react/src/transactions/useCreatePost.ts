@@ -25,7 +25,10 @@ export type UseCreatePostArgs = {
 };
 
 export type CreatePostArgs = Prettify<
-  Omit<CreatePostRequest, 'kind' | 'delegate' | 'collect' | 'profileId' | 'reference'> &
+  Omit<
+    CreatePostRequest,
+    'kind' | 'delegate' | 'collect' | 'profileId' | 'reference' | 'decryptionCriteria'
+  > &
     Partial<Pick<CreatePostRequest, 'collect' | 'reference'>>
 >;
 

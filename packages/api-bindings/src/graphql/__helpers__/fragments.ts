@@ -50,14 +50,14 @@ import {
   ScalarOperator,
   WalletFragment,
   WhoReactedResultFragment,
-  AnyCriterionFragment,
-  RootCriterionFragment,
+  AnyConditionFragment,
+  RootConditionFragment,
   NftOwnershipOutput,
   Erc20OwnershipOutput,
   EoaOwnershipOutput,
   ProfileOwnershipOutput,
   FollowConditionOutput,
-  LeafCriterionFragment,
+  LeafConditionFragment,
   EncryptedFieldsFragment,
 } from '../generated';
 import { erc20Amount } from '../utils';
@@ -497,7 +497,7 @@ export function mockEnabledModulesFragment(
 
 export function mockNftOwnershipAccessCondition(
   overrides?: Partial<NftOwnershipOutput>,
-): AnyCriterionFragment {
+): AnyConditionFragment {
   return {
     __typename: 'AccessConditionOutput',
     nft: {
@@ -520,7 +520,7 @@ export function mockNftOwnershipAccessCondition(
 
 export function mockErc20OwnershipAccessCondition(
   overrides?: Partial<Erc20OwnershipOutput>,
-): AnyCriterionFragment {
+): AnyConditionFragment {
   return {
     __typename: 'AccessConditionOutput',
     token: {
@@ -544,7 +544,7 @@ export function mockErc20OwnershipAccessCondition(
 
 export function mockEoaOwnershipAccessCondition(
   overrides?: Partial<EoaOwnershipOutput>,
-): AnyCriterionFragment {
+): AnyConditionFragment {
   return {
     __typename: 'AccessConditionOutput',
     eoa: {
@@ -564,7 +564,7 @@ export function mockEoaOwnershipAccessCondition(
 
 export function mockProfileOwnershipAccessCondition(
   overrides?: Partial<ProfileOwnershipOutput>,
-): AnyCriterionFragment {
+): AnyConditionFragment {
   return {
     __typename: 'AccessConditionOutput',
     profile: {
@@ -584,7 +584,7 @@ export function mockProfileOwnershipAccessCondition(
 
 export function mockFollowConditionAccessCondition(
   overrides?: Partial<FollowConditionOutput>,
-): AnyCriterionFragment {
+): AnyConditionFragment {
   return {
     __typename: 'AccessConditionOutput',
     follow: {
@@ -607,7 +607,7 @@ export function mockCollectConditionAccessCondition(
     publicationId: mockPublicationId(),
     thisPublication: null,
   },
-): AnyCriterionFragment {
+): AnyConditionFragment {
   return {
     __typename: 'AccessConditionOutput',
     collect: {
@@ -625,8 +625,8 @@ export function mockCollectConditionAccessCondition(
 }
 
 export function mockOrAccessCondition(
-  criteria: Array<AnyCriterionFragment | LeafCriterionFragment> = [],
-): AnyCriterionFragment {
+  criteria: Array<AnyConditionFragment | LeafConditionFragment> = [],
+): AnyConditionFragment {
   return {
     __typename: 'AccessConditionOutput',
     or: { __typename: 'OrConditionOutput', criteria },
@@ -641,8 +641,8 @@ export function mockOrAccessCondition(
 }
 
 export function mockAndAccessCondition(
-  criteria: Array<AnyCriterionFragment | LeafCriterionFragment> = [],
-): AnyCriterionFragment {
+  criteria: Array<AnyConditionFragment | LeafConditionFragment> = [],
+): AnyConditionFragment {
   return {
     __typename: 'AccessConditionOutput',
     and: { __typename: 'AndConditionOutput', criteria },
@@ -658,7 +658,7 @@ export function mockAndAccessCondition(
 
 function mockPublicationOwnerAccessCondition(
   overrides?: Partial<ProfileOwnershipFragment>,
-): AnyCriterionFragment {
+): AnyConditionFragment {
   return {
     __typename: 'AccessConditionOutput',
     profile: { __typename: 'ProfileOwnershipOutput', profileId: mockProfileId(), ...overrides },
@@ -672,13 +672,13 @@ function mockPublicationOwnerAccessCondition(
   };
 }
 
-function mockRootCriterionFragment({
+function mockRootConditionFragment({
   others,
   ownerId,
 }: {
-  others: AnyCriterionFragment[];
+  others: AnyConditionFragment[];
   ownerId: ProfileId;
-}): RootCriterionFragment {
+}): RootConditionFragment {
   return {
     __typename: 'AccessConditionOutput',
     or: {
@@ -690,17 +690,17 @@ function mockRootCriterionFragment({
 export function mockEncryptionParamsFragment({
   others,
   ownerId,
-  encryptedFields,
-  encryptionKey,
+  encryptedFields = mockEncryptedFieldsFragment(),
+  encryptionKey = '0x123',
 }: {
-  others: AnyCriterionFragment[];
+  others: AnyConditionFragment[];
   ownerId: ProfileId;
-  encryptedFields: EncryptedFieldsFragment;
-  encryptionKey: ContentEncryptionKey;
+  encryptedFields?: EncryptedFieldsFragment;
+  encryptionKey?: ContentEncryptionKey;
 }): EncryptionParamsFragment {
   return {
     __typename: 'EncryptionParamsOutput',
-    accessCondition: mockRootCriterionFragment({
+    accessCondition: mockRootConditionFragment({
       others,
       ownerId,
     }),

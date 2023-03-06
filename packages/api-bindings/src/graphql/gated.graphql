@@ -36,7 +36,7 @@ fragment CollectCondition on CollectConditionOutput {
   thisPublication
 }
 
-fragment LeafCriterion on AccessConditionOutput {
+fragment LeafCondition on AccessConditionOutput {
   __typename
   nft {
     ...NftOwnership
@@ -63,37 +63,37 @@ fragment LeafCriterion on AccessConditionOutput {
   }
 }
 
-fragment OrCriterion on OrConditionOutput {
+fragment OrCondition on OrConditionOutput {
   __typename
   criteria {
-    ...LeafCriterion
+    ...LeafCondition
   }
 }
-fragment AndCriterion on AndConditionOutput {
+fragment AndCondition on AndConditionOutput {
   __typename
   criteria {
-    ...LeafCriterion
+    ...LeafCondition
   }
 }
 
-fragment AnyCriterion on AccessConditionOutput {
+fragment AnyCondition on AccessConditionOutput {
   __typename
-  ...LeafCriterion
+  ...LeafCondition
 
   or {
-    ...OrCriterion
+    ...OrCondition
   }
 
   and {
-    ...AndCriterion
+    ...AndCondition
   }
 }
 
-fragment RootCriterion on AccessConditionOutput {
+fragment RootCondition on AccessConditionOutput {
   __typename
   or {
     criteria {
-      ...AnyCriterion
+      ...AnyCondition
     }
   }
 }
@@ -129,7 +129,7 @@ fragment EncryptedFields on EncryptedFieldsOutput {
 fragment EncryptionParams on EncryptionParamsOutput {
   __typename
   accessCondition {
-    ...RootCriterion
+    ...RootCondition
   }
   encryptionProvider
   encryptedFields {

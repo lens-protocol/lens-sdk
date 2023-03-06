@@ -458,6 +458,8 @@ export type Comment = {
   onChainContentURI: Scalars['String'];
   /** The profile ref */
   profile: Profile;
+  /** Comment ranking score */
+  rankingScore: Maybe<Scalars['Float']>;
   reaction: Maybe<ReactionTypes>;
   /** The reference module */
   referenceModule: Maybe<ReferenceModule>;
@@ -496,6 +498,18 @@ export type CommentMirrorsArgs = {
 export type CommentReactionArgs = {
   request?: InputMaybe<ReactionFieldResolverRequest>;
 };
+
+/** The comment ordering types */
+export enum CommentOrderingTypes {
+  Desc = 'DESC',
+  Ranking = 'RANKING',
+}
+
+/** The comment ranking filter types */
+export enum CommentRankingFilter {
+  NoneRelevant = 'NONE_RELEVANT',
+  Relevant = 'RELEVANT',
+}
 
 /** The gated publication access criteria contract types */
 export enum ContractType {
@@ -3387,6 +3401,10 @@ export type PublicationsQueryRequest = {
   collectedBy?: InputMaybe<Scalars['EthereumAddress']>;
   /** The publication id you wish to get comments for */
   commentsOf?: InputMaybe<Scalars['InternalPublicationId']>;
+  /** The comment ordering type - only used when you use commentsOf */
+  commentsOfOrdering?: InputMaybe<CommentOrderingTypes>;
+  /** The comment ranking filter, you can use  - only used when you use commentsOf + commentsOfOrdering=ranking */
+  commentsRankingFilter?: InputMaybe<CommentRankingFilter>;
   cursor?: InputMaybe<Scalars['Cursor']>;
   customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
@@ -4626,7 +4644,7 @@ export type CollectConditionFragment = {
   thisPublication: boolean | null;
 };
 
-export type LeafCriterionFragment = {
+export type LeafConditionFragment = {
   __typename: 'AccessConditionOutput';
   nft: NftOwnershipFragment | null;
   token: Erc20OwnershipFragment | null;
@@ -4636,25 +4654,25 @@ export type LeafCriterionFragment = {
   collect: CollectConditionFragment | null;
 };
 
-export type OrCriterionFragment = {
+export type OrConditionFragment = {
   __typename: 'OrConditionOutput';
-  criteria: Array<LeafCriterionFragment>;
+  criteria: Array<LeafConditionFragment>;
 };
 
-export type AndCriterionFragment = {
+export type AndConditionFragment = {
   __typename: 'AndConditionOutput';
-  criteria: Array<LeafCriterionFragment>;
+  criteria: Array<LeafConditionFragment>;
 };
 
-export type AnyCriterionFragment = {
+export type AnyConditionFragment = {
   __typename: 'AccessConditionOutput';
-  or: OrCriterionFragment | null;
-  and: AndCriterionFragment | null;
-} & LeafCriterionFragment;
+  or: OrConditionFragment | null;
+  and: AndConditionFragment | null;
+} & LeafConditionFragment;
 
-export type RootCriterionFragment = {
+export type RootConditionFragment = {
   __typename: 'AccessConditionOutput';
-  or: { criteria: Array<AnyCriterionFragment> } | null;
+  or: { criteria: Array<AnyConditionFragment> } | null;
 };
 
 export type EncryptedMediaFragment = {
@@ -4682,7 +4700,7 @@ export type EncryptedFieldsFragment = {
 export type EncryptionParamsFragment = {
   __typename: 'EncryptionParamsOutput';
   encryptionProvider: EncryptionProvider;
-  accessCondition: RootCriterionFragment;
+  accessCondition: RootConditionFragment;
   encryptedFields: EncryptedFieldsFragment;
   providerSpecificParams: { encryptionKey: ContentEncryptionKey };
 };
@@ -5506,8 +5524,8 @@ export const CollectConditionFragmentDoc = gql`
     thisPublication
   }
 `;
-export const LeafCriterionFragmentDoc = gql`
-  fragment LeafCriterion on AccessConditionOutput {
+export const LeafConditionFragmentDoc = gql`
+  fragment LeafCondition on AccessConditionOutput {
     __typename
     nft {
       ...NftOwnership
@@ -5535,49 +5553,49 @@ export const LeafCriterionFragmentDoc = gql`
   ${FollowConditionFragmentDoc}
   ${CollectConditionFragmentDoc}
 `;
-export const OrCriterionFragmentDoc = gql`
-  fragment OrCriterion on OrConditionOutput {
+export const OrConditionFragmentDoc = gql`
+  fragment OrCondition on OrConditionOutput {
     __typename
     criteria {
-      ...LeafCriterion
+      ...LeafCondition
     }
   }
-  ${LeafCriterionFragmentDoc}
+  ${LeafConditionFragmentDoc}
 `;
-export const AndCriterionFragmentDoc = gql`
-  fragment AndCriterion on AndConditionOutput {
+export const AndConditionFragmentDoc = gql`
+  fragment AndCondition on AndConditionOutput {
     __typename
     criteria {
-      ...LeafCriterion
+      ...LeafCondition
     }
   }
-  ${LeafCriterionFragmentDoc}
+  ${LeafConditionFragmentDoc}
 `;
-export const AnyCriterionFragmentDoc = gql`
-  fragment AnyCriterion on AccessConditionOutput {
+export const AnyConditionFragmentDoc = gql`
+  fragment AnyCondition on AccessConditionOutput {
     __typename
-    ...LeafCriterion
+    ...LeafCondition
     or {
-      ...OrCriterion
+      ...OrCondition
     }
     and {
-      ...AndCriterion
+      ...AndCondition
     }
   }
-  ${LeafCriterionFragmentDoc}
-  ${OrCriterionFragmentDoc}
-  ${AndCriterionFragmentDoc}
+  ${LeafConditionFragmentDoc}
+  ${OrConditionFragmentDoc}
+  ${AndConditionFragmentDoc}
 `;
-export const RootCriterionFragmentDoc = gql`
-  fragment RootCriterion on AccessConditionOutput {
+export const RootConditionFragmentDoc = gql`
+  fragment RootCondition on AccessConditionOutput {
     __typename
     or {
       criteria {
-        ...AnyCriterion
+        ...AnyCondition
       }
     }
   }
-  ${AnyCriterionFragmentDoc}
+  ${AnyConditionFragmentDoc}
 `;
 export const EncryptedMediaFragmentDoc = gql`
   fragment EncryptedMedia on EncryptedMedia {
@@ -5607,7 +5625,7 @@ export const EncryptionParamsFragmentDoc = gql`
   fragment EncryptionParams on EncryptionParamsOutput {
     __typename
     accessCondition {
-      ...RootCriterion
+      ...RootCondition
     }
     encryptionProvider
     encryptedFields {
@@ -5617,7 +5635,7 @@ export const EncryptionParamsFragmentDoc = gql`
       encryptionKey
     }
   }
-  ${RootCriterionFragmentDoc}
+  ${RootConditionFragmentDoc}
   ${EncryptedFieldsFragmentDoc}
 `;
 export const MetadataFragmentDoc = gql`
@@ -10145,6 +10163,7 @@ export type CommentKeySpecifier = (
   | 'mirrors'
   | 'onChainContentURI'
   | 'profile'
+  | 'rankingScore'
   | 'reaction'
   | 'referenceModule'
   | 'referencePolicy'
@@ -10177,6 +10196,7 @@ export type CommentFieldPolicy = {
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  rankingScore?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
   referencePolicy?: FieldPolicy<any> | FieldReadFunction<any>;

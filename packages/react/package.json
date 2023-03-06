@@ -45,6 +45,7 @@
     "@lens-protocol/api-bindings": "workspace:*",
     "@lens-protocol/blockchain-bindings": "workspace:*",
     "@lens-protocol/domain": "workspace:*",
+    "@lens-protocol/gated-content": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
     "graphql": "^16.6.0",

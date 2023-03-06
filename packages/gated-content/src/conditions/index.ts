@@ -1,7 +1,7 @@
 import {
   AccessCondition,
-  AnyCriterionFragment,
-  LeafCriterionFragment,
+  AnyConditionFragment,
+  LeafConditionFragment,
 } from '@lens-protocol/api-bindings';
 import { InvariantError, isNonNullable, never, UnknownObject } from '@lens-protocol/shared-kernel';
 import { UnifiedAccessControlConditions } from '@lit-protocol/constants';
@@ -50,7 +50,7 @@ function flatten<T>(conditions: T[]): T[] {
 }
 
 function transformSimpleCondition(
-  [type, value]: Entry<LeafCriterionFragment>,
+  [type, value]: Entry<LeafConditionFragment>,
   env: EnvironmentConfig,
 ): LitNestedAccessControlCondition<LitAccessControlCondition> {
   switch (type) {
@@ -72,7 +72,7 @@ function transformSimpleCondition(
 }
 
 function transformCompoundCondition(
-  entry: Entry<AnyCriterionFragment>,
+  entry: Entry<AnyConditionFragment>,
   env: EnvironmentConfig,
 ): LitNestedAccessControlCondition<LitAccessControlCondition> {
   const [type, value] = entry;
@@ -126,7 +126,7 @@ export function transform(
 
   const flat = flatten(
     rootEntries.map((entry) =>
-      transformCompoundCondition(entry as Entry<AnyCriterionFragment>, env),
+      transformCompoundCondition(entry as Entry<AnyConditionFragment>, env),
     ),
   );
 

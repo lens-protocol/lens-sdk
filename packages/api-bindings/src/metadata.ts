@@ -4,14 +4,14 @@ import type {
   DeepOmitTypename,
   EncryptionParamsOutput,
   PublicationMetadataV2Input,
-  RootCriterionFragment,
+  RootConditionFragment,
 } from './graphql';
 
 export type PublicationMetadata = Prettify<
   Overwrite<PublicationMetadataV2Input, { version: '2.0.0' }>
 >;
 
-export type AccessCondition = DeepOmitTypename<RootCriterionFragment>;
+export type AccessCondition = DeepOmitTypename<RootConditionFragment>;
 
 export type EncryptedFields = Pick<
   PublicationMetadata,

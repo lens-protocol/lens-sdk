@@ -1,4 +1,4 @@
-import { AccessCondition, ContractType, LeafCriterionFragment } from '@lens-protocol/api-bindings';
+import { AccessCondition, ContractType, LeafConditionFragment } from '@lens-protocol/api-bindings';
 import {
   mockEoaOwnershipAccessCondition,
   mockNftOwnershipAccessCondition,
@@ -30,7 +30,7 @@ describe(`Given the "${transform.name}" function`, () => {
       description: 'a simple condition',
       condition: mockOrAccessCondition([
         mockProfileOwnershipAccessCondition({ profileId: ownerProfileId }),
-        mockEoaOwnershipAccessCondition({ address: knownAddress }) as LeafCriterionFragment,
+        mockEoaOwnershipAccessCondition({ address: knownAddress }) as LeafConditionFragment,
       ]) as AccessCondition,
       expectedLitAccessConditions: [
         {

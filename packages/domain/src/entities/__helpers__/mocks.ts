@@ -7,12 +7,31 @@ import {
   PromiseResult,
   success,
 } from '@lens-protocol/shared-kernel';
-import { mock32BytesHexString, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import {
+  mock32BytesHexString,
+  mockDaiAmount,
+  mockEthereumAddress,
+} from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 
 import { ICredentials } from '../Credentials';
-import { NftOwnershipChallenge } from '../Nft';
-import { Profile } from '../Profile';
+import { NftContractType, NftOwnershipChallenge } from '../Nft';
+import { Profile, ProfileId } from '../Profile';
+import {
+  NftOwnershipCriterion,
+  Erc20OwnershipCriterion,
+  AddressOwnershipCriterion,
+  ProfileOwnershipCriterion,
+  FollowProfileCriterion,
+  CollectPublicationCriterion,
+  CollectThisPublicationCriterion,
+  OrCriterion,
+  AndCriterion,
+  Erc20ComparisonOperator,
+  DecryptionCriteriaType,
+  AnyCriterion,
+  PublicationId,
+} from '../Publication';
 import {
   Challenge,
   IUnsignedProtocolCall,
@@ -32,6 +51,14 @@ import {
   UnsignedTransaction,
 } from '../Transactions';
 import { Wallet } from '../Wallet';
+
+export function mockProfileId(): ProfileId {
+  return faker.datatype.hexadecimal({ length: 2 });
+}
+
+export function mockPublicationId(profileId: ProfileId = mockProfileId()): PublicationId {
+  return `${profileId}-${faker.datatype.hexadecimal({ length: 2 })}`;
+}
 
 export function mockWallet({
   address = mockEthereumAddress(),
@@ -312,4 +339,92 @@ export class MockedProxyTransaction<T extends TransactionRequestModel> extends P
   static fromRequest<T extends TransactionRequestModel>(request: T): ProxyTransaction<T> {
     return new MockedProxyTransaction({ request, status: ProxyActionStatus.MINTING });
   }
+}
+
+export function mockNftOwnershipCriterion(
+  overrides?: Partial<NftOwnershipCriterion>,
+): NftOwnershipCriterion {
+  return {
+    contractAddress: mockEthereumAddress(),
+    chainId: 1,
+    contractType: NftContractType.Erc721,
+    tokenIds: ['0x1', '0x2', '0x3'],
+    ...overrides,
+    type: DecryptionCriteriaType.NFT_OWNERSHIP,
+  };
+}
+
+export function mockErc20OwnershipCriterion(
+  overrides?: Partial<Erc20OwnershipCriterion>,
+): Erc20OwnershipCriterion {
+  return {
+    amount: mockDaiAmount(1),
+    condition: Erc20ComparisonOperator.GreaterThan,
+    ...overrides,
+    type: DecryptionCriteriaType.ERC20_OWNERSHIP,
+  };
+}
+
+export function mockAddressOwnershipCriterion(
+  overrides?: Partial<AddressOwnershipCriterion>,
+): AddressOwnershipCriterion {
+  return {
+    address: mockEthereumAddress(),
+    ...overrides,
+    type: DecryptionCriteriaType.ADDRESS_OWNERSHIP,
+  };
+}
+
+export function mockProfileOwnershipCriterion(
+  overrides?: Partial<ProfileOwnershipCriterion>,
+): ProfileOwnershipCriterion {
+  return {
+    profileId: mockProfileId(),
+    ...overrides,
+    type: DecryptionCriteriaType.PROFILE_OWNERSHIP,
+  };
+}
+
+export function mockFollowProfileCriterion(
+  overrides?: Partial<FollowProfileCriterion>,
+): FollowProfileCriterion {
+  return {
+    profileId: mockProfileId(),
+    ...overrides,
+    type: DecryptionCriteriaType.FOLLOW_PROFILE,
+  };
+}
+
+export function mockCollectPublicationCriterion(
+  overrides?: Partial<CollectPublicationCriterion>,
+): CollectPublicationCriterion {
+  return {
+    publicationId: mockPublicationId(),
+    ...overrides,
+    type: DecryptionCriteriaType.COLLECT_PUBLICATION,
+  };
+}
+
+export function mockCollectThisPublicationCriterion(
+  overrides?: Partial<CollectThisPublicationCriterion>,
+): CollectThisPublicationCriterion {
+  return {
+    publicationId: mockPublicationId(),
+    ...overrides,
+    type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
+  };
+}
+
+export function mockOrCriterion<T extends AnyCriterion[]>(criteria: T): OrCriterion<T> {
+  return {
+    or: criteria,
+    type: DecryptionCriteriaType.OR,
+  };
+}
+
+export function mockAndCriterion<T extends AnyCriterion[]>(criteria: T): AndCriterion<T> {
+  return {
+    and: criteria,
+    type: DecryptionCriteriaType.AND,
+  };
 }

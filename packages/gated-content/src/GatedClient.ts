@@ -23,7 +23,7 @@ import {
 } from './encryption';
 import { EnvironmentConfig } from './environments';
 
-type AuthenticationConfig = {
+export type AuthenticationConfig = {
   domain: string;
   statement?: string;
   uri: string;
