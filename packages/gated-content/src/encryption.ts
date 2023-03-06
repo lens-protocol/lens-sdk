@@ -3,7 +3,6 @@ import {
   EncryptedFields,
   EncryptedFieldsFragment,
   EncryptedMediaSetFragment,
-  EncryptionParamsFragment,
   MediaSetFragment,
   MetadataFragment,
   PublicationMetadata,
@@ -12,7 +11,7 @@ import {
 import { invariant, isNonNullable, never, UnknownObject, Url } from '@lens-protocol/shared-kernel';
 
 import { ICipher } from './IEncryptionProvider';
-import { Entries } from './types';
+import { Entries, ExtractFields } from './types';
 
 const SUPPORTED_FIELDS = ['content', 'image', 'media', 'animation_url', 'external_url'] as const;
 
@@ -20,8 +19,6 @@ const MEDIA_PLACEHOLDER_URL = 'ipfs://QmZq4ozZ4ZAoPuPnujgyhQmpmsQTJnBS36KfijUCqm
 const STRING_PLACEHOLDER = 'This publication is gated.';
 
 type SupportedFieldKeys = (typeof SUPPORTED_FIELDS)[number];
-
-type ExtractFields<T extends UnknownObject, F extends string> = Pick<T, Extract<keyof T, F>>;
 
 type ExtractSupportedFields<T extends UnknownObject> = ExtractFields<T, SupportedFieldKeys>;
 
@@ -125,16 +122,14 @@ export type EncryptedPublicationMetadata = Partial<
   ExtractFields<MetadataFragment, SupportedMetadataOutputFields>
 >;
 
-export type IndexedEncryptedFields = Partial<
-  DeepOmitTypename<EncryptionParamsFragment['encryptedFields']>
->;
+export type IndexedEncryptedFields = Partial<ExtractSupportedFields<EncryptedFieldsFragment>>;
 
 export class PublicationMetadataDecryptor {
   constructor(private readonly cipher: ICipher) {}
 
   async decrypt<T extends EncryptedPublicationMetadata>(
     encrypted: T,
-    using: EncryptedFieldsFragment,
+    using: IndexedEncryptedFields,
   ): Promise<T> {
     const fields = supportedFields(using);
     const decrypted = Object.assign({}, encrypted);

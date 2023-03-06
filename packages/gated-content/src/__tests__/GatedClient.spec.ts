@@ -5,6 +5,7 @@ import {
   AccessCondition,
   EncryptedFieldsFragment,
   EncryptionProvider,
+  LeafCondition,
 } from '@lens-protocol/api-bindings';
 import {
   mockEncryptionParamsFragment,
@@ -12,7 +13,6 @@ import {
   mockMetadataFragment,
   mockProfileOwnershipAccessCondition,
   mockPublicationMetadata,
-  mockOrAccessCondition,
   mockEncryptedFieldsFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
@@ -34,10 +34,14 @@ const eoaOwnershipAccessCondition = mockEoaOwnershipAccessCondition({
   address: signer.address,
 });
 const profileOwnershipAccessCondition = mockProfileOwnershipAccessCondition({ profileId: ownerId });
-const accessCondition = mockOrAccessCondition([
-  profileOwnershipAccessCondition,
-  eoaOwnershipAccessCondition,
-]) as AccessCondition;
+const accessCondition: AccessCondition = {
+  or: {
+    criteria: [
+      profileOwnershipAccessCondition as LeafCondition,
+      eoaOwnershipAccessCondition as LeafCondition,
+    ],
+  },
+};
 
 function setupTestScenario() {
   const client = new GatedClient({

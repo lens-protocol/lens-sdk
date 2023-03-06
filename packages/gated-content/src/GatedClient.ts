@@ -6,6 +6,7 @@ import {
   AccessCondition,
   EncryptionParamsFragment,
   OmitTypename,
+  RootConditionFragment,
 } from '@lens-protocol/api-bindings';
 import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { IStorage, IStorageProvider } from '@lens-protocol/storage';
@@ -99,9 +100,9 @@ export class GatedClient {
     return success(encryptedMetadata);
   }
 
-  async decryptPublication<T extends EncryptedPublicationMetadata>(
+  async decryptPublication<T extends EncryptedPublicationMetadata, P extends EncryptionParams>(
     encrypted: T,
-    using: EncryptionParams,
+    using: P,
   ): PromiseResult<T, never> {
     await this.ensureLitConnection();
 
@@ -161,7 +162,10 @@ export class GatedClient {
       authSig,
       chain: this.environment.chainName,
       symmetricKey,
-      unifiedAccessControlConditions: transform(accessCondition, this.environment),
+      unifiedAccessControlConditions: transform(
+        accessCondition as RootConditionFragment,
+        this.environment,
+      ),
     });
 
     return uint8arrayToHexString(encryptedSymmetricKey);
@@ -169,7 +173,7 @@ export class GatedClient {
 
   private async retrieveEncryptionKey(
     encryptedEncryptionKey: ContentEncryptionKey,
-    accessCondition: AccessCondition,
+    accessCondition: RootConditionFragment,
   ): Promise<ICipher> {
     const authSig = await this.getOrCreateAuthSig();
 

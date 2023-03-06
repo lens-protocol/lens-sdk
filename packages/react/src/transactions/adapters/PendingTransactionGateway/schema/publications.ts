@@ -63,8 +63,10 @@ const CollectPolicySchema = z.union([
 ]);
 
 const MediaSchema = z.object({
-  url: z.string(),
+  altTag: z.string().optional(),
+  cover: z.string().optional(),
   mimeType: z.nativeEnum(SupportedFileType),
+  url: z.string(),
 });
 
 const AnyoneReferencePolicySchema = z.object({

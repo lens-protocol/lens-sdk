@@ -14,12 +14,12 @@ export type PublicationMetadata = Prettify<
 type OneOf<T, K extends keyof T = keyof T> = Omit<T, K> &
   {
     [k in K]: Pick<Required<T>, k> & {
-      [k1 in Exclude<K, k>]?: never;
+      [k1 in Exclude<K, k>]?: null;
     };
   }[K];
 
 type NonNullableFields<T> = {
-  [P in keyof T]: Prettify<NonNullable<T[P]>>;
+  [P in keyof T]: NonNullable<T[P]>;
 };
 
 export type LeafCondition = Prettify<
@@ -38,7 +38,7 @@ export type AndCondition<T> = {
   };
 };
 
-export type AnyCondition = OrCondition<LeafCondition> | AndCondition<LeafCondition> | LeafCondition;
+export type AnyCondition = LeafCondition | OrCondition<LeafCondition> | AndCondition<LeafCondition>;
 
 export type AccessCondition = OrCondition<AnyCondition>;
 

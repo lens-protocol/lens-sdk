@@ -1,13 +1,13 @@
 import {
-  AccessCondition,
   AnyConditionFragment,
   LeafConditionFragment,
+  RootConditionFragment,
 } from '@lens-protocol/api-bindings';
 import { InvariantError, isNonNullable, never, UnknownObject } from '@lens-protocol/shared-kernel';
 import { UnifiedAccessControlConditions } from '@lit-protocol/constants';
 
 import { EnvironmentConfig } from '../environments';
-import { Entry } from '../types';
+import { Entry, ExtractFields } from '../types';
 import { transformCollectCondition } from './collect-condition';
 import { transformEoaCondition } from './eoa-condition';
 import { transformErc20Condition } from './erc20-condition';
@@ -27,9 +27,16 @@ import {
   InvalidAccessCriteriaError,
 } from './validators';
 
-function extractConditionEntry<T extends UnknownObject>(condition: T): Entry<T> {
+type ExtractAccessConditionType<T extends UnknownObject> = ExtractFields<
+  T,
+  `${AccessConditionType}`
+>;
+
+function extractConditionEntry<T extends UnknownObject, R extends ExtractAccessConditionType<T>>(
+  condition: R,
+): Entry<R> {
   for (const key in condition) {
-    if (isAccessConditionType(key) && isNonNullable(condition[key as keyof T])) {
+    if (isAccessConditionType(key) && isNonNullable(condition[key])) {
       return [key, condition[key] ?? never()];
     }
   }
@@ -99,7 +106,7 @@ function transformCompoundCondition(
 }
 
 export function transform(
-  condition: AccessCondition,
+  condition: RootConditionFragment,
   env: EnvironmentConfig,
 ): UnifiedAccessControlConditions {
   const [type, value] = extractConditionEntry(condition);
@@ -124,11 +131,7 @@ export function transform(
     throw new InvalidAccessCriteriaError('Root conditions must contain a profile condition');
   }
 
-  const flat = flatten(
-    rootEntries.map((entry) =>
-      transformCompoundCondition(entry as Entry<AnyConditionFragment>, env),
-    ),
-  );
+  const flat = flatten(rootEntries.map((entry) => transformCompoundCondition(entry, env)));
 
   // the type assertion is needed because the Lit SDK typedef suggests nested conditions are not allowed but they are
   return insertObjectInBetweenArrayElements(flat, {

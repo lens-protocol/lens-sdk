@@ -55,9 +55,7 @@ export function assertAtLeastTwoCriteria<T>(criteria: T[]): asserts criteria is 
   }
 }
 
-export function assertNoMoreThanFiveCriteria<T>(
-  criteria: T[],
-): asserts criteria is TwoAtLeastArray<T> {
+export function assertNoMoreThanFiveCriteria<T>(criteria: T[]) {
   if (criteria.length > 5) {
     throw new InvalidAccessCriteriaError('Compound conditions can only have up to 5 criteria.');
   }
