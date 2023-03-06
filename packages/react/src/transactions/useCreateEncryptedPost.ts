@@ -16,9 +16,9 @@ import { failure, invariant, Prettify, PromiseResult } from '@lens-protocol/shar
 import { Operation, useOperation } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { useWalletLogin, useActiveWalletSigner } from '../wallet';
+import { CreatePostController } from './adapters/CreatePostController';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
-import { CreatePostController } from './adapters/useCreatePostController';
 import {
   CreateEncryptedPostRequest,
   EncryptedPublicationMetadataUploader,

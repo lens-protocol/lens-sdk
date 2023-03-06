@@ -11,12 +11,12 @@ import {
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
-import { useMemo } from 'react';
 
 import { Operation, useOperation } from '../helpers';
+import { useSharedDependencies } from '../shared';
+import { CreatePostController } from './adapters/CreatePostController';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
-import { useCreatePostController } from './adapters/useCreatePostController';
 import { PublicationMetadataUploader } from './infrastructure/PublicationMetadataUploader';
 
 export type UseCreatePostArgs = {
@@ -39,8 +39,14 @@ export type CreatePostOperation = Operation<
 >;
 
 export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreatePostOperation {
-  const uploader = useMemo(() => new PublicationMetadataUploader(upload), [upload]);
-  const createPost = useCreatePostController({ uploader });
+  const {
+    activeWallet,
+    apolloClient,
+    protocolCallRelayer,
+    transactionFactory,
+    transactionGateway,
+    transactionQueue,
+  } = useSharedDependencies();
 
   return useOperation(
     async ({
@@ -51,8 +57,20 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
       void,
       PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
     > => {
+      const uploader = new PublicationMetadataUploader(upload);
+
+      const controller = new CreatePostController<CreatePostRequest>({
+        activeWallet,
+        apolloClient,
+        protocolCallRelayer,
+        transactionFactory,
+        transactionGateway,
+        transactionQueue,
+        uploader,
+      });
+
       try {
-        return await createPost({
+        return await controller.execute({
           kind: TransactionKind.CREATE_POST,
           collect,
           delegate: publisher.dispatcher !== null,
