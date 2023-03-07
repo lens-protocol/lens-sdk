@@ -1,6 +1,6 @@
-import { CollectModules, FollowModules, ReferenceModules } from '.';
 import { setupRandomAuthentication } from '../authentication/__helpers__/setupAuthentication';
 import { mumbaiSandbox } from '../consts/environments';
+import { CollectModules, FollowModules, ReferenceModules } from '../graphql/types.generated';
 import { Modules } from './Modules';
 
 const testConfig = {

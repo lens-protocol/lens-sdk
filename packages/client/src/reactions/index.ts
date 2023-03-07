@@ -1,2 +1,3 @@
+export type { WhoReactedResultFragment } from './graphql/reactions.generated';
+
 export * from './Reactions';
-export { ReactionTypes } from '../graphql/types.generated';
