@@ -2,41 +2,67 @@
 import * as Types from '../../graphql/types.generated';
 
 import {
-  PostFragment,
   ProfileFragment,
+  PostFragment,
   MirrorFragment,
   CommentFragment,
   CommonPaginatedResultInfoFragment,
-  WalletFragment,
-  Eip712TypedDataDomainFragment,
-  RelayerResultFragment,
-  RelayErrorFragment,
   FollowingFragment,
   FollowerFragment,
-  Erc20AmountFragment,
+  RelayerResultFragment,
+  RelayErrorFragment,
+  Eip712TypedDataDomainFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
-  PostFragmentDoc,
   ProfileFragmentDoc,
+  PostFragmentDoc,
   MirrorFragmentDoc,
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
-  WalletFragmentDoc,
-  Eip712TypedDataDomainFragmentDoc,
-  RelayerResultFragmentDoc,
-  RelayErrorFragmentDoc,
   FollowingFragmentDoc,
   FollowerFragmentDoc,
-  Erc20AmountFragmentDoc,
+  RelayerResultFragmentDoc,
+  RelayErrorFragmentDoc,
+  Eip712TypedDataDomainFragmentDoc,
 } from '../../graphql/fragments.generated';
+export type ElectedMirrorFragment = {
+  __typename: 'ElectedMirror';
+  mirrorId: string;
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
+export type MirrorEventFragment = {
+  __typename: 'MirrorEvent';
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
+export type CollectedEventFragment = {
+  __typename: 'CollectedEvent';
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
+export type ReactionEventFragment = {
+  __typename: 'ReactionEvent';
+  reaction: Types.ReactionTypes;
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
 export type FeedItemFragment = {
   __typename: 'FeedItem';
   root: CommentFragment | PostFragment;
   comments: Array<CommentFragment> | null;
+  electedMirror: ElectedMirrorFragment | null;
+  mirrors: Array<MirrorEventFragment>;
+  collects: Array<CollectedEventFragment>;
+  reactions: Array<ReactionEventFragment>;
 };
 
 export type FeedQueryVariables = Types.Exact<{
@@ -60,6 +86,48 @@ export type FeedHighlightsQuery = {
   };
 };
 
+export const ElectedMirrorFragmentDoc = gql`
+  fragment ElectedMirror on ElectedMirror {
+    __typename
+    mirrorId
+    profile {
+      ...Profile
+    }
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
+export const MirrorEventFragmentDoc = gql`
+  fragment MirrorEvent on MirrorEvent {
+    __typename
+    profile {
+      ...Profile
+    }
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
+export const CollectedEventFragmentDoc = gql`
+  fragment CollectedEvent on CollectedEvent {
+    __typename
+    profile {
+      ...Profile
+    }
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
+export const ReactionEventFragmentDoc = gql`
+  fragment ReactionEvent on ReactionEvent {
+    __typename
+    profile {
+      ...Profile
+    }
+    reaction
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
@@ -74,9 +142,25 @@ export const FeedItemFragmentDoc = gql`
     comments {
       ...Comment
     }
+    electedMirror {
+      ...ElectedMirror
+    }
+    mirrors {
+      ...MirrorEvent
+    }
+    collects {
+      ...CollectedEvent
+    }
+    reactions {
+      ...ReactionEvent
+    }
   }
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
+  ${ElectedMirrorFragmentDoc}
+  ${MirrorEventFragmentDoc}
+  ${CollectedEventFragmentDoc}
+  ${ReactionEventFragmentDoc}
 `;
 export const FeedDocument = gql`
   query Feed($request: FeedRequest!, $observerId: ProfileId) {
