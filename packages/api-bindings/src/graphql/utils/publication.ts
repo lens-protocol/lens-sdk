@@ -69,13 +69,30 @@ export type AnyPublicationFragment = CommentFragment | MirrorFragment | PostFrag
 
 export type ContentPublicationFragment = CommentFragment | PostFragment;
 
-type Gated<T extends ContentPublicationFragment> = Overwrite<T, { isGated: true }>;
+type Gated<T extends ContentPublicationFragment> = Overwrite<
+  T,
+  {
+    isGated: true;
+    metadata: Overwrite<
+      T['metadata'],
+      {
+        __encryptionParams: NonNullable<T['metadata']['__encryptionParams']>;
+      }
+    >;
+  }
+>;
 
 export type GatedCommentFragment = Prettify<Gated<CommentFragment>>;
 
 export type GatedPostFragment = Prettify<Gated<PostFragment>>;
 
-export type GatedContentPublicationFragment = GatedCommentFragment | GatedPostFragment;
+export type GatedPublicationFragment = GatedCommentFragment | GatedPostFragment;
+
+export function isGatedPublication(
+  publication: ContentPublicationFragment,
+): publication is GatedPublicationFragment {
+  return publication.isGated;
+}
 
 export function isContentPublication(
   publication: AnyPublicationFragment,

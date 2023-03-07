@@ -16,7 +16,7 @@ import { Header } from './components/header/Header';
 import { DiscoveryPage } from './discovery/DiscoveryPage';
 import { UseExploreProfiles } from './discovery/UseExploreProfiles';
 import { UseExplorePublications } from './discovery/UseExplorePublications';
-import { Feed } from './discovery/UseFeed';
+import { UseFeed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
 import { LoginSpecificProfile } from './misc/LoginSpecificProfile';
@@ -154,7 +154,7 @@ export function App() {
                 <Route path="/profiles/useProfileFollowing" element={<UseProfileFollowing />} />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
-                <Route path="/discovery/useFeed" element={<Feed />} />
+                <Route path="/discovery/useFeed" element={<UseFeed />} />
                 <Route path="/discovery/useExploreProfiles" element={<UseExploreProfiles />} />
                 <Route
                   path="/discovery/useExplorePublications"

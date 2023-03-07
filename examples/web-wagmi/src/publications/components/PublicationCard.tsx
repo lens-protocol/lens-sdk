@@ -9,7 +9,9 @@ import {
   AnyCriterion,
   DecryptionCriteriaType,
 } from '@lens-protocol/react';
+import { useEncryptedPublication } from '@lens-protocol/react/web';
 import { ReactNode } from 'react';
+import { useInView } from 'react-cool-inview';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 import { formatAmount } from '../../utils';
@@ -50,30 +52,44 @@ type ContentProps = {
 };
 
 function Content({ publication }: ContentProps) {
-  if (publication.hidden) {
+  const { decrypt, data, error, isPending } = useEncryptedPublication({
+    publication,
+  });
+
+  const { observe } = useInView({
+    threshold: 0.5,
+
+    onEnter: ({ unobserve }) => {
+      unobserve();
+      void decrypt();
+    },
+  });
+
+  if (isPending) {
+    return <p>Decrypting...</p>;
+  }
+
+  if (error) {
+    return <p>{error.message}</p>;
+  }
+
+  if (data.hidden) {
     return <p>This publication has been hidden</p>;
   }
 
-  if (publication.isGated) {
-    if (publication.decryptionCriteria === null) {
-      return (
-        <p>
-          <i>Encrypted content, it's currently not possible to determine the decryption criteria</i>
-        </p>
-      );
-    }
-
-    return (
-      <p>
-        <i>
-          To decrypt this publication you need to:&nbsp;
-          <b>{formatDecryptionCriterion(publication.decryptionCriteria)}</b>
-        </i>
-      </p>
-    );
-  }
-
-  return <p>{publication.metadata.content}</p>;
+  return (
+    <div ref={observe}>
+      <p>{data.metadata.content}</p>
+      {data.decryptionCriteria && (
+        <small>
+          <i>
+            To decrypt this publication you need to:&nbsp;
+            <b>{formatDecryptionCriterion(data.decryptionCriteria)}</b>
+          </i>
+        </small>
+      )}
+    </div>
+  );
 }
 
 type PublicationCardProps = {
@@ -95,11 +111,10 @@ export function PublicationCard({ publication }: PublicationCardProps) {
     <article>
       <ProfilePicture picture={publication.profile.picture} />
       <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
-      <p>
-        <Content
-          publication={isMirrorPublication(publication) ? publication.mirrorOf : publication}
-        />
-      </p>
+
+      <Content
+        publication={isMirrorPublication(publication) ? publication.mirrorOf : publication}
+      />
     </article>
   );
 }

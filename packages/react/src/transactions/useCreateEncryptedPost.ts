@@ -10,9 +10,9 @@ import {
   CreatePostRequest,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
-import { AuthenticationConfig, IEncryptionProvider } from '@lens-protocol/gated-content';
 import { failure, invariant, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
+import { EncryptionConfig } from '../EncryptionConfig';
 import { Operation, useOperation } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { useWalletLogin, useActiveWalletSigner } from '../wallet';
@@ -23,12 +23,10 @@ import {
   CreateEncryptedPostRequest,
   EncryptedPublicationMetadataUploader,
 } from './infrastructure/EncryptedMetadataUploader';
+import { createGatedClient } from './infrastructure/createGatedClient';
 
 export type UseCreateEncryptedPostArgs = {
-  encryption: {
-    authentication: AuthenticationConfig;
-    provider: IEncryptionProvider;
-  };
+  encryption: EncryptionConfig;
   publisher: ProfileOwnedByMeFragment;
   upload: MetadataUploadHandler;
 };
@@ -76,17 +74,17 @@ export function useCreateEncryptedPost({
     > => {
       invariant(
         signer,
-        `Active Wallet signer is not set, did you login with ${useWalletLogin.name}?`,
+        `Cannot find the Active Wallet Signer, did you login with ${useWalletLogin.name}?`,
       );
-
-      const uploader = EncryptedPublicationMetadataUploader.create({
+      const client = createGatedClient({
         config: encryption.authentication,
-        storageProvider,
         signer,
         encryptionProvider: encryption.provider,
         environment,
-        upload,
+        storageProvider,
       });
+
+      const uploader = new EncryptedPublicationMetadataUploader(client, environment.chains, upload);
 
       const controller = new CreatePostController<CreateEncryptedPostRequest>({
         activeWallet,

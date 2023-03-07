@@ -45,9 +45,7 @@ export function UsePublication() {
         <code>usePublication</code>
       </h1>
       <PublicationCard publication={publication} />
-      <h3>
-        <code>useComments</code>
-      </h3>
+      <h3>Comments</h3>
 
       <Comments commentsOf={publication.id} />
     </div>

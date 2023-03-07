@@ -5,11 +5,8 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import * as GatedContent from '@lens-protocol/gated-content';
 import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
-import { IStorageProvider } from '@lens-protocol/storage';
-import { Signer } from 'ethers';
 
 import { ChainConfigRegistry } from '../../chains';
-import { EnvironmentConfig, production } from '../../environments';
 import { IMetadataUploader } from '../adapters/IMetadataUploader';
 import { MetadataUploadHandler } from '../adapters/MetadataUploadHandler';
 import { createAccessCondition, FullyQualifiedDecryptionCriteria } from './createAccessCondition';
@@ -24,25 +21,9 @@ type WithDecryptionCriteria<T extends CreatePostRequest | CreateCommentRequest> 
   >
 >;
 
-function resolveGatedEnvironment(environment: EnvironmentConfig): GatedContent.EnvironmentConfig {
-  if (environment === production) {
-    return GatedContent.production;
-  }
-  return GatedContent.staging;
-}
-
 export type CreateEncryptedPostRequest = WithDecryptionCriteria<CreatePostRequest>;
 
 export type CreateEncryptedCommentRequest = WithDecryptionCriteria<CreateCommentRequest>;
-
-export type EncryptedPublicationMetadataUploaderArgs = {
-  config: GatedContent.AuthenticationConfig;
-  encryptionProvider: GatedContent.IEncryptionProvider;
-  environment: EnvironmentConfig;
-  signer: Signer;
-  storageProvider: IStorageProvider;
-  upload: MetadataUploadHandler;
-};
 
 export class EncryptedPublicationMetadataUploader<
   T extends WithDecryptionCriteria<
@@ -50,7 +31,7 @@ export class EncryptedPublicationMetadataUploader<
   > = WithDecryptionCriteria<CreatePostRequest | CreateCommentRequest>,
 > implements IMetadataUploader<T>
 {
-  private constructor(
+  constructor(
     private readonly client: GatedContent.GatedClient,
     private readonly chains: ChainConfigRegistry,
     private readonly handler: MetadataUploadHandler,
@@ -77,24 +58,5 @@ export class EncryptedPublicationMetadataUploader<
     const encryptedMetadata = result.unwrap();
 
     return this.handler(encryptedMetadata);
-  }
-
-  static create({
-    config,
-    encryptionProvider,
-    environment,
-    signer,
-    storageProvider,
-    upload,
-  }: EncryptedPublicationMetadataUploaderArgs): EncryptedPublicationMetadataUploader {
-    const client = new GatedContent.GatedClient({
-      authentication: config,
-      signer,
-      environment: resolveGatedEnvironment(environment),
-      encryptionProvider: encryptionProvider,
-      storageProvider,
-    });
-
-    return new EncryptedPublicationMetadataUploader(client, environment.chains, upload);
   }
 }
