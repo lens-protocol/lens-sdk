@@ -1,5 +1,14 @@
 # @lens-protocol/wagmi
 
+## 0.5.1
+
+### Patch Changes
+
+- Updated dependencies [44596707]
+- Updated dependencies [ed973b51]
+  - @lens-protocol/react@0.5.1
+  - @lens-protocol/shared-kernel@0.5.1
+
 ## 0.5.0
 
 ### Minor Changes

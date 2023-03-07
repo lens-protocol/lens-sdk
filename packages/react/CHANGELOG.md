@@ -1,5 +1,17 @@
 # @lens-protocol/react
 
+## 0.5.1
+
+### Patch Changes
+
+- 44596707: Fixed `TransactionQueue already initialized` console error in strict mode
+- ed973b51: Added `electedMirror`, `mirrors`, `collects` and `reactions` to feed query
+  - @lens-protocol/api-bindings@0.5.1
+  - @lens-protocol/blockchain-bindings@0.5.1
+  - @lens-protocol/domain@0.5.1
+  - @lens-protocol/storage@0.5.1
+  - @lens-protocol/shared-kernel@0.5.1
+
 ## 0.5.0
 
 ### Minor Changes
