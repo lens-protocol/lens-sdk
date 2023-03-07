@@ -4,10 +4,10 @@ import * as Types from '../../graphql/types.generated';
 import {
   CommentFragment,
   ProfileFragment,
-  WalletFragment,
   PostFragment,
   MirrorFragment,
   CommonPaginatedResultInfoFragment,
+  WalletFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -16,10 +16,10 @@ import gql from 'graphql-tag';
 import {
   CommentFragmentDoc,
   ProfileFragmentDoc,
-  WalletFragmentDoc,
   PostFragmentDoc,
   MirrorFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
+  WalletFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type CommentWithCommentedPublicationFragment = {
   __typename: 'Comment';

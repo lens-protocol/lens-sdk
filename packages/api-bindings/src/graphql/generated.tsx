@@ -457,6 +457,8 @@ export type Comment = {
   onChainContentURI: Scalars['String'];
   /** The profile ref */
   profile: Profile;
+  /** Comment ranking score */
+  rankingScore: Maybe<Scalars['Float']>;
   reaction: Maybe<ReactionTypes>;
   /** The reference module */
   referenceModule: Maybe<ReferenceModule>;
@@ -495,6 +497,18 @@ export type CommentMirrorsArgs = {
 export type CommentReactionArgs = {
   request?: InputMaybe<ReactionFieldResolverRequest>;
 };
+
+/** The comment ordering types */
+export enum CommentOrderingTypes {
+  Desc = 'DESC',
+  Ranking = 'RANKING',
+}
+
+/** The comment ranking filter types */
+export enum CommentRankingFilter {
+  NoneRelevant = 'NONE_RELEVANT',
+  Relevant = 'RELEVANT',
+}
 
 /** The gated publication access criteria contract types */
 export enum ContractType {
@@ -3386,6 +3400,10 @@ export type PublicationsQueryRequest = {
   collectedBy?: InputMaybe<Scalars['EthereumAddress']>;
   /** The publication id you wish to get comments for */
   commentsOf?: InputMaybe<Scalars['InternalPublicationId']>;
+  /** The comment ordering type - only used when you use commentsOf */
+  commentsOfOrdering?: InputMaybe<CommentOrderingTypes>;
+  /** The comment ranking filter, you can use  - only used when you use commentsOf + commentsOfOrdering=ranking */
+  commentsRankingFilter?: InputMaybe<CommentRankingFilter>;
   cursor?: InputMaybe<Scalars['Cursor']>;
   customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
@@ -4529,10 +4547,40 @@ export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never
 
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
 
+export type ElectedMirrorFragment = {
+  __typename: 'ElectedMirror';
+  mirrorId: PublicationId;
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
+export type MirrorEventFragment = {
+  __typename: 'MirrorEvent';
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
+export type CollectedEventFragment = {
+  __typename: 'CollectedEvent';
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
+export type ReactionEventFragment = {
+  __typename: 'ReactionEvent';
+  reaction: ReactionTypes;
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
 export type FeedItemFragment = {
   __typename: 'FeedItem';
   root: CommentFragment | PostFragment;
   comments: Array<CommentFragment> | null;
+  electedMirror: ElectedMirrorFragment | null;
+  mirrors: Array<MirrorEventFragment>;
+  collects: Array<CollectedEventFragment>;
+  reactions: Array<ReactionEventFragment>;
 };
 
 export type FeedQueryVariables = Exact<{
@@ -6067,6 +6115,48 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     verifyingContract
   }
 `;
+export const ElectedMirrorFragmentDoc = gql`
+  fragment ElectedMirror on ElectedMirror {
+    __typename
+    mirrorId
+    profile {
+      ...Profile
+    }
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
+export const MirrorEventFragmentDoc = gql`
+  fragment MirrorEvent on MirrorEvent {
+    __typename
+    profile {
+      ...Profile
+    }
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
+export const CollectedEventFragmentDoc = gql`
+  fragment CollectedEvent on CollectedEvent {
+    __typename
+    profile {
+      ...Profile
+    }
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
+export const ReactionEventFragmentDoc = gql`
+  fragment ReactionEvent on ReactionEvent {
+    __typename
+    profile {
+      ...Profile
+    }
+    reaction
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
@@ -6081,9 +6171,25 @@ export const FeedItemFragmentDoc = gql`
     comments {
       ...Comment
     }
+    electedMirror {
+      ...ElectedMirror
+    }
+    mirrors {
+      ...MirrorEvent
+    }
+    collects {
+      ...CollectedEvent
+    }
+    reactions {
+      ...ReactionEvent
+    }
   }
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
+  ${ElectedMirrorFragmentDoc}
+  ${MirrorEventFragmentDoc}
+  ${CollectedEventFragmentDoc}
+  ${ReactionEventFragmentDoc}
 `;
 export const ModuleInfoFragmentDoc = gql`
   fragment ModuleInfo on ModuleInfo {
@@ -10102,6 +10208,7 @@ export type CommentKeySpecifier = (
   | 'mirrors'
   | 'onChainContentURI'
   | 'profile'
+  | 'rankingScore'
   | 'reaction'
   | 'referenceModule'
   | 'referencePolicy'
@@ -10134,6 +10241,7 @@ export type CommentFieldPolicy = {
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  rankingScore?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
   referencePolicy?: FieldPolicy<any> | FieldReadFunction<any>;
