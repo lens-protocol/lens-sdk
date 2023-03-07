@@ -22,7 +22,7 @@ import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import {
   CreateEncryptedPostRequest,
   EncryptedPublicationMetadataUploader,
-} from './infrastructure/EncryptedMetadataUploader';
+} from './infrastructure/EncryptedPublicationMetadataUploader';
 import { createGatedClient } from './infrastructure/createGatedClient';
 
 export type UseCreateEncryptedPostArgs = {

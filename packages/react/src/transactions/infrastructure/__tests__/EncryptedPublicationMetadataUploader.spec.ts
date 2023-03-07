@@ -16,7 +16,7 @@ import { Wallet } from 'ethers';
 
 import { staging } from '../../../environments';
 import { MetadataUploadHandler } from '../../adapters/MetadataUploadHandler';
-import { EncryptedPublicationMetadataUploader } from '../EncryptedMetadataUploader';
+import { EncryptedPublicationMetadataUploader } from '../EncryptedPublicationMetadataUploader';
 import { createGatedClient } from '../createGatedClient';
 
 const signer = Wallet.createRandom();
