@@ -16,6 +16,7 @@ The official SDK for the [Lens Protocol](https://www.lens.xyz/) 🌿.
 - [Contributing](#contributing)
   - [Setup](#setup)
   - [Running tests](#running-tests)
+  - [Deduplicating dependencies](#deduplicating-dependencies)
 - [Releasing new version](#releasing-new-version)
 - [License](#license)
 - [Support](#support)
@@ -29,10 +30,10 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 
 ## Road Map
 
-- Release 1.0: initial stable release.
-- Release 1.1: Low-level API abstraction client (name to be decided).
-- Release 1.2: support for Data Availability posts.
-- Release 1.3: integration with Lens Gated SDK.
+- [x] Release 0.5.0: Low-level API abstraction client (name to be decided).
+- [ ] Release 0.6.0: integration with Lens Gated SDK.
+- [ ] Release 1.0.0: initial stable release.
+- [ ] Release 1.x.0: support for Data Availability posts.
 
 **Note**: This road map is subject to change and is provided for informational purposes only.
 

@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Lens SDK - NextJS</title>
+        <title>Lens SDK - Next.js</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
           rel="icon"
