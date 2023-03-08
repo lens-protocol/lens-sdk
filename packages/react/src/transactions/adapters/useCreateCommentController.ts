@@ -1,56 +1,70 @@
+import { LensApolloClient } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
-import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  IMetaTransactionNonceGateway,
+  IProtocolCallRelayer,
+  ProtocolCallUseCase,
+  TransactionQueue,
+} from '@lens-protocol/domain/use-cases/transactions';
+import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
 
-import { useSharedDependencies } from '../../shared';
 import { IMetadataUploader } from './IMetadataUploader';
+import { ITransactionFactory } from './ITransactionFactory';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 import { CreateCommentCallGateway } from './publication-call-gateways/CreateCommentCallGateway';
 
-export type UseCreateCommentControllerArgs = {
-  uploader: IMetadataUploader<CreateCommentRequest>;
+export type CreateCommentControllerArgs<T extends CreateCommentRequest> = {
+  activeWallet: ActiveWallet;
+  apolloClient: LensApolloClient;
+  protocolCallRelayer: IProtocolCallRelayer<T>;
+  transactionFactory: ITransactionFactory<T>;
+  transactionGateway: IMetaTransactionNonceGateway;
+  transactionQueue: TransactionQueue<T>;
+  uploader: IMetadataUploader<T>;
 };
 
-export function useCreateCommentController({ uploader }: UseCreateCommentControllerArgs) {
-  const {
-    apolloClient,
-    transactionFactory,
-    activeWallet,
-    transactionGateway,
-    protocolCallRelayer,
-    transactionQueue,
-  } = useSharedDependencies();
+export class CreateCommentController<T extends CreateCommentRequest> {
+  private readonly presenter = new PromiseResultPresenter<
+    void,
+    PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  >();
 
-  return async (request: CreateCommentRequest) => {
+  private readonly createComment: CreateComment;
+
+  constructor({
+    activeWallet,
+    apolloClient,
+    protocolCallRelayer,
+    transactionFactory,
+    transactionGateway,
+    transactionQueue,
+    uploader,
+  }: CreateCommentControllerArgs<T>) {
     const gateway = new CreateCommentCallGateway(apolloClient, transactionFactory, uploader);
 
-    const presenter = new PromiseResultPresenter<
-      void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError
-    >();
-
-    const signedCreateComment = new ProtocolCallUseCase<CreateCommentRequest>(
+    const signedCreatePost = new ProtocolCallUseCase<CreateCommentRequest>(
       activeWallet,
       transactionGateway,
       gateway,
       protocolCallRelayer,
       transactionQueue,
-      presenter,
+      this.presenter,
     );
-
-    const createComment = new CreateComment(
-      signedCreateComment,
+    this.createComment = new CreateComment(
+      signedCreatePost,
       gateway,
       transactionQueue,
-      presenter,
+      this.presenter,
     );
+  }
 
-    await createComment.execute(request);
-
-    return presenter.asResult();
-  };
+  async execute(request: CreateCommentRequest) {
+    await this.createComment.execute(request);
+    return this.presenter.asResult();
+  }
 }
