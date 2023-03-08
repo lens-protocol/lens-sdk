@@ -24,6 +24,9 @@ const mapRestrictEventTypesToLensTypes = (restrictEventTypesTo?: FeedEventItemTy
   );
 };
 
+// feed limit is higher than others to get good aggregation of feed items
+const FEED_LIMIT = 50;
+
 export type UseFeedArgs = PaginatedArgs<{
   observerId?: string;
   profileId: string;
@@ -36,7 +39,7 @@ export function useFeed({
   restrictEventTypesTo,
   observerId,
   profileId,
-  limit,
+  limit = FEED_LIMIT,
 }: UseFeedArgs): PaginatedReadResult<FeedItemFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
 
@@ -48,7 +51,7 @@ export function useFeed({
         profileId,
         observerId,
         sources,
-        limit: limit ?? 10,
+        limit,
       },
       client: apolloClient,
     }),
