@@ -1,4 +1,4 @@
-import { DecryptionCriteria, DecryptionCriteriaType } from '@lens-protocol/domain/entities';
+import { DecryptionCriteria } from '@lens-protocol/domain/entities';
 import {
   CreateCommentRequest,
   CreatePostRequest,
@@ -6,10 +6,9 @@ import {
 import * as GatedContent from '@lens-protocol/gated-content';
 import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 
-import { ChainConfigRegistry } from '../../chains';
 import { IMetadataUploader } from '../adapters/IMetadataUploader';
 import { MetadataUploadHandler } from '../adapters/MetadataUploadHandler';
-import { createAccessCondition, FullyQualifiedDecryptionCriteria } from './createAccessCondition';
+import { AccessConditionBuilderFactory } from './AccessConditionBuilderFactory';
 import { createPublicationMetadata } from './createPublicationMetadata';
 
 type WithDecryptionCriteria<T extends CreatePostRequest | CreateCommentRequest> = Prettify<
@@ -33,23 +32,15 @@ export class EncryptedPublicationMetadataUploader<
 {
   constructor(
     private readonly client: GatedContent.GatedClient,
-    private readonly chains: ChainConfigRegistry,
+    private readonly accessConditionBuilderFactory: AccessConditionBuilderFactory,
     private readonly handler: MetadataUploadHandler,
   ) {}
 
   async upload(request: T): Promise<string> {
-    const qualifiedDecryptionCriteria: FullyQualifiedDecryptionCriteria = {
-      type: DecryptionCriteriaType.OR,
-      or: [
-        {
-          type: DecryptionCriteriaType.PROFILE_OWNERSHIP,
-          profileId: request.profileId,
-        },
-        request.decryptionCriteria,
-      ],
-    };
-
-    const accessCondition = createAccessCondition(qualifiedDecryptionCriteria, this.chains);
+    const accessCondition = await this.accessConditionBuilderFactory
+      .createForPublicationBy(request.profileId)
+      .withDecryptionCriteria(request.decryptionCriteria)
+      .build();
 
     const metadata = createPublicationMetadata(request);
 

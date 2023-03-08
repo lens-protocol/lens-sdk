@@ -3,7 +3,7 @@
  */
 import { faker } from '@faker-js/faker';
 import { PublicationMainFocus } from '@lens-protocol/api-bindings';
-import { DecryptionCriteria, ProfileId } from '@lens-protocol/domain/entities';
+import { DecryptionCriteria } from '@lens-protocol/domain/entities';
 import {
   mockAddressOwnershipCriterion,
   mockCreateCommentRequest,
@@ -13,9 +13,14 @@ import { GatedClient } from '@lens-protocol/gated-content';
 import { webCryptoProvider } from '@lens-protocol/gated-content/web';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
 import { Wallet } from 'ethers';
+import { mock } from 'jest-mock-extended';
 
 import { staging } from '../../../environments';
 import { MetadataUploadHandler } from '../../adapters/MetadataUploadHandler';
+import {
+  AccessConditionBuilderFactory,
+  IPublicationIdPredictor,
+} from '../AccessConditionBuilderFactory';
 import { EncryptedPublicationMetadataUploader } from '../EncryptedPublicationMetadataUploader';
 import { createGatedClient } from '../createGatedClient';
 
@@ -33,26 +38,24 @@ function setupTestScenario({ uploadHandler }: { uploadHandler: MetadataUploadHan
     storageProvider: new InMemoryStorageProvider(),
   });
 
-  return new EncryptedPublicationMetadataUploader(client, staging.chains, uploadHandler);
+  const publicationIdPredictor = mock<IPublicationIdPredictor>();
+
+  const accessConditionBuilderFactory = new AccessConditionBuilderFactory(
+    staging.chains,
+    publicationIdPredictor,
+  );
+
+  const uploader = new EncryptedPublicationMetadataUploader(
+    client,
+    accessConditionBuilderFactory,
+    uploadHandler,
+  );
+
+  return { uploader };
 }
 
 const url = faker.internet.url();
 const successfulUploadHandler = jest.fn().mockResolvedValue(url);
-
-function expectedAccessCondition(request: { profileId: ProfileId }) {
-  return {
-    or: {
-      criteria: [
-        {
-          profile: { profileId: request.profileId },
-        },
-        {
-          eoa: { address: signer.address },
-        },
-      ],
-    },
-  };
-}
 
 function assertHasDecryptionCriteria(request: {
   decryptionCriteria?: DecryptionCriteria;
@@ -77,15 +80,15 @@ describe(`Given an instance of the ${EncryptedPublicationMetadataUploader.name}`
       const request = mockCreatePublicationRequest({
         decryptionCriteria: mockAddressOwnershipCriterion({ address: signer.address }),
       });
+      assertHasDecryptionCriteria(request);
 
       it(`should:
           - create AccessCondition criteria
           - create Publication Metadata
           - use the ${GatedClient.name} to encrypt the metadata
           - eventually upload the metadata using the provided upload handler`, async () => {
-        const uploader = setupTestScenario({ uploadHandler: successfulUploadHandler });
+        const { uploader } = setupTestScenario({ uploadHandler: successfulUploadHandler });
 
-        assertHasDecryptionCriteria(request);
         const result = await uploader.upload(request);
 
         expect(result).toEqual(url);
@@ -94,7 +97,18 @@ describe(`Given an instance of the ${EncryptedPublicationMetadataUploader.name}`
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             encryptionParams: expect.objectContaining({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              accessCondition: expectedAccessCondition(request),
+              accessCondition: {
+                or: {
+                  criteria: [
+                    {
+                      profile: { profileId: request.profileId },
+                    },
+                    {
+                      eoa: { address: signer.address },
+                    },
+                  ],
+                },
+              },
             }),
             content: 'This publication is gated.',
             mainContentFocus: PublicationMainFocus[request.contentFocus],

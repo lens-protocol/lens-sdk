@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { ContractType, NftOwnershipInput } from '@lens-protocol/api-bindings';
+import { never } from '@lens-protocol/shared-kernel';
 
 import {
   AccessConditionType,
@@ -75,7 +76,7 @@ export const transformNftCondition = (
     partial = _handleOwnsAtLeastOneNftFromCollection();
     // case owns a single specific nft from the collection
   } else if (condition.tokenIds.length === 1) {
-    partial = _handleOwnsOneSpecificNftFromCollection(condition.tokenIds[0]);
+    partial = _handleOwnsOneSpecificNftFromCollection(condition.tokenIds[0] ?? never());
     // case owns multiple specific nfts from the collection
   } else {
     // workaround for ERC721 contracts that do not support balanceOfBatch

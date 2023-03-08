@@ -405,12 +405,8 @@ export function mockCollectPublicationCriterion(
   };
 }
 
-export function mockCollectThisPublicationCriterion(
-  overrides?: Partial<CollectThisPublicationCriterion>,
-): CollectThisPublicationCriterion {
+export function mockCollectThisPublicationCriterion(): CollectThisPublicationCriterion {
   return {
-    publicationId: mockPublicationId(),
-    ...overrides,
     type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
   };
 }

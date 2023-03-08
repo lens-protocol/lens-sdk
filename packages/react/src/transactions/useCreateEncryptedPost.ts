@@ -19,10 +19,12 @@ import { useWalletLogin, useActiveWalletSigner } from '../wallet';
 import { CreatePostController } from './adapters/CreatePostController';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
+import { AccessConditionBuilderFactory } from './infrastructure/AccessConditionBuilderFactory';
 import {
   CreateEncryptedPostRequest,
   EncryptedPublicationMetadataUploader,
 } from './infrastructure/EncryptedPublicationMetadataUploader';
+import { PublicationIdPredictor } from './infrastructure/PublicationIdPredictor';
 import { createGatedClient } from './infrastructure/createGatedClient';
 
 export type UseCreateEncryptedPostArgs = {
@@ -84,7 +86,18 @@ export function useCreateEncryptedPost({
         storageProvider,
       });
 
-      const uploader = new EncryptedPublicationMetadataUploader(client, environment.chains, upload);
+      const publicationIdPredictor = new PublicationIdPredictor(apolloClient, transactionGateway);
+
+      const accessConditionBuilderFactory = new AccessConditionBuilderFactory(
+        environment.chains,
+        publicationIdPredictor,
+      );
+
+      const uploader = new EncryptedPublicationMetadataUploader(
+        client,
+        accessConditionBuilderFactory,
+        upload,
+      );
 
       const controller = new CreatePostController<CreateEncryptedPostRequest>({
         activeWallet,

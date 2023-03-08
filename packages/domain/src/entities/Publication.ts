@@ -67,7 +67,6 @@ export type CollectPublicationCriterion = {
 
 export type CollectThisPublicationCriterion = {
   type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION;
-  publicationId: PublicationId;
 };
 
 export type SimpleCriterion =
