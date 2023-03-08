@@ -22,6 +22,7 @@ import {
   IPublicationIdPredictor,
 } from '../AccessConditionBuilderFactory';
 import { EncryptedPublicationMetadataUploader } from '../EncryptedPublicationMetadataUploader';
+import { MetadataUploaderErrorMiddleware } from '../MetadataUploaderErrorMiddleware';
 import { createGatedClient } from '../createGatedClient';
 
 const signer = Wallet.createRandom();
@@ -48,14 +49,14 @@ function setupTestScenario({ uploadHandler }: { uploadHandler: MetadataUploadHan
   const uploader = new EncryptedPublicationMetadataUploader(
     client,
     accessConditionBuilderFactory,
-    uploadHandler,
+    new MetadataUploaderErrorMiddleware(uploadHandler),
   );
 
   return { uploader };
 }
 
 const url = faker.internet.url();
-const successfulUploadHandler = jest.fn().mockResolvedValue(url);
+const uploadHandler = jest.fn().mockResolvedValue(url);
 
 function assertHasDecryptionCriteria(request: {
   decryptionCriteria?: DecryptionCriteria;
@@ -87,12 +88,12 @@ describe(`Given an instance of the ${EncryptedPublicationMetadataUploader.name}`
           - create Publication Metadata
           - use the ${GatedClient.name} to encrypt the metadata
           - eventually upload the metadata using the provided upload handler`, async () => {
-        const { uploader } = setupTestScenario({ uploadHandler: successfulUploadHandler });
+        const { uploader } = setupTestScenario({ uploadHandler });
 
         const result = await uploader.upload(request);
 
         expect(result).toEqual(url);
-        expect(successfulUploadHandler).toHaveBeenCalledWith(
+        expect(uploadHandler).toHaveBeenCalledWith(
           expect.objectContaining({
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             encryptionParams: expect.objectContaining({
