@@ -1,3 +1,4 @@
+import { Authentication } from '../authentication';
 import { mumbaiSandbox } from '../consts/environments';
 import { NotAuthenticatedError } from '../consts/errors';
 import { ProxyAction } from './ProxyAction';
@@ -8,7 +9,8 @@ const testConfig = {
 
 describe(`Given the ${ProxyAction.name} configured to work with sandbox`, () => {
   describe(`and the instance is not authenticated`, () => {
-    const proxyAction = new ProxyAction(testConfig);
+    const authentication = new Authentication(testConfig);
+    const proxyAction = new ProxyAction(testConfig, authentication);
 
     describe(`when ${ProxyAction.prototype.freeFollow.name} method is called`, () => {
       it(`should return a failure`, async () => {
