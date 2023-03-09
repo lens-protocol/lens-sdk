@@ -10,3 +10,5 @@ export function setupWallet(): Wallet {
 
   return new Wallet(process.env.WALLET_PRIVATE_KEY);
 }
+
+export const walletPrivateKey = process.env.WALLET_PRIVATE_KEY;
