@@ -1,10 +1,11 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import { PromiseResult, Result } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
 import { Authentication } from '../authentication';
 import { LensConfig } from '../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { execute } from '../helpers/execute';
+import { poll } from '../helpers/poll';
 import {
   getSdk,
   ProxyActionErrorFragment,
@@ -12,6 +13,7 @@ import {
   ProxyActionStatusResultFragment,
   Sdk,
 } from './graphql/proxy-action.generated';
+import { getIsStatusCompleteFromProxyActionStatus } from './helpers';
 
 export class ProxyAction {
   private readonly authentication: Authentication | undefined;
@@ -81,6 +83,23 @@ export class ProxyAction {
       );
 
       return result.data.result;
+    });
+  }
+
+  async waitForStatusComplete(
+    proxyActionId: string,
+  ): Promise<
+    | Result<
+        ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment,
+        CredentialsExpiredError | NotAuthenticatedError
+      >
+    | undefined
+  > {
+    return poll({
+      fn: () => this.checkStatus(proxyActionId),
+      validate: (result: Awaited<ReturnType<typeof this.checkStatus>>) => {
+        return getIsStatusCompleteFromProxyActionStatus(result.unwrap());
+      },
     });
   }
 }

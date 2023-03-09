@@ -21,10 +21,11 @@ Client manages the token lifecycle and storage
 - [x] [M] client.authentication.authenticate(address, signature)
 - [x] [H] client.authentication.isAuthenticated()
 
-## Broadcast / Transaction
+## Transaction
 
 - [x] [AM] client.transaction.broadcast(request)
-- [x] [AQ] client.transaction.wasIndexed({ txId })
+- [x] [AQ] client.transaction.wasIndexed(txId)
+- [x] [AQ] client.transaction.waitForIsIndexed(txId)
 
 ## Explore
 
@@ -141,7 +142,8 @@ Client manages the token lifecycle and storage
 
 - [x] [AM] client.proxyAction.freeFollow({ profileId })
 - [x] [AM] client.proxyAction.freeCollect({ publicationId })
-- [x] [AQ] client.proxyAction.checkStatus({ proxyActionId })
+- [x] [AQ] client.proxyAction.checkStatus(proxyActionId)
+- [x] [AQ] client.proxyAction.waitForStatusComplete(proxyActionId)
 
 ## Reactions
 
