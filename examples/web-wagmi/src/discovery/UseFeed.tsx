@@ -14,7 +14,7 @@ const allFeedEventTypes = [
   FeedEventItemType.CollectPost,
 ];
 
-export function Feed() {
+export function UseFeed() {
   const [restrictEventTypesTo, setRestrictEventTypesTo] = useState<FeedEventItemType[]>([
     FeedEventItemType.Post,
   ]);

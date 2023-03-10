@@ -1,7 +1,7 @@
 import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
 import { CommonPaginatedResultInfoFragment, UnspecifiedError } from '@lens-protocol/api-bindings';
 import { IEquatableError, PromiseResult } from '@lens-protocol/shared-kernel';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 type ReadResultWithoutError<T> =
   | {
@@ -134,10 +134,8 @@ export function useOperation<TResult, TError extends IEquatableError, TArgs exte
 ): Operation<TResult, TError, TArgs> {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<TError | undefined>(undefined);
-
-  return {
-    error,
-    execute: async (...args: TArgs) => {
+  const execute = useCallback(
+    async (...args: TArgs) => {
       setError(undefined);
       setIsPending(true);
 
@@ -153,6 +151,8 @@ export function useOperation<TResult, TError extends IEquatableError, TArgs exte
         setIsPending(false);
       }
     },
-    isPending,
-  };
+    [handler],
+  );
+
+  return { error, execute, isPending };
 }

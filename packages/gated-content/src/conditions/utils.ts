@@ -1,4 +1,4 @@
-import { assertNever } from '@lens-protocol/shared-kernel';
+import { assertNever, never } from '@lens-protocol/shared-kernel';
 
 import { LitOperator, SupportedChainId, SupportedChains } from './types';
 
@@ -8,7 +8,7 @@ export const insertObjectInBetweenArrayElements = <T>(
 ): Array<T | LitOperator> => {
   const results: Array<T | LitOperator> = [];
   for (let i = 0; i < array.length; i++) {
-    results.push(array[i]);
+    results.push(array[i] ?? never());
     if (i !== array.length - 1) {
       results.push(objectToInsert);
     }

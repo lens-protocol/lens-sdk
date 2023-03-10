@@ -131,7 +131,7 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
   const lastName = faker.name.lastName();
 
   return {
-    id: faker.datatype.uuid(),
+    id: mockProfileId(),
     name: `${firstName} ${lastName}`,
     bio: faker.lorem.sentence(),
     handle: faker.internet.userName(firstName, lastName),

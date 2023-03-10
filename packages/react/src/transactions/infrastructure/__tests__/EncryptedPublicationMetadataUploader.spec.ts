@@ -16,23 +16,24 @@ import { Wallet } from 'ethers';
 
 import { staging } from '../../../environments';
 import { MetadataUploadHandler } from '../../adapters/MetadataUploadHandler';
-import { EncryptedPublicationMetadataUploader } from '../EncryptedMetadataUploader';
+import { EncryptedPublicationMetadataUploader } from '../EncryptedPublicationMetadataUploader';
+import { createGatedClient } from '../createGatedClient';
 
 const signer = Wallet.createRandom();
 
 function setupTestScenario({ uploadHandler }: { uploadHandler: MetadataUploadHandler }) {
-  return EncryptedPublicationMetadataUploader.create({
+  const client = createGatedClient({
     config: {
       domain: 'localhost',
       uri: 'https://localhost/login',
     },
-
-    encryptionProvider: webCryptoProvider(),
     environment: staging,
     signer,
+    encryptionProvider: webCryptoProvider(),
     storageProvider: new InMemoryStorageProvider(),
-    upload: uploadHandler,
   });
+
+  return new EncryptedPublicationMetadataUploader(client, staging.chains, uploadHandler);
 }
 
 const url = faker.internet.url();
@@ -64,10 +65,16 @@ function assertHasDecryptionCriteria(request: {
 describe(`Given an instance of the ${EncryptedPublicationMetadataUploader.name}`, () => {
   describe(`when the "${EncryptedPublicationMetadataUploader.prototype.upload.name}" method is invoked`, () => {
     describe.each([
-      { request: 'CreateEncryptedPostRequest', mockPublication: mockCreatePostRequest },
-      { request: 'CreateEncryptedCommentRequest', mockPublication: mockCreateCommentRequest },
-    ])('with a $request', ({ mockPublication }) => {
-      const request = mockPublication({
+      {
+        request: 'CreateEncryptedPostRequest',
+        mockCreatePublicationRequest: mockCreatePostRequest,
+      },
+      {
+        request: 'CreateEncryptedCommentRequest',
+        mockCreatePublicationRequest: mockCreateCommentRequest,
+      },
+    ])('with a $request', ({ mockCreatePublicationRequest }) => {
+      const request = mockCreatePublicationRequest({
         decryptionCriteria: mockAddressOwnershipCriterion({ address: signer.address }),
       });
 
