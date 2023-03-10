@@ -37,7 +37,9 @@ export enum PublicationReportReason {
   SOMETHING_ELSE = 'SOMETHING_ELSE',
 }
 
-export const buildReportReason = (reason: PublicationReportReason): ReportingReasonInputParams => {
+export const buildReportingReasonInputParams = (
+  reason: PublicationReportReason,
+): ReportingReasonInputParams => {
   switch (reason) {
     case PublicationReportReason.VIOLENCE:
       return {

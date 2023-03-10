@@ -21,15 +21,15 @@ Client manages the token lifecycle and storage
 - [x] [M] client.authentication.authenticate(address, signature)
 - [x] [H] client.authentication.isAuthenticated()
 
-## Broadcast / Transaction
-
-- [x] [AM] client.transaction.broadcast(request)
-- [x] [AQ] client.transaction.wasIndexed({ txId })
-
 ## Explore
 
 - [x] [PQ] client.explore.publications(request)
 - [x] [PQ] client.explore.profiles(request)
+
+## Feed
+
+- [x] [APQ] client.feed.fetch(request)
+- [x] [APQ] client.feed.fetchHighlights(request)
 
 ## Modules
 
@@ -69,7 +69,6 @@ Client manages the token lifecycle and storage
 ### Edit profile
 
 - [x] [AM] client.profile.create(request)
-- [x] [H] client.profile.isValidHandle(handle)
 
 - [x] [AM] client.profile.createSetProfileMetadataTypedData(request)
 - [x] [AM] client.profile.createSetProfileMetadataViaDispatcher(request)
@@ -84,6 +83,10 @@ Client manages the token lifecycle and storage
 - [x] [Q] client.profile.allInterests()
 - [x] [AM] client.profile.addInterests(request)
 - [x] [AM] client.profile.removeInterests(request)
+
+### Heleprs
+
+- [x] [H] isValidProfileHandle(handle)
 
 ### Follow profile
 
@@ -127,7 +130,10 @@ Client manages the token lifecycle and storage
 - [x] [M] client.publication.createAttachMediaData(request)
 
 - [x] [AM] client.publication.report(request)
-- [x] [H] client.publication.buildReportReason(PublicationReportReason)
+
+### Helpers
+
+- [x] [H] buildReportingReasonInputParams(PublicationReportReason)
 
 ## ProtocolStats
 
@@ -141,7 +147,14 @@ Client manages the token lifecycle and storage
 
 - [x] [AM] client.proxyAction.freeFollow({ profileId })
 - [x] [AM] client.proxyAction.freeCollect({ publicationId })
-- [x] [AQ] client.proxyAction.checkStatus({ proxyActionId })
+- [x] [AQ] client.proxyAction.checkStatus(proxyActionId)
+- [x] [AQ] client.proxyAction.waitForStatusComplete(proxyActionId)
+
+### Helpers
+
+- [x] [H] isProxyActionError()
+- [x] [H] isProxyActionQueued()
+- [x] [H] isProxyActionStatusResult()
 
 ## Reactions
 
@@ -160,10 +173,18 @@ Client manages the token lifecycle and storage
 - [x] [PQ] client.search.profiles({ query, limit })
 - [x] [PQ] client.search.publications({ query, limit })
 
-## Feed
+## Transaction
 
-- [x] [APQ] client.feed.fetch(request)
-- [x] [APQ] client.feed.fetchHighlights(request)
+- [x] [AM] client.transaction.broadcast(request)
+- [x] [AQ] client.transaction.wasIndexed(txId)
+- [x] [AQ] client.transaction.waitForIsIndexed(txId)
+
+### Helpers
+
+- [x] [H] isRelayerResult()
+- [x] [H] isRelayerError()
+- [x] [H] isTransactionIndexedResult()
+- [x] [H] isTransactionError()
 
 ## Other considerations
 
