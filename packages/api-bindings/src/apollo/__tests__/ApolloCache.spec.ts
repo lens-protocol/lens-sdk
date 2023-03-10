@@ -1,6 +1,7 @@
 import { ApolloCache, DocumentNode, makeVar } from '@apollo/client';
 import { DecryptionCriteriaType } from '@lens-protocol/domain/entities';
 import {
+  mockPublicationId,
   mockUnconstrainedFollowRequest,
   mockUnfollowRequest,
   mockWalletData,
@@ -120,6 +121,10 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
       const profileCondition = mockProfileOwnershipAccessCondition();
       const followCondition = mockFollowConditionAccessCondition();
       const collectCondition = mockCollectConditionAccessCondition();
+      const collectThisCondition = mockCollectConditionAccessCondition({
+        publicationId: mockPublicationId(),
+        thisPublication: true,
+      });
 
       describe.each([
         {
@@ -172,6 +177,13 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           expectations: {
             type: DecryptionCriteriaType.COLLECT_PUBLICATION,
             publicationId: collectCondition.collect?.publicationId ?? never(),
+          },
+        },
+        {
+          description: 'with a Collect access condition',
+          criterion: collectThisCondition,
+          expectations: {
+            type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
           },
         },
         {
@@ -228,36 +240,6 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           const read = readPublication(publication);
 
           expect(read.decryptionCriteria).toEqual(expectations);
-        });
-      });
-
-      describe('with a Collect access condition for the current publication', () => {
-        const criterion = mockCollectConditionAccessCondition({
-          publicationId: null,
-          thisPublication: true,
-        });
-        const metadata = mockMetadataFragment({
-          __encryptionParams: mockEncryptionParamsFragment({
-            ownerId: author.id,
-            others: [criterion],
-          }),
-        });
-        const publication = mockPublicationFragment({
-          isGated: true,
-          metadata,
-          profile: author,
-        });
-
-        it('should return the expected "DecryptionCriteria"', () => {
-          const { writePublication, readPublication } = setupApolloCache();
-          writePublication(publication);
-
-          const read = readPublication(publication);
-
-          expect(read.decryptionCriteria).toEqual({
-            type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
-            publicationId: publication.id,
-          });
         });
       });
     });

@@ -2,7 +2,7 @@ import { MockedResponse } from '@apollo/client/testing';
 import { AppId } from '@lens-protocol/domain/entities';
 import { Erc20 } from '@lens-protocol/shared-kernel';
 
-import { SearchProfilesQuery, SearchPublicationsQuery } from '..';
+import { AnyPublicationFragment, SearchProfilesQuery, SearchPublicationsQuery } from '..';
 import {
   CommentFragment,
   CommentWithFirstCommentFragment,
@@ -359,7 +359,7 @@ export function createPublicationQueryMockedResponse({
 
 export function createPublicationsQueryMockedResponse(args: {
   variables: PublicationsQueryVariables;
-  publications: Array<CommentFragment | PostFragment>;
+  publications: Array<AnyPublicationFragment>;
 }): MockedResponse<PublicationsQuery> {
   return {
     request: {

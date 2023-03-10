@@ -174,7 +174,7 @@ export class PublicationMetadataDecryptor {
 
     return Promise.all(
       media.map(async (obfuscated, index) => {
-        const encryptedMediaSet = encrypted[index];
+        const encryptedMediaSet = encrypted[index] ?? never();
 
         return {
           ...obfuscated,

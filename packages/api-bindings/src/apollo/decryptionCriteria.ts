@@ -14,7 +14,6 @@ import {
   OrCriterion,
   ProfileId,
   ProfileOwnershipCriterion,
-  PublicationId,
   SimpleCriterion,
 } from '@lens-protocol/domain/entities';
 import {
@@ -140,18 +139,12 @@ function followProfile(condition: FollowConditionOutput): FollowProfileCriterion
   };
 }
 
-type ContextBag = {
-  publicationId: PublicationId;
-};
-
 function collectPublication(
   condition: CollectConditionOutput,
-  { publicationId }: ContextBag,
 ): CollectPublicationCriterion | CollectThisPublicationCriterion {
   if (condition.thisPublication) {
     return {
       type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
-      publicationId,
     };
   }
   return {
@@ -166,10 +159,7 @@ function sanitize({ __typename, ...accessCondition }: AccessConditionOutput) {
   return conditions[0];
 }
 
-function resolveSimpleCriterion(
-  accessCondition: AccessConditionOutput,
-  context: ContextBag,
-): SimpleCriterion | null {
+function resolveSimpleCriterion(accessCondition: AccessConditionOutput): SimpleCriterion | null {
   const condition = sanitize(accessCondition);
 
   switch (condition.__typename) {
@@ -184,17 +174,16 @@ function resolveSimpleCriterion(
     case 'FollowConditionOutput':
       return followProfile(condition);
     case 'CollectConditionOutput':
-      return collectPublication(condition, context);
+      return collectPublication(condition);
   }
   return null;
 }
 
-function andCondition(
-  { criteria }: AndConditionOutput,
-  context: ContextBag,
-): AndCriterion<TwoAtLeastArray<SimpleCriterion>> | null {
+function andCondition({
+  criteria,
+}: AndConditionOutput): AndCriterion<TwoAtLeastArray<SimpleCriterion>> | null {
   const conditions = criteria
-    .map((condition) => resolveSimpleCriterion(condition, context))
+    .map((condition) => resolveSimpleCriterion(condition))
     .filter(isNonNullable);
 
   if (!hasTwoOrMore(conditions)) return null;
@@ -205,12 +194,11 @@ function andCondition(
   };
 }
 
-function orCondition(
-  { criteria }: OrConditionOutput,
-  context: ContextBag,
-): OrCriterion<TwoAtLeastArray<SimpleCriterion>> | null {
+function orCondition({
+  criteria,
+}: OrConditionOutput): OrCriterion<TwoAtLeastArray<SimpleCriterion>> | null {
   const conditions = criteria
-    .map((condition) => resolveSimpleCriterion(condition, context))
+    .map((condition) => resolveSimpleCriterion(condition))
     .filter(isNonNullable);
 
   if (!hasTwoOrMore(conditions)) return null;
@@ -221,20 +209,17 @@ function orCondition(
   };
 }
 
-function resolveRootCriterion(
-  accessCondition: AccessConditionOutput,
-  context: ContextBag,
-): Maybe<AnyCriterion> {
+function resolveRootCriterion(accessCondition: AccessConditionOutput): Maybe<AnyCriterion> {
   const condition = sanitize(accessCondition);
 
   switch (condition.__typename) {
     case 'AndConditionOutput':
-      return andCondition(condition, context);
+      return andCondition(condition);
     case 'OrConditionOutput':
-      return orCondition(condition, context);
+      return orCondition(condition);
   }
 
-  return resolveSimpleCriterion(accessCondition, context);
+  return resolveSimpleCriterion(accessCondition);
 }
 
 export const decryptionCriteria: FieldReadFunction<Maybe<DecryptionCriteria>, Comment | Post> = (
@@ -263,5 +248,5 @@ export const decryptionCriteria: FieldReadFunction<Maybe<DecryptionCriteria>, Co
 
   assertJustOne(criteria);
 
-  return resolveRootCriterion(criteria[0], { publicationId: readField('id') ?? never() });
+  return resolveRootCriterion(criteria[0]);
 };

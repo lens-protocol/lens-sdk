@@ -42,7 +42,7 @@ export function assertValidProfileId(profileId: string): asserts profileId is Pr
 export function assertValidPublicationId(
   publicationId: string,
 ): asserts publicationId is PublicationId {
-  const [profileId, pubId] = publicationId.split('-');
+  const [profileId, pubId] = publicationId.split('-') as [ProfileId, PublicationId];
 
   if (isValidLensId(profileId) && isValidLensId(pubId)) return;
 
