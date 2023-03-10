@@ -46,6 +46,7 @@ import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCollect } from './publications/UseCollect';
 import { UseCollectedPublications } from './publications/UseCollectedPublications';
 import { UseCreateComment } from './publications/UseCreateComment';
+import { UseCreateEncryptedPost } from './publications/UseCreateEncryptedPost';
 import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
@@ -100,6 +101,10 @@ export function App() {
                   element={<UseCollectedPublications />}
                 />
                 <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
+                <Route
+                  path="/publications/useCreateEncryptedPost"
+                  element={<UseCreateEncryptedPost />}
+                />
                 <Route path="/publications/useCreateComment" element={<UseCreateComment />} />
                 <Route
                   path="/publications/useProfilePublicationsForSale"

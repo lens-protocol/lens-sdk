@@ -86,7 +86,7 @@ export function PublicationCard({ publication }: PublicationCardProps) {
       <article>
         <ProfilePicture picture={publication.profile.picture} />
         <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
-        <p>{publication.content}</p>
+        <div>{publication.content}</div>
       </article>
     );
   }
