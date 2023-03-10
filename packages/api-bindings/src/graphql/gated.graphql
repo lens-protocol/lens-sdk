@@ -13,6 +13,8 @@ fragment Erc20Ownership on Erc20OwnershipOutput {
   condition
   contractAddress
   decimals
+  name
+  symbol
 }
 
 fragment AddressOwnership on EoaOwnershipOutput {

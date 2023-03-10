@@ -100,8 +100,8 @@ export function erc20Amount({ from }: { from: Erc20OwnershipFragment }) {
     chainType: ChainType.POLYGON, // temporary while BE works on returning an Erc20Amount node
     address: from.contractAddress,
     decimals: from.decimals,
-    name: 'Unspecified',
-    symbol: 'UNSPECIFIED',
+    name: from.name,
+    symbol: from.symbol,
   });
   return Amount.erc20(asset, from.amount);
 }
