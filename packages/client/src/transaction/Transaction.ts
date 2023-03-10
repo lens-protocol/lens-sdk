@@ -1,4 +1,4 @@
-import { PromiseResult, Result } from '@lens-protocol/shared-kernel';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
 import { Authentication } from '../authentication';
@@ -14,7 +14,11 @@ import {
   TransactionErrorFragment,
   TransactionIndexedResultFragment,
 } from './graphql/transaction.generated';
-import { getIsIndexedFromTransactionResult } from './helpers';
+
+export class TransactionPollingError extends Error {
+  name = 'TransactionPollingError' as const;
+  message = 'Max attempts exceeded';
+}
 
 export class Transaction {
   private readonly authentication: Authentication | undefined;
@@ -53,18 +57,24 @@ export class Transaction {
 
   async waitForIsIndexed(
     txId: string,
-  ): Promise<
-    | Result<
-        TransactionIndexedResultFragment | TransactionErrorFragment,
-        CredentialsExpiredError | NotAuthenticatedError
-      >
-    | undefined
+  ): PromiseResult<
+    TransactionIndexedResultFragment | TransactionErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
   > {
     return poll({
       fn: () => this.wasIndexed(txId),
       validate: (result: Awaited<ReturnType<typeof this.wasIndexed>>) => {
-        return getIsIndexedFromTransactionResult(result.unwrap());
+        if (result.isSuccess()) {
+          const value = result.value;
+
+          if ('indexed' in value) {
+            return value.indexed;
+          }
+        }
+        // in any not positive scenario, return true to resolve the polling with the Result
+        return true;
       },
+      onMaxAttempts: () => new TransactionPollingError(),
     });
   }
 }

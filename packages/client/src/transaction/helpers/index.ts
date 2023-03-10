@@ -27,21 +27,3 @@ export function isTransactionError(
 ): result is TransactionErrorFragment {
   return 'reason' in result;
 }
-
-export function getTxIdFromRelayerResult(
-  result: RelayerResultFragment | RelayErrorFragment,
-): string {
-  if (isRelayerResult(result)) {
-    return result.txId;
-  }
-  throw new Error(result.reason);
-}
-
-export function getIsIndexedFromTransactionResult(
-  result: TransactionIndexedResultFragment | TransactionErrorFragment,
-): boolean {
-  if (isTransactionIndexedResult(result)) {
-    return result.indexed;
-  }
-  throw new Error(result.reason);
-}

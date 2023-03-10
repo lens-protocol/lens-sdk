@@ -1,22 +1,10 @@
 type PollArgs<T> = {
   fn: (...args: unknown[]) => Promise<T>;
   validate: (result: T) => boolean;
+  onMaxAttempts: () => Error | void;
   interval?: number;
   maxAttempts?: number;
 };
-
-enum TransactionErrorReason {
-  EXCEEDED_MAX_ATTEMPTS = 'EXCEEDED_MAX_ATTEMPTS',
-  UNKNOWN = 'UNKNOWN',
-}
-
-export class TransactionError extends Error {
-  name = 'TransactionError' as const;
-
-  constructor(readonly reason: TransactionErrorReason) {
-    super(`Transaction failed due to: ${reason}`);
-  }
-}
 
 const POLL_INTERVAL = 1000;
 const POLL_MAX_ATTEMPTS = 20; // try for 20 sec
@@ -24,9 +12,10 @@ const POLL_MAX_ATTEMPTS = 20; // try for 20 sec
 export async function poll<T>({
   fn,
   validate,
+  onMaxAttempts,
   interval = POLL_INTERVAL,
   maxAttempts = POLL_MAX_ATTEMPTS,
-}: PollArgs<T>) {
+}: PollArgs<T>): Promise<T> {
   let attempts = 0;
 
   const executePoll = async (
@@ -39,11 +28,11 @@ export async function poll<T>({
     if (validate(result)) {
       return resolve(result);
     } else if (maxAttempts && attempts === maxAttempts) {
-      return reject(new TransactionError(TransactionErrorReason.EXCEEDED_MAX_ATTEMPTS));
+      return reject(onMaxAttempts());
     } else {
       setTimeout(executePoll, interval, resolve, reject);
     }
   };
 
-  return new Promise(executePoll);
+  return new Promise(executePoll) as Promise<T>;
 }

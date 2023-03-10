@@ -1,4 +1,3 @@
-import { ProxyActionStatusTypes } from '../../graphql/types.generated';
 import {
   ProxyActionErrorFragment,
   ProxyActionQueuedFragment,
@@ -21,13 +20,4 @@ export function isProxyActionStatusResult(
   result: ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment,
 ): result is ProxyActionStatusResultFragment {
   return 'status' in result;
-}
-
-export function getIsStatusCompleteFromProxyActionStatus(
-  result: ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment,
-): boolean {
-  if (isProxyActionStatusResult(result)) {
-    return result.status === ProxyActionStatusTypes.Complete;
-  }
-  return false;
 }

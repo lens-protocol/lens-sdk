@@ -1,9 +1,10 @@
-import { PromiseResult, Result } from '@lens-protocol/shared-kernel';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
 import { Authentication } from '../authentication';
 import { LensConfig } from '../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import { ProxyActionStatusTypes } from '../graphql/types.generated';
 import { execute } from '../helpers/execute';
 import { poll } from '../helpers/poll';
 import {
@@ -13,7 +14,11 @@ import {
   ProxyActionStatusResultFragment,
   Sdk,
 } from './graphql/proxy-action.generated';
-import { getIsStatusCompleteFromProxyActionStatus } from './helpers';
+
+export class StatusPollingError extends Error {
+  name = 'StatusPollingError' as const;
+  message = 'Max attempts exceeded';
+}
 
 export class ProxyAction {
   private readonly authentication: Authentication | undefined;
@@ -88,18 +93,24 @@ export class ProxyAction {
 
   async waitForStatusComplete(
     proxyActionId: string,
-  ): Promise<
-    | Result<
-        ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment,
-        CredentialsExpiredError | NotAuthenticatedError
-      >
-    | undefined
+  ): PromiseResult<
+    ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment,
+    CredentialsExpiredError | NotAuthenticatedError
   > {
     return poll({
       fn: () => this.checkStatus(proxyActionId),
       validate: (result: Awaited<ReturnType<typeof this.checkStatus>>) => {
-        return getIsStatusCompleteFromProxyActionStatus(result.unwrap());
+        if (result.isSuccess()) {
+          const value = result.value;
+
+          if ('status' in value) {
+            return value.status === ProxyActionStatusTypes.Complete;
+          }
+        }
+        // in any not positive scenario, return true to resolve the polling with the Result
+        return true;
       },
+      onMaxAttempts: () => new StatusPollingError(),
     });
   }
 }
