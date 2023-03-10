@@ -3,7 +3,7 @@ import {
   useProfilesOwnedBy,
   ProfileFragment,
   useActiveProfileSwitch,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';

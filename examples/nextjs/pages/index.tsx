@@ -1,4 +1,4 @@
-import { useActiveProfile, useWalletLogin } from '@lens-protocol/react';
+import { useActiveProfile, useWalletLogin } from '@lens-protocol/react-web';
 import Head from 'next/head';
 import { useAccount, useConnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';

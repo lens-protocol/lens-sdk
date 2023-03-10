@@ -1,4 +1,5 @@
 {
   "main": "dist/lens-protocol-gated-content-web.cjs.js",
-  "module": "dist/lens-protocol-gated-content-web.esm.js"
+  "module": "dist/lens-protocol-gated-content-web.esm.js",
+  "sideEffects": false
 }

@@ -1,5 +1,5 @@
 import { ContractType } from '@lens-protocol/api-bindings';
-import { ConditionType } from '@lit-protocol/constants';
+import type { ConditionType } from '@lit-protocol/constants';
 
 export enum AccessConditionType {
   And = 'and',

@@ -1,7 +1,8 @@
 import {
   UseCreateEncryptedCommentArgs as UseCreateEncryptedCommentBaseArgs,
   useCreateEncryptedComment as useCreateEncryptedCommentBase,
-} from '../transactions/useCreateEncryptedComment';
+} from '@lens-protocol/react';
+
 import { useBrowserEncryptionConfig } from './useBrowserEncryptionConfig';
 
 export type UseCreateEncryptedCommentArgs = Omit<UseCreateEncryptedCommentBaseArgs, 'encryption'>;

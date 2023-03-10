@@ -1,4 +1,4 @@
-import { ProfileFragment, useUnreadNotificationCount } from '@lens-protocol/react';
+import { ProfileFragment, useUnreadNotificationCount } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';

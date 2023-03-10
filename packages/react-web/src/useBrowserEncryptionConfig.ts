@@ -1,7 +1,6 @@
 import { webCryptoProvider } from '@lens-protocol/gated-content/web';
+import { EncryptionConfig } from '@lens-protocol/react';
 import { useState } from 'react';
-
-import { EncryptionConfig } from '../EncryptionConfig';
 
 export function useBrowserEncryptionConfig(): EncryptionConfig {
   const [encryption] = useState(() => ({
@@ -9,9 +8,8 @@ export function useBrowserEncryptionConfig(): EncryptionConfig {
       domain: location.host,
       uri: location.href,
     },
-    provider,
+    provider: webCryptoProvider(),
   }));
 
   return encryption;
 }
-const provider = webCryptoProvider();

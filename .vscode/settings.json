@@ -10,11 +10,12 @@
     "packages/domain",
     "packages/eslint-config",
     "packages/prettier-config",
+    "packages/react-web",
     "packages/react",
     "packages/sdk-gated",
     "packages/shared-kernel",
     "packages/storage",
-    "packages/wagmi",
-    "packages/gated-content"
+    "packages/tsconfig",
+    "packages/wagmi"
   ]
 }

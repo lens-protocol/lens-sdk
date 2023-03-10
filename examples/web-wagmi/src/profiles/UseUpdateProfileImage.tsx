@@ -1,4 +1,4 @@
-import { ImageType, ProfileFragment, useUpdateProfileImage } from '@lens-protocol/react';
+import { ImageType, ProfileFragment, useUpdateProfileImage } from '@lens-protocol/react-web';
 import { ChangeEvent, useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';

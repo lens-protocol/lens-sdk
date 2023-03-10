@@ -1,4 +1,4 @@
-import { EnabledModuleFragment } from '@lens-protocol/react';
+import { EnabledModuleFragment } from '@lens-protocol/react-web';
 
 type ModuleCardProps = {
   module: EnabledModuleFragment;

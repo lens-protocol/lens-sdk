@@ -1,4 +1,5 @@
 import { Sources } from '@lens-protocol/api-bindings';
+import { AuthenticationConfig, IEncryptionProvider } from '@lens-protocol/gated-content';
 import { ILogger } from '@lens-protocol/shared-kernel';
 import { IStorageProvider, IObservableStorageProvider } from '@lens-protocol/storage';
 
@@ -19,4 +20,9 @@ export type LensConfig = {
   logger?: ILogger;
   storage: IStorageProvider | IObservableStorageProvider;
   sources?: Sources;
+};
+
+export type EncryptionConfig = {
+  authentication: AuthenticationConfig;
+  provider: IEncryptionProvider;
 };

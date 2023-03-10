@@ -4,7 +4,7 @@ import {
   RootConditionFragment,
 } from '@lens-protocol/api-bindings';
 import { InvariantError, isNonNullable, never, UnknownObject } from '@lens-protocol/shared-kernel';
-import { UnifiedAccessControlConditions } from '@lit-protocol/constants';
+import type { UnifiedAccessControlConditions } from '@lit-protocol/constants';
 
 import { EnvironmentConfig } from '../environments';
 import { Entry, ExtractFields } from '../types';

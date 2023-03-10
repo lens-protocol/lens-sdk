@@ -1,4 +1,4 @@
-import { PublicationRevenueFragment } from '@lens-protocol/react';
+import { PublicationRevenueFragment } from '@lens-protocol/react-web';
 
 import { PublicationCard } from '../../publications/components/PublicationCard';
 

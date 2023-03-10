@@ -1,4 +1,4 @@
-import { FeedEventItemType, isPostPublication, useFeed } from '@lens-protocol/react';
+import { FeedEventItemType, isPostPublication, useFeed } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';

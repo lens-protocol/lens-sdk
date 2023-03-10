@@ -45,9 +45,9 @@
     "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
-    "@lit-protocol/constants": "^2.1.42",
-    "@lit-protocol/crypto": "^2.1.43",
-    "@lit-protocol/lit-node-client": "^2.1.42",
+    "@lit-protocol/constants": "^2.1.52",
+    "@lit-protocol/crypto": "^2.1.52",
+    "@lit-protocol/lit-node-client": "^2.1.52",
     "siwe": "^1.1.6",
     "tslib": "^2.5.0",
     "zod": "^3.20.6"

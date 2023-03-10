@@ -5,11 +5,10 @@ import { blobToBase64String, base64StringToBlob } from '@lit-protocol/lit-node-c
 import { ICipher, IEncryptionProvider } from '../IEncryptionProvider';
 
 class WebCryptoCipher implements ICipher {
-  constructor(
-    private readonly cryptoKey: CryptoKey,
-    private readonly encoder: TextEncoder,
-    private readonly decoder: TextDecoder,
-  ) {}
+  private readonly encoder = new TextEncoder();
+  private readonly decoder = new TextDecoder();
+
+  constructor(private readonly cryptoKey: CryptoKey) {}
 
   async encrypt(data: string): Promise<string> {
     const buffer = this.encoder.encode(data);
@@ -29,15 +28,12 @@ class WebCryptoCipher implements ICipher {
 }
 
 export class WebCryptoEncryptionProvider implements IEncryptionProvider {
-  private readonly encoder = new TextEncoder();
-  private readonly decoder = new TextDecoder();
-
   async createCipher(): Promise<ICipher> {
     const cryptoKey = await crypto.subtle.generateKey(SYMM_KEY_ALGO_PARAMS, true, [
       'encrypt',
       'decrypt',
     ]);
-    return new WebCryptoCipher(cryptoKey, this.encoder, this.decoder);
+    return new WebCryptoCipher(cryptoKey);
   }
 
   async importCipher(key: Uint8Array): Promise<ICipher> {
@@ -45,6 +41,6 @@ export class WebCryptoEncryptionProvider implements IEncryptionProvider {
       'encrypt',
       'decrypt',
     ]);
-    return new WebCryptoCipher(cryptoKey, this.encoder, this.decoder);
+    return new WebCryptoCipher(cryptoKey);
   }
 }

@@ -1,4 +1,4 @@
-import { useActiveProfile } from '@lens-protocol/react';
+import { useActiveProfile } from '@lens-protocol/react-web';
 import { NavLink } from 'react-router-dom';
 
 import { CATEGORIES } from '../../config';

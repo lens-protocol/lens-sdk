@@ -1,7 +1,8 @@
 import {
   UseCreateEncryptedPostArgs as UseCreateEncryptedPostBaseArgs,
   useCreateEncryptedPost as useCreateEncryptedPostBase,
-} from '../transactions/useCreateEncryptedPost';
+} from '@lens-protocol/react';
+
 import { useBrowserEncryptionConfig } from './useBrowserEncryptionConfig';
 
 export type UseCreateEncryptedPostArgs = Omit<UseCreateEncryptedPostBaseArgs, 'encryption'>;

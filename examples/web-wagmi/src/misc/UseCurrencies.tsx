@@ -1,4 +1,4 @@
-import { useCurrencies } from '@lens-protocol/react';
+import { useCurrencies } from '@lens-protocol/react-web';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';

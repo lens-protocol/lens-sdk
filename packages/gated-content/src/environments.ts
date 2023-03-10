@@ -1,5 +1,5 @@
 import { EthereumAddress } from '@lens-protocol/shared-kernel';
-import { Chain } from '@lit-protocol/constants';
+import type { Chain } from '@lit-protocol/constants';
 
 export type EnvironmentConfig = {
   chainId: number;
