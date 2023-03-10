@@ -5,6 +5,7 @@ import {
   NewMentionNotificationFragment,
   NewMirrorNotificationFragment,
   NewReactionNotificationFragment,
+  NotificationTypes,
   useNotificationsQuery,
 } from '@lens-protocol/api-bindings';
 
@@ -13,6 +14,7 @@ import { useSharedDependencies } from '../shared';
 
 type UseNotificationsArgs = PaginatedArgs<{
   profileId: string;
+  notificationTypes?: NotificationTypes[];
 }>;
 
 export type Notification =
@@ -24,6 +26,7 @@ export type Notification =
   | NewReactionNotificationFragment;
 
 export function useNotifications({
+  notificationTypes,
   profileId,
   limit,
 }: UseNotificationsArgs): PaginatedReadResult<Notification[]> {
@@ -34,6 +37,7 @@ export function useNotifications({
       variables: {
         observerId: profileId,
         limit: limit ?? 10,
+        notificationTypes,
         sources,
       },
       client: apolloClient,

@@ -4825,6 +4825,7 @@ export type NotificationsQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
 }>;
 
 export type NotificationsQuery = {
@@ -4844,6 +4845,7 @@ export type NotificationsQuery = {
 export type UnreadNotificationCountQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
 }>;
 
 export type UnreadNotificationCountQuery = { result: { pageInfo: { totalCount: number | null } } };
@@ -7362,9 +7364,16 @@ export const NotificationsDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]!
+    $notificationTypes: [NotificationTypes!]
   ) {
     result: notifications(
-      request: { profileId: $observerId, limit: $limit, cursor: $cursor, sources: $sources }
+      request: {
+        profileId: $observerId
+        limit: $limit
+        cursor: $cursor
+        sources: $sources
+        notificationTypes: $notificationTypes
+      }
     ) {
       items {
         ... on NewFollowerNotification {
@@ -7416,6 +7425,7 @@ export const NotificationsDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      notificationTypes: // value for 'notificationTypes'
  *   },
  * });
  */
@@ -7444,8 +7454,14 @@ export type NotificationsQueryResult = Apollo.QueryResult<
   NotificationsQueryVariables
 >;
 export const UnreadNotificationCountDocument = gql`
-  query UnreadNotificationCount($profileId: ProfileId!, $sources: [Sources!]) {
-    result: notifications(request: { profileId: $profileId, sources: $sources }) {
+  query UnreadNotificationCount(
+    $profileId: ProfileId!
+    $sources: [Sources!]
+    $notificationTypes: [NotificationTypes!]
+  ) {
+    result: notifications(
+      request: { profileId: $profileId, sources: $sources, notificationTypes: $notificationTypes }
+    ) {
       pageInfo {
         totalCount
       }
@@ -7467,6 +7483,7 @@ export const UnreadNotificationCountDocument = gql`
  *   variables: {
  *      profileId: // value for 'profileId'
  *      sources: // value for 'sources'
+ *      notificationTypes: // value for 'notificationTypes'
  *   },
  * });
  */
