@@ -1,4 +1,4 @@
-import { Publication, PublicationReportReason } from '.';
+import { buildReportingReasonInputParams, Publication, PublicationReportReason } from '.';
 import { setupRandomAuthentication } from '../authentication/__helpers__/setupAuthentication';
 import { mumbaiSandbox } from '../consts/environments';
 import { PublicationMainFocus } from '../graphql/types.generated';
@@ -84,7 +84,7 @@ describe(`Given the ${Publication.name} configured to work with sandbox`, () => 
         await expect(
           publication.report({
             publicationId: '0x014e-0x0a',
-            reason: publication.buildReportReason(PublicationReportReason.FAKE_ENGAGEMENT),
+            reason: buildReportingReasonInputParams(PublicationReportReason.FAKE_ENGAGEMENT),
             additionalComments: 'comment',
           }),
         ).resolves.not.toThrow();

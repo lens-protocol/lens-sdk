@@ -55,7 +55,6 @@ import {
   ProfileStatsFragment,
   Sdk,
 } from './graphql/profile.generated';
-import { isValidHandle } from './helpers';
 
 export class Profile {
   private readonly authentication: Authentication | undefined;
@@ -202,10 +201,6 @@ export class Profile {
 
       return result.data.result;
     });
-  }
-
-  isValidHandle(handle: string): boolean {
-    return isValidHandle(handle);
   }
 
   async createSetDispatcherTypedData(

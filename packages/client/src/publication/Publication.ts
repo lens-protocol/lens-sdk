@@ -27,7 +27,6 @@ import {
   PublicationsQueryRequest,
   PublicationValidateMetadataResult,
   PublicMediaRequest,
-  ReportingReasonInputParams,
   ReportPublicationRequest,
   TypedDataOptions,
   WhoCollectedPublicationRequest,
@@ -44,7 +43,6 @@ import {
   PublicationStatsFragment,
   Sdk,
 } from './graphql/publication.generated';
-import { buildReportReason, PublicationReportReason } from './helpers/buildReportReason';
 
 export class Publication {
   private readonly authentication: Authentication | undefined;
@@ -277,9 +275,5 @@ export class Publication {
     return execute(this.authentication, async (headers) => {
       await this.sdk.ReportPublication({ request }, headers);
     });
-  }
-
-  buildReportReason(reason: PublicationReportReason): ReportingReasonInputParams {
-    return buildReportReason(reason);
   }
 }
