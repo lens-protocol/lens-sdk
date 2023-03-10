@@ -68,6 +68,7 @@ export type ProfilesQuery = {
 };
 
 export type RecommendedProfilesQueryVariables = Types.Exact<{
+  options: Types.RecommendedProfileOptions;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
@@ -336,6 +337,12 @@ export type RemoveProfileInterestMutationVariables = Types.Exact<{
 
 export type RemoveProfileInterestMutation = { removeProfileInterests: void | null };
 
+export type DismissRecommendedProfilesMutationVariables = Types.Exact<{
+  request: Types.DismissRecommendedProfilesRequest;
+}>;
+
+export type DismissRecommendedProfilesMutation = { dismissRecommendedProfiles: void };
+
 export const ProfileStatsFragmentDoc = gql`
   fragment ProfileStats on ProfileStats {
     __typename
@@ -385,8 +392,8 @@ export const ProfilesDocument = gql`
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 export const RecommendedProfilesDocument = gql`
-  query RecommendedProfiles($observerId: ProfileId) {
-    result: recommendedProfiles {
+  query RecommendedProfiles($options: RecommendedProfileOptions!, $observerId: ProfileId) {
+    result: recommendedProfiles(options: $options) {
       ...Profile
     }
   }
@@ -797,6 +804,11 @@ export const RemoveProfileInterestDocument = gql`
     removeProfileInterests(request: $request)
   }
 `;
+export const DismissRecommendedProfilesDocument = gql`
+  mutation DismissRecommendedProfiles($request: DismissRecommendedProfilesRequest!) {
+    dismissRecommendedProfiles(request: $request)
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -840,6 +852,7 @@ const CreateSetFollowModuleTypedDataDocumentString = print(CreateSetFollowModule
 const CreateSetFollowNftUriTypedDataDocumentString = print(CreateSetFollowNftUriTypedDataDocument);
 const AddProfileInterestDocumentString = print(AddProfileInterestDocument);
 const RemoveProfileInterestDocumentString = print(RemoveProfileInterestDocument);
+const DismissRecommendedProfilesDocumentString = print(DismissRecommendedProfilesDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -890,7 +903,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
       );
     },
     RecommendedProfiles(
-      variables?: RecommendedProfilesQueryVariables,
+      variables: RecommendedProfilesQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<{
       data: RecommendedProfilesQuery;
@@ -1306,6 +1319,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'RemoveProfileInterest',
+        'mutation',
+      );
+    },
+    DismissRecommendedProfiles(
+      variables: DismissRecommendedProfilesMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: DismissRecommendedProfilesMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<DismissRecommendedProfilesMutation>(
+            DismissRecommendedProfilesDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'DismissRecommendedProfiles',
         'mutation',
       );
     },

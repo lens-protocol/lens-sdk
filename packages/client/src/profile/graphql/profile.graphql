@@ -42,8 +42,8 @@ query Profiles($request: ProfileQueryRequest!, $observerId: ProfileId) {
   }
 }
 
-query RecommendedProfiles($observerId: ProfileId) {
-  result: recommendedProfiles {
+query RecommendedProfiles($options: RecommendedProfileOptions!, $observerId: ProfileId) {
+  result: recommendedProfiles(options: $options) {
     ...Profile
   }
 }
@@ -421,4 +421,8 @@ mutation AddProfileInterest($request: AddProfileInterestsRequest!) {
 
 mutation RemoveProfileInterest($request: RemoveProfileInterestsRequest!) {
   removeProfileInterests(request: $request)
+}
+
+mutation DismissRecommendedProfiles($request: DismissRecommendedProfilesRequest!) {
+  dismissRecommendedProfiles(request: $request)
 }

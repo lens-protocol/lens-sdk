@@ -1,3 +1,4 @@
+import { Authentication } from '../authentication';
 import { mumbaiSandbox } from '../consts/environments';
 import { NotAuthenticatedError } from '../consts/errors';
 import { Transaction } from './Transaction';
@@ -8,7 +9,8 @@ const testConfig = {
 
 describe(`Given the ${Transaction.name} configured to work with sandbox`, () => {
   describe(`and the instance is not authenticated`, () => {
-    const transaction = new Transaction(testConfig);
+    const authentication = new Authentication(testConfig);
+    const transaction = new Transaction(testConfig, authentication);
 
     describe(`when ${Transaction.prototype.broadcast.name} method is called`, () => {
       it(`should return a failure`, async () => {

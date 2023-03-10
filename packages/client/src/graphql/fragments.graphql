@@ -97,7 +97,6 @@ fragment Profile on Profile {
 }
 
 fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-  __typename
   name
   chainId
   version

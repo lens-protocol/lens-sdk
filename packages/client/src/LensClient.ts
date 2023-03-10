@@ -33,7 +33,7 @@ export class LensClient {
   }
 
   get feed(): Feed {
-    return new Feed(this.config);
+    return new Feed(this.config, this._authentication);
   }
 
   get modules(): Modules {
