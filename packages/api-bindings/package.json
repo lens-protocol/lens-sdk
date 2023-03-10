@@ -61,7 +61,7 @@
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
-    "@types/jest": "29.2.3",
+    "@types/jest": "29.4.0",
     "@types/node": "^18.14.0",
     "babel-plugin-graphql-tag": "^3.3.0",
     "eslint": "^8.34.0",
