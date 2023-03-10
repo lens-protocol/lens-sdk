@@ -10,35 +10,49 @@ import {
   CreatePostRequest,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
-import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
+import { AuthenticationConfig, IEncryptionProvider } from '@lens-protocol/gated-content';
+import { failure, invariant, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers';
 import { useSharedDependencies } from '../shared';
+import { useWalletLogin, useActiveWalletSigner } from '../wallet';
 import { CreatePostController } from './adapters/CreatePostController';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
-import { PublicationMetadataUploader } from './infrastructure/PublicationMetadataUploader';
+import {
+  CreateEncryptedPostRequest,
+  EncryptedPublicationMetadataUploader,
+} from './infrastructure/EncryptedMetadataUploader';
 
-export type UseCreatePostArgs = {
+export type UseCreateEncryptedPostArgs = {
+  encryption: {
+    authentication: AuthenticationConfig;
+    provider: IEncryptionProvider;
+  };
   publisher: ProfileOwnedByMeFragment;
   upload: MetadataUploadHandler;
 };
 
-export type CreatePostArgs = Prettify<
+export type CreateEncryptedPostArgs = Prettify<
   Omit<
     CreatePostRequest,
     'kind' | 'delegate' | 'collect' | 'profileId' | 'reference' | 'decryptionCriteria'
   > &
-    Partial<Pick<CreatePostRequest, 'collect' | 'reference'>>
+    Partial<Pick<CreatePostRequest, 'collect' | 'reference'>> &
+    Required<Pick<CreatePostRequest, 'decryptionCriteria'>>
 >;
 
-export type CreatePostOperation = Operation<
+export type CreateEncryptedPostOperation = Operation<
   void,
   PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
-  [CreatePostArgs]
+  [CreateEncryptedPostArgs]
 >;
 
-export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreatePostOperation {
+export function useCreateEncryptedPost({
+  encryption,
+  publisher,
+  upload,
+}: UseCreateEncryptedPostArgs): CreateEncryptedPostOperation {
   const {
     activeWallet,
     apolloClient,
@@ -46,20 +60,35 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
     transactionFactory,
     transactionGateway,
     transactionQueue,
+    environment,
+    storageProvider,
   } = useSharedDependencies();
+  const { data: signer } = useActiveWalletSigner();
 
   return useOperation(
     async ({
       collect = { type: CollectPolicyType.NO_COLLECT },
       reference = { type: ReferencePolicyType.ANYONE },
       ...args
-    }: CreatePostArgs): PromiseResult<
+    }: CreateEncryptedPostArgs): PromiseResult<
       void,
       PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
     > => {
-      const uploader = new PublicationMetadataUploader(upload);
+      invariant(
+        signer,
+        `Active Wallet signer is not set, did you login with ${useWalletLogin.name}?`,
+      );
 
-      const controller = new CreatePostController<CreatePostRequest>({
+      const uploader = EncryptedPublicationMetadataUploader.create({
+        config: encryption.authentication,
+        storageProvider,
+        signer,
+        encryptionProvider: encryption.provider,
+        environment,
+        upload,
+      });
+
+      const controller = new CreatePostController<CreateEncryptedPostRequest>({
         activeWallet,
         apolloClient,
         protocolCallRelayer,

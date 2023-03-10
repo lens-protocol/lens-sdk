@@ -1,4 +1,8 @@
-import { AccessCondition, ContractType, LeafCriterionFragment } from '@lens-protocol/api-bindings';
+import {
+  ContractType,
+  LeafConditionFragment,
+  RootConditionFragment,
+} from '@lens-protocol/api-bindings';
 import {
   mockEoaOwnershipAccessCondition,
   mockNftOwnershipAccessCondition,
@@ -30,8 +34,8 @@ describe(`Given the "${transform.name}" function`, () => {
       description: 'a simple condition',
       condition: mockOrAccessCondition([
         mockProfileOwnershipAccessCondition({ profileId: ownerProfileId }),
-        mockEoaOwnershipAccessCondition({ address: knownAddress }) as LeafCriterionFragment,
-      ]) as AccessCondition,
+        mockEoaOwnershipAccessCondition({ address: knownAddress }) as LeafConditionFragment,
+      ]),
       expectedLitAccessConditions: [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
@@ -102,7 +106,7 @@ describe(`Given the "${transform.name}" function`, () => {
           mockEoaOwnershipAccessCondition({ address: knownAddress }),
           mockNftOwnershipAccessCondition({ contractAddress: knownAddress, tokenIds: null }),
         ]),
-      ]) as AccessCondition,
+      ]),
       expectedLitAccessConditions: [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
@@ -188,7 +192,7 @@ describe(`Given the "${transform.name}" function`, () => {
           mockEoaOwnershipAccessCondition({ address: knownAddress }),
           mockNftOwnershipAccessCondition({ contractAddress: knownAddress, tokenIds: null }),
         ]),
-      ]) as AccessCondition,
+      ]),
       expectedLitAccessConditions: [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
@@ -268,7 +272,7 @@ describe(`Given the "${transform.name}" function`, () => {
     },
   ])('when called with $description', ({ condition, expectedLitAccessConditions }) => {
     it('should return the expected Lit AccessControlCondition', () => {
-      const actual = transform(condition, testing);
+      const actual = transform(condition as RootConditionFragment, testing);
 
       expect(actual).toMatchObject(expectedLitAccessConditions);
     });
@@ -277,7 +281,7 @@ describe(`Given the "${transform.name}" function`, () => {
   describe.each([
     {
       description: 'with a root condition that is not an OR condition',
-      condition: mockProfileOwnershipAccessCondition() as AccessCondition,
+      condition: mockProfileOwnershipAccessCondition(),
     },
     {
       description: 'with an OR root condition that has more than 2 criteria',
@@ -285,21 +289,21 @@ describe(`Given the "${transform.name}" function`, () => {
         mockProfileOwnershipAccessCondition(),
         mockEoaOwnershipAccessCondition(),
         mockNftOwnershipAccessCondition(),
-      ]) as AccessCondition,
+      ]),
     },
     {
       description: 'with an OR root condition that does not include a profile ownership condition',
       condition: mockOrAccessCondition([
         mockEoaOwnershipAccessCondition(),
         mockNftOwnershipAccessCondition(),
-      ]) as AccessCondition,
+      ]),
     },
     {
       description: 'a nested AND condition with less than 2 criteria',
       condition: mockOrAccessCondition([
         mockProfileOwnershipAccessCondition(),
         mockAndAccessCondition([mockEoaOwnershipAccessCondition()]),
-      ]) as AccessCondition,
+      ]),
     },
     {
       description: 'a nested AND condition with more than 5 criteria',
@@ -313,14 +317,14 @@ describe(`Given the "${transform.name}" function`, () => {
           mockEoaOwnershipAccessCondition(),
           mockEoaOwnershipAccessCondition(),
         ]),
-      ]) as AccessCondition,
+      ]),
     },
     {
       description: 'a nested OR condition with less than 2 criteria',
       condition: mockOrAccessCondition([
         mockProfileOwnershipAccessCondition(),
         mockOrAccessCondition([mockEoaOwnershipAccessCondition()]),
-      ]) as AccessCondition,
+      ]),
     },
     {
       description: 'a nested OR condition with more than 5 criteria',
@@ -334,7 +338,7 @@ describe(`Given the "${transform.name}" function`, () => {
           mockEoaOwnershipAccessCondition(),
           mockEoaOwnershipAccessCondition(),
         ]),
-      ]) as AccessCondition,
+      ]),
     },
     {
       description: 'with more than 2 nested levels AND and OR conditions ',
@@ -347,11 +351,13 @@ describe(`Given the "${transform.name}" function`, () => {
             mockEoaOwnershipAccessCondition(),
           ]),
         ]),
-      ]) as AccessCondition,
+      ]),
     },
   ])('when called with $description', ({ condition }) => {
     it(`should throw a ${InvalidAccessCriteriaError.name}`, () => {
-      expect(() => transform(condition, testing)).toThrow(InvalidAccessCriteriaError);
+      expect(() => transform(condition as RootConditionFragment, testing)).toThrow(
+        InvalidAccessCriteriaError,
+      );
     });
   });
 });

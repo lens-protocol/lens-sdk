@@ -1,6 +1,7 @@
 export * from './useApproveModule';
 export * from './useCollect';
 export * from './useCreateComment';
+export * from './useCreateEncryptedPost';
 export * from './useCreateMirror';
 export * from './useCreatePost';
 export * from './useFollow';
@@ -10,6 +11,8 @@ export * from './useUpdateDispatcherConfig';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileDetails';
 export * from './useRecentTransactions';
+
+export type { IEncryptionProvider, ICipher } from '@lens-protocol/gated-content';
 
 export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 export {

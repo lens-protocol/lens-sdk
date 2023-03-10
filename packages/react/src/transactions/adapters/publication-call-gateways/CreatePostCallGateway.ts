@@ -28,16 +28,14 @@ import { IMetadataUploader } from '../IMetadataUploader';
 import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
-export class CreatePostCallGateway implements ICreatePostCallGateway {
+export class CreatePostCallGateway<R extends CreatePostRequest> implements ICreatePostCallGateway {
   constructor(
     private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
-    private readonly metadataUploader: IMetadataUploader<CreatePostRequest>,
+    private readonly metadataUploader: IMetadataUploader<R>,
   ) {}
 
-  async createDelegatedTransaction<T extends CreatePostRequest>(
-    request: T,
-  ): Promise<NativeTransaction<T>> {
+  async createDelegatedTransaction<T extends R>(request: T): Promise<NativeTransaction<T>> {
     return this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
@@ -46,8 +44,8 @@ export class CreatePostCallGateway implements ICreatePostCallGateway {
     });
   }
 
-  async createUnsignedProtocolCall(
-    request: CreatePostRequest,
+  async createUnsignedProtocolCall<T extends R>(
+    request: T,
     nonce?: Nonce,
   ): Promise<UnsignedLensProtocolCall<CreatePostRequest>> {
     const { data } = await this.apolloClient.mutate<
@@ -89,8 +87,8 @@ export class CreatePostCallGateway implements ICreatePostCallGateway {
     });
   }
 
-  private async resolveCreatePostRequestArg(
-    request: CreatePostRequest,
+  private async resolveCreatePostRequestArg<T extends R>(
+    request: T,
   ): Promise<CreatePublicPostRequestArg> {
     return {
       contentURI: await this.metadataUploader.upload(request),

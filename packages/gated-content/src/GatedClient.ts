@@ -6,6 +6,7 @@ import {
   AccessCondition,
   EncryptionParamsFragment,
   OmitTypename,
+  RootConditionFragment,
 } from '@lens-protocol/api-bindings';
 import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { IStorage, IStorageProvider } from '@lens-protocol/storage';
@@ -23,7 +24,7 @@ import {
 } from './encryption';
 import { EnvironmentConfig } from './environments';
 
-type AuthenticationConfig = {
+export type AuthenticationConfig = {
   domain: string;
   statement?: string;
   uri: string;
@@ -99,9 +100,9 @@ export class GatedClient {
     return success(encryptedMetadata);
   }
 
-  async decryptPublication<T extends EncryptedPublicationMetadata>(
+  async decryptPublication<T extends EncryptedPublicationMetadata, P extends EncryptionParams>(
     encrypted: T,
-    using: EncryptionParams,
+    using: P,
   ): PromiseResult<T, never> {
     await this.ensureLitConnection();
 
@@ -161,7 +162,10 @@ export class GatedClient {
       authSig,
       chain: this.environment.chainName,
       symmetricKey,
-      unifiedAccessControlConditions: transform(accessCondition, this.environment),
+      unifiedAccessControlConditions: transform(
+        accessCondition as RootConditionFragment,
+        this.environment,
+      ),
     });
 
     return uint8arrayToHexString(encryptedSymmetricKey);
@@ -169,7 +173,7 @@ export class GatedClient {
 
   private async retrieveEncryptionKey(
     encryptedEncryptionKey: ContentEncryptionKey,
-    accessCondition: AccessCondition,
+    accessCondition: RootConditionFragment,
   ): Promise<ICipher> {
     const authSig = await this.getOrCreateAuthSig();
 
@@ -188,6 +192,7 @@ export class GatedClient {
       address: await this.signer.getAddress(),
       version: '1',
       chainId: this.environment.chainId,
+      statement: 'Lens token-gated content needs you to log-in with the https://litprotocol.com/',
       ...this.authentication,
     });
   }

@@ -2,13 +2,12 @@ import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protoc
 import { ChainType } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { errors, Wallet, logger, providers, utils, VoidSigner } from 'ethers';
-import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { production } from '../../../environments';
 import { RequiredSigner } from '../../adapters/ConcreteWallet';
-import { ISignerBinding, SignerFactory } from '../SignerFactory';
-import { VoidJsonRpcProvider } from '../__helpers__/mocks';
+import { SignerFactory } from '../SignerFactory';
+import { mockISignerBinding, VoidJsonRpcProvider } from '../__helpers__/mocks';
 
 const address = mockEthereumAddress();
 
@@ -19,15 +18,7 @@ function setupTestScenario({
   signer: RequiredSigner;
   chainType?: ChainType;
 }) {
-  const bindings = mock<ISignerBinding>();
-
-  if (chainType) {
-    when(bindings.getSigner)
-      .calledWith({ chainId: production.chains[chainType].chainId })
-      .mockResolvedValue(signer);
-  } else {
-    when(bindings.getSigner).mockResolvedValue(signer);
-  }
+  const bindings = mockISignerBinding({ chainType, signer });
 
   const signerFactory = new SignerFactory(bindings, production.chains);
 

@@ -3,15 +3,44 @@ import { DeepOmit, Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 import type {
   DeepOmitTypename,
   EncryptionParamsOutput,
+  LeafConditionFragment,
   PublicationMetadataV2Input,
-  RootCriterionFragment,
 } from './graphql';
 
 export type PublicationMetadata = Prettify<
   Overwrite<PublicationMetadataV2Input, { version: '2.0.0' }>
 >;
 
-export type AccessCondition = DeepOmitTypename<RootCriterionFragment>;
+type OneOf<T, K extends keyof T = keyof T> = Omit<T, K> &
+  {
+    [k in K]: Pick<Required<T>, k> & {
+      [k1 in Exclude<K, k>]?: null;
+    };
+  }[K];
+
+type NonNullableFields<T> = {
+  [P in keyof T]: NonNullable<T[P]>;
+};
+
+export type LeafCondition = Prettify<
+  OneOf<NonNullableFields<DeepOmitTypename<LeafConditionFragment>>>
+>;
+
+export type OrCondition<T> = {
+  or: {
+    criteria: T[];
+  };
+};
+
+export type AndCondition<T> = {
+  and: {
+    criteria: T[];
+  };
+};
+
+export type AnyCondition = LeafCondition | OrCondition<LeafCondition> | AndCondition<LeafCondition>;
+
+export type AccessCondition = OrCondition<AnyCondition>;
 
 export type EncryptedFields = Pick<
   PublicationMetadata,

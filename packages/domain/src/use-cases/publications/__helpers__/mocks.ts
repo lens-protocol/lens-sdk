@@ -7,7 +7,7 @@ import {
 } from '@lens-protocol/shared-kernel/mocks';
 
 import { ReactionType, ReportReason, TransactionKind } from '../../../entities';
-import { mockProfileId } from '../../profile/__helpers__/mocks';
+import { mockProfileId } from '../../../entities/__helpers__/mocks';
 import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
@@ -138,6 +138,27 @@ export function mockCreateMirrorRequest(
 }
 
 export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): CreatePostRequest {
+  return {
+    kind: TransactionKind.CREATE_POST,
+
+    contentFocus: ContentFocus.TEXT,
+    content: faker.lorem.paragraph(),
+    reference: {
+      type: ReferencePolicyType.ANYONE,
+    },
+    collect: {
+      type: CollectPolicyType.NO_COLLECT,
+    },
+    profileId: mockProfileId(),
+    delegate: false,
+    locale: 'en',
+
+    ...overrides,
+  };
+}
+export function mockCreateEncryptedPostRequest(
+  overrides?: Partial<CreatePostRequest>,
+): CreatePostRequest {
   return {
     kind: TransactionKind.CREATE_POST,
 
