@@ -1,5 +1,14 @@
 # @lens-protocol/client
 
+## 0.2.0
+
+### Minor Changes
+
+- Fixed authentication in `Feed` module
+- Added a few transaction helpers
+- Exported multiple codegen generated types
+- Added `options` argument to `profile.allRecommended`
+
 ## 0.1.1
 
 ### Patch Changes
