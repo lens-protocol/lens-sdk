@@ -14,6 +14,7 @@ import {
   TransactionErrorFragment,
   TransactionIndexedResultFragment,
 } from './graphql/transaction.generated';
+import { isTransactionIndexedResult } from './helpers';
 
 export class TransactionPollingError extends Error {
   name = 'TransactionPollingError' as const;
@@ -67,7 +68,7 @@ export class Transaction {
         if (result.isSuccess()) {
           const value = result.value;
 
-          if ('indexed' in value) {
+          if (isTransactionIndexedResult(value)) {
             return value.indexed;
           }
         }

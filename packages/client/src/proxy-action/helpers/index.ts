@@ -7,17 +7,17 @@ import {
 export function isProxyActionError(
   result: ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment,
 ): result is ProxyActionErrorFragment {
-  return 'reason' in result;
+  return result.__typename === 'ProxyActionError';
 }
 
 export function isProxyActionQueued(
   result: ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment,
 ): result is ProxyActionQueuedFragment {
-  return 'queuedAt' in result;
+  return result.__typename === 'ProxyActionQueued';
 }
 
 export function isProxyActionStatusResult(
   result: ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment,
 ): result is ProxyActionStatusResultFragment {
-  return 'status' in result;
+  return result.__typename === 'ProxyActionStatusResult';
 }

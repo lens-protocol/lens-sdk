@@ -14,6 +14,7 @@ import {
   ProxyActionStatusResultFragment,
   Sdk,
 } from './graphql/proxy-action.generated';
+import { isProxyActionStatusResult } from './helpers';
 
 export class StatusPollingError extends Error {
   name = 'StatusPollingError' as const;
@@ -103,7 +104,7 @@ export class ProxyAction {
         if (result.isSuccess()) {
           const value = result.value;
 
-          if ('status' in value) {
+          if (isProxyActionStatusResult(value)) {
             return value.status === ProxyActionStatusTypes.Complete;
           }
         }
