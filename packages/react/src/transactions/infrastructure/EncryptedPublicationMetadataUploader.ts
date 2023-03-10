@@ -1,3 +1,4 @@
+import { PublicationMetadata } from '@lens-protocol/api-bindings';
 import { DecryptionCriteria } from '@lens-protocol/domain/entities';
 import {
   CreateCommentRequest,
@@ -7,7 +8,6 @@ import * as GatedContent from '@lens-protocol/gated-content';
 import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 
 import { IMetadataUploader } from '../adapters/IMetadataUploader';
-import { MetadataUploadHandler } from '../adapters/MetadataUploadHandler';
 import { AccessConditionBuilderFactory } from './AccessConditionBuilderFactory';
 import { createPublicationMetadata } from './createPublicationMetadata';
 
@@ -33,7 +33,7 @@ export class EncryptedPublicationMetadataUploader<
   constructor(
     private readonly client: GatedContent.GatedClient,
     private readonly accessConditionBuilderFactory: AccessConditionBuilderFactory,
-    private readonly handler: MetadataUploadHandler,
+    private readonly uploader: IMetadataUploader<PublicationMetadata>,
   ) {}
 
   async upload(request: T): Promise<string> {
@@ -48,6 +48,6 @@ export class EncryptedPublicationMetadataUploader<
 
     const encryptedMetadata = result.unwrap();
 
-    return this.handler(encryptedMetadata);
+    return this.uploader.upload(encryptedMetadata);
   }
 }

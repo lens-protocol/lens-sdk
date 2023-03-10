@@ -1,13 +1,12 @@
-import { ProfileMetadata } from '@lens-protocol/api-bindings';
 import { assertError } from '@lens-protocol/shared-kernel';
 
 import { FailedUploadError, IMetadataUploader } from '../adapters/IMetadataUploader';
 import { MetadataUploadHandler } from '../adapters/MetadataUploadHandler';
 
-export class ProfileMetadataUploader implements IMetadataUploader<ProfileMetadata> {
+export class MetadataUploaderErrorMiddleware<T> implements IMetadataUploader<T> {
   constructor(readonly handler: MetadataUploadHandler) {}
 
-  async upload(data: ProfileMetadata): Promise<string> {
+  async upload(data: T): Promise<string> {
     try {
       return await this.handler(data);
     } catch (err: unknown) {
