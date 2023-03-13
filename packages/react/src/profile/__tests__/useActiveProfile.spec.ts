@@ -12,7 +12,7 @@ import { waitFor } from '@testing-library/react';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { ApplicationsState, useAppState } from '../../lifecycle/adapters/ApplicationPresenter';
 import { activeWalletVar } from '../../wallet/adapters/ActiveWalletPresenter';
-import { activeProfileVar } from '../adapters/ActiveProfilePresenter';
+import { activeProfileIdentifierVar } from '../adapters/ActiveProfilePresenter';
 import { useActiveProfile } from '../useActiveProfile';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -24,7 +24,7 @@ function setupUseActiveProfile(args: {
 }) {
   const sources = mockSources();
 
-  activeProfileVar(args.activeProfile);
+  activeProfileIdentifierVar(args.activeProfile);
   activeWalletVar(mockWalletData({ address: args.profile.ownedBy }));
 
   return renderHookWithMocks(() => useActiveProfile(), {

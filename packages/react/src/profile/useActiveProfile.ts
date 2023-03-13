@@ -9,22 +9,22 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { ReadResult } from '../helpers';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
 import { useSharedDependencies } from '../shared';
-import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
+import { useActiveProfileIdentifierVar } from './adapters/ActiveProfilePresenter';
 
 export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, UnspecifiedError> {
   const state = useAppState();
   const { apolloClient, sources } = useSharedDependencies();
-  const profile = useActiveProfileVar();
+  const identifier = useActiveProfileIdentifierVar();
 
   const { data, error, loading } = useGetProfileQuery({
     variables: {
       request: {
-        profileId: profile?.id,
+        profileId: identifier?.id,
       },
       sources,
     },
     fetchPolicy: 'cache-first',
-    skip: state !== ApplicationsState.READY || profile === null,
+    skip: state !== ApplicationsState.READY || identifier === null,
     client: apolloClient,
   });
 
@@ -36,7 +36,7 @@ export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, 
     };
   }
 
-  if (profile === null) {
+  if (identifier === null) {
     return {
       data: null,
       error: undefined,
