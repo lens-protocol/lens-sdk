@@ -1,0 +1,15 @@
+{
+  "name": "@lens-protocol/tsconfig",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./base.json",
+  "peerDependencies": {
+    "tslib": "^2.5.0",
+    "typescript": "^4.9.5"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  }
+}

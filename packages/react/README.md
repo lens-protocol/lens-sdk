@@ -1,6 +1,8 @@
 # `@lens-protocol/react`
 
-The official React bindings for the Lens Protocol.
+The official Lens Protocol bindings for React applications. This is a low-level package, if you are building a web application you might want to look into `@lens-protocol/react-web` package.
+
+React Native integration are already possible (see the `example/react-native` in this repo). In the future we might provide a battery-included `@lens-protocol/react-native` package for RN apps.
 
 > **Warning**
 >

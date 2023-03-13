@@ -1,4 +1,4 @@
-import { useSearchPublications } from '@lens-protocol/react';
+import { useSearchPublications } from '@lens-protocol/react-web';
 import { ChangeEvent, useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';

@@ -10,7 +10,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { IStorage, IStorageProvider } from '@lens-protocol/storage';
-import * as LitJsSdk from '@lit-protocol/lit-node-client';
+import { LitNodeClient } from '@lit-protocol/lit-node-client';
 import { Signer, utils } from 'ethers';
 import { SiweMessage } from 'siwe';
 
@@ -53,7 +53,7 @@ export class GatedClient {
 
   private readonly signer: Signer;
 
-  private readonly litClient = new LitJsSdk.LitNodeClient({ debug: false });
+  private readonly litClient = new LitNodeClient({ debug: false });
 
   private readonly encryptionProvider: IEncryptionProvider;
 

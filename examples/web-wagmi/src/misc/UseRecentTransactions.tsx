@@ -1,4 +1,4 @@
-import { TxStatus, useRecentTransactions } from '@lens-protocol/react';
+import { TxStatus, useRecentTransactions } from '@lens-protocol/react-web';
 import { Link } from 'react-router-dom';
 
 import { LoginButton } from '../components/auth/LoginButton';

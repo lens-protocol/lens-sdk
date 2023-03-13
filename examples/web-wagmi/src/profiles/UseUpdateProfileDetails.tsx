@@ -2,7 +2,7 @@ import {
   ProfileOwnedByMeFragment,
   useActiveProfile,
   useUpdateProfileDetails,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 
 import { Loading } from '../components/loading/Loading';
 import { upload } from '../upload';

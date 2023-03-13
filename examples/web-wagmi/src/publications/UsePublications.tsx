@@ -1,4 +1,4 @@
-import { usePublications } from '@lens-protocol/react';
+import { usePublications } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';

@@ -8,7 +8,7 @@ import {
   ChargeFollowConfig,
   NoFeeFollowConfig,
   ProfileOwnedByMeFragment,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';

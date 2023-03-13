@@ -8,8 +8,8 @@ import {
   ContentPublicationFragment,
   AnyCriterion,
   DecryptionCriteriaType,
-} from '@lens-protocol/react';
-import { useEncryptedPublication } from '@lens-protocol/react/web';
+  useEncryptedPublication,
+} from '@lens-protocol/react-web';
 import { ReactNode } from 'react';
 import { useInView } from 'react-cool-inview';
 

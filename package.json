@@ -57,14 +57,16 @@
   "packageManager": "pnpm@7.27.1",
   "preconstruct": {
     "packages": [
+      "packages/api-bindings",
+      "packages/blockchain-bindings",
+      "packages/client",
       "packages/domain",
+      "packages/gated-content",
+      "packages/react-web",
       "packages/react",
       "packages/shared-kernel",
-      "packages/api-bindings",
-      "packages/wagmi",
-      "packages/blockchain-bindings",
       "packages/storage",
-      "packages/client"
+      "packages/wagmi"
     ]
   }
 }

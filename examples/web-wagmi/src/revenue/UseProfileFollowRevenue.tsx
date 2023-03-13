@@ -1,4 +1,4 @@
-import { ProfileFragment, useProfileFollowRevenue } from '@lens-protocol/react';
+import { ProfileFragment, useProfileFollowRevenue } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';

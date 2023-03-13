@@ -1,4 +1,4 @@
-import { Amount, Asset } from '@lens-protocol/react';
+import { Amount, Asset } from '@lens-protocol/react-web';
 
 export function never(message = 'Unexpected call to never()'): never {
   throw new Error(message);

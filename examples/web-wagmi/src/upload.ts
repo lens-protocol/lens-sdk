@@ -1,7 +1,7 @@
 import { Readable } from 'stream';
 
 import { WebBundlr } from '@bundlr-network/client';
-import { ImageType } from '@lens-protocol/react';
+import { ImageType } from '@lens-protocol/react-web';
 import { providers, utils } from 'ethers';
 import { ReadableWebToNodeStream } from 'readable-web-to-node-stream';
 import { fetchSigner } from 'wagmi/actions';

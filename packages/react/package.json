@@ -9,10 +9,6 @@
       "module": "./dist/lens-protocol-react.esm.js",
       "default": "./dist/lens-protocol-react.cjs.js"
     },
-    "./web": {
-      "module": "./web/dist/lens-protocol-react-web.esm.js",
-      "default": "./web/dist/lens-protocol-react-web.cjs.js"
-    },
     "./package.json": "./package.json"
   },
   "repository": {
@@ -103,8 +99,7 @@
   },
   "preconstruct": {
     "entrypoints": [
-      "index.tsx",
-      "web/index.ts"
+      "index.tsx"
     ],
     "exports": true
   }

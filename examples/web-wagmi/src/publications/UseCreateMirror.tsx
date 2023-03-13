@@ -3,7 +3,7 @@ import {
   useCreateMirror,
   isMirrorPublication,
   ProfileOwnedByMeFragment,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 
 import { LoginButton } from '../components/auth/LoginButton';
 import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';

@@ -1,4 +1,4 @@
-import { ProfileFragment } from '@lens-protocol/react';
+import { ProfileFragment } from '@lens-protocol/react-web';
 
 import { ProfilePicture } from './ProfilePicture';
 

@@ -6,8 +6,8 @@ import {
   DecryptionCriteria,
   NftContractType,
   SimpleCriterion,
-} from '@lens-protocol/react';
-import { useCreateEncryptedPost } from '@lens-protocol/react/web';
+  useCreateEncryptedPost,
+} from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/auth';

@@ -3,7 +3,7 @@ import {
   ContentFocus,
   ProfileOwnedByMeFragment,
   useCreateComment,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 
 import { upload } from '../../upload';
 import { never } from '../../utils';

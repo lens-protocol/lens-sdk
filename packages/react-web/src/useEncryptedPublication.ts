@@ -1,9 +1,9 @@
 import { ContentPublicationFragment } from '@lens-protocol/api-bindings';
-
 import {
   UseEncryptedPublicationArgs as UseEncryptedPublicationBaseArgs,
   useEncryptedPublication as useEncryptedPublicationBase,
-} from '../publication/useEncryptedPublication';
+} from '@lens-protocol/react';
+
 import { useBrowserEncryptionConfig } from './useBrowserEncryptionConfig';
 
 export type UseEncryptedPublicationArgs<T extends ContentPublicationFragment> = Omit<

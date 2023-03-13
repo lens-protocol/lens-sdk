@@ -2,7 +2,7 @@ import {
   PublicationSortCriteria,
   PublicationTypes,
   useExplorePublications,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';

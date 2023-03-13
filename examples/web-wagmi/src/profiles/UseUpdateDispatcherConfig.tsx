@@ -1,4 +1,4 @@
-import { ProfileOwnedByMeFragment, useUpdateDispatcherConfig } from '@lens-protocol/react';
+import { ProfileOwnedByMeFragment, useUpdateDispatcherConfig } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { LoginButton } from '../components/auth/LoginButton';
