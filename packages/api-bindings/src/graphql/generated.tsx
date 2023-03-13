@@ -46,6 +46,8 @@ export type Scalars = {
   CreateHandle: unknown;
   /** Cursor custom scalar type */
   Cursor: string;
+  /** The da id */
+  DataAvailabilityId: unknown;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: string;
   DecryptionCriteria: DecryptionCriteria;
@@ -783,7 +785,7 @@ export type CreateProfileRequest = {
 export type CreatePublicCommentRequest = {
   /** The collect module */
   collectModule: CollectModuleParams;
-  /** The metadata uploaded somewhere passing in the url to reach it */
+  /** The metadata contentURI resolver */
   contentURI: Scalars['Url'];
   /** The criteria to access the publication data */
   gated?: InputMaybe<GatedPublicationParamsInput>;
@@ -1357,7 +1359,7 @@ export type Erc20OwnershipInput = {
   chainID: Scalars['ChainId'];
   /** The operator to use when comparing the amount of tokens */
   condition: ScalarOperator;
-  /** The ERC20 token's ethereum address */
+  /** The ERC20 token ethereum address */
   contractAddress: Scalars['ContractAddress'];
   /** The amount of decimals of the ERC20 contract */
   decimals: Scalars['Float'];
@@ -1371,10 +1373,14 @@ export type Erc20OwnershipOutput = {
   chainID: Scalars['ChainId'];
   /** The operator to use when comparing the amount of tokens */
   condition: ScalarOperator;
-  /** The ERC20 token's ethereum address */
+  /** The ERC20 token ethereum address */
   contractAddress: Scalars['ContractAddress'];
   /** The amount of decimals of the ERC20 contract */
   decimals: Scalars['Float'];
+  /** The name of the ERC20 token */
+  name: Scalars['String'];
+  /** The symbol of the ERC20 token */
+  symbol: Scalars['String'];
 };
 
 /** The paginated publication result */
@@ -3681,7 +3687,7 @@ export enum ReactionTypes {
 export type RecipientDataInput = {
   /** Recipient of collect fees. */
   recipient: Scalars['EthereumAddress'];
-  /** Split %, should be between 1 and 100. All % should add up to 100 */
+  /** Split %, should be between 0.01 and 100. Up to 2 decimal points supported. All % should add up to 100 */
   split: Scalars['Float'];
 };
 
@@ -3689,7 +3695,7 @@ export type RecipientDataOutput = {
   __typename: 'RecipientDataOutput';
   /** Recipient of collect fees. */
   recipient: Scalars['EthereumAddress'];
-  /** Split %, should be between 1 and 100. All % should add up to 100 */
+  /** Split %, should be between 0.01 and 100. Up to 2 decimal points supported. All % should add up to 100 */
   split: Scalars['Float'];
 };
 
@@ -3751,6 +3757,7 @@ export type RelayResult = RelayError | RelayerResult;
 /** The relayer result */
 export type RelayerResult = {
   __typename: 'RelayerResult';
+  dataAvailabilityId: Scalars['DataAvailabilityId'];
   /** The tx hash - you should use the `txId` as your identifier as gas prices can be upgraded meaning txHash will change */
   txHash: Scalars['TxHash'];
   /** The tx id */
@@ -4624,6 +4631,8 @@ export type Erc20OwnershipFragment = {
   condition: ScalarOperator;
   contractAddress: string;
   decimals: number;
+  name: string;
+  symbol: string;
 };
 
 export type AddressOwnershipFragment = {
@@ -5497,6 +5506,8 @@ export const Erc20OwnershipFragmentDoc = gql`
     condition
     contractAddress
     decimals
+    name
+    symbol
   }
 `;
 export const AddressOwnershipFragmentDoc = gql`
@@ -10948,6 +10959,8 @@ export type Erc20OwnershipOutputKeySpecifier = (
   | 'condition'
   | 'contractAddress'
   | 'decimals'
+  | 'name'
+  | 'symbol'
   | Erc20OwnershipOutputKeySpecifier
 )[];
 export type Erc20OwnershipOutputFieldPolicy = {
@@ -10956,6 +10969,8 @@ export type Erc20OwnershipOutputFieldPolicy = {
   condition?: FieldPolicy<any> | FieldReadFunction<any>;
   contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
   decimals?: FieldPolicy<any> | FieldReadFunction<any>;
+  name?: FieldPolicy<any> | FieldReadFunction<any>;
+  symbol?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ExploreProfileResultKeySpecifier = (
   | 'items'
@@ -12162,8 +12177,14 @@ export type RelayErrorKeySpecifier = ('reason' | RelayErrorKeySpecifier)[];
 export type RelayErrorFieldPolicy = {
   reason?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type RelayerResultKeySpecifier = ('txHash' | 'txId' | RelayerResultKeySpecifier)[];
+export type RelayerResultKeySpecifier = (
+  | 'dataAvailabilityId'
+  | 'txHash'
+  | 'txId'
+  | RelayerResultKeySpecifier
+)[];
 export type RelayerResultFieldPolicy = {
+  dataAvailabilityId?: FieldPolicy<any> | FieldReadFunction<any>;
   txHash?: FieldPolicy<any> | FieldReadFunction<any>;
   txId?: FieldPolicy<any> | FieldReadFunction<any>;
 };

@@ -526,9 +526,11 @@ export function mockErc20OwnershipAccessCondition(
     token: {
       amount: '100',
       chainID: 1,
+      condition: ScalarOperator.Equal,
       contractAddress: mockEthereumAddress(),
       decimals: 18,
-      condition: ScalarOperator.Equal,
+      name: 'Dai Stablecoin',
+      symbol: 'DAI',
       ...overrides,
       __typename: 'Erc20OwnershipOutput',
     },
