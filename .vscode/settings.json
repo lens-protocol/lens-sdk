@@ -9,6 +9,7 @@
     "packages/client",
     "packages/domain",
     "packages/eslint-config",
+    "packages/gated-content",
     "packages/prettier-config",
     "packages/react-web",
     "packages/react",

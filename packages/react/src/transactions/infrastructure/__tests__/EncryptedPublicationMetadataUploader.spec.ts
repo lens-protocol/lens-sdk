@@ -9,8 +9,7 @@ import {
   mockCreateCommentRequest,
   mockCreatePostRequest,
 } from '@lens-protocol/domain/mocks';
-import { GatedClient } from '@lens-protocol/gated-content';
-import { webCryptoProvider } from '@lens-protocol/gated-content/web';
+import { GatedClient, webCryptoProvider } from '@lens-protocol/gated-content';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
 import { Wallet } from 'ethers';
 import { mock } from 'jest-mock-extended';
