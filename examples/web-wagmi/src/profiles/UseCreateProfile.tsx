@@ -1,4 +1,4 @@
-import { useActiveWallet, useCreateProfile, useProfilesOwnedByMe } from '@lens-protocol/react';
+import { useActiveWallet, useCreateProfile, useProfilesOwnedByMe } from '@lens-protocol/react-web';
 
 import { never } from '../utils';
 import { ProfileCard } from './components/ProfileCard';
