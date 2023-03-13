@@ -1,4 +1,10 @@
 export * from './useFeed';
 export * from './FeedEventItemType';
 
-export type { FeedItemFragment } from '@lens-protocol/api-bindings';
+export type {
+  FeedItemFragment,
+  CollectedEventFragment,
+  ElectedMirrorFragment,
+  MirrorEventFragment,
+  ReactionEventFragment,
+} from '@lens-protocol/api-bindings';

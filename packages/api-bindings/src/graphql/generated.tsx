@@ -4563,10 +4563,40 @@ export type EnabledModuleCurrenciesQueryVariables = Exact<{ [key: string]: never
 
 export type EnabledModuleCurrenciesQuery = { result: Array<Erc20Fragment> };
 
+export type ElectedMirrorFragment = {
+  __typename: 'ElectedMirror';
+  mirrorId: PublicationId;
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
+export type MirrorEventFragment = {
+  __typename: 'MirrorEvent';
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
+export type CollectedEventFragment = {
+  __typename: 'CollectedEvent';
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
+export type ReactionEventFragment = {
+  __typename: 'ReactionEvent';
+  reaction: ReactionTypes;
+  timestamp: string;
+  profile: ProfileFragment;
+};
+
 export type FeedItemFragment = {
   __typename: 'FeedItem';
   root: CommentFragment | PostFragment;
   comments: Array<CommentFragment> | null;
+  electedMirror: ElectedMirrorFragment | null;
+  mirrors: Array<MirrorEventFragment>;
+  collects: Array<CollectedEventFragment>;
+  reactions: Array<ReactionEventFragment>;
 };
 
 export type FeedQueryVariables = Exact<{
@@ -4823,6 +4853,7 @@ export type NotificationsQueryVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
 }>;
 
 export type NotificationsQuery = {
@@ -4842,6 +4873,7 @@ export type NotificationsQuery = {
 export type UnreadNotificationCountQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
 }>;
 
 export type UnreadNotificationCountQuery = { result: { pageInfo: { totalCount: number | null } } };
@@ -6130,6 +6162,48 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     verifyingContract
   }
 `;
+export const ElectedMirrorFragmentDoc = gql`
+  fragment ElectedMirror on ElectedMirror {
+    __typename
+    mirrorId
+    profile {
+      ...Profile
+    }
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
+export const MirrorEventFragmentDoc = gql`
+  fragment MirrorEvent on MirrorEvent {
+    __typename
+    profile {
+      ...Profile
+    }
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
+export const CollectedEventFragmentDoc = gql`
+  fragment CollectedEvent on CollectedEvent {
+    __typename
+    profile {
+      ...Profile
+    }
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
+export const ReactionEventFragmentDoc = gql`
+  fragment ReactionEvent on ReactionEvent {
+    __typename
+    profile {
+      ...Profile
+    }
+    reaction
+    timestamp
+  }
+  ${ProfileFragmentDoc}
+`;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {
     __typename
@@ -6144,9 +6218,25 @@ export const FeedItemFragmentDoc = gql`
     comments {
       ...Comment
     }
+    electedMirror {
+      ...ElectedMirror
+    }
+    mirrors {
+      ...MirrorEvent
+    }
+    collects {
+      ...CollectedEvent
+    }
+    reactions {
+      ...ReactionEvent
+    }
   }
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
+  ${ElectedMirrorFragmentDoc}
+  ${MirrorEventFragmentDoc}
+  ${CollectedEventFragmentDoc}
+  ${ReactionEventFragmentDoc}
 `;
 export const EncryptedMediaSetFragmentDoc = gql`
   fragment EncryptedMediaSet on EncryptedMediaSet {
@@ -7328,9 +7418,16 @@ export const NotificationsDocument = gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]!
+    $notificationTypes: [NotificationTypes!]
   ) {
     result: notifications(
-      request: { profileId: $observerId, limit: $limit, cursor: $cursor, sources: $sources }
+      request: {
+        profileId: $observerId
+        limit: $limit
+        cursor: $cursor
+        sources: $sources
+        notificationTypes: $notificationTypes
+      }
     ) {
       items {
         ... on NewFollowerNotification {
@@ -7382,6 +7479,7 @@ export const NotificationsDocument = gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      notificationTypes: // value for 'notificationTypes'
  *   },
  * });
  */
@@ -7410,8 +7508,14 @@ export type NotificationsQueryResult = Apollo.QueryResult<
   NotificationsQueryVariables
 >;
 export const UnreadNotificationCountDocument = gql`
-  query UnreadNotificationCount($profileId: ProfileId!, $sources: [Sources!]) {
-    result: notifications(request: { profileId: $profileId, sources: $sources }) {
+  query UnreadNotificationCount(
+    $profileId: ProfileId!
+    $sources: [Sources!]
+    $notificationTypes: [NotificationTypes!]
+  ) {
+    result: notifications(
+      request: { profileId: $profileId, sources: $sources, notificationTypes: $notificationTypes }
+    ) {
       pageInfo {
         totalCount
       }
@@ -7433,6 +7537,7 @@ export const UnreadNotificationCountDocument = gql`
  *   variables: {
  *      profileId: // value for 'profileId'
  *      sources: // value for 'sources'
+ *      notificationTypes: // value for 'notificationTypes'
  *   },
  * });
  */

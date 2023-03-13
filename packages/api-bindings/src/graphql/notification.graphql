@@ -99,9 +99,16 @@ query Notifications(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!]!
+  $notificationTypes: [NotificationTypes!]
 ) {
   result: notifications(
-    request: { profileId: $observerId, limit: $limit, cursor: $cursor, sources: $sources }
+    request: {
+      profileId: $observerId
+      limit: $limit
+      cursor: $cursor
+      sources: $sources
+      notificationTypes: $notificationTypes
+    }
   ) {
     items {
       ... on NewFollowerNotification {
@@ -133,8 +140,14 @@ query Notifications(
   }
 }
 
-query UnreadNotificationCount($profileId: ProfileId!, $sources: [Sources!]) {
-  result: notifications(request: { profileId: $profileId, sources: $sources }) {
+query UnreadNotificationCount(
+  $profileId: ProfileId!
+  $sources: [Sources!]
+  $notificationTypes: [NotificationTypes!]
+) {
+  result: notifications(
+    request: { profileId: $profileId, sources: $sources, notificationTypes: $notificationTypes }
+  ) {
     pageInfo {
       totalCount
     }

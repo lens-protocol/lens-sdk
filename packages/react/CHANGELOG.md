@@ -1,5 +1,36 @@
 # @lens-protocol/react
 
+## 0.5.1
+
+### Patch Changes
+
+- 44596707: Fixed `TransactionQueue already initialized` console error in strict mode
+- ed973b51: Added `electedMirror`, `mirrors`, `collects` and `reactions` to feed query
+  - @lens-protocol/api-bindings@0.5.1
+  - @lens-protocol/blockchain-bindings@0.5.1
+  - @lens-protocol/domain@0.5.1
+  - @lens-protocol/storage@0.5.1
+  - @lens-protocol/shared-kernel@0.5.1
+
+## 0.5.0
+
+### Minor Changes
+
+- 17646fff: - Removed the need for `assertRequiredSigner` when returning the signer from `getSigner` (Used in <LensProvider/>)
+- 95d905c5: Added `useProfilesOwnedByMe` hook
+- 7124e4e6: Added `profilePublicationsForSale` hook
+- b098c376: Added missing fields to `PublicationStats` and `ProfileStats`
+- 30abfeec: Updated internal dependencies
+
+### Patch Changes
+
+- 99eb422e: Added `DecryptionCriteria` to `CommentFragment` and `PostFragment`
+  - @lens-protocol/api-bindings@0.5.0
+  - @lens-protocol/blockchain-bindings@0.5.0
+  - @lens-protocol/domain@0.5.0
+  - @lens-protocol/shared-kernel@0.5.0
+  - @lens-protocol/storage@0.5.0
+
 ## 0.4.1
 
 ### Patch Changes

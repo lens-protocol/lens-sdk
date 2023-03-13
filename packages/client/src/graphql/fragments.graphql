@@ -50,13 +50,16 @@ fragment Profile on Profile {
   bio
   handle
   ownedBy
+  interests
 
   picture {
     ...ProfileMedia
   }
+
   coverPicture {
     ...ProfileMedia
   }
+
   stats {
     __typename
     totalFollowers
@@ -78,6 +81,7 @@ fragment Profile on Profile {
       ...UnknownFollowModuleSettings
     }
   }
+
   attributes {
     ...Attribute
   }
@@ -93,7 +97,6 @@ fragment Profile on Profile {
 }
 
 fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-  __typename
   name
   chainId
   version
@@ -259,19 +262,20 @@ fragment MetadataAttributeOutput on MetadataAttributeOutput {
   value
 }
 
-fragment PublicationStats on PublicationStats {
+fragment SimplePublicationStats on PublicationStats {
   __typename
   totalAmountOfMirrors
-  totalUpvotes
   totalAmountOfCollects
   totalAmountOfComments
+  totalUpvotes
+  totalDownvotes
 }
 
 fragment MirrorBase on Mirror {
   __typename
   id
   stats {
-    ...PublicationStats
+    ...SimplePublicationStats
   }
   metadata {
     ...Metadata
@@ -316,7 +320,7 @@ fragment CommentBase on Comment {
   __typename
   id
   stats {
-    ...PublicationStats
+    ...SimplePublicationStats
   }
   metadata {
     ...Metadata
@@ -378,7 +382,7 @@ fragment Post on Post {
   __typename
   id
   stats {
-    ...PublicationStats
+    ...SimplePublicationStats
   }
   metadata {
     ...Metadata

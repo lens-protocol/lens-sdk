@@ -2,6 +2,7 @@ import LensClient, {
   Explore,
   Feed,
   Modules,
+  Nfts,
   Nonces,
   Notifications,
   Profile,
@@ -37,6 +38,12 @@ describe(`Given the LensClient configured for sandbox`, () => {
   describe(`when accessing the ${Modules.name} module`, () => {
     it(`should return a new instance of ${Modules.name}`, () => {
       expect(client.modules).toBeInstanceOf(Modules);
+    });
+  });
+
+  describe(`when accessing the ${Nfts.name} module`, () => {
+    it(`should return a new instance of ${Nfts.name}`, () => {
+      expect(client.nfts).toBeInstanceOf(Nfts);
     });
   });
 

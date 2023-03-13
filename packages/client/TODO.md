@@ -21,15 +21,15 @@ Client manages the token lifecycle and storage
 - [x] [M] client.authentication.authenticate(address, signature)
 - [x] [H] client.authentication.isAuthenticated()
 
-## Broadcast / Transaction
-
-- [x] [AM] client.transaction.broadcast(request)
-- [x] [AQ] client.transaction.wasIndexed({ txId })
-
 ## Explore
 
 - [x] [PQ] client.explore.publications(request)
 - [x] [PQ] client.explore.profiles(request)
+
+## Feed
+
+- [x] [APQ] client.feed.fetch(request)
+- [x] [APQ] client.feed.fetchHighlights(request)
 
 ## Modules
 
@@ -40,8 +40,15 @@ Client manages the token lifecycle and storage
 
 ## NFTs
 
-- [Q] client.nfts.fetch(request)
-- [AQ] client.nfts.ownershipChallenge(request)
+- [x] [PQ] client.nfts.fetch(request)
+- [x] [AQ] client.nfts.ownershipChallenge(request)
+
+- [x] [Q] client.nfts.fetchGalleries(request)
+- [x] [AM] client.nfts.createGallery(request)
+- [x] [AM] client.nfts.updateGalleryInfo(request)
+- [x] [AM] client.nfts.updateGalleryItems(request)
+- [x] [AM] client.nfts.updateGalleryOrder(request)
+- [x] [AM] client.nfts.deleteGallery(request)
 
 ## Notifications
 
@@ -53,34 +60,41 @@ Client manages the token lifecycle and storage
 
 - [x] [Q] client.profile.fetch(request)
 - [x] [PQ] client.profile.fetchAll(request)
-- [x] [Q] client.profile.allRecommended()
 - [x] [PQ] client.profile.mutualFollowers({ viewingProfileId, yourProfileId })
+- [x] [Q] client.profile.stats(request)
+
+- [x] [Q] client.profile.allRecommended()
+- [x] [AM] client.profile.dismissRecommended(request)
 
 ### Edit profile
 
 - [x] [AM] client.profile.create(request)
-- [H] client.profile.isValidHandle(handle)
 
-- [AM] client.profile.createSetProfileMetadataTypedData(request)
-- [AM] client.profile.createSetProfileMetadataViaDispatcher(request)
+- [x] [AM] client.profile.createSetProfileMetadataTypedData(request)
+- [x] [AM] client.profile.createSetProfileMetadataViaDispatcher(request)
 
-- [AM] client.profile.createSetProfileImageURITypedData(request)
-- [AM] client.profile.createSetProfileImageURIViaDispatcher(request)
+- [x] [AM] client.profile.createSetProfileImageURITypedData(request)
+- [x] [AM] client.profile.createSetProfileImageURIViaDispatcher(request)
 
 - [x] [AM] client.profile.createBurnProfileTypedData(request)
-- [AM] client.profile.createSetDefaultProfileTypedData(request)
+- [x] [AM] client.profile.createSetDefaultProfileTypedData(request)
 - [x] [AM] client.profile.createSetDispatcherTypedData(request)
 
-- [AM] client.profile.addInterests(request)
-- [AM] client.profile.removeInterests(request)
+- [x] [Q] client.profile.allInterests()
+- [x] [AM] client.profile.addInterests(request)
+- [x] [AM] client.profile.removeInterests(request)
+
+### Heleprs
+
+- [x] [H] isValidProfileHandle(handle)
 
 ### Follow profile
 
 - [x] [AM] client.profile.createFollowTypedData(request)
 - [x] [AM] client.profile.createUnfollowTypedData(request)
-- [AM] client.profile.createSetFollowModuleTypedData(request)
-- [AM] client.profile.createSetFollowNFTUriTypedData(request)
-- [APQ] client.profile.pendingApprovalFollows(request)
+- [x] [AM] client.profile.createSetFollowModuleTypedData(request)
+- [x] [AM] client.profile.createSetFollowNFTUriTypedData(request)
+- [x] [APQ] client.profile.pendingApprovalFollows(request)
 
 - [x] [Q] client.profile.doesFollow(request)
 - [x] [PQ] client.profile.allFollowing({ address })
@@ -97,24 +111,29 @@ Client manages the token lifecycle and storage
 - [x] [PQ] client.publication.allWalletsWhoCollected({ publicationId })
 - [x] [PQ] client.publication.allForSale({ profileId })
 - [x] [Q] client.publication.metadataStatus(request)
+- [x] [Q] client.publication.stats(request)
 
 ### Create or edit publications
 
-- [AM] client.publication.createPostTypedData(request)
-- [AM] client.publication.createPostViaDispatcher(request)
+- [x] [AM] client.publication.createPostTypedData(request)
+- [x] [AM] client.publication.createPostViaDispatcher(request)
 
-- [AM] client.publication.createCommentTypedData(request)
-- [AM] client.publication.createCommentViaDispatcher(request)
+- [x] [AM] client.publication.createCommentTypedData(request)
+- [x] [AM] client.publication.createCommentViaDispatcher(request)
 
-- [AM] client.publication.createMirrorTypedData(request)
-- [AM] client.publication.createMirrorViaDispatcher(request)
+- [x] [AM] client.publication.createMirrorTypedData(request)
+- [x] [AM] client.publication.createMirrorViaDispatcher(request)
 
-- [AM] client.publication.createCollectTypedData(request)
+- [x] [AM] client.publication.createCollectTypedData(request)
 
-- [AM] client.publication.hide({ publicationId })
-- [M] client.publication.createAttachMediaData(request)
+- [x] [AM] client.publication.hide({ publicationId })
+- [x] [M] client.publication.createAttachMediaData(request)
 
-- gated publications TBD
+- [x] [AM] client.publication.report(request)
+
+### Helpers
+
+- [x] [H] buildReportingReasonInputParams(PublicationReportReason)
 
 ## ProtocolStats
 
@@ -128,17 +147,20 @@ Client manages the token lifecycle and storage
 
 - [x] [AM] client.proxyAction.freeFollow({ profileId })
 - [x] [AM] client.proxyAction.freeCollect({ publicationId })
-- [x] [AQ] client.proxyAction.checkStatus({ proxyActionId })
+- [x] [AQ] client.proxyAction.checkStatus(proxyActionId)
+- [x] [AQ] client.proxyAction.waitForStatusComplete(proxyActionId)
+
+### Helpers
+
+- [x] [H] isProxyActionError()
+- [x] [H] isProxyActionQueued()
+- [x] [H] isProxyActionStatusResult()
 
 ## Reactions
 
 - [x] [AM] client.reactions.add(request)
 - [x] [AM] client.reactions.remove(request)
 - [x] [PQ] client.reactions.toPublication({ publicationId })
-
-## Reporting
-
-- [AM] client.report.publication({ publicationId, reason, additionalComments })
 
 ## Revenue
 
@@ -151,10 +173,18 @@ Client manages the token lifecycle and storage
 - [x] [PQ] client.search.profiles({ query, limit })
 - [x] [PQ] client.search.publications({ query, limit })
 
-## Feed
+## Transaction
 
-- [x] [APQ] client.feed.fetch(request)
-- [x] [APQ] client.feed.fetchHighlights(request)
+- [x] [AM] client.transaction.broadcast(request)
+- [x] [AQ] client.transaction.wasIndexed(txId)
+- [x] [AQ] client.transaction.waitForIsIndexed(txId)
+
+### Helpers
+
+- [x] [H] isRelayerResult()
+- [x] [H] isRelayerError()
+- [x] [H] isTransactionIndexedResult()
+- [x] [H] isTransactionError()
 
 ## Other considerations
 

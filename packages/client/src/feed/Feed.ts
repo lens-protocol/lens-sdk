@@ -14,7 +14,7 @@ export class Feed {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication?: Authentication) {
+  constructor(config: LensConfig, authentication: Authentication) {
     const client = new GraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);

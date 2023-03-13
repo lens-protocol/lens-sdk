@@ -1,3 +1,4 @@
+import { invariant } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
@@ -21,9 +22,15 @@ export class Search {
 
   async profiles(request: SearchProfilesQueryVariables): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (variables) => {
-      const result = await this.sdk.SearchProfiles(variables);
+      const response = await this.sdk.SearchProfiles(variables);
+      const result = response.data.result;
 
-      return result.data.result;
+      invariant(
+        result.__typename !== 'PublicationSearchResult',
+        'PublicationSearchResult is not expected in this query',
+      );
+
+      return result;
     }, request);
   }
 
@@ -31,9 +38,15 @@ export class Search {
     request: SearchPublicationsQueryVariables,
   ): Promise<PaginatedResult<CommentFragment | PostFragment>> {
     return buildPaginatedQueryResult(async (variables) => {
-      const result = await this.sdk.SearchPublications(variables);
+      const response = await this.sdk.SearchPublications(variables);
+      const result = response.data.result;
 
-      return result.data.result;
+      invariant(
+        result.__typename !== 'ProfileSearchResult',
+        'ProfileSearchResult is not expected in this query',
+      );
+
+      return result;
     }, request);
   }
 }

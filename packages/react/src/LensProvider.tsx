@@ -14,6 +14,8 @@ export type LensProviderProps = Partial<Handlers> & {
 };
 
 export function LensProvider({ children, ...props }: LensProviderProps) {
+  const isStartedRef = useRef(false);
+
   const initialProps = useRef(props).current;
   const [sharedDependencies] = useState(() =>
     createSharedDependencies(props.config, {
@@ -33,6 +35,12 @@ export function LensProvider({ children, ...props }: LensProviderProps) {
   const start = useBootstrapController(sharedDependencies);
 
   useEffect(() => {
+    // Protects again multiple calls to start (quite likely from `useEffect` hook in concurrent mode (or in strict mode))
+    if (isStartedRef.current) {
+      return;
+    }
+
+    isStartedRef.current = true;
     start();
   }, [start]);
 

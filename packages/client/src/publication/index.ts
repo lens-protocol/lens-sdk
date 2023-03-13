@@ -1,9 +1,4 @@
+export type { PublicationStatsFragment } from './graphql/publication.generated';
+
 export * from './Publication';
-export {
-  PublicationMetadataDisplayTypes,
-  PublicationContentWarning,
-  PublicationMainFocus,
-  PublicationTypes,
-  CustomFiltersTypes,
-  PublicationMediaSource,
-} from '../graphql/types.generated';
+export * from './helpers';

@@ -53,6 +53,7 @@ export type ProfileFragment = {
   bio: string | null;
   handle: string;
   ownedBy: string;
+  interests: Array<string> | null;
   isDefault: boolean;
   isFollowedByMe: boolean;
   isFollowing: boolean;
@@ -75,7 +76,6 @@ export type ProfileFragment = {
 };
 
 export type Eip712TypedDataDomainFragment = {
-  __typename: 'EIP712TypedDataDomain';
   name: string;
   chainId: number;
   version: string;
@@ -249,12 +249,13 @@ export type MetadataAttributeOutputFragment = {
   value: string | null;
 };
 
-export type PublicationStatsFragment = {
+export type SimplePublicationStatsFragment = {
   __typename: 'PublicationStats';
   totalAmountOfMirrors: number;
-  totalUpvotes: number;
   totalAmountOfCollects: number;
   totalAmountOfComments: number;
+  totalUpvotes: number;
+  totalDownvotes: number;
 };
 
 export type MirrorBaseFragment = {
@@ -265,7 +266,7 @@ export type MirrorBaseFragment = {
   isGated: boolean;
   reaction: Types.ReactionTypes | null;
   hasCollectedByMe: boolean;
-  stats: PublicationStatsFragment;
+  stats: SimplePublicationStatsFragment;
   metadata: MetadataFragment;
   profile: ProfileFragment;
   collectModule:
@@ -302,7 +303,7 @@ export type CommentBaseFragment = {
   reaction: Types.ReactionTypes | null;
   hasCollectedByMe: boolean;
   mirrors: Array<string>;
-  stats: PublicationStatsFragment;
+  stats: SimplePublicationStatsFragment;
   metadata: MetadataFragment;
   profile: ProfileFragment;
   collectedBy: WalletFragment | null;
@@ -341,7 +342,7 @@ export type PostFragment = {
   reaction: Types.ReactionTypes | null;
   hasCollectedByMe: boolean;
   mirrors: Array<string>;
-  stats: PublicationStatsFragment;
+  stats: SimplePublicationStatsFragment;
   metadata: MetadataFragment;
   profile: ProfileFragment;
   collectedBy: WalletFragment | null;
@@ -382,7 +383,6 @@ export type RelayErrorFragment = { __typename: 'RelayError'; reason: Types.Relay
 
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    __typename
     name
     chainId
     version
@@ -408,13 +408,14 @@ export const Erc20AmountFragmentDoc = gql`
   }
   ${Erc20FragmentDoc}
 `;
-export const PublicationStatsFragmentDoc = gql`
-  fragment PublicationStats on PublicationStats {
+export const SimplePublicationStatsFragmentDoc = gql`
+  fragment SimplePublicationStats on PublicationStats {
     __typename
     totalAmountOfMirrors
-    totalUpvotes
     totalAmountOfCollects
     totalAmountOfComments
+    totalUpvotes
+    totalDownvotes
   }
 `;
 export const MediaFragmentDoc = gql`
@@ -527,6 +528,7 @@ export const ProfileFragmentDoc = gql`
     bio
     handle
     ownedBy
+    interests
     picture {
       ...ProfileMedia
     }
@@ -682,7 +684,7 @@ export const MirrorBaseFragmentDoc = gql`
     __typename
     id
     stats {
-      ...PublicationStats
+      ...SimplePublicationStats
     }
     metadata {
       ...Metadata
@@ -708,7 +710,7 @@ export const MirrorBaseFragmentDoc = gql`
       result
     }
   }
-  ${PublicationStatsFragmentDoc}
+  ${SimplePublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
   ${ProfileFragmentDoc}
   ${CollectModuleFragmentDoc}
@@ -729,7 +731,7 @@ export const PostFragmentDoc = gql`
     __typename
     id
     stats {
-      ...PublicationStats
+      ...SimplePublicationStats
     }
     metadata {
       ...Metadata
@@ -759,7 +761,7 @@ export const PostFragmentDoc = gql`
     }
     mirrors(by: $observerId)
   }
-  ${PublicationStatsFragmentDoc}
+  ${SimplePublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
   ${ProfileFragmentDoc}
   ${WalletFragmentDoc}
@@ -771,7 +773,7 @@ export const CommentBaseFragmentDoc = gql`
     __typename
     id
     stats {
-      ...PublicationStats
+      ...SimplePublicationStats
     }
     metadata {
       ...Metadata
@@ -801,7 +803,7 @@ export const CommentBaseFragmentDoc = gql`
     }
     mirrors(by: $observerId)
   }
-  ${PublicationStatsFragmentDoc}
+  ${SimplePublicationStatsFragmentDoc}
   ${MetadataFragmentDoc}
   ${ProfileFragmentDoc}
   ${WalletFragmentDoc}

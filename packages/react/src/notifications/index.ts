@@ -9,4 +9,5 @@ export type {
   NewMentionNotificationFragment,
   NewMirrorNotificationFragment,
   NewReactionNotificationFragment,
+  NotificationTypes,
 } from '@lens-protocol/api-bindings';

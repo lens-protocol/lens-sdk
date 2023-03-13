@@ -1,8 +1,9 @@
-import { ReactionTypes, Reactions } from '.';
+import { Reactions } from '.';
 import { setupAuthentication } from '../authentication/__helpers__/setupAuthentication';
 import { testWalletProfileId } from '../authentication/__helpers__/setupTestWallet';
 import { mumbaiSandbox } from '../consts/environments';
 import { NotAuthenticatedError } from '../consts/errors';
+import { ReactionTypes } from '../graphql/types.generated';
 
 const testConfig = {
   environment: mumbaiSandbox,

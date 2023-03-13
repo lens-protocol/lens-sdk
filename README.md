@@ -30,10 +30,10 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 
 ## Road Map
 
-- [x] Release 0.5.0: Low-level API abstraction client (name to be decided).
-- [ ] Release 0.X.0 : integration with Lens Gated SDK.
-- [ ] Release 0.Y.0: support for Data Availability posts.
+- [x] Release 0.5.0: Low-level API abstraction client.
+- [ ] Release 0.6.0: integration with Lens Gated SDK.
 - [ ] Release 1.0.0: initial stable release.
+- [ ] Release 1.x.0: support for Data Availability posts.
 
 **Note**: This road map is subject to change and is provided for informational purposes only.
 
@@ -131,6 +131,8 @@ _Note: Because this command assumes that the last commit is the release commit, 
 ```bash
 git push --follow-tags
 ```
+
+7. It's important that the last commit, from which the release was made and the git tags are associated with, is correctly merged to the `main` branch. Use `"Create a merge commit"` option when merging the release branch to the `main`.
 
 ## License
 

@@ -1,39 +1,37 @@
-import { useCreateProfile, useProfile } from '@lens-protocol/react-web';
-import { useState } from 'react';
+import { useActiveWallet, useCreateProfile, useProfilesOwnedByMe } from '@lens-protocol/react';
 
-import { ErrorMessage } from '../components/error/ErrorMessage';
 import { never } from '../utils';
 import { ProfileCard } from './components/ProfileCard';
 
-function ShowProfile({ handle }: { handle: string }) {
-  const { data: profile, error, loading } = useProfile({ handle: `${handle}.test` });
+function OwnedProfiles() {
+  const { data } = useProfilesOwnedByMe();
 
-  if (loading) return null;
+  return (
+    <div>
+      <h3>Owned Profiles</h3>
 
-  if (error) return <ErrorMessage error={error} />;
-
-  return <ProfileCard profile={profile} />;
+      {data
+        ?.slice()
+        .reverse()
+        .map((profile) => (
+          <ProfileCard key={profile.id} profile={profile} />
+        ))}
+    </div>
+  );
 }
 
 export function UseCreateProfile() {
-  const [newProfileHandle, setNewProfileHandle] = useState<string | null>(null);
-
   const { execute: create, error, isPending } = useCreateProfile();
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    setNewProfileHandle(null);
-
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
     const handle = (formData.get('handle') as string) ?? never();
-
-    const result = await create(handle);
-
-    if (result.isSuccess()) {
-      setNewProfileHandle(handle);
-    }
+    await create(handle);
   };
+
+  const activeWallet = useActiveWallet();
 
   return (
     <div>
@@ -64,7 +62,7 @@ export function UseCreateProfile() {
         {error && <p>{error.message}</p>}
       </form>
 
-      <div>{newProfileHandle && <ShowProfile handle={newProfileHandle} />}</div>
+      {activeWallet.data && <OwnedProfiles />}
     </div>
   );
 }

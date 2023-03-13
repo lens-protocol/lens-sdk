@@ -1,4 +1,16 @@
-query Publication($observerId: ProfileId, $request: PublicationQueryRequest!) {
+#fragments
+fragment PublicationStats on PublicationStats {
+  __typename
+  totalAmountOfMirrors
+  totalAmountOfCollects
+  totalAmountOfComments
+  totalUpvotes
+  totalDownvotes
+  commentsTotal(forSources: $sources)
+}
+
+# queries
+query Publication($request: PublicationQueryRequest!, $observerId: ProfileId) {
   result: publication(request: $request) {
     ... on Post {
       ...Post
@@ -10,6 +22,28 @@ query Publication($observerId: ProfileId, $request: PublicationQueryRequest!) {
 
     ... on Comment {
       ...Comment
+    }
+  }
+}
+
+query PublicationStats($request: PublicationQueryRequest!, $sources: [Sources!]!) {
+  result: publication(request: $request) {
+    ... on Post {
+      stats {
+        ...PublicationStats
+      }
+    }
+
+    ... on Mirror {
+      stats {
+        ...PublicationStats
+      }
+    }
+
+    ... on Comment {
+      stats {
+        ...PublicationStats
+      }
     }
   }
 }
@@ -81,4 +115,174 @@ query PublicationMetadataStatus($request: GetPublicationMetadataStatusRequest!) 
     reason
     status
   }
+}
+
+# mutations
+mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
+  result: createPostTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        PostWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        collectModule
+        collectModuleInitData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+}
+
+mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
+  result: createPostViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateCommentTypedData($request: CreatePublicCommentRequest!, $options: TypedDataOptions) {
+  result: createCommentTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        CommentWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        profileIdPointed
+        pubIdPointed
+        collectModule
+        collectModuleInitData
+        referenceModuleData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+}
+
+mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
+  result: createCommentViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDataOptions) {
+  result: createMirrorTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        MirrorWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        profileIdPointed
+        pubIdPointed
+        referenceModuleData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+}
+
+mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
+  result: createMirrorViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: TypedDataOptions) {
+  result: createCollectTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        CollectWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        pubId
+        data
+      }
+    }
+  }
+}
+
+mutation CreateAttachMediaData($request: PublicMediaRequest!) {
+  result: createAttachMediaData(request: $request) {
+    media {
+      altTag
+      cover
+      item
+      source
+      type
+    }
+    signedUrl
+  }
+}
+
+mutation HidePublication($request: HidePublicationRequest!) {
+  hidePublication(request: $request)
+}
+
+mutation ReportPublication($request: ReportPublicationRequest!) {
+  reportPublication(request: $request)
 }

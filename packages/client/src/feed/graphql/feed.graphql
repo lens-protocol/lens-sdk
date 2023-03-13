@@ -1,3 +1,37 @@
+fragment ElectedMirror on ElectedMirror {
+  __typename
+  mirrorId
+  profile {
+    ...Profile
+  }
+  timestamp
+}
+
+fragment MirrorEvent on MirrorEvent {
+  __typename
+  profile {
+    ...Profile
+  }
+  timestamp
+}
+
+fragment CollectedEvent on CollectedEvent {
+  __typename
+  profile {
+    ...Profile
+  }
+  timestamp
+}
+
+fragment ReactionEvent on ReactionEvent {
+  __typename
+  profile {
+    ...Profile
+  }
+  reaction
+  timestamp
+}
+
 fragment FeedItem on FeedItem {
   __typename
   root {
@@ -11,6 +45,18 @@ fragment FeedItem on FeedItem {
   }
   comments {
     ...Comment
+  }
+  electedMirror {
+    ...ElectedMirror
+  }
+  mirrors {
+    ...MirrorEvent
+  }
+  collects {
+    ...CollectedEvent
+  }
+  reactions {
+    ...ReactionEvent
   }
 }
 

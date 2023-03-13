@@ -8,11 +8,11 @@ import {
   CommentFragment,
   CommonPaginatedResultInfoFragment,
   WalletFragment,
-  FollowingFragment,
-  FollowerFragment,
   Eip712TypedDataDomainFragment,
   RelayerResultFragment,
   RelayErrorFragment,
+  FollowingFragment,
+  FollowerFragment,
   Erc20AmountFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -26,11 +26,11 @@ import {
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
   WalletFragmentDoc,
-  FollowingFragmentDoc,
-  FollowerFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
   RelayerResultFragmentDoc,
   RelayErrorFragmentDoc,
+  FollowingFragmentDoc,
+  FollowerFragmentDoc,
   Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type ExplorePublicationsQueryVariables = Types.Exact<{

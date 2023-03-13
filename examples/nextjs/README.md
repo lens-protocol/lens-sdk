@@ -1,6 +1,6 @@
 # Lens SDK + wagmi + NextJS
 
-This package is an example app showcasing the `@lens-protocol/react` integration with [wagmi](https://wagmi.sh/) and [NextJS](https://nextjs.org/).
+This package is an example app showcasing the `@lens-protocol/react` integration with [wagmi](https://wagmi.sh/) and [Next.js](https://nextjs.org/).
 
 It is not published or released anywhere directly.
 

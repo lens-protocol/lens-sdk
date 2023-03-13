@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { mumbaiSandbox } from '../consts/environments';
-import { getSdk } from '../search/graphql/search.generated';
+import { getSdk } from '../profile/graphql/profile.generated';
 import { buildPaginatedQueryResult } from './buildPaginatedQueryResult';
 
 describe('Given a paginated query function and the paginated query result helper', () => {
@@ -9,12 +9,14 @@ describe('Given a paginated query function and the paginated query result helper
 
   it('should be able to paginate forward', async () => {
     const result = await buildPaginatedQueryResult(
-      async (variables) => {
-        const res = await sdk.SearchProfiles(variables);
+      async (currRequest) => {
+        const res = await sdk.Profiles({
+          request: currRequest,
+        });
 
         return res.data.result;
       },
-      { query: 'test', limit: 10 },
+      { ownedBy: ['0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6'], limit: 2 },
     );
 
     await expect(result.next()).resolves.not.toThrow();
@@ -22,12 +24,14 @@ describe('Given a paginated query function and the paginated query result helper
 
   it('should be able to paginate forward and then back', async () => {
     const result = await buildPaginatedQueryResult(
-      async (variables) => {
-        const res = await sdk.SearchProfiles(variables);
+      async (currRequest) => {
+        const res = await sdk.Profiles({
+          request: currRequest,
+        });
 
         return res.data.result;
       },
-      { query: 'test', limit: 10 },
+      { ownedBy: ['0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6'], limit: 2 },
     );
 
     const firstPageResults = [...result.items];
@@ -43,12 +47,14 @@ describe('Given a paginated query function and the paginated query result helper
 
   it('should be able to paginate forward and then back even if there are no results', async () => {
     const result = await buildPaginatedQueryResult(
-      async (variables) => {
-        const res = await sdk.SearchProfiles(variables);
+      async (currRequest) => {
+        const res = await sdk.Profiles({
+          request: currRequest,
+        });
 
         return res.data.result;
       },
-      { query: 'somethingcrazywithnoresults', limit: 10 },
+      { ownedBy: ['0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6'], limit: 50 },
     );
 
     await expect(result.next()).resolves.not.toThrow();

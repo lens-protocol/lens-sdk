@@ -369,6 +369,10 @@ export function mockFeedItemFragment(overrides?: Partial<FeedItemFragment>): Fee
   return {
     root: mockPostFragment(),
     comments: null,
+    mirrors: [],
+    electedMirror: null,
+    reactions: [],
+    collects: [],
     ...overrides,
     __typename: 'FeedItem',
   };
