@@ -86,8 +86,8 @@ async function main() {
   await lensClient.transaction.waitForIsIndexed(createPostResultValue.txId);
 
   // now the transaction is indexed
-  const wasIndexedFinallCheck = await lensClient.transaction.wasIndexed(createPostResultValue.txId);
-  console.log(`Transaction status: `, wasIndexedFinallCheck.unwrap());
+  const wasIndexedFinalCheck = await lensClient.transaction.wasIndexed(createPostResultValue.txId);
+  console.log(`Transaction status: `, wasIndexedFinalCheck.unwrap());
 }
 
 main();

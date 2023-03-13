@@ -29,7 +29,7 @@ export class LensClient {
   }
 
   get explore(): Explore {
-    return new Explore(this.config);
+    return new Explore(this.config, this._authentication);
   }
 
   get feed(): Feed {
@@ -69,11 +69,11 @@ export class LensClient {
   }
 
   get revenue(): Revenue {
-    return new Revenue(this.config);
+    return new Revenue(this.config, this._authentication);
   }
 
   get search(): Search {
-    return new Search(this.config);
+    return new Search(this.config, this._authentication);
   }
 
   get stats(): Stats {

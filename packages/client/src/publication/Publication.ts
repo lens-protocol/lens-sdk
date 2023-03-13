@@ -1,19 +1,19 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
-import { Authentication } from '../authentication';
-import { LensConfig } from '../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { InferResultType } from '../consts/types';
-import {
+import type { Authentication } from '../authentication';
+import type { LensConfig } from '../consts/config';
+import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { InferResultType } from '../consts/types';
+import type {
   CommentFragment,
   PostFragment,
   RelayerResultFragment,
   RelayErrorFragment,
   WalletFragment,
 } from '../graphql/fragments.generated';
-import { PublicationFragment } from '../graphql/types';
-import {
+import type { PublicationFragment } from '../graphql/types';
+import type {
   CreateCollectRequest,
   CreateMirrorRequest,
   CreatePublicCommentRequest,
@@ -31,8 +31,12 @@ import {
   TypedDataOptions,
   WhoCollectedPublicationRequest,
 } from '../graphql/types.generated';
-import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
-import { execute } from '../helpers/execute';
+import {
+  buildPaginatedQueryResult,
+  PaginatedResult,
+  provideAuthHeaders,
+  requireAuthHeaders,
+} from '../helpers';
 import {
   CreateAttachMediaDataMutation,
   CreateCollectTypedDataMutation,
@@ -59,79 +63,111 @@ export class Publication {
     request: PublicationQueryRequest,
     observerId?: string,
   ): Promise<PublicationFragment | null> {
-    const result = await this.sdk.Publication({ request, observerId });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.Publication(
+        {
+          request,
+          observerId,
+        },
+        headers,
+      );
 
-    return result.data.result;
+      return result.data.result;
+    });
   }
 
   async stats(
     request: PublicationQueryRequest,
     sources: string[],
   ): Promise<PublicationStatsFragment | undefined> {
-    const result = await this.sdk.PublicationStats({
-      request,
-      sources,
-    });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.PublicationStats(
+        {
+          request,
+          sources,
+        },
+        headers,
+      );
 
-    return result.data.result?.stats;
+      return result.data.result?.stats;
+    });
   }
 
   async validateMetadata(
     metadata: PublicationMetadataV2Input,
   ): Promise<PublicationValidateMetadataResult> {
-    const result = await this.sdk.ValidatePublicationMetadata({ metadata });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.ValidatePublicationMetadata({ metadata }, headers);
 
-    return result.data.validatePublicationMetadata;
+      return result.data.validatePublicationMetadata;
+    });
   }
 
   async metadataStatus(
     request: GetPublicationMetadataStatusRequest,
   ): Promise<PublicationMetadataStatus | null> {
-    const result = await this.sdk.PublicationMetadataStatus({ request });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.PublicationMetadataStatus({ request }, headers);
 
-    return result.data.result;
+      return result.data.result;
+    });
   }
 
   async fetchAll(
     request: PublicationsQueryRequest,
     observerId?: string,
   ): Promise<PaginatedResult<PublicationFragment>> {
-    return buildPaginatedQueryResult(async (currRequest) => {
-      const result = await this.sdk.Publications({
-        request: currRequest,
-        observerId,
-      });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.Publications(
+          {
+            request: currRequest,
+            observerId,
+          },
+          headers,
+        );
 
-      return result.data.result;
-    }, request);
+        return result.data.result;
+      }, request);
+    });
   }
 
   async allWalletsWhoCollected(
     request: WhoCollectedPublicationRequest,
     observerId?: string,
   ): Promise<PaginatedResult<WalletFragment>> {
-    return buildPaginatedQueryResult(async (currRequest) => {
-      const result = await this.sdk.WhoCollectedPublication({
-        request: currRequest,
-        observerId,
-      });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.WhoCollectedPublication(
+          {
+            request: currRequest,
+            observerId,
+          },
+          headers,
+        );
 
-      return result.data.result;
-    }, request);
+        return result.data.result;
+      }, request);
+    });
   }
 
   async allForSale(
     request: ProfilePublicationsForSaleRequest,
     observerId?: string,
   ): Promise<PaginatedResult<CommentFragment | PostFragment>> {
-    return buildPaginatedQueryResult(async (currRequest) => {
-      const result = await this.sdk.ProfilePublicationsForSale({
-        request: currRequest,
-        observerId,
-      });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.ProfilePublicationsForSale(
+          {
+            request: currRequest,
+            observerId,
+          },
+          headers,
+        );
 
-      return result.data.result;
-    }, request);
+        return result.data.result;
+      }, request);
+    });
   }
 
   async createPostTypedData(
@@ -141,7 +177,7 @@ export class Publication {
     InferResultType<CreatePostTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreatePostTypedData(
         {
           request,
@@ -160,7 +196,7 @@ export class Publication {
     RelayerResultFragment | RelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreatePostViaDispatcher({ request }, headers);
 
       return result.data.result;
@@ -174,7 +210,7 @@ export class Publication {
     InferResultType<CreateCommentTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateCommentTypedData(
         {
           request,
@@ -193,7 +229,7 @@ export class Publication {
     RelayerResultFragment | RelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateCommentViaDispatcher({ request }, headers);
 
       return result.data.result;
@@ -207,7 +243,7 @@ export class Publication {
     InferResultType<CreateMirrorTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateMirrorTypedData(
         {
           request,
@@ -226,7 +262,7 @@ export class Publication {
     RelayerResultFragment | RelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateMirrorViaDispatcher({ request }, headers);
 
       return result.data.result;
@@ -240,7 +276,7 @@ export class Publication {
     InferResultType<CreateCollectTypedDataMutation>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateCollectTypedData(
         {
           request,
@@ -256,15 +292,17 @@ export class Publication {
   async createAttachMediaData(
     request: PublicMediaRequest,
   ): Promise<InferResultType<CreateAttachMediaDataMutation>> {
-    const result = await this.sdk.CreateAttachMediaData({ request });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateAttachMediaData({ request }, headers);
 
-    return result.data.result;
+      return result.data.result;
+    });
   }
 
   async hide(
     request: HidePublicationRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.HidePublication({ request }, headers);
     });
   }
@@ -272,7 +310,7 @@ export class Publication {
   async report(
     request: ReportPublicationRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.ReportPublication({ request }, headers);
     });
   }

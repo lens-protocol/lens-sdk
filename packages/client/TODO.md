@@ -2,7 +2,7 @@
 
 ## Legend:
 
-- [A] authenticated
+- [A] requires authentication
 - [P] paginated
 - [M] mutation
 - [Q] query
@@ -185,25 +185,3 @@ Client manages the token lifecycle and storage
 - [x] [H] isRelayerError()
 - [x] [H] isTransactionIndexedResult()
 - [x] [H] isTransactionError()
-
-## Other considerations
-
-- more helpers like `isValidHandle`
-- allow for custom gql queries or compose query from subqueries (like profile base, profile interests, profile onChainIdentity etc.) (is that possible?)
-
-```ts
-client.profile.fetch(
-  request,
-  `{
-    name
-    bio
-    handle
-    interests {
-      ...profileInterestsFragment,
-    }
-    identity {
-      ...profileOnChainIdentityFragment
-    }
-  }`,
-);
-```

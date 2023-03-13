@@ -1,16 +1,16 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
-import { Authentication } from '../authentication';
-import { LensConfig } from '../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { InferResultType } from '../consts/types';
-import { Erc20Fragment } from '../graphql/fragments.generated';
-import {
+import type { Authentication } from '../authentication';
+import type { LensConfig } from '../consts/config';
+import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { InferResultType } from '../consts/types';
+import type { Erc20Fragment } from '../graphql/fragments.generated';
+import type {
   ApprovedModuleAllowanceAmountRequest,
   GenerateModuleCurrencyApprovalDataRequest,
 } from '../graphql/types.generated';
-import { execute } from '../helpers/execute';
+import { requireAuthHeaders } from '../helpers';
 import {
   ApprovedModuleAllowanceAmountQuery,
   EnabledModulesFragment,
@@ -34,7 +34,7 @@ export class Modules {
     Erc20Fragment[],
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.EnabledModuleCurrencies({}, headers);
 
       return result.data.result;
@@ -45,7 +45,7 @@ export class Modules {
     EnabledModulesFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.EnabledModules({}, headers);
 
       return result.data.result;
@@ -58,7 +58,7 @@ export class Modules {
     InferResultType<ApprovedModuleAllowanceAmountQuery>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.ApprovedModuleAllowanceAmount({ request }, headers);
 
       return result.data.result;
@@ -71,7 +71,7 @@ export class Modules {
     InferResultType<GenerateModuleCurrencyApprovalDataQuery>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.GenerateModuleCurrencyApprovalData({ request }, headers);
 
       return result.data.result;
