@@ -12,7 +12,7 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { failure, invariant, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { EncryptionConfig } from '../EncryptionConfig';
+import { EncryptionConfig } from '../config';
 import { Operation, useOperation } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { useWalletLogin, useActiveWalletSigner } from '../wallet';

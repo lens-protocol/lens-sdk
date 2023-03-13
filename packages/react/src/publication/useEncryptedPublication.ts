@@ -7,7 +7,7 @@ import {
 import { failure, invariant, success } from '@lens-protocol/shared-kernel';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { EncryptionConfig } from '../EncryptionConfig';
+import { EncryptionConfig } from '../config';
 import { Operation, useOperation } from '../helpers';
 import { useSharedDependencies } from '../shared';
 import { createGatedClient } from '../transactions/infrastructure/createGatedClient';
