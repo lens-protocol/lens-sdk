@@ -14,6 +14,6 @@ export class ApplicationPresenter implements IApplicationPresenter {
   }
 }
 
-export const useAppState = () => {
+export function useAppState() {
   return useReactiveVar(applicationState);
-};
+}

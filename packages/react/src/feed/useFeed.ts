@@ -6,6 +6,7 @@ import {
 import { nonNullable } from '@lens-protocol/shared-kernel';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
+import { useActiveProfileIdentifier } from '../profile/useActiveProfileIdentifier';
 import { createPublicationMetadataFilters, PublicationMetadataFilters } from '../publication';
 import { useSharedDependencies } from '../shared';
 import { FeedEventItemType } from './FeedEventItemType';
@@ -42,6 +43,7 @@ export function useFeed({
   limit = FEED_LIMIT,
 }: UseFeedArgs): PaginatedReadResult<FeedItemFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
+  const { data: activeProfile, loading: bootstrapping } = useActiveProfileIdentifier();
 
   return usePaginatedReadResult(
     useFeedQuery({
@@ -49,11 +51,12 @@ export function useFeed({
         metadata: createPublicationMetadataFilters(metadataFilter),
         restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
         profileId,
-        observerId,
+        observerId: observerId ?? activeProfile?.id ?? null,
         sources,
         limit,
       },
       client: apolloClient,
+      skip: bootstrapping,
     }),
   );
 }
