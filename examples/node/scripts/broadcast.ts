@@ -1,3 +1,4 @@
+import { isRelayerResult } from "@lens-protocol/client";
 import { getActiveProfile } from "./shared/getActiveProfile";
 import { getAuthenticatedClient } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
@@ -34,20 +35,26 @@ async function main() {
   // broadcastResult is a Result object
   const broadcastResultValue = broadcastResult.unwrap();
 
-  if ("txId" in broadcastResultValue) {
-    console.log(
-      `Transaction to set dispatcher for profile ${activeProfile.id} was successfuly broadcasted with txId ${broadcastResultValue.txId}`
-    );
+  if (!isRelayerResult(broadcastResultValue)) {
+    console.log(`Something went wrong`, broadcastResultValue);
+    return;
   }
 
+  console.log(
+    `Transaction to set dispatcher for profile ${activeProfile.id} was successfuly broadcasted with txId ${broadcastResultValue.txId}`
+  );
+
   // single check
-  // const result = await lensClient.transaction.wasIndexed(broadcastResultValue.txId);
+  const wasIndexedFirstCheck = await lensClient.transaction.wasIndexed(broadcastResultValue.txId);
+  console.log(`Transaction status: `, wasIndexedFirstCheck.unwrap());
 
   // wait in a loop
-  // await lensClient.transaction.waitForIsIndexed(broadcastResultValue.txId);
+  console.log(`Waiting for the transaction to be indexed...`);
+  await lensClient.transaction.waitForIsIndexed(broadcastResultValue.txId);
 
-  // now the transaction is indexed for sure
-  // const result = await lensClient.transaction.wasIndexed(broadcastResultValue.txId);
+  // now the transaction is indexed
+  const wasIndexedFinallCheck = await lensClient.transaction.wasIndexed(broadcastResultValue.txId);
+  console.log(`Transaction status: `, wasIndexedFinallCheck.unwrap());
 }
 
 main();

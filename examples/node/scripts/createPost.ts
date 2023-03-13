@@ -1,5 +1,9 @@
 import { v4 } from "uuid";
-import { PublicationMainFocus, PublicationMetadataDisplayTypes } from "@lens-protocol/client";
+import {
+  isRelayerResult,
+  PublicationMainFocus,
+  PublicationMetadataDisplayTypes,
+} from "@lens-protocol/client";
 import { getAuthenticatedClient } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
 import { uploadWithBundlr } from "./shared/uploadWithBundlr";
@@ -68,11 +72,22 @@ async function main() {
   // createPostResult is a Result object
   const createPostResultValue = createPostResult.unwrap();
 
-  if ("txId" in createPostResultValue) {
-    console.log(
-      `Transaction to create a post was successfuly broadcasted with txId ${createPostResultValue.txId}`
-    );
+  if (!isRelayerResult(createPostResultValue)) {
+    console.log(`Something went wrong`, createPostResultValue);
+    return;
   }
+
+  console.log(
+    `Transaction to create a post was successfuly broadcasted with txId ${createPostResultValue.txId}`
+  );
+
+  // wait in a loop
+  console.log(`Waiting for the transaction to be indexed...`);
+  await lensClient.transaction.waitForIsIndexed(createPostResultValue.txId);
+
+  // now the transaction is indexed
+  const wasIndexedFinallCheck = await lensClient.transaction.wasIndexed(createPostResultValue.txId);
+  console.log(`Transaction status: `, wasIndexedFinallCheck.unwrap());
 }
 
 main();
