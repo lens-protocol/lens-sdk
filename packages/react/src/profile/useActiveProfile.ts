@@ -7,14 +7,12 @@ import {
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { ReadResult } from '../helpers';
-import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
 import { useSharedDependencies } from '../shared';
-import { useActiveProfileIdentifierVar } from './adapters/ActiveProfilePresenter';
+import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
 
 export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, UnspecifiedError> {
-  const state = useAppState();
+  const { data: identifier, loading: bootstrapping } = useActiveProfileIdentifier();
   const { apolloClient, sources } = useSharedDependencies();
-  const identifier = useActiveProfileIdentifierVar();
 
   const { data, error, loading } = useGetProfileQuery({
     variables: {
@@ -24,11 +22,11 @@ export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, 
       sources,
     },
     fetchPolicy: 'cache-first',
-    skip: state !== ApplicationsState.READY || identifier === null,
+    skip: bootstrapping || identifier === null,
     client: apolloClient,
   });
 
-  if (state !== ApplicationsState.READY) {
+  if (bootstrapping) {
     return {
       data: undefined,
       error: undefined,
