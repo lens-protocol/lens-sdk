@@ -5,7 +5,7 @@ import { useConfigSourcesVariable, useLensApolloClient } from '../helpers/argume
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseMutualFollowersArgs = PaginatedArgs<{
+export type UseMutualFollowersArgs = PaginatedArgs<{
   observerId: ProfileId;
   viewingProfileId: ProfileId;
 }>;

@@ -13,7 +13,7 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import { useConfigSourcesVariable, useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
-type UseNotificationsArgs = PaginatedArgs<{
+export type UseNotificationsArgs = PaginatedArgs<{
   profileId: ProfileId;
   notificationTypes?: NotificationTypes[];
 }>;

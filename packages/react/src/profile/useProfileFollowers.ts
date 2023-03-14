@@ -10,7 +10,7 @@ import {
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseProfileFollowersArgs = PaginatedArgs<
+export type UseProfileFollowersArgs = PaginatedArgs<
   SubjectiveArgs<{
     profileId: ProfileId;
   }>

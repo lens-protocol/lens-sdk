@@ -9,7 +9,7 @@ import {
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseFeedArgs = PaginatedArgs<SubjectiveArgs>;
+export type UseFeedArgs = PaginatedArgs<SubjectiveArgs>;
 
 export function useExploreProfiles({
   observerId,

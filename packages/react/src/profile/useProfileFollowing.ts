@@ -9,7 +9,7 @@ import {
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseProfileFollowingArgs = PaginatedArgs<
+export type UseProfileFollowingArgs = PaginatedArgs<
   SubjectiveArgs<{
     walletAddress: string;
   }>

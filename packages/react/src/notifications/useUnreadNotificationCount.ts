@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useLensApolloClient } from '../helpers/arguments';
 import { useSharedDependencies } from '../shared';
 
-type UseUnreadNotificationCountArgs = {
+export type UseUnreadNotificationCountArgs = {
   profileId: ProfileId;
 };
 
