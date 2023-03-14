@@ -15,8 +15,6 @@ import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate'
 import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
 import { usePublication, UsePublicationArgs } from '../usePublication';
 
-const sources = mockSources();
-
 function setupTestScenario({
   expectedObserverId,
   result,
@@ -27,6 +25,8 @@ function setupTestScenario({
   expectedObserverId?: ProfileId;
   result: AnyPublicationFragment | null;
 }) {
+  const sources = mockSources();
+
   return renderHookWithMocks(() => usePublication(args), {
     mocks: {
       sources,

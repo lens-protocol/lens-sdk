@@ -370,7 +370,7 @@ export function createPublicationQueryMockedResponse({
 
 export function createPublicationsQueryMockedResponse(args: {
   variables: PublicationsQueryVariables;
-  publications: Array<CommentFragment | PostFragment>;
+  publications: Array<AnyPublicationFragment>;
 }): MockedResponse<PublicationsQuery> {
   return {
     request: {
