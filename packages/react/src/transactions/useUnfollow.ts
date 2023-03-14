@@ -14,7 +14,7 @@ import {
 } from '@lens-protocol/domain/entities';
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { useUnfollowController } from './adapters/useUnfollowController';
 
 export class PrematureUnfollowError extends Error {

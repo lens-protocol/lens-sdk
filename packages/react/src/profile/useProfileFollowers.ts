@@ -1,6 +1,6 @@
 import { FollowerFragment, useProfileFollowersQuery } from '@lens-protocol/api-bindings';
 
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { useSharedDependencies } from '../shared';
 
 type UseProfileFollowersArgs = PaginatedArgs<{

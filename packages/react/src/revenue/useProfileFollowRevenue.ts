@@ -4,7 +4,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
-import { ReadResult, useReadResult } from '../helpers';
+import { ReadResult, useReadResult } from '../helpers/reads';
 import { useSharedDependencies } from '../shared';
 
 type UseProfileFollowRevenueArgs = {

@@ -1,7 +1,7 @@
 import { useEnabledModuleCurrenciesQuery } from '@lens-protocol/api-bindings';
 import { ChainType, erc20, Erc20 } from '@lens-protocol/shared-kernel';
 
-import { ReadResult, useReadResult } from '../helpers';
+import { ReadResult, useReadResult } from '../helpers/reads';
 import { useSharedDependencies } from '../shared';
 
 export function useCurrencies(): ReadResult<Erc20[]> {

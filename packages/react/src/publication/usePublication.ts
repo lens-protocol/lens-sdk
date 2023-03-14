@@ -5,7 +5,7 @@ import {
 } from '@lens-protocol/api-bindings';
 
 import { NotFoundError } from '../NotFoundError';
-import { ReadResult, useReadResult } from '../helpers';
+import { ReadResult, useReadResult } from '../helpers/reads';
 import { useSharedDependencies } from '../shared';
 
 type UsePublicationArgs = {

@@ -1,7 +1,7 @@
 import { useReactiveVar } from '@apollo/client';
 import { ProfileFragment, useGetAllProfilesByOwnerAddressQuery } from '@lens-protocol/api-bindings';
 
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { useSharedDependencies } from '../shared';
 import { createdProfilesVar } from '../transactions/adapters/responders/CreateProfileResponder';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
@@ -14,7 +14,8 @@ type UseProfilesOwnedByArgs = PaginatedArgs<{
 export function useProfilesOwnedByMe({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseProfilesOwnedByArgs = {}): PaginatedReadResult<ProfileFragment[]> {
+}: // TODO: rename ProfileFragment into ProfileOwnedByMeFragment
+UseProfilesOwnedByArgs = {}): PaginatedReadResult<ProfileFragment[]> {
   const { apolloClient, sources } = useSharedDependencies();
   const activeWallet = useActiveWallet();
   const createdProfiles = useReactiveVar(createdProfilesVar);

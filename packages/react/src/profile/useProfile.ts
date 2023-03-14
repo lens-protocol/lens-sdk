@@ -2,7 +2,7 @@ import { ProfileFragment, UnspecifiedError, useGetProfileQuery } from '@lens-pro
 import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
-import { ReadResult, useReadResult } from '../helpers';
+import { ReadResult, useReadResult } from '../helpers/reads';
 import { useSharedDependencies } from '../shared';
 
 type BaseUseProfileArgs = {

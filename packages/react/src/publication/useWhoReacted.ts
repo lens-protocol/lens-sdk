@@ -3,7 +3,7 @@ import {
   useWhoReactedPublicationQuery,
 } from '@lens-protocol/api-bindings';
 
-import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
+import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
 import { useSharedDependencies } from '../shared';
 
 type UseWhoReactedArgs = PaginatedArgs<{

@@ -6,13 +6,11 @@ import {
 import { nonNullable } from '@lens-protocol/shared-kernel';
 
 import {
-  PaginatedArgs,
-  PaginatedReadResult,
   useActiveProfileAsDefaultObserver,
   useConfigSources,
   useLensApolloClient,
-  usePaginatedReadResult,
-} from '../helpers';
+} from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { createPublicationMetadataFilters, PublicationMetadataFilters } from '../publication';
 import { FeedEventItemType } from './FeedEventItemType';
 

@@ -6,7 +6,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { ReadResult } from '../helpers';
+import { ReadResult } from '../helpers/reads';
 import { useSharedDependencies } from '../shared';
 import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
 
