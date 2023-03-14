@@ -29,20 +29,24 @@ type UseActiveProfileAsDefaultObserverArgs<TVariables> = {
   variables: SubjectiveArgs<TVariables>;
 };
 
+type UseActiveProfileAsDefaultObserverResultVariables<TVariables> = TVariables & {
+  observerId: ProfileId | null;
+};
+
 type UseActiveProfileAsDefaultObserverResult<TVariables> = Prettify<
   Overwrite<
     UseActiveProfileAsDefaultObserverArgs<TVariables>,
     {
-      variables: Omit<TVariables, 'observerId'> & { observerId: ProfileId | null };
+      variables: UseActiveProfileAsDefaultObserverResultVariables<TVariables>;
       skip: boolean;
     }
   >
 >;
 
-export function useActiveProfileAsDefaultObserver<T>({
+export function useActiveProfileAsDefaultObserver<TVariables>({
   variables,
   ...others
-}: UseActiveProfileAsDefaultObserverArgs<T>): UseActiveProfileAsDefaultObserverResult<T> {
+}: UseActiveProfileAsDefaultObserverArgs<TVariables>): UseActiveProfileAsDefaultObserverResult<TVariables> {
   const { data: activeProfile, loading: bootstrapping } = useActiveProfileIdentifier();
 
   return {
