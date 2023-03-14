@@ -4,25 +4,24 @@ import {
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
+import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
-import { useSharedDependencies } from '../shared';
 
-type UseProfileFollowRevenueArgs = {
+export type UseProfileFollowRevenueArgs = {
   profileId: ProfileId;
 };
 
 export function useProfileFollowRevenue({
   profileId,
 }: UseProfileFollowRevenueArgs): ReadResult<RevenueAggregateFragment[]> {
-  const { apolloClient } = useSharedDependencies();
-
   const { data, error, loading } = useReadResult(
-    useProfileFollowRevenueQuery({
-      variables: {
-        profileId,
-      },
-      client: apolloClient,
-    }),
+    useProfileFollowRevenueQuery(
+      useLensApolloClient({
+        variables: {
+          profileId,
+        },
+      }),
+    ),
   );
 
   if (loading) {
