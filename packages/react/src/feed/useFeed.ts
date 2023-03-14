@@ -1,9 +1,12 @@
+import { OperationVariables } from '@apollo/client';
 import {
   FeedEventItemType as LensFeedEventItemType,
   FeedItemFragment,
+  LensApolloClient,
   useFeedQuery,
 } from '@lens-protocol/api-bindings';
-import { nonNullable } from '@lens-protocol/shared-kernel';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import { nonNullable, Prettify } from '@lens-protocol/shared-kernel';
 
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
 import { useActiveProfileIdentifier } from '../profile/useActiveProfileIdentifier';
@@ -28,8 +31,61 @@ const mapRestrictEventTypesToLensTypes = (restrictEventTypesTo?: FeedEventItemTy
 // feed limit is higher than others to get good aggregation of feed items
 const FEED_LIMIT = 50;
 
+type UseLensApolloClientArgs<TVariables> = {
+  variables: TVariables;
+};
+
+type UseLensApolloClientResult<TVariables> = Prettify<
+  UseLensApolloClientArgs<TVariables> & {
+    client: LensApolloClient;
+  }
+>;
+
+function useLensApolloClient<TVariables extends OperationVariables = OperationVariables>(
+  options: UseLensApolloClientArgs<TVariables>,
+): UseLensApolloClientResult<TVariables> {
+  const { apolloClient } = useSharedDependencies();
+
+  return {
+    ...options,
+    client: apolloClient,
+  };
+}
+
+type UseActiveProfileAsDefaultObserverArgs = { observerId: ProfileId | null };
+
+type UseActiveProfileAsDefaultObserverResult<TArgs extends UseActiveProfileAsDefaultObserverArgs> =
+  {
+    variables: Omit<TArgs, 'observerId'> & { observerId: ProfileId | null };
+    skip: boolean;
+  };
+
+function useActiveProfileAsDefaultObserver<TArgs extends UseActiveProfileAsDefaultObserverArgs>({
+  observerId,
+  ...others
+}: TArgs): UseActiveProfileAsDefaultObserverResult<TArgs> {
+  const { data: activeProfile, loading: bootstrapping } = useActiveProfileIdentifier();
+
+  return {
+    variables: {
+      ...others,
+      observerId: observerId ?? activeProfile?.id ?? null,
+    },
+    skip: bootstrapping,
+  };
+}
+
+function useConfigSources<TArgs extends OperationVariables>(args: TArgs) {
+  const { sources } = useSharedDependencies();
+
+  return {
+    ...args,
+    sources,
+  };
+}
+
 export type UseFeedArgs = PaginatedArgs<{
-  observerId?: string;
+  observerId?: string | null;
   profileId: string;
   restrictEventTypesTo?: FeedEventItemType[];
   metadataFilter?: PublicationMetadataFilters;
@@ -38,25 +94,23 @@ export type UseFeedArgs = PaginatedArgs<{
 export function useFeed({
   metadataFilter,
   restrictEventTypesTo,
-  observerId,
+  observerId = null,
   profileId,
   limit = FEED_LIMIT,
 }: UseFeedArgs): PaginatedReadResult<FeedItemFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-  const { data: activeProfile, loading: bootstrapping } = useActiveProfileIdentifier();
-
   return usePaginatedReadResult(
-    useFeedQuery({
-      variables: {
-        metadata: createPublicationMetadataFilters(metadataFilter),
-        restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
-        profileId,
-        observerId: observerId ?? activeProfile?.id ?? null,
-        sources,
-        limit,
-      },
-      client: apolloClient,
-      skip: bootstrapping,
-    }),
+    useFeedQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver(
+          useConfigSources({
+            metadata: createPublicationMetadataFilters(metadataFilter),
+            restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
+            profileId,
+            observerId,
+            limit,
+          }),
+        ),
+      ),
+    ),
   );
 }
