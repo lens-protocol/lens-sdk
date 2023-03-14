@@ -6,25 +6,24 @@ import {
 } from '@lens-protocol/api-bindings';
 import { invariant } from '@lens-protocol/shared-kernel';
 
+import { useConfigSourcesVariable, useLensApolloClient } from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
-import { useSharedDependencies } from '../shared';
 import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
 
 export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, UnspecifiedError> {
   const { data: identifier, loading: bootstrapping } = useActiveProfileIdentifier();
-  const { apolloClient, sources } = useSharedDependencies();
 
-  const { data, error, loading } = useGetProfileQuery({
-    variables: {
-      request: {
-        profileId: identifier?.id,
-      },
-      sources,
-    },
-    fetchPolicy: 'cache-first',
-    skip: bootstrapping || identifier === null,
-    client: apolloClient,
-  });
+  const { data, error, loading } = useGetProfileQuery(
+    useLensApolloClient({
+      variables: useConfigSourcesVariable({
+        request: {
+          profileId: identifier?.id,
+        },
+      }),
+      fetchPolicy: 'cache-first',
+      skip: bootstrapping || identifier === null,
+    }),
+  );
 
   if (bootstrapping) {
     return {
