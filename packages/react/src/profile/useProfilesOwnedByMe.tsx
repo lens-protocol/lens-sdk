@@ -1,40 +1,53 @@
 import { useReactiveVar } from '@apollo/client';
-import { ProfileFragment, useGetAllProfilesByOwnerAddressQuery } from '@lens-protocol/api-bindings';
+import {
+  ProfileOwnedByMeFragment,
+  useGetAllProfilesByOwnerAddressQuery,
+} from '@lens-protocol/api-bindings';
+import { never } from '@lens-protocol/shared-kernel';
+import { constants } from 'ethers';
 
+import {
+  SubjectiveArgs,
+  useActiveProfileAsDefaultObserver,
+  useConfigSourcesVariable,
+  useLensApolloClient,
+} from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { useSharedDependencies } from '../shared';
 import { createdProfilesVar } from '../transactions/adapters/responders/CreateProfileResponder';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { useActiveWallet } from '../wallet';
 
-type UseProfilesOwnedByArgs = PaginatedArgs<{
-  observerId?: string;
-}>;
+export type UseProfilesOwnedByMeArgs = PaginatedArgs<SubjectiveArgs>;
 
 export function useProfilesOwnedByMe({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: // TODO: rename ProfileFragment into ProfileOwnedByMeFragment
-UseProfilesOwnedByArgs = {}): PaginatedReadResult<ProfileFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-  const activeWallet = useActiveWallet();
+}: UseProfilesOwnedByMeArgs = {}): PaginatedReadResult<ProfileOwnedByMeFragment[]> {
+  const { data: activeWallet, loading: bootstrapping } = useActiveWallet();
   const createdProfiles = useReactiveVar(createdProfilesVar);
 
   const result = usePaginatedReadResult(
-    useGetAllProfilesByOwnerAddressQuery({
-      variables: {
-        address: activeWallet.data?.address || '',
-        observerId,
-        limit,
-        sources,
-      },
-      skip: activeWallet.loading,
-      client: apolloClient,
-    }),
+    useGetAllProfilesByOwnerAddressQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useConfigSourcesVariable({
+            address: bootstrapping
+              ? constants.AddressZero
+              : activeWallet?.address ??
+                never(
+                  `Cannot use 'useProfilesOwnedByMe' without being logged in. Use 'useWalletLogin' to log in first.`,
+                ),
+            observerId,
+            limit,
+          }),
+          skip: bootstrapping && activeWallet === null,
+        }),
+      ),
+    ),
   );
 
   return {
     ...result,
     data: result.data ? [...result.data, ...createdProfiles] : result.data,
-  } as PaginatedReadResult<ProfileFragment[]>;
+  } as PaginatedReadResult<ProfileOwnedByMeFragment[]>;
 }

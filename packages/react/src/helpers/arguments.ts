@@ -28,6 +28,7 @@ export type SubjectiveArgs<TVariables = unknown> = Prettify<
 >;
 
 type UseActiveProfileAsDefaultObserverArgs<TVariables> = {
+  skip?: boolean;
   variables: SubjectiveArgs<TVariables>;
 };
 
@@ -46,6 +47,7 @@ type UseActiveProfileAsDefaultObserverResult<TVariables> = Prettify<
 >;
 
 export function useActiveProfileAsDefaultObserver<TVariables>({
+  skip,
   variables,
   ...others
 }: UseActiveProfileAsDefaultObserverArgs<TVariables>): UseActiveProfileAsDefaultObserverResult<TVariables> {
@@ -57,7 +59,7 @@ export function useActiveProfileAsDefaultObserver<TVariables>({
       ...variables,
       observerId: variables.observerId ?? activeProfile?.id ?? null,
     },
-    skip: bootstrapping,
+    skip: skip || bootstrapping,
   };
 }
 

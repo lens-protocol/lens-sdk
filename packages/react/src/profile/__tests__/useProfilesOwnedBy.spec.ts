@@ -67,7 +67,7 @@ describe(`Given the ${useProfilesOwnedBy.name} hook`, () => {
       activeProfileIdentifierVar(activeProfile);
     });
 
-    it('should use the Active Profile Id as the observerId', async () => {
+    it('should use the Active Profile Id as the "observerId"', async () => {
       const { result } = setupTestScenario({
         address,
         result: profiles,

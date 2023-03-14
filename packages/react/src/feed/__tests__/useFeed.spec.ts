@@ -79,7 +79,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
   describe('when there is an Active Profile defined', () => {
     const activeProfile = mockProfile();
 
-    it('should use the Active Profile Id as the observerId', async () => {
+    it('should use the Active Profile Id as the "observerId"', async () => {
       activeProfileIdentifierVar(activeProfile);
 
       const { result } = setupTestScenario({
