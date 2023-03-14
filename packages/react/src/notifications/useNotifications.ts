@@ -8,12 +8,13 @@ import {
   NotificationTypes,
   useNotificationsQuery,
 } from '@lens-protocol/api-bindings';
+import { ProfileId } from '@lens-protocol/domain/entities';
 
+import { useConfigSources, useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { useSharedDependencies } from '../shared';
 
 type UseNotificationsArgs = PaginatedArgs<{
-  profileId: string;
+  profileId: ProfileId;
   notificationTypes?: NotificationTypes[];
 }>;
 
@@ -30,17 +31,17 @@ export function useNotifications({
   profileId,
   limit,
 }: UseNotificationsArgs): PaginatedReadResult<Notification[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   return usePaginatedReadResult(
-    useNotificationsQuery({
-      variables: {
-        observerId: profileId,
-        limit: limit ?? 10,
-        notificationTypes,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useNotificationsQuery(
+      useLensApolloClient(
+        useConfigSources({
+          variables: {
+            observerId: profileId,
+            limit: limit ?? 10,
+            notificationTypes,
+          },
+        }),
+      ),
+    ),
   );
 }
