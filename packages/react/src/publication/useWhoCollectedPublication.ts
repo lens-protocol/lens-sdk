@@ -1,4 +1,5 @@
 import { useWhoCollectedPublicationQuery, WalletFragment } from '@lens-protocol/api-bindings';
+import { PublicationId } from '@lens-protocol/domain/entities';
 
 import {
   SubjectiveArgs,
@@ -11,7 +12,7 @@ import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseWhoCollectedPublicationArgs = PaginatedArgs<
   SubjectiveArgs<{
-    publicationId: string;
+    publicationId: PublicationId;
   }>
 >;
 
