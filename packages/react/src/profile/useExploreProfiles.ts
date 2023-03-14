@@ -9,12 +9,12 @@ import {
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-export type UseFeedArgs = PaginatedArgs<SubjectiveArgs>;
+export type UseExploreProfilesArgs = PaginatedArgs<SubjectiveArgs>;
 
 export function useExploreProfiles({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseFeedArgs = {}): PaginatedReadResult<ProfileFragment[]> {
+}: UseExploreProfilesArgs = {}): PaginatedReadResult<ProfileFragment[]> {
   return usePaginatedReadResult(
     useExploreProfilesQuery(
       useLensApolloClient(
