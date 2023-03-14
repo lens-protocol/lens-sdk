@@ -6,19 +6,25 @@ import {
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
+import {
+  SubjectiveArgs,
+  useActiveProfileAsDefaultObserver,
+  useConfigSourcesVariable,
+  useLensApolloClient,
+} from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 
-type UseExplorePublicationsArgs = PaginatedArgs<{
-  observerId?: string;
-  sortCriteria?: PublicationSortCriteria;
-  timestamp?: number;
-  publicationTypes?: Array<PublicationTypes>;
-  excludeProfileIds?: Array<ProfileId>;
-  metadataFilter?: PublicationMetadataFilters;
-}>;
+export type UseExplorePublicationsArgs = PaginatedArgs<
+  SubjectiveArgs<{
+    excludeProfileIds?: Array<ProfileId>;
+    metadataFilter?: PublicationMetadataFilters;
+    publicationTypes?: Array<PublicationTypes>;
+    sortCriteria?: PublicationSortCriteria;
+    timestamp?: number;
+  }>
+>;
 
 export function useExplorePublications({
   observerId,
@@ -29,21 +35,21 @@ export function useExplorePublications({
   excludeProfileIds,
   metadataFilter,
 }: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<AnyPublicationFragment>> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   return usePaginatedReadResult(
-    useExplorePublicationsQuery({
-      variables: {
-        excludeProfileIds,
-        limit,
-        metadata: createPublicationMetadataFilters(metadataFilter),
-        publicationTypes,
-        sortCriteria,
-        timestamp,
-        observerId,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useExplorePublicationsQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useConfigSourcesVariable({
+            excludeProfileIds,
+            limit,
+            metadata: createPublicationMetadataFilters(metadataFilter),
+            publicationTypes,
+            sortCriteria,
+            timestamp,
+            observerId,
+          }),
+        }),
+      ),
+    ),
   );
 }
