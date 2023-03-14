@@ -2,43 +2,41 @@ import { ProfileFragment, UnspecifiedError, useGetProfileQuery } from '@lens-pro
 import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
+import {
+  SubjectiveArgs,
+  useConfigSourcesVariable,
+  useLensApolloClient,
+} from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
-import { useSharedDependencies } from '../shared';
 
-type BaseUseProfileArgs = {
-  observerId?: string;
-};
-
-type UseProfileByIdArgs = BaseUseProfileArgs & {
+type UseProfileByIdArgs = {
   profileId: string;
 };
 
-type UseProfileByHandleArgs = BaseUseProfileArgs & {
+type UseProfileByHandleArgs = {
   handle: string;
 };
 
-type UseProfileArgs = XOR<UseProfileByIdArgs, UseProfileByHandleArgs>;
+type UseProfileArgs = SubjectiveArgs<XOR<UseProfileByIdArgs, UseProfileByHandleArgs>>;
 
 export function useProfile({
   observerId,
   ...request
 }: UseProfileArgs): ReadResult<ProfileFragment, NotFoundError | UnspecifiedError> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   invariant(
     request.profileId === undefined || request.handle === undefined,
     "Only one of 'id' or 'handle' should be provided to useProfile",
   );
 
   const { data, error, loading } = useReadResult(
-    useGetProfileQuery({
-      variables: {
-        request,
-        observerId,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useGetProfileQuery(
+      useLensApolloClient({
+        variables: useConfigSourcesVariable({
+          request,
+          observerId,
+        }),
+      }),
+    ),
   );
 
   if (loading) {
