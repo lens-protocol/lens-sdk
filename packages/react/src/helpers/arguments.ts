@@ -22,7 +22,7 @@ export function useLensApolloClient<TOptions>(
 }
 
 export type SubjectiveArgs<TVariables> = TVariables & {
-  observerId?: ProfileId | null;
+  observerId?: ProfileId;
 };
 
 type UseActiveProfileAsDefaultObserverArgs<TVariables> = {

@@ -3,9 +3,11 @@ import {
   FeedItemFragment,
   useFeedQuery,
 } from '@lens-protocol/api-bindings';
-import { nonNullable } from '@lens-protocol/shared-kernel';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import { nonNullable, Prettify } from '@lens-protocol/shared-kernel';
 
 import {
+  SubjectiveArgs,
   useActiveProfileAsDefaultObserver,
   useConfigSources,
   useLensApolloClient,
@@ -31,17 +33,20 @@ const mapRestrictEventTypesToLensTypes = (restrictEventTypesTo?: FeedEventItemTy
 // feed limit is higher than others to get good aggregation of feed items
 const FEED_LIMIT = 50;
 
-export type UseFeedArgs = PaginatedArgs<{
-  observerId?: string | null;
-  profileId: string;
-  restrictEventTypesTo?: FeedEventItemType[];
-  metadataFilter?: PublicationMetadataFilters;
-}>;
+export type UseFeedArgs = Prettify<
+  PaginatedArgs<
+    SubjectiveArgs<{
+      profileId: ProfileId;
+      restrictEventTypesTo?: FeedEventItemType[];
+      metadataFilter?: PublicationMetadataFilters;
+    }>
+  >
+>;
 
 export function useFeed({
   metadataFilter,
   restrictEventTypesTo,
-  observerId = null,
+  observerId,
   profileId,
   limit = FEED_LIMIT,
 }: UseFeedArgs): PaginatedReadResult<FeedItemFragment[]> {
