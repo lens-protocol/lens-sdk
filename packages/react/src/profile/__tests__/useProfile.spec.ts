@@ -1,95 +1,115 @@
+import { MockedResponse } from '@apollo/client/testing';
 import {
   createMockApolloClientWithMultipleResponses,
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockProfileId } from '@lens-protocol/domain/mocks';
+import { Profile } from '@lens-protocol/domain/entities';
+import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { useProfile } from '../useProfile';
+import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
+import { activeProfileIdentifierVar } from '../adapters/ActiveProfilePresenter';
+import { useProfile, UseProfileArgs } from '../useProfile';
 
 const sources = mockSources();
 
+function setupTestScenario({
+  expectations,
+  ...args
+}: UseProfileArgs & { expectations: MockedResponse<unknown> }) {
+  return renderHookWithMocks(() => useProfile(args), {
+    mocks: {
+      sources,
+      apolloClient: createMockApolloClientWithMultipleResponses([expectations]),
+    },
+  });
+}
+
 describe(`Given the ${useProfile.name} hook`, () => {
-  const profileId = mockProfileId();
-  const handle = 'aave.lens';
-  const mockProfile = mockProfileFragment({ id: profileId, handle });
+  const profile = mockProfileFragment();
 
-  describe('when supplied with a profile id', () => {
-    describe('and the query returns data successfully', () => {
+  beforeAll(() => {
+    simulateAppReady();
+  });
+
+  describe.each<{
+    activeProfileValue: Profile | null;
+    precondition: string;
+  }>([
+    {
+      precondition: 'and NO Active Profile set',
+      activeProfileValue: null,
+    },
+    {
+      precondition: 'and an Active Profile set',
+      activeProfileValue: mockProfile(),
+    },
+  ])('$precondition', ({ activeProfileValue }) => {
+    describe.each([
+      {
+        description: 'when invoked with a profile id',
+        args: { profileId: profile.id },
+      },
+      {
+        description: 'when invoked with a profile handle',
+        args: { handle: profile.handle },
+      },
+    ])('$description', ({ args }) => {
+      beforeAll(() => {
+        activeProfileIdentifierVar(activeProfileValue);
+      });
+
       it('should settle with the profile data', async () => {
-        const { result } = renderHookWithMocks(() => useProfile({ profileId: profileId }), {
-          mocks: {
+        const expectations = mockGetProfileQueryMockedResponse({
+          profile,
+          variables: {
+            request: args,
+            observerId: activeProfileValue?.id ?? null,
             sources,
-            apolloClient: createMockApolloClientWithMultipleResponses([
-              mockGetProfileQueryMockedResponse({
-                profile: mockProfile,
-                variables: {
-                  request: {
-                    profileId,
-                  },
-                  sources,
-                },
-              }),
-            ]),
+          },
+        });
+        const { result } = setupTestScenario({ ...args, expectations });
+
+        await waitFor(() => expect(result.current.loading).toBeFalsy());
+        expect(result.current.data).toEqual(profile);
+      });
+
+      it('should allow to specify the "observerId" on a per-call basis', async () => {
+        const observerId = mockProfileId();
+
+        const expectations = mockGetProfileQueryMockedResponse({
+          profile,
+          variables: {
+            request: args,
+            observerId: observerId,
+            sources,
           },
         });
 
+        const { result } = setupTestScenario({ ...args, observerId, expectations });
+
         await waitFor(() => expect(result.current.loading).toBeFalsy());
-
-        expect(result.current.data).toEqual(mockProfile);
+        expect(result.current.data).toEqual(profile);
       });
-    });
-  });
 
-  describe('when supplied with a profile handle', () => {
-    describe('and the query returns data successfully', () => {
-      it('should settle with the profile data', async () => {
-        const { result } = renderHookWithMocks(() => useProfile({ handle }), {
-          mocks: {
+      it(`should settle with a ${NotFoundError.name} if not found`, async () => {
+        const expectations = mockGetProfileQueryMockedResponse({
+          profile: null,
+          variables: {
+            request: args,
+            observerId: activeProfileValue?.id ?? null,
             sources,
-            apolloClient: createMockApolloClientWithMultipleResponses([
-              mockGetProfileQueryMockedResponse({
-                profile: mockProfile,
-                variables: {
-                  request: { handle },
-                  sources,
-                },
-              }),
-            ]),
           },
         });
+        const { result } = setupTestScenario({ ...args, expectations });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
-
-        expect(result.current.data).toEqual(mockProfile);
+        expect(result.current.error).toBeInstanceOf(NotFoundError);
       });
-    });
-  });
-
-  describe('when the query returns null', () => {
-    it(`should settle with a ${NotFoundError.name} state`, async () => {
-      const { result } = renderHookWithMocks(() => useProfile({ handle }), {
-        mocks: {
-          sources,
-          apolloClient: createMockApolloClientWithMultipleResponses([
-            mockGetProfileQueryMockedResponse({
-              profile: null,
-              variables: {
-                request: { handle },
-                sources,
-              },
-            }),
-          ]),
-        },
-      });
-
-      await waitFor(() => expect(result.current.loading).toBeFalsy());
-
-      expect(result.current.error).toBeInstanceOf(NotFoundError);
     });
   });
 });

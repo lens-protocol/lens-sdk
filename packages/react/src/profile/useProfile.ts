@@ -4,6 +4,7 @@ import { invariant, XOR } from '@lens-protocol/shared-kernel';
 import { NotFoundError } from '../NotFoundError';
 import {
   SubjectiveArgs,
+  useActiveProfileAsDefaultObserver,
   useConfigSourcesVariable,
   useLensApolloClient,
 } from '../helpers/arguments';
@@ -17,7 +18,7 @@ type UseProfileByHandleArgs = {
   handle: string;
 };
 
-type UseProfileArgs = SubjectiveArgs<XOR<UseProfileByIdArgs, UseProfileByHandleArgs>>;
+export type UseProfileArgs = SubjectiveArgs<XOR<UseProfileByIdArgs, UseProfileByHandleArgs>>;
 
 export function useProfile({
   observerId,
@@ -25,17 +26,19 @@ export function useProfile({
 }: UseProfileArgs): ReadResult<ProfileFragment, NotFoundError | UnspecifiedError> {
   invariant(
     request.profileId === undefined || request.handle === undefined,
-    "Only one of 'id' or 'handle' should be provided to useProfile",
+    "Only one of 'id' or 'handle' should be provided to 'useProfile' hook",
   );
 
   const { data, error, loading } = useReadResult(
     useGetProfileQuery(
-      useLensApolloClient({
-        variables: useConfigSourcesVariable({
-          request,
-          observerId,
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useConfigSourcesVariable({
+            request,
+            observerId,
+          }),
         }),
-      }),
+      ),
     ),
   );
 

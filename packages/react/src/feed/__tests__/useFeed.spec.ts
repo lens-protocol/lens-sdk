@@ -92,7 +92,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
       expect(result.current.data).toEqual(items);
     });
 
-    it('should allow to override the observerId on a per-call basis', async () => {
+    it('should allow to specify the "observerId" on a per-call basis', async () => {
       const observerId = mockProfileId();
 
       const { result } = setupTestScenario({
