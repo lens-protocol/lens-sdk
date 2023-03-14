@@ -21,9 +21,11 @@ export function useLensApolloClient<TOptions>(
   };
 }
 
-export type SubjectiveArgs<TVariables> = TVariables & {
-  observerId?: ProfileId;
-};
+export type SubjectiveArgs<TVariables = unknown> = Prettify<
+  TVariables & {
+    observerId?: ProfileId;
+  }
+>;
 
 type UseActiveProfileAsDefaultObserverArgs<TVariables> = {
   variables: SubjectiveArgs<TVariables>;

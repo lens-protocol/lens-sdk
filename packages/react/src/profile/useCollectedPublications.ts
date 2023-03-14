@@ -2,7 +2,6 @@ import {
   AnyPublicationFragment,
   useWalletCollectedPublicationsQuery,
 } from '@lens-protocol/api-bindings';
-import { Prettify } from '@lens-protocol/shared-kernel';
 
 import {
   SubjectiveArgs,
@@ -13,12 +12,10 @@ import {
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseCollectablesArgs = Prettify<
-  PaginatedArgs<
-    SubjectiveArgs<{
-      walletAddress: string;
-    }>
-  >
+type UseCollectablesArgs = PaginatedArgs<
+  SubjectiveArgs<{
+    walletAddress: string;
+  }>
 >;
 
 export function useCollectedPublications({

@@ -4,7 +4,7 @@ import {
   useFeedQuery,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { nonNullable, Prettify } from '@lens-protocol/shared-kernel';
+import { nonNullable } from '@lens-protocol/shared-kernel';
 
 import {
   SubjectiveArgs,
@@ -33,14 +33,12 @@ const mapRestrictEventTypesToLensTypes = (restrictEventTypesTo?: FeedEventItemTy
 // feed limit is higher than others to get good aggregation of feed items
 const FEED_LIMIT = 50;
 
-export type UseFeedArgs = Prettify<
-  PaginatedArgs<
-    SubjectiveArgs<{
-      profileId: ProfileId;
-      restrictEventTypesTo?: FeedEventItemType[];
-      metadataFilter?: PublicationMetadataFilters;
-    }>
-  >
+export type UseFeedArgs = PaginatedArgs<
+  SubjectiveArgs<{
+    profileId: ProfileId;
+    restrictEventTypesTo?: FeedEventItemType[];
+    metadataFilter?: PublicationMetadataFilters;
+  }>
 >;
 
 export function useFeed({

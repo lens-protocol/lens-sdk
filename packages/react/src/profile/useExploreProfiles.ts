@@ -1,21 +1,27 @@
 import { ProfileFragment, useExploreProfilesQuery } from '@lens-protocol/api-bindings';
 
-import { useConfigSourcesVariable, useLensApolloClient } from '../helpers/arguments';
+import {
+  SubjectiveArgs,
+  useActiveProfileAsDefaultObserver,
+  useConfigSourcesVariable,
+  useLensApolloClient,
+} from '../helpers/arguments';
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseFeedArgs = PaginatedArgs<{
-  observerId?: string;
-}>;
+type UseFeedArgs = PaginatedArgs<SubjectiveArgs>;
 
-export function useExploreProfiles(args?: UseFeedArgs): PaginatedReadResult<ProfileFragment[]> {
+export function useExploreProfiles({
+  observerId,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
+}: UseFeedArgs = {}): PaginatedReadResult<ProfileFragment[]> {
   return usePaginatedReadResult(
     useExploreProfilesQuery(
-      useLensApolloClient({
-        variables: useConfigSourcesVariable({
-          observerId: args?.observerId,
-          limit: args?.limit ?? 10,
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useConfigSourcesVariable({ limit, observerId }),
         }),
-      }),
+      ),
     ),
   );
 }

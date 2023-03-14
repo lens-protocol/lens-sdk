@@ -1,5 +1,6 @@
 import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
 import { CommonPaginatedResultInfoFragment, UnspecifiedError } from '@lens-protocol/api-bindings';
+import { Prettify } from '@lens-protocol/shared-kernel';
 
 type ReadResultWithoutError<T> =
   | {
@@ -72,9 +73,11 @@ export function useReadResult<
   return buildReadResult(data?.result, loading, error);
 }
 
-export type PaginatedArgs<T> = T & {
-  limit?: number;
-};
+export type PaginatedArgs<T> = Prettify<
+  T & {
+    limit?: number;
+  }
+>;
 
 export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
   hasMore: boolean;
