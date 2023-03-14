@@ -4,7 +4,6 @@
   "private": true,
   "description": "",
   "scripts": {
-    "dev": "ts-node ./index.ts",
     "ts-node": "ts-node"
   },
   "keywords": [],
