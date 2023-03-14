@@ -1,53 +1,94 @@
-import { PostFragment, WalletFragment } from '@lens-protocol/api-bindings';
+import { WalletFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockPostFragment,
-  mockProfileFragment,
   mockWalletFragment,
   createWhoCollectedPublicationQueryMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import { mockProfile, mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { useWhoCollectedPublication } from '../useWhoCollectedPublication';
+import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
+import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
+import {
+  useWhoCollectedPublication,
+  UseWhoCollectedPublicationArgs,
+} from '../useWhoCollectedPublication';
 
-const sources = mockSources();
+function setupTestScenario({
+  expectedObserverId,
+  result,
+  ...args
+}: UseWhoCollectedPublicationArgs & { expectedObserverId?: ProfileId; result: WalletFragment[] }) {
+  const sources = mockSources();
 
-describe('Given the useWhoCollectedPublication hook', () => {
-  const observer = mockProfileFragment();
-  const mockPublication: PostFragment = mockPostFragment();
-  const mockWallets: WalletFragment[] = [mockWalletFragment()];
+  return renderHookWithMocks(() => useWhoCollectedPublication(args), {
+    mocks: {
+      sources,
+      apolloClient: createMockApolloClientWithMultipleResponses([
+        createWhoCollectedPublicationQueryMockedResponse({
+          variables: {
+            ...args,
+            observerId: expectedObserverId ?? null,
+            limit: 10,
+            sources,
+          },
+          wallets: result,
+        }),
+      ]),
+    },
+  });
+}
+
+describe(`Given the ${useWhoCollectedPublication.name} hook`, () => {
+  const publicationId = mockPublicationId();
+  const collectors = [mockWalletFragment()];
+
+  beforeAll(() => {
+    simulateAppReady();
+  });
 
   describe('when the query returns data successfully', () => {
     it('should return wallets who collected the publication', async () => {
-      const { result } = renderHookWithMocks(
-        () =>
-          useWhoCollectedPublication({
-            observerId: observer.id,
-            publicationId: mockPublication.id,
-          }),
-        {
-          mocks: {
-            sources,
-            apolloClient: createMockApolloClientWithMultipleResponses([
-              createWhoCollectedPublicationQueryMockedResponse({
-                variables: {
-                  publicationId: mockPublication.id,
-                  observerId: observer.id,
-                  limit: 10,
-                  sources,
-                },
-                wallets: mockWallets,
-              }),
-            ]),
-          },
-        },
-      );
+      const { result } = setupTestScenario({ publicationId, result: collectors });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(collectors);
+    });
+  });
 
-      expect(result.current.data).toEqual(mockWallets);
+  describe('when there is an Active Profile defined', () => {
+    const activeProfile = mockProfile();
+
+    beforeAll(() => {
+      activeProfileIdentifierVar(activeProfile);
+    });
+
+    it('should use the Active Profile Id as the "observerId"', async () => {
+      const { result } = setupTestScenario({
+        publicationId,
+        result: collectors,
+        expectedObserverId: activeProfile.id,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(collectors);
+    });
+
+    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+      const observerId = mockProfileId();
+
+      const { result } = setupTestScenario({
+        publicationId,
+        result: collectors,
+        observerId,
+        expectedObserverId: observerId,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(collectors);
     });
   });
 });
