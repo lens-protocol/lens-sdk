@@ -9,6 +9,7 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { z } from 'zod';
 
+import { appId } from '../../../../utils';
 import { Erc20AmountSchema } from './common';
 
 const NftAttributeSchema = z.union([
@@ -93,6 +94,7 @@ const ReferencePolicyConfigSchema = z.union([
 ]);
 
 export const CreatePostRequestSchema = z.object({
+  appId: z.string().transform(appId).optional(),
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),
   media: z.array(MediaSchema).optional(),
@@ -105,6 +107,7 @@ export const CreatePostRequestSchema = z.object({
 });
 
 export const CreateCommentRequestSchema = z.object({
+  appId: z.string().transform(appId).optional(),
   publicationId: z.string(),
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),

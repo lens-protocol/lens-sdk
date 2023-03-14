@@ -4,7 +4,7 @@ import {
   LensApolloClient,
   Sources,
 } from '@lens-protocol/api-bindings';
-import { TransactionKind } from '@lens-protocol/domain/entities';
+import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   SupportedTransactionRequest,
   TransactionQueue,
@@ -70,6 +70,7 @@ export type Handlers = {
 };
 
 export type SharedDependencies = {
+  appId?: AppId;
   activeProfileGateway: ActiveProfileGateway;
   activeProfilePresenter: ActiveProfilePresenter;
   activeWallet: ActiveWallet;
@@ -194,6 +195,7 @@ export function createSharedDependencies(
   const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
 
   return {
+    appId: config.appId,
     activeProfileGateway,
     activeProfilePresenter,
     activeWallet,

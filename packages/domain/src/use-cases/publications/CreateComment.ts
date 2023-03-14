@@ -1,6 +1,6 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { DecryptionCriteria, TransactionKind } from '../../entities';
+import { AppId, DecryptionCriteria, TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -11,6 +11,7 @@ import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 import { CollectPolicyConfig, Media, ContentFocus, Locale } from './types';
 
 export type CreateCommentRequest = {
+  appId?: AppId;
   publicationId: string;
   content?: string;
   contentFocus: ContentFocus;
@@ -32,7 +33,6 @@ export type ICreateCommentPresenter = IProtocolCallPresenter;
 export class CreateComment extends DelegableProtocolCallUseCase<CreateCommentRequest> {
   async execute(request: CreateCommentRequest) {
     invariant(request.media || request.content, 'One of post media or content is required');
-
     await super.execute(request);
   }
 }

@@ -55,6 +55,7 @@ export function useCreateEncryptedPost({
   upload,
 }: UseCreateEncryptedPostArgs): CreateEncryptedPostOperation {
   const {
+    appId,
     activeWallet,
     apolloClient,
     protocolCallRelayer,
@@ -117,6 +118,7 @@ export function useCreateEncryptedPost({
           delegate: publisher.dispatcher !== null,
           profileId: publisher.id,
           reference,
+          appId,
           ...args,
         });
       } catch (err: unknown) {

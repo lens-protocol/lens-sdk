@@ -36,7 +36,7 @@ export function createPublicationMetadata(
   const sharedMetadata = {
     version: '2.0.0',
     metadata_id: v4(),
-
+    ...(request.appId && { appId: request.appId }),
     content: request.content,
     media: request.media?.map(mapMedia),
     locale: request.locale,
