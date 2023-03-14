@@ -1,28 +1,22 @@
 import { OperationVariables } from '@apollo/client';
 import { LensApolloClient } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { Prettify } from '@lens-protocol/shared-kernel';
+import { UnknownObject } from '@lens-protocol/shared-kernel';
 
 import { useActiveProfileIdentifier } from '../profile/useActiveProfileIdentifier';
 import { useSharedDependencies } from '../shared';
 
-type UseLensApolloClientArgs<TVariables> = {
-  variables: TVariables;
+type UseLensApolloClientResult<TArgs extends UnknownObject> = TArgs & {
+  client: LensApolloClient;
 };
 
-type UseLensApolloClientResult<TVariables> = Prettify<
-  UseLensApolloClientArgs<TVariables> & {
-    client: LensApolloClient;
-  }
->;
-
-export function useLensApolloClient<TVariables extends OperationVariables = OperationVariables>(
-  options: UseLensApolloClientArgs<TVariables>,
-): UseLensApolloClientResult<TVariables> {
+export function useLensApolloClient<TArgs extends UnknownObject>(
+  args: TArgs = {} as TArgs,
+): UseLensApolloClientResult<TArgs> {
   const { apolloClient } = useSharedDependencies();
 
   return {
-    ...options,
+    ...args,
     client: apolloClient,
   };
 }
