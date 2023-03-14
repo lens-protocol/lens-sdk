@@ -82,6 +82,7 @@ import {
   GetAllProfilesByOwnerAddressQueryVariables,
   GetProfileQueryVariables,
   PublicationByTxHashQueryVariables,
+  ProfilesToFollowQueryVariables,
 } from '../generated';
 import { Sources } from '../sources';
 import {
@@ -95,16 +96,21 @@ export function mockSources(): Sources {
   return ['foobar' as AppId];
 }
 
-export function createProfilesToFollowQueryMockedResponse(args: {
+export function createProfilesToFollowQueryMockedResponse({
+  variables,
+  profiles,
+}: {
+  variables: ProfilesToFollowQueryVariables;
   profiles: ProfileFragment[];
 }): MockedResponse<ProfilesToFollowQuery> {
   return {
     request: {
       query: ProfilesToFollowDocument,
+      variables,
     },
     result: {
       data: {
-        result: args.profiles,
+        result: profiles,
       },
     },
   };

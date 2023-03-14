@@ -1,10 +1,25 @@
 import { useProfilesToFollowQuery } from '@lens-protocol/api-bindings';
 
+import {
+  SubjectiveArgs,
+  useActiveProfileAsDefaultObserver,
+  useConfigSourcesVariable,
+  useLensApolloClient,
+} from '../helpers/arguments';
 import { useReadResult } from '../helpers/reads';
-import { useSharedDependencies } from '../shared';
 
-export function useProfilesToFollow() {
-  const { apolloClient } = useSharedDependencies();
+export type UseProfilesToFollowArgs = SubjectiveArgs;
 
-  return useReadResult(useProfilesToFollowQuery({ client: apolloClient }));
+export function useProfilesToFollow({ observerId }: UseProfilesToFollowArgs = {}) {
+  return useReadResult(
+    useProfilesToFollowQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useConfigSourcesVariable({
+            observerId,
+          }),
+        }),
+      ),
+    ),
+  );
 }
