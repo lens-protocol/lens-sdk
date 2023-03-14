@@ -69,7 +69,6 @@ import {
   PublicationsDocument,
   PublicationsQuery,
   PublicationsQueryVariables,
-  RevenueFragment,
   SearchProfilesDocument,
   SearchProfilesQueryVariables,
   SearchPublicationsDocument,
@@ -445,7 +444,7 @@ export function createExplorePublicationsQueryMockedResponse(args: {
 
 export function createPublicationRevenueQueryMockedResponse(args: {
   variables: PublicationRevenueQueryVariables;
-  revenue: RevenueFragment | null;
+  revenue: PublicationRevenueFragment | null;
 }): MockedResponse<PublicationRevenueQuery> {
   return {
     request: {

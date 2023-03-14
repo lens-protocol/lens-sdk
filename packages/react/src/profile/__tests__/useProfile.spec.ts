@@ -5,7 +5,6 @@ import {
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
-import { Profile } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
@@ -36,10 +35,7 @@ describe(`Given the ${useProfile.name} hook`, () => {
     simulateAppReady();
   });
 
-  describe.each<{
-    activeProfileValue: Profile | null;
-    precondition: string;
-  }>([
+  describe.each([
     {
       precondition: 'and NO Active Profile set',
       activeProfileValue: null,

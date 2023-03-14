@@ -45,6 +45,8 @@ export type Scalars = {
   CreateHandle: unknown;
   /** Cursor custom scalar type */
   Cursor: string;
+  /** The da id */
+  DataAvailabilityId: unknown;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: string;
   DecryptionCriteria: DecryptionCriteria;
@@ -782,7 +784,7 @@ export type CreateProfileRequest = {
 export type CreatePublicCommentRequest = {
   /** The collect module */
   collectModule: CollectModuleParams;
-  /** The metadata uploaded somewhere passing in the url to reach it */
+  /** The metadata contentURI resolver */
   contentURI: Scalars['Url'];
   /** The criteria to access the publication data */
   gated?: InputMaybe<GatedPublicationParamsInput>;
@@ -1356,7 +1358,7 @@ export type Erc20OwnershipInput = {
   chainID: Scalars['ChainId'];
   /** The operator to use when comparing the amount of tokens */
   condition: ScalarOperator;
-  /** The ERC20 token's ethereum address */
+  /** The ERC20 token ethereum address */
   contractAddress: Scalars['ContractAddress'];
   /** The amount of decimals of the ERC20 contract */
   decimals: Scalars['Float'];
@@ -1370,10 +1372,14 @@ export type Erc20OwnershipOutput = {
   chainID: Scalars['ChainId'];
   /** The operator to use when comparing the amount of tokens */
   condition: ScalarOperator;
-  /** The ERC20 token's ethereum address */
+  /** The ERC20 token ethereum address */
   contractAddress: Scalars['ContractAddress'];
   /** The amount of decimals of the ERC20 contract */
   decimals: Scalars['Float'];
+  /** The name of the ERC20 token */
+  name: Scalars['String'];
+  /** The symbol of the ERC20 token */
+  symbol: Scalars['String'];
 };
 
 /** The paginated publication result */
@@ -3680,7 +3686,7 @@ export enum ReactionTypes {
 export type RecipientDataInput = {
   /** Recipient of collect fees. */
   recipient: Scalars['EthereumAddress'];
-  /** Split %, should be between 1 and 100. All % should add up to 100 */
+  /** Split %, should be between 0.01 and 100. Up to 2 decimal points supported. All % should add up to 100 */
   split: Scalars['Float'];
 };
 
@@ -3688,7 +3694,7 @@ export type RecipientDataOutput = {
   __typename: 'RecipientDataOutput';
   /** Recipient of collect fees. */
   recipient: Scalars['EthereumAddress'];
-  /** Split %, should be between 1 and 100. All % should add up to 100 */
+  /** Split %, should be between 0.01 and 100. Up to 2 decimal points supported. All % should add up to 100 */
   split: Scalars['Float'];
 };
 
@@ -3750,6 +3756,7 @@ export type RelayResult = RelayError | RelayerResult;
 /** The relayer result */
 export type RelayerResult = {
   __typename: 'RelayerResult';
+  dataAvailabilityId: Scalars['DataAvailabilityId'];
   /** The tx hash - you should use the `txId` as your identifier as gas prices can be upgraded meaning txHash will change */
   txHash: Scalars['TxHash'];
   /** The tx id */
@@ -5324,18 +5331,16 @@ export type RevenueAggregateFragment = {
 export type PublicationRevenueFragment = {
   __typename: 'PublicationRevenue';
   publication: CommentFragment | MirrorFragment | PostFragment;
-} & RevenueFragment;
-
-export type RevenueFragment = {
-  __typename: 'PublicationRevenue';
   revenue: RevenueAggregateFragment;
 };
 
 export type PublicationRevenueQueryVariables = Exact<{
-  request: PublicationRevenueQueryRequest;
+  publicationId: Scalars['InternalPublicationId'];
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-export type PublicationRevenueQuery = { result: RevenueFragment | null };
+export type PublicationRevenueQuery = { result: PublicationRevenueFragment | null };
 
 export type ProfilePublicationRevenueQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
@@ -6436,15 +6441,6 @@ export const RevenueAggregateFragmentDoc = gql`
   }
   ${Erc20AmountFragmentDoc}
 `;
-export const RevenueFragmentDoc = gql`
-  fragment Revenue on PublicationRevenue {
-    __typename
-    revenue {
-      ...RevenueAggregate
-    }
-  }
-  ${RevenueAggregateFragmentDoc}
-`;
 export const PublicationRevenueFragmentDoc = gql`
   fragment PublicationRevenue on PublicationRevenue {
     __typename
@@ -6459,12 +6455,14 @@ export const PublicationRevenueFragmentDoc = gql`
         ...Comment
       }
     }
-    ...Revenue
+    revenue {
+      ...RevenueAggregate
+    }
   }
   ${PostFragmentDoc}
   ${MirrorFragmentDoc}
   ${CommentFragmentDoc}
-  ${RevenueFragmentDoc}
+  ${RevenueAggregateFragmentDoc}
 `;
 export const ProfileFollowRevenueFragmentDoc = gql`
   fragment ProfileFollowRevenue on FollowRevenueResult {
@@ -9441,12 +9439,16 @@ export type ReportPublicationMutationOptions = Apollo.BaseMutationOptions<
   ReportPublicationMutationVariables
 >;
 export const PublicationRevenueDocument = gql`
-  query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
-    result: publicationRevenue(request: $request) {
-      ...Revenue
+  query PublicationRevenue(
+    $publicationId: InternalPublicationId!
+    $observerId: ProfileId
+    $sources: [Sources!]!
+  ) {
+    result: publicationRevenue(request: { publicationId: $publicationId }) {
+      ...PublicationRevenue
     }
   }
-  ${RevenueFragmentDoc}
+  ${PublicationRevenueFragmentDoc}
 `;
 
 /**
@@ -9461,7 +9463,9 @@ export const PublicationRevenueDocument = gql`
  * @example
  * const { data, loading, error } = usePublicationRevenueQuery({
  *   variables: {
- *      request: // value for 'request'
+ *      publicationId: // value for 'publicationId'
+ *      observerId: // value for 'observerId'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -11010,6 +11014,8 @@ export type Erc20OwnershipOutputKeySpecifier = (
   | 'condition'
   | 'contractAddress'
   | 'decimals'
+  | 'name'
+  | 'symbol'
   | Erc20OwnershipOutputKeySpecifier
 )[];
 export type Erc20OwnershipOutputFieldPolicy = {
@@ -11018,6 +11024,8 @@ export type Erc20OwnershipOutputFieldPolicy = {
   condition?: FieldPolicy<any> | FieldReadFunction<any>;
   contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
   decimals?: FieldPolicy<any> | FieldReadFunction<any>;
+  name?: FieldPolicy<any> | FieldReadFunction<any>;
+  symbol?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ExploreProfileResultKeySpecifier = (
   | 'items'
@@ -12224,8 +12232,14 @@ export type RelayErrorKeySpecifier = ('reason' | RelayErrorKeySpecifier)[];
 export type RelayErrorFieldPolicy = {
   reason?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type RelayerResultKeySpecifier = ('txHash' | 'txId' | RelayerResultKeySpecifier)[];
+export type RelayerResultKeySpecifier = (
+  | 'dataAvailabilityId'
+  | 'txHash'
+  | 'txId'
+  | RelayerResultKeySpecifier
+)[];
 export type RelayerResultFieldPolicy = {
+  dataAvailabilityId?: FieldPolicy<any> | FieldReadFunction<any>;
   txHash?: FieldPolicy<any> | FieldReadFunction<any>;
   txId?: FieldPolicy<any> | FieldReadFunction<any>;
 };
