@@ -9,7 +9,7 @@ import { nonNullable, Prettify } from '@lens-protocol/shared-kernel';
 import {
   SubjectiveArgs,
   useActiveProfileAsDefaultObserver,
-  useConfigSources,
+  useConfigSourcesVariable,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -53,17 +53,15 @@ export function useFeed({
   return usePaginatedReadResult(
     useFeedQuery(
       useLensApolloClient(
-        useActiveProfileAsDefaultObserver(
-          useConfigSources({
-            variables: {
-              metadata: createPublicationMetadataFilters(metadataFilter),
-              restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
-              profileId,
-              observerId,
-              limit,
-            },
+        useActiveProfileAsDefaultObserver({
+          variables: useConfigSourcesVariable({
+            metadata: createPublicationMetadataFilters(metadataFilter),
+            restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
+            profileId,
+            observerId,
+            limit,
           }),
-        ),
+        }),
       ),
     ),
   );

@@ -59,29 +59,17 @@ export function useActiveProfileAsDefaultObserver<TVariables>({
   };
 }
 
-type UseConfigSourcesArgs<TVariables extends OperationVariables> = {
-  variables: TVariables;
+type UseConfigSourcesVariableResult<TVariables extends OperationVariables> = TVariables & {
+  sources: Sources;
 };
 
-type UseConfigSourcesResult<TVariables extends OperationVariables> = Prettify<
-  Overwrite<
-    UseConfigSourcesArgs<TVariables>,
-    {
-      variables: TVariables & { sources: Sources };
-    }
-  >
->;
-
-export function useConfigSources<TVariables extends OperationVariables>(
-  args: UseConfigSourcesArgs<TVariables>,
-): UseConfigSourcesResult<TVariables> {
+export function useConfigSourcesVariable<TVariables extends OperationVariables>(
+  variables: TVariables,
+): UseConfigSourcesVariableResult<TVariables> {
   const { sources } = useSharedDependencies();
 
   return {
-    ...args,
-    variables: {
-      ...args.variables,
-      sources,
-    },
+    ...variables,
+    sources,
   };
 }
