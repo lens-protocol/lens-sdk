@@ -1,4 +1,5 @@
 import { ProfileFragment, UnspecifiedError, useGetProfileQuery } from '@lens-protocol/api-bindings';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
@@ -11,7 +12,7 @@ import {
 import { ReadResult, useReadResult } from '../helpers/reads';
 
 type UseProfileByIdArgs = {
-  profileId: string;
+  profileId: ProfileId;
 };
 
 type UseProfileByHandleArgs = {
