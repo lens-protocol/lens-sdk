@@ -3,31 +3,36 @@ import {
   UnspecifiedError,
   usePublicationQuery,
 } from '@lens-protocol/api-bindings';
+import { PublicationId } from '@lens-protocol/domain/entities';
 
 import { NotFoundError } from '../NotFoundError';
+import {
+  SubjectiveArgs,
+  useActiveProfileAsDefaultObserver,
+  useConfigSourcesVariable,
+  useLensApolloClient,
+} from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
-import { useSharedDependencies } from '../shared';
 
-type UsePublicationArgs = {
-  publicationId: string;
-  observerId?: string;
-};
+export type UsePublicationArgs = SubjectiveArgs<{
+  publicationId: PublicationId;
+}>;
 
 export function usePublication({
   publicationId,
   observerId,
 }: UsePublicationArgs): ReadResult<AnyPublicationFragment, NotFoundError | UnspecifiedError> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   const { data, error, loading } = useReadResult(
-    usePublicationQuery({
-      variables: {
-        publicationId,
-        observerId,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    usePublicationQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useConfigSourcesVariable({
+            publicationId,
+            observerId,
+          }),
+        }),
+      ),
+    ),
   );
 
   if (loading) {
