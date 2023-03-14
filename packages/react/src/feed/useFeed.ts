@@ -50,11 +50,13 @@ export function useFeed({
       useLensApolloClient(
         useActiveProfileAsDefaultObserver(
           useConfigSources({
-            metadata: createPublicationMetadataFilters(metadataFilter),
-            restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
-            profileId,
-            observerId,
-            limit,
+            variables: {
+              metadata: createPublicationMetadataFilters(metadataFilter),
+              restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
+              profileId,
+              observerId,
+              limit,
+            },
           }),
         ),
       ),

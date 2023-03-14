@@ -1,53 +1,83 @@
 import { OperationVariables } from '@apollo/client';
-import { LensApolloClient } from '@lens-protocol/api-bindings';
+import { LensApolloClient, Sources } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { UnknownObject } from '@lens-protocol/shared-kernel';
+import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 
 import { useActiveProfileIdentifier } from '../profile/useActiveProfileIdentifier';
 import { useSharedDependencies } from '../shared';
 
-type UseLensApolloClientResult<TArgs extends UnknownObject> = TArgs & {
+type UseLensApolloClientResult<TOptions> = TOptions & {
   client: LensApolloClient;
 };
 
-export function useLensApolloClient<TArgs extends UnknownObject>(
-  args: TArgs = {} as TArgs,
-): UseLensApolloClientResult<TArgs> {
-  const { apolloClient } = useSharedDependencies();
+export function useLensApolloClient<TOptions>(
+  args: TOptions = {} as TOptions,
+): UseLensApolloClientResult<TOptions> {
+  const { apolloClient: client } = useSharedDependencies();
 
   return {
     ...args,
-    client: apolloClient,
+    client,
   };
 }
 
-type UseActiveProfileAsDefaultObserverArgs = { observerId: ProfileId | null };
+export type SubjectiveArgs<TVariables> = TVariables & {
+  observerId?: ProfileId | null;
+};
 
-type UseActiveProfileAsDefaultObserverResult<TArgs extends UseActiveProfileAsDefaultObserverArgs> =
-  {
-    variables: Omit<TArgs, 'observerId'> & { observerId: ProfileId | null };
-    skip: boolean;
-  };
+type UseActiveProfileAsDefaultObserverArgs<TVariables> = {
+  variables: SubjectiveArgs<TVariables>;
+};
 
-export function useActiveProfileAsDefaultObserver<
-  TArgs extends UseActiveProfileAsDefaultObserverArgs,
->({ observerId, ...others }: TArgs): UseActiveProfileAsDefaultObserverResult<TArgs> {
+type UseActiveProfileAsDefaultObserverResult<TVariables> = Prettify<
+  Overwrite<
+    UseActiveProfileAsDefaultObserverArgs<TVariables>,
+    {
+      variables: Omit<TVariables, 'observerId'> & { observerId: ProfileId | null };
+      skip: boolean;
+    }
+  >
+>;
+
+export function useActiveProfileAsDefaultObserver<T>({
+  variables,
+  ...others
+}: UseActiveProfileAsDefaultObserverArgs<T>): UseActiveProfileAsDefaultObserverResult<T> {
   const { data: activeProfile, loading: bootstrapping } = useActiveProfileIdentifier();
 
   return {
+    ...others,
     variables: {
-      ...others,
-      observerId: observerId ?? activeProfile?.id ?? null,
+      ...variables,
+      observerId: variables.observerId ?? activeProfile?.id ?? null,
     },
     skip: bootstrapping,
   };
 }
 
-export function useConfigSources<TArgs extends OperationVariables>(args: TArgs) {
+type UseConfigSourcesArgs<TVariables extends OperationVariables> = {
+  variables: TVariables;
+};
+
+type UseConfigSourcesResult<TVariables extends OperationVariables> = Prettify<
+  Overwrite<
+    UseConfigSourcesArgs<TVariables>,
+    {
+      variables: TVariables & { sources: Sources };
+    }
+  >
+>;
+
+export function useConfigSources<TVariables extends OperationVariables>(
+  args: UseConfigSourcesArgs<TVariables>,
+): UseConfigSourcesResult<TVariables> {
   const { sources } = useSharedDependencies();
 
   return {
     ...args,
-    sources,
+    variables: {
+      ...args.variables,
+      sources,
+    },
   };
 }
