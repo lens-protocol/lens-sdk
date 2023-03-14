@@ -8,6 +8,7 @@ import {
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 type UseProfileFollowersArgs = PaginatedArgs<
   SubjectiveArgs<{
@@ -16,19 +17,15 @@ type UseProfileFollowersArgs = PaginatedArgs<
 >;
 
 export function useProfileFollowers({
-  profileId,
-  limit,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
+  profileId,
 }: UseProfileFollowersArgs): PaginatedReadResult<FollowerFragment[]> {
   return usePaginatedReadResult(
     useProfileFollowersQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
-            profileId,
-            limit: limit ?? 10,
-            observerId,
-          }),
+          variables: useConfigSourcesVariable({ profileId, limit, observerId }),
         }),
       ),
     ),
