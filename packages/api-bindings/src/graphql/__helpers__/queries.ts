@@ -608,7 +608,7 @@ export function createProfilesWhoMirroredPublicationMockedResponse(args: {
 
 export function createSearchPublicationsQueryMockedResponse(args: {
   variables: SearchPublicationsQueryVariables;
-  items: Array<CommentFragment | PostFragment>;
+  items: Array<ContentPublicationFragment>;
 }): MockedResponse<SearchPublicationsQuery> {
   return {
     request: {
