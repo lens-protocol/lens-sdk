@@ -9,7 +9,7 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -39,7 +39,7 @@ export function useExplorePublications({
     useExplorePublicationsQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             excludeProfileIds,
             limit,
             metadata: createPublicationMetadataFilters(metadataFilter),

@@ -7,7 +7,7 @@ import { PublicationId } from '@lens-protocol/domain/entities';
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -29,7 +29,7 @@ export function useWhoMirroredPublication({
     useGetAllProfilesByWhoMirroredPublicationQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             publicationId,
             observerId,
             limit,

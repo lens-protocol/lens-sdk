@@ -3,7 +3,7 @@ import { useCommentsQuery, CommentWithFirstCommentFragment } from '@lens-protoco
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -27,7 +27,7 @@ export function useComments({
     useCommentsQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             metadata: createPublicationMetadataFilters(metadataFilter),
             commentsOf,
             limit,

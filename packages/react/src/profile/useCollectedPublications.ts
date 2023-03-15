@@ -6,7 +6,7 @@ import {
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -27,7 +27,7 @@ export function useCollectedPublications({
     useWalletCollectedPublicationsQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             walletAddress,
             limit: limit,
             observerId,

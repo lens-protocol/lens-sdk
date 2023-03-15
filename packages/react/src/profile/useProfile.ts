@@ -6,7 +6,7 @@ import { NotFoundError } from '../NotFoundError';
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
@@ -36,7 +36,7 @@ export function useProfile({
     useGetProfileQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             request,
             observerId,
           }),

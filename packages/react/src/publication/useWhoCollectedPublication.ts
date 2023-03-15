@@ -4,7 +4,7 @@ import { PublicationId } from '@lens-protocol/domain/entities';
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
@@ -25,7 +25,7 @@ export function useWhoCollectedPublication({
     useWhoCollectedPublicationQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({ limit, publicationId, observerId }),
+          variables: useSourcesFromConfig({ limit, publicationId, observerId }),
         }),
       ),
     ),

@@ -4,7 +4,7 @@ import { EthereumAddress } from '@lens-protocol/shared-kernel';
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -25,7 +25,7 @@ export function useProfilesOwnedBy({
     useGetAllProfilesByOwnerAddressQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             address,
             observerId,
             limit,

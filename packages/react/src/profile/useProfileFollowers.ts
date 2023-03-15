@@ -4,7 +4,7 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -25,7 +25,7 @@ export function useProfileFollowers({
     useProfileFollowersQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({ profileId, limit, observerId }),
+          variables: useSourcesFromConfig({ profileId, limit, observerId }),
         }),
       ),
     ),

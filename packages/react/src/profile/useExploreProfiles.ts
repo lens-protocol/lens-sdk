@@ -3,7 +3,7 @@ import { ProfileFragment, useExploreProfilesQuery } from '@lens-protocol/api-bin
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
@@ -19,7 +19,7 @@ export function useExploreProfiles({
     useExploreProfilesQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({ limit, observerId }),
+          variables: useSourcesFromConfig({ limit, observerId }),
         }),
       ),
     ),

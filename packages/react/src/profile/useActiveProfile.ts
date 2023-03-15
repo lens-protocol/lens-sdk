@@ -6,7 +6,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { useConfigSourcesVariable, useLensApolloClient } from '../helpers/arguments';
+import { useSourcesFromConfig, useLensApolloClient } from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
 import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
 
@@ -15,7 +15,7 @@ export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, 
 
   const { data, error, loading } = useGetProfileQuery(
     useLensApolloClient({
-      variables: useConfigSourcesVariable({
+      variables: useSourcesFromConfig({
         request: {
           profileId: identifier?.id,
         },

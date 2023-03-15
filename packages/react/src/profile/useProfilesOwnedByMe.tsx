@@ -8,7 +8,7 @@ import { constants } from 'ethers';
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -29,7 +29,7 @@ export function useProfilesOwnedByMe({
     useGetAllProfilesByOwnerAddressQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             address: bootstrapping
               ? constants.AddressZero
               : activeWallet?.address ??

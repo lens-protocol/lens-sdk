@@ -3,7 +3,7 @@ import { useProfilesToFollowQuery } from '@lens-protocol/api-bindings';
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { useReadResult } from '../helpers/reads';
@@ -15,7 +15,7 @@ export function useProfilesToFollow({ observerId }: UseProfilesToFollowArgs = {}
     useProfilesToFollowQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             observerId,
           }),
         }),

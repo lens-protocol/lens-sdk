@@ -3,7 +3,7 @@ import { FollowingFragment, useProfileFollowingQuery } from '@lens-protocol/api-
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -24,7 +24,7 @@ export function useProfileFollowing({
     useProfileFollowingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             walletAddress,
             limit,
             observerId,

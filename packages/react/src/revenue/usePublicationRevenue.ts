@@ -8,7 +8,7 @@ import { NotFoundError } from '../NotFoundError';
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
@@ -28,7 +28,7 @@ export function usePublicationRevenue({
     usePublicationRevenueQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             publicationId,
             observerId,
           }),

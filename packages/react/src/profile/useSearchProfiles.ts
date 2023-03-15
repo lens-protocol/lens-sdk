@@ -3,7 +3,7 @@ import { ProfileFragment, useSearchProfilesQuery } from '@lens-protocol/api-bind
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -25,7 +25,7 @@ export function useSearchProfiles({
     useSearchProfilesQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             query,
             limit,
             observerId,

@@ -8,7 +8,7 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import {
   WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -31,7 +31,7 @@ export function useProfilePublicationRevenue({
     useProfilePublicationRevenueQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             limit,
             publicationTypes,
             observerId,

@@ -6,7 +6,7 @@ import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 import { useActiveProfileIdentifier } from '../profile/useActiveProfileIdentifier';
 import { useSharedDependencies } from '../shared';
 
-type UseLensApolloClientResult<TOptions> = TOptions & {
+export type UseLensApolloClientResult<TOptions> = TOptions & {
   client: LensApolloClient;
 };
 
@@ -27,16 +27,16 @@ export type WithObserverIdOverride<TVariables = unknown> = Prettify<
   }
 >;
 
-type UseActiveProfileAsDefaultObserverArgs<TVariables> = {
+export type UseActiveProfileAsDefaultObserverArgs<TVariables> = {
   skip?: boolean;
   variables: WithObserverIdOverride<TVariables>;
 };
 
-type UseActiveProfileAsDefaultObserverResultVariables<TVariables> = TVariables & {
+export type UseActiveProfileAsDefaultObserverResultVariables<TVariables> = TVariables & {
   observerId: ProfileId | null;
 };
 
-type UseActiveProfileAsDefaultObserverResult<TVariables> = Prettify<
+export type UseActiveProfileAsDefaultObserverResult<TVariables> = Prettify<
   Overwrite<
     UseActiveProfileAsDefaultObserverArgs<TVariables>,
     {
@@ -63,13 +63,13 @@ export function useActiveProfileAsDefaultObserver<TVariables>({
   };
 }
 
-type UseConfigSourcesVariableResult<TVariables extends OperationVariables> = TVariables & {
+export type UseSourcesFromConfigResult<TVariables extends OperationVariables> = TVariables & {
   sources: Sources;
 };
 
-export function useConfigSourcesVariable<TVariables extends OperationVariables>(
+export function useSourcesFromConfig<TVariables extends OperationVariables>(
   variables: TVariables,
-): UseConfigSourcesVariableResult<TVariables> {
+): UseSourcesFromConfigResult<TVariables> {
   const { sources } = useSharedDependencies();
 
   return {
