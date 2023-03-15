@@ -21,7 +21,7 @@ export function useLensApolloClient<TOptions>(
   };
 }
 
-export type SubjectiveArgs<TVariables = unknown> = Prettify<
+export type WithObserverIdOverride<TVariables = unknown> = Prettify<
   TVariables & {
     observerId?: ProfileId;
   }
@@ -29,7 +29,7 @@ export type SubjectiveArgs<TVariables = unknown> = Prettify<
 
 type UseActiveProfileAsDefaultObserverArgs<TVariables> = {
   skip?: boolean;
-  variables: SubjectiveArgs<TVariables>;
+  variables: WithObserverIdOverride<TVariables>;
 };
 
 type UseActiveProfileAsDefaultObserverResultVariables<TVariables> = TVariables & {

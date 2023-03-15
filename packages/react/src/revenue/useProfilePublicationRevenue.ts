@@ -6,7 +6,7 @@ import {
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
   useConfigSourcesVariable,
   useLensApolloClient,
@@ -15,7 +15,7 @@ import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../h
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseProfilePublicationRevenueArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     profileId: ProfileId;
     publicationTypes?: PublicationTypes[];
   }>

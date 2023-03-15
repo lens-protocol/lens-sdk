@@ -1,7 +1,7 @@
 import { ProfileFragment, useSearchProfilesQuery } from '@lens-protocol/api-bindings';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
   useConfigSourcesVariable,
   useLensApolloClient,
@@ -10,7 +10,7 @@ import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../h
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseSearchProfilesArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     query: string;
     limit?: number;
   }>

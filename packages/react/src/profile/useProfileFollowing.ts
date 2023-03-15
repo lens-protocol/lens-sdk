@@ -1,7 +1,7 @@
 import { FollowingFragment, useProfileFollowingQuery } from '@lens-protocol/api-bindings';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
   useConfigSourcesVariable,
   useLensApolloClient,
@@ -10,7 +10,7 @@ import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../h
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseProfileFollowingArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     walletAddress: string;
   }>
 >;

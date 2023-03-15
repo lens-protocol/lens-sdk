@@ -5,7 +5,7 @@ import {
 import { PublicationId } from '@lens-protocol/domain/entities';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
   useConfigSourcesVariable,
   useLensApolloClient,
@@ -13,7 +13,7 @@ import {
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
 
 export type UseWhoReactedArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     publicationId: PublicationId;
   }>
 >;

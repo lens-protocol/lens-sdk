@@ -1,14 +1,14 @@
 import { useProfilesToFollowQuery } from '@lens-protocol/api-bindings';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
   useConfigSourcesVariable,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { useReadResult } from '../helpers/reads';
 
-export type UseProfilesToFollowArgs = SubjectiveArgs;
+export type UseProfilesToFollowArgs = WithObserverIdOverride;
 
 export function useProfilesToFollow({ observerId }: UseProfilesToFollowArgs = {}) {
   return useReadResult(

@@ -2,7 +2,7 @@ import { AnyPublicationFragment, usePublicationsQuery } from '@lens-protocol/api
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
   useConfigSourcesVariable,
   useLensApolloClient,
@@ -12,7 +12,7 @@ import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 
 export type UsePublicationsArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     metadataFilter?: PublicationMetadataFilters;
     profileId: ProfileId;
   }>

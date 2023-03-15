@@ -4,7 +4,7 @@ import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
   useConfigSourcesVariable,
   useLensApolloClient,
@@ -19,7 +19,9 @@ type UseProfileByHandleArgs = {
   handle: string;
 };
 
-export type UseProfileArgs = SubjectiveArgs<XOR<UseProfileByIdArgs, UseProfileByHandleArgs>>;
+export type UseProfileArgs = WithObserverIdOverride<
+  XOR<UseProfileByIdArgs, UseProfileByHandleArgs>
+>;
 
 export function useProfile({
   observerId,
