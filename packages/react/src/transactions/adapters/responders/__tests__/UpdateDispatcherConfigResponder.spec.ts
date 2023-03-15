@@ -12,6 +12,7 @@ import {
 import { nonNullable } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { UpdateDispatcherConfigResponder } from '../UpdateDispatcherConfigResponder';
 
 function setupTestScenario({ profile }: { profile: ProfileFragment }) {
@@ -28,7 +29,8 @@ function setupTestScenario({ profile }: { profile: ProfileFragment }) {
     }),
   ]);
 
-  const responder = new UpdateDispatcherConfigResponder(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const responder = new UpdateDispatcherConfigResponder(profileCacheManager);
 
   return {
     responder,

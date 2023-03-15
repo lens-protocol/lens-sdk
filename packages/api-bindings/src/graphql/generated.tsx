@@ -5010,7 +5010,7 @@ export type ProfilesToFollowQuery = { result: Array<ProfileFragment> };
 export type GetProfileQueryVariables = Exact<{
   request: SingleProfileQueryRequest;
   observerId?: InputMaybe<Scalars['ProfileId']>;
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
 
 export type GetProfileQuery = { result: ProfileFragment | null };
@@ -5020,7 +5020,7 @@ export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
 
 export type GetAllProfilesByOwnerAddressQuery = {
@@ -7778,7 +7778,7 @@ export const GetProfileDocument = gql`
   query GetProfile(
     $request: SingleProfileQueryRequest!
     $observerId: ProfileId
-    $sources: [Sources!]!
+    $sources: [Sources!] = []
   ) {
     result: profile(request: $request) {
       ...Profile
@@ -7829,7 +7829,7 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
-    $sources: [Sources!]!
+    $sources: [Sources!] = []
   ) {
     result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
       items {

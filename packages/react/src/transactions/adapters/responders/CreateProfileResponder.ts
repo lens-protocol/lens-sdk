@@ -1,38 +1,33 @@
-import { makeVar } from '@apollo/client';
-import {
-  LensApolloClient,
-  ProfileFragment,
-  SearchProfilesDocument,
-  SearchProfilesQuery,
-  SearchProfilesQueryVariables,
-  Sources,
-} from '@lens-protocol/api-bindings';
+import { makeVar, useReactiveVar } from '@apollo/client';
+import { ProfileFragment } from '@lens-protocol/api-bindings';
 import { CreateProfileRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastedTransactionData,
   ITransactionResponder,
 } from '@lens-protocol/domain/use-cases/transactions';
 
-export const createdProfilesVar = makeVar<ProfileFragment[]>([]);
+import { ProfileHandleResolver } from '../../../environments';
+import { IProfileCacheManager } from '../IProfileCacheManager';
+
+const recentProfilesVar = makeVar<ProfileFragment[]>([]);
 
 export class CreateProfileResponder implements ITransactionResponder<CreateProfileRequest> {
-  constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
+  constructor(
+    private readonly profileCacheManager: IProfileCacheManager,
+    private readonly handleResolver: ProfileHandleResolver,
+  ) {}
 
   async commit({ request }: BroadcastedTransactionData<CreateProfileRequest>) {
-    const res = await this.client.query<SearchProfilesQuery, SearchProfilesQueryVariables>({
-      query: SearchProfilesDocument,
-      variables: {
-        sources: this.sources,
-        query: request.handle,
-        limit: 1,
-      },
-      fetchPolicy: 'network-only',
+    const profile = await this.profileCacheManager.fetchProfile({
+      handle: this.handleResolver(request.handle),
     });
 
-    const item = res.data.result.items[0];
-
-    if (item?.handle.split('.')[0] === request.handle) {
-      createdProfilesVar([...createdProfilesVar(), item]);
+    if (profile) {
+      recentProfilesVar([...recentProfilesVar(), profile]);
     }
   }
+}
+
+export function useRecentProfiles() {
+  return useReactiveVar(recentProfilesVar);
 }
