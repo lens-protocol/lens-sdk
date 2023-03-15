@@ -1,13 +1,12 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
-import { Authentication } from '../authentication';
-import { LensConfig } from '../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { RelayerResultFragment, RelayErrorFragment } from '../graphql/fragments.generated';
-import { BroadcastRequest } from '../graphql/types.generated';
-import { execute } from '../helpers/execute';
-import { poll } from '../helpers/poll';
+import type { Authentication } from '../authentication';
+import type { LensConfig } from '../consts/config';
+import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { RelayerResultFragment, RelayErrorFragment } from '../graphql/fragments.generated';
+import type { BroadcastRequest } from '../graphql/types.generated';
+import { poll, requireAuthHeaders } from '../helpers';
 import {
   getSdk,
   Sdk,
@@ -38,7 +37,7 @@ export class Transaction {
     RelayerResultFragment | RelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.BroadcastProtocolCall({ request }, headers);
       return result.data.result;
     });
@@ -50,7 +49,7 @@ export class Transaction {
     TransactionIndexedResultFragment | TransactionErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.HasTxHashBeenIndexed({ request: { txId } }, headers);
       return result.data.result;
     });

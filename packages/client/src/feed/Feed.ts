@@ -1,13 +1,12 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
-import { Authentication } from '../authentication';
-import { LensConfig } from '../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { PublicationFragment } from '../graphql/types';
-import { FeedHighlightsRequest, FeedRequest } from '../graphql/types.generated';
-import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
-import { execute } from '../helpers/execute';
+import type { Authentication } from '../authentication';
+import type { LensConfig } from '../consts/config';
+import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { PublicationFragment } from '../graphql/types';
+import type { FeedHighlightsRequest, FeedRequest } from '../graphql/types.generated';
+import { buildPaginatedQueryResult, PaginatedResult, requireAuthHeaders } from '../helpers';
 import { FeedItemFragment, getSdk, Sdk } from './graphql/feed.generated';
 
 export class Feed {
@@ -28,7 +27,7 @@ export class Feed {
     PaginatedResult<FeedItemFragment>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
         const result = await this.sdk.Feed(
           {
@@ -50,7 +49,7 @@ export class Feed {
     PaginatedResult<PublicationFragment>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
         const result = await this.sdk.FeedHighlights(
           {
