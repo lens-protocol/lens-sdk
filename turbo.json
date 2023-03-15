@@ -9,11 +9,6 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "*/dist/**"]
     },
-    "build:packages": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"],
-      "inputs": ["src/packages/**/*.tsx", "src/packages/**/*.ts"]
-    },
     "test": {
       "outputs": [],
       "inputs": ["src/**/*.tsx", "src/**/*.ts"]

@@ -1,12 +1,16 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
-import { Authentication } from '../authentication';
-import { LensConfig } from '../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { ReactionRequest, WhoReactedPublicationRequest } from '../graphql/types.generated';
-import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
-import { execute } from '../helpers/execute';
+import type { Authentication } from '../authentication';
+import type { LensConfig } from '../consts/config';
+import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { ReactionRequest, WhoReactedPublicationRequest } from '../graphql/types.generated';
+import {
+  buildPaginatedQueryResult,
+  PaginatedResult,
+  provideAuthHeaders,
+  requireAuthHeaders,
+} from '../helpers';
 import { getSdk, Sdk, WhoReactedResultFragment } from './graphql/reactions.generated';
 
 export class Reactions {
@@ -23,7 +27,7 @@ export class Reactions {
   async add(
     request: ReactionRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.AddReaction({ request }, headers);
     });
   }
@@ -31,7 +35,7 @@ export class Reactions {
   async remove(
     request: ReactionRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.RemoveReaction({ request }, headers);
     });
   }
@@ -40,13 +44,18 @@ export class Reactions {
     request: WhoReactedPublicationRequest,
     observerId?: string,
   ): Promise<PaginatedResult<WhoReactedResultFragment>> {
-    return buildPaginatedQueryResult(async (currRequest) => {
-      const result = await this.sdk.WhoReactedPublication({
-        request: currRequest,
-        observerId,
-      });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.WhoReactedPublication(
+          {
+            request: currRequest,
+            observerId,
+          },
+          headers,
+        );
 
-      return result.data.result;
-    }, request);
+        return result.data.result;
+      }, request);
+    });
   }
 }

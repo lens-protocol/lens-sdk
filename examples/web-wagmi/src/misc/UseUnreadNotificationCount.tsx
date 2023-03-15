@@ -1,7 +1,7 @@
 import { ProfileFragment, useUnreadNotificationCount } from '@lens-protocol/react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
-import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { WhenLoggedInWithProfile } from '../components/auth';
 import { Loading } from '../components/loading/Loading';
 
 type NotificationCountInnerProps = {

@@ -7,7 +7,7 @@ import {
 } from '@lens-protocol/react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
-import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { WhenLoggedInWithProfile } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
@@ -36,15 +36,7 @@ function FollowButton({ followee, follower }: FollowButtonProps) {
   if (followee.followStatus.isFollowedByMe) {
     return (
       <>
-        <button
-          onClick={unfollow}
-          disabled={isUnfollowPending || !followee.followStatus.canUnfollow}
-          title={
-            !followee.followStatus.canUnfollow
-              ? 'The previous follow request is not finalized on-chain just yet.'
-              : undefined
-          }
-        >
+        <button onClick={unfollow} disabled={isUnfollowPending}>
           Unfollow
         </button>
         {unfollowError && <p>{unfollowError.message}</p>}
@@ -54,15 +46,7 @@ function FollowButton({ followee, follower }: FollowButtonProps) {
 
   return (
     <>
-      <button
-        onClick={follow}
-        disabled={isFollowPending || !followee.followStatus.canFollow}
-        title={
-          !followee.followStatus.canFollow
-            ? 'The previous unfollow request is not finalized on-chain just yet.'
-            : undefined
-        }
-      >
+      <button onClick={follow} disabled={isFollowPending}>
         Follow
       </button>
       {followError && <p>{followError.message}</p>}

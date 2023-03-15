@@ -1,3 +1,4 @@
+import { isRelayerResult } from "@lens-protocol/client";
 import { getAuthenticatedClient } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
 
@@ -15,14 +16,18 @@ async function main() {
   // profileCreateResult is a Result object
   const profileCreateResultValue = profileCreateResult.unwrap();
 
-  if ("txId" in profileCreateResultValue) {
-    console.log(
-      `Transaction to create a new profile with handle "${handle}" was successfuly broadcasted with txId ${profileCreateResultValue.txId}`
-    );
+  if (!isRelayerResult(profileCreateResultValue)) {
+    console.log(`Something went wrong`, profileCreateResultValue);
+    return;
   }
 
+  console.log(
+    `Transaction to create a new profile with handle "${handle}" was successfuly broadcasted with txId ${profileCreateResultValue.txId}`
+  );
+
   // wait in a loop
-  // await lensClient.transaction.waitForIsIndexed(profileCreateResultValue.txId);
+  console.log(`Waiting for the transaction to be indexed...`);
+  await lensClient.transaction.waitForIsIndexed(profileCreateResultValue.txId);
 
   const allOwnedProfiles = await lensClient.profile.fetchAll({
     ownedBy: [address],

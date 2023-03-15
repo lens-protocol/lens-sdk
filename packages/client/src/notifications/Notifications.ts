@@ -1,13 +1,12 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
-import { Authentication } from '../authentication';
-import { LensConfig } from '../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { InferResultType } from '../consts/types';
-import { NotificationRequest } from '../graphql/types.generated';
-import { buildPaginatedQueryResult } from '../helpers/buildPaginatedQueryResult';
-import { execute } from '../helpers/execute';
+import type { Authentication } from '../authentication';
+import type { LensConfig } from '../consts/config';
+import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { InferResultType } from '../consts/types';
+import type { NotificationRequest } from '../graphql/types.generated';
+import { buildPaginatedQueryResult, requireAuthHeaders } from '../helpers';
 import { getSdk, NotificationsQuery, Sdk } from './graphql/notifications.generated';
 
 export class Notifications {
@@ -28,7 +27,7 @@ export class Notifications {
     InferResultType<NotificationsQuery>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
         const result = await this.sdk.Notifications(
           {
