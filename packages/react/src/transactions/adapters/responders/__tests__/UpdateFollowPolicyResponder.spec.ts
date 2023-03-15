@@ -13,6 +13,7 @@ import {
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { UpdateFollowPolicyResponder } from '../UpdateFollowPolicyResponder';
 
 function setupUpdateFollowPolicyResponder({
@@ -43,7 +44,8 @@ function setupUpdateFollowPolicyResponder({
     data: existingProfile,
   });
 
-  const responder = new UpdateFollowPolicyResponder(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const responder = new UpdateFollowPolicyResponder(profileCacheManager);
 
   return {
     responder,

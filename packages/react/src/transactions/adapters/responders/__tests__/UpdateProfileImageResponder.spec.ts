@@ -13,6 +13,7 @@ import {
   mockUpdateOffChainProfileImageRequest,
 } from '@lens-protocol/domain/mocks';
 
+import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { UpdateProfileImageResponder } from '../UpdateProfileImageResponder';
 
 type SetupTestScenarioArgs = {
@@ -29,7 +30,6 @@ function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioA
         request: {
           profileId: responseProfile.id,
         },
-        observerId: responseProfile.id,
         sources,
       },
     }),
@@ -42,7 +42,8 @@ function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioA
     data: cacheProfile,
   });
 
-  const responder = new UpdateProfileImageResponder(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const responder = new UpdateProfileImageResponder(profileCacheManager);
 
   return {
     responder,

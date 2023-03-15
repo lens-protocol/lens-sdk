@@ -19,7 +19,7 @@ export class ProfileGateway implements IProfileGateway {
       GetAllProfilesByOwnerAddressQueryVariables
     >({
       query: GetAllProfilesByOwnerAddressDocument,
-      // 'sources' asn 'observerId' are not needed. We just use 'id' and 'handle' for now.
+      // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
       variables: { address, limit: 10 },
     });
 
@@ -29,7 +29,7 @@ export class ProfileGateway implements IProfileGateway {
   async getProfileByHandle(handle: string): Promise<Profile | null> {
     const { data } = await this.apolloClient.query<GetProfileQuery, GetProfileQueryVariables>({
       query: GetProfileDocument,
-      // 'sources' asn 'observerId' are not needed. We just use 'id' and 'handle' for now.
+      // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
       variables: { request: { handle } },
     });
 
@@ -45,7 +45,7 @@ export class ProfileGateway implements IProfileGateway {
   async getProfileById(profileId: string): Promise<Profile | null> {
     const { data } = await this.apolloClient.query<GetProfileQuery, GetProfileQueryVariables>({
       query: GetProfileDocument,
-      // 'sources' asn 'observerId' are not needed. We just use 'id' and 'handle' for now.
+      // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
       variables: { request: { profileId } },
     });
 
