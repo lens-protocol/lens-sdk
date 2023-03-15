@@ -137,7 +137,7 @@ query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {
 query GetProfile(
   $request: SingleProfileQueryRequest!
   $observerId: ProfileId
-  $sources: [Sources!]!
+  $sources: [Sources!] = []
 ) {
   result: profile(request: $request) {
     ...Profile
@@ -149,7 +149,7 @@ query GetAllProfilesByOwnerAddress(
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
-  $sources: [Sources!]!
+  $sources: [Sources!] = []
 ) {
   result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
     items {

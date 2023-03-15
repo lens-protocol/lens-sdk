@@ -140,7 +140,7 @@ export function createSharedDependencies(
   const tokenGateway = new TokenGateway(providerFactory);
   const followPolicyCallGateway = new FollowPolicyCallGateway(apolloClient);
 
-  const profileGateway = new ProfileGateway(apolloClient, sources);
+  const profileGateway = new ProfileGateway(apolloClient);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
   const activeProfilePresenter = new ActiveProfilePresenter();
   const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
@@ -152,7 +152,11 @@ export function createSharedDependencies(
     [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(publicationCacheManager),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
     [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient, sources),
-    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(apolloClient, sources),
+    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(
+      apolloClient,
+      sources,
+      config.environment.handleResolver,
+    ),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
       apolloClient,
