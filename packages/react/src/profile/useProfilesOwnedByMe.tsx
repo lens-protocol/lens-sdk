@@ -1,4 +1,3 @@
-import { useReactiveVar } from '@apollo/client';
 import {
   ProfileOwnedByMeFragment,
   useGetAllProfilesByOwnerAddressQuery,
@@ -13,7 +12,7 @@ import {
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { createdProfilesVar } from '../transactions/adapters/responders/CreateProfileResponder';
+import { useRecentProfiles } from '../transactions/adapters/responders/CreateProfileResponder';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { useActiveWallet } from '../wallet';
 
@@ -24,7 +23,7 @@ export function useProfilesOwnedByMe({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseProfilesOwnedByMeArgs = {}): PaginatedReadResult<ProfileOwnedByMeFragment[]> {
   const { data: activeWallet, loading: bootstrapping } = useActiveWallet();
-  const createdProfiles = useReactiveVar(createdProfilesVar);
+  const recentProfiles = useRecentProfiles();
 
   const result = usePaginatedReadResult(
     useGetAllProfilesByOwnerAddressQuery(
@@ -48,6 +47,6 @@ export function useProfilesOwnedByMe({
 
   return {
     ...result,
-    data: result.data ? [...result.data, ...createdProfiles] : result.data,
+    data: result.data ? [...result.data, ...recentProfiles] : result.data,
   } as PaginatedReadResult<ProfileOwnedByMeFragment[]>;
 }

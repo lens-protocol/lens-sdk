@@ -1,10 +1,10 @@
-import { makeVar } from '@apollo/client';
+import { makeVar, useReactiveVar } from '@apollo/client';
 import {
+  GetProfileDocument,
+  GetProfileQuery,
+  GetProfileQueryVariables,
   LensApolloClient,
   ProfileFragment,
-  SearchProfilesDocument,
-  SearchProfilesQuery,
-  SearchProfilesQueryVariables,
   Sources,
 } from '@lens-protocol/api-bindings';
 import { CreateProfileRequest } from '@lens-protocol/domain/use-cases/profile';
@@ -13,26 +13,37 @@ import {
   ITransactionResponder,
 } from '@lens-protocol/domain/use-cases/transactions';
 
-export const createdProfilesVar = makeVar<ProfileFragment[]>([]);
+import { ProfileHandleResolver } from '../../../environments';
+
+const recentProfilesVar = makeVar<ProfileFragment[]>([]);
+
+// TODO use activeProfileIdentifierVar (maybe move it to api-bindings?)
 
 export class CreateProfileResponder implements ITransactionResponder<CreateProfileRequest> {
-  constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
+  constructor(
+    private readonly client: LensApolloClient,
+    private readonly sources: Sources,
+    private readonly handleResolver: ProfileHandleResolver,
+  ) {}
 
   async commit({ request }: BroadcastedTransactionData<CreateProfileRequest>) {
-    const res = await this.client.query<SearchProfilesQuery, SearchProfilesQueryVariables>({
-      query: SearchProfilesDocument,
+    const { data } = await this.client.query<GetProfileQuery, GetProfileQueryVariables>({
+      query: GetProfileDocument,
       variables: {
+        request: {
+          handle: this.handleResolver(request.handle),
+        },
         sources: this.sources,
-        query: request.handle,
-        limit: 1,
       },
       fetchPolicy: 'network-only',
     });
 
-    const item = res.data.result.items[0];
-
-    if (item?.handle.split('.')[0] === request.handle) {
-      createdProfilesVar([...createdProfilesVar(), item]);
+    if (data.result) {
+      recentProfilesVar([...recentProfilesVar(), data.result]);
     }
   }
+}
+
+export function useRecentProfiles() {
+  return useReactiveVar(recentProfilesVar);
 }
