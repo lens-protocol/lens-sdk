@@ -4,16 +4,16 @@ import {
 } from '@lens-protocol/api-bindings';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 type UseCollectablesArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     walletAddress: string;
   }>
 >;
@@ -27,7 +27,7 @@ export function useCollectedPublications({
     useWalletCollectedPublicationsQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             walletAddress,
             limit: limit,
             observerId,

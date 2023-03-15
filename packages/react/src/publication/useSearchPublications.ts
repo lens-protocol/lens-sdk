@@ -5,16 +5,16 @@ import {
 } from '@lens-protocol/api-bindings';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseSearchPublicationsArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     query: string;
     limit?: number;
   }>
@@ -29,7 +29,7 @@ export function useSearchPublications({
     useSearchPublicationsQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             query,
             limit,
             observerId,

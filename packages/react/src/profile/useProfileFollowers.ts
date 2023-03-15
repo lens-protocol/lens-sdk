@@ -2,16 +2,16 @@ import { FollowerFragment, useProfileFollowersQuery } from '@lens-protocol/api-b
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseProfileFollowersArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     profileId: ProfileId;
   }>
 >;
@@ -25,7 +25,7 @@ export function useProfileFollowers({
     useProfileFollowersQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({ profileId, limit, observerId }),
+          variables: useSourcesFromConfig({ profileId, limit, observerId }),
         }),
       ),
     ),

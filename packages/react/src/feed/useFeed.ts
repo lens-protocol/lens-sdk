@@ -7,9 +7,9 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import { nonNullable } from '@lens-protocol/shared-kernel';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -34,7 +34,7 @@ const mapRestrictEventTypesToLensTypes = (restrictEventTypesTo?: FeedEventItemTy
 const FEED_LIMIT = 50;
 
 export type UseFeedArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     profileId: ProfileId;
     restrictEventTypesTo?: FeedEventItemType[];
     metadataFilter?: PublicationMetadataFilters;
@@ -52,7 +52,7 @@ export function useFeed({
     useFeedQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             metadata: createPublicationMetadataFilters(metadataFilter),
             restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
             profileId,

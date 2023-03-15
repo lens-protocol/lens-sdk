@@ -1,9 +1,9 @@
 import { useCommentsQuery, CommentWithFirstCommentFragment } from '@lens-protocol/api-bindings';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -11,7 +11,7 @@ import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 
 export type UseCommentsArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     commentsOf: string;
     metadataFilter?: PublicationMetadataFilters;
   }>
@@ -27,7 +27,7 @@ export function useComments({
     useCommentsQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             metadata: createPublicationMetadataFilters(metadataFilter),
             commentsOf,
             limit,

@@ -5,16 +5,16 @@ import {
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseProfilePublicationsForSaleArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     profileId: ProfileId;
   }>
 >;
@@ -28,7 +28,7 @@ export function useProfilePublicationsForSale({
     useProfilePublicationsForSaleQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             profileId,
             observerId,
             limit,

@@ -6,9 +6,9 @@ import { never } from '@lens-protocol/shared-kernel';
 import { constants } from 'ethers';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -16,7 +16,7 @@ import { useRecentProfiles } from '../transactions/adapters/responders/CreatePro
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { useActiveWallet } from '../wallet';
 
-export type UseProfilesOwnedByMeArgs = PaginatedArgs<SubjectiveArgs>;
+export type UseProfilesOwnedByMeArgs = PaginatedArgs<WithObserverIdOverride>;
 
 export function useProfilesOwnedByMe({
   observerId,
@@ -29,7 +29,7 @@ export function useProfilesOwnedByMe({
     useGetAllProfilesByOwnerAddressQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             address: bootstrapping
               ? constants.AddressZero
               : activeWallet?.address ??

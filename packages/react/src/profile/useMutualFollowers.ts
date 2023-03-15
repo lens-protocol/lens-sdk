@@ -1,7 +1,7 @@
 import { ProfileFragment, useMutualFollowersProfilesQuery } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
-import { useConfigSourcesVariable, useLensApolloClient } from '../helpers/arguments';
+import { useSourcesFromConfig, useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
@@ -18,7 +18,7 @@ export function useMutualFollowers({
   return usePaginatedReadResult(
     useMutualFollowersProfilesQuery(
       useLensApolloClient({
-        variables: useConfigSourcesVariable({ limit, observerId, viewingProfileId }),
+        variables: useSourcesFromConfig({ limit, observerId, viewingProfileId }),
       }),
     ),
   );

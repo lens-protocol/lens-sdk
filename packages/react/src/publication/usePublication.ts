@@ -7,14 +7,14 @@ import { PublicationId } from '@lens-protocol/domain/entities';
 
 import { NotFoundError } from '../NotFoundError';
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
-export type UsePublicationArgs = SubjectiveArgs<{
+export type UsePublicationArgs = WithObserverIdOverride<{
   publicationId: PublicationId;
 }>;
 
@@ -26,7 +26,7 @@ export function usePublication({
     usePublicationQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             publicationId,
             observerId,
           }),

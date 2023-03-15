@@ -6,14 +6,14 @@ import {
 
 import { NotFoundError } from '../NotFoundError';
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
-export type UsePublicationRevenueArgs = SubjectiveArgs<{
+export type UsePublicationRevenueArgs = WithObserverIdOverride<{
   publicationId: string;
 }>;
 
@@ -28,7 +28,7 @@ export function usePublicationRevenue({
     usePublicationRevenueQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             publicationId,
             observerId,
           }),

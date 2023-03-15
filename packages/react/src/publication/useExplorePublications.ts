@@ -7,9 +7,9 @@ import {
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import {
-  SubjectiveArgs,
+  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useConfigSourcesVariable,
+  useSourcesFromConfig,
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -17,7 +17,7 @@ import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 
 export type UseExplorePublicationsArgs = PaginatedArgs<
-  SubjectiveArgs<{
+  WithObserverIdOverride<{
     excludeProfileIds?: Array<ProfileId>;
     metadataFilter?: PublicationMetadataFilters;
     publicationTypes?: Array<PublicationTypes>;
@@ -39,7 +39,7 @@ export function useExplorePublications({
     useExplorePublicationsQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useConfigSourcesVariable({
+          variables: useSourcesFromConfig({
             excludeProfileIds,
             limit,
             metadata: createPublicationMetadataFilters(metadataFilter),
