@@ -1,6 +1,6 @@
 import { LogoutReason } from '@lens-protocol/domain/use-cases/wallets';
 
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { useWalletLogoutController } from './adapters/useWalletLogoutController';
 
 export type WalletLogoutOperation = Operation<void>;

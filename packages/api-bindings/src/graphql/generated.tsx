@@ -45,6 +45,8 @@ export type Scalars = {
   CreateHandle: unknown;
   /** Cursor custom scalar type */
   Cursor: string;
+  /** The da id */
+  DataAvailabilityId: unknown;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: string;
   DecryptionCriteria: DecryptionCriteria;
@@ -782,7 +784,7 @@ export type CreateProfileRequest = {
 export type CreatePublicCommentRequest = {
   /** The collect module */
   collectModule: CollectModuleParams;
-  /** The metadata uploaded somewhere passing in the url to reach it */
+  /** The metadata contentURI resolver */
   contentURI: Scalars['Url'];
   /** The criteria to access the publication data */
   gated?: InputMaybe<GatedPublicationParamsInput>;
@@ -1356,7 +1358,7 @@ export type Erc20OwnershipInput = {
   chainID: Scalars['ChainId'];
   /** The operator to use when comparing the amount of tokens */
   condition: ScalarOperator;
-  /** The ERC20 token's ethereum address */
+  /** The ERC20 token ethereum address */
   contractAddress: Scalars['ContractAddress'];
   /** The amount of decimals of the ERC20 contract */
   decimals: Scalars['Float'];
@@ -1370,10 +1372,14 @@ export type Erc20OwnershipOutput = {
   chainID: Scalars['ChainId'];
   /** The operator to use when comparing the amount of tokens */
   condition: ScalarOperator;
-  /** The ERC20 token's ethereum address */
+  /** The ERC20 token ethereum address */
   contractAddress: Scalars['ContractAddress'];
   /** The amount of decimals of the ERC20 contract */
   decimals: Scalars['Float'];
+  /** The name of the ERC20 token */
+  name: Scalars['String'];
+  /** The symbol of the ERC20 token */
+  symbol: Scalars['String'];
 };
 
 /** The paginated publication result */
@@ -3680,7 +3686,7 @@ export enum ReactionTypes {
 export type RecipientDataInput = {
   /** Recipient of collect fees. */
   recipient: Scalars['EthereumAddress'];
-  /** Split %, should be between 1 and 100. All % should add up to 100 */
+  /** Split %, should be between 0.01 and 100. Up to 2 decimal points supported. All % should add up to 100 */
   split: Scalars['Float'];
 };
 
@@ -3688,7 +3694,7 @@ export type RecipientDataOutput = {
   __typename: 'RecipientDataOutput';
   /** Recipient of collect fees. */
   recipient: Scalars['EthereumAddress'];
-  /** Split %, should be between 1 and 100. All % should add up to 100 */
+  /** Split %, should be between 0.01 and 100. Up to 2 decimal points supported. All % should add up to 100 */
   split: Scalars['Float'];
 };
 
@@ -3750,6 +3756,7 @@ export type RelayResult = RelayError | RelayerResult;
 /** The relayer result */
 export type RelayerResult = {
   __typename: 'RelayerResult';
+  dataAvailabilityId: Scalars['DataAvailabilityId'];
   /** The tx hash - you should use the `txId` as your identifier as gas prices can be upgraded meaning txHash will change */
   txHash: Scalars['TxHash'];
   /** The tx id */
@@ -4219,7 +4226,7 @@ export type CreateCommentViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreateCommentViaDispatcherMutation = {
-  result: RelayErrorFragment | RelayerResultFragment;
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
 };
 
 export type CommentWithFirstCommentFragment = {
@@ -4747,7 +4754,7 @@ export type CreateMirrorViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreateMirrorViaDispatcherMutation = {
-  result: RelayErrorFragment | RelayerResultFragment;
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
 };
 
 export type ModuleInfoFragment = { __typename: 'ModuleInfo'; name: string; type: string };
@@ -4881,7 +4888,7 @@ export type CreatePostViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreatePostViaDispatcherMutation = {
-  result: RelayErrorFragment | RelayerResultFragment;
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
 };
 
 export type CreateSetDispatcherTypedDataMutationVariables = Exact<{
@@ -5003,7 +5010,7 @@ export type ProfilesToFollowQuery = { result: Array<ProfileFragment> };
 export type GetProfileQueryVariables = Exact<{
   request: SingleProfileQueryRequest;
   observerId?: InputMaybe<Scalars['ProfileId']>;
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
 
 export type GetProfileQuery = { result: ProfileFragment | null };
@@ -5013,7 +5020,7 @@ export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
 
 export type GetAllProfilesByOwnerAddressQuery = {
@@ -5024,7 +5031,9 @@ export type CreateProfileMutationVariables = Exact<{
   request: CreateProfileRequest;
 }>;
 
-export type CreateProfileMutation = { result: RelayErrorFragment | RelayerResultFragment };
+export type CreateProfileMutation = {
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
+};
 
 export type MutualFollowersProfilesQueryVariables = Exact<{
   observerId: Scalars['ProfileId'];
@@ -5083,9 +5092,7 @@ export type CreateSetProfileImageUriViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreateSetProfileImageUriViaDispatcherMutation = {
-  result:
-    | ({ __typename: 'RelayError' } & RelayErrorFragment)
-    | ({ __typename: 'RelayerResult' } & RelayerResultFragment);
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
 };
 
 export type CreateSetProfileMetadataTypedDataMutationVariables = Exact<{
@@ -5110,9 +5117,7 @@ export type CreateSetProfileMetadataViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreateSetProfileMetadataViaDispatcherMutation = {
-  result:
-    | ({ __typename: 'RelayError' } & RelayErrorFragment)
-    | ({ __typename: 'RelayerResult' } & RelayerResultFragment);
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
 };
 
 export type FollowerFragment = { __typename: 'Follower'; wallet: WalletFragment };
@@ -5324,18 +5329,16 @@ export type RevenueAggregateFragment = {
 export type PublicationRevenueFragment = {
   __typename: 'PublicationRevenue';
   publication: CommentFragment | MirrorFragment | PostFragment;
-} & RevenueFragment;
-
-export type RevenueFragment = {
-  __typename: 'PublicationRevenue';
   revenue: RevenueAggregateFragment;
 };
 
 export type PublicationRevenueQueryVariables = Exact<{
-  request: PublicationRevenueQueryRequest;
+  publicationId: Scalars['InternalPublicationId'];
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-export type PublicationRevenueQuery = { result: RevenueFragment | null };
+export type PublicationRevenueQuery = { result: PublicationRevenueFragment | null };
 
 export type ProfilePublicationRevenueQueryVariables = Exact<{
   profileId: Scalars['ProfileId'];
@@ -5401,6 +5404,14 @@ export type RelayerResultFragment = { __typename: 'RelayerResult'; txHash: strin
 
 export type RelayErrorFragment = { __typename: 'RelayError'; reason: RelayErrorReasons };
 
+type RelayResult_RelayError_Fragment = RelayErrorFragment;
+
+type RelayResult_RelayerResult_Fragment = RelayerResultFragment;
+
+export type RelayResultFragment =
+  | RelayResult_RelayError_Fragment
+  | RelayResult_RelayerResult_Fragment;
+
 export type TransactionIndexedResultFragment = {
   __typename: 'TransactionIndexedResult';
   indexed: boolean;
@@ -5424,7 +5435,9 @@ export type BroadcastProtocolCallMutationVariables = Exact<{
   request: BroadcastRequest;
 }>;
 
-export type BroadcastProtocolCallMutation = { result: RelayErrorFragment | RelayerResultFragment };
+export type BroadcastProtocolCallMutation = {
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
+};
 
 export type CreateUnfollowTypedDataMutationVariables = Exact<{
   request: UnfollowRequest;
@@ -6436,15 +6449,6 @@ export const RevenueAggregateFragmentDoc = gql`
   }
   ${Erc20AmountFragmentDoc}
 `;
-export const RevenueFragmentDoc = gql`
-  fragment Revenue on PublicationRevenue {
-    __typename
-    revenue {
-      ...RevenueAggregate
-    }
-  }
-  ${RevenueAggregateFragmentDoc}
-`;
 export const PublicationRevenueFragmentDoc = gql`
   fragment PublicationRevenue on PublicationRevenue {
     __typename
@@ -6459,12 +6463,14 @@ export const PublicationRevenueFragmentDoc = gql`
         ...Comment
       }
     }
-    ...Revenue
+    revenue {
+      ...RevenueAggregate
+    }
   }
   ${PostFragmentDoc}
   ${MirrorFragmentDoc}
   ${CommentFragmentDoc}
-  ${RevenueFragmentDoc}
+  ${RevenueAggregateFragmentDoc}
 `;
 export const ProfileFollowRevenueFragmentDoc = gql`
   fragment ProfileFollowRevenue on FollowRevenueResult {
@@ -6487,6 +6493,18 @@ export const RelayErrorFragmentDoc = gql`
     __typename
     reason
   }
+`;
+export const RelayResultFragmentDoc = gql`
+  fragment RelayResult on RelayResult {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
 `;
 export const TransactionIndexedResultFragmentDoc = gql`
   fragment TransactionIndexedResult on TransactionIndexedResult {
@@ -6797,16 +6815,10 @@ export type CreateCommentTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreateCommentViaDispatcherDocument = gql`
   mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
     result: createCommentViaDispatcher(request: $request) {
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreateCommentViaDispatcherMutationFn = Apollo.MutationFunction<
   CreateCommentViaDispatcherMutation,
@@ -7256,16 +7268,10 @@ export type CreateMirrorTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreateMirrorViaDispatcherDocument = gql`
   mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
     result: createMirrorViaDispatcher(request: $request) {
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreateMirrorViaDispatcherMutationFn = Apollo.MutationFunction<
   CreateMirrorViaDispatcherMutation,
@@ -7597,16 +7603,10 @@ export type CreatePostTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreatePostViaDispatcherDocument = gql`
   mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
     result: createPostViaDispatcher(request: $request) {
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreatePostViaDispatcherMutationFn = Apollo.MutationFunction<
   CreatePostViaDispatcherMutation,
@@ -7780,7 +7780,7 @@ export const GetProfileDocument = gql`
   query GetProfile(
     $request: SingleProfileQueryRequest!
     $observerId: ProfileId
-    $sources: [Sources!]!
+    $sources: [Sources!] = []
   ) {
     result: profile(request: $request) {
       ...Profile
@@ -7831,7 +7831,7 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
-    $sources: [Sources!]!
+    $sources: [Sources!] = []
   ) {
     result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
       items {
@@ -7903,16 +7903,10 @@ export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
 export const CreateProfileDocument = gql`
   mutation CreateProfile($request: CreateProfileRequest!) {
     result: createProfile(request: $request) {
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreateProfileMutationFn = Apollo.MutationFunction<
   CreateProfileMutation,
@@ -8187,17 +8181,10 @@ export type CreateSetProfileImageUriTypedDataMutationOptions = Apollo.BaseMutati
 export const CreateSetProfileImageUriViaDispatcherDocument = gql`
   mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
     result: createSetProfileImageURIViaDispatcher(request: $request) {
-      __typename
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreateSetProfileImageUriViaDispatcherMutationFn = Apollo.MutationFunction<
   CreateSetProfileImageUriViaDispatcherMutation,
@@ -8322,17 +8309,10 @@ export const CreateSetProfileMetadataViaDispatcherDocument = gql`
     $request: CreatePublicSetProfileMetadataURIRequest!
   ) {
     result: createSetProfileMetadataViaDispatcher(request: $request) {
-      __typename
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreateSetProfileMetadataViaDispatcherMutationFn = Apollo.MutationFunction<
   CreateSetProfileMetadataViaDispatcherMutation,
@@ -9441,12 +9421,16 @@ export type ReportPublicationMutationOptions = Apollo.BaseMutationOptions<
   ReportPublicationMutationVariables
 >;
 export const PublicationRevenueDocument = gql`
-  query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
-    result: publicationRevenue(request: $request) {
-      ...Revenue
+  query PublicationRevenue(
+    $publicationId: InternalPublicationId!
+    $observerId: ProfileId
+    $sources: [Sources!]!
+  ) {
+    result: publicationRevenue(request: { publicationId: $publicationId }) {
+      ...PublicationRevenue
     }
   }
-  ${RevenueFragmentDoc}
+  ${PublicationRevenueFragmentDoc}
 `;
 
 /**
@@ -9461,7 +9445,9 @@ export const PublicationRevenueDocument = gql`
  * @example
  * const { data, loading, error } = usePublicationRevenueQuery({
  *   variables: {
- *      request: // value for 'request'
+ *      publicationId: // value for 'publicationId'
+ *      observerId: // value for 'observerId'
+ *      sources: // value for 'sources'
  *   },
  * });
  */
@@ -9857,16 +9843,10 @@ export type HasTxHashBeenIndexedQueryResult = Apollo.QueryResult<
 export const BroadcastProtocolCallDocument = gql`
   mutation BroadcastProtocolCall($request: BroadcastRequest!) {
     result: broadcast(request: $request) {
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type BroadcastProtocolCallMutationFn = Apollo.MutationFunction<
   BroadcastProtocolCallMutation,
@@ -11010,6 +10990,8 @@ export type Erc20OwnershipOutputKeySpecifier = (
   | 'condition'
   | 'contractAddress'
   | 'decimals'
+  | 'name'
+  | 'symbol'
   | Erc20OwnershipOutputKeySpecifier
 )[];
 export type Erc20OwnershipOutputFieldPolicy = {
@@ -11018,6 +11000,8 @@ export type Erc20OwnershipOutputFieldPolicy = {
   condition?: FieldPolicy<any> | FieldReadFunction<any>;
   contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
   decimals?: FieldPolicy<any> | FieldReadFunction<any>;
+  name?: FieldPolicy<any> | FieldReadFunction<any>;
+  symbol?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ExploreProfileResultKeySpecifier = (
   | 'items'
@@ -12224,8 +12208,14 @@ export type RelayErrorKeySpecifier = ('reason' | RelayErrorKeySpecifier)[];
 export type RelayErrorFieldPolicy = {
   reason?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type RelayerResultKeySpecifier = ('txHash' | 'txId' | RelayerResultKeySpecifier)[];
+export type RelayerResultKeySpecifier = (
+  | 'dataAvailabilityId'
+  | 'txHash'
+  | 'txId'
+  | RelayerResultKeySpecifier
+)[];
 export type RelayerResultFieldPolicy = {
+  dataAvailabilityId?: FieldPolicy<any> | FieldReadFunction<any>;
   txHash?: FieldPolicy<any> | FieldReadFunction<any>;
   txId?: FieldPolicy<any> | FieldReadFunction<any>;
 };

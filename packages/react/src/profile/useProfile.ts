@@ -1,44 +1,48 @@
 import { ProfileFragment, UnspecifiedError, useGetProfileQuery } from '@lens-protocol/api-bindings';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
-import { ReadResult, useReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import {
+  WithObserverIdOverride,
+  useActiveProfileAsDefaultObserver,
+  useSourcesFromConfig,
+  useLensApolloClient,
+} from '../helpers/arguments';
+import { ReadResult, useReadResult } from '../helpers/reads';
 
-type BaseUseProfileArgs = {
-  observerId?: string;
+type UseProfileByIdArgs = {
+  profileId: ProfileId;
 };
 
-type UseProfileByIdArgs = BaseUseProfileArgs & {
-  profileId: string;
-};
-
-type UseProfileByHandleArgs = BaseUseProfileArgs & {
+type UseProfileByHandleArgs = {
   handle: string;
 };
 
-type UseProfileArgs = XOR<UseProfileByIdArgs, UseProfileByHandleArgs>;
+export type UseProfileArgs = WithObserverIdOverride<
+  XOR<UseProfileByIdArgs, UseProfileByHandleArgs>
+>;
 
 export function useProfile({
   observerId,
   ...request
 }: UseProfileArgs): ReadResult<ProfileFragment, NotFoundError | UnspecifiedError> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   invariant(
     request.profileId === undefined || request.handle === undefined,
-    "Only one of 'id' or 'handle' should be provided to useProfile",
+    "Only one of 'id' or 'handle' should be provided to 'useProfile' hook",
   );
 
   const { data, error, loading } = useReadResult(
-    useGetProfileQuery({
-      variables: {
-        request,
-        observerId,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useGetProfileQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useSourcesFromConfig({
+            request,
+            observerId,
+          }),
+        }),
+      ),
+    ),
   );
 
   if (loading) {

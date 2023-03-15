@@ -1,29 +1,36 @@
 import { FollowingFragment, useProfileFollowingQuery } from '@lens-protocol/api-bindings';
 
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import {
+  WithObserverIdOverride,
+  useActiveProfileAsDefaultObserver,
+  useSourcesFromConfig,
+  useLensApolloClient,
+} from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseProfileFollowingArgs = PaginatedArgs<{
-  walletAddress: string;
-  observerId?: string;
-}>;
+export type UseProfileFollowingArgs = PaginatedArgs<
+  WithObserverIdOverride<{
+    walletAddress: string;
+  }>
+>;
 
 export function useProfileFollowing({
-  walletAddress,
-  limit,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
+  walletAddress,
 }: UseProfileFollowingArgs): PaginatedReadResult<FollowingFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   return usePaginatedReadResult(
-    useProfileFollowingQuery({
-      variables: {
-        walletAddress,
-        limit: limit ?? 10,
-        observerId,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useProfileFollowingQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useSourcesFromConfig({
+            walletAddress,
+            limit,
+            observerId,
+          }),
+        }),
+      ),
+    ),
   );
 }

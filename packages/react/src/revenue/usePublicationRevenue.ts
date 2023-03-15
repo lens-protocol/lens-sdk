@@ -1,30 +1,40 @@
 import {
   UnspecifiedError,
-  RevenueAggregateFragment,
+  PublicationRevenueFragment,
   usePublicationRevenueQuery,
 } from '@lens-protocol/api-bindings';
 
 import { NotFoundError } from '../NotFoundError';
-import { ReadResult, useReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import {
+  WithObserverIdOverride,
+  useActiveProfileAsDefaultObserver,
+  useSourcesFromConfig,
+  useLensApolloClient,
+} from '../helpers/arguments';
+import { ReadResult, useReadResult } from '../helpers/reads';
 
-type UsePublicationRevenueArgs = {
+export type UsePublicationRevenueArgs = WithObserverIdOverride<{
   publicationId: string;
-};
+}>;
 
 export function usePublicationRevenue({
   publicationId,
+  observerId,
 }: UsePublicationRevenueArgs): ReadResult<
-  RevenueAggregateFragment,
+  PublicationRevenueFragment,
   NotFoundError | UnspecifiedError
 > {
-  const { apolloClient } = useSharedDependencies();
-
   const { data, error, loading } = useReadResult(
-    usePublicationRevenueQuery({
-      variables: { request: { publicationId } },
-      client: apolloClient,
-    }),
+    usePublicationRevenueQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useSourcesFromConfig({
+            publicationId,
+            observerId,
+          }),
+        }),
+      ),
+    ),
   );
 
   if (loading) {
@@ -52,7 +62,7 @@ export function usePublicationRevenue({
   }
 
   return {
-    data: data.revenue,
+    data,
     error: undefined,
     loading: false,
   };

@@ -12,7 +12,6 @@ import {
   ProfileFragment,
   CreatePublicSetProfileMetadataUriRequest,
   LensApolloClient,
-  Sources,
   ProfileMetadata,
 } from '@lens-protocol/api-bindings';
 import {
@@ -44,7 +43,6 @@ export class ProfileMetadataCallGateway
     private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
     private readonly uploader: IMetadataUploader<ProfileMetadata>,
-    private readonly sources: Sources,
   ) {}
 
   async createDelegatedTransaction<T extends UpdateProfileDetailsRequest>(
@@ -128,9 +126,8 @@ export class ProfileMetadataCallGateway
       fetchPolicy: 'cache-first',
       query: GetProfileDocument,
       variables: {
+        // 'sources' and 'observerId' is not need as profile metadata is independent from observer profile and sources
         request: { profileId },
-        observerId: profileId,
-        sources: this.sources,
       },
     });
 

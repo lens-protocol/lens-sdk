@@ -36,7 +36,6 @@ import {
   ProxyActionDocument,
   ProxyActionMutation,
   ProxyActionMutationVariables,
-  RelayResult,
   RemoveReactionDocument,
   RemoveReactionMutation,
   RemoveReactionMutationVariables,
@@ -59,6 +58,7 @@ import {
   ReportPublicationDocument,
   CreateProfileDocument,
   CreateProfileMutationVariables,
+  RelayResultFragment,
 } from '../generated';
 
 export function createCreateProfileMutationMockedResponse({
@@ -66,7 +66,7 @@ export function createCreateProfileMutationMockedResponse({
   result,
 }: {
   request: CreateProfileMutationVariables['request'];
-  result: Required<RelayResult>;
+  result: Required<RelayResultFragment>;
 }): MockedResponse<CreateProfileMutation> {
   return {
     request: {
@@ -80,7 +80,7 @@ export function createCreateProfileMutationMockedResponse({
 }
 
 function mockBroadcastProtocolCallMutation(
-  result: Required<RelayResult>,
+  result: Required<RelayResultFragment>,
 ): BroadcastProtocolCallMutation {
   return {
     result,
@@ -94,7 +94,7 @@ export function createBroadcastProtocolCallMutationMockedResponse(
         variables: BroadcastProtocolCallMutationVariables;
       }
     | {
-        result: Required<RelayResult>;
+        result: Required<RelayResultFragment>;
         variables: BroadcastProtocolCallMutationVariables;
       },
 ): MockedResponse<BroadcastProtocolCallMutation> {

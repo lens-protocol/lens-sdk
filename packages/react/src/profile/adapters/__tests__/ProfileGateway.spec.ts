@@ -5,7 +5,6 @@ import {
   createGetAllProfilesByOwnerAddressQueryMockedResponse,
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
-  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { Profile } from '@lens-protocol/domain/entities';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
@@ -13,10 +12,8 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { ProfileGateway } from '../ProfileGateway';
 
-const sources = mockSources();
-
 function setupProfileGateway({ apolloClient }: { apolloClient: LensApolloClient }) {
-  return new ProfileGateway(apolloClient, sources);
+  return new ProfileGateway(apolloClient);
 }
 
 describe(`Given an instance of the ${ProfileGateway.name}`, () => {
@@ -29,7 +26,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
           variables: {
             address,
             limit: 10,
-            sources,
+            sources: [],
           },
           profiles: [profileDataFragment],
         }),
@@ -53,7 +50,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
         mockGetProfileQueryMockedResponse({
           variables: {
             request: { handle: profileDataFragment.handle },
-            sources,
+            sources: [],
           },
           profile: profileDataFragment,
         }),
@@ -73,7 +70,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
       const handle = faker.internet.userName();
       const apolloClient = createMockApolloClientWithMultipleResponses([
         mockGetProfileQueryMockedResponse({
-          variables: { request: { handle }, sources },
+          variables: { request: { handle }, sources: [] },
           profile: null,
         }),
       ]);
@@ -92,7 +89,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
         mockGetProfileQueryMockedResponse({
           variables: {
             request: { profileId: profileDataFragment.id },
-            sources,
+            sources: [],
           },
           profile: profileDataFragment,
         }),
@@ -114,7 +111,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
         mockGetProfileQueryMockedResponse({
           variables: {
             request: { profileId },
-            sources,
+            sources: [],
           },
           profile: null,
         }),

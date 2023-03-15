@@ -4,14 +4,14 @@ import {
   ProfileIdentifier,
 } from '@lens-protocol/domain/use-cases/profile';
 
-export const activeProfileVar = makeVar<ProfileIdentifier | null>(null);
+export const activeProfileIdentifierVar = makeVar<ProfileIdentifier | null>(null);
 
 export class ActiveProfilePresenter implements IActiveProfilePresenter {
   async presentActiveProfile(profileIdentifier: ProfileIdentifier | null): Promise<void> {
-    activeProfileVar(profileIdentifier);
+    activeProfileIdentifierVar(profileIdentifier);
   }
 }
 
-export function useActiveProfileVar() {
-  return useReactiveVar(activeProfileVar);
+export function useActiveProfileIdentifierVar() {
+  return useReactiveVar(activeProfileIdentifierVar);
 }

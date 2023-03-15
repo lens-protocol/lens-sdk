@@ -1,33 +1,40 @@
 import { useCommentsQuery, CommentWithFirstCommentFragment } from '@lens-protocol/api-bindings';
 
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import {
+  WithObserverIdOverride,
+  useActiveProfileAsDefaultObserver,
+  useSourcesFromConfig,
+  useLensApolloClient,
+} from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
 
-type UseCommentsArgs = PaginatedArgs<{
-  commentsOf: string;
-  observerId?: string;
-  metadataFilter?: PublicationMetadataFilters;
-}>;
+export type UseCommentsArgs = PaginatedArgs<
+  WithObserverIdOverride<{
+    commentsOf: string;
+    metadataFilter?: PublicationMetadataFilters;
+  }>
+>;
 
 export function useComments({
   metadataFilter,
   commentsOf,
-  limit,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
 }: UseCommentsArgs): PaginatedReadResult<CommentWithFirstCommentFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   return usePaginatedReadResult(
-    useCommentsQuery({
-      variables: {
-        metadata: createPublicationMetadataFilters(metadataFilter),
-        commentsOf,
-        limit: limit ?? 10,
-        observerId,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useCommentsQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useSourcesFromConfig({
+            metadata: createPublicationMetadataFilters(metadataFilter),
+            commentsOf,
+            limit,
+            observerId,
+          }),
+        }),
+      ),
+    ),
   );
 }

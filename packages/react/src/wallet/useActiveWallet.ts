@@ -1,6 +1,6 @@
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
-import { ReadResult } from '../helpers';
+import { ReadResult } from '../helpers/reads';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
 import { useActiveWalletVar } from './adapters/ActiveWalletPresenter';
 

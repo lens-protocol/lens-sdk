@@ -11,7 +11,7 @@ import {
 } from '@lens-protocol/domain/entities';
 import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
 
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { useUpdateDispatcherConfigController } from './adapters/useUpdateDispatcherConfigController';
 
 export type UseUpdateDispatcherConfigArgs = {

@@ -9,7 +9,6 @@ import {
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
   mockRelayerResultFragment,
-  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockUpdateProfileDetailsRequest } from '@lens-protocol/domain/mocks';
@@ -28,12 +27,10 @@ function setupTestScenario({
   otherMockedResponses?: MockedResponse<unknown>[];
   uploadUrl: Url;
 }) {
-  const sources = mockSources();
   const getProfilesByIdQueryMockedResponse = mockGetProfileQueryMockedResponse({
     variables: {
       request: { profileId: existingProfile.id },
-      observerId: existingProfile.id,
-      sources,
+      sources: [],
     },
     profile: existingProfile,
   });
@@ -46,12 +43,7 @@ function setupTestScenario({
   const transactionFactory = mockITransactionFactory();
   const uploader = mockIMetadataUploader(uploadUrl);
 
-  const gateway = new ProfileMetadataCallGateway(
-    apolloClient,
-    transactionFactory,
-    uploader,
-    sources,
-  );
+  const gateway = new ProfileMetadataCallGateway(apolloClient, transactionFactory, uploader);
 
   return { gateway, uploader };
 }

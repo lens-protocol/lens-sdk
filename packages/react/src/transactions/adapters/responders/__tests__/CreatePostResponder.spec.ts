@@ -11,6 +11,7 @@ import { mockCreatePostRequest, mockBroadcastedTransactionData } from '@lens-pro
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
 
+import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { CreatePostResponder, recentPosts } from '../CreatePostResponder';
 
 function setupTestScenario({
@@ -43,7 +44,8 @@ function setupTestScenario({
     }),
   ]);
 
-  return new CreatePostResponder(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  return new CreatePostResponder(profileCacheManager, apolloClient, sources);
 }
 
 describe(`Given an instance of the ${CreatePostResponder.name}`, () => {

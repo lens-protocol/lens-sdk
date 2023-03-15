@@ -2,29 +2,36 @@ import {
   WhoReactedResultFragment,
   useWhoReactedPublicationQuery,
 } from '@lens-protocol/api-bindings';
+import { PublicationId } from '@lens-protocol/domain/entities';
 
-import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import {
+  WithObserverIdOverride,
+  useActiveProfileAsDefaultObserver,
+  useSourcesFromConfig,
+  useLensApolloClient,
+} from '../helpers/arguments';
+import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
 
-type UseWhoReactedArgs = PaginatedArgs<{
-  publicationId: string;
-  observerId?: string;
-}>;
+export type UseWhoReactedArgs = PaginatedArgs<
+  WithObserverIdOverride<{
+    publicationId: PublicationId;
+  }>
+>;
 
 export function useWhoReacted(
   args: UseWhoReactedArgs,
 ): PaginatedReadResult<WhoReactedResultFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   return usePaginatedReadResult(
-    useWhoReactedPublicationQuery({
-      variables: {
-        publicationId: args.publicationId,
-        observerId: args?.observerId,
-        limit: args?.limit ?? 10,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useWhoReactedPublicationQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useSourcesFromConfig({
+            publicationId: args.publicationId,
+            observerId: args?.observerId,
+            limit: args?.limit ?? 10,
+          }),
+        }),
+      ),
+    ),
   );
 }

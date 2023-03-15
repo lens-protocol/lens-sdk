@@ -1,5 +1,7 @@
-import { useActiveWallet, useCreateProfile, useProfilesOwnedByMe } from '@lens-protocol/react';
+import { useCreateProfile, useProfilesOwnedByMe } from '@lens-protocol/react';
 
+import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
+import { WhenLoggedInWithProfile } from '../components/auth/WhenLoggedInWithProfile';
 import { never } from '../utils';
 import { ProfileCard } from './components/ProfileCard';
 
@@ -20,25 +22,24 @@ function OwnedProfiles() {
   );
 }
 
-export function UseCreateProfile() {
+function CreateProfileForm() {
   const { execute: create, error, isPending } = useCreateProfile();
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-    const handle = (formData.get('handle') as string) ?? never();
-    await create(handle);
-  };
+    const form = event.currentTarget;
 
-  const activeWallet = useActiveWallet();
+    const formData = new FormData(form);
+    const handle = (formData.get('handle') as string) ?? never();
+
+    await create(handle);
+
+    form.reset();
+  };
 
   return (
     <div>
-      <h1>
-        <code>useCreateProfile</code>
-      </h1>
-
       <form onSubmit={onSubmit}>
         <fieldset>
           <label>
@@ -62,7 +63,20 @@ export function UseCreateProfile() {
         {error && <p>{error.message}</p>}
       </form>
 
-      {activeWallet.data && <OwnedProfiles />}
+      <OwnedProfiles />
+    </div>
+  );
+}
+
+export function UseCreateProfile() {
+  return (
+    <div>
+      <h1>
+        <code>useCreateProfile</code>
+      </h1>
+
+      <WhenLoggedInWithProfile>{() => <CreateProfileForm />}</WhenLoggedInWithProfile>
+      <UnauthenticatedFallback message="Log in to create new profiles" />
     </div>
   );
 }

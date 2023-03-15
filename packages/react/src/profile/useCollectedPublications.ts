@@ -3,28 +3,37 @@ import {
   useWalletCollectedPublicationsQuery,
 } from '@lens-protocol/api-bindings';
 
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import {
+  WithObserverIdOverride,
+  useActiveProfileAsDefaultObserver,
+  useSourcesFromConfig,
+  useLensApolloClient,
+} from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseCollectablesArgs = PaginatedArgs<{
-  walletAddress: string;
-}>;
+type UseCollectablesArgs = PaginatedArgs<
+  WithObserverIdOverride<{
+    walletAddress: string;
+  }>
+>;
 
 export function useCollectedPublications({
   walletAddress,
+  observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseCollectablesArgs): PaginatedReadResult<AnyPublicationFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   return usePaginatedReadResult(
-    useWalletCollectedPublicationsQuery({
-      variables: {
-        walletAddress,
-        limit: limit,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useWalletCollectedPublicationsQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useSourcesFromConfig({
+            walletAddress,
+            limit: limit,
+            observerId,
+          }),
+        }),
+      ),
+    ),
   );
 }

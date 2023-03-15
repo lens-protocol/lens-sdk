@@ -1,53 +1,94 @@
+import { ProfileFragment } from '@lens-protocol/api-bindings';
 import {
   createGetAllProfilesByOwnerAddressQueryMockedResponse,
   createMockApolloClientWithMultipleResponses,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { useProfilesOwnedBy } from '../useProfilesOwnedBy';
+import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
+import { activeProfileIdentifierVar } from '../adapters/ActiveProfilePresenter';
+import { useProfilesOwnedBy, UseProfilesOwnedByArgs } from '../useProfilesOwnedBy';
 
-const sources = mockSources();
+function setupTestScenario({
+  result,
+  expectedObserverId,
+  ...args
+}: UseProfilesOwnedByArgs & { expectedObserverId?: ProfileId; result: ProfileFragment[] }) {
+  const sources = mockSources();
+
+  return renderHookWithMocks(() => useProfilesOwnedBy(args), {
+    mocks: {
+      sources,
+      apolloClient: createMockApolloClientWithMultipleResponses([
+        createGetAllProfilesByOwnerAddressQueryMockedResponse({
+          variables: {
+            ...args,
+            observerId: expectedObserverId ?? null,
+            limit: 10,
+            sources,
+          },
+          profiles: result,
+        }),
+      ]),
+    },
+  });
+}
 
 describe(`Given the ${useProfilesOwnedBy.name} hook`, () => {
   const address = mockEthereumAddress();
-  const observer = mockProfileFragment();
   const profiles = [
     mockProfileFragment({ ownedBy: address }),
     mockProfileFragment({ ownedBy: address }),
   ];
 
+  beforeAll(() => {
+    simulateAppReady();
+  });
+
   describe('when the query returns data successfully', () => {
     it('should return the profiles owned by the specified address', async () => {
-      const { result } = renderHookWithMocks(
-        () =>
-          useProfilesOwnedBy({
-            address,
-            observerId: observer.id,
-          }),
-        {
-          mocks: {
-            sources,
-            apolloClient: createMockApolloClientWithMultipleResponses([
-              createGetAllProfilesByOwnerAddressQueryMockedResponse({
-                variables: {
-                  address,
-                  observerId: observer.id,
-                  limit: 10,
-                  sources,
-                },
-                profiles,
-              }),
-            ]),
-          },
-        },
-      );
+      const { result } = setupTestScenario({ address, result: profiles });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(profiles);
+    });
+  });
 
+  describe('when there is an Active Profile defined', () => {
+    const activeProfile = mockProfile();
+
+    beforeAll(() => {
+      activeProfileIdentifierVar(activeProfile);
+    });
+
+    it('should use the Active Profile Id as the "observerId"', async () => {
+      const { result } = setupTestScenario({
+        address,
+        result: profiles,
+        expectedObserverId: activeProfile.id,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(profiles);
+    });
+
+    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+      const observerId = mockProfileId();
+
+      const { result } = setupTestScenario({
+        address,
+        observerId,
+        result: profiles,
+        expectedObserverId: observerId,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toEqual(profiles);
     });
   });

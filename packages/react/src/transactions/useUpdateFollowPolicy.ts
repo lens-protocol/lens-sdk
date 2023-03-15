@@ -7,7 +7,7 @@ import {
 } from '@lens-protocol/domain/entities';
 import { ChargeFollowConfig, NoFeeFollowConfig } from '@lens-protocol/domain/use-cases/profile';
 
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 
 export type UseUpdateFollowPolicyArgs = {

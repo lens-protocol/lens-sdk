@@ -13,7 +13,7 @@ import {
 import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 import { useMemo } from 'react';
 
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreatePostController } from './adapters/useCreatePostController';
