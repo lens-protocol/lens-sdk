@@ -9,8 +9,7 @@ import { useState } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
 
 function UnauthenticatedContent() {
   const [handle, setHandle] = useState('');

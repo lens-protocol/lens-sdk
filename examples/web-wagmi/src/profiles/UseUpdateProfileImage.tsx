@@ -1,8 +1,7 @@
 import { ImageType, ProfileFragment, useUpdateProfileImage } from '@lens-protocol/react';
 import { ChangeEvent, useState } from 'react';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
 import { useFilePreview } from '../hooks/useFilePreview';
 import { ILocalFile, useFileSelect } from '../hooks/useFileSelect';
 import { uploadImage } from '../upload';

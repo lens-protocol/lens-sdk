@@ -1,5 +1,4 @@
-import { LoginButton } from './auth/LoginButton';
-import { WhenLoggedOut } from './auth/auth';
+import { LoginButton, WhenLoggedOut } from './auth';
 
 type UnauthenticatedFallbackProps = {
   message?: string;

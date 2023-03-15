@@ -6,8 +6,7 @@ import {
 } from '@lens-protocol/react';
 import { useState } from 'react';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 
