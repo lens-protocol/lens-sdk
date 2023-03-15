@@ -1,7 +1,7 @@
 import { useCreateProfile, useProfilesOwnedByMe } from '@lens-protocol/react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
-import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { WhenLoggedInWithProfile } from '../components/auth/WhenLoggedInWithProfile';
 import { never } from '../utils';
 import { ProfileCard } from './components/ProfileCard';
 
