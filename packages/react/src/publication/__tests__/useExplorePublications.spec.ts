@@ -1,41 +1,66 @@
-import { PublicationSortCriteria, PublicationTypes } from '@lens-protocol/api-bindings';
+import {
+  AnyPublicationFragment,
+  PublicationSortCriteria,
+  PublicationTypes,
+} from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
   createExplorePublicationsQueryMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
+import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
-import { useExplorePublications } from '../useExplorePublications';
+import { useExplorePublications, UseExplorePublicationsArgs } from '../useExplorePublications';
 
-const sources = mockSources();
+function setupTestScenario({
+  expectedObserverId,
+  result,
+  ...args
+}: UseExplorePublicationsArgs & {
+  expectedObserverId?: ProfileId;
+  result: AnyPublicationFragment[];
+}) {
+  const sources = mockSources();
+
+  return renderHookWithMocks(() => useExplorePublications(args), {
+    mocks: {
+      sources,
+      apolloClient: createMockApolloClientWithMultipleResponses([
+        createExplorePublicationsQueryMockedResponse({
+          variables: {
+            limit: DEFAULT_PAGINATED_QUERY_LIMIT,
+            sortCriteria: PublicationSortCriteria.Latest,
+            ...args,
+            sources,
+            observerId: expectedObserverId ?? null,
+          },
+          items: result,
+        }),
+      ]),
+    },
+  });
+}
 
 describe(`Given the ${useExplorePublications.name} hook`, () => {
-  const mockPublications = [mockPostFragment()];
+  const publications = [mockPostFragment()];
 
-  describe('when the query returns data successfully', () => {
+  beforeAll(() => {
+    simulateAppReady();
+  });
+
+  describe('when invoked', () => {
     it('should return publications that match the explore with default parameters', async () => {
-      const { result } = renderHookWithMocks(() => useExplorePublications(), {
-        mocks: {
-          sources,
-          apolloClient: createMockApolloClientWithMultipleResponses([
-            createExplorePublicationsQueryMockedResponse({
-              variables: {
-                limit: DEFAULT_PAGINATED_QUERY_LIMIT,
-                sortCriteria: PublicationSortCriteria.Latest,
-                sources,
-              },
-              items: mockPublications,
-            }),
-          ]),
-        },
-      });
-      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      const { result } = setupTestScenario({ result: publications });
 
-      expect(result.current.data).toEqual(mockPublications);
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(publications);
     });
 
     it('should return publications that match the explore with custom parameters', async () => {
@@ -44,23 +69,41 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
         limit: 20,
         publicationTypes: [PublicationTypes.Comment, PublicationTypes.Post],
       };
-      const { result } = renderHookWithMocks(() => useExplorePublications(customParams), {
-        mocks: {
-          sources,
-          apolloClient: createMockApolloClientWithMultipleResponses([
-            createExplorePublicationsQueryMockedResponse({
-              variables: {
-                ...customParams,
-                sources,
-              },
-              items: mockPublications,
-            }),
-          ]),
-        },
-      });
-      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      const { result } = setupTestScenario({ ...customParams, result: publications });
 
-      expect(result.current.data).toEqual(mockPublications);
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(publications);
+    });
+  });
+
+  describe('when there is an Active Profile defined', () => {
+    const activeProfile = mockProfile();
+
+    beforeAll(() => {
+      activeProfileIdentifierVar(activeProfile);
+    });
+
+    it('should use the Active Profile Id as the "observerId"', async () => {
+      const { result } = setupTestScenario({
+        result: publications,
+        expectedObserverId: activeProfile.id,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(publications);
+    });
+
+    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+      const observerId = mockProfileId();
+
+      const { result } = setupTestScenario({
+        observerId,
+        result: publications,
+        expectedObserverId: observerId,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(publications);
     });
   });
 });

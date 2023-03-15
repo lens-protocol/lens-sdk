@@ -1,64 +1,103 @@
+import { PublicationRevenueFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createPublicationRevenueQueryMockedResponse,
-  mockRevenueFragment,
+  mockPublicationRevenueFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import { mockProfile, mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { usePublicationRevenue } from '../usePublicationRevenue';
+import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
+import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
+import { usePublicationRevenue, UsePublicationRevenueArgs } from '../usePublicationRevenue';
+
+function setupTestScenario({
+  expectedObserverId,
+  result,
+  ...args
+}: UsePublicationRevenueArgs & {
+  expectedObserverId?: ProfileId;
+  result: PublicationRevenueFragment | null;
+}) {
+  const sources = mockSources();
+
+  return renderHookWithMocks(() => usePublicationRevenue(args), {
+    mocks: {
+      sources,
+      apolloClient: createMockApolloClientWithMultipleResponses([
+        createPublicationRevenueQueryMockedResponse({
+          variables: {
+            ...args,
+            observerId: expectedObserverId ?? null,
+            sources,
+          },
+          revenue: result,
+        }),
+      ]),
+    },
+  });
+}
 
 describe(`Given the ${usePublicationRevenue.name} hook`, () => {
-  const mockRevenue = mockRevenueFragment();
-  const publicationId = '0x00_0x00';
+  const revenue = mockPublicationRevenueFragment();
+  const publicationId = mockPublicationId();
 
-  describe('when the query returns data successfully', () => {
-    it('should settle with the publication revenue details', async () => {
-      const { result } = renderHookWithMocks(
-        () =>
-          usePublicationRevenue({
-            publicationId,
-          }),
-        {
-          mocks: {
-            apolloClient: createMockApolloClientWithMultipleResponses([
-              createPublicationRevenueQueryMockedResponse({
-                variables: { request: { publicationId: publicationId } },
-                revenue: mockRevenue,
-              }),
-            ]),
-          },
-        },
-      );
-
-      await waitFor(() => expect(result.current.loading).toBeFalsy());
-
-      expect(result.current.data).toEqual(mockRevenue.revenue);
-    });
+  beforeAll(() => {
+    simulateAppReady();
   });
 
-  describe('when the query returns null', () => {
-    it(`should settle with a ${NotFoundError.name} state`, async () => {
-      const { result } = renderHookWithMocks(
-        () =>
-          usePublicationRevenue({
-            publicationId,
-          }),
-        {
-          mocks: {
-            apolloClient: createMockApolloClientWithMultipleResponses([
-              createPublicationRevenueQueryMockedResponse({
-                variables: { request: { publicationId: publicationId } },
-                revenue: null,
-              }),
-            ]),
-          },
-        },
-      );
+  describe.each([
+    {
+      description: 'when NO Active Profile is set',
+      activeProfileValue: null,
+    },
+    {
+      description: 'when an Active Profile is set',
+      activeProfileValue: mockProfile(),
+    },
+  ])('$description', ({ activeProfileValue }) => {
+    beforeAll(() => {
+      activeProfileIdentifierVar(activeProfileValue);
+    });
+
+    it('should settle with the publication revenue details', async () => {
+      const { result } = setupTestScenario({
+        observerId: activeProfileValue?.id,
+        expectedObserverId: activeProfileValue?.id,
+        publicationId,
+        result: revenue,
+      });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(revenue);
+    });
 
+    it('should allow to specify the "observerId" on a per-call basis', async () => {
+      const observerId = mockProfileId();
+
+      const { result } = setupTestScenario({
+        observerId: observerId,
+        expectedObserverId: observerId,
+        publicationId,
+        result: revenue,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(revenue);
+    });
+
+    it(`should settle with a ${NotFoundError.name} if not found`, async () => {
+      const { result } = setupTestScenario({
+        publicationId,
+        expectedObserverId: activeProfileValue?.id,
+        result: null,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.error).toBeInstanceOf(NotFoundError);
     });
   });

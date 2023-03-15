@@ -23,19 +23,18 @@ fragment PublicationRevenue on PublicationRevenue {
     }
   }
 
-  ...Revenue
-}
-
-fragment Revenue on PublicationRevenue {
-  __typename
   revenue {
     ...RevenueAggregate
   }
 }
 
-query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
-  result: publicationRevenue(request: $request) {
-    ...Revenue
+query PublicationRevenue(
+  $publicationId: InternalPublicationId!
+  $observerId: ProfileId
+  $sources: [Sources!]!
+) {
+  result: publicationRevenue(request: { publicationId: $publicationId }) {
+    ...PublicationRevenue
   }
 }
 

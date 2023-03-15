@@ -1,39 +1,30 @@
-import { usePublication, usePublicationRevenue } from '@lens-protocol/react';
+import { usePublicationRevenue } from '@lens-protocol/react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { PublicationCard } from '../publications/components/PublicationCard';
-import { RevenueCard } from './components/RevenueCard';
+import { PublicationRevenueCard } from './components/PublicationRevenueCard';
 
 const publicationId = '0x4f90-0x02';
 
 export function UsePublicationRevenue() {
   const {
     data: publicationRevenue,
-    error: revenueError,
-    loading: publicationRevenueLoading,
+    error,
+    loading,
   } = usePublicationRevenue({
     publicationId,
   });
-  const {
-    data: publication,
-    error: publicationError,
-    loading: publicationLoading,
-  } = usePublication({ publicationId });
 
-  if (publicationRevenueLoading || publicationLoading) return <Loading />;
+  if (loading) return <Loading />;
 
-  if (revenueError) return <ErrorMessage error={revenueError} />;
-  if (publicationError) return <ErrorMessage error={publicationError} />;
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>
       <h1>
         <code>usePublicationRevenue</code>
       </h1>
-      <PublicationCard publication={publication} />
-      <h2>Revenue</h2>
-      <RevenueCard revenue={publicationRevenue} />
+      <PublicationRevenueCard publicationRevenue={publicationRevenue} />
     </div>
   );
 }

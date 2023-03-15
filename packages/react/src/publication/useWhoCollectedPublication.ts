@@ -1,28 +1,33 @@
 import { useWhoCollectedPublicationQuery, WalletFragment } from '@lens-protocol/api-bindings';
+import { PublicationId } from '@lens-protocol/domain/entities';
 
+import {
+  SubjectiveArgs,
+  useActiveProfileAsDefaultObserver,
+  useConfigSourcesVariable,
+  useLensApolloClient,
+} from '../helpers/arguments';
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
-import { useSharedDependencies } from '../shared';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseWhoCollectedPublicationArgs = PaginatedArgs<{
-  publicationId: string;
-  observerId?: string;
-}>;
+export type UseWhoCollectedPublicationArgs = PaginatedArgs<
+  SubjectiveArgs<{
+    publicationId: PublicationId;
+  }>
+>;
 
-export function useWhoCollectedPublication(
-  args: UseWhoCollectedPublicationArgs,
-): PaginatedReadResult<WalletFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-
+export function useWhoCollectedPublication({
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
+  observerId,
+  publicationId,
+}: UseWhoCollectedPublicationArgs): PaginatedReadResult<WalletFragment[]> {
   return usePaginatedReadResult(
-    useWhoCollectedPublicationQuery({
-      variables: {
-        limit: args.limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
-        publicationId: args.publicationId,
-        observerId: args.observerId,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useWhoCollectedPublicationQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useConfigSourcesVariable({ limit, publicationId, observerId }),
+        }),
+      ),
+    ),
   );
 }
