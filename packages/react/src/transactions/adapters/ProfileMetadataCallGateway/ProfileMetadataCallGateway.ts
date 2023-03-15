@@ -12,7 +12,6 @@ import {
   ProfileFragment,
   CreatePublicSetProfileMetadataUriRequest,
   LensApolloClient,
-  Sources,
   ProfileMetadata,
 } from '@lens-protocol/api-bindings';
 import {
