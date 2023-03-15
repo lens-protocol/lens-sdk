@@ -1,5 +1,4 @@
 import { ContractType } from '@lens-protocol/api-bindings';
-import type { ConditionType } from '@lit-protocol/constants';
 
 export enum AccessConditionType {
   And = 'and',
@@ -69,7 +68,7 @@ export function isSupportedChainId(chainId: number): chainId is SupportedChainId
 }
 
 export type LitAccessCondition = {
-  conditionType: ConditionType;
+  conditionType: LitConditionType;
   contractAddress: string;
   standardContractType: ContractType | '';
   chain: SupportedChains;

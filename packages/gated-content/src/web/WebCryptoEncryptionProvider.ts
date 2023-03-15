@@ -1,6 +1,6 @@
 import { SYMM_KEY_ALGO_PARAMS } from '@lit-protocol/constants';
 import { encryptWithSymmetricKey, decryptWithSymmetricKey } from '@lit-protocol/crypto';
-import { blobToBase64String, base64StringToBlob } from '@lit-protocol/lit-node-client';
+import { blobToBase64String, base64StringToBlob } from '@lit-protocol/node-client';
 
 import { ICipher, IEncryptionProvider } from '../IEncryptionProvider';
 
