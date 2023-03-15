@@ -4226,7 +4226,7 @@ export type CreateCommentViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreateCommentViaDispatcherMutation = {
-  result: RelayErrorFragment | RelayerResultFragment;
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
 };
 
 export type CommentWithFirstCommentFragment = {
@@ -4754,7 +4754,7 @@ export type CreateMirrorViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreateMirrorViaDispatcherMutation = {
-  result: RelayErrorFragment | RelayerResultFragment;
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
 };
 
 export type ModuleInfoFragment = { __typename: 'ModuleInfo'; name: string; type: string };
@@ -4888,7 +4888,7 @@ export type CreatePostViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreatePostViaDispatcherMutation = {
-  result: RelayErrorFragment | RelayerResultFragment;
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
 };
 
 export type CreateSetDispatcherTypedDataMutationVariables = Exact<{
@@ -5031,7 +5031,9 @@ export type CreateProfileMutationVariables = Exact<{
   request: CreateProfileRequest;
 }>;
 
-export type CreateProfileMutation = { result: RelayErrorFragment | RelayerResultFragment };
+export type CreateProfileMutation = {
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
+};
 
 export type MutualFollowersProfilesQueryVariables = Exact<{
   observerId: Scalars['ProfileId'];
@@ -5090,9 +5092,7 @@ export type CreateSetProfileImageUriViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreateSetProfileImageUriViaDispatcherMutation = {
-  result:
-    | ({ __typename: 'RelayError' } & RelayErrorFragment)
-    | ({ __typename: 'RelayerResult' } & RelayerResultFragment);
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
 };
 
 export type CreateSetProfileMetadataTypedDataMutationVariables = Exact<{
@@ -5117,9 +5117,7 @@ export type CreateSetProfileMetadataViaDispatcherMutationVariables = Exact<{
 }>;
 
 export type CreateSetProfileMetadataViaDispatcherMutation = {
-  result:
-    | ({ __typename: 'RelayError' } & RelayErrorFragment)
-    | ({ __typename: 'RelayerResult' } & RelayerResultFragment);
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
 };
 
 export type FollowerFragment = { __typename: 'Follower'; wallet: WalletFragment };
@@ -5406,6 +5404,14 @@ export type RelayerResultFragment = { __typename: 'RelayerResult'; txHash: strin
 
 export type RelayErrorFragment = { __typename: 'RelayError'; reason: RelayErrorReasons };
 
+type RelayResult_RelayError_Fragment = RelayErrorFragment;
+
+type RelayResult_RelayerResult_Fragment = RelayerResultFragment;
+
+export type RelayResultFragment =
+  | RelayResult_RelayError_Fragment
+  | RelayResult_RelayerResult_Fragment;
+
 export type TransactionIndexedResultFragment = {
   __typename: 'TransactionIndexedResult';
   indexed: boolean;
@@ -5429,7 +5435,9 @@ export type BroadcastProtocolCallMutationVariables = Exact<{
   request: BroadcastRequest;
 }>;
 
-export type BroadcastProtocolCallMutation = { result: RelayErrorFragment | RelayerResultFragment };
+export type BroadcastProtocolCallMutation = {
+  result: RelayResult_RelayError_Fragment | RelayResult_RelayerResult_Fragment;
+};
 
 export type CreateUnfollowTypedDataMutationVariables = Exact<{
   request: UnfollowRequest;
@@ -6486,6 +6494,18 @@ export const RelayErrorFragmentDoc = gql`
     reason
   }
 `;
+export const RelayResultFragmentDoc = gql`
+  fragment RelayResult on RelayResult {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+  ${RelayerResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
 export const TransactionIndexedResultFragmentDoc = gql`
   fragment TransactionIndexedResult on TransactionIndexedResult {
     __typename
@@ -6795,16 +6815,10 @@ export type CreateCommentTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreateCommentViaDispatcherDocument = gql`
   mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
     result: createCommentViaDispatcher(request: $request) {
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreateCommentViaDispatcherMutationFn = Apollo.MutationFunction<
   CreateCommentViaDispatcherMutation,
@@ -7254,16 +7268,10 @@ export type CreateMirrorTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreateMirrorViaDispatcherDocument = gql`
   mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
     result: createMirrorViaDispatcher(request: $request) {
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreateMirrorViaDispatcherMutationFn = Apollo.MutationFunction<
   CreateMirrorViaDispatcherMutation,
@@ -7595,16 +7603,10 @@ export type CreatePostTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreatePostViaDispatcherDocument = gql`
   mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
     result: createPostViaDispatcher(request: $request) {
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreatePostViaDispatcherMutationFn = Apollo.MutationFunction<
   CreatePostViaDispatcherMutation,
@@ -7901,16 +7903,10 @@ export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
 export const CreateProfileDocument = gql`
   mutation CreateProfile($request: CreateProfileRequest!) {
     result: createProfile(request: $request) {
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreateProfileMutationFn = Apollo.MutationFunction<
   CreateProfileMutation,
@@ -8185,17 +8181,10 @@ export type CreateSetProfileImageUriTypedDataMutationOptions = Apollo.BaseMutati
 export const CreateSetProfileImageUriViaDispatcherDocument = gql`
   mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
     result: createSetProfileImageURIViaDispatcher(request: $request) {
-      __typename
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreateSetProfileImageUriViaDispatcherMutationFn = Apollo.MutationFunction<
   CreateSetProfileImageUriViaDispatcherMutation,
@@ -8320,17 +8309,10 @@ export const CreateSetProfileMetadataViaDispatcherDocument = gql`
     $request: CreatePublicSetProfileMetadataURIRequest!
   ) {
     result: createSetProfileMetadataViaDispatcher(request: $request) {
-      __typename
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type CreateSetProfileMetadataViaDispatcherMutationFn = Apollo.MutationFunction<
   CreateSetProfileMetadataViaDispatcherMutation,
@@ -9861,16 +9843,10 @@ export type HasTxHashBeenIndexedQueryResult = Apollo.QueryResult<
 export const BroadcastProtocolCallDocument = gql`
   mutation BroadcastProtocolCall($request: BroadcastRequest!) {
     result: broadcast(request: $request) {
-      ... on RelayerResult {
-        ...RelayerResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
+      ...RelayResult
     }
   }
-  ${RelayerResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${RelayResultFragmentDoc}
 `;
 export type BroadcastProtocolCallMutationFn = Apollo.MutationFunction<
   BroadcastProtocolCallMutation,

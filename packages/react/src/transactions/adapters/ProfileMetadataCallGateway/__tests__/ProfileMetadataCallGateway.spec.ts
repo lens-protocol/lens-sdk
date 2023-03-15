@@ -30,7 +30,6 @@ function setupTestScenario({
   const getProfilesByIdQueryMockedResponse = mockGetProfileQueryMockedResponse({
     variables: {
       request: { profileId: existingProfile.id },
-      observerId: existingProfile.id,
       sources: [],
     },
     profile: existingProfile,

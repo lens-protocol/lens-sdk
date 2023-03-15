@@ -163,13 +163,7 @@ query GetAllProfilesByOwnerAddress(
 
 mutation CreateProfile($request: CreateProfileRequest!) {
   result: createProfile(request: $request) {
-    ... on RelayerResult {
-      ...RelayerResult
-    }
-
-    ... on RelayError {
-      ...RelayError
-    }
+    ...RelayResult
   }
 }
 
@@ -260,15 +254,7 @@ mutation CreateSetProfileImageURITypedData(
 
 mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
   result: createSetProfileImageURIViaDispatcher(request: $request) {
-    __typename
-
-    ... on RelayerResult {
-      ...RelayerResult
-    }
-
-    ... on RelayError {
-      ...RelayError
-    }
+    ...RelayResult
   }
 }
 
@@ -306,14 +292,6 @@ mutation CreateSetProfileMetadataViaDispatcher(
   $request: CreatePublicSetProfileMetadataURIRequest!
 ) {
   result: createSetProfileMetadataViaDispatcher(request: $request) {
-    __typename
-
-    ... on RelayerResult {
-      ...RelayerResult
-    }
-
-    ... on RelayError {
-      ...RelayError
-    }
+    ...RelayResult
   }
 }
