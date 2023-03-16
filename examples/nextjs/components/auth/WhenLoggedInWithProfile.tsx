@@ -3,7 +3,7 @@ import {
   useActiveProfile,
   useActiveWallet,
   WalletData,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 import { ReactNode } from 'react';
 
 type LoggedInConfig = {

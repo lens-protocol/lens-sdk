@@ -10,7 +10,7 @@ import {
 } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
-import { WhenLoggedInWithProfile } from '../components/auth/auth';
+import { WhenLoggedInWithProfile } from '../components/auth/WhenLoggedInWithProfile';
 import { upload } from '../upload';
 import { never } from '../utils';
 import { PublicationCard } from './components/PublicationCard';

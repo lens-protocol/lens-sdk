@@ -1,4 +1,4 @@
-import { useWalletLogin, useWalletLogout } from '@lens-protocol/react';
+import { useWalletLogin, useWalletLogout } from '@lens-protocol/react-web';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';

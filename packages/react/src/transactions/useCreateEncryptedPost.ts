@@ -13,7 +13,7 @@ import {
 import { failure, invariant, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { EncryptionConfig } from '../config';
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
 import { useWalletLogin, useActiveWalletSigner } from '../wallet';
 import { CreatePostController } from './adapters/CreatePostController';

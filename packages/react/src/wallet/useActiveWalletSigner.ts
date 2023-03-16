@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { ReadResult } from '../helpers';
+import { ReadResult } from '../helpers/reads';
 import { useSharedDependencies } from '../shared';
 import { RequiredSigner } from './adapters/ConcreteWallet';
 import { useActiveWallet } from './useActiveWallet';

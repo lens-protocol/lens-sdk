@@ -8,7 +8,7 @@ import { failure, invariant, success } from '@lens-protocol/shared-kernel';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { EncryptionConfig } from '../config';
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
 import { createGatedClient } from '../transactions/infrastructure/createGatedClient';
 import { useActiveWalletSigner } from '../wallet';

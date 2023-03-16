@@ -6,7 +6,11 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), nodePolyfills({ protocolImports: true }), visualizer() as PluginOption],
+  plugins: [
+    react(),
+    nodePolyfills({ protocolImports: true }),
+    visualizer({ open: true }) as PluginOption,
+  ],
 
   build: {
     target: 'esnext',
@@ -14,7 +18,7 @@ export default defineConfig({
 
     rollupOptions: {
       treeshake: {
-        preset: 'safest',
+        preset: 'recommended',
       },
     },
   },

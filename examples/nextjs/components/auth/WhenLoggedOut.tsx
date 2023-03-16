@@ -1,4 +1,4 @@
-import { useActiveWallet } from '@lens-protocol/react';
+import { useActiveWallet } from '@lens-protocol/react-web';
 import { ReactNode } from 'react';
 
 export type WhenLoggedOutProps = {
