@@ -46,7 +46,6 @@ import {
   RelayErrorFragment,
   RelayErrorReasons,
   RevenueAggregateFragment,
-  RootCriterionFragment,
   ScalarOperator,
   WalletFragment,
   WhoReactedResultFragment,
