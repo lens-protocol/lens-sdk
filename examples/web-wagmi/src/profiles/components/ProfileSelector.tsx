@@ -1,4 +1,4 @@
-import { useExploreProfiles, ProfileFragment } from '@lens-protocol/react';
+import { useExploreProfiles, ProfileFragment } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { invariant } from '../../utils';

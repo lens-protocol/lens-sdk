@@ -1,4 +1,4 @@
-import { IBindings, RequiredSigner } from '@lens-protocol/react';
+import { IBindings, RequiredSigner } from '@lens-protocol/react-web';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 import { fetchSigner, getProvider } from 'wagmi/actions';

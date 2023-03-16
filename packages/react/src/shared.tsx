@@ -12,12 +12,12 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ActiveWallet, TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
-import { IStorage } from '@lens-protocol/storage';
+import { IStorage, IStorageProvider } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
 import { ErrorHandler } from './ErrorHandler';
-import { LensConfig } from './config';
+import { EnvironmentConfig, IBindings, LensConfig } from './config';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
@@ -74,7 +74,9 @@ export type SharedDependencies = {
   activeProfilePresenter: ActiveProfilePresenter;
   activeWallet: ActiveWallet;
   apolloClient: LensApolloClient;
+  bindings: IBindings;
   authApi: AuthApi;
+  environment: EnvironmentConfig;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   followPolicyCallGateway: FollowPolicyCallGateway;
@@ -87,6 +89,7 @@ export type SharedDependencies = {
   providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
   sources: Sources;
+  storageProvider: IStorageProvider;
   tokenAvailability: TokenAvailability;
   transactionFactory: TransactionFactory;
   transactionGateway: PendingTransactionGateway<SupportedTransactionRequest>;
@@ -196,8 +199,10 @@ export function createSharedDependencies(
     activeWallet,
     apolloClient,
     authApi,
+    bindings: config.bindings,
     credentialsFactory,
     credentialsGateway,
+    environment: config.environment,
     followPolicyCallGateway,
     logger,
     notificationStorage,
@@ -207,6 +212,7 @@ export function createSharedDependencies(
     protocolCallRelayer,
     publicationCacheManager,
     sources,
+    storageProvider: config.storage,
     tokenAvailability,
     transactionFactory,
     transactionGateway,

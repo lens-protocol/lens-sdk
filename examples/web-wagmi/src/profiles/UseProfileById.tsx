@@ -1,4 +1,4 @@
-import { ProfileFragment, useProfile } from '@lens-protocol/react';
+import { ProfileFragment, useProfile } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';

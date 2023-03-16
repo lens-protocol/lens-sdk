@@ -1,4 +1,4 @@
-import { FeedEventItemType, isPostPublication, useFeed } from '@lens-protocol/react';
+import { FeedEventItemType, isPostPublication, useFeed } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -14,7 +14,7 @@ const allFeedEventTypes = [
   FeedEventItemType.CollectPost,
 ];
 
-export function Feed() {
+export function UseFeed() {
   const [restrictEventTypesTo, setRestrictEventTypesTo] = useState<FeedEventItemType[]>([
     FeedEventItemType.Post,
   ]);

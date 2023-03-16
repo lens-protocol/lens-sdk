@@ -4,7 +4,7 @@ import {
   useWalletLogin,
   useWalletLogout,
   WalletData,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 import { useState } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';

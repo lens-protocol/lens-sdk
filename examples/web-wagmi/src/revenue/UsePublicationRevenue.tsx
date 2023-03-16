@@ -1,4 +1,4 @@
-import { usePublicationRevenue } from '@lens-protocol/react';
+import { usePublicationRevenue } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';

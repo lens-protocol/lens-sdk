@@ -13,6 +13,7 @@ export * from './experimental';
 
 export type { ReadResult, PaginatedReadResult } from './helpers/reads';
 export { isValidHandle } from '@lens-protocol/api-bindings';
+
 export type {
   StorageSubscription,
   StorageProviderSubscriber,

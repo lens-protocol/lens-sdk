@@ -23,12 +23,17 @@ const publicationHooks = [
   },
   {
     label: 'useCreatePost',
-    description: `Create a publication post.`,
+    description: `Create a post.`,
     path: '/publications/useCreatePost',
   },
   {
+    label: 'useCreateEncryptedPost',
+    description: `Create an encrypted post.`,
+    path: '/publications/useCreateEncryptedPost',
+  },
+  {
     label: 'useCreateComment',
-    description: `Create a publication comment.`,
+    description: `Create a comment.`,
     path: '/publications/useCreateComment',
   },
   {

@@ -71,7 +71,10 @@ export class UpdateProfileMetadataResponder
               original: {
                 __typename: 'Media',
                 url: request.coverPicture,
+                // we don't know the following (yet), not important for now
                 height: null,
+                altTag: null,
+                cover: null,
                 mimeType: null,
               },
             }

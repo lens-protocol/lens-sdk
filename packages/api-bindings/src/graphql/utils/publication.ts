@@ -4,7 +4,7 @@ import {
   CollectRequest,
   CollectType,
 } from '@lens-protocol/domain/use-cases/publications';
-import { DateUtils, never, Overwrite } from '@lens-protocol/shared-kernel';
+import { DateUtils, never, Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 
 import { CollectPolicy, CollectState } from '../CollectPolicy';
 import {
@@ -68,6 +68,31 @@ export function getApiReactionType(reaction: ReactionType): ReactionTypes {
 export type AnyPublicationFragment = CommentFragment | MirrorFragment | PostFragment;
 
 export type ContentPublicationFragment = CommentFragment | PostFragment;
+
+type Gated<T extends ContentPublicationFragment> = Overwrite<
+  T,
+  {
+    isGated: true;
+    metadata: Overwrite<
+      T['metadata'],
+      {
+        __encryptionParams: NonNullable<T['metadata']['__encryptionParams']>;
+      }
+    >;
+  }
+>;
+
+export type GatedCommentFragment = Prettify<Gated<CommentFragment>>;
+
+export type GatedPostFragment = Prettify<Gated<PostFragment>>;
+
+export type GatedPublicationFragment = GatedCommentFragment | GatedPostFragment;
+
+export function isGatedPublication(
+  publication: ContentPublicationFragment,
+): publication is GatedPublicationFragment {
+  return publication.isGated;
+}
 
 export function isContentPublication(
   publication: AnyPublicationFragment,

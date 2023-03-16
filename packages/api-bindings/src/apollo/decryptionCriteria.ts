@@ -14,7 +14,6 @@ import {
   OrCriterion,
   ProfileId,
   ProfileOwnershipCriterion,
-  PublicationId,
   SimpleCriterion,
 } from '@lens-protocol/domain/entities';
 import {
@@ -25,6 +24,7 @@ import {
   hasAtLeastOne,
   hasTwoOrMore,
   invariant,
+  isNonNullable,
   never,
   TwoAtLeastArray,
 } from '@lens-protocol/shared-kernel';
@@ -44,13 +44,13 @@ import {
   OrConditionOutput,
   Post,
   ProfileOwnershipOutput,
-  RootCriterionFragment,
+  AnyConditionFragment,
   ScalarOperator,
 } from '../graphql';
 import { FieldReadFunction } from './TypePolicy';
 
 function allButPublicationAuthor(authorId: ProfileId) {
-  return (criterion: RootCriterionFragment): boolean => {
+  return (criterion: AnyConditionFragment): boolean => {
     return criterion.profile?.profileId !== authorId;
   };
 }
@@ -100,8 +100,8 @@ export function erc20Amount({ from }: { from: Erc20OwnershipFragment }) {
     chainType: ChainType.POLYGON, // temporary while BE works on returning an Erc20Amount node
     address: from.contractAddress,
     decimals: from.decimals,
-    name: 'Unspecified',
-    symbol: 'UNSPECIFIED',
+    name: from.name,
+    symbol: from.symbol,
   });
   return Amount.erc20(asset, from.amount);
 }
@@ -139,18 +139,12 @@ function followProfile(condition: FollowConditionOutput): FollowProfileCriterion
   };
 }
 
-type ContextBag = {
-  publicationId: PublicationId;
-};
-
 function collectPublication(
   condition: CollectConditionOutput,
-  { publicationId }: ContextBag,
 ): CollectPublicationCriterion | CollectThisPublicationCriterion {
   if (condition.thisPublication) {
     return {
       type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
-      publicationId,
     };
   }
   return {
@@ -159,20 +153,13 @@ function collectPublication(
   };
 }
 
-function isNonNullable<T>(value: T): value is NonNullable<T> {
-  return value !== null && value !== undefined;
-}
-
 function sanitize({ __typename, ...accessCondition }: AccessConditionOutput) {
   const conditions = Object.values(accessCondition).filter(isNonNullable);
   assertJustOne(conditions);
   return conditions[0];
 }
 
-function resolveSimpleCriterion(
-  accessCondition: AccessConditionOutput,
-  context: ContextBag,
-): SimpleCriterion | null {
+function resolveSimpleCriterion(accessCondition: AccessConditionOutput): SimpleCriterion | null {
   const condition = sanitize(accessCondition);
 
   switch (condition.__typename) {
@@ -187,17 +174,16 @@ function resolveSimpleCriterion(
     case 'FollowConditionOutput':
       return followProfile(condition);
     case 'CollectConditionOutput':
-      return collectPublication(condition, context);
+      return collectPublication(condition);
   }
   return null;
 }
 
-function andCondition(
-  { criteria }: AndConditionOutput,
-  context: ContextBag,
-): AndCriterion<TwoAtLeastArray<SimpleCriterion>> | null {
+function andCondition({
+  criteria,
+}: AndConditionOutput): AndCriterion<TwoAtLeastArray<SimpleCriterion>> | null {
   const conditions = criteria
-    .map((condition) => resolveSimpleCriterion(condition, context))
+    .map((condition) => resolveSimpleCriterion(condition))
     .filter(isNonNullable);
 
   if (!hasTwoOrMore(conditions)) return null;
@@ -208,12 +194,11 @@ function andCondition(
   };
 }
 
-function orCondition(
-  { criteria }: OrConditionOutput,
-  context: ContextBag,
-): OrCriterion<TwoAtLeastArray<SimpleCriterion>> | null {
+function orCondition({
+  criteria,
+}: OrConditionOutput): OrCriterion<TwoAtLeastArray<SimpleCriterion>> | null {
   const conditions = criteria
-    .map((condition) => resolveSimpleCriterion(condition, context))
+    .map((condition) => resolveSimpleCriterion(condition))
     .filter(isNonNullable);
 
   if (!hasTwoOrMore(conditions)) return null;
@@ -224,20 +209,17 @@ function orCondition(
   };
 }
 
-function resolveRootCriterion(
-  accessCondition: AccessConditionOutput,
-  context: ContextBag,
-): Maybe<AnyCriterion> {
+function resolveRootCriterion(accessCondition: AccessConditionOutput): Maybe<AnyCriterion> {
   const condition = sanitize(accessCondition);
 
   switch (condition.__typename) {
     case 'AndConditionOutput':
-      return andCondition(condition, context);
+      return andCondition(condition);
     case 'OrConditionOutput':
-      return orCondition(condition, context);
+      return orCondition(condition);
   }
 
-  return resolveSimpleCriterion(accessCondition, context);
+  return resolveSimpleCriterion(accessCondition);
 }
 
 export const decryptionCriteria: FieldReadFunction<Maybe<DecryptionCriteria>, Comment | Post> = (
@@ -266,5 +248,5 @@ export const decryptionCriteria: FieldReadFunction<Maybe<DecryptionCriteria>, Co
 
   assertJustOne(criteria);
 
-  return resolveRootCriterion(criteria[0], { publicationId: readField('id') ?? never() });
+  return resolveRootCriterion(criteria[0]);
 };

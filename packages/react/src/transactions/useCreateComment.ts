@@ -11,12 +11,12 @@ import {
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
-import { useMemo } from 'react';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { useSharedDependencies } from '../shared';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
-import { useCreateCommentController } from './adapters/useCreateCommentController';
+import { CreateCommentController } from './adapters/useCreateCommentController';
 import { PublicationMetadataUploader } from './infrastructure/PublicationMetadataUploader';
 
 export type UseCreateCommentArg = {
@@ -25,7 +25,10 @@ export type UseCreateCommentArg = {
 };
 
 export type CreateCommentArgs = Prettify<
-  Omit<CreateCommentRequest, 'kind' | 'delegate' | 'collect' | 'profileId' | 'reference'> &
+  Omit<
+    CreateCommentRequest,
+    'kind' | 'delegate' | 'collect' | 'profileId' | 'reference' | 'decryptionCriteria'
+  > &
     Partial<Pick<CreateCommentRequest, 'collect' | 'reference'>>
 >;
 
@@ -39,8 +42,14 @@ export function useCreateComment({
   publisher,
   upload,
 }: UseCreateCommentArg): CreateCommentOperation {
-  const uploader = useMemo(() => new PublicationMetadataUploader(upload), [upload]);
-  const createComment = useCreateCommentController({ uploader });
+  const {
+    activeWallet,
+    apolloClient,
+    protocolCallRelayer,
+    transactionFactory,
+    transactionGateway,
+    transactionQueue,
+  } = useSharedDependencies();
 
   return useOperation(
     async ({
@@ -51,8 +60,20 @@ export function useCreateComment({
       void,
       PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
     > => {
+      const uploader = new PublicationMetadataUploader(upload);
+
+      const controller = new CreateCommentController<CreateCommentRequest>({
+        activeWallet,
+        apolloClient,
+        protocolCallRelayer,
+        transactionFactory,
+        transactionGateway,
+        transactionQueue,
+        uploader,
+      });
+
       try {
-        return await createComment({
+        return await controller.execute({
           kind: TransactionKind.CREATE_COMMENT,
           delegate: publisher.dispatcher !== null,
           collect,

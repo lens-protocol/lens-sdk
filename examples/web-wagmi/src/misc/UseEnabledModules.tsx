@@ -1,4 +1,4 @@
-import { useEnabledModules } from '@lens-protocol/react';
+import { useEnabledModules } from '@lens-protocol/react-web';
 
 import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';

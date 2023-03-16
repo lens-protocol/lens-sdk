@@ -1,4 +1,5 @@
 export * from './useActiveWallet';
+export * from './useActiveWalletSigner';
 export * from './useWalletLogin';
 export * from './useWalletLogout';
 

@@ -6,7 +6,7 @@ import {
   NewMentionNotificationFragment,
   NewMirrorNotificationFragment,
   NewReactionNotificationFragment,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 import { ReactNode } from 'react';
 
 function NotificationItemWrapper({ children }: { children: ReactNode }) {

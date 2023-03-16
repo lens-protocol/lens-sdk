@@ -39,6 +39,8 @@ function pendingPostFragment({
     media:
       request.media?.map((media) => ({
         __typename: 'Media',
+        altTag: media.altTag ?? null,
+        cover: media.cover ?? null,
         mimeType: media.mimeType,
         url: media.url,
       })) ?? null,

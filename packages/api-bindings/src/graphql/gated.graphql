@@ -13,6 +13,8 @@ fragment Erc20Ownership on Erc20OwnershipOutput {
   condition
   contractAddress
   decimals
+  name
+  symbol
 }
 
 fragment AddressOwnership on EoaOwnershipOutput {
@@ -36,7 +38,7 @@ fragment CollectCondition on CollectConditionOutput {
   thisPublication
 }
 
-fragment LeafCriterion on AccessConditionOutput {
+fragment LeafCondition on AccessConditionOutput {
   __typename
   nft {
     ...NftOwnership
@@ -63,63 +65,79 @@ fragment LeafCriterion on AccessConditionOutput {
   }
 }
 
-fragment OrCriterion on OrConditionOutput {
+fragment OrCondition on OrConditionOutput {
   __typename
   criteria {
-    ...LeafCriterion
+    ...LeafCondition
   }
 }
-fragment AndCriterion on AndConditionOutput {
+fragment AndCondition on AndConditionOutput {
   __typename
   criteria {
-    ...LeafCriterion
+    ...LeafCondition
   }
 }
 
-fragment RootCriterion on AccessConditionOutput {
+fragment AnyCondition on AccessConditionOutput {
   __typename
-  ...LeafCriterion
+  ...LeafCondition
 
   or {
-    ...OrCriterion
+    ...OrCondition
   }
 
   and {
-    ...AndCriterion
+    ...AndCondition
   }
 }
 
-fragment AccessCondition on AccessConditionOutput {
+fragment RootCondition on AccessConditionOutput {
   __typename
   or {
     criteria {
-      ...RootCriterion
+      ...AnyCondition
     }
   }
 }
 
 fragment EncryptedMedia on EncryptedMedia {
   __typename
-  url
+  altTag
+  cover
   mimeType
+  url
+}
+
+fragment EncryptedMediaSet on EncryptedMediaSet {
+  __typename
+  original {
+    ...EncryptedMedia
+  }
+}
+
+fragment EncryptedFields on EncryptedFieldsOutput {
+  __typename
+  animation_url
+  content
+  external_url
+  image
+  media {
+    original {
+      ...EncryptedMedia
+    }
+  }
 }
 
 fragment EncryptionParams on EncryptionParamsOutput {
   __typename
   accessCondition {
-    ...AccessCondition
+    ...RootCondition
   }
   encryptionProvider
   encryptedFields {
-    __typename
-    animation_url
-    content
-    external_url
-    image
-    media {
-      original {
-        ...EncryptedMedia
-      }
-    }
+    ...EncryptedFields
+  }
+  providerSpecificParams {
+    encryptionKey
   }
 }

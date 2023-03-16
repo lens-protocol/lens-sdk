@@ -1,3 +1,4 @@
+import { ProfileMetadata } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   UserRejectedError,
@@ -10,7 +11,8 @@ import {
 import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
-import { ProfileMetadataUploader } from '../infrastructure/ProfileMetadataUploader';
+import { MetadataUploaderErrorMiddleware } from '../infrastructure/MetadataUploaderErrorMiddleware';
+import { IMetadataUploader } from './IMetadataUploader';
 import { MetadataUploadHandler } from './MetadataUploadHandler';
 import { ProfileMetadataCallGateway } from './ProfileMetadataCallGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
@@ -32,7 +34,9 @@ export function useUpdateProfileDetailsController({
   } = useSharedDependencies();
 
   return async (request: UpdateProfileDetailsRequest) => {
-    const uploader = new ProfileMetadataUploader(upload);
+    const uploader: IMetadataUploader<ProfileMetadata> = new MetadataUploaderErrorMiddleware(
+      upload,
+    );
     const gateway = new ProfileMetadataCallGateway(apolloClient, transactionFactory, uploader);
 
     const presenter = new PromiseResultPresenter<

@@ -10,6 +10,7 @@ export * from './useHidePublication';
 export * from './useWhoCollectedPublication';
 export * from './useWhoMirroredPublication';
 export * from './useProfilePublicationsForSale';
+export * from './useEncryptedPublication';
 export * from './filters';
 
 export {

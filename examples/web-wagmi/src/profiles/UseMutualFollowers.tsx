@@ -1,4 +1,4 @@
-import { useMutualFollowers, useProfile, ProfileFragment } from '@lens-protocol/react';
+import { useMutualFollowers, useProfile, ProfileFragment } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';

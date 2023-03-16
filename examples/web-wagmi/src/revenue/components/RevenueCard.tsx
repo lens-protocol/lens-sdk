@@ -1,4 +1,4 @@
-import { RevenueAggregateFragment } from '@lens-protocol/react';
+import { RevenueAggregateFragment } from '@lens-protocol/react-web';
 
 type RevenueCardProps = {
   revenue: RevenueAggregateFragment;

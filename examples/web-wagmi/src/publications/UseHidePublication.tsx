@@ -5,7 +5,7 @@ import {
   usePublications,
   ProfileOwnedByMeFragment,
   AnyPublicationFragment,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 
 import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';

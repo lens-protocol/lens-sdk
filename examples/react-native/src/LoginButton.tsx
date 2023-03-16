@@ -1,6 +1,5 @@
 import React from 'react';
-import {useActiveProfile, useWalletLogout} from '@lens-protocol/react';
-import {useWalletLogin} from '@lens-protocol/react';
+import {useActiveProfile, useWalletLogin, useWalletLogout} from '@lens-protocol/react';
 import {Button, Text, View} from 'react-native';
 
 import {wallet} from './wallet';

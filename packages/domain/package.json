@@ -87,6 +87,20 @@
     "jest-mock-extended": "^3.0.1",
     "jest-when": "^3.5.2"
   },
+  "peerDependenciesMeta": {
+    "@faker-js/faker": {
+      "optional": true
+    },
+    "@jest/globals": {
+      "optional": true
+    },
+    "jest-mock-extended": {
+      "optional": true
+    },
+    "jest-when": {
+      "optional": true
+    }
+  },
   "prettier": "@lens-protocol/prettier-config",
   "babel": {
     "presets": [

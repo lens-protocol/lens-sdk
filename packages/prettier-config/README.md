@@ -20,7 +20,7 @@ $ pnpm add -D prettier
 
 **Edit `package.json`**:
 
-```jsonc
+```json
 {
   // ...
   "prettier": "@lens-protocol/prettier-config"

@@ -1,4 +1,4 @@
-import { useWalletLogin, useWalletLogout } from '@lens-protocol/react';
+import { useWalletLogin, useWalletLogout } from '@lens-protocol/react-web';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
@@ -15,7 +15,11 @@ export function LoginButton({ handle }: { handle?: string }) {
   const { disconnectAsync } = useDisconnect();
 
   const { connectAsync } = useConnect({
-    connector: new InjectedConnector(),
+    connector: new InjectedConnector({
+      options: {
+        shimChainChangedDisconnect: true,
+      },
+    }),
   });
 
   const onLoginClick = async () => {

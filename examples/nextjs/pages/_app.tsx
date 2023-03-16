@@ -1,8 +1,8 @@
 import 'example-shared';
-import { LensConfig, LensProvider, sources, staging, appId } from '@lens-protocol/react';
-import { localStorage } from '@lens-protocol/react/web';
+import { LensConfig, LensProvider, sources, staging, appId } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import type { AppProps } from 'next/app';
+import React from 'react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygonMumbai, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
@@ -22,7 +22,6 @@ const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
   environment: staging,
   sources: [sources.lenster, sources.orb, appId('any-other-app-id')],
-  storage: localStorage(),
 };
 
 export default function App({ Component, pageProps }: AppProps) {

@@ -1,4 +1,4 @@
-import { useComments, usePublication } from '@lens-protocol/react';
+import { useComments, usePublication } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
@@ -45,9 +45,7 @@ export function UsePublication() {
         <code>usePublication</code>
       </h1>
       <PublicationCard publication={publication} />
-      <h3>
-        <code>useComments</code>
-      </h3>
+      <h3>Comments</h3>
 
       <Comments commentsOf={publication.id} />
     </div>

@@ -1,4 +1,4 @@
-import { Amount, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EthereumAddress, Url } from '@lens-protocol/shared-kernel';
 
 import { AudioType, ImageType, VideoType } from './config';
 
@@ -81,6 +81,8 @@ export type SupportedPublicationMediaType =
   | AudioType.WAV;
 
 export type Media = {
-  url: string;
+  altTag?: string;
+  cover?: Url;
+  url: Url;
   mimeType: SupportedPublicationMediaType;
 };

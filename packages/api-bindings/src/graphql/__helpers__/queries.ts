@@ -3,12 +3,6 @@ import { AppId } from '@lens-protocol/domain/entities';
 import { Erc20 } from '@lens-protocol/shared-kernel';
 
 import {
-  AnyPublicationFragment,
-  ContentPublicationFragment,
-  SearchProfilesQuery,
-  SearchPublicationsQuery,
-} from '..';
-import {
   CommentFragment,
   CommentWithFirstCommentFragment,
   CommonPaginatedResultInfoFragment,
@@ -88,7 +82,9 @@ import {
   PublicationByTxHashQueryVariables,
   ProfilesToFollowQueryVariables,
 } from '../generated';
+import { SearchProfilesQuery, SearchPublicationsQuery } from '../index';
 import { Sources } from '../sources';
+import { AnyPublicationFragment, ContentPublicationFragment } from '../utils/publication';
 import {
   mockEnabledModulesFragment,
   mockFeedItemFragment,

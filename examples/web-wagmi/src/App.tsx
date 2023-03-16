@@ -1,5 +1,4 @@
-import { LensConfig, LensProvider, staging } from '@lens-protocol/react';
-import { localStorage } from '@lens-protocol/react/web';
+import { LensConfig, LensProvider, staging } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -16,7 +15,7 @@ import { Header } from './components/header/Header';
 import { DiscoveryPage } from './discovery/DiscoveryPage';
 import { UseExploreProfiles } from './discovery/UseExploreProfiles';
 import { UseExplorePublications } from './discovery/UseExplorePublications';
-import { Feed } from './discovery/UseFeed';
+import { UseFeed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
 import { LoginSpecificProfile } from './misc/LoginSpecificProfile';
@@ -46,6 +45,7 @@ import { PublicationsPage } from './publications/PublicationsPage';
 import { UseCollect } from './publications/UseCollect';
 import { UseCollectedPublications } from './publications/UseCollectedPublications';
 import { UseCreateComment } from './publications/UseCreateComment';
+import { UseCreateEncryptedPost } from './publications/UseCreateEncryptedPost';
 import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
@@ -73,7 +73,6 @@ const client = createClient({
 const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
   environment: staging,
-  storage: localStorage(),
 };
 
 const toastNotification = (error: Error) => toast.error(error.message);
@@ -100,6 +99,10 @@ export function App() {
                   element={<UseCollectedPublications />}
                 />
                 <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
+                <Route
+                  path="/publications/useCreateEncryptedPost"
+                  element={<UseCreateEncryptedPost />}
+                />
                 <Route path="/publications/useCreateComment" element={<UseCreateComment />} />
                 <Route
                   path="/publications/useProfilePublicationsForSale"
@@ -149,7 +152,7 @@ export function App() {
                 <Route path="/profiles/useProfileFollowing" element={<UseProfileFollowing />} />
 
                 <Route path="/discovery" element={<DiscoveryPage />} />
-                <Route path="/discovery/useFeed" element={<Feed />} />
+                <Route path="/discovery/useFeed" element={<UseFeed />} />
                 <Route path="/discovery/useExploreProfiles" element={<UseExploreProfiles />} />
                 <Route
                   path="/discovery/useExplorePublications"

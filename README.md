@@ -30,7 +30,7 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 
 ## Road Map
 
-- [x] Release 0.5.0: Low-level API abstraction client (name to be decided).
+- [x] Release 0.5.0: Low-level API abstraction client.
 - [ ] Release 0.6.0: integration with Lens Gated SDK.
 - [ ] Release 1.0.0: initial stable release.
 - [ ] Release 1.x.0: support for Data Availability posts.

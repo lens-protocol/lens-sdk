@@ -9,10 +9,6 @@
       "module": "./dist/lens-protocol-react.esm.js",
       "default": "./dist/lens-protocol-react.cjs.js"
     },
-    "./web": {
-      "module": "./web/dist/lens-protocol-react-web.esm.js",
-      "default": "./web/dist/lens-protocol-react-web.cjs.js"
-    },
     "./package.json": "./package.json"
   },
   "repository": {
@@ -45,6 +41,7 @@
     "@lens-protocol/api-bindings": "workspace:*",
     "@lens-protocol/blockchain-bindings": "workspace:*",
     "@lens-protocol/domain": "workspace:*",
+    "@lens-protocol/gated-content": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
     "graphql": "^16.6.0",
@@ -96,14 +93,18 @@
   "babel": {
     "presets": [
       "@babel/preset-env",
-      "@babel/preset-react",
+      [
+        "@babel/preset-react",
+        {
+          "runtime": "automatic"
+        }
+      ],
       "@babel/preset-typescript"
     ]
   },
   "preconstruct": {
     "entrypoints": [
-      "index.tsx",
-      "web/index.ts"
+      "index.tsx"
     ],
     "exports": true
   }

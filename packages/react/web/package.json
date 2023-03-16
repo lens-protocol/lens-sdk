@@ -1,4 +1,0 @@
-{
-  "main": "dist/lens-protocol-react-web.cjs.js",
-  "module": "dist/lens-protocol-react-web.esm.js"
-}

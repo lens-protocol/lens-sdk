@@ -1,4 +1,4 @@
-import { Amount, Erc20, EthereumAddress, NonEmptyArray } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import { NftContractType, NftId } from './Nft';
 import { ProfileId } from './Profile';
@@ -36,7 +36,7 @@ export type NftOwnershipCriterion = {
   contractAddress: EthereumAddress;
   chainId: number;
   contractType: NftContractType;
-  tokenIds?: NonEmptyArray<NftId>;
+  tokenIds?: Array<NftId>;
 };
 
 export type Erc20OwnershipCriterion = {
@@ -67,7 +67,6 @@ export type CollectPublicationCriterion = {
 
 export type CollectThisPublicationCriterion = {
   type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION;
-  publicationId: PublicationId;
 };
 
 export type SimpleCriterion =
@@ -90,7 +89,7 @@ export type AndCriterion<T extends AnyCriterion[]> = {
 };
 
 export type AnyCriterion<T extends SimpleCriterion = SimpleCriterion> =
-  | T
+  | SimpleCriterion
   | OrCriterion<T[]>
   | AndCriterion<T[]>;
 

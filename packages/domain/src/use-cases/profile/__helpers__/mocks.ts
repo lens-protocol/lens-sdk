@@ -8,14 +8,8 @@ import {
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import {
-  Transaction,
-  TransactionKind,
-  NftOwnershipChallenge,
-  ProfileId,
-  PublicationId,
-} from '../../../entities';
-import { mockSignature } from '../../../entities/__helpers__/mocks';
+import { Transaction, TransactionKind, NftOwnershipChallenge } from '../../../entities';
+import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
@@ -70,14 +64,6 @@ export function mockIProfileTransactionGateway({
     .mockResolvedValue(result);
 
   return profileTransactionGateway;
-}
-
-export function mockProfileId(): ProfileId {
-  return faker.datatype.uuid();
-}
-
-export function mockPublicationId(): PublicationId {
-  return faker.datatype.uuid();
 }
 
 export function mockProfileIdentifier(overrides?: Partial<ProfileIdentifier>): ProfileIdentifier {

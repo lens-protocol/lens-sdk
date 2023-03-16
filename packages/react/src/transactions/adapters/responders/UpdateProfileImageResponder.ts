@@ -30,7 +30,10 @@ export class UpdateProfileImageResponder
             original: {
               __typename: 'Media',
               url: request.url,
-              mimeType: null, // we don't know (yet), not important for now
+              // we don't know the following (yet), not important for now
+              altTag: null,
+              cover: null,
+              mimeType: null,
             },
           },
         };

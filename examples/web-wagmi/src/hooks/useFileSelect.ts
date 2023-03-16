@@ -1,4 +1,4 @@
-import { ImageType } from '@lens-protocol/react';
+import { ImageType } from '@lens-protocol/react-web';
 import { useRef, useEffect, useCallback } from 'react';
 
 import { never } from '../utils';

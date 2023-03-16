@@ -5,7 +5,7 @@ import {
   usePublication,
   useReaction,
   isMirrorPublication,
-} from '@lens-protocol/react';
+} from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth';

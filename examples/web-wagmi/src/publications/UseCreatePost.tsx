@@ -1,4 +1,4 @@
-import { useFeed, useRecentPosts } from '@lens-protocol/react';
+import { useFeed, useRecentPosts } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth';
