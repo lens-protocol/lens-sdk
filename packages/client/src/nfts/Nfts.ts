@@ -1,11 +1,11 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
-import { Authentication } from '../authentication';
-import { LensConfig } from '../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import { InferResultType } from '../consts/types';
-import {
+import type { Authentication } from '../authentication';
+import type { LensConfig } from '../consts/config';
+import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { InferResultType } from '../consts/types';
+import type {
   NftGalleriesRequest,
   NftGalleryCreateRequest,
   NftGalleryDeleteRequest,
@@ -15,8 +15,12 @@ import {
   NftOwnershipChallengeRequest,
   NfTsRequest,
 } from '../graphql/types.generated';
-import { buildPaginatedQueryResult, PaginatedResult } from '../helpers/buildPaginatedQueryResult';
-import { execute } from '../helpers/execute';
+import {
+  buildPaginatedQueryResult,
+  PaginatedResult,
+  provideAuthHeaders,
+  requireAuthHeaders,
+} from '../helpers';
 import {
   getSdk,
   NftFragment,
@@ -37,13 +41,18 @@ export class Nfts {
   }
 
   async fetch(request: NfTsRequest): Promise<PaginatedResult<NftFragment>> {
-    return buildPaginatedQueryResult(async (currRequest) => {
-      const result = await this.sdk.Nfts({
-        request: currRequest,
-      });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.Nfts(
+          {
+            request: currRequest,
+          },
+          headers,
+        );
 
-      return result.data.result;
-    }, request);
+        return result.data.result;
+      }, request);
+    });
   }
 
   async ownershipChallenge(
@@ -52,7 +61,7 @@ export class Nfts {
     InferResultType<NftOwnershipChallengeQuery>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.NftOwnershipChallenge({ request }, headers);
 
       return result.data.result;
@@ -60,15 +69,17 @@ export class Nfts {
   }
 
   async fetchGalleries(request: NftGalleriesRequest): Promise<NftGalleryFragment[]> {
-    const result = await this.sdk.ProfileGalleries({ request });
+    return provideAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.ProfileGalleries({ request }, headers);
 
-    return result.data.result;
+      return result.data.result;
+    });
   }
 
   async createGallery(
     request: NftGalleryCreateRequest,
   ): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateNFTGallery({ request }, headers);
 
       return result.data.result;
@@ -78,7 +89,7 @@ export class Nfts {
   async updateGalleryInfo(
     request: NftGalleryUpdateInfoRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.UpdateNFTGalleryInfo({ request }, headers);
     });
   }
@@ -86,7 +97,7 @@ export class Nfts {
   async updateGalleryItems(
     request: NftGalleryUpdateItemsRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.UpdateNFTGalleryItems({ request }, headers);
     });
   }
@@ -94,7 +105,7 @@ export class Nfts {
   async updateGalleryOrder(
     request: NftGalleryUpdateItemOrderRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.UpdateNFTGalleryOrder({ request }, headers);
     });
   }
@@ -102,7 +113,7 @@ export class Nfts {
   async deleteGallery(
     request: NftGalleryDeleteRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.DeleteNFTGallery({ request }, headers);
     });
   }

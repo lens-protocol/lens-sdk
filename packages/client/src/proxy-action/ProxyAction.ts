@@ -1,12 +1,11 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
-import { Authentication } from '../authentication';
-import { LensConfig } from '../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { Authentication } from '../authentication';
+import type { LensConfig } from '../consts/config';
+import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { ProxyActionStatusTypes } from '../graphql/types.generated';
-import { execute } from '../helpers/execute';
-import { poll } from '../helpers/poll';
+import { poll, requireAuthHeaders } from '../helpers';
 import {
   getSdk,
   ProxyActionErrorFragment,
@@ -35,7 +34,7 @@ export class ProxyAction {
   async freeFollow(
     profileId: string,
   ): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.ProxyAction(
         {
           request: {
@@ -56,7 +55,7 @@ export class ProxyAction {
   async freeCollect(
     publicationId: string,
   ): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.ProxyAction(
         {
           request: {
@@ -80,7 +79,7 @@ export class ProxyAction {
     ProxyActionStatusResultFragment | ProxyActionErrorFragment | ProxyActionQueuedFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    return execute(this.authentication, async (headers) => {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.ProxyActionStatus(
         {
           proxyActionId,

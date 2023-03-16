@@ -2,7 +2,6 @@ import { MockedResponse } from '@apollo/client/testing';
 import { AppId } from '@lens-protocol/domain/entities';
 import { Erc20 } from '@lens-protocol/shared-kernel';
 
-import { AnyPublicationFragment, SearchProfilesQuery, SearchPublicationsQuery } from '..';
 import {
   CommentFragment,
   CommentWithFirstCommentFragment,
@@ -64,7 +63,6 @@ import {
   PublicationsDocument,
   PublicationsQuery,
   PublicationsQueryVariables,
-  RevenueFragment,
   SearchProfilesDocument,
   SearchProfilesQueryVariables,
   SearchPublicationsDocument,
@@ -82,8 +80,11 @@ import {
   GetAllProfilesByOwnerAddressQueryVariables,
   GetProfileQueryVariables,
   PublicationByTxHashQueryVariables,
+  ProfilesToFollowQueryVariables,
 } from '../generated';
+import { SearchProfilesQuery, SearchPublicationsQuery } from '../index';
 import { Sources } from '../sources';
+import { AnyPublicationFragment, ContentPublicationFragment } from '../utils/publication';
 import {
   mockEnabledModulesFragment,
   mockFeedItemFragment,
@@ -95,16 +96,21 @@ export function mockSources(): Sources {
   return ['foobar' as AppId];
 }
 
-export function createProfilesToFollowQueryMockedResponse(args: {
+export function createProfilesToFollowQueryMockedResponse({
+  variables,
+  profiles,
+}: {
+  variables: ProfilesToFollowQueryVariables;
   profiles: ProfileFragment[];
 }): MockedResponse<ProfilesToFollowQuery> {
   return {
     request: {
       query: ProfilesToFollowDocument,
+      variables,
     },
     result: {
       data: {
-        result: args.profiles,
+        result: profiles,
       },
     },
   };
@@ -344,7 +350,7 @@ export function createPublicationQueryMockedResponse({
   result,
 }: {
   variables: PublicationQueryVariables;
-  result: PostFragment | null;
+  result: AnyPublicationFragment | null;
 }): MockedResponse<PublicationQuery> {
   return {
     request: {
@@ -434,7 +440,7 @@ export function createExplorePublicationsQueryMockedResponse(args: {
 
 export function createPublicationRevenueQueryMockedResponse(args: {
   variables: PublicationRevenueQueryVariables;
-  revenue: RevenueFragment | null;
+  revenue: PublicationRevenueFragment | null;
 }): MockedResponse<PublicationRevenueQuery> {
   return {
     request: {
@@ -476,7 +482,7 @@ export function createProfilePublicationRevenueQueryMockedResponse(args: {
 
 export function createProfilePublicationsForSaleQueryMockedResponse(args: {
   variables: ProfilePublicationsForSaleQueryVariables;
-  items: PostFragment[];
+  items: ContentPublicationFragment[];
 }): MockedResponse<ProfilePublicationsForSaleQuery> {
   return {
     request: {
@@ -597,7 +603,7 @@ export function createProfilesWhoMirroredPublicationMockedResponse(args: {
 
 export function createSearchPublicationsQueryMockedResponse(args: {
   variables: SearchPublicationsQueryVariables;
-  items: Array<CommentFragment | PostFragment>;
+  items: Array<ContentPublicationFragment>;
 }): MockedResponse<SearchPublicationsQuery> {
   return {
     request: {

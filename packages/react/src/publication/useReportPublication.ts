@@ -2,7 +2,7 @@ import { CommentFragment, MirrorFragment, PostFragment } from '@lens-protocol/ap
 import { ReportReason } from '@lens-protocol/domain/entities';
 import { ReportPublicationRequest } from '@lens-protocol/domain/use-cases/publications';
 
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { useReportPublicationController } from './adapters/useReportPublicationController';
 
 export { ReportReason };

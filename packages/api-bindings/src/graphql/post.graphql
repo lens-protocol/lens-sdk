@@ -28,12 +28,6 @@ mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: Typed
 
 mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
   result: createPostViaDispatcher(request: $request) {
-    ... on RelayerResult {
-      ...RelayerResult
-    }
-
-    ... on RelayError {
-      ...RelayError
-    }
+    ...RelayResult
   }
 }

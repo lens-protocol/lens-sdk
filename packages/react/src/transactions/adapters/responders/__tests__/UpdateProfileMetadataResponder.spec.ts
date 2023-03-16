@@ -17,6 +17,7 @@ import {
 import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 
+import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { UpdateProfileMetadataResponder } from '../UpdateProfileMetadataResponder';
 
 function setupUpdateProfileMetadataResponder({
@@ -34,7 +35,6 @@ function setupUpdateProfileMetadataResponder({
       profile: updatedProfile,
       variables: {
         request: { profileId: updatedProfile.id },
-        observerId: updatedProfile.id,
         sources,
       },
     }),
@@ -52,7 +52,8 @@ function setupUpdateProfileMetadataResponder({
     data: existingProfile,
   });
 
-  const responder = new UpdateProfileMetadataResponder(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const responder = new UpdateProfileMetadataResponder(profileCacheManager);
 
   return {
     responder,

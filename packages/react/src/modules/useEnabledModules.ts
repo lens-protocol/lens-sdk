@@ -1,9 +1,8 @@
 import { useEnabledModulesQuery } from '@lens-protocol/api-bindings';
 
-import { useReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import { useLensApolloClient } from '../helpers/arguments';
+import { useReadResult } from '../helpers/reads';
 
 export function useEnabledModules() {
-  const { apolloClient } = useSharedDependencies();
-  return useReadResult(useEnabledModulesQuery({ client: apolloClient }));
+  return useReadResult(useEnabledModulesQuery(useLensApolloClient()));
 }

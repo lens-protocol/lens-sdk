@@ -11,7 +11,6 @@
     "build": "pnpm clean && turbo build",
     "postinstall": "preconstruct dev",
     "clean": "rimraf packages/*/*/dist packages/*/dist",
-    "build:packages": "turbo run build:packages",
     "test": "turbo run test --no-cache",
     "dev": "turbo dev",
     "dev:packages": "pnpm preconstruct dev",

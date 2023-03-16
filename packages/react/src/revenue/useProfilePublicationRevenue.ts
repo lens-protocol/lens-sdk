@@ -3,16 +3,23 @@ import {
   PublicationTypes,
   useProfilePublicationRevenueQuery,
 } from '@lens-protocol/api-bindings';
+import { ProfileId } from '@lens-protocol/domain/entities';
 
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import {
+  WithObserverIdOverride,
+  useActiveProfileAsDefaultObserver,
+  useSourcesFromConfig,
+  useLensApolloClient,
+} from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseProfilePublicationRevenueArgs = PaginatedArgs<{
-  profileId: string;
-  observerId?: string;
-  publicationTypes?: PublicationTypes[];
-}>;
+export type UseProfilePublicationRevenueArgs = PaginatedArgs<
+  WithObserverIdOverride<{
+    profileId: ProfileId;
+    publicationTypes?: PublicationTypes[];
+  }>
+>;
 
 export function useProfilePublicationRevenue({
   profileId,
@@ -20,18 +27,18 @@ export function useProfilePublicationRevenue({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   publicationTypes,
 }: UseProfilePublicationRevenueArgs): PaginatedReadResult<PublicationRevenueFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   return usePaginatedReadResult(
-    useProfilePublicationRevenueQuery({
-      variables: {
-        limit,
-        publicationTypes,
-        observerId,
-        profileId,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useProfilePublicationRevenueQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useSourcesFromConfig({
+            limit,
+            publicationTypes,
+            observerId,
+            profileId,
+          }),
+        }),
+      ),
+    ),
   );
 }

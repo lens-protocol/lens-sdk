@@ -1,10 +1,8 @@
 import {
   isFollowTransactionFor,
-  isUnfollowTransactionFor,
   ProfileFragment,
   ProfileOwnedByMeFragment,
   useHasPendingTransaction,
-  useWaitUntilTransactionSettled,
 } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
@@ -14,7 +12,7 @@ import {
 } from '@lens-protocol/domain/entities';
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { useUnfollowController } from './adapters/useUnfollowController';
 
 export class PrematureUnfollowError extends Error {
@@ -37,7 +35,6 @@ export function useUnfollow({ followee, follower }: UseUnfollowArgs): UnfollowOp
   const hasPendingFollowTx = useHasPendingTransaction(
     isFollowTransactionFor({ profileId: followee.id, followerAddress: follower.ownedBy }),
   );
-  const waitUntilTransactionSettled = useWaitUntilTransactionSettled();
 
   return useOperation(
     async (): PromiseResult<
@@ -55,16 +52,10 @@ export function useUnfollow({ followee, follower }: UseUnfollowArgs): UnfollowOp
         );
       }
 
-      const result = await unfollow({
+      return unfollow({
         kind: TransactionKind.UNFOLLOW_PROFILE,
         profileId: followee.id,
       });
-
-      if (result.isSuccess()) {
-        await waitUntilTransactionSettled(isUnfollowTransactionFor({ profileId: followee.id }));
-      }
-
-      return result;
     },
   );
 }

@@ -1,10 +1,4 @@
-import {
-  GetProfileDocument,
-  GetProfileQuery,
-  GetProfileQueryVariables,
-  LensApolloClient,
-  Sources,
-} from '@lens-protocol/api-bindings';
+import { FollowPolicy } from '@lens-protocol/api-bindings';
 import { UpdateFollowPolicyRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastedTransactionData,
@@ -12,47 +6,25 @@ import {
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
+import { IProfileCacheManager } from '../IProfileCacheManager';
+
 export class UpdateFollowPolicyResponder
   implements ITransactionResponder<UpdateFollowPolicyRequest>
 {
-  constructor(private apolloClient: LensApolloClient, private readonly sources: Sources) {}
+  constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
   async prepare({ request }: TransactionData<UpdateFollowPolicyRequest>) {
-    const profileIdentifier = this.apolloClient.cache.identify({
-      __typename: 'Profile',
-      id: request.profileId,
-    });
-
-    this.apolloClient.cache.modify({
-      id: profileIdentifier,
-      fields: {
-        followPolicy() {
-          // Apollo types makes this operation unsafe
-          // make sure the shape is correct with a test
-          return request.policy;
-        },
-      },
-    });
+    this.profileCacheManager.updateProfile(request.profileId, (current) => ({
+      ...current,
+      followPolicy: request.policy as FollowPolicy, // TODO sort discrepancy with contractAddress missing from request model
+    }));
   }
 
   async commit({ request }: BroadcastedTransactionData<UpdateFollowPolicyRequest>) {
-    await this.refreshProfile(request.profileId);
+    await this.profileCacheManager.refreshProfile(request.profileId);
   }
 
   async rollback({ request }: BroadcastedTransactionData<UpdateFollowPolicyRequest>) {
-    await this.refreshProfile(request.profileId);
-  }
-
-  private async refreshProfile(profileId: string) {
-    await this.apolloClient.query<GetProfileQuery, GetProfileQueryVariables>({
-      query: GetProfileDocument,
-      variables: {
-        request: {
-          profileId,
-        },
-        sources: this.sources,
-      },
-      fetchPolicy: 'network-only',
-    });
+    await this.profileCacheManager.refreshProfile(request.profileId);
   }
 }

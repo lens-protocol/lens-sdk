@@ -12,7 +12,7 @@ import {
 } from '@lens-protocol/domain/use-cases/wallets';
 import { Amount, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { useApproveModuleController } from './adapters/useApproveModuleController';
 
 export type ApproveModuleArgs = {

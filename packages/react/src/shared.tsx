@@ -41,6 +41,7 @@ import { UpdateDispatcherConfigResponder } from './transactions/adapters/respond
 import { UpdateFollowPolicyResponder } from './transactions/adapters/responders/UpdateFollowPolicyResponder';
 import { UpdateProfileImageResponder } from './transactions/adapters/responders/UpdateProfileImageResponder';
 import { UpdateProfileMetadataResponder } from './transactions/adapters/responders/UpdateProfileMetadataResponder';
+import { ProfileCacheManager } from './transactions/infrastructure/ProfileCacheManager';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
@@ -124,6 +125,8 @@ export function createSharedDependencies(
     activeWalletVar: activeWalletVar,
     pollingInterval: config.environment.timings.pollingInterval,
   });
+  const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
 
   // adapters
   const providerFactory = new ProviderFactory(config.bindings, config.environment.chains);
@@ -143,10 +146,9 @@ export function createSharedDependencies(
   const tokenGateway = new TokenGateway(providerFactory);
   const followPolicyCallGateway = new FollowPolicyCallGateway(apolloClient);
 
-  const profileGateway = new ProfileGateway(apolloClient, sources);
+  const profileGateway = new ProfileGateway(apolloClient);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
   const activeProfilePresenter = new ActiveProfilePresenter();
-  const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
 
   const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
 
@@ -154,8 +156,15 @@ export function createSharedDependencies(
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(publicationCacheManager),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
-    [TransactionKind.CREATE_POST]: new CreatePostResponder(apolloClient, sources),
-    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(apolloClient, sources),
+    [TransactionKind.CREATE_POST]: new CreatePostResponder(
+      profileCacheManager,
+      apolloClient,
+      sources,
+    ),
+    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(
+      profileCacheManager,
+      config.environment.handleResolver,
+    ),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
       apolloClient,
@@ -164,15 +173,13 @@ export function createSharedDependencies(
     ),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(
-      apolloClient,
-      sources,
+      profileCacheManager,
     ),
-    [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(apolloClient, sources),
+    [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(profileCacheManager),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new UpdateProfileMetadataResponder(
-      apolloClient,
-      sources,
+      profileCacheManager,
     ),
-    [TransactionKind.UPDATE_PROFILE_IMAGE]: new UpdateProfileImageResponder(apolloClient, sources),
+    [TransactionKind.UPDATE_PROFILE_IMAGE]: new UpdateProfileImageResponder(profileCacheManager),
   };
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);
 

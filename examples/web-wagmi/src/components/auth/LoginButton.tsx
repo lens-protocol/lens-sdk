@@ -4,7 +4,8 @@ import toast from 'react-hot-toast';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
-import { WhenLoggedInWithProfile, WhenLoggedOut } from './auth';
+import { WhenLoggedInWithProfile } from './WhenLoggedInWithProfile';
+import { WhenLoggedOut } from './WhenLoggedOut';
 
 export function LoginButton({ handle }: { handle?: string }) {
   const { execute: login, error: loginError, isPending: isLoginPending } = useWalletLogin();

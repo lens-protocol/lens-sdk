@@ -9,6 +9,16 @@ fragment RelayError on RelayError {
   reason
 }
 
+fragment RelayResult on RelayResult {
+  ... on RelayerResult {
+    ...RelayerResult
+  }
+
+  ... on RelayError {
+    ...RelayError
+  }
+}
+
 fragment TransactionIndexedResult on TransactionIndexedResult {
   __typename
   indexed
@@ -34,12 +44,6 @@ query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
 
 mutation BroadcastProtocolCall($request: BroadcastRequest!) {
   result: broadcast(request: $request) {
-    ... on RelayerResult {
-      ...RelayerResult
-    }
-
-    ... on RelayError {
-      ...RelayError
-    }
+    ...RelayResult
   }
 }

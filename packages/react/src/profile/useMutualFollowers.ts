@@ -1,11 +1,11 @@
 import { ProfileFragment, useMutualFollowersProfilesQuery } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import { useSourcesFromConfig, useLensApolloClient } from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseMutualFollowersArgs = PaginatedArgs<{
+export type UseMutualFollowersArgs = PaginatedArgs<{
   observerId: ProfileId;
   viewingProfileId: ProfileId;
 }>;
@@ -13,19 +13,13 @@ type UseMutualFollowersArgs = PaginatedArgs<{
 export function useMutualFollowers({
   observerId,
   viewingProfileId,
-  limit,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseMutualFollowersArgs): PaginatedReadResult<ProfileFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   return usePaginatedReadResult(
-    useMutualFollowersProfilesQuery({
-      variables: {
-        observerId,
-        viewingProfileId,
-        limit: limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useMutualFollowersProfilesQuery(
+      useLensApolloClient({
+        variables: useSourcesFromConfig({ limit, observerId, viewingProfileId }),
+      }),
+    ),
   );
 }

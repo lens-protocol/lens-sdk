@@ -1,8 +1,7 @@
 import { TxStatus, useRecentTransactions } from '@lens-protocol/react-web';
 import { Link } from 'react-router-dom';
 
-import { LoginButton } from '../components/auth/LoginButton';
-import { WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth/auth';
+import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
 
 function UseRecentTransactionsInner() {
   const recentTransactions = useRecentTransactions();

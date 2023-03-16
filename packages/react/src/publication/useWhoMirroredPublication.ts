@@ -2,33 +2,40 @@ import {
   ProfileFragment,
   useGetAllProfilesByWhoMirroredPublicationQuery,
 } from '@lens-protocol/api-bindings';
+import { PublicationId } from '@lens-protocol/domain/entities';
 
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import {
+  WithObserverIdOverride,
+  useActiveProfileAsDefaultObserver,
+  useSourcesFromConfig,
+  useLensApolloClient,
+} from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseWhoMirroredPublicationArgs = PaginatedArgs<{
-  limit?: number;
-  observerId?: string;
-  publicationId: string;
-}>;
+export type UseWhoMirroredPublicationArgs = PaginatedArgs<
+  WithObserverIdOverride<{
+    limit?: number;
+    publicationId: PublicationId;
+  }>
+>;
 
 export function useWhoMirroredPublication({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   publicationId,
   observerId,
 }: UseWhoMirroredPublicationArgs): PaginatedReadResult<ProfileFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-
   return usePaginatedReadResult(
-    useGetAllProfilesByWhoMirroredPublicationQuery({
-      variables: {
-        publicationId,
-        observerId,
-        limit,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useGetAllProfilesByWhoMirroredPublicationQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useSourcesFromConfig({
+            publicationId,
+            observerId,
+            limit,
+          }),
+        }),
+      ),
+    ),
   );
 }

@@ -1,23 +1,27 @@
 import { ProfileFragment, useExploreProfilesQuery } from '@lens-protocol/api-bindings';
 
-import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
+import {
+  WithObserverIdOverride,
+  useActiveProfileAsDefaultObserver,
+  useSourcesFromConfig,
+  useLensApolloClient,
+} from '../helpers/arguments';
+import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseFeedArgs = PaginatedArgs<{
-  observerId?: string;
-}>;
+export type UseExploreProfilesArgs = PaginatedArgs<WithObserverIdOverride>;
 
-export function useExploreProfiles(args?: UseFeedArgs): PaginatedReadResult<ProfileFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-
+export function useExploreProfiles({
+  observerId,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
+}: UseExploreProfilesArgs = {}): PaginatedReadResult<ProfileFragment[]> {
   return usePaginatedReadResult(
-    useExploreProfilesQuery({
-      variables: {
-        observerId: args?.observerId,
-        limit: args?.limit ?? 10,
-        sources,
-      },
-      client: apolloClient,
-    }),
+    useExploreProfilesQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useSourcesFromConfig({ limit, observerId }),
+        }),
+      ),
+    ),
   );
 }

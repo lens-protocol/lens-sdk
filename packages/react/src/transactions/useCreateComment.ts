@@ -12,7 +12,7 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers';
+import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';

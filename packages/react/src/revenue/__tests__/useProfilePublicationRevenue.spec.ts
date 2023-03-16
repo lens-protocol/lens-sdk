@@ -1,46 +1,97 @@
+import { PublicationRevenueFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createProfilePublicationRevenueQueryMockedResponse,
-  mockProfileFragment,
   mockPublicationRevenueFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { useProfilePublicationRevenue } from '../useProfilePublicationRevenue';
+import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
+import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
+import {
+  useProfilePublicationRevenue,
+  UseProfilePublicationRevenueArgs,
+} from '../useProfilePublicationRevenue';
 
-const sources = mockSources();
+function setupTestScenario({
+  expectedObserverId,
+  result,
+  ...args
+}: UseProfilePublicationRevenueArgs & {
+  expectedObserverId?: ProfileId;
+  result: PublicationRevenueFragment[];
+}) {
+  const sources = mockSources();
+
+  return renderHookWithMocks(() => useProfilePublicationRevenue(args), {
+    mocks: {
+      sources,
+      apolloClient: createMockApolloClientWithMultipleResponses([
+        createProfilePublicationRevenueQueryMockedResponse({
+          variables: {
+            ...args,
+            observerId: expectedObserverId ?? null,
+            limit: 10,
+            sources,
+          },
+          items: result,
+        }),
+      ]),
+    },
+  });
+}
 
 describe(`Given the ${useProfilePublicationRevenue.name} hook`, () => {
-  const mockedPublicationRevenueFragments = [mockPublicationRevenueFragment()];
-  const mockedProfile = mockProfileFragment();
+  const profileId = mockProfileId();
+  const revenues = [mockPublicationRevenueFragment()];
 
-  describe('when supplied with a profile id', () => {
-    describe('and the query returns data successfully', () => {
-      it('should return all publications with revenue', async () => {
-        const { result } = renderHookWithMocks(
-          () =>
-            useProfilePublicationRevenue({
-              profileId: mockedProfile.id,
-            }),
-          {
-            mocks: {
-              sources,
-              apolloClient: createMockApolloClientWithMultipleResponses([
-                createProfilePublicationRevenueQueryMockedResponse({
-                  variables: { profileId: mockedProfile.id, limit: 10, sources },
-                  items: mockedPublicationRevenueFragments,
-                }),
-              ]),
-            },
-          },
-        );
+  beforeAll(() => {
+    simulateAppReady();
+  });
 
-        await waitFor(() => expect(result.current.loading).toBeFalsy());
+  describe('when the query returns data successfully', () => {
+    it('should return all publications with revenue', async () => {
+      const { result } = setupTestScenario({ profileId, result: revenues });
 
-        expect(result.current.data).toEqual(mockedPublicationRevenueFragments);
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(revenues);
+    });
+  });
+
+  describe('when there is an Active Profile defined', () => {
+    const activeProfile = mockProfile();
+
+    beforeAll(() => {
+      activeProfileIdentifierVar(activeProfile);
+    });
+
+    it('should use the Active Profile Id as the "observerId"', async () => {
+      const { result } = setupTestScenario({
+        profileId,
+        result: revenues,
+        expectedObserverId: activeProfile.id,
       });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(revenues);
+    });
+
+    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+      const observerId = mockProfileId();
+
+      const { result } = setupTestScenario({
+        profileId,
+        result: revenues,
+        observerId,
+        expectedObserverId: observerId,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(revenues);
     });
   });
 });

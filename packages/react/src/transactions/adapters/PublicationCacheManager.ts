@@ -6,6 +6,7 @@ import {
   PostFragmentDoc,
   AnyPublicationFragment,
 } from '@lens-protocol/api-bindings';
+import { PublicationId } from '@lens-protocol/domain/entities';
 import { failure, invariant, never, Result, success } from '@lens-protocol/shared-kernel';
 
 export class FragmentNotFoundError extends Error {
@@ -40,7 +41,7 @@ export class PublicationCacheManager {
     });
   }
 
-  read(publicationId: string): Result<AnyPublicationFragment, FragmentNotFoundError> {
+  read(publicationId: PublicationId): Result<AnyPublicationFragment, FragmentNotFoundError> {
     const resolvedTypeResult = this.resolveExactPublicationType(publicationId);
 
     if (resolvedTypeResult.isFailure()) {
@@ -62,7 +63,7 @@ export class PublicationCacheManager {
   }
 
   update(
-    publicationId: string,
+    publicationId: PublicationId,
     updateFn: (current: AnyPublicationFragment) => AnyPublicationFragment,
   ): Result<void, FragmentNotFoundError> {
     const resolvedTypeResult = this.resolveExactPublicationType(publicationId);
@@ -90,7 +91,7 @@ export class PublicationCacheManager {
     return success();
   }
 
-  private resolveExactPublicationType(publicationId: string) {
+  private resolveExactPublicationType(publicationId: PublicationId) {
     const postIdentifier =
       this.cache.identify({
         __typename: 'Post',

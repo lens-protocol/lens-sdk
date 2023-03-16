@@ -1,8 +1,5 @@
 import { makeVar } from '@apollo/client';
 import {
-  GetProfileDocument,
-  GetProfileQuery,
-  GetProfileQueryVariables,
   PendingPostFragment,
   PublicationMainFocus,
   PublicationByTxHashQuery,
@@ -21,6 +18,8 @@ import {
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
+
+import { IProfileCacheManager } from '../IProfileCacheManager';
 
 function pendingPostFragment({
   id,
@@ -52,21 +51,15 @@ function pendingPostFragment({
 export const recentPosts = makeVar<ReadonlyArray<PendingPostFragment | PostFragment>>([]);
 
 export class CreatePostResponder implements ITransactionResponder<CreatePostRequest> {
-  constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
+  constructor(
+    private readonly profileCacheManager: IProfileCacheManager,
+    private readonly client: LensApolloClient,
+    private readonly sources: Sources,
+  ) {}
 
   async prepare({ id, request }: TransactionData<CreatePostRequest>) {
-    const result = await this.client.query<GetProfileQuery, GetProfileQueryVariables>({
-      query: GetProfileDocument,
-      variables: {
-        request: {
-          profileId: request.profileId,
-        },
-        sources: this.sources,
-      },
-      fetchPolicy: 'cache-first',
-    });
+    const author = await this.profileCacheManager.fetchProfile({ id: request.profileId });
 
-    const author = result.data.result;
     invariant(author, 'Cannot find author profile');
 
     const pendingPost = pendingPostFragment({ id, author, request });

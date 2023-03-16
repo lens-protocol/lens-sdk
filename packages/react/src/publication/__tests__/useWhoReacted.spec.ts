@@ -1,47 +1,94 @@
+import { WhoReactedResultFragment } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createWhoReactedPublicationQueryMockedResponse,
   mockSources,
   mockWhoReactedResultFragment,
 } from '@lens-protocol/api-bindings/mocks';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import { mockProfile, mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { useWhoReacted } from '../useWhoReacted';
+import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
+import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
+import { useWhoReacted, UseWhoReactedArgs } from '../useWhoReacted';
 
-const sources = mockSources();
+function setupTestScenario({
+  expectedObserverId,
+  result,
+  ...args
+}: UseWhoReactedArgs & {
+  expectedObserverId?: ProfileId;
+  result: WhoReactedResultFragment[];
+}) {
+  const sources = mockSources();
+
+  return renderHookWithMocks(() => useWhoReacted(args), {
+    mocks: {
+      sources,
+      apolloClient: createMockApolloClientWithMultipleResponses([
+        createWhoReactedPublicationQueryMockedResponse({
+          variables: {
+            ...args,
+            observerId: expectedObserverId ?? null,
+            limit: 10,
+            sources,
+          },
+          items: result,
+        }),
+      ]),
+    },
+  });
+}
 
 describe(`Given the ${useWhoReacted.name} hook`, () => {
-  const mockWhoReacted = [mockWhoReactedResultFragment()];
-  const publicationId = 'pub-id';
+  const publicationId = mockPublicationId();
+  const reactions = [mockWhoReactedResultFragment()];
+
+  beforeAll(() => {
+    simulateAppReady();
+  });
 
   describe('when the query returns data successfully', () => {
     it('should return who reacted results', async () => {
-      const { result } = renderHookWithMocks(
-        () =>
-          useWhoReacted({
-            publicationId,
-          }),
-        {
-          mocks: {
-            sources,
-            apolloClient: createMockApolloClientWithMultipleResponses([
-              createWhoReactedPublicationQueryMockedResponse({
-                variables: {
-                  publicationId,
-                  limit: 10,
-                  sources,
-                },
-                items: mockWhoReacted,
-              }),
-            ]),
-          },
-        },
-      );
+      const { result } = setupTestScenario({ publicationId, result: reactions });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(reactions);
+    });
+  });
 
-      expect(result.current.data).toEqual(mockWhoReacted);
+  describe('when there is an Active Profile defined', () => {
+    const activeProfile = mockProfile();
+
+    beforeAll(() => {
+      activeProfileIdentifierVar(activeProfile);
+    });
+
+    it('should use the Active Profile Id as the "observerId"', async () => {
+      const { result } = setupTestScenario({
+        publicationId,
+        result: reactions,
+        expectedObserverId: activeProfile.id,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(reactions);
+    });
+
+    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+      const observerId = mockProfileId();
+
+      const { result } = setupTestScenario({
+        publicationId,
+        result: reactions,
+        observerId,
+        expectedObserverId: observerId,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toEqual(reactions);
     });
   });
 });

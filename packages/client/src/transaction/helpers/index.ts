@@ -1,5 +1,5 @@
-import { RelayerResultFragment, RelayErrorFragment } from '../../graphql/fragments.generated';
-import {
+import type { RelayerResultFragment, RelayErrorFragment } from '../../graphql/fragments.generated';
+import type {
   TransactionErrorFragment,
   TransactionIndexedResultFragment,
 } from '../graphql/transaction.generated';

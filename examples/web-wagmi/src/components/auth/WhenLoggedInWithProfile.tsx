@@ -34,17 +34,3 @@ export function WhenLoggedInWithProfile({ children }: WhenLoggedInWithProfilePro
 
   return <>{children({ wallet, profile })}</>;
 }
-
-export type WhenLoggedOutProps = {
-  children: ReactNode;
-};
-
-export function WhenLoggedOut({ children }: WhenLoggedOutProps) {
-  const { data: wallet, loading } = useActiveWallet();
-
-  if (loading || wallet !== null) {
-    return null;
-  }
-
-  return <>{children}</>;
-}

@@ -1,0 +1,36 @@
+import {
+  ProfileOwnedByMeFragment,
+  useActiveProfile,
+  useActiveWallet,
+  WalletData,
+} from '@lens-protocol/react';
+import { ReactNode } from 'react';
+
+type LoggedInConfig = {
+  wallet: WalletData;
+  profile: ProfileOwnedByMeFragment;
+};
+
+export type WhenLoggedInWithProfileProps = {
+  children: (config: LoggedInConfig) => ReactNode;
+};
+
+export function WhenLoggedInWithProfile({ children }: WhenLoggedInWithProfileProps) {
+  const { data: wallet, loading: walletLoading } = useActiveWallet();
+  const { data: profile, error, loading: profileLoading } = useActiveProfile();
+
+  if (walletLoading || profileLoading) {
+    return null;
+  }
+
+  if (wallet === null) {
+    return null;
+  }
+
+  if (profile === null || error) {
+    // TODO guide user to create profile
+    return null;
+  }
+
+  return <>{children({ wallet, profile })}</>;
+}

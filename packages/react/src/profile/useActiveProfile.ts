@@ -6,29 +6,26 @@ import {
 } from '@lens-protocol/api-bindings';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { ReadResult } from '../helpers';
-import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
-import { useSharedDependencies } from '../shared';
-import { useActiveProfileVar } from './adapters/ActiveProfilePresenter';
+import { useSourcesFromConfig, useLensApolloClient } from '../helpers/arguments';
+import { ReadResult } from '../helpers/reads';
+import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
 
 export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, UnspecifiedError> {
-  const state = useAppState();
-  const { apolloClient, sources } = useSharedDependencies();
-  const profile = useActiveProfileVar();
+  const { data: identifier, loading: bootstrapping } = useActiveProfileIdentifier();
 
-  const { data, error, loading } = useGetProfileQuery({
-    variables: {
-      request: {
-        profileId: profile?.id,
-      },
-      sources,
-    },
-    fetchPolicy: 'cache-first',
-    skip: state !== ApplicationsState.READY || profile === null,
-    client: apolloClient,
-  });
+  const { data, error, loading } = useGetProfileQuery(
+    useLensApolloClient({
+      variables: useSourcesFromConfig({
+        request: {
+          profileId: identifier?.id,
+        },
+      }),
+      fetchPolicy: 'cache-first',
+      skip: bootstrapping || identifier === null,
+    }),
+  );
 
-  if (state !== ApplicationsState.READY) {
+  if (bootstrapping) {
     return {
       data: undefined,
       error: undefined,
@@ -36,7 +33,7 @@ export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, 
     };
   }
 
-  if (profile === null) {
+  if (identifier === null) {
     return {
       data: null,
       error: undefined,

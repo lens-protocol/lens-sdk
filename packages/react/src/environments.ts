@@ -1,12 +1,15 @@
-import { ChainType } from '@lens-protocol/shared-kernel';
+import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
 import { ChainConfigRegistry, goerli, mainnet, mumbai, polygon } from './chains';
 import { TransactionObserverTimings } from './transactions/infrastructure/TransactionObserver';
 
+export type ProfileHandleResolver = (handle: string) => string;
+
 export type EnvironmentConfig = {
-  backend: string;
+  backend: Url;
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
+  handleResolver: ProfileHandleResolver;
 };
 
 export const production: EnvironmentConfig = {
@@ -20,6 +23,7 @@ export const production: EnvironmentConfig = {
     maxIndexingWaitTime: 120000,
     maxMiningWaitTime: 60000,
   },
+  handleResolver: (handle) => `${handle}.lens`,
 };
 
 export const staging: EnvironmentConfig = {
@@ -33,4 +37,5 @@ export const staging: EnvironmentConfig = {
     maxIndexingWaitTime: 240000,
     maxMiningWaitTime: 120000,
   },
+  handleResolver: (handle) => `${handle}.test`,
 };

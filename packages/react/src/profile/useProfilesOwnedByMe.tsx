@@ -1,39 +1,52 @@
-import { useReactiveVar } from '@apollo/client';
-import { ProfileFragment, useGetAllProfilesByOwnerAddressQuery } from '@lens-protocol/api-bindings';
+import {
+  ProfileOwnedByMeFragment,
+  useGetAllProfilesByOwnerAddressQuery,
+} from '@lens-protocol/api-bindings';
+import { never } from '@lens-protocol/shared-kernel';
+import { constants } from 'ethers';
 
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers';
-import { useSharedDependencies } from '../shared';
-import { createdProfilesVar } from '../transactions/adapters/responders/CreateProfileResponder';
+import {
+  WithObserverIdOverride,
+  useActiveProfileAsDefaultObserver,
+  useSourcesFromConfig,
+  useLensApolloClient,
+} from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { useRecentProfiles } from '../transactions/adapters/responders/CreateProfileResponder';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 import { useActiveWallet } from '../wallet';
 
-type UseProfilesOwnedByArgs = PaginatedArgs<{
-  observerId?: string;
-}>;
+export type UseProfilesOwnedByMeArgs = PaginatedArgs<WithObserverIdOverride>;
 
 export function useProfilesOwnedByMe({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseProfilesOwnedByArgs = {}): PaginatedReadResult<ProfileFragment[]> {
-  const { apolloClient, sources } = useSharedDependencies();
-  const activeWallet = useActiveWallet();
-  const createdProfiles = useReactiveVar(createdProfilesVar);
+}: UseProfilesOwnedByMeArgs = {}): PaginatedReadResult<ProfileOwnedByMeFragment[]> {
+  const { data: activeWallet, loading: bootstrapping } = useActiveWallet();
+  const recentProfiles = useRecentProfiles();
 
   const result = usePaginatedReadResult(
-    useGetAllProfilesByOwnerAddressQuery({
-      variables: {
-        address: activeWallet.data?.address || '',
-        observerId,
-        limit,
-        sources,
-      },
-      skip: activeWallet.loading,
-      client: apolloClient,
-    }),
+    useGetAllProfilesByOwnerAddressQuery(
+      useLensApolloClient(
+        useActiveProfileAsDefaultObserver({
+          variables: useSourcesFromConfig({
+            address: bootstrapping
+              ? constants.AddressZero
+              : activeWallet?.address ??
+                never(
+                  `Cannot use 'useProfilesOwnedByMe' without being logged in. Use 'useWalletLogin' to log in first.`,
+                ),
+            observerId,
+            limit,
+          }),
+          skip: bootstrapping && activeWallet === null,
+        }),
+      ),
+    ),
   );
 
   return {
     ...result,
-    data: result.data ? [...result.data, ...createdProfiles] : result.data,
-  } as PaginatedReadResult<ProfileFragment[]>;
+    data: result.data ? [...result.data, ...recentProfiles] : result.data,
+  } as PaginatedReadResult<ProfileOwnedByMeFragment[]>;
 }

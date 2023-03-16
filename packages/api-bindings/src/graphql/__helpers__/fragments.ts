@@ -46,7 +46,7 @@ import {
   RelayErrorFragment,
   RelayErrorReasons,
   RevenueAggregateFragment,
-  RevenueFragment,
+  RootCriterionFragment,
   ScalarOperator,
   WalletFragment,
   WhoReactedResultFragment,
@@ -421,18 +421,6 @@ export function mockPublicationRevenueFragment({
   return {
     __typename: 'PublicationRevenue',
     publication: publication,
-    revenue: mockRevenueAggregateFragment(amount),
-  };
-}
-
-export function mockRevenueFragment({
-  amount,
-}: {
-  publication?: CommentFragment | PostFragment | MirrorFragment;
-  amount?: Amount<Erc20>;
-} = {}): RevenueFragment {
-  return {
-    __typename: 'PublicationRevenue',
     revenue: mockRevenueAggregateFragment(amount),
   };
 }
