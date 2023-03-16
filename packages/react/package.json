@@ -104,8 +104,14 @@
   },
   "preconstruct": {
     "entrypoints": [
-      "index.tsx"
+      "index.ts"
     ],
     "exports": true
+  },
+  "typedoc": {
+    "entryPoint": "./src/index.ts",
+    "readmeFile": "./README.md",
+    "displayName": "React Hooks",
+    "tsconfig": "./tsconfig.json"
   }
 }
