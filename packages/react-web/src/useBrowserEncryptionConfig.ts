@@ -1,4 +1,4 @@
-import { webCryptoProvider } from '@lens-protocol/gated-content';
+import { webCryptoProvider } from '@lens-protocol/gated-content/web';
 import { EncryptionConfig } from '@lens-protocol/react';
 import { useState } from 'react';
 

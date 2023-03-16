@@ -9,6 +9,10 @@
       "module": "./dist/lens-protocol-gated-content.esm.js",
       "default": "./dist/lens-protocol-gated-content.cjs.js"
     },
+    "./web": {
+      "module": "./web/dist/lens-protocol-gated-content-web.esm.js",
+      "default": "./web/dist/lens-protocol-gated-content-web.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "repository": {
@@ -93,7 +97,8 @@
   },
   "preconstruct": {
     "entrypoints": [
-      "index.ts"
+      "index.ts",
+      "web/index.ts"
     ],
     "exports": true
   }

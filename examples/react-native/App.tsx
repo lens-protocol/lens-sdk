@@ -1,7 +1,7 @@
 import './shims';
 
 import React from 'react';
-import {LensConfig, LensProvider, staging} from '@lens-protocol/react-web';
+import {LensConfig, LensProvider, staging} from '@lens-protocol/react';
 import {View, StyleSheet, SafeAreaView} from 'react-native';
 
 import {ExplorePublications} from './src/ExplorePublications';

@@ -6,7 +6,7 @@ import {
   mockPostFragment,
   mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
-import { webCryptoProvider } from '@lens-protocol/gated-content';
+import { webCryptoProvider } from '@lens-protocol/gated-content/web';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
 import { act, waitFor } from '@testing-library/react';
 import { Wallet } from 'ethers';
