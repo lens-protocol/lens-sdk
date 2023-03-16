@@ -346,13 +346,13 @@ export class Profile {
   }
 
   async createSetProfileImageURIViaDispatcher(
-    request: CreatePublicSetProfileMetadataUriRequest,
+    request: UpdateProfileImageRequest,
   ): PromiseResult<
     RelayerResultFragment | RelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateSetProfileMetadataViaDispatcher({ request }, headers);
+      const result = await this.sdk.CreateSetProfileImageURIViaDispatcher({ request }, headers);
 
       return result.data.result;
     });
