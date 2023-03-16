@@ -13,21 +13,78 @@ import {
   usd,
 } from './Asset';
 
-type AmountValue = BigDecimal | number | string;
+export type AmountValue = BigDecimal | number | string;
 
+/**
+ * A set of convenience helpers useful to specify amount values in common denominations.
+ */
 export const Denomination = {
+  /**
+   * Creates an amount value in gwei (10^-9)
+   *
+   * @example
+   * Define an Ethers {@link Amount} in gwei:
+   *
+   * ```ts
+   * const etherAmount = Amount.ether(
+   *   Denomination.gwei(1)
+   * )
+   * ```
+   * @returns a {@link BigDecimal} instance
+   */
   gwei(value: AmountValue) {
     return BigDecimal.from(value).mul(BigDecimal.pow(10, -9));
   },
 
+  /**
+   * Creates an amount value in gwei (10^-18)
+   *
+   * @example
+   * Define an Ethers {@link Amount} in wei:
+   *
+   * ```ts
+   * const etherAmount = Amount.ether(
+   *   Denomination.wei(42)
+   * )
+   * ```
+   * @returns a {@link BigDecimal} instance
+   */
   wei(value: AmountValue) {
     return BigDecimal.from(value).mul(BigDecimal.pow(10, -18));
   },
 };
 
+/**
+ * Amount is a value object representing an amount of given {@link Asset}.
+ *
+ * @sealed
+ *
+ * @remarks
+ *
+ * Amount hides all the complexity of dealing with different precision of different assets.
+ * It offers a consistent interface to perform arithmetic operations on amounts.
+ *
+ * Amount is immutable. All arithmetic operations return a new Amount instance.
+ */
 export class Amount<T extends Asset> {
   private constructor(readonly asset: T, private readonly value: BigDecimal) {}
 
+  /**
+   * Creates a new Amount using the `rate: Amount<C>` as conversion factor.
+   *
+   * The new Amount will have the {@link Asset} of the `rate` parameter.
+   *
+   * @example
+   * Create the USD equivalent of an Ether Amount given the ETH-USD rate:
+   *
+   * ```ts
+   * const etherAmount = Amount.ether('1'); // Amount<Ether>
+   *
+   * const rate = Amount.usd('0.0006'); // Amount<Fiat>
+   *
+   * const usdAmount = etherAmount.convert(rate); // Amount<Fiat>
+   * ```
+   */
   convert<C extends Asset>(rate: Amount<C>): Amount<C> {
     return new Amount(rate.asset, this.value.mul(rate.value));
   }
@@ -85,11 +142,13 @@ export class Amount<T extends Asset> {
   }
 
   /**
-   * Return the internal representation as BigDecimal truncated at the Asset max precision.
+   * Return the internal value representation as BigDecimal truncated at the {@link Asset} max precision.
    *
-   * Favour the use of Amount arithmetic methods to guarantee the maximum precision.
+   * Use this as your last resource, you should favour the use of Amount arithmetic methods to have a guarantee maximum precision.
    *
-   * Use at your own risk.
+   * **Use at your own risk.**
+   *
+   * @experimental
    */
   toBigDecimal(): BigDecimal {
     return this.value.toDecimalPlaces(this.asset.decimals, BigDecimal.ROUND_FLOOR);
