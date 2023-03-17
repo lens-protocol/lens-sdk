@@ -1,4 +1,4 @@
-import { Deferred } from '@lens-protocol/shared-kernel';
+import { Deferred, never } from '@lens-protocol/shared-kernel';
 import { TypeOf, z } from 'zod';
 
 import {
@@ -295,7 +295,8 @@ describe(`Given a ${Storage.name} instance`, () => {
       storage.subscribe((newData, oldData) => deferred.resolve({ newData, oldData }));
 
       const newValue = JSON.stringify(newStorageItem);
-      jest.mocked(mockedStorageProvider.subscribe).mock.calls[0][1](newValue, oldValue);
+      const subscriber = jest.mocked(mockedStorageProvider.subscribe).mock.calls[0]?.[1] ?? never();
+      subscriber(newValue, oldValue);
 
       const result = await deferred.promise;
       expect(result).toEqual({
