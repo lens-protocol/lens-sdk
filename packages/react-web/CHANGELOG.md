@@ -4,7 +4,7 @@
 
 ### Minor changes
 
-- 6be7f14: Added this package out of `@lens-protocol/react` as the canonical integration in the Rect web apps. Includes support for token-gated via WebCrypto API. 
+- 6be7f14: Added this package out of `@lens-protocol/react` as the canonical integration in the Rect web apps. Includes support for token-gated via WebCrypto API.
 
 ### Patch Changes
 
