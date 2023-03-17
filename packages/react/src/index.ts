@@ -37,6 +37,7 @@ export type { NftId, ProfileId, PublicationId } from '@lens-protocol/domain/enti
 
 export {
   Amount,
+  BigDecimal,
   ChainType,
   Denomination,
   erc20,
@@ -45,12 +46,14 @@ export {
   usd,
 } from '@lens-protocol/shared-kernel';
 export type {
+  AmountValue,
   Asset,
   CryptoAmount,
   CryptoAsset,
   CryptoNativeAmount,
   CryptoNativeAsset,
   Erc20,
+  Erc20Info,
   Ether,
   EthereumAddress,
   Fiat,

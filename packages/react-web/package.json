@@ -87,5 +87,10 @@
       "index.ts"
     ],
     "exports": true
+  },
+  "typedoc": {
+    "entryPoint": "./src/index.ts",
+    "displayName": "React Hooks Web",
+    "tsconfig": "./tsconfig.json"
   }
 }
