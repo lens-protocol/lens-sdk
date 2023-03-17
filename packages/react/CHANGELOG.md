@@ -1,5 +1,22 @@
 # @lens-protocol/react
 
+## 0.6.0
+
+### Minor Changes
+
+- Integrated gated sdk
+- 4475a27: Added appId to LensConfig. It is used when creating publications.
+
+### Patch Changes
+
+- Updated dependencies [4475a27]
+  - @lens-protocol/domain@0.6.0
+  - @lens-protocol/api-bindings@0.6.0
+  - @lens-protocol/blockchain-bindings@0.6.0
+  - @lens-protocol/gated-content@0.0.2
+  - @lens-protocol/storage@0.6.0
+  - @lens-protocol/shared-kernel@0.6.0
+
 ## 0.5.1
 
 ### Patch Changes

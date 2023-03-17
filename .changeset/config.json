@@ -8,6 +8,7 @@
       "@lens-protocol/blockchain-bindings",
       "@lens-protocol/domain",
       "@lens-protocol/react",
+      "@lens-protocol/react-web",
       "@lens-protocol/storage",
       "@lens-protocol/wagmi",
       "@lens-protocol/shared-kernel"

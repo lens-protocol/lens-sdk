@@ -1,5 +1,15 @@
 # @lens-protocol/client
 
+## 0.3.0
+
+- Fixed `profile.createSetProfileImageURIViaDispatcher()`
+- Added authentication header to all API requests if client is authenticated
+
+### Patch Changes
+
+- @lens-protocol/storage@0.6.0
+- @lens-protocol/shared-kernel@0.6.0
+
 ## 0.2.0
 
 ### Minor Changes
