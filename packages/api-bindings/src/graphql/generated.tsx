@@ -4453,6 +4453,7 @@ export type MirrorFragment = {
 export type CommentBaseFragment = {
   __typename: 'Comment';
   id: PublicationId;
+  collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
   isGated: boolean;
@@ -4505,6 +4506,7 @@ export type CommentFragment = {
 export type PostFragment = {
   __typename: 'Post';
   id: PublicationId;
+  collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
   isGated: boolean;
@@ -6005,6 +6007,7 @@ export const CommentBaseFragmentDoc = gql`
     referenceModule {
       ...ReferenceModule
     }
+    collectNftAddress
     createdAt
     hidden
     isGated
@@ -6056,6 +6059,7 @@ export const PostFragmentDoc = gql`
     referenceModule {
       ...ReferenceModule
     }
+    collectNftAddress
     createdAt
     hidden
     isGated
