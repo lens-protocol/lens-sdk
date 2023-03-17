@@ -1,6 +1,8 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "@lens-protocol/tsconfig/base.json",
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["DOM", "ESNext"],
     "module": "ESNext",
     "outDir": "dist"
   },

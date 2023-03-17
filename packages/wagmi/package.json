@@ -38,6 +38,7 @@
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/react-web": "workspace:*",
+    "@lens-protocol/tsconfig": "workspace:*",
     "@types/node": "^18.14.0",
     "ethers": "^5.7.2",
     "prettier": "^2.8.4",
