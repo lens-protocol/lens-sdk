@@ -62,6 +62,11 @@
   "peerDependencies": {
     "ethers": "^5.7.2"
   },
+  "peerDependenciesMeta": {
+    "ethers": {
+      "optional": true
+    }
+  },
   "prettier": "@lens-protocol/prettier-config",
   "babel": {
     "presets": [
