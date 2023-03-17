@@ -808,6 +808,7 @@ importers:
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/react-web': workspace:*
       '@lens-protocol/shared-kernel': workspace:*
+      '@lens-protocol/tsconfig': workspace:*
       '@types/node': ^18.14.0
       ethers: ^5.7.2
       prettier: ^2.8.4
@@ -824,6 +825,7 @@ importers:
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
       '@lens-protocol/react-web': link:../react-web
+      '@lens-protocol/tsconfig': link:../tsconfig
       '@types/node': 18.14.0
       ethers: 5.7.2
       prettier: 2.8.4
