@@ -1,5 +1,5 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": ".@lens-protocol/tsconfig/tsconfig.base.json",
   "compilerOptions": {
     "module": "ESNext",
     "outDir": "dist"

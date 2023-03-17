@@ -767,6 +767,7 @@ importers:
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/shared-kernel': workspace:*
+      '@lens-protocol/tsconfig': workspace:*
       '@types/jest': 29.2.3
       '@types/node': ^18.14.0
       eslint: ^8.34.0
@@ -786,6 +787,7 @@ importers:
       '@babel/preset-typescript': 7.18.6_@babel+core@7.20.12
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
+      '@lens-protocol/tsconfig': link:../tsconfig
       '@types/jest': 29.2.3
       '@types/node': 18.14.0
       eslint: 8.34.0
