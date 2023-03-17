@@ -1,11 +1,10 @@
 # Module: React Hooks Web
 
-## Common
+## Common Enumerations
 
 - [ChainType](../enums/React_Hooks_Web.ChainType.md)
-- [BigDecimal](../classes/React_Hooks_Web.BigDecimal.md)
 
-## Enumerations
+## Other Enumerations
 
 - [NotificationTypes](../enums/React_Hooks_Web.NotificationTypes.md)
 - [PublicationContentWarning](../enums/React_Hooks_Web.PublicationContentWarning.md)
@@ -13,65 +12,47 @@
 - [PublicationSortCriteria](../enums/React_Hooks_Web.PublicationSortCriteria.md)
 - [PublicationTypes](../enums/React_Hooks_Web.PublicationTypes.md)
 
+## Common Classes
+
+- [Amount](../classes/React_Hooks_Web.Amount.md)
+- [BigDecimal](../classes/React_Hooks_Web.BigDecimal.md)
+- [Erc20](../classes/React_Hooks_Web.Erc20.md)
+- [Ether](../classes/React_Hooks_Web.Ether.md)
+- [Fiat](../classes/React_Hooks_Web.Fiat.md)
+- [Matic](../classes/React_Hooks_Web.Matic.md)
+
 ## Interfaces
 
 - [ICipher](../interfaces/React_Hooks_Web.ICipher.md)
 - [IObservableStorageProvider](../interfaces/React_Hooks_Web.IObservableStorageProvider.md)
 
-## Amounts
+## Common Type Aliases
 
-• **Amount**<`T`\>: `Object`
+- [AmountValue](React_Hooks_Web.md#amountvalue)
+- [Asset](React_Hooks_Web.md#asset)
+- [CryptoAmount](React_Hooks_Web.md#cryptoamount)
+- [CryptoAsset](React_Hooks_Web.md#cryptoasset)
+- [CryptoNativeAmount](React_Hooks_Web.md#cryptonativeamount)
+- [CryptoNativeAsset](React_Hooks_Web.md#cryptonativeasset)
+- [Erc20Info](React_Hooks_Web.md#erc20info)
+- [FiatAmount](React_Hooks_Web.md#fiatamount)
 
-Amount is a value object representing an amount of given [Asset](React_Hooks_Web.md#asset).
+## Other Type Aliases
 
-**`Remarks`**
+- [TwoAtLeastArray](React_Hooks_Web.md#twoatleastarray)
 
-Amount hides all the complexity of dealing with different precision of different assets.
-It offers a consistent interface to perform arithmetic operations on amounts.
+## Common Variables
 
-Amount is immutable. All arithmetic operations return a new Amount instance.
+- [Denomination](React_Hooks_Web.md#denomination)
 
-#### Type parameters
+## Common Functions
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`Asset`](React_Hooks_Web.md#asset) |
+- [erc20](React_Hooks_Web.md#erc20)
+- [ether](React_Hooks_Web.md#ether)
+- [matic](React_Hooks_Web.md#matic)
+- [usd](React_Hooks_Web.md#usd)
 
-#### Defined in
-
-[packages/shared-kernel/src/crypto/Amount.ts:76](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L76)
-
-• `Private` **Erc20**: `Object`
-
-Erc20 is a value object representing an ERC20 token.
-
-#### Defined in
-
-[packages/shared-kernel/src/crypto/Asset.ts:163](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L163)
-
-• `Private` **Ether**: `Object`
-
-Ether is a value object representing the Ether token.
-
-#### Defined in
-
-[packages/shared-kernel/src/crypto/Asset.ts:83](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L83)
-
-• `Private` **Fiat**: `Object`
-
-Fiat is a value object representing a fiat currency.
-
-#### Defined in
-
-[packages/shared-kernel/src/crypto/Asset.ts:49](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L49)
-
-• `Private` **Matic**: `Object`
-
-Matic is a value object representing the Matic token.
-
-#### Defined in
-
-[packages/shared-kernel/src/crypto/Asset.ts:123](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L123)
+## Common Type Aliases
 
 ### AmountValue
 
@@ -89,15 +70,13 @@ ___
 
 Ƭ **Asset**: [`Fiat`](../classes/React_Hooks_Web.Fiat.md) \| [`Ether`](../classes/React_Hooks_Web.Ether.md) \| [`Erc20`](../classes/React_Hooks_Web.Erc20.md) \| [`Matic`](../classes/React_Hooks_Web.Matic.md)
 
-Asset is a union of value objects representing currency or token.
-
-**`Remarks`**
+Asset is a convenience union of value objects representing currency or token.
 
 Asset instances are immutable and can be compared using reference equality (`===`).
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:209](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L209)
+[packages/shared-kernel/src/crypto/Asset.ts:204](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L204)
 
 ___
 
@@ -109,7 +88,7 @@ A convenience type to specify a crypto amount value.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Amount.ts:215](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L215)
+[packages/shared-kernel/src/crypto/Amount.ts:216](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L216)
 
 ___
 
@@ -121,7 +100,7 @@ CryptoAsset is a convenience union representing currencies that are blockchain t
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:227](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L227)
+[packages/shared-kernel/src/crypto/Asset.ts:223](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L223)
 
 ___
 
@@ -133,7 +112,7 @@ A convenience type to specify a native crypto amount value.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Amount.ts:221](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L221)
+[packages/shared-kernel/src/crypto/Amount.ts:223](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L223)
 
 ___
 
@@ -151,7 +130,7 @@ and they are used to pay for gas fees.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:221](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L221)
+[packages/shared-kernel/src/crypto/Asset.ts:216](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L216)
 
 ___
 
@@ -173,7 +152,7 @@ Initialization object for [erc20](React_Hooks_Web.md#erc20) factory function
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:248](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L248)
+[packages/shared-kernel/src/crypto/Asset.ts:244](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L244)
 
 ___
 
@@ -185,9 +164,29 @@ A convenience type to specify a fiat amount value.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Amount.ts:227](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L227)
+[packages/shared-kernel/src/crypto/Amount.ts:230](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L230)
 
 ___
+
+## Other Type Aliases
+
+### TwoAtLeastArray
+
+Ƭ **TwoAtLeastArray**<`T`\>: `Overwrite`<[`T`, `T`, ...T[]], { `map`: <U\>(`callbackfn`: (`value`: `T`, `index`: `number`, `array`: `T`[]) => `U`, `thisArg?`: `unknown`) => [`TwoAtLeastArray`](React_Hooks_Web.md#twoatleastarray)<`U`\>  }\>
+
+Declares an array of at least two elements of the specified type.
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+
+#### Defined in
+
+[packages/shared-kernel/src/ts-helpers/types.ts:102](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/ts-helpers/types.ts#L102)
+
+## Common Variables
 
 ### Denomination
 
@@ -206,7 +205,7 @@ A set of convenience helpers useful to specify amount values in common denominat
 
 [packages/shared-kernel/src/crypto/Amount.ts:28](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L28)
 
-___
+## Common Functions
 
 ### erc20
 
@@ -230,7 +229,7 @@ An Erc20 instance.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:265](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L265)
+[packages/shared-kernel/src/crypto/Asset.ts:260](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L260)
 
 ___
 
@@ -250,7 +249,7 @@ The Ether instance.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:293](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L293)
+[packages/shared-kernel/src/crypto/Asset.ts:286](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L286)
 
 ___
 
@@ -270,7 +269,7 @@ The Matic instance.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:279](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L279)
+[packages/shared-kernel/src/crypto/Asset.ts:273](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L273)
 
 ___
 
@@ -290,22 +289,4 @@ The USD Fiat instance.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:307](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L307)
-
-## Type Aliases
-
-### TwoAtLeastArray
-
-Ƭ **TwoAtLeastArray**<`T`\>: `Overwrite`<[`T`, `T`, ...T[]], { `map`: <U\>(`callbackfn`: (`value`: `T`, `index`: `number`, `array`: `T`[]) => `U`, `thisArg?`: `unknown`) => [`TwoAtLeastArray`](React_Hooks_Web.md#twoatleastarray)<`U`\>  }\>
-
-Declares an array of at least two elements of the specified type.
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Defined in
-
-[packages/shared-kernel/src/ts-helpers/types.ts:102](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/ts-helpers/types.ts#L102)
+[packages/shared-kernel/src/crypto/Asset.ts:299](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L299)

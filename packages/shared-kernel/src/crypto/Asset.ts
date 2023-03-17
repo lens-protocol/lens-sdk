@@ -3,7 +3,7 @@ import { ChainType } from './ChainType';
 /**
  * Kind is an enum representing the kind of asset.
  *
- * @group Common
+ * @category Common
  * @remarks
  *
  * - NATIVE: Native token, e.g. Ether, Matic
@@ -19,7 +19,7 @@ export enum Kind {
 /**
  * WellKnownSymbols is a convenience enum for well known symbols.
  *
- * @group Common
+ * @category Common
  */
 export enum WellKnownSymbols {
   ETH = 'ETH',
@@ -31,7 +31,7 @@ export enum WellKnownSymbols {
 /**
  * NativeType is an enum representing the supported native token types.
  *
- * @group Common
+ * @category Common
  */
 export enum NativeType {
   ETHER,
@@ -41,9 +41,8 @@ export enum NativeType {
 /**
  * Fiat is a value object representing a fiat currency.
  *
- * @group Common
+ * @category Common
  * @sealed
- * @private
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Fiat {
@@ -75,9 +74,8 @@ class Fiat {
 /**
  * Ether is a value object representing the Ether token.
  *
- * @group Common
+ * @category Common
  * @sealed
- * @private
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Ether {
@@ -115,9 +113,8 @@ class Ether {
 /**
  * Matic is a value object representing the Matic token.
  *
- * @group Common
+ * @category Common
  * @sealed
- * @private
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Matic {
@@ -155,9 +152,8 @@ class Matic {
 /**
  * Erc20 is a value object representing an ERC20 token.
  *
- * @group Common
+ * @category Common
  * @sealed
- * @private
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Erc20 {
@@ -199,19 +195,18 @@ class Erc20 {
 export type { Erc20, Ether, Matic, Fiat };
 
 /**
- * Asset is a union of value objects representing currency or token.
- *
- * @group Common
- * @remarks
+ * Asset is a convenience union of value objects representing currency or token.
  *
  * Asset instances are immutable and can be compared using reference equality (`===`).
+ *
+ * @category Common
  */
 export type Asset = Fiat | Ether | Erc20 | Matic;
 
 /**
  * CryptoAsset is a convenience union representing tokens that are native to the supported blockchains.
  *
- * @group Common
+ * @category Common
  * @remarks
  *
  * The reason we make a distinction between CryptoAsset and {@link Asset} is that CryptoAsset are
@@ -222,7 +217,8 @@ export type CryptoNativeAsset = Ether | Matic;
 
 /**
  * CryptoAsset is a convenience union representing currencies that are blockchain tokens.
- * @group Common
+ *
+ * @category Common
  */
 export type CryptoAsset = Ether | Erc20 | Matic;
 
@@ -243,7 +239,7 @@ function immutable(key: string, asset: Asset): Asset {
 /**
  * Initialization object for {@link erc20} factory function
  *
- * @group Common
+ * @category Common
  */
 export type Erc20Info = {
   address: string;
@@ -258,8 +254,7 @@ export type Erc20Info = {
  *
  * Erc20 instances, like all {@link Asset} instances, are immutable and can be compared using reference equality (`===`).
  *
- * @group Common
- *
+ * @category Common
  * @returns An Erc20 instance.
  */
 export function erc20({ name, decimals, symbol, address, chainType }: Erc20Info) {
@@ -272,8 +267,7 @@ export function erc20({ name, decimals, symbol, address, chainType }: Erc20Info)
  *
  * There is only one Matic token, so this function returns the same instance every time.
  *
- * @group Common
- *
+ * @category Common
  * @returns The Matic instance.
  */
 export function matic(): Matic {
@@ -286,8 +280,7 @@ export function matic(): Matic {
  *
  * There is only one Ether token, so this function returns the same instance every time.
  *
- * @group Common
- *
+ * @category Common
  * @returns The Ether instance.
  */
 export function ether(): Ether {
@@ -300,8 +293,7 @@ export function ether(): Ether {
  *
  * There is only one USD token, so this function returns the same instance every time.
  *
- * @group Common
- *
+ * @category Common
  * @returns The USD Fiat instance.
  */
 export function usd(): Fiat {
