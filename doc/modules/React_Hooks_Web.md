@@ -21,9 +21,13 @@
 - [Fiat](../classes/React_Hooks_Web.Fiat.md)
 - [Matic](../classes/React_Hooks_Web.Matic.md)
 
-## Interfaces
+## Encryption Interfaces
 
 - [ICipher](../interfaces/React_Hooks_Web.ICipher.md)
+- [IEncryptionProvider](../interfaces/React_Hooks_Web.IEncryptionProvider.md)
+
+## Storage Interfaces
+
 - [IObservableStorageProvider](../interfaces/React_Hooks_Web.IObservableStorageProvider.md)
 
 ## Common Type Aliases
@@ -74,9 +78,11 @@ Asset is a convenience union of value objects representing currency or token.
 
 Asset instances are immutable and can be compared using reference equality (`===`).
 
+**`Param`**
+
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:204](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L204)
+[packages/shared-kernel/src/crypto/Asset.ts:212](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L212)
 
 ___
 
@@ -98,9 +104,11 @@ ___
 
 CryptoAsset is a convenience union representing currencies that are blockchain tokens.
 
+**`Param`**
+
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:223](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L223)
+[packages/shared-kernel/src/crypto/Asset.ts:233](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L233)
 
 ___
 
@@ -122,6 +130,8 @@ ___
 
 CryptoAsset is a convenience union representing tokens that are native to the supported blockchains.
 
+**`Param`**
+
 **`Remarks`**
 
 The reason we make a distinction between CryptoAsset and [Asset](React_Hooks_Web.md#asset) is that CryptoAsset are
@@ -130,7 +140,7 @@ and they are used to pay for gas fees.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:216](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L216)
+[packages/shared-kernel/src/crypto/Asset.ts:225](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L225)
 
 ___
 
@@ -139,6 +149,8 @@ ___
 Ƭ **Erc20Info**: `Object`
 
 Initialization object for [erc20](React_Hooks_Web.md#erc20) factory function
+
+**`Param`**
 
 #### Type declaration
 
@@ -152,7 +164,7 @@ Initialization object for [erc20](React_Hooks_Web.md#erc20) factory function
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:244](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L244)
+[packages/shared-kernel/src/crypto/Asset.ts:255](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L255)
 
 ___
 
@@ -209,7 +221,7 @@ A set of convenience helpers useful to specify amount values in common denominat
 
 ### erc20
 
-▸ **erc20**(`«destructured»`): [`Erc20`](../classes/React_Hooks_Web.Erc20.md)
+▸ **erc20**(`info`): [`Erc20`](../classes/React_Hooks_Web.Erc20.md)
 
 Erc20 asset factory function.
 
@@ -217,19 +229,17 @@ Erc20 instances, like all [Asset](React_Hooks_Web.md#asset) instances, are immut
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `«destructured»` | [`Erc20Info`](React_Hooks_Web.md#erc20info) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `info` | [`Erc20Info`](React_Hooks_Web.md#erc20info) | [) details @returns An Erc20 instance.](React_Hooks_Web.md#erc20info) |
 
 #### Returns
 
 [`Erc20`](../classes/React_Hooks_Web.Erc20.md)
 
-An Erc20 instance.
-
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:260](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L260)
+[packages/shared-kernel/src/crypto/Asset.ts:272](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L272)
 
 ___
 
@@ -249,7 +259,7 @@ The Ether instance.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:286](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L286)
+[packages/shared-kernel/src/crypto/Asset.ts:298](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L298)
 
 ___
 
@@ -269,7 +279,7 @@ The Matic instance.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:273](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L273)
+[packages/shared-kernel/src/crypto/Asset.ts:285](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L285)
 
 ___
 
@@ -289,4 +299,4 @@ The USD Fiat instance.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Asset.ts:299](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L299)
+[packages/shared-kernel/src/crypto/Asset.ts:311](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Asset.ts#L311)

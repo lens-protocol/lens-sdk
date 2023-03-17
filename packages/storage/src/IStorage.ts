@@ -13,7 +13,9 @@ export interface IStorageProvider {
 }
 
 /**
- * A storage implementation that observes external updates (e.g. updating from another tab, updating from another devices)
+ * A storage provider that supports observable storage items
+ *
+ * @category Storage
  */
 export interface IObservableStorageProvider extends IStorageProvider {
   subscribe(key: string, subscriber: StorageProviderSubscriber): StorageSubscription;
