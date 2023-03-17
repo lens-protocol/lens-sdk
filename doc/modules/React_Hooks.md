@@ -94,7 +94,7 @@ A convenience type to specify a crypto amount value.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Amount.ts:216](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L216)
+[packages/shared-kernel/src/crypto/Amount.ts:308](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L308)
 
 ___
 
@@ -120,7 +120,7 @@ A convenience type to specify a native crypto amount value.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Amount.ts:223](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L223)
+[packages/shared-kernel/src/crypto/Amount.ts:315](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L315)
 
 ___
 
@@ -176,7 +176,7 @@ A convenience type to specify a fiat amount value.
 
 #### Defined in
 
-[packages/shared-kernel/src/crypto/Amount.ts:230](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L230)
+[packages/shared-kernel/src/crypto/Amount.ts:322](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/crypto/Amount.ts#L322)
 
 ___
 
@@ -231,11 +231,13 @@ Erc20 instances, like all [Asset](React_Hooks.md#asset) instances, are immutable
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `info` | [`Erc20Info`](React_Hooks.md#erc20info) | [) details @returns An Erc20 instance.](React_Hooks.md#erc20info) |
+| `info` | [`Erc20Info`](React_Hooks.md#erc20info) | [details](React_Hooks.md#erc20info) |
 
 #### Returns
 
 [`Erc20`](../classes/React_Hooks.Erc20.md)
+
+An Erc20 instance.
 
 #### Defined in
 
