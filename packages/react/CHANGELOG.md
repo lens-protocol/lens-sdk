@@ -4,7 +4,8 @@
 
 ### Minor Changes
 
-- Integrated gated sdk
+- 6be7f14: Added support for token gated post/comment using Lit Protocol.
+- d153c2e: Updated all hooks/flow requiring `observerId` to automatically use Active Profile Id.
 - 4475a27: Added appId to LensConfig. It is used when creating publications.
 
 ### Patch Changes
@@ -33,7 +34,7 @@
 
 ### Minor Changes
 
-- 17646fff: - Removed the need for `assertRequiredSigner` when returning the signer from `getSigner` (Used in <LensProvider/>)
+- 17646fff: Removed the need for `assertRequiredSigner` when returning the signer from `getSigner` (Used in <LensProvider/>)
 - 95d905c5: Added `useProfilesOwnedByMe` hook
 - 7124e4e6: Added `profilePublicationsForSale` hook
 - b098c376: Added missing fields to `PublicationStats` and `ProfileStats`

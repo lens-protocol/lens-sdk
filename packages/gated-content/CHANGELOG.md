@@ -1,6 +1,8 @@
 # @lens-protocol/gated-content
 
-## 0.0.2
+## 0.1.0
+
+- 6be7f14: Added support for token gated post/comment using Lit Protocol.
 
 ### Patch Changes
 
