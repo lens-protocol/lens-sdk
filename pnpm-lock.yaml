@@ -260,6 +260,7 @@ importers:
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/shared-kernel': workspace:*
       '@lens-protocol/storage': workspace:*
+      '@lens-protocol/tsconfig': workspace:*
       '@types/jest': 29.2.3
       '@types/node': ^18.14.0
       dotenv: ^16.0.3
@@ -296,6 +297,7 @@ importers:
       '@graphql-codegen/typescript-operations': 3.0.1_graphql@16.6.0
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
+      '@lens-protocol/tsconfig': link:../tsconfig
       '@types/jest': 29.2.3
       '@types/node': 18.14.0
       dotenv: 16.0.3
