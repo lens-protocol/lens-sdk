@@ -479,6 +479,7 @@ importers:
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/shared-kernel': workspace:*
       '@lens-protocol/storage': workspace:*
+      '@lens-protocol/tsconfig': workspace:*
       '@testing-library/react': ^13.4.0
       '@types/jest': 29.2.3
       '@types/jest-when': ^3.5.2
@@ -534,6 +535,7 @@ importers:
       '@faker-js/faker': 7.6.0
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
+      '@lens-protocol/tsconfig': link:../tsconfig
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.2.3
       '@types/jest-when': 3.5.2

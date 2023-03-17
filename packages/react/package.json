@@ -63,6 +63,7 @@
     "@faker-js/faker": "^7.6.0",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
+    "@lens-protocol/tsconfig": "workspace:*",
     "@testing-library/react": "^13.4.0",
     "@types/jest": "29.2.3",
     "@types/jest-when": "^3.5.2",
