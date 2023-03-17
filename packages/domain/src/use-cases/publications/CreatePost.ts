@@ -1,6 +1,6 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { DecryptionCriteria, TransactionKind } from '../../entities';
+import { AppId, DecryptionCriteria, TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -11,6 +11,7 @@ import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 import { CollectPolicyConfig, ContentFocus, Locale, Media } from './types';
 
 export type CreatePostRequest = {
+  appId?: AppId;
   content?: string;
   contentFocus: ContentFocus;
   media?: Media[];

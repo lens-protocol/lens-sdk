@@ -43,6 +43,7 @@ export function useCreateComment({
   upload,
 }: UseCreateCommentArg): CreateCommentOperation {
   const {
+    appId,
     activeWallet,
     apolloClient,
     protocolCallRelayer,
@@ -79,6 +80,7 @@ export function useCreateComment({
           collect,
           profileId: publisher.id,
           reference,
+          appId,
           ...args,
         });
       } catch (err: unknown) {

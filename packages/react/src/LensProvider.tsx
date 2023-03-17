@@ -1,7 +1,7 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { LensConfig } from './config';
+import { LensConfig, validateConfig } from './config';
 import { useBootstrapController } from './lifecycle/adapters/useBootstrapController';
 import { createSharedDependencies, Handlers, SharedDependenciesProvider } from './shared';
 
@@ -15,8 +15,10 @@ export type LensProviderProps = Partial<Handlers> & {
 
 export function LensProvider({ children, ...props }: LensProviderProps) {
   const isStartedRef = useRef(false);
-
   const initialProps = useRef(props).current;
+
+  validateConfig(props.config);
+
   const [sharedDependencies] = useState(() =>
     createSharedDependencies(props.config, {
       onLogout: props.onLogout ?? noop,

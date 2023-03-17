@@ -40,6 +40,7 @@ export type CreatePostOperation = Operation<
 
 export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreatePostOperation {
   const {
+    appId,
     activeWallet,
     apolloClient,
     protocolCallRelayer,
@@ -76,6 +77,7 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
           delegate: publisher.dispatcher !== null,
           profileId: publisher.id,
           reference,
+          appId,
           ...args,
         });
       } catch (err: unknown) {
