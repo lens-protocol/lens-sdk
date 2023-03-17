@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/shared-kernel",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Shared kernel",
   "repository": {
     "directory": "packages/shared-kernel",

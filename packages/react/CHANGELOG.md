@@ -1,5 +1,23 @@
 # @lens-protocol/react
 
+## 0.6.0
+
+### Minor Changes
+
+- 6be7f14: Added support for token gated post/comment using Lit Protocol.
+- d153c2e: Updated all hooks/flow requiring `observerId` to automatically use Active Profile Id.
+- 4475a27: Added appId to LensConfig. It is used when creating publications.
+
+### Patch Changes
+
+- Updated dependencies [4475a27]
+  - @lens-protocol/domain@0.6.0
+  - @lens-protocol/api-bindings@0.6.0
+  - @lens-protocol/blockchain-bindings@0.6.0
+  - @lens-protocol/gated-content@0.0.2
+  - @lens-protocol/storage@0.6.0
+  - @lens-protocol/shared-kernel@0.6.0
+
 ## 0.5.1
 
 ### Patch Changes
@@ -16,7 +34,7 @@
 
 ### Minor Changes
 
-- 17646fff: - Removed the need for `assertRequiredSigner` when returning the signer from `getSigner` (Used in <LensProvider/>)
+- 17646fff: Removed the need for `assertRequiredSigner` when returning the signer from `getSigner` (Used in <LensProvider/>)
 - 95d905c5: Added `useProfilesOwnedByMe` hook
 - 7124e4e6: Added `profilePublicationsForSale` hook
 - b098c376: Added missing fields to `PublicationStats` and `ProfileStats`
