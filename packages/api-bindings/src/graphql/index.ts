@@ -21,6 +21,7 @@ export * from './FollowStatus';
 export * from './generated';
 export * from './ProfileAttributeReader';
 export * from './ProfileAttributes';
+export * from './ReferencePolicy';
 export * from './sources';
 export * from './utils';
 

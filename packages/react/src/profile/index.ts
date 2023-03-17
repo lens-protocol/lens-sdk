@@ -16,11 +16,14 @@ export * from './useProfilesOwnedByMe';
 export { isProfileOwnedByMe } from '@lens-protocol/api-bindings';
 
 export type {
-  ProfileAttributes,
-  ProfileAttributeReader,
-  ProfileFragment,
-  ProfileOwnedByMeFragment,
-  FollowingFragment,
   FollowerFragment,
+  FollowingFragment,
   FollowPolicy,
+  FollowStatus,
+  ProfileAttributeReader,
+  ProfileAttributes,
+  ProfileFragment,
+  ProfileMediaFragment,
+  ProfileOwnedByMeFragment,
+  ProfileStatsFragment,
 } from '@lens-protocol/api-bindings';
