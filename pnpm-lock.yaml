@@ -316,6 +316,7 @@ importers:
       '@lens-protocol/eslint-config': workspace:*
       '@lens-protocol/prettier-config': workspace:*
       '@lens-protocol/shared-kernel': workspace:*
+      '@lens-protocol/tsconfig': workspace:*
       '@types/jest': 29.2.3
       '@types/jest-when': ^3.5.2
       eslint: ^8.34.0
@@ -338,6 +339,7 @@ importers:
       '@jest/globals': 29.4.3
       '@lens-protocol/eslint-config': link:../eslint-config
       '@lens-protocol/prettier-config': link:../prettier-config
+      '@lens-protocol/tsconfig': link:../tsconfig
       '@types/jest': 29.2.3
       '@types/jest-when': 3.5.2
       eslint: 8.34.0
