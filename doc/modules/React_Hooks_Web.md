@@ -43,6 +43,8 @@
 
 ## Other Type Aliases
 
+- [DistributiveOmit](React_Hooks_Web.md#distributiveomit)
+- [Overwrite](React_Hooks_Web.md#overwrite)
 - [TwoAtLeastArray](React_Hooks_Web.md#twoatleastarray)
 
 ## Common Variables
@@ -182,9 +184,53 @@ ___
 
 ## Other Type Aliases
 
+### DistributiveOmit
+
+Ƭ **DistributiveOmit**<`T`, `K`\>: `T` extends `any` ? `Omit`<`T`, `K`\> : `never`
+
+Omits properties from an union type, preserving the union.
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | `T` |
+| `K` | extends keyof `any` |
+
+#### Defined in
+
+[packages/shared-kernel/src/ts-helpers/types.ts:84](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/ts-helpers/types.ts#L84)
+
+___
+
+### Overwrite
+
+Ƭ **Overwrite**<`T1`, `T2`\>: [`DistributiveOmit`](React_Hooks_Web.md#distributiveomit)<`T1`, keyof `T2`\> & `T2`
+
+Overwrites properties from T1 with one from T2
+
+**`Example`**
+
+```ts
+Overwrite<{ foo: boolean, bar: string }, { foo: number }> // { foo: number, bar: string }
+```
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T1` |
+| `T2` |
+
+#### Defined in
+
+[packages/shared-kernel/src/ts-helpers/types.ts:31](https://github.com/lens-protocol/lens-sdk/blob/main/packages/shared-kernel/src/ts-helpers/types.ts#L31)
+
+___
+
 ### TwoAtLeastArray
 
-Ƭ **TwoAtLeastArray**<`T`\>: `Overwrite`<[`T`, `T`, ...T[]], { `map`: <U\>(`callbackfn`: (`value`: `T`, `index`: `number`, `array`: `T`[]) => `U`, `thisArg?`: `unknown`) => [`TwoAtLeastArray`](React_Hooks_Web.md#twoatleastarray)<`U`\>  }\>
+Ƭ **TwoAtLeastArray**<`T`\>: [`Overwrite`](React_Hooks_Web.md#overwrite)<[`T`, `T`, ...T[]], { `map`: <U\>(`callbackfn`: (`value`: `T`, `index`: `number`, `array`: `T`[]) => `U`, `thisArg?`: `unknown`) => [`TwoAtLeastArray`](React_Hooks_Web.md#twoatleastarray)<`U`\>  }\>
 
 Declares an array of at least two elements of the specified type.
 

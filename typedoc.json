@@ -6,6 +6,7 @@
   "name": "Lens SDK Reference",
   "gitRevision": "main",
   "readme": "none",
+  "excludeExternals": true,
   "excludeInternal": true,
   "excludePrivate": false,
   "excludeProtected": false,

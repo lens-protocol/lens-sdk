@@ -52,6 +52,7 @@ export type {
   CryptoAsset,
   CryptoNativeAmount,
   CryptoNativeAsset,
+  DistributiveOmit,
   Erc20,
   Erc20Info,
   Ether,
@@ -59,6 +60,8 @@ export type {
   Fiat,
   FiatAmount,
   Matic,
-  Result,
+  Overwrite,
   PromiseResult,
+  Result,
+  TwoAtLeastArray,
 } from '@lens-protocol/shared-kernel';
