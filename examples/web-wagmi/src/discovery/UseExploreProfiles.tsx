@@ -1,4 +1,4 @@
-import { useExploreProfiles } from '@lens-protocol/react-web';
+import { ProfileSortCriteria, useExploreProfiles } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
@@ -6,7 +6,11 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from '../profiles/components/ProfileCard';
 
 export function UseExploreProfiles() {
-  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(useExploreProfiles());
+  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
+    useExploreProfiles({
+      sortCriteria: ProfileSortCriteria.MostFollowers,
+    }),
+  );
 
   if (loading) return <Loading />;
 
