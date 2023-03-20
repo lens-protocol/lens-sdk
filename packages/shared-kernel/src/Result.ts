@@ -1,28 +1,15 @@
-/**
- * Thrown exceptions are historically difficult to trace. They require implicit knowledge
- * of the implementation details of the code that might throw exceptions. This might go
- * several layers down and lead to tight coupling between modules.
- *
- * There are good reasons to leave thrown exceptions only for exceptional (i.e. unexpected) failure
- * scenarios and model known failure modes in way that allows traditional control flow.
- *
- * Result<T, E> is a minimalistic implementation of a value that can be a "success" or a "failure".
- * It borrows from what done in other modern languages (i.e. Rust, Kotlin, Swift, etc.).
- * It's type safe and promotes exhaustive error handling.
- *
- * See:
- *   - https://wiki.c2.com/?AvoidExceptionsWheneverPossible
- *   - https://developer.apple.com/documentation/swift/result
- *   - https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/
- *
- * Alternatives:
- *   - https://github.com/everweij/typescript-result
- *   - https://github.com/supermacro/neverthrow
- *   - https://github.com/badrap/result
- */
-
 import { Narrow } from './ts-helpers/types';
 
+/**
+ * A `Success<T, E>` represents a successful computation that returns a value of type `T`.
+ *
+ * `E` in `Success<T, E>` is the type of the error that would have been returned in case of failure.
+ * It's present only to allow type safety of the `isFailure` method.
+ *
+ * @sealed
+ * @private
+ * @privateRemarks DO NOT EXPORT, see type export later on
+ */
 class Success<T, E> {
   public constructor(public readonly value: T) {}
 
@@ -39,6 +26,16 @@ class Success<T, E> {
   }
 }
 
+/**
+ * A `Success<T, E>` represents a successful computation that returns a value of type `T`.
+ *
+ * `T` in `Failure<T, E>` is the type of the value that would have been returned in case of success.
+ * It's present only to allow type safety of the `isSuccess` method.
+ *
+ * @sealed
+ * @private
+ * @privateRemarks DO NOT EXPORT, see type export later on
+ */
 class Failure<T, E> {
   public constructor(public readonly error: E) {}
 
@@ -55,12 +52,105 @@ class Failure<T, E> {
   }
 }
 
+export type { Success, Failure };
+
+/**
+ * An `IEquatableError` is an error that can be compared by name.
+ */
 export interface IEquatableError<T extends string = string, P = Narrow<T>> {
   name: P;
 }
 
+/**
+ * A `Result` type represents either `Success` or failure `Failure`.
+ *
+ * **TL;DR**
+ *
+ * `Result` is a minimalist implementation of a value that can be a "success" or a "failure".
+ * It borrows from what done in other modern languages (i.e. Rust, Kotlin, Swift, etc.).
+ *
+ * The Lens SDK adopts this pattern in order to:
+ * - be explicit about the known failure scenarios of a task,
+ * - provide a way for consumers to perform exhaustive error handling,
+ * - makes control flow easier to reason about.
+ *
+ * @remarks
+ *
+ * You might be familiar with the `Either` type from functional programming. The `Result` type
+ * could be seen as a more specific version of `Either` where the left side is reserved for
+ * success scenarios and the right side is reserved for known failure scenarios.
+ *
+ * Think of failure scenarios as alternative outcomes of a given task that although not the "happy path",
+ * are still legitimate results for the task within the boundary of a correct usage of the SDK.
+ *
+ * In promoting exhaustive error handling, the Lens SDK makes it easier to evolve your code
+ * when a new error case is added or a case is removed.
+ * For example after a Lens SDK upgrade you can simply run the TS compiler to figure out where you
+ * need to handle the new error cases, or even better, it guides you to remove obsolescent code
+ * where an error case is no longer possible. This is virtually impossible with a `try/catch` approach.
+ *
+ * Thrown exceptions are historically difficult to trace. They require implicit knowledge
+ * of the implementation details of the code that might throw exceptions. This might go several
+ * layers down and leads to tight coupling between modules.
+ *
+ * The Lens SDK still throws exceptions where the error is not a "normal execution scenario".
+ * These are considered real "exceptional circumstances" and not alternative outcomes and it's up to the consumer to `try/catch` them.
+ *
+ * An example of errors that are thrown by the SDK is {@link InvariantError}. They are often thrown as result of a misuse of the SDK.
+ * By throwing them we want to fail fast so the consumer can fix the issue as soon as possible.
+ * Specifically for `InvariantError`, there is no need to code defensively against these errors. Just rectify the coding issue and move on.
+ *
+ * @example Control flow
+ *
+ * ```ts
+ * const result: Result<number, RangeError> = doSomething();
+ *
+ * if (result.isFailure()) {
+ *   // because of the `isFailure` check above, TS knows that `result` is a `Failure<number, RangeError>` here
+ *   console.log(result.error); // result.error gets narrowed to `RangeError`
+ *
+ *   return; // early return
+ * }
+ *
+ * // because of the `isFailure` check above and the early return, TS knows that `result` is a `Success<number, RangeError>` here
+ * console.log(result.value); // result.value gets narrowed to `number`
+ * ```
+ *
+ * @example Exhaustive error handling
+ *
+ * Given a result type like the following:
+ *
+ * ```ts
+ * const result: Result<number, PendingSigningError | WalletConnectionError> = doSomething();
+ * ```
+ * You can use a function with a `switch` statement to perform exhaustive error handling:
+ * ```ts
+ * function format(failure: Failure<number, PendingSigningError | WalletConnectionError>): string {
+ *   switch (failure.error.name) {
+ *     case 'PendingSigningError':
+ *       return 'Please sign the transaction';
+ *       break;
+ *     case 'WalletConnectionError':
+ *       return 'Please connect your wallet and try again';
+ *       break;
+ *   }
+ *   // any code after the switch statement is unreachable
+ * }
+ * ```
+ * The example above assumes `allowUnreachableCode: false` in your `tsconfig.json`.
+ *
+ * An even more robust way to perform exhaustive error handling with a `switch` is to use the `never` type: see {@link https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking | exhaustiveness checking}.
+ *
+ * @see https://wiki.c2.com/?AvoidExceptionsWheneverPossible
+ * @see https://developer.apple.com/documentation/swift/result
+ * @see https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/
+ * @see https://the-guild.dev/blog/graphql-error-handling-with-fp#monads-to-the-rescue
+ */
 export type Result<T, E extends IEquatableError> = Success<T, E> | Failure<T, E>;
 
+/**
+ * A `PromiseResult` is a convenience type alias that represents either a {@link Result} in the context of asynchronous tasks.
+ */
 export type PromiseResult<T, E extends IEquatableError> = Promise<Result<T, E>>;
 
 export function success<T extends void, E>(): Success<T, E>;
@@ -73,7 +163,3 @@ export function success<T, E>(value: any = undefined): Success<T, E> {
 
 export const failure = <T, E extends IEquatableError>(error: E): Failure<T, E> =>
   new Failure(error);
-
-export function isResult(v: unknown): v is Result<unknown, IEquatableError> {
-  return v instanceof Success || v instanceof Failure;
-}

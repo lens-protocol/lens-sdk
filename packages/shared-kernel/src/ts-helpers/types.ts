@@ -53,14 +53,12 @@ export type XOR<T extends UnknownObject, U extends UnknownObject> =
  */
 export type Cast<A, B> = A extends B ? A : B;
 
-type Narrowable = string | number | bigint | boolean;
-
 /**
  * Prevent type widening on generic parameters
  */
 export type Narrow<A> = Cast<
   A,
-  [] | (A extends Narrowable ? A : never) | { [K in keyof A]: Narrow<A[K]> }
+  [] | (A extends Primitive ? A : never) | { [K in keyof A]: Narrow<A[K]> }
 >;
 
 /**
@@ -73,9 +71,10 @@ export type Gettify<T, P extends keyof T = keyof T> = P extends string | number
     : P
   : never;
 
+/**
+ * Primitive types
+ */
 export type Primitive = string | number | boolean | bigint | symbol | undefined | null;
-
-export type SingleOrArray<T> = T | T[];
 
 /**
  * Omits properties from an union type, preserving the union.
