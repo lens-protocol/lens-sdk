@@ -90,13 +90,14 @@ query Feed(
 }
 
 query ExploreProfiles(
-  $observerId: ProfileId
-  $limit: LimitScalar!
+  $sortCriteria: ProfileSortCriteria!
+  $limit: LimitScalar
   $cursor: Cursor
+  $observerId: ProfileId
   $sources: [Sources!]!
 ) {
   result: exploreProfiles(
-    request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
+    request: { limit: $limit, cursor: $cursor, sortCriteria: $sortCriteria }
   ) {
     items {
       ...Profile

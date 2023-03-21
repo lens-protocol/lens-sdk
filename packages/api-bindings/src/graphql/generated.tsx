@@ -133,7 +133,7 @@ export type AaveFeeCollectModuleParams = {
   /** The collect module amount info */
   amount: ModuleFeeAmountParams;
   /** The collect module limit */
-  collectLimit: Scalars['String'];
+  collectLimit?: InputMaybe<Scalars['String']>;
   /** The timestamp that this collect module will expire */
   endTimestamp?: InputMaybe<Scalars['DateTime']>;
   /** Follower only */
@@ -4614,9 +4614,10 @@ export type FeedQuery = {
 };
 
 export type ExploreProfilesQueryVariables = Exact<{
-  observerId?: InputMaybe<Scalars['ProfileId']>;
-  limit: Scalars['LimitScalar'];
+  sortCriteria: ProfileSortCriteria;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
   cursor?: InputMaybe<Scalars['Cursor']>;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
@@ -7105,13 +7106,14 @@ export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
 export type FeedQueryResult = Apollo.QueryResult<FeedQuery, FeedQueryVariables>;
 export const ExploreProfilesDocument = gql`
   query ExploreProfiles(
-    $observerId: ProfileId
-    $limit: LimitScalar!
+    $sortCriteria: ProfileSortCriteria!
+    $limit: LimitScalar
     $cursor: Cursor
+    $observerId: ProfileId
     $sources: [Sources!]!
   ) {
     result: exploreProfiles(
-      request: { limit: $limit, cursor: $cursor, sortCriteria: MOST_COMMENTS }
+      request: { limit: $limit, cursor: $cursor, sortCriteria: $sortCriteria }
     ) {
       items {
         ...Profile
@@ -7137,9 +7139,10 @@ export const ExploreProfilesDocument = gql`
  * @example
  * const { data, loading, error } = useExploreProfilesQuery({
  *   variables: {
- *      observerId: // value for 'observerId'
+ *      sortCriteria: // value for 'sortCriteria'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
+ *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
  *   },
  * });

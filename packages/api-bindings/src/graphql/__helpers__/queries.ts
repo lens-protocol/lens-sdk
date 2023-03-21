@@ -11,6 +11,9 @@ import {
   EnabledModulesDocument,
   EnabledModulesFragment,
   EnabledModulesQuery,
+  ExploreProfilesDocument,
+  ExploreProfilesQuery,
+  ExploreProfilesQueryVariables,
   ExplorePublicationsDocument,
   ExplorePublicationsQuery,
   ExplorePublicationsQueryVariables,
@@ -20,9 +23,12 @@ import {
   FeedQueryVariables,
   GetAllProfilesByOwnerAddressDocument,
   GetAllProfilesByOwnerAddressQuery,
+  GetAllProfilesByOwnerAddressQueryVariables,
+  GetAllProfilesByWhoMirroredPublicationDocument,
   GetAllProfilesByWhoMirroredPublicationQueryVariables,
   GetProfileDocument,
   GetProfileQuery,
+  GetProfileQueryVariables,
   HasTxHashBeenIndexedDocument,
   HasTxHashBeenIndexedQuery,
   HasTxHashBeenIndexedQueryVariables,
@@ -32,19 +38,20 @@ import {
   MutualFollowersProfilesQuery,
   MutualFollowersProfilesQueryVariables,
   PostFragment,
-  ProfileFragment,
   ProfileFollowRevenueDocument,
   ProfileFollowRevenueFragment,
   ProfileFollowRevenueQuery,
   ProfileFollowRevenueQueryVariables,
-  ProfilePublicationsForSaleDocument,
-  ProfilePublicationsForSaleQuery,
-  ProfilePublicationsForSaleQueryVariables,
+  ProfileFragment,
   ProfilePublicationRevenueDocument,
   ProfilePublicationRevenueQuery,
   ProfilePublicationRevenueQueryVariables,
+  ProfilePublicationsForSaleDocument,
+  ProfilePublicationsForSaleQuery,
+  ProfilePublicationsForSaleQueryVariables,
   ProfilesToFollowDocument,
   ProfilesToFollowQuery,
+  ProfilesToFollowQueryVariables,
   ProxyActionError,
   ProxyActionStatusDocument,
   ProxyActionStatusQuery,
@@ -53,6 +60,7 @@ import {
   ProxyActionStatusTypes,
   PublicationByTxHashDocument,
   PublicationByTxHashQuery,
+  PublicationByTxHashQueryVariables,
   PublicationDocument,
   PublicationQuery,
   PublicationQueryVariables,
@@ -76,11 +84,6 @@ import {
   WhoReactedPublicationQuery,
   WhoReactedPublicationQueryVariables,
   WhoReactedResultFragment,
-  GetAllProfilesByWhoMirroredPublicationDocument,
-  GetAllProfilesByOwnerAddressQueryVariables,
-  GetProfileQueryVariables,
-  PublicationByTxHashQueryVariables,
-  ProfilesToFollowQueryVariables,
 } from '../generated';
 import { SearchProfilesQuery, SearchPublicationsQuery } from '../index';
 import { Sources } from '../sources';
@@ -563,6 +566,31 @@ export function createSearchProfilesQueryMockedResponse(args: {
       data: {
         result: {
           __typename: 'ProfileSearchResult',
+          items: args.items,
+          pageInfo: {
+            __typename: 'PaginatedResultInfo',
+            prev: null,
+            next: null,
+            totalCount: args.items.length,
+          },
+        },
+      },
+    },
+  };
+}
+
+export function createExploreProfilesQueryMockedResponse(args: {
+  variables: ExploreProfilesQueryVariables;
+  items: Array<ProfileFragment>;
+}): MockedResponse<ExploreProfilesQuery> {
+  return {
+    request: {
+      query: ExploreProfilesDocument,
+      variables: args.variables,
+    },
+    result: {
+      data: {
+        result: {
           items: args.items,
           pageInfo: {
             __typename: 'PaginatedResultInfo',
