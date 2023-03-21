@@ -216,10 +216,10 @@ fragment CommentBase on Comment {
   __collectModule: collectModule {
     ...CollectModule
   }
+  __collectNftAddress: collectNftAddress
   referenceModule {
     ...ReferenceModule
   }
-  collectNftAddress
   createdAt
   hidden
   isGated
@@ -298,10 +298,10 @@ fragment Post on Post {
   __collectModule: collectModule {
     ...CollectModule
   }
+  __collectNftAddress: collectNftAddress
   referenceModule {
     ...ReferenceModule
   }
-  collectNftAddress
   createdAt
   hidden
   isGated
