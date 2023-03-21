@@ -5,19 +5,19 @@ import { never } from '@lens-protocol/shared-kernel';
 
 import {
   erc20Amount,
+  FollowPolicy,
   FollowModule,
   FollowStatus,
   Profile,
   ProfileAttributeReader,
   ProfileAttributes,
-} from '../graphql';
-import { FollowPolicy } from '../graphql/FollowPolicy';
-import { TypePolicy } from './TypePolicy';
+} from '../../graphql';
 import {
   getAllPendingTransactions,
   isFollowTransactionFor,
   isUnfollowTransactionFor,
 } from './transactions';
+import { TypePolicy } from './utils/TypePolicy';
 
 function resolveFollowPolicy({
   followModule,

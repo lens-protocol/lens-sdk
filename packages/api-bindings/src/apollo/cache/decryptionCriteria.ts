@@ -46,8 +46,8 @@ import {
   ProfileOwnershipOutput,
   AnyConditionFragment,
   ScalarOperator,
-} from '../graphql';
-import { FieldReadFunction } from './TypePolicy';
+} from '../../graphql';
+import { FieldReadFunction } from './utils/TypePolicy';
 
 function allButPublicationAuthor(authorId: ProfileId) {
   return (criterion: AnyConditionFragment): boolean => {

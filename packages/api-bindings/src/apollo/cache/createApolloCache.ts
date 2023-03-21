@@ -10,7 +10,7 @@ import {
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
-import generatedIntrospection from '../graphql/generated';
+import generatedIntrospection from '../../graphql/generated';
 import { createAttributeTypePolicy } from './createAttributeTypePolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
@@ -29,9 +29,9 @@ import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
-import { noCachedField } from './noCachedField';
-import { notNormalizedType } from './notNormalizedType';
 import { createContentPublicationTypePolicy } from './publicationTypePolicy';
+import { noCachedField } from './utils/noCachedField';
+import { notNormalizedType } from './utils/notNormalizedType';
 
 type TypedFieldFunctionOptions<TAll> = Overwrite<
   FieldFunctionOptions,

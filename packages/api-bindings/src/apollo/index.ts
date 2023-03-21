@@ -3,7 +3,7 @@ import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
 import type { IAccessTokenStorage } from './IAccessTokenStorage';
 import { LensApolloClient } from './LensApolloClient';
-import { createApolloCache } from './createApolloCache';
+import { createApolloCache } from './cache/createApolloCache';
 import { createAuthLink } from './createAuthLink';
 
 export type ApolloClientConfig = {
@@ -54,5 +54,5 @@ export function createAnonymousApolloClient({
 export type { IAccessTokenStorage };
 export type { IGraphQLClient } from './IGraphQLClient';
 export * from './errors';
-export * from './transactions';
+export * from './cache/transactions';
 export type { LensApolloClient };
