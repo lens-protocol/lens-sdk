@@ -1,7 +1,7 @@
 import { ProfileFragment } from '@lens-protocol/api-bindings';
 import {
+  createGetAllProfilesQueryMockedResponse,
   createMockApolloClientWithMultipleResponses,
-  createProfilesWhoMirroredPublicationMockedResponse,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -20,22 +20,24 @@ import {
 function setupTestScenario({
   expectedObserverId,
   result,
-  ...args
+  publicationId,
+  ...others
 }: UseWhoMirroredPublicationArgs & { expectedObserverId?: ProfileId; result: ProfileFragment[] }) {
   const sources = mockSources();
 
-  return renderHookWithMocks(() => useWhoMirroredPublication(args), {
+  return renderHookWithMocks(() => useWhoMirroredPublication({ publicationId, ...others }), {
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createProfilesWhoMirroredPublicationMockedResponse({
+        createGetAllProfilesQueryMockedResponse({
           variables: {
-            ...args,
+            ...others,
+            byWhoMirroredPublicationId: publicationId,
             observerId: expectedObserverId ?? null,
             limit: 10,
             sources,
           },
-          items: result,
+          profiles: result,
         }),
       ]),
     },

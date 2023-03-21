@@ -2,10 +2,10 @@ import {
   GetProfileQuery,
   GetProfileQueryVariables,
   GetProfileDocument,
-  GetAllProfilesByOwnerAddressDocument,
-  GetAllProfilesByOwnerAddressQuery,
-  GetAllProfilesByOwnerAddressQueryVariables,
   LensApolloClient,
+  GetAllProfilesQuery,
+  GetAllProfilesQueryVariables,
+  GetAllProfilesDocument,
 } from '@lens-protocol/api-bindings';
 import { Profile } from '@lens-protocol/domain/entities';
 import { IProfileGateway } from '@lens-protocol/domain/use-cases/profile';
@@ -15,12 +15,12 @@ export class ProfileGateway implements IProfileGateway {
 
   async getAllProfilesByOwnerAddress(address: string): Promise<Profile[]> {
     const { data } = await this.apolloClient.query<
-      GetAllProfilesByOwnerAddressQuery,
-      GetAllProfilesByOwnerAddressQueryVariables
+      GetAllProfilesQuery,
+      GetAllProfilesQueryVariables
     >({
-      query: GetAllProfilesByOwnerAddressDocument,
+      query: GetAllProfilesDocument,
       // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
-      variables: { address, limit: 10 },
+      variables: { byOwnerAddresses: [address], limit: 10 },
     });
 
     return data.result.items.map(({ id, handle }) => Profile.create({ id, handle }));

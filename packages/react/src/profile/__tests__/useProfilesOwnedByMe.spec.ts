@@ -1,6 +1,6 @@
 import { ProfileFragment } from '@lens-protocol/api-bindings';
 import {
-  createGetAllProfilesByOwnerAddressQueryMockedResponse,
+  createGetAllProfilesQueryMockedResponse,
   createMockApolloClientWithMultipleResponses,
   mockProfileFragment,
   mockSources,
@@ -32,10 +32,10 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createGetAllProfilesByOwnerAddressQueryMockedResponse({
+        createGetAllProfilesQueryMockedResponse({
           variables: {
             ...args,
-            address,
+            byOwnerAddresses: [address],
             observerId: expectedObserverId ?? null,
             limit: 10,
             sources,

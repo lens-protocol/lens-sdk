@@ -144,14 +144,26 @@ query GetProfile(
   }
 }
 
-query GetAllProfilesByOwnerAddress(
-  $address: EthereumAddress!
+query GetAllProfiles(
+  $byProfileIds: [ProfileId!]
+  $byHandles: [Handle!]
+  $byOwnerAddresses: [EthereumAddress!]
+  $byWhoMirroredPublicationId: InternalPublicationId
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!] = []
 ) {
-  result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
+  result: profiles(
+    request: {
+      whoMirroredPublicationId: $byWhoMirroredPublicationId
+      ownedBy: $byOwnerAddresses
+      profileIds: $byProfileIds
+      handles: $byHandles
+      limit: $limit
+      cursor: $cursor
+    }
+  ) {
     items {
       ...Profile
     }

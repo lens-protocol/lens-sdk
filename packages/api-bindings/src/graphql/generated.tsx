@@ -288,6 +288,8 @@ export type AuthenticationResult = {
   refreshToken: Scalars['Jwt'];
 };
 
+export type BroadcastDataAvailabilityUnion = CreateDataAvailabilityPublicationResult | RelayError;
+
 export type BroadcastRequest = {
   id: Scalars['BroadcastId'];
   signature: Scalars['Signature'];
@@ -642,6 +644,39 @@ export type CreateCommentEip712TypedDataValue = {
   referenceModule: Scalars['ContractAddress'];
   referenceModuleData: Scalars['ReferenceModuleData'];
   referenceModuleInitData: Scalars['ReferenceModuleData'];
+};
+
+export type CreateDataAvailabilityCommentRequest = {
+  /** Publication your commenting on */
+  commentOn: Scalars['InternalPublicationId'];
+  /** The metadata contentURI resolver */
+  contentURI: Scalars['Url'];
+  /** Profile id */
+  from: Scalars['ProfileId'];
+};
+
+export type CreateDataAvailabilityMirrorRequest = {
+  /** Profile id which will broadcast the mirror */
+  from: Scalars['ProfileId'];
+  /** The publication to mirror */
+  mirror: Scalars['InternalPublicationId'];
+};
+
+export type CreateDataAvailabilityPostRequest = {
+  /** The metadata contentURI resolver */
+  contentURI: Scalars['Url'];
+  /** Profile id */
+  from: Scalars['ProfileId'];
+};
+
+export type CreateDataAvailabilityPublicationResult = {
+  __typename: 'CreateDataAvailabilityPublicationResult';
+  /** The data availability id */
+  dataAvailabilityId: Scalars['DataAvailabilityId'];
+  /** The id of the post */
+  id: Scalars['InternalPublicationId'];
+  /** The proofs for the DA */
+  proofs: Scalars['String'];
 };
 
 /** The broadcast item */
@@ -1677,6 +1712,32 @@ export type GatedPublicationParamsInput = {
   token?: InputMaybe<Erc20OwnershipInput>;
 };
 
+export type GciRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ttt: Scalars['String'];
+};
+
+export type GcrRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ttt: Scalars['String'];
+};
+
+export type GctRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+};
+
+export type GddRequest = {
+  domain: Scalars['Url'];
+  secret: Scalars['String'];
+};
+
+export type GdmRequest = {
+  secret: Scalars['String'];
+};
+
 export type GenerateModuleCurrencyApproval = {
   __typename: 'GenerateModuleCurrencyApproval';
   data: Scalars['BlockchainData'];
@@ -2087,12 +2148,19 @@ export type Mutation = {
   addReaction: Maybe<Scalars['Void']>;
   authenticate: AuthenticationResult;
   broadcast: RelayResult;
+  broadcastDataAvailability: BroadcastDataAvailabilityUnion;
   claim: RelayResult;
   createAttachMediaData: PublicMediaResults;
   createBurnProfileTypedData: CreateBurnProfileBroadcastItemResult;
   createCollectTypedData: CreateCollectBroadcastItemResult;
   createCommentTypedData: CreateCommentBroadcastItemResult;
   createCommentViaDispatcher: RelayResult;
+  createDataAvailabilityCommentTypedData: CreateCommentBroadcastItemResult;
+  createDataAvailabilityCommentViaDispatcher: RelayDataAvailabilityResult;
+  createDataAvailabilityMirrorTypedData: CreateMirrorBroadcastItemResult;
+  createDataAvailabilityMirrorViaDispatcher: RelayDataAvailabilityResult;
+  createDataAvailabilityPostTypedData: CreatePostBroadcastItemResult;
+  createDataAvailabilityPostViaDispatcher: RelayDataAvailabilityResult;
   createFollowTypedData: CreateFollowBroadcastItemResult;
   createMirrorTypedData: CreateMirrorBroadcastItemResult;
   createMirrorViaDispatcher: RelayResult;
@@ -2114,7 +2182,10 @@ export type Mutation = {
   createUnfollowTypedData: CreateUnfollowBroadcastItemResult;
   /** Delete an NFT Gallery */
   deleteNftGallery: Maybe<Scalars['Void']>;
-  dismissRecommendedProfiles: Scalars['Void'];
+  dismissRecommendedProfiles: Maybe<Scalars['Void']>;
+  gci: Maybe<Scalars['Void']>;
+  gcr: Maybe<Scalars['Void']>;
+  gdi: Maybe<Scalars['Void']>;
   hel: Maybe<Scalars['Void']>;
   hidePublication: Maybe<Scalars['Void']>;
   idKitPhoneVerifyWebhook: IdKitPhoneVerifyWebhookResultStatusType;
@@ -2152,6 +2223,10 @@ export type MutationBroadcastArgs = {
   request: BroadcastRequest;
 };
 
+export type MutationBroadcastDataAvailabilityArgs = {
+  request: BroadcastRequest;
+};
+
 export type MutationClaimArgs = {
   request: ClaimHandleRequest;
 };
@@ -2177,6 +2252,30 @@ export type MutationCreateCommentTypedDataArgs = {
 
 export type MutationCreateCommentViaDispatcherArgs = {
   request: CreatePublicCommentRequest;
+};
+
+export type MutationCreateDataAvailabilityCommentTypedDataArgs = {
+  request: CreateDataAvailabilityCommentRequest;
+};
+
+export type MutationCreateDataAvailabilityCommentViaDispatcherArgs = {
+  request: CreateDataAvailabilityCommentRequest;
+};
+
+export type MutationCreateDataAvailabilityMirrorTypedDataArgs = {
+  request: CreateDataAvailabilityMirrorRequest;
+};
+
+export type MutationCreateDataAvailabilityMirrorViaDispatcherArgs = {
+  request: CreateDataAvailabilityMirrorRequest;
+};
+
+export type MutationCreateDataAvailabilityPostTypedDataArgs = {
+  request: CreateDataAvailabilityPostRequest;
+};
+
+export type MutationCreateDataAvailabilityPostViaDispatcherArgs = {
+  request: CreateDataAvailabilityPostRequest;
 };
 
 export type MutationCreateFollowTypedDataArgs = {
@@ -2268,6 +2367,18 @@ export type MutationDeleteNftGalleryArgs = {
 
 export type MutationDismissRecommendedProfilesArgs = {
   request: DismissRecommendedProfilesRequest;
+};
+
+export type MutationGciArgs = {
+  request: GciRequest;
+};
+
+export type MutationGcrArgs = {
+  request: GcrRequest;
+};
+
+export type MutationGdiArgs = {
+  request: GddRequest;
 };
 
 export type MutationHelArgs = {
@@ -3446,6 +3557,8 @@ export type Query = {
   followerNftOwnedTokenIds: Maybe<FollowerNftOwnedTokenIds>;
   followers: PaginatedFollowersResult;
   following: PaginatedFollowingResult;
+  gct: Array<Scalars['String']>;
+  gdm: Array<Scalars['Url']>;
   generateModuleCurrencyApprovalData: GenerateModuleCurrencyApproval;
   globalProtocolStats: GlobalProtocolStats;
   hasTxHashBeenIndexed: TransactionResult;
@@ -3535,6 +3648,14 @@ export type QueryFollowersArgs = {
 
 export type QueryFollowingArgs = {
   request: FollowingRequest;
+};
+
+export type QueryGctArgs = {
+  request: GctRequest;
+};
+
+export type QueryGdmArgs = {
+  request: GdmRequest;
 };
 
 export type QueryGenerateModuleCurrencyApprovalDataArgs = {
@@ -3738,6 +3859,8 @@ export type RelRequest = {
   secret: Scalars['String'];
 };
 
+export type RelayDataAvailabilityResult = CreateDataAvailabilityPublicationResult | RelayError;
+
 export type RelayError = {
   __typename: 'RelayError';
   reason: RelayErrorReasons;
@@ -3757,7 +3880,6 @@ export type RelayResult = RelayError | RelayerResult;
 /** The relayer result */
 export type RelayerResult = {
   __typename: 'RelayerResult';
-  dataAvailabilityId: Scalars['DataAvailabilityId'];
   /** The tx hash - you should use the `txId` as your identifier as gas prices can be upgraded meaning txHash will change */
   txHash: Scalars['TxHash'];
   /** The tx id */
@@ -5037,15 +5159,18 @@ export type GetProfileQueryVariables = Exact<{
 
 export type GetProfileQuery = { result: ProfileFragment | null };
 
-export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
-  address: Scalars['EthereumAddress'];
+export type GetAllProfilesQueryVariables = Exact<{
+  byProfileIds?: InputMaybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
+  byHandles?: InputMaybe<Array<Scalars['Handle']> | Scalars['Handle']>;
+  byOwnerAddresses?: InputMaybe<Array<Scalars['EthereumAddress']> | Scalars['EthereumAddress']>;
+  byWhoMirroredPublicationId?: InputMaybe<Scalars['InternalPublicationId']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
 
-export type GetAllProfilesByOwnerAddressQuery = {
+export type GetAllProfilesQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
@@ -5269,18 +5394,6 @@ export type WhoCollectedPublicationQueryVariables = Exact<{
 
 export type WhoCollectedPublicationQuery = {
   result: { items: Array<WalletFragment>; pageInfo: CommonPaginatedResultInfoFragment };
-};
-
-export type GetAllProfilesByWhoMirroredPublicationQueryVariables = Exact<{
-  publicationId: Scalars['InternalPublicationId'];
-  observerId?: InputMaybe<Scalars['ProfileId']>;
-  limit: Scalars['LimitScalar'];
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
-}>;
-
-export type GetAllProfilesByWhoMirroredPublicationQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type ProfilePublicationsForSaleQueryVariables = Exact<{
@@ -7875,15 +7988,27 @@ export function useGetProfileLazyQuery(
 export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
 export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
 export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
-export const GetAllProfilesByOwnerAddressDocument = gql`
-  query GetAllProfilesByOwnerAddress(
-    $address: EthereumAddress!
+export const GetAllProfilesDocument = gql`
+  query GetAllProfiles(
+    $byProfileIds: [ProfileId!]
+    $byHandles: [Handle!]
+    $byOwnerAddresses: [EthereumAddress!]
+    $byWhoMirroredPublicationId: InternalPublicationId
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!] = []
   ) {
-    result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
+    result: profiles(
+      request: {
+        whoMirroredPublicationId: $byWhoMirroredPublicationId
+        ownedBy: $byOwnerAddresses
+        profileIds: $byProfileIds
+        handles: $byHandles
+        limit: $limit
+        cursor: $cursor
+      }
+    ) {
       items {
         ...Profile
       }
@@ -7897,18 +8022,21 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
 `;
 
 /**
- * __useGetAllProfilesByOwnerAddressQuery__
+ * __useGetAllProfilesQuery__
  *
- * To run a query within a React component, call `useGetAllProfilesByOwnerAddressQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllProfilesByOwnerAddressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllProfilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllProfilesByOwnerAddressQuery({
+ * const { data, loading, error } = useGetAllProfilesQuery({
  *   variables: {
- *      address: // value for 'address'
+ *      byProfileIds: // value for 'byProfileIds'
+ *      byHandles: // value for 'byHandles'
+ *      byOwnerAddresses: // value for 'byOwnerAddresses'
+ *      byWhoMirroredPublicationId: // value for 'byWhoMirroredPublicationId'
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
@@ -7916,39 +8044,29 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
  *   },
  * });
  */
-export function useGetAllProfilesByOwnerAddressQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetAllProfilesByOwnerAddressQuery,
-    GetAllProfilesByOwnerAddressQueryVariables
-  >,
+export function useGetAllProfilesQuery(
+  baseOptions: Apollo.QueryHookOptions<GetAllProfilesQuery, GetAllProfilesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetAllProfilesByOwnerAddressQuery,
-    GetAllProfilesByOwnerAddressQueryVariables
-  >(GetAllProfilesByOwnerAddressDocument, options);
+  return Apollo.useQuery<GetAllProfilesQuery, GetAllProfilesQueryVariables>(
+    GetAllProfilesDocument,
+    options,
+  );
 }
-export function useGetAllProfilesByOwnerAddressLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAllProfilesByOwnerAddressQuery,
-    GetAllProfilesByOwnerAddressQueryVariables
-  >,
+export function useGetAllProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAllProfilesQuery, GetAllProfilesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetAllProfilesByOwnerAddressQuery,
-    GetAllProfilesByOwnerAddressQueryVariables
-  >(GetAllProfilesByOwnerAddressDocument, options);
+  return Apollo.useLazyQuery<GetAllProfilesQuery, GetAllProfilesQueryVariables>(
+    GetAllProfilesDocument,
+    options,
+  );
 }
-export type GetAllProfilesByOwnerAddressQueryHookResult = ReturnType<
-  typeof useGetAllProfilesByOwnerAddressQuery
->;
-export type GetAllProfilesByOwnerAddressLazyQueryHookResult = ReturnType<
-  typeof useGetAllProfilesByOwnerAddressLazyQuery
->;
-export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
-  GetAllProfilesByOwnerAddressQuery,
-  GetAllProfilesByOwnerAddressQueryVariables
+export type GetAllProfilesQueryHookResult = ReturnType<typeof useGetAllProfilesQuery>;
+export type GetAllProfilesLazyQueryHookResult = ReturnType<typeof useGetAllProfilesLazyQuery>;
+export type GetAllProfilesQueryResult = Apollo.QueryResult<
+  GetAllProfilesQuery,
+  GetAllProfilesQueryVariables
 >;
 export const CreateProfileDocument = gql`
   mutation CreateProfile($request: CreateProfileRequest!) {
@@ -9077,83 +9195,6 @@ export type WhoCollectedPublicationLazyQueryHookResult = ReturnType<
 export type WhoCollectedPublicationQueryResult = Apollo.QueryResult<
   WhoCollectedPublicationQuery,
   WhoCollectedPublicationQueryVariables
->;
-export const GetAllProfilesByWhoMirroredPublicationDocument = gql`
-  query GetAllProfilesByWhoMirroredPublication(
-    $publicationId: InternalPublicationId!
-    $observerId: ProfileId
-    $limit: LimitScalar!
-    $cursor: Cursor
-    $sources: [Sources!]!
-  ) {
-    result: profiles(
-      request: { whoMirroredPublicationId: $publicationId, limit: $limit, cursor: $cursor }
-    ) {
-      items {
-        ...Profile
-      }
-      pageInfo {
-        ...CommonPaginatedResultInfo
-      }
-    }
-  }
-  ${ProfileFragmentDoc}
-  ${CommonPaginatedResultInfoFragmentDoc}
-`;
-
-/**
- * __useGetAllProfilesByWhoMirroredPublicationQuery__
- *
- * To run a query within a React component, call `useGetAllProfilesByWhoMirroredPublicationQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllProfilesByWhoMirroredPublicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllProfilesByWhoMirroredPublicationQuery({
- *   variables: {
- *      publicationId: // value for 'publicationId'
- *      observerId: // value for 'observerId'
- *      limit: // value for 'limit'
- *      cursor: // value for 'cursor'
- *      sources: // value for 'sources'
- *   },
- * });
- */
-export function useGetAllProfilesByWhoMirroredPublicationQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetAllProfilesByWhoMirroredPublicationQuery,
-    GetAllProfilesByWhoMirroredPublicationQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetAllProfilesByWhoMirroredPublicationQuery,
-    GetAllProfilesByWhoMirroredPublicationQueryVariables
-  >(GetAllProfilesByWhoMirroredPublicationDocument, options);
-}
-export function useGetAllProfilesByWhoMirroredPublicationLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAllProfilesByWhoMirroredPublicationQuery,
-    GetAllProfilesByWhoMirroredPublicationQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetAllProfilesByWhoMirroredPublicationQuery,
-    GetAllProfilesByWhoMirroredPublicationQueryVariables
-  >(GetAllProfilesByWhoMirroredPublicationDocument, options);
-}
-export type GetAllProfilesByWhoMirroredPublicationQueryHookResult = ReturnType<
-  typeof useGetAllProfilesByWhoMirroredPublicationQuery
->;
-export type GetAllProfilesByWhoMirroredPublicationLazyQueryHookResult = ReturnType<
-  typeof useGetAllProfilesByWhoMirroredPublicationLazyQuery
->;
-export type GetAllProfilesByWhoMirroredPublicationQueryResult = Apollo.QueryResult<
-  GetAllProfilesByWhoMirroredPublicationQuery,
-  GetAllProfilesByWhoMirroredPublicationQueryVariables
 >;
 export const ProfilePublicationsForSaleDocument = gql`
   query ProfilePublicationsForSale(
@@ -10434,6 +10475,17 @@ export type CreateCommentEIP712TypedDataValueFieldPolicy = {
   referenceModuleData?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModuleInitData?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type CreateDataAvailabilityPublicationResultKeySpecifier = (
+  | 'dataAvailabilityId'
+  | 'id'
+  | 'proofs'
+  | CreateDataAvailabilityPublicationResultKeySpecifier
+)[];
+export type CreateDataAvailabilityPublicationResultFieldPolicy = {
+  dataAvailabilityId?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  proofs?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type CreateFollowBroadcastItemResultKeySpecifier = (
   | 'expiresAt'
   | 'id'
@@ -11437,12 +11489,19 @@ export type MutationKeySpecifier = (
   | 'addReaction'
   | 'authenticate'
   | 'broadcast'
+  | 'broadcastDataAvailability'
   | 'claim'
   | 'createAttachMediaData'
   | 'createBurnProfileTypedData'
   | 'createCollectTypedData'
   | 'createCommentTypedData'
   | 'createCommentViaDispatcher'
+  | 'createDataAvailabilityCommentTypedData'
+  | 'createDataAvailabilityCommentViaDispatcher'
+  | 'createDataAvailabilityMirrorTypedData'
+  | 'createDataAvailabilityMirrorViaDispatcher'
+  | 'createDataAvailabilityPostTypedData'
+  | 'createDataAvailabilityPostViaDispatcher'
   | 'createFollowTypedData'
   | 'createMirrorTypedData'
   | 'createMirrorViaDispatcher'
@@ -11463,6 +11522,9 @@ export type MutationKeySpecifier = (
   | 'createUnfollowTypedData'
   | 'deleteNftGallery'
   | 'dismissRecommendedProfiles'
+  | 'gci'
+  | 'gcr'
+  | 'gdi'
   | 'hel'
   | 'hidePublication'
   | 'idKitPhoneVerifyWebhook'
@@ -11482,12 +11544,19 @@ export type MutationFieldPolicy = {
   addReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   authenticate?: FieldPolicy<any> | FieldReadFunction<any>;
   broadcast?: FieldPolicy<any> | FieldReadFunction<any>;
+  broadcastDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
   claim?: FieldPolicy<any> | FieldReadFunction<any>;
   createAttachMediaData?: FieldPolicy<any> | FieldReadFunction<any>;
   createBurnProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createCollectTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createCommentTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createCommentViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
+  createDataAvailabilityCommentTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createDataAvailabilityCommentViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
+  createDataAvailabilityMirrorTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createDataAvailabilityMirrorViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
+  createDataAvailabilityPostTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createDataAvailabilityPostViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
   createFollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createMirrorTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createMirrorViaDispatcher?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -11508,6 +11577,9 @@ export type MutationFieldPolicy = {
   createUnfollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   deleteNftGallery?: FieldPolicy<any> | FieldReadFunction<any>;
   dismissRecommendedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
+  gci?: FieldPolicy<any> | FieldReadFunction<any>;
+  gcr?: FieldPolicy<any> | FieldReadFunction<any>;
+  gdi?: FieldPolicy<any> | FieldReadFunction<any>;
   hel?: FieldPolicy<any> | FieldReadFunction<any>;
   hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
   idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -12143,6 +12215,8 @@ export type QueryKeySpecifier = (
   | 'followerNftOwnedTokenIds'
   | 'followers'
   | 'following'
+  | 'gct'
+  | 'gdm'
   | 'generateModuleCurrencyApprovalData'
   | 'globalProtocolStats'
   | 'hasTxHashBeenIndexed'
@@ -12198,6 +12272,8 @@ export type QueryFieldPolicy = {
   followerNftOwnedTokenIds?: FieldPolicy<any> | FieldReadFunction<any>;
   followers?: FieldPolicy<any> | FieldReadFunction<any>;
   following?: FieldPolicy<any> | FieldReadFunction<any>;
+  gct?: FieldPolicy<any> | FieldReadFunction<any>;
+  gdm?: FieldPolicy<any> | FieldReadFunction<any>;
   generateModuleCurrencyApprovalData?: FieldPolicy<any> | FieldReadFunction<any>;
   globalProtocolStats?: FieldPolicy<any> | FieldReadFunction<any>;
   hasTxHashBeenIndexed?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -12258,14 +12334,8 @@ export type RelayErrorKeySpecifier = ('reason' | RelayErrorKeySpecifier)[];
 export type RelayErrorFieldPolicy = {
   reason?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type RelayerResultKeySpecifier = (
-  | 'dataAvailabilityId'
-  | 'txHash'
-  | 'txId'
-  | RelayerResultKeySpecifier
-)[];
+export type RelayerResultKeySpecifier = ('txHash' | 'txId' | RelayerResultKeySpecifier)[];
 export type RelayerResultFieldPolicy = {
-  dataAvailabilityId?: FieldPolicy<any> | FieldReadFunction<any>;
   txHash?: FieldPolicy<any> | FieldReadFunction<any>;
   txId?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -12696,6 +12766,13 @@ export type StrictTypedTypePolicies = {
       | CreateCommentEIP712TypedDataValueKeySpecifier
       | (() => undefined | CreateCommentEIP712TypedDataValueKeySpecifier);
     fields?: CreateCommentEIP712TypedDataValueFieldPolicy;
+  };
+  CreateDataAvailabilityPublicationResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateDataAvailabilityPublicationResultKeySpecifier
+      | (() => undefined | CreateDataAvailabilityPublicationResultKeySpecifier);
+    fields?: CreateDataAvailabilityPublicationResultFieldPolicy;
   };
   CreateFollowBroadcastItemResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
@@ -13705,6 +13782,7 @@ export interface PossibleTypesResultData {
 }
 const result: PossibleTypesResultData = {
   possibleTypes: {
+    BroadcastDataAvailabilityUnion: ['CreateDataAvailabilityPublicationResult', 'RelayError'],
     CollectModule: [
       'AaveFeeCollectModuleSettings',
       'ERC4626FeeCollectModuleSettings',
@@ -13749,6 +13827,7 @@ const result: PossibleTypesResultData = {
       'FollowOnlyReferenceModuleSettings',
       'UnknownReferenceModuleSettings',
     ],
+    RelayDataAvailabilityResult: ['CreateDataAvailabilityPublicationResult', 'RelayError'],
     RelayResult: ['RelayError', 'RelayerResult'],
     SearchResult: ['ProfileSearchResult', 'PublicationSearchResult'],
     TransactionResult: ['TransactionError', 'TransactionIndexedResult'],

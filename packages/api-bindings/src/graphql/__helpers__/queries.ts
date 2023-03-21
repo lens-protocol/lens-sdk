@@ -21,11 +21,9 @@ import {
   FeedItemFragment,
   FeedQuery,
   FeedQueryVariables,
-  GetAllProfilesByOwnerAddressDocument,
-  GetAllProfilesByOwnerAddressQuery,
-  GetAllProfilesByOwnerAddressQueryVariables,
-  GetAllProfilesByWhoMirroredPublicationDocument,
-  GetAllProfilesByWhoMirroredPublicationQueryVariables,
+  GetAllProfilesDocument,
+  GetAllProfilesQuery,
+  GetAllProfilesQueryVariables,
   GetProfileDocument,
   GetProfileQuery,
   GetProfileQueryVariables,
@@ -143,9 +141,7 @@ export function mockGetProfileQueryMockedResponse({
   };
 }
 
-function mockGetAllProfilesByOwnerAddressQuery(
-  profiles: ProfileFragment[],
-): GetAllProfilesByOwnerAddressQuery {
+function mockGetAllProfilesQuery(profiles: ProfileFragment[]): GetAllProfilesQuery {
   return {
     result: {
       items: profiles,
@@ -159,20 +155,20 @@ function mockGetAllProfilesByOwnerAddressQuery(
   };
 }
 
-export function createGetAllProfilesByOwnerAddressQueryMockedResponse({
+export function createGetAllProfilesQueryMockedResponse({
   variables,
   profiles = [mockProfileFragment()],
 }: {
-  variables: GetAllProfilesByOwnerAddressQueryVariables;
+  variables: GetAllProfilesQueryVariables;
   profiles?: ProfileFragment[];
-}): MockedResponse<GetAllProfilesByOwnerAddressQuery> {
+}): MockedResponse<GetAllProfilesQuery> {
   return {
     request: {
-      query: GetAllProfilesByOwnerAddressDocument,
+      query: GetAllProfilesDocument,
       variables,
     },
     result: {
-      data: mockGetAllProfilesByOwnerAddressQuery(profiles),
+      data: mockGetAllProfilesQuery(profiles),
     },
   };
 }
@@ -586,31 +582,6 @@ export function createExploreProfilesQueryMockedResponse(args: {
   return {
     request: {
       query: ExploreProfilesDocument,
-      variables: args.variables,
-    },
-    result: {
-      data: {
-        result: {
-          items: args.items,
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.items.length,
-          },
-        },
-      },
-    },
-  };
-}
-
-export function createProfilesWhoMirroredPublicationMockedResponse(args: {
-  variables: GetAllProfilesByWhoMirroredPublicationQueryVariables;
-  items: ProfileFragment[];
-}): MockedResponse<GetAllProfilesByOwnerAddressQuery> {
-  return {
-    request: {
-      query: GetAllProfilesByWhoMirroredPublicationDocument,
       variables: args.variables,
     },
     result: {
