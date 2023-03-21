@@ -13,14 +13,14 @@ export * from './sources';
 export type { ILogger, AuthenticationConfig, IEncryptionProvider, ICipher };
 
 /**
- * @group General Configuration
+ * @category General Configuration
  */
 export interface IBindings extends ISignerBinding, IProviderBinding {}
 
 /**
  * `<LensProvider>` configuration
  *
- * @group General Configuration
+ * @category General Configuration
  */
 export type LensConfig = {
   /**
@@ -67,7 +67,7 @@ export type LensConfig = {
 /**
  * Encryption configuration for token-gated content
  *
- * @group Encryption
+ * @category Encryption
  */
 export type EncryptionConfig = {
   authentication: AuthenticationConfig;

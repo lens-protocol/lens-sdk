@@ -24,7 +24,7 @@ const ONE_SECOND = 1000; // ms
 /**
  * The transaction observer timings
  *
- * @group Transaction Configuration
+ * @category Transaction Configuration
  */
 export type TransactionObserverTimings = {
   pollingInterval: number; // ms // TODO delete this
