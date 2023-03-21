@@ -13,7 +13,7 @@ export type ProfileHandleResolver = (handle: string) => string;
 /**
  * The environment configuration type
  *
- * @group General Configuration
+ * @category General Configuration
  */
 export type EnvironmentConfig = {
   backend: Url;
@@ -30,7 +30,7 @@ export type EnvironmentConfig = {
  * - Profile handle suffix: `.lens`
  * - Environment specific timings
  *
- * @group General Configuration
+ * @category General Configuration
  */
 export const production: EnvironmentConfig = {
   backend: 'https://api.lens.dev',
@@ -54,7 +54,7 @@ export const production: EnvironmentConfig = {
  * - Profile handle suffix: `.test`
  * - Environment specific timings
  *
- * @group General Configuration
+ * @category General Configuration
  */
 export const staging: EnvironmentConfig = {
   backend: 'https://api-mumbai.lens.dev',

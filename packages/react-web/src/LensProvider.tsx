@@ -16,7 +16,7 @@ import { localStorage } from './storage';
 /**
  * `<LensProvider>` configuration
  *
- * @group General Configuration
+ * @category General Configuration
  */
 export type LensConfig = {
   /**
@@ -56,7 +56,7 @@ export type LensConfig = {
 /**
  * <LensProvider> props
  *
- * @group General Configuration
+ * @category General Configuration
  */
 export type LensProviderProps = PropsWithChildren<{
   config: LensConfig;
@@ -77,7 +77,7 @@ const storage = localStorage();
  *
  * @param props - {@link LensProviderProps}
  *
- * @group General Configuration
+ * @category General Configuration
  */
 export function LensProvider({ config, ...props }: LensProviderProps) {
   const [resolvedConfig] = useState<LensConfigBase>(() => ({
