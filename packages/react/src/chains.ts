@@ -1,5 +1,8 @@
 import { CryptoNativeAsset, ChainType, ether, matic } from '@lens-protocol/shared-kernel';
 
+/**
+ * A chain configuration
+ */
 export type ChainConfig = {
   chainId: number;
   name: string;
@@ -40,4 +43,7 @@ export const mumbai: ChainConfig = {
   nativeCurrency: matic(),
 };
 
+/**
+ * A registry of chain configurations
+ */
 export type ChainConfigRegistry = Record<ChainType, ChainConfig>;

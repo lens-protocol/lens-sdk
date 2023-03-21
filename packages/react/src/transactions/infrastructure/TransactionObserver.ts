@@ -21,6 +21,11 @@ import { IndexingEvent, ITransactionObserver, ProxyActionStatusEvent } from './T
 
 const ONE_SECOND = 1000; // ms
 
+/**
+ * The transaction observer timings
+ *
+ * @group Transaction Configuration
+ */
 export type TransactionObserverTimings = {
   pollingInterval: number; // ms // TODO delete this
   maxMiningWaitTime: number; // ms

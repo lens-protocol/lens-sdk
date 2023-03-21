@@ -4,7 +4,7 @@ import { z } from 'zod';
 /**
  * Error thrown when the storage item does not match the validation schema
  *
- * @category Storage
+ * @group Storage
  */
 export class SchemaMismatchError extends Error {
   name = 'SchemaMismatchError' as const;
@@ -17,7 +17,7 @@ export class SchemaMismatchError extends Error {
 /**
  * Error thrown when no migration path is found between two versions
  *
- * @category Storage
+ * @group Storage
  */
 export class NoMigrationPathError extends Error {
   name = 'NoMigrationPathError' as const;
@@ -45,7 +45,7 @@ export interface IStorageItem<Data> {
 /**
  * A storage schema that can be used to migrate data between versions
  *
- * @category Storage
+ * @group Storage
  */
 export interface IStorageSchema<Data> {
   get key(): string;
@@ -59,7 +59,7 @@ export interface IStorageSchema<Data> {
  *
  * Use it directly of as the base class for specific schemas when migrations are required.
  *
- * @category Storage
+ * @group Storage
  */
 export class BaseStorageSchema<
   T extends z.ZodSchema<Output, z.ZodTypeDef, Input>,

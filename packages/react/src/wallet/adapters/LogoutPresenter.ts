@@ -3,6 +3,11 @@ import { invariant, Result } from '@lens-protocol/shared-kernel';
 
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
 
+/**
+ * Handler for logging out
+ *
+ * @group Wallet
+ */
 export type LogoutHandler = (data: LogoutData) => void;
 
 export class LogoutPresenter

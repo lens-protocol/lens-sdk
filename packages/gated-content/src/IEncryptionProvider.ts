@@ -3,7 +3,7 @@
  *
  * Implementation MUST be able to encrypt and decrypt data using AES-256-CBC.
  *
- * @category Encryption
+ * @group Encryption
  */
 export interface ICipher {
   /**
@@ -29,7 +29,7 @@ export interface ICipher {
 /**
  * A provider of encryption ciphers.
  *
- * @category Encryption
+ * @group Encryption
  */
 export interface IEncryptionProvider {
   /**

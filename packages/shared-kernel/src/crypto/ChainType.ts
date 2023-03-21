@@ -9,7 +9,7 @@
  * the same logic can be deployed into a testing, staging or production environment without having to change the code or
  * account for the different chain ids associated with each environment.
  *
- * @category Common
+ * @group Common
  */
 export enum ChainType {
   ETHEREUM = 'ethereum',

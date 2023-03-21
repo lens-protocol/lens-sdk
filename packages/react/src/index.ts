@@ -1,15 +1,16 @@
+export * from './chains';
 export * from './config';
+export * from './experimental';
 export * from './feed';
 export * from './LensProvider';
 export * from './modules';
+export * from './notifications';
 export * from './profile';
 export * from './publication';
 export * from './revenue';
 export * from './transactions';
 export * from './utils';
 export * from './wallet';
-export * from './notifications';
-export * from './experimental';
 
 export type { ReadResult, PaginatedReadResult } from './helpers/reads';
 export { isValidHandle } from '@lens-protocol/api-bindings';
@@ -48,6 +49,7 @@ export {
 export type {
   AmountValue,
   Asset,
+  Brand,
   Cast,
   CryptoAmount,
   CryptoAsset,
@@ -66,9 +68,11 @@ export type {
   Matic,
   Narrow,
   Overwrite,
+  Prettify,
   Primitive,
   PromiseResult,
   Result,
   Success,
   TwoAtLeastArray,
+  Url,
 } from '@lens-protocol/shared-kernel';

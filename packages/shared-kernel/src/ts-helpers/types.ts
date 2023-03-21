@@ -119,6 +119,7 @@ export type Prettify<T> = {
 } & {};
 
 declare const brand: unique symbol;
+
 /**
  * Branding function
  */

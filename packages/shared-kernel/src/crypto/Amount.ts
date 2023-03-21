@@ -16,14 +16,14 @@ import {
 /**
  * A type alias for a value that can be used to construct an {@link Amount}
  *
- * @category Common
+ * @group Common
  */
 export type AmountValue = BigDecimal | number | string;
 
 /**
  * A set of convenience helpers useful to specify amount values in common denominations.
  *
- * @category Common
+ * @group Common
  */
 export const Denomination = {
   /**
@@ -65,7 +65,7 @@ export const Denomination = {
  * Amount is a value object representing an amount of given {@link Asset}.
  *
  * @sealed
- * @category Common
+ * @group Common
  * @typeParam T - The {@link Asset} type of the amount.
  * @remarks
  *
@@ -303,20 +303,20 @@ export class Amount<T extends Asset> {
 /**
  * A convenience type to specify a crypto amount value.
  *
- * @category Common
+ * @group Common
  */
 export type CryptoAmount = Amount<CryptoAsset>;
 
 /**
  * A convenience type to specify a native crypto amount value.
  *
- * @category Common
+ * @group Common
  */
 export type CryptoNativeAmount = Amount<CryptoNativeAsset>;
 
 /**
  * A convenience type to specify a fiat amount value.
  *
- * @category Common
+ * @group Common
  */
 export type FiatAmount = Amount<Fiat>;

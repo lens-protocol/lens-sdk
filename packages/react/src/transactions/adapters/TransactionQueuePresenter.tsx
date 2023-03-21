@@ -17,6 +17,9 @@ import { CausedError } from '@lens-protocol/shared-kernel';
 
 import { ErrorHandler } from '../../ErrorHandler';
 
+/**
+ * Error thrown when a transaction fails
+ */
 export class FailedTransactionError extends CausedError {
   readonly data?: TransactionData<SupportedTransactionRequest>;
 

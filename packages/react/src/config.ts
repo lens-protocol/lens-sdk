@@ -1,8 +1,7 @@
-import { Sources } from '@lens-protocol/api-bindings';
 import { AppId } from '@lens-protocol/domain/entities';
-import { AuthenticationConfig, IEncryptionProvider } from '@lens-protocol/gated-content';
+import { AuthenticationConfig, IEncryptionProvider, ICipher } from '@lens-protocol/gated-content';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
-import { IStorageProvider, IObservableStorageProvider } from '@lens-protocol/storage';
+import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
 import { IProviderBinding } from './wallet/infrastructure/ProviderFactory';
@@ -11,19 +10,65 @@ import { ISignerBinding } from './wallet/infrastructure/SignerFactory';
 export * from './environments';
 export * from './sources';
 
-export type { ILogger };
+export type { ILogger, AuthenticationConfig, IEncryptionProvider, ICipher };
 
+/**
+ * @group General Configuration
+ */
 export interface IBindings extends ISignerBinding, IProviderBinding {}
 
+/**
+ * `<LensProvider>` configuration
+ *
+ * @group General Configuration
+ */
 export type LensConfig = {
+  /**
+   * Provides integration with the ethers.js Signer and Provider
+   */
   bindings: IBindings;
+  /**
+   * The environment to use. See {@link production} and {@link staging}.
+   */
   environment: EnvironmentConfig;
+  /**
+   * The logger interface to use when something worth logging happens
+   *
+   * @defaultValue `ConsoleLogger`, an internal implementation of {@link ILogger} that logs to the console
+   */
   logger?: ILogger;
+  /**
+   * The storage provider to use.
+   *
+   * If a implementation of {@link IObservableStorageProvider} is provided,
+   * the provider will be used to subscribe to changes in the storage.
+   */
   storage: IStorageProvider | IObservableStorageProvider;
-  sources?: Sources;
+  /**
+   * The `sources` determines the sources of posts and comments that will be fetched
+   *
+   * It also determines some Profile related statistics, such as the number of posts and comments.
+   *
+   * @defaultValue any sources, not restricted
+   */
+  sources?: AppId[];
+  /**
+   * The `appId` identifies post and comment created from the SDK
+   *
+   * The `appId`, if provided, MUST be included in the `sources` array.
+   *
+   * @defaultValue not set
+   *
+   * @see {@link appId} helper
+   */
   appId?: AppId;
 };
 
+/**
+ * Encryption configuration for token-gated content
+ *
+ * @group Encryption
+ */
 export type EncryptionConfig = {
   authentication: AuthenticationConfig;
   provider: IEncryptionProvider;
