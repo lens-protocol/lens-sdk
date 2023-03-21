@@ -18,7 +18,8 @@
     "lint:fix": "turbo run lint:fix --parallel --no-cache",
     "lint:examples": "sh ./scripts/lint-examples.sh",
     "deduplicate:check": "pnpm-deduplicate --list",
-    "deduplicate:fix": "pnpm-deduplicate"
+    "deduplicate:fix": "pnpm-deduplicate",
+    "typedoc": "typedoc"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
@@ -26,7 +27,10 @@
     "pnpm-deduplicate": "^0.4.2",
     "prettier": "^2.8.4",
     "rimraf": "^4.1.2",
-    "turbo": "^1.8.1"
+    "turbo": "^1.8.1",
+    "typedoc": "^0.23.27",
+    "typedoc-plugin-markdown": "^3.14.0",
+    "typescript": "^4.9.5"
   },
   "resolutions": {
     "ethereumjs-abi": "https://registry.npmjs.org/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz"

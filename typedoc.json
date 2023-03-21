@@ -1,0 +1,17 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPointStrategy": "packages",
+  "entryPoints": ["packages/react", "packages/react-web"],
+  "out": "doc",
+  "name": "Lens SDK Reference",
+  "gitRevision": "main",
+  "readme": "none",
+  "excludeExternals": true,
+  "excludeInternal": true,
+  "excludePrivate": false,
+  "excludeProtected": false,
+  "excludeNotDocumented": true,
+  "plugin": ["typedoc-plugin-markdown"],
+  "hideInPageTOC": true,
+  "hideBreadcrumbs": true
+}
