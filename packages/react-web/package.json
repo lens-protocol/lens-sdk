@@ -67,6 +67,7 @@
     "typescript": "^4.9.5"
   },
   "peerDependencies": {
+    "ethers": "^5.7.2",
     "react": "^18.2.0"
   },
   "prettier": "@lens-protocol/prettier-config",
