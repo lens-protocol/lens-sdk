@@ -117,6 +117,7 @@ export function createSharedDependencies(
   const anonymousApolloClient = createAnonymousApolloClient({
     backendURL: config.environment.backend,
     activeWalletVar: activeWalletVar,
+    logger,
   });
   const authApi = new AuthApi(anonymousApolloClient);
   const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
@@ -125,6 +126,7 @@ export function createSharedDependencies(
     accessTokenStorage,
     activeWalletVar: activeWalletVar,
     pollingInterval: config.environment.timings.pollingInterval,
+    logger,
   });
   const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
   const profileCacheManager = new ProfileCacheManager(apolloClient, sources);

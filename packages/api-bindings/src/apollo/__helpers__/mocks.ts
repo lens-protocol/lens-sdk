@@ -67,17 +67,22 @@ export function createGenericErrorMockedResponse(document: DocumentNode): Mocked
   };
 }
 
-function createJSONResponse(status: number, body: ExecutionResult<unknown>) {
+export function createHttpJsonResponse(
+  status: number,
+  body: ExecutionResult<unknown>,
+  headers: Record<string, string> = {},
+): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
+      ...headers,
       'Content-Type': 'application/json',
     },
   });
 }
 
-export function createUnauthenticatedResponse() {
-  return createJSONResponse(401, {
+export function createUnauthenticatedHttpResponse() {
+  return createHttpJsonResponse(401, {
     data: null,
     errors: [
       createGraphQLError({

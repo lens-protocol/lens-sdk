@@ -176,6 +176,7 @@ importers:
       graphql: ^16.6.0
       graphql-tag: ^2.12.6
       jest: ^29.4.3
+      jest-mock-extended: ^3.0.1
       react: ^18.2.0
       react-dom: ^18.2.0
       ts-jest: ^29.0.5
@@ -209,6 +210,7 @@ importers:
       babel-plugin-graphql-tag: 3.3.0_kmw2lllueuqv5qyte3kpx3bdei
       eslint: 8.34.0
       jest: 29.4.3_@types+node@18.14.0
+      jest-mock-extended: 3.0.1_orzzknleilowtsz34rkaotjvzm
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       ts-jest: 29.0.5_cslgewaznsjxirw6ogkiwclmbu
@@ -12111,7 +12113,7 @@ packages:
       jest: ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0 || 29.4.3
       typescript: ^3.0.0 || ^4.0.0
     dependencies:
-      jest: 29.4.3
+      jest: 29.4.3_@types+node@18.14.0
       ts-essentials: 7.0.3_typescript@4.9.5
       typescript: 4.9.5
     dev: true
@@ -16439,7 +16441,7 @@ packages:
       '@babel/core': 7.20.12
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.4.3
+      jest: 29.4.3_@types+node@18.14.0
       jest-util: 29.4.3
       json5: 2.2.3
       lodash.memoize: 4.1.2

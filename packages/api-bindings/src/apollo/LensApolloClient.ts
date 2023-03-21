@@ -10,8 +10,9 @@ import {
   QueryOptions,
 } from '@apollo/client';
 import { getOperationName } from '@apollo/client/utilities';
-import { assertError } from '@lens-protocol/shared-kernel';
+import { assertError, invariant } from '@lens-protocol/shared-kernel';
 
+import { SemVer } from '../SemVer';
 import {
   assertGraphQLClientMutationResult,
   assertGraphQLClientQueryResult,
@@ -22,12 +23,7 @@ import {
 import { UnspecifiedError, ValidationError } from './errors';
 import { isGraphQLValidationError } from './isGraphQLValidationError';
 
-export type LensApolloClientOptions<TCacheShape> = {
-  cache: ApolloCache<TCacheShape>;
-  link: ApolloLink;
-  pollingInterval?: number;
-};
-
+const clientName = 'lens-sdk';
 const defaultPollingInterval = 3000;
 
 function resolveError(error: unknown) {
@@ -39,6 +35,17 @@ function resolveError(error: unknown) {
   return new UnspecifiedError(error);
 }
 
+function isTerminating(link: ApolloLink): boolean {
+  return link.request.length <= 1;
+}
+
+export type LensApolloClientOptions<TCacheShape> = {
+  cache: ApolloCache<TCacheShape>;
+  pollingInterval?: number;
+  version?: SemVer;
+  link: ApolloLink;
+};
+
 export class LensApolloClient<TCacheShape extends NormalizedCacheObject = NormalizedCacheObject>
   extends ApolloClient<TCacheShape>
   implements IGraphQLClient<TCacheShape>
@@ -49,7 +56,13 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
     cache,
     link,
     pollingInterval = defaultPollingInterval,
+    version,
   }: LensApolloClientOptions<TCacheShape>) {
+    invariant(
+      isTerminating(link),
+      'The link passed to LensApolloClient must be a terminating link.',
+    );
+
     super({
       cache,
       defaultOptions: {
@@ -64,6 +77,8 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
         },
       },
       link,
+      name: clientName,
+      version,
     });
     this.pollingInterval = pollingInterval;
   }

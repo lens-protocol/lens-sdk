@@ -1,4 +1,5 @@
-import { gql, HttpLink, InMemoryCache, Observable } from '@apollo/client';
+// eslint-disable-next-line no-restricted-imports
+import { createHttpLink, gql, InMemoryCache, Observable } from '@apollo/client';
 import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, GraphQLError } from 'graphql';
 
@@ -6,7 +7,7 @@ import { LensApolloClient } from '../LensApolloClient';
 import {
   createValidationErrorMockedResponse,
   createGenericErrorMockedResponse,
-  createUnauthenticatedResponse,
+  createUnauthenticatedHttpResponse,
 } from '../__helpers__/mocks';
 import { UnspecifiedError, ValidationError } from '../errors';
 
@@ -64,13 +65,13 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
     });
 
     it(`should throw an ${UnspecifiedError.name} in case of ServerError (a specific type of NetworkError)`, async () => {
-      const fetch = jest.fn().mockResolvedValue(createUnauthenticatedResponse());
+      const fetch = jest.fn().mockResolvedValue(createUnauthenticatedHttpResponse());
       const client = new LensApolloClient({
         cache: new InMemoryCache(),
 
-        link: new HttpLink({
-          uri: 'http://localhost:4000/graphql',
+        link: createHttpLink({
           fetch,
+          uri: 'http://localhost:4000/graphql',
         }),
       });
 
@@ -110,13 +111,13 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
     });
 
     it(`should throw an ${UnspecifiedError.name} in case of ServerError (a specific type of NetworkError)`, async () => {
-      const fetch = jest.fn().mockResolvedValue(createUnauthenticatedResponse());
+      const fetch = jest.fn().mockResolvedValue(createUnauthenticatedHttpResponse());
       const client = new LensApolloClient({
         cache: new InMemoryCache(),
 
-        link: new HttpLink({
-          uri: 'http://localhost:4000/graphql',
+        link: createHttpLink({
           fetch,
+          uri: 'http://localhost:4000/graphql',
         }),
       });
 
@@ -173,13 +174,13 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
     });
 
     it(`should emit an ${UnspecifiedError.name} in case of ServerError (a specific type of NetworkError)`, async () => {
-      const fetch = jest.fn().mockResolvedValue(createUnauthenticatedResponse());
+      const fetch = jest.fn().mockResolvedValue(createUnauthenticatedHttpResponse());
       const client = new LensApolloClient({
         cache: new InMemoryCache(),
 
-        link: new HttpLink({
-          uri: 'http://localhost:4000/graphql',
+        link: createHttpLink({
           fetch,
+          uri: 'http://localhost:4000/graphql',
         }),
       });
 
