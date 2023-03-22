@@ -18,7 +18,6 @@ import { ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
 import { ImageType } from '../config';
 import {
-  ChargeCollectPolicy,
   CollectPolicyType,
   ContentFocus,
   FreeCollectPolicy,
@@ -27,6 +26,7 @@ import {
   NftAttributeDisplayType,
   NftMetadata,
   NoCollectPolicy,
+  SimpleChargeCollectPolicy,
 } from '../types';
 
 export function mockCreateCommentRequest(
@@ -107,8 +107,8 @@ export function mockFreeCollectPolicy(overrides?: Partial<FreeCollectPolicy>): F
 }
 
 export function mockChargeCollectPolicy(
-  overrides?: Partial<ChargeCollectPolicy>,
-): ChargeCollectPolicy {
+  overrides?: Partial<SimpleChargeCollectPolicy>,
+): SimpleChargeCollectPolicy {
   return {
     type: CollectPolicyType.CHARGE,
     fee: mockUsdcAmount(42),

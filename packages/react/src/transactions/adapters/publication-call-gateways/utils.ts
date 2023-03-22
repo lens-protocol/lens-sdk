@@ -5,44 +5,109 @@ import {
   ReferencePolicyType,
   CreatePostRequest,
   CreateCommentRequest,
+  AaveChargeCollectPolicy,
+  VaultChargeCollectPolicy,
+  MultirecipientChargeCollectPolicy,
 } from '@lens-protocol/domain/use-cases/publications';
 
-export function resolveCollectModuleFeeParams(collect: ChargeCollectPolicy) {
+function isAaveChargeCollectPolicy(
+  collect: ChargeCollectPolicy,
+): collect is AaveChargeCollectPolicy {
+  return 'depositToAave' in collect && collect.depositToAave;
+}
+
+function isVaultChargeCollectPolicy(
+  collect: ChargeCollectPolicy,
+): collect is VaultChargeCollectPolicy {
+  return 'vault' in collect;
+}
+
+function isMultirecipientChargeCollectPolicy(
+  collect: ChargeCollectPolicy,
+): collect is MultirecipientChargeCollectPolicy {
+  return 'recipients' in collect;
+}
+
+function resolveChargeCollectModuleSharedParams(collect: ChargeCollectPolicy) {
   return {
     amount: {
       currency: collect.fee.asset.address,
       value: collect.fee.toSignificantDigits(),
     },
     followerOnly: collect.followersOnly,
-    recipient: collect.recipient,
     referralFee: collect.mirrorReward,
   };
 }
 
-export function resolveChargeCollectModule(collect: ChargeCollectPolicy): CollectModuleParams {
+function resolveChargeCollectModule(collect: ChargeCollectPolicy): CollectModuleParams {
+  if (isAaveChargeCollectPolicy(collect)) {
+    return {
+      aaveFeeCollectModule: {
+        ...resolveChargeCollectModuleSharedParams(collect),
+        recipient: collect.recipient,
+        ...(collect.collectLimit && { collectLimit: collect.collectLimit.toString() }),
+        ...(collect.endTimestamp && { endTimestamp: collect.endTimestamp.toString() }),
+      },
+    };
+  }
+
+  if (isVaultChargeCollectPolicy(collect)) {
+    return {
+      erc4626FeeCollectModule: {
+        ...resolveChargeCollectModuleSharedParams(collect),
+        recipient: collect.recipient,
+        vault: collect.vault,
+        ...(collect.collectLimit && { collectLimit: collect.collectLimit.toString() }),
+        ...(collect.endTimestamp && { endTimestamp: collect.endTimestamp.toString() }),
+      },
+    };
+  }
+
+  if (isMultirecipientChargeCollectPolicy(collect)) {
+    return {
+      multirecipientFeeCollectModule: {
+        ...resolveChargeCollectModuleSharedParams(collect),
+        recipients: collect.recipients,
+        ...(collect.collectLimit && { collectLimit: collect.collectLimit.toString() }),
+        ...(collect.endTimestamp && { endTimestamp: collect.endTimestamp.toString() }),
+      },
+    };
+  }
+
   if (collect.collectLimit && collect.timeLimited) {
     return {
       limitedTimedFeeCollectModule: {
-        ...resolveCollectModuleFeeParams(collect),
+        ...resolveChargeCollectModuleSharedParams(collect),
+        recipient: collect.recipient,
         collectLimit: collect.collectLimit.toString(),
       },
     };
   }
+
   if (collect.collectLimit) {
     return {
       limitedFeeCollectModule: {
-        ...resolveCollectModuleFeeParams(collect),
+        ...resolveChargeCollectModuleSharedParams(collect),
+        recipient: collect.recipient,
         collectLimit: collect.collectLimit.toString(),
       },
     };
   }
+
   if (collect.timeLimited) {
     return {
-      timedFeeCollectModule: resolveCollectModuleFeeParams(collect),
+      timedFeeCollectModule: {
+        ...resolveChargeCollectModuleSharedParams(collect),
+        recipient: collect.recipient,
+      },
     };
   }
+
   return {
-    feeCollectModule: resolveCollectModuleFeeParams(collect),
+    feeCollectModule: {
+      ...resolveChargeCollectModuleSharedParams(collect),
+      recipient: collect.recipient,
+    },
   };
 }
 
