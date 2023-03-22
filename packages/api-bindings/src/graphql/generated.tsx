@@ -4,8 +4,11 @@ import type {
   ProfileId,
   PublicationId,
 } from '@lens-protocol/domain/entities';
-import type { EthereumAddress, Url } from '@lens-protocol/shared-kernel';
-import type { ClientErc20Amount } from './ClientErc20Amount';
+import type {
+  Erc20Amount as ClientErc20Amount,
+  EthereumAddress,
+  Url,
+} from '@lens-protocol/shared-kernel';
 import type { ContentEncryptionKey } from './ContentEncryptionKey';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { FollowPolicy } from './FollowPolicy';

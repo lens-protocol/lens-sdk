@@ -1,5 +1,5 @@
 export * from './chains';
-export * from './config';
+export * from './environments';
 export * from './experimental';
 export * from './feed';
 export * from './LensProvider';
@@ -8,9 +8,20 @@ export * from './notifications';
 export * from './profile';
 export * from './publication';
 export * from './revenue';
+export * from './sources';
 export * from './transactions';
 export * from './utils';
 export * from './wallet';
+
+export type {
+  AuthenticationConfig,
+  EncryptionConfig,
+  IBindings,
+  ICipher,
+  IEncryptionProvider,
+  ILogger,
+  LensConfig,
+} from './config';
 
 export type { ReadResult, PaginatedReadResult } from './helpers/reads';
 export { isValidHandle } from '@lens-protocol/api-bindings';

@@ -7,7 +7,6 @@ import { Narrow } from './ts-helpers/types';
  * It's present only to allow type safety of the `isFailure` method.
  *
  * @sealed
- * @private
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Success<T, E> {
@@ -33,7 +32,6 @@ class Success<T, E> {
  * It's present only to allow type safety of the `isSuccess` method.
  *
  * @sealed
- * @private
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Failure<T, E> {

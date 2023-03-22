@@ -301,21 +301,28 @@ export class Amount<T extends Asset> {
 }
 
 /**
- * A convenience type to specify a crypto amount value.
+ * A convenience type to specify a crypto amount.
  *
  * @category Common
  */
 export type CryptoAmount = Amount<CryptoAsset>;
 
 /**
- * A convenience type to specify a native crypto amount value.
+ * A convenience type to specify a native crypto amount.
  *
  * @category Common
  */
 export type CryptoNativeAmount = Amount<CryptoNativeAsset>;
 
 /**
- * A convenience type to specify a fiat amount value.
+ * A convenience type to specify an ERC20 crypto amount.
+ *
+ * @category Common
+ */
+export type Erc20Amount = Amount<Erc20>;
+
+/**
+ * A convenience type to specify a fiat amount.
  *
  * @category Common
  */

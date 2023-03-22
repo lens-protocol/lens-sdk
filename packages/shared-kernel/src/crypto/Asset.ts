@@ -1,15 +1,5 @@
 import { ChainType } from './ChainType';
 
-/**
- * Kind is an enum representing the kind of asset.
- *
- * @category Common
- * @remarks
- *
- * - NATIVE: Native token, e.g. Ether, Matic
- * - ERC20: ERC20 token
- * - FIAT: Fiat currency e.g. USD, GBP, EUR
- */
 export enum Kind {
   NATIVE,
   ERC20,
@@ -28,12 +18,7 @@ export enum WellKnownSymbols {
   USDC = 'USDC',
 }
 
-/**
- * NativeType is an enum representing the supported native token types.
- *
- * @category Common
- */
-export enum NativeType {
+enum NativeType {
   ETHER,
   MATIC,
 }
@@ -42,19 +27,17 @@ export enum NativeType {
  * Fiat is a value object representing a fiat currency.
  *
  * @category Common
-
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Fiat {
+  /** @internal */
   readonly kind = Kind.FIAT as const;
   readonly decimals: number = 2 as const;
 
   constructor(readonly name: string, readonly symbol: string) {}
 
-  /**
-   * @internal
-   */
+  /** @internal */
   get hash() {
     return this.symbol;
   }
@@ -76,21 +59,20 @@ class Fiat {
  * Ether is a value object representing the Ether token.
  *
  * @category Common
-
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Ether {
+  /** @internal */
   readonly kind = Kind.NATIVE as const;
+  /** @internal */
   readonly type = NativeType.ETHER as const;
   readonly name: string = 'Ethereum' as const;
   readonly decimals: number = 18;
   readonly symbol: string = WellKnownSymbols.ETH as const;
   readonly chainType: ChainType = ChainType.ETHEREUM;
 
-  /**
-   * @internal
-   */
+  /** @internal */
   get hash() {
     return this.type.toString();
   }
@@ -120,16 +102,16 @@ class Ether {
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Matic {
+  /** @internal */
   readonly kind = Kind.NATIVE as const;
+  /** @internal */
   readonly type = NativeType.MATIC as const;
   readonly name = 'Matic' as const;
   readonly decimals = 18 as const;
   readonly symbol = WellKnownSymbols.MATIC as const;
   readonly chainType: ChainType = ChainType.POLYGON;
 
-  /**
-   * @internal
-   */
+  /** @internal */
   get hash() {
     return this.type.toString();
   }
@@ -159,6 +141,7 @@ class Matic {
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Erc20 {
+  /** @internal */
   readonly kind = Kind.ERC20 as const;
 
   constructor(
@@ -169,9 +152,7 @@ class Erc20 {
     readonly chainType: ChainType,
   ) {}
 
-  /**
-   * @internal
-   */
+  /** @internal */
   get hash() {
     return `${this.chainType}:${this.address}`;
   }

@@ -17,7 +17,8 @@ import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
 import { ErrorHandler } from './ErrorHandler';
-import { EnvironmentConfig, IBindings, LensConfig } from './config';
+import { IBindings, LensConfig } from './config';
+import { EnvironmentConfig } from './environments';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
 import { ProfileGateway } from './profile/adapters/ProfileGateway';

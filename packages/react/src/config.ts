@@ -7,9 +7,6 @@ import { EnvironmentConfig } from './environments';
 import { IProviderBinding } from './wallet/infrastructure/ProviderFactory';
 import { ISignerBinding } from './wallet/infrastructure/SignerFactory';
 
-export * from './environments';
-export * from './sources';
-
 export type { ILogger, AuthenticationConfig, IEncryptionProvider, ICipher };
 
 /**
@@ -74,6 +71,7 @@ export type EncryptionConfig = {
   provider: IEncryptionProvider;
 };
 
+/** @internal */
 export function validateConfig(config: LensConfig) {
   invariant(
     !(config.appId && config.sources && !config.sources?.includes(config.appId)),

@@ -1,10 +1,9 @@
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-
-import { ClientErc20Amount } from './ClientErc20Amount';
+import { Erc20Amount } from '@lens-protocol/shared-kernel';
 
 export type ChargeFollowPolicy = {
   type: FollowPolicyType.CHARGE;
-  amount: ClientErc20Amount;
+  amount: Erc20Amount;
   recipient: string;
   contractAddress: string;
 };
