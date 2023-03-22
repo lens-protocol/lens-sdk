@@ -4,7 +4,6 @@ import { ChainType } from './ChainType';
  * Kind is an enum representing the kind of asset.
  *
  * @category Common
- * @param
  * @remarks
  *
  * - NATIVE: Native token, e.g. Ether, Matic
@@ -21,7 +20,6 @@ export enum Kind {
  * WellKnownSymbols is a convenience enum for well known symbols.
  *
  * @category Common
- * @param
  */
 export enum WellKnownSymbols {
   ETH = 'ETH',
@@ -34,7 +32,6 @@ export enum WellKnownSymbols {
  * NativeType is an enum representing the supported native token types.
  *
  * @category Common
- * @param
  */
 export enum NativeType {
   ETHER,
@@ -45,7 +42,7 @@ export enum NativeType {
  * Fiat is a value object representing a fiat currency.
  *
  * @category Common
- * @param
+
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
@@ -79,7 +76,7 @@ class Fiat {
  * Ether is a value object representing the Ether token.
  *
  * @category Common
- * @param
+
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
@@ -119,7 +116,6 @@ class Ether {
  * Matic is a value object representing the Matic token.
  *
  * @category Common
- * @param
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
@@ -159,7 +155,6 @@ class Matic {
  * Erc20 is a value object representing an ERC20 token.
  *
  * @category Common
- * @param
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
@@ -207,7 +202,6 @@ export type { Erc20, Ether, Matic, Fiat };
  * Asset instances are immutable and can be compared using reference equality (`===`).
  *
  * @category Common
- * @param
  */
 export type Asset = Fiat | Ether | Erc20 | Matic;
 
@@ -215,7 +209,6 @@ export type Asset = Fiat | Ether | Erc20 | Matic;
  * CryptoAsset is a convenience union representing tokens that are native to the supported blockchains.
  *
  * @category Common
- * @param
  * @remarks
  *
  * The reason we make a distinction between CryptoAsset and {@link Asset} is that CryptoAsset are
@@ -228,7 +221,6 @@ export type CryptoNativeAsset = Ether | Matic;
  * CryptoAsset is a convenience union representing currencies that are blockchain tokens.
  *
  * @category Common
- * @param
  */
 export type CryptoAsset = Ether | Erc20 | Matic;
 
@@ -250,7 +242,6 @@ function immutable(key: string, asset: Asset): Asset {
  * Initialization object for {@link erc20} factory function
  *
  * @category Common
- * @param
  */
 export type Erc20Info = {
   address: string;

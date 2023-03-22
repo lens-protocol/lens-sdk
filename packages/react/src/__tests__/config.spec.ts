@@ -29,8 +29,12 @@ const configBase = {
 const testAppId = appId('test');
 
 describe(`Given the ${validateConfig.name} helper`, () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
   describe(`when the config has no "appId" nor "sources" defined`, () => {
-    it(`should not throw`, async () => {
+    it(`should pass the validation`, async () => {
       const config: LensConfig = {
         ...configBase,
       };
@@ -40,7 +44,7 @@ describe(`Given the ${validateConfig.name} helper`, () => {
   });
 
   describe(`when the config defines "appId" and no "sources"`, () => {
-    it(`should not throw`, async () => {
+    it(`should pass the validation`, async () => {
       const config: LensConfig = {
         ...configBase,
         appId: testAppId,
@@ -51,7 +55,7 @@ describe(`Given the ${validateConfig.name} helper`, () => {
   });
 
   describe(`when the config defines "appId" and "sources" include the same "appId"`, () => {
-    it(`should not throw`, async () => {
+    it(`should pass the validation`, async () => {
       const config: LensConfig = {
         ...configBase,
         appId: testAppId,
@@ -63,7 +67,7 @@ describe(`Given the ${validateConfig.name} helper`, () => {
   });
 
   describe(`when the config defines "appId" and "sources", but "sources" don't include the same "appId"`, () => {
-    it(`should throw ${InvariantError.name}`, async () => {
+    it(`should throw an ${InvariantError.name}`, async () => {
       const config: LensConfig = {
         ...configBase,
         appId: testAppId,

@@ -13,8 +13,6 @@ export * from './useUpdateDispatcherConfig';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileDetails';
 
-export type { IEncryptionProvider, ICipher } from '@lens-protocol/gated-content';
-
 export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 export {
   CollectPolicyType,

@@ -6,6 +6,11 @@ export type StorageSubscriber<Data> = (newData: Data | null, oldData: Data | nul
 
 export type StorageProviderSubscriber = StorageSubscriber<string>;
 
+/**
+ * A storage provider that supports asynchronous storage of arbitrary data as strings
+ *
+ * @category Storage
+ */
 export interface IStorageProvider {
   getItem(key: string): Promise<string | null> | string | null;
   setItem(key: string, value: string): Promise<string> | Promise<void> | void | string;
@@ -13,7 +18,7 @@ export interface IStorageProvider {
 }
 
 /**
- * A storage provider that supports observable storage items
+ * An observable storage provider that supports asynchronous storage of arbitrary data as strings
  *
  * @category Storage
  */
