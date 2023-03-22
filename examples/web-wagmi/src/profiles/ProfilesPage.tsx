@@ -7,14 +7,14 @@ const profileHooks = [
     path: '/profiles/useCreateProfile',
   },
   {
-    label: 'useProfile (by handle)',
-    description: `Fetch a profile by the profile handle.`,
-    path: '/profiles/useProfile-handle',
+    label: 'useProfile',
+    description: `Get a profile by the profile id or by its handle.`,
+    path: '/profiles/useProfile',
   },
   {
-    label: 'useProfile (by id)',
-    description: `Fetch a profile by the profile id.`,
-    path: '/profiles/useProfile-id',
+    label: 'useProfiles',
+    description: `Get a paginated list of profile by their profile handles or their profile Ids.`,
+    path: '/profiles/useProfiles',
   },
   {
     label: 'useMutualFollowers',
