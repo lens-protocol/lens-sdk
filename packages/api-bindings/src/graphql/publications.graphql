@@ -98,25 +98,6 @@ query WhoCollectedPublication(
   }
 }
 
-query GetAllProfilesByWhoMirroredPublication(
-  $publicationId: InternalPublicationId!
-  $observerId: ProfileId
-  $limit: LimitScalar!
-  $cursor: Cursor
-  $sources: [Sources!]!
-) {
-  result: profiles(
-    request: { whoMirroredPublicationId: $publicationId, limit: $limit, cursor: $cursor }
-  ) {
-    items {
-      ...Profile
-    }
-    pageInfo {
-      ...CommonPaginatedResultInfo
-    }
-  }
-}
-
 query ProfilePublicationsForSale(
   $profileId: ProfileId!
   $observerId: ProfileId

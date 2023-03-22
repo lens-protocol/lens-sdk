@@ -5161,15 +5161,18 @@ export type GetProfileQueryVariables = Exact<{
 
 export type GetProfileQuery = { result: ProfileFragment | null };
 
-export type GetAllProfilesByOwnerAddressQueryVariables = Exact<{
-  address: Scalars['EthereumAddress'];
+export type GetAllProfilesQueryVariables = Exact<{
+  byProfileIds?: InputMaybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
+  byHandles?: InputMaybe<Array<Scalars['Handle']> | Scalars['Handle']>;
+  byOwnerAddresses?: InputMaybe<Array<Scalars['EthereumAddress']> | Scalars['EthereumAddress']>;
+  byWhoMirroredPublicationId?: InputMaybe<Scalars['InternalPublicationId']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
 
-export type GetAllProfilesByOwnerAddressQuery = {
+export type GetAllProfilesQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
@@ -5393,18 +5396,6 @@ export type WhoCollectedPublicationQueryVariables = Exact<{
 
 export type WhoCollectedPublicationQuery = {
   result: { items: Array<WalletFragment>; pageInfo: CommonPaginatedResultInfoFragment };
-};
-
-export type GetAllProfilesByWhoMirroredPublicationQueryVariables = Exact<{
-  publicationId: Scalars['InternalPublicationId'];
-  observerId?: InputMaybe<Scalars['ProfileId']>;
-  limit: Scalars['LimitScalar'];
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
-}>;
-
-export type GetAllProfilesByWhoMirroredPublicationQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: CommonPaginatedResultInfoFragment };
 };
 
 export type ProfilePublicationsForSaleQueryVariables = Exact<{
@@ -8001,15 +7992,27 @@ export function useGetProfileLazyQuery(
 export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
 export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
 export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
-export const GetAllProfilesByOwnerAddressDocument = gql`
-  query GetAllProfilesByOwnerAddress(
-    $address: EthereumAddress!
+export const GetAllProfilesDocument = gql`
+  query GetAllProfiles(
+    $byProfileIds: [ProfileId!]
+    $byHandles: [Handle!]
+    $byOwnerAddresses: [EthereumAddress!]
+    $byWhoMirroredPublicationId: InternalPublicationId
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!] = []
   ) {
-    result: profiles(request: { ownedBy: [$address], limit: $limit, cursor: $cursor }) {
+    result: profiles(
+      request: {
+        whoMirroredPublicationId: $byWhoMirroredPublicationId
+        ownedBy: $byOwnerAddresses
+        profileIds: $byProfileIds
+        handles: $byHandles
+        limit: $limit
+        cursor: $cursor
+      }
+    ) {
       items {
         ...Profile
       }
@@ -8023,18 +8026,21 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
 `;
 
 /**
- * __useGetAllProfilesByOwnerAddressQuery__
+ * __useGetAllProfilesQuery__
  *
- * To run a query within a React component, call `useGetAllProfilesByOwnerAddressQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllProfilesByOwnerAddressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllProfilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllProfilesByOwnerAddressQuery({
+ * const { data, loading, error } = useGetAllProfilesQuery({
  *   variables: {
- *      address: // value for 'address'
+ *      byProfileIds: // value for 'byProfileIds'
+ *      byHandles: // value for 'byHandles'
+ *      byOwnerAddresses: // value for 'byOwnerAddresses'
+ *      byWhoMirroredPublicationId: // value for 'byWhoMirroredPublicationId'
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
@@ -8042,39 +8048,29 @@ export const GetAllProfilesByOwnerAddressDocument = gql`
  *   },
  * });
  */
-export function useGetAllProfilesByOwnerAddressQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetAllProfilesByOwnerAddressQuery,
-    GetAllProfilesByOwnerAddressQueryVariables
-  >,
+export function useGetAllProfilesQuery(
+  baseOptions: Apollo.QueryHookOptions<GetAllProfilesQuery, GetAllProfilesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetAllProfilesByOwnerAddressQuery,
-    GetAllProfilesByOwnerAddressQueryVariables
-  >(GetAllProfilesByOwnerAddressDocument, options);
+  return Apollo.useQuery<GetAllProfilesQuery, GetAllProfilesQueryVariables>(
+    GetAllProfilesDocument,
+    options,
+  );
 }
-export function useGetAllProfilesByOwnerAddressLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAllProfilesByOwnerAddressQuery,
-    GetAllProfilesByOwnerAddressQueryVariables
-  >,
+export function useGetAllProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAllProfilesQuery, GetAllProfilesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetAllProfilesByOwnerAddressQuery,
-    GetAllProfilesByOwnerAddressQueryVariables
-  >(GetAllProfilesByOwnerAddressDocument, options);
+  return Apollo.useLazyQuery<GetAllProfilesQuery, GetAllProfilesQueryVariables>(
+    GetAllProfilesDocument,
+    options,
+  );
 }
-export type GetAllProfilesByOwnerAddressQueryHookResult = ReturnType<
-  typeof useGetAllProfilesByOwnerAddressQuery
->;
-export type GetAllProfilesByOwnerAddressLazyQueryHookResult = ReturnType<
-  typeof useGetAllProfilesByOwnerAddressLazyQuery
->;
-export type GetAllProfilesByOwnerAddressQueryResult = Apollo.QueryResult<
-  GetAllProfilesByOwnerAddressQuery,
-  GetAllProfilesByOwnerAddressQueryVariables
+export type GetAllProfilesQueryHookResult = ReturnType<typeof useGetAllProfilesQuery>;
+export type GetAllProfilesLazyQueryHookResult = ReturnType<typeof useGetAllProfilesLazyQuery>;
+export type GetAllProfilesQueryResult = Apollo.QueryResult<
+  GetAllProfilesQuery,
+  GetAllProfilesQueryVariables
 >;
 export const CreateProfileDocument = gql`
   mutation CreateProfile($request: CreateProfileRequest!) {
@@ -9203,83 +9199,6 @@ export type WhoCollectedPublicationLazyQueryHookResult = ReturnType<
 export type WhoCollectedPublicationQueryResult = Apollo.QueryResult<
   WhoCollectedPublicationQuery,
   WhoCollectedPublicationQueryVariables
->;
-export const GetAllProfilesByWhoMirroredPublicationDocument = gql`
-  query GetAllProfilesByWhoMirroredPublication(
-    $publicationId: InternalPublicationId!
-    $observerId: ProfileId
-    $limit: LimitScalar!
-    $cursor: Cursor
-    $sources: [Sources!]!
-  ) {
-    result: profiles(
-      request: { whoMirroredPublicationId: $publicationId, limit: $limit, cursor: $cursor }
-    ) {
-      items {
-        ...Profile
-      }
-      pageInfo {
-        ...CommonPaginatedResultInfo
-      }
-    }
-  }
-  ${ProfileFragmentDoc}
-  ${CommonPaginatedResultInfoFragmentDoc}
-`;
-
-/**
- * __useGetAllProfilesByWhoMirroredPublicationQuery__
- *
- * To run a query within a React component, call `useGetAllProfilesByWhoMirroredPublicationQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllProfilesByWhoMirroredPublicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllProfilesByWhoMirroredPublicationQuery({
- *   variables: {
- *      publicationId: // value for 'publicationId'
- *      observerId: // value for 'observerId'
- *      limit: // value for 'limit'
- *      cursor: // value for 'cursor'
- *      sources: // value for 'sources'
- *   },
- * });
- */
-export function useGetAllProfilesByWhoMirroredPublicationQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetAllProfilesByWhoMirroredPublicationQuery,
-    GetAllProfilesByWhoMirroredPublicationQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetAllProfilesByWhoMirroredPublicationQuery,
-    GetAllProfilesByWhoMirroredPublicationQueryVariables
-  >(GetAllProfilesByWhoMirroredPublicationDocument, options);
-}
-export function useGetAllProfilesByWhoMirroredPublicationLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAllProfilesByWhoMirroredPublicationQuery,
-    GetAllProfilesByWhoMirroredPublicationQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetAllProfilesByWhoMirroredPublicationQuery,
-    GetAllProfilesByWhoMirroredPublicationQueryVariables
-  >(GetAllProfilesByWhoMirroredPublicationDocument, options);
-}
-export type GetAllProfilesByWhoMirroredPublicationQueryHookResult = ReturnType<
-  typeof useGetAllProfilesByWhoMirroredPublicationQuery
->;
-export type GetAllProfilesByWhoMirroredPublicationLazyQueryHookResult = ReturnType<
-  typeof useGetAllProfilesByWhoMirroredPublicationLazyQuery
->;
-export type GetAllProfilesByWhoMirroredPublicationQueryResult = Apollo.QueryResult<
-  GetAllProfilesByWhoMirroredPublicationQuery,
-  GetAllProfilesByWhoMirroredPublicationQueryVariables
 >;
 export const ProfilePublicationsForSaleDocument = gql`
   query ProfilePublicationsForSale(

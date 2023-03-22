@@ -2,9 +2,9 @@ import { faker } from '@faker-js/faker';
 import { LensApolloClient } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  createGetAllProfilesByOwnerAddressQueryMockedResponse,
   mockGetProfileQueryMockedResponse,
   mockProfileFragment,
+  createGetAllProfilesQueryMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { Profile } from '@lens-protocol/domain/entities';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
@@ -22,9 +22,9 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
       const address = mockEthereumAddress();
       const profileDataFragment = mockProfileFragment();
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        createGetAllProfilesByOwnerAddressQueryMockedResponse({
+        createGetAllProfilesQueryMockedResponse({
           variables: {
-            address,
+            byOwnerAddresses: [address],
             limit: 10,
             sources: [],
           },

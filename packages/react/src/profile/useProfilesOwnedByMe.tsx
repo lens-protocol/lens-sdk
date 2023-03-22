@@ -1,7 +1,4 @@
-import {
-  ProfileOwnedByMeFragment,
-  useGetAllProfilesByOwnerAddressQuery,
-} from '@lens-protocol/api-bindings';
+import { ProfileOwnedByMeFragment, useGetAllProfilesQuery } from '@lens-protocol/api-bindings';
 import { never } from '@lens-protocol/shared-kernel';
 import { constants } from 'ethers';
 
@@ -26,16 +23,18 @@ export function useProfilesOwnedByMe({
   const recentProfiles = useRecentProfiles();
 
   const result = usePaginatedReadResult(
-    useGetAllProfilesByOwnerAddressQuery(
+    useGetAllProfilesQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({
-            address: bootstrapping
-              ? constants.AddressZero
-              : activeWallet?.address ??
-                never(
-                  `Cannot use 'useProfilesOwnedByMe' without being logged in. Use 'useWalletLogin' to log in first.`,
-                ),
+            byOwnerAddresses: [
+              bootstrapping
+                ? constants.AddressZero
+                : activeWallet?.address ??
+                  never(
+                    `Cannot use 'useProfilesOwnedByMe' without being logged in. Use 'useWalletLogin' to log in first.`,
+                  ),
+            ],
             observerId,
             limit,
           }),

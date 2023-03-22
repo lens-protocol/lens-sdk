@@ -6,6 +6,7 @@ export * from './useCreateProfile';
 export * from './useExploreProfiles';
 export * from './useMutualFollowers';
 export * from './useProfile';
+export * from './useProfiles';
 export * from './useProfileFollowers';
 export * from './useProfileFollowing';
 export * from './useProfilesOwnedBy';

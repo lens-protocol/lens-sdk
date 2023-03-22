@@ -31,11 +31,11 @@ import { UseActiveProfileSwitch } from './profiles/UseActiveProfileSwitch';
 import { UseCreateProfile } from './profiles/UseCreateProfile';
 import { UseFollowAndUnfollow } from './profiles/UseFollowAndUnfollow';
 import { UseMutualFollowers } from './profiles/UseMutualFollowers';
-import { ProfileByHandle } from './profiles/UseProfileByHandle';
-import { ProfileById } from './profiles/UseProfileById';
+import { UseProfile } from './profiles/UseProfile';
 import { UseProfileFollowers } from './profiles/UseProfileFollowers';
 import { UseProfileFollowing } from './profiles/UseProfileFollowing';
 import { UseProfilesOwnedBy } from './profiles/UseProfileOwnedBy';
+import { UseProfiles } from './profiles/UseProfiles';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
 import { UseUpdateDispatcherConfig } from './profiles/UseUpdateDispatcherConfig';
 import { UseUpdateFollowPolicy } from './profiles/UseUpdateFollowPolicy';
@@ -128,8 +128,8 @@ export function App() {
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />
-                <Route path="/profiles/useProfile-handle" element={<ProfileByHandle />} />
-                <Route path="/profiles/useProfile-id" element={<ProfileById />} />
+                <Route path="/profiles/useProfile" element={<UseProfile />} />
+                <Route path="/profiles/useProfiles" element={<UseProfiles />} />
                 <Route
                   path="/profiles/useUpdateDispatcherConfig"
                   element={<UseUpdateDispatcherConfig />}
