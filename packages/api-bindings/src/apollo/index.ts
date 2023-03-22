@@ -2,7 +2,7 @@ import { from, ReactiveVar } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { ILogger } from '@lens-protocol/shared-kernel';
 
-import { LENS_API_SUPPORTED_MAJOR_VERSION } from '../constants';
+import { LENS_API_MINIMAL_SUPPORTED_VERSION } from '../constants';
 import type { IAccessTokenStorage } from './IAccessTokenStorage';
 import { LensApolloClient } from './LensApolloClient';
 import { createApolloCache } from './cache/createApolloCache';
@@ -30,14 +30,14 @@ export function createApolloClient({
   const httpLink = createHttpLink({
     uri,
     logger,
-    supportedVersion: LENS_API_SUPPORTED_MAJOR_VERSION,
+    supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION,
   });
 
   return new LensApolloClient({
     cache: createApolloCache({ activeWalletVar }),
     link: from([authLink, httpLink]),
     pollingInterval,
-    version: LENS_API_SUPPORTED_MAJOR_VERSION,
+    version: LENS_API_MINIMAL_SUPPORTED_VERSION,
   });
 }
 
@@ -56,8 +56,8 @@ export function createAnonymousApolloClient({
 
   return new LensApolloClient({
     cache: createApolloCache({ activeWalletVar }),
-    link: createHttpLink({ uri, logger, supportedVersion: LENS_API_SUPPORTED_MAJOR_VERSION }),
-    version: LENS_API_SUPPORTED_MAJOR_VERSION,
+    link: createHttpLink({ uri, logger, supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION }),
+    version: LENS_API_MINIMAL_SUPPORTED_VERSION,
   });
 }
 
