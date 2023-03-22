@@ -216,6 +216,7 @@ fragment CommentBase on Comment {
   __collectModule: collectModule {
     ...CollectModule
   }
+  __collectNftAddress: collectNftAddress
   referenceModule {
     ...ReferenceModule
   }
@@ -297,6 +298,7 @@ fragment Post on Post {
   __collectModule: collectModule {
     ...CollectModule
   }
+  __collectNftAddress: collectNftAddress
   referenceModule {
     ...ReferenceModule
   }

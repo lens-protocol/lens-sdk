@@ -337,6 +337,7 @@ fragment CommentBase on Comment {
   referenceModule {
     ...ReferenceModule
   }
+  collectNftAddress
   createdAt
   hidden
   isGated
@@ -399,6 +400,7 @@ fragment Post on Post {
   referenceModule {
     ...ReferenceModule
   }
+  collectNftAddress
   createdAt
   hidden
   isGated

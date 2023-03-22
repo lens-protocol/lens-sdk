@@ -16,12 +16,14 @@ type FeeCollectPolicy = {
   amount: ClientErc20Amount;
   referralFee: number;
   followerOnly: boolean;
+  collectNftAddress: string | null;
 };
 
 export type NoFeeCollectPolicy = {
   type: CollectPolicyType.FREE;
   state: CollectState.CAN_BE_COLLECTED | CollectState.NOT_A_FOLLOWER;
   followerOnly: boolean;
+  collectNftAddress: string | null;
 };
 
 type LimitedFeeCollectPolicy = {
@@ -34,6 +36,7 @@ type LimitedFeeCollectPolicy = {
   referralFee: number;
   followerOnly: boolean;
   collectLimit: number;
+  collectNftAddress: string | null;
 };
 
 type TimedFeeCollectPolicy = {
@@ -46,6 +49,7 @@ type TimedFeeCollectPolicy = {
   referralFee: number;
   followerOnly: boolean;
   endTimestamp: string;
+  collectNftAddress: string | null;
 };
 
 type LimitedTimedFeeCollectPolicy = {
@@ -60,6 +64,7 @@ type LimitedTimedFeeCollectPolicy = {
   followerOnly: boolean;
   collectLimit: number;
   endTimestamp: string;
+  collectNftAddress: string | null;
 };
 
 type NoCollectPolicy = {

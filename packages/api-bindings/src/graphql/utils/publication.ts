@@ -210,10 +210,12 @@ export function resolveCollectPolicy({
   profile,
   collectModule,
   publicationStats,
+  collectNftAddress,
 }: {
   collectModule: CollectModuleFragment;
   profile: ProfileFragment;
   publicationStats: PublicationStatsFragment;
+  collectNftAddress: string | null;
 }): CollectPolicy {
   switch (collectModule.__typename) {
     case 'FeeCollectModuleSettings':
@@ -223,6 +225,7 @@ export function resolveCollectPolicy({
         amount: erc20Amount({ from: collectModule.amount }),
         referralFee: collectModule.referralFee,
         followerOnly: collectModule.followerOnly,
+        collectNftAddress,
       };
     case 'LimitedFeeCollectModuleSettings':
       return {
@@ -235,6 +238,7 @@ export function resolveCollectPolicy({
         referralFee: collectModule.referralFee,
         collectLimit: parseInt(collectModule.collectLimit),
         followerOnly: collectModule.followerOnly,
+        collectNftAddress,
       };
     case 'TimedFeeCollectModuleSettings':
       return {
@@ -247,6 +251,7 @@ export function resolveCollectPolicy({
         referralFee: collectModule.referralFee,
         endTimestamp: collectModule.endTimestamp,
         followerOnly: collectModule.followerOnly,
+        collectNftAddress,
       };
     case 'LimitedTimedFeeCollectModuleSettings':
       return {
@@ -261,12 +266,14 @@ export function resolveCollectPolicy({
         collectLimit: parseInt(collectModule.collectLimit),
         endTimestamp: collectModule.endTimestamp,
         followerOnly: collectModule.followerOnly,
+        collectNftAddress,
       };
     case 'FreeCollectModuleSettings':
       return {
         type: CollectPolicyType.FREE,
         state: resolveNotFollower(collectModule, profile) ?? CollectState.CAN_BE_COLLECTED,
         followerOnly: collectModule.followerOnly,
+        collectNftAddress,
       };
     case 'RevertCollectModuleSettings':
     case 'AaveFeeCollectModuleSettings':

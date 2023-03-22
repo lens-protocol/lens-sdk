@@ -71,8 +71,9 @@ const collectPolicy: FieldReadFunction<CollectPolicy, Comment | Post> = (
   const profile = readField('profile') as unknown as ProfileFragment;
   const collectModule = readField('collectModule') as CollectModuleFragment;
   const publicationStats = readField('stats') as unknown as PublicationStatsFragment;
+  const collectNftAddress = readField('collectNftAddress') || null;
 
-  return resolveCollectPolicy({ profile, collectModule, publicationStats });
+  return resolveCollectPolicy({ profile, collectModule, publicationStats, collectNftAddress });
 };
 
 const hasOptimisticCollectedByMe: FieldReadFunction<boolean, Comment | Post> = (
@@ -91,25 +92,15 @@ export function createContentPublicationTypePolicy(): TypePolicy<Comment | Post>
   return {
     fields: {
       referencePolicy,
-
       mirrors: noCachedField(),
-
       reaction: noCachedField(),
-
       canComment: noCachedField(),
-
       canMirror: noCachedField(),
-
       hasCollectedByMe: noCachedField(),
-
       collectedBy,
-
       hasOptimisticCollectedByMe,
-
       isOptimisticMirroredByMe,
-
       collectPolicy,
-
       decryptionCriteria,
     },
   };

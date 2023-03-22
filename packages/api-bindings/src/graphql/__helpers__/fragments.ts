@@ -258,6 +258,7 @@ function mockNoFeeCollectPolicy(overrides?: Partial<NoFeeCollectPolicy>): NoFeeC
     type: CollectPolicyType.FREE,
     state: CollectState.CAN_BE_COLLECTED,
     followerOnly: false,
+    collectNftAddress: mockEthereumAddress(),
     ...overrides,
   };
 }
@@ -273,6 +274,7 @@ export function mockPostFragment(
     profile: mockProfileFragment(),
     collectedBy: null,
     __collectModule: mockFreeCollectModuleSettings(),
+    __collectNftAddress: mockEthereumAddress(),
     collectPolicy: mockNoFeeCollectPolicy(),
     referenceModule: null,
     hasCollectedByMe: false,
@@ -318,6 +320,7 @@ export function mockCommentFragment(
     commentOn: mainPost,
     mainPost: mainPost,
     __collectModule: mockFreeCollectModuleSettings(),
+    __collectNftAddress: mockEthereumAddress(),
     collectPolicy: mockNoFeeCollectPolicy(),
     referenceModule: null,
     hasCollectedByMe: false,

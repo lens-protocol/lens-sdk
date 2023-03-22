@@ -16,6 +16,7 @@ config:
     ContractAddress: string
     CreateHandle: string
     Cursor: string
+    DataAvailabilityId: string
     DateTime: string
     EncryptedValueScalar: string
     Ens: string
