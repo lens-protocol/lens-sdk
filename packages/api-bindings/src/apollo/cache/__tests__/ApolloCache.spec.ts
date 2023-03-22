@@ -15,7 +15,7 @@ import {
   PostFragmentDoc,
   ProfileFragment,
   ProfileFragmentDoc,
-} from '../../graphql';
+} from '../../../graphql';
 import {
   mockEoaOwnershipAccessCondition,
   mockAndAccessCondition,
@@ -32,7 +32,7 @@ import {
   mockPostFragment,
   mockProfileFragment,
   mockProfileOwnershipAccessCondition,
-} from '../../mocks';
+} from '../../../mocks';
 import { createApolloCache } from '../createApolloCache';
 import { erc20Amount } from '../decryptionCriteria';
 import { recentTransactionsVar } from '../transactions';

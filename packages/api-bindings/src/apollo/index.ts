@@ -1,58 +1,68 @@
-import { from, HttpLink, ReactiveVar } from '@apollo/client';
+import { from, ReactiveVar } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
+import { ILogger } from '@lens-protocol/shared-kernel';
 
+import { LENS_API_MINIMAL_SUPPORTED_VERSION } from '../constants';
 import type { IAccessTokenStorage } from './IAccessTokenStorage';
 import { LensApolloClient } from './LensApolloClient';
-import { createApolloCache } from './createApolloCache';
-import { createAuthLink } from './createAuthLink';
+import { createApolloCache } from './cache/createApolloCache';
+import { createAuthLink, createHttpLink } from './links';
 
 export type ApolloClientConfig = {
   activeWalletVar: ReactiveVar<WalletData | null>;
   accessTokenStorage: IAccessTokenStorage;
   backendURL: string;
+  logger: ILogger;
   pollingInterval: number;
 };
 
 export function createApolloClient({
-  backendURL,
   accessTokenStorage,
   activeWalletVar,
+  backendURL,
+  logger,
   pollingInterval,
 }: ApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
 
   const authLink = createAuthLink(accessTokenStorage);
 
-  const httpLink = new HttpLink({
+  const httpLink = createHttpLink({
     uri,
+    logger,
+    supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION,
   });
 
   return new LensApolloClient({
     cache: createApolloCache({ activeWalletVar }),
     link: from([authLink, httpLink]),
     pollingInterval,
+    version: LENS_API_MINIMAL_SUPPORTED_VERSION,
   });
 }
 
 export type AnonymousApolloClientConfig = {
-  backendURL: string;
   activeWalletVar: ReactiveVar<WalletData | null>;
+  backendURL: string;
+  logger: ILogger;
 };
 
 export function createAnonymousApolloClient({
-  backendURL,
   activeWalletVar,
+  backendURL,
+  logger,
 }: AnonymousApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
 
   return new LensApolloClient({
     cache: createApolloCache({ activeWalletVar }),
-    link: new HttpLink({ uri }),
+    link: createHttpLink({ uri, logger, supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION }),
+    version: LENS_API_MINIMAL_SUPPORTED_VERSION,
   });
 }
 
 export type { IAccessTokenStorage };
 export type { IGraphQLClient } from './IGraphQLClient';
 export * from './errors';
-export * from './transactions';
+export * from './cache/transactions';
 export type { LensApolloClient };

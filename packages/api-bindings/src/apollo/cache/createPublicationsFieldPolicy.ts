@@ -1,6 +1,6 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { QueryPublicationsArgs, PublicationsQueryRequest } from '../graphql';
+import { QueryPublicationsArgs, PublicationsQueryRequest } from '../../graphql';
 import { cursorBasedPagination } from './utils/cursorBasedPagination';
 
 function assertQueryPublicationsArgs(

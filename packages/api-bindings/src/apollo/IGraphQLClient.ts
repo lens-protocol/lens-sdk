@@ -29,14 +29,14 @@ export function assertGraphQLClientQueryResult<TData>(
   result: ApolloQueryResult<TData>,
   operationName: string,
 ): asserts result is GraphQLClientQueryResult<TData> {
-  invariant(result.data, `No data received for query: ${operationName}}`);
+  invariant(result.data, `No data received for query: ${operationName}`);
 }
 
 export function assertGraphQLClientMutationResult<TData>(
   result: FetchResult<TData>,
   operationName: string,
 ): asserts result is GraphQLClientMutationResult<TData> {
-  invariant(result.data, `No data received for mutation: ${operationName}}}`);
+  invariant(result.data, `No data received for mutation: ${operationName}`);
 }
 
 export interface IGraphQLClient<TCacheShape extends NormalizedCacheObject> {

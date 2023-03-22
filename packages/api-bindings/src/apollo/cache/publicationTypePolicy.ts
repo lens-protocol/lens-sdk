@@ -10,12 +10,12 @@ import {
   PublicationStatsFragment,
   ReferenceModule,
   resolveCollectPolicy,
+  ReferencePolicy,
   Wallet,
-} from '../graphql';
-import { ReferencePolicy } from '../graphql/ReferencePolicy';
-import { FieldPolicy, FieldReadFunction, TypePolicy } from './TypePolicy';
+} from '../../graphql';
 import { decryptionCriteria } from './decryptionCriteria';
-import { noCachedField } from './noCachedField';
+import { FieldPolicy, FieldReadFunction, TypePolicy } from './utils/TypePolicy';
+import { noCachedField } from './utils/noCachedField';
 
 function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
   if (module === null) {
