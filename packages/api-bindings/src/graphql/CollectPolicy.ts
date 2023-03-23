@@ -9,7 +9,7 @@ export enum CollectState {
   COLLECT_TIME_EXPIRED = 'COLLECT_TIME_EXPIRED',
 }
 
-type FeeCollectPolicy = {
+export type FeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
   state: CollectState.CAN_BE_COLLECTED | CollectState.NOT_A_FOLLOWER;
   amount: Erc20Amount;
@@ -25,7 +25,7 @@ export type NoFeeCollectPolicy = {
   collectNftAddress: string | null;
 };
 
-type LimitedFeeCollectPolicy = {
+export type LimitedFeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
   state:
     | CollectState.CAN_BE_COLLECTED
@@ -38,7 +38,7 @@ type LimitedFeeCollectPolicy = {
   collectNftAddress: string | null;
 };
 
-type TimedFeeCollectPolicy = {
+export type TimedFeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
   state:
     | CollectState.CAN_BE_COLLECTED
@@ -51,7 +51,7 @@ type TimedFeeCollectPolicy = {
   collectNftAddress: string | null;
 };
 
-type LimitedTimedFeeCollectPolicy = {
+export type LimitedTimedFeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
   state:
     | CollectState.CAN_BE_COLLECTED
@@ -66,7 +66,7 @@ type LimitedTimedFeeCollectPolicy = {
   collectNftAddress: string | null;
 };
 
-type NoCollectPolicy = {
+export type NoCollectPolicy = {
   state: CollectState.CANNOT_BE_COLLECTED;
   type: CollectPolicyType.NO_COLLECT;
 };

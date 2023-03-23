@@ -43,7 +43,7 @@ export function isMirrorPublication<T extends Typename<string>>(
   return publication.__typename === 'Mirror';
 }
 
-export function getDomainReactionType(reaction: ReactionTypes): ReactionType {
+export function resolveDomainReactionType(reaction: ReactionTypes): ReactionType {
   switch (reaction) {
     case ReactionTypes.Upvote:
       return ReactionType.UPVOTE;
@@ -54,7 +54,7 @@ export function getDomainReactionType(reaction: ReactionTypes): ReactionType {
   }
 }
 
-export function getApiReactionType(reaction: ReactionType): ReactionTypes {
+export function resolveApiReactionType(reaction: ReactionType): ReactionTypes {
   switch (reaction) {
     case ReactionType.UPVOTE:
       return ReactionTypes.Upvote;

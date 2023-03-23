@@ -13,38 +13,9 @@ export * from './useProfilePublicationsForSale';
 export * from './useEncryptedPublication';
 export * from './filters';
 
-export {
-  CollectState,
-  DecryptFailReason,
-  isCommentPublication,
-  isContentPublication,
-  isMirrorPublication,
-  isPostPublication,
-  isPublicationOwnedByMe,
-  PublicationSortCriteria,
-  PublicationTypes,
-} from '@lens-protocol/api-bindings';
-
-export type {
-  AnyPublicationFragment,
-  CollectPolicy,
-  CommentFragment,
-  CommentWithFirstCommentFragment,
-  ContentPublicationFragment,
-  MediaFragment,
-  MediaSetFragment,
-  MetadataAttributeOutputFragment,
-  MetadataFragment,
-  MirrorFragment,
-  PendingPostFragment,
-  PostFragment,
-  PublicationOwnedByMeFragment,
-  ReferencePolicy,
-  PublicationStatsFragment,
-  RevenueAggregateFragment,
-  WhoReactedResultFragment,
-} from '@lens-protocol/api-bindings';
-
+/**
+ * Domain entities
+ */
 export {
   DecryptionCriteriaType,
   Erc20ComparisonOperator,
@@ -66,4 +37,67 @@ export type {
   SimpleCriterion,
 } from '@lens-protocol/domain/entities';
 
-export type { TwoAtLeastArray } from '@lens-protocol/shared-kernel';
+/**
+ * Collect policy
+ */
+export type {
+  CollectPolicy,
+  FeeCollectPolicy,
+  NoFeeCollectPolicy,
+  LimitedFeeCollectPolicy,
+  TimedFeeCollectPolicy,
+  LimitedTimedFeeCollectPolicy,
+  NoCollectPolicy,
+} from '@lens-protocol/api-bindings';
+
+/**
+ * Reference policy
+ */
+export type {
+  ReferencePolicy,
+  FollowersOnlyPolicy,
+  UnknownPolicy,
+  DegreesOfSeparationPolicy,
+  AnyonePolicy,
+} from '@lens-protocol/api-bindings';
+
+/**
+ * Other request models related
+ */
+export type { ReportPublicationRequest } from '@lens-protocol/domain/use-cases/publications';
+
+/**
+ * Publication fragments
+ */
+export type {
+  AnyPublicationFragment,
+  CommentFragment,
+  CommentWithFirstCommentFragment,
+  ContentPublicationFragment,
+  MediaFragment,
+  MediaSetFragment,
+  MetadataAttributeOutputFragment,
+  MetadataFragment,
+  MirrorFragment,
+  PendingPostFragment,
+  PostFragment,
+  PublicationOwnedByMeFragment,
+  PublicationStatsFragment,
+  RevenueAggregateFragment,
+  WhoReactedResultFragment,
+} from '@lens-protocol/api-bindings';
+
+/**
+ * Helpers
+ */
+export {
+  CollectState,
+  DecryptFailReason,
+  isCommentPublication,
+  isContentPublication,
+  isMirrorPublication,
+  isPostPublication,
+  isPublicationOwnedByMe,
+  PublicationSortCriteria,
+  PublicationTypes,
+} from '@lens-protocol/api-bindings';

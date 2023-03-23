@@ -13,7 +13,7 @@ export type UseUpdateProfileImageArgs = {
   profile: ProfileFragment;
 };
 
-type UpdateProfileImageOperation = Operation<
+export type UpdateProfileImageOperation = Operation<
   void,
   PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   [string]

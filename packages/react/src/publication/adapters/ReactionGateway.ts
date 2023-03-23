@@ -5,7 +5,7 @@ import {
   RemoveReactionDocument,
   RemoveReactionMutation,
   RemoveReactionMutationVariables,
-  getApiReactionType,
+  resolveApiReactionType,
   ValidationError,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
@@ -21,7 +21,7 @@ export class ReactionGateway implements IReactionGateway {
       variables: {
         publicationId,
         profileId,
-        reaction: getApiReactionType(reactionType),
+        reaction: resolveApiReactionType(reactionType),
       },
     });
   }
@@ -33,7 +33,7 @@ export class ReactionGateway implements IReactionGateway {
         variables: {
           publicationId,
           profileId,
-          reaction: getApiReactionType(reactionType),
+          reaction: resolveApiReactionType(reactionType),
         },
       });
     } catch (e) {

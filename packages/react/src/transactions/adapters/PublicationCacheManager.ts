@@ -13,7 +13,9 @@ export class FragmentNotFoundError extends Error {
   name = 'FragmentNotFoundError' as const;
 }
 
-export const getFragmentDoc = (publication: JustTypename<AnyPublicationFragment>): DocumentNode => {
+export const resolveFragmentDoc = (
+  publication: JustTypename<AnyPublicationFragment>,
+): DocumentNode => {
   switch (publication.__typename) {
     case 'Mirror':
       return MirrorFragmentDoc;
@@ -36,7 +38,7 @@ export class PublicationCacheManager {
         id: publication.id,
       }),
       fragmentName: publication.__typename,
-      fragment: getFragmentDoc(publication),
+      fragment: resolveFragmentDoc(publication),
       data: publication,
     });
   }

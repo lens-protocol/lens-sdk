@@ -18,15 +18,15 @@ import { ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
 import { ImageType } from '../config';
 import {
-  ChargeCollectPolicy,
+  ChargeCollectPolicyConfig,
   CollectPolicyType,
   ContentFocus,
-  FreeCollectPolicy,
+  FreeCollectPolicyConfig,
   Media,
   NftAttribute,
   NftAttributeDisplayType,
   NftMetadata,
-  NoCollectPolicy,
+  NoCollectPolicyConfig,
 } from '../types';
 
 export function mockCreateCommentRequest(
@@ -91,13 +91,15 @@ export function mockNftMetadata(overrides?: Partial<NftMetadata>): NftMetadata {
   };
 }
 
-export function mockNoCollectPolicy(): NoCollectPolicy {
+export function mockNoCollectPolicy(): NoCollectPolicyConfig {
   return {
     type: CollectPolicyType.NO_COLLECT,
   };
 }
 
-export function mockFreeCollectPolicy(overrides?: Partial<FreeCollectPolicy>): FreeCollectPolicy {
+export function mockFreeCollectPolicy(
+  overrides?: Partial<FreeCollectPolicyConfig>,
+): FreeCollectPolicyConfig {
   return {
     metadata: mockNftMetadata(),
     followersOnly: true,
@@ -107,8 +109,8 @@ export function mockFreeCollectPolicy(overrides?: Partial<FreeCollectPolicy>): F
 }
 
 export function mockChargeCollectPolicy(
-  overrides?: Partial<ChargeCollectPolicy>,
-): ChargeCollectPolicy {
+  overrides?: Partial<ChargeCollectPolicyConfig>,
+): ChargeCollectPolicyConfig {
   return {
     type: CollectPolicyType.CHARGE,
     fee: mockUsdcAmount(42),

@@ -2,7 +2,10 @@ import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
 import { CommonPaginatedResultInfoFragment, UnspecifiedError } from '@lens-protocol/api-bindings';
 import { Prettify } from '@lens-protocol/shared-kernel';
 
-type ReadResultWithoutError<T> =
+/**
+ * @internal
+ */
+export type ReadResultWithoutError<T> =
   | {
       data: undefined;
       loading: true;
@@ -12,7 +15,10 @@ type ReadResultWithoutError<T> =
       loading: false;
     };
 
-type ReadResultWithError<T, E> =
+/**
+ * @internal
+ */
+export type ReadResultWithError<T, E> =
   | {
       data: undefined;
       error: undefined;

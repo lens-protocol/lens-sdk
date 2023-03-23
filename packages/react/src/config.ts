@@ -4,10 +4,12 @@ import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
-import { IProviderBinding } from './wallet/infrastructure/ProviderFactory';
-import { ISignerBinding } from './wallet/infrastructure/SignerFactory';
+import { IProviderBinding, GetProvider } from './wallet/infrastructure/ProviderFactory';
+import { ISignerBinding, GetSigner } from './wallet/infrastructure/SignerFactory';
 
 export type { ILogger, AuthenticationConfig, IEncryptionProvider, ICipher };
+
+export type { GetProvider, GetSigner };
 
 /**
  * @category General Configuration

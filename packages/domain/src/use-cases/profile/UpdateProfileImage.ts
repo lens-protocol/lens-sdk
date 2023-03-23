@@ -9,6 +9,9 @@ import {
 } from '../transactions/ProtocolCallUseCase';
 import { NftOwnershipSignature } from './ProveNftOwnership';
 
+/**
+ * @alpha
+ */
 export type UpdateNftProfileImageRequest = {
   kind: TransactionKind.UPDATE_PROFILE_IMAGE;
   profileId: string;

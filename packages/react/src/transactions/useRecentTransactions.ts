@@ -4,6 +4,12 @@ import { useSharedDependencies } from '../shared';
 
 export { TxStatus } from '@lens-protocol/api-bindings';
 
+export type {
+  TransactionState,
+  PendingTransactionState,
+  BroadcastedTransactionState,
+} from '@lens-protocol/api-bindings';
+
 export function useRecentTransactions() {
   const { transactionQueue } = useSharedDependencies();
 

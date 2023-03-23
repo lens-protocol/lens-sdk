@@ -1,7 +1,6 @@
-export { useUnreadNotificationCount } from './useUnreadNotificationCount';
-export { useNotifications } from './useNotifications';
+export * from './useUnreadNotificationCount';
+export * from './useNotifications';
 
-export type { Notification } from './useNotifications';
 export type {
   NewCollectNotificationFragment,
   NewCommentNotificationFragment,

@@ -1,21 +1,21 @@
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 
-type FollowersOnlyPolicy = {
+export type FollowersOnlyPolicy = {
   type: ReferencePolicyType.FOLLOWERS_ONLY;
 };
 
-type UnknownPolicy = {
+export type UnknownPolicy = {
   type: ReferencePolicyType.UNKNOWN;
   contractAddress: string;
   data: string;
 };
 
-type DegreesOfSeparationPolicy = {
+export type DegreesOfSeparationPolicy = {
   type: ReferencePolicyType.DEGREES_OF_SEPARATION;
   degreesOfSeparation: number;
 };
 
-type AnyonePolicy = {
+export type AnyonePolicy = {
   type: ReferencePolicyType.ANYONE;
 };
 

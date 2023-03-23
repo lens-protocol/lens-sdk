@@ -11,11 +11,11 @@ import {
 } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
-type UseProfileByIdArgs = {
+export type UseProfileByIdArgs = {
   profileId: ProfileId;
 };
 
-type UseProfileByHandleArgs = {
+export type UseProfileByHandleArgs = {
   handle: string;
 };
 

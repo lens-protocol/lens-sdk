@@ -24,6 +24,8 @@ export * from './environments';
 export type {
   AuthenticationConfig,
   EncryptionConfig,
+  GetProvider,
+  GetSigner,
   IBindings,
   ICipher,
   IEncryptionProvider,
@@ -32,15 +34,24 @@ export type {
 } from './config';
 
 /**
- * Hooks return types
+ * Hooks helper types
  */
-export type { ReadResult, PaginatedReadResult } from './helpers/reads';
+export type { WithObserverIdOverride } from './helpers/arguments';
+export type { Operation } from './helpers/operations';
+export type {
+  PaginatedArgs,
+  PaginatedReadResult,
+  ReadResult,
+  ReadResultWithError,
+  ReadResultWithoutError,
+} from './helpers/reads';
 
 /**
  * Storage
  */
 export type {
   StorageSubscription,
+  StorageSubscriber,
   StorageProviderSubscriber,
   IStorageProvider,
   IObservableStorageProvider,
@@ -66,7 +77,7 @@ export {
  * Domain essentials
  */
 export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-export type { EthereumAddress, Url } from '@lens-protocol/shared-kernel';
+export type { ChainType, EthereumAddress, Url } from '@lens-protocol/shared-kernel';
 
 /**
  * Common Types
@@ -74,6 +85,7 @@ export type { EthereumAddress, Url } from '@lens-protocol/shared-kernel';
 export type {
   AmountValue,
   Asset,
+  BigDecimal,
   CryptoAmount,
   CryptoAsset,
   CryptoNativeAmount,
@@ -82,6 +94,8 @@ export type {
   Erc20Amount,
   Erc20Info,
   Ether,
+  Kind,
+  NativeType,
   Failure,
   Fiat,
   FiatAmount,
@@ -94,8 +108,20 @@ export type {
 } from '@lens-protocol/shared-kernel';
 
 /**
+ * Common fragments
+ */
+export type { Erc20Fragment } from '@lens-protocol/api-bindings';
+
+/**
+ * Common errors
+ */
+export { NotFoundError } from './NotFoundError';
+export { UnspecifiedError } from '@lens-protocol/api-bindings';
+
+/**
  * Helpers
  */
+export { Amount, WellKnownSymbols } from '@lens-protocol/shared-kernel';
 export * from './sources';
 export * from './utils';
 export { isValidHandle } from '@lens-protocol/api-bindings';
@@ -112,4 +138,8 @@ export type {
   Prettify,
   Primitive,
   TwoAtLeastArray,
+  UnknownObject,
+  Without,
+  XOR,
 } from '@lens-protocol/shared-kernel';
+export type { Typename, PickByTypename } from '@lens-protocol/api-bindings';

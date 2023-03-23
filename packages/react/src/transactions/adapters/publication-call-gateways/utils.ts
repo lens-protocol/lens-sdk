@@ -1,13 +1,13 @@
 import { CollectModuleParams, ReferenceModuleParams } from '@lens-protocol/api-bindings';
 import {
-  ChargeCollectPolicy,
+  ChargeCollectPolicyConfig,
   CollectPolicyType,
   ReferencePolicyType,
   CreatePostRequest,
   CreateCommentRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 
-export function resolveCollectModuleFeeParams(collect: ChargeCollectPolicy) {
+export function resolveCollectModuleFeeParams(collect: ChargeCollectPolicyConfig) {
   return {
     amount: {
       currency: collect.fee.asset.address,
@@ -19,7 +19,9 @@ export function resolveCollectModuleFeeParams(collect: ChargeCollectPolicy) {
   };
 }
 
-export function resolveChargeCollectModule(collect: ChargeCollectPolicy): CollectModuleParams {
+export function resolveChargeCollectModule(
+  collect: ChargeCollectPolicyConfig,
+): CollectModuleParams {
   if (collect.collectLimit && collect.timeLimited) {
     return {
       limitedTimedFeeCollectModule: {

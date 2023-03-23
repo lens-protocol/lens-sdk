@@ -13,7 +13,7 @@ import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useUpdateProfileDetailsController } from './adapters/useUpdateProfileDetailsController';
 
-type UseUpdateProfileDetailsArgs = {
+export type UseUpdateProfileDetailsArgs = {
   profile: ProfileOwnedByMeFragment;
   upload: MetadataUploadHandler;
 };

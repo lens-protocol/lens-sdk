@@ -1,5 +1,6 @@
 import { ChainType } from './ChainType';
 
+/** @internal */
 export enum Kind {
   NATIVE,
   ERC20,
@@ -7,7 +8,7 @@ export enum Kind {
 }
 
 /**
- * WellKnownSymbols is a convenience enum for well known symbols.
+ * WellKnownSymbols is a convenience enum for well known asset symbols.
  *
  * @category Common
  */
@@ -18,7 +19,8 @@ export enum WellKnownSymbols {
   USDC = 'USDC',
 }
 
-enum NativeType {
+/** @internal */
+export enum NativeType {
   ETHER,
   MATIC,
 }

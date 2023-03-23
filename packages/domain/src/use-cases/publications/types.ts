@@ -47,7 +47,7 @@ export enum CollectPolicyType {
   NO_COLLECT = 'NO_COLLECT',
 }
 
-export type ChargeCollectPolicy = {
+export type ChargeCollectPolicyConfig = {
   type: CollectPolicyType.CHARGE;
   fee: Amount<Erc20>;
   recipient: EthereumAddress;
@@ -58,17 +58,20 @@ export type ChargeCollectPolicy = {
   followersOnly: boolean;
 };
 
-export type FreeCollectPolicy = {
+export type FreeCollectPolicyConfig = {
   type: CollectPolicyType.FREE;
   metadata: NftMetadata;
   followersOnly: boolean;
 };
 
-export type NoCollectPolicy = {
+export type NoCollectPolicyConfig = {
   type: CollectPolicyType.NO_COLLECT;
 };
 
-export type CollectPolicyConfig = ChargeCollectPolicy | FreeCollectPolicy | NoCollectPolicy;
+export type CollectPolicyConfig =
+  | ChargeCollectPolicyConfig
+  | FreeCollectPolicyConfig
+  | NoCollectPolicyConfig;
 
 export type SupportedPublicationMediaType =
   | ImageType.PNG

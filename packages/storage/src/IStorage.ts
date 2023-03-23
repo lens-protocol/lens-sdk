@@ -2,8 +2,19 @@ export type StorageSubscription = {
   unsubscribe(): void;
 };
 
+/**
+ * A generic storage subscriber
+ *
+ * @category Storage
+ * @internal
+ */
 export type StorageSubscriber<Data> = (newData: Data | null, oldData: Data | null) => void;
 
+/**
+ * A string storage subscriber
+ *
+ * @category Storage
+ */
 export type StorageProviderSubscriber = StorageSubscriber<string>;
 
 /**
@@ -26,6 +37,10 @@ export interface IObservableStorageProvider extends IStorageProvider {
   subscribe(key: string, subscriber: StorageProviderSubscriber): StorageSubscription;
 }
 
+/**
+ * @category Storage
+ * @internal
+ */
 export interface IStorage<Data> {
   set(data: Data): Promise<void>;
   get(): Promise<Data | null>;
