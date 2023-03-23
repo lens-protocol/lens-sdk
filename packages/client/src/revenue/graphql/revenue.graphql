@@ -13,9 +13,9 @@ query ProfilePublicationRevenue(
   }
 }
 
-query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
+query PublicationRevenue($request: PublicationRevenueQueryRequest!, $observerId: ProfileId) {
   result: publicationRevenue(request: $request) {
-    ...Revenue
+    ...PublicationRevenue
   }
 }
 
@@ -50,11 +50,6 @@ fragment PublicationRevenue on PublicationRevenue {
     }
   }
 
-  ...Revenue
-}
-
-fragment Revenue on PublicationRevenue {
-  __typename
   revenue {
     ...RevenueAggregate
   }
