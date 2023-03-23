@@ -1,10 +1,10 @@
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { InMemoryStorageProvider } from '@lens-protocol/storage';
 
 import { LensConfig } from '../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { AuthenticationApi } from './adapters/AuthenticationApi';
 import { CredentialsStorage } from './adapters/CredentialsStorage';
-import { InMemoryStorageProvider } from './adapters/InMemoryStorageProvider';
 
 export interface IAuthentication {
   generateChallenge(address: string): Promise<string>;

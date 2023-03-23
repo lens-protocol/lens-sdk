@@ -1,6 +1,7 @@
+import { InMemoryStorageProvider } from '@lens-protocol/storage';
+
 import { Credentials } from './Credentials';
 import { CredentialsStorage } from './CredentialsStorage';
-import { InMemoryStorageProvider } from './InMemoryStorageProvider';
 
 const accessToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YjE5QzI4OTBjZjk0N0FEM2YwYjdkN0U1QTlmZkJjZTM2ZDNmOWJkMiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2Mzc3NTQ2ODEsImV4cCI6MTYzNzc1NDc0MX0.Be1eGBvVuFL4fj4pHHqc0yWDledsgS2GP3Jgonmy-xw';

@@ -1,3 +1,6 @@
+import { InMemoryStorageProvider } from '@lens-protocol/storage';
+import { Wallet } from 'ethers';
+
 import LensClient, {
   Explore,
   Feed,
@@ -20,7 +23,7 @@ const testConfig = {
   environment: mumbaiSandbox,
 };
 
-describe(`Given the LensClient configured for sandbox`, () => {
+describe(`Given the ${LensClient.name} configured for sandbox`, () => {
   const client = new LensClient(testConfig);
 
   describe(`when accessing the ${Explore.name} module`, () => {
@@ -104,6 +107,41 @@ describe(`Given the LensClient configured for sandbox`, () => {
   describe(`when accessing the ${Transaction.name} module`, () => {
     it(`should return a new instance of ${Transaction.name}`, () => {
       expect(client.transaction).toBeInstanceOf(Transaction);
+    });
+  });
+});
+
+describe(`Given storage and two ${LensClient.name} instances sharing the same storage`, () => {
+  const storage = new InMemoryStorageProvider();
+  const config = {
+    environment: mumbaiSandbox,
+    storage,
+  };
+  const client1 = new LensClient(config);
+  const client2 = new LensClient(config);
+
+  describe(`when 1st client is authenticated`, () => {
+    it(`should allow 2nd client to trigger methods that require authentication`, async () => {
+      const wallet = Wallet.createRandom();
+      const walletAddress = await wallet.getAddress();
+      const challenge = await client1.authentication.generateChallenge(walletAddress);
+      const signature = await wallet.signMessage(challenge);
+
+      // authenticate 1st client
+      await client1.authentication.authenticate(walletAddress, signature);
+
+      expect(await client1.authentication.isAuthenticated()).toBeTruthy();
+
+      // 2nd client will get accessToken from the stored refreshToken on the first try to call authenticated method
+      // so initialy it's not authenticated
+      expect(await client2.authentication.isAuthenticated()).toBeFalsy();
+
+      // call a method that requires authentication
+      const feedResult = await client2.feed.fetch({ profileId: '0x05' });
+      expect(feedResult.isSuccess()).toBeTruthy();
+
+      // now 2nd client is authenticated
+      expect(await client2.authentication.isAuthenticated()).toBeTruthy();
     });
   });
 });
