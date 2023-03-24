@@ -31,7 +31,7 @@ export class Credentials {
     return now < tokenExpTimestamp - TOKEN_EXP_THRESHOLD;
   }
 
-  isExpired(): boolean {
+  shouldRefresh(): boolean {
     const accessToken = this.accessToken;
 
     if (!accessToken) {

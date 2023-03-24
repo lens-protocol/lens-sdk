@@ -27,18 +27,33 @@ describe(`Given the ${Authentication.name} configured to work with sandbox`, () 
   });
 
   describe(`when the method ${Authentication.prototype.isAuthenticated.name} is called`, () => {
-    it(`should return true if already authenticated`, async () => {
-      const auth = getAuthentication();
-      const isAuth = await auth.isAuthenticated();
+    describe(`and there are no credentials stored`, () => {
+      it(`should return false`, async () => {
+        const auth = new Authentication(testConfig);
+        const isAuth = await auth.isAuthenticated();
 
-      expect(isAuth).toBe(true);
+        expect(isAuth).toBe(false);
+      });
     });
 
-    it(`should return false if not authenticated`, async () => {
-      const auth = new Authentication(testConfig);
-      const isAuth = await auth.isAuthenticated();
+    describe(`and credentials are expired and can't refresh`, () => {
+      it(`should return false`, async () => {
+        const auth = getAuthentication();
+        jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.hoursToMs(24 * 7)); // refreshToken is valid for 7 days
 
-      expect(isAuth).toBe(false);
+        const isAuth = await auth.isAuthenticated();
+
+        expect(isAuth).toBe(false);
+      });
+    });
+
+    describe(`and credentials are good`, () => {
+      it(`should return true`, async () => {
+        const auth = getAuthentication();
+        const isAuth = await auth.isAuthenticated();
+
+        expect(isAuth).toBe(true);
+      });
     });
   });
 
@@ -77,6 +92,7 @@ describe(`Given the ${Authentication.name} configured to work with sandbox`, () 
       });
     });
 
+    // throws ClockSkewedError if enabled
     describe.skip(`and credentials are expired but can be refreshed`, () => {
       it(`should return the authenticated header`, async () => {
         const auth = getAuthentication();
