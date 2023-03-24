@@ -132,15 +132,7 @@ describe(`Given storage and two ${LensClient.name} instances sharing the same st
 
       expect(await client1.authentication.isAuthenticated()).toBeTruthy();
 
-      // 2nd client will get accessToken from the stored refreshToken on the first try to call authenticated method
-      // so initialy it's not authenticated
-      expect(await client2.authentication.isAuthenticated()).toBeFalsy();
-
-      // call a method that requires authentication
-      const feedResult = await client2.feed.fetch({ profileId: '0x05' });
-      expect(feedResult.isSuccess()).toBeTruthy();
-
-      // now 2nd client is authenticated
+      // 2nd client will get accessToken from the stored refreshToken on the first call to any method, including isAuthenticated
       expect(await client2.authentication.isAuthenticated()).toBeTruthy();
     });
   });

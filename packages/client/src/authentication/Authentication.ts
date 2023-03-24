@@ -32,7 +32,23 @@ export class Authentication implements IAuthentication {
 
   async isAuthenticated(): Promise<boolean> {
     const credentials = await this.storage.get();
-    return credentials ? !credentials.isExpired() : false;
+
+    if (!credentials) {
+      return false;
+    }
+
+    if (!credentials.shouldRefresh()) {
+      return true;
+    }
+
+    if (credentials.canRefresh()) {
+      const newCredentials = await this.api.refresh(credentials.refreshToken);
+      await this.storage.set(newCredentials);
+      return true;
+    }
+
+    // credentials expired
+    return false;
   }
 
   async getRequestHeader(): PromiseResult<
@@ -45,12 +61,10 @@ export class Authentication implements IAuthentication {
       return failure(new NotAuthenticatedError());
     }
 
-    // if not expired
-    if (!credentials.isExpired()) {
+    if (!credentials.shouldRefresh()) {
       return success(this.buildHeader(credentials.accessToken));
     }
 
-    // if expired but can refresh
     if (credentials.canRefresh()) {
       const newCredentials = await this.api.refresh(credentials.refreshToken);
       await this.storage.set(newCredentials);
