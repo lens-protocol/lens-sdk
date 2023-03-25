@@ -1,4 +1,4 @@
-import { ProfileOwnedByMeFragment } from '@lens-protocol/api-bindings';
+import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -11,7 +11,7 @@ import { Operation, useOperation } from '../helpers/operations';
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 
 export type UseUpdateFollowPolicyArgs = {
-  profile: ProfileOwnedByMeFragment;
+  profile: ProfileOwnedByMe;
 };
 
 export type { ChargeFollowConfig, NoFeeFollowConfig };

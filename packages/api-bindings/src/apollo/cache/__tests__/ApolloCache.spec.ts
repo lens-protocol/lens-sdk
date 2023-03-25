@@ -9,23 +9,18 @@ import {
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
-import {
-  CommentFragmentDoc,
-  ContentPublicationFragment,
-  PostFragmentDoc,
-  ProfileFragment,
-  ProfileFragmentDoc,
-} from '../../../graphql';
+import { ContentPublication, Profile } from '../../../graphql';
+import { FragmentComment, FragmentPost, FragmentProfile } from '../../../graphql/hooks';
 import {
   mockEoaOwnershipAccessCondition,
   mockAndAccessCondition,
   mockAttributeFragment,
   mockCollectConditionAccessCondition,
   mockCommentFragment,
-  mockEncryptionParamsFragment,
+  mockEncryptionParamsOutputFragment,
   mockErc20OwnershipAccessCondition,
   mockFollowConditionAccessCondition,
-  mockMetadataFragment,
+  mockMetadataOutputFragment,
   mockNftOwnershipAccessCondition,
   mockOrAccessCondition,
   mockPendingTransactionState,
@@ -37,9 +32,9 @@ import { createApolloCache } from '../createApolloCache';
 import { erc20Amount } from '../decryptionCriteria';
 import { recentTransactionsVar } from '../transactions';
 
-const typeToFragmentMap: Record<ContentPublicationFragment['__typename'], DocumentNode> = {
-  Post: PostFragmentDoc,
-  Comment: CommentFragmentDoc,
+const typeToFragmentMap: Record<ContentPublication['__typename'], DocumentNode> = {
+  Post: FragmentPost,
+  Comment: FragmentComment,
 };
 
 function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}) {
@@ -47,7 +42,7 @@ function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}
   const cache = createApolloCache({ activeWalletVar });
 
   return {
-    writePublication(publication: ContentPublicationFragment) {
+    writePublication(publication: ContentPublication) {
       cache.writeFragment({
         id: cache.identify(publication),
         fragment: typeToFragmentMap[publication.__typename],
@@ -56,9 +51,9 @@ function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}
       });
     },
 
-    readPublication(publication: ContentPublicationFragment) {
+    readPublication(publication: ContentPublication) {
       return (
-        cache.readFragment<ContentPublicationFragment>({
+        cache.readFragment<ContentPublication>({
           id: cache.identify(publication),
           fragment: typeToFragmentMap[publication.__typename],
           fragmentName: publication.__typename,
@@ -66,18 +61,18 @@ function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}
       );
     },
 
-    writeProfileFragment(profile: ProfileFragment) {
+    writeProfileFragment(profile: Profile) {
       cache.writeFragment({
         data: profile,
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
         fragmentName: 'Profile',
       });
     },
 
-    readProfileFragment(profile: ProfileFragment) {
+    readProfileFragment(profile: Profile) {
       return (
-        cache.readFragment<ProfileFragment>({
-          fragment: ProfileFragmentDoc,
+        cache.readFragment<Profile>({
+          fragment: FragmentProfile,
           fragmentName: 'Profile',
           id: cache.identify(profile),
         }) ?? never('cannot read profile')
@@ -221,8 +216,8 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           },
         },
       ])('$description', ({ criterion, expectations }) => {
-        const metadata = mockMetadataFragment({
-          __encryptionParams: mockEncryptionParamsFragment({
+        const metadata = mockMetadataOutputFragment({
+          encryptionParams: mockEncryptionParamsOutputFragment({
             ownerId: author.id,
             others: [criterion],
           }),
@@ -245,7 +240,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
     });
   });
 
-  describe('and a ProfileFragment', () => {
+  describe('and a Profile', () => {
     describe('when retrieving its attributes', () => {
       const date = new Date();
       const profile = mockProfileFragment({
@@ -333,7 +328,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
 
       describe('when the profile is followed by the one specified as the "observerId"', () => {
         const profile = mockProfileFragment({
-          __isFollowedByMe: true,
+          isFollowedByMe: true,
         });
 
         beforeEach(() => {
@@ -379,7 +374,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
 
       describe('when the profile is NOT followed by the one specified as the "observerId"', () => {
         const profile = mockProfileFragment({
-          __isFollowedByMe: false,
+          isFollowedByMe: false,
         });
 
         beforeEach(() => {

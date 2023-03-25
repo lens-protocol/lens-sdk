@@ -1,4 +1,4 @@
-import { PostFragment, PostFragmentDoc, ReactionTypes } from '@lens-protocol/api-bindings';
+import { Post, FragmentPost, ReactionTypes } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
   mockPostFragment,
@@ -11,7 +11,7 @@ import { ReactionRequest } from '@lens-protocol/domain/use-cases/publications';
 import { PublicationCacheManager } from '../../../transactions/adapters/PublicationCacheManager';
 import { ReactionPresenter } from '../ReactionPresenter';
 
-function setupTestScenario({ post, request }: { post: PostFragment; request: ReactionRequest }) {
+function setupTestScenario({ post, request }: { post: Post; request: ReactionRequest }) {
   const apolloCache = createMockApolloCache();
 
   apolloCache.writeFragment({
@@ -19,7 +19,7 @@ function setupTestScenario({ post, request }: { post: PostFragment; request: Rea
       __typename: 'Post',
       id: request.publicationId,
     }),
-    fragment: PostFragmentDoc,
+    fragment: FragmentPost,
     fragmentName: 'Post',
     data: post,
   });
@@ -36,7 +36,7 @@ function setupTestScenario({ post, request }: { post: PostFragment; request: Rea
           __typename: 'Post',
           id: post.id,
         }),
-        fragment: PostFragmentDoc,
+        fragment: FragmentPost,
         fragmentName: 'Post',
       });
     },

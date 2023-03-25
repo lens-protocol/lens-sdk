@@ -4,9 +4,9 @@ import {
   EncryptionProvider,
   ContentEncryptionKey,
   AccessCondition,
-  EncryptionParamsFragment,
+  EncryptionParamsOutput,
   OmitTypename,
-  RootConditionFragment,
+  RootConditionOutput,
 } from '@lens-protocol/api-bindings';
 import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { IStorage, IStorageProvider } from '@lens-protocol/storage';
@@ -47,7 +47,7 @@ function uint8arrayToHexString(buffer: Uint8Array): string {
   return buffer.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
 }
 
-export type EncryptionParams = OmitTypename<EncryptionParamsFragment>;
+export type EncryptionParams = OmitTypename<EncryptionParamsOutput>;
 
 export class GatedClient {
   private readonly authentication: AuthenticationConfig;
@@ -168,7 +168,7 @@ export class GatedClient {
       chain: this.environment.chainName,
       symmetricKey,
       unifiedAccessControlConditions: transform(
-        accessCondition as RootConditionFragment,
+        accessCondition as RootConditionOutput,
         this.environment,
       ),
     });
@@ -178,7 +178,7 @@ export class GatedClient {
 
   private async retrieveEncryptionKey(
     encryptedEncryptionKey: ContentEncryptionKey,
-    accessCondition: RootConditionFragment,
+    accessCondition: RootConditionOutput,
   ): Promise<ICipher> {
     const authSig = await this.getOrCreateAuthSig();
 

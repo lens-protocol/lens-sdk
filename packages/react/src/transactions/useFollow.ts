@@ -1,6 +1,6 @@
 import {
-  ProfileOwnedByMeFragment,
-  ProfileFragment,
+  ProfileOwnedByMe,
+  Profile,
   isUnfollowTransactionFor,
   useHasPendingTransaction,
 } from '@lens-protocol/api-bindings';
@@ -24,7 +24,7 @@ export class PrematureFollowError extends Error {
   name = 'PrematureFollowError' as const;
 }
 
-function createFollowRequest(followee: ProfileFragment, follower: ProfileFragment): FollowRequest {
+function createFollowRequest(followee: Profile, follower: Profile): FollowRequest {
   const followPolicy = followee.followPolicy;
   switch (followPolicy.type) {
     case FollowPolicyType.CHARGE:
@@ -63,8 +63,8 @@ function createFollowRequest(followee: ProfileFragment, follower: ProfileFragmen
 }
 
 export type UseFollowArgs = {
-  followee: ProfileFragment;
-  follower: ProfileOwnedByMeFragment;
+  followee: Profile;
+  follower: ProfileOwnedByMe;
 };
 
 export type FollowOperation = Operation<

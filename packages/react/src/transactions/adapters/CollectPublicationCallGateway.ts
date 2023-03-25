@@ -1,7 +1,7 @@
 import {
   CreateCollectTypedDataDocument,
-  CreateCollectTypedDataMutation,
-  CreateCollectTypedDataMutationVariables,
+  CreateCollectTypedDataData,
+  CreateCollectTypedDataVariables,
   LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
@@ -22,8 +22,8 @@ export class CollectPublicationCallGateway implements ICollectPublicationCallGat
     nonce?: Nonce,
   ): Promise<UnsignedLensProtocolCall<T>> {
     const { data } = await this.apolloClient.mutate<
-      CreateCollectTypedDataMutation,
-      CreateCollectTypedDataMutationVariables
+      CreateCollectTypedDataData,
+      CreateCollectTypedDataVariables
     >({
       mutation: CreateCollectTypedDataDocument,
       variables: {

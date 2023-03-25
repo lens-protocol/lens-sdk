@@ -1,7 +1,7 @@
 import {
   UnspecifiedError,
-  PublicationRevenueFragment,
-  usePublicationRevenueQuery,
+  PublicationRevenue,
+  useGetPublicationRevenue,
 } from '@lens-protocol/api-bindings';
 
 import { NotFoundError } from '../NotFoundError';
@@ -20,12 +20,9 @@ export type UsePublicationRevenueArgs = WithObserverIdOverride<{
 export function usePublicationRevenue({
   publicationId,
   observerId,
-}: UsePublicationRevenueArgs): ReadResult<
-  PublicationRevenueFragment,
-  NotFoundError | UnspecifiedError
-> {
+}: UsePublicationRevenueArgs): ReadResult<PublicationRevenue, NotFoundError | UnspecifiedError> {
   const { data, error, loading } = useReadResult(
-    usePublicationRevenueQuery(
+    useGetPublicationRevenue(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

@@ -1,4 +1,4 @@
-import { resolveApiReactionType, ContentPublicationFragment } from '@lens-protocol/api-bindings';
+import { resolveApiReactionType, ContentPublication } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import { useState } from 'react';
 
@@ -9,7 +9,7 @@ export type UseReactionArgs = {
 };
 
 export type ReactionArgs = {
-  publication: ContentPublicationFragment;
+  publication: ContentPublication;
   reactionType: ReactionType;
 };
 

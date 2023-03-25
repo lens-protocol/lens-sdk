@@ -1,4 +1,5 @@
-import { ReactiveVar } from '@apollo/client';
+import { FieldFunctionOptions, ReactiveVar } from '@apollo/client';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
@@ -8,22 +9,19 @@ import {
   FollowPolicy,
   FollowModule,
   FollowStatus,
-  Profile,
   ProfileAttributeReader,
   ProfileAttributes,
+  StrictTypedTypePolicies,
+  ProfileMedia,
+  Attribute,
 } from '../../graphql';
 import {
   getAllPendingTransactions,
   isFollowTransactionFor,
   isUnfollowTransactionFor,
 } from './transactions';
-import { TypePolicy } from './utils/TypePolicy';
 
-function resolveFollowPolicy({
-  followModule,
-}: {
-  followModule: FollowModule | null;
-}): FollowPolicy {
+function resolveFollowPolicy({ followModule }: { followModule: FollowModule }): FollowPolicy {
   if (followModule === null) {
     return {
       type: FollowPolicyType.ANYONE,
@@ -58,7 +56,7 @@ function resolveFollowPolicy({
 
 export function createProfileTypePolicy(
   activeWalletVar: ReactiveVar<WalletData | null>,
-): TypePolicy<Profile> {
+): StrictTypedTypePolicies['Profile'] {
   return {
     fields: {
       isFollowing: {
@@ -68,7 +66,7 @@ export function createProfileTypePolicy(
       isFollowedByMe: {
         keyArgs: false,
 
-        merge(_, incoming) {
+        merge(_, incoming: boolean) {
           return incoming;
         },
       },
@@ -81,9 +79,9 @@ export function createProfileTypePolicy(
             return null;
           }
 
-          const profileId = readField('id') ?? never('Cannot read profile id');
+          const profileId = (readField('id') as ProfileId) ?? never('Cannot read profile id');
           const isFollowedByMe =
-            readField('isFollowedByMe') ?? never('Cannot read profile isFollowedByMe');
+            (readField('isFollowedByMe') as boolean) ?? never('Cannot read profile isFollowedByMe');
 
           const isFollowTransactionForThisProfile = isFollowTransactionFor({
             profileId,
@@ -122,30 +120,30 @@ export function createProfileTypePolicy(
         },
       },
 
-      followPolicy(existing, { readField }) {
+      followPolicy(existing: FollowPolicy | undefined, { readField }: FieldFunctionOptions) {
         if (existing) return existing;
 
-        const followModule = readField('followModule');
-
         return resolveFollowPolicy({
-          followModule: followModule ?? null,
+          followModule: readField('followModule') as FollowModule,
         });
       },
 
       coverPicture: {
-        merge(_, incoming) {
+        merge(_, incoming: ProfileMedia) {
           return incoming;
         },
       },
 
       attributes: {
-        merge(_, incoming) {
+        merge(_, incoming: Attribute) {
           return incoming;
         },
       },
 
-      attributesMap(_: unknown, { readField }) {
-        return (readField('attributes') ?? []).reduce((acc, attribute) => {
+      attributesMap(_, { readField }) {
+        const attributes = readField('attributes') as Attribute[];
+
+        return (attributes ?? []).reduce((acc, attribute) => {
           acc[attribute.key] = new ProfileAttributeReader(attribute);
           return acc;
         }, {} as ProfileAttributes);

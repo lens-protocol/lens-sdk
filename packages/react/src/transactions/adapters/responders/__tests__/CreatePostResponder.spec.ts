@@ -1,10 +1,10 @@
-import { PostFragment, ProfileFragment } from '@lens-protocol/api-bindings';
+import { Post, Profile } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockGetProfileQueryMockedResponse,
+  createGetProfileMockedResponse,
   mockPostFragment,
   mockProfileFragment,
-  mockPublicationByTxHashMockedResponse,
+  createPublicationByTxHashMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockCreatePostRequest, mockBroadcastedTransactionData } from '@lens-protocol/domain/mocks';
@@ -19,13 +19,13 @@ function setupTestScenario({
   post = mockPostFragment(),
   transactionData = mockBroadcastedTransactionData(),
 }: {
-  author: ProfileFragment;
-  post?: PostFragment;
+  author: Profile;
+  post?: Post;
   transactionData?: BroadcastedTransactionData<CreatePostRequest>;
 }) {
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
-    mockGetProfileQueryMockedResponse({
+    createGetProfileMockedResponse({
       profile: author,
       variables: {
         request: {
@@ -34,7 +34,7 @@ function setupTestScenario({
         sources,
       },
     }),
-    mockPublicationByTxHashMockedResponse({
+    createPublicationByTxHashMockedResponse({
       variables: {
         txHash: transactionData.txHash,
         observerId: author.id,
@@ -56,7 +56,7 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
   });
 
   describe(`when "${CreatePostResponder.prototype.prepare.name}" method is invoked`, () => {
-    it(`should optimistically add a PendingPostFragment at the top of the provided recent posts ReactiveVar`, async () => {
+    it(`should optimistically add a PendingPost at the top of the provided recent posts ReactiveVar`, async () => {
       const responder = setupTestScenario({
         author,
       });
@@ -83,7 +83,7 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
       }),
     });
 
-    it(`should replace the PendingPostFragment added during the "${CreatePostResponder.prototype.prepare.name}" method call with the actual PostFragment retrieved from the BE`, async () => {
+    it(`should replace the PendingPost added during the "${CreatePostResponder.prototype.prepare.name}" method call with the actual Post retrieved from the BE`, async () => {
       const responder = setupTestScenario({
         author,
         post,
@@ -108,7 +108,7 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
       }),
     });
 
-    it(`should remove the PendingPostFragment added during the "${CreatePostResponder.prototype.prepare.name}" method call`, async () => {
+    it(`should remove the PendingPost added during the "${CreatePostResponder.prototype.prepare.name}" method call`, async () => {
       const responder = setupTestScenario({
         author,
         post,

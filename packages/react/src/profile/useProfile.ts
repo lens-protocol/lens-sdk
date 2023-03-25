@@ -1,4 +1,4 @@
-import { ProfileFragment, UnspecifiedError, useGetProfileQuery } from '@lens-protocol/api-bindings';
+import { Profile, UnspecifiedError, useGetProfile } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
@@ -26,14 +26,14 @@ export type UseProfileArgs = WithObserverIdOverride<
 export function useProfile({
   observerId,
   ...request
-}: UseProfileArgs): ReadResult<ProfileFragment, NotFoundError | UnspecifiedError> {
+}: UseProfileArgs): ReadResult<Profile, NotFoundError | UnspecifiedError> {
   invariant(
     request.profileId === undefined || request.handle === undefined,
     "Only one of 'id' or 'handle' should be provided to 'useProfile' hook",
   );
 
   const { data, error, loading } = useReadResult(
-    useGetProfileQuery(
+    useGetProfile(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

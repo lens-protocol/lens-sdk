@@ -1,4 +1,4 @@
-import { FollowingFragment, useProfileFollowingQuery } from '@lens-protocol/api-bindings';
+import { Following, useProfileFollowing as useUnderlyingQuery } from '@lens-protocol/api-bindings';
 
 import {
   WithObserverIdOverride,
@@ -19,9 +19,9 @@ export function useProfileFollowing({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
   walletAddress,
-}: UseProfileFollowingArgs): PaginatedReadResult<FollowingFragment[]> {
+}: UseProfileFollowingArgs): PaginatedReadResult<Following[]> {
   return usePaginatedReadResult(
-    useProfileFollowingQuery(
+    useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

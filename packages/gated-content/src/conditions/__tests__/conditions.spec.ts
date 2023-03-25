@@ -1,7 +1,7 @@
 import {
   ContractType,
-  LeafConditionFragment,
-  RootConditionFragment,
+  LeafConditionOutput,
+  RootConditionOutput,
 } from '@lens-protocol/api-bindings';
 import {
   mockEoaOwnershipAccessCondition,
@@ -34,7 +34,7 @@ describe(`Given the "${transform.name}" function`, () => {
       description: 'a simple condition',
       condition: mockOrAccessCondition([
         mockProfileOwnershipAccessCondition({ profileId: ownerProfileId }),
-        mockEoaOwnershipAccessCondition({ address: knownAddress }) as LeafConditionFragment,
+        mockEoaOwnershipAccessCondition({ address: knownAddress }) as LeafConditionOutput,
       ]),
       expectedLitAccessConditions: [
         {
@@ -272,7 +272,7 @@ describe(`Given the "${transform.name}" function`, () => {
     },
   ])('when called with $description', ({ condition, expectedLitAccessConditions }) => {
     it('should return the expected Lit AccessControlCondition', () => {
-      const actual = transform(condition as RootConditionFragment, testing);
+      const actual = transform(condition as RootConditionOutput, testing);
 
       expect(actual).toMatchObject(expectedLitAccessConditions);
     });
@@ -355,7 +355,7 @@ describe(`Given the "${transform.name}" function`, () => {
     },
   ])('when called with $description', ({ condition }) => {
     it(`should throw a ${InvalidAccessCriteriaError.name}`, () => {
-      expect(() => transform(condition as RootConditionFragment, testing)).toThrow(
+      expect(() => transform(condition as RootConditionOutput, testing)).toThrow(
         InvalidAccessCriteriaError,
       );
     });

@@ -1,4 +1,4 @@
-import { useUnreadNotificationCountQuery } from '@lens-protocol/api-bindings';
+import { useUnreadNotificationCount as useUnderlyingQuery } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ export function useUnreadNotificationCount({ profileId }: UseUnreadNotificationC
   const { notificationStorage } = useSharedDependencies();
   const [unreadNotificationCount, setUnreadNotificationCount] = useState<number>(0);
 
-  const { loading, data } = useUnreadNotificationCountQuery(
+  const { loading, data } = useUnderlyingQuery(
     useLensApolloClient({
       variables: { profileId },
       // no cache is required to always have up-to-date information

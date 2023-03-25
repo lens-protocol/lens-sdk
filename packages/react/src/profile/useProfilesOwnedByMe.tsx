@@ -1,4 +1,4 @@
-import { ProfileOwnedByMeFragment, useGetAllProfilesQuery } from '@lens-protocol/api-bindings';
+import { ProfileOwnedByMe, useGetAllProfiles } from '@lens-protocol/api-bindings';
 import { never } from '@lens-protocol/shared-kernel';
 import { constants } from 'ethers';
 
@@ -18,12 +18,12 @@ export type UseProfilesOwnedByMeArgs = PaginatedArgs<WithObserverIdOverride>;
 export function useProfilesOwnedByMe({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseProfilesOwnedByMeArgs = {}): PaginatedReadResult<ProfileOwnedByMeFragment[]> {
+}: UseProfilesOwnedByMeArgs = {}): PaginatedReadResult<ProfileOwnedByMe[]> {
   const { data: activeWallet, loading: bootstrapping } = useActiveWallet();
   const recentProfiles = useRecentProfiles();
 
   const result = usePaginatedReadResult(
-    useGetAllProfilesQuery(
+    useGetAllProfiles(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({
@@ -47,5 +47,5 @@ export function useProfilesOwnedByMe({
   return {
     ...result,
     data: result.data ? [...result.data, ...recentProfiles] : result.data,
-  } as PaginatedReadResult<ProfileOwnedByMeFragment[]>;
+  } as PaginatedReadResult<ProfileOwnedByMe[]>;
 }

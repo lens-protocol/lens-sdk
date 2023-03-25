@@ -1,4 +1,4 @@
-import { PostFragment, PostFragmentDoc } from '@lens-protocol/api-bindings';
+import { Post, FragmentPost } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
   mockPostFragment,
@@ -8,7 +8,7 @@ import {
 import { PublicationCacheManager } from '../../../transactions/adapters/PublicationCacheManager';
 import { HidePublicationPresenter } from '../HidePublicationPresenter';
 
-function setupTestScenario({ post }: { post: PostFragment }) {
+function setupTestScenario({ post }: { post: Post }) {
   const apolloCache = createMockApolloCache();
 
   apolloCache.writeFragment({
@@ -16,7 +16,7 @@ function setupTestScenario({ post }: { post: PostFragment }) {
       __typename: 'Post',
       id: post.id,
     }),
-    fragment: PostFragmentDoc,
+    fragment: FragmentPost,
     fragmentName: 'Post',
     data: post,
   });
@@ -33,7 +33,7 @@ function setupTestScenario({ post }: { post: PostFragment }) {
           __typename: 'Post',
           id: post.id,
         }),
-        fragment: PostFragmentDoc,
+        fragment: FragmentPost,
         fragmentName: 'Post',
       });
     },

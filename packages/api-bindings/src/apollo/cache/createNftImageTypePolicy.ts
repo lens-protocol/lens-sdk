@@ -1,6 +1,5 @@
-import { NftImage } from '../../graphql';
-import { TypePolicy } from './utils/TypePolicy';
+import { StrictTypedTypePolicies } from '../../graphql';
 
-export const createNftImageTypePolicy = (): TypePolicy<NftImage> => ({
+export const createNftImageTypePolicy = (): StrictTypedTypePolicies['NftImage'] => ({
   keyFields: false,
 });

@@ -1,8 +1,8 @@
 import {
-  AnyPublicationFragment,
+  AnyPublication,
   PublicationSortCriteria,
   PublicationTypes,
-  useExplorePublicationsQuery,
+  useExplorePublications as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
@@ -34,9 +34,9 @@ export function useExplorePublications({
   publicationTypes,
   excludeProfileIds,
   metadataFilter,
-}: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<AnyPublicationFragment>> {
+}: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<AnyPublication>> {
   return usePaginatedReadResult(
-    useExplorePublicationsQuery(
+    useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

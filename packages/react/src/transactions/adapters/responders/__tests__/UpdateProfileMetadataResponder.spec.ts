@@ -1,11 +1,7 @@
-import {
-  ProfileAttributeReader,
-  ProfileFragment,
-  ProfileFragmentDoc,
-} from '@lens-protocol/api-bindings';
+import { ProfileAttributeReader, Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockGetProfileQueryMockedResponse,
+  createGetProfileMockedResponse,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -26,12 +22,12 @@ function setupUpdateProfileMetadataResponder({
   updatedProfile = mockProfileFragment(),
 }: {
   transactionData: TransactionData<UpdateProfileDetailsRequest>;
-  existingProfile: ProfileFragment | null;
-  updatedProfile?: ProfileFragment;
+  existingProfile: Profile | null;
+  updatedProfile?: Profile;
 }) {
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
-    mockGetProfileQueryMockedResponse({
+    createGetProfileMockedResponse({
       profile: updatedProfile,
       variables: {
         request: { profileId: updatedProfile.id },
@@ -47,7 +43,7 @@ function setupUpdateProfileMetadataResponder({
 
   apolloClient.cache.writeFragment({
     id: profileIdentifier,
-    fragment: ProfileFragmentDoc,
+    fragment: FragmentProfile,
     fragmentName: 'Profile',
     data: existingProfile,
   });
@@ -62,7 +58,7 @@ function setupUpdateProfileMetadataResponder({
       return apolloClient.cache.readFragment({
         id: profileIdentifier,
         fragmentName: 'Profile',
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
       });
     },
   };

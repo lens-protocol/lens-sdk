@@ -1,7 +1,7 @@
-import { ProfileFragment } from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockGetProfileQueryMockedResponse,
+  createGetProfileMockedResponse,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -18,7 +18,7 @@ import { useActiveProfile } from '../useActiveProfile';
 jest.mock('../../lifecycle/adapters/ApplicationPresenter');
 
 function setupUseActiveProfile(args: {
-  profile: ProfileFragment;
+  profile: Profile;
   activeProfile: ProfileIdentifier | null;
 }) {
   const sources = mockSources();
@@ -31,7 +31,7 @@ function setupUseActiveProfile(args: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses(
         [
-          mockGetProfileQueryMockedResponse({
+          createGetProfileMockedResponse({
             profile: args.profile,
             variables: {
               request: {

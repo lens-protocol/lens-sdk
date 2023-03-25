@@ -1,7 +1,7 @@
 import {
   FeedEventItemType as LensFeedEventItemType,
-  FeedItemFragment,
-  useFeedQuery,
+  FeedItem,
+  useFeed as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { nonNullable } from '@lens-protocol/shared-kernel';
@@ -47,9 +47,9 @@ export function useFeed({
   observerId,
   profileId,
   limit = FEED_LIMIT,
-}: UseFeedArgs): PaginatedReadResult<FeedItemFragment[]> {
+}: UseFeedArgs): PaginatedReadResult<FeedItem[]> {
   return usePaginatedReadResult(
-    useFeedQuery(
+    useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

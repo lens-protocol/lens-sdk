@@ -1,7 +1,7 @@
 import {
   HidePublicationDocument,
-  HidePublicationMutation,
-  HidePublicationMutationVariables,
+  HidePublicationData,
+  HidePublicationVariables,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
@@ -13,7 +13,7 @@ export class HidePublicationGateway implements IHidePublicationGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
   async hide(request: HidePublicationRequest) {
-    await this.apolloClient.mutate<HidePublicationMutation, HidePublicationMutationVariables>({
+    await this.apolloClient.mutate<HidePublicationData, HidePublicationVariables>({
       mutation: HidePublicationDocument,
       variables: {
         publicationId: request.publicationId,

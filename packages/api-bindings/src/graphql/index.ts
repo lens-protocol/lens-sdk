@@ -1,88 +1,86 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 
+import { CommentsDocument, SearchProfilesDocument, SearchPublicationsDocument } from './hooks';
 import {
-  CommentFragment,
-  CommentsDocument,
-  CommentsQueryVariables,
-  CommentWithFirstCommentFragment,
-  CommonPaginatedResultInfoFragment,
-  PostFragment,
-  ProfileFragment,
-  SearchProfilesDocument,
-  SearchProfilesQueryVariables,
-  SearchPublicationsDocument,
-  SearchPublicationsQueryVariables,
-} from './generated';
+  Comment,
+  CommentsVariables,
+  CommentWithFirstComment,
+  CommonPaginatedResultInfo,
+  Post,
+  Profile,
+  SearchProfilesVariables,
+  SearchPublicationsVariables,
+} from './operations';
 
 export * from './CollectPolicy';
 export * from './ContentEncryptionKey';
 export * from './FollowPolicy';
 export * from './FollowStatus';
-export * from './generated';
+export * from './hooks';
+export * from './operations';
 export * from './ProfileAttributeReader';
 export * from './ProfileAttributes';
 export * from './ReferencePolicy';
 export * from './sources';
 export * from './utils';
 
-export type CommentsQuery = {
+export type FollowModule = Profile['followModule'];
+
+export type CommentsResult = {
   result: {
-    items: Array<CommentWithFirstCommentFragment>;
-    pageInfo: CommonPaginatedResultInfoFragment;
+    items: Array<CommentWithFirstComment>;
+    pageInfo: CommonPaginatedResultInfo;
   };
 };
 
 /**
  * This is a patched version of the codegen generated useCommentsQuery hook.
- * It is patched to return paginated results of CommentWithFirstCommentFragment instead of union with {} type.
+ * It is patched to return paginated results of CommentWithFirstComment instead of union with {} type.
  *
  * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
  */
-export function useCommentsQuery(options: QueryHookOptions<CommentsQuery, CommentsQueryVariables>) {
-  return useQuery<CommentsQuery, CommentsQueryVariables>(CommentsDocument, options);
+export function useComments(options: QueryHookOptions<CommentsResult, CommentsVariables>) {
+  return useQuery<CommentsResult, CommentsVariables>(CommentsDocument, options);
 }
 
-export type SearchProfilesQuery = {
+export type SearchProfilesResult = {
   result: {
     __typename: 'ProfileSearchResult';
-    items: Array<ProfileFragment>;
-    pageInfo: CommonPaginatedResultInfoFragment;
+    items: Array<Profile>;
+    pageInfo: CommonPaginatedResultInfo;
   };
 };
 
 /**
  * This is a patched version of the codegen generated useSearchProfilesQuery hook.
- * It is patched to return paginated results of ProfileFragment instead of union with {} type.
+ * It is patched to return paginated results of Profile instead of union with {} type.
  *
  * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
  */
-export function useSearchProfilesQuery(
-  options: QueryHookOptions<SearchProfilesQuery, SearchProfilesQueryVariables>,
+export function useSearchProfiles(
+  options: QueryHookOptions<SearchProfilesResult, SearchProfilesVariables>,
 ) {
-  return useQuery<SearchProfilesQuery, SearchProfilesQueryVariables>(
-    SearchProfilesDocument,
-    options,
-  );
+  return useQuery<SearchProfilesResult, SearchProfilesVariables>(SearchProfilesDocument, options);
 }
 
-export type SearchPublicationsQuery = {
+export type SearchPublicationsResult = {
   result: {
     __typename: 'PublicationSearchResult';
-    items: Array<CommentFragment | PostFragment>;
-    pageInfo: CommonPaginatedResultInfoFragment;
+    items: Array<Comment | Post>;
+    pageInfo: CommonPaginatedResultInfo;
   };
 };
 
 /**
  * This is a patched version of the codegen generated useSearchPublicationsQuery hook.
- * It is patched to return paginated results of CommentFragment | PostFragment instead of union with {} type.
+ * It is patched to return paginated results of Comment | Post instead of union with {} type.
  *
  * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
  */
-export function useSearchPublicationsQuery(
-  options: QueryHookOptions<SearchPublicationsQuery, SearchPublicationsQueryVariables>,
+export function useSearchPublications(
+  options: QueryHookOptions<SearchPublicationsResult, SearchPublicationsVariables>,
 ) {
-  return useQuery<SearchPublicationsQuery, SearchPublicationsQueryVariables>(
+  return useQuery<SearchPublicationsResult, SearchPublicationsVariables>(
     SearchPublicationsDocument,
     options,
   );

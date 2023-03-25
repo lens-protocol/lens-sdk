@@ -1,7 +1,4 @@
-import {
-  WhoReactedResultFragment,
-  useWhoReactedPublicationQuery,
-} from '@lens-protocol/api-bindings';
+import { WhoReactedResult, useWhoReactedPublication } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
 
 import {
@@ -18,11 +15,9 @@ export type UseWhoReactedArgs = PaginatedArgs<
   }>
 >;
 
-export function useWhoReacted(
-  args: UseWhoReactedArgs,
-): PaginatedReadResult<WhoReactedResultFragment[]> {
+export function useWhoReacted(args: UseWhoReactedArgs): PaginatedReadResult<WhoReactedResult[]> {
   return usePaginatedReadResult(
-    useWhoReactedPublicationQuery(
+    useWhoReactedPublication(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

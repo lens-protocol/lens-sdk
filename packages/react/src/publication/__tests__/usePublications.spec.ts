@@ -1,8 +1,8 @@
-import { AnyPublicationFragment } from '@lens-protocol/api-bindings';
+import { AnyPublication } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
-  createPublicationsQueryMockedResponse,
+  createPublicationsMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
@@ -18,14 +18,14 @@ function setupTestScenario({
   result,
   expectedObserverId,
   ...args
-}: UsePublicationsArgs & { expectedObserverId?: ProfileId; result: AnyPublicationFragment[] }) {
+}: UsePublicationsArgs & { expectedObserverId?: ProfileId; result: AnyPublication[] }) {
   const sources = mockSources();
 
   return renderHookWithMocks(() => usePublications(args), {
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createPublicationsQueryMockedResponse({
+        createPublicationsMockedResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,

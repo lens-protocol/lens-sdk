@@ -1,7 +1,7 @@
 import {
-  AnyPublicationFragment,
+  AnyPublication,
   UnspecifiedError,
-  usePublicationQuery,
+  usePublication as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
 
@@ -21,9 +21,9 @@ export type UsePublicationArgs = WithObserverIdOverride<{
 export function usePublication({
   publicationId,
   observerId,
-}: UsePublicationArgs): ReadResult<AnyPublicationFragment, NotFoundError | UnspecifiedError> {
+}: UsePublicationArgs): ReadResult<AnyPublication, NotFoundError | UnspecifiedError> {
   const { data, error, loading } = useReadResult(
-    usePublicationQuery(
+    useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

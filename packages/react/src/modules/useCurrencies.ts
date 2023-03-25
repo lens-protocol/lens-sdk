@@ -1,13 +1,11 @@
-import { useEnabledModuleCurrenciesQuery } from '@lens-protocol/api-bindings';
+import { useEnabledModuleCurrencies } from '@lens-protocol/api-bindings';
 import { ChainType, erc20, Erc20 } from '@lens-protocol/shared-kernel';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
 export function useCurrencies(): ReadResult<Erc20[]> {
-  const { data, error, loading } = useReadResult(
-    useEnabledModuleCurrenciesQuery(useLensApolloClient()),
-  );
+  const { data, error, loading } = useReadResult(useEnabledModuleCurrencies(useLensApolloClient()));
 
   if (loading) {
     return {

@@ -1,11 +1,11 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { QueryPublicationsArgs, PublicationsQueryRequest } from '../../graphql';
+import { PublicationsQueryRequest } from '../../graphql';
 import { cursorBasedPagination } from './utils/cursorBasedPagination';
 
 function assertQueryPublicationsArgs(
   args: Record<string, unknown> | null,
-): asserts args is QueryPublicationsArgs {
+): asserts args is { request: PublicationsQueryRequest } {
   invariant(args?.request, 'Is not a query of publication args');
 }
 

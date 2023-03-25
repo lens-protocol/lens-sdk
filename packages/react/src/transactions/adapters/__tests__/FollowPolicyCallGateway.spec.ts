@@ -1,14 +1,14 @@
 import { MockedResponse } from '@apollo/client/testing';
 import {
   CreateSetFollowModuleTypedDataDocument,
-  CreateSetFollowModuleTypedDataMutation,
-  CreateSetFollowModuleTypedDataMutationVariables,
+  CreateSetFollowModuleTypedDataData,
+  CreateSetFollowModuleTypedDataVariables,
   FollowModuleParams,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockCreateSetFollowModuleTypedDataMutation,
+  mockCreateSetFollowModuleTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockChargeFollowConfig,
@@ -25,13 +25,13 @@ import { never } from '@lens-protocol/shared-kernel';
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { FollowPolicyCallGateway } from '../FollowPolicyCallGateway';
 
-function mockCreateSetFollowModuleTypedDataMutationMockedResponse({
+function createCreateSetFollowModuleTypedDataMockedResponse({
   variables,
   data,
 }: {
-  variables: CreateSetFollowModuleTypedDataMutationVariables;
-  data: CreateSetFollowModuleTypedDataMutation;
-}): MockedResponse<CreateSetFollowModuleTypedDataMutation> {
+  variables: CreateSetFollowModuleTypedDataVariables;
+  data: CreateSetFollowModuleTypedDataData;
+}): MockedResponse<CreateSetFollowModuleTypedDataData> {
   return {
     request: {
       query: CreateSetFollowModuleTypedDataDocument,
@@ -78,17 +78,17 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
       const request = mockUpdateFollowPolicyRequest({ policy });
 
       it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
-        const createSetFollowModuleTypedDataMutation = mockCreateSetFollowModuleTypedDataMutation();
+        const data = mockCreateSetFollowModuleTypedDataData();
 
         const apollo = createMockApolloClientWithMultipleResponses([
-          mockCreateSetFollowModuleTypedDataMutationMockedResponse({
+          createCreateSetFollowModuleTypedDataMockedResponse({
             variables: {
               request: {
                 profileId: request.profileId,
                 followModule: expectedFollowModule(request.policy),
               },
             },
-            data: createSetFollowModuleTypedDataMutation,
+            data,
           }),
         ]);
         const followFeeTransactionGateway = new FollowPolicyCallGateway(apollo);
@@ -96,15 +96,13 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
 
         expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-        expect(unsignedCall.typedData).toEqual(
-          omitTypename(createSetFollowModuleTypedDataMutation.result.typedData),
-        );
+        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
 
       it(`should be possible to override the signature nonce`, async () => {
         const nonce = mockNonce();
         const apollo = createMockApolloClientWithMultipleResponses([
-          mockCreateSetFollowModuleTypedDataMutationMockedResponse({
+          createCreateSetFollowModuleTypedDataMockedResponse({
             variables: {
               request: {
                 profileId: request.profileId,
@@ -114,7 +112,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
                 overrideSigNonce: nonce,
               },
             },
-            data: mockCreateSetFollowModuleTypedDataMutation({ nonce }),
+            data: mockCreateSetFollowModuleTypedDataData({ nonce }),
           }),
         ]);
         const followFeeTransactionGateway = new FollowPolicyCallGateway(apollo);

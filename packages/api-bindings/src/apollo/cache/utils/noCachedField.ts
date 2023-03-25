@@ -1,6 +1,6 @@
-import { FieldPolicy } from './TypePolicy';
+import { FieldPolicy } from '@apollo/client';
 
-export function noCachedField<T>(): FieldPolicy<T, unknown> {
+export function noCachedField(): FieldPolicy {
   return {
     // no arguments involved in caching this edge
     keyArgs: false,

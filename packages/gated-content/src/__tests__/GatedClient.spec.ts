@@ -3,17 +3,17 @@
  */
 import {
   AccessCondition,
-  EncryptedFieldsFragment,
+  EncryptedFieldsOutput,
   EncryptionProvider,
   LeafCondition,
 } from '@lens-protocol/api-bindings';
 import {
-  mockEncryptionParamsFragment,
+  mockEncryptionParamsOutputFragment,
   mockEoaOwnershipAccessCondition,
-  mockMetadataFragment,
+  mockMetadataOutputFragment,
   mockProfileOwnershipAccessCondition,
   mockPublicationMetadata,
-  mockEncryptedFieldsFragment,
+  mockEncryptedFieldsOutputFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
@@ -85,22 +85,23 @@ describe(`Given an instance of the ${GatedClient.name}`, () => {
   });
 
   describe(`when calling the "${GatedClient.prototype.decryptPublication.name}" method`, () => {
-    it(`should be able to decrypt and return the expected MetadataFragment`, async () => {
+    it(`should be able to decrypt and return the expected MetadataOutput`, async () => {
       // setup
       const { client } = setupTestScenario();
       const encryptionResult = await client.encryptPublication(metadata, accessCondition);
       const encrypted = encryptionResult.unwrap();
 
       // simulate the transcription process done by the indexer and Lens API
-      const metadataFragment = mockMetadataFragment({
+      const metadataFragment = mockMetadataOutputFragment({
         content: encrypted.content,
       });
-      const encryptionParams = mockEncryptionParamsFragment({
+      const encryptionParams = mockEncryptionParamsOutputFragment({
         ownerId,
         others: [eoaOwnershipAccessCondition],
         encryptionKey: encrypted.encryptionParams.providerSpecificParams.encryptionKey,
-        encryptedFields: mockEncryptedFieldsFragment(
-          encrypted.encryptionParams.encryptedFields as EncryptedFieldsFragment,
+        encryptedFields: mockEncryptedFieldsOutputFragment(
+          // this assertion is safe as EncryptedFields is a subset of EncryptedFieldsOutput
+          encrypted.encryptionParams.encryptedFields as EncryptedFieldsOutput,
         ),
       });
 

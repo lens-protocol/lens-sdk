@@ -1,7 +1,8 @@
 import { InvariantError } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 
-import { IBindings, LensConfig, staging, validateConfig } from '../config';
+import { IBindings, LensConfig, validateConfig } from '../config';
+import { staging } from '../environments';
 import { appId } from '../utils';
 
 class DummyStorageProvider {

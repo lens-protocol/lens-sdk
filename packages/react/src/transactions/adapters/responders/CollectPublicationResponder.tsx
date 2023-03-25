@@ -1,11 +1,11 @@
 import { DocumentNode } from '@apollo/client';
 import {
-  CommentFragmentDoc,
-  MirrorFragmentDoc,
-  PostFragmentDoc,
-  AnyPublicationFragment,
+  FragmentComment,
+  FragmentMirror,
+  FragmentPost,
+  AnyPublication,
   isMirrorPublication,
-  ContentPublicationFragment,
+  ContentPublication,
 } from '@lens-protocol/api-bindings';
 import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
@@ -16,7 +16,7 @@ import {
 
 import { PublicationCacheManager } from '../PublicationCacheManager';
 
-function optimisticUpdate(publication: ContentPublicationFragment) {
+function optimisticUpdate(publication: ContentPublication) {
   return {
     ...publication,
     hasOptimisticCollectedByMe: true,
@@ -27,7 +27,7 @@ function optimisticUpdate(publication: ContentPublicationFragment) {
   };
 }
 
-function confirmUpdate(publication: ContentPublicationFragment) {
+function confirmUpdate(publication: ContentPublication) {
   return {
     ...publication,
     hasCollectedByMe: true,
@@ -35,7 +35,7 @@ function confirmUpdate(publication: ContentPublicationFragment) {
   };
 }
 
-function revertUpdate(publication: ContentPublicationFragment) {
+function revertUpdate(publication: ContentPublication) {
   return {
     ...publication,
     hasCollectedByMe: false,
@@ -50,10 +50,10 @@ function revertUpdate(publication: ContentPublicationFragment) {
 export class CollectPublicationResponder implements ITransactionResponder<CollectRequest> {
   constructor(private readonly publicationCacheManager: PublicationCacheManager) {}
 
-  typeToFragmentMap: Record<AnyPublicationFragment['__typename'], DocumentNode> = {
-    Post: PostFragmentDoc,
-    Comment: CommentFragmentDoc,
-    Mirror: MirrorFragmentDoc,
+  typeToFragmentMap: Record<AnyPublication['__typename'], DocumentNode> = {
+    Post: FragmentPost,
+    Comment: FragmentComment,
+    Mirror: FragmentMirror,
   };
 
   async prepare({ request }: TransactionData<CollectRequest>) {

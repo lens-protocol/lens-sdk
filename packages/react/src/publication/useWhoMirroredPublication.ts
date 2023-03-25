@@ -1,4 +1,4 @@
-import { ProfileFragment, useGetAllProfilesQuery } from '@lens-protocol/api-bindings';
+import { Profile, useGetAllProfiles } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
 
 import {
@@ -21,9 +21,9 @@ export function useWhoMirroredPublication({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   publicationId,
   observerId,
-}: UseWhoMirroredPublicationArgs): PaginatedReadResult<ProfileFragment[]> {
+}: UseWhoMirroredPublicationArgs): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
-    useGetAllProfilesQuery(
+    useGetAllProfiles(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

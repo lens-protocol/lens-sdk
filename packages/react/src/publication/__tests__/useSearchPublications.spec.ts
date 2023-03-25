@@ -1,7 +1,7 @@
-import { ContentPublicationFragment } from '@lens-protocol/api-bindings';
+import { ContentPublication } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  createSearchPublicationsQueryMockedResponse,
+  createSearchPublicationsMockedResponse,
   mockCommentFragment,
   mockPostFragment,
   mockSources,
@@ -21,7 +21,7 @@ function setupTestScenario({
   ...args
 }: UseSearchPublicationsArgs & {
   expectedObserverId?: ProfileId;
-  result: ContentPublicationFragment[];
+  result: ContentPublication[];
 }) {
   const sources = mockSources();
 
@@ -29,7 +29,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createSearchPublicationsQueryMockedResponse({
+        createSearchPublicationsMockedResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,

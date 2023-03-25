@@ -70,21 +70,21 @@ export type { ReportPublicationRequest } from '@lens-protocol/domain/use-cases/p
  * Publication fragments
  */
 export type {
-  AnyPublicationFragment,
-  CommentFragment,
-  CommentWithFirstCommentFragment,
-  ContentPublicationFragment,
-  MediaFragment,
-  MediaSetFragment,
-  MetadataAttributeOutputFragment,
-  MetadataFragment,
-  MirrorFragment,
-  PendingPostFragment,
-  PostFragment,
-  PublicationOwnedByMeFragment,
-  PublicationStatsFragment,
-  RevenueAggregateFragment,
-  WhoReactedResultFragment,
+  AnyPublication,
+  Comment,
+  CommentWithFirstComment,
+  ContentPublication,
+  Media,
+  MediaSet,
+  MetadataAttributeOutput,
+  MetadataOutput,
+  Mirror,
+  PendingPost,
+  Post,
+  PublicationOwnedByMe,
+  PublicationStats,
+  RevenueAggregate,
+  WhoReactedResult,
 } from '@lens-protocol/api-bindings';
 
 /**

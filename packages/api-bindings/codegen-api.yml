@@ -1,7 +1,8 @@
 overwrite: true
 hooks:
   afterAllFileWrite:
-    - prettier --write
+    - eslint --fix
+
 watch: false
 config:
   gqlImport: graphql-tag
@@ -49,19 +50,21 @@ config:
     Void: void
   avoidOptionals:
     field: true
+
+schema:
+  - https://api-mumbai.lens.dev/graphql
+  - src/graphql/client.graphql
+documents:
+  - src/graphql/*.graphql
+
 generates:
-  src/graphql/generated.tsx:
-    schema:
-      - https://api-mumbai.lens.dev/graphql
-      - src/graphql/client.graphql
-    documents:
-      - src/graphql/*.graphql
+  src/graphql/operations.ts:
     plugins:
       - 'typescript':
-          nonOptionalTypename: true
+          onlyOperationTypes: true # scalars and enums
       - add:
-          content:
-            [
+          content: [
+              '/* eslint-disable @typescript-eslint/ban-types */', # needed by unions with {}
               "import type { AppId, DecryptionCriteria, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
               "import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';",
               "import type { ContentEncryptionKey } from './ContentEncryptionKey';",
@@ -75,6 +78,24 @@ generates:
           skipTypename: true
           immutableTypes: false
           inlineFragmentTypes: combine
-      - 'typescript-react-apollo'
+          omitOperationSuffix: true
+          operationResultSuffix: 'Data'
+
+  src/graphql/hooks.ts:
+    plugins:
+      - add:
+          content: [
+              '/* eslint-disable import/no-default-export */', # generatedTypes default export
+              '/* eslint-disable @typescript-eslint/no-explicit-any */', # see extensive use of FieldPolicy<any> | FieldReadFunction<any>
+              '/* eslint-disable @typescript-eslint/naming-convention */', # interface PossibleTypesResultData not starting with I
+              '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
+              "import * as Operations from './operations';",
+            ]
+      - 'typescript-react-apollo':
+          pureMagicComment: true # keep
+          importOperationTypesFrom: 'Operations'
+          omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix in src/graphql/operations.ts
+          operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix in src/graphql/operations.ts
+          fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents
       - 'typescript-apollo-client-helpers'
       - 'fragment-matcher'

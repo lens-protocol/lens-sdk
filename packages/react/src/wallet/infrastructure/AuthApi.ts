@@ -1,13 +1,13 @@
 import {
   AuthAuthenticateDocument,
-  AuthAuthenticateMutation,
-  AuthAuthenticateMutationVariables,
+  AuthAuthenticateData,
+  AuthAuthenticateVariables,
   AuthChallengeDocument,
-  AuthChallengeQuery,
-  AuthChallengeQueryVariables,
+  AuthChallengeData,
+  AuthChallengeVariables,
   AuthRefreshDocument,
-  AuthRefreshMutation,
-  AuthRefreshMutationVariables,
+  AuthRefreshData,
+  AuthRefreshVariables,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
 
@@ -17,7 +17,7 @@ export class AuthApi {
   constructor(private apolloClient: LensApolloClient) {}
 
   async generateChallenge(address: string): Promise<string> {
-    const result = await this.apolloClient.query<AuthChallengeQuery, AuthChallengeQueryVariables>({
+    const result = await this.apolloClient.query<AuthChallengeData, AuthChallengeVariables>({
       query: AuthChallengeDocument,
       variables: { address },
       // challenge to sign should be always a new one
@@ -28,10 +28,10 @@ export class AuthApi {
   }
 
   async generateCredentials(address: string, signature: string): Promise<Credentials> {
-    const result = await this.apolloClient.mutate<
-      AuthAuthenticateMutation,
-      AuthAuthenticateMutationVariables
-    >({ mutation: AuthAuthenticateDocument, variables: { address, signature } });
+    const result = await this.apolloClient.mutate<AuthAuthenticateData, AuthAuthenticateVariables>({
+      mutation: AuthAuthenticateDocument,
+      variables: { address, signature },
+    });
 
     const { accessToken, refreshToken } = result.data.result;
 
@@ -39,10 +39,10 @@ export class AuthApi {
   }
 
   async refreshCredentials(refreshToken: string): Promise<Credentials> {
-    const result = await this.apolloClient.mutate<
-      AuthRefreshMutation,
-      AuthRefreshMutationVariables
-    >({ mutation: AuthRefreshDocument, variables: { refreshToken } });
+    const result = await this.apolloClient.mutate<AuthRefreshData, AuthRefreshVariables>({
+      mutation: AuthRefreshDocument,
+      variables: { refreshToken },
+    });
 
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.data.result;
 

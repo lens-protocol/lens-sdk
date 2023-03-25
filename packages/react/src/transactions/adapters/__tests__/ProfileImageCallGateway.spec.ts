@@ -1,9 +1,9 @@
 import { omitTypename } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockCreateSetProfileImageUriTypedDataMutation,
-  mockCreateSetProfileImageUriTypedDataMutationMockedResponse,
-  createSetProfileImageURIViaDispatcherMutationMockedResponse,
+  mockCreateSetProfileImageUriTypedDataData,
+  createCreateSetProfileImageUriTypedDataMockedResponse,
+  createSetProfileImageURIViaDispatcherMockedResponse,
   mockRelayerResultFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
@@ -55,15 +55,14 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
 
     describe(`when calling the "${ProfileImageCallGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
       it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
-        const createSetProfileImageUriTypedDataMutation =
-          mockCreateSetProfileImageUriTypedDataMutation();
+        const data = mockCreateSetProfileImageUriTypedDataData();
 
         const apollo = createMockApolloClientWithMultipleResponses([
-          mockCreateSetProfileImageUriTypedDataMutationMockedResponse({
+          createCreateSetProfileImageUriTypedDataMockedResponse({
             variables: {
               request: expectedRequestVars,
             },
-            data: createSetProfileImageUriTypedDataMutation,
+            data,
           }),
         ]);
         const transactionFactory = mockITransactionFactory();
@@ -73,22 +72,20 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
         const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
         expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-        expect(unsignedCall.typedData).toEqual(
-          omitTypename(createSetProfileImageUriTypedDataMutation.result.typedData),
-        );
+        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
 
       it(`should be possible to override the signature nonce`, async () => {
         const nonce = mockNonce();
         const apollo = createMockApolloClientWithMultipleResponses([
-          mockCreateSetProfileImageUriTypedDataMutationMockedResponse({
+          createCreateSetProfileImageUriTypedDataMockedResponse({
             variables: {
               request: expectedRequestVars,
               options: {
                 overrideSigNonce: nonce,
               },
             },
-            data: mockCreateSetProfileImageUriTypedDataMutation({ nonce }),
+            data: mockCreateSetProfileImageUriTypedDataData({ nonce }),
           }),
         ]);
 
@@ -105,7 +102,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
     describe(`when calling the "${ProfileImageCallGateway.prototype.createDelegatedTransaction.name}"`, () => {
       it(`should create an instance of the ${NativeTransaction.name}`, async () => {
         const apollo = createMockApolloClientWithMultipleResponses([
-          createSetProfileImageURIViaDispatcherMutationMockedResponse({
+          createSetProfileImageURIViaDispatcherMockedResponse({
             variables: {
               request: expectedRequestVars,
             },

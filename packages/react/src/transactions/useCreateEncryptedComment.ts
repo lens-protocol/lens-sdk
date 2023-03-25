@@ -1,4 +1,4 @@
-import { ProfileOwnedByMeFragment } from '@lens-protocol/api-bindings';
+import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -30,7 +30,7 @@ import { createGatedClient } from './infrastructure/createGatedClient';
 
 export type UseCreateEncryptedCommentArgs = {
   encryption: EncryptionConfig;
-  publisher: ProfileOwnedByMeFragment;
+  publisher: ProfileOwnedByMe;
   upload: MetadataUploadHandler;
 };
 

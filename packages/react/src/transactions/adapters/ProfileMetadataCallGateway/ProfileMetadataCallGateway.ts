@@ -1,15 +1,15 @@
 import {
   CreateSetProfileMetadataTypedDataDocument,
-  CreateSetProfileMetadataTypedDataMutation,
-  CreateSetProfileMetadataTypedDataMutationVariables,
+  CreateSetProfileMetadataTypedDataData,
+  CreateSetProfileMetadataTypedDataVariables,
   CreateSetProfileMetadataViaDispatcherDocument,
-  CreateSetProfileMetadataViaDispatcherMutation,
-  CreateSetProfileMetadataViaDispatcherMutationVariables,
+  CreateSetProfileMetadataViaDispatcherData,
+  CreateSetProfileMetadataViaDispatcherVariables,
   GetProfileDocument,
-  GetProfileQuery,
-  GetProfileQueryVariables,
+  GetProfileData,
+  GetProfileVariables,
   omitTypename,
-  ProfileFragment,
+  Profile,
   CreatePublicSetProfileMetadataUriRequest,
   LensApolloClient,
   ProfileMetadata,
@@ -75,8 +75,8 @@ export class ProfileMetadataCallGateway
     nonce?: Nonce,
   ) {
     const { data } = await this.apolloClient.mutate<
-      CreateSetProfileMetadataTypedDataMutation,
-      CreateSetProfileMetadataTypedDataMutationVariables
+      CreateSetProfileMetadataTypedDataData,
+      CreateSetProfileMetadataTypedDataVariables
     >({
       mutation: CreateSetProfileMetadataTypedDataDocument,
       variables: {
@@ -92,8 +92,8 @@ export class ProfileMetadataCallGateway
     request: CreatePublicSetProfileMetadataUriRequest,
   ): AsyncRelayReceipt {
     const { data } = await this.apolloClient.mutate<
-      CreateSetProfileMetadataViaDispatcherMutation,
-      CreateSetProfileMetadataViaDispatcherMutationVariables
+      CreateSetProfileMetadataViaDispatcherData,
+      CreateSetProfileMetadataViaDispatcherVariables
     >({
       mutation: CreateSetProfileMetadataViaDispatcherDocument,
       variables: { request },
@@ -121,8 +121,8 @@ export class ProfileMetadataCallGateway
     };
   }
 
-  private async retrieveProfileDetails(profileId: string): Promise<ProfileFragment> {
-    const { data } = await this.apolloClient.query<GetProfileQuery, GetProfileQueryVariables>({
+  private async retrieveProfileDetails(profileId: string): Promise<Profile> {
+    const { data } = await this.apolloClient.query<GetProfileData, GetProfileVariables>({
       fetchPolicy: 'cache-first',
       query: GetProfileDocument,
       variables: {

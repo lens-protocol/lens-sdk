@@ -1,8 +1,8 @@
-import { ProfileFragment } from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockProfileFragment,
-  createProfilesToFollowQueryMockedResponse,
+  createProfilesToFollowMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
@@ -20,7 +20,7 @@ function setupTestScenario({
   ...args
 }: UseProfilesToFollowArgs & {
   expectedObserverId?: ProfileId;
-  profiles: ProfileFragment[];
+  profiles: Profile[];
 }) {
   const sources = mockSources();
 
@@ -28,7 +28,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createProfilesToFollowQueryMockedResponse({
+        createProfilesToFollowMockedResponse({
           variables: {
             observerId: expectedObserverId ?? null,
             sources,

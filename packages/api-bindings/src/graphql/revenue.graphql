@@ -1,7 +1,7 @@
 fragment RevenueAggregate on RevenueAggregate {
   __typename
   __total: total {
-    ...Erc20Amount
+    ...Erc20AmountFields
   }
 
   totalAmount @client
@@ -28,7 +28,7 @@ fragment PublicationRevenue on PublicationRevenue {
   }
 }
 
-query PublicationRevenue(
+query GetPublicationRevenue(
   $publicationId: InternalPublicationId!
   $observerId: ProfileId
   $sources: [Sources!]!
@@ -38,7 +38,7 @@ query PublicationRevenue(
   }
 }
 
-query ProfilePublicationRevenue(
+query GetProfilePublicationRevenue(
   $profileId: ProfileId!
   $observerId: ProfileId
   $limit: LimitScalar!

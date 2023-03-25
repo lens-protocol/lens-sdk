@@ -1,6 +1,6 @@
-import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
+import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import {
-  mockGetProfileQueryMockedResponse,
+  createGetProfileMockedResponse,
   mockProfileFragment,
   createMockApolloClientWithMultipleResponses,
   mockSources,
@@ -15,10 +15,10 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { UpdateDispatcherConfigResponder } from '../UpdateDispatcherConfigResponder';
 
-function setupTestScenario({ profile }: { profile: ProfileFragment }) {
+function setupTestScenario({ profile }: { profile: Profile }) {
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
-    mockGetProfileQueryMockedResponse({
+    createGetProfileMockedResponse({
       profile,
       variables: {
         request: {
@@ -42,7 +42,7 @@ function setupTestScenario({ profile }: { profile: ProfileFragment }) {
             __typename: 'Profile',
             id: profile.id,
           }),
-          fragment: ProfileFragmentDoc,
+          fragment: FragmentProfile,
           fragmentName: 'Profile',
         }),
         'Profile not found in cache',

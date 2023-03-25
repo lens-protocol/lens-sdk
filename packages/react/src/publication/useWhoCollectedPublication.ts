@@ -1,4 +1,7 @@
-import { useWhoCollectedPublicationQuery, WalletFragment } from '@lens-protocol/api-bindings';
+import {
+  useWhoCollectedPublication as useUnderlyingQuery,
+  Wallet,
+} from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
 
 import {
@@ -20,9 +23,9 @@ export function useWhoCollectedPublication({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
   publicationId,
-}: UseWhoCollectedPublicationArgs): PaginatedReadResult<WalletFragment[]> {
+}: UseWhoCollectedPublicationArgs): PaginatedReadResult<Wallet[]> {
   return usePaginatedReadResult(
-    useWhoCollectedPublicationQuery(
+    useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({ limit, publicationId, observerId }),

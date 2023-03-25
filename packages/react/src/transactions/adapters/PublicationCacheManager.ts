@@ -1,10 +1,10 @@
 import { ApolloCache, DocumentNode, NormalizedCacheObject } from '@apollo/client';
 import {
-  CommentFragmentDoc,
+  FragmentComment,
   JustTypename,
-  MirrorFragmentDoc,
-  PostFragmentDoc,
-  AnyPublicationFragment,
+  FragmentMirror,
+  FragmentPost,
+  AnyPublication,
 } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
 import { failure, invariant, never, Result, success } from '@lens-protocol/shared-kernel';
@@ -13,16 +13,14 @@ export class FragmentNotFoundError extends Error {
   name = 'FragmentNotFoundError' as const;
 }
 
-export const resolveFragmentDoc = (
-  publication: JustTypename<AnyPublicationFragment>,
-): DocumentNode => {
+export const resolveFragmentDoc = (publication: JustTypename<AnyPublication>): DocumentNode => {
   switch (publication.__typename) {
     case 'Mirror':
-      return MirrorFragmentDoc;
+      return FragmentMirror;
     case 'Post':
-      return PostFragmentDoc;
+      return FragmentPost;
     case 'Comment':
-      return CommentFragmentDoc;
+      return FragmentComment;
     default:
       never("Can't infer fragment document");
   }
@@ -31,8 +29,8 @@ export const resolveFragmentDoc = (
 export class PublicationCacheManager {
   constructor(private cache: ApolloCache<NormalizedCacheObject>) {}
 
-  write(publication: AnyPublicationFragment): void {
-    this.cache.writeFragment<AnyPublicationFragment>({
+  write(publication: AnyPublication): void {
+    this.cache.writeFragment<AnyPublication>({
       id: this.cache.identify({
         __typename: publication.__typename,
         id: publication.id,
@@ -43,7 +41,7 @@ export class PublicationCacheManager {
     });
   }
 
-  read(publicationId: PublicationId): Result<AnyPublicationFragment, FragmentNotFoundError> {
+  read(publicationId: PublicationId): Result<AnyPublication, FragmentNotFoundError> {
     const resolvedTypeResult = this.resolveExactPublicationType(publicationId);
 
     if (resolvedTypeResult.isFailure()) {
@@ -52,7 +50,7 @@ export class PublicationCacheManager {
 
     const { id, fragment, fragmentName } = resolvedTypeResult.unwrap();
 
-    const publication = this.cache.readFragment<AnyPublicationFragment>({
+    const publication = this.cache.readFragment<AnyPublication>({
       id,
       fragmentName,
       fragment,
@@ -66,7 +64,7 @@ export class PublicationCacheManager {
 
   update(
     publicationId: PublicationId,
-    updateFn: (current: AnyPublicationFragment) => AnyPublicationFragment,
+    updateFn: (current: AnyPublication) => AnyPublication,
   ): Result<void, FragmentNotFoundError> {
     const resolvedTypeResult = this.resolveExactPublicationType(publicationId);
 
@@ -76,7 +74,7 @@ export class PublicationCacheManager {
 
     const { id, fragment, fragmentName } = resolvedTypeResult.unwrap();
 
-    this.cache.updateFragment<AnyPublicationFragment>(
+    this.cache.updateFragment<AnyPublication>(
       {
         id,
         fragmentName,
@@ -102,7 +100,7 @@ export class PublicationCacheManager {
     const postArgs = {
       id: postIdentifier,
       fragmentName: 'Post',
-      fragment: PostFragmentDoc,
+      fragment: FragmentPost,
     };
 
     if (this.isInCache(postArgs)) {
@@ -117,7 +115,7 @@ export class PublicationCacheManager {
     const commentArgs = {
       id: commentIdentifier,
       fragmentName: 'Comment',
-      fragment: CommentFragmentDoc,
+      fragment: FragmentComment,
     };
 
     if (this.isInCache(commentArgs)) {
@@ -132,7 +130,7 @@ export class PublicationCacheManager {
     const mirrorArgs = {
       id: mirrorIdentifier,
       fragmentName: 'Mirror',
-      fragment: MirrorFragmentDoc,
+      fragment: FragmentMirror,
     };
 
     if (this.isInCache(mirrorArgs)) {
@@ -143,6 +141,6 @@ export class PublicationCacheManager {
   }
 
   private isInCache(args: { id: string; fragmentName: string; fragment: DocumentNode }) {
-    return !!this.cache.readFragment<AnyPublicationFragment>(args);
+    return !!this.cache.readFragment<AnyPublication>(args);
   }
 }

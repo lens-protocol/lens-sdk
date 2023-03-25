@@ -1,13 +1,13 @@
 import {
   MetadataUploadHandler,
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
   useCreateEncryptedPost as useCreateEncryptedPostBase,
 } from '@lens-protocol/react';
 
 import { useBrowserEncryptionConfig } from './useBrowserEncryptionConfig';
 
 export type UseCreateEncryptedPostArgs = {
-  publisher: ProfileOwnedByMeFragment;
+  publisher: ProfileOwnedByMe;
   upload: MetadataUploadHandler;
 };
 

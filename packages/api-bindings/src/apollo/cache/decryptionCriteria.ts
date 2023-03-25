@@ -1,10 +1,10 @@
+import { FieldReadFunction } from '@apollo/client';
 import {
   AddressOwnershipCriterion,
   AndCriterion,
   AnyCriterion,
   CollectPublicationCriterion,
   CollectThisPublicationCriterion,
-  DecryptionCriteria,
   DecryptionCriteriaType,
   Erc20ComparisonOperator,
   Erc20OwnershipCriterion,
@@ -30,27 +30,25 @@ import {
 } from '@lens-protocol/shared-kernel';
 
 import {
-  AccessConditionOutput,
   AndConditionOutput,
   CollectConditionOutput,
-  Comment,
   ContractType,
   EoaOwnershipOutput,
-  Erc20OwnershipFragment,
   Erc20OwnershipOutput,
   FollowConditionOutput,
   Maybe,
   NftOwnershipOutput,
   OrConditionOutput,
-  Post,
   ProfileOwnershipOutput,
-  AnyConditionFragment,
+  AnyConditionOutput,
   ScalarOperator,
+  LeafConditionOutput,
+  Profile,
+  MetadataOutput,
 } from '../../graphql';
-import { FieldReadFunction } from './utils/TypePolicy';
 
 function allButPublicationAuthor(authorId: ProfileId) {
-  return (criterion: AnyConditionFragment): boolean => {
+  return (criterion: AnyConditionOutput): boolean => {
     return criterion.profile?.profileId !== authorId;
   };
 }
@@ -95,7 +93,7 @@ function nftOwnershipCriterion({
   };
 }
 
-export function erc20Amount({ from }: { from: Erc20OwnershipFragment }) {
+export function erc20Amount({ from }: { from: Erc20OwnershipOutput }) {
   const asset = erc20({
     chainType: ChainType.POLYGON, // temporary while BE works on returning an Erc20Amount node
     address: from.contractAddress,
@@ -153,13 +151,13 @@ function collectPublication(
   };
 }
 
-function sanitize({ __typename, ...accessCondition }: AccessConditionOutput) {
+function sanitize({ __typename, ...accessCondition }: Partial<AnyConditionOutput>) {
   const conditions = Object.values(accessCondition).filter(isNonNullable);
   assertJustOne(conditions);
   return conditions[0];
 }
 
-function resolveSimpleCriterion(accessCondition: AccessConditionOutput): SimpleCriterion | null {
+function resolveSimpleCriterion(accessCondition: LeafConditionOutput): SimpleCriterion | null {
   const condition = sanitize(accessCondition);
 
   switch (condition.__typename) {
@@ -209,7 +207,7 @@ function orCondition({
   };
 }
 
-function resolveRootCriterion(accessCondition: AccessConditionOutput): Maybe<AnyCriterion> {
+function resolveRootCriterion(accessCondition: AnyConditionOutput): Maybe<AnyCriterion> {
   const condition = sanitize(accessCondition);
 
   switch (condition.__typename) {
@@ -222,16 +220,14 @@ function resolveRootCriterion(accessCondition: AccessConditionOutput): Maybe<Any
   return resolveSimpleCriterion(accessCondition);
 }
 
-export const decryptionCriteria: FieldReadFunction<Maybe<DecryptionCriteria>, Comment | Post> = (
-  _,
-  { canRead, readField },
-) => {
+export const decryptionCriteria: FieldReadFunction = (_, { canRead, readField }) => {
   const isGated = readField('isGated') ?? never();
 
   if (!isGated) return null;
 
-  const author = readField('profile') ?? never();
-  const metadata = readField('metadata') ?? never();
+  // we MUST be careful with these assertions as they rely on intrinsic knowledge of the schema
+  const author = (readField('profile') as Profile) ?? never();
+  const metadata = (readField('metadata') as MetadataOutput) ?? never();
 
   invariant(
     metadata.encryptionParams?.accessCondition.or,

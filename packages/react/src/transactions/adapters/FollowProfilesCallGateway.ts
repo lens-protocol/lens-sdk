@@ -1,7 +1,7 @@
 import {
   CreateFollowTypedDataDocument,
-  CreateFollowTypedDataMutation,
-  CreateFollowTypedDataMutationVariables,
+  CreateFollowTypedDataData,
+  CreateFollowTypedDataVariables,
   Follow,
   LensApolloClient,
   moduleFeeAmountParams,
@@ -53,8 +53,8 @@ export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
     nonce?: Nonce,
   ): Promise<UnsignedLensProtocolCall<T>> {
     const { data } = await this.apolloClient.mutate<
-      CreateFollowTypedDataMutation,
-      CreateFollowTypedDataMutationVariables
+      CreateFollowTypedDataData,
+      CreateFollowTypedDataVariables
     >({
       mutation: CreateFollowTypedDataDocument,
       variables: {

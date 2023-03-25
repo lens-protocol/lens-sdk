@@ -3,9 +3,9 @@ import { LensApolloClient, omitTypename } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockRelayerResultFragment,
-  mockCreateCommentTypedDataMutation,
-  createCreateCommentTypedDataMutationMockedResponse,
-  createCreateCommentViaDispatcherMutationMockedResponse,
+  mockCreateCommentTypedDataData,
+  createCreateCommentTypedDataMockedResponse,
+  createCreateCommentViaDispatcherMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockCreateCommentRequest } from '@lens-protocol/domain/mocks';
@@ -107,9 +107,9 @@ describe(`Given an instance of ${CreateCommentCallGateway.name}`, () => {
       it(`should:
           - use the IMetadataUploader<CreateCommentRequest'> to upload the publication metadata
           - create an instance of the ${UnsignedLensProtocolCall.name} with the expected typed data`, async () => {
-        const createCommentTypedDataMutation = mockCreateCommentTypedDataMutation();
+        const data = mockCreateCommentTypedDataData();
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          createCreateCommentTypedDataMutationMockedResponse({
+          createCreateCommentTypedDataMockedResponse({
             variables: {
               request: {
                 contentURI: uploadUrl,
@@ -118,7 +118,7 @@ describe(`Given an instance of ${CreateCommentCallGateway.name}`, () => {
                 ...expectedMutationRequestDetails,
               },
             },
-            data: createCommentTypedDataMutation,
+            data,
           }),
         ]);
         const { gateway, uploader } = setupTestScenario({ apolloClient, uploadUrl });
@@ -127,15 +127,13 @@ describe(`Given an instance of ${CreateCommentCallGateway.name}`, () => {
 
         expect(uploader.upload).toHaveBeenCalledWith(request);
         expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-        expect(unsignedCall.typedData).toEqual(
-          omitTypename(createCommentTypedDataMutation.result.typedData),
-        );
+        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
 
       it(`should be possible to override the signature nonce`, async () => {
         const nonce = mockNonce();
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          createCreateCommentTypedDataMutationMockedResponse({
+          createCreateCommentTypedDataMockedResponse({
             variables: {
               request: {
                 contentURI: uploadUrl,
@@ -147,7 +145,7 @@ describe(`Given an instance of ${CreateCommentCallGateway.name}`, () => {
                 overrideSigNonce: nonce,
               },
             },
-            data: mockCreateCommentTypedDataMutation({ nonce }),
+            data: mockCreateCommentTypedDataData({ nonce }),
           }),
         ]);
         const { gateway } = setupTestScenario({ apolloClient, uploadUrl });
@@ -163,7 +161,7 @@ describe(`Given an instance of ${CreateCommentCallGateway.name}`, () => {
           - use the IMetadataUploader<CreateCommentRequest'> to upload the publication metadata
           - create an instance of the ${NativeTransaction.name}`, async () => {
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          createCreateCommentViaDispatcherMutationMockedResponse({
+          createCreateCommentViaDispatcherMockedResponse({
             variables: {
               request: {
                 contentURI: uploadUrl,

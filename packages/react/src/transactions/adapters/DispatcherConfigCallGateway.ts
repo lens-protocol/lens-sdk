@@ -1,7 +1,7 @@
 import {
   CreateSetDispatcherTypedDataDocument,
-  CreateSetDispatcherTypedDataMutation,
-  CreateSetDispatcherTypedDataMutationVariables,
+  CreateSetDispatcherTypedDataData,
+  CreateSetDispatcherTypedDataVariables,
   LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
@@ -21,8 +21,8 @@ export class DispatcherConfigCallGateway implements IDispatcherConfigCallGateway
     nonce?: Nonce,
   ): Promise<UnsignedLensProtocolCall<T>> {
     const { data } = await this.apolloClient.mutate<
-      CreateSetDispatcherTypedDataMutation,
-      CreateSetDispatcherTypedDataMutationVariables
+      CreateSetDispatcherTypedDataData,
+      CreateSetDispatcherTypedDataVariables
     >({
       mutation: CreateSetDispatcherTypedDataDocument,
       variables: {

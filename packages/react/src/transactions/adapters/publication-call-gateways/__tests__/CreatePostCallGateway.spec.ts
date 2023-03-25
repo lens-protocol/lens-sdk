@@ -2,10 +2,10 @@ import { faker } from '@faker-js/faker';
 import { LensApolloClient, omitTypename } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockCreatePostTypedDataMutation,
+  mockCreatePostTypedDataData,
   mockRelayerResultFragment,
-  createCreatePostTypedDataMutationMockedResponse,
-  createCreatePostViaDispatcherMutationMockedResponse,
+  createCreatePostTypedDataMockedResponse,
+  createCreatePostViaDispatcherMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockCreatePostRequest } from '@lens-protocol/domain/mocks';
@@ -107,9 +107,9 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
       it(`should:
           - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
           - create an instance of the ${UnsignedLensProtocolCall.name} with the expected typed data`, async () => {
-        const createPostTypedDataMutation = mockCreatePostTypedDataMutation();
+        const data = mockCreatePostTypedDataData();
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          createCreatePostTypedDataMutationMockedResponse({
+          createCreatePostTypedDataMockedResponse({
             variables: {
               request: {
                 profileId: request.profileId,
@@ -117,7 +117,7 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
                 ...expectedMutationRequestDetails,
               },
             },
-            data: createPostTypedDataMutation,
+            data,
           }),
         ]);
         const { gateway, uploader } = setupTestScenario({ apolloClient, uploadUrl });
@@ -126,15 +126,13 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
 
         expect(uploader.upload).toHaveBeenCalledWith(request);
         expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-        expect(unsignedCall.typedData).toEqual(
-          omitTypename(createPostTypedDataMutation.result.typedData),
-        );
+        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
 
       it(`should be possible to override the signature nonce`, async () => {
         const nonce = mockNonce();
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          createCreatePostTypedDataMutationMockedResponse({
+          createCreatePostTypedDataMockedResponse({
             variables: {
               request: {
                 profileId: request.profileId,
@@ -145,7 +143,7 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
                 overrideSigNonce: nonce,
               },
             },
-            data: mockCreatePostTypedDataMutation({ nonce }),
+            data: mockCreatePostTypedDataData({ nonce }),
           }),
         ]);
         const { gateway } = setupTestScenario({ apolloClient, uploadUrl });
@@ -161,7 +159,7 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
           - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
           - create an instance of the ${NativeTransaction.name}`, async () => {
         const apolloClient = createMockApolloClientWithMultipleResponses([
-          createCreatePostViaDispatcherMutationMockedResponse({
+          createCreatePostViaDispatcherMockedResponse({
             variables: {
               request: {
                 profileId: request.profileId,

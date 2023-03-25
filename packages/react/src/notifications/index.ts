@@ -2,11 +2,11 @@ export * from './useUnreadNotificationCount';
 export * from './useNotifications';
 
 export type {
-  NewCollectNotificationFragment,
-  NewCommentNotificationFragment,
-  NewFollowerNotificationFragment,
-  NewMentionNotificationFragment,
-  NewMirrorNotificationFragment,
-  NewReactionNotificationFragment,
+  NewCollectNotification,
+  NewCommentNotification,
+  NewFollowerNotification,
+  NewMentionNotification,
+  NewMirrorNotification,
+  NewReactionNotification,
   NotificationTypes,
 } from '@lens-protocol/api-bindings';

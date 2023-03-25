@@ -1,11 +1,8 @@
-import {
-  FeedEventItemType as LensFeedEventItemType,
-  FeedItemFragment,
-} from '@lens-protocol/api-bindings';
+import { FeedEventItemType as LensFeedEventItemType, FeedItem } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockFeedItemFragment,
-  createFeedQueryMockedResponse,
+  createFeedMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
@@ -27,7 +24,7 @@ function setupTestScenario({
   profileId: ProfileId;
   observerId?: ProfileId;
   expectedObserverId: ProfileId | null;
-  items: FeedItemFragment[];
+  items: FeedItem[];
 }) {
   const sources = mockSources();
 
@@ -43,7 +40,7 @@ function setupTestScenario({
         sources,
 
         apolloClient: createMockApolloClientWithMultipleResponses([
-          createFeedQueryMockedResponse({
+          createFeedMockedResponse({
             variables: {
               profileId,
               observerId: expectedObserverId,

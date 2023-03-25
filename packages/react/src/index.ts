@@ -57,8 +57,6 @@ export type {
   IObservableStorageProvider,
 } from '@lens-protocol/storage';
 
-export type { Erc20AmountFragment } from '@lens-protocol/api-bindings';
-
 /**
  * Domain errors
  */
@@ -110,7 +108,7 @@ export type {
 /**
  * Common fragments
  */
-export type { Erc20Fragment } from '@lens-protocol/api-bindings';
+export type { Erc20Fields, Erc20AmountFields } from '@lens-protocol/api-bindings';
 
 /**
  * Common errors
@@ -143,3 +141,4 @@ export type {
   XOR,
 } from '@lens-protocol/shared-kernel';
 export type { Typename, PickByTypename } from '@lens-protocol/api-bindings';
+export * from './deprecated';
