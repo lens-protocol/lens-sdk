@@ -227,10 +227,10 @@ fragment CommentBase on Comment {
   collectedBy {
     ...Wallet
   }
-  __collectModule: collectModule {
+  collectModule {
     ...CollectModule
   }
-  __collectNftAddress: collectNftAddress
+  collectNftAddress
   referenceModule {
     ...ReferenceModule
   }
@@ -309,10 +309,10 @@ fragment Post on Post {
   collectedBy {
     ...Wallet
   }
-  __collectModule: collectModule {
+  collectModule {
     ...CollectModule
   }
-  __collectNftAddress: collectNftAddress
+  collectNftAddress
   referenceModule {
     ...ReferenceModule
   }

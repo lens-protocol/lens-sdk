@@ -114,8 +114,8 @@ export function createCollectRequest(
 ): CollectRequest {
   const collectModule =
     publication.__typename === 'Mirror'
-      ? publication.mirrorOf.__collectModule
-      : publication.__collectModule;
+      ? publication.mirrorOf.collectModule
+      : publication.collectModule;
 
   switch (collectModule.__typename) {
     case 'FreeCollectModuleSettings':

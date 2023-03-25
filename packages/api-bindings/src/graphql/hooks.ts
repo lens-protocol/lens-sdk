@@ -533,10 +533,10 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
     collectedBy {
       ...Wallet
     }
-    __collectModule: collectModule {
+    collectModule {
       ...CollectModule
     }
-    __collectNftAddress: collectNftAddress
+    collectNftAddress
     referenceModule {
       ...ReferenceModule
     }
@@ -585,10 +585,10 @@ export const FragmentPost = /*#__PURE__*/ gql`
     collectedBy {
       ...Wallet
     }
-    __collectModule: collectModule {
+    collectModule {
       ...CollectModule
     }
-    __collectNftAddress: collectNftAddress
+    collectNftAddress
     referenceModule {
       ...ReferenceModule
     }

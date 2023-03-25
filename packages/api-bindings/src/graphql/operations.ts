@@ -1901,6 +1901,7 @@ export type Mirror = { __typename: 'Mirror'; mirrorOf: Comment | Post } & Mirror
 export type CommentBase = {
   __typename: 'Comment';
   id: PublicationId;
+  collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
   isGated: boolean;
@@ -1912,12 +1913,11 @@ export type CommentBase = {
   collectPolicy: CollectPolicy;
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
-  __collectNftAddress: string | null;
   stats: PublicationStats;
   metadata: MetadataOutput;
   profile: Profile;
   collectedBy: Wallet | null;
-  __collectModule:
+  collectModule:
     | CollectModule_AaveFeeCollectModuleSettings_
     | CollectModule_Erc4626FeeCollectModuleSettings_
     | CollectModule_FeeCollectModuleSettings_
@@ -1954,6 +1954,7 @@ export type Comment = {
 export type Post = {
   __typename: 'Post';
   id: PublicationId;
+  collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
   isGated: boolean;
@@ -1965,12 +1966,11 @@ export type Post = {
   collectPolicy: CollectPolicy;
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
-  __collectNftAddress: string | null;
   stats: PublicationStats;
   metadata: MetadataOutput;
   profile: Profile;
   collectedBy: Wallet | null;
-  __collectModule:
+  collectModule:
     | CollectModule_AaveFeeCollectModuleSettings_
     | CollectModule_Erc4626FeeCollectModuleSettings_
     | CollectModule_FeeCollectModuleSettings_
