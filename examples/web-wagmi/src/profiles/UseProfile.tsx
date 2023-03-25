@@ -1,4 +1,4 @@
-import { ProfileFragment, ProfileId, useProfile } from '@lens-protocol/react-web';
+import { Profile, ProfileId, useProfile } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -21,7 +21,7 @@ function ProfileBy({ profileId }: ProfileByProps) {
 }
 
 export function UseProfile() {
-  const [profile, setProfile] = useState<ProfileFragment | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   return (
     <>
       <p>Select an profile:</p>

@@ -1,7 +1,7 @@
 import {
   CollectPolicyType,
   ContentFocus,
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
   useCreateComment,
 } from '@lens-protocol/react-web';
 
@@ -9,7 +9,7 @@ import { upload } from '../../upload';
 import { never } from '../../utils';
 
 type CommentComposerProps = {
-  publisher: ProfileOwnedByMeFragment;
+  publisher: ProfileOwnedByMe;
   publicationId: string;
 };
 

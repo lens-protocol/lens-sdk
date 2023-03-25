@@ -1,7 +1,7 @@
 import {
   useRecentPosts,
   ContentFocus,
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
   DecryptionCriteriaType,
   DecryptionCriteria,
   NftContractType,
@@ -16,7 +16,7 @@ import { never } from '../utils';
 import { PublicationCard } from './components/PublicationCard';
 
 export type ComposerProps = {
-  publisher: ProfileOwnedByMeFragment;
+  publisher: ProfileOwnedByMe;
 };
 
 export function Composer({ publisher }: ComposerProps) {

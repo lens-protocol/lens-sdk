@@ -1,5 +1,5 @@
 import {
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
   useActiveProfile,
   useUpdateProfileDetails,
 } from '@lens-protocol/react-web';
@@ -9,7 +9,7 @@ import { upload } from '../upload';
 import { ProfileCard } from './components/ProfileCard';
 
 type UpdateProfileFormProps = {
-  profile: ProfileOwnedByMeFragment;
+  profile: ProfileOwnedByMe;
 };
 
 function UpdateProfileForm({ profile }: UpdateProfileFormProps) {

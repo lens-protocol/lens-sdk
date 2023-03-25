@@ -1,11 +1,11 @@
-import { useProfilesToFollow, ProfileFragment } from '@lens-protocol/react-web';
+import { useProfilesToFollow, Profile } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
 type ProfileListProps = {
-  profiles: ProfileFragment[];
+  profiles: Profile[];
 };
 
 function ProfileList({ profiles }: ProfileListProps) {

@@ -1,9 +1,9 @@
-import { PublicationRevenueFragment } from '@lens-protocol/react-web';
+import { PublicationRevenue } from '@lens-protocol/react-web';
 
 import { PublicationCard } from '../../publications/components/PublicationCard';
 
 type RevenueCardProps = {
-  publicationRevenue: PublicationRevenueFragment;
+  publicationRevenue: PublicationRevenue;
 };
 
 export function PublicationRevenueCard({ publicationRevenue }: RevenueCardProps) {

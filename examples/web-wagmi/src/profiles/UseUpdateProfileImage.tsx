@@ -1,4 +1,4 @@
-import { ImageType, ProfileFragment, useUpdateProfileImage } from '@lens-protocol/react-web';
+import { ImageType, Profile, useUpdateProfileImage } from '@lens-protocol/react-web';
 import { ChangeEvent, useState } from 'react';
 
 import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
@@ -8,7 +8,7 @@ import { uploadImage } from '../upload';
 import { invariant } from '../utils';
 import { SmallProfileCard } from './components/ProfileCard';
 
-function UpdateUploadedImage({ profile }: { profile: ProfileFragment }) {
+function UpdateUploadedImage({ profile }: { profile: Profile }) {
   const [inputValue, setInputValue] = useState(
     'https://arweave.net/dOKOqiZVvSs14n54GIRH9nkSlLKArzK7-SPc2sBVmAM',
   );
@@ -46,7 +46,7 @@ function UpdateUploadedImage({ profile }: { profile: ProfileFragment }) {
   );
 }
 
-function UploadAndUpdateNewImage({ profile }: { profile: ProfileFragment }) {
+function UploadAndUpdateNewImage({ profile }: { profile: Profile }) {
   const [candidateFile, setCandidateFile] = useState<ILocalFile<ImageType> | null>(null);
   const [uploadError, setUploadError] = useState<Error | null>();
   const [isUploading, setIsUploading] = useState(false);
@@ -131,7 +131,7 @@ function UploadAndUpdateNewImage({ profile }: { profile: ProfileFragment }) {
   );
 }
 
-function UpdateProfileImageInner({ profile }: { profile: ProfileFragment }) {
+function UpdateProfileImageInner({ profile }: { profile: Profile }) {
   return (
     <div>
       <SmallProfileCard profile={profile} />
