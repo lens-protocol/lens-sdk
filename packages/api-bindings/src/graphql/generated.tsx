@@ -93,7 +93,7 @@ export type Scalars = {
   /** ProfileId custom scalar type */
   ProfileId: ProfileId;
   /** ProfileInterest custom scalar type */
-  ProfileInterest: unknown;
+  ProfileInterest: string;
   /** proxy action scalar id type */
   ProxyActionId: string;
   /** Publication id custom scalar type */
@@ -5121,6 +5121,7 @@ export type ProfileFragment = {
   bio: string | null;
   handle: string;
   ownedBy: EthereumAddress;
+  interests: Array<string> | null;
   followPolicy: FollowPolicy;
   followStatus: FollowStatus | null;
   ownedByMe: boolean;
@@ -5920,6 +5921,7 @@ export const ProfileFragmentDoc = gql`
     bio
     handle
     ownedBy
+    interests
     picture {
       ...ProfileMedia
     }
