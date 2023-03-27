@@ -1,4 +1,4 @@
-import { useComments } from '@lens-protocol/react-web';
+import { PublicationId, useComments } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { Loading } from '../../components/loading/Loading';
@@ -6,7 +6,7 @@ import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { PublicationCard } from './PublicationCard';
 
 type PublicationCommentsProps = {
-  publicationId: string;
+  publicationId: PublicationId;
 };
 
 export function PublicationComments({ publicationId }: PublicationCommentsProps) {

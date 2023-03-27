@@ -1,15 +1,13 @@
-import { useWhoMirroredPublication } from '@lens-protocol/react-web';
+import { publicationId, useWhoMirroredPublication } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from '../profiles/components/ProfileCard';
 
-const publicationId = '0x1b-0x0118';
-
 export function UseWhoMirroredPublication() {
   const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
-    useWhoMirroredPublication({ publicationId }),
+    useWhoMirroredPublication({ publicationId: publicationId('0x1b-0x0118') }),
   );
 
   if (loading) return <Loading />;

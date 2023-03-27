@@ -11,7 +11,7 @@ import {
   createReportPublicationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { ReportReason } from '@lens-protocol/domain/entities';
-import { mockReportPublicationRequest } from '@lens-protocol/domain/mocks';
+import { mockPublicationId, mockReportPublicationRequest } from '@lens-protocol/domain/mocks';
 
 import { ReportPublicationGateway } from '../ReportPublicationGateway';
 
@@ -183,7 +183,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
     ])(
       `should report the publication mapping the ReportReason.$reason to the expected request`,
       async ({ reason, expectedRequestReason }) => {
-        const publicationId = faker.datatype.uuid();
+        const publicationId = mockPublicationId();
         const additionalComments = faker.lorem.sentence();
 
         const apolloClient = createMockApolloClientWithMultipleResponses([

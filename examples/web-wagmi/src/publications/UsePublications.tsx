@@ -1,4 +1,4 @@
-import { usePublications } from '@lens-protocol/react-web';
+import { profileId, usePublications } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
@@ -12,7 +12,7 @@ export function UsePublications() {
     loading,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(usePublications({ profileId: '0x15' }));
+  } = useInfiniteScroll(usePublications({ profileId: profileId('0x15') }));
 
   if (loading) return <Loading />;
 

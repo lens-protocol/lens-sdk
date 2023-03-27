@@ -10,7 +10,7 @@ import {
 import { z } from 'zod';
 
 import { appId } from '../../../../utils';
-import { Erc20AmountSchema, ProfileIdSchema } from './common';
+import { Erc20AmountSchema, ProfileIdSchema, PublicationIdSchema } from './common';
 
 const NftAttributeSchema = z.union([
   z.object({
@@ -159,7 +159,7 @@ export const CreatePostRequestSchema = z.object({
 
 export const CreateCommentRequestSchema = z.object({
   appId: z.string().transform(appId).optional(),
-  publicationId: z.string(),
+  publicationId: PublicationIdSchema,
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),
   media: z.array(MediaSchema).optional(),
@@ -173,7 +173,7 @@ export const CreateCommentRequestSchema = z.object({
 
 export const CreateMirrorRequestSchema = z.object({
   profileId: ProfileIdSchema,
-  publicationId: z.string(),
+  publicationId: PublicationIdSchema,
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   delegate: z.boolean(),
 });
@@ -181,7 +181,7 @@ export const CreateMirrorRequestSchema = z.object({
 export const FreeCollectRequestSchema = z.object({
   profileId: ProfileIdSchema,
   type: z.literal(CollectType.FREE),
-  publicationId: z.string(),
+  publicationId: PublicationIdSchema,
   kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
 });
 
@@ -193,7 +193,7 @@ const CollectFeeSchema = z.object({
 export const PaidCollectRequestSchema = z.object({
   profileId: ProfileIdSchema,
   type: z.literal(CollectType.PAID),
-  publicationId: z.string(),
+  publicationId: PublicationIdSchema,
   fee: CollectFeeSchema,
   kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
 });

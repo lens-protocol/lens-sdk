@@ -1,10 +1,8 @@
-import { usePublicationRevenue } from '@lens-protocol/react-web';
+import { publicationId, usePublicationRevenue } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { PublicationRevenueCard } from './components/PublicationRevenueCard';
-
-const publicationId = '0x4f90-0x02';
 
 export function UsePublicationRevenue() {
   const {
@@ -12,7 +10,7 @@ export function UsePublicationRevenue() {
     error,
     loading,
   } = usePublicationRevenue({
-    publicationId,
+    publicationId: publicationId('0x4f90-0x02'),
   });
 
   if (loading) return <Loading />;

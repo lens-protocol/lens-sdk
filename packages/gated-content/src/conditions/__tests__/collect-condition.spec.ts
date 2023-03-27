@@ -1,3 +1,4 @@
+import { PublicationId } from '@lens-protocol/domain/entities';
 import { mockPublicationId } from '@lens-protocol/domain/mocks';
 import { InvariantError } from '@lens-protocol/shared-kernel';
 import { BigNumber } from 'ethers';
@@ -88,7 +89,7 @@ describe(`Given the "${transform.name}" function`, () => {
       {
         description: 'if with invalid publication Id',
         condition: mockCollectConditionInput({
-          publicationId: 'a',
+          publicationId: 'a' as PublicationId,
         }),
         expectedErrorCtor: InvalidAccessCriteriaError,
       },

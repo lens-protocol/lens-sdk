@@ -1,3 +1,4 @@
+import { PublicationId, publicationId } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
@@ -6,7 +7,7 @@ import { CommentComposer } from './components/CommentComposer';
 import { PublicationComments } from './components/PublicationComments';
 
 export function UseCreateComment() {
-  const [publicationId, setPublicationId] = useState<string>('0x1b-0x0118');
+  const [parentId, setPublicationId] = useState<PublicationId>(publicationId('0x1b-0x0118'));
 
   return (
     <div>
@@ -21,17 +22,17 @@ export function UseCreateComment() {
               <input
                 id="publicationId"
                 type="text"
-                value={publicationId}
-                onChange={(event) => setPublicationId(event.target.value)}
+                value={parentId}
+                onChange={(event) => setPublicationId(publicationId(event.target.value))}
               />
             </p>
 
-            {publicationId && (
+            {parentId && (
               <>
-                <CommentComposer publisher={profile} publicationId={publicationId} />
+                <CommentComposer publisher={profile} publicationId={parentId} />
 
                 <p>Publication comments:</p>
-                <PublicationComments publicationId={publicationId} />
+                <PublicationComments publicationId={parentId} />
               </>
             )}
           </>

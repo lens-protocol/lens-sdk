@@ -7,6 +7,7 @@ import {
   NftContractType,
   SimpleCriterion,
   useCreateEncryptedPost,
+  publicationId,
 } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
@@ -51,7 +52,7 @@ export function Composer({ publisher }: ComposerProps) {
     if (formData.has('collect') && formData.get('collect')?.length) {
       criteria.push({
         type: DecryptionCriteriaType.COLLECT_PUBLICATION,
-        publicationId: formData.get('collect') as string,
+        publicationId: publicationId(formData.get('collect') as string),
       });
     }
 

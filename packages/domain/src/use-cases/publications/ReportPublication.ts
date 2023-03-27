@@ -1,10 +1,10 @@
 import { success } from '@lens-protocol/shared-kernel';
 
-import { ReportReason } from '../../entities';
+import { PublicationId, ReportReason } from '../../entities';
 import { IGenericResultPresenter } from '../transactions';
 
 export type ReportPublicationRequest = {
-  publicationId: string;
+  publicationId: PublicationId;
   reason: ReportReason;
   additionalComments?: string;
 };

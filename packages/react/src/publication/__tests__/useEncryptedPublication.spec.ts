@@ -13,6 +13,7 @@ import { Wallet } from 'ethers';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { staging } from '../../environments';
+import { profileId } from '../../utils';
 import { useActiveWalletSigner } from '../../wallet';
 import { useEncryptedPublication } from '../useEncryptedPublication';
 
@@ -53,7 +54,7 @@ describe(`Given the "${useEncryptedPublication.name}" hook`, () => {
     // to assume that the underlying data is immutable, even though on Mumbai.
     const signer = new Wallet('0xcc268eda1086b6c71f811801bd4a3f96e3c95ddde2d44b4ebb0554e800d353d2'); // address: 0x6E7c8Ea196E54Ca38C9A074374D6e39a84727536
     const profile = mockProfileFragment({
-      id: '0xa6',
+      id: profileId('0xa6'),
     });
 
     const post = mockPostFragment({

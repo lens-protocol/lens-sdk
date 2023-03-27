@@ -2,6 +2,7 @@ import {
   CollectPolicyType,
   ContentFocus,
   ProfileOwnedByMe,
+  PublicationId,
   useCreateComment,
 } from '@lens-protocol/react-web';
 
@@ -10,7 +11,7 @@ import { never } from '../../utils';
 
 type CommentComposerProps = {
   publisher: ProfileOwnedByMe;
-  publicationId: string;
+  publicationId: PublicationId;
 };
 
 export function CommentComposer({ publisher, publicationId }: CommentComposerProps) {

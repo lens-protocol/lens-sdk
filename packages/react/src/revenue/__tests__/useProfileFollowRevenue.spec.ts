@@ -3,6 +3,7 @@ import {
   createProfileFollowRevenueMockedResponse,
   mockProfileFollowRevenueFragment,
 } from '@lens-protocol/api-bindings/mocks';
+import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
@@ -10,7 +11,7 @@ import { useProfileFollowRevenue } from '../useProfileFollowRevenue';
 
 describe(`Given the ${useProfileFollowRevenue.name} hook`, () => {
   describe('when the query returns data successfully', () => {
-    const profileId = '0x2001';
+    const profileId = mockProfileId();
 
     const mockRevenues = mockProfileFollowRevenueFragment();
 

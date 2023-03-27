@@ -9,7 +9,7 @@ export interface IHidePublicationGateway {
 }
 
 export interface IHidePublicationPresenter {
-  present(publicationId: string): void;
+  present(publicationId: PublicationId): void;
 }
 
 export class HidePublication {

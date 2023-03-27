@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker';
 import { ReactionTypes, ValidationError } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
@@ -6,7 +5,7 @@ import {
   createRemoveReactionMockedResponse,
   createRemoveReactionMockedResponseWithGraphqlValidationError,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockProfileId, mockReactionRequest } from '@lens-protocol/domain/mocks';
+import { mockProfileId, mockPublicationId, mockReactionRequest } from '@lens-protocol/domain/mocks';
 
 import { ReactionGateway } from '../ReactionGateway';
 
@@ -14,7 +13,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
   describe(`and the ${ReactionGateway.prototype.add.name} method`, () => {
     it(`should add reaction with success`, async () => {
       const profileId = mockProfileId();
-      const publicationId = faker.datatype.uuid();
+      const publicationId = mockPublicationId();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
         createAddReactionMockedResponse({
@@ -39,7 +38,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
   describe(`and the ${ReactionGateway.prototype.remove.name} method`, () => {
     it(`should remove reaction with success`, async () => {
       const profileId = mockProfileId();
-      const publicationId = faker.datatype.uuid();
+      const publicationId = mockPublicationId();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
         createRemoveReactionMockedResponse({
@@ -62,7 +61,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
 
     it(`should be resilient to ${ValidationError.name} and resolve the promise`, async () => {
       const profileId = mockProfileId();
-      const publicationId = faker.datatype.uuid();
+      const publicationId = mockPublicationId();
       const apolloClient = createMockApolloClientWithMultipleResponses([
         createRemoveReactionMockedResponseWithGraphqlValidationError({
           variables: {

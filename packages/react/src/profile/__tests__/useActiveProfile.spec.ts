@@ -5,7 +5,7 @@ import {
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockProfileIdentifier, mockWalletData } from '@lens-protocol/domain/mocks';
+import { mockProfileId, mockProfileIdentifier, mockWalletData } from '@lens-protocol/domain/mocks';
 import { ProfileIdentifier } from '@lens-protocol/domain/use-cases/profile';
 import { waitFor } from '@testing-library/react';
 
@@ -48,7 +48,7 @@ function setupUseActiveProfile(args: {
 }
 
 describe(`Given the ${useActiveProfile.name} hook`, () => {
-  const profileId = '0x2000';
+  const profileId = mockProfileId();
   const handle = 'aave.lens';
   const profile = mockProfileFragment({ id: profileId, handle });
 

@@ -1,4 +1,4 @@
-import { useWhoReacted } from '@lens-protocol/react-web';
+import { publicationId, useWhoReacted } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
@@ -7,7 +7,7 @@ import { ProfileCard } from '../profiles/components/ProfileCard';
 
 export function UseWhoReacted() {
   const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
-    useWhoReacted({ publicationId: '0x02-0x1a' }),
+    useWhoReacted({ publicationId: publicationId('0x02-0x1a') }),
   );
 
   if (loading) return <Loading />;

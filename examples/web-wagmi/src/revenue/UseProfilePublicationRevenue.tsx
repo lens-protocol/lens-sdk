@@ -1,16 +1,14 @@
-import { useProfilePublicationRevenue } from '@lens-protocol/react-web';
+import { profileId, useProfilePublicationRevenue } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationRevenueCard } from './components/PublicationRevenueCard';
 
-const profileId = '0x15';
-
 export function UseProfilePublicationRevenue() {
   const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
     useProfilePublicationRevenue({
-      profileId,
+      profileId: profileId('0x15'),
     }),
   );
 

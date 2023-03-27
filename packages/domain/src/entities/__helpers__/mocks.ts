@@ -57,7 +57,7 @@ export function mockProfileId(): ProfileId {
 }
 
 export function mockPublicationId(profileId: ProfileId = mockProfileId()): PublicationId {
-  return `${profileId}-${faker.datatype.hexadecimal({ length: 2 })}`;
+  return `${profileId}-${faker.datatype.hexadecimal({ length: 2 })}` as PublicationId;
 }
 
 export function mockWallet({

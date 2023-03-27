@@ -3,6 +3,7 @@ import {
   useCreateMirror,
   isMirrorPublication,
   ProfileOwnedByMe,
+  publicationId,
 } from '@lens-protocol/react-web';
 
 import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
@@ -20,7 +21,7 @@ function MirrorInner({ publisher }: MirrorInnerProps) {
     error: loadingError,
     loading: publicationLoading,
   } = usePublication({
-    publicationId: '0x15-0x028e',
+    publicationId: publicationId('0x15-0x028e'),
     observerId: publisher.id, // important!
   });
   const { execute: create, isPending, error: mirroringError } = useCreateMirror({ publisher });

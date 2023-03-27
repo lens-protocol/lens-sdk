@@ -6,6 +6,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
   ProfileId,
+  PublicationId,
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import {
@@ -27,7 +28,7 @@ export enum CollectType {
 export type FreeCollectRequest = {
   profileId: ProfileId;
   type: CollectType.FREE;
-  publicationId: string;
+  publicationId: PublicationId;
   kind: TransactionKind.COLLECT_PUBLICATION;
 };
 
@@ -39,7 +40,7 @@ export type CollectFee = {
 export type PaidCollectRequest = {
   profileId: ProfileId;
   type: CollectType.PAID;
-  publicationId: string;
+  publicationId: PublicationId;
   fee: CollectFee;
   kind: TransactionKind.COLLECT_PUBLICATION;
 };

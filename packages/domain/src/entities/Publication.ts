@@ -1,9 +1,9 @@
-import { Amount, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Brand, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import { NftContractType, NftId } from './Nft';
 import { ProfileId } from './Profile';
 
-export type PublicationId = string;
+export type PublicationId = Brand<string, 'PublicationId'>;
 
 export enum ReactionType {
   UPVOTE = 'upvote',
