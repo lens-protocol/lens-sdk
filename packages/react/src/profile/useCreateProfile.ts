@@ -4,12 +4,14 @@ import {
   CreateProfileRequest,
   DuplicatedHandleError,
 } from '@lens-protocol/domain/use-cases/profile';
-import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useCreateProfileController } from './adapters/useCreateProfileController';
 
-export type CreateProfileArgs = Prettify<Omit<CreateProfileRequest, 'kind'>>;
+export type CreateProfileArgs = {
+  handle: string;
+};
 
 export type CreateProfileOperation = Operation<
   void,
