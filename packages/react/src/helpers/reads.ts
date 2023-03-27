@@ -90,6 +90,8 @@ export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
   next: () => Promise<void>;
 };
 
+export type { CommonPaginatedResultInfo };
+
 export type PaginatedQueryData<K> = {
   result: { pageInfo: CommonPaginatedResultInfo; items: K };
 };

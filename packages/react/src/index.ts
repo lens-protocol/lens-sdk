@@ -39,6 +39,7 @@ export type {
 export type { WithObserverIdOverride } from './helpers/arguments';
 export type { Operation } from './helpers/operations';
 export type {
+  CommonPaginatedResultInfo,
   PaginatedArgs,
   PaginatedReadResult,
   ReadResult,
@@ -108,7 +109,7 @@ export type {
 /**
  * Common fragments
  */
-export type { Erc20Fields, Erc20AmountFields } from '@lens-protocol/api-bindings';
+export type { Erc20Fields, Erc20AmountFields, ModuleFeeAmount } from '@lens-protocol/api-bindings';
 
 /**
  * Common errors

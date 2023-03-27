@@ -7,3 +7,7 @@ export type ProfileOwnedByMe = Overwrite<Profile, { ownedByMe: true }>;
 export function isProfileOwnedByMe(profile: Profile): profile is ProfileOwnedByMe {
   return profile.ownedByMe;
 }
+
+export type FollowModule = NonNullable<Profile['followModule']>;
+
+export type ProfileMedia = NonNullable<Profile['picture'] | Profile['coverPicture']>;

@@ -2,6 +2,7 @@ import {
   useComments as useUnderlyingQuery,
   CommentWithFirstComment,
 } from '@lens-protocol/api-bindings';
+import { PublicationId } from '@lens-protocol/domain/entities';
 
 import {
   WithObserverIdOverride,
@@ -15,7 +16,7 @@ import { createPublicationMetadataFilters, PublicationMetadataFilters } from './
 
 export type UseCommentsArgs = PaginatedArgs<
   WithObserverIdOverride<{
-    commentsOf: string;
+    commentsOf: PublicationId;
     metadataFilter?: PublicationMetadataFilters;
   }>
 >;

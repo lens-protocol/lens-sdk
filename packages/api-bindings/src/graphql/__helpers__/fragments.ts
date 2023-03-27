@@ -17,7 +17,6 @@ import {
   AnyConditionOutput,
   Attribute,
   CollectConditionOutput,
-  CollectModule,
   Comment,
   ContractType,
   EnabledModule,
@@ -40,7 +39,6 @@ import {
   Post,
   Profile,
   ProfileFollowRevenue,
-  ProfileMedia,
   ProfileOwnershipOutput,
   ProfileStats,
   PublicationMainFocus,
@@ -56,7 +54,7 @@ import {
   Wallet,
   WhoReactedResult,
 } from '../operations';
-import { AnyPublication, erc20Amount } from '../utils';
+import { AnyPublication, CollectModule, erc20Amount, ProfileMedia } from '../utils';
 
 export function mockMediaFragment(overrides?: Partial<Media>): Media {
   return {

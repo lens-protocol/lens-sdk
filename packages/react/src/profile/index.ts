@@ -36,6 +36,7 @@ export type {
   Follower,
   Following,
   FollowStatus,
+  NftImage,
   ProfileAttributeReader,
   ProfileAttributes,
   Profile,

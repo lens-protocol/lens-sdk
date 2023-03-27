@@ -236,18 +236,6 @@ export const FragmentNftImage = /*#__PURE__*/ gql`
     verified
   }
 `;
-export const FragmentProfileMedia = /*#__PURE__*/ gql`
-  fragment ProfileMedia on ProfileMedia {
-    ... on NftImage {
-      ...NftImage
-    }
-    ... on MediaSet {
-      ...MediaSet
-    }
-  }
-  ${FragmentNftImage}
-  ${FragmentMediaSet}
-`;
 export const FragmentProfileStats = /*#__PURE__*/ gql`
   fragment ProfileStats on ProfileStats {
     __typename
@@ -328,10 +316,20 @@ export const FragmentProfile = /*#__PURE__*/ gql`
     handle
     ownedBy
     picture {
-      ...ProfileMedia
+      ... on NftImage {
+        ...NftImage
+      }
+      ... on MediaSet {
+        ...MediaSet
+      }
     }
     coverPicture {
-      ...ProfileMedia
+      ... on NftImage {
+        ...NftImage
+      }
+      ... on MediaSet {
+        ...MediaSet
+      }
     }
     stats {
       ...ProfileStats
@@ -381,7 +379,8 @@ export const FragmentProfile = /*#__PURE__*/ gql`
     followStatus @client
     ownedByMe @client
   }
-  ${FragmentProfileMedia}
+  ${FragmentNftImage}
+  ${FragmentMediaSet}
   ${FragmentProfileStats}
   ${FragmentFeeFollowModuleSettings}
   ${FragmentProfileFollowModuleSettings}
@@ -398,6 +397,60 @@ export const FragmentWallet = /*#__PURE__*/ gql`
     }
   }
   ${FragmentProfile}
+`;
+export const FragmentAaveFeeCollectModuleSettings = /*#__PURE__*/ gql`
+  fragment AaveFeeCollectModuleSettings on AaveFeeCollectModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    collectLimitOptional: collectLimit
+    contractAddress
+    followerOnly
+    endTimestampOptional: endTimestamp
+    recipient
+    referralFee
+  }
+  ${FragmentModuleFeeAmount}
+`;
+export const FragmentErc4626FeeCollectModuleSettings = /*#__PURE__*/ gql`
+  fragment Erc4626FeeCollectModuleSettings on ERC4626FeeCollectModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    collectLimitOptional: collectLimit
+    contractAddress
+    followerOnly
+    endTimestampOptional: endTimestamp
+    recipient
+    referralFee
+    vault
+  }
+  ${FragmentModuleFeeAmount}
+`;
+export const FragmentMultirecipientFeeCollectModuleSettings = /*#__PURE__*/ gql`
+  fragment MultirecipientFeeCollectModuleSettings on MultirecipientFeeCollectModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    collectLimitOptional: collectLimit
+    contractAddress
+    followerOnly
+    endTimestampOptional: endTimestamp
+    recipients {
+      recipient
+      split
+    }
+    referralFee
+  }
+  ${FragmentModuleFeeAmount}
+`;
+export const FragmentUnknownCollectModuleSettings = /*#__PURE__*/ gql`
+  fragment UnknownCollectModuleSettings on UnknownCollectModuleSettings {
+    __typename
+  }
 `;
 export const FragmentFreeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
@@ -468,53 +521,26 @@ export const FragmentTimedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   }
   ${FragmentModuleFeeAmount}
 `;
-export const FragmentCollectModule = /*#__PURE__*/ gql`
-  fragment CollectModule on CollectModule {
+export const FragmentFollowOnlyReferenceModuleSettings = /*#__PURE__*/ gql`
+  fragment FollowOnlyReferenceModuleSettings on FollowOnlyReferenceModuleSettings {
     __typename
-    ... on FreeCollectModuleSettings {
-      ...FreeCollectModuleSettings
-    }
-    ... on FeeCollectModuleSettings {
-      ...FeeCollectModuleSettings
-    }
-    ... on LimitedFeeCollectModuleSettings {
-      ...LimitedFeeCollectModuleSettings
-    }
-    ... on LimitedTimedFeeCollectModuleSettings {
-      ...LimitedTimedFeeCollectModuleSettings
-    }
-    ... on RevertCollectModuleSettings {
-      ...RevertCollectModuleSettings
-    }
-    ... on TimedFeeCollectModuleSettings {
-      ...TimedFeeCollectModuleSettings
-    }
+    contractAddress
   }
-  ${FragmentFreeCollectModuleSettings}
-  ${FragmentFeeCollectModuleSettings}
-  ${FragmentLimitedFeeCollectModuleSettings}
-  ${FragmentLimitedTimedFeeCollectModuleSettings}
-  ${FragmentRevertCollectModuleSettings}
-  ${FragmentTimedFeeCollectModuleSettings}
 `;
-export const FragmentReferenceModule = /*#__PURE__*/ gql`
-  fragment ReferenceModule on ReferenceModule {
-    ... on FollowOnlyReferenceModuleSettings {
-      __typename
-      contractAddress
-    }
-    ... on DegreesOfSeparationReferenceModuleSettings {
-      __typename
-      contractAddress
-      commentsRestricted
-      degreesOfSeparation
-      mirrorsRestricted
-    }
-    ... on UnknownReferenceModuleSettings {
-      __typename
-      contractAddress
-      referenceModuleReturnData
-    }
+export const FragmentDegreesOfSeparationReferenceModuleSettings = /*#__PURE__*/ gql`
+  fragment DegreesOfSeparationReferenceModuleSettings on DegreesOfSeparationReferenceModuleSettings {
+    __typename
+    contractAddress
+    commentsRestricted
+    degreesOfSeparation
+    mirrorsRestricted
+  }
+`;
+export const FragmentUnknownReferenceModuleSettings = /*#__PURE__*/ gql`
+  fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
+    __typename
+    contractAddress
+    referenceModuleReturnData
   }
 `;
 export const FragmentCommentBase = /*#__PURE__*/ gql`
@@ -534,11 +560,48 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
       ...Wallet
     }
     collectModule {
-      ...CollectModule
+      ... on AaveFeeCollectModuleSettings {
+        ...AaveFeeCollectModuleSettings
+      }
+      ... on ERC4626FeeCollectModuleSettings {
+        ...Erc4626FeeCollectModuleSettings
+      }
+      ... on MultirecipientFeeCollectModuleSettings {
+        ...MultirecipientFeeCollectModuleSettings
+      }
+      ... on UnknownCollectModuleSettings {
+        ...UnknownCollectModuleSettings
+      }
+      ... on FreeCollectModuleSettings {
+        ...FreeCollectModuleSettings
+      }
+      ... on FeeCollectModuleSettings {
+        ...FeeCollectModuleSettings
+      }
+      ... on LimitedFeeCollectModuleSettings {
+        ...LimitedFeeCollectModuleSettings
+      }
+      ... on LimitedTimedFeeCollectModuleSettings {
+        ...LimitedTimedFeeCollectModuleSettings
+      }
+      ... on RevertCollectModuleSettings {
+        ...RevertCollectModuleSettings
+      }
+      ... on TimedFeeCollectModuleSettings {
+        ...TimedFeeCollectModuleSettings
+      }
     }
     collectNftAddress
     referenceModule {
-      ...ReferenceModule
+      ... on FollowOnlyReferenceModuleSettings {
+        ...FollowOnlyReferenceModuleSettings
+      }
+      ... on DegreesOfSeparationReferenceModuleSettings {
+        ...DegreesOfSeparationReferenceModuleSettings
+      }
+      ... on UnknownReferenceModuleSettings {
+        ...UnknownReferenceModuleSettings
+      }
     }
     createdAt
     hidden
@@ -566,8 +629,19 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
   ${FragmentMetadataOutput}
   ${FragmentProfile}
   ${FragmentWallet}
-  ${FragmentCollectModule}
-  ${FragmentReferenceModule}
+  ${FragmentAaveFeeCollectModuleSettings}
+  ${FragmentErc4626FeeCollectModuleSettings}
+  ${FragmentMultirecipientFeeCollectModuleSettings}
+  ${FragmentUnknownCollectModuleSettings}
+  ${FragmentFreeCollectModuleSettings}
+  ${FragmentFeeCollectModuleSettings}
+  ${FragmentLimitedFeeCollectModuleSettings}
+  ${FragmentLimitedTimedFeeCollectModuleSettings}
+  ${FragmentRevertCollectModuleSettings}
+  ${FragmentTimedFeeCollectModuleSettings}
+  ${FragmentFollowOnlyReferenceModuleSettings}
+  ${FragmentDegreesOfSeparationReferenceModuleSettings}
+  ${FragmentUnknownReferenceModuleSettings}
 `;
 export const FragmentPost = /*#__PURE__*/ gql`
   fragment Post on Post {
@@ -586,11 +660,48 @@ export const FragmentPost = /*#__PURE__*/ gql`
       ...Wallet
     }
     collectModule {
-      ...CollectModule
+      ... on AaveFeeCollectModuleSettings {
+        ...AaveFeeCollectModuleSettings
+      }
+      ... on ERC4626FeeCollectModuleSettings {
+        ...Erc4626FeeCollectModuleSettings
+      }
+      ... on MultirecipientFeeCollectModuleSettings {
+        ...MultirecipientFeeCollectModuleSettings
+      }
+      ... on UnknownCollectModuleSettings {
+        ...UnknownCollectModuleSettings
+      }
+      ... on FreeCollectModuleSettings {
+        ...FreeCollectModuleSettings
+      }
+      ... on FeeCollectModuleSettings {
+        ...FeeCollectModuleSettings
+      }
+      ... on LimitedFeeCollectModuleSettings {
+        ...LimitedFeeCollectModuleSettings
+      }
+      ... on LimitedTimedFeeCollectModuleSettings {
+        ...LimitedTimedFeeCollectModuleSettings
+      }
+      ... on RevertCollectModuleSettings {
+        ...RevertCollectModuleSettings
+      }
+      ... on TimedFeeCollectModuleSettings {
+        ...TimedFeeCollectModuleSettings
+      }
     }
     collectNftAddress
     referenceModule {
-      ...ReferenceModule
+      ... on FollowOnlyReferenceModuleSettings {
+        ...FollowOnlyReferenceModuleSettings
+      }
+      ... on DegreesOfSeparationReferenceModuleSettings {
+        ...DegreesOfSeparationReferenceModuleSettings
+      }
+      ... on UnknownReferenceModuleSettings {
+        ...UnknownReferenceModuleSettings
+      }
     }
     createdAt
     hidden
@@ -618,8 +729,19 @@ export const FragmentPost = /*#__PURE__*/ gql`
   ${FragmentMetadataOutput}
   ${FragmentProfile}
   ${FragmentWallet}
-  ${FragmentCollectModule}
-  ${FragmentReferenceModule}
+  ${FragmentAaveFeeCollectModuleSettings}
+  ${FragmentErc4626FeeCollectModuleSettings}
+  ${FragmentMultirecipientFeeCollectModuleSettings}
+  ${FragmentUnknownCollectModuleSettings}
+  ${FragmentFreeCollectModuleSettings}
+  ${FragmentFeeCollectModuleSettings}
+  ${FragmentLimitedFeeCollectModuleSettings}
+  ${FragmentLimitedTimedFeeCollectModuleSettings}
+  ${FragmentRevertCollectModuleSettings}
+  ${FragmentTimedFeeCollectModuleSettings}
+  ${FragmentFollowOnlyReferenceModuleSettings}
+  ${FragmentDegreesOfSeparationReferenceModuleSettings}
+  ${FragmentUnknownReferenceModuleSettings}
 `;
 export const FragmentMirrorBase = /*#__PURE__*/ gql`
   fragment MirrorBase on Mirror {
