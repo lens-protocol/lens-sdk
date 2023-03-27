@@ -67,7 +67,7 @@ export const UpdateFollowPolicyRequestSchema = z.object({
 });
 
 const PartialAttributesUpdateSchema = z.record(
-  z.union([z.boolean(), z.date(), z.number(), z.string(), z.null()]),
+  z.union([z.boolean(), z.coerce.date(), z.number(), z.string(), z.null()]),
 );
 
 export const UpdateProfileDetailsRequestSchema = z.object({

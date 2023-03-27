@@ -15,7 +15,7 @@ import { Erc20AmountSchema } from './common';
 const NftAttributeSchema = z.union([
   z.object({
     displayType: z.literal(NftAttributeDisplayType.Date),
-    value: z.date(),
+    value: z.coerce.date(),
     traitType: z.string(),
   }),
   z.object({
