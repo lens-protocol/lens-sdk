@@ -2,30 +2,25 @@
 import * as Types from '../../graphql/types.generated';
 
 import {
-  CommentFragment,
+  WalletFragment,
   ProfileFragment,
   PostFragment,
   MirrorFragment,
+  CommentFragment,
   CommonPaginatedResultInfoFragment,
-  WalletFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
-  CommentFragmentDoc,
+  WalletFragmentDoc,
   ProfileFragmentDoc,
   PostFragmentDoc,
   MirrorFragmentDoc,
+  CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
-  WalletFragmentDoc,
 } from '../../graphql/fragments.generated';
-export type CommentWithCommentedPublicationFragment = {
-  __typename: 'Comment';
-  commentOn: CommentFragment | MirrorFragment | PostFragment | null;
-} & CommentFragment;
-
 export type NewFollowerNotificationFragment = {
   __typename: 'NewFollowerNotification';
   notificationId: string;
@@ -55,7 +50,7 @@ export type NewCommentNotificationFragment = {
   notificationId: string;
   createdAt: string;
   profile: ProfileFragment;
-  comment: CommentWithCommentedPublicationFragment;
+  comment: CommentFragment;
 };
 
 export type NewMentionNotificationFragment = {
@@ -151,26 +146,6 @@ export const NewMirrorNotificationFragmentDoc = gql`
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
 `;
-export const CommentWithCommentedPublicationFragmentDoc = gql`
-  fragment CommentWithCommentedPublication on Comment {
-    __typename
-    ...Comment
-    commentOn {
-      ... on Post {
-        ...Post
-      }
-      ... on Mirror {
-        ...Mirror
-      }
-      ... on Comment {
-        ...Comment
-      }
-    }
-  }
-  ${CommentFragmentDoc}
-  ${PostFragmentDoc}
-  ${MirrorFragmentDoc}
-`;
 export const NewCommentNotificationFragmentDoc = gql`
   fragment NewCommentNotification on NewCommentNotification {
     __typename
@@ -180,11 +155,11 @@ export const NewCommentNotificationFragmentDoc = gql`
       ...Profile
     }
     comment {
-      ...CommentWithCommentedPublication
+      ...Comment
     }
   }
   ${ProfileFragmentDoc}
-  ${CommentWithCommentedPublicationFragmentDoc}
+  ${CommentFragmentDoc}
 `;
 export const NewMentionNotificationFragmentDoc = gql`
   fragment NewMentionNotification on NewMentionNotification {

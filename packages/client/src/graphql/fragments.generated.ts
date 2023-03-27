@@ -297,30 +297,7 @@ export type MirrorBaseFragment = {
   id: string;
   createdAt: string;
   hidden: boolean;
-  isGated: boolean;
-  reaction: Types.ReactionTypes | null;
-  hasCollectedByMe: boolean;
-  stats: SimplePublicationStatsFragment;
-  metadata: MetadataFragment;
   profile: ProfileFragment;
-  collectModule:
-    | CollectModule_AaveFeeCollectModuleSettings_Fragment
-    | CollectModule_Erc4626FeeCollectModuleSettings_Fragment
-    | CollectModule_FeeCollectModuleSettings_Fragment
-    | CollectModule_FreeCollectModuleSettings_Fragment
-    | CollectModule_LimitedFeeCollectModuleSettings_Fragment
-    | CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment
-    | CollectModule_MultirecipientFeeCollectModuleSettings_Fragment
-    | CollectModule_RevertCollectModuleSettings_Fragment
-    | CollectModule_TimedFeeCollectModuleSettings_Fragment
-    | CollectModule_UnknownCollectModuleSettings_Fragment;
-  referenceModule:
-    | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_Fragment
-    | ReferenceModule_FollowOnlyReferenceModuleSettings_Fragment
-    | ReferenceModule_UnknownReferenceModuleSettings_Fragment
-    | null;
-  canComment: { result: boolean };
-  canMirror: { result: boolean };
 };
 
 export type MirrorFragment = {
@@ -444,16 +421,6 @@ export const Erc20AmountFragmentDoc = gql`
   }
   ${Erc20FragmentDoc}
 `;
-export const SimplePublicationStatsFragmentDoc = gql`
-  fragment SimplePublicationStats on PublicationStats {
-    __typename
-    totalAmountOfMirrors
-    totalAmountOfCollects
-    totalAmountOfComments
-    totalUpvotes
-    totalDownvotes
-  }
-`;
 export const MediaFragmentDoc = gql`
   fragment Media on Media {
     __typename
@@ -469,30 +436,6 @@ export const MediaSetFragmentDoc = gql`
     }
   }
   ${MediaFragmentDoc}
-`;
-export const MetadataAttributeOutputFragmentDoc = gql`
-  fragment MetadataAttributeOutput on MetadataAttributeOutput {
-    __typename
-    traitType
-    value
-  }
-`;
-export const MetadataFragmentDoc = gql`
-  fragment Metadata on MetadataOutput {
-    __typename
-    name
-    description
-    mainContentFocus
-    content
-    media {
-      ...MediaSet
-    }
-    attributes {
-      ...MetadataAttributeOutput
-    }
-  }
-  ${MediaSetFragmentDoc}
-  ${MetadataAttributeOutputFragmentDoc}
 `;
 export const ProfileMediaFragmentDoc = gql`
   fragment ProfileMedia on ProfileMedia {
@@ -608,6 +551,62 @@ export const ProfileFragmentDoc = gql`
   ${RevertFollowModuleSettingsFragmentDoc}
   ${UnknownFollowModuleSettingsFragmentDoc}
   ${AttributeFragmentDoc}
+`;
+export const MirrorBaseFragmentDoc = gql`
+  fragment MirrorBase on Mirror {
+    __typename
+    id
+    createdAt
+    profile {
+      ...Profile
+    }
+    hidden
+  }
+  ${ProfileFragmentDoc}
+`;
+export const SimplePublicationStatsFragmentDoc = gql`
+  fragment SimplePublicationStats on PublicationStats {
+    __typename
+    totalAmountOfMirrors
+    totalAmountOfCollects
+    totalAmountOfComments
+    totalUpvotes
+    totalDownvotes
+  }
+`;
+export const MetadataAttributeOutputFragmentDoc = gql`
+  fragment MetadataAttributeOutput on MetadataAttributeOutput {
+    __typename
+    traitType
+    value
+  }
+`;
+export const MetadataFragmentDoc = gql`
+  fragment Metadata on MetadataOutput {
+    __typename
+    name
+    description
+    mainContentFocus
+    content
+    media {
+      ...MediaSet
+    }
+    attributes {
+      ...MetadataAttributeOutput
+    }
+  }
+  ${MediaSetFragmentDoc}
+  ${MetadataAttributeOutputFragmentDoc}
+`;
+export const WalletFragmentDoc = gql`
+  fragment Wallet on Wallet {
+    __typename
+    address
+    defaultProfile {
+      ...Profile
+    }
+  }
+  ${ProfileFragmentDoc}
 `;
 export const FreeCollectModuleSettingsFragmentDoc = gql`
   fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
@@ -775,53 +774,6 @@ export const ReferenceModuleFragmentDoc = gql`
       contractAddress
     }
   }
-`;
-export const MirrorBaseFragmentDoc = gql`
-  fragment MirrorBase on Mirror {
-    __typename
-    id
-    stats {
-      ...SimplePublicationStats
-    }
-    metadata {
-      ...Metadata
-    }
-    profile {
-      ...Profile
-    }
-    collectModule {
-      ...CollectModule
-    }
-    referenceModule {
-      ...ReferenceModule
-    }
-    createdAt
-    hidden
-    isGated
-    reaction(request: { profileId: $observerId })
-    hasCollectedByMe(isFinalisedOnChain: true)
-    canComment(profileId: $observerId) {
-      result
-    }
-    canMirror(profileId: $observerId) {
-      result
-    }
-  }
-  ${SimplePublicationStatsFragmentDoc}
-  ${MetadataFragmentDoc}
-  ${ProfileFragmentDoc}
-  ${CollectModuleFragmentDoc}
-  ${ReferenceModuleFragmentDoc}
-`;
-export const WalletFragmentDoc = gql`
-  fragment Wallet on Wallet {
-    __typename
-    address
-    defaultProfile {
-      ...Profile
-    }
-  }
-  ${ProfileFragmentDoc}
 `;
 export const PostFragmentDoc = gql`
   fragment Post on Post {
