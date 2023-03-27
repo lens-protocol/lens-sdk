@@ -40,9 +40,10 @@ export type ProfilePublicationRevenueQuery = {
 
 export type PublicationRevenueQueryVariables = Types.Exact<{
   request: Types.PublicationRevenueQueryRequest;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
 }>;
 
-export type PublicationRevenueQuery = { result: RevenueFragment | null };
+export type PublicationRevenueQuery = { result: PublicationRevenueFragment | null };
 
 export type ProfileFollowRevenueQueryVariables = Types.Exact<{
   request: Types.ProfileFollowRevenueQueryRequest;
@@ -58,10 +59,6 @@ export type RevenueAggregateFragment = {
 export type PublicationRevenueFragment = {
   __typename: 'PublicationRevenue';
   publication: CommentFragment | MirrorFragment | PostFragment;
-} & RevenueFragment;
-
-export type RevenueFragment = {
-  __typename: 'PublicationRevenue';
   revenue: RevenueAggregateFragment;
 };
 
@@ -73,15 +70,6 @@ export const RevenueAggregateFragmentDoc = gql`
     }
   }
   ${Erc20AmountFragmentDoc}
-`;
-export const RevenueFragmentDoc = gql`
-  fragment Revenue on PublicationRevenue {
-    __typename
-    revenue {
-      ...RevenueAggregate
-    }
-  }
-  ${RevenueAggregateFragmentDoc}
 `;
 export const PublicationRevenueFragmentDoc = gql`
   fragment PublicationRevenue on PublicationRevenue {
@@ -97,12 +85,14 @@ export const PublicationRevenueFragmentDoc = gql`
         ...Comment
       }
     }
-    ...Revenue
+    revenue {
+      ...RevenueAggregate
+    }
   }
   ${PostFragmentDoc}
   ${MirrorFragmentDoc}
   ${CommentFragmentDoc}
-  ${RevenueFragmentDoc}
+  ${RevenueAggregateFragmentDoc}
 `;
 export const ProfilePublicationRevenueDocument = gql`
   query ProfilePublicationRevenue(
@@ -122,12 +112,12 @@ export const ProfilePublicationRevenueDocument = gql`
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 export const PublicationRevenueDocument = gql`
-  query PublicationRevenue($request: PublicationRevenueQueryRequest!) {
+  query PublicationRevenue($request: PublicationRevenueQueryRequest!, $observerId: ProfileId) {
     result: publicationRevenue(request: $request) {
-      ...Revenue
+      ...PublicationRevenue
     }
   }
-  ${RevenueFragmentDoc}
+  ${PublicationRevenueFragmentDoc}
 `;
 export const ProfileFollowRevenueDocument = gql`
   query ProfileFollowRevenue($request: ProfileFollowRevenueQueryRequest!) {

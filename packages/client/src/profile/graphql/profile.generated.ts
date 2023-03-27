@@ -341,7 +341,7 @@ export type DismissRecommendedProfilesMutationVariables = Types.Exact<{
   request: Types.DismissRecommendedProfilesRequest;
 }>;
 
-export type DismissRecommendedProfilesMutation = { dismissRecommendedProfiles: void };
+export type DismissRecommendedProfilesMutation = { dismissRecommendedProfiles: void | null };
 
 export const ProfileStatsFragmentDoc = gql`
   fragment ProfileStats on ProfileStats {
