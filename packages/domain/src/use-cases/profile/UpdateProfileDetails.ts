@@ -1,4 +1,4 @@
-import { TransactionKind } from '../../entities';
+import { ProfileId, TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -16,7 +16,7 @@ export type UpdateProfileDetailsRequest = {
   delegate: boolean;
   kind: TransactionKind.UPDATE_PROFILE_DETAILS;
   name: string;
-  profileId: string;
+  profileId: ProfileId;
 };
 
 export type IProfileDetailsCallGateway = IDelegableProtocolCallGateway<UpdateProfileDetailsRequest>;

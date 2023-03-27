@@ -5,6 +5,7 @@ import {
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import {
   mockBroadcastedTransactionData,
   mockChargeFollowConfig,
@@ -50,7 +51,7 @@ function setupUpdateFollowPolicyResponder({
   return {
     responder,
 
-    profileFromCache(profileId: string) {
+    profileFromCache(profileId: ProfileId) {
       return apolloClient.cache.readFragment({
         id: apolloClient.cache.identify({
           __typename: 'Profile',

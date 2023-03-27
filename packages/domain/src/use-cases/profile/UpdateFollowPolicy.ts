@@ -1,6 +1,6 @@
 import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
 
-import { TransactionKind } from '../../entities';
+import { ProfileId, TransactionKind } from '../../entities';
 import {
   IProtocolCallPresenter,
   IUnsignedProtocolCallGateway,
@@ -26,7 +26,7 @@ export type NoFeeFollowConfig = {
 };
 
 export type UpdateFollowPolicyRequest = {
-  profileId: string;
+  profileId: ProfileId;
   policy: ChargeFollowConfig | NoFeeFollowConfig;
   kind: TransactionKind.UPDATE_FOLLOW_POLICY;
 };

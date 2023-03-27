@@ -73,7 +73,7 @@ describe(`Given the "${mockProfileOwnershipInput.name}" function`, () => {
       {
         description: 'if with invalid profile Id',
         condition: mockProfileOwnershipInput({
-          profileId: 'a',
+          profileId: mockProfileId(),
         }),
       },
     ])(`should throw an ${InvalidAccessCriteriaError.name} $description`, ({ condition }) => {

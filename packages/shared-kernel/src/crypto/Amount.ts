@@ -66,7 +66,7 @@ export const Denomination = {
  * @typeParam T - The {@link Asset} type of the amount.
  * @remarks
  *
- * Amount hides all the complexity of dealing with different precision of different assets.
+ * Amount hides all the complexity of dealing with the specific precision constraints of different assets.
  * It offers a consistent interface to perform arithmetic operations on amounts.
  *
  * Amount is immutable. All arithmetic operations return a new Amount instance.

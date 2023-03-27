@@ -1,5 +1,7 @@
+import { ProfileId } from '../../entities';
+
 export type ProfileIdentifier = {
-  id: string;
+  id: ProfileId;
   handle: string;
 };
 

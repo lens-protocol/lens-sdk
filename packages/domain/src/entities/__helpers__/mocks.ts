@@ -53,7 +53,7 @@ import {
 import { Wallet } from '../Wallet';
 
 export function mockProfileId(): ProfileId {
-  return faker.datatype.hexadecimal({ length: 2 });
+  return faker.datatype.hexadecimal({ length: 2 }) as ProfileId;
 }
 
 export function mockPublicationId(profileId: ProfileId = mockProfileId()): PublicationId {
@@ -273,7 +273,7 @@ export class MockedNativeTransaction<
 
 export function mockProfile() {
   return Profile.create({
-    id: faker.datatype.uuid(),
+    id: mockProfileId(),
     handle: faker.internet.userName(),
   });
 }
