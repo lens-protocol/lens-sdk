@@ -4,15 +4,17 @@ import {
   CreateProfileRequest,
   DuplicatedHandleError,
 } from '@lens-protocol/domain/use-cases/profile';
-import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
+import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useCreateProfileController } from './adapters/useCreateProfileController';
 
+export type CreateProfileArgs = Prettify<Omit<CreateProfileRequest, 'kind'>>;
+
 export type CreateProfileOperation = Operation<
   void,
   DuplicatedHandleError | TransactionError,
-  [string]
+  [CreateProfileArgs]
 >;
 
 export function useCreateProfile(): CreateProfileOperation {
@@ -21,9 +23,14 @@ export function useCreateProfile(): CreateProfileOperation {
   const waitUntilTransactionIsSettled = useWaitUntilTransactionSettled();
 
   return useOperation(
-    async (handle: string): PromiseResult<void, DuplicatedHandleError | TransactionError> => {
+    async ({
+      handle,
+    }: CreateProfileArgs): PromiseResult<void, DuplicatedHandleError | TransactionError> => {
       try {
-        const result = await createProfile(handle);
+        const result = await createProfile({
+          handle,
+          kind: TransactionKind.CREATE_PROFILE,
+        });
 
         if (result.isSuccess()) {
           await waitUntilTransactionIsSettled(

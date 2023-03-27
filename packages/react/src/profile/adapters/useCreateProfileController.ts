@@ -1,5 +1,8 @@
-import { TransactionKind } from '@lens-protocol/domain/entities';
-import { CreateProfile, DuplicatedHandleError } from '@lens-protocol/domain/use-cases/profile';
+import {
+  CreateProfile,
+  CreateProfileRequest,
+  DuplicatedHandleError,
+} from '@lens-protocol/domain/use-cases/profile';
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
@@ -8,15 +11,12 @@ import { ProfileTransactionGateway } from './ProfileTransactionGateway';
 export function useCreateProfileController() {
   const { apolloClient, transactionFactory, transactionQueue } = useSharedDependencies();
 
-  return async (handle: string) => {
+  return async (request: CreateProfileRequest) => {
     const presenter = new PromiseResultPresenter<void, DuplicatedHandleError>();
     const gateway = new ProfileTransactionGateway(apolloClient, transactionFactory);
     const createProfile = new CreateProfile(gateway, presenter, transactionQueue);
 
-    await createProfile.create({
-      handle,
-      kind: TransactionKind.CREATE_PROFILE,
-    });
+    await createProfile.create(request);
 
     return presenter.asResult();
   };
