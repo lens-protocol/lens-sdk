@@ -6116,7 +6116,7 @@ export const MultirecipientFeeCollectModuleSettingsFragmentDoc = gql`
   ${ModuleFeeAmountFragmentDoc}
 `;
 export const Erc4626FeeCollectModuleSettingsFragmentDoc = gql`
-  fragment ERC4626FeeCollectModuleSettings on ERC4626FeeCollectModuleSettings {
+  fragment Erc4626FeeCollectModuleSettings on ERC4626FeeCollectModuleSettings {
     __typename
     amount {
       ...ModuleFeeAmount
@@ -6171,7 +6171,7 @@ export const CollectModuleFragmentDoc = gql`
       ...MultirecipientFeeCollectModuleSettings
     }
     ... on ERC4626FeeCollectModuleSettings {
-      ...ERC4626FeeCollectModuleSettings
+      ...Erc4626FeeCollectModuleSettings
     }
     ... on AaveFeeCollectModuleSettings {
       ...AaveFeeCollectModuleSettings

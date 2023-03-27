@@ -82,7 +82,7 @@ type MultirecipientFeeCollectPolicy = {
   collectNftAddress: string | null;
 };
 
-type ERC4626FeeCollectPolicy = {
+type VaultFeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
   state:
     | CollectState.CAN_BE_COLLECTED
@@ -124,6 +124,6 @@ export type CollectPolicy =
   | TimedFeeCollectPolicy
   | LimitedTimedFeeCollectPolicy
   | MultirecipientFeeCollectPolicy
-  | ERC4626FeeCollectPolicy
+  | VaultFeeCollectPolicy
   | AaveFeeCollectPolicy
   | NoCollectPolicy;
