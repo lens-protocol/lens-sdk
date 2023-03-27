@@ -27,7 +27,6 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 
 - [Introduction](https://docs.lens.xyz/docs/sdk-react-intro)
 - [Getting Started](https://docs.lens.xyz/docs/sdk-react-getting-started)
-- [SDK Reference](./doc/README.md)
 
 ## Road Map
 
