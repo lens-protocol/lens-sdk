@@ -28,7 +28,11 @@ export function createGraphQLError({
   code: string;
   message: string;
 }): GraphQLError {
-  return new GraphQLError(message, undefined, undefined, undefined, undefined, undefined, { code });
+  return new GraphQLError(message, {
+    extensions: {
+      code,
+    },
+  });
 }
 
 export function createGraphQLValidationError(message = 'No pings please!'): GraphQLError {

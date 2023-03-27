@@ -1,9 +1,9 @@
-import { ProfileFragment } from '@lens-protocol/react-web';
+import { Profile } from '@lens-protocol/react-web';
 
 import { ProfilePicture } from './ProfilePicture';
 
 type ProfileCardProps = {
-  profile: ProfileFragment;
+  profile: Profile;
 };
 
 export function ProfileCard({ profile }: ProfileCardProps) {
@@ -26,7 +26,7 @@ export function ProfileCard({ profile }: ProfileCardProps) {
 }
 
 type SmallProfileCardProps = {
-  profile: ProfileFragment;
+  profile: Profile;
 };
 
 export function SmallProfileCard({ profile }: SmallProfileCardProps) {

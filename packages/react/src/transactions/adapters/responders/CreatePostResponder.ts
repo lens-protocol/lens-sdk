@@ -1,12 +1,12 @@
 import { makeVar } from '@apollo/client';
 import {
-  PendingPostFragment,
+  PendingPost,
   PublicationMainFocus,
-  PublicationByTxHashQuery,
-  PublicationByTxHashQueryVariables,
+  PublicationByTxHashData,
+  PublicationByTxHashVariables,
   PublicationByTxHashDocument,
-  ProfileFragment,
-  PostFragment,
+  Profile,
+  Post,
   isPostPublication,
   LensApolloClient,
   Sources,
@@ -21,15 +21,15 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import { IProfileCacheManager } from '../IProfileCacheManager';
 
-function pendingPostFragment({
+function pendingPost({
   id,
   author,
   request,
 }: {
   id: string;
-  author: ProfileFragment;
+  author: Profile;
   request: CreatePostRequest;
-}): PendingPostFragment {
+}): PendingPost {
   return {
     __typename: 'PendingPost',
     id,
@@ -48,7 +48,7 @@ function pendingPostFragment({
   };
 }
 
-export const recentPosts = makeVar<ReadonlyArray<PendingPostFragment | PostFragment>>([]);
+export const recentPosts = makeVar<ReadonlyArray<PendingPost | Post>>([]);
 
 export class CreatePostResponder implements ITransactionResponder<CreatePostRequest> {
   constructor(
@@ -62,15 +62,15 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
 
     invariant(author, 'Cannot find author profile');
 
-    const pendingPost = pendingPostFragment({ id, author, request });
+    const post = pendingPost({ id, author, request });
 
-    recentPosts([pendingPost, ...recentPosts()]);
+    recentPosts([post, ...recentPosts()]);
   }
 
   async commit({ id, txHash, request }: BroadcastedTransactionData<CreatePostRequest>) {
     const publicationResult = await this.client.query<
-      PublicationByTxHashQuery,
-      PublicationByTxHashQueryVariables
+      PublicationByTxHashData,
+      PublicationByTxHashVariables
     >({
       query: PublicationByTxHashDocument,
       variables: {

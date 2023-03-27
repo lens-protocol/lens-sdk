@@ -1,4 +1,4 @@
-import { ProfileFragment, useSearchProfilesQuery } from '@lens-protocol/api-bindings';
+import { Profile, useSearchProfiles as useUnderlyingQuery } from '@lens-protocol/api-bindings';
 
 import {
   WithObserverIdOverride,
@@ -20,9 +20,9 @@ export function useSearchProfiles({
   query,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
-}: UseSearchProfilesArgs): PaginatedReadResult<ProfileFragment[]> {
+}: UseSearchProfilesArgs): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
-    useSearchProfilesQuery(
+    useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

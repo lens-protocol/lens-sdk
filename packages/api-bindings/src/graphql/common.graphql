@@ -1,4 +1,4 @@
-fragment Erc20 on Erc20 {
+fragment Erc20Fields on Erc20 {
   __typename
   name
   symbol
@@ -6,10 +6,10 @@ fragment Erc20 on Erc20 {
   address
 }
 
-fragment Erc20Amount on Erc20Amount {
+fragment Erc20AmountFields on Erc20Amount {
   __typename
   asset {
-    ...Erc20
+    ...Erc20Fields
   }
   value
 }
@@ -17,15 +17,29 @@ fragment Erc20Amount on Erc20Amount {
 fragment ModuleFeeAmount on ModuleFeeAmount {
   __typename
   asset {
-    ...Erc20
+    ...Erc20Fields
   }
   value
 }
 
 fragment ReferenceModule on ReferenceModule {
-  __typename
   ... on FollowOnlyReferenceModuleSettings {
+    __typename
     contractAddress
+  }
+
+  ... on DegreesOfSeparationReferenceModuleSettings {
+    __typename
+    contractAddress
+    commentsRestricted
+    degreesOfSeparation
+    mirrorsRestricted
+  }
+
+  ... on UnknownReferenceModuleSettings {
+    __typename
+    contractAddress
+    referenceModuleReturnData
   }
 }
 
@@ -139,7 +153,7 @@ fragment MediaSet on MediaSet {
   }
 }
 
-fragment Metadata on MetadataOutput {
+fragment MetadataOutput on MetadataOutput {
   __typename
   animatedUrl
   name
@@ -153,8 +167,8 @@ fragment Metadata on MetadataOutput {
   attributes {
     ...MetadataAttributeOutput
   }
-  __encryptionParams: encryptionParams {
-    ...EncryptionParams
+  encryptionParams {
+    ...EncryptionParamsOutput
   }
 }
 
@@ -205,7 +219,7 @@ fragment CommentBase on Comment {
     ...PublicationStats
   }
   metadata {
-    ...Metadata
+    ...MetadataOutput
   }
   profile {
     ...Profile
@@ -287,7 +301,7 @@ fragment Post on Post {
     ...PublicationStats
   }
   metadata {
-    ...Metadata
+    ...MetadataOutput
   }
   profile {
     ...Profile

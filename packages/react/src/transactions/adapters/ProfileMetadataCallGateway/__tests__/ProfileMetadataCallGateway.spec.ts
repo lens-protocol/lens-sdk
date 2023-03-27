@@ -1,12 +1,12 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
-import { omitTypename, ProfileFragment } from '@lens-protocol/api-bindings';
+import { omitTypename, Profile } from '@lens-protocol/api-bindings';
 import {
-  createCreateSetProfileMetadataTypedDataMutationMockedResponse,
-  createCreateSetProfileMetadataViaDispatcherMutationMockedResponse,
+  createCreateSetProfileMetadataTypedDataMockedResponse,
+  createCreateSetProfileMetadataViaDispatcherMockedResponse,
   createMockApolloClientWithMultipleResponses,
-  mockCreateSetProfileMetadataTypedDataMutation,
-  mockGetProfileQueryMockedResponse,
+  mockCreateSetProfileMetadataTypedDataData,
+  createGetProfileMockedResponse,
   mockProfileFragment,
   mockRelayerResultFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -23,11 +23,11 @@ function setupTestScenario({
   otherMockedResponses = [],
   uploadUrl,
 }: {
-  existingProfile: ProfileFragment;
+  existingProfile: Profile;
   otherMockedResponses?: MockedResponse<unknown>[];
   uploadUrl: Url;
 }) {
-  const getProfilesByIdQueryMockedResponse = mockGetProfileQueryMockedResponse({
+  const getProfilesByIdQueryMockedResponse = createGetProfileMockedResponse({
     variables: {
       request: { profileId: existingProfile.id },
       sources: [],
@@ -58,19 +58,18 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         - create a new Profile Metadata updating the profile details
         - upload it via the IMetadataUploader<ProfileMetadata>
         - create an instance of the ${UnsignedLensProtocolCall.name} w/ the expected typed data`, async () => {
-      const createSetProfileMetadataTypedDataMutation =
-        mockCreateSetProfileMetadataTypedDataMutation();
+      const data = mockCreateSetProfileMetadataTypedDataData();
 
       const { gateway, uploader } = setupTestScenario({
         existingProfile,
         uploadUrl,
         otherMockedResponses: [
-          createCreateSetProfileMetadataTypedDataMutationMockedResponse({
+          createCreateSetProfileMetadataTypedDataMockedResponse({
             request: {
               profileId: request.profileId,
               metadata: uploadUrl,
             },
-            data: createSetProfileMetadataTypedDataMutation,
+            data,
           }),
         ],
       });
@@ -86,9 +85,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         }),
       );
       expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-      expect(unsignedCall.typedData).toEqual(
-        omitTypename(createSetProfileMetadataTypedDataMutation.result.typedData),
-      );
+      expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
     });
 
     it(`should be possible to override the signature nonce`, async () => {
@@ -97,7 +94,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         existingProfile,
         uploadUrl,
         otherMockedResponses: [
-          createCreateSetProfileMetadataTypedDataMutationMockedResponse({
+          createCreateSetProfileMetadataTypedDataMockedResponse({
             request: {
               profileId: request.profileId,
               metadata: uploadUrl,
@@ -124,7 +121,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         existingProfile,
         uploadUrl,
         otherMockedResponses: [
-          createCreateSetProfileMetadataViaDispatcherMutationMockedResponse({
+          createCreateSetProfileMetadataViaDispatcherMockedResponse({
             variables: {
               request: {
                 profileId: request.profileId,

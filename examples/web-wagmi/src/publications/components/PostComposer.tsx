@@ -1,10 +1,10 @@
-import { ContentFocus, ProfileOwnedByMeFragment, useCreatePost } from '@lens-protocol/react-web';
+import { ContentFocus, ProfileOwnedByMe, useCreatePost } from '@lens-protocol/react-web';
 
 import { upload } from '../../upload';
 import { never } from '../../utils';
 
 export type PostComposerProps = {
-  publisher: ProfileOwnedByMeFragment;
+  publisher: ProfileOwnedByMe;
 };
 
 export function PostComposer({ publisher }: PostComposerProps) {

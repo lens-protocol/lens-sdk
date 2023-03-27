@@ -1,12 +1,12 @@
 import { MockedResponse } from '@apollo/client/testing';
 import {
   CreateFollowTypedDataDocument,
-  CreateFollowTypedDataMutation,
-  CreateFollowTypedDataMutationVariables,
+  CreateFollowTypedDataData,
+  CreateFollowTypedDataVariables,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
-  mockCreateFollowTypedDataMutation,
+  mockCreateFollowTypedDataData,
   createMockApolloClientWithMultipleResponses,
 } from '@lens-protocol/api-bindings/mocks';
 import {
@@ -23,9 +23,9 @@ function createCreateFollowTypedDataMutationMockedResponse({
   variables,
   data,
 }: {
-  variables: CreateFollowTypedDataMutationVariables;
-  data: CreateFollowTypedDataMutation;
-}): MockedResponse<CreateFollowTypedDataMutation> {
+  variables: CreateFollowTypedDataVariables;
+  data: CreateFollowTypedDataData;
+}): MockedResponse<CreateFollowTypedDataData> {
   return {
     request: {
       query: CreateFollowTypedDataDocument,
@@ -42,7 +42,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
     describe('with an UnconstrainedFollowRequest', () => {
       it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
         const request = mockUnconstrainedFollowRequest();
-        const createFollowTypedDataMutation = mockCreateFollowTypedDataMutation();
+        const data = mockCreateFollowTypedDataData();
 
         const apollo = createMockApolloClientWithMultipleResponses([
           createCreateFollowTypedDataMutationMockedResponse({
@@ -55,7 +55,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
                 ],
               },
             },
-            data: createFollowTypedDataMutation,
+            data,
           }),
         ]);
         const followFeeTransactionGateway = new FollowProfilesCallGateway(apollo);
@@ -63,16 +63,14 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
 
         expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-        expect(unsignedCall.typedData).toEqual(
-          omitTypename(createFollowTypedDataMutation.result.typedData),
-        );
+        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
     });
 
     describe('with a ProfileOwnerFollowRequest', () => {
       it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
         const request = mockProfileOwnerFollowRequest();
-        const createFollowTypedDataMutation = mockCreateFollowTypedDataMutation();
+        const data = mockCreateFollowTypedDataData();
 
         const apollo = createMockApolloClientWithMultipleResponses([
           createCreateFollowTypedDataMutationMockedResponse({
@@ -90,7 +88,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
                 ],
               },
             },
-            data: createFollowTypedDataMutation,
+            data,
           }),
         ]);
         const followFeeTransactionGateway = new FollowProfilesCallGateway(apollo);
@@ -98,16 +96,14 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
 
         expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-        expect(unsignedCall.typedData).toEqual(
-          omitTypename(createFollowTypedDataMutation.result.typedData),
-        );
+        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
     });
 
     describe(`with a PaidFollowRequest`, () => {
       it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
         const request = mockPaidFollowRequest();
-        const createFollowTypedDataMutation = mockCreateFollowTypedDataMutation();
+        const data = mockCreateFollowTypedDataData();
 
         const apollo = createMockApolloClientWithMultipleResponses([
           createCreateFollowTypedDataMutationMockedResponse({
@@ -128,7 +124,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
                 ],
               },
             },
-            data: createFollowTypedDataMutation,
+            data,
           }),
         ]);
         const followProfilesCallGateway = new FollowProfilesCallGateway(apollo);
@@ -136,9 +132,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         const unsignedCall = await followProfilesCallGateway.createUnsignedProtocolCall(request);
 
         expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-        expect(unsignedCall.typedData).toEqual(
-          omitTypename(createFollowTypedDataMutation.result.typedData),
-        );
+        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
     });
 
@@ -159,7 +153,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
               overrideSigNonce: nonce,
             },
           },
-          data: mockCreateFollowTypedDataMutation({ nonce }),
+          data: mockCreateFollowTypedDataData({ nonce }),
         }),
       ]);
       const followFeeTransactionGateway = new FollowProfilesCallGateway(apollo);

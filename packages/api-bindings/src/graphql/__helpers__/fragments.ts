@@ -6,7 +6,7 @@ import {
   CollectPolicyType,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
-import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
+import { Erc20Amount } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { CollectState, NoFeeCollectPolicy } from '../CollectPolicy';
@@ -14,54 +14,51 @@ import { ContentEncryptionKey } from '../ContentEncryptionKey';
 import { FollowPolicy } from '../FollowPolicy';
 import { ProfileAttributes } from '../ProfileAttributes';
 import {
-  AttributeFragment,
+  AnyConditionOutput,
+  Attribute,
   CollectConditionOutput,
-  CollectModuleFragment,
-  CommentFragment,
+  CollectModule,
+  Comment,
   ContractType,
-  EnabledModuleFragment,
-  EnabledModulesFragment,
-  EncryptionParamsFragment,
+  EnabledModule,
+  EnabledModules,
+  EncryptedFieldsOutput,
+  EncryptionParamsOutput,
   EncryptionProvider,
-  Erc20AmountFragment,
-  Erc20Fragment,
-  FeedItemFragment,
-  FollowModules,
-  MediaFragment,
-  MetadataFragment,
-  MirrorFragment,
-  ModuleInfoFragment,
-  PostFragment,
-  ProfileFollowModuleSettings,
-  ProfileFollowRevenueFragment,
-  ProfileFragment,
-  ProfileMediaFragment,
-  ProfileOwnershipFragment,
-  ProfileStatsFragment,
-  PublicationMainFocus,
-  PublicationRevenueFragment,
-  PublicationStatsFragment,
-  ReactionTypes,
-  RelayerResultFragment,
-  RelayErrorFragment,
-  RelayErrorReasons,
-  RevenueAggregateFragment,
-  ScalarOperator,
-  WalletFragment,
-  WhoReactedResultFragment,
-  AnyConditionFragment,
-  RootConditionFragment,
-  NftOwnershipOutput,
-  Erc20OwnershipOutput,
   EoaOwnershipOutput,
-  ProfileOwnershipOutput,
+  Erc20AmountFields,
+  Erc20Fields,
+  Erc20OwnershipOutput,
+  FeedItem,
   FollowConditionOutput,
-  LeafConditionFragment,
-  EncryptedFieldsFragment,
-} from '../generated';
-import { erc20Amount } from '../utils';
+  LeafConditionOutput,
+  Media,
+  MetadataOutput,
+  Mirror,
+  ModuleInfo,
+  NftOwnershipOutput,
+  Post,
+  Profile,
+  ProfileFollowRevenue,
+  ProfileMedia,
+  ProfileOwnershipOutput,
+  ProfileStats,
+  PublicationMainFocus,
+  PublicationRevenue,
+  PublicationStats,
+  ReactionTypes,
+  RelayerResult,
+  RelayError,
+  RelayErrorReasons,
+  RevenueAggregate,
+  RootConditionOutput,
+  ScalarOperator,
+  Wallet,
+  WhoReactedResult,
+} from '../operations';
+import { AnyPublication, erc20Amount } from '../utils';
 
-export function mockMediaFragment(overrides?: Partial<MediaFragment>): MediaFragment {
+export function mockMediaFragment(overrides?: Partial<Media>): Media {
   return {
     altTag: faker.lorem.sentence(),
     cover: faker.image.imageUrl(),
@@ -72,9 +69,7 @@ export function mockMediaFragment(overrides?: Partial<MediaFragment>): MediaFrag
   };
 }
 
-export function mockProfileMediaFragment(
-  overrides?: Partial<ProfileMediaFragment>,
-): ProfileMediaFragment {
+export function mockProfileMediaFragment(overrides?: Partial<ProfileMedia>): ProfileMedia {
   return {
     original: mockMediaFragment(),
     ...overrides,
@@ -82,7 +77,7 @@ export function mockProfileMediaFragment(
   };
 }
 
-export function mockAttributeFragment(overrides?: Partial<AttributeFragment>): AttributeFragment {
+export function mockAttributeFragment(overrides?: Partial<Attribute>): Attribute {
   return {
     key: 'answer',
     value: '42',
@@ -98,7 +93,7 @@ export function mockAnyoneFollowPolicy(): FollowPolicy {
   };
 }
 
-export function mockWalletFragment(): WalletFragment {
+export function mockWalletFragment(): Wallet {
   return {
     __typename: 'Wallet',
     defaultProfile: mockProfileFragment(),
@@ -106,9 +101,7 @@ export function mockWalletFragment(): WalletFragment {
   };
 }
 
-export function mockProfileStatsFragment(
-  overrides?: Partial<ProfileStatsFragment>,
-): ProfileStatsFragment {
+export function mockProfileStatsFragment(overrides?: Partial<ProfileStats>): ProfileStats {
   return {
     totalCollects: 0,
     totalComments: 0,
@@ -125,7 +118,7 @@ export function mockProfileStatsFragment(
   };
 }
 
-export function mockProfileFragment(overrides?: Partial<ProfileFragment>): ProfileFragment {
+export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
 
@@ -158,10 +151,10 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
       },
     },
 
-    __followModule: null,
+    followModule: null,
     followPolicy: mockAnyoneFollowPolicy(),
 
-    __isFollowedByMe: false,
+    isFollowedByMe: false,
     isFollowingObserver: false,
     followStatus: null,
 
@@ -175,17 +168,7 @@ export function mockProfileFragment(overrides?: Partial<ProfileFragment>): Profi
   };
 }
 
-export function mockProfileFollowFollowModuleFragment(): ProfileFollowModuleSettings {
-  return {
-    __typename: 'ProfileFollowModuleSettings',
-    contractAddress: mockEthereumAddress(),
-    type: FollowModules.ProfileFollowModule,
-  };
-}
-
-export function mockRelayerResultFragment(
-  txHash: string = mockTransactionHash(),
-): RelayerResultFragment {
+export function mockRelayerResultFragment(txHash: string = mockTransactionHash()): RelayerResult {
   return {
     __typename: 'RelayerResult',
     txHash,
@@ -193,7 +176,7 @@ export function mockRelayerResultFragment(
   };
 }
 
-export function mockRelayErrorFragment(reason: RelayErrorReasons): RelayErrorFragment {
+export function mockRelayErrorFragment(reason: RelayErrorReasons): RelayError {
   return {
     __typename: 'RelayError',
     reason,
@@ -201,8 +184,8 @@ export function mockRelayErrorFragment(reason: RelayErrorReasons): RelayErrorFra
 }
 
 export function mockPublicationStatsFragment(
-  overrides?: Partial<PublicationStatsFragment>,
-): PublicationStatsFragment {
+  overrides?: Partial<PublicationStats>,
+): PublicationStats {
   return {
     totalAmountOfMirrors: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     totalAmountOfCollects: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
@@ -215,9 +198,9 @@ export function mockPublicationStatsFragment(
   };
 }
 
-export function mockEncryptedFieldsFragment(
-  overrides?: Partial<EncryptedFieldsFragment>,
-): EncryptedFieldsFragment {
+export function mockEncryptedFieldsOutputFragment(
+  overrides?: Partial<EncryptedFieldsOutput>,
+): EncryptedFieldsOutput {
   return {
     animation_url: null,
     content: null,
@@ -229,7 +212,7 @@ export function mockEncryptedFieldsFragment(
   };
 }
 
-function mockFreeCollectModuleSettings({ followerOnly = false } = {}): CollectModuleFragment {
+function mockFreeCollectModuleSettings({ followerOnly = false } = {}): CollectModule {
   return {
     __typename: 'FreeCollectModuleSettings',
     contractAddress: '0x96351D3cE872903EBf4c2D77dd625992CCFdf8c9',
@@ -237,7 +220,7 @@ function mockFreeCollectModuleSettings({ followerOnly = false } = {}): CollectMo
   };
 }
 
-export function mockMetadataFragment(overrides?: Partial<MetadataFragment>): MetadataFragment {
+export function mockMetadataOutputFragment(overrides?: Partial<MetadataOutput>): MetadataOutput {
   return {
     mainContentFocus: PublicationMainFocus.TextOnly,
     animatedUrl: faker.internet.url(),
@@ -247,7 +230,7 @@ export function mockMetadataFragment(overrides?: Partial<MetadataFragment>): Met
     content: faker.lorem.words(5),
     image: faker.internet.url(),
     media: [],
-    __encryptionParams: null,
+    encryptionParams: null,
     ...overrides,
     __typename: 'MetadataOutput',
   };
@@ -263,14 +246,12 @@ function mockNoFeeCollectPolicy(overrides?: Partial<NoFeeCollectPolicy>): NoFeeC
   };
 }
 
-export function mockPostFragment(
-  overrides?: Partial<Omit<PostFragment, '__typename'>>,
-): PostFragment {
+export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>): Post {
   return {
     id: faker.datatype.uuid(),
     createdAt: faker.datatype.datetime().toISOString(),
     stats: mockPublicationStatsFragment(),
-    metadata: mockMetadataFragment(),
+    metadata: mockMetadataOutputFragment(),
     profile: mockProfileFragment(),
     collectedBy: null,
     __collectModule: mockFreeCollectModuleSettings(),
@@ -305,15 +286,13 @@ export function mockPostFragment(
   };
 }
 
-export function mockCommentFragment(
-  overrides?: Partial<Omit<CommentFragment, '__typename'>>,
-): CommentFragment {
+export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typename'>>): Comment {
   const mainPost = mockPostFragment();
 
   return {
     id: faker.datatype.uuid(),
     stats: mockPublicationStatsFragment(),
-    metadata: mockMetadataFragment(),
+    metadata: mockMetadataOutputFragment(),
     profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
     collectedBy: null,
@@ -351,9 +330,7 @@ export function mockCommentFragment(
   };
 }
 
-export function mockMirrorFragment(
-  overrides?: Partial<Omit<MirrorFragment, '__typename'>>,
-): MirrorFragment {
+export function mockMirrorFragment(overrides?: Partial<Omit<Mirror, '__typename'>>): Mirror {
   const mainPost = mockPostFragment();
 
   return {
@@ -367,7 +344,7 @@ export function mockMirrorFragment(
   };
 }
 
-export function mockFeedItemFragment(overrides?: Partial<FeedItemFragment>): FeedItemFragment {
+export function mockFeedItemFragment(overrides?: Partial<FeedItem>): FeedItem {
   return {
     root: mockPostFragment(),
     comments: null,
@@ -380,7 +357,9 @@ export function mockFeedItemFragment(overrides?: Partial<FeedItemFragment>): Fee
   };
 }
 
-function mockErc20Fragment(overrides?: Partial<Omit<Erc20Fragment, '__typename'>>): Erc20Fragment {
+function mockErc20FieldsFragment(
+  overrides?: Partial<Omit<Erc20Fields, '__typename'>>,
+): Erc20Fields {
   return {
     __typename: 'Erc20',
     name: 'Wrapped MATIC',
@@ -391,10 +370,10 @@ function mockErc20Fragment(overrides?: Partial<Omit<Erc20Fragment, '__typename'>
   };
 }
 
-export function mockErc20AmountFragment(amount = mockDaiAmount(42)): Erc20AmountFragment {
+export function mockErc20AmountFieldsFragment(amount = mockDaiAmount(42)): Erc20AmountFields {
   return {
     __typename: 'Erc20Amount',
-    asset: mockErc20Fragment({
+    asset: mockErc20FieldsFragment({
       name: amount.asset.name,
       symbol: amount.asset.symbol,
       decimals: amount.asset.decimals,
@@ -404,8 +383,8 @@ export function mockErc20AmountFragment(amount = mockDaiAmount(42)): Erc20Amount
   };
 }
 
-function mockRevenueAggregateFragment(amount?: Amount<Erc20>): RevenueAggregateFragment {
-  const total = mockErc20AmountFragment(amount);
+function mockRevenueAggregateFragment(amount?: Erc20Amount): RevenueAggregate {
+  const total = mockErc20AmountFieldsFragment(amount);
   return {
     __typename: 'RevenueAggregate',
     __total: total,
@@ -417,9 +396,9 @@ export function mockPublicationRevenueFragment({
   publication = mockPostFragment(),
   amount,
 }: {
-  publication?: CommentFragment | PostFragment | MirrorFragment;
-  amount?: Amount<Erc20>;
-} = {}): PublicationRevenueFragment {
+  publication?: AnyPublication;
+  amount?: Erc20Amount;
+} = {}): PublicationRevenue {
   return {
     __typename: 'PublicationRevenue',
     publication: publication,
@@ -430,9 +409,8 @@ export function mockPublicationRevenueFragment({
 export function mockProfileFollowRevenueFragment({
   amount,
 }: {
-  publication?: CommentFragment | PostFragment | MirrorFragment;
-  amount?: Amount<Erc20>;
-} = {}): ProfileFollowRevenueFragment {
+  amount?: Erc20Amount;
+} = {}): ProfileFollowRevenue {
   return {
     __typename: 'FollowRevenueResult',
     revenues: [mockRevenueAggregateFragment(amount)],
@@ -440,8 +418,8 @@ export function mockProfileFollowRevenueFragment({
 }
 
 export function mockWhoReactedResultFragment(
-  overrides?: Partial<Omit<WhoReactedResultFragment, '__typename'>>,
-): WhoReactedResultFragment {
+  overrides?: Partial<Omit<WhoReactedResult, '__typename'>>,
+): WhoReactedResult {
   return {
     __typename: 'WhoReactedResult',
     reactionId: faker.datatype.uuid(),
@@ -453,8 +431,8 @@ export function mockWhoReactedResultFragment(
 }
 
 export function mockModuleInfoFragment(
-  overrides?: Partial<Omit<ModuleInfoFragment, '__typename'>>,
-): ModuleInfoFragment {
+  overrides?: Partial<Omit<ModuleInfo, '__typename'>>,
+): ModuleInfo {
   return {
     __typename: 'ModuleInfo',
     name: faker.datatype.string(),
@@ -464,8 +442,8 @@ export function mockModuleInfoFragment(
 }
 
 export function mockEnabledModuleFragment(
-  overrides?: Partial<Omit<EnabledModuleFragment, '__typename'>>,
-): EnabledModuleFragment {
+  overrides?: Partial<Omit<EnabledModule, '__typename'>>,
+): EnabledModule {
   return {
     __typename: 'EnabledModule',
     moduleName: faker.datatype.string(),
@@ -478,8 +456,8 @@ export function mockEnabledModuleFragment(
 }
 
 export function mockEnabledModulesFragment(
-  overrides?: Partial<Omit<EnabledModulesFragment, '__typename'>>,
-): EnabledModulesFragment {
+  overrides?: Partial<Omit<EnabledModules, '__typename'>>,
+): EnabledModules {
   return {
     __typename: 'EnabledModules',
     collectModules: [mockEnabledModuleFragment()],
@@ -491,7 +469,7 @@ export function mockEnabledModulesFragment(
 
 export function mockNftOwnershipAccessCondition(
   overrides?: Partial<NftOwnershipOutput>,
-): AnyConditionFragment {
+): AnyConditionOutput {
   return {
     __typename: 'AccessConditionOutput',
     nft: {
@@ -514,7 +492,7 @@ export function mockNftOwnershipAccessCondition(
 
 export function mockErc20OwnershipAccessCondition(
   overrides?: Partial<Erc20OwnershipOutput>,
-): AnyConditionFragment {
+): AnyConditionOutput {
   return {
     __typename: 'AccessConditionOutput',
     token: {
@@ -540,7 +518,7 @@ export function mockErc20OwnershipAccessCondition(
 
 export function mockEoaOwnershipAccessCondition(
   overrides?: Partial<EoaOwnershipOutput>,
-): AnyConditionFragment {
+): AnyConditionOutput {
   return {
     __typename: 'AccessConditionOutput',
     eoa: {
@@ -560,7 +538,7 @@ export function mockEoaOwnershipAccessCondition(
 
 export function mockProfileOwnershipAccessCondition(
   overrides?: Partial<ProfileOwnershipOutput>,
-): AnyConditionFragment {
+): AnyConditionOutput {
   return {
     __typename: 'AccessConditionOutput',
     profile: {
@@ -580,7 +558,7 @@ export function mockProfileOwnershipAccessCondition(
 
 export function mockFollowConditionAccessCondition(
   overrides?: Partial<FollowConditionOutput>,
-): AnyConditionFragment {
+): AnyConditionOutput {
   return {
     __typename: 'AccessConditionOutput',
     follow: {
@@ -603,7 +581,7 @@ export function mockCollectConditionAccessCondition(
     publicationId: mockPublicationId(),
     thisPublication: null,
   },
-): AnyConditionFragment {
+): AnyConditionOutput {
   return {
     __typename: 'AccessConditionOutput',
     collect: {
@@ -621,8 +599,8 @@ export function mockCollectConditionAccessCondition(
 }
 
 export function mockOrAccessCondition(
-  criteria: Array<AnyConditionFragment | LeafConditionFragment> = [],
-): AnyConditionFragment {
+  criteria: Array<AnyConditionOutput | LeafConditionOutput> = [],
+): AnyConditionOutput {
   return {
     __typename: 'AccessConditionOutput',
     or: { __typename: 'OrConditionOutput', criteria },
@@ -637,8 +615,8 @@ export function mockOrAccessCondition(
 }
 
 export function mockAndAccessCondition(
-  criteria: Array<AnyConditionFragment | LeafConditionFragment> = [],
-): AnyConditionFragment {
+  criteria: Array<AnyConditionOutput | LeafConditionOutput> = [],
+): AnyConditionOutput {
   return {
     __typename: 'AccessConditionOutput',
     and: { __typename: 'AndConditionOutput', criteria },
@@ -653,8 +631,8 @@ export function mockAndAccessCondition(
 }
 
 function mockPublicationOwnerAccessCondition(
-  overrides?: Partial<ProfileOwnershipFragment>,
-): AnyConditionFragment {
+  overrides?: Partial<ProfileOwnershipOutput>,
+): AnyConditionOutput {
   return {
     __typename: 'AccessConditionOutput',
     profile: { __typename: 'ProfileOwnershipOutput', profileId: mockProfileId(), ...overrides },
@@ -672,9 +650,9 @@ function mockRootConditionFragment({
   others,
   ownerId,
 }: {
-  others: AnyConditionFragment[];
+  others: AnyConditionOutput[];
   ownerId: ProfileId;
-}): RootConditionFragment {
+}): RootConditionOutput {
   return {
     __typename: 'AccessConditionOutput',
     or: {
@@ -683,17 +661,17 @@ function mockRootConditionFragment({
   };
 }
 
-export function mockEncryptionParamsFragment({
+export function mockEncryptionParamsOutputFragment({
   others,
   ownerId,
-  encryptedFields = mockEncryptedFieldsFragment(),
+  encryptedFields = mockEncryptedFieldsOutputFragment(),
   encryptionKey = '0x123',
 }: {
-  others: AnyConditionFragment[];
+  others: AnyConditionOutput[];
   ownerId: ProfileId;
-  encryptedFields?: EncryptedFieldsFragment;
+  encryptedFields?: EncryptedFieldsOutput;
   encryptionKey?: ContentEncryptionKey;
-}): EncryptionParamsFragment {
+}): EncryptionParamsOutput {
   return {
     __typename: 'EncryptionParamsOutput',
     accessCondition: mockRootConditionFragment({

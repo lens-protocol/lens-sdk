@@ -1,7 +1,7 @@
 import {
   isFollowTransactionFor,
-  ProfileFragment,
-  ProfileOwnedByMeFragment,
+  Profile,
+  ProfileOwnedByMe,
   useHasPendingTransaction,
 } from '@lens-protocol/api-bindings';
 import {
@@ -20,8 +20,8 @@ export class PrematureUnfollowError extends Error {
 }
 
 export type UseUnfollowArgs = {
-  followee: ProfileFragment;
-  follower: ProfileOwnedByMeFragment;
+  followee: Profile;
+  follower: ProfileOwnedByMe;
 };
 
 export type UnfollowOperation = Operation<

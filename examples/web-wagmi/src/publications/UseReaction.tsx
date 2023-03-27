@@ -1,6 +1,6 @@
 import {
-  ProfileFragment,
-  ContentPublicationFragment,
+  Profile,
+  ContentPublication,
   ReactionType,
   usePublication,
   useReaction,
@@ -15,7 +15,7 @@ import { invariant } from '../utils';
 import { PublicationCard } from './components/PublicationCard';
 
 type ReactionButtonProps = {
-  publication: ContentPublicationFragment;
+  publication: ContentPublication;
   profileId: string;
   reactionType: ReactionType;
 };
@@ -54,7 +54,7 @@ function ReactionButton({ publication, profileId, reactionType }: ReactionButton
 }
 
 type ReactionInnerProps = {
-  profile: ProfileFragment;
+  profile: Profile;
 };
 
 function ReactionInner({ profile }: ReactionInnerProps) {

@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
+import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockGetProfileQueryMockedResponse,
+  createGetProfileMockedResponse,
   mockMediaFragment,
   mockProfileFragment,
   mockProfileMediaFragment,
@@ -17,14 +17,14 @@ import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager
 import { UpdateProfileImageResponder } from '../UpdateProfileImageResponder';
 
 type SetupTestScenarioArgs = {
-  cacheProfile: ProfileFragment;
-  responseProfile: ProfileFragment;
+  cacheProfile: Profile;
+  responseProfile: Profile;
 };
 
 function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioArgs) {
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
-    mockGetProfileQueryMockedResponse({
+    createGetProfileMockedResponse({
       profile: responseProfile,
       variables: {
         request: {
@@ -37,7 +37,7 @@ function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioA
 
   apolloClient.cache.writeFragment({
     id: apolloClient.cache.identify(cacheProfile),
-    fragment: ProfileFragmentDoc,
+    fragment: FragmentProfile,
     fragmentName: 'Profile',
     data: cacheProfile,
   });
@@ -51,7 +51,7 @@ function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioA
     get profileFromCache() {
       return apolloClient.cache.readFragment({
         id: apolloClient.cache.identify(cacheProfile),
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
         fragmentName: 'Profile',
       });
     },
@@ -69,7 +69,7 @@ describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
     }),
   });
 
-  const profileWithNewImage: ProfileFragment = {
+  const profileWithNewImage: Profile = {
     ...profile,
     picture: mockProfileMediaFragment({
       original: mockMediaFragment({

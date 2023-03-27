@@ -83,7 +83,7 @@ export type SupportedPublicationMediaType =
   | AudioType.OGG
   | AudioType.WAV;
 
-export type Media = {
+export type MediaObject = {
   altTag?: string;
   cover?: Url;
   url: Url;

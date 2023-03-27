@@ -1,6 +1,6 @@
 import {
-  AnyPublicationFragment,
-  useProfilePublicationsForSaleQuery,
+  AnyPublication,
+  useProfilePublicationsForSale as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
@@ -23,9 +23,9 @@ export function useProfilePublicationsForSale({
   profileId,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseProfilePublicationsForSaleArgs): PaginatedReadResult<AnyPublicationFragment[]> {
+}: UseProfilePublicationsForSaleArgs): PaginatedReadResult<AnyPublication[]> {
   return usePaginatedReadResult(
-    useProfilePublicationsForSaleQuery(
+    useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

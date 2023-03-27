@@ -1,9 +1,9 @@
-import { PostFragment, PostFragmentDoc } from '@lens-protocol/api-bindings';
+import { Post, FragmentPost } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
   mockProfileFragment,
-  mockPublicationByTxHashMockedResponse,
+  createPublicationByTxHashMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import {
@@ -21,12 +21,12 @@ function setupTestScenario({
   post,
   transactionData,
 }: {
-  post: PostFragment;
+  post: Post;
   transactionData: BroadcastedTransactionData<CreateMirrorRequest>;
 }) {
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
-    mockPublicationByTxHashMockedResponse({
+    createPublicationByTxHashMockedResponse({
       variables: {
         txHash: transactionData.txHash,
         observerId: transactionData.request.profileId,
@@ -41,7 +41,7 @@ function setupTestScenario({
       __typename: 'Post',
       id: post.id,
     }),
-    fragment: PostFragmentDoc,
+    fragment: FragmentPost,
     fragmentName: 'Post',
     data: post,
   });
@@ -54,12 +54,12 @@ function setupTestScenario({
 
     get updatedPost() {
       return nonNullable(
-        apolloClient.cache.readFragment<PostFragment>({
+        apolloClient.cache.readFragment<Post>({
           id: apolloClient.cache.identify({
             __typename: 'Post',
             id: post.id,
           }),
-          fragment: PostFragmentDoc,
+          fragment: FragmentPost,
           fragmentName: 'Post',
         }),
         "Can't find post in cache",

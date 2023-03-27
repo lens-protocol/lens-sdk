@@ -1,10 +1,10 @@
 import {
   useHidePublication,
   isPublicationOwnedByMe,
-  PublicationOwnedByMeFragment,
+  PublicationOwnedByMe,
   usePublications,
-  ProfileOwnedByMeFragment,
-  AnyPublicationFragment,
+  ProfileOwnedByMe,
+  AnyPublication,
 } from '@lens-protocol/react-web';
 
 import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
@@ -14,7 +14,7 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from './components/PublicationCard';
 
 type HidePublicationButtonProps = {
-  publication: PublicationOwnedByMeFragment;
+  publication: PublicationOwnedByMe;
 };
 
 function HidePublicationButton({ publication }: HidePublicationButtonProps) {
@@ -29,7 +29,7 @@ function HidePublicationButton({ publication }: HidePublicationButtonProps) {
   );
 }
 
-function FeedItem({ publication }: { publication: AnyPublicationFragment }) {
+function FeedItem({ publication }: { publication: AnyPublication }) {
   return (
     <section>
       <PublicationCard publication={publication} />
@@ -44,7 +44,7 @@ function FeedItem({ publication }: { publication: AnyPublicationFragment }) {
 }
 
 type FeedProps = {
-  activeProfile: ProfileOwnedByMeFragment;
+  activeProfile: ProfileOwnedByMe;
 };
 
 function Feed({ activeProfile }: FeedProps) {

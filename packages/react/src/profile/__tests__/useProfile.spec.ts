@@ -1,7 +1,7 @@
 import { MockedResponse } from '@apollo/client/testing';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockGetProfileQueryMockedResponse,
+  createGetProfileMockedResponse,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -60,7 +60,7 @@ describe(`Given the ${useProfile.name} hook`, () => {
       });
 
       it('should settle with the profile data', async () => {
-        const expectations = mockGetProfileQueryMockedResponse({
+        const expectations = createGetProfileMockedResponse({
           profile,
           variables: {
             request: args,
@@ -77,7 +77,7 @@ describe(`Given the ${useProfile.name} hook`, () => {
       it('should allow to specify the "observerId" on a per-call basis', async () => {
         const observerId = mockProfileId();
 
-        const expectations = mockGetProfileQueryMockedResponse({
+        const expectations = createGetProfileMockedResponse({
           profile,
           variables: {
             request: args,
@@ -93,7 +93,7 @@ describe(`Given the ${useProfile.name} hook`, () => {
       });
 
       it(`should settle with a ${NotFoundError.name} if not found`, async () => {
-        const expectations = mockGetProfileQueryMockedResponse({
+        const expectations = createGetProfileMockedResponse({
           profile: null,
           variables: {
             request: args,

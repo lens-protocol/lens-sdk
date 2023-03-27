@@ -7,8 +7,8 @@ import {
   PublicationReportingSpamSubreason,
   ReportingReasonInputParams,
   ReportPublicationDocument,
-  ReportPublicationMutation,
-  ReportPublicationMutationVariables,
+  ReportPublicationData,
+  ReportPublicationVariables,
 } from '@lens-protocol/api-bindings';
 import { ReportReason } from '@lens-protocol/domain/entities';
 import {
@@ -142,7 +142,7 @@ export class ReportPublicationGateway implements IReportPublicationGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
   async report({ additionalComments, publicationId, reason }: ReportPublicationRequest) {
-    await this.apolloClient.mutate<ReportPublicationMutation, ReportPublicationMutationVariables>({
+    await this.apolloClient.mutate<ReportPublicationData, ReportPublicationVariables>({
       mutation: ReportPublicationDocument,
       variables: {
         publicationId,

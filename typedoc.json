@@ -3,7 +3,7 @@
   "entryPoints": ["packages/react-web"],
   "entryPointStrategy": "packages",
   "excludeExternals": true,
-  "excludeInternal": true,
+  "excludeInternal": false,
   "excludeNotDocumented": false,
   "excludePrivate": true,
   "excludeProtected": true,

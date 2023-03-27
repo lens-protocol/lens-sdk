@@ -1,8 +1,8 @@
 import {
-  mockEncryptedFieldsFragment,
-  mockEncryptionParamsFragment,
+  mockEncryptedFieldsOutputFragment,
+  mockEncryptionParamsOutputFragment,
   mockEoaOwnershipAccessCondition,
-  mockMetadataFragment,
+  mockMetadataOutputFragment,
   mockPostFragment,
   mockProfileFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -59,8 +59,8 @@ describe(`Given the "${useEncryptedPublication.name}" hook`, () => {
     const post = mockPostFragment({
       isGated: true,
       profile,
-      metadata: mockMetadataFragment({
-        __encryptionParams: mockEncryptionParamsFragment({
+      metadata: mockMetadataOutputFragment({
+        encryptionParams: mockEncryptionParamsOutputFragment({
           ownerId: profile.id,
           others: [
             mockEoaOwnershipAccessCondition({
@@ -69,7 +69,7 @@ describe(`Given the "${useEncryptedPublication.name}" hook`, () => {
           ],
           encryptionKey:
             'e689da704a53fe9c56698e11be4a4f9f04a1bd36c5149f894df98fc2637df83b8bbdf495d8a47b882c17e900b688f110fc2762772e1437f165b6c416e990bde072842b46f4376e2dd3051c228870a877dd99800924a364be22320340441b6d8863ebab2892d4102a14c060b222c61c8b7f47c670232670505389fd4a983205c000000000000000207171294fc14c9e6996f89eaac7bf36d30a3abb415595fd9e4d329eee6490349a134b5291fe25f167f3cded81ae8231b4',
-          encryptedFields: mockEncryptedFieldsFragment({
+          encryptedFields: mockEncryptedFieldsOutputFragment({
             content:
               '_ef7pOheqo9WZyZglm5eaqPGrJmNr_eZmeoVIIQGZUXRRpoZ7gcL8PJQBTsOMweZFpIqdTFk9ug2X9Cyw07yQrZuQ4d-BmTJ3k19mPb-YSistE4GiRKC74mTyjas882KKc8Og9nML1WwlJdCesFfxOTeOucyWKspGozIkJoG99cMjD_keMLGN6NdAi9A6pj9_beRaN5GjL8AzU0_0VqBJjM_j7dn4OxRqfoAzt9d2LTX7t3UUAwuNG5W_oJNuc_44Z8ojU0DNzsiHzrLsV_yCOFJO9X_L3I-GDCDLmR-dzJGwwNbss0FjfQvuMc8RzOSkeoEc1mGRW4wz20pGFY8VNJoqA1a--ILF_kVUevSi4HPdoubuVPkPvBecWBKM0VWw42zp63qY5YgnjIROk7AQgGxDNaLtBeIFo92syiOEZ3FAyHpCCcrxQbJ89tdSS1mNKe2xf0E4JT5j4k48NSL2Neq-3XLiRGcbUAHYlOpflc=',
           }),

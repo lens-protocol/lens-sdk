@@ -1,7 +1,7 @@
 import {
-  ProfileFragment,
+  Profile,
   ProfileSortCriteria,
-  useExploreProfilesQuery,
+  useExploreProfiles as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
 
 import {
@@ -23,9 +23,9 @@ export function useExploreProfiles({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   sortCriteria = ProfileSortCriteria.MostComments,
-}: UseExploreProfilesArgs = {}): PaginatedReadResult<ProfileFragment[]> {
+}: UseExploreProfilesArgs = {}): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
-    useExploreProfilesQuery(
+    useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({ limit, observerId, sortCriteria }),

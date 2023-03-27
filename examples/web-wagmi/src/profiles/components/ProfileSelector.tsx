@@ -1,10 +1,10 @@
-import { useExploreProfiles, ProfileFragment } from '@lens-protocol/react-web';
+import { useExploreProfiles, Profile } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { invariant } from '../../utils';
 
 type ProfileSelectorProps = {
-  onProfileSelected: (profile: ProfileFragment | null) => void;
+  onProfileSelected: (profile: Profile | null) => void;
 };
 
 export function ProfileSelector({ onProfileSelected }: ProfileSelectorProps) {

@@ -1,5 +1,5 @@
 import {
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
   useProfilesOwnedBy,
   useWalletLogin,
   useWalletLogout,
@@ -39,7 +39,7 @@ function AuthenticatedContent({
   profile,
 }: {
   wallet: WalletData;
-  profile: ProfileOwnedByMeFragment;
+  profile: ProfileOwnedByMe;
 }) {
   const { data: profiles } = useProfilesOwnedBy({ address: wallet.address });
   const [handle, setHandle] = useState<string>();

@@ -1,5 +1,5 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { ProfileFragment } from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import { CreateProfileRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastedTransactionData,
@@ -9,7 +9,7 @@ import {
 import { ProfileHandleResolver } from '../../../environments';
 import { IProfileCacheManager } from '../IProfileCacheManager';
 
-const recentProfilesVar = makeVar<ProfileFragment[]>([]);
+const recentProfilesVar = makeVar<Profile[]>([]);
 
 export class CreateProfileResponder implements ITransactionResponder<CreateProfileRequest> {
   constructor(

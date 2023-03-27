@@ -7,7 +7,7 @@ import {
   FollowPolicy,
   ChargeFollowConfig,
   NoFeeFollowConfig,
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
 } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
@@ -93,7 +93,7 @@ function UpdateButtonText({
 }
 
 type UpdateFollowPolicyFormProps = {
-  profile: ProfileOwnedByMeFragment;
+  profile: ProfileOwnedByMe;
   currentFollowPolicy: FollowPolicy | null;
   currencies: Erc20[];
 };
@@ -239,7 +239,7 @@ function UpdateFollowPolicyForm({
 }
 
 type UpdateFollowPolicyProps = {
-  profile: ProfileOwnedByMeFragment;
+  profile: ProfileOwnedByMe;
 };
 
 function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {

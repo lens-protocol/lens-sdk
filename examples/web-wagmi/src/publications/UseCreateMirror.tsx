@@ -2,7 +2,7 @@ import {
   usePublication,
   useCreateMirror,
   isMirrorPublication,
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
 } from '@lens-protocol/react-web';
 
 import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
@@ -11,7 +11,7 @@ import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
 type MirrorInnerProps = {
-  publisher: ProfileOwnedByMeFragment;
+  publisher: ProfileOwnedByMe;
 };
 
 function MirrorInner({ publisher }: MirrorInnerProps) {

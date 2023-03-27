@@ -1,7 +1,7 @@
 import {
   BroadcastProtocolCallDocument,
-  BroadcastProtocolCallMutation,
-  BroadcastProtocolCallMutationVariables,
+  BroadcastProtocolCallData,
+  BroadcastProtocolCallVariables,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
@@ -41,8 +41,8 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
   ): AsyncRelayReceipt {
     try {
       const { data } = await this.apolloClient.mutate<
-        BroadcastProtocolCallMutation,
-        BroadcastProtocolCallMutationVariables
+        BroadcastProtocolCallData,
+        BroadcastProtocolCallVariables
       >({
         mutation: BroadcastProtocolCallDocument,
         variables: {

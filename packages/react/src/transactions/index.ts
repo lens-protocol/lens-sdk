@@ -57,10 +57,8 @@ export type {
   ChargeCollectPolicyConfig,
   CollectFee,
   CollectPolicyConfig,
-  CollectPolicyType,
   CollectRequest,
   CollectType,
-  ContentFocus,
   CreateCommentRequest,
   CreateMirrorRequest,
   CreatePostRequest,
@@ -69,7 +67,7 @@ export type {
   FreeCollectPolicyConfig,
   FreeCollectRequest,
   Locale,
-  Media,
+  MediaObject,
   NftAttribute,
   NftAttributeDisplayType,
   NftMetadata,
@@ -80,9 +78,11 @@ export type {
   SupportedPublicationMediaType,
 } from '@lens-protocol/domain/use-cases/publications';
 export {
-  SupportedFileType,
-  ImageType,
   AudioType,
+  CollectPolicyType,
+  ContentFocus,
+  ImageType,
+  SupportedFileType,
   VideoType,
 } from '@lens-protocol/domain/use-cases/publications';
 

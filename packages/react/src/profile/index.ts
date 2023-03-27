@@ -32,26 +32,26 @@ export type {
  * Profile fragments
  */
 export type {
-  AttributeFragment,
-  FollowerFragment,
-  FollowingFragment,
+  Attribute,
+  Follower,
+  Following,
   FollowStatus,
   ProfileAttributeReader,
   ProfileAttributes,
-  ProfileFragment,
-  ProfileMediaFragment,
-  ProfileOwnedByMeFragment,
-  ProfileStatsFragment,
+  Profile,
+  ProfileMedia,
+  ProfileOwnedByMe,
+  ProfileStats,
 } from '@lens-protocol/api-bindings';
 
 /**
  * Follow module fragments
  */
 export type {
-  FeeFollowModuleSettingsFragment,
-  ProfileFollowModuleSettingsFragment,
-  RevertFollowModuleSettingsFragment,
-  UnknownFollowModuleSettingsFragment,
+  FeeFollowModuleSettings,
+  ProfileFollowModuleSettings,
+  RevertFollowModuleSettings,
+  UnknownFollowModuleSettings,
 } from '@lens-protocol/api-bindings';
 
 /**

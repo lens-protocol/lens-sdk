@@ -22,7 +22,7 @@ import {
   CollectPolicyType,
   ContentFocus,
   FreeCollectPolicyConfig,
-  Media,
+  MediaObject,
   NftAttribute,
   NftAttributeDisplayType,
   NftMetadata,
@@ -52,7 +52,7 @@ export function mockCreateCommentRequest(
   };
 }
 
-export function mockMedia(): Media {
+export function mockMediaObject(): MediaObject {
   return {
     url: faker.image.imageUrl(),
     mimeType: ImageType.JPEG,

@@ -2,9 +2,9 @@ import { faker } from '@faker-js/faker';
 import { ReactionTypes, ValidationError } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  createAddReactionMutationMockedResponse,
-  createRemoveReactionMutationMockedResponse,
-  createRemoveReactionMutationWithGraphqlValidationErrorResponse,
+  createAddReactionMockedResponse,
+  createRemoveReactionMockedResponse,
+  createRemoveReactionMockedResponseWithGraphqlValidationError,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockReactionRequest } from '@lens-protocol/domain/mocks';
 
@@ -17,7 +17,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        createAddReactionMutationMockedResponse({
+        createAddReactionMockedResponse({
           variables: {
             publicationId,
             profileId,
@@ -42,7 +42,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        createRemoveReactionMutationMockedResponse({
+        createRemoveReactionMockedResponse({
           variables: {
             publicationId,
             profileId,
@@ -64,7 +64,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const profileId = faker.datatype.uuid();
       const publicationId = faker.datatype.uuid();
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        createRemoveReactionMutationWithGraphqlValidationErrorResponse({
+        createRemoveReactionMockedResponseWithGraphqlValidationError({
           variables: {
             publicationId,
             profileId,

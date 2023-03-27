@@ -1,7 +1,7 @@
-import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
+import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockGetProfileQueryMockedResponse,
+  createGetProfileMockedResponse,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -20,12 +20,12 @@ function setupUpdateFollowPolicyResponder({
   existingProfile = mockProfileFragment(),
   updatedProfile = mockProfileFragment(),
 }: {
-  existingProfile?: ProfileFragment;
-  updatedProfile?: ProfileFragment;
+  existingProfile?: Profile;
+  updatedProfile?: Profile;
 }) {
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
-    mockGetProfileQueryMockedResponse({
+    createGetProfileMockedResponse({
       variables: {
         request: { profileId: updatedProfile.id },
         sources,
@@ -39,7 +39,7 @@ function setupUpdateFollowPolicyResponder({
       __typename: 'Profile',
       id: existingProfile.id,
     }),
-    fragment: ProfileFragmentDoc,
+    fragment: FragmentProfile,
     fragmentName: 'Profile',
     data: existingProfile,
   });
@@ -56,7 +56,7 @@ function setupUpdateFollowPolicyResponder({
           __typename: 'Profile',
           id: profileId,
         }),
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
         fragmentName: 'Profile',
       });
     },

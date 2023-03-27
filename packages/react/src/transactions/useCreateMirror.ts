@@ -1,8 +1,4 @@
-import {
-  CommentFragment,
-  PostFragment,
-  ProfileOwnedByMeFragment,
-} from '@lens-protocol/api-bindings';
+import { Comment, Post, ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -14,11 +10,11 @@ import { Operation, useOperation } from '../helpers/operations';
 import { useCreateMirrorController } from './adapters/useCreateMirrorController';
 
 export type UseCreateMirrorArgs = {
-  publisher: ProfileOwnedByMeFragment;
+  publisher: ProfileOwnedByMe;
 };
 
 export type CreateMirrorArgs = {
-  publication: PostFragment | CommentFragment;
+  publication: Post | Comment;
 };
 
 export type CreateMirrorOperation = Operation<

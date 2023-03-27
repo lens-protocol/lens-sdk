@@ -10,8 +10,8 @@ import {
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockHasTxHashBeenIndexedQuery,
-  createHasTxHashBeenIndexedQueryMockedResponse,
+  mockHasTxHashBeenIndexedData,
+  createHasTxHashBeenIndexedMockedResponse,
   createProxyActionStatusMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import {
@@ -118,11 +118,11 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     it('should succeed with the expected IndexingEvent if the tx has been indexed by the BE', async () => {
       const txHash = mockTransactionHash();
       const responses = [
-        createHasTxHashBeenIndexedQueryMockedResponse({
+        createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txId },
           },
-          data: mockHasTxHashBeenIndexedQuery({
+          data: mockHasTxHashBeenIndexedData({
             indexed: true,
             txHash,
           }),
@@ -144,29 +144,29 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       const initialTxHash = mockTransactionHash();
       const upgradedTxHash = mockTransactionHash();
       const responses = [
-        createHasTxHashBeenIndexedQueryMockedResponse({
+        createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txId },
           },
-          data: mockHasTxHashBeenIndexedQuery({
+          data: mockHasTxHashBeenIndexedData({
             indexed: false,
             txHash: initialTxHash,
           }),
         }),
-        createHasTxHashBeenIndexedQueryMockedResponse({
+        createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txId },
           },
-          data: mockHasTxHashBeenIndexedQuery({
+          data: mockHasTxHashBeenIndexedData({
             indexed: false,
             txHash: initialTxHash,
           }),
         }),
-        createHasTxHashBeenIndexedQueryMockedResponse({
+        createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txId },
           },
-          data: mockHasTxHashBeenIndexedQuery({
+          data: mockHasTxHashBeenIndexedData({
             indexed: false,
             txHash: upgradedTxHash,
           }),
@@ -188,20 +188,20 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       const initialTxHash = mockTransactionHash();
       const upgradedTxHash = mockTransactionHash();
       const responses = [
-        createHasTxHashBeenIndexedQueryMockedResponse({
+        createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txId },
           },
-          data: mockHasTxHashBeenIndexedQuery({
+          data: mockHasTxHashBeenIndexedData({
             indexed: false,
             txHash: initialTxHash,
           }),
         }),
-        createHasTxHashBeenIndexedQueryMockedResponse({
+        createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txId },
           },
-          data: mockHasTxHashBeenIndexedQuery({
+          data: mockHasTxHashBeenIndexedData({
             indexed: true,
             txHash: upgradedTxHash,
           }),
@@ -221,11 +221,11 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
 
     it(`should fail with ${TransactionError.name} for ${TransactionErrorReason.REVERTED} reason if the tx gets reverted`, async () => {
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        createHasTxHashBeenIndexedQueryMockedResponse({
+        createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txId },
           },
-          data: mockHasTxHashBeenIndexedQuery({
+          data: mockHasTxHashBeenIndexedData({
             reason: TransactionErrorReasons.Reverted,
           }),
         }),
@@ -243,11 +243,11 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     it(`should fail with ${TransactionError.name} for ${TransactionErrorReason.INDEXING_TIMEOUT} reason if the tx is not indexed within a reasonable time`, async () => {
       const txHash = mockTransactionHash();
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        createHasTxHashBeenIndexedQueryMockedResponse({
+        createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txId },
           },
-          data: mockHasTxHashBeenIndexedQuery({
+          data: mockHasTxHashBeenIndexedData({
             indexed: false,
             txHash,
           }),

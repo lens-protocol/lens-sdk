@@ -1,9 +1,9 @@
 import {
   CollectState,
-  CommentFragment,
+  Comment,
   isPostPublication,
-  PostFragment,
-  ProfileOwnedByMeFragment,
+  Post,
+  ProfileOwnedByMe,
   useCollect,
   useFeed,
 } from '@lens-protocol/react-web';
@@ -16,8 +16,8 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { CollectablePublicationCard } from './components/PublicationCard';
 
 type CollectButtonProps = {
-  collector: ProfileOwnedByMeFragment;
-  publication: PostFragment | CommentFragment;
+  collector: ProfileOwnedByMe;
+  publication: Post | Comment;
 };
 
 function CollectButton({ collector, publication }: CollectButtonProps) {
@@ -50,7 +50,7 @@ function CollectButton({ collector, publication }: CollectButtonProps) {
 }
 
 type FeedProps = {
-  activeProfile: ProfileOwnedByMeFragment;
+  activeProfile: ProfileOwnedByMe;
 };
 
 function Feed({ activeProfile }: FeedProps) {

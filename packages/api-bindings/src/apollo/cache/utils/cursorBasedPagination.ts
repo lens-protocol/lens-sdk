@@ -1,10 +1,10 @@
 import { FieldPolicy, StoreValue } from '@apollo/client/core';
 
-import { CommonPaginatedResultInfoFragment } from '../../../graphql';
+import { CommonPaginatedResultInfo } from '../../../graphql';
 
 type CursorBasedPagination<T = StoreValue> = {
   items: T[];
-  pageInfo: CommonPaginatedResultInfoFragment;
+  pageInfo: CommonPaginatedResultInfo;
 };
 
 // Note: Copied from apollo given it's not exposed publicly

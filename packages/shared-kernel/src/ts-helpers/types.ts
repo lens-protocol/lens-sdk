@@ -122,5 +122,7 @@ declare const brand: unique symbol;
 
 /**
  * Branding function
+ *
+ * @internal
  */
 export type Brand<T, TBrand> = T & { [brand]: TBrand };

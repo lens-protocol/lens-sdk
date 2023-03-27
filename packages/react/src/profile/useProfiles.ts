@@ -1,4 +1,4 @@
-import { ProfileFragment, useGetAllProfilesQuery } from '@lens-protocol/api-bindings';
+import { Profile, useGetAllProfiles } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
@@ -82,14 +82,14 @@ export function useProfiles({
   profileIds: byProfileIds,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseProfilesArgs): PaginatedReadResult<ProfileFragment[]> {
+}: UseProfilesArgs): PaginatedReadResult<Profile[]> {
   invariant(
     byHandles === undefined || byProfileIds === undefined,
     `Cannot provide both 'handles' and 'profileIds' to '${useProfiles.name}' hook`,
   );
 
   return usePaginatedReadResult(
-    useGetAllProfilesQuery(
+    useGetAllProfiles(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({ byHandles, byProfileIds, limit, observerId }),

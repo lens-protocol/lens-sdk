@@ -1,6 +1,6 @@
 import {
-  AttributeFragment,
-  ProfileFragment,
+  Attribute,
+  Profile,
   ProfileMetadataAttribute,
   ProfileMetadata,
 } from '@lens-protocol/api-bindings';
@@ -27,7 +27,7 @@ function newAttribute(key: string, value: ProfileAttributeValue): ProfileMetadat
   };
 }
 
-function extractCoverImageUrl(existingProfile: ProfileFragment): string | null {
+function extractCoverImageUrl(existingProfile: Profile): string | null {
   return existingProfile.coverPicture?.__typename === 'MediaSet'
     ? existingProfile.coverPicture.original.url
     : null;
@@ -43,7 +43,7 @@ function isProfileAttributeValue(
   return value !== null;
 }
 
-function resolveAttributes(attributes: AttributeFragment[], update: PartialAttributesUpdate = {}) {
+function resolveAttributes(attributes: Attribute[], update: PartialAttributesUpdate = {}) {
   const remainder = { ...update };
   const updated = attributes.reduce((acc, attribute) => {
     const value = update[attribute.key];
@@ -72,7 +72,7 @@ function resolveAttributes(attributes: AttributeFragment[], update: PartialAttri
 }
 
 export function createProfileMetadata(
-  existingProfile: ProfileFragment,
+  existingProfile: Profile,
   request: UpdateProfileDetailsRequest,
 ): ProfileMetadata {
   return {

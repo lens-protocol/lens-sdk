@@ -1,4 +1,4 @@
-import { useMutualFollowers, useProfile, ProfileFragment } from '@lens-protocol/react-web';
+import { useMutualFollowers, useProfile, Profile } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -50,8 +50,8 @@ function ViewMutualFollowers({
 }
 
 export function UseMutualFollowers() {
-  const [selectedProfileOne, setSelectedProfileOne] = useState<ProfileFragment | null>(null);
-  const [selectedProfileTwo, setSelectedProfileTwo] = useState<ProfileFragment | null>(null);
+  const [selectedProfileOne, setSelectedProfileOne] = useState<Profile | null>(null);
+  const [selectedProfileTwo, setSelectedProfileTwo] = useState<Profile | null>(null);
 
   return (
     <div>

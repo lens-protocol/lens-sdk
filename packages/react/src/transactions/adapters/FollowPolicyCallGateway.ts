@@ -1,8 +1,8 @@
 import {
   omitTypename,
   CreateSetFollowModuleTypedDataDocument,
-  CreateSetFollowModuleTypedDataMutation,
-  CreateSetFollowModuleTypedDataMutationVariables,
+  CreateSetFollowModuleTypedDataData,
+  CreateSetFollowModuleTypedDataVariables,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
@@ -49,8 +49,8 @@ export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
     nonce?: Nonce,
   ): Promise<UnsignedLensProtocolCall<T>> {
     const { data } = await this.apolloClient.mutate<
-      CreateSetFollowModuleTypedDataMutation,
-      CreateSetFollowModuleTypedDataMutationVariables
+      CreateSetFollowModuleTypedDataData,
+      CreateSetFollowModuleTypedDataVariables
     >({
       mutation: CreateSetFollowModuleTypedDataDocument,
       variables: {

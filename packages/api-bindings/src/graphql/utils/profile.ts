@@ -1,9 +1,9 @@
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
-import { ProfileFragment } from '../generated';
+import { Profile } from '../operations';
 
-export type ProfileOwnedByMeFragment = Overwrite<ProfileFragment, { ownedByMe: true }>;
+export type ProfileOwnedByMe = Overwrite<Profile, { ownedByMe: true }>;
 
-export function isProfileOwnedByMe(profile: ProfileFragment): profile is ProfileOwnedByMeFragment {
+export function isProfileOwnedByMe(profile: Profile): profile is ProfileOwnedByMe {
   return profile.ownedByMe;
 }

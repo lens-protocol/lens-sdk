@@ -1,6 +1,6 @@
-import { ProfileFragment, ProfileSortCriteria } from '@lens-protocol/api-bindings';
+import { Profile, ProfileSortCriteria } from '@lens-protocol/api-bindings';
 import {
-  createExploreProfilesQueryMockedResponse,
+  createExploreProfilesMockedResponse,
   createMockApolloClientWithMultipleResponses,
   mockProfileFragment,
   mockSources,
@@ -19,7 +19,7 @@ function setupTestScenario({
   expectedObserverId,
   result,
   ...args
-}: UseExploreProfilesArgs & { result: ProfileFragment[]; expectedObserverId?: ProfileId }) {
+}: UseExploreProfilesArgs & { result: Profile[]; expectedObserverId?: ProfileId }) {
   const sources = mockSources();
 
   return renderHookWithMocks(
@@ -28,7 +28,7 @@ function setupTestScenario({
       mocks: {
         sources,
         apolloClient: createMockApolloClientWithMultipleResponses([
-          createExploreProfilesQueryMockedResponse({
+          createExploreProfilesMockedResponse({
             variables: {
               limit: DEFAULT_PAGINATED_QUERY_LIMIT,
               sortCriteria: ProfileSortCriteria.CreatedOn,

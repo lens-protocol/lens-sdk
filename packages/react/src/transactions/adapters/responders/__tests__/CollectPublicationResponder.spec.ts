@@ -1,13 +1,13 @@
 import { DocumentNode } from '@apollo/client';
 import {
-  CommentFragment,
-  CommentFragmentDoc,
-  MirrorFragment,
-  MirrorFragmentDoc,
-  PostFragment,
-  PostFragmentDoc,
-  AnyPublicationFragment,
-  ContentPublicationFragment,
+  Comment,
+  FragmentComment,
+  Mirror,
+  FragmentMirror,
+  Post,
+  FragmentPost,
+  AnyPublication,
+  ContentPublication,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
@@ -24,19 +24,15 @@ import {
 import { PublicationCacheManager } from '../../PublicationCacheManager';
 import { CollectPublicationResponder } from '../CollectPublicationResponder';
 
-type AnyPublicationTypename = AnyPublicationFragment['__typename'];
+type AnyPublicationTypename = AnyPublication['__typename'];
 
 const typeToFragmentMap: Record<AnyPublicationTypename, DocumentNode> = {
-  Post: PostFragmentDoc,
-  Comment: CommentFragmentDoc,
-  Mirror: MirrorFragmentDoc,
+  Post: FragmentPost,
+  Comment: FragmentComment,
+  Mirror: FragmentMirror,
 };
 
-function setupTestScenario({
-  publication,
-}: {
-  publication: PostFragment | CommentFragment | MirrorFragment;
-}) {
+function setupTestScenario({ publication }: { publication: Post | Comment | Mirror }) {
   const apolloCache = createMockApolloCache();
 
   apolloCache.writeFragment({
@@ -65,7 +61,7 @@ function setupTestScenario({
 const knownInitialPublicationStats = mockPublicationStatsFragment({ totalAmountOfCollects: 1 });
 
 describe(`Given the ${CollectPublicationResponder.name}`, () => {
-  describe.each<ContentPublicationFragment>([
+  describe.each<ContentPublication>([
     mockPostFragment({
       hasCollectedByMe: false,
       hasOptimisticCollectedByMe: false,

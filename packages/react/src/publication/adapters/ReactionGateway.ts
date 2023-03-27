@@ -1,10 +1,10 @@
 import {
   AddReactionDocument,
-  AddReactionMutation,
-  AddReactionMutationVariables,
+  AddReactionData,
+  AddReactionVariables,
   RemoveReactionDocument,
-  RemoveReactionMutation,
-  RemoveReactionMutationVariables,
+  RemoveReactionData,
+  RemoveReactionVariables,
   resolveApiReactionType,
   ValidationError,
   LensApolloClient,
@@ -16,7 +16,7 @@ export class ReactionGateway implements IReactionGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
   async add({ profileId, publicationId, reactionType }: ReactionRequest) {
-    await this.apolloClient.mutate<AddReactionMutation, AddReactionMutationVariables>({
+    await this.apolloClient.mutate<AddReactionData, AddReactionVariables>({
       mutation: AddReactionDocument,
       variables: {
         publicationId,
@@ -28,7 +28,7 @@ export class ReactionGateway implements IReactionGateway {
 
   async remove({ profileId, publicationId, reactionType }: ReactionRequest) {
     try {
-      await this.apolloClient.mutate<RemoveReactionMutation, RemoveReactionMutationVariables>({
+      await this.apolloClient.mutate<RemoveReactionData, RemoveReactionVariables>({
         mutation: RemoveReactionDocument,
         variables: {
           publicationId,

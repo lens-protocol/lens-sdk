@@ -1,4 +1,4 @@
-import { ProfileFragment } from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -10,7 +10,7 @@ import { Operation, useOperation } from '../helpers/operations';
 import { useUpdateProfileImageController } from './adapters/useUpdateProfileImageController';
 
 export type UseUpdateProfileImageArgs = {
-  profile: ProfileFragment;
+  profile: Profile;
 };
 
 export type UpdateProfileImageOperation = Operation<

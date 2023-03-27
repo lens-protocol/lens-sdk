@@ -1,10 +1,10 @@
 import {
-  GetProfileQuery,
-  GetProfileQueryVariables,
+  GetProfileData,
+  GetProfileVariables,
   GetProfileDocument,
   LensApolloClient,
-  GetAllProfilesQuery,
-  GetAllProfilesQueryVariables,
+  GetAllProfilesData,
+  GetAllProfilesVariables,
   GetAllProfilesDocument,
 } from '@lens-protocol/api-bindings';
 import { Profile } from '@lens-protocol/domain/entities';
@@ -14,10 +14,7 @@ export class ProfileGateway implements IProfileGateway {
   constructor(private readonly apolloClient: LensApolloClient) {}
 
   async getAllProfilesByOwnerAddress(address: string): Promise<Profile[]> {
-    const { data } = await this.apolloClient.query<
-      GetAllProfilesQuery,
-      GetAllProfilesQueryVariables
-    >({
+    const { data } = await this.apolloClient.query<GetAllProfilesData, GetAllProfilesVariables>({
       query: GetAllProfilesDocument,
       // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
       variables: { byOwnerAddresses: [address], limit: 10 },
@@ -27,7 +24,7 @@ export class ProfileGateway implements IProfileGateway {
   }
 
   async getProfileByHandle(handle: string): Promise<Profile | null> {
-    const { data } = await this.apolloClient.query<GetProfileQuery, GetProfileQueryVariables>({
+    const { data } = await this.apolloClient.query<GetProfileData, GetProfileVariables>({
       query: GetProfileDocument,
       // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
       variables: { request: { handle } },
@@ -43,7 +40,7 @@ export class ProfileGateway implements IProfileGateway {
   }
 
   async getProfileById(profileId: string): Promise<Profile | null> {
-    const { data } = await this.apolloClient.query<GetProfileQuery, GetProfileQueryVariables>({
+    const { data } = await this.apolloClient.query<GetProfileData, GetProfileVariables>({
       query: GetProfileDocument,
       // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
       variables: { request: { profileId } },

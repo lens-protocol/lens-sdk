@@ -1,11 +1,7 @@
-import {
-  ProfileFragment,
-  ProfileFragmentDoc,
-  SingleProfileQueryRequest,
-} from '@lens-protocol/api-bindings';
+import { Profile, FragmentProfile, SingleProfileQueryRequest } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockGetProfileQueryMockedResponse,
+  createGetProfileMockedResponse,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -23,13 +19,13 @@ function setupTestScenario({
   expectedRequest = { profileId: profile.id },
 }: {
   expectedRequest?: SingleProfileQueryRequest;
-  cacheEntry?: ProfileFragment | null;
+  cacheEntry?: Profile | null;
   expectedObserverId?: ProfileId;
-  profile: ProfileFragment;
+  profile: Profile;
 }) {
   const sources = mockSources();
   const client = createMockApolloClientWithMultipleResponses([
-    mockGetProfileQueryMockedResponse({
+    createGetProfileMockedResponse({
       profile: profile,
       variables: {
         request: expectedRequest,
@@ -46,7 +42,7 @@ function setupTestScenario({
 
   client.cache.writeFragment({
     id: profileIdentifier,
-    fragment: ProfileFragmentDoc,
+    fragment: FragmentProfile,
     fragmentName: 'Profile',
     data: cacheEntry,
   });
@@ -60,7 +56,7 @@ function setupTestScenario({
       return client.cache.readFragment({
         id: profileIdentifier,
         fragmentName: 'Profile',
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
       });
     },
   };

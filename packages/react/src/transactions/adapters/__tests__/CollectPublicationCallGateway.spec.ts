@@ -1,13 +1,13 @@
 import { MockedResponse } from '@apollo/client/testing';
 import {
   CreateCollectTypedDataDocument,
-  CreateCollectTypedDataMutation,
-  CreateCollectTypedDataMutationVariables,
+  CreateCollectTypedDataData,
+  CreateCollectTypedDataVariables,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockCreateCollectTypedDataMutation,
+  mockCreateCollectTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockFreeCollectRequest, mockNonce } from '@lens-protocol/domain/mocks';
 
@@ -18,9 +18,9 @@ function mockCreateCollectTypedDatMutationMockedResponse({
   variables,
   data,
 }: {
-  variables: CreateCollectTypedDataMutationVariables;
-  data: CreateCollectTypedDataMutation;
-}): MockedResponse<CreateCollectTypedDataMutation> {
+  variables: CreateCollectTypedDataVariables;
+  data: CreateCollectTypedDataData;
+}): MockedResponse<CreateCollectTypedDataData> {
   return {
     request: {
       query: CreateCollectTypedDataDocument,
@@ -37,7 +37,7 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
 
   describe(`when calling the "${CollectPublicationCallGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
     it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
-      const createCollectTypedDataMutation = mockCreateCollectTypedDataMutation();
+      const data = mockCreateCollectTypedDataData();
 
       const apollo = createMockApolloClientWithMultipleResponses([
         mockCreateCollectTypedDatMutationMockedResponse({
@@ -46,7 +46,7 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
               publicationId: request.publicationId,
             },
           },
-          data: createCollectTypedDataMutation,
+          data,
         }),
       ]);
       const collectPublicationCallGateway = new CollectPublicationCallGateway(apollo);
@@ -54,9 +54,7 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
       const unsignedCall = await collectPublicationCallGateway.createUnsignedProtocolCall(request);
 
       expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-      expect(unsignedCall.typedData).toEqual(
-        omitTypename(createCollectTypedDataMutation.result.typedData),
-      );
+      expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
     });
 
     it(`should be possible to override the signature nonce`, async () => {
@@ -71,7 +69,7 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
               overrideSigNonce: nonce,
             },
           },
-          data: mockCreateCollectTypedDataMutation({ nonce }),
+          data: mockCreateCollectTypedDataData({ nonce }),
         }),
       ]);
       const collectPublicationCallGateway = new CollectPublicationCallGateway(apollo);

@@ -2,8 +2,8 @@ import {
   isContentPublication,
   LensApolloClient,
   PublicationByTxHashDocument,
-  PublicationByTxHashQuery,
-  PublicationByTxHashQueryVariables,
+  PublicationByTxHashData,
+  PublicationByTxHashVariables,
   Sources,
 } from '@lens-protocol/api-bindings';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
@@ -40,7 +40,7 @@ export class CreateMirrorResponder implements ITransactionResponder<CreateMirror
 
   async commit({ request, txHash }: BroadcastedTransactionData<CreateMirrorRequest>) {
     // refresh the publication to get new mirror id from API
-    await this.client.query<PublicationByTxHashQuery, PublicationByTxHashQueryVariables>({
+    await this.client.query<PublicationByTxHashData, PublicationByTxHashVariables>({
       query: PublicationByTxHashDocument,
       variables: { txHash, observerId: request.profileId, sources: this.sources },
       fetchPolicy: 'network-only',

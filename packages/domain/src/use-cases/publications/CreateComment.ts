@@ -8,14 +8,14 @@ import {
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
-import { CollectPolicyConfig, Media, ContentFocus, Locale } from './types';
+import { CollectPolicyConfig, MediaObject, ContentFocus, Locale } from './types';
 
 export type CreateCommentRequest = {
   appId?: AppId;
   publicationId: string;
   content?: string;
   contentFocus: ContentFocus;
-  media?: Media[];
+  media?: MediaObject[];
   reference: ReferencePolicyConfig;
   collect: CollectPolicyConfig;
   profileId: string;

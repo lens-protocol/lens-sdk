@@ -1,6 +1,5 @@
-import { Attribute } from '../../graphql';
-import { TypePolicy } from './utils/TypePolicy';
+import { StrictTypedTypePolicies } from '../../graphql';
 
-export const createAttributeTypePolicy = (): TypePolicy<Attribute> => ({
+export const createAttributeTypePolicy = (): StrictTypedTypePolicies['Attribute'] => ({
   keyFields: false,
 });

@@ -1,7 +1,7 @@
-import { PublicationRevenueFragment } from '@lens-protocol/api-bindings';
+import { PublicationRevenue } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  createPublicationRevenueQueryMockedResponse,
+  createGetPublicationRevenueMockedResponse,
   mockPublicationRevenueFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -21,7 +21,7 @@ function setupTestScenario({
   ...args
 }: UsePublicationRevenueArgs & {
   expectedObserverId?: ProfileId;
-  result: PublicationRevenueFragment | null;
+  result: PublicationRevenue | null;
 }) {
   const sources = mockSources();
 
@@ -29,7 +29,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createPublicationRevenueQueryMockedResponse({
+        createGetPublicationRevenueMockedResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,

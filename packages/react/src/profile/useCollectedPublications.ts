@@ -1,7 +1,4 @@
-import {
-  AnyPublicationFragment,
-  useWalletCollectedPublicationsQuery,
-} from '@lens-protocol/api-bindings';
+import { AnyPublication, useWalletCollectedPublications } from '@lens-protocol/api-bindings';
 
 import {
   WithObserverIdOverride,
@@ -22,9 +19,9 @@ export function useCollectedPublications({
   walletAddress,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseCollectablesArgs): PaginatedReadResult<AnyPublicationFragment[]> {
+}: UseCollectablesArgs): PaginatedReadResult<AnyPublication[]> {
   return usePaginatedReadResult(
-    useWalletCollectedPublicationsQuery(
+    useWalletCollectedPublications(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

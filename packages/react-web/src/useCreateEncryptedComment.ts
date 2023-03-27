@@ -1,13 +1,13 @@
 import {
   useCreateEncryptedComment as useCreateEncryptedCommentBase,
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
   MetadataUploadHandler,
 } from '@lens-protocol/react';
 
 import { useBrowserEncryptionConfig } from './useBrowserEncryptionConfig';
 
 export type UseCreateEncryptedCommentArgs = {
-  publisher: ProfileOwnedByMeFragment;
+  publisher: ProfileOwnedByMe;
   upload: MetadataUploadHandler;
 };
 

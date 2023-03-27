@@ -1,4 +1,4 @@
-import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
+import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
   mockProfileFragment,
@@ -11,7 +11,7 @@ import {
 
 import { FollowProfilesResponder } from '../FollowProfilesResponder';
 
-function setupTestScenario({ existingProfile }: { existingProfile: ProfileFragment }) {
+function setupTestScenario({ existingProfile }: { existingProfile: Profile }) {
   const apolloCache = createMockApolloCache();
 
   apolloCache.writeFragment({
@@ -19,7 +19,7 @@ function setupTestScenario({ existingProfile }: { existingProfile: ProfileFragme
       __typename: 'Profile',
       id: existingProfile.id,
     }),
-    fragment: ProfileFragmentDoc,
+    fragment: FragmentProfile,
     fragmentName: 'Profile',
     data: existingProfile,
   });
@@ -35,7 +35,7 @@ function setupTestScenario({ existingProfile }: { existingProfile: ProfileFragme
           __typename: 'Profile',
           id: existingProfile.id,
         }),
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
         fragmentName: 'Profile',
       });
     },
@@ -73,7 +73,7 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
       const transactionData = mockBroadcastedTransactionData({ request });
       const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
-        __isFollowedByMe: false,
+        isFollowedByMe: false,
         stats: mockProfileStatsFragment({
           totalFollowers: 2,
         }),
@@ -84,7 +84,7 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
 
       expect(scenario.updatedProfile).toMatchObject({
         id: existingProfile.id,
-        __isFollowedByMe: true,
+        isFollowedByMe: true,
         stats: {
           totalFollowers: 3,
         },

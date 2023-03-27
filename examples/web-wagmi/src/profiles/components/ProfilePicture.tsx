@@ -1,4 +1,4 @@
-import { ProfileFragment } from '@lens-protocol/react-web';
+import { Profile } from '@lens-protocol/react-web';
 
 import { useBuildResourceSrc } from '../../hooks/useBuildResourceSrc';
 
@@ -37,7 +37,7 @@ function RemoteProfilePicture({ url }: RemoteProfilePictureProps) {
 }
 
 type ProfilePictureProps = {
-  picture: ProfileFragment['picture'];
+  picture: Profile['picture'];
 };
 
 export function ProfilePicture({ picture }: ProfilePictureProps) {

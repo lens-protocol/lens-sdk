@@ -1,4 +1,4 @@
-import { ProfileFragment, useProfile } from '@lens-protocol/react-web';
+import { Profile, useProfile } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -26,7 +26,7 @@ export function ProfileByHandleLayout({ handle }: ProfileByHandleLayoutProps) {
 }
 
 export function ProfileByHandle() {
-  const [profile, setProfile] = useState<ProfileFragment | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   return (
     <>

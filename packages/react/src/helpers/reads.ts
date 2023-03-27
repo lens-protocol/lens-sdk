@@ -1,5 +1,5 @@
 import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
-import { CommonPaginatedResultInfoFragment, UnspecifiedError } from '@lens-protocol/api-bindings';
+import { CommonPaginatedResultInfo, UnspecifiedError } from '@lens-protocol/api-bindings';
 import { Prettify } from '@lens-protocol/shared-kernel';
 
 /**
@@ -91,7 +91,7 @@ export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
 };
 
 export type PaginatedQueryData<K> = {
-  result: { pageInfo: CommonPaginatedResultInfoFragment; items: K };
+  result: { pageInfo: CommonPaginatedResultInfo; items: K };
 };
 
 type InferPaginatedItemsType<T extends PaginatedQueryData<unknown>> = T extends PaginatedQueryData<

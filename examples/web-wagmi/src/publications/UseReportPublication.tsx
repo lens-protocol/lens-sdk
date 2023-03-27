@@ -1,9 +1,9 @@
 import {
   useReportPublication,
   ReportReason,
-  CommentFragment,
-  MirrorFragment,
-  PostFragment,
+  Comment,
+  Mirror,
+  Post,
   usePublication,
 } from '@lens-protocol/react-web';
 
@@ -13,7 +13,7 @@ import { never } from '../utils';
 import { PublicationCard } from './components/PublicationCard';
 
 type ReportPublicationFormProps = {
-  publication: CommentFragment | MirrorFragment | PostFragment;
+  publication: Comment | Mirror | Post;
 };
 
 function ReportPublicationForm({ publication }: ReportPublicationFormProps) {

@@ -1,10 +1,10 @@
 import {
   CreatePostTypedDataDocument,
-  CreatePostTypedDataMutation,
-  CreatePostTypedDataMutationVariables,
+  CreatePostTypedDataData,
+  CreatePostTypedDataVariables,
   CreatePostViaDispatcherDocument,
-  CreatePostViaDispatcherMutation,
-  CreatePostViaDispatcherMutationVariables,
+  CreatePostViaDispatcherData,
+  CreatePostViaDispatcherVariables,
   CreatePublicPostRequest as CreatePublicPostRequestArg,
   LensApolloClient,
   omitTypename,
@@ -49,8 +49,8 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     nonce?: Nonce,
   ): Promise<UnsignedLensProtocolCall<CreatePostRequest>> {
     const { data } = await this.apolloClient.mutate<
-      CreatePostTypedDataMutation,
-      CreatePostTypedDataMutationVariables
+      CreatePostTypedDataData,
+      CreatePostTypedDataVariables
     >({
       mutation: CreatePostTypedDataDocument,
       variables: {
@@ -68,8 +68,8 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
 
   private async initiatePostCreation(requestArgs: CreatePublicPostRequestArg): AsyncRelayReceipt {
     const { data } = await this.apolloClient.mutate<
-      CreatePostViaDispatcherMutation,
-      CreatePostViaDispatcherMutationVariables
+      CreatePostViaDispatcherData,
+      CreatePostViaDispatcherVariables
     >({
       mutation: CreatePostViaDispatcherDocument,
       variables: {
