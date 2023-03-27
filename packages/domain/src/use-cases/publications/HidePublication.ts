@@ -1,5 +1,7 @@
+import { PublicationId } from '../../entities';
+
 export type HidePublicationRequest = {
-  publicationId: string;
+  publicationId: PublicationId;
 };
 
 export interface IHidePublicationGateway {

@@ -17,7 +17,6 @@ import {
   AnyConditionOutput,
   Attribute,
   CollectConditionOutput,
-  CollectModule,
   Comment,
   ContractType,
   EnabledModule,
@@ -40,7 +39,6 @@ import {
   Post,
   Profile,
   ProfileFollowRevenue,
-  ProfileMedia,
   ProfileOwnershipOutput,
   ProfileStats,
   PublicationMainFocus,
@@ -56,7 +54,7 @@ import {
   Wallet,
   WhoReactedResult,
 } from '../operations';
-import { AnyPublication, erc20Amount } from '../utils';
+import { AnyPublication, CollectModule, erc20Amount, ProfileMedia } from '../utils';
 
 export function mockMediaFragment(overrides?: Partial<Media>): Media {
   return {
@@ -254,8 +252,8 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
     metadata: mockMetadataOutputFragment(),
     profile: mockProfileFragment(),
     collectedBy: null,
-    __collectModule: mockFreeCollectModuleSettings(),
-    __collectNftAddress: mockEthereumAddress(),
+    collectModule: mockFreeCollectModuleSettings(),
+    collectNftAddress: mockEthereumAddress(),
     collectPolicy: mockNoFeeCollectPolicy(),
     referenceModule: null,
     hasCollectedByMe: false,
@@ -298,8 +296,8 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
     collectedBy: null,
     commentOn: mainPost,
     mainPost: mainPost,
-    __collectModule: mockFreeCollectModuleSettings(),
-    __collectNftAddress: mockEthereumAddress(),
+    collectModule: mockFreeCollectModuleSettings(),
+    collectNftAddress: mockEthereumAddress(),
     collectPolicy: mockNoFeeCollectPolicy(),
     referenceModule: null,
     hasCollectedByMe: false,

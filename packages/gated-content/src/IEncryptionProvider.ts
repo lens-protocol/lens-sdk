@@ -2,8 +2,6 @@
  * A cipher that can encrypt and decrypt data.
  *
  * Implementation MUST be able to encrypt and decrypt data using AES-256-CBC.
- *
- * @category Encryption
  */
 export interface ICipher {
   /**
@@ -28,8 +26,6 @@ export interface ICipher {
 
 /**
  * A provider of encryption ciphers.
- *
- * @category Encryption
  */
 export interface IEncryptionProvider {
   /**

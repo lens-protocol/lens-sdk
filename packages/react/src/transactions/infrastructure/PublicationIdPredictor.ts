@@ -13,7 +13,7 @@ import { PendingTransactionGateway } from '../adapters/PendingTransactionGateway
 import { IPublicationIdPredictor } from './AccessConditionBuilderFactory';
 
 function formatPublicationId(profileId: ProfileId, newSequentialId: number): PublicationId {
-  return `${profileId}-0x${newSequentialId.toString(16)}`;
+  return `${profileId}-0x${newSequentialId.toString(16)}` as PublicationId;
 }
 
 export class PublicationIdPredictor implements IPublicationIdPredictor {

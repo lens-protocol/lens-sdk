@@ -8,7 +8,6 @@ import { DateUtils, never, Overwrite, Prettify } from '@lens-protocol/shared-ker
 
 import { CollectPolicy, CollectState } from '../CollectPolicy';
 import {
-  CollectModule,
   Comment,
   FeeCollectModuleSettings,
   FreeCollectModuleSettings,
@@ -24,6 +23,10 @@ import {
 import { erc20Amount } from './amount';
 import { isProfileOwnedByMe, ProfileOwnedByMe } from './profile';
 import { PickByTypename, Typename } from './types';
+
+export type CollectModule = ContentPublication['collectModule'];
+
+export type ReferenceModule = NonNullable<ContentPublication['referenceModule']>;
 
 export function isPostPublication<T extends Typename<string>>(
   publication: T,
@@ -69,7 +72,10 @@ export type AnyPublication = Comment | Mirror | Post;
 
 export type ContentPublication = Comment | Post;
 
-type Gated<T extends ContentPublication> = Overwrite<
+/**
+ * @internal
+ */
+export type Gated<T extends ContentPublication> = Overwrite<
   T,
   {
     isGated: true;
@@ -112,10 +118,10 @@ export function createCollectRequest(
   publication: AnyPublication,
   collector: ProfileOwnedByMe,
 ): CollectRequest {
-  const collectModule =
+  const collectModule: CollectModule =
     publication.__typename === 'Mirror'
-      ? publication.mirrorOf.__collectModule
-      : publication.__collectModule;
+      ? publication.mirrorOf.collectModule
+      : publication.collectModule;
 
   switch (collectModule.__typename) {
     case 'FreeCollectModuleSettings':

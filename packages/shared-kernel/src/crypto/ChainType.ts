@@ -8,8 +8,6 @@
  * This allows consumers to express logic that is bound to the nature of the chain but not to a specific chain id, so that
  * the same logic can be deployed into a testing, staging or production environment without having to change the code or
  * account for the different chain ids associated with each environment.
- *
- * @category Common
  */
 export enum ChainType {
   ETHEREUM = 'ethereum',

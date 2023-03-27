@@ -13,7 +13,10 @@ import {
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { createPublicationMetadataFilters, PublicationMetadataFilters } from '../publication';
+import {
+  createPublicationMetadataFilters,
+  PublicationMetadataFilters,
+} from '../publication/filters';
 import { FeedEventItemType } from './FeedEventItemType';
 
 const SupportedFeedEvenTypesMap: Record<FeedEventItemType, LensFeedEventItemType> = {

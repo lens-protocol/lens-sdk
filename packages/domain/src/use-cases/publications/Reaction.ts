@@ -1,8 +1,8 @@
-import { ReactionType } from '../../entities';
+import { ProfileId, PublicationId, ReactionType } from '../../entities';
 
 export type ReactionRequest = {
-  profileId: string;
-  publicationId: string;
+  profileId: ProfileId;
+  publicationId: PublicationId;
   reactionType: ReactionType;
 };
 

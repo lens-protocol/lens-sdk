@@ -5,7 +5,6 @@ import { invariant } from '../ts-helpers/invariant';
 /**
  * BigDecimal is a value object representing an high precision decimal number.
  *
- * @category Common
  * @sealed
  */
 export class BigDecimal extends DecimalJS.clone({

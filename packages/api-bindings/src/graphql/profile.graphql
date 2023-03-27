@@ -30,16 +30,6 @@ fragment NftImage on NftImage {
   verified
 }
 
-fragment ProfileMedia on ProfileMedia {
-  ... on NftImage {
-    ...NftImage
-  }
-
-  ... on MediaSet {
-    ...MediaSet
-  }
-}
-
 fragment Attribute on Attribute {
   __typename
   displayType
@@ -71,11 +61,25 @@ fragment Profile on Profile {
   ownedBy
 
   picture {
-    ...ProfileMedia
+    ... on NftImage {
+      ...NftImage
+    }
+
+    ... on MediaSet {
+      ...MediaSet
+    }
   }
+
   coverPicture {
-    ...ProfileMedia
+    ... on NftImage {
+      ...NftImage
+    }
+
+    ... on MediaSet {
+      ...MediaSet
+    }
   }
+
   stats {
     ...ProfileStats
   }
@@ -88,9 +92,11 @@ fragment Profile on Profile {
     ... on ProfileFollowModuleSettings {
       ...ProfileFollowModuleSettings
     }
+
     ... on RevertFollowModuleSettings {
       ...RevertFollowModuleSettings
     }
+
     ... on UnknownFollowModuleSettings {
       ...UnknownFollowModuleSettings
     }
