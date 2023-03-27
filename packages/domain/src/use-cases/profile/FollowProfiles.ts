@@ -5,6 +5,7 @@ import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
+  ProfileId,
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import {
@@ -26,22 +27,22 @@ export type FollowRequestFee = {
 
 export type UnconstrainedFollowRequest = {
   followerAddress: string;
-  profileId: string;
+  profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILES;
 };
 
 export type PaidFollowRequest = {
   followerAddress: string;
-  profileId: string;
+  profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILES;
   fee: FollowRequestFee;
 };
 
 export type ProfileOwnerFollowRequest = {
   followerAddress: string;
-  profileId: string;
+  profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILES;
-  followerProfileId: string;
+  followerProfileId: ProfileId;
 };
 
 export type FollowRequest =

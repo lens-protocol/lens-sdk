@@ -17,6 +17,7 @@ import {
 import {
   NativeTransaction,
   Nonce,
+  ProfileId,
   TransactionError,
   TransactionErrorReason,
 } from '@lens-protocol/domain/entities';
@@ -121,7 +122,7 @@ export class ProfileMetadataCallGateway
     };
   }
 
-  private async retrieveProfileDetails(profileId: string): Promise<Profile> {
+  private async retrieveProfileDetails(profileId: ProfileId): Promise<Profile> {
     const { data } = await this.apolloClient.query<GetProfileData, GetProfileVariables>({
       fetchPolicy: 'cache-first',
       query: GetProfileDocument,

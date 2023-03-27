@@ -1,6 +1,6 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { AppId, DecryptionCriteria, TransactionKind } from '../../entities';
+import { AppId, DecryptionCriteria, ProfileId, TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -17,7 +17,7 @@ export type CreatePostRequest = {
   media?: MediaObject[];
   reference: ReferencePolicyConfig;
   collect: CollectPolicyConfig;
-  profileId: string;
+  profileId: ProfileId;
   kind: TransactionKind.CREATE_POST;
   locale: Locale;
   delegate: boolean;

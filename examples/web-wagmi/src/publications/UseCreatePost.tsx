@@ -1,4 +1,4 @@
-import { useFeed, useRecentPosts } from '@lens-protocol/react-web';
+import { ProfileId, useFeed, useRecentPosts } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth';
@@ -9,7 +9,7 @@ import { PostComposer } from './components/PostComposer';
 import { PublicationCard } from './components/PublicationCard';
 
 type TimelineProps = {
-  profileId: string;
+  profileId: ProfileId;
 };
 
 export function Timeline({ profileId }: TimelineProps) {

@@ -83,7 +83,7 @@ describe(`Given the "${transformFollowCondition.name}" function`, () => {
       {
         description: 'if with invalid profile Id',
         condition: mockFollowConditionInput({
-          profileId: 'a',
+          profileId: mockProfileId(),
         }),
       },
     ])(`should throw an ${InvalidAccessCriteriaError.name} $description`, ({ condition }) => {

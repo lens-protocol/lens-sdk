@@ -7,7 +7,7 @@ import {
   GetAllProfilesVariables,
   GetAllProfilesDocument,
 } from '@lens-protocol/api-bindings';
-import { Profile } from '@lens-protocol/domain/entities';
+import { Profile, ProfileId } from '@lens-protocol/domain/entities';
 import { IProfileGateway } from '@lens-protocol/domain/use-cases/profile';
 
 export class ProfileGateway implements IProfileGateway {
@@ -39,7 +39,7 @@ export class ProfileGateway implements IProfileGateway {
     });
   }
 
-  async getProfileById(profileId: string): Promise<Profile | null> {
+  async getProfileById(profileId: ProfileId): Promise<Profile | null> {
     const { data } = await this.apolloClient.query<GetProfileData, GetProfileVariables>({
       query: GetProfileDocument,
       // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.

@@ -182,7 +182,7 @@ export function mockCreateEncryptedPostRequest(
 
 export function mockReactionRequest(overrides?: Partial<ReactionRequest>): ReactionRequest {
   return {
-    profileId: faker.datatype.uuid(),
+    profileId: mockProfileId(),
     publicationId: faker.datatype.uuid(),
     reactionType: ReactionType.UPVOTE,
     ...overrides,

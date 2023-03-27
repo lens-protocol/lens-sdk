@@ -3,6 +3,7 @@ import {
   useProfilesOwnedBy,
   Profile,
   useActiveProfileSwitch,
+  ProfileId,
 } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
@@ -17,7 +18,7 @@ type ProfilesSwitcherProps = {
 
 function ProfilesSwitcher({ address, current }: ProfilesSwitcherProps) {
   const { execute: switchProfile, isPending } = useActiveProfileSwitch();
-  const [selected, setSelected] = useState<string>(current.id);
+  const [selected, setSelected] = useState<ProfileId>(current.id);
   const { data, error, loading } = useProfilesOwnedBy({ address, limit: 50 });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

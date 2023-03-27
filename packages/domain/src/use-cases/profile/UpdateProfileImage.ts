@@ -1,4 +1,4 @@
-import { TransactionKind } from '../../entities';
+import { ProfileId, TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -14,7 +14,7 @@ import { NftOwnershipSignature } from './ProveNftOwnership';
  */
 export type UpdateNftProfileImageRequest = {
   kind: TransactionKind.UPDATE_PROFILE_IMAGE;
-  profileId: string;
+  profileId: ProfileId;
   signature: NftOwnershipSignature;
   delegate: boolean;
 };
@@ -22,7 +22,7 @@ export type UpdateNftProfileImageRequest = {
 export type UpdateOffChainProfileImageRequest = {
   url: string;
   kind: TransactionKind.UPDATE_PROFILE_IMAGE;
-  profileId: string;
+  profileId: ProfileId;
   delegate: boolean;
 };
 

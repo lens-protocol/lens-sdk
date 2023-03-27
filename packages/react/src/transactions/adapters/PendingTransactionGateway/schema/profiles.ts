@@ -2,7 +2,7 @@ import { TransactionKind } from '@lens-protocol/domain/entities';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { z } from 'zod';
 
-import { Erc20AmountSchema } from './common';
+import { Erc20AmountSchema, ProfileIdSchema } from './common';
 
 export const CreateProfileRequestSchema = z.object({
   handle: z.string(),
@@ -17,31 +17,31 @@ const FollowRequestFeeSchema = z.object({
 
 export const UnconstrainedFollowRequestSchema = z.object({
   followerAddress: z.string(),
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILES),
 });
 
 export const PaidFollowRequestSchema = z.object({
   followerAddress: z.string(),
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILES),
   fee: FollowRequestFeeSchema,
 });
 
 export const ProfileOwnerFollowRequestSchema = z.object({
   followerAddress: z.string(),
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILES),
   followerProfileId: z.string(),
 });
 
 export const UnfollowRequestSchema = z.object({
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UNFOLLOW_PROFILE),
 });
 
 export const UpdateDispatcherConfigRequestSchema = z.object({
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   enabled: z.boolean(),
   kind: z.literal(TransactionKind.UPDATE_DISPATCHER_CONFIG),
 });
@@ -61,7 +61,7 @@ const NoFeeFollowPolicySchema = z.object({
 });
 
 export const UpdateFollowPolicyRequestSchema = z.object({
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   policy: z.union([ChargeFollowPolicySchema, NoFeeFollowPolicySchema]),
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
 });
@@ -75,7 +75,7 @@ export const UpdateProfileDetailsRequestSchema = z.object({
   bio: z.string().nullable().optional(),
   coverPicture: z.string().nullable().optional(),
   name: z.string(),
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UPDATE_PROFILE_DETAILS),
   delegate: z.boolean(),
 });
@@ -87,7 +87,7 @@ const NftOwnershipSignatureSchema = z.object({
 
 export const UpdateNftProfileImageRequestSchema = z.object({
   kind: z.literal(TransactionKind.UPDATE_PROFILE_IMAGE),
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   signature: NftOwnershipSignatureSchema,
   delegate: z.boolean(),
 });
@@ -95,6 +95,6 @@ export const UpdateNftProfileImageRequestSchema = z.object({
 export const UpdateOffChainProfileImageRequestSchema = z.object({
   url: z.string(),
   kind: z.literal(TransactionKind.UPDATE_PROFILE_IMAGE),
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   delegate: z.boolean(),
 });

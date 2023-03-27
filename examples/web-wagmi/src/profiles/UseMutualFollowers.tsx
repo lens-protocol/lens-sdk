@@ -1,4 +1,4 @@
-import { useMutualFollowers, useProfile, Profile } from '@lens-protocol/react-web';
+import { useMutualFollowers, useProfile, Profile, ProfileId } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -6,8 +6,8 @@ import { SmallProfileCard } from './components/ProfileCard';
 import { ProfileSelector } from './components/ProfileSelector';
 
 type ViewMutualFollowersProps = {
-  profileToCompareOne: string;
-  profileToCompareTwo: string;
+  profileToCompareOne: ProfileId;
+  profileToCompareTwo: ProfileId;
 };
 
 function ViewMutualFollowers({

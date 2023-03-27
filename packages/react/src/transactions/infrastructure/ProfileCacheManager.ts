@@ -8,6 +8,7 @@ import {
   FragmentProfile,
   Sources,
 } from '@lens-protocol/api-bindings';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { never } from '@lens-protocol/shared-kernel';
 
 import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
@@ -20,7 +21,7 @@ export class ProfileCacheManager implements IProfileCacheManager {
     return this.request(args, 'cache-first');
   }
 
-  async refreshProfile(id: string) {
+  async refreshProfile(id: ProfileId) {
     const profile = await this.request({ id }, 'network-only');
 
     return profile ?? never();

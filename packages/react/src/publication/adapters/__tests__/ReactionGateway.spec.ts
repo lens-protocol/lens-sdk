@@ -6,14 +6,14 @@ import {
   createRemoveReactionMockedResponse,
   createRemoveReactionMockedResponseWithGraphqlValidationError,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockReactionRequest } from '@lens-protocol/domain/mocks';
+import { mockProfileId, mockReactionRequest } from '@lens-protocol/domain/mocks';
 
 import { ReactionGateway } from '../ReactionGateway';
 
 describe(`Given an instance of the ${ReactionGateway.name}`, () => {
   describe(`and the ${ReactionGateway.prototype.add.name} method`, () => {
     it(`should add reaction with success`, async () => {
-      const profileId = faker.datatype.uuid();
+      const profileId = mockProfileId();
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
@@ -38,7 +38,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
 
   describe(`and the ${ReactionGateway.prototype.remove.name} method`, () => {
     it(`should remove reaction with success`, async () => {
-      const profileId = faker.datatype.uuid();
+      const profileId = mockProfileId();
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
@@ -61,7 +61,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
     });
 
     it(`should be resilient to ${ValidationError.name} and resolve the promise`, async () => {
-      const profileId = faker.datatype.uuid();
+      const profileId = mockProfileId();
       const publicationId = faker.datatype.uuid();
       const apolloClient = createMockApolloClientWithMultipleResponses([
         createRemoveReactionMockedResponseWithGraphqlValidationError({

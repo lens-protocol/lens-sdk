@@ -6,7 +6,7 @@ import {
   createRemoveReactionMockedResponse,
   mockPostFragment,
 } from '@lens-protocol/api-bindings/mocks';
-import { ReactionType } from '@lens-protocol/domain/entities';
+import { ProfileId, ReactionType } from '@lens-protocol/domain/entities';
 import { act } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
@@ -17,7 +17,7 @@ function setupUseReaction({
   mocks = [],
   profileId,
 }: {
-  profileId: string;
+  profileId: ProfileId;
   mocks?: ReadonlyArray<MockedResponse<unknown>>;
 }) {
   const apolloClient = createMockApolloClientWithMultipleResponses(mocks);

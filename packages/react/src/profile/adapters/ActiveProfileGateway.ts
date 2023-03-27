@@ -1,11 +1,11 @@
-import { Profile } from '@lens-protocol/domain/entities';
+import { Profile, ProfileId } from '@lens-protocol/domain/entities';
 import * as profileUseCases from '@lens-protocol/domain/use-cases/profile';
 import * as walletsUseCases from '@lens-protocol/domain/use-cases/wallets';
 import { IStorage } from '@lens-protocol/storage';
 import { z } from 'zod';
 
 export const StoredActiveProfileData = z.object({
-  id: z.string(),
+  id: z.custom<ProfileId>(),
   handle: z.string(),
 });
 

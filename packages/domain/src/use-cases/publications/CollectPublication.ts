@@ -5,6 +5,7 @@ import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
+  ProfileId,
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import {
@@ -24,7 +25,7 @@ export enum CollectType {
 }
 
 export type FreeCollectRequest = {
-  profileId: string;
+  profileId: ProfileId;
   type: CollectType.FREE;
   publicationId: string;
   kind: TransactionKind.COLLECT_PUBLICATION;
@@ -36,7 +37,7 @@ export type CollectFee = {
 };
 
 export type PaidCollectRequest = {
-  profileId: string;
+  profileId: ProfileId;
   type: CollectType.PAID;
   publicationId: string;
   fee: CollectFee;

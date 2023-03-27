@@ -1,7 +1,7 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
-import { mockNonce } from '@lens-protocol/domain/mocks';
+import { mockNonce, mockProfileId } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { createGraphQLValidationError } from '../../apollo/__helpers__/mocks';
@@ -186,11 +186,11 @@ export function mockCreateCommentTypedDataData({
       domain: mockEIP712TypedDataDomain(),
       value: {
         __typename: 'CreateCommentEIP712TypedDataValue',
-        profileIdPointed: '',
+        profileIdPointed: mockProfileId(),
         pubIdPointed: '',
         nonce,
         deadline: 1644303500,
-        profileId: '0x0132',
+        profileId: mockProfileId(),
         contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
         collectModule: '0xd6072BB2ABc0a9d1331c7d0B83AE6C47f2Cb86A3',
         collectModuleInitData: '0x',
@@ -277,7 +277,7 @@ export function mockCreateFollowTypedDataData({
         __typename: 'CreateFollowEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        profileIds: [faker.datatype.uuid()],
+        profileIds: [mockProfileId()],
         datas: ['0x00'],
       },
     }),
@@ -299,7 +299,7 @@ export function mockCreateSetProfileMetadataTypedDataData({
         __typename: 'CreateSetProfileMetadataURIEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        profileId: faker.datatype.uuid(),
+        profileId: mockProfileId(),
         metadata: faker.internet.url(),
       },
     }),
@@ -357,7 +357,7 @@ export function mockCreateSetFollowModuleTypedDataData({
         __typename: 'CreateSetFollowModuleEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        profileId: faker.datatype.uuid(),
+        profileId: mockProfileId(),
         followModule: mockEthereumAddress(),
         followModuleInitData: '0x00',
       },
@@ -422,7 +422,7 @@ export function mockCreateSetDispatcherTypedDataData({
         __typename: 'CreateSetDispatcherEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        profileId: faker.datatype.uuid(),
+        profileId: mockProfileId(),
         dispatcher: faker.datatype.uuid(),
       },
     }),
@@ -577,7 +577,7 @@ export function mockCreateCollectTypedDataData({
         __typename: 'CreateCollectEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        profileId: faker.datatype.uuid(),
+        profileId: mockProfileId(),
         pubId: faker.datatype.uuid(),
         data: ['0x00'],
       },

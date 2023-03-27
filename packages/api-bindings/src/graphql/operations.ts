@@ -1,7 +1,16 @@
 /** Code generated. DO NOT EDIT. */
 /* eslint-disable @typescript-eslint/ban-types */
-import type { AppId, DecryptionCriteria, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';
+import type {
+  AppId,
+  DecryptionCriteria,
+  ProfileId,
+  PublicationId,
+} from '@lens-protocol/domain/entities';
+import type {
+  Erc20Amount as ClientErc20Amount,
+  EthereumAddress,
+  Url,
+} from '@lens-protocol/shared-kernel';
 
 import type { CollectPolicy } from './CollectPolicy';
 import type { ContentEncryptionKey } from './ContentEncryptionKey';
@@ -224,7 +233,7 @@ export type ClaimHandleRequest = {
 export enum ClaimStatus {
   AlreadyClaimed = 'ALREADY_CLAIMED',
   ClaimFailed = 'CLAIM_FAILED',
-  NotClaimed = 'NOT_CLAIMED'
+  NotClaimed = 'NOT_CLAIMED',
 }
 
 /** Condition that signifies if address or profile has collected a publication */
@@ -269,7 +278,7 @@ export enum CollectModules {
   MultirecipientFeeCollectModule = 'MultirecipientFeeCollectModule',
   RevertCollectModule = 'RevertCollectModule',
   TimedFeeCollectModule = 'TimedFeeCollectModule',
-  UnknownCollectModule = 'UnknownCollectModule'
+  UnknownCollectModule = 'UnknownCollectModule',
 }
 
 export type CollectProxyAction = {
@@ -279,20 +288,20 @@ export type CollectProxyAction = {
 /** The comment ordering types */
 export enum CommentOrderingTypes {
   Desc = 'DESC',
-  Ranking = 'RANKING'
+  Ranking = 'RANKING',
 }
 
 /** The comment ranking filter types */
 export enum CommentRankingFilter {
   NoneRelevant = 'NONE_RELEVANT',
-  Relevant = 'RELEVANT'
+  Relevant = 'RELEVANT',
 }
 
 /** The gated publication access criteria contract types */
 export enum ContractType {
   Erc20 = 'ERC20',
   Erc721 = 'ERC721',
-  Erc1155 = 'ERC1155'
+  Erc1155 = 'ERC1155',
 }
 
 export type CreateCollectRequest = {
@@ -406,7 +415,7 @@ export type CurRequest = {
 
 /** The custom filters types */
 export enum CustomFiltersTypes {
-  Gardeners = 'GARDENERS'
+  Gardeners = 'GARDENERS',
 }
 
 /** The reason why a profile cannot decrypt a publication */
@@ -421,7 +430,7 @@ export enum DecryptFailReason {
   MissingEncryptionParams = 'MISSING_ENCRYPTION_PARAMS',
   ProfileDoesNotExist = 'PROFILE_DOES_NOT_EXIST',
   UnauthorizedAddress = 'UNAUTHORIZED_ADDRESS',
-  UnauthorizedBalance = 'UNAUTHORIZED_BALANCE'
+  UnauthorizedBalance = 'UNAUTHORIZED_BALANCE',
 }
 
 export type DefaultProfileRequest = {
@@ -472,7 +481,7 @@ export type Erc4626FeeCollectModuleParams = {
 
 /** The gated publication encryption provider */
 export enum EncryptionProvider {
-  LitProtocol = 'LIT_PROTOCOL'
+  LitProtocol = 'LIT_PROTOCOL',
 }
 
 export type EoaOwnershipInput = {
@@ -549,7 +558,7 @@ export enum FeedEventItemType {
   Mirror = 'MIRROR',
   Post = 'POST',
   ReactionComment = 'REACTION_COMMENT',
-  ReactionPost = 'REACTION_POST'
+  ReactionPost = 'REACTION_POST',
 }
 
 export type FeedHighlightsRequest = {
@@ -611,7 +620,7 @@ export enum FollowModules {
   FeeFollowModule = 'FeeFollowModule',
   ProfileFollowModule = 'ProfileFollowModule',
   RevertFollowModule = 'RevertFollowModule',
-  UnknownFollowModule = 'UnknownFollowModule'
+  UnknownFollowModule = 'UnknownFollowModule',
 }
 
 export type FollowProxyAction = {
@@ -758,7 +767,7 @@ export type IdKitPhoneVerifyWebhookRequest = {
 /** The verify webhook result status type */
 export enum IdKitPhoneVerifyWebhookResultStatusType {
   AlreadyVerified = 'ALREADY_VERIFIED',
-  Success = 'SUCCESS'
+  Success = 'SUCCESS',
 }
 
 export type IllegalReasonInputParams = {
@@ -992,7 +1001,7 @@ export enum NotificationTypes {
   MirroredComment = 'MIRRORED_COMMENT',
   MirroredPost = 'MIRRORED_POST',
   ReactionComment = 'REACTION_COMMENT',
-  ReactionPost = 'REACTION_POST'
+  ReactionPost = 'REACTION_POST',
 }
 
 export type OrConditionInput = {
@@ -1074,7 +1083,7 @@ export enum ProfileSortCriteria {
   MostFollowers = 'MOST_FOLLOWERS',
   MostMirrors = 'MOST_MIRRORS',
   MostPosts = 'MOST_POSTS',
-  MostPublication = 'MOST_PUBLICATION'
+  MostPublication = 'MOST_PUBLICATION',
 }
 
 export type ProxyActionRequest = {
@@ -1086,7 +1095,7 @@ export type ProxyActionRequest = {
 export enum ProxyActionStatusTypes {
   Complete = 'COMPLETE',
   Minting = 'MINTING',
-  Transferring = 'TRANSFERRING'
+  Transferring = 'TRANSFERRING',
 }
 
 export type PublicMediaRequest = {
@@ -1104,7 +1113,7 @@ export type PublicMediaRequest = {
 export enum PublicationContentWarning {
   Nsfw = 'NSFW',
   Sensitive = 'SENSITIVE',
-  Spoiler = 'SPOILER'
+  Spoiler = 'SPOILER',
 }
 
 /** The publication main focus */
@@ -1115,12 +1124,12 @@ export enum PublicationMainFocus {
   Image = 'IMAGE',
   Link = 'LINK',
   TextOnly = 'TEXT_ONLY',
-  Video = 'VIDEO'
+  Video = 'VIDEO',
 }
 
 /** The source of the media */
 export enum PublicationMediaSource {
-  Lens = 'LENS'
+  Lens = 'LENS',
 }
 
 /** Publication metadata content warning filters */
@@ -1133,7 +1142,7 @@ export type PublicationMetadataContentWarningFilter = {
 export enum PublicationMetadataDisplayTypes {
   Date = 'date',
   Number = 'number',
-  String = 'string'
+  String = 'string',
 }
 
 /** Publication metadata filters */
@@ -1162,7 +1171,7 @@ export enum PublicationMetadataStatusType {
   MetadataValidationFailed = 'METADATA_VALIDATION_FAILED',
   NotFound = 'NOT_FOUND',
   Pending = 'PENDING',
-  Success = 'SUCCESS'
+  Success = 'SUCCESS',
 }
 
 /** Publication metadata tag filter */
@@ -1265,7 +1274,7 @@ export type PublicationQueryRequest = {
 /** Publication reporting fraud subreason */
 export enum PublicationReportingFraudSubreason {
   Impersonation = 'IMPERSONATION',
-  Scam = 'SCAM'
+  Scam = 'SCAM',
 }
 
 /** Publication reporting illegal subreason */
@@ -1274,7 +1283,7 @@ export enum PublicationReportingIllegalSubreason {
   DirectThreat = 'DIRECT_THREAT',
   HumanAbuse = 'HUMAN_ABUSE',
   ThreatIndividual = 'THREAT_INDIVIDUAL',
-  Violence = 'VIOLENCE'
+  Violence = 'VIOLENCE',
 }
 
 /** Publication reporting reason */
@@ -1282,13 +1291,13 @@ export enum PublicationReportingReason {
   Fraud = 'FRAUD',
   Illegal = 'ILLEGAL',
   Sensitive = 'SENSITIVE',
-  Spam = 'SPAM'
+  Spam = 'SPAM',
 }
 
 /** Publication reporting sensitive subreason */
 export enum PublicationReportingSensitiveSubreason {
   Nsfw = 'NSFW',
-  Offensive = 'OFFENSIVE'
+  Offensive = 'OFFENSIVE',
 }
 
 /** Publication reporting spam subreason */
@@ -1299,7 +1308,7 @@ export enum PublicationReportingSpamSubreason {
   MisuseHashtags = 'MISUSE_HASHTAGS',
   Repetitive = 'REPETITIVE',
   SomethingElse = 'SOMETHING_ELSE',
-  Unrelated = 'UNRELATED'
+  Unrelated = 'UNRELATED',
 }
 
 export type PublicationRevenueQueryRequest = {
@@ -1317,14 +1326,14 @@ export enum PublicationSortCriteria {
   Latest = 'LATEST',
   TopCollected = 'TOP_COLLECTED',
   TopCommented = 'TOP_COMMENTED',
-  TopMirrored = 'TOP_MIRRORED'
+  TopMirrored = 'TOP_MIRRORED',
 }
 
 /** The publication types */
 export enum PublicationTypes {
   Comment = 'COMMENT',
   Mirror = 'MIRROR',
-  Post = 'POST'
+  Post = 'POST',
 }
 
 export type PublicationsQueryRequest = {
@@ -1369,7 +1378,7 @@ export type ReactionRequest = {
 /** Reaction types */
 export enum ReactionTypes {
   Downvote = 'DOWNVOTE',
-  Upvote = 'UPVOTE'
+  Upvote = 'UPVOTE',
 }
 
 export type RecipientDataInput = {
@@ -1399,7 +1408,7 @@ export type ReferenceModuleParams = {
 export enum ReferenceModules {
   DegreesOfSeparationReferenceModule = 'DegreesOfSeparationReferenceModule',
   FollowerOnlyReferenceModule = 'FollowerOnlyReferenceModule',
-  UnknownReferenceModule = 'UnknownReferenceModule'
+  UnknownReferenceModule = 'UnknownReferenceModule',
 }
 
 /** The refresh request */
@@ -1419,7 +1428,7 @@ export enum RelayErrorReasons {
   HandleTaken = 'HANDLE_TAKEN',
   NotAllowed = 'NOT_ALLOWED',
   Rejected = 'REJECTED',
-  WrongWalletSigned = 'WRONG_WALLET_SIGNED'
+  WrongWalletSigned = 'WRONG_WALLET_SIGNED',
 }
 
 /** The request object to remove interests from a profile */
@@ -1450,7 +1459,7 @@ export enum ScalarOperator {
   GreaterThanOrEqual = 'GREATER_THAN_OR_EQUAL',
   LessThan = 'LESS_THAN',
   LessThanOrEqual = 'LESS_THAN_OR_EQUAL',
-  NotEqual = 'NOT_EQUAL'
+  NotEqual = 'NOT_EQUAL',
 }
 
 export type SearchQueryRequest = {
@@ -1467,7 +1476,7 @@ export type SearchQueryRequest = {
 /** Search request types */
 export enum SearchRequestTypes {
   Profile = 'PROFILE',
-  Publication = 'PUBLICATION'
+  Publication = 'PUBLICATION',
 }
 
 export type SensitiveReasonInputParams = {
@@ -1507,7 +1516,7 @@ export type SpamReasonInputParams = {
 /** The publications tags sort criteria */
 export enum TagSortCriteria {
   Alphabetical = 'ALPHABETICAL',
-  MostPopular = 'MOST_POPULAR'
+  MostPopular = 'MOST_POPULAR',
 }
 
 export type TimedFeeCollectModuleParams = {
@@ -1523,7 +1532,7 @@ export type TimedFeeCollectModuleParams = {
 
 /** Transaction error reason */
 export enum TransactionErrorReasons {
-  Reverted = 'REVERTED'
+  Reverted = 'REVERTED',
 }
 
 export type TypedDataOptions = {
@@ -1594,7 +1603,7 @@ export type WhoReactedPublicationRequest = {
 /** The worldcoin signal type */
 export enum WorldcoinPhoneVerifyType {
   Orb = 'ORB',
-  Phone = 'PHONE'
+  Phone = 'PHONE',
 }
 
 export type WorldcoinPhoneVerifyWebhookRequest = {
@@ -1607,7 +1616,6 @@ export type AuthChallengeVariables = Exact<{
   address: Scalars['EthereumAddress'];
 }>;
 
-
 export type AuthChallengeData = { result: { text: string } };
 
 export type AuthAuthenticateVariables = Exact<{
@@ -1615,43 +1623,78 @@ export type AuthAuthenticateVariables = Exact<{
   signature: Scalars['Signature'];
 }>;
 
-
-export type AuthAuthenticateData = { result: { accessToken: string, refreshToken: string } };
+export type AuthAuthenticateData = { result: { accessToken: string; refreshToken: string } };
 
 export type AuthRefreshVariables = Exact<{
   refreshToken: Scalars['Jwt'];
 }>;
 
-
-export type AuthRefreshData = { result: { accessToken: string, refreshToken: string } };
+export type AuthRefreshData = { result: { accessToken: string; refreshToken: string } };
 
 export type CreateCollectTypedDataVariables = Exact<{
   request: CreateCollectRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
-
-export type CreateCollectTypedDataData = { result: { id: string, expiresAt: string, typedData: { types: { CollectWithSig: Array<{ name: string, type: string }> }, domain: Eip712TypedDataDomain, value: { nonce: number, deadline: unknown, profileId: ProfileId, pubId: unknown, data: unknown } } } };
+export type CreateCollectTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { CollectWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomain;
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileId: ProfileId;
+        pubId: unknown;
+        data: unknown;
+      };
+    };
+  };
+};
 
 export type CreateCommentTypedDataVariables = Exact<{
   request: CreatePublicCommentRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
-
-export type CreateCommentTypedDataData = { result: { id: string, expiresAt: string, typedData: { types: { CommentWithSig: Array<{ name: string, type: string }> }, domain: Eip712TypedDataDomain, value: { nonce: number, deadline: unknown, profileId: ProfileId, contentURI: unknown, profileIdPointed: ProfileId, pubIdPointed: unknown, collectModule: string, collectModuleInitData: unknown, referenceModuleData: string, referenceModule: string, referenceModuleInitData: string } } } };
+export type CreateCommentTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { CommentWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomain;
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileId: ProfileId;
+        contentURI: unknown;
+        profileIdPointed: ProfileId;
+        pubIdPointed: unknown;
+        collectModule: string;
+        collectModuleInitData: unknown;
+        referenceModuleData: string;
+        referenceModule: string;
+        referenceModuleInitData: string;
+      };
+    };
+  };
+};
 
 export type CreateCommentViaDispatcherVariables = Exact<{
   request: CreatePublicCommentRequest;
 }>;
 
+export type CreateCommentViaDispatcherData = {
+  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+};
 
-export type CreateCommentViaDispatcherData = { result: RelayResult_RelayError_ | RelayResult_RelayerResult_ };
-
-export type CommentWithFirstComment = (
-  { __typename: 'Comment', firstComment: Comment | null }
-  & Comment
-);
+export type CommentWithFirstComment = {
+  __typename: 'Comment';
+  firstComment: Comment | null;
+} & Comment;
 
 export type CommentsVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
@@ -1662,89 +1705,325 @@ export type CommentsVariables = Exact<{
   metadata?: InputMaybe<PublicationMetadataFilters>;
 }>;
 
+export type CommentsData = {
+  result: { items: Array<CommentWithFirstComment | {}>; pageInfo: CommonPaginatedResultInfo };
+};
 
-export type CommentsData = { result: { items: Array<CommentWithFirstComment | {}>, pageInfo: CommonPaginatedResultInfo } };
+export type Erc20Fields = {
+  __typename: 'Erc20';
+  name: string;
+  symbol: string;
+  decimals: number;
+  address: string;
+};
 
-export type Erc20Fields = { __typename: 'Erc20', name: string, symbol: string, decimals: number, address: string };
+export type Erc20AmountFields = { __typename: 'Erc20Amount'; value: string; asset: Erc20Fields };
 
-export type Erc20AmountFields = { __typename: 'Erc20Amount', value: string, asset: Erc20Fields };
+export type ModuleFeeAmount = { __typename: 'ModuleFeeAmount'; value: string; asset: Erc20Fields };
 
-export type ModuleFeeAmount = { __typename: 'ModuleFeeAmount', value: string, asset: Erc20Fields };
+export type AaveFeeCollectModuleSettings = {
+  __typename: 'AaveFeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmount;
+};
 
-export type AaveFeeCollectModuleSettings = { __typename: 'AaveFeeCollectModuleSettings', contractAddress: string, followerOnly: boolean, recipient: EthereumAddress, referralFee: number, collectLimitOptional: string | null, endTimestampOptional: string | null, amount: ModuleFeeAmount };
+export type Erc4626FeeCollectModuleSettings = {
+  __typename: 'ERC4626FeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  vault: string;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmount;
+};
 
-export type Erc4626FeeCollectModuleSettings = { __typename: 'ERC4626FeeCollectModuleSettings', contractAddress: string, followerOnly: boolean, recipient: EthereumAddress, referralFee: number, vault: string, collectLimitOptional: string | null, endTimestampOptional: string | null, amount: ModuleFeeAmount };
-
-export type MultirecipientFeeCollectModuleSettings = { __typename: 'MultirecipientFeeCollectModuleSettings', contractAddress: string, followerOnly: boolean, referralFee: number, collectLimitOptional: string | null, endTimestampOptional: string | null, amount: ModuleFeeAmount, recipients: Array<{ recipient: EthereumAddress, split: number }> };
+export type MultirecipientFeeCollectModuleSettings = {
+  __typename: 'MultirecipientFeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  referralFee: number;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmount;
+  recipients: Array<{ recipient: EthereumAddress; split: number }>;
+};
 
 export type UnknownCollectModuleSettings = { __typename: 'UnknownCollectModuleSettings' };
 
-export type FreeCollectModuleSettings = { __typename: 'FreeCollectModuleSettings', contractAddress: string, followerOnly: boolean };
+export type FreeCollectModuleSettings = {
+  __typename: 'FreeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+};
 
-export type FeeCollectModuleSettings = { __typename: 'FeeCollectModuleSettings', contractAddress: string, followerOnly: boolean, recipient: EthereumAddress, referralFee: number, amount: ModuleFeeAmount };
+export type FeeCollectModuleSettings = {
+  __typename: 'FeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  amount: ModuleFeeAmount;
+};
 
-export type LimitedFeeCollectModuleSettings = { __typename: 'LimitedFeeCollectModuleSettings', collectLimit: string, contractAddress: string, followerOnly: boolean, recipient: EthereumAddress, referralFee: number, amount: ModuleFeeAmount };
+export type LimitedFeeCollectModuleSettings = {
+  __typename: 'LimitedFeeCollectModuleSettings';
+  collectLimit: string;
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  amount: ModuleFeeAmount;
+};
 
-export type LimitedTimedFeeCollectModuleSettings = { __typename: 'LimitedTimedFeeCollectModuleSettings', collectLimit: string, contractAddress: string, followerOnly: boolean, endTimestamp: string, recipient: EthereumAddress, referralFee: number, amount: ModuleFeeAmount };
+export type LimitedTimedFeeCollectModuleSettings = {
+  __typename: 'LimitedTimedFeeCollectModuleSettings';
+  collectLimit: string;
+  contractAddress: string;
+  followerOnly: boolean;
+  endTimestamp: string;
+  recipient: EthereumAddress;
+  referralFee: number;
+  amount: ModuleFeeAmount;
+};
 
-export type RevertCollectModuleSettings = { __typename: 'RevertCollectModuleSettings', contractAddress: string };
+export type RevertCollectModuleSettings = {
+  __typename: 'RevertCollectModuleSettings';
+  contractAddress: string;
+};
 
-export type TimedFeeCollectModuleSettings = { __typename: 'TimedFeeCollectModuleSettings', contractAddress: string, followerOnly: boolean, endTimestamp: string, recipient: EthereumAddress, referralFee: number, amount: ModuleFeeAmount };
+export type TimedFeeCollectModuleSettings = {
+  __typename: 'TimedFeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  endTimestamp: string;
+  recipient: EthereumAddress;
+  referralFee: number;
+  amount: ModuleFeeAmount;
+};
 
-export type Wallet = { __typename: 'Wallet', address: EthereumAddress, defaultProfile: Profile | null };
+export type Wallet = {
+  __typename: 'Wallet';
+  address: EthereumAddress;
+  defaultProfile: Profile | null;
+};
 
-export type Media = { __typename: 'Media', altTag: string | null, cover: Url | null, mimeType: string | null, url: Url };
+export type Media = {
+  __typename: 'Media';
+  altTag: string | null;
+  cover: Url | null;
+  mimeType: string | null;
+  url: Url;
+};
 
-export type MediaSet = { __typename: 'MediaSet', original: Media };
+export type MediaSet = { __typename: 'MediaSet'; original: Media };
 
-export type MetadataOutput = { __typename: 'MetadataOutput', animatedUrl: Url | null, name: string | null, description: string | null, mainContentFocus: PublicationMainFocus, content: string | null, image: Url | null, media: Array<MediaSet>, attributes: Array<MetadataAttributeOutput>, encryptionParams: EncryptionParamsOutput | null };
+export type MetadataOutput = {
+  __typename: 'MetadataOutput';
+  animatedUrl: Url | null;
+  name: string | null;
+  description: string | null;
+  mainContentFocus: PublicationMainFocus;
+  content: string | null;
+  image: Url | null;
+  media: Array<MediaSet>;
+  attributes: Array<MetadataAttributeOutput>;
+  encryptionParams: EncryptionParamsOutput | null;
+};
 
-export type MetadataAttributeOutput = { __typename: 'MetadataAttributeOutput', traitType: string | null, value: string | null };
+export type MetadataAttributeOutput = {
+  __typename: 'MetadataAttributeOutput';
+  traitType: string | null;
+  value: string | null;
+};
 
-export type PublicationStats = { __typename: 'PublicationStats', totalAmountOfMirrors: number, totalUpvotes: number, totalDownvotes: number, totalAmountOfCollects: number, totalAmountOfComments: number, commentsCount: number };
+export type PublicationStats = {
+  __typename: 'PublicationStats';
+  totalAmountOfMirrors: number;
+  totalUpvotes: number;
+  totalDownvotes: number;
+  totalAmountOfCollects: number;
+  totalAmountOfComments: number;
+  commentsCount: number;
+};
 
-export type MirrorBase = { __typename: 'Mirror', id: PublicationId, createdAt: string, hidden: boolean, profile: Profile };
+export type MirrorBase = {
+  __typename: 'Mirror';
+  id: PublicationId;
+  createdAt: string;
+  hidden: boolean;
+  profile: Profile;
+};
 
-export type Mirror = (
-  { __typename: 'Mirror', mirrorOf: Comment | Post }
-  & MirrorBase
-);
+export type Mirror = { __typename: 'Mirror'; mirrorOf: Comment | Post } & MirrorBase;
 
-export type FollowOnlyReferenceModuleSettings = { __typename: 'FollowOnlyReferenceModuleSettings', contractAddress: string };
+export type FollowOnlyReferenceModuleSettings = {
+  __typename: 'FollowOnlyReferenceModuleSettings';
+  contractAddress: string;
+};
 
-export type DegreesOfSeparationReferenceModuleSettings = { __typename: 'DegreesOfSeparationReferenceModuleSettings', contractAddress: string, commentsRestricted: boolean, degreesOfSeparation: number, mirrorsRestricted: boolean };
+export type DegreesOfSeparationReferenceModuleSettings = {
+  __typename: 'DegreesOfSeparationReferenceModuleSettings';
+  contractAddress: string;
+  commentsRestricted: boolean;
+  degreesOfSeparation: number;
+  mirrorsRestricted: boolean;
+};
 
-export type UnknownReferenceModuleSettings = { __typename: 'UnknownReferenceModuleSettings', contractAddress: string, referenceModuleReturnData: string };
+export type UnknownReferenceModuleSettings = {
+  __typename: 'UnknownReferenceModuleSettings';
+  contractAddress: string;
+  referenceModuleReturnData: string;
+};
 
-export type CommentBase = { __typename: 'Comment', id: PublicationId, collectNftAddress: string | null, createdAt: string, hidden: boolean, isGated: boolean, reaction: ReactionTypes | null, hasCollectedByMe: boolean, mirrors: Array<PublicationId>, hasOptimisticCollectedByMe: boolean, isOptimisticMirroredByMe: boolean, collectPolicy: CollectPolicy, referencePolicy: ReferencePolicy, decryptionCriteria: DecryptionCriteria | null, stats: PublicationStats, metadata: MetadataOutput, profile: Profile, collectedBy: Wallet | null, collectModule: AaveFeeCollectModuleSettings | Erc4626FeeCollectModuleSettings | FeeCollectModuleSettings | FreeCollectModuleSettings | LimitedFeeCollectModuleSettings | LimitedTimedFeeCollectModuleSettings | MultirecipientFeeCollectModuleSettings | RevertCollectModuleSettings | TimedFeeCollectModuleSettings | UnknownCollectModuleSettings, referenceModule: DegreesOfSeparationReferenceModuleSettings | FollowOnlyReferenceModuleSettings | UnknownReferenceModuleSettings | null, canComment: { result: boolean }, canMirror: { result: boolean }, canObserverDecrypt: { result: boolean, reasons: Array<DecryptFailReason> | null } };
+export type CommentBase = {
+  __typename: 'Comment';
+  id: PublicationId;
+  collectNftAddress: string | null;
+  createdAt: string;
+  hidden: boolean;
+  isGated: boolean;
+  reaction: ReactionTypes | null;
+  hasCollectedByMe: boolean;
+  mirrors: Array<PublicationId>;
+  hasOptimisticCollectedByMe: boolean;
+  isOptimisticMirroredByMe: boolean;
+  collectPolicy: CollectPolicy;
+  referencePolicy: ReferencePolicy;
+  decryptionCriteria: DecryptionCriteria | null;
+  stats: PublicationStats;
+  metadata: MetadataOutput;
+  profile: Profile;
+  collectedBy: Wallet | null;
+  collectModule:
+    | AaveFeeCollectModuleSettings
+    | Erc4626FeeCollectModuleSettings
+    | FeeCollectModuleSettings
+    | FreeCollectModuleSettings
+    | LimitedFeeCollectModuleSettings
+    | LimitedTimedFeeCollectModuleSettings
+    | MultirecipientFeeCollectModuleSettings
+    | RevertCollectModuleSettings
+    | TimedFeeCollectModuleSettings
+    | UnknownCollectModuleSettings;
+  referenceModule:
+    | DegreesOfSeparationReferenceModuleSettings
+    | FollowOnlyReferenceModuleSettings
+    | UnknownReferenceModuleSettings
+    | null;
+  canComment: { result: boolean };
+  canMirror: { result: boolean };
+  canObserverDecrypt: { result: boolean; reasons: Array<DecryptFailReason> | null };
+};
 
-export type CommonPaginatedResultInfo = { __typename: 'PaginatedResultInfo', prev: string | null, next: string | null, totalCount: number | null };
+export type CommonPaginatedResultInfo = {
+  __typename: 'PaginatedResultInfo';
+  prev: string | null;
+  next: string | null;
+  totalCount: number | null;
+};
 
-export type Comment = (
-  { __typename: 'Comment', commentOn: CommentBase | MirrorBase | Post | null, mainPost: MirrorBase | Post }
-  & CommentBase
-);
+export type Comment = {
+  __typename: 'Comment';
+  commentOn: CommentBase | MirrorBase | Post | null;
+  mainPost: MirrorBase | Post;
+} & CommentBase;
 
-export type Post = { __typename: 'Post', id: PublicationId, collectNftAddress: string | null, createdAt: string, hidden: boolean, isGated: boolean, reaction: ReactionTypes | null, hasCollectedByMe: boolean, mirrors: Array<PublicationId>, hasOptimisticCollectedByMe: boolean, isOptimisticMirroredByMe: boolean, collectPolicy: CollectPolicy, referencePolicy: ReferencePolicy, decryptionCriteria: DecryptionCriteria | null, stats: PublicationStats, metadata: MetadataOutput, profile: Profile, collectedBy: Wallet | null, collectModule: AaveFeeCollectModuleSettings | Erc4626FeeCollectModuleSettings | FeeCollectModuleSettings | FreeCollectModuleSettings | LimitedFeeCollectModuleSettings | LimitedTimedFeeCollectModuleSettings | MultirecipientFeeCollectModuleSettings | RevertCollectModuleSettings | TimedFeeCollectModuleSettings | UnknownCollectModuleSettings, referenceModule: DegreesOfSeparationReferenceModuleSettings | FollowOnlyReferenceModuleSettings | UnknownReferenceModuleSettings | null, canComment: { result: boolean }, canMirror: { result: boolean }, canObserverDecrypt: { result: boolean, reasons: Array<DecryptFailReason> | null } };
+export type Post = {
+  __typename: 'Post';
+  id: PublicationId;
+  collectNftAddress: string | null;
+  createdAt: string;
+  hidden: boolean;
+  isGated: boolean;
+  reaction: ReactionTypes | null;
+  hasCollectedByMe: boolean;
+  mirrors: Array<PublicationId>;
+  hasOptimisticCollectedByMe: boolean;
+  isOptimisticMirroredByMe: boolean;
+  collectPolicy: CollectPolicy;
+  referencePolicy: ReferencePolicy;
+  decryptionCriteria: DecryptionCriteria | null;
+  stats: PublicationStats;
+  metadata: MetadataOutput;
+  profile: Profile;
+  collectedBy: Wallet | null;
+  collectModule:
+    | AaveFeeCollectModuleSettings
+    | Erc4626FeeCollectModuleSettings
+    | FeeCollectModuleSettings
+    | FreeCollectModuleSettings
+    | LimitedFeeCollectModuleSettings
+    | LimitedTimedFeeCollectModuleSettings
+    | MultirecipientFeeCollectModuleSettings
+    | RevertCollectModuleSettings
+    | TimedFeeCollectModuleSettings
+    | UnknownCollectModuleSettings;
+  referenceModule:
+    | DegreesOfSeparationReferenceModuleSettings
+    | FollowOnlyReferenceModuleSettings
+    | UnknownReferenceModuleSettings
+    | null;
+  canComment: { result: boolean };
+  canMirror: { result: boolean };
+  canObserverDecrypt: { result: boolean; reasons: Array<DecryptFailReason> | null };
+};
 
-export type PendingPost = { __typename: 'PendingPost', id: PublicationId, content: string | null, locale: string, mainContentFocus: PublicationMainFocus, media: Array<Media> | null, profile: Profile };
+export type PendingPost = {
+  __typename: 'PendingPost';
+  id: PublicationId;
+  content: string | null;
+  locale: string;
+  mainContentFocus: PublicationMainFocus;
+  media: Array<Media> | null;
+  profile: Profile;
+};
 
-export type Eip712TypedDataDomain = { __typename: 'EIP712TypedDataDomain', name: string, chainId: number, version: string, verifyingContract: string };
+export type Eip712TypedDataDomain = {
+  __typename: 'EIP712TypedDataDomain';
+  name: string;
+  chainId: number;
+  version: string;
+  verifyingContract: string;
+};
 
-export type EnabledModuleCurrenciesVariables = Exact<{ [key: string]: never; }>;
-
+export type EnabledModuleCurrenciesVariables = Exact<{ [key: string]: never }>;
 
 export type EnabledModuleCurrenciesData = { result: Array<Erc20Fields> };
 
-export type ElectedMirror = { __typename: 'ElectedMirror', mirrorId: PublicationId, timestamp: string, profile: Profile };
+export type ElectedMirror = {
+  __typename: 'ElectedMirror';
+  mirrorId: PublicationId;
+  timestamp: string;
+  profile: Profile;
+};
 
-export type MirrorEvent = { __typename: 'MirrorEvent', timestamp: string, profile: Profile };
+export type MirrorEvent = { __typename: 'MirrorEvent'; timestamp: string; profile: Profile };
 
-export type CollectedEvent = { __typename: 'CollectedEvent', timestamp: string, profile: Profile };
+export type CollectedEvent = { __typename: 'CollectedEvent'; timestamp: string; profile: Profile };
 
-export type ReactionEvent = { __typename: 'ReactionEvent', reaction: ReactionTypes, timestamp: string, profile: Profile };
+export type ReactionEvent = {
+  __typename: 'ReactionEvent';
+  reaction: ReactionTypes;
+  timestamp: string;
+  profile: Profile;
+};
 
-export type FeedItem = { __typename: 'FeedItem', root: Comment | Post, comments: Array<Comment> | null, electedMirror: ElectedMirror | null, mirrors: Array<MirrorEvent>, collects: Array<CollectedEvent>, reactions: Array<ReactionEvent> };
+export type FeedItem = {
+  __typename: 'FeedItem';
+  root: Comment | Post;
+  comments: Array<Comment> | null;
+  electedMirror: ElectedMirror | null;
+  mirrors: Array<MirrorEvent>;
+  collects: Array<CollectedEvent>;
+  reactions: Array<ReactionEvent>;
+};
 
 export type FeedVariables = Exact<{
   profileId: Scalars['ProfileId'];
@@ -1756,8 +2035,7 @@ export type FeedVariables = Exact<{
   metadata?: InputMaybe<PublicationMetadataFilters>;
 }>;
 
-
-export type FeedData = { result: { items: Array<FeedItem>, pageInfo: CommonPaginatedResultInfo } };
+export type FeedData = { result: { items: Array<FeedItem>; pageInfo: CommonPaginatedResultInfo } };
 
 export type ExploreProfilesVariables = Exact<{
   sortCriteria: ProfileSortCriteria;
@@ -1767,87 +2045,224 @@ export type ExploreProfilesVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-
-export type ExploreProfilesData = { result: { items: Array<Profile>, pageInfo: CommonPaginatedResultInfo } };
+export type ExploreProfilesData = {
+  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+};
 
 export type CreateFollowTypedDataVariables = Exact<{
   request: FollowRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
+export type CreateFollowTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { FollowWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomain;
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileIds: Array<ProfileId>;
+        datas: Array<unknown>;
+      };
+    };
+  };
+};
 
-export type CreateFollowTypedDataData = { result: { id: string, expiresAt: string, typedData: { types: { FollowWithSig: Array<{ name: string, type: string }> }, domain: Eip712TypedDataDomain, value: { nonce: number, deadline: unknown, profileIds: Array<ProfileId>, datas: Array<unknown> } } } };
+export type NftOwnershipOutput = {
+  __typename: 'NftOwnershipOutput';
+  contractAddress: string;
+  chainID: number;
+  contractType: ContractType;
+  tokenIds: Array<string> | null;
+};
 
-export type NftOwnershipOutput = { __typename: 'NftOwnershipOutput', contractAddress: string, chainID: number, contractType: ContractType, tokenIds: Array<string> | null };
+export type Erc20OwnershipOutput = {
+  __typename: 'Erc20OwnershipOutput';
+  amount: string;
+  chainID: number;
+  condition: ScalarOperator;
+  contractAddress: string;
+  decimals: number;
+  name: string;
+  symbol: string;
+};
 
-export type Erc20OwnershipOutput = { __typename: 'Erc20OwnershipOutput', amount: string, chainID: number, condition: ScalarOperator, contractAddress: string, decimals: number, name: string, symbol: string };
+export type EoaOwnershipOutput = { __typename: 'EoaOwnershipOutput'; address: EthereumAddress };
 
-export type EoaOwnershipOutput = { __typename: 'EoaOwnershipOutput', address: EthereumAddress };
+export type ProfileOwnershipOutput = { __typename: 'ProfileOwnershipOutput'; profileId: ProfileId };
 
-export type ProfileOwnershipOutput = { __typename: 'ProfileOwnershipOutput', profileId: ProfileId };
+export type FollowConditionOutput = { __typename: 'FollowConditionOutput'; profileId: ProfileId };
 
-export type FollowConditionOutput = { __typename: 'FollowConditionOutput', profileId: ProfileId };
+export type CollectConditionOutput = {
+  __typename: 'CollectConditionOutput';
+  publicationId: PublicationId | null;
+  thisPublication: boolean | null;
+};
 
-export type CollectConditionOutput = { __typename: 'CollectConditionOutput', publicationId: PublicationId | null, thisPublication: boolean | null };
+export type LeafConditionOutput = {
+  __typename: 'AccessConditionOutput';
+  nft: NftOwnershipOutput | null;
+  token: Erc20OwnershipOutput | null;
+  eoa: EoaOwnershipOutput | null;
+  profile: ProfileOwnershipOutput | null;
+  follow: FollowConditionOutput | null;
+  collect: CollectConditionOutput | null;
+};
 
-export type LeafConditionOutput = { __typename: 'AccessConditionOutput', nft: NftOwnershipOutput | null, token: Erc20OwnershipOutput | null, eoa: EoaOwnershipOutput | null, profile: ProfileOwnershipOutput | null, follow: FollowConditionOutput | null, collect: CollectConditionOutput | null };
+export type OrConditionOutput = {
+  __typename: 'OrConditionOutput';
+  criteria: Array<LeafConditionOutput>;
+};
 
-export type OrConditionOutput = { __typename: 'OrConditionOutput', criteria: Array<LeafConditionOutput> };
+export type AndConditionOutput = {
+  __typename: 'AndConditionOutput';
+  criteria: Array<LeafConditionOutput>;
+};
 
-export type AndConditionOutput = { __typename: 'AndConditionOutput', criteria: Array<LeafConditionOutput> };
+export type AnyConditionOutput = {
+  __typename: 'AccessConditionOutput';
+  or: OrConditionOutput | null;
+  and: AndConditionOutput | null;
+} & LeafConditionOutput;
 
-export type AnyConditionOutput = (
-  { __typename: 'AccessConditionOutput', or: OrConditionOutput | null, and: AndConditionOutput | null }
-  & LeafConditionOutput
-);
+export type RootConditionOutput = {
+  __typename: 'AccessConditionOutput';
+  or: { criteria: Array<AnyConditionOutput> } | null;
+};
 
-export type RootConditionOutput = { __typename: 'AccessConditionOutput', or: { criteria: Array<AnyConditionOutput> } | null };
+export type EncryptedMedia = {
+  __typename: 'EncryptedMedia';
+  altTag: string | null;
+  cover: string | null;
+  mimeType: string | null;
+  url: Url;
+};
 
-export type EncryptedMedia = { __typename: 'EncryptedMedia', altTag: string | null, cover: string | null, mimeType: string | null, url: Url };
+export type EncryptedMediaSet = { __typename: 'EncryptedMediaSet'; original: EncryptedMedia };
 
-export type EncryptedMediaSet = { __typename: 'EncryptedMediaSet', original: EncryptedMedia };
+export type EncryptedFieldsOutput = {
+  __typename: 'EncryptedFieldsOutput';
+  animation_url: string | null;
+  content: string | null;
+  external_url: string | null;
+  image: string | null;
+  media: Array<{ original: EncryptedMedia }> | null;
+};
 
-export type EncryptedFieldsOutput = { __typename: 'EncryptedFieldsOutput', animation_url: string | null, content: string | null, external_url: string | null, image: string | null, media: Array<{ original: EncryptedMedia }> | null };
-
-export type EncryptionParamsOutput = { __typename: 'EncryptionParamsOutput', encryptionProvider: EncryptionProvider, accessCondition: RootConditionOutput, encryptedFields: EncryptedFieldsOutput, providerSpecificParams: { encryptionKey: ContentEncryptionKey } };
+export type EncryptionParamsOutput = {
+  __typename: 'EncryptionParamsOutput';
+  encryptionProvider: EncryptionProvider;
+  accessCondition: RootConditionOutput;
+  encryptedFields: EncryptedFieldsOutput;
+  providerSpecificParams: { encryptionKey: ContentEncryptionKey };
+};
 
 export type CreateMirrorTypedDataVariables = Exact<{
   request: CreateMirrorRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
-
-export type CreateMirrorTypedDataData = { result: { id: string, expiresAt: string, typedData: { types: { MirrorWithSig: Array<{ name: string, type: string }> }, domain: Eip712TypedDataDomain, value: { nonce: number, deadline: unknown, profileId: ProfileId, profileIdPointed: ProfileId, pubIdPointed: unknown, referenceModuleData: string, referenceModule: string, referenceModuleInitData: string } } } };
+export type CreateMirrorTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { MirrorWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomain;
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileId: ProfileId;
+        profileIdPointed: ProfileId;
+        pubIdPointed: unknown;
+        referenceModuleData: string;
+        referenceModule: string;
+        referenceModuleInitData: string;
+      };
+    };
+  };
+};
 
 export type CreateMirrorViaDispatcherVariables = Exact<{
   request: CreateMirrorRequest;
 }>;
 
+export type CreateMirrorViaDispatcherData = {
+  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+};
 
-export type CreateMirrorViaDispatcherData = { result: RelayResult_RelayError_ | RelayResult_RelayerResult_ };
+export type ModuleInfo = { __typename: 'ModuleInfo'; name: string; type: string };
 
-export type ModuleInfo = { __typename: 'ModuleInfo', name: string, type: string };
+export type EnabledModule = {
+  __typename: 'EnabledModule';
+  moduleName: string;
+  contractAddress: string;
+  inputParams: Array<ModuleInfo>;
+  redeemParams: Array<ModuleInfo>;
+  returnDataParams: Array<ModuleInfo>;
+};
 
-export type EnabledModule = { __typename: 'EnabledModule', moduleName: string, contractAddress: string, inputParams: Array<ModuleInfo>, redeemParams: Array<ModuleInfo>, returnDataParams: Array<ModuleInfo> };
+export type EnabledModules = {
+  __typename: 'EnabledModules';
+  collectModules: Array<EnabledModule>;
+  followModules: Array<EnabledModule>;
+  referenceModules: Array<EnabledModule>;
+};
 
-export type EnabledModules = { __typename: 'EnabledModules', collectModules: Array<EnabledModule>, followModules: Array<EnabledModule>, referenceModules: Array<EnabledModule> };
-
-export type EnabledModulesVariables = Exact<{ [key: string]: never; }>;
-
+export type EnabledModulesVariables = Exact<{ [key: string]: never }>;
 
 export type EnabledModulesData = { result: EnabledModules };
 
-export type NewFollowerNotification = { __typename: 'NewFollowerNotification', notificationId: string, createdAt: string, isFollowedByMe: boolean, wallet: Wallet };
+export type NewFollowerNotification = {
+  __typename: 'NewFollowerNotification';
+  notificationId: string;
+  createdAt: string;
+  isFollowedByMe: boolean;
+  wallet: Wallet;
+};
 
-export type NewCollectNotification = { __typename: 'NewCollectNotification', notificationId: string, createdAt: string, wallet: Wallet, collectedPublication: Comment | Mirror | Post };
+export type NewCollectNotification = {
+  __typename: 'NewCollectNotification';
+  notificationId: string;
+  createdAt: string;
+  wallet: Wallet;
+  collectedPublication: Comment | Mirror | Post;
+};
 
-export type NewMirrorNotification = { __typename: 'NewMirrorNotification', notificationId: string, createdAt: string, profile: Profile, publication: Comment | Post };
+export type NewMirrorNotification = {
+  __typename: 'NewMirrorNotification';
+  notificationId: string;
+  createdAt: string;
+  profile: Profile;
+  publication: Comment | Post;
+};
 
-export type NewCommentNotification = { __typename: 'NewCommentNotification', notificationId: string, createdAt: string, profile: Profile, comment: Comment };
+export type NewCommentNotification = {
+  __typename: 'NewCommentNotification';
+  notificationId: string;
+  createdAt: string;
+  profile: Profile;
+  comment: Comment;
+};
 
-export type NewMentionNotification = { __typename: 'NewMentionNotification', notificationId: string, createdAt: string, mentionPublication: Comment | Post };
+export type NewMentionNotification = {
+  __typename: 'NewMentionNotification';
+  notificationId: string;
+  createdAt: string;
+  mentionPublication: Comment | Post;
+};
 
-export type NewReactionNotification = { __typename: 'NewReactionNotification', notificationId: string, createdAt: string, reaction: ReactionTypes, profile: Profile, publication: Comment | Mirror | Post };
+export type NewReactionNotification = {
+  __typename: 'NewReactionNotification';
+  notificationId: string;
+  createdAt: string;
+  reaction: ReactionTypes;
+  profile: Profile;
+  publication: Comment | Mirror | Post;
+};
 
 export type NotificationsVariables = Exact<{
   observerId: Scalars['ProfileId'];
@@ -1857,15 +2272,25 @@ export type NotificationsVariables = Exact<{
   notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
 }>;
 
-
-export type NotificationsData = { result: { items: Array<NewCollectNotification | NewCommentNotification | NewFollowerNotification | NewMentionNotification | NewMirrorNotification | NewReactionNotification>, pageInfo: CommonPaginatedResultInfo } };
+export type NotificationsData = {
+  result: {
+    items: Array<
+      | NewCollectNotification
+      | NewCommentNotification
+      | NewFollowerNotification
+      | NewMentionNotification
+      | NewMirrorNotification
+      | NewReactionNotification
+    >;
+    pageInfo: CommonPaginatedResultInfo;
+  };
+};
 
 export type UnreadNotificationCountVariables = Exact<{
   profileId: Scalars['ProfileId'];
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
   notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
 }>;
-
 
 export type UnreadNotificationCountData = { result: { pageInfo: { totalCount: number | null } } };
 
@@ -1874,45 +2299,144 @@ export type CreatePostTypedDataVariables = Exact<{
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
-
-export type CreatePostTypedDataData = { result: { id: string, expiresAt: string, typedData: { types: { PostWithSig: Array<{ name: string, type: string }> }, domain: Eip712TypedDataDomain, value: { nonce: number, deadline: unknown, profileId: ProfileId, contentURI: unknown, collectModule: string, collectModuleInitData: unknown, referenceModule: string, referenceModuleInitData: string } } } };
+export type CreatePostTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { PostWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomain;
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileId: ProfileId;
+        contentURI: unknown;
+        collectModule: string;
+        collectModuleInitData: unknown;
+        referenceModule: string;
+        referenceModuleInitData: string;
+      };
+    };
+  };
+};
 
 export type CreatePostViaDispatcherVariables = Exact<{
   request: CreatePublicPostRequest;
 }>;
 
-
-export type CreatePostViaDispatcherData = { result: RelayResult_RelayError_ | RelayResult_RelayerResult_ };
+export type CreatePostViaDispatcherData = {
+  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+};
 
 export type CreateSetDispatcherTypedDataVariables = Exact<{
   request: SetDispatcherRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
+export type CreateSetDispatcherTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { SetDispatcherWithSig: Array<{ name: string; type: string }> };
+      domain: { name: string; chainId: number; version: string; verifyingContract: string };
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileId: ProfileId;
+        dispatcher: EthereumAddress;
+      };
+    };
+  };
+};
 
-export type CreateSetDispatcherTypedDataData = { result: { id: string, expiresAt: string, typedData: { types: { SetDispatcherWithSig: Array<{ name: string, type: string }> }, domain: { name: string, chainId: number, version: string, verifyingContract: string }, value: { nonce: number, deadline: unknown, profileId: ProfileId, dispatcher: EthereumAddress } } } };
+export type FeeFollowModuleSettings = {
+  __typename: 'FeeFollowModuleSettings';
+  contractAddress: string;
+  recipient: EthereumAddress;
+  amount: ModuleFeeAmount;
+};
 
-export type FeeFollowModuleSettings = { __typename: 'FeeFollowModuleSettings', contractAddress: string, recipient: EthereumAddress, amount: ModuleFeeAmount };
+export type ProfileFollowModuleSettings = {
+  __typename: 'ProfileFollowModuleSettings';
+  contractAddress: string;
+};
 
-export type ProfileFollowModuleSettings = { __typename: 'ProfileFollowModuleSettings', contractAddress: string };
+export type RevertFollowModuleSettings = {
+  __typename: 'RevertFollowModuleSettings';
+  contractAddress: string;
+};
 
-export type RevertFollowModuleSettings = { __typename: 'RevertFollowModuleSettings', contractAddress: string };
+export type UnknownFollowModuleSettings = {
+  __typename: 'UnknownFollowModuleSettings';
+  contractAddress: string;
+};
 
-export type UnknownFollowModuleSettings = { __typename: 'UnknownFollowModuleSettings', contractAddress: string };
+export type NftImage = {
+  __typename: 'NftImage';
+  contractAddress: string;
+  tokenId: string;
+  uri: Url;
+  verified: boolean;
+};
 
-export type NftImage = { __typename: 'NftImage', contractAddress: string, tokenId: string, uri: Url, verified: boolean };
+export type Attribute = {
+  __typename: 'Attribute';
+  displayType: string | null;
+  key: string;
+  value: string;
+};
 
-export type Attribute = { __typename: 'Attribute', displayType: string | null, key: string, value: string };
+export type ProfileStats = {
+  __typename: 'ProfileStats';
+  totalCollects: number;
+  totalComments: number;
+  totalFollowers: number;
+  totalFollowing: number;
+  totalMirrors: number;
+  totalPosts: number;
+  totalPublications: number;
+  commentsCount: number;
+  postsCount: number;
+  mirrorsCount: number;
+};
 
-export type ProfileStats = { __typename: 'ProfileStats', totalCollects: number, totalComments: number, totalFollowers: number, totalFollowing: number, totalMirrors: number, totalPosts: number, totalPublications: number, commentsCount: number, postsCount: number, mirrorsCount: number };
-
-export type Profile = { __typename: 'Profile', id: ProfileId, name: string | null, bio: string | null, handle: string, ownedBy: EthereumAddress, followPolicy: FollowPolicy, isFollowedByMe: boolean, followStatus: FollowStatus | null, ownedByMe: boolean, attributes: ProfileAttributes, isFollowingObserver: boolean, picture: MediaSet | NftImage | null, coverPicture: MediaSet | NftImage | null, stats: ProfileStats, followModule: FeeFollowModuleSettings | ProfileFollowModuleSettings | RevertFollowModuleSettings | UnknownFollowModuleSettings | null, __attributes: Array<Attribute> | null, dispatcher: { address: EthereumAddress, canUseRelay: boolean } | null, onChainIdentity: { proofOfHumanity: boolean, ens: { name: unknown | null } | null, sybilDotOrg: { verified: boolean, source: { twitter: { handle: string | null } } }, worldcoin: { isHuman: boolean } } };
+export type Profile = {
+  __typename: 'Profile';
+  id: ProfileId;
+  name: string | null;
+  bio: string | null;
+  handle: string;
+  ownedBy: EthereumAddress;
+  followPolicy: FollowPolicy;
+  isFollowedByMe: boolean;
+  followStatus: FollowStatus | null;
+  ownedByMe: boolean;
+  attributes: ProfileAttributes;
+  isFollowingObserver: boolean;
+  picture: MediaSet | NftImage | null;
+  coverPicture: MediaSet | NftImage | null;
+  stats: ProfileStats;
+  followModule:
+    | FeeFollowModuleSettings
+    | ProfileFollowModuleSettings
+    | RevertFollowModuleSettings
+    | UnknownFollowModuleSettings
+    | null;
+  __attributes: Array<Attribute> | null;
+  dispatcher: { address: EthereumAddress; canUseRelay: boolean } | null;
+  onChainIdentity: {
+    proofOfHumanity: boolean;
+    ens: { name: unknown | null } | null;
+    sybilDotOrg: { verified: boolean; source: { twitter: { handle: string | null } } };
+    worldcoin: { isHuman: boolean };
+  };
+};
 
 export type ProfilesToFollowVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
-
 
 export type ProfilesToFollowData = { result: Array<Profile> };
 
@@ -1921,7 +2445,6 @@ export type GetProfileVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
-
 
 export type GetProfileData = { result: Profile | null };
 
@@ -1936,13 +2459,13 @@ export type GetAllProfilesVariables = Exact<{
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
 }>;
 
-
-export type GetAllProfilesData = { result: { items: Array<Profile>, pageInfo: CommonPaginatedResultInfo } };
+export type GetAllProfilesData = {
+  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+};
 
 export type CreateProfileVariables = Exact<{
   request: CreateProfileRequest;
 }>;
-
 
 export type CreateProfileData = { result: RelayResult_RelayError_ | RelayResult_RelayerResult_ };
 
@@ -1954,50 +2477,86 @@ export type MutualFollowersProfilesVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-
-export type MutualFollowersProfilesData = { result: { items: Array<Profile>, pageInfo: CommonPaginatedResultInfo } };
+export type MutualFollowersProfilesData = {
+  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+};
 
 export type CreateSetFollowModuleTypedDataVariables = Exact<{
   request: CreateSetFollowModuleRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
-
-export type CreateSetFollowModuleTypedDataData = { result: { id: string, expiresAt: string, typedData: { types: { SetFollowModuleWithSig: Array<{ name: string, type: string }> }, domain: { name: string, chainId: number, version: string, verifyingContract: string }, value: { nonce: number, deadline: unknown, profileId: ProfileId, followModule: string, followModuleInitData: unknown } } } };
+export type CreateSetFollowModuleTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { SetFollowModuleWithSig: Array<{ name: string; type: string }> };
+      domain: { name: string; chainId: number; version: string; verifyingContract: string };
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileId: ProfileId;
+        followModule: string;
+        followModuleInitData: unknown;
+      };
+    };
+  };
+};
 
 export type CreateSetProfileImageUriTypedDataVariables = Exact<{
   request: UpdateProfileImageRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
-
-export type CreateSetProfileImageUriTypedDataData = { result: { id: string, expiresAt: string, typedData: { types: { SetProfileImageURIWithSig: Array<{ name: string, type: string }> }, domain: { name: string, chainId: number, version: string, verifyingContract: string }, value: { nonce: number, deadline: unknown, profileId: ProfileId, imageURI: Url } } } };
+export type CreateSetProfileImageUriTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { SetProfileImageURIWithSig: Array<{ name: string; type: string }> };
+      domain: { name: string; chainId: number; version: string; verifyingContract: string };
+      value: { nonce: number; deadline: unknown; profileId: ProfileId; imageURI: Url };
+    };
+  };
+};
 
 export type CreateSetProfileImageUriViaDispatcherVariables = Exact<{
   request: UpdateProfileImageRequest;
 }>;
 
-
-export type CreateSetProfileImageUriViaDispatcherData = { result: RelayResult_RelayError_ | RelayResult_RelayerResult_ };
+export type CreateSetProfileImageUriViaDispatcherData = {
+  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+};
 
 export type CreateSetProfileMetadataTypedDataVariables = Exact<{
   request: CreatePublicSetProfileMetadataUriRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
-
-export type CreateSetProfileMetadataTypedDataData = { result: { id: string, expiresAt: string, typedData: { types: { SetProfileMetadataURIWithSig: Array<{ name: string, type: string }> }, domain: { name: string, chainId: number, version: string, verifyingContract: string }, value: { nonce: number, deadline: unknown, profileId: ProfileId, metadata: Url } } } };
+export type CreateSetProfileMetadataTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { SetProfileMetadataURIWithSig: Array<{ name: string; type: string }> };
+      domain: { name: string; chainId: number; version: string; verifyingContract: string };
+      value: { nonce: number; deadline: unknown; profileId: ProfileId; metadata: Url };
+    };
+  };
+};
 
 export type CreateSetProfileMetadataViaDispatcherVariables = Exact<{
   request: CreatePublicSetProfileMetadataUriRequest;
 }>;
 
+export type CreateSetProfileMetadataViaDispatcherData = {
+  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+};
 
-export type CreateSetProfileMetadataViaDispatcherData = { result: RelayResult_RelayError_ | RelayResult_RelayerResult_ };
+export type Follower = { __typename: 'Follower'; wallet: Wallet };
 
-export type Follower = { __typename: 'Follower', wallet: Wallet };
-
-export type Following = { __typename: 'Following', profile: Profile };
+export type Following = { __typename: 'Following'; profile: Profile };
 
 export type ProfileFollowersVariables = Exact<{
   profileId: Scalars['ProfileId'];
@@ -2007,8 +2566,9 @@ export type ProfileFollowersVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-
-export type ProfileFollowersData = { result: { items: Array<Follower>, pageInfo: CommonPaginatedResultInfo } };
+export type ProfileFollowersData = {
+  result: { items: Array<Follower>; pageInfo: CommonPaginatedResultInfo };
+};
 
 export type ProfileFollowingVariables = Exact<{
   walletAddress: Scalars['EthereumAddress'];
@@ -2018,26 +2578,36 @@ export type ProfileFollowingVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
+export type ProfileFollowingData = {
+  result: { items: Array<Following>; pageInfo: CommonPaginatedResultInfo };
+};
 
-export type ProfileFollowingData = { result: { items: Array<Following>, pageInfo: CommonPaginatedResultInfo } };
+export type ProxyActionStatusResult = {
+  __typename: 'ProxyActionStatusResult';
+  txHash: string;
+  txId: string;
+  status: ProxyActionStatusTypes;
+};
 
-export type ProxyActionStatusResult = { __typename: 'ProxyActionStatusResult', txHash: string, txId: string, status: ProxyActionStatusTypes };
+export type ProxyActionError = {
+  __typename: 'ProxyActionError';
+  reason: string;
+  lastKnownTxId: string | null;
+};
 
-export type ProxyActionError = { __typename: 'ProxyActionError', reason: string, lastKnownTxId: string | null };
-
-export type ProxyActionQueued = { __typename: 'ProxyActionQueued', queuedAt: string };
+export type ProxyActionQueued = { __typename: 'ProxyActionQueued'; queuedAt: string };
 
 export type ProxyActionStatusVariables = Exact<{
   proxyActionId: Scalars['ProxyActionId'];
 }>;
 
-
-export type ProxyActionStatusData = { result: ProxyActionError | ProxyActionQueued | ProxyActionStatusResult };
+export type ProxyActionStatusData = {
+  result: ProxyActionError | ProxyActionQueued | ProxyActionStatusResult;
+};
 
 export type ProxyActionVariables = Exact<{
   request: ProxyActionRequest;
 }>;
-
 
 export type ProxyActionData = { result: string };
 
@@ -2047,7 +2617,6 @@ export type PublicationVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-
 export type PublicationData = { result: Comment | Mirror | Post | null };
 
 export type PublicationByTxHashVariables = Exact<{
@@ -2056,13 +2625,11 @@ export type PublicationByTxHashVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-
 export type PublicationByTxHashData = { result: CommentWithFirstComment | Mirror | Post | null };
 
 export type HidePublicationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
 }>;
-
 
 export type HidePublicationData = { hidePublication: void | null };
 
@@ -2076,8 +2643,9 @@ export type PublicationsVariables = Exact<{
   metadata?: InputMaybe<PublicationMetadataFilters>;
 }>;
 
-
-export type PublicationsData = { result: { items: Array<Comment | Mirror | Post>, pageInfo: CommonPaginatedResultInfo } };
+export type PublicationsData = {
+  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
+};
 
 export type ExplorePublicationsVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
@@ -2091,8 +2659,9 @@ export type ExplorePublicationsVariables = Exact<{
   timestamp?: InputMaybe<Scalars['TimestampScalar']>;
 }>;
 
-
-export type ExplorePublicationsData = { result: { items: Array<Comment | Mirror | Post>, pageInfo: CommonPaginatedResultInfo } };
+export type ExplorePublicationsData = {
+  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
+};
 
 export type WhoCollectedPublicationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
@@ -2102,8 +2671,9 @@ export type WhoCollectedPublicationVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-
-export type WhoCollectedPublicationData = { result: { items: Array<Wallet>, pageInfo: CommonPaginatedResultInfo } };
+export type WhoCollectedPublicationData = {
+  result: { items: Array<Wallet>; pageInfo: CommonPaginatedResultInfo };
+};
 
 export type ProfilePublicationsForSaleVariables = Exact<{
   profileId: Scalars['ProfileId'];
@@ -2113,15 +2683,15 @@ export type ProfilePublicationsForSaleVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-
-export type ProfilePublicationsForSaleData = { result: { items: Array<Comment | Post>, pageInfo: CommonPaginatedResultInfo } };
+export type ProfilePublicationsForSaleData = {
+  result: { items: Array<Comment | Post>; pageInfo: CommonPaginatedResultInfo };
+};
 
 export type AddReactionVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
   reaction: ReactionTypes;
   profileId: Scalars['ProfileId'];
 }>;
-
 
 export type AddReactionData = { addReaction: void | null };
 
@@ -2131,10 +2701,15 @@ export type RemoveReactionVariables = Exact<{
   profileId: Scalars['ProfileId'];
 }>;
 
-
 export type RemoveReactionData = { removeReaction: void | null };
 
-export type WhoReactedResult = { __typename: 'WhoReactedResult', reactionId: unknown, reaction: ReactionTypes, reactionAt: string, profile: Profile };
+export type WhoReactedResult = {
+  __typename: 'WhoReactedResult';
+  reactionId: unknown;
+  reaction: ReactionTypes;
+  reactionAt: string;
+  profile: Profile;
+};
 
 export type WhoReactedPublicationVariables = Exact<{
   limit?: InputMaybe<Scalars['LimitScalar']>;
@@ -2144,8 +2719,9 @@ export type WhoReactedPublicationVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-
-export type WhoReactedPublicationData = { result: { items: Array<WhoReactedResult>, pageInfo: CommonPaginatedResultInfo } };
+export type WhoReactedPublicationData = {
+  result: { items: Array<WhoReactedResult>; pageInfo: CommonPaginatedResultInfo };
+};
 
 export type ReportPublicationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
@@ -2153,19 +2729,25 @@ export type ReportPublicationVariables = Exact<{
   additionalComments?: InputMaybe<Scalars['String']>;
 }>;
 
-
 export type ReportPublicationData = { reportPublication: void | null };
 
-export type RevenueAggregate = { __typename: 'RevenueAggregate', totalAmount: ClientErc20Amount, __total: Erc20AmountFields };
+export type RevenueAggregate = {
+  __typename: 'RevenueAggregate';
+  totalAmount: ClientErc20Amount;
+  __total: Erc20AmountFields;
+};
 
-export type PublicationRevenue = { __typename: 'PublicationRevenue', publication: Comment | Mirror | Post, revenue: RevenueAggregate };
+export type PublicationRevenue = {
+  __typename: 'PublicationRevenue';
+  publication: Comment | Mirror | Post;
+  revenue: RevenueAggregate;
+};
 
 export type GetPublicationRevenueVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
-
 
 export type GetPublicationRevenueData = { result: PublicationRevenue | null };
 
@@ -2178,15 +2760,18 @@ export type GetProfilePublicationRevenueVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
+export type GetProfilePublicationRevenueData = {
+  result: { items: Array<PublicationRevenue>; pageInfo: CommonPaginatedResultInfo };
+};
 
-export type GetProfilePublicationRevenueData = { result: { items: Array<PublicationRevenue>, pageInfo: CommonPaginatedResultInfo } };
-
-export type ProfileFollowRevenue = { __typename: 'FollowRevenueResult', revenues: Array<RevenueAggregate> };
+export type ProfileFollowRevenue = {
+  __typename: 'FollowRevenueResult';
+  revenues: Array<RevenueAggregate>;
+};
 
 export type ProfileFollowRevenueVariables = Exact<{
   profileId: Scalars['ProfileId'];
 }>;
-
 
 export type ProfileFollowRevenueData = { result: ProfileFollowRevenue };
 
@@ -2198,8 +2783,15 @@ export type SearchPublicationsVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
 }>;
 
-
-export type SearchPublicationsData = { result: { __typename: 'PublicationSearchResult', items: Array<Comment | Post>, pageInfo: CommonPaginatedResultInfo } | {} };
+export type SearchPublicationsData = {
+  result:
+    | {
+        __typename: 'PublicationSearchResult';
+        items: Array<Comment | Post>;
+        pageInfo: CommonPaginatedResultInfo;
+      }
+    | {};
+};
 
 export type SearchProfilesVariables = Exact<{
   limit: Scalars['LimitScalar'];
@@ -2209,12 +2801,19 @@ export type SearchProfilesVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
+export type SearchProfilesData = {
+  result:
+    | {
+        __typename: 'ProfileSearchResult';
+        items: Array<Profile>;
+        pageInfo: CommonPaginatedResultInfo;
+      }
+    | {};
+};
 
-export type SearchProfilesData = { result: { __typename: 'ProfileSearchResult', items: Array<Profile>, pageInfo: CommonPaginatedResultInfo } | {} };
+export type RelayerResult = { __typename: 'RelayerResult'; txHash: string; txId: string };
 
-export type RelayerResult = { __typename: 'RelayerResult', txHash: string, txId: string };
-
-export type RelayError = { __typename: 'RelayError', reason: RelayErrorReasons };
+export type RelayError = { __typename: 'RelayError'; reason: RelayErrorReasons };
 
 type RelayResult_RelayError_ = RelayError;
 
@@ -2222,14 +2821,17 @@ type RelayResult_RelayerResult_ = RelayerResult;
 
 export type RelayResult = RelayResult_RelayError_ | RelayResult_RelayerResult_;
 
-export type TransactionIndexedResult = { __typename: 'TransactionIndexedResult', indexed: boolean, txHash: string };
+export type TransactionIndexedResult = {
+  __typename: 'TransactionIndexedResult';
+  indexed: boolean;
+  txHash: string;
+};
 
-export type TransactionError = { __typename: 'TransactionError', reason: TransactionErrorReasons };
+export type TransactionError = { __typename: 'TransactionError'; reason: TransactionErrorReasons };
 
 export type HasTxHashBeenIndexedVariables = Exact<{
   request: HasTxHashBeenIndexedRequest;
 }>;
-
 
 export type HasTxHashBeenIndexedData = { result: TransactionError | TransactionIndexedResult };
 
@@ -2237,15 +2839,25 @@ export type BroadcastProtocolCallVariables = Exact<{
   request: BroadcastRequest;
 }>;
 
-
-export type BroadcastProtocolCallData = { result: RelayResult_RelayError_ | RelayResult_RelayerResult_ };
+export type BroadcastProtocolCallData = {
+  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+};
 
 export type CreateUnfollowTypedDataVariables = Exact<{
   request: UnfollowRequest;
 }>;
 
-
-export type CreateUnfollowTypedDataData = { result: { id: string, expiresAt: string, typedData: { types: { BurnWithSig: Array<{ name: string, type: string }> }, domain: Eip712TypedDataDomain, value: { nonce: number, deadline: unknown, tokenId: string } } } };
+export type CreateUnfollowTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { BurnWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomain;
+      value: { nonce: number; deadline: unknown; tokenId: string };
+    };
+  };
+};
 
 export type WalletCollectedPublicationsVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
@@ -2255,5 +2867,6 @@ export type WalletCollectedPublicationsVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-
-export type WalletCollectedPublicationsData = { result: { items: Array<Comment | Mirror | Post>, pageInfo: CommonPaginatedResultInfo } };
+export type WalletCollectedPublicationsData = {
+  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
+};

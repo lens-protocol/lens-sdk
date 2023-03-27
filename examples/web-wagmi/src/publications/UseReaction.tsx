@@ -5,6 +5,7 @@ import {
   usePublication,
   useReaction,
   isMirrorPublication,
+  ProfileId,
 } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
@@ -16,7 +17,7 @@ import { PublicationCard } from './components/PublicationCard';
 
 type ReactionButtonProps = {
   publication: ContentPublication;
-  profileId: string;
+  profileId: ProfileId;
   reactionType: ReactionType;
 };
 
