@@ -64,6 +64,7 @@ generates:
           onlyOperationTypes: true # scalars and enums
       - add:
           content: [
+              '/** Code generated. DO NOT EDIT. */',
               '/* eslint-disable @typescript-eslint/ban-types */', # needed by unions with {}
               "import type { AppId, DecryptionCriteria, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
               "import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';",
@@ -85,6 +86,7 @@ generates:
     plugins:
       - add:
           content: [
+              '/** Code generated. DO NOT EDIT. */',
               '/* eslint-disable import/no-default-export */', # generatedTypes default export
               '/* eslint-disable @typescript-eslint/no-explicit-any */', # see extensive use of FieldPolicy<any> | FieldReadFunction<any>
               '/* eslint-disable @typescript-eslint/naming-convention */', # interface PossibleTypesResultData not starting with I
