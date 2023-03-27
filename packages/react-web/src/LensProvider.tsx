@@ -15,8 +15,6 @@ import { localStorage } from './storage';
 
 /**
  * `<LensProvider>` configuration
- *
- * @category General Configuration
  */
 export type LensConfig = {
   /**
@@ -55,8 +53,6 @@ export type LensConfig = {
 
 /**
  * <LensProvider> props
- *
- * @category General Configuration
  */
 export type LensProviderProps = PropsWithChildren<{
   config: LensConfig;
@@ -76,8 +72,6 @@ const storage = localStorage();
  * Given {@link LensConfig} it manages the lifecycle and internal state management of the Lens SDK
  *
  * @param props - {@link LensProviderProps}
- *
- * @category General Configuration
  */
 export function LensProvider({ config, ...props }: LensProviderProps) {
   const [resolvedConfig] = useState<LensConfigBase>(() => ({

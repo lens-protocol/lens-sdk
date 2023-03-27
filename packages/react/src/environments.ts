@@ -12,8 +12,6 @@ export type ProfileHandleResolver = (handle: string) => string;
 
 /**
  * The environment configuration type
- *
- * @category General Configuration
  */
 export type EnvironmentConfig = {
   backend: Url;
@@ -29,8 +27,6 @@ export type EnvironmentConfig = {
  * - Chain IDs: 137 (Polygon), 1 (Ethereum)
  * - Profile handle suffix: `.lens`
  * - Environment specific timings
- *
- * @category General Configuration
  */
 export const production: EnvironmentConfig = {
   backend: 'https://api.lens.dev',
@@ -53,8 +49,6 @@ export const production: EnvironmentConfig = {
  * - Chain IDs: 80001 (Mumbai), 5 (Goerli)
  * - Profile handle suffix: `.test`
  * - Environment specific timings
- *
- * @category General Configuration
  */
 export const staging: EnvironmentConfig = {
   backend: 'https://api-mumbai.lens.dev',

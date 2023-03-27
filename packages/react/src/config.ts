@@ -11,15 +11,10 @@ export type { ILogger, AuthenticationConfig, IEncryptionProvider, ICipher };
 
 export type { GetProvider, GetSigner };
 
-/**
- * @category General Configuration
- */
 export interface IBindings extends ISignerBinding, IProviderBinding {}
 
 /**
  * `<LensProvider>` configuration
- *
- * @category General Configuration
  */
 export type LensConfig = {
   /**
@@ -65,8 +60,6 @@ export type LensConfig = {
 
 /**
  * Encryption configuration for token-gated content
- *
- * @category Encryption
  */
 export type EncryptionConfig = {
   authentication: AuthenticationConfig;

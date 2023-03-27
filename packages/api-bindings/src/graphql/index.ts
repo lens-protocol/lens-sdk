@@ -24,9 +24,7 @@ export * from './ReferencePolicy';
 export * from './sources';
 export * from './utils';
 
-export type FollowModule = Profile['followModule'];
-
-export type CommentsResult = {
+export type CommentsData = {
   result: {
     items: Array<CommentWithFirstComment>;
     pageInfo: CommonPaginatedResultInfo;
@@ -39,8 +37,8 @@ export type CommentsResult = {
  *
  * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
  */
-export function useComments(options: QueryHookOptions<CommentsResult, CommentsVariables>) {
-  return useQuery<CommentsResult, CommentsVariables>(CommentsDocument, options);
+export function useComments(options: QueryHookOptions<CommentsData, CommentsVariables>) {
+  return useQuery<CommentsData, CommentsVariables>(CommentsDocument, options);
 }
 
 export type SearchProfilesResult = {

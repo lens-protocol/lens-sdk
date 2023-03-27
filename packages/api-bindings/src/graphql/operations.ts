@@ -1720,29 +1720,41 @@ export type Erc20AmountFields = { __typename: 'Erc20Amount'; value: string; asse
 
 export type ModuleFeeAmount = { __typename: 'ModuleFeeAmount'; value: string; asset: Erc20Fields };
 
-type ReferenceModule_DegreesOfSeparationReferenceModuleSettings_ = {
-  __typename: 'DegreesOfSeparationReferenceModuleSettings';
+export type AaveFeeCollectModuleSettings = {
+  __typename: 'AaveFeeCollectModuleSettings';
   contractAddress: string;
-  commentsRestricted: boolean;
-  degreesOfSeparation: number;
-  mirrorsRestricted: boolean;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmount;
 };
 
-type ReferenceModule_FollowOnlyReferenceModuleSettings_ = {
-  __typename: 'FollowOnlyReferenceModuleSettings';
+export type Erc4626FeeCollectModuleSettings = {
+  __typename: 'ERC4626FeeCollectModuleSettings';
   contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  vault: string;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmount;
 };
 
-type ReferenceModule_UnknownReferenceModuleSettings_ = {
-  __typename: 'UnknownReferenceModuleSettings';
+export type MultirecipientFeeCollectModuleSettings = {
+  __typename: 'MultirecipientFeeCollectModuleSettings';
   contractAddress: string;
-  referenceModuleReturnData: string;
+  followerOnly: boolean;
+  referralFee: number;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmount;
+  recipients: Array<{ recipient: EthereumAddress; split: number }>;
 };
 
-export type ReferenceModule =
-  | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_
-  | ReferenceModule_FollowOnlyReferenceModuleSettings_
-  | ReferenceModule_UnknownReferenceModuleSettings_;
+export type UnknownCollectModuleSettings = { __typename: 'UnknownCollectModuleSettings' };
 
 export type FreeCollectModuleSettings = {
   __typename: 'FreeCollectModuleSettings';
@@ -1794,54 +1806,6 @@ export type TimedFeeCollectModuleSettings = {
   referralFee: number;
   amount: ModuleFeeAmount;
 };
-
-type CollectModule_AaveFeeCollectModuleSettings_ = { __typename: 'AaveFeeCollectModuleSettings' };
-
-type CollectModule_Erc4626FeeCollectModuleSettings_ = {
-  __typename: 'ERC4626FeeCollectModuleSettings';
-};
-
-type CollectModule_FeeCollectModuleSettings_ = {
-  __typename: 'FeeCollectModuleSettings';
-} & FeeCollectModuleSettings;
-
-type CollectModule_FreeCollectModuleSettings_ = {
-  __typename: 'FreeCollectModuleSettings';
-} & FreeCollectModuleSettings;
-
-type CollectModule_LimitedFeeCollectModuleSettings_ = {
-  __typename: 'LimitedFeeCollectModuleSettings';
-} & LimitedFeeCollectModuleSettings;
-
-type CollectModule_LimitedTimedFeeCollectModuleSettings_ = {
-  __typename: 'LimitedTimedFeeCollectModuleSettings';
-} & LimitedTimedFeeCollectModuleSettings;
-
-type CollectModule_MultirecipientFeeCollectModuleSettings_ = {
-  __typename: 'MultirecipientFeeCollectModuleSettings';
-};
-
-type CollectModule_RevertCollectModuleSettings_ = {
-  __typename: 'RevertCollectModuleSettings';
-} & RevertCollectModuleSettings;
-
-type CollectModule_TimedFeeCollectModuleSettings_ = {
-  __typename: 'TimedFeeCollectModuleSettings';
-} & TimedFeeCollectModuleSettings;
-
-type CollectModule_UnknownCollectModuleSettings_ = { __typename: 'UnknownCollectModuleSettings' };
-
-export type CollectModule =
-  | CollectModule_AaveFeeCollectModuleSettings_
-  | CollectModule_Erc4626FeeCollectModuleSettings_
-  | CollectModule_FeeCollectModuleSettings_
-  | CollectModule_FreeCollectModuleSettings_
-  | CollectModule_LimitedFeeCollectModuleSettings_
-  | CollectModule_LimitedTimedFeeCollectModuleSettings_
-  | CollectModule_MultirecipientFeeCollectModuleSettings_
-  | CollectModule_RevertCollectModuleSettings_
-  | CollectModule_TimedFeeCollectModuleSettings_
-  | CollectModule_UnknownCollectModuleSettings_;
 
 export type Wallet = {
   __typename: 'Wallet';
@@ -1898,6 +1862,25 @@ export type MirrorBase = {
 
 export type Mirror = { __typename: 'Mirror'; mirrorOf: Comment | Post } & MirrorBase;
 
+export type FollowOnlyReferenceModuleSettings = {
+  __typename: 'FollowOnlyReferenceModuleSettings';
+  contractAddress: string;
+};
+
+export type DegreesOfSeparationReferenceModuleSettings = {
+  __typename: 'DegreesOfSeparationReferenceModuleSettings';
+  contractAddress: string;
+  commentsRestricted: boolean;
+  degreesOfSeparation: number;
+  mirrorsRestricted: boolean;
+};
+
+export type UnknownReferenceModuleSettings = {
+  __typename: 'UnknownReferenceModuleSettings';
+  contractAddress: string;
+  referenceModuleReturnData: string;
+};
+
 export type CommentBase = {
   __typename: 'Comment';
   id: PublicationId;
@@ -1918,20 +1901,20 @@ export type CommentBase = {
   profile: Profile;
   collectedBy: Wallet | null;
   collectModule:
-    | CollectModule_AaveFeeCollectModuleSettings_
-    | CollectModule_Erc4626FeeCollectModuleSettings_
-    | CollectModule_FeeCollectModuleSettings_
-    | CollectModule_FreeCollectModuleSettings_
-    | CollectModule_LimitedFeeCollectModuleSettings_
-    | CollectModule_LimitedTimedFeeCollectModuleSettings_
-    | CollectModule_MultirecipientFeeCollectModuleSettings_
-    | CollectModule_RevertCollectModuleSettings_
-    | CollectModule_TimedFeeCollectModuleSettings_
-    | CollectModule_UnknownCollectModuleSettings_;
+    | AaveFeeCollectModuleSettings
+    | Erc4626FeeCollectModuleSettings
+    | FeeCollectModuleSettings
+    | FreeCollectModuleSettings
+    | LimitedFeeCollectModuleSettings
+    | LimitedTimedFeeCollectModuleSettings
+    | MultirecipientFeeCollectModuleSettings
+    | RevertCollectModuleSettings
+    | TimedFeeCollectModuleSettings
+    | UnknownCollectModuleSettings;
   referenceModule:
-    | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_
-    | ReferenceModule_FollowOnlyReferenceModuleSettings_
-    | ReferenceModule_UnknownReferenceModuleSettings_
+    | DegreesOfSeparationReferenceModuleSettings
+    | FollowOnlyReferenceModuleSettings
+    | UnknownReferenceModuleSettings
     | null;
   canComment: { result: boolean };
   canMirror: { result: boolean };
@@ -1971,20 +1954,20 @@ export type Post = {
   profile: Profile;
   collectedBy: Wallet | null;
   collectModule:
-    | CollectModule_AaveFeeCollectModuleSettings_
-    | CollectModule_Erc4626FeeCollectModuleSettings_
-    | CollectModule_FeeCollectModuleSettings_
-    | CollectModule_FreeCollectModuleSettings_
-    | CollectModule_LimitedFeeCollectModuleSettings_
-    | CollectModule_LimitedTimedFeeCollectModuleSettings_
-    | CollectModule_MultirecipientFeeCollectModuleSettings_
-    | CollectModule_RevertCollectModuleSettings_
-    | CollectModule_TimedFeeCollectModuleSettings_
-    | CollectModule_UnknownCollectModuleSettings_;
+    | AaveFeeCollectModuleSettings
+    | Erc4626FeeCollectModuleSettings
+    | FeeCollectModuleSettings
+    | FreeCollectModuleSettings
+    | LimitedFeeCollectModuleSettings
+    | LimitedTimedFeeCollectModuleSettings
+    | MultirecipientFeeCollectModuleSettings
+    | RevertCollectModuleSettings
+    | TimedFeeCollectModuleSettings
+    | UnknownCollectModuleSettings;
   referenceModule:
-    | ReferenceModule_DegreesOfSeparationReferenceModuleSettings_
-    | ReferenceModule_FollowOnlyReferenceModuleSettings_
-    | ReferenceModule_UnknownReferenceModuleSettings_
+    | DegreesOfSeparationReferenceModuleSettings
+    | FollowOnlyReferenceModuleSettings
+    | UnknownReferenceModuleSettings
     | null;
   canComment: { result: boolean };
   canMirror: { result: boolean };
@@ -2396,12 +2379,6 @@ export type NftImage = {
   verified: boolean;
 };
 
-type ProfileMedia_MediaSet_ = MediaSet;
-
-type ProfileMedia_NftImage_ = NftImage;
-
-export type ProfileMedia = ProfileMedia_MediaSet_ | ProfileMedia_NftImage_;
-
 export type Attribute = {
   __typename: 'Attribute';
   displayType: string | null;
@@ -2436,8 +2413,8 @@ export type Profile = {
   ownedByMe: boolean;
   attributes: ProfileAttributes;
   isFollowingObserver: boolean;
-  picture: ProfileMedia_MediaSet_ | ProfileMedia_NftImage_ | null;
-  coverPicture: ProfileMedia_MediaSet_ | ProfileMedia_NftImage_ | null;
+  picture: MediaSet | NftImage | null;
+  coverPicture: MediaSet | NftImage | null;
   stats: ProfileStats;
   followModule:
     | FeeFollowModuleSettings

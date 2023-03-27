@@ -26,8 +26,6 @@ import { EnvironmentConfig } from './environments';
 
 /**
  * The LIT Protocol authentication configuration
- *
- * @category Encryption
  */
 export type AuthenticationConfig = {
   domain: string;

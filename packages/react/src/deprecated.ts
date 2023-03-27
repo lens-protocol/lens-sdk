@@ -41,196 +41,196 @@ import {
 } from '@lens-protocol/api-bindings';
 
 /**
- * @deprecated Use `EnabledModules` instead.
+ * @deprecated Use {@link EnabledModules} instead.
  */
 export type EnabledModulesFragment = EnabledModules;
 
 /**
- * @deprecated Use `EnabledModule` instead.
+ * @deprecated Use {@link EnabledModule} instead.
  */
 export type EnabledModuleFragment = EnabledModule;
 
 /**
- * @deprecated Use `ModuleInfo` instead.
+ * @deprecated Use {@link ModuleInfo} instead.
  */
 export type ModuleInfoFragment = ModuleInfo;
 
 /**
- * @deprecated Use `CommonPaginatedResultInfo` instead.
+ * @deprecated Use {@link CommonPaginatedResultInfo} instead.
  */
 export type CommonPaginatedResultInfoFragment = CommonPaginatedResultInfo;
 
 /**
- * @deprecated Use `NewCollectNotification` instead.
+ * @deprecated Use {@link NewCollectNotification} instead.
  */
 export type NewCollectNotificationFragment = NewCollectNotification;
 
 /**
- * @deprecated Use `NewCommentNotification` instead.
+ * @deprecated Use {@link NewCommentNotification} instead.
  */
 export type NewCommentNotificationFragment = NewCommentNotification;
 
 /**
- * @deprecated Use `NewFollowerNotification` instead.
+ * @deprecated Use {@link NewFollowerNotification} instead.
  */
 export type NewFollowerNotificationFragment = NewFollowerNotification;
 
 /**
- * @deprecated Use `NewMentionNotification` instead.
+ * @deprecated Use {@link NewMentionNotification} instead.
  */
 export type NewMentionNotificationFragment = NewMentionNotification;
 
 /**
- * @deprecated Use `NewMirrorNotification` instead.
+ * @deprecated Use {@link NewMirrorNotification} instead.
  */
 export type NewMirrorNotificationFragment = NewMirrorNotification;
 
 /**
- * @deprecated Use `NewReactionNotification` instead.
+ * @deprecated Use {@link NewReactionNotification} instead.
  */
 export type NewReactionNotificationFragment = NewReactionNotification;
 
 /**
- * @deprecated Use `Attribute` instead.
+ * @deprecated Use {@link Attribute} instead.
  */
 export type AttributeFragment = Attribute;
 
 /**
- * @deprecated Use `Follower` instead.
+ * @deprecated Use {@link Follower} instead.
  */
 export type FollowerFragment = Follower;
 
 /**
- * @deprecated Use `Following` instead.
+ * @deprecated Use {@link Following} instead.
  */
 export type FollowingFragment = Following;
 
 /**
- * @deprecated Use `ProfileAttributeReader` instead.
+ * @deprecated Use {@link ProfileAttributeReader} instead.
  */
 export type ProfileAttributeReaderFragment = ProfileAttributeReader;
 
 /**
- * @deprecated Use `ProfileAttributes` instead.
+ * @deprecated Use {@link ProfileAttributes} instead.
  */
 export type ProfileAttributesFragment = ProfileAttributes;
 
 /**
- * @deprecated Use `Profile` instead.
+ * @deprecated Use {@link Profile} instead.
  */
 export type ProfileFragment = Profile;
 
 /**
- * @deprecated Use `ProfileMedia` instead.
+ * @deprecated Use {@link ProfileMedia} instead.
  */
 export type ProfileMediaFragment = ProfileMedia;
 
 /**
- * @deprecated Use `ProfileOwnedByMe` instead.
+ * @deprecated Use {@link ProfileOwnedByMe} instead.
  */
 export type ProfileOwnedByMeFragment = ProfileOwnedByMe;
 
 /**
- * @deprecated Use `ProfileStats` instead.
+ * @deprecated Use {@link ProfileStats} instead.
  */
 export type ProfileStatsFragment = ProfileStats;
 
 /**
- * @deprecated Use `FeeFollowModuleSettings` instead.
+ * @deprecated Use {@link FeeFollowModuleSettings} instead.
  */
 export type FeeFollowModuleSettingsFragment = FeeFollowModuleSettings;
 
 /**
- * @deprecated Use `ProfileFollowModuleSettings` instead.
+ * @deprecated Use {@link ProfileFollowModuleSettings} instead.
  */
 export type ProfileFollowModuleSettingsFragment = ProfileFollowModuleSettings;
 
 /**
- * @deprecated Use `RevertFollowModuleSettings` instead.
+ * @deprecated Use {@link RevertFollowModuleSettings} instead.
  */
 export type RevertFollowModuleSettingsFragment = RevertFollowModuleSettings;
 
 /**
- * @deprecated Use `UnknownFollowModuleSettings` instead.
+ * @deprecated Use {@link UnknownFollowModuleSettings} instead.
  */
 export type UnknownFollowModuleSettingsFragment = UnknownFollowModuleSettings;
 
 /**
- * @deprecated Use `AnyPublication` instead.
+ * @deprecated Use {@link AnyPublication} instead.
  */
 export type AnyPublicationFragment = AnyPublication;
 
 /**
- * @deprecated Use `Comment` instead.
+ * @deprecated Use {@link Comment} instead.
  */
 export type CommentFragment = Comment;
 
 /**
- * @deprecated Use `CommentWithFirstComment` instead.
+ * @deprecated Use {@link CommentWithFirstComment} instead.
  */
 export type CommentWithFirstCommentFragment = CommentWithFirstComment;
 
 /**
- * @deprecated Use `ContentPublication` instead.
+ * @deprecated Use {@link ContentPublication} instead.
  */
 export type ContentPublicationFragment = ContentPublication;
 
 /**
- * @deprecated Use `Media` instead.
+ * @deprecated Use {@link Media} instead.
  */
 export type MediaFragment = Media;
 
 /**
- * @deprecated Use `MediaSet` instead.
+ * @deprecated Use {@link MediaSet} instead.
  */
 export type MediaSetFragment = MediaSet;
 
 /**
- * @deprecated Use `MetadataAttributeOutput` instead.
+ * @deprecated Use {@link MetadataAttributeOutput} instead.
  */
 export type MetadataAttributeOutputFragment = MetadataAttributeOutput;
 
 /**
- * @deprecated Use `MetadataOutput` instead.
+ * @deprecated Use {@link MetadataOutput} instead.
  */
 export type MetadataOutputFragment = MetadataOutput;
 
 /**
- * @deprecated Use `Mirror` instead.
+ * @deprecated Use {@link Mirror} instead.
  */
 export type MirrorFragment = Mirror;
 
 /**
- * @deprecated Use `PendingPost` instead.
+ * @deprecated Use {@link PendingPost} instead.
  */
 export type PendingPostFragment = PendingPost;
 
 /**
- * @deprecated Use `Post` instead.
+ * @deprecated Use {@link Post} instead.
  */
 export type PostFragment = Post;
 
 /**
- * @deprecated Use `PublicationOwnedByMe` instead.
+ * @deprecated Use {@link PublicationOwnedByMe} instead.
  */
 export type PublicationOwnedByMeFragment = PublicationOwnedByMe;
 
 /**
- * @deprecated Use `PublicationStats` instead.
+ * @deprecated Use {@link PublicationStats} instead.
  */
 export type PublicationStatsFragment = PublicationStats;
 
 /**
- * @deprecated Use `RevenueAggregate` instead.
+ * @deprecated Use {@link RevenueAggregate} instead.
  */
 export type RevenueAggregateFragment = RevenueAggregate;
 
 /**
- * @deprecated Use `WhoReactedResult` instead.
+ * @deprecated Use {@link WhoReactedResult} instead.
  */
 export type WhoReactedResultFragment = WhoReactedResult;
 
 /**
- * @deprecated Use `PublicationRevenue` instead.
+ * @deprecated Use {@link PublicationRevenue} instead.
  */
 export type PublicationRevenueFragment = PublicationRevenue;

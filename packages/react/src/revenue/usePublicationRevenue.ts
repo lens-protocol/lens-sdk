@@ -3,6 +3,7 @@ import {
   PublicationRevenue,
   useGetPublicationRevenue,
 } from '@lens-protocol/api-bindings';
+import { PublicationId } from '@lens-protocol/domain/entities';
 
 import { NotFoundError } from '../NotFoundError';
 import {
@@ -14,7 +15,7 @@ import {
 import { ReadResult, useReadResult } from '../helpers/reads';
 
 export type UsePublicationRevenueArgs = WithObserverIdOverride<{
-  publicationId: string;
+  publicationId: PublicationId;
 }>;
 
 export function usePublicationRevenue({
