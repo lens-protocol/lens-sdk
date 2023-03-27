@@ -38,7 +38,7 @@ export type Scalars = {
   ChainId: number;
   ClientErc20Amount: ClientErc20Amount;
   /** collect module data scalar type */
-  CollectModuleData: unknown;
+  CollectModuleData: string;
   CollectPolicy: CollectPolicy;
   /** ContentEncryptionKey scalar type */
   ContentEncryptionKey: ContentEncryptionKey;
@@ -95,7 +95,7 @@ export type Scalars = {
   /** ProfileId custom scalar type */
   ProfileId: ProfileId;
   /** ProfileInterest custom scalar type */
-  ProfileInterest: unknown;
+  ProfileInterest: string;
   /** proxy action scalar id type */
   ProxyActionId: string;
   /** Publication id custom scalar type */
@@ -1674,7 +1674,7 @@ export type CreateCommentTypedDataData = {
         profileIdPointed: ProfileId;
         pubIdPointed: unknown;
         collectModule: string;
-        collectModuleInitData: unknown;
+        collectModuleInitData: string;
         referenceModuleData: string;
         referenceModule: string;
         referenceModuleInitData: string;
@@ -1755,7 +1755,11 @@ export type MultirecipientFeeCollectModuleSettings = {
   recipients: Array<{ recipient: EthereumAddress; split: number }>;
 };
 
-export type UnknownCollectModuleSettings = { __typename: 'UnknownCollectModuleSettings' };
+export type UnknownCollectModuleSettings = {
+  __typename: 'UnknownCollectModuleSettings';
+  contractAddress: string;
+  collectModuleReturnData: string;
+};
 
 export type FreeCollectModuleSettings = {
   __typename: 'FreeCollectModuleSettings';
@@ -2312,7 +2316,7 @@ export type CreatePostTypedDataData = {
         profileId: ProfileId;
         contentURI: unknown;
         collectModule: string;
-        collectModuleInitData: unknown;
+        collectModuleInitData: string;
         referenceModule: string;
         referenceModuleInitData: string;
       };
@@ -2408,6 +2412,7 @@ export type Profile = {
   bio: string | null;
   handle: string;
   ownedBy: EthereumAddress;
+  interests: Array<string> | null;
   followPolicy: FollowPolicy;
   isFollowedByMe: boolean;
   followStatus: FollowStatus | null;

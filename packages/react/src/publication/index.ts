@@ -40,13 +40,16 @@ export type {
  * Collect policy
  */
 export type {
+  AaveFeeCollectPolicy,
   CollectPolicy,
   FeeCollectPolicy,
-  NoFeeCollectPolicy,
   LimitedFeeCollectPolicy,
-  TimedFeeCollectPolicy,
   LimitedTimedFeeCollectPolicy,
+  MultirecipientFeeCollectPolicy,
   NoCollectPolicy,
+  NoFeeCollectPolicy,
+  TimedFeeCollectPolicy,
+  VaultFeeCollectPolicy,
 } from '@lens-protocol/api-bindings';
 
 export type {

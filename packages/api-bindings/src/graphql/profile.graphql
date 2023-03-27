@@ -59,6 +59,7 @@ fragment Profile on Profile {
   bio
   handle
   ownedBy
+  interests
 
   picture {
     ... on NftImage {

@@ -126,6 +126,7 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     bio: faker.lorem.sentence(),
     handle: faker.internet.userName(firstName, lastName),
     ownedBy: mockEthereumAddress(),
+    interests: [],
     picture: mockProfileMediaFragment(),
     coverPicture: mockProfileMediaFragment(),
 

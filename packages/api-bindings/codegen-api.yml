@@ -13,19 +13,21 @@ config:
     BroadcastId: string
     ChainId: number
     ClientErc20Amount: ClientErc20Amount
-    ContractAddress: string
+    CollectModuleData: string
+    CollectPolicy: CollectPolicy
     ContentEncryptionKey: ContentEncryptionKey
+    ContractAddress: string
     Cursor: string
     DateTime: string
     DecryptionCriteria: DecryptionCriteria
     EncryptedValueScalar: string
     EthereumAddress: EthereumAddress
+    FollowPolicy: FollowPolicy
     FollowStatus: FollowStatus
     Handle: string
     InternalPublicationId: PublicationId
     Jwt: string
     LimitScalar: number
-    CollectPolicy: CollectPolicy
     Locale: string
     Markdown: string
     Media: string
@@ -34,8 +36,8 @@ config:
     Nonce: number
     NotificationId: string
     ProfileAttributes: ProfileAttributes
-    FollowPolicy: FollowPolicy
     ProfileId: ProfileId
+    ProfileInterest: string
     ProxyActionId: string
     ReferenceModuleData: string
     ReferencePolicy: ReferencePolicy

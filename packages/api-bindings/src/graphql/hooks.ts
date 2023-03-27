@@ -316,6 +316,7 @@ export const FragmentProfile = /*#__PURE__*/ gql`
     bio
     handle
     ownedBy
+    interests
     picture {
       ... on NftImage {
         ...NftImage
@@ -451,6 +452,8 @@ export const FragmentMultirecipientFeeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentUnknownCollectModuleSettings = /*#__PURE__*/ gql`
   fragment UnknownCollectModuleSettings on UnknownCollectModuleSettings {
     __typename
+    contractAddress
+    collectModuleReturnData
   }
 `;
 export const FragmentFreeCollectModuleSettings = /*#__PURE__*/ gql`

@@ -53,7 +53,8 @@ export type {
 } from '@lens-protocol/domain/use-cases/profile';
 export type { TokenAllowanceRequest } from '@lens-protocol/domain/use-cases/wallets';
 export type {
-  AnyonePolicyConfig,
+  AaveChargeCollectPolicyConfig,
+  AnyoneReferencePolicyConfig,
   ChargeCollectPolicyConfig,
   CollectFee,
   CollectPolicyConfig,
@@ -62,8 +63,8 @@ export type {
   CreateCommentRequest,
   CreateMirrorRequest,
   CreatePostRequest,
-  DegreesOfSeparationPolicyConfig,
-  FollowersOnlyPolicyConfig,
+  DegreesOfSeparationReferencePolicyConfig,
+  FollowersOnlyReferencePolicyConfig,
   FreeCollectPolicyConfig,
   FreeCollectRequest,
   Locale,
@@ -73,9 +74,13 @@ export type {
   NftMetadata,
   NoCollectPolicyConfig,
   PaidCollectRequest,
+  RecipientWithSplit,
   ReferencePolicyConfig,
   ReferencePolicyType,
   SupportedPublicationMediaType,
+  MultirecipientChargeCollectPolicyConfig,
+  SimpleChargeCollectPolicyConfig,
+  VaultChargeCollectPolicyConfig,
 } from '@lens-protocol/domain/use-cases/publications';
 export {
   AudioType,

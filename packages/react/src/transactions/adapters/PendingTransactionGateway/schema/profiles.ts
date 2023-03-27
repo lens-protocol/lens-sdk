@@ -46,13 +46,13 @@ export const UpdateDispatcherConfigRequestSchema = z.object({
   kind: z.literal(TransactionKind.UPDATE_DISPATCHER_CONFIG),
 });
 
-const ChargeFollowPolicySchema = z.object({
+const ChargeFollowPolicyConfigSchema = z.object({
   type: z.literal(FollowPolicyType.CHARGE),
   amount: Erc20AmountSchema,
   recipient: z.string(),
 });
 
-const NoFeeFollowPolicySchema = z.object({
+const NoFeeFollowPolicyConfigSchema = z.object({
   type: z.union([
     z.literal(FollowPolicyType.ANYONE),
     z.literal(FollowPolicyType.ONLY_PROFILE_OWNERS),
@@ -62,7 +62,7 @@ const NoFeeFollowPolicySchema = z.object({
 
 export const UpdateFollowPolicyRequestSchema = z.object({
   profileId: ProfileIdSchema,
-  policy: z.union([ChargeFollowPolicySchema, NoFeeFollowPolicySchema]),
+  policy: z.union([ChargeFollowPolicyConfigSchema, NoFeeFollowPolicyConfigSchema]),
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
 });
 

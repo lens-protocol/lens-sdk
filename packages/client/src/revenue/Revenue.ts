@@ -12,7 +12,6 @@ import {
   getSdk,
   PublicationRevenueFragment,
   RevenueAggregateFragment,
-  RevenueFragment,
   Sdk,
 } from './graphql/revenue.generated';
 
@@ -50,15 +49,29 @@ export class Revenue {
     request: ProfileFollowRevenueQueryRequest,
   ): Promise<RevenueAggregateFragment[]> {
     return provideAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.ProfileFollowRevenue({ request }, headers);
+      const result = await this.sdk.ProfileFollowRevenue(
+        {
+          request,
+        },
+        headers,
+      );
 
       return result.data.result.revenues;
     });
   }
 
-  async publication(request: PublicationRevenueQueryRequest): Promise<RevenueFragment | null> {
+  async publication(
+    request: PublicationRevenueQueryRequest,
+    observerId?: string,
+  ): Promise<PublicationRevenueFragment | null> {
     return provideAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.PublicationRevenue({ request }, headers);
+      const result = await this.sdk.PublicationRevenue(
+        {
+          request,
+          observerId,
+        },
+        headers,
+      );
 
       return result.data.result;
     });

@@ -66,6 +66,51 @@ export type LimitedTimedFeeCollectPolicy = {
   collectNftAddress: string | null;
 };
 
+export type MultirecipientFeeCollectPolicy = {
+  type: CollectPolicyType.CHARGE;
+  state:
+    | CollectState.CAN_BE_COLLECTED
+    | CollectState.NOT_A_FOLLOWER
+    | CollectState.COLLECT_LIMIT_REACHED
+    | CollectState.COLLECT_TIME_EXPIRED;
+  amount: Erc20Amount;
+  referralFee: number;
+  followerOnly: boolean;
+  collectLimit: number | null;
+  endTimestamp: string | null;
+  collectNftAddress: string | null;
+};
+
+export type VaultFeeCollectPolicy = {
+  type: CollectPolicyType.CHARGE;
+  state:
+    | CollectState.CAN_BE_COLLECTED
+    | CollectState.NOT_A_FOLLOWER
+    | CollectState.COLLECT_LIMIT_REACHED
+    | CollectState.COLLECT_TIME_EXPIRED;
+  amount: Erc20Amount;
+  referralFee: number;
+  followerOnly: boolean;
+  collectLimit: number | null;
+  endTimestamp: string | null;
+  collectNftAddress: string | null;
+};
+
+export type AaveFeeCollectPolicy = {
+  type: CollectPolicyType.CHARGE;
+  state:
+    | CollectState.CAN_BE_COLLECTED
+    | CollectState.NOT_A_FOLLOWER
+    | CollectState.COLLECT_LIMIT_REACHED
+    | CollectState.COLLECT_TIME_EXPIRED;
+  amount: Erc20Amount;
+  referralFee: number;
+  followerOnly: boolean;
+  collectLimit: number | null;
+  endTimestamp: string | null;
+  collectNftAddress: string | null;
+};
+
 export type NoCollectPolicy = {
   state: CollectState.CANNOT_BE_COLLECTED;
   type: CollectPolicyType.NO_COLLECT;
@@ -77,4 +122,7 @@ export type CollectPolicy =
   | LimitedFeeCollectPolicy
   | TimedFeeCollectPolicy
   | LimitedTimedFeeCollectPolicy
+  | MultirecipientFeeCollectPolicy
+  | VaultFeeCollectPolicy
+  | AaveFeeCollectPolicy
   | NoCollectPolicy;
