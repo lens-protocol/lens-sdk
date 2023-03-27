@@ -1,8 +1,8 @@
-import { Amount, ChainType, Erc20, erc20 } from '@lens-protocol/shared-kernel';
+import { Amount, ChainType, Erc20, erc20, Erc20Amount } from '@lens-protocol/shared-kernel';
 
-import { Erc20AmountFragment, ModuleFeeAmountFragment, ModuleFeeAmountParams } from '../generated';
+import { Erc20AmountFields, ModuleFeeAmount, ModuleFeeAmountParams } from '../operations';
 
-export function erc20Amount({ from }: { from: ModuleFeeAmountFragment | Erc20AmountFragment }) {
+export function erc20Amount({ from }: { from: Erc20AmountFields | ModuleFeeAmount }): Erc20Amount {
   const asset = erc20({ chainType: ChainType.POLYGON, ...from.asset });
   return Amount.erc20(asset, from.value);
 }

@@ -1,6 +1,5 @@
-import { Media } from '../../graphql';
-import { TypePolicy } from './utils/TypePolicy';
+import { StrictTypedTypePolicies } from '../../graphql';
 
-export const createMediaTypePolicy = (): TypePolicy<Media> => ({
+export const createMediaTypePolicy = (): StrictTypedTypePolicies['Media'] => ({
   keyFields: false,
 });

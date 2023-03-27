@@ -1,3 +1,4 @@
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { BigNumber } from 'ethers';
 
@@ -83,7 +84,7 @@ describe(`Given the "${transformFollowCondition.name}" function`, () => {
       {
         description: 'if with invalid profile Id',
         condition: mockFollowConditionInput({
-          profileId: 'a',
+          profileId: 'invalid-profile-id' as ProfileId,
         }),
       },
     ])(`should throw an ${InvalidAccessCriteriaError.name} $description`, ({ condition }) => {

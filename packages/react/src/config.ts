@@ -4,23 +4,17 @@ import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
-import { IProviderBinding } from './wallet/infrastructure/ProviderFactory';
-import { ISignerBinding } from './wallet/infrastructure/SignerFactory';
-
-export * from './environments';
-export * from './sources';
+import { IProviderBinding, GetProvider } from './wallet/infrastructure/ProviderFactory';
+import { ISignerBinding, GetSigner } from './wallet/infrastructure/SignerFactory';
 
 export type { ILogger, AuthenticationConfig, IEncryptionProvider, ICipher };
 
-/**
- * @category General Configuration
- */
+export type { GetProvider, GetSigner };
+
 export interface IBindings extends ISignerBinding, IProviderBinding {}
 
 /**
  * `<LensProvider>` configuration
- *
- * @category General Configuration
  */
 export type LensConfig = {
   /**
@@ -66,14 +60,13 @@ export type LensConfig = {
 
 /**
  * Encryption configuration for token-gated content
- *
- * @category Encryption
  */
 export type EncryptionConfig = {
   authentication: AuthenticationConfig;
   provider: IEncryptionProvider;
 };
 
+/** @internal */
 export function validateConfig(config: LensConfig) {
   invariant(
     !(config.appId && config.sources && !config.sources?.includes(config.appId)),

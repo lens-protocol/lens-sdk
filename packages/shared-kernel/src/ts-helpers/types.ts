@@ -9,6 +9,7 @@ export type Constructable = new (...args: any[]) => any;
  *
  * Useful when you don't care about exact props passed to the component.
  * @note Don't use `{}` as a type. `{}` actually means "any non-nullish value".
+ * @internal
  */
 export type UnknownObject = Record<string, unknown>;
 
@@ -25,15 +26,21 @@ export type DeepPartial<T> = {
 
 /**
  * Overwrites properties from T1 with one from T2
+ * @internal
  * @example
+ * ```ts
  * Overwrite<{ foo: boolean, bar: string }, { foo: number }> // { foo: number, bar: string }
+ * ```
  */
 export type Overwrite<T1, T2> = DistributiveOmit<T1, keyof T2> & T2;
 
 /**
  * Change the type of exclusive properties from T in U to `never` and `undefined`
+ * @internal
  * @example
+ * ```ts
  * Without<{ foo: boolean, bar: string }, { foo: boolean }> // { bar?: never }
+ * ```
  */
 export type Without<T, U> = {
   [P in Exclude<keyof T, keyof U>]?: never;
@@ -41,8 +48,11 @@ export type Without<T, U> = {
 
 /**
  * Makes union exclusive. Useful in situations when only single prop can be provided at the same time
+ * @internal
  * @example
+ * ```ts
  * XOR<{ foo: boolean}, { bar: number }> // { foo: boolean, bar?: never } | { foo?: never, bar: number }
+ * ```
  */
 export type XOR<T extends UnknownObject, U extends UnknownObject> =
   | (Without<T, U> & U)
@@ -50,11 +60,13 @@ export type XOR<T extends UnknownObject, U extends UnknownObject> =
 
 /**
  * Ask TS to re-check that A1 extends A2. And if it fails, A2 will be enforced anyway.
+ * @internal
  */
 export type Cast<A, B> = A extends B ? A : B;
 
 /**
  * Prevent type widening on generic parameters
+ * @internal
  */
 export type Narrow<A> = Cast<
   A,
@@ -73,11 +85,13 @@ export type Gettify<T, P extends keyof T = keyof T> = P extends string | number
 
 /**
  * Primitive types
+ * @internal
  */
 export type Primitive = string | number | boolean | bigint | symbol | undefined | null;
 
 /**
  * Omits properties from an union type, preserving the union.
+ * @internal
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
@@ -97,6 +111,7 @@ export type NonEmptyArray<T> = Overwrite<
 
 /**
  * Declares an array of at least two elements of the specified type.
+ * @internal
  */
 export type TwoAtLeastArray<T> = Overwrite<
   [T, T, ...T[]],
@@ -112,6 +127,8 @@ export type TwoAtLeastArray<T> = Overwrite<
  * Beautify the  readout of all of the members of that intersection.
  *
  * As seen on tv: https://twitter.com/mattpocockuk/status/1622730173446557697
+ *
+ * @internal
  */
 export type Prettify<T> = {
   [K in keyof T]: T[K];
@@ -122,5 +139,7 @@ declare const brand: unique symbol;
 
 /**
  * Branding function
+ *
+ * @internal
  */
 export type Brand<T, TBrand> = T & { [brand]: TBrand };

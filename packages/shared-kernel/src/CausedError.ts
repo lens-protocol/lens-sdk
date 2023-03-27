@@ -7,6 +7,7 @@ import isObject from 'lodash/isObject.js';
  * Otherwise, it sets it up itself.
  *
  * @see https://github.com/tc39/proposal-error-cause
+ * @internal
  */
 export class CausedError extends Error {
   readonly cause?: Error;

@@ -1,3 +1,4 @@
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { Amount, ChainType, erc20, Kind } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
@@ -18,3 +19,5 @@ export const Erc20AmountSchema = z
     value: z.string(),
   })
   .transform((value) => Amount.erc20(value.asset, value.value));
+
+export const ProfileIdSchema = z.custom<ProfileId>(); // TODO add validation function

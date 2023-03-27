@@ -1,27 +1,66 @@
-export * from './chains';
-export * from './config';
+/**
+ * Components
+ */
+export * from './LensProvider';
+
+/**
+ * Hooks
+ */
 export * from './experimental';
 export * from './feed';
-export * from './LensProvider';
 export * from './modules';
 export * from './notifications';
 export * from './profile';
 export * from './publication';
 export * from './revenue';
 export * from './transactions';
-export * from './utils';
 export * from './wallet';
 
-export type { ReadResult, PaginatedReadResult } from './helpers/reads';
-export { isValidHandle } from '@lens-protocol/api-bindings';
+/**
+ * Config
+ */
+export * from './chains';
+export * from './environments';
+export type {
+  AuthenticationConfig,
+  EncryptionConfig,
+  GetProvider,
+  GetSigner,
+  IBindings,
+  ICipher,
+  IEncryptionProvider,
+  ILogger,
+  LensConfig,
+} from './config';
 
+/**
+ * Hooks helper types
+ */
+export type { WithObserverIdOverride } from './helpers/arguments';
+export type { Operation } from './helpers/operations';
+export type {
+  CommonPaginatedResultInfo,
+  PaginatedArgs,
+  PaginatedReadResult,
+  ReadResult,
+  ReadResultWithError,
+  ReadResultWithoutError,
+} from './helpers/reads';
+
+/**
+ * Storage
+ */
 export type {
   StorageSubscription,
+  StorageSubscriber,
   StorageProviderSubscriber,
   IStorageProvider,
   IObservableStorageProvider,
 } from '@lens-protocol/storage';
 
+/**
+ * Domain errors
+ */
 export {
   InsufficientGasError,
   PendingSigningRequestError,
@@ -32,47 +71,75 @@ export {
   WalletConnectionError,
   WalletConnectionErrorReason,
 } from '@lens-protocol/domain/entities';
-export type { AppId } from '@lens-protocol/domain/entities';
 
-export type { NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+/**
+ * Domain essentials
+ */
+export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+export type { ChainType, EthereumAddress, Url } from '@lens-protocol/shared-kernel';
 
-export {
-  Amount,
-  BigDecimal,
-  ChainType,
-  Denomination,
-  erc20,
-  matic,
-  ether,
-  usd,
-} from '@lens-protocol/shared-kernel';
+/**
+ * Common Types
+ */
 export type {
   AmountValue,
   Asset,
-  Brand,
-  Cast,
+  BigDecimal,
   CryptoAmount,
   CryptoAsset,
   CryptoNativeAmount,
   CryptoNativeAsset,
-  DistributiveOmit,
   Erc20,
+  Erc20Amount,
   Erc20Info,
   Ether,
-  EthereumAddress,
+  Kind,
+  NativeType,
   Failure,
   Fiat,
   FiatAmount,
   IEquatableError,
   InvariantError,
   Matic,
+  PromiseResult,
+  Result,
+  Success,
+} from '@lens-protocol/shared-kernel';
+
+/**
+ * Common fragments
+ */
+export type { Erc20Fields, Erc20AmountFields, ModuleFeeAmount } from '@lens-protocol/api-bindings';
+
+/**
+ * Common errors
+ */
+export { NotFoundError } from './NotFoundError';
+export { UnspecifiedError } from '@lens-protocol/api-bindings';
+
+/**
+ * Helpers
+ */
+export { Amount, WellKnownSymbols } from '@lens-protocol/shared-kernel';
+export * from './sources';
+export * from './utils';
+export { isValidHandle } from '@lens-protocol/api-bindings';
+
+/**
+ * Helpers types
+ */
+export type {
+  Brand,
+  Cast,
+  DistributiveOmit,
   Narrow,
   Overwrite,
   Prettify,
   Primitive,
-  PromiseResult,
-  Result,
-  Success,
   TwoAtLeastArray,
-  Url,
+  UnknownObject,
+  Without,
+  XOR,
 } from '@lens-protocol/shared-kernel';
+export type { Typename, PickByTypename } from '@lens-protocol/api-bindings';
+export * from './deprecated';

@@ -1,34 +1,34 @@
 import { CollectModuleParams, ReferenceModuleParams } from '@lens-protocol/api-bindings';
 import {
-  ChargeCollectPolicy,
   CollectPolicyType,
   ReferencePolicyType,
   CreatePostRequest,
   CreateCommentRequest,
-  AaveChargeCollectPolicy,
-  VaultChargeCollectPolicy,
-  MultirecipientChargeCollectPolicy,
+  AaveChargeCollectPolicyConfig,
+  VaultChargeCollectPolicyConfig,
+  MultirecipientChargeCollectPolicyConfig,
+  ChargeCollectPolicyConfig,
 } from '@lens-protocol/domain/use-cases/publications';
 
 function isAaveChargeCollectPolicy(
-  collect: ChargeCollectPolicy,
-): collect is AaveChargeCollectPolicy {
+  collect: ChargeCollectPolicyConfig,
+): collect is AaveChargeCollectPolicyConfig {
   return 'depositToAave' in collect && collect.depositToAave;
 }
 
 function isVaultChargeCollectPolicy(
-  collect: ChargeCollectPolicy,
-): collect is VaultChargeCollectPolicy {
+  collect: ChargeCollectPolicyConfig,
+): collect is VaultChargeCollectPolicyConfig {
   return 'vault' in collect;
 }
 
 function isMultirecipientChargeCollectPolicy(
-  collect: ChargeCollectPolicy,
-): collect is MultirecipientChargeCollectPolicy {
+  collect: ChargeCollectPolicyConfig,
+): collect is MultirecipientChargeCollectPolicyConfig {
   return 'recipients' in collect;
 }
 
-function resolveChargeCollectModuleSharedParams(collect: ChargeCollectPolicy) {
+function resolveChargeCollectModuleSharedParams(collect: ChargeCollectPolicyConfig) {
   return {
     amount: {
       currency: collect.fee.asset.address,
@@ -39,7 +39,7 @@ function resolveChargeCollectModuleSharedParams(collect: ChargeCollectPolicy) {
   };
 }
 
-function resolveChargeCollectModule(collect: ChargeCollectPolicy): CollectModuleParams {
+function resolveChargeCollectModule(collect: ChargeCollectPolicyConfig): CollectModuleParams {
   if (isAaveChargeCollectPolicy(collect)) {
     return {
       aaveFeeCollectModule: {

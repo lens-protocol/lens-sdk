@@ -1,10 +1,10 @@
 import {
   CreateCommentTypedDataDocument,
-  CreateCommentTypedDataMutation,
-  CreateCommentTypedDataMutationVariables,
+  CreateCommentTypedDataData,
+  CreateCommentTypedDataVariables,
   CreateCommentViaDispatcherDocument,
-  CreateCommentViaDispatcherMutation,
-  CreateCommentViaDispatcherMutationVariables,
+  CreateCommentViaDispatcherData,
+  CreateCommentViaDispatcherVariables,
   CreatePublicCommentRequest as CreatePublicCommentRequestArg,
   LensApolloClient,
   omitTypename,
@@ -53,8 +53,8 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     nonce?: Nonce,
   ): Promise<UnsignedLensProtocolCall<CreateCommentRequest>> {
     const { data } = await this.apolloClient.mutate<
-      CreateCommentTypedDataMutation,
-      CreateCommentTypedDataMutationVariables
+      CreateCommentTypedDataData,
+      CreateCommentTypedDataVariables
     >({
       mutation: CreateCommentTypedDataDocument,
       variables: {
@@ -74,8 +74,8 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     requestArg: CreatePublicCommentRequestArg,
   ): AsyncRelayReceipt {
     const { data } = await this.apolloClient.mutate<
-      CreateCommentViaDispatcherMutation,
-      CreateCommentViaDispatcherMutationVariables
+      CreateCommentViaDispatcherData,
+      CreateCommentViaDispatcherVariables
     >({
       mutation: CreateCommentViaDispatcherDocument,
       variables: {

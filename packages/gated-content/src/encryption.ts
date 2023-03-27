@@ -1,10 +1,10 @@
 import {
   DeepOmitTypename,
   EncryptedFields,
-  EncryptedFieldsFragment,
-  EncryptedMediaSetFragment,
-  MediaSetFragment,
-  MetadataFragment,
+  EncryptedFieldsOutput,
+  EncryptedMediaSet,
+  MediaSet,
+  MetadataOutput,
   PublicationMetadata,
   PublicationMetadataMediaInput,
 } from '@lens-protocol/api-bindings';
@@ -116,13 +116,13 @@ export class PublicationMetadataEncryptor {
   }
 }
 
-type SupportedMetadataOutputFields = 'animatedUrl' | keyof EncryptedFieldsFragment;
+type SupportedMetadataOutputFields = 'animatedUrl' | keyof EncryptedFieldsOutput;
 
 export type EncryptedPublicationMetadata = Partial<
-  ExtractFields<MetadataFragment, SupportedMetadataOutputFields>
+  ExtractFields<MetadataOutput, SupportedMetadataOutputFields>
 >;
 
-export type IndexedEncryptedFields = Partial<ExtractSupportedFields<EncryptedFieldsFragment>>;
+export type IndexedEncryptedFields = Partial<ExtractSupportedFields<EncryptedFieldsOutput>>;
 
 export class PublicationMetadataDecryptor {
   constructor(private readonly cipher: ICipher) {}
@@ -163,9 +163,9 @@ export class PublicationMetadataDecryptor {
     return decrypted;
   }
 
-  private async decryptMedia<T extends MediaSetFragment>(
+  private async decryptMedia<T extends MediaSet>(
     media: T[],
-    encrypted: DeepOmitTypename<EncryptedMediaSetFragment>[],
+    encrypted: DeepOmitTypename<EncryptedMediaSet>[],
   ): Promise<T[]> {
     invariant(
       media.length === encrypted.length,

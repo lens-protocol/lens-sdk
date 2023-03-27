@@ -5,8 +5,6 @@ import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResul
 
 /**
  * Handler for logging out
- *
- * @category Wallet
  */
 export type LogoutHandler = (data: LogoutData) => void;
 

@@ -1,4 +1,4 @@
-import { AttributeFragment, Maybe, ProfileFragment } from '@lens-protocol/api-bindings';
+import { Attribute, Maybe, Profile } from '@lens-protocol/api-bindings';
 import {
   ProfileAttributeValue,
   UpdateProfileDetailsRequest,
@@ -12,7 +12,7 @@ import {
 
 import { IProfileCacheManager } from '../IProfileCacheManager';
 
-function newAttributeFragment(key: string, value: ProfileAttributeValue): AttributeFragment {
+function attribute(key: string, value: ProfileAttributeValue): Attribute {
   if (value instanceof Date) {
     return {
       __typename: 'Attribute',
@@ -31,10 +31,10 @@ function newAttributeFragment(key: string, value: ProfileAttributeValue): Attrib
 }
 
 function mergeAttributes(
-  existing: Maybe<AttributeFragment[]>,
+  existing: Maybe<Attribute[]>,
   update: PartialAttributesUpdate,
-): AttributeFragment[] {
-  const acc = new Map<string, AttributeFragment>();
+): Attribute[] {
+  const acc = new Map<string, Attribute>();
 
   (existing ?? []).forEach((attr) => {
     acc.set(attr.key, attr);
@@ -44,7 +44,7 @@ function mergeAttributes(
     if (value === null) {
       acc.delete(key);
     } else {
-      acc.set(key, newAttributeFragment(key, value));
+      acc.set(key, attribute(key, value));
     }
   }
   return Array.from(acc.values());
@@ -53,7 +53,7 @@ function mergeAttributes(
 export class UpdateProfileMetadataResponder
   implements ITransactionResponder<UpdateProfileDetailsRequest>
 {
-  private snapshots = new Map<UpdateProfileDetailsRequest, ProfileFragment | null>();
+  private snapshots = new Map<UpdateProfileDetailsRequest, Profile | null>();
 
   constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 

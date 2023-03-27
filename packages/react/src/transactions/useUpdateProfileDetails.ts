@@ -1,4 +1,4 @@
-import { ProfileOwnedByMeFragment } from '@lens-protocol/api-bindings';
+import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -13,8 +13,8 @@ import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useUpdateProfileDetailsController } from './adapters/useUpdateProfileDetailsController';
 
-type UseUpdateProfileDetailsArgs = {
-  profile: ProfileOwnedByMeFragment;
+export type UseUpdateProfileDetailsArgs = {
+  profile: ProfileOwnedByMe;
   upload: MetadataUploadHandler;
 };
 

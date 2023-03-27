@@ -8,7 +8,7 @@ import {
   CollectPolicyType,
   CreateCommentRequest,
   CreatePostRequest,
-  Media,
+  MediaObject,
   NftAttribute,
 } from '@lens-protocol/domain/use-cases/publications';
 import { v4 } from 'uuid';
@@ -23,7 +23,7 @@ function mapMetaAttributes(attributes: NftAttribute[]) {
   });
 }
 
-function mapMedia(media: Media): PublicationMetadataMediaInput {
+function mapMedia(media: MediaObject): PublicationMetadataMediaInput {
   return {
     item: media.url,
     type: media.mimeType,

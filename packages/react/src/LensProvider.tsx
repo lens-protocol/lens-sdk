@@ -14,8 +14,6 @@ export type { ErrorHandler, FailedTransactionError };
 
 /**
  * <LensProvider> props
- *
- * @category General Configuration
  */
 export type LensProviderProps = PropsWithChildren<{
   config: LensConfig;
@@ -46,8 +44,6 @@ function useLatestCallback<T extends Function>(callback: T) {
  * Given {@link LensConfig} it manages the lifecycle and internal state management of the Lens SDK
  *
  * @param props - {@link LensProviderProps}
- *
- * @category General Configuration
  */
 export function LensProvider({ children, ...props }: LensProviderProps) {
   const onError = useLatestCallback(props.onError ?? noop);

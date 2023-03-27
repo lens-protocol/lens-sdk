@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import {
   createMockApolloClientWithMultipleResponses,
-  createHidePublicationMutationMockedResponse,
+  createHidePublicationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockHidePublicationRequest } from '@lens-protocol/domain/mocks';
 
@@ -13,7 +13,7 @@ describe(`Given an instance of the ${HidePublicationGateway.name}`, () => {
       const publicationId = faker.datatype.uuid();
 
       const apolloClient = createMockApolloClientWithMultipleResponses([
-        createHidePublicationMutationMockedResponse({
+        createHidePublicationMockedResponse({
           variables: {
             publicationId,
           },

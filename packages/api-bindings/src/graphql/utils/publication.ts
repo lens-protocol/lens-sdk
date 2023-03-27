@@ -8,25 +8,28 @@ import { DateUtils, never, Overwrite, Prettify } from '@lens-protocol/shared-ker
 
 import { CollectPolicy, CollectState } from '../CollectPolicy';
 import {
-  AaveFeeCollectModuleSettingsFragment,
-  CollectModuleFragment,
-  CommentFragment,
-  Erc4626FeeCollectModuleSettingsFragment,
-  FeeCollectModuleSettingsFragment,
-  FreeCollectModuleSettingsFragment,
-  LimitedFeeCollectModuleSettingsFragment,
-  LimitedTimedFeeCollectModuleSettingsFragment,
-  MirrorFragment,
-  MultirecipientFeeCollectModuleSettingsFragment,
-  PostFragment,
-  ProfileFragment,
-  PublicationStatsFragment,
+  AaveFeeCollectModuleSettings,
+  Comment,
+  Erc4626FeeCollectModuleSettings,
+  FeeCollectModuleSettings,
+  FreeCollectModuleSettings,
+  LimitedFeeCollectModuleSettings,
+  LimitedTimedFeeCollectModuleSettings,
+  Mirror,
+  MultirecipientFeeCollectModuleSettings,
+  Post,
+  Profile,
+  PublicationStats,
   ReactionTypes,
-  TimedFeeCollectModuleSettingsFragment,
-} from '../generated';
+  TimedFeeCollectModuleSettings,
+} from '../operations';
 import { erc20Amount } from './amount';
-import { isProfileOwnedByMe, ProfileOwnedByMeFragment } from './profile';
+import { isProfileOwnedByMe, ProfileOwnedByMe } from './profile';
 import { PickByTypename, Typename } from './types';
+
+export type CollectModule = ContentPublication['collectModule'];
+
+export type ReferenceModule = NonNullable<ContentPublication['referenceModule']>;
 
 export function isPostPublication<T extends Typename<string>>(
   publication: T,
@@ -46,7 +49,7 @@ export function isMirrorPublication<T extends Typename<string>>(
   return publication.__typename === 'Mirror';
 }
 
-export function getDomainReactionType(reaction: ReactionTypes): ReactionType {
+export function resolveDomainReactionType(reaction: ReactionTypes): ReactionType {
   switch (reaction) {
     case ReactionTypes.Upvote:
       return ReactionType.UPVOTE;
@@ -57,7 +60,7 @@ export function getDomainReactionType(reaction: ReactionTypes): ReactionType {
   }
 }
 
-export function getApiReactionType(reaction: ReactionType): ReactionTypes {
+export function resolveApiReactionType(reaction: ReactionType): ReactionTypes {
   switch (reaction) {
     case ReactionType.UPVOTE:
       return ReactionTypes.Upvote;
@@ -68,60 +71,60 @@ export function getApiReactionType(reaction: ReactionType): ReactionTypes {
   }
 }
 
-export type AnyPublicationFragment = CommentFragment | MirrorFragment | PostFragment;
+export type AnyPublication = Comment | Mirror | Post;
 
-export type ContentPublicationFragment = CommentFragment | PostFragment;
+export type ContentPublication = Comment | Post;
 
-type Gated<T extends ContentPublicationFragment> = Overwrite<
+/**
+ * @internal
+ */
+export type Gated<T extends ContentPublication> = Overwrite<
   T,
   {
     isGated: true;
     metadata: Overwrite<
       T['metadata'],
       {
-        __encryptionParams: NonNullable<T['metadata']['__encryptionParams']>;
+        encryptionParams: NonNullable<T['metadata']['encryptionParams']>;
       }
     >;
   }
 >;
 
-export type GatedCommentFragment = Prettify<Gated<CommentFragment>>;
+export type GatedComment = Prettify<Gated<Comment>>;
 
-export type GatedPostFragment = Prettify<Gated<PostFragment>>;
+export type GatedPost = Prettify<Gated<Post>>;
 
-export type GatedPublicationFragment = GatedCommentFragment | GatedPostFragment;
+export type GatedPublication = GatedComment | GatedPost;
 
 export function isGatedPublication(
-  publication: ContentPublicationFragment,
-): publication is GatedPublicationFragment {
+  publication: ContentPublication,
+): publication is GatedPublication {
   return publication.isGated;
 }
 
 export function isContentPublication(
-  publication: AnyPublicationFragment,
-): publication is ContentPublicationFragment {
+  publication: AnyPublication,
+): publication is ContentPublication {
   return isPostPublication(publication) || isCommentPublication(publication);
 }
 
-export type PublicationOwnedByMeFragment = Overwrite<
-  AnyPublicationFragment,
-  { profile: ProfileOwnedByMeFragment }
->;
+export type PublicationOwnedByMe = Overwrite<AnyPublication, { profile: ProfileOwnedByMe }>;
 
 export function isPublicationOwnedByMe(
-  publication: AnyPublicationFragment,
-): publication is PublicationOwnedByMeFragment {
+  publication: AnyPublication,
+): publication is PublicationOwnedByMe {
   return isProfileOwnedByMe(publication.profile);
 }
 
 export function createCollectRequest(
-  publication: AnyPublicationFragment,
-  collector: ProfileOwnedByMeFragment,
+  publication: AnyPublication,
+  collector: ProfileOwnedByMe,
 ): CollectRequest {
-  const collectModule =
+  const collectModule: CollectModule =
     publication.__typename === 'Mirror'
-      ? publication.mirrorOf.__collectModule
-      : publication.__collectModule;
+      ? publication.mirrorOf.collectModule
+      : publication.collectModule;
 
   switch (collectModule.__typename) {
     case 'FreeCollectModuleSettings':
@@ -169,24 +172,8 @@ export function createCollectRequest(
   }
 }
 
-export type CollectableCollectModuleSettingsFragment =
-  | FreeCollectModuleSettingsFragment
-  | FeeCollectModuleSettingsFragment
-  | LimitedFeeCollectModuleSettingsFragment
-  | TimedFeeCollectModuleSettingsFragment
-  | LimitedTimedFeeCollectModuleSettingsFragment
-  | MultirecipientFeeCollectModuleSettingsFragment
-  | Erc4626FeeCollectModuleSettingsFragment
-  | AaveFeeCollectModuleSettingsFragment;
-
-export type PublicationFragmentWithCollectableCollectModule = AnyPublicationFragment & {
-  collectModule: CollectableCollectModuleSettingsFragment;
-};
-
 function resolveTimeLimitReached(
-  collectModule:
-    | LimitedTimedFeeCollectModuleSettingsFragment
-    | TimedFeeCollectModuleSettingsFragment,
+  collectModule: LimitedTimedFeeCollectModuleSettings | TimedFeeCollectModuleSettings,
 ) {
   if (DateUtils.unix() > DateUtils.toUnix(collectModule.endTimestamp)) {
     return CollectState.COLLECT_TIME_EXPIRED;
@@ -196,9 +183,9 @@ function resolveTimeLimitReached(
 
 function resolveOptionalTimeLimitReached(
   collectModule:
-    | MultirecipientFeeCollectModuleSettingsFragment
-    | Erc4626FeeCollectModuleSettingsFragment
-    | AaveFeeCollectModuleSettingsFragment,
+    | MultirecipientFeeCollectModuleSettings
+    | Erc4626FeeCollectModuleSettings
+    | AaveFeeCollectModuleSettings,
 ) {
   if (
     collectModule.endTimestampOptional &&
@@ -210,10 +197,8 @@ function resolveOptionalTimeLimitReached(
 }
 
 function resolveLimitReached(
-  collectModule:
-    | LimitedFeeCollectModuleSettingsFragment
-    | LimitedTimedFeeCollectModuleSettingsFragment,
-  publicationStats: PublicationStatsFragment,
+  collectModule: LimitedFeeCollectModuleSettings | LimitedTimedFeeCollectModuleSettings,
+  publicationStats: PublicationStats,
 ) {
   if (publicationStats.totalAmountOfCollects >= parseInt(collectModule.collectLimit)) {
     return CollectState.COLLECT_LIMIT_REACHED;
@@ -224,10 +209,10 @@ function resolveLimitReached(
 
 function resolveOptionalLimitReached(
   collectModule:
-    | MultirecipientFeeCollectModuleSettingsFragment
-    | Erc4626FeeCollectModuleSettingsFragment
-    | AaveFeeCollectModuleSettingsFragment,
-  publicationStats: PublicationStatsFragment,
+    | MultirecipientFeeCollectModuleSettings
+    | Erc4626FeeCollectModuleSettings
+    | AaveFeeCollectModuleSettings,
+  publicationStats: PublicationStats,
 ) {
   if (
     collectModule.collectLimitOptional &&
@@ -239,19 +224,18 @@ function resolveOptionalLimitReached(
   return null;
 }
 
-function resolveNotFollower(
-  collectModule:
-    | FreeCollectModuleSettingsFragment
-    | FeeCollectModuleSettingsFragment
-    | LimitedFeeCollectModuleSettingsFragment
-    | TimedFeeCollectModuleSettingsFragment
-    | LimitedTimedFeeCollectModuleSettingsFragment
-    | MultirecipientFeeCollectModuleSettingsFragment
-    | Erc4626FeeCollectModuleSettingsFragment
-    | AaveFeeCollectModuleSettingsFragment,
-  author: ProfileFragment,
-) {
-  if (collectModule.followerOnly && !author.__isFollowedByMe) {
+export type CollectableCollectModuleSettings =
+  | FreeCollectModuleSettings
+  | FeeCollectModuleSettings
+  | LimitedFeeCollectModuleSettings
+  | TimedFeeCollectModuleSettings
+  | LimitedTimedFeeCollectModuleSettings
+  | MultirecipientFeeCollectModuleSettings
+  | Erc4626FeeCollectModuleSettings
+  | AaveFeeCollectModuleSettings;
+
+function resolveNotFollower(collectModule: CollectableCollectModuleSettings, author: Profile) {
+  if (collectModule.followerOnly && !author.isFollowedByMe) {
     return CollectState.NOT_A_FOLLOWER;
   }
   return null;
@@ -263,9 +247,9 @@ export function resolveCollectPolicy({
   publicationStats,
   collectNftAddress,
 }: {
-  collectModule: CollectModuleFragment;
-  profile: ProfileFragment;
-  publicationStats: PublicationStatsFragment;
+  collectModule: CollectModule;
+  profile: Profile;
+  publicationStats: PublicationStats;
   collectNftAddress: string | null;
 }): CollectPolicy {
   switch (collectModule.__typename) {

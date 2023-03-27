@@ -1,4 +1,4 @@
-import { CommentFragment, MirrorFragment, PostFragment } from '@lens-protocol/api-bindings';
+import { Comment, Mirror, Post } from '@lens-protocol/api-bindings';
 import { ReportReason } from '@lens-protocol/domain/entities';
 import { ReportPublicationRequest } from '@lens-protocol/domain/use-cases/publications';
 
@@ -8,7 +8,7 @@ import { useReportPublicationController } from './adapters/useReportPublicationC
 export { ReportReason };
 
 export type UseReportPublicationArgs = {
-  publication: CommentFragment | MirrorFragment | PostFragment;
+  publication: Comment | Mirror | Post;
 };
 
 export type ReportPublicationArgs = Pick<ReportPublicationRequest, 'additionalComments' | 'reason'>;

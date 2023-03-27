@@ -1,5 +1,5 @@
 query EnabledModuleCurrencies {
   result: enabledModuleCurrencies {
-    ...Erc20
+    ...Erc20Fields
   }
 }

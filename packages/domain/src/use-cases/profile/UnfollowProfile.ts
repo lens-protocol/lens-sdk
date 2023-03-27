@@ -1,4 +1,4 @@
-import { TransactionKind } from '../../entities';
+import { ProfileId, TransactionKind } from '../../entities';
 import {
   IProtocolCallPresenter,
   IUnsignedProtocolCallGateway,
@@ -6,7 +6,7 @@ import {
 } from '../transactions/ProtocolCallUseCase';
 
 export type UnfollowRequest = {
-  profileId: string;
+  profileId: ProfileId;
   kind: TransactionKind.UNFOLLOW_PROFILE;
 };
 

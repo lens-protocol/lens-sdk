@@ -1,5 +1,5 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
-import { ProfileFragment, ProfileFragmentDoc } from '@lens-protocol/api-bindings';
+import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import { FollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastedTransactionData,
@@ -16,17 +16,17 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
       id: request.profileId,
     });
 
-    const snapshot = this.apolloCache.readFragment<ProfileFragment>({
+    const snapshot = this.apolloCache.readFragment<Profile>({
       id: profileIdentifier,
       fragmentName: 'Profile',
-      fragment: ProfileFragmentDoc,
+      fragment: FragmentProfile,
     });
 
     if (snapshot) {
       this.apolloCache.writeFragment({
         id: profileIdentifier,
         fragmentName: 'Profile',
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
         data: {
           ...snapshot,
           stats: {
@@ -44,20 +44,20 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
       id: request.profileId,
     });
 
-    const snapshot = this.apolloCache.readFragment<ProfileFragment>({
+    const snapshot = this.apolloCache.readFragment<Profile>({
       id: profileIdentifier,
       fragmentName: 'Profile',
-      fragment: ProfileFragmentDoc,
+      fragment: FragmentProfile,
     });
 
     if (snapshot) {
       this.apolloCache.writeFragment({
         id: profileIdentifier,
         fragmentName: 'Profile',
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
         data: {
           ...snapshot,
-          __isFollowedByMe: true,
+          isFollowedByMe: true,
           stats: {
             ...snapshot.stats,
             totalFollowers: snapshot.stats.totalFollowers + 1,
@@ -73,17 +73,17 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
       id: request.profileId,
     });
 
-    const snapshot = this.apolloCache.readFragment<ProfileFragment>({
+    const snapshot = this.apolloCache.readFragment<Profile>({
       id: profileIdentifier,
       fragmentName: 'Profile',
-      fragment: ProfileFragmentDoc,
+      fragment: FragmentProfile,
     });
 
     if (snapshot) {
       this.apolloCache.writeFragment({
         id: profileIdentifier,
         fragmentName: 'Profile',
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
         data: {
           ...snapshot,
           stats: {

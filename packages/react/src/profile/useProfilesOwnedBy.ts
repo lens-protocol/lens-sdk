@@ -1,4 +1,4 @@
-import { ProfileFragment, useGetAllProfilesQuery } from '@lens-protocol/api-bindings';
+import { Profile, useGetAllProfiles } from '@lens-protocol/api-bindings';
 import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
@@ -20,9 +20,9 @@ export function useProfilesOwnedBy({
   address,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseProfilesOwnedByArgs): PaginatedReadResult<ProfileFragment[]> {
+}: UseProfilesOwnedByArgs): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
-    useGetAllProfilesQuery(
+    useGetAllProfiles(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

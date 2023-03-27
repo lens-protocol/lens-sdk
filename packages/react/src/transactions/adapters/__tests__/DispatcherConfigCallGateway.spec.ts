@@ -1,13 +1,13 @@
 import { MockedResponse } from '@apollo/client/testing';
 import {
   CreateSetDispatcherTypedDataDocument,
-  CreateSetDispatcherTypedDataMutation,
-  CreateSetDispatcherTypedDataMutationVariables,
+  CreateSetDispatcherTypedDataData,
+  CreateSetDispatcherTypedDataVariables,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockCreateSetDispatcherTypedDataMutation,
+  mockCreateSetDispatcherTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockNonce, mockUpdateDispatcherConfigRequest } from '@lens-protocol/domain/mocks';
 
@@ -18,9 +18,9 @@ function mockCreateSetDispatcherTypedDataMutationMockedResponse({
   variables,
   data,
 }: {
-  variables: CreateSetDispatcherTypedDataMutationVariables;
-  data: CreateSetDispatcherTypedDataMutation;
-}): MockedResponse<CreateSetDispatcherTypedDataMutation> {
+  variables: CreateSetDispatcherTypedDataVariables;
+  data: CreateSetDispatcherTypedDataData;
+}): MockedResponse<CreateSetDispatcherTypedDataData> {
   return {
     request: {
       query: CreateSetDispatcherTypedDataDocument,
@@ -37,7 +37,7 @@ describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
     it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
       const request = mockUpdateDispatcherConfigRequest();
 
-      const setDispatcherTypedDataMutation = mockCreateSetDispatcherTypedDataMutation();
+      const data = mockCreateSetDispatcherTypedDataData();
 
       const apollo = createMockApolloClientWithMultipleResponses([
         mockCreateSetDispatcherTypedDataMutationMockedResponse({
@@ -47,7 +47,7 @@ describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
               enable: request.enabled,
             },
           },
-          data: setDispatcherTypedDataMutation,
+          data,
         }),
       ]);
 
@@ -56,9 +56,7 @@ describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
       const unsignedCall = await dispatcherConfigCallGateway.createUnsignedProtocolCall(request);
 
       expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-      expect(unsignedCall.typedData).toEqual(
-        omitTypename(setDispatcherTypedDataMutation.result.typedData),
-      );
+      expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
     });
 
     it('should be possible to override the signature nonce', async () => {
@@ -77,7 +75,7 @@ describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
               overrideSigNonce: nonce,
             },
           },
-          data: mockCreateSetDispatcherTypedDataMutation({ nonce }),
+          data: mockCreateSetDispatcherTypedDataData({ nonce }),
         }),
       ]);
       const dispatcherConfigCallGateway = new DispatcherConfigCallGateway(apollo);

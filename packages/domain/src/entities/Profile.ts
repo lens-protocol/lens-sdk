@@ -1,4 +1,4 @@
-export type ProfileId = string;
+export type ProfileId = `0x${string}`;
 
 export class Profile {
   private constructor(readonly id: ProfileId, readonly handle: string) {}

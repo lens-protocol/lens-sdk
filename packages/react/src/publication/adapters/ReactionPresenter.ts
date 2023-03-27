@@ -1,6 +1,6 @@
 import {
-  getApiReactionType,
-  getDomainReactionType,
+  resolveApiReactionType,
+  resolveDomainReactionType,
   isContentPublication,
 } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
@@ -30,7 +30,7 @@ export class ReactionPresenter implements IReactionPresenter {
       );
 
       const removedStatKey = current.reaction
-        ? getReactionStatKey(getDomainReactionType(current.reaction))
+        ? getReactionStatKey(resolveDomainReactionType(current.reaction))
         : undefined;
 
       const currentStatsValue = current.stats[getReactionStatKey(request.reactionType)];
@@ -44,7 +44,7 @@ export class ReactionPresenter implements IReactionPresenter {
           ...(removedStatKey && { [removedStatKey]: current.stats[removedStatKey] - 1 }),
           [getReactionStatKey(request.reactionType)]: currentStatsValue + 1,
         },
-        reaction: getApiReactionType(request.reactionType),
+        reaction: resolveApiReactionType(request.reactionType),
       };
     });
   }

@@ -1,12 +1,12 @@
 import {
   CreateMirrorTypedDataDocument,
   CreateMirrorViaDispatcherDocument,
-  CreateMirrorViaDispatcherMutation,
-  CreateMirrorViaDispatcherMutationVariables,
+  CreateMirrorViaDispatcherData,
+  CreateMirrorViaDispatcherVariables,
   CreateMirrorRequest as CreateMirrorRequestArg,
   omitTypename,
-  CreateMirrorTypedDataMutation,
-  CreateMirrorTypedDataMutationVariables,
+  CreateMirrorTypedDataData,
+  CreateMirrorTypedDataVariables,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
@@ -50,8 +50,8 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
     nonce?: Nonce,
   ): Promise<UnsignedLensProtocolCall<CreateMirrorRequest>> {
     const { data } = await this.apolloClient.mutate<
-      CreateMirrorTypedDataMutation,
-      CreateMirrorTypedDataMutationVariables
+      CreateMirrorTypedDataData,
+      CreateMirrorTypedDataVariables
     >({
       mutation: CreateMirrorTypedDataDocument,
       variables: {
@@ -69,8 +69,8 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
 
   private async initiateMirrorCreation(requestArgs: CreateMirrorRequestArg): AsyncRelayReceipt {
     const { data } = await this.apolloClient.mutate<
-      CreateMirrorViaDispatcherMutation,
-      CreateMirrorViaDispatcherMutationVariables
+      CreateMirrorViaDispatcherData,
+      CreateMirrorViaDispatcherVariables
     >({
       mutation: CreateMirrorViaDispatcherDocument,
       variables: {

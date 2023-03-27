@@ -12,31 +12,95 @@ export * from './useUnfollow';
 export * from './useUpdateDispatcherConfig';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileDetails';
+export * from './useUpdateProfileImage';
 
-export { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
+/**
+ * Domain
+ */
 export {
+  TransactionError,
+  TransactionErrorReason,
+  TransactionKind,
+} from '@lens-protocol/domain/entities';
+export type { Signature, TransactionRequestModel } from '@lens-protocol/domain/entities';
+
+/**
+ * Request models
+ */
+export type {
+  SupportedTransactionRequest,
+  TransactionData,
+  BroadcastedTransactionData,
+  PendingTransactionData,
+} from '@lens-protocol/domain/use-cases/transactions';
+export type {
+  CreateProfileRequest,
+  FollowRequest,
+  FollowRequestFee,
+  NftOwnershipSignature,
+  PaidFollowRequest,
+  PartialAttributesUpdate,
+  ProfileAttributeValue,
+  ProfileOwnerFollowRequest,
+  UnconstrainedFollowRequest,
+  UnfollowRequest,
+  UpdateDispatcherConfigRequest,
+  UpdateFollowPolicyRequest,
+  UpdateNftProfileImageRequest,
+  UpdateOffChainProfileImageRequest,
+  UpdateProfileDetailsRequest,
+  UpdateProfileImageRequest,
+} from '@lens-protocol/domain/use-cases/profile';
+export type { TokenAllowanceRequest } from '@lens-protocol/domain/use-cases/wallets';
+export type {
+  AaveChargeCollectPolicyConfig,
+  AnyoneReferencePolicyConfig,
+  ChargeCollectPolicyConfig,
+  CollectFee,
+  CollectPolicyConfig,
+  CollectRequest,
+  CollectType,
+  CreateCommentRequest,
+  CreateMirrorRequest,
+  CreatePostRequest,
+  DegreesOfSeparationReferencePolicyConfig,
+  FollowersOnlyReferencePolicyConfig,
+  FreeCollectPolicyConfig,
+  FreeCollectRequest,
+  Locale,
+  MediaObject,
+  NftAttribute,
+  NftAttributeDisplayType,
+  NftMetadata,
+  NoCollectPolicyConfig,
+  PaidCollectRequest,
+  RecipientWithSplit,
+  ReferencePolicyConfig,
+  ReferencePolicyType,
+  SupportedPublicationMediaType,
+  MultirecipientChargeCollectPolicyConfig,
+  SimpleChargeCollectPolicyConfig,
+  VaultChargeCollectPolicyConfig,
+} from '@lens-protocol/domain/use-cases/publications';
+export {
+  AudioType,
   CollectPolicyType,
   ContentFocus,
-  NftAttributeDisplayType,
-  ReferencePolicyType,
-} from '@lens-protocol/domain/use-cases/publications';
-export {
-  SupportedFileType,
   ImageType,
-  AudioType,
+  SupportedFileType,
   VideoType,
 } from '@lens-protocol/domain/use-cases/publications';
-export type {
-  ChargeCollectPolicy,
-  CollectPolicyConfig,
-  FreeCollectPolicy,
-  Media,
-  NftAttribute,
-  NftMetadata,
-  NoCollectPolicy,
-  SupportedPublicationMediaType,
-  ReferencePolicyConfig,
-} from '@lens-protocol/domain/use-cases/publications';
-export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+
+/**
+ * Domain errors
+ */
+export {
+  InsufficientAllowanceError,
+  InsufficientFundsError,
+} from '@lens-protocol/domain/use-cases/wallets';
+
+/**
+ * Helpers
+ */
 export type { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 export { FailedUploadError } from './adapters/IMetadataUploader';

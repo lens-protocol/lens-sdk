@@ -1,7 +1,7 @@
 import {
-  ContentPublicationFragment,
+  ContentPublication,
   isGatedPublication,
-  MetadataFragment,
+  MetadataOutput,
   UnspecifiedError,
 } from '@lens-protocol/api-bindings';
 import { failure, invariant, success } from '@lens-protocol/shared-kernel';
@@ -13,7 +13,7 @@ import { useSharedDependencies } from '../shared';
 import { createGatedClient } from '../transactions/infrastructure/createGatedClient';
 import { useActiveWalletSigner } from '../wallet';
 
-export type UseEncryptedPublicationArgs<T extends ContentPublicationFragment> = {
+export type UseEncryptedPublicationArgs<T extends ContentPublication> = {
   encryption: EncryptionConfig;
   publication: T;
 };
@@ -35,19 +35,16 @@ export type UseEncryptedPublicationResult<T> = {
   isPending: boolean;
 };
 
-function updateMetadata<T extends ContentPublicationFragment>(
-  publication: T,
-  metadata: MetadataFragment,
-) {
+function updateMetadata<T extends ContentPublication>(publication: T, metadata: MetadataOutput) {
   return Object.assign({}, publication, { metadata });
 }
 
-export function useEncryptedPublication<T extends ContentPublicationFragment>({
+export function useEncryptedPublication<T extends ContentPublication>({
   encryption,
   publication,
 }: UseEncryptedPublicationArgs<T>): UseEncryptedPublicationResult<T> {
   const [shouldDecrypt, signalDecryptionIntent] = useState(false);
-  const [metadata, setMetadata] = useState<MetadataFragment>(publication.metadata);
+  const [metadata, setMetadata] = useState<MetadataOutput>(publication.metadata);
 
   // Although publication Metadata is to be considered immutable,
   // there are other things that can change (e.g. the publication could be deleted).
@@ -84,7 +81,7 @@ export function useEncryptedPublication<T extends ContentPublicationFragment>({
 
       const result = await client.decryptPublication(
         publication.metadata,
-        publication.metadata.__encryptionParams,
+        publication.metadata.encryptionParams,
       );
 
       if (result.isFailure()) {

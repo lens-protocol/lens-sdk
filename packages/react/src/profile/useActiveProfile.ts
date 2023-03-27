@@ -1,8 +1,8 @@
 import {
   isProfileOwnedByMe,
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
   UnspecifiedError,
-  useGetProfileQuery,
+  useGetProfile,
 } from '@lens-protocol/api-bindings';
 import { invariant } from '@lens-protocol/shared-kernel';
 
@@ -10,10 +10,10 @@ import { useSourcesFromConfig, useLensApolloClient } from '../helpers/arguments'
 import { ReadResult } from '../helpers/reads';
 import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
 
-export function useActiveProfile(): ReadResult<ProfileOwnedByMeFragment | null, UnspecifiedError> {
+export function useActiveProfile(): ReadResult<ProfileOwnedByMe | null, UnspecifiedError> {
   const { data: identifier, loading: bootstrapping } = useActiveProfileIdentifier();
 
-  const { data, error, loading } = useGetProfileQuery(
+  const { data, error, loading } = useGetProfile(
     useLensApolloClient({
       variables: useSourcesFromConfig({
         request: {

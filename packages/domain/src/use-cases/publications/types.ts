@@ -52,7 +52,7 @@ export enum CollectPolicyType {
   NO_COLLECT = 'NO_COLLECT',
 }
 
-export type AaveChargeCollectPolicy = {
+export type AaveChargeCollectPolicyConfig = {
   type: CollectPolicyType.CHARGE;
   fee: Amount<Erc20>;
   followersOnly: boolean;
@@ -65,7 +65,7 @@ export type AaveChargeCollectPolicy = {
   endTimestamp?: number;
 };
 
-export type VaultChargeCollectPolicy = {
+export type VaultChargeCollectPolicyConfig = {
   type: CollectPolicyType.CHARGE;
   fee: Amount<Erc20>;
   followersOnly: boolean;
@@ -78,7 +78,7 @@ export type VaultChargeCollectPolicy = {
   endTimestamp?: number;
 };
 
-export type MultirecipientChargeCollectPolicy = {
+export type MultirecipientChargeCollectPolicyConfig = {
   type: CollectPolicyType.CHARGE;
   fee: Amount<Erc20>;
   followersOnly: boolean;
@@ -90,7 +90,7 @@ export type MultirecipientChargeCollectPolicy = {
   endTimestamp?: number;
 };
 
-export type SimpleChargeCollectPolicy = {
+export type SimpleChargeCollectPolicyConfig = {
   type: CollectPolicyType.CHARGE;
   fee: Amount<Erc20>;
   followersOnly: boolean;
@@ -102,23 +102,26 @@ export type SimpleChargeCollectPolicy = {
   timeLimited: boolean;
 };
 
-export type ChargeCollectPolicy =
-  | SimpleChargeCollectPolicy
-  | MultirecipientChargeCollectPolicy
-  | VaultChargeCollectPolicy
-  | AaveChargeCollectPolicy;
+export type ChargeCollectPolicyConfig =
+  | SimpleChargeCollectPolicyConfig
+  | MultirecipientChargeCollectPolicyConfig
+  | VaultChargeCollectPolicyConfig
+  | AaveChargeCollectPolicyConfig;
 
-export type FreeCollectPolicy = {
+export type FreeCollectPolicyConfig = {
   type: CollectPolicyType.FREE;
   metadata: NftMetadata;
   followersOnly: boolean;
 };
 
-export type NoCollectPolicy = {
+export type NoCollectPolicyConfig = {
   type: CollectPolicyType.NO_COLLECT;
 };
 
-export type CollectPolicyConfig = ChargeCollectPolicy | FreeCollectPolicy | NoCollectPolicy;
+export type CollectPolicyConfig =
+  | ChargeCollectPolicyConfig
+  | FreeCollectPolicyConfig
+  | NoCollectPolicyConfig;
 
 export type SupportedPublicationMediaType =
   | ImageType.PNG
@@ -130,7 +133,7 @@ export type SupportedPublicationMediaType =
   | AudioType.OGG
   | AudioType.WAV;
 
-export type Media = {
+export type MediaObject = {
   altTag?: string;
   cover?: Url;
   url: Url;

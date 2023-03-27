@@ -14,14 +14,26 @@ extend type Profile {
 }
 
 extend type Post {
+  """
+  @deprecated this will be replaced by collectState
+  """
   hasOptimisticCollectedByMe: Boolean!
+  """
+  @deprecated this will be replaced by mirrorState
+  """
   isOptimisticMirroredByMe: Boolean!
   collectPolicy: CollectPolicy!
   referencePolicy: ReferencePolicy!
 }
 
 extend type Comment {
+  """
+  @deprecated this will be replaced by collectState
+  """
   hasOptimisticCollectedByMe: Boolean!
+  """
+  @deprecated this will be replaced by mirrorState
+  """
   isOptimisticMirroredByMe: Boolean!
   collectPolicy: CollectPolicy!
   referencePolicy: ReferencePolicy!

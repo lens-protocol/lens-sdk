@@ -1,16 +1,7 @@
-import {
-  ApolloCache,
-  InMemoryCache,
-  NormalizedCacheObject,
-  FieldFunctionOptions,
-  FieldPolicy,
-  TypePolicy as UnpatchedTypePolicy,
-  ReactiveVar,
-} from '@apollo/client';
+import { ApolloCache, InMemoryCache, NormalizedCacheObject, ReactiveVar } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
-import { Overwrite } from '@lens-protocol/shared-kernel';
 
-import generatedIntrospection from '../../graphql/generated';
+import generatedIntrospection, { StrictTypedTypePolicies } from '../../graphql/hooks';
 import { createAttributeTypePolicy } from './createAttributeTypePolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
@@ -33,39 +24,14 @@ import { createContentPublicationTypePolicy } from './publicationTypePolicy';
 import { noCachedField } from './utils/noCachedField';
 import { notNormalizedType } from './utils/notNormalizedType';
 
-type TypedFieldFunctionOptions<TAll> = Overwrite<
-  FieldFunctionOptions,
-  {
-    readField: <T extends keyof NO, O = TAll, NO = NonNullable<O>>(
-      fieldName: T,
-      from?: O,
-    ) => Readonly<NO[T]> | undefined;
-  }
->;
-
-type TypedFieldReadFunction<TExisting, TAll> = (
-  existing: Readonly<TExisting> | undefined,
-  options: TypedFieldFunctionOptions<TAll>,
-) => TExisting | undefined;
-
-export type TypePolicy<T> = Overwrite<
-  UnpatchedTypePolicy,
-  {
-    fields?: Partial<{
-      [key in keyof T]: FieldPolicy<T[key]> | TypedFieldReadFunction<T[key], T>;
-    }>;
-  }
->;
-
-type TypePolicies = {
-  [__typename: string]: TypePolicy<unknown>;
-};
-
 type TypePoliciesArgs = {
+  /**
+   * @deprecated this should not be provided by the consumer but should be part of @lens-protocol/api-bindings exports
+   */
   activeWalletVar: ReactiveVar<WalletData | null>;
 };
 
-function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): TypePolicies {
+function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): StrictTypedTypePolicies {
   return {
     Profile: createProfileTypePolicy(activeWalletVar),
     Post: createContentPublicationTypePolicy(),

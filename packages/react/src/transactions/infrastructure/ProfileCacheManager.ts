@@ -1,13 +1,14 @@
 import { FetchPolicy } from '@apollo/client';
 import {
   GetProfileDocument,
-  GetProfileQuery,
-  GetProfileQueryVariables,
+  GetProfileData,
+  GetProfileVariables,
   LensApolloClient,
-  ProfileFragment,
-  ProfileFragmentDoc,
+  Profile,
+  FragmentProfile,
   Sources,
 } from '@lens-protocol/api-bindings';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { never } from '@lens-protocol/shared-kernel';
 
 import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
@@ -20,7 +21,7 @@ export class ProfileCacheManager implements IProfileCacheManager {
     return this.request(args, 'cache-first');
   }
 
-  async refreshProfile(id: string) {
+  async refreshProfile(id: ProfileId) {
     const profile = await this.request({ id }, 'network-only');
 
     return profile ?? never();
@@ -29,7 +30,7 @@ export class ProfileCacheManager implements IProfileCacheManager {
   private async request(args: FetchProfileArgs, fetchPolicy: FetchPolicy) {
     const activeProfile = activeProfileIdentifierVar();
 
-    const { data } = await this.client.query<GetProfileQuery, GetProfileQueryVariables>({
+    const { data } = await this.client.query<GetProfileData, GetProfileVariables>({
       query: GetProfileDocument,
       variables: {
         request: {
@@ -45,24 +46,24 @@ export class ProfileCacheManager implements IProfileCacheManager {
     return data.result;
   }
 
-  updateProfile(id: string, updateFn: (current: ProfileFragment) => ProfileFragment): void {
+  updateProfile(id: string, updateFn: (current: Profile) => Profile): void {
     const identifier =
       this.client.cache.identify({ __typename: 'Profile', id }) ??
       never('Profile identifier not found');
 
-    const profile = this.client.cache.readFragment<ProfileFragment>({
+    const profile = this.client.cache.readFragment<Profile>({
       id: identifier,
       fragmentName: 'Profile',
-      fragment: ProfileFragmentDoc,
+      fragment: FragmentProfile,
     });
 
     if (profile) {
       const updated = updateFn(profile);
 
-      this.client.cache.writeFragment<ProfileFragment>({
+      this.client.cache.writeFragment<Profile>({
         id: identifier,
         fragmentName: 'Profile',
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
         data: updated,
       });
     }

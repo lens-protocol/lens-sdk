@@ -1,11 +1,11 @@
 import {
   HasTxHashBeenIndexedDocument,
-  HasTxHashBeenIndexedQuery,
-  HasTxHashBeenIndexedQueryVariables,
+  HasTxHashBeenIndexedData,
+  HasTxHashBeenIndexedVariables,
   LensApolloClient,
   ProxyActionStatusDocument,
-  ProxyActionStatusQuery,
-  ProxyActionStatusQueryVariables,
+  ProxyActionStatusData,
+  ProxyActionStatusVariables,
   ProxyActionStatusTypes,
   TransactionErrorReasons,
 } from '@lens-protocol/api-bindings';
@@ -24,7 +24,7 @@ const ONE_SECOND = 1000; // ms
 /**
  * The transaction observer timings
  *
- * @category Transaction Configuration
+ * @internal
  */
 export type TransactionObserverTimings = {
   pollingInterval: number; // ms // TODO delete this
@@ -90,8 +90,8 @@ export class TransactionObserver implements ITransactionObserver {
   ): PromiseResult<IndexingEvent, TransactionError> {
     const startedAt = Date.now();
     const observable = this.apolloClient.poll<
-      HasTxHashBeenIndexedQuery,
-      HasTxHashBeenIndexedQueryVariables
+      HasTxHashBeenIndexedData,
+      HasTxHashBeenIndexedVariables
     >({
       query: HasTxHashBeenIndexedDocument,
       variables: {
@@ -141,10 +141,7 @@ export class TransactionObserver implements ITransactionObserver {
     proxyId: string,
   ): PromiseResult<ProxyActionStatusEvent, TransactionError> {
     const startedAt = Date.now();
-    const observable = this.apolloClient.poll<
-      ProxyActionStatusQuery,
-      ProxyActionStatusQueryVariables
-    >({
+    const observable = this.apolloClient.poll<ProxyActionStatusData, ProxyActionStatusVariables>({
       query: ProxyActionStatusDocument,
       variables: { proxyActionId: proxyId },
     });

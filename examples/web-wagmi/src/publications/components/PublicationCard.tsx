@@ -1,11 +1,11 @@
 import {
-  CommentFragment,
-  MirrorFragment,
-  PostFragment,
-  PendingPostFragment,
+  Comment,
+  Mirror,
+  Post,
+  PendingPost,
   CollectState,
   isMirrorPublication,
-  ContentPublicationFragment,
+  ContentPublication,
   AnyCriterion,
   DecryptionCriteriaType,
   useEncryptedPublication,
@@ -48,7 +48,7 @@ function formatDecryptionCriterion(criterion: AnyCriterion): string {
 }
 
 type ContentProps = {
-  publication: ContentPublicationFragment;
+  publication: ContentPublication;
 };
 
 function Content({ publication }: ContentProps) {
@@ -93,7 +93,7 @@ function Content({ publication }: ContentProps) {
 }
 
 type PublicationCardProps = {
-  publication: PostFragment | CommentFragment | MirrorFragment | PendingPostFragment;
+  publication: Post | Comment | Mirror | PendingPost;
 };
 
 export function PublicationCard({ publication }: PublicationCardProps) {
@@ -120,7 +120,7 @@ export function PublicationCard({ publication }: PublicationCardProps) {
 }
 
 type CollectablePublicationCardProps = {
-  publication: PostFragment | CommentFragment;
+  publication: Post | Comment;
   collectButton: ReactNode;
 };
 

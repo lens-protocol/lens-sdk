@@ -22,18 +22,12 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
   contractAddress
 }
 
-fragment ProfileMedia on ProfileMedia {
-  ... on NftImage {
-    __typename
-    contractAddress
-    tokenId
-    uri
-    verified
-  }
-
-  ... on MediaSet {
-    ...MediaSet
-  }
+fragment NftImage on NftImage {
+  __typename
+  contractAddress
+  tokenId
+  uri
+  verified
 }
 
 fragment Attribute on Attribute {
@@ -68,15 +62,30 @@ fragment Profile on Profile {
   interests
 
   picture {
-    ...ProfileMedia
+    ... on NftImage {
+      ...NftImage
+    }
+
+    ... on MediaSet {
+      ...MediaSet
+    }
   }
+
   coverPicture {
-    ...ProfileMedia
+    ... on NftImage {
+      ...NftImage
+    }
+
+    ... on MediaSet {
+      ...MediaSet
+    }
   }
+
   stats {
     ...ProfileStats
   }
-  __followModule: followModule {
+
+  followModule {
     ... on FeeFollowModuleSettings {
       ...FeeFollowModuleSettings
     }
@@ -84,9 +93,11 @@ fragment Profile on Profile {
     ... on ProfileFollowModuleSettings {
       ...ProfileFollowModuleSettings
     }
+
     ... on RevertFollowModuleSettings {
       ...RevertFollowModuleSettings
     }
+
     ... on UnknownFollowModuleSettings {
       ...UnknownFollowModuleSettings
     }
@@ -122,7 +133,7 @@ fragment Profile on Profile {
     }
   }
 
-  __isFollowedByMe: isFollowedByMe
+  isFollowedByMe
   isFollowingObserver: isFollowing(who: $observerId)
 
   followStatus @client

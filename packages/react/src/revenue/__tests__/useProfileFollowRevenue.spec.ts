@@ -1,6 +1,6 @@
 import {
   createMockApolloClientWithMultipleResponses,
-  createProfileFollowRevenueQueryMockedResponse,
+  createProfileFollowRevenueMockedResponse,
   mockProfileFollowRevenueFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
@@ -18,7 +18,7 @@ describe(`Given the ${useProfileFollowRevenue.name} hook`, () => {
       const { result } = renderHookWithMocks(() => useProfileFollowRevenue({ profileId }), {
         mocks: {
           apolloClient: createMockApolloClientWithMultipleResponses([
-            createProfileFollowRevenueQueryMockedResponse({
+            createProfileFollowRevenueMockedResponse({
               variables: { profileId },
               revenues: mockRevenues,
             }),

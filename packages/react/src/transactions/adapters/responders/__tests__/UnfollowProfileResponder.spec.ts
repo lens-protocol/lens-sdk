@@ -1,5 +1,5 @@
 import { InMemoryCache } from '@apollo/client';
-import { ProfileFragmentDoc } from '@lens-protocol/api-bindings';
+import { FragmentProfile } from '@lens-protocol/api-bindings';
 import { mockProfileFragment, mockProfileStatsFragment } from '@lens-protocol/api-bindings/mocks';
 import {
   mockBroadcastedTransactionData,
@@ -34,7 +34,7 @@ function setupTestScenario({
       __typename: 'Profile',
       id: existingProfile.id,
     }),
-    fragment: ProfileFragmentDoc,
+    fragment: FragmentProfile,
     fragmentName: 'Profile',
     data: existingProfile,
   });
@@ -52,7 +52,7 @@ function setupTestScenario({
           __typename: 'Profile',
           id: transactionData.request.profileId,
         }),
-        fragment: ProfileFragmentDoc,
+        fragment: FragmentProfile,
         fragmentName: 'Profile',
       });
     },

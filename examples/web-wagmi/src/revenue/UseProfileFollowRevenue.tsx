@@ -1,4 +1,4 @@
-import { ProfileFragment, useProfileFollowRevenue } from '@lens-protocol/react-web';
+import { Profile, useProfileFollowRevenue } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -8,7 +8,7 @@ import { ProfileSelector } from '../profiles/components/ProfileSelector';
 import { RevenueCard } from './components/RevenueCard';
 
 type UseProfileFollowRevenueInnerProps = {
-  profile: ProfileFragment;
+  profile: Profile;
 };
 
 function UseProfileFollowRevenueInner({ profile }: UseProfileFollowRevenueInnerProps) {
@@ -41,7 +41,7 @@ function UseProfileFollowRevenueInner({ profile }: UseProfileFollowRevenueInnerP
 }
 
 export function UseProfileFollowRevenue() {
-  const [profile, setProfile] = useState<ProfileFragment | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   return (
     <>
       <h1>

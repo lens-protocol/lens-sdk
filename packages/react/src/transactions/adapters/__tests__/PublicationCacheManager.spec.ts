@@ -1,4 +1,4 @@
-import { AnyPublicationFragment } from '@lens-protocol/api-bindings';
+import { AnyPublication } from '@lens-protocol/api-bindings';
 import {
   createMockApolloCache,
   mockPostFragment,
@@ -8,11 +8,11 @@ import {
 
 import {
   FragmentNotFoundError,
-  getFragmentDoc,
+  resolveFragmentDoc,
   PublicationCacheManager,
 } from '../PublicationCacheManager';
 
-function setupTestScenario({ publication }: { publication: AnyPublicationFragment }) {
+function setupTestScenario({ publication }: { publication: AnyPublication }) {
   const apolloCache = createMockApolloCache();
 
   apolloCache.writeFragment({
@@ -20,7 +20,7 @@ function setupTestScenario({ publication }: { publication: AnyPublicationFragmen
       __typename: publication.__typename,
       id: publication.id,
     }),
-    fragment: getFragmentDoc(publication),
+    fragment: resolveFragmentDoc(publication),
     fragmentName: publication.__typename,
     data: publication,
   });
@@ -33,7 +33,7 @@ function setupTestScenario({ publication }: { publication: AnyPublicationFragmen
           __typename: publication.__typename,
           id: publication.id,
         }),
-        fragment: getFragmentDoc(publication),
+        fragment: resolveFragmentDoc(publication),
         fragmentName: publication.__typename,
       });
     },

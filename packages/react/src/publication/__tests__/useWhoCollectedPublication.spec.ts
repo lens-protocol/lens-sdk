@@ -1,8 +1,8 @@
-import { WalletFragment } from '@lens-protocol/api-bindings';
+import { Wallet } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockWalletFragment,
-  createWhoCollectedPublicationQueryMockedResponse,
+  createWhoCollectedPublicationMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
@@ -21,14 +21,14 @@ function setupTestScenario({
   expectedObserverId,
   result,
   ...args
-}: UseWhoCollectedPublicationArgs & { expectedObserverId?: ProfileId; result: WalletFragment[] }) {
+}: UseWhoCollectedPublicationArgs & { expectedObserverId?: ProfileId; result: Wallet[] }) {
   const sources = mockSources();
 
   return renderHookWithMocks(() => useWhoCollectedPublication(args), {
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createWhoCollectedPublicationQueryMockedResponse({
+        createWhoCollectedPublicationMockedResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,

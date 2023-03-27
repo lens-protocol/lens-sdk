@@ -1,6 +1,6 @@
-import { ProfileFragment } from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import {
-  createGetAllProfilesQueryMockedResponse,
+  createGetAllProfilesMockedResponse,
   createMockApolloClientWithMultipleResponses,
   mockProfileFragment,
   mockSources,
@@ -24,7 +24,7 @@ function setupTestScenario({
 }: UseProfilesOwnedByMeArgs & {
   address: EthereumAddress;
   expectedObserverId?: ProfileId;
-  result: ProfileFragment[];
+  result: Profile[];
 }) {
   const sources = mockSources();
 
@@ -32,7 +32,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createGetAllProfilesQueryMockedResponse({
+        createGetAllProfilesMockedResponse({
           variables: {
             ...args,
             byOwnerAddresses: [address],

@@ -1,7 +1,7 @@
-import { WhoReactedResultFragment } from '@lens-protocol/api-bindings';
+import { WhoReactedResult } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  createWhoReactedPublicationQueryMockedResponse,
+  createWhoReactedPublicationMockedResponse,
   mockSources,
   mockWhoReactedResultFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -20,7 +20,7 @@ function setupTestScenario({
   ...args
 }: UseWhoReactedArgs & {
   expectedObserverId?: ProfileId;
-  result: WhoReactedResultFragment[];
+  result: WhoReactedResult[];
 }) {
   const sources = mockSources();
 
@@ -28,7 +28,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createWhoReactedPublicationQueryMockedResponse({
+        createWhoReactedPublicationMockedResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,

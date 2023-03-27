@@ -1,4 +1,4 @@
-fragment NftOwnership on NftOwnershipOutput {
+fragment NftOwnershipOutput on NftOwnershipOutput {
   __typename
   contractAddress
   chainID
@@ -6,7 +6,7 @@ fragment NftOwnership on NftOwnershipOutput {
   tokenIds
 }
 
-fragment Erc20Ownership on Erc20OwnershipOutput {
+fragment Erc20OwnershipOutput on Erc20OwnershipOutput {
   __typename
   amount
   chainID
@@ -17,85 +17,85 @@ fragment Erc20Ownership on Erc20OwnershipOutput {
   symbol
 }
 
-fragment AddressOwnership on EoaOwnershipOutput {
+fragment EoaOwnershipOutput on EoaOwnershipOutput {
   __typename
   address
 }
 
-fragment ProfileOwnership on ProfileOwnershipOutput {
+fragment ProfileOwnershipOutput on ProfileOwnershipOutput {
   __typename
   profileId
 }
 
-fragment FollowCondition on FollowConditionOutput {
+fragment FollowConditionOutput on FollowConditionOutput {
   __typename
   profileId
 }
 
-fragment CollectCondition on CollectConditionOutput {
+fragment CollectConditionOutput on CollectConditionOutput {
   __typename
   publicationId
   thisPublication
 }
 
-fragment LeafCondition on AccessConditionOutput {
+fragment LeafConditionOutput on AccessConditionOutput {
   __typename
   nft {
-    ...NftOwnership
+    ...NftOwnershipOutput
   }
 
   token {
-    ...Erc20Ownership
+    ...Erc20OwnershipOutput
   }
 
   eoa {
-    ...AddressOwnership
+    ...EoaOwnershipOutput
   }
 
   profile {
-    ...ProfileOwnership
+    ...ProfileOwnershipOutput
   }
 
   follow {
-    ...FollowCondition
+    ...FollowConditionOutput
   }
 
   collect {
-    ...CollectCondition
+    ...CollectConditionOutput
   }
 }
 
-fragment OrCondition on OrConditionOutput {
+fragment OrConditionOutput on OrConditionOutput {
   __typename
   criteria {
-    ...LeafCondition
+    ...LeafConditionOutput
   }
 }
-fragment AndCondition on AndConditionOutput {
+fragment AndConditionOutput on AndConditionOutput {
   __typename
   criteria {
-    ...LeafCondition
+    ...LeafConditionOutput
   }
 }
 
-fragment AnyCondition on AccessConditionOutput {
+fragment AnyConditionOutput on AccessConditionOutput {
   __typename
-  ...LeafCondition
+  ...LeafConditionOutput
 
   or {
-    ...OrCondition
+    ...OrConditionOutput
   }
 
   and {
-    ...AndCondition
+    ...AndConditionOutput
   }
 }
 
-fragment RootCondition on AccessConditionOutput {
+fragment RootConditionOutput on AccessConditionOutput {
   __typename
   or {
     criteria {
-      ...AnyCondition
+      ...AnyConditionOutput
     }
   }
 }
@@ -115,7 +115,7 @@ fragment EncryptedMediaSet on EncryptedMediaSet {
   }
 }
 
-fragment EncryptedFields on EncryptedFieldsOutput {
+fragment EncryptedFieldsOutput on EncryptedFieldsOutput {
   __typename
   animation_url
   content
@@ -128,14 +128,14 @@ fragment EncryptedFields on EncryptedFieldsOutput {
   }
 }
 
-fragment EncryptionParams on EncryptionParamsOutput {
+fragment EncryptionParamsOutput on EncryptionParamsOutput {
   __typename
   accessCondition {
-    ...RootCondition
+    ...RootConditionOutput
   }
   encryptionProvider
   encryptedFields {
-    ...EncryptedFields
+    ...EncryptedFieldsOutput
   }
   providerSpecificParams {
     encryptionKey

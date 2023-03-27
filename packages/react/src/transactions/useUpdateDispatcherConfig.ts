@@ -1,5 +1,5 @@
 import {
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
   TransactionState,
   useHasPendingTransaction,
 } from '@lens-protocol/api-bindings';
@@ -15,7 +15,7 @@ import { Operation, useOperation } from '../helpers/operations';
 import { useUpdateDispatcherConfigController } from './adapters/useUpdateDispatcherConfigController';
 
 export type UseUpdateDispatcherConfigArgs = {
-  profile: ProfileOwnedByMeFragment;
+  profile: ProfileOwnedByMe;
 };
 
 export type UpdateDispatcherConfigArgs = {

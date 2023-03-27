@@ -3,107 +3,103 @@ import { AppId } from '@lens-protocol/domain/entities';
 import { Erc20 } from '@lens-protocol/shared-kernel';
 
 import {
-  CommentFragment,
-  CommentWithFirstCommentFragment,
-  CommonPaginatedResultInfoFragment,
   EnabledModuleCurrenciesDocument,
-  EnabledModuleCurrenciesQuery,
   EnabledModulesDocument,
-  EnabledModulesFragment,
-  EnabledModulesQuery,
   ExploreProfilesDocument,
-  ExploreProfilesQuery,
-  ExploreProfilesQueryVariables,
   ExplorePublicationsDocument,
-  ExplorePublicationsQuery,
-  ExplorePublicationsQueryVariables,
   FeedDocument,
-  FeedItemFragment,
-  FeedQuery,
-  FeedQueryVariables,
   GetAllProfilesDocument,
-  GetAllProfilesQuery,
-  GetAllProfilesQueryVariables,
   GetProfileDocument,
-  GetProfileQuery,
-  GetProfileQueryVariables,
+  GetProfilePublicationRevenueDocument,
+  GetPublicationRevenueDocument,
   HasTxHashBeenIndexedDocument,
-  HasTxHashBeenIndexedQuery,
-  HasTxHashBeenIndexedQueryVariables,
-  Maybe,
-  MirrorFragment,
   MutualFollowersProfilesDocument,
-  MutualFollowersProfilesQuery,
-  MutualFollowersProfilesQueryVariables,
-  PostFragment,
   ProfileFollowRevenueDocument,
-  ProfileFollowRevenueFragment,
-  ProfileFollowRevenueQuery,
-  ProfileFollowRevenueQueryVariables,
-  ProfileFragment,
-  ProfilePublicationRevenueDocument,
-  ProfilePublicationRevenueQuery,
-  ProfilePublicationRevenueQueryVariables,
   ProfilePublicationsForSaleDocument,
-  ProfilePublicationsForSaleQuery,
-  ProfilePublicationsForSaleQueryVariables,
   ProfilesToFollowDocument,
-  ProfilesToFollowQuery,
-  ProfilesToFollowQueryVariables,
-  ProxyActionError,
   ProxyActionStatusDocument,
-  ProxyActionStatusQuery,
-  ProxyActionStatusQueryVariables,
+  PublicationByTxHashDocument,
+  PublicationDocument,
+  PublicationsDocument,
+  SearchProfilesDocument,
+  SearchPublicationsDocument,
+  WhoCollectedPublicationDocument,
+  WhoReactedPublicationDocument,
+} from '../hooks';
+import { SearchProfilesResult, SearchPublicationsResult } from '../index';
+import {
+  Comment,
+  CommentWithFirstComment,
+  EnabledModuleCurrenciesData,
+  EnabledModules,
+  EnabledModulesData,
+  ExploreProfilesData,
+  ExploreProfilesVariables,
+  ExplorePublicationsData,
+  ExplorePublicationsVariables,
+  FeedData,
+  FeedItem,
+  FeedVariables,
+  GetAllProfilesData,
+  GetAllProfilesVariables,
+  GetProfileData,
+  GetProfilePublicationRevenueData,
+  GetProfilePublicationRevenueVariables,
+  GetProfileVariables,
+  GetPublicationRevenueData,
+  GetPublicationRevenueVariables,
+  HasTxHashBeenIndexedData,
+  HasTxHashBeenIndexedVariables,
+  Maybe,
+  Mirror,
+  MutualFollowersProfilesData,
+  MutualFollowersProfilesVariables,
+  Post,
+  Profile,
+  ProfileFollowRevenue,
+  ProfileFollowRevenueData,
+  ProfileFollowRevenueVariables,
+  ProfilePublicationsForSaleData,
+  ProfilePublicationsForSaleVariables,
+  ProfilesToFollowData,
+  ProfilesToFollowVariables,
+  ProxyActionError,
+  ProxyActionStatusData,
   ProxyActionStatusResult,
   ProxyActionStatusTypes,
-  PublicationByTxHashDocument,
-  PublicationByTxHashQuery,
-  PublicationByTxHashQueryVariables,
-  PublicationDocument,
-  PublicationQuery,
-  PublicationQueryVariables,
-  PublicationRevenueDocument,
-  PublicationRevenueFragment,
-  PublicationRevenueQuery,
-  PublicationRevenueQueryVariables,
-  PublicationsDocument,
-  PublicationsQuery,
-  PublicationsQueryVariables,
-  SearchProfilesDocument,
-  SearchProfilesQueryVariables,
-  SearchPublicationsDocument,
-  SearchPublicationsQueryVariables,
+  ProxyActionStatusVariables,
+  PublicationByTxHashData,
+  PublicationByTxHashVariables,
+  PublicationData,
+  PublicationRevenue,
+  PublicationsData,
+  PublicationsVariables,
+  PublicationVariables,
+  SearchProfilesVariables,
+  SearchPublicationsVariables,
   TransactionErrorReasons,
-  WalletFragment,
-  WhoCollectedPublicationDocument,
-  WhoCollectedPublicationQuery,
-  WhoCollectedPublicationQueryVariables,
-  WhoReactedPublicationDocument,
-  WhoReactedPublicationQuery,
-  WhoReactedPublicationQueryVariables,
-  WhoReactedResultFragment,
-} from '../generated';
-import { SearchProfilesQuery, SearchPublicationsQuery } from '../index';
+  Wallet,
+  WhoCollectedPublicationData,
+  WhoCollectedPublicationVariables,
+  WhoReactedPublicationData,
+  WhoReactedPublicationVariables,
+  WhoReactedResult,
+} from '../operations';
 import { Sources } from '../sources';
-import { AnyPublicationFragment, ContentPublicationFragment } from '../utils/publication';
-import {
-  mockEnabledModulesFragment,
-  mockFeedItemFragment,
-  mockPostFragment,
-  mockProfileFragment,
-} from './fragments';
+import { AnyPublication, ContentPublication } from '../utils/publication';
+import { mockEnabledModulesFragment, mockPostFragment, mockProfileFragment } from './fragments';
 
 export function mockSources(): Sources {
   return ['foobar' as AppId];
 }
 
-export function createProfilesToFollowQueryMockedResponse({
+export function createProfilesToFollowMockedResponse({
   variables,
   profiles,
 }: {
-  variables: ProfilesToFollowQueryVariables;
-  profiles: ProfileFragment[];
-}): MockedResponse<ProfilesToFollowQuery> {
+  variables: ProfilesToFollowVariables;
+  profiles: Profile[];
+}): MockedResponse<ProfilesToFollowData> {
   return {
     request: {
       query: ProfilesToFollowDocument,
@@ -117,31 +113,27 @@ export function createProfilesToFollowQueryMockedResponse({
   };
 }
 
-export function mockGetProfileQuery(profile: Maybe<ProfileFragment>): GetProfileQuery {
-  return {
-    result: profile,
-  };
-}
-
-export function mockGetProfileQueryMockedResponse({
+export function createGetProfileMockedResponse({
   variables,
   profile = mockProfileFragment(),
 }: {
-  variables: GetProfileQueryVariables;
-  profile?: Maybe<ProfileFragment>;
-}): MockedResponse<GetProfileQuery> {
+  variables: GetProfileVariables;
+  profile?: Maybe<Profile>;
+}): MockedResponse<GetProfileData> {
   return {
     request: {
       query: GetProfileDocument,
       variables,
     },
     result: {
-      data: mockGetProfileQuery(profile),
+      data: {
+        result: profile,
+      },
     },
   };
 }
 
-function mockGetAllProfilesQuery(profiles: ProfileFragment[]): GetAllProfilesQuery {
+function mockGetAllProfilesData(profiles: Profile[]): GetAllProfilesData {
   return {
     result: {
       items: profiles,
@@ -155,27 +147,27 @@ function mockGetAllProfilesQuery(profiles: ProfileFragment[]): GetAllProfilesQue
   };
 }
 
-export function createGetAllProfilesQueryMockedResponse({
+export function createGetAllProfilesMockedResponse({
   variables,
   profiles = [mockProfileFragment()],
 }: {
-  variables: GetAllProfilesQueryVariables;
-  profiles?: ProfileFragment[];
-}): MockedResponse<GetAllProfilesQuery> {
+  variables: GetAllProfilesVariables;
+  profiles?: Profile[];
+}): MockedResponse<GetAllProfilesData> {
   return {
     request: {
       query: GetAllProfilesDocument,
       variables,
     },
     result: {
-      data: mockGetAllProfilesQuery(profiles),
+      data: mockGetAllProfilesData(profiles),
     },
   };
 }
 
-export function mockHasTxHashBeenIndexedQuery(
+export function mockHasTxHashBeenIndexedData(
   result: { reason: TransactionErrorReasons } | { indexed: boolean; txHash: string },
-): HasTxHashBeenIndexedQuery {
+): HasTxHashBeenIndexedData {
   return {
     result:
       'reason' in result
@@ -190,13 +182,13 @@ export function mockHasTxHashBeenIndexedQuery(
   };
 }
 
-export function createHasTxHashBeenIndexedQueryMockedResponse({
+export function createHasTxHashBeenIndexedMockedResponse({
   variables,
   data,
 }: {
-  variables: HasTxHashBeenIndexedQueryVariables;
-  data: HasTxHashBeenIndexedQuery;
-}): MockedResponse<HasTxHashBeenIndexedQuery> {
+  variables: HasTxHashBeenIndexedVariables;
+  data: HasTxHashBeenIndexedData;
+}): MockedResponse<HasTxHashBeenIndexedData> {
   return {
     request: {
       query: HasTxHashBeenIndexedDocument,
@@ -208,7 +200,7 @@ export function createHasTxHashBeenIndexedQueryMockedResponse({
   };
 }
 
-function mockProxyActionStatusError(overrides?: Partial<ProxyActionError>): ProxyActionError {
+function mockProxyActionError(overrides?: Partial<ProxyActionError>): ProxyActionError {
   return {
     __typename: 'ProxyActionError',
     reason: 'UNKNOWN',
@@ -231,8 +223,8 @@ function mockProxyActionStatusResult(
 
 export function createProxyActionStatusMockedResponse(instructions: {
   result: { reason: string; lastKnownTxId: string } | Partial<ProxyActionStatusResult>;
-  variables: ProxyActionStatusQueryVariables;
-}): MockedResponse<ProxyActionStatusQuery> {
+  variables: ProxyActionStatusVariables;
+}): MockedResponse<ProxyActionStatusData> {
   return {
     request: {
       query: ProxyActionStatusDocument,
@@ -242,16 +234,16 @@ export function createProxyActionStatusMockedResponse(instructions: {
       data: {
         result:
           'reason' in instructions.result
-            ? mockProxyActionStatusError(instructions.result)
+            ? mockProxyActionError(instructions.result)
             : mockProxyActionStatusResult(instructions.result),
       },
     },
   };
 }
 
-export function createEnabledModuleCurrenciesQueryMockedResponse(
+export function createEnabledModuleCurrenciesMockedResponse(
   currencies: Erc20[],
-): MockedResponse<EnabledModuleCurrenciesQuery> {
+): MockedResponse<EnabledModuleCurrenciesData> {
   return {
     request: {
       query: EnabledModuleCurrenciesDocument,
@@ -270,10 +262,10 @@ export function createEnabledModuleCurrenciesQueryMockedResponse(
   };
 }
 
-export function createWhoCollectedPublicationQueryMockedResponse(args: {
-  variables: WhoCollectedPublicationQueryVariables;
-  wallets: WalletFragment[];
-}): MockedResponse<WhoCollectedPublicationQuery> {
+export function createWhoCollectedPublicationMockedResponse(args: {
+  variables: WhoCollectedPublicationVariables;
+  wallets: Wallet[];
+}): MockedResponse<WhoCollectedPublicationData> {
   return {
     request: {
       query: WhoCollectedPublicationDocument,
@@ -295,10 +287,10 @@ export function createWhoCollectedPublicationQueryMockedResponse(args: {
   };
 }
 
-export function createMutualFollowersQueryMockedResponse(args: {
-  variables: MutualFollowersProfilesQueryVariables;
-  profiles: ProfileFragment[];
-}): MockedResponse<MutualFollowersProfilesQuery> {
+export function createMutualFollowersMockedResponse(args: {
+  variables: MutualFollowersProfilesVariables;
+  profiles: Profile[];
+}): MockedResponse<MutualFollowersProfilesData> {
   return {
     request: {
       query: MutualFollowersProfilesDocument,
@@ -320,37 +312,13 @@ export function createMutualFollowersQueryMockedResponse(args: {
   };
 }
 
-export type MockFeedQueryArgs = {
-  items?: Array<FeedItemFragment>;
-  pageInfo?: Pick<CommonPaginatedResultInfoFragment, 'next' | 'prev'>;
-};
-
-export function mockFeedQuery({
-  items = [mockFeedItemFragment(), mockFeedItemFragment()],
-  pageInfo = {
-    prev: null,
-    next: null,
-  },
-}: MockFeedQueryArgs = {}): FeedQuery {
-  return {
-    result: {
-      items,
-      pageInfo: {
-        __typename: 'PaginatedResultInfo',
-        totalCount: null,
-        ...pageInfo,
-      },
-    },
-  };
-}
-
-export function createPublicationQueryMockedResponse({
+export function createPublicationMockedResponse({
   variables,
   result,
 }: {
-  variables: PublicationQueryVariables;
-  result: AnyPublicationFragment | null;
-}): MockedResponse<PublicationQuery> {
+  variables: PublicationVariables;
+  result: AnyPublication | null;
+}): MockedResponse<PublicationData> {
   return {
     request: {
       query: PublicationDocument,
@@ -362,10 +330,10 @@ export function createPublicationQueryMockedResponse({
   };
 }
 
-export function createPublicationsQueryMockedResponse(args: {
-  variables: PublicationsQueryVariables;
-  publications: Array<AnyPublicationFragment>;
-}): MockedResponse<PublicationsQuery> {
+export function createPublicationsMockedResponse(args: {
+  variables: PublicationsVariables;
+  publications: Array<AnyPublication>;
+}): MockedResponse<PublicationsData> {
   return {
     request: {
       query: PublicationsDocument,
@@ -387,10 +355,10 @@ export function createPublicationsQueryMockedResponse(args: {
   };
 }
 
-export function createFeedQueryMockedResponse(args: {
-  variables: FeedQueryVariables;
-  items: FeedItemFragment[];
-}): MockedResponse<FeedQuery> {
+export function createFeedMockedResponse(args: {
+  variables: FeedVariables;
+  items: FeedItem[];
+}): MockedResponse<FeedData> {
   return {
     request: {
       query: FeedDocument,
@@ -412,10 +380,10 @@ export function createFeedQueryMockedResponse(args: {
   };
 }
 
-export function createExplorePublicationsQueryMockedResponse(args: {
-  variables: ExplorePublicationsQueryVariables;
-  items: Array<PostFragment | CommentFragment | MirrorFragment>;
-}): MockedResponse<ExplorePublicationsQuery> {
+export function createExplorePublicationsMockedResponse(args: {
+  variables: ExplorePublicationsVariables;
+  items: Array<Post | Comment | Mirror>;
+}): MockedResponse<ExplorePublicationsData> {
   return {
     request: {
       query: ExplorePublicationsDocument,
@@ -437,13 +405,13 @@ export function createExplorePublicationsQueryMockedResponse(args: {
   };
 }
 
-export function createPublicationRevenueQueryMockedResponse(args: {
-  variables: PublicationRevenueQueryVariables;
-  revenue: PublicationRevenueFragment | null;
-}): MockedResponse<PublicationRevenueQuery> {
+export function createGetPublicationRevenueMockedResponse(args: {
+  variables: GetPublicationRevenueVariables;
+  revenue: PublicationRevenue | null;
+}): MockedResponse<GetPublicationRevenueData> {
   return {
     request: {
-      query: PublicationRevenueDocument,
+      query: GetPublicationRevenueDocument,
       variables: args.variables,
     },
     result: {
@@ -454,13 +422,13 @@ export function createPublicationRevenueQueryMockedResponse(args: {
   };
 }
 
-export function createProfilePublicationRevenueQueryMockedResponse(args: {
-  variables: ProfilePublicationRevenueQueryVariables;
-  items: PublicationRevenueFragment[];
-}): MockedResponse<ProfilePublicationRevenueQuery> {
+export function createGetProfilePublicationRevenueMockedResponse(args: {
+  variables: GetProfilePublicationRevenueVariables;
+  items: PublicationRevenue[];
+}): MockedResponse<GetProfilePublicationRevenueData> {
   return {
     request: {
-      query: ProfilePublicationRevenueDocument,
+      query: GetProfilePublicationRevenueDocument,
       variables: args.variables,
     },
     result: {
@@ -479,10 +447,10 @@ export function createProfilePublicationRevenueQueryMockedResponse(args: {
   };
 }
 
-export function createProfilePublicationsForSaleQueryMockedResponse(args: {
-  variables: ProfilePublicationsForSaleQueryVariables;
-  items: ContentPublicationFragment[];
-}): MockedResponse<ProfilePublicationsForSaleQuery> {
+export function createProfilePublicationsForSaleMockedResponse(args: {
+  variables: ProfilePublicationsForSaleVariables;
+  items: ContentPublication[];
+}): MockedResponse<ProfilePublicationsForSaleData> {
   return {
     request: {
       query: ProfilePublicationsForSaleDocument,
@@ -504,10 +472,10 @@ export function createProfilePublicationsForSaleQueryMockedResponse(args: {
   };
 }
 
-export function createWhoReactedPublicationQueryMockedResponse(args: {
-  variables: WhoReactedPublicationQueryVariables;
-  items: Array<WhoReactedResultFragment>;
-}): MockedResponse<WhoReactedPublicationQuery> {
+export function createWhoReactedPublicationMockedResponse(args: {
+  variables: WhoReactedPublicationVariables;
+  items: Array<WhoReactedResult>;
+}): MockedResponse<WhoReactedPublicationData> {
   return {
     request: {
       query: WhoReactedPublicationDocument,
@@ -529,13 +497,13 @@ export function createWhoReactedPublicationQueryMockedResponse(args: {
   };
 }
 
-export function createProfileFollowRevenueQueryMockedResponse({
+export function createProfileFollowRevenueMockedResponse({
   variables,
   revenues,
 }: {
-  variables: ProfileFollowRevenueQueryVariables;
-  revenues: ProfileFollowRevenueFragment;
-}): MockedResponse<ProfileFollowRevenueQuery> {
+  variables: ProfileFollowRevenueVariables;
+  revenues: ProfileFollowRevenue;
+}): MockedResponse<ProfileFollowRevenueData> {
   return {
     request: {
       query: ProfileFollowRevenueDocument,
@@ -549,10 +517,10 @@ export function createProfileFollowRevenueQueryMockedResponse({
   };
 }
 
-export function createSearchProfilesQueryMockedResponse(args: {
-  variables: SearchProfilesQueryVariables;
-  items: ProfileFragment[];
-}): MockedResponse<SearchProfilesQuery> {
+export function createSearchProfilesMockedResponse(args: {
+  variables: SearchProfilesVariables;
+  items: Profile[];
+}): MockedResponse<SearchProfilesResult> {
   return {
     request: {
       query: SearchProfilesDocument,
@@ -575,10 +543,10 @@ export function createSearchProfilesQueryMockedResponse(args: {
   };
 }
 
-export function createExploreProfilesQueryMockedResponse(args: {
-  variables: ExploreProfilesQueryVariables;
-  items: Array<ProfileFragment>;
-}): MockedResponse<ExploreProfilesQuery> {
+export function createExploreProfilesMockedResponse(args: {
+  variables: ExploreProfilesVariables;
+  items: Array<Profile>;
+}): MockedResponse<ExploreProfilesData> {
   return {
     request: {
       query: ExploreProfilesDocument,
@@ -600,10 +568,10 @@ export function createExploreProfilesQueryMockedResponse(args: {
   };
 }
 
-export function createSearchPublicationsQueryMockedResponse(args: {
-  variables: SearchPublicationsQueryVariables;
-  items: Array<ContentPublicationFragment>;
-}): MockedResponse<SearchPublicationsQuery> {
+export function createSearchPublicationsMockedResponse(args: {
+  variables: SearchPublicationsVariables;
+  items: Array<ContentPublication>;
+}): MockedResponse<SearchPublicationsResult> {
   return {
     request: {
       query: SearchPublicationsDocument,
@@ -627,20 +595,20 @@ export function createSearchPublicationsQueryMockedResponse(args: {
 }
 
 function mockPublicationByTxHash(
-  publication: CommentWithFirstCommentFragment | PostFragment | MirrorFragment = mockPostFragment(),
-): PublicationByTxHashQuery {
+  publication: CommentWithFirstComment | Post | Mirror = mockPostFragment(),
+): PublicationByTxHashData {
   return {
     result: publication,
   };
 }
 
-export function mockPublicationByTxHashMockedResponse({
+export function createPublicationByTxHashMockedResponse({
   variables,
   publication,
 }: {
-  variables: PublicationByTxHashQueryVariables;
-  publication: CommentWithFirstCommentFragment | PostFragment | MirrorFragment;
-}): MockedResponse<PublicationByTxHashQuery> {
+  variables: PublicationByTxHashVariables;
+  publication: CommentWithFirstComment | Post | Mirror;
+}): MockedResponse<PublicationByTxHashData> {
   return {
     request: {
       query: PublicationByTxHashDocument,
@@ -652,11 +620,11 @@ export function mockPublicationByTxHashMockedResponse({
   };
 }
 
-export function createEnabledModulesQueryMockedResponse({
+export function createEnabledModulesMockedResponse({
   data = mockEnabledModulesFragment(),
 }: {
-  data?: EnabledModulesFragment;
-} = {}): MockedResponse<EnabledModulesQuery> {
+  data?: EnabledModules;
+} = {}): MockedResponse<EnabledModulesData> {
   return {
     request: {
       query: EnabledModulesDocument,

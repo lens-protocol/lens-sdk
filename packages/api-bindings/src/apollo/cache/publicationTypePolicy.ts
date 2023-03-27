@@ -1,20 +1,18 @@
+import { FieldFunctionOptions, FieldPolicy, FieldReadFunction } from '@apollo/client';
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
+import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
-  CollectModuleFragment,
-  CollectPolicy,
-  Comment,
-  Maybe,
-  Post,
-  ProfileFragment,
-  PublicationStatsFragment,
+  CollectModule,
+  Profile,
+  PublicationStats,
   ReferenceModule,
   resolveCollectPolicy,
   ReferencePolicy,
   Wallet,
+  CollectPolicy,
 } from '../../graphql';
 import { decryptionCriteria } from './decryptionCriteria';
-import { FieldPolicy, FieldReadFunction, TypePolicy } from './utils/TypePolicy';
 import { noCachedField } from './utils/noCachedField';
 
 function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
@@ -43,18 +41,15 @@ function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy
   }
 }
 
-const referencePolicy: FieldReadFunction<ReferencePolicy, Comment | Post> = (
-  existing,
-  { readField },
-) => {
+const referencePolicy: FieldReadFunction<ReferencePolicy> = (existing, { readField }) => {
   if (existing) return existing;
 
-  const module = readField('referenceModule');
+  const module = readField('referenceModule') as ReferenceModule;
 
   return resolveReferencePolicy(module ?? null);
 };
 
-const collectedBy: FieldPolicy<Maybe<Wallet>, Comment | Post> = {
+const collectedBy: FieldPolicy<Wallet> = {
   merge: (existing, incoming) => {
     // workaround: try to retain the information even if the publication is updated in
     // cache as part of another query that does not have the collectedBy field
@@ -62,33 +57,29 @@ const collectedBy: FieldPolicy<Maybe<Wallet>, Comment | Post> = {
   },
 };
 
-const collectPolicy: FieldReadFunction<CollectPolicy, Comment | Post> = (
-  existing,
-  { readField },
-) => {
+const collectPolicy = (
+  existing: CollectPolicy | undefined,
+  { readField }: FieldFunctionOptions,
+): CollectPolicy => {
   if (existing) return existing;
 
-  const profile = readField('profile') as unknown as ProfileFragment;
-  const collectModule = readField('collectModule') as CollectModuleFragment;
-  const publicationStats = readField('stats') as unknown as PublicationStatsFragment;
-  const collectNftAddress = readField('collectNftAddress') || null;
+  const profile = readField('profile') as Profile;
+  const collectModule = readField('collectModule') as CollectModule;
+  const publicationStats = readField('stats') as PublicationStats;
+  const collectNftAddress = (readField('collectNftAddress') as EthereumAddress) || null;
 
   return resolveCollectPolicy({ profile, collectModule, publicationStats, collectNftAddress });
 };
 
-const hasOptimisticCollectedByMe: FieldReadFunction<boolean, Comment | Post> = (
-  existing: boolean | undefined,
-) => {
+const hasOptimisticCollectedByMe: FieldReadFunction<boolean> = (existing) => {
   return existing ?? false;
 };
 
-const isOptimisticMirroredByMe: FieldReadFunction<boolean, Comment | Post> = (
-  existing: boolean | undefined,
-) => {
+const isOptimisticMirroredByMe: FieldReadFunction<boolean> = (existing) => {
   return existing ?? false;
 };
 
-export function createContentPublicationTypePolicy(): TypePolicy<Comment | Post> {
+export function createContentPublicationTypePolicy() {
   return {
     fields: {
       referencePolicy,

@@ -1,4 +1,4 @@
-import { useProfileFollowers } from '@lens-protocol/react-web';
+import { ProfileId, useProfileFollowers } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { Loading } from '../../components/loading/Loading';
@@ -6,7 +6,7 @@ import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { ProfileCard } from './ProfileCard';
 
 type ProfileFollowersProps = {
-  profileId: string;
+  profileId: ProfileId;
 };
 
 export function ProfileFollowers({ profileId }: ProfileFollowersProps) {

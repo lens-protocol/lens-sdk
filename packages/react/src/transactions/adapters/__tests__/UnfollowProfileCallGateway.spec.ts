@@ -1,13 +1,13 @@
 import { MockedResponse } from '@apollo/client/testing';
 import {
   CreateUnfollowTypedDataDocument,
-  CreateUnfollowTypedDataMutation,
-  CreateUnfollowTypedDataMutationVariables,
+  CreateUnfollowTypedDataData,
+  CreateUnfollowTypedDataVariables,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  mockCreateUnfollowTypedDataMutation,
+  mockCreateUnfollowTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockUnfollowRequest } from '@lens-protocol/domain/mocks';
 
@@ -18,9 +18,9 @@ function mockCreateUnfollowTypedDataMutationMockedResponse({
   variables,
   data,
 }: {
-  variables: CreateUnfollowTypedDataMutationVariables;
-  data: CreateUnfollowTypedDataMutation;
-}): MockedResponse<CreateUnfollowTypedDataMutation> {
+  variables: CreateUnfollowTypedDataVariables;
+  data: CreateUnfollowTypedDataData;
+}): MockedResponse<CreateUnfollowTypedDataData> {
   return {
     request: {
       query: CreateUnfollowTypedDataDocument,
@@ -37,7 +37,7 @@ describe(`Given an instance of the ${UnfollowProfileCallGateway.name}`, () => {
 
   describe(`when calling the "${UnfollowProfileCallGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
     it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
-      const createUnfollowTypedDataMutation = mockCreateUnfollowTypedDataMutation();
+      const data = mockCreateUnfollowTypedDataData();
       const apollo = createMockApolloClientWithMultipleResponses([
         mockCreateUnfollowTypedDataMutationMockedResponse({
           variables: {
@@ -45,7 +45,7 @@ describe(`Given an instance of the ${UnfollowProfileCallGateway.name}`, () => {
               profile: request.profileId,
             },
           },
-          data: createUnfollowTypedDataMutation,
+          data,
         }),
       ]);
       const gateway = new UnfollowProfileCallGateway(apollo);
@@ -53,9 +53,7 @@ describe(`Given an instance of the ${UnfollowProfileCallGateway.name}`, () => {
       const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
       expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-      expect(unsignedCall.typedData).toEqual(
-        omitTypename(createUnfollowTypedDataMutation.result.typedData),
-      );
+      expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
     });
   });
 });

@@ -1,9 +1,9 @@
 import {
-  ProfileOwnedByMeFragment,
+  ProfileOwnedByMe,
   useExploreProfiles,
   useFollow,
   useUnfollow,
-  ProfileFragment,
+  Profile,
 } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
@@ -13,8 +13,8 @@ import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
 type FollowButtonProps = {
-  follower: ProfileOwnedByMeFragment;
-  followee: ProfileFragment;
+  follower: ProfileOwnedByMe;
+  followee: Profile;
 };
 
 function FollowButton({ followee, follower }: FollowButtonProps) {
@@ -55,7 +55,7 @@ function FollowButton({ followee, follower }: FollowButtonProps) {
 }
 
 type UseFollowInnerProps = {
-  activeProfile: ProfileOwnedByMeFragment;
+  activeProfile: ProfileOwnedByMe;
 };
 
 function UseFollowInner({ activeProfile }: UseFollowInnerProps) {

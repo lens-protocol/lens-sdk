@@ -20,13 +20,13 @@ import { ImageType } from '../config';
 import {
   CollectPolicyType,
   ContentFocus,
-  FreeCollectPolicy,
-  Media,
+  FreeCollectPolicyConfig,
+  MediaObject,
   NftAttribute,
   NftAttributeDisplayType,
   NftMetadata,
-  NoCollectPolicy,
-  SimpleChargeCollectPolicy,
+  NoCollectPolicyConfig,
+  SimpleChargeCollectPolicyConfig,
 } from '../types';
 
 export function mockCreateCommentRequest(
@@ -52,7 +52,7 @@ export function mockCreateCommentRequest(
   };
 }
 
-export function mockMedia(): Media {
+export function mockMediaObject(): MediaObject {
   return {
     url: faker.image.imageUrl(),
     mimeType: ImageType.JPEG,
@@ -91,13 +91,15 @@ export function mockNftMetadata(overrides?: Partial<NftMetadata>): NftMetadata {
   };
 }
 
-export function mockNoCollectPolicy(): NoCollectPolicy {
+export function mockNoCollectPolicy(): NoCollectPolicyConfig {
   return {
     type: CollectPolicyType.NO_COLLECT,
   };
 }
 
-export function mockFreeCollectPolicy(overrides?: Partial<FreeCollectPolicy>): FreeCollectPolicy {
+export function mockFreeCollectPolicy(
+  overrides?: Partial<FreeCollectPolicyConfig>,
+): FreeCollectPolicyConfig {
   return {
     metadata: mockNftMetadata(),
     followersOnly: true,
@@ -107,8 +109,8 @@ export function mockFreeCollectPolicy(overrides?: Partial<FreeCollectPolicy>): F
 }
 
 export function mockChargeCollectPolicy(
-  overrides?: Partial<SimpleChargeCollectPolicy>,
-): SimpleChargeCollectPolicy {
+  overrides?: Partial<SimpleChargeCollectPolicyConfig>,
+): SimpleChargeCollectPolicyConfig {
   return {
     type: CollectPolicyType.CHARGE,
     fee: mockUsdcAmount(42),
@@ -180,7 +182,7 @@ export function mockCreateEncryptedPostRequest(
 
 export function mockReactionRequest(overrides?: Partial<ReactionRequest>): ReactionRequest {
   return {
-    profileId: faker.datatype.uuid(),
+    profileId: mockProfileId(),
     publicationId: faker.datatype.uuid(),
     reactionType: ReactionType.UPVOTE,
     ...overrides,

@@ -21,6 +21,9 @@ export interface INftOwnershipChallengeGateway {
   createOwnershipChallenge(request: ProveNftOwnershipRequest): Promise<NftOwnershipChallenge>;
 }
 
+/**
+ * @alpha
+ */
 export type NftOwnershipSignature = {
   id: string;
   signature: Signature;

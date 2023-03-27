@@ -1,7 +1,7 @@
 import {
-  PublicationRevenueFragment,
+  PublicationRevenue,
   PublicationTypes,
-  useProfilePublicationRevenueQuery,
+  useGetProfilePublicationRevenue,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
@@ -26,9 +26,9 @@ export function useProfilePublicationRevenue({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   publicationTypes,
-}: UseProfilePublicationRevenueArgs): PaginatedReadResult<PublicationRevenueFragment[]> {
+}: UseProfilePublicationRevenueArgs): PaginatedReadResult<PublicationRevenue[]> {
   return usePaginatedReadResult(
-    useProfilePublicationRevenueQuery(
+    useGetProfilePublicationRevenue(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

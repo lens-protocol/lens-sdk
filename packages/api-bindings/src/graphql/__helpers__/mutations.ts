@@ -1,73 +1,74 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
-import { mockNonce } from '@lens-protocol/domain/mocks';
+import { mockNonce, mockProfileId } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { createGraphQLValidationError } from '../../apollo/__helpers__/mocks';
 import {
   AddReactionDocument,
-  AddReactionMutation,
-  AddReactionMutationVariables,
   BroadcastProtocolCallDocument,
-  BroadcastProtocolCallMutation,
-  BroadcastProtocolCallMutationVariables,
-  CreateCommentTypedDataMutation,
-  CreateFollowTypedDataMutation,
-  CreatePostTypedDataMutation,
-  CreateProfileMutation,
-  CreateSetFollowModuleTypedDataMutation,
-  CreateSetDispatcherTypedDataMutation,
-  CreateUnfollowTypedDataMutation,
   CreateSetProfileImageUriTypedDataDocument,
-  CreateSetProfileImageUriTypedDataMutation,
-  CreateSetProfileImageUriTypedDataMutationVariables,
-  CreatePublicSetProfileMetadataUriRequest,
   CreateSetProfileMetadataTypedDataDocument,
-  CreateSetProfileMetadataTypedDataMutation,
   CreateSetProfileMetadataViaDispatcherDocument,
-  CreateSetProfileMetadataViaDispatcherMutation,
-  CreateSetProfileMetadataViaDispatcherMutationVariables,
-  Eip712TypedDataDomain,
-  Eip712TypedDataField,
   HidePublicationDocument,
-  HidePublicationMutation,
-  HidePublicationMutationVariables,
   ProxyActionDocument,
-  ProxyActionMutation,
-  ProxyActionMutationVariables,
   RemoveReactionDocument,
-  RemoveReactionMutation,
-  RemoveReactionMutationVariables,
-  CreateCommentTypedDataMutationVariables,
   CreateCommentTypedDataDocument,
-  CreateCommentViaDispatcherMutationVariables,
-  CreateCommentViaDispatcherMutation,
   CreateCommentViaDispatcherDocument,
-  CreatePostTypedDataMutationVariables,
   CreatePostTypedDataDocument,
-  CreatePostViaDispatcherMutationVariables,
-  CreatePostViaDispatcherMutation,
   CreatePostViaDispatcherDocument,
-  CreateSetProfileImageUriViaDispatcherMutationVariables,
-  CreateSetProfileImageUriViaDispatcherMutation,
   CreateSetProfileImageUriViaDispatcherDocument,
-  CreateCollectTypedDataMutation,
-  ReportPublicationMutationVariables,
-  ReportPublicationMutation,
   ReportPublicationDocument,
   CreateProfileDocument,
-  CreateProfileMutationVariables,
-  RelayResultFragment,
-} from '../generated';
+} from '../hooks';
+import {
+  AddReactionVariables,
+  BroadcastProtocolCallVariables,
+  CreateSetProfileImageUriTypedDataVariables,
+  CreatePublicSetProfileMetadataUriRequest,
+  CreateSetProfileMetadataViaDispatcherVariables,
+  Eip712TypedDataDomain,
+  HidePublicationVariables,
+  ProxyActionVariables,
+  RemoveReactionVariables,
+  CreateCommentTypedDataVariables,
+  CreateCommentViaDispatcherVariables,
+  CreatePostTypedDataVariables,
+  CreatePostViaDispatcherVariables,
+  CreateSetProfileImageUriViaDispatcherVariables,
+  CreateCollectTypedDataData,
+  ReportPublicationVariables,
+  CreateProfileVariables,
+  CreateProfileData,
+  RelayResult,
+  BroadcastProtocolCallData,
+  CreatePostTypedDataData,
+  CreateCommentTypedDataData,
+  HidePublicationData,
+  AddReactionData,
+  RemoveReactionData,
+  CreateFollowTypedDataData,
+  CreateSetProfileMetadataTypedDataData,
+  CreateUnfollowTypedDataData,
+  ProxyActionData,
+  CreateSetFollowModuleTypedDataData,
+  CreateSetProfileImageUriTypedDataData,
+  CreateSetDispatcherTypedDataData,
+  CreateSetProfileMetadataViaDispatcherData,
+  CreateCommentViaDispatcherData,
+  CreatePostViaDispatcherData,
+  CreateSetProfileImageUriViaDispatcherData,
+  ReportPublicationData,
+} from '../operations';
 
-export function createCreateProfileMutationMockedResponse({
+export function createCreateProfileMockedResponse({
   request,
   result,
 }: {
-  request: CreateProfileMutationVariables['request'];
-  result: Required<RelayResultFragment>;
-}): MockedResponse<CreateProfileMutation> {
+  request: CreateProfileVariables['request'];
+  result: Required<RelayResult>;
+}): MockedResponse<CreateProfileData> {
   return {
     request: {
       query: CreateProfileDocument,
@@ -79,25 +80,23 @@ export function createCreateProfileMutationMockedResponse({
   };
 }
 
-function mockBroadcastProtocolCallMutation(
-  result: Required<RelayResultFragment>,
-): BroadcastProtocolCallMutation {
+function mockBroadcastProtocolCallData(result: Required<RelayResult>): BroadcastProtocolCallData {
   return {
     result,
   };
 }
 
-export function createBroadcastProtocolCallMutationMockedResponse(
+export function createBroadcastProtocolCallMockedResponse(
   instructions:
     | {
         error: Error;
-        variables: BroadcastProtocolCallMutationVariables;
+        variables: BroadcastProtocolCallVariables;
       }
     | {
-        result: Required<RelayResultFragment>;
-        variables: BroadcastProtocolCallMutationVariables;
+        result: Required<RelayResult>;
+        variables: BroadcastProtocolCallVariables;
       },
-): MockedResponse<BroadcastProtocolCallMutation> {
+): MockedResponse<BroadcastProtocolCallData> {
   if ('error' in instructions) {
     return {
       request: {
@@ -113,7 +112,7 @@ export function createBroadcastProtocolCallMutationMockedResponse(
       variables: instructions.variables,
     },
     result: {
-      data: mockBroadcastProtocolCallMutation(instructions.result),
+      data: mockBroadcastProtocolCallData(instructions.result),
     },
   };
 }
@@ -130,7 +129,7 @@ function mockCreateTypedDataResult<T extends string, D extends object>(
   };
 }
 
-function mockEIP712TypedDataField(): Eip712TypedDataField {
+function mockEIP712TypedDataField() {
   return {
     __typename: 'EIP712TypedDataField',
     name: 'nonce',
@@ -148,9 +147,9 @@ function mockEIP712TypedDataDomain(): Eip712TypedDataDomain {
   };
 }
 
-export function mockCreatePostTypedDataMutation({
+export function mockCreatePostTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreatePostTypedDataMutation {
+}: { nonce?: Nonce } = {}): CreatePostTypedDataData {
   return {
     result: mockCreateTypedDataResult('CreatePostBroadcastItemResult', {
       __typename: 'CreatePostEIP712TypedData',
@@ -174,9 +173,9 @@ export function mockCreatePostTypedDataMutation({
   };
 }
 
-export function mockCreateCommentTypedDataMutation({
+export function mockCreateCommentTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreateCommentTypedDataMutation {
+}: { nonce?: Nonce } = {}): CreateCommentTypedDataData {
   return {
     result: mockCreateTypedDataResult('CreateCommentBroadcastItemResult', {
       __typename: 'CreateCommentEIP712TypedData',
@@ -187,11 +186,11 @@ export function mockCreateCommentTypedDataMutation({
       domain: mockEIP712TypedDataDomain(),
       value: {
         __typename: 'CreateCommentEIP712TypedDataValue',
-        profileIdPointed: '',
+        profileIdPointed: mockProfileId(),
         pubIdPointed: '',
         nonce,
         deadline: 1644303500,
-        profileId: '0x0132',
+        profileId: mockProfileId(),
         contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
         collectModule: '0xd6072BB2ABc0a9d1331c7d0B83AE6C47f2Cb86A3',
         collectModuleInitData: '0x',
@@ -203,9 +202,9 @@ export function mockCreateCommentTypedDataMutation({
   };
 }
 
-export function createHidePublicationMutationMockedResponse(args: {
-  variables: HidePublicationMutationVariables;
-}): MockedResponse<HidePublicationMutation> {
+export function createHidePublicationMockedResponse(args: {
+  variables: HidePublicationVariables;
+}): MockedResponse<HidePublicationData> {
   return {
     request: {
       query: HidePublicationDocument,
@@ -217,9 +216,9 @@ export function createHidePublicationMutationMockedResponse(args: {
   };
 }
 
-export function createAddReactionMutationMockedResponse(args: {
-  variables: AddReactionMutationVariables;
-}): MockedResponse<AddReactionMutation> {
+export function createAddReactionMockedResponse(args: {
+  variables: AddReactionVariables;
+}): MockedResponse<AddReactionData> {
   return {
     request: {
       query: AddReactionDocument,
@@ -231,9 +230,9 @@ export function createAddReactionMutationMockedResponse(args: {
   };
 }
 
-export function createRemoveReactionMutationMockedResponse(args: {
-  variables: RemoveReactionMutationVariables;
-}): MockedResponse<RemoveReactionMutation> {
+export function createRemoveReactionMockedResponse(args: {
+  variables: RemoveReactionVariables;
+}): MockedResponse<RemoveReactionData> {
   return {
     request: {
       query: RemoveReactionDocument,
@@ -245,9 +244,9 @@ export function createRemoveReactionMutationMockedResponse(args: {
   };
 }
 
-export function createRemoveReactionMutationWithGraphqlValidationErrorResponse(args: {
-  variables: RemoveReactionMutationVariables;
-}): MockedResponse<RemoveReactionMutation> {
+export function createRemoveReactionMockedResponseWithGraphqlValidationError(args: {
+  variables: RemoveReactionVariables;
+}): MockedResponse<RemoveReactionData> {
   return {
     request: {
       query: RemoveReactionDocument,
@@ -263,9 +262,9 @@ export function createRemoveReactionMutationWithGraphqlValidationErrorResponse(a
   };
 }
 
-export function mockCreateFollowTypedDataMutation({
+export function mockCreateFollowTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreateFollowTypedDataMutation {
+}: { nonce?: Nonce } = {}): CreateFollowTypedDataData {
   return {
     result: mockCreateTypedDataResult('CreateFollowBroadcastItemResult', {
       __typename: 'CreateFollowEIP712TypedData',
@@ -278,16 +277,16 @@ export function mockCreateFollowTypedDataMutation({
         __typename: 'CreateFollowEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        profileIds: [faker.datatype.uuid()],
+        profileIds: [mockProfileId()],
         datas: ['0x00'],
       },
     }),
   };
 }
 
-export function mockCreateSetProfileMetadataTypedDataMutation({
+export function mockCreateSetProfileMetadataTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreateSetProfileMetadataTypedDataMutation {
+}: { nonce?: Nonce } = {}): CreateSetProfileMetadataTypedDataData {
   return {
     result: mockCreateTypedDataResult('CreateSetProfileMetadataURIBroadcastItemResult', {
       __typename: 'CreateSetProfileMetadataURIEIP712TypedData',
@@ -300,16 +299,16 @@ export function mockCreateSetProfileMetadataTypedDataMutation({
         __typename: 'CreateSetProfileMetadataURIEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        profileId: faker.datatype.uuid(),
+        profileId: mockProfileId(),
         metadata: faker.internet.url(),
       },
     }),
   };
 }
 
-export function mockCreateUnfollowTypedDataMutation({
+export function mockCreateUnfollowTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreateUnfollowTypedDataMutation {
+}: { nonce?: Nonce } = {}): CreateUnfollowTypedDataData {
   return {
     result: mockCreateTypedDataResult('CreateUnfollowBroadcastItemResult', {
       __typename: 'CreateBurnEIP712TypedData',
@@ -328,10 +327,10 @@ export function mockCreateUnfollowTypedDataMutation({
   };
 }
 
-export function createBroadcastProxyActionCallMutationMockedResponse(instructions: {
+export function createBroadcastProxyActionCallMockedResponse(instructions: {
   result: string;
-  variables: ProxyActionMutationVariables;
-}): MockedResponse<ProxyActionMutation> {
+  variables: ProxyActionVariables;
+}): MockedResponse<ProxyActionData> {
   return {
     request: {
       query: ProxyActionDocument,
@@ -343,9 +342,9 @@ export function createBroadcastProxyActionCallMutationMockedResponse(instruction
   };
 }
 
-export function mockCreateSetFollowModuleTypedDataMutation({
+export function mockCreateSetFollowModuleTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreateSetFollowModuleTypedDataMutation {
+}: { nonce?: Nonce } = {}): CreateSetFollowModuleTypedDataData {
   return {
     result: mockCreateTypedDataResult('CreateSetFollowModuleBroadcastItemResult', {
       __typename: 'CreateSetFollowModuleEIP712TypedData',
@@ -358,7 +357,7 @@ export function mockCreateSetFollowModuleTypedDataMutation({
         __typename: 'CreateSetFollowModuleEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        profileId: faker.datatype.uuid(),
+        profileId: mockProfileId(),
         followModule: mockEthereumAddress(),
         followModuleInitData: '0x00',
       },
@@ -366,9 +365,9 @@ export function mockCreateSetFollowModuleTypedDataMutation({
   };
 }
 
-export function mockCreateSetProfileImageUriTypedDataMutation({
+export function mockCreateSetProfileImageUriTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreateSetProfileImageUriTypedDataMutation {
+}: { nonce?: Nonce } = {}): CreateSetProfileImageUriTypedDataData {
   return {
     result: mockCreateTypedDataResult('CreateSetProfileImageUriBroadcastItemResult', {
       __typename: 'CreateSetProfileImageUriEIP712TypedData',
@@ -388,13 +387,15 @@ export function mockCreateSetProfileImageUriTypedDataMutation({
   };
 }
 
-export function mockCreateSetProfileImageUriTypedDataMutationMockedResponse({
+export function createCreateSetProfileImageUriTypedDataMockedResponse<
+  T extends CreateSetProfileImageUriTypedDataData,
+>({
   variables,
   data,
 }: {
-  variables: CreateSetProfileImageUriTypedDataMutationVariables;
-  data: CreateSetProfileImageUriTypedDataMutation;
-}): MockedResponse<CreateSetProfileImageUriTypedDataMutation> {
+  variables: CreateSetProfileImageUriTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
   return {
     request: {
       query: CreateSetProfileImageUriTypedDataDocument,
@@ -406,9 +407,9 @@ export function mockCreateSetProfileImageUriTypedDataMutationMockedResponse({
   };
 }
 
-export function mockCreateSetDispatcherTypedDataMutation({
+export function mockCreateSetDispatcherTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreateSetDispatcherTypedDataMutation {
+}: { nonce?: Nonce } = {}): CreateSetDispatcherTypedDataData {
   return {
     result: mockCreateTypedDataResult('CreateSetDispatcherBroadcastItemResult', {
       __typename: 'CreateSetDispatcherEIP712TypedData',
@@ -421,22 +422,22 @@ export function mockCreateSetDispatcherTypedDataMutation({
         __typename: 'CreateSetDispatcherEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        profileId: faker.datatype.uuid(),
+        profileId: mockProfileId(),
         dispatcher: faker.datatype.uuid(),
       },
     }),
   };
 }
 
-export function createCreateSetProfileMetadataTypedDataMutationMockedResponse({
+export function createCreateSetProfileMetadataTypedDataMockedResponse({
   request,
   overrideSigNonce,
-  data = mockCreateSetProfileMetadataTypedDataMutation({ nonce: overrideSigNonce }),
+  data = mockCreateSetProfileMetadataTypedDataData({ nonce: overrideSigNonce }),
 }: {
   request: CreatePublicSetProfileMetadataUriRequest;
   overrideSigNonce?: Nonce;
-  data?: CreateSetProfileMetadataTypedDataMutation;
-}): MockedResponse<CreateSetProfileMetadataTypedDataMutation> {
+  data?: CreateSetProfileMetadataTypedDataData;
+}): MockedResponse<CreateSetProfileMetadataTypedDataData> {
   return {
     request: {
       query: CreateSetProfileMetadataTypedDataDocument,
@@ -449,13 +450,15 @@ export function createCreateSetProfileMetadataTypedDataMutationMockedResponse({
   };
 }
 
-export function createCreateSetProfileMetadataViaDispatcherMutationMockedResponse({
+export function createCreateSetProfileMetadataViaDispatcherMockedResponse<
+  T extends CreateSetProfileMetadataViaDispatcherData,
+>({
   variables,
   data,
 }: {
-  variables: CreateSetProfileMetadataViaDispatcherMutationVariables;
-  data: CreateSetProfileMetadataViaDispatcherMutation;
-}): MockedResponse<CreateSetProfileMetadataViaDispatcherMutation> {
+  variables: CreateSetProfileMetadataViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
   return {
     request: {
       query: CreateSetProfileMetadataViaDispatcherDocument,
@@ -465,13 +468,13 @@ export function createCreateSetProfileMetadataViaDispatcherMutationMockedRespons
   };
 }
 
-export function createCreateCommentTypedDataMutationMockedResponse({
+export function createCreateCommentTypedDataMockedResponse<T extends CreateCommentTypedDataData>({
   variables,
   data,
 }: {
-  variables: CreateCommentTypedDataMutationVariables;
-  data: CreateCommentTypedDataMutation;
-}): MockedResponse<CreateCommentTypedDataMutation> {
+  variables: CreateCommentTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
   return {
     request: {
       query: CreateCommentTypedDataDocument,
@@ -483,13 +486,15 @@ export function createCreateCommentTypedDataMutationMockedResponse({
   };
 }
 
-export function createCreateCommentViaDispatcherMutationMockedResponse({
+export function createCreateCommentViaDispatcherMockedResponse<
+  T extends CreateCommentViaDispatcherData,
+>({
   variables,
   data,
 }: {
-  variables: CreateCommentViaDispatcherMutationVariables;
-  data: CreateCommentViaDispatcherMutation;
-}): MockedResponse<CreateCommentViaDispatcherMutation> {
+  variables: CreateCommentViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
   return {
     request: {
       query: CreateCommentViaDispatcherDocument,
@@ -501,13 +506,13 @@ export function createCreateCommentViaDispatcherMutationMockedResponse({
   };
 }
 
-export function createCreatePostTypedDataMutationMockedResponse({
+export function createCreatePostTypedDataMockedResponse<T extends CreatePostTypedDataData>({
   variables,
   data,
 }: {
-  variables: CreatePostTypedDataMutationVariables;
-  data: CreatePostTypedDataMutation;
-}): MockedResponse<CreatePostTypedDataMutation> {
+  variables: CreatePostTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
   return {
     request: {
       query: CreatePostTypedDataDocument,
@@ -519,13 +524,13 @@ export function createCreatePostTypedDataMutationMockedResponse({
   };
 }
 
-export function createCreatePostViaDispatcherMutationMockedResponse({
+export function createCreatePostViaDispatcherMockedResponse<T extends CreatePostViaDispatcherData>({
   variables,
   data,
 }: {
-  variables: CreatePostViaDispatcherMutationVariables;
-  data: CreatePostViaDispatcherMutation;
-}): MockedResponse<CreatePostViaDispatcherMutation> {
+  variables: CreatePostViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
   return {
     request: {
       query: CreatePostViaDispatcherDocument,
@@ -537,13 +542,15 @@ export function createCreatePostViaDispatcherMutationMockedResponse({
   };
 }
 
-export function createSetProfileImageURIViaDispatcherMutationMockedResponse({
+export function createSetProfileImageURIViaDispatcherMockedResponse<
+  T extends CreateSetProfileImageUriViaDispatcherData,
+>({
   variables,
   data,
 }: {
-  variables: CreateSetProfileImageUriViaDispatcherMutationVariables;
-  data: CreateSetProfileImageUriViaDispatcherMutation;
-}): MockedResponse<CreateSetProfileImageUriViaDispatcherMutation> {
+  variables: CreateSetProfileImageUriViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
   return {
     request: {
       query: CreateSetProfileImageUriViaDispatcherDocument,
@@ -555,9 +562,9 @@ export function createSetProfileImageURIViaDispatcherMutationMockedResponse({
   };
 }
 
-export function mockCreateCollectTypedDataMutation({
+export function mockCreateCollectTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreateCollectTypedDataMutation {
+}: { nonce?: Nonce } = {}): CreateCollectTypedDataData {
   return {
     result: mockCreateTypedDataResult('CreateCollectBroadcastItemResult', {
       __typename: 'CreateCollectEIP712TypedData',
@@ -570,7 +577,7 @@ export function mockCreateCollectTypedDataMutation({
         __typename: 'CreateCollectEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        profileId: faker.datatype.uuid(),
+        profileId: mockProfileId(),
         pubId: faker.datatype.uuid(),
         data: ['0x00'],
       },
@@ -578,9 +585,9 @@ export function mockCreateCollectTypedDataMutation({
   };
 }
 
-export function createReportPublicationMutationMockedResponse(args: {
-  variables: ReportPublicationMutationVariables;
-}): MockedResponse<ReportPublicationMutation> {
+export function createReportPublicationMockedResponse(args: {
+  variables: ReportPublicationVariables;
+}): MockedResponse<ReportPublicationData> {
   return {
     request: {
       query: ReportPublicationDocument,

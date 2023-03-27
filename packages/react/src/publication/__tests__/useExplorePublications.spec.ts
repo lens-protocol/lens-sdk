@@ -1,12 +1,12 @@
 import {
-  AnyPublicationFragment,
+  AnyPublication,
   PublicationSortCriteria,
   PublicationTypes,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
-  createExplorePublicationsQueryMockedResponse,
+  createExplorePublicationsMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
@@ -25,7 +25,7 @@ function setupTestScenario({
   ...args
 }: UseExplorePublicationsArgs & {
   expectedObserverId?: ProfileId;
-  result: AnyPublicationFragment[];
+  result: AnyPublication[];
 }) {
   const sources = mockSources();
 
@@ -33,7 +33,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createExplorePublicationsQueryMockedResponse({
+        createExplorePublicationsMockedResponse({
           variables: {
             limit: DEFAULT_PAGINATED_QUERY_LIMIT,
             sortCriteria: PublicationSortCriteria.Latest,

@@ -1,4 +1,4 @@
-import { TransactionKind } from '../../entities';
+import { ProfileId, TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
   IProtocolCallPresenter,
@@ -7,7 +7,7 @@ import {
 import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
 
 export type CreateMirrorRequest = {
-  profileId: string;
+  profileId: ProfileId;
   publicationId: string;
   kind: TransactionKind.MIRROR_PUBLICATION;
   delegate: boolean;

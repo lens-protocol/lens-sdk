@@ -1,10 +1,11 @@
 import {
-  ProfileFragment,
-  ContentPublicationFragment,
+  Profile,
+  ContentPublication,
   ReactionType,
   usePublication,
   useReaction,
   isMirrorPublication,
+  ProfileId,
 } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
@@ -15,8 +16,8 @@ import { invariant } from '../utils';
 import { PublicationCard } from './components/PublicationCard';
 
 type ReactionButtonProps = {
-  publication: ContentPublicationFragment;
-  profileId: string;
+  publication: ContentPublication;
+  profileId: ProfileId;
   reactionType: ReactionType;
 };
 
@@ -54,7 +55,7 @@ function ReactionButton({ publication, profileId, reactionType }: ReactionButton
 }
 
 type ReactionInnerProps = {
-  profile: ProfileFragment;
+  profile: Profile;
 };
 
 function ReactionInner({ profile }: ReactionInnerProps) {

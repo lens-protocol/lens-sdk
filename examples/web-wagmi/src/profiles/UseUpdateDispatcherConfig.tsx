@@ -1,10 +1,10 @@
-import { ProfileOwnedByMeFragment, useUpdateDispatcherConfig } from '@lens-protocol/react-web';
+import { ProfileOwnedByMe, useUpdateDispatcherConfig } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
 
 type UpdateDispatcherConfigFormProps = {
-  activeProfile: ProfileOwnedByMeFragment;
+  activeProfile: ProfileOwnedByMe;
 };
 
 function UpdateDispatcherConfigForm({ activeProfile }: UpdateDispatcherConfigFormProps) {

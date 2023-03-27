@@ -1,8 +1,8 @@
 import {
   LensApolloClient,
   ProxyActionDocument,
-  ProxyActionMutation,
-  ProxyActionMutationVariables,
+  ProxyActionData,
+  ProxyActionVariables,
   ProxyActionRequest,
 } from '@lens-protocol/api-bindings';
 import {
@@ -52,10 +52,7 @@ export class FollowProxyActionRelayer<T extends UnconstrainedFollowRequest>
   }
 
   private async executeBroadcast(request: ProxyActionRequest): Promise<RelayProxyReceipt> {
-    const { data } = await this.apolloClient.mutate<
-      ProxyActionMutation,
-      ProxyActionMutationVariables
-    >({
+    const { data } = await this.apolloClient.mutate<ProxyActionData, ProxyActionVariables>({
       mutation: ProxyActionDocument,
       variables: {
         request,

@@ -6,7 +6,7 @@ import {
   mockCreatePostRequest,
   mockDateNftAttribute,
   mockFreeCollectPolicy,
-  mockMedia,
+  mockMediaObject,
   mockNftMetadata,
   mockNoCollectPolicy,
   mockNumberNftAttribute,
@@ -18,7 +18,7 @@ import { appId } from '../../../utils';
 import { createPublicationMetadata } from '../createPublicationMetadata';
 
 const content = faker.lorem.sentence();
-const media = [mockMedia()];
+const media = [mockMediaObject()];
 const dateNftAttribute = mockDateNftAttribute();
 const numberNftAttribute = mockNumberNftAttribute();
 const stringNftAttribute = mockStringNftAttribute();

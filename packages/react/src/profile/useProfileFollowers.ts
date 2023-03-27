@@ -1,4 +1,4 @@
-import { FollowerFragment, useProfileFollowersQuery } from '@lens-protocol/api-bindings';
+import { Follower, useProfileFollowers as useUnderlyingQuery } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import {
@@ -20,9 +20,9 @@ export function useProfileFollowers({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
   profileId,
-}: UseProfileFollowersArgs): PaginatedReadResult<FollowerFragment[]> {
+}: UseProfileFollowersArgs): PaginatedReadResult<Follower[]> {
   return usePaginatedReadResult(
-    useProfileFollowersQuery(
+    useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({ profileId, limit, observerId }),

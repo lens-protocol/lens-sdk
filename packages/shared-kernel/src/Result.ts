@@ -7,10 +7,10 @@ import { Narrow } from './ts-helpers/types';
  * It's present only to allow type safety of the `isFailure` method.
  *
  * @sealed
- * @private
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Success<T, E> {
+  /** @internal */
   public constructor(public readonly value: T) {}
 
   public isSuccess(): this is Success<T, E> {
@@ -33,10 +33,10 @@ class Success<T, E> {
  * It's present only to allow type safety of the `isSuccess` method.
  *
  * @sealed
- * @private
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
 class Failure<T, E> {
+  /** @internal */
   public constructor(public readonly error: E) {}
 
   public isSuccess(): this is Success<T, E> {
@@ -56,6 +56,7 @@ export type { Success, Failure };
 
 /**
  * An `IEquatableError` is an error that can be compared by name.
+ *
  */
 export interface IEquatableError<T extends string = string, P = Narrow<T>> {
   name: P;
@@ -150,6 +151,7 @@ export type Result<T, E extends IEquatableError> = Success<T, E> | Failure<T, E>
 
 /**
  * A `PromiseResult` is a convenience type alias that represents either a {@link Result} in the context of asynchronous tasks.
+ *
  */
 export type PromiseResult<T, E extends IEquatableError> = Promise<Result<T, E>>;
 

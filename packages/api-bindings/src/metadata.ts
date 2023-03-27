@@ -3,8 +3,8 @@ import { DeepOmit, Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 import type {
   DeepOmitTypename,
   EncryptionParamsOutput,
-  Erc20OwnershipFragment,
-  LeafConditionFragment,
+  Erc20OwnershipOutput,
+  LeafConditionOutput,
   PublicationMetadataV2Input,
 } from './graphql';
 
@@ -23,15 +23,15 @@ type NonNullableFields<T> = {
   [P in keyof T]: NonNullable<T[P]>;
 };
 
-type PatchLeafConditionFragment = Overwrite<
-  LeafConditionFragment,
+type PatchLeafConditionOutput = Overwrite<
+  LeafConditionOutput,
   {
-    token: Omit<Erc20OwnershipFragment, 'name' | 'symbol'> | null;
+    token: Omit<Erc20OwnershipOutput, 'name' | 'symbol'> | null;
   }
 >;
 
 export type LeafCondition = Prettify<
-  OneOf<NonNullableFields<DeepOmitTypename<PatchLeafConditionFragment>>>
+  OneOf<NonNullableFields<DeepOmitTypename<PatchLeafConditionOutput>>>
 >;
 
 export type OrCondition<T> = {

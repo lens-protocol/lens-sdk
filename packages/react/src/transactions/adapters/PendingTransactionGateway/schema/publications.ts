@@ -10,7 +10,7 @@ import {
 import { z } from 'zod';
 
 import { appId } from '../../../../utils';
-import { Erc20AmountSchema } from './common';
+import { Erc20AmountSchema, ProfileIdSchema } from './common';
 
 const NftAttributeSchema = z.union([
   z.object({
@@ -41,7 +41,7 @@ const RecipientWithSplitSchema = z.object({
   split: z.number(),
 });
 
-const AaveChargeCollectPolicySchema = z.object({
+const AaveChargeCollectPolicyConfigSchema = z.object({
   type: z.literal(CollectPolicyType.CHARGE),
   fee: Erc20AmountSchema,
   followersOnly: z.boolean(),
@@ -54,7 +54,7 @@ const AaveChargeCollectPolicySchema = z.object({
   endTimestamp: z.number().optional(),
 });
 
-const VaultChargeCollectPolicySchema = z.object({
+const VaultChargeCollectPolicyConfigSchema = z.object({
   type: z.literal(CollectPolicyType.CHARGE),
   fee: Erc20AmountSchema,
   followersOnly: z.boolean(),
@@ -67,7 +67,7 @@ const VaultChargeCollectPolicySchema = z.object({
   endTimestamp: z.number().optional(),
 });
 
-const MultirecipientChargeCollectPolicySchema = z.object({
+const MultirecipientChargeCollectPolicyConfigSchema = z.object({
   type: z.literal(CollectPolicyType.CHARGE),
   fee: Erc20AmountSchema,
   followersOnly: z.boolean(),
@@ -79,7 +79,7 @@ const MultirecipientChargeCollectPolicySchema = z.object({
   endTimestamp: z.number().optional(),
 });
 
-const SimpleChargeCollectPolicySchema = z.object({
+const SimpleChargeCollectPolicyConfigSchema = z.object({
   type: z.literal(CollectPolicyType.CHARGE),
   fee: Erc20AmountSchema,
   followersOnly: z.boolean(),
@@ -91,27 +91,27 @@ const SimpleChargeCollectPolicySchema = z.object({
   timeLimited: z.boolean(),
 });
 
-const ChargeCollectPolicySchema = z.union([
-  SimpleChargeCollectPolicySchema,
-  MultirecipientChargeCollectPolicySchema,
-  VaultChargeCollectPolicySchema,
-  AaveChargeCollectPolicySchema,
+const ChargeCollectPolicyConfigSchema = z.union([
+  SimpleChargeCollectPolicyConfigSchema,
+  MultirecipientChargeCollectPolicyConfigSchema,
+  VaultChargeCollectPolicyConfigSchema,
+  AaveChargeCollectPolicyConfigSchema,
 ]);
 
-const FreeCollectPolicySchema = z.object({
+const FreeCollectPolicyConfigSchema = z.object({
   type: z.literal(CollectPolicyType.FREE),
   metadata: NftMetadataSchema,
   followersOnly: z.boolean(),
 });
 
-const NoCollectPolicySchema = z.object({
+const NoCollectPolicyConfigSchema = z.object({
   type: z.literal(CollectPolicyType.NO_COLLECT),
 });
 
-const CollectPolicySchema = z.union([
-  ChargeCollectPolicySchema,
-  FreeCollectPolicySchema,
-  NoCollectPolicySchema,
+const CollectPolicyConfigSchema = z.union([
+  ChargeCollectPolicyConfigSchema,
+  FreeCollectPolicyConfigSchema,
+  NoCollectPolicyConfigSchema,
 ]);
 
 const MediaSchema = z.object({
@@ -121,11 +121,11 @@ const MediaSchema = z.object({
   url: z.string(),
 });
 
-const AnyoneReferencePolicySchema = z.object({
+const AnyoneReferencePolicyConfigSchema = z.object({
   type: z.literal(ReferencePolicyType.ANYONE),
 });
 
-const DegreesOfSeparationReferencePolicySchema = z.object({
+const DegreesOfSeparationReferencePolicyConfigSchema = z.object({
   type: z.literal(ReferencePolicyType.DEGREES_OF_SEPARATION),
   params: z.object({
     commentsRestricted: z.boolean(),
@@ -134,14 +134,14 @@ const DegreesOfSeparationReferencePolicySchema = z.object({
   }),
 });
 
-const FollowersOnlyReferencePolicySchema = z.object({
+const FollowersOnlyReferencePolicyConfigSchema = z.object({
   type: z.literal(ReferencePolicyType.FOLLOWERS_ONLY),
 });
 
 const ReferencePolicyConfigSchema = z.union([
-  AnyoneReferencePolicySchema,
-  DegreesOfSeparationReferencePolicySchema,
-  FollowersOnlyReferencePolicySchema,
+  AnyoneReferencePolicyConfigSchema,
+  DegreesOfSeparationReferencePolicyConfigSchema,
+  FollowersOnlyReferencePolicyConfigSchema,
 ]);
 
 export const CreatePostRequestSchema = z.object({
@@ -150,8 +150,8 @@ export const CreatePostRequestSchema = z.object({
   contentFocus: z.nativeEnum(ContentFocus),
   media: z.array(MediaSchema).optional(),
   reference: ReferencePolicyConfigSchema,
-  collect: CollectPolicySchema,
-  profileId: z.string(),
+  collect: CollectPolicyConfigSchema,
+  profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.CREATE_POST),
   locale: z.string(),
   delegate: z.boolean(),
@@ -164,22 +164,22 @@ export const CreateCommentRequestSchema = z.object({
   contentFocus: z.nativeEnum(ContentFocus),
   media: z.array(MediaSchema).optional(),
   reference: ReferencePolicyConfigSchema,
-  collect: CollectPolicySchema,
-  profileId: z.string(),
+  collect: CollectPolicyConfigSchema,
+  profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.CREATE_COMMENT),
   locale: z.string(),
   delegate: z.boolean(),
 });
 
 export const CreateMirrorRequestSchema = z.object({
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   publicationId: z.string(),
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   delegate: z.boolean(),
 });
 
 export const FreeCollectRequestSchema = z.object({
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   type: z.literal(CollectType.FREE),
   publicationId: z.string(),
   kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
@@ -191,7 +191,7 @@ const CollectFeeSchema = z.object({
 });
 
 export const PaidCollectRequestSchema = z.object({
-  profileId: z.string(),
+  profileId: ProfileIdSchema,
   type: z.literal(CollectType.PAID),
   publicationId: z.string(),
   fee: CollectFeeSchema,

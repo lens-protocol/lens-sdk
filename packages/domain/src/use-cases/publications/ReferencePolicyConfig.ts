@@ -5,11 +5,11 @@ export enum ReferencePolicyType {
   ANYONE = 'ANYONE',
 }
 
-type FollowersOnlyPolicy = {
+export type FollowersOnlyReferencePolicyConfig = {
   type: ReferencePolicyType.FOLLOWERS_ONLY;
 };
 
-type DegreesOfSeparationPolicy = {
+export type DegreesOfSeparationReferencePolicyConfig = {
   type: ReferencePolicyType.DEGREES_OF_SEPARATION;
   params: {
     commentsRestricted: boolean;
@@ -18,8 +18,11 @@ type DegreesOfSeparationPolicy = {
   };
 };
 
-type AnyonePolicy = {
+export type AnyoneReferencePolicyConfig = {
   type: ReferencePolicyType.ANYONE;
 };
 
-export type ReferencePolicyConfig = FollowersOnlyPolicy | DegreesOfSeparationPolicy | AnyonePolicy;
+export type ReferencePolicyConfig =
+  | FollowersOnlyReferencePolicyConfig
+  | DegreesOfSeparationReferencePolicyConfig
+  | AnyoneReferencePolicyConfig;

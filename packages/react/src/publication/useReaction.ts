@@ -1,15 +1,15 @@
-import { getApiReactionType, ContentPublicationFragment } from '@lens-protocol/api-bindings';
-import { ReactionType } from '@lens-protocol/domain/entities';
+import { resolveApiReactionType, ContentPublication } from '@lens-protocol/api-bindings';
+import { ProfileId, ReactionType } from '@lens-protocol/domain/entities';
 import { useState } from 'react';
 
 import { useReactionController } from './adapters/useReactionController';
 
 export type UseReactionArgs = {
-  profileId: string;
+  profileId: ProfileId;
 };
 
 export type ReactionArgs = {
-  publication: ContentPublicationFragment;
+  publication: ContentPublication;
   reactionType: ReactionType;
 };
 
@@ -46,7 +46,7 @@ export function useReaction({ profileId }: UseReactionArgs) {
   };
 
   const hasReaction = ({ publication, reactionType }: ReactionArgs) => {
-    return publication.reaction === getApiReactionType(reactionType);
+    return publication.reaction === resolveApiReactionType(reactionType);
   };
 
   return {

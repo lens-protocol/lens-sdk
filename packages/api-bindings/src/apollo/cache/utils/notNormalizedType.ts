@@ -1,4 +1,4 @@
-import { TypePolicy } from './TypePolicy';
+import { TypePolicy } from '@apollo/client';
 
 /**
  * Use this to declare a type policy for an object that should not be normalized.
@@ -8,10 +8,10 @@ import { TypePolicy } from './TypePolicy';
  *
  * @returns a TypePolicy that does not cache the result of the field
  */
-export function notNormalizedType<T>(others?: Omit<TypePolicy<T>, 'keyFields'>): TypePolicy<T> {
+export function notNormalizedType(others?: Omit<TypePolicy, 'keyFields'>) {
   return {
     keyFields: false,
 
     ...others,
-  };
+  } as const;
 }

@@ -1,6 +1,6 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { AppId, DecryptionCriteria, TransactionKind } from '../../entities';
+import { AppId, DecryptionCriteria, ProfileId, TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -8,17 +8,17 @@ import {
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
-import { CollectPolicyConfig, Media, ContentFocus, Locale } from './types';
+import { CollectPolicyConfig, MediaObject, ContentFocus, Locale } from './types';
 
 export type CreateCommentRequest = {
   appId?: AppId;
   publicationId: string;
   content?: string;
   contentFocus: ContentFocus;
-  media?: Media[];
+  media?: MediaObject[];
   reference: ReferencePolicyConfig;
   collect: CollectPolicyConfig;
-  profileId: string;
+  profileId: ProfileId;
   kind: TransactionKind.CREATE_COMMENT;
   locale: Locale;
   delegate: boolean;

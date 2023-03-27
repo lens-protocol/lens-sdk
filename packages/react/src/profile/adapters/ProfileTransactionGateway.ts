@@ -1,7 +1,7 @@
 import {
   CreateProfileDocument,
-  CreateProfileMutation,
-  CreateProfileMutationVariables,
+  CreateProfileData,
+  CreateProfileVariables,
   LensApolloClient,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
@@ -24,7 +24,7 @@ import {
   ITransactionFactory,
 } from '../../transactions/adapters/ITransactionFactory';
 
-async function asyncRelayReceipt(data: CreateProfileMutation): AsyncRelayReceipt {
+async function asyncRelayReceipt(data: CreateProfileData): AsyncRelayReceipt {
   if (data.result.__typename === 'RelayError') {
     return failure(new TransactionError(TransactionErrorReason.REJECTED));
   }
@@ -43,10 +43,7 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
   async createProfileTransaction<T extends CreateProfileRequest>(
     request: T,
   ): PromiseResult<Transaction<T>, DuplicatedHandleError> {
-    const { data } = await this.apolloClient.mutate<
-      CreateProfileMutation,
-      CreateProfileMutationVariables
-    >({
+    const { data } = await this.apolloClient.mutate<CreateProfileData, CreateProfileVariables>({
       mutation: CreateProfileDocument,
       variables: {
         request: {

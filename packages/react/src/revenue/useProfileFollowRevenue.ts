@@ -1,6 +1,6 @@
 import {
-  RevenueAggregateFragment,
-  useProfileFollowRevenueQuery,
+  RevenueAggregate,
+  useProfileFollowRevenue as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
@@ -13,9 +13,9 @@ export type UseProfileFollowRevenueArgs = {
 
 export function useProfileFollowRevenue({
   profileId,
-}: UseProfileFollowRevenueArgs): ReadResult<RevenueAggregateFragment[]> {
+}: UseProfileFollowRevenueArgs): ReadResult<RevenueAggregate[]> {
   const { data, error, loading } = useReadResult(
-    useProfileFollowRevenueQuery(
+    useUnderlyingQuery(
       useLensApolloClient({
         variables: {
           profileId,

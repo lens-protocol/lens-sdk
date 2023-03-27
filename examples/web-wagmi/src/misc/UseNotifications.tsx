@@ -1,4 +1,4 @@
-import { ProfileFragment, useNotifications } from '@lens-protocol/react-web';
+import { Profile, useNotifications } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth';
@@ -8,7 +8,7 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { NotificationItem } from './components/NotificationItem';
 
 type NotificationsInnerProps = {
-  profile: ProfileFragment;
+  profile: Profile;
 };
 
 function NotificationsInner({ profile }: NotificationsInnerProps) {

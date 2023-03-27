@@ -1,10 +1,10 @@
 import {
   CreateSetProfileImageUriTypedDataDocument,
-  CreateSetProfileImageUriTypedDataMutation,
-  CreateSetProfileImageUriTypedDataMutationVariables,
+  CreateSetProfileImageUriTypedDataData,
+  CreateSetProfileImageUriTypedDataVariables,
   CreateSetProfileImageUriViaDispatcherDocument,
-  CreateSetProfileImageUriViaDispatcherMutation,
-  CreateSetProfileImageUriViaDispatcherMutationVariables,
+  CreateSetProfileImageUriViaDispatcherData,
+  CreateSetProfileImageUriViaDispatcherVariables,
   omitTypename,
   UpdateProfileImageRequest as UpdateProfileImageRequestArgs,
   LensApolloClient,
@@ -48,8 +48,8 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
     nonce?: Nonce,
   ): Promise<UnsignedLensProtocolCall<UpdateProfileImageRequest>> {
     const { data } = await this.apolloClient.mutate<
-      CreateSetProfileImageUriTypedDataMutation,
-      CreateSetProfileImageUriTypedDataMutationVariables
+      CreateSetProfileImageUriTypedDataData,
+      CreateSetProfileImageUriTypedDataVariables
     >({
       mutation: CreateSetProfileImageUriTypedDataDocument,
       variables: {
@@ -69,8 +69,8 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
     requestArgs: UpdateProfileImageRequestArgs,
   ): AsyncRelayReceipt {
     const { data } = await this.apolloClient.mutate<
-      CreateSetProfileImageUriViaDispatcherMutation,
-      CreateSetProfileImageUriViaDispatcherMutationVariables
+      CreateSetProfileImageUriViaDispatcherData,
+      CreateSetProfileImageUriViaDispatcherVariables
     >({
       mutation: CreateSetProfileImageUriViaDispatcherDocument,
       variables: {

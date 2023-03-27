@@ -1,12 +1,12 @@
 import {
-  NewCollectNotificationFragment,
-  NewCommentNotificationFragment,
-  NewFollowerNotificationFragment,
-  NewMentionNotificationFragment,
-  NewMirrorNotificationFragment,
-  NewReactionNotificationFragment,
+  NewCollectNotification,
+  NewCommentNotification,
+  NewFollowerNotification,
+  NewMentionNotification,
+  NewMirrorNotification,
+  NewReactionNotification,
   NotificationTypes,
-  useNotificationsQuery,
+  useNotifications as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
@@ -19,12 +19,12 @@ export type UseNotificationsArgs = PaginatedArgs<{
 }>;
 
 export type Notification =
-  | NewFollowerNotificationFragment
-  | NewCollectNotificationFragment
-  | NewCommentNotificationFragment
-  | NewMirrorNotificationFragment
-  | NewMentionNotificationFragment
-  | NewReactionNotificationFragment;
+  | NewFollowerNotification
+  | NewCollectNotification
+  | NewCommentNotification
+  | NewMirrorNotification
+  | NewMentionNotification
+  | NewReactionNotification;
 
 export function useNotifications({
   notificationTypes,
@@ -32,7 +32,7 @@ export function useNotifications({
   limit,
 }: UseNotificationsArgs): PaginatedReadResult<Notification[]> {
   return usePaginatedReadResult(
-    useNotificationsQuery(
+    useUnderlyingQuery(
       useLensApolloClient({
         variables: useSourcesFromConfig({
           observerId: profileId,

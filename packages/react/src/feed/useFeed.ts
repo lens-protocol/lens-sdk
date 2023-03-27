@@ -1,7 +1,7 @@
 import {
   FeedEventItemType as LensFeedEventItemType,
-  FeedItemFragment,
-  useFeedQuery,
+  FeedItem,
+  useFeed as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { nonNullable } from '@lens-protocol/shared-kernel';
@@ -13,7 +13,10 @@ import {
   useLensApolloClient,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { createPublicationMetadataFilters, PublicationMetadataFilters } from '../publication';
+import {
+  createPublicationMetadataFilters,
+  PublicationMetadataFilters,
+} from '../publication/filters';
 import { FeedEventItemType } from './FeedEventItemType';
 
 const SupportedFeedEvenTypesMap: Record<FeedEventItemType, LensFeedEventItemType> = {
@@ -47,9 +50,9 @@ export function useFeed({
   observerId,
   profileId,
   limit = FEED_LIMIT,
-}: UseFeedArgs): PaginatedReadResult<FeedItemFragment[]> {
+}: UseFeedArgs): PaginatedReadResult<FeedItem[]> {
   return usePaginatedReadResult(
-    useFeedQuery(
+    useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

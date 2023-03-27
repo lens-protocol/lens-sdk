@@ -1,7 +1,7 @@
 import {
   CreateUnfollowTypedDataDocument,
-  CreateUnfollowTypedDataMutation,
-  CreateUnfollowTypedDataMutationVariables,
+  CreateUnfollowTypedDataData,
+  CreateUnfollowTypedDataVariables,
   LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
@@ -26,8 +26,8 @@ export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
     request: T,
   ): Promise<UnsignedLensProtocolCall<T>> {
     const { data } = await this.apolloClient.mutate<
-      CreateUnfollowTypedDataMutation,
-      CreateUnfollowTypedDataMutationVariables
+      CreateUnfollowTypedDataData,
+      CreateUnfollowTypedDataVariables
     >({
       mutation: CreateUnfollowTypedDataDocument,
       variables: {

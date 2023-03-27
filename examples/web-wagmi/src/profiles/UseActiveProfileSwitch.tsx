@@ -1,8 +1,9 @@
 import {
   EthereumAddress,
   useProfilesOwnedBy,
-  ProfileFragment,
+  Profile,
   useActiveProfileSwitch,
+  ProfileId,
 } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
@@ -12,12 +13,12 @@ import { Loading } from '../components/loading/Loading';
 
 type ProfilesSwitcherProps = {
   address: EthereumAddress;
-  current: ProfileFragment;
+  current: Profile;
 };
 
 function ProfilesSwitcher({ address, current }: ProfilesSwitcherProps) {
   const { execute: switchProfile, isPending } = useActiveProfileSwitch();
-  const [selected, setSelected] = useState<string>(current.id);
+  const [selected, setSelected] = useState<ProfileId>(current.id);
   const { data, error, loading } = useProfilesOwnedBy({ address, limit: 50 });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

@@ -1,4 +1,4 @@
-import { ProfileOwnedByMeFragment } from '@lens-protocol/api-bindings';
+import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -20,7 +20,7 @@ import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { PublicationMetadataUploader } from './infrastructure/PublicationMetadataUploader';
 
 export type UseCreatePostArgs = {
-  publisher: ProfileOwnedByMeFragment;
+  publisher: ProfileOwnedByMe;
   upload: MetadataUploadHandler;
 };
 

@@ -1,6 +1,6 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { AppId, DecryptionCriteria, TransactionKind } from '../../entities';
+import { AppId, DecryptionCriteria, ProfileId, TransactionKind } from '../../entities';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -8,16 +8,16 @@ import {
 } from '../transactions/DelegableProtocolCallUseCase';
 import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
-import { CollectPolicyConfig, ContentFocus, Locale, Media } from './types';
+import { CollectPolicyConfig, ContentFocus, Locale, MediaObject } from './types';
 
 export type CreatePostRequest = {
   appId?: AppId;
   content?: string;
   contentFocus: ContentFocus;
-  media?: Media[];
+  media?: MediaObject[];
   reference: ReferencePolicyConfig;
   collect: CollectPolicyConfig;
-  profileId: string;
+  profileId: ProfileId;
   kind: TransactionKind.CREATE_POST;
   locale: Locale;
   delegate: boolean;
