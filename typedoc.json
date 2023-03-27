@@ -10,14 +10,12 @@
   "gitRevision": "main",
   "hideGenerator": true,
   "name": "Lens SDK Reference",
-  "out": "doc",
+  "out": "docs",
   "readme": "none",
-  "theme": "markdown",
-  "hideBreadcrumbs": true,
-  "hideInPageTOC": false,
+  "plugin": ["@mxssfd/typedoc-theme"],
+  "theme": "my-theme",
   "disableSources": true,
   "treatWarningsAsErrors": true,
   "intentionallyNotExported": [],
-  // "categorizeByGroup": false,
   "categoryOrder": ["Hooks", "Components", "*"]
 }

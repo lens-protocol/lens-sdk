@@ -8,23 +8,23 @@ importers:
   .:
     specifiers:
       '@changesets/cli': ^2.26.0
+      '@mxssfd/typedoc-theme': ^1.0.6
       '@preconstruct/cli': ^2.3.0
       pnpm-deduplicate: ^0.4.2
       prettier: ^2.8.4
       rimraf: ^4.1.2
       turbo: ^1.8.1
       typedoc: ^0.23.27
-      typedoc-plugin-markdown: ^3.14.0
       typescript: ^4.9.5
     devDependencies:
       '@changesets/cli': 2.26.0
+      '@mxssfd/typedoc-theme': 1.0.6_typedoc@0.23.27
       '@preconstruct/cli': 2.3.0
       pnpm-deduplicate: 0.4.2
       prettier: 2.8.4
       rimraf: 4.1.2
       turbo: 1.8.1
       typedoc: 0.23.27_typescript@4.9.5
-      typedoc-plugin-markdown: 3.14.0_typedoc@0.23.27
       typescript: 4.9.5
 
   examples/nextjs:
@@ -4579,6 +4579,15 @@ packages:
     dependencies:
       '@motionone/dom': 10.15.5
       tslib: 2.5.0
+
+  /@mxssfd/typedoc-theme/1.0.6_typedoc@0.23.27:
+    resolution: {integrity: sha512-GmaVRWWCaL9jIr58uKyXuBS+yn5L4e5BznclGCB+VlDSGHfZEc8GZdVc4ApKFUC3UEtZkS3fWy9S5aJMQttUyQ==}
+    engines: {node: '>= 14'}
+    peerDependencies:
+      typedoc: ^0.23.21
+    dependencies:
+      typedoc: 0.23.27_typescript@4.9.5
+    dev: true
 
   /@next/env/13.1.6:
     resolution: {integrity: sha512-s+W9Fdqh5MFk6ECrbnVmmAOwxKQuhGMT7xXHrkYIBMBcTiOqNWhv5KbJIboKR5STXxNXl32hllnvKaffzFaWQg==}
@@ -10854,19 +10863,6 @@ packages:
       duplexer: 0.1.2
     dev: true
 
-  /handlebars/4.7.7:
-    resolution: {integrity: sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==}
-    engines: {node: '>=0.4.7'}
-    hasBin: true
-    dependencies:
-      minimist: 1.2.8
-      neo-async: 2.6.2
-      source-map: 0.6.1
-      wordwrap: 1.0.0
-    optionalDependencies:
-      uglify-js: 3.17.4
-    dev: true
-
   /har-schema/2.0.0:
     resolution: {integrity: sha512-Oqluz6zhGX8cyRaTQlFMPw80bSJVG2x/cFb8ZPhUILGgHka9SsokCCOQgpveePerqidZOrT14ipqfJb7ILcW5Q==}
     engines: {node: '>=4'}
@@ -16708,15 +16704,6 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: true
 
-  /typedoc-plugin-markdown/3.14.0_typedoc@0.23.27:
-    resolution: {integrity: sha512-UyQLkLRkfTFhLdhSf3RRpA3nNInGn+k6sll2vRXjflaMNwQAAiB61SYbisNZTg16t4K1dt1bPQMMGLrxS0GZ0Q==}
-    peerDependencies:
-      typedoc: '>=0.23.0'
-    dependencies:
-      handlebars: 4.7.7
-      typedoc: 0.23.27_typescript@4.9.5
-    dev: true
-
   /typedoc/0.23.27_typescript@4.9.5:
     resolution: {integrity: sha512-YKjlxX3LEhYbMCkemjlpNh1OKDiFa+ynqP0VRPsH28bEugrMTGI6l8DC6oX5kzFcUKKlYWKpZDSGWszuO/FR3g==}
     engines: {node: '>= 14.14'}
@@ -16764,14 +16751,6 @@ packages:
     optionalDependencies:
       uglify-to-browserify: 1.0.2
     dev: true
-
-  /uglify-js/3.17.4:
-    resolution: {integrity: sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==}
-    engines: {node: '>=0.8.0'}
-    hasBin: true
-    requiresBuild: true
-    dev: true
-    optional: true
 
   /uglify-to-browserify/1.0.2:
     resolution: {integrity: sha512-vb2s1lYx2xBtUgy+ta+b2J/GLVUR+wmpINwHePmPRhOsIVCG2wDzKJ0n14GslH1BifsqVzSOwQhRaCAsZ/nI4Q==}
@@ -17402,10 +17381,6 @@ packages:
   /wordwrap/0.0.2:
     resolution: {integrity: sha512-xSBsCeh+g+dinoBv3GAOWM4LcVVO68wLXRanibtBSdUvkGWQRGeE9P7IwU9EmDDi4jA6L44lz15CGMwdw9N5+Q==}
     engines: {node: '>=0.4.0'}
-    dev: true
-
-  /wordwrap/1.0.0:
-    resolution: {integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==}
     dev: true
 
   /wordwrapjs/4.0.1:
