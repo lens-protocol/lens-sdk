@@ -15,6 +15,10 @@ import { useActiveWallet } from '../wallet';
 
 export type UseProfilesOwnedByMeArgs = PaginatedArgs<WithObserverIdOverride>;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useProfilesOwnedByMe({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,

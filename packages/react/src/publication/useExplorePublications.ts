@@ -26,6 +26,10 @@ export type UseExplorePublicationsArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Discovery
+ * @group Hooks
+ */
 export function useExplorePublications({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,

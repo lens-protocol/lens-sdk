@@ -26,6 +26,10 @@ export type UpdateFollowPolicyOperation = Operation<
   [UpdateFollowPolicyArgs]
 >;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useUpdateFollowPolicy({
   profile,
 }: UseUpdateFollowPolicyArgs): UpdateFollowPolicyOperation {

@@ -20,6 +20,10 @@ export type UseSearchPublicationsArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Discovery
+ * @group Hooks
+ */
 export function useSearchPublications({
   query,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,

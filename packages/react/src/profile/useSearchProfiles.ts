@@ -16,6 +16,10 @@ export type UseSearchProfilesArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Discovery
+ * @group Hooks
+ */
 export function useSearchProfiles({
   query,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,

@@ -29,6 +29,10 @@ export type UnfollowOperation = Operation<
   PendingSigningRequestError | WalletConnectionError | UserRejectedError | PrematureUnfollowError
 >;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useUnfollow({ followee, follower }: UseUnfollowArgs): UnfollowOperation {
   const unfollow = useUnfollowController();
 

@@ -10,6 +10,10 @@ import { useSourcesFromConfig, useLensApolloClient } from '../helpers/arguments'
 import { ReadResult } from '../helpers/reads';
 import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useActiveProfile(): ReadResult<ProfileOwnedByMe | null, UnspecifiedError> {
   const { data: identifier, loading: bootstrapping } = useActiveProfileIdentifier();
 

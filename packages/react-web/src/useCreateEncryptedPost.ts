@@ -11,6 +11,10 @@ export type UseCreateEncryptedPostArgs = {
   upload: MetadataUploadHandler;
 };
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useCreateEncryptedPost(args: UseCreateEncryptedPostArgs) {
   return useCreateEncryptedPostBase({
     ...args,

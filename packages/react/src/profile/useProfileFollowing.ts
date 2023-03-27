@@ -15,6 +15,10 @@ export type UseProfileFollowingArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useProfileFollowing({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,

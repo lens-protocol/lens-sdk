@@ -31,18 +31,27 @@ export type CollectModule = ContentPublication['collectModule'];
 
 export type ReferenceModule = NonNullable<ContentPublication['referenceModule']>;
 
+/**
+ * @group Helpers
+ */
 export function isPostPublication<T extends Typename<string>>(
   publication: T,
 ): publication is PickByTypename<T, 'Post'> {
   return publication.__typename === 'Post';
 }
 
+/**
+ * @group Helpers
+ */
 export function isCommentPublication<T extends Typename<string>>(
   publication: T,
 ): publication is PickByTypename<T, 'Comment'> {
   return publication.__typename === 'Comment';
 }
 
+/**
+ * @group Helpers
+ */
 export function isMirrorPublication<T extends Typename<string>>(
   publication: T,
 ): publication is PickByTypename<T, 'Mirror'> {
@@ -97,12 +106,18 @@ export type GatedPost = Prettify<Gated<Post>>;
 
 export type GatedPublication = GatedComment | GatedPost;
 
+/**
+ * @group Helpers
+ */
 export function isGatedPublication(
   publication: ContentPublication,
 ): publication is GatedPublication {
   return publication.isGated;
 }
 
+/**
+ * @group Helpers
+ */
 export function isContentPublication(
   publication: AnyPublication,
 ): publication is ContentPublication {
@@ -111,6 +126,9 @@ export function isContentPublication(
 
 export type PublicationOwnedByMe = Overwrite<AnyPublication, { profile: ProfileOwnedByMe }>;
 
+/**
+ * @group Helpers
+ */
 export function isPublicationOwnedByMe(
   publication: AnyPublication,
 ): publication is PublicationOwnedByMe {

@@ -29,6 +29,10 @@ export type UpdateProfileDetailsOperation = Operation<
   [UpdateProfileDetailsArgs]
 >;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useUpdateProfileDetails({
   profile,
   upload,

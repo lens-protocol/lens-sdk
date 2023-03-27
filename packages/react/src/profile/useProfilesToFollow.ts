@@ -10,6 +10,10 @@ import { useReadResult } from '../helpers/reads';
 
 export type UseProfilesToFollowArgs = WithObserverIdOverride;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useProfilesToFollow({ observerId }: UseProfilesToFollowArgs = {}) {
   return useReadResult(
     useUnderlyingQuery(

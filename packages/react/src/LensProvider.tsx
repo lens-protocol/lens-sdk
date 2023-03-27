@@ -43,6 +43,7 @@ function useLatestCallback<T extends Function>(callback: T) {
 /**
  * Given {@link LensConfig} it manages the lifecycle and internal state management of the Lens SDK
  *
+ * @group Components
  * @param props - {@link LensProviderProps}
  */
 export function LensProvider({ children, ...props }: LensProviderProps) {

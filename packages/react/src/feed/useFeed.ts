@@ -44,6 +44,11 @@ export type UseFeedArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Discovery
+ * @group Hooks
+ * @param args - {@link UseFeedArgs}
+ */
 export function useFeed({
   metadataFilter,
   restrictEventTypesTo,

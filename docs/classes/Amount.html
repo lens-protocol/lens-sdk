@@ -50,6 +50,12 @@
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#eq" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
 <div>eq
 <div class="menu-item-desc">Equality check for Amounts of the same Asset.</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#erc20" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>erc20
+<div class="menu-item-desc">Creates an Amount of the specified Erc20 with the specified `value`.</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#ether" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>ether
+<div class="menu-item-desc">Creates an Ether Amount with the specified `value`.</div></div></a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#gt" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
 <div>gt
 <div class="menu-item-desc">Greater than check for Amounts of the same Asset.</div></div></a></li>
@@ -65,6 +71,9 @@
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#lte" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
 <div>lte
 <div class="menu-item-desc">Less than or equal check for Amounts of the same Asset.</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#matic" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>matic
+<div class="menu-item-desc">Creates an Matic Amount with the specified `value`.</div></div></a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#mul" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
 <div>mul
 <div class="menu-item-desc">Product of an Amount and a scalar factor.</div></div></a></li>
@@ -83,15 +92,6 @@
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#toSignificantDigits" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
 <div>to<wbr/>Significant<wbr/>Digits
 <div class="menu-item-desc">Formats the Amount value to its maximum precision using a fixed-point notation.</div></div></a></li>
-<li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#erc20" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
-<div>erc20
-<div class="menu-item-desc">Creates an Amount of the specified Erc20 with the specified `value`.</div></div></a></li>
-<li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#ether" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
-<div>ether
-<div class="menu-item-desc">Creates an Ether Amount with the specified `value`.</div></div></a></li>
-<li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#matic" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
-<div>matic
-<div class="menu-item-desc">Creates an Matic Amount with the specified `value`.</div></div></a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Amount.html#usd" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
 <div>usd
 <div class="menu-item-desc">Creates an USD Fiat Amount with the specified `value`.</div></div></a></li></ul></li></ul></nav></div>
@@ -135,20 +135,20 @@ It offers a consistent interface to perform arithmetic operations on amounts.</p
 <a href="Amount.html#convert" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>convert</span></a>
 <a href="Amount.html#div" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>div</span></a>
 <a href="Amount.html#eq" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>eq</span></a>
+<a href="Amount.html#erc20" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>erc20</span></a>
+<a href="Amount.html#ether" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>ether</span></a>
 <a href="Amount.html#gt" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>gt</span></a>
 <a href="Amount.html#gte" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>gte</span></a>
 <a href="Amount.html#isZero" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>is<wbr/>Zero</span></a>
 <a href="Amount.html#lt" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>lt</span></a>
 <a href="Amount.html#lte" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>lte</span></a>
+<a href="Amount.html#matic" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>matic</span></a>
 <a href="Amount.html#mul" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>mul</span></a>
 <a href="Amount.html#sub" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>sub</span></a>
 <a href="Amount.html#toBigDecimal" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Big<wbr/>Decimal</span></a>
 <a href="Amount.html#toFixed" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Fixed</span></a>
 <a href="Amount.html#toNumber" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Number</span></a>
 <a href="Amount.html#toSignificantDigits" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Significant<wbr/>Digits</span></a>
-<a href="Amount.html#erc20" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>erc20</span></a>
-<a href="Amount.html#ether" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>ether</span></a>
-<a href="Amount.html#matic" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>matic</span></a>
 <a href="Amount.html#usd" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>usd</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
@@ -197,7 +197,7 @@ It offers a consistent interface to perform arithmetic operations on amounts.</p
 <p>The new Amount will have the <a href="../types/Asset.html">Asset</a> of the <code>rate</code> parameter.</p>
 
 <h3>Example</h3><p>Create the USD equivalent of an Ether Amount given the ETH-USD rate:</p>
-<pre><code class="language-ts"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">etherAmount</span><span class="hl-1"> = </span><span class="hl-3">Amount</span><span class="hl-1">.</span><span class="hl-4">ether</span><span class="hl-1">(</span><span class="hl-5">&#39;1&#39;</span><span class="hl-1">); </span><span class="hl-6">// Amount&lt;Ether&gt;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">rate</span><span class="hl-1"> = </span><span class="hl-3">Amount</span><span class="hl-1">.</span><span class="hl-4">usd</span><span class="hl-1">(</span><span class="hl-5">&#39;0.0006&#39;</span><span class="hl-1">); </span><span class="hl-6">// Amount&lt;Fiat&gt;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">usdAmount</span><span class="hl-1"> = </span><span class="hl-3">etherAmount</span><span class="hl-1">.</span><span class="hl-4">convert</span><span class="hl-1">(</span><span class="hl-3">rate</span><span class="hl-1">); </span><span class="hl-6">// Amount&lt;Fiat&gt;</span>
+<pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">etherAmount</span><span class="hl-1"> = </span><span class="hl-2">Amount</span><span class="hl-1">.</span><span class="hl-5">ether</span><span class="hl-1">(</span><span class="hl-3">&#39;1&#39;</span><span class="hl-1">); </span><span class="hl-7">// Amount&lt;Ether&gt;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">rate</span><span class="hl-1"> = </span><span class="hl-2">Amount</span><span class="hl-1">.</span><span class="hl-5">usd</span><span class="hl-1">(</span><span class="hl-3">&#39;0.0006&#39;</span><span class="hl-1">); </span><span class="hl-7">// Amount&lt;Fiat&gt;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">usdAmount</span><span class="hl-1"> = </span><span class="hl-2">etherAmount</span><span class="hl-1">.</span><span class="hl-5">convert</span><span class="hl-1">(</span><span class="hl-2">rate</span><span class="hl-1">); </span><span class="hl-7">// Amount&lt;Fiat&gt;</span>
 </code></pre>
 </div>
 <section class="tsd-panel tsd-type-parameters">
@@ -243,6 +243,39 @@ It offers a consistent interface to perform arithmetic operations on amounts.</p
 <li>
 <h5>amount: <a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="erc20" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>erc20</span><a href="#erc20" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="erc20.erc20-1">erc20<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>asset<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span>, value<span class="tsd-signature-symbol">: </span><a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#erc20.erc20-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates an Amount of the specified <a href="Erc20.html">Erc20</a> with the specified <code>value</code>.</p>
+</div>
+<section class="tsd-panel tsd-type-parameters">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameters">
+<li>
+<h4>T<span class="tsd-signature-symbol"> extends </span><a href="Erc20.html" class="tsd-signature-type" data-tsd-kind="Class">Erc20</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>asset: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5></li>
+<li>
+<h5>value: <a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="ether" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>ether</span><a href="#ether" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="ether.ether-1">ether<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><a href="Ether.html" class="tsd-signature-type" data-tsd-kind="Class">Ether</a><span class="tsd-signature-symbol">&gt;</span><a href="#ether.ether-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates an <a href="Ether.html">Ether</a> Amount with the specified <code>value</code>.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>value: <a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><a href="Ether.html" class="tsd-signature-type" data-tsd-kind="Class">Ether</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="gt" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>gt</span><a href="#gt" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -313,6 +346,19 @@ It offers a consistent interface to perform arithmetic operations on amounts.</p
 <li>
 <h5>amount: <a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="matic" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>matic</span><a href="#matic" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="matic.matic-1">matic<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><a href="Matic.html" class="tsd-signature-type" data-tsd-kind="Class">Matic</a><span class="tsd-signature-symbol">&gt;</span><a href="#matic.matic-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates an <a href="Matic.html">Matic</a> Amount with the specified <code>value</code>.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>value: <a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><a href="Matic.html" class="tsd-signature-type" data-tsd-kind="Class">Matic</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="mul" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>mul</span><a href="#mul" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -397,52 +443,6 @@ It offers a consistent interface to perform arithmetic operations on amounts.</p
 <li>
 <h5>significantDigits: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="erc20" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>erc20</span><a href="#erc20" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="erc20.erc20-1">erc20<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>asset<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span>, value<span class="tsd-signature-symbol">: </span><a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#erc20.erc20-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Creates an Amount of the specified <a href="Erc20.html">Erc20</a> with the specified <code>value</code>.</p>
-</div>
-<section class="tsd-panel tsd-type-parameters">
-<h4>Type Parameters</h4>
-<ul class="tsd-type-parameters">
-<li>
-<h4>T<span class="tsd-signature-symbol"> extends </span><a href="Erc20.html" class="tsd-signature-type" data-tsd-kind="Class">Erc20</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>asset: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5></li>
-<li>
-<h5>value: <a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="ether" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>ether</span><a href="#ether" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="ether.ether-1">ether<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><a href="Ether.html" class="tsd-signature-type" data-tsd-kind="Class">Ether</a><span class="tsd-signature-symbol">&gt;</span><a href="#ether.ether-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Creates an <a href="Ether.html">Ether</a> Amount with the specified <code>value</code>.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>value: <a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><a href="Ether.html" class="tsd-signature-type" data-tsd-kind="Class">Ether</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="matic" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>matic</span><a href="#matic" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="matic.matic-1">matic<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><a href="Matic.html" class="tsd-signature-type" data-tsd-kind="Class">Matic</a><span class="tsd-signature-symbol">&gt;</span><a href="#matic.matic-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Creates an <a href="Matic.html">Matic</a> Amount with the specified <code>value</code>.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>value: <a href="../types/AmountValue.html" class="tsd-signature-type" data-tsd-kind="Type alias">AmountValue</a></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="Amount.html" class="tsd-signature-type" data-tsd-kind="Class">Amount</a><span class="tsd-signature-symbol">&lt;</span><a href="Matic.html" class="tsd-signature-type" data-tsd-kind="Class">Matic</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="usd" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>usd</span><a href="#usd" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">

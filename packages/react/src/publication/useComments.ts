@@ -21,6 +21,10 @@ export type UseCommentsArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useComments({
   metadataFilter,
   commentsOf,

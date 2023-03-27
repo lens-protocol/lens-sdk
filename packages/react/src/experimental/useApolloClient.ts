@@ -25,6 +25,8 @@ import { useSharedDependencies } from '../shared';
  * ```
  *
  * @experimental This hook is experimental and may change in the future.
+ * @category Misc
+ * @group Hooks
  */
 export function useApolloClient(): ApolloClient<NormalizedCacheObject> {
   const { apolloClient } = useSharedDependencies();

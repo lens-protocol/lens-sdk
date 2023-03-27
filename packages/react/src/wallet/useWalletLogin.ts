@@ -14,6 +14,10 @@ export type WalletLoginOperation = Operation<
   [Signer, string?]
 >;
 
+/**
+ * @category Wallet
+ * @group Hooks
+ */
 export function useWalletLogin(): WalletLoginOperation {
   const loginWallet = useWalletLoginController();
 

@@ -38,6 +38,10 @@ export type CreateCommentOperation = Operation<
   [CreateCommentArgs]
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useCreateComment({
   publisher,
   upload,

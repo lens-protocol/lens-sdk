@@ -16,6 +16,10 @@ export type UseProfilesOwnedByArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useProfilesOwnedBy({
   address,
   observerId,

@@ -19,6 +19,10 @@ export type CreateProfileOperation = Operation<
   [CreateProfileArgs]
 >;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useCreateProfile(): CreateProfileOperation {
   const createProfile = useCreateProfileController();
 

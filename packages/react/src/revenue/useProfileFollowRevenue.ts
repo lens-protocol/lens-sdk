@@ -11,6 +11,10 @@ export type UseProfileFollowRevenueArgs = {
   profileId: ProfileId;
 };
 
+/**
+ * @category Revenues
+ * @group Hooks
+ */
 export function useProfileFollowRevenue({
   profileId,
 }: UseProfileFollowRevenueArgs): ReadResult<RevenueAggregate[]> {

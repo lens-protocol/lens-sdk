@@ -4,6 +4,10 @@ import { ReadResult } from '../helpers/reads';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
 import { useActiveProfileIdentifierVar } from './adapters/ActiveProfilePresenter';
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useActiveProfileIdentifier(): ReadResult<ProfileIdentifier | null> {
   const state = useAppState();
   const identifier = useActiveProfileIdentifierVar();

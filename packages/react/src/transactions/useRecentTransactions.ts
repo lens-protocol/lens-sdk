@@ -10,6 +10,10 @@ export type {
   BroadcastedTransactionState,
 } from '@lens-protocol/api-bindings';
 
+/**
+ * @category Misc
+ * @group Hooks
+ */
 export function useRecentTransactions() {
   const { transactionQueue } = useSharedDependencies();
 

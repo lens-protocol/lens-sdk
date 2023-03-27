@@ -38,6 +38,10 @@ export type CreatePostOperation = Operation<
   [CreatePostArgs]
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreatePostOperation {
   const {
     appId,

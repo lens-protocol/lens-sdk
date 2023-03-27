@@ -77,6 +77,10 @@ export type FollowOperation = Operation<
   | WalletConnectionError
 >;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useFollow({ followee, follower }: UseFollowArgs): FollowOperation {
   const follow = useFollowController();
 

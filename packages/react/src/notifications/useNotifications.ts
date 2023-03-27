@@ -26,6 +26,11 @@ export type Notification =
   | NewMentionNotification
   | NewReactionNotification;
 
+/**
+ * @category Notifications
+ * @group Hooks
+ * @param props - {@link UseNotificationsArgs}
+ */
 export function useNotifications({
   notificationTypes,
   profileId,

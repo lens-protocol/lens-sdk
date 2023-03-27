@@ -11,6 +11,10 @@ export type UseCreateEncryptedCommentArgs = {
   upload: MetadataUploadHandler;
 };
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useCreateEncryptedComment(args: UseCreateEncryptedCommentArgs) {
   return useCreateEncryptedCommentBase({
     ...args,

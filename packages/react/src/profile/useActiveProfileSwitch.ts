@@ -6,6 +6,10 @@ import { useSwitchActiveProfileController } from './adapters/useSwitchActiveProf
 
 export type ActiveProfileSwitchOperation = Operation<void, never, [ProfileId]>;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useActiveProfileSwitch(): ActiveProfileSwitchOperation {
   const switchActiveProfile = useSwitchActiveProfileController();
 

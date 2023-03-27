@@ -19,6 +19,10 @@ export type UseExploreProfilesArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Discovery
+ * @group Hooks
+ */
 export function useExploreProfiles({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,

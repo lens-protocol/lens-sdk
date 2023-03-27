@@ -15,6 +15,10 @@ type UseCollectablesArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useCollectedPublications({
   walletAddress,
   observerId,

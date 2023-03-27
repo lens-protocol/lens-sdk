@@ -49,6 +49,10 @@ export type CreateEncryptedCommentOperation = Operation<
   [CreateEncryptedCommentArgs]
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useCreateEncryptedComment({
   encryption,
   publisher,

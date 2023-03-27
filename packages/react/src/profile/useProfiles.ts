@@ -30,6 +30,9 @@ export type UseProfilesArgs = PaginatedArgs<
 /**
  * Get a paginated list of profiles by either their handles or their profile Ids.
  *
+ * @category Profiles
+ * @group Hooks
+ *
  * @param args - {@link UseProfilesArgs}
  *
  * @example Get profiles by handles

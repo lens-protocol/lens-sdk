@@ -23,6 +23,10 @@ export type UseProfileArgs = WithObserverIdOverride<
   XOR<UseProfileByIdArgs, UseProfileByHandleArgs>
 >;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useProfile({
   observerId,
   ...request

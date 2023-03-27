@@ -10,6 +10,11 @@ export type UseUnreadNotificationCountArgs = {
   profileId: ProfileId;
 };
 
+/**
+ * @category Notifications
+ * @group Hooks
+ * @param props - {@link UseUnreadNotificationCountArgs}
+ */
 export function useUnreadNotificationCount({ profileId }: UseUnreadNotificationCountArgs) {
   const { notificationStorage } = useSharedDependencies();
   const [unreadNotificationCount, setUnreadNotificationCount] = useState<number>(0);

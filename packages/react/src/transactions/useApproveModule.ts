@@ -29,6 +29,10 @@ export type ApproveModuleOperation = Operation<
   [ApproveModuleArgs]
 >;
 
+/**
+ * @category Misc
+ * @group Hooks
+ */
 export function useApproveModule(): ApproveModuleOperation {
   const setAllowance = useApproveModuleController();
 
