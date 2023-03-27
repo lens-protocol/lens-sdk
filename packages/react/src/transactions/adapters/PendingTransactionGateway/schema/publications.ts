@@ -36,16 +36,67 @@ const NftMetadataSchema = z.object({
   attributes: z.array(NftAttributeSchema),
 });
 
-const ChargeCollectPolicySchema = z.object({
+const RecipientWithSplitSchema = z.object({
+  recipient: z.string(),
+  split: z.number(),
+});
+
+const AaveChargeCollectPolicySchema = z.object({
   type: z.literal(CollectPolicyType.CHARGE),
   fee: Erc20AmountSchema,
-  recipient: z.string(),
+  followersOnly: z.boolean(),
   metadata: NftMetadataSchema,
   mirrorReward: z.number(),
   collectLimit: z.number().optional(),
-  timeLimited: z.boolean(),
-  followersOnly: z.boolean(),
+
+  recipient: z.string(),
+  depositToAave: z.literal(true),
+  endTimestamp: z.number().optional(),
 });
+
+const VaultChargeCollectPolicySchema = z.object({
+  type: z.literal(CollectPolicyType.CHARGE),
+  fee: Erc20AmountSchema,
+  followersOnly: z.boolean(),
+  metadata: NftMetadataSchema,
+  mirrorReward: z.number(),
+  collectLimit: z.number().optional(),
+
+  recipient: z.string(),
+  vault: z.string(),
+  endTimestamp: z.number().optional(),
+});
+
+const MultirecipientChargeCollectPolicySchema = z.object({
+  type: z.literal(CollectPolicyType.CHARGE),
+  fee: Erc20AmountSchema,
+  followersOnly: z.boolean(),
+  metadata: NftMetadataSchema,
+  mirrorReward: z.number(),
+  collectLimit: z.number().optional(),
+
+  recipients: z.array(RecipientWithSplitSchema),
+  endTimestamp: z.number().optional(),
+});
+
+const SimpleChargeCollectPolicySchema = z.object({
+  type: z.literal(CollectPolicyType.CHARGE),
+  fee: Erc20AmountSchema,
+  followersOnly: z.boolean(),
+  metadata: NftMetadataSchema,
+  mirrorReward: z.number(),
+  collectLimit: z.number().optional(),
+
+  recipient: z.string(),
+  timeLimited: z.boolean(),
+});
+
+const ChargeCollectPolicySchema = z.union([
+  SimpleChargeCollectPolicySchema,
+  MultirecipientChargeCollectPolicySchema,
+  VaultChargeCollectPolicySchema,
+  AaveChargeCollectPolicySchema,
+]);
 
 const FreeCollectPolicySchema = z.object({
   type: z.literal(CollectPolicyType.FREE),

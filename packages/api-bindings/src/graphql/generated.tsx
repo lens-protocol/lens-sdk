@@ -4447,6 +4447,40 @@ export type LimitedTimedFeeCollectModuleSettingsFragment = {
   amount: ModuleFeeAmountFragment;
 };
 
+export type MultirecipientFeeCollectModuleSettingsFragment = {
+  __typename: 'MultirecipientFeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  referralFee: number;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmountFragment;
+  recipients: Array<{ recipient: EthereumAddress; split: number }>;
+};
+
+export type Erc4626FeeCollectModuleSettingsFragment = {
+  __typename: 'ERC4626FeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  vault: string;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmountFragment;
+};
+
+export type AaveFeeCollectModuleSettingsFragment = {
+  __typename: 'AaveFeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmountFragment;
+};
+
 export type RevertCollectModuleSettingsFragment = {
   __typename: 'RevertCollectModuleSettings';
   contractAddress: string;
@@ -4464,11 +4498,11 @@ export type TimedFeeCollectModuleSettingsFragment = {
 
 type CollectModule_AaveFeeCollectModuleSettings_Fragment = {
   __typename: 'AaveFeeCollectModuleSettings';
-};
+} & AaveFeeCollectModuleSettingsFragment;
 
 type CollectModule_Erc4626FeeCollectModuleSettings_Fragment = {
   __typename: 'ERC4626FeeCollectModuleSettings';
-};
+} & Erc4626FeeCollectModuleSettingsFragment;
 
 type CollectModule_FeeCollectModuleSettings_Fragment = {
   __typename: 'FeeCollectModuleSettings';
@@ -4488,7 +4522,7 @@ type CollectModule_LimitedTimedFeeCollectModuleSettings_Fragment = {
 
 type CollectModule_MultirecipientFeeCollectModuleSettings_Fragment = {
   __typename: 'MultirecipientFeeCollectModuleSettings';
-};
+} & MultirecipientFeeCollectModuleSettingsFragment;
 
 type CollectModule_RevertCollectModuleSettings_Fragment = {
   __typename: 'RevertCollectModuleSettings';
@@ -6063,6 +6097,55 @@ export const TimedFeeCollectModuleSettingsFragmentDoc = gql`
   }
   ${ModuleFeeAmountFragmentDoc}
 `;
+export const MultirecipientFeeCollectModuleSettingsFragmentDoc = gql`
+  fragment MultirecipientFeeCollectModuleSettings on MultirecipientFeeCollectModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    collectLimitOptional: collectLimit
+    contractAddress
+    followerOnly
+    endTimestampOptional: endTimestamp
+    recipients {
+      recipient
+      split
+    }
+    referralFee
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const Erc4626FeeCollectModuleSettingsFragmentDoc = gql`
+  fragment Erc4626FeeCollectModuleSettings on ERC4626FeeCollectModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    collectLimitOptional: collectLimit
+    contractAddress
+    followerOnly
+    endTimestampOptional: endTimestamp
+    recipient
+    referralFee
+    vault
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
+export const AaveFeeCollectModuleSettingsFragmentDoc = gql`
+  fragment AaveFeeCollectModuleSettings on AaveFeeCollectModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    collectLimitOptional: collectLimit
+    contractAddress
+    followerOnly
+    endTimestampOptional: endTimestamp
+    recipient
+    referralFee
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
 export const CollectModuleFragmentDoc = gql`
   fragment CollectModule on CollectModule {
     __typename
@@ -6084,6 +6167,15 @@ export const CollectModuleFragmentDoc = gql`
     ... on TimedFeeCollectModuleSettings {
       ...TimedFeeCollectModuleSettings
     }
+    ... on MultirecipientFeeCollectModuleSettings {
+      ...MultirecipientFeeCollectModuleSettings
+    }
+    ... on ERC4626FeeCollectModuleSettings {
+      ...Erc4626FeeCollectModuleSettings
+    }
+    ... on AaveFeeCollectModuleSettings {
+      ...AaveFeeCollectModuleSettings
+    }
   }
   ${FreeCollectModuleSettingsFragmentDoc}
   ${FeeCollectModuleSettingsFragmentDoc}
@@ -6091,6 +6183,9 @@ export const CollectModuleFragmentDoc = gql`
   ${LimitedTimedFeeCollectModuleSettingsFragmentDoc}
   ${RevertCollectModuleSettingsFragmentDoc}
   ${TimedFeeCollectModuleSettingsFragmentDoc}
+  ${MultirecipientFeeCollectModuleSettingsFragmentDoc}
+  ${Erc4626FeeCollectModuleSettingsFragmentDoc}
+  ${AaveFeeCollectModuleSettingsFragmentDoc}
 `;
 export const ReferenceModuleFragmentDoc = gql`
   fragment ReferenceModule on ReferenceModule {

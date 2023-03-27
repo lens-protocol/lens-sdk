@@ -71,6 +71,49 @@ fragment LimitedTimedFeeCollectModuleSettings on LimitedTimedFeeCollectModuleSet
   referralFee
 }
 
+fragment MultirecipientFeeCollectModuleSettings on MultirecipientFeeCollectModuleSettings {
+  __typename
+  amount {
+    ...ModuleFeeAmount
+  }
+  collectLimitOptional: collectLimit
+  contractAddress
+  followerOnly
+  endTimestampOptional: endTimestamp
+  recipients {
+    recipient
+    split
+  }
+  referralFee
+}
+
+fragment Erc4626FeeCollectModuleSettings on ERC4626FeeCollectModuleSettings {
+  __typename
+  amount {
+    ...ModuleFeeAmount
+  }
+  collectLimitOptional: collectLimit
+  contractAddress
+  followerOnly
+  endTimestampOptional: endTimestamp
+  recipient
+  referralFee
+  vault
+}
+
+fragment AaveFeeCollectModuleSettings on AaveFeeCollectModuleSettings {
+  __typename
+  amount {
+    ...ModuleFeeAmount
+  }
+  collectLimitOptional: collectLimit
+  contractAddress
+  followerOnly
+  endTimestampOptional: endTimestamp
+  recipient
+  referralFee
+}
+
 fragment RevertCollectModuleSettings on RevertCollectModuleSettings {
   __typename
   contractAddress
@@ -113,6 +156,18 @@ fragment CollectModule on CollectModule {
 
   ... on TimedFeeCollectModuleSettings {
     ...TimedFeeCollectModuleSettings
+  }
+
+  ... on MultirecipientFeeCollectModuleSettings {
+    ...MultirecipientFeeCollectModuleSettings
+  }
+
+  ... on ERC4626FeeCollectModuleSettings {
+    ...Erc4626FeeCollectModuleSettings
+  }
+
+  ... on AaveFeeCollectModuleSettings {
+    ...AaveFeeCollectModuleSettings
   }
 }
 

@@ -41,22 +41,72 @@ export type NftMetadata = {
   attributes: NftAttribute[];
 };
 
+export type RecipientWithSplit = {
+  recipient: EthereumAddress;
+  split: number;
+};
+
 export enum CollectPolicyType {
   CHARGE = 'CHARGE',
   FREE = 'FREE',
   NO_COLLECT = 'NO_COLLECT',
 }
 
-export type ChargeCollectPolicy = {
+export type AaveChargeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
   fee: Amount<Erc20>;
-  recipient: EthereumAddress;
+  followersOnly: boolean;
   metadata: NftMetadata;
   mirrorReward: number;
   collectLimit?: number;
-  timeLimited: boolean;
-  followersOnly: boolean;
+
+  recipient: EthereumAddress;
+  depositToAave: true;
+  endTimestamp?: number;
 };
+
+export type VaultChargeCollectPolicy = {
+  type: CollectPolicyType.CHARGE;
+  fee: Amount<Erc20>;
+  followersOnly: boolean;
+  metadata: NftMetadata;
+  mirrorReward: number;
+  collectLimit?: number;
+
+  recipient: EthereumAddress;
+  vault: EthereumAddress;
+  endTimestamp?: number;
+};
+
+export type MultirecipientChargeCollectPolicy = {
+  type: CollectPolicyType.CHARGE;
+  fee: Amount<Erc20>;
+  followersOnly: boolean;
+  metadata: NftMetadata;
+  mirrorReward: number;
+  collectLimit?: number;
+
+  recipients: RecipientWithSplit[];
+  endTimestamp?: number;
+};
+
+export type SimpleChargeCollectPolicy = {
+  type: CollectPolicyType.CHARGE;
+  fee: Amount<Erc20>;
+  followersOnly: boolean;
+  metadata: NftMetadata;
+  mirrorReward: number;
+  collectLimit?: number;
+
+  recipient: EthereumAddress;
+  timeLimited: boolean;
+};
+
+export type ChargeCollectPolicy =
+  | SimpleChargeCollectPolicy
+  | MultirecipientChargeCollectPolicy
+  | VaultChargeCollectPolicy
+  | AaveChargeCollectPolicy;
 
 export type FreeCollectPolicy = {
   type: CollectPolicyType.FREE;
