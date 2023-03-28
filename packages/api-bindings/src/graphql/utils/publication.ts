@@ -261,6 +261,7 @@ export function resolveCollectPolicy({
         referralFee: collectModule.referralFee,
         followerOnly: collectModule.followerOnly,
         collectNftAddress,
+        contractAddress: collectModule.contractAddress,
       };
     case 'LimitedFeeCollectModuleSettings':
       return {
@@ -274,6 +275,7 @@ export function resolveCollectPolicy({
         collectLimit: parseInt(collectModule.collectLimit),
         followerOnly: collectModule.followerOnly,
         collectNftAddress,
+        contractAddress: collectModule.contractAddress,
       };
     case 'TimedFeeCollectModuleSettings':
       return {
@@ -287,6 +289,7 @@ export function resolveCollectPolicy({
         endTimestamp: collectModule.endTimestamp,
         followerOnly: collectModule.followerOnly,
         collectNftAddress,
+        contractAddress: collectModule.contractAddress,
       };
     case 'LimitedTimedFeeCollectModuleSettings':
       return {
@@ -302,6 +305,7 @@ export function resolveCollectPolicy({
         endTimestamp: collectModule.endTimestamp,
         followerOnly: collectModule.followerOnly,
         collectNftAddress,
+        contractAddress: collectModule.contractAddress,
       };
     case 'FreeCollectModuleSettings':
       return {
@@ -309,6 +313,7 @@ export function resolveCollectPolicy({
         state: resolveNotFollower(collectModule, profile) ?? CollectState.CAN_BE_COLLECTED,
         followerOnly: collectModule.followerOnly,
         collectNftAddress,
+        contractAddress: collectModule.contractAddress,
       };
     case 'MultirecipientFeeCollectModuleSettings':
     case 'ERC4626FeeCollectModuleSettings':
@@ -328,6 +333,7 @@ export function resolveCollectPolicy({
         endTimestamp: collectModule.endTimestampOptional,
         followerOnly: collectModule.followerOnly,
         collectNftAddress,
+        contractAddress: collectModule.contractAddress,
       };
     case 'RevertCollectModuleSettings':
     case 'UnknownCollectModuleSettings':

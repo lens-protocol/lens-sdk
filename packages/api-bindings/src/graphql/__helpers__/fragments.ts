@@ -241,6 +241,7 @@ function mockNoFeeCollectPolicy(overrides?: Partial<NoFeeCollectPolicy>): NoFeeC
     state: CollectState.CAN_BE_COLLECTED,
     followerOnly: false,
     collectNftAddress: mockEthereumAddress(),
+    contractAddress: mockEthereumAddress(),
     ...overrides,
   };
 }

@@ -1,5 +1,5 @@
 import { CollectPolicyType } from '@lens-protocol/domain/use-cases/publications';
-import { Erc20Amount } from '@lens-protocol/shared-kernel';
+import { Erc20Amount, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 export enum CollectState {
   CAN_BE_COLLECTED = 'CAN_BE_COLLECTED',
@@ -15,14 +15,16 @@ export type FeeCollectPolicy = {
   amount: Erc20Amount;
   referralFee: number;
   followerOnly: boolean;
-  collectNftAddress: string | null;
+  collectNftAddress: EthereumAddress | null;
+  contractAddress: EthereumAddress;
 };
 
 export type NoFeeCollectPolicy = {
   type: CollectPolicyType.FREE;
   state: CollectState.CAN_BE_COLLECTED | CollectState.NOT_A_FOLLOWER;
   followerOnly: boolean;
-  collectNftAddress: string | null;
+  collectNftAddress: EthereumAddress | null;
+  contractAddress: EthereumAddress;
 };
 
 export type LimitedFeeCollectPolicy = {
@@ -35,7 +37,8 @@ export type LimitedFeeCollectPolicy = {
   referralFee: number;
   followerOnly: boolean;
   collectLimit: number;
-  collectNftAddress: string | null;
+  collectNftAddress: EthereumAddress | null;
+  contractAddress: EthereumAddress;
 };
 
 export type TimedFeeCollectPolicy = {
@@ -48,7 +51,8 @@ export type TimedFeeCollectPolicy = {
   referralFee: number;
   followerOnly: boolean;
   endTimestamp: string;
-  collectNftAddress: string | null;
+  collectNftAddress: EthereumAddress | null;
+  contractAddress: EthereumAddress;
 };
 
 export type LimitedTimedFeeCollectPolicy = {
@@ -63,7 +67,8 @@ export type LimitedTimedFeeCollectPolicy = {
   followerOnly: boolean;
   collectLimit: number;
   endTimestamp: string;
-  collectNftAddress: string | null;
+  collectNftAddress: EthereumAddress | null;
+  contractAddress: EthereumAddress;
 };
 
 export type MultirecipientFeeCollectPolicy = {
@@ -78,7 +83,8 @@ export type MultirecipientFeeCollectPolicy = {
   followerOnly: boolean;
   collectLimit: number | null;
   endTimestamp: string | null;
-  collectNftAddress: string | null;
+  collectNftAddress: EthereumAddress | null;
+  contractAddress: EthereumAddress;
 };
 
 export type VaultFeeCollectPolicy = {
@@ -93,7 +99,8 @@ export type VaultFeeCollectPolicy = {
   followerOnly: boolean;
   collectLimit: number | null;
   endTimestamp: string | null;
-  collectNftAddress: string | null;
+  collectNftAddress: EthereumAddress | null;
+  contractAddress: EthereumAddress;
 };
 
 export type AaveFeeCollectPolicy = {
@@ -108,7 +115,8 @@ export type AaveFeeCollectPolicy = {
   followerOnly: boolean;
   collectLimit: number | null;
   endTimestamp: string | null;
-  collectNftAddress: string | null;
+  collectNftAddress: EthereumAddress | null;
+  contractAddress: EthereumAddress;
 };
 
 export type NoCollectPolicy = {
