@@ -20,8 +20,46 @@ export type CreateProfileOperation = Operation<
 >;
 
 /**
+ * `useCreateProfile` is a hook that lets you create a new profile
+ *
+ * The hook `execute` function resolves with a {@link Result} when the corresponding transaction is settled.
+ * You can use the {@link Success.isSuccess | `Result.isSuccess`} (or {@link Failure.isFailure | `Result.isFailure`}) method
+ * to determine the outcome of the operation.
+ *
  * @category Profiles
  * @group Hooks
+ *
+ * @example
+ * ```tsx
+ * import { useCreateProfile } from '@lens-protocol/react-web';
+ *
+ * function CreateProfile() {
+ *   const { execute, isPending } = useCreateProfile();
+ *
+ *   const createProfile = async (handle: string) => {
+ *     const result = await execute({ handle });
+ *
+ *     if (result.isSuccess()) {
+ *       console.log("Profile created!");
+ *     } else {
+ *       console.log("Error: ", result.error.message);
+ *     }
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       <button
+ *         disabled={isPending}
+ *         onClick={() => {
+ *           createProfile("my-new-profile");
+ *         }}
+ *       >
+ *         Create profile
+ *       </button>
+ *     </div>
+ *   );
+ * }
+ * ```
  */
 export function useCreateProfile(): CreateProfileOperation {
   const createProfile = useCreateProfileController();
