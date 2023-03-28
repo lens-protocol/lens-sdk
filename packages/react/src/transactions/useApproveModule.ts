@@ -30,8 +30,40 @@ export type ApproveModuleOperation = Operation<
 >;
 
 /**
+ * `useApproveModule` is a hook that lets you approve a Lens module to access the authenticated wallet Erc20 for the purpose of paying a fee
+ *
+ * You MUST be authenticated via {@link useWalletLogin} to use this hook.
+ *
  * @category Misc
  * @group Hooks
+ *
+ * @example Approve a collect module for the amount specified in the publication collect policy
+ * ```tsx
+ * import { useApproveModule, CollectPolicyType, CollectablePublication, TokenAllowanceLimit } from '@lens-protocol/react-web';
+ *
+ * function ApproveCollect({ publication }: { publication: CollectablePublication }) {
+ *   const approveModule = useApproveModule();
+ *
+ *   const handleClick = async () => {
+ *     if (publication.collectPolicy.type === CollectPolicyType.CHARGE) {
+ *       const result = await approveModule({
+ *         // The collect fee amount
+ *         amount: publication.collectPolicy.amount,
+ *
+ *         // The collect module contract address
+ *         spender: publication.collectPolicy.contractAddress,
+ *
+ *         // In this case we want to  approve the exact amount
+ *         limit: TokenAllowanceLimit.EXACT,
+ *       })
+ *     }
+ *   };
+ *
+ *   return (
+ *     <button onClick={handleClick}>Approve collect module</button>
+ *   );
+ * }
+ * ```
  */
 export function useApproveModule(): ApproveModuleOperation {
   const setAllowance = useApproveModuleController();

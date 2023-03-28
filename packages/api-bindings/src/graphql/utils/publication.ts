@@ -6,7 +6,18 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { DateUtils, never, Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 
-import { CollectPolicy, CollectState } from '../CollectPolicy';
+import {
+  AaveFeeCollectPolicy,
+  CollectPolicy,
+  CollectState,
+  FeeCollectPolicy,
+  LimitedFeeCollectPolicy,
+  LimitedTimedFeeCollectPolicy,
+  MultirecipientFeeCollectPolicy,
+  NoFeeCollectPolicy,
+  TimedFeeCollectPolicy,
+  VaultFeeCollectPolicy,
+} from '../CollectPolicy';
 import {
   AaveFeeCollectModuleSettings,
   Comment,
@@ -80,8 +91,14 @@ export function resolveApiReactionType(reaction: ReactionType): ReactionTypes {
   }
 }
 
+/**
+ * Any publication regardless of its type, or capabilities
+ */
 export type AnyPublication = Comment | Mirror | Post;
 
+/**
+ * Any publication that can be referenced other via a comment or mirror
+ */
 export type ContentPublication = Comment | Post;
 
 /**
@@ -100,11 +117,70 @@ export type Gated<T extends ContentPublication> = Overwrite<
   }
 >;
 
+/**
+ * An encrypted comment
+ */
 export type GatedComment = Prettify<Gated<Comment>>;
 
+/**
+ * An encrypted post
+ */
 export type GatedPost = Prettify<Gated<Post>>;
 
+/**
+ * An encrypted publication
+ */
 export type GatedPublication = GatedComment | GatedPost;
+
+/**
+ * @internal
+ */
+export type Collectable<T extends AnyPublication> = Overwrite<
+  T,
+  {
+    collectPolicy:
+      | FeeCollectPolicy
+      | NoFeeCollectPolicy
+      | LimitedFeeCollectPolicy
+      | TimedFeeCollectPolicy
+      | LimitedTimedFeeCollectPolicy
+      | MultirecipientFeeCollectPolicy
+      | VaultFeeCollectPolicy
+      | AaveFeeCollectPolicy;
+
+    collectModule:
+      | AaveFeeCollectModuleSettings
+      | Erc4626FeeCollectModuleSettings
+      | FeeCollectModuleSettings
+      | FreeCollectModuleSettings
+      | LimitedFeeCollectModuleSettings
+      | LimitedTimedFeeCollectModuleSettings
+      | MultirecipientFeeCollectModuleSettings
+      | TimedFeeCollectModuleSettings;
+  }
+>;
+
+/**
+ * A collectable comment
+ */
+export type CollectableComment = Prettify<Collectable<Comment>>;
+
+/**
+ * A collectable mirror (i.e. a mirror of a collectable comment or post)
+ */
+export type CollectableMirror = Prettify<Collectable<Mirror>>;
+
+/**
+ * A collectable post
+ */
+export type CollectablePost = Prettify<Collectable<Post>>;
+
+/**
+ * A collectable publication
+ *
+ * It can be a comment, mirror or post
+ */
+export type CollectablePublication = CollectableComment | CollectableMirror | CollectablePost;
 
 /**
  * @group Helpers

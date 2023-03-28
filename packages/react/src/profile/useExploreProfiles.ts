@@ -28,7 +28,7 @@ export type UseExploreProfilesArgs = PaginatedArgs<
  *
  * @example
  *
- * ```tss
+ * ```tsx
  * import { useExploreProfiles } from '@lens-protocol/react-web';
  *
  * function ExploreProfiles() {
