@@ -20,7 +20,7 @@ export type UseUnreadNotificationCountArgs = {
  *
  * @category Notifications
  * @group Hooks
- * @param props - {@link UseUnreadNotificationCountArgs}
+ * @param args - {@link UseUnreadNotificationCountArgs}
  *
  * @example
  * ```tsx

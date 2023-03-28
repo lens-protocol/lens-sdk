@@ -27,7 +27,7 @@ export type UseSearchPublicationsArgs = PaginatedArgs<
  *
  * @category Discovery
  * @group Hooks
- * @param args - Search criteria
+ * @param args - {@link UseSearchPublicationsArgs}
  *
  * @example
  * ```tsx

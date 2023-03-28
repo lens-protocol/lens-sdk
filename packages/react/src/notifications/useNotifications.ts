@@ -40,7 +40,7 @@ export type Notification =
  *
  * @category Notifications
  * @group Hooks
- * @param props - {@link UseNotificationsArgs}
+ * @param args - {@link UseNotificationsArgs}
  *
  * @example
  * ```tsx

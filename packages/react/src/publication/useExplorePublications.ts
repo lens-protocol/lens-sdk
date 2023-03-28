@@ -52,7 +52,7 @@ export type UseExplorePublicationsArgs = PaginatedArgs<
  *
  * @category Discovery
  * @group Hooks
- * @param args - Explore criteria
+ * @param args - {@link UseExplorePublicationsArgs}
  *
  * @example
  *

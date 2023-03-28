@@ -63,7 +63,14 @@ function createFollowRequest(followee: Profile, follower: Profile): FollowReques
 }
 
 export type UseFollowArgs = {
+  /**
+   * The profile to follow
+   */
   followee: Profile;
+
+  /**
+   * The profile that follows
+   */
   follower: ProfileOwnedByMe;
 };
 
@@ -78,8 +85,54 @@ export type FollowOperation = Operation<
 >;
 
 /**
+ * `useFollow` is a hook that lets you follow a profile
+ *
+ * You MUST be authenticated via {@link useWalletLogin} to use this hook.
+ *
+ * The hook `execute` function resolves with a {@link Result} when the corresponding operation is queued.
+ * You can use the {@link Success.isSuccess | `Result.isSuccess`} (or {@link Failure.isFailure | `Result.isFailure`}) method
+ * to check if the operation queuing was successful and determine the next step if not.
+ *
+ * **Pro-tip**: Use the {@link ProfileOwnedByMe} instance from {@link useActiveProfile} (or {@link useProfilesOwnedByMe}) as the `follower` argument.
+ *
+ * You can use the {@link FollowStatus | `followee.followStatus`} property to determine the status of the follow request and if you should show the follow button.
+ *
  * @category Profiles
  * @group Hooks
+ * @param args
+ *
+ * @example Follow a profile with {@link OpenFollowPolicy}
+ * ```ts
+ * import { useFollow, Profile, ProfileOwnedByMe } from '@lens-protocol/react-web';
+ *
+ * function FollowButton({ followee, follower }: { followee: Profile; follower: ProfileOwnedByMe }) {
+ *   const { execute, error, isPending } = useFollow({ followee, follower });
+ *
+ *   const follow = async () => {
+ *     const result = await execute();
+ *
+ *     if (result.isFailure()) {
+ *       console.error(result.error);
+ *     }
+ *   }
+ *
+ *   if (followee.canFollow === false) {
+ *     return null;
+ *   }
+ *
+ *   if (followee.followStatus.isFollowedByMe) {
+ *     return (
+ *       <p>You are following this profile</p>
+ *     )
+ *   }
+ *
+ *   return (
+ *     <button onClick={follow} disabled={isPending}>
+ *       Follow
+ *     </button>
+ *   );
+ * }
+ * ```
  */
 export function useFollow({ followee, follower }: UseFollowArgs): FollowOperation {
   const follow = useFollowController();

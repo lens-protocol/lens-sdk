@@ -24,7 +24,7 @@ export type UseExploreProfilesArgs = PaginatedArgs<
  *
  * @category Discovery
  * @group Hooks
- * @param args - Explore criteria
+ * @param args - {@link UseExploreProfilesArgs}
  *
  * @example
  *

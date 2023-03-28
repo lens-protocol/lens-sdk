@@ -23,7 +23,7 @@ export type UseSearchProfilesArgs = PaginatedArgs<
  *
  * @category Discovery
  * @group Hooks
- * @param args - Search criteria
+ * @param args - {@link UseSearchProfilesArgs}
  *
  * @example
  * ```tsx
