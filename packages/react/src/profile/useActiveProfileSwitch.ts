@@ -21,7 +21,7 @@ export type ActiveProfileSwitchOperation = Operation<void, never, [ProfileId]>;
  *
  * function ProfileSwitcher({ address }: { address: EthereumAddress }) {
  *   const { data: activeProfile } = useActiveProfile();
- *   const { execute: switchActiveProfile } = useActiveProfileSwitch();
+ *   const { execute: switchActiveProfile, isPending } = useActiveProfileSwitch();
  *   const { data: profiles, error, loading } = useProfilesOwnedByMe({ address, limit: 50 });
  *
  *   if (loading) return <p>Loading...</p>;
@@ -35,6 +35,7 @@ export type ActiveProfileSwitchOperation = Operation<void, never, [ProfileId]>;
  *         {profiles.map((profile) => (
  *           <li key={profile.id}>
  *             <button
+ *               disabled={isPending || activeProfile?.id === profile.id}
  *               onClick={() => {
  *                 switchActiveProfile(profile.id);
  *               }}
