@@ -6,20 +6,22 @@ import {
   mockUnfollowRequest,
   mockWalletData,
 } from '@lens-protocol/domain/mocks';
+import { CollectPolicyType } from '@lens-protocol/domain/use-cases/publications';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { ContentPublication, Profile } from '../../../graphql';
+import { CollectState, ContentPublication, Profile } from '../../../graphql';
 import { FragmentComment, FragmentPost, FragmentProfile } from '../../../graphql/hooks';
 import {
-  mockEoaOwnershipAccessCondition,
   mockAndAccessCondition,
   mockAttributeFragment,
   mockCollectConditionAccessCondition,
   mockCommentFragment,
   mockEncryptionParamsOutputFragment,
+  mockEoaOwnershipAccessCondition,
   mockErc20OwnershipAccessCondition,
   mockFollowConditionAccessCondition,
+  mockFreeCollectModuleSettings,
   mockMetadataOutputFragment,
   mockNftOwnershipAccessCondition,
   mockOrAccessCondition,
@@ -27,6 +29,7 @@ import {
   mockPostFragment,
   mockProfileFragment,
   mockProfileOwnershipAccessCondition,
+  mockPublicationStatsFragment,
 } from '../../../mocks';
 import { createApolloCache } from '../createApolloCache';
 import { erc20Amount } from '../decryptionCriteria';
@@ -415,6 +418,71 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
               canUnfollow: false,
             });
           });
+        });
+      });
+    });
+  });
+
+  describe('and a Publication', () => {
+    describe('when retrieving its collectPolicy', () => {
+      it('should return expected data for free collect', () => {
+        const publication = mockPostFragment({
+          profile: mockProfileFragment(),
+          collectModule: mockFreeCollectModuleSettings(),
+          collectPolicy: undefined,
+          stats: mockPublicationStatsFragment(),
+        });
+
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
+        const read = readPublication(publication);
+
+        expect(read.collectPolicy).toMatchObject({
+          type: CollectPolicyType.FREE,
+          state: CollectState.CAN_BE_COLLECTED,
+          followerOnly: false,
+        });
+      });
+
+      it('should return expected data for not follower profile, free collect with followerOnly flag', () => {
+        const publication = mockPostFragment({
+          profile: mockProfileFragment({
+            isFollowedByMe: false,
+          }),
+          collectModule: mockFreeCollectModuleSettings({ followerOnly: true }),
+          collectPolicy: undefined,
+          stats: mockPublicationStatsFragment(),
+        });
+
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
+        const read = readPublication(publication);
+
+        expect(read.collectPolicy).toMatchObject({
+          type: CollectPolicyType.FREE,
+          state: CollectState.NOT_A_FOLLOWER,
+          followerOnly: true,
+        });
+      });
+
+      it('should return expected data for a follower profile, free collect with followerOnly flag', () => {
+        const publication = mockPostFragment({
+          profile: mockProfileFragment({
+            isFollowedByMe: true,
+          }),
+          collectModule: mockFreeCollectModuleSettings({ followerOnly: true }),
+          collectPolicy: undefined,
+          stats: mockPublicationStatsFragment(),
+        });
+
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
+        const read = readPublication(publication);
+
+        expect(read.collectPolicy).toMatchObject({
+          type: CollectPolicyType.FREE,
+          state: CollectState.CAN_BE_COLLECTED,
+          followerOnly: true,
         });
       });
     });

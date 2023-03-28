@@ -1,10 +1,9 @@
-import { FieldFunctionOptions, FieldPolicy, FieldReadFunction } from '@apollo/client';
+import { FieldFunctionOptions, FieldPolicy, FieldReadFunction, Reference } from '@apollo/client';
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   CollectModule,
-  Profile,
   PublicationStats,
   ReferenceModule,
   resolveCollectPolicy,
@@ -63,12 +62,18 @@ const collectPolicy = (
 ): CollectPolicy => {
   if (existing) return existing;
 
-  const profile = readField('profile') as Profile;
+  const profile = readField('profile') as Reference;
   const collectModule = readField('collectModule') as CollectModule;
+  const isAuthorFollowedByMe = readField('isFollowedByMe', profile) as boolean;
   const publicationStats = readField('stats') as PublicationStats;
   const collectNftAddress = (readField('collectNftAddress') as EthereumAddress) || null;
 
-  return resolveCollectPolicy({ profile, collectModule, publicationStats, collectNftAddress });
+  return resolveCollectPolicy({
+    collectModule,
+    isAuthorFollowedByMe,
+    publicationStats,
+    collectNftAddress,
+  });
 };
 
 const hasOptimisticCollectedByMe: FieldReadFunction<boolean> = (existing) => {

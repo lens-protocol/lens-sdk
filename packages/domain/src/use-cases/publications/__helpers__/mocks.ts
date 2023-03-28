@@ -205,6 +205,7 @@ export function mockFreeCollectRequest(
     profileId: mockProfileId(),
     type: CollectType.FREE,
     publicationId: mockPublicationId(),
+    followerOnly: false,
     ...overrides,
     kind: TransactionKind.COLLECT_PUBLICATION,
   };

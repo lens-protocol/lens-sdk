@@ -29,6 +29,7 @@ export type FreeCollectRequest = {
   profileId: ProfileId;
   type: CollectType.FREE;
   publicationId: PublicationId;
+  followerOnly: boolean;
   kind: TransactionKind.COLLECT_PUBLICATION;
 };
 
@@ -82,6 +83,10 @@ export class CollectPublication {
         return;
       }
 
+      await this.signedFlow.execute(request);
+      return;
+    }
+    if (request.followerOnly) {
       await this.signedFlow.execute(request);
       return;
     }
