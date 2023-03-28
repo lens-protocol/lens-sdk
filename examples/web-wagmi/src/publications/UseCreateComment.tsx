@@ -7,7 +7,7 @@ import { CommentComposer } from './components/CommentComposer';
 import { PublicationComments } from './components/PublicationComments';
 
 export function UseCreateComment() {
-  const [parentId, setPublicationId] = useState<PublicationId>(publicationId('0x1b-0x0118'));
+  const [parentId, setParentId] = useState<PublicationId>(publicationId('0x1b-0x0118'));
 
   return (
     <div>
@@ -23,7 +23,7 @@ export function UseCreateComment() {
                 id="publicationId"
                 type="text"
                 value={parentId}
-                onChange={(event) => setPublicationId(publicationId(event.target.value))}
+                onChange={(event) => setParentId(publicationId(event.target.value))}
               />
             </p>
 
