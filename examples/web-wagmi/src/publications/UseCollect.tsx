@@ -60,7 +60,7 @@ function Feed({ activeProfile }: FeedProps) {
     loading,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(useFeed({ profileId: activeProfile.id, observerId: activeProfile.id }));
+  } = useInfiniteScroll(useFeed({ profileId: activeProfile.id }));
 
   if (loading) return <Loading />;
 
