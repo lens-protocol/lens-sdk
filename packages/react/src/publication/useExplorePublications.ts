@@ -48,7 +48,7 @@ export type UseExplorePublicationsArgs = PaginatedArgs<
 >;
 
 /**
- * `useExplorePublications` is a paginated hook that lets you discover new publications base on a defined criteria.
+ * `useExplorePublications` is a paginated hook that lets you discover new publications base on a defined criteria
  *
  * @category Discovery
  * @group Hooks
@@ -56,7 +56,7 @@ export type UseExplorePublicationsArgs = PaginatedArgs<
  *
  * @example
  *
- * ```ts
+ * ```tsx
  * import { useExplorePublications } from '@lens-protocol/react-web';
  *
  * function ExplorePublications() {
@@ -69,7 +69,9 @@ export type UseExplorePublicationsArgs = PaginatedArgs<
  *   return (
  *     <ul>
  *       {data.map((publication) => (
- *         <li key={publication.id}>{publication.title}</li>
+ *         <li key={publication.id}>
+ *            // render publication details
+ *         </li>
  *       ))}
  *     </ul>
  *   );

@@ -15,14 +15,42 @@ import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseSearchPublicationsArgs = PaginatedArgs<
   WithObserverIdOverride<{
+    /**
+     * Search query
+     */
     query: string;
-    limit?: number;
   }>
 >;
 
 /**
+ * `useSearchPublications` is a paginated hook that lets you search for publications based on a defined criteria
+ *
  * @category Discovery
  * @group Hooks
+ * @param args - Search criteria
+ *
+ * @example
+ * ```tsx
+ * import { useSearchPublications } from '@lens-protocol/react-web';
+ *
+ * function SearchPublication() {
+ *   const { data, error, loading } = useSearchPublications({ query: 'foo' });
+ *
+ *   if (loading) return <p>Loading...</p>;
+ *
+ *   if (error) return <p>Error: {error.message}</p>;
+ *
+ *   return (
+ *     <ul>
+ *       {data.map((publication) => (
+ *         <li key={publication.id}>
+ *            // render publication details
+ *         </li>
+ *       ))}
+ *     </ul>
+ *   );
+ * }
+ * ```
  */
 export function useSearchPublications({
   query,

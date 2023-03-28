@@ -20,7 +20,7 @@ export type UseExploreProfilesArgs = PaginatedArgs<
 >;
 
 /**
- * `useExploreProfiles` is a paginated hook that lets you discover new profiles based on a defined criteria.
+ * `useExploreProfiles` is a paginated hook that lets you discover new profiles based on a defined criteria
  *
  * @category Discovery
  * @group Hooks
@@ -28,7 +28,7 @@ export type UseExploreProfilesArgs = PaginatedArgs<
  *
  * @example
  *
- * ```ts
+ * ```tss
  * import { useExploreProfiles } from '@lens-protocol/react-web';
  *
  * function ExploreProfiles() {
@@ -41,7 +41,7 @@ export type UseExploreProfilesArgs = PaginatedArgs<
  *   return (
  *     <ul>
  *       {data.map((profile) => (
- *         <li key={profile.id}>{profile.name}</li>
+ *         <li key={profile.id}>{profile.handle}</li>
  *       ))}
  *     </ul>
  *   );
