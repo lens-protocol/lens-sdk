@@ -33,7 +33,7 @@ function CreateProfileForm() {
     const formData = new FormData(form);
     const handle = (formData.get('handle') as string) ?? never();
 
-    await create(handle);
+    await create({ handle });
 
     form.reset();
   };
