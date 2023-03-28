@@ -9,6 +9,7 @@ import {
 import {
   mockBroadcastedTransactionData,
   mockCreateMirrorRequest,
+  mockPublicationId,
 } from '@lens-protocol/domain/mocks';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
@@ -32,7 +33,7 @@ function setupTestScenario({
         observerId: transactionData.request.profileId,
         sources,
       },
-      publication: { ...post, mirrors: post.mirrors.concat('<new-mirror-id>') },
+      publication: { ...post, mirrors: post.mirrors.concat(mockPublicationId()) },
     }),
   ]);
 

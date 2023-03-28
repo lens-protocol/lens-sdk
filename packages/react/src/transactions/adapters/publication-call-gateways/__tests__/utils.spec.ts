@@ -1,4 +1,5 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
+import { mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
 import {
   CollectPolicyType,
   ContentFocus,
@@ -13,8 +14,8 @@ describe(`Given ${resolveCollectModule.name} function`, () => {
   const requestBase = {
     contentFocus: ContentFocus.TEXT,
     reference: { type: ReferencePolicyType.FOLLOWERS_ONLY },
-    profileId: '',
-    publicationId: '',
+    profileId: mockProfileId(),
+    publicationId: mockPublicationId(),
     kind: TransactionKind.CREATE_POST,
     locale: '',
     delegate: false,

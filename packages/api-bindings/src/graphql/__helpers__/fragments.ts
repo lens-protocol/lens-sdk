@@ -247,7 +247,7 @@ function mockNoFeeCollectPolicy(overrides?: Partial<NoFeeCollectPolicy>): NoFeeC
 
 export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>): Post {
   return {
-    id: faker.datatype.uuid(),
+    id: mockPublicationId(),
     createdAt: faker.datatype.datetime().toISOString(),
     stats: mockPublicationStatsFragment(),
     metadata: mockMetadataOutputFragment(),
@@ -289,7 +289,7 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
   const mainPost = mockPostFragment();
 
   return {
-    id: faker.datatype.uuid(),
+    id: mockPublicationId(),
     stats: mockPublicationStatsFragment(),
     metadata: mockMetadataOutputFragment(),
     profile: mockProfileFragment(),
@@ -333,7 +333,7 @@ export function mockMirrorFragment(overrides?: Partial<Omit<Mirror, '__typename'
   const mainPost = mockPostFragment();
 
   return {
-    id: faker.datatype.uuid(),
+    id: mockPublicationId(),
     profile: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),
     mirrorOf: mainPost,

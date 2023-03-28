@@ -1,4 +1,4 @@
-import { useWhoCollectedPublication } from '@lens-protocol/react-web';
+import { publicationId, PublicationId, useWhoCollectedPublication } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
@@ -6,19 +6,17 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from '../profiles/components/ProfileCard';
 
 type UseWhoCollectedPublicationLayoutProps = {
-  publicationId: string;
+  publicationId: PublicationId;
 };
 
-function UseWhoCollectedPublicationLayout({
-  publicationId,
-}: UseWhoCollectedPublicationLayoutProps) {
+function UseWhoCollectedPublicationLayout(props: UseWhoCollectedPublicationLayoutProps) {
   const {
     data: whoCollected,
     error,
     loading,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(useWhoCollectedPublication({ publicationId }));
+  } = useInfiniteScroll(useWhoCollectedPublication({ publicationId: props.publicationId }));
 
   if (loading) return <Loading />;
 
@@ -45,5 +43,5 @@ function UseWhoCollectedPublicationLayout({
 
 export function UseWhoCollectedPublication() {
   // TODO: use the useExplorePublications hook to get a list of publications to select an id from
-  return <UseWhoCollectedPublicationLayout publicationId="0x02-0x19" />;
+  return <UseWhoCollectedPublicationLayout publicationId={publicationId('0x02-0x19')} />;
 }

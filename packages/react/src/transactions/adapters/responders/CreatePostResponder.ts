@@ -11,6 +11,7 @@ import {
   LensApolloClient,
   Sources,
 } from '@lens-protocol/api-bindings';
+import { PublicationId } from '@lens-protocol/domain/entities';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastedTransactionData,
@@ -32,7 +33,7 @@ function pendingPost({
 }): PendingPost {
   return {
     __typename: 'PendingPost',
-    id,
+    id: id as PublicationId,
     profile: author,
     content: request.content ?? null,
     mainContentFocus: PublicationMainFocus[request.contentFocus],

@@ -7,7 +7,7 @@ import {
 } from '@lens-protocol/shared-kernel/mocks';
 
 import { ReactionType, ReportReason, TransactionKind } from '../../../entities';
-import { mockProfileId } from '../../../entities/__helpers__/mocks';
+import { mockProfileId, mockPublicationId } from '../../../entities/__helpers__/mocks';
 import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
@@ -36,7 +36,7 @@ export function mockCreateCommentRequest(
     kind: TransactionKind.CREATE_COMMENT,
 
     contentFocus: ContentFocus.TEXT,
-    publicationId: faker.datatype.uuid(),
+    publicationId: mockPublicationId(),
     content: faker.lorem.paragraph(),
     reference: {
       type: ReferencePolicyType.ANYONE,
@@ -132,7 +132,7 @@ export function mockCreateMirrorRequest(
 ): CreateMirrorRequest {
   return {
     profileId: mockProfileId(),
-    publicationId: faker.datatype.uuid(),
+    publicationId: mockPublicationId(),
     ...overrides,
     kind: TransactionKind.MIRROR_PUBLICATION,
     delegate: false,
@@ -183,7 +183,7 @@ export function mockCreateEncryptedPostRequest(
 export function mockReactionRequest(overrides?: Partial<ReactionRequest>): ReactionRequest {
   return {
     profileId: mockProfileId(),
-    publicationId: faker.datatype.uuid(),
+    publicationId: mockPublicationId(),
     reactionType: ReactionType.UPVOTE,
     ...overrides,
   };
@@ -193,7 +193,7 @@ export function mockHidePublicationRequest(
   overrides?: Partial<HidePublicationRequest>,
 ): HidePublicationRequest {
   return {
-    publicationId: faker.datatype.uuid(),
+    publicationId: mockPublicationId(),
     ...overrides,
   };
 }
@@ -204,7 +204,7 @@ export function mockFreeCollectRequest(
   return {
     profileId: mockProfileId(),
     type: CollectType.FREE,
-    publicationId: faker.datatype.uuid(),
+    publicationId: mockPublicationId(),
     ...overrides,
     kind: TransactionKind.COLLECT_PUBLICATION,
   };
@@ -216,7 +216,7 @@ export function mockPaidCollectRequest(
   return {
     profileId: mockProfileId(),
     type: CollectType.PAID,
-    publicationId: faker.datatype.uuid(),
+    publicationId: mockPublicationId(),
     fee: {
       amount: mockDaiAmount(1, ChainType.POLYGON),
       contractAddress: mockEthereumAddress(),
@@ -230,7 +230,7 @@ export function mockReportPublicationRequest(
   overrides?: Partial<ReportPublicationRequest>,
 ): ReportPublicationRequest {
   return {
-    publicationId: faker.datatype.uuid(),
+    publicationId: mockPublicationId(),
     reason: ReportReason.FAKE_ENGAGEMENT,
     additionalComments: faker.lorem.sentence(),
     ...overrides,

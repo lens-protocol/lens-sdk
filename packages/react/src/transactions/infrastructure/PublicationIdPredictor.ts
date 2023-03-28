@@ -9,11 +9,12 @@ import { ProfileId, PublicationId, TransactionKind } from '@lens-protocol/domain
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { hasAtLeastOne, never } from '@lens-protocol/shared-kernel';
 
+import { publicationId } from '../../utils';
 import { PendingTransactionGateway } from '../adapters/PendingTransactionGateway';
 import { IPublicationIdPredictor } from './AccessConditionBuilderFactory';
 
 function formatPublicationId(profileId: ProfileId, newSequentialId: number): PublicationId {
-  return `${profileId}-0x${newSequentialId.toString(16)}`;
+  return publicationId(`${profileId}-0x${newSequentialId.toString(16)}`);
 }
 
 export class PublicationIdPredictor implements IPublicationIdPredictor {

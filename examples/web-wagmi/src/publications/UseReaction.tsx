@@ -6,6 +6,7 @@ import {
   useReaction,
   isMirrorPublication,
   ProfileId,
+  publicationId,
 } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
@@ -64,7 +65,7 @@ function ReactionInner({ profile }: ReactionInnerProps) {
     error,
     loading,
   } = usePublication({
-    publicationId: '0x1b-0x0118',
+    publicationId: publicationId('0x1b-0x0118'),
     observerId: profile.id, // important!
   });
 

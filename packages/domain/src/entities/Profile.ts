@@ -1,4 +1,6 @@
-export type ProfileId = `0x${string}`;
+import { Brand } from '@lens-protocol/shared-kernel';
+
+export type ProfileId = Brand<string, 'ProfileId'>;
 
 export class Profile {
   private constructor(readonly id: ProfileId, readonly handle: string) {}

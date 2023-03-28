@@ -1,4 +1,9 @@
-import { useComments, usePublication } from '@lens-protocol/react-web';
+import {
+  PublicationId,
+  publicationId,
+  useComments,
+  usePublication,
+} from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
@@ -6,7 +11,7 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from './components/PublicationCard';
 
 type CommentsProps = {
-  commentsOf: string;
+  commentsOf: PublicationId;
 };
 
 function Comments({ commentsOf }: CommentsProps) {
@@ -33,7 +38,11 @@ function Comments({ commentsOf }: CommentsProps) {
 }
 
 export function UsePublication() {
-  const { data: publication, error, loading } = usePublication({ publicationId: '0x1b-0x0118' });
+  const {
+    data: publication,
+    error,
+    loading,
+  } = usePublication({ publicationId: publicationId('0x1b-0x0118') });
 
   if (loading) return <Loading />;
 

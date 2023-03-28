@@ -1,6 +1,12 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { AppId, DecryptionCriteria, ProfileId, TransactionKind } from '../../entities';
+import {
+  AppId,
+  DecryptionCriteria,
+  ProfileId,
+  PublicationId,
+  TransactionKind,
+} from '../../entities';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -12,7 +18,7 @@ import { CollectPolicyConfig, MediaObject, ContentFocus, Locale } from './types'
 
 export type CreateCommentRequest = {
   appId?: AppId;
-  publicationId: string;
+  publicationId: PublicationId;
   content?: string;
   contentFocus: ContentFocus;
   media?: MediaObject[];
