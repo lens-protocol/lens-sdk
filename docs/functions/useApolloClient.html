@@ -56,7 +56,8 @@
 <div>publication<wbr/>Id
 <div class="menu-item-desc">Ensures that the given value is a valid PublicationId</div></div></a></li>
 <li class="tsd-kind-function"><a href="useActiveProfile.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
-<div>use<wbr/>Active<wbr/>Profile</div></a></li>
+<div>use<wbr/>Active<wbr/>Profile
+<div class="menu-item-desc">`useActiveProfile` is a hook that lets you retrieve the active profile</div></div></a></li>
 <li class="tsd-kind-function"><a href="useActiveProfileSwitch.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
 <div>use<wbr/>Active<wbr/>Profile<wbr/>Switch</div></a></li>
 <li class="tsd-kind-function"><a href="useActiveWallet.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
@@ -110,7 +111,8 @@
 <li class="tsd-kind-function"><a href="useMutualFollowers.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
 <div>use<wbr/>Mutual<wbr/>Followers</div></a></li>
 <li class="tsd-kind-function"><a href="useNotifications.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
-<div>use<wbr/>Notifications</div></a></li>
+<div>use<wbr/>Notifications
+<div class="menu-item-desc">`useNotifications` is a paginated hook that lets you retrieve notifications for a given profile</div></div></a></li>
 <li class="tsd-kind-function"><a href="useProfile.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
 <div>use<wbr/>Profile</div></a></li>
 <li class="tsd-kind-function"><a href="useProfileFollowRevenue.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
@@ -156,7 +158,8 @@
 <li class="tsd-kind-function"><a href="useUnfollow.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
 <div>use<wbr/>Unfollow</div></a></li>
 <li class="tsd-kind-function"><a href="useUnreadNotificationCount.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
-<div>use<wbr/>Unread<wbr/>Notification<wbr/>Count</div></a></li>
+<div>use<wbr/>Unread<wbr/>Notification<wbr/>Count
+<div class="menu-item-desc">`useUnreadNotificationCount` is a hook that lets you retrieve the number of unread notifications for a given profile</div></div></a></li>
 <li class="tsd-kind-function"><a href="useUpdateDispatcherConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
 <div>use<wbr/>Update<wbr/>Dispatcher<wbr/>Config</div></a></li>
 <li class="tsd-kind-function"><a href="useUpdateFollowPolicy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
@@ -1122,7 +1125,7 @@
 This is done transparently, so you don&#39;t need to worry about it.</p>
 
 <h3>Example</h3><p>Perform a query</p>
-<pre><code class="language-ts"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">useQuery</span><span class="hl-1">, </span><span class="hl-2">gql</span><span class="hl-1">} </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@apollo/client&#39;</span><span class="hl-1">;</span><br/><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">useApolloClient</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@lens-protocol/react-web&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">function</span><span class="hl-1"> </span><span class="hl-7">MyComponent</span><span class="hl-1">() {</span><br/><span class="hl-1">   </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1"> = </span><span class="hl-7">useApolloClient</span><span class="hl-1">();</span><br/><span class="hl-1">   </span><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">data</span><span class="hl-1">, </span><span class="hl-5">loading</span><span class="hl-1">, </span><span class="hl-5">error</span><span class="hl-1"> } = </span><span class="hl-7">useQuery</span><span class="hl-1">(</span><span class="hl-7">gql</span><span class="hl-3">`&lt;your query&gt;`</span><span class="hl-1">, { </span><span class="hl-2">client</span><span class="hl-1"> })</span><br/><br/><span class="hl-1">   </span><span class="hl-10">// use the low-level useQuery response</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">useQuery</span><span class="hl-1">, </span><span class="hl-2">gql</span><span class="hl-1">} </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@apollo/client&#39;</span><span class="hl-1">;</span><br/><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">useApolloClient</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@lens-protocol/react-web&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">function</span><span class="hl-1"> </span><span class="hl-7">MyComponent</span><span class="hl-1">() {</span><br/><span class="hl-1">   </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1"> = </span><span class="hl-7">useApolloClient</span><span class="hl-1">();</span><br/><span class="hl-1">   </span><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">data</span><span class="hl-1">, </span><span class="hl-5">loading</span><span class="hl-1">, </span><span class="hl-5">error</span><span class="hl-1"> } = </span><span class="hl-7">useQuery</span><span class="hl-1">(</span><span class="hl-7">gql</span><span class="hl-3">`&lt;your query&gt;`</span><span class="hl-1">, { </span><span class="hl-2">client</span><span class="hl-1"> })</span><br/><br/><span class="hl-1">   </span><span class="hl-12">// use the low-level useQuery response</span><br/><span class="hl-1">}</span>
 </code></pre>
 <p> This hook is experimental and may change in the future.</p>
 </div>
