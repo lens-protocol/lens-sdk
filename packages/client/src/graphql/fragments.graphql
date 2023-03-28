@@ -329,32 +329,11 @@ fragment SimplePublicationStats on PublicationStats {
 fragment MirrorBase on Mirror {
   __typename
   id
-  stats {
-    ...SimplePublicationStats
-  }
-  metadata {
-    ...Metadata
-  }
+  createdAt
   profile {
     ...Profile
   }
-  collectModule {
-    ...CollectModule
-  }
-  referenceModule {
-    ...ReferenceModule
-  }
-  createdAt
   hidden
-  isGated
-  reaction(request: { profileId: $observerId })
-  hasCollectedByMe(isFinalisedOnChain: true)
-  canComment(profileId: $observerId) {
-    result
-  }
-  canMirror(profileId: $observerId) {
-    result
-  }
 }
 
 fragment Mirror on Mirror {
