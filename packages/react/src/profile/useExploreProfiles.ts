@@ -20,8 +20,33 @@ export type UseExploreProfilesArgs = PaginatedArgs<
 >;
 
 /**
+ * `useExploreProfiles` is a paginated hook that lets you discover new profiles based on a defined criteria.
+ *
  * @category Discovery
  * @group Hooks
+ * @param args - Explore criteria
+ *
+ * @example
+ *
+ * ```ts
+ * import { useExploreProfiles } from '@lens-protocol/react-web';
+ *
+ * function ExploreProfiles() {
+ *   const { data, error, loading } = useExploreProfiles({ sortCriteria: ProfileSortCriteria.MostFollowers });
+ *
+ *   if (loading) return <p>Loading...</p>;
+ *
+ *   if (error) return <p>Error: {error.message}</p>;
+ *
+ *   return (
+ *     <ul>
+ *       {data.map((profile) => (
+ *         <li key={profile.id}>{profile.name}</li>
+ *       ))}
+ *     </ul>
+ *   );
+ * }
+ * ```
  */
 export function useExploreProfiles({
   observerId,

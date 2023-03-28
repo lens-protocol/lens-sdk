@@ -23,6 +23,11 @@ export function useLensApolloClient<TOptions>(
 
 export type WithObserverIdOverride<TVariables = unknown> = Prettify<
   TVariables & {
+    /**
+     * The ID of the profile that is observing the data.
+     *
+     * @defaultValue The ID of the Active Profile if it exists, otherwise `null`
+     */
     observerId?: ProfileId;
   }
 >;

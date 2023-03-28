@@ -18,17 +18,63 @@ import { createPublicationMetadataFilters, PublicationMetadataFilters } from './
 
 export type UseExplorePublicationsArgs = PaginatedArgs<
   WithObserverIdOverride<{
-    excludeProfileIds?: Array<ProfileId>;
+    /**
+     * Exclude publications from these profiles
+     */
+    excludeProfileIds?: ProfileId[];
+
+    /**
+     * Filter publications by metadata details
+     */
     metadataFilter?: PublicationMetadataFilters;
+
+    /**
+     * Filter publications by type
+     *
+     * @defaultValue empty - all types
+     */
     publicationTypes?: Array<PublicationTypes>;
+
+    /**
+     * Sort criteria
+     */
     sortCriteria?: PublicationSortCriteria;
+
+    /**
+     * Timestamp to start from
+     */
     timestamp?: number;
   }>
 >;
 
 /**
+ * `useExplorePublications` is a paginated hook that lets you discover new publications base on a defined criteria.
+ *
  * @category Discovery
  * @group Hooks
+ * @param args - Explore criteria
+ *
+ * @example
+ *
+ * ```ts
+ * import { useExplorePublications } from '@lens-protocol/react-web';
+ *
+ * function ExplorePublications() {
+ *   const { data, error, loading } = useExplorePublications({ sortCriteria: PublicationSortCriteria.MostComments });
+ *
+ *   if (loading) return <p>Loading...</p>;
+ *
+ *   if (error) return <p>Error: {error.message}</p>;
+ *
+ *   return (
+ *     <ul>
+ *       {data.map((publication) => (
+ *         <li key={publication.id}>{publication.title}</li>
+ *       ))}
+ *     </ul>
+ *   );
+ * }
+ * ```
  */
 export function useExplorePublications({
   observerId,
