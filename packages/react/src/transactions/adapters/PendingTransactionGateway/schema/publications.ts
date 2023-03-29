@@ -15,7 +15,7 @@ import { Erc20AmountSchema, ProfileIdSchema, PublicationIdSchema } from './commo
 const NftAttributeSchema = z.union([
   z.object({
     displayType: z.literal(NftAttributeDisplayType.Date),
-    value: z.date(),
+    value: z.coerce.date(),
     traitType: z.string(),
   }),
   z.object({
