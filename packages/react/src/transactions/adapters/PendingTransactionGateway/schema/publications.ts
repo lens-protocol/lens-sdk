@@ -182,6 +182,7 @@ export const FreeCollectRequestSchema = z.object({
   profileId: ProfileIdSchema,
   type: z.literal(CollectType.FREE),
   publicationId: PublicationIdSchema,
+  followerOnly: z.boolean(),
   kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
 });
 

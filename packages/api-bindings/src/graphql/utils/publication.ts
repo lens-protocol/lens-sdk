@@ -18,7 +18,6 @@ import {
   Mirror,
   MultirecipientFeeCollectModuleSettings,
   Post,
-  Profile,
   PublicationStats,
   ReactionTypes,
   TimedFeeCollectModuleSettings,
@@ -132,7 +131,7 @@ export function createCollectRequest(
         profileId: collector.id,
         kind: TransactionKind.COLLECT_PUBLICATION,
         publicationId: publication.id,
-
+        followerOnly: collectModule.followerOnly,
         type: CollectType.FREE,
       };
     case 'FeeCollectModuleSettings':
@@ -234,21 +233,24 @@ export type CollectableCollectModuleSettings =
   | Erc4626FeeCollectModuleSettings
   | AaveFeeCollectModuleSettings;
 
-function resolveNotFollower(collectModule: CollectableCollectModuleSettings, author: Profile) {
-  if (collectModule.followerOnly && !author.isFollowedByMe) {
+function resolveNotFollower(
+  collectModule: CollectableCollectModuleSettings,
+  isAuthorFollowedByMe: boolean,
+) {
+  if (collectModule.followerOnly && !isAuthorFollowedByMe) {
     return CollectState.NOT_A_FOLLOWER;
   }
   return null;
 }
 
 export function resolveCollectPolicy({
-  profile,
   collectModule,
+  isAuthorFollowedByMe,
   publicationStats,
   collectNftAddress,
 }: {
   collectModule: CollectModule;
-  profile: Profile;
+  isAuthorFollowedByMe: boolean;
   publicationStats: PublicationStats;
   collectNftAddress: string | null;
 }): CollectPolicy {
@@ -256,7 +258,8 @@ export function resolveCollectPolicy({
     case 'FeeCollectModuleSettings':
       return {
         type: CollectPolicyType.CHARGE,
-        state: resolveNotFollower(collectModule, profile) ?? CollectState.CAN_BE_COLLECTED,
+        state:
+          resolveNotFollower(collectModule, isAuthorFollowedByMe) ?? CollectState.CAN_BE_COLLECTED,
         amount: erc20Amount({ from: collectModule.amount }),
         referralFee: collectModule.referralFee,
         followerOnly: collectModule.followerOnly,
@@ -267,7 +270,7 @@ export function resolveCollectPolicy({
       return {
         type: CollectPolicyType.CHARGE,
         state:
-          resolveNotFollower(collectModule, profile) ??
+          resolveNotFollower(collectModule, isAuthorFollowedByMe) ??
           resolveLimitReached(collectModule, publicationStats) ??
           CollectState.CAN_BE_COLLECTED,
         amount: erc20Amount({ from: collectModule.amount }),
@@ -281,7 +284,7 @@ export function resolveCollectPolicy({
       return {
         type: CollectPolicyType.CHARGE,
         state:
-          resolveNotFollower(collectModule, profile) ??
+          resolveNotFollower(collectModule, isAuthorFollowedByMe) ??
           resolveTimeLimitReached(collectModule) ??
           CollectState.CAN_BE_COLLECTED,
         amount: erc20Amount({ from: collectModule.amount }),
@@ -295,7 +298,7 @@ export function resolveCollectPolicy({
       return {
         type: CollectPolicyType.CHARGE,
         state:
-          resolveNotFollower(collectModule, profile) ??
+          resolveNotFollower(collectModule, isAuthorFollowedByMe) ??
           resolveLimitReached(collectModule, publicationStats) ??
           resolveTimeLimitReached(collectModule) ??
           CollectState.CAN_BE_COLLECTED,
@@ -310,7 +313,8 @@ export function resolveCollectPolicy({
     case 'FreeCollectModuleSettings':
       return {
         type: CollectPolicyType.FREE,
-        state: resolveNotFollower(collectModule, profile) ?? CollectState.CAN_BE_COLLECTED,
+        state:
+          resolveNotFollower(collectModule, isAuthorFollowedByMe) ?? CollectState.CAN_BE_COLLECTED,
         followerOnly: collectModule.followerOnly,
         collectNftAddress,
         contractAddress: collectModule.contractAddress,
@@ -321,7 +325,7 @@ export function resolveCollectPolicy({
       return {
         type: CollectPolicyType.CHARGE,
         state:
-          resolveNotFollower(collectModule, profile) ??
+          resolveNotFollower(collectModule, isAuthorFollowedByMe) ??
           resolveOptionalLimitReached(collectModule, publicationStats) ??
           resolveOptionalTimeLimitReached(collectModule) ??
           CollectState.CAN_BE_COLLECTED,

@@ -47,7 +47,7 @@ function setupCollectPublication({
 describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
   const presenter = mock<ICollectPublicationPresenter>();
 
-  describe(`when "${CollectPublication.prototype.execute.name}" method`, () => {
+  describe(`when "${CollectPublication.prototype.execute.name}" method is invoked`, () => {
     describe('with a FreeCollectRequest', () => {
       it(`should execute the ${SignlessProtocolCallUseCase.name}<FreeCollectRequest> strategy`, async () => {
         const request = mockFreeCollectRequest();
@@ -65,6 +65,28 @@ describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
 
         expect(signlessProtocolCall.execute).toHaveBeenCalledWith(request);
         expect(signedProtocolCall.execute).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('with a FreeCollectRequest and followerOnly', () => {
+      it(`should execute the ${ProtocolCallUseCase.name}<CollectRequest> strategy`, async () => {
+        const request = mockFreeCollectRequest({
+          followerOnly: true,
+        });
+        const signedProtocolCall = mockProtocolCallUseCase<CollectRequest>();
+        const signlessProtocolCall = mockSignlessProtocolCallUseCase<FreeCollectRequest>();
+
+        const followProfiles = setupCollectPublication({
+          tokenAvailability: mock<TokenAvailability>(),
+          signedProtocolCall,
+          signlessProtocolCall,
+          presenter,
+        });
+
+        await followProfiles.execute(request);
+
+        expect(signedProtocolCall.execute).toHaveBeenCalledWith(request);
+        expect(signlessProtocolCall.execute).not.toHaveBeenCalledWith(request);
       });
     });
 

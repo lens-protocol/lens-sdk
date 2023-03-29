@@ -211,7 +211,7 @@ export function mockEncryptedFieldsOutputFragment(
   };
 }
 
-function mockFreeCollectModuleSettings({ followerOnly = false } = {}): CollectModule {
+export function mockFreeCollectModuleSettings({ followerOnly = false } = {}): CollectModule {
   return {
     __typename: 'FreeCollectModuleSettings',
     contractAddress: '0x96351D3cE872903EBf4c2D77dd625992CCFdf8c9',
