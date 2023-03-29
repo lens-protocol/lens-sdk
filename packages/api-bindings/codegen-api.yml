@@ -35,6 +35,7 @@ config:
     NftOwnershipId: string
     Nonce: number
     NotificationId: string
+    PendingPublicationId: string
     ProfileAttributes: ProfileAttributes
     ProfileId: ProfileId
     ProfileInterest: string

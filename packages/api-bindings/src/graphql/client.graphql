@@ -5,6 +5,7 @@ scalar CollectPolicy
 scalar ReferencePolicy
 scalar FollowStatus
 scalar DecryptionCriteria
+scalar PendingPublicationId
 
 extend type Profile {
   ownedByMe: Boolean!
@@ -40,7 +41,7 @@ extend type Comment {
 }
 
 type PendingPost {
-  id: InternalPublicationId!
+  id: PendingPublicationId!
   content: String
   media: [Media!]
   profile: Profile!

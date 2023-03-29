@@ -91,6 +91,7 @@ export type Scalars = {
   Nonce: number;
   /** The notification id */
   NotificationId: string;
+  PendingPublicationId: string;
   ProfileAttributes: ProfileAttributes;
   /** ProfileId custom scalar type */
   ProfileId: ProfileId;
@@ -1981,7 +1982,7 @@ export type Post = {
 
 export type PendingPost = {
   __typename: 'PendingPost';
-  id: PublicationId;
+  id: string;
   content: string | null;
   locale: string;
   mainContentFocus: PublicationMainFocus;
