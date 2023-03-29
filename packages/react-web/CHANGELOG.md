@@ -1,5 +1,29 @@
 # @lens-protocol/react-web
 
+## 1.0.0-beta.0
+
+### Minor Changes
+
+- dc1350d: Added TSDoc, use shared tsconfig, better types
+
+### Patch Changes
+
+- 520a7c1: Changed GQL generated types so that `Fragment` suffix is no longer necessary
+  Added several missing TS type definitions
+  Added TSDoc comments to several APIs
+- Updated dependencies [fce5b18]
+- Updated dependencies [520a7c1]
+- Updated dependencies [6ae90ef]
+- Updated dependencies [c5dd99b]
+- Updated dependencies [006aff5]
+- Updated dependencies [dc1350d]
+- Updated dependencies [a4e9500]
+  - @lens-protocol/react@1.0.0-beta.0
+  - @lens-protocol/api-bindings@0.7.0-beta.0
+  - @lens-protocol/gated-content@0.2.0-beta.0
+  - @lens-protocol/shared-kernel@0.7.0-beta.0
+  - @lens-protocol/storage@0.7.0-beta.0
+
 ## 0.6.0
 
 ### Minor changes

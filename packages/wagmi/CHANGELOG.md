@@ -1,5 +1,18 @@
 # @lens-protocol/wagmi
 
+## 1.0.0-beta.0
+
+### Minor Changes
+
+- dc1350d: Added TSDoc, use shared tsconfig, better types
+
+### Patch Changes
+
+- Updated dependencies [520a7c1]
+- Updated dependencies [dc1350d]
+  - @lens-protocol/react-web@1.0.0-beta.0
+  - @lens-protocol/shared-kernel@0.7.0-beta.0
+
 ## 0.6.0
 
 ### Patch Changes

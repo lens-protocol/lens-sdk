@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/gated-content",
-  "version": "0.1.0",
+  "version": "0.2.0-beta.0",
   "description": "Token-gated content for the Lens Protocol",
   "main": "dist/lens-protocol-gated-content.cjs.js",
   "module": "dist/lens-protocol-gated-content.esm.js",

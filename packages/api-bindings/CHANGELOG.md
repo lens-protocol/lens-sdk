@@ -1,5 +1,19 @@
 # @lens-protocol/api-bindings
 
+## 0.7.0-beta.0
+
+### Minor Changes
+
+- dc1350d: Added TSDoc, use shared tsconfig, better types
+
+### Patch Changes
+
+- 6ae90ef: Exposed `collectNftAddress` from publication fragments
+- a4e9500: allow to define `sortCriteria` for `useExploreProfiles`
+- Updated dependencies [dc1350d]
+  - @lens-protocol/shared-kernel@0.7.0-beta.0
+  - @lens-protocol/domain@0.7.0-beta.0
+
 ## 0.6.0
 
 ### Patch Changes

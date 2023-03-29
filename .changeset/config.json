@@ -2,18 +2,7 @@
   "$schema": "https://unpkg.com/@changesets/config@2.3.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [
-    [
-      "@lens-protocol/api-bindings",
-      "@lens-protocol/blockchain-bindings",
-      "@lens-protocol/domain",
-      "@lens-protocol/react",
-      "@lens-protocol/react-web",
-      "@lens-protocol/storage",
-      "@lens-protocol/wagmi",
-      "@lens-protocol/shared-kernel"
-    ]
-  ],
+  "fixed": [["@lens-protocol/react", "@lens-protocol/react-web", "@lens-protocol/wagmi"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
