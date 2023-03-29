@@ -111,7 +111,6 @@
   },
   "typedoc": {
     "entryPoint": "./src/index.ts",
-    "displayName": "React Hooks",
     "tsconfig": "./tsconfig.json"
   }
 }
