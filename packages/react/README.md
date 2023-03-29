@@ -40,26 +40,3 @@ const nextConfig = {
 ```
 
 For further details on how to integrate Lens SDK with a Next.js app, there is a working Next.js example in this monorepo: https://github.com/lens-protocol/lens-sdk/tree/main/examples/nextjs
-
-### Cannot retrieve wagmi `Signer`
-
-If you are using Lens SDK with wagmi via the `@lens-protocol/wagmi` bindings and you might have seen this error:
-
-```
-InvariantError: Cannot get signer, is the wallet connected?
-  [stack trace]
-```
-
-This is most likely caused by wagmi not being able to auto-reconnect with a browser extension wallet after a network switch in your wallet.
-
-When configuring your wagmi connectors make sure you set the [`shimChainChangedDisconnect`](https://wagmi.sh/core/connectors/injected#shimchainchangeddisconnect) flag in your `InjectedConnector` (or [`MetaMaskConnector`](https://wagmi.sh/core/connectors/metaMask#shimchainchangeddisconnect)).
-
-```tsx
-useConnect({
-  connector: new InjectedConnector({
-    options: {
-      shimChainChangedDisconnect: true,
-    },
-  }),
-});
-```

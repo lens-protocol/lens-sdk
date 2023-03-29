@@ -15,11 +15,7 @@ export function LoginButton({ handle }: { handle?: string }) {
   const { disconnectAsync } = useDisconnect();
 
   const { connectAsync } = useConnect({
-    connector: new InjectedConnector({
-      options: {
-        shimChainChangedDisconnect: true,
-      },
-    }),
+    connector: new InjectedConnector(),
   });
 
   const onLoginClick = async () => {
