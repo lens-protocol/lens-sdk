@@ -19,6 +19,10 @@ export type UseProfilePublicationsForSaleArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useProfilePublicationsForSale({
   profileId,
   observerId,

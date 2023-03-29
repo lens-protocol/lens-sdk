@@ -10,6 +10,10 @@ export type UseHidePublicationArgs = {
 
 export type HidePublicationOperation = Operation<void>;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useHidePublication({
   publication,
 }: UseHidePublicationArgs): HidePublicationOperation {

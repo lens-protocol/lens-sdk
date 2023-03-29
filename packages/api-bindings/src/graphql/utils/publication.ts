@@ -6,7 +6,18 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { DateUtils, never, Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 
-import { CollectPolicy, CollectState } from '../CollectPolicy';
+import {
+  AaveFeeCollectPolicy,
+  CollectPolicy,
+  CollectState,
+  FeeCollectPolicy,
+  LimitedFeeCollectPolicy,
+  LimitedTimedFeeCollectPolicy,
+  MultirecipientFeeCollectPolicy,
+  NoFeeCollectPolicy,
+  TimedFeeCollectPolicy,
+  VaultFeeCollectPolicy,
+} from '../CollectPolicy';
 import {
   AaveFeeCollectModuleSettings,
   Comment,
@@ -30,18 +41,27 @@ export type CollectModule = ContentPublication['collectModule'];
 
 export type ReferenceModule = NonNullable<ContentPublication['referenceModule']>;
 
+/**
+ * @group Helpers
+ */
 export function isPostPublication<T extends Typename<string>>(
   publication: T,
 ): publication is PickByTypename<T, 'Post'> {
   return publication.__typename === 'Post';
 }
 
+/**
+ * @group Helpers
+ */
 export function isCommentPublication<T extends Typename<string>>(
   publication: T,
 ): publication is PickByTypename<T, 'Comment'> {
   return publication.__typename === 'Comment';
 }
 
+/**
+ * @group Helpers
+ */
 export function isMirrorPublication<T extends Typename<string>>(
   publication: T,
 ): publication is PickByTypename<T, 'Mirror'> {
@@ -70,8 +90,14 @@ export function resolveApiReactionType(reaction: ReactionType): ReactionTypes {
   }
 }
 
+/**
+ * Any publication regardless of its type, or capabilities
+ */
 export type AnyPublication = Comment | Mirror | Post;
 
+/**
+ * Any publication that can be referenced other via a comment or mirror
+ */
 export type ContentPublication = Comment | Post;
 
 /**
@@ -90,18 +116,83 @@ export type Gated<T extends ContentPublication> = Overwrite<
   }
 >;
 
+/**
+ * An encrypted comment
+ */
 export type GatedComment = Prettify<Gated<Comment>>;
 
+/**
+ * An encrypted post
+ */
 export type GatedPost = Prettify<Gated<Post>>;
 
+/**
+ * An encrypted publication
+ */
 export type GatedPublication = GatedComment | GatedPost;
 
+/**
+ * @internal
+ */
+export type Collectable<T extends AnyPublication> = Overwrite<
+  T,
+  {
+    collectPolicy:
+      | FeeCollectPolicy
+      | NoFeeCollectPolicy
+      | LimitedFeeCollectPolicy
+      | TimedFeeCollectPolicy
+      | LimitedTimedFeeCollectPolicy
+      | MultirecipientFeeCollectPolicy
+      | VaultFeeCollectPolicy
+      | AaveFeeCollectPolicy;
+
+    collectModule:
+      | AaveFeeCollectModuleSettings
+      | Erc4626FeeCollectModuleSettings
+      | FeeCollectModuleSettings
+      | FreeCollectModuleSettings
+      | LimitedFeeCollectModuleSettings
+      | LimitedTimedFeeCollectModuleSettings
+      | MultirecipientFeeCollectModuleSettings
+      | TimedFeeCollectModuleSettings;
+  }
+>;
+
+/**
+ * A collectable comment
+ */
+export type CollectableComment = Prettify<Collectable<Comment>>;
+
+/**
+ * A collectable mirror (i.e. a mirror of a collectable comment or post)
+ */
+export type CollectableMirror = Prettify<Collectable<Mirror>>;
+
+/**
+ * A collectable post
+ */
+export type CollectablePost = Prettify<Collectable<Post>>;
+
+/**
+ * A collectable publication
+ *
+ * It can be a comment, mirror or post
+ */
+export type CollectablePublication = CollectableComment | CollectableMirror | CollectablePost;
+
+/**
+ * @group Helpers
+ */
 export function isGatedPublication(
   publication: ContentPublication,
 ): publication is GatedPublication {
   return publication.isGated;
 }
 
+/**
+ * @group Helpers
+ */
 export function isContentPublication(
   publication: AnyPublication,
 ): publication is ContentPublication {
@@ -110,6 +201,9 @@ export function isContentPublication(
 
 export type PublicationOwnedByMe = Overwrite<AnyPublication, { profile: ProfileOwnedByMe }>;
 
+/**
+ * @group Helpers
+ */
 export function isPublicationOwnedByMe(
   publication: AnyPublication,
 ): publication is PublicationOwnedByMe {

@@ -15,6 +15,10 @@ export type UseWhoReactedArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useWhoReacted(args: UseWhoReactedArgs): PaginatedReadResult<WhoReactedResult[]> {
   return usePaginatedReadResult(
     useWhoReactedPublication(

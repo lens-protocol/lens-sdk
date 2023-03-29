@@ -10,6 +10,10 @@ export type UseMutualFollowersArgs = PaginatedArgs<{
   viewingProfileId: ProfileId;
 }>;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useMutualFollowers({
   observerId,
   viewingProfileId,

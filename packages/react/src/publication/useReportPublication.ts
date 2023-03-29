@@ -15,6 +15,10 @@ export type ReportPublicationArgs = Pick<ReportPublicationRequest, 'additionalCo
 
 export type ReportPublicationOperation = Operation<void, never, [ReportPublicationArgs]>;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useReportPublication({
   publication,
 }: UseReportPublicationArgs): ReportPublicationOperation {

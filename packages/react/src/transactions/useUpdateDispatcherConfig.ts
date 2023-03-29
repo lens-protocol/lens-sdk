@@ -28,6 +28,10 @@ export type UpdateDispatcherConfigOperation = Operation<
   [UpdateDispatcherConfigArgs]
 >;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useUpdateDispatcherConfig({
   profile,
 }: UseUpdateDispatcherConfigArgs): UpdateDispatcherConfigOperation {

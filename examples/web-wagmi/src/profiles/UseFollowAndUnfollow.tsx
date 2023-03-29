@@ -59,7 +59,7 @@ type UseFollowInnerProps = {
 };
 
 function UseFollowInner({ activeProfile }: UseFollowInnerProps) {
-  const { data, error, loading } = useExploreProfiles({ observerId: activeProfile.id, limit: 50 });
+  const { data, error, loading } = useExploreProfiles({ limit: 50 });
 
   if (loading) return <Loading />;
 

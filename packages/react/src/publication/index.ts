@@ -92,6 +92,11 @@ export type { ReportPublicationRequest } from '@lens-protocol/domain/use-cases/p
  */
 export type {
   AnyPublication,
+  Collectable,
+  CollectableComment,
+  CollectableMirror,
+  CollectablePost,
+  CollectablePublication,
   Comment,
   CommentBase,
   CommentWithFirstComment,

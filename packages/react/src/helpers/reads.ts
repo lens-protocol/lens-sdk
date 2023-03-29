@@ -3,7 +3,10 @@ import { CommonPaginatedResultInfo, UnspecifiedError } from '@lens-protocol/api-
 import { Prettify } from '@lens-protocol/shared-kernel';
 
 /**
- * @internal
+ * A discriminated union of the possible results of a read operation with no errors.
+ *
+ * You can rely on the `loading` value to determine if the `data` is available.
+ * When `loading` is `false`, the `data` value will be available.
  */
 export type ReadResultWithoutError<T> =
   | {
@@ -16,7 +19,11 @@ export type ReadResultWithoutError<T> =
     };
 
 /**
- * @internal
+ * A discriminated union of the possible results of a read operation with possible errors.
+ *
+ * You can rely on the `loading` value to determine if the `data` or `error` can be evaluated.
+ *
+ * If `error` is `undefined`, then `data` value will be available.
  */
 export type ReadResultWithError<T, E> =
   | {
@@ -35,6 +42,9 @@ export type ReadResultWithError<T, E> =
       loading: false;
     };
 
+/**
+ * A discriminated union of the possible results of a read operation.
+ */
 export type ReadResult<T, E = UnspecifiedError> = E extends Error
   ? ReadResultWithError<T, E>
   : ReadResultWithoutError<T>;
@@ -81,12 +91,28 @@ export function useReadResult<
 
 export type PaginatedArgs<T> = Prettify<
   T & {
+    /**
+     * The number of items to return.
+     *
+     * @defaultValue 10
+     */
     limit?: number;
   }
 >;
 
+/**
+ * A paginated read result.
+ */
 export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
+  /**
+   * Whether there are more items to fetch.
+   */
   hasMore: boolean;
+  /**
+   * Fetches the next page of items.
+   *
+   * @returns A promise that resolves when the next page of items has been fetched.
+   */
   next: () => Promise<void>;
 };
 

@@ -18,6 +18,10 @@ export type UsePublicationRevenueArgs = WithObserverIdOverride<{
   publicationId: PublicationId;
 }>;
 
+/**
+ * @category Revenues
+ * @group Hooks
+ */
 export function usePublicationRevenue({
   publicationId,
   observerId,

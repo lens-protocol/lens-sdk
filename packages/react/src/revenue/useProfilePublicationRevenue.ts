@@ -21,6 +21,10 @@ export type UseProfilePublicationRevenueArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Revenues
+ * @group Hooks
+ */
 export function useProfilePublicationRevenue({
   profileId,
   observerId,

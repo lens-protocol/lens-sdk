@@ -66,7 +66,6 @@ function ReactionInner({ profile }: ReactionInnerProps) {
     loading,
   } = usePublication({
     publicationId: publicationId('0x1b-0x0118'),
-    observerId: profile.id, // important!
   });
 
   if (loading) return <Loading />;

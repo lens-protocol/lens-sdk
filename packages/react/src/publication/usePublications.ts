@@ -18,6 +18,10 @@ export type UsePublicationsArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function usePublications({
   profileId,
   metadataFilter,

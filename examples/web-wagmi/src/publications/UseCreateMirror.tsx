@@ -22,7 +22,6 @@ function MirrorInner({ publisher }: MirrorInnerProps) {
     loading: publicationLoading,
   } = usePublication({
     publicationId: publicationId('0x15-0x028e'),
-    observerId: publisher.id, // important!
   });
   const { execute: create, isPending, error: mirroringError } = useCreateMirror({ publisher });
 

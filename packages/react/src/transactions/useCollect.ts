@@ -22,6 +22,10 @@ export type CollectOperation = Operation<
   PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useCollect({ collector, publication }: UseCollectArgs): CollectOperation {
   const collect = useCollectController();
   return useOperation(async () => collect(createCollectRequest(publication, collector)));

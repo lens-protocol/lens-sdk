@@ -5,6 +5,11 @@ import { useSharedDependencies } from '../shared';
 import { RequiredSigner } from './adapters/ConcreteWallet';
 import { useActiveWallet } from './useActiveWallet';
 
+/**
+ * @category Wallet
+ * @group Hooks
+ * @experimental
+ */
 export function useActiveWalletSigner(): ReadResult<RequiredSigner | null, void> {
   const [{ signer, signerLoading }, setSigner] = useState<{
     signer: RequiredSigner | null;

@@ -19,6 +19,10 @@ export type UpdateProfileImageOperation = Operation<
   [string]
 >;
 
+/**
+ * @category Profiles
+ * @group Hooks
+ */
 export function useUpdateProfileImage({
   profile,
 }: UseUpdateProfileImageArgs): UpdateProfileImageOperation {

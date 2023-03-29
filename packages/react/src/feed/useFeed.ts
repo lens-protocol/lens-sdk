@@ -44,6 +44,38 @@ export type UseFeedArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * `useFeed` is a paginated hook that lets you read the feed of a given profile
+ *
+ * You MUST be authenticated via {@link useWalletLogin} to use this hook.
+ *
+ * @category Discovery
+ * @group Hooks
+ * @param args - {@link UseFeedArgs}
+ *
+ * @example
+ * ```tsx
+ * import { useFeed, ProfileId } from '@lens-protocol/react-web';
+ *
+ * function Feed({ profileId }: { profileId: ProfileId }) {
+ *   const { data, loading, error } = useFeed({ profileId });
+ *
+ *   if (loading) return <div>Loading...</div>;
+ *
+ *   if (error) return <div>Error: {error.message}</div>;
+ *
+ *   return (
+ *     <ul>
+ *       {data.map((item, idx) => (
+ *         <li key={key={`${item.root.id}-${idx}`}}>
+ *           // render item details
+ *         </li>
+ *       ))}
+ *     </ul>
+ *   );
+ * }
+ * ```
+ */
 export function useFeed({
   metadataFilter,
   restrictEventTypesTo,

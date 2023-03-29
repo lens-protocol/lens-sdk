@@ -7,6 +7,10 @@ export type UseEncryptedPublicationArgs<T extends ContentPublication> = {
   publication: T;
 };
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useEncryptedPublication<T extends ContentPublication>(
   args: UseEncryptedPublicationArgs<T>,
 ) {

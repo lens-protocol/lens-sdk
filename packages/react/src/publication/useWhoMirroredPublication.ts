@@ -17,6 +17,10 @@ export type UseWhoMirroredPublicationArgs = PaginatedArgs<
   }>
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useWhoMirroredPublication({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   publicationId,

@@ -13,6 +13,10 @@ export type ReactionArgs = {
   reactionType: ReactionType;
 };
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useReaction({ profileId }: UseReactionArgs) {
   const [isPending, setIsPending] = useState(false);
   const { add, remove } = useReactionController();

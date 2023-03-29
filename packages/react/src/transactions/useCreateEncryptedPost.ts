@@ -49,6 +49,10 @@ export type CreateEncryptedPostOperation = Operation<
   [CreateEncryptedPostArgs]
 >;
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useCreateEncryptedPost({
   encryption,
   publisher,

@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 
 import { ErrorHandler } from './ErrorHandler';
 import { LensConfig, validateConfig } from './config';
@@ -15,17 +15,28 @@ export type { ErrorHandler, FailedTransactionError };
 /**
  * <LensProvider> props
  */
-export type LensProviderProps = PropsWithChildren<{
+export type LensProviderProps = {
+  /**
+   * The children to render
+   */
+  children: ReactNode;
+  /**
+   * The configuration for the Lens SDK
+   */
   config: LensConfig;
   /**
+   * A callback that is called when the user logs out
+   *
    * @defaultValue no-op
    */
   onLogout?: LogoutHandler;
   /**
+   * A callback that is called when a transaction fails
+   *
    * @defaultValue no-op
    */
   onError?: ErrorHandler<FailedTransactionError>;
-}>;
+};
 
 // A specific function type would not trigger implicit any.
 // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/52873#issuecomment-845806435 for a comparison between `Function` and more specific types.
@@ -41,8 +52,9 @@ function useLatestCallback<T extends Function>(callback: T) {
 }
 
 /**
- * Given {@link LensConfig} it manages the lifecycle and internal state management of the Lens SDK
+ * Manages the lifecycle and internal state of the Lens SDK
  *
+ * @group Components
  * @param props - {@link LensProviderProps}
  */
 export function LensProvider({ children, ...props }: LensProviderProps) {

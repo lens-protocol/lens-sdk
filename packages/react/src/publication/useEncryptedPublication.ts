@@ -39,6 +39,10 @@ function updateMetadata<T extends ContentPublication>(publication: T, metadata: 
   return Object.assign({}, publication, { metadata });
 }
 
+/**
+ * @category Publications
+ * @group Hooks
+ */
 export function useEncryptedPublication<T extends ContentPublication>({
   encryption,
   publication,
