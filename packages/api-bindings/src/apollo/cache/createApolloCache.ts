@@ -87,7 +87,6 @@ export function createApolloCache({
 }: TypePoliciesArgs): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     possibleTypes: generatedIntrospection.possibleTypes,
-    resultCaching: true,
     typePolicies: createTypePolicies({ activeWalletVar }),
   });
 }
