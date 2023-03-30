@@ -9,9 +9,8 @@ function resolveGatedEnvironment(environment: EnvironmentConfig): GatedContent.E
   switch (environment.name) {
     case 'production':
       return GatedContent.production;
-    case 'staging':
-    case 'sandbox':
-      return GatedContent.staging;
+    case 'development':
+      return GatedContent.development;
   }
   throw new InvariantError(`Unknown new environment`);
 }

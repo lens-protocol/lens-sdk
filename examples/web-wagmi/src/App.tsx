@@ -1,4 +1,4 @@
-import { LensConfig, LensProvider, staging } from '@lens-protocol/react-web';
+import { LensConfig, LensProvider, development } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -72,7 +72,7 @@ const client = createClient({
 
 const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
-  environment: staging,
+  environment: development,
 };
 
 const toastNotification = (error: Error) => toast.error(error.message);

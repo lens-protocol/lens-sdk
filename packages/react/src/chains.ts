@@ -2,6 +2,8 @@ import { CryptoNativeAsset, ChainType, ether, matic } from '@lens-protocol/share
 
 /**
  * A chain configuration
+ *
+ * @internal
  */
 export type ChainConfig = {
   chainId: number;
@@ -11,6 +13,9 @@ export type ChainConfig = {
   nativeCurrency: CryptoNativeAsset;
 };
 
+/**
+ * @internal
+ */
 export const mainnet: ChainConfig = {
   chainId: 1,
   name: 'Ethereum',
@@ -19,6 +24,9 @@ export const mainnet: ChainConfig = {
   nativeCurrency: ether(),
 };
 
+/**
+ * @internal
+ */
 export const goerli: ChainConfig = {
   chainId: 5,
   name: 'Goerli',
@@ -27,6 +35,9 @@ export const goerli: ChainConfig = {
   nativeCurrency: ether(),
 };
 
+/**
+ * @internal
+ */
 export const polygon: ChainConfig = {
   chainId: 137,
   name: 'Polygon Mainnet',
@@ -35,6 +46,9 @@ export const polygon: ChainConfig = {
   nativeCurrency: matic(),
 };
 
+/**
+ * @internal
+ */
 export const mumbai: ChainConfig = {
   chainId: 80001,
   name: 'Polygon Testnet Mumbai',
@@ -45,5 +59,7 @@ export const mumbai: ChainConfig = {
 
 /**
  * A registry of chain configurations
+ *
+ * @internal
  */
 export type ChainConfigRegistry = Record<ChainType, ChainConfig>;

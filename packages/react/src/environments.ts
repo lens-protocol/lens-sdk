@@ -7,14 +7,18 @@ export type { TransactionObserverTimings };
 
 /**
  * A function that resolves a profile handle to a fully qualified profile handle
+ *
+ * @internal
  */
 export type ProfileHandleResolver = (handle: string) => string;
 
 /**
  * The environment configuration type
+ *
+ * @internal
  */
 export type EnvironmentConfig = {
-  name: 'production' | 'staging' | 'sandbox';
+  name: 'production' | 'development';
   backend: Url;
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
@@ -23,6 +27,8 @@ export type EnvironmentConfig = {
 
 /**
  * The production environment configuration
+ *
+ * This is the environment to be used in the live instance of your application (real users, real profiles, real data).
  *
  * - Endpoint: https://api.lens.dev
  * - Chain IDs: 137 (Polygon), 1 (Ethereum)
@@ -45,15 +51,17 @@ export const production: EnvironmentConfig = {
 };
 
 /**
- * The staging environment configuration
+ * The development environment configuration
+ *
+ * This is the environment to be used when you develop and test your application (test users, test profiles, test data)
  *
  * - Endpoint: https://api-mumbai.lens.dev
  * - Chain IDs: 80001 (Mumbai), 5 (Goerli)
  * - Profile handle suffix: `.test`
  * - Environment specific timings
  */
-export const staging: EnvironmentConfig = {
-  name: 'staging',
+export const development: EnvironmentConfig = {
+  name: 'development',
   backend: 'https://api-mumbai.lens.dev',
   chains: {
     [ChainType.ETHEREUM]: goerli,
@@ -66,3 +74,20 @@ export const staging: EnvironmentConfig = {
   },
   handleResolver: (handle) => `${handle}.test`,
 };
+
+/**
+ * The development environment configuration
+ *
+ * @deprecated Please use the {@link development} variable instead
+ *
+ * After extensive considerations, we have decided to rename the `staging` variable into `development`.
+ * We found that the term `staging` is inflated and not very clear to the all users.
+ *
+ * Together with {@link `production`} the changes is meant to be more explicit about the intended usage of these variables.
+ *
+ * - `production` is the environment to be used in the live instance of your application (real users, real profiles, real data).
+ * - `development` is the environment to be used when you develop and test your application (test users, test profiles, test data).
+ *
+ * We also aligned the naming in the `@lens-protocol/client` package to enable interoperability between the two packages.
+ */
+export const staging = development;

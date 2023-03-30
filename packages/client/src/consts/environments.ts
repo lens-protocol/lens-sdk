@@ -1,13 +1,45 @@
-export class Environment {
-  constructor(public readonly name: 'production' | 'staging' | 'sandbox', private url: string) {}
+/**
+ * @internal
+ * @privateRemarks DO NOT export constructor, just the type and variables defined with it
+ */
+class Environment {
+  constructor(public readonly name: string, private url: string) {}
 
   get gqlEndpoint() {
     return this.url;
   }
 }
 
-export const polygon = new Environment('production', 'https://api.lens.dev');
-export const mumbai = new Environment('staging', 'https://api-mumbai.lens.dev');
+export type { Environment };
 
-// not exposed from the package, used in tests
+export const production = new Environment('production', 'https://api.lens.dev');
+
+export const development = new Environment('development', 'https://api-mumbai.lens.dev');
+
+/**
+ * @deprecated Please use the {@link production} variable instead
+ *
+ * After extensive considerations, we have decided to rename the `polygon` variable into `production`.
+ * See also the deprecated {@link `mumbai`} variable.
+ *
+ * The changes is meant to be more explicit about the intended usage of the variables.
+ * It also helps to widen the meaning of these as we add features that are not limited to Polygon blockchain.
+ */
+export const polygon = production;
+
+/**
+ * @deprecated Please use the {@link development} variable instead
+ *
+ * After extensive considerations, we have decided to rename the `mumbai` variable into `development`.
+ * See also the deprecated {@link `polygon`} variable.
+ *
+ * The changes is meant to be more explicit about the intended usage of the variable.
+ * It also helps to widen the meaning of these as we add features that are not limited to Polygon blockchain.
+ */
+export const mumbai = development;
+
+/**
+ * @internal
+ * @privateRemarks not exposed from the package, used in tests ONLY
+ */
 export const mumbaiSandbox = new Environment('sandbox', 'https://api-sandbox-mumbai.lens.dev');

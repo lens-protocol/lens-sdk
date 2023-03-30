@@ -1,7 +1,7 @@
 import './shims';
 
 import React from 'react';
-import {LensConfig, LensProvider, staging} from '@lens-protocol/react';
+import {LensConfig, LensProvider, development} from '@lens-protocol/react';
 import {View, StyleSheet, SafeAreaView} from 'react-native';
 
 import {ExplorePublications} from './src/ExplorePublications';
@@ -11,7 +11,7 @@ import {LoginButton} from './src/LoginButton';
 
 const lensConfig: LensConfig = {
   bindings: bindings(),
-  environment: staging,
+  environment: development,
   storage: mmkvStorageProvider(),
 };
 
