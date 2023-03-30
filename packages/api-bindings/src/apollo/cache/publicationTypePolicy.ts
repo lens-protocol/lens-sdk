@@ -1,4 +1,5 @@
 import { FieldFunctionOptions, FieldPolicy, FieldReadFunction, Reference } from '@apollo/client';
+import { PublicationId } from '@lens-protocol/domain/entities';
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
@@ -12,6 +13,7 @@ import {
   CollectPolicy,
 } from '../../graphql';
 import { decryptionCriteria } from './decryptionCriteria';
+import { getAllPendingTransactions, isCollectTransactionFor } from './transactions';
 import { noCachedField } from './utils/noCachedField';
 
 function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
@@ -76,6 +78,23 @@ const collectPolicy = (
   });
 };
 
+const hasCollectedByMe = (existing: boolean, { readField }: FieldFunctionOptions): boolean => {
+  // if collected already then just return, it can't be undone
+  if (existing === true) return existing;
+
+  const publicationId = readField('id') as PublicationId;
+
+  const isCollectTransactionForThisPublication = isCollectTransactionFor({
+    publicationId,
+  });
+
+  const collectPendingTx = getAllPendingTransactions().find((transaction) => {
+    return isCollectTransactionForThisPublication(transaction);
+  });
+
+  return collectPendingTx !== undefined;
+};
+
 const hasOptimisticCollectedByMe: FieldReadFunction<boolean> = (existing) => {
   return existing ?? false;
 };
@@ -92,7 +111,7 @@ export function createContentPublicationTypePolicy() {
       reaction: noCachedField(),
       canComment: noCachedField(),
       canMirror: noCachedField(),
-      hasCollectedByMe: noCachedField(),
+      hasCollectedByMe,
       collectedBy,
       hasOptimisticCollectedByMe,
       isOptimisticMirroredByMe,

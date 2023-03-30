@@ -67,10 +67,10 @@ export type Scalars = {
   Handle: string;
   /** handle claim id custom scalar type */
   HandleClaimIdScalar: unknown;
-  /** IfpsCid scalar type */
-  IfpsCid: unknown;
   /** Internal publication id custom scalar type */
   InternalPublicationId: PublicationId;
+  /** IpfsCid scalar type */
+  IpfsCid: unknown;
   /** jwt custom scalar type */
   Jwt: string;
   /** limit custom scalar type */
@@ -981,6 +981,7 @@ export type NftUpdateItemOrder = {
 export type NotificationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  highSignalFilter?: InputMaybe<Scalars['Boolean']>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
   /** The profile id */
   notificationTypes?: InputMaybe<Array<NotificationTypes>>;
@@ -1105,7 +1106,7 @@ export type PublicMediaRequest = {
   /** The cover for any video or audio you attached */
   cover?: InputMaybe<Scalars['Url']>;
   /** Pre calculated cid of the file to push */
-  itemCid: Scalars['IfpsCid'];
+  itemCid: Scalars['IpfsCid'];
   /** This is the mime type of media */
   type?: InputMaybe<Scalars['MimeType']>;
 };
