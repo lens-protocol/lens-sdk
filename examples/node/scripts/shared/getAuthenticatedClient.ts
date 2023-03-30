@@ -1,4 +1,4 @@
-import LensClient, { mumbai } from "@lens-protocol/client";
+import { LensClient, mumbai } from "@lens-protocol/client";
 import { Wallet } from "ethers";
 
 export async function getAuthenticatedClient(wallet: Wallet): Promise<LensClient> {

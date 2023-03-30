@@ -1,4 +1,4 @@
-import LensClient, { mumbai } from "@lens-protocol/client";
+import { LensClient, mumbai } from "@lens-protocol/client";
 import { setupWallet } from "./shared/setupWallet";
 
 async function main() {
