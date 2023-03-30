@@ -14,6 +14,7 @@ export type ProfileHandleResolver = (handle: string) => string;
  * The environment configuration type
  */
 export type EnvironmentConfig = {
+  name: string;
   backend: Url;
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
@@ -29,6 +30,7 @@ export type EnvironmentConfig = {
  * - Environment specific timings
  */
 export const production: EnvironmentConfig = {
+  name: 'production',
   backend: 'https://api.lens.dev',
   chains: {
     [ChainType.ETHEREUM]: mainnet,
@@ -51,6 +53,7 @@ export const production: EnvironmentConfig = {
  * - Environment specific timings
  */
 export const staging: EnvironmentConfig = {
+  name: 'staging',
   backend: 'https://api-mumbai.lens.dev',
   chains: {
     [ChainType.ETHEREUM]: goerli,

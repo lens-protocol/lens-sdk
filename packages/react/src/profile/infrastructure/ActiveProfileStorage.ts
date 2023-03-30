@@ -2,11 +2,10 @@ import { BaseStorageSchema, IStorageProvider, Storage } from '@lens-protocol/sto
 
 import { StoredActiveProfileData } from '../adapters/ActiveProfileGateway';
 
-const ActiveProfileStorageDataSchema = new BaseStorageSchema(
-  'lens.activeProfile',
-  StoredActiveProfileData,
-);
-
-export function createActiveProfileStorage(storageProvider: IStorageProvider) {
+export function createActiveProfileStorage(storageProvider: IStorageProvider, namespace: string) {
+  const ActiveProfileStorageDataSchema = new BaseStorageSchema(
+    `lens.${namespace}.activeProfile`,
+    StoredActiveProfileData,
+  );
   return Storage.createForSchema(ActiveProfileStorageDataSchema, storageProvider);
 }

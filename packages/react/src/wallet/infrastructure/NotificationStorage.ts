@@ -7,11 +7,10 @@ export const UnreadNotificationsData = z.object({
 
 export type UnreadNotificationsData = z.infer<typeof UnreadNotificationsData>;
 
-const notificationStorageDataSchema = new BaseStorageSchema(
-  'lens.notifications',
-  UnreadNotificationsData,
-);
-
-export function createNotificationStorage(storageProvider: IStorageProvider) {
+export function createNotificationStorage(storageProvider: IStorageProvider, namespace: string) {
+  const notificationStorageDataSchema = new BaseStorageSchema(
+    `lens.${namespace}.notifications`,
+    UnreadNotificationsData,
+  );
   return Storage.createForSchema(notificationStorageDataSchema, storageProvider);
 }

@@ -11,7 +11,7 @@ const refreshToken =
 describe(`Given the ${CredentialsStorage.name} class`, () => {
   describe(`when ${CredentialsStorage.prototype.set.name} is invoked with credentials`, () => {
     it(`should make the credentials available with ${CredentialsStorage.prototype.get.name} method`, async () => {
-      const storage = new CredentialsStorage(new InMemoryStorageProvider());
+      const storage = new CredentialsStorage(new InMemoryStorageProvider(), 'namespace');
 
       const creds = new Credentials(accessToken, refreshToken);
       await storage.set(creds);
