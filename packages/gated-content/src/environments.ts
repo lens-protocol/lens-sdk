@@ -3,7 +3,7 @@ import { EthereumAddress } from '@lens-protocol/shared-kernel';
 import { SupportedChains } from './conditions/types';
 
 export type EnvironmentConfig = {
-  name: string;
+  name: 'production' | 'staging';
   chainId: number;
   chainName: SupportedChains;
   contractAddress: EthereumAddress;

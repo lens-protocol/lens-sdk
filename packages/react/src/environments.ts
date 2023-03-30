@@ -14,7 +14,7 @@ export type ProfileHandleResolver = (handle: string) => string;
  * The environment configuration type
  */
 export type EnvironmentConfig = {
-  name: string;
+  name: 'production' | 'staging' | 'sandbox';
   backend: Url;
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
