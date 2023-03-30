@@ -1,5 +1,8 @@
 import { cursorBasedPagination } from './utils/cursorBasedPagination';
 
 export function createNotificationsFieldPolicy() {
-  return cursorBasedPagination(['profileId']);
+  return cursorBasedPagination([
+    ['request', ['profileId', 'sources', 'notificationTypes']],
+    '$observerId',
+  ]);
 }

@@ -402,6 +402,9 @@ fragment Comment on Comment {
       ...MirrorBase
     }
   }
+  firstComment {
+    ...CommentBase
+  }
 }
 
 fragment Post on Post {

@@ -2,7 +2,6 @@ import {
   AnyPublication,
   Attribute,
   Comment,
-  CommentWithFirstComment,
   CommonPaginatedResultInfo,
   ContentPublication,
   EnabledModule,
@@ -166,9 +165,14 @@ export type AnyPublicationFragment = AnyPublication;
 export type CommentFragment = Comment;
 
 /**
- * @deprecated Use {@link CommentWithFirstComment} instead.
+ * @deprecated Use {@link Comment} instead.
  */
-export type CommentWithFirstCommentFragment = CommentWithFirstComment;
+export type CommentWithFirstCommentFragment = Comment;
+
+/**
+ * @deprecated Use {@link Comment} instead.
+ */
+export type CommentWithFirstComment = Comment;
 
 /**
  * @deprecated Use {@link ContentPublication} instead.
