@@ -4,11 +4,6 @@ The official framework-agnostic Lens API Client.
 
 This package enables you to interact with the Lens API via a type safe interface that abstracts away some of the GraphQL intricacies.
 
-> **Warning**
->
-> The Lens SDK is still in its initial development phase. Anything MAY change at any time.
-> This is a Developer Preview aimed primarily at existing integrators so to gather [early feedback](https://github.com/lens-protocol/lens-sdk/discussions/48).
-
 ## Running tests
 
 Tests are using a real wallet created from a private key stored in `.env` file. Test are run against Mumbai Sandbox API. The private key is set as a secret for Github Actions (our CI). Ask if you need it for local tests.

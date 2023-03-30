@@ -1,5 +1,30 @@
 # @lens-protocol/react
 
+## 1.0.0-beta.0
+
+### Minor Changes
+
+- c5dd99b: Changed arguments of `execute` method returned from `useCreateProfile` hook
+- dc1350d: Added TSDoc, use shared tsconfig, better types
+
+### Patch Changes
+
+- fce5b18: Added support for new collect modules: `multirecipientFeeCollectModule`, `erc4626FeeCollectModule`, `aaveFeeCollectModule`
+- 520a7c1: Changed GQL generated types so that `Fragment` suffix is no longer necessary
+- Added several missing TS type definitions
+- Added TSDoc comments to several APIs
+- 006aff5: Fixed bug with schema validation for `Date` in `NftAttribute`
+- a4e9500: allow to define `sortCriteria` for `useExploreProfiles`
+- Updated dependencies [6ae90ef]
+- Updated dependencies [dc1350d]
+- Updated dependencies [a4e9500]
+  - @lens-protocol/api-bindings@0.7.0-beta.0
+  - @lens-protocol/blockchain-bindings@0.7.0-beta.0
+  - @lens-protocol/gated-content@0.2.0-beta.0
+  - @lens-protocol/shared-kernel@0.7.0-beta.0
+  - @lens-protocol/storage@0.7.0-beta.0
+  - @lens-protocol/domain@0.7.0-beta.0
+
 ## 0.6.0
 
 ### Minor Changes

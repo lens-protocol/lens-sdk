@@ -1,5 +1,22 @@
 # @lens-protocol/client
 
+## 1.0.0-beta.0
+
+### Minor Changes
+
+- dc1350d: Added TSDoc, use shared tsconfig, better types
+
+### Patch Changes
+
+- fce5b18: Added support for new collect modules: `multirecipientFeeCollectModule`, `erc4626FeeCollectModule`, `aaveFeeCollectModule`
+- 6ae90ef: Exposed `collectNftAddress` from publication fragments
+- d865959: Changed `PublicationRevenue` query to return `PublicationRevenue` fragment
+- c8c069c: Reduced exposed fields on MirrorFragment to guide correct usage of Mirrors
+- d1499aa: Added refresh access token on `isAuthenticated` call
+- Updated dependencies [dc1350d]
+  - @lens-protocol/shared-kernel@0.7.0-beta.0
+  - @lens-protocol/storage@0.7.0-beta.0
+
 ## 0.3.0
 
 - Fixed `profile.createSetProfileImageURIViaDispatcher()`
