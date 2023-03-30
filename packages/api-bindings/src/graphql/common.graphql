@@ -348,7 +348,7 @@ fragment CommentBase on Comment {
   hidden
   isGated
   reaction(request: { profileId: $observerId })
-  hasCollectedByMe(isFinalisedOnChain: true)
+  hasCollectedByMe
   canComment(profileId: $observerId) {
     result
   }
@@ -481,7 +481,7 @@ fragment Post on Post {
   hidden
   isGated
   reaction(request: { profileId: $observerId })
-  hasCollectedByMe(isFinalisedOnChain: true)
+  hasCollectedByMe
   canComment(profileId: $observerId) {
     result
   }
