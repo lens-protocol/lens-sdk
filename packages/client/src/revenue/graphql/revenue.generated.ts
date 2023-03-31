@@ -8,10 +8,6 @@ import {
   ProfileFragment,
   MirrorFragment,
   CommentFragment,
-  WalletFragment,
-  Eip712TypedDataDomainFragment,
-  RelayerResultFragment,
-  RelayErrorFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -24,10 +20,6 @@ import {
   ProfileFragmentDoc,
   MirrorFragmentDoc,
   CommentFragmentDoc,
-  WalletFragmentDoc,
-  Eip712TypedDataDomainFragmentDoc,
-  RelayerResultFragmentDoc,
-  RelayErrorFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type ProfilePublicationRevenueQueryVariables = Types.Exact<{
   request: Types.ProfilePublicationRevenueQueryRequest;

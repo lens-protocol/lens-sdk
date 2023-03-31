@@ -9,6 +9,11 @@ import type { FeedHighlightsRequest, FeedRequest } from '../graphql/types.genera
 import { buildPaginatedQueryResult, PaginatedResult, requireAuthHeaders } from '../helpers';
 import { FeedItemFragment, getSdk, Sdk } from './graphql/feed.generated';
 
+/**
+ * Feed is one of the most fundamental element to create a successful social media site.
+ *
+ * @group LensClient Modules
+ */
 export class Feed {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
@@ -20,6 +25,22 @@ export class Feed {
     this.authentication = authentication;
   }
 
+  /**
+   * Fetch feed items.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns {@link PromiseResult} with array of {@link FeedItemFragment} wrapped in the {@link PaginatedResult} helper
+   *
+   * @example
+   * ```ts
+   * const result = await client.feed.fetch({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
   async fetch(
     request: FeedRequest,
     observerId?: string,
@@ -42,6 +63,22 @@ export class Feed {
     });
   }
 
+  /**
+   * Fetch feed highlights.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns {@link PromiseResult} with array of {@link PublicationFragment} wrapped in the {@link PaginatedResult} helper
+   *
+   * @example
+   * ```ts
+   * const result = await client.feed.fetchHighlights({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
   async fetchHighlights(
     request: FeedHighlightsRequest,
     observerId?: string,

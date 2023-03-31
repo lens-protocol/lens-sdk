@@ -1,10 +1,14 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { LensConfig } from '../consts/config';
-import { InferResultType } from '../consts/types';
 import { GlobalProtocolStatsRequest } from '../graphql/types.generated';
-import { getSdk, GlobalProtocolStatsQuery, Sdk } from './graphql/stats.generated';
+import { getSdk, GlobalProtocolStatsFragment, Sdk } from './graphql/stats.generated';
 
+/**
+ * Protocol stats.
+ *
+ * @group LensClient Modules
+ */
 export class Stats {
   private readonly sdk: Sdk;
 
@@ -14,9 +18,18 @@ export class Stats {
     this.sdk = getSdk(client);
   }
 
-  async fetch(
-    request?: GlobalProtocolStatsRequest,
-  ): Promise<InferResultType<GlobalProtocolStatsQuery>> {
+  /**
+   * Fetch protocol stats.
+   *
+   * @param request - Request object for the query
+   * @returns Protocol stats
+   *
+   * @example
+   * ```ts
+   * const result = await client.stats.fetch();
+   * ```
+   */
+  async fetch(request?: GlobalProtocolStatsRequest): Promise<GlobalProtocolStatsFragment> {
     const result = await this.sdk.GlobalProtocolStats({ request });
 
     return result.data.result;

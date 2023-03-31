@@ -1,20 +1,21 @@
+fragment GlobalProtocolStats on GlobalProtocolStats {
+  totalProfiles
+  totalBurntProfiles
+  totalPosts
+  totalMirrors
+  totalComments
+  totalCollects
+  totalFollows
+  totalRevenue {
+    asset {
+      ...Erc20
+    }
+    value
+  }
+}
+
 query GlobalProtocolStats($request: GlobalProtocolStatsRequest) {
   result: globalProtocolStats(request: $request) {
-    totalProfiles
-    totalBurntProfiles
-    totalPosts
-    totalMirrors
-    totalComments
-    totalCollects
-    totalFollows
-    totalRevenue {
-      asset {
-        name
-        symbol
-        decimals
-        address
-      }
-      value
-    }
+    ...GlobalProtocolStats
   }
 }

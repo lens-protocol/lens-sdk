@@ -13,6 +13,11 @@ import {
 } from '../helpers';
 import { getSdk, Sdk, WhoReactedResultFragment } from './graphql/reactions.generated';
 
+/**
+ * React to publications off-chain.
+ *
+ * @group LensClient Modules
+ */
 export class Reactions {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
@@ -24,6 +29,25 @@ export class Reactions {
     this.authentication = authentication;
   }
 
+  /**
+   * Add a reaction to a publication.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * import { ReactionTypes } from '@lens-protocol/client';
+   *
+   * await client.reactions.add({
+   *   profileId: '0x01',
+   *   publicationId: '0x02-0x01',
+   *   reaction: ReactionTypes.Upvote,
+   * });
+   * ```
+   */
   async add(
     request: ReactionRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
@@ -32,6 +56,26 @@ export class Reactions {
     });
   }
 
+  /**
+   * Remove a reaction from a publication.
+   * If the reaction does not exist, this will return an error.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * import { ReactionTypes } from '@lens-protocol/client';
+   *
+   * await client.reactions.remove({
+   *   profileId: '0x01',
+   *   publicationId: '0x02-0x01',
+   *   reaction: ReactionTypes.Upvote,
+   * });
+   * ```
+   */
   async remove(
     request: ReactionRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
@@ -40,6 +84,20 @@ export class Reactions {
     });
   }
 
+  /**
+   * Fetch who reacted to a publication.
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Array of {@link WhoReactedResultFragment} wrapped in the {@link PaginatedResult} helper
+   *
+   * @example
+   * ```ts
+   * const result = await client.reactions.toPublication({
+   *   publicationId: '0x01-0x02',
+   * });
+   * ```
+   */
   async toPublication(
     request: WhoReactedPublicationRequest,
     observerId?: string,

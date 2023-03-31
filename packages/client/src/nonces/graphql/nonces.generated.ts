@@ -5,19 +5,28 @@ import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-export type UserSigNoncesQueryVariables = Types.Exact<{ [key: string]: never }>;
-
-export type UserSigNoncesQuery = {
-  result: { lensHubOnChainSigNonce: number; peripheryOnChainSigNonce: number };
+export type UserSigNoncesFragment = {
+  lensHubOnChainSigNonce: number;
+  peripheryOnChainSigNonce: number;
 };
 
+export type UserSigNoncesQueryVariables = Types.Exact<{ [key: string]: never }>;
+
+export type UserSigNoncesQuery = { result: UserSigNoncesFragment };
+
+export const UserSigNoncesFragmentDoc = gql`
+  fragment UserSigNonces on UserSigNonces {
+    lensHubOnChainSigNonce
+    peripheryOnChainSigNonce
+  }
+`;
 export const UserSigNoncesDocument = gql`
   query UserSigNonces {
     result: userSigNonces {
-      lensHubOnChainSigNonce
-      peripheryOnChainSigNonce
+      ...UserSigNonces
     }
   }
+  ${UserSigNoncesFragmentDoc}
 `;
 
 export type SdkFunctionWrapper = <T>(

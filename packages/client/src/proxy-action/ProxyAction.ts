@@ -20,6 +20,17 @@ export class StatusPollingError extends Error {
   message = 'Max attempts exceeded';
 }
 
+/**
+ * ProxyAction enables signless follow and collect actions.
+ *
+ * @remarks
+ *
+ * ProxyAction enables actions like follow and collect
+ * to be signless. This only works if the modules assigned
+ * to those actions are free and have no cost to them.
+ *
+ * @group LensClient Modules
+ */
 export class ProxyAction {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
@@ -31,6 +42,19 @@ export class ProxyAction {
     this.authentication = authentication;
   }
 
+  /**
+   * Follow a profile.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param profileId - profile id to follow
+   * @returns {@link PromiseResult} with a proxyActionId
+   *
+   * @example
+   * ```ts
+   * const result = await client.proxyAction.freeFollow('0x123');
+   * ```
+   */
   async freeFollow(
     profileId: string,
   ): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
@@ -52,6 +76,19 @@ export class ProxyAction {
     });
   }
 
+  /**
+   * Collect a publication.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param publicationId - publication id to collect
+   * @returns {@link PromiseResult} with a proxyActionId
+   *
+   * @example
+   * ```ts
+   * const result = await client.proxyAction.freeCollect('0x123-0x456');
+   * ```
+   */
   async freeCollect(
     publicationId: string,
   ): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
@@ -73,6 +110,19 @@ export class ProxyAction {
     });
   }
 
+  /**
+   * Check the status of a proxy action.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param proxyActionId - proxy action id to check
+   * @returns {@link PromiseResult} with a {@link ProxyActionStatusResultFragment} or {@link ProxyActionErrorFragment} or {@link ProxyActionQueuedFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.proxyAction.checkStatus(proxyActionId);
+   * ```
+   */
   async checkStatus(
     proxyActionId: string,
   ): PromiseResult<
@@ -91,6 +141,19 @@ export class ProxyAction {
     });
   }
 
+  /**
+   * Wait for a proxy action to complete.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param proxyActionId - proxy action id to wait for
+   * @returns {@link PromiseResult} with a {@link ProxyActionStatusResultFragment} or {@link ProxyActionErrorFragment} or {@link ProxyActionQueuedFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.proxyAction.waitForStatusComplete(proxyActionId);
+   * ```
+   */
   async waitForStatusComplete(
     proxyActionId: string,
   ): PromiseResult<

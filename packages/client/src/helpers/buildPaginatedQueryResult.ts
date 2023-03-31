@@ -1,5 +1,3 @@
-import { Prettify } from '@lens-protocol/shared-kernel';
-
 import { CommonPaginatedResultInfoFragment } from '../graphql/fragments.generated';
 
 /**
@@ -10,12 +8,10 @@ export type PaginatedQueryData<Item> = {
   items: Item[];
 };
 
-export type PaginatedResult<T> = Prettify<
-  PaginatedQueryData<T> & {
-    next(): Promise<PaginatedResult<T> | null>;
-    prev(): Promise<PaginatedResult<T> | null>;
-  }
->;
+export type PaginatedResult<T> = PaginatedQueryData<T> & {
+  next(): Promise<PaginatedResult<T> | null>;
+  prev(): Promise<PaginatedResult<T> | null>;
+};
 
 /**
  * @internal

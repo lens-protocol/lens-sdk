@@ -15,6 +15,11 @@ import {
   Sdk,
 } from './graphql/revenue.generated';
 
+/**
+ * With built-in ways to earn on Lens Protocol, see the breakdown of what you have earned.
+ *
+ * @group LensClient Modules
+ */
 export class Revenue {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
@@ -26,6 +31,21 @@ export class Revenue {
     this.authentication = authentication;
   }
 
+  /**
+   * Fetch revenue of a profile's publications.
+   * Return only publications that have earned any fees.
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Array of {@link PublicationRevenueFragment} wrapped in the {@link PaginatedResult} helper
+   *
+   * @example
+   * ```ts
+   * const result = await client.revenue.profilePublication({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
   async profilePublication(
     request: ProfilePublicationRevenueQueryRequest,
     observerId?: string,
@@ -45,6 +65,19 @@ export class Revenue {
     });
   }
 
+  /**
+   * Fetch the amounts earned on the requested profile for all follows, grouped by currency.
+   *
+   * @param request - Request object for the query
+   * @returns Array of {@link RevenueAggregateFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.revenue.profileFollow({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
   async profileFollow(
     request: ProfileFollowRevenueQueryRequest,
   ): Promise<RevenueAggregateFragment[]> {
@@ -60,6 +93,20 @@ export class Revenue {
     });
   }
 
+  /**
+   * Fetch the amounts earned on the requested publication.
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Publication revenue
+   *
+   * @example
+   * ```ts
+   * const result = await client.revenue.publication({
+   *  publicationId: '0x123',
+   * });
+   * ```
+   */
   async publication(
     request: PublicationRevenueQueryRequest,
     observerId?: string,

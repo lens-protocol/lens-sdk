@@ -6,12 +6,39 @@ import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors
 import { AuthenticationApi } from './adapters/AuthenticationApi';
 import { CredentialsStorage } from './adapters/CredentialsStorage';
 
+/**
+ * Authentication for Lens API.
+ *
+ * @group LensClient Modules
+ */
 export interface IAuthentication {
+  /**
+   * Generate a challenge string for the wallet to sign.
+   *
+   * @param address - The wallet address
+   * @returns A challenge string
+   */
   generateChallenge(address: string): Promise<string>;
+
+  /**
+   * Authenticate the user with the wallet address and signature of the challenge.
+   *
+   * @param address - The wallet address
+   * @param signature - The signature of the challenge
+   */
   authenticate(address: string, signature: string): Promise<void>;
+
+  /**
+   * Check if the user is authenticated. If the credentials are expired, try to refresh them.
+   *
+   * @returns Whether the user is authenticated
+   */
   isAuthenticated(): Promise<boolean>;
 }
 
+/**
+ * Authentication for Lens API. Request challenge, authenticate, manage credentials.
+ */
 export class Authentication implements IAuthentication {
   private readonly api: AuthenticationApi;
   private readonly storage: CredentialsStorage;

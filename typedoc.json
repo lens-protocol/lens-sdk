@@ -1,6 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["packages/react-web"],
+  "entryPoints": ["packages/react-web", "packages/client"],
   "entryPointStrategy": "packages",
   "excludeExternals": false,
   "excludeInternal": false,
