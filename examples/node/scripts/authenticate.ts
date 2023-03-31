@@ -1,9 +1,9 @@
-import { LensClient, mumbai } from "@lens-protocol/client";
+import { LensClient, development } from "@lens-protocol/client";
 import { setupWallet } from "./shared/setupWallet";
 
 async function main() {
   const lensClient = new LensClient({
-    environment: mumbai,
+    environment: development,
   });
 
   const wallet = setupWallet();

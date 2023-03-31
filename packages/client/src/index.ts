@@ -1,6 +1,5 @@
 export { LensClient } from './LensClient';
-
-export { polygon, mumbai, Environment } from './consts/environments';
+export { polygon, mumbai, production, development } from './consts/environments';
 export * from './authentication';
 export * from './consts/config';
 export * from './consts/errors';
@@ -53,9 +52,11 @@ export type {
 } from '@lens-protocol/shared-kernel';
 export type { IStorageProvider } from '@lens-protocol/storage';
 
+export type { Environment } from './consts/environments';
 export type { LensConfig } from './consts/config';
 export type { PublicationFragment } from './graphql/types';
 export type { PaginatedResult, PaginatedQueryData } from './helpers/buildPaginatedQueryResult';
+
 export type {
   AaveFeeCollectModuleSettingsFragment,
   AttributeFragment,
