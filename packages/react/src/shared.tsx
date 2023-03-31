@@ -108,11 +108,11 @@ export function createSharedDependencies(
   const logger = config.logger ?? new ConsoleLogger();
 
   // storages
-  const activeProfileStorage = createActiveProfileStorage(config.storage);
-  const credentialsStorage = new CredentialsStorage(config.storage);
-  const walletStorage = createWalletStorage(config.storage);
-  const notificationStorage = createNotificationStorage(config.storage);
-  const transactionStorage = createTransactionStorage(config.storage);
+  const activeProfileStorage = createActiveProfileStorage(config.storage, config.environment.name);
+  const credentialsStorage = new CredentialsStorage(config.storage, config.environment.name);
+  const walletStorage = createWalletStorage(config.storage, config.environment.name);
+  const notificationStorage = createNotificationStorage(config.storage, config.environment.name);
+  const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
 
   // apollo client
   const anonymousApolloClient = createAnonymousApolloClient({

@@ -70,7 +70,7 @@ export class GatedClient {
     this.authentication = authentication;
     this.environment = environment;
     this.signer = signer;
-    this.storage = createAuthStorage(environment, storageProvider);
+    this.storage = createAuthStorage(storageProvider, environment.name);
     this.encryptionProvider = encryptionProvider;
   }
 

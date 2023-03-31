@@ -2,8 +2,7 @@ import { BaseStorageSchema, IStorageProvider, Storage } from '@lens-protocol/sto
 
 import { TransactionStorageSchema } from '../adapters/PendingTransactionGateway';
 
-const schema = new BaseStorageSchema('lens.transactions', TransactionStorageSchema);
-
-export function createTransactionStorage(storageProvider: IStorageProvider) {
+export function createTransactionStorage(storageProvider: IStorageProvider, namespace: string) {
+  const schema = new BaseStorageSchema(`lens.${namespace}.transactions`, TransactionStorageSchema);
   return Storage.createForSchema(schema, storageProvider);
 }

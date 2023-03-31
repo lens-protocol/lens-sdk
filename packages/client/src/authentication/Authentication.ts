@@ -18,7 +18,10 @@ export class Authentication implements IAuthentication {
 
   constructor(config: LensConfig) {
     this.api = new AuthenticationApi(config);
-    this.storage = new CredentialsStorage(config.storage || new InMemoryStorageProvider());
+    this.storage = new CredentialsStorage(
+      config.storage || new InMemoryStorageProvider(),
+      config.environment.name,
+    );
   }
 
   async generateChallenge(address: string): Promise<string> {

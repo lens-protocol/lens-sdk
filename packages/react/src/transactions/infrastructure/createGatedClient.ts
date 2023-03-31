@@ -3,14 +3,14 @@ import * as GatedContent from '@lens-protocol/gated-content';
 import { IStorageProvider } from '@lens-protocol/storage';
 import { Signer } from 'ethers';
 
-import { EnvironmentConfig, production, staging } from '../../environments';
+import { EnvironmentConfig } from '../../environments';
 
 function resolveGatedEnvironment(environment: EnvironmentConfig): GatedContent.EnvironmentConfig {
-  switch (environment) {
-    case production:
+  switch (environment.name) {
+    case 'production':
       return GatedContent.production;
-    case staging:
-      return GatedContent.staging;
+    case 'development':
+      return GatedContent.development;
   }
   throw new InvariantError(`Unknown new environment`);
 }

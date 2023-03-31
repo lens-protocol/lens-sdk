@@ -16,8 +16,6 @@ const AuthData = z.object({
 
 type AuthData = z.infer<typeof AuthData>;
 
-const authStorageSchema = new BaseStorageSchema('lens.credentials', AuthData);
-
 /**
  * Stores auth credentials.
  * Access token is kept in memory.
@@ -27,7 +25,8 @@ export class CredentialsStorage implements IStorage<Credentials> {
   refreshTokenStorage: IStorage<AuthData>;
   accessToken: string | null = null;
 
-  constructor(storageProvider: IStorageProvider) {
+  constructor(storageProvider: IStorageProvider, namespace: string) {
+    const authStorageSchema = new BaseStorageSchema(`lens.${namespace}.credentials`, AuthData);
     this.refreshTokenStorage = Storage.createForSchema(authStorageSchema, storageProvider);
   }
 
