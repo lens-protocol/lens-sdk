@@ -1,9 +1,10 @@
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
 import { Wallet } from 'ethers';
 
-import LensClient, {
+import {
   Explore,
   Feed,
+  LensClient,
   Modules,
   Nfts,
   Nonces,

@@ -1,4 +1,4 @@
-import LensClient from "@lens-protocol/client";
+import { LensClient } from "@lens-protocol/client";
 
 export async function getActiveProfile(client: LensClient, walletAddress: string) {
   const ownedProfiles = await client.profile.fetchAll({

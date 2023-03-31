@@ -1,4 +1,4 @@
-import LensClient, { Result } from "@lens-protocol/client";
+import { LensClient, Result } from "@lens-protocol/client";
 import { Wallet } from "ethers";
 
 export async function signAndBroadcast(

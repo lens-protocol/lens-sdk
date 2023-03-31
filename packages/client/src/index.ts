@@ -1,4 +1,4 @@
-import { LensClient } from './LensClient';
+export { LensClient } from './LensClient';
 
 export { polygon, mumbai } from './consts/environments';
 export * from './authentication';
@@ -63,5 +63,3 @@ export {
   ReactionTypes,
   ReferenceModules,
 } from './graphql/types.generated';
-
-export default LensClient; // eslint-disable-line
