@@ -10,7 +10,7 @@
 
 ## Environments
 
-- `polygon`, `mumbai`
+- `production`, `development`
 
 ## Client and Authentication
 

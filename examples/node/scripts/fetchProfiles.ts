@@ -1,8 +1,8 @@
-import { LensClient, mumbai } from "@lens-protocol/client";
+import { LensClient, development } from "@lens-protocol/client";
 
 async function main() {
   const lensClient = new LensClient({
-    environment: mumbai,
+    environment: development,
   });
 
   // by profileIds
