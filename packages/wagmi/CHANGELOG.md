@@ -1,5 +1,13 @@
 # @lens-protocol/wagmi
 
+## 1.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [0f20b5a]
+- Updated dependencies [0f20b5a]
+  - @lens-protocol/react-web@1.0.0-beta.1
+
 ## 1.0.0-beta.0
 
 ### Minor Changes

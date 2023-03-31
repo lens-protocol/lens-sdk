@@ -1,5 +1,16 @@
 # @lens-protocol/react-web
 
+## 1.0.0-beta.1
+
+### Patch Changes
+
+- 0f20b5a: Changed storage keys so use environment name as namespace
+- 0f20b5a: Changed env config variables to be `development` and `production`
+- Updated dependencies [0f20b5a]
+- Updated dependencies [0f20b5a]
+  - @lens-protocol/gated-content@0.2.0-beta.1
+  - @lens-protocol/react@1.0.0-beta.1
+
 ## 1.0.0-beta.0
 
 ### Minor Changes
