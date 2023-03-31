@@ -15,7 +15,7 @@ module.exports = {
     'plugin:import/typescript',
     'prettier',
   ],
-  plugins: ['@typescript-eslint', 'import'],
+  plugins: ['@typescript-eslint', 'eslint-plugin-tsdoc', 'import'],
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
@@ -60,6 +60,13 @@ module.exports = {
         '@typescript-eslint/no-empty-function': 'off',
       },
     },
+
+    {
+      files: ['**/*.spec.{js,ts,tsx}'],
+      rules: {
+        'tsdoc/syntax': 'off',
+      },
+    },
   ],
   rules: {
     'no-console': 'error',
@@ -74,6 +81,9 @@ module.exports = {
         checksVoidReturn: false,
       },
     ],
+
+    'tsdoc/syntax': 'warn',
+
     // note you must disable the base rule as it can report incorrect errors
     'no-return-await': 'off',
     '@typescript-eslint/return-await': 'error',

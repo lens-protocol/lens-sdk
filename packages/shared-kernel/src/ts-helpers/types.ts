@@ -8,7 +8,7 @@ export type Constructable = new (...args: any[]) => any;
  * Specifies an object with unknown keys
  *
  * Useful when you don't care about exact props passed to the component.
- * @note Don't use `{}` as a type. `{}` actually means "any non-nullish value".
+ * @privateRemarks Don't use `{}` as a type. `{}` actually means "any non-nullish value".
  * @internal
  */
 export type UnknownObject = Record<string, unknown>;

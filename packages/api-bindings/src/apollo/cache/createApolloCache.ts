@@ -26,7 +26,7 @@ import { notNormalizedType } from './utils/notNormalizedType';
 
 type TypePoliciesArgs = {
   /**
-   * @deprecated this should not be provided by the consumer but should be part of @lens-protocol/api-bindings exports
+   * @deprecated this should not be provided by the consumer but should be part of `@lens-protocol/api-bindings` exports
    */
   activeWalletVar: ReactiveVar<WalletData | null>;
 };

@@ -99,7 +99,7 @@ export type FollowOperation = Operation<
  *
  * @category Profiles
  * @group Hooks
- * @param args
+ * @param args - {@link UseFollowArgs}
  *
  * @example Follow a profile with {@link OpenFollowPolicy}
  * ```ts

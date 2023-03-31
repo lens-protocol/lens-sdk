@@ -79,6 +79,7 @@ export type UseProfilesArgs = PaginatedArgs<
  *     ))}
  *   </div>
  * );
+ * ```
  */
 export function useProfiles({
   handles: byHandles,

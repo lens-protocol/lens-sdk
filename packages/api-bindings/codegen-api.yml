@@ -1,6 +1,7 @@
 overwrite: true
 hooks:
   afterAllFileWrite:
+    - prettier --write
     - eslint --fix
 
 watch: false
@@ -94,6 +95,7 @@ generates:
               '/* eslint-disable @typescript-eslint/no-explicit-any */', # see extensive use of FieldPolicy<any> | FieldReadFunction<any>
               '/* eslint-disable @typescript-eslint/naming-convention */', # interface PossibleTypesResultData not starting with I
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
+              '/* eslint-disable tsdoc/syntax */',
               "import * as Operations from './operations';",
             ]
       - 'typescript-react-apollo':

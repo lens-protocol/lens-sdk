@@ -230,7 +230,7 @@ export type Erc20Info = {
  *
  * Erc20 instances, like all {@link Asset} instances, are immutable and can be compared using reference equality (`===`).
  *
- * @param info - {@link Erc20Info details}
+ * @param info - {@link Erc20Info} details
  * @returns An Erc20 asset instance.
  */
 export function erc20({ name, decimals, symbol, address, chainType }: Erc20Info) {

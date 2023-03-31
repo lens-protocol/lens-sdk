@@ -84,7 +84,7 @@ export const development: EnvironmentConfig = {
  * We find that the term `staging` is inflated with too many meanings and people have different expectations
  * depending on their past work experiences. So the term is not very intelligible for our purpose.
  *
- * Together with {@link `production`} the changes is meant to be more explicit about the intended usage of these variables.
+ * Together with {@link production} the changes is meant to be more explicit about the intended usage of these variables.
  *
  * - `production` is the environment to be used in the live instance of your application (real users, real profiles, real data).
  * - `development` is the environment to be used when you develop and test your application (test users, test profiles, test data).
