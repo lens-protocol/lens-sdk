@@ -1,15 +1,25 @@
+import { Prettify } from '@lens-protocol/shared-kernel';
+
 import { CommonPaginatedResultInfoFragment } from '../graphql/fragments.generated';
 
-type PaginatedQueryData<Item> = {
+/**
+ * @internal
+ */
+export type PaginatedQueryData<Item> = {
   pageInfo: CommonPaginatedResultInfoFragment;
   items: Item[];
 };
 
-export type PaginatedResult<T> = PaginatedQueryData<T> & {
-  next(): Promise<PaginatedResult<T> | null>;
-  prev(): Promise<PaginatedResult<T> | null>;
-};
+export type PaginatedResult<T> = Prettify<
+  PaginatedQueryData<T> & {
+    next(): Promise<PaginatedResult<T> | null>;
+    prev(): Promise<PaginatedResult<T> | null>;
+  }
+>;
 
+/**
+ * @internal
+ */
 export async function buildPaginatedQueryResult<V, R>(
   queryFn: (variables: V) => Promise<PaginatedQueryData<R>>,
   variables: V,
