@@ -32,6 +32,12 @@ fragment NftGallery on NftGallery {
   }
 }
 
+fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
+  id
+  text
+  timeout
+}
+
 # queries
 query Nfts($request: NFTsRequest!) {
   result: nfts(request: $request) {
@@ -46,9 +52,7 @@ query Nfts($request: NFTsRequest!) {
 
 query NftOwnershipChallenge($request: NftOwnershipChallengeRequest!) {
   result: nftOwnershipChallenge(request: $request) {
-    id
-    text
-    timeout
+    ...NftOwnershipChallengeResult
   }
 }
 

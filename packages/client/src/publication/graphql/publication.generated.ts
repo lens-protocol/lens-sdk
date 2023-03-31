@@ -2,36 +2,30 @@
 import * as Types from '../../graphql/types.generated';
 
 import {
+  Eip712TypedDataDomainFragment,
   PostFragment,
   ProfileFragment,
   MirrorFragment,
   CommentFragment,
   CommonPaginatedResultInfoFragment,
   WalletFragment,
-  Eip712TypedDataDomainFragment,
   RelayerResultFragment,
   RelayErrorFragment,
-  FollowingFragment,
-  FollowerFragment,
-  Erc20AmountFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
+  Eip712TypedDataDomainFragmentDoc,
   PostFragmentDoc,
   ProfileFragmentDoc,
   MirrorFragmentDoc,
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
   WalletFragmentDoc,
-  Eip712TypedDataDomainFragmentDoc,
   RelayerResultFragmentDoc,
   RelayErrorFragmentDoc,
-  FollowingFragmentDoc,
-  FollowerFragmentDoc,
-  Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type PublicationStatsFragment = {
   __typename: 'PublicationStats';
@@ -41,6 +35,86 @@ export type PublicationStatsFragment = {
   totalUpvotes: number;
   totalDownvotes: number;
   commentsTotal: number;
+};
+
+export type MediaOutputFragment = {
+  altTag: string | null;
+  cover: string | null;
+  item: string;
+  source: Types.PublicationMediaSource | null;
+  type: string | null;
+};
+
+export type PublicMediaResultsFragment = { signedUrl: string; media: MediaOutputFragment };
+
+export type CreatePostBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { PostWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: {
+      nonce: number;
+      deadline: string;
+      profileId: string;
+      contentURI: string;
+      collectModule: string;
+      collectModuleInitData: string;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
+  };
+};
+
+export type CreateCommentBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { CommentWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: {
+      nonce: number;
+      deadline: string;
+      profileId: string;
+      contentURI: string;
+      profileIdPointed: string;
+      pubIdPointed: string;
+      collectModule: string;
+      collectModuleInitData: string;
+      referenceModuleData: string;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
+  };
+};
+
+export type CreateMirrorBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { MirrorWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: {
+      nonce: number;
+      deadline: string;
+      profileId: string;
+      profileIdPointed: string;
+      pubIdPointed: string;
+      referenceModuleData: string;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
+  };
+};
+
+export type CreateCollectBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { CollectWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: number; deadline: string; profileId: string; pubId: string; data: string };
+  };
 };
 
 export type PublicationQueryVariables = Types.Exact<{
@@ -125,26 +199,7 @@ export type CreatePostTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreatePostTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { PostWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomainFragment;
-      value: {
-        nonce: number;
-        deadline: string;
-        profileId: string;
-        contentURI: string;
-        collectModule: string;
-        collectModuleInitData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
-};
+export type CreatePostTypedDataMutation = { result: CreatePostBroadcastItemResultFragment };
 
 export type CreatePostViaDispatcherMutationVariables = Types.Exact<{
   request: Types.CreatePublicPostRequest;
@@ -159,29 +214,7 @@ export type CreateCommentTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateCommentTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { CommentWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomainFragment;
-      value: {
-        nonce: number;
-        deadline: string;
-        profileId: string;
-        contentURI: string;
-        profileIdPointed: string;
-        pubIdPointed: string;
-        collectModule: string;
-        collectModuleInitData: string;
-        referenceModuleData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
-};
+export type CreateCommentTypedDataMutation = { result: CreateCommentBroadcastItemResultFragment };
 
 export type CreateCommentViaDispatcherMutationVariables = Types.Exact<{
   request: Types.CreatePublicCommentRequest;
@@ -196,26 +229,7 @@ export type CreateMirrorTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateMirrorTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { MirrorWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomainFragment;
-      value: {
-        nonce: number;
-        deadline: string;
-        profileId: string;
-        profileIdPointed: string;
-        pubIdPointed: string;
-        referenceModuleData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
-};
+export type CreateMirrorTypedDataMutation = { result: CreateMirrorBroadcastItemResultFragment };
 
 export type CreateMirrorViaDispatcherMutationVariables = Types.Exact<{
   request: Types.CreateMirrorRequest;
@@ -230,34 +244,13 @@ export type CreateCollectTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateCollectTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { CollectWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomainFragment;
-      value: { nonce: number; deadline: string; profileId: string; pubId: string; data: string };
-    };
-  };
-};
+export type CreateCollectTypedDataMutation = { result: CreateCollectBroadcastItemResultFragment };
 
 export type CreateAttachMediaDataMutationVariables = Types.Exact<{
   request: Types.PublicMediaRequest;
 }>;
 
-export type CreateAttachMediaDataMutation = {
-  result: {
-    signedUrl: string;
-    media: {
-      altTag: string | null;
-      cover: string | null;
-      item: string;
-      source: Types.PublicationMediaSource | null;
-      type: string | null;
-    };
-  };
-};
+export type CreateAttachMediaDataMutation = { result: PublicMediaResultsFragment };
 
 export type HidePublicationMutationVariables = Types.Exact<{
   request: Types.HidePublicationRequest;
@@ -281,6 +274,136 @@ export const PublicationStatsFragmentDoc = gql`
     totalDownvotes
     commentsTotal(forSources: $sources)
   }
+`;
+export const MediaOutputFragmentDoc = gql`
+  fragment MediaOutput on MediaOutput {
+    altTag
+    cover
+    item
+    source
+    type
+  }
+`;
+export const PublicMediaResultsFragmentDoc = gql`
+  fragment PublicMediaResults on PublicMediaResults {
+    media {
+      ...MediaOutput
+    }
+    signedUrl
+  }
+  ${MediaOutputFragmentDoc}
+`;
+export const CreatePostBroadcastItemResultFragmentDoc = gql`
+  fragment CreatePostBroadcastItemResult on CreatePostBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        PostWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        collectModule
+        collectModuleInitData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateCommentBroadcastItemResultFragmentDoc = gql`
+  fragment CreateCommentBroadcastItemResult on CreateCommentBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        CommentWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        profileIdPointed
+        pubIdPointed
+        collectModule
+        collectModuleInitData
+        referenceModuleData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateMirrorBroadcastItemResultFragmentDoc = gql`
+  fragment CreateMirrorBroadcastItemResult on CreateMirrorBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        MirrorWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        profileIdPointed
+        pubIdPointed
+        referenceModuleData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateCollectBroadcastItemResultFragmentDoc = gql`
+  fragment CreateCollectBroadcastItemResult on CreateCollectBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        CollectWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        pubId
+        data
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
 `;
 export const PublicationDocument = gql`
   query Publication($request: PublicationQueryRequest!, $observerId: ProfileId) {
@@ -404,32 +527,10 @@ export const PublicationMetadataStatusDocument = gql`
 export const CreatePostTypedDataDocument = gql`
   mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
     result: createPostTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          PostWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          contentURI
-          collectModule
-          collectModuleInitData
-          referenceModule
-          referenceModuleInitData
-        }
-      }
+      ...CreatePostBroadcastItemResult
     }
   }
-  ${Eip712TypedDataDomainFragmentDoc}
+  ${CreatePostBroadcastItemResultFragmentDoc}
 `;
 export const CreatePostViaDispatcherDocument = gql`
   mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
@@ -451,35 +552,10 @@ export const CreateCommentTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createCommentTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          CommentWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          contentURI
-          profileIdPointed
-          pubIdPointed
-          collectModule
-          collectModuleInitData
-          referenceModuleData
-          referenceModule
-          referenceModuleInitData
-        }
-      }
+      ...CreateCommentBroadcastItemResult
     }
   }
-  ${Eip712TypedDataDomainFragmentDoc}
+  ${CreateCommentBroadcastItemResultFragmentDoc}
 `;
 export const CreateCommentViaDispatcherDocument = gql`
   mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
@@ -498,32 +574,10 @@ export const CreateCommentViaDispatcherDocument = gql`
 export const CreateMirrorTypedDataDocument = gql`
   mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDataOptions) {
     result: createMirrorTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          MirrorWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          profileIdPointed
-          pubIdPointed
-          referenceModuleData
-          referenceModule
-          referenceModuleInitData
-        }
-      }
+      ...CreateMirrorBroadcastItemResult
     }
   }
-  ${Eip712TypedDataDomainFragmentDoc}
+  ${CreateMirrorBroadcastItemResultFragmentDoc}
 `;
 export const CreateMirrorViaDispatcherDocument = gql`
   mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
@@ -542,43 +596,18 @@ export const CreateMirrorViaDispatcherDocument = gql`
 export const CreateCollectTypedDataDocument = gql`
   mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: TypedDataOptions) {
     result: createCollectTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          CollectWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          pubId
-          data
-        }
-      }
+      ...CreateCollectBroadcastItemResult
     }
   }
-  ${Eip712TypedDataDomainFragmentDoc}
+  ${CreateCollectBroadcastItemResultFragmentDoc}
 `;
 export const CreateAttachMediaDataDocument = gql`
   mutation CreateAttachMediaData($request: PublicMediaRequest!) {
     result: createAttachMediaData(request: $request) {
-      media {
-        altTag
-        cover
-        item
-        source
-        type
-      }
-      signedUrl
+      ...PublicMediaResults
     }
   }
+  ${PublicMediaResultsFragmentDoc}
 `;
 export const HidePublicationDocument = gql`
   mutation HidePublication($request: HidePublicationRequest!) {

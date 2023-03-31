@@ -24,3 +24,6 @@ coverage
 
 # env vars
 .env
+
+# documentation
+docs

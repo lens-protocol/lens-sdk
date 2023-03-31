@@ -20,6 +20,17 @@ export class TransactionPollingError extends Error {
   message = 'Max attempts exceeded';
 }
 
+/**
+ * Broadcast signed typed data for a gasless transaction.
+ *
+ * @remarks
+ *
+ * Typed data is a way to try to show the users what they are signing
+ * in a more readable format. You should only call transaction broadcast
+ * if you are using the typed data logic.
+ *
+ * @group LensClient Modules
+ */
 export class Transaction {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
@@ -31,6 +42,22 @@ export class Transaction {
     this.authentication = authentication;
   }
 
+  /**
+   * Broadcast a signed typed data for a gasless transaction.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelayerResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.transaction.broadcast({
+   *   id: data.id,
+   *   signature: signedTypedData,
+   * });
+   * ```
+   */
   async broadcast(
     request: BroadcastRequest,
   ): PromiseResult<
@@ -43,6 +70,19 @@ export class Transaction {
     });
   }
 
+  /**
+   * Check if a transaction has been indexed.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param txId - transaction id
+   * @returns {@link PromiseResult} with {@link TransactionIndexedResultFragment} or {@link TransactionErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.transaction.wasIndexed(txId);
+   * ```
+   */
   async wasIndexed(
     txId: string,
   ): PromiseResult<
@@ -55,6 +95,19 @@ export class Transaction {
     });
   }
 
+  /**
+   * Poll the transaction status until it has been indexed.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param txId - transaction id
+   * @returns {@link PromiseResult} with {@link TransactionIndexedResultFragment} or {@link TransactionErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.transaction.waitForIsIndexed(txId);
+   * ```
+   */
   async waitForIsIndexed(
     txId: string,
   ): PromiseResult<

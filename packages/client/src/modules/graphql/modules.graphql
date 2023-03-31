@@ -32,6 +32,19 @@ fragment EnabledModules on EnabledModules {
   }
 }
 
+fragment ApprovedAllowanceAmount on ApprovedAllowanceAmount {
+  currency
+  module
+  contractAddress
+  allowance
+}
+
+fragment GenerateModuleCurrencyApproval on GenerateModuleCurrencyApproval {
+  to
+  from
+  data
+}
+
 query EnabledModules {
   result: enabledModules {
     ...EnabledModules
@@ -46,17 +59,16 @@ query EnabledModuleCurrencies {
 
 query ApprovedModuleAllowanceAmount($request: ApprovedModuleAllowanceAmountRequest!) {
   result: approvedModuleAllowanceAmount(request: $request) {
-    currency
-    module
-    contractAddress
-    allowance
+    ... on ApprovedAllowanceAmount {
+      ...ApprovedAllowanceAmount
+    }
   }
 }
 
 query GenerateModuleCurrencyApprovalData($request: GenerateModuleCurrencyApprovalDataRequest!) {
   result: generateModuleCurrencyApprovalData(request: $request) {
-    to
-    from
-    data
+    ... on GenerateModuleCurrencyApproval {
+      ...GenerateModuleCurrencyApproval
+    }
   }
 }

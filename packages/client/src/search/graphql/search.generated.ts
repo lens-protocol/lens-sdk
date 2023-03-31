@@ -7,12 +7,11 @@ import {
   MirrorFragment,
   CommentFragment,
   CommonPaginatedResultInfoFragment,
-  WalletFragment,
-  Eip712TypedDataDomainFragment,
-  RelayerResultFragment,
-  RelayErrorFragment,
   FollowingFragment,
   FollowerFragment,
+  RelayerResultFragment,
+  RelayErrorFragment,
+  Eip712TypedDataDomainFragment,
   Erc20AmountFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -25,12 +24,11 @@ import {
   MirrorFragmentDoc,
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
-  WalletFragmentDoc,
-  Eip712TypedDataDomainFragmentDoc,
-  RelayerResultFragmentDoc,
-  RelayErrorFragmentDoc,
   FollowingFragmentDoc,
   FollowerFragmentDoc,
+  RelayerResultFragmentDoc,
+  RelayErrorFragmentDoc,
+  Eip712TypedDataDomainFragmentDoc,
   Erc20AmountFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type SearchPublicationsQueryVariables = Types.Exact<{

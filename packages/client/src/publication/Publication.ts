@@ -3,7 +3,6 @@ import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import type { InferResultType } from '../consts/types';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type {
   CommentFragment,
@@ -38,16 +37,31 @@ import {
   requireAuthHeaders,
 } from '../helpers';
 import {
-  CreateAttachMediaDataMutation,
-  CreateCollectTypedDataMutation,
-  CreateCommentTypedDataMutation,
-  CreateMirrorTypedDataMutation,
-  CreatePostTypedDataMutation,
+  CreateCollectBroadcastItemResultFragment,
+  CreateCommentBroadcastItemResultFragment,
+  CreateMirrorBroadcastItemResultFragment,
+  CreatePostBroadcastItemResultFragment,
   getSdk,
   PublicationStatsFragment,
+  PublicMediaResultsFragment,
   Sdk,
 } from './graphql/publication.generated';
 
+/**
+ * Publications are the posts, comments and mirrors that a profile creates.
+ *
+ * @remarks
+ *
+ * Make sure you understand the metadata standards that are set
+ * for publications. If a publication does not conform to these
+ * standards it will not be indexed by the Lens API.
+ * These are the guidelines set for the API. The Lens Protocol itself
+ * does not validate these guidelines. Building a standard allows
+ * compatibility for all kinds of projects, so we advise following
+ * the standards.
+ *
+ * @group LensClient Modules
+ */
 export class Publication {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
@@ -59,6 +73,19 @@ export class Publication {
     this.authentication = authentication;
   }
 
+  /**
+   * Fetch a publication
+   *
+   * @param request - Request object for the query
+   * @returns Publication or null if not found
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.fetch({
+   *   publicationId: '0x123',
+   * });
+   * ```
+   */
   async fetch(
     request: PublicationQueryRequest,
     observerId?: string,
@@ -76,6 +103,22 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch a publication's stats
+   *
+   * Returns global stats for a publication, like total amount of
+   * mirrors, collects, comments, upvotes and downvotes, as well
+   * as `appId` specific stats, like comments (if `sources` provided).
+   *
+   * @param request - Request object for the query
+   * @param sources - Required to calculate stats specific to provided appIds
+   * @returns Publication stats or undefined if not found
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.stats({ publicationId: '0x123' }, ['lenster']);
+   * ```
+   */
   async stats(
     request: PublicationQueryRequest,
     sources: string[],
@@ -93,6 +136,21 @@ export class Publication {
     });
   }
 
+  /**
+   * Validate a publication's metadata before creating it
+   *
+   * @param metadata - Metadata to validate
+   * @returns Validation result
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.validateMetadata(metadata);
+   *
+   * if (!result.valid) {
+   *   throw new Error(`Metadata is not valid.`);
+   * }
+   * ```
+   */
   async validateMetadata(
     metadata: PublicationMetadataV2Input,
   ): Promise<PublicationValidateMetadataResult> {
@@ -103,6 +161,20 @@ export class Publication {
     });
   }
 
+  /**
+   * Check the status of a publication's metadata.
+   * Helps to debug why a publication has not been indexed by Lens API.
+   *
+   * @param request - Request object for the query
+   * @returns Status of the publication's metadata
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.metadataStatus({
+   *   publicationId: '0x123-0x456',
+   * });
+   * ```
+   */
   async metadataStatus(
     request: GetPublicationMetadataStatusRequest,
   ): Promise<PublicationMetadataStatus | null> {
@@ -113,6 +185,19 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch all publications by requested criteria
+   *
+   * @param request - Request object for the query
+   * @returns Publications wrapped in {@link PaginatedResult} helper
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.fetchAll({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
   async fetchAll(
     request: PublicationsQueryRequest,
     observerId?: string,
@@ -132,6 +217,19 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch all wallets that collected a publication
+   *
+   * @param request - Request object for the query
+   * @returns Wallets wrapped in {@link PaginatedResult} helper
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.allWalletsWhoCollected({
+   *   publicationId: '0x123-0x456',
+   * });
+   * ```
+   */
   async allWalletsWhoCollected(
     request: WhoCollectedPublicationRequest,
     observerId?: string,
@@ -151,6 +249,19 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch all publications for sale by requested criteria
+   *
+   * @param request - Request object for the query
+   * @returns Publications wrapped in {@link PaginatedResult} helper
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.allForSale({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
   async allForSale(
     request: ProfilePublicationsForSaleRequest,
     observerId?: string,
@@ -170,11 +281,36 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data for creating a post.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for creating a post
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createPostTypedData({
+   *   profileId: '0x123',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   *   collectModule: {
+   *     revertCollectModule: true, // collect disabled
+   *   },
+   *   referenceModule: {
+   *     followerOnlyReferenceModule: false, // anybody can comment or mirror
+   *   },
+   * });
+   * ```
+   */
   async createPostTypedData(
     request: CreatePublicPostRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    InferResultType<CreatePostTypedDataMutation>,
+    CreatePostBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -190,6 +326,28 @@ export class Publication {
     });
   }
 
+  /**
+   * Create a post using dispatcher. Profile has to have the dispatcher enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelayerResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createPostViaDispatcher({
+   *   profileId: '0x123',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   *   collectModule: {
+   *     revertCollectModule: true, // collect disabled
+   *   },
+   *   referenceModule: {
+   *     followerOnlyReferenceModule: false, // anybody can comment or mirror
+   *   },
+   * });
+   * ```
+   */
   async createPostViaDispatcher(
     request: CreatePublicPostRequest,
   ): PromiseResult<
@@ -203,11 +361,37 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data for creating a comment.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for creating a comment
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createCommentTypedData({
+   *   profileId: '0x123',
+   *   publicationId: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   *   collectModule: {
+   *     revertCollectModule: true, // collect disabled
+   *   },
+   *   referenceModule: {
+   *     followerOnlyReferenceModule: false, // anybody can comment or mirror
+   *   },
+   * });
+   * ```
+   */
   async createCommentTypedData(
     request: CreatePublicCommentRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    InferResultType<CreateCommentTypedDataMutation>,
+    CreateCommentBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -223,6 +407,29 @@ export class Publication {
     });
   }
 
+  /**
+   * Create a comment using dispatcher. Profile has to have the dispatcher enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelayerResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createCommentViaDispatcher({
+   *   profileId: '0x123',
+   *   publicationId: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   *   collectModule: {
+   *     revertCollectModule: true, // collect disabled
+   *   },
+   *   referenceModule: {
+   *     followerOnlyReferenceModule: false, // anybody can comment or mirror
+   *   },
+   * });
+   * ```
+   */
   async createCommentViaDispatcher(
     request: CreatePublicCommentRequest,
   ): PromiseResult<
@@ -236,11 +443,33 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data for creating a mirror.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for creating a mirror
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createMirrorTypedData({
+   *   profileId: '0x123',
+   *   publicationId: '0x123-0x456',
+   *   referenceModule: {
+   *     followerOnlyReferenceModule: false, // anybody can comment or mirror
+   *   },
+   * });
+   * ```
+   */
   async createMirrorTypedData(
     request: CreateMirrorRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    InferResultType<CreateMirrorTypedDataMutation>,
+    CreateMirrorBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -256,6 +485,25 @@ export class Publication {
     });
   }
 
+  /**
+   * Create a mirror using dispatcher. Profile has to have the dispatcher enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelayerResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createMirrorViaDispatcher({
+   *   profileId: '0x123',
+   *   publicationId: '0x123-0x456',
+   *   referenceModule: {
+   *     followerOnlyReferenceModule: false, // anybody can comment or mirror
+   *   },
+   * });
+   * ```
+   */
   async createMirrorViaDispatcher(
     request: CreateMirrorRequest,
   ): PromiseResult<
@@ -269,11 +517,29 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data for collecting a publication or a comment.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for collecting a publication or a comment
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createCollectTypedData({
+   *   publicationId: '0x123-0x456',
+   * });
+   * ```
+   */
   async createCollectTypedData(
     request: CreateCollectRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    InferResultType<CreateCollectTypedDataMutation>,
+    CreateCollectBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -289,9 +555,34 @@ export class Publication {
     });
   }
 
-  async createAttachMediaData(
-    request: PublicMediaRequest,
-  ): Promise<InferResultType<CreateAttachMediaDataMutation>> {
+  /**
+   * Media endpoint allows to upload AUDIO and VIDEO directly to the Lens API
+   * without using IPFS or a storage provider. It will create a copy of the
+   * file in Lens API cache and streaming system before pinning it to
+   * the decentralised IPFS.
+   *
+   * @param request - Request object for the mutation
+   *
+   * | name    | type     | desc                                                                                |
+   * | :------ | :------- | :---------------------------------------------------------------------------------- |
+   * | itemCid | IfpsCid  | You need to precalculate the CID of the file before upload it with the presignedURL |
+   * | type    | MimeType | Mime type of the file to upload                                                     |
+   * | altTag  | String   | Alternative text to show on the embed object                                        |
+   * | cover   | Url      | Url cover image                                                                     |
+   *
+   * @returns Signed url for uploading the media together with media data
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createAttachMediaData({
+   *   itemCid: 'QmTAznyH583xUgEyY5zdrPB2LSGY7FUBPDddWKj58GmBgp',
+   *   type: 'video/mp4',
+   *   altTag: 'Video alt tag',
+   *   cover: 'ifps://QmVwvsJrFzAAb1fPe5uXF4QpPib1T6gjc3xLpS96BUsTL6'
+   * });
+   * ```
+   */
+  async createAttachMediaData(request: PublicMediaRequest): Promise<PublicMediaResultsFragment> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateAttachMediaData({ request }, headers);
 
@@ -299,6 +590,21 @@ export class Publication {
     });
   }
 
+  /**
+   * Hide a publication
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.publication.hide({
+   *  publicationId: '0x014e-0x0a',
+   * });
+   * ```
+   */
   async hide(
     request: HidePublicationRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
@@ -307,6 +613,25 @@ export class Publication {
     });
   }
 
+  /**
+   * Report a publication with a reason
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * import { buildReportingReasonInputParams, PublicationReportReason } from '@lens-protocol/client';
+   *
+   * await client.publication.report({
+   *   publicationId: '0x014e-0x0a',
+   *   reason: buildReportingReasonInputParams(PublicationReportReason.FAKE_ENGAGEMENT),
+   *   additionalComments: 'comment',
+   * });
+   * ```
+   */
   async report(
     request: ReportPublicationRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
