@@ -81,7 +81,8 @@ export const development: EnvironmentConfig = {
  * @deprecated Please use the {@link development} variable instead
  *
  * After extensive considerations, we have decided to rename the `staging` variable into `development`.
- * We found that the term `staging` is inflated and not very clear to the all users.
+ * We find that the term `staging` is inflated with too many meanings and people have different expectations
+ * depending on their past work experiences. So the term is not very intelligible for our purpose.
  *
  * Together with {@link `production`} the changes is meant to be more explicit about the intended usage of these variables.
  *

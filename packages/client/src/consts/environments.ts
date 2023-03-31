@@ -22,7 +22,7 @@ export const development = new Environment('development', 'https://api-mumbai.le
  * After extensive considerations, we have decided to rename the `polygon` variable into `production`.
  * See also the deprecated {@link `mumbai`} variable.
  *
- * The changes is meant to be more explicit about the intended usage of the variables.
+ * The new variable names are meant to be more explicit about the intended usage.
  * It also helps to widen the meaning of these as we add features that are not limited to Polygon blockchain.
  */
 export const polygon = production;
@@ -33,7 +33,7 @@ export const polygon = production;
  * After extensive considerations, we have decided to rename the `mumbai` variable into `development`.
  * See also the deprecated {@link `polygon`} variable.
  *
- * The changes is meant to be more explicit about the intended usage of the variable.
+ * The new variable names are meant to be more explicit about the intended usage.
  * It also helps to widen the meaning of these as we add features that are not limited to Polygon blockchain.
  */
 export const mumbai = development;
