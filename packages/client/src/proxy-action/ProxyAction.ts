@@ -1,7 +1,6 @@
 import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import { GraphQLClient } from 'graphql-request';
 
-import { testHeaderWrapper } from '../__helpers__/testHeaderWrapper';
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
@@ -28,7 +27,7 @@ export class ProxyAction {
   constructor(config: LensConfig, authentication: Authentication) {
     const client = new GraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client, testHeaderWrapper);
+    this.sdk = getSdk(client);
     this.authentication = authentication;
   }
 

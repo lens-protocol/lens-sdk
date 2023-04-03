@@ -28,7 +28,7 @@
     "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
-    "test": "NODE_ENV=testing jest",
+    "test": "jest",
     "tsc": "tsc --noEmit",
     "codegen": "graphql-codegen --config codegen-api.yml"
   },
