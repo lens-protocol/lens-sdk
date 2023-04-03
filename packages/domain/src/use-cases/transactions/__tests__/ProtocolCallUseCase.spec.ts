@@ -28,6 +28,7 @@ import {
   IUnsignedProtocolCallGateway,
   IProtocolCallRelayer,
 } from '../ProtocolCallUseCase';
+import { RelayError, RelayErrorReason } from '../RelayError';
 import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIMetaTransactionNonceGateway,
@@ -87,7 +88,10 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
 
       const transaction = MockedMetaTransaction.fromSignedCall(signedCall);
-      const protocolCallRelayer = mockIProtocolCallRelayer({ signedCall, transaction });
+      const protocolCallRelayer = mockIProtocolCallRelayer({
+        signedCall,
+        result: success(transaction),
+      });
 
       const transactionQueue = mockTransactionQueue();
 
@@ -121,7 +125,7 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
         ErrorCtor: UserRejectedError,
         error: new UserRejectedError(),
       },
-    ])(`should present any $ErrorCtor.name from the user's ${Wallet.name}`, async ({ error }) => {
+    ])(`should present any $ErrorCtor.name from the owner's ${Wallet.name}`, async ({ error }) => {
       const metaTransactionNonceGateway = mock<IMetaTransactionNonceGateway>();
 
       const unsignedProtocolCallGateway = mock<IUnsignedProtocolCallGateway<typeof request>>();
@@ -135,6 +139,39 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       const useCase = setupMetaTransactionUseCase({
         metaTransactionNonceGateway,
         unsignedProtocolCallGateway,
+        presenter,
+        wallet,
+      });
+
+      await useCase.execute(request);
+
+      expect(presenter.present).toHaveBeenCalledWith(failure(error));
+    });
+
+    it(`should present any ${RelayError.name} from the IProtocolCallRelayer call`, async () => {
+      const nonce = mockNonce();
+
+      const metaTransactionNonceGateway = mockIMetaTransactionNonceGateway({ nonce });
+
+      const unsignedProtocolCallGateway = mockIUnsignedProtocolCallGateway({
+        request,
+        nonce,
+        unsignedCall,
+      });
+
+      const wallet = mockWallet();
+      const signedCall = mockSignedProtocolCall(unsignedCall);
+      when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
+
+      const error = new RelayError(RelayErrorReason.REJECTED);
+      const protocolCallRelayer = mockIProtocolCallRelayer({ signedCall, result: failure(error) });
+
+      const presenter = mock<IProtocolCallPresenter>();
+
+      const useCase = setupMetaTransactionUseCase({
+        metaTransactionNonceGateway,
+        unsignedProtocolCallGateway,
+        protocolCallRelayer,
         presenter,
         wallet,
       });

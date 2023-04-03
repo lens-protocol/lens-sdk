@@ -4,3 +4,4 @@ export * from './ProtocolCallUseCase';
 export * from './SignlessProtocolCallUseCase';
 export * from './SupportedTransactionRequest';
 export * from './TransactionQueue';
+export * from './RelayError';

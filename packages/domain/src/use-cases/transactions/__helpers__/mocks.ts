@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { Result } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -13,7 +14,6 @@ import {
   TransactionRequestModel,
 } from '../../../entities';
 import {
-  MockedMetaTransaction,
   MockedProxyTransaction,
   mockNonce,
   mockTransactionHash,
@@ -25,6 +25,7 @@ import {
   IProtocolCallRelayer,
   IUnsignedProtocolCallGateway,
 } from '../ProtocolCallUseCase';
+import { RelayError } from '../RelayError';
 import { ISignlessProtocolCallRelayer } from '../SignlessProtocolCallUseCase';
 import { SupportedTransactionRequest } from '../SupportedTransactionRequest';
 import {
@@ -33,23 +34,16 @@ import {
   TransactionQueue,
 } from '../TransactionQueue';
 
-export function mockIProtocolCallRelayer<T extends TransactionRequestModel>(instructions?: {
+export function mockIProtocolCallRelayer<T extends TransactionRequestModel>({
+  signedCall,
+  result,
+}: {
   signedCall: SignedProtocolCall<T>;
-  transaction?: MetaTransaction<T>;
+  result: Result<MetaTransaction<T>, RelayError>;
 }) {
   const transactionRelayer = mock<IProtocolCallRelayer<T>>();
 
-  if (instructions) {
-    const { signedCall, transaction = MockedMetaTransaction.fromSignedCall(signedCall) } =
-      instructions;
-    when(transactionRelayer.relayProtocolCall)
-      .calledWith(signedCall)
-      .mockResolvedValue(transaction);
-  } else {
-    when(transactionRelayer.relayProtocolCall).mockImplementation(async (signedCall) =>
-      MockedMetaTransaction.fromSignedCall(signedCall),
-    );
-  }
+  when(transactionRelayer.relayProtocolCall).calledWith(signedCall).mockResolvedValue(result);
 
   return transactionRelayer;
 }
@@ -109,16 +103,14 @@ export function mockIUnsignedProtocolCallGateway<T extends TransactionRequestMod
 
 export function mockIDelegableProtocolCallGateway<T extends TransactionRequestModel>({
   request,
-  delegatedTransaction,
+  result,
 }: {
   request: T;
-  delegatedTransaction: NativeTransaction<T>;
+  result: Result<NativeTransaction<T>, RelayError>;
 }): IDelegableProtocolCallGateway<T> {
   const gateway = mock<IDelegableProtocolCallGateway<T>>();
 
-  when(gateway.createDelegatedTransaction)
-    .calledWith(request)
-    .mockResolvedValue(delegatedTransaction);
+  when(gateway.createDelegatedTransaction).calledWith(request).mockResolvedValue(result);
 
   return gateway;
 }

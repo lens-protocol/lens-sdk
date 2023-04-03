@@ -1,4 +1,4 @@
-import { failure, success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import {
   IUnsignedProtocolCall,
@@ -13,6 +13,7 @@ import {
 } from '../../entities';
 import { ActiveWallet } from '../wallets/ActiveWallet';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
+import { RelayError } from './RelayError';
 import { TransactionQueue } from './TransactionQueue';
 
 export interface IMetaTransactionNonceGateway {
@@ -20,7 +21,9 @@ export interface IMetaTransactionNonceGateway {
 }
 
 export interface IProtocolCallRelayer<T extends TransactionRequestModel> {
-  relayProtocolCall(signedCall: SignedProtocolCall<T>): Promise<MetaTransaction<T>>;
+  relayProtocolCall(
+    signedCall: SignedProtocolCall<T>,
+  ): PromiseResult<MetaTransaction<T>, RelayError>;
 }
 
 export interface IUnsignedProtocolCallGateway<T extends TransactionRequestModel> {
@@ -29,7 +32,7 @@ export interface IUnsignedProtocolCallGateway<T extends TransactionRequestModel>
 
 export type IProtocolCallPresenter = IGenericResultPresenter<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  PendingSigningRequestError | RelayError | UserRejectedError | WalletConnectionError
 >;
 
 export class ProtocolCallUseCase<T extends TransactionRequestModel> {
@@ -61,8 +64,14 @@ export class ProtocolCallUseCase<T extends TransactionRequestModel> {
       return;
     }
 
-    const transaction = await this.protocolCallRelayer.relayProtocolCall(signingResult.value);
+    const relayResult = await this.protocolCallRelayer.relayProtocolCall(signingResult.value);
 
+    if (relayResult.isFailure()) {
+      this.presenter.present(failure(relayResult.error));
+      return;
+    }
+
+    const transaction = relayResult.value;
     await this.transactionQueue.push(transaction);
 
     this.presenter.present(success());
