@@ -37,9 +37,9 @@ const safeSetTimeoutRec = (
  * 1. Large milliseconds delays (larger than 2147483647)
  * 2. Hibernation/Sleep
  *
- * @param fn callback to be invoked after
- * @param ms milliseconds to wait
- * @param options timer options
+ * @param fn - callback to be invoked after
+ * @param ms - milliseconds to wait
+ * @param options - timer options
  *
  * Note: `safeSetTimeout` should be only used when really needed
  *        as processor overhead is bigger than with normal `setTimeout`

@@ -33,7 +33,7 @@ export type CommentsData = {
 
 /**
  * This is a patched version of the codegen generated useCommentsQuery hook.
- * It is patched to return paginated results of CommentWithFirstComment instead of union with {} type.
+ * It is patched to return paginated results of CommentWithFirstComment instead of union with `{}` type.
  *
  * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
  */
@@ -51,7 +51,7 @@ export type SearchProfilesResult = {
 
 /**
  * This is a patched version of the codegen generated useSearchProfilesQuery hook.
- * It is patched to return paginated results of Profile instead of union with {} type.
+ * It is patched to return paginated results of Profile instead of union with `{}` type.
  *
  * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
  */
@@ -71,7 +71,7 @@ export type SearchPublicationsResult = {
 
 /**
  * This is a patched version of the codegen generated useSearchPublicationsQuery hook.
- * It is patched to return paginated results of Comment | Post instead of union with {} type.
+ * It is patched to return paginated results of Comment | Post instead of union with `{}` type.
  *
  * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
  */
