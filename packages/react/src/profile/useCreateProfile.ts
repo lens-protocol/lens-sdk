@@ -124,7 +124,7 @@ export function useCreateProfile(): CreateProfileOperation {
 
         return result;
       } catch (e) {
-        if (e instanceof BroadcastingError || e instanceof TransactionError) {
+        if (e instanceof TransactionError) {
           return failure(e);
         }
         throw e;

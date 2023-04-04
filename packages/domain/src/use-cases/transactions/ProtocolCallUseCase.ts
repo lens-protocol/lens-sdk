@@ -32,7 +32,7 @@ export interface IUnsignedProtocolCallGateway<T extends TransactionRequestModel>
 
 export type IProtocolCallPresenter = IGenericResultPresenter<
   void,
-  PendingSigningRequestError | BroadcastingError | UserRejectedError | WalletConnectionError
+  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
 export class ProtocolCallUseCase<T extends TransactionRequestModel> {
