@@ -10,6 +10,7 @@ import { when } from 'jest-when';
 
 import { Transaction, TransactionKind, NftOwnershipChallenge } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
+import { RelayError } from '../../transactions';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
@@ -55,7 +56,7 @@ export function mockIProfileTransactionGateway({
   result,
 }: {
   request: CreateProfileRequest;
-  result: Result<Transaction<CreateProfileRequest>, DuplicatedHandleError>;
+  result: Result<Transaction<CreateProfileRequest>, DuplicatedHandleError | RelayError>;
 }) {
   const profileTransactionGateway = mock<IProfileTransactionGateway>();
 

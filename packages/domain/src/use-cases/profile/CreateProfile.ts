@@ -1,6 +1,7 @@
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { NativeTransaction, TransactionKind, TransactionRequestModel } from '../../entities';
+import { RelayError } from '../transactions';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
 
@@ -20,10 +21,13 @@ export class DuplicatedHandleError extends Error {
 export interface IProfileTransactionGateway {
   createProfileTransaction<T extends CreateProfileRequest>(
     request: T,
-  ): PromiseResult<NativeTransaction<T>, DuplicatedHandleError>;
+  ): PromiseResult<NativeTransaction<T>, DuplicatedHandleError | RelayError>;
 }
 
-export type ICreateProfilePresenter = IGenericResultPresenter<void, DuplicatedHandleError>;
+export type ICreateProfilePresenter = IGenericResultPresenter<
+  void,
+  DuplicatedHandleError | RelayError
+>;
 
 export class CreateProfile {
   constructor(
