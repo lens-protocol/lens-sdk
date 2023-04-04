@@ -96,9 +96,7 @@ export function useWaitUntilTransactionSettled(waitTimeInMs: number = FIFTEEN_SE
       recentTransactionsVar.onNextChange(resolver);
     });
     const waitForSpecifiedTime = delay(waitTimeInMs).then(() => {
-      // Inaccurate error, moved code over here from `@lens-protocol/react` package
-      // TODO: Fix this
-      throw new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
+      throw new TransactionError(TransactionErrorReason.INDEXING_TIMEOUT);
     });
     await Promise.race([resolveWhenNoPendingTransactions, waitForSpecifiedTime]);
   };

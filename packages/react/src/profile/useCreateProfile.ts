@@ -1,5 +1,5 @@
 import { TransactionState, useWaitUntilTransactionSettled } from '@lens-protocol/api-bindings';
-import { TransactionKind } from '@lens-protocol/domain/entities';
+import { TransactionError, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
@@ -18,7 +18,7 @@ export { DuplicatedHandleError };
 
 export type CreateProfileOperation = Operation<
   void,
-  DuplicatedHandleError | BroadcastingError,
+  BroadcastingError | DuplicatedHandleError | TransactionError,
   [CreateProfileArgs]
 >;
 
@@ -104,7 +104,10 @@ export function useCreateProfile(): CreateProfileOperation {
   return useOperation(
     async ({
       handle,
-    }: CreateProfileArgs): PromiseResult<void, DuplicatedHandleError | BroadcastingError> => {
+    }: CreateProfileArgs): PromiseResult<
+      void,
+      BroadcastingError | DuplicatedHandleError | TransactionError
+    > => {
       try {
         const result = await createProfile({
           handle,
@@ -121,7 +124,7 @@ export function useCreateProfile(): CreateProfileOperation {
 
         return result;
       } catch (e) {
-        if (e instanceof BroadcastingError) {
+        if (e instanceof BroadcastingError || e instanceof TransactionError) {
           return failure(e);
         }
         throw e;
