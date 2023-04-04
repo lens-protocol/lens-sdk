@@ -1,14 +1,16 @@
 import { faker } from '@faker-js/faker';
-import { LensApolloClient, omitTypename } from '@lens-protocol/api-bindings';
+import { LensApolloClient, omitTypename, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockCreatePostTypedDataData,
   mockRelayerResultFragment,
   createCreatePostTypedDataMockedResponse,
   createCreatePostViaDispatcherMockedResponse,
+  mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockCreatePostRequest } from '@lens-protocol/domain/mocks';
+import { RelayError, RelayErrorReason } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
@@ -103,7 +105,7 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
     const request = mockCreatePostRequest(requestVars);
     const uploadUrl = faker.internet.url();
 
-    describe(`when creating an ${UnsignedLensProtocolCall.name}<CreatePostRequest>`, () => {
+    describe(`when creating an IUnsignedProtocolCall<CreatePostRequest>`, () => {
       it(`should:
           - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
           - create an instance of the ${UnsignedLensProtocolCall.name} with the expected typed data`, async () => {
@@ -129,7 +131,7 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
         expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
 
-      it(`should be possible to override the signature nonce`, async () => {
+      it(`should allow to override the signature nonce`, async () => {
         const nonce = mockNonce();
         const apolloClient = createMockApolloClientWithMultipleResponses([
           createCreatePostTypedDataMockedResponse({
@@ -174,12 +176,11 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
         ]);
         const { gateway, uploader } = setupTestScenario({ apolloClient, uploadUrl });
 
-        const transaction = await gateway.createDelegatedTransaction(request);
+        const result = await gateway.createDelegatedTransaction(request);
 
-        await transaction.waitNextEvent();
         expect(uploader.upload).toHaveBeenCalledWith(request);
-        expect(transaction).toBeInstanceOf(NativeTransaction);
-        expect(transaction).toEqual(
+        expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
+        expect(result.unwrap()).toEqual(
           expect.objectContaining({
             chainType: ChainType.POLYGON,
             id: expect.any(String),
@@ -187,6 +188,40 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
           }),
         );
       });
+
+      it.each([
+        {
+          expected: new RelayError(RelayErrorReason.REJECTED),
+          relayError: mockRelayErrorFragment(RelayErrorReasons.Rejected),
+        },
+        {
+          expected: new RelayError(RelayErrorReason.UNSPECIFIED),
+          relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
+        },
+      ])(
+        `should fail w/ a $expected.constructor.name in case of RelayError response with "$relayError.reason" reason`,
+        async ({ relayError, expected }) => {
+          const apolloClient = createMockApolloClientWithMultipleResponses([
+            createCreatePostViaDispatcherMockedResponse({
+              variables: {
+                request: {
+                  profileId: request.profileId,
+                  contentURI: uploadUrl,
+                  ...expectedMutationRequestDetails,
+                },
+              },
+              data: {
+                result: relayError,
+              },
+            }),
+          ]);
+
+          const { gateway } = setupTestScenario({ apolloClient, uploadUrl });
+          const result = await gateway.createDelegatedTransaction(request);
+
+          expect(() => result.unwrap()).toThrow(expected);
+        },
+      );
     });
   });
 });

@@ -8,24 +8,24 @@ import {
   CreatePublicPostRequest as CreatePublicPostRequestArg,
   LensApolloClient,
   omitTypename,
+  RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
-import {
-  NativeTransaction,
-  Nonce,
-  TransactionError,
-  TransactionErrorReason,
-} from '@lens-protocol/domain/entities';
+import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   CreatePostRequest,
   ICreatePostCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
+import {
+  RelayError,
+  RelayErrorReason,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
+import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
-import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
+import { ITransactionFactory, RelayReceipt } from '../ITransactionFactory';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class CreatePostCallGateway<R extends CreatePostRequest> implements ICreatePostCallGateway {
@@ -35,13 +35,23 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     private readonly metadataUploader: IMetadataUploader<R>,
   ) {}
 
-  async createDelegatedTransaction<T extends R>(request: T): Promise<NativeTransaction<T>> {
-    return this.transactionFactory.createNativeTransaction({
+  async createDelegatedTransaction<T extends R>(
+    request: T,
+  ): PromiseResult<NativeTransaction<T>, RelayError> {
+    const result = await this.broadcast(await this.resolveCreatePostRequestArg(request));
+
+    if (result.isFailure()) return failure(result.error);
+
+    const receipt = result.value;
+    const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiatePostCreation(await this.resolveCreatePostRequestArg(request)),
+      indexingId: receipt.indexingId,
+      txHash: receipt.txHash,
     });
+
+    return success(transaction);
   }
 
   async createUnsignedProtocolCall<T extends R>(
@@ -66,7 +76,9 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     );
   }
 
-  private async initiatePostCreation(requestArgs: CreatePublicPostRequestArg): AsyncRelayReceipt {
+  private async broadcast(
+    requestArgs: CreatePublicPostRequestArg,
+  ): PromiseResult<RelayReceipt, RelayError> {
     const { data } = await this.apolloClient.mutate<
       CreatePostViaDispatcherData,
       CreatePostViaDispatcherVariables
@@ -78,7 +90,10 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     });
 
     if (data.result.__typename === 'RelayError') {
-      return failure(new TransactionError(TransactionErrorReason.REJECTED));
+      if (data.result.reason === RelayErrorReasons.Rejected) {
+        return failure(new RelayError(RelayErrorReason.REJECTED));
+      }
+      return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
     }
 
     return success({
