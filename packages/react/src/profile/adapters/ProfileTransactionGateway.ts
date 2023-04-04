@@ -5,34 +5,21 @@ import {
   LensApolloClient,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
-import {
-  Transaction,
-  TransactionError,
-  TransactionErrorReason,
-} from '@lens-protocol/domain/entities';
+import { Transaction } from '@lens-protocol/domain/entities';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
   IProfileTransactionGateway,
 } from '@lens-protocol/domain/use-cases/profile';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  RelayError,
+  RelayErrorReason,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import {
-  AsyncRelayReceipt,
-  ITransactionFactory,
-} from '../../transactions/adapters/ITransactionFactory';
-
-async function asyncRelayReceipt(data: CreateProfileData): AsyncRelayReceipt {
-  if (data.result.__typename === 'RelayError') {
-    return failure(new TransactionError(TransactionErrorReason.REJECTED));
-  }
-  return success({
-    indexingId: data.result.txId,
-    txHash: data.result.txHash,
-  });
-}
+import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 
 export class ProfileTransactionGateway implements IProfileTransactionGateway {
   constructor(
@@ -42,7 +29,7 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
 
   async createProfileTransaction<T extends CreateProfileRequest>(
     request: T,
-  ): PromiseResult<Transaction<T>, DuplicatedHandleError> {
+  ): PromiseResult<Transaction<T>, DuplicatedHandleError | RelayError> {
     const { data } = await this.apolloClient.mutate<CreateProfileData, CreateProfileVariables>({
       mutation: CreateProfileDocument,
       variables: {
@@ -53,8 +40,13 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
     });
 
     if (data.result.__typename === 'RelayError') {
-      if (data.result.reason === RelayErrorReasons.HandleTaken) {
-        return failure(new DuplicatedHandleError(request.handle));
+      switch (data.result.reason) {
+        case RelayErrorReasons.HandleTaken:
+          return failure(new DuplicatedHandleError(request.handle));
+        case RelayErrorReasons.Rejected:
+          return failure(new RelayError(RelayErrorReason.REJECTED));
+        default:
+          return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
       }
     }
 
@@ -62,8 +54,10 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
       chainType: ChainType.POLYGON,
       request,
       id: v4(),
-      asyncRelayReceipt: asyncRelayReceipt(data),
+      indexingId: data.result.txId,
+      txHash: data.result.txHash,
     });
+
     return success(transaction);
   }
 }
