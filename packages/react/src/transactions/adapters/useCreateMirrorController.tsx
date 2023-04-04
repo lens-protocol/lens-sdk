@@ -4,7 +4,10 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { CreateMirror, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
-import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  ProtocolCallUseCase,
+} from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
@@ -23,7 +26,7 @@ export function useCreateMirrorController() {
   return async (request: CreateMirrorRequest) => {
     const presenter = new PromiseResultPresenter<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
     const mirrorCallGateway = new CreateMirrorCallGateway(apolloClient, transactionFactory);

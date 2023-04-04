@@ -9,6 +9,7 @@ import {
   UnconstrainedFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
+  BroadcastingError,
   ProtocolCallUseCase,
   SignlessProtocolCallUseCase,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -37,6 +38,7 @@ export function useFollowController() {
   return async (request: FollowRequest) => {
     const presenter = new PromiseResultPresenter<
       void,
+      | BroadcastingError
       | InsufficientAllowanceError
       | InsufficientFundsError
       | PendingSigningRequestError

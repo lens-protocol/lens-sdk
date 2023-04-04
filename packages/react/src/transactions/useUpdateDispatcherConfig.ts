@@ -10,6 +10,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useUpdateDispatcherConfigController } from './adapters/useUpdateDispatcherConfigController';
@@ -24,7 +25,7 @@ export type UpdateDispatcherConfigArgs = {
 
 export type UpdateDispatcherConfigOperation = Operation<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   [UpdateDispatcherConfigArgs]
 >;
 

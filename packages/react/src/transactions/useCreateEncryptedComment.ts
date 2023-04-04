@@ -27,6 +27,7 @@ import {
 import { MetadataUploaderErrorMiddleware } from './infrastructure/MetadataUploaderErrorMiddleware';
 import { PublicationIdPredictor } from './infrastructure/PublicationIdPredictor';
 import { createGatedClient } from './infrastructure/createGatedClient';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 export type UseCreateEncryptedCommentArgs = {
   encryption: EncryptionConfig;
@@ -45,7 +46,11 @@ export type CreateEncryptedCommentArgs = Prettify<
 
 export type CreateEncryptedCommentOperation = Operation<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
+  | BroadcastingError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError
+  | FailedUploadError,
   [CreateEncryptedCommentArgs]
 >;
 
@@ -78,7 +83,11 @@ export function useCreateEncryptedComment({
       ...args
     }: CreateEncryptedCommentArgs): PromiseResult<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
+      | BroadcastingError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
+      | FailedUploadError
     > => {
       invariant(
         signer,

@@ -6,6 +6,7 @@ import {
 } from '@lens-protocol/domain/entities';
 import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
+  BroadcastingError,
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
   ProtocolCallUseCase,
@@ -32,7 +33,7 @@ export type CreateCommentControllerArgs<T extends CreateCommentRequest> = {
 export class CreateCommentController<T extends CreateCommentRequest> {
   private readonly presenter = new PromiseResultPresenter<
     void,
-    PendingSigningRequestError | UserRejectedError | WalletConnectionError
+    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >();
 
   private readonly createComment: CreateComment;

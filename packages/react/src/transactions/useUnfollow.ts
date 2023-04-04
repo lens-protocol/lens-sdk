@@ -10,6 +10,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
@@ -26,7 +27,11 @@ export type UseUnfollowArgs = {
 
 export type UnfollowOperation = Operation<
   void,
-  PendingSigningRequestError | WalletConnectionError | UserRejectedError | PrematureUnfollowError
+  | BroadcastingError
+  | PendingSigningRequestError
+  | PrematureUnfollowError
+  | UserRejectedError
+  | WalletConnectionError
 >;
 
 /**
@@ -43,15 +48,16 @@ export function useUnfollow({ followee, follower }: UseUnfollowArgs): UnfollowOp
   return useOperation(
     async (): PromiseResult<
       void,
+      | BroadcastingError
       | PendingSigningRequestError
-      | WalletConnectionError
-      | UserRejectedError
       | PrematureUnfollowError
+      | UserRejectedError
+      | WalletConnectionError
     > => {
       if (hasPendingFollowTx) {
         return failure(
           new PrematureUnfollowError(
-            `Your follow request for ${followee.handle} is still pending.`,
+            `A previous follow request for ${followee.handle} is still pending.`,
           ),
         );
       }

@@ -7,6 +7,7 @@ import {
   UpdateFollowPolicy,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
@@ -23,7 +24,7 @@ export function useUpdateFollowPolicyController() {
   return async (args: UpdateFollowPolicyRequest) => {
     const presenter = new PromiseResultPresenter<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
     const updateFollowPolicy = new UpdateFollowPolicy(
       activeWallet,

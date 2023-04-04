@@ -7,7 +7,10 @@ import {
   UpdateProfileImage,
   UpdateProfileImageRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  ProtocolCallUseCase,
+} from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { ProfileImageCallGateway } from './ProfileImageCallGateway';
@@ -28,7 +31,7 @@ export function useUpdateProfileImageController() {
 
     const presenter = new PromiseResultPresenter<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
     const signedUpdateProfileImage = new ProtocolCallUseCase<UpdateProfileImageRequest>(

@@ -10,6 +10,7 @@ import {
   CreatePostRequest,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
@@ -34,7 +35,11 @@ export type CreatePostArgs = Prettify<
 
 export type CreatePostOperation = Operation<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
+  | BroadcastingError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError
+  | FailedUploadError,
   [CreatePostArgs]
 >;
 
@@ -60,7 +65,11 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
       ...args
     }: CreatePostArgs): PromiseResult<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
+      | BroadcastingError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
+      | FailedUploadError
     > => {
       const uploader = new PublicationMetadataUploader(upload);
 

@@ -8,6 +8,11 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  InsufficientAllowanceError,
+  InsufficientFundsError,
+} from '@lens-protocol/domain/use-cases/wallets';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useCollectController } from './adapters/useCollectController';
@@ -19,7 +24,12 @@ export type UseCollectArgs = {
 
 export type CollectOperation = Operation<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  | BroadcastingError
+  | InsufficientAllowanceError
+  | InsufficientFundsError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError
 >;
 
 /**

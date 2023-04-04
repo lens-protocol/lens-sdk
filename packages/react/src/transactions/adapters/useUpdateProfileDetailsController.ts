@@ -8,7 +8,10 @@ import {
   UpdateProfileDetails,
   UpdateProfileDetailsRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { ProtocolCallUseCase } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  ProtocolCallUseCase,
+} from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { MetadataUploaderErrorMiddleware } from '../infrastructure/MetadataUploaderErrorMiddleware';
@@ -41,7 +44,7 @@ export function useUpdateProfileDetailsController({
 
     const presenter = new PromiseResultPresenter<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
     const signedUpdateProfiles = new ProtocolCallUseCase<UpdateProfileDetailsRequest>(

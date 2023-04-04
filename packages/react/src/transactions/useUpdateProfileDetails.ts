@@ -6,6 +6,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
@@ -25,7 +26,11 @@ export type UpdateProfileDetailsArgs = Pick<
 
 export type UpdateProfileDetailsOperation = Operation<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
+  | BroadcastingError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError
+  | FailedUploadError,
   [UpdateProfileDetailsArgs]
 >;
 
@@ -44,7 +49,11 @@ export function useUpdateProfileDetails({
       details: UpdateProfileDetailsArgs,
     ): PromiseResult<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
+      | BroadcastingError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
+      | FailedUploadError
     > => {
       try {
         return await update({

@@ -9,9 +9,14 @@ import {
   FreeCollectRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import {
+  BroadcastingError,
   ProtocolCallUseCase,
   SignlessProtocolCallUseCase,
 } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  InsufficientAllowanceError,
+  InsufficientFundsError,
+} from '@lens-protocol/domain/use-cases/wallets';
 
 import { useSharedDependencies } from '../../shared';
 import { CollectProxyActionRelayer } from './CollectProxyActionRelayer';
@@ -35,7 +40,12 @@ export function useCollectController() {
 
     const presenter = new PromiseResultPresenter<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      | BroadcastingError
+      | InsufficientAllowanceError
+      | InsufficientFundsError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
     >();
 
     const signedFlow = new ProtocolCallUseCase<CollectRequest>(

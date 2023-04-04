@@ -5,6 +5,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useUpdateProfileImageController } from './adapters/useUpdateProfileImageController';
@@ -15,7 +16,7 @@ export type UseUpdateProfileImageArgs = {
 
 export type UpdateProfileImageOperation = Operation<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   [string]
 >;
 

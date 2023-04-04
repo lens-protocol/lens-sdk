@@ -4,6 +4,7 @@ import {
   UserRejectedError,
 } from '@lens-protocol/domain/entities';
 import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
@@ -16,7 +17,7 @@ export function useUnfollowController() {
   return async (request: UnfollowRequest) => {
     const presenter = new PromiseResultPresenter<
       void,
-      PendingSigningRequestError | WalletConnectionError | UserRejectedError
+      BroadcastingError | PendingSigningRequestError | WalletConnectionError | UserRejectedError
     >();
 
     const unfollowProfileCallGateway = new UnfollowProfileCallGateway(apolloClient);

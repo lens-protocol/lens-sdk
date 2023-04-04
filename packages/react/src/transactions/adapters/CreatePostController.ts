@@ -6,6 +6,7 @@ import {
 } from '@lens-protocol/domain/entities';
 import { CreatePost, CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
+  BroadcastingError,
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
   ProtocolCallUseCase,
@@ -32,7 +33,7 @@ export type CreatePostControllerArgs<T extends CreatePostRequest> = {
 export class CreatePostController<T extends CreatePostRequest> {
   private readonly presenter = new PromiseResultPresenter<
     void,
-    PendingSigningRequestError | UserRejectedError | WalletConnectionError
+    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >();
 
   private readonly createPost: CreatePost;
