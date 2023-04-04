@@ -60,9 +60,7 @@ export function mockTypedData(): TypedData {
   };
 }
 
-export function mockAsyncRelayReceipt(
-  result: Result<RelayReceipt, TransactionError>,
-): AsyncRelayReceipt {
+function mockAsyncRelayReceipt(result: Result<RelayReceipt, TransactionError>): AsyncRelayReceipt {
   return Promise.resolve(result);
 }
 

@@ -10,19 +10,25 @@ import {
 } from '@lens-protocol/domain/entities';
 import { ChainType, PromiseResult } from '@lens-protocol/shared-kernel';
 
+// TODO move if no longer relevant here
 export type RelayReceipt = {
   indexingId: string;
   txHash: string;
 };
 
+/**
+ * @deprecated
+ */
 export type AsyncRelayReceipt = PromiseResult<RelayReceipt, TransactionError>;
 
-export type RelayProxyReceipt = {
+// TODO move if no longer relevant here
+export type ProxyReceipt = {
   proxyId: string;
 };
 
-export type AsyncRelayProxyReceipt = PromiseResult<RelayProxyReceipt, TransactionError>;
-
+/**
+ * @deprecated
+ */
 export type DeferredNativeTransactionInit<T extends TransactionRequestModel> = {
   chainType: ChainType;
   request: T;
@@ -30,17 +36,13 @@ export type DeferredNativeTransactionInit<T extends TransactionRequestModel> = {
   asyncRelayReceipt: AsyncRelayReceipt;
 };
 
+/**
+ * @deprecated
+ */
 export type DeferredMetaTransactionInit<T extends TransactionRequestModel> = {
   chainType: ChainType;
   signedCall: SignedProtocolCall<T>;
   asyncRelayReceipt: AsyncRelayReceipt;
-};
-
-export type DeferredProxyTransactionInit<T extends TransactionRequestModel> = {
-  chainType: ChainType;
-  request: T;
-  id: string;
-  asyncRelayReceipt: AsyncRelayProxyReceipt;
 };
 
 export type NativeTransactionData<T extends TransactionRequestModel> = {
