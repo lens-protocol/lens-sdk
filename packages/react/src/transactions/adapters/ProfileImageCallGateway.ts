@@ -8,23 +8,23 @@ import {
   omitTypename,
   UpdateProfileImageRequest as UpdateProfileImageRequestArgs,
   LensApolloClient,
+  RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
-import {
-  NativeTransaction,
-  Nonce,
-  TransactionError,
-  TransactionErrorReason,
-} from '@lens-protocol/domain/entities';
+import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   IProfileImageCallGateway,
   UpdateProfileImageRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
+import {
+  RelayError,
+  RelayErrorReason,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
+import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
-import { AsyncRelayReceipt, ITransactionFactory } from './ITransactionFactory';
+import { ITransactionFactory, RelayReceipt } from './ITransactionFactory';
 
 export class ProfileImageCallGateway implements IProfileImageCallGateway {
   constructor(
@@ -34,13 +34,22 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
 
   async createDelegatedTransaction(
     request: UpdateProfileImageRequest,
-  ): Promise<NativeTransaction<UpdateProfileImageRequest>> {
-    return this.transactionFactory.createNativeTransaction({
+  ): PromiseResult<NativeTransaction<UpdateProfileImageRequest>, RelayError> {
+    const result = await this.broadcast(this.resolveMutationRequest(request));
+
+    if (result.isFailure()) return failure(result.error);
+
+    const receipt = result.value;
+
+    const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiateProfileImageUpdate(this.resolveMutationRequest(request)),
+      indexingId: receipt.indexingId,
+      txHash: receipt.txHash,
     });
+
+    return success(transaction);
   }
 
   async createUnsignedProtocolCall(
@@ -65,9 +74,9 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
     );
   }
 
-  private async initiateProfileImageUpdate(
+  private async broadcast(
     requestArgs: UpdateProfileImageRequestArgs,
-  ): AsyncRelayReceipt {
+  ): PromiseResult<RelayReceipt, RelayError> {
     const { data } = await this.apolloClient.mutate<
       CreateSetProfileImageUriViaDispatcherData,
       CreateSetProfileImageUriViaDispatcherVariables
@@ -79,7 +88,10 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
     });
 
     if (data.result.__typename === 'RelayError') {
-      return failure(new TransactionError(TransactionErrorReason.REJECTED));
+      if (data.result.reason === RelayErrorReasons.Rejected) {
+        return failure(new RelayError(RelayErrorReason.REJECTED));
+      }
+      return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
     }
 
     return success({

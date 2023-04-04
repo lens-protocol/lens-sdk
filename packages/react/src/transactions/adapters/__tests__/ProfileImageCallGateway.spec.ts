@@ -1,10 +1,11 @@
-import { omitTypename } from '@lens-protocol/api-bindings';
+import { omitTypename, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockCreateSetProfileImageUriTypedDataData,
   createCreateSetProfileImageUriTypedDataMockedResponse,
   createSetProfileImageURIViaDispatcherMockedResponse,
   mockRelayerResultFragment,
+  mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import {
@@ -12,6 +13,7 @@ import {
   mockUpdateNftProfileImageRequest,
   mockUpdateOffChainProfileImageRequest,
 } from '@lens-protocol/domain/mocks';
+import { RelayError, RelayErrorReason } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -92,7 +94,6 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
         const transactionFactory = mockITransactionFactory();
 
         const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
-
         const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
 
         expect(unsignedCall.nonce).toEqual(nonce);
@@ -114,12 +115,10 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
         const transactionFactory = mockITransactionFactory();
 
         const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
+        const result = await gateway.createDelegatedTransaction(request);
 
-        const transaction = await gateway.createDelegatedTransaction(request);
-
-        await transaction.waitNextEvent();
-        expect(transaction).toBeInstanceOf(NativeTransaction);
-        expect(transaction).toEqual(
+        expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
+        expect(result.unwrap()).toEqual(
           expect.objectContaining({
             chainType: ChainType.POLYGON,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -128,6 +127,37 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
           }),
         );
       });
+
+      it.each([
+        {
+          expected: new RelayError(RelayErrorReason.REJECTED),
+          relayError: mockRelayErrorFragment(RelayErrorReasons.Rejected),
+        },
+        {
+          expected: new RelayError(RelayErrorReason.UNSPECIFIED),
+          relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
+        },
+      ])(
+        `should fail w/ a $expected.constructor.name in case of RelayError response with "$relayError.reason" reason`,
+        async ({ relayError, expected }) => {
+          const apollo = createMockApolloClientWithMultipleResponses([
+            createSetProfileImageURIViaDispatcherMockedResponse({
+              variables: {
+                request: expectedRequestVars,
+              },
+              data: {
+                result: relayError,
+              },
+            }),
+          ]);
+          const transactionFactory = mockITransactionFactory();
+
+          const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
+          const result = await gateway.createDelegatedTransaction(request);
+
+          expect(() => result.unwrap()).toThrow(expected);
+        },
+      );
     });
   });
 });
