@@ -8,23 +8,23 @@ import {
   CreateMirrorTypedDataData,
   CreateMirrorTypedDataVariables,
   LensApolloClient,
+  RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
-import {
-  NativeTransaction,
-  Nonce,
-  TransactionError,
-  TransactionErrorReason,
-} from '@lens-protocol/domain/entities';
+import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   CreateMirrorRequest,
   ICreateMirrorCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
+import {
+  RelayError,
+  RelayErrorReason,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
+import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
-import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
+import { ITransactionFactory, RelayReceipt } from '../ITransactionFactory';
 
 export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
   constructor(
@@ -34,15 +34,22 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
 
   async createDelegatedTransaction<T extends CreateMirrorRequest>(
     request: T,
-  ): Promise<NativeTransaction<T>> {
-    return this.transactionFactory.createNativeTransaction({
+  ): PromiseResult<NativeTransaction<T>, RelayError> {
+    const result = await this.broadcast(await this.resolveCreateMirrorRequestArg(request));
+
+    if (result.isFailure()) return failure(result.error);
+
+    const receipt = result.value;
+
+    const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiateMirrorCreation(
-        await this.resolveCreateMirrorRequestArg(request),
-      ),
+      indexingId: receipt.indexingId,
+      txHash: receipt.txHash,
     });
+
+    return success(transaction);
   }
 
   async createUnsignedProtocolCall(
@@ -67,7 +74,9 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
     );
   }
 
-  private async initiateMirrorCreation(requestArgs: CreateMirrorRequestArg): AsyncRelayReceipt {
+  private async broadcast(
+    requestArgs: CreateMirrorRequestArg,
+  ): PromiseResult<RelayReceipt, RelayError> {
     const { data } = await this.apolloClient.mutate<
       CreateMirrorViaDispatcherData,
       CreateMirrorViaDispatcherVariables
@@ -79,7 +88,10 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
     });
 
     if (data.result.__typename === 'RelayError') {
-      return failure(new TransactionError(TransactionErrorReason.REJECTED));
+      if (data.result.reason === RelayErrorReasons.Rejected) {
+        return failure(new RelayError(RelayErrorReason.REJECTED));
+      }
+      return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
     }
 
     return success({
