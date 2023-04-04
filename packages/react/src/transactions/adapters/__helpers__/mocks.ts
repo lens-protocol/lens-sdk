@@ -1,16 +1,11 @@
 import { faker } from '@faker-js/faker';
-import {
-  ProxyActionStatus,
-  TransactionError,
-  TransactionRequestModel,
-} from '@lens-protocol/domain/entities';
+import { ProxyActionStatus, TransactionRequestModel } from '@lens-protocol/domain/entities';
 import {
   mockNonce,
-  mockSignedProtocolCall,
   mockTransactionHash,
   mockTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
-import { ChainType, Result, success, Url } from '@lens-protocol/shared-kernel';
+import { ChainType, Url } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress, mockUint256HexString } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
@@ -18,14 +13,11 @@ import { when } from 'jest-when';
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
 import { IMetadataUploader } from '../IMetadataUploader';
 import {
-  AsyncRelayReceipt,
-  DeferredMetaTransactionInit,
-  DeferredNativeTransactionInit,
   MetaTransactionData,
   NativeTransactionData,
   ProxyTransactionData,
-  RelayReceipt,
 } from '../ITransactionFactory';
+import { RelayReceipt } from '../RelayReceipt';
 import { TypedData } from '../TypedData';
 
 export function mockITransactionFactory(
@@ -57,35 +49,6 @@ export function mockTypedData(): TypedData {
     value: {
       nonce: 0,
     },
-  };
-}
-
-function mockAsyncRelayReceipt(result: Result<RelayReceipt, TransactionError>): AsyncRelayReceipt {
-  return Promise.resolve(result);
-}
-
-/** @deprecated */
-export function mockDeferredMetaTransactionInit<T extends TransactionRequestModel>({
-  request = mockTransactionRequestModel() as T,
-  relayReceipt = mockRelayReceipt(),
-}: { request?: T; relayReceipt?: RelayReceipt } = {}): DeferredMetaTransactionInit<T> {
-  return {
-    chainType: ChainType.ETHEREUM,
-    signedCall: mockSignedProtocolCall(request),
-    asyncRelayReceipt: mockAsyncRelayReceipt(success(relayReceipt)),
-  };
-}
-
-/** @deprecated */
-export function mockDeferredNativeTransactionInit<T extends TransactionRequestModel>({
-  request = mockTransactionRequestModel() as T,
-  relayReceipt = mockRelayReceipt(),
-}: { request?: T; relayReceipt?: RelayReceipt } = {}): DeferredNativeTransactionInit<T> {
-  return {
-    chainType: ChainType.ETHEREUM,
-    id: faker.datatype.uuid(),
-    request,
-    asyncRelayReceipt: mockAsyncRelayReceipt(success(relayReceipt)),
   };
 }
 

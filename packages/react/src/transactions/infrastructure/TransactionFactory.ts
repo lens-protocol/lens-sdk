@@ -59,10 +59,10 @@ type StateReducer<T> = (state: T) => PromiseResult<StateUpdate<T>, TransactionEr
 type MetaTransactionState<T extends SupportedTransactionRequest> = {
   chainType: ChainType;
   id: string;
-  indexingId?: string;
+  indexingId: string;
   nonce: Nonce;
   request: T;
-  txHash?: string;
+  txHash: string;
 };
 
 class SerializableMetaTransaction<T extends SupportedTransactionRequest>
@@ -76,18 +76,15 @@ class SerializableMetaTransaction<T extends SupportedTransactionRequest>
     super();
   }
 
-  toTransactionData(): MetaTransactionData<T> | null {
-    if (this.state.txHash && this.state.indexingId) {
-      return {
-        chainType: this.state.chainType,
-        id: this.state.id,
-        indexingId: this.state.indexingId,
-        nonce: this.state.nonce,
-        request: this.state.request,
-        txHash: this.state.txHash,
-      };
-    }
-    return null;
+  toTransactionData(): MetaTransactionData<T> {
+    return {
+      chainType: this.state.chainType,
+      id: this.state.id,
+      indexingId: this.state.indexingId,
+      nonce: this.state.nonce,
+      request: this.state.request,
+      txHash: this.state.txHash,
+    };
   }
 
   get chainType(): ChainType {
@@ -124,7 +121,7 @@ class SerializableMetaTransaction<T extends SupportedTransactionRequest>
 type ProxyTransactionState<T extends SupportedTransactionRequest> = {
   chainType: ChainType;
   id: string;
-  proxyId?: string;
+  proxyId: string;
   request: T;
   txHash?: string;
   status?: ProxyActionStatus;
@@ -141,18 +138,15 @@ class SerializableProxyTransaction<T extends SupportedTransactionRequest>
     super();
   }
 
-  toTransactionData(): ProxyTransactionData<T> | null {
-    if (this.state.proxyId) {
-      return {
-        chainType: this.state.chainType,
-        id: this.state.id,
-        proxyId: this.state.proxyId,
-        request: this.state.request,
-        txHash: this.state.txHash,
-        status: this.state.status,
-      };
-    }
-    return null;
+  toTransactionData(): ProxyTransactionData<T> {
+    return {
+      chainType: this.state.chainType,
+      id: this.state.id,
+      proxyId: this.state.proxyId,
+      request: this.state.request,
+      txHash: this.state.txHash,
+      status: this.state.status,
+    };
   }
 
   get chainType(): ChainType {
@@ -191,7 +185,7 @@ type NativeTransactionState<T extends SupportedTransactionRequest> = {
   id: string;
   indexingId?: string;
   request: T;
-  txHash?: string;
+  txHash: string;
 };
 
 class SerializableNativeTransaction<T extends SupportedTransactionRequest>
@@ -205,17 +199,14 @@ class SerializableNativeTransaction<T extends SupportedTransactionRequest>
     super();
   }
 
-  toTransactionData(): NativeTransactionData<T> | null {
-    if (this.state.txHash) {
-      return {
-        chainType: this.state.chainType,
-        id: this.state.id,
-        indexingId: this.state.indexingId,
-        request: this.state.request,
-        txHash: this.state.txHash,
-      };
-    }
-    return null;
+  toTransactionData(): NativeTransactionData<T> {
+    return {
+      chainType: this.state.chainType,
+      id: this.state.id,
+      indexingId: this.state.indexingId,
+      request: this.state.request,
+      txHash: this.state.txHash,
+    };
   }
 
   get nonce(): number {
@@ -290,7 +281,7 @@ export class TransactionFactory
         request: init.request,
         txHash: init.txHash,
       },
-      this.createPureBlockchainStateReducer(init),
+      this.createPureBlockchainStateReducer(),
     );
   }
 
@@ -306,7 +297,7 @@ export class TransactionFactory
         txHash: init.txHash,
         status: init.status,
       },
-      this.createProxyActionStateReducer(init),
+      this.createProxyActionStateReducer(),
     );
   }
 
@@ -347,9 +338,9 @@ export class TransactionFactory
   private createPureBlockchainStateReducer<
     T extends SupportedTransactionRequest,
     S extends NativeTransactionState<T>,
-  >(init: NativeTransactionData<T>): StateReducer<S> {
+  >(): StateReducer<S> {
     return async (state) => {
-      const result = await this.transactionObserver.waitForExecuted(init.txHash, init.chainType);
+      const result = await this.transactionObserver.waitForExecuted(state.txHash, state.chainType);
 
       if (result.isFailure()) {
         return failure(result.error);
@@ -365,9 +356,9 @@ export class TransactionFactory
   private createProxyActionStateReducer<
     T extends SupportedTransactionRequest,
     S extends ProxyTransactionState<T>,
-  >(init: ProxyTransactionData<T>): StateReducer<S> {
+  >(): StateReducer<S> {
     return async (state) => {
-      const result = await this.transactionObserver.waitForProxyTransactionStatus(init.proxyId);
+      const result = await this.transactionObserver.waitForProxyTransactionStatus(state.proxyId);
 
       if (result.isFailure()) {
         return failure(result.error);

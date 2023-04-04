@@ -14,7 +14,8 @@ import { UnconstrainedFollowRequest } from '@lens-protocol/domain/use-cases/prof
 import { ISignlessProtocolCallRelayer } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, getID, ILogger } from '@lens-protocol/shared-kernel';
 
-import { ITransactionFactory, ProxyReceipt } from './ITransactionFactory';
+import { ITransactionFactory } from './ITransactionFactory';
+import { ProxyReceipt } from './ProxyReceipt';
 
 export class FollowProxyActionRelayer<T extends UnconstrainedFollowRequest>
   implements ISignlessProtocolCallRelayer<T>

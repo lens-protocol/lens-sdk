@@ -25,7 +25,8 @@ import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
-import { ITransactionFactory, RelayReceipt } from '../ITransactionFactory';
+import { ITransactionFactory } from '../ITransactionFactory';
+import { RelayReceipt } from '../RelayReceipt';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class CreateCommentCallGateway implements ICreateCommentCallGateway {

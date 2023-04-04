@@ -14,7 +14,8 @@ import { FreeCollectRequest } from '@lens-protocol/domain/use-cases/publications
 import { ISignlessProtocolCallRelayer } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, getID, ILogger } from '@lens-protocol/shared-kernel';
 
-import { ITransactionFactory, ProxyReceipt } from './ITransactionFactory';
+import { ITransactionFactory } from './ITransactionFactory';
+import { ProxyReceipt } from './ProxyReceipt';
 
 export class CollectProxyActionRelayer<T extends FreeCollectRequest>
   implements ISignlessProtocolCallRelayer<T>

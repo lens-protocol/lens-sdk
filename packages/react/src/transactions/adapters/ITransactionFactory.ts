@@ -1,49 +1,12 @@
 import {
-  SignedProtocolCall,
   TransactionRequestModel,
   MetaTransaction,
   NativeTransaction,
-  TransactionError,
   Nonce,
   ProxyTransaction,
   ProxyActionStatus,
 } from '@lens-protocol/domain/entities';
-import { ChainType, PromiseResult } from '@lens-protocol/shared-kernel';
-
-// TODO move if no longer relevant here
-export type RelayReceipt = {
-  indexingId: string;
-  txHash: string;
-};
-
-/**
- * @deprecated
- */
-export type AsyncRelayReceipt = PromiseResult<RelayReceipt, TransactionError>;
-
-// TODO move if no longer relevant here
-export type ProxyReceipt = {
-  proxyId: string;
-};
-
-/**
- * @deprecated
- */
-export type DeferredNativeTransactionInit<T extends TransactionRequestModel> = {
-  chainType: ChainType;
-  request: T;
-  id: string;
-  asyncRelayReceipt: AsyncRelayReceipt;
-};
-
-/**
- * @deprecated
- */
-export type DeferredMetaTransactionInit<T extends TransactionRequestModel> = {
-  chainType: ChainType;
-  signedCall: SignedProtocolCall<T>;
-  asyncRelayReceipt: AsyncRelayReceipt;
-};
+import { ChainType } from '@lens-protocol/shared-kernel';
 
 export type NativeTransactionData<T extends TransactionRequestModel> = {
   chainType: ChainType;

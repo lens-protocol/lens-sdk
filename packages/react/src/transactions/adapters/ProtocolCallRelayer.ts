@@ -18,7 +18,8 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, ILogger, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
-import { ITransactionFactory, RelayReceipt } from './ITransactionFactory';
+import { ITransactionFactory } from './ITransactionFactory';
+import { RelayReceipt } from './RelayReceipt';
 
 export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransactionRequest> {
   constructor(

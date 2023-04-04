@@ -24,7 +24,8 @@ import { ChainType, failure, PromiseResult, success } from '@lens-protocol/share
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
-import { ITransactionFactory, RelayReceipt } from './ITransactionFactory';
+import { ITransactionFactory } from './ITransactionFactory';
+import { RelayReceipt } from './RelayReceipt';
 
 export class ProfileImageCallGateway implements IProfileImageCallGateway {
   constructor(
