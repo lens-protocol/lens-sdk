@@ -26,11 +26,11 @@ jest.mock('@lens-protocol/shared-kernel', () => {
 });
 
 function mockITransactionObserver() {
-  const mockITransactionObserver = mock<ITransactionObserver>();
-  mockITransactionObserver.waitForProxyTransactionStatus.mockResolvedValue(
+  const observer = mock<ITransactionObserver>();
+  observer.waitForProxyTransactionStatus.mockResolvedValue(
     success({ txHash: 'tx-hash', status: ProxyActionStatus.MINTING, txId: 'tx-id' }),
   );
-  return mockITransactionObserver;
+  return observer;
 }
 
 function setupCollectProxyActionRelayer({
