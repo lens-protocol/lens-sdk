@@ -13,7 +13,7 @@ import {
 } from '../../entities';
 import { ActiveWallet } from '../wallets/ActiveWallet';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
-import { RelayError } from './RelayError';
+import { BroadcastingError } from './BroadcastingError';
 import { TransactionQueue } from './TransactionQueue';
 
 export interface IMetaTransactionNonceGateway {
@@ -23,7 +23,7 @@ export interface IMetaTransactionNonceGateway {
 export interface IProtocolCallRelayer<T extends TransactionRequestModel> {
   relayProtocolCall(
     signedCall: SignedProtocolCall<T>,
-  ): PromiseResult<MetaTransaction<T>, RelayError>;
+  ): PromiseResult<MetaTransaction<T>, BroadcastingError>;
 }
 
 export interface IUnsignedProtocolCallGateway<T extends TransactionRequestModel> {
@@ -32,7 +32,7 @@ export interface IUnsignedProtocolCallGateway<T extends TransactionRequestModel>
 
 export type IProtocolCallPresenter = IGenericResultPresenter<
   void,
-  PendingSigningRequestError | RelayError | UserRejectedError | WalletConnectionError
+  PendingSigningRequestError | BroadcastingError | UserRejectedError | WalletConnectionError
 >;
 
 export class ProtocolCallUseCase<T extends TransactionRequestModel> {

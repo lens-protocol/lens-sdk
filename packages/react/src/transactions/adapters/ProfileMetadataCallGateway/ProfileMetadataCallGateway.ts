@@ -22,8 +22,8 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   IUnsignedProtocolCallGateway,
-  RelayError,
-  RelayErrorReason,
+  BroadcastingError,
+  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -46,7 +46,7 @@ export class ProfileMetadataCallGateway
 
   async createDelegatedTransaction<T extends UpdateProfileDetailsRequest>(
     request: T,
-  ): PromiseResult<NativeTransaction<T>, RelayError> {
+  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(
       await this.resolveCreateSetProfileMetadataUriRequest(request),
     );
@@ -98,7 +98,7 @@ export class ProfileMetadataCallGateway
 
   private async broadcast(
     request: CreatePublicSetProfileMetadataUriRequest,
-  ): PromiseResult<RelayReceipt, RelayError> {
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<
       CreateSetProfileMetadataViaDispatcherData,
       CreateSetProfileMetadataViaDispatcherVariables
@@ -109,9 +109,9 @@ export class ProfileMetadataCallGateway
 
     if (data.result.__typename === 'RelayError') {
       if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new RelayError(RelayErrorReason.REJECTED));
+        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
       }
-      return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
     }
 
     return success({

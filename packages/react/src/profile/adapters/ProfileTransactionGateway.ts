@@ -12,8 +12,8 @@ import {
   IProfileTransactionGateway,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
-  RelayError,
-  RelayErrorReason,
+  BroadcastingError,
+  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -29,7 +29,7 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
 
   async createProfileTransaction<T extends CreateProfileRequest>(
     request: T,
-  ): PromiseResult<Transaction<T>, DuplicatedHandleError | RelayError> {
+  ): PromiseResult<Transaction<T>, DuplicatedHandleError | BroadcastingError> {
     const { data } = await this.apolloClient.mutate<CreateProfileData, CreateProfileVariables>({
       mutation: CreateProfileDocument,
       variables: {
@@ -44,9 +44,9 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
         case RelayErrorReasons.HandleTaken:
           return failure(new DuplicatedHandleError(request.handle));
         case RelayErrorReasons.Rejected:
-          return failure(new RelayError(RelayErrorReason.REJECTED));
+          return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
         default:
-          return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
+          return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
       }
     }
 

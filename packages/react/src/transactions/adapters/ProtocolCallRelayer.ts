@@ -12,8 +12,8 @@ import {
 } from '@lens-protocol/domain/entities';
 import {
   IProtocolCallRelayer,
-  RelayError,
-  RelayErrorReason,
+  BroadcastingError,
+  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, ILogger, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -30,7 +30,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
 
   async relayProtocolCall<T extends SupportedTransactionRequest>(
     signedCall: SignedProtocolCall<T>,
-  ): PromiseResult<MetaTransaction<T>, RelayError> {
+  ): PromiseResult<MetaTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(signedCall);
 
     if (result.isFailure()) return failure(result.error);
@@ -51,7 +51,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
 
   private async broadcast<T extends TransactionRequestModel>(
     signedCall: SignedProtocolCall<T>,
-  ): PromiseResult<RelayReceipt, RelayError> {
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
     try {
       const { data } = await this.apolloClient.mutate<
         BroadcastProtocolCallData,
@@ -69,9 +69,9 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
       if (data.result.__typename === 'RelayError') {
         switch (data.result.reason) {
           case RelayErrorReasons.Rejected:
-            return failure(new RelayError(RelayErrorReason.REJECTED));
+            return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
           default:
-            return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
+            return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
         }
       }
 
@@ -81,7 +81,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
       });
     } catch (err) {
       this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);
-      return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
     }
   }
 }

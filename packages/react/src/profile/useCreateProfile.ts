@@ -4,7 +4,7 @@ import {
   CreateProfileRequest,
   DuplicatedHandleError,
 } from '@lens-protocol/domain/use-cases/profile';
-import { RelayError } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
@@ -18,7 +18,7 @@ export { DuplicatedHandleError };
 
 export type CreateProfileOperation = Operation<
   void,
-  DuplicatedHandleError | RelayError,
+  DuplicatedHandleError | BroadcastingError,
   [CreateProfileArgs]
 >;
 
@@ -62,7 +62,7 @@ export type CreateProfileOperation = Operation<
  *
  * @example Programmatic error handling
  * ```tsx
- * import { useCreateProfile, DuplicatedHandleError, RelayError } from '@lens-protocol/react-web';
+ * import { useCreateProfile, DuplicatedHandleError } from '@lens-protocol/react-web';
  *
  * function CreateProfile() {
  *   const { execute, isPending } = useCreateProfile();
@@ -81,7 +81,7 @@ export type CreateProfileOperation = Operation<
  *       case DuplicatedHandleError:
  *         console.log("Handle already taken");
  *
- *       case RelayError:
+ *       default:
  *         console.log(`Could not create profile due to: ${result.error.message}`);
  *     }
  *   };
@@ -104,7 +104,7 @@ export function useCreateProfile(): CreateProfileOperation {
   return useOperation(
     async ({
       handle,
-    }: CreateProfileArgs): PromiseResult<void, DuplicatedHandleError | RelayError> => {
+    }: CreateProfileArgs): PromiseResult<void, DuplicatedHandleError | BroadcastingError> => {
       try {
         const result = await createProfile({
           handle,
@@ -121,7 +121,7 @@ export function useCreateProfile(): CreateProfileOperation {
 
         return result;
       } catch (e) {
-        if (e instanceof RelayError) {
+        if (e instanceof BroadcastingError) {
           return failure(e);
         }
         throw e;

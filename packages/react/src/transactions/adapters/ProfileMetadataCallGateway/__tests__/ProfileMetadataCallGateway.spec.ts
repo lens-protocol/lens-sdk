@@ -13,7 +13,10 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockUpdateProfileDetailsRequest } from '@lens-protocol/domain/mocks';
-import { RelayError, RelayErrorReason } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  BroadcastingErrorReason,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
@@ -157,11 +160,11 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
 
     it.each([
       {
-        expected: new RelayError(RelayErrorReason.REJECTED),
+        expected: new BroadcastingError(BroadcastingErrorReason.REJECTED),
         relayError: mockRelayErrorFragment(RelayErrorReasons.Rejected),
       },
       {
-        expected: new RelayError(RelayErrorReason.UNSPECIFIED),
+        expected: new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED),
         relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
       },
     ])(

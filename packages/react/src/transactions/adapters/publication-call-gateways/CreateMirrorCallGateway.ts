@@ -16,8 +16,8 @@ import {
   ICreateMirrorCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
 import {
-  RelayError,
-  RelayErrorReason,
+  BroadcastingError,
+  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -35,7 +35,7 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
 
   async createDelegatedTransaction<T extends CreateMirrorRequest>(
     request: T,
-  ): PromiseResult<NativeTransaction<T>, RelayError> {
+  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(await this.resolveCreateMirrorRequestArg(request));
 
     if (result.isFailure()) return failure(result.error);
@@ -77,7 +77,7 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
 
   private async broadcast(
     requestArgs: CreateMirrorRequestArg,
-  ): PromiseResult<RelayReceipt, RelayError> {
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<
       CreateMirrorViaDispatcherData,
       CreateMirrorViaDispatcherVariables
@@ -90,9 +90,9 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
 
     if (data.result.__typename === 'RelayError') {
       if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new RelayError(RelayErrorReason.REJECTED));
+        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
       }
-      return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
     }
 
     return success({

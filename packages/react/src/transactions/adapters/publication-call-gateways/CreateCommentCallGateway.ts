@@ -16,8 +16,8 @@ import {
   ICreateCommentCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
 import {
-  RelayError,
-  RelayErrorReason,
+  BroadcastingError,
+  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -38,7 +38,7 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
 
   async createDelegatedTransaction<T extends CreateCommentRequest>(
     request: T,
-  ): PromiseResult<NativeTransaction<T>, RelayError> {
+  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(await this.resolveCreateCommentRequestArg(request));
 
     if (result.isFailure()) return failure(result.error);
@@ -79,7 +79,7 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
 
   private async broadcast(
     requestArg: CreatePublicCommentRequestArg,
-  ): PromiseResult<RelayReceipt, RelayError> {
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<
       CreateCommentViaDispatcherData,
       CreateCommentViaDispatcherVariables
@@ -92,9 +92,9 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
 
     if (data.result.__typename === 'RelayError') {
       if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new RelayError(RelayErrorReason.REJECTED));
+        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
       }
-      return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
     }
 
     return success({

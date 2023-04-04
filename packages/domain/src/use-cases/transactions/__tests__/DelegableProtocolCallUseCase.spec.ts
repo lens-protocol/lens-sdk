@@ -9,7 +9,7 @@ import {
   IProtocolCallPresenter,
 } from '../DelegableProtocolCallUseCase';
 import { ProtocolCallUseCase } from '../ProtocolCallUseCase';
-import { RelayError, RelayErrorReason } from '../RelayError';
+import { BroadcastingError, BroadcastingErrorReason } from '../BroadcastingError';
 import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIDelegableProtocolCallGateway,
@@ -83,8 +83,8 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
         expect(presenter.present).toHaveBeenCalledWith(success());
       });
 
-      it(`should present any ${RelayError.name} from the IDelegableProtocolCallGateway<T>`, async () => {
-        const error = new RelayError(RelayErrorReason.REJECTED);
+      it(`should present any ${BroadcastingError.name} from the IDelegableProtocolCallGateway<T>`, async () => {
+        const error = new BroadcastingError(BroadcastingErrorReason.REJECTED);
         const protocolCallGateway = mockIDelegableProtocolCallGateway({
           request,
           result: failure(error),

@@ -28,7 +28,7 @@ import {
   IUnsignedProtocolCallGateway,
   IProtocolCallRelayer,
 } from '../ProtocolCallUseCase';
-import { RelayError, RelayErrorReason } from '../RelayError';
+import { BroadcastingError, BroadcastingErrorReason } from '../BroadcastingError';
 import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIMetaTransactionNonceGateway,
@@ -148,7 +148,7 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       expect(presenter.present).toHaveBeenCalledWith(failure(error));
     });
 
-    it(`should present any ${RelayError.name} from the IProtocolCallRelayer call`, async () => {
+    it(`should present any ${BroadcastingError.name} from the IProtocolCallRelayer call`, async () => {
       const nonce = mockNonce();
 
       const metaTransactionNonceGateway = mockIMetaTransactionNonceGateway({ nonce });
@@ -163,7 +163,7 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       const signedCall = mockSignedProtocolCall(unsignedCall);
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
 
-      const error = new RelayError(RelayErrorReason.REJECTED);
+      const error = new BroadcastingError(BroadcastingErrorReason.REJECTED);
       const protocolCallRelayer = mockIProtocolCallRelayer({ signedCall, result: failure(error) });
 
       const presenter = mock<IProtocolCallPresenter>();

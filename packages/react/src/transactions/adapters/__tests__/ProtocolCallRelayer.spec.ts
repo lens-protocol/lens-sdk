@@ -12,8 +12,8 @@ import {
 } from '@lens-protocol/domain/entities';
 import { mockSignedProtocolCall } from '@lens-protocol/domain/mocks';
 import {
-  RelayError,
-  RelayErrorReason,
+  BroadcastingError,
+  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, ILogger } from '@lens-protocol/shared-kernel';
@@ -66,24 +66,28 @@ describe(`Given an instance of the ${ProtocolCallRelayer.name}`, () => {
   });
 
   describe(`when relaying a ${SignedProtocolCall.name} fails with a Rejected reason`, () => {
-    it(`should resolve with a failure(${RelayError.name}) with ${RelayErrorReason.REJECTED}`, async () => {
+    it(`should resolve with a failure(${BroadcastingError.name}) with ${BroadcastingErrorReason.REJECTED}`, async () => {
       const relayResult = mockRelayErrorFragment(RelayErrorReasons.Rejected);
 
       const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
       const result = await transactionRelayer.relayProtocolCall(signedCall);
 
-      expect(() => result.unwrap()).toThrowError(new RelayError(RelayErrorReason.REJECTED));
+      expect(() => result.unwrap()).toThrowError(
+        new BroadcastingError(BroadcastingErrorReason.REJECTED),
+      );
     });
   });
 
   describe(`when relaying a ${SignedProtocolCall.name} fails with any other reason than Rejected`, () => {
-    it(`should resolve with a failure(${RelayError.name}) with ${RelayErrorReason.UNSPECIFIED}`, async () => {
+    it(`should resolve with a failure(${BroadcastingError.name}) with ${BroadcastingErrorReason.UNSPECIFIED}`, async () => {
       const relayResult = mockRelayErrorFragment(RelayErrorReasons.NotAllowed);
 
       const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
       const result = await transactionRelayer.relayProtocolCall(signedCall);
 
-      expect(() => result.unwrap()).toThrowError(new RelayError(RelayErrorReason.UNSPECIFIED));
+      expect(() => result.unwrap()).toThrowError(
+        new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED),
+      );
     });
   });
 });

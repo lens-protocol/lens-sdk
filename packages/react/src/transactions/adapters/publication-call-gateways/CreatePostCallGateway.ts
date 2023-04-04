@@ -16,8 +16,8 @@ import {
   ICreatePostCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
 import {
-  RelayError,
-  RelayErrorReason,
+  BroadcastingError,
+  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -38,7 +38,7 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
 
   async createDelegatedTransaction<T extends R>(
     request: T,
-  ): PromiseResult<NativeTransaction<T>, RelayError> {
+  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(await this.resolveCreatePostRequestArg(request));
 
     if (result.isFailure()) return failure(result.error);
@@ -79,7 +79,7 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
 
   private async broadcast(
     requestArgs: CreatePublicPostRequestArg,
-  ): PromiseResult<RelayReceipt, RelayError> {
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<
       CreatePostViaDispatcherData,
       CreatePostViaDispatcherVariables
@@ -92,9 +92,9 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
 
     if (data.result.__typename === 'RelayError') {
       if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new RelayError(RelayErrorReason.REJECTED));
+        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
       }
-      return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
     }
 
     return success({

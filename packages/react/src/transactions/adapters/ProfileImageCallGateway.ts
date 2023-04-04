@@ -16,8 +16,8 @@ import {
   UpdateProfileImageRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
-  RelayError,
-  RelayErrorReason,
+  BroadcastingError,
+  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -35,7 +35,7 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
 
   async createDelegatedTransaction(
     request: UpdateProfileImageRequest,
-  ): PromiseResult<NativeTransaction<UpdateProfileImageRequest>, RelayError> {
+  ): PromiseResult<NativeTransaction<UpdateProfileImageRequest>, BroadcastingError> {
     const result = await this.broadcast(this.resolveMutationRequest(request));
 
     if (result.isFailure()) return failure(result.error);
@@ -77,7 +77,7 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
 
   private async broadcast(
     requestArgs: UpdateProfileImageRequestArgs,
-  ): PromiseResult<RelayReceipt, RelayError> {
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<
       CreateSetProfileImageUriViaDispatcherData,
       CreateSetProfileImageUriViaDispatcherVariables
@@ -90,9 +90,9 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
 
     if (data.result.__typename === 'RelayError') {
       if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new RelayError(RelayErrorReason.REJECTED));
+        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
       }
-      return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
     }
 
     return success({

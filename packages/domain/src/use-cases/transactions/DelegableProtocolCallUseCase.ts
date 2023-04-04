@@ -2,7 +2,7 @@ import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { NativeTransaction, TransactionRequestModel } from '../../entities';
 import { IProtocolCallPresenter, ProtocolCallUseCase } from './ProtocolCallUseCase';
-import { RelayError } from './RelayError';
+import { BroadcastingError } from './BroadcastingError';
 import { TransactionQueue } from './TransactionQueue';
 
 export type WithDelegateFlag<T extends TransactionRequestModel> = T extends { delegate: boolean }
@@ -10,7 +10,7 @@ export type WithDelegateFlag<T extends TransactionRequestModel> = T extends { de
   : never;
 
 export interface IDelegableProtocolCallGateway<T extends TransactionRequestModel> {
-  createDelegatedTransaction(request: T): PromiseResult<NativeTransaction<T>, RelayError>;
+  createDelegatedTransaction(request: T): PromiseResult<NativeTransaction<T>, BroadcastingError>;
 }
 
 export type { IProtocolCallPresenter };

@@ -25,7 +25,7 @@ import {
   IProtocolCallRelayer,
   IUnsignedProtocolCallGateway,
 } from '../ProtocolCallUseCase';
-import { RelayError } from '../RelayError';
+import { BroadcastingError } from '../BroadcastingError';
 import { ISignlessProtocolCallRelayer } from '../SignlessProtocolCallUseCase';
 import { SupportedTransactionRequest } from '../SupportedTransactionRequest';
 import {
@@ -39,7 +39,7 @@ export function mockIProtocolCallRelayer<T extends TransactionRequestModel>({
   result,
 }: {
   signedCall: SignedProtocolCall<T>;
-  result: Result<MetaTransaction<T>, RelayError>;
+  result: Result<MetaTransaction<T>, BroadcastingError>;
 }) {
   const transactionRelayer = mock<IProtocolCallRelayer<T>>();
 
@@ -106,7 +106,7 @@ export function mockIDelegableProtocolCallGateway<T extends TransactionRequestMo
   result,
 }: {
   request: T;
-  result: Result<NativeTransaction<T>, RelayError>;
+  result: Result<NativeTransaction<T>, BroadcastingError>;
 }): IDelegableProtocolCallGateway<T> {
   const gateway = mock<IDelegableProtocolCallGateway<T>>();
 
