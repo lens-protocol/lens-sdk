@@ -27,12 +27,7 @@ export type { Signature, TransactionRequestModel } from '@lens-protocol/domain/e
 /**
  * Request models
  */
-export type {
-  SupportedTransactionRequest,
-  TransactionData,
-  BroadcastedTransactionData,
-  PendingTransactionData,
-} from '@lens-protocol/domain/use-cases/transactions';
+export type { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 export type {
   CreateProfileRequest,
   FollowRequest,

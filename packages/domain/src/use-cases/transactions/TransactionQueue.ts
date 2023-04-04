@@ -19,32 +19,21 @@ export interface IPendingTransactionGateway<T extends TransactionRequestModel> {
   subscribe(subscriber: NewTransactionsSubscriber<T>): void;
 }
 
-export type PendingTransactionData<T extends TransactionRequestModel> = {
+export type TransactionData<T extends TransactionRequestModel> = {
   id: string;
   request: T;
+  txHash?: string;
 };
-
-export type BroadcastedTransactionData<T extends TransactionRequestModel> = {
-  id: string;
-  request: T;
-  txHash: string;
-};
-
-export type TransactionData<T extends TransactionRequestModel> =
-  | PendingTransactionData<T>
-  | BroadcastedTransactionData<T>;
 
 export interface ITransactionResponder<T extends TransactionRequestModel> {
   prepare?(data: TransactionData<T>): Promise<unknown>;
-  commit(data: BroadcastedTransactionData<T>): Promise<unknown>;
+  commit(data: TransactionData<T>): Promise<unknown>;
   rollback?(data: TransactionData<T>): Promise<unknown>;
 }
 
-function broadcastedTransactionData<T extends TransactionRequestModel>(
+function transactionData<T extends TransactionRequestModel>(
   tx: Transaction<T>,
-): BroadcastedTransactionData<T> {
-  invariant(tx.hash, 'Transaction must have a hash');
-
+): TransactionData<T> {
   return {
     id: tx.id,
     request: tx.request,
@@ -52,24 +41,10 @@ function broadcastedTransactionData<T extends TransactionRequestModel>(
   };
 }
 
-function transactionData<T extends TransactionRequestModel>(
-  tx: Transaction<T>,
-): TransactionData<T> {
-  if (tx.hash) {
-    return broadcastedTransactionData(tx);
-  }
-  return {
-    id: tx.id,
-    request: tx.request,
-  };
-}
-
 export interface ITransactionQueuePresenter<T extends TransactionRequestModel> {
-  broadcasting(data: TransactionData<T>): void;
+  pending(data: TransactionData<T>): void;
 
-  mining(data: BroadcastedTransactionData<T>): void;
-
-  settled(data: BroadcastedTransactionData<T>): void;
+  settled(data: TransactionData<T>): void;
 
   failed(error: TransactionError, data: TransactionData<T>): void;
 
@@ -123,26 +98,26 @@ export class TransactionQueue<T extends TransactionRequestModel> {
   }
 
   private async observe(transaction: Transaction<T>): Promise<void> {
-    const transactionResult = await this.waitTransaction(transaction);
+    const result = await this.waitCompletion(transaction);
     await this.transactionGateway.remove(transaction.id);
 
-    if (transactionResult.isFailure()) {
+    if (result.isFailure()) {
       const txData = transactionData(transaction);
-      await this.rollback(transactionResult.error, txData);
+      await this.rollback(result.error, txData);
       return;
     }
 
-    const txData = broadcastedTransactionData(transaction);
+    const txData = transactionData(transaction);
     await this.commit(txData);
   }
 
   private async prepare(txData: TransactionData<T>) {
     const responder = this.getResponderFor(txData.request.kind);
     await responder.prepare?.(txData);
-    this.transactionQueuePresenter.broadcasting(txData);
+    this.transactionQueuePresenter.pending(txData);
   }
 
-  private async commit(txData: BroadcastedTransactionData<T>) {
+  private async commit(txData: TransactionData<T>) {
     const responder = this.getResponderFor(txData.request.kind);
     await responder.commit(txData);
     this.transactionQueuePresenter.settled(txData);
@@ -154,20 +129,20 @@ export class TransactionQueue<T extends TransactionRequestModel> {
     this.transactionQueuePresenter.failed(error, txData);
   }
 
-  private async waitTransaction(
-    transaction: Transaction<T>,
-  ): PromiseResult<void, TransactionError> {
+  private async waitCompletion(transaction: Transaction<T>): PromiseResult<void, TransactionError> {
     while (true) {
-      if (transaction.hash) {
-        this.transactionQueuePresenter.mining(broadcastedTransactionData(transaction));
-      }
       const result = await transaction.waitNextEvent();
 
       if (result.isFailure()) {
         return failure(result.error);
       }
+
       if (result.value === TransactionEvent.SETTLED) {
         return success();
+      }
+
+      if (transaction.hash) {
+        this.transactionQueuePresenter.pending(transactionData(transaction));
       }
 
       await this.transactionGateway.save(transaction);

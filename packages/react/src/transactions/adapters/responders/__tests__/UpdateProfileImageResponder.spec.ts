@@ -9,7 +9,7 @@ import {
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import {
-  mockBroadcastedTransactionData,
+  mockTransactionData,
   mockUpdateOffChainProfileImageRequest,
 } from '@lens-protocol/domain/mocks';
 
@@ -62,7 +62,7 @@ describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
   const profile = mockProfileFragment();
   const newImageUrl = faker.image.imageUrl(600, 600, 'cat', true);
 
-  const transactionData = mockBroadcastedTransactionData({
+  const transactionData = mockTransactionData({
     request: mockUpdateOffChainProfileImageRequest({
       profileId: profile.id,
       url: newImageUrl,

@@ -28,11 +28,7 @@ import {
 import { BroadcastingError } from '../BroadcastingError';
 import { ISignlessProtocolCallRelayer } from '../SignlessProtocolCallUseCase';
 import { SupportedTransactionRequest } from '../SupportedTransactionRequest';
-import {
-  BroadcastedTransactionData,
-  PendingTransactionData,
-  TransactionQueue,
-} from '../TransactionQueue';
+import { TransactionData, TransactionQueue } from '../TransactionQueue';
 
 export function mockIProtocolCallRelayer<T extends TransactionRequestModel>({
   signedCall,
@@ -54,19 +50,9 @@ export function mockTransactionQueue<
   return mock<TransactionQueue<T>>();
 }
 
-export function mockPendingTransactionData<T extends SupportedTransactionRequest>(
-  overrides?: Partial<PendingTransactionData<T>>,
-): PendingTransactionData<T> {
-  return {
-    id: faker.datatype.uuid(),
-    request: mock(),
-    ...overrides,
-  };
-}
-
-export function mockBroadcastedTransactionData<T extends SupportedTransactionRequest>(
-  overrides?: Partial<BroadcastedTransactionData<T>>,
-): BroadcastedTransactionData<T> {
+export function mockTransactionData<T extends SupportedTransactionRequest>(
+  overrides?: Partial<TransactionData<T>>,
+): TransactionData<T> {
   return {
     id: faker.datatype.uuid(),
     request: mock(),

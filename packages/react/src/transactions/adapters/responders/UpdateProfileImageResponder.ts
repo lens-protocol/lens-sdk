@@ -3,7 +3,7 @@ import {
   UpdateProfileImageRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
-  BroadcastedTransactionData,
+  TransactionData,
   ITransactionResponder,
 } from '@lens-protocol/domain/use-cases/transactions';
 
@@ -20,7 +20,7 @@ export class UpdateProfileImageResponder
 {
   constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
-  async prepare({ request }: BroadcastedTransactionData<UpdateProfileImageRequest>) {
+  async prepare({ request }: TransactionData<UpdateProfileImageRequest>) {
     if (isUpdateOffChainProfileImageRequest(request)) {
       this.profileCacheManager.updateProfile(request.profileId, (current) => {
         return {
@@ -41,11 +41,11 @@ export class UpdateProfileImageResponder
     }
   }
 
-  async commit({ request }: BroadcastedTransactionData<UpdateProfileImageRequest>) {
+  async commit({ request }: TransactionData<UpdateProfileImageRequest>) {
     await this.profileCacheManager.refreshProfile(request.profileId);
   }
 
-  async rollback({ request }: BroadcastedTransactionData<UpdateProfileImageRequest>) {
+  async rollback({ request }: TransactionData<UpdateProfileImageRequest>) {
     await this.profileCacheManager.refreshProfile(request.profileId);
   }
 }

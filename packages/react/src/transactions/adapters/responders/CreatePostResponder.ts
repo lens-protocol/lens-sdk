@@ -13,7 +13,6 @@ import {
 } from '@lens-protocol/api-bindings';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
-  BroadcastedTransactionData,
   ITransactionResponder,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -67,7 +66,9 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
     recentPosts([post, ...recentPosts()]);
   }
 
-  async commit({ id, txHash, request }: BroadcastedTransactionData<CreatePostRequest>) {
+  async commit({ id, txHash, request }: TransactionData<CreatePostRequest>) {
+    invariant(txHash, 'Cannot fetch publication by txHash without txHash');
+
     const publicationResult = await this.client.query<
       PublicationByTxHashData,
       PublicationByTxHashVariables

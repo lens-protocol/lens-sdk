@@ -5,11 +5,7 @@ import {
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
-import {
-  mockUpdateProfileDetailsRequest,
-  mockBroadcastedTransactionData,
-  mockPendingTransactionData,
-} from '@lens-protocol/domain/mocks';
+import { mockUpdateProfileDetailsRequest, mockTransactionData } from '@lens-protocol/domain/mocks';
 import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 
@@ -70,17 +66,17 @@ describe(`Given the ${UpdateProfileMetadataResponder.name}`, () => {
       foo: 42,
     },
   });
-  const pendingTransactionData = mockPendingTransactionData({ request });
+  const transactionData = mockTransactionData({ request });
 
   describe(`when "${UpdateProfileMetadataResponder.prototype.prepare.name}" method is invoked with PendingTransactionData<UpdateProfileDetailsRequest>`, () => {
     it(`should update the correct Profile in the Apollo Cache`, async () => {
       const existingProfile = mockProfileFragment({ id: request.profileId });
       const scenario = setupUpdateProfileMetadataResponder({
         existingProfile,
-        transactionData: pendingTransactionData,
+        transactionData,
       });
 
-      await scenario.responder.prepare(pendingTransactionData);
+      await scenario.responder.prepare(transactionData);
 
       expect(scenario.profileFromCache).toMatchObject({
         name: request.name,
@@ -95,10 +91,10 @@ describe(`Given the ${UpdateProfileMetadataResponder.name}`, () => {
       const existingProfile = null;
       const scenario = setupUpdateProfileMetadataResponder({
         existingProfile,
-        transactionData: pendingTransactionData,
+        transactionData,
       });
 
-      await scenario.responder.prepare(pendingTransactionData);
+      await scenario.responder.prepare(transactionData);
 
       expect(scenario.profileFromCache).toEqual({});
     });
@@ -109,11 +105,11 @@ describe(`Given the ${UpdateProfileMetadataResponder.name}`, () => {
       const existingProfile = mockProfileFragment({ id: request.profileId });
       const scenario = setupUpdateProfileMetadataResponder({
         existingProfile,
-        transactionData: pendingTransactionData,
+        transactionData,
       });
-      await scenario.responder.prepare(pendingTransactionData);
+      await scenario.responder.prepare(transactionData);
 
-      await scenario.responder.rollback(pendingTransactionData);
+      await scenario.responder.rollback(transactionData);
 
       expect(scenario.profileFromCache).toEqual(existingProfile);
     });
@@ -122,18 +118,18 @@ describe(`Given the ${UpdateProfileMetadataResponder.name}`, () => {
       const existingProfile = null;
       const scenario = setupUpdateProfileMetadataResponder({
         existingProfile,
-        transactionData: pendingTransactionData,
+        transactionData,
       });
-      await scenario.responder.prepare(pendingTransactionData);
+      await scenario.responder.prepare(transactionData);
 
-      await scenario.responder.rollback(pendingTransactionData);
+      await scenario.responder.rollback(transactionData);
 
       expect(scenario.profileFromCache).toEqual({});
     });
   });
 
   describe(`when "${UpdateProfileMetadataResponder.prototype.commit.name}" method is invoked with BroadcastedTransactionData<UpdateProfileDetailsRequest>`, () => {
-    const transactionData = mockBroadcastedTransactionData({ request });
+    const transactionData = mockTransactionData({ request });
 
     it(`should confirm the cache changes on the correct Profile with fresh data from the server`, async () => {
       const existingProfile = mockProfileFragment({ id: request.profileId });

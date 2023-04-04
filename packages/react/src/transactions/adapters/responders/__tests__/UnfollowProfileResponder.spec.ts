@@ -2,12 +2,12 @@ import { InMemoryCache } from '@apollo/client';
 import { FragmentProfile } from '@lens-protocol/api-bindings';
 import { mockProfileFragment, mockProfileStatsFragment } from '@lens-protocol/api-bindings/mocks';
 import {
-  mockBroadcastedTransactionData,
+  mockTransactionData,
   mockUnfollowRequest,
   mockWalletData,
 } from '@lens-protocol/domain/mocks';
 import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
+import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
 import { UnfollowProfileResponder } from '../UnfollowProfileResponder';
@@ -15,7 +15,7 @@ import { UnfollowProfileResponder } from '../UnfollowProfileResponder';
 function setupTestScenario({
   transactionData,
 }: {
-  transactionData: BroadcastedTransactionData<UnfollowRequest>;
+  transactionData: TransactionData<UnfollowRequest>;
   walletData: WalletData;
 }) {
   const apolloCache = new InMemoryCache({
@@ -64,7 +64,7 @@ describe(`Given the ${UnfollowProfileResponder.name}`, () => {
     it(`should update apollo cache with new unfollow information`, async () => {
       const walletData = mockWalletData();
       const request = mockUnfollowRequest();
-      const transactionData = mockBroadcastedTransactionData({ request });
+      const transactionData = mockTransactionData({ request });
       const scenario = setupTestScenario({ transactionData, walletData });
 
       await scenario.responder.commit(transactionData);

@@ -1,7 +1,6 @@
 import { FollowPolicy } from '@lens-protocol/api-bindings';
 import { UpdateFollowPolicyRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
-  BroadcastedTransactionData,
   ITransactionResponder,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -20,11 +19,11 @@ export class UpdateFollowPolicyResponder
     }));
   }
 
-  async commit({ request }: BroadcastedTransactionData<UpdateFollowPolicyRequest>) {
+  async commit({ request }: TransactionData<UpdateFollowPolicyRequest>) {
     await this.profileCacheManager.refreshProfile(request.profileId);
   }
 
-  async rollback({ request }: BroadcastedTransactionData<UpdateFollowPolicyRequest>) {
+  async rollback({ request }: TransactionData<UpdateFollowPolicyRequest>) {
     await this.profileCacheManager.refreshProfile(request.profileId);
   }
 }

@@ -7,7 +7,7 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import {
-  mockBroadcastedTransactionData,
+  mockTransactionData,
   mockChargeFollowConfig,
   mockUpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/mocks';
@@ -76,7 +76,7 @@ describe(`Given the ${UpdateFollowPolicyResponder.name}`, () => {
 
       const scenario = setupUpdateFollowPolicyResponder({ existingProfile });
 
-      const txData = mockBroadcastedTransactionData({
+      const txData = mockTransactionData({
         request: mockUpdateFollowPolicyRequest({
           profileId: existingProfile.id,
           policy: updatedFollowPolicy,
@@ -101,7 +101,7 @@ describe(`Given the ${UpdateFollowPolicyResponder.name}`, () => {
       });
       const scenario = setupUpdateFollowPolicyResponder({ updatedProfile });
 
-      const txData = mockBroadcastedTransactionData({
+      const txData = mockTransactionData({
         request: mockUpdateFollowPolicyRequest({ profileId: updatedProfile.id }),
       });
       await scenario.responder.commit(txData);
@@ -120,7 +120,7 @@ describe(`Given the ${UpdateFollowPolicyResponder.name}`, () => {
       });
       const scenario = setupUpdateFollowPolicyResponder({ updatedProfile });
 
-      const txData = mockBroadcastedTransactionData({
+      const txData = mockTransactionData({
         request: mockUpdateFollowPolicyRequest({ profileId: updatedProfile.id }),
       });
       await scenario.responder.rollback(txData);

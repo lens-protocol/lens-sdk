@@ -9,7 +9,6 @@ import {
 } from '@lens-protocol/api-bindings';
 import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
-  BroadcastedTransactionData,
   ITransactionResponder,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -69,7 +68,7 @@ export class CollectPublicationResponder implements ITransactionResponder<Collec
     });
   }
 
-  async commit({ request }: BroadcastedTransactionData<CollectRequest>) {
+  async commit({ request }: TransactionData<CollectRequest>) {
     this.publicationCacheManager.update(request.publicationId, (current) => {
       if (isMirrorPublication(current)) {
         return {

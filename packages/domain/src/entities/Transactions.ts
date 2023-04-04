@@ -113,7 +113,9 @@ export enum TransactionErrorReason {
   /**
    * Failed to be broadcasted
    *
-   * @deprecated {@link TransactionError} is not longer throw with this reason. See {@link RelayError} instead.
+   * @deprecated {@link TransactionError} is not longer throw with this reason. See {@link BroadcastingError} instead.
+   *
+   * It will be removed in the next major version. Its value falls back to {@link TransactionErrorReason.UNKNOWN} so to not cause a breaking change in consumer's code.
    */
   CANNOT_EXECUTE = 'UNKNOWN',
   /**
@@ -127,7 +129,9 @@ export enum TransactionErrorReason {
   /**
    * The gas-less broadcasting of the tx was rejected, probably due to reaching a quota limit
    *
-   * @deprecated {@link TransactionError} is not longer throw with this reason. See {@link RelayError} instead.
+   * @deprecated {@link TransactionError} is not longer throw with this reason. See {@link BroadcastingError} instead.
+   *
+   * It will be removed in the next major version. Its value falls back to {@link TransactionErrorReason.UNKNOWN} so to not cause a breaking change in consumer's code.
    */
   REJECTED = 'UNKNOWN',
   /**

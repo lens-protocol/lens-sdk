@@ -7,13 +7,13 @@ import {
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import {
-  mockBroadcastedTransactionData,
+  mockTransactionData,
   mockCreateMirrorRequest,
   mockPublicationId,
 } from '@lens-protocol/domain/mocks';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
-import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
-import { nonNullable } from '@lens-protocol/shared-kernel';
+import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
+import { never, nonNullable } from '@lens-protocol/shared-kernel';
 
 import { PublicationCacheManager } from '../../PublicationCacheManager';
 import { CreateMirrorResponder } from '../CreateMirrorResponder';
@@ -23,13 +23,13 @@ function setupTestScenario({
   transactionData,
 }: {
   post: Post;
-  transactionData: BroadcastedTransactionData<CreateMirrorRequest>;
+  transactionData: TransactionData<CreateMirrorRequest>;
 }) {
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
     createPublicationByTxHashMockedResponse({
       variables: {
-        txHash: transactionData.txHash,
+        txHash: transactionData.txHash ?? never(),
         observerId: transactionData.request.profileId,
         sources,
       },
@@ -79,7 +79,7 @@ describe(`Given an instance of the ${CreateMirrorResponder.name}`, () => {
         profile: author,
       });
 
-      const transactionData = mockBroadcastedTransactionData({
+      const transactionData = mockTransactionData({
         request: mockCreateMirrorRequest({
           profileId: author.id,
           publicationId: post.id,
@@ -107,7 +107,7 @@ describe(`Given an instance of the ${CreateMirrorResponder.name}`, () => {
         profile: author,
       });
 
-      const transactionData = mockBroadcastedTransactionData({
+      const transactionData = mockTransactionData({
         request: mockCreateMirrorRequest({
           profileId: author.id,
           publicationId: post.id,
@@ -133,7 +133,7 @@ describe(`Given an instance of the ${CreateMirrorResponder.name}`, () => {
         profile: author,
       });
 
-      const transactionData = mockBroadcastedTransactionData({
+      const transactionData = mockTransactionData({
         request: mockCreateMirrorRequest({
           profileId: author.id,
           publicationId: post.id,

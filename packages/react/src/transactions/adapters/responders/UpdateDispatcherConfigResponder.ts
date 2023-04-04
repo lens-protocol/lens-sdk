@@ -1,6 +1,6 @@
 import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
-  BroadcastedTransactionData,
+  TransactionData,
   ITransactionResponder,
 } from '@lens-protocol/domain/use-cases/transactions';
 
@@ -11,7 +11,7 @@ export class UpdateDispatcherConfigResponder
 {
   constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
-  async commit({ request }: BroadcastedTransactionData<UpdateDispatcherConfigRequest>) {
+  async commit({ request }: TransactionData<UpdateDispatcherConfigRequest>) {
     await this.profileCacheManager.refreshProfile(request.profileId);
   }
 }

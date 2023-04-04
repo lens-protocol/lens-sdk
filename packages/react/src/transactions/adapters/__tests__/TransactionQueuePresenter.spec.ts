@@ -1,13 +1,9 @@
 import { recentTransactionsVar, TxStatus } from '@lens-protocol/api-bindings';
 import { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
+import { mockTransactionError, mockTransactionData } from '@lens-protocol/domain/mocks';
 import {
-  mockTransactionError,
-  mockBroadcastedTransactionData,
-  mockPendingTransactionData,
-} from '@lens-protocol/domain/mocks';
-import {
-  BroadcastedTransactionData,
   SupportedTransactionRequest,
+  TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { FailedTransactionError, TransactionQueuePresenter } from '../TransactionQueuePresenter';
@@ -25,44 +21,47 @@ describe(`Given the ${TransactionQueuePresenter.name}`, () => {
     recentTransactionsVar([]);
   });
 
-  describe(`when invoking "${TransactionQueuePresenter.prototype.broadcasting.name}" method`, () => {
+  describe(`when invoking "${TransactionQueuePresenter.prototype.pending.name}" method`, () => {
     it('should add it to the list of recent transactions', () => {
       const { presenter } = setupTransactionQueuePresenter();
 
-      const transaction = mockPendingTransactionData();
-      presenter.broadcasting(transaction);
+      const transaction = mockTransactionData();
+      presenter.pending(transaction);
 
-      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.BROADCASTING, ...transaction }]);
-    });
-  });
-
-  describe(`when invoking "${TransactionQueuePresenter.prototype.mining.name}" method`, () => {
-    it('should add it to the list of recent transactions', () => {
-      const { presenter } = setupTransactionQueuePresenter();
-
-      const transaction = mockBroadcastedTransactionData();
-      presenter.mining(transaction);
-
-      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.MINING, ...transaction }]);
+      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.PENDING, ...transaction }]);
     });
 
     it('should update the status of an existing transaction', () => {
       const { presenter } = setupTransactionQueuePresenter();
-      const transaction = mockBroadcastedTransactionData();
-      presenter.broadcasting(transaction);
+      const transaction = mockTransactionData();
+      presenter.pending(transaction);
 
-      presenter.mining(transaction);
+      const updated = mockTransactionData({ id: transaction.id, request: transaction.request });
+      presenter.pending(updated);
 
-      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.MINING, ...transaction }]);
+      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.PENDING, ...updated }]);
+    });
+  });
+
+  describe(`when invoking "${TransactionQueuePresenter.prototype.settled.name}" method`, () => {
+    const transaction = mockTransactionData();
+
+    it('should update the corresponding transaction', () => {
+      const { presenter } = setupTransactionQueuePresenter();
+      presenter.pending(transaction);
+
+      presenter.settled(transaction);
+
+      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.SETTLED, ...transaction }]);
     });
   });
 
   describe(`when invoking "${TransactionQueuePresenter.prototype.failed.name}" method`, () => {
-    const transaction = mockBroadcastedTransactionData();
+    const transaction = mockTransactionData();
 
     it('should update the corresponding transaction', () => {
       const { presenter } = setupTransactionQueuePresenter();
-      presenter.mining(transaction);
+      presenter.pending(transaction);
 
       presenter.failed(mockTransactionError(), transaction);
 
@@ -71,7 +70,7 @@ describe(`Given the ${TransactionQueuePresenter.name}`, () => {
 
     it(`should use the provided errorHandler to propagate the error to the user`, () => {
       const { presenter, errorHandler } = setupTransactionQueuePresenter();
-      presenter.mining(transaction);
+      presenter.pending(transaction);
 
       const error = new TransactionError(TransactionErrorReason.UNKNOWN);
       presenter.failed(error, transaction);
@@ -84,22 +83,22 @@ describe(`Given the ${TransactionQueuePresenter.name}`, () => {
   describe(`when invoking "${TransactionQueuePresenter.prototype.clearRecent.name}" method`, () => {
     it(`should remove ${TxStatus.SETTLED} and ${TxStatus.FAILED} tx`, () => {
       const { presenter } = setupTransactionQueuePresenter();
-      const toKeep = [mockBroadcastedTransactionData(), mockBroadcastedTransactionData()];
-      const toRemove = [mockBroadcastedTransactionData(), mockBroadcastedTransactionData()];
+      const toKeep = [mockTransactionData(), mockTransactionData()];
+      const toRemove = [mockTransactionData(), mockTransactionData()];
 
-      toKeep.concat(toRemove).forEach((transaction) => presenter.mining(transaction));
+      toKeep.concat(toRemove).forEach((transaction) => presenter.pending(transaction));
       presenter.failed(
         mockTransactionError(),
-        toRemove[0] as BroadcastedTransactionData<SupportedTransactionRequest>,
+        toRemove[0] as TransactionData<SupportedTransactionRequest>,
       );
-      presenter.settled(toRemove[1] as BroadcastedTransactionData<SupportedTransactionRequest>);
+      presenter.settled(toRemove[1] as TransactionData<SupportedTransactionRequest>);
 
       presenter.clearRecent();
 
       expect(recentTransactionsVar()).toEqual(
         toKeep.reverse().map((data) => ({
           ...data,
-          status: TxStatus.MINING,
+          status: TxStatus.PENDING,
         })),
       );
     });
