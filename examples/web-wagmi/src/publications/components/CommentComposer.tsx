@@ -25,7 +25,7 @@ export function CommentComposer({ publisher, publicationId }: CommentComposerPro
     const formData = new FormData(form);
     const content = (formData.get('content') as string | null) ?? never();
 
-    await create({
+    const result = await create({
       publicationId,
       content,
       contentFocus: ContentFocus.TEXT,
@@ -35,7 +35,9 @@ export function CommentComposer({ publisher, publicationId }: CommentComposerPro
       },
     });
 
-    form.reset();
+    if (result.isSuccess()) {
+      form.reset();
+    }
   };
 
   return (
