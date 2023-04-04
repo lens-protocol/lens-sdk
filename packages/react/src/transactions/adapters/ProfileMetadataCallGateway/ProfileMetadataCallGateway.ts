@@ -13,28 +13,25 @@ import {
   CreatePublicSetProfileMetadataUriRequest,
   LensApolloClient,
   ProfileMetadata,
+  RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
-import {
-  NativeTransaction,
-  Nonce,
-  ProfileId,
-  TransactionError,
-  TransactionErrorReason,
-} from '@lens-protocol/domain/entities';
+import { NativeTransaction, Nonce, ProfileId } from '@lens-protocol/domain/entities';
 import {
   IProfileDetailsCallGateway,
   UpdateProfileDetailsRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   IUnsignedProtocolCallGateway,
+  RelayError,
+  RelayErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, never, success } from '@lens-protocol/shared-kernel';
+import { ChainType, failure, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
-import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
+import { ITransactionFactory, RelayReceipt } from '../ITransactionFactory';
 import { createProfileMetadata } from './createProfileMetadata';
 
 export class ProfileMetadataCallGateway
@@ -48,15 +45,24 @@ export class ProfileMetadataCallGateway
 
   async createDelegatedTransaction<T extends UpdateProfileDetailsRequest>(
     request: T,
-  ): Promise<NativeTransaction<T>> {
-    return this.transactionFactory.createNativeTransaction({
+  ): PromiseResult<NativeTransaction<T>, RelayError> {
+    const result = await this.broadcast(
+      await this.resolveCreateSetProfileMetadataUriRequest(request),
+    );
+
+    if (result.isFailure()) return failure(result.error);
+
+    const receipt = result.value;
+
+    const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiateProfileUpdate(
-        await this.resolveCreateSetProfileMetadataUriRequest(request),
-      ),
+      indexingId: receipt.indexingId,
+      txHash: receipt.txHash,
     });
+
+    return success(transaction);
   }
 
   async createUnsignedProtocolCall<T extends UpdateProfileDetailsRequest>(
@@ -89,9 +95,9 @@ export class ProfileMetadataCallGateway
     return data.result;
   }
 
-  private async initiateProfileUpdate(
+  private async broadcast(
     request: CreatePublicSetProfileMetadataUriRequest,
-  ): AsyncRelayReceipt {
+  ): PromiseResult<RelayReceipt, RelayError> {
     const { data } = await this.apolloClient.mutate<
       CreateSetProfileMetadataViaDispatcherData,
       CreateSetProfileMetadataViaDispatcherVariables
@@ -101,7 +107,10 @@ export class ProfileMetadataCallGateway
     });
 
     if (data.result.__typename === 'RelayError') {
-      return failure(new TransactionError(TransactionErrorReason.REJECTED));
+      if (data.result.reason === RelayErrorReasons.Rejected) {
+        return failure(new RelayError(RelayErrorReason.REJECTED));
+      }
+      return failure(new RelayError(RelayErrorReason.UNSPECIFIED));
     }
 
     return success({

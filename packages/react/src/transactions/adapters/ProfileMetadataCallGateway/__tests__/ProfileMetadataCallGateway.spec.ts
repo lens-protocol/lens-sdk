@@ -1,6 +1,6 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
-import { omitTypename, Profile } from '@lens-protocol/api-bindings';
+import { omitTypename, Profile, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   createCreateSetProfileMetadataTypedDataMockedResponse,
   createCreateSetProfileMetadataViaDispatcherMockedResponse,
@@ -9,9 +9,11 @@ import {
   createGetProfileMockedResponse,
   mockProfileFragment,
   mockRelayerResultFragment,
+  mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockUpdateProfileDetailsRequest } from '@lens-protocol/domain/mocks';
+import { RelayError, RelayErrorReason } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
 import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
@@ -53,7 +55,7 @@ const uploadUrl = faker.internet.url();
 const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
 
 describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
-  describe(`when creating an ${UnsignedLensProtocolCall.name}<UpdateProfileDetailsRequest> via the "${ProfileMetadataCallGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
+  describe(`when creating an IUnsignedProtocolCall<UpdateProfileDetailsRequest> via the "${ProfileMetadataCallGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
     it(`should:
         - create a new Profile Metadata updating the profile details
         - upload it via the IMetadataUploader<ProfileMetadata>
@@ -111,12 +113,12 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
   });
 
   describe(`when creating a ${NativeTransaction.name}<UpdateProfileDetailsRequest> via the "${ProfileMetadataCallGateway.prototype.createDelegatedTransaction.name}" method`, () => {
+    const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
+
     it(`should:
         - create a new Profile Metadata updating the profile details
         - upload it via the IMetadataUploader<ProfileMetadata>
         - create a ${NativeTransaction.name} instance`, async () => {
-      const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
-
       const { gateway, uploader } = setupTestScenario({
         existingProfile,
         uploadUrl,
@@ -135,9 +137,8 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         ],
       });
 
-      const transaction = await gateway.createDelegatedTransaction(request);
+      const result = await gateway.createDelegatedTransaction(request);
 
-      await transaction.waitNextEvent();
       expect(uploader.upload).toHaveBeenCalledWith(
         expect.objectContaining({
           version: '1.0.0',
@@ -146,12 +147,50 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
           bio: request.bio,
         }),
       );
-      expect(transaction).toBeInstanceOf(NativeTransaction);
-      expect(transaction).toMatchObject({
+      expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
+      expect(result.unwrap()).toMatchObject({
         id: expect.any(String),
         chainType: ChainType.POLYGON,
         request,
       });
     });
+
+    it.each([
+      {
+        expected: new RelayError(RelayErrorReason.REJECTED),
+        relayError: mockRelayErrorFragment(RelayErrorReasons.Rejected),
+      },
+      {
+        expected: new RelayError(RelayErrorReason.UNSPECIFIED),
+        relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
+      },
+    ])(
+      `should fail w/ a $expected.constructor.name in case of RelayError response with "$relayError.reason" reason`,
+      async ({ relayError, expected }) => {
+        const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
+
+        const { gateway } = setupTestScenario({
+          existingProfile,
+          uploadUrl,
+          otherMockedResponses: [
+            createCreateSetProfileMetadataViaDispatcherMockedResponse({
+              variables: {
+                request: {
+                  profileId: request.profileId,
+                  metadata: uploadUrl,
+                },
+              },
+              data: {
+                result: relayError,
+              },
+            }),
+          ],
+        });
+
+        const result = await gateway.createDelegatedTransaction(request);
+
+        expect(() => result.unwrap()).toThrow(expected);
+      },
+    );
   });
 });
