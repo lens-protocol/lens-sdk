@@ -53,23 +53,20 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
 
     it.each([
       {
-        ErrorCtor: DuplicatedHandleError,
         expected: new DuplicatedHandleError(request.handle),
         relayError: mockRelayErrorFragment(RelayErrorReasons.HandleTaken),
       },
       {
-        ErrorCtor: RelayError,
         expected: new RelayError(RelayErrorReason.REJECTED),
         relayError: mockRelayErrorFragment(RelayErrorReasons.Rejected),
       },
       {
-        ErrorCtor: RelayError,
         expected: new RelayError(RelayErrorReason.UNSPECIFIED),
         relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
       },
     ])(
-      `should fail w/ a $ErrorCtor in case of RelayError response with "$relayError.reason" reason`,
-      async ({ relayError, ErrorCtor }) => {
+      `should fail w/ a $expected.constructor.name in case of RelayError response with "$relayError.reason" reason`,
+      async ({ relayError, expected }) => {
         const apollo = createMockApolloClientWithMultipleResponses([
           createCreateProfileMockedResponse({
             request: {
@@ -82,7 +79,7 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
 
         const result = await profileTransactionGateway.createProfileTransaction(request);
 
-        expect(() => result.unwrap()).toThrow(ErrorCtor);
+        expect(() => result.unwrap()).toThrow(expected);
       },
     );
   });
