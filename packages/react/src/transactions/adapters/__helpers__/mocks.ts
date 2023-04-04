@@ -64,6 +64,7 @@ function mockAsyncRelayReceipt(result: Result<RelayReceipt, TransactionError>): 
   return Promise.resolve(result);
 }
 
+/** @deprecated */
 export function mockDeferredMetaTransactionInit<T extends TransactionRequestModel>({
   request = mockTransactionRequestModel() as T,
   relayReceipt = mockRelayReceipt(),
@@ -75,6 +76,7 @@ export function mockDeferredMetaTransactionInit<T extends TransactionRequestMode
   };
 }
 
+/** @deprecated */
 export function mockDeferredNativeTransactionInit<T extends TransactionRequestModel>({
   request = mockTransactionRequestModel() as T,
   relayReceipt = mockRelayReceipt(),

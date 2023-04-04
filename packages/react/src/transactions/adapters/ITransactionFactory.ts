@@ -71,18 +71,11 @@ export type ProxyTransactionData<T extends TransactionRequestModel> = {
   status?: ProxyActionStatus;
 };
 
-export type TransactionInit<T extends TransactionRequestModel> =
-  | DeferredNativeTransactionInit<T>
-  | DeferredMetaTransactionInit<T>
-  | NativeTransactionData<T>;
-
 export interface ITransactionFactory<Supported extends TransactionRequestModel> {
-  createMetaTransaction<T extends Supported>(
-    init: DeferredMetaTransactionInit<T> | MetaTransactionData<T>,
-  ): MetaTransaction<T>;
+  createMetaTransaction<T extends Supported>(init: MetaTransactionData<T>): MetaTransaction<T>;
 
   createNativeTransaction<T extends Supported>(
-    init: DeferredNativeTransactionInit<T> | NativeTransactionData<T>,
+    init: NativeTransactionData<T>,
   ): NativeTransaction<T>;
 
   createProxyTransaction<T extends Supported>(init: ProxyTransactionData<T>): ProxyTransaction<T>;

@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker';
 import {
   MetaTransaction,
   NativeTransaction,
@@ -8,19 +7,16 @@ import {
   TransactionErrorReason,
   TransactionEvent,
 } from '@lens-protocol/domain/entities';
-import { mockSignedProtocolCall, mockTransactionHash } from '@lens-protocol/domain/mocks';
+import { mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
+import { success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
 import {
-  mockAsyncRelayReceipt,
-  mockDeferredMetaTransactionInit,
   mockMetaTransactionData,
   mockNativeTransactionData,
   mockNativeTransactionDataWithIndexingId,
   mockProxyTransactionData,
-  mockRelayReceipt,
 } from '../../adapters/__helpers__/mocks';
 import { IndexingEvent, ITransactionObserver, TransactionFactory } from '../TransactionFactory';
 import { MockedTransactionObserver, mockProxyActionStatusEvent } from '../__helpers__/mocks';
@@ -40,94 +36,6 @@ function setupTransactionFactory({
 }
 
 describe(`Given an instance of the ${TransactionFactory.name}`, () => {
-  describe(`and a ${MetaTransaction.name} instance created via DeferredMetaTransactionInit<T>`, () => {
-    const chainType = ChainType.ETHEREUM;
-
-    describe(`when invoking the "waitNextEvent" method`, () => {
-      const request = mock<SupportedTransactionRequest>();
-      const signedCall = mockSignedProtocolCall(request);
-      const relayReceipt = mockRelayReceipt();
-      const init = mockDeferredMetaTransactionInit({ request, relayReceipt });
-
-      it(`should
-            - resolve with Success<TransactionEvent.${TransactionEvent.BROADCASTED}> as the provided AsyncRelayReceipt resolves with a successful result
-            - and update the tx hash`, async () => {
-        const factory = setupTransactionFactory();
-
-        const transaction = factory.createMetaTransaction(init);
-        const result = await transaction.waitNextEvent();
-
-        expect(result.unwrap()).toBe(TransactionEvent.BROADCASTED);
-        expect(transaction.hash).toEqual(relayReceipt.txHash);
-      });
-
-      it(`should forward any ${TransactionError.name} resulting from the provided AsyncRelayReceipt`, async () => {
-        const error = new TransactionError(TransactionErrorReason.UNKNOWN);
-        const factory = setupTransactionFactory();
-
-        const transaction = factory.createMetaTransaction({
-          chainType,
-          signedCall,
-          asyncRelayReceipt: mockAsyncRelayReceipt(failure(error)),
-        });
-        const result = await transaction.waitNextEvent();
-
-        expect(() => result.unwrap()).toThrow(error);
-      });
-
-      it(`should
-            - resolve with Success<TransactionEvent.${TransactionEvent.UPGRADED}> as the txHash changes while not yet indexed
-            - and update the tx hash`, async () => {
-        const indexingEvent = mockIndexingEvent({ indexed: false });
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: relayReceipt.indexingId,
-          indexingEventsSequence: [indexingEvent],
-        });
-        const factory = setupTransactionFactory({ observer });
-
-        const transaction = factory.createMetaTransaction(init);
-        await transaction.waitNextEvent();
-        const result = await transaction.waitNextEvent();
-
-        expect(result.unwrap()).toBe(TransactionEvent.UPGRADED);
-        expect(transaction.hash).toEqual(indexingEvent.txHash);
-      });
-
-      it(`should:
-            - resolve with Success<TransactionEvent.${TransactionEvent.SETTLED}> as soon as indexed by the BE
-            - and update the tx hash if changed`, async () => {
-        const indexingEvent = mockIndexingEvent({ indexed: true });
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: relayReceipt.indexingId,
-          indexingEventsSequence: [indexingEvent],
-        });
-        const factory = setupTransactionFactory({ observer });
-
-        const transaction = factory.createMetaTransaction(init);
-        await transaction.waitNextEvent();
-        const result = await transaction.waitNextEvent();
-
-        expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
-        expect(transaction.hash).toEqual(indexingEvent.txHash);
-      });
-
-      it(`should forward any ${TransactionError.name} from the ITransactionObserver`, async () => {
-        const error = new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: relayReceipt.indexingId,
-          indexingEventsSequence: [error],
-        });
-        const factory = setupTransactionFactory({ observer });
-
-        const transaction = factory.createMetaTransaction(init);
-        await transaction.waitNextEvent();
-        const result = await transaction.waitNextEvent();
-
-        expect(() => result.unwrap()).toThrow(error);
-      });
-    });
-  });
-
   describe(`and a ${MetaTransaction.name} instance created via MetaTransactionData<T>`, () => {
     const init = mockMetaTransactionData<SupportedTransactionRequest>();
 
@@ -178,119 +86,6 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
 
         const transaction = factory.createMetaTransaction(init);
 
-        const result = await transaction.waitNextEvent();
-
-        expect(() => result.unwrap()).toThrow(error);
-      });
-    });
-  });
-
-  describe(`and an ${NativeTransaction.name} instance created via DeferredNativeTransactionInit<T>`, () => {
-    describe(`when invoking the "waitNextEvent" method`, () => {
-      const request = mock<SupportedTransactionRequest>();
-      const relayResult = mockRelayReceipt();
-      const successfulAsyncRelayReceipt = mockAsyncRelayReceipt(success(relayResult));
-      const indexingId = faker.datatype.uuid();
-      const chainType = ChainType.ETHEREUM;
-
-      it(`should
-          - resolve with Success<TransactionEvent.${TransactionEvent.BROADCASTED}> as the provided AsyncRelayReceipt resolves with a successful result
-          - and update the tx hash`, async () => {
-        const indexingEvent = mockIndexingEvent({ indexed: false });
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId,
-          indexingEventsSequence: [indexingEvent],
-        });
-        const factory = setupTransactionFactory({ observer });
-
-        const transaction = factory.createNativeTransaction({
-          chainType,
-          id: faker.datatype.uuid(),
-          request,
-          asyncRelayReceipt: successfulAsyncRelayReceipt,
-        });
-        const result = await transaction.waitNextEvent();
-
-        expect(result.unwrap()).toBe(TransactionEvent.BROADCASTED);
-        expect(transaction.hash).toEqual(relayResult.txHash);
-      });
-
-      it(`should forward any ${TransactionError.name} resulting from the provided AsyncRelayReceipt`, async () => {
-        const error = new TransactionError(TransactionErrorReason.UNKNOWN);
-        const factory = setupTransactionFactory();
-
-        const transaction = factory.createNativeTransaction({
-          chainType,
-          id: faker.datatype.uuid(),
-          request,
-          asyncRelayReceipt: mockAsyncRelayReceipt(failure(error)),
-        });
-        const result = await transaction.waitNextEvent();
-
-        expect(() => result.unwrap()).toThrow(error);
-      });
-
-      it(`should
-          - resolve with Success<TransactionEvent.${TransactionEvent.UPGRADED}> as the txHash changes while not yet indexed
-          - and update the tx hash`, async () => {
-        const indexingEvent = mockIndexingEvent({ indexed: false });
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: relayResult.indexingId,
-          indexingEventsSequence: [indexingEvent],
-        });
-        const factory = setupTransactionFactory({ observer });
-
-        const transaction = factory.createNativeTransaction({
-          chainType,
-          id: faker.datatype.uuid(),
-          request,
-          asyncRelayReceipt: successfulAsyncRelayReceipt,
-        });
-        await transaction.waitNextEvent();
-        const result = await transaction.waitNextEvent();
-
-        expect(result.unwrap()).toBe(TransactionEvent.UPGRADED);
-        expect(transaction.hash).toEqual(indexingEvent.txHash);
-      });
-
-      it(`should:
-          - resolve with Success<TransactionEvent.${TransactionEvent.SETTLED}> as soon as indexed by the BE
-          - and update the tx hash if changed`, async () => {
-        const indexingEvent = mockIndexingEvent({ indexed: true });
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: relayResult.indexingId,
-          indexingEventsSequence: [indexingEvent],
-        });
-        const factory = setupTransactionFactory({ observer });
-
-        const transaction = factory.createNativeTransaction({
-          chainType,
-          id: faker.datatype.uuid(),
-          request,
-          asyncRelayReceipt: successfulAsyncRelayReceipt,
-        });
-        await transaction.waitNextEvent();
-        const result = await transaction.waitNextEvent();
-
-        expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
-        expect(transaction.hash).toEqual(indexingEvent.txHash);
-      });
-
-      it(`should forward any ${TransactionError.name} from the ITransactionObserver`, async () => {
-        const error = new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: relayResult.indexingId,
-          indexingEventsSequence: [error],
-        });
-        const factory = setupTransactionFactory({ observer });
-
-        const transaction = factory.createNativeTransaction({
-          chainType,
-          id: faker.datatype.uuid(),
-          request,
-          asyncRelayReceipt: successfulAsyncRelayReceipt,
-        });
-        await transaction.waitNextEvent();
         const result = await transaction.waitNextEvent();
 
         expect(() => result.unwrap()).toThrow(error);

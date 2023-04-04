@@ -17,8 +17,6 @@ import {
 } from '@lens-protocol/shared-kernel';
 
 import {
-  DeferredMetaTransactionInit,
-  DeferredNativeTransactionInit,
   ITransactionFactory,
   MetaTransactionData,
   NativeTransactionData,
@@ -258,20 +256,7 @@ export class TransactionFactory
 {
   constructor(private readonly transactionObserver: ITransactionObserver) {}
 
-  createMetaTransaction<T extends SupportedTransactionRequest>(
-    init: DeferredMetaTransactionInit<T> | MetaTransactionData<T>,
-  ) {
-    if ('asyncRelayReceipt' in init) {
-      return new SerializableMetaTransaction(
-        {
-          chainType: init.chainType,
-          id: init.signedCall.id,
-          nonce: init.signedCall.nonce,
-          request: init.signedCall.request,
-        },
-        this.createProtocolCallStateReducer(init),
-      );
-    }
+  createMetaTransaction<T extends SupportedTransactionRequest>(init: MetaTransactionData<T>) {
     return new SerializableMetaTransaction(
       {
         chainType: init.chainType,
@@ -281,23 +266,11 @@ export class TransactionFactory
         request: init.request,
         txHash: init.txHash,
       },
-      this.createProtocolCallStateReducer(init),
+      this.createProtocolCallStateReducer(),
     );
   }
 
-  createNativeTransaction<T extends SupportedTransactionRequest>(
-    init: DeferredNativeTransactionInit<T> | NativeTransactionData<T>,
-  ) {
-    if ('asyncRelayReceipt' in init) {
-      return new SerializableNativeTransaction(
-        {
-          chainType: init.chainType,
-          id: init.id,
-          request: init.request,
-        },
-        this.createProtocolCallStateReducer(init),
-      );
-    }
+  createNativeTransaction<T extends SupportedTransactionRequest>(init: NativeTransactionData<T>) {
     if (init.indexingId) {
       return new SerializableNativeTransaction(
         {
@@ -307,7 +280,7 @@ export class TransactionFactory
           request: init.request,
           txHash: init.txHash,
         },
-        this.createProtocolCallStateReducer(init),
+        this.createProtocolCallStateReducer(),
       );
     }
     return new SerializableNativeTransaction(
@@ -340,34 +313,8 @@ export class TransactionFactory
   private createProtocolCallStateReducer<
     T extends SupportedTransactionRequest,
     S extends MetaTransactionState<T> | NativeTransactionState<T>,
-  >(
-    init:
-      | DeferredMetaTransactionInit<T>
-      | DeferredNativeTransactionInit<T>
-      | MetaTransactionData<T>
-      | NativeTransactionData<T>
-      | ProxyTransactionData<T>,
-  ): StateReducer<S> {
+  >(): StateReducer<S> {
     return async (state) => {
-      if ('asyncRelayReceipt' in init) {
-        const relayReceiptResult = await init.asyncRelayReceipt;
-
-        if (relayReceiptResult.isFailure()) {
-          return failure(relayReceiptResult.error);
-        }
-
-        if (state.txHash === undefined) {
-          return success({
-            event: TransactionEvent.BROADCASTED,
-            state: {
-              ...state,
-              txHash: relayReceiptResult.value.txHash,
-              indexingId: relayReceiptResult.value.indexingId,
-            },
-          });
-        }
-      }
-
       invariant(state.indexingId, 'indexingId is required');
 
       const indexingEventResult = await this.transactionObserver.waitForNextIndexingEvent(
