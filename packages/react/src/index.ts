@@ -71,6 +71,7 @@ export {
   WalletConnectionError,
   WalletConnectionErrorReason,
 } from '@lens-protocol/domain/entities';
+export { RelayError, RelayErrorReason } from '@lens-protocol/domain/use-cases/transactions';
 
 /**
  * Domain essentials

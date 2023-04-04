@@ -1,9 +1,10 @@
 import { TransactionState, useWaitUntilTransactionSettled } from '@lens-protocol/api-bindings';
-import { TransactionError, TransactionKind } from '@lens-protocol/domain/entities';
+import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
 } from '@lens-protocol/domain/use-cases/profile';
+import { RelayError } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
@@ -13,9 +14,11 @@ export type CreateProfileArgs = {
   handle: string;
 };
 
+export { DuplicatedHandleError };
+
 export type CreateProfileOperation = Operation<
   void,
-  DuplicatedHandleError | TransactionError,
+  DuplicatedHandleError | RelayError,
   [CreateProfileArgs]
 >;
 
@@ -29,31 +32,63 @@ export type CreateProfileOperation = Operation<
  * @category Profiles
  * @group Hooks
  *
- * @example
+ * @example Simple usage
  * ```tsx
  * import { useCreateProfile } from '@lens-protocol/react-web';
  *
  * function CreateProfile() {
- *   const { execute, isPending } = useCreateProfile();
+ *   const { error, execute, isPending } = useCreateProfile();
  *
- *   const createProfile = async (handle: string) => {
+ *   const onClick = async () => {
+ *     const handle = window.prompt("Enter your handle");
+ *
  *     const result = await execute({ handle });
  *
  *     if (result.isSuccess()) {
  *       console.log("Profile created!");
- *     } else {
- *       console.log("Error: ", result.error.message);
  *     }
  *   };
  *
  *   return (
  *     <div>
- *       <button
- *         disabled={isPending}
- *         onClick={() => {
- *           createProfile("my-new-profile");
- *         }}
- *       >
+ *       { error && <p>{error.message}</p>}
+ *       <button disabled={isPending} onClick={onClick}>
+ *         Create profile
+ *       </button>
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @example Programmatic error handling
+ * ```tsx
+ * import { useCreateProfile, DuplicatedHandleError, RelayError } from '@lens-protocol/react-web';
+ *
+ * function CreateProfile() {
+ *   const { execute, isPending } = useCreateProfile();
+ *
+ *   const onClick = async () => {
+ *     const handle = window.prompt("Enter your handle");
+ *
+ *     const result = await execute({ handle });
+ *
+ *     if (result.isSuccess()) {
+ *       console.log("Profile created!");
+ *       return;
+ *     }
+ *
+ *     switch (result.error.constructor) {
+ *       case DuplicatedHandleError:
+ *         console.log("Handle already taken");
+ *
+ *       case RelayError:
+ *         console.log(`Could not create profile due to: ${result.error.message}`);
+ *     }
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       <button disabled={isPending} onClick={onClick}>
  *         Create profile
  *       </button>
  *     </div>
@@ -69,7 +104,7 @@ export function useCreateProfile(): CreateProfileOperation {
   return useOperation(
     async ({
       handle,
-    }: CreateProfileArgs): PromiseResult<void, DuplicatedHandleError | TransactionError> => {
+    }: CreateProfileArgs): PromiseResult<void, DuplicatedHandleError | RelayError> => {
       try {
         const result = await createProfile({
           handle,
@@ -86,7 +121,7 @@ export function useCreateProfile(): CreateProfileOperation {
 
         return result;
       } catch (e) {
-        if (e instanceof TransactionError) {
+        if (e instanceof RelayError) {
           return failure(e);
         }
         throw e;
@@ -94,5 +129,3 @@ export function useCreateProfile(): CreateProfileOperation {
     },
   );
 }
-
-export { DuplicatedHandleError };
