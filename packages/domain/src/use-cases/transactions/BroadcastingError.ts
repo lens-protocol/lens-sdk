@@ -15,6 +15,9 @@ export enum BroadcastingErrorReason {
 export class BroadcastingError extends Error {
   name = 'BroadcastingError' as const;
 
+  /**
+   * @internal
+   */
   constructor(readonly reason: BroadcastingErrorReason) {
     super(`broadcasting failed with reason: ${reason}`);
   }
