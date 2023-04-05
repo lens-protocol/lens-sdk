@@ -19,13 +19,13 @@ import {
   mockTransactionHash,
   mockUnsignedProtocolCall,
 } from '../../../entities/__helpers__/mocks';
+import { BroadcastingError } from '../BroadcastingError';
 import { IDelegableProtocolCallGateway, WithDelegateFlag } from '../DelegableProtocolCallUseCase';
 import {
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
   IUnsignedProtocolCallGateway,
 } from '../ProtocolCallUseCase';
-import { BroadcastingError } from '../BroadcastingError';
 import { ISignlessProtocolCallRelayer } from '../SignlessProtocolCallUseCase';
 import { SupportedTransactionRequest } from '../SupportedTransactionRequest';
 import { TransactionData, TransactionQueue } from '../TransactionQueue';

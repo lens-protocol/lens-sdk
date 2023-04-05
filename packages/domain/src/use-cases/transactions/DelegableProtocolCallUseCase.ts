@@ -1,8 +1,8 @@
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { NativeTransaction, TransactionRequestModel } from '../../entities';
-import { IProtocolCallPresenter, ProtocolCallUseCase } from './ProtocolCallUseCase';
 import { BroadcastingError } from './BroadcastingError';
+import { IProtocolCallPresenter, ProtocolCallUseCase } from './ProtocolCallUseCase';
 import { TransactionQueue } from './TransactionQueue';
 
 export type WithDelegateFlag<T extends TransactionRequestModel> = T extends { delegate: boolean }

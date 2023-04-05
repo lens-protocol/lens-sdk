@@ -10,6 +10,7 @@ import {
   CreatePostRequest,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, invariant, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { EncryptionConfig } from '../config';
@@ -27,7 +28,6 @@ import {
 import { MetadataUploaderErrorMiddleware } from './infrastructure/MetadataUploaderErrorMiddleware';
 import { PublicationIdPredictor } from './infrastructure/PublicationIdPredictor';
 import { createGatedClient } from './infrastructure/createGatedClient';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 export type UseCreateEncryptedPostArgs = {
   encryption: EncryptionConfig;

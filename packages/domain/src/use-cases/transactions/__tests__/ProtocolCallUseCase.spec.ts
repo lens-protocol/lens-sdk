@@ -21,6 +21,7 @@ import {
   mockWallet,
 } from '../../../entities/__helpers__/mocks';
 import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
+import { BroadcastingError, BroadcastingErrorReason } from '../BroadcastingError';
 import {
   ProtocolCallUseCase,
   IProtocolCallPresenter,
@@ -28,7 +29,6 @@ import {
   IUnsignedProtocolCallGateway,
   IProtocolCallRelayer,
 } from '../ProtocolCallUseCase';
-import { BroadcastingError, BroadcastingErrorReason } from '../BroadcastingError';
 import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIMetaTransactionNonceGateway,

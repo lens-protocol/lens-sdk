@@ -3,13 +3,13 @@ import { mock } from 'jest-mock-extended';
 
 import { NativeTransaction, TransactionRequestModel } from '../../../entities';
 import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
+import { BroadcastingError, BroadcastingErrorReason } from '../BroadcastingError';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
   IProtocolCallPresenter,
 } from '../DelegableProtocolCallUseCase';
 import { ProtocolCallUseCase } from '../ProtocolCallUseCase';
-import { BroadcastingError, BroadcastingErrorReason } from '../BroadcastingError';
 import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIDelegableProtocolCallGateway,

@@ -1,7 +1,7 @@
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { NativeTransaction, TransactionKind, TransactionRequestModel } from '../../entities';
-import { BroadcastingError } from '../transactions';
+import { BroadcastingError } from '../transactions/BroadcastingError';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
 

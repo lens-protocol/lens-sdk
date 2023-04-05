@@ -12,8 +12,8 @@ import {
   WalletConnectionError,
 } from '../../entities';
 import { ActiveWallet } from '../wallets/ActiveWallet';
-import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { BroadcastingError } from './BroadcastingError';
+import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
 export interface IMetaTransactionNonceGateway {

@@ -40,6 +40,7 @@ import {
   UnknownFollowModuleSettings,
   WhoReactedResult,
 } from '@lens-protocol/api-bindings';
+
 import { SupportedTransactionRequest } from './transactions';
 
 /**
