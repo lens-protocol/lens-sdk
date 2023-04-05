@@ -21,6 +21,7 @@ import {
 } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import { IDelegableProtocolCallGateway, WithDelegateFlag } from '../DelegableProtocolCallUseCase';
+import { Data, WithData } from '../PayTransaction';
 import {
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
@@ -125,5 +126,12 @@ export function mockTransactionRequestModelWithDelegateFlag({
   return {
     kind: TransactionKind.CREATE_POST,
     delegate,
+  } as WithDelegateFlag<TransactionRequestModel>;
+}
+
+export function mockTransactionRequestModelWithData(): WithData<TransactionRequestModel> {
+  return {
+    kind: TransactionKind.CREATE_POST,
+    data: faker.datatype.hexadecimal({ length: 32 }) as Data,
   } as WithDelegateFlag<TransactionRequestModel>;
 }
