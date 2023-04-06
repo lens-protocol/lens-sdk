@@ -1,8 +1,24 @@
-import type { RelayerResultFragment, RelayErrorFragment } from '../../graphql/fragments.generated';
+import type {
+  CreateDataAvailabilityPublicationResultFragment,
+  RelayerResultFragment,
+  RelayErrorFragment,
+} from '../../graphql/fragments.generated';
 import type {
   TransactionErrorFragment,
   TransactionIndexedResultFragment,
 } from '../graphql/transaction.generated';
+
+/**
+ * Check if the result is a {@link CreateDataAvailabilityPublicationResultFragment}.
+ *
+ * @param result - result to check
+ * @returns true if the result is a {@link CreateDataAvailabilityPublicationResultFragment}
+ */
+export function isCreateDataAvailabilityPublicationResult(
+  result: CreateDataAvailabilityPublicationResultFragment | RelayErrorFragment,
+): result is CreateDataAvailabilityPublicationResultFragment {
+  return result.__typename === 'CreateDataAvailabilityPublicationResult';
+}
 
 /**
  * Check if the result is a {@link RelayerResultFragment}.

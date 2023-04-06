@@ -4,7 +4,11 @@ import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
-import type { RelayerResultFragment, RelayErrorFragment } from '../graphql/fragments.generated';
+import type {
+  CreateDataAvailabilityPublicationResultFragment,
+  RelayerResultFragment,
+  RelayErrorFragment,
+} from '../graphql/fragments.generated';
 import type { BroadcastRequest } from '../graphql/types.generated';
 import { poll, requireAuthHeaders } from '../helpers';
 import {
@@ -128,6 +132,34 @@ export class Transaction {
         return true;
       },
       onMaxAttempts: () => new TransactionPollingError(),
+    });
+  }
+
+  /**
+   * Broadcast a signed typed data for a data availability publication.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link CreateDataAvailabilityPublicationResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.transaction.broadcastDataAvailability({
+   *   id: data.id,
+   *   signature: signedTypedData,
+   * });
+   * ```
+   */
+  async broadcastDataAvailability(
+    request: BroadcastRequest,
+  ): PromiseResult<
+    CreateDataAvailabilityPublicationResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.BroadcastDataAvailability({ request }, headers);
+      return result.data.result;
     });
   }
 }

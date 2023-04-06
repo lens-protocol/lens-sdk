@@ -1,8 +1,8 @@
 export type {
-  CreateCollectBroadcastItemResultFragment,
-  CreateCommentBroadcastItemResultFragment,
-  CreateMirrorBroadcastItemResultFragment,
-  CreatePostBroadcastItemResultFragment,
+  CreateCollectTypedDataFragment,
+  CreateCommentTypedDataFragment,
+  CreateMirrorTypedDataFragment,
+  CreatePostTypedDataFragment,
   MediaOutputFragment,
   PublicationStatsFragment,
   PublicMediaResultsFragment,
