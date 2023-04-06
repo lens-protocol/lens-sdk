@@ -6,6 +6,7 @@ import type { LensConfig } from '../consts/config';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import type {
   CommentFragment,
+  CreateDataAvailabilityPublicationResultFragment,
   PostFragment,
   RelayerResultFragment,
   RelayErrorFragment,
@@ -14,6 +15,9 @@ import type {
 import type { PublicationFragment } from '../graphql/types';
 import type {
   CreateCollectRequest,
+  CreateDataAvailabilityCommentRequest,
+  CreateDataAvailabilityMirrorRequest,
+  CreateDataAvailabilityPostRequest,
   CreateMirrorRequest,
   CreatePublicCommentRequest,
   CreatePublicPostRequest,
@@ -37,10 +41,10 @@ import {
   requireAuthHeaders,
 } from '../helpers';
 import {
-  CreateCollectBroadcastItemResultFragment,
-  CreateCommentBroadcastItemResultFragment,
-  CreateMirrorBroadcastItemResultFragment,
-  CreatePostBroadcastItemResultFragment,
+  CreateCollectTypedDataFragment,
+  CreateCommentTypedDataFragment,
+  CreateMirrorTypedDataFragment,
+  CreatePostTypedDataFragment,
   getSdk,
   PublicationStatsFragment,
   PublicMediaResultsFragment,
@@ -309,10 +313,7 @@ export class Publication {
   async createPostTypedData(
     request: CreatePublicPostRequest,
     options?: TypedDataOptions,
-  ): PromiseResult<
-    CreatePostBroadcastItemResultFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
+  ): PromiseResult<CreatePostTypedDataFragment, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreatePostTypedData(
         {
@@ -391,7 +392,7 @@ export class Publication {
     request: CreatePublicCommentRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateCommentBroadcastItemResultFragment,
+    CreateCommentTypedDataFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -468,10 +469,7 @@ export class Publication {
   async createMirrorTypedData(
     request: CreateMirrorRequest,
     options?: TypedDataOptions,
-  ): PromiseResult<
-    CreateMirrorBroadcastItemResultFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
+  ): PromiseResult<CreateMirrorTypedDataFragment, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateMirrorTypedData(
         {
@@ -539,7 +537,7 @@ export class Publication {
     request: CreateCollectRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateCollectBroadcastItemResultFragment,
+    CreateCollectTypedDataFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -637,6 +635,200 @@ export class Publication {
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.ReportPublication({ request }, headers);
+    });
+  }
+
+  /**
+   * Fetch typed data for creating a data availability post.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastDataAvailability}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns Typed data for creating a data availability post
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createDataAvailabilityPostTypedData({
+   *   from: '0x123',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   * });
+   * ```
+   */
+  async createDataAvailabilityPostTypedData(
+    request: CreateDataAvailabilityPostRequest,
+  ): PromiseResult<CreatePostTypedDataFragment, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateDataAvailabilityPostTypedData(
+        {
+          request,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  /**
+   * Create a data availability post using dispatcher. Profile has to have the dispatcher enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link CreateDataAvailabilityPublicationResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createDataAvailabilityPostViaDispatcher({
+   *   from: '0x123',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   * });
+   * ```
+   */
+  async createDataAvailabilityPostViaDispatcher(
+    request: CreateDataAvailabilityPostRequest,
+  ): PromiseResult<
+    CreateDataAvailabilityPublicationResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateDataAvailabilityPostViaDispatcher({ request }, headers);
+
+      return result.data.result;
+    });
+  }
+
+  /**
+   * Fetch typed data for creating a data availability comment.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastDataAvailability}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns Typed data for creating a data availability comment
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createDataAvailabilityCommentTypedData({
+   *   from: '0x123',
+   *   commentOn: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   * });
+   * ```
+   */
+  async createDataAvailabilityCommentTypedData(
+    request: CreateDataAvailabilityCommentRequest,
+  ): PromiseResult<
+    CreateCommentTypedDataFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateDataAvailabilityCommentTypedData(
+        {
+          request,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  /**
+   * Create a data availability comment using dispatcher. Profile has to have the dispatcher enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link CreateDataAvailabilityPublicationResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createDataAvailabilityCommentViaDispatcher({
+   *   from: '0x123',
+   *   commentOn: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   * });
+   * ```
+   */
+  async createDataAvailabilityCommentViaDispatcher(
+    request: CreateDataAvailabilityCommentRequest,
+  ): PromiseResult<
+    CreateDataAvailabilityPublicationResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateDataAvailabilityCommentViaDispatcher(
+        { request },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  /**
+   * Fetch typed data for creating a data availability mirror.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastDataAvailability}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns Typed data for creating a data availability mirror
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createDataAvailabilityMirrorTypedData({
+   *   from: '0x123',
+   *   mirror: '0x123-0x456',
+   * });
+   * ```
+   */
+  async createDataAvailabilityMirrorTypedData(
+    request: CreateDataAvailabilityMirrorRequest,
+  ): PromiseResult<CreateMirrorTypedDataFragment, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateDataAvailabilityMirrorTypedData(
+        {
+          request,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  /**
+   * Create a data availability mirror using dispatcher. Profile has to have the dispatcher enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link CreateDataAvailabilityPublicationResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createDataAvailabilityMirrorViaDispatcher({
+   *   from: '0x123',
+   *   mirror: '0x123-0x456',
+   * });
+   * ```
+   */
+  async createDataAvailabilityMirrorViaDispatcher(
+    request: CreateDataAvailabilityMirrorRequest,
+  ): PromiseResult<
+    CreateDataAvailabilityPublicationResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateDataAvailabilityMirrorViaDispatcher({ request }, headers);
+
+      return result.data.result;
     });
   }
 }

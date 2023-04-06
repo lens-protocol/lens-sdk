@@ -24,7 +24,7 @@ fragment PublicMediaResults on PublicMediaResults {
   signedUrl
 }
 
-fragment CreatePostBroadcastItemResult on CreatePostBroadcastItemResult {
+fragment CreatePostTypedData on CreatePostBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -50,7 +50,7 @@ fragment CreatePostBroadcastItemResult on CreatePostBroadcastItemResult {
   }
 }
 
-fragment CreateCommentBroadcastItemResult on CreateCommentBroadcastItemResult {
+fragment CreateCommentTypedData on CreateCommentBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -79,7 +79,7 @@ fragment CreateCommentBroadcastItemResult on CreateCommentBroadcastItemResult {
   }
 }
 
-fragment CreateMirrorBroadcastItemResult on CreateMirrorBroadcastItemResult {
+fragment CreateMirrorTypedData on CreateMirrorBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -105,7 +105,7 @@ fragment CreateMirrorBroadcastItemResult on CreateMirrorBroadcastItemResult {
   }
 }
 
-fragment CreateCollectBroadcastItemResult on CreateCollectBroadcastItemResult {
+fragment CreateCollectTypedData on CreateCollectBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -239,7 +239,7 @@ query PublicationMetadataStatus($request: GetPublicationMetadataStatusRequest!) 
 # mutations
 mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
   result: createPostTypedData(request: $request, options: $options) {
-    ...CreatePostBroadcastItemResult
+    ...CreatePostTypedData
   }
 }
 
@@ -257,7 +257,7 @@ mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
 
 mutation CreateCommentTypedData($request: CreatePublicCommentRequest!, $options: TypedDataOptions) {
   result: createCommentTypedData(request: $request, options: $options) {
-    ...CreateCommentBroadcastItemResult
+    ...CreateCommentTypedData
   }
 }
 
@@ -275,7 +275,7 @@ mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
 
 mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDataOptions) {
   result: createMirrorTypedData(request: $request, options: $options) {
-    ...CreateMirrorBroadcastItemResult
+    ...CreateMirrorTypedData
   }
 }
 
@@ -293,7 +293,7 @@ mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
 
 mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: TypedDataOptions) {
   result: createCollectTypedData(request: $request, options: $options) {
-    ...CreateCollectBroadcastItemResult
+    ...CreateCollectTypedData
   }
 }
 
@@ -309,4 +309,58 @@ mutation HidePublication($request: HidePublicationRequest!) {
 
 mutation ReportPublication($request: ReportPublicationRequest!) {
   reportPublication(request: $request)
+}
+
+# DataAvailability
+mutation CreateDataAvailabilityPostTypedData($request: CreateDataAvailabilityPostRequest!) {
+  result: createDataAvailabilityPostTypedData(request: $request) {
+    ...CreatePostTypedData
+  }
+}
+
+mutation CreateDataAvailabilityPostViaDispatcher($request: CreateDataAvailabilityPostRequest!) {
+  result: createDataAvailabilityPostViaDispatcher(request: $request) {
+    ... on CreateDataAvailabilityPublicationResult {
+      ...CreateDataAvailabilityPublicationResult
+    }
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateDataAvailabilityCommentTypedData($request: CreateDataAvailabilityCommentRequest!) {
+  result: createDataAvailabilityCommentTypedData(request: $request) {
+    ...CreateCommentTypedData
+  }
+}
+
+mutation CreateDataAvailabilityCommentViaDispatcher(
+  $request: CreateDataAvailabilityCommentRequest!
+) {
+  result: createDataAvailabilityCommentViaDispatcher(request: $request) {
+    ... on CreateDataAvailabilityPublicationResult {
+      ...CreateDataAvailabilityPublicationResult
+    }
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation CreateDataAvailabilityMirrorTypedData($request: CreateDataAvailabilityMirrorRequest!) {
+  result: createDataAvailabilityMirrorTypedData(request: $request) {
+    ...CreateMirrorTypedData
+  }
+}
+
+mutation CreateDataAvailabilityMirrorViaDispatcher($request: CreateDataAvailabilityMirrorRequest!) {
+  result: createDataAvailabilityMirrorViaDispatcher(request: $request) {
+    ... on CreateDataAvailabilityPublicationResult {
+      ...CreateDataAvailabilityPublicationResult
+    }
+    ... on RelayError {
+      ...RelayError
+    }
+  }
 }

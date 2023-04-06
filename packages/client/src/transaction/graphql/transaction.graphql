@@ -14,7 +14,6 @@ query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
     ... on TransactionIndexedResult {
       ...TransactionIndexedResult
     }
-
     ... on TransactionError {
       ...TransactionError
     }
@@ -26,7 +25,17 @@ mutation BroadcastProtocolCall($request: BroadcastRequest!) {
     ... on RelayerResult {
       ...RelayerResult
     }
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
 
+mutation BroadcastDataAvailability($request: BroadcastRequest!) {
+  result: broadcastDataAvailability(request: $request) {
+    ... on CreateDataAvailabilityPublicationResult {
+      ...CreateDataAvailabilityPublicationResult
+    }
     ... on RelayError {
       ...RelayError
     }
