@@ -7,8 +7,6 @@ async function main() {
   const wallet = setupWallet();
   const address = await wallet.getAddress();
   const lensClient = await getAuthenticatedClient(wallet);
-
-  // query for one of profiles
   const activeProfile = await getActiveProfile(lensClient, address);
 
   // we need some typedData to sign and broadcast so let's set the dispatcher as an example

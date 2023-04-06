@@ -1,49 +1,19 @@
-import { v4 } from "uuid";
-import {
-  isRelayerResult,
-  PublicationMainFocus,
-  PublicationMetadataDisplayTypes,
-} from "@lens-protocol/client";
+import { isRelayerResult } from "@lens-protocol/client";
 import { getAuthenticatedClient } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
 import { uploadWithBundlr } from "./shared/uploadWithBundlr";
+import { getActiveProfile } from "./shared/getActiveProfile";
+import { buildPublicationMetadata } from "./shared/buildPublicationMetadata";
 
 async function main() {
   const wallet = setupWallet();
   const address = await wallet.getAddress();
   const lensClient = await getAuthenticatedClient(wallet);
-
-  // fetch your profile id
-  const ownedProfiles = await lensClient.profile.fetchAll({
-    ownedBy: [address],
-    limit: 1,
-  });
-
-  if (ownedProfiles.items.length === 0) {
-    throw new Error(`You don't have any profiles, create one first`);
-  }
-
-  const profileId = ownedProfiles.items[0].id;
+  const profile = await getActiveProfile(lensClient, address);
+  const profileId = profile.id;
 
   // prepare metadata
-  const metadata = {
-    appId: "lenster",
-    attributes: [
-      {
-        displayType: PublicationMetadataDisplayTypes.String,
-        traitType: "Created with",
-        value: "LensClient SDK",
-      },
-    ],
-    content: "Post created with LensClient SDK",
-    description: "Description of the post created with LensClient SDK",
-    locale: "en-US",
-    mainContentFocus: PublicationMainFocus.TextOnly,
-    metadata_id: v4(),
-    name: "Post created with LensClient SDK",
-    tags: ["lens-sdk"],
-    version: "2.0.0",
-  };
+  const metadata = buildPublicationMetadata();
 
   // validate metadata
   const validateResult = await lensClient.publication.validateMetadata(metadata);
