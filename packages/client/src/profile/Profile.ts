@@ -1,5 +1,4 @@
 import type { PromiseResult } from '@lens-protocol/shared-kernel';
-import { GraphQLClient } from 'graphql-request';
 
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
@@ -44,6 +43,7 @@ import {
   provideAuthHeaders,
   requireAuthHeaders,
 } from '../helpers';
+import { FetchGraphQLClient } from '../helpers/FetchGraphQLClient';
 import {
   BurnProfileTypedDataFragment,
   FollowTypedDataFragment,
@@ -69,7 +69,7 @@ export class Profile {
   private readonly sdk: Sdk;
 
   constructor(config: LensConfig, authentication?: Authentication) {
-    const client = new GraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
     this.authentication = authentication;

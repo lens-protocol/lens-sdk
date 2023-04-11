@@ -1,5 +1,4 @@
 import type { PromiseResult } from '@lens-protocol/shared-kernel';
-import { GraphQLClient } from 'graphql-request';
 
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
@@ -7,6 +6,7 @@ import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/e
 import type { PublicationFragment } from '../graphql/types';
 import type { FeedHighlightsRequest, FeedRequest } from '../graphql/types.generated';
 import { buildPaginatedQueryResult, PaginatedResult, requireAuthHeaders } from '../helpers';
+import { FetchGraphQLClient } from '../helpers/FetchGraphQLClient';
 import { FeedItemFragment, getSdk, Sdk } from './graphql/feed.generated';
 
 /**
@@ -19,7 +19,7 @@ export class Feed {
   private readonly sdk: Sdk;
 
   constructor(config: LensConfig, authentication: Authentication) {
-    const client = new GraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
     this.authentication = authentication;

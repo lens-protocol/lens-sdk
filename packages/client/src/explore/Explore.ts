@@ -1,11 +1,10 @@
-import { GraphQLClient } from 'graphql-request';
-
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
 import type { ProfileFragment } from '../graphql/fragments.generated';
 import type { PublicationFragment } from '../graphql/types';
 import type { ExploreProfilesRequest, ExplorePublicationRequest } from '../graphql/types.generated';
 import { buildPaginatedQueryResult, PaginatedResult, provideAuthHeaders } from '../helpers';
+import { FetchGraphQLClient } from '../helpers/FetchGraphQLClient';
 import { getSdk, Sdk } from './graphql/explore.generated';
 
 /**
@@ -18,7 +17,7 @@ export class Explore {
   private readonly sdk: Sdk;
 
   constructor(config: LensConfig, authentication?: Authentication) {
-    const client = new GraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
     this.authentication = authentication;

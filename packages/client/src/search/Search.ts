@@ -1,5 +1,4 @@
 import { invariant } from '@lens-protocol/shared-kernel';
-import { GraphQLClient } from 'graphql-request';
 
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
@@ -9,6 +8,7 @@ import type {
   ProfileFragment,
 } from '../graphql/fragments.generated';
 import { buildPaginatedQueryResult, PaginatedResult, provideAuthHeaders } from '../helpers';
+import { FetchGraphQLClient } from '../helpers/FetchGraphQLClient';
 import {
   getSdk,
   Sdk,
@@ -26,7 +26,7 @@ export class Search {
   private readonly sdk: Sdk;
 
   constructor(config: LensConfig, authentication?: Authentication) {
-    const client = new GraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
     this.authentication = authentication;

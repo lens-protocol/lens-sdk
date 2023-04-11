@@ -1,6 +1,5 @@
-import { GraphQLClient } from 'graphql-request';
-
 import { LensConfig } from '../../consts/config';
+import { FetchGraphQLClient } from '../../helpers/FetchGraphQLClient';
 import { getSdk, Sdk } from '../graphql/auth.generated';
 import { Credentials } from './Credentials';
 
@@ -8,7 +7,7 @@ export class AuthenticationApi {
   private readonly sdk: Sdk;
 
   constructor(config: LensConfig) {
-    const client = new GraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
     this.sdk = getSdk(client);
   }
 

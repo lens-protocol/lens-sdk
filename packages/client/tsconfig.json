@@ -2,6 +2,7 @@
   "extends": "@lens-protocol/tsconfig/base.json",
   "compilerOptions": {
     "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
     "outDir": "dist"
   },
   "include": ["./src"]
