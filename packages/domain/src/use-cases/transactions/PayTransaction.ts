@@ -1,4 +1,5 @@
 import { Brand, failure, success } from '@lens-protocol/shared-kernel';
+
 import {
   InsufficientGasError,
   PendingSigningRequestError,
@@ -8,7 +9,7 @@ import {
   WalletConnectionError,
 } from '../../entities';
 import { UnsignedTransaction } from '../../entities/Transactions';
-import { ActiveWallet } from '../wallets';
+import { ActiveWallet } from '../wallets/ActiveWallet';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 

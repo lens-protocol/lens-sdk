@@ -4,13 +4,13 @@ import { ICredentials, TransactionRequestModel, Wallet } from '../../entities';
 import { ActiveProfileLoader, IActiveProfileGateway } from '../profile';
 import { TransactionQueue } from '../transactions';
 import {
-  ActiveWallet,
   IActiveWalletPresenter,
   ICredentialsReader,
   ICredentialsWriter,
   ILogoutPresenter,
   LogoutReason,
 } from '../wallets';
+import { ActiveWallet } from '../wallets/ActiveWallet';
 
 export class CredentialsExpiredError extends Error {
   name = 'CredentialsExpiredError' as const;
