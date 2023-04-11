@@ -1,5 +1,23 @@
 # @lens-protocol/gated-content
 
+## 0.2.0
+
+### Minor Changes
+
+- 37eaf8a: Added TSDoc, use shared tsconfig, better types
+
+### Patch Changes
+
+- 0f20b5a: Changed storage keys so use environment name as namespace
+- 0f20b5a: Changed env config variables to be `development` and `production`
+- Updated dependencies [6ae90ef]
+- Updated dependencies [37eaf8a]
+- Updated dependencies [a4e9500]
+  - @lens-protocol/api-bindings@0.7.0
+  - @lens-protocol/shared-kernel@0.7.0
+  - @lens-protocol/storage@0.7.0
+  - @lens-protocol/domain@0.7.0
+
 ## 0.2.0-beta.1
 
 ### Patch Changes
