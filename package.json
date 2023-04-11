@@ -55,9 +55,9 @@
   },
   "engines": {
     "node": "^18.15.0",
-    "pnpm": "^7.27.1"
+    "pnpm": "^8.0.0"
   },
-  "packageManager": "pnpm@7.27.1",
+  "packageManager": "pnpm@8.2.0",
   "preconstruct": {
     "packages": [
       "packages/api-bindings",
