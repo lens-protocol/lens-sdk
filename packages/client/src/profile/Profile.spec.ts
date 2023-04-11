@@ -1,29 +1,31 @@
-import { mumbaiSandbox } from '../consts/environments';
+import { altProfileId, buildTestEnvironment, existingProfileId } from '../__helpers__';
 import { Profile } from './Profile';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
-describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
+describe(`Given the ${Profile.name} configured to work with the test environment`, () => {
   describe(`and is not authenticated`, () => {
     const profile = new Profile(testConfig);
 
     describe(`when the method ${Profile.prototype.fetch.name} is called`, () => {
       it(`should run successfully`, async () => {
-        await expect(profile.fetch({ profileId: '0x0185' })).resolves.not.toThrow();
+        await expect(profile.fetch({ profileId: existingProfileId })).resolves.not.toThrow();
       });
     });
 
     describe(`when the method ${Profile.prototype.stats.name} is called`, () => {
       it(`should run successfully`, async () => {
-        await expect(profile.stats({ profileId: '0x05' }, ['lenster'])).resolves.not.toThrow();
+        await expect(
+          profile.stats({ profileId: existingProfileId }, ['lenster']),
+        ).resolves.not.toThrow();
       });
     });
 
     describe(`when the method ${Profile.prototype.fetchAll.name} is called`, () => {
       it(`should run successfully`, async () => {
-        const result = await profile.fetchAll({ profileIds: ['0x0185', '0x0186'] });
+        const result = await profile.fetchAll({ profileIds: [existingProfileId, altProfileId] });
 
         expect(result.items.length).toBe(2);
       });
@@ -38,7 +40,10 @@ describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
     describe(`when the method ${Profile.prototype.mutualFollowers.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(
-          profile.mutualFollowers({ viewingProfileId: '0x0185', yourProfileId: '0x0186' }),
+          profile.mutualFollowers({
+            viewingProfileId: existingProfileId,
+            yourProfileId: altProfileId,
+          }),
         ).resolves.not.toThrow();
       });
     });
@@ -50,11 +55,11 @@ describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
             followInfos: [
               {
                 followerAddress: '0x088C3152A5Ad1892236b312f18405Df3586Aca87',
-                profileId: '0x0185',
+                profileId: existingProfileId,
               },
               {
                 followerAddress: '0x088C3152A5Ad1892236b312f18405Df3586Aca87',
-                profileId: '0x0186',
+                profileId: altProfileId,
               },
             ],
           }),
@@ -76,7 +81,7 @@ describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
       it(`should run successfully`, async () => {
         await expect(
           profile.allFollowers({
-            profileId: '0x0185',
+            profileId: existingProfileId,
           }),
         ).resolves.not.toThrow();
       });
@@ -87,7 +92,7 @@ describe(`Given the ${Profile.name} configured to work with sandbox`, () => {
         await expect(
           profile.followerNftOwnedTokenIds({
             address: '0x088C3152A5Ad1892236b312f18405Df3586Aca87',
-            profileId: '0x0185',
+            profileId: existingProfileId,
           }),
         ).resolves.not.toThrow();
       });

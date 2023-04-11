@@ -3,5 +3,5 @@ export default {
   testEnvironment: 'node',
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   transformIgnorePatterns: [`/node_modules/(?!@lens-protocol/*)`],
-  testTimeout: 15000,
+  testTimeout: 30000,
 };

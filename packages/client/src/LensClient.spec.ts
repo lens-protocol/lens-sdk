@@ -18,13 +18,13 @@ import {
   Stats,
   Transaction,
 } from '.';
-import { mumbaiSandbox } from './consts/environments';
+import { buildTestEnvironment } from './__helpers__';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
-describe(`Given the ${LensClient.name} configured for sandbox`, () => {
+describe(`Given the ${LensClient.name} configured for the test environment`, () => {
   const client = new LensClient(testConfig);
 
   describe(`when accessing the ${Explore.name} module`, () => {
@@ -115,7 +115,7 @@ describe(`Given the ${LensClient.name} configured for sandbox`, () => {
 describe(`Given storage and two ${LensClient.name} instances sharing the same storage`, () => {
   const storage = new InMemoryStorageProvider();
   const config = {
-    environment: mumbaiSandbox,
+    environment: buildTestEnvironment(),
     storage,
   };
   const client1 = new LensClient(config);

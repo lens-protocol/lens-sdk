@@ -1,19 +1,23 @@
 import { buildReportingReasonInputParams, Publication, PublicationReportReason } from '.';
-import { setupRandomAuthentication } from '../authentication/__helpers__/setupAuthentication';
-import { mumbaiSandbox } from '../consts/environments';
+import {
+  buildTestEnvironment,
+  describeAuthenticatedScenario,
+  existingProfileId,
+  existingPublicationId,
+} from '../__helpers__';
 import { PublicationMainFocus } from '../graphql/types.generated';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
-describe(`Given the ${Publication.name} configured to work with sandbox`, () => {
+describe(`Given the ${Publication.name} configured to work with the test environment`, () => {
   describe(`and is not authenticated`, () => {
     const publication = new Publication(testConfig);
 
     describe(`when the method ${Publication.prototype.fetch.name} is called`, () => {
       it(`should return the requested publication`, async () => {
-        const id = '0x014e-0x0a';
+        const id = existingPublicationId;
         const result = await publication.fetch({ publicationId: id });
 
         expect(result).toMatchObject({
@@ -24,14 +28,14 @@ describe(`Given the ${Publication.name} configured to work with sandbox`, () => 
 
     describe(`when the method ${Publication.prototype.fetchAll.name} is called`, () => {
       it(`should run successfully`, async () => {
-        await expect(publication.fetchAll({ profileId: '0x50' })).resolves.not.toThrow();
+        await expect(publication.fetchAll({ profileId: existingProfileId })).resolves.not.toThrow();
       });
     });
 
     describe(`when the method ${Publication.prototype.allWalletsWhoCollected.name} is called`, () => {
       it(`should run successfully`, async () => {
         await expect(
-          publication.allWalletsWhoCollected({ publicationId: '0x014e-0x0a' }),
+          publication.allWalletsWhoCollected({ publicationId: existingPublicationId }),
         ).resolves.not.toThrow();
       });
     });
@@ -56,7 +60,7 @@ describe(`Given the ${Publication.name} configured to work with sandbox`, () => 
       it(`should run successfully`, async () => {
         await expect(
           publication.allForSale({
-            profileId: '0x014e',
+            profileId: existingProfileId,
           }),
         ).resolves.not.toThrow();
       });
@@ -66,24 +70,22 @@ describe(`Given the ${Publication.name} configured to work with sandbox`, () => 
       it(`should run successfully`, async () => {
         await expect(
           publication.metadataStatus({
-            publicationId: '0x014e-0x0a',
+            publicationId: existingPublicationId,
           }),
         ).resolves.not.toThrow();
       });
     });
   });
 
-  describe(`and is authenticated`, () => {
-    const getAuthentication = setupRandomAuthentication();
-
+  describeAuthenticatedScenario()((getTestSetup) => {
     describe(`when the method ${Publication.prototype.report.name} is called`, () => {
       it(`should run successfully`, async () => {
-        const authentication = getAuthentication();
+        const { authentication } = getTestSetup();
         const publication = new Publication(testConfig, authentication);
 
         await expect(
           publication.report({
-            publicationId: '0x014e-0x0a',
+            publicationId: existingPublicationId,
             reason: buildReportingReasonInputParams(PublicationReportReason.FAKE_ENGAGEMENT),
             additionalComments: 'comment',
           }),

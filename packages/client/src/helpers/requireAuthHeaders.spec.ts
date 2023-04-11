@@ -1,11 +1,10 @@
+import { buildTestEnvironment, describeAuthenticatedScenario } from '../__helpers__';
 import { Authentication } from '../authentication';
-import { setupRandomAuthentication } from '../authentication/__helpers__/setupAuthentication';
-import { mumbaiSandbox } from '../consts/environments';
 import { NotAuthenticatedError } from '../consts/errors';
 import { requireAuthHeaders } from './requireAuthHeaders';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
 describe(`Given the "${requireAuthHeaders.name}" helper`, () => {
@@ -32,18 +31,18 @@ describe(`Given the "${requireAuthHeaders.name}" helper`, () => {
     });
   });
 
-  describe(`when the ${Authentication.name} is available and authenticated`, () => {
-    const getAuthentication = setupRandomAuthentication();
+  describeAuthenticatedScenario()((getTestSetup) => {
+    describe(`when the ${Authentication.name} is available and authenticated`, () => {
+      it(`should provide the authentication header`, async () => {
+        const { authentication } = getTestSetup();
+        const result = await requireAuthHeaders(authentication, (header) => {
+          return Promise.resolve(header);
+        });
 
-    it(`should provide the authentication header`, async () => {
-      const authentication = getAuthentication();
-      const result = await requireAuthHeaders(authentication, (header) => {
-        return Promise.resolve(header);
-      });
-
-      expect(result.isSuccess()).toBeTruthy();
-      expect(result.unwrap()).toEqual({
-        authorization: expect.any(String),
+        expect(result.isSuccess()).toBeTruthy();
+        expect(result.unwrap()).toEqual({
+          authorization: expect.any(String),
+        });
       });
     });
   });

@@ -1,12 +1,12 @@
-import { mumbaiSandbox } from '../consts/environments';
+import { buildTestEnvironment } from '../__helpers__';
 import { ProfileSortCriteria, PublicationSortCriteria } from '../graphql/types.generated';
 import { Explore } from './Explore';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
-describe(`Given the ${Explore.name} configured to work with sandbox`, () => {
+describe(`Given the ${Explore.name} configured to work with the test environment`, () => {
   describe(`when the method ${Explore.prototype.publications.name} is called`, () => {
     it(`should execute successfully`, async () => {
       const explore = new Explore(testConfig);
