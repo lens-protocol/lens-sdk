@@ -1,5 +1,18 @@
 # @lens-protocol/react
 
+## 1.0.1
+
+### Patch Changes
+
+- 425daba: **Fixed** 1.0.0 release packages bundles
+- Updated dependencies [425daba]
+  - @lens-protocol/api-bindings@0.7.1
+  - @lens-protocol/blockchain-bindings@0.7.1
+  - @lens-protocol/domain@0.7.1
+  - @lens-protocol/gated-content@0.2.1
+  - @lens-protocol/shared-kernel@0.7.1
+  - @lens-protocol/storage@0.7.1
+
 ## 1.0.0
 
 ### Minor Changes

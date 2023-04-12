@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Low level Lens API client",
   "repository": {
     "directory": "packages/client",
