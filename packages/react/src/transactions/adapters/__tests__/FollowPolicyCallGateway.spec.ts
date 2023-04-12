@@ -22,7 +22,7 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { FollowPolicyCallGateway } from '../FollowPolicyCallGateway';
 
 function createCreateSetFollowModuleTypedDataMockedResponse({
@@ -77,7 +77,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
     ({ policy, expectedFollowModule }) => {
       const request = mockUpdateFollowPolicyRequest({ policy });
 
-      it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
+      it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
         const data = mockCreateSetFollowModuleTypedDataData();
 
         const apollo = createMockApolloClientWithMultipleResponses([
@@ -95,7 +95,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
 
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
+        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
         expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
 

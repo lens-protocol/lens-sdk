@@ -6,7 +6,7 @@ import {
   mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import {
-  SignedProtocolCall,
+  ISignedProtocolCall,
   MetaTransaction,
   TransactionRequestModel,
 } from '@lens-protocol/domain/entities';
@@ -27,7 +27,7 @@ function setupProtocolCallRelayer({
   signedCall,
 }: {
   relayResult: RelayResult;
-  signedCall: SignedProtocolCall<TransactionRequestModel>;
+  signedCall: ISignedProtocolCall<TransactionRequestModel>;
 }) {
   const factory = mockITransactionFactory();
   const apollo = createMockApolloClientWithMultipleResponses([
@@ -47,7 +47,7 @@ function setupProtocolCallRelayer({
 describe(`Given an instance of the ${ProtocolCallRelayer.name}`, () => {
   const signedCall = mockSignedProtocolCall<SupportedTransactionRequest>();
 
-  describe(`when relaying a ${SignedProtocolCall.name} succeeds`, () => {
+  describe(`when relaying an ISignedProtocolCall succeeds`, () => {
     it(`should resolve with a success(${MetaTransaction.name}) on Polygon`, async () => {
       const relayResult = mockRelayerResultFragment();
 
@@ -65,29 +65,31 @@ describe(`Given an instance of the ${ProtocolCallRelayer.name}`, () => {
     });
   });
 
-  describe(`when relaying a ${SignedProtocolCall.name} fails with a Rejected reason`, () => {
-    it(`should resolve with a failure(${BroadcastingError.name}) with ${BroadcastingErrorReason.REJECTED}`, async () => {
-      const relayResult = mockRelayErrorFragment(RelayErrorReasons.Rejected);
+  describe(`when relaying an ISignedProtocolCall fails`, () => {
+    describe(`with a Rejected reason`, () => {
+      it(`should resolve with a failure(${BroadcastingError.name}) with ${BroadcastingErrorReason.REJECTED}`, async () => {
+        const relayResult = mockRelayErrorFragment(RelayErrorReasons.Rejected);
 
-      const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
-      const result = await transactionRelayer.relayProtocolCall(signedCall);
+        const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
+        const result = await transactionRelayer.relayProtocolCall(signedCall);
 
-      expect(() => result.unwrap()).toThrowError(
-        new BroadcastingError(BroadcastingErrorReason.REJECTED),
-      );
+        expect(() => result.unwrap()).toThrowError(
+          new BroadcastingError(BroadcastingErrorReason.REJECTED),
+        );
+      });
     });
-  });
 
-  describe(`when relaying a ${SignedProtocolCall.name} fails with any other reason than Rejected`, () => {
-    it(`should resolve with a failure(${BroadcastingError.name}) with ${BroadcastingErrorReason.UNSPECIFIED}`, async () => {
-      const relayResult = mockRelayErrorFragment(RelayErrorReasons.NotAllowed);
+    describe(`with any other reason than Rejected`, () => {
+      it(`should resolve with a failure(${BroadcastingError.name}) with ${BroadcastingErrorReason.UNSPECIFIED}`, async () => {
+        const relayResult = mockRelayErrorFragment(RelayErrorReasons.NotAllowed);
 
-      const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
-      const result = await transactionRelayer.relayProtocolCall(signedCall);
+        const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
+        const result = await transactionRelayer.relayProtocolCall(signedCall);
 
-      expect(() => result.unwrap()).toThrowError(
-        new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED),
-      );
+        expect(() => result.unwrap()).toThrowError(
+          new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED),
+        );
+      });
     });
   });
 });

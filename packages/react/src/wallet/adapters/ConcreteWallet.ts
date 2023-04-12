@@ -7,7 +7,7 @@ import {
   UserRejectedError,
   PendingSigningRequestError,
   TransactionRequestModel,
-  SignedProtocolCall,
+  ISignedProtocolCall,
   IUnsignedProtocolCall,
   UnsignedTransaction,
   NativeTransaction,
@@ -45,13 +45,65 @@ export const WalletDataSchema = z.object({
 
 export type WalletDataSchema = z.infer<typeof WalletDataSchema>;
 
-export class UnsignedLensProtocolCall<T extends TransactionRequestModel>
+export class UnsignedProtocolCall<T extends TransactionRequestModel>
   implements IUnsignedProtocolCall<T>
 {
-  constructor(readonly id: string, readonly request: T, readonly typedData: TypedData) {}
+  private constructor(
+    readonly id: string,
+    readonly request: T,
+    readonly typedData: TypedData,
+    readonly contractAddress: EthereumAddress,
+    readonly functionName: string,
+  ) {}
 
   get nonce() {
     return this.typedData.value.nonce;
+  }
+
+  static create<T extends TransactionRequestModel>({
+    id,
+    request,
+    typedData,
+    contractAddress,
+    functionName,
+  }: {
+    id: string;
+    request: T;
+    typedData: TypedData;
+    contractAddress: EthereumAddress;
+    functionName: string;
+  }): UnsignedProtocolCall<T> {
+    return new UnsignedProtocolCall(id, request, typedData, contractAddress, functionName);
+  }
+}
+
+export class SignedProtocolCall<T extends TransactionRequestModel>
+  implements ISignedProtocolCall<T>
+{
+  private constructor(
+    readonly id: string,
+    readonly request: T,
+    readonly signature: string,
+    readonly nonce: number,
+    readonly contractAddress: EthereumAddress,
+    readonly functionName: string,
+  ) {}
+
+  static create<T extends TransactionRequestModel>({
+    unsignedCall,
+    signature,
+  }: {
+    unsignedCall: UnsignedProtocolCall<T>;
+    signature: string;
+  }): SignedProtocolCall<T> {
+    return new SignedProtocolCall(
+      unsignedCall.id,
+      unsignedCall.request,
+      signature,
+      unsignedCall.nonce,
+      unsignedCall.contractAddress,
+      unsignedCall.functionName,
+    );
   }
 }
 
@@ -71,9 +123,9 @@ export class ConcreteWallet extends Wallet {
   }
 
   async signProtocolCall<T extends TransactionRequestModel>(
-    unsignedCall: UnsignedLensProtocolCall<T>,
+    unsignedCall: UnsignedProtocolCall<T>,
   ): PromiseResult<
-    SignedProtocolCall<T>,
+    ISignedProtocolCall<T>,
     PendingSigningRequestError | UserRejectedError | WalletConnectionError
   > {
     const result = await this.signerFactory.createSigner({
@@ -97,12 +149,7 @@ export class ConcreteWallet extends Wallet {
         unsignedCall.typedData.value,
       );
 
-      const signedCall = SignedProtocolCall.create({
-        id: unsignedCall.id,
-        request: unsignedCall.request,
-        signature,
-        nonce: unsignedCall.nonce,
-      });
+      const signedCall = SignedProtocolCall.create({ unsignedCall, signature });
       return success(signedCall);
     } catch (err) {
       assertErrorObjectWithCode<errors>(err);

@@ -19,7 +19,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ProfileImageCallGateway } from '../ProfileImageCallGateway';
 import { mockITransactionFactory } from '../__helpers__/mocks';
 
@@ -59,7 +59,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
     const { request, expectedRequestVars } = createExerciseData();
 
     describe(`when calling the "${ProfileImageCallGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
-      it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
+      it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
         const data = mockCreateSetProfileImageUriTypedDataData();
 
         const apollo = createMockApolloClientWithMultipleResponses([
@@ -76,7 +76,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
 
         const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
+        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
         expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
 

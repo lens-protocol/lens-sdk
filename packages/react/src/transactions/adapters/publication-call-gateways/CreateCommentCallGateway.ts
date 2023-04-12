@@ -23,7 +23,7 @@ import {
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
 import { ITransactionFactory } from '../ITransactionFactory';
 import { RelayReceipt } from '../RelayReceipt';
@@ -58,7 +58,7 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
   async createUnsignedProtocolCall(
     request: CreateCommentRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<CreateCommentRequest>> {
+  ): Promise<UnsignedProtocolCall<CreateCommentRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateCommentTypedDataData,
       CreateCommentTypedDataVariables
@@ -70,11 +70,13 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
       },
     });
 
-    return new UnsignedLensProtocolCall(
-      data.result.id,
+    return UnsignedProtocolCall.create({
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      functionName: 'commentWithSig',
+      id: data.result.id,
       request,
-      omitTypename(data.result.typedData),
-    );
+      typedData: omitTypename(data.result.typedData),
+    });
   }
 
   private async broadcast(

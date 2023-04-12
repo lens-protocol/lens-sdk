@@ -9,7 +9,7 @@ import {
   NativeTransaction,
   Nonce,
   ProxyTransaction,
-  SignedProtocolCall,
+  ISignedProtocolCall,
   TransactionKind,
   TransactionRequestModel,
 } from '../../../entities';
@@ -35,7 +35,7 @@ export function mockIProtocolCallRelayer<T extends TransactionRequestModel>({
   signedCall,
   result,
 }: {
-  signedCall: SignedProtocolCall<T>;
+  signedCall: ISignedProtocolCall<T>;
   result: Result<MetaTransaction<T>, BroadcastingError>;
 }) {
   const transactionRelayer = mock<IProtocolCallRelayer<T>>();

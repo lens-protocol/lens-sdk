@@ -12,7 +12,7 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
 export class CollectPublicationCallGateway implements ICollectPublicationCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
@@ -20,7 +20,7 @@ export class CollectPublicationCallGateway implements ICollectPublicationCallGat
   async createUnsignedProtocolCall<T extends CollectRequest>(
     request: T,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<T>> {
     const { data } = await this.apolloClient.mutate<
       CreateCollectTypedDataData,
       CreateCollectTypedDataVariables
@@ -36,10 +36,12 @@ export class CollectPublicationCallGateway implements ICollectPublicationCallGat
 
     invariant(data, 'Cannot generate typed data for collect');
 
-    return new UnsignedLensProtocolCall(
-      data.result.id,
+    return UnsignedProtocolCall.create({
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      functionName: 'collectWithSig',
+      id: data.result.id,
       request,
-      omitTypename(data.result.typedData),
-    );
+      typedData: omitTypename(data.result.typedData),
+    });
   }
 }

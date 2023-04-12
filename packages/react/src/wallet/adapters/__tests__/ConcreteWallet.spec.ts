@@ -5,7 +5,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
   NativeTransaction,
-  SignedProtocolCall,
   UnsignedTransaction,
   InsufficientGasError,
   WalletConnectionError,
@@ -25,11 +24,11 @@ import {
   mockITransactionFactory,
   mockTypedData,
 } from '../../../transactions/adapters/__helpers__/mocks';
-import { ConcreteWallet, ISignerFactory, UnsignedLensProtocolCall } from '../ConcreteWallet';
+import { ConcreteWallet, ISignerFactory, UnsignedProtocolCall } from '../ConcreteWallet';
 import {
   mockErrorWithCode,
   mockISignerFactory,
-  mockUnsignedLensProtocolCall,
+  mockUnsignedProtocolCall,
   mockUnsignedTransactionRequest,
 } from '../__helpers__/mocks';
 
@@ -48,13 +47,13 @@ function setupWalletInstance({ signerFactory }: { signerFactory: ISignerFactory 
 }
 
 describe(`Given an instance of ${ConcreteWallet.name}`, () => {
-  describe(`when signing an ${UnsignedLensProtocolCall.name}`, () => {
+  describe(`when signing an ${UnsignedProtocolCall.name}`, () => {
     const typedData = mockTypedData();
     const request = mockTransactionRequestModel();
-    const unsignedCall = mockUnsignedLensProtocolCall({ typedData, request });
+    const unsignedCall = mockUnsignedProtocolCall({ typedData, request });
     const signature = mockSignature();
 
-    it(`should resolve with a ${SignedProtocolCall.name} instance`, async () => {
+    it(`should resolve with a ISignedProtocolCall instance`, async () => {
       const signer = mock<providers.JsonRpcSigner>();
       when(signer._signTypedData)
         .calledWith(typedData.domain, typedData.types, typedData.value)
@@ -68,7 +67,6 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
       const wallet = setupWalletInstance({ signerFactory });
       const result = await wallet.signProtocolCall(unsignedCall);
 
-      expect(result.unwrap()).toBeInstanceOf(SignedProtocolCall);
       expect(result.unwrap()).toEqual({
         id: unsignedCall.id,
         nonce: unsignedCall.nonce,

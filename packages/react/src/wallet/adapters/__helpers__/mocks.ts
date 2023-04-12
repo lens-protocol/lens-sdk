@@ -18,7 +18,7 @@ import {
   ConcreteWallet,
   ISignerFactory,
   ITransactionRequest,
-  UnsignedLensProtocolCall,
+  UnsignedProtocolCall,
 } from '../ConcreteWallet';
 import { Credentials } from '../Credentials';
 import { IProviderFactory } from '../IProviderFactory';
@@ -70,14 +70,20 @@ export function mockIProviderFactory({
   return factory;
 }
 
-export function mockUnsignedLensProtocolCall<T extends TransactionRequestModel>({
+export function mockUnsignedProtocolCall<T extends TransactionRequestModel>({
   typedData,
   request,
 }: {
   typedData: TypedData;
   request: T;
 }) {
-  return new UnsignedLensProtocolCall(faker.datatype.uuid(), request, typedData);
+  return UnsignedProtocolCall.create({
+    id: faker.datatype.uuid(),
+    request,
+    typedData,
+    contractAddress: mockEthereumAddress(),
+    functionName: faker.datatype.string(),
+  });
 }
 
 class MockedUnsignedTransactionRequest<T extends TransactionRequestModel>

@@ -37,27 +37,14 @@ export interface IUnsignedProtocolCall<T extends TransactionRequestModel> {
   readonly nonce: Nonce;
 }
 
-export class SignedProtocolCall<T extends TransactionRequestModel> {
-  private constructor(
-    readonly id: string,
-    readonly signature: Signature,
-    readonly request: T,
-    readonly nonce: Nonce,
-  ) {}
+export interface ISignedProtocolCall<T extends TransactionRequestModel> {
+  readonly id: string;
 
-  static create<T extends TransactionRequestModel>({
-    id,
-    signature,
-    request,
-    nonce,
-  }: {
-    id: string;
-    signature: Signature;
-    request: T;
-    nonce: Nonce;
-  }) {
-    return new SignedProtocolCall(id, signature, request, nonce);
-  }
+  readonly signature: Signature;
+
+  readonly request: T;
+
+  readonly nonce: Nonce;
 }
 
 export enum TransactionEvent {

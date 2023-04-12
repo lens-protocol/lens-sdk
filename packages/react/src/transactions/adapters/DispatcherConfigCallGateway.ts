@@ -11,7 +11,7 @@ import {
   UpdateDispatcherConfigRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 
-import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
 export class DispatcherConfigCallGateway implements IDispatcherConfigCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
@@ -19,7 +19,7 @@ export class DispatcherConfigCallGateway implements IDispatcherConfigCallGateway
   async createUnsignedProtocolCall<T extends UpdateDispatcherConfigRequest>(
     request: T,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<T>> {
     const { data } = await this.apolloClient.mutate<
       CreateSetDispatcherTypedDataData,
       CreateSetDispatcherTypedDataVariables
@@ -34,10 +34,12 @@ export class DispatcherConfigCallGateway implements IDispatcherConfigCallGateway
       },
     });
 
-    return new UnsignedLensProtocolCall(
-      data.result.id,
+    return UnsignedProtocolCall.create({
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      functionName: 'setDispatcherWithSig',
+      id: data.result.id,
       request,
-      omitTypename(data.result.typedData),
-    );
+      typedData: omitTypename(data.result.typedData),
+    });
   }
 }

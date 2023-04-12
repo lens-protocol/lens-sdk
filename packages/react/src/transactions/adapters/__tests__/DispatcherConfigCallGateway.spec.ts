@@ -11,7 +11,7 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { mockNonce, mockUpdateDispatcherConfigRequest } from '@lens-protocol/domain/mocks';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { DispatcherConfigCallGateway } from '../DispatcherConfigCallGateway';
 
 function mockCreateSetDispatcherTypedDataMutationMockedResponse({
@@ -34,7 +34,7 @@ function mockCreateSetDispatcherTypedDataMutationMockedResponse({
 
 describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
   describe(`when calling the "${DispatcherConfigCallGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
-    it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
+    it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
       const request = mockUpdateDispatcherConfigRequest();
 
       const data = mockCreateSetDispatcherTypedDataData();
@@ -55,7 +55,7 @@ describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
 
       const unsignedCall = await dispatcherConfigCallGateway.createUnsignedProtocolCall(request);
 
-      expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
+      expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
       expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
     });
 
