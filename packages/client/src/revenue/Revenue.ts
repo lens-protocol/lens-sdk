@@ -1,7 +1,6 @@
-import { GraphQLClient } from 'graphql-request';
-
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
+import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type {
   ProfileFollowRevenueQueryRequest,
   ProfilePublicationRevenueQueryRequest,
@@ -20,7 +19,7 @@ export class Revenue {
   private readonly sdk: Sdk;
 
   constructor(config: LensConfig, authentication?: Authentication) {
-    const client = new GraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
     this.authentication = authentication;

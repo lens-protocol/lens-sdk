@@ -1,6 +1,6 @@
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
-import { Authentication } from '../authentication';
+import type { Authentication } from '../authentication';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 
 type Handler<Val> = (headers: Record<string, string>) => Promise<Val>;
