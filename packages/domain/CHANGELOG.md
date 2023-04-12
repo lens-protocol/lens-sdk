@@ -1,5 +1,13 @@
 # @lens-protocol/domain
 
+## 0.7.1
+
+### Patch Changes
+
+- 425daba: **Fixed** 1.0.0 release packages bundles
+- Updated dependencies [425daba]
+  - @lens-protocol/shared-kernel@0.7.1
+
 ## 0.7.0
 
 ### Minor Changes
