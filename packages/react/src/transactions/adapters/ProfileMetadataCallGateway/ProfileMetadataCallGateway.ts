@@ -50,9 +50,8 @@ export class ProfileMetadataCallGateway
   async createDelegatedTransaction<T extends UpdateProfileDetailsRequest>(
     request: T,
   ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
-    const result = await this.broadcast(
-      await this.resolveCreateSetProfileMetadataUriRequest(request),
-    );
+    const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
+    const result = await this.broadcast(requestArg);
 
     if (result.isFailure()) return failure(result.error);
 
