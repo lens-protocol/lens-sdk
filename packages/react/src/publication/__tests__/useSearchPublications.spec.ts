@@ -1,4 +1,4 @@
-import { ContentPublication } from '@lens-protocol/api-bindings';
+import { activeProfileIdentifierVar, ContentPublication } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createSearchPublicationsMockedResponse,
@@ -12,7 +12,6 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
-import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
 import { useSearchPublications, UseSearchPublicationsArgs } from '../useSearchPublications';
 
 function setupTestScenario({

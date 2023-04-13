@@ -1,4 +1,8 @@
-import { FeedEventItemType as LensFeedEventItemType, FeedItem } from '@lens-protocol/api-bindings';
+import {
+  FeedEventItemType as LensFeedEventItemType,
+  FeedItem,
+  activeProfileIdentifierVar,
+} from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockFeedItemFragment,
@@ -11,7 +15,6 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
-import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
 import { FeedEventItemType } from '../FeedEventItemType';
 import { useFeed } from '../useFeed';
 

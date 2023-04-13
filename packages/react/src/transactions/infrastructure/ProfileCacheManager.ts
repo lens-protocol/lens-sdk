@@ -7,11 +7,11 @@ import {
   Profile,
   FragmentProfile,
   Sources,
+  activeProfileIdentifierVar,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
 import { FetchProfileArgs, IProfileCacheManager } from '../adapters/IProfileCacheManager';
 
 export class ProfileCacheManager implements IProfileCacheManager {
