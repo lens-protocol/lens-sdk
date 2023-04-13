@@ -321,7 +321,7 @@ export function mockCreateUnfollowTypedDataData({
         __typename: 'CreateBurnEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        tokenId: faker.datatype.uuid(),
+        tokenId: faker.datatype.hexadecimal({ length: 2 }),
       },
     }),
   };
