@@ -1,6 +1,6 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
-import { omitTypename, Profile, RelayErrorReasons } from '@lens-protocol/api-bindings';
+import { Profile, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   createCreateSetProfileMetadataTypedDataMockedResponse,
   createCreateSetProfileMetadataViaDispatcherMockedResponse,
@@ -20,7 +20,12 @@ import {
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
-import { mockIMetadataUploader, mockITransactionFactory } from '../../__helpers__/mocks';
+import {
+  assertBroadcastingErrorResultWithRequestFallback,
+  assertUnsignedProtocolCallCorrectness,
+  mockIMetadataUploader,
+  mockITransactionFactory,
+} from '../../__helpers__/mocks';
 import { ProfileMetadataCallGateway } from '../ProfileMetadataCallGateway';
 
 function setupTestScenario({
@@ -58,13 +63,13 @@ const uploadUrl = faker.internet.url();
 const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
 
 describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
+  const data = mockCreateSetProfileMetadataTypedDataData();
+
   describe(`when creating an IUnsignedProtocolCall<UpdateProfileDetailsRequest> via the "${ProfileMetadataCallGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
     it(`should:
         - create a new Profile Metadata updating the profile details
         - upload it via the IMetadataUploader<ProfileMetadata>
         - create an instance of the ${UnsignedProtocolCall.name} w/ the expected typed data`, async () => {
-      const data = mockCreateSetProfileMetadataTypedDataData();
-
       const { gateway, uploader } = setupTestScenario({
         existingProfile,
         uploadUrl,
@@ -89,8 +94,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
           bio: request.bio,
         }),
       );
-      expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
-      expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+      assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
     });
 
     it(`should be possible to override the signature nonce`, async () => {
@@ -160,16 +164,16 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
 
     it.each([
       {
-        expected: new BroadcastingError(BroadcastingErrorReason.REJECTED),
+        expectedBroadcastingErrorReason: BroadcastingErrorReason.REJECTED,
         relayError: mockRelayErrorFragment(RelayErrorReasons.Rejected),
       },
       {
-        expected: new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED),
+        expectedBroadcastingErrorReason: BroadcastingErrorReason.UNSPECIFIED,
         relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
       },
     ])(
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$relayError.reason" reason`,
-      async ({ relayError, expected }) => {
+      async ({ relayError, expectedBroadcastingErrorReason }) => {
         const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
 
         const { gateway } = setupTestScenario({
@@ -187,12 +191,24 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
                 result: relayError,
               },
             }),
+
+            createCreateSetProfileMetadataTypedDataMockedResponse({
+              request: {
+                profileId: request.profileId,
+                metadata: uploadUrl,
+              },
+              data,
+            }),
           ],
         });
 
         const result = await gateway.createDelegatedTransaction(request);
 
-        expect(() => result.unwrap()).toThrow(expected);
+        assertBroadcastingErrorResultWithRequestFallback(
+          result,
+          expectedBroadcastingErrorReason,
+          data.result.typedData,
+        );
       },
     );
   });
