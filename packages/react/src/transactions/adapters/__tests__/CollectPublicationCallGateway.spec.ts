@@ -3,7 +3,6 @@ import {
   CreateCollectTypedDataDocument,
   CreateCollectTypedDataData,
   CreateCollectTypedDataVariables,
-  omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
@@ -13,6 +12,7 @@ import { mockFreeCollectRequest, mockNonce } from '@lens-protocol/domain/mocks';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { CollectPublicationCallGateway } from '../CollectPublicationCallGateway';
+import { assertUnsignedProtocolCallCorrectness } from '../__helpers__/mocks';
 
 function mockCreateCollectTypedDatMutationMockedResponse({
   variables,
@@ -53,8 +53,7 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
       const collectPublicationCallGateway = new CollectPublicationCallGateway(apollo);
       const unsignedCall = await collectPublicationCallGateway.createUnsignedProtocolCall(request);
 
-      expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
-      expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+      assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
     });
 
     it(`should be possible to override the signature nonce`, async () => {

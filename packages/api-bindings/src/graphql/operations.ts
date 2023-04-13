@@ -31,7 +31,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** Blockchain data scalar type */
-  BlockchainData: unknown;
+  BlockchainData: string;
   /** Broadcast scalar id type */
   BroadcastId: string;
   /** ChainId custom scalar type */
@@ -1684,7 +1684,7 @@ export type CreateCollectTypedDataData = {
         deadline: unknown;
         profileId: ProfileId;
         pubId: string;
-        data: unknown;
+        data: string;
       };
     };
   };
@@ -2105,7 +2105,7 @@ export type CreateFollowTypedDataData = {
         nonce: number;
         deadline: unknown;
         profileIds: Array<ProfileId>;
-        datas: Array<unknown>;
+        datas: Array<string>;
       };
     };
   };

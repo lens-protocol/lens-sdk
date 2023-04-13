@@ -578,8 +578,8 @@ export function mockCreateCollectTypedDataData({
         nonce,
         deadline: '0',
         profileId: mockProfileId(),
-        pubId: faker.datatype.uuid(),
-        data: ['0x00'],
+        pubId: faker.datatype.hexadecimal({ length: 2 }),
+        data: faker.datatype.hexadecimal({ length: 2 }),
       },
     }),
   };

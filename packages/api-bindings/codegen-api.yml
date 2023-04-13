@@ -12,6 +12,7 @@ config:
   scalars:
     Attach: string
     BroadcastId: string
+    BlockchainData: string
     ChainId: number
     ClientErc20Amount: ClientErc20Amount
     CollectModuleData: string
