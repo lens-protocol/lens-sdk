@@ -65,4 +65,5 @@ export type { IAccessTokenStorage };
 export type { IGraphQLClient } from './IGraphQLClient';
 export * from './errors';
 export * from './cache/transactions';
+export * from './cache/activeProfileIdentifier';
 export type { LensApolloClient };
