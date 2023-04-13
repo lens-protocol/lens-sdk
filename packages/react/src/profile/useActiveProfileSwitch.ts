@@ -17,12 +17,12 @@ export type ActiveProfileSwitchOperation = Operation<void, never, [ProfileId]>;
  *
  * @example Profile switcher interface
  * ```tsx
- * import { EthereumAddress, useActiveProfileSwitch, useActiveProfile, useProfilesOwnedByMe } from '@lens-protocol/react-web';
+ * import { useActiveProfileSwitch, useActiveProfile, useProfilesOwnedByMe } from '@lens-protocol/react-web';
  *
- * function ProfileSwitcher({ address }: { address: EthereumAddress }) {
+ * function ProfileSwitcher() {
  *   const { data: activeProfile } = useActiveProfile();
  *   const { execute: switchActiveProfile, isPending } = useActiveProfileSwitch();
- *   const { data: profiles, error, loading } = useProfilesOwnedByMe({ address, limit: 50 });
+ *   const { data: profiles, error, loading } = useProfilesOwnedByMe({ limit: 50 });
  *
  *   if (loading) return <p>Loading...</p>;
  *
