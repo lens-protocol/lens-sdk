@@ -24,6 +24,7 @@ config:
     DecryptionCriteria: DecryptionCriteria
     EncryptedValueScalar: string
     EthereumAddress: EthereumAddress
+    FollowModuleData: string
     FollowPolicy: FollowPolicy
     FollowStatus: FollowStatus
     Handle: string

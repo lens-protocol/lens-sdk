@@ -60,7 +60,7 @@ export type Scalars = {
   /** Ethereum address custom scalar type */
   EthereumAddress: EthereumAddress;
   /** follow module data scalar type */
-  FollowModuleData: unknown;
+  FollowModuleData: string;
   FollowPolicy: FollowPolicy;
   FollowStatus: FollowStatus;
   /** handle custom scalar type */
@@ -2539,7 +2539,7 @@ export type CreateSetFollowModuleTypedDataData = {
         deadline: unknown;
         profileId: ProfileId;
         followModule: string;
-        followModuleInitData: unknown;
+        followModuleInitData: string;
       };
     };
   };
