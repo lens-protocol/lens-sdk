@@ -13,15 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.x"
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v2.2.4
 
-      - run: pnpm install
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
 
       - run: pnpm deduplicate:check
 
