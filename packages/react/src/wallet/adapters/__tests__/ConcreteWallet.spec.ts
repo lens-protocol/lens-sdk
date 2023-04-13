@@ -61,6 +61,7 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
 
       const signerFactory = mockISignerFactory({
         address,
+        chainType: ChainType.POLYGON,
         signerResult: success(signer),
       });
 

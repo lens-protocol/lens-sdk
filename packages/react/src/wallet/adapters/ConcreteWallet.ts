@@ -128,6 +128,7 @@ export class ConcreteWallet extends Wallet {
   > {
     const result = await this.signerFactory.createSigner({
       address: this.address,
+      chainType: ChainType.POLYGON,
     });
 
     if (result.isFailure()) {
