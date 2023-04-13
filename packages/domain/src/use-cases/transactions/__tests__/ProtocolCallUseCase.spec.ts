@@ -13,10 +13,10 @@ import {
 } from '../../../entities';
 import {
   MockedMetaTransaction,
+  mockISignedProtocolCall,
+  mockIUnsignedProtocolCall,
   mockNonce,
-  mockSignedProtocolCall,
   mockTransactionRequestModel,
-  mockUnsignedProtocolCall,
   mockWallet,
 } from '../../../entities/__helpers__/mocks';
 import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
@@ -65,7 +65,7 @@ function setupMetaTransactionUseCase<T extends TransactionRequestModel>({
 describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, () => {
   describe(`when calling the "${ProtocolCallUseCase.prototype.execute.name}" method`, () => {
     const request = mockTransactionRequestModel();
-    const unsignedCall = mockUnsignedProtocolCall(request);
+    const unsignedCall = mockIUnsignedProtocolCall(request);
 
     it(`should:
         - create an IUnsignedProtocolCall<T> passing the Nonce override from the IPendingTransactionGateway
@@ -83,7 +83,7 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       });
 
       const wallet = mockWallet();
-      const signedCall = mockSignedProtocolCall(unsignedCall);
+      const signedCall = mockISignedProtocolCall(unsignedCall);
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
 
       const transaction = MockedMetaTransaction.fromSignedCall(signedCall);
@@ -159,7 +159,7 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       });
 
       const wallet = mockWallet();
-      const signedCall = mockSignedProtocolCall(unsignedCall);
+      const signedCall = mockISignedProtocolCall(unsignedCall);
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
 
       const error = new BroadcastingError(BroadcastingErrorReason.REJECTED);

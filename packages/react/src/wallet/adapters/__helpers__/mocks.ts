@@ -5,7 +5,11 @@ import {
   UnsignedTransaction,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { mockTransactionRequestModel } from '@lens-protocol/domain/mocks';
+import {
+  mockRequestFallback,
+  mockSignature,
+  mockTransactionRequestModel,
+} from '@lens-protocol/domain/mocks';
 import { ChainType, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { providers } from 'ethers';
@@ -18,6 +22,7 @@ import {
   ConcreteWallet,
   ISignerFactory,
   ITransactionRequest,
+  SignedProtocolCall,
   UnsignedProtocolCall,
 } from '../ConcreteWallet';
 import { Credentials } from '../Credentials';
@@ -81,8 +86,17 @@ export function mockUnsignedProtocolCall<T extends TransactionRequestModel>({
     id: faker.datatype.uuid(),
     request,
     typedData,
-    contractAddress: mockEthereumAddress(),
-    functionName: faker.datatype.string(),
+    fallback: mockRequestFallback(),
+  });
+}
+
+export function mockSignedProtocolCall<T extends TransactionRequestModel>() {
+  return SignedProtocolCall.create({
+    unsignedCall: mockUnsignedProtocolCall({
+      typedData: mock<TypedData>(),
+      request: mockTransactionRequestModel() as T,
+    }),
+    signature: mockSignature(),
   });
 }
 

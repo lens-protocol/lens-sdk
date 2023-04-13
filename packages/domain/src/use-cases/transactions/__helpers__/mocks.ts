@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { Result } from '@lens-protocol/shared-kernel';
+import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -17,9 +18,8 @@ import {
   MockedProxyTransaction,
   mockNonce,
   mockTransactionHash,
-  mockUnsignedProtocolCall,
 } from '../../../entities/__helpers__/mocks';
-import { BroadcastingError } from '../BroadcastingError';
+import { BroadcastingError, RequestFallback } from '../BroadcastingError';
 import { IDelegableProtocolCallGateway, WithDelegateFlag } from '../DelegableProtocolCallUseCase';
 import { Data, WithData } from '../PayTransaction';
 import {
@@ -73,11 +73,11 @@ export function mockIMetaTransactionNonceGateway({
 export function mockIUnsignedProtocolCallGateway<T extends TransactionRequestModel>({
   request,
   nonce,
-  unsignedCall = mockUnsignedProtocolCall(request),
+  unsignedCall,
 }: {
   request: T;
   nonce?: Nonce;
-  unsignedCall?: IUnsignedProtocolCall<T>;
+  unsignedCall: IUnsignedProtocolCall<T>;
 }): IUnsignedProtocolCallGateway<T> {
   const gateway = mock<IUnsignedProtocolCallGateway<T>>();
 
@@ -134,4 +134,11 @@ export function mockTransactionRequestModelWithData(): WithData<TransactionReque
     kind: TransactionKind.CREATE_POST,
     data: faker.datatype.hexadecimal({ length: 32 }) as Data,
   } as WithDelegateFlag<TransactionRequestModel>;
+}
+
+export function mockRequestFallback(): RequestFallback {
+  return {
+    contractAddress: mockEthereumAddress(),
+    encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
+  };
 }
