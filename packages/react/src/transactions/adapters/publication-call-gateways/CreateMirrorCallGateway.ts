@@ -10,6 +10,7 @@ import {
   LensApolloClient,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
+import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   CreateMirrorRequest,
@@ -18,6 +19,8 @@ import {
 import {
   BroadcastingError,
   BroadcastingErrorReason,
+  Data,
+  RequestFallback,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -36,7 +39,8 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
   async createDelegatedTransaction<T extends CreateMirrorRequest>(
     request: T,
   ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
-    const result = await this.broadcast(await this.resolveCreateMirrorRequestArg(request));
+    const requestArg = await this.resolveCreateMirrorRequestArg(request);
+    const result = await this.broadcast(requestArg);
 
     if (result.isFailure()) return failure(result.error);
 
@@ -57,28 +61,20 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
     request: CreateMirrorRequest,
     nonce?: Nonce,
   ): Promise<UnsignedProtocolCall<CreateMirrorRequest>> {
-    const { data } = await this.apolloClient.mutate<
-      CreateMirrorTypedDataData,
-      CreateMirrorTypedDataVariables
-    >({
-      mutation: CreateMirrorTypedDataDocument,
-      variables: {
-        request: await this.resolveCreateMirrorRequestArg(request),
-        options: nonce ? { overrideSigNonce: nonce } : undefined,
-      },
-    });
+    const requestArg = await this.resolveCreateMirrorRequestArg(request);
+
+    const data = await this.createTypedData(requestArg, nonce);
 
     return UnsignedProtocolCall.create({
-      contractAddress: data.result.typedData.domain.verifyingContract,
-      functionName: 'mirrorWithSig',
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
+      fallback: this.createRequestFallback(data),
     });
   }
 
   private async broadcast(
-    requestArgs: CreateMirrorRequestArg,
+    requestArg: CreateMirrorRequestArg,
   ): PromiseResult<RelayReceipt, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<
       CreateMirrorViaDispatcherData,
@@ -86,15 +82,18 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
     >({
       mutation: CreateMirrorViaDispatcherDocument,
       variables: {
-        request: requestArgs,
+        request: requestArg,
       },
     });
 
     if (data.result.__typename === 'RelayError') {
+      const typedData = await this.createTypedData(requestArg);
+      const fallback = this.createRequestFallback(typedData);
+
       if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
+        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
       }
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
     }
 
     return success({
@@ -103,12 +102,47 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
     });
   }
 
+  private async createTypedData(
+    requestArg: CreateMirrorRequestArg,
+    nonce?: Nonce,
+  ): Promise<CreateMirrorTypedDataData> {
+    const { data } = await this.apolloClient.mutate<
+      CreateMirrorTypedDataData,
+      CreateMirrorTypedDataVariables
+    >({
+      mutation: CreateMirrorTypedDataDocument,
+      variables: {
+        request: requestArg,
+        options: nonce ? { overrideSigNonce: nonce } : undefined,
+      },
+    });
+    return data;
+  }
+
   private async resolveCreateMirrorRequestArg(
     request: CreateMirrorRequest,
   ): Promise<CreateMirrorRequestArg> {
     return {
       profileId: request.profileId,
       publicationId: request.publicationId,
+    };
+  }
+
+  private createRequestFallback(data: CreateMirrorTypedDataData): RequestFallback {
+    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('mirror', [
+      {
+        profileId: data.result.typedData.value.profileId,
+        profileIdPointed: data.result.typedData.value.profileIdPointed,
+        pubIdPointed: data.result.typedData.value.pubIdPointed,
+        referenceModuleData: data.result.typedData.value.referenceModuleData,
+        referenceModule: data.result.typedData.value.referenceModule,
+        referenceModuleInitData: data.result.typedData.value.referenceModuleInitData,
+      },
+    ]);
+    return {
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
     };
   }
 }
