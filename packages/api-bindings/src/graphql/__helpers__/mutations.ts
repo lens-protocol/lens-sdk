@@ -423,7 +423,7 @@ export function mockCreateSetDispatcherTypedDataData({
         nonce,
         deadline: '0',
         profileId: mockProfileId(),
-        dispatcher: faker.datatype.uuid(),
+        dispatcher: mockEthereumAddress(),
       },
     }),
   };

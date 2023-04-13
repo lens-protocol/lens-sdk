@@ -3,7 +3,6 @@ import {
   CreateSetDispatcherTypedDataDocument,
   CreateSetDispatcherTypedDataData,
   CreateSetDispatcherTypedDataVariables,
-  omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
@@ -13,6 +12,7 @@ import { mockNonce, mockUpdateDispatcherConfigRequest } from '@lens-protocol/dom
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { DispatcherConfigCallGateway } from '../DispatcherConfigCallGateway';
+import { assertUnsignedProtocolCallCorrectness } from '../__helpers__/mocks';
 
 function mockCreateSetDispatcherTypedDataMutationMockedResponse({
   variables,
@@ -55,8 +55,7 @@ describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
 
       const unsignedCall = await dispatcherConfigCallGateway.createUnsignedProtocolCall(request);
 
-      expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
-      expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+      assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
     });
 
     it('should be possible to override the signature nonce', async () => {
