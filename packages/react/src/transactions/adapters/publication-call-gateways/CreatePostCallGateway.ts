@@ -10,6 +10,7 @@ import {
   omitTypename,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
+import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   CreatePostRequest,
@@ -18,6 +19,8 @@ import {
 import {
   BroadcastingError,
   BroadcastingErrorReason,
+  Data,
+  RequestFallback,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -39,7 +42,8 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
   async createDelegatedTransaction<T extends R>(
     request: T,
   ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
-    const result = await this.broadcast(await this.resolveCreatePostRequestArg(request));
+    const requestArg = await this.resolveCreatePostRequestArg(request);
+    const result = await this.broadcast(requestArg);
 
     if (result.isFailure()) return failure(result.error);
 
@@ -59,24 +63,33 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     request: T,
     nonce?: Nonce,
   ): Promise<UnsignedProtocolCall<CreatePostRequest>> {
+    const requestArg = await this.resolveCreatePostRequestArg(request);
+
+    const data = await this.createTypedData(requestArg, nonce);
+
+    return UnsignedProtocolCall.create({
+      id: data.result.id,
+      request,
+      typedData: omitTypename(data.result.typedData),
+      fallback: this.createRequestFallback(data),
+    });
+  }
+
+  private async createTypedData(
+    requestArg: CreatePublicPostRequestArg,
+    nonce?: Nonce,
+  ): Promise<CreatePostTypedDataData> {
     const { data } = await this.apolloClient.mutate<
       CreatePostTypedDataData,
       CreatePostTypedDataVariables
     >({
       mutation: CreatePostTypedDataDocument,
       variables: {
-        request: await this.resolveCreatePostRequestArg(request),
+        request: requestArg,
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },
     });
-
-    return UnsignedProtocolCall.create({
-      contractAddress: data.result.typedData.domain.verifyingContract,
-      functionName: 'postWithSig',
-      id: data.result.id,
-      request,
-      typedData: omitTypename(data.result.typedData),
-    });
+    return data;
   }
 
   private async broadcast(
@@ -93,10 +106,13 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     });
 
     if (data.result.__typename === 'RelayError') {
+      const typedData = await this.createTypedData(requestArgs);
+      const fallback = this.createRequestFallback(typedData);
+
       if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
+        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
       }
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
     }
 
     return success({
@@ -113,6 +129,24 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
       profileId: request.profileId,
       collectModule: resolveCollectModule(request),
       referenceModule: resolveReferenceModule(request),
+    };
+  }
+
+  private createRequestFallback(data: CreatePostTypedDataData): RequestFallback {
+    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('post', [
+      {
+        profileId: data.result.typedData.value.profileId,
+        contentURI: data.result.typedData.value.contentURI,
+        collectModule: data.result.typedData.value.collectModule,
+        collectModuleInitData: data.result.typedData.value.collectModuleInitData,
+        referenceModule: data.result.typedData.value.referenceModule,
+        referenceModuleInitData: data.result.typedData.value.referenceModuleInitData,
+      },
+    ]);
+    return {
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
     };
   }
 }

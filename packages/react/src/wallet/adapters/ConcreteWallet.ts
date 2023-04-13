@@ -12,7 +12,10 @@ import {
   UnsignedTransaction,
   NativeTransaction,
 } from '@lens-protocol/domain/entities';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  RequestFallback,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
 import {
   ChainType,
   EthereumAddress,
@@ -52,8 +55,7 @@ export class UnsignedProtocolCall<T extends TransactionRequestModel>
     readonly id: string,
     readonly request: T,
     readonly typedData: TypedData,
-    readonly contractAddress: EthereumAddress,
-    readonly functionName: string,
+    readonly fallback: RequestFallback,
   ) {}
 
   get nonce() {
@@ -64,16 +66,14 @@ export class UnsignedProtocolCall<T extends TransactionRequestModel>
     id,
     request,
     typedData,
-    contractAddress,
-    functionName,
+    fallback,
   }: {
     id: string;
     request: T;
     typedData: TypedData;
-    contractAddress: EthereumAddress;
-    functionName: string;
+    fallback: RequestFallback;
   }): UnsignedProtocolCall<T> {
-    return new UnsignedProtocolCall(id, request, typedData, contractAddress, functionName);
+    return new UnsignedProtocolCall(id, request, typedData, fallback);
   }
 }
 
@@ -85,8 +85,7 @@ export class SignedProtocolCall<T extends TransactionRequestModel>
     readonly request: T,
     readonly signature: string,
     readonly nonce: number,
-    readonly contractAddress: EthereumAddress,
-    readonly functionName: string,
+    readonly fallback: RequestFallback,
   ) {}
 
   static create<T extends TransactionRequestModel>({
@@ -101,8 +100,7 @@ export class SignedProtocolCall<T extends TransactionRequestModel>
       unsignedCall.request,
       signature,
       unsignedCall.nonce,
-      unsignedCall.contractAddress,
-      unsignedCall.functionName,
+      unsignedCall.fallback,
     );
   }
 }

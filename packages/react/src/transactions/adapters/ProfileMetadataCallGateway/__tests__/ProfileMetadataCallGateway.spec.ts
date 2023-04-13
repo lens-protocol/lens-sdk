@@ -168,7 +168,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
       },
     ])(
-      `should fail w/ a $expected.constructor.name in case of RelayError response with "$relayError.reason" reason`,
+      `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$relayError.reason" reason`,
       async ({ relayError, expected }) => {
         const request = mockUpdateProfileDetailsRequest({ profileId: existingProfile.id });
 

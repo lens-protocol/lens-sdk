@@ -41,6 +41,7 @@ config:
     ProfileId: ProfileId
     ProfileInterest: string
     ProxyActionId: string
+    PublicationUrl: Url
     ReferenceModuleData: string
     ReferencePolicy: ReferencePolicy
     Search: string

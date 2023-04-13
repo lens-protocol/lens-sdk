@@ -1,15 +1,21 @@
 import { faker } from '@faker-js/faker';
+import { omitTypename } from '@lens-protocol/api-bindings';
 import { ProxyActionStatus, TransactionRequestModel } from '@lens-protocol/domain/entities';
 import {
   mockNonce,
   mockTransactionHash,
   mockTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
-import { ChainType, Url } from '@lens-protocol/shared-kernel';
-import { mockEthereumAddress, mockUint256HexString } from '@lens-protocol/shared-kernel/mocks';
+import {
+  BroadcastingError,
+  BroadcastingErrorReason,
+} from '@lens-protocol/domain/use-cases/transactions';
+import { assertFailure, ChainType, Result, Url } from '@lens-protocol/shared-kernel';
+import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
 import { IMetadataUploader } from '../IMetadataUploader';
 import {
@@ -43,7 +49,7 @@ export function mockTypedData(): TypedData {
     domain: {
       name: 'none',
       version: '1',
-      chainId: mockUint256HexString(),
+      chainId: 1,
       verifyingContract: mockEthereumAddress(),
     },
     value: {
@@ -117,4 +123,28 @@ export function mockIMetadataUploader(urlOrError: Url | Error): IMetadataUploade
   }
 
   return uploader;
+}
+
+export function assertUnsignedProtocolCallCorrectness<T extends TransactionRequestModel>(
+  unsignedProtocolCall: UnsignedProtocolCall<T>,
+  broadcastResult: {
+    id: string;
+    typedData: TypedData;
+  },
+) {
+  expect(unsignedProtocolCall.id).toEqual(broadcastResult.id);
+  expect(unsignedProtocolCall.typedData).toEqual(omitTypename(broadcastResult.typedData));
+}
+
+export function assertBroadcastingErrorResultWithRequestFallback(
+  result: Result<unknown, BroadcastingError>,
+  expectedBroadcastingErrorReason: BroadcastingErrorReason,
+  typedData: TypedData,
+) {
+  assertFailure(result);
+  expect(result.error.reason).toEqual(expectedBroadcastingErrorReason);
+  expect(result.error.fallback).toMatchObject({
+    contractAddress: typedData.domain.verifyingContract,
+    encodedData: expect.any(String),
+  });
 }

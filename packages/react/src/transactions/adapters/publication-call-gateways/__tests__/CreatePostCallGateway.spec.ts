@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { LensApolloClient, omitTypename, RelayErrorReasons } from '@lens-protocol/api-bindings';
+import { LensApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockCreatePostTypedDataData,
@@ -17,7 +17,12 @@ import {
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
-import { mockITransactionFactory, mockIMetadataUploader } from '../../__helpers__/mocks';
+import {
+  mockITransactionFactory,
+  mockIMetadataUploader,
+  assertUnsignedProtocolCallCorrectness,
+  assertBroadcastingErrorResultWithRequestFallback,
+} from '../../__helpers__/mocks';
 import { CreatePostCallGateway } from '../CreatePostCallGateway';
 import {
   createFeeCollectModuleExerciseData,
@@ -104,6 +109,7 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
       createExerciseData: createLimitedTimedFeeCollectModuleFollowersOnlyExerciseData,
     },
   ])(`and CreatePostRequest with $description`, ({ createExerciseData }) => {
+    const data = mockCreatePostTypedDataData();
     const { requestVars, expectedMutationRequestDetails } = createExerciseData();
     const request = mockCreatePostRequest(requestVars);
     const uploadUrl = faker.internet.url();
@@ -112,7 +118,6 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
       it(`should:
           - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
           - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
-        const data = mockCreatePostTypedDataData();
         const apolloClient = createMockApolloClientWithMultipleResponses([
           createCreatePostTypedDataMockedResponse({
             variables: {
@@ -131,7 +136,7 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
 
         expect(uploader.upload).toHaveBeenCalledWith(request);
         expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
-        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+        assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
 
       it(`should allow to override the signature nonce`, async () => {
@@ -194,16 +199,16 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
 
       it.each([
         {
-          expected: new BroadcastingError(BroadcastingErrorReason.REJECTED),
+          expectedBroadcastingErrorReason: BroadcastingErrorReason.REJECTED,
           relayError: mockRelayErrorFragment(RelayErrorReasons.Rejected),
         },
         {
-          expected: new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED),
+          expectedBroadcastingErrorReason: BroadcastingErrorReason.UNSPECIFIED,
           relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
         },
       ])(
-        `should fail w/ a $expected.constructor.name in case of RelayError response with "$relayError.reason" reason`,
-        async ({ relayError, expected }) => {
+        `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$relayError.reason" reason`,
+        async ({ relayError, expectedBroadcastingErrorReason }) => {
           const apolloClient = createMockApolloClientWithMultipleResponses([
             createCreatePostViaDispatcherMockedResponse({
               variables: {
@@ -217,12 +222,26 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
                 result: relayError,
               },
             }),
+            createCreatePostTypedDataMockedResponse({
+              variables: {
+                request: {
+                  profileId: request.profileId,
+                  contentURI: uploadUrl,
+                  ...expectedMutationRequestDetails,
+                },
+              },
+              data,
+            }),
           ]);
 
           const { gateway } = setupTestScenario({ apolloClient, uploadUrl });
           const result = await gateway.createDelegatedTransaction(request);
 
-          expect(() => result.unwrap()).toThrow(expected);
+          assertBroadcastingErrorResultWithRequestFallback(
+            result,
+            expectedBroadcastingErrorReason,
+            data.result.typedData,
+          );
         },
       );
     });
