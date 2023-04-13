@@ -278,7 +278,7 @@ export function mockCreateFollowTypedDataData({
         nonce,
         deadline: '0',
         profileIds: [mockProfileId()],
-        datas: ['0x00'],
+        datas: [faker.datatype.hexadecimal({ length: 2 })],
       },
     }),
   };
