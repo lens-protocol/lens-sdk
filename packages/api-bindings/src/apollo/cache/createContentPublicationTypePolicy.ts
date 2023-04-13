@@ -12,6 +12,7 @@ import {
   Wallet,
   CollectPolicy,
 } from '../../graphql';
+import { activeProfileIdentifierVar } from './activeProfileIdentifier';
 import { decryptionCriteria } from './decryptionCriteria';
 import { getAllPendingTransactions, isCollectTransactionFor } from './transactions';
 import { noCachedField } from './utils/noCachedField';
@@ -82,10 +83,14 @@ const hasCollectedByMe = (existing: boolean, { readField }: FieldFunctionOptions
   // if collected already then just return, it can't be undone
   if (existing === true) return existing;
 
+  const profileIdentifier = activeProfileIdentifierVar();
   const publicationId = readField('id') as PublicationId;
+
+  if (!profileIdentifier) return false;
 
   const isCollectTransactionForThisPublication = isCollectTransactionFor({
     publicationId,
+    profileId: profileIdentifier.id,
   });
 
   const collectPendingTx = getAllPendingTransactions().find((transaction) => {
