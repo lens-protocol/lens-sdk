@@ -131,10 +131,13 @@ export function isUnfollowTransactionFor({
 
 export function isCollectTransactionFor({
   publicationId,
+  profileId,
 }: {
   publicationId: PublicationId;
+  profileId: ProfileId;
 }): TransactionStatusPredicate<CollectRequest> {
   return (transaction): transaction is TransactionState<CollectRequest> =>
     transaction.request.kind === TransactionKind.COLLECT_PUBLICATION &&
+    transaction.request.profileId === profileId &&
     transaction.request.publicationId === publicationId;
 }

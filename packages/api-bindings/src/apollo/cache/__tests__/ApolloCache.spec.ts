@@ -1,6 +1,8 @@
 import { ApolloCache, DocumentNode, makeVar } from '@apollo/client';
 import { DecryptionCriteriaType } from '@lens-protocol/domain/entities';
 import {
+  mockFreeCollectRequest,
+  mockProfile,
   mockPublicationId,
   mockUnconstrainedFollowRequest,
   mockUnfollowRequest,
@@ -31,6 +33,7 @@ import {
   mockProfileOwnershipAccessCondition,
   mockPublicationStatsFragment,
 } from '../../../mocks';
+import { activeProfileIdentifierVar } from '../activeProfileIdentifier';
 import { createApolloCache } from '../createApolloCache';
 import { erc20Amount } from '../decryptionCriteria';
 import { recentTransactionsVar } from '../transactions';
@@ -483,6 +486,35 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           type: CollectPolicyType.FREE,
           state: CollectState.CAN_BE_COLLECTED,
           followerOnly: true,
+        });
+      });
+    });
+
+    describe('when retrieving hasCollectedByMe', () => {
+      describe('and active profile is available', () => {
+        const activeProfile = mockProfile();
+        activeProfileIdentifierVar(activeProfile);
+
+        it('should return true if collect transaction is pending', () => {
+          const publication = mockPostFragment({
+            profile: mockProfileFragment(),
+            hasCollectedByMe: false,
+          });
+
+          recentTransactionsVar([
+            mockPendingTransactionState({
+              request: mockFreeCollectRequest({
+                profileId: activeProfile.id,
+                publicationId: publication.id,
+              }),
+            }),
+          ]);
+
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+          const read = readPublication(publication);
+
+          expect(read.hasCollectedByMe).toBe(true);
         });
       });
     });
