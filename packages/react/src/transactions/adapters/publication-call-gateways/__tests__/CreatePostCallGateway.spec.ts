@@ -135,7 +135,6 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
         const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
         expect(uploader.upload).toHaveBeenCalledWith(request);
-        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
         assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
 

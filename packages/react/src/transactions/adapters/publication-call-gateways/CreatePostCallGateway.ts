@@ -75,6 +75,35 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     });
   }
 
+  private async broadcast(
+    requestArg: CreatePublicPostRequestArg,
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
+    const { data } = await this.apolloClient.mutate<
+      CreatePostViaDispatcherData,
+      CreatePostViaDispatcherVariables
+    >({
+      mutation: CreatePostViaDispatcherDocument,
+      variables: {
+        request: requestArg,
+      },
+    });
+
+    if (data.result.__typename === 'RelayError') {
+      const typedData = await this.createTypedData(requestArg);
+      const fallback = this.createRequestFallback(typedData);
+
+      if (data.result.reason === RelayErrorReasons.Rejected) {
+        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
+      }
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
+    }
+
+    return success({
+      indexingId: data.result.txId,
+      txHash: data.result.txHash,
+    });
+  }
+
   private async createTypedData(
     requestArg: CreatePublicPostRequestArg,
     nonce?: Nonce,
@@ -90,35 +119,6 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
       },
     });
     return data;
-  }
-
-  private async broadcast(
-    requestArgs: CreatePublicPostRequestArg,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
-    const { data } = await this.apolloClient.mutate<
-      CreatePostViaDispatcherData,
-      CreatePostViaDispatcherVariables
-    >({
-      mutation: CreatePostViaDispatcherDocument,
-      variables: {
-        request: requestArgs,
-      },
-    });
-
-    if (data.result.__typename === 'RelayError') {
-      const typedData = await this.createTypedData(requestArgs);
-      const fallback = this.createRequestFallback(typedData);
-
-      if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
-      }
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
-    }
-
-    return success({
-      indexingId: data.result.txId,
-      txHash: data.result.txHash,
-    });
   }
 
   private async resolveCreatePostRequestArg<T extends R>(

@@ -100,7 +100,7 @@ export type Scalars = {
   /** proxy action scalar id type */
   ProxyActionId: string;
   /** Publication id custom scalar type */
-  PublicationId: unknown;
+  PublicationId: string;
   /** The publication tag */
   PublicationTag: unknown;
   /** Publication url scalar type */
@@ -1683,7 +1683,7 @@ export type CreateCollectTypedDataData = {
         nonce: number;
         deadline: unknown;
         profileId: ProfileId;
-        pubId: unknown;
+        pubId: string;
         data: unknown;
       };
     };
@@ -1708,7 +1708,7 @@ export type CreateCommentTypedDataData = {
         profileId: ProfileId;
         contentURI: Url;
         profileIdPointed: ProfileId;
-        pubIdPointed: unknown;
+        pubIdPointed: string;
         collectModule: string;
         collectModuleInitData: string;
         referenceModuleData: string;
@@ -2217,7 +2217,7 @@ export type CreateMirrorTypedDataData = {
         deadline: unknown;
         profileId: ProfileId;
         profileIdPointed: ProfileId;
-        pubIdPointed: unknown;
+        pubIdPointed: string;
         referenceModuleData: string;
         referenceModule: string;
         referenceModuleInitData: string;

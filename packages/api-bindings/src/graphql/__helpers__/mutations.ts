@@ -187,7 +187,7 @@ export function mockCreateCommentTypedDataData({
       value: {
         __typename: 'CreateCommentEIP712TypedDataValue',
         profileIdPointed: mockProfileId(),
-        pubIdPointed: '',
+        pubIdPointed: faker.datatype.hexadecimal({ length: 2 }),
         nonce,
         deadline: 1644303500,
         profileId: mockProfileId(),
