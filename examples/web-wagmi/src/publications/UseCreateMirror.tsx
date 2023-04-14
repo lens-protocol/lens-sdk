@@ -33,14 +33,13 @@ function MirrorInner({ publisher }: MirrorInnerProps) {
     return <p>Can't mirror a mirror</p>;
   }
 
-  const isMirroredByMe = publication.isOptimisticMirroredByMe || publication.mirrors.length > 0;
-
   return (
     <div>
       <PublicationCard publication={publication} />
 
       <div>Total Mirrors: {publication.stats.totalAmountOfMirrors}</div>
-      <div>Is Mirrored by Me: {isMirroredByMe ? 'true' : 'false'}</div>
+      <div>My mirrors: {publication.myMirrors.length}</div>
+      <div>Is Mirrored by Me: {publication.isMirroredByMe ? 'true' : 'false'}</div>
 
       <div>
         {mirroringError && <p>{mirroringError.message}</p>}

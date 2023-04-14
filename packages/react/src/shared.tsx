@@ -170,11 +170,7 @@ export function createSharedDependencies(
       config.environment.handleResolver,
     ),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
-    [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
-      apolloClient,
-      publicationCacheManager,
-      sources,
-    ),
+    [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(apolloClient, sources),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(
       profileCacheManager,

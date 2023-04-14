@@ -8,6 +8,7 @@ import {
   FragmentPost,
   AnyPublication,
   ContentPublication,
+  activeProfileIdentifierVar,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
@@ -15,10 +16,12 @@ import {
   mockCommentFragment,
   mockMirrorFragment,
   mockPostFragment,
+  mockProfileFragment,
   mockPublicationStatsFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockTransactionData, mockPaidCollectRequest } from '@lens-protocol/domain/mocks';
+import { nonNullable } from '@lens-protocol/shared-kernel';
 
 import { CollectPublicationResponder } from '../CollectPublicationResponder';
 
@@ -37,16 +40,27 @@ function setupTestScenario({
   publication: Post | Comment | Mirror;
   expected: Post | Comment | Mirror;
 }) {
+  const activeProfile = mockProfileFragment();
+  activeProfileIdentifierVar(activeProfile);
+
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
     createPublicationMockedResponse({
       variables: {
         publicationId: publication.id,
+        observerId: activeProfile.id,
         sources,
       },
       result: expected,
     }),
   ]);
+
+  apolloClient.cache.writeFragment({
+    id: apolloClient.cache.identify(publication),
+    fragment: typeToFragmentMap[publication.__typename],
+    fragmentName: publication.__typename,
+    data: publication,
+  });
 
   const responder = new CollectPublicationResponder(apolloClient, sources);
 
@@ -54,11 +68,14 @@ function setupTestScenario({
     responder,
 
     get updatedPublicationFragment() {
-      return apolloClient.cache.readFragment({
-        id: apolloClient.cache.identify(publication),
-        fragment: typeToFragmentMap[publication.__typename],
-        fragmentName: publication.__typename,
-      });
+      return nonNullable(
+        apolloClient.cache.readFragment({
+          id: apolloClient.cache.identify(publication),
+          fragment: typeToFragmentMap[publication.__typename],
+          fragmentName: publication.__typename,
+        }),
+        "Can't find post in cache",
+      );
     },
   };
 }

@@ -4,6 +4,7 @@ import {
   PublicationDocument,
   PublicationData,
   PublicationVariables,
+  activeProfileIdentifierVar,
 } from '@lens-protocol/api-bindings';
 import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
@@ -15,10 +16,13 @@ export class CollectPublicationResponder implements ITransactionResponder<Collec
   constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
 
   async commit({ request }: TransactionData<CollectRequest>) {
+    const activeProfile = activeProfileIdentifierVar();
+
     await this.client.query<PublicationData, PublicationVariables>({
       query: PublicationDocument,
       variables: {
         publicationId: request.publicationId,
+        observerId: activeProfile?.id,
         sources: this.sources,
       },
       fetchPolicy: 'network-only',
