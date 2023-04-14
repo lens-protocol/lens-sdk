@@ -1,5 +1,4 @@
 import {
-  TransactionKind,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
@@ -18,7 +17,7 @@ export function useUpdateDispatcherConfigController() {
   const { activeWallet, transactionGateway, protocolCallRelayer, transactionQueue, apolloClient } =
     useSharedDependencies();
 
-  return async (request: Omit<UpdateDispatcherConfigRequest, 'kind'>) => {
+  return async (request: UpdateDispatcherConfigRequest) => {
     const presenter = new PromiseResultPresenter<
       void,
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
@@ -33,10 +32,7 @@ export function useUpdateDispatcherConfigController() {
       presenter,
     );
 
-    await updateDispatcherConfig.execute({
-      ...request,
-      kind: TransactionKind.UPDATE_DISPATCHER_CONFIG,
-    });
+    await updateDispatcherConfig.execute(request);
 
     return presenter.asResult();
   };
