@@ -1,6 +1,6 @@
-import { EthereumAddress } from '@lens-protocol/shared-kernel';
+import { Brand, EthereumAddress } from '@lens-protocol/shared-kernel';
 
-import { Data } from './PayTransaction';
+export type Data = Brand<string, 'Data'>;
 
 export enum BroadcastingErrorReason {
   /**

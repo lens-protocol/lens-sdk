@@ -15,20 +15,18 @@ import {
 } from '../../../entities';
 import {
   MockedNativeTransaction,
+  mockTransactionRequestModel,
   mockUnsignedTransaction,
   mockWallet,
 } from '../../../entities/__helpers__/mocks';
 import { mockActiveWallet, mockIPayTransactionGateway } from '../../../mocks';
-import { TransactionQueue } from '../../transactions/TransactionQueue';
-import {
-  mockTransactionQueue,
-  mockTransactionRequestModelWithData,
-} from '../../transactions/__helpers__/mocks';
 import {
   IPayTransactionGateway,
   IPayTransactionPresenter,
   PayTransaction,
 } from '../PayTransaction';
+import { TransactionQueue } from '../TransactionQueue';
+import { mockTransactionQueue } from '../__helpers__/mocks';
 
 function setupPayTransaction({
   gateway,
@@ -45,11 +43,11 @@ function setupPayTransaction({
 }
 
 describe(`Given the ${PayTransaction.name} interactor`, () => {
-  const request = mockTransactionRequestModelWithData();
+  const request = mockTransactionRequestModel();
   const unsignedTransaction = mockUnsignedTransaction(request);
   const transaction = MockedNativeTransaction.fromUnsignedTransaction(unsignedTransaction);
 
-  describe(`when invoking the "${PayTransaction.prototype.execute.name}" method with a request if type WithData<T>`, () => {
+  describe(`when invoking the "${PayTransaction.prototype.execute.name}" method`, () => {
     it(`should:
         - create an ${UnsignedTransaction.name}<T>
         - sign and broadcast the transaction with the user's wallet

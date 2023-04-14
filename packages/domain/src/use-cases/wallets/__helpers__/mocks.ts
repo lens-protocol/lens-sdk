@@ -10,7 +10,7 @@ import {
   UnsignedTransaction,
 } from '../../../entities';
 import { mockWallet } from '../../../entities/__helpers__/mocks';
-import { IPayTransactionGateway, WithData } from '../../transactions/PayTransaction';
+import { IPayTransactionGateway } from '../../transactions/PayTransaction';
 import { ActiveWallet } from '../ActiveWallet';
 import { WalletData } from '../IActiveWalletPresenter';
 import {
@@ -147,7 +147,7 @@ export function mockIPayTransactionGateway<T extends TransactionRequestModel>({
   wallet,
   unsignedTransaction,
 }: {
-  request: WithData<T>;
+  request: T;
   wallet: Wallet;
   unsignedTransaction: UnsignedTransaction<T>;
 }): IPayTransactionGateway<T> {
