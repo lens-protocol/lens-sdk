@@ -27,7 +27,13 @@ export class BroadcastingError extends Error {
   /**
    * @internal
    */
-  constructor(readonly reason: BroadcastingErrorReason, readonly fallback?: RequestFallback) {
+  constructor(
+    readonly reason: BroadcastingErrorReason,
+    /**
+     * @internal
+     */
+    readonly fallback?: RequestFallback,
+  ) {
     super(`broadcasting failed with reason: ${reason}`);
   }
 }

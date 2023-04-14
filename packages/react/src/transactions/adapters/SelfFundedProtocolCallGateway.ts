@@ -16,35 +16,37 @@ import {
   TransactionExecutionSpeed,
 } from '../infrastructure/Eip1559GasPriceEstimator';
 
-type Distribute<TUnion, TAdd> = TUnion extends unknown ? TUnion & TAdd : never;
-
 type RawTransactionDetails = {
   contractAddress: EthereumAddress;
   encodedData: Data;
 };
 
-export type SelfFundedProtocolCallRequest = Distribute<
-  SupportedTransactionRequest,
-  RawTransactionDetails
->;
+export type SelfFundedProtocolCallRequest<T extends SupportedTransactionRequest> = T &
+  RawTransactionDetails;
 
 export class UnsignedSelfFundedProtocolCallTransaction<
-    Request extends SelfFundedProtocolCallRequest = SelfFundedProtocolCallRequest,
+    TRequest extends SupportedTransactionRequest,
+    TSelfFundedRequest extends SelfFundedProtocolCallRequest<TRequest> = SelfFundedProtocolCallRequest<TRequest>,
   >
-  extends UnsignedTransaction<Request>
+  extends UnsignedTransaction<TSelfFundedRequest>
   implements ITransactionRequest
 {
-  constructor(request: Request, readonly transactionRequest: TransactionRequest) {
+  constructor(request: TSelfFundedRequest, readonly transactionRequest: TransactionRequest) {
     super(v4(), ChainType.POLYGON, request);
   }
 }
 
-export class SelfFundedProtocolCallGateway<T extends SelfFundedProtocolCallRequest>
-  implements IPayTransactionGateway<T>
+export class SelfFundedProtocolCallGateway<
+  TRequest extends SupportedTransactionRequest,
+  TSelfFundedRequest extends SelfFundedProtocolCallRequest<TRequest> = SelfFundedProtocolCallRequest<TRequest>,
+> implements IPayTransactionGateway<TSelfFundedRequest>
 {
   constructor(private readonly providerFactory: IProviderFactory) {}
 
-  async prepareSelfFundedTransaction(request: T, wallet: Wallet): Promise<UnsignedTransaction<T>> {
+  async prepareSelfFundedTransaction(
+    request: TSelfFundedRequest,
+    wallet: Wallet,
+  ): Promise<UnsignedTransaction<TSelfFundedRequest>> {
     const provider = await this.providerFactory.createProvider({
       chainType: ChainType.POLYGON,
     });

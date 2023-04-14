@@ -1,4 +1,10 @@
-import { ContentFocus, ProfileOwnedByMe, useCreatePost } from '@lens-protocol/react-web';
+import {
+  BroadcastingError,
+  ContentFocus,
+  ProfileOwnedByMe,
+  supportsSelfFundedRetry,
+  useCreatePost,
+} from '@lens-protocol/react-web';
 
 import { upload } from '../../upload';
 import { never } from '../../utils';
@@ -18,11 +24,23 @@ export function PostComposer({ publisher }: PostComposerProps) {
     const formData = new FormData(form);
     const content = (formData.get('content') as string | null) ?? never();
 
-    const result = await create({
+    let result = await create({
       content,
       contentFocus: ContentFocus.TEXT,
       locale: 'en',
     });
+
+    if (result.isFailure()) {
+      if (result.error instanceof BroadcastingError && supportsSelfFundedRetry(result.error)) {
+        const retry = window.confirm(
+          'We cannot cover the transaction costs at this time. Do you want to retry with your own MATIC?',
+        );
+
+        if (retry) {
+          result = await result.error.retrySelfFunded();
+        }
+      }
+    }
 
     if (result.isSuccess()) {
       form.reset();

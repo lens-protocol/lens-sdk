@@ -15,9 +15,9 @@ import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
-import { CreatePostController } from './adapters/CreatePostController';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
+import { useCreatePostController } from './adapters/useCreatePostController';
 import { PublicationMetadataUploader } from './infrastructure/PublicationMetadataUploader';
 
 export type UseCreatePostArgs = {
@@ -48,15 +48,10 @@ export type CreatePostOperation = Operation<
  * @group Hooks
  */
 export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreatePostOperation {
-  const {
-    appId,
-    activeWallet,
-    apolloClient,
-    protocolCallRelayer,
-    transactionFactory,
-    transactionGateway,
-    transactionQueue,
-  } = useSharedDependencies();
+  const { appId } = useSharedDependencies();
+
+  const uploader = new PublicationMetadataUploader(upload);
+  const createPost = useCreatePostController({ uploader });
 
   return useOperation(
     async ({
@@ -71,20 +66,8 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
       | WalletConnectionError
       | FailedUploadError
     > => {
-      const uploader = new PublicationMetadataUploader(upload);
-
-      const controller = new CreatePostController<CreatePostRequest>({
-        activeWallet,
-        apolloClient,
-        protocolCallRelayer,
-        transactionFactory,
-        transactionGateway,
-        transactionQueue,
-        uploader,
-      });
-
       try {
-        return await controller.execute({
+        const request: CreatePostRequest = {
           kind: TransactionKind.CREATE_POST,
           collect,
           delegate: publisher.dispatcher !== null,
@@ -92,7 +75,8 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
           reference,
           appId,
           ...args,
-        });
+        };
+        return await createPost(request);
       } catch (err: unknown) {
         if (err instanceof FailedUploadError) {
           return failure(err);
