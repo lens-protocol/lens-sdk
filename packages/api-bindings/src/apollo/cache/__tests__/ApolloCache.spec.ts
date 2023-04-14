@@ -1,6 +1,7 @@
 import { ApolloCache, DocumentNode, makeVar } from '@apollo/client';
 import { DecryptionCriteriaType } from '@lens-protocol/domain/entities';
 import {
+  mockCreateMirrorRequest,
   mockFreeCollectRequest,
   mockProfile,
   mockPublicationId,
@@ -493,7 +494,13 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
     describe('when retrieving hasCollectedByMe', () => {
       describe('and active profile is available', () => {
         const activeProfile = mockProfile();
-        activeProfileIdentifierVar(activeProfile);
+        beforeAll(() => {
+          activeProfileIdentifierVar(activeProfile);
+        });
+
+        afterAll(() => {
+          activeProfileIdentifierVar(undefined);
+        });
 
         it('should return true if collect transaction is pending', () => {
           const publication = mockPostFragment({
@@ -515,6 +522,104 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           const read = readPublication(publication);
 
           expect(read.hasCollectedByMe).toBe(true);
+        });
+      });
+    });
+
+    describe('when retrieving isMirroredByMe', () => {
+      describe('and active profile is available', () => {
+        const activeProfile = mockProfile();
+        beforeAll(() => {
+          activeProfileIdentifierVar(activeProfile);
+        });
+
+        afterAll(() => {
+          activeProfileIdentifierVar(undefined);
+        });
+
+        it('should return true if mirror transaction is pending', () => {
+          const publication = mockPostFragment({
+            profile: mockProfileFragment(),
+            mirrors: [],
+            isMirroredByMe: false,
+          });
+
+          recentTransactionsVar([
+            mockPendingTransactionState({
+              request: mockCreateMirrorRequest({
+                profileId: activeProfile.id,
+                publicationId: publication.id,
+              }),
+            }),
+          ]);
+
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+          const read = readPublication(publication);
+
+          expect(read.isMirroredByMe).toBe(true);
+        });
+      });
+    });
+
+    describe('when retrieving stats', () => {
+      describe('and active profile is available', () => {
+        const activeProfile = mockProfile();
+        beforeAll(() => {
+          activeProfileIdentifierVar(activeProfile);
+        });
+
+        afterAll(() => {
+          activeProfileIdentifierVar(undefined);
+        });
+
+        it('should return totalAmountOfMirrors incremented by number of pending mirror transactions', () => {
+          const publication = mockPostFragment({
+            profile: mockProfileFragment(),
+            mirrors: [mockPublicationId()],
+            stats: mockPublicationStatsFragment({
+              totalAmountOfMirrors: 1,
+            }),
+          });
+
+          recentTransactionsVar([
+            mockPendingTransactionState({
+              request: mockCreateMirrorRequest({
+                profileId: activeProfile.id,
+                publicationId: publication.id,
+              }),
+            }),
+          ]);
+
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+          const read = readPublication(publication);
+
+          expect(read.stats.totalAmountOfMirrors).toEqual(2);
+        });
+
+        it('should return totalAmountOfCollects incremented by number of pending collect transactions', () => {
+          const publication = mockPostFragment({
+            profile: mockProfileFragment(),
+            stats: mockPublicationStatsFragment({
+              totalAmountOfCollects: 1,
+            }),
+          });
+
+          recentTransactionsVar([
+            mockPendingTransactionState({
+              request: mockFreeCollectRequest({
+                profileId: activeProfile.id,
+                publicationId: publication.id,
+              }),
+            }),
+          ]);
+
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+          const read = readPublication(publication);
+
+          expect(read.stats.totalAmountOfCollects).toEqual(2);
         });
       });
     });

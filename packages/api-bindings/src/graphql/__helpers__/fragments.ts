@@ -261,7 +261,9 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
     isOptimisticMirroredByMe: false,
+    isMirroredByMe: false,
     mirrors: [],
+    myMirrors: [],
     reaction: null,
     hidden: false,
 
@@ -305,7 +307,9 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
     hasCollectedByMe: false,
     hasOptimisticCollectedByMe: false,
     isOptimisticMirroredByMe: false,
+    isMirroredByMe: false,
     mirrors: [],
+    myMirrors: [],
     reaction: null,
     hidden: false,
 

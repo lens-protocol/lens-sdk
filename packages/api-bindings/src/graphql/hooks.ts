@@ -624,8 +624,10 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
       reasons
     }
     mirrors(by: $observerId)
+    myMirrors: mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    isMirroredByMe @client
     collectPolicy @client
     referencePolicy @client
     decryptionCriteria @client
@@ -720,12 +722,14 @@ export const FragmentPost = /*#__PURE__*/ gql`
       result
     }
     mirrors(by: $observerId)
+    myMirrors: mirrors(by: $observerId)
     canObserverDecrypt: canDecrypt(profileId: $observerId) {
       result
       reasons
     }
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    isMirroredByMe @client
     collectPolicy @client
     referencePolicy @client
     decryptionCriteria @client
@@ -4928,6 +4932,7 @@ export type CommentKeySpecifier = (
   | 'id'
   | 'isDataAvailability'
   | 'isGated'
+  | 'isMirroredByMe'
   | 'isOptimisticMirroredByMe'
   | 'mainPost'
   | 'metadata'
@@ -4961,6 +4966,7 @@ export type CommentFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
   isGated?: FieldPolicy<any> | FieldReadFunction<any>;
+  isMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   mainPost?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6585,6 +6591,7 @@ export type PostKeySpecifier = (
   | 'id'
   | 'isDataAvailability'
   | 'isGated'
+  | 'isMirroredByMe'
   | 'isOptimisticMirroredByMe'
   | 'metadata'
   | 'mirrors'
@@ -6614,6 +6621,7 @@ export type PostFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
   isGated?: FieldPolicy<any> | FieldReadFunction<any>;
+  isMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6882,6 +6890,7 @@ export type QueryKeySpecifier = (
   | 'publications'
   | 'recommendedProfiles'
   | 'rel'
+  | 'relayQueues'
   | 'search'
   | 'txIdToTxHash'
   | 'unknownEnabledModules'
@@ -6939,6 +6948,7 @@ export type QueryFieldPolicy = {
   publications?: FieldPolicy<any> | FieldReadFunction<any>;
   recommendedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   rel?: FieldPolicy<any> | FieldReadFunction<any>;
+  relayQueues?: FieldPolicy<any> | FieldReadFunction<any>;
   search?: FieldPolicy<any> | FieldReadFunction<any>;
   txIdToTxHash?: FieldPolicy<any> | FieldReadFunction<any>;
   unknownEnabledModules?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6971,6 +6981,17 @@ export type RecipientDataOutputFieldPolicy = {
 export type RelayErrorKeySpecifier = ('reason' | RelayErrorKeySpecifier)[];
 export type RelayErrorFieldPolicy = {
   reason?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type RelayQueueResultKeySpecifier = (
+  | 'address'
+  | 'queue'
+  | 'relayer'
+  | RelayQueueResultKeySpecifier
+)[];
+export type RelayQueueResultFieldPolicy = {
+  address?: FieldPolicy<any> | FieldReadFunction<any>;
+  queue?: FieldPolicy<any> | FieldReadFunction<any>;
+  relayer?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type RelayerResultKeySpecifier = ('txHash' | 'txId' | RelayerResultKeySpecifier)[];
 export type RelayerResultFieldPolicy = {
@@ -8253,6 +8274,13 @@ export type StrictTypedTypePolicies = {
   RelayError?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | RelayErrorKeySpecifier | (() => undefined | RelayErrorKeySpecifier);
     fields?: RelayErrorFieldPolicy;
+  };
+  RelayQueueResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | RelayQueueResultKeySpecifier
+      | (() => undefined | RelayQueueResultKeySpecifier);
+    fields?: RelayQueueResultFieldPolicy;
   };
   RelayerResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | RelayerResultKeySpecifier | (() => undefined | RelayerResultKeySpecifier);

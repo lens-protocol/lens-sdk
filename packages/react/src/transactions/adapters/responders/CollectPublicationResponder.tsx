@@ -19,6 +19,7 @@ export class CollectPublicationResponder implements ITransactionResponder<Collec
       query: PublicationDocument,
       variables: {
         publicationId: request.publicationId,
+        observerId: request.profileId,
         sources: this.sources,
       },
       fetchPolicy: 'network-only',

@@ -1433,6 +1433,40 @@ export enum RelayErrorReasons {
   WrongWalletSigned = 'WRONG_WALLET_SIGNED',
 }
 
+/** The relay role key */
+export enum RelayRoleKey {
+  CreateProfile = 'CREATE_PROFILE',
+  Dispatcher_1 = 'DISPATCHER_1',
+  Dispatcher_2 = 'DISPATCHER_2',
+  Dispatcher_3 = 'DISPATCHER_3',
+  Dispatcher_4 = 'DISPATCHER_4',
+  Dispatcher_5 = 'DISPATCHER_5',
+  Dispatcher_6 = 'DISPATCHER_6',
+  Dispatcher_7 = 'DISPATCHER_7',
+  Dispatcher_8 = 'DISPATCHER_8',
+  Dispatcher_9 = 'DISPATCHER_9',
+  Dispatcher_10 = 'DISPATCHER_10',
+  ProxyActionCollect_1 = 'PROXY_ACTION_COLLECT_1',
+  ProxyActionCollect_2 = 'PROXY_ACTION_COLLECT_2',
+  ProxyActionCollect_3 = 'PROXY_ACTION_COLLECT_3',
+  ProxyActionCollect_4 = 'PROXY_ACTION_COLLECT_4',
+  ProxyActionCollect_5 = 'PROXY_ACTION_COLLECT_5',
+  ProxyActionCollect_6 = 'PROXY_ACTION_COLLECT_6',
+  ProxyActionFollow_1 = 'PROXY_ACTION_FOLLOW_1',
+  ProxyActionFollow_2 = 'PROXY_ACTION_FOLLOW_2',
+  ProxyActionFollow_3 = 'PROXY_ACTION_FOLLOW_3',
+  ProxyActionFollow_4 = 'PROXY_ACTION_FOLLOW_4',
+  ProxyActionFollow_5 = 'PROXY_ACTION_FOLLOW_5',
+  ProxyActionFollow_6 = 'PROXY_ACTION_FOLLOW_6',
+  ProxyActionFollow_7 = 'PROXY_ACTION_FOLLOW_7',
+  ProxyActionFollow_8 = 'PROXY_ACTION_FOLLOW_8',
+  ProxyActionFollow_9 = 'PROXY_ACTION_FOLLOW_9',
+  ProxyActionFollow_10 = 'PROXY_ACTION_FOLLOW_10',
+  WithSig_1 = 'WITH_SIG_1',
+  WithSig_2 = 'WITH_SIG_2',
+  WithSig_3 = 'WITH_SIG_3',
+}
+
 /** The request object to remove interests from a profile */
 export type RemoveProfileInterestsRequest = {
   /** The profile interest to add */
@@ -1900,9 +1934,11 @@ export type CommentBase = {
   mirrors: Array<PublicationId>;
   hasOptimisticCollectedByMe: boolean;
   isOptimisticMirroredByMe: boolean;
+  isMirroredByMe: boolean;
   collectPolicy: CollectPolicy;
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
+  myMirrors: Array<PublicationId>;
   stats: PublicationStats;
   metadata: MetadataOutput;
   profile: Profile;
@@ -1953,9 +1989,11 @@ export type Post = {
   mirrors: Array<PublicationId>;
   hasOptimisticCollectedByMe: boolean;
   isOptimisticMirroredByMe: boolean;
+  isMirroredByMe: boolean;
   collectPolicy: CollectPolicy;
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
+  myMirrors: Array<PublicationId>;
   stats: PublicationStats;
   metadata: MetadataOutput;
   profile: Profile;

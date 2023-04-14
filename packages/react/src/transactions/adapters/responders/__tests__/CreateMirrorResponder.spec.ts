@@ -15,7 +15,6 @@ import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publication
 import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import { nonNullable } from '@lens-protocol/shared-kernel';
 
-import { PublicationCacheManager } from '../../PublicationCacheManager';
 import { CreateMirrorResponder } from '../CreateMirrorResponder';
 
 function setupTestScenario({
@@ -47,8 +46,7 @@ function setupTestScenario({
     data: post,
   });
 
-  const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
-  const responder = new CreateMirrorResponder(apolloClient, publicationCacheManager, sources);
+  const responder = new CreateMirrorResponder(apolloClient, sources);
 
   return {
     responder,
@@ -72,38 +70,9 @@ function setupTestScenario({
 describe(`Given an instance of the ${CreateMirrorResponder.name}`, () => {
   const author = mockProfileFragment();
 
-  describe(`when "${CreateMirrorResponder.prototype.prepare.name}" method is invoked`, () => {
-    it(`should mark as optimistically mirrored by me and update total mirrors count`, async () => {
-      const post = mockPostFragment({
-        isOptimisticMirroredByMe: false,
-        profile: author,
-      });
-
-      const transactionData = mockBroadcastedTransactionData({
-        request: mockCreateMirrorRequest({
-          profileId: author.id,
-          publicationId: post.id,
-        }),
-      });
-
-      const scenario = setupTestScenario({
-        post,
-        transactionData,
-      });
-
-      await scenario.responder.prepare(transactionData);
-
-      expect(scenario.updatedPost.stats.totalAmountOfMirrors).toBe(
-        post.stats.totalAmountOfMirrors + 1,
-      );
-      expect(scenario.updatedPost.isOptimisticMirroredByMe).toBeTruthy();
-    });
-  });
-
   describe(`when "${CreateMirrorResponder.prototype.commit.name}" method is invoked`, () => {
-    it(`should update the publication 'mirrors' list and unmark optimistically mirrored by me`, async () => {
+    it(`should update the publication 'mirrors' list`, async () => {
       const post = mockPostFragment({
-        isOptimisticMirroredByMe: true,
         profile: author,
       });
 
@@ -122,35 +91,6 @@ describe(`Given an instance of the ${CreateMirrorResponder.name}`, () => {
       await scenario.responder.commit(transactionData);
 
       expect(scenario.updatedPost.mirrors).toHaveLength(post.mirrors.length + 1);
-      expect(scenario.updatedPost.isOptimisticMirroredByMe).toBeFalsy();
-    });
-  });
-
-  describe(`when "${CreateMirrorResponder.prototype.rollback.name}" method is invoked`, () => {
-    it(`should rollback optimistically mirrored by me and total mirrors count`, async () => {
-      const post = mockPostFragment({
-        isOptimisticMirroredByMe: true,
-        profile: author,
-      });
-
-      const transactionData = mockBroadcastedTransactionData({
-        request: mockCreateMirrorRequest({
-          profileId: author.id,
-          publicationId: post.id,
-        }),
-      });
-
-      const scenario = setupTestScenario({
-        post,
-        transactionData,
-      });
-
-      await scenario.responder.rollback(transactionData);
-
-      expect(scenario.updatedPost.stats.totalAmountOfMirrors).toBe(
-        post.stats.totalAmountOfMirrors - 1,
-      );
-      expect(scenario.updatedPost.isOptimisticMirroredByMe).toBeFalsy();
     });
   });
 });
