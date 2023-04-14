@@ -2,7 +2,9 @@ import { faker } from '@faker-js/faker';
 import { omitTypename } from '@lens-protocol/api-bindings';
 import { ProxyActionStatus, TransactionRequestModel } from '@lens-protocol/domain/entities';
 import {
+  mockCreatePostRequest,
   mockNonce,
+  mockRequestFallback,
   mockTransactionHash,
   mockTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
@@ -24,6 +26,7 @@ import {
   ProxyTransactionData,
 } from '../ITransactionFactory';
 import { RelayReceipt } from '../RelayReceipt';
+import { SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallGateway';
 import { TypedData } from '../TypedData';
 
 export function mockITransactionFactory(
@@ -147,4 +150,13 @@ export function assertBroadcastingErrorResultWithRequestFallback(
     contractAddress: typedData.domain.verifyingContract,
     encodedData: expect.any(String),
   });
+}
+
+export function mockSelfFundedProtocolCallRequest(): SelfFundedProtocolCallRequest {
+  const requestFallback = mockRequestFallback();
+  const transactionRequest = mockCreatePostRequest();
+  return {
+    ...transactionRequest,
+    ...requestFallback,
+  };
 }
