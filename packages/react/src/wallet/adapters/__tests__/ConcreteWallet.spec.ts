@@ -73,6 +73,7 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
         nonce: unsignedCall.nonce,
         request,
         signature,
+        fallback: unsignedCall.fallback,
       });
     });
 
