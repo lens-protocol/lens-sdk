@@ -3,8 +3,8 @@ import { act, renderHook } from '@testing-library/react';
 
 import { OperationHandler, useOperation } from '../operations';
 
-describe(`Given the operation hook helpers`, () => {
-  describe(`when creating an hook with the ${useOperation.name} helper`, () => {
+describe(`Given the ${useOperation.name} hook`, () => {
+  describe(`when invoking the "execute" callback`, () => {
     it('should call the provided handler function with the arguments passed to the execute method', async () => {
       const fn: OperationHandler<void, never, unknown[]> = jest.fn().mockResolvedValue(success());
       const { result } = renderHook(() => useOperation(fn));

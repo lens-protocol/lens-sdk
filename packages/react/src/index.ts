@@ -34,10 +34,10 @@ export type {
 } from './config';
 
 /**
- * Hooks helper types
+ * Hooks helpers types
  */
 export type { WithObserverIdOverride } from './helpers/arguments';
-export type { Operation } from './helpers/operations';
+export type { ISelfFundedFallback, Operation } from './helpers/operations';
 export type {
   CommonPaginatedResultInfo,
   PaginatedArgs,
@@ -46,6 +46,8 @@ export type {
   ReadResultWithError,
   ReadResultWithoutError,
 } from './helpers/reads';
+
+export { supportsSelfFundedRetry } from './helpers/operations';
 
 /**
  * Storage

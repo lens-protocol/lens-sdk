@@ -3,7 +3,6 @@ import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications'
 import { useSharedDependencies } from '../../shared';
 import { CreatePostController } from './CreatePostController';
 import { IMetadataUploader } from './IMetadataUploader';
-import { useSelfFundedTransactionFallback } from './useSelfFundedTransactionFallback';
 
 export type UseCreatePostArgs = {
   uploader: IMetadataUploader<CreatePostRequest>;
@@ -19,7 +18,7 @@ export function useCreatePostController({ uploader }: UseCreatePostArgs) {
     transactionQueue,
   } = useSharedDependencies();
 
-  return useSelfFundedTransactionFallback(async (request: CreatePostRequest) => {
+  return async (request: CreatePostRequest) => {
     const controller = new CreatePostController<CreatePostRequest>({
       activeWallet,
       apolloClient,
@@ -31,5 +30,5 @@ export function useCreatePostController({ uploader }: UseCreatePostArgs) {
     });
 
     return controller.execute(request);
-  });
+  };
 }

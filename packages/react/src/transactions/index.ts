@@ -99,4 +99,3 @@ export {
  */
 export type { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 export { FailedUploadError } from './adapters/IMetadataUploader';
-export { supportsSelfFundedRetry } from './adapters/useSelfFundedTransactionFallback';
