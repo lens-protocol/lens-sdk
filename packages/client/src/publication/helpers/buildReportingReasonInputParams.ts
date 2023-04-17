@@ -37,6 +37,12 @@ export enum PublicationReportReason {
   SOMETHING_ELSE = 'SOMETHING_ELSE',
 }
 
+/**
+ * Build the input params for reporting a publication.
+ *
+ * @param reason - the reason for reporting the publication
+ * @returns the input params for reporting a publication required by the Lens API
+ */
 export const buildReportingReasonInputParams = (
   reason: PublicationReportReason,
 ): ReportingReasonInputParams => {

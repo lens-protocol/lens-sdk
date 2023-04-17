@@ -20,41 +20,22 @@ export * from './transaction';
 
 // types
 export type {
-  Amount,
-  AmountValue,
-  Asset,
-  BigDecimal,
   Cast,
-  ChainType,
-  CryptoAmount,
-  CryptoAsset,
-  CryptoNativeAmount,
-  CryptoNativeAsset,
-  Erc20,
-  Erc20Amount,
-  Erc20Info,
-  Ether,
+  EthereumAddress,
   Failure,
-  Fiat,
-  FiatAmount,
   IEquatableError,
   InvariantError,
-  Kind,
-  Matic,
   Narrow,
-  NativeType,
-  Prettify,
   Primitive,
   PromiseResult,
   Result,
   Success,
-  WellKnownSymbols,
 } from '@lens-protocol/shared-kernel';
 export type { IStorageProvider } from '@lens-protocol/storage';
 
 export type { Environment } from './consts/environments';
 export type { LensConfig } from './consts/config';
-export type { InferResultType, TypedData, TypedDataResponse } from './consts/types';
+export type { TypedData, TypedDataResponse } from './consts/types';
 export type { PublicationFragment } from './graphql/types';
 export type { PaginatedResult, PaginatedQueryData } from './helpers/buildPaginatedQueryResult';
 
@@ -95,15 +76,13 @@ export type {
   UnknownFollowModuleSettingsFragment,
   WalletFragment,
 } from './graphql/fragments.generated';
+
 export type {
-  CollectProxyAction,
   CommentOrderingTypes,
   CommentRankingFilter,
   Exact,
   Follow,
   FollowerNftOwnedTokenIds,
-  FollowProxyAction,
-  FreeFollowProxyAction,
   Maybe,
   NftData,
   NftOwnershipChallenge,
@@ -121,12 +100,10 @@ export type {
   PublicationReportingSpamSubreason,
   PublicationValidateMetadataResult,
   RelayErrorReasons,
-  SearchRequestTypes,
   TransactionErrorReasons,
   DoesFollow,
   Scalars,
   InputMaybe,
-  FreeCollectProxyAction,
   DoesFollowResponse,
   ScalarOperator,
   ContractType,
@@ -134,7 +111,6 @@ export type {
   // input
   NftInput,
   PublicationMetadataMediaInput,
-  PublicationMetadataV1Input,
   PublicationMetadataV2Input,
   PublicationSignatureContextInput,
   AccessConditionInput,
@@ -184,9 +160,6 @@ export type {
   BroadcastRequest,
   BurnProfileRequest,
   CreateCollectRequest,
-  CreateDataAvailabilityCommentRequest,
-  CreateDataAvailabilityMirrorRequest,
-  CreateDataAvailabilityPostRequest,
   CreateMirrorRequest,
   CreateProfileRequest,
   CreatePublicCommentRequest,
@@ -208,7 +181,6 @@ export type {
   GenerateModuleCurrencyApprovalDataRequest,
   GetPublicationMetadataStatusRequest,
   GlobalProtocolStatsRequest,
-  HasTxHashBeenIndexedRequest,
   HidePublicationRequest,
   MutualFollowersProfilesQueryRequest,
   NftGalleriesRequest,
@@ -225,7 +197,6 @@ export type {
   ProfilePublicationRevenueQueryRequest,
   ProfilePublicationsForSaleRequest,
   ProfileQueryRequest,
-  ProxyActionRequest,
   PublicationQueryRequest,
   PublicationRevenueQueryRequest,
   PublicationsQueryRequest,
@@ -233,12 +204,10 @@ export type {
   ReactionRequest,
   RemoveProfileInterestsRequest,
   ReportPublicationRequest,
-  SearchQueryRequest,
   SetDispatcherRequest,
   SingleProfileQueryRequest,
   UnfollowRequest,
   UpdateProfileImageRequest,
-  ValidatePublicationMetadataRequest,
   WhoCollectedPublicationRequest,
   WhoReactedPublicationRequest,
 

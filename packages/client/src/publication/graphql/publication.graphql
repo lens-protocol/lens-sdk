@@ -9,6 +9,125 @@ fragment PublicationStats on PublicationStats {
   commentsTotal(forSources: $sources)
 }
 
+fragment MediaOutput on MediaOutput {
+  altTag
+  cover
+  item
+  source
+  type
+}
+
+fragment PublicMediaResults on PublicMediaResults {
+  media {
+    ...MediaOutput
+  }
+  signedUrl
+}
+
+fragment CreatePostBroadcastItemResult on CreatePostBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      PostWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      collectModule
+      collectModuleInitData
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+}
+
+fragment CreateCommentBroadcastItemResult on CreateCommentBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      CommentWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      profileIdPointed
+      pubIdPointed
+      collectModule
+      collectModuleInitData
+      referenceModuleData
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+}
+
+fragment CreateMirrorBroadcastItemResult on CreateMirrorBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      MirrorWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      profileIdPointed
+      pubIdPointed
+      referenceModuleData
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+}
+
+fragment CreateCollectBroadcastItemResult on CreateCollectBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      CollectWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      pubId
+      data
+    }
+  }
+}
+
 # queries
 query Publication($request: PublicationQueryRequest!, $observerId: ProfileId) {
   result: publication(request: $request) {
@@ -120,29 +239,7 @@ query PublicationMetadataStatus($request: GetPublicationMetadataStatusRequest!) 
 # mutations
 mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
   result: createPostTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        PostWithSig {
-          name
-          type
-        }
-      }
-      domain {
-        ...EIP712TypedDataDomain
-      }
-      value {
-        nonce
-        deadline
-        profileId
-        contentURI
-        collectModule
-        collectModuleInitData
-        referenceModule
-        referenceModuleInitData
-      }
-    }
+    ...CreatePostBroadcastItemResult
   }
 }
 
@@ -160,32 +257,7 @@ mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
 
 mutation CreateCommentTypedData($request: CreatePublicCommentRequest!, $options: TypedDataOptions) {
   result: createCommentTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        CommentWithSig {
-          name
-          type
-        }
-      }
-      domain {
-        ...EIP712TypedDataDomain
-      }
-      value {
-        nonce
-        deadline
-        profileId
-        contentURI
-        profileIdPointed
-        pubIdPointed
-        collectModule
-        collectModuleInitData
-        referenceModuleData
-        referenceModule
-        referenceModuleInitData
-      }
-    }
+    ...CreateCommentBroadcastItemResult
   }
 }
 
@@ -203,29 +275,7 @@ mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
 
 mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDataOptions) {
   result: createMirrorTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        MirrorWithSig {
-          name
-          type
-        }
-      }
-      domain {
-        ...EIP712TypedDataDomain
-      }
-      value {
-        nonce
-        deadline
-        profileId
-        profileIdPointed
-        pubIdPointed
-        referenceModuleData
-        referenceModule
-        referenceModuleInitData
-      }
-    }
+    ...CreateMirrorBroadcastItemResult
   }
 }
 
@@ -243,39 +293,13 @@ mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
 
 mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: TypedDataOptions) {
   result: createCollectTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        CollectWithSig {
-          name
-          type
-        }
-      }
-      domain {
-        ...EIP712TypedDataDomain
-      }
-      value {
-        nonce
-        deadline
-        profileId
-        pubId
-        data
-      }
-    }
+    ...CreateCollectBroadcastItemResult
   }
 }
 
 mutation CreateAttachMediaData($request: PublicMediaRequest!) {
   result: createAttachMediaData(request: $request) {
-    media {
-      altTag
-      cover
-      item
-      source
-      type
-    }
-    signedUrl
+    ...PublicMediaResults
   }
 }
 

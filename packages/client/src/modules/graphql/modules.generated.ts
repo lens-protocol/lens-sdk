@@ -25,6 +25,15 @@ export type EnabledModulesFragment = {
   referenceModules: Array<EnabledModuleFragment>;
 };
 
+export type ApprovedAllowanceAmountFragment = {
+  currency: string;
+  module: string;
+  contractAddress: string;
+  allowance: string;
+};
+
+export type GenerateModuleCurrencyApprovalFragment = { to: string; from: string; data: string };
+
 export type EnabledModulesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type EnabledModulesQuery = { result: EnabledModulesFragment };
@@ -37,16 +46,14 @@ export type ApprovedModuleAllowanceAmountQueryVariables = Types.Exact<{
   request: Types.ApprovedModuleAllowanceAmountRequest;
 }>;
 
-export type ApprovedModuleAllowanceAmountQuery = {
-  result: Array<{ currency: string; module: string; contractAddress: string; allowance: string }>;
-};
+export type ApprovedModuleAllowanceAmountQuery = { result: Array<ApprovedAllowanceAmountFragment> };
 
 export type GenerateModuleCurrencyApprovalDataQueryVariables = Types.Exact<{
   request: Types.GenerateModuleCurrencyApprovalDataRequest;
 }>;
 
 export type GenerateModuleCurrencyApprovalDataQuery = {
-  result: { to: string; from: string; data: string };
+  result: GenerateModuleCurrencyApprovalFragment;
 };
 
 export const ModuleInfoFragmentDoc = gql`
@@ -88,6 +95,21 @@ export const EnabledModulesFragmentDoc = gql`
   }
   ${EnabledModuleFragmentDoc}
 `;
+export const ApprovedAllowanceAmountFragmentDoc = gql`
+  fragment ApprovedAllowanceAmount on ApprovedAllowanceAmount {
+    currency
+    module
+    contractAddress
+    allowance
+  }
+`;
+export const GenerateModuleCurrencyApprovalFragmentDoc = gql`
+  fragment GenerateModuleCurrencyApproval on GenerateModuleCurrencyApproval {
+    to
+    from
+    data
+  }
+`;
 export const EnabledModulesDocument = gql`
   query EnabledModules {
     result: enabledModules {
@@ -107,21 +129,22 @@ export const EnabledModuleCurrenciesDocument = gql`
 export const ApprovedModuleAllowanceAmountDocument = gql`
   query ApprovedModuleAllowanceAmount($request: ApprovedModuleAllowanceAmountRequest!) {
     result: approvedModuleAllowanceAmount(request: $request) {
-      currency
-      module
-      contractAddress
-      allowance
+      ... on ApprovedAllowanceAmount {
+        ...ApprovedAllowanceAmount
+      }
     }
   }
+  ${ApprovedAllowanceAmountFragmentDoc}
 `;
 export const GenerateModuleCurrencyApprovalDataDocument = gql`
   query GenerateModuleCurrencyApprovalData($request: GenerateModuleCurrencyApprovalDataRequest!) {
     result: generateModuleCurrencyApprovalData(request: $request) {
-      to
-      from
-      data
+      ... on GenerateModuleCurrencyApproval {
+        ...GenerateModuleCurrencyApproval
+      }
     }
   }
+  ${GenerateModuleCurrencyApprovalFragmentDoc}
 `;
 
 export type SdkFunctionWrapper = <T>(

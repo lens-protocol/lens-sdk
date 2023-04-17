@@ -3,7 +3,6 @@ import type { PromiseResult } from '@lens-protocol/shared-kernel';
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
-import type { InferResultType } from '../consts/types';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type {
   FollowerFragment,
@@ -46,20 +45,25 @@ import {
   requireAuthHeaders,
 } from '../helpers';
 import {
-  CreateBurnProfileTypedDataMutation,
-  CreateFollowTypedDataMutation,
-  CreateSetDefaultProfileTypedDataMutation,
-  CreateSetDispatcherTypedDataMutation,
-  CreateSetFollowModuleTypedDataMutation,
-  CreateSetFollowNftUriTypedDataMutation,
-  CreateSetProfileImageUriTypedDataMutation,
-  CreateSetProfileMetadataTypedDataMutation,
-  CreateUnfollowTypedDataMutation,
+  BurnProfileTypedDataFragment,
+  FollowTypedDataFragment,
   getSdk,
   ProfileStatsFragment,
   Sdk,
+  SetDefaultProfileTypedDataFragment,
+  SetDispatcherTypedDataFragment,
+  SetFollowModuleTypedDataFragment,
+  SetFollowNftUriTypedDataFragment,
+  SetProfileImageUriTypedDataFragment,
+  SetProfileMetadataTypedDataFragment,
+  UnfollowTypedDataFragment,
 } from './graphql/profile.generated';
 
+/**
+ * Profiles are the accounts that create publications and are owned by wallets.
+ *
+ * @group LensClient Modules
+ */
 export class Profile {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
@@ -71,6 +75,18 @@ export class Profile {
     this.authentication = authentication;
   }
 
+  /**
+   * Fetch a single profile.
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Profile or null if not found
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.fetch({ profileId: '0x123' });
+   * ```
+   */
   async fetch(
     request: SingleProfileQueryRequest,
     observerId?: string,
@@ -88,6 +104,18 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch a profile's stats.
+   *
+   * @param request - Request object for the query
+   * @param sources - Required to calculate stats specific to provided appIds
+   * @returns Profile stats or undefined if not found
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.stats({ profileId: '0x123' }, ['lenster']);
+   * ```
+   */
   async stats(
     request: SingleProfileQueryRequest,
     sources: string[],
@@ -105,6 +133,20 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch all profiles by requested criteria
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.fetchAll({
+   *   ownedBy: ['0xe3D871d389BF78c091E29deCe83200E9d6B2B0C2'],
+   * });
+   * ```
+   */
   async fetchAll(
     request: ProfileQueryRequest,
     observerId?: string,
@@ -124,6 +166,18 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch all recommended profiles
+   *
+   * @param options - Optional options for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Array of recommended profiles
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.allRecommended();
+   * ```
+   */
   async allRecommended(
     options: RecommendedProfileOptions = {},
     observerId?: string,
@@ -141,6 +195,19 @@ export class Profile {
     });
   }
 
+  /**
+   * Dismiss profiles from the recommended list
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.dismissRecommended({ profileIds: ['0x123'] });
+   * ```
+   */
   async dismissRecommended(
     request: DismissRecommendedProfilesRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
@@ -149,6 +216,21 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch mutual followers between two profiles
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.mutualFollowers({
+   *   viewingProfileId: '0x123',
+   *   yourProfileId: '0x456',
+   * });
+   * ```
+   */
   async mutualFollowers(
     request: MutualFollowersProfilesQueryRequest,
     observerId?: string,
@@ -168,6 +250,28 @@ export class Profile {
     });
   }
 
+  /**
+   * Check if the ethereum address follows a profile. Allows bulk request.
+   *
+   * @param request - Request object for the query
+   * @returns Array of results for each requested pair
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.doesFollow({
+   *   followInfos: [
+   *     {
+   *       followerAddress: '0xD020E01C0c90Ab005A01482d34B808874345FD82',
+   *       profileId: '0x01'
+   *     },
+   *     {
+   *       followerAddress: '0x248ba21F6ff51cf0CD4765C3Bc9fAD2030a591d5',
+   *       profileId: '0x01'
+   *     }
+   *   ]
+   * });
+   * ```
+   */
   async doesFollow(request: DoesFollowRequest): Promise<DoesFollowResponse[]> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.DoesFollow(
@@ -181,6 +285,20 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch all profiles an ethereum address is following
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.allFollowing({
+   *  address: '0xe3D871d389BF78c091E29deCe83200E9d6B2B0C2',
+   * });
+   * ```
+   */
   async allFollowing(
     request: FollowingRequest,
     observerId?: string,
@@ -200,6 +318,19 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch all wallet addresses that follow a profile
+   *
+   * @param request - Request object for the query
+   * @returns Wallets with default profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.allFollowers({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
   async allFollowers(
     request: FollowersRequest,
     observerId?: string,
@@ -219,6 +350,21 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch follower NFT that the wallet address owns.
+   * Remember a wallet can follow a profile as many times as they wish.
+   *
+   * @param request - Request object for the query
+   * @returns Details of follower NFT like contract address and token ids
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.followerNftOwnedTokenIds({
+   *   address: '0xD020E01C0c90Ab005A01482d34B808874345FD82',
+   *   profileId: '0x01'
+   * });
+   * ```
+   */
   async followerNftOwnedTokenIds(
     request: FollowerNftOwnedTokenIdsRequest,
   ): Promise<FollowerNftOwnedTokenIds | null> {
@@ -234,6 +380,21 @@ export class Profile {
     });
   }
 
+  /**
+   * Create a new profile
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelayerResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.create({
+   *   handle: 'profilehandle',
+   * });
+   * ```
+   */
   async create(
     request: CreateProfileRequest,
   ): PromiseResult<
@@ -252,11 +413,29 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch typed data for setting the dispatcher
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for setting the dispatcher
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetDispatcherTypedData({
+   *   profileId: activeProfile.id,
+   * });
+   * ```
+   */
   async createSetDispatcherTypedData(
     request: SetDispatcherRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    InferResultType<CreateSetDispatcherTypedDataMutation>,
+    SetDispatcherTypedDataFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -272,11 +451,29 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch typed data for setting the default profile
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for setting the default profile
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetDefaultProfileTypedData({
+   *   profileId: '0x0635', // must be a profile owned by authenticated wallet
+   * });
+   * ```
+   */
   async createSetDefaultProfileTypedData(
     request: CreateSetDefaultProfileRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    InferResultType<CreateSetDefaultProfileTypedDataMutation>,
+    SetDefaultProfileTypedDataFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -292,11 +489,30 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch typed data for setting the profile's metadata
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for setting the profile's metadata
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetProfileMetadataTypedData({
+   *   profileId: '0x0635',
+   *   metadata: 'ipfs://Qm...',
+   * });
+   * ```
+   */
   async createSetProfileMetadataTypedData(
     request: CreatePublicSetProfileMetadataUriRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    InferResultType<CreateSetProfileMetadataTypedDataMutation>,
+    SetProfileMetadataTypedDataFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -312,6 +528,22 @@ export class Profile {
     });
   }
 
+  /**
+   * Set profile's metadata using dispatcher. Profile has to have the dispatcher enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelayerResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetProfileMetadataViaDispatcher({
+   *   profileId: '0x0635',
+   *   metadata: 'ipfs://Qm...',
+   * });
+   * ```
+   */
   async createSetProfileMetadataViaDispatcher(
     request: CreatePublicSetProfileMetadataUriRequest,
   ): PromiseResult<
@@ -325,11 +557,30 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch typed data for setting the profile's image
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for setting the profile's image
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetProfileImageURITypedData({
+   *   profileId: '0x0635',
+   *   url: 'ipfs://Qm...',
+   * });
+   * ```
+   */
   async createSetProfileImageURITypedData(
     request: UpdateProfileImageRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    InferResultType<CreateSetProfileImageUriTypedDataMutation>,
+    SetProfileImageUriTypedDataFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -345,6 +596,22 @@ export class Profile {
     });
   }
 
+  /**
+   * Set profile's image using dispatcher. Profile has to have the dispatcher enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelayerResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetProfileImageURIViaDispatcher({
+   *   profileId: '0x0635',
+   *   url: 'ipfs://Qm...',
+   * });
+   * ```
+   */
   async createSetProfileImageURIViaDispatcher(
     request: UpdateProfileImageRequest,
   ): PromiseResult<
@@ -358,13 +625,28 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch typed data for burning a profile
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for burning a profile
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createBurnProfileTypedData({
+   *   profileId: '0x0635',
+   * });
+   * ```
+   */
   async createBurnProfileTypedData(
     request: BurnProfileRequest,
     options?: TypedDataOptions,
-  ): PromiseResult<
-    InferResultType<CreateBurnProfileTypedDataMutation>,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
+  ): PromiseResult<BurnProfileTypedDataFragment, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateBurnProfileTypedData(
         {
@@ -378,13 +660,30 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch typed data for following a profile
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for following a profile
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createFollowTypedData({
+   *   follow: [
+   *     { profile: '0x123' },
+   *   ],
+   * });
+   * ```
+   */
   async createFollowTypedData(
     request: FollowRequest,
     options?: TypedDataOptions,
-  ): PromiseResult<
-    InferResultType<CreateFollowTypedDataMutation>,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
+  ): PromiseResult<FollowTypedDataFragment, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateFollowTypedData(
         {
@@ -398,13 +697,28 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch typed data for unfollowing a profile
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for unfollowing a profile
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createUnfollowTypedData({
+   *   profile: '0x123',
+   * });
+   * ```
+   */
   async createUnfollowTypedData(
     request: UnfollowRequest,
     options?: TypedDataOptions,
-  ): PromiseResult<
-    InferResultType<CreateUnfollowTypedDataMutation>,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
+  ): PromiseResult<UnfollowTypedDataFragment, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateUnfollowTypedData(
         {
@@ -418,11 +732,38 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch typed data for setting a profile's follow module
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for setting a profile's follow module
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetFollowModuleTypedData({
+   *   profileId: '0x123',
+   *   followModule: {
+   *     feeFollowModule: {
+   *       amount: {
+   *         currency: '0xD40282e050723Ae26Aeb0F77022dB14470f4e011',
+   *         value: '0.01'
+   *       },
+   *       recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaF'
+   *     }
+   *   }
+   * });
+   * ```
+   */
   async createSetFollowModuleTypedData(
     request: CreateSetFollowModuleRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    InferResultType<CreateSetFollowModuleTypedDataMutation>,
+    SetFollowModuleTypedDataFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -438,11 +779,32 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch typed data for setting a profile's follow NFT URI.
+   *
+   * The follow NFT URI is the NFT metadata followers will mint when they follow your profile.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for setting a profile's follow NFT URI
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetFollowNFTUriTypedData({
+   *   profileId: '0x123',
+   *   followNFTURI: 'ipfs://Qm...',
+   * });
+   * ```
+   */
   async createSetFollowNFTUriTypedData(
     request: CreateSetFollowNftUriRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    InferResultType<CreateSetFollowNftUriTypedDataMutation>,
+    SetFollowNftUriTypedDataFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -458,6 +820,20 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch all the pending approval follow NFTs you have been sent
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.pendingApprovalFollows();
+   * ```
+   */
   async pendingApprovalFollows(
     request: PendingApprovalFollowsRequest,
     observerId?: string,
@@ -480,6 +856,11 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch all available interests.
+   *
+   * @returns Array of interests
+   */
   async allInterests(): Promise<string[]> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.ProfileInterests({}, headers);
@@ -488,6 +869,22 @@ export class Profile {
     });
   }
 
+  /**
+   * Add interests to a profile.
+   *
+   * ⚠️ Requires authenticated LensClient with the provided profileId.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.profile.addInterests({
+   *   interests: ['TECHNOLOGY__PROGRAMMING'],
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
   async addInterests(
     request: AddProfileInterestsRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
@@ -496,6 +893,22 @@ export class Profile {
     });
   }
 
+  /**
+   * Remove interests from a profile.
+   *
+   * ⚠️ Requires authenticated LensClient with the provided profileId.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.profile.removeInterests({
+   *   interests: ['TECHNOLOGY__PROGRAMMING'],
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
   async removeInterests(
     request: RemoveProfileInterestsRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {

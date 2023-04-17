@@ -7,6 +7,11 @@ import type { ExploreProfilesRequest, ExplorePublicationRequest } from '../graph
 import { buildPaginatedQueryResult, PaginatedResult, provideAuthHeaders } from '../helpers';
 import { getSdk, Sdk } from './graphql/explore.generated';
 
+/**
+ * Explore Lens Protocol.
+ *
+ * @group LensClient Modules
+ */
 export class Explore {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
@@ -18,6 +23,22 @@ export class Explore {
     this.authentication = authentication;
   }
 
+  /**
+   * Explore publications
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Array of {@link PublicationFragment} wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * import { PublicationSortCriteria } from '@lens-protocol/client';
+   *
+   * const result = await client.explore.publications({
+   *   sortCriteria: PublicationSortCriteria.TopCommented
+   * });
+   * ```
+   */
   async publications(
     request: ExplorePublicationRequest,
     observerId?: string,
@@ -37,6 +58,22 @@ export class Explore {
     });
   }
 
+  /**
+   * Explore profiles
+   *
+   * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
+   * @returns Array of {@link ProfileFragment} wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * import { ProfileSortCriteria } from '@lens-protocol/client';
+   *
+   * const result = await client.explore.profiles({
+   *   sortCriteria: ProfileSortCriteria.MostFollowers
+   * })
+   * ```
+   */
   async profiles(
     request: ExploreProfilesRequest,
     observerId?: string,

@@ -1,13 +1,4 @@
-import { Prettify } from '@lens-protocol/shared-kernel';
 import type { TypedDataDomain, TypedDataField } from 'ethers';
-
-type InferResultTypeRaw<T> = T extends {
-  result: infer C;
-}
-  ? C
-  : never;
-
-export type InferResultType<T> = Prettify<InferResultTypeRaw<T>>;
 
 export type TypedData = {
   domain: TypedDataDomain;
