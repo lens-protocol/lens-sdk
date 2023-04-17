@@ -10,10 +10,8 @@ import {
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import {
-  SelfFundedProtocolCallGateway,
-  SelfFundedProtocolCallRequest,
-} from './SelfFundedProtocolCallGateway';
+import { SelfFundedProtocolCallGateway } from './SelfFundedProtocolCallGateway';
+import { SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
 
 export function usePayTransactionController<T extends SupportedTransactionRequest>() {
   const { activeWallet, providerFactory, transactionQueue } = useSharedDependencies();

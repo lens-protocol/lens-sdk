@@ -5,10 +5,12 @@ import {
 } from '@lens-protocol/domain/entities';
 import {
   BroadcastingError,
-  BroadcastingErrorReason,
+  SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { IEquatableError, PromiseResult } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
+
+import { SelfFundedProtocolCallRequest } from '../transactions/adapters/SelfFundedProtocolCallRequest';
 
 export type OperationHandler<
   TResult,
@@ -63,22 +65,7 @@ export function useOperation<TResult, TError extends IEquatableError, TArgs exte
  *
  */
 export interface ISelfFundedFallback {
-  /**
-   * Retry the operation using the logged-in wallet funds to pay for the transaction gas costs.
-   */
-  retrySelfFunded(): PromiseResult<
-    void,
-    PendingSigningRequestError | UserRejectedError | WalletConnectionError
-  >;
-}
-
-export class RetryableBroadcastingError extends BroadcastingError implements ISelfFundedFallback {
-  constructor(
-    reason: BroadcastingErrorReason,
-    public retrySelfFunded: ISelfFundedFallback['retrySelfFunded'],
-  ) {
-    super(reason);
-  }
+  fallback: SelfFundedProtocolCallRequest<SupportedTransactionRequest>;
 }
 
 /**
@@ -86,7 +73,7 @@ export class RetryableBroadcastingError extends BroadcastingError implements ISe
  *
  */
 export function supportsSelfFundedRetry(
-  error: BroadcastingError,
+  error: IEquatableError,
 ): error is BroadcastingError & ISelfFundedFallback {
-  return error instanceof RetryableBroadcastingError;
+  return error instanceof BroadcastingError && error.fallback !== undefined;
 }

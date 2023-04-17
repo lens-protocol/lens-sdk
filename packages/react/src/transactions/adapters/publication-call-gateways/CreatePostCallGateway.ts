@@ -8,7 +8,6 @@ import {
   CreatePublicPostRequest as CreatePublicPostRequestArg,
   LensApolloClient,
   omitTypename,
-  RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -18,9 +17,6 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
-  BroadcastingErrorReason,
-  Data,
-  RequestFallback,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -29,7 +25,8 @@ import { v4 } from 'uuid';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { RelayReceipt } from '../RelayReceipt';
+import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
+import { handleRelayError, RelayReceipt } from '../relayer';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class CreatePostCallGateway<R extends CreatePostRequest> implements ICreatePostCallGateway {
@@ -42,8 +39,7 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
   async createDelegatedTransaction<T extends R>(
     request: T,
   ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
-    const requestArg = await this.resolveCreatePostRequestArg(request);
-    const result = await this.broadcast(requestArg);
+    const result = await this.broadcast(request);
 
     if (result.isFailure()) return failure(result.error);
 
@@ -71,13 +67,13 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
-      fallback: this.createRequestFallback(data),
+      fallback: this.createRequestFallback(request, data),
     });
   }
 
-  private async broadcast(
-    requestArg: CreatePublicPostRequestArg,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  private async broadcast<T extends R>(request: T): PromiseResult<RelayReceipt, BroadcastingError> {
+    const requestArg = await this.resolveCreatePostRequestArg(request);
+
     const { data } = await this.apolloClient.mutate<
       CreatePostViaDispatcherData,
       CreatePostViaDispatcherVariables
@@ -90,12 +86,9 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
 
     if (data.result.__typename === 'RelayError') {
       const typedData = await this.createTypedData(requestArg);
-      const fallback = this.createRequestFallback(typedData);
+      const fallback = this.createRequestFallback(request, typedData);
 
-      if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
-      }
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
+      return handleRelayError(data.result, fallback);
     }
 
     return success({
@@ -132,7 +125,10 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     };
   }
 
-  private createRequestFallback(data: CreatePostTypedDataData): RequestFallback {
+  private createRequestFallback<T extends R>(
+    request: T,
+    data: CreatePostTypedDataData,
+  ): SelfFundedProtocolCallRequest<T> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('post', [
       {
@@ -145,6 +141,7 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
       },
     ]);
     return {
+      ...request,
       contractAddress: data.result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

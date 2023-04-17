@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 import { mockWallet } from '@lens-protocol/domain/mocks';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
 import { MockProvider } from 'ethereum-waffle';
 import { providers } from 'ethers';
@@ -27,7 +28,7 @@ async function mineNBlocks(provider: MockProvider, blocks: number) {
 }
 
 describe(`Given an instance of the ${SelfFundedProtocolCallGateway.name}`, () => {
-  const request = mockSelfFundedProtocolCallRequest();
+  const request = mockSelfFundedProtocolCallRequest<SupportedTransactionRequest>();
   const wallet = mockWallet();
 
   describe(`when invoking ${SelfFundedProtocolCallGateway.prototype.prepareSelfFundedTransaction.name}`, () => {

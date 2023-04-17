@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
 import { Result } from '@lens-protocol/shared-kernel';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -19,7 +18,7 @@ import {
   mockNonce,
   mockTransactionHash,
 } from '../../../entities/__helpers__/mocks';
-import { BroadcastingError, Data, RequestFallback } from '../BroadcastingError';
+import { BroadcastingError } from '../BroadcastingError';
 import { IDelegableProtocolCallGateway, WithDelegateFlag } from '../DelegableProtocolCallUseCase';
 import {
   IMetaTransactionNonceGateway,
@@ -126,11 +125,4 @@ export function mockTransactionRequestModelWithDelegateFlag({
     kind: TransactionKind.CREATE_POST,
     delegate,
   } as WithDelegateFlag<TransactionRequestModel>;
-}
-
-export function mockRequestFallback(): RequestFallback {
-  return {
-    contractAddress: mockEthereumAddress(),
-    encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
-  };
 }

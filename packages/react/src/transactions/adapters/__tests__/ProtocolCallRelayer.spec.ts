@@ -12,7 +12,6 @@ import {
 } from '@lens-protocol/domain/entities';
 import {
   BroadcastingError,
-  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { assertFailure, ChainType, ILogger } from '@lens-protocol/shared-kernel';
@@ -74,33 +73,8 @@ describe(`Given an instance of the ${ProtocolCallRelayer.name}`, () => {
       const result = await transactionRelayer.relayProtocolCall(signedCall);
 
       assertFailure(result);
+      expect(result.error).toBeInstanceOf(BroadcastingError);
       expect(result.error.fallback).toMatchObject(signedCall.fallback);
-    });
-
-    describe(`with a Rejected reason`, () => {
-      it(`should resolve with a failure(${BroadcastingError.name}) with ${BroadcastingErrorReason.REJECTED}`, async () => {
-        const relayResult = mockRelayErrorFragment(RelayErrorReasons.Rejected);
-
-        const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
-        const result = await transactionRelayer.relayProtocolCall(signedCall);
-
-        expect(() => result.unwrap()).toThrowError(
-          new BroadcastingError(BroadcastingErrorReason.REJECTED),
-        );
-      });
-    });
-
-    describe(`with any other reason than Rejected`, () => {
-      it(`should resolve with a failure(${BroadcastingError.name}) with ${BroadcastingErrorReason.UNSPECIFIED}`, async () => {
-        const relayResult = mockRelayErrorFragment(RelayErrorReasons.NotAllowed);
-
-        const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
-        const result = await transactionRelayer.relayProtocolCall(signedCall);
-
-        expect(() => result.unwrap()).toThrowError(
-          new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED),
-        );
-      });
     });
   });
 });

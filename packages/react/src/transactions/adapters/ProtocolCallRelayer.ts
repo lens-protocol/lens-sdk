@@ -3,20 +3,25 @@ import {
   BroadcastProtocolCallData,
   BroadcastProtocolCallVariables,
   LensApolloClient,
-  RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
 import { MetaTransaction, TransactionRequestModel } from '@lens-protocol/domain/entities';
 import {
   IProtocolCallRelayer,
   BroadcastingError,
-  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, ILogger, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import {
+  assertError,
+  ChainType,
+  failure,
+  ILogger,
+  PromiseResult,
+  success,
+} from '@lens-protocol/shared-kernel';
 
 import { SignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
-import { RelayReceipt } from './RelayReceipt';
+import { handleRelayError, RelayReceipt } from './relayer';
 
 export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransactionRequest> {
   constructor(
@@ -64,16 +69,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
       });
 
       if (data.result.__typename === 'RelayError') {
-        switch (data.result.reason) {
-          case RelayErrorReasons.Rejected:
-            return failure(
-              new BroadcastingError(BroadcastingErrorReason.REJECTED, signedCall.fallback),
-            );
-          default:
-            return failure(
-              new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, signedCall.fallback),
-            );
-        }
+        return handleRelayError(data.result, signedCall.fallback);
       }
 
       return success({
@@ -82,7 +78,8 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
       });
     } catch (err) {
       this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
+      assertError(err);
+      return failure(new BroadcastingError(err.message));
     }
   }
 }

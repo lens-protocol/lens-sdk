@@ -73,10 +73,7 @@ export {
   WalletConnectionError,
   WalletConnectionErrorReason,
 } from '@lens-protocol/domain/entities';
-export {
-  BroadcastingError,
-  BroadcastingErrorReason,
-} from '@lens-protocol/domain/use-cases/transactions';
+export { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 /**
  * Domain essentials

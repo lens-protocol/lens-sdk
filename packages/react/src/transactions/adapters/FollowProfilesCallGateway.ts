@@ -15,9 +15,9 @@ import {
   isPaidFollowRequest,
   isProfileOwnerFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { Data, RequestFallback } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
 
 function resolveProfileFollow(request: FollowRequest): Follow[] {
   if (isPaidFollowRequest(request)) {
@@ -71,17 +71,21 @@ export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
-      fallback: this.createRequestFallback(data),
+      fallback: this.createRequestFallback(request, data),
     });
   }
 
-  private createRequestFallback(data: CreateFollowTypedDataData): RequestFallback {
+  private createRequestFallback<T extends FollowRequest>(
+    request: T,
+    data: CreateFollowTypedDataData,
+  ): SelfFundedProtocolCallRequest<T> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('follow', [
       data.result.typedData.value.profileIds,
       data.result.typedData.value.datas,
     ]);
     return {
+      ...request,
       contractAddress: data.result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

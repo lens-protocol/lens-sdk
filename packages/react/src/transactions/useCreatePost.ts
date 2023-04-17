@@ -21,7 +21,15 @@ import { useCreatePostController } from './adapters/useCreatePostController';
 import { PublicationMetadataUploader } from './infrastructure/PublicationMetadataUploader';
 
 export type UseCreatePostArgs = {
+  /**
+   * The post author.
+   *
+   * **Poo-tip**: use the profile instance returned by {@link useActiveProfile} to create a post on behalf of the active profile.
+   */
   publisher: ProfileOwnedByMe;
+  /**
+   * The handler that will be used to upload the post metadata.
+   */
   upload: MetadataUploadHandler;
 };
 
@@ -46,6 +54,56 @@ export type CreatePostOperation = Operation<
 /**
  * @category Publications
  * @group Hooks
+ * @param args - {@link UseCreatePostArgs}
+ *
+ * @example Create a short text-only post
+ * ```ts
+ * import { uploadToIpfs } from './myIpfsUploader';
+ * import { ContentFocus, ProfileOwnedByMe, useCreatePost } from '@lens-protocol/react-web';
+ *
+ * function PostComposer({ publisher }: { publisher: ProfileOwnedByMe }) {
+ *   const { execute: createPost, error, isPending } = useCreatePost({ publisher, upload: uploadToIpfs });
+ *
+ *   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+ *     event.preventDefault();
+ *
+ *     const form = event.currentTarget;
+ *
+ *     const formData = new FormData(form);
+ *     const content = (formData.get('content') as string | null) ?? never();
+ *
+ *     let result = await create({
+ *       content,
+ *       contentFocus: ContentFocus.TEXT,
+ *       locale: 'en',
+ *     });
+ *
+ *     if (result.isSuccess()) {
+ *       form.reset();
+ *     }
+ *   };
+ *
+ *   return (
+ *     <form onSubmit={submit}>
+ *       <textarea
+ *         name="content"
+ *         minLength={1}
+ *         required
+ *         rows={3}
+ *         placeholder="What's happening?"
+ *         style={{ resize: 'none' }}
+ *         disabled={isPending}
+ *       ></textarea>
+ *
+ *       <button type="submit" disabled={isPending}>
+ *         Post
+ *       </button>
+ *
+ *       {error && <pre>{error.message}</pre>}
+ *     </form>
+ *   );
+ * }
+ * ```
  */
 export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreatePostOperation {
   const { appId } = useSharedDependencies();

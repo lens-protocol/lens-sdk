@@ -95,7 +95,7 @@ export type FollowOperation = Operation<
  * You can use the {@link Success.isSuccess | `Result.isSuccess`} (or {@link Failure.isFailure | `Result.isFailure`}) method
  * to check if the operation queuing was successful and determine the next step if not.
  *
- * **Pro-tip**: Use the {@link ProfileOwnedByMe} instance from {@link useActiveProfile} (or {@link useProfilesOwnedByMe}) as the `follower` argument.
+ * **Pro-tip**: use the {@link ProfileOwnedByMe} instance from {@link useActiveProfile} (or {@link useProfilesOwnedByMe}) as the `follower` argument.
  *
  * You can use the {@link FollowStatus | `followee.followStatus`} property to determine the status of the follow request and if you should show the follow button.
  *

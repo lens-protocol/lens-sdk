@@ -2,16 +2,11 @@ import { faker } from '@faker-js/faker';
 import { omitTypename } from '@lens-protocol/api-bindings';
 import { ProxyActionStatus, TransactionRequestModel } from '@lens-protocol/domain/entities';
 import {
-  mockCreatePostRequest,
   mockNonce,
-  mockRequestFallback,
   mockTransactionHash,
   mockTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
-import {
-  BroadcastingError,
-  BroadcastingErrorReason,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { assertFailure, ChainType, Result, Url } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
@@ -25,9 +20,9 @@ import {
   NativeTransactionData,
   ProxyTransactionData,
 } from '../ITransactionFactory';
-import { RelayReceipt } from '../RelayReceipt';
-import { SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallGateway';
+import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
 import { TypedData } from '../TypedData';
+import { RelayReceipt } from '../relayer';
 
 export function mockITransactionFactory(
   transactionObserver: ITransactionObserver = mock<ITransactionObserver>(),
@@ -141,22 +136,22 @@ export function assertUnsignedProtocolCallCorrectness<T extends TransactionReque
 
 export function assertBroadcastingErrorResultWithRequestFallback(
   result: Result<unknown, BroadcastingError>,
-  expectedBroadcastingErrorReason: BroadcastingErrorReason,
   typedData: TypedData,
 ) {
   assertFailure(result);
-  expect(result.error.reason).toEqual(expectedBroadcastingErrorReason);
+  expect(result.error).toBeInstanceOf(BroadcastingError);
   expect(result.error.fallback).toMatchObject({
     contractAddress: typedData.domain.verifyingContract,
     encodedData: expect.any(String),
   });
 }
 
-export function mockSelfFundedProtocolCallRequest(): SelfFundedProtocolCallRequest {
-  const requestFallback = mockRequestFallback();
-  const transactionRequest = mockCreatePostRequest();
+export function mockSelfFundedProtocolCallRequest<
+  TRequest extends TransactionRequestModel,
+>(): SelfFundedProtocolCallRequest<TRequest> {
   return {
-    ...transactionRequest,
-    ...requestFallback,
+    contractAddress: mockEthereumAddress(),
+    encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
+    ...(mockTransactionRequestModel() as TRequest),
   };
 }

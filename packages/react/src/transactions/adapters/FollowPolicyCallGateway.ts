@@ -12,9 +12,9 @@ import {
   IFollowPolicyCallGateway,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { Data, RequestFallback } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
 
 function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
   switch (request.policy.type) {
@@ -68,11 +68,14 @@ export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
-      fallback: this.createRequestFallback(data),
+      fallback: this.createRequestFallback(request, data),
     });
   }
 
-  private createRequestFallback(data: CreateSetFollowModuleTypedDataData): RequestFallback {
+  private createRequestFallback<T extends UpdateFollowPolicyRequest>(
+    request: T,
+    data: CreateSetFollowModuleTypedDataData,
+  ): SelfFundedProtocolCallRequest<T> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setFollowModule', [
       data.result.typedData.value.profileId,
@@ -80,6 +83,7 @@ export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
       data.result.typedData.value.followModuleInitData,
     ]);
     return {
+      ...request,
       contractAddress: data.result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

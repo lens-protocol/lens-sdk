@@ -20,7 +20,7 @@ import {
   mockWallet,
 } from '../../../entities/__helpers__/mocks';
 import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
-import { BroadcastingError, BroadcastingErrorReason } from '../BroadcastingError';
+import { BroadcastingError } from '../BroadcastingError';
 import {
   ProtocolCallUseCase,
   IProtocolCallPresenter,
@@ -162,7 +162,7 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       const signedCall = mockISignedProtocolCall(unsignedCall);
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
 
-      const error = new BroadcastingError(BroadcastingErrorReason.REJECTED);
+      const error = new BroadcastingError('some reason');
       const protocolCallRelayer = mockIProtocolCallRelayer({ signedCall, result: failure(error) });
 
       const presenter = mock<IProtocolCallPresenter>();

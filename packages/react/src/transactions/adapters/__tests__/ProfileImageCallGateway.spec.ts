@@ -13,10 +13,7 @@ import {
   mockUpdateNftProfileImageRequest,
   mockUpdateOffChainProfileImageRequest,
 } from '@lens-protocol/domain/mocks';
-import {
-  BroadcastingError,
-  BroadcastingErrorReason,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -134,17 +131,11 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
       });
 
       it.each([
-        {
-          expectedBroadcastingErrorReason: BroadcastingErrorReason.REJECTED,
-          relayError: mockRelayErrorFragment(RelayErrorReasons.Rejected),
-        },
-        {
-          expectedBroadcastingErrorReason: BroadcastingErrorReason.UNSPECIFIED,
-          relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
-        },
+        mockRelayErrorFragment(RelayErrorReasons.Rejected),
+        mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
       ])(
-        `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$relayError.reason" reason`,
-        async ({ relayError, expectedBroadcastingErrorReason }) => {
+        `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
+        async (relayError) => {
           const apollo = createMockApolloClientWithMultipleResponses([
             createSetProfileImageURIViaDispatcherMockedResponse({
               variables: {
@@ -166,11 +157,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
           const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
           const result = await gateway.createDelegatedTransaction(request);
 
-          assertBroadcastingErrorResultWithRequestFallback(
-            result,
-            expectedBroadcastingErrorReason,
-            data.result.typedData,
-          );
+          assertBroadcastingErrorResultWithRequestFallback(result, data.result.typedData);
         },
       );
     });

@@ -13,6 +13,7 @@ import {
   PendingSigningRequestError,
 } from '@lens-protocol/domain/entities';
 import { mockSignature, mockTransactionRequestModel } from '@lens-protocol/domain/mocks';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { MockProvider } from 'ethereum-waffle';
@@ -49,7 +50,7 @@ function setupWalletInstance({ signerFactory }: { signerFactory: ISignerFactory 
 describe(`Given an instance of ${ConcreteWallet.name}`, () => {
   describe(`when signing an ${UnsignedProtocolCall.name}`, () => {
     const typedData = mockTypedData();
-    const request = mockTransactionRequestModel();
+    const request = mockTransactionRequestModel() as SupportedTransactionRequest;
     const unsignedCall = mockUnsignedProtocolCall({ typedData, request });
     const signature = mockSignature();
 

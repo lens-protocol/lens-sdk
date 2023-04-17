@@ -2,11 +2,10 @@ import { TransactionRequest } from '@ethersproject/providers';
 import { bigNumber } from '@lens-protocol/blockchain-bindings';
 import { Wallet, UnsignedTransaction } from '@lens-protocol/domain/entities';
 import {
-  Data,
   IPayTransactionGateway,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { Amount, ChainType, EthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, ChainType } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { ITransactionRequest } from '../../wallet/adapters/ConcreteWallet';
@@ -15,14 +14,7 @@ import {
   Eip1559GasPriceEstimator,
   TransactionExecutionSpeed,
 } from '../infrastructure/Eip1559GasPriceEstimator';
-
-type RawTransactionDetails = {
-  contractAddress: EthereumAddress;
-  encodedData: Data;
-};
-
-export type SelfFundedProtocolCallRequest<T extends SupportedTransactionRequest> = T &
-  RawTransactionDetails;
+import { SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
 
 export class UnsignedSelfFundedProtocolCallTransaction<
     TRequest extends SupportedTransactionRequest,

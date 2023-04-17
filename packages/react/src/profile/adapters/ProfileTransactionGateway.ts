@@ -13,13 +13,13 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
-  BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
+import { handleRelayError } from '../../transactions/adapters/relayer';
 
 export class ProfileTransactionGateway implements IProfileTransactionGateway {
   constructor(
@@ -43,10 +43,9 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
       switch (data.result.reason) {
         case RelayErrorReasons.HandleTaken:
           return failure(new DuplicatedHandleError(request.handle));
-        case RelayErrorReasons.Rejected:
-          return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
+
         default:
-          return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
+          return handleRelayError(data.result);
       }
     }
 

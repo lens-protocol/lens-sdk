@@ -8,7 +8,6 @@ import {
   omitTypename,
   UpdateProfileImageRequest as UpdateProfileImageRequestArgs,
   LensApolloClient,
-  RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -18,9 +17,6 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
-  BroadcastingErrorReason,
-  Data,
-  RequestFallback,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -28,7 +24,8 @@ import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
-import { RelayReceipt } from './RelayReceipt';
+import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
+import { handleRelayError, RelayReceipt } from './relayer';
 
 export class ProfileImageCallGateway implements IProfileImageCallGateway {
   constructor(
@@ -39,9 +36,7 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
   async createDelegatedTransaction(
     request: UpdateProfileImageRequest,
   ): PromiseResult<NativeTransaction<UpdateProfileImageRequest>, BroadcastingError> {
-    const requestArg = this.resolveMutationRequestArg(request);
-
-    const result = await this.broadcast(requestArg);
+    const result = await this.broadcast(request);
 
     if (result.isFailure()) return failure(result.error);
 
@@ -70,13 +65,15 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
-      fallback: this.createRequestFallback(data),
+      fallback: this.createRequestFallback(request, data),
     });
   }
 
   private async broadcast(
-    requestArg: UpdateProfileImageRequestArgs,
+    request: UpdateProfileImageRequest,
   ): PromiseResult<RelayReceipt, BroadcastingError> {
+    const requestArg = this.resolveMutationRequestArg(request);
+
     const { data } = await this.apolloClient.mutate<
       CreateSetProfileImageUriViaDispatcherData,
       CreateSetProfileImageUriViaDispatcherVariables
@@ -89,12 +86,9 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
 
     if (data.result.__typename === 'RelayError') {
       const typedData = await this.createTypedData(requestArg);
-      const fallback = this.createRequestFallback(typedData);
+      const fallback = this.createRequestFallback(request, typedData);
 
-      if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
-      }
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
+      return handleRelayError(data.result, fallback);
     }
 
     return success({
@@ -138,13 +132,17 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
     };
   }
 
-  private createRequestFallback(data: CreateSetProfileImageUriTypedDataData): RequestFallback {
+  private createRequestFallback<T extends UpdateProfileImageRequest>(
+    request: T,
+    data: CreateSetProfileImageUriTypedDataData,
+  ): SelfFundedProtocolCallRequest<T> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileImageURI', [
       data.result.typedData.value.profileId,
       data.result.typedData.value.imageURI,
     ]);
     return {
+      ...request,
       contractAddress: data.result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };
