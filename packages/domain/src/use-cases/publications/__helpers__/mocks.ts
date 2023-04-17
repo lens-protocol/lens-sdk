@@ -52,10 +52,11 @@ export function mockCreateCommentRequest(
   };
 }
 
-export function mockMediaObject(): MediaObject {
+export function mockMediaObject(overrides?: Partial<MediaObject>): MediaObject {
   return {
     url: faker.image.imageUrl(),
     mimeType: ImageType.JPEG,
+    ...overrides,
   };
 }
 
