@@ -21,6 +21,7 @@ export * from './transaction';
 // types
 export type {
   Cast,
+  EthereumAddress,
   Failure,
   IEquatableError,
   InvariantError,

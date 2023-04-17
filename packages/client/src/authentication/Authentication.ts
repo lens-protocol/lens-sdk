@@ -1,4 +1,4 @@
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
 
 import { LensConfig } from '../consts/config';
@@ -18,7 +18,7 @@ export interface IAuthentication {
    * @param address - The wallet address
    * @returns A challenge string
    */
-  generateChallenge(address: string): Promise<string>;
+  generateChallenge(address: EthereumAddress): Promise<string>;
 
   /**
    * Authenticate the user with the wallet address and signature of the challenge.
@@ -26,7 +26,7 @@ export interface IAuthentication {
    * @param address - The wallet address
    * @param signature - The signature of the challenge
    */
-  authenticate(address: string, signature: string): Promise<void>;
+  authenticate(address: EthereumAddress, signature: string): Promise<void>;
 
   /**
    * Check if the user is authenticated. If the credentials are expired, try to refresh them.
@@ -51,11 +51,11 @@ export class Authentication implements IAuthentication {
     );
   }
 
-  async generateChallenge(address: string): Promise<string> {
+  async generateChallenge(address: EthereumAddress): Promise<string> {
     return this.api.challenge(address);
   }
 
-  async authenticate(address: string, signature: string): Promise<void> {
+  async authenticate(address: EthereumAddress, signature: string): Promise<void> {
     const credentials = await this.api.authenticate(address, signature);
     await this.storage.set(credentials);
   }

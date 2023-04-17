@@ -138,7 +138,7 @@ export class Profile {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @returns Profiles wrapped in {@link PaginatedResult} helper
+   * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -221,7 +221,7 @@ export class Profile {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @returns Profiles wrapped in {@link PaginatedResult} helper
+   * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -290,7 +290,7 @@ export class Profile {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @returns Profiles wrapped in {@link PaginatedResult} helper
+   * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -322,7 +322,7 @@ export class Profile {
    * Fetch all wallet addresses that follow a profile
    *
    * @param request - Request object for the query
-   * @returns Wallets with default profiles wrapped in {@link PaginatedResult} helper
+   * @returns Wallets with default profiles wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -827,7 +827,7 @@ export class Profile {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @returns Profiles wrapped in {@link PaginatedResult} helper
+   * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts

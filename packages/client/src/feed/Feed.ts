@@ -32,7 +32,7 @@ export class Feed {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @returns {@link PromiseResult} with array of {@link FeedItemFragment} wrapped in the {@link PaginatedResult} helper
+   * @returns {@link PromiseResult} with array of {@link FeedItemFragment} wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -70,7 +70,7 @@ export class Feed {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @returns {@link PromiseResult} with array of {@link PublicationFragment} wrapped in the {@link PaginatedResult} helper
+   * @returns {@link PromiseResult} with array of {@link PublicationFragment} wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts

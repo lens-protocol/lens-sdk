@@ -56,7 +56,7 @@ export class Nfts {
    * If you are using `production` enviroment you can only query Ethereum Mainnet (chainId: 1) and Polygon Mainnet (chainId: 137).
    *
    * @param request - Request object for the query
-   * @returns Array of {@link NftFragment} wrapped in the {@link PaginatedResult} helper
+   * @returns Array of {@link NftFragment} wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts

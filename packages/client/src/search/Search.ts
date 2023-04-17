@@ -36,7 +36,7 @@ export class Search {
    * Search for profiles.
    *
    * @param request - Request object for the query
-   * @returns Array of {@link ProfileFragment} wrapped in the {@link PaginatedResult} helper
+   * @returns Array of {@link ProfileFragment} wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -65,7 +65,7 @@ export class Search {
    * Search for publications.
    *
    * @param request - Request object for the query
-   * @returns Array of {@link CommentFragment} and/or {@link PostFragment} wrapped in the {@link PaginatedResult} helper
+   * @returns Array of {@link CommentFragment} and/or {@link PostFragment} wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts

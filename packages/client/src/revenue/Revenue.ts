@@ -36,7 +36,7 @@ export class Revenue {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @returns Array of {@link PublicationRevenueFragment} wrapped in the {@link PaginatedResult} helper
+   * @returns Array of {@link PublicationRevenueFragment} wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts

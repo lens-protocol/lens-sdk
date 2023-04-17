@@ -189,7 +189,7 @@ export class Publication {
    * Fetch all publications by requested criteria
    *
    * @param request - Request object for the query
-   * @returns Publications wrapped in {@link PaginatedResult} helper
+   * @returns Publications wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -221,7 +221,7 @@ export class Publication {
    * Fetch all wallets that collected a publication
    *
    * @param request - Request object for the query
-   * @returns Wallets wrapped in {@link PaginatedResult} helper
+   * @returns Wallets wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -253,7 +253,7 @@ export class Publication {
    * Fetch all publications for sale by requested criteria
    *
    * @param request - Request object for the query
-   * @returns Publications wrapped in {@link PaginatedResult} helper
+   * @returns Publications wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
