@@ -1,12 +1,20 @@
 // @ts-nocheck
 import * as Types from '../../graphql/types.generated';
 
-import { RelayerResultFragment, RelayErrorFragment } from '../../graphql/fragments.generated';
+import {
+  RelayerResultFragment,
+  RelayErrorFragment,
+  CreateDataAvailabilityPublicationResultFragment,
+} from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-import { RelayerResultFragmentDoc, RelayErrorFragmentDoc } from '../../graphql/fragments.generated';
+import {
+  RelayerResultFragmentDoc,
+  RelayErrorFragmentDoc,
+  CreateDataAvailabilityPublicationResultFragmentDoc,
+} from '../../graphql/fragments.generated';
 export type TransactionIndexedResultFragment = {
   __typename: 'TransactionIndexedResult';
   indexed: boolean;
@@ -31,6 +39,14 @@ export type BroadcastProtocolCallMutationVariables = Types.Exact<{
 }>;
 
 export type BroadcastProtocolCallMutation = { result: RelayErrorFragment | RelayerResultFragment };
+
+export type BroadcastDataAvailabilityMutationVariables = Types.Exact<{
+  request: Types.BroadcastRequest;
+}>;
+
+export type BroadcastDataAvailabilityMutation = {
+  result: CreateDataAvailabilityPublicationResultFragment | RelayErrorFragment;
+};
 
 export const TransactionIndexedResultFragmentDoc = gql`
   fragment TransactionIndexedResult on TransactionIndexedResult {
@@ -73,6 +89,20 @@ export const BroadcastProtocolCallDocument = gql`
   ${RelayerResultFragmentDoc}
   ${RelayErrorFragmentDoc}
 `;
+export const BroadcastDataAvailabilityDocument = gql`
+  mutation BroadcastDataAvailability($request: BroadcastRequest!) {
+    result: broadcastDataAvailability(request: $request) {
+      ... on CreateDataAvailabilityPublicationResult {
+        ...CreateDataAvailabilityPublicationResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${CreateDataAvailabilityPublicationResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -83,6 +113,7 @@ export type SdkFunctionWrapper = <T>(
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const HasTxHashBeenIndexedDocumentString = print(HasTxHashBeenIndexedDocument);
 const BroadcastProtocolCallDocumentString = print(BroadcastProtocolCallDocument);
+const BroadcastDataAvailabilityDocumentString = print(BroadcastDataAvailabilityDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     HasTxHashBeenIndexed(
@@ -122,6 +153,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'BroadcastProtocolCall',
+        'mutation',
+      );
+    },
+    BroadcastDataAvailability(
+      variables: BroadcastDataAvailabilityMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: BroadcastDataAvailabilityMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<BroadcastDataAvailabilityMutation>(
+            BroadcastDataAvailabilityDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'BroadcastDataAvailability',
         'mutation',
       );
     },
