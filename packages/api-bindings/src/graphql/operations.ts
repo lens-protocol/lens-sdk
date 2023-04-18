@@ -1849,11 +1849,14 @@ export type MediaSet = { __typename: 'MediaSet'; original: Media };
 export type MetadataOutput = {
   __typename: 'MetadataOutput';
   animatedUrl: Url | null;
-  name: string | null;
-  description: string | null;
-  mainContentFocus: PublicationMainFocus;
   content: string | null;
+  contentWarning: PublicationContentWarning | null;
+  description: string | null;
   image: Url | null;
+  locale: string | null;
+  mainContentFocus: PublicationMainFocus;
+  name: string | null;
+  tags: Array<string>;
   media: Array<MediaSet>;
   attributes: Array<MetadataAttributeOutput>;
   encryptionParams: EncryptionParamsOutput | null;

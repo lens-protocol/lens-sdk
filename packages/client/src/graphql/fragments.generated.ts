@@ -199,16 +199,27 @@ export type WalletFragment = {
   defaultProfile: ProfileFragment | null;
 };
 
-export type MediaFragment = { __typename: 'Media'; url: string; mimeType: string | null };
+export type MediaFragment = {
+  __typename: 'Media';
+  altTag: string | null;
+  cover: string | null;
+  mimeType: string | null;
+  url: string;
+};
 
 export type MediaSetFragment = { __typename: 'MediaSet'; original: MediaFragment };
 
 export type MetadataFragment = {
   __typename: 'MetadataOutput';
-  name: string | null;
-  description: string | null;
-  mainContentFocus: Types.PublicationMainFocus;
+  animatedUrl: string | null;
   content: string | null;
+  contentWarning: Types.PublicationContentWarning | null;
+  description: string | null;
+  image: string | null;
+  locale: string | null;
+  mainContentFocus: Types.PublicationMainFocus;
+  name: string | null;
+  tags: Array<string>;
   media: Array<MediaSetFragment>;
   attributes: Array<MetadataAttributeOutputFragment>;
 };
@@ -381,8 +392,10 @@ export const Erc20AmountFragmentDoc = gql`
 export const MediaFragmentDoc = gql`
   fragment Media on Media {
     __typename
-    url
+    altTag
+    cover
     mimeType
+    url
   }
 `;
 export const MediaSetFragmentDoc = gql`
@@ -546,16 +559,21 @@ export const MetadataAttributeOutputFragmentDoc = gql`
 export const MetadataFragmentDoc = gql`
   fragment Metadata on MetadataOutput {
     __typename
-    name
-    description
-    mainContentFocus
+    animatedUrl
     content
+    contentWarning
+    description
+    image
+    locale
+    mainContentFocus
+    name
     media {
       ...MediaSet
     }
     attributes {
       ...MetadataAttributeOutput
     }
+    tags
   }
   ${MediaSetFragmentDoc}
   ${MetadataAttributeOutputFragmentDoc}

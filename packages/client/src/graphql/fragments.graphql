@@ -245,8 +245,10 @@ fragment Wallet on Wallet {
 
 fragment Media on Media {
   __typename
-  url
+  altTag
+  cover
   mimeType
+  url
 }
 
 fragment MediaSet on MediaSet {
@@ -258,16 +260,21 @@ fragment MediaSet on MediaSet {
 
 fragment Metadata on MetadataOutput {
   __typename
-  name
-  description
-  mainContentFocus
+  animatedUrl
   content
+  contentWarning
+  description
+  image
+  locale
+  mainContentFocus
+  name
   media {
     ...MediaSet
   }
   attributes {
     ...MetadataAttributeOutput
   }
+  tags
 }
 
 fragment MetadataAttributeOutput on MetadataAttributeOutput {

@@ -3,6 +3,7 @@ import {
   PublicationMainFocus,
   PublicationMetadataDisplayTypes,
   PublicationMetadataMediaInput,
+  PublicationContentWarning,
 } from '@lens-protocol/api-bindings';
 import {
   CollectPolicyType,
@@ -36,13 +37,22 @@ export function createPublicationMetadata(
   request: CreatePostRequest | CreateCommentRequest,
 ): PublicationMetadata {
   const sharedMetadata = {
-    version: '2.0.0',
-    metadata_id: v4(),
-    ...(request.appId && { appId: request.appId }),
     content: request.content,
-    media: request.media?.map(mapMedia),
     locale: request.locale,
     mainContentFocus: PublicationMainFocus[request.contentFocus],
+    media: request.media?.map(mapMedia),
+    metadata_id: v4(),
+    version: '2.0.0',
+    // optional
+    ...(request.animationUrl && { animation_url: request.animationUrl }),
+    ...(request.appId && { appId: request.appId }),
+    ...(request.contentWarning && {
+      contentWarning: PublicationContentWarning[request.contentWarning],
+    }),
+    ...(request.externalUrl && { external_url: request.externalUrl }),
+    ...(request.image && { image: request.image }),
+    ...(request.imageMimeType && { imageMimeType: request.imageMimeType }),
+    ...(request.tags && { tags: request.tags }),
   } as const;
 
   switch (request.collect.type) {

@@ -199,11 +199,13 @@ fragment MediaSet on MediaSet {
 fragment MetadataOutput on MetadataOutput {
   __typename
   animatedUrl
-  name
-  description
-  mainContentFocus
   content
+  contentWarning
+  description
   image
+  locale
+  mainContentFocus
+  name
   media {
     ...MediaSet
   }
@@ -213,6 +215,7 @@ fragment MetadataOutput on MetadataOutput {
   encryptionParams {
     ...EncryptionParamsOutput
   }
+  tags
 }
 
 fragment MetadataAttributeOutput on MetadataAttributeOutput {
