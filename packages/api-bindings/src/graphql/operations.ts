@@ -67,10 +67,10 @@ export type Scalars = {
   Handle: string;
   /** handle claim id custom scalar type */
   HandleClaimIdScalar: unknown;
-  /** IfpsCid scalar type */
-  IfpsCid: unknown;
   /** Internal publication id custom scalar type */
   InternalPublicationId: PublicationId;
+  /** IpfsCid scalar type */
+  IpfsCid: unknown;
   /** jwt custom scalar type */
   Jwt: string;
   /** limit custom scalar type */
@@ -981,6 +981,7 @@ export type NftUpdateItemOrder = {
 export type NotificationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  highSignalFilter?: InputMaybe<Scalars['Boolean']>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
   /** The profile id */
   notificationTypes?: InputMaybe<Array<NotificationTypes>>;
@@ -1105,7 +1106,7 @@ export type PublicMediaRequest = {
   /** The cover for any video or audio you attached */
   cover?: InputMaybe<Scalars['Url']>;
   /** Pre calculated cid of the file to push */
-  itemCid: Scalars['IfpsCid'];
+  itemCid: Scalars['IpfsCid'];
   /** This is the mime type of media */
   type?: InputMaybe<Scalars['MimeType']>;
 };
@@ -1432,6 +1433,40 @@ export enum RelayErrorReasons {
   WrongWalletSigned = 'WRONG_WALLET_SIGNED',
 }
 
+/** The relay role key */
+export enum RelayRoleKey {
+  CreateProfile = 'CREATE_PROFILE',
+  Dispatcher_1 = 'DISPATCHER_1',
+  Dispatcher_2 = 'DISPATCHER_2',
+  Dispatcher_3 = 'DISPATCHER_3',
+  Dispatcher_4 = 'DISPATCHER_4',
+  Dispatcher_5 = 'DISPATCHER_5',
+  Dispatcher_6 = 'DISPATCHER_6',
+  Dispatcher_7 = 'DISPATCHER_7',
+  Dispatcher_8 = 'DISPATCHER_8',
+  Dispatcher_9 = 'DISPATCHER_9',
+  Dispatcher_10 = 'DISPATCHER_10',
+  ProxyActionCollect_1 = 'PROXY_ACTION_COLLECT_1',
+  ProxyActionCollect_2 = 'PROXY_ACTION_COLLECT_2',
+  ProxyActionCollect_3 = 'PROXY_ACTION_COLLECT_3',
+  ProxyActionCollect_4 = 'PROXY_ACTION_COLLECT_4',
+  ProxyActionCollect_5 = 'PROXY_ACTION_COLLECT_5',
+  ProxyActionCollect_6 = 'PROXY_ACTION_COLLECT_6',
+  ProxyActionFollow_1 = 'PROXY_ACTION_FOLLOW_1',
+  ProxyActionFollow_2 = 'PROXY_ACTION_FOLLOW_2',
+  ProxyActionFollow_3 = 'PROXY_ACTION_FOLLOW_3',
+  ProxyActionFollow_4 = 'PROXY_ACTION_FOLLOW_4',
+  ProxyActionFollow_5 = 'PROXY_ACTION_FOLLOW_5',
+  ProxyActionFollow_6 = 'PROXY_ACTION_FOLLOW_6',
+  ProxyActionFollow_7 = 'PROXY_ACTION_FOLLOW_7',
+  ProxyActionFollow_8 = 'PROXY_ACTION_FOLLOW_8',
+  ProxyActionFollow_9 = 'PROXY_ACTION_FOLLOW_9',
+  ProxyActionFollow_10 = 'PROXY_ACTION_FOLLOW_10',
+  WithSig_1 = 'WITH_SIG_1',
+  WithSig_2 = 'WITH_SIG_2',
+  WithSig_3 = 'WITH_SIG_3',
+}
+
 /** The request object to remove interests from a profile */
 export type RemoveProfileInterestsRequest = {
   /** The profile interest to add */
@@ -1692,24 +1727,6 @@ export type CreateCommentViaDispatcherData = {
   result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
 };
 
-export type CommentWithFirstComment = {
-  __typename: 'Comment';
-  firstComment: Comment | null;
-} & Comment;
-
-export type CommentsVariables = Exact<{
-  observerId?: InputMaybe<Scalars['ProfileId']>;
-  commentsOf: Scalars['InternalPublicationId'];
-  limit: Scalars['LimitScalar'];
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
-  metadata?: InputMaybe<PublicationMetadataFilters>;
-}>;
-
-export type CommentsData = {
-  result: { items: Array<CommentWithFirstComment | {}>; pageInfo: CommonPaginatedResultInfo };
-};
-
 export type Erc20Fields = {
   __typename: 'Erc20';
   name: string;
@@ -1938,6 +1955,7 @@ export type Comment = {
   __typename: 'Comment';
   commentOn: CommentBase | MirrorBase | Post | null;
   mainPost: MirrorBase | Post;
+  firstComment: CommentBase | null;
 } & CommentBase;
 
 export type Post = {
@@ -2631,7 +2649,7 @@ export type PublicationByTxHashVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-export type PublicationByTxHashData = { result: CommentWithFirstComment | Mirror | Post | null };
+export type PublicationByTxHashData = { result: Comment | Mirror | Post | null };
 
 export type HidePublicationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
@@ -2639,17 +2657,19 @@ export type HidePublicationVariables = Exact<{
 
 export type HidePublicationData = { hidePublication: void | null };
 
-export type PublicationsVariables = Exact<{
-  profileId: Scalars['ProfileId'];
+export type GetPublicationsVariables = Exact<{
+  profileId?: InputMaybe<Scalars['ProfileId']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   publicationTypes?: InputMaybe<Array<PublicationTypes> | PublicationTypes>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   metadata?: InputMaybe<PublicationMetadataFilters>;
+  commentsOf?: InputMaybe<Scalars['InternalPublicationId']>;
+  walletAddress?: InputMaybe<Scalars['EthereumAddress']>;
 }>;
 
-export type PublicationsData = {
+export type GetPublicationsData = {
   result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
 };
 
@@ -2863,16 +2883,4 @@ export type CreateUnfollowTypedDataData = {
       value: { nonce: number; deadline: unknown; tokenId: string };
     };
   };
-};
-
-export type WalletCollectedPublicationsVariables = Exact<{
-  observerId?: InputMaybe<Scalars['ProfileId']>;
-  walletAddress: Scalars['EthereumAddress'];
-  limit: Scalars['LimitScalar'];
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
-}>;
-
-export type WalletCollectedPublicationsData = {
-  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
 };

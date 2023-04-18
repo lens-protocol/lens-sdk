@@ -1,7 +1,4 @@
-import {
-  useComments as useUnderlyingQuery,
-  CommentWithFirstComment,
-} from '@lens-protocol/api-bindings';
+import { Comment, useGetComments } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
 
 import {
@@ -30,9 +27,9 @@ export function useComments({
   commentsOf,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
-}: UseCommentsArgs): PaginatedReadResult<CommentWithFirstComment[]> {
+}: UseCommentsArgs): PaginatedReadResult<Comment[]> {
   return usePaginatedReadResult(
-    useUnderlyingQuery(
+    useGetComments(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({

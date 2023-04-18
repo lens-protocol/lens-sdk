@@ -99,7 +99,6 @@ export type {
   CollectablePublication,
   Comment,
   CommentBase,
-  CommentWithFirstComment,
   ContentPublication,
   Gated,
   GatedComment,

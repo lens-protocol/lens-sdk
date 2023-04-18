@@ -1,16 +1,23 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
+import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
-import { CommentsDocument, SearchProfilesDocument, SearchPublicationsDocument } from './hooks';
+import {
+  GetPublicationsDocument,
+  SearchProfilesDocument,
+  SearchPublicationsDocument,
+} from './hooks';
 import {
   Comment,
-  CommentsVariables,
-  CommentWithFirstComment,
   CommonPaginatedResultInfo,
+  Exact,
+  InputMaybe,
   Post,
   Profile,
+  PublicationMetadataFilters,
   SearchProfilesVariables,
   SearchPublicationsVariables,
 } from './operations';
+import { Sources } from './sources';
 
 export * from './CollectPolicy';
 export * from './ContentEncryptionKey';
@@ -24,21 +31,28 @@ export * from './ReferencePolicy';
 export * from './sources';
 export * from './utils';
 
-export type CommentsData = {
+export type GetCommentsVariables = Exact<{
+  commentsOf: PublicationId;
+  limit: number;
+  sources: Sources;
+  cursor?: string;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  observerId?: InputMaybe<ProfileId>;
+}>;
+
+export type GetCommentsData = {
   result: {
-    items: Array<CommentWithFirstComment>;
+    items: Array<Comment>;
     pageInfo: CommonPaginatedResultInfo;
   };
 };
 
 /**
- * This is a patched version of the codegen generated useCommentsQuery hook.
- * It is patched to return paginated results of CommentWithFirstComment instead of union with `{}` type.
- *
- * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
+ * This hooks uses the codegen generated GetPublications query hook so that it
+ * can returns paginated results of Comment in a type safe way.
  */
-export function useComments(options: QueryHookOptions<CommentsData, CommentsVariables>) {
-  return useQuery<CommentsData, CommentsVariables>(CommentsDocument, options);
+export function useGetComments(options: QueryHookOptions<GetCommentsData, GetCommentsVariables>) {
+  return useQuery<GetCommentsData, GetCommentsVariables>(GetPublicationsDocument, options);
 }
 
 export type SearchProfilesResult = {

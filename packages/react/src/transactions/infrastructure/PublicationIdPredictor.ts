@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   LensApolloClient,
-  PublicationsDocument,
-  PublicationsData,
-  PublicationsVariables,
+  GetPublicationsDocument,
+  GetPublicationsData,
+  GetPublicationsVariables,
 } from '@lens-protocol/api-bindings';
 import { ProfileId, PublicationId, TransactionKind } from '@lens-protocol/domain/entities';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
@@ -24,8 +24,8 @@ export class PublicationIdPredictor implements IPublicationIdPredictor {
   ) {}
 
   async predictNextPublicationIdFor(profileId: ProfileId): Promise<PublicationId> {
-    const { data } = await this.apolloClient.query<PublicationsData, PublicationsVariables>({
-      query: PublicationsDocument,
+    const { data } = await this.apolloClient.query<GetPublicationsData, GetPublicationsVariables>({
+      query: GetPublicationsDocument,
       variables: {
         profileId,
         sources: [],

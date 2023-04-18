@@ -1,18 +1,22 @@
-query Publications(
-  $profileId: ProfileId!
+query GetPublications(
+  $profileId: ProfileId
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
   $publicationTypes: [PublicationTypes!]
   $sources: [Sources!]!
   $metadata: PublicationMetadataFilters
+  $commentsOf: InternalPublicationId
+  $walletAddress: EthereumAddress
 ) {
   result: publications(
     request: {
       profileId: $profileId
       limit: $limit
+      collectedBy: $walletAddress
       cursor: $cursor
       publicationTypes: $publicationTypes
+      commentsOf: $commentsOf
       sources: $sources
       metadata: $metadata
     }
@@ -27,7 +31,6 @@ query Publications(
       }
 
       ... on Comment {
-        # not possible to receive given we narrow `publicationTypes`
         ...Comment
       }
     }

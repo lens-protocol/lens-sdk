@@ -1,3 +1,4 @@
+import { KeySpecifier } from '@apollo/client/cache/inmemory/policies';
 import { FieldPolicy, StoreValue } from '@apollo/client/core';
 
 import { CommonPaginatedResultInfo } from '../../../graphql';
@@ -12,7 +13,7 @@ type CursorBasedPagination<T = StoreValue> = {
 type SafeReadonly<T> = T extends object ? Readonly<T> : T;
 
 export function cursorBasedPagination<T extends CursorBasedPagination>(
-  keyArgs: FieldPolicy['keyArgs'],
+  keyArgs: KeySpecifier,
 ): FieldPolicy<T> {
   return {
     keyArgs,
