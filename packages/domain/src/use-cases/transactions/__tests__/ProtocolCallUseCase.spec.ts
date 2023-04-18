@@ -9,7 +9,6 @@ import {
   UserRejectedError,
   Wallet,
   MetaTransaction,
-  SignedProtocolCall,
   TransactionRequestModel,
 } from '../../../entities';
 import {
@@ -71,7 +70,7 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
     it(`should:
         - create an IUnsignedProtocolCall<T> passing the Nonce override from the IPendingTransactionGateway
         - sign it with the user's ${Wallet.name}
-        - relay the resulting ${SignedProtocolCall.name}<T>
+        - relay the resulting ISignedProtocolCall<T>
         - push the resulting ${MetaTransaction.name}<T> into the `, async () => {
       const nonce = mockNonce();
 

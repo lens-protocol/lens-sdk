@@ -23,7 +23,7 @@ import {
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
 import { RelayReceipt } from './RelayReceipt';
 
@@ -56,7 +56,7 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
   async createUnsignedProtocolCall(
     request: UpdateProfileImageRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<UpdateProfileImageRequest>> {
+  ): Promise<UnsignedProtocolCall<UpdateProfileImageRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateSetProfileImageUriTypedDataData,
       CreateSetProfileImageUriTypedDataVariables
@@ -68,11 +68,13 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
       },
     });
 
-    return new UnsignedLensProtocolCall(
-      data.result.id,
+    return UnsignedProtocolCall.create({
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      functionName: 'setProfileImageURIWithSig',
+      id: data.result.id,
       request,
-      omitTypename(data.result.typedData),
-    );
+      typedData: omitTypename(data.result.typedData),
+    });
   }
 
   private async broadcast(

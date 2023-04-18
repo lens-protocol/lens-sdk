@@ -16,7 +16,7 @@ import {
   mockUnconstrainedFollowRequest,
 } from '@lens-protocol/domain/mocks';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { FollowProfilesCallGateway } from '../FollowProfilesCallGateway';
 
 function createCreateFollowTypedDataMutationMockedResponse({
@@ -40,7 +40,7 @@ function createCreateFollowTypedDataMutationMockedResponse({
 describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
   describe(`when calling the "${FollowProfilesCallGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
     describe('with an UnconstrainedFollowRequest', () => {
-      it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
+      it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
         const request = mockUnconstrainedFollowRequest();
         const data = mockCreateFollowTypedDataData();
 
@@ -62,13 +62,13 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
 
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
+        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
         expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
     });
 
     describe('with a ProfileOwnerFollowRequest', () => {
-      it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
+      it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
         const request = mockProfileOwnerFollowRequest();
         const data = mockCreateFollowTypedDataData();
 
@@ -95,13 +95,13 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
 
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
+        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
         expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
     });
 
     describe(`with a PaidFollowRequest`, () => {
-      it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
+      it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
         const request = mockPaidFollowRequest();
         const data = mockCreateFollowTypedDataData();
 
@@ -131,7 +131,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
 
         const unsignedCall = await followProfilesCallGateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
+        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
         expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
     });

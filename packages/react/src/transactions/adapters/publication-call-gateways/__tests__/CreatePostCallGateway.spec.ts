@@ -16,7 +16,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
-import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { mockITransactionFactory, mockIMetadataUploader } from '../../__helpers__/mocks';
 import { CreatePostCallGateway } from '../CreatePostCallGateway';
 import {
@@ -111,7 +111,7 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
     describe(`when creating an IUnsignedProtocolCall<CreatePostRequest>`, () => {
       it(`should:
           - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
-          - create an instance of the ${UnsignedLensProtocolCall.name} with the expected typed data`, async () => {
+          - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
         const data = mockCreatePostTypedDataData();
         const apolloClient = createMockApolloClientWithMultipleResponses([
           createCreatePostTypedDataMockedResponse({
@@ -130,7 +130,7 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
         const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
         expect(uploader.upload).toHaveBeenCalledWith(request);
-        expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
+        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
         expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
       });
 

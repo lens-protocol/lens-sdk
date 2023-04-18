@@ -15,7 +15,7 @@ import {
   isProfileOwnerFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 
-import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
 function resolveProfileFollow(request: FollowRequest): Follow[] {
   if (isPaidFollowRequest(request)) {
@@ -51,7 +51,7 @@ export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
   async createUnsignedProtocolCall<T extends FollowRequest>(
     request: T,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<T>> {
     const { data } = await this.apolloClient.mutate<
       CreateFollowTypedDataData,
       CreateFollowTypedDataVariables
@@ -65,10 +65,12 @@ export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
       },
     });
 
-    return new UnsignedLensProtocolCall(
-      data.result.id,
+    return UnsignedProtocolCall.create({
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      functionName: 'followWithSig',
+      id: data.result.id,
       request,
-      omitTypename(data.result.typedData),
-    );
+      typedData: omitTypename(data.result.typedData),
+    });
   }
 }

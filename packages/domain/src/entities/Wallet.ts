@@ -1,7 +1,7 @@
 import { CryptoNativeAsset, EthereumAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import {
-  SignedProtocolCall,
+  ISignedProtocolCall,
   TransactionRequestModel,
   IUnsignedProtocolCall,
   UnsignedTransaction,
@@ -52,7 +52,7 @@ export abstract class Wallet {
   abstract signProtocolCall<T extends TransactionRequestModel>(
     unsignedCall: IUnsignedProtocolCall<T>,
   ): PromiseResult<
-    SignedProtocolCall<T>,
+    ISignedProtocolCall<T>,
     PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >;
 

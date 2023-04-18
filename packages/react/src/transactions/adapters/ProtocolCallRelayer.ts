@@ -7,7 +7,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import {
   MetaTransaction,
-  SignedProtocolCall,
+  ISignedProtocolCall,
   TransactionRequestModel,
 } from '@lens-protocol/domain/entities';
 import {
@@ -29,7 +29,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
   ) {}
 
   async relayProtocolCall<T extends SupportedTransactionRequest>(
-    signedCall: SignedProtocolCall<T>,
+    signedCall: ISignedProtocolCall<T>,
   ): PromiseResult<MetaTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(signedCall);
 
@@ -50,7 +50,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
   }
 
   private async broadcast<T extends TransactionRequestModel>(
-    signedCall: SignedProtocolCall<T>,
+    signedCall: ISignedProtocolCall<T>,
   ): PromiseResult<RelayReceipt, BroadcastingError> {
     try {
       const { data } = await this.apolloClient.mutate<

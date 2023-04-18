@@ -4,7 +4,7 @@ import {
   IUnsignedProtocolCall,
   Nonce,
   TransactionKind,
-  SignedProtocolCall,
+  ISignedProtocolCall,
   TransactionRequestModel,
   MetaTransaction,
   PendingSigningRequestError,
@@ -22,7 +22,7 @@ export interface IMetaTransactionNonceGateway {
 
 export interface IProtocolCallRelayer<T extends TransactionRequestModel> {
   relayProtocolCall(
-    signedCall: SignedProtocolCall<T>,
+    signedCall: ISignedProtocolCall<T>,
   ): PromiseResult<MetaTransaction<T>, BroadcastingError>;
 }
 

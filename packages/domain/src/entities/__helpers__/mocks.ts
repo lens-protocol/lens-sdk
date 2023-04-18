@@ -41,7 +41,7 @@ import {
   ProxyActionStatus,
   ProxyTransaction,
   Signature,
-  SignedProtocolCall,
+  ISignedProtocolCall,
   Transaction,
   TransactionError,
   TransactionErrorReason,
@@ -107,26 +107,28 @@ export function mockUnsignedProtocolCall<T extends TransactionRequestModel>(
   return new MockedUnsignedProtocolCall(faker.datatype.uuid(), request, overrides?.nonce);
 }
 
+class MockedSignedProtocolCall<T extends TransactionRequestModel>
+  implements ISignedProtocolCall<T>
+{
+  constructor(
+    readonly id: string,
+    readonly signature: Signature,
+    readonly request: T,
+    readonly nonce: Nonce,
+  ) {}
+}
+
 export function mockSignedProtocolCall<T extends TransactionRequestModel>(
-  unsignedCallOrRequest: IUnsignedProtocolCall<T> | T = mockUnsignedProtocolCall<T>(
+  unsignedCall: IUnsignedProtocolCall<T> = mockUnsignedProtocolCall<T>(
     mockTransactionRequestModel() as T,
   ),
-  overrides?: { nonce: Nonce },
-): SignedProtocolCall<T> {
-  if ('request' in unsignedCallOrRequest) {
-    return SignedProtocolCall.create({
-      id: unsignedCallOrRequest.id,
-      signature: mockSignature(),
-      request: unsignedCallOrRequest.request,
-      nonce: overrides?.nonce ?? unsignedCallOrRequest.nonce,
-    });
-  }
-  return SignedProtocolCall.create({
-    id: faker.datatype.uuid(),
-    signature: mockSignature(),
-    request: unsignedCallOrRequest,
-    nonce: overrides?.nonce ?? mockNonce(),
-  });
+): ISignedProtocolCall<T> {
+  return new MockedSignedProtocolCall(
+    unsignedCall.id,
+    mockSignature(),
+    unsignedCall.request,
+    unsignedCall.nonce,
+  );
 }
 
 export function mockUnsignedTransaction<T extends TransactionRequestModel>(
@@ -205,7 +207,7 @@ export class MockedMetaTransaction<T extends TransactionRequestModel> extends Me
   }
 
   static fromSignedCall<T extends TransactionRequestModel>(
-    signedCall: SignedProtocolCall<T>,
+    signedCall: ISignedProtocolCall<T>,
   ): MetaTransaction<T> {
     return new MockedMetaTransaction({
       chainType: ChainType.POLYGON,

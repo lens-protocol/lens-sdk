@@ -9,7 +9,7 @@ import {
   NativeTransaction,
   Nonce,
   ProxyTransaction,
-  SignedProtocolCall,
+  ISignedProtocolCall,
   TransactionKind,
   TransactionRequestModel,
 } from '../../../entities';
@@ -21,6 +21,7 @@ import {
 } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import { IDelegableProtocolCallGateway, WithDelegateFlag } from '../DelegableProtocolCallUseCase';
+import { Data, WithData } from '../PayTransaction';
 import {
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
@@ -34,7 +35,7 @@ export function mockIProtocolCallRelayer<T extends TransactionRequestModel>({
   signedCall,
   result,
 }: {
-  signedCall: SignedProtocolCall<T>;
+  signedCall: ISignedProtocolCall<T>;
   result: Result<MetaTransaction<T>, BroadcastingError>;
 }) {
   const transactionRelayer = mock<IProtocolCallRelayer<T>>();
@@ -125,5 +126,12 @@ export function mockTransactionRequestModelWithDelegateFlag({
   return {
     kind: TransactionKind.CREATE_POST,
     delegate,
+  } as WithDelegateFlag<TransactionRequestModel>;
+}
+
+export function mockTransactionRequestModelWithData(): WithData<TransactionRequestModel> {
+  return {
+    kind: TransactionKind.CREATE_POST,
+    data: faker.datatype.hexadecimal({ length: 32 }) as Data,
   } as WithDelegateFlag<TransactionRequestModel>;
 }

@@ -10,21 +10,14 @@ import {
   UnfollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 
-import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
-import { TypedData } from './TypedData';
-
-class UnsignedUnfollowCall<T extends UnfollowRequest> extends UnsignedLensProtocolCall<T> {
-  constructor(data: { id: string; request: T; typedData: TypedData }) {
-    super(data.id, data.request, data.typedData);
-  }
-}
+import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
 export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall<T extends UnfollowRequest>(
     request: T,
-  ): Promise<UnsignedLensProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<T>> {
     const { data } = await this.apolloClient.mutate<
       CreateUnfollowTypedDataData,
       CreateUnfollowTypedDataVariables
@@ -37,7 +30,9 @@ export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
       },
     });
 
-    return new UnsignedUnfollowCall({
+    return UnsignedProtocolCall.create({
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      functionName: 'burnWithSig',
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),

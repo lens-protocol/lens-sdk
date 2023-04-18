@@ -19,7 +19,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
-import { UnsignedLensProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { mockIMetadataUploader, mockITransactionFactory } from '../../__helpers__/mocks';
 import { ProfileMetadataCallGateway } from '../ProfileMetadataCallGateway';
 
@@ -62,7 +62,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
     it(`should:
         - create a new Profile Metadata updating the profile details
         - upload it via the IMetadataUploader<ProfileMetadata>
-        - create an instance of the ${UnsignedLensProtocolCall.name} w/ the expected typed data`, async () => {
+        - create an instance of the ${UnsignedProtocolCall.name} w/ the expected typed data`, async () => {
       const data = mockCreateSetProfileMetadataTypedDataData();
 
       const { gateway, uploader } = setupTestScenario({
@@ -89,7 +89,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
           bio: request.bio,
         }),
       );
-      expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
+      expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
       expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
     });
 

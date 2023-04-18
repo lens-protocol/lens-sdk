@@ -3,8 +3,14 @@ import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { Wallet, TransactionKind } from '../../../entities';
+import {
+  Wallet,
+  TransactionKind,
+  TransactionRequestModel,
+  UnsignedTransaction,
+} from '../../../entities';
 import { mockWallet } from '../../../entities/__helpers__/mocks';
+import { IPayTransactionGateway, WithData } from '../../transactions/PayTransaction';
 import { ActiveWallet } from '../ActiveWallet';
 import { WalletData } from '../IActiveWalletPresenter';
 import {
@@ -134,4 +140,22 @@ export function mockWalletLoginRequest(
     address: mockEthereumAddress(),
     ...overrides,
   };
+}
+
+export function mockIPayTransactionGateway<T extends TransactionRequestModel>({
+  request,
+  wallet,
+  unsignedTransaction,
+}: {
+  request: WithData<T>;
+  wallet: Wallet;
+  unsignedTransaction: UnsignedTransaction<T>;
+}): IPayTransactionGateway<T> {
+  const gateway = mock<IPayTransactionGateway<T>>();
+
+  when(gateway.prepareSelfFundedTransaction)
+    .calledWith(request, wallet)
+    .mockResolvedValue(unsignedTransaction);
+
+  return gateway;
 }

@@ -29,7 +29,7 @@ import {
 import { ChainType, failure, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
 import { ITransactionFactory } from '../ITransactionFactory';
 import { RelayReceipt } from '../RelayReceipt';
@@ -69,13 +69,19 @@ export class ProfileMetadataCallGateway
   async createUnsignedProtocolCall<T extends UpdateProfileDetailsRequest>(
     request: T,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<T>> {
     const result = await this.createSetProfileMetadataTypedData(
       await this.resolveCreateSetProfileMetadataUriRequest(request),
       nonce,
     );
 
-    return new UnsignedLensProtocolCall(result.id, request, omitTypename(result.typedData));
+    return UnsignedProtocolCall.create({
+      contractAddress: result.typedData.domain.verifyingContract,
+      functionName: 'setProfileMetadataURIWithSig',
+      id: result.id,
+      request,
+      typedData: omitTypename(result.typedData),
+    });
   }
 
   private async createSetProfileMetadataTypedData(
