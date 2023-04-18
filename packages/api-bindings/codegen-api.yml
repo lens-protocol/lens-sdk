@@ -12,6 +12,7 @@ config:
   scalars:
     Attach: string
     BroadcastId: string
+    BlockchainData: string
     ChainId: number
     ClientErc20Amount: ClientErc20Amount
     CollectModuleData: string
@@ -23,6 +24,7 @@ config:
     DecryptionCriteria: DecryptionCriteria
     EncryptedValueScalar: string
     EthereumAddress: EthereumAddress
+    FollowModuleData: string
     FollowPolicy: FollowPolicy
     FollowStatus: FollowStatus
     Handle: string
@@ -41,6 +43,8 @@ config:
     ProfileId: ProfileId
     ProfileInterest: string
     ProxyActionId: string
+    PublicationId: string
+    PublicationUrl: Url
     ReferenceModuleData: string
     ReferencePolicy: ReferencePolicy
     Search: string

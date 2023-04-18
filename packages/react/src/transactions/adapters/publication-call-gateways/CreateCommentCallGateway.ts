@@ -10,6 +10,7 @@ import {
   omitTypename,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
+import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   CreateCommentRequest,
@@ -18,6 +19,8 @@ import {
 import {
   BroadcastingError,
   BroadcastingErrorReason,
+  Data,
+  RequestFallback,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -39,12 +42,12 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
   async createDelegatedTransaction<T extends CreateCommentRequest>(
     request: T,
   ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
-    const result = await this.broadcast(await this.resolveCreateCommentRequestArg(request));
+    const requestArg = await this.resolveCreateCommentRequestArg(request);
+    const result = await this.broadcast(requestArg);
 
     if (result.isFailure()) return failure(result.error);
 
     const receipt = result.value;
-
     const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
@@ -59,23 +62,15 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     request: CreateCommentRequest,
     nonce?: Nonce,
   ): Promise<UnsignedProtocolCall<CreateCommentRequest>> {
-    const { data } = await this.apolloClient.mutate<
-      CreateCommentTypedDataData,
-      CreateCommentTypedDataVariables
-    >({
-      mutation: CreateCommentTypedDataDocument,
-      variables: {
-        request: await this.resolveCreateCommentRequestArg(request),
-        options: nonce ? { overrideSigNonce: nonce } : undefined,
-      },
-    });
+    const requestArg = await this.resolveCreateCommentRequestArg(request);
+
+    const data = await this.createTypedData(requestArg, nonce);
 
     return UnsignedProtocolCall.create({
-      contractAddress: data.result.typedData.domain.verifyingContract,
-      functionName: 'commentWithSig',
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
+      fallback: this.createRequestFallback(data),
     });
   }
 
@@ -93,10 +88,13 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     });
 
     if (data.result.__typename === 'RelayError') {
+      const typedData = await this.createTypedData(requestArg);
+      const fallback = this.createRequestFallback(typedData);
+
       if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
+        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
       }
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
     }
 
     return success({
@@ -105,6 +103,22 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     });
   }
 
+  private async createTypedData(
+    requestArg: CreatePublicCommentRequestArg,
+    nonce?: Nonce,
+  ): Promise<CreateCommentTypedDataData> {
+    const { data } = await this.apolloClient.mutate<
+      CreateCommentTypedDataData,
+      CreateCommentTypedDataVariables
+    >({
+      mutation: CreateCommentTypedDataDocument,
+      variables: {
+        request: requestArg,
+        options: nonce ? { overrideSigNonce: nonce } : undefined,
+      },
+    });
+    return data;
+  }
   private async resolveCreateCommentRequestArg(
     request: CreateCommentRequest,
   ): Promise<CreatePublicCommentRequestArg> {
@@ -116,6 +130,27 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
       publicationId: request.publicationId,
       collectModule: resolveCollectModule(request),
       referenceModule: resolveReferenceModule(request),
+    };
+  }
+
+  private createRequestFallback(data: CreateCommentTypedDataData): RequestFallback {
+    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('comment', [
+      {
+        profileId: data.result.typedData.value.profileId,
+        contentURI: data.result.typedData.value.contentURI,
+        profileIdPointed: data.result.typedData.value.profileIdPointed,
+        pubIdPointed: data.result.typedData.value.pubIdPointed,
+        referenceModuleData: data.result.typedData.value.referenceModuleData,
+        collectModule: data.result.typedData.value.collectModule,
+        collectModuleInitData: data.result.typedData.value.collectModuleInitData,
+        referenceModule: data.result.typedData.value.referenceModule,
+        referenceModuleInitData: data.result.typedData.value.referenceModuleInitData,
+      },
+    ]);
+    return {
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
     };
   }
 }

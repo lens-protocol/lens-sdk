@@ -5,12 +5,14 @@ import {
   CreateSetFollowModuleTypedDataVariables,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
+import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import {
   FollowPolicyType,
   IFollowPolicyCallGateway,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
+import { Data, RequestFallback } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
@@ -63,11 +65,23 @@ export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
     });
 
     return UnsignedProtocolCall.create({
-      contractAddress: data.result.typedData.domain.verifyingContract,
-      functionName: 'setFollowModuleWithSig',
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
+      fallback: this.createRequestFallback(data),
     });
+  }
+
+  private createRequestFallback(data: CreateSetFollowModuleTypedDataData): RequestFallback {
+    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('setFollowModule', [
+      data.result.typedData.value.profileId,
+      data.result.typedData.value.followModule,
+      data.result.typedData.value.followModuleInitData,
+    ]);
+    return {
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
   }
 }

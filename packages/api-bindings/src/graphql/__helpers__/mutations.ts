@@ -187,7 +187,7 @@ export function mockCreateCommentTypedDataData({
       value: {
         __typename: 'CreateCommentEIP712TypedDataValue',
         profileIdPointed: mockProfileId(),
-        pubIdPointed: '',
+        pubIdPointed: faker.datatype.hexadecimal({ length: 2 }),
         nonce,
         deadline: 1644303500,
         profileId: mockProfileId(),
@@ -278,7 +278,7 @@ export function mockCreateFollowTypedDataData({
         nonce,
         deadline: '0',
         profileIds: [mockProfileId()],
-        datas: ['0x00'],
+        datas: [faker.datatype.hexadecimal({ length: 2 })],
       },
     }),
   };
@@ -321,7 +321,7 @@ export function mockCreateUnfollowTypedDataData({
         __typename: 'CreateBurnEIP712TypedDataValue',
         nonce,
         deadline: '0',
-        tokenId: faker.datatype.uuid(),
+        tokenId: faker.datatype.hexadecimal({ length: 2 }),
       },
     }),
   };
@@ -423,7 +423,7 @@ export function mockCreateSetDispatcherTypedDataData({
         nonce,
         deadline: '0',
         profileId: mockProfileId(),
-        dispatcher: faker.datatype.uuid(),
+        dispatcher: mockEthereumAddress(),
       },
     }),
   };
@@ -578,8 +578,8 @@ export function mockCreateCollectTypedDataData({
         nonce,
         deadline: '0',
         profileId: mockProfileId(),
-        pubId: faker.datatype.uuid(),
-        data: ['0x00'],
+        pubId: faker.datatype.hexadecimal({ length: 2 }),
+        data: faker.datatype.hexadecimal({ length: 2 }),
       },
     }),
   };

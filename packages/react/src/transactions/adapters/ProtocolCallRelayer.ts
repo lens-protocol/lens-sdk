@@ -5,11 +5,7 @@ import {
   LensApolloClient,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
-import {
-  MetaTransaction,
-  ISignedProtocolCall,
-  TransactionRequestModel,
-} from '@lens-protocol/domain/entities';
+import { MetaTransaction, TransactionRequestModel } from '@lens-protocol/domain/entities';
 import {
   IProtocolCallRelayer,
   BroadcastingError,
@@ -18,6 +14,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, ILogger, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
+import { SignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
 import { RelayReceipt } from './RelayReceipt';
 
@@ -29,7 +26,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
   ) {}
 
   async relayProtocolCall<T extends SupportedTransactionRequest>(
-    signedCall: ISignedProtocolCall<T>,
+    signedCall: SignedProtocolCall<T>,
   ): PromiseResult<MetaTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(signedCall);
 
@@ -50,7 +47,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
   }
 
   private async broadcast<T extends TransactionRequestModel>(
-    signedCall: ISignedProtocolCall<T>,
+    signedCall: SignedProtocolCall<T>,
   ): PromiseResult<RelayReceipt, BroadcastingError> {
     try {
       const { data } = await this.apolloClient.mutate<
@@ -69,9 +66,13 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
       if (data.result.__typename === 'RelayError') {
         switch (data.result.reason) {
           case RelayErrorReasons.Rejected:
-            return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
+            return failure(
+              new BroadcastingError(BroadcastingErrorReason.REJECTED, signedCall.fallback),
+            );
           default:
-            return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
+            return failure(
+              new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, signedCall.fallback),
+            );
         }
       }
 

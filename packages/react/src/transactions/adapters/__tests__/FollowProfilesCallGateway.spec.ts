@@ -3,7 +3,6 @@ import {
   CreateFollowTypedDataDocument,
   CreateFollowTypedDataData,
   CreateFollowTypedDataVariables,
-  omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   mockCreateFollowTypedDataData,
@@ -18,6 +17,7 @@ import {
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { FollowProfilesCallGateway } from '../FollowProfilesCallGateway';
+import { assertUnsignedProtocolCallCorrectness } from '../__helpers__/mocks';
 
 function createCreateFollowTypedDataMutationMockedResponse({
   variables,
@@ -62,8 +62,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
 
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
-        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+        assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
     });
 
@@ -95,8 +94,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
 
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
-        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+        assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
     });
 
@@ -131,8 +129,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
 
         const unsignedCall = await followProfilesCallGateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
-        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+        assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
     });
 

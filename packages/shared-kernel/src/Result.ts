@@ -1,3 +1,4 @@
+import { invariant } from './ts-helpers/invariant';
 import { Narrow } from './ts-helpers/types';
 
 /**
@@ -151,7 +152,6 @@ export type Result<T, E extends IEquatableError> = Success<T, E> | Failure<T, E>
 
 /**
  * A `PromiseResult` is a convenience type alias that represents either a {@link Result} in the context of asynchronous tasks.
- *
  */
 export type PromiseResult<T, E extends IEquatableError> = Promise<Result<T, E>>;
 
@@ -165,3 +165,21 @@ export function success<T, E>(value: any = undefined): Success<T, E> {
 
 export const failure = <T, E extends IEquatableError>(error: E): Failure<T, E> =>
   new Failure(error);
+
+/**
+ * Returns `true` if the result is a success.
+ */
+export function assertSuccess<T, E extends IEquatableError>(
+  result: Result<T, E>,
+): asserts result is Success<T, E> {
+  invariant(result.isSuccess(), 'Expected a success result');
+}
+
+/**
+ * Returns `true` if the result is a failure.
+ */
+export function assertFailure<T, E extends IEquatableError>(
+  result: Result<T, E>,
+): asserts result is Failure<T, E> {
+  invariant(result.isFailure(), 'Expected a failure result');
+}

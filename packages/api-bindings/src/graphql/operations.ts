@@ -31,7 +31,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** Blockchain data scalar type */
-  BlockchainData: unknown;
+  BlockchainData: string;
   /** Broadcast scalar id type */
   BroadcastId: string;
   /** ChainId custom scalar type */
@@ -60,17 +60,17 @@ export type Scalars = {
   /** Ethereum address custom scalar type */
   EthereumAddress: EthereumAddress;
   /** follow module data scalar type */
-  FollowModuleData: unknown;
+  FollowModuleData: string;
   FollowPolicy: FollowPolicy;
   FollowStatus: FollowStatus;
   /** handle custom scalar type */
   Handle: string;
   /** handle claim id custom scalar type */
   HandleClaimIdScalar: unknown;
-  /** IfpsCid scalar type */
-  IfpsCid: unknown;
   /** Internal publication id custom scalar type */
   InternalPublicationId: PublicationId;
+  /** IpfsCid scalar type */
+  IpfsCid: unknown;
   /** jwt custom scalar type */
   Jwt: string;
   /** limit custom scalar type */
@@ -100,11 +100,11 @@ export type Scalars = {
   /** proxy action scalar id type */
   ProxyActionId: string;
   /** Publication id custom scalar type */
-  PublicationId: unknown;
+  PublicationId: string;
   /** The publication tag */
   PublicationTag: unknown;
   /** Publication url scalar type */
-  PublicationUrl: unknown;
+  PublicationUrl: Url;
   /** The reaction id */
   ReactionId: unknown;
   /** reference module data scalar type */
@@ -981,6 +981,7 @@ export type NftUpdateItemOrder = {
 export type NotificationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  highSignalFilter?: InputMaybe<Scalars['Boolean']>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
   /** The profile id */
   notificationTypes?: InputMaybe<Array<NotificationTypes>>;
@@ -1105,7 +1106,7 @@ export type PublicMediaRequest = {
   /** The cover for any video or audio you attached */
   cover?: InputMaybe<Scalars['Url']>;
   /** Pre calculated cid of the file to push */
-  itemCid: Scalars['IfpsCid'];
+  itemCid: Scalars['IpfsCid'];
   /** This is the mime type of media */
   type?: InputMaybe<Scalars['MimeType']>;
 };
@@ -1432,6 +1433,40 @@ export enum RelayErrorReasons {
   WrongWalletSigned = 'WRONG_WALLET_SIGNED',
 }
 
+/** The relay role key */
+export enum RelayRoleKey {
+  CreateProfile = 'CREATE_PROFILE',
+  Dispatcher_1 = 'DISPATCHER_1',
+  Dispatcher_2 = 'DISPATCHER_2',
+  Dispatcher_3 = 'DISPATCHER_3',
+  Dispatcher_4 = 'DISPATCHER_4',
+  Dispatcher_5 = 'DISPATCHER_5',
+  Dispatcher_6 = 'DISPATCHER_6',
+  Dispatcher_7 = 'DISPATCHER_7',
+  Dispatcher_8 = 'DISPATCHER_8',
+  Dispatcher_9 = 'DISPATCHER_9',
+  Dispatcher_10 = 'DISPATCHER_10',
+  ProxyActionCollect_1 = 'PROXY_ACTION_COLLECT_1',
+  ProxyActionCollect_2 = 'PROXY_ACTION_COLLECT_2',
+  ProxyActionCollect_3 = 'PROXY_ACTION_COLLECT_3',
+  ProxyActionCollect_4 = 'PROXY_ACTION_COLLECT_4',
+  ProxyActionCollect_5 = 'PROXY_ACTION_COLLECT_5',
+  ProxyActionCollect_6 = 'PROXY_ACTION_COLLECT_6',
+  ProxyActionFollow_1 = 'PROXY_ACTION_FOLLOW_1',
+  ProxyActionFollow_2 = 'PROXY_ACTION_FOLLOW_2',
+  ProxyActionFollow_3 = 'PROXY_ACTION_FOLLOW_3',
+  ProxyActionFollow_4 = 'PROXY_ACTION_FOLLOW_4',
+  ProxyActionFollow_5 = 'PROXY_ACTION_FOLLOW_5',
+  ProxyActionFollow_6 = 'PROXY_ACTION_FOLLOW_6',
+  ProxyActionFollow_7 = 'PROXY_ACTION_FOLLOW_7',
+  ProxyActionFollow_8 = 'PROXY_ACTION_FOLLOW_8',
+  ProxyActionFollow_9 = 'PROXY_ACTION_FOLLOW_9',
+  ProxyActionFollow_10 = 'PROXY_ACTION_FOLLOW_10',
+  WithSig_1 = 'WITH_SIG_1',
+  WithSig_2 = 'WITH_SIG_2',
+  WithSig_3 = 'WITH_SIG_3',
+}
+
 /** The request object to remove interests from a profile */
 export type RemoveProfileInterestsRequest = {
   /** The profile interest to add */
@@ -1648,8 +1683,8 @@ export type CreateCollectTypedDataData = {
         nonce: number;
         deadline: unknown;
         profileId: ProfileId;
-        pubId: unknown;
-        data: unknown;
+        pubId: string;
+        data: string;
       };
     };
   };
@@ -1671,9 +1706,9 @@ export type CreateCommentTypedDataData = {
         nonce: number;
         deadline: unknown;
         profileId: ProfileId;
-        contentURI: unknown;
+        contentURI: Url;
         profileIdPointed: ProfileId;
-        pubIdPointed: unknown;
+        pubIdPointed: string;
         collectModule: string;
         collectModuleInitData: string;
         referenceModuleData: string;
@@ -2070,7 +2105,7 @@ export type CreateFollowTypedDataData = {
         nonce: number;
         deadline: unknown;
         profileIds: Array<ProfileId>;
-        datas: Array<unknown>;
+        datas: Array<string>;
       };
     };
   };
@@ -2182,7 +2217,7 @@ export type CreateMirrorTypedDataData = {
         deadline: unknown;
         profileId: ProfileId;
         profileIdPointed: ProfileId;
-        pubIdPointed: unknown;
+        pubIdPointed: string;
         referenceModuleData: string;
         referenceModule: string;
         referenceModuleInitData: string;
@@ -2315,7 +2350,7 @@ export type CreatePostTypedDataData = {
         nonce: number;
         deadline: unknown;
         profileId: ProfileId;
-        contentURI: unknown;
+        contentURI: Url;
         collectModule: string;
         collectModuleInitData: string;
         referenceModule: string;
@@ -2504,7 +2539,7 @@ export type CreateSetFollowModuleTypedDataData = {
         deadline: unknown;
         profileId: ProfileId;
         followModule: string;
-        followModuleInitData: unknown;
+        followModuleInitData: string;
       };
     };
   };

@@ -1,4 +1,4 @@
-import { omitTypename, RelayErrorReasons } from '@lens-protocol/api-bindings';
+import { RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockCreateSetProfileImageUriTypedDataData,
@@ -21,7 +21,11 @@ import { ChainType } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ProfileImageCallGateway } from '../ProfileImageCallGateway';
-import { mockITransactionFactory } from '../__helpers__/mocks';
+import {
+  assertBroadcastingErrorResultWithRequestFallback,
+  assertUnsignedProtocolCallCorrectness,
+  mockITransactionFactory,
+} from '../__helpers__/mocks';
 
 describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
   describe.each([
@@ -57,11 +61,10 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
     },
   ])('with $requestName', ({ createExerciseData }) => {
     const { request, expectedRequestVars } = createExerciseData();
+    const data = mockCreateSetProfileImageUriTypedDataData();
 
     describe(`when calling the "${ProfileImageCallGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
       it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
-        const data = mockCreateSetProfileImageUriTypedDataData();
-
         const apollo = createMockApolloClientWithMultipleResponses([
           createCreateSetProfileImageUriTypedDataMockedResponse({
             variables: {
@@ -76,8 +79,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
 
         const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
-        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+        assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
 
       it(`should be possible to override the signature nonce`, async () => {
@@ -133,16 +135,16 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
 
       it.each([
         {
-          expected: new BroadcastingError(BroadcastingErrorReason.REJECTED),
+          expectedBroadcastingErrorReason: BroadcastingErrorReason.REJECTED,
           relayError: mockRelayErrorFragment(RelayErrorReasons.Rejected),
         },
         {
-          expected: new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED),
+          expectedBroadcastingErrorReason: BroadcastingErrorReason.UNSPECIFIED,
           relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
         },
       ])(
-        `should fail w/ a $expected.constructor.name in case of RelayError response with "$relayError.reason" reason`,
-        async ({ relayError, expected }) => {
+        `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$relayError.reason" reason`,
+        async ({ relayError, expectedBroadcastingErrorReason }) => {
           const apollo = createMockApolloClientWithMultipleResponses([
             createSetProfileImageURIViaDispatcherMockedResponse({
               variables: {
@@ -152,13 +154,23 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
                 result: relayError,
               },
             }),
+            createCreateSetProfileImageUriTypedDataMockedResponse({
+              variables: {
+                request: expectedRequestVars,
+              },
+              data,
+            }),
           ]);
           const transactionFactory = mockITransactionFactory();
 
           const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
           const result = await gateway.createDelegatedTransaction(request);
 
-          expect(() => result.unwrap()).toThrow(expected);
+          assertBroadcastingErrorResultWithRequestFallback(
+            result,
+            expectedBroadcastingErrorReason,
+            data.result.typedData,
+          );
         },
       );
     });

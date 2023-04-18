@@ -6882,6 +6882,7 @@ export type QueryKeySpecifier = (
   | 'publications'
   | 'recommendedProfiles'
   | 'rel'
+  | 'relayQueues'
   | 'search'
   | 'txIdToTxHash'
   | 'unknownEnabledModules'
@@ -6939,6 +6940,7 @@ export type QueryFieldPolicy = {
   publications?: FieldPolicy<any> | FieldReadFunction<any>;
   recommendedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   rel?: FieldPolicy<any> | FieldReadFunction<any>;
+  relayQueues?: FieldPolicy<any> | FieldReadFunction<any>;
   search?: FieldPolicy<any> | FieldReadFunction<any>;
   txIdToTxHash?: FieldPolicy<any> | FieldReadFunction<any>;
   unknownEnabledModules?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6971,6 +6973,17 @@ export type RecipientDataOutputFieldPolicy = {
 export type RelayErrorKeySpecifier = ('reason' | RelayErrorKeySpecifier)[];
 export type RelayErrorFieldPolicy = {
   reason?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type RelayQueueResultKeySpecifier = (
+  | 'address'
+  | 'queue'
+  | 'relayer'
+  | RelayQueueResultKeySpecifier
+)[];
+export type RelayQueueResultFieldPolicy = {
+  address?: FieldPolicy<any> | FieldReadFunction<any>;
+  queue?: FieldPolicy<any> | FieldReadFunction<any>;
+  relayer?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type RelayerResultKeySpecifier = ('txHash' | 'txId' | RelayerResultKeySpecifier)[];
 export type RelayerResultFieldPolicy = {
@@ -8253,6 +8266,13 @@ export type StrictTypedTypePolicies = {
   RelayError?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | RelayErrorKeySpecifier | (() => undefined | RelayErrorKeySpecifier);
     fields?: RelayErrorFieldPolicy;
+  };
+  RelayQueueResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | RelayQueueResultKeySpecifier
+      | (() => undefined | RelayQueueResultKeySpecifier);
+    fields?: RelayQueueResultFieldPolicy;
   };
   RelayerResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | RelayerResultKeySpecifier | (() => undefined | RelayerResultKeySpecifier);

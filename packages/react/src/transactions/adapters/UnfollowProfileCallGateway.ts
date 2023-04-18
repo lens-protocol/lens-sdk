@@ -5,10 +5,12 @@ import {
   LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
+import { lensFollowNFT } from '@lens-protocol/blockchain-bindings';
 import {
   IUnfollowProfileCallGateway,
   UnfollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
+import { Data, RequestFallback } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 
@@ -31,11 +33,21 @@ export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
     });
 
     return UnsignedProtocolCall.create({
-      contractAddress: data.result.typedData.domain.verifyingContract,
-      functionName: 'burnWithSig',
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
+      fallback: this.createRequestFallback(data),
     });
+  }
+
+  private createRequestFallback(data: CreateUnfollowTypedDataData): RequestFallback {
+    const contract = lensFollowNFT(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('burn', [
+      data.result.typedData.value.tokenId,
+    ]);
+    return {
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
   }
 }

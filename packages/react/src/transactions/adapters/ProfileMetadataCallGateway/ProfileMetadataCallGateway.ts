@@ -15,6 +15,7 @@ import {
   ProfileMetadata,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
+import { lensPeriphery } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce, ProfileId } from '@lens-protocol/domain/entities';
 import {
   IProfileDetailsCallGateway,
@@ -25,6 +26,8 @@ import {
   BroadcastingError,
   BroadcastingErrorReason,
   SupportedTransactionRequest,
+  RequestFallback,
+  Data,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -47,9 +50,8 @@ export class ProfileMetadataCallGateway
   async createDelegatedTransaction<T extends UpdateProfileDetailsRequest>(
     request: T,
   ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
-    const result = await this.broadcast(
-      await this.resolveCreateSetProfileMetadataUriRequest(request),
-    );
+    const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
+    const result = await this.broadcast(requestArg);
 
     if (result.isFailure()) return failure(result.error);
 
@@ -70,24 +72,51 @@ export class ProfileMetadataCallGateway
     request: T,
     nonce?: Nonce,
   ): Promise<UnsignedProtocolCall<T>> {
-    const result = await this.createSetProfileMetadataTypedData(
-      await this.resolveCreateSetProfileMetadataUriRequest(request),
-      nonce,
-    );
+    const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
+
+    const data = await this.createTypedData(requestArg, nonce);
 
     return UnsignedProtocolCall.create({
-      contractAddress: result.typedData.domain.verifyingContract,
-      functionName: 'setProfileMetadataURIWithSig',
-      id: result.id,
+      id: data.result.id,
       request,
-      typedData: omitTypename(result.typedData),
+      typedData: omitTypename(data.result.typedData),
+      fallback: this.createRequestFallback(data),
     });
   }
 
-  private async createSetProfileMetadataTypedData(
+  private async broadcast(
+    requestArg: CreatePublicSetProfileMetadataUriRequest,
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
+    const { data } = await this.apolloClient.mutate<
+      CreateSetProfileMetadataViaDispatcherData,
+      CreateSetProfileMetadataViaDispatcherVariables
+    >({
+      mutation: CreateSetProfileMetadataViaDispatcherDocument,
+      variables: {
+        request: requestArg,
+      },
+    });
+
+    if (data.result.__typename === 'RelayError') {
+      const typedData = await this.createTypedData(requestArg);
+      const fallback = this.createRequestFallback(typedData);
+
+      if (data.result.reason === RelayErrorReasons.Rejected) {
+        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
+      }
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
+    }
+
+    return success({
+      indexingId: data.result.txId,
+      txHash: data.result.txHash,
+    });
+  }
+
+  private async createTypedData(
     request: CreatePublicSetProfileMetadataUriRequest,
     nonce?: Nonce,
-  ) {
+  ): Promise<CreateSetProfileMetadataTypedDataData> {
     const { data } = await this.apolloClient.mutate<
       CreateSetProfileMetadataTypedDataData,
       CreateSetProfileMetadataTypedDataVariables
@@ -99,31 +128,7 @@ export class ProfileMetadataCallGateway
       },
     });
 
-    return data.result;
-  }
-
-  private async broadcast(
-    request: CreatePublicSetProfileMetadataUriRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
-    const { data } = await this.apolloClient.mutate<
-      CreateSetProfileMetadataViaDispatcherData,
-      CreateSetProfileMetadataViaDispatcherVariables
-    >({
-      mutation: CreateSetProfileMetadataViaDispatcherDocument,
-      variables: { request },
-    });
-
-    if (data.result.__typename === 'RelayError') {
-      if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED));
-      }
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED));
-    }
-
-    return success({
-      indexingId: data.result.txId,
-      txHash: data.result.txHash,
-    });
+    return data;
   }
 
   private async resolveCreateSetProfileMetadataUriRequest(
@@ -149,5 +154,17 @@ export class ProfileMetadataCallGateway
     });
 
     return data.result ?? never(`Cannot update profile "${profileId}: profile not found`);
+  }
+
+  private createRequestFallback(data: CreateSetProfileMetadataTypedDataData): RequestFallback {
+    const contract = lensPeriphery(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('setProfileMetadataURI', [
+      data.result.typedData.value.profileId,
+      data.result.typedData.value.metadata,
+    ]);
+    return {
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
   }
 }

@@ -4,7 +4,6 @@ import {
   CreateSetFollowModuleTypedDataData,
   CreateSetFollowModuleTypedDataVariables,
   FollowModuleParams,
-  omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
@@ -24,6 +23,7 @@ import { never } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { FollowPolicyCallGateway } from '../FollowPolicyCallGateway';
+import { assertUnsignedProtocolCallCorrectness } from '../__helpers__/mocks';
 
 function createCreateSetFollowModuleTypedDataMockedResponse({
   variables,
@@ -73,7 +73,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
       }),
     },
   ])(
-    `when calling the "${FollowPolicyCallGateway.prototype.createUnsignedProtocolCall.name}" method`,
+    `when calling the "${FollowPolicyCallGateway.prototype.createUnsignedProtocolCall.name}" method $description`,
     ({ policy, expectedFollowModule }) => {
       const request = mockUpdateFollowPolicyRequest({ policy });
 
@@ -95,8 +95,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
 
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedProtocolCall);
-        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+        assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
 
       it(`should be possible to override the signature nonce`, async () => {

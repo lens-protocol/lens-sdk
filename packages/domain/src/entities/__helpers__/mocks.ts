@@ -100,7 +100,7 @@ class MockedUnsignedProtocolCall<T extends TransactionRequestModel>
   }
 }
 
-export function mockUnsignedProtocolCall<T extends TransactionRequestModel>(
+export function mockIUnsignedProtocolCall<T extends TransactionRequestModel>(
   request: T,
   overrides?: { nonce: Nonce },
 ): IUnsignedProtocolCall<T> {
@@ -118,8 +118,8 @@ class MockedSignedProtocolCall<T extends TransactionRequestModel>
   ) {}
 }
 
-export function mockSignedProtocolCall<T extends TransactionRequestModel>(
-  unsignedCall: IUnsignedProtocolCall<T> = mockUnsignedProtocolCall<T>(
+export function mockISignedProtocolCall<T extends TransactionRequestModel>(
+  unsignedCall: IUnsignedProtocolCall<T> = mockIUnsignedProtocolCall<T>(
     mockTransactionRequestModel() as T,
   ),
 ): ISignedProtocolCall<T> {

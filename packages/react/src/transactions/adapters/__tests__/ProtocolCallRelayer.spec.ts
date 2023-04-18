@@ -10,15 +10,16 @@ import {
   MetaTransaction,
   TransactionRequestModel,
 } from '@lens-protocol/domain/entities';
-import { mockSignedProtocolCall } from '@lens-protocol/domain/mocks';
 import {
   BroadcastingError,
   BroadcastingErrorReason,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, ILogger } from '@lens-protocol/shared-kernel';
+import { assertFailure, ChainType, ILogger } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
+import { SignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { mockSignedProtocolCall } from '../../../wallet/adapters/__helpers__/mocks';
 import { ProtocolCallRelayer } from '../ProtocolCallRelayer';
 import { mockITransactionFactory } from '../__helpers__/mocks';
 
@@ -66,6 +67,16 @@ describe(`Given an instance of the ${ProtocolCallRelayer.name}`, () => {
   });
 
   describe(`when relaying an ISignedProtocolCall fails`, () => {
+    it(`should resolve with a failure(${BroadcastingError.name}) carrying the RequestFallback from the ${SignedProtocolCall.name}`, async () => {
+      const relayResult = mockRelayErrorFragment(RelayErrorReasons.Rejected);
+
+      const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
+      const result = await transactionRelayer.relayProtocolCall(signedCall);
+
+      assertFailure(result);
+      expect(result.error.fallback).toMatchObject(signedCall.fallback);
+    });
+
     describe(`with a Rejected reason`, () => {
       it(`should resolve with a failure(${BroadcastingError.name}) with ${BroadcastingErrorReason.REJECTED}`, async () => {
         const relayResult = mockRelayErrorFragment(RelayErrorReasons.Rejected);
