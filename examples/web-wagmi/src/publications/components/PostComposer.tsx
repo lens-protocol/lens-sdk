@@ -1,5 +1,4 @@
 import {
-  BroadcastingError,
   ContentFocus,
   ProfileOwnedByMe,
   supportsSelfFundedFallback,
@@ -15,8 +14,16 @@ export type PostComposerProps = {
 };
 
 export function PostComposer({ publisher }: PostComposerProps) {
-  const { execute: create, error, isPending } = useCreatePost({ publisher, upload });
-  const { execute: payGasFor } = useSelfFundedFallback();
+  const {
+    execute: post,
+    error: postError,
+    isPending: isPosting,
+  } = useCreatePost({ publisher, upload });
+  const {
+    execute: fallback,
+    error: fallbackError,
+    isPending: fallbackInProgress,
+  } = useSelfFundedFallback();
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -26,20 +33,20 @@ export function PostComposer({ publisher }: PostComposerProps) {
     const formData = new FormData(form);
     const content = (formData.get('content') as string | null) ?? never();
 
-    let result = await create({
+    let result = await post({
       content,
       contentFocus: ContentFocus.TEXT,
       locale: 'en',
     });
 
     if (result.isFailure()) {
-      if (result.error instanceof BroadcastingError && supportsSelfFundedFallback(result.error)) {
+      if (supportsSelfFundedFallback(result.error)) {
         const retry = window.confirm(
           'We cannot cover the transaction costs at this time. Do you want to retry with your own MATIC?',
         );
 
         if (retry) {
-          result = await payGasFor(result.error.fallback);
+          result = await fallback(result.error.fallback);
         }
       }
     }
@@ -48,6 +55,8 @@ export function PostComposer({ publisher }: PostComposerProps) {
       form.reset();
     }
   };
+
+  const isPending = isPosting || fallbackInProgress;
 
   return (
     <form onSubmit={submit}>
@@ -66,7 +75,8 @@ export function PostComposer({ publisher }: PostComposerProps) {
           Post
         </button>
 
-        {error && <pre>{error.message}</pre>}
+        {!isPosting && postError && <pre>{postError.message}</pre>}
+        {!fallbackInProgress && fallbackError && <pre>{fallbackError.message}</pre>}
       </fieldset>
     </form>
   );
