@@ -2,8 +2,9 @@ import {
   BroadcastingError,
   ContentFocus,
   ProfileOwnedByMe,
-  supportsSelfFundedRetry,
+  supportsSelfFundedFallback,
   useCreatePost,
+  useSelfFundedFallback,
 } from '@lens-protocol/react-web';
 
 import { upload } from '../../upload';
@@ -15,6 +16,7 @@ export type PostComposerProps = {
 
 export function PostComposer({ publisher }: PostComposerProps) {
   const { execute: create, error, isPending } = useCreatePost({ publisher, upload });
+  const { execute: payGasFor } = useSelfFundedFallback();
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,13 +33,13 @@ export function PostComposer({ publisher }: PostComposerProps) {
     });
 
     if (result.isFailure()) {
-      if (result.error instanceof BroadcastingError && supportsSelfFundedRetry(result.error)) {
+      if (result.error instanceof BroadcastingError && supportsSelfFundedFallback(result.error)) {
         const retry = window.confirm(
           'We cannot cover the transaction costs at this time. Do you want to retry with your own MATIC?',
         );
 
         if (retry) {
-          result = await result.error.retrySelfFunded();
+          result = await payGasFor(result.error.fallback);
         }
       }
     }

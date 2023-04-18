@@ -1,16 +1,5 @@
-import {
-  PendingSigningRequestError,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
-import {
-  BroadcastingError,
-  SupportedTransactionRequest,
-} from '@lens-protocol/domain/use-cases/transactions';
 import { IEquatableError, PromiseResult } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
-
-import { SelfFundedProtocolCallRequest } from '../transactions/adapters/SelfFundedProtocolCallRequest';
 
 export type OperationHandler<
   TResult,
@@ -59,21 +48,4 @@ export function useOperation<TResult, TError extends IEquatableError, TArgs exte
     },
     isPending,
   };
-}
-
-/**
- *
- */
-export interface ISelfFundedFallback {
-  fallback: SelfFundedProtocolCallRequest<SupportedTransactionRequest>;
-}
-
-/**
- * Given a {@link BroadcastingError}, returns true if it implements the {@link ISelfFundedFallback} interface.
- *
- */
-export function supportsSelfFundedRetry(
-  error: IEquatableError,
-): error is BroadcastingError & ISelfFundedFallback {
-  return error instanceof BroadcastingError && error.fallback !== undefined;
 }

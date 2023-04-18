@@ -16,7 +16,7 @@
   "theme": "my-theme",
   "disableSources": true,
   "treatWarningsAsErrors": true,
-  "intentionallyNotExported": [],
+  "intentionallyNotExported": ["SelfFundedProtocolCallRequest"],
   "categoryOrder": ["Components", "Hooks", "Utils", "*"],
   "categorizeByGroup": true,
   "sort": ["kind", "required-first", "alphabetical"],

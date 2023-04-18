@@ -50,10 +50,10 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
 export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
-  async createUnsignedProtocolCall<T extends FollowRequest>(
-    request: T,
+  async createUnsignedProtocolCall(
+    request: FollowRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<FollowRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateFollowTypedDataData,
       CreateFollowTypedDataVariables
@@ -75,10 +75,10 @@ export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
     });
   }
 
-  private createRequestFallback<T extends FollowRequest>(
-    request: T,
+  private createRequestFallback(
+    request: FollowRequest,
     data: CreateFollowTypedDataData,
-  ): SelfFundedProtocolCallRequest<T> {
+  ): SelfFundedProtocolCallRequest<FollowRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('follow', [
       data.result.typedData.value.profileIds,

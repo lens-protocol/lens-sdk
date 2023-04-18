@@ -152,6 +152,6 @@ export function mockSelfFundedProtocolCallRequest<
   return {
     contractAddress: mockEthereumAddress(),
     encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
-    ...(mockTransactionRequestModel() as TRequest),
-  };
+    ...mockTransactionRequestModel(),
+  } as SelfFundedProtocolCallRequest<TRequest>;
 }

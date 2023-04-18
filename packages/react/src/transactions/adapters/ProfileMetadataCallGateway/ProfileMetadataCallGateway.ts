@@ -44,9 +44,9 @@ export class ProfileMetadataCallGateway
     private readonly uploader: IMetadataUploader<ProfileMetadata>,
   ) {}
 
-  async createDelegatedTransaction<T extends UpdateProfileDetailsRequest>(
-    request: T,
-  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
+  async createDelegatedTransaction(
+    request: UpdateProfileDetailsRequest,
+  ): PromiseResult<NativeTransaction<UpdateProfileDetailsRequest>, BroadcastingError> {
     const result = await this.broadcast(request);
 
     if (result.isFailure()) return failure(result.error);
@@ -64,10 +64,10 @@ export class ProfileMetadataCallGateway
     return success(transaction);
   }
 
-  async createUnsignedProtocolCall<T extends UpdateProfileDetailsRequest>(
-    request: T,
+  async createUnsignedProtocolCall(
+    request: UpdateProfileDetailsRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<UpdateProfileDetailsRequest>> {
     const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
 
     const data = await this.createTypedData(requestArg, nonce);
@@ -151,10 +151,10 @@ export class ProfileMetadataCallGateway
     return data.result ?? never(`Cannot update profile "${profileId}: profile not found`);
   }
 
-  private createRequestFallback<T extends UpdateProfileDetailsRequest>(
-    request: T,
+  private createRequestFallback(
+    request: UpdateProfileDetailsRequest,
     data: CreateSetProfileMetadataTypedDataData,
-  ): SelfFundedProtocolCallRequest<T> {
+  ): SelfFundedProtocolCallRequest<UpdateProfileDetailsRequest> {
     const contract = lensPeriphery(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileMetadataURI', [
       data.result.typedData.value.profileId,

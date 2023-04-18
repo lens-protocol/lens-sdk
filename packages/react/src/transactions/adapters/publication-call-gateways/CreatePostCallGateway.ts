@@ -29,16 +29,16 @@ import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRe
 import { handleRelayError, RelayReceipt } from '../relayer';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
-export class CreatePostCallGateway<R extends CreatePostRequest> implements ICreatePostCallGateway {
+export class CreatePostCallGateway implements ICreatePostCallGateway {
   constructor(
     private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
-    private readonly metadataUploader: IMetadataUploader<R>,
+    private readonly metadataUploader: IMetadataUploader<CreatePostRequest>,
   ) {}
 
-  async createDelegatedTransaction<T extends R>(
-    request: T,
-  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
+  async createDelegatedTransaction(
+    request: CreatePostRequest,
+  ): PromiseResult<NativeTransaction<CreatePostRequest>, BroadcastingError> {
     const result = await this.broadcast(request);
 
     if (result.isFailure()) return failure(result.error);
@@ -55,8 +55,8 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     return success(transaction);
   }
 
-  async createUnsignedProtocolCall<T extends R>(
-    request: T,
+  async createUnsignedProtocolCall(
+    request: CreatePostRequest,
     nonce?: Nonce,
   ): Promise<UnsignedProtocolCall<CreatePostRequest>> {
     const requestArg = await this.resolveCreatePostRequestArg(request);
@@ -71,7 +71,9 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     });
   }
 
-  private async broadcast<T extends R>(request: T): PromiseResult<RelayReceipt, BroadcastingError> {
+  private async broadcast(
+    request: CreatePostRequest,
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
     const requestArg = await this.resolveCreatePostRequestArg(request);
 
     const { data } = await this.apolloClient.mutate<
@@ -114,8 +116,8 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     return data;
   }
 
-  private async resolveCreatePostRequestArg<T extends R>(
-    request: T,
+  private async resolveCreatePostRequestArg(
+    request: CreatePostRequest,
   ): Promise<CreatePublicPostRequestArg> {
     return {
       contentURI: await this.metadataUploader.upload(request),
@@ -125,10 +127,10 @@ export class CreatePostCallGateway<R extends CreatePostRequest> implements ICrea
     };
   }
 
-  private createRequestFallback<T extends R>(
-    request: T,
+  private createRequestFallback(
+    request: CreatePostRequest,
     data: CreatePostTypedDataData,
-  ): SelfFundedProtocolCallRequest<T> {
+  ): SelfFundedProtocolCallRequest<CreatePostRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('post', [
       {

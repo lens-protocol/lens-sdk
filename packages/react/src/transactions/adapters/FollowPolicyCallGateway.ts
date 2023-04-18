@@ -46,10 +46,10 @@ function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
 export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
-  async createUnsignedProtocolCall<T extends UpdateFollowPolicyRequest>(
-    request: T,
+  async createUnsignedProtocolCall(
+    request: UpdateFollowPolicyRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<UpdateFollowPolicyRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateSetFollowModuleTypedDataData,
       CreateSetFollowModuleTypedDataVariables
@@ -72,10 +72,10 @@ export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
     });
   }
 
-  private createRequestFallback<T extends UpdateFollowPolicyRequest>(
-    request: T,
+  private createRequestFallback(
+    request: UpdateFollowPolicyRequest,
     data: CreateSetFollowModuleTypedDataData,
-  ): SelfFundedProtocolCallRequest<T> {
+  ): SelfFundedProtocolCallRequest<UpdateFollowPolicyRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setFollowModule', [
       data.result.typedData.value.profileId,

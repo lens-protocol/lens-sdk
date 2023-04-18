@@ -8,6 +8,7 @@ export * from './useCreatePost';
 export * from './useFollow';
 export * from './useRecentPosts';
 export * from './useRecentTransactions';
+export * from './useSelfFundedFallback';
 export * from './useUnfollow';
 export * from './useUpdateDispatcherConfig';
 export * from './useUpdateFollowPolicy';
@@ -97,5 +98,6 @@ export {
 /**
  * Helpers
  */
+export type { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 export type { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 export { FailedUploadError } from './adapters/IMetadataUploader';

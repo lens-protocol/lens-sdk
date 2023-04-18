@@ -1,0 +1,86 @@
+import {
+  PendingSigningRequestError,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
+import {
+  BroadcastingError,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
+import { IEquatableError } from '@lens-protocol/shared-kernel';
+
+import { Operation, useOperation } from '../helpers/operations';
+import { SelfFundedProtocolCallRequest } from './adapters/SelfFundedProtocolCallRequest';
+import { usePayTransactionController } from './adapters/usePayTransactionController';
+
+/**
+ * An opaque data structure that encapsulates the data required to make a self-funded protocol call.
+ *
+ * @internal
+ */
+export type SelfFundedOperationRequest = SelfFundedProtocolCallRequest<SupportedTransactionRequest>;
+
+export interface ISelfFundedFallback {
+  /**
+   * The fallback request to be executed if the original request fails.
+   *
+   * See {@link useSelfFundedFallback} for more information.
+   */
+  fallback: SelfFundedOperationRequest;
+}
+
+/**
+ * Given a {@link BroadcastingError}, returns true if it implements the {@link ISelfFundedFallback} interface.
+ *
+ */
+export function supportsSelfFundedFallback(
+  error: IEquatableError,
+): error is BroadcastingError & ISelfFundedFallback {
+  return error instanceof BroadcastingError && error.fallback !== undefined;
+}
+
+export type SelfFundedOperation = Operation<
+  void,
+  PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  [SelfFundedOperationRequest]
+>;
+
+/**
+ * `useExploreProfiles` is an hook that let you retry a failed operation that could be self-funded.
+ *
+ * @category Misc
+ * @group Hooks
+ *
+ * @example Create a post
+ * ```ts
+ * import { ContentFocus, ProfileOwnedByMe, supportsSelfFundedFallback, useCreatePost, useSelfFundedFallback } from '@lens-protocol/react-web';
+ *
+ * function PostComposer({ publisher }: { publisher: ProfileOwnedByMe }) {
+ *   const { execute: createPost, error, isPending } = useCreatePost({ publisher, upload: uploadToIpfs });
+ *   const { execute: createPostFromWallet, error: selfFundedError, isPending: selfFundedPending } = useSelfFundedFallback();
+ *
+ *   const submit = async (content: string) => {
+ *     const result = await create({
+ *       content,
+ *       contentFocus: ContentFocus.TEXT,
+ *       locale: 'en',
+ *     });
+ *
+ *     if (result.isFailure()) {
+ *       if (supportsSelfFundedFallback(result.error)) {
+ *         await createPostFromWallet(result.error.fallback)
+ *       }
+ *     }
+ *
+ *     // ...
+ *   };
+ *
+ *   // continues with your UI/form that invokes the submit(content) handler above
+ * }
+ * ```
+ */
+export function useSelfFundedFallback(): SelfFundedOperation {
+  const payTransaction = usePayTransactionController();
+
+  return useOperation(payTransaction);
+}

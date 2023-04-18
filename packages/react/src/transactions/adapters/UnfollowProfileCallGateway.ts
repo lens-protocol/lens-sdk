@@ -17,9 +17,9 @@ import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallReq
 export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
-  async createUnsignedProtocolCall<T extends UnfollowRequest>(
-    request: T,
-  ): Promise<UnsignedProtocolCall<T>> {
+  async createUnsignedProtocolCall(
+    request: UnfollowRequest,
+  ): Promise<UnsignedProtocolCall<UnfollowRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateUnfollowTypedDataData,
       CreateUnfollowTypedDataVariables
@@ -40,10 +40,10 @@ export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
     });
   }
 
-  private createRequestFallback<T extends UnfollowRequest>(
-    request: T,
+  private createRequestFallback(
+    request: UnfollowRequest,
     data: CreateUnfollowTypedDataData,
-  ): SelfFundedProtocolCallRequest<T> {
+  ): SelfFundedProtocolCallRequest<UnfollowRequest> {
     const contract = lensFollowNFT(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('burn', [
       data.result.typedData.value.tokenId,

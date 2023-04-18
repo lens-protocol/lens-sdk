@@ -33,9 +33,9 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
   ) {}
 
-  async createDelegatedTransaction<T extends CreateMirrorRequest>(
-    request: T,
-  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
+  async createDelegatedTransaction(
+    request: CreateMirrorRequest,
+  ): PromiseResult<NativeTransaction<CreateMirrorRequest>, BroadcastingError> {
     const result = await this.broadcast(request);
 
     if (result.isFailure()) return failure(result.error);
@@ -123,10 +123,10 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
     };
   }
 
-  private createRequestFallback<T extends CreateMirrorRequest>(
-    request: T,
+  private createRequestFallback(
+    request: CreateMirrorRequest,
     data: CreateMirrorTypedDataData,
-  ): SelfFundedProtocolCallRequest<T> {
+  ): SelfFundedProtocolCallRequest<CreateMirrorRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('mirror', [
       {

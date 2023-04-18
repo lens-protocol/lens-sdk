@@ -19,10 +19,10 @@ import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallReq
 export class CollectPublicationCallGateway implements ICollectPublicationCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
-  async createUnsignedProtocolCall<T extends CollectRequest>(
-    request: T,
+  async createUnsignedProtocolCall(
+    request: CollectRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<CollectRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateCollectTypedDataData,
       CreateCollectTypedDataVariables
@@ -46,10 +46,10 @@ export class CollectPublicationCallGateway implements ICollectPublicationCallGat
     });
   }
 
-  private createRequestFallback<T extends CollectRequest>(
-    request: T,
+  private createRequestFallback(
+    request: CollectRequest,
     data: CreateCollectTypedDataData,
-  ): SelfFundedProtocolCallRequest<T> {
+  ): SelfFundedProtocolCallRequest<CollectRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('collect', [
       data.result.typedData.value.profileId,

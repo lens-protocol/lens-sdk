@@ -36,9 +36,9 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     private readonly uploader: IMetadataUploader<CreateCommentRequest>,
   ) {}
 
-  async createDelegatedTransaction<T extends CreateCommentRequest>(
-    request: T,
-  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
+  async createDelegatedTransaction(
+    request: CreateCommentRequest,
+  ): PromiseResult<NativeTransaction<CreateCommentRequest>, BroadcastingError> {
     const result = await this.broadcast(request);
 
     if (result.isFailure()) return failure(result.error);
@@ -128,10 +128,10 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     };
   }
 
-  private createRequestFallback<T extends CreateCommentRequest>(
-    request: T,
+  private createRequestFallback(
+    request: CreateCommentRequest,
     data: CreateCommentTypedDataData,
-  ): SelfFundedProtocolCallRequest<T> {
+  ): SelfFundedProtocolCallRequest<CreateCommentRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('comment', [
       {

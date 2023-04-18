@@ -132,10 +132,10 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
     };
   }
 
-  private createRequestFallback<T extends UpdateProfileImageRequest>(
-    request: T,
+  private createRequestFallback(
+    request: UpdateProfileImageRequest,
     data: CreateSetProfileImageUriTypedDataData,
-  ): SelfFundedProtocolCallRequest<T> {
+  ): SelfFundedProtocolCallRequest<UpdateProfileImageRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileImageURI', [
       data.result.typedData.value.profileId,
