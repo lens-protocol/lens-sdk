@@ -1,5 +1,9 @@
 export type { Erc20 } from './Erc20';
 
+export type { LensFollowNFT } from './LensFollowNFT';
+export type { LensHub } from './LensHub';
+export type { LensPeriphery } from './LensPeriphery';
+
 export type ChainId = number;
 
 // https://eips.ethereum.org/EIPS/eip-3085

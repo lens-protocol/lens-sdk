@@ -35,7 +35,7 @@
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
     "tsc": "tsc --noEmit",
-    "typechain": "typechain --target ethers-v5 --out-dir ./src/types './src/abi/erc-20.json'"
+    "typechain": "typechain --target ethers-v5 --out-dir ./src/types './src/abi/*.json'"
   },
   "license": "MIT",
   "dependencies": {
