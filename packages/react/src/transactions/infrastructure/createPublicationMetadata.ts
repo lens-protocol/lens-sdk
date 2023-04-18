@@ -27,6 +27,8 @@ function mapMedia(media: MediaObject): PublicationMetadataMediaInput {
   return {
     item: media.url,
     type: media.mimeType,
+    ...(media.altTag && { altTag: media.altTag }),
+    ...(media.cover && { cover: media.cover }),
   };
 }
 
