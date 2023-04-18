@@ -34,22 +34,16 @@ type MockedISignerFactoryConfig = {
   signerResult: Result<providers.JsonRpcSigner, WalletConnectionError>;
 };
 
-export function mockISignerFactory(config: MockedISignerFactoryConfig): ISignerFactory {
+export function mockISignerFactory({
+  signerResult,
+  ...config
+}: MockedISignerFactoryConfig): ISignerFactory {
   const factory = mock<ISignerFactory>();
 
-  if (config.chainType) {
-    when(factory.createSigner)
-      .calledWith(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        expect.objectContaining({ address: config.address, chainType: config.chainType }),
-      )
-      .mockResolvedValue(config.signerResult);
-  } else {
-    when(factory.createSigner)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      .calledWith(expect.objectContaining({ address: config.address }))
-      .mockResolvedValue(config.signerResult);
-  }
+  when(factory.createSigner)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    .calledWith(expect.objectContaining(config))
+    .mockResolvedValue(signerResult);
 
   return factory;
 }
