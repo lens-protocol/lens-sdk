@@ -646,7 +646,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
     hidden
     isGated
     reaction(request: { profileId: $observerId })
-    hasCollectedByMe(isFinalisedOnChain: true)
+    hasCollectedByMe
     canComment(profileId: $observerId) {
       result
     }
@@ -746,7 +746,7 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
     hidden
     isGated
     reaction(request: { profileId: $observerId })
-    hasCollectedByMe(isFinalisedOnChain: true)
+    hasCollectedByMe
     canComment(profileId: $observerId) {
       result
     }

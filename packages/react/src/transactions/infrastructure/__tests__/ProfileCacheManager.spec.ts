@@ -1,4 +1,9 @@
-import { Profile, FragmentProfile, SingleProfileQueryRequest } from '@lens-protocol/api-bindings';
+import {
+  Profile,
+  FragmentProfile,
+  SingleProfileQueryRequest,
+  activeProfileIdentifierVar,
+} from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createGetProfileMockedResponse,
@@ -9,7 +14,6 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import identity from 'lodash/identity';
 
-import { activeProfileIdentifierVar } from '../../../profile/adapters/ActiveProfilePresenter';
 import { ProfileCacheManager } from '../ProfileCacheManager';
 
 function setupTestScenario({

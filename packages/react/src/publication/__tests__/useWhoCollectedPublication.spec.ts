@@ -1,4 +1,4 @@
-import { Wallet } from '@lens-protocol/api-bindings';
+import { activeProfileIdentifierVar, Wallet } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockWalletFragment,
@@ -11,7 +11,6 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
-import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
 import {
   useWhoCollectedPublication,
   UseWhoCollectedPublicationArgs,

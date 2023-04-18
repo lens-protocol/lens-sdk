@@ -1,4 +1,4 @@
-import { PublicationRevenue } from '@lens-protocol/api-bindings';
+import { PublicationRevenue, activeProfileIdentifierVar } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createGetPublicationRevenueMockedResponse,
@@ -12,7 +12,6 @@ import { waitFor } from '@testing-library/react';
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
-import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
 import { usePublicationRevenue, UsePublicationRevenueArgs } from '../usePublicationRevenue';
 
 function setupTestScenario({
