@@ -9,7 +9,7 @@ import { ReadResult, useReadResult } from '../helpers/reads';
  *
  * You MUST be authenticated via {@link useWalletLogin} to use this hook.
  *
- * **Pro-tip**: You can use this hook to populate a dropdown menu of currencies
+ * **Pro-tip**: use this hook to populate a dropdown menu of currencies
  * to choose from for powering a collect policy form of your post composer interface.
  *
  * @category Misc

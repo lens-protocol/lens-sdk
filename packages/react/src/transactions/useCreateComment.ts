@@ -10,6 +10,7 @@ import {
   CreateCommentRequest,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
@@ -34,7 +35,11 @@ export type CreateCommentArgs = Prettify<
 
 export type CreateCommentOperation = Operation<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
+  | BroadcastingError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError
+  | FailedUploadError,
   [CreateCommentArgs]
 >;
 
@@ -63,7 +68,11 @@ export function useCreateComment({
       ...args
     }: CreateCommentArgs): PromiseResult<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
+      | BroadcastingError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
+      | FailedUploadError
     > => {
       const uploader = new PublicationMetadataUploader(upload);
 

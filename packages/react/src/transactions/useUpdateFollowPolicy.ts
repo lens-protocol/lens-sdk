@@ -6,6 +6,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { ChargeFollowConfig, NoFeeFollowConfig } from '@lens-protocol/domain/use-cases/profile';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
@@ -22,7 +23,7 @@ export type UpdateFollowPolicyArgs = {
 
 export type UpdateFollowPolicyOperation = Operation<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   [UpdateFollowPolicyArgs]
 >;
 

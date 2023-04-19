@@ -5,7 +5,6 @@ import {
   PartialAttributesUpdate,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
-  BroadcastedTransactionData,
   ITransactionResponder,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -94,7 +93,7 @@ export class UpdateProfileMetadataResponder
     }
   }
 
-  async commit({ request }: BroadcastedTransactionData<UpdateProfileDetailsRequest>) {
+  async commit({ request }: TransactionData<UpdateProfileDetailsRequest>) {
     await this.profileCacheManager.refreshProfile(request.profileId);
     this.snapshots.delete(request);
   }

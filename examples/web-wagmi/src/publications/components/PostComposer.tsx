@@ -1,4 +1,10 @@
-import { ContentFocus, ProfileOwnedByMe, useCreatePost } from '@lens-protocol/react-web';
+import {
+  ContentFocus,
+  ProfileOwnedByMe,
+  supportsSelfFundedFallback,
+  useCreatePost,
+  useSelfFundedFallback,
+} from '@lens-protocol/react-web';
 
 import { upload } from '../../upload';
 import { never } from '../../utils';
@@ -8,7 +14,16 @@ export type PostComposerProps = {
 };
 
 export function PostComposer({ publisher }: PostComposerProps) {
-  const { execute: create, error, isPending } = useCreatePost({ publisher, upload });
+  const {
+    execute: post,
+    error: postError,
+    isPending: isPosting,
+  } = useCreatePost({ publisher, upload });
+  const {
+    execute: fallback,
+    error: fallbackError,
+    isPending: fallbackInProgress,
+  } = useSelfFundedFallback();
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -18,14 +33,33 @@ export function PostComposer({ publisher }: PostComposerProps) {
     const formData = new FormData(form);
     const content = (formData.get('content') as string | null) ?? never();
 
-    await create({
+    const subsidizedAttempt = await post({
       content,
       contentFocus: ContentFocus.TEXT,
       locale: 'en',
     });
 
-    form.reset();
+    if (subsidizedAttempt.isSuccess()) {
+      form.reset();
+      return;
+    }
+
+    if (supportsSelfFundedFallback(subsidizedAttempt.error)) {
+      const retry = window.confirm(
+        'We cannot cover the transaction costs at this time. Do you want to retry with your own MATIC?',
+      );
+
+      if (retry) {
+        const selfFundedAttempt = await fallback(subsidizedAttempt.error.fallback);
+
+        if (selfFundedAttempt.isSuccess()) {
+          form.reset();
+        }
+      }
+    }
   };
+
+  const isPending = isPosting || fallbackInProgress;
 
   return (
     <form onSubmit={submit}>
@@ -44,7 +78,8 @@ export function PostComposer({ publisher }: PostComposerProps) {
           Post
         </button>
 
-        {error && <pre>{error.message}</pre>}
+        {!isPosting && postError && <pre>{postError.message}</pre>}
+        {!fallbackInProgress && fallbackError && <pre>{fallbackError.message}</pre>}
       </fieldset>
     </form>
   );

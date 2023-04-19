@@ -6,7 +6,7 @@ import {
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import {
-  mockBroadcastedTransactionData,
+  mockTransactionData,
   mockUpdateDispatcherConfigRequest,
 } from '@lens-protocol/domain/mocks';
 import { nonNullable } from '@lens-protocol/shared-kernel';
@@ -63,7 +63,7 @@ describe(`Given the ${UpdateDispatcherConfigResponder.name}`, () => {
         enabled: true,
         profileId: profileWithoutDispatcherConfig.id,
       });
-      const transactionData = mockBroadcastedTransactionData({ request });
+      const transactionData = mockTransactionData({ request });
 
       const scenario = setupTestScenario({ profile: profileWithDispatcherConfig });
 

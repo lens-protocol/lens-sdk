@@ -5,16 +5,16 @@ import {
   ProxyActionVariables,
   ProxyActionRequest,
 } from '@lens-protocol/api-bindings';
-import {
-  ProxyTransaction,
-  TransactionError,
-  TransactionErrorReason,
-} from '@lens-protocol/domain/entities';
+import { ProxyTransaction } from '@lens-protocol/domain/entities';
 import { FreeCollectRequest } from '@lens-protocol/domain/use-cases/publications';
-import { ISignlessProtocolCallRelayer } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, getID, ILogger } from '@lens-protocol/shared-kernel';
+import {
+  BroadcastingError,
+  ISignlessProtocolCallRelayer,
+} from '@lens-protocol/domain/use-cases/transactions';
+import { assertError, ChainType, getID, ILogger } from '@lens-protocol/shared-kernel';
 
-import { ITransactionFactory, RelayProxyReceipt } from './ITransactionFactory';
+import { ITransactionFactory } from './ITransactionFactory';
+import { ProxyReceipt } from './ProxyReceipt';
 
 export class CollectProxyActionRelayer<T extends FreeCollectRequest>
   implements ISignlessProtocolCallRelayer<T>
@@ -26,19 +26,19 @@ export class CollectProxyActionRelayer<T extends FreeCollectRequest>
   ) {}
 
   async relaySignlessProtocolCall(request: T): Promise<ProxyTransaction<T>> {
-    const relayProxyReceipt = await this.broadcast(request);
+    const proxyReceipt = await this.proxy(request);
 
     return this.factory.createProxyTransaction({
       chainType: ChainType.POLYGON,
       id: getID(),
       request,
-      proxyId: relayProxyReceipt.proxyId,
+      proxyId: proxyReceipt.proxyId,
     });
   }
 
-  private async broadcast(request: T): Promise<RelayProxyReceipt> {
+  private async proxy(request: T): Promise<ProxyReceipt> {
     try {
-      return await this.executeBroadcast({
+      return await this.broadcast({
         collect: {
           freeCollect: {
             publicationId: request.publicationId,
@@ -46,12 +46,13 @@ export class CollectProxyActionRelayer<T extends FreeCollectRequest>
         },
       });
     } catch (error) {
+      assertError(error);
       this.logger.error(error, 'It was not possible to relay the transaction');
-      throw new TransactionError(TransactionErrorReason.CANNOT_EXECUTE);
+      throw new BroadcastingError(error.message);
     }
   }
 
-  private async executeBroadcast(request: ProxyActionRequest): Promise<RelayProxyReceipt> {
+  private async broadcast(request: ProxyActionRequest): Promise<ProxyReceipt> {
     const { data } = await this.apolloClient.mutate<ProxyActionData, ProxyActionVariables>({
       mutation: ProxyActionDocument,
       variables: {

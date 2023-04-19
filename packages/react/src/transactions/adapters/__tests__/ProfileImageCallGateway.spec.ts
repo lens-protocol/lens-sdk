@@ -1,10 +1,11 @@
-import { omitTypename } from '@lens-protocol/api-bindings';
+import { RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockCreateSetProfileImageUriTypedDataData,
   createCreateSetProfileImageUriTypedDataMockedResponse,
   createSetProfileImageURIViaDispatcherMockedResponse,
   mockRelayerResultFragment,
+  mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import {
@@ -12,11 +13,16 @@ import {
   mockUpdateNftProfileImageRequest,
   mockUpdateOffChainProfileImageRequest,
 } from '@lens-protocol/domain/mocks';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ProfileImageCallGateway } from '../ProfileImageCallGateway';
-import { mockITransactionFactory } from '../__helpers__/mocks';
+import {
+  assertBroadcastingErrorResultWithRequestFallback,
+  assertUnsignedProtocolCallCorrectness,
+  mockITransactionFactory,
+} from '../__helpers__/mocks';
 
 describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
   describe.each([
@@ -52,11 +58,10 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
     },
   ])('with $requestName', ({ createExerciseData }) => {
     const { request, expectedRequestVars } = createExerciseData();
+    const data = mockCreateSetProfileImageUriTypedDataData();
 
     describe(`when calling the "${ProfileImageCallGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
-      it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
-        const data = mockCreateSetProfileImageUriTypedDataData();
-
+      it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
         const apollo = createMockApolloClientWithMultipleResponses([
           createCreateSetProfileImageUriTypedDataMockedResponse({
             variables: {
@@ -71,8 +76,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
 
         const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+        assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
 
       it(`should be possible to override the signature nonce`, async () => {
@@ -92,7 +96,6 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
         const transactionFactory = mockITransactionFactory();
 
         const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
-
         const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
 
         expect(unsignedCall.nonce).toEqual(nonce);
@@ -114,12 +117,10 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
         const transactionFactory = mockITransactionFactory();
 
         const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
+        const result = await gateway.createDelegatedTransaction(request);
 
-        const transaction = await gateway.createDelegatedTransaction(request);
-
-        await transaction.waitNextEvent();
-        expect(transaction).toBeInstanceOf(NativeTransaction);
-        expect(transaction).toEqual(
+        expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
+        expect(result.unwrap()).toEqual(
           expect.objectContaining({
             chainType: ChainType.POLYGON,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -128,6 +129,37 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
           }),
         );
       });
+
+      it.each([
+        mockRelayErrorFragment(RelayErrorReasons.Rejected),
+        mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
+      ])(
+        `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
+        async (relayError) => {
+          const apollo = createMockApolloClientWithMultipleResponses([
+            createSetProfileImageURIViaDispatcherMockedResponse({
+              variables: {
+                request: expectedRequestVars,
+              },
+              data: {
+                result: relayError,
+              },
+            }),
+            createCreateSetProfileImageUriTypedDataMockedResponse({
+              variables: {
+                request: expectedRequestVars,
+              },
+              data,
+            }),
+          ]);
+          const transactionFactory = mockITransactionFactory();
+
+          const gateway = new ProfileImageCallGateway(apollo, transactionFactory);
+          const result = await gateway.createDelegatedTransaction(request);
+
+          assertBroadcastingErrorResultWithRequestFallback(result, data.result.typedData);
+        },
+      );
     });
   });
 });

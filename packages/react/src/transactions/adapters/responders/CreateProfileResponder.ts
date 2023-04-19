@@ -2,7 +2,7 @@ import { makeVar, useReactiveVar } from '@apollo/client';
 import { Profile } from '@lens-protocol/api-bindings';
 import { CreateProfileRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
-  BroadcastedTransactionData,
+  TransactionData,
   ITransactionResponder,
 } from '@lens-protocol/domain/use-cases/transactions';
 
@@ -17,7 +17,7 @@ export class CreateProfileResponder implements ITransactionResponder<CreateProfi
     private readonly handleResolver: ProfileHandleResolver,
   ) {}
 
-  async commit({ request }: BroadcastedTransactionData<CreateProfileRequest>) {
+  async commit({ request }: TransactionData<CreateProfileRequest>) {
     const profile = await this.profileCacheManager.fetchProfile({
       handle: this.handleResolver(request.handle),
     });

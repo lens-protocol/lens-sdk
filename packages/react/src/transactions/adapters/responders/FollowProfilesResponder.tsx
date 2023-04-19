@@ -2,7 +2,6 @@ import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
 import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import { FollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
-  BroadcastedTransactionData,
   ITransactionResponder,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -38,7 +37,7 @@ export class FollowProfilesResponder implements ITransactionResponder<FollowRequ
     }
   }
 
-  async commit({ request }: BroadcastedTransactionData<FollowRequest>) {
+  async commit({ request }: TransactionData<FollowRequest>) {
     const profileIdentifier = this.apolloCache.identify({
       __typename: 'Profile',
       id: request.profileId,

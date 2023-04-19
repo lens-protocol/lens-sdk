@@ -4,7 +4,6 @@ import {
   CreateSetFollowModuleTypedDataData,
   CreateSetFollowModuleTypedDataVariables,
   FollowModuleParams,
-  omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
@@ -22,8 +21,9 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { FollowPolicyCallGateway } from '../FollowPolicyCallGateway';
+import { assertUnsignedProtocolCallCorrectness } from '../__helpers__/mocks';
 
 function createCreateSetFollowModuleTypedDataMockedResponse({
   variables,
@@ -73,11 +73,11 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
       }),
     },
   ])(
-    `when calling the "${FollowPolicyCallGateway.prototype.createUnsignedProtocolCall.name}" method`,
+    `when calling the "${FollowPolicyCallGateway.prototype.createUnsignedProtocolCall.name}" method $description`,
     ({ policy, expectedFollowModule }) => {
       const request = mockUpdateFollowPolicyRequest({ policy });
 
-      it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
+      it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
         const data = mockCreateSetFollowModuleTypedDataData();
 
         const apollo = createMockApolloClientWithMultipleResponses([
@@ -95,8 +95,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
 
         const unsignedCall = await followFeeTransactionGateway.createUnsignedProtocolCall(request);
 
-        expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-        expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+        assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
 
       it(`should be possible to override the signature nonce`, async () => {

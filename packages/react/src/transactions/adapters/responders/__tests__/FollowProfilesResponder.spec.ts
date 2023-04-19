@@ -4,10 +4,7 @@ import {
   mockProfileFragment,
   mockProfileStatsFragment,
 } from '@lens-protocol/api-bindings/mocks';
-import {
-  mockBroadcastedTransactionData,
-  mockUnconstrainedFollowRequest,
-} from '@lens-protocol/domain/mocks';
+import { mockTransactionData, mockUnconstrainedFollowRequest } from '@lens-protocol/domain/mocks';
 
 import { FollowProfilesResponder } from '../FollowProfilesResponder';
 
@@ -46,7 +43,7 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
   describe(`when "${FollowProfilesResponder.prototype.prepare.name}" method is invoked`, () => {
     it(`should update apollo cache with follow information`, async () => {
       const request = mockUnconstrainedFollowRequest();
-      const transactionData = mockBroadcastedTransactionData({ request });
+      const transactionData = mockTransactionData({ request });
       const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
         stats: mockProfileStatsFragment({
@@ -70,7 +67,7 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
   describe(`when "${FollowProfilesResponder.prototype.commit.name}" method is invoked`, () => {
     it(`should update apollo cache with follow information`, async () => {
       const request = mockUnconstrainedFollowRequest();
-      const transactionData = mockBroadcastedTransactionData({ request });
+      const transactionData = mockTransactionData({ request });
       const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
         isFollowedByMe: false,
@@ -95,7 +92,7 @@ describe(`Given the ${FollowProfilesResponder.name}`, () => {
   describe(`when "${FollowProfilesResponder.prototype.rollback.name}" method is invoked`, () => {
     it(`should update apollo cache with follow information`, async () => {
       const request = mockUnconstrainedFollowRequest();
-      const transactionData = mockBroadcastedTransactionData({ request });
+      const transactionData = mockTransactionData({ request });
       const existingProfile = mockProfileFragment({
         id: transactionData.request.profileId,
         stats: mockProfileStatsFragment({

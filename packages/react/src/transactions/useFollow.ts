@@ -11,6 +11,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { FollowPolicyType, FollowRequest } from '@lens-protocol/domain/use-cases/profile';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -76,6 +77,7 @@ export type UseFollowArgs = {
 
 export type FollowOperation = Operation<
   void,
+  | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
   | PendingSigningRequestError
@@ -93,7 +95,7 @@ export type FollowOperation = Operation<
  * You can use the {@link Success.isSuccess | `Result.isSuccess`} (or {@link Failure.isFailure | `Result.isFailure`}) method
  * to check if the operation queuing was successful and determine the next step if not.
  *
- * **Pro-tip**: Use the {@link ProfileOwnedByMe} instance from {@link useActiveProfile} (or {@link useProfilesOwnedByMe}) as the `follower` argument.
+ * **Pro-tip**: use the {@link ProfileOwnedByMe} instance from {@link useActiveProfile} (or {@link useProfilesOwnedByMe}) as the `follower` argument.
  *
  * You can use the {@link FollowStatus | `followee.followStatus`} property to determine the status of the follow request and if you should show the follow button.
  *
@@ -144,6 +146,7 @@ export function useFollow({ followee, follower }: UseFollowArgs): FollowOperatio
   return useOperation(
     async (): PromiseResult<
       void,
+      | BroadcastingError
       | InsufficientAllowanceError
       | InsufficientFundsError
       | PendingSigningRequestError
@@ -154,7 +157,7 @@ export function useFollow({ followee, follower }: UseFollowArgs): FollowOperatio
       if (hasPendingUnfollowTx) {
         return failure(
           new PrematureFollowError(
-            `Your unfollow request for ${followee.handle} is still pending.`,
+            `A previous unfollow request for ${followee.handle} is still pending.`,
           ),
         );
       }

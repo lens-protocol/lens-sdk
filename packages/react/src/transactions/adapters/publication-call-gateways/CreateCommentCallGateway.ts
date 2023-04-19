@@ -9,23 +9,24 @@ import {
   LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
-import {
-  NativeTransaction,
-  Nonce,
-  TransactionError,
-  TransactionErrorReason,
-} from '@lens-protocol/domain/entities';
+import { lensHub } from '@lens-protocol/blockchain-bindings';
+import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   CreateCommentRequest,
   ICreateCommentCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
+import {
+  BroadcastingError,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
+import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
-import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
+import { ITransactionFactory } from '../ITransactionFactory';
+import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
+import { handleRelayError, RelayReceipt } from '../relayer';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class CreateCommentCallGateway implements ICreateCommentCallGateway {
@@ -35,44 +36,45 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     private readonly uploader: IMetadataUploader<CreateCommentRequest>,
   ) {}
 
-  async createDelegatedTransaction<T extends CreateCommentRequest>(
-    request: T,
-  ): Promise<NativeTransaction<T>> {
-    return this.transactionFactory.createNativeTransaction({
+  async createDelegatedTransaction(
+    request: CreateCommentRequest,
+  ): PromiseResult<NativeTransaction<CreateCommentRequest>, BroadcastingError> {
+    const result = await this.broadcast(request);
+
+    if (result.isFailure()) return failure(result.error);
+
+    const receipt = result.value;
+    const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiateCommentCreation(
-        await this.resolveCreateCommentRequestArg(request),
-      ),
+      indexingId: receipt.indexingId,
+      txHash: receipt.txHash,
     });
+    return success(transaction);
   }
 
   async createUnsignedProtocolCall(
     request: CreateCommentRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<CreateCommentRequest>> {
-    const { data } = await this.apolloClient.mutate<
-      CreateCommentTypedDataData,
-      CreateCommentTypedDataVariables
-    >({
-      mutation: CreateCommentTypedDataDocument,
-      variables: {
-        request: await this.resolveCreateCommentRequestArg(request),
-        options: nonce ? { overrideSigNonce: nonce } : undefined,
-      },
-    });
+  ): Promise<UnsignedProtocolCall<CreateCommentRequest>> {
+    const requestArg = await this.resolveCreateCommentRequestArg(request);
 
-    return new UnsignedLensProtocolCall(
-      data.result.id,
+    const typedData = await this.createTypedData(requestArg, nonce);
+
+    return UnsignedProtocolCall.create({
+      id: typedData.result.id,
       request,
-      omitTypename(data.result.typedData),
-    );
+      typedData: omitTypename(typedData.result.typedData),
+      fallback: this.createRequestFallback(request, typedData),
+    });
   }
 
-  private async initiateCommentCreation(
-    requestArg: CreatePublicCommentRequestArg,
-  ): AsyncRelayReceipt {
+  private async broadcast(
+    request: CreateCommentRequest,
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
+    const requestArg = await this.resolveCreateCommentRequestArg(request);
+
     const { data } = await this.apolloClient.mutate<
       CreateCommentViaDispatcherData,
       CreateCommentViaDispatcherVariables
@@ -84,7 +86,10 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     });
 
     if (data.result.__typename === 'RelayError') {
-      return failure(new TransactionError(TransactionErrorReason.REJECTED));
+      const typedData = await this.createTypedData(requestArg);
+      const fallback = this.createRequestFallback(request, typedData);
+
+      return handleRelayError(data.result, fallback);
     }
 
     return success({
@@ -93,6 +98,22 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     });
   }
 
+  private async createTypedData(
+    requestArg: CreatePublicCommentRequestArg,
+    nonce?: Nonce,
+  ): Promise<CreateCommentTypedDataData> {
+    const { data } = await this.apolloClient.mutate<
+      CreateCommentTypedDataData,
+      CreateCommentTypedDataVariables
+    >({
+      mutation: CreateCommentTypedDataDocument,
+      variables: {
+        request: requestArg,
+        options: nonce ? { overrideSigNonce: nonce } : undefined,
+      },
+    });
+    return data;
+  }
   private async resolveCreateCommentRequestArg(
     request: CreateCommentRequest,
   ): Promise<CreatePublicCommentRequestArg> {
@@ -104,6 +125,31 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
       publicationId: request.publicationId,
       collectModule: resolveCollectModule(request),
       referenceModule: resolveReferenceModule(request),
+    };
+  }
+
+  private createRequestFallback(
+    request: CreateCommentRequest,
+    data: CreateCommentTypedDataData,
+  ): SelfFundedProtocolCallRequest<CreateCommentRequest> {
+    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('comment', [
+      {
+        profileId: data.result.typedData.value.profileId,
+        contentURI: data.result.typedData.value.contentURI,
+        profileIdPointed: data.result.typedData.value.profileIdPointed,
+        pubIdPointed: data.result.typedData.value.pubIdPointed,
+        referenceModuleData: data.result.typedData.value.referenceModuleData,
+        collectModule: data.result.typedData.value.collectModule,
+        collectModuleInitData: data.result.typedData.value.collectModuleInitData,
+        referenceModule: data.result.typedData.value.referenceModule,
+        referenceModuleInitData: data.result.typedData.value.referenceModuleInitData,
+      },
+    ]);
+    return {
+      ...request,
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
     };
   }
 }

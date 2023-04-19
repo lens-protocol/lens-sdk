@@ -5,6 +5,7 @@ import {
   CreateSetFollowModuleTypedDataVariables,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
+import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import {
   FollowPolicyType,
@@ -12,7 +13,8 @@ import {
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 
-import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
 
 function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
   switch (request.policy.type) {
@@ -44,10 +46,10 @@ function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
 export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
-  async createUnsignedProtocolCall<T extends UpdateFollowPolicyRequest>(
-    request: T,
+  async createUnsignedProtocolCall(
+    request: UpdateFollowPolicyRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<UpdateFollowPolicyRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateSetFollowModuleTypedDataData,
       CreateSetFollowModuleTypedDataVariables
@@ -62,10 +64,28 @@ export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
       },
     });
 
-    return new UnsignedLensProtocolCall(
-      data.result.id,
+    return UnsignedProtocolCall.create({
+      id: data.result.id,
       request,
-      omitTypename(data.result.typedData),
-    );
+      typedData: omitTypename(data.result.typedData),
+      fallback: this.createRequestFallback(request, data),
+    });
+  }
+
+  private createRequestFallback(
+    request: UpdateFollowPolicyRequest,
+    data: CreateSetFollowModuleTypedDataData,
+  ): SelfFundedProtocolCallRequest<UpdateFollowPolicyRequest> {
+    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('setFollowModule', [
+      data.result.typedData.value.profileId,
+      data.result.typedData.value.followModule,
+      data.result.typedData.value.followModuleInitData,
+    ]);
+    return {
+      ...request,
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
   }
 }

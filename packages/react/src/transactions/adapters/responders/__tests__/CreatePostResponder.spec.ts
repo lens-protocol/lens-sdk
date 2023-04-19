@@ -7,9 +7,10 @@ import {
   createPublicationByTxHashMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockCreatePostRequest, mockBroadcastedTransactionData } from '@lens-protocol/domain/mocks';
+import { mockCreatePostRequest, mockTransactionData } from '@lens-protocol/domain/mocks';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
-import { BroadcastedTransactionData } from '@lens-protocol/domain/use-cases/transactions';
+import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
+import { never } from '@lens-protocol/shared-kernel';
 
 import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { CreatePostResponder, recentPosts } from '../CreatePostResponder';
@@ -17,11 +18,11 @@ import { CreatePostResponder, recentPosts } from '../CreatePostResponder';
 function setupTestScenario({
   author,
   post = mockPostFragment(),
-  transactionData = mockBroadcastedTransactionData(),
+  transactionData = mockTransactionData(),
 }: {
   author: Profile;
   post?: Post;
-  transactionData?: BroadcastedTransactionData<CreatePostRequest>;
+  transactionData?: TransactionData<CreatePostRequest>;
 }) {
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
@@ -36,7 +37,7 @@ function setupTestScenario({
     }),
     createPublicationByTxHashMockedResponse({
       variables: {
-        txHash: transactionData.txHash,
+        txHash: transactionData.txHash ?? never(),
         observerId: author.id,
         sources,
       },
@@ -61,7 +62,7 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
         author,
       });
 
-      const transactionData = mockBroadcastedTransactionData({
+      const transactionData = mockTransactionData({
         request: mockCreatePostRequest({
           profileId: author.id,
         }),
@@ -77,7 +78,7 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
 
   describe(`when "${CreatePostResponder.prototype.commit.name}" method is invoked`, () => {
     const post = mockPostFragment();
-    const transactionData = mockBroadcastedTransactionData({
+    const transactionData = mockTransactionData({
       request: mockCreatePostRequest({
         profileId: author.id,
       }),
@@ -102,7 +103,7 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
 
   describe(`when "${CreatePostResponder.prototype.rollback.name}" method is invoked`, () => {
     const post = mockPostFragment();
-    const transactionData = mockBroadcastedTransactionData({
+    const transactionData = mockTransactionData({
       request: mockCreatePostRequest({
         profileId: author.id,
       }),

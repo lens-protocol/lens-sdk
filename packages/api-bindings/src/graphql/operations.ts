@@ -31,7 +31,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** Blockchain data scalar type */
-  BlockchainData: unknown;
+  BlockchainData: string;
   /** Broadcast scalar id type */
   BroadcastId: string;
   /** ChainId custom scalar type */
@@ -60,7 +60,7 @@ export type Scalars = {
   /** Ethereum address custom scalar type */
   EthereumAddress: EthereumAddress;
   /** follow module data scalar type */
-  FollowModuleData: unknown;
+  FollowModuleData: string;
   FollowPolicy: FollowPolicy;
   FollowStatus: FollowStatus;
   /** handle custom scalar type */
@@ -100,11 +100,11 @@ export type Scalars = {
   /** proxy action scalar id type */
   ProxyActionId: string;
   /** Publication id custom scalar type */
-  PublicationId: unknown;
+  PublicationId: string;
   /** The publication tag */
   PublicationTag: unknown;
   /** Publication url scalar type */
-  PublicationUrl: unknown;
+  PublicationUrl: Url;
   /** The reaction id */
   ReactionId: unknown;
   /** reference module data scalar type */
@@ -1683,8 +1683,8 @@ export type CreateCollectTypedDataData = {
         nonce: number;
         deadline: unknown;
         profileId: ProfileId;
-        pubId: unknown;
-        data: unknown;
+        pubId: string;
+        data: string;
       };
     };
   };
@@ -1706,9 +1706,9 @@ export type CreateCommentTypedDataData = {
         nonce: number;
         deadline: unknown;
         profileId: ProfileId;
-        contentURI: unknown;
+        contentURI: Url;
         profileIdPointed: ProfileId;
-        pubIdPointed: unknown;
+        pubIdPointed: string;
         collectModule: string;
         collectModuleInitData: string;
         referenceModuleData: string;
@@ -2088,7 +2088,7 @@ export type CreateFollowTypedDataData = {
         nonce: number;
         deadline: unknown;
         profileIds: Array<ProfileId>;
-        datas: Array<unknown>;
+        datas: Array<string>;
       };
     };
   };
@@ -2200,7 +2200,7 @@ export type CreateMirrorTypedDataData = {
         deadline: unknown;
         profileId: ProfileId;
         profileIdPointed: ProfileId;
-        pubIdPointed: unknown;
+        pubIdPointed: string;
         referenceModuleData: string;
         referenceModule: string;
         referenceModuleInitData: string;
@@ -2333,7 +2333,7 @@ export type CreatePostTypedDataData = {
         nonce: number;
         deadline: unknown;
         profileId: ProfileId;
-        contentURI: unknown;
+        contentURI: Url;
         collectModule: string;
         collectModuleInitData: string;
         referenceModule: string;
@@ -2522,7 +2522,7 @@ export type CreateSetFollowModuleTypedDataData = {
         deadline: unknown;
         profileId: ProfileId;
         followModule: string;
-        followModuleInitData: unknown;
+        followModuleInitData: string;
       };
     };
   };

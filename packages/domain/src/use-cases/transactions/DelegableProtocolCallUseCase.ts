@@ -1,6 +1,7 @@
-import { success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { NativeTransaction, TransactionRequestModel } from '../../entities';
+import { BroadcastingError } from './BroadcastingError';
 import { IProtocolCallPresenter, ProtocolCallUseCase } from './ProtocolCallUseCase';
 import { TransactionQueue } from './TransactionQueue';
 
@@ -9,7 +10,7 @@ export type WithDelegateFlag<T extends TransactionRequestModel> = T extends { de
   : never;
 
 export interface IDelegableProtocolCallGateway<T extends TransactionRequestModel> {
-  createDelegatedTransaction(request: T): Promise<NativeTransaction<T>>;
+  createDelegatedTransaction(request: T): PromiseResult<NativeTransaction<T>, BroadcastingError>;
 }
 
 export type { IProtocolCallPresenter };
@@ -24,8 +25,14 @@ export class DelegableProtocolCallUseCase<T extends TransactionRequestModel> {
 
   async execute(request: WithDelegateFlag<T>): Promise<void> {
     if (request.delegate) {
-      const transaction = await this.protocolCallGateway.createDelegatedTransaction(request);
+      const result = await this.protocolCallGateway.createDelegatedTransaction(request);
 
+      if (result.isFailure()) {
+        this.presenter.present(failure(result.error));
+        return;
+      }
+
+      const transaction = result.value;
       await this.transactionQueue.push(transaction);
 
       this.presenter.present(success());

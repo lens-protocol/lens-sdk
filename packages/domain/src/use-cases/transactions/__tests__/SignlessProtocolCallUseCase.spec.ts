@@ -1,10 +1,11 @@
 import { success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { TransactionRequestModel } from '../../../entities';
-import { MockedProxyTransaction } from '../../../entities/__helpers__/mocks';
-import { mockUnconstrainedFollowRequest } from '../../profile/__helpers__/mocks';
-import { mockFreeCollectRequest } from '../../publications/__helpers__/mocks';
+import { ProxyTransaction, TransactionRequestModel } from '../../../entities';
+import {
+  MockedProxyTransaction,
+  mockTransactionRequestModel,
+} from '../../../entities/__helpers__/mocks';
 import {
   ISignlessProtocolCallPresenter,
   ISignlessProtocolCallRelayer,
@@ -28,53 +29,27 @@ function setup<T extends TransactionRequestModel>({
 }
 
 describe(`Given an instance of ${SignlessProtocolCallUseCase.name}<T>`, () => {
-  describe(`when calling ${SignlessProtocolCallUseCase.prototype.execute.name}()`, () => {
-    describe(`with a valid UnconstrainedFollowRequest`, () => {
-      it(`should:
-          - relay the request to generate a proxy transaction
-          - push the proxy transaction to the transaction queue
-          - call the presenter with success()`, async () => {
-        const request = mockUnconstrainedFollowRequest();
-        const transaction = MockedProxyTransaction.fromRequest(request);
-        const signlessProtocolCallRelayer = mockISignlessProtocolCallRelayer({
-          request,
-          transaction,
-        });
-
-        const { useCase, presenter, transactionQueue } = setup({
-          relayer: signlessProtocolCallRelayer,
-        });
-
-        await useCase.execute(request);
-
-        expect(signlessProtocolCallRelayer.relaySignlessProtocolCall).toHaveBeenCalledWith(request);
-        expect(transactionQueue.push).toHaveBeenCalledWith(transaction);
-        expect(presenter.present).toHaveBeenCalledWith(success());
+  describe(`when calling "${SignlessProtocolCallUseCase.prototype.execute.name}" method`, () => {
+    it(`should:
+        - use the ISignlessProtocolCallRelayer to generate a ${ProxyTransaction.name}
+        - push the ${ProxyTransaction.name} into the ${TransactionQueue.name}
+        - call the presenter with success()`, async () => {
+      const request = mockTransactionRequestModel();
+      const transaction = MockedProxyTransaction.fromRequest(request);
+      const signlessProtocolCallRelayer = mockISignlessProtocolCallRelayer({
+        request,
+        transaction,
       });
-    });
 
-    describe(`with a valid FreeCollectRequest`, () => {
-      it(`should:
-          - relay the request to generate a proxy transaction
-          - push the proxy transaction to the transaction queue
-          - call the presenter with success()`, async () => {
-        const request = mockFreeCollectRequest();
-        const transaction = MockedProxyTransaction.fromRequest(request);
-        const signlessProtocolCallRelayer = mockISignlessProtocolCallRelayer({
-          request,
-          transaction,
-        });
-
-        const { useCase, presenter, transactionQueue } = setup({
-          relayer: signlessProtocolCallRelayer,
-        });
-
-        await useCase.execute(request);
-
-        expect(signlessProtocolCallRelayer.relaySignlessProtocolCall).toHaveBeenCalledWith(request);
-        expect(transactionQueue.push).toHaveBeenCalledWith(transaction);
-        expect(presenter.present).toHaveBeenCalledWith(success());
+      const { useCase, presenter, transactionQueue } = setup({
+        relayer: signlessProtocolCallRelayer,
       });
+
+      await useCase.execute(request);
+
+      expect(signlessProtocolCallRelayer.relaySignlessProtocolCall).toHaveBeenCalledWith(request);
+      expect(transactionQueue.push).toHaveBeenCalledWith(transaction);
+      expect(presenter.present).toHaveBeenCalledWith(success());
     });
   });
 });

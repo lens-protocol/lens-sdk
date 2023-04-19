@@ -8,6 +8,7 @@ export * from './useCreatePost';
 export * from './useFollow';
 export * from './useRecentPosts';
 export * from './useRecentTransactions';
+export * from './useSelfFundedFallback';
 export * from './useUnfollow';
 export * from './useUpdateDispatcherConfig';
 export * from './useUpdateFollowPolicy';
@@ -27,12 +28,7 @@ export type { Signature, TransactionRequestModel } from '@lens-protocol/domain/e
 /**
  * Request models
  */
-export type {
-  SupportedTransactionRequest,
-  TransactionData,
-  BroadcastedTransactionData,
-  PendingTransactionData,
-} from '@lens-protocol/domain/use-cases/transactions';
+export type { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 export type {
   CreateProfileRequest,
   FollowRequest,
@@ -102,5 +98,6 @@ export {
 /**
  * Helpers
  */
+export type { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 export type { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 export { FailedUploadError } from './adapters/IMetadataUploader';

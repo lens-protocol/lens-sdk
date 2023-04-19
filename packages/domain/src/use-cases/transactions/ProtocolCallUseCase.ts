@@ -1,10 +1,10 @@
-import { failure, success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import {
   IUnsignedProtocolCall,
   Nonce,
   TransactionKind,
-  SignedProtocolCall,
+  ISignedProtocolCall,
   TransactionRequestModel,
   MetaTransaction,
   PendingSigningRequestError,
@@ -12,6 +12,7 @@ import {
   WalletConnectionError,
 } from '../../entities';
 import { ActiveWallet } from '../wallets/ActiveWallet';
+import { BroadcastingError } from './BroadcastingError';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
@@ -20,7 +21,9 @@ export interface IMetaTransactionNonceGateway {
 }
 
 export interface IProtocolCallRelayer<T extends TransactionRequestModel> {
-  relayProtocolCall(signedCall: SignedProtocolCall<T>): Promise<MetaTransaction<T>>;
+  relayProtocolCall(
+    signedCall: ISignedProtocolCall<T>,
+  ): PromiseResult<MetaTransaction<T>, BroadcastingError>;
 }
 
 export interface IUnsignedProtocolCallGateway<T extends TransactionRequestModel> {
@@ -29,7 +32,7 @@ export interface IUnsignedProtocolCallGateway<T extends TransactionRequestModel>
 
 export type IProtocolCallPresenter = IGenericResultPresenter<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
 export class ProtocolCallUseCase<T extends TransactionRequestModel> {
@@ -61,8 +64,14 @@ export class ProtocolCallUseCase<T extends TransactionRequestModel> {
       return;
     }
 
-    const transaction = await this.protocolCallRelayer.relayProtocolCall(signingResult.value);
+    const relayResult = await this.protocolCallRelayer.relayProtocolCall(signingResult.value);
 
+    if (relayResult.isFailure()) {
+      this.presenter.present(failure(relayResult.error));
+      return;
+    }
+
+    const transaction = relayResult.value;
     await this.transactionQueue.push(transaction);
 
     this.presenter.present(success());

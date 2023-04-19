@@ -3,6 +3,7 @@ import { mock } from 'jest-mock-extended';
 
 import { NativeTransaction } from '../../../entities';
 import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
+import { BroadcastingError } from '../../transactions';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
 import { mockTransactionQueue } from '../../transactions/__helpers__/mocks';
 import {
@@ -54,8 +55,16 @@ describe(`Given an instance of the ${CreateProfile.name} interactor`, () => {
       expect(presenter.present).toHaveBeenCalledWith(success());
     });
 
-    it(`should present any ${DuplicatedHandleError.name} might occur`, async () => {
-      const error = new DuplicatedHandleError('bob');
+    it.each([
+      {
+        ErrorCtor: DuplicatedHandleError,
+        error: new DuplicatedHandleError('bob'),
+      },
+      {
+        ErrorCtor: BroadcastingError,
+        error: new BroadcastingError('some reason'),
+      },
+    ])(`should present any $ErrorCtor might occur`, async ({ error }) => {
       const gateway = mockIProfileTransactionGateway({
         request,
         result: failure(error),

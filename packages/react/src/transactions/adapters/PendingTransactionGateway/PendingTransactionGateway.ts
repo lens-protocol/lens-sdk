@@ -65,40 +65,25 @@ type ISerializableTransaction<T extends SupportedTransactionRequest> =
 
 function toTransactionSchema<T extends SupportedTransactionRequest>(
   tx: ISerializableTransaction<T>,
-): TransactionSchema | null {
+): TransactionSchema {
   if (tx instanceof MetaTransaction) {
-    const data = tx.toTransactionData();
-
-    if (data === null) {
-      return null;
-    }
     return {
       type: TransactionType.Meta,
-      ...data,
+      ...tx.toTransactionData(),
     };
   }
 
   if (tx instanceof NativeTransaction) {
-    const data = tx.toTransactionData();
-
-    if (data === null) {
-      return null;
-    }
     return {
       type: TransactionType.Native,
-      ...data,
+      ...tx.toTransactionData(),
     };
   }
 
   if (tx instanceof ProxyTransaction) {
-    const data = tx.toTransactionData();
-
-    if (data === null) {
-      return null;
-    }
     return {
       type: TransactionType.Proxy,
-      ...data,
+      ...tx.toTransactionData(),
     };
   }
 
@@ -198,16 +183,13 @@ export class PendingTransactionGateway<T extends SupportedTransactionRequest>
 
   private async update(transactions: ISerializableTransaction<T>[]): Promise<void> {
     this.cache = transactions;
-    const data = transactions
-      .map(toTransactionSchema)
-      .filter((v): v is NonNullable<typeof v> => v !== null);
+    const data = transactions.map(toTransactionSchema);
     await this.storage.set(data);
   }
 
   private toEntity(data: TransactionSchema): ISerializableTransaction<T> {
     switch (data.type) {
       case TransactionType.Meta:
-        data;
         return this.transactionFactory.createMetaTransaction(data);
       case TransactionType.Native:
         return this.transactionFactory.createNativeTransaction(data);

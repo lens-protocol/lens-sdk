@@ -1,15 +1,7 @@
-import {
-  recentTransactionsVar,
-  TxStatus,
-  PendingTransactionState,
-  BroadcastedTransactionState,
-  TransactionState,
-} from '@lens-protocol/api-bindings';
+import { recentTransactionsVar, TxStatus, TransactionState } from '@lens-protocol/api-bindings';
 import { TransactionError } from '@lens-protocol/domain/entities';
 import {
-  BroadcastedTransactionData,
   ITransactionQueuePresenter,
-  PendingTransactionData,
   SupportedTransactionRequest,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -30,9 +22,9 @@ export class FailedTransactionError extends CausedError {
   }
 }
 
-type PartialTransactionStateUpdate<T extends SupportedTransactionRequest> =
-  | Partial<PendingTransactionState<T>>
-  | Partial<BroadcastedTransactionState<T>>;
+type PartialTransactionStateUpdate<T extends SupportedTransactionRequest> = Partial<
+  TransactionState<T>
+>;
 
 export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
   implements ITransactionQueuePresenter<T>
@@ -48,15 +40,7 @@ export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
     recentTransactionsVar(filteredTransactions);
   }
 
-  broadcasting(data: PendingTransactionData<T>): void {
-    this.addTransaction({
-      id: data.id,
-      status: TxStatus.BROADCASTING,
-      request: data.request,
-    });
-  }
-
-  mining(data: BroadcastedTransactionData<T>): void {
+  pending(data: TransactionData<T>): void {
     if (recentTransactionsVar().find(({ id }) => id === data.id)) {
       this.updateById(data.id, {
         ...data,
@@ -72,7 +56,7 @@ export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
     }
   }
 
-  settled(data: BroadcastedTransactionData<T>): void {
+  settled(data: TransactionData<T>): void {
     this.updateById(data.id, { status: TxStatus.SETTLED });
   }
 

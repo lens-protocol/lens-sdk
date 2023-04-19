@@ -14,27 +14,25 @@ import {
   LensApolloClient,
   ProfileMetadata,
 } from '@lens-protocol/api-bindings';
-import {
-  NativeTransaction,
-  Nonce,
-  ProfileId,
-  TransactionError,
-  TransactionErrorReason,
-} from '@lens-protocol/domain/entities';
+import { lensPeriphery } from '@lens-protocol/blockchain-bindings';
+import { NativeTransaction, Nonce, ProfileId } from '@lens-protocol/domain/entities';
 import {
   IProfileDetailsCallGateway,
   UpdateProfileDetailsRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   IUnsignedProtocolCallGateway,
+  BroadcastingError,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, never, success } from '@lens-protocol/shared-kernel';
+import { ChainType, failure, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
-import { AsyncRelayReceipt, ITransactionFactory } from '../ITransactionFactory';
+import { ITransactionFactory } from '../ITransactionFactory';
+import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
+import { handleRelayError, RelayReceipt } from '../relayer';
 import { createProfileMetadata } from './createProfileMetadata';
 
 export class ProfileMetadataCallGateway
@@ -46,35 +44,74 @@ export class ProfileMetadataCallGateway
     private readonly uploader: IMetadataUploader<ProfileMetadata>,
   ) {}
 
-  async createDelegatedTransaction<T extends UpdateProfileDetailsRequest>(
-    request: T,
-  ): Promise<NativeTransaction<T>> {
-    return this.transactionFactory.createNativeTransaction({
+  async createDelegatedTransaction(
+    request: UpdateProfileDetailsRequest,
+  ): PromiseResult<NativeTransaction<UpdateProfileDetailsRequest>, BroadcastingError> {
+    const result = await this.broadcast(request);
+
+    if (result.isFailure()) return failure(result.error);
+
+    const receipt = result.value;
+
+    const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      asyncRelayReceipt: this.initiateProfileUpdate(
-        await this.resolveCreateSetProfileMetadataUriRequest(request),
-      ),
+      indexingId: receipt.indexingId,
+      txHash: receipt.txHash,
+    });
+
+    return success(transaction);
+  }
+
+  async createUnsignedProtocolCall(
+    request: UpdateProfileDetailsRequest,
+    nonce?: Nonce,
+  ): Promise<UnsignedProtocolCall<UpdateProfileDetailsRequest>> {
+    const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
+
+    const data = await this.createTypedData(requestArg, nonce);
+
+    return UnsignedProtocolCall.create({
+      id: data.result.id,
+      request,
+      typedData: omitTypename(data.result.typedData),
+      fallback: this.createRequestFallback(request, data),
     });
   }
 
-  async createUnsignedProtocolCall<T extends UpdateProfileDetailsRequest>(
-    request: T,
-    nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>> {
-    const result = await this.createSetProfileMetadataTypedData(
-      await this.resolveCreateSetProfileMetadataUriRequest(request),
-      nonce,
-    );
+  private async broadcast(
+    request: UpdateProfileDetailsRequest,
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
+    const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
 
-    return new UnsignedLensProtocolCall(result.id, request, omitTypename(result.typedData));
+    const { data } = await this.apolloClient.mutate<
+      CreateSetProfileMetadataViaDispatcherData,
+      CreateSetProfileMetadataViaDispatcherVariables
+    >({
+      mutation: CreateSetProfileMetadataViaDispatcherDocument,
+      variables: {
+        request: requestArg,
+      },
+    });
+
+    if (data.result.__typename === 'RelayError') {
+      const typedData = await this.createTypedData(requestArg);
+      const fallback = this.createRequestFallback(request, typedData);
+
+      return handleRelayError(data.result, fallback);
+    }
+
+    return success({
+      indexingId: data.result.txId,
+      txHash: data.result.txHash,
+    });
   }
 
-  private async createSetProfileMetadataTypedData(
+  private async createTypedData(
     request: CreatePublicSetProfileMetadataUriRequest,
     nonce?: Nonce,
-  ) {
+  ): Promise<CreateSetProfileMetadataTypedDataData> {
     const { data } = await this.apolloClient.mutate<
       CreateSetProfileMetadataTypedDataData,
       CreateSetProfileMetadataTypedDataVariables
@@ -86,28 +123,7 @@ export class ProfileMetadataCallGateway
       },
     });
 
-    return data.result;
-  }
-
-  private async initiateProfileUpdate(
-    request: CreatePublicSetProfileMetadataUriRequest,
-  ): AsyncRelayReceipt {
-    const { data } = await this.apolloClient.mutate<
-      CreateSetProfileMetadataViaDispatcherData,
-      CreateSetProfileMetadataViaDispatcherVariables
-    >({
-      mutation: CreateSetProfileMetadataViaDispatcherDocument,
-      variables: { request },
-    });
-
-    if (data.result.__typename === 'RelayError') {
-      return failure(new TransactionError(TransactionErrorReason.REJECTED));
-    }
-
-    return success({
-      indexingId: data.result.txId,
-      txHash: data.result.txHash,
-    });
+    return data;
   }
 
   private async resolveCreateSetProfileMetadataUriRequest(
@@ -133,5 +149,21 @@ export class ProfileMetadataCallGateway
     });
 
     return data.result ?? never(`Cannot update profile "${profileId}: profile not found`);
+  }
+
+  private createRequestFallback(
+    request: UpdateProfileDetailsRequest,
+    data: CreateSetProfileMetadataTypedDataData,
+  ): SelfFundedProtocolCallRequest<UpdateProfileDetailsRequest> {
+    const contract = lensPeriphery(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('setProfileMetadataURI', [
+      data.result.typedData.value.profileId,
+      data.result.typedData.value.metadata,
+    ]);
+    return {
+      ...request,
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
   }
 }

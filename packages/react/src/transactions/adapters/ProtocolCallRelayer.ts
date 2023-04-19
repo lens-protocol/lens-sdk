@@ -4,20 +4,24 @@ import {
   BroadcastProtocolCallVariables,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
-import {
-  MetaTransaction,
-  SignedProtocolCall,
-  TransactionError,
-  TransactionErrorReason,
-  TransactionRequestModel,
-} from '@lens-protocol/domain/entities';
+import { MetaTransaction, TransactionRequestModel } from '@lens-protocol/domain/entities';
 import {
   IProtocolCallRelayer,
+  BroadcastingError,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, ILogger, success } from '@lens-protocol/shared-kernel';
+import {
+  assertError,
+  ChainType,
+  failure,
+  ILogger,
+  PromiseResult,
+  success,
+} from '@lens-protocol/shared-kernel';
 
-import { AsyncRelayReceipt, ITransactionFactory } from './ITransactionFactory';
+import { SignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { ITransactionFactory } from './ITransactionFactory';
+import { handleRelayError, RelayReceipt } from './relayer';
 
 export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransactionRequest> {
   constructor(
@@ -28,17 +32,28 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
 
   async relayProtocolCall<T extends SupportedTransactionRequest>(
     signedCall: SignedProtocolCall<T>,
-  ): Promise<MetaTransaction<T>> {
-    return this.factory.createMetaTransaction({
+  ): PromiseResult<MetaTransaction<T>, BroadcastingError> {
+    const result = await this.broadcast(signedCall);
+
+    if (result.isFailure()) return failure(result.error);
+
+    const receipt = result.value;
+
+    const transaction = this.factory.createMetaTransaction({
       chainType: ChainType.POLYGON,
-      signedCall,
-      asyncRelayReceipt: this.broadcast(signedCall),
+      id: signedCall.id,
+      request: signedCall.request,
+      nonce: signedCall.nonce,
+      indexingId: receipt.indexingId,
+      txHash: receipt.txHash,
     });
+
+    return success(transaction);
   }
 
   private async broadcast<T extends TransactionRequestModel>(
     signedCall: SignedProtocolCall<T>,
-  ): AsyncRelayReceipt {
+  ): PromiseResult<RelayReceipt, BroadcastingError> {
     try {
       const { data } = await this.apolloClient.mutate<
         BroadcastProtocolCallData,
@@ -54,7 +69,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
       });
 
       if (data.result.__typename === 'RelayError') {
-        return failure(new TransactionError(TransactionErrorReason.REJECTED));
+        return handleRelayError(data.result, signedCall.fallback);
       }
 
       return success({
@@ -63,7 +78,8 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
       });
     } catch (err) {
       this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);
-      return failure(new TransactionError(TransactionErrorReason.CANNOT_EXECUTE));
+      assertError(err);
+      return failure(new BroadcastingError(err.message));
     }
   }
 }

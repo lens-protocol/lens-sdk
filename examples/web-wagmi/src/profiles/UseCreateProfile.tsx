@@ -33,9 +33,11 @@ function CreateProfileForm() {
     const formData = new FormData(form);
     const handle = (formData.get('handle') as string) ?? never();
 
-    await create({ handle });
+    const result = await create({ handle });
 
-    form.reset();
+    if (result.isSuccess()) {
+      form.reset();
+    }
   };
 
   return (

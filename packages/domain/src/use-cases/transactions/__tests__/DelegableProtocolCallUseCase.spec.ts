@@ -1,8 +1,9 @@
-import { success } from '@lens-protocol/shared-kernel';
+import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
 import { NativeTransaction, TransactionRequestModel } from '../../../entities';
 import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
+import { BroadcastingError } from '../BroadcastingError';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -37,7 +38,7 @@ function setupDelegableProtocolCallUseCase<T extends TransactionRequestModel>({
 
 describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> interactor`, () => {
   describe(`when calling the "${DelegableProtocolCallUseCase.prototype.execute.name}" method`, () => {
-    describe('with a SupportedRequestModel that has the "delegate" flag unset', () => {
+    describe('with a WithDelegateFlag<TransactionRequestModel> that has the "delegate" flag unset', () => {
       const request = mockTransactionRequestModelWithDelegateFlag({ delegate: false });
 
       it(`should execute the ${ProtocolCallUseCase.name}<T>`, async () => {
@@ -52,7 +53,7 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
       });
     });
 
-    describe('with a SupportedRequestModel that has the "delegate" flag set', () => {
+    describe('with a WithDelegateFlag<TransactionRequestModel> that has the "delegate" flag set', () => {
       const request = mockTransactionRequestModelWithDelegateFlag({ delegate: true });
 
       it(`should:
@@ -62,7 +63,7 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
         const transaction = MockedNativeTransaction.fromRequest(request);
         const protocolCallGateway = mockIDelegableProtocolCallGateway({
           request,
-          delegatedTransaction: transaction,
+          result: success(transaction),
         });
 
         const transactionQueue = mockTransactionQueue<TransactionRequestModel>();
@@ -80,6 +81,25 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
         expect(protocolCallGateway.createDelegatedTransaction).toHaveBeenCalledWith(request);
         expect(transactionQueue.push).toHaveBeenCalledWith(transaction);
         expect(presenter.present).toHaveBeenCalledWith(success());
+      });
+
+      it(`should present any ${BroadcastingError.name} from the IDelegableProtocolCallGateway<T>`, async () => {
+        const error = new BroadcastingError('some reason');
+        const protocolCallGateway = mockIDelegableProtocolCallGateway({
+          request,
+          result: failure(error),
+        });
+
+        const presenter = mock<IProtocolCallPresenter>();
+
+        const useCase = setupDelegableProtocolCallUseCase({
+          protocolCallGateway: protocolCallGateway,
+          presenter,
+        });
+
+        await useCase.execute(request);
+
+        expect(presenter.present).toHaveBeenCalledWith(failure(error));
       });
     });
   });

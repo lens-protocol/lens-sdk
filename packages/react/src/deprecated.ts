@@ -35,9 +35,12 @@ import {
   PublicationStats,
   RevenueAggregate,
   RevertFollowModuleSettings,
+  TransactionState,
   UnknownFollowModuleSettings,
   WhoReactedResult,
 } from '@lens-protocol/api-bindings';
+
+import { SupportedTransactionRequest } from './transactions';
 
 /**
  * @deprecated Use {@link EnabledModules} instead.
@@ -238,3 +241,13 @@ export type WhoReactedResultFragment = WhoReactedResult;
  * @deprecated Use {@link PublicationRevenue} instead.
  */
 export type PublicationRevenueFragment = PublicationRevenue;
+
+/**
+ * @deprecated Use {@link TransactionState} instead.
+ */
+export type BroadcastedTransactionData<T extends SupportedTransactionRequest> = TransactionState<T>;
+
+/**
+ * @deprecated Use {@link TransactionState} instead.
+ */
+export type PendingTransactionData<T extends SupportedTransactionRequest> = TransactionState<T>;

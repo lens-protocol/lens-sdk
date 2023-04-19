@@ -5,6 +5,7 @@ import {
   LensApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
+import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import {
   CollectRequest,
@@ -12,15 +13,16 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
 
 export class CollectPublicationCallGateway implements ICollectPublicationCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
-  async createUnsignedProtocolCall<T extends CollectRequest>(
-    request: T,
+  async createUnsignedProtocolCall(
+    request: CollectRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<CollectRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateCollectTypedDataData,
       CreateCollectTypedDataVariables
@@ -36,10 +38,28 @@ export class CollectPublicationCallGateway implements ICollectPublicationCallGat
 
     invariant(data, 'Cannot generate typed data for collect');
 
-    return new UnsignedLensProtocolCall(
-      data.result.id,
+    return UnsignedProtocolCall.create({
+      id: data.result.id,
       request,
-      omitTypename(data.result.typedData),
-    );
+      typedData: omitTypename(data.result.typedData),
+      fallback: this.createRequestFallback(request, data),
+    });
+  }
+
+  private createRequestFallback(
+    request: CollectRequest,
+    data: CreateCollectTypedDataData,
+  ): SelfFundedProtocolCallRequest<CollectRequest> {
+    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('collect', [
+      data.result.typedData.value.profileId,
+      data.result.typedData.value.pubId,
+      data.result.typedData.value.data,
+    ]);
+    return {
+      ...request,
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
   }
 }

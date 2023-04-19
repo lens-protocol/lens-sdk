@@ -7,14 +7,14 @@ import {
 } from '@lens-protocol/api-bindings';
 import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
-  BroadcastedTransactionData,
   ITransactionResponder,
+  TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 export class CollectPublicationResponder implements ITransactionResponder<CollectRequest> {
   constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
 
-  async commit({ request }: BroadcastedTransactionData<CollectRequest>) {
+  async commit({ request }: TransactionData<CollectRequest>) {
     await this.client.query<PublicationData, PublicationVariables>({
       query: PublicationDocument,
       variables: {

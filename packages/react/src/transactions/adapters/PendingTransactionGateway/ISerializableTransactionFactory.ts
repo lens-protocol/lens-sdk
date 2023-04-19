@@ -13,17 +13,17 @@ import {
 
 export interface ISerializableMetaTransaction<T extends SupportedTransactionRequest>
   extends MetaTransaction<T> {
-  toTransactionData(): MetaTransactionData<T> | null;
+  toTransactionData(): MetaTransactionData<T>;
 }
 
 export interface ISerializableNativeTransaction<T extends SupportedTransactionRequest>
   extends NativeTransaction<T> {
-  toTransactionData(): NativeTransactionData<T> | null;
+  toTransactionData(): NativeTransactionData<T>;
 }
 
 export interface ISerializableProxyTransaction<T extends SupportedTransactionRequest>
   extends ProxyTransaction<T> {
-  toTransactionData(): ProxyTransactionData<T> | null;
+  toTransactionData(): ProxyTransactionData<T>;
 }
 
 export interface ISerializableTransactionFactory<T extends SupportedTransactionRequest> {

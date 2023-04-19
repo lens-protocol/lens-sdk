@@ -18,10 +18,7 @@ import {
   mockPublicationStatsFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
-import {
-  mockBroadcastedTransactionData,
-  mockPaidCollectRequest,
-} from '@lens-protocol/domain/mocks';
+import { mockTransactionData, mockPaidCollectRequest } from '@lens-protocol/domain/mocks';
 
 import { CollectPublicationResponder } from '../CollectPublicationResponder';
 
@@ -85,7 +82,7 @@ describe(`Given the ${CollectPublicationResponder.name}`, () => {
         const request = mockPaidCollectRequest({
           publicationId: publication.id,
         });
-        const transactionData = mockBroadcastedTransactionData({ request });
+        const transactionData = mockTransactionData({ request });
         const scenario = setupTestScenario({
           publication,
           expected: {
@@ -115,7 +112,7 @@ describe(`Given the ${CollectPublicationResponder.name}`, () => {
         const request = mockPaidCollectRequest({
           publicationId: mirror.id,
         });
-        const transactionData = mockBroadcastedTransactionData({ request });
+        const transactionData = mockTransactionData({ request });
         const scenario = setupTestScenario({
           publication: mirror,
           expected: {

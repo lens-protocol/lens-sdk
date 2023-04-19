@@ -3,7 +3,6 @@ import {
   CreateUnfollowTypedDataDocument,
   CreateUnfollowTypedDataData,
   CreateUnfollowTypedDataVariables,
-  omitTypename,
 } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
@@ -11,8 +10,9 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { mockUnfollowRequest } from '@lens-protocol/domain/mocks';
 
-import { UnsignedLensProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { UnfollowProfileCallGateway } from '../UnfollowProfileCallGateway';
+import { assertUnsignedProtocolCallCorrectness } from '../__helpers__/mocks';
 
 function mockCreateUnfollowTypedDataMutationMockedResponse({
   variables,
@@ -36,7 +36,7 @@ describe(`Given an instance of the ${UnfollowProfileCallGateway.name}`, () => {
   const request = mockUnfollowRequest();
 
   describe(`when calling the "${UnfollowProfileCallGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
-    it(`should create an "${UnsignedLensProtocolCall.name}" w/ the expected typed data`, async () => {
+    it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
       const data = mockCreateUnfollowTypedDataData();
       const apollo = createMockApolloClientWithMultipleResponses([
         mockCreateUnfollowTypedDataMutationMockedResponse({
@@ -52,8 +52,7 @@ describe(`Given an instance of the ${UnfollowProfileCallGateway.name}`, () => {
 
       const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
-      expect(unsignedCall).toBeInstanceOf(UnsignedLensProtocolCall);
-      expect(unsignedCall.typedData).toEqual(omitTypename(data.result.typedData));
+      assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
     });
   });
 });

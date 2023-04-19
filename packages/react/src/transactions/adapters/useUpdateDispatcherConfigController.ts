@@ -1,5 +1,4 @@
 import {
-  TransactionKind,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
@@ -8,6 +7,7 @@ import {
   UpdateDispatcherConfig,
   UpdateDispatcherConfigRequest,
 } from '@lens-protocol/domain/use-cases/profile';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { DispatcherConfigCallGateway } from './DispatcherConfigCallGateway';
@@ -17,10 +17,10 @@ export function useUpdateDispatcherConfigController() {
   const { activeWallet, transactionGateway, protocolCallRelayer, transactionQueue, apolloClient } =
     useSharedDependencies();
 
-  return async (request: Omit<UpdateDispatcherConfigRequest, 'kind'>) => {
+  return async (request: UpdateDispatcherConfigRequest) => {
     const presenter = new PromiseResultPresenter<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
     const gateway = new DispatcherConfigCallGateway(apolloClient);
     const updateDispatcherConfig = new UpdateDispatcherConfig(
@@ -32,10 +32,7 @@ export function useUpdateDispatcherConfigController() {
       presenter,
     );
 
-    await updateDispatcherConfig.execute({
-      ...request,
-      kind: TransactionKind.UPDATE_DISPATCHER_CONFIG,
-    });
+    await updateDispatcherConfig.execute(request);
 
     return presenter.asResult();
   };

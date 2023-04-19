@@ -8,33 +8,66 @@ import {
 } from '@lens-protocol/domain/entities';
 import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
-import {
-  BroadcastedTransactionData,
-  PendingTransactionData,
-  SupportedTransactionRequest,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { DateUtils, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 export enum TxStatus {
-  BROADCASTING = 'broadcasting',
-  MINING = 'mining',
+  /**
+   * @deprecated Use {@link TxStatus.PENDING} instead. It will be removed in the next major version.
+   */
+  BROADCASTING = 'pending',
+
+  /**
+   * @deprecated Use {@link TxStatus.PENDING} instead. It will be removed in the next major version.
+   */
+  MINING = 'pending',
+
+  /**
+   * A pending transaction is a transaction that is either mining or it's mined but not indexed yet.
+   */
+  PENDING = 'pending',
+
+  /**
+   * A settled transaction is a transaction that is mined and indexed.
+   */
   SETTLED = 'settled',
+
+  /**
+   * A failed transaction is a transaction that failed to be broadcasted or it failed to be mined.
+   */
   FAILED = 'failed',
 }
 
 const PENDING_STATUSES = [TxStatus.BROADCASTING, TxStatus.MINING];
 
+/**
+ * @deprecated Use {@link TransactionState} instead. It will be removed in the next major version.
+ */
 export type PendingTransactionState<T extends SupportedTransactionRequest> = {
   status: TxStatus.BROADCASTING | TxStatus.FAILED;
-} & PendingTransactionData<T>;
+  id: string;
+  request: T;
+};
 
+/**
+ * @deprecated Use {@link TransactionState} instead. It will be removed in the next major version.
+ */
 export type BroadcastedTransactionState<T extends SupportedTransactionRequest> = {
   status: TxStatus.MINING | TxStatus.SETTLED | TxStatus.FAILED;
-} & BroadcastedTransactionData<T>;
+  id: string;
+  request: T;
+  txHash: string;
+};
 
-export type TransactionState<T extends SupportedTransactionRequest> =
-  | PendingTransactionState<T>
-  | BroadcastedTransactionState<T>;
+/**
+ * Describe the state of a transaction and the originating request.
+ */
+export type TransactionState<T extends SupportedTransactionRequest> = {
+  status: TxStatus;
+  id: string;
+  request: T;
+  txHash?: string;
+};
 
 export const recentTransactionsVar = makeVar<TransactionState<SupportedTransactionRequest>[]>([]);
 
@@ -98,9 +131,7 @@ export function useWaitUntilTransactionSettled(waitTimeInMs: number = FIFTEEN_SE
       recentTransactionsVar.onNextChange(resolver);
     });
     const waitForSpecifiedTime = delay(waitTimeInMs).then(() => {
-      // Inaccurate error, moved code over here from `@lens-protocol/react` package
-      // TODO: Fix this
-      throw new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
+      throw new TransactionError(TransactionErrorReason.INDEXING_TIMEOUT);
     });
     await Promise.race([resolveWhenNoPendingTransactions, waitForSpecifiedTime]);
   };

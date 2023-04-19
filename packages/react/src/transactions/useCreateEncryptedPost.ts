@@ -10,6 +10,7 @@ import {
   CreatePostRequest,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, invariant, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { EncryptionConfig } from '../config';
@@ -45,7 +46,11 @@ export type CreateEncryptedPostArgs = Prettify<
 
 export type CreateEncryptedPostOperation = Operation<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError,
+  | BroadcastingError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError
+  | FailedUploadError,
   [CreateEncryptedPostArgs]
 >;
 
@@ -78,7 +83,11 @@ export function useCreateEncryptedPost({
       ...args
     }: CreateEncryptedPostArgs): PromiseResult<
       void,
-      PendingSigningRequestError | UserRejectedError | WalletConnectionError | FailedUploadError
+      | BroadcastingError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
+      | FailedUploadError
     > => {
       invariant(
         signer,

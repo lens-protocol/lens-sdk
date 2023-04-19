@@ -7,6 +7,7 @@ import {
   moduleFeeAmountParams,
   omitTypename,
 } from '@lens-protocol/api-bindings';
+import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import {
   FollowRequest,
@@ -15,7 +16,8 @@ import {
   isProfileOwnerFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 
-import { UnsignedLensProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
 
 function resolveProfileFollow(request: FollowRequest): Follow[] {
   if (isPaidFollowRequest(request)) {
@@ -48,10 +50,10 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
 export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
-  async createUnsignedProtocolCall<T extends FollowRequest>(
-    request: T,
+  async createUnsignedProtocolCall(
+    request: FollowRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedLensProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<FollowRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateFollowTypedDataData,
       CreateFollowTypedDataVariables
@@ -65,10 +67,27 @@ export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
       },
     });
 
-    return new UnsignedLensProtocolCall(
-      data.result.id,
+    return UnsignedProtocolCall.create({
+      id: data.result.id,
       request,
-      omitTypename(data.result.typedData),
-    );
+      typedData: omitTypename(data.result.typedData),
+      fallback: this.createRequestFallback(request, data),
+    });
+  }
+
+  private createRequestFallback(
+    request: FollowRequest,
+    data: CreateFollowTypedDataData,
+  ): SelfFundedProtocolCallRequest<FollowRequest> {
+    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('follow', [
+      data.result.typedData.value.profileIds,
+      data.result.typedData.value.datas,
+    ]);
+    return {
+      ...request,
+      contractAddress: data.result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
   }
 }

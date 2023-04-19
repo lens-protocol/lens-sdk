@@ -2,14 +2,14 @@ import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
 import { Profile } from '@lens-protocol/api-bindings';
 import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
-  BroadcastedTransactionData,
+  TransactionData,
   ITransactionResponder,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 export class UnfollowProfileResponder implements ITransactionResponder<UnfollowRequest> {
   constructor(private apolloCache: ApolloCache<NormalizedCacheObject>) {}
 
-  async commit({ request }: BroadcastedTransactionData<UnfollowRequest>) {
+  async commit({ request }: TransactionData<UnfollowRequest>) {
     const profileIdentifier = this.apolloCache.identify({
       __typename: 'Profile',
       id: request.profileId,

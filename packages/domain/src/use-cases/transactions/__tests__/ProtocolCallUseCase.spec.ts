@@ -9,18 +9,18 @@ import {
   UserRejectedError,
   Wallet,
   MetaTransaction,
-  SignedProtocolCall,
   TransactionRequestModel,
 } from '../../../entities';
 import {
   MockedMetaTransaction,
+  mockISignedProtocolCall,
+  mockIUnsignedProtocolCall,
   mockNonce,
-  mockSignedProtocolCall,
   mockTransactionRequestModel,
-  mockUnsignedProtocolCall,
   mockWallet,
 } from '../../../entities/__helpers__/mocks';
 import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
+import { BroadcastingError } from '../BroadcastingError';
 import {
   ProtocolCallUseCase,
   IProtocolCallPresenter,
@@ -65,12 +65,12 @@ function setupMetaTransactionUseCase<T extends TransactionRequestModel>({
 describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, () => {
   describe(`when calling the "${ProtocolCallUseCase.prototype.execute.name}" method`, () => {
     const request = mockTransactionRequestModel();
-    const unsignedCall = mockUnsignedProtocolCall(request);
+    const unsignedCall = mockIUnsignedProtocolCall(request);
 
     it(`should:
         - create an IUnsignedProtocolCall<T> passing the Nonce override from the IPendingTransactionGateway
         - sign it with the user's ${Wallet.name}
-        - relay the resulting ${SignedProtocolCall.name}<T>
+        - relay the resulting ISignedProtocolCall<T>
         - push the resulting ${MetaTransaction.name}<T> into the `, async () => {
       const nonce = mockNonce();
 
@@ -83,11 +83,14 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       });
 
       const wallet = mockWallet();
-      const signedCall = mockSignedProtocolCall(unsignedCall);
+      const signedCall = mockISignedProtocolCall(unsignedCall);
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
 
       const transaction = MockedMetaTransaction.fromSignedCall(signedCall);
-      const protocolCallRelayer = mockIProtocolCallRelayer({ signedCall, transaction });
+      const protocolCallRelayer = mockIProtocolCallRelayer({
+        signedCall,
+        result: success(transaction),
+      });
 
       const transactionQueue = mockTransactionQueue();
 
@@ -121,7 +124,7 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
         ErrorCtor: UserRejectedError,
         error: new UserRejectedError(),
       },
-    ])(`should present any $ErrorCtor.name from the user's ${Wallet.name}`, async ({ error }) => {
+    ])(`should present any $ErrorCtor.name from the owner's ${Wallet.name}`, async ({ error }) => {
       const metaTransactionNonceGateway = mock<IMetaTransactionNonceGateway>();
 
       const unsignedProtocolCallGateway = mock<IUnsignedProtocolCallGateway<typeof request>>();
@@ -135,6 +138,39 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       const useCase = setupMetaTransactionUseCase({
         metaTransactionNonceGateway,
         unsignedProtocolCallGateway,
+        presenter,
+        wallet,
+      });
+
+      await useCase.execute(request);
+
+      expect(presenter.present).toHaveBeenCalledWith(failure(error));
+    });
+
+    it(`should present any ${BroadcastingError.name} from the IProtocolCallRelayer call`, async () => {
+      const nonce = mockNonce();
+
+      const metaTransactionNonceGateway = mockIMetaTransactionNonceGateway({ nonce });
+
+      const unsignedProtocolCallGateway = mockIUnsignedProtocolCallGateway({
+        request,
+        nonce,
+        unsignedCall,
+      });
+
+      const wallet = mockWallet();
+      const signedCall = mockISignedProtocolCall(unsignedCall);
+      when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
+
+      const error = new BroadcastingError('some reason');
+      const protocolCallRelayer = mockIProtocolCallRelayer({ signedCall, result: failure(error) });
+
+      const presenter = mock<IProtocolCallPresenter>();
+
+      const useCase = setupMetaTransactionUseCase({
+        metaTransactionNonceGateway,
+        unsignedProtocolCallGateway,
+        protocolCallRelayer,
         presenter,
         wallet,
       });

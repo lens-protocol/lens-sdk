@@ -20,8 +20,6 @@ import { mockStorage } from '@lens-protocol/storage/mocks';
 
 import { TransactionFactory } from '../../../infrastructure/TransactionFactory';
 import {
-  mockDeferredMetaTransactionInit,
-  mockDeferredNativeTransactionInit,
   mockITransactionFactory,
   mockMetaTransactionData,
   mockNativeTransactionData,
@@ -87,29 +85,6 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
 
       const actual = await gateway.getAll();
       expect(actual).toEqual([tx]);
-    });
-
-    it('should commit to long term storage only the transactions that return a serialized object', async () => {
-      const storage = mockStorage<TransactionStorageSchema>();
-      const gateway1 = setupPendingTransactionGateway({ factory, storage });
-
-      const noSaveMetaTx = factory.createMetaTransaction(
-        mockDeferredMetaTransactionInit({ request }),
-      );
-      const noSaveNativeTx = factory.createNativeTransaction(
-        mockDeferredNativeTransactionInit({ request }),
-      );
-      const toBeSaved = factory.createMetaTransaction(
-        mockMetaTransactionData({ request, nonce: noSaveMetaTx.nonce + 1 }),
-      );
-
-      await gateway1.save(noSaveMetaTx);
-      await gateway1.save(noSaveNativeTx);
-      await gateway1.save(toBeSaved);
-
-      const gateway2 = setupPendingTransactionGateway({ factory, storage });
-      const actual = await gateway2.getAll();
-      expect(actual).toEqual([expect.objectContaining({ id: toBeSaved.id })]);
     });
 
     it('should update the existing tx if provided a second time', async () => {

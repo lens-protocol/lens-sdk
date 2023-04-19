@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { Result } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -8,17 +9,16 @@ import {
   NativeTransaction,
   Nonce,
   ProxyTransaction,
-  SignedProtocolCall,
+  ISignedProtocolCall,
   TransactionKind,
   TransactionRequestModel,
 } from '../../../entities';
 import {
-  MockedMetaTransaction,
   MockedProxyTransaction,
   mockNonce,
   mockTransactionHash,
-  mockUnsignedProtocolCall,
 } from '../../../entities/__helpers__/mocks';
+import { BroadcastingError } from '../BroadcastingError';
 import { IDelegableProtocolCallGateway, WithDelegateFlag } from '../DelegableProtocolCallUseCase';
 import {
   IMetaTransactionNonceGateway,
@@ -27,29 +27,18 @@ import {
 } from '../ProtocolCallUseCase';
 import { ISignlessProtocolCallRelayer } from '../SignlessProtocolCallUseCase';
 import { SupportedTransactionRequest } from '../SupportedTransactionRequest';
-import {
-  BroadcastedTransactionData,
-  PendingTransactionData,
-  TransactionQueue,
-} from '../TransactionQueue';
+import { TransactionData, TransactionQueue } from '../TransactionQueue';
 
-export function mockIProtocolCallRelayer<T extends TransactionRequestModel>(instructions?: {
-  signedCall: SignedProtocolCall<T>;
-  transaction?: MetaTransaction<T>;
+export function mockIProtocolCallRelayer<T extends TransactionRequestModel>({
+  signedCall,
+  result,
+}: {
+  signedCall: ISignedProtocolCall<T>;
+  result: Result<MetaTransaction<T>, BroadcastingError>;
 }) {
   const transactionRelayer = mock<IProtocolCallRelayer<T>>();
 
-  if (instructions) {
-    const { signedCall, transaction = MockedMetaTransaction.fromSignedCall(signedCall) } =
-      instructions;
-    when(transactionRelayer.relayProtocolCall)
-      .calledWith(signedCall)
-      .mockResolvedValue(transaction);
-  } else {
-    when(transactionRelayer.relayProtocolCall).mockImplementation(async (signedCall) =>
-      MockedMetaTransaction.fromSignedCall(signedCall),
-    );
-  }
+  when(transactionRelayer.relayProtocolCall).calledWith(signedCall).mockResolvedValue(result);
 
   return transactionRelayer;
 }
@@ -60,19 +49,9 @@ export function mockTransactionQueue<
   return mock<TransactionQueue<T>>();
 }
 
-export function mockPendingTransactionData<T extends SupportedTransactionRequest>(
-  overrides?: Partial<PendingTransactionData<T>>,
-): PendingTransactionData<T> {
-  return {
-    id: faker.datatype.uuid(),
-    request: mock(),
-    ...overrides,
-  };
-}
-
-export function mockBroadcastedTransactionData<T extends SupportedTransactionRequest>(
-  overrides?: Partial<BroadcastedTransactionData<T>>,
-): BroadcastedTransactionData<T> {
+export function mockTransactionData<T extends SupportedTransactionRequest>(
+  overrides?: Partial<TransactionData<T>>,
+): TransactionData<T> {
   return {
     id: faker.datatype.uuid(),
     request: mock(),
@@ -92,11 +71,11 @@ export function mockIMetaTransactionNonceGateway({
 export function mockIUnsignedProtocolCallGateway<T extends TransactionRequestModel>({
   request,
   nonce,
-  unsignedCall = mockUnsignedProtocolCall(request),
+  unsignedCall,
 }: {
   request: T;
   nonce?: Nonce;
-  unsignedCall?: IUnsignedProtocolCall<T>;
+  unsignedCall: IUnsignedProtocolCall<T>;
 }): IUnsignedProtocolCallGateway<T> {
   const gateway = mock<IUnsignedProtocolCallGateway<T>>();
 
@@ -109,16 +88,14 @@ export function mockIUnsignedProtocolCallGateway<T extends TransactionRequestMod
 
 export function mockIDelegableProtocolCallGateway<T extends TransactionRequestModel>({
   request,
-  delegatedTransaction,
+  result,
 }: {
   request: T;
-  delegatedTransaction: NativeTransaction<T>;
+  result: Result<NativeTransaction<T>, BroadcastingError>;
 }): IDelegableProtocolCallGateway<T> {
   const gateway = mock<IDelegableProtocolCallGateway<T>>();
 
-  when(gateway.createDelegatedTransaction)
-    .calledWith(request)
-    .mockResolvedValue(delegatedTransaction);
+  when(gateway.createDelegatedTransaction).calledWith(request).mockResolvedValue(result);
 
   return gateway;
 }

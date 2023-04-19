@@ -1,32 +1,28 @@
 import { faker } from '@faker-js/faker';
-import {
-  ProxyActionStatus,
-  TransactionError,
-  TransactionRequestModel,
-} from '@lens-protocol/domain/entities';
+import { omitTypename } from '@lens-protocol/api-bindings';
+import { ProxyActionStatus, TransactionRequestModel } from '@lens-protocol/domain/entities';
 import {
   mockNonce,
-  mockSignedProtocolCall,
   mockTransactionHash,
   mockTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
-import { ChainType, Result, success, Url } from '@lens-protocol/shared-kernel';
-import { mockEthereumAddress, mockUint256HexString } from '@lens-protocol/shared-kernel/mocks';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import { assertFailure, ChainType, Result, Url } from '@lens-protocol/shared-kernel';
+import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
 import { IMetadataUploader } from '../IMetadataUploader';
 import {
-  AsyncRelayReceipt,
-  DeferredMetaTransactionInit,
-  DeferredNativeTransactionInit,
   MetaTransactionData,
   NativeTransactionData,
   ProxyTransactionData,
-  RelayReceipt,
 } from '../ITransactionFactory';
+import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
 import { TypedData } from '../TypedData';
+import { RelayReceipt } from '../relayer';
 
 export function mockITransactionFactory(
   transactionObserver: ITransactionObserver = mock<ITransactionObserver>(),
@@ -51,41 +47,12 @@ export function mockTypedData(): TypedData {
     domain: {
       name: 'none',
       version: '1',
-      chainId: mockUint256HexString(),
+      chainId: 1,
       verifyingContract: mockEthereumAddress(),
     },
     value: {
       nonce: 0,
     },
-  };
-}
-
-export function mockAsyncRelayReceipt(
-  result: Result<RelayReceipt, TransactionError>,
-): AsyncRelayReceipt {
-  return Promise.resolve(result);
-}
-
-export function mockDeferredMetaTransactionInit<T extends TransactionRequestModel>({
-  request = mockTransactionRequestModel() as T,
-  relayReceipt = mockRelayReceipt(),
-}: { request?: T; relayReceipt?: RelayReceipt } = {}): DeferredMetaTransactionInit<T> {
-  return {
-    chainType: ChainType.ETHEREUM,
-    signedCall: mockSignedProtocolCall(request),
-    asyncRelayReceipt: mockAsyncRelayReceipt(success(relayReceipt)),
-  };
-}
-
-export function mockDeferredNativeTransactionInit<T extends TransactionRequestModel>({
-  request = mockTransactionRequestModel() as T,
-  relayReceipt = mockRelayReceipt(),
-}: { request?: T; relayReceipt?: RelayReceipt } = {}): DeferredNativeTransactionInit<T> {
-  return {
-    chainType: ChainType.ETHEREUM,
-    id: faker.datatype.uuid(),
-    request,
-    asyncRelayReceipt: mockAsyncRelayReceipt(success(relayReceipt)),
   };
 }
 
@@ -154,4 +121,37 @@ export function mockIMetadataUploader(urlOrError: Url | Error): IMetadataUploade
   }
 
   return uploader;
+}
+
+export function assertUnsignedProtocolCallCorrectness<T extends TransactionRequestModel>(
+  unsignedProtocolCall: UnsignedProtocolCall<T>,
+  broadcastResult: {
+    id: string;
+    typedData: TypedData;
+  },
+) {
+  expect(unsignedProtocolCall.id).toEqual(broadcastResult.id);
+  expect(unsignedProtocolCall.typedData).toEqual(omitTypename(broadcastResult.typedData));
+}
+
+export function assertBroadcastingErrorResultWithRequestFallback(
+  result: Result<unknown, BroadcastingError>,
+  typedData: TypedData,
+) {
+  assertFailure(result);
+  expect(result.error).toBeInstanceOf(BroadcastingError);
+  expect(result.error.fallback).toMatchObject({
+    contractAddress: typedData.domain.verifyingContract,
+    encodedData: expect.any(String),
+  });
+}
+
+export function mockSelfFundedProtocolCallRequest<
+  TRequest extends TransactionRequestModel,
+>(): SelfFundedProtocolCallRequest<TRequest> {
+  return {
+    contractAddress: mockEthereumAddress(),
+    encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
+    ...mockTransactionRequestModel(),
+  } as SelfFundedProtocolCallRequest<TRequest>;
 }
