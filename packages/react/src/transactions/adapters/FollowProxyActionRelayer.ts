@@ -9,10 +9,9 @@ import { ProxyTransaction } from '@lens-protocol/domain/entities';
 import { UnconstrainedFollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
-  BroadcastingErrorReason,
   ISignlessProtocolCallRelayer,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, getID, ILogger } from '@lens-protocol/shared-kernel';
+import { assertError, ChainType, getID, ILogger } from '@lens-protocol/shared-kernel';
 
 import { ITransactionFactory } from './ITransactionFactory';
 import { ProxyReceipt } from './ProxyReceipt';
@@ -47,8 +46,9 @@ export class FollowProxyActionRelayer<T extends UnconstrainedFollowRequest>
         },
       });
     } catch (error) {
+      assertError(error);
       this.logger.error(error, 'It was not possible to relay the transaction');
-      throw new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED);
+      throw new BroadcastingError(error.message);
     }
   }
 

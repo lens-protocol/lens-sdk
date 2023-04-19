@@ -48,6 +48,7 @@ export function useUpdateDispatcherConfig({
   const { execute, error, isPending } = useOperation(
     async ({ enabled }: UpdateDispatcherConfigArgs) =>
       update({
+        kind: TransactionKind.UPDATE_DISPATCHER_CONFIG,
         enabled,
         profileId: profile.id,
       }),

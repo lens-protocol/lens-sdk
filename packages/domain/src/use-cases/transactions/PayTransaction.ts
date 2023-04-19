@@ -1,4 +1,4 @@
-import { Brand, failure, success } from '@lens-protocol/shared-kernel';
+import { failure, success } from '@lens-protocol/shared-kernel';
 
 import {
   InsufficientGasError,
@@ -13,15 +13,8 @@ import { ActiveWallet } from '../wallets/ActiveWallet';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
-export type Data = Brand<string, 'Data'>;
-
-export type WithData<T extends TransactionRequestModel> = T extends { data: Data } ? T : never;
-
 export interface IPayTransactionGateway<T extends TransactionRequestModel> {
-  prepareSelfFundedTransaction(
-    request: WithData<T>,
-    wallet: Wallet,
-  ): Promise<UnsignedTransaction<T>>;
+  prepareSelfFundedTransaction(request: T, wallet: Wallet): Promise<UnsignedTransaction<T>>;
 }
 
 export type IPayTransactionPresenter = IGenericResultPresenter<
@@ -37,7 +30,7 @@ export class PayTransaction<T extends TransactionRequestModel> {
     private readonly queue: TransactionQueue<TransactionRequestModel>,
   ) {}
 
-  async execute(request: WithData<T>) {
+  async execute(request: T) {
     const wallet = await this.activeWallet.requireActiveWallet();
 
     const approveTransaction = await this.gateway.prepareSelfFundedTransaction(request, wallet);

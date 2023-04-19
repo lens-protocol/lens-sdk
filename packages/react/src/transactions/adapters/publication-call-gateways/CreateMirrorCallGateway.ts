@@ -8,7 +8,6 @@ import {
   CreateMirrorTypedDataData,
   CreateMirrorTypedDataVariables,
   LensApolloClient,
-  RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -18,9 +17,6 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
-  BroadcastingErrorReason,
-  Data,
-  RequestFallback,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -28,7 +24,8 @@ import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { RelayReceipt } from '../RelayReceipt';
+import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
+import { handleRelayError, RelayReceipt } from '../relayer';
 
 export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
   constructor(
@@ -36,11 +33,10 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
     private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
   ) {}
 
-  async createDelegatedTransaction<T extends CreateMirrorRequest>(
-    request: T,
-  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
-    const requestArg = await this.resolveCreateMirrorRequestArg(request);
-    const result = await this.broadcast(requestArg);
+  async createDelegatedTransaction(
+    request: CreateMirrorRequest,
+  ): PromiseResult<NativeTransaction<CreateMirrorRequest>, BroadcastingError> {
+    const result = await this.broadcast(request);
 
     if (result.isFailure()) return failure(result.error);
 
@@ -69,13 +65,15 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
-      fallback: this.createRequestFallback(data),
+      fallback: this.createRequestFallback(request, data),
     });
   }
 
   private async broadcast(
-    requestArg: CreateMirrorRequestArg,
+    request: CreateMirrorRequest,
   ): PromiseResult<RelayReceipt, BroadcastingError> {
+    const requestArg = await this.resolveCreateMirrorRequestArg(request);
+
     const { data } = await this.apolloClient.mutate<
       CreateMirrorViaDispatcherData,
       CreateMirrorViaDispatcherVariables
@@ -88,12 +86,9 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
 
     if (data.result.__typename === 'RelayError') {
       const typedData = await this.createTypedData(requestArg);
-      const fallback = this.createRequestFallback(typedData);
+      const fallback = this.createRequestFallback(request, typedData);
 
-      if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
-      }
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
+      return handleRelayError(data.result, fallback);
     }
 
     return success({
@@ -128,7 +123,10 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
     };
   }
 
-  private createRequestFallback(data: CreateMirrorTypedDataData): RequestFallback {
+  private createRequestFallback(
+    request: CreateMirrorRequest,
+    data: CreateMirrorTypedDataData,
+  ): SelfFundedProtocolCallRequest<CreateMirrorRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('mirror', [
       {
@@ -141,6 +139,7 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
       },
     ]);
     return {
+      ...request,
       contractAddress: data.result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

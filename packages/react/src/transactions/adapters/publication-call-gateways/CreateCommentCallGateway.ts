@@ -8,7 +8,6 @@ import {
   CreatePublicCommentRequest as CreatePublicCommentRequestArg,
   LensApolloClient,
   omitTypename,
-  RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -18,9 +17,6 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
-  BroadcastingErrorReason,
-  Data,
-  RequestFallback,
   SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -29,7 +25,8 @@ import { v4 } from 'uuid';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { RelayReceipt } from '../RelayReceipt';
+import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
+import { handleRelayError, RelayReceipt } from '../relayer';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class CreateCommentCallGateway implements ICreateCommentCallGateway {
@@ -39,11 +36,10 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     private readonly uploader: IMetadataUploader<CreateCommentRequest>,
   ) {}
 
-  async createDelegatedTransaction<T extends CreateCommentRequest>(
-    request: T,
-  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
-    const requestArg = await this.resolveCreateCommentRequestArg(request);
-    const result = await this.broadcast(requestArg);
+  async createDelegatedTransaction(
+    request: CreateCommentRequest,
+  ): PromiseResult<NativeTransaction<CreateCommentRequest>, BroadcastingError> {
+    const result = await this.broadcast(request);
 
     if (result.isFailure()) return failure(result.error);
 
@@ -64,19 +60,21 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
   ): Promise<UnsignedProtocolCall<CreateCommentRequest>> {
     const requestArg = await this.resolveCreateCommentRequestArg(request);
 
-    const data = await this.createTypedData(requestArg, nonce);
+    const typedData = await this.createTypedData(requestArg, nonce);
 
     return UnsignedProtocolCall.create({
-      id: data.result.id,
+      id: typedData.result.id,
       request,
-      typedData: omitTypename(data.result.typedData),
-      fallback: this.createRequestFallback(data),
+      typedData: omitTypename(typedData.result.typedData),
+      fallback: this.createRequestFallback(request, typedData),
     });
   }
 
   private async broadcast(
-    requestArg: CreatePublicCommentRequestArg,
+    request: CreateCommentRequest,
   ): PromiseResult<RelayReceipt, BroadcastingError> {
+    const requestArg = await this.resolveCreateCommentRequestArg(request);
+
     const { data } = await this.apolloClient.mutate<
       CreateCommentViaDispatcherData,
       CreateCommentViaDispatcherVariables
@@ -89,12 +87,9 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
 
     if (data.result.__typename === 'RelayError') {
       const typedData = await this.createTypedData(requestArg);
-      const fallback = this.createRequestFallback(typedData);
+      const fallback = this.createRequestFallback(request, typedData);
 
-      if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
-      }
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
+      return handleRelayError(data.result, fallback);
     }
 
     return success({
@@ -133,7 +128,10 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
     };
   }
 
-  private createRequestFallback(data: CreateCommentTypedDataData): RequestFallback {
+  private createRequestFallback(
+    request: CreateCommentRequest,
+    data: CreateCommentTypedDataData,
+  ): SelfFundedProtocolCallRequest<CreateCommentRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('comment', [
       {
@@ -149,6 +147,7 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
       },
     ]);
     return {
+      ...request,
       contractAddress: data.result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

@@ -6,10 +6,7 @@ import {
   mockTransactionHash,
   mockTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
-import {
-  BroadcastingError,
-  BroadcastingErrorReason,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { assertFailure, ChainType, Result, Url } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
@@ -23,8 +20,9 @@ import {
   NativeTransactionData,
   ProxyTransactionData,
 } from '../ITransactionFactory';
-import { RelayReceipt } from '../RelayReceipt';
+import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
 import { TypedData } from '../TypedData';
+import { RelayReceipt } from '../relayer';
 
 export function mockITransactionFactory(
   transactionObserver: ITransactionObserver = mock<ITransactionObserver>(),
@@ -138,13 +136,22 @@ export function assertUnsignedProtocolCallCorrectness<T extends TransactionReque
 
 export function assertBroadcastingErrorResultWithRequestFallback(
   result: Result<unknown, BroadcastingError>,
-  expectedBroadcastingErrorReason: BroadcastingErrorReason,
   typedData: TypedData,
 ) {
   assertFailure(result);
-  expect(result.error.reason).toEqual(expectedBroadcastingErrorReason);
+  expect(result.error).toBeInstanceOf(BroadcastingError);
   expect(result.error.fallback).toMatchObject({
     contractAddress: typedData.domain.verifyingContract,
     encodedData: expect.any(String),
   });
+}
+
+export function mockSelfFundedProtocolCallRequest<
+  TRequest extends TransactionRequestModel,
+>(): SelfFundedProtocolCallRequest<TRequest> {
+  return {
+    contractAddress: mockEthereumAddress(),
+    encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
+    ...mockTransactionRequestModel(),
+  } as SelfFundedProtocolCallRequest<TRequest>;
 }

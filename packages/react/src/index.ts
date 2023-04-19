@@ -34,7 +34,7 @@ export type {
 } from './config';
 
 /**
- * Hooks helper types
+ * Hooks helpers types
  */
 export type { WithObserverIdOverride } from './helpers/arguments';
 export type { Operation } from './helpers/operations';
@@ -71,10 +71,7 @@ export {
   WalletConnectionError,
   WalletConnectionErrorReason,
 } from '@lens-protocol/domain/entities';
-export {
-  BroadcastingError,
-  BroadcastingErrorReason,
-} from '@lens-protocol/domain/use-cases/transactions';
+export { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 /**
  * Domain essentials

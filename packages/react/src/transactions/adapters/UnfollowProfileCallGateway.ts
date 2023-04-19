@@ -10,16 +10,16 @@ import {
   IUnfollowProfileCallGateway,
   UnfollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { Data, RequestFallback } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
 
 export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
   constructor(private apolloClient: LensApolloClient) {}
 
-  async createUnsignedProtocolCall<T extends UnfollowRequest>(
-    request: T,
-  ): Promise<UnsignedProtocolCall<T>> {
+  async createUnsignedProtocolCall(
+    request: UnfollowRequest,
+  ): Promise<UnsignedProtocolCall<UnfollowRequest>> {
     const { data } = await this.apolloClient.mutate<
       CreateUnfollowTypedDataData,
       CreateUnfollowTypedDataVariables
@@ -36,16 +36,20 @@ export class UnfollowProfileCallGateway implements IUnfollowProfileCallGateway {
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
-      fallback: this.createRequestFallback(data),
+      fallback: this.createRequestFallback(request, data),
     });
   }
 
-  private createRequestFallback(data: CreateUnfollowTypedDataData): RequestFallback {
+  private createRequestFallback(
+    request: UnfollowRequest,
+    data: CreateUnfollowTypedDataData,
+  ): SelfFundedProtocolCallRequest<UnfollowRequest> {
     const contract = lensFollowNFT(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('burn', [
       data.result.typedData.value.tokenId,
     ]);
     return {
+      ...request,
       contractAddress: data.result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

@@ -13,7 +13,7 @@ import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
 /**
  * `useActiveProfile` is a hook that lets you retrieve the active profile
  *
- * **Pro-tip**: use the profile instance returned by this hook to perform actions
+ * **Pro-tip**: Use the profile instance returned by this hook to perform actions
  * that require a ProfileOwnedByMe instances (e.g. {@link useCollect}, {@link useFollow}).
  *
  * @category Profiles

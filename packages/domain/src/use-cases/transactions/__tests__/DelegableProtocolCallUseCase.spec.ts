@@ -3,7 +3,7 @@ import { mock } from 'jest-mock-extended';
 
 import { NativeTransaction, TransactionRequestModel } from '../../../entities';
 import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
-import { BroadcastingError, BroadcastingErrorReason } from '../BroadcastingError';
+import { BroadcastingError } from '../BroadcastingError';
 import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
@@ -84,7 +84,7 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
       });
 
       it(`should present any ${BroadcastingError.name} from the IDelegableProtocolCallGateway<T>`, async () => {
-        const error = new BroadcastingError(BroadcastingErrorReason.REJECTED);
+        const error = new BroadcastingError('some reason');
         const protocolCallGateway = mockIDelegableProtocolCallGateway({
           request,
           result: failure(error),

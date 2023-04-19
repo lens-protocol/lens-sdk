@@ -13,7 +13,6 @@ import {
   CreatePublicSetProfileMetadataUriRequest,
   LensApolloClient,
   ProfileMetadata,
-  RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
 import { lensPeriphery } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce, ProfileId } from '@lens-protocol/domain/entities';
@@ -24,10 +23,7 @@ import {
 import {
   IUnsignedProtocolCallGateway,
   BroadcastingError,
-  BroadcastingErrorReason,
   SupportedTransactionRequest,
-  RequestFallback,
-  Data,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -35,7 +31,8 @@ import { v4 } from 'uuid';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { RelayReceipt } from '../RelayReceipt';
+import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
+import { handleRelayError, RelayReceipt } from '../relayer';
 import { createProfileMetadata } from './createProfileMetadata';
 
 export class ProfileMetadataCallGateway
@@ -47,11 +44,10 @@ export class ProfileMetadataCallGateway
     private readonly uploader: IMetadataUploader<ProfileMetadata>,
   ) {}
 
-  async createDelegatedTransaction<T extends UpdateProfileDetailsRequest>(
-    request: T,
-  ): PromiseResult<NativeTransaction<T>, BroadcastingError> {
-    const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
-    const result = await this.broadcast(requestArg);
+  async createDelegatedTransaction(
+    request: UpdateProfileDetailsRequest,
+  ): PromiseResult<NativeTransaction<UpdateProfileDetailsRequest>, BroadcastingError> {
+    const result = await this.broadcast(request);
 
     if (result.isFailure()) return failure(result.error);
 
@@ -68,10 +64,10 @@ export class ProfileMetadataCallGateway
     return success(transaction);
   }
 
-  async createUnsignedProtocolCall<T extends UpdateProfileDetailsRequest>(
-    request: T,
+  async createUnsignedProtocolCall(
+    request: UpdateProfileDetailsRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedProtocolCall<T>> {
+  ): Promise<UnsignedProtocolCall<UpdateProfileDetailsRequest>> {
     const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
 
     const data = await this.createTypedData(requestArg, nonce);
@@ -80,13 +76,15 @@ export class ProfileMetadataCallGateway
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
-      fallback: this.createRequestFallback(data),
+      fallback: this.createRequestFallback(request, data),
     });
   }
 
   private async broadcast(
-    requestArg: CreatePublicSetProfileMetadataUriRequest,
+    request: UpdateProfileDetailsRequest,
   ): PromiseResult<RelayReceipt, BroadcastingError> {
+    const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
+
     const { data } = await this.apolloClient.mutate<
       CreateSetProfileMetadataViaDispatcherData,
       CreateSetProfileMetadataViaDispatcherVariables
@@ -99,12 +97,9 @@ export class ProfileMetadataCallGateway
 
     if (data.result.__typename === 'RelayError') {
       const typedData = await this.createTypedData(requestArg);
-      const fallback = this.createRequestFallback(typedData);
+      const fallback = this.createRequestFallback(request, typedData);
 
-      if (data.result.reason === RelayErrorReasons.Rejected) {
-        return failure(new BroadcastingError(BroadcastingErrorReason.REJECTED, fallback));
-      }
-      return failure(new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED, fallback));
+      return handleRelayError(data.result, fallback);
     }
 
     return success({
@@ -156,13 +151,17 @@ export class ProfileMetadataCallGateway
     return data.result ?? never(`Cannot update profile "${profileId}: profile not found`);
   }
 
-  private createRequestFallback(data: CreateSetProfileMetadataTypedDataData): RequestFallback {
+  private createRequestFallback(
+    request: UpdateProfileDetailsRequest,
+    data: CreateSetProfileMetadataTypedDataData,
+  ): SelfFundedProtocolCallRequest<UpdateProfileDetailsRequest> {
     const contract = lensPeriphery(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileMetadataURI', [
       data.result.typedData.value.profileId,
       data.result.typedData.value.metadata,
     ]);
     return {
+      ...request,
       contractAddress: data.result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

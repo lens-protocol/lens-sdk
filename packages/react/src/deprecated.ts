@@ -239,16 +239,11 @@ export type WhoReactedResultFragment = WhoReactedResult;
 export type PublicationRevenueFragment = PublicationRevenue;
 
 /**
- * @deprecated Use {@link TransactionStatus} instead.
+ * @deprecated Use {@link TransactionState} instead.
  */
 export type BroadcastedTransactionData<T extends SupportedTransactionRequest> = TransactionState<T>;
 
 /**
- * @deprecated Use {@link TransactionStatus} instead.
+ * @deprecated Use {@link TransactionState} instead.
  */
 export type PendingTransactionData<T extends SupportedTransactionRequest> = TransactionState<T>;
-
-/**
- * @deprecated Use {@link TransactionStatus} instead.
- */
-export type TransactionData<T extends SupportedTransactionRequest> = TransactionState<T>;

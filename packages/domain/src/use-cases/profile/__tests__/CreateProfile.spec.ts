@@ -3,7 +3,7 @@ import { mock } from 'jest-mock-extended';
 
 import { NativeTransaction } from '../../../entities';
 import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
-import { BroadcastingError, BroadcastingErrorReason } from '../../transactions';
+import { BroadcastingError } from '../../transactions';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
 import { mockTransactionQueue } from '../../transactions/__helpers__/mocks';
 import {
@@ -62,7 +62,7 @@ describe(`Given an instance of the ${CreateProfile.name} interactor`, () => {
       },
       {
         ErrorCtor: BroadcastingError,
-        error: new BroadcastingError(BroadcastingErrorReason.REJECTED),
+        error: new BroadcastingError('some reason'),
       },
     ])(`should present any $ErrorCtor might occur`, async ({ error }) => {
       const gateway = mockIProfileTransactionGateway({

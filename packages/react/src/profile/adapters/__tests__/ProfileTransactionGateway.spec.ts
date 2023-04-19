@@ -8,10 +8,7 @@ import {
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockCreateProfileRequest } from '@lens-protocol/domain/mocks';
 import { DuplicatedHandleError } from '@lens-protocol/domain/use-cases/profile';
-import {
-  BroadcastingError,
-  BroadcastingErrorReason,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
 import { mockITransactionFactory } from '../../../transactions/adapters/__helpers__/mocks';
@@ -60,12 +57,8 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
         relayError: mockRelayErrorFragment(RelayErrorReasons.HandleTaken),
       },
       {
-        expected: new BroadcastingError(BroadcastingErrorReason.REJECTED),
+        expected: new BroadcastingError(RelayErrorReasons.Rejected),
         relayError: mockRelayErrorFragment(RelayErrorReasons.Rejected),
-      },
-      {
-        expected: new BroadcastingError(BroadcastingErrorReason.UNSPECIFIED),
-        relayError: mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
       },
     ])(
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$relayError.reason" reason`,

@@ -5,11 +5,8 @@ import {
   UnsignedTransaction,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  mockRequestFallback,
-  mockSignature,
-  mockTransactionRequestModel,
-} from '@lens-protocol/domain/mocks';
+import { mockSignature, mockTransactionRequestModel } from '@lens-protocol/domain/mocks';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { providers } from 'ethers';
@@ -18,6 +15,7 @@ import { when } from 'jest-when';
 
 import { ITransactionFactory } from '../../../transactions/adapters/ITransactionFactory';
 import { TypedData } from '../../../transactions/adapters/TypedData';
+import { mockSelfFundedProtocolCallRequest } from '../../../transactions/adapters/__helpers__/mocks';
 import {
   ConcreteWallet,
   ISignerFactory,
@@ -69,7 +67,7 @@ export function mockIProviderFactory({
   return factory;
 }
 
-export function mockUnsignedProtocolCall<T extends TransactionRequestModel>({
+export function mockUnsignedProtocolCall<T extends SupportedTransactionRequest>({
   typedData,
   request,
 }: {
@@ -80,11 +78,11 @@ export function mockUnsignedProtocolCall<T extends TransactionRequestModel>({
     id: faker.datatype.uuid(),
     request,
     typedData,
-    fallback: mockRequestFallback(),
+    fallback: mockSelfFundedProtocolCallRequest<T>(),
   });
 }
 
-export function mockSignedProtocolCall<T extends TransactionRequestModel>() {
+export function mockSignedProtocolCall<T extends SupportedTransactionRequest>() {
   return SignedProtocolCall.create({
     unsignedCall: mockUnsignedProtocolCall({
       typedData: mock<TypedData>(),
