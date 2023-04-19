@@ -1,11 +1,13 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import {
   ProfileId,
+  PublicationId,
   TransactionError,
   TransactionErrorReason,
   TransactionKind,
 } from '@lens-protocol/domain/entities';
 import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
+import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { DateUtils, EthereumAddress } from '@lens-protocol/shared-kernel';
 
@@ -156,4 +158,17 @@ export function isUnfollowTransactionFor({
   return (transaction): transaction is TransactionState<UnfollowRequest> =>
     transaction.request.kind === TransactionKind.UNFOLLOW_PROFILE &&
     transaction.request.profileId === profileId;
+}
+
+export function isCollectTransactionFor({
+  publicationId,
+  profileId,
+}: {
+  publicationId: PublicationId;
+  profileId: ProfileId;
+}): TransactionStatusPredicate<CollectRequest> {
+  return (transaction): transaction is TransactionState<CollectRequest> =>
+    transaction.request.kind === TransactionKind.COLLECT_PUBLICATION &&
+    transaction.request.profileId === profileId &&
+    transaction.request.publicationId === publicationId;
 }

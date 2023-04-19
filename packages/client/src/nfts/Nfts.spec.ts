@@ -1,12 +1,15 @@
 import { Nfts } from '.';
-import { setupRandomAuthentication } from '../authentication/__helpers__/setupAuthentication';
-import { mumbaiSandbox } from '../consts/environments';
+import {
+  buildTestEnvironment,
+  describeAuthenticatedScenario,
+  existingProfileId,
+} from '../__helpers__';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
-describe(`Given the ${Nfts.name} configured to work with sandbox`, () => {
+describe(`Given the ${Nfts.name} configured to work with the test environment`, () => {
   describe(`and the instance is not authenticated`, () => {
     const nfts = new Nfts(testConfig);
 
@@ -26,19 +29,17 @@ describe(`Given the ${Nfts.name} configured to work with sandbox`, () => {
       it(`should run successfully`, async () => {
         await expect(
           nfts.fetchGalleries({
-            profileId: '0x0185',
+            profileId: existingProfileId,
           }),
         ).resolves.not.toThrow();
       });
     });
   });
 
-  describe(`and the instance is authenticated`, () => {
-    const getAuthentication = setupRandomAuthentication();
-
+  describeAuthenticatedScenario()((getTestSetup) => {
     describe(`when the method ${Nfts.prototype.ownershipChallenge.name} is called`, () => {
       it(`should run successfully`, async () => {
-        const authentication = getAuthentication();
+        const { authentication } = getTestSetup();
         const nfts = new Nfts(testConfig, authentication);
 
         const result = await nfts.ownershipChallenge({

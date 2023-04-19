@@ -1,6 +1,7 @@
-import { GraphQLClient } from 'graphql-request';
+import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import { LensConfig } from '../../consts/config';
+import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import { getSdk, Sdk } from '../graphql/auth.generated';
 import { Credentials } from './Credentials';
 
@@ -8,11 +9,11 @@ export class AuthenticationApi {
   private readonly sdk: Sdk;
 
   constructor(config: LensConfig) {
-    const client = new GraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
     this.sdk = getSdk(client);
   }
 
-  async challenge(address: string): Promise<string> {
+  async challenge(address: EthereumAddress): Promise<string> {
     const result = await this.sdk.AuthChallenge({ address });
 
     return result.data.result.text;
@@ -24,7 +25,7 @@ export class AuthenticationApi {
     return result.data.result;
   }
 
-  async authenticate(address: string, signature: string): Promise<Credentials> {
+  async authenticate(address: EthereumAddress, signature: string): Promise<Credentials> {
     const result = await this.sdk.AuthAuthenticate({ address, signature });
     const { accessToken, refreshToken } = result.data.result;
 

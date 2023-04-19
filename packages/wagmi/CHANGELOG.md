@@ -1,5 +1,29 @@
 # @lens-protocol/wagmi
 
+## 1.0.1
+
+### Patch Changes
+
+- 425daba: **Fixed** 1.0.0 release packages bundles
+- Updated dependencies [425daba]
+  - @lens-protocol/react-web@1.0.1
+  - @lens-protocol/shared-kernel@0.7.1
+
+## 1.0.0
+
+### Minor Changes
+
+- 37eaf8a: Added TSDoc, use shared tsconfig, better types
+
+### Patch Changes
+
+- Updated dependencies [520a7c1]
+- Updated dependencies [0f20b5a]
+- Updated dependencies [37eaf8a]
+- Updated dependencies [0f20b5a]
+  - @lens-protocol/react-web@1.0.0
+  - @lens-protocol/shared-kernel@0.7.0
+
 ## 1.0.0-beta.1
 
 ### Patch Changes

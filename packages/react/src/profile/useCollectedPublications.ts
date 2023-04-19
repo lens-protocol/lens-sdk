@@ -1,4 +1,5 @@
-import { AnyPublication, useWalletCollectedPublications } from '@lens-protocol/api-bindings';
+import { AnyPublication, PublicationTypes, useGetPublications } from '@lens-protocol/api-bindings';
+import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   WithObserverIdOverride,
@@ -11,7 +12,7 @@ import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 type UseCollectablesArgs = PaginatedArgs<
   WithObserverIdOverride<{
-    walletAddress: string;
+    walletAddress: EthereumAddress;
   }>
 >;
 
@@ -25,11 +26,16 @@ export function useCollectedPublications({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseCollectablesArgs): PaginatedReadResult<AnyPublication[]> {
   return usePaginatedReadResult(
-    useWalletCollectedPublications(
+    useGetPublications(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({
             walletAddress,
+            publicationTypes: [
+              PublicationTypes.Comment,
+              PublicationTypes.Mirror,
+              PublicationTypes.Post,
+            ],
             limit: limit,
             observerId,
           }),

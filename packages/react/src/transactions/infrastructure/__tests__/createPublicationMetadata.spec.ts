@@ -18,7 +18,12 @@ import { appId } from '../../../utils';
 import { createPublicationMetadata } from '../createPublicationMetadata';
 
 const content = faker.lorem.sentence();
-const media = [mockMediaObject()];
+const media = [
+  mockMediaObject({
+    altTag: 'media',
+    cover: faker.image.imageUrl(),
+  }),
+];
 const dateNftAttribute = mockDateNftAttribute();
 const numberNftAttribute = mockNumberNftAttribute();
 const stringNftAttribute = mockStringNftAttribute();
@@ -74,7 +79,12 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
             name: collectPolicyConfig.metadata.name,
             content: content,
             description: collectPolicyConfig.metadata.description,
-            media: request.media?.map((m) => ({ type: m.mimeType, item: m.url })),
+            media: request.media?.map((m) => ({
+              type: m.mimeType,
+              item: m.url,
+              altTag: m.altTag,
+              cover: m.cover,
+            })),
             locale: request.locale,
             mainContentFocus: PublicationMainFocus[contentFocus],
           });
@@ -99,7 +109,12 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
             attributes: [],
             name: 'none', // although "name" is not needed when a publication is not collectable, our Publication Metadata V2 schema requires it ¯\_(ツ)_/¯
             content: content,
-            media: request.media?.map((m) => ({ type: m.mimeType, item: m.url })),
+            media: request.media?.map((m) => ({
+              type: m.mimeType,
+              item: m.url,
+              altTag: m.altTag,
+              cover: m.cover,
+            })),
             locale: request.locale,
             mainContentFocus: PublicationMainFocus[contentFocus],
           });
@@ -119,6 +134,23 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
           const metadata = createPublicationMetadata(request);
 
           expect(metadata).not.toHaveProperty('appId');
+        });
+      });
+
+      describe(`with media`, () => {
+        it(`should return the metadata.media with only defined fields`, () => {
+          const request = mockPublication({
+            content,
+            media: [mockMediaObject()],
+            locale: 'en',
+            contentFocus: ContentFocus.TEXT,
+            collect: mockNoCollectPolicy(),
+          });
+
+          const metadata = createPublicationMetadata(request);
+
+          expect(metadata.media?.[0]).not.toHaveProperty('altTag');
+          expect(metadata.media?.[0]).not.toHaveProperty('cover');
         });
       });
     });

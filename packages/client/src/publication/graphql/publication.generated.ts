@@ -2,36 +2,32 @@
 import * as Types from '../../graphql/types.generated';
 
 import {
+  Eip712TypedDataDomainFragment,
   PostFragment,
   ProfileFragment,
   MirrorFragment,
   CommentFragment,
   CommonPaginatedResultInfoFragment,
   WalletFragment,
-  Eip712TypedDataDomainFragment,
   RelayerResultFragment,
   RelayErrorFragment,
-  FollowingFragment,
-  FollowerFragment,
-  Erc20AmountFragment,
+  CreateDataAvailabilityPublicationResultFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
+  Eip712TypedDataDomainFragmentDoc,
   PostFragmentDoc,
   ProfileFragmentDoc,
   MirrorFragmentDoc,
   CommentFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
   WalletFragmentDoc,
-  Eip712TypedDataDomainFragmentDoc,
   RelayerResultFragmentDoc,
   RelayErrorFragmentDoc,
-  FollowingFragmentDoc,
-  FollowerFragmentDoc,
-  Erc20AmountFragmentDoc,
+  CreateDataAvailabilityPublicationResultFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type PublicationStatsFragment = {
   __typename: 'PublicationStats';
@@ -41,6 +37,86 @@ export type PublicationStatsFragment = {
   totalUpvotes: number;
   totalDownvotes: number;
   commentsTotal: number;
+};
+
+export type MediaOutputFragment = {
+  altTag: string | null;
+  cover: string | null;
+  item: string;
+  source: Types.PublicationMediaSource | null;
+  type: string | null;
+};
+
+export type PublicMediaResultsFragment = { signedUrl: string; media: MediaOutputFragment };
+
+export type CreatePostTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { PostWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: {
+      nonce: number;
+      deadline: string;
+      profileId: string;
+      contentURI: string;
+      collectModule: string;
+      collectModuleInitData: string;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
+  };
+};
+
+export type CreateCommentTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { CommentWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: {
+      nonce: number;
+      deadline: string;
+      profileId: string;
+      contentURI: string;
+      profileIdPointed: string;
+      pubIdPointed: string;
+      collectModule: string;
+      collectModuleInitData: string;
+      referenceModuleData: string;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
+  };
+};
+
+export type CreateMirrorTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { MirrorWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: {
+      nonce: number;
+      deadline: string;
+      profileId: string;
+      profileIdPointed: string;
+      pubIdPointed: string;
+      referenceModuleData: string;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
+  };
+};
+
+export type CreateCollectTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { CollectWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: number; deadline: string; profileId: string; pubId: string; data: string };
+  };
 };
 
 export type PublicationQueryVariables = Types.Exact<{
@@ -125,26 +201,7 @@ export type CreatePostTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreatePostTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { PostWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomainFragment;
-      value: {
-        nonce: number;
-        deadline: string;
-        profileId: string;
-        contentURI: string;
-        collectModule: string;
-        collectModuleInitData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
-};
+export type CreatePostTypedDataMutation = { result: CreatePostTypedDataFragment };
 
 export type CreatePostViaDispatcherMutationVariables = Types.Exact<{
   request: Types.CreatePublicPostRequest;
@@ -159,29 +216,7 @@ export type CreateCommentTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateCommentTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { CommentWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomainFragment;
-      value: {
-        nonce: number;
-        deadline: string;
-        profileId: string;
-        contentURI: string;
-        profileIdPointed: string;
-        pubIdPointed: string;
-        collectModule: string;
-        collectModuleInitData: string;
-        referenceModuleData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
-};
+export type CreateCommentTypedDataMutation = { result: CreateCommentTypedDataFragment };
 
 export type CreateCommentViaDispatcherMutationVariables = Types.Exact<{
   request: Types.CreatePublicCommentRequest;
@@ -196,26 +231,7 @@ export type CreateMirrorTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateMirrorTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { MirrorWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomainFragment;
-      value: {
-        nonce: number;
-        deadline: string;
-        profileId: string;
-        profileIdPointed: string;
-        pubIdPointed: string;
-        referenceModuleData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
-};
+export type CreateMirrorTypedDataMutation = { result: CreateMirrorTypedDataFragment };
 
 export type CreateMirrorViaDispatcherMutationVariables = Types.Exact<{
   request: Types.CreateMirrorRequest;
@@ -230,34 +246,13 @@ export type CreateCollectTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateCollectTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { CollectWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomainFragment;
-      value: { nonce: number; deadline: string; profileId: string; pubId: string; data: string };
-    };
-  };
-};
+export type CreateCollectTypedDataMutation = { result: CreateCollectTypedDataFragment };
 
 export type CreateAttachMediaDataMutationVariables = Types.Exact<{
   request: Types.PublicMediaRequest;
 }>;
 
-export type CreateAttachMediaDataMutation = {
-  result: {
-    signedUrl: string;
-    media: {
-      altTag: string | null;
-      cover: string | null;
-      item: string;
-      source: Types.PublicationMediaSource | null;
-      type: string | null;
-    };
-  };
-};
+export type CreateAttachMediaDataMutation = { result: PublicMediaResultsFragment };
 
 export type HidePublicationMutationVariables = Types.Exact<{
   request: Types.HidePublicationRequest;
@@ -271,6 +266,52 @@ export type ReportPublicationMutationVariables = Types.Exact<{
 
 export type ReportPublicationMutation = { reportPublication: void | null };
 
+export type CreateDataAvailabilityPostTypedDataMutationVariables = Types.Exact<{
+  request: Types.CreateDataAvailabilityPostRequest;
+}>;
+
+export type CreateDataAvailabilityPostTypedDataMutation = { result: CreatePostTypedDataFragment };
+
+export type CreateDataAvailabilityPostViaDispatcherMutationVariables = Types.Exact<{
+  request: Types.CreateDataAvailabilityPostRequest;
+}>;
+
+export type CreateDataAvailabilityPostViaDispatcherMutation = {
+  result: CreateDataAvailabilityPublicationResultFragment | RelayErrorFragment;
+};
+
+export type CreateDataAvailabilityCommentTypedDataMutationVariables = Types.Exact<{
+  request: Types.CreateDataAvailabilityCommentRequest;
+}>;
+
+export type CreateDataAvailabilityCommentTypedDataMutation = {
+  result: CreateCommentTypedDataFragment;
+};
+
+export type CreateDataAvailabilityCommentViaDispatcherMutationVariables = Types.Exact<{
+  request: Types.CreateDataAvailabilityCommentRequest;
+}>;
+
+export type CreateDataAvailabilityCommentViaDispatcherMutation = {
+  result: CreateDataAvailabilityPublicationResultFragment | RelayErrorFragment;
+};
+
+export type CreateDataAvailabilityMirrorTypedDataMutationVariables = Types.Exact<{
+  request: Types.CreateDataAvailabilityMirrorRequest;
+}>;
+
+export type CreateDataAvailabilityMirrorTypedDataMutation = {
+  result: CreateMirrorTypedDataFragment;
+};
+
+export type CreateDataAvailabilityMirrorViaDispatcherMutationVariables = Types.Exact<{
+  request: Types.CreateDataAvailabilityMirrorRequest;
+}>;
+
+export type CreateDataAvailabilityMirrorViaDispatcherMutation = {
+  result: CreateDataAvailabilityPublicationResultFragment | RelayErrorFragment;
+};
+
 export const PublicationStatsFragmentDoc = gql`
   fragment PublicationStats on PublicationStats {
     __typename
@@ -281,6 +322,136 @@ export const PublicationStatsFragmentDoc = gql`
     totalDownvotes
     commentsTotal(forSources: $sources)
   }
+`;
+export const MediaOutputFragmentDoc = gql`
+  fragment MediaOutput on MediaOutput {
+    altTag
+    cover
+    item
+    source
+    type
+  }
+`;
+export const PublicMediaResultsFragmentDoc = gql`
+  fragment PublicMediaResults on PublicMediaResults {
+    media {
+      ...MediaOutput
+    }
+    signedUrl
+  }
+  ${MediaOutputFragmentDoc}
+`;
+export const CreatePostTypedDataFragmentDoc = gql`
+  fragment CreatePostTypedData on CreatePostBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        PostWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        collectModule
+        collectModuleInitData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateCommentTypedDataFragmentDoc = gql`
+  fragment CreateCommentTypedData on CreateCommentBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        CommentWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        profileIdPointed
+        pubIdPointed
+        collectModule
+        collectModuleInitData
+        referenceModuleData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateMirrorTypedDataFragmentDoc = gql`
+  fragment CreateMirrorTypedData on CreateMirrorBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        MirrorWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        profileIdPointed
+        pubIdPointed
+        referenceModuleData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateCollectTypedDataFragmentDoc = gql`
+  fragment CreateCollectTypedData on CreateCollectBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        CollectWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        pubId
+        data
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
 `;
 export const PublicationDocument = gql`
   query Publication($request: PublicationQueryRequest!, $observerId: ProfileId) {
@@ -404,32 +575,10 @@ export const PublicationMetadataStatusDocument = gql`
 export const CreatePostTypedDataDocument = gql`
   mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
     result: createPostTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          PostWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          contentURI
-          collectModule
-          collectModuleInitData
-          referenceModule
-          referenceModuleInitData
-        }
-      }
+      ...CreatePostTypedData
     }
   }
-  ${Eip712TypedDataDomainFragmentDoc}
+  ${CreatePostTypedDataFragmentDoc}
 `;
 export const CreatePostViaDispatcherDocument = gql`
   mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
@@ -451,35 +600,10 @@ export const CreateCommentTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createCommentTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          CommentWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          contentURI
-          profileIdPointed
-          pubIdPointed
-          collectModule
-          collectModuleInitData
-          referenceModuleData
-          referenceModule
-          referenceModuleInitData
-        }
-      }
+      ...CreateCommentTypedData
     }
   }
-  ${Eip712TypedDataDomainFragmentDoc}
+  ${CreateCommentTypedDataFragmentDoc}
 `;
 export const CreateCommentViaDispatcherDocument = gql`
   mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
@@ -498,32 +622,10 @@ export const CreateCommentViaDispatcherDocument = gql`
 export const CreateMirrorTypedDataDocument = gql`
   mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDataOptions) {
     result: createMirrorTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          MirrorWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          profileIdPointed
-          pubIdPointed
-          referenceModuleData
-          referenceModule
-          referenceModuleInitData
-        }
-      }
+      ...CreateMirrorTypedData
     }
   }
-  ${Eip712TypedDataDomainFragmentDoc}
+  ${CreateMirrorTypedDataFragmentDoc}
 `;
 export const CreateMirrorViaDispatcherDocument = gql`
   mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
@@ -542,43 +644,18 @@ export const CreateMirrorViaDispatcherDocument = gql`
 export const CreateCollectTypedDataDocument = gql`
   mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: TypedDataOptions) {
     result: createCollectTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          CollectWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          pubId
-          data
-        }
-      }
+      ...CreateCollectTypedData
     }
   }
-  ${Eip712TypedDataDomainFragmentDoc}
+  ${CreateCollectTypedDataFragmentDoc}
 `;
 export const CreateAttachMediaDataDocument = gql`
   mutation CreateAttachMediaData($request: PublicMediaRequest!) {
     result: createAttachMediaData(request: $request) {
-      media {
-        altTag
-        cover
-        item
-        source
-        type
-      }
-      signedUrl
+      ...PublicMediaResults
     }
   }
+  ${PublicMediaResultsFragmentDoc}
 `;
 export const HidePublicationDocument = gql`
   mutation HidePublication($request: HidePublicationRequest!) {
@@ -589,6 +666,76 @@ export const ReportPublicationDocument = gql`
   mutation ReportPublication($request: ReportPublicationRequest!) {
     reportPublication(request: $request)
   }
+`;
+export const CreateDataAvailabilityPostTypedDataDocument = gql`
+  mutation CreateDataAvailabilityPostTypedData($request: CreateDataAvailabilityPostRequest!) {
+    result: createDataAvailabilityPostTypedData(request: $request) {
+      ...CreatePostTypedData
+    }
+  }
+  ${CreatePostTypedDataFragmentDoc}
+`;
+export const CreateDataAvailabilityPostViaDispatcherDocument = gql`
+  mutation CreateDataAvailabilityPostViaDispatcher($request: CreateDataAvailabilityPostRequest!) {
+    result: createDataAvailabilityPostViaDispatcher(request: $request) {
+      ... on CreateDataAvailabilityPublicationResult {
+        ...CreateDataAvailabilityPublicationResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${CreateDataAvailabilityPublicationResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export const CreateDataAvailabilityCommentTypedDataDocument = gql`
+  mutation CreateDataAvailabilityCommentTypedData($request: CreateDataAvailabilityCommentRequest!) {
+    result: createDataAvailabilityCommentTypedData(request: $request) {
+      ...CreateCommentTypedData
+    }
+  }
+  ${CreateCommentTypedDataFragmentDoc}
+`;
+export const CreateDataAvailabilityCommentViaDispatcherDocument = gql`
+  mutation CreateDataAvailabilityCommentViaDispatcher(
+    $request: CreateDataAvailabilityCommentRequest!
+  ) {
+    result: createDataAvailabilityCommentViaDispatcher(request: $request) {
+      ... on CreateDataAvailabilityPublicationResult {
+        ...CreateDataAvailabilityPublicationResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${CreateDataAvailabilityPublicationResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export const CreateDataAvailabilityMirrorTypedDataDocument = gql`
+  mutation CreateDataAvailabilityMirrorTypedData($request: CreateDataAvailabilityMirrorRequest!) {
+    result: createDataAvailabilityMirrorTypedData(request: $request) {
+      ...CreateMirrorTypedData
+    }
+  }
+  ${CreateMirrorTypedDataFragmentDoc}
+`;
+export const CreateDataAvailabilityMirrorViaDispatcherDocument = gql`
+  mutation CreateDataAvailabilityMirrorViaDispatcher(
+    $request: CreateDataAvailabilityMirrorRequest!
+  ) {
+    result: createDataAvailabilityMirrorViaDispatcher(request: $request) {
+      ... on CreateDataAvailabilityPublicationResult {
+        ...CreateDataAvailabilityPublicationResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${CreateDataAvailabilityPublicationResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
 `;
 
 export type SdkFunctionWrapper = <T>(
@@ -615,6 +762,24 @@ const CreateCollectTypedDataDocumentString = print(CreateCollectTypedDataDocumen
 const CreateAttachMediaDataDocumentString = print(CreateAttachMediaDataDocument);
 const HidePublicationDocumentString = print(HidePublicationDocument);
 const ReportPublicationDocumentString = print(ReportPublicationDocument);
+const CreateDataAvailabilityPostTypedDataDocumentString = print(
+  CreateDataAvailabilityPostTypedDataDocument,
+);
+const CreateDataAvailabilityPostViaDispatcherDocumentString = print(
+  CreateDataAvailabilityPostViaDispatcherDocument,
+);
+const CreateDataAvailabilityCommentTypedDataDocumentString = print(
+  CreateDataAvailabilityCommentTypedDataDocument,
+);
+const CreateDataAvailabilityCommentViaDispatcherDocumentString = print(
+  CreateDataAvailabilityCommentViaDispatcherDocument,
+);
+const CreateDataAvailabilityMirrorTypedDataDocumentString = print(
+  CreateDataAvailabilityMirrorTypedDataDocument,
+);
+const CreateDataAvailabilityMirrorViaDispatcherDocumentString = print(
+  CreateDataAvailabilityMirrorViaDispatcherDocument,
+);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Publication(
@@ -944,6 +1109,126 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'ReportPublication',
+        'mutation',
+      );
+    },
+    CreateDataAvailabilityPostTypedData(
+      variables: CreateDataAvailabilityPostTypedDataMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateDataAvailabilityPostTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateDataAvailabilityPostTypedDataMutation>(
+            CreateDataAvailabilityPostTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateDataAvailabilityPostTypedData',
+        'mutation',
+      );
+    },
+    CreateDataAvailabilityPostViaDispatcher(
+      variables: CreateDataAvailabilityPostViaDispatcherMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateDataAvailabilityPostViaDispatcherMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateDataAvailabilityPostViaDispatcherMutation>(
+            CreateDataAvailabilityPostViaDispatcherDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateDataAvailabilityPostViaDispatcher',
+        'mutation',
+      );
+    },
+    CreateDataAvailabilityCommentTypedData(
+      variables: CreateDataAvailabilityCommentTypedDataMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateDataAvailabilityCommentTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateDataAvailabilityCommentTypedDataMutation>(
+            CreateDataAvailabilityCommentTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateDataAvailabilityCommentTypedData',
+        'mutation',
+      );
+    },
+    CreateDataAvailabilityCommentViaDispatcher(
+      variables: CreateDataAvailabilityCommentViaDispatcherMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateDataAvailabilityCommentViaDispatcherMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateDataAvailabilityCommentViaDispatcherMutation>(
+            CreateDataAvailabilityCommentViaDispatcherDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateDataAvailabilityCommentViaDispatcher',
+        'mutation',
+      );
+    },
+    CreateDataAvailabilityMirrorTypedData(
+      variables: CreateDataAvailabilityMirrorTypedDataMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateDataAvailabilityMirrorTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateDataAvailabilityMirrorTypedDataMutation>(
+            CreateDataAvailabilityMirrorTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateDataAvailabilityMirrorTypedData',
+        'mutation',
+      );
+    },
+    CreateDataAvailabilityMirrorViaDispatcher(
+      variables: CreateDataAvailabilityMirrorViaDispatcherMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: CreateDataAvailabilityMirrorViaDispatcherMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateDataAvailabilityMirrorViaDispatcherMutation>(
+            CreateDataAvailabilityMirrorViaDispatcherDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateDataAvailabilityMirrorViaDispatcher',
         'mutation',
       );
     },

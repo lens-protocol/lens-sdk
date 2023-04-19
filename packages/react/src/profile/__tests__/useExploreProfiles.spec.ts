@@ -1,4 +1,8 @@
-import { Profile, ProfileSortCriteria } from '@lens-protocol/api-bindings';
+import {
+  activeProfileIdentifierVar,
+  Profile,
+  ProfileSortCriteria,
+} from '@lens-protocol/api-bindings';
 import {
   createExploreProfilesMockedResponse,
   createMockApolloClientWithMultipleResponses,
@@ -12,7 +16,6 @@ import { waitFor } from '@testing-library/react';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
-import { activeProfileIdentifierVar } from '../adapters/ActiveProfilePresenter';
 import { useExploreProfiles, UseExploreProfilesArgs } from '../useExploreProfiles';
 
 function setupTestScenario({

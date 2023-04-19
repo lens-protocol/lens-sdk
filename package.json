@@ -17,15 +17,12 @@
     "lint": "turbo run lint --parallel",
     "lint:fix": "turbo run lint:fix --parallel --no-cache",
     "lint:examples": "sh ./scripts/lint-examples.sh",
-    "deduplicate:check": "pnpm-deduplicate --list",
-    "deduplicate:fix": "pnpm-deduplicate",
     "typedoc": "typedoc"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
     "@mxssfd/typedoc-theme": "^1.0.6",
     "@preconstruct/cli": "^2.3.0",
-    "pnpm-deduplicate": "^0.4.2",
     "prettier": "^2.8.4",
     "rimraf": "^4.1.2",
     "turbo": "^1.8.1",
@@ -54,10 +51,10 @@
     }
   },
   "engines": {
-    "node": "^18.12.1",
-    "pnpm": "^7.27.1"
+    "node": "^18.15.0",
+    "pnpm": "^8.0.0"
   },
-  "packageManager": "pnpm@7.27.1",
+  "packageManager": "pnpm@8.2.0",
   "preconstruct": {
     "packages": [
       "packages/api-bindings",

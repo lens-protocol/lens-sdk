@@ -1,4 +1,4 @@
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
 
 import { LensConfig } from '../consts/config';
@@ -6,12 +6,39 @@ import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors
 import { AuthenticationApi } from './adapters/AuthenticationApi';
 import { CredentialsStorage } from './adapters/CredentialsStorage';
 
+/**
+ * Authentication for Lens API.
+ *
+ * @group LensClient Modules
+ */
 export interface IAuthentication {
-  generateChallenge(address: string): Promise<string>;
-  authenticate(address: string, signature: string): Promise<void>;
+  /**
+   * Generate a challenge string for the wallet to sign.
+   *
+   * @param address - The wallet address
+   * @returns A challenge string
+   */
+  generateChallenge(address: EthereumAddress): Promise<string>;
+
+  /**
+   * Authenticate the user with the wallet address and signature of the challenge.
+   *
+   * @param address - The wallet address
+   * @param signature - The signature of the challenge
+   */
+  authenticate(address: EthereumAddress, signature: string): Promise<void>;
+
+  /**
+   * Check if the user is authenticated. If the credentials are expired, try to refresh them.
+   *
+   * @returns Whether the user is authenticated
+   */
   isAuthenticated(): Promise<boolean>;
 }
 
+/**
+ * Authentication for Lens API. Request challenge, authenticate, manage credentials.
+ */
 export class Authentication implements IAuthentication {
   private readonly api: AuthenticationApi;
   private readonly storage: CredentialsStorage;
@@ -24,11 +51,11 @@ export class Authentication implements IAuthentication {
     );
   }
 
-  async generateChallenge(address: string): Promise<string> {
+  async generateChallenge(address: EthereumAddress): Promise<string> {
     return this.api.challenge(address);
   }
 
-  async authenticate(address: string, signature: string): Promise<void> {
+  async authenticate(address: EthereumAddress, signature: string): Promise<void> {
     const credentials = await this.api.authenticate(address, signature);
     await this.storage.set(credentials);
   }

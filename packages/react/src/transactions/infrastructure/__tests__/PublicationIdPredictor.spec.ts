@@ -1,7 +1,7 @@
 import { AnyPublication } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  createPublicationsMockedResponse,
+  createGetPublicationsMockedResponse,
   mockPostFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
@@ -30,7 +30,7 @@ function setupTestScenario({
   pendingTransactionsFor?: SupportedTransactionRequest[];
 }) {
   const apolloClient = createMockApolloClientWithMultipleResponses([
-    createPublicationsMockedResponse({
+    createGetPublicationsMockedResponse({
       variables: {
         profileId,
         limit: 1,

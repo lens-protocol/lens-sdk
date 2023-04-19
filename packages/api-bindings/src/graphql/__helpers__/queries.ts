@@ -12,6 +12,7 @@ import {
   GetProfileDocument,
   GetProfilePublicationRevenueDocument,
   GetPublicationRevenueDocument,
+  GetPublicationsDocument,
   HasTxHashBeenIndexedDocument,
   MutualFollowersProfilesDocument,
   ProfileFollowRevenueDocument,
@@ -20,7 +21,6 @@ import {
   ProxyActionStatusDocument,
   PublicationByTxHashDocument,
   PublicationDocument,
-  PublicationsDocument,
   SearchProfilesDocument,
   SearchPublicationsDocument,
   WhoCollectedPublicationDocument,
@@ -29,7 +29,6 @@ import {
 import { SearchProfilesResult, SearchPublicationsResult } from '../index';
 import {
   Comment,
-  CommentWithFirstComment,
   EnabledModuleCurrenciesData,
   EnabledModules,
   EnabledModulesData,
@@ -48,6 +47,8 @@ import {
   GetProfileVariables,
   GetPublicationRevenueData,
   GetPublicationRevenueVariables,
+  GetPublicationsData,
+  GetPublicationsVariables,
   HasTxHashBeenIndexedData,
   HasTxHashBeenIndexedVariables,
   Maybe,
@@ -72,8 +73,6 @@ import {
   PublicationByTxHashVariables,
   PublicationData,
   PublicationRevenue,
-  PublicationsData,
-  PublicationsVariables,
   PublicationVariables,
   SearchProfilesVariables,
   SearchPublicationsVariables,
@@ -330,13 +329,13 @@ export function createPublicationMockedResponse({
   };
 }
 
-export function createPublicationsMockedResponse(args: {
-  variables: PublicationsVariables;
+export function createGetPublicationsMockedResponse(args: {
+  variables: GetPublicationsVariables;
   publications: Array<AnyPublication>;
-}): MockedResponse<PublicationsData> {
+}): MockedResponse<GetPublicationsData> {
   return {
     request: {
-      query: PublicationsDocument,
+      query: GetPublicationsDocument,
       variables: args.variables,
     },
     result: {
@@ -595,7 +594,7 @@ export function createSearchPublicationsMockedResponse(args: {
 }
 
 function mockPublicationByTxHash(
-  publication: CommentWithFirstComment | Post | Mirror = mockPostFragment(),
+  publication: Comment | Post | Mirror = mockPostFragment(),
 ): PublicationByTxHashData {
   return {
     result: publication,
@@ -607,7 +606,7 @@ export function createPublicationByTxHashMockedResponse({
   publication,
 }: {
   variables: PublicationByTxHashVariables;
-  publication: CommentWithFirstComment | Post | Mirror;
+  publication: Comment | Post | Mirror;
 }): MockedResponse<PublicationByTxHashData> {
   return {
     request: {

@@ -10,15 +10,12 @@ import gql from 'graphql-tag';
 
 import * as Operations from './operations';
 const defaultOptions = {} as const;
-export const FragmentPublicationStats = /*#__PURE__*/ gql`
-  fragment PublicationStats on PublicationStats {
+export const FragmentCommonPaginatedResultInfo = /*#__PURE__*/ gql`
+  fragment CommonPaginatedResultInfo on PaginatedResultInfo {
     __typename
-    totalAmountOfMirrors
-    totalUpvotes
-    totalDownvotes
-    totalAmountOfCollects
-    totalAmountOfComments
-    commentsCount: commentsTotal(forSources: $sources)
+    prev
+    next
+    totalCount
   }
 `;
 export const FragmentMedia = /*#__PURE__*/ gql`
@@ -30,6 +27,15 @@ export const FragmentMedia = /*#__PURE__*/ gql`
     url
   }
 `;
+export const FragmentNftImage = /*#__PURE__*/ gql`
+  fragment NftImage on NftImage {
+    __typename
+    contractAddress
+    tokenId
+    uri
+    verified
+  }
+`;
 export const FragmentMediaSet = /*#__PURE__*/ gql`
   fragment MediaSet on MediaSet {
     __typename
@@ -38,6 +44,196 @@ export const FragmentMediaSet = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMedia}
+`;
+export const FragmentProfileStats = /*#__PURE__*/ gql`
+  fragment ProfileStats on ProfileStats {
+    __typename
+    totalCollects
+    totalComments
+    totalFollowers
+    totalFollowing
+    totalMirrors
+    totalPosts
+    totalPublications
+    commentsCount: commentsTotal(forSources: $sources)
+    postsCount: postsTotal(forSources: $sources)
+    mirrorsCount: mirrorsTotal(forSources: $sources)
+  }
+`;
+export const FragmentErc20Fields = /*#__PURE__*/ gql`
+  fragment Erc20Fields on Erc20 {
+    __typename
+    name
+    symbol
+    decimals
+    address
+  }
+`;
+export const FragmentModuleFeeAmount = /*#__PURE__*/ gql`
+  fragment ModuleFeeAmount on ModuleFeeAmount {
+    __typename
+    asset {
+      ...Erc20Fields
+    }
+    value
+  }
+  ${FragmentErc20Fields}
+`;
+export const FragmentFeeFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    contractAddress
+    recipient
+  }
+  ${FragmentModuleFeeAmount}
+`;
+export const FragmentProfileFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const FragmentRevertFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const FragmentUnknownFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const FragmentAttribute = /*#__PURE__*/ gql`
+  fragment Attribute on Attribute {
+    __typename
+    displayType
+    key
+    value
+  }
+`;
+export const FragmentProfile = /*#__PURE__*/ gql`
+  fragment Profile on Profile {
+    __typename
+    id
+    name
+    bio
+    handle
+    ownedBy
+    interests
+    picture {
+      ... on NftImage {
+        ...NftImage
+      }
+      ... on MediaSet {
+        ...MediaSet
+      }
+    }
+    coverPicture {
+      ... on NftImage {
+        ...NftImage
+      }
+      ... on MediaSet {
+        ...MediaSet
+      }
+    }
+    stats {
+      ...ProfileStats
+    }
+    followModule {
+      ... on FeeFollowModuleSettings {
+        ...FeeFollowModuleSettings
+      }
+      ... on ProfileFollowModuleSettings {
+        ...ProfileFollowModuleSettings
+      }
+      ... on RevertFollowModuleSettings {
+        ...RevertFollowModuleSettings
+      }
+      ... on UnknownFollowModuleSettings {
+        ...UnknownFollowModuleSettings
+      }
+    }
+    followPolicy @client
+    __attributes: attributes {
+      ...Attribute
+    }
+    attributes: attributesMap @client
+    dispatcher {
+      address
+      canUseRelay
+    }
+    onChainIdentity {
+      proofOfHumanity
+      ens {
+        name
+      }
+      sybilDotOrg {
+        verified
+        source {
+          twitter {
+            handle
+          }
+        }
+      }
+      worldcoin {
+        isHuman
+      }
+    }
+    isFollowedByMe
+    isFollowingObserver: isFollowing(who: $observerId)
+    followStatus @client
+    ownedByMe @client
+  }
+  ${FragmentNftImage}
+  ${FragmentMediaSet}
+  ${FragmentProfileStats}
+  ${FragmentFeeFollowModuleSettings}
+  ${FragmentProfileFollowModuleSettings}
+  ${FragmentRevertFollowModuleSettings}
+  ${FragmentUnknownFollowModuleSettings}
+  ${FragmentAttribute}
+`;
+export const FragmentPendingPost = /*#__PURE__*/ gql`
+  fragment PendingPost on PendingPost {
+    __typename
+    id
+    content
+    media {
+      ...Media
+    }
+    profile {
+      ...Profile
+    }
+    locale
+    mainContentFocus
+  }
+  ${FragmentMedia}
+  ${FragmentProfile}
+`;
+export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
+  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    __typename
+    name
+    chainId
+    version
+    verifyingContract
+  }
+`;
+export const FragmentPublicationStats = /*#__PURE__*/ gql`
+  fragment PublicationStats on PublicationStats {
+    __typename
+    totalAmountOfMirrors
+    totalUpvotes
+    totalDownvotes
+    totalAmountOfCollects
+    totalAmountOfComments
+    commentsCount: commentsTotal(forSources: $sources)
+  }
 `;
 export const FragmentMetadataAttributeOutput = /*#__PURE__*/ gql`
   fragment MetadataAttributeOutput on MetadataAttributeOutput {
@@ -229,168 +425,6 @@ export const FragmentMetadataOutput = /*#__PURE__*/ gql`
   ${FragmentMetadataAttributeOutput}
   ${FragmentEncryptionParamsOutput}
 `;
-export const FragmentNftImage = /*#__PURE__*/ gql`
-  fragment NftImage on NftImage {
-    __typename
-    contractAddress
-    tokenId
-    uri
-    verified
-  }
-`;
-export const FragmentProfileStats = /*#__PURE__*/ gql`
-  fragment ProfileStats on ProfileStats {
-    __typename
-    totalCollects
-    totalComments
-    totalFollowers
-    totalFollowing
-    totalMirrors
-    totalPosts
-    totalPublications
-    commentsCount: commentsTotal(forSources: $sources)
-    postsCount: postsTotal(forSources: $sources)
-    mirrorsCount: mirrorsTotal(forSources: $sources)
-  }
-`;
-export const FragmentErc20Fields = /*#__PURE__*/ gql`
-  fragment Erc20Fields on Erc20 {
-    __typename
-    name
-    symbol
-    decimals
-    address
-  }
-`;
-export const FragmentModuleFeeAmount = /*#__PURE__*/ gql`
-  fragment ModuleFeeAmount on ModuleFeeAmount {
-    __typename
-    asset {
-      ...Erc20Fields
-    }
-    value
-  }
-  ${FragmentErc20Fields}
-`;
-export const FragmentFeeFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
-    __typename
-    amount {
-      ...ModuleFeeAmount
-    }
-    contractAddress
-    recipient
-  }
-  ${FragmentModuleFeeAmount}
-`;
-export const FragmentProfileFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
-    __typename
-    contractAddress
-  }
-`;
-export const FragmentRevertFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
-    __typename
-    contractAddress
-  }
-`;
-export const FragmentUnknownFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
-    __typename
-    contractAddress
-  }
-`;
-export const FragmentAttribute = /*#__PURE__*/ gql`
-  fragment Attribute on Attribute {
-    __typename
-    displayType
-    key
-    value
-  }
-`;
-export const FragmentProfile = /*#__PURE__*/ gql`
-  fragment Profile on Profile {
-    __typename
-    id
-    name
-    bio
-    handle
-    ownedBy
-    interests
-    picture {
-      ... on NftImage {
-        ...NftImage
-      }
-      ... on MediaSet {
-        ...MediaSet
-      }
-    }
-    coverPicture {
-      ... on NftImage {
-        ...NftImage
-      }
-      ... on MediaSet {
-        ...MediaSet
-      }
-    }
-    stats {
-      ...ProfileStats
-    }
-    followModule {
-      ... on FeeFollowModuleSettings {
-        ...FeeFollowModuleSettings
-      }
-      ... on ProfileFollowModuleSettings {
-        ...ProfileFollowModuleSettings
-      }
-      ... on RevertFollowModuleSettings {
-        ...RevertFollowModuleSettings
-      }
-      ... on UnknownFollowModuleSettings {
-        ...UnknownFollowModuleSettings
-      }
-    }
-    followPolicy @client
-    __attributes: attributes {
-      ...Attribute
-    }
-    attributes: attributesMap @client
-    dispatcher {
-      address
-      canUseRelay
-    }
-    onChainIdentity {
-      proofOfHumanity
-      ens {
-        name
-      }
-      sybilDotOrg {
-        verified
-        source {
-          twitter {
-            handle
-          }
-        }
-      }
-      worldcoin {
-        isHuman
-      }
-    }
-    isFollowedByMe
-    isFollowingObserver: isFollowing(who: $observerId)
-    followStatus @client
-    ownedByMe @client
-  }
-  ${FragmentNftImage}
-  ${FragmentMediaSet}
-  ${FragmentProfileStats}
-  ${FragmentFeeFollowModuleSettings}
-  ${FragmentProfileFollowModuleSettings}
-  ${FragmentRevertFollowModuleSettings}
-  ${FragmentUnknownFollowModuleSettings}
-  ${FragmentAttribute}
-`;
 export const FragmentWallet = /*#__PURE__*/ gql`
   fragment Wallet on Wallet {
     __typename
@@ -548,106 +582,6 @@ export const FragmentUnknownReferenceModuleSettings = /*#__PURE__*/ gql`
     referenceModuleReturnData
   }
 `;
-export const FragmentCommentBase = /*#__PURE__*/ gql`
-  fragment CommentBase on Comment {
-    __typename
-    id
-    stats {
-      ...PublicationStats
-    }
-    metadata {
-      ...MetadataOutput
-    }
-    profile {
-      ...Profile
-    }
-    collectedBy {
-      ...Wallet
-    }
-    collectModule {
-      ... on AaveFeeCollectModuleSettings {
-        ...AaveFeeCollectModuleSettings
-      }
-      ... on ERC4626FeeCollectModuleSettings {
-        ...Erc4626FeeCollectModuleSettings
-      }
-      ... on MultirecipientFeeCollectModuleSettings {
-        ...MultirecipientFeeCollectModuleSettings
-      }
-      ... on UnknownCollectModuleSettings {
-        ...UnknownCollectModuleSettings
-      }
-      ... on FreeCollectModuleSettings {
-        ...FreeCollectModuleSettings
-      }
-      ... on FeeCollectModuleSettings {
-        ...FeeCollectModuleSettings
-      }
-      ... on LimitedFeeCollectModuleSettings {
-        ...LimitedFeeCollectModuleSettings
-      }
-      ... on LimitedTimedFeeCollectModuleSettings {
-        ...LimitedTimedFeeCollectModuleSettings
-      }
-      ... on RevertCollectModuleSettings {
-        ...RevertCollectModuleSettings
-      }
-      ... on TimedFeeCollectModuleSettings {
-        ...TimedFeeCollectModuleSettings
-      }
-    }
-    collectNftAddress
-    referenceModule {
-      ... on FollowOnlyReferenceModuleSettings {
-        ...FollowOnlyReferenceModuleSettings
-      }
-      ... on DegreesOfSeparationReferenceModuleSettings {
-        ...DegreesOfSeparationReferenceModuleSettings
-      }
-      ... on UnknownReferenceModuleSettings {
-        ...UnknownReferenceModuleSettings
-      }
-    }
-    createdAt
-    hidden
-    isGated
-    reaction(request: { profileId: $observerId })
-    hasCollectedByMe(isFinalisedOnChain: true)
-    canComment(profileId: $observerId) {
-      result
-    }
-    canMirror(profileId: $observerId) {
-      result
-    }
-    canObserverDecrypt: canDecrypt(profileId: $observerId) {
-      result
-      reasons
-    }
-    mirrors(by: $observerId)
-    hasOptimisticCollectedByMe @client
-    isOptimisticMirroredByMe @client
-    collectPolicy @client
-    referencePolicy @client
-    decryptionCriteria @client
-  }
-  ${FragmentPublicationStats}
-  ${FragmentMetadataOutput}
-  ${FragmentProfile}
-  ${FragmentWallet}
-  ${FragmentAaveFeeCollectModuleSettings}
-  ${FragmentErc4626FeeCollectModuleSettings}
-  ${FragmentMultirecipientFeeCollectModuleSettings}
-  ${FragmentUnknownCollectModuleSettings}
-  ${FragmentFreeCollectModuleSettings}
-  ${FragmentFeeCollectModuleSettings}
-  ${FragmentLimitedFeeCollectModuleSettings}
-  ${FragmentLimitedTimedFeeCollectModuleSettings}
-  ${FragmentRevertCollectModuleSettings}
-  ${FragmentTimedFeeCollectModuleSettings}
-  ${FragmentFollowOnlyReferenceModuleSettings}
-  ${FragmentDegreesOfSeparationReferenceModuleSettings}
-  ${FragmentUnknownReferenceModuleSettings}
-`;
 export const FragmentPost = /*#__PURE__*/ gql`
   fragment Post on Post {
     __typename
@@ -712,7 +646,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
     hidden
     isGated
     reaction(request: { profileId: $observerId })
-    hasCollectedByMe(isFinalisedOnChain: true)
+    hasCollectedByMe
     canComment(profileId: $observerId) {
       result
     }
@@ -724,6 +658,106 @@ export const FragmentPost = /*#__PURE__*/ gql`
       result
       reasons
     }
+    hasOptimisticCollectedByMe @client
+    isOptimisticMirroredByMe @client
+    collectPolicy @client
+    referencePolicy @client
+    decryptionCriteria @client
+  }
+  ${FragmentPublicationStats}
+  ${FragmentMetadataOutput}
+  ${FragmentProfile}
+  ${FragmentWallet}
+  ${FragmentAaveFeeCollectModuleSettings}
+  ${FragmentErc4626FeeCollectModuleSettings}
+  ${FragmentMultirecipientFeeCollectModuleSettings}
+  ${FragmentUnknownCollectModuleSettings}
+  ${FragmentFreeCollectModuleSettings}
+  ${FragmentFeeCollectModuleSettings}
+  ${FragmentLimitedFeeCollectModuleSettings}
+  ${FragmentLimitedTimedFeeCollectModuleSettings}
+  ${FragmentRevertCollectModuleSettings}
+  ${FragmentTimedFeeCollectModuleSettings}
+  ${FragmentFollowOnlyReferenceModuleSettings}
+  ${FragmentDegreesOfSeparationReferenceModuleSettings}
+  ${FragmentUnknownReferenceModuleSettings}
+`;
+export const FragmentCommentBase = /*#__PURE__*/ gql`
+  fragment CommentBase on Comment {
+    __typename
+    id
+    stats {
+      ...PublicationStats
+    }
+    metadata {
+      ...MetadataOutput
+    }
+    profile {
+      ...Profile
+    }
+    collectedBy {
+      ...Wallet
+    }
+    collectModule {
+      ... on AaveFeeCollectModuleSettings {
+        ...AaveFeeCollectModuleSettings
+      }
+      ... on ERC4626FeeCollectModuleSettings {
+        ...Erc4626FeeCollectModuleSettings
+      }
+      ... on MultirecipientFeeCollectModuleSettings {
+        ...MultirecipientFeeCollectModuleSettings
+      }
+      ... on UnknownCollectModuleSettings {
+        ...UnknownCollectModuleSettings
+      }
+      ... on FreeCollectModuleSettings {
+        ...FreeCollectModuleSettings
+      }
+      ... on FeeCollectModuleSettings {
+        ...FeeCollectModuleSettings
+      }
+      ... on LimitedFeeCollectModuleSettings {
+        ...LimitedFeeCollectModuleSettings
+      }
+      ... on LimitedTimedFeeCollectModuleSettings {
+        ...LimitedTimedFeeCollectModuleSettings
+      }
+      ... on RevertCollectModuleSettings {
+        ...RevertCollectModuleSettings
+      }
+      ... on TimedFeeCollectModuleSettings {
+        ...TimedFeeCollectModuleSettings
+      }
+    }
+    collectNftAddress
+    referenceModule {
+      ... on FollowOnlyReferenceModuleSettings {
+        ...FollowOnlyReferenceModuleSettings
+      }
+      ... on DegreesOfSeparationReferenceModuleSettings {
+        ...DegreesOfSeparationReferenceModuleSettings
+      }
+      ... on UnknownReferenceModuleSettings {
+        ...UnknownReferenceModuleSettings
+      }
+    }
+    createdAt
+    hidden
+    isGated
+    reaction(request: { profileId: $observerId })
+    hasCollectedByMe
+    canComment(profileId: $observerId) {
+      result
+    }
+    canMirror(profileId: $observerId) {
+      result
+    }
+    canObserverDecrypt: canDecrypt(profileId: $observerId) {
+      result
+      reasons
+    }
+    mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     collectPolicy @client
@@ -783,54 +817,13 @@ export const FragmentComment = /*#__PURE__*/ gql`
         ...MirrorBase
       }
     }
+    firstComment {
+      ...CommentBase
+    }
   }
   ${FragmentCommentBase}
   ${FragmentPost}
   ${FragmentMirrorBase}
-`;
-export const FragmentCommentWithFirstComment = /*#__PURE__*/ gql`
-  fragment CommentWithFirstComment on Comment {
-    __typename
-    ...Comment
-    firstComment {
-      ...Comment
-    }
-  }
-  ${FragmentComment}
-`;
-export const FragmentCommonPaginatedResultInfo = /*#__PURE__*/ gql`
-  fragment CommonPaginatedResultInfo on PaginatedResultInfo {
-    __typename
-    prev
-    next
-    totalCount
-  }
-`;
-export const FragmentPendingPost = /*#__PURE__*/ gql`
-  fragment PendingPost on PendingPost {
-    __typename
-    id
-    content
-    media {
-      ...Media
-    }
-    profile {
-      ...Profile
-    }
-    locale
-    mainContentFocus
-  }
-  ${FragmentMedia}
-  ${FragmentProfile}
-`;
-export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
-  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    __typename
-    name
-    chainId
-    version
-    verifyingContract
-  }
 `;
 export const FragmentElectedMirror = /*#__PURE__*/ gql`
   fragment ElectedMirror on ElectedMirror {
@@ -1576,83 +1569,6 @@ export type CreateCommentViaDispatcherMutationResult =
 export type CreateCommentViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
   Operations.CreateCommentViaDispatcherData,
   Operations.CreateCommentViaDispatcherVariables
->;
-export const CommentsDocument = /*#__PURE__*/ gql`
-  query Comments(
-    $observerId: ProfileId
-    $commentsOf: InternalPublicationId!
-    $limit: LimitScalar!
-    $cursor: Cursor
-    $sources: [Sources!]!
-    $metadata: PublicationMetadataFilters
-  ) {
-    result: publications(
-      request: {
-        limit: $limit
-        cursor: $cursor
-        commentsOf: $commentsOf
-        sources: $sources
-        metadata: $metadata
-      }
-    ) {
-      items {
-        ... on Comment {
-          ...CommentWithFirstComment
-        }
-      }
-      pageInfo {
-        ...CommonPaginatedResultInfo
-      }
-    }
-  }
-  ${FragmentCommentWithFirstComment}
-  ${FragmentCommonPaginatedResultInfo}
-`;
-
-/**
- * __useComments__
- *
- * To run a query within a React component, call `useComments` and pass it any options that fit your needs.
- * When your component renders, `useComments` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useComments({
- *   variables: {
- *      observerId: // value for 'observerId'
- *      commentsOf: // value for 'commentsOf'
- *      limit: // value for 'limit'
- *      cursor: // value for 'cursor'
- *      sources: // value for 'sources'
- *      metadata: // value for 'metadata'
- *   },
- * });
- */
-export function useComments(
-  baseOptions: Apollo.QueryHookOptions<Operations.CommentsData, Operations.CommentsVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.CommentsData, Operations.CommentsVariables>(
-    CommentsDocument,
-    options,
-  );
-}
-export function useCommentsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<Operations.CommentsData, Operations.CommentsVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.CommentsData, Operations.CommentsVariables>(
-    CommentsDocument,
-    options,
-  );
-}
-export type CommentsHookResult = ReturnType<typeof useComments>;
-export type CommentsLazyQueryHookResult = ReturnType<typeof useCommentsLazyQuery>;
-export type CommentsQueryResult = Apollo.QueryResult<
-  Operations.CommentsData,
-  Operations.CommentsVariables
 >;
 export const EnabledModuleCurrenciesDocument = /*#__PURE__*/ gql`
   query EnabledModuleCurrencies {
@@ -3446,13 +3362,13 @@ export const PublicationByTxHashDocument = /*#__PURE__*/ gql`
         ...Mirror
       }
       ... on Comment {
-        ...CommentWithFirstComment
+        ...Comment
       }
     }
   }
   ${FragmentPost}
   ${FragmentMirror}
-  ${FragmentCommentWithFirstComment}
+  ${FragmentComment}
 `;
 
 /**
@@ -3550,22 +3466,26 @@ export type HidePublicationMutationOptions = Apollo.BaseMutationOptions<
   Operations.HidePublicationData,
   Operations.HidePublicationVariables
 >;
-export const PublicationsDocument = /*#__PURE__*/ gql`
-  query Publications(
-    $profileId: ProfileId!
+export const GetPublicationsDocument = /*#__PURE__*/ gql`
+  query GetPublications(
+    $profileId: ProfileId
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
     $publicationTypes: [PublicationTypes!]
     $sources: [Sources!]!
     $metadata: PublicationMetadataFilters
+    $commentsOf: InternalPublicationId
+    $walletAddress: EthereumAddress
   ) {
     result: publications(
       request: {
         profileId: $profileId
         limit: $limit
+        collectedBy: $walletAddress
         cursor: $cursor
         publicationTypes: $publicationTypes
+        commentsOf: $commentsOf
         sources: $sources
         metadata: $metadata
       }
@@ -3593,16 +3513,16 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
 `;
 
 /**
- * __usePublications__
+ * __useGetPublications__
  *
- * To run a query within a React component, call `usePublications` and pass it any options that fit your needs.
- * When your component renders, `usePublications` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetPublications` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublications` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usePublications({
+ * const { data, loading, error } = useGetPublications({
  *   variables: {
  *      profileId: // value for 'profileId'
  *      observerId: // value for 'observerId'
@@ -3611,38 +3531,40 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
  *      publicationTypes: // value for 'publicationTypes'
  *      sources: // value for 'sources'
  *      metadata: // value for 'metadata'
+ *      commentsOf: // value for 'commentsOf'
+ *      walletAddress: // value for 'walletAddress'
  *   },
  * });
  */
-export function usePublications(
+export function useGetPublications(
   baseOptions: Apollo.QueryHookOptions<
-    Operations.PublicationsData,
-    Operations.PublicationsVariables
+    Operations.GetPublicationsData,
+    Operations.GetPublicationsVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.PublicationsData, Operations.PublicationsVariables>(
-    PublicationsDocument,
+  return Apollo.useQuery<Operations.GetPublicationsData, Operations.GetPublicationsVariables>(
+    GetPublicationsDocument,
     options,
   );
 }
-export function usePublicationsLazyQuery(
+export function useGetPublicationsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.PublicationsData,
-    Operations.PublicationsVariables
+    Operations.GetPublicationsData,
+    Operations.GetPublicationsVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.PublicationsData, Operations.PublicationsVariables>(
-    PublicationsDocument,
+  return Apollo.useLazyQuery<Operations.GetPublicationsData, Operations.GetPublicationsVariables>(
+    GetPublicationsDocument,
     options,
   );
 }
-export type PublicationsHookResult = ReturnType<typeof usePublications>;
-export type PublicationsLazyQueryHookResult = ReturnType<typeof usePublicationsLazyQuery>;
-export type PublicationsQueryResult = Apollo.QueryResult<
-  Operations.PublicationsData,
-  Operations.PublicationsVariables
+export type GetPublicationsHookResult = ReturnType<typeof useGetPublications>;
+export type GetPublicationsLazyQueryHookResult = ReturnType<typeof useGetPublicationsLazyQuery>;
+export type GetPublicationsQueryResult = Apollo.QueryResult<
+  Operations.GetPublicationsData,
+  Operations.GetPublicationsVariables
 >;
 export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
   query ExplorePublications(
@@ -4687,99 +4609,6 @@ export type CreateUnfollowTypedDataMutationResult =
 export type CreateUnfollowTypedDataMutationOptions = Apollo.BaseMutationOptions<
   Operations.CreateUnfollowTypedDataData,
   Operations.CreateUnfollowTypedDataVariables
->;
-export const WalletCollectedPublicationsDocument = /*#__PURE__*/ gql`
-  query WalletCollectedPublications(
-    $observerId: ProfileId
-    $walletAddress: EthereumAddress!
-    $limit: LimitScalar!
-    $cursor: Cursor
-    $sources: [Sources!]!
-  ) {
-    result: publications(
-      request: {
-        collectedBy: $walletAddress
-        limit: $limit
-        cursor: $cursor
-        publicationTypes: [POST, COMMENT]
-        sources: $sources
-      }
-    ) {
-      items {
-        ... on Post {
-          ...Post
-        }
-        ... on Mirror {
-          ...Mirror
-        }
-        ... on Comment {
-          ...Comment
-        }
-      }
-      pageInfo {
-        ...CommonPaginatedResultInfo
-      }
-    }
-  }
-  ${FragmentPost}
-  ${FragmentMirror}
-  ${FragmentComment}
-  ${FragmentCommonPaginatedResultInfo}
-`;
-
-/**
- * __useWalletCollectedPublications__
- *
- * To run a query within a React component, call `useWalletCollectedPublications` and pass it any options that fit your needs.
- * When your component renders, `useWalletCollectedPublications` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useWalletCollectedPublications({
- *   variables: {
- *      observerId: // value for 'observerId'
- *      walletAddress: // value for 'walletAddress'
- *      limit: // value for 'limit'
- *      cursor: // value for 'cursor'
- *      sources: // value for 'sources'
- *   },
- * });
- */
-export function useWalletCollectedPublications(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.WalletCollectedPublicationsData,
-    Operations.WalletCollectedPublicationsVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.WalletCollectedPublicationsData,
-    Operations.WalletCollectedPublicationsVariables
-  >(WalletCollectedPublicationsDocument, options);
-}
-export function useWalletCollectedPublicationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.WalletCollectedPublicationsData,
-    Operations.WalletCollectedPublicationsVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.WalletCollectedPublicationsData,
-    Operations.WalletCollectedPublicationsVariables
-  >(WalletCollectedPublicationsDocument, options);
-}
-export type WalletCollectedPublicationsHookResult = ReturnType<
-  typeof useWalletCollectedPublications
->;
-export type WalletCollectedPublicationsLazyQueryHookResult = ReturnType<
-  typeof useWalletCollectedPublicationsLazyQuery
->;
-export type WalletCollectedPublicationsQueryResult = Apollo.QueryResult<
-  Operations.WalletCollectedPublicationsData,
-  Operations.WalletCollectedPublicationsVariables
 >;
 export type AaveFeeCollectModuleSettingsKeySpecifier = (
   | 'amount'

@@ -1,4 +1,4 @@
-import { Profile } from '@lens-protocol/api-bindings';
+import { activeProfileIdentifierVar, Profile } from '@lens-protocol/api-bindings';
 import {
   createGetAllProfilesMockedResponse,
   createMockApolloClientWithMultipleResponses,
@@ -12,7 +12,6 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
-import { activeProfileIdentifierVar } from '../adapters/ActiveProfilePresenter';
 import { useProfilesOwnedBy, UseProfilesOwnedByArgs } from '../useProfilesOwnedBy';
 
 function setupTestScenario({

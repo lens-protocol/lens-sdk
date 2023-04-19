@@ -289,6 +289,8 @@ fragment MirrorBase on Mirror {
   __typename
   id
   createdAt
+  isDataAvailability
+  dataAvailabilityProofs
   profile {
     ...Profile
   }
@@ -364,6 +366,8 @@ fragment CommentBase on Comment {
   createdAt
   hidden
   isGated
+  isDataAvailability
+  dataAvailabilityProofs
   reaction(request: { profileId: $observerId })
   hasCollectedByMe(isFinalisedOnChain: true)
   canComment(profileId: $observerId) {
@@ -457,6 +461,8 @@ fragment Post on Post {
   createdAt
   hidden
   isGated
+  isDataAvailability
+  dataAvailabilityProofs
   reaction(request: { profileId: $observerId })
   hasCollectedByMe(isFinalisedOnChain: true)
   canComment(profileId: $observerId) {
@@ -498,4 +504,11 @@ fragment RelayerResult on RelayerResult {
 fragment RelayError on RelayError {
   __typename
   reason
+}
+
+fragment CreateDataAvailabilityPublicationResult on CreateDataAvailabilityPublicationResult {
+  __typename
+  id
+  proofs
+  dataAvailabilityId
 }

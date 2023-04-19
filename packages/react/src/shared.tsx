@@ -158,7 +158,7 @@ export function createSharedDependencies(
 
   const responders: TransactionResponders<SupportedTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
-    [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(publicationCacheManager),
+    [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(apolloClient, sources),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
     [TransactionKind.CREATE_POST]: new CreatePostResponder(
       profileCacheManager,

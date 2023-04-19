@@ -1,8 +1,8 @@
-import { AnyPublication } from '@lens-protocol/api-bindings';
+import { activeProfileIdentifierVar, AnyPublication } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
-  createPublicationsMockedResponse,
+  createGetPublicationsMockedResponse,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
@@ -11,7 +11,6 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
-import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
 import { usePublications, UsePublicationsArgs } from '../usePublications';
 
 function setupTestScenario({
@@ -25,7 +24,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createPublicationsMockedResponse({
+        createGetPublicationsMockedResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,

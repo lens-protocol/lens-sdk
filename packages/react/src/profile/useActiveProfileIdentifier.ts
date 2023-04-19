@@ -1,8 +1,8 @@
+import { useActiveProfileIdentifierVar } from '@lens-protocol/api-bindings';
 import { ProfileIdentifier } from '@lens-protocol/domain/use-cases/profile';
 
 import { ReadResult } from '../helpers/reads';
 import { ApplicationsState, useAppState } from '../lifecycle/adapters/ApplicationPresenter';
-import { useActiveProfileIdentifierVar } from './adapters/ActiveProfilePresenter';
 
 /**
  * @category Profiles

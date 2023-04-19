@@ -2,6 +2,10 @@ import { cursorBasedPagination } from './utils/cursorBasedPagination';
 
 export function createExplorePublicationsFieldPolicy() {
   return cursorBasedPagination([
-    ['request', ['sortCriteria', 'timestamp', 'publicationTypes', 'excludeProfileIds', 'metadata']],
+    [
+      'request',
+      ['excludeProfileIds', 'metadata', 'publicationTypes', 'sortCriteria', 'sources', 'timestamp'],
+    ],
+    '$observerId',
   ]);
 }

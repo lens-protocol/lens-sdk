@@ -1,5 +1,34 @@
 # @lens-protocol/client
 
+## 1.0.1
+
+### Patch Changes
+
+- 425daba: **Fixed** 1.0.0 release packages bundles
+- Updated dependencies [425daba]
+  - @lens-protocol/shared-kernel@0.7.1
+  - @lens-protocol/storage@0.7.1
+
+## 1.0.0
+
+### Minor Changes
+
+- 7af4585: **Breaking:** removed default export of main client class, added LensClient as named export
+- 37eaf8a: Added TSDoc, use shared tsconfig, better types
+
+### Patch Changes
+
+- fce5b18: Added support for new collect modules: multirecipientFeeCollectModule, erc4626FeeCollectModule, aaveFeeCollectModule
+- 6ae90ef: Exposed collectNftAddress from publication fragments
+- d865959: Changed PublicationRevenue query to return PublicationRevenue fragment
+- 0f20b5a: Changed storage keys so use environment name as namespace
+- c8c069c: Reduced exposed fields on MirrorFragment to guide correct usage of Mirrors
+- 0f20b5a: Changed env config variables to be `development` and `production`
+- d1499aa: Added refresh access token on `isAuthenticated` call
+- Updated dependencies [37eaf8a]
+  - @lens-protocol/shared-kernel@0.7.0
+  - @lens-protocol/storage@0.7.0
+
 ## 1.0.0-beta.1
 
 ### Minor Changes

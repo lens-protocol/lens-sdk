@@ -232,6 +232,8 @@ export type MirrorBaseFragment = {
   __typename: 'Mirror';
   id: string;
   createdAt: string;
+  isDataAvailability: boolean;
+  dataAvailabilityProofs: string | null;
   hidden: boolean;
   profile: ProfileFragment;
 };
@@ -248,6 +250,8 @@ export type CommentBaseFragment = {
   createdAt: string;
   hidden: boolean;
   isGated: boolean;
+  isDataAvailability: boolean;
+  dataAvailabilityProofs: string | null;
   reaction: Types.ReactionTypes | null;
   hasCollectedByMe: boolean;
   mirrors: Array<string>;
@@ -292,6 +296,8 @@ export type PostFragment = {
   createdAt: string;
   hidden: boolean;
   isGated: boolean;
+  isDataAvailability: boolean;
+  dataAvailabilityProofs: string | null;
   reaction: Types.ReactionTypes | null;
   hasCollectedByMe: boolean;
   mirrors: Array<string>;
@@ -337,6 +343,13 @@ export type FollowerFragment = { __typename: 'Follower'; wallet: WalletFragment 
 export type RelayerResultFragment = { __typename: 'RelayerResult'; txHash: string; txId: string };
 
 export type RelayErrorFragment = { __typename: 'RelayError'; reason: Types.RelayErrorReasons };
+
+export type CreateDataAvailabilityPublicationResultFragment = {
+  __typename: 'CreateDataAvailabilityPublicationResult';
+  id: string;
+  proofs: string;
+  dataAvailabilityId: string;
+};
 
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
@@ -504,6 +517,8 @@ export const MirrorBaseFragmentDoc = gql`
     __typename
     id
     createdAt
+    isDataAvailability
+    dataAvailabilityProofs
     profile {
       ...Profile
     }
@@ -729,6 +744,8 @@ export const PostFragmentDoc = gql`
     createdAt
     hidden
     isGated
+    isDataAvailability
+    dataAvailabilityProofs
     reaction(request: { profileId: $observerId })
     hasCollectedByMe(isFinalisedOnChain: true)
     canComment(profileId: $observerId) {
@@ -809,6 +826,8 @@ export const CommentBaseFragmentDoc = gql`
     createdAt
     hidden
     isGated
+    isDataAvailability
+    dataAvailabilityProofs
     reaction(request: { profileId: $observerId })
     hasCollectedByMe(isFinalisedOnChain: true)
     canComment(profileId: $observerId) {
@@ -915,6 +934,14 @@ export const RelayErrorFragmentDoc = gql`
   fragment RelayError on RelayError {
     __typename
     reason
+  }
+`;
+export const CreateDataAvailabilityPublicationResultFragmentDoc = gql`
+  fragment CreateDataAvailabilityPublicationResult on CreateDataAvailabilityPublicationResult {
+    __typename
+    id
+    proofs
+    dataAvailabilityId
   }
 `;
 

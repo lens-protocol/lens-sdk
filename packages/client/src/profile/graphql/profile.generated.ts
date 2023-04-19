@@ -29,6 +29,13 @@ import {
   RelayErrorFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
 } from '../../graphql/fragments.generated';
+export type ProfileQueryVariables = Types.Exact<{
+  request: Types.SingleProfileQueryRequest;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+}>;
+
+export type ProfileQuery = { result: ProfileFragment | null };
+
 export type ProfileStatsFragment = {
   __typename: 'ProfileStats';
   totalCollects: number;
@@ -43,13 +50,6 @@ export type ProfileStatsFragment = {
   mirrorsTotal: number;
   publicationsTotal: number;
 };
-
-export type ProfileQueryVariables = Types.Exact<{
-  request: Types.SingleProfileQueryRequest;
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-}>;
-
-export type ProfileQuery = { result: ProfileFragment | null };
 
 export type ProfileStatsQueryVariables = Types.Exact<{
   request: Types.SingleProfileQueryRequest;
@@ -146,20 +146,30 @@ export type CreateProfileMutationVariables = Types.Exact<{
 
 export type CreateProfileMutation = { result: RelayErrorFragment | RelayerResultFragment };
 
+export type BurnProfileTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { BurnWithSig: Array<{ name: string; type: string }> };
+    domain: { name: string; chainId: number; version: string; verifyingContract: string };
+    value: { nonce: number; deadline: string; tokenId: string };
+  };
+};
+
 export type CreateBurnProfileTypedDataMutationVariables = Types.Exact<{
   request: Types.BurnProfileRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateBurnProfileTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { BurnWithSig: Array<{ name: string; type: string }> };
-      domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: { nonce: number; deadline: string; tokenId: string };
-    };
+export type CreateBurnProfileTypedDataMutation = { result: BurnProfileTypedDataFragment };
+
+export type SetDefaultProfileTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { SetDefaultProfileWithSig: Array<{ name: string; type: string }> };
+    domain: { name: string; chainId: number; version: string; verifyingContract: string };
+    value: { nonce: number; deadline: string; wallet: string; profileId: string };
   };
 };
 
@@ -169,14 +179,16 @@ export type CreateSetDefaultProfileTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateSetDefaultProfileTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { SetDefaultProfileWithSig: Array<{ name: string; type: string }> };
-      domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: { nonce: number; deadline: string; wallet: string; profileId: string };
-    };
+  result: SetDefaultProfileTypedDataFragment;
+};
+
+export type SetProfileImageUriTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { SetProfileImageURIWithSig: Array<{ name: string; type: string }> };
+    domain: { name: string; chainId: number; version: string; verifyingContract: string };
+    value: { nonce: number; deadline: string; profileId: string; imageURI: string };
   };
 };
 
@@ -186,15 +198,7 @@ export type CreateSetProfileImageUriTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateSetProfileImageUriTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { SetProfileImageURIWithSig: Array<{ name: string; type: string }> };
-      domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: { nonce: number; deadline: string; profileId: string; imageURI: string };
-    };
-  };
+  result: SetProfileImageUriTypedDataFragment;
 };
 
 export type CreateSetProfileImageUriViaDispatcherMutationVariables = Types.Exact<{
@@ -207,21 +211,23 @@ export type CreateSetProfileImageUriViaDispatcherMutation = {
     | ({ __typename: 'RelayerResult' } & RelayerResultFragment);
 };
 
+export type SetProfileMetadataTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { SetProfileMetadataURIWithSig: Array<{ name: string; type: string }> };
+    domain: { name: string; chainId: number; version: string; verifyingContract: string };
+    value: { nonce: number; deadline: string; profileId: string; metadata: string };
+  };
+};
+
 export type CreateSetProfileMetadataTypedDataMutationVariables = Types.Exact<{
   request: Types.CreatePublicSetProfileMetadataUriRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
 export type CreateSetProfileMetadataTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { SetProfileMetadataURIWithSig: Array<{ name: string; type: string }> };
-      domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: { nonce: number; deadline: string; profileId: string; metadata: string };
-    };
-  };
+  result: SetProfileMetadataTypedDataFragment;
 };
 
 export type CreateSetProfileMetadataViaDispatcherMutationVariables = Types.Exact<{
@@ -234,20 +240,30 @@ export type CreateSetProfileMetadataViaDispatcherMutation = {
     | ({ __typename: 'RelayerResult' } & RelayerResultFragment);
 };
 
+export type SetDispatcherTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { SetDispatcherWithSig: Array<{ name: string; type: string }> };
+    domain: { name: string; chainId: number; version: string; verifyingContract: string };
+    value: { nonce: number; deadline: string; profileId: string; dispatcher: string };
+  };
+};
+
 export type CreateSetDispatcherTypedDataMutationVariables = Types.Exact<{
   request: Types.SetDispatcherRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateSetDispatcherTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { SetDispatcherWithSig: Array<{ name: string; type: string }> };
-      domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: { nonce: number; deadline: string; profileId: string; dispatcher: string };
-    };
+export type CreateSetDispatcherTypedDataMutation = { result: SetDispatcherTypedDataFragment };
+
+export type FollowTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { FollowWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: number; deadline: string; profileIds: Array<string>; datas: Array<string> };
   };
 };
 
@@ -256,15 +272,15 @@ export type CreateFollowTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateFollowTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { FollowWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomainFragment;
-      value: { nonce: number; deadline: string; profileIds: Array<string>; datas: Array<string> };
-    };
+export type CreateFollowTypedDataMutation = { result: FollowTypedDataFragment };
+
+export type UnfollowTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { BurnWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: number; deadline: string; tokenId: string };
   };
 };
 
@@ -273,14 +289,20 @@ export type CreateUnfollowTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateUnfollowTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { BurnWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomainFragment;
-      value: { nonce: number; deadline: string; tokenId: string };
+export type CreateUnfollowTypedDataMutation = { result: UnfollowTypedDataFragment };
+
+export type SetFollowModuleTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { SetFollowModuleWithSig: Array<{ name: string; type: string }> };
+    domain: { name: string; chainId: number; version: string; verifyingContract: string };
+    value: {
+      nonce: number;
+      deadline: string;
+      profileId: string;
+      followModule: string;
+      followModuleInitData: string;
     };
   };
 };
@@ -290,21 +312,15 @@ export type CreateSetFollowModuleTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateSetFollowModuleTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { SetFollowModuleWithSig: Array<{ name: string; type: string }> };
-      domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: {
-        nonce: number;
-        deadline: string;
-        profileId: string;
-        followModule: string;
-        followModuleInitData: string;
-      };
-    };
+export type CreateSetFollowModuleTypedDataMutation = { result: SetFollowModuleTypedDataFragment };
+
+export type SetFollowNftUriTypedDataFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { SetFollowNFTURIWithSig: Array<{ name: string; type: string }> };
+    domain: { name: string; chainId: number; version: string; verifyingContract: string };
+    value: { nonce: number; profileId: string; deadline: string; followNFTURI: string };
   };
 };
 
@@ -313,17 +329,7 @@ export type CreateSetFollowNftUriTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateSetFollowNftUriTypedDataMutation = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { SetFollowNFTURIWithSig: Array<{ name: string; type: string }> };
-      domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: { nonce: number; profileId: string; deadline: string; followNFTURI: string };
-    };
-  };
-};
+export type CreateSetFollowNftUriTypedDataMutation = { result: SetFollowNftUriTypedDataFragment };
 
 export type AddProfileInterestMutationVariables = Types.Exact<{
   request: Types.AddProfileInterestsRequest;
@@ -357,6 +363,235 @@ export const ProfileStatsFragmentDoc = gql`
     postsTotal(forSources: $sources)
     mirrorsTotal(forSources: $sources)
     publicationsTotal(forSources: $sources)
+  }
+`;
+export const BurnProfileTypedDataFragmentDoc = gql`
+  fragment BurnProfileTypedData on CreateBurnProfileBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        BurnWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        tokenId
+      }
+    }
+  }
+`;
+export const SetDefaultProfileTypedDataFragmentDoc = gql`
+  fragment SetDefaultProfileTypedData on SetDefaultProfileBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetDefaultProfileWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        wallet
+        profileId
+      }
+    }
+  }
+`;
+export const SetProfileImageUriTypedDataFragmentDoc = gql`
+  fragment SetProfileImageURITypedData on CreateSetProfileImageUriBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetProfileImageURIWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        imageURI
+      }
+    }
+  }
+`;
+export const SetProfileMetadataTypedDataFragmentDoc = gql`
+  fragment SetProfileMetadataTypedData on CreateSetProfileMetadataURIBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetProfileMetadataURIWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        metadata
+      }
+    }
+  }
+`;
+export const SetDispatcherTypedDataFragmentDoc = gql`
+  fragment SetDispatcherTypedData on CreateSetDispatcherBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetDispatcherWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        dispatcher
+      }
+    }
+  }
+`;
+export const FollowTypedDataFragmentDoc = gql`
+  fragment FollowTypedData on CreateFollowBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        FollowWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileIds
+        datas
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const UnfollowTypedDataFragmentDoc = gql`
+  fragment UnfollowTypedData on CreateUnfollowBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        BurnWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        tokenId
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const SetFollowModuleTypedDataFragmentDoc = gql`
+  fragment SetFollowModuleTypedData on CreateSetFollowModuleBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetFollowModuleWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        followModule
+        followModuleInitData
+      }
+    }
+  }
+`;
+export const SetFollowNftUriTypedDataFragmentDoc = gql`
+  fragment SetFollowNFTUriTypedData on CreateSetFollowNFTUriBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetFollowNFTURIWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      value {
+        nonce
+        profileId
+        deadline
+        followNFTURI
+      }
+    }
   }
 `;
 export const ProfileDocument = gql`
@@ -500,29 +735,10 @@ export const CreateProfileDocument = gql`
 export const CreateBurnProfileTypedDataDocument = gql`
   mutation CreateBurnProfileTypedData($request: BurnProfileRequest!, $options: TypedDataOptions) {
     result: createBurnProfileTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          BurnWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          name
-          chainId
-          version
-          verifyingContract
-        }
-        value {
-          nonce
-          deadline
-          tokenId
-        }
-      }
+      ...BurnProfileTypedData
     }
   }
+  ${BurnProfileTypedDataFragmentDoc}
 `;
 export const CreateSetDefaultProfileTypedDataDocument = gql`
   mutation CreateSetDefaultProfileTypedData(
@@ -530,30 +746,10 @@ export const CreateSetDefaultProfileTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createSetDefaultProfileTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          SetDefaultProfileWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          name
-          chainId
-          version
-          verifyingContract
-        }
-        value {
-          nonce
-          deadline
-          wallet
-          profileId
-        }
-      }
+      ...SetDefaultProfileTypedData
     }
   }
+  ${SetDefaultProfileTypedDataFragmentDoc}
 `;
 export const CreateSetProfileImageUriTypedDataDocument = gql`
   mutation CreateSetProfileImageURITypedData(
@@ -561,30 +757,10 @@ export const CreateSetProfileImageUriTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createSetProfileImageURITypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          SetProfileImageURIWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          name
-          chainId
-          version
-          verifyingContract
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          imageURI
-        }
-      }
+      ...SetProfileImageURITypedData
     }
   }
+  ${SetProfileImageUriTypedDataFragmentDoc}
 `;
 export const CreateSetProfileImageUriViaDispatcherDocument = gql`
   mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
@@ -607,30 +783,10 @@ export const CreateSetProfileMetadataTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createSetProfileMetadataTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          SetProfileMetadataURIWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          name
-          chainId
-          version
-          verifyingContract
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          metadata
-        }
-      }
+      ...SetProfileMetadataTypedData
     }
   }
+  ${SetProfileMetadataTypedDataFragmentDoc}
 `;
 export const CreateSetProfileMetadataViaDispatcherDocument = gql`
   mutation CreateSetProfileMetadataViaDispatcher(
@@ -655,81 +811,26 @@ export const CreateSetDispatcherTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createSetDispatcherTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          SetDispatcherWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          name
-          chainId
-          version
-          verifyingContract
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          dispatcher
-        }
-      }
+      ...SetDispatcherTypedData
     }
   }
+  ${SetDispatcherTypedDataFragmentDoc}
 `;
 export const CreateFollowTypedDataDocument = gql`
   mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
     result: createFollowTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          FollowWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileIds
-          datas
-        }
-      }
+      ...FollowTypedData
     }
   }
-  ${Eip712TypedDataDomainFragmentDoc}
+  ${FollowTypedDataFragmentDoc}
 `;
 export const CreateUnfollowTypedDataDocument = gql`
   mutation CreateUnfollowTypedData($request: UnfollowRequest!, $options: TypedDataOptions) {
     result: createUnfollowTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          BurnWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          tokenId
-        }
-      }
+      ...UnfollowTypedData
     }
   }
-  ${Eip712TypedDataDomainFragmentDoc}
+  ${UnfollowTypedDataFragmentDoc}
 `;
 export const CreateSetFollowModuleTypedDataDocument = gql`
   mutation CreateSetFollowModuleTypedData(
@@ -737,31 +838,10 @@ export const CreateSetFollowModuleTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createSetFollowModuleTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          SetFollowModuleWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          name
-          chainId
-          version
-          verifyingContract
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          followModule
-          followModuleInitData
-        }
-      }
+      ...SetFollowModuleTypedData
     }
   }
+  ${SetFollowModuleTypedDataFragmentDoc}
 `;
 export const CreateSetFollowNftUriTypedDataDocument = gql`
   mutation CreateSetFollowNFTUriTypedData(
@@ -769,30 +849,10 @@ export const CreateSetFollowNftUriTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createSetFollowNFTUriTypedData(request: $request, options: $options) {
-      id
-      expiresAt
-      typedData {
-        types {
-          SetFollowNFTURIWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          name
-          chainId
-          version
-          verifyingContract
-        }
-        value {
-          nonce
-          profileId
-          deadline
-          followNFTURI
-        }
-      }
+      ...SetFollowNFTUriTypedData
     }
   }
+  ${SetFollowNftUriTypedDataFragmentDoc}
 `;
 export const AddProfileInterestDocument = gql`
   mutation AddProfileInterest($request: AddProfileInterestsRequest!) {

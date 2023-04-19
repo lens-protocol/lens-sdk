@@ -1,21 +1,24 @@
 import { Reactions } from '.';
-import { setupAuthentication } from '../authentication/__helpers__/setupAuthentication';
-import { testWalletProfileId } from '../authentication/__helpers__/setupTestWallet';
-import { mumbaiSandbox } from '../consts/environments';
+import {
+  buildTestEnvironment,
+  describeAuthenticatedScenario,
+  existingProfileId,
+  existingPublicationId,
+} from '../__helpers__';
 import { NotAuthenticatedError } from '../consts/errors';
 import { ReactionTypes } from '../graphql/types.generated';
 
 const testConfig = {
-  environment: mumbaiSandbox,
+  environment: buildTestEnvironment(),
 };
 
-describe(`Given the ${Reactions.name} configured to work with sandbox`, () => {
+describe(`Given the ${Reactions.name} configured to work with the test environment`, () => {
   describe(`and the instance is not authenticated`, () => {
     const reactions = new Reactions(testConfig);
 
     const reactionRequest = {
-      profileId: testWalletProfileId,
-      publicationId: '0x05-0x04',
+      profileId: existingProfileId,
+      publicationId: existingPublicationId,
       reaction: ReactionTypes.Upvote,
     };
 
@@ -41,25 +44,23 @@ describe(`Given the ${Reactions.name} configured to work with sandbox`, () => {
       it(`should run successfully`, async () => {
         await expect(
           reactions.toPublication({
-            publicationId: '0x05-0x04',
+            publicationId: existingPublicationId,
           }),
         ).resolves.not.toThrow();
       });
     });
   });
 
-  describe(`and the instance is authenticated`, () => {
-    const getAuthentication = setupAuthentication();
-    const reactionRequest = {
-      profileId: testWalletProfileId,
-      publicationId: '0x05-0x04',
-      reaction: ReactionTypes.Upvote,
-    };
-
+  describeAuthenticatedScenario({ withNewProfile: true })((getTestSetup) => {
     describe(`when ${Reactions.prototype.add.name} method is called`, () => {
       it(`should execute with success`, async () => {
-        const authentication = getAuthentication();
+        const { authentication, profileId } = getTestSetup();
         const reactions = new Reactions(testConfig, authentication);
+        const reactionRequest = {
+          profileId,
+          publicationId: existingPublicationId,
+          reaction: ReactionTypes.Upvote,
+        };
 
         const result = await reactions.add(reactionRequest);
 
@@ -70,8 +71,13 @@ describe(`Given the ${Reactions.name} configured to work with sandbox`, () => {
 
     describe(`when ${Reactions.prototype.remove.name} method is called`, () => {
       it(`should execute with success`, async () => {
-        const authentication = getAuthentication();
+        const { authentication, profileId } = getTestSetup();
         const reactions = new Reactions(testConfig, authentication);
+        const reactionRequest = {
+          profileId,
+          publicationId: existingPublicationId,
+          reaction: ReactionTypes.Upvote,
+        };
 
         const result = await reactions.remove(reactionRequest);
 

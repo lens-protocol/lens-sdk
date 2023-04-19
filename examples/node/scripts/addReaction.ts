@@ -1,23 +1,14 @@
 import { FeedEventItemType, ReactionTypes } from "@lens-protocol/client";
 import { getAuthenticatedClient } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
+import { getActiveProfile } from "./shared/getActiveProfile";
 
 async function main() {
   const wallet = setupWallet();
   const address = await wallet.getAddress();
   const lensClient = await getAuthenticatedClient(wallet);
-
-  // fetch your profile id
-  const ownedProfiles = await lensClient.profile.fetchAll({
-    ownedBy: [address],
-    limit: 1,
-  });
-
-  if (ownedProfiles.items.length === 0) {
-    throw new Error(`You don't have any profiles, create one first`);
-  }
-
-  const profileId = ownedProfiles.items[0].id;
+  const profile = await getActiveProfile(lensClient, address);
+  const profileId = profile.id;
 
   // fetch your feed
   const feedResult = await lensClient.feed.fetch(

@@ -1,5 +1,45 @@
 # @lens-protocol/react-web
 
+## 1.0.1
+
+### Patch Changes
+
+- 425daba: **Fixed** 1.0.0 release packages bundles
+- Updated dependencies [425daba]
+  - @lens-protocol/api-bindings@0.7.1
+  - @lens-protocol/gated-content@0.2.1
+  - @lens-protocol/react@1.0.1
+  - @lens-protocol/shared-kernel@0.7.1
+  - @lens-protocol/storage@0.7.1
+
+## 1.0.0
+
+### Minor Changes
+
+- 37eaf8a: Added TSDoc, use shared tsconfig, better types
+
+### Patch Changes
+
+- 520a7c1: Changed GQL generated types so that Fragment suffix is no longer necessary
+  - Added several missing TS type definitions
+  - Added TSDoc comments to several APIs
+- 0f20b5a: Changed storage keys so use environment name as namespace
+- 0f20b5a: Changed env config variables to be `development` and `production`
+- Updated dependencies [fce5b18]
+- Updated dependencies [520a7c1]
+- Updated dependencies [6ae90ef]
+- Updated dependencies [c5dd99b]
+- Updated dependencies [0f20b5a]
+- Updated dependencies [006aff5]
+- Updated dependencies [37eaf8a]
+- Updated dependencies [0f20b5a]
+- Updated dependencies [a4e9500]
+  - @lens-protocol/react@1.0.0
+  - @lens-protocol/api-bindings@0.7.0
+  - @lens-protocol/gated-content@0.2.0
+  - @lens-protocol/shared-kernel@0.7.0
+  - @lens-protocol/storage@0.7.0
+
 ## 1.0.0-beta.1
 
 ### Patch Changes

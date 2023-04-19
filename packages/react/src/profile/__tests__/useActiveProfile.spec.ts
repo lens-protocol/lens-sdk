@@ -1,4 +1,4 @@
-import { Profile } from '@lens-protocol/api-bindings';
+import { Profile, activeProfileIdentifierVar } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
   createGetProfileMockedResponse,
@@ -12,7 +12,6 @@ import { waitFor } from '@testing-library/react';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { ApplicationsState, useAppState } from '../../lifecycle/adapters/ApplicationPresenter';
 import { activeWalletVar } from '../../wallet/adapters/ActiveWalletPresenter';
-import { activeProfileIdentifierVar } from '../adapters/ActiveProfilePresenter';
 import { useActiveProfile } from '../useActiveProfile';
 
 jest.mock('../../lifecycle/adapters/ApplicationPresenter');

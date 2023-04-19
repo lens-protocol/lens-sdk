@@ -29,7 +29,7 @@ query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!, $sources: [S
     }
 
     ... on Comment {
-      ...CommentWithFirstComment
+      ...Comment
     }
   }
 }

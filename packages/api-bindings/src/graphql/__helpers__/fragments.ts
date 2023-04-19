@@ -325,6 +325,7 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
     referencePolicy: {
       type: ReferencePolicyType.ANYONE,
     },
+    firstComment: null,
     ...overrides,
     __typename: 'Comment',
   };

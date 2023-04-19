@@ -1727,24 +1727,6 @@ export type CreateCommentViaDispatcherData = {
   result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
 };
 
-export type CommentWithFirstComment = {
-  __typename: 'Comment';
-  firstComment: Comment | null;
-} & Comment;
-
-export type CommentsVariables = Exact<{
-  observerId?: InputMaybe<Scalars['ProfileId']>;
-  commentsOf: Scalars['InternalPublicationId'];
-  limit: Scalars['LimitScalar'];
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
-  metadata?: InputMaybe<PublicationMetadataFilters>;
-}>;
-
-export type CommentsData = {
-  result: { items: Array<CommentWithFirstComment | {}>; pageInfo: CommonPaginatedResultInfo };
-};
-
 export type Erc20Fields = {
   __typename: 'Erc20';
   name: string;
@@ -1973,6 +1955,7 @@ export type Comment = {
   __typename: 'Comment';
   commentOn: CommentBase | MirrorBase | Post | null;
   mainPost: MirrorBase | Post;
+  firstComment: CommentBase | null;
 } & CommentBase;
 
 export type Post = {
@@ -2666,7 +2649,7 @@ export type PublicationByTxHashVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-export type PublicationByTxHashData = { result: CommentWithFirstComment | Mirror | Post | null };
+export type PublicationByTxHashData = { result: Comment | Mirror | Post | null };
 
 export type HidePublicationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
@@ -2674,17 +2657,19 @@ export type HidePublicationVariables = Exact<{
 
 export type HidePublicationData = { hidePublication: void | null };
 
-export type PublicationsVariables = Exact<{
-  profileId: Scalars['ProfileId'];
+export type GetPublicationsVariables = Exact<{
+  profileId?: InputMaybe<Scalars['ProfileId']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   publicationTypes?: InputMaybe<Array<PublicationTypes> | PublicationTypes>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   metadata?: InputMaybe<PublicationMetadataFilters>;
+  commentsOf?: InputMaybe<Scalars['InternalPublicationId']>;
+  walletAddress?: InputMaybe<Scalars['EthereumAddress']>;
 }>;
 
-export type PublicationsData = {
+export type GetPublicationsData = {
   result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
 };
 
@@ -2898,16 +2883,4 @@ export type CreateUnfollowTypedDataData = {
       value: { nonce: number; deadline: unknown; tokenId: string };
     };
   };
-};
-
-export type WalletCollectedPublicationsVariables = Exact<{
-  observerId?: InputMaybe<Scalars['ProfileId']>;
-  walletAddress: Scalars['EthereumAddress'];
-  limit: Scalars['LimitScalar'];
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
-}>;
-
-export type WalletCollectedPublicationsData = {
-  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
 };

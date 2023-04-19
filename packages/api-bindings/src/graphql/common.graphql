@@ -348,7 +348,7 @@ fragment CommentBase on Comment {
   hidden
   isGated
   reaction(request: { profileId: $observerId })
-  hasCollectedByMe(isFinalisedOnChain: true)
+  hasCollectedByMe
   canComment(profileId: $observerId) {
     result
   }
@@ -401,6 +401,9 @@ fragment Comment on Comment {
     ... on Mirror {
       ...MirrorBase
     }
+  }
+  firstComment {
+    ...CommentBase
   }
 }
 
@@ -478,7 +481,7 @@ fragment Post on Post {
   hidden
   isGated
   reaction(request: { profileId: $observerId })
-  hasCollectedByMe(isFinalisedOnChain: true)
+  hasCollectedByMe
   canComment(profileId: $observerId) {
     result
   }

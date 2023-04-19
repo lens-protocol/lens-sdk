@@ -1,5 +1,47 @@
 # @lens-protocol/react
 
+## 1.0.1
+
+### Patch Changes
+
+- 425daba: **Fixed** 1.0.0 release packages bundles
+- Updated dependencies [425daba]
+  - @lens-protocol/api-bindings@0.7.1
+  - @lens-protocol/blockchain-bindings@0.7.1
+  - @lens-protocol/domain@0.7.1
+  - @lens-protocol/gated-content@0.2.1
+  - @lens-protocol/shared-kernel@0.7.1
+  - @lens-protocol/storage@0.7.1
+
+## 1.0.0
+
+### Minor Changes
+
+- c5dd99b: Changed arguments of `execute` method returned from `useCreateProfile` hook
+- 37eaf8a: Added TSDoc, use shared tsconfig, better types
+
+### Patch Changes
+
+- fce5b18: Added support for new collect modules: multirecipientFeeCollectModule, erc4626FeeCollectModule, aaveFeeCollectModule
+- 520a7c1: Changed GQL generated types so that Fragment suffix is no longer necessary
+  - Added several missing TS type definitions
+  - Added TSDoc comments to several APIs
+- 0f20b5a: Changed storage keys so use environment name as namespace
+- 006aff5: Fixed bug with schema validation for Date in NftAttribute
+- 0f20b5a: Changed env config variables to be `development` and `production`
+- a4e9500: allow to define sortCriteria for useExploreProfiles
+- Updated dependencies [6ae90ef]
+- Updated dependencies [0f20b5a]
+- Updated dependencies [37eaf8a]
+- Updated dependencies [0f20b5a]
+- Updated dependencies [a4e9500]
+  - @lens-protocol/api-bindings@0.7.0
+  - @lens-protocol/gated-content@0.2.0
+  - @lens-protocol/blockchain-bindings@0.7.0
+  - @lens-protocol/shared-kernel@0.7.0
+  - @lens-protocol/storage@0.7.0
+  - @lens-protocol/domain@0.7.0
+
 ## 1.0.0-beta.1
 
 ### Patch Changes

@@ -1,4 +1,5 @@
 import {
+  activeProfileIdentifierVar,
   AnyPublication,
   PublicationSortCriteria,
   PublicationTypes,
@@ -15,7 +16,6 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
-import { activeProfileIdentifierVar } from '../../profile/adapters/ActiveProfilePresenter';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { useExplorePublications, UseExplorePublicationsArgs } from '../useExplorePublications';
 

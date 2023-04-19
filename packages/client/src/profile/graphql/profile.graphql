@@ -1,4 +1,10 @@
-# fragments
+# queries
+query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+  result: profile(request: $request) {
+    ...Profile
+  }
+}
+
 fragment ProfileStats on ProfileStats {
   __typename
   totalCollects
@@ -13,13 +19,6 @@ fragment ProfileStats on ProfileStats {
   postsTotal(forSources: $sources)
   mirrorsTotal(forSources: $sources)
   publicationsTotal(forSources: $sources)
-}
-
-# queries
-query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
-  result: profile(request: $request) {
-    ...Profile
-  }
 }
 
 query ProfileStats($request: SingleProfileQueryRequest!, $sources: [Sources!]!) {
@@ -134,28 +133,57 @@ mutation CreateProfile($request: CreateProfileRequest!) {
   }
 }
 
+fragment BurnProfileTypedData on CreateBurnProfileBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      BurnWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      name
+      chainId
+      version
+      verifyingContract
+    }
+    value {
+      nonce
+      deadline
+      tokenId
+    }
+  }
+}
+
 mutation CreateBurnProfileTypedData($request: BurnProfileRequest!, $options: TypedDataOptions) {
   result: createBurnProfileTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        BurnWithSig {
-          name
-          type
-        }
-      }
-      domain {
+    ...BurnProfileTypedData
+  }
+}
+
+fragment SetDefaultProfileTypedData on SetDefaultProfileBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetDefaultProfileWithSig {
         name
-        chainId
-        version
-        verifyingContract
+        type
       }
-      value {
-        nonce
-        deadline
-        tokenId
-      }
+    }
+    domain {
+      name
+      chainId
+      version
+      verifyingContract
+    }
+    value {
+      nonce
+      deadline
+      wallet
+      profileId
     }
   }
 }
@@ -165,27 +193,31 @@ mutation CreateSetDefaultProfileTypedData(
   $options: TypedDataOptions
 ) {
   result: createSetDefaultProfileTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        SetDefaultProfileWithSig {
-          name
-          type
-        }
-      }
-      domain {
+    ...SetDefaultProfileTypedData
+  }
+}
+
+fragment SetProfileImageURITypedData on CreateSetProfileImageUriBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetProfileImageURIWithSig {
         name
-        chainId
-        version
-        verifyingContract
+        type
       }
-      value {
-        nonce
-        deadline
-        wallet
-        profileId
-      }
+    }
+    domain {
+      name
+      chainId
+      version
+      verifyingContract
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      imageURI
     }
   }
 }
@@ -195,28 +227,7 @@ mutation CreateSetProfileImageURITypedData(
   $options: TypedDataOptions
 ) {
   result: createSetProfileImageURITypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        SetProfileImageURIWithSig {
-          name
-          type
-        }
-      }
-      domain {
-        name
-        chainId
-        version
-        verifyingContract
-      }
-      value {
-        nonce
-        deadline
-        profileId
-        imageURI
-      }
-    }
+    ...SetProfileImageURITypedData
   }
 }
 
@@ -234,33 +245,37 @@ mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageReque
   }
 }
 
+fragment SetProfileMetadataTypedData on CreateSetProfileMetadataURIBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetProfileMetadataURIWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      name
+      chainId
+      version
+      verifyingContract
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      metadata
+    }
+  }
+}
+
 mutation CreateSetProfileMetadataTypedData(
   $request: CreatePublicSetProfileMetadataURIRequest!
   $options: TypedDataOptions
 ) {
   result: createSetProfileMetadataTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        SetProfileMetadataURIWithSig {
-          name
-          type
-        }
-      }
-      domain {
-        name
-        chainId
-        version
-        verifyingContract
-      }
-      value {
-        nonce
-        deadline
-        profileId
-        metadata
-      }
-    }
+    ...SetProfileMetadataTypedData
   }
 }
 
@@ -280,76 +295,114 @@ mutation CreateSetProfileMetadataViaDispatcher(
   }
 }
 
+fragment SetDispatcherTypedData on CreateSetDispatcherBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetDispatcherWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      name
+      chainId
+      version
+      verifyingContract
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      dispatcher
+    }
+  }
+}
+
 mutation CreateSetDispatcherTypedData($request: SetDispatcherRequest!, $options: TypedDataOptions) {
   result: createSetDispatcherTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        SetDispatcherWithSig {
-          name
-          type
-        }
-      }
-      domain {
+    ...SetDispatcherTypedData
+  }
+}
+
+fragment FollowTypedData on CreateFollowBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      FollowWithSig {
         name
-        chainId
-        version
-        verifyingContract
+        type
       }
-      value {
-        nonce
-        deadline
-        profileId
-        dispatcher
-      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileIds
+      datas
     }
   }
 }
 
 mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
   result: createFollowTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        FollowWithSig {
-          name
-          type
-        }
+    ...FollowTypedData
+  }
+}
+
+fragment UnfollowTypedData on CreateUnfollowBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      BurnWithSig {
+        name
+        type
       }
-      domain {
-        ...EIP712TypedDataDomain
-      }
-      value {
-        nonce
-        deadline
-        profileIds
-        datas
-      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      tokenId
     }
   }
 }
 
 mutation CreateUnfollowTypedData($request: UnfollowRequest!, $options: TypedDataOptions) {
   result: createUnfollowTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        BurnWithSig {
-          name
-          type
-        }
+    ...UnfollowTypedData
+  }
+}
+
+fragment SetFollowModuleTypedData on CreateSetFollowModuleBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetFollowModuleWithSig {
+        name
+        type
       }
-      domain {
-        ...EIP712TypedDataDomain
-      }
-      value {
-        nonce
-        deadline
-        tokenId
-      }
+    }
+    domain {
+      name
+      chainId
+      version
+      verifyingContract
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      followModule
+      followModuleInitData
     }
   }
 }
@@ -359,28 +412,31 @@ mutation CreateSetFollowModuleTypedData(
   $options: TypedDataOptions
 ) {
   result: createSetFollowModuleTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        SetFollowModuleWithSig {
-          name
-          type
-        }
-      }
-      domain {
+    ...SetFollowModuleTypedData
+  }
+}
+
+fragment SetFollowNFTUriTypedData on CreateSetFollowNFTUriBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetFollowNFTURIWithSig {
         name
-        chainId
-        version
-        verifyingContract
+        type
       }
-      value {
-        nonce
-        deadline
-        profileId
-        followModule
-        followModuleInitData
-      }
+    }
+    domain {
+      name
+      chainId
+      version
+      verifyingContract
+    }
+    value {
+      nonce
+      profileId
+      deadline
+      followNFTURI
     }
   }
 }
@@ -390,28 +446,7 @@ mutation CreateSetFollowNFTUriTypedData(
   $options: TypedDataOptions
 ) {
   result: createSetFollowNFTUriTypedData(request: $request, options: $options) {
-    id
-    expiresAt
-    typedData {
-      types {
-        SetFollowNFTURIWithSig {
-          name
-          type
-        }
-      }
-      domain {
-        name
-        chainId
-        version
-        verifyingContract
-      }
-      value {
-        nonce
-        profileId
-        deadline
-        followNFTURI
-      }
-    }
+    ...SetFollowNFTUriTypedData
   }
 }
 

@@ -8,10 +8,6 @@ import {
   ProfileFragment,
   MirrorFragment,
   CommentFragment,
-  WalletFragment,
-  Eip712TypedDataDomainFragment,
-  RelayerResultFragment,
-  RelayErrorFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -24,10 +20,6 @@ import {
   ProfileFragmentDoc,
   MirrorFragmentDoc,
   CommentFragmentDoc,
-  WalletFragmentDoc,
-  Eip712TypedDataDomainFragmentDoc,
-  RelayerResultFragmentDoc,
-  RelayErrorFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type NftFragment = {
   __typename: 'NFT';
@@ -54,6 +46,8 @@ export type NftGalleryFragment = {
   items: Array<NftFragment>;
 };
 
+export type NftOwnershipChallengeResultFragment = { id: string; text: string; timeout: string };
+
 export type NftsQueryVariables = Types.Exact<{
   request: Types.NfTsRequest;
 }>;
@@ -66,7 +60,7 @@ export type NftOwnershipChallengeQueryVariables = Types.Exact<{
   request: Types.NftOwnershipChallengeRequest;
 }>;
 
-export type NftOwnershipChallengeQuery = { result: { id: string; text: string; timeout: string } };
+export type NftOwnershipChallengeQuery = { result: NftOwnershipChallengeResultFragment };
 
 export type ProfileGalleriesQueryVariables = Types.Exact<{
   request: Types.NftGalleriesRequest;
@@ -141,6 +135,13 @@ export const NftGalleryFragmentDoc = gql`
   }
   ${NftFragmentDoc}
 `;
+export const NftOwnershipChallengeResultFragmentDoc = gql`
+  fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
+    id
+    text
+    timeout
+  }
+`;
 export const NftsDocument = gql`
   query Nfts($request: NFTsRequest!) {
     result: nfts(request: $request) {
@@ -158,11 +159,10 @@ export const NftsDocument = gql`
 export const NftOwnershipChallengeDocument = gql`
   query NftOwnershipChallenge($request: NftOwnershipChallengeRequest!) {
     result: nftOwnershipChallenge(request: $request) {
-      id
-      text
-      timeout
+      ...NftOwnershipChallengeResult
     }
   }
+  ${NftOwnershipChallengeResultFragmentDoc}
 `;
 export const ProfileGalleriesDocument = gql`
   query ProfileGalleries($request: NftGalleriesRequest!) {

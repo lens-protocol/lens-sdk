@@ -33,26 +33,29 @@ export function PostComposer({ publisher }: PostComposerProps) {
     const formData = new FormData(form);
     const content = (formData.get('content') as string | null) ?? never();
 
-    let result = await post({
+    const subsidizedAttempt = await post({
       content,
       contentFocus: ContentFocus.TEXT,
       locale: 'en',
     });
 
-    if (result.isFailure()) {
-      if (supportsSelfFundedFallback(result.error)) {
-        const retry = window.confirm(
-          'We cannot cover the transaction costs at this time. Do you want to retry with your own MATIC?',
-        );
-
-        if (retry) {
-          result = await fallback(result.error.fallback);
-        }
-      }
+    if (subsidizedAttempt.isSuccess()) {
+      form.reset();
+      return;
     }
 
-    if (result.isSuccess()) {
-      form.reset();
+    if (supportsSelfFundedFallback(subsidizedAttempt.error)) {
+      const retry = window.confirm(
+        'We cannot cover the transaction costs at this time. Do you want to retry with your own MATIC?',
+      );
+
+      if (retry) {
+        const selfFundedAttempt = await fallback(subsidizedAttempt.error.fallback);
+
+        if (selfFundedAttempt.isSuccess()) {
+          form.reset();
+        }
+      }
     }
   };
 

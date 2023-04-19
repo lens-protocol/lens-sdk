@@ -3,4 +3,4 @@
 "@lens-protocol/react": patch
 ---
 
-allow to define sortCriteria for useExploreProfiles
+**Fixed** issue preventing query hook from detecting active profile changes

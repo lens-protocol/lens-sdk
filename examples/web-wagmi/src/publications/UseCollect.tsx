@@ -23,7 +23,7 @@ type CollectButtonProps = {
 function CollectButton({ collector, publication }: CollectButtonProps) {
   const { execute: collect, error, isPending } = useCollect({ collector, publication });
 
-  const isCollected = publication.hasOptimisticCollectedByMe || publication.hasCollectedByMe;
+  const isCollected = publication.hasCollectedByMe;
 
   switch (publication.collectPolicy.state) {
     case CollectState.COLLECT_TIME_EXPIRED:

@@ -3,6 +3,7 @@ import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
 import generatedIntrospection, { StrictTypedTypePolicies } from '../../graphql/hooks';
 import { createAttributeTypePolicy } from './createAttributeTypePolicy';
+import { createContentPublicationTypePolicy } from './createContentPublicationTypePolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
@@ -20,7 +21,6 @@ import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
-import { createContentPublicationTypePolicy } from './publicationTypePolicy';
 import { noCachedField } from './utils/noCachedField';
 import { notNormalizedType } from './utils/notNormalizedType';
 
@@ -87,7 +87,6 @@ export function createApolloCache({
 }: TypePoliciesArgs): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     possibleTypes: generatedIntrospection.possibleTypes,
-    resultCaching: true,
     typePolicies: createTypePolicies({ activeWalletVar }),
   });
 }

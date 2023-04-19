@@ -16,7 +16,7 @@ extend type Profile {
 
 extend type Post {
   """
-  @deprecated this will be replaced by collectState
+  @deprecated use hasCollectedByMe instead
   """
   hasOptimisticCollectedByMe: Boolean!
   """
@@ -29,7 +29,7 @@ extend type Post {
 
 extend type Comment {
   """
-  @deprecated this will be replaced by collectState
+  @deprecated use hasCollectedByMe instead
   """
   hasOptimisticCollectedByMe: Boolean!
   """
