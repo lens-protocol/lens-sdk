@@ -229,7 +229,6 @@ type MockedNativeTransactionInit<T extends TransactionRequestModel> = {
   chainType?: ChainType;
   hash?: string;
   id?: string;
-  indexingId?: string;
   request: T;
 };
 
