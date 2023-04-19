@@ -1,4 +1,5 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
@@ -21,7 +22,7 @@ export function usePayTransactionController<T extends SupportedTransactionReques
 
     const presenter = new PromiseResultPresenter<
       void,
-      PendingSigningRequestError | WalletConnectionError | UserRejectedError
+      InsufficientGasError | PendingSigningRequestError | WalletConnectionError | UserRejectedError
     >();
 
     const payTransaction = new PayTransaction(activeWallet, gateway, presenter, transactionQueue);

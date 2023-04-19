@@ -1,4 +1,5 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
@@ -41,12 +42,12 @@ export function supportsSelfFundedFallback(
 
 export type SelfFundedOperation = Operation<
   void,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  InsufficientGasError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   [SelfFundedOperationRequest]
 >;
 
 /**
- * `useExploreProfiles` is an hook that let you retry a failed operation that could be self-funded.
+ * `useSelfFundedFallback` is an hook that let you retry a failed operation that could be self-funded.
  *
  * @category Misc
  * @group Hooks
@@ -60,7 +61,7 @@ export type SelfFundedOperation = Operation<
  *   const { execute: createPostFromWallet, error: selfFundedError, isPending: selfFundedPending } = useSelfFundedFallback();
  *
  *   const submit = async (content: string) => {
- *     const result = await create({
+ *     const result = await createPost({
  *       content,
  *       contentFocus: ContentFocus.TEXT,
  *       locale: 'en',
