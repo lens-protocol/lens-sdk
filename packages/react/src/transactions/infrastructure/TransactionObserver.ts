@@ -14,10 +14,16 @@ import {
   TransactionError,
   TransactionErrorReason,
 } from '@lens-protocol/domain/entities';
-import { ChainType, failure, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
 
 import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
-import { IndexingEvent, ITransactionObserver, ProxyActionStatusEvent } from './TransactionFactory';
+import {
+  ConfirmationRequest,
+  IndexingEvent,
+  IndexingEventRequest,
+  ITransactionObserver,
+  ProxyActionStatusEvent,
+} from './TransactionFactory';
 
 const ONE_SECOND = 1000; // ms
 
@@ -52,15 +58,12 @@ export class TransactionObserver implements ITransactionObserver {
     private readonly timings: TransactionObserverTimings,
   ) {}
 
-  async waitForExecuted(
-    txHash: string,
-    chainType: ChainType,
-  ): PromiseResult<void, TransactionError> {
-    const provider = await this.providerFactory.createProvider({ chainType });
+  async waitForConfirmation(request: ConfirmationRequest): PromiseResult<void, TransactionError> {
+    const provider = await this.providerFactory.createProvider({ chainType: request.chainType });
     const startedAt = Date.now();
 
     while (Date.now() - startedAt <= this.timings.maxMiningWaitTime) {
-      const txResponse = await provider.getTransaction(txHash);
+      const txResponse = await provider.getTransaction(request.txHash);
 
       if (txResponse === null) {
         await delay(ONE_SECOND);
@@ -86,7 +89,7 @@ export class TransactionObserver implements ITransactionObserver {
   }
 
   async waitForNextIndexingEvent(
-    indexingId: string,
+    request: IndexingEventRequest,
   ): PromiseResult<IndexingEvent, TransactionError> {
     const startedAt = Date.now();
     const observable = this.apolloClient.poll<
@@ -95,7 +98,13 @@ export class TransactionObserver implements ITransactionObserver {
     >({
       query: HasTxHashBeenIndexedDocument,
       variables: {
-        request: { txId: indexingId },
+        request: request.indexingId
+          ? {
+              txId: request.indexingId,
+            }
+          : {
+              txHash: request.txHash,
+            },
       },
     });
     let previousTxHash: string | null = null;

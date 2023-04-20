@@ -10,30 +10,42 @@ import {
   success,
 } from '@lens-protocol/shared-kernel';
 
-import { IndexingEvent, ITransactionObserver, ProxyActionStatusEvent } from '../TransactionFactory';
+import {
+  ConfirmationRequest,
+  IndexingEvent,
+  IndexingEventRequest,
+  ITransactionObserver,
+  ProxyActionStatusEvent,
+} from '../TransactionFactory';
 
-type MockedTransactionObserverWaitForExecutedInstructions = {
+type WaitForConfirmationInstructions = {
   txHash: string;
   chainType: ChainType;
   result: Result<void, TransactionError>;
 };
 
-type MockedTransactionObserverWaitForNextIndexingEventInstructions = {
-  indexingId: string;
-  indexingEventsSequence: Array<IndexingEvent | ProxyActionStatusEvent | TransactionError>;
+type WaitForNextIndexingEventInstructions = {
+  request: IndexingEventRequest;
+  events: Array<IndexingEvent | TransactionError>;
+};
+
+type WaitForProxyTransactionStatusInstructions = {
+  request: string;
+  statuses: Array<ProxyActionStatusEvent | TransactionError>;
 };
 
 type MockedTransactionObserverInstructions =
-  | MockedTransactionObserverWaitForExecutedInstructions
-  | MockedTransactionObserverWaitForNextIndexingEventInstructions;
+  | WaitForConfirmationInstructions
+  | WaitForNextIndexingEventInstructions
+  | WaitForProxyTransactionStatusInstructions;
 
 export class MockedTransactionObserver implements ITransactionObserver {
   private constructor(private readonly instructions: MockedTransactionObserverInstructions) {}
 
-  async waitForExecuted(
-    txHash: string,
-    chainType: ChainType,
-  ): PromiseResult<void, TransactionError> {
+  async waitForConfirmation({
+    txHash,
+    chainType,
+  }: ConfirmationRequest): PromiseResult<void, TransactionError> {
     if (!('txHash' in this.instructions)) {
       throw new Error('Method not implemented.');
     }
@@ -44,16 +56,17 @@ export class MockedTransactionObserver implements ITransactionObserver {
   }
 
   async waitForNextIndexingEvent(
-    indexingId: string,
+    request: IndexingEventRequest,
   ): PromiseResult<IndexingEvent, TransactionError> {
-    if (!('indexingId' in this.instructions)) {
+    if (!('events' in this.instructions)) {
       throw new Error('Method not implemented.');
     }
     invariant(
-      indexingId === this.instructions.indexingId,
-      `Indexing ID mismatch, expected: ${this.instructions.indexingId}, got: ${indexingId}`,
+      JSON.stringify(request) === JSON.stringify(this.instructions.request),
+      'Indexing event request mismatch',
     );
-    const item = this.instructions.indexingEventsSequence.shift();
+
+    const item = this.instructions.events.shift();
 
     invariant(item, 'Indexing events sequence is empty');
 
@@ -69,16 +82,15 @@ export class MockedTransactionObserver implements ITransactionObserver {
   }
 
   async waitForProxyTransactionStatus(
-    indexingId: string,
+    proxyId: string,
   ): PromiseResult<ProxyActionStatusEvent, TransactionError> {
-    if (!('indexingId' in this.instructions)) {
+    if (!('statuses' in this.instructions)) {
       throw new Error('Method not implemented.');
     }
-    invariant(
-      indexingId === this.instructions.indexingId,
-      `Indexing ID mismatch, expected: ${this.instructions.indexingId}, got: ${indexingId}`,
-    );
-    const item = this.instructions.indexingEventsSequence.shift();
+
+    invariant(proxyId === this.instructions.request, 'Proxy ID mismatch');
+
+    const item = this.instructions.statuses.shift();
 
     invariant(item, 'Indexing events sequence is empty');
 
@@ -93,13 +105,19 @@ export class MockedTransactionObserver implements ITransactionObserver {
     never(`Unexpected item in indexing events sequence`);
   }
 
-  static withIndexingEventsSequence(
-    instructions: MockedTransactionObserverWaitForNextIndexingEventInstructions,
+  static withIndexingEventSequence(
+    instructions: WaitForNextIndexingEventInstructions,
   ): MockedTransactionObserver {
     return new MockedTransactionObserver(instructions);
   }
 
-  static withExecutedOutcome(instructions: MockedTransactionObserverWaitForExecutedInstructions) {
+  static withProxyStatusSequence(
+    instructions: WaitForProxyTransactionStatusInstructions,
+  ): MockedTransactionObserver {
+    return new MockedTransactionObserver(instructions);
+  }
+
+  static withExecutedOutcome(instructions: WaitForConfirmationInstructions) {
     return new MockedTransactionObserver(instructions);
   }
 }

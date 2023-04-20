@@ -7,14 +7,11 @@ import {
   TransactionError,
   TransactionEvent,
 } from '@lens-protocol/domain/entities';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
-  ChainType,
-  failure,
-  invariant,
-  PromiseResult,
-  success,
-} from '@lens-protocol/shared-kernel';
+  ProtocolCallKinds,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
+import { ChainType, failure, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
 
 import {
   ITransactionFactory,
@@ -39,13 +36,22 @@ export type ProxyActionStatusEvent = {
   status: ProxyActionStatus;
 };
 
-export interface ITransactionObserver {
-  waitForExecuted(txHash: string, chainType: ChainType): PromiseResult<void, TransactionError>;
+export type ConfirmationRequest = {
+  txHash: string;
+  chainType: ChainType;
+};
 
-  waitForNextIndexingEvent(indexingId: string): PromiseResult<IndexingEvent, TransactionError>;
+export type IndexingEventRequest = XOR<{ txHash: string }, { indexingId: string }>;
+
+export interface ITransactionObserver {
+  waitForConfirmation(request: ConfirmationRequest): PromiseResult<void, TransactionError>;
+
+  waitForNextIndexingEvent(
+    request: IndexingEventRequest,
+  ): PromiseResult<IndexingEvent, TransactionError>;
 
   waitForProxyTransactionStatus(
-    indexingId: string,
+    proxyId: string,
   ): PromiseResult<ProxyActionStatusEvent, TransactionError>;
 }
 
@@ -274,6 +280,18 @@ export class TransactionFactory
         this.createProtocolCallStateReducer(),
       );
     }
+
+    if (ProtocolCallKinds.includes(init.request.kind)) {
+      return new SerializableNativeTransaction(
+        {
+          chainType: init.chainType,
+          id: init.id,
+          request: init.request,
+          txHash: init.txHash,
+        },
+        this.createProtocolCallStateReducer(),
+      );
+    }
     return new SerializableNativeTransaction(
       {
         chainType: init.chainType,
@@ -306,11 +324,11 @@ export class TransactionFactory
     S extends MetaTransactionState<T> | NativeTransactionState<T>,
   >(): StateReducer<S> {
     return async (state) => {
-      invariant(state.indexingId, 'indexingId is required');
+      const request = state.indexingId
+        ? { indexingId: state.indexingId }
+        : { txHash: state.txHash };
 
-      const indexingEventResult = await this.transactionObserver.waitForNextIndexingEvent(
-        state.indexingId,
-      );
+      const indexingEventResult = await this.transactionObserver.waitForNextIndexingEvent(request);
 
       if (indexingEventResult.isFailure()) {
         return failure(indexingEventResult.error);
@@ -340,7 +358,10 @@ export class TransactionFactory
     S extends NativeTransactionState<T>,
   >(): StateReducer<S> {
     return async (state) => {
-      const result = await this.transactionObserver.waitForExecuted(state.txHash, state.chainType);
+      const result = await this.transactionObserver.waitForConfirmation({
+        txHash: state.txHash,
+        chainType: state.chainType,
+      });
 
       if (result.isFailure()) {
         return failure(result.error);

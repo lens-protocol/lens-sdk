@@ -6,9 +6,13 @@ import {
   TransactionError,
   TransactionErrorReason,
   TransactionEvent,
+  TransactionKind,
 } from '@lens-protocol/domain/entities';
-import { mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { mockTransactionHash, mockTransactionRequestModel } from '@lens-protocol/domain/mocks';
+import {
+  ProtocolCallKinds,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
@@ -41,73 +45,19 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
 
     describe(`when invoking the "waitNextEvent" method`, () => {
       it(`should
-            - resolve with Success<TransactionEvent.${TransactionEvent.UPGRADED}> as the txHash changes while not yet indexed
-            - and update the tx hash`, async () => {
-        const indexingEvent = mockIndexingEvent({ indexed: false });
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.indexingId,
-          indexingEventsSequence: [indexingEvent],
-        });
-        const factory = setupTransactionFactory({ observer });
-
-        const transaction = factory.createMetaTransaction(init);
-
-        const result = await transaction.waitNextEvent();
-
-        expect(result.unwrap()).toBe(TransactionEvent.UPGRADED);
-        expect(transaction.hash).toEqual(indexingEvent.txHash);
-      });
-
-      it(`should:
-            - resolve with Success<TransactionEvent.${TransactionEvent.SETTLED}> as soon as indexed by the BE
-            - and update the tx hash if changed`, async () => {
-        const indexingEvent = mockIndexingEvent({ indexed: true });
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.indexingId,
-          indexingEventsSequence: [indexingEvent],
-        });
-        const factory = setupTransactionFactory({ observer });
-
-        const transaction = factory.createMetaTransaction(init);
-
-        const result = await transaction.waitNextEvent();
-
-        expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
-        expect(transaction.hash).toEqual(indexingEvent.txHash);
-      });
-
-      it(`should forward any ${TransactionError.name} from the ITransactionObserver`, async () => {
-        const error = new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.indexingId,
-          indexingEventsSequence: [error],
-        });
-        const factory = setupTransactionFactory({ observer });
-
-        const transaction = factory.createMetaTransaction(init);
-
-        const result = await transaction.waitNextEvent();
-
-        expect(() => result.unwrap()).toThrow(error);
-      });
-    });
-  });
-
-  describe(`and an ${NativeTransaction.name} instance created via NativeTransactionData<T> with "indexingId"`, () => {
-    const init = mockNativeTransactionDataWithIndexingId<SupportedTransactionRequest>();
-
-    describe(`when invoking the "waitNextEvent" method`, () => {
-      it(`should
           - resolve with Success<TransactionEvent.${TransactionEvent.UPGRADED}> as the txHash changes while not yet indexed
           - and update the tx hash`, async () => {
         const indexingEvent = mockIndexingEvent({ indexed: false });
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.indexingId,
-          indexingEventsSequence: [indexingEvent],
+        const observer = MockedTransactionObserver.withIndexingEventSequence({
+          request: {
+            indexingId: init.indexingId,
+          },
+          events: [indexingEvent],
         });
         const factory = setupTransactionFactory({ observer });
 
-        const transaction = factory.createNativeTransaction(init);
+        const transaction = factory.createMetaTransaction(init);
+
         const result = await transaction.waitNextEvent();
 
         expect(result.unwrap()).toBe(TransactionEvent.UPGRADED);
@@ -118,13 +68,16 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           - resolve with Success<TransactionEvent.${TransactionEvent.SETTLED}> as soon as indexed by the BE
           - and update the tx hash if changed`, async () => {
         const indexingEvent = mockIndexingEvent({ indexed: true });
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.indexingId,
-          indexingEventsSequence: [indexingEvent],
+        const observer = MockedTransactionObserver.withIndexingEventSequence({
+          request: {
+            indexingId: init.indexingId,
+          },
+          events: [indexingEvent],
         });
         const factory = setupTransactionFactory({ observer });
 
-        const transaction = factory.createNativeTransaction(init);
+        const transaction = factory.createMetaTransaction(init);
+
         const result = await transaction.waitNextEvent();
 
         expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
@@ -133,13 +86,16 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
 
       it(`should forward any ${TransactionError.name} from the ITransactionObserver`, async () => {
         const error = new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.indexingId,
-          indexingEventsSequence: [error],
+        const observer = MockedTransactionObserver.withIndexingEventSequence({
+          request: {
+            indexingId: init.indexingId,
+          },
+          events: [error],
         });
         const factory = setupTransactionFactory({ observer });
 
-        const transaction = factory.createNativeTransaction(init);
+        const transaction = factory.createMetaTransaction(init);
+
         const result = await transaction.waitNextEvent();
 
         expect(() => result.unwrap()).toThrow(error);
@@ -147,28 +103,123 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
     });
   });
 
-  describe(`and a ${NativeTransaction.name} instance created via NativeTransactionData<T> with NO "indexingId"`, () => {
-    describe(`when invoking the "waitNextEvent" method`, () => {
-      const init = mockNativeTransactionData<SupportedTransactionRequest>();
+  describe(`and a ${NativeTransaction.name} instance created via NativeTransactionData<T>`, () => {
+    describe(`with "indexingId"`, () => {
+      const init = mockNativeTransactionDataWithIndexingId<SupportedTransactionRequest>();
 
-      it(`should resolve with Success<TransactionEvent.SETTLED> as soon as the transaction is executed`, async () => {
-        const observer = MockedTransactionObserver.withExecutedOutcome({
-          txHash: init.txHash,
-          chainType: init.chainType,
-          result: success(),
+      describe(`when invoking the "waitNextEvent" method`, () => {
+        it(`should
+            - resolve with Success<TransactionEvent.${TransactionEvent.UPGRADED}> as the txHash changes while not yet indexed
+            - and update the tx hash`, async () => {
+          const indexingEvent = mockIndexingEvent({ indexed: false });
+          const observer = MockedTransactionObserver.withIndexingEventSequence({
+            request: {
+              indexingId: init.indexingId,
+            },
+            events: [indexingEvent],
+          });
+          const factory = setupTransactionFactory({ observer });
+
+          const transaction = factory.createNativeTransaction(init);
+          const result = await transaction.waitNextEvent();
+
+          expect(result.unwrap()).toBe(TransactionEvent.UPGRADED);
+          expect(transaction.hash).toEqual(indexingEvent.txHash);
         });
-        const factory = setupTransactionFactory({ observer });
 
-        const transaction = factory.createNativeTransaction(init);
-        const result = await transaction.waitNextEvent();
+        it(`should:
+            - resolve with Success<TransactionEvent.${TransactionEvent.SETTLED}> as soon as indexed by the BE
+            - and update the tx hash if changed`, async () => {
+          const indexingEvent = mockIndexingEvent({ indexed: true });
+          const observer = MockedTransactionObserver.withIndexingEventSequence({
+            request: {
+              indexingId: init.indexingId,
+            },
+            events: [indexingEvent],
+          });
+          const factory = setupTransactionFactory({ observer });
 
-        expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
+          const transaction = factory.createNativeTransaction(init);
+          const result = await transaction.waitNextEvent();
+
+          expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
+          expect(transaction.hash).toEqual(indexingEvent.txHash);
+        });
+
+        it(`should forward any ${TransactionError.name} from the ITransactionObserver`, async () => {
+          const error = new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
+          const observer = MockedTransactionObserver.withIndexingEventSequence({
+            request: {
+              indexingId: init.indexingId,
+            },
+            events: [error],
+          });
+          const factory = setupTransactionFactory({ observer });
+
+          const transaction = factory.createNativeTransaction(init);
+          const result = await transaction.waitNextEvent();
+
+          expect(() => result.unwrap()).toThrow(error);
+        });
+      });
+    });
+
+    describe(`with NO "indexingId"`, () => {
+      describe.each(ProtocolCallKinds)(
+        `and the transaction request is for an "%s" transaction`,
+        (kind) => {
+          describe(`when invoking the "waitNextEvent" method`, () => {
+            const init = mockNativeTransactionData({
+              request: mockTransactionRequestModel({ kind }) as SupportedTransactionRequest,
+            });
+
+            it(`should resolve with Success<TransactionEvent.SETTLED> as soon as indexed by the BE`, async () => {
+              const indexingEvent = mockIndexingEvent({ indexed: true });
+              const observer = MockedTransactionObserver.withIndexingEventSequence({
+                request: {
+                  txHash: init.txHash,
+                },
+                events: [indexingEvent],
+              });
+              const factory = setupTransactionFactory({ observer });
+
+              const transaction = factory.createNativeTransaction(init);
+              const result = await transaction.waitNextEvent();
+
+              expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
+            });
+          });
+        },
+      );
+
+      describe(`and the transaction request is for an "${TransactionKind.APPROVE_MODULE}" transaction`, () => {
+        describe(`when invoking the "waitNextEvent" method`, () => {
+          const init = mockNativeTransactionData({
+            request: mockTransactionRequestModel({
+              kind: TransactionKind.APPROVE_MODULE,
+            }) as SupportedTransactionRequest,
+          });
+
+          it(`should resolve with Success<TransactionEvent.SETTLED> as soon as the transaction is executed`, async () => {
+            const observer = MockedTransactionObserver.withExecutedOutcome({
+              txHash: init.txHash,
+              chainType: init.chainType,
+              result: success(),
+            });
+            const factory = setupTransactionFactory({ observer });
+
+            const transaction = factory.createNativeTransaction(init);
+            const result = await transaction.waitNextEvent();
+
+            expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
+          });
+        });
       });
     });
   });
 
   describe(`and a ${ProxyTransaction.name} instance created via ProxyTransactionData<T>`, () => {
-    describe(`when invoking the ${ProxyTransaction.name}#waitNextEvent() method`, () => {
+    describe(`when invoking the "waitNextEvent" method`, () => {
       it(`should:
           - resolve with Success<TransactionEvent.${TransactionEvent.SETTLED}> as soon as the proxy action status is ${ProxyActionStatus.COMPLETE}
           - update the tx hash`, async () => {
@@ -177,9 +228,9 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           txHash: mockTransactionHash(),
           status: ProxyActionStatus.COMPLETE,
         });
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.proxyId,
-          indexingEventsSequence: [proxyActionStatusEvent],
+        const observer = MockedTransactionObserver.withProxyStatusSequence({
+          request: init.proxyId,
+          statuses: [proxyActionStatusEvent],
         });
         const factory = setupTransactionFactory({ observer });
 
@@ -204,9 +255,9 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           status: ProxyActionStatus.MINTING,
         });
 
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.proxyId,
-          indexingEventsSequence: [proxyActionStatusEvent],
+        const observer = MockedTransactionObserver.withProxyStatusSequence({
+          request: init.proxyId,
+          statuses: [proxyActionStatusEvent],
         });
         const factory = setupTransactionFactory({ observer });
 
@@ -231,9 +282,9 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           status: ProxyActionStatus.TRANSFERRING,
         });
 
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.proxyId,
-          indexingEventsSequence: [proxyActionStatusEvent],
+        const observer = MockedTransactionObserver.withProxyStatusSequence({
+          request: init.proxyId,
+          statuses: [proxyActionStatusEvent],
         });
         const factory = setupTransactionFactory({ observer });
 
@@ -255,9 +306,9 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           status: ProxyActionStatus.MINTING,
         });
 
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.proxyId,
-          indexingEventsSequence: [proxyActionStatusEvent],
+        const observer = MockedTransactionObserver.withProxyStatusSequence({
+          request: init.proxyId,
+          statuses: [proxyActionStatusEvent],
         });
         const factory = setupTransactionFactory({ observer });
 
@@ -279,9 +330,9 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           status: ProxyActionStatus.TRANSFERRING,
         });
 
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.proxyId,
-          indexingEventsSequence: [proxyActionStatusEvent],
+        const observer = MockedTransactionObserver.withProxyStatusSequence({
+          request: init.proxyId,
+          statuses: [proxyActionStatusEvent],
         });
         const factory = setupTransactionFactory({ observer });
 
@@ -296,9 +347,9 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
       it(`should forward any ${TransactionError.name} from the ITransactionObserver`, async () => {
         const init = mockProxyTransactionData<SupportedTransactionRequest>();
         const error = new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
-        const observer = MockedTransactionObserver.withIndexingEventsSequence({
-          indexingId: init.proxyId,
-          indexingEventsSequence: [error],
+        const observer = MockedTransactionObserver.withProxyStatusSequence({
+          request: init.proxyId,
+          statuses: [error],
         });
         const factory = setupTransactionFactory({ observer });
 

@@ -61,33 +61,33 @@ async function createBlockchainTransaction(provider: MockProvider) {
 }
 
 describe(`Given an instance of the ${TransactionObserver.name}`, () => {
-  describe(`when invoking ${TransactionObserver.prototype.waitForExecuted.name} with a tx hash`, () => {
-    it('should resolve with Success if the tx is mined within a reasonable time', async () => {
+  describe(`when invoking ${TransactionObserver.prototype.waitForConfirmation.name} with a tx hash`, () => {
+    it('should succeed if the tx is mined within a reasonable time', async () => {
       const provider = new MockProvider();
       const transaction = setupTransactionObserver({
         provider,
       });
 
       const txHash = await createBlockchainTransaction(provider);
-      const result = await transaction.waitForExecuted(txHash, chainType);
+      const result = await transaction.waitForConfirmation({ txHash, chainType });
 
       expect(result.isSuccess()).toBe(true);
     }, 15_000);
 
-    it(`should resolve with Failure<${TransactionError.name}> with ${TransactionErrorReason.MINING_TIMEOUT} reason if the tx is not found within a reasonable time`, async () => {
+    it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.MINING_TIMEOUT}] if the tx is not found within a reasonable time`, async () => {
       const provider = new MockProvider();
 
       const transaction = setupTransactionObserver({
         provider,
       });
       const txHash = mockTransactionHash();
-      const result = await transaction.waitForExecuted(txHash, chainType);
+      const result = await transaction.waitForConfirmation({ txHash, chainType });
 
       expect(() => result.unwrap()).toThrow(TransactionError);
       expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.MINING_TIMEOUT);
     }, 15_000);
 
-    it.skip(`should resolve with Failure<${TransactionError.name}> with ${TransactionErrorReason.MINING_TIMEOUT} reason if the tx is found but not mined within a reasonable time`, async () => {
+    it.skip(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.MINING_TIMEOUT}] if the tx is found but not mined within a reasonable time`, async () => {
       const provider = new MockProvider({
         ganacheOptions: {
           miner: {
@@ -105,22 +105,21 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       });
 
       const txHash = await createBlockchainTransaction(provider);
-      const result = await transaction.waitForExecuted(txHash, chainType);
+      const result = await transaction.waitForConfirmation({ txHash, chainType });
 
       expect(() => result.unwrap()).toThrow(TransactionError);
       expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.MINING_TIMEOUT);
     }, 15_000);
   });
 
-  describe(`when invoking ${TransactionObserver.prototype.waitForNextIndexingEvent.name} with a tx indexing ID`, () => {
-    const txId = faker.datatype.uuid();
+  describe(`when invoking ${TransactionObserver.prototype.waitForNextIndexingEvent.name} with a tx hash"`, () => {
+    const txHash = mockTransactionHash();
 
-    it('should succeed with the expected IndexingEvent if the tx has been indexed by the BE', async () => {
-      const txHash = mockTransactionHash();
+    it('should succeed with indexed=true if the tx has been indexed by the BE', async () => {
       const responses = [
         createHasTxHashBeenIndexedMockedResponse({
           variables: {
-            request: { txId },
+            request: { txHash },
           },
           data: mockHasTxHashBeenIndexedData({
             indexed: true,
@@ -133,97 +132,18 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
         apolloClient,
       });
 
-      const event = await transaction.waitForNextIndexingEvent(txId);
+      const event = await transaction.waitForNextIndexingEvent({ txHash });
       expect(event.unwrap()).toEqual({
         indexed: true,
         txHash,
       });
     });
 
-    it('should succeed with the expected IndexingEvent if the txHash changes before the tx gets indexed', async () => {
-      const initialTxHash = mockTransactionHash();
-      const upgradedTxHash = mockTransactionHash();
-      const responses = [
-        createHasTxHashBeenIndexedMockedResponse({
-          variables: {
-            request: { txId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: false,
-            txHash: initialTxHash,
-          }),
-        }),
-        createHasTxHashBeenIndexedMockedResponse({
-          variables: {
-            request: { txId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: false,
-            txHash: initialTxHash,
-          }),
-        }),
-        createHasTxHashBeenIndexedMockedResponse({
-          variables: {
-            request: { txId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: false,
-            txHash: upgradedTxHash,
-          }),
-        }),
-      ];
-      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
-      const transaction = setupTransactionObserver({
-        apolloClient,
-      });
-
-      const event = await transaction.waitForNextIndexingEvent(txId);
-      expect(event.unwrap()).toEqual({
-        indexed: false,
-        txHash: upgradedTxHash,
-      });
-    });
-
-    it('should succeed with the expected IndexingEvent as the tx gets indexed', async () => {
-      const initialTxHash = mockTransactionHash();
-      const upgradedTxHash = mockTransactionHash();
-      const responses = [
-        createHasTxHashBeenIndexedMockedResponse({
-          variables: {
-            request: { txId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: false,
-            txHash: initialTxHash,
-          }),
-        }),
-        createHasTxHashBeenIndexedMockedResponse({
-          variables: {
-            request: { txId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: true,
-            txHash: upgradedTxHash,
-          }),
-        }),
-      ];
-      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
-      const transaction = setupTransactionObserver({
-        apolloClient,
-      });
-
-      const event = await transaction.waitForNextIndexingEvent(txId);
-      expect(event.unwrap()).toEqual({
-        indexed: true,
-        txHash: upgradedTxHash,
-      });
-    });
-
-    it(`should fail with ${TransactionError.name} for ${TransactionErrorReason.REVERTED} reason if the tx gets reverted`, async () => {
+    it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.REVERTED}] if the tx gets reverted`, async () => {
       const apolloClient = createMockApolloClientWithMultipleResponses([
         createHasTxHashBeenIndexedMockedResponse({
           variables: {
-            request: { txId },
+            request: { txHash },
           },
           data: mockHasTxHashBeenIndexedData({
             reason: TransactionErrorReasons.Reverted,
@@ -234,18 +154,18 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
         apolloClient,
       });
 
-      const result = await transaction.waitForNextIndexingEvent(txId);
+      const result = await transaction.waitForNextIndexingEvent({ txHash });
 
       expect(() => result.unwrap()).toThrow(TransactionError);
       expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.REVERTED);
     });
 
-    it(`should fail with ${TransactionError.name} for ${TransactionErrorReason.INDEXING_TIMEOUT} reason if the tx is not indexed within a reasonable time`, async () => {
+    it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.INDEXING_TIMEOUT}] if the tx is not indexed within a reasonable time`, async () => {
       const txHash = mockTransactionHash();
       const apolloClient = createMockApolloClientWithMultipleResponses([
         createHasTxHashBeenIndexedMockedResponse({
           variables: {
-            request: { txId },
+            request: { txHash },
           },
           data: mockHasTxHashBeenIndexedData({
             indexed: false,
@@ -262,7 +182,156 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           maxIndexingWaitTime: 1, // ms
         },
       });
-      const result = await transaction.waitForNextIndexingEvent(txId);
+      const result = await transaction.waitForNextIndexingEvent({ txHash });
+
+      expect(() => result.unwrap()).toThrow(TransactionError);
+      expect(result.isFailure() && result.error.reason).toBe(
+        TransactionErrorReason.INDEXING_TIMEOUT,
+      );
+    });
+  });
+
+  describe(`when invoking ${TransactionObserver.prototype.waitForNextIndexingEvent.name} with an indexing ID`, () => {
+    const indexingId = faker.datatype.uuid();
+
+    it('should succeed with indexed=true if the tx has been indexed by the BE', async () => {
+      const txHash = mockTransactionHash();
+      const responses = [
+        createHasTxHashBeenIndexedMockedResponse({
+          variables: {
+            request: { txId: indexingId },
+          },
+          data: mockHasTxHashBeenIndexedData({
+            indexed: true,
+            txHash,
+          }),
+        }),
+      ];
+      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
+      const transaction = setupTransactionObserver({
+        apolloClient,
+      });
+
+      const event = await transaction.waitForNextIndexingEvent({ indexingId });
+      expect(event.unwrap()).toEqual({
+        indexed: true,
+        txHash,
+      });
+    });
+
+    it('should succeed with any new txHash if the it changes before being indexed', async () => {
+      const upgradedTxHash = mockTransactionHash();
+      const responses = [
+        createHasTxHashBeenIndexedMockedResponse({
+          variables: {
+            request: { txId: indexingId },
+          },
+          data: mockHasTxHashBeenIndexedData({
+            indexed: false,
+            txHash: mockTransactionHash(),
+          }),
+        }),
+        createHasTxHashBeenIndexedMockedResponse({
+          variables: {
+            request: { txId: indexingId },
+          },
+          data: mockHasTxHashBeenIndexedData({
+            indexed: false,
+            txHash: upgradedTxHash,
+          }),
+        }),
+      ];
+      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
+      const transaction = setupTransactionObserver({
+        apolloClient,
+      });
+
+      const event = await transaction.waitForNextIndexingEvent({ indexingId });
+      expect(event.unwrap()).toEqual({
+        indexed: false,
+        txHash: upgradedTxHash,
+      });
+    });
+
+    it('should succeed return any new txHash also as the tx is flagged as indexed by the BE', async () => {
+      const initialTxHash = mockTransactionHash();
+      const upgradedTxHash = mockTransactionHash();
+      const responses = [
+        createHasTxHashBeenIndexedMockedResponse({
+          variables: {
+            request: { txId: indexingId },
+          },
+          data: mockHasTxHashBeenIndexedData({
+            indexed: false,
+            txHash: initialTxHash,
+          }),
+        }),
+        createHasTxHashBeenIndexedMockedResponse({
+          variables: {
+            request: { txId: indexingId },
+          },
+          data: mockHasTxHashBeenIndexedData({
+            indexed: true,
+            txHash: upgradedTxHash,
+          }),
+        }),
+      ];
+      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
+      const transaction = setupTransactionObserver({
+        apolloClient,
+      });
+
+      const event = await transaction.waitForNextIndexingEvent({ indexingId });
+      expect(event.unwrap()).toEqual({
+        indexed: true,
+        txHash: upgradedTxHash,
+      });
+    });
+
+    it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.REVERTED}] if the tx gets reverted`, async () => {
+      const apolloClient = createMockApolloClientWithMultipleResponses([
+        createHasTxHashBeenIndexedMockedResponse({
+          variables: {
+            request: { txId: indexingId },
+          },
+          data: mockHasTxHashBeenIndexedData({
+            reason: TransactionErrorReasons.Reverted,
+          }),
+        }),
+      ]);
+      const transaction = setupTransactionObserver({
+        apolloClient,
+      });
+
+      const result = await transaction.waitForNextIndexingEvent({ indexingId });
+
+      expect(() => result.unwrap()).toThrow(TransactionError);
+      expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.REVERTED);
+    });
+
+    it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.INDEXING_TIMEOUT}] if the tx is not indexed within a reasonable time`, async () => {
+      const txHash = mockTransactionHash();
+      const apolloClient = createMockApolloClientWithMultipleResponses([
+        createHasTxHashBeenIndexedMockedResponse({
+          variables: {
+            request: { txId: indexingId },
+          },
+          data: mockHasTxHashBeenIndexedData({
+            indexed: false,
+            txHash,
+          }),
+        }),
+      ]);
+
+      const transaction = setupTransactionObserver({
+        apolloClient,
+        timings: {
+          pollingInterval: 1,
+          maxMiningWaitTime: 1000, // ms
+          maxIndexingWaitTime: 1, // ms
+        },
+      });
+      const result = await transaction.waitForNextIndexingEvent({ indexingId });
 
       expect(() => result.unwrap()).toThrow(TransactionError);
       expect(result.isFailure() && result.error.reason).toBe(
