@@ -1920,7 +1920,6 @@ export type CommentBase = {
   collectPolicy: CollectPolicy;
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
-  myMirrors: Array<PublicationId>;
   stats: PublicationStats;
   metadata: MetadataOutput;
   profile: Profile;
@@ -1976,7 +1975,6 @@ export type Post = {
   collectPolicy: CollectPolicy;
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
-  myMirrors: Array<PublicationId>;
   stats: PublicationStats;
   metadata: MetadataOutput;
   profile: Profile;

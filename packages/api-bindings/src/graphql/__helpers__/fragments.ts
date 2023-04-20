@@ -263,7 +263,6 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
     isOptimisticMirroredByMe: false,
     isMirroredByMe: false,
     mirrors: [],
-    myMirrors: [],
     reaction: null,
     hidden: false,
 
@@ -309,7 +308,6 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
     isOptimisticMirroredByMe: false,
     isMirroredByMe: false,
     mirrors: [],
-    myMirrors: [],
     reaction: null,
     hidden: false,
 

@@ -38,7 +38,7 @@ function MirrorInner({ publisher }: MirrorInnerProps) {
       <PublicationCard publication={publication} />
 
       <div>Total Mirrors: {publication.stats.totalAmountOfMirrors}</div>
-      <div>My mirrors: {publication.myMirrors.length}</div>
+      <div>My mirrors: {publication.mirrors.length}</div>
       <div>Is Mirrored by Me: {publication.isMirroredByMe ? 'true' : 'false'}</div>
 
       <div>

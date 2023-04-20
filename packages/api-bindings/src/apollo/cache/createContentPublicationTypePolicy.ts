@@ -180,7 +180,6 @@ export function createContentPublicationTypePolicy() {
     fields: {
       referencePolicy,
       mirrors: noCachedField(),
-      myMirrors: noCachedField(),
       reaction: noCachedField(),
       canComment: noCachedField(),
       canMirror: noCachedField(),

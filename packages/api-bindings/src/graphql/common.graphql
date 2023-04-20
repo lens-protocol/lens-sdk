@@ -360,7 +360,6 @@ fragment CommentBase on Comment {
     reasons
   }
   mirrors(by: $observerId)
-  myMirrors: mirrors(by: $observerId)
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
@@ -491,7 +490,6 @@ fragment Post on Post {
     result
   }
   mirrors(by: $observerId)
-  myMirrors: mirrors(by: $observerId)
   canObserverDecrypt: canDecrypt(profileId: $observerId) {
     result
     reasons

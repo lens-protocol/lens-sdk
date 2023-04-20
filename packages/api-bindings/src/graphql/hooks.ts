@@ -654,7 +654,6 @@ export const FragmentPost = /*#__PURE__*/ gql`
       result
     }
     mirrors(by: $observerId)
-    myMirrors: mirrors(by: $observerId)
     canObserverDecrypt: canDecrypt(profileId: $observerId) {
       result
       reasons
@@ -760,7 +759,6 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
       reasons
     }
     mirrors(by: $observerId)
-    myMirrors: mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     isMirroredByMe @client
