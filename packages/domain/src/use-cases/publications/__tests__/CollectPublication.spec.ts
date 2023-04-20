@@ -1,7 +1,7 @@
 import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { SignlessProtocolCallUseCase } from '../../transactions/SignlessProtocolCallUseCase';
+import { SignlessSubsidizedCall } from '../../transactions/SignlessSubsidizedCall';
 import { SubsidizedCall } from '../../transactions/SubsidizedCall';
 import {
   InsufficientAllowanceError,
@@ -17,31 +17,26 @@ import {
 } from '../CollectPublication';
 import { mockFreeCollectRequest, mockPaidCollectRequest } from '../__helpers__/mocks';
 
-function mockProtocolCallUseCase<T extends CollectRequest>() {
+function mockSubsidizedCall<T extends CollectRequest>() {
   return mock<SubsidizedCall<T>>();
 }
 
-function mockSignlessProtocolCallUseCase<T extends FreeCollectRequest>() {
-  return mock<SignlessProtocolCallUseCase<T>>();
+function mockSignlessSubsidizedCall<T extends FreeCollectRequest>() {
+  return mock<SignlessSubsidizedCall<T>>();
 }
 
 function setupCollectPublication({
   presenter,
   tokenAvailability,
-  signedProtocolCall = mockProtocolCallUseCase<CollectRequest>(),
-  signlessProtocolCall = mockSignlessProtocolCallUseCase<FreeCollectRequest>(),
+  signedCall = mockSubsidizedCall<CollectRequest>(),
+  signlessCall = mockSignlessSubsidizedCall<FreeCollectRequest>(),
 }: {
   presenter: ICollectPublicationPresenter;
   tokenAvailability: TokenAvailability;
-  signedProtocolCall?: SubsidizedCall<CollectRequest>;
-  signlessProtocolCall?: SignlessProtocolCallUseCase<FreeCollectRequest>;
+  signedCall?: SubsidizedCall<CollectRequest>;
+  signlessCall?: SignlessSubsidizedCall<FreeCollectRequest>;
 }) {
-  return new CollectPublication(
-    tokenAvailability,
-    signedProtocolCall,
-    signlessProtocolCall,
-    presenter,
-  );
+  return new CollectPublication(tokenAvailability, signedCall, signlessCall, presenter);
 }
 
 describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
@@ -49,22 +44,22 @@ describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
 
   describe(`when "${CollectPublication.prototype.execute.name}" method is invoked`, () => {
     describe('with a FreeCollectRequest', () => {
-      it(`should execute the ${SignlessProtocolCallUseCase.name}<FreeCollectRequest> strategy`, async () => {
+      it(`should execute the ${SignlessSubsidizedCall.name}<FreeCollectRequest> strategy`, async () => {
         const request = mockFreeCollectRequest();
-        const signedProtocolCall = mockProtocolCallUseCase<CollectRequest>();
-        const signlessProtocolCall = mockSignlessProtocolCallUseCase<FreeCollectRequest>();
+        const signedCall = mockSubsidizedCall<CollectRequest>();
+        const signlessCall = mockSignlessSubsidizedCall<FreeCollectRequest>();
 
         const followProfiles = setupCollectPublication({
           tokenAvailability: mock<TokenAvailability>(),
-          signedProtocolCall,
-          signlessProtocolCall,
+          signedCall,
+          signlessCall,
           presenter,
         });
 
         await followProfiles.execute(request);
 
-        expect(signlessProtocolCall.execute).toHaveBeenCalledWith(request);
-        expect(signedProtocolCall.execute).not.toHaveBeenCalled();
+        expect(signlessCall.execute).toHaveBeenCalledWith(request);
+        expect(signedCall.execute).not.toHaveBeenCalled();
       });
     });
 
@@ -73,20 +68,20 @@ describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
         const request = mockFreeCollectRequest({
           followerOnly: true,
         });
-        const signedProtocolCall = mockProtocolCallUseCase<CollectRequest>();
-        const signlessProtocolCall = mockSignlessProtocolCallUseCase<FreeCollectRequest>();
+        const signedCall = mockSubsidizedCall<CollectRequest>();
+        const signlessCall = mockSignlessSubsidizedCall<FreeCollectRequest>();
 
         const followProfiles = setupCollectPublication({
           tokenAvailability: mock<TokenAvailability>(),
-          signedProtocolCall,
-          signlessProtocolCall,
+          signedCall,
+          signlessCall,
           presenter,
         });
 
         await followProfiles.execute(request);
 
-        expect(signedProtocolCall.execute).toHaveBeenCalledWith(request);
-        expect(signlessProtocolCall.execute).not.toHaveBeenCalledWith(request);
+        expect(signedCall.execute).toHaveBeenCalledWith(request);
+        expect(signlessCall.execute).not.toHaveBeenCalledWith(request);
       });
     });
 
@@ -95,8 +90,8 @@ describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
 
       it(`should execute the ${SubsidizedCall.name}<CollectRequest> strategy`, async () => {
         const request = mockPaidCollectRequest();
-        const signedProtocolCall = mockProtocolCallUseCase<CollectRequest>();
-        const signlessProtocolCall = mockSignlessProtocolCallUseCase<FreeCollectRequest>();
+        const signedCall = mockSubsidizedCall<CollectRequest>();
+        const signlessCall = mockSignlessSubsidizedCall<FreeCollectRequest>();
         const tokenAvailability = mockTokeAvailability({
           request: {
             amount: request.fee.amount,
@@ -107,15 +102,15 @@ describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
 
         const followProfiles = setupCollectPublication({
           tokenAvailability,
-          signedProtocolCall,
-          signlessProtocolCall,
+          signedCall,
+          signlessCall,
           presenter,
         });
 
         await followProfiles.execute(request);
 
-        expect(signedProtocolCall.execute).toHaveBeenCalled();
-        expect(signlessProtocolCall.execute).not.toHaveBeenCalledWith(request);
+        expect(signedCall.execute).toHaveBeenCalled();
+        expect(signlessCall.execute).not.toHaveBeenCalledWith(request);
       });
 
       it.each([

@@ -9,7 +9,7 @@ import {
   PublicationId,
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
-import { SignlessProtocolCallUseCase } from '../transactions/SignlessProtocolCallUseCase';
+import { SignlessSubsidizedCall } from '../transactions/SignlessSubsidizedCall';
 import { IUnsignedProtocolCallGateway, SubsidizedCall } from '../transactions/SubsidizedCall';
 import {
   InsufficientAllowanceError,
@@ -63,8 +63,8 @@ export type ICollectPublicationPresenter = IGenericResultPresenter<
 export class CollectPublication {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
-    private readonly signedFlow: SubsidizedCall<CollectRequest>,
-    private readonly signlessFlow: SignlessProtocolCallUseCase<FreeCollectRequest>,
+    private readonly signedCollect: SubsidizedCall<CollectRequest>,
+    private readonly signlessCollect: SignlessSubsidizedCall<FreeCollectRequest>,
     private readonly collectPublicationPresenter: ICollectPublicationPresenter,
   ) {}
 
@@ -80,14 +80,14 @@ export class CollectPublication {
         return;
       }
 
-      await this.signedFlow.execute(request);
+      await this.signedCollect.execute(request);
       return;
     }
     if (request.followerOnly) {
-      await this.signedFlow.execute(request);
+      await this.signedCollect.execute(request);
       return;
     }
 
-    await this.signlessFlow.execute(request);
+    await this.signlessCollect.execute(request);
   }
 }

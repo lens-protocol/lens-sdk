@@ -11,7 +11,7 @@ import {
 import {
   BroadcastingError,
   SubsidizedCall,
-  SignlessProtocolCallUseCase,
+  SignlessSubsidizedCall,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
@@ -48,7 +48,7 @@ export function useCollectController() {
       | WalletConnectionError
     >();
 
-    const signedFlow = new SubsidizedCall<CollectRequest>(
+    const signedCollect = new SubsidizedCall<CollectRequest>(
       activeWallet,
       transactionGateway,
       collectPublicationCallGateway,
@@ -62,7 +62,7 @@ export function useCollectController() {
       transactionFactory,
       logger,
     );
-    const signlessFlow = new SignlessProtocolCallUseCase<FreeCollectRequest>(
+    const signlessCollect = new SignlessSubsidizedCall<FreeCollectRequest>(
       collectProxyActionRelayer,
       transactionQueue,
       presenter,
@@ -70,8 +70,8 @@ export function useCollectController() {
 
     const collectPublication = new CollectPublication(
       tokenAvailability,
-      signedFlow,
-      signlessFlow,
+      signedCollect,
+      signlessCollect,
       presenter,
     );
 

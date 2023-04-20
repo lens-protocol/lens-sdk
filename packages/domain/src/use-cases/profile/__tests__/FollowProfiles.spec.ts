@@ -2,7 +2,7 @@
 import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { SignlessProtocolCallUseCase } from '../../transactions/SignlessProtocolCallUseCase';
+import { SignlessSubsidizedCall } from '../../transactions/SignlessSubsidizedCall';
 import { SubsidizedCall } from '../../transactions/SubsidizedCall';
 import {
   InsufficientAllowanceError,
@@ -22,26 +22,26 @@ import {
   mockUnconstrainedFollowRequest,
 } from '../__helpers__/mocks';
 
-function mockProtocolCallUseCase<T extends FollowRequest>() {
+function mockSubsidizedCall<T extends FollowRequest>() {
   return mock<SubsidizedCall<T>>();
 }
 
-function mockSignlessProtocolCallUseCase<T extends UnconstrainedFollowRequest>() {
-  return mock<SignlessProtocolCallUseCase<T>>();
+function mockSignlessSubsidizedCall<T extends UnconstrainedFollowRequest>() {
+  return mock<SignlessSubsidizedCall<T>>();
 }
 
 function setupFollowProfiles({
   tokenAvailability = mock<TokenAvailability>(),
   presenter = mock<IFollowProfilePresenter>(),
-  signedProtocolCall = mockProtocolCallUseCase<FollowRequest>(),
-  signlessProtocolCall = mockSignlessProtocolCallUseCase<UnconstrainedFollowRequest>(),
+  signedCall = mockSubsidizedCall<FollowRequest>(),
+  signlessCall = mockSignlessSubsidizedCall<UnconstrainedFollowRequest>(),
 }: {
   tokenAvailability?: TokenAvailability;
   presenter?: IFollowProfilePresenter;
-  signedProtocolCall?: SubsidizedCall<FollowRequest>;
-  signlessProtocolCall?: SignlessProtocolCallUseCase<UnconstrainedFollowRequest>;
+  signedCall?: SubsidizedCall<FollowRequest>;
+  signlessCall?: SignlessSubsidizedCall<UnconstrainedFollowRequest>;
 }) {
-  return new FollowProfiles(tokenAvailability, signedProtocolCall, signlessProtocolCall, presenter);
+  return new FollowProfiles(tokenAvailability, signedCall, signlessCall, presenter);
 }
 
 describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
@@ -49,19 +49,19 @@ describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
     describe('with an UnconstrainedFollowRequest', () => {
       const request = mockUnconstrainedFollowRequest();
 
-      it(`should execute the ${SignlessProtocolCallUseCase.name}<UnconstrainedFollowRequest> strategy`, async () => {
-        const signedProtocolCall = mockProtocolCallUseCase<FollowRequest>();
-        const signlessProtocolCall = mockSignlessProtocolCallUseCase<UnconstrainedFollowRequest>();
+      it(`should execute the ${SignlessSubsidizedCall.name}<UnconstrainedFollowRequest> strategy`, async () => {
+        const signedCall = mockSubsidizedCall<FollowRequest>();
+        const signlessCall = mockSignlessSubsidizedCall<UnconstrainedFollowRequest>();
 
         const followProfiles = setupFollowProfiles({
-          signedProtocolCall,
-          signlessProtocolCall,
+          signedCall,
+          signlessCall,
         });
 
         await followProfiles.execute(request);
 
-        expect(signlessProtocolCall.execute).toHaveBeenCalledWith(request);
-        expect(signedProtocolCall.execute).not.toHaveBeenCalled();
+        expect(signlessCall.execute).toHaveBeenCalledWith(request);
+        expect(signedCall.execute).not.toHaveBeenCalled();
       });
     });
 
@@ -69,18 +69,18 @@ describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
       const request = mockProfileOwnerFollowRequest();
 
       it(`should execute the ${SubsidizedCall.name}<T> strategy`, async () => {
-        const signedProtocolCall = mockProtocolCallUseCase<FollowRequest>();
-        const signlessProtocolCall = mockSignlessProtocolCallUseCase<UnconstrainedFollowRequest>();
+        const signedCall = mockSubsidizedCall<FollowRequest>();
+        const signlessCall = mockSignlessSubsidizedCall<UnconstrainedFollowRequest>();
 
         const followProfiles = setupFollowProfiles({
-          signedProtocolCall,
-          signlessProtocolCall,
+          signedCall,
+          signlessCall,
         });
 
         await followProfiles.execute(request);
 
-        expect(signedProtocolCall.execute).toHaveBeenCalledWith(request);
-        expect(signlessProtocolCall.execute).not.toHaveBeenCalled();
+        expect(signedCall.execute).toHaveBeenCalledWith(request);
+        expect(signlessCall.execute).not.toHaveBeenCalled();
       });
     });
 
@@ -95,19 +95,19 @@ describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
           },
           result: success(),
         });
-        const signedProtocolCall = mockProtocolCallUseCase<FollowRequest>();
-        const signlessProtocolCall = mockSignlessProtocolCallUseCase<UnconstrainedFollowRequest>();
+        const signedCall = mockSubsidizedCall<FollowRequest>();
+        const signlessCall = mockSignlessSubsidizedCall<UnconstrainedFollowRequest>();
 
         const followProfiles = setupFollowProfiles({
-          signedProtocolCall,
-          signlessProtocolCall,
+          signedCall,
+          signlessCall,
           tokenAvailability,
         });
 
         await followProfiles.execute(request);
 
-        expect(signedProtocolCall.execute).toHaveBeenCalledWith(request);
-        expect(signlessProtocolCall.execute).not.toHaveBeenCalled();
+        expect(signedCall.execute).toHaveBeenCalledWith(request);
+        expect(signlessCall.execute).not.toHaveBeenCalled();
       });
 
       it.each([

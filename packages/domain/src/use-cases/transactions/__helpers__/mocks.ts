@@ -20,7 +20,7 @@ import {
 } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import { IDelegatedCallGateway, WithDelegateFlag } from '../DelegableSubsidizedCall';
-import { ISignlessProtocolCallRelayer } from '../SignlessProtocolCallUseCase';
+import { ISignlessSubsidizedCallRelayer } from '../SignlessSubsidizedCall';
 import {
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
@@ -100,11 +100,13 @@ export function mockIDelegatedCallGateway<T extends TransactionRequestModel>({
   return gateway;
 }
 
-export function mockISignlessProtocolCallRelayer<T extends TransactionRequestModel>(instructions: {
+export function mockISignlessSubsidizedCallRelayer<
+  T extends TransactionRequestModel,
+>(instructions: {
   request: T;
   transaction?: ProxyTransaction<T>;
-}): ISignlessProtocolCallRelayer<T> {
-  const signlessProtocolCallRelayer = mock<ISignlessProtocolCallRelayer<T>>();
+}): ISignlessSubsidizedCallRelayer<T> {
+  const signlessProtocolCallRelayer = mock<ISignlessSubsidizedCallRelayer<T>>();
 
   if (instructions) {
     const { request, transaction = MockedProxyTransaction.fromRequest(request) } = instructions;

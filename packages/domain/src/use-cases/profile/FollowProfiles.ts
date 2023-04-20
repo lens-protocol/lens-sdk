@@ -8,7 +8,7 @@ import {
   ProfileId,
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
-import { SignlessProtocolCallUseCase } from '../transactions/SignlessProtocolCallUseCase';
+import { SignlessSubsidizedCall } from '../transactions/SignlessSubsidizedCall';
 import { IUnsignedProtocolCallGateway, SubsidizedCall } from '../transactions/SubsidizedCall';
 import {
   InsufficientAllowanceError,
@@ -78,7 +78,7 @@ export class FollowProfiles {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
     private readonly signedFollow: SubsidizedCall<FollowRequest>,
-    private readonly signlessFollow: SignlessProtocolCallUseCase<UnconstrainedFollowRequest>,
+    private readonly signlessFollow: SignlessSubsidizedCall<UnconstrainedFollowRequest>,
     private readonly followProfilePresenter: IFollowProfilePresenter,
   ) {}
 

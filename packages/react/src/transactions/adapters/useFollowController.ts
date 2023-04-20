@@ -11,7 +11,7 @@ import {
 import {
   BroadcastingError,
   SubsidizedCall,
-  SignlessProtocolCallUseCase,
+  SignlessSubsidizedCall,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
@@ -62,7 +62,7 @@ export function useFollowController() {
       transactionFactory,
       logger,
     );
-    const signlessFollow = new SignlessProtocolCallUseCase<UnconstrainedFollowRequest>(
+    const signlessFollow = new SignlessSubsidizedCall<UnconstrainedFollowRequest>(
       followProxyActionRelayer,
       transactionQueue,
       presenter,
