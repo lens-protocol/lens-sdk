@@ -660,6 +660,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
     }
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    isMirroredByMe @client
     collectPolicy @client
     referencePolicy @client
     decryptionCriteria @client
@@ -760,6 +761,7 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
     mirrors(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
+    isMirroredByMe @client
     collectPolicy @client
     referencePolicy @client
     decryptionCriteria @client
@@ -4757,6 +4759,7 @@ export type CommentKeySpecifier = (
   | 'id'
   | 'isDataAvailability'
   | 'isGated'
+  | 'isMirroredByMe'
   | 'isOptimisticMirroredByMe'
   | 'mainPost'
   | 'metadata'
@@ -4790,6 +4793,7 @@ export type CommentFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
   isGated?: FieldPolicy<any> | FieldReadFunction<any>;
+  isMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   mainPost?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6414,6 +6418,7 @@ export type PostKeySpecifier = (
   | 'id'
   | 'isDataAvailability'
   | 'isGated'
+  | 'isMirroredByMe'
   | 'isOptimisticMirroredByMe'
   | 'metadata'
   | 'mirrors'
@@ -6443,6 +6448,7 @@ export type PostFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   isDataAvailability?: FieldPolicy<any> | FieldReadFunction<any>;
   isGated?: FieldPolicy<any> | FieldReadFunction<any>;
+  isMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;

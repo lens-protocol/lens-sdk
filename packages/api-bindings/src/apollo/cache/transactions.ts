@@ -7,7 +7,7 @@ import {
   TransactionKind,
 } from '@lens-protocol/domain/entities';
 import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
-import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
+import { CollectRequest, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { DateUtils, EthereumAddress } from '@lens-protocol/shared-kernel';
 
@@ -169,6 +169,19 @@ export function isCollectTransactionFor({
 }): TransactionStatusPredicate<CollectRequest> {
   return (transaction): transaction is TransactionState<CollectRequest> =>
     transaction.request.kind === TransactionKind.COLLECT_PUBLICATION &&
+    transaction.request.profileId === profileId &&
+    transaction.request.publicationId === publicationId;
+}
+
+export function isMirrorTransactionFor({
+  publicationId,
+  profileId,
+}: {
+  publicationId: PublicationId;
+  profileId: ProfileId;
+}): TransactionStatusPredicate<CreateMirrorRequest> {
+  return (transaction): transaction is TransactionState<CreateMirrorRequest> =>
+    transaction.request.kind === TransactionKind.MIRROR_PUBLICATION &&
     transaction.request.profileId === profileId &&
     transaction.request.publicationId === publicationId;
 }

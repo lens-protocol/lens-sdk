@@ -1916,6 +1916,7 @@ export type CommentBase = {
   mirrors: Array<PublicationId>;
   hasOptimisticCollectedByMe: boolean;
   isOptimisticMirroredByMe: boolean;
+  isMirroredByMe: boolean;
   collectPolicy: CollectPolicy;
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
@@ -1970,6 +1971,7 @@ export type Post = {
   mirrors: Array<PublicationId>;
   hasOptimisticCollectedByMe: boolean;
   isOptimisticMirroredByMe: boolean;
+  isMirroredByMe: boolean;
   collectPolicy: CollectPolicy;
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;

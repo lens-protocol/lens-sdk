@@ -363,6 +363,7 @@ fragment CommentBase on Comment {
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
+  isMirroredByMe @client
   collectPolicy @client
   referencePolicy @client
   decryptionCriteria @client
@@ -496,6 +497,7 @@ fragment Post on Post {
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
+  isMirroredByMe @client
   collectPolicy @client
   referencePolicy @client
   decryptionCriteria @client

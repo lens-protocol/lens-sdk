@@ -16,26 +16,28 @@ extend type Profile {
 
 extend type Post {
   """
-  @deprecated use hasCollectedByMe instead
+  @deprecated use `hasCollectedByMe` instead
   """
   hasOptimisticCollectedByMe: Boolean!
   """
-  @deprecated this will be replaced by mirrorState
+  @deprecated use `isMirroredByMe` instead
   """
   isOptimisticMirroredByMe: Boolean!
+  isMirroredByMe: Boolean!
   collectPolicy: CollectPolicy!
   referencePolicy: ReferencePolicy!
 }
 
 extend type Comment {
   """
-  @deprecated use hasCollectedByMe instead
+  @deprecated use `hasCollectedByMe` instead
   """
   hasOptimisticCollectedByMe: Boolean!
   """
-  @deprecated this will be replaced by mirrorState
+  @deprecated use `isMirroredByMe` instead
   """
   isOptimisticMirroredByMe: Boolean!
+  isMirroredByMe: Boolean!
   collectPolicy: CollectPolicy!
   referencePolicy: ReferencePolicy!
 }

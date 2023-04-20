@@ -14,7 +14,11 @@ import {
 } from '../../graphql';
 import { activeProfileIdentifierVar } from './activeProfileIdentifier';
 import { decryptionCriteria } from './decryptionCriteria';
-import { getAllPendingTransactions, isCollectTransactionFor } from './transactions';
+import {
+  getAllPendingTransactions,
+  isCollectTransactionFor,
+  isMirrorTransactionFor,
+} from './transactions';
 import { noCachedField } from './utils/noCachedField';
 
 function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
@@ -100,10 +104,73 @@ const hasCollectedByMe = (existing: boolean, { readField }: FieldFunctionOptions
   return collectPendingTx !== undefined;
 };
 
+const isMirroredByMe = (existing: boolean, { readField }: FieldFunctionOptions): boolean => {
+  if (existing === true) return existing;
+
+  const profileIdentifier = activeProfileIdentifierVar();
+  const publicationId = readField('id') as PublicationId;
+  const mirrors = readField('mirrors') as PublicationId[];
+
+  if (!profileIdentifier) return existing;
+  if (mirrors.length > 0) return true;
+
+  const isMirrorTransactionForThisPublication = isMirrorTransactionFor({
+    publicationId,
+    profileId: profileIdentifier.id,
+  });
+
+  const mirrorPendingTxs = getAllPendingTransactions().filter((transaction) => {
+    return isMirrorTransactionForThisPublication(transaction);
+  });
+
+  return mirrorPendingTxs.length > 0;
+};
+
+const stats: FieldReadFunction<PublicationStats> = (existing, { readField }) => {
+  if (!existing) return existing;
+
+  const profileIdentifier = activeProfileIdentifierVar();
+  const publicationId = readField('id') as PublicationId;
+
+  if (!profileIdentifier) return existing;
+
+  // mirror
+  const isMirrorTransactionForThisPublication = isMirrorTransactionFor({
+    publicationId,
+    profileId: profileIdentifier.id,
+  });
+
+  const mirrorPendingTxs = getAllPendingTransactions().filter((transaction) => {
+    return isMirrorTransactionForThisPublication(transaction);
+  });
+
+  // collect
+  const isCollectTransactionForThisPublication = isCollectTransactionFor({
+    publicationId,
+    profileId: profileIdentifier.id,
+  });
+
+  const collectPendingTx = getAllPendingTransactions().filter((transaction) => {
+    return isCollectTransactionForThisPublication(transaction);
+  });
+
+  return {
+    ...existing,
+    totalAmountOfMirrors: existing.totalAmountOfMirrors + mirrorPendingTxs.length,
+    totalAmountOfCollects: existing.totalAmountOfCollects + collectPendingTx.length,
+  };
+};
+
+/**
+ * @deprecated use `hasCollectedByMe` instead
+ */
 const hasOptimisticCollectedByMe: FieldReadFunction<boolean> = (existing) => {
   return existing ?? false;
 };
 
+/**
+ * @deprecated use `isMirroredByMe` instead
+ */
 const isOptimisticMirroredByMe: FieldReadFunction<boolean> = (existing) => {
   return existing ?? false;
 };
@@ -117,11 +184,13 @@ export function createContentPublicationTypePolicy() {
       canComment: noCachedField(),
       canMirror: noCachedField(),
       hasCollectedByMe,
+      isMirroredByMe,
       collectedBy,
       hasOptimisticCollectedByMe,
       isOptimisticMirroredByMe,
       collectPolicy,
       decryptionCriteria,
+      stats,
     },
   };
 }
