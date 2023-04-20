@@ -36,7 +36,7 @@ import {
   mockTransactionQueue,
 } from '../__helpers__/mocks';
 
-function setupMetaTransactionUseCase<T extends TransactionRequestModel>({
+function setupSubsidizedCall<T extends TransactionRequestModel>({
   metaTransactionNonceGateway,
   unsignedProtocolCallGateway,
   protocolCallRelayer = mock<IProtocolCallRelayer<T>>(),
@@ -96,7 +96,7 @@ describe(`Given an instance of the ${SubsidizedCall.name}<T> interactor`, () => 
 
       const presenter = mock<IProtocolCallPresenter>();
 
-      const useCase = setupMetaTransactionUseCase({
+      const useCase = setupSubsidizedCall({
         metaTransactionNonceGateway,
         unsignedProtocolCallGateway,
         protocolCallRelayer,
@@ -135,7 +135,7 @@ describe(`Given an instance of the ${SubsidizedCall.name}<T> interactor`, () => 
 
       const presenter = mock<IProtocolCallPresenter>();
 
-      const useCase = setupMetaTransactionUseCase({
+      const useCase = setupSubsidizedCall({
         metaTransactionNonceGateway,
         unsignedProtocolCallGateway,
         presenter,
@@ -167,7 +167,7 @@ describe(`Given an instance of the ${SubsidizedCall.name}<T> interactor`, () => 
 
       const presenter = mock<IProtocolCallPresenter>();
 
-      const useCase = setupMetaTransactionUseCase({
+      const useCase = setupSubsidizedCall({
         metaTransactionNonceGateway,
         unsignedProtocolCallGateway,
         protocolCallRelayer,

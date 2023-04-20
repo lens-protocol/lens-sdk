@@ -19,13 +19,13 @@ import {
   mockTransactionHash,
 } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
-import { IDelegableProtocolCallGateway, WithDelegateFlag } from '../DelegableProtocolCallUseCase';
+import { IDelegatedCallGateway, WithDelegateFlag } from '../DelegableSubsidizedCall';
+import { ISignlessProtocolCallRelayer } from '../SignlessProtocolCallUseCase';
 import {
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
   IUnsignedProtocolCallGateway,
 } from '../SubsidizedCall';
-import { ISignlessProtocolCallRelayer } from '../SignlessProtocolCallUseCase';
 import { SupportedTransactionRequest } from '../SupportedTransactionRequest';
 import { TransactionData, TransactionQueue } from '../TransactionQueue';
 
@@ -86,14 +86,14 @@ export function mockIUnsignedProtocolCallGateway<T extends TransactionRequestMod
   return gateway;
 }
 
-export function mockIDelegableProtocolCallGateway<T extends TransactionRequestModel>({
+export function mockIDelegatedCallGateway<T extends TransactionRequestModel>({
   request,
   result,
 }: {
   request: T;
   result: Result<NativeTransaction<T>, BroadcastingError>;
-}): IDelegableProtocolCallGateway<T> {
-  const gateway = mock<IDelegableProtocolCallGateway<T>>();
+}): IDelegatedCallGateway<T> {
+  const gateway = mock<IDelegatedCallGateway<T>>();
 
   when(gateway.createDelegatedTransaction).calledWith(request).mockResolvedValue(result);
 

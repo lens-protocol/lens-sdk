@@ -1,8 +1,8 @@
 import { ProfileId, TransactionKind } from '../../entities';
 import {
-  DelegableProtocolCallUseCase,
-  IDelegableProtocolCallGateway,
-} from '../transactions/DelegableProtocolCallUseCase';
+  DelegableSubsidizedCall,
+  IDelegatedCallGateway,
+} from '../transactions/DelegableSubsidizedCall';
 import { IProtocolCallPresenter } from '../transactions/SubsidizedCall';
 
 export type ProfileAttributeValue = boolean | Date | string | number;
@@ -19,8 +19,8 @@ export type UpdateProfileDetailsRequest = {
   profileId: ProfileId;
 };
 
-export type IProfileDetailsCallGateway = IDelegableProtocolCallGateway<UpdateProfileDetailsRequest>;
+export type IProfileDetailsCallGateway = IDelegatedCallGateway<UpdateProfileDetailsRequest>;
 
 export type IUpdateProfileDetailsPresenter = IProtocolCallPresenter;
 
-export class UpdateProfileDetails extends DelegableProtocolCallUseCase<UpdateProfileDetailsRequest> {}
+export class UpdateProfileDetails extends DelegableSubsidizedCall<UpdateProfileDetailsRequest> {}

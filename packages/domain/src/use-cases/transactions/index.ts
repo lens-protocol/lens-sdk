@@ -1,4 +1,4 @@
-export * from './DelegableProtocolCallUseCase';
+export * from './DelegableSubsidizedCall';
 export * from './IGenericResultPresenter';
 export * from './SubsidizedCall';
 export * from './SignlessProtocolCallUseCase';

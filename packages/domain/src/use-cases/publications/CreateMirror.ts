@@ -1,9 +1,9 @@
 import { ProfileId, PublicationId, TransactionKind } from '../../entities';
 import {
-  DelegableProtocolCallUseCase,
+  DelegableSubsidizedCall,
   IProtocolCallPresenter,
-  IDelegableProtocolCallGateway,
-} from '../transactions/DelegableProtocolCallUseCase';
+  IDelegatedCallGateway,
+} from '../transactions/DelegableSubsidizedCall';
 import { IUnsignedProtocolCallGateway } from '../transactions/SubsidizedCall';
 
 export type CreateMirrorRequest = {
@@ -13,9 +13,9 @@ export type CreateMirrorRequest = {
   delegate: boolean;
 };
 
-export type ICreateMirrorCallGateway = IDelegableProtocolCallGateway<CreateMirrorRequest> &
+export type ICreateMirrorCallGateway = IDelegatedCallGateway<CreateMirrorRequest> &
   IUnsignedProtocolCallGateway<CreateMirrorRequest>;
 
 export type ICreateMirrorPresenter = IProtocolCallPresenter;
 
-export class CreateMirror extends DelegableProtocolCallUseCase<CreateMirrorRequest> {}
+export class CreateMirror extends DelegableSubsidizedCall<CreateMirrorRequest> {}

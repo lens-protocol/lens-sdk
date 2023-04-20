@@ -5,30 +5,30 @@ import { NativeTransaction, TransactionRequestModel } from '../../../entities';
 import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import {
-  DelegableProtocolCallUseCase,
-  IDelegableProtocolCallGateway,
+  DelegableSubsidizedCall,
+  IDelegatedCallGateway,
   IProtocolCallPresenter,
-} from '../DelegableProtocolCallUseCase';
+} from '../DelegableSubsidizedCall';
 import { SubsidizedCall } from '../SubsidizedCall';
 import { TransactionQueue } from '../TransactionQueue';
 import {
-  mockIDelegableProtocolCallGateway,
+  mockIDelegatedCallGateway,
   mockTransactionQueue,
   mockTransactionRequestModelWithDelegateFlag,
 } from '../__helpers__/mocks';
 
-function setupDelegableProtocolCallUseCase<T extends TransactionRequestModel>({
+function setupDelegableSubsidizedCall<T extends TransactionRequestModel>({
   subsidizedCall = mock<SubsidizedCall<T>>(),
-  protocolCallGateway = mock<IDelegableProtocolCallGateway<T>>(),
+  protocolCallGateway = mock<IDelegatedCallGateway<T>>(),
   transactionQueue = mockTransactionQueue<T>(),
   presenter = mock<IProtocolCallPresenter>(),
 }: {
   subsidizedCall?: SubsidizedCall<T>;
-  protocolCallGateway?: IDelegableProtocolCallGateway<T>;
+  protocolCallGateway?: IDelegatedCallGateway<T>;
   transactionQueue?: TransactionQueue<TransactionRequestModel>;
   presenter?: IProtocolCallPresenter;
 }) {
-  return new DelegableProtocolCallUseCase(
+  return new DelegableSubsidizedCall(
     subsidizedCall,
     protocolCallGateway,
     transactionQueue,
@@ -36,18 +36,18 @@ function setupDelegableProtocolCallUseCase<T extends TransactionRequestModel>({
   );
 }
 
-describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> interactor`, () => {
-  describe(`when calling the "${DelegableProtocolCallUseCase.prototype.execute.name}" method`, () => {
+describe(`Given an instance of the ${DelegableSubsidizedCall.name}<T> interactor`, () => {
+  describe(`when calling the "${DelegableSubsidizedCall.prototype.execute.name}" method`, () => {
     describe('with a WithDelegateFlag<TransactionRequestModel> that has the "delegate" flag unset', () => {
       const request = mockTransactionRequestModelWithDelegateFlag({ delegate: false });
 
       it(`should execute the ${SubsidizedCall.name}<T>`, async () => {
         const subsidizedCall = mock<SubsidizedCall<TransactionRequestModel>>();
-        const useCase = setupDelegableProtocolCallUseCase({
+        const call = setupDelegableSubsidizedCall({
           subsidizedCall,
         });
 
-        await useCase.execute(request);
+        await call.execute(request);
 
         expect(subsidizedCall.execute).toHaveBeenCalledWith(request);
       });
@@ -61,7 +61,7 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
           - queue it into the ${TransactionQueue.name}
           - present successful result`, async () => {
         const transaction = MockedNativeTransaction.fromRequest(request);
-        const protocolCallGateway = mockIDelegableProtocolCallGateway({
+        const protocolCallGateway = mockIDelegatedCallGateway({
           request,
           result: success(transaction),
         });
@@ -70,13 +70,13 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
 
         const presenter = mock<IProtocolCallPresenter>();
 
-        const useCase = setupDelegableProtocolCallUseCase({
+        const call = setupDelegableSubsidizedCall({
           protocolCallGateway: protocolCallGateway,
           transactionQueue,
           presenter,
         });
 
-        await useCase.execute(request);
+        await call.execute(request);
 
         expect(protocolCallGateway.createDelegatedTransaction).toHaveBeenCalledWith(request);
         expect(transactionQueue.push).toHaveBeenCalledWith(transaction);
@@ -85,19 +85,19 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
 
       it(`should present any ${BroadcastingError.name} from the IDelegableProtocolCallGateway<T>`, async () => {
         const error = new BroadcastingError('some reason');
-        const protocolCallGateway = mockIDelegableProtocolCallGateway({
+        const protocolCallGateway = mockIDelegatedCallGateway({
           request,
           result: failure(error),
         });
 
         const presenter = mock<IProtocolCallPresenter>();
 
-        const useCase = setupDelegableProtocolCallUseCase({
+        const call = setupDelegableSubsidizedCall({
           protocolCallGateway: protocolCallGateway,
           presenter,
         });
 
-        await useCase.execute(request);
+        await call.execute(request);
 
         expect(presenter.present).toHaveBeenCalledWith(failure(error));
       });
