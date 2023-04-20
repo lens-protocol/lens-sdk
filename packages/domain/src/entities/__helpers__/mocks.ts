@@ -49,6 +49,7 @@ import {
   TransactionKind,
   TransactionRequestModel,
   UnsignedTransaction,
+  ProtocolCallRequestModel,
 } from '../Transactions';
 import { Wallet } from '../Wallet';
 
@@ -84,6 +85,15 @@ export function mockSignature(): Signature {
 export function mockTransactionRequestModel(
   overrides?: Partial<TransactionRequestModel>,
 ): TransactionRequestModel {
+  return {
+    kind: TransactionKind.CREATE_POST,
+    ...overrides,
+  };
+}
+
+export function mockProtocolCallRequestModel(
+  overrides?: Partial<ProtocolCallRequestModel>,
+): ProtocolCallRequestModel {
   return {
     kind: TransactionKind.CREATE_POST,
     ...overrides,

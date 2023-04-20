@@ -1,7 +1,11 @@
 import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { NativeTransaction, TransactionRequestModel } from '../../../entities';
+import {
+  NativeTransaction,
+  ProtocolCallRequestModel,
+  TransactionRequestModel,
+} from '../../../entities';
 import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import {
@@ -14,10 +18,10 @@ import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIDelegatedCallGateway,
   mockTransactionQueue,
-  mockTransactionRequestModelWithDelegateFlag,
+  mockProtocolCallRequestModelWithDelegateFlag,
 } from '../__helpers__/mocks';
 
-function setupDelegableSubsidizedCall<T extends TransactionRequestModel>({
+function setupDelegableSubsidizedCall<T extends ProtocolCallRequestModel>({
   subsidizedCall = mock<SubsidizedCall<T>>(),
   protocolCallGateway = mock<IDelegatedCallGateway<T>>(),
   transactionQueue = mockTransactionQueue<T>(),
@@ -38,11 +42,11 @@ function setupDelegableSubsidizedCall<T extends TransactionRequestModel>({
 
 describe(`Given an instance of the ${DelegableSubsidizedCall.name}<T> interactor`, () => {
   describe(`when calling the "${DelegableSubsidizedCall.prototype.execute.name}" method`, () => {
-    describe('with a WithDelegateFlag<TransactionRequestModel> that has the "delegate" flag unset', () => {
-      const request = mockTransactionRequestModelWithDelegateFlag({ delegate: false });
+    describe('with a WithDelegateFlag<ProtocolCallRequestModel> that has the "delegate" flag unset', () => {
+      const request = mockProtocolCallRequestModelWithDelegateFlag({ delegate: false });
 
       it(`should execute the ${SubsidizedCall.name}<T>`, async () => {
-        const subsidizedCall = mock<SubsidizedCall<TransactionRequestModel>>();
+        const subsidizedCall = mock<SubsidizedCall<ProtocolCallRequestModel>>();
         const call = setupDelegableSubsidizedCall({
           subsidizedCall,
         });
@@ -53,8 +57,8 @@ describe(`Given an instance of the ${DelegableSubsidizedCall.name}<T> interactor
       });
     });
 
-    describe('with a WithDelegateFlag<TransactionRequestModel> that has the "delegate" flag set', () => {
-      const request = mockTransactionRequestModelWithDelegateFlag({ delegate: true });
+    describe('with a WithDelegateFlag<ProtocolCallRequestModel> that has the "delegate" flag set', () => {
+      const request = mockProtocolCallRequestModelWithDelegateFlag({ delegate: true });
 
       it(`should:
           - create a ${NativeTransaction.name}<T>

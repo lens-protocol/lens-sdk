@@ -21,9 +21,31 @@ export enum TransactionKind {
   UPDATE_DISPATCHER_CONFIG = 'UPDATE_DISPATCHER_CONFIG',
 }
 
-export type TransactionRequestModel = {
-  kind: TransactionKind;
+export const ProtocolCallKinds = [
+  TransactionKind.COLLECT_PUBLICATION,
+  TransactionKind.CREATE_COMMENT,
+  TransactionKind.CREATE_POST,
+  TransactionKind.CREATE_PROFILE,
+  TransactionKind.FOLLOW_PROFILES,
+  TransactionKind.MIRROR_PUBLICATION,
+  TransactionKind.UPDATE_PROFILE_IMAGE,
+  TransactionKind.UNFOLLOW_PROFILE,
+  TransactionKind.UPDATE_PROFILE_DETAILS,
+  TransactionKind.UPDATE_FOLLOW_POLICY,
+  TransactionKind.UPDATE_DISPATCHER_CONFIG,
+] as const;
+
+export type ProtocolCallKind = (typeof ProtocolCallKinds)[number];
+
+export type ProtocolCallRequestModel = {
+  kind: ProtocolCallKind;
 };
+
+export type TransactionRequestModel =
+  | ProtocolCallRequestModel
+  | {
+      kind: TransactionKind.APPROVE_MODULE;
+    };
 
 export class UnsignedTransaction<T extends TransactionRequestModel> {
   constructor(readonly id: string, readonly chainType: ChainType, readonly request: T) {}

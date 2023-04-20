@@ -2,15 +2,14 @@ import {
   MetaTransaction,
   NativeTransaction,
   Nonce,
+  ProtocolCallKinds,
   ProxyActionStatus,
   ProxyTransaction,
   TransactionError,
   TransactionEvent,
+  TransactionKind,
 } from '@lens-protocol/domain/entities';
-import {
-  ProtocolCallKinds,
-  SupportedTransactionRequest,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
 
 import {
@@ -281,7 +280,7 @@ export class TransactionFactory
       );
     }
 
-    if (ProtocolCallKinds.includes(init.request.kind)) {
+    if ((ProtocolCallKinds as ReadonlyArray<TransactionKind>).includes(init.request.kind)) {
       return new SerializableNativeTransaction(
         {
           chainType: init.chainType,

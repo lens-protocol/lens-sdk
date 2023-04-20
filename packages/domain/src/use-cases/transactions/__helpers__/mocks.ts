@@ -12,6 +12,7 @@ import {
   ISignedProtocolCall,
   TransactionKind,
   TransactionRequestModel,
+  ProtocolCallRequestModel,
 } from '../../../entities';
 import {
   MockedProxyTransaction,
@@ -29,7 +30,7 @@ import {
 import { SupportedTransactionRequest } from '../SupportedTransactionRequest';
 import { TransactionData, TransactionQueue } from '../TransactionQueue';
 
-export function mockIProtocolCallRelayer<T extends TransactionRequestModel>({
+export function mockIProtocolCallRelayer<T extends ProtocolCallRequestModel>({
   signedCall,
   result,
 }: {
@@ -68,7 +69,7 @@ export function mockIMetaTransactionNonceGateway({
   return gateway;
 }
 
-export function mockIUnsignedProtocolCallGateway<T extends TransactionRequestModel>({
+export function mockIUnsignedProtocolCallGateway<T extends ProtocolCallRequestModel>({
   request,
   nonce,
   unsignedCall,
@@ -86,7 +87,7 @@ export function mockIUnsignedProtocolCallGateway<T extends TransactionRequestMod
   return gateway;
 }
 
-export function mockIDelegatedCallGateway<T extends TransactionRequestModel>({
+export function mockIDelegatedCallGateway<T extends ProtocolCallRequestModel>({
   request,
   result,
 }: {
@@ -101,7 +102,7 @@ export function mockIDelegatedCallGateway<T extends TransactionRequestModel>({
 }
 
 export function mockISignlessSubsidizedCallRelayer<
-  T extends TransactionRequestModel,
+  T extends ProtocolCallRequestModel,
 >(instructions: {
   request: T;
   transaction?: ProxyTransaction<T>;
@@ -118,13 +119,13 @@ export function mockISignlessSubsidizedCallRelayer<
   return signlessProtocolCallRelayer;
 }
 
-export function mockTransactionRequestModelWithDelegateFlag({
+export function mockProtocolCallRequestModelWithDelegateFlag({
   delegate,
 }: {
   delegate: boolean;
-}): WithDelegateFlag<TransactionRequestModel> {
+}): WithDelegateFlag<ProtocolCallRequestModel> {
   return {
     kind: TransactionKind.CREATE_POST,
     delegate,
-  } as WithDelegateFlag<TransactionRequestModel>;
+  } as WithDelegateFlag<ProtocolCallRequestModel>;
 }

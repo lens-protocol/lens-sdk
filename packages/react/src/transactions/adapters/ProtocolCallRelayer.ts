@@ -9,6 +9,7 @@ import {
   IProtocolCallRelayer,
   BroadcastingError,
   SupportedTransactionRequest,
+  ProtocolCallRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   assertError,
@@ -23,7 +24,7 @@ import { SignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
 import { handleRelayError, RelayReceipt } from './relayer';
 
-export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransactionRequest> {
+export class ProtocolCallRelayer implements IProtocolCallRelayer<ProtocolCallRequest> {
   constructor(
     private apolloClient: LensApolloClient,
     private factory: ITransactionFactory<SupportedTransactionRequest>,

@@ -10,6 +10,7 @@ import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
+  ProtocolCallRequestModel,
 } from '../../entities';
 import { ActiveWallet } from '../wallets/ActiveWallet';
 import { BroadcastingError } from './BroadcastingError';
@@ -20,13 +21,13 @@ export interface IMetaTransactionNonceGateway {
   getNextMetaTransactionNonceFor(kind: TransactionKind): Promise<Nonce | undefined>;
 }
 
-export interface IProtocolCallRelayer<T extends TransactionRequestModel> {
+export interface IProtocolCallRelayer<T extends ProtocolCallRequestModel> {
   relayProtocolCall(
     signedCall: ISignedProtocolCall<T>,
   ): PromiseResult<MetaTransaction<T>, BroadcastingError>;
 }
 
-export interface IUnsignedProtocolCallGateway<T extends TransactionRequestModel> {
+export interface IUnsignedProtocolCallGateway<T extends ProtocolCallRequestModel> {
   createUnsignedProtocolCall(request: T, nonceOverride?: Nonce): Promise<IUnsignedProtocolCall<T>>;
 }
 
@@ -35,7 +36,7 @@ export type IProtocolCallPresenter = IGenericResultPresenter<
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
-export class SubsidizedCall<T extends TransactionRequestModel> {
+export class SubsidizedCall<T extends ProtocolCallRequestModel> {
   constructor(
     protected readonly activeWallet: ActiveWallet,
     protected readonly metaTransactionNonceGateway: IMetaTransactionNonceGateway,

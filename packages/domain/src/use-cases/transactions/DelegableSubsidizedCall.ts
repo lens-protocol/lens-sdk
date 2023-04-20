@@ -1,21 +1,25 @@
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
-import { NativeTransaction, TransactionRequestModel } from '../../entities';
+import {
+  NativeTransaction,
+  ProtocolCallRequestModel,
+  TransactionRequestModel,
+} from '../../entities';
 import { BroadcastingError } from './BroadcastingError';
 import { IProtocolCallPresenter, SubsidizedCall } from './SubsidizedCall';
 import { TransactionQueue } from './TransactionQueue';
 
-export type WithDelegateFlag<T extends TransactionRequestModel> = T extends { delegate: boolean }
+export type WithDelegateFlag<T extends ProtocolCallRequestModel> = T extends { delegate: boolean }
   ? T
   : never;
 
-export interface IDelegatedCallGateway<T extends TransactionRequestModel> {
+export interface IDelegatedCallGateway<T extends ProtocolCallRequestModel> {
   createDelegatedTransaction(request: T): PromiseResult<NativeTransaction<T>, BroadcastingError>;
 }
 
 export type { IProtocolCallPresenter };
 
-export class DelegableSubsidizedCall<T extends TransactionRequestModel> {
+export class DelegableSubsidizedCall<T extends ProtocolCallRequestModel> {
   constructor(
     private readonly subsidizedCall: SubsidizedCall<T>,
     private readonly protocolCallGateway: IDelegatedCallGateway<T>,

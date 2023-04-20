@@ -1,4 +1,4 @@
-import { TransactionKind } from '../../entities';
+import { ProtocolCallKind, TransactionRequestModel } from '../../entities';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfiles';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
@@ -26,16 +26,8 @@ export type SupportedTransactionRequest =
   | UpdateProfileDetailsRequest
   | UpdateProfileImageRequest;
 
-export const ProtocolCallKinds = [
-  TransactionKind.COLLECT_PUBLICATION,
-  TransactionKind.CREATE_COMMENT,
-  TransactionKind.CREATE_POST,
-  TransactionKind.CREATE_PROFILE,
-  TransactionKind.FOLLOW_PROFILES,
-  TransactionKind.MIRROR_PUBLICATION,
-  TransactionKind.UPDATE_PROFILE_IMAGE,
-  TransactionKind.UNFOLLOW_PROFILE,
-  TransactionKind.UPDATE_PROFILE_DETAILS,
-  TransactionKind.UPDATE_FOLLOW_POLICY,
-  TransactionKind.UPDATE_DISPATCHER_CONFIG,
-];
+type PickByKind<T extends TransactionRequestModel, K extends T['kind']> = T extends { kind: K }
+  ? T
+  : never;
+
+export type ProtocolCallRequest = PickByKind<SupportedTransactionRequest, ProtocolCallKind>;

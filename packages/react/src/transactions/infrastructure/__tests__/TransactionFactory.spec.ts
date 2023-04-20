@@ -1,6 +1,7 @@
 import {
   MetaTransaction,
   NativeTransaction,
+  ProtocolCallKinds,
   ProxyActionStatus,
   ProxyTransaction,
   TransactionError,
@@ -9,10 +10,7 @@ import {
   TransactionKind,
 } from '@lens-protocol/domain/entities';
 import { mockTransactionHash, mockTransactionRequestModel } from '@lens-protocol/domain/mocks';
-import {
-  ProtocolCallKinds,
-  SupportedTransactionRequest,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 

@@ -1,10 +1,10 @@
 import { success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { ProxyTransaction, TransactionRequestModel } from '../../../entities';
+import { ProtocolCallRequestModel, ProxyTransaction } from '../../../entities';
 import {
   MockedProxyTransaction,
-  mockTransactionRequestModel,
+  mockProtocolCallRequestModel,
 } from '../../../entities/__helpers__/mocks';
 import {
   ISignlessSubsidizedCallPresenter,
@@ -14,7 +14,7 @@ import {
 import { TransactionQueue } from '../TransactionQueue';
 import { mockISignlessSubsidizedCallRelayer, mockTransactionQueue } from '../__helpers__/mocks';
 
-function setupTestScenario<T extends TransactionRequestModel>({
+function setupTestScenario<T extends ProtocolCallRequestModel>({
   relayer,
   transactionQueue = mockTransactionQueue(),
   presenter = mock<ISignlessSubsidizedCallPresenter>(),
@@ -34,7 +34,7 @@ describe(`Given an instance of ${SignlessSubsidizedCall.name}<T>`, () => {
         - use the ISignlessSubsidizedCallRelayer to generate a ${ProxyTransaction.name}
         - push the ${ProxyTransaction.name} into the ${TransactionQueue.name}
         - call the presenter with success()`, async () => {
-      const request = mockTransactionRequestModel();
+      const request = mockProtocolCallRequestModel();
       const transaction = MockedProxyTransaction.fromRequest(request);
       const relayer = mockISignlessSubsidizedCallRelayer({
         request,

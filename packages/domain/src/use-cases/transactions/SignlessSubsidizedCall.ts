@@ -1,16 +1,20 @@
 import { success } from '@lens-protocol/shared-kernel';
 
-import { ProxyTransaction, TransactionRequestModel } from '../../entities';
+import {
+  ProtocolCallRequestModel,
+  ProxyTransaction,
+  TransactionRequestModel,
+} from '../../entities';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
-export interface ISignlessSubsidizedCallRelayer<T extends TransactionRequestModel> {
+export interface ISignlessSubsidizedCallRelayer<T extends ProtocolCallRequestModel> {
   createProxyTransaction(request: T): Promise<ProxyTransaction<T>>;
 }
 
 export type ISignlessSubsidizedCallPresenter = IGenericResultPresenter<void, Error>;
 
-export class SignlessSubsidizedCall<T extends TransactionRequestModel> {
+export class SignlessSubsidizedCall<T extends ProtocolCallRequestModel> {
   constructor(
     protected readonly relayer: ISignlessSubsidizedCallRelayer<T>,
     protected readonly transactionQueue: TransactionQueue<TransactionRequestModel>,
