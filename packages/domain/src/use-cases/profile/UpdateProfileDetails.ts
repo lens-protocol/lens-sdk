@@ -3,7 +3,7 @@ import {
   DelegableProtocolCallUseCase,
   IDelegableProtocolCallGateway,
 } from '../transactions/DelegableProtocolCallUseCase';
-import { IProtocolCallPresenter } from '../transactions/ProtocolCallUseCase';
+import { IProtocolCallPresenter } from '../transactions/SubsidizedCall';
 
 export type ProfileAttributeValue = boolean | Date | string | number;
 

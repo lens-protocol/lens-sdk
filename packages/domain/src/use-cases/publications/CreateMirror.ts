@@ -4,7 +4,7 @@ import {
   IProtocolCallPresenter,
   IDelegableProtocolCallGateway,
 } from '../transactions/DelegableProtocolCallUseCase';
-import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
+import { IUnsignedProtocolCallGateway } from '../transactions/SubsidizedCall';
 
 export type CreateMirrorRequest = {
   profileId: ProfileId;

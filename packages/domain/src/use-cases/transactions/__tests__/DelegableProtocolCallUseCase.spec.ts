@@ -9,7 +9,7 @@ import {
   IDelegableProtocolCallGateway,
   IProtocolCallPresenter,
 } from '../DelegableProtocolCallUseCase';
-import { ProtocolCallUseCase } from '../ProtocolCallUseCase';
+import { SubsidizedCall } from '../SubsidizedCall';
 import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIDelegableProtocolCallGateway,
@@ -18,18 +18,18 @@ import {
 } from '../__helpers__/mocks';
 
 function setupDelegableProtocolCallUseCase<T extends TransactionRequestModel>({
-  protocolCallUseCase = mock<ProtocolCallUseCase<T>>(),
+  subsidizedCall = mock<SubsidizedCall<T>>(),
   protocolCallGateway = mock<IDelegableProtocolCallGateway<T>>(),
   transactionQueue = mockTransactionQueue<T>(),
   presenter = mock<IProtocolCallPresenter>(),
 }: {
-  protocolCallUseCase?: ProtocolCallUseCase<T>;
+  subsidizedCall?: SubsidizedCall<T>;
   protocolCallGateway?: IDelegableProtocolCallGateway<T>;
   transactionQueue?: TransactionQueue<TransactionRequestModel>;
   presenter?: IProtocolCallPresenter;
 }) {
   return new DelegableProtocolCallUseCase(
-    protocolCallUseCase,
+    subsidizedCall,
     protocolCallGateway,
     transactionQueue,
     presenter,
@@ -41,15 +41,15 @@ describe(`Given an instance of the ${DelegableProtocolCallUseCase.name}<T> inter
     describe('with a WithDelegateFlag<TransactionRequestModel> that has the "delegate" flag unset', () => {
       const request = mockTransactionRequestModelWithDelegateFlag({ delegate: false });
 
-      it(`should execute the ${ProtocolCallUseCase.name}<T>`, async () => {
-        const protocolCallUseCase = mock<ProtocolCallUseCase<TransactionRequestModel>>();
+      it(`should execute the ${SubsidizedCall.name}<T>`, async () => {
+        const subsidizedCall = mock<SubsidizedCall<TransactionRequestModel>>();
         const useCase = setupDelegableProtocolCallUseCase({
-          protocolCallUseCase,
+          subsidizedCall,
         });
 
         await useCase.execute(request);
 
-        expect(protocolCallUseCase.execute).toHaveBeenCalledWith(request);
+        expect(subsidizedCall.execute).toHaveBeenCalledWith(request);
       });
     });
 

@@ -2,8 +2,8 @@
 import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { ProtocolCallUseCase } from '../../transactions/ProtocolCallUseCase';
 import { SignlessProtocolCallUseCase } from '../../transactions/SignlessProtocolCallUseCase';
+import { SubsidizedCall } from '../../transactions/SubsidizedCall';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -23,7 +23,7 @@ import {
 } from '../__helpers__/mocks';
 
 function mockProtocolCallUseCase<T extends FollowRequest>() {
-  return mock<ProtocolCallUseCase<T>>();
+  return mock<SubsidizedCall<T>>();
 }
 
 function mockSignlessProtocolCallUseCase<T extends UnconstrainedFollowRequest>() {
@@ -38,7 +38,7 @@ function setupFollowProfiles({
 }: {
   tokenAvailability?: TokenAvailability;
   presenter?: IFollowProfilePresenter;
-  signedProtocolCall?: ProtocolCallUseCase<FollowRequest>;
+  signedProtocolCall?: SubsidizedCall<FollowRequest>;
   signlessProtocolCall?: SignlessProtocolCallUseCase<UnconstrainedFollowRequest>;
 }) {
   return new FollowProfiles(tokenAvailability, signedProtocolCall, signlessProtocolCall, presenter);
@@ -68,7 +68,7 @@ describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
     describe('with a ProfileOwnerFollowRequest', () => {
       const request = mockProfileOwnerFollowRequest();
 
-      it(`should execute the ${ProtocolCallUseCase.name}<T> strategy`, async () => {
+      it(`should execute the ${SubsidizedCall.name}<T> strategy`, async () => {
         const signedProtocolCall = mockProtocolCallUseCase<FollowRequest>();
         const signlessProtocolCall = mockSignlessProtocolCallUseCase<UnconstrainedFollowRequest>();
 
@@ -87,7 +87,7 @@ describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
     describe('with a PaidFollowRequest', () => {
       const request = mockPaidFollowRequest();
 
-      it(`should execute the ${ProtocolCallUseCase.name}<T> strategy`, async () => {
+      it(`should execute the ${SubsidizedCall.name}<T> strategy`, async () => {
         const tokenAvailability = mockTokeAvailability({
           request: {
             amount: request.fee.amount,

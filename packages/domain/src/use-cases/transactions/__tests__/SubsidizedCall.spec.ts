@@ -22,12 +22,12 @@ import {
 import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import {
-  ProtocolCallUseCase,
+  SubsidizedCall,
   IProtocolCallPresenter,
   IMetaTransactionNonceGateway,
   IUnsignedProtocolCallGateway,
   IProtocolCallRelayer,
-} from '../ProtocolCallUseCase';
+} from '../SubsidizedCall';
 import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIMetaTransactionNonceGateway,
@@ -52,7 +52,7 @@ function setupMetaTransactionUseCase<T extends TransactionRequestModel>({
   wallet: Wallet;
 }) {
   const activeWallet = mockActiveWallet({ wallet });
-  return new ProtocolCallUseCase(
+  return new SubsidizedCall(
     activeWallet,
     metaTransactionNonceGateway,
     unsignedProtocolCallGateway,
@@ -62,8 +62,8 @@ function setupMetaTransactionUseCase<T extends TransactionRequestModel>({
   );
 }
 
-describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, () => {
-  describe(`when calling the "${ProtocolCallUseCase.prototype.execute.name}" method`, () => {
+describe(`Given an instance of the ${SubsidizedCall.name}<T> interactor`, () => {
+  describe(`when calling the "${SubsidizedCall.prototype.execute.name}" method`, () => {
     const request = mockTransactionRequestModel();
     const unsignedCall = mockIUnsignedProtocolCall(request);
 

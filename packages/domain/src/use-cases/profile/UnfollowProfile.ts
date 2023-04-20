@@ -2,8 +2,8 @@ import { ProfileId, TransactionKind } from '../../entities';
 import {
   IProtocolCallPresenter,
   IUnsignedProtocolCallGateway,
-  ProtocolCallUseCase,
-} from '../transactions/ProtocolCallUseCase';
+  SubsidizedCall,
+} from '../transactions/SubsidizedCall';
 
 export type UnfollowRequest = {
   profileId: ProfileId;
@@ -14,4 +14,4 @@ export type IUnfollowProfileCallGateway = IUnsignedProtocolCallGateway<UnfollowR
 
 export type IUnfollowProfilePresenter = IProtocolCallPresenter;
 
-export class UnfollowProfile extends ProtocolCallUseCase<UnfollowRequest> {}
+export class UnfollowProfile extends SubsidizedCall<UnfollowRequest> {}

@@ -4,8 +4,8 @@ import { ProfileId, TransactionKind } from '../../entities';
 import {
   IProtocolCallPresenter,
   IUnsignedProtocolCallGateway,
-  ProtocolCallUseCase,
-} from '../transactions/ProtocolCallUseCase';
+  SubsidizedCall,
+} from '../transactions/SubsidizedCall';
 
 export enum FollowPolicyType {
   ONLY_PROFILE_OWNERS = 'ONLY_PROFILE_OWNERS',
@@ -35,4 +35,4 @@ export type IFollowPolicyCallGateway = IUnsignedProtocolCallGateway<UpdateFollow
 
 export type IUpdateFollowPolicyPresenter = IProtocolCallPresenter;
 
-export class UpdateFollowPolicy extends ProtocolCallUseCase<UpdateFollowPolicyRequest> {}
+export class UpdateFollowPolicy extends SubsidizedCall<UpdateFollowPolicyRequest> {}

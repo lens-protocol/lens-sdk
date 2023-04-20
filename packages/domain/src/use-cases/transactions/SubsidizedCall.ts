@@ -35,7 +35,7 @@ export type IProtocolCallPresenter = IGenericResultPresenter<
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
-export class ProtocolCallUseCase<T extends TransactionRequestModel> {
+export class SubsidizedCall<T extends TransactionRequestModel> {
   constructor(
     protected readonly activeWallet: ActiveWallet,
     protected readonly metaTransactionNonceGateway: IMetaTransactionNonceGateway,

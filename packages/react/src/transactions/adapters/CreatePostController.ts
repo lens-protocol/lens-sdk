@@ -9,7 +9,7 @@ import {
   BroadcastingError,
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
-  ProtocolCallUseCase,
+  SubsidizedCall,
   SupportedTransactionRequest,
   TransactionQueue,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -49,7 +49,7 @@ export class CreatePostController<T extends CreatePostRequest> {
   }: CreatePostControllerArgs<T>) {
     const gateway = new CreatePostCallGateway(apolloClient, transactionFactory, uploader);
 
-    const signedCreatePost = new ProtocolCallUseCase<CreatePostRequest>(
+    const signedCreatePost = new SubsidizedCall<CreatePostRequest>(
       activeWallet,
       transactionGateway,
       gateway,

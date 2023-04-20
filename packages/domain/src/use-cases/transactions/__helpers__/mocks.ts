@@ -24,7 +24,7 @@ import {
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
   IUnsignedProtocolCallGateway,
-} from '../ProtocolCallUseCase';
+} from '../SubsidizedCall';
 import { ISignlessProtocolCallRelayer } from '../SignlessProtocolCallUseCase';
 import { SupportedTransactionRequest } from '../SupportedTransactionRequest';
 import { TransactionData, TransactionQueue } from '../TransactionQueue';

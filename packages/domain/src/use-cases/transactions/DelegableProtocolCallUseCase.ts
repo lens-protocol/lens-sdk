@@ -2,7 +2,7 @@ import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { NativeTransaction, TransactionRequestModel } from '../../entities';
 import { BroadcastingError } from './BroadcastingError';
-import { IProtocolCallPresenter, ProtocolCallUseCase } from './ProtocolCallUseCase';
+import { IProtocolCallPresenter, SubsidizedCall } from './SubsidizedCall';
 import { TransactionQueue } from './TransactionQueue';
 
 export type WithDelegateFlag<T extends TransactionRequestModel> = T extends { delegate: boolean }
@@ -17,7 +17,7 @@ export type { IProtocolCallPresenter };
 
 export class DelegableProtocolCallUseCase<T extends TransactionRequestModel> {
   constructor(
-    private readonly protocolCallUseCase: ProtocolCallUseCase<T>,
+    private readonly subsidizedCall: SubsidizedCall<T>,
     private readonly protocolCallGateway: IDelegableProtocolCallGateway<T>,
     private readonly transactionQueue: TransactionQueue<TransactionRequestModel>,
     private readonly presenter: IProtocolCallPresenter,
@@ -38,6 +38,6 @@ export class DelegableProtocolCallUseCase<T extends TransactionRequestModel> {
       this.presenter.present(success());
       return;
     }
-    return this.protocolCallUseCase.execute(request);
+    return this.subsidizedCall.execute(request);
   }
 }

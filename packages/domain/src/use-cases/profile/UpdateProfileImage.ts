@@ -6,7 +6,7 @@ import {
 import {
   IUnsignedProtocolCallGateway,
   IProtocolCallPresenter,
-} from '../transactions/ProtocolCallUseCase';
+} from '../transactions/SubsidizedCall';
 import { NftOwnershipSignature } from './ProveNftOwnership';
 
 /**

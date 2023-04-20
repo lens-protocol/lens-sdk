@@ -1,8 +1,8 @@
 import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { ProtocolCallUseCase } from '../../transactions/ProtocolCallUseCase';
 import { SignlessProtocolCallUseCase } from '../../transactions/SignlessProtocolCallUseCase';
+import { SubsidizedCall } from '../../transactions/SubsidizedCall';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -18,7 +18,7 @@ import {
 import { mockFreeCollectRequest, mockPaidCollectRequest } from '../__helpers__/mocks';
 
 function mockProtocolCallUseCase<T extends CollectRequest>() {
-  return mock<ProtocolCallUseCase<T>>();
+  return mock<SubsidizedCall<T>>();
 }
 
 function mockSignlessProtocolCallUseCase<T extends FreeCollectRequest>() {
@@ -33,7 +33,7 @@ function setupCollectPublication({
 }: {
   presenter: ICollectPublicationPresenter;
   tokenAvailability: TokenAvailability;
-  signedProtocolCall?: ProtocolCallUseCase<CollectRequest>;
+  signedProtocolCall?: SubsidizedCall<CollectRequest>;
   signlessProtocolCall?: SignlessProtocolCallUseCase<FreeCollectRequest>;
 }) {
   return new CollectPublication(
@@ -69,7 +69,7 @@ describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
     });
 
     describe('with a FreeCollectRequest and followerOnly', () => {
-      it(`should execute the ${ProtocolCallUseCase.name}<CollectRequest> strategy`, async () => {
+      it(`should execute the ${SubsidizedCall.name}<CollectRequest> strategy`, async () => {
         const request = mockFreeCollectRequest({
           followerOnly: true,
         });
@@ -93,7 +93,7 @@ describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
     describe('with an associated collect fee', () => {
       const request = mockPaidCollectRequest();
 
-      it(`should execute the ${ProtocolCallUseCase.name}<CollectRequest> strategy`, async () => {
+      it(`should execute the ${SubsidizedCall.name}<CollectRequest> strategy`, async () => {
         const request = mockPaidCollectRequest();
         const signedProtocolCall = mockProtocolCallUseCase<CollectRequest>();
         const signlessProtocolCall = mockSignlessProtocolCallUseCase<FreeCollectRequest>();

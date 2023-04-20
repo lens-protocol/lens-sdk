@@ -10,7 +10,7 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
-  ProtocolCallUseCase,
+  SubsidizedCall,
   SignlessProtocolCallUseCase,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -48,7 +48,7 @@ export function useFollowController() {
 
     const followProfilesCallGateway = new FollowProfilesCallGateway(apolloClient);
 
-    const signedFollow = new ProtocolCallUseCase<FollowRequest>(
+    const signedFollow = new SubsidizedCall<FollowRequest>(
       activeWallet,
       transactionGateway,
       followProfilesCallGateway,

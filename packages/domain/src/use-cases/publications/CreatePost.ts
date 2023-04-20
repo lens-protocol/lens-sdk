@@ -6,7 +6,7 @@ import {
   IDelegableProtocolCallGateway,
   IProtocolCallPresenter,
 } from '../transactions/DelegableProtocolCallUseCase';
-import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
+import { IUnsignedProtocolCallGateway } from '../transactions/SubsidizedCall';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 import { CollectPolicyConfig, ContentFocus, Locale, MediaObject } from './types';
 

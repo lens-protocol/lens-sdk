@@ -10,7 +10,7 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
-  ProtocolCallUseCase,
+  SubsidizedCall,
   SignlessProtocolCallUseCase,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -48,7 +48,7 @@ export function useCollectController() {
       | WalletConnectionError
     >();
 
-    const signedFlow = new ProtocolCallUseCase<CollectRequest>(
+    const signedFlow = new SubsidizedCall<CollectRequest>(
       activeWallet,
       transactionGateway,
       collectPublicationCallGateway,
