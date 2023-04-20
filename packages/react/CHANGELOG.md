@@ -1,5 +1,30 @@
 # @lens-protocol/react
 
+## 2.0.0-next.0
+
+### Minor Changes
+
+- 513373d3: Enhanced publication's hasCollectedByMe to replace deprecated hasOptimisticCollectedByMe property
+- c416a2ea: **Added:** self-fund protocol calls when subsidized approaches fails
+  **Fixed:** ensures correct chain when signing typed data
+  **Fixed:** network switch in wagmi bindings
+- cf4a4201: Added support for cover and altTag in publication media attributes
+
+### Patch Changes
+
+- 72becec0: **Fixed** documentation for `useuseActiveProfileSwitch` and `useProfilesOwnedByMe` hooks
+- 04647bbe: **Fixed** issue preventing query hook from detecting active profile changes
+- c4e6fcfc: **Fixes** `CollectType`, `NftAttributeDisplayType`, `ReferencePolicyType` not exported as values
+- Updated dependencies [513373d3]
+- Updated dependencies [04647bbe]
+- Updated dependencies [c416a2ea]
+  - @lens-protocol/api-bindings@0.8.0-next.0
+  - @lens-protocol/blockchain-bindings@0.8.0-next.0
+  - @lens-protocol/shared-kernel@0.8.0-next.0
+  - @lens-protocol/domain@0.8.0-next.0
+  - @lens-protocol/gated-content@0.2.2-next.0
+  - @lens-protocol/storage@0.7.2-next.0
+
 ## 1.0.1
 
 ### Patch Changes
