@@ -110,7 +110,7 @@ export function mockISignlessSubsidizedCallRelayer<
 
   if (instructions) {
     const { request, transaction = MockedProxyTransaction.fromRequest(request) } = instructions;
-    when(signlessProtocolCallRelayer.relaySignlessProtocolCall)
+    when(signlessProtocolCallRelayer.createProxyTransaction)
       .calledWith(request)
       .mockResolvedValue(transaction);
   }

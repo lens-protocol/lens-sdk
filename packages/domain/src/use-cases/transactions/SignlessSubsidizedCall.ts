@@ -5,7 +5,7 @@ import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
 export interface ISignlessSubsidizedCallRelayer<T extends TransactionRequestModel> {
-  relaySignlessProtocolCall(request: T): Promise<ProxyTransaction<T>>;
+  createProxyTransaction(request: T): Promise<ProxyTransaction<T>>;
 }
 
 export type ISignlessSubsidizedCallPresenter = IGenericResultPresenter<void, Error>;
@@ -18,7 +18,7 @@ export class SignlessSubsidizedCall<T extends TransactionRequestModel> {
   ) {}
 
   async execute(request: T) {
-    const transaction = await this.relayer.relaySignlessProtocolCall(request);
+    const transaction = await this.relayer.createProxyTransaction(request);
 
     await this.transactionQueue.push(transaction);
 

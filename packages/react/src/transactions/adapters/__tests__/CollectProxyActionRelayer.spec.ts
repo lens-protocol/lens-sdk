@@ -67,7 +67,7 @@ describe(`Given an instance of the ${CollectProxyActionRelayer.name}`, () => {
       const factory = mockITransactionFactory(mockTransactionObserver);
       const transactionRelayer = setupCollectProxyActionRelayer({ apollo, factory });
 
-      const transaction = await transactionRelayer.relaySignlessProtocolCall(request);
+      const transaction = await transactionRelayer.createProxyTransaction(request);
 
       await transaction.waitNextEvent();
 

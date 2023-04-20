@@ -25,7 +25,7 @@ export class FollowProxyActionRelayer<T extends UnconstrainedFollowRequest>
     private logger: ILogger,
   ) {}
 
-  async relaySignlessProtocolCall(request: T): Promise<ProxyTransaction<T>> {
+  async createProxyTransaction(request: T): Promise<ProxyTransaction<T>> {
     const proxyReceipt = await this.proxy(request);
 
     return this.factory.createProxyTransaction({

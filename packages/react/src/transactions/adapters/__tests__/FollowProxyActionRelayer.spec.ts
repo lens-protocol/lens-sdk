@@ -66,7 +66,7 @@ describe(`Given an instance of the ${FollowProxyActionRelayer.name}`, () => {
       const factory = mockITransactionFactory(mockTransactionObserver);
       const transactionRelayer = mockFollowProxyActionRelayer({ apollo, factory });
 
-      const transaction = await transactionRelayer.relaySignlessProtocolCall(request);
+      const transaction = await transactionRelayer.createProxyTransaction(request);
 
       await transaction.waitNextEvent();
 

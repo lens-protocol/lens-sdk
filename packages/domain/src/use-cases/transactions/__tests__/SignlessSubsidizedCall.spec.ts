@@ -47,7 +47,7 @@ describe(`Given an instance of ${SignlessSubsidizedCall.name}<T>`, () => {
 
       await useCase.execute(request);
 
-      expect(relayer.relaySignlessProtocolCall).toHaveBeenCalledWith(request);
+      expect(relayer.createProxyTransaction).toHaveBeenCalledWith(request);
       expect(transactionQueue.push).toHaveBeenCalledWith(transaction);
       expect(presenter.present).toHaveBeenCalledWith(success());
     });
