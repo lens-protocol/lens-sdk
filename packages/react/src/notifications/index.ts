@@ -8,5 +8,5 @@ export type {
   NewMentionNotification,
   NewMirrorNotification,
   NewReactionNotification,
-  NotificationTypes,
 } from '@lens-protocol/api-bindings';
+export { NotificationTypes } from '@lens-protocol/api-bindings';
