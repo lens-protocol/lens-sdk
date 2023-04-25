@@ -62,5 +62,3 @@ export function createPublicationMetadataFilters(
     }),
   };
 }
-
-export type { PublicationMainFocus, PublicationContentWarning };

@@ -12,6 +12,12 @@ export enum ContentFocus {
   ARTICLE = 'Article',
 }
 
+export enum ContentWarning {
+  NSFW = 'Nsfw',
+  SENSITIVE = 'Sensitive',
+  SPOILER = 'Spoiler',
+}
+
 export enum NftAttributeDisplayType {
   Number = 'Number',
   String = 'String',

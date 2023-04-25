@@ -406,11 +406,13 @@ export const FragmentMetadataOutput = /*#__PURE__*/ gql`
   fragment MetadataOutput on MetadataOutput {
     __typename
     animatedUrl
-    name
-    description
-    mainContentFocus
     content
+    contentWarning
+    description
     image
+    locale
+    mainContentFocus
+    name
     media {
       ...MediaSet
     }
@@ -420,6 +422,7 @@ export const FragmentMetadataOutput = /*#__PURE__*/ gql`
     encryptionParams {
       ...EncryptionParamsOutput
     }
+    tags
   }
   ${FragmentMediaSet}
   ${FragmentMetadataAttributeOutput}

@@ -24,7 +24,7 @@ config:
     FollowModuleData: string
     Handle: string
     HandleClaimIdScalar: string
-    IfpsCid: string
+    IpfsCid: string
     InternalPublicationId: string
     Jwt: string
     LimitScalar: number
