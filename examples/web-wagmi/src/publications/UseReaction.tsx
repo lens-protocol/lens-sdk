@@ -79,7 +79,7 @@ function ReactionInner({ profile }: ReactionInnerProps) {
       <PublicationCard publication={publication} />
 
       <div>Total Upvotes: {publication.stats.totalUpvotes}</div>
-      <div>Total Upvotes: {publication.stats.totalDownvotes}</div>
+      <div>Total Downvotes: {publication.stats.totalDownvotes}</div>
 
       <div>
         <ReactionButton

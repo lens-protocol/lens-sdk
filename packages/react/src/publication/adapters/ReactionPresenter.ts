@@ -5,18 +5,19 @@ import {
 } from '@lens-protocol/api-bindings';
 import { ReactionType } from '@lens-protocol/domain/entities';
 import { ReactionRequest, IReactionPresenter } from '@lens-protocol/domain/use-cases/publications';
-import { invariant, never } from '@lens-protocol/shared-kernel';
+import { assertNever, invariant } from '@lens-protocol/shared-kernel';
 
 import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
 
 const getReactionStatKey = (reactionType: ReactionType) => {
-  if (reactionType === ReactionType.UPVOTE) {
-    return 'totalUpvotes' as const;
-  } else if (reactionType === ReactionType.DOWNVOTE) {
-    return 'totalDownvotes' as const;
+  switch (reactionType) {
+    case ReactionType.UPVOTE:
+      return 'totalUpvotes' as const;
+    case ReactionType.DOWNVOTE:
+      return 'totalDownvotes' as const;
+    default:
+      assertNever(reactionType, 'Invalid reaction type');
   }
-
-  never('Unknown reaction type');
 };
 
 export class ReactionPresenter implements IReactionPresenter {

@@ -183,6 +183,7 @@ export function createContentPublicationTypePolicy() {
       reaction: noCachedField(),
       canComment: noCachedField(),
       canMirror: noCachedField(),
+      canDecrypt: noCachedField(),
       hasCollectedByMe,
       isMirroredByMe,
       collectedBy,
