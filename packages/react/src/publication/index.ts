@@ -117,7 +117,6 @@ export type {
   RevenueAggregate,
   WhoReactedResult,
 } from '@lens-protocol/api-bindings';
-export { PublicationMainFocus, ReactionTypes } from '@lens-protocol/api-bindings';
 
 /**
  * Gated publication specific fragments
@@ -130,6 +129,7 @@ export type {
   ContractType,
   EncryptedFieldsOutput,
   EncryptedMedia,
+  EncryptionParamsOutput,
   EncryptionProvider,
   EoaOwnershipOutput,
   Erc20OwnershipOutput,
@@ -141,7 +141,6 @@ export type {
   RootConditionOutput,
   ScalarOperator,
 } from '@lens-protocol/api-bindings';
-export type { EncryptionParamsOutput } from '@lens-protocol/api-bindings';
 
 /**
  * Helpers
@@ -154,7 +153,11 @@ export {
   isMirrorPublication,
   isPostPublication,
   isPublicationOwnedByMe,
+  PublicationContentWarning,
+  PublicationMainFocus,
   PublicationSortCriteria,
   PublicationTypes,
+  ReactionTypes,
 } from '@lens-protocol/api-bindings';
-export type { PublicationMetadataFilters, PublicationContentWarning } from './filters';
+
+export type { PublicationMetadataFilters } from './filters';
