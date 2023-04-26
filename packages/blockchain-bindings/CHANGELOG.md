@@ -1,5 +1,20 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.8.0-next.0
+
+### Minor Changes
+
+- c416a2ea:
+  - **Added:** self-fund protocol calls when subsidized approaches fails
+  - **Fixed:** ensures correct chain when signing typed data
+  - **Fixed:** network switch in wagmi bindings
+
+### Patch Changes
+
+- Updated dependencies [c416a2ea]
+  - @lens-protocol/shared-kernel@0.8.0-next.0
+  - @lens-protocol/domain@0.8.0-next.0
+
 ## 0.7.1
 
 ### Patch Changes
