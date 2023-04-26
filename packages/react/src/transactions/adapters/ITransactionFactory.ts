@@ -5,6 +5,7 @@ import {
   Nonce,
   ProxyTransaction,
   ProxyActionStatus,
+  ProtocolCallOf,
 } from '@lens-protocol/domain/entities';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
@@ -35,11 +36,15 @@ export type ProxyTransactionData<T extends TransactionRequestModel> = {
 };
 
 export interface ITransactionFactory<Supported extends TransactionRequestModel> {
-  createMetaTransaction<T extends Supported>(init: MetaTransactionData<T>): MetaTransaction<T>;
+  createMetaTransaction<T extends ProtocolCallOf<Supported>>(
+    init: MetaTransactionData<T>,
+  ): MetaTransaction<T>;
 
   createNativeTransaction<T extends Supported>(
     init: NativeTransactionData<T>,
   ): NativeTransaction<T>;
 
-  createProxyTransaction<T extends Supported>(init: ProxyTransactionData<T>): ProxyTransaction<T>;
+  createProxyTransaction<T extends ProtocolCallOf<Supported>>(
+    init: ProxyTransactionData<T>,
+  ): ProxyTransaction<T>;
 }

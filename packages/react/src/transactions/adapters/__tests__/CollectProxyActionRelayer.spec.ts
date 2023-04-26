@@ -5,7 +5,7 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { ProxyActionStatus, ProxyTransaction } from '@lens-protocol/domain/entities';
 import { mockFreeCollectRequest } from '@lens-protocol/domain/mocks';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { FreeCollectRequest } from '@lens-protocol/domain/use-cases/publications';
 import { ChainType, ILogger, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
@@ -38,7 +38,7 @@ function setupCollectProxyActionRelayer({
   factory,
 }: {
   apollo: LensApolloClient;
-  factory: ITransactionFactory<SupportedTransactionRequest>;
+  factory: ITransactionFactory<FreeCollectRequest>;
 }) {
   return new CollectProxyActionRelayer(apollo, factory, mock<ILogger>());
 }

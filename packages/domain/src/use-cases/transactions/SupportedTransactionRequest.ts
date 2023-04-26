@@ -1,4 +1,4 @@
-import { ProtocolCallKind, TransactionRequestModel } from '../../entities';
+import { ProtocolCallOf } from '../../entities';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfiles';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
@@ -26,8 +26,4 @@ export type SupportedTransactionRequest =
   | UpdateProfileDetailsRequest
   | UpdateProfileImageRequest;
 
-type PickByKind<T extends TransactionRequestModel, K extends T['kind']> = T extends { kind: K }
-  ? T
-  : never;
-
-export type ProtocolCallRequest = PickByKind<SupportedTransactionRequest, ProtocolCallKind>;
+export type ProtocolCallRequest = ProtocolCallOf<SupportedTransactionRequest>;

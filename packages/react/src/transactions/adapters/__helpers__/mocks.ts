@@ -1,6 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { omitTypename } from '@lens-protocol/api-bindings';
-import { ProxyActionStatus, TransactionRequestModel } from '@lens-protocol/domain/entities';
+import {
+  ProtocolCallRequestModel,
+  ProxyActionStatus,
+  TransactionRequestModel,
+} from '@lens-protocol/domain/entities';
 import {
   mockNonce,
   mockTransactionHash,
@@ -56,7 +60,7 @@ export function mockTypedData(): TypedData {
   };
 }
 
-export function mockMetaTransactionData<T extends TransactionRequestModel>({
+export function mockMetaTransactionData<T extends ProtocolCallRequestModel>({
   request = mockTransactionRequestModel() as T,
   ...others
 }: Partial<MetaTransactionData<T>> = {}): MetaTransactionData<T> {
@@ -123,7 +127,7 @@ export function mockIMetadataUploader(urlOrError: Url | Error): IMetadataUploade
   return uploader;
 }
 
-export function assertUnsignedProtocolCallCorrectness<T extends TransactionRequestModel>(
+export function assertUnsignedProtocolCallCorrectness<T extends ProtocolCallRequestModel>(
   unsignedProtocolCall: UnsignedProtocolCall<T>,
   broadcastResult: {
     id: string;

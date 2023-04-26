@@ -15,10 +15,7 @@ import {
   CreatePostRequest,
   ICreatePostCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
-import {
-  BroadcastingError,
-  SupportedTransactionRequest,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
@@ -32,7 +29,7 @@ import { resolveCollectModule, resolveReferenceModule } from './utils';
 export class CreatePostCallGateway implements ICreatePostCallGateway {
   constructor(
     private readonly apolloClient: LensApolloClient,
-    private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
+    private readonly transactionFactory: ITransactionFactory<CreatePostRequest>,
     private readonly metadataUploader: IMetadataUploader<CreatePostRequest>,
   ) {}
 

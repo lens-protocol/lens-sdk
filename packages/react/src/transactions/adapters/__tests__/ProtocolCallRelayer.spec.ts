@@ -5,14 +5,10 @@ import {
   mockRelayerResultFragment,
   mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
-import {
-  ISignedProtocolCall,
-  MetaTransaction,
-  TransactionRequestModel,
-} from '@lens-protocol/domain/entities';
+import { ISignedProtocolCall, MetaTransaction } from '@lens-protocol/domain/entities';
 import {
   BroadcastingError,
-  SupportedTransactionRequest,
+  ProtocolCallRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { assertFailure, ChainType, ILogger } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
@@ -27,7 +23,7 @@ function setupProtocolCallRelayer({
   signedCall,
 }: {
   relayResult: RelayResult;
-  signedCall: ISignedProtocolCall<TransactionRequestModel>;
+  signedCall: ISignedProtocolCall<ProtocolCallRequest>;
 }) {
   const factory = mockITransactionFactory();
   const apollo = createMockApolloClientWithMultipleResponses([
@@ -45,7 +41,7 @@ function setupProtocolCallRelayer({
 }
 
 describe(`Given an instance of the ${ProtocolCallRelayer.name}`, () => {
-  const signedCall = mockSignedProtocolCall<SupportedTransactionRequest>();
+  const signedCall = mockSignedProtocolCall<ProtocolCallRequest>();
 
   describe(`when relaying an ISignedProtocolCall succeeds`, () => {
     it(`should resolve with a success(${MetaTransaction.name}) on Polygon`, async () => {

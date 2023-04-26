@@ -23,7 +23,7 @@ import {
   PaidCollectRequestSchema,
 } from './publications';
 
-const SupportedRequestModelSchema = z.union([
+const ProtocolCallRequestModelSchema = z.union([
   // CollectRequest schemas
   FreeCollectRequestSchema,
   PaidCollectRequestSchema,
@@ -41,8 +41,6 @@ const SupportedRequestModelSchema = z.union([
 
   CreateProfileRequestSchema,
 
-  TokenAllowanceRequestSchema,
-
   UnfollowRequestSchema,
 
   UpdateDispatcherConfigRequestSchema,
@@ -54,6 +52,12 @@ const SupportedRequestModelSchema = z.union([
   // UpdateProfileImageRequest schemas
   UpdateNftProfileImageRequestSchema,
   UpdateOffChainProfileImageRequestSchema,
+]);
+
+const AllSupportedRequestModelSchema = z.union([
+  TokenAllowanceRequestSchema,
+
+  ProtocolCallRequestModelSchema,
 ]);
 
 export enum TransactionType {
@@ -69,7 +73,7 @@ const MetaTransactionSchema = z.object({
   indexingId: z.string(),
   txHash: z.string(),
   nonce: z.number(),
-  request: SupportedRequestModelSchema,
+  request: ProtocolCallRequestModelSchema,
 });
 
 type MetaTransactionSchema = z.infer<typeof MetaTransactionSchema>;
@@ -80,7 +84,7 @@ const NativeTransactionSchema = z.object({
   id: z.string(),
   indexingId: z.string().optional(),
   txHash: z.string(),
-  request: SupportedRequestModelSchema,
+  request: AllSupportedRequestModelSchema,
 });
 
 type NativeTransactionSchema = z.infer<typeof NativeTransactionSchema>;
@@ -92,7 +96,7 @@ const ProxyTransactionSchema = z.object({
   proxyId: z.string(),
   txHash: z.string().optional(),
   status: z.nativeEnum(ProxyActionStatus).optional(),
-  request: SupportedRequestModelSchema,
+  request: ProtocolCallRequestModelSchema,
 });
 
 type ProxyTransactionSchema = z.infer<typeof ProxyTransactionSchema>;

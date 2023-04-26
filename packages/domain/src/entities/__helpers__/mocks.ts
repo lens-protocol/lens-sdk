@@ -42,7 +42,6 @@ import {
   ProxyTransaction,
   Signature,
   ISignedProtocolCall,
-  Transaction,
   TransactionError,
   TransactionErrorReason,
   TransactionEvent,
@@ -100,7 +99,7 @@ export function mockProtocolCallRequestModel(
   };
 }
 
-class MockedUnsignedProtocolCall<T extends TransactionRequestModel>
+class MockedUnsignedProtocolCall<T extends ProtocolCallRequestModel>
   implements IUnsignedProtocolCall<T>
 {
   constructor(readonly id: string, readonly request: T, readonly nonce: Nonce = mockNonce()) {}
@@ -110,14 +109,14 @@ class MockedUnsignedProtocolCall<T extends TransactionRequestModel>
   }
 }
 
-export function mockIUnsignedProtocolCall<T extends TransactionRequestModel>(
+export function mockIUnsignedProtocolCall<T extends ProtocolCallRequestModel>(
   request: T,
   overrides?: { nonce: Nonce },
 ): IUnsignedProtocolCall<T> {
   return new MockedUnsignedProtocolCall(faker.datatype.uuid(), request, overrides?.nonce);
 }
 
-class MockedSignedProtocolCall<T extends TransactionRequestModel>
+class MockedSignedProtocolCall<T extends ProtocolCallRequestModel>
   implements ISignedProtocolCall<T>
 {
   constructor(
@@ -128,7 +127,7 @@ class MockedSignedProtocolCall<T extends TransactionRequestModel>
   ) {}
 }
 
-export function mockISignedProtocolCall<T extends TransactionRequestModel>(
+export function mockISignedProtocolCall<T extends ProtocolCallRequestModel>(
   unsignedCall: IUnsignedProtocolCall<T> = mockIUnsignedProtocolCall<T>(
     mockTransactionRequestModel() as T,
   ),
@@ -177,7 +176,7 @@ type MockedTransactionInstructions = {
   failsWith?: TransactionError;
 };
 
-export class MockedMetaTransaction<T extends TransactionRequestModel> extends MetaTransaction<T> {
+export class MockedMetaTransaction<T extends ProtocolCallRequestModel> extends MetaTransaction<T> {
   readonly chainType: ChainType;
   readonly id: string;
   readonly request: T;
@@ -216,7 +215,7 @@ export class MockedMetaTransaction<T extends TransactionRequestModel> extends Me
     return success(item.event);
   }
 
-  static fromSignedCall<T extends TransactionRequestModel>(
+  static fromSignedCall<T extends ProtocolCallRequestModel>(
     signedCall: ISignedProtocolCall<T>,
   ): MetaTransaction<T> {
     return new MockedMetaTransaction({
@@ -227,7 +226,7 @@ export class MockedMetaTransaction<T extends TransactionRequestModel> extends Me
     });
   }
 
-  static fromRawData<T extends TransactionRequestModel>(
+  static fromRawData<T extends ProtocolCallRequestModel>(
     data: MockedMetaTransactionInit<T>,
     instructions?: MockedTransactionInstructions,
   ): MetaTransaction<T> {
@@ -268,7 +267,7 @@ export class MockedNativeTransaction<
 
   static fromUnsignedTransaction<T extends TransactionRequestModel>(
     unsignedTransaction: UnsignedTransaction<T>,
-  ): Transaction<T> {
+  ): NativeTransaction<T> {
     return new MockedNativeTransaction({
       chainType: ChainType.POLYGON,
       hash: mockTransactionHash(),
@@ -300,7 +299,7 @@ export function mockNftOwnershipChallenge(): NftOwnershipChallenge {
   };
 }
 
-type MockedProxyTransactionInit<T extends TransactionRequestModel> = {
+type MockedProxyTransactionInit<T extends ProtocolCallRequestModel> = {
   request: T;
   chainType?: ChainType;
   hash?: string;
@@ -308,7 +307,9 @@ type MockedProxyTransactionInit<T extends TransactionRequestModel> = {
   status: ProxyActionStatus;
 };
 
-export class MockedProxyTransaction<T extends TransactionRequestModel> extends ProxyTransaction<T> {
+export class MockedProxyTransaction<
+  T extends ProtocolCallRequestModel,
+> extends ProxyTransaction<T> {
   readonly chainType: ChainType;
   readonly id: string;
   readonly request: T;
@@ -347,7 +348,7 @@ export class MockedProxyTransaction<T extends TransactionRequestModel> extends P
     return success(item.event);
   }
 
-  static fromRequest<T extends TransactionRequestModel>(request: T): ProxyTransaction<T> {
+  static fromRequest<T extends ProtocolCallRequestModel>(request: T): ProxyTransaction<T> {
     return new MockedProxyTransaction({ request, status: ProxyActionStatus.MINTING });
   }
 }

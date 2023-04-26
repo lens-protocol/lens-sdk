@@ -47,11 +47,19 @@ export type TransactionRequestModel =
       kind: TransactionKind.APPROVE_MODULE;
     };
 
+type PickByKind<T extends TransactionRequestModel, K extends T['kind']> = T extends {
+  kind: K;
+}
+  ? T
+  : never;
+
+export type ProtocolCallOf<T extends TransactionRequestModel> = PickByKind<T, ProtocolCallKind>;
+
 export class UnsignedTransaction<T extends TransactionRequestModel> {
   constructor(readonly id: string, readonly chainType: ChainType, readonly request: T) {}
 }
 
-export interface IUnsignedProtocolCall<T extends TransactionRequestModel> {
+export interface IUnsignedProtocolCall<T extends ProtocolCallRequestModel> {
   readonly id: string;
 
   readonly request: T;
@@ -59,7 +67,7 @@ export interface IUnsignedProtocolCall<T extends TransactionRequestModel> {
   readonly nonce: Nonce;
 }
 
-export interface ISignedProtocolCall<T extends TransactionRequestModel> {
+export interface ISignedProtocolCall<T extends ProtocolCallRequestModel> {
   readonly id: string;
 
   readonly signature: Signature;
@@ -81,7 +89,7 @@ export enum ProxyActionStatus {
   COMPLETE = 'COMPLETE',
 }
 
-export abstract class MetaTransaction<T extends TransactionRequestModel> {
+export abstract class MetaTransaction<T extends ProtocolCallRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
   abstract get request(): T;
@@ -100,7 +108,7 @@ export abstract class NativeTransaction<T extends TransactionRequestModel> {
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
-export abstract class ProxyTransaction<T extends TransactionRequestModel> {
+export abstract class ProxyTransaction<T extends ProtocolCallRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
   abstract get request(): T;
@@ -111,9 +119,9 @@ export abstract class ProxyTransaction<T extends TransactionRequestModel> {
 }
 
 export type Transaction<T extends TransactionRequestModel> =
-  | MetaTransaction<T>
+  | MetaTransaction<ProtocolCallOf<T>>
   | NativeTransaction<T>
-  | ProxyTransaction<T>;
+  | ProxyTransaction<ProtocolCallOf<T>>;
 
 /**
  * The reason why a transaction failed.

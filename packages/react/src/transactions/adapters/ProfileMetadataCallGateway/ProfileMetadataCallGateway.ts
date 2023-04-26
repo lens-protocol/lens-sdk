@@ -23,7 +23,6 @@ import {
 import {
   IUnsignedProtocolCallGateway,
   BroadcastingError,
-  SupportedTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -40,7 +39,7 @@ export class ProfileMetadataCallGateway
 {
   constructor(
     private readonly apolloClient: LensApolloClient,
-    private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
+    private readonly transactionFactory: ITransactionFactory<UpdateProfileDetailsRequest>,
     private readonly uploader: IMetadataUploader<ProfileMetadata>,
   ) {}
 

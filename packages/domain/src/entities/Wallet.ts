@@ -7,6 +7,7 @@ import {
   UnsignedTransaction,
   NativeTransaction,
   Signature,
+  ProtocolCallRequestModel,
 } from './Transactions';
 
 export class InsufficientGasError extends Error {
@@ -49,7 +50,7 @@ export class UserRejectedError extends Error {
 export abstract class Wallet {
   constructor(readonly address: EthereumAddress) {}
 
-  abstract signProtocolCall<T extends TransactionRequestModel>(
+  abstract signProtocolCall<T extends ProtocolCallRequestModel>(
     unsignedCall: IUnsignedProtocolCall<T>,
   ): PromiseResult<
     ISignedProtocolCall<T>,

@@ -15,10 +15,7 @@ import {
   CreateMirrorRequest,
   ICreateMirrorCallGateway,
 } from '@lens-protocol/domain/use-cases/publications';
-import {
-  BroadcastingError,
-  SupportedTransactionRequest,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
@@ -30,7 +27,7 @@ import { handleRelayError, RelayReceipt } from '../relayer';
 export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
   constructor(
     private readonly apolloClient: LensApolloClient,
-    private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
+    private readonly transactionFactory: ITransactionFactory<CreateMirrorRequest>,
   ) {}
 
   async createDelegatedTransaction(

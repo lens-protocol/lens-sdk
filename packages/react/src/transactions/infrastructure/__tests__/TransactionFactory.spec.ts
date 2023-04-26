@@ -10,7 +10,10 @@ import {
   TransactionKind,
 } from '@lens-protocol/domain/entities';
 import { mockTransactionHash, mockTransactionRequestModel } from '@lens-protocol/domain/mocks';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  ProtocolCallRequest,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
@@ -39,7 +42,7 @@ function setupTransactionFactory({
 
 describe(`Given an instance of the ${TransactionFactory.name}`, () => {
   describe(`and a ${MetaTransaction.name} instance created via MetaTransactionData<T>`, () => {
-    const init = mockMetaTransactionData<SupportedTransactionRequest>();
+    const init = mockMetaTransactionData<ProtocolCallRequest>();
 
     describe(`when invoking the "waitNextEvent" method`, () => {
       it(`should
@@ -221,7 +224,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
       it(`should:
           - resolve with Success<TransactionEvent.${TransactionEvent.SETTLED}> as soon as the proxy action status is ${ProxyActionStatus.COMPLETE}
           - update the tx hash`, async () => {
-        const init = mockProxyTransactionData<SupportedTransactionRequest>();
+        const init = mockProxyTransactionData<ProtocolCallRequest>();
         const proxyActionStatusEvent = mockProxyActionStatusEvent({
           txHash: mockTransactionHash(),
           status: ProxyActionStatus.COMPLETE,
@@ -243,7 +246,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           - resolve with Success<TransactionEvent.${TransactionEvent.BROADCASTED}>  as soon as the proxy action status is ${ProxyActionStatus.MINTING}
           - update the status to ${ProxyActionStatus.MINTING}
           - update the tx hash`, async () => {
-        const init = mockProxyTransactionData<SupportedTransactionRequest>({
+        const init = mockProxyTransactionData<ProtocolCallRequest>({
           txHash: undefined,
           status: undefined,
         });
@@ -271,7 +274,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           - resolve with Success<TransactionEvent.${TransactionEvent.BROADCASTED}> as soon as the proxy action status transitions from ${ProxyActionStatus.MINTING} to ${ProxyActionStatus.TRANSFERRING}
           - update the status to ${ProxyActionStatus.TRANSFERRING}
           - update the tx hash`, async () => {
-        const init = mockProxyTransactionData<SupportedTransactionRequest>({
+        const init = mockProxyTransactionData<ProtocolCallRequest>({
           status: ProxyActionStatus.MINTING,
         });
 
@@ -295,7 +298,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
       });
 
       it(`should reflect tx hash changes  the proxy action status is ${ProxyActionStatus.MINTING}`, async () => {
-        const init = mockProxyTransactionData<SupportedTransactionRequest>({
+        const init = mockProxyTransactionData<ProtocolCallRequest>({
           status: ProxyActionStatus.MINTING,
         });
 
@@ -319,7 +322,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
       });
 
       it(`should reflect tx hash changes  the proxy action status is ${ProxyActionStatus.TRANSFERRING}`, async () => {
-        const init = mockProxyTransactionData<SupportedTransactionRequest>({
+        const init = mockProxyTransactionData<ProtocolCallRequest>({
           status: ProxyActionStatus.TRANSFERRING,
         });
 
@@ -343,7 +346,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
       });
 
       it(`should forward any ${TransactionError.name} from the ITransactionObserver`, async () => {
-        const init = mockProxyTransactionData<SupportedTransactionRequest>();
+        const init = mockProxyTransactionData<ProtocolCallRequest>();
         const error = new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
         const observer = MockedTransactionObserver.withProxyStatusSequence({
           request: init.proxyId,

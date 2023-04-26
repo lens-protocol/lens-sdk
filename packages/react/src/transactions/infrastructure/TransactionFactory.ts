@@ -9,11 +9,13 @@ import {
   TransactionEvent,
   TransactionKind,
 } from '@lens-protocol/domain/entities';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  ProtocolCallRequest,
+  SupportedTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
 
 import {
-  ITransactionFactory,
   MetaTransactionData,
   NativeTransactionData,
   ProxyTransactionData,
@@ -70,7 +72,7 @@ type MetaTransactionState<T extends SupportedTransactionRequest> = {
   txHash: string;
 };
 
-class SerializableMetaTransaction<T extends SupportedTransactionRequest>
+class SerializableMetaTransaction<T extends ProtocolCallRequest>
   extends MetaTransaction<T>
   implements ISerializableMetaTransaction<T>
 {
@@ -132,7 +134,7 @@ type ProxyTransactionState<T extends SupportedTransactionRequest> = {
   status?: ProxyActionStatus;
 };
 
-class SerializableProxyTransaction<T extends SupportedTransactionRequest>
+class SerializableProxyTransaction<T extends ProtocolCallRequest>
   extends ProxyTransaction<T>
   implements ISerializableProxyTransaction<T>
 {
@@ -245,14 +247,10 @@ class SerializableNativeTransaction<T extends SupportedTransactionRequest>
   }
 }
 
-export class TransactionFactory
-  implements
-    ITransactionFactory<SupportedTransactionRequest>,
-    ISerializableTransactionFactory<SupportedTransactionRequest>
-{
+export class TransactionFactory implements ISerializableTransactionFactory {
   constructor(private readonly transactionObserver: ITransactionObserver) {}
 
-  createMetaTransaction<T extends SupportedTransactionRequest>(init: MetaTransactionData<T>) {
+  createMetaTransaction<T extends ProtocolCallRequest>(init: MetaTransactionData<T>) {
     return new SerializableMetaTransaction(
       {
         chainType: init.chainType,
@@ -302,7 +300,7 @@ export class TransactionFactory
     );
   }
 
-  createProxyTransaction<T extends SupportedTransactionRequest>(
+  createProxyTransaction<T extends ProtocolCallRequest>(
     init: ProxyTransactionData<T>,
   ): ISerializableProxyTransaction<T> {
     return new SerializableProxyTransaction(

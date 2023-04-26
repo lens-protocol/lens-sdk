@@ -1,12 +1,12 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { faker } from '@faker-js/faker';
 import {
+  ProtocolCallRequestModel,
   TransactionRequestModel,
   UnsignedTransaction,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { mockSignature, mockTransactionRequestModel } from '@lens-protocol/domain/mocks';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { providers } from 'ethers';
@@ -67,7 +67,7 @@ export function mockIProviderFactory({
   return factory;
 }
 
-export function mockUnsignedProtocolCall<T extends SupportedTransactionRequest>({
+export function mockUnsignedProtocolCall<T extends ProtocolCallRequestModel>({
   typedData,
   request,
 }: {
@@ -82,7 +82,7 @@ export function mockUnsignedProtocolCall<T extends SupportedTransactionRequest>(
   });
 }
 
-export function mockSignedProtocolCall<T extends SupportedTransactionRequest>() {
+export function mockSignedProtocolCall<T extends ProtocolCallRequestModel>() {
   return SignedProtocolCall.create({
     unsignedCall: mockUnsignedProtocolCall({
       typedData: mock<TypedData>(),

@@ -6,11 +6,12 @@ import {
   WalletConnectionError,
   UserRejectedError,
   PendingSigningRequestError,
-  TransactionRequestModel,
   ISignedProtocolCall,
   IUnsignedProtocolCall,
   UnsignedTransaction,
   NativeTransaction,
+  ProtocolCallRequestModel,
+  TransactionRequestModel,
 } from '@lens-protocol/domain/entities';
 import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -46,7 +47,7 @@ export const WalletDataSchema = z.object({
 
 export type WalletDataSchema = z.infer<typeof WalletDataSchema>;
 
-export class UnsignedProtocolCall<T extends TransactionRequestModel>
+export class UnsignedProtocolCall<T extends ProtocolCallRequestModel>
   implements IUnsignedProtocolCall<T>
 {
   private constructor(
@@ -60,7 +61,7 @@ export class UnsignedProtocolCall<T extends TransactionRequestModel>
     return this.typedData.value.nonce;
   }
 
-  static create<T extends SupportedTransactionRequest>({
+  static create<T extends ProtocolCallRequestModel>({
     id,
     request,
     typedData,
@@ -75,7 +76,7 @@ export class UnsignedProtocolCall<T extends TransactionRequestModel>
   }
 }
 
-export class SignedProtocolCall<T extends TransactionRequestModel>
+export class SignedProtocolCall<T extends ProtocolCallRequestModel>
   implements ISignedProtocolCall<T>
 {
   private constructor(
@@ -86,7 +87,7 @@ export class SignedProtocolCall<T extends TransactionRequestModel>
     readonly fallback: SelfFundedProtocolCallRequest<T>,
   ) {}
 
-  static create<T extends TransactionRequestModel>({
+  static create<T extends ProtocolCallRequestModel>({
     unsignedCall,
     signature,
   }: {
@@ -118,7 +119,7 @@ export class ConcreteWallet extends Wallet {
     super(data.address);
   }
 
-  async signProtocolCall<T extends TransactionRequestModel>(
+  async signProtocolCall<T extends ProtocolCallRequestModel>(
     unsignedCall: UnsignedProtocolCall<T>,
   ): PromiseResult<
     ISignedProtocolCall<T>,

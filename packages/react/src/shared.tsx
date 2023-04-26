@@ -94,7 +94,7 @@ export type SharedDependencies = {
   storageProvider: IStorageProvider;
   tokenAvailability: TokenAvailability;
   transactionFactory: TransactionFactory;
-  transactionGateway: PendingTransactionGateway<SupportedTransactionRequest>;
+  transactionGateway: PendingTransactionGateway;
   transactionQueue: TransactionQueue<SupportedTransactionRequest>;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;

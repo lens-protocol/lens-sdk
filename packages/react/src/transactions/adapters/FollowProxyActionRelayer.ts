@@ -21,7 +21,7 @@ export class FollowProxyActionRelayer<T extends UnconstrainedFollowRequest>
 {
   constructor(
     private apolloClient: LensApolloClient,
-    private factory: ITransactionFactory<T>,
+    private factory: ITransactionFactory<UnconstrainedFollowRequest>,
     private logger: ILogger,
   ) {}
 

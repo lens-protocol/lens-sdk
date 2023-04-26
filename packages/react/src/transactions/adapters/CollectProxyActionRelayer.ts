@@ -21,7 +21,7 @@ export class CollectProxyActionRelayer<T extends FreeCollectRequest>
 {
   constructor(
     private apolloClient: LensApolloClient,
-    private factory: ITransactionFactory<T>,
+    private factory: ITransactionFactory<FreeCollectRequest>,
     private logger: ILogger,
   ) {}
 
