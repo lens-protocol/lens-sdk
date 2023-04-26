@@ -1,6 +1,6 @@
 # @lens-protocol/react-web
 
-## 2.0.0-next.0
+## 1.1.0-next.0
 
 ### Minor Changes
 
@@ -15,7 +15,7 @@
 - Updated dependencies [c416a2ea]
 - Updated dependencies [cf4a4201]
 - Updated dependencies [c4e6fcfc]
-  - @lens-protocol/react@2.0.0-next.0
+  - @lens-protocol/react@1.1.0-next.0
   - @lens-protocol/api-bindings@0.8.0-next.0
   - @lens-protocol/shared-kernel@0.8.0-next.0
   - @lens-protocol/gated-content@0.2.2-next.0

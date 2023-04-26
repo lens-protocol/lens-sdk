@@ -1,6 +1,6 @@
 # @lens-protocol/react
 
-## 2.0.0-next.0
+## 1.1.0-next.0
 
 ### Minor Changes
 
