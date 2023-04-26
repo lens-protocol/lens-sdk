@@ -5,9 +5,10 @@
 ### Minor Changes
 
 - 513373d3: Enhanced publication's hasCollectedByMe to replace deprecated hasOptimisticCollectedByMe property
-- c416a2ea: **Added:** self-fund protocol calls when subsidized approaches fails
-  **Fixed:** ensures correct chain when signing typed data
-  **Fixed:** network switch in wagmi bindings
+- c416a2ea:
+  - **Added:** self-fund protocol calls when subsidized approaches fails
+  - **Fixed:** ensures correct chain when signing typed data
+  - **Fixed:** network switch in wagmi bindings
 - cf4a4201: Added support for cover and altTag in publication media attributes
 
 ### Patch Changes

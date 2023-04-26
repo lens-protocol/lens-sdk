@@ -4,11 +4,8 @@
 
 ### Minor Changes
 
-- c416a2ea: **Added:** self-fund protocol calls when subsidized approaches fails
-  **Fixed:** ensures correct chain when signing typed data
-  **Fixed:** network switch in wagmi bindings
 - 86fc3de3: Added support for data availability publications
-- a85e9a7b: Use fetch instead of XMLHttpRequest to fix edge functions usecases
+- a85e9a7b: Use fetch instead of XMLHttpRequest to fix edge functions use cases
 
 ### Patch Changes
 

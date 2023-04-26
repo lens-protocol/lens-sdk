@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- cf4a4201: Added support for cover and altTag in publication media attributes
+- cf4a4201: Added support for cover and `altTag` in publication media attributes
 
 ### Patch Changes
 

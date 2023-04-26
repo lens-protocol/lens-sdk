@@ -3,4 +3,4 @@
 "@lens-protocol/react-web": minor
 ---
 
-Added support for cover and altTag in publication media attributes
+Added support for cover and `altTag` in publication media attributes
