@@ -110,7 +110,7 @@ class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
     return this.state.nonce;
   }
 
-  get hash(): string | undefined {
+  get hash(): string {
     return this.state.txHash;
   }
 
@@ -232,7 +232,7 @@ class SerializableNativeTransaction<T extends AnyTransactionRequest>
     return this.state.request;
   }
 
-  get hash(): string | undefined {
+  get hash(): string {
     return this.state?.txHash;
   }
 

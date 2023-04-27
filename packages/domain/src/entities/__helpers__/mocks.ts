@@ -183,13 +183,13 @@ export class MockedMetaTransaction<
   readonly id: string;
   readonly request: T;
   readonly nonce: Nonce;
-  hash: string | undefined;
+  hash: string;
 
   private constructor(
     {
       chainType = ChainType.POLYGON,
       id = faker.datatype.uuid(),
-      hash,
+      hash = mockTransactionHash(),
       request,
       nonce = mockNonce(),
     }: MockedMetaTransactionInit<T>,
@@ -251,11 +251,11 @@ export class MockedNativeTransaction<
   readonly chainType: ChainType;
   readonly id: string;
   readonly request: T;
-  hash: string | undefined;
+  hash: string;
 
   private constructor({
     chainType = ChainType.POLYGON,
-    hash,
+    hash = mockTransactionHash(),
     id = faker.datatype.uuid(),
     request,
   }: MockedNativeTransactionInit<T>) {
@@ -272,14 +272,13 @@ export class MockedNativeTransaction<
   ): NativeTransaction<T> {
     return new MockedNativeTransaction({
       chainType: ChainType.POLYGON,
-      hash: mockTransactionHash(),
       id: unsignedTransaction.id,
       request: unsignedTransaction.request,
     });
   }
 
   static fromRequest<T extends AnyTransactionRequestModel>(request: T) {
-    return new MockedNativeTransaction({ request });
+    return new MockedNativeTransaction({ request, hash: mockTransactionHash() });
   }
 }
 

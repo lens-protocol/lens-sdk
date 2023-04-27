@@ -5,7 +5,7 @@ import {
   LensApolloClient,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
-import { Transaction } from '@lens-protocol/domain/entities';
+import { NativeTransaction } from '@lens-protocol/domain/entities';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
@@ -26,7 +26,7 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
 
   async createProfileTransaction<T extends CreateProfileRequest>(
     request: T,
-  ): PromiseResult<Transaction<T>, DuplicatedHandleError | BroadcastingError> {
+  ): PromiseResult<NativeTransaction<T>, DuplicatedHandleError | BroadcastingError> {
     const { data } = await this.apolloClient.mutate<CreateProfileData, CreateProfileVariables>({
       mutation: CreateProfileDocument,
       variables: {
