@@ -1,12 +1,16 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { faker } from '@faker-js/faker';
 import {
-  ProtocolCallRequestModel,
-  TransactionRequestModel,
+  ProtocolTransactionRequestModel,
+  AnyTransactionRequestModel,
   UnsignedTransaction,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { mockSignature, mockTransactionRequestModel } from '@lens-protocol/domain/mocks';
+import {
+  mockSignature,
+  mockAnyTransactionRequestModel,
+  mockProtocolTransactionRequestModel,
+} from '@lens-protocol/domain/mocks';
 import { ChainType, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { providers } from 'ethers';
@@ -15,7 +19,7 @@ import { when } from 'jest-when';
 
 import { ITransactionFactory } from '../../../transactions/adapters/ITransactionFactory';
 import { TypedData } from '../../../transactions/adapters/TypedData';
-import { mockSelfFundedProtocolCallRequest } from '../../../transactions/adapters/__helpers__/mocks';
+import { mockSelfFundedProtocolTransactionRequest } from '../../../transactions/adapters/__helpers__/mocks';
 import {
   ConcreteWallet,
   ISignerFactory,
@@ -67,7 +71,7 @@ export function mockIProviderFactory({
   return factory;
 }
 
-export function mockUnsignedProtocolCall<T extends ProtocolCallRequestModel>({
+export function mockUnsignedProtocolCall<T extends ProtocolTransactionRequestModel>({
   typedData,
   request,
 }: {
@@ -78,21 +82,21 @@ export function mockUnsignedProtocolCall<T extends ProtocolCallRequestModel>({
     id: faker.datatype.uuid(),
     request,
     typedData,
-    fallback: mockSelfFundedProtocolCallRequest<T>(),
+    fallback: mockSelfFundedProtocolTransactionRequest<T>(),
   });
 }
 
-export function mockSignedProtocolCall<T extends ProtocolCallRequestModel>() {
+export function mockSignedProtocolCall<T extends ProtocolTransactionRequestModel>() {
   return SignedProtocolCall.create({
     unsignedCall: mockUnsignedProtocolCall({
       typedData: mock<TypedData>(),
-      request: mockTransactionRequestModel() as T,
+      request: mockProtocolTransactionRequestModel() as T,
     }),
     signature: mockSignature(),
   });
 }
 
-class MockedUnsignedTransactionRequest<T extends TransactionRequestModel>
+class MockedUnsignedTransactionRequest<T extends AnyTransactionRequestModel>
   extends UnsignedTransaction<T>
   implements ITransactionRequest
 {
@@ -108,14 +112,18 @@ export function mockUnsignedTransactionRequest({
   chainType: ChainType;
   txRequest: TransactionRequest;
 }) {
-  return new MockedUnsignedTransactionRequest(chainType, mockTransactionRequestModel(), txRequest);
+  return new MockedUnsignedTransactionRequest(
+    chainType,
+    mockAnyTransactionRequestModel(),
+    txRequest,
+  );
 }
 
 export function mockConcreteWallet() {
   return ConcreteWallet.create(
     { address: mockEthereumAddress() },
     mock<ISignerFactory>(),
-    mock<ITransactionFactory<TransactionRequestModel>>(),
+    mock<ITransactionFactory<AnyTransactionRequestModel>>(),
   );
 }
 

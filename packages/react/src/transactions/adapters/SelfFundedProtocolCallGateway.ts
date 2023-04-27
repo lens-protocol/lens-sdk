@@ -3,7 +3,7 @@ import { bigNumber } from '@lens-protocol/blockchain-bindings';
 import { Wallet, UnsignedTransaction } from '@lens-protocol/domain/entities';
 import {
   IPayTransactionGateway,
-  SupportedTransactionRequest,
+  ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { Amount, ChainType } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -14,11 +14,11 @@ import {
   Eip1559GasPriceEstimator,
   TransactionExecutionSpeed,
 } from '../infrastructure/Eip1559GasPriceEstimator';
-import { SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
+import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
 export class UnsignedSelfFundedProtocolCallTransaction<
-    TRequest extends SupportedTransactionRequest,
-    TSelfFundedRequest extends SelfFundedProtocolCallRequest<TRequest> = SelfFundedProtocolCallRequest<TRequest>,
+    TRequest extends ProtocolTransactionRequest,
+    TSelfFundedRequest extends SelfFundedProtocolTransactionRequest<TRequest> = SelfFundedProtocolTransactionRequest<TRequest>,
   >
   extends UnsignedTransaction<TSelfFundedRequest>
   implements ITransactionRequest
@@ -29,8 +29,8 @@ export class UnsignedSelfFundedProtocolCallTransaction<
 }
 
 export class SelfFundedProtocolCallGateway<
-  TRequest extends SupportedTransactionRequest,
-  TSelfFundedRequest extends SelfFundedProtocolCallRequest<TRequest> = SelfFundedProtocolCallRequest<TRequest>,
+  TRequest extends ProtocolTransactionRequest,
+  TSelfFundedRequest extends SelfFundedProtocolTransactionRequest<TRequest> = SelfFundedProtocolTransactionRequest<TRequest>,
 > implements IPayTransactionGateway<TSelfFundedRequest>
 {
   constructor(private readonly providerFactory: IProviderFactory) {}

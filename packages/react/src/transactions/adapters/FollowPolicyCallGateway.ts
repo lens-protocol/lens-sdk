@@ -9,12 +9,12 @@ import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import {
   FollowPolicyType,
-  IFollowPolicyCallGateway,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
+import { IUnsignedProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
-import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
+import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
 function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
   switch (request.policy.type) {
@@ -43,7 +43,9 @@ function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
   }
 }
 
-export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
+export class FollowPolicyCallGateway
+  implements IUnsignedProtocolCallGateway<UpdateFollowPolicyRequest>
+{
   constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall(
@@ -75,7 +77,7 @@ export class FollowPolicyCallGateway implements IFollowPolicyCallGateway {
   private createRequestFallback(
     request: UpdateFollowPolicyRequest,
     data: CreateSetFollowModuleTypedDataData,
-  ): SelfFundedProtocolCallRequest<UpdateFollowPolicyRequest> {
+  ): SelfFundedProtocolTransactionRequest<UpdateFollowPolicyRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setFollowModule', [
       data.result.typedData.value.profileId,

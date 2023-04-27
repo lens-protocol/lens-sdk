@@ -5,10 +5,29 @@ import { AudioType, ImageType, VideoType } from './config';
 export type Locale = string;
 
 export enum ContentFocus {
+  /**
+   * The primary objective of the publication is to provide a textual content.
+   */
   TEXT = 'TextOnly',
+  /**
+   * The primary objective of the publication is to provide an image or a gallery of images.
+   * The publication `content` field be used to add extra context to the image(s).
+   */
   IMAGE = 'Image',
+  /**
+   * The primary objective of the publication is to provide a video or a collection of videos.
+   * The publication `content` field be used to add extra context to the video(s).
+   */
   VIDEO = 'Video',
+  /**
+   * The primary objective of the publication is to provide an audio or a playlist of audio files.
+   * The publication `content` field be used to add extra context to the audio(s).
+   */
   AUDIO = 'Audio',
+  /**
+   * The primary objective of the publication is to provide a document-like textual content.
+   * It can be accompanied by images, videos, or audio files.
+   */
   ARTICLE = 'Article',
 }
 
@@ -118,10 +137,9 @@ export type NoCollectPolicyConfig = {
   type: CollectPolicyType.NO_COLLECT;
 };
 
-export type CollectPolicyConfig =
-  | ChargeCollectPolicyConfig
-  | FreeCollectPolicyConfig
-  | NoCollectPolicyConfig;
+export type CollectablePolicyConfig = ChargeCollectPolicyConfig | FreeCollectPolicyConfig;
+
+export type CollectPolicyConfig = CollectablePolicyConfig | NoCollectPolicyConfig;
 
 export type SupportedPublicationMediaType =
   | ImageType.PNG

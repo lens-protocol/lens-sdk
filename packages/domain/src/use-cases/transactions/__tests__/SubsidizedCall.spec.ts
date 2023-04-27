@@ -9,15 +9,15 @@ import {
   UserRejectedError,
   Wallet,
   MetaTransaction,
-  TransactionRequestModel,
-  ProtocolCallRequestModel,
+  AnyTransactionRequestModel,
+  ProtocolTransactionRequestModel,
 } from '../../../entities';
 import {
   MockedMetaTransaction,
   mockISignedProtocolCall,
   mockIUnsignedProtocolCall,
   mockNonce,
-  mockProtocolCallRequestModel,
+  mockProtocolTransactionRequestModel,
   mockWallet,
 } from '../../../entities/__helpers__/mocks';
 import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
@@ -37,7 +37,7 @@ import {
   mockTransactionQueue,
 } from '../__helpers__/mocks';
 
-function setupSubsidizedCall<T extends ProtocolCallRequestModel>({
+function setupSubsidizedCall<T extends ProtocolTransactionRequestModel>({
   metaTransactionNonceGateway,
   unsignedProtocolCallGateway,
   protocolCallRelayer = mock<IProtocolCallRelayer<T>>(),
@@ -48,7 +48,7 @@ function setupSubsidizedCall<T extends ProtocolCallRequestModel>({
   metaTransactionNonceGateway: IMetaTransactionNonceGateway;
   unsignedProtocolCallGateway: IUnsignedProtocolCallGateway<T>;
   protocolCallRelayer?: IProtocolCallRelayer<T>;
-  transactionQueue?: TransactionQueue<TransactionRequestModel>;
+  transactionQueue?: TransactionQueue<AnyTransactionRequestModel>;
   presenter: IProtocolCallPresenter;
   wallet: Wallet;
 }) {
@@ -65,7 +65,7 @@ function setupSubsidizedCall<T extends ProtocolCallRequestModel>({
 
 describe(`Given an instance of the ${SubsidizedCall.name}<T> interactor`, () => {
   describe(`when calling the "${SubsidizedCall.prototype.execute.name}" method`, () => {
-    const request = mockProtocolCallRequestModel();
+    const request = mockProtocolTransactionRequestModel();
     const unsignedCall = mockIUnsignedProtocolCall(request);
 
     it(`should:

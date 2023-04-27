@@ -7,12 +7,7 @@ import {
   PublicationId,
   TransactionKind,
 } from '../../entities';
-import {
-  DelegableSubsidizedCall,
-  IDelegatedCallGateway,
-  IProtocolCallPresenter,
-} from '../transactions/DelegableSubsidizedCall';
-import { IUnsignedProtocolCallGateway } from '../transactions/SubsidizedCall';
+import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 import { CollectPolicyConfig, MediaObject, ContentFocus, Locale } from './types';
 
@@ -31,12 +26,7 @@ export type CreateCommentRequest = {
   decryptionCriteria?: DecryptionCriteria;
 };
 
-export type ICreateCommentCallGateway = IDelegatedCallGateway<CreateCommentRequest> &
-  IUnsignedProtocolCallGateway<CreateCommentRequest>;
-
-export type ICreateCommentPresenter = IProtocolCallPresenter;
-
-export class CreateComment extends DelegableSubsidizedCall<CreateCommentRequest> {
+export class CreateComment extends DelegableSigning<CreateCommentRequest> {
   async execute(request: CreateCommentRequest) {
     invariant(request.media || request.content, 'One of post media or content is required');
     await super.execute(request);

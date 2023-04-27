@@ -6,18 +6,18 @@ import {
 } from '@lens-protocol/domain/entities';
 import {
   PayTransaction,
-  SupportedTransactionRequest,
+  ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 import { SelfFundedProtocolCallGateway } from './SelfFundedProtocolCallGateway';
-import { SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
+import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
-export function usePayTransactionController<T extends SupportedTransactionRequest>() {
+export function usePayTransactionController<T extends ProtocolTransactionRequest>() {
   const { activeWallet, providerFactory, transactionQueue } = useSharedDependencies();
 
-  return async (request: SelfFundedProtocolCallRequest<T>) => {
+  return async (request: SelfFundedProtocolTransactionRequest<T>) => {
     const gateway = new SelfFundedProtocolCallGateway(providerFactory);
 
     const presenter = new PromiseResultPresenter<

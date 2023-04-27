@@ -2,12 +2,12 @@ import { CryptoNativeAsset, EthereumAddress, PromiseResult } from '@lens-protoco
 
 import {
   ISignedProtocolCall,
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
   IUnsignedProtocolCall,
   UnsignedTransaction,
   NativeTransaction,
   Signature,
-  ProtocolCallRequestModel,
+  ProtocolTransactionRequestModel,
 } from './Transactions';
 
 export class InsufficientGasError extends Error {
@@ -50,7 +50,7 @@ export class UserRejectedError extends Error {
 export abstract class Wallet {
   constructor(readonly address: EthereumAddress) {}
 
-  abstract signProtocolCall<T extends ProtocolCallRequestModel>(
+  abstract signProtocolCall<T extends ProtocolTransactionRequestModel>(
     unsignedCall: IUnsignedProtocolCall<T>,
   ): PromiseResult<
     ISignedProtocolCall<T>,
@@ -64,7 +64,7 @@ export abstract class Wallet {
     PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >;
 
-  abstract sendTransaction<T extends TransactionRequestModel>(
+  abstract sendTransaction<T extends AnyTransactionRequestModel>(
     unsignedTransaction: UnsignedTransaction<T>,
   ): PromiseResult<
     NativeTransaction<T>,

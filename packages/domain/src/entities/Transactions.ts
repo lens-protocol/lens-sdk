@@ -21,7 +21,7 @@ export enum TransactionKind {
   UPDATE_DISPATCHER_CONFIG = 'UPDATE_DISPATCHER_CONFIG',
 }
 
-export const ProtocolCallKinds = [
+export const ProtocolTransactionKinds = [
   TransactionKind.COLLECT_PUBLICATION,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,
@@ -35,31 +35,34 @@ export const ProtocolCallKinds = [
   TransactionKind.UPDATE_DISPATCHER_CONFIG,
 ] as const;
 
-export type ProtocolCallKind = (typeof ProtocolCallKinds)[number];
+export type ProtocolTransactionKind = (typeof ProtocolTransactionKinds)[number];
 
-export type ProtocolCallRequestModel = {
-  kind: ProtocolCallKind;
+export type ProtocolTransactionRequestModel = {
+  kind: ProtocolTransactionKind;
 };
 
-export type TransactionRequestModel =
-  | ProtocolCallRequestModel
+export type AnyTransactionRequestModel =
+  | ProtocolTransactionRequestModel
   | {
       kind: TransactionKind.APPROVE_MODULE;
     };
 
-type PickByKind<T extends TransactionRequestModel, K extends T['kind']> = T extends {
+type PickByKind<T extends AnyTransactionRequestModel, K extends T['kind']> = T extends {
   kind: K;
 }
   ? T
   : never;
 
-export type ProtocolCallOf<T extends TransactionRequestModel> = PickByKind<T, ProtocolCallKind>;
+export type JustProtocolRequest<T extends AnyTransactionRequestModel> = PickByKind<
+  T,
+  ProtocolTransactionKind
+>;
 
-export class UnsignedTransaction<T extends TransactionRequestModel> {
+export class UnsignedTransaction<T extends AnyTransactionRequestModel> {
   constructor(readonly id: string, readonly chainType: ChainType, readonly request: T) {}
 }
 
-export interface IUnsignedProtocolCall<T extends ProtocolCallRequestModel> {
+export interface IUnsignedProtocolCall<T extends ProtocolTransactionRequestModel> {
   readonly id: string;
 
   readonly request: T;
@@ -67,7 +70,7 @@ export interface IUnsignedProtocolCall<T extends ProtocolCallRequestModel> {
   readonly nonce: Nonce;
 }
 
-export interface ISignedProtocolCall<T extends ProtocolCallRequestModel> {
+export interface ISignedProtocolCall<T extends ProtocolTransactionRequestModel> {
   readonly id: string;
 
   readonly signature: Signature;
@@ -89,7 +92,7 @@ export enum ProxyActionStatus {
   COMPLETE = 'COMPLETE',
 }
 
-export abstract class MetaTransaction<T extends ProtocolCallRequestModel> {
+export abstract class MetaTransaction<T extends ProtocolTransactionRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
   abstract get request(): T;
@@ -99,7 +102,7 @@ export abstract class MetaTransaction<T extends ProtocolCallRequestModel> {
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
-export abstract class NativeTransaction<T extends TransactionRequestModel> {
+export abstract class NativeTransaction<T extends AnyTransactionRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
   abstract get request(): T;
@@ -108,7 +111,7 @@ export abstract class NativeTransaction<T extends TransactionRequestModel> {
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
-export abstract class ProxyTransaction<T extends ProtocolCallRequestModel> {
+export abstract class ProxyTransaction<T extends ProtocolTransactionRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
   abstract get request(): T;
@@ -118,10 +121,10 @@ export abstract class ProxyTransaction<T extends ProtocolCallRequestModel> {
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
-export type Transaction<T extends TransactionRequestModel> =
-  | MetaTransaction<ProtocolCallOf<T>>
+export type Transaction<T extends AnyTransactionRequestModel> =
+  | MetaTransaction<JustProtocolRequest<T>>
   | NativeTransaction<T>
-  | ProxyTransaction<ProtocolCallOf<T>>;
+  | ProxyTransaction<JustProtocolRequest<T>>;
 
 /**
  * The reason why a transaction failed.

@@ -1,9 +1,5 @@
 import { ProfileId, TransactionKind } from '../../entities';
-import {
-  DelegableSubsidizedCall,
-  IDelegatedCallGateway,
-} from '../transactions/DelegableSubsidizedCall';
-import { IProtocolCallPresenter } from '../transactions/SubsidizedCall';
+import { DelegableSigning } from '../transactions/DelegableSigning';
 
 export type ProfileAttributeValue = boolean | Date | string | number;
 
@@ -19,8 +15,4 @@ export type UpdateProfileDetailsRequest = {
   profileId: ProfileId;
 };
 
-export type IProfileDetailsCallGateway = IDelegatedCallGateway<UpdateProfileDetailsRequest>;
-
-export type IUpdateProfileDetailsPresenter = IProtocolCallPresenter;
-
-export class UpdateProfileDetails extends DelegableSubsidizedCall<UpdateProfileDetailsRequest> {}
+export class UpdateProfileDetails extends DelegableSigning<UpdateProfileDetailsRequest> {}

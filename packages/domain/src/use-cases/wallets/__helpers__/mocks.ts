@@ -6,7 +6,7 @@ import { when } from 'jest-when';
 import {
   Wallet,
   TransactionKind,
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
   UnsignedTransaction,
 } from '../../../entities';
 import { mockWallet } from '../../../entities/__helpers__/mocks';
@@ -142,7 +142,7 @@ export function mockWalletLoginRequest(
   };
 }
 
-export function mockIPayTransactionGateway<T extends TransactionRequestModel>({
+export function mockIPayTransactionGateway<T extends AnyTransactionRequestModel>({
   request,
   wallet,
   unsignedTransaction,

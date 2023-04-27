@@ -10,7 +10,7 @@ import {
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import { SignlessSubsidizedCall } from '../transactions/SignlessSubsidizedCall';
-import { IUnsignedProtocolCallGateway, SubsidizedCall } from '../transactions/SubsidizedCall';
+import { SubsidizedCall } from '../transactions/SubsidizedCall';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -48,8 +48,6 @@ export type CollectRequest = FreeCollectRequest | PaidCollectRequest;
 export function isPaidCollectRequest(request: CollectRequest): request is PaidCollectRequest {
   return request.type === CollectType.PAID;
 }
-
-export type ICollectPublicationCallGateway = IUnsignedProtocolCallGateway<CollectRequest>;
 
 export type ICollectPublicationPresenter = IGenericResultPresenter<
   void,

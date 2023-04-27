@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { CollectModuleParams, ReferenceModuleParams } from '@lens-protocol/api-bindings';
 import {
-  mockFreeCollectPolicy,
-  mockNoCollectPolicy,
-  mockChargeCollectPolicy,
+  mockFreeCollectPolicyConfig,
+  mockNoCollectPolicyConfig,
+  mockChargeCollectPolicyConfig,
 } from '@lens-protocol/domain/mocks';
 import {
   CollectPolicyConfig,
@@ -25,7 +25,7 @@ export type PublicationExerciseData = {
 export const createFollowerOnlyReferenceModuleExerciseData = (): PublicationExerciseData => {
   return {
     requestVars: {
-      collect: mockNoCollectPolicy(),
+      collect: mockNoCollectPolicyConfig(),
       reference: {
         type: ReferencePolicyType.FOLLOWERS_ONLY,
       },
@@ -45,7 +45,7 @@ export const createFollowerOnlyReferenceModuleExerciseData = (): PublicationExer
 export const createRevertCollectModuleExerciseData = (): PublicationExerciseData => {
   return {
     requestVars: {
-      collect: mockNoCollectPolicy(),
+      collect: mockNoCollectPolicyConfig(),
     },
 
     expectedMutationRequestDetails: {
@@ -59,7 +59,7 @@ export const createRevertCollectModuleExerciseData = (): PublicationExerciseData
 export const createFreeCollectModuleExerciseData = (): PublicationExerciseData => {
   return {
     requestVars: {
-      collect: mockFreeCollectPolicy({
+      collect: mockFreeCollectPolicyConfig({
         followersOnly: false,
       }),
     },
@@ -77,7 +77,7 @@ export const createFreeCollectModuleExerciseData = (): PublicationExerciseData =
 export const createFreeCollectModuleFollowersOnlyExerciseData = (): PublicationExerciseData => {
   return {
     requestVars: {
-      collect: mockFreeCollectPolicy({
+      collect: mockFreeCollectPolicyConfig({
         followersOnly: true,
       }),
     },
@@ -93,7 +93,7 @@ export const createFreeCollectModuleFollowersOnlyExerciseData = (): PublicationE
 };
 
 export const createFeeCollectModuleExerciseData = (): PublicationExerciseData => {
-  const collect = mockChargeCollectPolicy({ followersOnly: false });
+  const collect = mockChargeCollectPolicyConfig({ followersOnly: false });
   return {
     requestVars: {
       collect,
@@ -116,7 +116,7 @@ export const createFeeCollectModuleExerciseData = (): PublicationExerciseData =>
 };
 
 export const createFeeCollectModuleFollowersOnlyExerciseData = (): PublicationExerciseData => {
-  const collect = mockChargeCollectPolicy({ followersOnly: true });
+  const collect = mockChargeCollectPolicyConfig({ followersOnly: true });
   return {
     requestVars: {
       collect,
@@ -140,7 +140,7 @@ export const createFeeCollectModuleFollowersOnlyExerciseData = (): PublicationEx
 
 export const createLimitedFeeCollectModuleExerciseData = (): PublicationExerciseData => {
   const collectLimit = faker.datatype.number(10_000);
-  const collect = mockChargeCollectPolicy({ followersOnly: false, collectLimit });
+  const collect = mockChargeCollectPolicyConfig({ followersOnly: false, collectLimit });
   return {
     requestVars: {
       collect,
@@ -167,7 +167,7 @@ export const createLimitedFeeCollectModuleExerciseData = (): PublicationExercise
 export const createLimitedFeeCollectModuleFollowersOnlyExerciseData =
   (): PublicationExerciseData => {
     const collectLimit = faker.datatype.number(10_000);
-    const collect = mockChargeCollectPolicy({ followersOnly: true, collectLimit });
+    const collect = mockChargeCollectPolicyConfig({ followersOnly: true, collectLimit });
     return {
       requestVars: {
         collect,
@@ -191,7 +191,7 @@ export const createLimitedFeeCollectModuleFollowersOnlyExerciseData =
   };
 
 export const createTimedFeeCollectModuleExerciseData = (): PublicationExerciseData => {
-  const collect = mockChargeCollectPolicy({ followersOnly: false, timeLimited: true });
+  const collect = mockChargeCollectPolicyConfig({ followersOnly: false, timeLimited: true });
   return {
     requestVars: {
       collect,
@@ -214,7 +214,7 @@ export const createTimedFeeCollectModuleExerciseData = (): PublicationExerciseDa
 };
 
 export const createTimedFeeCollectModuleFollowersOnlyExerciseData = (): PublicationExerciseData => {
-  const collect = mockChargeCollectPolicy({ followersOnly: true, timeLimited: true });
+  const collect = mockChargeCollectPolicyConfig({ followersOnly: true, timeLimited: true });
   return {
     requestVars: {
       collect,
@@ -238,7 +238,7 @@ export const createTimedFeeCollectModuleFollowersOnlyExerciseData = (): Publicat
 
 export const createLimitedTimedFeeCollectModuleExerciseData = (): PublicationExerciseData => {
   const collectLimit = faker.datatype.number(10_000);
-  const collect = mockChargeCollectPolicy({
+  const collect = mockChargeCollectPolicyConfig({
     followersOnly: false,
     collectLimit,
     timeLimited: true,
@@ -268,7 +268,7 @@ export const createLimitedTimedFeeCollectModuleExerciseData = (): PublicationExe
 export const createLimitedTimedFeeCollectModuleFollowersOnlyExerciseData =
   (): PublicationExerciseData => {
     const collectLimit = faker.datatype.number(10_000);
-    const collect = mockChargeCollectPolicy({
+    const collect = mockChargeCollectPolicyConfig({
       followersOnly: true,
       collectLimit,
       timeLimited: true,

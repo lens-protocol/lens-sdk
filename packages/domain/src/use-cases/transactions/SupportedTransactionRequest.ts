@@ -1,4 +1,4 @@
-import { ProtocolCallOf } from '../../entities';
+import { JustProtocolRequest } from '../../entities';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfiles';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
@@ -12,7 +12,7 @@ import { CreateMirrorRequest } from '../publications/CreateMirror';
 import { CreatePostRequest } from '../publications/CreatePost';
 import { TokenAllowanceRequest } from '../wallets/TokenAllowance';
 
-export type SupportedTransactionRequest =
+export type AnyTransactionRequest =
   | CollectRequest
   | CreateCommentRequest
   | CreateMirrorRequest
@@ -26,4 +26,4 @@ export type SupportedTransactionRequest =
   | UpdateProfileDetailsRequest
   | UpdateProfileImageRequest;
 
-export type ProtocolCallRequest = ProtocolCallOf<SupportedTransactionRequest>;
+export type ProtocolTransactionRequest = JustProtocolRequest<AnyTransactionRequest>;

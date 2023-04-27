@@ -10,10 +10,10 @@ import {
   IUnsignedProtocolCall,
   UnsignedTransaction,
   NativeTransaction,
-  ProtocolCallRequestModel,
-  TransactionRequestModel,
+  ProtocolTransactionRequestModel,
+  AnyTransactionRequestModel,
 } from '@lens-protocol/domain/entities';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
   ChainType,
   EthereumAddress,
@@ -26,7 +26,7 @@ import { errors, Signer } from 'ethers';
 import { z } from 'zod';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
-import { SelfFundedProtocolCallRequest } from '../../transactions/adapters/SelfFundedProtocolCallRequest';
+import { SelfFundedProtocolTransactionRequest } from '../../transactions/adapters/SelfFundedProtocolTransactionRequest';
 import { TypedData } from '../../transactions/adapters/TypedData';
 import { assertErrorObjectWithCode } from './errors';
 
@@ -47,21 +47,21 @@ export const WalletDataSchema = z.object({
 
 export type WalletDataSchema = z.infer<typeof WalletDataSchema>;
 
-export class UnsignedProtocolCall<T extends ProtocolCallRequestModel>
+export class UnsignedProtocolCall<T extends ProtocolTransactionRequestModel>
   implements IUnsignedProtocolCall<T>
 {
   private constructor(
     readonly id: string,
     readonly request: T,
     readonly typedData: TypedData,
-    readonly fallback: SelfFundedProtocolCallRequest<T>,
+    readonly fallback: SelfFundedProtocolTransactionRequest<T>,
   ) {}
 
   get nonce() {
     return this.typedData.value.nonce;
   }
 
-  static create<T extends ProtocolCallRequestModel>({
+  static create<T extends ProtocolTransactionRequestModel>({
     id,
     request,
     typedData,
@@ -70,13 +70,13 @@ export class UnsignedProtocolCall<T extends ProtocolCallRequestModel>
     id: string;
     request: T;
     typedData: TypedData;
-    fallback: SelfFundedProtocolCallRequest<T>;
+    fallback: SelfFundedProtocolTransactionRequest<T>;
   }): UnsignedProtocolCall<T> {
     return new UnsignedProtocolCall(id, request, typedData, fallback);
   }
 }
 
-export class SignedProtocolCall<T extends ProtocolCallRequestModel>
+export class SignedProtocolCall<T extends ProtocolTransactionRequestModel>
   implements ISignedProtocolCall<T>
 {
   private constructor(
@@ -84,10 +84,10 @@ export class SignedProtocolCall<T extends ProtocolCallRequestModel>
     readonly request: T,
     readonly signature: string,
     readonly nonce: number,
-    readonly fallback: SelfFundedProtocolCallRequest<T>,
+    readonly fallback: SelfFundedProtocolTransactionRequest<T>,
   ) {}
 
-  static create<T extends ProtocolCallRequestModel>({
+  static create<T extends ProtocolTransactionRequestModel>({
     unsignedCall,
     signature,
   }: {
@@ -114,12 +114,12 @@ export class ConcreteWallet extends Wallet {
   private constructor(
     data: WalletDataSchema,
     private readonly signerFactory: ISignerFactory,
-    private readonly transactionFactory: ITransactionFactory<TransactionRequestModel>,
+    private readonly transactionFactory: ITransactionFactory<AnyTransactionRequestModel>,
   ) {
     super(data.address);
   }
 
-  async signProtocolCall<T extends ProtocolCallRequestModel>(
+  async signProtocolCall<T extends ProtocolTransactionRequestModel>(
     unsignedCall: UnsignedProtocolCall<T>,
   ): PromiseResult<
     ISignedProtocolCall<T>,
@@ -193,7 +193,7 @@ export class ConcreteWallet extends Wallet {
     }
   }
 
-  async sendTransaction<T extends TransactionRequestModel>(
+  async sendTransaction<T extends AnyTransactionRequestModel>(
     unsignedTransaction: UnsignedTransaction<T> & ITransactionRequest,
   ): PromiseResult<
     NativeTransaction<T>,
@@ -250,7 +250,7 @@ export class ConcreteWallet extends Wallet {
   static create(
     data: WalletDataSchema,
     signerFactory: ISignerFactory,
-    transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
+    transactionFactory: ITransactionFactory<AnyTransactionRequest>,
   ) {
     return new ConcreteWallet(data, signerFactory, transactionFactory);
   }

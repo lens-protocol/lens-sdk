@@ -8,7 +8,7 @@ import { MetaTransaction } from '@lens-protocol/domain/entities';
 import {
   IProtocolCallRelayer,
   BroadcastingError,
-  ProtocolCallRequest,
+  ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   assertError,
@@ -23,14 +23,14 @@ import { SignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
 import { handleRelayError, RelayReceipt } from './relayer';
 
-export class ProtocolCallRelayer implements IProtocolCallRelayer<ProtocolCallRequest> {
+export class ProtocolCallRelayer implements IProtocolCallRelayer<ProtocolTransactionRequest> {
   constructor(
     private apolloClient: LensApolloClient,
-    private factory: ITransactionFactory<ProtocolCallRequest>,
+    private factory: ITransactionFactory<ProtocolTransactionRequest>,
     private logger: ILogger,
   ) {}
 
-  async relayProtocolCall<T extends ProtocolCallRequest>(
+  async relayProtocolCall<T extends ProtocolTransactionRequest>(
     signedCall: SignedProtocolCall<T>,
   ): PromiseResult<MetaTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(signedCall);
@@ -51,7 +51,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<ProtocolCallReq
     return success(transaction);
   }
 
-  private async broadcast<T extends ProtocolCallRequest>(
+  private async broadcast<T extends ProtocolTransactionRequest>(
     signedCall: SignedProtocolCall<T>,
   ): PromiseResult<RelayReceipt, BroadcastingError> {
     try {

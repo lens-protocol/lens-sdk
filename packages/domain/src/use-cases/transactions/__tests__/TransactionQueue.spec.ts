@@ -2,7 +2,7 @@ import { mock } from 'jest-mock-extended';
 import waitFor from 'wait-for-expect';
 
 import {
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
   TransactionEvent,
   TransactionError,
   TransactionErrorReason,
@@ -10,7 +10,7 @@ import {
 import {
   MockedMetaTransaction,
   mockTransactionHash,
-  mockTransactionRequestModel,
+  mockAnyTransactionRequestModel,
 } from '../../../entities/__helpers__/mocks';
 import { mockCreatePostRequest } from '../../publications/__helpers__/mocks';
 import {
@@ -21,14 +21,14 @@ import {
   TransactionResponders,
 } from '../TransactionQueue';
 
-function mockResponders<T extends TransactionRequestModel>(
+function mockResponders<T extends AnyTransactionRequestModel>(
   mocks: Partial<TransactionResponders<T>>,
 ): TransactionResponders<T> {
   return mocks as TransactionResponders<T>;
 }
 
-function setupTestScenario<T extends TransactionRequestModel>({
-  request = mockTransactionRequestModel() as T,
+function setupTestScenario<T extends AnyTransactionRequestModel>({
+  request = mockAnyTransactionRequestModel() as T,
 }: {
   request?: T;
 } = {}) {

@@ -16,13 +16,11 @@ import {
 } from '@lens-protocol/api-bindings';
 import { lensPeriphery } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce, ProfileId } from '@lens-protocol/domain/entities';
-import {
-  IProfileDetailsCallGateway,
-  UpdateProfileDetailsRequest,
-} from '@lens-protocol/domain/use-cases/profile';
+import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   IUnsignedProtocolCallGateway,
   BroadcastingError,
+  IDelegatedTransactionGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -30,12 +28,17 @@ import { v4 } from 'uuid';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
+import {
+  Data,
+  SelfFundedProtocolTransactionRequest,
+} from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError, RelayReceipt } from '../relayer';
 import { createProfileMetadata } from './createProfileMetadata';
 
 export class ProfileMetadataCallGateway
-  implements IProfileDetailsCallGateway, IUnsignedProtocolCallGateway<UpdateProfileDetailsRequest>
+  implements
+    IDelegatedTransactionGateway<UpdateProfileDetailsRequest>,
+    IUnsignedProtocolCallGateway<UpdateProfileDetailsRequest>
 {
   constructor(
     private readonly apolloClient: LensApolloClient,
@@ -153,7 +156,7 @@ export class ProfileMetadataCallGateway
   private createRequestFallback(
     request: UpdateProfileDetailsRequest,
     data: CreateSetProfileMetadataTypedDataData,
-  ): SelfFundedProtocolCallRequest<UpdateProfileDetailsRequest> {
+  ): SelfFundedProtocolTransactionRequest<UpdateProfileDetailsRequest> {
     const contract = lensPeriphery(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileMetadataURI', [
       data.result.typedData.value.profileId,

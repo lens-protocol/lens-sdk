@@ -10,7 +10,7 @@ import {
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
   SubsidizedCall,
-  SupportedTransactionRequest,
+  AnyTransactionRequest,
   TransactionQueue,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
@@ -26,7 +26,7 @@ export type CreateCommentControllerArgs<T extends CreateCommentRequest> = {
   protocolCallRelayer: IProtocolCallRelayer<T>;
   transactionFactory: ITransactionFactory<T>;
   transactionGateway: IMetaTransactionNonceGateway;
-  transactionQueue: TransactionQueue<SupportedTransactionRequest>;
+  transactionQueue: TransactionQueue<AnyTransactionRequest>;
   uploader: IMetadataUploader<T>;
 };
 

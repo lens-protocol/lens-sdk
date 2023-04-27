@@ -7,15 +7,15 @@ import {
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
-import {
-  IDispatcherConfigCallGateway,
-  UpdateDispatcherConfigRequest,
-} from '@lens-protocol/domain/use-cases/profile';
+import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/profile';
+import { IUnsignedProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
-import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
+import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
-export class DispatcherConfigCallGateway implements IDispatcherConfigCallGateway {
+export class DispatcherConfigCallGateway
+  implements IUnsignedProtocolCallGateway<UpdateDispatcherConfigRequest>
+{
   constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall(
@@ -47,7 +47,7 @@ export class DispatcherConfigCallGateway implements IDispatcherConfigCallGateway
   private createRequestFallback(
     request: UpdateDispatcherConfigRequest,
     data: CreateSetDispatcherTypedDataData,
-  ): SelfFundedProtocolCallRequest<UpdateDispatcherConfigRequest> {
+  ): SelfFundedProtocolTransactionRequest<UpdateDispatcherConfigRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setDispatcher', [
       data.result.typedData.value.profileId,

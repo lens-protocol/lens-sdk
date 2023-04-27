@@ -12,7 +12,7 @@ import {
   mockPaidFollowRequest,
   mockProfileId,
 } from '@lens-protocol/domain/mocks';
-import { ProtocolCallRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { ProtocolTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { never } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
@@ -27,7 +27,7 @@ function setupTestScenario({
 }: {
   profileId: ProfileId;
   publications: AnyPublication[];
-  pendingTransactionsFor?: ProtocolCallRequest[];
+  pendingTransactionsFor?: ProtocolTransactionRequest[];
 }) {
   const apolloClient = createMockApolloClientWithMultipleResponses([
     createGetPublicationsMockedResponse({

@@ -1,12 +1,7 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { AppId, DecryptionCriteria, ProfileId, TransactionKind } from '../../entities';
-import {
-  DelegableSubsidizedCall,
-  IDelegatedCallGateway,
-  IProtocolCallPresenter,
-} from '../transactions/DelegableSubsidizedCall';
-import { IUnsignedProtocolCallGateway } from '../transactions/SubsidizedCall';
+import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 import { CollectPolicyConfig, ContentFocus, Locale, MediaObject } from './types';
 
@@ -24,12 +19,7 @@ export type CreatePostRequest = {
   decryptionCriteria?: DecryptionCriteria;
 };
 
-export type ICreatePostCallGateway = IDelegatedCallGateway<CreatePostRequest> &
-  IUnsignedProtocolCallGateway<CreatePostRequest>;
-
-export type ICreatePostPresenter = IProtocolCallPresenter;
-
-export class CreatePost extends DelegableSubsidizedCall<CreatePostRequest> {
+export class CreatePost extends DelegableSigning<CreatePostRequest> {
   async execute(request: CreatePostRequest) {
     invariant(request.media || request.content, 'One of post media or content is required');
     await super.execute(request);

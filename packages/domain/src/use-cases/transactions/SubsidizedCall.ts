@@ -5,15 +5,16 @@ import {
   Nonce,
   TransactionKind,
   ISignedProtocolCall,
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
   MetaTransaction,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
-  ProtocolCallRequestModel,
+  ProtocolTransactionRequestModel,
 } from '../../entities';
 import { ActiveWallet } from '../wallets/ActiveWallet';
 import { BroadcastingError } from './BroadcastingError';
+import { ISignedOperation } from './DelegableSigning';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
@@ -21,13 +22,13 @@ export interface IMetaTransactionNonceGateway {
   getNextMetaTransactionNonceFor(kind: TransactionKind): Promise<Nonce | undefined>;
 }
 
-export interface IProtocolCallRelayer<T extends ProtocolCallRequestModel> {
+export interface IProtocolCallRelayer<T extends ProtocolTransactionRequestModel> {
   relayProtocolCall(
     signedCall: ISignedProtocolCall<T>,
   ): PromiseResult<MetaTransaction<T>, BroadcastingError>;
 }
 
-export interface IUnsignedProtocolCallGateway<T extends ProtocolCallRequestModel> {
+export interface IUnsignedProtocolCallGateway<T extends ProtocolTransactionRequestModel> {
   createUnsignedProtocolCall(request: T, nonceOverride?: Nonce): Promise<IUnsignedProtocolCall<T>>;
 }
 
@@ -36,13 +37,15 @@ export type IProtocolCallPresenter = IGenericResultPresenter<
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
-export class SubsidizedCall<T extends ProtocolCallRequestModel> {
+export class SubsidizedCall<T extends ProtocolTransactionRequestModel>
+  implements ISignedOperation<T>
+{
   constructor(
     protected readonly activeWallet: ActiveWallet,
     protected readonly metaTransactionNonceGateway: IMetaTransactionNonceGateway,
     protected readonly unsignedProtocolCallGateway: IUnsignedProtocolCallGateway<T>,
     protected readonly protocolCallRelayer: IProtocolCallRelayer<T>,
-    protected readonly transactionQueue: TransactionQueue<TransactionRequestModel>,
+    protected readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
     protected readonly presenter: IProtocolCallPresenter,
   ) {}
 

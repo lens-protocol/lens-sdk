@@ -9,7 +9,7 @@ import {
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import { SignlessSubsidizedCall } from '../transactions/SignlessSubsidizedCall';
-import { IUnsignedProtocolCallGateway, SubsidizedCall } from '../transactions/SubsidizedCall';
+import { SubsidizedCall } from '../transactions/SubsidizedCall';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -62,8 +62,6 @@ export function isUnconstrainedFollowRequest(
 ): request is UnconstrainedFollowRequest {
   return !isPaidFollowRequest(request) && !isProfileOwnerFollowRequest(request);
 }
-
-export type IFollowProfilesCallGateway = IUnsignedProtocolCallGateway<FollowRequest>;
 
 export type IFollowProfilePresenter = IGenericResultPresenter<
   void,

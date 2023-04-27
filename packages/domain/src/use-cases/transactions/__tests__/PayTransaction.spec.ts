@@ -11,11 +11,11 @@ import {
   WalletConnectionErrorReason,
   UserRejectedError,
   PendingSigningRequestError,
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
 } from '../../../entities';
 import {
   MockedNativeTransaction,
-  mockTransactionRequestModel,
+  mockAnyTransactionRequestModel,
   mockUnsignedTransaction,
   mockWallet,
 } from '../../../entities/__helpers__/mocks';
@@ -31,19 +31,19 @@ import { mockTransactionQueue } from '../__helpers__/mocks';
 function setupPayTransaction({
   gateway,
   presenter = mock<IPayTransactionPresenter>(),
-  queue = mockTransactionQueue<TransactionRequestModel>(),
+  queue = mockTransactionQueue<AnyTransactionRequestModel>(),
   wallet,
 }: {
-  gateway: IPayTransactionGateway<TransactionRequestModel>;
+  gateway: IPayTransactionGateway<AnyTransactionRequestModel>;
   presenter?: IPayTransactionPresenter;
-  queue?: TransactionQueue<TransactionRequestModel>;
+  queue?: TransactionQueue<AnyTransactionRequestModel>;
   wallet: Wallet;
 }) {
   return new PayTransaction(mockActiveWallet({ wallet }), gateway, presenter, queue);
 }
 
 describe(`Given the ${PayTransaction.name} interactor`, () => {
-  const request = mockTransactionRequestModel();
+  const request = mockAnyTransactionRequestModel();
   const unsignedTransaction = mockUnsignedTransaction(request);
   const transaction = MockedNativeTransaction.fromUnsignedTransaction(unsignedTransaction);
 
@@ -54,7 +54,7 @@ describe(`Given the ${PayTransaction.name} interactor`, () => {
         - queue the resulting ${NativeTransaction.name} into the ${TransactionQueue.name}
         - present successful result`, async () => {
       const wallet = mockWallet();
-      const queue = mockTransactionQueue<TransactionRequestModel>();
+      const queue = mockTransactionQueue<AnyTransactionRequestModel>();
       const gateway = mockIPayTransactionGateway({
         request,
         wallet,

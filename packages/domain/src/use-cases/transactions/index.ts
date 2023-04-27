@@ -1,4 +1,4 @@
-export * from './DelegableSubsidizedCall';
+export * from './DelegableSigning';
 export * from './IGenericResultPresenter';
 export * from './SubsidizedCall';
 export * from './SignlessSubsidizedCall';

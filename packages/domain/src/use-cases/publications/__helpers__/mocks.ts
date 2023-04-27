@@ -92,13 +92,13 @@ export function mockNftMetadata(overrides?: Partial<NftMetadata>): NftMetadata {
   };
 }
 
-export function mockNoCollectPolicy(): NoCollectPolicyConfig {
+export function mockNoCollectPolicyConfig(): NoCollectPolicyConfig {
   return {
     type: CollectPolicyType.NO_COLLECT,
   };
 }
 
-export function mockFreeCollectPolicy(
+export function mockFreeCollectPolicyConfig(
   overrides?: Partial<FreeCollectPolicyConfig>,
 ): FreeCollectPolicyConfig {
   return {
@@ -109,7 +109,7 @@ export function mockFreeCollectPolicy(
   };
 }
 
-export function mockChargeCollectPolicy(
+export function mockChargeCollectPolicyConfig(
   overrides?: Partial<SimpleChargeCollectPolicyConfig>,
 ): SimpleChargeCollectPolicyConfig {
   return {

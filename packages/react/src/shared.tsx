@@ -6,7 +6,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
 import {
-  SupportedTransactionRequest,
+  AnyTransactionRequest,
   TransactionQueue,
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -95,7 +95,7 @@ export type SharedDependencies = {
   tokenAvailability: TokenAvailability;
   transactionFactory: TransactionFactory;
   transactionGateway: PendingTransactionGateway;
-  transactionQueue: TransactionQueue<SupportedTransactionRequest>;
+  transactionQueue: TransactionQueue<AnyTransactionRequest>;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
 };
@@ -156,7 +156,7 @@ export function createSharedDependencies(
 
   const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
 
-  const responders: TransactionResponders<SupportedTransactionRequest> = {
+  const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(apolloClient, sources),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),

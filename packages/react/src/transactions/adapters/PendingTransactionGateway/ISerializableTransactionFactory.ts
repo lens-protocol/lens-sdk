@@ -4,8 +4,8 @@ import {
   ProxyTransaction,
 } from '@lens-protocol/domain/entities';
 import {
-  ProtocolCallRequest,
-  SupportedTransactionRequest,
+  ProtocolTransactionRequest,
+  AnyTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import {
@@ -15,32 +15,32 @@ import {
   ProxyTransactionData,
 } from '../ITransactionFactory';
 
-export interface ISerializableMetaTransaction<T extends ProtocolCallRequest>
+export interface ISerializableMetaTransaction<T extends ProtocolTransactionRequest>
   extends MetaTransaction<T> {
   toTransactionData(): MetaTransactionData<T>;
 }
 
-export interface ISerializableNativeTransaction<T extends SupportedTransactionRequest>
+export interface ISerializableNativeTransaction<T extends AnyTransactionRequest>
   extends NativeTransaction<T> {
   toTransactionData(): NativeTransactionData<T>;
 }
 
-export interface ISerializableProxyTransaction<T extends ProtocolCallRequest>
+export interface ISerializableProxyTransaction<T extends ProtocolTransactionRequest>
   extends ProxyTransaction<T> {
   toTransactionData(): ProxyTransactionData<T>;
 }
 
 export interface ISerializableTransactionFactory
-  extends ITransactionFactory<SupportedTransactionRequest> {
-  createMetaTransaction<T extends ProtocolCallRequest>(
+  extends ITransactionFactory<AnyTransactionRequest> {
+  createMetaTransaction<T extends ProtocolTransactionRequest>(
     init: MetaTransactionData<T>,
   ): ISerializableMetaTransaction<T>;
 
-  createNativeTransaction<T extends SupportedTransactionRequest>(
+  createNativeTransaction<T extends AnyTransactionRequest>(
     init: NativeTransactionData<T>,
   ): ISerializableNativeTransaction<T>;
 
-  createProxyTransaction<T extends ProtocolCallRequest>(
+  createProxyTransaction<T extends ProtocolTransactionRequest>(
     init: ProxyTransactionData<T>,
   ): ISerializableProxyTransaction<T>;
 }

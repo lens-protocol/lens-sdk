@@ -2,7 +2,7 @@ import {
   MetaTransaction,
   NativeTransaction,
   Nonce,
-  ProtocolCallKinds,
+  ProtocolTransactionKinds,
   ProxyActionStatus,
   ProxyTransaction,
   TransactionError,
@@ -10,8 +10,8 @@ import {
   TransactionKind,
 } from '@lens-protocol/domain/entities';
 import {
-  ProtocolCallRequest,
-  SupportedTransactionRequest,
+  ProtocolTransactionRequest,
+  AnyTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
 
@@ -63,7 +63,7 @@ type StateUpdate<T> = {
 
 type StateReducer<T> = (state: T) => PromiseResult<StateUpdate<T>, TransactionError>;
 
-type MetaTransactionState<T extends SupportedTransactionRequest> = {
+type MetaTransactionState<T extends AnyTransactionRequest> = {
   chainType: ChainType;
   id: string;
   indexingId: string;
@@ -72,7 +72,7 @@ type MetaTransactionState<T extends SupportedTransactionRequest> = {
   txHash: string;
 };
 
-class SerializableMetaTransaction<T extends ProtocolCallRequest>
+class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
   extends MetaTransaction<T>
   implements ISerializableMetaTransaction<T>
 {
@@ -125,7 +125,7 @@ class SerializableMetaTransaction<T extends ProtocolCallRequest>
   }
 }
 
-type ProxyTransactionState<T extends SupportedTransactionRequest> = {
+type ProxyTransactionState<T extends AnyTransactionRequest> = {
   chainType: ChainType;
   id: string;
   proxyId: string;
@@ -134,7 +134,7 @@ type ProxyTransactionState<T extends SupportedTransactionRequest> = {
   status?: ProxyActionStatus;
 };
 
-class SerializableProxyTransaction<T extends ProtocolCallRequest>
+class SerializableProxyTransaction<T extends ProtocolTransactionRequest>
   extends ProxyTransaction<T>
   implements ISerializableProxyTransaction<T>
 {
@@ -187,7 +187,7 @@ class SerializableProxyTransaction<T extends ProtocolCallRequest>
   }
 }
 
-type NativeTransactionState<T extends SupportedTransactionRequest> = {
+type NativeTransactionState<T extends AnyTransactionRequest> = {
   chainType: ChainType;
   id: string;
   indexingId?: string;
@@ -195,7 +195,7 @@ type NativeTransactionState<T extends SupportedTransactionRequest> = {
   txHash: string;
 };
 
-class SerializableNativeTransaction<T extends SupportedTransactionRequest>
+class SerializableNativeTransaction<T extends AnyTransactionRequest>
   extends NativeTransaction<T>
   implements ISerializableNativeTransaction<T>
 {
@@ -250,7 +250,7 @@ class SerializableNativeTransaction<T extends SupportedTransactionRequest>
 export class TransactionFactory implements ISerializableTransactionFactory {
   constructor(private readonly transactionObserver: ITransactionObserver) {}
 
-  createMetaTransaction<T extends ProtocolCallRequest>(init: MetaTransactionData<T>) {
+  createMetaTransaction<T extends ProtocolTransactionRequest>(init: MetaTransactionData<T>) {
     return new SerializableMetaTransaction(
       {
         chainType: init.chainType,
@@ -264,7 +264,7 @@ export class TransactionFactory implements ISerializableTransactionFactory {
     );
   }
 
-  createNativeTransaction<T extends SupportedTransactionRequest>(init: NativeTransactionData<T>) {
+  createNativeTransaction<T extends AnyTransactionRequest>(init: NativeTransactionData<T>) {
     if (init.indexingId) {
       return new SerializableNativeTransaction(
         {
@@ -278,7 +278,7 @@ export class TransactionFactory implements ISerializableTransactionFactory {
       );
     }
 
-    if ((ProtocolCallKinds as ReadonlyArray<TransactionKind>).includes(init.request.kind)) {
+    if ((ProtocolTransactionKinds as ReadonlyArray<TransactionKind>).includes(init.request.kind)) {
       return new SerializableNativeTransaction(
         {
           chainType: init.chainType,
@@ -300,7 +300,7 @@ export class TransactionFactory implements ISerializableTransactionFactory {
     );
   }
 
-  createProxyTransaction<T extends ProtocolCallRequest>(
+  createProxyTransaction<T extends ProtocolTransactionRequest>(
     init: ProxyTransactionData<T>,
   ): ISerializableProxyTransaction<T> {
     return new SerializableProxyTransaction(
@@ -317,7 +317,7 @@ export class TransactionFactory implements ISerializableTransactionFactory {
   }
 
   private createProtocolCallStateReducer<
-    T extends SupportedTransactionRequest,
+    T extends AnyTransactionRequest,
     S extends MetaTransactionState<T> | NativeTransactionState<T>,
   >(): StateReducer<S> {
     return async (state) => {
@@ -351,7 +351,7 @@ export class TransactionFactory implements ISerializableTransactionFactory {
   }
 
   private createPureBlockchainStateReducer<
-    T extends SupportedTransactionRequest,
+    T extends AnyTransactionRequest,
     S extends NativeTransactionState<T>,
   >(): StateReducer<S> {
     return async (state) => {
@@ -372,7 +372,7 @@ export class TransactionFactory implements ISerializableTransactionFactory {
   }
 
   private createProxyActionStateReducer<
-    T extends SupportedTransactionRequest,
+    T extends AnyTransactionRequest,
     S extends ProxyTransactionState<T>,
   >(): StateReducer<S> {
     return async (state) => {

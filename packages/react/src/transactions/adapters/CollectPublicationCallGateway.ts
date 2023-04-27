@@ -7,16 +7,14 @@ import {
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
-import {
-  CollectRequest,
-  ICollectPublicationCallGateway,
-} from '@lens-protocol/domain/use-cases/publications';
+import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
+import { IUnsignedProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
-import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
+import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
-export class CollectPublicationCallGateway implements ICollectPublicationCallGateway {
+export class CollectPublicationCallGateway implements IUnsignedProtocolCallGateway<CollectRequest> {
   constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall(
@@ -49,7 +47,7 @@ export class CollectPublicationCallGateway implements ICollectPublicationCallGat
   private createRequestFallback(
     request: CollectRequest,
     data: CreateCollectTypedDataData,
-  ): SelfFundedProtocolCallRequest<CollectRequest> {
+  ): SelfFundedProtocolTransactionRequest<CollectRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('collect', [
       data.result.typedData.value.profileId,

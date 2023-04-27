@@ -11,13 +11,13 @@ import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import {
   FollowRequest,
-  IFollowProfilesCallGateway,
   isPaidFollowRequest,
   isProfileOwnerFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
+import { IUnsignedProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
-import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
+import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
 function resolveProfileFollow(request: FollowRequest): Follow[] {
   if (isPaidFollowRequest(request)) {
@@ -47,7 +47,7 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
   return [{ profile: request.profileId }];
 }
 
-export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
+export class FollowProfilesCallGateway implements IUnsignedProtocolCallGateway<FollowRequest> {
   constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall(
@@ -78,7 +78,7 @@ export class FollowProfilesCallGateway implements IFollowProfilesCallGateway {
   private createRequestFallback(
     request: FollowRequest,
     data: CreateFollowTypedDataData,
-  ): SelfFundedProtocolCallRequest<FollowRequest> {
+  ): SelfFundedProtocolTransactionRequest<FollowRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('follow', [
       data.result.typedData.value.profileIds,

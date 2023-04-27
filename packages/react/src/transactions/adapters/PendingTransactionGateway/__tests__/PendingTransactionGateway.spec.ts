@@ -13,7 +13,7 @@ import {
   mockFreeCollectRequest,
   mockTokenAllowanceRequest,
 } from '@lens-protocol/domain/mocks';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { InvariantError } from '@lens-protocol/shared-kernel';
 import { IStorage, Storage } from '@lens-protocol/storage';
 import { mockStorage } from '@lens-protocol/storage/mocks';
@@ -38,7 +38,7 @@ function setupPendingTransactionGateway({
 }
 
 type TransactionRequest = {
-  [K in TransactionKind]: Extract<SupportedTransactionRequest, { kind: K }>;
+  [K in TransactionKind]: Extract<AnyTransactionRequest, { kind: K }>;
 };
 
 const requests: TransactionRequest = {

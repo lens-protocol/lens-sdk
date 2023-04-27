@@ -1,17 +1,23 @@
 import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
+  AppId,
   PendingSigningRequestError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import {
+  CollectPolicyConfig,
   CollectPolicyType,
+  ContentFocus,
   CreatePostRequest,
+  Locale,
+  MediaObject,
+  ReferencePolicyConfig,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
@@ -24,7 +30,7 @@ export type UseCreatePostArgs = {
   /**
    * The post author.
    *
-   * **Poo-tip**: use the profile instance returned by {@link useActiveProfile} to create a post on behalf of the active profile.
+   * **Poo-tip**: use the profile instance returned by {@link useActiveProfile} to create a post in behalf of the active profile.
    */
   publisher: ProfileOwnedByMe;
   /**
@@ -33,13 +39,42 @@ export type UseCreatePostArgs = {
   upload: MetadataUploadHandler;
 };
 
-export type CreatePostArgs = Prettify<
-  Omit<
-    CreatePostRequest,
-    'kind' | 'delegate' | 'collect' | 'profileId' | 'reference' | 'decryptionCriteria'
-  > &
-    Partial<Pick<CreatePostRequest, 'collect' | 'reference'>>
->;
+export type CreatePostArgs = {
+  /**
+   * @deprecated Use {@link LensConfig#appId} instead. This was exposed by mistake but was never used.
+   */
+  appId?: AppId;
+  /**
+   * The post collect policy. Determines the criteria that must be met for a user to be able to collect the post.
+   */
+  collect?: CollectPolicyConfig;
+  /**
+   * The post content as Markdown string.
+   */
+  content?: string;
+  /**
+   * The post content focus. Determines what is the primary objective of the post.
+   */
+  contentFocus: ContentFocus;
+  /**
+   * The post media. An array of media objects.
+   */
+  media?: MediaObject[];
+  /**
+   * The post reference policy. Determines the criteria that must be met for a user to be able to comment or mirror the post.
+   */
+  reference?: ReferencePolicyConfig;
+  /**
+   * The language of the post.
+   *
+   * It a locale string in the format of `<language-tag>-<region-tag>` or just `<language-tag>`, where:
+   * - `language-tag` is a two-letter ISO 639-1 language code, e.g. `en` or `it`
+   * - `region-tag` is a two-letter ISO 3166-1 alpha-2 region code, e.g. `US` or `IT`
+   *
+   * You can just pass in the language tag if you do not know the region or don't need to be specific.
+   */
+  locale: Locale;
+};
 
 export type CreatePostOperation = Operation<
   void,

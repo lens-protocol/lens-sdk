@@ -3,7 +3,7 @@ import { failure, success } from '@lens-protocol/shared-kernel';
 import {
   InsufficientGasError,
   PendingSigningRequestError,
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
   UserRejectedError,
   Wallet,
   WalletConnectionError,
@@ -13,7 +13,7 @@ import { ActiveWallet } from '../wallets/ActiveWallet';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
-export interface IPayTransactionGateway<T extends TransactionRequestModel> {
+export interface IPayTransactionGateway<T extends AnyTransactionRequestModel> {
   prepareSelfFundedTransaction(request: T, wallet: Wallet): Promise<UnsignedTransaction<T>>;
 }
 
@@ -22,12 +22,12 @@ export type IPayTransactionPresenter = IGenericResultPresenter<
   PendingSigningRequestError | InsufficientGasError | UserRejectedError | WalletConnectionError
 >;
 
-export class PayTransaction<T extends TransactionRequestModel> {
+export class PayTransaction<T extends AnyTransactionRequestModel> {
   constructor(
     private readonly activeWallet: ActiveWallet,
     private readonly gateway: IPayTransactionGateway<T>,
     private readonly presenter: IPayTransactionPresenter,
-    private readonly queue: TransactionQueue<TransactionRequestModel>,
+    private readonly queue: TransactionQueue<AnyTransactionRequestModel>,
   ) {}
 
   async execute(request: T) {

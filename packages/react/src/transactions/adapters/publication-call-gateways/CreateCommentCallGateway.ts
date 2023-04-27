@@ -11,22 +11,30 @@ import {
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
+import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
-  CreateCommentRequest,
-  ICreateCommentCallGateway,
-} from '@lens-protocol/domain/use-cases/publications';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+  BroadcastingError,
+  IDelegatedTransactionGateway,
+  IUnsignedProtocolCallGateway,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
+import {
+  Data,
+  SelfFundedProtocolTransactionRequest,
+} from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError, RelayReceipt } from '../relayer';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
-export class CreateCommentCallGateway implements ICreateCommentCallGateway {
+export class CreateCommentCallGateway
+  implements
+    IDelegatedTransactionGateway<CreateCommentRequest>,
+    IUnsignedProtocolCallGateway<CreateCommentRequest>
+{
   constructor(
     private readonly apolloClient: LensApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateCommentRequest>,
@@ -128,7 +136,7 @@ export class CreateCommentCallGateway implements ICreateCommentCallGateway {
   private createRequestFallback(
     request: CreateCommentRequest,
     data: CreateCommentTypedDataData,
-  ): SelfFundedProtocolCallRequest<CreateCommentRequest> {
+  ): SelfFundedProtocolTransactionRequest<CreateCommentRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('comment', [
       {

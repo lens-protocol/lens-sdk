@@ -1,15 +1,15 @@
 import {
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
   MetaTransaction,
   NativeTransaction,
   Nonce,
   ProxyTransaction,
   ProxyActionStatus,
-  ProtocolCallOf,
+  JustProtocolRequest,
 } from '@lens-protocol/domain/entities';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
-export type NativeTransactionData<T extends TransactionRequestModel> = {
+export type NativeTransactionData<T extends AnyTransactionRequestModel> = {
   chainType: ChainType;
   id: string;
   indexingId?: string;
@@ -17,7 +17,7 @@ export type NativeTransactionData<T extends TransactionRequestModel> = {
   txHash: string;
 };
 
-export type MetaTransactionData<T extends TransactionRequestModel> = {
+export type MetaTransactionData<T extends AnyTransactionRequestModel> = {
   chainType: ChainType;
   id: string;
   indexingId: string;
@@ -26,7 +26,7 @@ export type MetaTransactionData<T extends TransactionRequestModel> = {
   txHash: string;
 };
 
-export type ProxyTransactionData<T extends TransactionRequestModel> = {
+export type ProxyTransactionData<T extends AnyTransactionRequestModel> = {
   chainType: ChainType;
   id: string;
   request: T;
@@ -35,8 +35,8 @@ export type ProxyTransactionData<T extends TransactionRequestModel> = {
   status?: ProxyActionStatus;
 };
 
-export interface ITransactionFactory<Supported extends TransactionRequestModel> {
-  createMetaTransaction<T extends ProtocolCallOf<Supported>>(
+export interface ITransactionFactory<Supported extends AnyTransactionRequestModel> {
+  createMetaTransaction<T extends JustProtocolRequest<Supported>>(
     init: MetaTransactionData<T>,
   ): MetaTransaction<T>;
 
@@ -44,7 +44,7 @@ export interface ITransactionFactory<Supported extends TransactionRequestModel> 
     init: NativeTransactionData<T>,
   ): NativeTransaction<T>;
 
-  createProxyTransaction<T extends ProtocolCallOf<Supported>>(
+  createProxyTransaction<T extends JustProtocolRequest<Supported>>(
     init: ProxyTransactionData<T>,
   ): ProxyTransaction<T>;
 }

@@ -4,34 +4,34 @@ import {
   Transaction,
   TransactionError,
   TransactionKind,
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
   TransactionEvent,
 } from '../../entities';
 
-export type NewTransactionsSubscriber<T extends TransactionRequestModel> = (
+export type NewTransactionsSubscriber<T extends AnyTransactionRequestModel> = (
   transactions: readonly Transaction<T>[],
 ) => void;
 
-export interface IPendingTransactionGateway<T extends TransactionRequestModel> {
+export interface IPendingTransactionGateway<T extends AnyTransactionRequestModel> {
   getAll(): Promise<readonly Transaction<T>[]>;
   save(tx: Transaction<T>): Promise<void>;
   remove(id: string): Promise<void>;
   subscribe(subscriber: NewTransactionsSubscriber<T>): void;
 }
 
-export type TransactionData<T extends TransactionRequestModel> = {
+export type TransactionData<T extends AnyTransactionRequestModel> = {
   id: string;
   request: T;
   txHash?: string;
 };
 
-export interface ITransactionResponder<T extends TransactionRequestModel> {
+export interface ITransactionResponder<T extends AnyTransactionRequestModel> {
   prepare?(data: TransactionData<T>): Promise<unknown>;
   commit(data: TransactionData<T>): Promise<unknown>;
   rollback?(data: TransactionData<T>): Promise<unknown>;
 }
 
-function transactionData<T extends TransactionRequestModel>(
+function transactionData<T extends AnyTransactionRequestModel>(
   tx: Transaction<T>,
 ): TransactionData<T> {
   return {
@@ -41,7 +41,7 @@ function transactionData<T extends TransactionRequestModel>(
   };
 }
 
-export interface ITransactionQueuePresenter<T extends TransactionRequestModel> {
+export interface ITransactionQueuePresenter<T extends AnyTransactionRequestModel> {
   pending(data: TransactionData<T>): void;
 
   settled(data: TransactionData<T>): void;
@@ -51,11 +51,11 @@ export interface ITransactionQueuePresenter<T extends TransactionRequestModel> {
   clearRecent(): void;
 }
 
-export type TransactionResponders<T extends TransactionRequestModel> = {
+export type TransactionResponders<T extends AnyTransactionRequestModel> = {
   [K in TransactionKind]: ITransactionResponder<Extract<T, { kind: K }>>;
 };
 
-export class TransactionQueue<T extends TransactionRequestModel> {
+export class TransactionQueue<T extends AnyTransactionRequestModel> {
   private initialized = false;
 
   constructor(
