@@ -15,7 +15,7 @@ import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications'
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IUnsignedProtocolCallGateway,
+  IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -33,7 +33,7 @@ import { resolveCollectModule, resolveReferenceModule } from './utils';
 export class CreatePostGateway
   implements
     IDelegatedTransactionGateway<CreatePostRequest>,
-    IUnsignedProtocolCallGateway<CreatePostRequest>
+    IOnChainProtocolCallGateway<CreatePostRequest>
 {
   constructor(
     private readonly apolloClient: LensApolloClient,

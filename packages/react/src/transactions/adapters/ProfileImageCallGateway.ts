@@ -15,7 +15,7 @@ import { UpdateProfileImageRequest } from '@lens-protocol/domain/use-cases/profi
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IUnsignedProtocolCallGateway,
+  IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -28,7 +28,7 @@ import { handleRelayError, RelayReceipt } from './relayer';
 export class ProfileImageCallGateway
   implements
     IDelegatedTransactionGateway<UpdateProfileImageRequest>,
-    IUnsignedProtocolCallGateway<UpdateProfileImageRequest>
+    IOnChainProtocolCallGateway<UpdateProfileImageRequest>
 {
   constructor(
     private apolloClient: LensApolloClient,

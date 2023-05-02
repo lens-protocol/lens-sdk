@@ -7,12 +7,12 @@ import {
 } from '@lens-protocol/api-bindings';
 import { lensFollowNFT } from '@lens-protocol/blockchain-bindings';
 import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
-import { IUnsignedProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
+import { IOnChainProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
-export class UnfollowProfileCallGateway implements IUnsignedProtocolCallGateway<UnfollowRequest> {
+export class UnfollowProfileCallGateway implements IOnChainProtocolCallGateway<UnfollowRequest> {
   constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall(

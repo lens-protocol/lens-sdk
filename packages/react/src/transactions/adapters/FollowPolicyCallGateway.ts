@@ -11,7 +11,7 @@ import {
   FollowPolicyType,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { IUnsignedProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
+import { IOnChainProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
@@ -44,7 +44,7 @@ function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
 }
 
 export class FollowPolicyCallGateway
-  implements IUnsignedProtocolCallGateway<UpdateFollowPolicyRequest>
+  implements IOnChainProtocolCallGateway<UpdateFollowPolicyRequest>
 {
   constructor(private apolloClient: LensApolloClient) {}
 

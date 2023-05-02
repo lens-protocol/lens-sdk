@@ -28,7 +28,7 @@ export interface IProtocolCallRelayer<T extends ProtocolTransactionRequestModel>
   ): PromiseResult<MetaTransaction<T>, BroadcastingError>;
 }
 
-export interface IUnsignedProtocolCallGateway<T extends ProtocolTransactionRequestModel> {
+export interface IOnChainProtocolCallGateway<T extends ProtocolTransactionRequestModel> {
   createUnsignedProtocolCall(request: T, nonceOverride?: Nonce): Promise<IUnsignedProtocolCall<T>>;
 }
 
@@ -43,7 +43,7 @@ export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
   constructor(
     protected readonly activeWallet: ActiveWallet,
     protected readonly metaTransactionNonceGateway: IMetaTransactionNonceGateway,
-    protected readonly unsignedProtocolCallGateway: IUnsignedProtocolCallGateway<T>,
+    protected readonly onChainProtocolCallGateway: IOnChainProtocolCallGateway<T>,
     protected readonly protocolCallRelayer: IProtocolCallRelayer<T>,
     protected readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
     protected readonly presenter: ISubsidizeOnChainPresenter,
@@ -56,7 +56,7 @@ export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
       request.kind,
     );
 
-    const unsignedCall = await this.unsignedProtocolCallGateway.createUnsignedProtocolCall(
+    const unsignedCall = await this.onChainProtocolCallGateway.createUnsignedProtocolCall(
       request,
       nonce,
     );

@@ -18,7 +18,7 @@ import { lensPeriphery } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce, ProfileId } from '@lens-protocol/domain/entities';
 import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
-  IUnsignedProtocolCallGateway,
+  IOnChainProtocolCallGateway,
   BroadcastingError,
   IDelegatedTransactionGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -38,7 +38,7 @@ import { createProfileMetadata } from './createProfileMetadata';
 export class ProfileMetadataCallGateway
   implements
     IDelegatedTransactionGateway<UpdateProfileDetailsRequest>,
-    IUnsignedProtocolCallGateway<UpdateProfileDetailsRequest>
+    IOnChainProtocolCallGateway<UpdateProfileDetailsRequest>
 {
   constructor(
     private readonly apolloClient: LensApolloClient,

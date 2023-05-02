@@ -31,7 +31,7 @@ import {
 import {
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
-  IUnsignedProtocolCallGateway,
+  IOnChainProtocolCallGateway,
 } from '../SubsidizeOnChain';
 import { AnyTransactionRequest } from '../SupportedTransactionRequest';
 import { TransactionData, TransactionQueue } from '../TransactionQueue';
@@ -91,7 +91,7 @@ export function mockIMetaTransactionNonceGateway({
   return gateway;
 }
 
-export function mockIUnsignedProtocolCallGateway<T extends ProtocolTransactionRequestModel>({
+export function mockIOnChainProtocolCallGateway<T extends ProtocolTransactionRequestModel>({
   request,
   nonce,
   unsignedCall,
@@ -99,8 +99,8 @@ export function mockIUnsignedProtocolCallGateway<T extends ProtocolTransactionRe
   request: T;
   nonce: Nonce | undefined;
   unsignedCall: IUnsignedProtocolCall<T>;
-}): IUnsignedProtocolCallGateway<T> {
-  const gateway = mock<IUnsignedProtocolCallGateway<T>>();
+}): IOnChainProtocolCallGateway<T> {
+  const gateway = mock<IOnChainProtocolCallGateway<T>>();
 
   when(gateway.createUnsignedProtocolCall)
     .calledWith(request, nonce)
@@ -118,7 +118,7 @@ export function mockIOffChainProtocolCallGateway<
 }: {
   request: T;
   unsignedCall: IUnsignedProtocolCall<T>;
-}): IUnsignedProtocolCallGateway<T> {
+}): IOnChainProtocolCallGateway<T> {
   const gateway = mock<IOffChainProtocolCallGateway<T>>();
 
   when(gateway.createUnsignedProtocolCall).calledWith(request).mockResolvedValue(unsignedCall);
