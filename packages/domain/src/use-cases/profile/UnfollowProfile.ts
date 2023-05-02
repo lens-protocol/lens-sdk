@@ -1,9 +1,9 @@
 import { ProfileId, TransactionKind } from '../../entities';
-import { SubsidizedCall } from '../transactions/SubsidizedCall';
+import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 
 export type UnfollowRequest = {
   profileId: ProfileId;
   kind: TransactionKind.UNFOLLOW_PROFILE;
 };
 
-export class UnfollowProfile extends SubsidizedCall<UnfollowRequest> {}
+export class UnfollowProfile extends SubsidizeOnChain<UnfollowRequest> {}

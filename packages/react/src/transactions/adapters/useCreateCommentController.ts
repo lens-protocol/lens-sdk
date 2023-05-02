@@ -9,7 +9,7 @@ import {
   BroadcastingError,
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
-  SubsidizedCall,
+  SubsidizeOnChain,
   AnyTransactionRequest,
   TransactionQueue,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -49,7 +49,7 @@ export class CreateCommentController<T extends CreateCommentRequest> {
   }: CreateCommentControllerArgs<T>) {
     const gateway = new CreateCommentCallGateway(apolloClient, transactionFactory, uploader);
 
-    const signedCreatePost = new SubsidizedCall<CreateCommentRequest>(
+    const signedCreateComment = new SubsidizeOnChain<CreateCommentRequest>(
       activeWallet,
       transactionGateway,
       gateway,
@@ -58,7 +58,7 @@ export class CreateCommentController<T extends CreateCommentRequest> {
       this.presenter,
     );
     this.createComment = new CreateComment(
-      signedCreatePost,
+      signedCreateComment,
       gateway,
       transactionQueue,
       this.presenter,

@@ -32,12 +32,12 @@ export interface IUnsignedProtocolCallGateway<T extends ProtocolTransactionReque
   createUnsignedProtocolCall(request: T, nonceOverride?: Nonce): Promise<IUnsignedProtocolCall<T>>;
 }
 
-export type IProtocolCallPresenter = IGenericResultPresenter<
+export type ISubsidizeOnChainPresenter = IGenericResultPresenter<
   void,
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
-export class SubsidizedCall<T extends ProtocolTransactionRequestModel>
+export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
   implements ISignedOperation<T>
 {
   constructor(
@@ -46,7 +46,7 @@ export class SubsidizedCall<T extends ProtocolTransactionRequestModel>
     protected readonly unsignedProtocolCallGateway: IUnsignedProtocolCallGateway<T>,
     protected readonly protocolCallRelayer: IProtocolCallRelayer<T>,
     protected readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
-    protected readonly presenter: IProtocolCallPresenter,
+    protected readonly presenter: ISubsidizeOnChainPresenter,
   ) {}
 
   async execute(request: T) {

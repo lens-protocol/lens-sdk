@@ -13,6 +13,7 @@ import {
   TransactionKind,
   AnyTransactionRequestModel,
   ProtocolTransactionRequestModel,
+  DataTransaction,
 } from '../../../entities';
 import {
   MockedProxyTransaction,
@@ -21,12 +22,17 @@ import {
 } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import { IDelegatedTransactionGateway, WithDelegateFlag } from '../DelegableSigning';
-import { ISignlessSubsidizedCallRelayer } from '../SignlessSubsidizedCall';
+import { ISignlessSubsidizedCallRelayer } from '../SignlessSubsidizeOnChain';
+import {
+  IDataAvailabilityRelayer,
+  IOffChainProtocolCallGateway,
+  WithOffChainFlag,
+} from '../SubsidizeOffChain';
 import {
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
   IUnsignedProtocolCallGateway,
-} from '../SubsidizedCall';
+} from '../SubsidizeOnChain';
 import { AnyTransactionRequest } from '../SupportedTransactionRequest';
 import { TransactionData, TransactionQueue } from '../TransactionQueue';
 
@@ -38,6 +44,22 @@ export function mockIProtocolCallRelayer<T extends ProtocolTransactionRequestMod
   result: Result<MetaTransaction<T>, BroadcastingError>;
 }) {
   const transactionRelayer = mock<IProtocolCallRelayer<T>>();
+
+  when(transactionRelayer.relayProtocolCall).calledWith(signedCall).mockResolvedValue(result);
+
+  return transactionRelayer;
+}
+
+export function mockIDataAvailabilityRelayer<
+  T extends WithOffChainFlag<ProtocolTransactionRequestModel>,
+>({
+  signedCall,
+  result,
+}: {
+  signedCall: ISignedProtocolCall<T>;
+  result: Result<DataTransaction<T>, BroadcastingError>;
+}) {
+  const transactionRelayer = mock<IDataAvailabilityRelayer<T>>();
 
   when(transactionRelayer.relayProtocolCall).calledWith(signedCall).mockResolvedValue(result);
 
@@ -75,7 +97,7 @@ export function mockIUnsignedProtocolCallGateway<T extends ProtocolTransactionRe
   unsignedCall,
 }: {
   request: T;
-  nonce?: Nonce;
+  nonce: Nonce | undefined;
   unsignedCall: IUnsignedProtocolCall<T>;
 }): IUnsignedProtocolCallGateway<T> {
   const gateway = mock<IUnsignedProtocolCallGateway<T>>();
@@ -83,6 +105,23 @@ export function mockIUnsignedProtocolCallGateway<T extends ProtocolTransactionRe
   when(gateway.createUnsignedProtocolCall)
     .calledWith(request, nonce)
     .mockResolvedValue(unsignedCall);
+
+  return gateway;
+}
+
+export function mockIOffChainProtocolCallGateway<
+  T extends WithOffChainFlag<ProtocolTransactionRequestModel>,
+>({
+  request,
+
+  unsignedCall,
+}: {
+  request: T;
+  unsignedCall: IUnsignedProtocolCall<T>;
+}): IUnsignedProtocolCallGateway<T> {
+  const gateway = mock<IOffChainProtocolCallGateway<T>>();
+
+  when(gateway.createUnsignedProtocolCall).calledWith(request).mockResolvedValue(unsignedCall);
 
   return gateway;
 }
@@ -128,4 +167,11 @@ export function mockProtocolTransactionRequestModelWithDelegateFlag({
     kind: TransactionKind.CREATE_POST,
     delegate,
   } as WithDelegateFlag<ProtocolTransactionRequestModel>;
+}
+
+export function mockProtocolTransactionRequestModelWithOffChainFlag(): WithOffChainFlag<ProtocolTransactionRequestModel> {
+  return {
+    kind: TransactionKind.CREATE_POST,
+    offChain: true,
+  } as WithOffChainFlag<ProtocolTransactionRequestModel>;
 }

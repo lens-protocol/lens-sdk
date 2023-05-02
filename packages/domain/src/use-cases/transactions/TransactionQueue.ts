@@ -34,10 +34,16 @@ export interface ITransactionResponder<T extends AnyTransactionRequestModel> {
 function transactionData<T extends AnyTransactionRequestModel>(
   tx: Transaction<T>,
 ): TransactionData<T> {
+  if ('hash' in tx) {
+    return {
+      id: tx.id,
+      request: tx.request,
+      txHash: tx.hash,
+    };
+  }
   return {
     id: tx.id,
     request: tx.request,
-    txHash: tx.hash,
   };
 }
 
@@ -141,9 +147,7 @@ export class TransactionQueue<T extends AnyTransactionRequestModel> {
         return success();
       }
 
-      if (transaction.hash) {
-        this.transactionQueuePresenter.pending(transactionData(transaction));
-      }
+      this.transactionQueuePresenter.pending(transactionData(transaction));
 
       await this.transactionGateway.save(transaction);
     }

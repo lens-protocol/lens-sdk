@@ -1,8 +1,8 @@
 import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { SignlessSubsidizedCall } from '../../transactions/SignlessSubsidizedCall';
-import { SubsidizedCall } from '../../transactions/SubsidizedCall';
+import { SignlessSubsidizeOnChain } from '../../transactions/SignlessSubsidizeOnChain';
+import { SubsidizeOnChain } from '../../transactions/SubsidizeOnChain';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -18,11 +18,11 @@ import {
 import { mockFreeCollectRequest, mockPaidCollectRequest } from '../__helpers__/mocks';
 
 function mockSubsidizedCall<T extends CollectRequest>() {
-  return mock<SubsidizedCall<T>>();
+  return mock<SubsidizeOnChain<T>>();
 }
 
 function mockSignlessSubsidizedCall<T extends FreeCollectRequest>() {
-  return mock<SignlessSubsidizedCall<T>>();
+  return mock<SignlessSubsidizeOnChain<T>>();
 }
 
 function setupCollectPublication({
@@ -33,8 +33,8 @@ function setupCollectPublication({
 }: {
   presenter: ICollectPublicationPresenter;
   tokenAvailability: TokenAvailability;
-  signedCall?: SubsidizedCall<CollectRequest>;
-  signlessCall?: SignlessSubsidizedCall<FreeCollectRequest>;
+  signedCall?: SubsidizeOnChain<CollectRequest>;
+  signlessCall?: SignlessSubsidizeOnChain<FreeCollectRequest>;
 }) {
   return new CollectPublication(tokenAvailability, signedCall, signlessCall, presenter);
 }
@@ -44,7 +44,7 @@ describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
 
   describe(`when "${CollectPublication.prototype.execute.name}" method is invoked`, () => {
     describe('with a FreeCollectRequest', () => {
-      it(`should execute the ${SignlessSubsidizedCall.name}<FreeCollectRequest> strategy`, async () => {
+      it(`should execute the ${SignlessSubsidizeOnChain.name}<FreeCollectRequest> strategy`, async () => {
         const request = mockFreeCollectRequest();
         const signedCall = mockSubsidizedCall<CollectRequest>();
         const signlessCall = mockSignlessSubsidizedCall<FreeCollectRequest>();
@@ -64,7 +64,7 @@ describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
     });
 
     describe('with a FreeCollectRequest and followerOnly', () => {
-      it(`should execute the ${SubsidizedCall.name}<CollectRequest> strategy`, async () => {
+      it(`should execute the ${SubsidizeOnChain.name}<CollectRequest> strategy`, async () => {
         const request = mockFreeCollectRequest({
           followerOnly: true,
         });
@@ -88,7 +88,7 @@ describe(`Given the ${CollectPublication.name} use-case interactor`, () => {
     describe('with an associated collect fee', () => {
       const request = mockPaidCollectRequest();
 
-      it(`should execute the ${SubsidizedCall.name}<CollectRequest> strategy`, async () => {
+      it(`should execute the ${SubsidizeOnChain.name}<CollectRequest> strategy`, async () => {
         const request = mockPaidCollectRequest();
         const signedCall = mockSubsidizedCall<CollectRequest>();
         const signlessCall = mockSignlessSubsidizedCall<FreeCollectRequest>();

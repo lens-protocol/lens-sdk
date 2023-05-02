@@ -8,7 +8,7 @@ import {
   UpdateProfileDetails,
   UpdateProfileDetailsRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SubsidizedCall } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { MetadataUploaderErrorMiddleware } from '../infrastructure/MetadataUploaderErrorMiddleware';
@@ -44,7 +44,7 @@ export function useUpdateProfileDetailsController({
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
-    const signedUpdateProfiles = new SubsidizedCall<UpdateProfileDetailsRequest>(
+    const signedUpdateProfiles = new SubsidizeOnChain<UpdateProfileDetailsRequest>(
       activeWallet,
       transactionGateway,
       gateway,

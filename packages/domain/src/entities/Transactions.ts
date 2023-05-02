@@ -121,7 +121,15 @@ export abstract class ProxyTransaction<T extends ProtocolTransactionRequestModel
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
+export abstract class DataTransaction<T extends ProtocolTransactionRequestModel> {
+  abstract get id(): string;
+  abstract get request(): T;
+
+  abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
+}
+
 export type Transaction<T extends AnyTransactionRequestModel> =
+  | DataTransaction<JustProtocolRequest<T>>
   | MetaTransaction<JustProtocolRequest<T>>
   | NativeTransaction<T>
   | ProxyTransaction<JustProtocolRequest<T>>;

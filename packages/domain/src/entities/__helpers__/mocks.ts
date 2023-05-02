@@ -49,6 +49,7 @@ import {
   AnyTransactionRequestModel,
   UnsignedTransaction,
   ProtocolTransactionRequestModel,
+  DataTransaction,
 } from '../Transactions';
 import { Wallet } from '../Wallet';
 
@@ -213,6 +214,7 @@ export class MockedMetaTransaction<
     if ('error' in item) {
       return failure(item.error);
     }
+
     this.hash = item.txHash ?? this.hash;
     return success(item.event);
   }
@@ -351,6 +353,37 @@ export class MockedProxyTransaction<
 
   static fromRequest<T extends ProtocolTransactionRequestModel>(request: T): ProxyTransaction<T> {
     return new MockedProxyTransaction({ request, status: ProxyActionStatus.MINTING });
+  }
+}
+
+type MockedDataTransactionInit<T extends ProtocolTransactionRequestModel> = {
+  request: T;
+  id?: string;
+};
+
+export class MockedDataTransaction<
+  T extends ProtocolTransactionRequestModel,
+> extends DataTransaction<T> {
+  readonly id: string;
+  readonly request: T;
+
+  private constructor({ id = faker.datatype.uuid(), request }: MockedDataTransactionInit<T>) {
+    super();
+    this.id = id;
+    this.request = request;
+  }
+
+  async waitNextEvent(): PromiseResult<TransactionEvent, TransactionError> {
+    return success(TransactionEvent.SETTLED);
+  }
+
+  static fromSignedCall<T extends ProtocolTransactionRequestModel>(
+    signedCall: ISignedProtocolCall<T>,
+  ): MockedDataTransaction<T> {
+    return new MockedDataTransaction({
+      id: signedCall.id,
+      request: signedCall.request,
+    });
   }
 }
 

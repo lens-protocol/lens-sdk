@@ -4,7 +4,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { CreateMirror, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
-import { BroadcastingError, SubsidizedCall } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
@@ -28,7 +28,7 @@ export function useCreateMirrorController() {
 
     const mirrorCallGateway = new CreateMirrorCallGateway(apolloClient, transactionFactory);
 
-    const signedCreatePost = new SubsidizedCall<CreateMirrorRequest>(
+    const signedCreateMirror = new SubsidizeOnChain<CreateMirrorRequest>(
       activeWallet,
       transactionGateway,
       mirrorCallGateway,
@@ -38,7 +38,7 @@ export function useCreateMirrorController() {
     );
 
     const createMirror = new CreateMirror(
-      signedCreatePost,
+      signedCreateMirror,
       mirrorCallGateway,
       transactionQueue,
       presenter,

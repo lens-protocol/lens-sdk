@@ -14,7 +14,6 @@ import {
   IDelegatedTransactionPresenter,
   ISignedOperation,
 } from '../DelegableSigning';
-import { SubsidizedCall } from '../SubsidizedCall';
 import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIDelegatedTransactionGateway,
@@ -41,8 +40,8 @@ describe(`Given an instance of the ${DelegableSigning.name}<T> interactor`, () =
     describe('with a WithDelegateFlag<ProtocolTransactionRequestModel> that has the "delegate" flag unset', () => {
       const request = mockProtocolTransactionRequestModelWithDelegateFlag({ delegate: false });
 
-      it(`should execute the ${SubsidizedCall.name}<T>`, async () => {
-        const signedOperation = mock<SubsidizedCall<ProtocolTransactionRequestModel>>();
+      it(`should execute the ISignedOperation<T>`, async () => {
+        const signedOperation = mock<ISignedOperation<ProtocolTransactionRequestModel>>();
         const call = setupDelegableSigning({
           signedOperation,
         });

@@ -79,22 +79,13 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
         request,
       });
 
-      const transaction = MockedMetaTransaction.fromRawData(
-        { request },
-        {
-          withUpdatesSequence: [
-            {
-              event: TransactionEvent.BROADCASTED,
-            },
-            { event: TransactionEvent.SETTLED, txHash: mockTransactionHash() },
-          ],
-        },
-      );
+      const transaction = MockedMetaTransaction.fromRawData({ request });
       await transactionQueue.push(transaction);
 
       const expectedTxData = {
         id: transaction.id,
         request,
+        txHash: transaction.hash,
       };
       expect(responder.prepare).toHaveBeenCalledWith(expectedTxData);
       expect(transactionQueuePresenter.pending).toHaveBeenCalledWith(expectedTxData);
@@ -102,22 +93,21 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
 
     it(`should asynchronously:
         - persist the transaction via the transactions gateway
-        - wait for the transaction to be broadcasted
-        - present the updated transaction data`, async () => {
-      const {
-        responder,
-        transactionGateway,
-        transactionQueue,
-        transactionQueuePresenter,
-        waitForCommit,
-      } = setupTestScenario({
-        request,
-      });
+        - wait for any transaction event
+        - store and present the updated transaction data`, async () => {
+      const { transactionGateway, transactionQueue, transactionQueuePresenter, waitForCommit } =
+        setupTestScenario({
+          request,
+        });
 
       const transaction = MockedMetaTransaction.fromRawData(
         { request, hash: mockTransactionHash() },
         {
-          withUpdatesSequence: [{ event: TransactionEvent.SETTLED }],
+          withUpdatesSequence: [
+            { event: TransactionEvent.UPGRADED, txHash: mockTransactionHash() },
+            { event: TransactionEvent.UPGRADED, txHash: mockTransactionHash() },
+            { event: TransactionEvent.SETTLED, txHash: mockTransactionHash() },
+          ],
         },
       );
       await transactionQueue.push(transaction);
@@ -126,35 +116,12 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
       const expectedTxData = {
         id: transaction.id,
         request: transaction.request,
-        txHash: transaction.hash,
+        txHash: expect.any(String),
       };
-      expect(responder.commit).toHaveBeenCalledWith(expectedTxData);
       expect(transactionGateway.save).toHaveBeenCalledWith(transaction);
-      expect(transactionQueuePresenter.pending).toHaveBeenCalledTimes(1);
-      expect(transactionQueuePresenter.pending).toHaveBeenLastCalledWith(expectedTxData);
-    });
-
-    it('should store and present any tx hash updates to the transaction data', async () => {
-      const { transactionGateway, transactionQueue, transactionQueuePresenter, waitForCommit } =
-        setupTestScenario({
-          request,
-        });
-
-      const transaction = MockedMetaTransaction.fromRawData(
-        { request },
-        {
-          withUpdatesSequence: [
-            { event: TransactionEvent.UPGRADED, txHash: mockTransactionHash() },
-            { event: TransactionEvent.UPGRADED, txHash: mockTransactionHash() },
-            { event: TransactionEvent.SETTLED, txHash: mockTransactionHash() },
-          ],
-        },
-      );
-      await transactionQueue.push(transaction);
-
-      await waitForCommit();
       expect(transactionGateway.save).toHaveBeenCalledTimes(1 + 2); // initial save + 2 updates
       expect(transactionQueuePresenter.pending).toHaveBeenCalledTimes(1 + 2); // initial presentation + 2 updates
+      expect(transactionQueuePresenter.pending).toHaveBeenLastCalledWith(expectedTxData);
       expect(transactionQueuePresenter.settled).toHaveBeenCalledTimes(1);
     });
 
@@ -228,6 +195,7 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
         const expectedTxData = {
           id: transaction.id,
           request: transaction.request,
+          txHash: transaction.hash,
         };
         await waitForRollback();
         expect(responder.rollback).toHaveBeenCalledWith(expectedTxData);
@@ -261,12 +229,14 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
       });
       transactionGateway.getAll.mockResolvedValue([transaction]);
 
-      await transactionQueue.init();
-
       const expectedBroadcastedTxData = {
         id: transaction.id,
         request,
+        txHash: transaction.hash,
       };
+
+      await transactionQueue.init();
+
       expect(responder.prepare).toHaveBeenCalledWith(expectedBroadcastedTxData);
       expect(transactionQueuePresenter.pending).toHaveBeenCalledWith(expectedBroadcastedTxData);
 
@@ -347,4 +317,3 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
     });
   });
 });
-//

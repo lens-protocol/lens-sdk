@@ -8,8 +8,8 @@ import {
   ProfileId,
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
-import { SignlessSubsidizedCall } from '../transactions/SignlessSubsidizedCall';
-import { SubsidizedCall } from '../transactions/SubsidizedCall';
+import { SignlessSubsidizeOnChain } from '../transactions/SignlessSubsidizeOnChain';
+import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -75,8 +75,8 @@ export type IFollowProfilePresenter = IGenericResultPresenter<
 export class FollowProfiles {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
-    private readonly signedFollow: SubsidizedCall<FollowRequest>,
-    private readonly signlessFollow: SignlessSubsidizedCall<UnconstrainedFollowRequest>,
+    private readonly signedFollow: SubsidizeOnChain<FollowRequest>,
+    private readonly signlessFollow: SignlessSubsidizeOnChain<UnconstrainedFollowRequest>,
     private readonly followProfilePresenter: IFollowProfilePresenter,
   ) {}
 
