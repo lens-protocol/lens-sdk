@@ -9,7 +9,7 @@ import {
   BroadcastingError,
   IMetaTransactionNonceGateway,
   IProtocolCallRelayer,
-  SubsidizedCall,
+  SubsidizeOnChain,
   AnyTransactionRequest,
   TransactionQueue,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -18,7 +18,7 @@ import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
 import { IMetadataUploader } from './IMetadataUploader';
 import { ITransactionFactory } from './ITransactionFactory';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { CreatePostCallGateway } from './publication-call-gateways/CreatePostCallGateway';
+import { CreatePostGateway } from './publication-call-gateways/CreatePostGateway';
 
 export type CreatePostControllerArgs<T extends CreatePostRequest> = {
   activeWallet: ActiveWallet;
@@ -47,9 +47,9 @@ export class CreatePostController<T extends CreatePostRequest> {
     transactionQueue,
     uploader,
   }: CreatePostControllerArgs<T>) {
-    const gateway = new CreatePostCallGateway(apolloClient, transactionFactory, uploader);
+    const gateway = new CreatePostGateway(apolloClient, transactionFactory, uploader);
 
-    const signedCreatePost = new SubsidizedCall<CreatePostRequest>(
+    const signedCreatePost = new SubsidizeOnChain<CreatePostRequest>(
       activeWallet,
       transactionGateway,
       gateway,

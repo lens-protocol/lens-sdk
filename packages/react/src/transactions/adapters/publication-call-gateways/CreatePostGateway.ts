@@ -30,7 +30,7 @@ import {
 import { handleRelayError, RelayReceipt } from '../relayer';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
-export class CreatePostCallGateway
+export class CreatePostGateway
   implements
     IDelegatedTransactionGateway<CreatePostRequest>,
     IUnsignedProtocolCallGateway<CreatePostRequest>

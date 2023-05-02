@@ -20,7 +20,7 @@ import {
   assertUnsignedProtocolCallCorrectness,
   assertBroadcastingErrorResultWithRequestFallback,
 } from '../../__helpers__/mocks';
-import { CreatePostCallGateway } from '../CreatePostCallGateway';
+import { CreatePostGateway } from '../CreatePostGateway';
 import {
   createFeeCollectModuleExerciseData,
   createFeeCollectModuleFollowersOnlyExerciseData,
@@ -47,12 +47,12 @@ function setupTestScenario({
   const transactionFactory = mockITransactionFactory();
   const uploader = mockIMetadataUploader(uploadUrl);
 
-  const gateway = new CreatePostCallGateway(apolloClient, transactionFactory, uploader);
+  const gateway = new CreatePostGateway(apolloClient, transactionFactory, uploader);
 
   return { gateway, uploader };
 }
 
-describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
+describe(`Given an instance of ${CreatePostGateway.name}`, () => {
   describe.each<{
     description: string;
     createExerciseData: () => PublicationExerciseData;
