@@ -1,3 +1,5 @@
+import { JsonEncryptionRetrieveRequest, JsonSaveEncryptionKeyRequest } from '@lit-protocol/types';
+
 /**
  * A cipher that can encrypt and decrypt data.
  *
@@ -37,4 +39,7 @@ export interface IEncryptionProvider {
    * Import a cipher from an AES-256-CBC key.
    */
   importCipher(key: Uint8Array): Promise<ICipher>;
+
+  litSaveEncryptionKey?(request: JsonSaveEncryptionKeyRequest): Promise<Uint8Array>;
+  litGetEncryptionKey?(request: JsonEncryptionRetrieveRequest): Promise<Uint8Array>;
 }

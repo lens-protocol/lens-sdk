@@ -8,7 +8,7 @@ import {
   OmitTypename,
   RootConditionOutput,
 } from '@lens-protocol/api-bindings';
-import { PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { invariant, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { IStorage, IStorageProvider } from '@lens-protocol/storage';
 import { NodeClient } from '@lit-protocol/node-client';
 import { Signer, utils } from 'ethers';
@@ -56,7 +56,7 @@ export class GatedClient {
 
   private readonly signer: Signer;
 
-  private readonly litClient = new NodeClient({ debug: false });
+  private readonly litClient?: NodeClient;
 
   private readonly encryptionProvider: IEncryptionProvider;
 
@@ -72,6 +72,13 @@ export class GatedClient {
     this.signer = signer;
     this.storage = createAuthStorage(storageProvider, environment.name);
     this.encryptionProvider = encryptionProvider;
+
+    if (
+      !this.encryptionProvider.litSaveEncryptionKey ||
+      !this.encryptionProvider.litGetEncryptionKey
+    ) {
+      this.litClient = new NodeClient({ debug: false });
+    }
   }
 
   async encryptPublication(
@@ -148,6 +155,10 @@ export class GatedClient {
   }
 
   private async ensureLitConnection() {
+    if (!this.litClient) {
+      return;
+    }
+
     if (!this.litClient.ready) {
       await this.litClient.connect();
     }
@@ -161,7 +172,13 @@ export class GatedClient {
 
     const authSig = await this.getOrCreateAuthSig();
 
-    const encryptedSymmetricKey = await this.litClient.saveEncryptionKey({
+    const saveEncryptionKey =
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      this.encryptionProvider.litSaveEncryptionKey || this.litClient?.saveEncryptionKey;
+
+    invariant(saveEncryptionKey, 'No method to save encryption key');
+
+    const encryptedSymmetricKey = await saveEncryptionKey({
       authSig,
       chain: this.environment.chainName,
       symmetricKey,
@@ -180,7 +197,13 @@ export class GatedClient {
   ): Promise<ICipher> {
     const authSig = await this.getOrCreateAuthSig();
 
-    const encryptionKey = await this.litClient.getEncryptionKey({
+    const getEncryptionKey =
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      this.encryptionProvider.litGetEncryptionKey || this.litClient?.getEncryptionKey;
+
+    invariant(getEncryptionKey, 'No method to retrieve encryption key');
+
+    const encryptionKey = await getEncryptionKey({
       authSig,
       chain: this.environment.chainName,
       toDecrypt: encryptedEncryptionKey,
