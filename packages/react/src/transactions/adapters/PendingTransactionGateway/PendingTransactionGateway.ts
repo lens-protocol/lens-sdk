@@ -4,6 +4,7 @@ import {
   JustProtocolRequest,
   ProxyTransaction,
   TransactionKind,
+  DataTransaction,
 } from '@lens-protocol/domain/entities';
 import {
   IMetaTransactionNonceGateway,
@@ -16,6 +17,7 @@ import { IStorage } from '@lens-protocol/storage';
 import differenceBy from 'lodash/differenceBy.js';
 
 import {
+  ISerializableDataTransaction,
   ISerializableMetaTransaction,
   ISerializableNativeTransaction,
   ISerializableProxyTransaction,
@@ -62,7 +64,8 @@ function isSerializableMetaTransaction<T extends AnyTransactionRequest>(
 type ISerializableTransaction<T extends AnyTransactionRequest> =
   | ISerializableNativeTransaction<T>
   | ISerializableMetaTransaction<JustProtocolRequest<T>>
-  | ISerializableProxyTransaction<JustProtocolRequest<T>>;
+  | ISerializableProxyTransaction<JustProtocolRequest<T>>
+  | ISerializableDataTransaction<JustProtocolRequest<T>>;
 
 function toTransactionSchema(
   tx: ISerializableTransaction<AnyTransactionRequest>,
@@ -84,6 +87,13 @@ function toTransactionSchema(
   if (tx instanceof ProxyTransaction) {
     return {
       type: TransactionType.Proxy,
+      ...tx.toTransactionData(),
+    };
+  }
+
+  if (tx instanceof DataTransaction) {
+    return {
+      type: TransactionType.Data,
       ...tx.toTransactionData(),
     };
   }
@@ -198,6 +208,8 @@ export class PendingTransactionGateway
         return this.transactionFactory.createNativeTransaction(data);
       case TransactionType.Proxy:
         return this.transactionFactory.createProxyTransaction(data);
+      case TransactionType.Data:
+        return this.transactionFactory.createDataTransaction(data);
       default:
         assertNever(data, 'Transaction type not supported');
     }

@@ -155,6 +155,7 @@ export const CreatePostRequestSchema = z.object({
   kind: z.literal(TransactionKind.CREATE_POST),
   locale: z.string(),
   delegate: z.boolean(),
+  offChain: z.boolean(),
 });
 
 export const CreateCommentRequestSchema = z.object({

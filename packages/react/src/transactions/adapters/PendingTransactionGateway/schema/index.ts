@@ -64,6 +64,7 @@ export enum TransactionType {
   Native,
   Meta,
   Proxy,
+  Data,
 }
 
 const MetaTransactionSchema = z.object({
@@ -101,10 +102,19 @@ const ProxyTransactionSchema = z.object({
 
 type ProxyTransactionSchema = z.infer<typeof ProxyTransactionSchema>;
 
+const DataTransactionSchema = z.object({
+  type: z.literal(TransactionType.Data),
+  id: z.string(),
+  request: ProtocolTransactionRequestSchema,
+});
+
+type DataTransactionSchema = z.infer<typeof DataTransactionSchema>;
+
 export const TransactionSchema = z.union([
   MetaTransactionSchema,
   NativeTransactionSchema,
   ProxyTransactionSchema,
+  DataTransactionSchema,
 ]);
 
 export type TransactionSchema = z.infer<typeof TransactionSchema>;
