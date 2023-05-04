@@ -564,8 +564,8 @@ importers:
         specifier: workspace:*
         version: link:../storage
       '@lit-protocol/constants':
-        specifier: 2.1.62
-        version: 2.1.62
+        specifier: 2.1.158
+        version: 2.1.158
       '@lit-protocol/crypto':
         specifier: 2.1.62
         version: 2.1.62
@@ -4669,6 +4669,13 @@ packages:
     resolution: {integrity: sha512-UjNjycoNXOEoLH/foIJx1L9PLL5OxmHcCD/mFXr4KSeQV/v4srvGNpY/4ng7+k9sJEbvwRwv+FB07ng3/Ihacg==}
     dev: false
 
+  /@lit-protocol/constants@2.1.158:
+    resolution: {integrity: sha512-PoLeh2lipob6VlultzRFg3uWFX/59v6hS7nz5xa0/WeTIhdUdlzyGXFTyJCsRGxGC4PnfqiIIVG9tTow9mfw1w==}
+    dependencies:
+      '@lit-protocol/types': 2.1.158
+      tslib: 2.5.0
+    dev: false
+
   /@lit-protocol/constants@2.1.62:
     resolution: {integrity: sha512-4CigP3GS7Cxpa9RXT1twCCvYI5wvfo1UAMbdrjoDgM9VMDtpvSrmlG8AwC9yMoqPM6409BYcgGI9LDGzUjNUjg==}
     dependencies:
@@ -4787,6 +4794,10 @@ packages:
       - lokijs
       - typescript
       - utf-8-validate
+    dev: false
+
+  /@lit-protocol/types@2.1.158:
+    resolution: {integrity: sha512-QzFbuc4cSz5+f8f/V7G45p4b+64S5sJPqIrk6uYgLeu0xArTqbSy5kHwZrliFRSkIEotcHwg7kMs2s2na/Z1xQ==}
     dev: false
 
   /@lit-protocol/types@2.1.62:
@@ -10220,7 +10231,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: fsevents 1 will break on node v14+ and could be using insecure binaries. Upgrade to fsevents 2.
+    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
