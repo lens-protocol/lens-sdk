@@ -2950,6 +2950,16 @@ export type BroadcastOnChainData = {
   result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
 };
 
+export type BroadcastOffChainVariables = Exact<{
+  request: BroadcastRequest;
+}>;
+
+export type BroadcastOffChainData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
+};
+
 export type CreateUnfollowTypedDataVariables = Exact<{
   request: UnfollowRequest;
 }>;

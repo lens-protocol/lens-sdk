@@ -25,7 +25,7 @@ fragment DataAvailabilityPublicationResult on CreateDataAvailabilityPublicationR
   dataAvailabilityId
 }
 
-fragment BroadcastOffChainResult on RelayDataAvailabilityResult {
+fragment BroadcastOffChainResult on BroadcastDataAvailabilityUnion {
   ... on CreateDataAvailabilityPublicationResult {
     ...DataAvailabilityPublicationResult
   }
@@ -61,5 +61,11 @@ query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
 mutation BroadcastOnChain($request: BroadcastRequest!) {
   result: broadcast(request: $request) {
     ...BroadcastOnChainResult
+  }
+}
+
+mutation BroadcastOffChain($request: BroadcastRequest!) {
+  result: broadcastDataAvailability(request: $request) {
+    ...BroadcastOffChainResult
   }
 }

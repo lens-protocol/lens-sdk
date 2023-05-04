@@ -23,6 +23,7 @@ import {
   CreateDataAvailabilityPostTypedDataDocument,
   CreateDataAvailabilityPostViaDispatcherDocument,
   BroadcastOnChainDocument,
+  BroadcastOffChainDocument,
 } from '../hooks';
 import {
   AddReactionVariables,
@@ -66,6 +67,9 @@ import {
   BroadcastOnChainData,
   BroadcastOnChainVariables,
   BroadcastOnChainResult,
+  BroadcastOffChainResult,
+  BroadcastOffChainData,
+  BroadcastOffChainVariables,
 } from '../operations';
 
 export function createCreateProfileMockedResponse({
@@ -92,33 +96,46 @@ function mockBroadcastOnChainData(result: Required<BroadcastOnChainResult>): Bro
   };
 }
 
-export function createBroadcastOnChainMockedResponse(
-  instructions:
-    | {
-        error: Error;
-        variables: BroadcastOnChainVariables;
-      }
-    | {
-        result: Required<BroadcastOnChainResult>;
-        variables: BroadcastOnChainVariables;
-      },
-): MockedResponse<BroadcastOnChainData> {
-  if ('error' in instructions) {
-    return {
-      request: {
-        query: BroadcastOnChainDocument,
-        variables: instructions.variables,
-      },
-      error: instructions.error,
-    };
-  }
+export function createBroadcastOnChainMockedResponse({
+  result,
+  variables,
+}: {
+  result: Required<BroadcastOnChainResult>;
+  variables: BroadcastOnChainVariables;
+}): MockedResponse<BroadcastOnChainData> {
   return {
     request: {
       query: BroadcastOnChainDocument,
-      variables: instructions.variables,
+      variables: variables,
     },
     result: {
-      data: mockBroadcastOnChainData(instructions.result),
+      data: mockBroadcastOnChainData(result),
+    },
+  };
+}
+
+function mockBroadcastOffChainData(
+  result: Required<BroadcastOffChainResult>,
+): BroadcastOffChainData {
+  return {
+    result,
+  };
+}
+
+export function createBroadcastOffChainMockedResponse({
+  result,
+  variables,
+}: {
+  result: Required<BroadcastOffChainResult>;
+  variables: BroadcastOffChainVariables;
+}): MockedResponse<BroadcastOffChainData> {
+  return {
+    request: {
+      query: BroadcastOffChainDocument,
+      variables: variables,
+    },
+    result: {
+      data: mockBroadcastOffChainData(result),
     },
   };
 }

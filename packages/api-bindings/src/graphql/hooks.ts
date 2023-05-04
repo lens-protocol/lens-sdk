@@ -1244,7 +1244,7 @@ export const FragmentDataAvailabilityPublicationResult = /*#__PURE__*/ gql`
   }
 `;
 export const FragmentBroadcastOffChainResult = /*#__PURE__*/ gql`
-  fragment BroadcastOffChainResult on RelayDataAvailabilityResult {
+  fragment BroadcastOffChainResult on BroadcastDataAvailabilityUnion {
     ... on CreateDataAvailabilityPublicationResult {
       ...DataAvailabilityPublicationResult
     }
@@ -4675,6 +4675,55 @@ export type BroadcastOnChainMutationResult = Apollo.MutationResult<Operations.Br
 export type BroadcastOnChainMutationOptions = Apollo.BaseMutationOptions<
   Operations.BroadcastOnChainData,
   Operations.BroadcastOnChainVariables
+>;
+export const BroadcastOffChainDocument = /*#__PURE__*/ gql`
+  mutation BroadcastOffChain($request: BroadcastRequest!) {
+    result: broadcastDataAvailability(request: $request) {
+      ...BroadcastOffChainResult
+    }
+  }
+  ${FragmentBroadcastOffChainResult}
+`;
+export type BroadcastOffChainMutationFn = Apollo.MutationFunction<
+  Operations.BroadcastOffChainData,
+  Operations.BroadcastOffChainVariables
+>;
+
+/**
+ * __useBroadcastOffChain__
+ *
+ * To run a mutation, you first call `useBroadcastOffChain` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBroadcastOffChain` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [broadcastOffChain, { data, loading, error }] = useBroadcastOffChain({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useBroadcastOffChain(
+  baseOptions?: Apollo.MutationHookOptions<
+    Operations.BroadcastOffChainData,
+    Operations.BroadcastOffChainVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Operations.BroadcastOffChainData,
+    Operations.BroadcastOffChainVariables
+  >(BroadcastOffChainDocument, options);
+}
+export type BroadcastOffChainHookResult = ReturnType<typeof useBroadcastOffChain>;
+export type BroadcastOffChainMutationResult =
+  Apollo.MutationResult<Operations.BroadcastOffChainData>;
+export type BroadcastOffChainMutationOptions = Apollo.BaseMutationOptions<
+  Operations.BroadcastOffChainData,
+  Operations.BroadcastOffChainVariables
 >;
 export const CreateUnfollowTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateUnfollowTypedData($request: UnfollowRequest!) {
