@@ -187,7 +187,7 @@ query GetAllProfiles(
 
 mutation CreateProfile($request: CreateProfileRequest!) {
   result: createProfile(request: $request) {
-    ...BroadcastResult
+    ...BroadcastOnChainResult
   }
 }
 
@@ -278,7 +278,7 @@ mutation CreateSetProfileImageURITypedData(
 
 mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
   result: createSetProfileImageURIViaDispatcher(request: $request) {
-    ...BroadcastResult
+    ...BroadcastOnChainResult
   }
 }
 
@@ -316,6 +316,6 @@ mutation CreateSetProfileMetadataViaDispatcher(
   $request: CreatePublicSetProfileMetadataURIRequest!
 ) {
   result: createSetProfileMetadataViaDispatcher(request: $request) {
-    ...BroadcastResult
+    ...BroadcastOnChainResult
   }
 }

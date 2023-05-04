@@ -1,7 +1,7 @@
-import { RelayErrorReasons, BroadcastResult } from '@lens-protocol/api-bindings';
+import { RelayErrorReasons, BroadcastOnChainResult } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  createBroadcastProtocolCallMockedResponse,
+  createBroadcastOnChainMockedResponse,
   mockRelayerResultFragment,
   mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -22,12 +22,12 @@ function setupRelayer({
   broadcastResult,
   signedCall,
 }: {
-  broadcastResult: BroadcastResult;
+  broadcastResult: BroadcastOnChainResult;
   signedCall: ISignedProtocolCall<ProtocolTransactionRequest>;
 }) {
   const factory = mockITransactionFactory();
   const apollo = createMockApolloClientWithMultipleResponses([
-    createBroadcastProtocolCallMockedResponse({
+    createBroadcastOnChainMockedResponse({
       result: broadcastResult,
       variables: {
         request: {

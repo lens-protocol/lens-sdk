@@ -1,7 +1,7 @@
 import {
-  BroadcastProtocolCallDocument,
-  BroadcastProtocolCallData,
-  BroadcastProtocolCallVariables,
+  BroadcastOnChainData,
+  BroadcastOnChainDocument,
+  BroadcastOnChainVariables,
   LensApolloClient,
 } from '@lens-protocol/api-bindings';
 import { MetaTransaction } from '@lens-protocol/domain/entities';
@@ -56,10 +56,10 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
   ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     try {
       const { data } = await this.apolloClient.mutate<
-        BroadcastProtocolCallData,
-        BroadcastProtocolCallVariables
+        BroadcastOnChainData,
+        BroadcastOnChainVariables
       >({
-        mutation: BroadcastProtocolCallDocument,
+        mutation: BroadcastOnChainDocument,
         variables: {
           request: {
             id: signedCall.id,

@@ -57,11 +57,11 @@ export function mockIOffChainRelayer<T extends WithOffChainFlag<ProtocolTransact
   signedCall: ISignedProtocolCall<T>;
   result: Result<DataTransaction<T>, BroadcastingError>;
 }) {
-  const transactionRelayer = mock<IOffChainRelayer<T>>();
+  const relayer = mock<IOffChainRelayer<T>>();
 
-  when(transactionRelayer.relayProtocolCall).calledWith(signedCall).mockResolvedValue(result);
+  when(relayer.relayProtocolCall).calledWith(signedCall).mockResolvedValue(result);
 
-  return transactionRelayer;
+  return relayer;
 }
 
 export function mockTransactionQueue<

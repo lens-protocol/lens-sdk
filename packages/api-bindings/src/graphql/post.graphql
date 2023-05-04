@@ -32,7 +32,7 @@ mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: Typed
 
 mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
   result: createPostViaDispatcher(request: $request) {
-    ...BroadcastResult
+    ...BroadcastOnChainResult
   }
 }
 
@@ -48,6 +48,6 @@ mutation CreateDataAvailabilityPostTypedData($request: CreateDataAvailabilityPos
 
 mutation CreateDataAvailabilityPostViaDispatcher($request: CreateDataAvailabilityPostRequest!) {
   result: createDataAvailabilityPostViaDispatcher(request: $request) {
-    ...RelayDataAvailabilityPublicationResult
+    ...BroadcastOffChainResult
   }
 }

@@ -1768,7 +1768,7 @@ export type CreateCommentViaDispatcherVariables = Exact<{
 }>;
 
 export type CreateCommentViaDispatcherData = {
-  result: BroadcastResult_RelayError_ | BroadcastResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
 };
 
 export type Erc20Fields = {
@@ -2260,7 +2260,7 @@ export type CreateMirrorViaDispatcherVariables = Exact<{
 }>;
 
 export type CreateMirrorViaDispatcherData = {
-  result: BroadcastResult_RelayError_ | BroadcastResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
 };
 
 export type ModuleInfo = { __typename: 'ModuleInfo'; name: string; type: string };
@@ -2392,7 +2392,7 @@ export type CreatePostViaDispatcherVariables = Exact<{
 }>;
 
 export type CreatePostViaDispatcherData = {
-  result: BroadcastResult_RelayError_ | BroadcastResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
 };
 
 export type CreateDataAvailabilityPostTypedDataVariables = Exact<{
@@ -2409,8 +2409,8 @@ export type CreateDataAvailabilityPostViaDispatcherVariables = Exact<{
 
 export type CreateDataAvailabilityPostViaDispatcherData = {
   result:
-    | RelayDataAvailabilityPublicationResult_CreateDataAvailabilityPublicationResult_
-    | RelayDataAvailabilityPublicationResult_RelayError_;
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
 };
 
 export type CreateSetDispatcherTypedDataVariables = Exact<{
@@ -2554,7 +2554,7 @@ export type CreateProfileVariables = Exact<{
 }>;
 
 export type CreateProfileData = {
-  result: BroadcastResult_RelayError_ | BroadcastResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
 };
 
 export type MutualFollowersProfilesVariables = Exact<{
@@ -2614,7 +2614,7 @@ export type CreateSetProfileImageUriViaDispatcherVariables = Exact<{
 }>;
 
 export type CreateSetProfileImageUriViaDispatcherData = {
-  result: BroadcastResult_RelayError_ | BroadcastResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
 };
 
 export type CreateSetProfileMetadataTypedDataVariables = Exact<{
@@ -2639,7 +2639,7 @@ export type CreateSetProfileMetadataViaDispatcherVariables = Exact<{
 }>;
 
 export type CreateSetProfileMetadataViaDispatcherData = {
-  result: BroadcastResult_RelayError_ | BroadcastResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
 };
 
 export type Follower = { __typename: 'Follower'; wallet: Wallet };
@@ -2905,11 +2905,13 @@ export type RelayerResult = { __typename: 'RelayerResult'; txHash: string; txId:
 
 export type RelayError = { __typename: 'RelayError'; reason: RelayErrorReasons };
 
-type BroadcastResult_RelayError_ = RelayError;
+type BroadcastOnChainResult_RelayError_ = RelayError;
 
-type BroadcastResult_RelayerResult_ = RelayerResult;
+type BroadcastOnChainResult_RelayerResult_ = RelayerResult;
 
-export type BroadcastResult = BroadcastResult_RelayError_ | BroadcastResult_RelayerResult_;
+export type BroadcastOnChainResult =
+  | BroadcastOnChainResult_RelayError_
+  | BroadcastOnChainResult_RelayerResult_;
 
 export type DataAvailabilityPublicationResult = {
   __typename: 'CreateDataAvailabilityPublicationResult';
@@ -2917,14 +2919,14 @@ export type DataAvailabilityPublicationResult = {
   dataAvailabilityId: string;
 };
 
-type RelayDataAvailabilityPublicationResult_CreateDataAvailabilityPublicationResult_ =
+type BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_ =
   DataAvailabilityPublicationResult;
 
-type RelayDataAvailabilityPublicationResult_RelayError_ = RelayError;
+type BroadcastOffChainResult_RelayError_ = RelayError;
 
-export type RelayDataAvailabilityPublicationResult =
-  | RelayDataAvailabilityPublicationResult_CreateDataAvailabilityPublicationResult_
-  | RelayDataAvailabilityPublicationResult_RelayError_;
+export type BroadcastOffChainResult =
+  | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+  | BroadcastOffChainResult_RelayError_;
 
 export type TransactionIndexedResult = {
   __typename: 'TransactionIndexedResult';
@@ -2940,12 +2942,12 @@ export type HasTxHashBeenIndexedVariables = Exact<{
 
 export type HasTxHashBeenIndexedData = { result: TransactionError | TransactionIndexedResult };
 
-export type BroadcastProtocolCallVariables = Exact<{
+export type BroadcastOnChainVariables = Exact<{
   request: BroadcastRequest;
 }>;
 
-export type BroadcastProtocolCallData = {
-  result: BroadcastResult_RelayError_ | BroadcastResult_RelayerResult_;
+export type BroadcastOnChainData = {
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
 };
 
 export type CreateUnfollowTypedDataVariables = Exact<{

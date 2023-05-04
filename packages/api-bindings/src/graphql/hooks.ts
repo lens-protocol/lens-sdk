@@ -1224,8 +1224,8 @@ export const FragmentRelayError = /*#__PURE__*/ gql`
     reason
   }
 `;
-export const FragmentBroadcastResult = /*#__PURE__*/ gql`
-  fragment BroadcastResult on RelayResult {
+export const FragmentBroadcastOnChainResult = /*#__PURE__*/ gql`
+  fragment BroadcastOnChainResult on RelayResult {
     ... on RelayerResult {
       ...RelayerResult
     }
@@ -1243,8 +1243,8 @@ export const FragmentDataAvailabilityPublicationResult = /*#__PURE__*/ gql`
     dataAvailabilityId
   }
 `;
-export const FragmentRelayDataAvailabilityPublicationResult = /*#__PURE__*/ gql`
-  fragment RelayDataAvailabilityPublicationResult on RelayDataAvailabilityResult {
+export const FragmentBroadcastOffChainResult = /*#__PURE__*/ gql`
+  fragment BroadcastOffChainResult on RelayDataAvailabilityResult {
     ... on CreateDataAvailabilityPublicationResult {
       ...DataAvailabilityPublicationResult
     }
@@ -1569,10 +1569,10 @@ export type CreateCommentTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreateCommentViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
     result: createCommentViaDispatcher(request: $request) {
-      ...BroadcastResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentBroadcastResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreateCommentViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreateCommentViaDispatcherData,
@@ -1956,10 +1956,10 @@ export type CreateMirrorTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreateMirrorViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
     result: createMirrorViaDispatcher(request: $request) {
-      ...BroadcastResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentBroadcastResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreateMirrorViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreateMirrorViaDispatcherData,
@@ -2280,10 +2280,10 @@ export type CreatePostTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreatePostViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
     result: createPostViaDispatcher(request: $request) {
-      ...BroadcastResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentBroadcastResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreatePostViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreatePostViaDispatcherData,
@@ -2384,10 +2384,10 @@ export type CreateDataAvailabilityPostTypedDataMutationOptions = Apollo.BaseMuta
 export const CreateDataAvailabilityPostViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateDataAvailabilityPostViaDispatcher($request: CreateDataAvailabilityPostRequest!) {
     result: createDataAvailabilityPostViaDispatcher(request: $request) {
-      ...RelayDataAvailabilityPublicationResult
+      ...BroadcastOffChainResult
     }
   }
-  ${FragmentRelayDataAvailabilityPublicationResult}
+  ${FragmentBroadcastOffChainResult}
 `;
 export type CreateDataAvailabilityPostViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreateDataAvailabilityPostViaDispatcherData,
@@ -2710,10 +2710,10 @@ export type GetAllProfilesQueryResult = Apollo.QueryResult<
 export const CreateProfileDocument = /*#__PURE__*/ gql`
   mutation CreateProfile($request: CreateProfileRequest!) {
     result: createProfile(request: $request) {
-      ...BroadcastResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentBroadcastResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreateProfileMutationFn = Apollo.MutationFunction<
   Operations.CreateProfileData,
@@ -2989,10 +2989,10 @@ export type CreateSetProfileImageUriTypedDataMutationOptions = Apollo.BaseMutati
 export const CreateSetProfileImageUriViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
     result: createSetProfileImageURIViaDispatcher(request: $request) {
-      ...BroadcastResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentBroadcastResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreateSetProfileImageUriViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreateSetProfileImageUriViaDispatcherData,
@@ -3117,10 +3117,10 @@ export const CreateSetProfileMetadataViaDispatcherDocument = /*#__PURE__*/ gql`
     $request: CreatePublicSetProfileMetadataURIRequest!
   ) {
     result: createSetProfileMetadataViaDispatcher(request: $request) {
-      ...BroadcastResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentBroadcastResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreateSetProfileMetadataViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreateSetProfileMetadataViaDispatcherData,
@@ -4628,54 +4628,53 @@ export type HasTxHashBeenIndexedQueryResult = Apollo.QueryResult<
   Operations.HasTxHashBeenIndexedData,
   Operations.HasTxHashBeenIndexedVariables
 >;
-export const BroadcastProtocolCallDocument = /*#__PURE__*/ gql`
-  mutation BroadcastProtocolCall($request: BroadcastRequest!) {
+export const BroadcastOnChainDocument = /*#__PURE__*/ gql`
+  mutation BroadcastOnChain($request: BroadcastRequest!) {
     result: broadcast(request: $request) {
-      ...BroadcastResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentBroadcastResult}
+  ${FragmentBroadcastOnChainResult}
 `;
-export type BroadcastProtocolCallMutationFn = Apollo.MutationFunction<
-  Operations.BroadcastProtocolCallData,
-  Operations.BroadcastProtocolCallVariables
+export type BroadcastOnChainMutationFn = Apollo.MutationFunction<
+  Operations.BroadcastOnChainData,
+  Operations.BroadcastOnChainVariables
 >;
 
 /**
- * __useBroadcastProtocolCall__
+ * __useBroadcastOnChain__
  *
- * To run a mutation, you first call `useBroadcastProtocolCall` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBroadcastProtocolCall` returns a tuple that includes:
+ * To run a mutation, you first call `useBroadcastOnChain` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBroadcastOnChain` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [broadcastProtocolCall, { data, loading, error }] = useBroadcastProtocolCall({
+ * const [broadcastOnChain, { data, loading, error }] = useBroadcastOnChain({
  *   variables: {
  *      request: // value for 'request'
  *   },
  * });
  */
-export function useBroadcastProtocolCall(
+export function useBroadcastOnChain(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.BroadcastProtocolCallData,
-    Operations.BroadcastProtocolCallVariables
+    Operations.BroadcastOnChainData,
+    Operations.BroadcastOnChainVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.BroadcastProtocolCallData,
-    Operations.BroadcastProtocolCallVariables
-  >(BroadcastProtocolCallDocument, options);
+  return Apollo.useMutation<Operations.BroadcastOnChainData, Operations.BroadcastOnChainVariables>(
+    BroadcastOnChainDocument,
+    options,
+  );
 }
-export type BroadcastProtocolCallHookResult = ReturnType<typeof useBroadcastProtocolCall>;
-export type BroadcastProtocolCallMutationResult =
-  Apollo.MutationResult<Operations.BroadcastProtocolCallData>;
-export type BroadcastProtocolCallMutationOptions = Apollo.BaseMutationOptions<
-  Operations.BroadcastProtocolCallData,
-  Operations.BroadcastProtocolCallVariables
+export type BroadcastOnChainHookResult = ReturnType<typeof useBroadcastOnChain>;
+export type BroadcastOnChainMutationResult = Apollo.MutationResult<Operations.BroadcastOnChainData>;
+export type BroadcastOnChainMutationOptions = Apollo.BaseMutationOptions<
+  Operations.BroadcastOnChainData,
+  Operations.BroadcastOnChainVariables
 >;
 export const CreateUnfollowTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateUnfollowTypedData($request: UnfollowRequest!) {

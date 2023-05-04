@@ -9,7 +9,7 @@ fragment RelayError on RelayError {
   reason
 }
 
-fragment BroadcastResult on RelayResult {
+fragment BroadcastOnChainResult on RelayResult {
   ... on RelayerResult {
     ...RelayerResult
   }
@@ -25,7 +25,7 @@ fragment DataAvailabilityPublicationResult on CreateDataAvailabilityPublicationR
   dataAvailabilityId
 }
 
-fragment RelayDataAvailabilityPublicationResult on RelayDataAvailabilityResult {
+fragment BroadcastOffChainResult on RelayDataAvailabilityResult {
   ... on CreateDataAvailabilityPublicationResult {
     ...DataAvailabilityPublicationResult
   }
@@ -58,8 +58,8 @@ query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
   }
 }
 
-mutation BroadcastProtocolCall($request: BroadcastRequest!) {
+mutation BroadcastOnChain($request: BroadcastRequest!) {
   result: broadcast(request: $request) {
-    ...BroadcastResult
+    ...BroadcastOnChainResult
   }
 }

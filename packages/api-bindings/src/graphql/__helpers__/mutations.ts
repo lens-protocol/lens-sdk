@@ -7,7 +7,6 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { createGraphQLValidationError } from '../../apollo/__helpers__/mocks';
 import {
   AddReactionDocument,
-  BroadcastProtocolCallDocument,
   CreateSetProfileImageUriTypedDataDocument,
   CreateSetProfileMetadataTypedDataDocument,
   CreateSetProfileMetadataViaDispatcherDocument,
@@ -23,10 +22,10 @@ import {
   CreateProfileDocument,
   CreateDataAvailabilityPostTypedDataDocument,
   CreateDataAvailabilityPostViaDispatcherDocument,
+  BroadcastOnChainDocument,
 } from '../hooks';
 import {
   AddReactionVariables,
-  BroadcastProtocolCallVariables,
   CreateSetProfileImageUriTypedDataVariables,
   CreatePublicSetProfileMetadataUriRequest,
   CreateSetProfileMetadataViaDispatcherVariables,
@@ -43,7 +42,6 @@ import {
   ReportPublicationVariables,
   CreateProfileVariables,
   CreateProfileData,
-  BroadcastProtocolCallData,
   CreatePostTypedDataData,
   CreateCommentTypedDataData,
   HidePublicationData,
@@ -63,9 +61,11 @@ import {
   ReportPublicationData,
   CreateDataAvailabilityPostTypedDataVariables,
   CreateDataAvailabilityPostTypedDataData,
-  BroadcastResult,
   CreateDataAvailabilityPostViaDispatcherData,
   CreateDataAvailabilityPostViaDispatcherVariables,
+  BroadcastOnChainData,
+  BroadcastOnChainVariables,
+  BroadcastOnChainResult,
 } from '../operations';
 
 export function createCreateProfileMockedResponse({
@@ -73,7 +73,7 @@ export function createCreateProfileMockedResponse({
   result,
 }: {
   request: CreateProfileVariables['request'];
-  result: Required<BroadcastResult>;
+  result: Required<BroadcastOnChainResult>;
 }): MockedResponse<CreateProfileData> {
   return {
     request: {
@@ -86,29 +86,27 @@ export function createCreateProfileMockedResponse({
   };
 }
 
-function mockBroadcastProtocolCallData(
-  result: Required<BroadcastResult>,
-): BroadcastProtocolCallData {
+function mockBroadcastOnChainData(result: Required<BroadcastOnChainResult>): BroadcastOnChainData {
   return {
     result,
   };
 }
 
-export function createBroadcastProtocolCallMockedResponse(
+export function createBroadcastOnChainMockedResponse(
   instructions:
     | {
         error: Error;
-        variables: BroadcastProtocolCallVariables;
+        variables: BroadcastOnChainVariables;
       }
     | {
-        result: Required<BroadcastResult>;
-        variables: BroadcastProtocolCallVariables;
+        result: Required<BroadcastOnChainResult>;
+        variables: BroadcastOnChainVariables;
       },
-): MockedResponse<BroadcastProtocolCallData> {
+): MockedResponse<BroadcastOnChainData> {
   if ('error' in instructions) {
     return {
       request: {
-        query: BroadcastProtocolCallDocument,
+        query: BroadcastOnChainDocument,
         variables: instructions.variables,
       },
       error: instructions.error,
@@ -116,11 +114,11 @@ export function createBroadcastProtocolCallMockedResponse(
   }
   return {
     request: {
-      query: BroadcastProtocolCallDocument,
+      query: BroadcastOnChainDocument,
       variables: instructions.variables,
     },
     result: {
-      data: mockBroadcastProtocolCallData(instructions.result),
+      data: mockBroadcastOnChainData(instructions.result),
     },
   };
 }
