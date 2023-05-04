@@ -1,4 +1,5 @@
 import {
+  DataTransaction,
   MetaTransaction,
   NativeTransaction,
   Nonce,
@@ -16,6 +17,7 @@ import {
 import { ChainType, failure, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
 
 import {
+  DataTransactionData,
   MetaTransactionData,
   NativeTransactionData,
   ProxyTransactionData,
@@ -26,6 +28,7 @@ import {
   ISerializableProxyTransaction,
   ISerializableTransactionFactory,
 } from '../adapters/PendingTransactionGateway';
+import { ISerializableDataTransaction } from '../adapters/PendingTransactionGateway/ISerializableTransactionFactory';
 
 export type IndexingEvent = {
   indexed: boolean;
@@ -247,6 +250,26 @@ class SerializableNativeTransaction<T extends AnyTransactionRequest>
   }
 }
 
+class SerializableDataTransaction<T extends ProtocolTransactionRequest>
+  extends DataTransaction<T>
+  implements ISerializableDataTransaction<T>
+{
+  constructor(readonly id: string, readonly request: T) {
+    super();
+  }
+
+  async waitNextEvent(): PromiseResult<TransactionEvent, TransactionError> {
+    return success(TransactionEvent.SETTLED);
+  }
+
+  toTransactionData(): DataTransactionData<T> {
+    return {
+      id: this.id,
+      request: this.request,
+    };
+  }
+}
+
 export class TransactionFactory implements ISerializableTransactionFactory {
   constructor(private readonly transactionObserver: ITransactionObserver) {}
 
@@ -314,6 +337,12 @@ export class TransactionFactory implements ISerializableTransactionFactory {
       },
       this.createProxyActionStateReducer(),
     );
+  }
+
+  createDataTransaction<T extends ProtocolTransactionRequest>(
+    init: DataTransactionData<T>,
+  ): ISerializableDataTransaction<T> {
+    return new SerializableDataTransaction(init.id, init.request);
   }
 
   private createProtocolCallStateReducer<

@@ -28,7 +28,7 @@ export function useCollectController() {
     activeWallet,
     apolloClient,
     logger,
-    protocolCallRelayer,
+    onChainRelayer,
     tokenAvailability,
     transactionFactory,
     transactionGateway,
@@ -52,7 +52,7 @@ export function useCollectController() {
       activeWallet,
       transactionGateway,
       collectPublicationCallGateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );

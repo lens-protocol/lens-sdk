@@ -16,7 +16,7 @@ export function useCreateMirrorController() {
     apolloClient,
     transactionFactory,
     transactionGateway,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionQueue,
   } = useSharedDependencies();
 
@@ -32,7 +32,7 @@ export function useCreateMirrorController() {
       activeWallet,
       transactionGateway,
       mirrorCallGateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );

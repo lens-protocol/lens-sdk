@@ -22,17 +22,13 @@ export type WithOffChainFlag<T extends ProtocolTransactionRequestModel> = T exte
   ? T
   : never;
 
-export interface IDataAvailabilityRelayer<
-  T extends WithOffChainFlag<ProtocolTransactionRequestModel>,
-> {
+export interface IOffChainRelayer<T extends WithOffChainFlag<ProtocolTransactionRequestModel>> {
   relayProtocolCall(
     signedCall: ISignedProtocolCall<T>,
   ): PromiseResult<DataTransaction<T>, BroadcastingError>;
 }
 
-export interface IOffChainProtocolCallGateway<
-  T extends WithOffChainFlag<ProtocolTransactionRequestModel>,
-> {
+export interface IOffChainProtocolCallGateway<T extends ProtocolTransactionRequestModel> {
   createUnsignedProtocolCall(request: T): Promise<IUnsignedProtocolCall<T>>;
 }
 
@@ -47,7 +43,7 @@ export class SubsidizeOffChain<T extends WithOffChainFlag<ProtocolTransactionReq
   constructor(
     protected readonly activeWallet: ActiveWallet,
     protected readonly gateway: IOffChainProtocolCallGateway<T>,
-    protected readonly relayer: IDataAvailabilityRelayer<T>,
+    protected readonly relayer: IOffChainRelayer<T>,
     protected readonly queue: TransactionQueue<AnyTransactionRequestModel>,
     protected readonly presenter: ISubsidizeOffChainPresenter,
   ) {}

@@ -14,7 +14,7 @@ import { DispatcherConfigCallGateway } from './DispatcherConfigCallGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 
 export function useUpdateDispatcherConfigController() {
-  const { activeWallet, transactionGateway, protocolCallRelayer, transactionQueue, apolloClient } =
+  const { activeWallet, transactionGateway, onChainRelayer, transactionQueue, apolloClient } =
     useSharedDependencies();
 
   return async (request: UpdateDispatcherConfigRequest) => {
@@ -27,7 +27,7 @@ export function useUpdateDispatcherConfigController() {
       activeWallet,
       transactionGateway,
       gateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );

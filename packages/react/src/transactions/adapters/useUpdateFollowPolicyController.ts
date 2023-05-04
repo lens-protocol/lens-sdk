@@ -17,7 +17,7 @@ export function useUpdateFollowPolicyController() {
     activeWallet,
     transactionGateway,
     followPolicyCallGateway,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionQueue,
   } = useSharedDependencies();
 
@@ -30,7 +30,7 @@ export function useUpdateFollowPolicyController() {
       activeWallet,
       transactionGateway,
       followPolicyCallGateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );

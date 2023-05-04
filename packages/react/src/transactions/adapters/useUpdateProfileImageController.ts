@@ -18,7 +18,7 @@ export function useUpdateProfileImageController() {
     activeWallet,
     apolloClient,
     transactionGateway,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionQueue,
     transactionFactory,
   } = useSharedDependencies();
@@ -35,7 +35,7 @@ export function useUpdateProfileImageController() {
       activeWallet,
       transactionGateway,
       profileImageCallGateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );

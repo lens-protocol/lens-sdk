@@ -8,7 +8,7 @@ import { CreatePost, CreatePostRequest } from '@lens-protocol/domain/use-cases/p
 import {
   BroadcastingError,
   IMetaTransactionNonceGateway,
-  IProtocolCallRelayer,
+  IOnChainRelayer,
   SubsidizeOnChain,
   AnyTransactionRequest,
   TransactionQueue,
@@ -18,12 +18,12 @@ import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
 import { IMetadataUploader } from './IMetadataUploader';
 import { ITransactionFactory } from './ITransactionFactory';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { CreatePostGateway } from './publication-call-gateways/CreatePostGateway';
+import { CreateOnChainPostGateway } from './publication-call-gateways/CreateOnChainPostGateway';
 
 export type CreatePostControllerArgs<T extends CreatePostRequest> = {
   activeWallet: ActiveWallet;
   apolloClient: LensApolloClient;
-  protocolCallRelayer: IProtocolCallRelayer<T>;
+  onChainRelayer: IOnChainRelayer<T>;
   transactionFactory: ITransactionFactory<T>;
   transactionGateway: IMetaTransactionNonceGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;
@@ -41,19 +41,19 @@ export class CreatePostController<T extends CreatePostRequest> {
   constructor({
     activeWallet,
     apolloClient,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionFactory,
     transactionGateway,
     transactionQueue,
     uploader,
   }: CreatePostControllerArgs<T>) {
-    const gateway = new CreatePostGateway(apolloClient, transactionFactory, uploader);
+    const gateway = new CreateOnChainPostGateway(apolloClient, transactionFactory, uploader);
 
     const signedCreatePost = new SubsidizeOnChain<CreatePostRequest>(
       activeWallet,
       transactionGateway,
       gateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       this.presenter,
     );

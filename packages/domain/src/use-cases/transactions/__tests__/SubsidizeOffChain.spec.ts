@@ -11,7 +11,7 @@ import {
 import {
   mockActiveWallet,
   MockedDataTransaction,
-  mockIDataAvailabilityRelayer,
+  mockIOffChainRelayer,
   mockISignedProtocolCall,
   mockIUnsignedProtocolCall,
   mockIOffChainProtocolCallGateway,
@@ -20,7 +20,7 @@ import {
   mockProtocolTransactionRequestModelWithOffChainFlag,
 } from '../../../mocks';
 import {
-  IDataAvailabilityRelayer,
+  IOffChainRelayer,
   ISubsidizeOffChainPresenter,
   IOffChainProtocolCallGateway,
   SubsidizeOffChain,
@@ -30,13 +30,13 @@ import { TransactionQueue } from '../TransactionQueue';
 
 function setupStoreOffChain<T extends WithOffChainFlag<ProtocolTransactionRequestModel>>({
   gateway,
-  relayer = mock<IDataAvailabilityRelayer<T>>(),
+  relayer = mock<IOffChainRelayer<T>>(),
   queue = mockTransactionQueue(),
   presenter,
   wallet,
 }: {
   gateway: IOffChainProtocolCallGateway<T>;
-  relayer?: IDataAvailabilityRelayer<T>;
+  relayer?: IOffChainRelayer<T>;
   queue?: TransactionQueue<AnyTransactionRequestModel>;
   presenter: ISubsidizeOffChainPresenter;
   wallet: Wallet;
@@ -65,7 +65,7 @@ describe(`Given an instance of the ${SubsidizeOffChain.name}<T> interactor`, () 
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
 
       const transaction = MockedDataTransaction.fromSignedCall(signedCall);
-      const relayer = mockIDataAvailabilityRelayer({
+      const relayer = mockIOffChainRelayer({
         signedCall,
         result: success(transaction),
       });

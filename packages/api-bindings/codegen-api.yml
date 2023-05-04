@@ -20,6 +20,7 @@ config:
     ContentEncryptionKey: ContentEncryptionKey
     ContractAddress: string
     Cursor: string
+    DataAvailabilityId: string
     DateTime: string
     DecryptionCriteria: DecryptionCriteria
     EncryptedValueScalar: string

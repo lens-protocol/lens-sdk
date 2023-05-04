@@ -8,6 +8,7 @@ import {
   CreatePublicPostRequest as CreatePublicPostRequestArg,
   LensApolloClient,
   omitTypename,
+  CreatePostEip712TypedData,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -27,10 +28,10 @@ import {
   Data,
   SelfFundedProtocolTransactionRequest,
 } from '../SelfFundedProtocolTransactionRequest';
-import { handleRelayError, RelayReceipt } from '../relayer';
+import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
-export class CreatePostGateway
+export class CreateOnChainPostGateway
   implements
     IDelegatedTransactionGateway<CreatePostRequest>,
     IOnChainProtocolCallGateway<CreatePostRequest>
@@ -65,20 +66,19 @@ export class CreatePostGateway
     nonce?: Nonce,
   ): Promise<UnsignedProtocolCall<CreatePostRequest>> {
     const requestArg = await this.resolveCreatePostRequestArg(request);
-
     const data = await this.createTypedData(requestArg, nonce);
 
     return UnsignedProtocolCall.create({
       id: data.result.id,
       request,
       typedData: omitTypename(data.result.typedData),
-      fallback: this.createRequestFallback(request, data),
+      fallback: this.createRequestFallback(request, data.result.typedData),
     });
   }
 
   private async broadcast(
     request: CreatePostRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = await this.resolveCreatePostRequestArg(request);
 
     const { data } = await this.apolloClient.mutate<
@@ -93,7 +93,7 @@ export class CreatePostGateway
 
     if (data.result.__typename === 'RelayError') {
       const typedData = await this.createTypedData(requestArg);
-      const fallback = this.createRequestFallback(request, typedData);
+      const fallback = this.createRequestFallback(request, typedData.result.typedData);
 
       return handleRelayError(data.result, fallback);
     }
@@ -134,22 +134,22 @@ export class CreatePostGateway
 
   private createRequestFallback(
     request: CreatePostRequest,
-    data: CreatePostTypedDataData,
+    data: CreatePostEip712TypedData,
   ): SelfFundedProtocolTransactionRequest<CreatePostRequest> {
-    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const contract = lensHub(data.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('post', [
       {
-        profileId: data.result.typedData.value.profileId,
-        contentURI: data.result.typedData.value.contentURI,
-        collectModule: data.result.typedData.value.collectModule,
-        collectModuleInitData: data.result.typedData.value.collectModuleInitData,
-        referenceModule: data.result.typedData.value.referenceModule,
-        referenceModuleInitData: data.result.typedData.value.referenceModuleInitData,
+        profileId: data.value.profileId,
+        contentURI: data.value.contentURI,
+        collectModule: data.value.collectModule,
+        collectModuleInitData: data.value.collectModuleInitData,
+        referenceModule: data.value.referenceModule,
+        referenceModuleInitData: data.value.referenceModuleInitData,
       },
     ]);
     return {
       ...request,
-      contractAddress: data.result.typedData.domain.verifyingContract,
+      contractAddress: data.domain.verifyingContract,
       encodedData: encodedData as Data,
     };
   }

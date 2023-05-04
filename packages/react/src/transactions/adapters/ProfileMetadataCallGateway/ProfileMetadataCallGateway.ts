@@ -32,7 +32,7 @@ import {
   Data,
   SelfFundedProtocolTransactionRequest,
 } from '../SelfFundedProtocolTransactionRequest';
-import { handleRelayError, RelayReceipt } from '../relayer';
+import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
 import { createProfileMetadata } from './createProfileMetadata';
 
 export class ProfileMetadataCallGateway
@@ -84,7 +84,7 @@ export class ProfileMetadataCallGateway
 
   private async broadcast(
     request: UpdateProfileDetailsRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
 
     const { data } = await this.apolloClient.mutate<

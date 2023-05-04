@@ -22,7 +22,7 @@ export interface IMetaTransactionNonceGateway {
   getNextMetaTransactionNonceFor(kind: TransactionKind): Promise<Nonce | undefined>;
 }
 
-export interface IProtocolCallRelayer<T extends ProtocolTransactionRequestModel> {
+export interface IOnChainRelayer<T extends ProtocolTransactionRequestModel> {
   relayProtocolCall(
     signedCall: ISignedProtocolCall<T>,
   ): PromiseResult<MetaTransaction<T>, BroadcastingError>;
@@ -44,7 +44,7 @@ export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
     protected readonly activeWallet: ActiveWallet,
     protected readonly metaTransactionNonceGateway: IMetaTransactionNonceGateway,
     protected readonly onChainProtocolCallGateway: IOnChainProtocolCallGateway<T>,
-    protected readonly protocolCallRelayer: IProtocolCallRelayer<T>,
+    protected readonly relayer: IOnChainRelayer<T>,
     protected readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
     protected readonly presenter: ISubsidizeOnChainPresenter,
   ) {}
@@ -68,7 +68,7 @@ export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
       return;
     }
 
-    const relayResult = await this.protocolCallRelayer.relayProtocolCall(signingResult.value);
+    const relayResult = await this.relayer.relayProtocolCall(signingResult.value);
 
     if (relayResult.isFailure()) {
       this.presenter.present(failure(relayResult.error));

@@ -23,7 +23,7 @@ import { v4 } from 'uuid';
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
 import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
-import { handleRelayError, RelayReceipt } from './relayer';
+import { handleRelayError, OnChainBroadcastReceipt } from './relayer';
 
 export class ProfileImageCallGateway
   implements
@@ -73,7 +73,7 @@ export class ProfileImageCallGateway
 
   private async broadcast(
     request: UpdateProfileImageRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = this.resolveMutationRequestArg(request);
 
     const { data } = await this.apolloClient.mutate<

@@ -17,6 +17,7 @@ export type CreatePostRequest = {
   locale: Locale;
   delegate: boolean;
   decryptionCriteria?: DecryptionCriteria;
+  offChain: boolean;
 };
 
 export class CreatePost extends DelegableSigning<CreatePostRequest> {

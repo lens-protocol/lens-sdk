@@ -26,7 +26,7 @@ import {
   Data,
   SelfFundedProtocolTransactionRequest,
 } from '../SelfFundedProtocolTransactionRequest';
-import { handleRelayError, RelayReceipt } from '../relayer';
+import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
 
 export class CreateMirrorCallGateway
   implements
@@ -76,7 +76,7 @@ export class CreateMirrorCallGateway
 
   private async broadcast(
     request: CreateMirrorRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = await this.resolveCreateMirrorRequestArg(request);
 
     const { data } = await this.apolloClient.mutate<

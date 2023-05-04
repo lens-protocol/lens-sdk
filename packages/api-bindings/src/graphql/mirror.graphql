@@ -28,6 +28,6 @@ mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDa
 
 mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
   result: createMirrorViaDispatcher(request: $request) {
-    ...RelayResult
+    ...BroadcastResult
   }
 }

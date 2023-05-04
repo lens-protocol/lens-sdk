@@ -21,6 +21,8 @@ import {
   CreateSetProfileImageUriViaDispatcherDocument,
   ReportPublicationDocument,
   CreateProfileDocument,
+  CreateDataAvailabilityPostTypedDataDocument,
+  CreateDataAvailabilityPostViaDispatcherDocument,
 } from '../hooks';
 import {
   AddReactionVariables,
@@ -41,7 +43,6 @@ import {
   ReportPublicationVariables,
   CreateProfileVariables,
   CreateProfileData,
-  RelayResult,
   BroadcastProtocolCallData,
   CreatePostTypedDataData,
   CreateCommentTypedDataData,
@@ -60,6 +61,11 @@ import {
   CreatePostViaDispatcherData,
   CreateSetProfileImageUriViaDispatcherData,
   ReportPublicationData,
+  CreateDataAvailabilityPostTypedDataVariables,
+  CreateDataAvailabilityPostTypedDataData,
+  BroadcastResult,
+  CreateDataAvailabilityPostViaDispatcherData,
+  CreateDataAvailabilityPostViaDispatcherVariables,
 } from '../operations';
 
 export function createCreateProfileMockedResponse({
@@ -67,7 +73,7 @@ export function createCreateProfileMockedResponse({
   result,
 }: {
   request: CreateProfileVariables['request'];
-  result: Required<RelayResult>;
+  result: Required<BroadcastResult>;
 }): MockedResponse<CreateProfileData> {
   return {
     request: {
@@ -80,7 +86,9 @@ export function createCreateProfileMockedResponse({
   };
 }
 
-function mockBroadcastProtocolCallData(result: Required<RelayResult>): BroadcastProtocolCallData {
+function mockBroadcastProtocolCallData(
+  result: Required<BroadcastResult>,
+): BroadcastProtocolCallData {
   return {
     result,
   };
@@ -93,7 +101,7 @@ export function createBroadcastProtocolCallMockedResponse(
         variables: BroadcastProtocolCallVariables;
       }
     | {
-        result: Required<RelayResult>;
+        result: Required<BroadcastResult>;
         variables: BroadcastProtocolCallVariables;
       },
 ): MockedResponse<BroadcastProtocolCallData> {
@@ -524,6 +532,26 @@ export function createCreatePostTypedDataMockedResponse<T extends CreatePostType
   };
 }
 
+export function createCreateDataAvailabilityPostTypedDataMockedResponse<
+  T extends CreateDataAvailabilityPostTypedDataData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityPostTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityPostTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
 export function createCreatePostViaDispatcherMockedResponse<T extends CreatePostViaDispatcherData>({
   variables,
   data,
@@ -534,6 +562,26 @@ export function createCreatePostViaDispatcherMockedResponse<T extends CreatePost
   return {
     request: {
       query: CreatePostViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateDataAvailabilityPostViaDispatcherDataMockedResponse<
+  T extends CreateDataAvailabilityPostViaDispatcherData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityPostViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityPostViaDispatcherDocument,
       variables,
     },
     result: {

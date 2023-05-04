@@ -31,6 +31,6 @@ mutation CreateCommentTypedData($request: CreatePublicCommentRequest!, $options:
 
 mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
   result: createCommentViaDispatcher(request: $request) {
-    ...RelayResult
+    ...BroadcastResult
   }
 }

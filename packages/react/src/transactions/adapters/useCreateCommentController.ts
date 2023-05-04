@@ -8,7 +8,7 @@ import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-c
 import {
   BroadcastingError,
   IMetaTransactionNonceGateway,
-  IProtocolCallRelayer,
+  IOnChainRelayer,
   SubsidizeOnChain,
   AnyTransactionRequest,
   TransactionQueue,
@@ -23,7 +23,7 @@ import { CreateCommentCallGateway } from './publication-call-gateways/CreateComm
 export type CreateCommentControllerArgs<T extends CreateCommentRequest> = {
   activeWallet: ActiveWallet;
   apolloClient: LensApolloClient;
-  protocolCallRelayer: IProtocolCallRelayer<T>;
+  onChainRelayer: IOnChainRelayer<T>;
   transactionFactory: ITransactionFactory<T>;
   transactionGateway: IMetaTransactionNonceGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;
@@ -41,7 +41,7 @@ export class CreateCommentController<T extends CreateCommentRequest> {
   constructor({
     activeWallet,
     apolloClient,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionFactory,
     transactionGateway,
     transactionQueue,
@@ -53,7 +53,7 @@ export class CreateCommentController<T extends CreateCommentRequest> {
       activeWallet,
       transactionGateway,
       gateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       this.presenter,
     );

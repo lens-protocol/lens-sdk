@@ -28,7 +28,7 @@ export function useUpdateProfileDetailsController({
     activeWallet,
     apolloClient,
     transactionGateway,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionQueue,
     transactionFactory,
   } = useSharedDependencies();
@@ -48,7 +48,7 @@ export function useUpdateProfileDetailsController({
       activeWallet,
       transactionGateway,
       gateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );

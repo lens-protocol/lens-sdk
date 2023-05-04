@@ -55,7 +55,7 @@ export function useCreateComment({
     appId,
     activeWallet,
     apolloClient,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionFactory,
     transactionGateway,
     transactionQueue,
@@ -79,7 +79,7 @@ export function useCreateComment({
       const controller = new CreateCommentController<CreateCommentRequest>({
         activeWallet,
         apolloClient,
-        protocolCallRelayer,
+        onChainRelayer,
         transactionFactory,
         transactionGateway,
         transactionQueue,

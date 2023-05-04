@@ -28,7 +28,7 @@ export function useFollowController() {
     activeWallet,
     apolloClient,
     logger,
-    protocolCallRelayer,
+    onChainRelayer,
     tokenAvailability,
     transactionFactory,
     transactionGateway,
@@ -52,7 +52,7 @@ export function useFollowController() {
       activeWallet,
       transactionGateway,
       followProfilesCallGateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );

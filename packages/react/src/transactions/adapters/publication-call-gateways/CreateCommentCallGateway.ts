@@ -27,7 +27,7 @@ import {
   Data,
   SelfFundedProtocolTransactionRequest,
 } from '../SelfFundedProtocolTransactionRequest';
-import { handleRelayError, RelayReceipt } from '../relayer';
+import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class CreateCommentCallGateway
@@ -77,7 +77,7 @@ export class CreateCommentCallGateway
 
   private async broadcast(
     request: CreateCommentRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = await this.resolveCreateCommentRequestArg(request);
 
     const { data } = await this.apolloClient.mutate<
