@@ -15,7 +15,7 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@bundlr-network/client": "^0.10.3",
+    "@bundlr-network/client": "^0.10.5",
     "@lens-protocol/react-web": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
     "ethers": "^5.7.2",
@@ -23,23 +23,23 @@
     "react": "^18.2.0",
     "react-cool-inview": "^3.0.1",
     "react-dom": "^18.2.0",
-    "react-hot-toast": "^2.4.0",
-    "react-router-dom": "^6.8.1",
+    "react-hot-toast": "^2.4.1",
+    "react-router-dom": "^6.11.1",
     "readable-web-to-node-stream": "^3.0.2",
     "wagmi": "0.12.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.12",
+    "@babel/core": "^7.21.8",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
-    "@types/node": "^18.15.11",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
+    "@types/node": "^18.16.4",
+    "@types/react": "^18.2.5",
+    "@types/react-dom": "^18.2.3",
     "@vitejs/plugin-react": "^3.1.0",
-    "prettier": "^2.8.4",
+    "prettier": "^2.8.8",
     "rollup-plugin-visualizer": "^5.9.0",
     "typescript": "^4.9.5",
-    "vite": "^4.1.3",
+    "vite": "^4.3.4",
     "vite-plugin-node-polyfills": "^0.7.0"
   },
   "prettier": "@lens-protocol/prettier-config"
