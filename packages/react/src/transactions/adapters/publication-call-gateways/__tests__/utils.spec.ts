@@ -1,379 +1,353 @@
-import { TransactionKind } from '@lens-protocol/domain/entities';
-import { mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
 import {
-  CollectPolicyType,
-  ContentFocus,
-  CreatePostRequest,
-  ReferencePolicyType,
-} from '@lens-protocol/domain/use-cases/publications';
+  mockChargeCollectPolicyConfig,
+  mockCreateCommentRequest,
+  mockCreatePostRequest,
+} from '@lens-protocol/domain/mocks';
+import { CollectPolicyType } from '@lens-protocol/domain/use-cases/publications';
 import { mockDaiAmount } from '@lens-protocol/shared-kernel/mocks';
 
 import { resolveCollectModule } from '../utils';
 
 describe(`Given ${resolveCollectModule.name} function`, () => {
-  const requestBase = {
-    contentFocus: ContentFocus.TEXT,
-    reference: { type: ReferencePolicyType.FOLLOWERS_ONLY },
-    profileId: mockProfileId(),
-    publicationId: mockPublicationId(),
-    kind: TransactionKind.CREATE_POST,
-    locale: '',
-    delegate: false,
-  };
+  describe.each([
+    {
+      type: 'CreatePostRequest',
+      mockRequest: mockCreatePostRequest,
+    },
+    {
+      type: 'CreateCommentRequest',
+      mockRequest: mockCreateCommentRequest,
+    },
+  ])('when called with a "$type"', ({ mockRequest }) => {
+    describe(`that has ${CollectPolicyType.NO_COLLECT} collect policy`, () => {
+      it(`should resolve with the "revertCollectModule" with the expected parameters`, async () => {
+        const request = mockRequest({
+          collect: { type: CollectPolicyType.NO_COLLECT },
+        });
 
-  describe(`when called with collect policy ${CollectPolicyType.NO_COLLECT}`, () => {
-    it(`resolves to the revertCollectModule`, async () => {
-      const request = {
-        ...requestBase,
-        collect: { type: CollectPolicyType.NO_COLLECT },
-      } as CreatePostRequest;
+        const collectModule = resolveCollectModule(request);
 
-      const collectModule = resolveCollectModule(request);
-
-      expect(collectModule).toEqual({
-        revertCollectModule: true,
+        expect(collectModule).toEqual({
+          revertCollectModule: true,
+        });
       });
     });
-  });
 
-  describe(`when called with collect policy ${CollectPolicyType.FREE}`, () => {
-    it(`resolves to the freeCollectModule`, async () => {
-      const request = {
-        ...requestBase,
-        collect: {
-          type: CollectPolicyType.FREE,
-          metadata: {
-            name: '',
-            attributes: [],
+    describe(`that has ${CollectPolicyType.FREE} collect policy`, () => {
+      it(`should resolve with the "freeCollectModule" with the expected parameters`, async () => {
+        const request = mockRequest({
+          collect: {
+            type: CollectPolicyType.FREE,
+            metadata: {
+              name: '',
+              attributes: [],
+            },
+            followersOnly: true,
           },
-          followersOnly: true,
+        });
+
+        const collectModule = resolveCollectModule(request);
+
+        expect(collectModule).toEqual({
+          freeCollectModule: {
+            followerOnly: true,
+          },
+        });
+      });
+    });
+
+    describe(`that has ${CollectPolicyType.CHARGE} collect policy`, () => {
+      const fee = mockDaiAmount(5);
+      const recipients = [
+        {
+          recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaF',
+          split: 50,
         },
-      } as CreatePostRequest;
-
-      const collectModule = resolveCollectModule(request);
-
-      expect(collectModule).toEqual({
-        freeCollectModule: {
-          followerOnly: true,
+        {
+          recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaB',
+          split: 50,
         },
-      });
-    });
-  });
+      ];
 
-  describe(`when called with collect policy ${CollectPolicyType.CHARGE}`, () => {
-    const chargeCollectBase = {
-      type: CollectPolicyType.CHARGE,
-      fee: mockDaiAmount(5),
-      followersOnly: true,
-      metadata: {
-        name: '',
-        attributes: [],
-      },
-      mirrorReward: 0,
-    };
-
-    describe(`and defines only a fee`, () => {
-      it(`resolves to the feeCollectModule`, async () => {
-        const request = {
-          ...requestBase,
-          collect: {
-            ...chargeCollectBase,
-            recipient: '0x',
-          },
-        } as CreatePostRequest;
-
-        const collectModule = resolveCollectModule(request);
-
-        expect(collectModule).toEqual({
-          feeCollectModule: {
-            amount: {
-              currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              value: '5',
+      describe.each([
+        {
+          description: 'with just a "fee"',
+          request: mockRequest({
+            collect: mockChargeCollectPolicyConfig({
+              recipient: '0x',
+              followersOnly: true,
+              mirrorReward: 0,
+              fee,
+            }),
+          }),
+          expected: {
+            feeCollectModule: {
+              amount: {
+                currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                value: '5',
+              },
+              followerOnly: true,
+              recipient: '0x',
+              referralFee: 0,
             },
-            followerOnly: true,
-            recipient: '0x',
-            referralFee: 0,
           },
-        });
-      });
-    });
+        },
 
-    describe(`and is timeLimited`, () => {
-      it(`resolves to the timedFeeCollectModule`, async () => {
-        const request = {
-          ...requestBase,
-          collect: {
-            ...chargeCollectBase,
-            recipient: '0x',
-            timeLimited: true,
-          },
-        } as CreatePostRequest;
-
-        const collectModule = resolveCollectModule(request);
-
-        expect(collectModule).toEqual({
-          timedFeeCollectModule: {
-            amount: {
-              currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              value: '5',
+        {
+          description: 'with "fee" and "timeLimited"',
+          request: mockRequest({
+            collect: mockChargeCollectPolicyConfig({
+              recipient: '0x',
+              followersOnly: true,
+              mirrorReward: 0,
+              fee,
+              timeLimited: true,
+            }),
+          }),
+          expected: {
+            timedFeeCollectModule: {
+              amount: {
+                currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                value: '5',
+              },
+              followerOnly: true,
+              recipient: '0x',
+              referralFee: 0,
             },
-            followerOnly: true,
-            recipient: '0x',
-            referralFee: 0,
           },
-        });
-      });
-    });
+        },
 
-    describe(`and has collectLimit`, () => {
-      it(`resolves to the limitedFeeCollectModule`, async () => {
-        const request = {
-          ...requestBase,
-          collect: {
-            ...chargeCollectBase,
-            recipient: '0x',
-            collectLimit: 10,
-          },
-        } as CreatePostRequest;
-
-        const collectModule = resolveCollectModule(request);
-
-        expect(collectModule).toEqual({
-          limitedFeeCollectModule: {
-            amount: {
-              currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              value: '5',
+        {
+          description: 'with "fee" and "collectLimit"',
+          request: mockRequest({
+            collect: mockChargeCollectPolicyConfig({
+              recipient: '0x',
+              followersOnly: true,
+              mirrorReward: 0,
+              fee,
+              collectLimit: 10,
+            }),
+          }),
+          expected: {
+            limitedFeeCollectModule: {
+              amount: {
+                currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                value: '5',
+              },
+              followerOnly: true,
+              recipient: '0x',
+              referralFee: 0,
+              collectLimit: '10',
             },
-            followerOnly: true,
-            recipient: '0x',
-            referralFee: 0,
-            collectLimit: '10',
           },
-        });
-      });
-    });
+        },
 
-    describe(`and has both timeLimited and collectLimit defined`, () => {
-      it(`resolves to the limitedTimedFeeCollectModule`, async () => {
-        const request = {
-          ...requestBase,
-          collect: {
-            ...chargeCollectBase,
-            recipient: '0x',
-            timeLimited: true,
-            collectLimit: 10,
-          },
-        } as CreatePostRequest;
-
-        const collectModule = resolveCollectModule(request);
-
-        expect(collectModule).toEqual({
-          limitedTimedFeeCollectModule: {
-            amount: {
-              currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              value: '5',
+        {
+          description: 'with "fee", "timeLimited" and "collectLimit"',
+          request: mockRequest({
+            collect: mockChargeCollectPolicyConfig({
+              recipient: '0x',
+              followersOnly: true,
+              mirrorReward: 0,
+              fee,
+              timeLimited: true,
+              collectLimit: 10,
+            }),
+          }),
+          expected: {
+            limitedTimedFeeCollectModule: {
+              amount: {
+                currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                value: '5',
+              },
+              followerOnly: true,
+              recipient: '0x',
+              referralFee: 0,
+              collectLimit: '10',
             },
-            followerOnly: true,
-            recipient: '0x',
-            referralFee: 0,
-            collectLimit: '10',
           },
-        });
-      });
-    });
+        },
 
-    describe(`and has depositToAave flag set without collectLimit or endTimestamp`, () => {
-      it(`resolves to the aaveFeeCollectModule`, async () => {
-        const request = {
-          ...requestBase,
-          collect: {
-            ...chargeCollectBase,
-            recipient: '0x',
-            depositToAave: true,
-          },
-        } as CreatePostRequest;
-
-        const collectModule = resolveCollectModule(request);
-
-        expect(collectModule).toEqual({
-          aaveFeeCollectModule: {
-            amount: {
-              currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              value: '5',
+        {
+          description:
+            'with "fee" and "depositToAave" but without "collectLimit" or "endTimestamp"',
+          request: mockRequest({
+            collect: mockChargeCollectPolicyConfig({
+              recipient: '0x',
+              followersOnly: true,
+              mirrorReward: 0,
+              fee,
+              depositToAave: true,
+            }),
+          }),
+          expected: {
+            aaveFeeCollectModule: {
+              amount: {
+                currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                value: '5',
+              },
+              followerOnly: true,
+              recipient: '0x',
+              referralFee: 0,
             },
-            followerOnly: true,
-            recipient: '0x',
-            referralFee: 0,
           },
-        });
-      });
-    });
+        },
 
-    describe(`and has depositToAave flag set together with collectLimit and endTimestamp`, () => {
-      it(`resolves to the aaveFeeCollectModule`, async () => {
-        const request = {
-          ...requestBase,
-          collect: {
-            ...chargeCollectBase,
-            recipient: '0x',
-            depositToAave: true,
-            collectLimit: 10,
-            endTimestamp: 1679501207007,
-          },
-        } as CreatePostRequest;
-
-        const collectModule = resolveCollectModule(request);
-
-        expect(collectModule).toEqual({
-          aaveFeeCollectModule: {
-            amount: {
-              currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              value: '5',
+        {
+          description: 'with "fee", "depositToAave", "collectLimit" and "endTimestamp"',
+          request: mockRequest({
+            collect: mockChargeCollectPolicyConfig({
+              recipient: '0x',
+              followersOnly: true,
+              mirrorReward: 0,
+              fee,
+              depositToAave: true,
+              collectLimit: 10,
+              endTimestamp: 1679501207007,
+            }),
+          }),
+          expected: {
+            aaveFeeCollectModule: {
+              amount: {
+                currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                value: '5',
+              },
+              followerOnly: true,
+              recipient: '0x',
+              referralFee: 0,
+              collectLimit: '10',
+              endTimestamp: '1679501207007',
             },
-            followerOnly: true,
-            recipient: '0x',
-            referralFee: 0,
-            collectLimit: '10',
-            endTimestamp: '1679501207007',
           },
-        });
-      });
-    });
+        },
 
-    describe(`and has vault set without collectLimit and endTimestamp`, () => {
-      it(`resolves to the erc4626FeeCollectModule`, async () => {
-        const request = {
-          ...requestBase,
-          collect: {
-            ...chargeCollectBase,
-            recipient: '0x',
-            vault: '0x',
-          },
-        } as CreatePostRequest;
-
-        const collectModule = resolveCollectModule(request);
-
-        expect(collectModule).toEqual({
-          erc4626FeeCollectModule: {
-            amount: {
-              currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              value: '5',
+        {
+          description: 'with "fee" and "vault" but without "collectLimit" and "endTimestamp"',
+          request: mockRequest({
+            collect: mockChargeCollectPolicyConfig({
+              recipient: '0x',
+              followersOnly: true,
+              mirrorReward: 0,
+              fee,
+              vault: '0x',
+            }),
+          }),
+          expected: {
+            erc4626FeeCollectModule: {
+              amount: {
+                currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                value: '5',
+              },
+              followerOnly: true,
+              recipient: '0x',
+              referralFee: 0,
+              vault: '0x',
             },
-            followerOnly: true,
-            recipient: '0x',
-            referralFee: 0,
-            vault: '0x',
           },
-        });
-      });
-    });
+        },
 
-    describe(`and has vault set together with collectLimit and endTimestamp`, () => {
-      it(`resolves to the erc4626FeeCollectModule`, async () => {
-        const request = {
-          ...requestBase,
-          collect: {
-            ...chargeCollectBase,
-            recipient: '0x',
-            vault: '0x',
-            collectLimit: 10,
-            endTimestamp: 1679501207007,
-          },
-        } as CreatePostRequest;
-
-        const collectModule = resolveCollectModule(request);
-
-        expect(collectModule).toEqual({
-          erc4626FeeCollectModule: {
-            amount: {
-              currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              value: '5',
+        {
+          description: 'with "fee", "vault", "collectLimit" and "endTimestamp"',
+          request: mockRequest({
+            collect: mockChargeCollectPolicyConfig({
+              recipient: '0x',
+              followersOnly: true,
+              mirrorReward: 0,
+              fee,
+              vault: '0x',
+              collectLimit: 10,
+              endTimestamp: 1679501207007,
+            }),
+          }),
+          expected: {
+            erc4626FeeCollectModule: {
+              amount: {
+                currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                value: '5',
+              },
+              followerOnly: true,
+              recipient: '0x',
+              referralFee: 0,
+              vault: '0x',
+              collectLimit: '10',
+              endTimestamp: '1679501207007',
             },
-            followerOnly: true,
-            recipient: '0x',
-            referralFee: 0,
-            vault: '0x',
-            collectLimit: '10',
-            endTimestamp: '1679501207007',
           },
-        });
-      });
-    });
+        },
 
-    describe(`and has multiple recipients set without collectLimit and endTimestamp`, () => {
-      it(`resolves to the multirecipientFeeCollectModule`, async () => {
-        const recipients = [
-          {
-            recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaF',
-            split: 50,
-          },
-          {
-            recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaB',
-            split: 50,
-          },
-        ];
-
-        const request = {
-          ...requestBase,
-          collect: {
-            ...chargeCollectBase,
-            recipients,
-          },
-        } as CreatePostRequest;
-
-        const collectModule = resolveCollectModule(request);
-
-        expect(collectModule).toEqual({
-          multirecipientFeeCollectModule: {
-            amount: {
-              currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              value: '5',
+        {
+          description:
+            'with "fee", multiple "recipients" but without "collectLimit" and "endTimestamp"',
+          request: mockRequest({
+            collect: mockChargeCollectPolicyConfig({
+              followersOnly: true,
+              mirrorReward: 0,
+              fee,
+              recipients: [
+                {
+                  recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaF',
+                  split: 50,
+                },
+                {
+                  recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaB',
+                  split: 50,
+                },
+              ],
+            }),
+          }),
+          expected: {
+            multirecipientFeeCollectModule: {
+              amount: {
+                currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                value: '5',
+              },
+              followerOnly: true,
+              referralFee: 0,
+              recipients: [
+                {
+                  recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaF',
+                  split: 50,
+                },
+                {
+                  recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaB',
+                  split: 50,
+                },
+              ],
             },
-            followerOnly: true,
-            referralFee: 0,
-            recipients,
           },
-        });
-      });
-    });
+        },
 
-    describe(`and has multiple recipients set together with collectLimit and endTimestamp`, () => {
-      it(`resolves to the multirecipientFeeCollectModule`, async () => {
-        const recipients = [
-          {
-            recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaF',
-            split: 50,
-          },
-          {
-            recipient: '0xEEA0C1f5ab0159dba749Dc0BAee462E5e293daaB',
-            split: 50,
-          },
-        ];
-
-        const request = {
-          ...requestBase,
-          collect: {
-            ...chargeCollectBase,
-            recipients,
-            collectLimit: 10,
-            endTimestamp: 1679501207007,
-          },
-        } as CreatePostRequest;
-
-        const collectModule = resolveCollectModule(request);
-
-        expect(collectModule).toEqual({
-          multirecipientFeeCollectModule: {
-            amount: {
-              currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              value: '5',
+        {
+          description: 'with "fee", multiple "recipients", "collectLimit" and "endTimestamp"',
+          request: mockRequest({
+            collect: mockChargeCollectPolicyConfig({
+              followersOnly: true,
+              mirrorReward: 0,
+              fee,
+              recipients,
+              collectLimit: 10,
+              endTimestamp: 1679501207007,
+            }),
+          }),
+          expected: {
+            multirecipientFeeCollectModule: {
+              amount: {
+                currency: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                value: '5',
+              },
+              followerOnly: true,
+              referralFee: 0,
+              recipients,
+              collectLimit: '10',
+              endTimestamp: '1679501207007',
             },
-            followerOnly: true,
-            referralFee: 0,
-            recipients,
-            collectLimit: '10',
-            endTimestamp: '1679501207007',
           },
+        },
+      ])(`$description`, ({ request, expected }) => {
+        it(`should resolve with the "feeCollectModule" with the expected parameters`, async () => {
+          const collectModule = resolveCollectModule(request);
+
+          expect(collectModule).toEqual(expected);
         });
       });
     });
