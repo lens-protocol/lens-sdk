@@ -18,6 +18,7 @@ import { ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
 import { ImageType } from '../config';
 import {
+  ChargeCollectPolicyConfig,
   CollectPolicyType,
   ContentFocus,
   FreeCollectPolicyConfig,
@@ -110,7 +111,7 @@ export function mockFreeCollectPolicyConfig(
 }
 
 export function mockChargeCollectPolicyConfig(
-  overrides?: Partial<SimpleChargeCollectPolicyConfig>,
+  overrides?: Partial<ChargeCollectPolicyConfig>,
 ): SimpleChargeCollectPolicyConfig {
   return {
     type: CollectPolicyType.CHARGE,
