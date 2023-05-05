@@ -1,4 +1,4 @@
-import { Challenge } from './Transactions';
+export type Challenge = string;
 
 export type NftId = string;
 

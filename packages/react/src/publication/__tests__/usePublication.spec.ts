@@ -2,10 +2,10 @@ import { AnyPublication, activeProfileIdentifierVar } from '@lens-protocol/api-b
 import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
-  createPublicationMockedResponse,
   mockSources,
+  createGetPublicationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
@@ -16,27 +16,26 @@ import { usePublication, UsePublicationArgs } from '../usePublication';
 
 function setupTestScenario({
   expectedObserverId,
-  result,
-  ...args
+  publication,
+  publicationId,
+  observerId,
 }: UsePublicationArgs & {
-  publicationId: PublicationId;
-  observerId?: ProfileId;
   expectedObserverId?: ProfileId;
-  result: AnyPublication | null;
+  publication: AnyPublication | null;
 }) {
   const sources = mockSources();
 
-  return renderHookWithMocks(() => usePublication(args), {
+  return renderHookWithMocks(() => usePublication({ publicationId, observerId }), {
     mocks: {
       sources,
       apolloClient: createMockApolloClientWithMultipleResponses([
-        createPublicationMockedResponse({
+        createGetPublicationMockedResponse({
           variables: {
-            ...args,
+            request: { publicationId },
             sources,
             observerId: expectedObserverId ?? null,
           },
-          result,
+          publication,
         }),
       ]),
     },
@@ -69,7 +68,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
         const { result } = setupTestScenario({
           publicationId: publication.id,
           expectedObserverId: activeProfileValue?.id,
-          result: publication,
+          publication,
         });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
@@ -82,7 +81,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
           publicationId: publication.id,
           observerId,
           expectedObserverId: observerId,
-          result: publication,
+          publication,
         });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
@@ -95,7 +94,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
         const { result } = setupTestScenario({
           publicationId: publication.id,
           expectedObserverId: activeProfileValue?.id,
-          result: null,
+          publication: null,
         });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());

@@ -20,8 +20,6 @@ import {
   ProfilePublicationsForSaleDocument,
   ProfilesToFollowDocument,
   ProxyActionStatusDocument,
-  PublicationByTxHashDocument,
-  PublicationDocument,
   SearchProfilesDocument,
   SearchPublicationsDocument,
   WhoCollectedPublicationDocument,
@@ -72,11 +70,7 @@ import {
   ProxyActionStatusResult,
   ProxyActionStatusTypes,
   ProxyActionStatusVariables,
-  PublicationByTxHashData,
-  PublicationByTxHashVariables,
-  PublicationData,
   PublicationRevenue,
-  PublicationVariables,
   SearchProfilesVariables,
   SearchPublicationsVariables,
   TransactionErrorReasons,
@@ -310,24 +304,6 @@ export function createMutualFollowersMockedResponse(args: {
           },
         },
       },
-    },
-  };
-}
-
-export function createPublicationMockedResponse({
-  variables,
-  result,
-}: {
-  variables: PublicationVariables;
-  result: AnyPublication | null;
-}): MockedResponse<PublicationData> {
-  return {
-    request: {
-      query: PublicationDocument,
-      variables,
-    },
-    result: {
-      data: { result },
     },
   };
 }
@@ -596,47 +572,20 @@ export function createSearchPublicationsMockedResponse(args: {
   };
 }
 
-function mockPublicationByTxHash(
-  publication: Comment | Post | Mirror = mockPostFragment(),
-): PublicationByTxHashData {
-  return {
-    result: publication,
-  };
-}
-
-/** @deprecated */
-export function createPublicationByTxHashMockedResponse({
-  variables,
-  publication,
-}: {
-  variables: PublicationByTxHashVariables;
-  publication: Comment | Post | Mirror;
-}): MockedResponse<PublicationByTxHashData> {
-  return {
-    request: {
-      query: PublicationByTxHashDocument,
-      variables,
-    },
-    result: {
-      data: mockPublicationByTxHash(publication),
-    },
-  };
-}
-
 function mockGetPublicationData(
-  publication: Comment | Post | Mirror = mockPostFragment(),
+  publication: AnyPublication | null = mockPostFragment(),
 ): GetPublicationData {
   return {
     result: publication,
   };
 }
 
-export function createGetPublicationDocumentMockedResponse({
+export function createGetPublicationMockedResponse({
   variables,
   publication,
 }: {
   variables: GetPublicationVariables;
-  publication: Comment | Post | Mirror;
+  publication: AnyPublication | null;
 }): MockedResponse<GetPublicationData> {
   return {
     request: {

@@ -27,6 +27,7 @@ function setupTestScenario({ publication }: { publication: AnyPublication }) {
 
   return {
     cacheManager: new PublicationCacheManager(apolloCache),
+
     get updatedPublicationFragment() {
       return apolloCache.readFragment({
         id: apolloCache.identify({
@@ -42,7 +43,7 @@ function setupTestScenario({ publication }: { publication: AnyPublication }) {
 
 describe(`Given the ${PublicationCacheManager.name}`, () => {
   describe(`when "${PublicationCacheManager.prototype.update.name}" method is invoked`, () => {
-    it(`should update properly post cache fragment`, async () => {
+    it(`should be able to update post cache fragments`, async () => {
       const post = mockPostFragment({
         hidden: false,
       });
@@ -63,7 +64,7 @@ describe(`Given the ${PublicationCacheManager.name}`, () => {
       );
     });
 
-    it(`should update properly comment cache fragment`, async () => {
+    it(`should be able to update comment cache fragments`, async () => {
       const comment = mockCommentFragment({
         hidden: false,
       });
@@ -84,7 +85,7 @@ describe(`Given the ${PublicationCacheManager.name}`, () => {
       );
     });
 
-    it(`should update properly mirror cache fragment`, async () => {
+    it(`should be able to update mirror cache fragments`, async () => {
       const mirror = mockMirrorFragment({
         hidden: false,
       });
@@ -105,7 +106,7 @@ describe(`Given the ${PublicationCacheManager.name}`, () => {
       );
     });
 
-    it(`should return failure when cache item is not present`, async () => {
+    it(`should return failure if the specified cache item is not present`, async () => {
       const scenario = setupTestScenario({
         publication: mockPostFragment(),
       });

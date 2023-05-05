@@ -2707,22 +2707,6 @@ export type GetPublicationVariables = Exact<{
 
 export type GetPublicationData = { result: Comment | Mirror | Post | null };
 
-export type PublicationVariables = Exact<{
-  observerId?: InputMaybe<Scalars['ProfileId']>;
-  publicationId: Scalars['InternalPublicationId'];
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
-}>;
-
-export type PublicationData = { result: Comment | Mirror | Post | null };
-
-export type PublicationByTxHashVariables = Exact<{
-  observerId?: InputMaybe<Scalars['ProfileId']>;
-  txHash: Scalars['TxHash'];
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
-}>;
-
-export type PublicationByTxHashData = { result: Comment | Mirror | Post | null };
-
 export type HidePublicationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
 }>;

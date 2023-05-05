@@ -1,7 +1,5 @@
 import { ChainType, PromiseResult } from '@lens-protocol/shared-kernel';
 
-export type Challenge = string;
-
 export type Signature = string;
 
 export type Nonce = number;

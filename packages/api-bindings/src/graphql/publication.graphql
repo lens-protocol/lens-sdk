@@ -18,42 +18,6 @@ query GetPublication(
   }
 }
 
-query Publication(
-  $observerId: ProfileId
-  $publicationId: InternalPublicationId!
-  $sources: [Sources!]!
-) {
-  result: publication(request: { publicationId: $publicationId }) {
-    ... on Post {
-      ...Post
-    }
-
-    ... on Mirror {
-      ...Mirror
-    }
-
-    ... on Comment {
-      ...Comment
-    }
-  }
-}
-
-query PublicationByTxHash($observerId: ProfileId, $txHash: TxHash!, $sources: [Sources!]!) {
-  result: publication(request: { txHash: $txHash }) {
-    ... on Post {
-      ...Post
-    }
-
-    ... on Mirror {
-      ...Mirror
-    }
-
-    ... on Comment {
-      ...Comment
-    }
-  }
-}
-
 mutation HidePublication($publicationId: InternalPublicationId!) {
   hidePublication(request: { publicationId: $publicationId })
 }

@@ -87,6 +87,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.MINING_TIMEOUT);
     }, 15_000);
 
+    // This test is temporarily skipped because the previous strategy to test stale tx does not work with the new version of Ganache
     it.skip(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.MINING_TIMEOUT}] if the tx is found but not mined within a reasonable time`, async () => {
       const provider = new MockProvider({
         ganacheOptions: {

@@ -5,7 +5,7 @@ import {
   mockPostFragment,
   mockProfileFragment,
   mockSources,
-  createGetPublicationDocumentMockedResponse,
+  createGetPublicationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { PublicationId } from '@lens-protocol/domain/entities';
 import {
@@ -39,7 +39,7 @@ function setupTestScenario({
         sources,
       },
     }),
-    createGetPublicationDocumentMockedResponse({
+    createGetPublicationMockedResponse({
       variables: {
         request: transactionData.txHash
           ? {
