@@ -1,5 +1,6 @@
 export * from './DelegableSigning';
 export * from './IGenericResultPresenter';
+export * from './SubsidizeOffChain';
 export * from './SubsidizeOnChain';
 export * from './SignlessSubsidizeOnChain';
 export * from './SupportedTransactionRequest';

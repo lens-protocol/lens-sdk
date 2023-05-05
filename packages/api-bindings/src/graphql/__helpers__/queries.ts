@@ -11,6 +11,7 @@ import {
   GetAllProfilesDocument,
   GetProfileDocument,
   GetProfilePublicationRevenueDocument,
+  GetPublicationDocument,
   GetPublicationRevenueDocument,
   GetPublicationsDocument,
   HasTxHashBeenIndexedDocument,
@@ -45,10 +46,12 @@ import {
   GetProfilePublicationRevenueData,
   GetProfilePublicationRevenueVariables,
   GetProfileVariables,
+  GetPublicationData,
   GetPublicationRevenueData,
   GetPublicationRevenueVariables,
   GetPublicationsData,
   GetPublicationsVariables,
+  GetPublicationVariables,
   HasTxHashBeenIndexedData,
   HasTxHashBeenIndexedVariables,
   Maybe,
@@ -601,6 +604,7 @@ function mockPublicationByTxHash(
   };
 }
 
+/** @deprecated */
 export function createPublicationByTxHashMockedResponse({
   variables,
   publication,
@@ -615,6 +619,32 @@ export function createPublicationByTxHashMockedResponse({
     },
     result: {
       data: mockPublicationByTxHash(publication),
+    },
+  };
+}
+
+function mockGetPublicationData(
+  publication: Comment | Post | Mirror = mockPostFragment(),
+): GetPublicationData {
+  return {
+    result: publication,
+  };
+}
+
+export function createGetPublicationDocumentMockedResponse({
+  variables,
+  publication,
+}: {
+  variables: GetPublicationVariables;
+  publication: Comment | Post | Mirror;
+}): MockedResponse<GetPublicationData> {
+  return {
+    request: {
+      query: GetPublicationDocument,
+      variables,
+    },
+    result: {
+      data: mockGetPublicationData(publication),
     },
   };
 }

@@ -5,10 +5,7 @@ import {
   BroadcastOffChainDocument,
 } from '@lens-protocol/api-bindings';
 import { DataTransaction } from '@lens-protocol/domain/entities';
-import {
-  IOffChainRelayer,
-  WithOffChainFlag,
-} from '@lens-protocol/domain/src/use-cases/transactions/SubsidizeOffChain';
+import { IOffChainRelayer } from '@lens-protocol/domain/src/use-cases/transactions/SubsidizeOffChain';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
@@ -26,7 +23,7 @@ import { SignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
 import { handleRelayError, OffChainBroadcastReceipt } from './relayer';
 
-export class OffChainRelayer implements IOffChainRelayer<WithOffChainFlag<CreatePostRequest>> {
+export class OffChainRelayer implements IOffChainRelayer<CreatePostRequest> {
   constructor(
     private apolloClient: LensApolloClient,
     private factory: ITransactionFactory<ProtocolTransactionRequest>,
@@ -72,7 +69,7 @@ export class OffChainRelayer implements IOffChainRelayer<WithOffChainFlag<Create
       }
 
       return success({
-        id: data.result.dataAvailabilityId,
+        id: data.result.id,
       });
     } catch (err) {
       this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);

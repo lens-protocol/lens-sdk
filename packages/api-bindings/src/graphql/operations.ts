@@ -2699,6 +2699,14 @@ export type ProxyActionVariables = Exact<{
 
 export type ProxyActionData = { result: string };
 
+export type GetPublicationVariables = Exact<{
+  request: PublicationQueryRequest;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type GetPublicationData = { result: Comment | Mirror | Post | null };
+
 export type PublicationVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
   publicationId: Scalars['InternalPublicationId'];

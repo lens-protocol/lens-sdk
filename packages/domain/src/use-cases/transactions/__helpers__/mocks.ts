@@ -15,19 +15,11 @@ import {
   ProtocolTransactionRequestModel,
   DataTransaction,
 } from '../../../entities';
-import {
-  MockedProxyTransaction,
-  mockNonce,
-  mockTransactionHash,
-} from '../../../entities/__helpers__/mocks';
+import { MockedProxyTransaction, mockNonce } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import { IDelegatedTransactionGateway, WithDelegateFlag } from '../DelegableSigning';
 import { ISignlessSubsidizedCallRelayer } from '../SignlessSubsidizeOnChain';
-import {
-  IOffChainRelayer,
-  IOffChainProtocolCallGateway,
-  WithOffChainFlag,
-} from '../SubsidizeOffChain';
+import { IOffChainRelayer, IOffChainProtocolCallGateway } from '../SubsidizeOffChain';
 import {
   IMetaTransactionNonceGateway,
   IOnChainRelayer,
@@ -50,7 +42,7 @@ export function mockIOnChainRelayer<T extends ProtocolTransactionRequestModel>({
   return relayer;
 }
 
-export function mockIOffChainRelayer<T extends WithOffChainFlag<ProtocolTransactionRequestModel>>({
+export function mockIOffChainRelayer<T extends ProtocolTransactionRequestModel>({
   signedCall,
   result,
 }: {
@@ -76,7 +68,6 @@ export function mockTransactionData<T extends AnyTransactionRequest>(
   return {
     id: faker.datatype.uuid(),
     request: mock(),
-    txHash: mockTransactionHash(),
     ...overrides,
   };
 }
@@ -163,9 +154,9 @@ export function mockProtocolTransactionRequestModelWithDelegateFlag({
   } as WithDelegateFlag<ProtocolTransactionRequestModel>;
 }
 
-export function mockProtocolTransactionRequestModelWithOffChainFlag(): WithOffChainFlag<ProtocolTransactionRequestModel> {
+export function mockProtocolTransactionRequestModelWithOffChainFlag(): ProtocolTransactionRequestModel {
   return {
     kind: TransactionKind.CREATE_POST,
     offChain: true,
-  } as WithOffChainFlag<ProtocolTransactionRequestModel>;
+  } as ProtocolTransactionRequestModel;
 }

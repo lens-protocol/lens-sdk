@@ -155,7 +155,6 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
     profileId: mockProfileId(),
     delegate: false,
     locale: 'en',
-    offChain: false,
 
     ...overrides,
   };
@@ -177,7 +176,6 @@ export function mockCreateEncryptedPostRequest(
     profileId: mockProfileId(),
     delegate: false,
     locale: 'en',
-    offChain: false,
 
     ...overrides,
   };

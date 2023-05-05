@@ -24,11 +24,10 @@ import {
   ISubsidizeOffChainPresenter,
   IOffChainProtocolCallGateway,
   SubsidizeOffChain,
-  WithOffChainFlag,
 } from '../SubsidizeOffChain';
 import { TransactionQueue } from '../TransactionQueue';
 
-function setupStoreOffChain<T extends WithOffChainFlag<ProtocolTransactionRequestModel>>({
+function setupStoreOffChain<T extends ProtocolTransactionRequestModel>({
   gateway,
   relayer = mock<IOffChainRelayer<T>>(),
   queue = mockTransactionQueue(),

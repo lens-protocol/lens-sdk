@@ -3417,6 +3417,77 @@ export type ProxyActionMutationOptions = Apollo.BaseMutationOptions<
   Operations.ProxyActionData,
   Operations.ProxyActionVariables
 >;
+export const GetPublicationDocument = /*#__PURE__*/ gql`
+  query GetPublication(
+    $request: PublicationQueryRequest!
+    $observerId: ProfileId
+    $sources: [Sources!]!
+  ) {
+    result: publication(request: $request) {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${FragmentPost}
+  ${FragmentMirror}
+  ${FragmentComment}
+`;
+
+/**
+ * __useGetPublication__
+ *
+ * To run a query within a React component, call `useGetPublication` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublication` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublication({
+ *   variables: {
+ *      request: // value for 'request'
+ *      observerId: // value for 'observerId'
+ *      sources: // value for 'sources'
+ *   },
+ * });
+ */
+export function useGetPublication(
+  baseOptions: Apollo.QueryHookOptions<
+    Operations.GetPublicationData,
+    Operations.GetPublicationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<Operations.GetPublicationData, Operations.GetPublicationVariables>(
+    GetPublicationDocument,
+    options,
+  );
+}
+export function useGetPublicationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Operations.GetPublicationData,
+    Operations.GetPublicationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<Operations.GetPublicationData, Operations.GetPublicationVariables>(
+    GetPublicationDocument,
+    options,
+  );
+}
+export type GetPublicationHookResult = ReturnType<typeof useGetPublication>;
+export type GetPublicationLazyQueryHookResult = ReturnType<typeof useGetPublicationLazyQuery>;
+export type GetPublicationQueryResult = Apollo.QueryResult<
+  Operations.GetPublicationData,
+  Operations.GetPublicationVariables
+>;
 export const PublicationDocument = /*#__PURE__*/ gql`
   query Publication(
     $observerId: ProfileId

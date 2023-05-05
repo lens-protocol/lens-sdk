@@ -24,6 +24,7 @@ import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresente
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
 import { FollowPolicyCallGateway } from './transactions/adapters/FollowPolicyCallGateway';
+import { OffChainRelayer } from './transactions/adapters/OffChainRelayer';
 import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { PublicationCacheManager } from './transactions/adapters/PublicationCacheManager';
@@ -87,6 +88,7 @@ export type SharedDependencies = {
   onError: Handlers['onError'];
   onLogout: Handlers['onLogout'];
   profileGateway: ProfileGateway;
+  offChainRelayer: OffChainRelayer;
   onChainRelayer: OnChainRelayer;
   providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
@@ -184,6 +186,7 @@ export function createSharedDependencies(
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);
 
   const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
+  const offChainRelayer = new OffChainRelayer(apolloClient, transactionFactory, logger);
 
   // common interactors
   const transactionQueue = new TransactionQueue(
@@ -210,6 +213,7 @@ export function createSharedDependencies(
     onError,
     onLogout,
     profileGateway,
+    offChainRelayer,
     onChainRelayer,
     publicationCacheManager,
     sources,

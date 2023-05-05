@@ -67,6 +67,7 @@ export function useCreateEncryptedPost({
     appId,
     activeWallet,
     apolloClient,
+    offChainRelayer,
     onChainRelayer,
     transactionFactory,
     transactionGateway,
@@ -117,6 +118,7 @@ export function useCreateEncryptedPost({
       const controller = new CreatePostController<CreateEncryptedPostRequest>({
         activeWallet,
         apolloClient,
+        offChainRelayer,
         onChainRelayer,
         transactionFactory,
         transactionGateway,

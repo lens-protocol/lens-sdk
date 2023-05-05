@@ -15,7 +15,7 @@ import {
 import { mock } from 'jest-mock-extended';
 
 import { ICredentials } from '../Credentials';
-import { NftContractType, NftOwnershipChallenge } from '../Nft';
+import { Challenge, NftContractType, NftOwnershipChallenge } from '../Nft';
 import { Profile, ProfileId } from '../Profile';
 import {
   NftOwnershipCriterion,
@@ -33,7 +33,6 @@ import {
   PublicationId,
 } from '../Publication';
 import {
-  Challenge,
   IUnsignedProtocolCall,
   MetaTransaction,
   NativeTransaction,

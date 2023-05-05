@@ -10,19 +10,13 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '../../entities';
-import { ActiveWallet } from '../wallets';
+import { ActiveWallet } from '../wallets/ActiveWallet';
 import { BroadcastingError } from './BroadcastingError';
 import { ISignedOperation } from './DelegableSigning';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
-export type WithOffChainFlag<T extends ProtocolTransactionRequestModel> = T extends {
-  offChain: true;
-}
-  ? T
-  : never;
-
-export interface IOffChainRelayer<T extends WithOffChainFlag<ProtocolTransactionRequestModel>> {
+export interface IOffChainRelayer<T extends ProtocolTransactionRequestModel> {
   relayProtocolCall(
     signedCall: ISignedProtocolCall<T>,
   ): PromiseResult<DataTransaction<T>, BroadcastingError>;
@@ -37,7 +31,7 @@ export type ISubsidizeOffChainPresenter = IGenericResultPresenter<
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
-export class SubsidizeOffChain<T extends WithOffChainFlag<ProtocolTransactionRequestModel>>
+export class SubsidizeOffChain<T extends ProtocolTransactionRequestModel>
   implements ISignedOperation<T>
 {
   constructor(

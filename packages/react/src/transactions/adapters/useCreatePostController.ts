@@ -12,6 +12,7 @@ export function useCreatePostController({ uploader }: UseCreatePostArgs) {
   const {
     activeWallet,
     apolloClient,
+    offChainRelayer,
     onChainRelayer,
     transactionFactory,
     transactionGateway,
@@ -22,6 +23,7 @@ export function useCreatePostController({ uploader }: UseCreatePostArgs) {
     const controller = new CreatePostController<CreatePostRequest>({
       activeWallet,
       apolloClient,
+      offChainRelayer,
       onChainRelayer,
       transactionFactory,
       transactionGateway,

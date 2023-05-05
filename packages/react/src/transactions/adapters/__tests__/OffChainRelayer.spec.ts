@@ -54,7 +54,7 @@ describe(`Given an instance of the ${OffChainRelayer.name}`, () => {
       expect(result.value).toBeInstanceOf(DataTransaction);
       expect(result.value).toMatchObject(
         expect.objectContaining({
-          id: broadcastResult.dataAvailabilityId,
+          id: broadcastResult.id,
           request: signedCall.request,
         }),
       );
