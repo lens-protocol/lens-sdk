@@ -155,6 +155,7 @@ export const CreatePostRequestSchema = z.object({
   kind: z.literal(TransactionKind.CREATE_POST),
   locale: z.string(),
   delegate: z.boolean(),
+  offChain: z.boolean(),
 });
 
 export const CreateCommentRequestSchema = z.object({
@@ -169,6 +170,7 @@ export const CreateCommentRequestSchema = z.object({
   kind: z.literal(TransactionKind.CREATE_COMMENT),
   locale: z.string(),
   delegate: z.boolean(),
+  offChain: z.boolean(),
 });
 
 export const CreateMirrorRequestSchema = z.object({

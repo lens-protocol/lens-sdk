@@ -24,11 +24,22 @@ export type CreateCommentRequest = {
   locale: Locale;
   delegate: boolean;
   decryptionCriteria?: DecryptionCriteria;
+  offChain: boolean;
 };
 
-export class CreateComment extends DelegableSigning<CreateCommentRequest> {
+export class CreateComment {
+  constructor(
+    private readonly createOnChainPost: DelegableSigning<CreateCommentRequest>,
+    private readonly createOffChainPost: DelegableSigning<CreateCommentRequest>,
+  ) {}
+
   async execute(request: CreateCommentRequest) {
     invariant(request.media || request.content, 'One of post media or content is required');
-    await super.execute(request);
+
+    if (request.offChain) {
+      await this.createOffChainPost.execute(request);
+    } else {
+      await this.createOnChainPost.execute(request);
+    }
   }
 }

@@ -20,7 +20,7 @@ import {
   mockIMetadataUploader,
   mockITransactionFactory,
 } from '../../__helpers__/mocks';
-import { CreateCommentCallGateway } from '../CreateCommentCallGateway';
+import { CreateOnChainCommentGateway } from '../CreateOnChainCommentGateway';
 import {
   createFeeCollectModuleExerciseData,
   createFeeCollectModuleFollowersOnlyExerciseData,
@@ -47,12 +47,12 @@ function setupTestScenario({
   const transactionFactory = mockITransactionFactory();
   const uploader = mockIMetadataUploader(uploadUrl);
 
-  const gateway = new CreateCommentCallGateway(apolloClient, transactionFactory, uploader);
+  const gateway = new CreateOnChainCommentGateway(apolloClient, transactionFactory, uploader);
 
   return { gateway, uploader };
 }
 
-describe(`Given an instance of ${CreateCommentCallGateway.name}`, () => {
+describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
   describe.each<{
     description: string;
     createExerciseData: () => PublicationExerciseData;

@@ -1734,33 +1734,31 @@ export type CreateCollectTypedDataData = {
   };
 };
 
+export type CreateCommentEip712TypedData = {
+  types: { CommentWithSig: Array<{ name: string; type: string }> };
+  domain: Eip712TypedDataDomain;
+  value: {
+    nonce: number;
+    deadline: unknown;
+    profileId: ProfileId;
+    contentURI: Url;
+    profileIdPointed: ProfileId;
+    pubIdPointed: string;
+    collectModule: string;
+    collectModuleInitData: string;
+    referenceModuleData: string;
+    referenceModule: string;
+    referenceModuleInitData: string;
+  };
+};
+
 export type CreateCommentTypedDataVariables = Exact<{
   request: CreatePublicCommentRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
 export type CreateCommentTypedDataData = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { CommentWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomain;
-      value: {
-        nonce: number;
-        deadline: unknown;
-        profileId: ProfileId;
-        contentURI: Url;
-        profileIdPointed: ProfileId;
-        pubIdPointed: string;
-        collectModule: string;
-        collectModuleInitData: string;
-        referenceModuleData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
+  result: { id: string; expiresAt: string; typedData: CreateCommentEip712TypedData };
 };
 
 export type CreateCommentViaDispatcherVariables = Exact<{
@@ -1769,6 +1767,24 @@ export type CreateCommentViaDispatcherVariables = Exact<{
 
 export type CreateCommentViaDispatcherData = {
   result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type CreateDataAvailabilityCommentTypedDataVariables = Exact<{
+  request: CreateDataAvailabilityCommentRequest;
+}>;
+
+export type CreateDataAvailabilityCommentTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreateCommentEip712TypedData };
+};
+
+export type CreateDataAvailabilityCommentViaDispatcherVariables = Exact<{
+  request: CreateDataAvailabilityCommentRequest;
+}>;
+
+export type CreateDataAvailabilityCommentViaDispatcherData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
 };
 
 export type Erc20Fields = {

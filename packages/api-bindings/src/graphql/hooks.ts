@@ -10,6 +10,42 @@ import gql from 'graphql-tag';
 
 import * as Operations from './operations';
 const defaultOptions = {} as const;
+export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
+  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    __typename
+    name
+    chainId
+    version
+    verifyingContract
+  }
+`;
+export const FragmentCreateCommentEip712TypedData = /*#__PURE__*/ gql`
+  fragment CreateCommentEIP712TypedData on CreateCommentEIP712TypedData {
+    types {
+      CommentWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      profileIdPointed
+      pubIdPointed
+      collectModule
+      collectModuleInitData
+      referenceModuleData
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+  ${FragmentEip712TypedDataDomain}
+`;
 export const FragmentCommonPaginatedResultInfo = /*#__PURE__*/ gql`
   fragment CommonPaginatedResultInfo on PaginatedResultInfo {
     __typename
@@ -1075,15 +1111,6 @@ export const FragmentNewReactionNotification = /*#__PURE__*/ gql`
   ${FragmentComment}
   ${FragmentMirror}
 `;
-export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
-  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    __typename
-    name
-    chainId
-    version
-    verifyingContract
-  }
-`;
 export const FragmentCreatePostEip712TypedData = /*#__PURE__*/ gql`
   fragment CreatePostEIP712TypedData on CreatePostEIP712TypedData {
     types {
@@ -1497,32 +1524,11 @@ export const CreateCommentTypedDataDocument = /*#__PURE__*/ gql`
       id
       expiresAt
       typedData {
-        types {
-          CommentWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          contentURI
-          profileIdPointed
-          pubIdPointed
-          collectModule
-          collectModuleInitData
-          referenceModuleData
-          referenceModule
-          referenceModuleInitData
-        }
+        ...CreateCommentEIP712TypedData
       }
     }
   }
-  ${FragmentEip712TypedDataDomain}
+  ${FragmentCreateCommentEip712TypedData}
 `;
 export type CreateCommentTypedDataMutationFn = Apollo.MutationFunction<
   Operations.CreateCommentTypedDataData,
@@ -1614,6 +1620,114 @@ export type CreateCommentViaDispatcherMutationResult =
 export type CreateCommentViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
   Operations.CreateCommentViaDispatcherData,
   Operations.CreateCommentViaDispatcherVariables
+>;
+export const CreateDataAvailabilityCommentTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateDataAvailabilityCommentTypedData($request: CreateDataAvailabilityCommentRequest!) {
+    result: createDataAvailabilityCommentTypedData(request: $request) {
+      id
+      expiresAt
+      typedData {
+        ...CreateCommentEIP712TypedData
+      }
+    }
+  }
+  ${FragmentCreateCommentEip712TypedData}
+`;
+export type CreateDataAvailabilityCommentTypedDataMutationFn = Apollo.MutationFunction<
+  Operations.CreateDataAvailabilityCommentTypedDataData,
+  Operations.CreateDataAvailabilityCommentTypedDataVariables
+>;
+
+/**
+ * __useCreateDataAvailabilityCommentTypedData__
+ *
+ * To run a mutation, you first call `useCreateDataAvailabilityCommentTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDataAvailabilityCommentTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDataAvailabilityCommentTypedData, { data, loading, error }] = useCreateDataAvailabilityCommentTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateDataAvailabilityCommentTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    Operations.CreateDataAvailabilityCommentTypedDataData,
+    Operations.CreateDataAvailabilityCommentTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Operations.CreateDataAvailabilityCommentTypedDataData,
+    Operations.CreateDataAvailabilityCommentTypedDataVariables
+  >(CreateDataAvailabilityCommentTypedDataDocument, options);
+}
+export type CreateDataAvailabilityCommentTypedDataHookResult = ReturnType<
+  typeof useCreateDataAvailabilityCommentTypedData
+>;
+export type CreateDataAvailabilityCommentTypedDataMutationResult =
+  Apollo.MutationResult<Operations.CreateDataAvailabilityCommentTypedDataData>;
+export type CreateDataAvailabilityCommentTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  Operations.CreateDataAvailabilityCommentTypedDataData,
+  Operations.CreateDataAvailabilityCommentTypedDataVariables
+>;
+export const CreateDataAvailabilityCommentViaDispatcherDocument = /*#__PURE__*/ gql`
+  mutation CreateDataAvailabilityCommentViaDispatcher(
+    $request: CreateDataAvailabilityCommentRequest!
+  ) {
+    result: createDataAvailabilityCommentViaDispatcher(request: $request) {
+      ...BroadcastOffChainResult
+    }
+  }
+  ${FragmentBroadcastOffChainResult}
+`;
+export type CreateDataAvailabilityCommentViaDispatcherMutationFn = Apollo.MutationFunction<
+  Operations.CreateDataAvailabilityCommentViaDispatcherData,
+  Operations.CreateDataAvailabilityCommentViaDispatcherVariables
+>;
+
+/**
+ * __useCreateDataAvailabilityCommentViaDispatcher__
+ *
+ * To run a mutation, you first call `useCreateDataAvailabilityCommentViaDispatcher` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDataAvailabilityCommentViaDispatcher` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDataAvailabilityCommentViaDispatcher, { data, loading, error }] = useCreateDataAvailabilityCommentViaDispatcher({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateDataAvailabilityCommentViaDispatcher(
+  baseOptions?: Apollo.MutationHookOptions<
+    Operations.CreateDataAvailabilityCommentViaDispatcherData,
+    Operations.CreateDataAvailabilityCommentViaDispatcherVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Operations.CreateDataAvailabilityCommentViaDispatcherData,
+    Operations.CreateDataAvailabilityCommentViaDispatcherVariables
+  >(CreateDataAvailabilityCommentViaDispatcherDocument, options);
+}
+export type CreateDataAvailabilityCommentViaDispatcherHookResult = ReturnType<
+  typeof useCreateDataAvailabilityCommentViaDispatcher
+>;
+export type CreateDataAvailabilityCommentViaDispatcherMutationResult =
+  Apollo.MutationResult<Operations.CreateDataAvailabilityCommentViaDispatcherData>;
+export type CreateDataAvailabilityCommentViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
+  Operations.CreateDataAvailabilityCommentViaDispatcherData,
+  Operations.CreateDataAvailabilityCommentViaDispatcherVariables
 >;
 export const EnabledModuleCurrenciesDocument = /*#__PURE__*/ gql`
   query EnabledModuleCurrencies {

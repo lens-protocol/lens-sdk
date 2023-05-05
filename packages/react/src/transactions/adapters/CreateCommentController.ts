@@ -4,7 +4,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { CreatePost, CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
+import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
   IMetaTransactionNonceGateway,
@@ -12,8 +12,8 @@ import {
   SubsidizeOnChain,
   AnyTransactionRequest,
   TransactionQueue,
-  DelegableSigning,
   IOffChainRelayer,
+  DelegableSigning,
   SubsidizeOffChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
@@ -21,10 +21,10 @@ import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
 import { IMetadataUploader } from './IMetadataUploader';
 import { ITransactionFactory } from './ITransactionFactory';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { CreateOffChainPostGateway } from './publication-call-gateways/CreateOffChainPostGateway';
-import { CreateOnChainPostGateway } from './publication-call-gateways/CreateOnChainPostGateway';
+import { CreateOffChainCommentGateway } from './publication-call-gateways/CreateOffChainCommentGateway';
+import { CreateOnChainCommentGateway } from './publication-call-gateways/CreateOnChainCommentGateway';
 
-export type CreatePostControllerArgs<T extends CreatePostRequest> = {
+export type CreateCommentControllerArgs<T extends CreateCommentRequest> = {
   activeWallet: ActiveWallet;
   apolloClient: LensApolloClient;
   offChainRelayer: IOffChainRelayer<T>;
@@ -35,13 +35,13 @@ export type CreatePostControllerArgs<T extends CreatePostRequest> = {
   uploader: IMetadataUploader<T>;
 };
 
-export class CreatePostController<T extends CreatePostRequest> {
+export class CreateCommentController<T extends CreateCommentRequest> {
   private readonly presenter = new PromiseResultPresenter<
     void,
     BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >();
 
-  private readonly createPost: CreatePost;
+  private readonly createComment: CreateComment;
 
   constructor({
     activeWallet,
@@ -52,10 +52,14 @@ export class CreatePostController<T extends CreatePostRequest> {
     transactionGateway,
     transactionQueue,
     uploader,
-  }: CreatePostControllerArgs<T>) {
-    const onChainGateway = new CreateOnChainPostGateway(apolloClient, transactionFactory, uploader);
+  }: CreateCommentControllerArgs<T>) {
+    const onChainGateway = new CreateOnChainCommentGateway(
+      apolloClient,
+      transactionFactory,
+      uploader,
+    );
 
-    const onChainPost = new SubsidizeOnChain(
+    const onChainComment = new SubsidizeOnChain(
       activeWallet,
       transactionGateway,
       onChainGateway,
@@ -64,20 +68,20 @@ export class CreatePostController<T extends CreatePostRequest> {
       this.presenter,
     );
 
-    const delegableOnChainPost = new DelegableSigning(
-      onChainPost,
+    const delegableOnChainComment = new DelegableSigning(
+      onChainComment,
       onChainGateway,
       transactionQueue,
       this.presenter,
     );
 
-    const offChainGateway = new CreateOffChainPostGateway(
+    const offChainGateway = new CreateOffChainCommentGateway(
       apolloClient,
       transactionFactory,
       uploader,
     );
 
-    const offChainPost = new SubsidizeOffChain(
+    const offChainComment = new SubsidizeOffChain(
       activeWallet,
       offChainGateway,
       offChainRelayer,
@@ -85,18 +89,18 @@ export class CreatePostController<T extends CreatePostRequest> {
       this.presenter,
     );
 
-    const delegableOffChainPost = new DelegableSigning(
-      offChainPost,
+    const delegableOffChainComment = new DelegableSigning(
+      offChainComment,
       offChainGateway,
       transactionQueue,
       this.presenter,
     );
 
-    this.createPost = new CreatePost(delegableOnChainPost, delegableOffChainPost);
+    this.createComment = new CreateComment(delegableOnChainComment, delegableOffChainComment);
   }
 
-  async execute(request: CreatePostRequest) {
-    await this.createPost.execute(request);
+  async execute(request: CreateCommentRequest) {
+    await this.createComment.execute(request);
     return this.presenter.asResult();
   }
 }

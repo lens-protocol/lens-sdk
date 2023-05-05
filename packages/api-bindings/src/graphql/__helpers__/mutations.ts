@@ -24,6 +24,8 @@ import {
   CreateDataAvailabilityPostViaDispatcherDocument,
   BroadcastOnChainDocument,
   BroadcastOffChainDocument,
+  CreateDataAvailabilityCommentTypedDataDocument,
+  CreateDataAvailabilityCommentViaDispatcherDocument,
 } from '../hooks';
 import {
   AddReactionVariables,
@@ -70,6 +72,10 @@ import {
   BroadcastOffChainResult,
   BroadcastOffChainData,
   BroadcastOffChainVariables,
+  CreateDataAvailabilityCommentTypedDataData,
+  CreateDataAvailabilityCommentTypedDataVariables,
+  CreateDataAvailabilityCommentViaDispatcherData,
+  CreateDataAvailabilityCommentViaDispatcherVariables,
 } from '../operations';
 
 export function createCreateProfileMockedResponse({
@@ -509,6 +515,26 @@ export function createCreateCommentTypedDataMockedResponse<T extends CreateComme
   };
 }
 
+export function createCreateDataAvailabilityCommentTypedDataMockedResponse<
+  T extends CreateDataAvailabilityCommentTypedDataData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityCommentTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityCommentTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
 export function createCreateCommentViaDispatcherMockedResponse<
   T extends CreateCommentViaDispatcherData,
 >({
@@ -521,6 +547,26 @@ export function createCreateCommentViaDispatcherMockedResponse<
   return {
     request: {
       query: CreateCommentViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateDataAvailabilityCommentViaDispatcherDataMockedResponse<
+  T extends CreateDataAvailabilityCommentViaDispatcherData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityCommentViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityCommentViaDispatcherDocument,
       variables,
     },
     result: {

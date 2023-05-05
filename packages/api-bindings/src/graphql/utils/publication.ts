@@ -1,4 +1,4 @@
-import { ReactionType, TransactionKind } from '@lens-protocol/domain/entities';
+import { PublicationId, ReactionType, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   CollectPolicyType,
   CollectRequest,
@@ -66,6 +66,13 @@ export function isMirrorPublication<T extends Typename<string>>(
   publication: T,
 ): publication is PickByTypename<T, 'Mirror'> {
   return publication.__typename === 'Mirror';
+}
+
+/**
+ * @internal
+ */
+export function isDataAvailabilityPublicationId(publicationId: PublicationId): boolean {
+  return publicationId.includes('-DA-');
 }
 
 export function resolveDomainReactionType(reaction: ReactionTypes): ReactionType {

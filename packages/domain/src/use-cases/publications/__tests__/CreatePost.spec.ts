@@ -2,17 +2,13 @@ import { mock } from 'jest-mock-extended';
 
 import { DelegableSigning } from '../../transactions';
 import { CreatePost, CreatePostRequest } from '../CreatePost';
-import {
-  mockCreatePostRequest,
-  mockFreeCollectPolicyConfig,
-  mockNoCollectPolicyConfig,
-} from '../__helpers__/mocks';
+import { mockCreatePostRequest } from '../__helpers__/mocks';
 
 describe(`Given an instance of the ${CreatePost.name} interactor`, () => {
-  describe('when executed', () => {
-    describe('with a collectable CreatePostRequest', () => {
+  describe('when executed with a CreatePostRequest', () => {
+    describe('not flagged off-chain', () => {
       const request = mockCreatePostRequest({
-        collect: mockFreeCollectPolicyConfig(),
+        offChain: false,
       });
 
       it(`should execute on-chain ${DelegableSigning.name}<T> strategy`, async () => {
@@ -25,9 +21,9 @@ describe(`Given an instance of the ${CreatePost.name} interactor`, () => {
       });
     });
 
-    describe('with a non-collectable CreatePostRequest', () => {
+    describe('flagged off-chain', () => {
       const request = mockCreatePostRequest({
-        collect: mockNoCollectPolicyConfig(),
+        offChain: true,
       });
 
       it(`should execute off-chain ${DelegableSigning.name}<T> strategy`, async () => {

@@ -48,6 +48,7 @@ export function mockCreateCommentRequest(
     profileId: mockProfileId(),
     delegate: false,
     locale: 'en',
+    offChain: true,
 
     ...overrides,
   };
@@ -156,27 +157,7 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
     profileId: mockProfileId(),
     delegate: false,
     locale: 'en',
-
-    ...overrides,
-  };
-}
-export function mockCreateEncryptedPostRequest(
-  overrides?: Partial<CreatePostRequest>,
-): CreatePostRequest {
-  return {
-    kind: TransactionKind.CREATE_POST,
-
-    contentFocus: ContentFocus.TEXT,
-    content: faker.lorem.paragraph(),
-    reference: {
-      type: ReferencePolicyType.ANYONE,
-    },
-    collect: {
-      type: CollectPolicyType.NO_COLLECT,
-    },
-    profileId: mockProfileId(),
-    delegate: false,
-    locale: 'en',
+    offChain: false,
 
     ...overrides,
   };
