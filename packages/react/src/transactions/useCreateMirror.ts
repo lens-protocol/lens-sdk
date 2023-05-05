@@ -1,4 +1,9 @@
-import { Comment, Post, ProfileOwnedByMe } from '@lens-protocol/api-bindings';
+import {
+  Comment,
+  isDataAvailabilityPublicationId,
+  Post,
+  ProfileOwnedByMe,
+} from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -37,6 +42,7 @@ export function useCreateMirror({ publisher }: UseCreateMirrorArgs): CreateMirro
       publicationId: publication.id,
       profileId: publisher.id,
       delegate: publisher.dispatcher !== null,
+      offChain: isDataAvailabilityPublicationId(publication.id),
     }),
   );
 }

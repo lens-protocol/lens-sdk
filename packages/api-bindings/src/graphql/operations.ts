@@ -2245,30 +2245,28 @@ export type EncryptionParamsOutput = {
   providerSpecificParams: { encryptionKey: ContentEncryptionKey };
 };
 
+export type CreateMirrorEip712TypedData = {
+  types: { MirrorWithSig: Array<{ name: string; type: string }> };
+  domain: Eip712TypedDataDomain;
+  value: {
+    nonce: number;
+    deadline: unknown;
+    profileId: ProfileId;
+    profileIdPointed: ProfileId;
+    pubIdPointed: string;
+    referenceModuleData: string;
+    referenceModule: string;
+    referenceModuleInitData: string;
+  };
+};
+
 export type CreateMirrorTypedDataVariables = Exact<{
   request: CreateMirrorRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
 export type CreateMirrorTypedDataData = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { MirrorWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomain;
-      value: {
-        nonce: number;
-        deadline: unknown;
-        profileId: ProfileId;
-        profileIdPointed: ProfileId;
-        pubIdPointed: string;
-        referenceModuleData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
+  result: { id: string; expiresAt: string; typedData: CreateMirrorEip712TypedData };
 };
 
 export type CreateMirrorViaDispatcherVariables = Exact<{
@@ -2277,6 +2275,24 @@ export type CreateMirrorViaDispatcherVariables = Exact<{
 
 export type CreateMirrorViaDispatcherData = {
   result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type CreateDataAvailabilityMirrorTypedDataVariables = Exact<{
+  request: CreateDataAvailabilityMirrorRequest;
+}>;
+
+export type CreateDataAvailabilityMirrorTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreateMirrorEip712TypedData };
+};
+
+export type CreateDataAvailabilityMirrorViaDispatcherVariables = Exact<{
+  request: CreateDataAvailabilityMirrorRequest;
+}>;
+
+export type CreateDataAvailabilityMirrorViaDispatcherData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
 };
 
 export type ModuleInfo = { __typename: 'ModuleInfo'; name: string; type: string };

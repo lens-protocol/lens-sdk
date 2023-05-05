@@ -939,6 +939,30 @@ export const FragmentEncryptedMediaSet = /*#__PURE__*/ gql`
   }
   ${FragmentEncryptedMedia}
 `;
+export const FragmentCreateMirrorEip712TypedData = /*#__PURE__*/ gql`
+  fragment CreateMirrorEIP712TypedData on CreateMirrorEIP712TypedData {
+    types {
+      MirrorWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      profileIdPointed
+      pubIdPointed
+      referenceModuleData
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+  ${FragmentEip712TypedDataDomain}
+`;
 export const FragmentModuleInfo = /*#__PURE__*/ gql`
   fragment ModuleInfo on ModuleInfo {
     __typename
@@ -2001,29 +2025,11 @@ export const CreateMirrorTypedDataDocument = /*#__PURE__*/ gql`
       id
       expiresAt
       typedData {
-        types {
-          MirrorWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          profileIdPointed
-          pubIdPointed
-          referenceModuleData
-          referenceModule
-          referenceModuleInitData
-        }
+        ...CreateMirrorEIP712TypedData
       }
     }
   }
-  ${FragmentEip712TypedDataDomain}
+  ${FragmentCreateMirrorEip712TypedData}
 `;
 export type CreateMirrorTypedDataMutationFn = Apollo.MutationFunction<
   Operations.CreateMirrorTypedDataData,
@@ -2115,6 +2121,114 @@ export type CreateMirrorViaDispatcherMutationResult =
 export type CreateMirrorViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
   Operations.CreateMirrorViaDispatcherData,
   Operations.CreateMirrorViaDispatcherVariables
+>;
+export const CreateDataAvailabilityMirrorTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateDataAvailabilityMirrorTypedData($request: CreateDataAvailabilityMirrorRequest!) {
+    result: createDataAvailabilityMirrorTypedData(request: $request) {
+      id
+      expiresAt
+      typedData {
+        ...CreateMirrorEIP712TypedData
+      }
+    }
+  }
+  ${FragmentCreateMirrorEip712TypedData}
+`;
+export type CreateDataAvailabilityMirrorTypedDataMutationFn = Apollo.MutationFunction<
+  Operations.CreateDataAvailabilityMirrorTypedDataData,
+  Operations.CreateDataAvailabilityMirrorTypedDataVariables
+>;
+
+/**
+ * __useCreateDataAvailabilityMirrorTypedData__
+ *
+ * To run a mutation, you first call `useCreateDataAvailabilityMirrorTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDataAvailabilityMirrorTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDataAvailabilityMirrorTypedData, { data, loading, error }] = useCreateDataAvailabilityMirrorTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateDataAvailabilityMirrorTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    Operations.CreateDataAvailabilityMirrorTypedDataData,
+    Operations.CreateDataAvailabilityMirrorTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Operations.CreateDataAvailabilityMirrorTypedDataData,
+    Operations.CreateDataAvailabilityMirrorTypedDataVariables
+  >(CreateDataAvailabilityMirrorTypedDataDocument, options);
+}
+export type CreateDataAvailabilityMirrorTypedDataHookResult = ReturnType<
+  typeof useCreateDataAvailabilityMirrorTypedData
+>;
+export type CreateDataAvailabilityMirrorTypedDataMutationResult =
+  Apollo.MutationResult<Operations.CreateDataAvailabilityMirrorTypedDataData>;
+export type CreateDataAvailabilityMirrorTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  Operations.CreateDataAvailabilityMirrorTypedDataData,
+  Operations.CreateDataAvailabilityMirrorTypedDataVariables
+>;
+export const CreateDataAvailabilityMirrorViaDispatcherDocument = /*#__PURE__*/ gql`
+  mutation CreateDataAvailabilityMirrorViaDispatcher(
+    $request: CreateDataAvailabilityMirrorRequest!
+  ) {
+    result: createDataAvailabilityMirrorViaDispatcher(request: $request) {
+      ...BroadcastOffChainResult
+    }
+  }
+  ${FragmentBroadcastOffChainResult}
+`;
+export type CreateDataAvailabilityMirrorViaDispatcherMutationFn = Apollo.MutationFunction<
+  Operations.CreateDataAvailabilityMirrorViaDispatcherData,
+  Operations.CreateDataAvailabilityMirrorViaDispatcherVariables
+>;
+
+/**
+ * __useCreateDataAvailabilityMirrorViaDispatcher__
+ *
+ * To run a mutation, you first call `useCreateDataAvailabilityMirrorViaDispatcher` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDataAvailabilityMirrorViaDispatcher` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDataAvailabilityMirrorViaDispatcher, { data, loading, error }] = useCreateDataAvailabilityMirrorViaDispatcher({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateDataAvailabilityMirrorViaDispatcher(
+  baseOptions?: Apollo.MutationHookOptions<
+    Operations.CreateDataAvailabilityMirrorViaDispatcherData,
+    Operations.CreateDataAvailabilityMirrorViaDispatcherVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Operations.CreateDataAvailabilityMirrorViaDispatcherData,
+    Operations.CreateDataAvailabilityMirrorViaDispatcherVariables
+  >(CreateDataAvailabilityMirrorViaDispatcherDocument, options);
+}
+export type CreateDataAvailabilityMirrorViaDispatcherHookResult = ReturnType<
+  typeof useCreateDataAvailabilityMirrorViaDispatcher
+>;
+export type CreateDataAvailabilityMirrorViaDispatcherMutationResult =
+  Apollo.MutationResult<Operations.CreateDataAvailabilityMirrorViaDispatcherData>;
+export type CreateDataAvailabilityMirrorViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
+  Operations.CreateDataAvailabilityMirrorViaDispatcherData,
+  Operations.CreateDataAvailabilityMirrorViaDispatcherVariables
 >;
 export const EnabledModulesDocument = /*#__PURE__*/ gql`
   query EnabledModules {

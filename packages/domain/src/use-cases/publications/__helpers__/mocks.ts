@@ -134,11 +134,14 @@ export function mockCreateMirrorRequest(
   overrides?: Partial<CreateMirrorRequest>,
 ): CreateMirrorRequest {
   return {
+    kind: TransactionKind.MIRROR_PUBLICATION,
+
     profileId: mockProfileId(),
     publicationId: mockPublicationId(),
-    ...overrides,
-    kind: TransactionKind.MIRROR_PUBLICATION,
     delegate: false,
+    offChain: false,
+
+    ...overrides,
   };
 }
 
