@@ -3,13 +3,14 @@ import {
   createMockApolloClientWithMultipleResponses,
   mockPostFragment,
   mockProfileFragment,
-  createPublicationByTxHashMockedResponse,
   mockSources,
+  createGetPublicationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockTransactionData,
   mockCreateMirrorRequest,
   mockPublicationId,
+  mockTransactionHash,
 } from '@lens-protocol/domain/mocks';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
@@ -29,9 +30,11 @@ function setupTestScenario({
 
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
-    createPublicationByTxHashMockedResponse({
+    createGetPublicationMockedResponse({
       variables: {
-        txHash: transactionData.txHash ?? never(),
+        request: {
+          txHash: transactionData.txHash ?? never(),
+        },
         observerId: activeProfile.id,
         sources,
       },
@@ -80,6 +83,7 @@ describe(`Given an instance of the ${CreateMirrorResponder.name}`, () => {
       });
 
       const transactionData = mockTransactionData({
+        txHash: mockTransactionHash(),
         request: mockCreateMirrorRequest({
           profileId: author.id,
           publicationId: post.id,

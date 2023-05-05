@@ -1,8 +1,4 @@
-import {
-  AnyPublication,
-  UnspecifiedError,
-  usePublication as useUnderlyingQuery,
-} from '@lens-protocol/api-bindings';
+import { AnyPublication, UnspecifiedError, useGetPublication } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
 
 import { NotFoundError } from '../NotFoundError';
@@ -27,11 +23,13 @@ export function usePublication({
   observerId,
 }: UsePublicationArgs): ReadResult<AnyPublication, NotFoundError | UnspecifiedError> {
   const { data, error, loading } = useReadResult(
-    useUnderlyingQuery(
+    useGetPublication(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({
-            publicationId,
+            request: {
+              publicationId,
+            },
             observerId,
           }),
         }),
