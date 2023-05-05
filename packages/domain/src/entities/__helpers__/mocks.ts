@@ -15,7 +15,7 @@ import {
 import { mock } from 'jest-mock-extended';
 
 import { ICredentials } from '../Credentials';
-import { NftContractType, NftOwnershipChallenge } from '../Nft';
+import { Challenge, NftContractType, NftOwnershipChallenge } from '../Nft';
 import { Profile, ProfileId } from '../Profile';
 import {
   NftOwnershipCriterion,
@@ -33,7 +33,6 @@ import {
   PublicationId,
 } from '../Publication';
 import {
-  Challenge,
   IUnsignedProtocolCall,
   MetaTransaction,
   NativeTransaction,
@@ -49,6 +48,7 @@ import {
   AnyTransactionRequestModel,
   UnsignedTransaction,
   ProtocolTransactionRequestModel,
+  DataTransaction,
 } from '../Transactions';
 import { Wallet } from '../Wallet';
 
@@ -183,13 +183,13 @@ export class MockedMetaTransaction<
   readonly id: string;
   readonly request: T;
   readonly nonce: Nonce;
-  hash: string | undefined;
+  hash: string;
 
   private constructor(
     {
       chainType = ChainType.POLYGON,
       id = faker.datatype.uuid(),
-      hash,
+      hash = mockTransactionHash(),
       request,
       nonce = mockNonce(),
     }: MockedMetaTransactionInit<T>,
@@ -213,6 +213,7 @@ export class MockedMetaTransaction<
     if ('error' in item) {
       return failure(item.error);
     }
+
     this.hash = item.txHash ?? this.hash;
     return success(item.event);
   }
@@ -251,11 +252,11 @@ export class MockedNativeTransaction<
   readonly chainType: ChainType;
   readonly id: string;
   readonly request: T;
-  hash: string | undefined;
+  hash: string;
 
   private constructor({
     chainType = ChainType.POLYGON,
-    hash,
+    hash = mockTransactionHash(),
     id = faker.datatype.uuid(),
     request,
   }: MockedNativeTransactionInit<T>) {
@@ -272,14 +273,13 @@ export class MockedNativeTransaction<
   ): NativeTransaction<T> {
     return new MockedNativeTransaction({
       chainType: ChainType.POLYGON,
-      hash: mockTransactionHash(),
       id: unsignedTransaction.id,
       request: unsignedTransaction.request,
     });
   }
 
   static fromRequest<T extends AnyTransactionRequestModel>(request: T) {
-    return new MockedNativeTransaction({ request });
+    return new MockedNativeTransaction({ request, hash: mockTransactionHash() });
   }
 }
 
@@ -352,6 +352,37 @@ export class MockedProxyTransaction<
 
   static fromRequest<T extends ProtocolTransactionRequestModel>(request: T): ProxyTransaction<T> {
     return new MockedProxyTransaction({ request, status: ProxyActionStatus.MINTING });
+  }
+}
+
+type MockedDataTransactionInit<T extends ProtocolTransactionRequestModel> = {
+  request: T;
+  id?: string;
+};
+
+export class MockedDataTransaction<
+  T extends ProtocolTransactionRequestModel,
+> extends DataTransaction<T> {
+  readonly id: string;
+  readonly request: T;
+
+  private constructor({ id = faker.datatype.uuid(), request }: MockedDataTransactionInit<T>) {
+    super();
+    this.id = id;
+    this.request = request;
+  }
+
+  async waitNextEvent(): PromiseResult<TransactionEvent, TransactionError> {
+    return success(TransactionEvent.SETTLED);
+  }
+
+  static fromSignedCall<T extends ProtocolTransactionRequestModel>(
+    signedCall: ISignedProtocolCall<T>,
+  ): MockedDataTransaction<T> {
+    return new MockedDataTransaction({
+      id: signedCall.id,
+      request: signedCall.request,
+    });
   }
 }
 

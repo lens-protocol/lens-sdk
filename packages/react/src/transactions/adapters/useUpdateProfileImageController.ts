@@ -7,7 +7,7 @@ import {
   UpdateProfileImage,
   UpdateProfileImageRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SubsidizedCall } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { ProfileImageCallGateway } from './ProfileImageCallGateway';
@@ -18,7 +18,7 @@ export function useUpdateProfileImageController() {
     activeWallet,
     apolloClient,
     transactionGateway,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionQueue,
     transactionFactory,
   } = useSharedDependencies();
@@ -31,11 +31,11 @@ export function useUpdateProfileImageController() {
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
-    const signedUpdateProfileImage = new SubsidizedCall<UpdateProfileImageRequest>(
+    const signedUpdateProfileImage = new SubsidizeOnChain<UpdateProfileImageRequest>(
       activeWallet,
       transactionGateway,
       profileImageCallGateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );

@@ -15,7 +15,7 @@ import { UpdateProfileImageRequest } from '@lens-protocol/domain/use-cases/profi
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IUnsignedProtocolCallGateway,
+  IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -23,12 +23,12 @@ import { v4 } from 'uuid';
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
 import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
-import { handleRelayError, RelayReceipt } from './relayer';
+import { handleRelayError, OnChainBroadcastReceipt } from './relayer';
 
 export class ProfileImageCallGateway
   implements
     IDelegatedTransactionGateway<UpdateProfileImageRequest>,
-    IUnsignedProtocolCallGateway<UpdateProfileImageRequest>
+    IOnChainProtocolCallGateway<UpdateProfileImageRequest>
 {
   constructor(
     private apolloClient: LensApolloClient,
@@ -73,7 +73,7 @@ export class ProfileImageCallGateway
 
   private async broadcast(
     request: UpdateProfileImageRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = this.resolveMutationRequestArg(request);
 
     const { data } = await this.apolloClient.mutate<

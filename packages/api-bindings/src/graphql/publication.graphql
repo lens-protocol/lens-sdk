@@ -1,3 +1,23 @@
+query GetPublication(
+  $request: PublicationQueryRequest!
+  $observerId: ProfileId
+  $sources: [Sources!]!
+) {
+  result: publication(request: $request) {
+    ... on Post {
+      ...Post
+    }
+
+    ... on Mirror {
+      ...Mirror
+    }
+
+    ... on Comment {
+      ...Comment
+    }
+  }
+}
+
 query Publication(
   $observerId: ProfileId
   $publicationId: InternalPublicationId!

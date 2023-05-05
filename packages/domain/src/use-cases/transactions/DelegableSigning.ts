@@ -1,9 +1,9 @@
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import {
-  NativeTransaction,
   ProtocolTransactionRequestModel,
   AnyTransactionRequestModel,
+  Transaction,
 } from '../../entities';
 import { BroadcastingError } from './BroadcastingError';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
@@ -20,7 +20,7 @@ export interface ISignedOperation<T extends ProtocolTransactionRequestModel> {
 }
 
 export interface IDelegatedTransactionGateway<T extends ProtocolTransactionRequestModel> {
-  createDelegatedTransaction(request: T): PromiseResult<NativeTransaction<T>, BroadcastingError>;
+  createDelegatedTransaction(request: T): PromiseResult<Transaction<T>, BroadcastingError>;
 }
 
 export type IDelegatedTransactionPresenter = IGenericResultPresenter<void, BroadcastingError>;

@@ -6,6 +6,7 @@ import {
   ProxyTransaction,
   ProxyActionStatus,
   JustProtocolRequest,
+  DataTransaction,
 } from '@lens-protocol/domain/entities';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
@@ -35,6 +36,11 @@ export type ProxyTransactionData<T extends AnyTransactionRequestModel> = {
   status?: ProxyActionStatus;
 };
 
+export type DataTransactionData<T extends AnyTransactionRequestModel> = {
+  id: string;
+  request: T;
+};
+
 export interface ITransactionFactory<Supported extends AnyTransactionRequestModel> {
   createMetaTransaction<T extends JustProtocolRequest<Supported>>(
     init: MetaTransactionData<T>,
@@ -47,4 +53,8 @@ export interface ITransactionFactory<Supported extends AnyTransactionRequestMode
   createProxyTransaction<T extends JustProtocolRequest<Supported>>(
     init: ProxyTransactionData<T>,
   ): ProxyTransaction<T>;
+
+  createDataTransaction<T extends JustProtocolRequest<Supported>>(
+    init: DataTransactionData<T>,
+  ): DataTransaction<T>;
 }

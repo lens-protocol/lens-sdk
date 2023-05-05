@@ -7,9 +7,13 @@ import { failure, Failure, InvariantError } from '@lens-protocol/shared-kernel';
 
 import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
-export type RelayReceipt = {
+export type OnChainBroadcastReceipt = {
   indexingId: string;
   txHash: string;
+};
+
+export type OffChainBroadcastReceipt = {
+  id: string;
 };
 
 export function handleRelayError(

@@ -30,7 +30,7 @@ import {
   SelfFundedProtocolTransactionRequest,
 } from '../SelfFundedProtocolTransactionRequest';
 import { TypedData } from '../TypedData';
-import { RelayReceipt } from '../relayer';
+import { OnChainBroadcastReceipt } from '../relayer';
 
 export function mockITransactionFactory(
   transactionObserver: ITransactionObserver = mock<ITransactionObserver>(),
@@ -40,7 +40,7 @@ export function mockITransactionFactory(
   return new TransactionFactory(transactionObserver);
 }
 
-export function mockRelayReceipt(): RelayReceipt {
+export function mockRelayReceipt(): OnChainBroadcastReceipt {
   return {
     indexingId: faker.datatype.uuid(),
     txHash: mockTransactionHash(),

@@ -8,7 +8,7 @@ import {
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { Transaction, TransactionKind, NftOwnershipChallenge } from '../../../entities';
+import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../../transactions';
 import {
@@ -56,7 +56,10 @@ export function mockIProfileTransactionGateway({
   result,
 }: {
   request: CreateProfileRequest;
-  result: Result<Transaction<CreateProfileRequest>, DuplicatedHandleError | BroadcastingError>;
+  result: Result<
+    NativeTransaction<CreateProfileRequest>,
+    DuplicatedHandleError | BroadcastingError
+  >;
 }) {
   const profileTransactionGateway = mock<IProfileTransactionGateway>();
 

@@ -7,29 +7,29 @@ import {
   mockProtocolTransactionRequestModel,
 } from '../../../entities/__helpers__/mocks';
 import {
-  ISignlessSubsidizedCallPresenter,
+  ISignlessSubsidizeOnChainPresenter,
   ISignlessSubsidizedCallRelayer,
-  SignlessSubsidizedCall,
-} from '../SignlessSubsidizedCall';
+  SignlessSubsidizeOnChain,
+} from '../SignlessSubsidizeOnChain';
 import { TransactionQueue } from '../TransactionQueue';
 import { mockISignlessSubsidizedCallRelayer, mockTransactionQueue } from '../__helpers__/mocks';
 
 function setupTestScenario<T extends ProtocolTransactionRequestModel>({
   relayer,
   transactionQueue = mockTransactionQueue(),
-  presenter = mock<ISignlessSubsidizedCallPresenter>(),
+  presenter = mock<ISignlessSubsidizeOnChainPresenter>(),
 }: {
   relayer: ISignlessSubsidizedCallRelayer<T>;
   transactionQueue?: TransactionQueue<T>;
-  presenter?: ISignlessSubsidizedCallPresenter;
+  presenter?: ISignlessSubsidizeOnChainPresenter;
 }) {
-  const useCase = new SignlessSubsidizedCall(relayer, transactionQueue, presenter);
+  const useCase = new SignlessSubsidizeOnChain(relayer, transactionQueue, presenter);
 
   return { useCase, presenter, transactionQueue, relayer };
 }
 
-describe(`Given an instance of ${SignlessSubsidizedCall.name}<T>`, () => {
-  describe(`when calling "${SignlessSubsidizedCall.prototype.execute.name}" method`, () => {
+describe(`Given an instance of ${SignlessSubsidizeOnChain.name}<T> interactor`, () => {
+  describe(`when calling "${SignlessSubsidizeOnChain.prototype.execute.name}" method`, () => {
     it(`should:
         - use the ISignlessSubsidizedCallRelayer to generate a ${ProxyTransaction.name}
         - push the ${ProxyTransaction.name} into the ${TransactionQueue.name}

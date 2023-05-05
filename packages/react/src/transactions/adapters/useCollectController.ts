@@ -10,8 +10,8 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
-  SubsidizedCall,
-  SignlessSubsidizedCall,
+  SubsidizeOnChain,
+  SignlessSubsidizeOnChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
@@ -28,7 +28,7 @@ export function useCollectController() {
     activeWallet,
     apolloClient,
     logger,
-    protocolCallRelayer,
+    onChainRelayer,
     tokenAvailability,
     transactionFactory,
     transactionGateway,
@@ -48,11 +48,11 @@ export function useCollectController() {
       | WalletConnectionError
     >();
 
-    const signedCollect = new SubsidizedCall<CollectRequest>(
+    const signedCollect = new SubsidizeOnChain<CollectRequest>(
       activeWallet,
       transactionGateway,
       collectPublicationCallGateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );
@@ -62,7 +62,7 @@ export function useCollectController() {
       transactionFactory,
       logger,
     );
-    const signlessCollect = new SignlessSubsidizedCall<FreeCollectRequest>(
+    const signlessCollect = new SignlessSubsidizeOnChain<FreeCollectRequest>(
       collectProxyActionRelayer,
       transactionQueue,
       presenter,

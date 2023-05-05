@@ -15,7 +15,7 @@ import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publicatio
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IUnsignedProtocolCallGateway,
+  IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -27,13 +27,13 @@ import {
   Data,
   SelfFundedProtocolTransactionRequest,
 } from '../SelfFundedProtocolTransactionRequest';
-import { handleRelayError, RelayReceipt } from '../relayer';
+import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
 export class CreateCommentCallGateway
   implements
     IDelegatedTransactionGateway<CreateCommentRequest>,
-    IUnsignedProtocolCallGateway<CreateCommentRequest>
+    IOnChainProtocolCallGateway<CreateCommentRequest>
 {
   constructor(
     private readonly apolloClient: LensApolloClient,
@@ -77,7 +77,7 @@ export class CreateCommentCallGateway
 
   private async broadcast(
     request: CreateCommentRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = await this.resolveCreateCommentRequestArg(request);
 
     const { data } = await this.apolloClient.mutate<

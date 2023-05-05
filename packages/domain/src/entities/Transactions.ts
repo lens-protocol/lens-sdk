@@ -97,7 +97,7 @@ export abstract class MetaTransaction<T extends ProtocolTransactionRequestModel>
   abstract get id(): string;
   abstract get request(): T;
   abstract get nonce(): Nonce;
-  abstract get hash(): string | undefined;
+  abstract get hash(): string;
 
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
@@ -106,7 +106,7 @@ export abstract class NativeTransaction<T extends AnyTransactionRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
   abstract get request(): T;
-  abstract get hash(): string | undefined;
+  abstract get hash(): string;
 
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
@@ -121,7 +121,15 @@ export abstract class ProxyTransaction<T extends ProtocolTransactionRequestModel
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
+export abstract class DataTransaction<T extends ProtocolTransactionRequestModel> {
+  abstract get id(): string;
+  abstract get request(): T;
+
+  abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
+}
+
 export type Transaction<T extends AnyTransactionRequestModel> =
+  | DataTransaction<JustProtocolRequest<T>>
   | MetaTransaction<JustProtocolRequest<T>>
   | NativeTransaction<T>
   | ProxyTransaction<JustProtocolRequest<T>>;

@@ -8,13 +8,13 @@ import {
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
-import { IUnsignedProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
+import { IOnChainProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
-export class CollectPublicationCallGateway implements IUnsignedProtocolCallGateway<CollectRequest> {
+export class CollectPublicationCallGateway implements IOnChainProtocolCallGateway<CollectRequest> {
   constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall(

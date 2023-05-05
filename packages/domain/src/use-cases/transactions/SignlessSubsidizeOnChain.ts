@@ -12,13 +12,13 @@ export interface ISignlessSubsidizedCallRelayer<T extends ProtocolTransactionReq
   createProxyTransaction(request: T): Promise<ProxyTransaction<T>>;
 }
 
-export type ISignlessSubsidizedCallPresenter = IGenericResultPresenter<void, Error>;
+export type ISignlessSubsidizeOnChainPresenter = IGenericResultPresenter<void, Error>;
 
-export class SignlessSubsidizedCall<T extends ProtocolTransactionRequestModel> {
+export class SignlessSubsidizeOnChain<T extends ProtocolTransactionRequestModel> {
   constructor(
     protected readonly relayer: ISignlessSubsidizedCallRelayer<T>,
     protected readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
-    protected readonly presenter: ISignlessSubsidizedCallPresenter,
+    protected readonly presenter: ISignlessSubsidizeOnChainPresenter,
   ) {}
 
   async execute(request: T) {

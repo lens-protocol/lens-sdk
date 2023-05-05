@@ -1,7 +1,7 @@
 import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
 
 import { ProfileId, TransactionKind } from '../../entities';
-import { SubsidizedCall } from '../transactions/SubsidizedCall';
+import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 
 export enum FollowPolicyType {
   ONLY_PROFILE_OWNERS = 'ONLY_PROFILE_OWNERS',
@@ -27,4 +27,4 @@ export type UpdateFollowPolicyRequest = {
   kind: TransactionKind.UPDATE_FOLLOW_POLICY;
 };
 
-export class UpdateFollowPolicy extends SubsidizedCall<UpdateFollowPolicyRequest> {}
+export class UpdateFollowPolicy extends SubsidizeOnChain<UpdateFollowPolicyRequest> {}

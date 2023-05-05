@@ -2,15 +2,16 @@ import { makeVar } from '@apollo/client';
 import {
   PendingPost,
   PublicationMainFocus,
-  PublicationByTxHashData,
-  PublicationByTxHashVariables,
-  PublicationByTxHashDocument,
   Profile,
   Post,
   isPostPublication,
   LensApolloClient,
   Sources,
+  GetPublicationData,
+  GetPublicationVariables,
+  GetPublicationDocument,
 } from '@lens-protocol/api-bindings';
+import { PublicationId } from '@lens-protocol/domain/entities';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   ITransactionResponder,
@@ -67,15 +68,10 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
   }
 
   async commit({ id, txHash, request }: TransactionData<CreatePostRequest>) {
-    invariant(txHash, 'Cannot fetch publication by txHash without txHash');
-
-    const publicationResult = await this.client.query<
-      PublicationByTxHashData,
-      PublicationByTxHashVariables
-    >({
-      query: PublicationByTxHashDocument,
+    const publicationResult = await this.client.query<GetPublicationData, GetPublicationVariables>({
+      query: GetPublicationDocument,
       variables: {
-        txHash,
+        request: txHash ? { txHash } : { publicationId: id as PublicationId },
         observerId: request.profileId,
         sources: this.sources,
       },

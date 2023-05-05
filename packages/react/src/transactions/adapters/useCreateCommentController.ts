@@ -8,8 +8,8 @@ import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-c
 import {
   BroadcastingError,
   IMetaTransactionNonceGateway,
-  IProtocolCallRelayer,
-  SubsidizedCall,
+  IOnChainRelayer,
+  SubsidizeOnChain,
   AnyTransactionRequest,
   TransactionQueue,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -23,7 +23,7 @@ import { CreateCommentCallGateway } from './publication-call-gateways/CreateComm
 export type CreateCommentControllerArgs<T extends CreateCommentRequest> = {
   activeWallet: ActiveWallet;
   apolloClient: LensApolloClient;
-  protocolCallRelayer: IProtocolCallRelayer<T>;
+  onChainRelayer: IOnChainRelayer<T>;
   transactionFactory: ITransactionFactory<T>;
   transactionGateway: IMetaTransactionNonceGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;
@@ -41,7 +41,7 @@ export class CreateCommentController<T extends CreateCommentRequest> {
   constructor({
     activeWallet,
     apolloClient,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionFactory,
     transactionGateway,
     transactionQueue,
@@ -49,16 +49,16 @@ export class CreateCommentController<T extends CreateCommentRequest> {
   }: CreateCommentControllerArgs<T>) {
     const gateway = new CreateCommentCallGateway(apolloClient, transactionFactory, uploader);
 
-    const signedCreatePost = new SubsidizedCall<CreateCommentRequest>(
+    const signedCreateComment = new SubsidizeOnChain<CreateCommentRequest>(
       activeWallet,
       transactionGateway,
       gateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       this.presenter,
     );
     this.createComment = new CreateComment(
-      signedCreatePost,
+      signedCreateComment,
       gateway,
       transactionQueue,
       this.presenter,

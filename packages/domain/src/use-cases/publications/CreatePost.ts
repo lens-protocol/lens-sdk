@@ -3,7 +3,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { AppId, DecryptionCriteria, ProfileId, TransactionKind } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
-import { CollectPolicyConfig, ContentFocus, Locale, MediaObject } from './types';
+import { CollectPolicyConfig, CollectPolicyType, ContentFocus, Locale, MediaObject } from './types';
 
 export type CreatePostRequest = {
   appId?: AppId;
@@ -19,9 +19,19 @@ export type CreatePostRequest = {
   decryptionCriteria?: DecryptionCriteria;
 };
 
-export class CreatePost extends DelegableSigning<CreatePostRequest> {
+export class CreatePost {
+  constructor(
+    private readonly createOnChainPost: DelegableSigning<CreatePostRequest>,
+    private readonly createOffChainPost: DelegableSigning<CreatePostRequest>,
+  ) {}
+
   async execute(request: CreatePostRequest) {
     invariant(request.media || request.content, 'One of post media or content is required');
-    await super.execute(request);
+
+    if (request.collect.type === CollectPolicyType.NO_COLLECT) {
+      await this.createOffChainPost.execute(request);
+    } else {
+      await this.createOnChainPost.execute(request);
+    }
   }
 }

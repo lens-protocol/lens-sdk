@@ -15,7 +15,7 @@ import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publication
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IUnsignedProtocolCallGateway,
+  IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -26,12 +26,12 @@ import {
   Data,
   SelfFundedProtocolTransactionRequest,
 } from '../SelfFundedProtocolTransactionRequest';
-import { handleRelayError, RelayReceipt } from '../relayer';
+import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
 
 export class CreateMirrorCallGateway
   implements
     IDelegatedTransactionGateway<CreateMirrorRequest>,
-    IUnsignedProtocolCallGateway<CreateMirrorRequest>
+    IOnChainProtocolCallGateway<CreateMirrorRequest>
 {
   constructor(
     private readonly apolloClient: LensApolloClient,
@@ -76,7 +76,7 @@ export class CreateMirrorCallGateway
 
   private async broadcast(
     request: CreateMirrorRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = await this.resolveCreateMirrorRequestArg(request);
 
     const { data } = await this.apolloClient.mutate<

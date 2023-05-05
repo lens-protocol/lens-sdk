@@ -215,15 +215,6 @@ export const FragmentPendingPost = /*#__PURE__*/ gql`
   ${FragmentMedia}
   ${FragmentProfile}
 `;
-export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
-  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    __typename
-    name
-    chainId
-    version
-    verifyingContract
-  }
-`;
 export const FragmentPublicationStats = /*#__PURE__*/ gql`
   fragment PublicationStats on PublicationStats {
     __typename
@@ -1084,6 +1075,39 @@ export const FragmentNewReactionNotification = /*#__PURE__*/ gql`
   ${FragmentComment}
   ${FragmentMirror}
 `;
+export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
+  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    __typename
+    name
+    chainId
+    version
+    verifyingContract
+  }
+`;
+export const FragmentCreatePostEip712TypedData = /*#__PURE__*/ gql`
+  fragment CreatePostEIP712TypedData on CreatePostEIP712TypedData {
+    types {
+      PostWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      collectModule
+      collectModuleInitData
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+  ${FragmentEip712TypedDataDomain}
+`;
 export const FragmentFollower = /*#__PURE__*/ gql`
   fragment Follower on Follower {
     __typename
@@ -1200,8 +1224,8 @@ export const FragmentRelayError = /*#__PURE__*/ gql`
     reason
   }
 `;
-export const FragmentRelayResult = /*#__PURE__*/ gql`
-  fragment RelayResult on RelayResult {
+export const FragmentBroadcastOnChainResult = /*#__PURE__*/ gql`
+  fragment BroadcastOnChainResult on RelayResult {
     ... on RelayerResult {
       ...RelayerResult
     }
@@ -1210,6 +1234,25 @@ export const FragmentRelayResult = /*#__PURE__*/ gql`
     }
   }
   ${FragmentRelayerResult}
+  ${FragmentRelayError}
+`;
+export const FragmentDataAvailabilityPublicationResult = /*#__PURE__*/ gql`
+  fragment DataAvailabilityPublicationResult on CreateDataAvailabilityPublicationResult {
+    __typename
+    id
+    dataAvailabilityId
+  }
+`;
+export const FragmentBroadcastOffChainResult = /*#__PURE__*/ gql`
+  fragment BroadcastOffChainResult on BroadcastDataAvailabilityUnion {
+    ... on CreateDataAvailabilityPublicationResult {
+      ...DataAvailabilityPublicationResult
+    }
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+  ${FragmentDataAvailabilityPublicationResult}
   ${FragmentRelayError}
 `;
 export const FragmentTransactionIndexedResult = /*#__PURE__*/ gql`
@@ -1526,10 +1569,10 @@ export type CreateCommentTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreateCommentViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
     result: createCommentViaDispatcher(request: $request) {
-      ...RelayResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentRelayResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreateCommentViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreateCommentViaDispatcherData,
@@ -1913,10 +1956,10 @@ export type CreateMirrorTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreateMirrorViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
     result: createMirrorViaDispatcher(request: $request) {
-      ...RelayResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentRelayResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreateMirrorViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreateMirrorViaDispatcherData,
@@ -2186,29 +2229,11 @@ export const CreatePostTypedDataDocument = /*#__PURE__*/ gql`
       id
       expiresAt
       typedData {
-        types {
-          PostWithSig {
-            name
-            type
-          }
-        }
-        domain {
-          ...EIP712TypedDataDomain
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          contentURI
-          collectModule
-          collectModuleInitData
-          referenceModule
-          referenceModuleInitData
-        }
+        ...CreatePostEIP712TypedData
       }
     }
   }
-  ${FragmentEip712TypedDataDomain}
+  ${FragmentCreatePostEip712TypedData}
 `;
 export type CreatePostTypedDataMutationFn = Apollo.MutationFunction<
   Operations.CreatePostTypedDataData,
@@ -2255,10 +2280,10 @@ export type CreatePostTypedDataMutationOptions = Apollo.BaseMutationOptions<
 export const CreatePostViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
     result: createPostViaDispatcher(request: $request) {
-      ...RelayResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentRelayResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreatePostViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreatePostViaDispatcherData,
@@ -2300,6 +2325,112 @@ export type CreatePostViaDispatcherMutationResult =
 export type CreatePostViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
   Operations.CreatePostViaDispatcherData,
   Operations.CreatePostViaDispatcherVariables
+>;
+export const CreateDataAvailabilityPostTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateDataAvailabilityPostTypedData($request: CreateDataAvailabilityPostRequest!) {
+    result: createDataAvailabilityPostTypedData(request: $request) {
+      id
+      expiresAt
+      typedData {
+        ...CreatePostEIP712TypedData
+      }
+    }
+  }
+  ${FragmentCreatePostEip712TypedData}
+`;
+export type CreateDataAvailabilityPostTypedDataMutationFn = Apollo.MutationFunction<
+  Operations.CreateDataAvailabilityPostTypedDataData,
+  Operations.CreateDataAvailabilityPostTypedDataVariables
+>;
+
+/**
+ * __useCreateDataAvailabilityPostTypedData__
+ *
+ * To run a mutation, you first call `useCreateDataAvailabilityPostTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDataAvailabilityPostTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDataAvailabilityPostTypedData, { data, loading, error }] = useCreateDataAvailabilityPostTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateDataAvailabilityPostTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    Operations.CreateDataAvailabilityPostTypedDataData,
+    Operations.CreateDataAvailabilityPostTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Operations.CreateDataAvailabilityPostTypedDataData,
+    Operations.CreateDataAvailabilityPostTypedDataVariables
+  >(CreateDataAvailabilityPostTypedDataDocument, options);
+}
+export type CreateDataAvailabilityPostTypedDataHookResult = ReturnType<
+  typeof useCreateDataAvailabilityPostTypedData
+>;
+export type CreateDataAvailabilityPostTypedDataMutationResult =
+  Apollo.MutationResult<Operations.CreateDataAvailabilityPostTypedDataData>;
+export type CreateDataAvailabilityPostTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  Operations.CreateDataAvailabilityPostTypedDataData,
+  Operations.CreateDataAvailabilityPostTypedDataVariables
+>;
+export const CreateDataAvailabilityPostViaDispatcherDocument = /*#__PURE__*/ gql`
+  mutation CreateDataAvailabilityPostViaDispatcher($request: CreateDataAvailabilityPostRequest!) {
+    result: createDataAvailabilityPostViaDispatcher(request: $request) {
+      ...BroadcastOffChainResult
+    }
+  }
+  ${FragmentBroadcastOffChainResult}
+`;
+export type CreateDataAvailabilityPostViaDispatcherMutationFn = Apollo.MutationFunction<
+  Operations.CreateDataAvailabilityPostViaDispatcherData,
+  Operations.CreateDataAvailabilityPostViaDispatcherVariables
+>;
+
+/**
+ * __useCreateDataAvailabilityPostViaDispatcher__
+ *
+ * To run a mutation, you first call `useCreateDataAvailabilityPostViaDispatcher` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDataAvailabilityPostViaDispatcher` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDataAvailabilityPostViaDispatcher, { data, loading, error }] = useCreateDataAvailabilityPostViaDispatcher({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateDataAvailabilityPostViaDispatcher(
+  baseOptions?: Apollo.MutationHookOptions<
+    Operations.CreateDataAvailabilityPostViaDispatcherData,
+    Operations.CreateDataAvailabilityPostViaDispatcherVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Operations.CreateDataAvailabilityPostViaDispatcherData,
+    Operations.CreateDataAvailabilityPostViaDispatcherVariables
+  >(CreateDataAvailabilityPostViaDispatcherDocument, options);
+}
+export type CreateDataAvailabilityPostViaDispatcherHookResult = ReturnType<
+  typeof useCreateDataAvailabilityPostViaDispatcher
+>;
+export type CreateDataAvailabilityPostViaDispatcherMutationResult =
+  Apollo.MutationResult<Operations.CreateDataAvailabilityPostViaDispatcherData>;
+export type CreateDataAvailabilityPostViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
+  Operations.CreateDataAvailabilityPostViaDispatcherData,
+  Operations.CreateDataAvailabilityPostViaDispatcherVariables
 >;
 export const CreateSetDispatcherTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateSetDispatcherTypedData(
@@ -2579,10 +2710,10 @@ export type GetAllProfilesQueryResult = Apollo.QueryResult<
 export const CreateProfileDocument = /*#__PURE__*/ gql`
   mutation CreateProfile($request: CreateProfileRequest!) {
     result: createProfile(request: $request) {
-      ...RelayResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentRelayResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreateProfileMutationFn = Apollo.MutationFunction<
   Operations.CreateProfileData,
@@ -2858,10 +2989,10 @@ export type CreateSetProfileImageUriTypedDataMutationOptions = Apollo.BaseMutati
 export const CreateSetProfileImageUriViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
     result: createSetProfileImageURIViaDispatcher(request: $request) {
-      ...RelayResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentRelayResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreateSetProfileImageUriViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreateSetProfileImageUriViaDispatcherData,
@@ -2986,10 +3117,10 @@ export const CreateSetProfileMetadataViaDispatcherDocument = /*#__PURE__*/ gql`
     $request: CreatePublicSetProfileMetadataURIRequest!
   ) {
     result: createSetProfileMetadataViaDispatcher(request: $request) {
-      ...RelayResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentRelayResult}
+  ${FragmentBroadcastOnChainResult}
 `;
 export type CreateSetProfileMetadataViaDispatcherMutationFn = Apollo.MutationFunction<
   Operations.CreateSetProfileMetadataViaDispatcherData,
@@ -3285,6 +3416,77 @@ export type ProxyActionMutationResult = Apollo.MutationResult<Operations.ProxyAc
 export type ProxyActionMutationOptions = Apollo.BaseMutationOptions<
   Operations.ProxyActionData,
   Operations.ProxyActionVariables
+>;
+export const GetPublicationDocument = /*#__PURE__*/ gql`
+  query GetPublication(
+    $request: PublicationQueryRequest!
+    $observerId: ProfileId
+    $sources: [Sources!]!
+  ) {
+    result: publication(request: $request) {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${FragmentPost}
+  ${FragmentMirror}
+  ${FragmentComment}
+`;
+
+/**
+ * __useGetPublication__
+ *
+ * To run a query within a React component, call `useGetPublication` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublication` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublication({
+ *   variables: {
+ *      request: // value for 'request'
+ *      observerId: // value for 'observerId'
+ *      sources: // value for 'sources'
+ *   },
+ * });
+ */
+export function useGetPublication(
+  baseOptions: Apollo.QueryHookOptions<
+    Operations.GetPublicationData,
+    Operations.GetPublicationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<Operations.GetPublicationData, Operations.GetPublicationVariables>(
+    GetPublicationDocument,
+    options,
+  );
+}
+export function useGetPublicationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Operations.GetPublicationData,
+    Operations.GetPublicationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<Operations.GetPublicationData, Operations.GetPublicationVariables>(
+    GetPublicationDocument,
+    options,
+  );
+}
+export type GetPublicationHookResult = ReturnType<typeof useGetPublication>;
+export type GetPublicationLazyQueryHookResult = ReturnType<typeof useGetPublicationLazyQuery>;
+export type GetPublicationQueryResult = Apollo.QueryResult<
+  Operations.GetPublicationData,
+  Operations.GetPublicationVariables
 >;
 export const PublicationDocument = /*#__PURE__*/ gql`
   query Publication(
@@ -4497,54 +4699,102 @@ export type HasTxHashBeenIndexedQueryResult = Apollo.QueryResult<
   Operations.HasTxHashBeenIndexedData,
   Operations.HasTxHashBeenIndexedVariables
 >;
-export const BroadcastProtocolCallDocument = /*#__PURE__*/ gql`
-  mutation BroadcastProtocolCall($request: BroadcastRequest!) {
+export const BroadcastOnChainDocument = /*#__PURE__*/ gql`
+  mutation BroadcastOnChain($request: BroadcastRequest!) {
     result: broadcast(request: $request) {
-      ...RelayResult
+      ...BroadcastOnChainResult
     }
   }
-  ${FragmentRelayResult}
+  ${FragmentBroadcastOnChainResult}
 `;
-export type BroadcastProtocolCallMutationFn = Apollo.MutationFunction<
-  Operations.BroadcastProtocolCallData,
-  Operations.BroadcastProtocolCallVariables
+export type BroadcastOnChainMutationFn = Apollo.MutationFunction<
+  Operations.BroadcastOnChainData,
+  Operations.BroadcastOnChainVariables
 >;
 
 /**
- * __useBroadcastProtocolCall__
+ * __useBroadcastOnChain__
  *
- * To run a mutation, you first call `useBroadcastProtocolCall` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBroadcastProtocolCall` returns a tuple that includes:
+ * To run a mutation, you first call `useBroadcastOnChain` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBroadcastOnChain` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [broadcastProtocolCall, { data, loading, error }] = useBroadcastProtocolCall({
+ * const [broadcastOnChain, { data, loading, error }] = useBroadcastOnChain({
  *   variables: {
  *      request: // value for 'request'
  *   },
  * });
  */
-export function useBroadcastProtocolCall(
+export function useBroadcastOnChain(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.BroadcastProtocolCallData,
-    Operations.BroadcastProtocolCallVariables
+    Operations.BroadcastOnChainData,
+    Operations.BroadcastOnChainVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<Operations.BroadcastOnChainData, Operations.BroadcastOnChainVariables>(
+    BroadcastOnChainDocument,
+    options,
+  );
+}
+export type BroadcastOnChainHookResult = ReturnType<typeof useBroadcastOnChain>;
+export type BroadcastOnChainMutationResult = Apollo.MutationResult<Operations.BroadcastOnChainData>;
+export type BroadcastOnChainMutationOptions = Apollo.BaseMutationOptions<
+  Operations.BroadcastOnChainData,
+  Operations.BroadcastOnChainVariables
+>;
+export const BroadcastOffChainDocument = /*#__PURE__*/ gql`
+  mutation BroadcastOffChain($request: BroadcastRequest!) {
+    result: broadcastDataAvailability(request: $request) {
+      ...BroadcastOffChainResult
+    }
+  }
+  ${FragmentBroadcastOffChainResult}
+`;
+export type BroadcastOffChainMutationFn = Apollo.MutationFunction<
+  Operations.BroadcastOffChainData,
+  Operations.BroadcastOffChainVariables
+>;
+
+/**
+ * __useBroadcastOffChain__
+ *
+ * To run a mutation, you first call `useBroadcastOffChain` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBroadcastOffChain` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [broadcastOffChain, { data, loading, error }] = useBroadcastOffChain({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useBroadcastOffChain(
+  baseOptions?: Apollo.MutationHookOptions<
+    Operations.BroadcastOffChainData,
+    Operations.BroadcastOffChainVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.BroadcastProtocolCallData,
-    Operations.BroadcastProtocolCallVariables
-  >(BroadcastProtocolCallDocument, options);
+    Operations.BroadcastOffChainData,
+    Operations.BroadcastOffChainVariables
+  >(BroadcastOffChainDocument, options);
 }
-export type BroadcastProtocolCallHookResult = ReturnType<typeof useBroadcastProtocolCall>;
-export type BroadcastProtocolCallMutationResult =
-  Apollo.MutationResult<Operations.BroadcastProtocolCallData>;
-export type BroadcastProtocolCallMutationOptions = Apollo.BaseMutationOptions<
-  Operations.BroadcastProtocolCallData,
-  Operations.BroadcastProtocolCallVariables
+export type BroadcastOffChainHookResult = ReturnType<typeof useBroadcastOffChain>;
+export type BroadcastOffChainMutationResult =
+  Apollo.MutationResult<Operations.BroadcastOffChainData>;
+export type BroadcastOffChainMutationOptions = Apollo.BaseMutationOptions<
+  Operations.BroadcastOffChainData,
+  Operations.BroadcastOffChainVariables
 >;
 export const CreateUnfollowTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateUnfollowTypedData($request: UnfollowRequest!) {
@@ -5364,6 +5614,121 @@ export type CreateUnfollowBroadcastItemResultFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   typedData?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type DataAvailabilityCommentKeySpecifier = (
+  | 'appId'
+  | 'commentedOnProfile'
+  | 'commentedOnPublicationId'
+  | 'createdAt'
+  | 'profile'
+  | 'publicationId'
+  | 'submitter'
+  | 'transactionId'
+  | 'verificationStatus'
+  | DataAvailabilityCommentKeySpecifier
+)[];
+export type DataAvailabilityCommentFieldPolicy = {
+  appId?: FieldPolicy<any> | FieldReadFunction<any>;
+  commentedOnProfile?: FieldPolicy<any> | FieldReadFunction<any>;
+  commentedOnPublicationId?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  publicationId?: FieldPolicy<any> | FieldReadFunction<any>;
+  submitter?: FieldPolicy<any> | FieldReadFunction<any>;
+  transactionId?: FieldPolicy<any> | FieldReadFunction<any>;
+  verificationStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type DataAvailabilityMirrorKeySpecifier = (
+  | 'appId'
+  | 'createdAt'
+  | 'mirrorOfProfile'
+  | 'mirrorOfPublicationId'
+  | 'profile'
+  | 'publicationId'
+  | 'submitter'
+  | 'transactionId'
+  | 'verificationStatus'
+  | DataAvailabilityMirrorKeySpecifier
+)[];
+export type DataAvailabilityMirrorFieldPolicy = {
+  appId?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  mirrorOfProfile?: FieldPolicy<any> | FieldReadFunction<any>;
+  mirrorOfPublicationId?: FieldPolicy<any> | FieldReadFunction<any>;
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  publicationId?: FieldPolicy<any> | FieldReadFunction<any>;
+  submitter?: FieldPolicy<any> | FieldReadFunction<any>;
+  transactionId?: FieldPolicy<any> | FieldReadFunction<any>;
+  verificationStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type DataAvailabilityPostKeySpecifier = (
+  | 'appId'
+  | 'createdAt'
+  | 'profile'
+  | 'publicationId'
+  | 'submitter'
+  | 'transactionId'
+  | 'verificationStatus'
+  | DataAvailabilityPostKeySpecifier
+)[];
+export type DataAvailabilityPostFieldPolicy = {
+  appId?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  publicationId?: FieldPolicy<any> | FieldReadFunction<any>;
+  submitter?: FieldPolicy<any> | FieldReadFunction<any>;
+  transactionId?: FieldPolicy<any> | FieldReadFunction<any>;
+  verificationStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type DataAvailabilitySubmitterResultKeySpecifier = (
+  | 'address'
+  | 'name'
+  | 'totalTransactions'
+  | DataAvailabilitySubmitterResultKeySpecifier
+)[];
+export type DataAvailabilitySubmitterResultFieldPolicy = {
+  address?: FieldPolicy<any> | FieldReadFunction<any>;
+  name?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalTransactions?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type DataAvailabilitySubmittersResultKeySpecifier = (
+  | 'items'
+  | 'pageInfo'
+  | DataAvailabilitySubmittersResultKeySpecifier
+)[];
+export type DataAvailabilitySubmittersResultFieldPolicy = {
+  items?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type DataAvailabilitySummaryResultKeySpecifier = (
+  | 'totalTransactions'
+  | DataAvailabilitySummaryResultKeySpecifier
+)[];
+export type DataAvailabilitySummaryResultFieldPolicy = {
+  totalTransactions?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type DataAvailabilityTransactionsResultKeySpecifier = (
+  | 'items'
+  | 'pageInfo'
+  | DataAvailabilityTransactionsResultKeySpecifier
+)[];
+export type DataAvailabilityTransactionsResultFieldPolicy = {
+  items?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type DataAvailabilityVerificationStatusFailureKeySpecifier = (
+  | 'status'
+  | DataAvailabilityVerificationStatusFailureKeySpecifier
+)[];
+export type DataAvailabilityVerificationStatusFailureFieldPolicy = {
+  status?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type DataAvailabilityVerificationStatusSuccessKeySpecifier = (
+  | 'verified'
+  | DataAvailabilityVerificationStatusSuccessKeySpecifier
+)[];
+export type DataAvailabilityVerificationStatusSuccessFieldPolicy = {
+  verified?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type DegreesOfSeparationReferenceModuleSettingsKeySpecifier = (
   | 'commentsRestricted'
   | 'contractAddress'
@@ -5379,10 +5744,16 @@ export type DegreesOfSeparationReferenceModuleSettingsFieldPolicy = {
   mirrorsRestricted?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type DispatcherKeySpecifier = ('address' | 'canUseRelay' | DispatcherKeySpecifier)[];
+export type DispatcherKeySpecifier = (
+  | 'address'
+  | 'canUseRelay'
+  | 'sponsor'
+  | DispatcherKeySpecifier
+)[];
 export type DispatcherFieldPolicy = {
   address?: FieldPolicy<any> | FieldReadFunction<any>;
   canUseRelay?: FieldPolicy<any> | FieldReadFunction<any>;
+  sponsor?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type DoesFollowResponseKeySpecifier = (
   | 'followerAddress'
@@ -6677,6 +7048,10 @@ export type QueryKeySpecifier = (
   | 'claimableHandles'
   | 'claimableStatus'
   | 'cur'
+  | 'dataAvailabilitySubmitters'
+  | 'dataAvailabilitySummary'
+  | 'dataAvailabilityTransaction'
+  | 'dataAvailabilityTransactions'
   | 'defaultProfile'
   | 'doesFollow'
   | 'enabledModuleCurrencies'
@@ -6735,6 +7110,10 @@ export type QueryFieldPolicy = {
   claimableHandles?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   cur?: FieldPolicy<any> | FieldReadFunction<any>;
+  dataAvailabilitySubmitters?: FieldPolicy<any> | FieldReadFunction<any>;
+  dataAvailabilitySummary?: FieldPolicy<any> | FieldReadFunction<any>;
+  dataAvailabilityTransaction?: FieldPolicy<any> | FieldReadFunction<any>;
+  dataAvailabilityTransactions?: FieldPolicy<any> | FieldReadFunction<any>;
   defaultProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   doesFollow?: FieldPolicy<any> | FieldReadFunction<any>;
   enabledModuleCurrencies?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6906,6 +7285,13 @@ export type SetDefaultProfileEIP712TypedDataValueFieldPolicy = {
   nonce?: FieldPolicy<any> | FieldReadFunction<any>;
   profileId?: FieldPolicy<any> | FieldReadFunction<any>;
   wallet?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type SubscriptionKeySpecifier = (
+  | 'newDataAvailabilityTransaction'
+  | SubscriptionKeySpecifier
+)[];
+export type SubscriptionFieldPolicy = {
+  newDataAvailabilityTransaction?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type SybilDotOrgIdentityKeySpecifier = (
   | 'source'
@@ -7518,6 +7904,69 @@ export type StrictTypedTypePolicies = {
       | CreateUnfollowBroadcastItemResultKeySpecifier
       | (() => undefined | CreateUnfollowBroadcastItemResultKeySpecifier);
     fields?: CreateUnfollowBroadcastItemResultFieldPolicy;
+  };
+  DataAvailabilityComment?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | DataAvailabilityCommentKeySpecifier
+      | (() => undefined | DataAvailabilityCommentKeySpecifier);
+    fields?: DataAvailabilityCommentFieldPolicy;
+  };
+  DataAvailabilityMirror?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | DataAvailabilityMirrorKeySpecifier
+      | (() => undefined | DataAvailabilityMirrorKeySpecifier);
+    fields?: DataAvailabilityMirrorFieldPolicy;
+  };
+  DataAvailabilityPost?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | DataAvailabilityPostKeySpecifier
+      | (() => undefined | DataAvailabilityPostKeySpecifier);
+    fields?: DataAvailabilityPostFieldPolicy;
+  };
+  DataAvailabilitySubmitterResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | DataAvailabilitySubmitterResultKeySpecifier
+      | (() => undefined | DataAvailabilitySubmitterResultKeySpecifier);
+    fields?: DataAvailabilitySubmitterResultFieldPolicy;
+  };
+  DataAvailabilitySubmittersResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | DataAvailabilitySubmittersResultKeySpecifier
+      | (() => undefined | DataAvailabilitySubmittersResultKeySpecifier);
+    fields?: DataAvailabilitySubmittersResultFieldPolicy;
+  };
+  DataAvailabilitySummaryResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | DataAvailabilitySummaryResultKeySpecifier
+      | (() => undefined | DataAvailabilitySummaryResultKeySpecifier);
+    fields?: DataAvailabilitySummaryResultFieldPolicy;
+  };
+  DataAvailabilityTransactionsResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | DataAvailabilityTransactionsResultKeySpecifier
+      | (() => undefined | DataAvailabilityTransactionsResultKeySpecifier);
+    fields?: DataAvailabilityTransactionsResultFieldPolicy;
+  };
+  DataAvailabilityVerificationStatusFailure?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | DataAvailabilityVerificationStatusFailureKeySpecifier
+      | (() => undefined | DataAvailabilityVerificationStatusFailureKeySpecifier);
+    fields?: DataAvailabilityVerificationStatusFailureFieldPolicy;
+  };
+  DataAvailabilityVerificationStatusSuccess?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | DataAvailabilityVerificationStatusSuccessKeySpecifier
+      | (() => undefined | DataAvailabilityVerificationStatusSuccessKeySpecifier);
+    fields?: DataAvailabilityVerificationStatusSuccessFieldPolicy;
   };
   DegreesOfSeparationReferenceModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
@@ -8169,6 +8618,10 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | SetDefaultProfileEIP712TypedDataValueKeySpecifier);
     fields?: SetDefaultProfileEIP712TypedDataValueFieldPolicy;
   };
+  Subscription?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | SubscriptionKeySpecifier | (() => undefined | SubscriptionKeySpecifier);
+    fields?: SubscriptionFieldPolicy;
+  };
   SybilDotOrgIdentity?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -8287,6 +8740,15 @@ const result: PossibleTypesResultData = {
       'RevertCollectModuleSettings',
       'TimedFeeCollectModuleSettings',
       'UnknownCollectModuleSettings',
+    ],
+    DataAvailabilityTransactionUnion: [
+      'DataAvailabilityComment',
+      'DataAvailabilityMirror',
+      'DataAvailabilityPost',
+    ],
+    DataAvailabilityVerificationStatusUnion: [
+      'DataAvailabilityVerificationStatusFailure',
+      'DataAvailabilityVerificationStatusSuccess',
     ],
     FeedItemRoot: ['Comment', 'Post'],
     FollowModule: [

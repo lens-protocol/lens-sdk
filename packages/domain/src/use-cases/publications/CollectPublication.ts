@@ -9,8 +9,8 @@ import {
   PublicationId,
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
-import { SignlessSubsidizedCall } from '../transactions/SignlessSubsidizedCall';
-import { SubsidizedCall } from '../transactions/SubsidizedCall';
+import { SignlessSubsidizeOnChain } from '../transactions/SignlessSubsidizeOnChain';
+import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -61,8 +61,8 @@ export type ICollectPublicationPresenter = IGenericResultPresenter<
 export class CollectPublication {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
-    private readonly signedCollect: SubsidizedCall<CollectRequest>,
-    private readonly signlessCollect: SignlessSubsidizedCall<FreeCollectRequest>,
+    private readonly signedCollect: SubsidizeOnChain<CollectRequest>,
+    private readonly signlessCollect: SignlessSubsidizeOnChain<FreeCollectRequest>,
     private readonly collectPublicationPresenter: ICollectPublicationPresenter,
   ) {}
 

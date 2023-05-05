@@ -8,22 +8,27 @@ import { CreatePost, CreatePostRequest } from '@lens-protocol/domain/use-cases/p
 import {
   BroadcastingError,
   IMetaTransactionNonceGateway,
-  IProtocolCallRelayer,
-  SubsidizedCall,
+  IOnChainRelayer,
+  SubsidizeOnChain,
   AnyTransactionRequest,
   TransactionQueue,
+  DelegableSigning,
+  IOffChainRelayer,
+  SubsidizeOffChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
 
 import { IMetadataUploader } from './IMetadataUploader';
 import { ITransactionFactory } from './ITransactionFactory';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { CreatePostCallGateway } from './publication-call-gateways/CreatePostCallGateway';
+import { CreateOffChainPostGateway } from './publication-call-gateways/CreateOffChainPostGateway';
+import { CreateOnChainPostGateway } from './publication-call-gateways/CreateOnChainPostGateway';
 
 export type CreatePostControllerArgs<T extends CreatePostRequest> = {
   activeWallet: ActiveWallet;
   apolloClient: LensApolloClient;
-  protocolCallRelayer: IProtocolCallRelayer<T>;
+  offChainRelayer: IOffChainRelayer<T>;
+  onChainRelayer: IOnChainRelayer<T>;
   transactionFactory: ITransactionFactory<T>;
   transactionGateway: IMetaTransactionNonceGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;
@@ -41,23 +46,53 @@ export class CreatePostController<T extends CreatePostRequest> {
   constructor({
     activeWallet,
     apolloClient,
-    protocolCallRelayer,
+    offChainRelayer,
+    onChainRelayer,
     transactionFactory,
     transactionGateway,
     transactionQueue,
     uploader,
   }: CreatePostControllerArgs<T>) {
-    const gateway = new CreatePostCallGateway(apolloClient, transactionFactory, uploader);
+    const onChainGateway = new CreateOnChainPostGateway(apolloClient, transactionFactory, uploader);
 
-    const signedCreatePost = new SubsidizedCall<CreatePostRequest>(
+    const onChainPost = new SubsidizeOnChain<CreatePostRequest>(
       activeWallet,
       transactionGateway,
-      gateway,
-      protocolCallRelayer,
+      onChainGateway,
+      onChainRelayer,
       transactionQueue,
       this.presenter,
     );
-    this.createPost = new CreatePost(signedCreatePost, gateway, transactionQueue, this.presenter);
+
+    const delegableOnChainPost = new DelegableSigning<CreatePostRequest>(
+      onChainPost,
+      onChainGateway,
+      transactionQueue,
+      this.presenter,
+    );
+
+    const offChainGateway = new CreateOffChainPostGateway(
+      apolloClient,
+      transactionFactory,
+      uploader,
+    );
+
+    const offChainPost = new SubsidizeOffChain(
+      activeWallet,
+      offChainGateway,
+      offChainRelayer,
+      transactionQueue,
+      this.presenter,
+    );
+
+    const delegableOffChainPost = new DelegableSigning(
+      offChainPost,
+      offChainGateway,
+      transactionQueue,
+      this.presenter,
+    );
+
+    this.createPost = new CreatePost(delegableOnChainPost, delegableOffChainPost);
   }
 
   async execute(request: CreatePostRequest) {

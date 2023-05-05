@@ -19,6 +19,7 @@ import {
   CollectConditionOutput,
   Comment,
   ContractType,
+  DataAvailabilityPublicationResult,
   EnabledModule,
   EnabledModules,
   EncryptedFieldsOutput,
@@ -179,6 +180,14 @@ export function mockRelayErrorFragment(reason: RelayErrorReasons): RelayError {
   return {
     __typename: 'RelayError',
     reason,
+  };
+}
+
+export function mockDataAvailabilityPublicationResult(): DataAvailabilityPublicationResult {
+  return {
+    id: mockPublicationId(),
+    dataAvailabilityId: faker.datatype.uuid(),
+    __typename: 'CreateDataAvailabilityPublicationResult',
   };
 }
 

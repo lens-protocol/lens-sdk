@@ -7,7 +7,6 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { createGraphQLValidationError } from '../../apollo/__helpers__/mocks';
 import {
   AddReactionDocument,
-  BroadcastProtocolCallDocument,
   CreateSetProfileImageUriTypedDataDocument,
   CreateSetProfileMetadataTypedDataDocument,
   CreateSetProfileMetadataViaDispatcherDocument,
@@ -21,10 +20,13 @@ import {
   CreateSetProfileImageUriViaDispatcherDocument,
   ReportPublicationDocument,
   CreateProfileDocument,
+  CreateDataAvailabilityPostTypedDataDocument,
+  CreateDataAvailabilityPostViaDispatcherDocument,
+  BroadcastOnChainDocument,
+  BroadcastOffChainDocument,
 } from '../hooks';
 import {
   AddReactionVariables,
-  BroadcastProtocolCallVariables,
   CreateSetProfileImageUriTypedDataVariables,
   CreatePublicSetProfileMetadataUriRequest,
   CreateSetProfileMetadataViaDispatcherVariables,
@@ -41,8 +43,6 @@ import {
   ReportPublicationVariables,
   CreateProfileVariables,
   CreateProfileData,
-  RelayResult,
-  BroadcastProtocolCallData,
   CreatePostTypedDataData,
   CreateCommentTypedDataData,
   HidePublicationData,
@@ -60,6 +60,16 @@ import {
   CreatePostViaDispatcherData,
   CreateSetProfileImageUriViaDispatcherData,
   ReportPublicationData,
+  CreateDataAvailabilityPostTypedDataVariables,
+  CreateDataAvailabilityPostTypedDataData,
+  CreateDataAvailabilityPostViaDispatcherData,
+  CreateDataAvailabilityPostViaDispatcherVariables,
+  BroadcastOnChainData,
+  BroadcastOnChainVariables,
+  BroadcastOnChainResult,
+  BroadcastOffChainResult,
+  BroadcastOffChainData,
+  BroadcastOffChainVariables,
 } from '../operations';
 
 export function createCreateProfileMockedResponse({
@@ -67,7 +77,7 @@ export function createCreateProfileMockedResponse({
   result,
 }: {
   request: CreateProfileVariables['request'];
-  result: Required<RelayResult>;
+  result: Required<BroadcastOnChainResult>;
 }): MockedResponse<CreateProfileData> {
   return {
     request: {
@@ -80,39 +90,52 @@ export function createCreateProfileMockedResponse({
   };
 }
 
-function mockBroadcastProtocolCallData(result: Required<RelayResult>): BroadcastProtocolCallData {
+function mockBroadcastOnChainData(result: Required<BroadcastOnChainResult>): BroadcastOnChainData {
   return {
     result,
   };
 }
 
-export function createBroadcastProtocolCallMockedResponse(
-  instructions:
-    | {
-        error: Error;
-        variables: BroadcastProtocolCallVariables;
-      }
-    | {
-        result: Required<RelayResult>;
-        variables: BroadcastProtocolCallVariables;
-      },
-): MockedResponse<BroadcastProtocolCallData> {
-  if ('error' in instructions) {
-    return {
-      request: {
-        query: BroadcastProtocolCallDocument,
-        variables: instructions.variables,
-      },
-      error: instructions.error,
-    };
-  }
+export function createBroadcastOnChainMockedResponse({
+  result,
+  variables,
+}: {
+  result: Required<BroadcastOnChainResult>;
+  variables: BroadcastOnChainVariables;
+}): MockedResponse<BroadcastOnChainData> {
   return {
     request: {
-      query: BroadcastProtocolCallDocument,
-      variables: instructions.variables,
+      query: BroadcastOnChainDocument,
+      variables: variables,
     },
     result: {
-      data: mockBroadcastProtocolCallData(instructions.result),
+      data: mockBroadcastOnChainData(result),
+    },
+  };
+}
+
+function mockBroadcastOffChainData(
+  result: Required<BroadcastOffChainResult>,
+): BroadcastOffChainData {
+  return {
+    result,
+  };
+}
+
+export function createBroadcastOffChainMockedResponse({
+  result,
+  variables,
+}: {
+  result: Required<BroadcastOffChainResult>;
+  variables: BroadcastOffChainVariables;
+}): MockedResponse<BroadcastOffChainData> {
+  return {
+    request: {
+      query: BroadcastOffChainDocument,
+      variables: variables,
+    },
+    result: {
+      data: mockBroadcastOffChainData(result),
     },
   };
 }
@@ -524,6 +547,26 @@ export function createCreatePostTypedDataMockedResponse<T extends CreatePostType
   };
 }
 
+export function createCreateDataAvailabilityPostTypedDataMockedResponse<
+  T extends CreateDataAvailabilityPostTypedDataData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityPostTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityPostTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
 export function createCreatePostViaDispatcherMockedResponse<T extends CreatePostViaDispatcherData>({
   variables,
   data,
@@ -534,6 +577,26 @@ export function createCreatePostViaDispatcherMockedResponse<T extends CreatePost
   return {
     request: {
       query: CreatePostViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateDataAvailabilityPostViaDispatcherDataMockedResponse<
+  T extends CreateDataAvailabilityPostViaDispatcherData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityPostViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityPostViaDispatcherDocument,
       variables,
     },
     result: {

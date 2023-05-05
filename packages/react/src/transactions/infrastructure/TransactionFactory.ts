@@ -1,4 +1,5 @@
 import {
+  DataTransaction,
   MetaTransaction,
   NativeTransaction,
   Nonce,
@@ -16,6 +17,7 @@ import {
 import { ChainType, failure, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
 
 import {
+  DataTransactionData,
   MetaTransactionData,
   NativeTransactionData,
   ProxyTransactionData,
@@ -26,6 +28,7 @@ import {
   ISerializableProxyTransaction,
   ISerializableTransactionFactory,
 } from '../adapters/PendingTransactionGateway';
+import { ISerializableDataTransaction } from '../adapters/PendingTransactionGateway/ISerializableTransactionFactory';
 
 export type IndexingEvent = {
   indexed: boolean;
@@ -110,7 +113,7 @@ class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
     return this.state.nonce;
   }
 
-  get hash(): string | undefined {
+  get hash(): string {
     return this.state.txHash;
   }
 
@@ -232,7 +235,7 @@ class SerializableNativeTransaction<T extends AnyTransactionRequest>
     return this.state.request;
   }
 
-  get hash(): string | undefined {
+  get hash(): string {
     return this.state?.txHash;
   }
 
@@ -244,6 +247,26 @@ class SerializableNativeTransaction<T extends AnyTransactionRequest>
       return success(result.value.event);
     }
     return failure(result.error);
+  }
+}
+
+class SerializableDataTransaction<T extends ProtocolTransactionRequest>
+  extends DataTransaction<T>
+  implements ISerializableDataTransaction<T>
+{
+  constructor(readonly id: string, readonly request: T) {
+    super();
+  }
+
+  async waitNextEvent(): PromiseResult<TransactionEvent, TransactionError> {
+    return success(TransactionEvent.SETTLED);
+  }
+
+  toTransactionData(): DataTransactionData<T> {
+    return {
+      id: this.id,
+      request: this.request,
+    };
   }
 }
 
@@ -314,6 +337,12 @@ export class TransactionFactory implements ISerializableTransactionFactory {
       },
       this.createProxyActionStateReducer(),
     );
+  }
+
+  createDataTransaction<T extends ProtocolTransactionRequest>(
+    init: DataTransactionData<T>,
+  ): ISerializableDataTransaction<T> {
+    return new SerializableDataTransaction(init.id, init.request);
   }
 
   private createProtocolCallStateReducer<

@@ -13,35 +13,47 @@ import {
   TransactionKind,
   AnyTransactionRequestModel,
   ProtocolTransactionRequestModel,
+  DataTransaction,
 } from '../../../entities';
-import {
-  MockedProxyTransaction,
-  mockNonce,
-  mockTransactionHash,
-} from '../../../entities/__helpers__/mocks';
+import { MockedProxyTransaction, mockNonce } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import { IDelegatedTransactionGateway, WithDelegateFlag } from '../DelegableSigning';
-import { ISignlessSubsidizedCallRelayer } from '../SignlessSubsidizedCall';
+import { ISignlessSubsidizedCallRelayer } from '../SignlessSubsidizeOnChain';
+import { IOffChainRelayer, IOffChainProtocolCallGateway } from '../SubsidizeOffChain';
 import {
   IMetaTransactionNonceGateway,
-  IProtocolCallRelayer,
-  IUnsignedProtocolCallGateway,
-} from '../SubsidizedCall';
+  IOnChainRelayer,
+  IOnChainProtocolCallGateway,
+} from '../SubsidizeOnChain';
 import { AnyTransactionRequest } from '../SupportedTransactionRequest';
 import { TransactionData, TransactionQueue } from '../TransactionQueue';
 
-export function mockIProtocolCallRelayer<T extends ProtocolTransactionRequestModel>({
+export function mockIOnChainRelayer<T extends ProtocolTransactionRequestModel>({
   signedCall,
   result,
 }: {
   signedCall: ISignedProtocolCall<T>;
   result: Result<MetaTransaction<T>, BroadcastingError>;
 }) {
-  const transactionRelayer = mock<IProtocolCallRelayer<T>>();
+  const relayer = mock<IOnChainRelayer<T>>();
 
-  when(transactionRelayer.relayProtocolCall).calledWith(signedCall).mockResolvedValue(result);
+  when(relayer.relayProtocolCall).calledWith(signedCall).mockResolvedValue(result);
 
-  return transactionRelayer;
+  return relayer;
+}
+
+export function mockIOffChainRelayer<T extends ProtocolTransactionRequestModel>({
+  signedCall,
+  result,
+}: {
+  signedCall: ISignedProtocolCall<T>;
+  result: Result<DataTransaction<T>, BroadcastingError>;
+}) {
+  const relayer = mock<IOffChainRelayer<T>>();
+
+  when(relayer.relayProtocolCall).calledWith(signedCall).mockResolvedValue(result);
+
+  return relayer;
 }
 
 export function mockTransactionQueue<
@@ -56,7 +68,6 @@ export function mockTransactionData<T extends AnyTransactionRequest>(
   return {
     id: faker.datatype.uuid(),
     request: mock(),
-    txHash: mockTransactionHash(),
     ...overrides,
   };
 }
@@ -69,20 +80,35 @@ export function mockIMetaTransactionNonceGateway({
   return gateway;
 }
 
-export function mockIUnsignedProtocolCallGateway<T extends ProtocolTransactionRequestModel>({
+export function mockIOnChainProtocolCallGateway<T extends ProtocolTransactionRequestModel>({
   request,
   nonce,
   unsignedCall,
 }: {
   request: T;
-  nonce?: Nonce;
+  nonce: Nonce | undefined;
   unsignedCall: IUnsignedProtocolCall<T>;
-}): IUnsignedProtocolCallGateway<T> {
-  const gateway = mock<IUnsignedProtocolCallGateway<T>>();
+}): IOnChainProtocolCallGateway<T> {
+  const gateway = mock<IOnChainProtocolCallGateway<T>>();
 
   when(gateway.createUnsignedProtocolCall)
     .calledWith(request, nonce)
     .mockResolvedValue(unsignedCall);
+
+  return gateway;
+}
+
+export function mockIOffChainProtocolCallGateway<T extends ProtocolTransactionRequestModel>({
+  request,
+
+  unsignedCall,
+}: {
+  request: T;
+  unsignedCall: IUnsignedProtocolCall<T>;
+}): IOnChainProtocolCallGateway<T> {
+  const gateway = mock<IOffChainProtocolCallGateway<T>>();
+
+  when(gateway.createUnsignedProtocolCall).calledWith(request).mockResolvedValue(unsignedCall);
 
   return gateway;
 }
@@ -107,16 +133,14 @@ export function mockISignlessSubsidizedCallRelayer<
   request: T;
   transaction?: ProxyTransaction<T>;
 }): ISignlessSubsidizedCallRelayer<T> {
-  const signlessProtocolCallRelayer = mock<ISignlessSubsidizedCallRelayer<T>>();
+  const relayer = mock<ISignlessSubsidizedCallRelayer<T>>();
 
   if (instructions) {
     const { request, transaction = MockedProxyTransaction.fromRequest(request) } = instructions;
-    when(signlessProtocolCallRelayer.createProxyTransaction)
-      .calledWith(request)
-      .mockResolvedValue(transaction);
+    when(relayer.createProxyTransaction).calledWith(request).mockResolvedValue(transaction);
   }
 
-  return signlessProtocolCallRelayer;
+  return relayer;
 }
 
 export function mockProtocolTransactionRequestModelWithDelegateFlag({
@@ -128,4 +152,11 @@ export function mockProtocolTransactionRequestModelWithDelegateFlag({
     kind: TransactionKind.CREATE_POST,
     delegate,
   } as WithDelegateFlag<ProtocolTransactionRequestModel>;
+}
+
+export function mockProtocolTransactionRequestModelWithOffChainFlag(): ProtocolTransactionRequestModel {
+  return {
+    kind: TransactionKind.CREATE_POST,
+    offChain: true,
+  } as ProtocolTransactionRequestModel;
 }

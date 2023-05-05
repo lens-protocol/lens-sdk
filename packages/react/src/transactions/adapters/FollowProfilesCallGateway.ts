@@ -14,7 +14,7 @@ import {
   isPaidFollowRequest,
   isProfileOwnerFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { IUnsignedProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
+import { IOnChainProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
@@ -47,7 +47,7 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
   return [{ profile: request.profileId }];
 }
 
-export class FollowProfilesCallGateway implements IUnsignedProtocolCallGateway<FollowRequest> {
+export class FollowProfilesCallGateway implements IOnChainProtocolCallGateway<FollowRequest> {
   constructor(private apolloClient: LensApolloClient) {}
 
   async createUnsignedProtocolCall(

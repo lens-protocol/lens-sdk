@@ -67,7 +67,7 @@ export function useCreateEncryptedComment({
     appId,
     activeWallet,
     apolloClient,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionFactory,
     transactionGateway,
     transactionQueue,
@@ -117,7 +117,7 @@ export function useCreateEncryptedComment({
       const controller = new CreateCommentController<CreateEncryptedCommentRequest>({
         activeWallet,
         apolloClient,
-        protocolCallRelayer,
+        onChainRelayer,
         transactionFactory,
         transactionGateway,
         transactionQueue,
