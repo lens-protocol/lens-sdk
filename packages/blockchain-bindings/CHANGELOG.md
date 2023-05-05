@@ -1,5 +1,12 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.8.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [71196cf]
+  - @lens-protocol/domain@0.8.0-next.1
+
 ## 0.8.0-next.0
 
 ### Minor Changes

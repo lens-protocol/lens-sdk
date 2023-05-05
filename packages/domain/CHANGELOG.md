@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.8.0-next.1
+
+### Patch Changes
+
+- 71196cf: Added support for more metadata fields in create publication hooks
+
 ## 0.8.0-next.0
 
 ### Minor Changes

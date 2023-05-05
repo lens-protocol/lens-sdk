@@ -1,5 +1,16 @@
 # @lens-protocol/api-bindings
 
+## 0.8.0-next.1
+
+### Minor Changes
+
+- 03a8ad5: Deprecated publication's `isOptimisticMirroredByMe` property, introduced `isMirroredByMe`
+
+### Patch Changes
+
+- Updated dependencies [71196cf]
+  - @lens-protocol/domain@0.8.0-next.1
+
 ## 0.8.0-next.0
 
 ### Minor Changes
