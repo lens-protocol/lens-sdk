@@ -36,6 +36,9 @@ const NftMetadataSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   attributes: z.array(NftAttributeSchema),
+  externalUrl: z.string().optional(),
+  image: z.string().optional(),
+  imageMimeType: z.nativeEnum(ImageType).optional(),
 });
 
 const RecipientWithSplitSchema = z.object({
@@ -146,46 +149,84 @@ const ReferencePolicyConfigSchema = z.union([
   FollowersOnlyReferencePolicyConfigSchema,
 ]);
 
-export const CreatePostRequestSchema = z.object({
-  animationUrl: z.string().optional(),
+const BasePostRequestSchema = z.object({
   appId: z.string().transform(appId).optional(),
   collect: CollectPolicyConfigSchema,
-  content: z.string().optional(),
-  contentFocus: z.nativeEnum(ContentFocus),
   contentWarning: z.nativeEnum(ContentWarning).optional(),
+  // decryptionCriteria TODO, add to schema
   delegate: z.boolean(),
-  externalUrl: z.string().optional(),
-  image: z.string().optional(),
-  imageMimeType: z.nativeEnum(ImageType).optional(),
   kind: z.literal(TransactionKind.CREATE_POST),
   locale: z.string(),
-  media: z.array(MediaSchema).optional(),
   offChain: z.boolean(),
   profileId: ProfileIdSchema,
   reference: ReferencePolicyConfigSchema,
   tags: z.array(z.string()).optional(),
 });
 
-export const CreateCommentRequestSchema = z.object({
-  animationUrl: z.string().optional(),
+const CreateTextualPostRequestSchema = BasePostRequestSchema.extend({
+  content: z.string(),
+  contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
+  media: z.array(MediaSchema).optional(),
+});
+
+const CreateMediaPostRequestSchema = BasePostRequestSchema.extend({
+  content: z.string().optional(),
+  contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
+  media: z.array(MediaSchema),
+});
+
+const CreateEmbedPostRequestSchema = BasePostRequestSchema.extend({
+  animationUrl: z.string(),
+  content: z.string().optional(),
+  contentFocus: z.enum([ContentFocus.EMBED]),
+  media: z.array(MediaSchema).optional(),
+});
+
+export const CreatePostRequestSchema = z.union([
+  CreateTextualPostRequestSchema,
+  CreateMediaPostRequestSchema,
+  CreateEmbedPostRequestSchema,
+]);
+
+const BaseCommentRequestSchema = z.object({
   appId: z.string().transform(appId).optional(),
   collect: CollectPolicyConfigSchema,
-  content: z.string().optional(),
-  contentFocus: z.nativeEnum(ContentFocus),
   contentWarning: z.nativeEnum(ContentWarning).optional(),
+  // decryptionCriteria TODO, add to schema
   delegate: z.boolean(),
-  externalUrl: z.string().optional(),
-  image: z.string().optional(),
-  imageMimeType: z.nativeEnum(ImageType).optional(),
   kind: z.literal(TransactionKind.CREATE_COMMENT),
   locale: z.string(),
-  media: z.array(MediaSchema).optional(),
   offChain: z.boolean(),
   profileId: ProfileIdSchema,
   publicationId: PublicationIdSchema,
   reference: ReferencePolicyConfigSchema,
   tags: z.array(z.string()).optional(),
 });
+
+const CreateTextualCommentRequestSchema = BaseCommentRequestSchema.extend({
+  content: z.string(),
+  contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
+  media: z.array(MediaSchema).optional(),
+});
+
+const CreateMediaCommentRequestSchema = BaseCommentRequestSchema.extend({
+  content: z.string().optional(),
+  contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
+  media: z.array(MediaSchema),
+});
+
+const CreateEmbedCommentRequestSchema = BaseCommentRequestSchema.extend({
+  animationUrl: z.string(),
+  content: z.string().optional(),
+  contentFocus: z.enum([ContentFocus.EMBED]),
+  media: z.array(MediaSchema).optional(),
+});
+
+export const CreateCommentRequestSchema = z.union([
+  CreateTextualCommentRequestSchema,
+  CreateMediaCommentRequestSchema,
+  CreateEmbedCommentRequestSchema,
+]);
 
 export const CreateMirrorRequestSchema = z.object({
   profileId: ProfileIdSchema,

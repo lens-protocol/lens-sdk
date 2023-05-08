@@ -90,6 +90,11 @@ export type NftMetadata = {
    */
   attributes: NftAttribute[];
   /**
+   * This is the URL that will appear below the asset's image on OpenSea and other marketplaces.
+   * It will allow users to leave OpenSea and view the item on the external site.
+   */
+  externalUrl?: Url;
+  /**
    * Legacy to support OpenSea schema, store any NFT image here.
    */
   image?: Url;
