@@ -7,12 +7,7 @@ import {
   PublicationId,
   TransactionKind,
 } from '../../entities';
-import {
-  DelegableProtocolCallUseCase,
-  IDelegableProtocolCallGateway,
-  IProtocolCallPresenter,
-} from '../transactions/DelegableProtocolCallUseCase';
-import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
+import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 import { ImageType } from './config';
 import { CollectPolicyConfig, ContentFocus, ContentWarning, Locale, MediaObject } from './types';
@@ -20,6 +15,7 @@ import { CollectPolicyConfig, ContentFocus, ContentWarning, Locale, MediaObject 
 export type CreateCommentRequest = {
   collect: CollectPolicyConfig;
   decryptionCriteria?: DecryptionCriteria;
+  offChain: boolean;
   delegate: boolean;
   kind: TransactionKind.CREATE_COMMENT;
   profileId: ProfileId;
@@ -78,14 +74,19 @@ export type CreateCommentRequest = {
   tags?: string[];
 };
 
-export type ICreateCommentCallGateway = IDelegableProtocolCallGateway<CreateCommentRequest> &
-  IUnsignedProtocolCallGateway<CreateCommentRequest>;
+export class CreateComment {
+  constructor(
+    private readonly createOnChainPost: DelegableSigning<CreateCommentRequest>,
+    private readonly createOffChainPost: DelegableSigning<CreateCommentRequest>,
+  ) {}
 
-export type ICreateCommentPresenter = IProtocolCallPresenter;
-
-export class CreateComment extends DelegableProtocolCallUseCase<CreateCommentRequest> {
   async execute(request: CreateCommentRequest) {
     invariant(request.media || request.content, 'One of post media or content is required');
-    await super.execute(request);
+
+    if (request.offChain) {
+      await this.createOffChainPost.execute(request);
+    } else {
+      await this.createOnChainPost.execute(request);
+    }
   }
 }

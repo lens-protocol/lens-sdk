@@ -1,18 +1,18 @@
 import {
-  BroadcastProtocolCallDocument,
-  BroadcastProtocolCallData,
-  BroadcastProtocolCallVariables,
   LensApolloClient,
+  BroadcastOffChainData,
+  BroadcastOffChainVariables,
+  BroadcastOffChainDocument,
 } from '@lens-protocol/api-bindings';
-import { MetaTransaction, TransactionRequestModel } from '@lens-protocol/domain/entities';
+import { DataTransaction } from '@lens-protocol/domain/entities';
+import { IOffChainRelayer } from '@lens-protocol/domain/src/use-cases/transactions/SubsidizeOffChain';
+import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
-  IProtocolCallRelayer,
   BroadcastingError,
-  SupportedTransactionRequest,
+  ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   assertError,
-  ChainType,
   failure,
   ILogger,
   PromiseResult,
@@ -21,45 +21,41 @@ import {
 
 import { SignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
-import { handleRelayError, RelayReceipt } from './relayer';
+import { handleRelayError, OffChainBroadcastReceipt } from './relayer';
 
-export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransactionRequest> {
+export class OffChainRelayer implements IOffChainRelayer<CreatePostRequest> {
   constructor(
     private apolloClient: LensApolloClient,
-    private factory: ITransactionFactory<SupportedTransactionRequest>,
+    private factory: ITransactionFactory<ProtocolTransactionRequest>,
     private logger: ILogger,
   ) {}
 
-  async relayProtocolCall<T extends SupportedTransactionRequest>(
+  async relayProtocolCall<T extends ProtocolTransactionRequest>(
     signedCall: SignedProtocolCall<T>,
-  ): PromiseResult<MetaTransaction<T>, BroadcastingError> {
+  ): PromiseResult<DataTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(signedCall);
 
     if (result.isFailure()) return failure(result.error);
 
     const receipt = result.value;
 
-    const transaction = this.factory.createMetaTransaction({
-      chainType: ChainType.POLYGON,
-      id: signedCall.id,
+    const transaction = this.factory.createDataTransaction({
+      id: receipt.id,
       request: signedCall.request,
-      nonce: signedCall.nonce,
-      indexingId: receipt.indexingId,
-      txHash: receipt.txHash,
     });
 
     return success(transaction);
   }
 
-  private async broadcast<T extends TransactionRequestModel>(
+  private async broadcast<T extends ProtocolTransactionRequest>(
     signedCall: SignedProtocolCall<T>,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OffChainBroadcastReceipt, BroadcastingError> {
     try {
       const { data } = await this.apolloClient.mutate<
-        BroadcastProtocolCallData,
-        BroadcastProtocolCallVariables
+        BroadcastOffChainData,
+        BroadcastOffChainVariables
       >({
-        mutation: BroadcastProtocolCallDocument,
+        mutation: BroadcastOffChainDocument,
         variables: {
           request: {
             id: signedCall.id,
@@ -73,8 +69,7 @@ export class ProtocolCallRelayer implements IProtocolCallRelayer<SupportedTransa
       }
 
       return success({
-        indexingId: data.result.txId,
-        txHash: data.result.txHash,
+        id: data.result.id,
       });
     } catch (err) {
       this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);

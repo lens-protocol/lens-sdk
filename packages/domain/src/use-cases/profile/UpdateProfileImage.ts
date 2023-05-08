@@ -1,12 +1,5 @@
 import { ProfileId, TransactionKind } from '../../entities';
-import {
-  DelegableProtocolCallUseCase,
-  IDelegableProtocolCallGateway,
-} from '../transactions/DelegableProtocolCallUseCase';
-import {
-  IUnsignedProtocolCallGateway,
-  IProtocolCallPresenter,
-} from '../transactions/ProtocolCallUseCase';
+import { DelegableSigning } from '../transactions/DelegableSigning';
 import { NftOwnershipSignature } from './ProveNftOwnership';
 
 /**
@@ -30,9 +23,4 @@ export type UpdateProfileImageRequest =
   | UpdateNftProfileImageRequest
   | UpdateOffChainProfileImageRequest;
 
-export type IProfileImageCallGateway = IDelegableProtocolCallGateway<UpdateProfileImageRequest> &
-  IUnsignedProtocolCallGateway<UpdateProfileImageRequest>;
-
-export type IUpdateProfileImagePresenter = IProtocolCallPresenter;
-
-export class UpdateProfileImage extends DelegableProtocolCallUseCase<UpdateProfileImageRequest> {}
+export class UpdateProfileImage extends DelegableSigning<UpdateProfileImageRequest> {}

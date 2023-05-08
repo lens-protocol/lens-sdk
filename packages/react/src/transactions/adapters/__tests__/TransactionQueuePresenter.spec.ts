@@ -2,7 +2,7 @@ import { recentTransactionsVar, TxStatus } from '@lens-protocol/api-bindings';
 import { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 import { mockTransactionError, mockTransactionData } from '@lens-protocol/domain/mocks';
 import {
-  SupportedTransactionRequest,
+  AnyTransactionRequest,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
@@ -89,9 +89,9 @@ describe(`Given the ${TransactionQueuePresenter.name}`, () => {
       toKeep.concat(toRemove).forEach((transaction) => presenter.pending(transaction));
       presenter.failed(
         mockTransactionError(),
-        toRemove[0] as TransactionData<SupportedTransactionRequest>,
+        toRemove[0] as TransactionData<AnyTransactionRequest>,
       );
-      presenter.settled(toRemove[1] as TransactionData<SupportedTransactionRequest>);
+      presenter.settled(toRemove[1] as TransactionData<AnyTransactionRequest>);
 
       presenter.clearRecent();
 

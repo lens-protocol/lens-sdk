@@ -160,6 +160,7 @@ export const CreatePostRequestSchema = z.object({
   kind: z.literal(TransactionKind.CREATE_POST),
   locale: z.string(),
   media: z.array(MediaSchema).optional(),
+  offChain: z.boolean(),
   profileId: ProfileIdSchema,
   reference: ReferencePolicyConfigSchema,
   tags: z.array(z.string()).optional(),
@@ -179,6 +180,7 @@ export const CreateCommentRequestSchema = z.object({
   kind: z.literal(TransactionKind.CREATE_COMMENT),
   locale: z.string(),
   media: z.array(MediaSchema).optional(),
+  offChain: z.boolean(),
   profileId: ProfileIdSchema,
   publicationId: PublicationIdSchema,
   reference: ReferencePolicyConfigSchema,
@@ -190,6 +192,7 @@ export const CreateMirrorRequestSchema = z.object({
   publicationId: PublicationIdSchema,
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   delegate: z.boolean(),
+  offChain: z.boolean(),
 });
 
 export const FreeCollectRequestSchema = z.object({

@@ -1,12 +1,7 @@
 import { Url, invariant } from '@lens-protocol/shared-kernel';
 
 import { AppId, DecryptionCriteria, ProfileId, TransactionKind } from '../../entities';
-import {
-  DelegableProtocolCallUseCase,
-  IDelegableProtocolCallGateway,
-  IProtocolCallPresenter,
-} from '../transactions/DelegableProtocolCallUseCase';
-import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
+import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 import { ImageType } from './config';
 import { CollectPolicyConfig, ContentFocus, ContentWarning, Locale, MediaObject } from './types';
@@ -14,6 +9,7 @@ import { CollectPolicyConfig, ContentFocus, ContentWarning, Locale, MediaObject 
 export type CreatePostRequest = {
   collect: CollectPolicyConfig;
   decryptionCriteria?: DecryptionCriteria;
+  offChain: boolean;
   delegate: boolean;
   kind: TransactionKind.CREATE_POST;
   profileId: ProfileId;
@@ -71,14 +67,19 @@ export type CreatePostRequest = {
   tags?: string[];
 };
 
-export type ICreatePostCallGateway = IDelegableProtocolCallGateway<CreatePostRequest> &
-  IUnsignedProtocolCallGateway<CreatePostRequest>;
+export class CreatePost {
+  constructor(
+    private readonly createOnChainPost: DelegableSigning<CreatePostRequest>,
+    private readonly createOffChainPost: DelegableSigning<CreatePostRequest>,
+  ) {}
 
-export type ICreatePostPresenter = IProtocolCallPresenter;
-
-export class CreatePost extends DelegableProtocolCallUseCase<CreatePostRequest> {
   async execute(request: CreatePostRequest) {
     invariant(request.media || request.content, 'One of post media or content is required');
-    await super.execute(request);
+
+    if (request.offChain) {
+      await this.createOffChainPost.execute(request);
+    } else {
+      await this.createOnChainPost.execute(request);
+    }
   }
 }

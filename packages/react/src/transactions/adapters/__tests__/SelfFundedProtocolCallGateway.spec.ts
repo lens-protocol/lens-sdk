@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import { mockWallet } from '@lens-protocol/domain/mocks';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { ProtocolTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
 import { MockProvider } from 'ethereum-waffle';
 import { providers } from 'ethers';
@@ -12,7 +12,7 @@ import {
   SelfFundedProtocolCallGateway,
   UnsignedSelfFundedProtocolCallTransaction,
 } from '../SelfFundedProtocolCallGateway';
-import { mockSelfFundedProtocolCallRequest } from '../__helpers__/mocks';
+import { mockSelfFundedProtocolTransactionRequest } from '../__helpers__/mocks';
 
 function setupSelfFundedProtocolCallGateway({ provider }: { provider: providers.JsonRpcProvider }) {
   const providerFactory = mockIProviderFactory({
@@ -28,7 +28,7 @@ async function mineNBlocks(provider: MockProvider, blocks: number) {
 }
 
 describe(`Given an instance of the ${SelfFundedProtocolCallGateway.name}`, () => {
-  const request = mockSelfFundedProtocolCallRequest<SupportedTransactionRequest>();
+  const request = mockSelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>();
   const wallet = mockWallet();
 
   describe(`when invoking ${SelfFundedProtocolCallGateway.prototype.prepareSelfFundedTransaction.name}`, () => {

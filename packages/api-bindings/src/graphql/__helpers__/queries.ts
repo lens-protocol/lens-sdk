@@ -11,6 +11,7 @@ import {
   GetAllProfilesDocument,
   GetProfileDocument,
   GetProfilePublicationRevenueDocument,
+  GetPublicationDocument,
   GetPublicationRevenueDocument,
   GetPublicationsDocument,
   HasTxHashBeenIndexedDocument,
@@ -19,8 +20,6 @@ import {
   ProfilePublicationsForSaleDocument,
   ProfilesToFollowDocument,
   ProxyActionStatusDocument,
-  PublicationByTxHashDocument,
-  PublicationDocument,
   SearchProfilesDocument,
   SearchPublicationsDocument,
   WhoCollectedPublicationDocument,
@@ -45,10 +44,12 @@ import {
   GetProfilePublicationRevenueData,
   GetProfilePublicationRevenueVariables,
   GetProfileVariables,
+  GetPublicationData,
   GetPublicationRevenueData,
   GetPublicationRevenueVariables,
   GetPublicationsData,
   GetPublicationsVariables,
+  GetPublicationVariables,
   HasTxHashBeenIndexedData,
   HasTxHashBeenIndexedVariables,
   Maybe,
@@ -69,11 +70,7 @@ import {
   ProxyActionStatusResult,
   ProxyActionStatusTypes,
   ProxyActionStatusVariables,
-  PublicationByTxHashData,
-  PublicationByTxHashVariables,
-  PublicationData,
   PublicationRevenue,
-  PublicationVariables,
   SearchProfilesVariables,
   SearchPublicationsVariables,
   TransactionErrorReasons,
@@ -307,24 +304,6 @@ export function createMutualFollowersMockedResponse(args: {
           },
         },
       },
-    },
-  };
-}
-
-export function createPublicationMockedResponse({
-  variables,
-  result,
-}: {
-  variables: PublicationVariables;
-  result: AnyPublication | null;
-}): MockedResponse<PublicationData> {
-  return {
-    request: {
-      query: PublicationDocument,
-      variables,
-    },
-    result: {
-      data: { result },
     },
   };
 }
@@ -593,28 +572,28 @@ export function createSearchPublicationsMockedResponse(args: {
   };
 }
 
-function mockPublicationByTxHash(
-  publication: Comment | Post | Mirror = mockPostFragment(),
-): PublicationByTxHashData {
+function mockGetPublicationData(
+  publication: AnyPublication | null = mockPostFragment(),
+): GetPublicationData {
   return {
     result: publication,
   };
 }
 
-export function createPublicationByTxHashMockedResponse({
+export function createGetPublicationMockedResponse({
   variables,
   publication,
 }: {
-  variables: PublicationByTxHashVariables;
-  publication: Comment | Post | Mirror;
-}): MockedResponse<PublicationByTxHashData> {
+  variables: GetPublicationVariables;
+  publication: AnyPublication | null;
+}): MockedResponse<GetPublicationData> {
   return {
     request: {
-      query: PublicationByTxHashDocument,
+      query: GetPublicationDocument,
       variables,
     },
     result: {
-      data: mockPublicationByTxHash(publication),
+      data: mockGetPublicationData(publication),
     },
   };
 }

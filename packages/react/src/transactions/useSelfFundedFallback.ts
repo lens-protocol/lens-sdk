@@ -6,12 +6,12 @@ import {
 } from '@lens-protocol/domain/entities';
 import {
   BroadcastingError,
-  SupportedTransactionRequest,
+  ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { IEquatableError } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
-import { SelfFundedProtocolCallRequest } from './adapters/SelfFundedProtocolCallRequest';
+import { SelfFundedProtocolTransactionRequest } from './adapters/SelfFundedProtocolTransactionRequest';
 import { usePayTransactionController } from './adapters/usePayTransactionController';
 
 /**
@@ -19,7 +19,8 @@ import { usePayTransactionController } from './adapters/usePayTransactionControl
  *
  * @internal
  */
-export type SelfFundedOperationRequest = SelfFundedProtocolCallRequest<SupportedTransactionRequest>;
+export type SelfFundedOperationRequest =
+  SelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>;
 
 export interface ISelfFundedFallback {
   /**

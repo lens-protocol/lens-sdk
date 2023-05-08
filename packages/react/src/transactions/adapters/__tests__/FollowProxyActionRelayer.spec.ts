@@ -5,7 +5,7 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { ProxyActionStatus, ProxyTransaction } from '@lens-protocol/domain/entities';
 import { mockUnconstrainedFollowRequest } from '@lens-protocol/domain/mocks';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { UnconstrainedFollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { ChainType, ILogger, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
@@ -38,7 +38,7 @@ function mockFollowProxyActionRelayer({
   factory,
 }: {
   apollo: LensApolloClient;
-  factory: ITransactionFactory<SupportedTransactionRequest>;
+  factory: ITransactionFactory<UnconstrainedFollowRequest>;
 }) {
   return new FollowProxyActionRelayer(apollo, factory, mock<ILogger>());
 }
@@ -66,7 +66,7 @@ describe(`Given an instance of the ${FollowProxyActionRelayer.name}`, () => {
       const factory = mockITransactionFactory(mockTransactionObserver);
       const transactionRelayer = mockFollowProxyActionRelayer({ apollo, factory });
 
-      const transaction = await transactionRelayer.relaySignlessProtocolCall(request);
+      const transaction = await transactionRelayer.createProxyTransaction(request);
 
       await transaction.waitNextEvent();
 

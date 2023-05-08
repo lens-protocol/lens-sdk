@@ -49,7 +49,7 @@ export type Scalars = {
   /** Cursor custom scalar type */
   Cursor: string;
   /** The da id */
-  DataAvailabilityId: unknown;
+  DataAvailabilityId: string;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: string;
   DecryptionCriteria: DecryptionCriteria;
@@ -418,6 +418,17 @@ export type CurRequest = {
 export enum CustomFiltersTypes {
   Gardeners = 'GARDENERS',
 }
+
+export type DataAvailabilityTransactionRequest = {
+  /** The DA transaction id or internal publiation id */
+  id: Scalars['String'];
+};
+
+export type DataAvailabilityTransactionsRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  profileId?: InputMaybe<Scalars['ProfileId']>;
+};
 
 /** The reason why a profile cannot decrypt a publication */
 export enum DecryptFailReason {
@@ -832,6 +843,38 @@ export type ModuleFeeAmountParams = {
   value: Scalars['String'];
 };
 
+/** The momka validator error */
+export enum MomokaValidatorError {
+  BlockCantBeReadFromNode = 'BLOCK_CANT_BE_READ_FROM_NODE',
+  BlockTooFar = 'BLOCK_TOO_FAR',
+  CanNotConnectToBundlr = 'CAN_NOT_CONNECT_TO_BUNDLR',
+  ChainSignatureAlreadyUsed = 'CHAIN_SIGNATURE_ALREADY_USED',
+  DataCantBeReadFromNode = 'DATA_CANT_BE_READ_FROM_NODE',
+  EventMismatch = 'EVENT_MISMATCH',
+  GeneratedPublicationIdMismatch = 'GENERATED_PUBLICATION_ID_MISMATCH',
+  InvalidEventTimestamp = 'INVALID_EVENT_TIMESTAMP',
+  InvalidFormattedTypedData = 'INVALID_FORMATTED_TYPED_DATA',
+  InvalidPointerSetNotNeeded = 'INVALID_POINTER_SET_NOT_NEEDED',
+  InvalidSignatureSubmitter = 'INVALID_SIGNATURE_SUBMITTER',
+  InvalidTxId = 'INVALID_TX_ID',
+  InvalidTypedDataDeadlineTimestamp = 'INVALID_TYPED_DATA_DEADLINE_TIMESTAMP',
+  NotClosestBlock = 'NOT_CLOSEST_BLOCK',
+  NoSignatureSubmitter = 'NO_SIGNATURE_SUBMITTER',
+  PointerFailedVerification = 'POINTER_FAILED_VERIFICATION',
+  PotentialReorg = 'POTENTIAL_REORG',
+  PublicationNonceInvalid = 'PUBLICATION_NONCE_INVALID',
+  PublicationNoneDa = 'PUBLICATION_NONE_DA',
+  PublicationNoPointer = 'PUBLICATION_NO_POINTER',
+  PublicationSignerNotAllowed = 'PUBLICATION_SIGNER_NOT_ALLOWED',
+  SimulationFailed = 'SIMULATION_FAILED',
+  SimulationNodeCouldNotRun = 'SIMULATION_NODE_COULD_NOT_RUN',
+  TimestampProofInvalidDaId = 'TIMESTAMP_PROOF_INVALID_DA_ID',
+  TimestampProofInvalidSignature = 'TIMESTAMP_PROOF_INVALID_SIGNATURE',
+  TimestampProofInvalidType = 'TIMESTAMP_PROOF_INVALID_TYPE',
+  TimestampProofNotSubmitter = 'TIMESTAMP_PROOF_NOT_SUBMITTER',
+  Unknown = 'UNKNOWN',
+}
+
 export type MultirecipientFeeCollectModuleParams = {
   /** The collecting cost associated with this publication. 0 for free collect. */
   amount: ModuleFeeAmountParams;
@@ -983,7 +1026,7 @@ export type NotificationRequest = {
   customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
   highSignalFilter?: InputMaybe<Scalars['Boolean']>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
-  /** The profile id */
+  /** The notification types */
   notificationTypes?: InputMaybe<Array<NotificationTypes>>;
   /** The profile id */
   profileId: Scalars['ProfileId'];
@@ -1178,7 +1221,7 @@ export enum PublicationMetadataStatusType {
 
 /** Publication metadata tag filter */
 export type PublicationMetadataTagsFilter = {
-  /** Needs to only match all */
+  /** Needs to match all */
   all?: InputMaybe<Array<Scalars['String']>>;
   /** Needs to only match one of */
   oneOf?: InputMaybe<Array<Scalars['String']>>;
@@ -1305,6 +1348,7 @@ export enum PublicationReportingSensitiveSubreason {
 /** Publication reporting spam subreason */
 export enum PublicationReportingSpamSubreason {
   FakeEngagement = 'FAKE_ENGAGEMENT',
+  LowSignal = 'LOW_SIGNAL',
   ManipulationAlgo = 'MANIPULATION_ALGO',
   Misleading = 'MISLEADING',
   MisuseHashtags = 'MISUSE_HASHTAGS',
@@ -1690,33 +1734,31 @@ export type CreateCollectTypedDataData = {
   };
 };
 
+export type CreateCommentEip712TypedData = {
+  types: { CommentWithSig: Array<{ name: string; type: string }> };
+  domain: Eip712TypedDataDomain;
+  value: {
+    nonce: number;
+    deadline: unknown;
+    profileId: ProfileId;
+    contentURI: Url;
+    profileIdPointed: ProfileId;
+    pubIdPointed: string;
+    collectModule: string;
+    collectModuleInitData: string;
+    referenceModuleData: string;
+    referenceModule: string;
+    referenceModuleInitData: string;
+  };
+};
+
 export type CreateCommentTypedDataVariables = Exact<{
   request: CreatePublicCommentRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
 export type CreateCommentTypedDataData = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { CommentWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomain;
-      value: {
-        nonce: number;
-        deadline: unknown;
-        profileId: ProfileId;
-        contentURI: Url;
-        profileIdPointed: ProfileId;
-        pubIdPointed: string;
-        collectModule: string;
-        collectModuleInitData: string;
-        referenceModuleData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
+  result: { id: string; expiresAt: string; typedData: CreateCommentEip712TypedData };
 };
 
 export type CreateCommentViaDispatcherVariables = Exact<{
@@ -1724,7 +1766,25 @@ export type CreateCommentViaDispatcherVariables = Exact<{
 }>;
 
 export type CreateCommentViaDispatcherData = {
-  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type CreateDataAvailabilityCommentTypedDataVariables = Exact<{
+  request: CreateDataAvailabilityCommentRequest;
+}>;
+
+export type CreateDataAvailabilityCommentTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreateCommentEip712TypedData };
+};
+
+export type CreateDataAvailabilityCommentViaDispatcherVariables = Exact<{
+  request: CreateDataAvailabilityCommentRequest;
+}>;
+
+export type CreateDataAvailabilityCommentViaDispatcherData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
 };
 
 export type Erc20Fields = {
@@ -2188,30 +2248,28 @@ export type EncryptionParamsOutput = {
   providerSpecificParams: { encryptionKey: ContentEncryptionKey };
 };
 
+export type CreateMirrorEip712TypedData = {
+  types: { MirrorWithSig: Array<{ name: string; type: string }> };
+  domain: Eip712TypedDataDomain;
+  value: {
+    nonce: number;
+    deadline: unknown;
+    profileId: ProfileId;
+    profileIdPointed: ProfileId;
+    pubIdPointed: string;
+    referenceModuleData: string;
+    referenceModule: string;
+    referenceModuleInitData: string;
+  };
+};
+
 export type CreateMirrorTypedDataVariables = Exact<{
   request: CreateMirrorRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
 export type CreateMirrorTypedDataData = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { MirrorWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomain;
-      value: {
-        nonce: number;
-        deadline: unknown;
-        profileId: ProfileId;
-        profileIdPointed: ProfileId;
-        pubIdPointed: string;
-        referenceModuleData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
+  result: { id: string; expiresAt: string; typedData: CreateMirrorEip712TypedData };
 };
 
 export type CreateMirrorViaDispatcherVariables = Exact<{
@@ -2219,7 +2277,25 @@ export type CreateMirrorViaDispatcherVariables = Exact<{
 }>;
 
 export type CreateMirrorViaDispatcherData = {
-  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type CreateDataAvailabilityMirrorTypedDataVariables = Exact<{
+  request: CreateDataAvailabilityMirrorRequest;
+}>;
+
+export type CreateDataAvailabilityMirrorTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreateMirrorEip712TypedData };
+};
+
+export type CreateDataAvailabilityMirrorViaDispatcherVariables = Exact<{
+  request: CreateDataAvailabilityMirrorRequest;
+}>;
+
+export type CreateDataAvailabilityMirrorViaDispatcherData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
 };
 
 export type ModuleInfo = { __typename: 'ModuleInfo'; name: string; type: string };
@@ -2322,30 +2398,28 @@ export type UnreadNotificationCountVariables = Exact<{
 
 export type UnreadNotificationCountData = { result: { pageInfo: { totalCount: number | null } } };
 
+export type CreatePostEip712TypedData = {
+  types: { PostWithSig: Array<{ name: string; type: string }> };
+  domain: Eip712TypedDataDomain;
+  value: {
+    nonce: number;
+    deadline: unknown;
+    profileId: ProfileId;
+    contentURI: Url;
+    collectModule: string;
+    collectModuleInitData: string;
+    referenceModule: string;
+    referenceModuleInitData: string;
+  };
+};
+
 export type CreatePostTypedDataVariables = Exact<{
   request: CreatePublicPostRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
 export type CreatePostTypedDataData = {
-  result: {
-    id: string;
-    expiresAt: string;
-    typedData: {
-      types: { PostWithSig: Array<{ name: string; type: string }> };
-      domain: Eip712TypedDataDomain;
-      value: {
-        nonce: number;
-        deadline: unknown;
-        profileId: ProfileId;
-        contentURI: Url;
-        collectModule: string;
-        collectModuleInitData: string;
-        referenceModule: string;
-        referenceModuleInitData: string;
-      };
-    };
-  };
+  result: { id: string; expiresAt: string; typedData: CreatePostEip712TypedData };
 };
 
 export type CreatePostViaDispatcherVariables = Exact<{
@@ -2353,7 +2427,25 @@ export type CreatePostViaDispatcherVariables = Exact<{
 }>;
 
 export type CreatePostViaDispatcherData = {
-  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type CreateDataAvailabilityPostTypedDataVariables = Exact<{
+  request: CreateDataAvailabilityPostRequest;
+}>;
+
+export type CreateDataAvailabilityPostTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreatePostEip712TypedData };
+};
+
+export type CreateDataAvailabilityPostViaDispatcherVariables = Exact<{
+  request: CreateDataAvailabilityPostRequest;
+}>;
+
+export type CreateDataAvailabilityPostViaDispatcherData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
 };
 
 export type CreateSetDispatcherTypedDataVariables = Exact<{
@@ -2496,7 +2588,9 @@ export type CreateProfileVariables = Exact<{
   request: CreateProfileRequest;
 }>;
 
-export type CreateProfileData = { result: RelayResult_RelayError_ | RelayResult_RelayerResult_ };
+export type CreateProfileData = {
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
 
 export type MutualFollowersProfilesVariables = Exact<{
   observerId: Scalars['ProfileId'];
@@ -2555,7 +2649,7 @@ export type CreateSetProfileImageUriViaDispatcherVariables = Exact<{
 }>;
 
 export type CreateSetProfileImageUriViaDispatcherData = {
-  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
 };
 
 export type CreateSetProfileMetadataTypedDataVariables = Exact<{
@@ -2580,7 +2674,7 @@ export type CreateSetProfileMetadataViaDispatcherVariables = Exact<{
 }>;
 
 export type CreateSetProfileMetadataViaDispatcherData = {
-  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
 };
 
 export type Follower = { __typename: 'Follower'; wallet: Wallet };
@@ -2640,21 +2734,13 @@ export type ProxyActionVariables = Exact<{
 
 export type ProxyActionData = { result: string };
 
-export type PublicationVariables = Exact<{
+export type GetPublicationVariables = Exact<{
+  request: PublicationQueryRequest;
   observerId?: InputMaybe<Scalars['ProfileId']>;
-  publicationId: Scalars['InternalPublicationId'];
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
 }>;
 
-export type PublicationData = { result: Comment | Mirror | Post | null };
-
-export type PublicationByTxHashVariables = Exact<{
-  observerId?: InputMaybe<Scalars['ProfileId']>;
-  txHash: Scalars['TxHash'];
-  sources: Array<Scalars['Sources']> | Scalars['Sources'];
-}>;
-
-export type PublicationByTxHashData = { result: Comment | Mirror | Post | null };
+export type GetPublicationData = { result: Comment | Mirror | Post | null };
 
 export type HidePublicationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
@@ -2846,11 +2932,28 @@ export type RelayerResult = { __typename: 'RelayerResult'; txHash: string; txId:
 
 export type RelayError = { __typename: 'RelayError'; reason: RelayErrorReasons };
 
-type RelayResult_RelayError_ = RelayError;
+type BroadcastOnChainResult_RelayError_ = RelayError;
 
-type RelayResult_RelayerResult_ = RelayerResult;
+type BroadcastOnChainResult_RelayerResult_ = RelayerResult;
 
-export type RelayResult = RelayResult_RelayError_ | RelayResult_RelayerResult_;
+export type BroadcastOnChainResult =
+  | BroadcastOnChainResult_RelayError_
+  | BroadcastOnChainResult_RelayerResult_;
+
+export type DataAvailabilityPublicationResult = {
+  __typename: 'CreateDataAvailabilityPublicationResult';
+  id: PublicationId;
+  dataAvailabilityId: string;
+};
+
+type BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_ =
+  DataAvailabilityPublicationResult;
+
+type BroadcastOffChainResult_RelayError_ = RelayError;
+
+export type BroadcastOffChainResult =
+  | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+  | BroadcastOffChainResult_RelayError_;
 
 export type TransactionIndexedResult = {
   __typename: 'TransactionIndexedResult';
@@ -2866,12 +2969,22 @@ export type HasTxHashBeenIndexedVariables = Exact<{
 
 export type HasTxHashBeenIndexedData = { result: TransactionError | TransactionIndexedResult };
 
-export type BroadcastProtocolCallVariables = Exact<{
+export type BroadcastOnChainVariables = Exact<{
   request: BroadcastRequest;
 }>;
 
-export type BroadcastProtocolCallData = {
-  result: RelayResult_RelayError_ | RelayResult_RelayerResult_;
+export type BroadcastOnChainData = {
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type BroadcastOffChainVariables = Exact<{
+  request: BroadcastRequest;
+}>;
+
+export type BroadcastOffChainData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
 };
 
 export type CreateUnfollowTypedDataVariables = Exact<{

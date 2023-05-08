@@ -11,7 +11,7 @@ import { PromiseResultPresenter } from './PromiseResultPresenter';
 import { UnfollowProfileCallGateway } from './UnfollowProfileCallGateway';
 
 export function useUnfollowController() {
-  const { activeWallet, apolloClient, transactionGateway, protocolCallRelayer, transactionQueue } =
+  const { activeWallet, apolloClient, transactionGateway, onChainRelayer, transactionQueue } =
     useSharedDependencies();
 
   return async (request: UnfollowRequest) => {
@@ -26,7 +26,7 @@ export function useUnfollowController() {
       activeWallet,
       transactionGateway,
       unfollowProfileCallGateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );

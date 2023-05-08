@@ -1,4 +1,4 @@
-import { TransactionRequestModel } from '@lens-protocol/domain/entities';
+import { ProtocolTransactionRequestModel } from '@lens-protocol/domain/entities';
 import { Brand, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 export type Data = Brand<string, 'Data'>;
@@ -14,7 +14,5 @@ type RawTransactionDetails = {
 
 type Distribute<TUnion, TAdd> = TUnion extends unknown ? TUnion & TAdd : never;
 
-export type SelfFundedProtocolCallRequest<T extends TransactionRequestModel> = Distribute<
-  T,
-  RawTransactionDetails
->;
+export type SelfFundedProtocolTransactionRequest<T extends ProtocolTransactionRequestModel> =
+  Distribute<T, RawTransactionDetails>;

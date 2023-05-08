@@ -8,10 +8,7 @@ import {
   UpdateProfileDetails,
   UpdateProfileDetailsRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import {
-  BroadcastingError,
-  ProtocolCallUseCase,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { MetadataUploaderErrorMiddleware } from '../infrastructure/MetadataUploaderErrorMiddleware';
@@ -31,7 +28,7 @@ export function useUpdateProfileDetailsController({
     activeWallet,
     apolloClient,
     transactionGateway,
-    protocolCallRelayer,
+    onChainRelayer,
     transactionQueue,
     transactionFactory,
   } = useSharedDependencies();
@@ -47,11 +44,11 @@ export function useUpdateProfileDetailsController({
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
-    const signedUpdateProfiles = new ProtocolCallUseCase<UpdateProfileDetailsRequest>(
+    const signedUpdateProfiles = new SubsidizeOnChain<UpdateProfileDetailsRequest>(
       activeWallet,
       transactionGateway,
       gateway,
-      protocolCallRelayer,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );

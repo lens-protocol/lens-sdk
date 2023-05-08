@@ -1,33 +1,31 @@
 import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
+  AppId,
+  DecryptionCriteria,
   PendingSigningRequestError,
+  PublicationId,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import {
+  CollectPolicyConfig,
   CollectPolicyType,
-  CreateCommentRequest,
+  ContentFocus,
+  Locale,
+  MediaObject,
+  ReferencePolicyConfig,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { failure, invariant, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { EncryptionConfig } from '../config';
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
-import { useWalletLogin, useActiveWalletSigner } from '../wallet';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
-import { CreateCommentController } from './adapters/useCreateCommentController';
-import { AccessConditionBuilderFactory } from './infrastructure/AccessConditionBuilderFactory';
-import {
-  CreateEncryptedCommentRequest,
-  EncryptedPublicationMetadataUploader,
-} from './infrastructure/EncryptedPublicationMetadataUploader';
-import { MetadataUploaderErrorMiddleware } from './infrastructure/MetadataUploaderErrorMiddleware';
-import { PublicationIdPredictor } from './infrastructure/PublicationIdPredictor';
-import { createGatedClient } from './infrastructure/createGatedClient';
+import { useCreateEncryptedCommentController } from './adapters/useCreateEncryptedCommentController';
 
 export type UseCreateEncryptedCommentArgs = {
   encryption: EncryptionConfig;
@@ -35,14 +33,50 @@ export type UseCreateEncryptedCommentArgs = {
   upload: MetadataUploadHandler;
 };
 
-export type CreateEncryptedCommentArgs = Prettify<
-  Omit<
-    CreateCommentRequest,
-    'kind' | 'delegate' | 'collect' | 'profileId' | 'reference' | 'decryptionCriteria'
-  > &
-    Partial<Pick<CreateCommentRequest, 'collect' | 'reference'>> &
-    Required<Pick<CreateCommentRequest, 'decryptionCriteria'>>
->;
+export type CreateEncryptedCommentArgs = {
+  /**
+   * @deprecated Use {@link LensConfig#appId} instead. This was exposed by mistake but was never used.
+   */
+  appId?: AppId;
+  /**
+   * The comment collect policy. Determines the criteria that must be met for a user to be able to collect the comment.
+   */
+  collect?: CollectPolicyConfig;
+  /**
+   * The comment content as Markdown string.
+   */
+  content?: string;
+  /**
+   * The comment content focus. Determines what is the primary objective of the comment.
+   */
+  contentFocus: ContentFocus;
+  /**
+   * The comment media. An array of media objects.
+   */
+  media?: MediaObject[];
+  /**
+   * The publication ID to which the comment is being posted.
+   */
+  publicationId: PublicationId;
+  /**
+   * The comment reference policy. Determines the criteria that must be met for a user to be able to comment or mirror the comment.
+   */
+  reference?: ReferencePolicyConfig;
+  /**
+   * The language of the comment.
+   *
+   * It a locale string in the format of `<language-tag>-<region-tag>` or just `<language-tag>`, where:
+   * - `language-tag` is a two-letter ISO 639-1 language code, e.g. `en` or `it`
+   * - `region-tag` is a two-letter ISO 3166-1 alpha-2 region code, e.g. `US` or `IT`
+   *
+   * You can just pass in the language tag if you do not know the region or don't need to be specific.
+   */
+  locale: Locale;
+  /**
+   * The criteria that must be met for a user to be able to decrypt the comment.
+   */
+  decryptionCriteria: DecryptionCriteria;
+};
 
 export type CreateEncryptedCommentOperation = Operation<
   void,
@@ -63,18 +97,8 @@ export function useCreateEncryptedComment({
   publisher,
   upload,
 }: UseCreateEncryptedCommentArgs): CreateEncryptedCommentOperation {
-  const {
-    appId,
-    activeWallet,
-    apolloClient,
-    protocolCallRelayer,
-    transactionFactory,
-    transactionGateway,
-    transactionQueue,
-    environment,
-    storageProvider,
-  } = useSharedDependencies();
-  const { data: signer } = useActiveWalletSigner();
+  const { appId } = useSharedDependencies();
+  const createComment = useCreateEncryptedCommentController({ encryption, upload });
 
   return useOperation(
     async ({
@@ -89,49 +113,15 @@ export function useCreateEncryptedComment({
       | WalletConnectionError
       | FailedUploadError
     > => {
-      invariant(
-        signer,
-        `Cannot find the Active Wallet Signer, did you login with ${useWalletLogin.name}?`,
-      );
-      const client = createGatedClient({
-        config: encryption.authentication,
-        signer,
-        encryptionProvider: encryption.provider,
-        environment,
-        storageProvider,
-      });
-
-      const publicationIdPredictor = new PublicationIdPredictor(apolloClient, transactionGateway);
-
-      const accessConditionBuilderFactory = new AccessConditionBuilderFactory(
-        environment.chains,
-        publicationIdPredictor,
-      );
-
-      const uploader = new EncryptedPublicationMetadataUploader(
-        client,
-        accessConditionBuilderFactory,
-        new MetadataUploaderErrorMiddleware(upload),
-      );
-
-      const controller = new CreateCommentController<CreateEncryptedCommentRequest>({
-        activeWallet,
-        apolloClient,
-        protocolCallRelayer,
-        transactionFactory,
-        transactionGateway,
-        transactionQueue,
-        uploader,
-      });
-
       try {
-        return await controller.execute({
+        return await createComment({
           kind: TransactionKind.CREATE_COMMENT,
           collect,
           delegate: publisher.dispatcher !== null,
           profileId: publisher.id,
           reference,
           appId,
+          offChain: false, // For now, we only support on-chain token-gated comments
           ...args,
         });
       } catch (err: unknown) {

@@ -1,18 +1,24 @@
 import { RelayError, RelayErrorReasons } from '@lens-protocol/api-bindings';
-import { TransactionRequestModel } from '@lens-protocol/domain/entities';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  ProtocolTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { failure, Failure, InvariantError } from '@lens-protocol/shared-kernel';
 
-import { SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
+import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
-export type RelayReceipt = {
+export type OnChainBroadcastReceipt = {
   indexingId: string;
   txHash: string;
 };
 
+export type OffChainBroadcastReceipt = {
+  id: string;
+};
+
 export function handleRelayError(
   error: RelayError,
-  fallback?: SelfFundedProtocolCallRequest<TransactionRequestModel>,
+  fallback?: SelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>,
 ): Failure<never, BroadcastingError> {
   switch (error.reason) {
     case RelayErrorReasons.NotAllowed:

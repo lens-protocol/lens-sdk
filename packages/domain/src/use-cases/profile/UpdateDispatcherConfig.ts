@@ -1,9 +1,5 @@
 import { ProfileId, TransactionKind } from '../../entities';
-import {
-  IProtocolCallPresenter,
-  IUnsignedProtocolCallGateway,
-  ProtocolCallUseCase,
-} from '../transactions/ProtocolCallUseCase';
+import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 
 export type UpdateDispatcherConfigRequest = {
   profileId: ProfileId;
@@ -11,9 +7,4 @@ export type UpdateDispatcherConfigRequest = {
   kind: TransactionKind.UPDATE_DISPATCHER_CONFIG;
 };
 
-export type IDispatcherConfigCallGateway =
-  IUnsignedProtocolCallGateway<UpdateDispatcherConfigRequest>;
-
-export type IUpdateDispatcherConfigPresenter = IProtocolCallPresenter;
-
-export class UpdateDispatcherConfig extends ProtocolCallUseCase<UpdateDispatcherConfigRequest> {}
+export class UpdateDispatcherConfig extends SubsidizeOnChain<UpdateDispatcherConfigRequest> {}

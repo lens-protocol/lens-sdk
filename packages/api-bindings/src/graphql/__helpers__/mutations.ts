@@ -7,7 +7,6 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { createGraphQLValidationError } from '../../apollo/__helpers__/mocks';
 import {
   AddReactionDocument,
-  BroadcastProtocolCallDocument,
   CreateSetProfileImageUriTypedDataDocument,
   CreateSetProfileMetadataTypedDataDocument,
   CreateSetProfileMetadataViaDispatcherDocument,
@@ -21,10 +20,19 @@ import {
   CreateSetProfileImageUriViaDispatcherDocument,
   ReportPublicationDocument,
   CreateProfileDocument,
+  CreateDataAvailabilityPostTypedDataDocument,
+  CreateDataAvailabilityPostViaDispatcherDocument,
+  BroadcastOnChainDocument,
+  BroadcastOffChainDocument,
+  CreateDataAvailabilityCommentTypedDataDocument,
+  CreateDataAvailabilityCommentViaDispatcherDocument,
+  CreateMirrorTypedDataDocument,
+  CreateMirrorViaDispatcherDocument,
+  CreateDataAvailabilityMirrorTypedDataDocument,
+  CreateDataAvailabilityMirrorViaDispatcherDocument,
 } from '../hooks';
 import {
   AddReactionVariables,
-  BroadcastProtocolCallVariables,
   CreateSetProfileImageUriTypedDataVariables,
   CreatePublicSetProfileMetadataUriRequest,
   CreateSetProfileMetadataViaDispatcherVariables,
@@ -41,8 +49,6 @@ import {
   ReportPublicationVariables,
   CreateProfileVariables,
   CreateProfileData,
-  RelayResult,
-  BroadcastProtocolCallData,
   CreatePostTypedDataData,
   CreateCommentTypedDataData,
   HidePublicationData,
@@ -60,6 +66,28 @@ import {
   CreatePostViaDispatcherData,
   CreateSetProfileImageUriViaDispatcherData,
   ReportPublicationData,
+  CreateDataAvailabilityPostTypedDataVariables,
+  CreateDataAvailabilityPostTypedDataData,
+  CreateDataAvailabilityPostViaDispatcherData,
+  CreateDataAvailabilityPostViaDispatcherVariables,
+  BroadcastOnChainData,
+  BroadcastOnChainVariables,
+  BroadcastOnChainResult,
+  BroadcastOffChainResult,
+  BroadcastOffChainData,
+  BroadcastOffChainVariables,
+  CreateDataAvailabilityCommentTypedDataData,
+  CreateDataAvailabilityCommentTypedDataVariables,
+  CreateDataAvailabilityCommentViaDispatcherData,
+  CreateDataAvailabilityCommentViaDispatcherVariables,
+  CreateMirrorTypedDataData,
+  CreateMirrorTypedDataVariables,
+  CreateMirrorViaDispatcherData,
+  CreateMirrorViaDispatcherVariables,
+  CreateDataAvailabilityMirrorTypedDataData,
+  CreateDataAvailabilityMirrorTypedDataVariables,
+  CreateDataAvailabilityMirrorViaDispatcherData,
+  CreateDataAvailabilityMirrorViaDispatcherVariables,
 } from '../operations';
 
 export function createCreateProfileMockedResponse({
@@ -67,7 +95,7 @@ export function createCreateProfileMockedResponse({
   result,
 }: {
   request: CreateProfileVariables['request'];
-  result: Required<RelayResult>;
+  result: Required<BroadcastOnChainResult>;
 }): MockedResponse<CreateProfileData> {
   return {
     request: {
@@ -80,39 +108,52 @@ export function createCreateProfileMockedResponse({
   };
 }
 
-function mockBroadcastProtocolCallData(result: Required<RelayResult>): BroadcastProtocolCallData {
+function mockBroadcastOnChainData(result: Required<BroadcastOnChainResult>): BroadcastOnChainData {
   return {
     result,
   };
 }
 
-export function createBroadcastProtocolCallMockedResponse(
-  instructions:
-    | {
-        error: Error;
-        variables: BroadcastProtocolCallVariables;
-      }
-    | {
-        result: Required<RelayResult>;
-        variables: BroadcastProtocolCallVariables;
-      },
-): MockedResponse<BroadcastProtocolCallData> {
-  if ('error' in instructions) {
-    return {
-      request: {
-        query: BroadcastProtocolCallDocument,
-        variables: instructions.variables,
-      },
-      error: instructions.error,
-    };
-  }
+export function createBroadcastOnChainMockedResponse({
+  result,
+  variables,
+}: {
+  result: Required<BroadcastOnChainResult>;
+  variables: BroadcastOnChainVariables;
+}): MockedResponse<BroadcastOnChainData> {
   return {
     request: {
-      query: BroadcastProtocolCallDocument,
-      variables: instructions.variables,
+      query: BroadcastOnChainDocument,
+      variables: variables,
     },
     result: {
-      data: mockBroadcastProtocolCallData(instructions.result),
+      data: mockBroadcastOnChainData(result),
+    },
+  };
+}
+
+function mockBroadcastOffChainData(
+  result: Required<BroadcastOffChainResult>,
+): BroadcastOffChainData {
+  return {
+    result,
+  };
+}
+
+export function createBroadcastOffChainMockedResponse({
+  result,
+  variables,
+}: {
+  result: Required<BroadcastOffChainResult>;
+  variables: BroadcastOffChainVariables;
+}): MockedResponse<BroadcastOffChainData> {
+  return {
+    request: {
+      query: BroadcastOffChainDocument,
+      variables: variables,
+    },
+    result: {
+      data: mockBroadcastOffChainData(result),
     },
   };
 }
@@ -194,6 +235,32 @@ export function mockCreateCommentTypedDataData({
         contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
         collectModule: '0xd6072BB2ABc0a9d1331c7d0B83AE6C47f2Cb86A3',
         collectModuleInitData: '0x',
+        referenceModuleData: '0x0000000000000000000000000000000000000000',
+        referenceModule: '0x0000000000000000000000000000000000000000',
+        referenceModuleInitData: '0x',
+      },
+    }),
+  };
+}
+
+export function mockCreateMirrorTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateMirrorTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateMirrorBroadcastItemResult', {
+      __typename: 'CreateMirrorEIP712TypedData',
+      types: {
+        __typename: 'CreateMirrorEIP712TypedDataTypes',
+        MirrorWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateMirrorEIP712TypedDataValue',
+        profileIdPointed: mockProfileId(),
+        pubIdPointed: faker.datatype.hexadecimal({ length: 2 }),
+        nonce,
+        deadline: 1644303500,
+        profileId: mockProfileId(),
         referenceModuleData: '0x0000000000000000000000000000000000000000',
         referenceModule: '0x0000000000000000000000000000000000000000',
         referenceModuleInitData: '0x',
@@ -486,6 +553,26 @@ export function createCreateCommentTypedDataMockedResponse<T extends CreateComme
   };
 }
 
+export function createCreateDataAvailabilityCommentTypedDataMockedResponse<
+  T extends CreateDataAvailabilityCommentTypedDataData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityCommentTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityCommentTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
 export function createCreateCommentViaDispatcherMockedResponse<
   T extends CreateCommentViaDispatcherData,
 >({
@@ -498,6 +585,104 @@ export function createCreateCommentViaDispatcherMockedResponse<
   return {
     request: {
       query: CreateCommentViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateDataAvailabilityCommentViaDispatcherDataMockedResponse<
+  T extends CreateDataAvailabilityCommentViaDispatcherData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityCommentViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityCommentViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateMirrorTypedDataMockedResponse<T extends CreateMirrorTypedDataData>({
+  variables,
+  data,
+}: {
+  variables: CreateMirrorTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateMirrorTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateDataAvailabilityMirrorTypedDataMockedResponse<
+  T extends CreateDataAvailabilityMirrorTypedDataData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityMirrorTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityMirrorTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateMirrorViaDispatcherMockedResponse<
+  T extends CreateMirrorViaDispatcherData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateMirrorViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateMirrorViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateDataAvailabilityMirrorViaDispatcherDataMockedResponse<
+  T extends CreateDataAvailabilityMirrorViaDispatcherData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityMirrorViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityMirrorViaDispatcherDocument,
       variables,
     },
     result: {
@@ -524,6 +709,26 @@ export function createCreatePostTypedDataMockedResponse<T extends CreatePostType
   };
 }
 
+export function createCreateDataAvailabilityPostTypedDataMockedResponse<
+  T extends CreateDataAvailabilityPostTypedDataData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityPostTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityPostTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
 export function createCreatePostViaDispatcherMockedResponse<T extends CreatePostViaDispatcherData>({
   variables,
   data,
@@ -534,6 +739,26 @@ export function createCreatePostViaDispatcherMockedResponse<T extends CreatePost
   return {
     request: {
       query: CreatePostViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateDataAvailabilityPostViaDispatcherDataMockedResponse<
+  T extends CreateDataAvailabilityPostViaDispatcherData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityPostViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityPostViaDispatcherDocument,
       variables,
     },
     result: {

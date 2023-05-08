@@ -9,11 +9,8 @@ import {
   PublicationId,
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
-import {
-  IUnsignedProtocolCallGateway,
-  ProtocolCallUseCase,
-} from '../transactions/ProtocolCallUseCase';
-import { SignlessProtocolCallUseCase } from '../transactions/SignlessProtocolCallUseCase';
+import { SignlessSubsidizeOnChain } from '../transactions/SignlessSubsidizeOnChain';
+import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -52,8 +49,6 @@ export function isPaidCollectRequest(request: CollectRequest): request is PaidCo
   return request.type === CollectType.PAID;
 }
 
-export type ICollectPublicationCallGateway = IUnsignedProtocolCallGateway<CollectRequest>;
-
 export type ICollectPublicationPresenter = IGenericResultPresenter<
   void,
   | InsufficientAllowanceError
@@ -66,8 +61,8 @@ export type ICollectPublicationPresenter = IGenericResultPresenter<
 export class CollectPublication {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
-    private readonly signedFlow: ProtocolCallUseCase<CollectRequest>,
-    private readonly signlessFlow: SignlessProtocolCallUseCase<FreeCollectRequest>,
+    private readonly signedCollect: SubsidizeOnChain<CollectRequest>,
+    private readonly signlessCollect: SignlessSubsidizeOnChain<FreeCollectRequest>,
     private readonly collectPublicationPresenter: ICollectPublicationPresenter,
   ) {}
 
@@ -83,14 +78,14 @@ export class CollectPublication {
         return;
       }
 
-      await this.signedFlow.execute(request);
+      await this.signedCollect.execute(request);
       return;
     }
     if (request.followerOnly) {
-      await this.signedFlow.execute(request);
+      await this.signedCollect.execute(request);
       return;
     }
 
-    await this.signlessFlow.execute(request);
+    await this.signlessCollect.execute(request);
   }
 }

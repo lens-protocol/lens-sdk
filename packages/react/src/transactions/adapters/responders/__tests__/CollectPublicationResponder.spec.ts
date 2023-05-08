@@ -1,18 +1,15 @@
 import { DocumentNode } from '@apollo/client';
 import {
-  Comment,
   FragmentComment,
-  Mirror,
   FragmentMirror,
-  Post,
   FragmentPost,
   AnyPublication,
   ContentPublication,
   activeProfileIdentifierVar,
 } from '@lens-protocol/api-bindings';
 import {
+  createGetPublicationMockedResponse,
   createMockApolloClientWithMultipleResponses,
-  createPublicationMockedResponse,
   mockCommentFragment,
   mockMirrorFragment,
   mockPostFragment,
@@ -37,21 +34,21 @@ function setupTestScenario({
   publication,
   expected,
 }: {
-  publication: Post | Comment | Mirror;
-  expected: Post | Comment | Mirror;
+  publication: AnyPublication;
+  expected: AnyPublication;
 }) {
   const activeProfile = mockProfileFragment();
   activeProfileIdentifierVar(activeProfile);
 
   const sources = mockSources();
   const apolloClient = createMockApolloClientWithMultipleResponses([
-    createPublicationMockedResponse({
+    createGetPublicationMockedResponse({
       variables: {
-        publicationId: publication.id,
+        request: { publicationId: publication.id },
         observerId: activeProfile.id,
         sources,
       },
-      result: expected,
+      publication: expected,
     }),
   ]);
 

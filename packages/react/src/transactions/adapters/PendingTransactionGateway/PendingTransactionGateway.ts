@@ -1,20 +1,23 @@
 import {
   MetaTransaction,
   NativeTransaction,
+  JustProtocolRequest,
   ProxyTransaction,
   TransactionKind,
+  DataTransaction,
 } from '@lens-protocol/domain/entities';
 import {
   IMetaTransactionNonceGateway,
   IPendingTransactionGateway,
   NewTransactionsSubscriber,
-  SupportedTransactionRequest,
+  AnyTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { assertNever, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import differenceBy from 'lodash/differenceBy.js';
 
 import {
+  ISerializableDataTransaction,
   ISerializableMetaTransaction,
   ISerializableNativeTransaction,
   ISerializableProxyTransaction,
@@ -52,19 +55,20 @@ const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] 
   [TransactionKind.UNFOLLOW_PROFILE]: [],
 };
 
-function isSerializableMetaTransaction<T extends SupportedTransactionRequest>(
+function isSerializableMetaTransaction<T extends AnyTransactionRequest>(
   tx: ISerializableTransaction<T>,
-): tx is ISerializableMetaTransaction<T> {
+): tx is ISerializableMetaTransaction<JustProtocolRequest<T>> {
   return tx instanceof MetaTransaction;
 }
 
-type ISerializableTransaction<T extends SupportedTransactionRequest> =
+type ISerializableTransaction<T extends AnyTransactionRequest> =
   | ISerializableNativeTransaction<T>
-  | ISerializableMetaTransaction<T>
-  | ISerializableProxyTransaction<T>;
+  | ISerializableMetaTransaction<JustProtocolRequest<T>>
+  | ISerializableProxyTransaction<JustProtocolRequest<T>>
+  | ISerializableDataTransaction<JustProtocolRequest<T>>;
 
-function toTransactionSchema<T extends SupportedTransactionRequest>(
-  tx: ISerializableTransaction<T>,
+function toTransactionSchema(
+  tx: ISerializableTransaction<AnyTransactionRequest>,
 ): TransactionSchema {
   if (tx instanceof MetaTransaction) {
     return {
@@ -87,20 +91,27 @@ function toTransactionSchema<T extends SupportedTransactionRequest>(
     };
   }
 
+  if (tx instanceof DataTransaction) {
+    return {
+      type: TransactionType.Data,
+      ...tx.toTransactionData(),
+    };
+  }
+
   assertNever(tx, 'Transaction type not supported');
 }
 
-export class PendingTransactionGateway<T extends SupportedTransactionRequest>
-  implements IPendingTransactionGateway<T>, IMetaTransactionNonceGateway
+export class PendingTransactionGateway
+  implements IPendingTransactionGateway<AnyTransactionRequest>, IMetaTransactionNonceGateway
 {
-  private cache?: ISerializableTransaction<T>[];
+  private cache?: ISerializableTransaction<AnyTransactionRequest>[];
 
   constructor(
     private readonly storage: IStorage<TransactionStorageSchema>,
-    private readonly transactionFactory: ISerializableTransactionFactory<T>,
+    private readonly transactionFactory: ISerializableTransactionFactory,
   ) {}
 
-  async save(tx: ISerializableTransaction<T>): Promise<void> {
+  async save(tx: ISerializableTransaction<AnyTransactionRequest>): Promise<void> {
     const transactions = await this.getAll();
     const newTransactions = [...transactions];
 
@@ -131,7 +142,7 @@ export class PendingTransactionGateway<T extends SupportedTransactionRequest>
     await this.update(transactions.filter((tx) => tx.id !== id));
   }
 
-  async getAll(): Promise<readonly ISerializableTransaction<T>[]> {
+  async getAll(): Promise<readonly ISerializableTransaction<AnyTransactionRequest>[]> {
     if (this.cache) {
       return this.cache.slice();
     }
@@ -165,7 +176,7 @@ export class PendingTransactionGateway<T extends SupportedTransactionRequest>
     return undefined;
   }
 
-  subscribe(subscriber: NewTransactionsSubscriber<T>): void {
+  subscribe(subscriber: NewTransactionsSubscriber<AnyTransactionRequest>): void {
     this.storage.subscribe(async (newData, oldData) => {
       if (newData === null) {
         return;
@@ -181,13 +192,15 @@ export class PendingTransactionGateway<T extends SupportedTransactionRequest>
     });
   }
 
-  private async update(transactions: ISerializableTransaction<T>[]): Promise<void> {
+  private async update(
+    transactions: ISerializableTransaction<AnyTransactionRequest>[],
+  ): Promise<void> {
     this.cache = transactions;
     const data = transactions.map(toTransactionSchema);
     await this.storage.set(data);
   }
 
-  private toEntity(data: TransactionSchema): ISerializableTransaction<T> {
+  private toEntity(data: TransactionSchema): ISerializableTransaction<AnyTransactionRequest> {
     switch (data.type) {
       case TransactionType.Meta:
         return this.transactionFactory.createMetaTransaction(data);
@@ -195,6 +208,8 @@ export class PendingTransactionGateway<T extends SupportedTransactionRequest>
         return this.transactionFactory.createNativeTransaction(data);
       case TransactionType.Proxy:
         return this.transactionFactory.createProxyTransaction(data);
+      case TransactionType.Data:
+        return this.transactionFactory.createDataTransaction(data);
       default:
         assertNever(data, 'Transaction type not supported');
     }

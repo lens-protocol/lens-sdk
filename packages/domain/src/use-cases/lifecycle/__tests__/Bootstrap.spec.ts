@@ -2,7 +2,7 @@ import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { TransactionRequestModel } from '../../../entities';
+import { AnyTransactionRequestModel } from '../../../entities';
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { mockTransactionQueue } from '../../../mocks';
 import { IActiveProfileGateway } from '../../profile';
@@ -28,7 +28,7 @@ type BootstrapSetupConfig = {
   walletPresenter?: IActiveWalletPresenter;
   applicationPresenter?: IApplicationPresenter;
   logoutPresenter?: ILogoutPresenter;
-  transactionQueue?: TransactionQueue<TransactionRequestModel>;
+  transactionQueue?: TransactionQueue<AnyTransactionRequestModel>;
 };
 
 const setupBootstrapInteractor = ({

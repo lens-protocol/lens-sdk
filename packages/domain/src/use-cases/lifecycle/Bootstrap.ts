@@ -1,6 +1,6 @@
 import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 
-import { ICredentials, TransactionRequestModel, Wallet } from '../../entities';
+import { ICredentials, AnyTransactionRequestModel, Wallet } from '../../entities';
 import { ActiveProfileLoader, IActiveProfileGateway } from '../profile';
 import { TransactionQueue } from '../transactions';
 import {
@@ -27,7 +27,7 @@ export interface ICredentialsRenewer {
   renewCredentials(credentials: ICredentials): PromiseResult<ICredentials, CredentialsExpiredError>;
 }
 
-export class Bootstrap<T extends TransactionRequestModel> {
+export class Bootstrap<T extends AnyTransactionRequestModel> {
   constructor(
     private readonly activeWallet: ActiveWallet,
     private readonly credentialsGateway: ICredentialsGateway,

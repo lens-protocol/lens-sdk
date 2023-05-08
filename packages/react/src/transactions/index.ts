@@ -23,12 +23,12 @@ export {
   TransactionErrorReason,
   TransactionKind,
 } from '@lens-protocol/domain/entities';
-export type { Signature, TransactionRequestModel } from '@lens-protocol/domain/entities';
+export type { Signature, AnyTransactionRequestModel } from '@lens-protocol/domain/entities';
 
 /**
  * Request models
  */
-export type { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+export type { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 export type {
   CreateProfileRequest,
   FollowRequest,

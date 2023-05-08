@@ -28,7 +28,7 @@ import {
   mockMetadataOutputFragment,
   mockNftOwnershipAccessCondition,
   mockOrAccessCondition,
-  mockPendingTransactionState,
+  mockTransactionState,
   mockPostFragment,
   mockProfileFragment,
   mockProfileOwnershipAccessCondition,
@@ -361,7 +361,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
               - canFollow=false
               - canUnfollow=false`, () => {
             recentTransactionsVar([
-              mockPendingTransactionState({
+              mockTransactionState({
                 request: mockUnfollowRequest({
                   profileId: profile.id,
                 }),
@@ -407,7 +407,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
               - canFollow=false
               - canUnfollow=false`, () => {
             recentTransactionsVar([
-              mockPendingTransactionState({
+              mockTransactionState({
                 request: mockUnconstrainedFollowRequest({
                   profileId: profile.id,
                   followerAddress: wallet.address,
@@ -509,7 +509,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           });
 
           recentTransactionsVar([
-            mockPendingTransactionState({
+            mockTransactionState({
               request: mockFreeCollectRequest({
                 profileId: activeProfile.id,
                 publicationId: publication.id,
@@ -545,7 +545,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           });
 
           recentTransactionsVar([
-            mockPendingTransactionState({
+            mockTransactionState({
               request: mockCreateMirrorRequest({
                 profileId: activeProfile.id,
                 publicationId: publication.id,
@@ -583,7 +583,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           });
 
           recentTransactionsVar([
-            mockPendingTransactionState({
+            mockTransactionState({
               request: mockCreateMirrorRequest({
                 profileId: activeProfile.id,
                 publicationId: publication.id,
@@ -607,7 +607,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           });
 
           recentTransactionsVar([
-            mockPendingTransactionState({
+            mockTransactionState({
               request: mockFreeCollectRequest({
                 profileId: activeProfile.id,
                 publicationId: publication.id,

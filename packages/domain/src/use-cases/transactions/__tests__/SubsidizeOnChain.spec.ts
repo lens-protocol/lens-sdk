@@ -9,74 +9,75 @@ import {
   UserRejectedError,
   Wallet,
   MetaTransaction,
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
+  ProtocolTransactionRequestModel,
 } from '../../../entities';
 import {
   MockedMetaTransaction,
   mockISignedProtocolCall,
   mockIUnsignedProtocolCall,
   mockNonce,
-  mockTransactionRequestModel,
+  mockProtocolTransactionRequestModel,
   mockWallet,
 } from '../../../entities/__helpers__/mocks';
 import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import {
-  ProtocolCallUseCase,
-  IProtocolCallPresenter,
+  SubsidizeOnChain,
+  ISubsidizeOnChainPresenter,
   IMetaTransactionNonceGateway,
-  IUnsignedProtocolCallGateway,
-  IProtocolCallRelayer,
-} from '../ProtocolCallUseCase';
+  IOnChainProtocolCallGateway,
+  IOnChainRelayer,
+} from '../SubsidizeOnChain';
 import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIMetaTransactionNonceGateway,
-  mockIProtocolCallRelayer,
-  mockIUnsignedProtocolCallGateway,
+  mockIOnChainRelayer,
+  mockIOnChainProtocolCallGateway,
   mockTransactionQueue,
 } from '../__helpers__/mocks';
 
-function setupMetaTransactionUseCase<T extends TransactionRequestModel>({
+function setupSubsidizedCall<T extends ProtocolTransactionRequestModel>({
   metaTransactionNonceGateway,
-  unsignedProtocolCallGateway,
-  protocolCallRelayer = mock<IProtocolCallRelayer<T>>(),
+  onChainProtocolCallGateway,
+  relayer = mock<IOnChainRelayer<T>>(),
   transactionQueue = mockTransactionQueue(),
   presenter,
   wallet,
 }: {
   metaTransactionNonceGateway: IMetaTransactionNonceGateway;
-  unsignedProtocolCallGateway: IUnsignedProtocolCallGateway<T>;
-  protocolCallRelayer?: IProtocolCallRelayer<T>;
-  transactionQueue?: TransactionQueue<T>;
-  presenter: IProtocolCallPresenter;
+  onChainProtocolCallGateway: IOnChainProtocolCallGateway<T>;
+  relayer?: IOnChainRelayer<T>;
+  transactionQueue?: TransactionQueue<AnyTransactionRequestModel>;
+  presenter: ISubsidizeOnChainPresenter;
   wallet: Wallet;
 }) {
   const activeWallet = mockActiveWallet({ wallet });
-  return new ProtocolCallUseCase(
+  return new SubsidizeOnChain(
     activeWallet,
     metaTransactionNonceGateway,
-    unsignedProtocolCallGateway,
-    protocolCallRelayer,
+    onChainProtocolCallGateway,
+    relayer,
     transactionQueue,
     presenter,
   );
 }
 
-describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, () => {
-  describe(`when calling the "${ProtocolCallUseCase.prototype.execute.name}" method`, () => {
-    const request = mockTransactionRequestModel();
+describe(`Given an instance of the ${SubsidizeOnChain.name}<T> interactor`, () => {
+  describe(`when calling the "${SubsidizeOnChain.prototype.execute.name}" method`, () => {
+    const request = mockProtocolTransactionRequestModel();
     const unsignedCall = mockIUnsignedProtocolCall(request);
 
     it(`should:
-        - create an IUnsignedProtocolCall<T> passing the Nonce override from the IPendingTransactionGateway
+        - create an IUnsignedProtocolCall<T> passing the Nonce override from the IMetaTransactionNonceGateway
         - sign it with the user's ${Wallet.name}
         - relay the resulting ISignedProtocolCall<T>
-        - push the resulting ${MetaTransaction.name}<T> into the `, async () => {
+        - push the resulting ${MetaTransaction.name}<T> into the ${TransactionQueue.name}`, async () => {
       const nonce = mockNonce();
 
       const metaTransactionNonceGateway = mockIMetaTransactionNonceGateway({ nonce });
 
-      const unsignedProtocolCallGateway = mockIUnsignedProtocolCallGateway({
+      const onChainProtocolCallGateway = mockIOnChainProtocolCallGateway({
         request,
         nonce,
         unsignedCall,
@@ -87,19 +88,19 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
 
       const transaction = MockedMetaTransaction.fromSignedCall(signedCall);
-      const protocolCallRelayer = mockIProtocolCallRelayer({
+      const relayer = mockIOnChainRelayer({
         signedCall,
         result: success(transaction),
       });
 
       const transactionQueue = mockTransactionQueue();
 
-      const presenter = mock<IProtocolCallPresenter>();
+      const presenter = mock<ISubsidizeOnChainPresenter>();
 
-      const useCase = setupMetaTransactionUseCase({
+      const useCase = setupSubsidizedCall({
         metaTransactionNonceGateway,
-        unsignedProtocolCallGateway,
-        protocolCallRelayer,
+        onChainProtocolCallGateway,
+        relayer,
         transactionQueue,
         presenter,
         wallet,
@@ -127,17 +128,17 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
     ])(`should present any $ErrorCtor.name from the owner's ${Wallet.name}`, async ({ error }) => {
       const metaTransactionNonceGateway = mock<IMetaTransactionNonceGateway>();
 
-      const unsignedProtocolCallGateway = mock<IUnsignedProtocolCallGateway<typeof request>>();
-      when(unsignedProtocolCallGateway.createUnsignedProtocolCall).mockResolvedValue(unsignedCall);
+      const onChainProtocolCallGateway = mock<IOnChainProtocolCallGateway<typeof request>>();
+      when(onChainProtocolCallGateway.createUnsignedProtocolCall).mockResolvedValue(unsignedCall);
 
       const wallet = mockWallet();
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(failure(error));
 
-      const presenter = mock<IProtocolCallPresenter>();
+      const presenter = mock<ISubsidizeOnChainPresenter>();
 
-      const useCase = setupMetaTransactionUseCase({
+      const useCase = setupSubsidizedCall({
         metaTransactionNonceGateway,
-        unsignedProtocolCallGateway,
+        onChainProtocolCallGateway,
         presenter,
         wallet,
       });
@@ -147,12 +148,12 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       expect(presenter.present).toHaveBeenCalledWith(failure(error));
     });
 
-    it(`should present any ${BroadcastingError.name} from the IProtocolCallRelayer call`, async () => {
+    it(`should present any ${BroadcastingError.name} from the IOnChainRelayer call`, async () => {
       const nonce = mockNonce();
 
       const metaTransactionNonceGateway = mockIMetaTransactionNonceGateway({ nonce });
 
-      const unsignedProtocolCallGateway = mockIUnsignedProtocolCallGateway({
+      const onChainProtocolCallGateway = mockIOnChainProtocolCallGateway({
         request,
         nonce,
         unsignedCall,
@@ -163,14 +164,17 @@ describe(`Given an instance of the ${ProtocolCallUseCase.name}<T> interactor`, (
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
 
       const error = new BroadcastingError('some reason');
-      const protocolCallRelayer = mockIProtocolCallRelayer({ signedCall, result: failure(error) });
+      const relayer = mockIOnChainRelayer({
+        signedCall,
+        result: failure(error),
+      });
 
-      const presenter = mock<IProtocolCallPresenter>();
+      const presenter = mock<ISubsidizeOnChainPresenter>();
 
-      const useCase = setupMetaTransactionUseCase({
+      const useCase = setupSubsidizedCall({
         metaTransactionNonceGateway,
-        unsignedProtocolCallGateway,
-        protocolCallRelayer,
+        onChainProtocolCallGateway,
+        relayer,
         presenter,
         wallet,
       });

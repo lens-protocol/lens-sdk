@@ -6,12 +6,15 @@ import {
 import { CreateMirror, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
-  ProtocolCallUseCase,
+  DelegableSigning,
+  SubsidizeOffChain,
+  SubsidizeOnChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { CreateMirrorCallGateway } from './publication-call-gateways/CreateMirrorCallGateway';
+import { CreateOffChainMirrorGateway } from './publication-call-gateways/CreateOffChainMirrorGateway';
+import { CreateOnChainMirrorGateway } from './publication-call-gateways/CreateOnChainMirrorGateway';
 
 export function useCreateMirrorController() {
   const {
@@ -19,7 +22,8 @@ export function useCreateMirrorController() {
     apolloClient,
     transactionFactory,
     transactionGateway,
-    protocolCallRelayer,
+    offChainRelayer,
+    onChainRelayer,
     transactionQueue,
   } = useSharedDependencies();
 
@@ -29,26 +33,44 @@ export function useCreateMirrorController() {
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
-    const mirrorCallGateway = new CreateMirrorCallGateway(apolloClient, transactionFactory);
+    const onChainGateway = new CreateOnChainMirrorGateway(apolloClient, transactionFactory);
 
-    const signedCreatePost = new ProtocolCallUseCase<CreateMirrorRequest>(
+    const onChainMirror = new SubsidizeOnChain<CreateMirrorRequest>(
       activeWallet,
       transactionGateway,
-      mirrorCallGateway,
-      protocolCallRelayer,
+      onChainGateway,
+      onChainRelayer,
       transactionQueue,
       presenter,
     );
 
-    const createMirror = new CreateMirror(
-      signedCreatePost,
-      mirrorCallGateway,
+    const delegableOnChainMirror = new DelegableSigning<CreateMirrorRequest>(
+      onChainMirror,
+      onChainGateway,
       transactionQueue,
       presenter,
     );
+
+    const offChainGateway = new CreateOffChainMirrorGateway(apolloClient, transactionFactory);
+
+    const offChainMirror = new SubsidizeOffChain<CreateMirrorRequest>(
+      activeWallet,
+      offChainGateway,
+      offChainRelayer,
+      transactionQueue,
+      presenter,
+    );
+
+    const delegableOffChainMirror = new DelegableSigning<CreateMirrorRequest>(
+      offChainMirror,
+      offChainGateway,
+      transactionQueue,
+      presenter,
+    );
+
+    const createMirror = new CreateMirror(delegableOnChainMirror, delegableOffChainMirror);
 
     await createMirror.execute(request);
-
     return presenter.asResult();
   };
 }

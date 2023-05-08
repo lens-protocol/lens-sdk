@@ -1,6 +1,6 @@
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
-import { NativeTransaction, TransactionKind, TransactionRequestModel } from '../../entities';
+import { NativeTransaction, TransactionKind, AnyTransactionRequestModel } from '../../entities';
 import { BroadcastingError } from '../transactions/BroadcastingError';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
@@ -33,7 +33,7 @@ export class CreateProfile {
   constructor(
     private readonly gateway: IProfileTransactionGateway,
     private readonly presenter: ICreateProfilePresenter,
-    private readonly transactionQueue: TransactionQueue<TransactionRequestModel>,
+    private readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
   ) {}
 
   async create(request: CreateProfileRequest) {

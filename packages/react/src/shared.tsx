@@ -6,7 +6,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
 import {
-  SupportedTransactionRequest,
+  AnyTransactionRequest,
   TransactionQueue,
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -24,8 +24,9 @@ import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresente
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
 import { FollowPolicyCallGateway } from './transactions/adapters/FollowPolicyCallGateway';
+import { OffChainRelayer } from './transactions/adapters/OffChainRelayer';
+import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
-import { ProtocolCallRelayer } from './transactions/adapters/ProtocolCallRelayer';
 import { PublicationCacheManager } from './transactions/adapters/PublicationCacheManager';
 import {
   FailedTransactionError,
@@ -87,15 +88,16 @@ export type SharedDependencies = {
   onError: Handlers['onError'];
   onLogout: Handlers['onLogout'];
   profileGateway: ProfileGateway;
-  protocolCallRelayer: ProtocolCallRelayer;
+  offChainRelayer: OffChainRelayer;
+  onChainRelayer: OnChainRelayer;
   providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
   sources: Sources;
   storageProvider: IStorageProvider;
   tokenAvailability: TokenAvailability;
   transactionFactory: TransactionFactory;
-  transactionGateway: PendingTransactionGateway<SupportedTransactionRequest>;
-  transactionQueue: TransactionQueue<SupportedTransactionRequest>;
+  transactionGateway: PendingTransactionGateway;
+  transactionQueue: TransactionQueue<AnyTransactionRequest>;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
 };
@@ -156,7 +158,7 @@ export function createSharedDependencies(
 
   const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
 
-  const responders: TransactionResponders<SupportedTransactionRequest> = {
+  const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(apolloClient, sources),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
@@ -183,7 +185,8 @@ export function createSharedDependencies(
   };
   const transactionQueuePresenter = new TransactionQueuePresenter(onError);
 
-  const protocolCallRelayer = new ProtocolCallRelayer(apolloClient, transactionFactory, logger);
+  const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
+  const offChainRelayer = new OffChainRelayer(apolloClient, transactionFactory, logger);
 
   // common interactors
   const transactionQueue = new TransactionQueue(
@@ -210,7 +213,8 @@ export function createSharedDependencies(
     onError,
     onLogout,
     profileGateway,
-    protocolCallRelayer,
+    offChainRelayer,
+    onChainRelayer,
     publicationCacheManager,
     sources,
     storageProvider: config.storage,

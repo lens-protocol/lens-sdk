@@ -8,11 +8,8 @@ import {
   ProfileId,
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
-import {
-  IUnsignedProtocolCallGateway,
-  ProtocolCallUseCase,
-} from '../transactions/ProtocolCallUseCase';
-import { SignlessProtocolCallUseCase } from '../transactions/SignlessProtocolCallUseCase';
+import { SignlessSubsidizeOnChain } from '../transactions/SignlessSubsidizeOnChain';
+import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -66,8 +63,6 @@ export function isUnconstrainedFollowRequest(
   return !isPaidFollowRequest(request) && !isProfileOwnerFollowRequest(request);
 }
 
-export type IFollowProfilesCallGateway = IUnsignedProtocolCallGateway<FollowRequest>;
-
 export type IFollowProfilePresenter = IGenericResultPresenter<
   void,
   | InsufficientAllowanceError
@@ -80,8 +75,8 @@ export type IFollowProfilePresenter = IGenericResultPresenter<
 export class FollowProfiles {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
-    private readonly signedFollow: ProtocolCallUseCase<FollowRequest>,
-    private readonly signlessFollow: SignlessProtocolCallUseCase<UnconstrainedFollowRequest>,
+    private readonly signedFollow: SubsidizeOnChain<FollowRequest>,
+    private readonly signlessFollow: SignlessSubsidizeOnChain<UnconstrainedFollowRequest>,
     private readonly followProfilePresenter: IFollowProfilePresenter,
   ) {}
 

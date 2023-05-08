@@ -18,6 +18,7 @@ import { ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
 import { ImageType } from '../config';
 import {
+  ChargeCollectPolicyConfig,
   CollectPolicyType,
   ContentFocus,
   FreeCollectPolicyConfig,
@@ -47,6 +48,7 @@ export function mockCreateCommentRequest(
     profileId: mockProfileId(),
     delegate: false,
     locale: 'en',
+    offChain: true,
 
     ...overrides,
   };
@@ -92,13 +94,13 @@ export function mockNftMetadata(overrides?: Partial<NftMetadata>): NftMetadata {
   };
 }
 
-export function mockNoCollectPolicy(): NoCollectPolicyConfig {
+export function mockNoCollectPolicyConfig(): NoCollectPolicyConfig {
   return {
     type: CollectPolicyType.NO_COLLECT,
   };
 }
 
-export function mockFreeCollectPolicy(
+export function mockFreeCollectPolicyConfig(
   overrides?: Partial<FreeCollectPolicyConfig>,
 ): FreeCollectPolicyConfig {
   return {
@@ -109,8 +111,8 @@ export function mockFreeCollectPolicy(
   };
 }
 
-export function mockChargeCollectPolicy(
-  overrides?: Partial<SimpleChargeCollectPolicyConfig>,
+export function mockChargeCollectPolicyConfig(
+  overrides?: Partial<ChargeCollectPolicyConfig>,
 ): SimpleChargeCollectPolicyConfig {
   return {
     type: CollectPolicyType.CHARGE,
@@ -132,11 +134,14 @@ export function mockCreateMirrorRequest(
   overrides?: Partial<CreateMirrorRequest>,
 ): CreateMirrorRequest {
   return {
+    kind: TransactionKind.MIRROR_PUBLICATION,
+
     profileId: mockProfileId(),
     publicationId: mockPublicationId(),
-    ...overrides,
-    kind: TransactionKind.MIRROR_PUBLICATION,
     delegate: false,
+    offChain: false,
+
+    ...overrides,
   };
 }
 
@@ -155,27 +160,7 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
     profileId: mockProfileId(),
     delegate: false,
     locale: 'en',
-
-    ...overrides,
-  };
-}
-export function mockCreateEncryptedPostRequest(
-  overrides?: Partial<CreatePostRequest>,
-): CreatePostRequest {
-  return {
-    kind: TransactionKind.CREATE_POST,
-
-    contentFocus: ContentFocus.TEXT,
-    content: faker.lorem.paragraph(),
-    reference: {
-      type: ReferencePolicyType.ANYONE,
-    },
-    collect: {
-      type: CollectPolicyType.NO_COLLECT,
-    },
-    profileId: mockProfileId(),
-    delegate: false,
-    locale: 'en',
+    offChain: false,
 
     ...overrides,
   };

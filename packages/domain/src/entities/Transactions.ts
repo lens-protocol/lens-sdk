@@ -1,7 +1,5 @@
 import { ChainType, PromiseResult } from '@lens-protocol/shared-kernel';
 
-export type Challenge = string;
-
 export type Signature = string;
 
 export type Nonce = number;
@@ -21,15 +19,48 @@ export enum TransactionKind {
   UPDATE_DISPATCHER_CONFIG = 'UPDATE_DISPATCHER_CONFIG',
 }
 
-export type TransactionRequestModel = {
-  kind: TransactionKind;
+export const ProtocolTransactionKinds = [
+  TransactionKind.COLLECT_PUBLICATION,
+  TransactionKind.CREATE_COMMENT,
+  TransactionKind.CREATE_POST,
+  TransactionKind.CREATE_PROFILE,
+  TransactionKind.FOLLOW_PROFILES,
+  TransactionKind.MIRROR_PUBLICATION,
+  TransactionKind.UPDATE_PROFILE_IMAGE,
+  TransactionKind.UNFOLLOW_PROFILE,
+  TransactionKind.UPDATE_PROFILE_DETAILS,
+  TransactionKind.UPDATE_FOLLOW_POLICY,
+  TransactionKind.UPDATE_DISPATCHER_CONFIG,
+] as const;
+
+export type ProtocolTransactionKind = (typeof ProtocolTransactionKinds)[number];
+
+export type ProtocolTransactionRequestModel = {
+  kind: ProtocolTransactionKind;
 };
 
-export class UnsignedTransaction<T extends TransactionRequestModel> {
+export type AnyTransactionRequestModel =
+  | ProtocolTransactionRequestModel
+  | {
+      kind: TransactionKind.APPROVE_MODULE;
+    };
+
+type PickByKind<T extends AnyTransactionRequestModel, K extends T['kind']> = T extends {
+  kind: K;
+}
+  ? T
+  : never;
+
+export type JustProtocolRequest<T extends AnyTransactionRequestModel> = PickByKind<
+  T,
+  ProtocolTransactionKind
+>;
+
+export class UnsignedTransaction<T extends AnyTransactionRequestModel> {
   constructor(readonly id: string, readonly chainType: ChainType, readonly request: T) {}
 }
 
-export interface IUnsignedProtocolCall<T extends TransactionRequestModel> {
+export interface IUnsignedProtocolCall<T extends ProtocolTransactionRequestModel> {
   readonly id: string;
 
   readonly request: T;
@@ -37,7 +68,7 @@ export interface IUnsignedProtocolCall<T extends TransactionRequestModel> {
   readonly nonce: Nonce;
 }
 
-export interface ISignedProtocolCall<T extends TransactionRequestModel> {
+export interface ISignedProtocolCall<T extends ProtocolTransactionRequestModel> {
   readonly id: string;
 
   readonly signature: Signature;
@@ -59,26 +90,26 @@ export enum ProxyActionStatus {
   COMPLETE = 'COMPLETE',
 }
 
-export abstract class MetaTransaction<T extends TransactionRequestModel> {
+export abstract class MetaTransaction<T extends ProtocolTransactionRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
   abstract get request(): T;
   abstract get nonce(): Nonce;
-  abstract get hash(): string | undefined;
+  abstract get hash(): string;
 
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
-export abstract class NativeTransaction<T extends TransactionRequestModel> {
+export abstract class NativeTransaction<T extends AnyTransactionRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
   abstract get request(): T;
-  abstract get hash(): string | undefined;
+  abstract get hash(): string;
 
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
-export abstract class ProxyTransaction<T extends TransactionRequestModel> {
+export abstract class ProxyTransaction<T extends ProtocolTransactionRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
   abstract get request(): T;
@@ -88,10 +119,18 @@ export abstract class ProxyTransaction<T extends TransactionRequestModel> {
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
-export type Transaction<T extends TransactionRequestModel> =
-  | MetaTransaction<T>
+export abstract class DataTransaction<T extends ProtocolTransactionRequestModel> {
+  abstract get id(): string;
+  abstract get request(): T;
+
+  abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
+}
+
+export type Transaction<T extends AnyTransactionRequestModel> =
+  | DataTransaction<JustProtocolRequest<T>>
+  | MetaTransaction<JustProtocolRequest<T>>
   | NativeTransaction<T>
-  | ProxyTransaction<T>;
+  | ProxyTransaction<JustProtocolRequest<T>>;
 
 /**
  * The reason why a transaction failed.

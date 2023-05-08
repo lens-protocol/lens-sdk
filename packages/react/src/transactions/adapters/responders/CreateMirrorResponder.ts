@@ -1,10 +1,10 @@
 import {
   LensApolloClient,
-  PublicationByTxHashDocument,
-  PublicationByTxHashData,
-  PublicationByTxHashVariables,
   Sources,
   activeProfileIdentifierVar,
+  GetPublicationData,
+  GetPublicationVariables,
+  GetPublicationDocument,
 } from '@lens-protocol/api-bindings';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
@@ -20,10 +20,10 @@ export class CreateMirrorResponder implements ITransactionResponder<CreateMirror
     invariant(txHash, 'Cannot fetch publication by txHash without txHash');
     const activeProfile = activeProfileIdentifierVar();
 
-    await this.client.query<PublicationByTxHashData, PublicationByTxHashVariables>({
-      query: PublicationByTxHashDocument,
+    await this.client.query<GetPublicationData, GetPublicationVariables>({
+      query: GetPublicationDocument,
       variables: {
-        txHash,
+        request: { txHash },
         observerId: activeProfile?.id,
         sources: this.sources,
       },

@@ -15,7 +15,7 @@ import {
 import { mock } from 'jest-mock-extended';
 
 import { ICredentials } from '../Credentials';
-import { NftContractType, NftOwnershipChallenge } from '../Nft';
+import { Challenge, NftContractType, NftOwnershipChallenge } from '../Nft';
 import { Profile, ProfileId } from '../Profile';
 import {
   NftOwnershipCriterion,
@@ -33,7 +33,6 @@ import {
   PublicationId,
 } from '../Publication';
 import {
-  Challenge,
   IUnsignedProtocolCall,
   MetaTransaction,
   NativeTransaction,
@@ -42,13 +41,14 @@ import {
   ProxyTransaction,
   Signature,
   ISignedProtocolCall,
-  Transaction,
   TransactionError,
   TransactionErrorReason,
   TransactionEvent,
   TransactionKind,
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
   UnsignedTransaction,
+  ProtocolTransactionRequestModel,
+  DataTransaction,
 } from '../Transactions';
 import { Wallet } from '../Wallet';
 
@@ -81,16 +81,25 @@ export function mockSignature(): Signature {
   return mock32BytesHexString();
 }
 
-export function mockTransactionRequestModel(
-  overrides?: Partial<TransactionRequestModel>,
-): TransactionRequestModel {
+export function mockAnyTransactionRequestModel(
+  overrides?: Partial<AnyTransactionRequestModel>,
+): AnyTransactionRequestModel {
   return {
     kind: TransactionKind.CREATE_POST,
     ...overrides,
   };
 }
 
-class MockedUnsignedProtocolCall<T extends TransactionRequestModel>
+export function mockProtocolTransactionRequestModel(
+  overrides?: Partial<ProtocolTransactionRequestModel>,
+): ProtocolTransactionRequestModel {
+  return {
+    kind: TransactionKind.CREATE_POST,
+    ...overrides,
+  };
+}
+
+class MockedUnsignedProtocolCall<T extends ProtocolTransactionRequestModel>
   implements IUnsignedProtocolCall<T>
 {
   constructor(readonly id: string, readonly request: T, readonly nonce: Nonce = mockNonce()) {}
@@ -100,14 +109,14 @@ class MockedUnsignedProtocolCall<T extends TransactionRequestModel>
   }
 }
 
-export function mockIUnsignedProtocolCall<T extends TransactionRequestModel>(
+export function mockIUnsignedProtocolCall<T extends ProtocolTransactionRequestModel>(
   request: T,
   overrides?: { nonce: Nonce },
 ): IUnsignedProtocolCall<T> {
   return new MockedUnsignedProtocolCall(faker.datatype.uuid(), request, overrides?.nonce);
 }
 
-class MockedSignedProtocolCall<T extends TransactionRequestModel>
+class MockedSignedProtocolCall<T extends ProtocolTransactionRequestModel>
   implements ISignedProtocolCall<T>
 {
   constructor(
@@ -118,9 +127,9 @@ class MockedSignedProtocolCall<T extends TransactionRequestModel>
   ) {}
 }
 
-export function mockISignedProtocolCall<T extends TransactionRequestModel>(
+export function mockISignedProtocolCall<T extends ProtocolTransactionRequestModel>(
   unsignedCall: IUnsignedProtocolCall<T> = mockIUnsignedProtocolCall<T>(
-    mockTransactionRequestModel() as T,
+    mockAnyTransactionRequestModel() as T,
   ),
 ): ISignedProtocolCall<T> {
   return new MockedSignedProtocolCall(
@@ -131,8 +140,8 @@ export function mockISignedProtocolCall<T extends TransactionRequestModel>(
   );
 }
 
-export function mockUnsignedTransaction<T extends TransactionRequestModel>(
-  request: T = mockTransactionRequestModel() as T,
+export function mockUnsignedTransaction<T extends AnyTransactionRequestModel>(
+  request: T = mockAnyTransactionRequestModel() as T,
 ): UnsignedTransaction<T> {
   return new UnsignedTransaction(faker.datatype.uuid(), ChainType.POLYGON, request);
 }
@@ -145,7 +154,7 @@ export function mockNonce(): Nonce {
   return faker.datatype.number();
 }
 
-type MockedMetaTransactionInit<T extends TransactionRequestModel> = {
+type MockedMetaTransactionInit<T extends AnyTransactionRequestModel> = {
   chainType?: ChainType;
   hash?: string;
   id?: string;
@@ -167,18 +176,20 @@ type MockedTransactionInstructions = {
   failsWith?: TransactionError;
 };
 
-export class MockedMetaTransaction<T extends TransactionRequestModel> extends MetaTransaction<T> {
+export class MockedMetaTransaction<
+  T extends ProtocolTransactionRequestModel,
+> extends MetaTransaction<T> {
   readonly chainType: ChainType;
   readonly id: string;
   readonly request: T;
   readonly nonce: Nonce;
-  hash: string | undefined;
+  hash: string;
 
   private constructor(
     {
       chainType = ChainType.POLYGON,
       id = faker.datatype.uuid(),
-      hash,
+      hash = mockTransactionHash(),
       request,
       nonce = mockNonce(),
     }: MockedMetaTransactionInit<T>,
@@ -202,11 +213,12 @@ export class MockedMetaTransaction<T extends TransactionRequestModel> extends Me
     if ('error' in item) {
       return failure(item.error);
     }
+
     this.hash = item.txHash ?? this.hash;
     return success(item.event);
   }
 
-  static fromSignedCall<T extends TransactionRequestModel>(
+  static fromSignedCall<T extends ProtocolTransactionRequestModel>(
     signedCall: ISignedProtocolCall<T>,
   ): MetaTransaction<T> {
     return new MockedMetaTransaction({
@@ -217,7 +229,7 @@ export class MockedMetaTransaction<T extends TransactionRequestModel> extends Me
     });
   }
 
-  static fromRawData<T extends TransactionRequestModel>(
+  static fromRawData<T extends ProtocolTransactionRequestModel>(
     data: MockedMetaTransactionInit<T>,
     instructions?: MockedTransactionInstructions,
   ): MetaTransaction<T> {
@@ -225,7 +237,7 @@ export class MockedMetaTransaction<T extends TransactionRequestModel> extends Me
   }
 }
 
-type MockedNativeTransactionInit<T extends TransactionRequestModel> = {
+type MockedNativeTransactionInit<T extends AnyTransactionRequestModel> = {
   chainType?: ChainType;
   hash?: string;
   id?: string;
@@ -233,18 +245,18 @@ type MockedNativeTransactionInit<T extends TransactionRequestModel> = {
 };
 
 export class MockedNativeTransaction<
-  T extends TransactionRequestModel,
+  T extends AnyTransactionRequestModel,
 > extends NativeTransaction<T> {
   waitNextEvent: () => PromiseResult<TransactionEvent, TransactionError> =
     jest.fn<() => PromiseResult<TransactionEvent, TransactionError>>();
   readonly chainType: ChainType;
   readonly id: string;
   readonly request: T;
-  hash: string | undefined;
+  hash: string;
 
   private constructor({
     chainType = ChainType.POLYGON,
-    hash,
+    hash = mockTransactionHash(),
     id = faker.datatype.uuid(),
     request,
   }: MockedNativeTransactionInit<T>) {
@@ -256,19 +268,18 @@ export class MockedNativeTransaction<
     this.hash = hash;
   }
 
-  static fromUnsignedTransaction<T extends TransactionRequestModel>(
+  static fromUnsignedTransaction<T extends AnyTransactionRequestModel>(
     unsignedTransaction: UnsignedTransaction<T>,
-  ): Transaction<T> {
+  ): NativeTransaction<T> {
     return new MockedNativeTransaction({
       chainType: ChainType.POLYGON,
-      hash: mockTransactionHash(),
       id: unsignedTransaction.id,
       request: unsignedTransaction.request,
     });
   }
 
-  static fromRequest<T extends TransactionRequestModel>(request: T) {
-    return new MockedNativeTransaction({ request });
+  static fromRequest<T extends AnyTransactionRequestModel>(request: T) {
+    return new MockedNativeTransaction({ request, hash: mockTransactionHash() });
   }
 }
 
@@ -290,7 +301,7 @@ export function mockNftOwnershipChallenge(): NftOwnershipChallenge {
   };
 }
 
-type MockedProxyTransactionInit<T extends TransactionRequestModel> = {
+type MockedProxyTransactionInit<T extends ProtocolTransactionRequestModel> = {
   request: T;
   chainType?: ChainType;
   hash?: string;
@@ -298,7 +309,9 @@ type MockedProxyTransactionInit<T extends TransactionRequestModel> = {
   status: ProxyActionStatus;
 };
 
-export class MockedProxyTransaction<T extends TransactionRequestModel> extends ProxyTransaction<T> {
+export class MockedProxyTransaction<
+  T extends ProtocolTransactionRequestModel,
+> extends ProxyTransaction<T> {
   readonly chainType: ChainType;
   readonly id: string;
   readonly request: T;
@@ -337,8 +350,39 @@ export class MockedProxyTransaction<T extends TransactionRequestModel> extends P
     return success(item.event);
   }
 
-  static fromRequest<T extends TransactionRequestModel>(request: T): ProxyTransaction<T> {
+  static fromRequest<T extends ProtocolTransactionRequestModel>(request: T): ProxyTransaction<T> {
     return new MockedProxyTransaction({ request, status: ProxyActionStatus.MINTING });
+  }
+}
+
+type MockedDataTransactionInit<T extends ProtocolTransactionRequestModel> = {
+  request: T;
+  id?: string;
+};
+
+export class MockedDataTransaction<
+  T extends ProtocolTransactionRequestModel,
+> extends DataTransaction<T> {
+  readonly id: string;
+  readonly request: T;
+
+  private constructor({ id = faker.datatype.uuid(), request }: MockedDataTransactionInit<T>) {
+    super();
+    this.id = id;
+    this.request = request;
+  }
+
+  async waitNextEvent(): PromiseResult<TransactionEvent, TransactionError> {
+    return success(TransactionEvent.SETTLED);
+  }
+
+  static fromSignedCall<T extends ProtocolTransactionRequestModel>(
+    signedCall: ISignedProtocolCall<T>,
+  ): MockedDataTransaction<T> {
+    return new MockedDataTransaction({
+      id: signedCall.id,
+      request: signedCall.request,
+    });
   }
 }
 

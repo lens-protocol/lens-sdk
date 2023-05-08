@@ -1,21 +1,25 @@
 import { ProfileId, PublicationId, TransactionKind } from '../../entities';
-import {
-  DelegableProtocolCallUseCase,
-  IProtocolCallPresenter,
-  IDelegableProtocolCallGateway,
-} from '../transactions/DelegableProtocolCallUseCase';
-import { IUnsignedProtocolCallGateway } from '../transactions/ProtocolCallUseCase';
+import { DelegableSigning } from '../transactions/DelegableSigning';
 
 export type CreateMirrorRequest = {
   profileId: ProfileId;
   publicationId: PublicationId;
   kind: TransactionKind.MIRROR_PUBLICATION;
   delegate: boolean;
+  offChain: boolean;
 };
 
-export type ICreateMirrorCallGateway = IDelegableProtocolCallGateway<CreateMirrorRequest> &
-  IUnsignedProtocolCallGateway<CreateMirrorRequest>;
+export class CreateMirror {
+  constructor(
+    private readonly createOnChainPost: DelegableSigning<CreateMirrorRequest>,
+    private readonly createOffChainPost: DelegableSigning<CreateMirrorRequest>,
+  ) {}
 
-export type ICreateMirrorPresenter = IProtocolCallPresenter;
-
-export class CreateMirror extends DelegableProtocolCallUseCase<CreateMirrorRequest> {}
+  async execute(request: CreateMirrorRequest) {
+    if (request.offChain) {
+      await this.createOffChainPost.execute(request);
+    } else {
+      await this.createOnChainPost.execute(request);
+    }
+  }
+}

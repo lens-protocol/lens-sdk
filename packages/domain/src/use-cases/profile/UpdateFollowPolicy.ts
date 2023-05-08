@@ -1,11 +1,7 @@
 import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
 
 import { ProfileId, TransactionKind } from '../../entities';
-import {
-  IProtocolCallPresenter,
-  IUnsignedProtocolCallGateway,
-  ProtocolCallUseCase,
-} from '../transactions/ProtocolCallUseCase';
+import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 
 export enum FollowPolicyType {
   ONLY_PROFILE_OWNERS = 'ONLY_PROFILE_OWNERS',
@@ -31,8 +27,4 @@ export type UpdateFollowPolicyRequest = {
   kind: TransactionKind.UPDATE_FOLLOW_POLICY;
 };
 
-export type IFollowPolicyCallGateway = IUnsignedProtocolCallGateway<UpdateFollowPolicyRequest>;
-
-export type IUpdateFollowPolicyPresenter = IProtocolCallPresenter;
-
-export class UpdateFollowPolicy extends ProtocolCallUseCase<UpdateFollowPolicyRequest> {}
+export class UpdateFollowPolicy extends SubsidizeOnChain<UpdateFollowPolicyRequest> {}

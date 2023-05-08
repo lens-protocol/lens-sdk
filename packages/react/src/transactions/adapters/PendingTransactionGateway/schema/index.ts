@@ -23,7 +23,7 @@ import {
   PaidCollectRequestSchema,
 } from './publications';
 
-const SupportedRequestModelSchema = z.union([
+const ProtocolTransactionRequestSchema = z.union([
   // CollectRequest schemas
   FreeCollectRequestSchema,
   PaidCollectRequestSchema,
@@ -41,8 +41,6 @@ const SupportedRequestModelSchema = z.union([
 
   CreateProfileRequestSchema,
 
-  TokenAllowanceRequestSchema,
-
   UnfollowRequestSchema,
 
   UpdateDispatcherConfigRequestSchema,
@@ -56,10 +54,17 @@ const SupportedRequestModelSchema = z.union([
   UpdateOffChainProfileImageRequestSchema,
 ]);
 
+const AnyTransactionRequestSchema = z.union([
+  TokenAllowanceRequestSchema,
+
+  ProtocolTransactionRequestSchema,
+]);
+
 export enum TransactionType {
   Native,
   Meta,
   Proxy,
+  Data,
 }
 
 const MetaTransactionSchema = z.object({
@@ -69,7 +74,7 @@ const MetaTransactionSchema = z.object({
   indexingId: z.string(),
   txHash: z.string(),
   nonce: z.number(),
-  request: SupportedRequestModelSchema,
+  request: ProtocolTransactionRequestSchema,
 });
 
 type MetaTransactionSchema = z.infer<typeof MetaTransactionSchema>;
@@ -80,7 +85,7 @@ const NativeTransactionSchema = z.object({
   id: z.string(),
   indexingId: z.string().optional(),
   txHash: z.string(),
-  request: SupportedRequestModelSchema,
+  request: AnyTransactionRequestSchema,
 });
 
 type NativeTransactionSchema = z.infer<typeof NativeTransactionSchema>;
@@ -92,15 +97,24 @@ const ProxyTransactionSchema = z.object({
   proxyId: z.string(),
   txHash: z.string().optional(),
   status: z.nativeEnum(ProxyActionStatus).optional(),
-  request: SupportedRequestModelSchema,
+  request: ProtocolTransactionRequestSchema,
 });
 
 type ProxyTransactionSchema = z.infer<typeof ProxyTransactionSchema>;
+
+const DataTransactionSchema = z.object({
+  type: z.literal(TransactionType.Data),
+  id: z.string(),
+  request: ProtocolTransactionRequestSchema,
+});
+
+type DataTransactionSchema = z.infer<typeof DataTransactionSchema>;
 
 export const TransactionSchema = z.union([
   MetaTransactionSchema,
   NativeTransactionSchema,
   ProxyTransactionSchema,
+  DataTransactionSchema,
 ]);
 
 export type TransactionSchema = z.infer<typeof TransactionSchema>;

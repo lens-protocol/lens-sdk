@@ -4,13 +4,17 @@ import {
   createGetProfileMockedResponse,
   mockPostFragment,
   mockProfileFragment,
-  createPublicationByTxHashMockedResponse,
   mockSources,
+  createGetPublicationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockCreatePostRequest, mockTransactionData } from '@lens-protocol/domain/mocks';
+import { PublicationId } from '@lens-protocol/domain/entities';
+import {
+  mockCreatePostRequest,
+  mockTransactionData,
+  mockTransactionHash,
+} from '@lens-protocol/domain/mocks';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
-import { never } from '@lens-protocol/shared-kernel';
 
 import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { CreatePostResponder, recentPosts } from '../CreatePostResponder';
@@ -35,9 +39,15 @@ function setupTestScenario({
         sources,
       },
     }),
-    createPublicationByTxHashMockedResponse({
+    createGetPublicationMockedResponse({
       variables: {
-        txHash: transactionData.txHash ?? never(),
+        request: transactionData.txHash
+          ? {
+              txHash: transactionData.txHash,
+            }
+          : {
+              publicationId: transactionData.id as PublicationId,
+            },
         observerId: author.id,
         sources,
       },
@@ -78,20 +88,42 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
 
   describe(`when "${CreatePostResponder.prototype.commit.name}" method is invoked`, () => {
     const post = mockPostFragment();
-    const transactionData = mockTransactionData({
-      request: mockCreatePostRequest({
-        profileId: author.id,
-      }),
-    });
 
     it(`should replace the PendingPost added during the "${CreatePostResponder.prototype.prepare.name}" method call with the actual Post retrieved from the BE`, async () => {
+      const transactionData = mockTransactionData({
+        txHash: mockTransactionHash(),
+        request: mockCreatePostRequest({
+          profileId: author.id,
+        }),
+      });
       const responder = setupTestScenario({
         author,
         post,
         transactionData,
       });
-      await responder.prepare(transactionData);
 
+      await responder.prepare(transactionData);
+      await responder.commit(transactionData);
+
+      expect(recentPosts()[0]).toMatchObject({
+        __typename: 'Post',
+        id: post.id,
+      });
+    });
+
+    it('should fallback to retrieve the Post by PublicationId if the txHash is not available', async () => {
+      const transactionData = mockTransactionData({
+        request: mockCreatePostRequest({
+          profileId: author.id,
+        }),
+      });
+      const responder = setupTestScenario({
+        author,
+        post,
+        transactionData,
+      });
+
+      await responder.prepare(transactionData);
       await responder.commit(transactionData);
 
       expect(recentPosts()[0]).toMatchObject({
@@ -115,8 +147,8 @@ describe(`Given an instance of the ${CreatePostResponder.name}`, () => {
         post,
         transactionData,
       });
-      await responder.prepare(transactionData);
 
+      await responder.prepare(transactionData);
       await responder.rollback(transactionData);
 
       expect(recentPosts().length).toBe(0);

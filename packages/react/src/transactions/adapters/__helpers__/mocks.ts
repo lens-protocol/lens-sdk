@@ -1,10 +1,15 @@
 import { faker } from '@faker-js/faker';
 import { omitTypename } from '@lens-protocol/api-bindings';
-import { ProxyActionStatus, TransactionRequestModel } from '@lens-protocol/domain/entities';
+import {
+  ProtocolTransactionRequestModel,
+  ProxyActionStatus,
+  AnyTransactionRequestModel,
+} from '@lens-protocol/domain/entities';
 import {
   mockNonce,
   mockTransactionHash,
-  mockTransactionRequestModel,
+  mockAnyTransactionRequestModel,
+  mockProtocolTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { assertFailure, ChainType, Result, Url } from '@lens-protocol/shared-kernel';
@@ -20,9 +25,12 @@ import {
   NativeTransactionData,
   ProxyTransactionData,
 } from '../ITransactionFactory';
-import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
+import {
+  Data,
+  SelfFundedProtocolTransactionRequest,
+} from '../SelfFundedProtocolTransactionRequest';
 import { TypedData } from '../TypedData';
-import { RelayReceipt } from '../relayer';
+import { OnChainBroadcastReceipt } from '../relayer';
 
 export function mockITransactionFactory(
   transactionObserver: ITransactionObserver = mock<ITransactionObserver>(),
@@ -32,7 +40,7 @@ export function mockITransactionFactory(
   return new TransactionFactory(transactionObserver);
 }
 
-export function mockRelayReceipt(): RelayReceipt {
+export function mockRelayReceipt(): OnChainBroadcastReceipt {
   return {
     indexingId: faker.datatype.uuid(),
     txHash: mockTransactionHash(),
@@ -56,8 +64,8 @@ export function mockTypedData(): TypedData {
   };
 }
 
-export function mockMetaTransactionData<T extends TransactionRequestModel>({
-  request = mockTransactionRequestModel() as T,
+export function mockMetaTransactionData<T extends ProtocolTransactionRequestModel>({
+  request = mockProtocolTransactionRequestModel() as T,
   ...others
 }: Partial<MetaTransactionData<T>> = {}): MetaTransactionData<T> {
   return {
@@ -71,8 +79,8 @@ export function mockMetaTransactionData<T extends TransactionRequestModel>({
   };
 }
 
-export function mockNativeTransactionData<T extends TransactionRequestModel>({
-  request = mockTransactionRequestModel() as T,
+export function mockNativeTransactionData<T extends AnyTransactionRequestModel>({
+  request = mockAnyTransactionRequestModel() as T,
   ...others
 }: Partial<NativeTransactionData<T>> = {}): NativeTransactionData<T> {
   return {
@@ -85,19 +93,19 @@ export function mockNativeTransactionData<T extends TransactionRequestModel>({
 }
 
 export function mockNativeTransactionDataWithIndexingId<
-  T extends TransactionRequestModel,
+  T extends AnyTransactionRequestModel,
 >(): Required<NativeTransactionData<T>> {
   return {
     chainType: ChainType.ETHEREUM,
     id: faker.datatype.uuid(),
     indexingId: faker.datatype.uuid(),
-    request: mockTransactionRequestModel() as T,
+    request: mockAnyTransactionRequestModel() as T,
     txHash: mockTransactionHash(),
   };
 }
 
-export function mockProxyTransactionData<T extends TransactionRequestModel>({
-  request = mockTransactionRequestModel() as T,
+export function mockProxyTransactionData<T extends AnyTransactionRequestModel>({
+  request = mockAnyTransactionRequestModel() as T,
   ...others
 }: Partial<ProxyTransactionData<T>> = {}): ProxyTransactionData<T> {
   return {
@@ -123,7 +131,7 @@ export function mockIMetadataUploader(urlOrError: Url | Error): IMetadataUploade
   return uploader;
 }
 
-export function assertUnsignedProtocolCallCorrectness<T extends TransactionRequestModel>(
+export function assertUnsignedProtocolCallCorrectness<T extends ProtocolTransactionRequestModel>(
   unsignedProtocolCall: UnsignedProtocolCall<T>,
   broadcastResult: {
     id: string;
@@ -146,12 +154,12 @@ export function assertBroadcastingErrorResultWithRequestFallback(
   });
 }
 
-export function mockSelfFundedProtocolCallRequest<
-  TRequest extends TransactionRequestModel,
->(): SelfFundedProtocolCallRequest<TRequest> {
+export function mockSelfFundedProtocolTransactionRequest<
+  TRequest extends ProtocolTransactionRequestModel,
+>(): SelfFundedProtocolTransactionRequest<TRequest> {
   return {
     contractAddress: mockEthereumAddress(),
     encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
-    ...mockTransactionRequestModel(),
-  } as SelfFundedProtocolCallRequest<TRequest>;
+    ...mockAnyTransactionRequestModel(),
+  } as SelfFundedProtocolTransactionRequest<TRequest>;
 }

@@ -1,14 +1,16 @@
 import {
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
   MetaTransaction,
   NativeTransaction,
   Nonce,
   ProxyTransaction,
   ProxyActionStatus,
+  JustProtocolRequest,
+  DataTransaction,
 } from '@lens-protocol/domain/entities';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
-export type NativeTransactionData<T extends TransactionRequestModel> = {
+export type NativeTransactionData<T extends AnyTransactionRequestModel> = {
   chainType: ChainType;
   id: string;
   indexingId?: string;
@@ -16,7 +18,7 @@ export type NativeTransactionData<T extends TransactionRequestModel> = {
   txHash: string;
 };
 
-export type MetaTransactionData<T extends TransactionRequestModel> = {
+export type MetaTransactionData<T extends AnyTransactionRequestModel> = {
   chainType: ChainType;
   id: string;
   indexingId: string;
@@ -25,7 +27,7 @@ export type MetaTransactionData<T extends TransactionRequestModel> = {
   txHash: string;
 };
 
-export type ProxyTransactionData<T extends TransactionRequestModel> = {
+export type ProxyTransactionData<T extends AnyTransactionRequestModel> = {
   chainType: ChainType;
   id: string;
   request: T;
@@ -34,12 +36,25 @@ export type ProxyTransactionData<T extends TransactionRequestModel> = {
   status?: ProxyActionStatus;
 };
 
-export interface ITransactionFactory<Supported extends TransactionRequestModel> {
-  createMetaTransaction<T extends Supported>(init: MetaTransactionData<T>): MetaTransaction<T>;
+export type DataTransactionData<T extends AnyTransactionRequestModel> = {
+  id: string;
+  request: T;
+};
+
+export interface ITransactionFactory<Supported extends AnyTransactionRequestModel> {
+  createMetaTransaction<T extends JustProtocolRequest<Supported>>(
+    init: MetaTransactionData<T>,
+  ): MetaTransaction<T>;
 
   createNativeTransaction<T extends Supported>(
     init: NativeTransactionData<T>,
   ): NativeTransaction<T>;
 
-  createProxyTransaction<T extends Supported>(init: ProxyTransactionData<T>): ProxyTransaction<T>;
+  createProxyTransaction<T extends JustProtocolRequest<Supported>>(
+    init: ProxyTransactionData<T>,
+  ): ProxyTransaction<T>;
+
+  createDataTransaction<T extends JustProtocolRequest<Supported>>(
+    init: DataTransactionData<T>,
+  ): DataTransaction<T>;
 }

@@ -1,4 +1,4 @@
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { IWalletFactory, WalletLoginRequest } from '@lens-protocol/domain/use-cases/wallets';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
@@ -8,7 +8,7 @@ import { IWalletUnmarshaller } from './WalletGateway';
 export class WalletFactory implements IWalletUnmarshaller, IWalletFactory {
   constructor(
     private readonly signerFactory: ISignerFactory,
-    private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
+    private readonly transactionFactory: ITransactionFactory<AnyTransactionRequest>,
   ) {}
 
   async create(request: WalletLoginRequest): Promise<ConcreteWallet> {

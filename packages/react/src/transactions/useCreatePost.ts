@@ -1,30 +1,35 @@
 import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
+  AppId,
   PendingSigningRequestError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import {
+  CollectPolicyConfig,
   CollectPolicyType,
+  ContentFocus,
   CreatePostRequest,
+  Locale,
+  MediaObject,
+  ReferencePolicyConfig,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { failure, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreatePostController } from './adapters/useCreatePostController';
-import { PublicationMetadataUploader } from './infrastructure/PublicationMetadataUploader';
 
 export type UseCreatePostArgs = {
   /**
    * The post author.
    *
-   * **Poo-tip**: use the profile instance returned by {@link useActiveProfile} to create a post on behalf of the active profile.
+   * **Poo-tip**: use the profile instance returned by {@link useActiveProfile} to create a post in behalf of the active profile.
    */
   publisher: ProfileOwnedByMe;
   /**
@@ -33,13 +38,42 @@ export type UseCreatePostArgs = {
   upload: MetadataUploadHandler;
 };
 
-export type CreatePostArgs = Prettify<
-  Omit<
-    CreatePostRequest,
-    'kind' | 'delegate' | 'collect' | 'profileId' | 'reference' | 'decryptionCriteria'
-  > &
-    Partial<Pick<CreatePostRequest, 'collect' | 'reference'>>
->;
+export type CreatePostArgs = {
+  /**
+   * @deprecated Use {@link LensConfig#appId} instead. This was exposed by mistake but was never used.
+   */
+  appId?: AppId;
+  /**
+   * The post collect policy. Determines the criteria that must be met for a user to be able to collect the post.
+   */
+  collect?: CollectPolicyConfig;
+  /**
+   * The post content as Markdown string.
+   */
+  content?: string;
+  /**
+   * The post content focus. Determines what is the primary objective of the post.
+   */
+  contentFocus: ContentFocus;
+  /**
+   * The post media. An array of media objects.
+   */
+  media?: MediaObject[];
+  /**
+   * The post reference policy. Determines the criteria that must be met for a user to be able to comment or mirror the post.
+   */
+  reference?: ReferencePolicyConfig;
+  /**
+   * The language of the post.
+   *
+   * It a locale string in the format of `<language-tag>-<region-tag>` or just `<language-tag>`, where:
+   * - `language-tag` is a two-letter ISO 639-1 language code, e.g. `en` or `it`
+   * - `region-tag` is a two-letter ISO 3166-1 alpha-2 region code, e.g. `US` or `IT`
+   *
+   * You can just pass in the language tag if you do not know the region or don't need to be specific.
+   */
+  locale: Locale;
+};
 
 export type CreatePostOperation = Operation<
   void,
@@ -52,6 +86,8 @@ export type CreatePostOperation = Operation<
 >;
 
 /**
+ * Creates a new post.
+ *
  * @category Publications
  * @group Hooks
  * @param args - {@link UseCreatePostArgs}
@@ -62,7 +98,7 @@ export type CreatePostOperation = Operation<
  * import { ContentFocus, ProfileOwnedByMe, useCreatePost } from '@lens-protocol/react-web';
  *
  * function PostComposer({ publisher }: { publisher: ProfileOwnedByMe }) {
- *   const { execute: createPost, error, isPending } = useCreatePost({ publisher, upload: uploadToIpfs });
+ *   const { execute: post, error, isPending } = useCreatePost({ publisher, upload: uploadToIpfs });
  *
  *   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
  *     event.preventDefault();
@@ -72,7 +108,7 @@ export type CreatePostOperation = Operation<
  *     const formData = new FormData(form);
  *     const content = (formData.get('content') as string | null) ?? never();
  *
- *     let result = await create({
+ *     let result = await post({
  *       content,
  *       contentFocus: ContentFocus.TEXT,
  *       locale: 'en',
@@ -107,9 +143,7 @@ export type CreatePostOperation = Operation<
  */
 export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreatePostOperation {
   const { appId } = useSharedDependencies();
-
-  const uploader = new PublicationMetadataUploader(upload);
-  const createPost = useCreatePostController({ uploader });
+  const createPost = useCreatePostController({ upload });
 
   return useOperation(
     async ({
@@ -132,6 +166,7 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
           profileId: publisher.id,
           reference,
           appId,
+          offChain: collect.type === CollectPolicyType.NO_COLLECT,
           ...args,
         };
         return await createPost(request);

@@ -9,7 +9,7 @@ import { ProxyTransaction } from '@lens-protocol/domain/entities';
 import { FreeCollectRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
-  ISignlessProtocolCallRelayer,
+  ISignlessSubsidizedCallRelayer,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { assertError, ChainType, getID, ILogger } from '@lens-protocol/shared-kernel';
 
@@ -17,15 +17,15 @@ import { ITransactionFactory } from './ITransactionFactory';
 import { ProxyReceipt } from './ProxyReceipt';
 
 export class CollectProxyActionRelayer<T extends FreeCollectRequest>
-  implements ISignlessProtocolCallRelayer<T>
+  implements ISignlessSubsidizedCallRelayer<T>
 {
   constructor(
     private apolloClient: LensApolloClient,
-    private factory: ITransactionFactory<T>,
+    private factory: ITransactionFactory<FreeCollectRequest>,
     private logger: ILogger,
   ) {}
 
-  async relaySignlessProtocolCall(request: T): Promise<ProxyTransaction<T>> {
+  async createProxyTransaction(request: T): Promise<ProxyTransaction<T>> {
     const proxyReceipt = await this.proxy(request);
 
     return this.factory.createProxyTransaction({

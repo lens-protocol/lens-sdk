@@ -5,16 +5,13 @@ import {
   LensApolloClient,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
-import { Transaction } from '@lens-protocol/domain/entities';
+import { NativeTransaction } from '@lens-protocol/domain/entities';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
   IProfileTransactionGateway,
 } from '@lens-protocol/domain/use-cases/profile';
-import {
-  BroadcastingError,
-  SupportedTransactionRequest,
-} from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
@@ -24,12 +21,12 @@ import { handleRelayError } from '../../transactions/adapters/relayer';
 export class ProfileTransactionGateway implements IProfileTransactionGateway {
   constructor(
     private apolloClient: LensApolloClient,
-    private factory: ITransactionFactory<SupportedTransactionRequest>,
+    private factory: ITransactionFactory<CreateProfileRequest>,
   ) {}
 
   async createProfileTransaction<T extends CreateProfileRequest>(
     request: T,
-  ): PromiseResult<Transaction<T>, DuplicatedHandleError | BroadcastingError> {
+  ): PromiseResult<NativeTransaction<T>, DuplicatedHandleError | BroadcastingError> {
     const { data } = await this.apolloClient.mutate<CreateProfileData, CreateProfileVariables>({
       mutation: CreateProfileDocument,
       variables: {

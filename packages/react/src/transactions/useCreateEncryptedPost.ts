@@ -1,48 +1,86 @@
 import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
+  AppId,
+  DecryptionCriteria,
   PendingSigningRequestError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import {
+  CollectPolicyConfig,
   CollectPolicyType,
-  CreatePostRequest,
+  ContentFocus,
+  Locale,
+  MediaObject,
+  ReferencePolicyConfig,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { failure, invariant, Prettify, PromiseResult } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { EncryptionConfig } from '../config';
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
-import { useWalletLogin, useActiveWalletSigner } from '../wallet';
-import { CreatePostController } from './adapters/CreatePostController';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
-import { AccessConditionBuilderFactory } from './infrastructure/AccessConditionBuilderFactory';
-import {
-  CreateEncryptedPostRequest,
-  EncryptedPublicationMetadataUploader,
-} from './infrastructure/EncryptedPublicationMetadataUploader';
-import { MetadataUploaderErrorMiddleware } from './infrastructure/MetadataUploaderErrorMiddleware';
-import { PublicationIdPredictor } from './infrastructure/PublicationIdPredictor';
-import { createGatedClient } from './infrastructure/createGatedClient';
+import { useCreateEncryptedPostController } from './adapters/useCreateEncryptedPostController';
 
 export type UseCreateEncryptedPostArgs = {
+  /**
+   * The encryption configuration.
+   */
   encryption: EncryptionConfig;
+  /**
+   * The publisher profile.
+   */
   publisher: ProfileOwnedByMe;
+  /**
+   * The metadata upload handler.
+   */
   upload: MetadataUploadHandler;
 };
 
-export type CreateEncryptedPostArgs = Prettify<
-  Omit<
-    CreatePostRequest,
-    'kind' | 'delegate' | 'collect' | 'profileId' | 'reference' | 'decryptionCriteria'
-  > &
-    Partial<Pick<CreatePostRequest, 'collect' | 'reference'>> &
-    Required<Pick<CreatePostRequest, 'decryptionCriteria'>>
->;
+export type CreateEncryptedPostArgs = {
+  /**
+   * @deprecated Use {@link LensConfig#appId} instead. This was exposed by mistake but was never used.
+   */
+  appId?: AppId;
+  /**
+   * The post collect policy. Determines the criteria that must be met for a user to be able to collect the post.
+   */
+  collect?: CollectPolicyConfig;
+  /**
+   * The post content as Markdown string.
+   */
+  content?: string;
+  /**
+   * The post content focus. Determines what is the primary objective of the post.
+   */
+  contentFocus: ContentFocus;
+  /**
+   * The post media. An array of media objects.
+   */
+  media?: MediaObject[];
+  /**
+   * The post reference policy. Determines the criteria that must be met for a user to be able to comment or mirror the post.
+   */
+  reference?: ReferencePolicyConfig;
+  /**
+   * The language of the post.
+   *
+   * It a locale string in the format of `<language-tag>-<region-tag>` or just `<language-tag>`, where:
+   * - `language-tag` is a two-letter ISO 639-1 language code, e.g. `en` or `it`
+   * - `region-tag` is a two-letter ISO 3166-1 alpha-2 region code, e.g. `US` or `IT`
+   *
+   * You can just pass in the language tag if you do not know the region or don't need to be specific.
+   */
+  locale: Locale;
+  /**
+   * The criteria that must be met for a user to be able to decrypt the post.
+   */
+  decryptionCriteria: DecryptionCriteria;
+};
 
 export type CreateEncryptedPostOperation = Operation<
   void,
@@ -63,18 +101,8 @@ export function useCreateEncryptedPost({
   publisher,
   upload,
 }: UseCreateEncryptedPostArgs): CreateEncryptedPostOperation {
-  const {
-    appId,
-    activeWallet,
-    apolloClient,
-    protocolCallRelayer,
-    transactionFactory,
-    transactionGateway,
-    transactionQueue,
-    environment,
-    storageProvider,
-  } = useSharedDependencies();
-  const { data: signer } = useActiveWalletSigner();
+  const { appId } = useSharedDependencies();
+  const createPost = useCreateEncryptedPostController({ encryption, upload });
 
   return useOperation(
     async ({
@@ -89,49 +117,15 @@ export function useCreateEncryptedPost({
       | WalletConnectionError
       | FailedUploadError
     > => {
-      invariant(
-        signer,
-        `Cannot find the Active Wallet Signer, did you login with ${useWalletLogin.name}?`,
-      );
-      const client = createGatedClient({
-        config: encryption.authentication,
-        signer,
-        encryptionProvider: encryption.provider,
-        environment,
-        storageProvider,
-      });
-
-      const publicationIdPredictor = new PublicationIdPredictor(apolloClient, transactionGateway);
-
-      const accessConditionBuilderFactory = new AccessConditionBuilderFactory(
-        environment.chains,
-        publicationIdPredictor,
-      );
-
-      const uploader = new EncryptedPublicationMetadataUploader(
-        client,
-        accessConditionBuilderFactory,
-        new MetadataUploaderErrorMiddleware(upload),
-      );
-
-      const controller = new CreatePostController<CreateEncryptedPostRequest>({
-        activeWallet,
-        apolloClient,
-        protocolCallRelayer,
-        transactionFactory,
-        transactionGateway,
-        transactionQueue,
-        uploader,
-      });
-
       try {
-        return await controller.execute({
+        return await createPost({
           kind: TransactionKind.CREATE_POST,
           collect,
           delegate: publisher.dispatcher !== null,
           profileId: publisher.id,
           reference,
           appId,
+          offChain: false, // For now, we only support on-chain token-gated comments
           ...args,
         });
       } catch (err: unknown) {

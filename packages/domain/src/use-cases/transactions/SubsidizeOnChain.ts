@@ -5,14 +5,16 @@ import {
   Nonce,
   TransactionKind,
   ISignedProtocolCall,
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
   MetaTransaction,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
+  ProtocolTransactionRequestModel,
 } from '../../entities';
 import { ActiveWallet } from '../wallets/ActiveWallet';
 import { BroadcastingError } from './BroadcastingError';
+import { ISignedOperation } from './DelegableSigning';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
@@ -20,29 +22,31 @@ export interface IMetaTransactionNonceGateway {
   getNextMetaTransactionNonceFor(kind: TransactionKind): Promise<Nonce | undefined>;
 }
 
-export interface IProtocolCallRelayer<T extends TransactionRequestModel> {
+export interface IOnChainRelayer<T extends ProtocolTransactionRequestModel> {
   relayProtocolCall(
     signedCall: ISignedProtocolCall<T>,
   ): PromiseResult<MetaTransaction<T>, BroadcastingError>;
 }
 
-export interface IUnsignedProtocolCallGateway<T extends TransactionRequestModel> {
+export interface IOnChainProtocolCallGateway<T extends ProtocolTransactionRequestModel> {
   createUnsignedProtocolCall(request: T, nonceOverride?: Nonce): Promise<IUnsignedProtocolCall<T>>;
 }
 
-export type IProtocolCallPresenter = IGenericResultPresenter<
+export type ISubsidizeOnChainPresenter = IGenericResultPresenter<
   void,
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
-export class ProtocolCallUseCase<T extends TransactionRequestModel> {
+export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
+  implements ISignedOperation<T>
+{
   constructor(
     protected readonly activeWallet: ActiveWallet,
     protected readonly metaTransactionNonceGateway: IMetaTransactionNonceGateway,
-    protected readonly unsignedProtocolCallGateway: IUnsignedProtocolCallGateway<T>,
-    protected readonly protocolCallRelayer: IProtocolCallRelayer<T>,
-    protected readonly transactionQueue: TransactionQueue<TransactionRequestModel>,
-    protected readonly presenter: IProtocolCallPresenter,
+    protected readonly onChainProtocolCallGateway: IOnChainProtocolCallGateway<T>,
+    protected readonly relayer: IOnChainRelayer<T>,
+    protected readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
+    protected readonly presenter: ISubsidizeOnChainPresenter,
   ) {}
 
   async execute(request: T) {
@@ -52,7 +56,7 @@ export class ProtocolCallUseCase<T extends TransactionRequestModel> {
       request.kind,
     );
 
-    const unsignedCall = await this.unsignedProtocolCallGateway.createUnsignedProtocolCall(
+    const unsignedCall = await this.onChainProtocolCallGateway.createUnsignedProtocolCall(
       request,
       nonce,
     );
@@ -64,7 +68,7 @@ export class ProtocolCallUseCase<T extends TransactionRequestModel> {
       return;
     }
 
-    const relayResult = await this.protocolCallRelayer.relayProtocolCall(signingResult.value);
+    const relayResult = await this.relayer.relayProtocolCall(signingResult.value);
 
     if (relayResult.isFailure()) {
       this.presenter.present(failure(relayResult.error));

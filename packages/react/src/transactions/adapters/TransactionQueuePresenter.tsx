@@ -2,7 +2,7 @@ import { recentTransactionsVar, TxStatus, TransactionState } from '@lens-protoco
 import { TransactionError } from '@lens-protocol/domain/entities';
 import {
   ITransactionQueuePresenter,
-  SupportedTransactionRequest,
+  AnyTransactionRequest,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { CausedError } from '@lens-protocol/shared-kernel';
@@ -13,20 +13,18 @@ import { ErrorHandler } from '../../ErrorHandler';
  * Error thrown when a transaction fails
  */
 export class FailedTransactionError extends CausedError {
-  readonly data?: TransactionData<SupportedTransactionRequest>;
+  readonly data?: TransactionData<AnyTransactionRequest>;
 
-  constructor(cause: TransactionError, data: TransactionData<SupportedTransactionRequest>) {
+  constructor(cause: TransactionError, data: TransactionData<AnyTransactionRequest>) {
     super(`Failed ${data.request.kind} transaction due to ${cause.reason}`, { cause });
 
     this.data = data;
   }
 }
 
-type PartialTransactionStateUpdate<T extends SupportedTransactionRequest> = Partial<
-  TransactionState<T>
->;
+type PartialTransactionStateUpdate<T extends AnyTransactionRequest> = Partial<TransactionState<T>>;
 
-export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
+export class TransactionQueuePresenter<T extends AnyTransactionRequest>
   implements ITransactionQueuePresenter<T>
 {
   constructor(private readonly errorHandler: ErrorHandler<FailedTransactionError>) {}
@@ -65,15 +63,12 @@ export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
     this.updateById(data.id, { status: TxStatus.FAILED });
   }
 
-  private addTransaction(data: TransactionState<SupportedTransactionRequest>) {
+  private addTransaction(data: TransactionState<AnyTransactionRequest>) {
     const transactions = recentTransactionsVar();
     recentTransactionsVar([data, ...transactions]);
   }
 
-  private updateById(
-    id: string,
-    update: PartialTransactionStateUpdate<SupportedTransactionRequest>,
-  ) {
+  private updateById(id: string, update: PartialTransactionStateUpdate<AnyTransactionRequest>) {
     const transactions = recentTransactionsVar();
 
     recentTransactionsVar(
@@ -82,7 +77,7 @@ export class TransactionQueuePresenter<T extends SupportedTransactionRequest>
           return {
             ...data,
             ...update,
-          } as TransactionState<SupportedTransactionRequest>;
+          } as TransactionState<AnyTransactionRequest>;
         }
         return data;
       }),

@@ -11,26 +11,31 @@ import {
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
-import {
-  CreateMirrorRequest,
-  ICreateMirrorCallGateway,
-} from '@lens-protocol/domain/use-cases/publications';
+import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
-  SupportedTransactionRequest,
+  IDelegatedTransactionGateway,
+  IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
-import { handleRelayError, RelayReceipt } from '../relayer';
+import {
+  Data,
+  SelfFundedProtocolTransactionRequest,
+} from '../SelfFundedProtocolTransactionRequest';
+import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
 
-export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
+export class CreateOnChainMirrorGateway
+  implements
+    IDelegatedTransactionGateway<CreateMirrorRequest>,
+    IOnChainProtocolCallGateway<CreateMirrorRequest>
+{
   constructor(
     private readonly apolloClient: LensApolloClient,
-    private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
+    private readonly transactionFactory: ITransactionFactory<CreateMirrorRequest>,
   ) {}
 
   async createDelegatedTransaction(
@@ -71,7 +76,7 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
 
   private async broadcast(
     request: CreateMirrorRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = await this.resolveCreateMirrorRequestArg(request);
 
     const { data } = await this.apolloClient.mutate<
@@ -126,7 +131,7 @@ export class CreateMirrorCallGateway implements ICreateMirrorCallGateway {
   private createRequestFallback(
     request: CreateMirrorRequest,
     data: CreateMirrorTypedDataData,
-  ): SelfFundedProtocolCallRequest<CreateMirrorRequest> {
+  ): SelfFundedProtocolTransactionRequest<CreateMirrorRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('mirror', [
       {

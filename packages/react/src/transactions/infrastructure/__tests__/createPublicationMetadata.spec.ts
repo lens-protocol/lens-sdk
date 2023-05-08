@@ -1,14 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { PublicationMainFocus, PublicationMetadataDisplayTypes } from '@lens-protocol/api-bindings';
 import {
-  mockChargeCollectPolicy,
+  mockChargeCollectPolicyConfig,
   mockCreateCommentRequest,
   mockCreatePostRequest,
   mockDateNftAttribute,
-  mockFreeCollectPolicy,
+  mockFreeCollectPolicyConfig,
   mockMediaObject,
   mockNftMetadata,
-  mockNoCollectPolicy,
+  mockNoCollectPolicyConfig,
   mockNumberNftAttribute,
   mockStringNftAttribute,
 } from '@lens-protocol/domain/mocks';
@@ -45,8 +45,8 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
       { request: 'CreateCommentRequest', mockPublication: mockCreateCommentRequest },
     ])('for a $request', ({ mockPublication }) => {
       describe.each([
-        mockFreeCollectPolicy({ metadata: nftMetadata }),
-        mockChargeCollectPolicy({ metadata: nftMetadata }),
+        mockFreeCollectPolicyConfig({ metadata: nftMetadata }),
+        mockChargeCollectPolicyConfig({ metadata: nftMetadata }),
       ])('with $type collect policy', (collectPolicyConfig) => {
         it('should return the expected metadata for collectable publications', () => {
           const request = mockPublication({
@@ -103,7 +103,7 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
             media,
             locale: 'en',
             contentFocus: ContentFocus.TEXT,
-            collect: mockNoCollectPolicy(),
+            collect: mockNoCollectPolicyConfig(),
           });
 
           const metadata = createPublicationMetadata(request);
@@ -131,6 +131,7 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
           const request = mockPublication({
             media: [mockMediaObject()],
             locale: 'en',
+            // collect: mockNoCollectPolicyConfig(),
             contentFocus: ContentFocus.IMAGE,
           });
 

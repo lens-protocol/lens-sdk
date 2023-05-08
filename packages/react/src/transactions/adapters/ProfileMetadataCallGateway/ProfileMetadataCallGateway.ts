@@ -16,14 +16,11 @@ import {
 } from '@lens-protocol/api-bindings';
 import { lensPeriphery } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce, ProfileId } from '@lens-protocol/domain/entities';
+import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
-  IProfileDetailsCallGateway,
-  UpdateProfileDetailsRequest,
-} from '@lens-protocol/domain/use-cases/profile';
-import {
-  IUnsignedProtocolCallGateway,
+  IOnChainProtocolCallGateway,
   BroadcastingError,
-  SupportedTransactionRequest,
+  IDelegatedTransactionGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -31,16 +28,21 @@ import { v4 } from 'uuid';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { Data, SelfFundedProtocolCallRequest } from '../SelfFundedProtocolCallRequest';
-import { handleRelayError, RelayReceipt } from '../relayer';
+import {
+  Data,
+  SelfFundedProtocolTransactionRequest,
+} from '../SelfFundedProtocolTransactionRequest';
+import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
 import { createProfileMetadata } from './createProfileMetadata';
 
 export class ProfileMetadataCallGateway
-  implements IProfileDetailsCallGateway, IUnsignedProtocolCallGateway<UpdateProfileDetailsRequest>
+  implements
+    IDelegatedTransactionGateway<UpdateProfileDetailsRequest>,
+    IOnChainProtocolCallGateway<UpdateProfileDetailsRequest>
 {
   constructor(
     private readonly apolloClient: LensApolloClient,
-    private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
+    private readonly transactionFactory: ITransactionFactory<UpdateProfileDetailsRequest>,
     private readonly uploader: IMetadataUploader<ProfileMetadata>,
   ) {}
 
@@ -82,7 +84,7 @@ export class ProfileMetadataCallGateway
 
   private async broadcast(
     request: UpdateProfileDetailsRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = await this.resolveCreateSetProfileMetadataUriRequest(request);
 
     const { data } = await this.apolloClient.mutate<
@@ -154,7 +156,7 @@ export class ProfileMetadataCallGateway
   private createRequestFallback(
     request: UpdateProfileDetailsRequest,
     data: CreateSetProfileMetadataTypedDataData,
-  ): SelfFundedProtocolCallRequest<UpdateProfileDetailsRequest> {
+  ): SelfFundedProtocolTransactionRequest<UpdateProfileDetailsRequest> {
     const contract = lensPeriphery(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileMetadataURI', [
       data.result.typedData.value.profileId,

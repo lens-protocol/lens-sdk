@@ -20,7 +20,7 @@ import {
   assertUnsignedProtocolCallCorrectness,
   assertBroadcastingErrorResultWithRequestFallback,
 } from '../../__helpers__/mocks';
-import { CreatePostCallGateway } from '../CreatePostCallGateway';
+import { CreateOnChainPostGateway } from '../CreateOnChainPostGateway';
 import {
   createFeeCollectModuleExerciseData,
   createFeeCollectModuleFollowersOnlyExerciseData,
@@ -47,12 +47,12 @@ function setupTestScenario({
   const transactionFactory = mockITransactionFactory();
   const uploader = mockIMetadataUploader(uploadUrl);
 
-  const gateway = new CreatePostCallGateway(apolloClient, transactionFactory, uploader);
+  const gateway = new CreateOnChainPostGateway(apolloClient, transactionFactory, uploader);
 
   return { gateway, uploader };
 }
 
-describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
+describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
   describe.each<{
     description: string;
     createExerciseData: () => PublicationExerciseData;
@@ -108,13 +108,13 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
   ])(`and CreatePostRequest with $description`, ({ createExerciseData }) => {
     const data = mockCreatePostTypedDataData();
     const { requestVars, expectedMutationRequestDetails } = createExerciseData();
-    const request = mockCreatePostRequest(requestVars);
     const uploadUrl = faker.internet.url();
+    const request = mockCreatePostRequest(requestVars);
 
     describe(`when creating an IUnsignedProtocolCall<CreatePostRequest>`, () => {
       it(`should:
-          - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
-          - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
+            - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
+            - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
         const apolloClient = createMockApolloClientWithMultipleResponses([
           createCreatePostTypedDataMockedResponse({
             variables: {
@@ -160,7 +160,9 @@ describe(`Given an instance of ${CreatePostCallGateway.name}`, () => {
       });
     });
 
-    describe(`when creating a ${NativeTransaction.name}<CreatePostRequest>}"`, () => {
+    describe(`when creating a ${NativeTransaction.name}<CreatePostRequest>`, () => {
+      const request = mockCreatePostRequest(requestVars);
+
       it(`should:
           - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
           - create an instance of the ${NativeTransaction.name}`, async () => {

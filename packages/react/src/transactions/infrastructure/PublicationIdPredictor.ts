@@ -6,7 +6,6 @@ import {
   GetPublicationsVariables,
 } from '@lens-protocol/api-bindings';
 import { ProfileId, PublicationId, TransactionKind } from '@lens-protocol/domain/entities';
-import { SupportedTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { hasAtLeastOne, never } from '@lens-protocol/shared-kernel';
 
 import { publicationId } from '../../utils';
@@ -20,7 +19,7 @@ function formatPublicationId(profileId: ProfileId, newSequentialId: number): Pub
 export class PublicationIdPredictor implements IPublicationIdPredictor {
   constructor(
     private readonly apolloClient: LensApolloClient,
-    private readonly pendingTransactionGateway: PendingTransactionGateway<SupportedTransactionRequest>,
+    private readonly pendingTransactionGateway: PendingTransactionGateway,
   ) {}
 
   async predictNextPublicationIdFor(profileId: ProfileId): Promise<PublicationId> {

@@ -8,7 +8,7 @@ import {
   Wallet,
   WalletConnectionError,
   PendingSigningRequestError,
-  TransactionRequestModel,
+  AnyTransactionRequestModel,
 } from '../../entities';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
@@ -45,7 +45,7 @@ export class TokenAllowance {
     private readonly activeWallet: ActiveWallet,
     private readonly gateway: IApproveTransactionGateway,
     private readonly presenter: ITokenAllowancePresenter,
-    private readonly queue: TransactionQueue<TransactionRequestModel>,
+    private readonly queue: TransactionQueue<AnyTransactionRequestModel>,
   ) {}
 
   async increaseAllowance(request: TokenAllowanceRequest) {

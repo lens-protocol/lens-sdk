@@ -1,6 +1,6 @@
-import { TransactionRequestModel } from '../../entities';
+import { AnyTransactionRequestModel } from '../../entities';
 
-export type RequestFallback = TransactionRequestModel;
+export type RequestFallback = AnyTransactionRequestModel;
 
 /**
  * An error thrown when the Lens API refuses to relay a transaction.

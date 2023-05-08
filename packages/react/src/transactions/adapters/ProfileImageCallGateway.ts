@@ -11,26 +11,28 @@ import {
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
-import {
-  IProfileImageCallGateway,
-  UpdateProfileImageRequest,
-} from '@lens-protocol/domain/use-cases/profile';
+import { UpdateProfileImageRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
-  SupportedTransactionRequest,
+  IDelegatedTransactionGateway,
+  IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
-import { Data, SelfFundedProtocolCallRequest } from './SelfFundedProtocolCallRequest';
-import { handleRelayError, RelayReceipt } from './relayer';
+import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
+import { handleRelayError, OnChainBroadcastReceipt } from './relayer';
 
-export class ProfileImageCallGateway implements IProfileImageCallGateway {
+export class ProfileImageCallGateway
+  implements
+    IDelegatedTransactionGateway<UpdateProfileImageRequest>,
+    IOnChainProtocolCallGateway<UpdateProfileImageRequest>
+{
   constructor(
     private apolloClient: LensApolloClient,
-    private readonly transactionFactory: ITransactionFactory<SupportedTransactionRequest>,
+    private readonly transactionFactory: ITransactionFactory<UpdateProfileImageRequest>,
   ) {}
 
   async createDelegatedTransaction(
@@ -71,7 +73,7 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
 
   private async broadcast(
     request: UpdateProfileImageRequest,
-  ): PromiseResult<RelayReceipt, BroadcastingError> {
+  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
     const requestArg = this.resolveMutationRequestArg(request);
 
     const { data } = await this.apolloClient.mutate<
@@ -135,7 +137,7 @@ export class ProfileImageCallGateway implements IProfileImageCallGateway {
   private createRequestFallback(
     request: UpdateProfileImageRequest,
     data: CreateSetProfileImageUriTypedDataData,
-  ): SelfFundedProtocolCallRequest<UpdateProfileImageRequest> {
+  ): SelfFundedProtocolTransactionRequest<UpdateProfileImageRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileImageURI', [
       data.result.typedData.value.profileId,

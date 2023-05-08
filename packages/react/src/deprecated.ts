@@ -39,8 +39,8 @@ import {
   UnknownFollowModuleSettings,
   WhoReactedResult,
 } from '@lens-protocol/api-bindings';
-
-import { SupportedTransactionRequest } from './transactions';
+import { AnyTransactionRequestModel } from '@lens-protocol/domain/entities';
+import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 
 /**
  * @deprecated Use {@link EnabledModules} instead.
@@ -251,3 +251,13 @@ export type BroadcastedTransactionData<T extends SupportedTransactionRequest> = 
  * @deprecated Use {@link TransactionState} instead.
  */
 export type PendingTransactionData<T extends SupportedTransactionRequest> = TransactionState<T>;
+
+/**
+ * @deprecated Use {@link AnyTransactionRequestModel} instead.
+ */
+export type TransactionRequestModel = AnyTransactionRequestModel;
+
+/**
+ * @deprecated Use {@link AnyTransactionRequest} instead.
+ */
+export type SupportedTransactionRequest = AnyTransactionRequest;

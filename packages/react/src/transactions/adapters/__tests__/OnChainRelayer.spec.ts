@@ -1,38 +1,34 @@
-import { RelayErrorReasons, RelayResult } from '@lens-protocol/api-bindings';
+import { RelayErrorReasons, BroadcastOnChainResult } from '@lens-protocol/api-bindings';
 import {
   createMockApolloClientWithMultipleResponses,
-  createBroadcastProtocolCallMockedResponse,
+  createBroadcastOnChainMockedResponse,
   mockRelayerResultFragment,
   mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
-import {
-  ISignedProtocolCall,
-  MetaTransaction,
-  TransactionRequestModel,
-} from '@lens-protocol/domain/entities';
+import { ISignedProtocolCall, MetaTransaction } from '@lens-protocol/domain/entities';
 import {
   BroadcastingError,
-  SupportedTransactionRequest,
+  ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { assertFailure, ChainType, ILogger } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
 import { SignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { mockSignedProtocolCall } from '../../../wallet/adapters/__helpers__/mocks';
-import { ProtocolCallRelayer } from '../ProtocolCallRelayer';
+import { OnChainRelayer } from '../OnChainRelayer';
 import { mockITransactionFactory } from '../__helpers__/mocks';
 
-function setupProtocolCallRelayer({
-  relayResult,
+function setupRelayer({
+  broadcastResult,
   signedCall,
 }: {
-  relayResult: RelayResult;
-  signedCall: ISignedProtocolCall<TransactionRequestModel>;
+  broadcastResult: BroadcastOnChainResult;
+  signedCall: ISignedProtocolCall<ProtocolTransactionRequest>;
 }) {
   const factory = mockITransactionFactory();
   const apollo = createMockApolloClientWithMultipleResponses([
-    createBroadcastProtocolCallMockedResponse({
-      result: relayResult,
+    createBroadcastOnChainMockedResponse({
+      result: broadcastResult,
       variables: {
         request: {
           id: signedCall.id,
@@ -41,18 +37,18 @@ function setupProtocolCallRelayer({
       },
     }),
   ]);
-  return new ProtocolCallRelayer(apollo, factory, mock<ILogger>());
+  return new OnChainRelayer(apollo, factory, mock<ILogger>());
 }
 
-describe(`Given an instance of the ${ProtocolCallRelayer.name}`, () => {
-  const signedCall = mockSignedProtocolCall<SupportedTransactionRequest>();
+describe(`Given an instance of the ${OnChainRelayer.name}`, () => {
+  const signedCall = mockSignedProtocolCall<ProtocolTransactionRequest>();
 
   describe(`when relaying an ISignedProtocolCall succeeds`, () => {
     it(`should resolve with a success(${MetaTransaction.name}) on Polygon`, async () => {
-      const relayResult = mockRelayerResultFragment();
+      const broadcastResult = mockRelayerResultFragment();
 
-      const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
-      const result = await transactionRelayer.relayProtocolCall(signedCall);
+      const relayer = setupRelayer({ broadcastResult, signedCall });
+      const result = await relayer.relayProtocolCall(signedCall);
 
       expect(result.unwrap()).toMatchObject(
         expect.objectContaining({
@@ -67,10 +63,10 @@ describe(`Given an instance of the ${ProtocolCallRelayer.name}`, () => {
 
   describe(`when relaying an ISignedProtocolCall fails`, () => {
     it(`should resolve with a failure(${BroadcastingError.name}) carrying the RequestFallback from the ${SignedProtocolCall.name}`, async () => {
-      const relayResult = mockRelayErrorFragment(RelayErrorReasons.Rejected);
+      const broadcastResult = mockRelayErrorFragment(RelayErrorReasons.Rejected);
 
-      const transactionRelayer = setupProtocolCallRelayer({ relayResult, signedCall });
-      const result = await transactionRelayer.relayProtocolCall(signedCall);
+      const relayer = setupRelayer({ broadcastResult, signedCall });
+      const result = await relayer.relayProtocolCall(signedCall);
 
       assertFailure(result);
       expect(result.error).toBeInstanceOf(BroadcastingError);
