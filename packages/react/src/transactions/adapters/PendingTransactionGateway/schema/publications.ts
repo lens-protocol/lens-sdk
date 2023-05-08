@@ -6,6 +6,8 @@ import {
   ContentFocus,
   NftAttributeDisplayType,
   ReferencePolicyType,
+  ContentWarning,
+  ImageType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { z } from 'zod';
 
@@ -145,32 +147,44 @@ const ReferencePolicyConfigSchema = z.union([
 ]);
 
 export const CreatePostRequestSchema = z.object({
+  animationUrl: z.string().optional(),
   appId: z.string().transform(appId).optional(),
+  collect: CollectPolicyConfigSchema,
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),
-  media: z.array(MediaSchema).optional(),
-  reference: ReferencePolicyConfigSchema,
-  collect: CollectPolicyConfigSchema,
-  profileId: ProfileIdSchema,
+  contentWarning: z.nativeEnum(ContentWarning).optional(),
+  delegate: z.boolean(),
+  externalUrl: z.string().optional(),
+  image: z.string().optional(),
+  imageMimeType: z.nativeEnum(ImageType).optional(),
   kind: z.literal(TransactionKind.CREATE_POST),
   locale: z.string(),
-  delegate: z.boolean(),
+  media: z.array(MediaSchema).optional(),
   offChain: z.boolean(),
+  profileId: ProfileIdSchema,
+  reference: ReferencePolicyConfigSchema,
+  tags: z.array(z.string()).optional(),
 });
 
 export const CreateCommentRequestSchema = z.object({
+  animationUrl: z.string().optional(),
   appId: z.string().transform(appId).optional(),
-  publicationId: PublicationIdSchema,
+  collect: CollectPolicyConfigSchema,
   content: z.string().optional(),
   contentFocus: z.nativeEnum(ContentFocus),
-  media: z.array(MediaSchema).optional(),
-  reference: ReferencePolicyConfigSchema,
-  collect: CollectPolicyConfigSchema,
-  profileId: ProfileIdSchema,
+  contentWarning: z.nativeEnum(ContentWarning).optional(),
+  delegate: z.boolean(),
+  externalUrl: z.string().optional(),
+  image: z.string().optional(),
+  imageMimeType: z.nativeEnum(ImageType).optional(),
   kind: z.literal(TransactionKind.CREATE_COMMENT),
   locale: z.string(),
-  delegate: z.boolean(),
+  media: z.array(MediaSchema).optional(),
   offChain: z.boolean(),
+  profileId: ProfileIdSchema,
+  publicationId: PublicationIdSchema,
+  reference: ReferencePolicyConfigSchema,
+  tags: z.array(z.string()).optional(),
 });
 
 export const CreateMirrorRequestSchema = z.object({

@@ -563,7 +563,7 @@ export class Publication {
    *
    * | name    | type     | desc                                                                                |
    * | :------ | :------- | :---------------------------------------------------------------------------------- |
-   * | itemCid | IfpsCid  | You need to precalculate the CID of the file before upload it with the presignedURL |
+   * | itemCid | IpfsCid  | You need to precalculate the CID of the file before upload it with the presignedURL |
    * | type    | MimeType | Mime type of the file to upload                                                     |
    * | altTag  | String   | Alternative text to show on the embed object                                        |
    * | cover   | Url      | Url cover image                                                                     |

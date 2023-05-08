@@ -1,5 +1,33 @@
 # @lens-protocol/api-bindings
 
+## 0.8.0-next.1
+
+### Minor Changes
+
+- 03a8ad5: Deprecated publication's `isOptimisticMirroredByMe` property, introduced `isMirroredByMe`
+
+### Patch Changes
+
+- Updated dependencies [71196cf]
+  - @lens-protocol/domain@0.8.0-next.1
+
+## 0.8.0-next.0
+
+### Minor Changes
+
+- 513373d3: Enhanced publication's hasCollectedByMe to replace deprecated hasOptimisticCollectedByMe property
+- c416a2ea:
+  - **Added:** self-fund protocol calls when subsidized approaches fails
+  - **Fixed:** ensures correct chain when signing typed data
+  - **Fixed:** network switch in wagmi bindings
+
+### Patch Changes
+
+- 04647bbe: **Fixed** issue preventing query hook from detecting active profile changes
+- Updated dependencies [c416a2ea]
+  - @lens-protocol/shared-kernel@0.8.0-next.0
+  - @lens-protocol/domain@0.8.0-next.0
+
 ## 0.7.1
 
 ### Patch Changes

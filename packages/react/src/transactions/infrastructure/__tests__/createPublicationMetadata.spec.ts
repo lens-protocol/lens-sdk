@@ -12,7 +12,12 @@ import {
   mockNumberNftAttribute,
   mockStringNftAttribute,
 } from '@lens-protocol/domain/mocks';
-import { CollectPolicyType, ContentFocus } from '@lens-protocol/domain/use-cases/publications';
+import {
+  CollectPolicyType,
+  ContentFocus,
+  ContentWarning,
+  ImageType,
+} from '@lens-protocol/domain/use-cases/publications';
 
 import { appId } from '../../../utils';
 import { createPublicationMetadata } from '../createPublicationMetadata';
@@ -121,36 +126,66 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
         });
       });
 
-      describe(`without appId`, () => {
-        it(`should return the metadata without appId field`, () => {
-          const request = mockPublication({
-            content,
-            media,
-            locale: 'en',
-            contentFocus: ContentFocus.TEXT,
-            collect: mockNoCollectPolicyConfig(),
-          });
-
-          const metadata = createPublicationMetadata(request);
-
-          expect(metadata).not.toHaveProperty('appId');
-        });
-      });
-
       describe(`with media`, () => {
         it(`should return the metadata.media with only defined fields`, () => {
           const request = mockPublication({
-            content,
             media: [mockMediaObject()],
             locale: 'en',
-            contentFocus: ContentFocus.TEXT,
-            collect: mockNoCollectPolicyConfig(),
+            // collect: mockNoCollectPolicyConfig(),
+            contentFocus: ContentFocus.IMAGE,
           });
 
           const metadata = createPublicationMetadata(request);
 
           expect(metadata.media?.[0]).not.toHaveProperty('altTag');
           expect(metadata.media?.[0]).not.toHaveProperty('cover');
+        });
+      });
+
+      describe(`without optional fields like appId, animationUrl etc.`, () => {
+        it(`should return the metadata without appId field`, () => {
+          const request = mockPublication({
+            content,
+            locale: 'en',
+            contentFocus: ContentFocus.TEXT,
+          });
+
+          const metadata = createPublicationMetadata(request);
+
+          expect(metadata).not.toHaveProperty('animation_url');
+          expect(metadata).not.toHaveProperty('appId');
+          expect(metadata).not.toHaveProperty('contentWarning');
+          expect(metadata).not.toHaveProperty('external_url');
+          expect(metadata).not.toHaveProperty('image');
+          expect(metadata).not.toHaveProperty('imageMimeType');
+          expect(metadata).not.toHaveProperty('tags');
+        });
+      });
+
+      describe(`with all optional fields like appId, animationUrl etc.`, () => {
+        it(`should return the metadata.media with only defined fields`, () => {
+          const request = mockPublication({
+            content,
+            locale: 'en',
+            contentFocus: ContentFocus.TEXT,
+            animationUrl: faker.internet.url(),
+            appId: appId('test'),
+            contentWarning: ContentWarning.NSFW,
+            externalUrl: faker.internet.url(),
+            image: faker.image.imageUrl(),
+            imageMimeType: ImageType.JPEG,
+            tags: [faker.lorem.word()],
+          });
+
+          const metadata = createPublicationMetadata(request);
+
+          expect(metadata.animation_url).toBeDefined();
+          expect(metadata.appId).toBeDefined();
+          expect(metadata.contentWarning).toEqual('NSFW');
+          expect(metadata.external_url).toBeDefined();
+          expect(metadata.image).toBeDefined();
+          expect(metadata.imageMimeType).toBeDefined();
+          expect(metadata.tags).toBeDefined();
         });
       });
     });

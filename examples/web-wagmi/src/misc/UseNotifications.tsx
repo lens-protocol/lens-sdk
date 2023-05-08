@@ -1,4 +1,4 @@
-import { Profile, useNotifications } from '@lens-protocol/react-web';
+import { NotificationTypes, Profile, useNotifications } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth';
@@ -18,7 +18,12 @@ function NotificationsInner({ profile }: NotificationsInnerProps) {
     loading,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(useNotifications({ profileId: profile.id }));
+  } = useInfiniteScroll(
+    useNotifications({
+      profileId: profile.id,
+      notificationTypes: [NotificationTypes.MentionComment, NotificationTypes.CollectedComment],
+    }),
+  );
 
   if (loading) return <Loading />;
 

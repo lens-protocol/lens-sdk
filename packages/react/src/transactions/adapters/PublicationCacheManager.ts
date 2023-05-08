@@ -72,7 +72,7 @@ export class PublicationCacheManager {
       return failure(resolvedTypeResult.error);
     }
 
-    const { id, fragment, fragmentName } = resolvedTypeResult.unwrap();
+    const { id, fragment, fragmentName } = resolvedTypeResult.value;
 
     this.cache.updateFragment<AnyPublication>(
       {

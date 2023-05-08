@@ -80,6 +80,7 @@ export {
   CollectPolicyType,
   CollectType,
   ContentFocus,
+  ContentWarning,
   ImageType,
   NftAttributeDisplayType,
   ReferencePolicyType,

@@ -230,15 +230,19 @@ export function mockFreeCollectModuleSettings({ followerOnly = false } = {}): Co
 
 export function mockMetadataOutputFragment(overrides?: Partial<MetadataOutput>): MetadataOutput {
   return {
-    mainContentFocus: PublicationMainFocus.TextOnly,
     animatedUrl: faker.internet.url(),
-    name: faker.commerce.productName(),
-    description: null,
     attributes: [],
     content: faker.lorem.words(5),
-    image: faker.internet.url(),
-    media: [],
+    contentWarning: null,
+    description: null,
     encryptionParams: null,
+    image: faker.internet.url(),
+    locale: null,
+    mainContentFocus: PublicationMainFocus.TextOnly,
+    media: [],
+    name: faker.commerce.productName(),
+    tags: [],
+
     ...overrides,
     __typename: 'MetadataOutput',
   };
