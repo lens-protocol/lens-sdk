@@ -8,6 +8,7 @@ import {
   CreatePublicCommentRequest as CreatePublicCommentRequestArg,
   LensApolloClient,
   omitTypename,
+  CreateCommentEip712TypedData,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -30,7 +31,7 @@ import {
 import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
 import { resolveCollectModule, resolveReferenceModule } from './utils';
 
-export class CreateCommentCallGateway
+export class CreateOnChainCommentGateway
   implements
     IDelegatedTransactionGateway<CreateCommentRequest>,
     IOnChainProtocolCallGateway<CreateCommentRequest>
@@ -71,7 +72,7 @@ export class CreateCommentCallGateway
       id: typedData.result.id,
       request,
       typedData: omitTypename(typedData.result.typedData),
-      fallback: this.createRequestFallback(request, typedData),
+      fallback: this.createRequestFallback(request, typedData.result.typedData),
     });
   }
 
@@ -92,7 +93,7 @@ export class CreateCommentCallGateway
 
     if (data.result.__typename === 'RelayError') {
       const typedData = await this.createTypedData(requestArg);
-      const fallback = this.createRequestFallback(request, typedData);
+      const fallback = this.createRequestFallback(request, typedData.result.typedData);
 
       return handleRelayError(data.result, fallback);
     }
@@ -135,25 +136,25 @@ export class CreateCommentCallGateway
 
   private createRequestFallback(
     request: CreateCommentRequest,
-    data: CreateCommentTypedDataData,
+    data: CreateCommentEip712TypedData,
   ): SelfFundedProtocolTransactionRequest<CreateCommentRequest> {
-    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const contract = lensHub(data.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('comment', [
       {
-        profileId: data.result.typedData.value.profileId,
-        contentURI: data.result.typedData.value.contentURI,
-        profileIdPointed: data.result.typedData.value.profileIdPointed,
-        pubIdPointed: data.result.typedData.value.pubIdPointed,
-        referenceModuleData: data.result.typedData.value.referenceModuleData,
-        collectModule: data.result.typedData.value.collectModule,
-        collectModuleInitData: data.result.typedData.value.collectModuleInitData,
-        referenceModule: data.result.typedData.value.referenceModule,
-        referenceModuleInitData: data.result.typedData.value.referenceModuleInitData,
+        profileId: data.value.profileId,
+        contentURI: data.value.contentURI,
+        profileIdPointed: data.value.profileIdPointed,
+        pubIdPointed: data.value.pubIdPointed,
+        referenceModuleData: data.value.referenceModuleData,
+        collectModule: data.value.collectModule,
+        collectModuleInitData: data.value.collectModuleInitData,
+        referenceModule: data.value.referenceModule,
+        referenceModuleInitData: data.value.referenceModuleInitData,
       },
     ]);
     return {
       ...request,
-      contractAddress: data.result.typedData.domain.verifyingContract,
+      contractAddress: data.domain.verifyingContract,
       encodedData: encodedData as Data,
     };
   }

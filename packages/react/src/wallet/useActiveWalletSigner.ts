@@ -8,7 +8,7 @@ import { useActiveWallet } from './useActiveWallet';
 /**
  * @category Wallet
  * @group Hooks
- * @experimental
+ * @internal
  */
 export function useActiveWalletSigner(): ReadResult<RequiredSigner | null, void> {
   const [{ signer, signerLoading }, setSigner] = useState<{

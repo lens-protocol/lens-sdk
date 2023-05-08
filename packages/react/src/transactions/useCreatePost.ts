@@ -24,7 +24,6 @@ import { useSharedDependencies } from '../shared';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreatePostController } from './adapters/useCreatePostController';
-import { PublicationMetadataUploader } from './infrastructure/PublicationMetadataUploader';
 
 export type UseCreatePostArgs = {
   /**
@@ -87,6 +86,8 @@ export type CreatePostOperation = Operation<
 >;
 
 /**
+ * Creates a new post.
+ *
  * @category Publications
  * @group Hooks
  * @param args - {@link UseCreatePostArgs}
@@ -97,7 +98,7 @@ export type CreatePostOperation = Operation<
  * import { ContentFocus, ProfileOwnedByMe, useCreatePost } from '@lens-protocol/react-web';
  *
  * function PostComposer({ publisher }: { publisher: ProfileOwnedByMe }) {
- *   const { execute: createPost, error, isPending } = useCreatePost({ publisher, upload: uploadToIpfs });
+ *   const { execute: post, error, isPending } = useCreatePost({ publisher, upload: uploadToIpfs });
  *
  *   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
  *     event.preventDefault();
@@ -107,7 +108,7 @@ export type CreatePostOperation = Operation<
  *     const formData = new FormData(form);
  *     const content = (formData.get('content') as string | null) ?? never();
  *
- *     let result = await create({
+ *     let result = await post({
  *       content,
  *       contentFocus: ContentFocus.TEXT,
  *       locale: 'en',
@@ -142,9 +143,7 @@ export type CreatePostOperation = Operation<
  */
 export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreatePostOperation {
   const { appId } = useSharedDependencies();
-
-  const uploader = new PublicationMetadataUploader(upload);
-  const createPost = useCreatePostController({ uploader });
+  const createPost = useCreatePostController({ upload });
 
   return useOperation(
     async ({
@@ -167,6 +166,7 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
           profileId: publisher.id,
           reference,
           appId,
+          offChain: collect.type === CollectPolicyType.NO_COLLECT,
           ...args,
         };
         return await createPost(request);

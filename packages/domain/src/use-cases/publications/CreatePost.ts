@@ -3,7 +3,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { AppId, DecryptionCriteria, ProfileId, TransactionKind } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
-import { CollectPolicyConfig, CollectPolicyType, ContentFocus, Locale, MediaObject } from './types';
+import { CollectPolicyConfig, ContentFocus, Locale, MediaObject } from './types';
 
 export type CreatePostRequest = {
   appId?: AppId;
@@ -17,6 +17,7 @@ export type CreatePostRequest = {
   locale: Locale;
   delegate: boolean;
   decryptionCriteria?: DecryptionCriteria;
+  offChain: boolean;
 };
 
 export class CreatePost {
@@ -28,7 +29,7 @@ export class CreatePost {
   async execute(request: CreatePostRequest) {
     invariant(request.media || request.content, 'One of post media or content is required');
 
-    if (request.collect.type === CollectPolicyType.NO_COLLECT) {
+    if (request.offChain) {
       await this.createOffChainPost.execute(request);
     } else {
       await this.createOnChainPost.execute(request);

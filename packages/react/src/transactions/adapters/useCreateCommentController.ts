@@ -1,72 +1,36 @@
-import { LensApolloClient } from '@lens-protocol/api-bindings';
-import {
-  PendingSigningRequestError,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
-import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
-import {
-  BroadcastingError,
-  IMetaTransactionNonceGateway,
-  IOnChainRelayer,
-  SubsidizeOnChain,
-  AnyTransactionRequest,
-  TransactionQueue,
-} from '@lens-protocol/domain/use-cases/transactions';
-import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
+import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
 
+import { useSharedDependencies } from '../../shared';
+import { CreateCommentController } from './CreateCommentController';
 import { IMetadataUploader } from './IMetadataUploader';
-import { ITransactionFactory } from './ITransactionFactory';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
-import { CreateCommentCallGateway } from './publication-call-gateways/CreateCommentCallGateway';
 
-export type CreateCommentControllerArgs<T extends CreateCommentRequest> = {
-  activeWallet: ActiveWallet;
-  apolloClient: LensApolloClient;
-  onChainRelayer: IOnChainRelayer<T>;
-  transactionFactory: ITransactionFactory<T>;
-  transactionGateway: IMetaTransactionNonceGateway;
-  transactionQueue: TransactionQueue<AnyTransactionRequest>;
-  uploader: IMetadataUploader<T>;
+export type UseCreateCommentArgs = {
+  uploader: IMetadataUploader<CreateCommentRequest>;
 };
 
-export class CreateCommentController<T extends CreateCommentRequest> {
-  private readonly presenter = new PromiseResultPresenter<
-    void,
-    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
-  >();
-
-  private readonly createComment: CreateComment;
-
-  constructor({
+export function useCreateCommentController({ uploader }: UseCreateCommentArgs) {
+  const {
     activeWallet,
     apolloClient,
+    offChainRelayer,
     onChainRelayer,
     transactionFactory,
     transactionGateway,
     transactionQueue,
-    uploader,
-  }: CreateCommentControllerArgs<T>) {
-    const gateway = new CreateCommentCallGateway(apolloClient, transactionFactory, uploader);
+  } = useSharedDependencies();
 
-    const signedCreateComment = new SubsidizeOnChain<CreateCommentRequest>(
+  return async (request: CreateCommentRequest) => {
+    const controller = new CreateCommentController<CreateCommentRequest>({
       activeWallet,
-      transactionGateway,
-      gateway,
+      apolloClient,
+      offChainRelayer,
       onChainRelayer,
+      transactionFactory,
+      transactionGateway,
       transactionQueue,
-      this.presenter,
-    );
-    this.createComment = new CreateComment(
-      signedCreateComment,
-      gateway,
-      transactionQueue,
-      this.presenter,
-    );
-  }
+      uploader,
+    });
 
-  async execute(request: CreateCommentRequest) {
-    await this.createComment.execute(request);
-    return this.presenter.asResult();
-  }
+    return controller.execute(request);
+  };
 }

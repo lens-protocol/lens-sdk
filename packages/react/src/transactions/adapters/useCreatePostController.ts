@@ -1,14 +1,17 @@
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 
 import { useSharedDependencies } from '../../shared';
+import { PublicationMetadataUploader } from '../infrastructure/PublicationMetadataUploader';
 import { CreatePostController } from './CreatePostController';
-import { IMetadataUploader } from './IMetadataUploader';
+import { MetadataUploadHandler } from './MetadataUploadHandler';
 
 export type UseCreatePostArgs = {
-  uploader: IMetadataUploader<CreatePostRequest>;
+  upload: MetadataUploadHandler;
 };
 
-export function useCreatePostController({ uploader }: UseCreatePostArgs) {
+export function useCreatePostController({ upload }: UseCreatePostArgs) {
+  const uploader = new PublicationMetadataUploader(upload);
+
   const {
     activeWallet,
     apolloClient,
@@ -20,7 +23,7 @@ export function useCreatePostController({ uploader }: UseCreatePostArgs) {
   } = useSharedDependencies();
 
   return async (request: CreatePostRequest) => {
-    const controller = new CreatePostController<CreatePostRequest>({
+    const controller = new CreatePostController({
       activeWallet,
       apolloClient,
       offChainRelayer,
