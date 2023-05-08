@@ -28,7 +28,7 @@ import {
 } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
 
-export class CreateMirrorCallGateway
+export class CreateOnChainMirrorGateway
   implements
     IDelegatedTransactionGateway<CreateMirrorRequest>,
     IOnChainProtocolCallGateway<CreateMirrorRequest>

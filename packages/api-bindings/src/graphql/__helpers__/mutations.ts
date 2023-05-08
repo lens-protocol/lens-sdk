@@ -26,6 +26,10 @@ import {
   BroadcastOffChainDocument,
   CreateDataAvailabilityCommentTypedDataDocument,
   CreateDataAvailabilityCommentViaDispatcherDocument,
+  CreateMirrorTypedDataDocument,
+  CreateMirrorViaDispatcherDocument,
+  CreateDataAvailabilityMirrorTypedDataDocument,
+  CreateDataAvailabilityMirrorViaDispatcherDocument,
 } from '../hooks';
 import {
   AddReactionVariables,
@@ -76,6 +80,14 @@ import {
   CreateDataAvailabilityCommentTypedDataVariables,
   CreateDataAvailabilityCommentViaDispatcherData,
   CreateDataAvailabilityCommentViaDispatcherVariables,
+  CreateMirrorTypedDataData,
+  CreateMirrorTypedDataVariables,
+  CreateMirrorViaDispatcherData,
+  CreateMirrorViaDispatcherVariables,
+  CreateDataAvailabilityMirrorTypedDataData,
+  CreateDataAvailabilityMirrorTypedDataVariables,
+  CreateDataAvailabilityMirrorViaDispatcherData,
+  CreateDataAvailabilityMirrorViaDispatcherVariables,
 } from '../operations';
 
 export function createCreateProfileMockedResponse({
@@ -223,6 +235,32 @@ export function mockCreateCommentTypedDataData({
         contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
         collectModule: '0xd6072BB2ABc0a9d1331c7d0B83AE6C47f2Cb86A3',
         collectModuleInitData: '0x',
+        referenceModuleData: '0x0000000000000000000000000000000000000000',
+        referenceModule: '0x0000000000000000000000000000000000000000',
+        referenceModuleInitData: '0x',
+      },
+    }),
+  };
+}
+
+export function mockCreateMirrorTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateMirrorTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateMirrorBroadcastItemResult', {
+      __typename: 'CreateMirrorEIP712TypedData',
+      types: {
+        __typename: 'CreateMirrorEIP712TypedDataTypes',
+        MirrorWithSig: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      value: {
+        __typename: 'CreateMirrorEIP712TypedDataValue',
+        profileIdPointed: mockProfileId(),
+        pubIdPointed: faker.datatype.hexadecimal({ length: 2 }),
+        nonce,
+        deadline: 1644303500,
+        profileId: mockProfileId(),
         referenceModuleData: '0x0000000000000000000000000000000000000000',
         referenceModule: '0x0000000000000000000000000000000000000000',
         referenceModuleInitData: '0x',
@@ -567,6 +605,84 @@ export function createCreateDataAvailabilityCommentViaDispatcherDataMockedRespon
   return {
     request: {
       query: CreateDataAvailabilityCommentViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateMirrorTypedDataMockedResponse<T extends CreateMirrorTypedDataData>({
+  variables,
+  data,
+}: {
+  variables: CreateMirrorTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateMirrorTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateDataAvailabilityMirrorTypedDataMockedResponse<
+  T extends CreateDataAvailabilityMirrorTypedDataData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityMirrorTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityMirrorTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateMirrorViaDispatcherMockedResponse<
+  T extends CreateMirrorViaDispatcherData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateMirrorViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateMirrorViaDispatcherDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function createCreateDataAvailabilityMirrorViaDispatcherDataMockedResponse<
+  T extends CreateDataAvailabilityMirrorViaDispatcherData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateDataAvailabilityMirrorViaDispatcherVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateDataAvailabilityMirrorViaDispatcherDocument,
       variables,
     },
     result: {
