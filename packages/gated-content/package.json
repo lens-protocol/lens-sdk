@@ -49,7 +49,7 @@
     "@lit-protocol/crypto": "2.1.62",
     "@lit-protocol/encryption": "2.1.62",
     "@lit-protocol/node-client": "^2.1.62",
-    "@lit-protocol/types": "2.1.62",
+    "@lit-protocol/types": "2.1.160",
     "siwe": "^1.1.6",
     "tslib": "^2.5.0"
   },
