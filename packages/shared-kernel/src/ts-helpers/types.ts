@@ -97,6 +97,12 @@ export type Primitive = string | number | boolean | bigint | symbol | undefined 
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 
 /**
+ * Distributes TAdd over a union TUnion.
+ * @internal
+ */
+export type Distribute<TUnion, TAdd> = TUnion extends unknown ? TUnion & TAdd : never;
+
+/**
  * Declares a non empty array of the specified type.
  */
 export type NonEmptyArray<T> = Overwrite<

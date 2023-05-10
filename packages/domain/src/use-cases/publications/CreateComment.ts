@@ -11,6 +11,9 @@ import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 import { CollectPolicyConfig, ContentFocus, ContentWarning, Locale, MediaObject } from './types';
 
+/**
+ * @alpha
+ */
 export type BaseCommentRequest = {
   /**
    * The discriminator for the transaction kind.
@@ -87,7 +90,7 @@ export type CreateTextualCommentRequest = BaseCommentRequest & {
 
 export type CreateMediaCommentRequest = BaseCommentRequest & {
   /**
-   * The publication content as Markdown string.
+   * Contextual information as Markdown string.
    */
   content?: string;
   /**
@@ -102,14 +105,13 @@ export type CreateMediaCommentRequest = BaseCommentRequest & {
 
 export type CreateEmbedCommentRequest = BaseCommentRequest & {
   /**
-   * A URL to a multi-media attachment for the item. The file extensions GLTF, GLB, WEBM, MP4, M4V, OGV,
-   * and OGG are supported.
-   * Animation_url also supports HTML pages, allowing you to build rich experiences and interactive NFTs using JavaScript canvas,
+   * A URL to a multi-media attachment for the item. The file extensions GLTF, GLB, WEBM, MP4, M4V, OGV, and OGG are supported.
+   * It also supports HTML pages, allowing you to build rich experiences and interactive NFTs using JavaScript canvas,
    * WebGL, and more. Scripts and relative paths within the HTML page are now supported. However, access to browser extensions is not supported.
    */
   animationUrl: Url;
   /**
-   * The publication content as Markdown string.
+   * Contextual information as Markdown string.
    */
   content?: string;
   /**

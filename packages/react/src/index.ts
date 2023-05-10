@@ -65,8 +65,6 @@ export {
   InsufficientGasError,
   PendingSigningRequestError,
   ReactionType,
-  TransactionError,
-  TransactionErrorReason,
   UserRejectedError,
   WalletConnectionError,
   WalletConnectionErrorReason,
@@ -132,6 +130,7 @@ export { isValidHandle } from '@lens-protocol/api-bindings';
 export type {
   Brand,
   Cast,
+  Distribute,
   DistributiveOmit,
   Narrow,
   Overwrite,

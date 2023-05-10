@@ -23,12 +23,21 @@ export {
   TransactionErrorReason,
   TransactionKind,
 } from '@lens-protocol/domain/entities';
-export type { Signature, AnyTransactionRequestModel } from '@lens-protocol/domain/entities';
+export type {
+  JustProtocolRequest,
+  PickByKind,
+  ProtocolTransactionKind,
+  ProtocolTransactionKinds,
+  Signature,
+} from '@lens-protocol/domain/entities';
 
 /**
  * Request models
  */
-export type { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+export type {
+  AnyTransactionRequest,
+  ProtocolTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
 export type {
   CreateProfileRequest,
   FollowRequest,
@@ -51,28 +60,37 @@ export type { TokenAllowanceRequest } from '@lens-protocol/domain/use-cases/wall
 export type {
   AaveChargeCollectPolicyConfig,
   AnyoneReferencePolicyConfig,
+  BaseCommentRequest,
+  BasePostRequest,
   ChargeCollectPolicyConfig,
+  CollectablePolicyConfig,
   CollectFee,
   CollectPolicyConfig,
   CollectRequest,
   CreateCommentRequest,
+  CreateEmbedCommentRequest,
+  CreateEmbedPostRequest,
+  CreateMediaCommentRequest,
+  CreateMediaPostRequest,
   CreateMirrorRequest,
   CreatePostRequest,
+  CreateTextualCommentRequest,
+  CreateTextualPostRequest,
   DegreesOfSeparationReferencePolicyConfig,
   FollowersOnlyReferencePolicyConfig,
   FreeCollectPolicyConfig,
   FreeCollectRequest,
   Locale,
   MediaObject,
+  MultirecipientChargeCollectPolicyConfig,
   NftAttribute,
   NftMetadata,
   NoCollectPolicyConfig,
   PaidCollectRequest,
   RecipientWithSplit,
   ReferencePolicyConfig,
-  SupportedPublicationMediaType,
-  MultirecipientChargeCollectPolicyConfig,
   SimpleChargeCollectPolicyConfig,
+  SupportedPublicationMediaType,
   VaultChargeCollectPolicyConfig,
 } from '@lens-protocol/domain/use-cases/publications';
 export {

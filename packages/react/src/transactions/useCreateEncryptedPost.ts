@@ -1,6 +1,5 @@
 import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
-  AppId,
   DecryptionCriteria,
   PendingSigningRequestError,
   TransactionKind,
@@ -8,16 +7,11 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import {
-  CollectPolicyConfig,
   CollectPolicyType,
-  ContentFocus,
-  Locale,
-  MediaObject,
-  ReferencePolicyConfig,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
+import { Distribute, failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { EncryptionConfig } from '../config';
 import { Operation, useOperation } from '../helpers/operations';
@@ -25,6 +19,7 @@ import { useSharedDependencies } from '../shared';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreateEncryptedPostController } from './adapters/useCreateEncryptedPostController';
+import { CreatePostArgs } from './useCreatePost';
 
 export type UseCreateEncryptedPostArgs = {
   /**
@@ -41,46 +36,15 @@ export type UseCreateEncryptedPostArgs = {
   upload: MetadataUploadHandler;
 };
 
-export type CreateEncryptedPostArgs = {
-  /**
-   * @deprecated Use {@link LensConfig#appId} instead. This was exposed by mistake but was never used.
-   */
-  appId?: AppId;
-  /**
-   * The post collect policy. Determines the criteria that must be met for a user to be able to collect the post.
-   */
-  collect?: CollectPolicyConfig;
-  /**
-   * The post content as Markdown string.
-   */
-  content?: string;
-  /**
-   * The post content focus. Determines what is the primary objective of the post.
-   */
-  contentFocus: ContentFocus;
-  /**
-   * The post media. An array of media objects.
-   */
-  media?: MediaObject[];
-  /**
-   * The post reference policy. Determines the criteria that must be met for a user to be able to comment or mirror the post.
-   */
-  reference?: ReferencePolicyConfig;
-  /**
-   * The language of the post.
-   *
-   * It a locale string in the format of `<language-tag>-<region-tag>` or just `<language-tag>`, where:
-   * - `language-tag` is a two-letter ISO 639-1 language code, e.g. `en` or `it`
-   * - `region-tag` is a two-letter ISO 3166-1 alpha-2 region code, e.g. `US` or `IT`
-   *
-   * You can just pass in the language tag if you do not know the region or don't need to be specific.
-   */
-  locale: Locale;
-  /**
-   * The criteria that must be met for a user to be able to decrypt the post.
-   */
-  decryptionCriteria: DecryptionCriteria;
-};
+export type CreateEncryptedPostArgs = Distribute<
+  CreatePostArgs,
+  {
+    /**
+     * The criteria that must be met for a user to be able to decrypt the post.
+     */
+    decryptionCriteria: DecryptionCriteria;
+  }
+>;
 
 export type CreateEncryptedPostOperation = Operation<
   void,
@@ -95,6 +59,7 @@ export type CreateEncryptedPostOperation = Operation<
 /**
  * @category Publications
  * @group Hooks
+ * @param args - {@link UseCreateEncryptedPostArgs}
  */
 export function useCreateEncryptedPost({
   encryption,

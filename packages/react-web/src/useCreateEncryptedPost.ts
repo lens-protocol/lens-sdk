@@ -14,6 +14,7 @@ export type UseCreateEncryptedPostArgs = {
 /**
  * @category Publications
  * @group Hooks
+ * @param args - {@link UseCreateEncryptedPostArgs}
  */
 export function useCreateEncryptedPost(args: UseCreateEncryptedPostArgs) {
   return useCreateEncryptedPostBase({

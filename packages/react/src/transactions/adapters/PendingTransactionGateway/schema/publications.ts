@@ -1,4 +1,4 @@
-import { TransactionKind } from '@lens-protocol/domain/entities';
+import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   SupportedFileType,
   CollectPolicyType,
@@ -8,6 +8,8 @@ import {
   ReferencePolicyType,
   ContentWarning,
   ImageType,
+  CreatePostRequest,
+  CreateCommentRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { z } from 'zod';
 
@@ -149,8 +151,11 @@ const ReferencePolicyConfigSchema = z.union([
   FollowersOnlyReferencePolicyConfigSchema,
 ]);
 
+// see https://github.com/colinhacks/zod/issues/210#issuecomment-729775018
+const AppIdSchema: z.Schema<AppId> = z.any().refine(appId);
+
 const BasePostRequestSchema = z.object({
-  appId: z.string().transform(appId).optional(),
+  appId: AppIdSchema.optional(),
   collect: CollectPolicyConfigSchema,
   contentWarning: z.nativeEnum(ContentWarning).optional(),
   // decryptionCriteria TODO, add to schema
@@ -182,14 +187,20 @@ const CreateEmbedPostRequestSchema = BasePostRequestSchema.extend({
   media: z.array(MediaSchema).optional(),
 });
 
-export const CreatePostRequestSchema = z.union([
+/**
+ * The type annotation here to reduce the likelihood of incurring in the TS7056 error down the line:
+ * ```
+ * error TS7056: The inferred type of this node exceeds the maximum length the compiler will serialize. An explicit type annotation is needed.
+ * ```
+ */
+export const CreatePostRequestSchema: z.Schema<CreatePostRequest> = z.union([
   CreateTextualPostRequestSchema,
   CreateMediaPostRequestSchema,
   CreateEmbedPostRequestSchema,
 ]);
 
 const BaseCommentRequestSchema = z.object({
-  appId: z.string().transform(appId).optional(),
+  appId: AppIdSchema.optional(),
   collect: CollectPolicyConfigSchema,
   contentWarning: z.nativeEnum(ContentWarning).optional(),
   // decryptionCriteria TODO, add to schema
@@ -215,6 +226,12 @@ const CreateMediaCommentRequestSchema = BaseCommentRequestSchema.extend({
   media: z.array(MediaSchema),
 });
 
+/**
+ * The type annotation here to reduce the likelihood of incurring in the TS7056 error down the line:
+ * ```
+ * error TS7056: The inferred type of this node exceeds the maximum length the compiler will serialize. An explicit type annotation is needed.
+ * ```
+ */
 const CreateEmbedCommentRequestSchema = BaseCommentRequestSchema.extend({
   animationUrl: z.string(),
   content: z.string().optional(),
@@ -222,7 +239,7 @@ const CreateEmbedCommentRequestSchema = BaseCommentRequestSchema.extend({
   media: z.array(MediaSchema).optional(),
 });
 
-export const CreateCommentRequestSchema = z.union([
+export const CreateCommentRequestSchema: z.Schema<CreateCommentRequest> = z.union([
   CreateTextualCommentRequestSchema,
   CreateMediaCommentRequestSchema,
   CreateEmbedCommentRequestSchema,

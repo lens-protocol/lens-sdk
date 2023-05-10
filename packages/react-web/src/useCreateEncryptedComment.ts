@@ -14,6 +14,7 @@ export type UseCreateEncryptedCommentArgs = {
 /**
  * @category Publications
  * @group Hooks
+ * @param args - {@link UseCreateEncryptedCommentArgs}
  */
 export function useCreateEncryptedComment(args: UseCreateEncryptedCommentArgs) {
   return useCreateEncryptedCommentBase({
