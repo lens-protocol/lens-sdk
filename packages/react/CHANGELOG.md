@@ -1,5 +1,11 @@
 # @lens-protocol/react
 
+## 1.1.0-next.3
+
+### Patch Changes
+
+- 1d5cf31: Fixed create mirror commit phase so to update the correct publication in cache
+
 ## 1.1.0-next.2
 
 ### Minor Changes

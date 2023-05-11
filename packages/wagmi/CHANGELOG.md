@@ -1,5 +1,11 @@
 # @lens-protocol/wagmi
 
+## 1.1.0-next.3
+
+### Patch Changes
+
+- @lens-protocol/react-web@1.1.0-next.3
+
 ## 1.1.0-next.2
 
 ### Patch Changes
