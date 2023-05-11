@@ -1,5 +1,12 @@
 # @lens-protocol/wagmi
 
+## 1.1.0-next.2
+
+### Patch Changes
+
+- ef1d7e2: Added Momoka support to React hooks
+  - @lens-protocol/react-web@1.1.0-next.2
+
 ## 1.1.0-next.1
 
 ### Patch Changes
