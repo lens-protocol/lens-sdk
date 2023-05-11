@@ -35,7 +35,7 @@ export function PostComposer({ publisher }: PostComposerProps) {
 
     const subsidizedAttempt = await post({
       content,
-      contentFocus: ContentFocus.TEXT,
+      contentFocus: ContentFocus.TEXT_ONLY,
       locale: 'en',
     });
 

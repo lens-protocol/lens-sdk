@@ -66,7 +66,7 @@ export function Composer({ publisher }: ComposerProps) {
 
     await create({
       content,
-      contentFocus: ContentFocus.TEXT,
+      contentFocus: ContentFocus.TEXT_ONLY,
       locale: 'en',
       decryptionCriteria,
     });

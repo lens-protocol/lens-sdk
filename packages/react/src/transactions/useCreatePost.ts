@@ -50,9 +50,11 @@ export type CreatePostBaseArgs = {
   /**
    * The publication collect policy. Determines the criteria that must be met for a user to be able to collect the publication.
    */
-  collect: CollectPolicyConfig;
+  collect?: CollectPolicyConfig;
   /**
    * Specifies a content warning for the publication.
+   *
+   * @defaultValue `{ type: CollectPolicyType.NO_COLLECT }`
    */
   contentWarning?: ContentWarning;
   /**
@@ -67,8 +69,10 @@ export type CreatePostBaseArgs = {
   locale: Locale;
   /**
    * The publication reference policy. Determines the criteria that must be met for a user to be able to publication or mirror the publication.
+   *
+   * @defaultValue `{ type: ReferencePolicyType.ANYONE }`
    */
-  reference: ReferencePolicyConfig;
+  reference?: ReferencePolicyConfig;
   /**
    * A list of tags for the publication. This can be used to categorize the publication.
    *
@@ -165,7 +169,7 @@ export type CreatePostOperation = Operation<
  *
  *     let result = await post({
  *       content,
- *       contentFocus: ContentFocus.TEXT,
+ *       contentFocus: ContentFocus.TEXT_ONLY,
  *       locale: 'en',
  *     });
  *

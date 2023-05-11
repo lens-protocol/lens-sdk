@@ -65,7 +65,7 @@ export type SelfFundedOperation = Operation<
  *   const submit = async (content: string) => {
  *     const result = await createPost({
  *       content,
- *       contentFocus: ContentFocus.TEXT,
+ *       contentFocus: ContentFocus.TEXT_ONLY,
  *       locale: 'en',
  *     });
  *
