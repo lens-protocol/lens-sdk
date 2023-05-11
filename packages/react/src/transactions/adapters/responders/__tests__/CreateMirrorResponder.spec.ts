@@ -10,11 +10,10 @@ import {
   mockTransactionData,
   mockCreateMirrorRequest,
   mockPublicationId,
-  mockTransactionHash,
 } from '@lens-protocol/domain/mocks';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
-import { never, nonNullable } from '@lens-protocol/shared-kernel';
+import { nonNullable } from '@lens-protocol/shared-kernel';
 
 import { CreateMirrorResponder } from '../CreateMirrorResponder';
 
@@ -33,7 +32,7 @@ function setupTestScenario({
     createGetPublicationMockedResponse({
       variables: {
         request: {
-          txHash: transactionData.txHash ?? never(),
+          publicationId: transactionData.request.publicationId,
         },
         observerId: activeProfile.id,
         sources,
@@ -77,13 +76,12 @@ describe(`Given an instance of the ${CreateMirrorResponder.name}`, () => {
   const author = mockProfileFragment();
 
   describe(`when "${CreateMirrorResponder.prototype.commit.name}" method is invoked`, () => {
-    it(`should update the publication 'mirrors' list`, async () => {
+    it(`should update the original publication 'mirrors' list`, async () => {
       const post = mockPostFragment({
         profile: author,
       });
 
       const transactionData = mockTransactionData({
-        txHash: mockTransactionHash(),
         request: mockCreateMirrorRequest({
           profileId: author.id,
           publicationId: post.id,

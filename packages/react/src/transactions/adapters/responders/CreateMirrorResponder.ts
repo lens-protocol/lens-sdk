@@ -11,19 +11,19 @@ import {
   ITransactionResponder,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 export class CreateMirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
   constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
 
-  async commit({ txHash }: TransactionData<CreateMirrorRequest>) {
-    invariant(txHash, 'Cannot fetch publication by txHash without txHash');
+  async commit({ request }: TransactionData<CreateMirrorRequest>) {
     const activeProfile = activeProfileIdentifierVar();
 
     await this.client.query<GetPublicationData, GetPublicationVariables>({
       query: GetPublicationDocument,
       variables: {
-        request: { txHash },
+        request: {
+          publicationId: request.publicationId,
+        },
         observerId: activeProfile?.id,
         sources: this.sources,
       },
