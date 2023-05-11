@@ -1,5 +1,19 @@
 # @lens-protocol/react
 
+## 1.1.0-next.2
+
+### Minor Changes
+
+- ef1d7e2: Added Momoka support to React hooks
+
+### Patch Changes
+
+- Updated dependencies [ef1d7e2]
+  - @lens-protocol/api-bindings@0.8.0-next.2
+  - @lens-protocol/domain@0.8.0-next.2
+  - @lens-protocol/gated-content@0.2.2-next.2
+  - @lens-protocol/blockchain-bindings@0.8.0-next.2
+
 ## 1.1.0-next.1
 
 ### Minor Changes

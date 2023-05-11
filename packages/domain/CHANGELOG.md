@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.8.0-next.2
+
+### Minor Changes
+
+- ef1d7e2: Added Momoka support to React hooks
+
 ## 0.8.0-next.1
 
 ### Patch Changes
