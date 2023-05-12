@@ -11,13 +11,14 @@ import {
   CollectPolicyConfig,
   CollectPolicyType,
   ContentFocus,
+  ContentWarning,
   Locale,
   MediaObject,
   ReferencePolicyConfig,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, Url } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
@@ -31,46 +32,107 @@ export type UseCreateCommentArg = {
   upload: MetadataUploadHandler;
 };
 
-export type CreateCommentArgs = {
+/**
+ * @alpha
+ */
+export type CreateCommentBaseArgs = {
   /**
-   * @deprecated Use {@link LensConfig#appId} instead. This was exposed by mistake but was never used.
+   * @deprecated This was exposed by mistake but was never used. See {@link LensConfig} instead.
    */
   appId?: AppId;
   /**
-   * The comment collect policy. Determines the criteria that must be met for a user to be able to collect the comment.
+   * The publication collect policy. Determines the criteria that must be met for a user to be able to collect the publication.
+   *
+   * @defaultValue `{ type: CollectPolicyType.NO_COLLECT }`
    */
   collect?: CollectPolicyConfig;
   /**
-   * The comment content as Markdown string.
+   * Specifies a content warning for the publication.
    */
-  content?: string;
+  contentWarning?: ContentWarning;
   /**
-   * The comment content focus. Determines what is the primary objective of the comment.
-   */
-  contentFocus: ContentFocus;
-  /**
-   * The comment media. An array of media objects.
-   */
-  media?: MediaObject[];
-  /**
-   * The publication ID to which the comment is being posted.
-   */
-  publicationId: PublicationId;
-  /**
-   * The comment reference policy. Determines the criteria that must be met for a user to be able to comment or mirror the comment.
-   */
-  reference?: ReferencePolicyConfig;
-  /**
-   * The language of the comment.
+   * The language of the publication.
    *
-   * It a locale string in the format of `<language-tag>-<region-tag>` or just `<language-tag>`, where:
+   * It's a locale string in the format of `<language-tag>-<region-tag>` or just `<language-tag>`, where:
    * - `language-tag` is a two-letter ISO 639-1 language code, e.g. `en` or `it`
    * - `region-tag` is a two-letter ISO 3166-1 alpha-2 region code, e.g. `US` or `IT`
    *
    * You can just pass in the language tag if you do not know the region or don't need to be specific.
    */
   locale: Locale;
+  /**
+   * The publication ID to which the publication is being posted.
+   */
+  publicationId: PublicationId;
+  /**
+   * The publication reference policy. Determines the criteria that must be met for a user to be able to publication or mirror the publication.
+   *
+   * @defaultValue `{ type: ReferencePolicyType.ANYONE }`
+   */
+  reference?: ReferencePolicyConfig;
+  /**
+   * A list of tags for the publication. This can be used to categorize the publication.
+   *
+   * These are not the same as #hashtag in the publication content. Use these if you don't want to clutter the publication content with tags.
+   */
+  tags?: string[];
 };
+
+export type CreateTextualCommentArgs = CreateCommentBaseArgs & {
+  /**
+   * The publication content as Markdown string.
+   */
+  content: string;
+  /**
+   * The publication focus.
+   */
+  contentFocus: ContentFocus.ARTICLE | ContentFocus.LINK | ContentFocus.TEXT_ONLY;
+  /**
+   * The publication media. An array of media objects.
+   */
+  media?: MediaObject[];
+};
+
+export type CreateMediaCommentArgs = CreateCommentBaseArgs & {
+  /**
+   * Contextual information as Markdown string.
+   */
+  content?: string;
+  /**
+   * The publication focus.
+   */
+  contentFocus: ContentFocus.AUDIO | ContentFocus.IMAGE | ContentFocus.VIDEO;
+  /**
+   * The publication media. An array of media objects.
+   */
+  media: MediaObject[];
+};
+
+export type CreateEmbedCommentArgs = CreateCommentBaseArgs & {
+  /**
+   * A URL to a multi-media attachment for the item. The file extensions GLTF, GLB, WEBM, MP4, M4V, OGV, and OGG are supported.
+   * It also supports HTML pages, allowing you to build rich experiences and interactive NFTs using JavaScript canvas,
+   * WebGL, and more. Scripts and relative paths within the HTML page are now supported. However, access to browser extensions is not supported.
+   */
+  animationUrl: Url;
+  /**
+   * Contextual information as Markdown string.
+   */
+  content?: string;
+  /**
+   * The publication focus.
+   */
+  contentFocus: ContentFocus.EMBED;
+  /**
+   * The publication media. An array of media objects.
+   */
+  media?: MediaObject[];
+};
+
+export type CreateCommentArgs =
+  | CreateTextualCommentArgs
+  | CreateMediaCommentArgs
+  | CreateEmbedCommentArgs;
 
 export type CreateCommentOperation = Operation<
   void,
@@ -107,7 +169,7 @@ export type CreateCommentOperation = Operation<
  *
  *     let result = await comment({
  *       content,
- *       contentFocus: ContentFocus.TEXT,
+ *       contentFocus: ContentFocus.TEXT_ONLY,
  *       locale: 'en',
  *     });
  *

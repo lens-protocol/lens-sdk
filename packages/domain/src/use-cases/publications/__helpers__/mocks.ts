@@ -36,7 +36,7 @@ export function mockCreateCommentRequest(
   return {
     kind: TransactionKind.CREATE_COMMENT,
 
-    contentFocus: ContentFocus.TEXT,
+    contentFocus: ContentFocus.TEXT_ONLY,
     publicationId: mockPublicationId(),
     content: faker.lorem.paragraph(),
     reference: {
@@ -51,7 +51,7 @@ export function mockCreateCommentRequest(
     offChain: true,
 
     ...overrides,
-  };
+  } as CreateCommentRequest;
 }
 
 export function mockMediaObject(overrides?: Partial<MediaObject>): MediaObject {
@@ -149,7 +149,7 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
   return {
     kind: TransactionKind.CREATE_POST,
 
-    contentFocus: ContentFocus.TEXT,
+    contentFocus: ContentFocus.TEXT_ONLY,
     content: faker.lorem.paragraph(),
     reference: {
       type: ReferencePolicyType.ANYONE,
@@ -163,7 +163,7 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
     offChain: false,
 
     ...overrides,
-  };
+  } as CreatePostRequest;
 }
 
 export function mockReactionRequest(overrides?: Partial<ReactionRequest>): ReactionRequest {

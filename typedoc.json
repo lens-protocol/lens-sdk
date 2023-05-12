@@ -16,7 +16,10 @@
   "theme": "my-theme",
   "disableSources": true,
   "treatWarningsAsErrors": true,
-  "intentionallyNotExported": ["SelfFundedProtocolCallRequest"],
+  "intentionallyNotExported": [
+    "AnyTransactionRequestModel",
+    "SelfFundedProtocolTransactionRequest"
+  ],
   "categoryOrder": ["Components", "Hooks", "Utils", "*"],
   "categorizeByGroup": true,
   "sort": ["kind", "required-first", "alphabetical"],

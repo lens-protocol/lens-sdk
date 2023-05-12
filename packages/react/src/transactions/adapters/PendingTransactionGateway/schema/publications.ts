@@ -1,4 +1,4 @@
-import { TransactionKind } from '@lens-protocol/domain/entities';
+import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   SupportedFileType,
   CollectPolicyType,
@@ -8,6 +8,8 @@ import {
   ReferencePolicyType,
   ContentWarning,
   ImageType,
+  CreatePostRequest,
+  CreateCommentRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { z } from 'zod';
 
@@ -36,6 +38,9 @@ const NftMetadataSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   attributes: z.array(NftAttributeSchema),
+  externalUrl: z.string().optional(),
+  image: z.string().optional(),
+  imageMimeType: z.nativeEnum(ImageType).optional(),
 });
 
 const RecipientWithSplitSchema = z.object({
@@ -146,46 +151,99 @@ const ReferencePolicyConfigSchema = z.union([
   FollowersOnlyReferencePolicyConfigSchema,
 ]);
 
-export const CreatePostRequestSchema = z.object({
-  animationUrl: z.string().optional(),
-  appId: z.string().transform(appId).optional(),
+// see https://github.com/colinhacks/zod/issues/210#issuecomment-729775018
+const AppIdSchema: z.Schema<AppId> = z.any().refine(appId);
+
+const BasePostRequestSchema = z.object({
+  appId: AppIdSchema.optional(),
   collect: CollectPolicyConfigSchema,
-  content: z.string().optional(),
-  contentFocus: z.nativeEnum(ContentFocus),
   contentWarning: z.nativeEnum(ContentWarning).optional(),
+  // decryptionCriteria TODO, add to schema
   delegate: z.boolean(),
-  externalUrl: z.string().optional(),
-  image: z.string().optional(),
-  imageMimeType: z.nativeEnum(ImageType).optional(),
   kind: z.literal(TransactionKind.CREATE_POST),
   locale: z.string(),
-  media: z.array(MediaSchema).optional(),
   offChain: z.boolean(),
   profileId: ProfileIdSchema,
   reference: ReferencePolicyConfigSchema,
   tags: z.array(z.string()).optional(),
 });
 
-export const CreateCommentRequestSchema = z.object({
-  animationUrl: z.string().optional(),
-  appId: z.string().transform(appId).optional(),
-  collect: CollectPolicyConfigSchema,
+const CreateTextualPostRequestSchema = BasePostRequestSchema.extend({
+  content: z.string(),
+  contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
+  media: z.array(MediaSchema).optional(),
+});
+
+const CreateMediaPostRequestSchema = BasePostRequestSchema.extend({
   content: z.string().optional(),
-  contentFocus: z.nativeEnum(ContentFocus),
+  contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
+  media: z.array(MediaSchema),
+});
+
+const CreateEmbedPostRequestSchema = BasePostRequestSchema.extend({
+  animationUrl: z.string(),
+  content: z.string().optional(),
+  contentFocus: z.enum([ContentFocus.EMBED]),
+  media: z.array(MediaSchema).optional(),
+});
+
+/**
+ * The type annotation here to reduce the likelihood of incurring in the TS7056 error down the line:
+ * ```
+ * error TS7056: The inferred type of this node exceeds the maximum length the compiler will serialize. An explicit type annotation is needed.
+ * ```
+ */
+export const CreatePostRequestSchema: z.Schema<CreatePostRequest> = z.union([
+  CreateTextualPostRequestSchema,
+  CreateMediaPostRequestSchema,
+  CreateEmbedPostRequestSchema,
+]);
+
+const BaseCommentRequestSchema = z.object({
+  appId: AppIdSchema.optional(),
+  collect: CollectPolicyConfigSchema,
   contentWarning: z.nativeEnum(ContentWarning).optional(),
+  // decryptionCriteria TODO, add to schema
   delegate: z.boolean(),
-  externalUrl: z.string().optional(),
-  image: z.string().optional(),
-  imageMimeType: z.nativeEnum(ImageType).optional(),
   kind: z.literal(TransactionKind.CREATE_COMMENT),
   locale: z.string(),
-  media: z.array(MediaSchema).optional(),
   offChain: z.boolean(),
   profileId: ProfileIdSchema,
   publicationId: PublicationIdSchema,
   reference: ReferencePolicyConfigSchema,
   tags: z.array(z.string()).optional(),
 });
+
+const CreateTextualCommentRequestSchema = BaseCommentRequestSchema.extend({
+  content: z.string(),
+  contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
+  media: z.array(MediaSchema).optional(),
+});
+
+const CreateMediaCommentRequestSchema = BaseCommentRequestSchema.extend({
+  content: z.string().optional(),
+  contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
+  media: z.array(MediaSchema),
+});
+
+/**
+ * The type annotation here to reduce the likelihood of incurring in the TS7056 error down the line:
+ * ```
+ * error TS7056: The inferred type of this node exceeds the maximum length the compiler will serialize. An explicit type annotation is needed.
+ * ```
+ */
+const CreateEmbedCommentRequestSchema = BaseCommentRequestSchema.extend({
+  animationUrl: z.string(),
+  content: z.string().optional(),
+  contentFocus: z.enum([ContentFocus.EMBED]),
+  media: z.array(MediaSchema).optional(),
+});
+
+export const CreateCommentRequestSchema: z.Schema<CreateCommentRequest> = z.union([
+  CreateTextualCommentRequestSchema,
+  CreateMediaCommentRequestSchema,
+  CreateEmbedCommentRequestSchema,
+]);
 
 export const CreateMirrorRequestSchema = z.object({
   profileId: ProfileIdSchema,

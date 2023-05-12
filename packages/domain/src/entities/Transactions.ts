@@ -45,12 +45,18 @@ export type AnyTransactionRequestModel =
       kind: TransactionKind.APPROVE_MODULE;
     };
 
-type PickByKind<T extends AnyTransactionRequestModel, K extends T['kind']> = T extends {
+/**
+ * @internal
+ */
+export type PickByKind<T extends AnyTransactionRequestModel, K extends T['kind']> = T extends {
   kind: K;
 }
   ? T
   : never;
 
+/**
+ * @internal
+ */
 export type JustProtocolRequest<T extends AnyTransactionRequestModel> = PickByKind<
   T,
   ProtocolTransactionKind

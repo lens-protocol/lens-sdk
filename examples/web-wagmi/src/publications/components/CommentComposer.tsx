@@ -15,7 +15,7 @@ type CommentComposerProps = {
 };
 
 export function CommentComposer({ publisher, publicationId }: CommentComposerProps) {
-  const { execute: create, error, isPending } = useCreateComment({ publisher, upload });
+  const { execute: comment, error, isPending } = useCreateComment({ publisher, upload });
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -25,10 +25,10 @@ export function CommentComposer({ publisher, publicationId }: CommentComposerPro
     const formData = new FormData(form);
     const content = (formData.get('content') as string | null) ?? never();
 
-    const result = await create({
+    const result = await comment({
       publicationId,
       content,
-      contentFocus: ContentFocus.TEXT,
+      contentFocus: ContentFocus.TEXT_ONLY,
       locale: 'en',
       collect: {
         type: CollectPolicyType.NO_COLLECT,

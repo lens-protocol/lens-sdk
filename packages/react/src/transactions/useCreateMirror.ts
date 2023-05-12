@@ -32,6 +32,7 @@ export type CreateMirrorOperation = Operation<
 /**
  * @category Publications
  * @group Hooks
+ * @param args - {@link UseCreateMirrorArgs}
  */
 export function useCreateMirror({ publisher }: UseCreateMirrorArgs): CreateMirrorOperation {
   const createMirror = useCreateMirrorController();

@@ -18,6 +18,7 @@ import { usePayTransactionController } from './adapters/usePayTransactionControl
  * An opaque data structure that encapsulates the data required to make a self-funded protocol call.
  *
  * @internal
+ * @privateRemarks Ensure SelfFundedProtocolTransactionRequest is also excluded from the generated docs.
  */
 export type SelfFundedOperationRequest =
   SelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>;
@@ -64,7 +65,7 @@ export type SelfFundedOperation = Operation<
  *   const submit = async (content: string) => {
  *     const result = await createPost({
  *       content,
- *       contentFocus: ContentFocus.TEXT,
+ *       contentFocus: ContentFocus.TEXT_ONLY,
  *       locale: 'en',
  *     });
  *

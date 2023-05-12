@@ -1,5 +1,10 @@
 import { faker } from '@faker-js/faker';
-import { PublicationMainFocus, PublicationMetadataDisplayTypes } from '@lens-protocol/api-bindings';
+import {
+  PublicationMainFocus,
+  PublicationMetadata,
+  PublicationMetadataDisplayTypes,
+  PublicationContentWarning,
+} from '@lens-protocol/api-bindings';
 import {
   mockChargeCollectPolicyConfig,
   mockCreateCommentRequest,
@@ -16,12 +21,16 @@ import {
   CollectPolicyType,
   ContentFocus,
   ContentWarning,
+  CreateCommentRequest,
+  CreatePostRequest,
   ImageType,
+  MediaObject,
 } from '@lens-protocol/domain/use-cases/publications';
 
-import { appId } from '../../../utils';
+import { appId as toAppId } from '../../../utils';
 import { createPublicationMetadata } from '../createPublicationMetadata';
 
+const animationUrl = faker.image.imageUrl();
 const content = faker.lorem.sentence();
 const media = [
   mockMediaObject({
@@ -35,35 +44,178 @@ const stringNftAttribute = mockStringNftAttribute();
 const nftMetadata = mockNftMetadata({
   attributes: [dateNftAttribute, numberNftAttribute, stringNftAttribute],
   description: faker.lorem.sentence(),
+  externalUrl: faker.internet.url(),
+  image: faker.image.imageUrl(),
+  imageMimeType: ImageType.JPEG,
 });
-const contentFocus = ContentFocus.TEXT;
+
+function toPublicationMetadataMediaItem(media: MediaObject) {
+  return {
+    item: media.url,
+    type: media.mimeType,
+    ...(media.altTag && { altTag: media.altTag }),
+    ...(media.cover && { cover: media.cover }),
+  };
+}
 
 describe(`Given the ${createPublicationMetadata.name} helper`, () => {
   describe('when creating PublicationMetadata', () => {
     describe.each([
       { request: 'CreatePostRequest', mockPublication: mockCreatePostRequest },
       { request: 'CreateCommentRequest', mockPublication: mockCreateCommentRequest },
-    ])('for a $request', ({ mockPublication }) => {
+    ])('from a $request', ({ mockPublication }) => {
+      it('should return PublicationMetadata with the expected mandatory fields', () => {
+        const request = mockPublication({ locale: 'it-IT' });
+
+        const result = createPublicationMetadata(request);
+
+        expect(result).toMatchObject({
+          locale: 'it-IT',
+          metadata_id: expect.any(String),
+          version: '2.0.0',
+        });
+      });
+
+      it('should support optional content-agnostic fields', () => {
+        const appId = toAppId(faker.word.noun());
+        const contentWarning = ContentWarning.NSFW;
+        const tags = [faker.lorem.word()];
+        const request = mockPublication({
+          appId,
+          contentWarning,
+          tags,
+        });
+
+        const result = createPublicationMetadata(request);
+
+        expect(result).toMatchObject({
+          appId,
+          contentWarning: PublicationContentWarning[contentWarning],
+          tags,
+        });
+      });
+
+      describe.each<{
+        description: string;
+        request: CreatePostRequest | CreateCommentRequest;
+        expected: Partial<PublicationMetadata>;
+      }>([
+        {
+          description: 'for a text-only publication',
+          request: mockPublication({
+            content,
+            contentFocus: ContentFocus.TEXT_ONLY,
+          }),
+          expected: {
+            content,
+            mainContentFocus: PublicationMainFocus.TextOnly,
+          },
+        },
+        {
+          description: 'for an article publication',
+          request: mockPublication({
+            content,
+            contentFocus: ContentFocus.ARTICLE,
+          }),
+          expected: {
+            content,
+          },
+        },
+        {
+          description: 'for an article publication with attachments',
+          request: mockPublication({
+            content,
+            contentFocus: ContentFocus.ARTICLE,
+            media,
+          }),
+          expected: {
+            content,
+            media: media.map(toPublicationMetadataMediaItem),
+          },
+        },
+        {
+          description: 'for a link publication',
+          request: mockPublication({
+            content,
+            contentFocus: ContentFocus.LINK,
+          }),
+          expected: {
+            content,
+          },
+        },
+        {
+          description: 'for an audio publication',
+          request: mockPublication({
+            content,
+            contentFocus: ContentFocus.AUDIO,
+            media,
+          }),
+          expected: {
+            content,
+            media: media.map(toPublicationMetadataMediaItem),
+          },
+        },
+        {
+          description: 'for an image publication',
+          request: mockPublication({
+            content,
+            contentFocus: ContentFocus.IMAGE,
+            media,
+          }),
+          expected: {
+            content,
+            media: media.map(toPublicationMetadataMediaItem),
+          },
+        },
+        {
+          description: 'for a video publication',
+          request: mockPublication({
+            content,
+            contentFocus: ContentFocus.IMAGE,
+            media,
+          }),
+          expected: {
+            content,
+            media: media.map(toPublicationMetadataMediaItem),
+          },
+        },
+        {
+          description: 'for an embed publication',
+          request: mockPublication({
+            content,
+            contentFocus: ContentFocus.EMBED,
+            media,
+            animationUrl,
+          }),
+          expected: {
+            content,
+            media: media.map(toPublicationMetadataMediaItem),
+            animation_url: animationUrl,
+          },
+        },
+      ])('$description', ({ request, expected }) => {
+        it('should return the expected metadata', () => {
+          const metadata = createPublicationMetadata(request);
+
+          expect(metadata).toMatchObject({
+            ...expected,
+            mainContentFocus: PublicationMainFocus[request.contentFocus],
+          });
+        });
+      });
+
       describe.each([
         mockFreeCollectPolicyConfig({ metadata: nftMetadata }),
         mockChargeCollectPolicyConfig({ metadata: nftMetadata }),
       ])('with $type collect policy', (collectPolicyConfig) => {
         it('should return the expected metadata for collectable publications', () => {
           const request = mockPublication({
-            appId: appId(faker.word.noun()),
-            content,
-            media,
-            locale: 'en',
-            contentFocus: ContentFocus.TEXT,
             collect: collectPolicyConfig,
           });
 
           const metadata = createPublicationMetadata(request);
 
           expect(metadata).toMatchObject({
-            metadata_id: expect.any(String),
-            version: '2.0.0',
-            appId: expect.any(String),
             attributes: [
               {
                 displayType: PublicationMetadataDisplayTypes[dateNftAttribute.displayType],
@@ -82,16 +234,10 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
               },
             ],
             name: collectPolicyConfig.metadata.name,
-            content: content,
             description: collectPolicyConfig.metadata.description,
-            media: request.media?.map((m) => ({
-              type: m.mimeType,
-              item: m.url,
-              altTag: m.altTag,
-              cover: m.cover,
-            })),
-            locale: request.locale,
-            mainContentFocus: PublicationMainFocus[contentFocus],
+            external_url: nftMetadata.externalUrl,
+            image: nftMetadata.image,
+            imageMimeType: nftMetadata.imageMimeType,
           });
         });
       });
@@ -99,93 +245,15 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
       describe(`with ${CollectPolicyType.NO_COLLECT} collect policy`, () => {
         it(`should return the expected basic metadata for non-collectable publications`, () => {
           const request = mockPublication({
-            content,
-            media,
-            locale: 'en',
-            contentFocus: ContentFocus.TEXT,
             collect: mockNoCollectPolicyConfig(),
           });
 
           const metadata = createPublicationMetadata(request);
 
           expect(metadata).toMatchObject({
-            metadata_id: expect.any(String),
-            version: '2.0.0',
             attributes: [],
             name: 'none', // although "name" is not needed when a publication is not collectable, our Publication Metadata V2 schema requires it ¯\_(ツ)_/¯
-            content: content,
-            media: request.media?.map((m) => ({
-              type: m.mimeType,
-              item: m.url,
-              altTag: m.altTag,
-              cover: m.cover,
-            })),
-            locale: request.locale,
-            mainContentFocus: PublicationMainFocus[contentFocus],
           });
-        });
-      });
-
-      describe(`with media`, () => {
-        it(`should return the metadata.media with only defined fields`, () => {
-          const request = mockPublication({
-            media: [mockMediaObject()],
-            locale: 'en',
-            // collect: mockNoCollectPolicyConfig(),
-            contentFocus: ContentFocus.IMAGE,
-          });
-
-          const metadata = createPublicationMetadata(request);
-
-          expect(metadata.media?.[0]).not.toHaveProperty('altTag');
-          expect(metadata.media?.[0]).not.toHaveProperty('cover');
-        });
-      });
-
-      describe(`without optional fields like appId, animationUrl etc.`, () => {
-        it(`should return the metadata without appId field`, () => {
-          const request = mockPublication({
-            content,
-            locale: 'en',
-            contentFocus: ContentFocus.TEXT,
-          });
-
-          const metadata = createPublicationMetadata(request);
-
-          expect(metadata).not.toHaveProperty('animation_url');
-          expect(metadata).not.toHaveProperty('appId');
-          expect(metadata).not.toHaveProperty('contentWarning');
-          expect(metadata).not.toHaveProperty('external_url');
-          expect(metadata).not.toHaveProperty('image');
-          expect(metadata).not.toHaveProperty('imageMimeType');
-          expect(metadata).not.toHaveProperty('tags');
-        });
-      });
-
-      describe(`with all optional fields like appId, animationUrl etc.`, () => {
-        it(`should return the metadata.media with only defined fields`, () => {
-          const request = mockPublication({
-            content,
-            locale: 'en',
-            contentFocus: ContentFocus.TEXT,
-            animationUrl: faker.internet.url(),
-            appId: appId('test'),
-            contentWarning: ContentWarning.NSFW,
-            externalUrl: faker.internet.url(),
-            image: faker.image.imageUrl(),
-            imageMimeType: ImageType.JPEG,
-            tags: [faker.lorem.word()],
-          });
-
-          const metadata = createPublicationMetadata(request);
-
-          expect(metadata.animation_url).toBeDefined();
-          expect(metadata.appId).toBeDefined();
-          expect(metadata.contentWarning).toEqual('NSFW');
-          expect(metadata.external_url).toBeDefined();
-          expect(metadata.image).toBeDefined();
-          expect(metadata.imageMimeType).toBeDefined();
-          expect(metadata.tags).toBeDefined();
         });
       });
     });
