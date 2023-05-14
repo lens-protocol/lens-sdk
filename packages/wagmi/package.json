@@ -7,7 +7,7 @@
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
-  "main": "dist/lens-protocol-wagmi.cjs.js",
+  "main": "dist/lens-protocol-wagmi.esm.js",
   "module": "dist/lens-protocol-wagmi.esm.js",
   "exports": {
     ".": {
