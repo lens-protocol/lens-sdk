@@ -62,11 +62,18 @@ export type LensConfig = {
 /**
  * Encryption configuration for token-gated content
  */
-export type EncryptionConfig = {
-  authentication: AuthenticationConfig;
-  provider: IEncryptionProvider;
-  createGatedClient?: typeof createGatedClient;
-};
+export type EncryptionConfig =
+  | {
+      authentication: AuthenticationConfig;
+      provider: IEncryptionProvider;
+    }
+  | {
+      provider: IEncryptionProvider;
+      /**
+       * @internal
+       */
+      createGatedClient: typeof createGatedClient;
+    };
 
 /** @internal */
 export function validateConfig(config: LensConfig) {

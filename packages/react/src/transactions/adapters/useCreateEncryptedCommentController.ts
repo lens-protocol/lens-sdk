@@ -40,10 +40,11 @@ export function useCreateEncryptedCommentController({ encryption, upload }: UseC
       `Cannot find the Active Wallet Signer, did you login with ${useWalletLogin.name}?`,
     );
 
-    const createGatedClient = encryption.createGatedClient || defaultCreateGatedClient;
+    const createGatedClient =
+      'createGatedClient' in encryption ? encryption.createGatedClient : defaultCreateGatedClient;
 
     const client = createGatedClient({
-      config: encryption.authentication,
+      config: 'authentication' in encryption ? encryption.authentication : undefined,
       signer,
       encryptionProvider: encryption.provider,
       environment,

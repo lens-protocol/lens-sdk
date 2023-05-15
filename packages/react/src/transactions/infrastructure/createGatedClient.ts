@@ -1,5 +1,6 @@
 import { InvariantError } from '@apollo/client/utilities/globals';
 import * as GatedContent from '@lens-protocol/gated-content';
+import { invariant } from '@lens-protocol/shared-kernel';
 import { IStorageProvider } from '@lens-protocol/storage';
 import { Signer } from 'ethers';
 
@@ -16,7 +17,7 @@ function resolveGatedEnvironment(environment: EnvironmentConfig): GatedContent.E
 }
 
 export type GateClientInit = {
-  config: GatedContent.AuthenticationConfig;
+  config?: GatedContent.AuthenticationConfig | undefined;
   encryptionProvider: GatedContent.IEncryptionProvider;
   environment: EnvironmentConfig;
   signer: Signer;
@@ -30,6 +31,8 @@ export function createGatedClient({
   encryptionProvider,
   storageProvider,
 }: GateClientInit) {
+  invariant(config, `GatedClient requires a config`);
+
   return new GatedContent.GatedClient({
     authentication: config,
     signer,

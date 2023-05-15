@@ -75,10 +75,11 @@ export function useEncryptedPublication<T extends ContentPublication>({
         );
       }
 
-      const createGatedClient = encryption.createGatedClient || defaultCreateGatedClient;
+      const createGatedClient =
+        'createGatedClient' in encryption ? encryption.createGatedClient : defaultCreateGatedClient;
 
       const client = createGatedClient({
-        config: encryption.authentication,
+        config: 'authentication' in encryption ? encryption.authentication : undefined,
         signer,
         encryptionProvider: encryption.provider,
         environment,
@@ -97,15 +98,7 @@ export function useEncryptedPublication<T extends ContentPublication>({
       setMetadata(result.value);
 
       return success();
-    }, [
-      encryption.authentication,
-      encryption.provider,
-      environment,
-      publication,
-      signer,
-      storageProvider,
-      encryption.createGatedClient,
-    ]),
+    }, [environment, publication, signer, storageProvider, encryption]),
   );
 
   useEffect(() => {
