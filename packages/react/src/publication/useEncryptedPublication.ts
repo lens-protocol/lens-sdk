@@ -10,7 +10,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { EncryptionConfig } from '../config';
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
-import { createGatedClient } from '../transactions/infrastructure/createGatedClient';
+import { createGatedClient as defaultCreateGatedClient } from '../transactions/infrastructure/createGatedClient';
 import { useActiveWalletSigner } from '../wallet';
 
 export type UseEncryptedPublicationArgs<T extends ContentPublication> = {
@@ -75,6 +75,8 @@ export function useEncryptedPublication<T extends ContentPublication>({
         );
       }
 
+      const createGatedClient = encryption.createGatedClient || defaultCreateGatedClient;
+
       const client = createGatedClient({
         config: encryption.authentication,
         signer,
@@ -102,6 +104,7 @@ export function useEncryptedPublication<T extends ContentPublication>({
       publication,
       signer,
       storageProvider,
+      encryption.createGatedClient,
     ]),
   );
 
