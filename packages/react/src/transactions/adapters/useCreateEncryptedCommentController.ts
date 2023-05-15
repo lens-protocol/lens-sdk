@@ -11,7 +11,7 @@ import {
 } from '../infrastructure/EncryptedPublicationMetadataUploader';
 import { MetadataUploaderErrorMiddleware } from '../infrastructure/MetadataUploaderErrorMiddleware';
 import { PublicationIdPredictor } from '../infrastructure/PublicationIdPredictor';
-import { createGatedClient } from '../infrastructure/createGatedClient';
+import { createGatedClient as defaultCreateGatedClient } from '../infrastructure/createGatedClient';
 import { CreateCommentController } from './CreateCommentController';
 import { MetadataUploadHandler } from './MetadataUploadHandler';
 
@@ -39,6 +39,8 @@ export function useCreateEncryptedCommentController({ encryption, upload }: UseC
       signer,
       `Cannot find the Active Wallet Signer, did you login with ${useWalletLogin.name}?`,
     );
+
+    const createGatedClient = encryption.createGatedClient || defaultCreateGatedClient;
 
     const client = createGatedClient({
       config: encryption.authentication,
