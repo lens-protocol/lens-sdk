@@ -68,7 +68,7 @@ export type EncryptionConfig =
       provider: IEncryptionProvider;
     }
   | {
-      provider: IEncryptionProvider;
+      authentication: AuthenticationConfig;
       /**
        * @internal
        */

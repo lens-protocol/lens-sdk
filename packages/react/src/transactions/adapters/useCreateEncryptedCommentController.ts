@@ -44,9 +44,9 @@ export function useCreateEncryptedCommentController({ encryption, upload }: UseC
       'createGatedClient' in encryption ? encryption.createGatedClient : defaultCreateGatedClient;
 
     const client = createGatedClient({
-      config: 'authentication' in encryption ? encryption.authentication : undefined,
+      config: encryption.authentication,
       signer,
-      encryptionProvider: encryption.provider,
+      encryptionProvider: 'provider' in encryption ? encryption.provider : undefined,
       environment,
       storageProvider,
     });

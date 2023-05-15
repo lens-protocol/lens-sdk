@@ -17,8 +17,8 @@ function resolveGatedEnvironment(environment: EnvironmentConfig): GatedContent.E
 }
 
 export type GateClientInit = {
-  config?: GatedContent.AuthenticationConfig | undefined;
-  encryptionProvider: GatedContent.IEncryptionProvider;
+  config: GatedContent.AuthenticationConfig;
+  encryptionProvider?: GatedContent.IEncryptionProvider | undefined;
   environment: EnvironmentConfig;
   signer: Signer;
   storageProvider: IStorageProvider;
@@ -31,7 +31,7 @@ export function createGatedClient({
   encryptionProvider,
   storageProvider,
 }: GateClientInit) {
-  invariant(config, `GatedClient requires a config`);
+  invariant(encryptionProvider, 'Encryption provider is required');
 
   return new GatedContent.GatedClient({
     authentication: config,
