@@ -94,7 +94,7 @@ export const SearchPublicationsDocument = gql`
           }
         }
         pageInfo {
-          ...CommonPaginatedResultInfo
+          ...PaginatedResultInfo
         }
       }
       ... on ProfileSearchResult {
@@ -120,7 +120,7 @@ export const SearchProfilesDocument = gql`
           ...Profile
         }
         pageInfo {
-          ...CommonPaginatedResultInfo
+          ...PaginatedResultInfo
         }
       }
       ... on PublicationSearchResult {

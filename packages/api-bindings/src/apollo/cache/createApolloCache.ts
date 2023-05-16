@@ -63,6 +63,9 @@ function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): StrictTypedT
 
     RevenueAggregate: createRevenueAggregateTypePolicy(),
 
+    // ensures that no matter what fields we add to it in the future, it will NOT be normalized
+    PaginatedResultInfo: notNormalizedType(),
+
     Query: {
       fields: {
         feed: createFeedFieldPolicy(),

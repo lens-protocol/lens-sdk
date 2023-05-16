@@ -14,6 +14,7 @@ import type {
 
 import type { CollectPolicy } from './CollectPolicy';
 import type { ContentEncryptionKey } from './ContentEncryptionKey';
+import type { Cursor } from './Cursor';
 import type { FollowPolicy } from './FollowPolicy';
 import type { FollowStatus } from './FollowStatus';
 import type { ProfileAttributes } from './ProfileAttributes';
@@ -47,7 +48,7 @@ export type Scalars = {
   /** create handle custom scalar type */
   CreateHandle: unknown;
   /** Cursor custom scalar type */
-  Cursor: string;
+  Cursor: Cursor;
   /** The da id */
   DataAvailabilityId: string;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
@@ -2041,10 +2042,12 @@ export type CommentBase = {
   canObserverDecrypt: { result: boolean; reasons: Array<DecryptFailReason> | null };
 };
 
-export type CommonPaginatedResultInfo = {
+export type PaginatedResultInfo = {
   __typename: 'PaginatedResultInfo';
-  prev: string | null;
-  next: string | null;
+  beforeCount: number;
+  moreAfter: boolean;
+  prev: Cursor | null;
+  next: Cursor | null;
   totalCount: number | null;
 };
 
@@ -2157,7 +2160,7 @@ export type FeedVariables = Exact<{
   metadata?: InputMaybe<PublicationMetadataFilters>;
 }>;
 
-export type FeedData = { result: { items: Array<FeedItem>; pageInfo: CommonPaginatedResultInfo } };
+export type FeedData = { result: { items: Array<FeedItem>; pageInfo: PaginatedResultInfo } };
 
 export type ExploreProfilesVariables = Exact<{
   sortCriteria: ProfileSortCriteria;
@@ -2168,7 +2171,7 @@ export type ExploreProfilesVariables = Exact<{
 }>;
 
 export type ExploreProfilesData = {
-  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
 };
 
 export type CreateFollowTypedDataVariables = Exact<{
@@ -2420,7 +2423,7 @@ export type NotificationsData = {
       | NewMirrorNotification
       | NewReactionNotification
     >;
-    pageInfo: CommonPaginatedResultInfo;
+    pageInfo: PaginatedResultInfo;
   };
 };
 
@@ -2615,7 +2618,7 @@ export type GetAllProfilesVariables = Exact<{
 }>;
 
 export type GetAllProfilesData = {
-  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
 };
 
 export type CreateProfileVariables = Exact<{
@@ -2635,7 +2638,7 @@ export type MutualFollowersProfilesVariables = Exact<{
 }>;
 
 export type MutualFollowersProfilesData = {
-  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
 };
 
 export type CreateSetFollowModuleTypedDataVariables = Exact<{
@@ -2724,7 +2727,7 @@ export type ProfileFollowersVariables = Exact<{
 }>;
 
 export type ProfileFollowersData = {
-  result: { items: Array<Follower>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Follower>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProfileFollowingVariables = Exact<{
@@ -2736,7 +2739,7 @@ export type ProfileFollowingVariables = Exact<{
 }>;
 
 export type ProfileFollowingData = {
-  result: { items: Array<Following>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Following>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProxyActionStatusResult = {
@@ -2795,7 +2798,7 @@ export type GetPublicationsVariables = Exact<{
 }>;
 
 export type GetPublicationsData = {
-  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Comment | Mirror | Post>; pageInfo: PaginatedResultInfo };
 };
 
 export type ExplorePublicationsVariables = Exact<{
@@ -2811,7 +2814,7 @@ export type ExplorePublicationsVariables = Exact<{
 }>;
 
 export type ExplorePublicationsData = {
-  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Comment | Mirror | Post>; pageInfo: PaginatedResultInfo };
 };
 
 export type WhoCollectedPublicationVariables = Exact<{
@@ -2823,7 +2826,7 @@ export type WhoCollectedPublicationVariables = Exact<{
 }>;
 
 export type WhoCollectedPublicationData = {
-  result: { items: Array<Wallet>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Wallet>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProfilePublicationsForSaleVariables = Exact<{
@@ -2835,7 +2838,7 @@ export type ProfilePublicationsForSaleVariables = Exact<{
 }>;
 
 export type ProfilePublicationsForSaleData = {
-  result: { items: Array<Comment | Post>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Comment | Post>; pageInfo: PaginatedResultInfo };
 };
 
 export type AddReactionVariables = Exact<{
@@ -2871,7 +2874,7 @@ export type WhoReactedPublicationVariables = Exact<{
 }>;
 
 export type WhoReactedPublicationData = {
-  result: { items: Array<WhoReactedResult>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<WhoReactedResult>; pageInfo: PaginatedResultInfo };
 };
 
 export type ReportPublicationVariables = Exact<{
@@ -2912,7 +2915,7 @@ export type GetProfilePublicationRevenueVariables = Exact<{
 }>;
 
 export type GetProfilePublicationRevenueData = {
-  result: { items: Array<PublicationRevenue>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<PublicationRevenue>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProfileFollowRevenue = {
@@ -2939,7 +2942,7 @@ export type SearchPublicationsData = {
     | {
         __typename: 'PublicationSearchResult';
         items: Array<Comment | Post>;
-        pageInfo: CommonPaginatedResultInfo;
+        pageInfo: PaginatedResultInfo;
       }
     | {};
 };
@@ -2954,11 +2957,7 @@ export type SearchProfilesVariables = Exact<{
 
 export type SearchProfilesData = {
   result:
-    | {
-        __typename: 'ProfileSearchResult';
-        items: Array<Profile>;
-        pageInfo: CommonPaginatedResultInfo;
-      }
+    | { __typename: 'ProfileSearchResult'; items: Array<Profile>; pageInfo: PaginatedResultInfo }
     | {};
 };
 

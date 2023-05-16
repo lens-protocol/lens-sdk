@@ -22,7 +22,7 @@ query WhoReactedPublication($request: WhoReactedPublicationRequest!, $observerId
       ...WhoReactedResult
     }
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }

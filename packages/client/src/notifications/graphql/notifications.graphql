@@ -121,7 +121,7 @@ query Notifications($request: NotificationRequest!, $observerId: ProfileId) {
       }
     }
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }

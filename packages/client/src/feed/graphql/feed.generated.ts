@@ -169,7 +169,7 @@ export const FeedDocument = gql`
         ...FeedItem
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
@@ -191,7 +191,7 @@ export const FeedHighlightsDocument = gql`
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }

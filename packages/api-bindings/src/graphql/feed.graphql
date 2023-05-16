@@ -84,7 +84,7 @@ query Feed(
     }
 
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }
@@ -103,7 +103,7 @@ query ExploreProfiles(
       ...Profile
     }
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }

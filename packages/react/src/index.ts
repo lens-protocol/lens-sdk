@@ -39,7 +39,6 @@ export type {
 export type { WithObserverIdOverride } from './helpers/arguments';
 export type { Operation } from './helpers/operations';
 export type {
-  CommonPaginatedResultInfo,
   PaginatedArgs,
   PaginatedReadResult,
   ReadResult,

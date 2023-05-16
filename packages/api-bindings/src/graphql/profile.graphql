@@ -180,7 +180,7 @@ query GetAllProfiles(
       ...Profile
     }
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }
@@ -210,7 +210,7 @@ query MutualFollowersProfiles(
       ...Profile
     }
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }

@@ -619,7 +619,7 @@ export const ProfilesDocument = gql`
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
@@ -644,7 +644,7 @@ export const MutualFollowersProfilesDocument = gql`
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
@@ -669,7 +669,7 @@ export const FollowingDocument = gql`
         ...Following
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
@@ -683,7 +683,7 @@ export const FollowersDocument = gql`
         ...Follower
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
@@ -706,7 +706,7 @@ export const PendingApprovalFollowsDocument = gql`
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }

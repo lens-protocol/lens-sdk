@@ -43,7 +43,7 @@ query WhoReactedPublication(
     }
 
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }

@@ -20,7 +20,7 @@ query SearchPublications(
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
     ... on ProfileSearchResult {
@@ -42,7 +42,7 @@ query SearchProfiles(
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
     ... on PublicationSearchResult {

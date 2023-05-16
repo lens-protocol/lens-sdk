@@ -135,7 +135,7 @@ query Notifications(
       }
     }
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }

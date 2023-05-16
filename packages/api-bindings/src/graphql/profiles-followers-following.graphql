@@ -24,7 +24,7 @@ query ProfileFollowers(
       ...Follower
     }
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }
@@ -41,7 +41,7 @@ query ProfileFollowing(
       ...Following
     }
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }

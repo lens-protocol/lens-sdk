@@ -67,7 +67,7 @@ export const ExplorePublicationsDocument = gql`
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
@@ -83,7 +83,7 @@ export const ExploreProfilesDocument = gql`
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }

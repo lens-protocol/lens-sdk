@@ -502,7 +502,7 @@ fragment Post on Post {
   mirrors(by: $observerId)
 }
 
-fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+fragment PaginatedResultInfo on PaginatedResultInfo {
   __typename
   prev
   next

@@ -62,3 +62,8 @@ extend type Post {
 extend type Comment {
   decryptionCriteria: DecryptionCriteria
 }
+
+extend type PaginatedResultInfo {
+  beforeCount: Int!
+  moreAfter: Boolean!
+}
