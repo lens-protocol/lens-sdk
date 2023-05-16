@@ -193,6 +193,15 @@ export type AaveFeeCollectModuleSettingsFragment = {
   amount: ModuleFeeAmountFragment;
 };
 
+export type SimpleCollectModuleSettingsFragment = {
+  __typename: 'SimpleCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  feeOptional: { referralFee: number; recipient: string; amount: ModuleFeeAmountFragment } | null;
+};
+
 export type WalletFragment = {
   __typename: 'Wallet';
   address: string;
@@ -283,7 +292,7 @@ export type CommentBaseFragment = {
         __typename: 'MultirecipientFeeCollectModuleSettings';
       } & MultirecipientFeeCollectModuleSettingsFragment)
     | ({ __typename: 'RevertCollectModuleSettings' } & RevertCollectModuleSettingsFragment)
-    | { __typename: 'SimpleCollectModuleSettings' }
+    | ({ __typename: 'SimpleCollectModuleSettings' } & SimpleCollectModuleSettingsFragment)
     | ({ __typename: 'TimedFeeCollectModuleSettings' } & TimedFeeCollectModuleSettingsFragment)
     | { __typename: 'UnknownCollectModuleSettings' };
   referenceModule:
@@ -330,7 +339,7 @@ export type PostFragment = {
         __typename: 'MultirecipientFeeCollectModuleSettings';
       } & MultirecipientFeeCollectModuleSettingsFragment)
     | ({ __typename: 'RevertCollectModuleSettings' } & RevertCollectModuleSettingsFragment)
-    | { __typename: 'SimpleCollectModuleSettings' }
+    | ({ __typename: 'SimpleCollectModuleSettings' } & SimpleCollectModuleSettingsFragment)
     | ({ __typename: 'TimedFeeCollectModuleSettings' } & TimedFeeCollectModuleSettingsFragment)
     | { __typename: 'UnknownCollectModuleSettings' };
   referenceModule:
@@ -708,6 +717,23 @@ export const AaveFeeCollectModuleSettingsFragmentDoc = gql`
   }
   ${ModuleFeeAmountFragmentDoc}
 `;
+export const SimpleCollectModuleSettingsFragmentDoc = gql`
+  fragment SimpleCollectModuleSettings on SimpleCollectModuleSettings {
+    __typename
+    contractAddress
+    followerOnly
+    feeOptional: fee {
+      amount {
+        ...ModuleFeeAmount
+      }
+      referralFee
+      recipient
+    }
+    collectLimitOptional: collectLimit
+    endTimestampOptional: endTimestamp
+  }
+  ${ModuleFeeAmountFragmentDoc}
+`;
 export const PostFragmentDoc = gql`
   fragment Post on Post {
     __typename
@@ -753,6 +779,9 @@ export const PostFragmentDoc = gql`
       ... on AaveFeeCollectModuleSettings {
         ...AaveFeeCollectModuleSettings
       }
+      ... on SimpleCollectModuleSettings {
+        ...SimpleCollectModuleSettings
+      }
     }
     referenceModule {
       __typename
@@ -789,6 +818,7 @@ export const PostFragmentDoc = gql`
   ${MultirecipientFeeCollectModuleSettingsFragmentDoc}
   ${Erc4626FeeCollectModuleSettingsFragmentDoc}
   ${AaveFeeCollectModuleSettingsFragmentDoc}
+  ${SimpleCollectModuleSettingsFragmentDoc}
 `;
 export const CommentBaseFragmentDoc = gql`
   fragment CommentBase on Comment {
@@ -835,6 +865,9 @@ export const CommentBaseFragmentDoc = gql`
       ... on AaveFeeCollectModuleSettings {
         ...AaveFeeCollectModuleSettings
       }
+      ... on SimpleCollectModuleSettings {
+        ...SimpleCollectModuleSettings
+      }
     }
     referenceModule {
       __typename
@@ -871,6 +904,7 @@ export const CommentBaseFragmentDoc = gql`
   ${MultirecipientFeeCollectModuleSettingsFragmentDoc}
   ${Erc4626FeeCollectModuleSettingsFragmentDoc}
   ${AaveFeeCollectModuleSettingsFragmentDoc}
+  ${SimpleCollectModuleSettingsFragmentDoc}
 `;
 export const CommentFragmentDoc = gql`
   fragment Comment on Comment {

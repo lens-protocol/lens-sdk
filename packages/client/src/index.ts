@@ -73,6 +73,7 @@ export type {
   RevertCollectModuleSettingsFragment,
   RevertFollowModuleSettingsFragment,
   SimplePublicationStatsFragment,
+  SimpleCollectModuleSettingsFragment,
   TimedFeeCollectModuleSettingsFragment,
   UnknownFollowModuleSettingsFragment,
   WalletFragment,
