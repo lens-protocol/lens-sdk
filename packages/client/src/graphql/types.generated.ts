@@ -297,6 +297,7 @@ export type CollectModule =
   | LimitedTimedFeeCollectModuleSettings
   | MultirecipientFeeCollectModuleSettings
   | RevertCollectModuleSettings
+  | SimpleCollectModuleSettings
   | TimedFeeCollectModuleSettings
   | UnknownCollectModuleSettings;
 
@@ -317,6 +318,8 @@ export type CollectModuleParams = {
   multirecipientFeeCollectModule?: InputMaybe<MultirecipientFeeCollectModuleParams>;
   /** The collect revert collect module */
   revertCollectModule?: InputMaybe<Scalars['Boolean']>;
+  /** The collect simple fee collect module */
+  simpleCollectModule?: InputMaybe<SimpleCollectModuleParams>;
   /** The collect timed fee collect module */
   timedFeeCollectModule?: InputMaybe<TimedFeeCollectModuleParams>;
   /** A unknown collect module */
@@ -333,6 +336,7 @@ export enum CollectModules {
   LimitedTimedFeeCollectModule = 'LimitedTimedFeeCollectModule',
   MultirecipientFeeCollectModule = 'MultirecipientFeeCollectModule',
   RevertCollectModule = 'RevertCollectModule',
+  SimpleCollectModule = 'SimpleCollectModule',
   TimedFeeCollectModule = 'TimedFeeCollectModule',
   UnknownCollectModule = 'UnknownCollectModule',
 }
@@ -1041,6 +1045,98 @@ export enum CustomFiltersTypes {
   Gardeners = 'GARDENERS',
 }
 
+export type DataAvailabilityComment = {
+  __typename: 'DataAvailabilityComment';
+  appId: Maybe<Scalars['Sources']>;
+  commentedOnProfile: Profile;
+  commentedOnPublicationId: Scalars['InternalPublicationId'];
+  createdAt: Scalars['DateTime'];
+  profile: Profile;
+  publicationId: Scalars['InternalPublicationId'];
+  submitter: Scalars['EthereumAddress'];
+  transactionId: Scalars['String'];
+  verificationStatus: DataAvailabilityVerificationStatusUnion;
+};
+
+export type DataAvailabilityMirror = {
+  __typename: 'DataAvailabilityMirror';
+  appId: Maybe<Scalars['Sources']>;
+  createdAt: Scalars['DateTime'];
+  mirrorOfProfile: Profile;
+  mirrorOfPublicationId: Scalars['InternalPublicationId'];
+  profile: Profile;
+  publicationId: Scalars['InternalPublicationId'];
+  submitter: Scalars['EthereumAddress'];
+  transactionId: Scalars['String'];
+  verificationStatus: DataAvailabilityVerificationStatusUnion;
+};
+
+export type DataAvailabilityPost = {
+  __typename: 'DataAvailabilityPost';
+  appId: Maybe<Scalars['Sources']>;
+  createdAt: Scalars['DateTime'];
+  profile: Profile;
+  publicationId: Scalars['InternalPublicationId'];
+  submitter: Scalars['EthereumAddress'];
+  transactionId: Scalars['String'];
+  verificationStatus: DataAvailabilityVerificationStatusUnion;
+};
+
+export type DataAvailabilitySubmitterResult = {
+  __typename: 'DataAvailabilitySubmitterResult';
+  address: Scalars['EthereumAddress'];
+  name: Scalars['String'];
+  totalTransactions: Scalars['Int'];
+};
+
+/** The paginated submitter results */
+export type DataAvailabilitySubmittersResult = {
+  __typename: 'DataAvailabilitySubmittersResult';
+  items: Array<DataAvailabilitySubmitterResult>;
+  pageInfo: PaginatedResultInfo;
+};
+
+export type DataAvailabilitySummaryResult = {
+  __typename: 'DataAvailabilitySummaryResult';
+  totalTransactions: Scalars['Int'];
+};
+
+export type DataAvailabilityTransactionRequest = {
+  /** The DA transaction id or internal publiation id */
+  id: Scalars['String'];
+};
+
+export type DataAvailabilityTransactionUnion =
+  | DataAvailabilityComment
+  | DataAvailabilityMirror
+  | DataAvailabilityPost;
+
+export type DataAvailabilityTransactionsRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  profileId?: InputMaybe<Scalars['ProfileId']>;
+};
+
+export type DataAvailabilityTransactionsResult = {
+  __typename: 'DataAvailabilityTransactionsResult';
+  items: Array<DataAvailabilityTransactionUnion>;
+  pageInfo: PaginatedResultInfo;
+};
+
+export type DataAvailabilityVerificationStatusFailure = {
+  __typename: 'DataAvailabilityVerificationStatusFailure';
+  status: Maybe<MomokaValidatorError>;
+};
+
+export type DataAvailabilityVerificationStatusSuccess = {
+  __typename: 'DataAvailabilityVerificationStatusSuccess';
+  verified: Scalars['Boolean'];
+};
+
+export type DataAvailabilityVerificationStatusUnion =
+  | DataAvailabilityVerificationStatusFailure
+  | DataAvailabilityVerificationStatusSuccess;
+
 /** The reason why a profile cannot decrypt a publication */
 export enum DecryptFailReason {
   CanNotDecrypt = 'CAN_NOT_DECRYPT',
@@ -1093,6 +1189,8 @@ export type Dispatcher = {
   address: Scalars['EthereumAddress'];
   /** If the dispatcher can use the relay */
   canUseRelay: Scalars['Boolean'];
+  /** If the dispatcher transactions will be sponsored by lens aka cover the gas costs */
+  sponsor: Scalars['Boolean'];
 };
 
 export type DoesFollow = {
@@ -2009,6 +2107,16 @@ export type MirrorEvent = {
 
 export type MirrorablePublication = Comment | Post;
 
+export type ModuleFee = {
+  __typename: 'ModuleFee';
+  /** The fee amount */
+  amount: ModuleFeeAmount;
+  /** The fee recipient */
+  recipient: Scalars['EthereumAddress'];
+  /** The referral fee */
+  referralFee: Scalars['Float'];
+};
+
 export type ModuleFeeAmount = {
   __typename: 'ModuleFeeAmount';
   /** The erc20 token info */
@@ -2024,11 +2132,52 @@ export type ModuleFeeAmountParams = {
   value: Scalars['String'];
 };
 
+export type ModuleFeeParams = {
+  /** The fee amount */
+  amount: ModuleFeeAmountParams;
+  /** The fee recipient */
+  recipient: Scalars['EthereumAddress'];
+  /** The referral fee */
+  referralFee: Scalars['Float'];
+};
+
 export type ModuleInfo = {
   __typename: 'ModuleInfo';
   name: Scalars['String'];
   type: Scalars['String'];
 };
+
+/** The momka validator error */
+export enum MomokaValidatorError {
+  BlockCantBeReadFromNode = 'BLOCK_CANT_BE_READ_FROM_NODE',
+  BlockTooFar = 'BLOCK_TOO_FAR',
+  CanNotConnectToBundlr = 'CAN_NOT_CONNECT_TO_BUNDLR',
+  ChainSignatureAlreadyUsed = 'CHAIN_SIGNATURE_ALREADY_USED',
+  DataCantBeReadFromNode = 'DATA_CANT_BE_READ_FROM_NODE',
+  EventMismatch = 'EVENT_MISMATCH',
+  GeneratedPublicationIdMismatch = 'GENERATED_PUBLICATION_ID_MISMATCH',
+  InvalidEventTimestamp = 'INVALID_EVENT_TIMESTAMP',
+  InvalidFormattedTypedData = 'INVALID_FORMATTED_TYPED_DATA',
+  InvalidPointerSetNotNeeded = 'INVALID_POINTER_SET_NOT_NEEDED',
+  InvalidSignatureSubmitter = 'INVALID_SIGNATURE_SUBMITTER',
+  InvalidTxId = 'INVALID_TX_ID',
+  InvalidTypedDataDeadlineTimestamp = 'INVALID_TYPED_DATA_DEADLINE_TIMESTAMP',
+  NotClosestBlock = 'NOT_CLOSEST_BLOCK',
+  NoSignatureSubmitter = 'NO_SIGNATURE_SUBMITTER',
+  PointerFailedVerification = 'POINTER_FAILED_VERIFICATION',
+  PotentialReorg = 'POTENTIAL_REORG',
+  PublicationNonceInvalid = 'PUBLICATION_NONCE_INVALID',
+  PublicationNoneDa = 'PUBLICATION_NONE_DA',
+  PublicationNoPointer = 'PUBLICATION_NO_POINTER',
+  PublicationSignerNotAllowed = 'PUBLICATION_SIGNER_NOT_ALLOWED',
+  SimulationFailed = 'SIMULATION_FAILED',
+  SimulationNodeCouldNotRun = 'SIMULATION_NODE_COULD_NOT_RUN',
+  TimestampProofInvalidDaId = 'TIMESTAMP_PROOF_INVALID_DA_ID',
+  TimestampProofInvalidSignature = 'TIMESTAMP_PROOF_INVALID_SIGNATURE',
+  TimestampProofInvalidType = 'TIMESTAMP_PROOF_INVALID_TYPE',
+  TimestampProofNotSubmitter = 'TIMESTAMP_PROOF_NOT_SUBMITTER',
+  Unknown = 'UNKNOWN',
+}
 
 export type MultirecipientFeeCollectModuleParams = {
   /** The collecting cost associated with this publication. 0 for free collect. */
@@ -2645,7 +2794,7 @@ export type NotificationRequest = {
   customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
   highSignalFilter?: InputMaybe<Scalars['Boolean']>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
-  /** The profile id */
+  /** The notification types */
   notificationTypes?: InputMaybe<Array<NotificationTypes>>;
   /** The profile id */
   profileId: Scalars['ProfileId'];
@@ -3212,7 +3361,7 @@ export enum PublicationMetadataStatusType {
 
 /** Publication metadata tag filter */
 export type PublicationMetadataTagsFilter = {
-  /** Needs to only match all */
+  /** Needs to match all */
   all?: InputMaybe<Array<Scalars['String']>>;
   /** Needs to only match one of */
   oneOf?: InputMaybe<Array<Scalars['String']>>;
@@ -3339,6 +3488,7 @@ export enum PublicationReportingSensitiveSubreason {
 /** Publication reporting spam subreason */
 export enum PublicationReportingSpamSubreason {
   FakeEngagement = 'FAKE_ENGAGEMENT',
+  LowSignal = 'LOW_SIGNAL',
   ManipulationAlgo = 'MANIPULATION_ALGO',
   Misleading = 'MISLEADING',
   MisuseHashtags = 'MISUSE_HASHTAGS',
@@ -3452,6 +3602,10 @@ export type Query = {
   claimableHandles: ClaimableHandles;
   claimableStatus: ClaimStatus;
   cur: Array<Scalars['String']>;
+  dataAvailabilitySubmitters: DataAvailabilitySubmittersResult;
+  dataAvailabilitySummary: DataAvailabilitySummaryResult;
+  dataAvailabilityTransaction: Maybe<DataAvailabilityTransactionUnion>;
+  dataAvailabilityTransactions: DataAvailabilityTransactionsResult;
   defaultProfile: Maybe<Profile>;
   doesFollow: Array<DoesFollowResponse>;
   enabledModuleCurrencies: Array<Erc20>;
@@ -3519,6 +3673,14 @@ export type QueryChallengeArgs = {
 
 export type QueryCurArgs = {
   request: CurRequest;
+};
+
+export type QueryDataAvailabilityTransactionArgs = {
+  request: DataAvailabilityTransactionRequest;
+};
+
+export type QueryDataAvailabilityTransactionsArgs = {
+  request?: InputMaybe<DataAvailabilityTransactionsRequest>;
 };
 
 export type QueryDefaultProfileArgs = {
@@ -3974,6 +4136,32 @@ export type SignedAuthChallenge = {
   signature: Scalars['Signature'];
 };
 
+export type SimpleCollectModuleParams = {
+  /** The collect module limit */
+  collectLimit?: InputMaybe<Scalars['String']>;
+  /** The timestamp that this collect module will expire */
+  endTimestamp?: InputMaybe<Scalars['DateTime']>;
+  /** The collect module fee params */
+  fee?: InputMaybe<ModuleFeeParams>;
+  /** Collectible by followers only */
+  followerOnly: Scalars['Boolean'];
+};
+
+export type SimpleCollectModuleSettings = {
+  __typename: 'SimpleCollectModuleSettings';
+  /** The maximum number of collects for this publication. 0 for no limit. */
+  collectLimit: Maybe<Scalars['String']>;
+  contractAddress: Scalars['ContractAddress'];
+  /** The end timestamp after which collecting is impossible. 0 for no expiry. */
+  endTimestamp: Maybe<Scalars['DateTime']>;
+  /** The collect module fee params */
+  fee: Maybe<ModuleFee>;
+  /** True if only followers of publisher may collect the post. */
+  followerOnly: Scalars['Boolean'];
+  /** The collect modules enum */
+  type: CollectModules;
+};
+
 export type SingleProfileQueryRequest = {
   /** The handle for the profile */
   handle?: InputMaybe<Scalars['Handle']>;
@@ -3984,6 +4172,11 @@ export type SingleProfileQueryRequest = {
 export type SpamReasonInputParams = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingSpamSubreason;
+};
+
+export type Subscription = {
+  __typename: 'Subscription';
+  newDataAvailabilityTransaction: DataAvailabilityTransactionUnion;
 };
 
 export type SybilDotOrgIdentity = {

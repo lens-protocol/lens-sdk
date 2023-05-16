@@ -173,6 +173,21 @@ fragment TimedFeeCollectModuleSettings on TimedFeeCollectModuleSettings {
   referralFee
 }
 
+fragment SimpleCollectModuleSettings on SimpleCollectModuleSettings {
+  __typename
+  contractAddress
+  followerOnly
+  feeOptional: fee {
+    amount {
+      ...ModuleFeeAmount
+    }
+    referralFee
+    recipient
+  }
+  collectLimitOptional: collectLimit
+  endTimestampOptional: endTimestamp
+}
+
 fragment Wallet on Wallet {
   __typename
   address
@@ -332,6 +347,10 @@ fragment CommentBase on Comment {
     ... on TimedFeeCollectModuleSettings {
       ...TimedFeeCollectModuleSettings
     }
+
+    ... on SimpleCollectModuleSettings {
+      ...SimpleCollectModuleSettings
+    }
   }
   collectNftAddress
   referenceModule {
@@ -465,6 +484,10 @@ fragment Post on Post {
 
     ... on TimedFeeCollectModuleSettings {
       ...TimedFeeCollectModuleSettings
+    }
+
+    ... on SimpleCollectModuleSettings {
+      ...SimpleCollectModuleSettings
     }
   }
   collectNftAddress

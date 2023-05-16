@@ -10,6 +10,10 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockCreateCommentRequest } from '@lens-protocol/domain/mocks';
+import {
+  CollectPolicyType,
+  ReferencePolicyType,
+} from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
@@ -21,21 +25,6 @@ import {
   mockITransactionFactory,
 } from '../../__helpers__/mocks';
 import { CreateOnChainCommentGateway } from '../CreateOnChainCommentGateway';
-import {
-  createFeeCollectModuleExerciseData,
-  createFeeCollectModuleFollowersOnlyExerciseData,
-  createFollowerOnlyReferenceModuleExerciseData,
-  createFreeCollectModuleExerciseData,
-  createFreeCollectModuleFollowersOnlyExerciseData,
-  createLimitedFeeCollectModuleExerciseData,
-  createLimitedFeeCollectModuleFollowersOnlyExerciseData,
-  createLimitedTimedFeeCollectModuleExerciseData,
-  createLimitedTimedFeeCollectModuleFollowersOnlyExerciseData,
-  PublicationExerciseData,
-  createRevertCollectModuleExerciseData,
-  createTimedFeeCollectModuleExerciseData,
-  createTimedFeeCollectModuleFollowersOnlyExerciseData,
-} from '../__helpers__/publication-exercise-data';
 
 function setupTestScenario({
   apolloClient,
@@ -53,119 +42,115 @@ function setupTestScenario({
 }
 
 describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
-  describe.each<{
-    description: string;
-    createExerciseData: () => PublicationExerciseData;
-  }>([
-    {
-      description: 'Follower Only Reference Module',
-      createExerciseData: createFollowerOnlyReferenceModuleExerciseData,
+  const request = mockCreateCommentRequest({
+    collect: {
+      type: CollectPolicyType.NO_COLLECT,
     },
-    {
-      description: 'Revert Collect Module',
-      createExerciseData: createRevertCollectModuleExerciseData,
+    reference: {
+      type: ReferencePolicyType.ANYONE,
     },
-    {
-      description: 'Free Collect Module (anybody)',
-      createExerciseData: createFreeCollectModuleExerciseData,
+  });
+  const expectedMutationRequestDetails = {
+    collectModule: {
+      revertCollectModule: true,
     },
-    {
-      description: 'Free Collect Module (followers only)',
-      createExerciseData: createFreeCollectModuleFollowersOnlyExerciseData,
-    },
-    {
-      description: 'Fee Collect Module (anybody)',
-      createExerciseData: createFeeCollectModuleExerciseData,
-    },
-    {
-      description: 'Fee Collect Module (followers only)',
-      createExerciseData: createFeeCollectModuleFollowersOnlyExerciseData,
-    },
-    {
-      description: 'Limited Fee Collect Module (anybody)',
-      createExerciseData: createLimitedFeeCollectModuleExerciseData,
-    },
-    {
-      description: 'Limited Fee Collect Module (followers only)',
-      createExerciseData: createLimitedFeeCollectModuleFollowersOnlyExerciseData,
-    },
-    {
-      description: 'Timed Fee Collect Module (anybody)',
-      createExerciseData: createTimedFeeCollectModuleExerciseData,
-    },
-    {
-      description: 'Timed Fee Collect Module (followers only)',
-      createExerciseData: createTimedFeeCollectModuleFollowersOnlyExerciseData,
-    },
-    {
-      description: 'Limited Timed Fee Collect Module (anybody)',
-      createExerciseData: createLimitedTimedFeeCollectModuleExerciseData,
-    },
-    {
-      description: 'Limited Timed Fee Collect Module (followers only)',
-      createExerciseData: createLimitedTimedFeeCollectModuleFollowersOnlyExerciseData,
-    },
-  ])(`and CreateCommentRequest with $description`, ({ createExerciseData }) => {
-    const { requestVars, expectedMutationRequestDetails } = createExerciseData();
-    const request = mockCreateCommentRequest(requestVars);
-    const uploadUrl = faker.internet.url();
-    const data = mockCreateCommentTypedDataData();
+  };
+  const uploadUrl = faker.internet.url();
+  const data = mockCreateCommentTypedDataData();
 
-    describe(`when creating an IUnsignedProtocolCall<CreateCommentRequest>`, () => {
-      it(`should:
-          - use the IMetadataUploader<CreateCommentRequest'> to upload the publication metadata
+  describe(`when creating an IUnsignedProtocolCall<CreateCommentRequest>`, () => {
+    it(`should:
+          - use the IMetadataUploader<CreateCommentRequest> to upload the publication metadata
           - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
-        const apolloClient = createMockApolloClientWithMultipleResponses([
-          createCreateCommentTypedDataMockedResponse({
-            variables: {
-              request: {
-                contentURI: uploadUrl,
-                profileId: request.profileId,
-                publicationId: request.publicationId,
-                ...expectedMutationRequestDetails,
-              },
+      const apolloClient = createMockApolloClientWithMultipleResponses([
+        createCreateCommentTypedDataMockedResponse({
+          variables: {
+            request: {
+              contentURI: uploadUrl,
+              profileId: request.profileId,
+              publicationId: request.publicationId,
+              ...expectedMutationRequestDetails,
             },
-            data,
-          }),
-        ]);
-        const { gateway, uploader } = setupTestScenario({ apolloClient, uploadUrl });
+          },
+          data,
+        }),
+      ]);
+      const { gateway, uploader } = setupTestScenario({ apolloClient, uploadUrl });
 
-        const unsignedCall = await gateway.createUnsignedProtocolCall(request);
+      const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
-        expect(uploader.upload).toHaveBeenCalledWith(request);
-        assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
-      });
-
-      it(`should be possible to override the signature nonce`, async () => {
-        const nonce = mockNonce();
-        const apolloClient = createMockApolloClientWithMultipleResponses([
-          createCreateCommentTypedDataMockedResponse({
-            variables: {
-              request: {
-                contentURI: uploadUrl,
-                profileId: request.profileId,
-                publicationId: request.publicationId,
-                ...expectedMutationRequestDetails,
-              },
-              options: {
-                overrideSigNonce: nonce,
-              },
-            },
-            data: mockCreateCommentTypedDataData({ nonce }),
-          }),
-        ]);
-        const { gateway } = setupTestScenario({ apolloClient, uploadUrl });
-
-        const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
-
-        expect(unsignedCall.nonce).toEqual(nonce);
-      });
+      expect(uploader.upload).toHaveBeenCalledWith(request);
+      assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
     });
 
-    describe(`when creating a ${NativeTransaction.name}<CreateCommentRequest>}"`, () => {
-      it(`should:
-          - use the IMetadataUploader<CreateCommentRequest'> to upload the publication metadata
+    it(`should be possible to override the signature nonce`, async () => {
+      const nonce = mockNonce();
+      const apolloClient = createMockApolloClientWithMultipleResponses([
+        createCreateCommentTypedDataMockedResponse({
+          variables: {
+            request: {
+              contentURI: uploadUrl,
+              profileId: request.profileId,
+              publicationId: request.publicationId,
+              ...expectedMutationRequestDetails,
+            },
+            options: {
+              overrideSigNonce: nonce,
+            },
+          },
+          data: mockCreateCommentTypedDataData({ nonce }),
+        }),
+      ]);
+      const { gateway } = setupTestScenario({ apolloClient, uploadUrl });
+
+      const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
+
+      expect(unsignedCall.nonce).toEqual(nonce);
+    });
+  });
+
+  describe(`when creating a ${NativeTransaction.name}<CreateCommentRequest>}"`, () => {
+    it(`should:
+          - use the IMetadataUploader<CreateCommentRequest> to upload the publication metadata
           - create an instance of the ${NativeTransaction.name}`, async () => {
+      const apolloClient = createMockApolloClientWithMultipleResponses([
+        createCreateCommentViaDispatcherMockedResponse({
+          variables: {
+            request: {
+              contentURI: uploadUrl,
+              profileId: request.profileId,
+              publicationId: request.publicationId,
+
+              ...expectedMutationRequestDetails,
+            },
+          },
+          data: {
+            result: mockRelayerResultFragment(),
+          },
+        }),
+      ]);
+
+      const { gateway, uploader } = setupTestScenario({ apolloClient, uploadUrl });
+
+      const result = await gateway.createDelegatedTransaction(request);
+
+      expect(uploader.upload).toHaveBeenCalledWith(request);
+      expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
+      expect(result.unwrap()).toEqual(
+        expect.objectContaining({
+          chainType: ChainType.POLYGON,
+          id: expect.any(String),
+          request,
+        }),
+      );
+    });
+
+    it.each([
+      mockRelayErrorFragment(RelayErrorReasons.Rejected),
+      mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
+    ])(
+      `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
+      async (relayError) => {
         const apolloClient = createMockApolloClientWithMultipleResponses([
           createCreateCommentViaDispatcherMockedResponse({
             variables: {
@@ -178,67 +163,28 @@ describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
               },
             },
             data: {
-              result: mockRelayerResultFragment(),
+              result: relayError,
             },
+          }),
+          createCreateCommentTypedDataMockedResponse({
+            variables: {
+              request: {
+                contentURI: uploadUrl,
+                profileId: request.profileId,
+                publicationId: request.publicationId,
+                ...expectedMutationRequestDetails,
+              },
+            },
+            data,
           }),
         ]);
 
-        const { gateway, uploader } = setupTestScenario({ apolloClient, uploadUrl });
+        const { gateway } = setupTestScenario({ apolloClient, uploadUrl });
 
         const result = await gateway.createDelegatedTransaction(request);
 
-        expect(uploader.upload).toHaveBeenCalledWith(request);
-        expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
-        expect(result.unwrap()).toEqual(
-          expect.objectContaining({
-            chainType: ChainType.POLYGON,
-            id: expect.any(String),
-            request,
-          }),
-        );
-      });
-
-      it.each([
-        mockRelayErrorFragment(RelayErrorReasons.Rejected),
-        mockRelayErrorFragment(RelayErrorReasons.NotAllowed),
-      ])(
-        `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
-        async (relayError) => {
-          const apolloClient = createMockApolloClientWithMultipleResponses([
-            createCreateCommentViaDispatcherMockedResponse({
-              variables: {
-                request: {
-                  contentURI: uploadUrl,
-                  profileId: request.profileId,
-                  publicationId: request.publicationId,
-
-                  ...expectedMutationRequestDetails,
-                },
-              },
-              data: {
-                result: relayError,
-              },
-            }),
-            createCreateCommentTypedDataMockedResponse({
-              variables: {
-                request: {
-                  contentURI: uploadUrl,
-                  profileId: request.profileId,
-                  publicationId: request.publicationId,
-                  ...expectedMutationRequestDetails,
-                },
-              },
-              data,
-            }),
-          ]);
-
-          const { gateway } = setupTestScenario({ apolloClient, uploadUrl });
-
-          const result = await gateway.createDelegatedTransaction(request);
-
-          assertBroadcastingErrorResultWithRequestFallback(result, data.result.typedData);
-        },
-      );
-    });
+        assertBroadcastingErrorResultWithRequestFallback(result, data.result.typedData);
+      },
+    );
   });
 });

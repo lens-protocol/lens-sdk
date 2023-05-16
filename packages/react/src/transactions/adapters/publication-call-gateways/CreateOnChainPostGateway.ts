@@ -29,7 +29,8 @@ import {
   SelfFundedProtocolTransactionRequest,
 } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
-import { resolveCollectModule, resolveReferenceModule } from './utils';
+import { resolveCollectModuleParams } from './resolveCollectModuleParams';
+import { resolveReferenceModuleParams } from './resolveReferenceModuleParams';
 
 export class CreateOnChainPostGateway
   implements
@@ -127,8 +128,8 @@ export class CreateOnChainPostGateway
     return {
       contentURI: await this.metadataUploader.upload(request),
       profileId: request.profileId,
-      collectModule: resolveCollectModule(request),
-      referenceModule: resolveReferenceModule(request),
+      collectModule: resolveCollectModuleParams(request),
+      referenceModule: resolveReferenceModuleParams(request),
     };
   }
 

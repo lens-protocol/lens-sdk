@@ -8,12 +8,12 @@ import { DateUtils, never, Overwrite, Prettify } from '@lens-protocol/shared-ker
 
 import {
   AaveFeeCollectPolicy,
-  CollectPolicy,
   CollectState,
   FeeCollectPolicy,
   LimitedFeeCollectPolicy,
   LimitedTimedFeeCollectPolicy,
   MultirecipientFeeCollectPolicy,
+  NoCollectPolicy,
   NoFeeCollectPolicy,
   TimedFeeCollectPolicy,
   VaultFeeCollectPolicy,
@@ -31,6 +31,7 @@ import {
   Post,
   PublicationStats,
   ReactionTypes,
+  SimpleCollectModuleSettings,
   TimedFeeCollectModuleSettings,
 } from '../operations';
 import { erc20Amount } from './amount';
@@ -227,6 +228,26 @@ export function createCollectRequest(
       : publication.collectModule;
 
   switch (collectModule.__typename) {
+    case 'SimpleCollectModuleSettings':
+      if (collectModule.feeOptional) {
+        return {
+          profileId: collector.id,
+          kind: TransactionKind.COLLECT_PUBLICATION,
+          publicationId: publication.id,
+          type: CollectType.PAID,
+          fee: {
+            amount: erc20Amount({ from: collectModule.feeOptional.amount }),
+            contractAddress: collectModule.contractAddress,
+          },
+        };
+      }
+      return {
+        profileId: collector.id,
+        kind: TransactionKind.COLLECT_PUBLICATION,
+        publicationId: publication.id,
+        followerOnly: collectModule.followerOnly,
+        type: CollectType.FREE,
+      };
     case 'FreeCollectModuleSettings':
       return {
         profileId: collector.id,
@@ -285,7 +306,8 @@ function resolveOptionalTimeLimitReached(
   collectModule:
     | MultirecipientFeeCollectModuleSettings
     | Erc4626FeeCollectModuleSettings
-    | AaveFeeCollectModuleSettings,
+    | AaveFeeCollectModuleSettings
+    | SimpleCollectModuleSettings,
 ) {
   if (
     collectModule.endTimestampOptional &&
@@ -311,7 +333,8 @@ function resolveOptionalLimitReached(
   collectModule:
     | MultirecipientFeeCollectModuleSettings
     | Erc4626FeeCollectModuleSettings
-    | AaveFeeCollectModuleSettings,
+    | AaveFeeCollectModuleSettings
+    | SimpleCollectModuleSettings,
   publicationStats: PublicationStats,
 ) {
   if (
@@ -332,7 +355,8 @@ export type CollectableCollectModuleSettings =
   | LimitedTimedFeeCollectModuleSettings
   | MultirecipientFeeCollectModuleSettings
   | Erc4626FeeCollectModuleSettings
-  | AaveFeeCollectModuleSettings;
+  | AaveFeeCollectModuleSettings
+  | SimpleCollectModuleSettings;
 
 function resolveNotFollower(
   collectModule: CollectableCollectModuleSettings,
@@ -354,18 +378,63 @@ export function resolveCollectPolicy({
   isAuthorFollowedByMe: boolean;
   publicationStats: PublicationStats;
   collectNftAddress: string | null;
-}): CollectPolicy {
+}):
+  | FeeCollectPolicy
+  | NoFeeCollectPolicy
+  | MultirecipientFeeCollectPolicy
+  | VaultFeeCollectPolicy
+  | AaveFeeCollectPolicy
+  | NoCollectPolicy {
   switch (collectModule.__typename) {
+    case 'SimpleCollectModuleSettings': {
+      if (collectModule.feeOptional) {
+        return {
+          type: CollectPolicyType.CHARGE,
+          state:
+            resolveNotFollower(collectModule, isAuthorFollowedByMe) ??
+            resolveOptionalLimitReached(collectModule, publicationStats) ??
+            resolveOptionalTimeLimitReached(collectModule) ??
+            CollectState.CAN_BE_COLLECTED,
+          amount: erc20Amount({ from: collectModule.feeOptional.amount }),
+          collectLimit: collectModule.collectLimitOptional
+            ? parseInt(collectModule.collectLimitOptional)
+            : null,
+          collectNftAddress,
+          contractAddress: collectModule.contractAddress,
+          endTimestamp: collectModule.endTimestampOptional,
+          followerOnly: collectModule.followerOnly,
+          referralFee: collectModule.feeOptional.referralFee,
+        };
+      }
+      return {
+        type: CollectPolicyType.FREE,
+        state:
+          resolveNotFollower(collectModule, isAuthorFollowedByMe) ??
+          resolveOptionalLimitReached(collectModule, publicationStats) ??
+          resolveOptionalTimeLimitReached(collectModule) ??
+          CollectState.CAN_BE_COLLECTED,
+        contractAddress: collectModule.contractAddress,
+        collectLimit: collectModule.collectLimitOptional
+          ? parseInt(collectModule.collectLimitOptional)
+          : null,
+        collectNftAddress,
+        endTimestamp: collectModule.endTimestampOptional,
+        followerOnly: collectModule.followerOnly,
+      };
+    }
     case 'FeeCollectModuleSettings':
       return {
         type: CollectPolicyType.CHARGE,
         state:
           resolveNotFollower(collectModule, isAuthorFollowedByMe) ?? CollectState.CAN_BE_COLLECTED,
+
         amount: erc20Amount({ from: collectModule.amount }),
-        referralFee: collectModule.referralFee,
-        followerOnly: collectModule.followerOnly,
+        collectLimit: null,
         collectNftAddress,
         contractAddress: collectModule.contractAddress,
+        endTimestamp: null,
+        followerOnly: collectModule.followerOnly,
+        referralFee: collectModule.referralFee,
       };
     case 'LimitedFeeCollectModuleSettings':
       return {
@@ -375,11 +444,12 @@ export function resolveCollectPolicy({
           resolveLimitReached(collectModule, publicationStats) ??
           CollectState.CAN_BE_COLLECTED,
         amount: erc20Amount({ from: collectModule.amount }),
-        referralFee: collectModule.referralFee,
         collectLimit: parseInt(collectModule.collectLimit),
-        followerOnly: collectModule.followerOnly,
         collectNftAddress,
         contractAddress: collectModule.contractAddress,
+        endTimestamp: null,
+        followerOnly: collectModule.followerOnly,
+        referralFee: collectModule.referralFee,
       };
     case 'TimedFeeCollectModuleSettings':
       return {
@@ -389,11 +459,12 @@ export function resolveCollectPolicy({
           resolveTimeLimitReached(collectModule) ??
           CollectState.CAN_BE_COLLECTED,
         amount: erc20Amount({ from: collectModule.amount }),
-        referralFee: collectModule.referralFee,
-        endTimestamp: collectModule.endTimestamp,
-        followerOnly: collectModule.followerOnly,
+        collectLimit: null,
         collectNftAddress,
         contractAddress: collectModule.contractAddress,
+        endTimestamp: collectModule.endTimestamp,
+        followerOnly: collectModule.followerOnly,
+        referralFee: collectModule.referralFee,
       };
     case 'LimitedTimedFeeCollectModuleSettings':
       return {
@@ -416,9 +487,11 @@ export function resolveCollectPolicy({
         type: CollectPolicyType.FREE,
         state:
           resolveNotFollower(collectModule, isAuthorFollowedByMe) ?? CollectState.CAN_BE_COLLECTED,
-        followerOnly: collectModule.followerOnly,
+        collectLimit: null,
         collectNftAddress,
         contractAddress: collectModule.contractAddress,
+        endTimestamp: null,
+        followerOnly: collectModule.followerOnly,
       };
     case 'MultirecipientFeeCollectModuleSettings':
     case 'ERC4626FeeCollectModuleSettings':

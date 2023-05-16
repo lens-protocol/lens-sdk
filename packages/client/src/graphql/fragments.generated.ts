@@ -283,6 +283,7 @@ export type CommentBaseFragment = {
         __typename: 'MultirecipientFeeCollectModuleSettings';
       } & MultirecipientFeeCollectModuleSettingsFragment)
     | ({ __typename: 'RevertCollectModuleSettings' } & RevertCollectModuleSettingsFragment)
+    | { __typename: 'SimpleCollectModuleSettings' }
     | ({ __typename: 'TimedFeeCollectModuleSettings' } & TimedFeeCollectModuleSettingsFragment)
     | { __typename: 'UnknownCollectModuleSettings' };
   referenceModule:
@@ -329,6 +330,7 @@ export type PostFragment = {
         __typename: 'MultirecipientFeeCollectModuleSettings';
       } & MultirecipientFeeCollectModuleSettingsFragment)
     | ({ __typename: 'RevertCollectModuleSettings' } & RevertCollectModuleSettingsFragment)
+    | { __typename: 'SimpleCollectModuleSettings' }
     | ({ __typename: 'TimedFeeCollectModuleSettings' } & TimedFeeCollectModuleSettingsFragment)
     | { __typename: 'UnknownCollectModuleSettings' };
   referenceModule:
