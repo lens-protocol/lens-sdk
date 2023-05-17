@@ -1,5 +1,40 @@
 # @lens-protocol/react
 
+## 1.1.0
+
+### Minor Changes
+
+- 03a8ad5d: Deprecated publication's isOptimisticMirroredByMe property, introduced isMirroredByMe
+- 513373d3: Enhanced publication's hasCollectedByMe to replace deprecated hasOptimisticCollectedByMe property
+- c416a2ea: **Added:** self-fund protocol calls when subsidized approaches fails
+  **Fixed:** ensures correct chain when signing typed data
+  **Fixed:** network switch in wagmi bindings
+- cf4a4201: Added support for cover and `altTag` in publication media attributes
+- ef1d7e28: Added Momoka support to React hooks
+
+### Patch Changes
+
+- 1d5cf31b: Fixed create mirror commit phase so to update the correct publication in cache
+- 72becec0: **Fixed** documentation for `useuseActiveProfileSwitch` and `useProfilesOwnedByMe` hooks
+- ca9b8cb0: **Fixes** export of `NotificationTypes`
+- 04647bbe: **Fixed** issue preventing query hook from detecting active profile changes
+- b738abbe: Fixed `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+- 71196cf0: Added support for more metadata fields in create publication hooks
+- c4e6fcfc: **Fixes** `CollectType`, `NftAttributeDisplayType`, `ReferencePolicyType` not exported as values
+- Updated dependencies [03a8ad5d]
+- Updated dependencies [513373d3]
+- Updated dependencies [04647bbe]
+- Updated dependencies [c416a2ea]
+- Updated dependencies [ef1d7e28]
+- Updated dependencies [b738abbe]
+- Updated dependencies [71196cf0]
+  - @lens-protocol/api-bindings@0.8.0
+  - @lens-protocol/blockchain-bindings@0.8.0
+  - @lens-protocol/shared-kernel@0.8.0
+  - @lens-protocol/domain@0.8.0
+  - @lens-protocol/gated-content@0.2.2
+  - @lens-protocol/storage@0.7.2
+
 ## 1.1.0-next.3
 
 ### Patch Changes

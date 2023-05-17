@@ -1,5 +1,23 @@
 # @lens-protocol/wagmi
 
+## 1.1.0
+
+### Minor Changes
+
+- c416a2ea: **Added:** self-fund protocol calls when subsidized approaches fails
+  **Fixed:** ensures correct chain when signing typed data
+  **Fixed:** network switch in wagmi bindings
+
+### Patch Changes
+
+- ef1d7e28: Added Momoka support to React hooks
+- Updated dependencies [72becec0]
+- Updated dependencies [c416a2ea]
+- Updated dependencies [cf4a4201]
+- Updated dependencies [b738abbe]
+  - @lens-protocol/react-web@2.0.0
+  - @lens-protocol/shared-kernel@0.8.0
+
 ## 1.1.0-next.3
 
 ### Patch Changes

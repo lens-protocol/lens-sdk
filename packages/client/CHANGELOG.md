@@ -1,11 +1,43 @@
 # @lens-protocol/client
 
+## 1.1.0
+
+### Minor Changes
+
+- 86fc3de3: Added support for data availability publications
+- a85e9a7b: Use fetch instead of XMLHttpRequest to fix edge functions usecases
+- 71196cf0: Added support for more metadata fields in create publication hooks
+
+### Patch Changes
+
+- ef96756f: Fixed enum exports for:
+
+  - CommentOrderingTypes
+  - CommentRankingFilter
+  - ContractType
+  - ProxyActionStatusTypes
+  - PublicationMetadataStatusType
+  - PublicationReportingFraudSubreason
+  - PublicationReportingIllegalSubreason
+  - PublicationReportingReason
+  - PublicationReportingSensitiveSubreason
+  - PublicationReportingSpamSubreason
+  - RelayErrorReasons
+  - ScalarOperator
+  - TransactionErrorReasons
+
+- Updated dependencies [c416a2ea]
+- Updated dependencies [b738abbe]
+  - @lens-protocol/shared-kernel@0.8.0
+  - @lens-protocol/storage@0.7.2
+
 ## 1.1.0-next.0
 
 ### Minor Changes
 
 - 86fc3de3: Added support for data availability publications
 - a85e9a7b: Use fetch instead of XMLHttpRequest to fix edge functions use cases
+- 71196cf0: Added support for more metadata fields in create publication hooks
 
 ### Patch Changes
 

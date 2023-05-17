@@ -1,5 +1,26 @@
 # @lens-protocol/api-bindings
 
+## 0.8.0
+
+### Minor Changes
+
+- 03a8ad5d: Deprecated publication's isOptimisticMirroredByMe property, introduced isMirroredByMe
+- 513373d3: Enhanced publication's hasCollectedByMe to replace deprecated hasOptimisticCollectedByMe property
+- c416a2ea: **Added:** self-fund protocol calls when subsidized approaches fails
+  **Fixed:** ensures correct chain when signing typed data
+  **Fixed:** network switch in wagmi bindings
+- ef1d7e28: Added Momoka support to React hooks
+
+### Patch Changes
+
+- 04647bbe: **Fixed** issue preventing query hook from detecting active profile changes
+- Updated dependencies [c416a2ea]
+- Updated dependencies [ef1d7e28]
+- Updated dependencies [b738abbe]
+- Updated dependencies [71196cf0]
+  - @lens-protocol/shared-kernel@0.8.0
+  - @lens-protocol/domain@0.8.0
+
 ## 0.8.0-next.2
 
 ### Minor Changes

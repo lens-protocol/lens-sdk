@@ -1,5 +1,33 @@
 # @lens-protocol/react-web
 
+## 1.1.0
+
+### Minor Changes
+
+- cf4a4201: Added support for cover and `altTag` in publication media attributes
+
+### Patch Changes
+
+- 72becec0: **Fixed** documentation for `useuseActiveProfileSwitch` and `useProfilesOwnedByMe` hooks
+- b738abbe: Fixed `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+- Updated dependencies [1d5cf31b]
+- Updated dependencies [03a8ad5d]
+- Updated dependencies [72becec0]
+- Updated dependencies [ca9b8cb0]
+- Updated dependencies [513373d3]
+- Updated dependencies [04647bbe]
+- Updated dependencies [c416a2ea]
+- Updated dependencies [cf4a4201]
+- Updated dependencies [ef1d7e28]
+- Updated dependencies [b738abbe]
+- Updated dependencies [71196cf0]
+- Updated dependencies [c4e6fcfc]
+  - @lens-protocol/react@2.0.0
+  - @lens-protocol/api-bindings@0.8.0
+  - @lens-protocol/shared-kernel@0.8.0
+  - @lens-protocol/gated-content@0.2.2
+  - @lens-protocol/storage@0.7.2
+
 ## 1.1.0-next.3
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # @lens-protocol/domain
 
+## 0.8.0
+
+### Minor Changes
+
+- c416a2ea: **Added:** self-fund protocol calls when subsidized approaches fails
+  **Fixed:** ensures correct chain when signing typed data
+  **Fixed:** network switch in wagmi bindings
+- ef1d7e28: Added Momoka support to React hooks
+
+### Patch Changes
+
+- b738abbe: Fixed `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+- 71196cf0: Added support for more metadata fields in create publication hooks
+- Updated dependencies [c416a2ea]
+- Updated dependencies [b738abbe]
+  - @lens-protocol/shared-kernel@0.8.0
+
 ## 0.8.0-next.2
 
 ### Minor Changes
