@@ -228,7 +228,7 @@ export const NotificationsDocument = gql`
         }
       }
       pageInfo {
-        ...PaginatedResultInfo
+        ...CommonPaginatedResultInfo
       }
     }
   }

@@ -96,7 +96,7 @@ export const ProfilePublicationRevenueDocument = gql`
         ...PublicationRevenue
       }
       pageInfo {
-        ...PaginatedResultInfo
+        ...CommonPaginatedResultInfo
       }
     }
   }

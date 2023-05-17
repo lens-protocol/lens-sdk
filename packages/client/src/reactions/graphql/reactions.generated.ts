@@ -87,7 +87,7 @@ export const WhoReactedPublicationDocument = gql`
         ...WhoReactedResult
       }
       pageInfo {
-        ...PaginatedResultInfo
+        ...CommonPaginatedResultInfo
       }
     }
   }

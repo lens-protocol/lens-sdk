@@ -508,7 +508,7 @@ export const PublicationsDocument = gql`
         }
       }
       pageInfo {
-        ...PaginatedResultInfo
+        ...CommonPaginatedResultInfo
       }
     }
   }
@@ -533,7 +533,7 @@ export const WhoCollectedPublicationDocument = gql`
         ...Wallet
       }
       pageInfo {
-        ...PaginatedResultInfo
+        ...CommonPaginatedResultInfo
       }
     }
   }
@@ -555,7 +555,7 @@ export const ProfilePublicationsForSaleDocument = gql`
         }
       }
       pageInfo {
-        ...PaginatedResultInfo
+        ...CommonPaginatedResultInfo
       }
     }
   }

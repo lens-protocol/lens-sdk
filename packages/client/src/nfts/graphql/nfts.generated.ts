@@ -149,7 +149,7 @@ export const NftsDocument = gql`
         ...Nft
       }
       pageInfo {
-        ...PaginatedResultInfo
+        ...CommonPaginatedResultInfo
       }
     }
   }

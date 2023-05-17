@@ -8,7 +8,7 @@ query ProfilePublicationRevenue(
     }
 
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }

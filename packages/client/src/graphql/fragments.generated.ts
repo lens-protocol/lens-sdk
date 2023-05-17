@@ -952,7 +952,7 @@ export const MirrorFragmentDoc = gql`
   ${CommentFragmentDoc}
 `;
 export const CommonPaginatedResultInfoFragmentDoc = gql`
-  fragment PaginatedResultInfo on PaginatedResultInfo {
+  fragment CommonPaginatedResultInfo on PaginatedResultInfo {
     __typename
     prev
     next

@@ -36,7 +36,7 @@ query Profiles($request: ProfileQueryRequest!, $observerId: ProfileId) {
     }
 
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }
@@ -57,7 +57,7 @@ query MutualFollowersProfiles(
     }
 
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }
@@ -79,7 +79,7 @@ query Following($request: FollowingRequest!, $observerId: ProfileId) {
     }
 
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }
@@ -91,7 +91,7 @@ query Followers($request: FollowersRequest!, $observerId: ProfileId) {
     }
 
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }
@@ -111,7 +111,7 @@ query PendingApprovalFollows($request: PendingApprovalFollowsRequest!, $observer
     }
 
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }

@@ -183,7 +183,7 @@ query Publications($request: PublicationsQueryRequest!, $observerId: ProfileId) 
       }
     }
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }
@@ -203,7 +203,7 @@ query WhoCollectedPublication($request: WhoCollectedPublicationRequest!, $observ
     }
 
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }
@@ -223,7 +223,7 @@ query ProfilePublicationsForSale(
     }
 
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }

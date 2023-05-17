@@ -14,7 +14,7 @@ query ExplorePublications($request: ExplorePublicationRequest!, $observerId: Pro
       }
     }
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }
@@ -25,7 +25,7 @@ query ExploreProfiles($request: ExploreProfilesRequest!, $observerId: ProfileId)
       ...Profile
     }
     pageInfo {
-      ...PaginatedResultInfo
+      ...CommonPaginatedResultInfo
     }
   }
 }
