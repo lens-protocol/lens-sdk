@@ -1,5 +1,18 @@
 # @lens-protocol/api-bindings
 
+## 0.8.0-next.3
+
+### Minor Changes
+
+- 5c5bfb2: Added support for SimpleCollectModule
+
+### Patch Changes
+
+- Updated dependencies [b738abb]
+- Updated dependencies [5c5bfb2]
+  - @lens-protocol/shared-kernel@0.8.0-next.1
+  - @lens-protocol/domain@0.8.0-next.3
+
 ## 0.8.0-next.2
 
 ### Minor Changes

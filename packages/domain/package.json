@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/domain",
-  "version": "0.8.0-next.2",
+  "version": "0.8.0-next.3",
   "description": "Critical Business Rules and Application-specific Business Rules",
   "exports": {
     "./mocks": {

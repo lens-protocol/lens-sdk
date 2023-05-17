@@ -1,5 +1,18 @@
 # @lens-protocol/client
 
+## 1.1.0-next.1
+
+### Minor Changes
+
+- 5c5bfb2: Added support for SimpleCollectModule
+
+### Patch Changes
+
+- 7218910: Added support for more metadata fields in create publication methods
+- Updated dependencies [b738abb]
+  - @lens-protocol/shared-kernel@0.8.0-next.1
+  - @lens-protocol/storage@0.7.2-next.1
+
 ## 1.1.0-next.0
 
 ### Minor Changes
