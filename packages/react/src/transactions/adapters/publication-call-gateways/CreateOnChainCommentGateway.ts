@@ -29,7 +29,8 @@ import {
   SelfFundedProtocolTransactionRequest,
 } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError, OnChainBroadcastReceipt } from '../relayer';
-import { resolveCollectModule, resolveReferenceModule } from './utils';
+import { resolveCollectModuleParams } from './resolveCollectModuleParams';
+import { resolveReferenceModuleParams } from './resolveReferenceModuleParams';
 
 export class CreateOnChainCommentGateway
   implements
@@ -129,8 +130,8 @@ export class CreateOnChainCommentGateway
       contentURI,
       profileId: request.profileId,
       publicationId: request.publicationId,
-      collectModule: resolveCollectModule(request),
-      referenceModule: resolveReferenceModule(request),
+      collectModule: resolveCollectModuleParams(request),
+      referenceModule: resolveReferenceModuleParams(request),
     };
   }
 

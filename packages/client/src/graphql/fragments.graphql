@@ -235,6 +235,21 @@ fragment AaveFeeCollectModuleSettings on AaveFeeCollectModuleSettings {
   referralFee
 }
 
+fragment SimpleCollectModuleSettings on SimpleCollectModuleSettings {
+  __typename
+  contractAddress
+  followerOnly
+  feeOptional: fee {
+    amount {
+      ...ModuleFeeAmount
+    }
+    referralFee
+    recipient
+  }
+  collectLimitOptional: collectLimit
+  endTimestampOptional: endTimestamp
+}
+
 fragment Wallet on Wallet {
   __typename
   address
@@ -362,6 +377,9 @@ fragment CommentBase on Comment {
     ... on AaveFeeCollectModuleSettings {
       ...AaveFeeCollectModuleSettings
     }
+    ... on SimpleCollectModuleSettings {
+      ...SimpleCollectModuleSettings
+    }
   }
   referenceModule {
     __typename
@@ -456,6 +474,9 @@ fragment Post on Post {
     }
     ... on AaveFeeCollectModuleSettings {
       ...AaveFeeCollectModuleSettings
+    }
+    ... on SimpleCollectModuleSettings {
+      ...SimpleCollectModuleSettings
     }
   }
   referenceModule {

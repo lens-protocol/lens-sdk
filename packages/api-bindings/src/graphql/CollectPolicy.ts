@@ -11,22 +11,37 @@ export enum CollectState {
 
 export type FeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
-  state: CollectState.CAN_BE_COLLECTED | CollectState.NOT_A_FOLLOWER;
+  state:
+    | CollectState.CAN_BE_COLLECTED
+    | CollectState.NOT_A_FOLLOWER
+    | CollectState.COLLECT_LIMIT_REACHED
+    | CollectState.COLLECT_TIME_EXPIRED;
   amount: Erc20Amount;
   referralFee: number;
   followerOnly: boolean;
   collectNftAddress: EthereumAddress | null;
   contractAddress: EthereumAddress;
+  endTimestamp: string | null;
+  collectLimit: number | null;
 };
 
 export type NoFeeCollectPolicy = {
   type: CollectPolicyType.FREE;
-  state: CollectState.CAN_BE_COLLECTED | CollectState.NOT_A_FOLLOWER;
+  state:
+    | CollectState.CAN_BE_COLLECTED
+    | CollectState.NOT_A_FOLLOWER
+    | CollectState.COLLECT_LIMIT_REACHED
+    | CollectState.COLLECT_TIME_EXPIRED;
   followerOnly: boolean;
   collectNftAddress: EthereumAddress | null;
   contractAddress: EthereumAddress;
+  endTimestamp: string | null;
+  collectLimit: number | null;
 };
 
+/**
+ * @deprecated Use {@link FeeCollectPolicy} with `collectLimit` instead.
+ */
 export type LimitedFeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
   state:
@@ -41,6 +56,9 @@ export type LimitedFeeCollectPolicy = {
   contractAddress: EthereumAddress;
 };
 
+/**
+ * @deprecated Use {@link FeeCollectPolicy} with `endTimestamp` instead.
+ */
 export type TimedFeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
   state:
@@ -55,6 +73,9 @@ export type TimedFeeCollectPolicy = {
   contractAddress: EthereumAddress;
 };
 
+/**
+ * @deprecated Use {@link FeeCollectPolicy} with `collectLimit` and `endTimestamp` instead.
+ */
 export type LimitedTimedFeeCollectPolicy = {
   type: CollectPolicyType.CHARGE;
   state:

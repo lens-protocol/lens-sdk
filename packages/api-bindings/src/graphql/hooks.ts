@@ -590,6 +590,23 @@ export const FragmentTimedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   }
   ${FragmentModuleFeeAmount}
 `;
+export const FragmentSimpleCollectModuleSettings = /*#__PURE__*/ gql`
+  fragment SimpleCollectModuleSettings on SimpleCollectModuleSettings {
+    __typename
+    contractAddress
+    followerOnly
+    feeOptional: fee {
+      amount {
+        ...ModuleFeeAmount
+      }
+      referralFee
+      recipient
+    }
+    collectLimitOptional: collectLimit
+    endTimestampOptional: endTimestamp
+  }
+  ${FragmentModuleFeeAmount}
+`;
 export const FragmentFollowOnlyReferenceModuleSettings = /*#__PURE__*/ gql`
   fragment FollowOnlyReferenceModuleSettings on FollowOnlyReferenceModuleSettings {
     __typename
@@ -659,6 +676,9 @@ export const FragmentPost = /*#__PURE__*/ gql`
       ... on TimedFeeCollectModuleSettings {
         ...TimedFeeCollectModuleSettings
       }
+      ... on SimpleCollectModuleSettings {
+        ...SimpleCollectModuleSettings
+      }
     }
     collectNftAddress
     referenceModule {
@@ -709,6 +729,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
   ${FragmentLimitedTimedFeeCollectModuleSettings}
   ${FragmentRevertCollectModuleSettings}
   ${FragmentTimedFeeCollectModuleSettings}
+  ${FragmentSimpleCollectModuleSettings}
   ${FragmentFollowOnlyReferenceModuleSettings}
   ${FragmentDegreesOfSeparationReferenceModuleSettings}
   ${FragmentUnknownReferenceModuleSettings}
@@ -760,6 +781,9 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
       ... on TimedFeeCollectModuleSettings {
         ...TimedFeeCollectModuleSettings
       }
+      ... on SimpleCollectModuleSettings {
+        ...SimpleCollectModuleSettings
+      }
     }
     collectNftAddress
     referenceModule {
@@ -810,6 +834,7 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
   ${FragmentLimitedTimedFeeCollectModuleSettings}
   ${FragmentRevertCollectModuleSettings}
   ${FragmentTimedFeeCollectModuleSettings}
+  ${FragmentSimpleCollectModuleSettings}
   ${FragmentFollowOnlyReferenceModuleSettings}
   ${FragmentDegreesOfSeparationReferenceModuleSettings}
   ${FragmentUnknownReferenceModuleSettings}
@@ -6388,6 +6413,17 @@ export type MirrorEventFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   timestamp?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type ModuleFeeKeySpecifier = (
+  | 'amount'
+  | 'recipient'
+  | 'referralFee'
+  | ModuleFeeKeySpecifier
+)[];
+export type ModuleFeeFieldPolicy = {
+  amount?: FieldPolicy<any> | FieldReadFunction<any>;
+  recipient?: FieldPolicy<any> | FieldReadFunction<any>;
+  referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type ModuleFeeAmountKeySpecifier = ('asset' | 'value' | ModuleFeeAmountKeySpecifier)[];
 export type ModuleFeeAmountFieldPolicy = {
   asset?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -7380,6 +7416,23 @@ export type SetDefaultProfileEIP712TypedDataValueFieldPolicy = {
   profileId?: FieldPolicy<any> | FieldReadFunction<any>;
   wallet?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type SimpleCollectModuleSettingsKeySpecifier = (
+  | 'collectLimit'
+  | 'contractAddress'
+  | 'endTimestamp'
+  | 'fee'
+  | 'followerOnly'
+  | 'type'
+  | SimpleCollectModuleSettingsKeySpecifier
+)[];
+export type SimpleCollectModuleSettingsFieldPolicy = {
+  collectLimit?: FieldPolicy<any> | FieldReadFunction<any>;
+  contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
+  endTimestamp?: FieldPolicy<any> | FieldReadFunction<any>;
+  fee?: FieldPolicy<any> | FieldReadFunction<any>;
+  followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type SubscriptionKeySpecifier = (
   | 'newDataAvailabilityTransaction'
   | SubscriptionKeySpecifier
@@ -8305,6 +8358,10 @@ export type StrictTypedTypePolicies = {
     keyFields?: false | MirrorEventKeySpecifier | (() => undefined | MirrorEventKeySpecifier);
     fields?: MirrorEventFieldPolicy;
   };
+  ModuleFee?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | ModuleFeeKeySpecifier | (() => undefined | ModuleFeeKeySpecifier);
+    fields?: ModuleFeeFieldPolicy;
+  };
   ModuleFeeAmount?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -8712,6 +8769,13 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | SetDefaultProfileEIP712TypedDataValueKeySpecifier);
     fields?: SetDefaultProfileEIP712TypedDataValueFieldPolicy;
   };
+  SimpleCollectModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | SimpleCollectModuleSettingsKeySpecifier
+      | (() => undefined | SimpleCollectModuleSettingsKeySpecifier);
+    fields?: SimpleCollectModuleSettingsFieldPolicy;
+  };
   Subscription?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | SubscriptionKeySpecifier | (() => undefined | SubscriptionKeySpecifier);
     fields?: SubscriptionFieldPolicy;
@@ -8832,6 +8896,7 @@ const result: PossibleTypesResultData = {
       'LimitedTimedFeeCollectModuleSettings',
       'MultirecipientFeeCollectModuleSettings',
       'RevertCollectModuleSettings',
+      'SimpleCollectModuleSettings',
       'TimedFeeCollectModuleSettings',
       'UnknownCollectModuleSettings',
     ],

@@ -1,13 +1,14 @@
-import { CollectModuleParams, ReferenceModuleParams } from '@lens-protocol/api-bindings';
+import { CollectModuleParams, ModuleFeeParams } from '@lens-protocol/api-bindings';
 import {
   CollectPolicyType,
-  ReferencePolicyType,
   CreatePostRequest,
   CreateCommentRequest,
   AaveChargeCollectPolicyConfig,
   VaultChargeCollectPolicyConfig,
   MultirecipientChargeCollectPolicyConfig,
   ChargeCollectPolicyConfig,
+  CollectPolicyConfig,
+  SimpleChargeCollectPolicyConfig,
 } from '@lens-protocol/domain/use-cases/publications';
 
 function isAaveChargeCollectPolicy(
@@ -39,14 +40,50 @@ function resolveChargeCollectModuleSharedParams(collect: ChargeCollectPolicyConf
   };
 }
 
+function resolveModuleFeeParams(collect: SimpleChargeCollectPolicyConfig): ModuleFeeParams {
+  return {
+    amount: {
+      currency: collect.fee.asset.address,
+      value: collect.fee.toSignificantDigits(),
+    },
+    referralFee: collect.mirrorReward,
+    recipient: collect.recipient,
+  };
+}
+
+function resolveOptionalCollectLimit(collect: CollectPolicyConfig) {
+  return {
+    ...('collectLimit' in collect &&
+      collect.collectLimit && { collectLimit: collect.collectLimit.toString() }),
+  };
+}
+
+function resolveOptionalEndTimestamp(collect: CollectPolicyConfig) {
+  return {
+    ...('endTimestamp' in collect &&
+      collect.endTimestamp && { endTimestamp: collect.endTimestamp.toString() }),
+  };
+}
+
+function oneDayFromNowTimestamp() {
+  return Date.now() + 24 * 60 * 60 * 1000;
+}
+
+function resolveEndTimestampFromOptionalTimeLimited(collect: CollectPolicyConfig) {
+  return {
+    ...('timeLimited' in collect &&
+      collect.timeLimited && { endTimestamp: oneDayFromNowTimestamp().toString() }),
+  };
+}
+
 function resolveChargeCollectModule(collect: ChargeCollectPolicyConfig): CollectModuleParams {
   if (isAaveChargeCollectPolicy(collect)) {
     return {
       aaveFeeCollectModule: {
         ...resolveChargeCollectModuleSharedParams(collect),
         recipient: collect.recipient,
-        ...(collect.collectLimit && { collectLimit: collect.collectLimit.toString() }),
-        ...(collect.endTimestamp && { endTimestamp: collect.endTimestamp.toString() }),
+        ...resolveOptionalCollectLimit(collect),
+        ...resolveOptionalEndTimestamp(collect),
       },
     };
   }
@@ -57,8 +94,8 @@ function resolveChargeCollectModule(collect: ChargeCollectPolicyConfig): Collect
         ...resolveChargeCollectModuleSharedParams(collect),
         recipient: collect.recipient,
         vault: collect.vault,
-        ...(collect.collectLimit && { collectLimit: collect.collectLimit.toString() }),
-        ...(collect.endTimestamp && { endTimestamp: collect.endTimestamp.toString() }),
+        ...resolveOptionalCollectLimit(collect),
+        ...resolveOptionalEndTimestamp(collect),
       },
     };
   }
@@ -68,57 +105,33 @@ function resolveChargeCollectModule(collect: ChargeCollectPolicyConfig): Collect
       multirecipientFeeCollectModule: {
         ...resolveChargeCollectModuleSharedParams(collect),
         recipients: collect.recipients,
-        ...(collect.collectLimit && { collectLimit: collect.collectLimit.toString() }),
-        ...(collect.endTimestamp && { endTimestamp: collect.endTimestamp.toString() }),
-      },
-    };
-  }
-
-  if (collect.collectLimit && collect.timeLimited) {
-    return {
-      limitedTimedFeeCollectModule: {
-        ...resolveChargeCollectModuleSharedParams(collect),
-        recipient: collect.recipient,
-        collectLimit: collect.collectLimit.toString(),
-      },
-    };
-  }
-
-  if (collect.collectLimit) {
-    return {
-      limitedFeeCollectModule: {
-        ...resolveChargeCollectModuleSharedParams(collect),
-        recipient: collect.recipient,
-        collectLimit: collect.collectLimit.toString(),
-      },
-    };
-  }
-
-  if (collect.timeLimited) {
-    return {
-      timedFeeCollectModule: {
-        ...resolveChargeCollectModuleSharedParams(collect),
-        recipient: collect.recipient,
+        ...resolveOptionalCollectLimit(collect),
+        ...resolveOptionalEndTimestamp(collect),
       },
     };
   }
 
   return {
-    feeCollectModule: {
-      ...resolveChargeCollectModuleSharedParams(collect),
-      recipient: collect.recipient,
+    simpleCollectModule: {
+      fee: resolveModuleFeeParams(collect),
+      followerOnly: collect.followersOnly,
+      ...resolveOptionalCollectLimit(collect),
+      ...resolveOptionalEndTimestamp(collect),
+      ...resolveEndTimestampFromOptionalTimeLimited(collect),
     },
   };
 }
 
-export function resolveCollectModule(
+export function resolveCollectModuleParams(
   request: CreatePostRequest | CreateCommentRequest,
 ): CollectModuleParams {
   switch (request.collect.type) {
     case CollectPolicyType.FREE:
       return {
-        freeCollectModule: {
+        simpleCollectModule: {
           followerOnly: request.collect.followersOnly,
+          ...resolveOptionalCollectLimit(request.collect),
+          ...resolveOptionalEndTimestamp(request.collect),
         },
       };
 
@@ -130,22 +143,4 @@ export function resolveCollectModule(
     case CollectPolicyType.CHARGE:
       return resolveChargeCollectModule(request.collect);
   }
-}
-
-export function resolveReferenceModule(
-  request: CreatePostRequest | CreateCommentRequest,
-): ReferenceModuleParams | undefined {
-  if (request.reference.type === ReferencePolicyType.FOLLOWERS_ONLY) {
-    return {
-      followerOnlyReferenceModule: true,
-    };
-  }
-
-  if (request.reference.type === ReferencePolicyType.DEGREES_OF_SEPARATION) {
-    return {
-      degreesOfSeparationReferenceModule: request.reference.params,
-    };
-  }
-
-  return undefined;
 }

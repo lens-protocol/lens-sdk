@@ -161,9 +161,14 @@ export type SimpleChargeCollectPolicyConfig = {
   metadata: NftMetadata;
   mirrorReward: number;
   collectLimit?: number;
-
   recipient: EthereumAddress;
-  timeLimited: boolean;
+  endTimestamp?: number;
+  /**
+   * If `true` it will set `endTimestamp` to the current timestamp + 24 hours.
+   *
+   * @deprecated use `endTimestamp` instead.
+   */
+  timeLimited?: boolean;
 };
 
 export type ChargeCollectPolicyConfig =
@@ -176,6 +181,8 @@ export type FreeCollectPolicyConfig = {
   type: CollectPolicyType.FREE;
   metadata: NftMetadata;
   followersOnly: boolean;
+  collectLimit?: number;
+  endTimestamp?: number;
 };
 
 export type NoCollectPolicyConfig = {
