@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 1.1.0-next.1
+
+### Minor Changes
+
+- 71196cf0: Added support for more metadata fields
+
 ## 1.1.0-next.0
 
 ### Minor Changes
