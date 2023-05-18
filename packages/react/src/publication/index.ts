@@ -61,6 +61,7 @@ export type {
   LimitedTimedFeeCollectModuleSettings,
   MultirecipientFeeCollectModuleSettings,
   RevertCollectModuleSettings,
+  SimpleCollectModuleSettings,
   TimedFeeCollectModuleSettings,
   UnknownCollectModuleSettings,
 } from '@lens-protocol/api-bindings';

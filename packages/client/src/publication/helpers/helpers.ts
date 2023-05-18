@@ -1,12 +1,12 @@
 /**
  * @internal
  */
-type Typename<T> = { [key in '__typename']: T };
+export type Typename<T> = { [key in '__typename']: T };
 
 /**
  * @internal
  */
-type PickByTypename<T extends Typename<string>, P extends T['__typename']> = T extends {
+export type PickByTypename<T extends Typename<string>, P extends T['__typename']> = T extends {
   __typename?: P;
 }
   ? T
