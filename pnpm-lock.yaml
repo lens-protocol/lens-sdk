@@ -12,7 +12,7 @@ importers:
         version: 2.26.0
       '@mxssfd/typedoc-theme':
         specifier: ^1.0.6
-        version: 1.0.6(typedoc@0.23.27)
+        version: 1.0.6(typedoc@0.24.0)
       '@preconstruct/cli':
         specifier: ^2.3.0
         version: 2.3.0
@@ -26,8 +26,8 @@ importers:
         specifier: ^1.8.1
         version: 1.8.1
       typedoc:
-        specifier: ^0.23.27
-        version: 0.23.27(typescript@4.9.5)
+        specifier: ^0.24.0
+        version: 0.24.0(typescript@4.9.5)
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
@@ -4914,13 +4914,13 @@ packages:
       '@motionone/dom': 10.15.5
       tslib: 2.5.0
 
-  /@mxssfd/typedoc-theme@1.0.6(typedoc@0.23.27):
+  /@mxssfd/typedoc-theme@1.0.6(typedoc@0.24.0):
     resolution: {integrity: sha512-GmaVRWWCaL9jIr58uKyXuBS+yn5L4e5BznclGCB+VlDSGHfZEc8GZdVc4ApKFUC3UEtZkS3fWy9S5aJMQttUyQ==}
     engines: {node: '>= 14'}
     peerDependencies:
       typedoc: ^0.23.21
     dependencies:
-      typedoc: 0.23.27(typescript@4.9.5)
+      typedoc: 0.24.0(typescript@4.9.5)
     dev: true
 
   /@next/env@13.1.6:
@@ -10220,7 +10220,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: fsevents 1 will break on node v14+ and could be using insecure binaries. Upgrade to fsevents 2.
+    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -16161,12 +16161,12 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: true
 
-  /typedoc@0.23.27(typescript@4.9.5):
-    resolution: {integrity: sha512-YKjlxX3LEhYbMCkemjlpNh1OKDiFa+ynqP0VRPsH28bEugrMTGI6l8DC6oX5kzFcUKKlYWKpZDSGWszuO/FR3g==}
+  /typedoc@0.24.0(typescript@4.9.5):
+    resolution: {integrity: sha512-yNbhPdDCb67r+v+SRcyXDp5JTImMqHHOFQDI7zciT7rXJnJt5UD9wz1Z4WllCVm5Ey92j2bOML0hnaiK1Pk2JA==}
     engines: {node: '>= 14.14'}
     hasBin: true
     peerDependencies:
-      typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x
+      typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x
     dependencies:
       lunr: 2.3.9
       marked: 4.2.12
