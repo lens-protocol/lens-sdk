@@ -1,5 +1,23 @@
 # @lens-protocol/react
 
+## 1.1.0-next.4
+
+### Minor Changes
+
+- 5c5bfb2: Added support for SimpleCollectModule
+
+### Patch Changes
+
+- b738abb: Fixed `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+- Updated dependencies [b738abb]
+- Updated dependencies [5c5bfb2]
+  - @lens-protocol/shared-kernel@0.8.0-next.1
+  - @lens-protocol/domain@0.8.0-next.3
+  - @lens-protocol/api-bindings@0.8.0-next.3
+  - @lens-protocol/blockchain-bindings@0.8.0-next.3
+  - @lens-protocol/gated-content@0.2.2-next.3
+  - @lens-protocol/storage@0.7.2-next.1
+
 ## 1.1.0-next.3
 
 ### Patch Changes

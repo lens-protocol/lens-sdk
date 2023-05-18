@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.8.0-next.1
+
+### Patch Changes
+
+- b738abb: Fixed `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+
 ## 0.8.0-next.0
 
 ### Minor Changes

@@ -1,5 +1,18 @@
 # @lens-protocol/react-web
 
+## 1.1.0-next.4
+
+### Patch Changes
+
+- b738abb: Fixed `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+- Updated dependencies [b738abb]
+- Updated dependencies [5c5bfb2]
+  - @lens-protocol/shared-kernel@0.8.0-next.1
+  - @lens-protocol/react@1.1.0-next.4
+  - @lens-protocol/api-bindings@0.8.0-next.3
+  - @lens-protocol/gated-content@0.2.2-next.3
+  - @lens-protocol/storage@0.7.2-next.1
+
 ## 1.1.0-next.3
 
 ### Patch Changes

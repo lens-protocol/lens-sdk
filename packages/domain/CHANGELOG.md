@@ -1,5 +1,17 @@
 # @lens-protocol/domain
 
+## 0.8.0-next.3
+
+### Minor Changes
+
+- 5c5bfb2: Added support for SimpleCollectModule
+
+### Patch Changes
+
+- b738abb: Fixed `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+- Updated dependencies [b738abb]
+  - @lens-protocol/shared-kernel@0.8.0-next.1
+
 ## 0.8.0-next.2
 
 ### Minor Changes
