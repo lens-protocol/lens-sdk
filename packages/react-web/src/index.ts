@@ -1,4 +1,5 @@
 import { LensConfig, LensProvider, LensProviderProps } from './LensProvider';
+import { UseConversationsArgs, useConversations } from './inbox/useConversations';
 import {
   UseCreateEncryptedCommentArgs,
   useCreateEncryptedComment,
@@ -10,12 +11,19 @@ export * from '@lens-protocol/react';
 
 // NOTE: local exports takes priority over package exports, basically overriding the hooks with same names from @lens-protocol/react
 // see https://github.com/systemjs/systemjs/issues/1031#issuecomment-171262430
-export { LensProvider, useCreateEncryptedPost, useCreateEncryptedComment, useEncryptedPublication };
+export {
+  LensProvider,
+  useConversations,
+  useCreateEncryptedComment,
+  useCreateEncryptedPost,
+  useEncryptedPublication,
+};
 export type {
   LensConfig,
   LensProviderProps,
-  UseCreateEncryptedPostArgs,
+  UseConversationsArgs,
   UseCreateEncryptedCommentArgs,
+  UseCreateEncryptedPostArgs,
   UseEncryptedPublicationArgs,
 };
 

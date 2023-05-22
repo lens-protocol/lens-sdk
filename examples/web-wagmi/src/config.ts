@@ -1,9 +1,5 @@
 export const CATEGORIES = [
   {
-    label: 'Authentication',
-    path: '/authentication',
-  },
-  {
     label: 'Profiles',
     path: '/profiles',
   },
@@ -22,5 +18,9 @@ export const CATEGORIES = [
   {
     label: 'Misc',
     path: '/misc',
+  },
+  {
+    label: 'Inbox',
+    path: '/inbox',
   },
 ];

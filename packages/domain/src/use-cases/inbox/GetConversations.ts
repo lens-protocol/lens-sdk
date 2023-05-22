@@ -1,3 +1,6 @@
+import { EthereumAddress } from '@lens-protocol/shared-kernel';
+
+import { ProfileId } from '../../entities';
 import {
   Conversation,
   ConversationId,
@@ -5,19 +8,15 @@ import {
   Message,
   Participant,
 } from '../../entities/Conversation';
-import { Wallet } from '../../entities/Wallet';
-import { ActiveWallet } from '../wallets/ActiveWallet';
 
-export type FetchConversationsRequest = {
-  for: Wallet;
+export type GetAllConversationsRequest = {
+  profileId?: ProfileId;
+  address: EthereumAddress;
 };
 
 export interface IGetConversationsGateway {
-  fetchConversations(request: FetchConversationsRequest): Promise<Conversation[]>;
-}
-
-export interface IGetConversationsMessageGateway {
-  fetchLastMessagesForEach(conversations: Conversation[]): Promise<Message[]>;
+  fetchConversations(request: GetAllConversationsRequest): Promise<Conversation[]>;
+  fetchLastMessageForEach(conversations: Conversation[]): Promise<Message[]>;
 }
 
 export interface IGetConversationsPresenter {
@@ -38,22 +37,14 @@ export type ConversationData = {
 
 export class GetAllConversations {
   constructor(
-    private readonly activeWallet: ActiveWallet,
-    private readonly conversationGateway: IGetConversationsGateway,
-    private readonly messageGateway: IGetConversationsMessageGateway,
+    private readonly gateway: IGetConversationsGateway,
     private readonly presenter: IGetConversationsPresenter,
   ) {}
 
-  async execute(): Promise<void> {
-    const wallet = await this.activeWallet.requireActiveWallet();
-
-    const conversations = await this.conversationGateway.fetchConversations({
-      for: wallet,
-    });
-    const messages = await this.messageGateway.fetchLastMessagesForEach(conversations);
-
+  async execute(request: GetAllConversationsRequest): Promise<void> {
+    const conversations = await this.gateway.fetchConversations(request);
+    const messages = await this.gateway.fetchLastMessageForEach(conversations); // TODO pass also request
     const data = this.assembleConversationData(conversations, messages);
-
     this.presenter.presentConversations(data);
   }
 
