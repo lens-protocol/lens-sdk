@@ -13,8 +13,14 @@ import { CollectPolicyType } from '@lens-protocol/domain/use-cases/publications'
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { CollectState, ContentPublication, Profile } from '../../../graphql';
-import { FragmentComment, FragmentPost, FragmentProfile } from '../../../graphql/hooks';
+import {
+  CollectState,
+  ContentPublication,
+  Profile,
+  FragmentComment,
+  FragmentPost,
+  FragmentProfile,
+} from '../../../lens';
 import {
   mockAndAccessCondition,
   mockAttributeFragment,

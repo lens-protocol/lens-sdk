@@ -1,7 +1,7 @@
 import { KeySpecifier } from '@apollo/client/cache/inmemory/policies';
 import { FieldPolicy, StoreValue } from '@apollo/client/core';
 
-import { CommonPaginatedResultInfo } from '../../../graphql';
+import { CommonPaginatedResultInfo } from '../../../lens';
 
 type CursorBasedPagination<T = StoreValue> = {
   items: T[];

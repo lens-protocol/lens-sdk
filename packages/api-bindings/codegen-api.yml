@@ -11,8 +11,9 @@ config:
     field: true
 
 generates:
-  src/graphql/generated.ts:
+  src/lens/generated.ts:
     config:
+      defaultScalarType: unknown
       scalars:
         Attach: string
         BroadcastId: string
@@ -63,9 +64,9 @@ generates:
         Void: void
     schema:
       - https://api-mumbai.lens.dev/graphql
-      - src/graphql/client.graphql
+      - src/lens/client.graphql
     documents:
-      - src/graphql/*.graphql
+      - src/lens/*.graphql
     plugins:
       - 'typescript':
           onlyOperationTypes: true # scalars and enums

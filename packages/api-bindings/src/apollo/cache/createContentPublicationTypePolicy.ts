@@ -11,7 +11,7 @@ import {
   ReferencePolicy,
   Wallet,
   CollectPolicy,
-} from '../../graphql';
+} from '../../lens';
 import { activeProfileIdentifierVar } from './activeProfileIdentifier';
 import { decryptionCriteria } from './decryptionCriteria';
 import {
