@@ -11,10 +11,19 @@ import {
   BroadcastingError,
   ISignlessSubsidizedCallRelayer,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { assertError, ChainType, getID, ILogger } from '@lens-protocol/shared-kernel';
+import {
+  assertError,
+  ChainType,
+  failure,
+  getID,
+  ILogger,
+  PromiseResult,
+  success,
+} from '@lens-protocol/shared-kernel';
 
 import { ITransactionFactory } from './ITransactionFactory';
 import { ProxyReceipt } from './ProxyReceipt';
+import { ProxyActionUsageLimitExceededError } from '@lens-protocol/domain/src/use-cases/transactions/ProxyActionUsageLimitExceededError';
 
 export class CollectProxyActionRelayer<T extends FreeCollectRequest>
   implements ISignlessSubsidizedCallRelayer<T>
@@ -25,15 +34,28 @@ export class CollectProxyActionRelayer<T extends FreeCollectRequest>
     private logger: ILogger,
   ) {}
 
-  async createProxyTransaction(request: T): Promise<ProxyTransaction<T>> {
-    const proxyReceipt = await this.proxy(request);
+  async createProxyTransaction(
+    request: T,
+  ): PromiseResult<ProxyTransaction<T>, ProxyActionUsageLimitExceededError> {
+    try {
+      const proxyReceipt = await this.proxy(request);
 
-    return this.factory.createProxyTransaction({
-      chainType: ChainType.POLYGON,
-      id: getID(),
-      request,
-      proxyId: proxyReceipt.proxyId,
-    });
+      return success(
+        this.factory.createProxyTransaction({
+          chainType: ChainType.POLYGON,
+          id: getID(),
+          request,
+          proxyId: proxyReceipt.proxyId,
+        }),
+      );
+    } catch (error) {
+      assertError(error);
+      this.logger.error(error, 'It was not possible to create the proxy transaction');
+      if (error.message.includes('Usage limit exceeded')) {
+        return failure(new ProxyActionUsageLimitExceededError(error.message));
+      }
+      throw error;
+    }
   }
 
   private async proxy(request: T): Promise<ProxyReceipt> {
