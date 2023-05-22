@@ -1,4 +1,7 @@
-import type { Conversation, ConversationsDisabledError } from '@lens-protocol/domain/entities';
+import type {
+  ConversationWithMessages,
+  ConversationsDisabledError,
+} from '@lens-protocol/domain/entities';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { useEffect, useState } from 'react';
 
@@ -6,8 +9,6 @@ import type { ReadResult } from '../helpers/reads';
 import { useActiveProfile } from '../profile';
 import { useGetAllConversationsController } from './adapters/useGetAllConversationsController';
 import type { InboxConfig } from './config';
-
-export type ConversationData = Conversation;
 
 export type UseConversationsArgs = {
   config: InboxConfig;
@@ -19,11 +20,11 @@ export type UseConversationsArgs = {
  */
 export function useConversations(
   args: UseConversationsArgs,
-): ReadResult<ConversationData[], ConversationsDisabledError> {
+): ReadResult<ConversationWithMessages[], ConversationsDisabledError> {
   const { data: profile } = useActiveProfile();
   const execute = useGetAllConversationsController(args.config);
 
-  const [data, setData] = useState<Conversation[]>([]);
+  const [data, setData] = useState<ConversationWithMessages[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ConversationsDisabledError>();
 

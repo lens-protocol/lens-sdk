@@ -1,11 +1,13 @@
 export * from './useConversation';
 export * from './useConversations';
+export * from './useCreateConversation';
 export * from './useEnableConversations';
 export { createInboxKeyStorage } from './infrastructure/InboxKeyStorage';
 export { ConversationsDisabledError } from '@lens-protocol/domain/entities';
 
 export type { InboxConfig } from './config';
 export type {
+  CreateConversationRequest,
   EnableConversationsRequest,
   FetchConversationRequest,
   FetchConversationsRequest,
@@ -22,6 +24,7 @@ export type {
   Participant,
 } from '@lens-protocol/domain/entities';
 export type {
+  CreateConversationResult,
   EnableConversationsResult,
   GetAllConversationsResult,
   GetConversationResult,

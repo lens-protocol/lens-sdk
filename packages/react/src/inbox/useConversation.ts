@@ -11,8 +11,6 @@ import { useActiveProfile } from '../profile';
 import { useGetConversationController } from './adapters/useGetConversationController';
 import type { InboxConfig } from './config';
 
-export type ConversationWithMessagesData = ConversationWithMessages;
-
 export type UseConversationArgs = {
   config: InboxConfig;
   conversationId: ConversationId;
@@ -24,7 +22,7 @@ export type UseConversationArgs = {
  */
 export function useConversation(
   args: UseConversationArgs,
-): ReadResult<ConversationWithMessagesData | null, ConversationsDisabledError> {
+): ReadResult<ConversationWithMessages | null, ConversationsDisabledError> {
   const { data: profile } = useActiveProfile();
   const execute = useGetConversationController(args.config);
 

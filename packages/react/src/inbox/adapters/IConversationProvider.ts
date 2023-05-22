@@ -1,5 +1,6 @@
 import { ConversationId, Participant } from '@lens-protocol/domain/entities';
 import {
+  CreateConversationResult,
   EnableConversationsResult,
   GetAllConversationsResult,
   GetConversationResult,
@@ -25,6 +26,23 @@ export type FetchConversationRequest = {
   conversationId: ConversationId;
 };
 
+export type CreateConversationRequest = {
+  creator: Participant;
+  peer: Participant;
+};
+
+// export type FetchMessagesRequest = {
+//   participant: Participant;
+//   conversationId: ConversationId;
+//   // TODO: add filters and pagination
+// };
+
+// export type SendMessageRequest = {
+//   participant: Participant;
+//   conversationId: ConversationId;
+//   message: Markdown;
+// };
+
 export interface IConversationProvider {
   enableConversations(
     wallet: IConversationWallet,
@@ -34,4 +52,9 @@ export interface IConversationProvider {
   fetchConversations(request: FetchConversationsRequest): Promise<GetAllConversationsResult>;
 
   fetchConversation(request: FetchConversationRequest): Promise<GetConversationResult>;
+
+  createConversation(request: CreateConversationRequest): Promise<CreateConversationResult>;
+
+  // fetchMessages(request: FetchMessagesRequest): Promise<Message[]>;
+  // sendMessage(request: SendMessageRequest): Promise<Message>;
 }

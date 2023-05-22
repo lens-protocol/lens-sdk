@@ -17,12 +17,19 @@ import {
   ProfileId,
   ConversationWithMessages,
   IConversationWallet,
+  CreateConversationRequest,
+  CreateConversationResult,
 } from '@lens-protocol/react';
 import { failure, invariant, success } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import { Client, DecodedMessage, Conversation as XmtpConversation } from '@xmtp/xmtp-js';
 
-import { extractPeerProfileId, isLensConversation, notEmpty } from '../helpers';
+import {
+  buildConversationId,
+  extractPeerProfileId,
+  isLensConversation,
+  notEmpty,
+} from '../helpers';
 import { SignerAdapter } from './SignerAdapter';
 
 export class WebConversationProvider implements IConversationProvider {
@@ -172,6 +179,53 @@ export class WebConversationProvider implements IConversationProvider {
       return failure(e);
     }
   }
+
+  async createConversation({
+    creator,
+    peer,
+  }: CreateConversationRequest): Promise<CreateConversationResult> {
+    try {
+      const client = await this.getClient();
+
+      const conversationContext =
+        creator.profileId && peer.profileId
+          ? {
+              conversationId: buildConversationId(creator.profileId, peer.profileId),
+              metadata: {},
+            }
+          : undefined;
+
+      const newXmtpConversation = await client.conversations.newConversation(
+        peer.address,
+        conversationContext,
+      );
+
+      const conversation = this.buildConversation(newXmtpConversation, creator);
+
+      return success(conversation);
+    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore Error not yet properly typed
+      return failure(e);
+    }
+  }
+
+  // async fetchMessages(request: FetchMessagesRequest): Promise<Message[]> {
+  //   const xmtpConversation = await this.getXmtpConversation(request.conversationId);
+
+  //   invariant(xmtpConversation, 'Conversation not found');
+
+  //   const peerProfileId = this.extractPeerProfileIdFromConversation(
+  //     xmtpConversation,
+  //     request.participant,
+  //   );
+
+  //   const messages = await xmtpConversation.messages();
+
+  //   return messages.map((decodedMessage: DecodedMessage) =>
+  //     this.buildMessage(decodedMessage, xmtpConversation, peerProfileId),
+  //   );
+  // }
 
   private buildConversation(
     xmtpConversation: XmtpConversation,

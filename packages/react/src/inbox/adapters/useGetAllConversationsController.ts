@@ -1,5 +1,5 @@
 import {
-  Conversation,
+  ConversationWithMessages,
   ConversationsDisabledError,
   ProfileId,
 } from '@lens-protocol/domain/entities';
@@ -18,7 +18,10 @@ export function useGetAllConversationsController(config: InboxConfig) {
   const { activeWallet } = useSharedDependencies();
 
   return async (request: GetAllConversationsControllerRequest) => {
-    const presenter = new PromiseResultPresenter<Conversation[], ConversationsDisabledError>();
+    const presenter = new PromiseResultPresenter<
+      ConversationWithMessages[],
+      ConversationsDisabledError
+    >();
     const gateway = new GetAllConversationsGateway(config.provider);
     const useCase = new GetAllConversations(activeWallet, gateway, presenter);
 
