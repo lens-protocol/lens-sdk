@@ -28,8 +28,8 @@
     "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "jest --env='./src/__helpers__/jest.jsdom.env.cjs'",
+    "test:watch": "pnpm test -- --watch",
     "tsc": "tsc --noEmit"
   },
   "license": "MIT",

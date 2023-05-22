@@ -1,20 +1,21 @@
 import { Wallet } from '@lens-protocol/domain/entities';
 import {
-  GetAllConversationsRequest,
-  GetAllConversationsResult,
-  IGetAllConversationsGateway,
+  GetConversationRequest,
+  GetConversationResult,
+  IGetConversationGateway,
 } from '@lens-protocol/domain/use-cases/inbox';
 
 import { IConversationProvider } from './IConversationProvider';
 
-export class GetAllConversationsGateway implements IGetAllConversationsGateway {
+export class GetConversationGateway implements IGetConversationGateway {
   constructor(private readonly provider: IConversationProvider) {}
 
-  async fetchConversationsWithLastMessage(
+  async fetchConversationWithMessages(
     wallet: Wallet,
-    request: GetAllConversationsRequest,
-  ): Promise<GetAllConversationsResult> {
-    return this.provider.fetchConversations({
+    request: GetConversationRequest,
+  ): Promise<GetConversationResult> {
+    return this.provider.fetchConversation({
+      conversationId: request.conversationId,
       participant: {
         profileId: request.profileId,
         address: wallet.address,

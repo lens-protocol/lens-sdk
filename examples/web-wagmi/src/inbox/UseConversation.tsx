@@ -1,66 +1,68 @@
 import {
   ConversationsEnabled,
-  useConversations,
+  useConversation,
   useEnableConversations,
 } from '@lens-protocol/react-web';
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ConversationCard } from './components/ConversationCard';
+import { MessagesCard } from './components/MessagesCard';
 
 type UseConversationsInnerProps = {
   inbox: ConversationsEnabled;
 };
 
-function UseConversationsInner({ inbox }: UseConversationsInnerProps) {
-  const { data, loading, error } = useConversations(inbox);
+function UseConversationInner({ inbox }: UseConversationsInnerProps) {
+  const { conversationId } = useParams();
+  const { data, loading, error } = useConversation({
+    ...inbox,
+    conversationId: conversationId || '',
+  });
 
   return (
     <div>
-      {data?.length === 0 && <p>No items</p>}
-
       {loading && <Loading />}
 
       {error && <ErrorMessage error={error} />}
 
-      {data?.map((conversation) => (
-        <ConversationCard conversation={conversation} key={conversation.id}>
-          <Link to={`/inbox/useConversation/${encodeURIComponent(conversation.id)}`}>
-            Show details
-          </Link>
-        </ConversationCard>
-      ))}
+      {data && (
+        <>
+          <ConversationCard key={data.id} conversation={data} />
+          <MessagesCard conversation={data} />
+        </>
+      )}
     </div>
   );
 }
 
 function EnableConversations() {
+  const { conversationId } = useParams();
   const { execute: enableConversations, isPending, data: inbox, error } = useEnableConversations();
 
-  const onEnableClick = async () => {
-    await enableConversations();
-  };
+  useEffect(() => {
+    if (!inbox && !isPending && conversationId) {
+      void enableConversations();
+    }
+  }, [enableConversations, inbox, isPending, conversationId]);
+
+  if (!conversationId) return <div>Specify conversationId</div>;
 
   return (
     <div>
-      {!inbox && (
-        <button onClick={onEnableClick} disabled={isPending}>
-          Enable Inbox
-        </button>
-      )}
-
       {isPending && <Loading />}
 
       {error && <ErrorMessage error={error} />}
 
-      {inbox && <UseConversationsInner inbox={inbox} />}
+      {inbox && <UseConversationInner inbox={inbox} />}
     </div>
   );
 }
 
-export function UseConversations() {
+export function UseConversation() {
   return (
     <>
       <h1>

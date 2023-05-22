@@ -1,36 +1,42 @@
 import { Result } from '@lens-protocol/shared-kernel';
 
 import { ProfileId, Wallet } from '../../entities';
-import { Conversation, ConversationsDisabledError } from '../../entities/Conversation';
+import { ConversationWithMessages, ConversationsDisabledError } from '../../entities/Conversation';
 import { ActiveWallet } from '../wallets';
 
 export type GetAllConversationsRequest = {
   profileId?: ProfileId;
 };
 
-export type GetAllConversationsResult = Result<Conversation[], ConversationsDisabledError>;
+export type GetAllConversationsResult = Result<
+  ConversationWithMessages[],
+  ConversationsDisabledError
+>;
 
-export interface IGetConversationsGateway {
-  fetchConversations(
+export interface IGetAllConversationsGateway {
+  fetchConversationsWithLastMessage(
     wallet: Wallet,
     request: GetAllConversationsRequest,
   ): Promise<GetAllConversationsResult>;
 }
 
-export interface IGetConversationsPresenter {
+interface IGetAllConversationsPresenter {
   present(conversations: GetAllConversationsResult): void;
 }
 
 export class GetAllConversations {
   constructor(
     private readonly activeWallet: ActiveWallet,
-    private readonly gateway: IGetConversationsGateway,
-    private readonly presenter: IGetConversationsPresenter,
+    private readonly gateway: IGetAllConversationsGateway,
+    private readonly presenter: IGetAllConversationsPresenter,
   ) {}
 
   async execute(request: GetAllConversationsRequest): Promise<void> {
     const wallet = await this.activeWallet.requireActiveWallet();
-    const conversationsResult = await this.gateway.fetchConversations(wallet, request);
+    const conversationsResult = await this.gateway.fetchConversationsWithLastMessage(
+      wallet,
+      request,
+    );
     this.presenter.present(conversationsResult);
   }
 }

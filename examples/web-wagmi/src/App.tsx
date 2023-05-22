@@ -20,6 +20,7 @@ import { UseFeed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
 import { InboxPage } from './inbox/InboxPage';
+import { UseConversation } from './inbox/UseConversation';
 import { UseConversations } from './inbox/UseConversations';
 import { MiscPage } from './misc/MiscPage';
 import { Polls } from './misc/Polls';
@@ -199,6 +200,11 @@ export function App() {
 
                 <Route path="/inbox" element={<InboxPage />} />
                 <Route path="/inbox/useConversations" element={<UseConversations />} />
+                <Route path="/inbox/useConversation" element={<UseConversation />} />
+                <Route
+                  path="/inbox/useConversation/:conversationId"
+                  element={<UseConversation />}
+                />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

@@ -26,7 +26,7 @@ export interface IEnableConversationsGateway {
   ): Promise<EnableConversationsResult>;
 }
 
-export interface IEnableConversationsPresenter {
+interface IEnableConversationsPresenter {
   present(result: EnableConversationsResult): void;
 }
 
@@ -39,7 +39,7 @@ export class EnableConversations {
 
   async execute(request: EnableConversationsRequest): Promise<void> {
     const wallet = await this.activeWallet.requireActiveWallet();
-    const enableResult = await this.gateway.enableConversations(wallet, request);
-    this.presenter.present(enableResult);
+    const result = await this.gateway.enableConversations(wallet, request);
+    this.presenter.present(result);
   }
 }

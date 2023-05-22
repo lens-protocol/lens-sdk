@@ -1,8 +1,8 @@
-import { WalletEntity } from '@lens-protocol/react';
+import { IConversationWallet } from '@lens-protocol/react';
 import { Signer } from '@xmtp/xmtp-js';
 
 export class SignerAdapter implements Signer {
-  constructor(private readonly wallet: WalletEntity) {}
+  constructor(private readonly wallet: IConversationWallet) {}
 
   async getAddress() {
     return this.wallet.address;

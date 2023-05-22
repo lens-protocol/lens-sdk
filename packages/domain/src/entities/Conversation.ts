@@ -26,6 +26,10 @@ export type Message = {
   sender: Participant;
 };
 
+export type ConversationWithMessages = Conversation & {
+  messages: Message[];
+};
+
 export class ConversationsDisabledError extends Error {
   name = 'ConversationsDisabledError' as const;
   message = 'Conversations are disabled, enable them first';

@@ -8,14 +8,21 @@ import {
   IConversationProvider,
   Participant,
   profileId as createProfileId,
-  WalletEntity,
   EnvironmentConfig,
+  ConversationId,
+  Message,
+  Markdown,
+  FetchConversationRequest,
+  GetConversationResult,
+  ProfileId,
+  ConversationWithMessages,
+  IConversationWallet,
 } from '@lens-protocol/react';
-import { failure, success } from '@lens-protocol/shared-kernel';
+import { failure, invariant, success } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
-import { Client, Conversation as XmtpConversation } from '@xmtp/xmtp-js';
+import { Client, DecodedMessage, Conversation as XmtpConversation } from '@xmtp/xmtp-js';
 
-import { extractPeerProfileId } from '../helpers';
+import { extractPeerProfileId, isLensConversation, notEmpty } from '../helpers';
 import { SignerAdapter } from './SignerAdapter';
 
 export class WebConversationProvider implements IConversationProvider {
@@ -58,7 +65,7 @@ export class WebConversationProvider implements IConversationProvider {
   }
 
   async enableConversations(
-    wallet: WalletEntity,
+    wallet: IConversationWallet,
     { participant }: EnableConversationsRequest,
   ): Promise<EnableConversationsResult> {
     // check if we can recreate client from the storage
@@ -96,11 +103,69 @@ export class WebConversationProvider implements IConversationProvider {
     try {
       const client = await this.getClient();
       const xmtpConversations = await client.conversations.list();
-      const convos = xmtpConversations.map((xmtpConversation: XmtpConversation) => {
-        return this.buildConversation(xmtpConversation, request.participant);
-      });
 
-      return success(convos);
+      const conversationsOrNot = await Promise.all(
+        xmtpConversations.map(
+          async (xmtpConversation: XmtpConversation): Promise<ConversationWithMessages | null> => {
+            const peerProfileId = this.extractPeerProfileIdFromConversation(
+              xmtpConversation,
+              request.participant,
+            );
+            const xmtpMessages = await xmtpConversation.messages();
+
+            // exclude conversations without messages
+            if (xmtpMessages.length === 0) {
+              return null;
+            }
+
+            invariant(xmtpMessages[0], 'Conversation should have at least one message');
+
+            const lastMessage = this.buildMessage(xmtpMessages[0], xmtpConversation, peerProfileId);
+            const conversation = this.buildConversation(xmtpConversation, request.participant);
+
+            return {
+              ...conversation,
+              messages: [lastMessage],
+            };
+          },
+        ),
+      );
+
+      const conversations = conversationsOrNot.filter(notEmpty);
+
+      return success(conversations);
+    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore Error not yet properly typed
+      return failure(e);
+    }
+  }
+
+  async fetchConversation(request: FetchConversationRequest): Promise<GetConversationResult> {
+    try {
+      const xmtpConversation = await this.getXmtpConversation(request.conversationId);
+
+      if (!xmtpConversation) {
+        return success(null);
+      }
+
+      const peerProfileId = this.extractPeerProfileIdFromConversation(
+        xmtpConversation,
+        request.participant,
+      );
+
+      const xmtpMessages = await xmtpConversation.messages();
+
+      const messages = xmtpMessages.map((decodedMessage: DecodedMessage) =>
+        this.buildMessage(decodedMessage, xmtpConversation, peerProfileId),
+      );
+
+      const conversation = this.buildConversation(xmtpConversation, request.participant);
+
+      return success({
+        ...conversation,
+        messages,
+      });
     } catch (e) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore Error not yet properly typed
@@ -112,18 +177,17 @@ export class WebConversationProvider implements IConversationProvider {
     xmtpConversation: XmtpConversation,
     activeParticipant: Participant,
   ): Conversation {
-    const conversationId = xmtpConversation.context?.conversationId;
     const activeProfileId = activeParticipant.profileId;
 
-    const peerProfileId =
-      conversationId && activeProfileId && this.isLensConversation(activeProfileId, conversationId)
-        ? extractPeerProfileId(conversationId, activeProfileId)
-        : undefined;
+    const peerProfileId = this.extractPeerProfileIdFromConversation(
+      xmtpConversation,
+      activeParticipant,
+    );
 
     return {
       id: xmtpConversation.topic,
       peer: {
-        profileId: peerProfileId ? createProfileId(peerProfileId) : undefined,
+        profileId: peerProfileId,
         address: xmtpConversation.peerAddress,
       },
       me: {
@@ -133,13 +197,47 @@ export class WebConversationProvider implements IConversationProvider {
     };
   }
 
-  private isLensConversation(
-    activeProfileId: string,
-    conversationId?: string,
-  ): conversationId is string {
-    if (conversationId && conversationId.includes(activeProfileId)) {
-      return true;
-    }
-    return false;
+  private buildMessage(
+    decodedMessage: DecodedMessage,
+    xmtpConversation: XmtpConversation,
+    peerProfileId: ProfileId | undefined,
+  ): Message {
+    return {
+      id: decodedMessage.id,
+      conversationId: xmtpConversation.topic,
+      content: decodedMessage.content as Markdown,
+      reactions: [],
+      sentAt: decodedMessage.sent,
+      sender: {
+        profileId: peerProfileId,
+        address: decodedMessage.senderAddress,
+      },
+    };
+  }
+
+  private async getXmtpConversation(
+    conversationId: ConversationId,
+  ): Promise<XmtpConversation | undefined> {
+    const client = await this.getClient();
+    const allXmtpConversations = await client.conversations.list();
+
+    return allXmtpConversations.find((xmtpConversation) => {
+      return conversationId === xmtpConversation.topic;
+    });
+  }
+
+  private extractPeerProfileIdFromConversation(
+    xmtpConversation: XmtpConversation,
+    activeParticipant: Participant,
+  ): ProfileId | undefined {
+    const conversationId = xmtpConversation.context?.conversationId;
+    const activeProfileId = activeParticipant.profileId;
+
+    const peerProfileId =
+      conversationId && activeProfileId && isLensConversation(activeProfileId, conversationId)
+        ? extractPeerProfileId(conversationId, activeProfileId)
+        : undefined;
+
+    return peerProfileId ? createProfileId(peerProfileId) : undefined;
   }
 }

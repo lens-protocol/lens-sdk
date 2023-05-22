@@ -21,3 +21,17 @@ export function extractPeerProfileId(conversationId: string, activeProfileId: st
 
   return profileIdA === activeProfileId ? profileIdB : profileIdA;
 }
+
+export function isLensConversation(
+  activeProfileId: string,
+  conversationId?: string,
+): conversationId is string {
+  if (conversationId && conversationId.includes(activeProfileId)) {
+    return true;
+  }
+  return false;
+}
+
+export function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+  return value !== null && value !== undefined;
+}
