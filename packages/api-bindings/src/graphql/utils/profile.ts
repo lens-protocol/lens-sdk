@@ -1,6 +1,6 @@
 import { Overwrite } from '@lens-protocol/shared-kernel';
 
-import { Profile } from '../operations';
+import { Profile } from '../generated';
 
 export type ProfileOwnedByMe = Overwrite<Profile, { ownedByMe: true }>;
 

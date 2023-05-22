@@ -54,7 +54,7 @@ import {
   ScalarOperator,
   Wallet,
   WhoReactedResult,
-} from '../operations';
+} from '../generated';
 import { AnyPublication, CollectModule, erc20Amount, ProfileMedia } from '../utils';
 
 export function mockMediaFragment(overrides?: Partial<Media>): Media {
@@ -306,7 +306,7 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
     },
     ...overrides,
     __typename: 'Post',
-  };
+  } as Post;
 }
 
 export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typename'>>): Comment {
@@ -352,7 +352,7 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
     firstComment: null,
     ...overrides,
     __typename: 'Comment',
-  };
+  } as Comment;
 }
 
 export function mockMirrorFragment(overrides?: Partial<Omit<Mirror, '__typename'>>): Mirror {

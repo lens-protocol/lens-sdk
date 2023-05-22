@@ -18,6 +18,7 @@ import {
   TimedFeeCollectPolicy,
   VaultFeeCollectPolicy,
 } from '../CollectPolicy';
+import { ContentInsightType, SnapshotPoll } from '../ContentInsight';
 import {
   AaveFeeCollectModuleSettings,
   Comment,
@@ -33,7 +34,7 @@ import {
   ReactionTypes,
   SimpleCollectModuleSettings,
   TimedFeeCollectModuleSettings,
-} from '../operations';
+} from '../generated';
 import { erc20Amount } from './amount';
 import { isProfileOwnedByMe, ProfileOwnedByMe } from './profile';
 import { PickByTypename, Typename } from './types';
@@ -196,6 +197,31 @@ export function isGatedPublication(
   publication: ContentPublication,
 ): publication is GatedPublication {
   return publication.isGated;
+}
+
+/**
+ * @internal
+ */
+export type Poll<T extends ContentPublication> = Overwrite<
+  T,
+  {
+    contentInsight: SnapshotPoll;
+  }
+>;
+
+/**
+ * A publication with a poll in its content
+ */
+export type PollPublication = Prettify<Poll<ContentPublication>>;
+
+/**
+ * @group Helpers
+ */
+export function isPollPublication(publication: AnyPublication): publication is PollPublication {
+  return (
+    isContentPublication(publication) &&
+    publication.contentInsight.type === ContentInsightType.SNAPSHOT_POLL
+  );
 }
 
 /**

@@ -1,4 +1,4 @@
-import { Attribute } from './operations';
+import { Attribute } from './generated';
 
 export class ProfileAttributeReader {
   constructor(private readonly attribute: Attribute) {}

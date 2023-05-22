@@ -2,29 +2,27 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
 import {
-  GetPublicationsDocument,
-  SearchProfilesDocument,
-  SearchPublicationsDocument,
-} from './hooks';
-import {
   Comment,
   CommonPaginatedResultInfo,
   Exact,
+  GetPublicationsDocument,
   InputMaybe,
   Post,
   Profile,
   PublicationMetadataFilters,
+  SearchProfilesDocument,
   SearchProfilesVariables,
+  SearchPublicationsDocument,
   SearchPublicationsVariables,
-} from './operations';
+} from './generated';
 import { Sources } from './sources';
 
 export * from './CollectPolicy';
 export * from './ContentEncryptionKey';
+export * from './ContentInsight';
 export * from './FollowPolicy';
 export * from './FollowStatus';
-export * from './hooks';
-export * from './operations';
+export * from './generated';
 export * from './ProfileAttributeReader';
 export * from './ProfileAttributes';
 export * from './ReferencePolicy';

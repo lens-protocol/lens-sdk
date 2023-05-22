@@ -1,7 +1,7 @@
 import { ApolloCache, InMemoryCache, NormalizedCacheObject, ReactiveVar } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
-import generatedIntrospection, { StrictTypedTypePolicies } from '../../graphql/hooks';
+import generatedIntrospection, { StrictTypedTypePolicies } from '../../graphql/generated';
 import { createAttributeTypePolicy } from './createAttributeTypePolicy';
 import { createContentPublicationTypePolicy } from './createContentPublicationTypePolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';

@@ -1,15 +1,3061 @@
 /** Code generated. DO NOT EDIT. */
 /* eslint-disable import/no-default-export */
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-restricted-imports */
 /* eslint-disable tsdoc/syntax */
 import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
+import type {
+  AppId,
+  DecryptionCriteria,
+  ProfileId,
+  PublicationId,
+} from '@lens-protocol/domain/entities';
+import type {
+  Erc20Amount as ClientErc20Amount,
+  EthereumAddress,
+  Url,
+} from '@lens-protocol/shared-kernel';
 import gql from 'graphql-tag';
 
-import * as Operations from './operations';
+import type { CollectPolicy } from './CollectPolicy';
+import type { ContentEncryptionKey } from './ContentEncryptionKey';
+import type { ContentInsight } from './ContentInsight';
+import type { FollowPolicy } from './FollowPolicy';
+import type { FollowStatus } from './FollowStatus';
+import type { ProfileAttributes } from './ProfileAttributes';
+import type { ReferencePolicy } from './ReferencePolicy';
+
+export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 const defaultOptions = {} as const;
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+  /** Blockchain data scalar type */
+  BlockchainData: string;
+  /** Broadcast scalar id type */
+  BroadcastId: string;
+  /** ChainId custom scalar type */
+  ChainId: number;
+  ClientErc20Amount: ClientErc20Amount;
+  /** collect module data scalar type */
+  CollectModuleData: string;
+  CollectPolicy: CollectPolicy;
+  /** ContentEncryptionKey scalar type */
+  ContentEncryptionKey: ContentEncryptionKey;
+  ContentInsight: ContentInsight;
+  /** Contract address custom scalar type */
+  ContractAddress: string;
+  /** create handle custom scalar type */
+  CreateHandle: unknown;
+  /** Cursor custom scalar type */
+  Cursor: string;
+  /** The da id */
+  DataAvailabilityId: string;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: string;
+  DecryptionCriteria: DecryptionCriteria;
+  /** EncryptedValue custom scalar type */
+  EncryptedValueScalar: string;
+  /** Ens custom scalar type */
+  Ens: unknown;
+  /** Ethereum address custom scalar type */
+  EthereumAddress: EthereumAddress;
+  /** follow module data scalar type */
+  FollowModuleData: string;
+  FollowPolicy: FollowPolicy;
+  FollowStatus: FollowStatus;
+  /** handle custom scalar type */
+  Handle: string;
+  /** handle claim id custom scalar type */
+  HandleClaimIdScalar: unknown;
+  /** Internal publication id custom scalar type */
+  InternalPublicationId: PublicationId;
+  /** IpfsCid scalar type */
+  IpfsCid: unknown;
+  /** jwt custom scalar type */
+  Jwt: string;
+  /** limit custom scalar type */
+  LimitScalar: number;
+  /** Locale scalar type */
+  Locale: string;
+  /** Markdown scalar type */
+  Markdown: string;
+  /** mimetype custom scalar type */
+  MimeType: string;
+  /** Nft gallery id type */
+  NftGalleryId: unknown;
+  /** Nft gallery name type */
+  NftGalleryName: unknown;
+  /** Nft ownership id type */
+  NftOwnershipId: string;
+  /** Nonce custom scalar type */
+  Nonce: number;
+  /** The notification id */
+  NotificationId: string;
+  PendingPublicationId: string;
+  ProfileAttributes: ProfileAttributes;
+  /** ProfileId custom scalar type */
+  ProfileId: ProfileId;
+  /** ProfileInterest custom scalar type */
+  ProfileInterest: string;
+  /** proxy action scalar id type */
+  ProxyActionId: string;
+  /** Publication id custom scalar type */
+  PublicationId: string;
+  /** The publication tag */
+  PublicationTag: unknown;
+  /** Publication url scalar type */
+  PublicationUrl: Url;
+  /** The reaction id */
+  ReactionId: unknown;
+  /** reference module data scalar type */
+  ReferenceModuleData: string;
+  ReferencePolicy: ReferencePolicy;
+  /** Query search */
+  Search: string;
+  /** Relayer signature */
+  Signature: string;
+  /** Sources custom scalar type */
+  Sources: AppId;
+  /** timestamp date custom scalar type */
+  TimestampScalar: unknown;
+  /** The NFT token id */
+  TokenId: string;
+  /** The tx hash */
+  TxHash: string;
+  /** The tx id */
+  TxId: string;
+  /** UnixTimestamp custom scalar type */
+  UnixTimestamp: unknown;
+  /** Url scalar type */
+  Url: Url;
+  /** Represents NULL values */
+  Void: void;
+};
+
+export type AaveFeeCollectModuleParams = {
+  /** The collect module amount info */
+  amount: ModuleFeeAmountParams;
+  /** The collect module limit */
+  collectLimit?: InputMaybe<Scalars['String']>;
+  /** The timestamp that this collect module will expire */
+  endTimestamp?: InputMaybe<Scalars['DateTime']>;
+  /** Follower only */
+  followerOnly: Scalars['Boolean'];
+  /** The collect module recipient address */
+  recipient: Scalars['EthereumAddress'];
+  /** The collect module referral fee */
+  referralFee: Scalars['Float'];
+};
+
+/** The access conditions for the publication */
+export type AccessConditionInput = {
+  /** AND condition */
+  and?: InputMaybe<AndConditionInput>;
+  /** Profile follow condition */
+  collect?: InputMaybe<CollectConditionInput>;
+  /** EOA ownership condition */
+  eoa?: InputMaybe<EoaOwnershipInput>;
+  /** Profile follow condition */
+  follow?: InputMaybe<FollowConditionInput>;
+  /** NFT ownership condition */
+  nft?: InputMaybe<NftOwnershipInput>;
+  /** OR condition */
+  or?: InputMaybe<OrConditionInput>;
+  /** Profile ownership condition */
+  profile?: InputMaybe<ProfileOwnershipInput>;
+  /** ERC20 token ownership condition */
+  token?: InputMaybe<Erc20OwnershipInput>;
+};
+
+export type AchRequest = {
+  ethereumAddress: Scalars['EthereumAddress'];
+  freeTextHandle?: InputMaybe<Scalars['Boolean']>;
+  handle?: InputMaybe<Scalars['CreateHandle']>;
+  overrideAlreadyClaimed: Scalars['Boolean'];
+  overrideTradeMark: Scalars['Boolean'];
+  secret: Scalars['String'];
+};
+
+/** The request object to add interests to a profile */
+export type AddProfileInterestsRequest = {
+  /** The profile interest to add */
+  interests: Array<Scalars['ProfileInterest']>;
+  /** The profileId to add interests to */
+  profileId: Scalars['ProfileId'];
+};
+
+export type AllPublicationsTagsRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  sort: TagSortCriteria;
+  /** The App Id */
+  source?: InputMaybe<Scalars['Sources']>;
+};
+
+export type AndConditionInput = {
+  /** The list of conditions to apply AND to. You can only use nested boolean conditions at the root level. */
+  criteria: Array<AccessConditionInput>;
+};
+
+export type ApprovedModuleAllowanceAmountRequest = {
+  collectModules?: InputMaybe<Array<CollectModules>>;
+  /** The contract addresses for the module approved currencies you want to find information on about the user */
+  currencies: Array<Scalars['ContractAddress']>;
+  followModules?: InputMaybe<Array<FollowModules>>;
+  referenceModules?: InputMaybe<Array<ReferenceModules>>;
+  unknownCollectModules?: InputMaybe<Array<Scalars['ContractAddress']>>;
+  unknownFollowModules?: InputMaybe<Array<Scalars['ContractAddress']>>;
+  unknownReferenceModules?: InputMaybe<Array<Scalars['ContractAddress']>>;
+};
+
+export type BroadcastRequest = {
+  id: Scalars['BroadcastId'];
+  signature: Scalars['Signature'];
+};
+
+export type BurnProfileRequest = {
+  profileId: Scalars['ProfileId'];
+};
+
+/** The challenge request */
+export type ChallengeRequest = {
+  /** The ethereum address you want to login with */
+  address: Scalars['EthereumAddress'];
+};
+
+export type ClaimHandleRequest = {
+  /** The follow module */
+  followModule?: InputMaybe<FollowModuleParams>;
+  freeTextHandle?: InputMaybe<Scalars['CreateHandle']>;
+  id?: InputMaybe<Scalars['HandleClaimIdScalar']>;
+};
+
+/** The claim status */
+export enum ClaimStatus {
+  AlreadyClaimed = 'ALREADY_CLAIMED',
+  ClaimFailed = 'CLAIM_FAILED',
+  NotClaimed = 'NOT_CLAIMED',
+}
+
+/** Condition that signifies if address or profile has collected a publication */
+export type CollectConditionInput = {
+  /** The publication id that has to be collected to unlock content */
+  publicationId?: InputMaybe<Scalars['InternalPublicationId']>;
+  /** True if the content will be unlocked for this specific publication */
+  thisPublication?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CollectModuleParams = {
+  /** The collect aave fee collect module */
+  aaveFeeCollectModule?: InputMaybe<AaveFeeCollectModuleParams>;
+  /** The collect ERC4626 fee collect module */
+  erc4626FeeCollectModule?: InputMaybe<Erc4626FeeCollectModuleParams>;
+  /** The collect fee collect module */
+  feeCollectModule?: InputMaybe<FeeCollectModuleParams>;
+  /** The collect empty collect module */
+  freeCollectModule?: InputMaybe<FreeCollectModuleParams>;
+  /** The collect limited fee collect module */
+  limitedFeeCollectModule?: InputMaybe<LimitedFeeCollectModuleParams>;
+  /** The collect limited timed fee collect module */
+  limitedTimedFeeCollectModule?: InputMaybe<LimitedTimedFeeCollectModuleParams>;
+  /** The multirecipient fee collect module */
+  multirecipientFeeCollectModule?: InputMaybe<MultirecipientFeeCollectModuleParams>;
+  /** The collect revert collect module */
+  revertCollectModule?: InputMaybe<Scalars['Boolean']>;
+  /** The collect simple fee collect module */
+  simpleCollectModule?: InputMaybe<SimpleCollectModuleParams>;
+  /** The collect timed fee collect module */
+  timedFeeCollectModule?: InputMaybe<TimedFeeCollectModuleParams>;
+  /** A unknown collect module */
+  unknownCollectModule?: InputMaybe<UnknownCollectModuleParams>;
+};
+
+/** The collect module types */
+export enum CollectModules {
+  AaveFeeCollectModule = 'AaveFeeCollectModule',
+  Erc4626FeeCollectModule = 'ERC4626FeeCollectModule',
+  FeeCollectModule = 'FeeCollectModule',
+  FreeCollectModule = 'FreeCollectModule',
+  LimitedFeeCollectModule = 'LimitedFeeCollectModule',
+  LimitedTimedFeeCollectModule = 'LimitedTimedFeeCollectModule',
+  MultirecipientFeeCollectModule = 'MultirecipientFeeCollectModule',
+  RevertCollectModule = 'RevertCollectModule',
+  SimpleCollectModule = 'SimpleCollectModule',
+  TimedFeeCollectModule = 'TimedFeeCollectModule',
+  UnknownCollectModule = 'UnknownCollectModule',
+}
+
+export type CollectProxyAction = {
+  freeCollect?: InputMaybe<FreeCollectProxyAction>;
+};
+
+/** The comment ordering types */
+export enum CommentOrderingTypes {
+  Desc = 'DESC',
+  Ranking = 'RANKING',
+}
+
+/** The comment ranking filter types */
+export enum CommentRankingFilter {
+  NoneRelevant = 'NONE_RELEVANT',
+  Relevant = 'RELEVANT',
+}
+
+/** The gated publication access criteria contract types */
+export enum ContractType {
+  Erc20 = 'ERC20',
+  Erc721 = 'ERC721',
+  Erc1155 = 'ERC1155',
+}
+
+export type CreateCollectRequest = {
+  publicationId: Scalars['InternalPublicationId'];
+  /** The encoded data to collect with if using an unknown module */
+  unknownModuleData?: InputMaybe<Scalars['BlockchainData']>;
+};
+
+export type CreateDataAvailabilityCommentRequest = {
+  /** Publication your commenting on */
+  commentOn: Scalars['InternalPublicationId'];
+  /** The metadata contentURI resolver */
+  contentURI: Scalars['Url'];
+  /** Profile id */
+  from: Scalars['ProfileId'];
+};
+
+export type CreateDataAvailabilityMirrorRequest = {
+  /** Profile id which will broadcast the mirror */
+  from: Scalars['ProfileId'];
+  /** The publication to mirror */
+  mirror: Scalars['InternalPublicationId'];
+};
+
+export type CreateDataAvailabilityPostRequest = {
+  /** The metadata contentURI resolver */
+  contentURI: Scalars['Url'];
+  /** Profile id */
+  from: Scalars['ProfileId'];
+};
+
+export type CreateMirrorRequest = {
+  /** Profile id */
+  profileId: Scalars['ProfileId'];
+  /** Publication id of what you want to mirror on remember if this is a comment it will be that as the id */
+  publicationId: Scalars['InternalPublicationId'];
+  /** The reference module info */
+  referenceModule?: InputMaybe<ReferenceModuleParams>;
+};
+
+export type CreateProfileRequest = {
+  /** The follow module */
+  followModule?: InputMaybe<FollowModuleParams>;
+  /** The follow NFT URI is the NFT metadata your followers will mint when they follow you. This can be updated at all times. If you do not pass in anything it will create a super cool changing NFT which will show the last publication of your profile as the NFT which looks awesome! This means people do not have to worry about writing this logic but still have the ability to customise it for their followers */
+  followNFTURI?: InputMaybe<Scalars['Url']>;
+  handle: Scalars['CreateHandle'];
+  /** The profile picture uri */
+  profilePictureUri?: InputMaybe<Scalars['Url']>;
+};
+
+export type CreatePublicCommentRequest = {
+  /** The collect module */
+  collectModule: CollectModuleParams;
+  /** The metadata contentURI resolver */
+  contentURI: Scalars['Url'];
+  /** The criteria to access the publication data */
+  gated?: InputMaybe<GatedPublicationParamsInput>;
+  /** Profile id */
+  profileId: Scalars['ProfileId'];
+  /** Publication id of what your comments on remember if this is a comment you commented on it will be that as the id */
+  publicationId: Scalars['InternalPublicationId'];
+  /** The reference module */
+  referenceModule?: InputMaybe<ReferenceModuleParams>;
+};
+
+export type CreatePublicPostRequest = {
+  /** The collect module */
+  collectModule: CollectModuleParams;
+  /** The metadata uploaded somewhere passing in the url to reach it */
+  contentURI: Scalars['Url'];
+  /** The criteria to access the publication data */
+  gated?: InputMaybe<GatedPublicationParamsInput>;
+  /** Profile id */
+  profileId: Scalars['ProfileId'];
+  /** The reference module */
+  referenceModule?: InputMaybe<ReferenceModuleParams>;
+};
+
+export type CreatePublicSetProfileMetadataUriRequest = {
+  /** The metadata uploaded somewhere passing in the url to reach it */
+  metadata: Scalars['Url'];
+  /** Profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+export type CreateSetDefaultProfileRequest = {
+  /** Profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+export type CreateSetFollowModuleRequest = {
+  /** The follow module info */
+  followModule: FollowModuleParams;
+  profileId: Scalars['ProfileId'];
+};
+
+export type CreateSetFollowNftUriRequest = {
+  /** The follow NFT URI is the NFT metadata your followers will mint when they follow you. This can be updated at all times. If you do not pass in anything it will create a super cool changing NFT which will show the last publication of your profile as the NFT which looks awesome! This means people do not have to worry about writing this logic but still have the ability to customise it for their followers */
+  followNFTURI?: InputMaybe<Scalars['Url']>;
+  profileId: Scalars['ProfileId'];
+};
+
+export type CreateToggleFollowRequest = {
+  enables: Array<Scalars['Boolean']>;
+  profileIds: Array<Scalars['ProfileId']>;
+};
+
+export type CurRequest = {
+  secret: Scalars['String'];
+};
+
+/** The custom filters types */
+export enum CustomFiltersTypes {
+  Gardeners = 'GARDENERS',
+}
+
+export type DataAvailabilityTransactionRequest = {
+  /** The DA transaction id or internal publiation id */
+  id: Scalars['String'];
+};
+
+export type DataAvailabilityTransactionsRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  profileId?: InputMaybe<Scalars['ProfileId']>;
+};
+
+/** The reason why a profile cannot decrypt a publication */
+export enum DecryptFailReason {
+  CanNotDecrypt = 'CAN_NOT_DECRYPT',
+  CollectNotFinalisedOnChain = 'COLLECT_NOT_FINALISED_ON_CHAIN',
+  DoesNotFollowProfile = 'DOES_NOT_FOLLOW_PROFILE',
+  DoesNotOwnNft = 'DOES_NOT_OWN_NFT',
+  DoesNotOwnProfile = 'DOES_NOT_OWN_PROFILE',
+  FollowNotFinalisedOnChain = 'FOLLOW_NOT_FINALISED_ON_CHAIN',
+  HasNotCollectedPublication = 'HAS_NOT_COLLECTED_PUBLICATION',
+  MissingEncryptionParams = 'MISSING_ENCRYPTION_PARAMS',
+  ProfileDoesNotExist = 'PROFILE_DOES_NOT_EXIST',
+  UnauthorizedAddress = 'UNAUTHORIZED_ADDRESS',
+  UnauthorizedBalance = 'UNAUTHORIZED_BALANCE',
+}
+
+export type DefaultProfileRequest = {
+  ethereumAddress: Scalars['EthereumAddress'];
+};
+
+export type DegreesOfSeparationReferenceModuleParams = {
+  /** Applied to comments */
+  commentsRestricted: Scalars['Boolean'];
+  /** Degrees of separation */
+  degreesOfSeparation: Scalars['Int'];
+  /** Applied to mirrors */
+  mirrorsRestricted: Scalars['Boolean'];
+};
+
+export type DismissRecommendedProfilesRequest = {
+  profileIds: Array<Scalars['ProfileId']>;
+};
+
+export type DoesFollow = {
+  /** The follower address remember wallets follow profiles */
+  followerAddress: Scalars['EthereumAddress'];
+  /** The profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+export type DoesFollowRequest = {
+  /** The follower infos */
+  followInfos: Array<DoesFollow>;
+};
+
+export type Erc4626FeeCollectModuleParams = {
+  /** The collecting cost associated with this publication. 0 for free collect. */
+  amount: ModuleFeeAmountParams;
+  /** The maximum number of collects for this publication. Omit for no limit. */
+  collectLimit?: InputMaybe<Scalars['String']>;
+  /** The end timestamp after which collecting is impossible. Omit for no expiry. */
+  endTimestamp?: InputMaybe<Scalars['DateTime']>;
+  /** True if only followers of publisher may collect the post. */
+  followerOnly: Scalars['Boolean'];
+  /** The address of the recipient who will recieve vault shares after depositing is completed. */
+  recipient: Scalars['EthereumAddress'];
+  /** The referral fee associated with this publication. */
+  referralFee?: InputMaybe<Scalars['Float']>;
+  /** The address of the ERC4626 vault to deposit funds to. */
+  vault: Scalars['ContractAddress'];
+};
+
+/** The gated publication encryption provider */
+export enum EncryptionProvider {
+  LitProtocol = 'LIT_PROTOCOL',
+}
+
+export type EoaOwnershipInput = {
+  /** The address that will have access to the content */
+  address: Scalars['EthereumAddress'];
+};
+
+export type Erc20OwnershipInput = {
+  /** The amount of tokens required to access the content */
+  amount: Scalars['String'];
+  /** The amount of tokens required to access the content */
+  chainID: Scalars['ChainId'];
+  /** The operator to use when comparing the amount of tokens */
+  condition: ScalarOperator;
+  /** The ERC20 token ethereum address */
+  contractAddress: Scalars['ContractAddress'];
+  /** The amount of decimals of the ERC20 contract */
+  decimals: Scalars['Float'];
+};
+
+export type ExploreProfilesRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  sortCriteria: ProfileSortCriteria;
+  timestamp?: InputMaybe<Scalars['TimestampScalar']>;
+};
+
+export type ExplorePublicationRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  /** If you wish to exclude any results for profile ids */
+  excludeProfileIds?: InputMaybe<Array<Scalars['ProfileId']>>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  /** If you want the randomizer off (default on) */
+  noRandomize?: InputMaybe<Scalars['Boolean']>;
+  /** The publication types you want to query */
+  publicationTypes?: InputMaybe<Array<PublicationTypes>>;
+  sortCriteria: PublicationSortCriteria;
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+  timestamp?: InputMaybe<Scalars['TimestampScalar']>;
+};
+
+export type FeeCollectModuleParams = {
+  /** The collect module amount info */
+  amount: ModuleFeeAmountParams;
+  /** Follower only */
+  followerOnly: Scalars['Boolean'];
+  /** The collect module recipient address */
+  recipient: Scalars['EthereumAddress'];
+  /** The collect module referral fee */
+  referralFee: Scalars['Float'];
+};
+
+export type FeeFollowModuleParams = {
+  /** The follow module amount info */
+  amount: ModuleFeeAmountParams;
+  /** The follow module recipient address */
+  recipient: Scalars['EthereumAddress'];
+};
+
+export type FeeFollowModuleRedeemParams = {
+  /** The expected amount to pay */
+  amount: ModuleFeeAmountParams;
+};
+
+/** The feed event item filter types */
+export enum FeedEventItemType {
+  CollectComment = 'COLLECT_COMMENT',
+  CollectPost = 'COLLECT_POST',
+  Comment = 'COMMENT',
+  Mirror = 'MIRROR',
+  Post = 'POST',
+  ReactionComment = 'REACTION_COMMENT',
+  ReactionPost = 'REACTION_POST',
+}
+
+export type FeedHighlightsRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  /** The profile id */
+  profileId: Scalars['ProfileId'];
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+};
+
+export type FeedRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  /** Filter your feed to whatever you wish */
+  feedEventItemTypes?: InputMaybe<Array<FeedEventItemType>>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  /** The profile id */
+  profileId: Scalars['ProfileId'];
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+};
+
+export type Follow = {
+  followModule?: InputMaybe<FollowModuleRedeemParams>;
+  profile: Scalars['ProfileId'];
+};
+
+export type FollowConditionInput = {
+  /** The profile id of the gated profile */
+  profileId: Scalars['ProfileId'];
+};
+
+export type FollowModuleParams = {
+  /** The follower fee follower module */
+  feeFollowModule?: InputMaybe<FeeFollowModuleParams>;
+  /** The empty follow module */
+  freeFollowModule?: InputMaybe<Scalars['Boolean']>;
+  /** The profile follow module */
+  profileFollowModule?: InputMaybe<Scalars['Boolean']>;
+  /** The revert follow module */
+  revertFollowModule?: InputMaybe<Scalars['Boolean']>;
+  /** A unknown follow module */
+  unknownFollowModule?: InputMaybe<UnknownFollowModuleParams>;
+};
+
+export type FollowModuleRedeemParams = {
+  /** The follower fee follower module */
+  feeFollowModule?: InputMaybe<FeeFollowModuleRedeemParams>;
+  /** The profile follower module */
+  profileFollowModule?: InputMaybe<ProfileFollowModuleRedeemParams>;
+  /** A unknown follow module */
+  unknownFollowModule?: InputMaybe<UnknownFollowModuleRedeemParams>;
+};
+
+/** The follow module types */
+export enum FollowModules {
+  FeeFollowModule = 'FeeFollowModule',
+  ProfileFollowModule = 'ProfileFollowModule',
+  RevertFollowModule = 'RevertFollowModule',
+  UnknownFollowModule = 'UnknownFollowModule',
+}
+
+export type FollowProxyAction = {
+  freeFollow?: InputMaybe<FreeFollowProxyAction>;
+};
+
+export type FollowRequest = {
+  follow: Array<Follow>;
+};
+
+export type FollowerNftOwnedTokenIdsRequest = {
+  address: Scalars['EthereumAddress'];
+  profileId: Scalars['ProfileId'];
+};
+
+export type FollowersRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  profileId: Scalars['ProfileId'];
+};
+
+export type FollowingRequest = {
+  address: Scalars['EthereumAddress'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+};
+
+export type FraudReasonInputParams = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingFraudSubreason;
+};
+
+export type FreeCollectModuleParams = {
+  /** Follower only */
+  followerOnly: Scalars['Boolean'];
+};
+
+export type FreeCollectProxyAction = {
+  publicationId: Scalars['InternalPublicationId'];
+};
+
+export type FreeFollowProxyAction = {
+  profileId: Scalars['ProfileId'];
+};
+
+/** The access conditions for the publication */
+export type GatedPublicationParamsInput = {
+  /** AND condition */
+  and?: InputMaybe<AndConditionInput>;
+  /** Profile follow condition */
+  collect?: InputMaybe<CollectConditionInput>;
+  /** The LIT Protocol encrypted symmetric key */
+  encryptedSymmetricKey: Scalars['ContentEncryptionKey'];
+  /** EOA ownership condition */
+  eoa?: InputMaybe<EoaOwnershipInput>;
+  /** Profile follow condition */
+  follow?: InputMaybe<FollowConditionInput>;
+  /** NFT ownership condition */
+  nft?: InputMaybe<NftOwnershipInput>;
+  /** OR condition */
+  or?: InputMaybe<OrConditionInput>;
+  /** Profile ownership condition */
+  profile?: InputMaybe<ProfileOwnershipInput>;
+  /** ERC20 token ownership condition */
+  token?: InputMaybe<Erc20OwnershipInput>;
+};
+
+export type GciRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ttt: Scalars['String'];
+};
+
+export type GcrRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ttt: Scalars['String'];
+};
+
+export type GctRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+};
+
+export type GddRequest = {
+  domain: Scalars['Url'];
+  secret: Scalars['String'];
+};
+
+export type GdmRequest = {
+  secret: Scalars['String'];
+};
+
+export type GenerateModuleCurrencyApprovalDataRequest = {
+  collectModule?: InputMaybe<CollectModules>;
+  currency: Scalars['ContractAddress'];
+  followModule?: InputMaybe<FollowModules>;
+  referenceModule?: InputMaybe<ReferenceModules>;
+  unknownCollectModule?: InputMaybe<Scalars['ContractAddress']>;
+  unknownFollowModule?: InputMaybe<Scalars['ContractAddress']>;
+  unknownReferenceModule?: InputMaybe<Scalars['ContractAddress']>;
+  /** Floating point number as string (e.g. 42.009837). The server will move its decimal places for you */
+  value: Scalars['String'];
+};
+
+export type GetPublicationMetadataStatusRequest = {
+  publicationId?: InputMaybe<Scalars['InternalPublicationId']>;
+  txHash?: InputMaybe<Scalars['TxHash']>;
+  txId?: InputMaybe<Scalars['TxId']>;
+};
+
+export type GlobalProtocolStatsRequest = {
+  /** Unix time from timestamp - if not supplied it will go from 0 timestamp */
+  fromTimestamp?: InputMaybe<Scalars['UnixTimestamp']>;
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+  /** Unix time to timestamp - if not supplied it go to the present timestamp */
+  toTimestamp?: InputMaybe<Scalars['UnixTimestamp']>;
+};
+
+export type HasTxHashBeenIndexedRequest = {
+  /** Tx hash.. if your using the broadcaster you should use txId due to gas price upgrades */
+  txHash?: InputMaybe<Scalars['TxHash']>;
+  /** Tx id.. if your using the broadcaster you should always use this field */
+  txId?: InputMaybe<Scalars['TxId']>;
+};
+
+export type HelRequest = {
+  handle: Scalars['Handle'];
+  remove: Scalars['Boolean'];
+  secret: Scalars['String'];
+};
+
+export type HidePublicationRequest = {
+  /** Publication id */
+  publicationId: Scalars['InternalPublicationId'];
+};
+
+export type IdKitPhoneVerifyWebhookRequest = {
+  sharedSecret: Scalars['String'];
+  worldcoin?: InputMaybe<WorldcoinPhoneVerifyWebhookRequest>;
+};
+
+/** The verify webhook result status type */
+export enum IdKitPhoneVerifyWebhookResultStatusType {
+  AlreadyVerified = 'ALREADY_VERIFIED',
+  Success = 'SUCCESS',
+}
+
+export type IllegalReasonInputParams = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingIllegalSubreason;
+};
+
+export type InternalPublicationsFilterRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  /** must be DD/MM/YYYY */
+  fromDate: Scalars['String'];
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** The shared secret */
+  secret: Scalars['String'];
+  /** The App Id */
+  source: Scalars['Sources'];
+  /** must be DD/MM/YYYY */
+  toDate: Scalars['String'];
+};
+
+export type LimitedFeeCollectModuleParams = {
+  /** The collect module amount info */
+  amount: ModuleFeeAmountParams;
+  /** The collect module limit */
+  collectLimit: Scalars['String'];
+  /** Follower only */
+  followerOnly: Scalars['Boolean'];
+  /** The collect module recipient address */
+  recipient: Scalars['EthereumAddress'];
+  /** The collect module referral fee */
+  referralFee: Scalars['Float'];
+};
+
+export type LimitedTimedFeeCollectModuleParams = {
+  /** The collect module amount info */
+  amount: ModuleFeeAmountParams;
+  /** The collect module limit */
+  collectLimit: Scalars['String'];
+  /** Follower only */
+  followerOnly: Scalars['Boolean'];
+  /** The collect module recipient address */
+  recipient: Scalars['EthereumAddress'];
+  /** The collect module referral fee */
+  referralFee: Scalars['Float'];
+};
+
+/** The metadata attribute input */
+export type MetadataAttributeInput = {
+  /** The display type */
+  displayType?: InputMaybe<PublicationMetadataDisplayTypes>;
+  /** The trait type - can be anything its the name it will render so include spaces */
+  traitType: Scalars['String'];
+  /** The value */
+  value: Scalars['String'];
+};
+
+export type ModuleFeeAmountParams = {
+  /** The currency address */
+  currency: Scalars['ContractAddress'];
+  /** Floating point number as string (e.g. 42.009837). It could have the entire precision of the Asset or be truncated to the last significant decimal. */
+  value: Scalars['String'];
+};
+
+export type ModuleFeeParams = {
+  /** The fee amount */
+  amount: ModuleFeeAmountParams;
+  /** The fee recipient */
+  recipient: Scalars['EthereumAddress'];
+  /** The referral fee */
+  referralFee: Scalars['Float'];
+};
+
+/** The momka validator error */
+export enum MomokaValidatorError {
+  BlockCantBeReadFromNode = 'BLOCK_CANT_BE_READ_FROM_NODE',
+  BlockTooFar = 'BLOCK_TOO_FAR',
+  CanNotConnectToBundlr = 'CAN_NOT_CONNECT_TO_BUNDLR',
+  ChainSignatureAlreadyUsed = 'CHAIN_SIGNATURE_ALREADY_USED',
+  DataCantBeReadFromNode = 'DATA_CANT_BE_READ_FROM_NODE',
+  EventMismatch = 'EVENT_MISMATCH',
+  GeneratedPublicationIdMismatch = 'GENERATED_PUBLICATION_ID_MISMATCH',
+  InvalidEventTimestamp = 'INVALID_EVENT_TIMESTAMP',
+  InvalidFormattedTypedData = 'INVALID_FORMATTED_TYPED_DATA',
+  InvalidPointerSetNotNeeded = 'INVALID_POINTER_SET_NOT_NEEDED',
+  InvalidSignatureSubmitter = 'INVALID_SIGNATURE_SUBMITTER',
+  InvalidTxId = 'INVALID_TX_ID',
+  InvalidTypedDataDeadlineTimestamp = 'INVALID_TYPED_DATA_DEADLINE_TIMESTAMP',
+  NotClosestBlock = 'NOT_CLOSEST_BLOCK',
+  NoSignatureSubmitter = 'NO_SIGNATURE_SUBMITTER',
+  PointerFailedVerification = 'POINTER_FAILED_VERIFICATION',
+  PotentialReorg = 'POTENTIAL_REORG',
+  PublicationNonceInvalid = 'PUBLICATION_NONCE_INVALID',
+  PublicationNoneDa = 'PUBLICATION_NONE_DA',
+  PublicationNoPointer = 'PUBLICATION_NO_POINTER',
+  PublicationSignerNotAllowed = 'PUBLICATION_SIGNER_NOT_ALLOWED',
+  SimulationFailed = 'SIMULATION_FAILED',
+  SimulationNodeCouldNotRun = 'SIMULATION_NODE_COULD_NOT_RUN',
+  TimestampProofInvalidDaId = 'TIMESTAMP_PROOF_INVALID_DA_ID',
+  TimestampProofInvalidSignature = 'TIMESTAMP_PROOF_INVALID_SIGNATURE',
+  TimestampProofInvalidType = 'TIMESTAMP_PROOF_INVALID_TYPE',
+  TimestampProofNotSubmitter = 'TIMESTAMP_PROOF_NOT_SUBMITTER',
+  Unknown = 'UNKNOWN',
+}
+
+export type MultirecipientFeeCollectModuleParams = {
+  /** The collecting cost associated with this publication. 0 for free collect. */
+  amount: ModuleFeeAmountParams;
+  /** The maximum number of collects for this publication. Omit for no limit. */
+  collectLimit?: InputMaybe<Scalars['String']>;
+  /** The end timestamp after which collecting is impossible. Omit for no expiry. */
+  endTimestamp?: InputMaybe<Scalars['DateTime']>;
+  /** True if only followers of publisher may collect the post. */
+  followerOnly: Scalars['Boolean'];
+  /** Recipient of collect fees. */
+  recipients: Array<RecipientDataInput>;
+  /** The referral fee associated with this publication. */
+  referralFee?: InputMaybe<Scalars['Float']>;
+};
+
+export type MutualFollowersProfilesQueryRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** The profile id your viewing */
+  viewingProfileId: Scalars['ProfileId'];
+  /** The profile id you want the result to come back as your viewing from */
+  yourProfileId: Scalars['ProfileId'];
+};
+
+export type NftData = {
+  /** Id of the nft ownership challenge */
+  id: Scalars['NftOwnershipId'];
+  /** The signature */
+  signature: Scalars['Signature'];
+};
+
+export type NfTsRequest = {
+  /** Chain Ids */
+  chainIds: Array<Scalars['ChainId']>;
+  /** Filter by contract address */
+  contractAddress?: InputMaybe<Scalars['ContractAddress']>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** Filter by owner address */
+  ownerAddress: Scalars['EthereumAddress'];
+};
+
+/** The NFT gallery input */
+export type NftGalleriesRequest = {
+  /** The profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+/** The input for creating a new NFT gallery */
+export type NftGalleryCreateRequest = {
+  /** The NFTs in the gallery */
+  items: Array<NftInput>;
+  /** The name of the NFT gallery */
+  name: Scalars['NftGalleryName'];
+  /** The owner profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+/** The input for deleting gallery */
+export type NftGalleryDeleteRequest = {
+  /** The NFT gallery id */
+  galleryId: Scalars['NftGalleryId'];
+  /** The profile id of the gallery owner */
+  profileId: Scalars['ProfileId'];
+};
+
+/** The input for updating NFT gallery name */
+export type NftGalleryUpdateInfoRequest = {
+  /** The NFT gallery id */
+  galleryId: Scalars['NftGalleryId'];
+  /** The name of the NFT gallery */
+  name: Scalars['NftGalleryName'];
+  /** The profile id of the gallery owner */
+  profileId: Scalars['ProfileId'];
+};
+
+/** The input for reordering gallery items */
+export type NftGalleryUpdateItemOrderRequest = {
+  /** The NFT gallery id */
+  galleryId: Scalars['NftGalleryId'];
+  /** The profile id of the gallery owner */
+  profileId: Scalars['ProfileId'];
+  /** The order of the NFTs in the gallery */
+  updates: Array<NftUpdateItemOrder>;
+};
+
+/** The input for adding/removing gallery items */
+export type NftGalleryUpdateItemsRequest = {
+  /** The NFT gallery id */
+  galleryId: Scalars['NftGalleryId'];
+  /** The profile id of the gallery owner */
+  profileId: Scalars['ProfileId'];
+  /** The contents of the NFT gallery */
+  toAdd?: InputMaybe<Array<NftInput>>;
+  /** The contents of the NFT gallery */
+  toRemove?: InputMaybe<Array<NftInput>>;
+};
+
+/** The NFT input for gallery */
+export type NftInput = {
+  /** The chain ID of the NFT */
+  chainId: Scalars['ChainId'];
+  /** The contract address of the NFT */
+  contractAddress: Scalars['ContractAddress'];
+  /** The token ID of the NFT */
+  tokenId: Scalars['String'];
+};
+
+export type NftOwnershipChallenge = {
+  /** Chain Id */
+  chainId: Scalars['ChainId'];
+  /** ContractAddress for nft */
+  contractAddress: Scalars['ContractAddress'];
+  /** Token id for NFT */
+  tokenId: Scalars['String'];
+};
+
+export type NftOwnershipChallengeRequest = {
+  /** The wallet address which owns the NFT */
+  ethereumAddress: Scalars['EthereumAddress'];
+  nfts: Array<NftOwnershipChallenge>;
+};
+
+export type NftOwnershipInput = {
+  /** The NFT chain id */
+  chainID: Scalars['ChainId'];
+  /** The NFT collection's ethereum address */
+  contractAddress: Scalars['ContractAddress'];
+  /** The unlocker contract type */
+  contractType: ContractType;
+  /** The optional token ID(s) to check for ownership */
+  tokenIds?: InputMaybe<Array<Scalars['TokenId']>>;
+};
+
+/** The input for updating the order of a NFT gallery item */
+export type NftUpdateItemOrder = {
+  /** The chain ID of the NFT */
+  chainId: Scalars['ChainId'];
+  /** The contract address of the NFT */
+  contractAddress: Scalars['ContractAddress'];
+  /** The new order of the NFT in the gallery */
+  newOrder: Scalars['Int'];
+  /** The token ID of the NFT */
+  tokenId: Scalars['String'];
+};
+
+export type NotificationRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  highSignalFilter?: InputMaybe<Scalars['Boolean']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** The notification types */
+  notificationTypes?: InputMaybe<Array<NotificationTypes>>;
+  /** The profile id */
+  profileId: Scalars['ProfileId'];
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+};
+
+/** The notification filter types */
+export enum NotificationTypes {
+  CollectedComment = 'COLLECTED_COMMENT',
+  CollectedPost = 'COLLECTED_POST',
+  CommentedComment = 'COMMENTED_COMMENT',
+  CommentedPost = 'COMMENTED_POST',
+  Followed = 'FOLLOWED',
+  MentionComment = 'MENTION_COMMENT',
+  MentionPost = 'MENTION_POST',
+  MirroredComment = 'MIRRORED_COMMENT',
+  MirroredPost = 'MIRRORED_POST',
+  ReactionComment = 'REACTION_COMMENT',
+  ReactionPost = 'REACTION_POST',
+}
+
+export type OrConditionInput = {
+  /** The list of conditions to apply OR to. You can only use nested boolean conditions at the root level. */
+  criteria: Array<AccessConditionInput>;
+};
+
+export type PendingApprovalFollowsRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+};
+
+export type PrfRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+};
+
+export type ProfileFollowModuleBeenRedeemedRequest = {
+  followProfileId: Scalars['ProfileId'];
+  redeemingProfileId: Scalars['ProfileId'];
+};
+
+export type ProfileFollowModuleRedeemParams = {
+  /** The profile id to use to follow this profile */
+  profileId: Scalars['ProfileId'];
+};
+
+export type ProfileFollowRevenueQueryRequest = {
+  /** The profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+export type ProfileOnChainIdentityRequest = {
+  profileIds: Array<Scalars['ProfileId']>;
+};
+
+/** Condition that signifies if address has access to profile */
+export type ProfileOwnershipInput = {
+  /** The profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+export type ProfilePublicationRevenueQueryRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  /** The profile id */
+  profileId: Scalars['ProfileId'];
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+  /** The revenue types */
+  types?: InputMaybe<Array<PublicationTypes>>;
+};
+
+export type ProfilePublicationsForSaleRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  /** Profile id */
+  profileId: Scalars['ProfileId'];
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+};
+
+export type ProfileQueryRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  /** The handles for the profile */
+  handles?: InputMaybe<Array<Scalars['Handle']>>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** The ethereum addresses */
+  ownedBy?: InputMaybe<Array<Scalars['EthereumAddress']>>;
+  /** The profile ids */
+  profileIds?: InputMaybe<Array<Scalars['ProfileId']>>;
+  /** The mirrored publication id */
+  whoMirroredPublicationId?: InputMaybe<Scalars['InternalPublicationId']>;
+};
+
+/** profile sort criteria */
+export enum ProfileSortCriteria {
+  CreatedOn = 'CREATED_ON',
+  LatestCreated = 'LATEST_CREATED',
+  MostCollects = 'MOST_COLLECTS',
+  MostComments = 'MOST_COMMENTS',
+  MostFollowers = 'MOST_FOLLOWERS',
+  MostMirrors = 'MOST_MIRRORS',
+  MostPosts = 'MOST_POSTS',
+  MostPublication = 'MOST_PUBLICATION',
+}
+
+export type ProxyActionRequest = {
+  collect?: InputMaybe<CollectProxyAction>;
+  follow?: InputMaybe<FollowProxyAction>;
+};
+
+/** The proxy action status */
+export enum ProxyActionStatusTypes {
+  Complete = 'COMPLETE',
+  Minting = 'MINTING',
+  Transferring = 'TRANSFERRING',
+}
+
+export type PublicMediaRequest = {
+  /** The alt tags for accessibility */
+  altTag?: InputMaybe<Scalars['String']>;
+  /** The cover for any video or audio you attached */
+  cover?: InputMaybe<Scalars['Url']>;
+  /** Pre calculated cid of the file to push */
+  itemCid: Scalars['IpfsCid'];
+  /** This is the mime type of media */
+  type?: InputMaybe<Scalars['MimeType']>;
+};
+
+/** The publication content warning */
+export enum PublicationContentWarning {
+  Nsfw = 'NSFW',
+  Sensitive = 'SENSITIVE',
+  Spoiler = 'SPOILER',
+}
+
+/** The publication main focus */
+export enum PublicationMainFocus {
+  Article = 'ARTICLE',
+  Audio = 'AUDIO',
+  Embed = 'EMBED',
+  Image = 'IMAGE',
+  Link = 'LINK',
+  TextOnly = 'TEXT_ONLY',
+  Video = 'VIDEO',
+}
+
+/** The source of the media */
+export enum PublicationMediaSource {
+  Lens = 'LENS',
+}
+
+/** Publication metadata content warning filters */
+export type PublicationMetadataContentWarningFilter = {
+  /** By default all content warnings will be hidden you can include them in your query by adding them to this array. */
+  includeOneOf?: InputMaybe<Array<PublicationContentWarning>>;
+};
+
+/** The publication metadata display types */
+export enum PublicationMetadataDisplayTypes {
+  Date = 'date',
+  Number = 'number',
+  String = 'string',
+}
+
+/** Publication metadata filters */
+export type PublicationMetadataFilters = {
+  contentWarning?: InputMaybe<PublicationMetadataContentWarningFilter>;
+  /** IOS 639-1 language code aka en or it and ISO 3166-1 alpha-2 region code aka US or IT aka en-US or it-IT. You can just filter on language if you wish. */
+  locale?: InputMaybe<Scalars['Locale']>;
+  mainContentFocus?: InputMaybe<Array<PublicationMainFocus>>;
+  tags?: InputMaybe<PublicationMetadataTagsFilter>;
+};
+
+/** The metadata attribute input */
+export type PublicationMetadataMediaInput = {
+  /** The alt tags for accessibility */
+  altTag?: InputMaybe<Scalars['String']>;
+  /** The cover for any video or audio you attached */
+  cover?: InputMaybe<Scalars['Url']>;
+  item: Scalars['Url'];
+  source?: InputMaybe<PublicationMediaSource>;
+  /** This is the mime type of media */
+  type?: InputMaybe<Scalars['MimeType']>;
+};
+
+/** publication metadata status type */
+export enum PublicationMetadataStatusType {
+  MetadataValidationFailed = 'METADATA_VALIDATION_FAILED',
+  NotFound = 'NOT_FOUND',
+  Pending = 'PENDING',
+  Success = 'SUCCESS',
+}
+
+/** Publication metadata tag filter */
+export type PublicationMetadataTagsFilter = {
+  /** Needs to match all */
+  all?: InputMaybe<Array<Scalars['String']>>;
+  /** Needs to only match one of */
+  oneOf?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export type PublicationMetadataV1Input = {
+  /**
+   * A URL to a multi-media attachment for the item. The file extensions GLTF, GLB, WEBM, MP4, M4V, OGV,
+   *       and OGG are supported, along with the audio-only extensions MP3, WAV, and OGA.
+   *       Animation_url also supports HTML pages, allowing you to build rich experiences and interactive NFTs using JavaScript canvas,
+   *       WebGL, and more. Scripts and relative paths within the HTML page are now supported. However, access to browser extensions is not supported.
+   */
+  animation_url?: InputMaybe<Scalars['Url']>;
+  /**  This is the appId the content belongs to */
+  appId?: InputMaybe<Scalars['Sources']>;
+  /**  These are the attributes for the item, which will show up on the OpenSea and others NFT trading websites on the item. */
+  attributes: Array<MetadataAttributeInput>;
+  /** The content of a publication. If this is blank `media` must be defined or its out of spec */
+  content?: InputMaybe<Scalars['Markdown']>;
+  /** A human-readable description of the item. */
+  description?: InputMaybe<Scalars['Markdown']>;
+  /**
+   * This is the URL that will appear below the asset's image on OpenSea and others etc
+   *       and will allow users to leave OpenSea and view the item on the site.
+   */
+  external_url?: InputMaybe<Scalars['Url']>;
+  /** legacy to support OpenSea will store any NFT image here. */
+  image?: InputMaybe<Scalars['Url']>;
+  /** This is the mime type of the image. This is used if your uploading more advanced cover images as sometimes ipfs does not emit the content header so this solves that */
+  imageMimeType?: InputMaybe<Scalars['MimeType']>;
+  /**  This is lens supported attached media items to the publication */
+  media?: InputMaybe<Array<PublicationMetadataMediaInput>>;
+  /** The metadata id can be anything but if your uploading to ipfs you will want it to be random.. using uuid could be an option! */
+  metadata_id: Scalars['String'];
+  /** Name of the item. */
+  name: Scalars['String'];
+  /** Signed metadata to validate the owner */
+  signatureContext?: InputMaybe<PublicationSignatureContextInput>;
+  /** The metadata version. (1.0.0 | 2.0.0) */
+  version: Scalars['String'];
+};
+
+export type PublicationMetadataV2Input = {
+  /**
+   * A URL to a multi-media attachment for the item. The file extensions GLTF, GLB, WEBM, MP4, M4V, OGV,
+   *       and OGG are supported, along with the audio-only extensions MP3, WAV, and OGA.
+   *       Animation_url also supports HTML pages, allowing you to build rich experiences and interactive NFTs using JavaScript canvas,
+   *       WebGL, and more. Scripts and relative paths within the HTML page are now supported. However, access to browser extensions is not supported.
+   */
+  animation_url?: InputMaybe<Scalars['Url']>;
+  /**  This is the appId the content belongs to */
+  appId?: InputMaybe<Scalars['Sources']>;
+  /**  These are the attributes for the item, which will show up on the OpenSea and others NFT trading websites on the item. */
+  attributes: Array<MetadataAttributeInput>;
+  /** The content of a publication. If this is blank `media` must be defined or its out of spec */
+  content?: InputMaybe<Scalars['Markdown']>;
+  /** Ability to add a content warning */
+  contentWarning?: InputMaybe<PublicationContentWarning>;
+  /** A human-readable description of the item. */
+  description?: InputMaybe<Scalars['Markdown']>;
+  /**
+   * This is the URL that will appear below the asset's image on OpenSea and others etc
+   *       and will allow users to leave OpenSea and view the item on the site.
+   */
+  external_url?: InputMaybe<Scalars['Url']>;
+  /** legacy to support OpenSea will store any NFT image here. */
+  image?: InputMaybe<Scalars['Url']>;
+  /** This is the mime type of the image. This is used if your uploading more advanced cover images as sometimes ipfs does not emit the content header so this solves that */
+  imageMimeType?: InputMaybe<Scalars['MimeType']>;
+  /** IOS 639-1 language code aka en or it and ISO 3166-1 alpha-2 region code aka US or IT aka en-US or it-IT */
+  locale: Scalars['Locale'];
+  /** Main content focus that for this publication */
+  mainContentFocus: PublicationMainFocus;
+  /**  This is lens supported attached media items to the publication */
+  media?: InputMaybe<Array<PublicationMetadataMediaInput>>;
+  /** The metadata id can be anything but if your uploading to ipfs you will want it to be random.. using uuid could be an option! */
+  metadata_id: Scalars['String'];
+  /** Name of the item. */
+  name: Scalars['String'];
+  /** Signed metadata to validate the owner */
+  signatureContext?: InputMaybe<PublicationSignatureContextInput>;
+  /** Ability to tag your publication */
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  /** The metadata version. (1.0.0 | 2.0.0) */
+  version: Scalars['String'];
+};
+
+export type PublicationQueryRequest = {
+  /** The publication id */
+  publicationId?: InputMaybe<Scalars['InternalPublicationId']>;
+  /** The tx hash */
+  txHash?: InputMaybe<Scalars['TxHash']>;
+};
+
+/** Publication reporting fraud subreason */
+export enum PublicationReportingFraudSubreason {
+  Impersonation = 'IMPERSONATION',
+  Scam = 'SCAM',
+}
+
+/** Publication reporting illegal subreason */
+export enum PublicationReportingIllegalSubreason {
+  AnimalAbuse = 'ANIMAL_ABUSE',
+  DirectThreat = 'DIRECT_THREAT',
+  HumanAbuse = 'HUMAN_ABUSE',
+  ThreatIndividual = 'THREAT_INDIVIDUAL',
+  Violence = 'VIOLENCE',
+}
+
+/** Publication reporting reason */
+export enum PublicationReportingReason {
+  Fraud = 'FRAUD',
+  Illegal = 'ILLEGAL',
+  Sensitive = 'SENSITIVE',
+  Spam = 'SPAM',
+}
+
+/** Publication reporting sensitive subreason */
+export enum PublicationReportingSensitiveSubreason {
+  Nsfw = 'NSFW',
+  Offensive = 'OFFENSIVE',
+}
+
+/** Publication reporting spam subreason */
+export enum PublicationReportingSpamSubreason {
+  FakeEngagement = 'FAKE_ENGAGEMENT',
+  LowSignal = 'LOW_SIGNAL',
+  ManipulationAlgo = 'MANIPULATION_ALGO',
+  Misleading = 'MISLEADING',
+  MisuseHashtags = 'MISUSE_HASHTAGS',
+  Repetitive = 'REPETITIVE',
+  SomethingElse = 'SOMETHING_ELSE',
+  Unrelated = 'UNRELATED',
+}
+
+export type PublicationRevenueQueryRequest = {
+  /** The publication id */
+  publicationId: Scalars['InternalPublicationId'];
+};
+
+export type PublicationSignatureContextInput = {
+  signature: Scalars['String'];
+};
+
+/** Publication sort criteria */
+export enum PublicationSortCriteria {
+  CuratedProfiles = 'CURATED_PROFILES',
+  Latest = 'LATEST',
+  TopCollected = 'TOP_COLLECTED',
+  TopCommented = 'TOP_COMMENTED',
+  TopMirrored = 'TOP_MIRRORED',
+}
+
+/** The publication types */
+export enum PublicationTypes {
+  Comment = 'COMMENT',
+  Mirror = 'MIRROR',
+  Post = 'POST',
+}
+
+export type PublicationsQueryRequest = {
+  /** The ethereum address */
+  collectedBy?: InputMaybe<Scalars['EthereumAddress']>;
+  /** The publication id you wish to get comments for */
+  commentsOf?: InputMaybe<Scalars['InternalPublicationId']>;
+  /** The comment ordering type - only used when you use commentsOf */
+  commentsOfOrdering?: InputMaybe<CommentOrderingTypes>;
+  /** The comment ranking filter, you can use  - only used when you use commentsOf + commentsOfOrdering=ranking */
+  commentsRankingFilter?: InputMaybe<CommentRankingFilter>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  /** Profile id */
+  profileId?: InputMaybe<Scalars['ProfileId']>;
+  /** Profile ids */
+  profileIds?: InputMaybe<Array<Scalars['ProfileId']>>;
+  /** The publication id */
+  publicationIds?: InputMaybe<Array<Scalars['InternalPublicationId']>>;
+  /** The publication types you want to query */
+  publicationTypes?: InputMaybe<Array<PublicationTypes>>;
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+};
+
+export type ReactionFieldResolverRequest = {
+  /** Profile id */
+  profileId?: InputMaybe<Scalars['ProfileId']>;
+};
+
+export type ReactionRequest = {
+  /** Profile id to perform the action */
+  profileId: Scalars['ProfileId'];
+  /** The internal publication id */
+  publicationId: Scalars['InternalPublicationId'];
+  /** The reaction */
+  reaction: ReactionTypes;
+};
+
+/** Reaction types */
+export enum ReactionTypes {
+  Downvote = 'DOWNVOTE',
+  Upvote = 'UPVOTE',
+}
+
+export type RecipientDataInput = {
+  /** Recipient of collect fees. */
+  recipient: Scalars['EthereumAddress'];
+  /** Split %, should be between 0.01 and 100. Up to 2 decimal points supported. All % should add up to 100 */
+  split: Scalars['Float'];
+};
+
+export type RecommendedProfileOptions = {
+  /** If you wish to turn ML off */
+  disableML?: InputMaybe<Scalars['Boolean']>;
+  /** If you wish to shuffle the results */
+  shuffle?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ReferenceModuleParams = {
+  /** The degrees of separation reference module */
+  degreesOfSeparationReferenceModule?: InputMaybe<DegreesOfSeparationReferenceModuleParams>;
+  /** The follower only reference module */
+  followerOnlyReferenceModule?: InputMaybe<Scalars['Boolean']>;
+  /** A unknown reference module */
+  unknownReferenceModule?: InputMaybe<UnknownReferenceModuleParams>;
+};
+
+/** The reference module types */
+export enum ReferenceModules {
+  DegreesOfSeparationReferenceModule = 'DegreesOfSeparationReferenceModule',
+  FollowerOnlyReferenceModule = 'FollowerOnlyReferenceModule',
+  UnknownReferenceModule = 'UnknownReferenceModule',
+}
+
+/** The refresh request */
+export type RefreshRequest = {
+  /** The refresh token */
+  refreshToken: Scalars['Jwt'];
+};
+
+export type RelRequest = {
+  ethereumAddress: Scalars['EthereumAddress'];
+  secret: Scalars['String'];
+};
+
+/** Relay error reason */
+export enum RelayErrorReasons {
+  Expired = 'EXPIRED',
+  HandleTaken = 'HANDLE_TAKEN',
+  NotAllowed = 'NOT_ALLOWED',
+  Rejected = 'REJECTED',
+  WrongWalletSigned = 'WRONG_WALLET_SIGNED',
+}
+
+/** The relay role key */
+export enum RelayRoleKey {
+  CreateProfile = 'CREATE_PROFILE',
+  Dispatcher_1 = 'DISPATCHER_1',
+  Dispatcher_2 = 'DISPATCHER_2',
+  Dispatcher_3 = 'DISPATCHER_3',
+  Dispatcher_4 = 'DISPATCHER_4',
+  Dispatcher_5 = 'DISPATCHER_5',
+  Dispatcher_6 = 'DISPATCHER_6',
+  Dispatcher_7 = 'DISPATCHER_7',
+  Dispatcher_8 = 'DISPATCHER_8',
+  Dispatcher_9 = 'DISPATCHER_9',
+  Dispatcher_10 = 'DISPATCHER_10',
+  ProxyActionCollect_1 = 'PROXY_ACTION_COLLECT_1',
+  ProxyActionCollect_2 = 'PROXY_ACTION_COLLECT_2',
+  ProxyActionCollect_3 = 'PROXY_ACTION_COLLECT_3',
+  ProxyActionCollect_4 = 'PROXY_ACTION_COLLECT_4',
+  ProxyActionCollect_5 = 'PROXY_ACTION_COLLECT_5',
+  ProxyActionCollect_6 = 'PROXY_ACTION_COLLECT_6',
+  ProxyActionFollow_1 = 'PROXY_ACTION_FOLLOW_1',
+  ProxyActionFollow_2 = 'PROXY_ACTION_FOLLOW_2',
+  ProxyActionFollow_3 = 'PROXY_ACTION_FOLLOW_3',
+  ProxyActionFollow_4 = 'PROXY_ACTION_FOLLOW_4',
+  ProxyActionFollow_5 = 'PROXY_ACTION_FOLLOW_5',
+  ProxyActionFollow_6 = 'PROXY_ACTION_FOLLOW_6',
+  ProxyActionFollow_7 = 'PROXY_ACTION_FOLLOW_7',
+  ProxyActionFollow_8 = 'PROXY_ACTION_FOLLOW_8',
+  ProxyActionFollow_9 = 'PROXY_ACTION_FOLLOW_9',
+  ProxyActionFollow_10 = 'PROXY_ACTION_FOLLOW_10',
+  WithSig_1 = 'WITH_SIG_1',
+  WithSig_2 = 'WITH_SIG_2',
+  WithSig_3 = 'WITH_SIG_3',
+}
+
+/** The request object to remove interests from a profile */
+export type RemoveProfileInterestsRequest = {
+  /** The profile interest to add */
+  interests: Array<Scalars['ProfileInterest']>;
+  /** The profileId to add interests to */
+  profileId: Scalars['ProfileId'];
+};
+
+export type ReportPublicationRequest = {
+  additionalComments?: InputMaybe<Scalars['String']>;
+  publicationId: Scalars['InternalPublicationId'];
+  reason: ReportingReasonInputParams;
+};
+
+export type ReportingReasonInputParams = {
+  fraudReason?: InputMaybe<FraudReasonInputParams>;
+  illegalReason?: InputMaybe<IllegalReasonInputParams>;
+  sensitiveReason?: InputMaybe<SensitiveReasonInputParams>;
+  spamReason?: InputMaybe<SpamReasonInputParams>;
+};
+
+/** The gated publication access criteria scalar operators */
+export enum ScalarOperator {
+  Equal = 'EQUAL',
+  GreaterThan = 'GREATER_THAN',
+  GreaterThanOrEqual = 'GREATER_THAN_OR_EQUAL',
+  LessThan = 'LESS_THAN',
+  LessThanOrEqual = 'LESS_THAN_OR_EQUAL',
+  NotEqual = 'NOT_EQUAL',
+}
+
+export type SearchQueryRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** The search term */
+  query: Scalars['Search'];
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+  type: SearchRequestTypes;
+};
+
+/** Search request types */
+export enum SearchRequestTypes {
+  Profile = 'PROFILE',
+  Publication = 'PUBLICATION',
+}
+
+export type SensitiveReasonInputParams = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingSensitiveSubreason;
+};
+
+export type SetDispatcherRequest = {
+  /** The dispatcher address - they can post, comment, mirror, set follow module, change your profile picture on your behalf, if left as none it will use the built in dispatcher address. */
+  dispatcher?: InputMaybe<Scalars['EthereumAddress']>;
+  /** If you want to enable or disable it */
+  enable?: InputMaybe<Scalars['Boolean']>;
+  /** The profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+/** The signed auth challenge */
+export type SignedAuthChallenge = {
+  /** The ethereum address you signed the signature with */
+  address: Scalars['EthereumAddress'];
+  /** The signature */
+  signature: Scalars['Signature'];
+};
+
+export type SimpleCollectModuleParams = {
+  /** The collect module limit */
+  collectLimit?: InputMaybe<Scalars['String']>;
+  /** The timestamp that this collect module will expire */
+  endTimestamp?: InputMaybe<Scalars['DateTime']>;
+  /** The collect module fee params */
+  fee?: InputMaybe<ModuleFeeParams>;
+  /** Collectible by followers only */
+  followerOnly: Scalars['Boolean'];
+};
+
+export type SingleProfileQueryRequest = {
+  /** The handle for the profile */
+  handle?: InputMaybe<Scalars['Handle']>;
+  /** The profile id */
+  profileId?: InputMaybe<Scalars['ProfileId']>;
+};
+
+export type SpamReasonInputParams = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingSpamSubreason;
+};
+
+/** The publications tags sort criteria */
+export enum TagSortCriteria {
+  Alphabetical = 'ALPHABETICAL',
+  MostPopular = 'MOST_POPULAR',
+}
+
+export type TimedFeeCollectModuleParams = {
+  /** The collect module amount info */
+  amount: ModuleFeeAmountParams;
+  /** Follower only */
+  followerOnly: Scalars['Boolean'];
+  /** The collect module recipient address */
+  recipient: Scalars['EthereumAddress'];
+  /** The collect module referral fee */
+  referralFee: Scalars['Float'];
+};
+
+/** Transaction error reason */
+export enum TransactionErrorReasons {
+  Reverted = 'REVERTED',
+}
+
+export type TypedDataOptions = {
+  /** If you wish to override the nonce for the sig if you want to do some clever stuff in the client */
+  overrideSigNonce: Scalars['Nonce'];
+};
+
+export type UnfollowRequest = {
+  profile: Scalars['ProfileId'];
+};
+
+export type UnknownCollectModuleParams = {
+  contractAddress: Scalars['ContractAddress'];
+  /** The encoded data to submit with the module */
+  data: Scalars['BlockchainData'];
+};
+
+export type UnknownFollowModuleParams = {
+  contractAddress: Scalars['ContractAddress'];
+  /** The encoded data to submit with the module */
+  data: Scalars['BlockchainData'];
+};
+
+export type UnknownFollowModuleRedeemParams = {
+  /** The encoded data to submit with the module */
+  data: Scalars['BlockchainData'];
+};
+
+export type UnknownReferenceModuleParams = {
+  contractAddress: Scalars['ContractAddress'];
+  /** The encoded data to submit with the module */
+  data: Scalars['BlockchainData'];
+};
+
+export type UpdateProfileImageRequest = {
+  /** The nft data */
+  nftData?: InputMaybe<NftData>;
+  profileId: Scalars['ProfileId'];
+  /** The url to the image if offline */
+  url?: InputMaybe<Scalars['Url']>;
+};
+
+export type ValidatePublicationMetadataRequest = {
+  metadatav1?: InputMaybe<PublicationMetadataV1Input>;
+  metadatav2?: InputMaybe<PublicationMetadataV2Input>;
+};
+
+/** The access request */
+export type VerifyRequest = {
+  /** The access token */
+  accessToken: Scalars['Jwt'];
+};
+
+export type WhoCollectedPublicationRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** Internal publication id */
+  publicationId: Scalars['InternalPublicationId'];
+};
+
+export type WhoReactedPublicationRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** Internal publication id */
+  publicationId: Scalars['InternalPublicationId'];
+};
+
+/** The worldcoin signal type */
+export enum WorldcoinPhoneVerifyType {
+  Orb = 'ORB',
+  Phone = 'PHONE',
+}
+
+export type WorldcoinPhoneVerifyWebhookRequest = {
+  nullifierHash: Scalars['String'];
+  signal: Scalars['EthereumAddress'];
+  signalType: WorldcoinPhoneVerifyType;
+};
+
+export type AuthChallengeVariables = Exact<{
+  address: Scalars['EthereumAddress'];
+}>;
+
+export type AuthChallengeData = { result: { text: string } };
+
+export type AuthAuthenticateVariables = Exact<{
+  address: Scalars['EthereumAddress'];
+  signature: Scalars['Signature'];
+}>;
+
+export type AuthAuthenticateData = { result: { accessToken: string; refreshToken: string } };
+
+export type AuthRefreshVariables = Exact<{
+  refreshToken: Scalars['Jwt'];
+}>;
+
+export type AuthRefreshData = { result: { accessToken: string; refreshToken: string } };
+
+export type CreateCollectTypedDataVariables = Exact<{
+  request: CreateCollectRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateCollectTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { CollectWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomain;
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileId: ProfileId;
+        pubId: string;
+        data: string;
+      };
+    };
+  };
+};
+
+export type CreateCommentEip712TypedData = {
+  types: { CommentWithSig: Array<{ name: string; type: string }> };
+  domain: Eip712TypedDataDomain;
+  value: {
+    nonce: number;
+    deadline: unknown;
+    profileId: ProfileId;
+    contentURI: Url;
+    profileIdPointed: ProfileId;
+    pubIdPointed: string;
+    collectModule: string;
+    collectModuleInitData: string;
+    referenceModuleData: string;
+    referenceModule: string;
+    referenceModuleInitData: string;
+  };
+};
+
+export type CreateCommentTypedDataVariables = Exact<{
+  request: CreatePublicCommentRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateCommentTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreateCommentEip712TypedData };
+};
+
+export type CreateCommentViaDispatcherVariables = Exact<{
+  request: CreatePublicCommentRequest;
+}>;
+
+export type CreateCommentViaDispatcherData = {
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type CreateDataAvailabilityCommentTypedDataVariables = Exact<{
+  request: CreateDataAvailabilityCommentRequest;
+}>;
+
+export type CreateDataAvailabilityCommentTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreateCommentEip712TypedData };
+};
+
+export type CreateDataAvailabilityCommentViaDispatcherVariables = Exact<{
+  request: CreateDataAvailabilityCommentRequest;
+}>;
+
+export type CreateDataAvailabilityCommentViaDispatcherData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
+};
+
+export type Erc20Fields = {
+  __typename: 'Erc20';
+  name: string;
+  symbol: string;
+  decimals: number;
+  address: string;
+};
+
+export type Erc20AmountFields = { __typename: 'Erc20Amount'; value: string; asset: Erc20Fields };
+
+export type ModuleFeeAmount = { __typename: 'ModuleFeeAmount'; value: string; asset: Erc20Fields };
+
+export type AaveFeeCollectModuleSettings = {
+  __typename: 'AaveFeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmount;
+};
+
+export type Erc4626FeeCollectModuleSettings = {
+  __typename: 'ERC4626FeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  vault: string;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmount;
+};
+
+export type MultirecipientFeeCollectModuleSettings = {
+  __typename: 'MultirecipientFeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  referralFee: number;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  amount: ModuleFeeAmount;
+  recipients: Array<{ recipient: EthereumAddress; split: number }>;
+};
+
+export type UnknownCollectModuleSettings = {
+  __typename: 'UnknownCollectModuleSettings';
+  contractAddress: string;
+  collectModuleReturnData: string;
+};
+
+export type FreeCollectModuleSettings = {
+  __typename: 'FreeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+};
+
+export type FeeCollectModuleSettings = {
+  __typename: 'FeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  amount: ModuleFeeAmount;
+};
+
+export type LimitedFeeCollectModuleSettings = {
+  __typename: 'LimitedFeeCollectModuleSettings';
+  collectLimit: string;
+  contractAddress: string;
+  followerOnly: boolean;
+  recipient: EthereumAddress;
+  referralFee: number;
+  amount: ModuleFeeAmount;
+};
+
+export type LimitedTimedFeeCollectModuleSettings = {
+  __typename: 'LimitedTimedFeeCollectModuleSettings';
+  collectLimit: string;
+  contractAddress: string;
+  followerOnly: boolean;
+  endTimestamp: string;
+  recipient: EthereumAddress;
+  referralFee: number;
+  amount: ModuleFeeAmount;
+};
+
+export type RevertCollectModuleSettings = {
+  __typename: 'RevertCollectModuleSettings';
+  contractAddress: string;
+};
+
+export type TimedFeeCollectModuleSettings = {
+  __typename: 'TimedFeeCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  endTimestamp: string;
+  recipient: EthereumAddress;
+  referralFee: number;
+  amount: ModuleFeeAmount;
+};
+
+export type SimpleCollectModuleSettings = {
+  __typename: 'SimpleCollectModuleSettings';
+  contractAddress: string;
+  followerOnly: boolean;
+  collectLimitOptional: string | null;
+  endTimestampOptional: string | null;
+  feeOptional: { referralFee: number; recipient: EthereumAddress; amount: ModuleFeeAmount } | null;
+};
+
+export type Wallet = {
+  __typename: 'Wallet';
+  address: EthereumAddress;
+  defaultProfile: Profile | null;
+};
+
+export type Media = {
+  __typename: 'Media';
+  altTag: string | null;
+  cover: Url | null;
+  mimeType: string | null;
+  url: Url;
+};
+
+export type MediaSet = { __typename: 'MediaSet'; original: Media };
+
+export type MetadataOutput = {
+  __typename: 'MetadataOutput';
+  animatedUrl: Url | null;
+  content: string | null;
+  contentWarning: PublicationContentWarning | null;
+  description: string | null;
+  image: Url | null;
+  locale: string | null;
+  mainContentFocus: PublicationMainFocus;
+  name: string | null;
+  tags: Array<string>;
+  media: Array<MediaSet>;
+  attributes: Array<MetadataAttributeOutput>;
+  encryptionParams: EncryptionParamsOutput | null;
+};
+
+export type MetadataAttributeOutput = {
+  __typename: 'MetadataAttributeOutput';
+  traitType: string | null;
+  value: string | null;
+};
+
+export type PublicationStats = {
+  __typename: 'PublicationStats';
+  totalAmountOfMirrors: number;
+  totalUpvotes: number;
+  totalDownvotes: number;
+  totalAmountOfCollects: number;
+  totalAmountOfComments: number;
+  commentsCount: number;
+};
+
+export type MirrorBase = {
+  __typename: 'Mirror';
+  id: PublicationId;
+  createdAt: string;
+  hidden: boolean;
+  profile: Profile;
+};
+
+export type Mirror = { __typename: 'Mirror'; mirrorOf: Comment | Post } & MirrorBase;
+
+export type FollowOnlyReferenceModuleSettings = {
+  __typename: 'FollowOnlyReferenceModuleSettings';
+  contractAddress: string;
+};
+
+export type DegreesOfSeparationReferenceModuleSettings = {
+  __typename: 'DegreesOfSeparationReferenceModuleSettings';
+  contractAddress: string;
+  commentsRestricted: boolean;
+  degreesOfSeparation: number;
+  mirrorsRestricted: boolean;
+};
+
+export type UnknownReferenceModuleSettings = {
+  __typename: 'UnknownReferenceModuleSettings';
+  contractAddress: string;
+  referenceModuleReturnData: string;
+};
+
+export type CommentBase = {
+  __typename: 'Comment';
+  id: PublicationId;
+  collectNftAddress: string | null;
+  createdAt: string;
+  hidden: boolean;
+  isGated: boolean;
+  reaction: ReactionTypes | null;
+  hasCollectedByMe: boolean;
+  mirrors: Array<PublicationId>;
+  hasOptimisticCollectedByMe: boolean;
+  isOptimisticMirroredByMe: boolean;
+  isMirroredByMe: boolean;
+  collectPolicy: CollectPolicy;
+  referencePolicy: ReferencePolicy;
+  decryptionCriteria: DecryptionCriteria | null;
+  contentInsight: ContentInsight;
+  stats: PublicationStats;
+  metadata: MetadataOutput;
+  profile: Profile;
+  collectedBy: Wallet | null;
+  collectModule:
+    | AaveFeeCollectModuleSettings
+    | Erc4626FeeCollectModuleSettings
+    | FeeCollectModuleSettings
+    | FreeCollectModuleSettings
+    | LimitedFeeCollectModuleSettings
+    | LimitedTimedFeeCollectModuleSettings
+    | MultirecipientFeeCollectModuleSettings
+    | RevertCollectModuleSettings
+    | SimpleCollectModuleSettings
+    | TimedFeeCollectModuleSettings
+    | UnknownCollectModuleSettings;
+  referenceModule:
+    | DegreesOfSeparationReferenceModuleSettings
+    | FollowOnlyReferenceModuleSettings
+    | UnknownReferenceModuleSettings
+    | null;
+  canComment: { result: boolean };
+  canMirror: { result: boolean };
+  canObserverDecrypt: { result: boolean; reasons: Array<DecryptFailReason> | null };
+};
+
+export type CommonPaginatedResultInfo = {
+  __typename: 'PaginatedResultInfo';
+  prev: string | null;
+  next: string | null;
+  totalCount: number | null;
+};
+
+export type Comment = {
+  __typename: 'Comment';
+  commentOn: CommentBase | MirrorBase | Post | null;
+  mainPost: MirrorBase | Post;
+  firstComment: CommentBase | null;
+} & CommentBase;
+
+export type Post = {
+  __typename: 'Post';
+  id: PublicationId;
+  collectNftAddress: string | null;
+  createdAt: string;
+  hidden: boolean;
+  isGated: boolean;
+  reaction: ReactionTypes | null;
+  hasCollectedByMe: boolean;
+  mirrors: Array<PublicationId>;
+  hasOptimisticCollectedByMe: boolean;
+  isOptimisticMirroredByMe: boolean;
+  isMirroredByMe: boolean;
+  collectPolicy: CollectPolicy;
+  referencePolicy: ReferencePolicy;
+  decryptionCriteria: DecryptionCriteria | null;
+  contentInsight: ContentInsight;
+  stats: PublicationStats;
+  metadata: MetadataOutput;
+  profile: Profile;
+  collectedBy: Wallet | null;
+  collectModule:
+    | AaveFeeCollectModuleSettings
+    | Erc4626FeeCollectModuleSettings
+    | FeeCollectModuleSettings
+    | FreeCollectModuleSettings
+    | LimitedFeeCollectModuleSettings
+    | LimitedTimedFeeCollectModuleSettings
+    | MultirecipientFeeCollectModuleSettings
+    | RevertCollectModuleSettings
+    | SimpleCollectModuleSettings
+    | TimedFeeCollectModuleSettings
+    | UnknownCollectModuleSettings;
+  referenceModule:
+    | DegreesOfSeparationReferenceModuleSettings
+    | FollowOnlyReferenceModuleSettings
+    | UnknownReferenceModuleSettings
+    | null;
+  canComment: { result: boolean };
+  canMirror: { result: boolean };
+  canObserverDecrypt: { result: boolean; reasons: Array<DecryptFailReason> | null };
+};
+
+export type PendingPost = {
+  __typename: 'PendingPost';
+  id: string;
+  content: string | null;
+  locale: string;
+  mainContentFocus: PublicationMainFocus;
+  media: Array<Media> | null;
+  profile: Profile;
+};
+
+export type Eip712TypedDataDomain = {
+  __typename: 'EIP712TypedDataDomain';
+  name: string;
+  chainId: number;
+  version: string;
+  verifyingContract: string;
+};
+
+export type EnabledModuleCurrenciesVariables = Exact<{ [key: string]: never }>;
+
+export type EnabledModuleCurrenciesData = { result: Array<Erc20Fields> };
+
+export type ElectedMirror = {
+  __typename: 'ElectedMirror';
+  mirrorId: PublicationId;
+  timestamp: string;
+  profile: Profile;
+};
+
+export type MirrorEvent = { __typename: 'MirrorEvent'; timestamp: string; profile: Profile };
+
+export type CollectedEvent = { __typename: 'CollectedEvent'; timestamp: string; profile: Profile };
+
+export type ReactionEvent = {
+  __typename: 'ReactionEvent';
+  reaction: ReactionTypes;
+  timestamp: string;
+  profile: Profile;
+};
+
+export type FeedItem = {
+  __typename: 'FeedItem';
+  root: Comment | Post;
+  comments: Array<Comment> | null;
+  electedMirror: ElectedMirror | null;
+  mirrors: Array<MirrorEvent>;
+  collects: Array<CollectedEvent>;
+  reactions: Array<ReactionEvent>;
+};
+
+export type FeedVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  restrictEventTypesTo?: InputMaybe<Array<FeedEventItemType> | FeedEventItemType>;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+}>;
+
+export type FeedData = { result: { items: Array<FeedItem>; pageInfo: CommonPaginatedResultInfo } };
+
+export type ExploreProfilesVariables = Exact<{
+  sortCriteria: ProfileSortCriteria;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type ExploreProfilesData = {
+  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type CreateFollowTypedDataVariables = Exact<{
+  request: FollowRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateFollowTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { FollowWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomain;
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileIds: Array<ProfileId>;
+        datas: Array<string>;
+      };
+    };
+  };
+};
+
+export type NftOwnershipOutput = {
+  __typename: 'NftOwnershipOutput';
+  contractAddress: string;
+  chainID: number;
+  contractType: ContractType;
+  tokenIds: Array<string> | null;
+};
+
+export type Erc20OwnershipOutput = {
+  __typename: 'Erc20OwnershipOutput';
+  amount: string;
+  chainID: number;
+  condition: ScalarOperator;
+  contractAddress: string;
+  decimals: number;
+  name: string;
+  symbol: string;
+};
+
+export type EoaOwnershipOutput = { __typename: 'EoaOwnershipOutput'; address: EthereumAddress };
+
+export type ProfileOwnershipOutput = { __typename: 'ProfileOwnershipOutput'; profileId: ProfileId };
+
+export type FollowConditionOutput = { __typename: 'FollowConditionOutput'; profileId: ProfileId };
+
+export type CollectConditionOutput = {
+  __typename: 'CollectConditionOutput';
+  publicationId: PublicationId | null;
+  thisPublication: boolean | null;
+};
+
+export type LeafConditionOutput = {
+  __typename: 'AccessConditionOutput';
+  nft: NftOwnershipOutput | null;
+  token: Erc20OwnershipOutput | null;
+  eoa: EoaOwnershipOutput | null;
+  profile: ProfileOwnershipOutput | null;
+  follow: FollowConditionOutput | null;
+  collect: CollectConditionOutput | null;
+};
+
+export type OrConditionOutput = {
+  __typename: 'OrConditionOutput';
+  criteria: Array<LeafConditionOutput>;
+};
+
+export type AndConditionOutput = {
+  __typename: 'AndConditionOutput';
+  criteria: Array<LeafConditionOutput>;
+};
+
+export type AnyConditionOutput = {
+  __typename: 'AccessConditionOutput';
+  or: OrConditionOutput | null;
+  and: AndConditionOutput | null;
+} & LeafConditionOutput;
+
+export type RootConditionOutput = {
+  __typename: 'AccessConditionOutput';
+  or: { criteria: Array<AnyConditionOutput> } | null;
+};
+
+export type EncryptedMedia = {
+  __typename: 'EncryptedMedia';
+  altTag: string | null;
+  cover: string | null;
+  mimeType: string | null;
+  url: Url;
+};
+
+export type EncryptedMediaSet = { __typename: 'EncryptedMediaSet'; original: EncryptedMedia };
+
+export type EncryptedFieldsOutput = {
+  __typename: 'EncryptedFieldsOutput';
+  animation_url: string | null;
+  content: string | null;
+  external_url: string | null;
+  image: string | null;
+  media: Array<{ original: EncryptedMedia }> | null;
+};
+
+export type EncryptionParamsOutput = {
+  __typename: 'EncryptionParamsOutput';
+  encryptionProvider: EncryptionProvider;
+  accessCondition: RootConditionOutput;
+  encryptedFields: EncryptedFieldsOutput;
+  providerSpecificParams: { encryptionKey: ContentEncryptionKey };
+};
+
+export type CreateMirrorEip712TypedData = {
+  types: { MirrorWithSig: Array<{ name: string; type: string }> };
+  domain: Eip712TypedDataDomain;
+  value: {
+    nonce: number;
+    deadline: unknown;
+    profileId: ProfileId;
+    profileIdPointed: ProfileId;
+    pubIdPointed: string;
+    referenceModuleData: string;
+    referenceModule: string;
+    referenceModuleInitData: string;
+  };
+};
+
+export type CreateMirrorTypedDataVariables = Exact<{
+  request: CreateMirrorRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateMirrorTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreateMirrorEip712TypedData };
+};
+
+export type CreateMirrorViaDispatcherVariables = Exact<{
+  request: CreateMirrorRequest;
+}>;
+
+export type CreateMirrorViaDispatcherData = {
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type CreateDataAvailabilityMirrorTypedDataVariables = Exact<{
+  request: CreateDataAvailabilityMirrorRequest;
+}>;
+
+export type CreateDataAvailabilityMirrorTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreateMirrorEip712TypedData };
+};
+
+export type CreateDataAvailabilityMirrorViaDispatcherVariables = Exact<{
+  request: CreateDataAvailabilityMirrorRequest;
+}>;
+
+export type CreateDataAvailabilityMirrorViaDispatcherData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
+};
+
+export type ModuleInfo = { __typename: 'ModuleInfo'; name: string; type: string };
+
+export type EnabledModule = {
+  __typename: 'EnabledModule';
+  moduleName: string;
+  contractAddress: string;
+  inputParams: Array<ModuleInfo>;
+  redeemParams: Array<ModuleInfo>;
+  returnDataParams: Array<ModuleInfo>;
+};
+
+export type EnabledModules = {
+  __typename: 'EnabledModules';
+  collectModules: Array<EnabledModule>;
+  followModules: Array<EnabledModule>;
+  referenceModules: Array<EnabledModule>;
+};
+
+export type EnabledModulesVariables = Exact<{ [key: string]: never }>;
+
+export type EnabledModulesData = { result: EnabledModules };
+
+export type NewFollowerNotification = {
+  __typename: 'NewFollowerNotification';
+  notificationId: string;
+  createdAt: string;
+  isFollowedByMe: boolean;
+  wallet: Wallet;
+};
+
+export type NewCollectNotification = {
+  __typename: 'NewCollectNotification';
+  notificationId: string;
+  createdAt: string;
+  wallet: Wallet;
+  collectedPublication: Comment | Mirror | Post;
+};
+
+export type NewMirrorNotification = {
+  __typename: 'NewMirrorNotification';
+  notificationId: string;
+  createdAt: string;
+  profile: Profile;
+  publication: Comment | Post;
+};
+
+export type NewCommentNotification = {
+  __typename: 'NewCommentNotification';
+  notificationId: string;
+  createdAt: string;
+  profile: Profile;
+  comment: Comment;
+};
+
+export type NewMentionNotification = {
+  __typename: 'NewMentionNotification';
+  notificationId: string;
+  createdAt: string;
+  mentionPublication: Comment | Post;
+};
+
+export type NewReactionNotification = {
+  __typename: 'NewReactionNotification';
+  notificationId: string;
+  createdAt: string;
+  reaction: ReactionTypes;
+  profile: Profile;
+  publication: Comment | Mirror | Post;
+};
+
+export type NotificationsVariables = Exact<{
+  observerId: Scalars['ProfileId'];
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
+}>;
+
+export type NotificationsData = {
+  result: {
+    items: Array<
+      | NewCollectNotification
+      | NewCommentNotification
+      | NewFollowerNotification
+      | NewMentionNotification
+      | NewMirrorNotification
+      | NewReactionNotification
+    >;
+    pageInfo: CommonPaginatedResultInfo;
+  };
+};
+
+export type UnreadNotificationCountVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
+}>;
+
+export type UnreadNotificationCountData = { result: { pageInfo: { totalCount: number | null } } };
+
+export type CreatePostEip712TypedData = {
+  types: { PostWithSig: Array<{ name: string; type: string }> };
+  domain: Eip712TypedDataDomain;
+  value: {
+    nonce: number;
+    deadline: unknown;
+    profileId: ProfileId;
+    contentURI: Url;
+    collectModule: string;
+    collectModuleInitData: string;
+    referenceModule: string;
+    referenceModuleInitData: string;
+  };
+};
+
+export type CreatePostTypedDataVariables = Exact<{
+  request: CreatePublicPostRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreatePostTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreatePostEip712TypedData };
+};
+
+export type CreatePostViaDispatcherVariables = Exact<{
+  request: CreatePublicPostRequest;
+}>;
+
+export type CreatePostViaDispatcherData = {
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type CreateDataAvailabilityPostTypedDataVariables = Exact<{
+  request: CreateDataAvailabilityPostRequest;
+}>;
+
+export type CreateDataAvailabilityPostTypedDataData = {
+  result: { id: string; expiresAt: string; typedData: CreatePostEip712TypedData };
+};
+
+export type CreateDataAvailabilityPostViaDispatcherVariables = Exact<{
+  request: CreateDataAvailabilityPostRequest;
+}>;
+
+export type CreateDataAvailabilityPostViaDispatcherData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
+};
+
+export type CreateSetDispatcherTypedDataVariables = Exact<{
+  request: SetDispatcherRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateSetDispatcherTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { SetDispatcherWithSig: Array<{ name: string; type: string }> };
+      domain: { name: string; chainId: number; version: string; verifyingContract: string };
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileId: ProfileId;
+        dispatcher: EthereumAddress;
+      };
+    };
+  };
+};
+
+export type FeeFollowModuleSettings = {
+  __typename: 'FeeFollowModuleSettings';
+  contractAddress: string;
+  recipient: EthereumAddress;
+  amount: ModuleFeeAmount;
+};
+
+export type ProfileFollowModuleSettings = {
+  __typename: 'ProfileFollowModuleSettings';
+  contractAddress: string;
+};
+
+export type RevertFollowModuleSettings = {
+  __typename: 'RevertFollowModuleSettings';
+  contractAddress: string;
+};
+
+export type UnknownFollowModuleSettings = {
+  __typename: 'UnknownFollowModuleSettings';
+  contractAddress: string;
+};
+
+export type NftImage = {
+  __typename: 'NftImage';
+  contractAddress: string;
+  tokenId: string;
+  uri: Url;
+  verified: boolean;
+};
+
+export type Attribute = {
+  __typename: 'Attribute';
+  displayType: string | null;
+  key: string;
+  value: string;
+};
+
+export type ProfileStats = {
+  __typename: 'ProfileStats';
+  totalCollects: number;
+  totalComments: number;
+  totalFollowers: number;
+  totalFollowing: number;
+  totalMirrors: number;
+  totalPosts: number;
+  totalPublications: number;
+  commentsCount: number;
+  postsCount: number;
+  mirrorsCount: number;
+};
+
+export type Profile = {
+  __typename: 'Profile';
+  id: ProfileId;
+  name: string | null;
+  bio: string | null;
+  handle: string;
+  ownedBy: EthereumAddress;
+  interests: Array<string> | null;
+  followPolicy: FollowPolicy;
+  isFollowedByMe: boolean;
+  followStatus: FollowStatus | null;
+  ownedByMe: boolean;
+  attributes: ProfileAttributes;
+  isFollowingObserver: boolean;
+  picture: MediaSet | NftImage | null;
+  coverPicture: MediaSet | NftImage | null;
+  stats: ProfileStats;
+  followModule:
+    | FeeFollowModuleSettings
+    | ProfileFollowModuleSettings
+    | RevertFollowModuleSettings
+    | UnknownFollowModuleSettings
+    | null;
+  __attributes: Array<Attribute> | null;
+  dispatcher: { address: EthereumAddress; canUseRelay: boolean } | null;
+  onChainIdentity: {
+    proofOfHumanity: boolean;
+    ens: { name: unknown | null } | null;
+    sybilDotOrg: { verified: boolean; source: { twitter: { handle: string | null } } };
+    worldcoin: { isHuman: boolean };
+  };
+};
+
+export type ProfilesToFollowVariables = Exact<{
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type ProfilesToFollowData = { result: Array<Profile> };
+
+export type GetProfileVariables = Exact<{
+  request: SingleProfileQueryRequest;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+}>;
+
+export type GetProfileData = { result: Profile | null };
+
+export type GetAllProfilesVariables = Exact<{
+  byProfileIds?: InputMaybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
+  byHandles?: InputMaybe<Array<Scalars['Handle']> | Scalars['Handle']>;
+  byOwnerAddresses?: InputMaybe<Array<Scalars['EthereumAddress']> | Scalars['EthereumAddress']>;
+  byWhoMirroredPublicationId?: InputMaybe<Scalars['InternalPublicationId']>;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+}>;
+
+export type GetAllProfilesData = {
+  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type CreateProfileVariables = Exact<{
+  request: CreateProfileRequest;
+}>;
+
+export type CreateProfileData = {
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type MutualFollowersProfilesVariables = Exact<{
+  observerId: Scalars['ProfileId'];
+  viewingProfileId: Scalars['ProfileId'];
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type MutualFollowersProfilesData = {
+  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type CreateSetFollowModuleTypedDataVariables = Exact<{
+  request: CreateSetFollowModuleRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateSetFollowModuleTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { SetFollowModuleWithSig: Array<{ name: string; type: string }> };
+      domain: { name: string; chainId: number; version: string; verifyingContract: string };
+      value: {
+        nonce: number;
+        deadline: unknown;
+        profileId: ProfileId;
+        followModule: string;
+        followModuleInitData: string;
+      };
+    };
+  };
+};
+
+export type CreateSetProfileImageUriTypedDataVariables = Exact<{
+  request: UpdateProfileImageRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateSetProfileImageUriTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { SetProfileImageURIWithSig: Array<{ name: string; type: string }> };
+      domain: { name: string; chainId: number; version: string; verifyingContract: string };
+      value: { nonce: number; deadline: unknown; profileId: ProfileId; imageURI: Url };
+    };
+  };
+};
+
+export type CreateSetProfileImageUriViaDispatcherVariables = Exact<{
+  request: UpdateProfileImageRequest;
+}>;
+
+export type CreateSetProfileImageUriViaDispatcherData = {
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type CreateSetProfileMetadataTypedDataVariables = Exact<{
+  request: CreatePublicSetProfileMetadataUriRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateSetProfileMetadataTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { SetProfileMetadataURIWithSig: Array<{ name: string; type: string }> };
+      domain: { name: string; chainId: number; version: string; verifyingContract: string };
+      value: { nonce: number; deadline: unknown; profileId: ProfileId; metadata: Url };
+    };
+  };
+};
+
+export type CreateSetProfileMetadataViaDispatcherVariables = Exact<{
+  request: CreatePublicSetProfileMetadataUriRequest;
+}>;
+
+export type CreateSetProfileMetadataViaDispatcherData = {
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type Follower = { __typename: 'Follower'; wallet: Wallet };
+
+export type Following = { __typename: 'Following'; profile: Profile };
+
+export type ProfileFollowersVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type ProfileFollowersData = {
+  result: { items: Array<Follower>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type ProfileFollowingVariables = Exact<{
+  walletAddress: Scalars['EthereumAddress'];
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type ProfileFollowingData = {
+  result: { items: Array<Following>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type ProxyActionStatusResult = {
+  __typename: 'ProxyActionStatusResult';
+  txHash: string;
+  txId: string;
+  status: ProxyActionStatusTypes;
+};
+
+export type ProxyActionError = {
+  __typename: 'ProxyActionError';
+  reason: string;
+  lastKnownTxId: string | null;
+};
+
+export type ProxyActionQueued = { __typename: 'ProxyActionQueued'; queuedAt: string };
+
+export type ProxyActionStatusVariables = Exact<{
+  proxyActionId: Scalars['ProxyActionId'];
+}>;
+
+export type ProxyActionStatusData = {
+  result: ProxyActionError | ProxyActionQueued | ProxyActionStatusResult;
+};
+
+export type ProxyActionVariables = Exact<{
+  request: ProxyActionRequest;
+}>;
+
+export type ProxyActionData = { result: string };
+
+export type GetPublicationVariables = Exact<{
+  request: PublicationQueryRequest;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type GetPublicationData = { result: Comment | Mirror | Post | null };
+
+export type HidePublicationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+}>;
+
+export type HidePublicationData = { hidePublication: void | null };
+
+export type GetPublicationsVariables = Exact<{
+  profileId?: InputMaybe<Scalars['ProfileId']>;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  publicationTypes?: InputMaybe<Array<PublicationTypes> | PublicationTypes>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  commentsOf?: InputMaybe<Scalars['InternalPublicationId']>;
+  walletAddress?: InputMaybe<Scalars['EthereumAddress']>;
+}>;
+
+export type GetPublicationsData = {
+  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type ExplorePublicationsVariables = Exact<{
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  excludeProfileIds?: InputMaybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  publicationTypes?: InputMaybe<Array<PublicationTypes> | PublicationTypes>;
+  sortCriteria: PublicationSortCriteria;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  timestamp?: InputMaybe<Scalars['TimestampScalar']>;
+}>;
+
+export type ExplorePublicationsData = {
+  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type WhoCollectedPublicationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type WhoCollectedPublicationData = {
+  result: { items: Array<Wallet>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type ProfilePublicationsForSaleVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type ProfilePublicationsForSaleData = {
+  result: { items: Array<Comment | Post>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type AddReactionVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  reaction: ReactionTypes;
+  profileId: Scalars['ProfileId'];
+}>;
+
+export type AddReactionData = { addReaction: void | null };
+
+export type RemoveReactionVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  reaction: ReactionTypes;
+  profileId: Scalars['ProfileId'];
+}>;
+
+export type RemoveReactionData = { removeReaction: void | null };
+
+export type WhoReactedResult = {
+  __typename: 'WhoReactedResult';
+  reactionId: unknown;
+  reaction: ReactionTypes;
+  reactionAt: string;
+  profile: Profile;
+};
+
+export type WhoReactedPublicationVariables = Exact<{
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  publicationId: Scalars['InternalPublicationId'];
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type WhoReactedPublicationData = {
+  result: { items: Array<WhoReactedResult>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type ReportPublicationVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  reason: ReportingReasonInputParams;
+  additionalComments?: InputMaybe<Scalars['String']>;
+}>;
+
+export type ReportPublicationData = { reportPublication: void | null };
+
+export type RevenueAggregate = {
+  __typename: 'RevenueAggregate';
+  totalAmount: ClientErc20Amount;
+  __total: Erc20AmountFields;
+};
+
+export type PublicationRevenue = {
+  __typename: 'PublicationRevenue';
+  publication: Comment | Mirror | Post;
+  revenue: RevenueAggregate;
+};
+
+export type GetPublicationRevenueVariables = Exact<{
+  publicationId: Scalars['InternalPublicationId'];
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type GetPublicationRevenueData = { result: PublicationRevenue | null };
+
+export type GetProfilePublicationRevenueVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  publicationTypes?: InputMaybe<Array<PublicationTypes> | PublicationTypes>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type GetProfilePublicationRevenueData = {
+  result: { items: Array<PublicationRevenue>; pageInfo: CommonPaginatedResultInfo };
+};
+
+export type ProfileFollowRevenue = {
+  __typename: 'FollowRevenueResult';
+  revenues: Array<RevenueAggregate>;
+};
+
+export type ProfileFollowRevenueVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+}>;
+
+export type ProfileFollowRevenueData = { result: ProfileFollowRevenue };
+
+export type SearchPublicationsVariables = Exact<{
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  query: Scalars['Search'];
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+}>;
+
+export type SearchPublicationsData = {
+  result:
+    | {
+        __typename: 'PublicationSearchResult';
+        items: Array<Comment | Post>;
+        pageInfo: CommonPaginatedResultInfo;
+      }
+    | {};
+};
+
+export type SearchProfilesVariables = Exact<{
+  limit: Scalars['LimitScalar'];
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  query: Scalars['Search'];
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+}>;
+
+export type SearchProfilesData = {
+  result:
+    | {
+        __typename: 'ProfileSearchResult';
+        items: Array<Profile>;
+        pageInfo: CommonPaginatedResultInfo;
+      }
+    | {};
+};
+
+export type RelayerResult = { __typename: 'RelayerResult'; txHash: string; txId: string };
+
+export type RelayError = { __typename: 'RelayError'; reason: RelayErrorReasons };
+
+type BroadcastOnChainResult_RelayError_ = RelayError;
+
+type BroadcastOnChainResult_RelayerResult_ = RelayerResult;
+
+export type BroadcastOnChainResult =
+  | BroadcastOnChainResult_RelayError_
+  | BroadcastOnChainResult_RelayerResult_;
+
+export type DataAvailabilityPublicationResult = {
+  __typename: 'CreateDataAvailabilityPublicationResult';
+  id: PublicationId;
+  dataAvailabilityId: string;
+};
+
+type BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_ =
+  DataAvailabilityPublicationResult;
+
+type BroadcastOffChainResult_RelayError_ = RelayError;
+
+export type BroadcastOffChainResult =
+  | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+  | BroadcastOffChainResult_RelayError_;
+
+export type TransactionIndexedResult = {
+  __typename: 'TransactionIndexedResult';
+  indexed: boolean;
+  txHash: string;
+};
+
+export type TransactionError = { __typename: 'TransactionError'; reason: TransactionErrorReasons };
+
+export type HasTxHashBeenIndexedVariables = Exact<{
+  request: HasTxHashBeenIndexedRequest;
+}>;
+
+export type HasTxHashBeenIndexedData = { result: TransactionError | TransactionIndexedResult };
+
+export type BroadcastOnChainVariables = Exact<{
+  request: BroadcastRequest;
+}>;
+
+export type BroadcastOnChainData = {
+  result: BroadcastOnChainResult_RelayError_ | BroadcastOnChainResult_RelayerResult_;
+};
+
+export type BroadcastOffChainVariables = Exact<{
+  request: BroadcastRequest;
+}>;
+
+export type BroadcastOffChainData = {
+  result:
+    | BroadcastOffChainResult_CreateDataAvailabilityPublicationResult_
+    | BroadcastOffChainResult_RelayError_;
+};
+
+export type CreateUnfollowTypedDataVariables = Exact<{
+  request: UnfollowRequest;
+}>;
+
+export type CreateUnfollowTypedDataData = {
+  result: {
+    id: string;
+    expiresAt: string;
+    typedData: {
+      types: { BurnWithSig: Array<{ name: string; type: string }> };
+      domain: Eip712TypedDataDomain;
+      value: { nonce: number; deadline: unknown; tokenId: string };
+    };
+  };
+};
+
 export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
     __typename
@@ -714,6 +3760,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
     collectPolicy @client
     referencePolicy @client
     decryptionCriteria @client
+    contentInsight @client
   }
   ${FragmentPublicationStats}
   ${FragmentMetadataOutput}
@@ -819,6 +3866,7 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
     collectPolicy @client
     referencePolicy @client
     decryptionCriteria @client
+    contentInsight @client
   }
   ${FragmentPublicationStats}
   ${FragmentMetadataOutput}
@@ -1372,25 +4420,16 @@ export const AuthChallengeDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useAuthChallenge(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.AuthChallengeData,
-    Operations.AuthChallengeVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<AuthChallengeData, AuthChallengeVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.AuthChallengeData, Operations.AuthChallengeVariables>(
-    AuthChallengeDocument,
-    options,
-  );
+  return Apollo.useQuery<AuthChallengeData, AuthChallengeVariables>(AuthChallengeDocument, options);
 }
 export function useAuthChallengeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.AuthChallengeData,
-    Operations.AuthChallengeVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<AuthChallengeData, AuthChallengeVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.AuthChallengeData, Operations.AuthChallengeVariables>(
+  return Apollo.useLazyQuery<AuthChallengeData, AuthChallengeVariables>(
     AuthChallengeDocument,
     options,
   );
@@ -1398,8 +4437,8 @@ export function useAuthChallengeLazyQuery(
 export type AuthChallengeHookResult = ReturnType<typeof useAuthChallenge>;
 export type AuthChallengeLazyQueryHookResult = ReturnType<typeof useAuthChallengeLazyQuery>;
 export type AuthChallengeQueryResult = Apollo.QueryResult<
-  Operations.AuthChallengeData,
-  Operations.AuthChallengeVariables
+  AuthChallengeData,
+  AuthChallengeVariables
 >;
 export const AuthAuthenticateDocument = /*#__PURE__*/ gql`
   mutation AuthAuthenticate($address: EthereumAddress!, $signature: Signature!) {
@@ -1410,8 +4449,8 @@ export const AuthAuthenticateDocument = /*#__PURE__*/ gql`
   }
 `;
 export type AuthAuthenticateMutationFn = Apollo.MutationFunction<
-  Operations.AuthAuthenticateData,
-  Operations.AuthAuthenticateVariables
+  AuthAuthenticateData,
+  AuthAuthenticateVariables
 >;
 
 /**
@@ -1433,22 +4472,19 @@ export type AuthAuthenticateMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useAuthAuthenticate(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.AuthAuthenticateData,
-    Operations.AuthAuthenticateVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<AuthAuthenticateData, AuthAuthenticateVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<Operations.AuthAuthenticateData, Operations.AuthAuthenticateVariables>(
+  return Apollo.useMutation<AuthAuthenticateData, AuthAuthenticateVariables>(
     AuthAuthenticateDocument,
     options,
   );
 }
 export type AuthAuthenticateHookResult = ReturnType<typeof useAuthAuthenticate>;
-export type AuthAuthenticateMutationResult = Apollo.MutationResult<Operations.AuthAuthenticateData>;
+export type AuthAuthenticateMutationResult = Apollo.MutationResult<AuthAuthenticateData>;
 export type AuthAuthenticateMutationOptions = Apollo.BaseMutationOptions<
-  Operations.AuthAuthenticateData,
-  Operations.AuthAuthenticateVariables
+  AuthAuthenticateData,
+  AuthAuthenticateVariables
 >;
 export const AuthRefreshDocument = /*#__PURE__*/ gql`
   mutation AuthRefresh($refreshToken: Jwt!) {
@@ -1458,10 +4494,7 @@ export const AuthRefreshDocument = /*#__PURE__*/ gql`
     }
   }
 `;
-export type AuthRefreshMutationFn = Apollo.MutationFunction<
-  Operations.AuthRefreshData,
-  Operations.AuthRefreshVariables
->;
+export type AuthRefreshMutationFn = Apollo.MutationFunction<AuthRefreshData, AuthRefreshVariables>;
 
 /**
  * __useAuthRefresh__
@@ -1481,22 +4514,16 @@ export type AuthRefreshMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useAuthRefresh(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.AuthRefreshData,
-    Operations.AuthRefreshVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<AuthRefreshData, AuthRefreshVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<Operations.AuthRefreshData, Operations.AuthRefreshVariables>(
-    AuthRefreshDocument,
-    options,
-  );
+  return Apollo.useMutation<AuthRefreshData, AuthRefreshVariables>(AuthRefreshDocument, options);
 }
 export type AuthRefreshHookResult = ReturnType<typeof useAuthRefresh>;
-export type AuthRefreshMutationResult = Apollo.MutationResult<Operations.AuthRefreshData>;
+export type AuthRefreshMutationResult = Apollo.MutationResult<AuthRefreshData>;
 export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
-  Operations.AuthRefreshData,
-  Operations.AuthRefreshVariables
+  AuthRefreshData,
+  AuthRefreshVariables
 >;
 export const CreateCollectTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: TypedDataOptions) {
@@ -1526,8 +4553,8 @@ export const CreateCollectTypedDataDocument = /*#__PURE__*/ gql`
   ${FragmentEip712TypedDataDomain}
 `;
 export type CreateCollectTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateCollectTypedDataData,
-  Operations.CreateCollectTypedDataVariables
+  CreateCollectTypedDataData,
+  CreateCollectTypedDataVariables
 >;
 
 /**
@@ -1550,22 +4577,22 @@ export type CreateCollectTypedDataMutationFn = Apollo.MutationFunction<
  */
 export function useCreateCollectTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateCollectTypedDataData,
-    Operations.CreateCollectTypedDataVariables
+    CreateCollectTypedDataData,
+    CreateCollectTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.CreateCollectTypedDataData,
-    Operations.CreateCollectTypedDataVariables
-  >(CreateCollectTypedDataDocument, options);
+  return Apollo.useMutation<CreateCollectTypedDataData, CreateCollectTypedDataVariables>(
+    CreateCollectTypedDataDocument,
+    options,
+  );
 }
 export type CreateCollectTypedDataHookResult = ReturnType<typeof useCreateCollectTypedData>;
 export type CreateCollectTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateCollectTypedDataData>;
+  Apollo.MutationResult<CreateCollectTypedDataData>;
 export type CreateCollectTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateCollectTypedDataData,
-  Operations.CreateCollectTypedDataVariables
+  CreateCollectTypedDataData,
+  CreateCollectTypedDataVariables
 >;
 export const CreateCommentTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateCommentTypedData(
@@ -1583,8 +4610,8 @@ export const CreateCommentTypedDataDocument = /*#__PURE__*/ gql`
   ${FragmentCreateCommentEip712TypedData}
 `;
 export type CreateCommentTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateCommentTypedDataData,
-  Operations.CreateCommentTypedDataVariables
+  CreateCommentTypedDataData,
+  CreateCommentTypedDataVariables
 >;
 
 /**
@@ -1607,22 +4634,22 @@ export type CreateCommentTypedDataMutationFn = Apollo.MutationFunction<
  */
 export function useCreateCommentTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateCommentTypedDataData,
-    Operations.CreateCommentTypedDataVariables
+    CreateCommentTypedDataData,
+    CreateCommentTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.CreateCommentTypedDataData,
-    Operations.CreateCommentTypedDataVariables
-  >(CreateCommentTypedDataDocument, options);
+  return Apollo.useMutation<CreateCommentTypedDataData, CreateCommentTypedDataVariables>(
+    CreateCommentTypedDataDocument,
+    options,
+  );
 }
 export type CreateCommentTypedDataHookResult = ReturnType<typeof useCreateCommentTypedData>;
 export type CreateCommentTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateCommentTypedDataData>;
+  Apollo.MutationResult<CreateCommentTypedDataData>;
 export type CreateCommentTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateCommentTypedDataData,
-  Operations.CreateCommentTypedDataVariables
+  CreateCommentTypedDataData,
+  CreateCommentTypedDataVariables
 >;
 export const CreateCommentViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
@@ -1633,8 +4660,8 @@ export const CreateCommentViaDispatcherDocument = /*#__PURE__*/ gql`
   ${FragmentBroadcastOnChainResult}
 `;
 export type CreateCommentViaDispatcherMutationFn = Apollo.MutationFunction<
-  Operations.CreateCommentViaDispatcherData,
-  Operations.CreateCommentViaDispatcherVariables
+  CreateCommentViaDispatcherData,
+  CreateCommentViaDispatcherVariables
 >;
 
 /**
@@ -1656,22 +4683,22 @@ export type CreateCommentViaDispatcherMutationFn = Apollo.MutationFunction<
  */
 export function useCreateCommentViaDispatcher(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateCommentViaDispatcherData,
-    Operations.CreateCommentViaDispatcherVariables
+    CreateCommentViaDispatcherData,
+    CreateCommentViaDispatcherVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.CreateCommentViaDispatcherData,
-    Operations.CreateCommentViaDispatcherVariables
-  >(CreateCommentViaDispatcherDocument, options);
+  return Apollo.useMutation<CreateCommentViaDispatcherData, CreateCommentViaDispatcherVariables>(
+    CreateCommentViaDispatcherDocument,
+    options,
+  );
 }
 export type CreateCommentViaDispatcherHookResult = ReturnType<typeof useCreateCommentViaDispatcher>;
 export type CreateCommentViaDispatcherMutationResult =
-  Apollo.MutationResult<Operations.CreateCommentViaDispatcherData>;
+  Apollo.MutationResult<CreateCommentViaDispatcherData>;
 export type CreateCommentViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateCommentViaDispatcherData,
-  Operations.CreateCommentViaDispatcherVariables
+  CreateCommentViaDispatcherData,
+  CreateCommentViaDispatcherVariables
 >;
 export const CreateDataAvailabilityCommentTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateDataAvailabilityCommentTypedData($request: CreateDataAvailabilityCommentRequest!) {
@@ -1686,8 +4713,8 @@ export const CreateDataAvailabilityCommentTypedDataDocument = /*#__PURE__*/ gql`
   ${FragmentCreateCommentEip712TypedData}
 `;
 export type CreateDataAvailabilityCommentTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateDataAvailabilityCommentTypedDataData,
-  Operations.CreateDataAvailabilityCommentTypedDataVariables
+  CreateDataAvailabilityCommentTypedDataData,
+  CreateDataAvailabilityCommentTypedDataVariables
 >;
 
 /**
@@ -1709,24 +4736,24 @@ export type CreateDataAvailabilityCommentTypedDataMutationFn = Apollo.MutationFu
  */
 export function useCreateDataAvailabilityCommentTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateDataAvailabilityCommentTypedDataData,
-    Operations.CreateDataAvailabilityCommentTypedDataVariables
+    CreateDataAvailabilityCommentTypedDataData,
+    CreateDataAvailabilityCommentTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateDataAvailabilityCommentTypedDataData,
-    Operations.CreateDataAvailabilityCommentTypedDataVariables
+    CreateDataAvailabilityCommentTypedDataData,
+    CreateDataAvailabilityCommentTypedDataVariables
   >(CreateDataAvailabilityCommentTypedDataDocument, options);
 }
 export type CreateDataAvailabilityCommentTypedDataHookResult = ReturnType<
   typeof useCreateDataAvailabilityCommentTypedData
 >;
 export type CreateDataAvailabilityCommentTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateDataAvailabilityCommentTypedDataData>;
+  Apollo.MutationResult<CreateDataAvailabilityCommentTypedDataData>;
 export type CreateDataAvailabilityCommentTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateDataAvailabilityCommentTypedDataData,
-  Operations.CreateDataAvailabilityCommentTypedDataVariables
+  CreateDataAvailabilityCommentTypedDataData,
+  CreateDataAvailabilityCommentTypedDataVariables
 >;
 export const CreateDataAvailabilityCommentViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateDataAvailabilityCommentViaDispatcher(
@@ -1739,8 +4766,8 @@ export const CreateDataAvailabilityCommentViaDispatcherDocument = /*#__PURE__*/ 
   ${FragmentBroadcastOffChainResult}
 `;
 export type CreateDataAvailabilityCommentViaDispatcherMutationFn = Apollo.MutationFunction<
-  Operations.CreateDataAvailabilityCommentViaDispatcherData,
-  Operations.CreateDataAvailabilityCommentViaDispatcherVariables
+  CreateDataAvailabilityCommentViaDispatcherData,
+  CreateDataAvailabilityCommentViaDispatcherVariables
 >;
 
 /**
@@ -1762,24 +4789,24 @@ export type CreateDataAvailabilityCommentViaDispatcherMutationFn = Apollo.Mutati
  */
 export function useCreateDataAvailabilityCommentViaDispatcher(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateDataAvailabilityCommentViaDispatcherData,
-    Operations.CreateDataAvailabilityCommentViaDispatcherVariables
+    CreateDataAvailabilityCommentViaDispatcherData,
+    CreateDataAvailabilityCommentViaDispatcherVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateDataAvailabilityCommentViaDispatcherData,
-    Operations.CreateDataAvailabilityCommentViaDispatcherVariables
+    CreateDataAvailabilityCommentViaDispatcherData,
+    CreateDataAvailabilityCommentViaDispatcherVariables
   >(CreateDataAvailabilityCommentViaDispatcherDocument, options);
 }
 export type CreateDataAvailabilityCommentViaDispatcherHookResult = ReturnType<
   typeof useCreateDataAvailabilityCommentViaDispatcher
 >;
 export type CreateDataAvailabilityCommentViaDispatcherMutationResult =
-  Apollo.MutationResult<Operations.CreateDataAvailabilityCommentViaDispatcherData>;
+  Apollo.MutationResult<CreateDataAvailabilityCommentViaDispatcherData>;
 export type CreateDataAvailabilityCommentViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateDataAvailabilityCommentViaDispatcherData,
-  Operations.CreateDataAvailabilityCommentViaDispatcherVariables
+  CreateDataAvailabilityCommentViaDispatcherData,
+  CreateDataAvailabilityCommentViaDispatcherVariables
 >;
 export const EnabledModuleCurrenciesDocument = /*#__PURE__*/ gql`
   query EnabledModuleCurrencies {
@@ -1807,35 +4834,35 @@ export const EnabledModuleCurrenciesDocument = /*#__PURE__*/ gql`
  */
 export function useEnabledModuleCurrencies(
   baseOptions?: Apollo.QueryHookOptions<
-    Operations.EnabledModuleCurrenciesData,
-    Operations.EnabledModuleCurrenciesVariables
+    EnabledModuleCurrenciesData,
+    EnabledModuleCurrenciesVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.EnabledModuleCurrenciesData,
-    Operations.EnabledModuleCurrenciesVariables
-  >(EnabledModuleCurrenciesDocument, options);
+  return Apollo.useQuery<EnabledModuleCurrenciesData, EnabledModuleCurrenciesVariables>(
+    EnabledModuleCurrenciesDocument,
+    options,
+  );
 }
 export function useEnabledModuleCurrenciesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.EnabledModuleCurrenciesData,
-    Operations.EnabledModuleCurrenciesVariables
+    EnabledModuleCurrenciesData,
+    EnabledModuleCurrenciesVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.EnabledModuleCurrenciesData,
-    Operations.EnabledModuleCurrenciesVariables
-  >(EnabledModuleCurrenciesDocument, options);
+  return Apollo.useLazyQuery<EnabledModuleCurrenciesData, EnabledModuleCurrenciesVariables>(
+    EnabledModuleCurrenciesDocument,
+    options,
+  );
 }
 export type EnabledModuleCurrenciesHookResult = ReturnType<typeof useEnabledModuleCurrencies>;
 export type EnabledModuleCurrenciesLazyQueryHookResult = ReturnType<
   typeof useEnabledModuleCurrenciesLazyQuery
 >;
 export type EnabledModuleCurrenciesQueryResult = Apollo.QueryResult<
-  Operations.EnabledModuleCurrenciesData,
-  Operations.EnabledModuleCurrenciesVariables
+  EnabledModuleCurrenciesData,
+  EnabledModuleCurrenciesVariables
 >;
 export const FeedDocument = /*#__PURE__*/ gql`
   query Feed(
@@ -1891,21 +4918,19 @@ export const FeedDocument = /*#__PURE__*/ gql`
  *   },
  * });
  */
-export function useFeed(
-  baseOptions: Apollo.QueryHookOptions<Operations.FeedData, Operations.FeedVariables>,
-) {
+export function useFeed(baseOptions: Apollo.QueryHookOptions<FeedData, FeedVariables>) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.FeedData, Operations.FeedVariables>(FeedDocument, options);
+  return Apollo.useQuery<FeedData, FeedVariables>(FeedDocument, options);
 }
 export function useFeedLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<Operations.FeedData, Operations.FeedVariables>,
+  baseOptions?: Apollo.LazyQueryHookOptions<FeedData, FeedVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.FeedData, Operations.FeedVariables>(FeedDocument, options);
+  return Apollo.useLazyQuery<FeedData, FeedVariables>(FeedDocument, options);
 }
 export type FeedHookResult = ReturnType<typeof useFeed>;
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
-export type FeedQueryResult = Apollo.QueryResult<Operations.FeedData, Operations.FeedVariables>;
+export type FeedQueryResult = Apollo.QueryResult<FeedData, FeedVariables>;
 export const ExploreProfilesDocument = /*#__PURE__*/ gql`
   query ExploreProfiles(
     $sortCriteria: ProfileSortCriteria!
@@ -1950,25 +4975,19 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useExploreProfiles(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.ExploreProfilesData,
-    Operations.ExploreProfilesVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<ExploreProfilesData, ExploreProfilesVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.ExploreProfilesData, Operations.ExploreProfilesVariables>(
+  return Apollo.useQuery<ExploreProfilesData, ExploreProfilesVariables>(
     ExploreProfilesDocument,
     options,
   );
 }
 export function useExploreProfilesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.ExploreProfilesData,
-    Operations.ExploreProfilesVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<ExploreProfilesData, ExploreProfilesVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.ExploreProfilesData, Operations.ExploreProfilesVariables>(
+  return Apollo.useLazyQuery<ExploreProfilesData, ExploreProfilesVariables>(
     ExploreProfilesDocument,
     options,
   );
@@ -1976,8 +4995,8 @@ export function useExploreProfilesLazyQuery(
 export type ExploreProfilesHookResult = ReturnType<typeof useExploreProfiles>;
 export type ExploreProfilesLazyQueryHookResult = ReturnType<typeof useExploreProfilesLazyQuery>;
 export type ExploreProfilesQueryResult = Apollo.QueryResult<
-  Operations.ExploreProfilesData,
-  Operations.ExploreProfilesVariables
+  ExploreProfilesData,
+  ExploreProfilesVariables
 >;
 export const CreateFollowTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
@@ -2006,8 +5025,8 @@ export const CreateFollowTypedDataDocument = /*#__PURE__*/ gql`
   ${FragmentEip712TypedDataDomain}
 `;
 export type CreateFollowTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateFollowTypedDataData,
-  Operations.CreateFollowTypedDataVariables
+  CreateFollowTypedDataData,
+  CreateFollowTypedDataVariables
 >;
 
 /**
@@ -2030,22 +5049,21 @@ export type CreateFollowTypedDataMutationFn = Apollo.MutationFunction<
  */
 export function useCreateFollowTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateFollowTypedDataData,
-    Operations.CreateFollowTypedDataVariables
+    CreateFollowTypedDataData,
+    CreateFollowTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.CreateFollowTypedDataData,
-    Operations.CreateFollowTypedDataVariables
-  >(CreateFollowTypedDataDocument, options);
+  return Apollo.useMutation<CreateFollowTypedDataData, CreateFollowTypedDataVariables>(
+    CreateFollowTypedDataDocument,
+    options,
+  );
 }
 export type CreateFollowTypedDataHookResult = ReturnType<typeof useCreateFollowTypedData>;
-export type CreateFollowTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateFollowTypedDataData>;
+export type CreateFollowTypedDataMutationResult = Apollo.MutationResult<CreateFollowTypedDataData>;
 export type CreateFollowTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateFollowTypedDataData,
-  Operations.CreateFollowTypedDataVariables
+  CreateFollowTypedDataData,
+  CreateFollowTypedDataVariables
 >;
 export const CreateMirrorTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateMirrorTypedData($request: CreateMirrorRequest!, $options: TypedDataOptions) {
@@ -2060,8 +5078,8 @@ export const CreateMirrorTypedDataDocument = /*#__PURE__*/ gql`
   ${FragmentCreateMirrorEip712TypedData}
 `;
 export type CreateMirrorTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateMirrorTypedDataData,
-  Operations.CreateMirrorTypedDataVariables
+  CreateMirrorTypedDataData,
+  CreateMirrorTypedDataVariables
 >;
 
 /**
@@ -2084,22 +5102,21 @@ export type CreateMirrorTypedDataMutationFn = Apollo.MutationFunction<
  */
 export function useCreateMirrorTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateMirrorTypedDataData,
-    Operations.CreateMirrorTypedDataVariables
+    CreateMirrorTypedDataData,
+    CreateMirrorTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.CreateMirrorTypedDataData,
-    Operations.CreateMirrorTypedDataVariables
-  >(CreateMirrorTypedDataDocument, options);
+  return Apollo.useMutation<CreateMirrorTypedDataData, CreateMirrorTypedDataVariables>(
+    CreateMirrorTypedDataDocument,
+    options,
+  );
 }
 export type CreateMirrorTypedDataHookResult = ReturnType<typeof useCreateMirrorTypedData>;
-export type CreateMirrorTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateMirrorTypedDataData>;
+export type CreateMirrorTypedDataMutationResult = Apollo.MutationResult<CreateMirrorTypedDataData>;
 export type CreateMirrorTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateMirrorTypedDataData,
-  Operations.CreateMirrorTypedDataVariables
+  CreateMirrorTypedDataData,
+  CreateMirrorTypedDataVariables
 >;
 export const CreateMirrorViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
@@ -2110,8 +5127,8 @@ export const CreateMirrorViaDispatcherDocument = /*#__PURE__*/ gql`
   ${FragmentBroadcastOnChainResult}
 `;
 export type CreateMirrorViaDispatcherMutationFn = Apollo.MutationFunction<
-  Operations.CreateMirrorViaDispatcherData,
-  Operations.CreateMirrorViaDispatcherVariables
+  CreateMirrorViaDispatcherData,
+  CreateMirrorViaDispatcherVariables
 >;
 
 /**
@@ -2133,22 +5150,22 @@ export type CreateMirrorViaDispatcherMutationFn = Apollo.MutationFunction<
  */
 export function useCreateMirrorViaDispatcher(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateMirrorViaDispatcherData,
-    Operations.CreateMirrorViaDispatcherVariables
+    CreateMirrorViaDispatcherData,
+    CreateMirrorViaDispatcherVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.CreateMirrorViaDispatcherData,
-    Operations.CreateMirrorViaDispatcherVariables
-  >(CreateMirrorViaDispatcherDocument, options);
+  return Apollo.useMutation<CreateMirrorViaDispatcherData, CreateMirrorViaDispatcherVariables>(
+    CreateMirrorViaDispatcherDocument,
+    options,
+  );
 }
 export type CreateMirrorViaDispatcherHookResult = ReturnType<typeof useCreateMirrorViaDispatcher>;
 export type CreateMirrorViaDispatcherMutationResult =
-  Apollo.MutationResult<Operations.CreateMirrorViaDispatcherData>;
+  Apollo.MutationResult<CreateMirrorViaDispatcherData>;
 export type CreateMirrorViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateMirrorViaDispatcherData,
-  Operations.CreateMirrorViaDispatcherVariables
+  CreateMirrorViaDispatcherData,
+  CreateMirrorViaDispatcherVariables
 >;
 export const CreateDataAvailabilityMirrorTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateDataAvailabilityMirrorTypedData($request: CreateDataAvailabilityMirrorRequest!) {
@@ -2163,8 +5180,8 @@ export const CreateDataAvailabilityMirrorTypedDataDocument = /*#__PURE__*/ gql`
   ${FragmentCreateMirrorEip712TypedData}
 `;
 export type CreateDataAvailabilityMirrorTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateDataAvailabilityMirrorTypedDataData,
-  Operations.CreateDataAvailabilityMirrorTypedDataVariables
+  CreateDataAvailabilityMirrorTypedDataData,
+  CreateDataAvailabilityMirrorTypedDataVariables
 >;
 
 /**
@@ -2186,24 +5203,24 @@ export type CreateDataAvailabilityMirrorTypedDataMutationFn = Apollo.MutationFun
  */
 export function useCreateDataAvailabilityMirrorTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateDataAvailabilityMirrorTypedDataData,
-    Operations.CreateDataAvailabilityMirrorTypedDataVariables
+    CreateDataAvailabilityMirrorTypedDataData,
+    CreateDataAvailabilityMirrorTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateDataAvailabilityMirrorTypedDataData,
-    Operations.CreateDataAvailabilityMirrorTypedDataVariables
+    CreateDataAvailabilityMirrorTypedDataData,
+    CreateDataAvailabilityMirrorTypedDataVariables
   >(CreateDataAvailabilityMirrorTypedDataDocument, options);
 }
 export type CreateDataAvailabilityMirrorTypedDataHookResult = ReturnType<
   typeof useCreateDataAvailabilityMirrorTypedData
 >;
 export type CreateDataAvailabilityMirrorTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateDataAvailabilityMirrorTypedDataData>;
+  Apollo.MutationResult<CreateDataAvailabilityMirrorTypedDataData>;
 export type CreateDataAvailabilityMirrorTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateDataAvailabilityMirrorTypedDataData,
-  Operations.CreateDataAvailabilityMirrorTypedDataVariables
+  CreateDataAvailabilityMirrorTypedDataData,
+  CreateDataAvailabilityMirrorTypedDataVariables
 >;
 export const CreateDataAvailabilityMirrorViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateDataAvailabilityMirrorViaDispatcher(
@@ -2216,8 +5233,8 @@ export const CreateDataAvailabilityMirrorViaDispatcherDocument = /*#__PURE__*/ g
   ${FragmentBroadcastOffChainResult}
 `;
 export type CreateDataAvailabilityMirrorViaDispatcherMutationFn = Apollo.MutationFunction<
-  Operations.CreateDataAvailabilityMirrorViaDispatcherData,
-  Operations.CreateDataAvailabilityMirrorViaDispatcherVariables
+  CreateDataAvailabilityMirrorViaDispatcherData,
+  CreateDataAvailabilityMirrorViaDispatcherVariables
 >;
 
 /**
@@ -2239,24 +5256,24 @@ export type CreateDataAvailabilityMirrorViaDispatcherMutationFn = Apollo.Mutatio
  */
 export function useCreateDataAvailabilityMirrorViaDispatcher(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateDataAvailabilityMirrorViaDispatcherData,
-    Operations.CreateDataAvailabilityMirrorViaDispatcherVariables
+    CreateDataAvailabilityMirrorViaDispatcherData,
+    CreateDataAvailabilityMirrorViaDispatcherVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateDataAvailabilityMirrorViaDispatcherData,
-    Operations.CreateDataAvailabilityMirrorViaDispatcherVariables
+    CreateDataAvailabilityMirrorViaDispatcherData,
+    CreateDataAvailabilityMirrorViaDispatcherVariables
   >(CreateDataAvailabilityMirrorViaDispatcherDocument, options);
 }
 export type CreateDataAvailabilityMirrorViaDispatcherHookResult = ReturnType<
   typeof useCreateDataAvailabilityMirrorViaDispatcher
 >;
 export type CreateDataAvailabilityMirrorViaDispatcherMutationResult =
-  Apollo.MutationResult<Operations.CreateDataAvailabilityMirrorViaDispatcherData>;
+  Apollo.MutationResult<CreateDataAvailabilityMirrorViaDispatcherData>;
 export type CreateDataAvailabilityMirrorViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateDataAvailabilityMirrorViaDispatcherData,
-  Operations.CreateDataAvailabilityMirrorViaDispatcherVariables
+  CreateDataAvailabilityMirrorViaDispatcherData,
+  CreateDataAvailabilityMirrorViaDispatcherVariables
 >;
 export const EnabledModulesDocument = /*#__PURE__*/ gql`
   query EnabledModules {
@@ -2283,25 +5300,19 @@ export const EnabledModulesDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useEnabledModules(
-  baseOptions?: Apollo.QueryHookOptions<
-    Operations.EnabledModulesData,
-    Operations.EnabledModulesVariables
-  >,
+  baseOptions?: Apollo.QueryHookOptions<EnabledModulesData, EnabledModulesVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.EnabledModulesData, Operations.EnabledModulesVariables>(
+  return Apollo.useQuery<EnabledModulesData, EnabledModulesVariables>(
     EnabledModulesDocument,
     options,
   );
 }
 export function useEnabledModulesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.EnabledModulesData,
-    Operations.EnabledModulesVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<EnabledModulesData, EnabledModulesVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.EnabledModulesData, Operations.EnabledModulesVariables>(
+  return Apollo.useLazyQuery<EnabledModulesData, EnabledModulesVariables>(
     EnabledModulesDocument,
     options,
   );
@@ -2309,8 +5320,8 @@ export function useEnabledModulesLazyQuery(
 export type EnabledModulesHookResult = ReturnType<typeof useEnabledModules>;
 export type EnabledModulesLazyQueryHookResult = ReturnType<typeof useEnabledModulesLazyQuery>;
 export type EnabledModulesQueryResult = Apollo.QueryResult<
-  Operations.EnabledModulesData,
-  Operations.EnabledModulesVariables
+  EnabledModulesData,
+  EnabledModulesVariables
 >;
 export const NotificationsDocument = /*#__PURE__*/ gql`
   query Notifications(
@@ -2384,25 +5395,16 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useNotifications(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.NotificationsData,
-    Operations.NotificationsVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<NotificationsData, NotificationsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.NotificationsData, Operations.NotificationsVariables>(
-    NotificationsDocument,
-    options,
-  );
+  return Apollo.useQuery<NotificationsData, NotificationsVariables>(NotificationsDocument, options);
 }
 export function useNotificationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.NotificationsData,
-    Operations.NotificationsVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<NotificationsData, NotificationsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.NotificationsData, Operations.NotificationsVariables>(
+  return Apollo.useLazyQuery<NotificationsData, NotificationsVariables>(
     NotificationsDocument,
     options,
   );
@@ -2410,8 +5412,8 @@ export function useNotificationsLazyQuery(
 export type NotificationsHookResult = ReturnType<typeof useNotifications>;
 export type NotificationsLazyQueryHookResult = ReturnType<typeof useNotificationsLazyQuery>;
 export type NotificationsQueryResult = Apollo.QueryResult<
-  Operations.NotificationsData,
-  Operations.NotificationsVariables
+  NotificationsData,
+  NotificationsVariables
 >;
 export const UnreadNotificationCountDocument = /*#__PURE__*/ gql`
   query UnreadNotificationCount(
@@ -2449,35 +5451,35 @@ export const UnreadNotificationCountDocument = /*#__PURE__*/ gql`
  */
 export function useUnreadNotificationCount(
   baseOptions: Apollo.QueryHookOptions<
-    Operations.UnreadNotificationCountData,
-    Operations.UnreadNotificationCountVariables
+    UnreadNotificationCountData,
+    UnreadNotificationCountVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.UnreadNotificationCountData,
-    Operations.UnreadNotificationCountVariables
-  >(UnreadNotificationCountDocument, options);
+  return Apollo.useQuery<UnreadNotificationCountData, UnreadNotificationCountVariables>(
+    UnreadNotificationCountDocument,
+    options,
+  );
 }
 export function useUnreadNotificationCountLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.UnreadNotificationCountData,
-    Operations.UnreadNotificationCountVariables
+    UnreadNotificationCountData,
+    UnreadNotificationCountVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.UnreadNotificationCountData,
-    Operations.UnreadNotificationCountVariables
-  >(UnreadNotificationCountDocument, options);
+  return Apollo.useLazyQuery<UnreadNotificationCountData, UnreadNotificationCountVariables>(
+    UnreadNotificationCountDocument,
+    options,
+  );
 }
 export type UnreadNotificationCountHookResult = ReturnType<typeof useUnreadNotificationCount>;
 export type UnreadNotificationCountLazyQueryHookResult = ReturnType<
   typeof useUnreadNotificationCountLazyQuery
 >;
 export type UnreadNotificationCountQueryResult = Apollo.QueryResult<
-  Operations.UnreadNotificationCountData,
-  Operations.UnreadNotificationCountVariables
+  UnreadNotificationCountData,
+  UnreadNotificationCountVariables
 >;
 export const CreatePostTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
@@ -2492,8 +5494,8 @@ export const CreatePostTypedDataDocument = /*#__PURE__*/ gql`
   ${FragmentCreatePostEip712TypedData}
 `;
 export type CreatePostTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreatePostTypedDataData,
-  Operations.CreatePostTypedDataVariables
+  CreatePostTypedDataData,
+  CreatePostTypedDataVariables
 >;
 
 /**
@@ -2515,23 +5517,19 @@ export type CreatePostTypedDataMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useCreatePostTypedData(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreatePostTypedDataData,
-    Operations.CreatePostTypedDataVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<CreatePostTypedDataData, CreatePostTypedDataVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.CreatePostTypedDataData,
-    Operations.CreatePostTypedDataVariables
-  >(CreatePostTypedDataDocument, options);
+  return Apollo.useMutation<CreatePostTypedDataData, CreatePostTypedDataVariables>(
+    CreatePostTypedDataDocument,
+    options,
+  );
 }
 export type CreatePostTypedDataHookResult = ReturnType<typeof useCreatePostTypedData>;
-export type CreatePostTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreatePostTypedDataData>;
+export type CreatePostTypedDataMutationResult = Apollo.MutationResult<CreatePostTypedDataData>;
 export type CreatePostTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreatePostTypedDataData,
-  Operations.CreatePostTypedDataVariables
+  CreatePostTypedDataData,
+  CreatePostTypedDataVariables
 >;
 export const CreatePostViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreatePostViaDispatcher($request: CreatePublicPostRequest!) {
@@ -2542,8 +5540,8 @@ export const CreatePostViaDispatcherDocument = /*#__PURE__*/ gql`
   ${FragmentBroadcastOnChainResult}
 `;
 export type CreatePostViaDispatcherMutationFn = Apollo.MutationFunction<
-  Operations.CreatePostViaDispatcherData,
-  Operations.CreatePostViaDispatcherVariables
+  CreatePostViaDispatcherData,
+  CreatePostViaDispatcherVariables
 >;
 
 /**
@@ -2565,22 +5563,22 @@ export type CreatePostViaDispatcherMutationFn = Apollo.MutationFunction<
  */
 export function useCreatePostViaDispatcher(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreatePostViaDispatcherData,
-    Operations.CreatePostViaDispatcherVariables
+    CreatePostViaDispatcherData,
+    CreatePostViaDispatcherVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.CreatePostViaDispatcherData,
-    Operations.CreatePostViaDispatcherVariables
-  >(CreatePostViaDispatcherDocument, options);
+  return Apollo.useMutation<CreatePostViaDispatcherData, CreatePostViaDispatcherVariables>(
+    CreatePostViaDispatcherDocument,
+    options,
+  );
 }
 export type CreatePostViaDispatcherHookResult = ReturnType<typeof useCreatePostViaDispatcher>;
 export type CreatePostViaDispatcherMutationResult =
-  Apollo.MutationResult<Operations.CreatePostViaDispatcherData>;
+  Apollo.MutationResult<CreatePostViaDispatcherData>;
 export type CreatePostViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreatePostViaDispatcherData,
-  Operations.CreatePostViaDispatcherVariables
+  CreatePostViaDispatcherData,
+  CreatePostViaDispatcherVariables
 >;
 export const CreateDataAvailabilityPostTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateDataAvailabilityPostTypedData($request: CreateDataAvailabilityPostRequest!) {
@@ -2595,8 +5593,8 @@ export const CreateDataAvailabilityPostTypedDataDocument = /*#__PURE__*/ gql`
   ${FragmentCreatePostEip712TypedData}
 `;
 export type CreateDataAvailabilityPostTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateDataAvailabilityPostTypedDataData,
-  Operations.CreateDataAvailabilityPostTypedDataVariables
+  CreateDataAvailabilityPostTypedDataData,
+  CreateDataAvailabilityPostTypedDataVariables
 >;
 
 /**
@@ -2618,24 +5616,24 @@ export type CreateDataAvailabilityPostTypedDataMutationFn = Apollo.MutationFunct
  */
 export function useCreateDataAvailabilityPostTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateDataAvailabilityPostTypedDataData,
-    Operations.CreateDataAvailabilityPostTypedDataVariables
+    CreateDataAvailabilityPostTypedDataData,
+    CreateDataAvailabilityPostTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateDataAvailabilityPostTypedDataData,
-    Operations.CreateDataAvailabilityPostTypedDataVariables
+    CreateDataAvailabilityPostTypedDataData,
+    CreateDataAvailabilityPostTypedDataVariables
   >(CreateDataAvailabilityPostTypedDataDocument, options);
 }
 export type CreateDataAvailabilityPostTypedDataHookResult = ReturnType<
   typeof useCreateDataAvailabilityPostTypedData
 >;
 export type CreateDataAvailabilityPostTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateDataAvailabilityPostTypedDataData>;
+  Apollo.MutationResult<CreateDataAvailabilityPostTypedDataData>;
 export type CreateDataAvailabilityPostTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateDataAvailabilityPostTypedDataData,
-  Operations.CreateDataAvailabilityPostTypedDataVariables
+  CreateDataAvailabilityPostTypedDataData,
+  CreateDataAvailabilityPostTypedDataVariables
 >;
 export const CreateDataAvailabilityPostViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateDataAvailabilityPostViaDispatcher($request: CreateDataAvailabilityPostRequest!) {
@@ -2646,8 +5644,8 @@ export const CreateDataAvailabilityPostViaDispatcherDocument = /*#__PURE__*/ gql
   ${FragmentBroadcastOffChainResult}
 `;
 export type CreateDataAvailabilityPostViaDispatcherMutationFn = Apollo.MutationFunction<
-  Operations.CreateDataAvailabilityPostViaDispatcherData,
-  Operations.CreateDataAvailabilityPostViaDispatcherVariables
+  CreateDataAvailabilityPostViaDispatcherData,
+  CreateDataAvailabilityPostViaDispatcherVariables
 >;
 
 /**
@@ -2669,24 +5667,24 @@ export type CreateDataAvailabilityPostViaDispatcherMutationFn = Apollo.MutationF
  */
 export function useCreateDataAvailabilityPostViaDispatcher(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateDataAvailabilityPostViaDispatcherData,
-    Operations.CreateDataAvailabilityPostViaDispatcherVariables
+    CreateDataAvailabilityPostViaDispatcherData,
+    CreateDataAvailabilityPostViaDispatcherVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateDataAvailabilityPostViaDispatcherData,
-    Operations.CreateDataAvailabilityPostViaDispatcherVariables
+    CreateDataAvailabilityPostViaDispatcherData,
+    CreateDataAvailabilityPostViaDispatcherVariables
   >(CreateDataAvailabilityPostViaDispatcherDocument, options);
 }
 export type CreateDataAvailabilityPostViaDispatcherHookResult = ReturnType<
   typeof useCreateDataAvailabilityPostViaDispatcher
 >;
 export type CreateDataAvailabilityPostViaDispatcherMutationResult =
-  Apollo.MutationResult<Operations.CreateDataAvailabilityPostViaDispatcherData>;
+  Apollo.MutationResult<CreateDataAvailabilityPostViaDispatcherData>;
 export type CreateDataAvailabilityPostViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateDataAvailabilityPostViaDispatcherData,
-  Operations.CreateDataAvailabilityPostViaDispatcherVariables
+  CreateDataAvailabilityPostViaDispatcherData,
+  CreateDataAvailabilityPostViaDispatcherVariables
 >;
 export const CreateSetDispatcherTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateSetDispatcherTypedData(
@@ -2720,8 +5718,8 @@ export const CreateSetDispatcherTypedDataDocument = /*#__PURE__*/ gql`
   }
 `;
 export type CreateSetDispatcherTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateSetDispatcherTypedDataData,
-  Operations.CreateSetDispatcherTypedDataVariables
+  CreateSetDispatcherTypedDataData,
+  CreateSetDispatcherTypedDataVariables
 >;
 
 /**
@@ -2744,24 +5742,24 @@ export type CreateSetDispatcherTypedDataMutationFn = Apollo.MutationFunction<
  */
 export function useCreateSetDispatcherTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateSetDispatcherTypedDataData,
-    Operations.CreateSetDispatcherTypedDataVariables
+    CreateSetDispatcherTypedDataData,
+    CreateSetDispatcherTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateSetDispatcherTypedDataData,
-    Operations.CreateSetDispatcherTypedDataVariables
+    CreateSetDispatcherTypedDataData,
+    CreateSetDispatcherTypedDataVariables
   >(CreateSetDispatcherTypedDataDocument, options);
 }
 export type CreateSetDispatcherTypedDataHookResult = ReturnType<
   typeof useCreateSetDispatcherTypedData
 >;
 export type CreateSetDispatcherTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateSetDispatcherTypedDataData>;
+  Apollo.MutationResult<CreateSetDispatcherTypedDataData>;
 export type CreateSetDispatcherTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateSetDispatcherTypedDataData,
-  Operations.CreateSetDispatcherTypedDataVariables
+  CreateSetDispatcherTypedDataData,
+  CreateSetDispatcherTypedDataVariables
 >;
 export const ProfilesToFollowDocument = /*#__PURE__*/ gql`
   query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {
@@ -2790,25 +5788,19 @@ export const ProfilesToFollowDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useProfilesToFollow(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.ProfilesToFollowData,
-    Operations.ProfilesToFollowVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<ProfilesToFollowData, ProfilesToFollowVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.ProfilesToFollowData, Operations.ProfilesToFollowVariables>(
+  return Apollo.useQuery<ProfilesToFollowData, ProfilesToFollowVariables>(
     ProfilesToFollowDocument,
     options,
   );
 }
 export function useProfilesToFollowLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.ProfilesToFollowData,
-    Operations.ProfilesToFollowVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfilesToFollowData, ProfilesToFollowVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.ProfilesToFollowData, Operations.ProfilesToFollowVariables>(
+  return Apollo.useLazyQuery<ProfilesToFollowData, ProfilesToFollowVariables>(
     ProfilesToFollowDocument,
     options,
   );
@@ -2816,8 +5808,8 @@ export function useProfilesToFollowLazyQuery(
 export type ProfilesToFollowHookResult = ReturnType<typeof useProfilesToFollow>;
 export type ProfilesToFollowLazyQueryHookResult = ReturnType<typeof useProfilesToFollowLazyQuery>;
 export type ProfilesToFollowQueryResult = Apollo.QueryResult<
-  Operations.ProfilesToFollowData,
-  Operations.ProfilesToFollowVariables
+  ProfilesToFollowData,
+  ProfilesToFollowVariables
 >;
 export const GetProfileDocument = /*#__PURE__*/ gql`
   query GetProfile(
@@ -2851,32 +5843,20 @@ export const GetProfileDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useGetProfile(
-  baseOptions: Apollo.QueryHookOptions<Operations.GetProfileData, Operations.GetProfileVariables>,
+  baseOptions: Apollo.QueryHookOptions<GetProfileData, GetProfileVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.GetProfileData, Operations.GetProfileVariables>(
-    GetProfileDocument,
-    options,
-  );
+  return Apollo.useQuery<GetProfileData, GetProfileVariables>(GetProfileDocument, options);
 }
 export function useGetProfileLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.GetProfileData,
-    Operations.GetProfileVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<GetProfileData, GetProfileVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.GetProfileData, Operations.GetProfileVariables>(
-    GetProfileDocument,
-    options,
-  );
+  return Apollo.useLazyQuery<GetProfileData, GetProfileVariables>(GetProfileDocument, options);
 }
 export type GetProfileHookResult = ReturnType<typeof useGetProfile>;
 export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
-export type GetProfileQueryResult = Apollo.QueryResult<
-  Operations.GetProfileData,
-  Operations.GetProfileVariables
->;
+export type GetProfileQueryResult = Apollo.QueryResult<GetProfileData, GetProfileVariables>;
 export const GetAllProfilesDocument = /*#__PURE__*/ gql`
   query GetAllProfiles(
     $byProfileIds: [ProfileId!]
@@ -2934,25 +5914,19 @@ export const GetAllProfilesDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useGetAllProfiles(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.GetAllProfilesData,
-    Operations.GetAllProfilesVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<GetAllProfilesData, GetAllProfilesVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.GetAllProfilesData, Operations.GetAllProfilesVariables>(
+  return Apollo.useQuery<GetAllProfilesData, GetAllProfilesVariables>(
     GetAllProfilesDocument,
     options,
   );
 }
 export function useGetAllProfilesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.GetAllProfilesData,
-    Operations.GetAllProfilesVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAllProfilesData, GetAllProfilesVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.GetAllProfilesData, Operations.GetAllProfilesVariables>(
+  return Apollo.useLazyQuery<GetAllProfilesData, GetAllProfilesVariables>(
     GetAllProfilesDocument,
     options,
   );
@@ -2960,8 +5934,8 @@ export function useGetAllProfilesLazyQuery(
 export type GetAllProfilesHookResult = ReturnType<typeof useGetAllProfiles>;
 export type GetAllProfilesLazyQueryHookResult = ReturnType<typeof useGetAllProfilesLazyQuery>;
 export type GetAllProfilesQueryResult = Apollo.QueryResult<
-  Operations.GetAllProfilesData,
-  Operations.GetAllProfilesVariables
+  GetAllProfilesData,
+  GetAllProfilesVariables
 >;
 export const CreateProfileDocument = /*#__PURE__*/ gql`
   mutation CreateProfile($request: CreateProfileRequest!) {
@@ -2972,8 +5946,8 @@ export const CreateProfileDocument = /*#__PURE__*/ gql`
   ${FragmentBroadcastOnChainResult}
 `;
 export type CreateProfileMutationFn = Apollo.MutationFunction<
-  Operations.CreateProfileData,
-  Operations.CreateProfileVariables
+  CreateProfileData,
+  CreateProfileVariables
 >;
 
 /**
@@ -2994,22 +5968,19 @@ export type CreateProfileMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useCreateProfile(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateProfileData,
-    Operations.CreateProfileVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<CreateProfileData, CreateProfileVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<Operations.CreateProfileData, Operations.CreateProfileVariables>(
+  return Apollo.useMutation<CreateProfileData, CreateProfileVariables>(
     CreateProfileDocument,
     options,
   );
 }
 export type CreateProfileHookResult = ReturnType<typeof useCreateProfile>;
-export type CreateProfileMutationResult = Apollo.MutationResult<Operations.CreateProfileData>;
+export type CreateProfileMutationResult = Apollo.MutationResult<CreateProfileData>;
 export type CreateProfileMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateProfileData,
-  Operations.CreateProfileVariables
+  CreateProfileData,
+  CreateProfileVariables
 >;
 export const MutualFollowersProfilesDocument = /*#__PURE__*/ gql`
   query MutualFollowersProfiles(
@@ -3061,35 +6032,35 @@ export const MutualFollowersProfilesDocument = /*#__PURE__*/ gql`
  */
 export function useMutualFollowersProfiles(
   baseOptions: Apollo.QueryHookOptions<
-    Operations.MutualFollowersProfilesData,
-    Operations.MutualFollowersProfilesVariables
+    MutualFollowersProfilesData,
+    MutualFollowersProfilesVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.MutualFollowersProfilesData,
-    Operations.MutualFollowersProfilesVariables
-  >(MutualFollowersProfilesDocument, options);
+  return Apollo.useQuery<MutualFollowersProfilesData, MutualFollowersProfilesVariables>(
+    MutualFollowersProfilesDocument,
+    options,
+  );
 }
 export function useMutualFollowersProfilesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.MutualFollowersProfilesData,
-    Operations.MutualFollowersProfilesVariables
+    MutualFollowersProfilesData,
+    MutualFollowersProfilesVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.MutualFollowersProfilesData,
-    Operations.MutualFollowersProfilesVariables
-  >(MutualFollowersProfilesDocument, options);
+  return Apollo.useLazyQuery<MutualFollowersProfilesData, MutualFollowersProfilesVariables>(
+    MutualFollowersProfilesDocument,
+    options,
+  );
 }
 export type MutualFollowersProfilesHookResult = ReturnType<typeof useMutualFollowersProfiles>;
 export type MutualFollowersProfilesLazyQueryHookResult = ReturnType<
   typeof useMutualFollowersProfilesLazyQuery
 >;
 export type MutualFollowersProfilesQueryResult = Apollo.QueryResult<
-  Operations.MutualFollowersProfilesData,
-  Operations.MutualFollowersProfilesVariables
+  MutualFollowersProfilesData,
+  MutualFollowersProfilesVariables
 >;
 export const CreateSetFollowModuleTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateSetFollowModuleTypedData(
@@ -3124,8 +6095,8 @@ export const CreateSetFollowModuleTypedDataDocument = /*#__PURE__*/ gql`
   }
 `;
 export type CreateSetFollowModuleTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateSetFollowModuleTypedDataData,
-  Operations.CreateSetFollowModuleTypedDataVariables
+  CreateSetFollowModuleTypedDataData,
+  CreateSetFollowModuleTypedDataVariables
 >;
 
 /**
@@ -3148,24 +6119,24 @@ export type CreateSetFollowModuleTypedDataMutationFn = Apollo.MutationFunction<
  */
 export function useCreateSetFollowModuleTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateSetFollowModuleTypedDataData,
-    Operations.CreateSetFollowModuleTypedDataVariables
+    CreateSetFollowModuleTypedDataData,
+    CreateSetFollowModuleTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateSetFollowModuleTypedDataData,
-    Operations.CreateSetFollowModuleTypedDataVariables
+    CreateSetFollowModuleTypedDataData,
+    CreateSetFollowModuleTypedDataVariables
   >(CreateSetFollowModuleTypedDataDocument, options);
 }
 export type CreateSetFollowModuleTypedDataHookResult = ReturnType<
   typeof useCreateSetFollowModuleTypedData
 >;
 export type CreateSetFollowModuleTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateSetFollowModuleTypedDataData>;
+  Apollo.MutationResult<CreateSetFollowModuleTypedDataData>;
 export type CreateSetFollowModuleTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateSetFollowModuleTypedDataData,
-  Operations.CreateSetFollowModuleTypedDataVariables
+  CreateSetFollowModuleTypedDataData,
+  CreateSetFollowModuleTypedDataVariables
 >;
 export const CreateSetProfileImageUriTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateSetProfileImageURITypedData(
@@ -3199,8 +6170,8 @@ export const CreateSetProfileImageUriTypedDataDocument = /*#__PURE__*/ gql`
   }
 `;
 export type CreateSetProfileImageUriTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateSetProfileImageUriTypedDataData,
-  Operations.CreateSetProfileImageUriTypedDataVariables
+  CreateSetProfileImageUriTypedDataData,
+  CreateSetProfileImageUriTypedDataVariables
 >;
 
 /**
@@ -3223,24 +6194,24 @@ export type CreateSetProfileImageUriTypedDataMutationFn = Apollo.MutationFunctio
  */
 export function useCreateSetProfileImageUriTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateSetProfileImageUriTypedDataData,
-    Operations.CreateSetProfileImageUriTypedDataVariables
+    CreateSetProfileImageUriTypedDataData,
+    CreateSetProfileImageUriTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateSetProfileImageUriTypedDataData,
-    Operations.CreateSetProfileImageUriTypedDataVariables
+    CreateSetProfileImageUriTypedDataData,
+    CreateSetProfileImageUriTypedDataVariables
   >(CreateSetProfileImageUriTypedDataDocument, options);
 }
 export type CreateSetProfileImageUriTypedDataHookResult = ReturnType<
   typeof useCreateSetProfileImageUriTypedData
 >;
 export type CreateSetProfileImageUriTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateSetProfileImageUriTypedDataData>;
+  Apollo.MutationResult<CreateSetProfileImageUriTypedDataData>;
 export type CreateSetProfileImageUriTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateSetProfileImageUriTypedDataData,
-  Operations.CreateSetProfileImageUriTypedDataVariables
+  CreateSetProfileImageUriTypedDataData,
+  CreateSetProfileImageUriTypedDataVariables
 >;
 export const CreateSetProfileImageUriViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateSetProfileImageURIViaDispatcher($request: UpdateProfileImageRequest!) {
@@ -3251,8 +6222,8 @@ export const CreateSetProfileImageUriViaDispatcherDocument = /*#__PURE__*/ gql`
   ${FragmentBroadcastOnChainResult}
 `;
 export type CreateSetProfileImageUriViaDispatcherMutationFn = Apollo.MutationFunction<
-  Operations.CreateSetProfileImageUriViaDispatcherData,
-  Operations.CreateSetProfileImageUriViaDispatcherVariables
+  CreateSetProfileImageUriViaDispatcherData,
+  CreateSetProfileImageUriViaDispatcherVariables
 >;
 
 /**
@@ -3274,24 +6245,24 @@ export type CreateSetProfileImageUriViaDispatcherMutationFn = Apollo.MutationFun
  */
 export function useCreateSetProfileImageUriViaDispatcher(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateSetProfileImageUriViaDispatcherData,
-    Operations.CreateSetProfileImageUriViaDispatcherVariables
+    CreateSetProfileImageUriViaDispatcherData,
+    CreateSetProfileImageUriViaDispatcherVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateSetProfileImageUriViaDispatcherData,
-    Operations.CreateSetProfileImageUriViaDispatcherVariables
+    CreateSetProfileImageUriViaDispatcherData,
+    CreateSetProfileImageUriViaDispatcherVariables
   >(CreateSetProfileImageUriViaDispatcherDocument, options);
 }
 export type CreateSetProfileImageUriViaDispatcherHookResult = ReturnType<
   typeof useCreateSetProfileImageUriViaDispatcher
 >;
 export type CreateSetProfileImageUriViaDispatcherMutationResult =
-  Apollo.MutationResult<Operations.CreateSetProfileImageUriViaDispatcherData>;
+  Apollo.MutationResult<CreateSetProfileImageUriViaDispatcherData>;
 export type CreateSetProfileImageUriViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateSetProfileImageUriViaDispatcherData,
-  Operations.CreateSetProfileImageUriViaDispatcherVariables
+  CreateSetProfileImageUriViaDispatcherData,
+  CreateSetProfileImageUriViaDispatcherVariables
 >;
 export const CreateSetProfileMetadataTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateSetProfileMetadataTypedData(
@@ -3325,8 +6296,8 @@ export const CreateSetProfileMetadataTypedDataDocument = /*#__PURE__*/ gql`
   }
 `;
 export type CreateSetProfileMetadataTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateSetProfileMetadataTypedDataData,
-  Operations.CreateSetProfileMetadataTypedDataVariables
+  CreateSetProfileMetadataTypedDataData,
+  CreateSetProfileMetadataTypedDataVariables
 >;
 
 /**
@@ -3349,24 +6320,24 @@ export type CreateSetProfileMetadataTypedDataMutationFn = Apollo.MutationFunctio
  */
 export function useCreateSetProfileMetadataTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateSetProfileMetadataTypedDataData,
-    Operations.CreateSetProfileMetadataTypedDataVariables
+    CreateSetProfileMetadataTypedDataData,
+    CreateSetProfileMetadataTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateSetProfileMetadataTypedDataData,
-    Operations.CreateSetProfileMetadataTypedDataVariables
+    CreateSetProfileMetadataTypedDataData,
+    CreateSetProfileMetadataTypedDataVariables
   >(CreateSetProfileMetadataTypedDataDocument, options);
 }
 export type CreateSetProfileMetadataTypedDataHookResult = ReturnType<
   typeof useCreateSetProfileMetadataTypedData
 >;
 export type CreateSetProfileMetadataTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateSetProfileMetadataTypedDataData>;
+  Apollo.MutationResult<CreateSetProfileMetadataTypedDataData>;
 export type CreateSetProfileMetadataTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateSetProfileMetadataTypedDataData,
-  Operations.CreateSetProfileMetadataTypedDataVariables
+  CreateSetProfileMetadataTypedDataData,
+  CreateSetProfileMetadataTypedDataVariables
 >;
 export const CreateSetProfileMetadataViaDispatcherDocument = /*#__PURE__*/ gql`
   mutation CreateSetProfileMetadataViaDispatcher(
@@ -3379,8 +6350,8 @@ export const CreateSetProfileMetadataViaDispatcherDocument = /*#__PURE__*/ gql`
   ${FragmentBroadcastOnChainResult}
 `;
 export type CreateSetProfileMetadataViaDispatcherMutationFn = Apollo.MutationFunction<
-  Operations.CreateSetProfileMetadataViaDispatcherData,
-  Operations.CreateSetProfileMetadataViaDispatcherVariables
+  CreateSetProfileMetadataViaDispatcherData,
+  CreateSetProfileMetadataViaDispatcherVariables
 >;
 
 /**
@@ -3402,24 +6373,24 @@ export type CreateSetProfileMetadataViaDispatcherMutationFn = Apollo.MutationFun
  */
 export function useCreateSetProfileMetadataViaDispatcher(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateSetProfileMetadataViaDispatcherData,
-    Operations.CreateSetProfileMetadataViaDispatcherVariables
+    CreateSetProfileMetadataViaDispatcherData,
+    CreateSetProfileMetadataViaDispatcherVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    Operations.CreateSetProfileMetadataViaDispatcherData,
-    Operations.CreateSetProfileMetadataViaDispatcherVariables
+    CreateSetProfileMetadataViaDispatcherData,
+    CreateSetProfileMetadataViaDispatcherVariables
   >(CreateSetProfileMetadataViaDispatcherDocument, options);
 }
 export type CreateSetProfileMetadataViaDispatcherHookResult = ReturnType<
   typeof useCreateSetProfileMetadataViaDispatcher
 >;
 export type CreateSetProfileMetadataViaDispatcherMutationResult =
-  Apollo.MutationResult<Operations.CreateSetProfileMetadataViaDispatcherData>;
+  Apollo.MutationResult<CreateSetProfileMetadataViaDispatcherData>;
 export type CreateSetProfileMetadataViaDispatcherMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateSetProfileMetadataViaDispatcherData,
-  Operations.CreateSetProfileMetadataViaDispatcherVariables
+  CreateSetProfileMetadataViaDispatcherData,
+  CreateSetProfileMetadataViaDispatcherVariables
 >;
 export const ProfileFollowersDocument = /*#__PURE__*/ gql`
   query ProfileFollowers(
@@ -3463,25 +6434,19 @@ export const ProfileFollowersDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useProfileFollowers(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.ProfileFollowersData,
-    Operations.ProfileFollowersVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<ProfileFollowersData, ProfileFollowersVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.ProfileFollowersData, Operations.ProfileFollowersVariables>(
+  return Apollo.useQuery<ProfileFollowersData, ProfileFollowersVariables>(
     ProfileFollowersDocument,
     options,
   );
 }
 export function useProfileFollowersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.ProfileFollowersData,
-    Operations.ProfileFollowersVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfileFollowersData, ProfileFollowersVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.ProfileFollowersData, Operations.ProfileFollowersVariables>(
+  return Apollo.useLazyQuery<ProfileFollowersData, ProfileFollowersVariables>(
     ProfileFollowersDocument,
     options,
   );
@@ -3489,8 +6454,8 @@ export function useProfileFollowersLazyQuery(
 export type ProfileFollowersHookResult = ReturnType<typeof useProfileFollowers>;
 export type ProfileFollowersLazyQueryHookResult = ReturnType<typeof useProfileFollowersLazyQuery>;
 export type ProfileFollowersQueryResult = Apollo.QueryResult<
-  Operations.ProfileFollowersData,
-  Operations.ProfileFollowersVariables
+  ProfileFollowersData,
+  ProfileFollowersVariables
 >;
 export const ProfileFollowingDocument = /*#__PURE__*/ gql`
   query ProfileFollowing(
@@ -3534,25 +6499,19 @@ export const ProfileFollowingDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useProfileFollowing(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.ProfileFollowingData,
-    Operations.ProfileFollowingVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<ProfileFollowingData, ProfileFollowingVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.ProfileFollowingData, Operations.ProfileFollowingVariables>(
+  return Apollo.useQuery<ProfileFollowingData, ProfileFollowingVariables>(
     ProfileFollowingDocument,
     options,
   );
 }
 export function useProfileFollowingLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.ProfileFollowingData,
-    Operations.ProfileFollowingVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfileFollowingData, ProfileFollowingVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.ProfileFollowingData, Operations.ProfileFollowingVariables>(
+  return Apollo.useLazyQuery<ProfileFollowingData, ProfileFollowingVariables>(
     ProfileFollowingDocument,
     options,
   );
@@ -3560,8 +6519,8 @@ export function useProfileFollowingLazyQuery(
 export type ProfileFollowingHookResult = ReturnType<typeof useProfileFollowing>;
 export type ProfileFollowingLazyQueryHookResult = ReturnType<typeof useProfileFollowingLazyQuery>;
 export type ProfileFollowingQueryResult = Apollo.QueryResult<
-  Operations.ProfileFollowingData,
-  Operations.ProfileFollowingVariables
+  ProfileFollowingData,
+  ProfileFollowingVariables
 >;
 export const ProxyActionStatusDocument = /*#__PURE__*/ gql`
   query ProxyActionStatus($proxyActionId: ProxyActionId!) {
@@ -3599,44 +6558,35 @@ export const ProxyActionStatusDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useProxyActionStatus(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.ProxyActionStatusData,
-    Operations.ProxyActionStatusVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<ProxyActionStatusData, ProxyActionStatusVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.ProxyActionStatusData, Operations.ProxyActionStatusVariables>(
+  return Apollo.useQuery<ProxyActionStatusData, ProxyActionStatusVariables>(
     ProxyActionStatusDocument,
     options,
   );
 }
 export function useProxyActionStatusLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.ProxyActionStatusData,
-    Operations.ProxyActionStatusVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<ProxyActionStatusData, ProxyActionStatusVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.ProxyActionStatusData,
-    Operations.ProxyActionStatusVariables
-  >(ProxyActionStatusDocument, options);
+  return Apollo.useLazyQuery<ProxyActionStatusData, ProxyActionStatusVariables>(
+    ProxyActionStatusDocument,
+    options,
+  );
 }
 export type ProxyActionStatusHookResult = ReturnType<typeof useProxyActionStatus>;
 export type ProxyActionStatusLazyQueryHookResult = ReturnType<typeof useProxyActionStatusLazyQuery>;
 export type ProxyActionStatusQueryResult = Apollo.QueryResult<
-  Operations.ProxyActionStatusData,
-  Operations.ProxyActionStatusVariables
+  ProxyActionStatusData,
+  ProxyActionStatusVariables
 >;
 export const ProxyActionDocument = /*#__PURE__*/ gql`
   mutation ProxyAction($request: ProxyActionRequest!) {
     result: proxyAction(request: $request)
   }
 `;
-export type ProxyActionMutationFn = Apollo.MutationFunction<
-  Operations.ProxyActionData,
-  Operations.ProxyActionVariables
->;
+export type ProxyActionMutationFn = Apollo.MutationFunction<ProxyActionData, ProxyActionVariables>;
 
 /**
  * __useProxyAction__
@@ -3656,22 +6606,16 @@ export type ProxyActionMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useProxyAction(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.ProxyActionData,
-    Operations.ProxyActionVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<ProxyActionData, ProxyActionVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<Operations.ProxyActionData, Operations.ProxyActionVariables>(
-    ProxyActionDocument,
-    options,
-  );
+  return Apollo.useMutation<ProxyActionData, ProxyActionVariables>(ProxyActionDocument, options);
 }
 export type ProxyActionHookResult = ReturnType<typeof useProxyAction>;
-export type ProxyActionMutationResult = Apollo.MutationResult<Operations.ProxyActionData>;
+export type ProxyActionMutationResult = Apollo.MutationResult<ProxyActionData>;
 export type ProxyActionMutationOptions = Apollo.BaseMutationOptions<
-  Operations.ProxyActionData,
-  Operations.ProxyActionVariables
+  ProxyActionData,
+  ProxyActionVariables
 >;
 export const GetPublicationDocument = /*#__PURE__*/ gql`
   query GetPublication(
@@ -3715,25 +6659,19 @@ export const GetPublicationDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useGetPublication(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.GetPublicationData,
-    Operations.GetPublicationVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<GetPublicationData, GetPublicationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.GetPublicationData, Operations.GetPublicationVariables>(
+  return Apollo.useQuery<GetPublicationData, GetPublicationVariables>(
     GetPublicationDocument,
     options,
   );
 }
 export function useGetPublicationLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.GetPublicationData,
-    Operations.GetPublicationVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPublicationData, GetPublicationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.GetPublicationData, Operations.GetPublicationVariables>(
+  return Apollo.useLazyQuery<GetPublicationData, GetPublicationVariables>(
     GetPublicationDocument,
     options,
   );
@@ -3741,8 +6679,8 @@ export function useGetPublicationLazyQuery(
 export type GetPublicationHookResult = ReturnType<typeof useGetPublication>;
 export type GetPublicationLazyQueryHookResult = ReturnType<typeof useGetPublicationLazyQuery>;
 export type GetPublicationQueryResult = Apollo.QueryResult<
-  Operations.GetPublicationData,
-  Operations.GetPublicationVariables
+  GetPublicationData,
+  GetPublicationVariables
 >;
 export const HidePublicationDocument = /*#__PURE__*/ gql`
   mutation HidePublication($publicationId: InternalPublicationId!) {
@@ -3750,8 +6688,8 @@ export const HidePublicationDocument = /*#__PURE__*/ gql`
   }
 `;
 export type HidePublicationMutationFn = Apollo.MutationFunction<
-  Operations.HidePublicationData,
-  Operations.HidePublicationVariables
+  HidePublicationData,
+  HidePublicationVariables
 >;
 
 /**
@@ -3772,22 +6710,19 @@ export type HidePublicationMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useHidePublication(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.HidePublicationData,
-    Operations.HidePublicationVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<HidePublicationData, HidePublicationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<Operations.HidePublicationData, Operations.HidePublicationVariables>(
+  return Apollo.useMutation<HidePublicationData, HidePublicationVariables>(
     HidePublicationDocument,
     options,
   );
 }
 export type HidePublicationHookResult = ReturnType<typeof useHidePublication>;
-export type HidePublicationMutationResult = Apollo.MutationResult<Operations.HidePublicationData>;
+export type HidePublicationMutationResult = Apollo.MutationResult<HidePublicationData>;
 export type HidePublicationMutationOptions = Apollo.BaseMutationOptions<
-  Operations.HidePublicationData,
-  Operations.HidePublicationVariables
+  HidePublicationData,
+  HidePublicationVariables
 >;
 export const GetPublicationsDocument = /*#__PURE__*/ gql`
   query GetPublications(
@@ -3860,25 +6795,19 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useGetPublications(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.GetPublicationsData,
-    Operations.GetPublicationsVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<GetPublicationsData, GetPublicationsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.GetPublicationsData, Operations.GetPublicationsVariables>(
+  return Apollo.useQuery<GetPublicationsData, GetPublicationsVariables>(
     GetPublicationsDocument,
     options,
   );
 }
 export function useGetPublicationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.GetPublicationsData,
-    Operations.GetPublicationsVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPublicationsData, GetPublicationsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.GetPublicationsData, Operations.GetPublicationsVariables>(
+  return Apollo.useLazyQuery<GetPublicationsData, GetPublicationsVariables>(
     GetPublicationsDocument,
     options,
   );
@@ -3886,8 +6815,8 @@ export function useGetPublicationsLazyQuery(
 export type GetPublicationsHookResult = ReturnType<typeof useGetPublications>;
 export type GetPublicationsLazyQueryHookResult = ReturnType<typeof useGetPublicationsLazyQuery>;
 export type GetPublicationsQueryResult = Apollo.QueryResult<
-  Operations.GetPublicationsData,
-  Operations.GetPublicationsVariables
+  GetPublicationsData,
+  GetPublicationsVariables
 >;
 export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
   query ExplorePublications(
@@ -3960,36 +6889,30 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useExplorePublications(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.ExplorePublicationsData,
-    Operations.ExplorePublicationsVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<ExplorePublicationsData, ExplorePublicationsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.ExplorePublicationsData,
-    Operations.ExplorePublicationsVariables
-  >(ExplorePublicationsDocument, options);
+  return Apollo.useQuery<ExplorePublicationsData, ExplorePublicationsVariables>(
+    ExplorePublicationsDocument,
+    options,
+  );
 }
 export function useExplorePublicationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.ExplorePublicationsData,
-    Operations.ExplorePublicationsVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<ExplorePublicationsData, ExplorePublicationsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.ExplorePublicationsData,
-    Operations.ExplorePublicationsVariables
-  >(ExplorePublicationsDocument, options);
+  return Apollo.useLazyQuery<ExplorePublicationsData, ExplorePublicationsVariables>(
+    ExplorePublicationsDocument,
+    options,
+  );
 }
 export type ExplorePublicationsHookResult = ReturnType<typeof useExplorePublications>;
 export type ExplorePublicationsLazyQueryHookResult = ReturnType<
   typeof useExplorePublicationsLazyQuery
 >;
 export type ExplorePublicationsQueryResult = Apollo.QueryResult<
-  Operations.ExplorePublicationsData,
-  Operations.ExplorePublicationsVariables
+  ExplorePublicationsData,
+  ExplorePublicationsVariables
 >;
 export const WhoCollectedPublicationDocument = /*#__PURE__*/ gql`
   query WhoCollectedPublication(
@@ -4036,35 +6959,35 @@ export const WhoCollectedPublicationDocument = /*#__PURE__*/ gql`
  */
 export function useWhoCollectedPublication(
   baseOptions: Apollo.QueryHookOptions<
-    Operations.WhoCollectedPublicationData,
-    Operations.WhoCollectedPublicationVariables
+    WhoCollectedPublicationData,
+    WhoCollectedPublicationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.WhoCollectedPublicationData,
-    Operations.WhoCollectedPublicationVariables
-  >(WhoCollectedPublicationDocument, options);
+  return Apollo.useQuery<WhoCollectedPublicationData, WhoCollectedPublicationVariables>(
+    WhoCollectedPublicationDocument,
+    options,
+  );
 }
 export function useWhoCollectedPublicationLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.WhoCollectedPublicationData,
-    Operations.WhoCollectedPublicationVariables
+    WhoCollectedPublicationData,
+    WhoCollectedPublicationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.WhoCollectedPublicationData,
-    Operations.WhoCollectedPublicationVariables
-  >(WhoCollectedPublicationDocument, options);
+  return Apollo.useLazyQuery<WhoCollectedPublicationData, WhoCollectedPublicationVariables>(
+    WhoCollectedPublicationDocument,
+    options,
+  );
 }
 export type WhoCollectedPublicationHookResult = ReturnType<typeof useWhoCollectedPublication>;
 export type WhoCollectedPublicationLazyQueryHookResult = ReturnType<
   typeof useWhoCollectedPublicationLazyQuery
 >;
 export type WhoCollectedPublicationQueryResult = Apollo.QueryResult<
-  Operations.WhoCollectedPublicationData,
-  Operations.WhoCollectedPublicationVariables
+  WhoCollectedPublicationData,
+  WhoCollectedPublicationVariables
 >;
 export const ProfilePublicationsForSaleDocument = /*#__PURE__*/ gql`
   query ProfilePublicationsForSale(
@@ -4117,35 +7040,35 @@ export const ProfilePublicationsForSaleDocument = /*#__PURE__*/ gql`
  */
 export function useProfilePublicationsForSale(
   baseOptions: Apollo.QueryHookOptions<
-    Operations.ProfilePublicationsForSaleData,
-    Operations.ProfilePublicationsForSaleVariables
+    ProfilePublicationsForSaleData,
+    ProfilePublicationsForSaleVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.ProfilePublicationsForSaleData,
-    Operations.ProfilePublicationsForSaleVariables
-  >(ProfilePublicationsForSaleDocument, options);
+  return Apollo.useQuery<ProfilePublicationsForSaleData, ProfilePublicationsForSaleVariables>(
+    ProfilePublicationsForSaleDocument,
+    options,
+  );
 }
 export function useProfilePublicationsForSaleLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.ProfilePublicationsForSaleData,
-    Operations.ProfilePublicationsForSaleVariables
+    ProfilePublicationsForSaleData,
+    ProfilePublicationsForSaleVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.ProfilePublicationsForSaleData,
-    Operations.ProfilePublicationsForSaleVariables
-  >(ProfilePublicationsForSaleDocument, options);
+  return Apollo.useLazyQuery<ProfilePublicationsForSaleData, ProfilePublicationsForSaleVariables>(
+    ProfilePublicationsForSaleDocument,
+    options,
+  );
 }
 export type ProfilePublicationsForSaleHookResult = ReturnType<typeof useProfilePublicationsForSale>;
 export type ProfilePublicationsForSaleLazyQueryHookResult = ReturnType<
   typeof useProfilePublicationsForSaleLazyQuery
 >;
 export type ProfilePublicationsForSaleQueryResult = Apollo.QueryResult<
-  Operations.ProfilePublicationsForSaleData,
-  Operations.ProfilePublicationsForSaleVariables
+  ProfilePublicationsForSaleData,
+  ProfilePublicationsForSaleVariables
 >;
 export const AddReactionDocument = /*#__PURE__*/ gql`
   mutation AddReaction(
@@ -4158,10 +7081,7 @@ export const AddReactionDocument = /*#__PURE__*/ gql`
     )
   }
 `;
-export type AddReactionMutationFn = Apollo.MutationFunction<
-  Operations.AddReactionData,
-  Operations.AddReactionVariables
->;
+export type AddReactionMutationFn = Apollo.MutationFunction<AddReactionData, AddReactionVariables>;
 
 /**
  * __useAddReaction__
@@ -4183,22 +7103,16 @@ export type AddReactionMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useAddReaction(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.AddReactionData,
-    Operations.AddReactionVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<AddReactionData, AddReactionVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<Operations.AddReactionData, Operations.AddReactionVariables>(
-    AddReactionDocument,
-    options,
-  );
+  return Apollo.useMutation<AddReactionData, AddReactionVariables>(AddReactionDocument, options);
 }
 export type AddReactionHookResult = ReturnType<typeof useAddReaction>;
-export type AddReactionMutationResult = Apollo.MutationResult<Operations.AddReactionData>;
+export type AddReactionMutationResult = Apollo.MutationResult<AddReactionData>;
 export type AddReactionMutationOptions = Apollo.BaseMutationOptions<
-  Operations.AddReactionData,
-  Operations.AddReactionVariables
+  AddReactionData,
+  AddReactionVariables
 >;
 export const RemoveReactionDocument = /*#__PURE__*/ gql`
   mutation RemoveReaction(
@@ -4212,8 +7126,8 @@ export const RemoveReactionDocument = /*#__PURE__*/ gql`
   }
 `;
 export type RemoveReactionMutationFn = Apollo.MutationFunction<
-  Operations.RemoveReactionData,
-  Operations.RemoveReactionVariables
+  RemoveReactionData,
+  RemoveReactionVariables
 >;
 
 /**
@@ -4236,22 +7150,19 @@ export type RemoveReactionMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useRemoveReaction(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.RemoveReactionData,
-    Operations.RemoveReactionVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<RemoveReactionData, RemoveReactionVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<Operations.RemoveReactionData, Operations.RemoveReactionVariables>(
+  return Apollo.useMutation<RemoveReactionData, RemoveReactionVariables>(
     RemoveReactionDocument,
     options,
   );
 }
 export type RemoveReactionHookResult = ReturnType<typeof useRemoveReaction>;
-export type RemoveReactionMutationResult = Apollo.MutationResult<Operations.RemoveReactionData>;
+export type RemoveReactionMutationResult = Apollo.MutationResult<RemoveReactionData>;
 export type RemoveReactionMutationOptions = Apollo.BaseMutationOptions<
-  Operations.RemoveReactionData,
-  Operations.RemoveReactionVariables
+  RemoveReactionData,
+  RemoveReactionVariables
 >;
 export const WhoReactedPublicationDocument = /*#__PURE__*/ gql`
   query WhoReactedPublication(
@@ -4297,36 +7208,33 @@ export const WhoReactedPublicationDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useWhoReactedPublication(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.WhoReactedPublicationData,
-    Operations.WhoReactedPublicationVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<WhoReactedPublicationData, WhoReactedPublicationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.WhoReactedPublicationData,
-    Operations.WhoReactedPublicationVariables
-  >(WhoReactedPublicationDocument, options);
+  return Apollo.useQuery<WhoReactedPublicationData, WhoReactedPublicationVariables>(
+    WhoReactedPublicationDocument,
+    options,
+  );
 }
 export function useWhoReactedPublicationLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.WhoReactedPublicationData,
-    Operations.WhoReactedPublicationVariables
+    WhoReactedPublicationData,
+    WhoReactedPublicationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.WhoReactedPublicationData,
-    Operations.WhoReactedPublicationVariables
-  >(WhoReactedPublicationDocument, options);
+  return Apollo.useLazyQuery<WhoReactedPublicationData, WhoReactedPublicationVariables>(
+    WhoReactedPublicationDocument,
+    options,
+  );
 }
 export type WhoReactedPublicationHookResult = ReturnType<typeof useWhoReactedPublication>;
 export type WhoReactedPublicationLazyQueryHookResult = ReturnType<
   typeof useWhoReactedPublicationLazyQuery
 >;
 export type WhoReactedPublicationQueryResult = Apollo.QueryResult<
-  Operations.WhoReactedPublicationData,
-  Operations.WhoReactedPublicationVariables
+  WhoReactedPublicationData,
+  WhoReactedPublicationVariables
 >;
 export const ReportPublicationDocument = /*#__PURE__*/ gql`
   mutation ReportPublication(
@@ -4344,8 +7252,8 @@ export const ReportPublicationDocument = /*#__PURE__*/ gql`
   }
 `;
 export type ReportPublicationMutationFn = Apollo.MutationFunction<
-  Operations.ReportPublicationData,
-  Operations.ReportPublicationVariables
+  ReportPublicationData,
+  ReportPublicationVariables
 >;
 
 /**
@@ -4368,23 +7276,19 @@ export type ReportPublicationMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useReportPublication(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.ReportPublicationData,
-    Operations.ReportPublicationVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<ReportPublicationData, ReportPublicationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.ReportPublicationData,
-    Operations.ReportPublicationVariables
-  >(ReportPublicationDocument, options);
+  return Apollo.useMutation<ReportPublicationData, ReportPublicationVariables>(
+    ReportPublicationDocument,
+    options,
+  );
 }
 export type ReportPublicationHookResult = ReturnType<typeof useReportPublication>;
-export type ReportPublicationMutationResult =
-  Apollo.MutationResult<Operations.ReportPublicationData>;
+export type ReportPublicationMutationResult = Apollo.MutationResult<ReportPublicationData>;
 export type ReportPublicationMutationOptions = Apollo.BaseMutationOptions<
-  Operations.ReportPublicationData,
-  Operations.ReportPublicationVariables
+  ReportPublicationData,
+  ReportPublicationVariables
 >;
 export const GetPublicationRevenueDocument = /*#__PURE__*/ gql`
   query GetPublicationRevenue(
@@ -4418,36 +7322,33 @@ export const GetPublicationRevenueDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useGetPublicationRevenue(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.GetPublicationRevenueData,
-    Operations.GetPublicationRevenueVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<GetPublicationRevenueData, GetPublicationRevenueVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.GetPublicationRevenueData,
-    Operations.GetPublicationRevenueVariables
-  >(GetPublicationRevenueDocument, options);
+  return Apollo.useQuery<GetPublicationRevenueData, GetPublicationRevenueVariables>(
+    GetPublicationRevenueDocument,
+    options,
+  );
 }
 export function useGetPublicationRevenueLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.GetPublicationRevenueData,
-    Operations.GetPublicationRevenueVariables
+    GetPublicationRevenueData,
+    GetPublicationRevenueVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.GetPublicationRevenueData,
-    Operations.GetPublicationRevenueVariables
-  >(GetPublicationRevenueDocument, options);
+  return Apollo.useLazyQuery<GetPublicationRevenueData, GetPublicationRevenueVariables>(
+    GetPublicationRevenueDocument,
+    options,
+  );
 }
 export type GetPublicationRevenueHookResult = ReturnType<typeof useGetPublicationRevenue>;
 export type GetPublicationRevenueLazyQueryHookResult = ReturnType<
   typeof useGetPublicationRevenueLazyQuery
 >;
 export type GetPublicationRevenueQueryResult = Apollo.QueryResult<
-  Operations.GetPublicationRevenueData,
-  Operations.GetPublicationRevenueVariables
+  GetPublicationRevenueData,
+  GetPublicationRevenueVariables
 >;
 export const GetProfilePublicationRevenueDocument = /*#__PURE__*/ gql`
   query GetProfilePublicationRevenue(
@@ -4502,26 +7403,26 @@ export const GetProfilePublicationRevenueDocument = /*#__PURE__*/ gql`
  */
 export function useGetProfilePublicationRevenue(
   baseOptions: Apollo.QueryHookOptions<
-    Operations.GetProfilePublicationRevenueData,
-    Operations.GetProfilePublicationRevenueVariables
+    GetProfilePublicationRevenueData,
+    GetProfilePublicationRevenueVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.GetProfilePublicationRevenueData,
-    Operations.GetProfilePublicationRevenueVariables
-  >(GetProfilePublicationRevenueDocument, options);
+  return Apollo.useQuery<GetProfilePublicationRevenueData, GetProfilePublicationRevenueVariables>(
+    GetProfilePublicationRevenueDocument,
+    options,
+  );
 }
 export function useGetProfilePublicationRevenueLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.GetProfilePublicationRevenueData,
-    Operations.GetProfilePublicationRevenueVariables
+    GetProfilePublicationRevenueData,
+    GetProfilePublicationRevenueVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
-    Operations.GetProfilePublicationRevenueData,
-    Operations.GetProfilePublicationRevenueVariables
+    GetProfilePublicationRevenueData,
+    GetProfilePublicationRevenueVariables
   >(GetProfilePublicationRevenueDocument, options);
 }
 export type GetProfilePublicationRevenueHookResult = ReturnType<
@@ -4531,8 +7432,8 @@ export type GetProfilePublicationRevenueLazyQueryHookResult = ReturnType<
   typeof useGetProfilePublicationRevenueLazyQuery
 >;
 export type GetProfilePublicationRevenueQueryResult = Apollo.QueryResult<
-  Operations.GetProfilePublicationRevenueData,
-  Operations.GetProfilePublicationRevenueVariables
+  GetProfilePublicationRevenueData,
+  GetProfilePublicationRevenueVariables
 >;
 export const ProfileFollowRevenueDocument = /*#__PURE__*/ gql`
   query ProfileFollowRevenue($profileId: ProfileId!) {
@@ -4560,36 +7461,33 @@ export const ProfileFollowRevenueDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useProfileFollowRevenue(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.ProfileFollowRevenueData,
-    Operations.ProfileFollowRevenueVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<ProfileFollowRevenueData, ProfileFollowRevenueVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.ProfileFollowRevenueData,
-    Operations.ProfileFollowRevenueVariables
-  >(ProfileFollowRevenueDocument, options);
+  return Apollo.useQuery<ProfileFollowRevenueData, ProfileFollowRevenueVariables>(
+    ProfileFollowRevenueDocument,
+    options,
+  );
 }
 export function useProfileFollowRevenueLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.ProfileFollowRevenueData,
-    Operations.ProfileFollowRevenueVariables
+    ProfileFollowRevenueData,
+    ProfileFollowRevenueVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.ProfileFollowRevenueData,
-    Operations.ProfileFollowRevenueVariables
-  >(ProfileFollowRevenueDocument, options);
+  return Apollo.useLazyQuery<ProfileFollowRevenueData, ProfileFollowRevenueVariables>(
+    ProfileFollowRevenueDocument,
+    options,
+  );
 }
 export type ProfileFollowRevenueHookResult = ReturnType<typeof useProfileFollowRevenue>;
 export type ProfileFollowRevenueLazyQueryHookResult = ReturnType<
   typeof useProfileFollowRevenueLazyQuery
 >;
 export type ProfileFollowRevenueQueryResult = Apollo.QueryResult<
-  Operations.ProfileFollowRevenueData,
-  Operations.ProfileFollowRevenueVariables
+  ProfileFollowRevenueData,
+  ProfileFollowRevenueVariables
 >;
 export const SearchPublicationsDocument = /*#__PURE__*/ gql`
   query SearchPublications(
@@ -4650,36 +7548,30 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useSearchPublications(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.SearchPublicationsData,
-    Operations.SearchPublicationsVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<SearchPublicationsData, SearchPublicationsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.SearchPublicationsData, Operations.SearchPublicationsVariables>(
+  return Apollo.useQuery<SearchPublicationsData, SearchPublicationsVariables>(
     SearchPublicationsDocument,
     options,
   );
 }
 export function useSearchPublicationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.SearchPublicationsData,
-    Operations.SearchPublicationsVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<SearchPublicationsData, SearchPublicationsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.SearchPublicationsData,
-    Operations.SearchPublicationsVariables
-  >(SearchPublicationsDocument, options);
+  return Apollo.useLazyQuery<SearchPublicationsData, SearchPublicationsVariables>(
+    SearchPublicationsDocument,
+    options,
+  );
 }
 export type SearchPublicationsHookResult = ReturnType<typeof useSearchPublications>;
 export type SearchPublicationsLazyQueryHookResult = ReturnType<
   typeof useSearchPublicationsLazyQuery
 >;
 export type SearchPublicationsQueryResult = Apollo.QueryResult<
-  Operations.SearchPublicationsData,
-  Operations.SearchPublicationsVariables
+  SearchPublicationsData,
+  SearchPublicationsVariables
 >;
 export const SearchProfilesDocument = /*#__PURE__*/ gql`
   query SearchProfiles(
@@ -4726,25 +7618,19 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useSearchProfiles(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.SearchProfilesData,
-    Operations.SearchProfilesVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<SearchProfilesData, SearchProfilesVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<Operations.SearchProfilesData, Operations.SearchProfilesVariables>(
+  return Apollo.useQuery<SearchProfilesData, SearchProfilesVariables>(
     SearchProfilesDocument,
     options,
   );
 }
 export function useSearchProfilesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.SearchProfilesData,
-    Operations.SearchProfilesVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<SearchProfilesData, SearchProfilesVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<Operations.SearchProfilesData, Operations.SearchProfilesVariables>(
+  return Apollo.useLazyQuery<SearchProfilesData, SearchProfilesVariables>(
     SearchProfilesDocument,
     options,
   );
@@ -4752,8 +7638,8 @@ export function useSearchProfilesLazyQuery(
 export type SearchProfilesHookResult = ReturnType<typeof useSearchProfiles>;
 export type SearchProfilesLazyQueryHookResult = ReturnType<typeof useSearchProfilesLazyQuery>;
 export type SearchProfilesQueryResult = Apollo.QueryResult<
-  Operations.SearchProfilesData,
-  Operations.SearchProfilesVariables
+  SearchProfilesData,
+  SearchProfilesVariables
 >;
 export const HasTxHashBeenIndexedDocument = /*#__PURE__*/ gql`
   query HasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
@@ -4787,36 +7673,33 @@ export const HasTxHashBeenIndexedDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useHasTxHashBeenIndexed(
-  baseOptions: Apollo.QueryHookOptions<
-    Operations.HasTxHashBeenIndexedData,
-    Operations.HasTxHashBeenIndexedVariables
-  >,
+  baseOptions: Apollo.QueryHookOptions<HasTxHashBeenIndexedData, HasTxHashBeenIndexedVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    Operations.HasTxHashBeenIndexedData,
-    Operations.HasTxHashBeenIndexedVariables
-  >(HasTxHashBeenIndexedDocument, options);
+  return Apollo.useQuery<HasTxHashBeenIndexedData, HasTxHashBeenIndexedVariables>(
+    HasTxHashBeenIndexedDocument,
+    options,
+  );
 }
 export function useHasTxHashBeenIndexedLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Operations.HasTxHashBeenIndexedData,
-    Operations.HasTxHashBeenIndexedVariables
+    HasTxHashBeenIndexedData,
+    HasTxHashBeenIndexedVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    Operations.HasTxHashBeenIndexedData,
-    Operations.HasTxHashBeenIndexedVariables
-  >(HasTxHashBeenIndexedDocument, options);
+  return Apollo.useLazyQuery<HasTxHashBeenIndexedData, HasTxHashBeenIndexedVariables>(
+    HasTxHashBeenIndexedDocument,
+    options,
+  );
 }
 export type HasTxHashBeenIndexedHookResult = ReturnType<typeof useHasTxHashBeenIndexed>;
 export type HasTxHashBeenIndexedLazyQueryHookResult = ReturnType<
   typeof useHasTxHashBeenIndexedLazyQuery
 >;
 export type HasTxHashBeenIndexedQueryResult = Apollo.QueryResult<
-  Operations.HasTxHashBeenIndexedData,
-  Operations.HasTxHashBeenIndexedVariables
+  HasTxHashBeenIndexedData,
+  HasTxHashBeenIndexedVariables
 >;
 export const BroadcastOnChainDocument = /*#__PURE__*/ gql`
   mutation BroadcastOnChain($request: BroadcastRequest!) {
@@ -4827,8 +7710,8 @@ export const BroadcastOnChainDocument = /*#__PURE__*/ gql`
   ${FragmentBroadcastOnChainResult}
 `;
 export type BroadcastOnChainMutationFn = Apollo.MutationFunction<
-  Operations.BroadcastOnChainData,
-  Operations.BroadcastOnChainVariables
+  BroadcastOnChainData,
+  BroadcastOnChainVariables
 >;
 
 /**
@@ -4849,22 +7732,19 @@ export type BroadcastOnChainMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useBroadcastOnChain(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.BroadcastOnChainData,
-    Operations.BroadcastOnChainVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<BroadcastOnChainData, BroadcastOnChainVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<Operations.BroadcastOnChainData, Operations.BroadcastOnChainVariables>(
+  return Apollo.useMutation<BroadcastOnChainData, BroadcastOnChainVariables>(
     BroadcastOnChainDocument,
     options,
   );
 }
 export type BroadcastOnChainHookResult = ReturnType<typeof useBroadcastOnChain>;
-export type BroadcastOnChainMutationResult = Apollo.MutationResult<Operations.BroadcastOnChainData>;
+export type BroadcastOnChainMutationResult = Apollo.MutationResult<BroadcastOnChainData>;
 export type BroadcastOnChainMutationOptions = Apollo.BaseMutationOptions<
-  Operations.BroadcastOnChainData,
-  Operations.BroadcastOnChainVariables
+  BroadcastOnChainData,
+  BroadcastOnChainVariables
 >;
 export const BroadcastOffChainDocument = /*#__PURE__*/ gql`
   mutation BroadcastOffChain($request: BroadcastRequest!) {
@@ -4875,8 +7755,8 @@ export const BroadcastOffChainDocument = /*#__PURE__*/ gql`
   ${FragmentBroadcastOffChainResult}
 `;
 export type BroadcastOffChainMutationFn = Apollo.MutationFunction<
-  Operations.BroadcastOffChainData,
-  Operations.BroadcastOffChainVariables
+  BroadcastOffChainData,
+  BroadcastOffChainVariables
 >;
 
 /**
@@ -4897,23 +7777,19 @@ export type BroadcastOffChainMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useBroadcastOffChain(
-  baseOptions?: Apollo.MutationHookOptions<
-    Operations.BroadcastOffChainData,
-    Operations.BroadcastOffChainVariables
-  >,
+  baseOptions?: Apollo.MutationHookOptions<BroadcastOffChainData, BroadcastOffChainVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.BroadcastOffChainData,
-    Operations.BroadcastOffChainVariables
-  >(BroadcastOffChainDocument, options);
+  return Apollo.useMutation<BroadcastOffChainData, BroadcastOffChainVariables>(
+    BroadcastOffChainDocument,
+    options,
+  );
 }
 export type BroadcastOffChainHookResult = ReturnType<typeof useBroadcastOffChain>;
-export type BroadcastOffChainMutationResult =
-  Apollo.MutationResult<Operations.BroadcastOffChainData>;
+export type BroadcastOffChainMutationResult = Apollo.MutationResult<BroadcastOffChainData>;
 export type BroadcastOffChainMutationOptions = Apollo.BaseMutationOptions<
-  Operations.BroadcastOffChainData,
-  Operations.BroadcastOffChainVariables
+  BroadcastOffChainData,
+  BroadcastOffChainVariables
 >;
 export const CreateUnfollowTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateUnfollowTypedData($request: UnfollowRequest!) {
@@ -4941,8 +7817,8 @@ export const CreateUnfollowTypedDataDocument = /*#__PURE__*/ gql`
   ${FragmentEip712TypedDataDomain}
 `;
 export type CreateUnfollowTypedDataMutationFn = Apollo.MutationFunction<
-  Operations.CreateUnfollowTypedDataData,
-  Operations.CreateUnfollowTypedDataVariables
+  CreateUnfollowTypedDataData,
+  CreateUnfollowTypedDataVariables
 >;
 
 /**
@@ -4964,22 +7840,22 @@ export type CreateUnfollowTypedDataMutationFn = Apollo.MutationFunction<
  */
 export function useCreateUnfollowTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    Operations.CreateUnfollowTypedDataData,
-    Operations.CreateUnfollowTypedDataVariables
+    CreateUnfollowTypedDataData,
+    CreateUnfollowTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    Operations.CreateUnfollowTypedDataData,
-    Operations.CreateUnfollowTypedDataVariables
-  >(CreateUnfollowTypedDataDocument, options);
+  return Apollo.useMutation<CreateUnfollowTypedDataData, CreateUnfollowTypedDataVariables>(
+    CreateUnfollowTypedDataDocument,
+    options,
+  );
 }
 export type CreateUnfollowTypedDataHookResult = ReturnType<typeof useCreateUnfollowTypedData>;
 export type CreateUnfollowTypedDataMutationResult =
-  Apollo.MutationResult<Operations.CreateUnfollowTypedDataData>;
+  Apollo.MutationResult<CreateUnfollowTypedDataData>;
 export type CreateUnfollowTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  Operations.CreateUnfollowTypedDataData,
-  Operations.CreateUnfollowTypedDataVariables
+  CreateUnfollowTypedDataData,
+  CreateUnfollowTypedDataVariables
 >;
 export type AaveFeeCollectModuleSettingsKeySpecifier = (
   | 'amount'
@@ -5118,6 +7994,7 @@ export type CommentKeySpecifier = (
   | 'collectPolicy'
   | 'collectedBy'
   | 'commentOn'
+  | 'contentInsight'
   | 'createdAt'
   | 'dataAvailabilityProofs'
   | 'decryptionCriteria'
@@ -5152,6 +8029,7 @@ export type CommentFieldPolicy = {
   collectPolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   commentOn?: FieldPolicy<any> | FieldReadFunction<any>;
+  contentInsight?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
   decryptionCriteria?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6494,6 +9372,7 @@ export type MutationKeySpecifier = (
   | 'createUnfollowTypedData'
   | 'deleteNftGallery'
   | 'dismissRecommendedProfiles'
+  | 'dss'
   | 'gci'
   | 'gcr'
   | 'gdi'
@@ -6549,6 +9428,7 @@ export type MutationFieldPolicy = {
   createUnfollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   deleteNftGallery?: FieldPolicy<any> | FieldReadFunction<any>;
   dismissRecommendedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
+  dss?: FieldPolicy<any> | FieldReadFunction<any>;
   gci?: FieldPolicy<any> | FieldReadFunction<any>;
   gcr?: FieldPolicy<any> | FieldReadFunction<any>;
   gdi?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6910,6 +9790,7 @@ export type PostKeySpecifier = (
   | 'collectNftAddress'
   | 'collectPolicy'
   | 'collectedBy'
+  | 'contentInsight'
   | 'createdAt'
   | 'dataAvailabilityProofs'
   | 'decryptionCriteria'
@@ -6940,6 +9821,7 @@ export type PostFieldPolicy = {
   collectNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
   collectPolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   collectedBy?: FieldPolicy<any> | FieldReadFunction<any>;
+  contentInsight?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   dataAvailabilityProofs?: FieldPolicy<any> | FieldReadFunction<any>;
   decryptionCriteria?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -7200,6 +10082,7 @@ export type QueryKeySpecifier = (
   | 'hasTxHashBeenIndexed'
   | 'internalPublicationFilter'
   | 'isIDKitPhoneVerified'
+  | 'iss'
   | 'mutualFollowersProfiles'
   | 'nftGalleries'
   | 'nftOwnershipChallenge'
@@ -7262,6 +10145,7 @@ export type QueryFieldPolicy = {
   hasTxHashBeenIndexed?: FieldPolicy<any> | FieldReadFunction<any>;
   internalPublicationFilter?: FieldPolicy<any> | FieldReadFunction<any>;
   isIDKitPhoneVerified?: FieldPolicy<any> | FieldReadFunction<any>;
+  iss?: FieldPolicy<any> | FieldReadFunction<any>;
   mutualFollowersProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   nftGalleries?: FieldPolicy<any> | FieldReadFunction<any>;
   nftOwnershipChallenge?: FieldPolicy<any> | FieldReadFunction<any>;
