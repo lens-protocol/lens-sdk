@@ -1,0 +1,4 @@
+{
+  "main": "dist/lens-protocol-domain-use-cases-inbox.cjs.js",
+  "module": "dist/lens-protocol-domain-use-cases-inbox.esm.js"
+}
