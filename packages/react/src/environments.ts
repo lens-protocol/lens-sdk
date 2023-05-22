@@ -38,6 +38,9 @@ export type EnvironmentConfig = {
   handleResolver: ProfileHandleResolver;
   snapshot: SnapshotConfig;
   gated: GatedEnvironments.EnvironmentConfig;
+  xmtpEnv: {
+    name: 'production' | 'dev' | 'local';
+  };
 };
 
 /**
@@ -69,6 +72,9 @@ export const production: EnvironmentConfig = {
     sequencer: 'https://seq.snapshot.org',
   },
   gated: GatedEnvironments.production,
+  xmtpEnv: {
+    name: 'production',
+  },
 };
 /**
  * The development environment configuration
@@ -99,6 +105,9 @@ export const development: EnvironmentConfig = {
     sequencer: 'https://testnet.seq.snapshot.org',
   },
   gated: GatedEnvironments.development,
+  xmtpEnv: {
+    name: 'dev',
+  },
 };
 
 /**
@@ -131,6 +140,9 @@ export const sandbox: EnvironmentConfig = {
     sequencer: 'https://testnet.seq.snapshot.org',
   },
   gated: GatedEnvironments.sandbox,
+  xmtpEnv: {
+    name: 'dev',
+  },
 };
 
 /**

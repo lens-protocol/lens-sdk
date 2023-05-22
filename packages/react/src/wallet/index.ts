@@ -11,3 +11,4 @@ export type {
 export type { LogoutHandler } from './adapters/LogoutPresenter';
 export type { RequiredSigner } from './adapters/ConcreteWallet';
 export type { Wallet } from '@lens-protocol/api-bindings';
+export type { Wallet as WalletEntity } from '@lens-protocol/domain/entities';

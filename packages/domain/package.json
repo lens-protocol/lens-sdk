@@ -11,6 +11,10 @@
       "module": "./entities/dist/lens-protocol-domain-entities.esm.js",
       "default": "./entities/dist/lens-protocol-domain-entities.cjs.js"
     },
+    "./use-cases/inbox": {
+      "module": "./use-cases/inbox/dist/lens-protocol-domain-use-cases-inbox.esm.js",
+      "default": "./use-cases/inbox/dist/lens-protocol-domain-use-cases-inbox.cjs.js"
+    },
     "./use-cases/polls": {
       "module": "./use-cases/polls/dist/lens-protocol-domain-use-cases-polls.esm.js",
       "default": "./use-cases/polls/dist/lens-protocol-domain-use-cases-polls.cjs.js"
@@ -117,6 +121,7 @@
     "entrypoints": [
       "entities/index.ts",
       "use-cases/lifecycle/index.ts",
+      "use-cases/inbox/index.ts",
       "use-cases/profile/index.ts",
       "use-cases/polls/index.ts",
       "use-cases/publications/index.ts",

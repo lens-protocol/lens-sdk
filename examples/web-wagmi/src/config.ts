@@ -23,4 +23,8 @@ export const CATEGORIES = [
     label: 'Misc',
     path: '/misc',
   },
+  {
+    label: 'Inbox',
+    path: '/inbox',
+  },
 ];

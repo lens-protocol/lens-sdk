@@ -1,4 +1,5 @@
 export * from './AppId';
+export * from './Conversation';
 export * from './Credentials';
 export * from './Nft';
 export * from './polls';

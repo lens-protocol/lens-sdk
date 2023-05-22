@@ -19,6 +19,7 @@ import { ConsoleLogger } from './ConsoleLogger';
 import { ErrorHandler } from './ErrorHandler';
 import { IBindings, LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
+import { createInboxKeyStorage } from './inbox/infrastructure/InboxKeyStorage';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
@@ -72,24 +73,25 @@ export type Handlers = {
 };
 
 export type SharedDependencies = {
-  appId?: AppId;
   activeProfileGateway: ActiveProfileGateway;
   activeProfilePresenter: ActiveProfilePresenter;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
-  bindings: IBindings;
+  appId?: AppId;
   authApi: AuthApi;
-  environment: EnvironmentConfig;
+  bindings: IBindings;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
+  environment: EnvironmentConfig;
   followPolicyCallGateway: FollowPolicyCallGateway;
+  inboxKeyStorage: IStorage<string>;
   logger: ILogger;
   notificationStorage: IStorage<UnreadNotificationsData>;
+  offChainRelayer: OffChainRelayer;
+  onChainRelayer: OnChainRelayer;
   onError: Handlers['onError'];
   onLogout: Handlers['onLogout'];
   profileGateway: ProfileGateway;
-  offChainRelayer: OffChainRelayer;
-  onChainRelayer: OnChainRelayer;
   providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
   sources: Sources;
@@ -115,6 +117,7 @@ export function createSharedDependencies(
   const walletStorage = createWalletStorage(config.storage, config.environment.name);
   const notificationStorage = createNotificationStorage(config.storage, config.environment.name);
   const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
+  const inboxKeyStorage = createInboxKeyStorage(config.storage, config.environment.name);
 
   // apollo client
   const anonymousApolloClient = createAuthApolloClient({
@@ -198,24 +201,26 @@ export function createSharedDependencies(
   const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
 
   return {
-    appId: config.appId,
     activeProfileGateway,
     activeProfilePresenter,
     activeWallet,
     apolloClient,
+    appId: config.appId,
     authApi,
     bindings: config.bindings,
     credentialsFactory,
     credentialsGateway,
     environment: config.environment,
     followPolicyCallGateway,
+    inboxKeyStorage,
     logger,
     notificationStorage,
+    offChainRelayer,
+    onChainRelayer,
     onError,
     onLogout,
     profileGateway,
-    offChainRelayer,
-    onChainRelayer,
+    providerFactory,
     publicationCacheManager,
     sources,
     storageProvider: config.storage,
@@ -225,7 +230,6 @@ export function createSharedDependencies(
     transactionQueue,
     walletFactory,
     walletGateway,
-    providerFactory,
   };
 }
 

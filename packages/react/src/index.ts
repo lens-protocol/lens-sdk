@@ -8,6 +8,7 @@ export * from './LensProvider';
  */
 export * from './experimental';
 export * from './feed';
+export * from './inbox';
 export * from './modules';
 export * from './notifications';
 export * from './polls';

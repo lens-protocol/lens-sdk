@@ -19,6 +19,8 @@ import { UseExplorePublications } from './discovery/UseExplorePublications';
 import { UseFeed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
+import { InboxPage } from './inbox/InboxPage';
+import { UseConversations } from './inbox/UseConversations';
 import { MiscPage } from './misc/MiscPage';
 import { Polls } from './misc/Polls';
 import { UseApproveModule } from './misc/UseApproveModule';
@@ -194,6 +196,9 @@ export function App() {
                 <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
                 <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
                 <Route path="/misc/polls" element={<Polls />} />
+
+                <Route path="/inbox" element={<InboxPage />} />
+                <Route path="/inbox/useConversations" element={<UseConversations />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />
