@@ -515,6 +515,10 @@ export function resolveCollectPolicy({
       };
     case 'RevertCollectModuleSettings':
     case 'UnknownCollectModuleSettings':
+    // Important: at any time backend can introduce new collect module
+    // that older sdk version does not know about
+    // eslint-disable-next-line no-fallthrough
+    default:
       return {
         type: CollectPolicyType.NO_COLLECT,
         state: CollectState.CANNOT_BE_COLLECTED,

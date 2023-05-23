@@ -228,6 +228,13 @@ export function mockFreeCollectModuleSettings({ followerOnly = false } = {}): Co
   };
 }
 
+// Use this to test the handling of collect modules that are already whitelisted by backend but not yet support by sdk
+export function mockNotYetKnownCollectModuleSettings(): CollectModule {
+  return {
+    __typename: 'NotYetKnownCollectModuleSettings',
+  } as unknown as CollectModule;
+}
+
 export function mockMetadataOutputFragment(overrides?: Partial<MetadataOutput>): MetadataOutput {
   return {
     animatedUrl: faker.internet.url(),
