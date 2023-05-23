@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 1.1.0-next.2
+
+### Patch Changes
+
+- 59c7a20: Added `isPostPublication`, `isCommentPublication` and `isMirrorPublication` helpers
+
 ## 1.1.0-next.1
 
 ### Minor Changes

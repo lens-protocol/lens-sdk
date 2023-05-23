@@ -1,5 +1,11 @@
 # @lens-protocol/api-bindings
 
+## 0.8.0-next.4
+
+### Patch Changes
+
+- 37bf8e8: Do not fallback to `undefined` with unsupported collect module in collect policy
+
 ## 0.8.0-next.3
 
 ### Minor Changes
