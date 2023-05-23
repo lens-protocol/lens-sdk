@@ -8,8 +8,6 @@ import {
   ReferencePolicyType,
   ContentWarning,
   ImageType,
-  CreatePostRequest,
-  CreateCommentRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { z } from 'zod';
 
@@ -151,8 +149,7 @@ const ReferencePolicyConfigSchema = z.union([
   FollowersOnlyReferencePolicyConfigSchema,
 ]);
 
-// see https://github.com/colinhacks/zod/issues/210#issuecomment-729775018
-const AppIdSchema: z.Schema<AppId> = z.any().refine(appId);
+const AppIdSchema: z.Schema<AppId, z.ZodTypeDef, string> = z.any().transform(appId);
 
 const BasePostRequestSchema = z.object({
   appId: AppIdSchema.optional(),
@@ -168,36 +165,24 @@ const BasePostRequestSchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
-const CreateTextualPostRequestSchema = BasePostRequestSchema.extend({
+export const CreateTextualPostRequestSchema = BasePostRequestSchema.extend({
   content: z.string(),
   contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
   media: z.array(MediaSchema).optional(),
 });
 
-const CreateMediaPostRequestSchema = BasePostRequestSchema.extend({
+export const CreateMediaPostRequestSchema = BasePostRequestSchema.extend({
   content: z.string().optional(),
   contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
   media: z.array(MediaSchema),
 });
 
-const CreateEmbedPostRequestSchema = BasePostRequestSchema.extend({
+export const CreateEmbedPostRequestSchema = BasePostRequestSchema.extend({
   animationUrl: z.string(),
   content: z.string().optional(),
   contentFocus: z.enum([ContentFocus.EMBED]),
   media: z.array(MediaSchema).optional(),
 });
-
-/**
- * The type annotation here to reduce the likelihood of incurring in the TS7056 error down the line:
- * ```
- * error TS7056: The inferred type of this node exceeds the maximum length the compiler will serialize. An explicit type annotation is needed.
- * ```
- */
-export const CreatePostRequestSchema: z.Schema<CreatePostRequest> = z.union([
-  CreateTextualPostRequestSchema,
-  CreateMediaPostRequestSchema,
-  CreateEmbedPostRequestSchema,
-]);
 
 const BaseCommentRequestSchema = z.object({
   appId: AppIdSchema.optional(),
@@ -214,36 +199,24 @@ const BaseCommentRequestSchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
-const CreateTextualCommentRequestSchema = BaseCommentRequestSchema.extend({
+export const CreateTextualCommentRequestSchema = BaseCommentRequestSchema.extend({
   content: z.string(),
   contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
   media: z.array(MediaSchema).optional(),
 });
 
-const CreateMediaCommentRequestSchema = BaseCommentRequestSchema.extend({
+export const CreateMediaCommentRequestSchema = BaseCommentRequestSchema.extend({
   content: z.string().optional(),
   contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
   media: z.array(MediaSchema),
 });
 
-/**
- * The type annotation here to reduce the likelihood of incurring in the TS7056 error down the line:
- * ```
- * error TS7056: The inferred type of this node exceeds the maximum length the compiler will serialize. An explicit type annotation is needed.
- * ```
- */
-const CreateEmbedCommentRequestSchema = BaseCommentRequestSchema.extend({
+export const CreateEmbedCommentRequestSchema = BaseCommentRequestSchema.extend({
   animationUrl: z.string(),
   content: z.string().optional(),
   contentFocus: z.enum([ContentFocus.EMBED]),
   media: z.array(MediaSchema).optional(),
 });
-
-export const CreateCommentRequestSchema: z.Schema<CreateCommentRequest> = z.union([
-  CreateTextualCommentRequestSchema,
-  CreateMediaCommentRequestSchema,
-  CreateEmbedCommentRequestSchema,
-]);
 
 export const CreateMirrorRequestSchema = z.object({
   profileId: ProfileIdSchema,
@@ -253,12 +226,15 @@ export const CreateMirrorRequestSchema = z.object({
   offChain: z.boolean(),
 });
 
-export const FreeCollectRequestSchema = z.object({
-  profileId: ProfileIdSchema,
-  type: z.literal(CollectType.FREE),
-  publicationId: PublicationIdSchema,
-  followerOnly: z.boolean(),
+const BaseCollectRequestSchema = z.object({
   kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
+  profileId: ProfileIdSchema,
+  publicationId: PublicationIdSchema,
+});
+
+export const FreeCollectRequestSchema = BaseCollectRequestSchema.extend({
+  type: z.literal(CollectType.FREE),
+  followerOnly: z.boolean(),
 });
 
 const CollectFeeSchema = z.object({
@@ -266,10 +242,7 @@ const CollectFeeSchema = z.object({
   contractAddress: z.string(),
 });
 
-export const PaidCollectRequestSchema = z.object({
-  profileId: ProfileIdSchema,
+export const PaidCollectRequestSchema = BaseCollectRequestSchema.extend({
   type: z.literal(CollectType.PAID),
-  publicationId: PublicationIdSchema,
   fee: CollectFeeSchema,
-  kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
 });
