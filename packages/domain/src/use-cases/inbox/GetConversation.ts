@@ -53,12 +53,12 @@ export class GetConversation {
 
     const messages = await this.messageGateway.fetchMessagesFor(conversation);
 
-    const data = this._assembleConversationData(conversation, messages);
+    const data = this.assembleConversationData(conversation, messages);
 
     this.presenter.presentConversation(data);
   }
 
-  private _assembleConversationData(
+  private assembleConversationData(
     conversation: Conversation,
     messages: Message[],
   ): GetConversationData {

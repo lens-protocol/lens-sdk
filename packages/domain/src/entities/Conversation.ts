@@ -1,10 +1,10 @@
-import { EthereumAddress } from '@lens-protocol/shared-kernel';
+import { Brand, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import { ProfileId } from './Profile';
 
 export type ConversationId = string;
-export type Markdown = string;
-export type Emoji = string;
+export type Markdown = Brand<string, 'Markdown'>;
+export type Emoji = Brand<string, 'Emoji'>;
 
 export type Participant = {
   profileId?: ProfileId;

@@ -52,12 +52,12 @@ export class GetAllConversations {
     });
     const messages = await this.messageGateway.fetchLastMessagesForEach(conversations);
 
-    const data = this._assembleConversationData(conversations, messages);
+    const data = this.assembleConversationData(conversations, messages);
 
     this.presenter.presentConversations(data);
   }
 
-  private _assembleConversationData(
+  private assembleConversationData(
     conversations: Conversation[],
     messages: Message[],
   ): ConversationData[] {
