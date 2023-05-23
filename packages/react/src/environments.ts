@@ -1,9 +1,20 @@
+import { ContentInsightMatcher, demoSnapshotPoll, snapshotPoll } from '@lens-protocol/api-bindings';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
 import { ChainConfigRegistry, goerli, mainnet, mumbai, polygon } from './chains';
 import { TransactionObserverTimings } from './transactions/infrastructure/TransactionObserver';
 
 export type { TransactionObserverTimings };
+
+/**
+ * The Snapshot.org integration configuration
+ *
+ * @internal
+ */
+export type SnapshotConfig = {
+  hub: Url;
+  matcher: ContentInsightMatcher;
+};
 
 /**
  * A function that resolves a profile handle to a fully qualified profile handle
@@ -23,6 +34,7 @@ export type EnvironmentConfig = {
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
   handleResolver: ProfileHandleResolver;
+  snapshot: SnapshotConfig;
 };
 
 /**
@@ -48,8 +60,11 @@ export const production: EnvironmentConfig = {
     maxMiningWaitTime: 60000,
   },
   handleResolver: (handle) => `${handle}.lens`,
+  snapshot: {
+    hub: 'https://hub.snapshot.org',
+    matcher: snapshotPoll,
+  },
 };
-
 /**
  * The development environment configuration
  *
@@ -73,6 +88,10 @@ export const development: EnvironmentConfig = {
     maxMiningWaitTime: 120000,
   },
   handleResolver: (handle) => `${handle}.test`,
+  snapshot: {
+    hub: 'https://testnet.snapshot.org',
+    matcher: demoSnapshotPoll,
+  },
 };
 
 /**

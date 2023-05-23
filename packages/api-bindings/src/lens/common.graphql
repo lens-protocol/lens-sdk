@@ -389,6 +389,7 @@ fragment CommentBase on Comment {
   collectPolicy @client
   referencePolicy @client
   decryptionCriteria @client
+  contentInsight @client
 }
 
 fragment CommonPaginatedResultInfo on PaginatedResultInfo {
@@ -527,6 +528,7 @@ fragment Post on Post {
   collectPolicy @client
   referencePolicy @client
   decryptionCriteria @client
+  contentInsight @client
 }
 
 fragment PendingPost on PendingPost {

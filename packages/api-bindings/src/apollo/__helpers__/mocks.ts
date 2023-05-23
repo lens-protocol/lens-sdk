@@ -3,7 +3,7 @@ import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
 import { LensApolloClient } from '../LensApolloClient';
-import { createMockApolloCache, MockCacheConfiguration } from '../cache/__helpers__/mocks';
+import { mockLensCache, MockCacheConfiguration } from '../cache/__helpers__/mocks';
 import { ApolloServerErrorCode } from '../isGraphQLValidationError';
 
 export function createMockApolloClientWithMultipleResponses(
@@ -11,7 +11,7 @@ export function createMockApolloClientWithMultipleResponses(
   cacheConfiguration: MockCacheConfiguration = {},
 ): LensApolloClient<NormalizedCacheObject> {
   return new LensApolloClient({
-    cache: createMockApolloCache(cacheConfiguration),
+    cache: mockLensCache(cacheConfiguration),
 
     link: mockSingleLink(...mocks).setOnError((error) => {
       throw error;

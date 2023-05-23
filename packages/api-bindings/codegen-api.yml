@@ -23,6 +23,7 @@ generates:
         CollectModuleData: string
         CollectPolicy: CollectPolicy
         ContentEncryptionKey: ContentEncryptionKey
+        ContentInsight: ContentInsight
         ContractAddress: string
         Cursor: string
         DataAvailabilityId: string
@@ -82,6 +83,7 @@ generates:
               "import type { AppId, DecryptionCriteria, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
               "import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';",
               "import type { ContentEncryptionKey } from './ContentEncryptionKey';",
+              "import type { ContentInsight } from './ContentInsight';",
               "import type { ProfileAttributes } from './ProfileAttributes';",
               "import type { FollowPolicy } from './FollowPolicy';",
               "import type { FollowStatus } from './FollowStatus';",
@@ -101,3 +103,32 @@ generates:
           fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents
       - 'typescript-apollo-client-helpers'
       - 'fragment-matcher'
+
+  src/snapshot/generated.ts:
+    config:
+      strictScalars: true
+      scalars:
+        Any: unknown
+    schema: https://hub.snapshot.org/graphql
+    documents:
+      - src/snapshot/*.graphql
+    plugins:
+      - 'typescript':
+          onlyOperationTypes: true # scalars and enums
+      - add:
+          content: [
+              '/** Code generated. DO NOT EDIT. */',
+              '/* eslint-disable import/no-default-export */', # generatedTypes default export
+              '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
+            ]
+      - 'typescript-operations':
+          skipTypename: true
+          immutableTypes: false
+          inlineFragmentTypes: combine
+          omitOperationSuffix: true
+          operationResultSuffix: 'Data'
+      - 'typescript-react-apollo':
+          pureMagicComment: true # keep
+          omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix
+          operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix
+          fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents
