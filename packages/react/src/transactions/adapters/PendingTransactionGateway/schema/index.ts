@@ -1,13 +1,17 @@
 import { ProxyActionStatus } from '@lens-protocol/domain/entities';
-import { ChainType } from '@lens-protocol/shared-kernel';
+import {
+  AnyTransactionRequest,
+  ProtocolTransactionRequest,
+} from '@lens-protocol/domain/use-cases/transactions';
+import { ChainType, UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
 import { TokenAllowanceRequestSchema } from './erc20';
 import {
   CreateProfileRequestSchema,
-  UnconstrainedFollowRequestSchema,
   PaidFollowRequestSchema,
   ProfileOwnerFollowRequestSchema,
+  UnconstrainedFollowRequestSchema,
   UnfollowRequestSchema,
   UpdateDispatcherConfigRequestSchema,
   UpdateFollowPolicyRequestSchema,
@@ -16,26 +20,42 @@ import {
   UpdateProfileDetailsRequestSchema,
 } from './profiles';
 import {
-  CreateCommentRequestSchema,
+  CreateEmbedCommentRequestSchema,
+  CreateEmbedPostRequestSchema,
+  CreateMediaCommentRequestSchema,
+  CreateMediaPostRequestSchema,
   CreateMirrorRequestSchema,
-  CreatePostRequestSchema,
+  CreateTextualCommentRequestSchema,
+  CreateTextualPostRequestSchema,
   FreeCollectRequestSchema,
   PaidCollectRequestSchema,
 } from './publications';
 
-const ProtocolTransactionRequestSchema = z.union([
+// the repetition of the schemas compared to AnyTransactionRequestSchema
+// is intentional due to https://github.com/colinhacks/zod/issues/2106
+const ProtocolTransactionRequestSchema: z.Schema<
+  ProtocolTransactionRequest,
+  z.ZodTypeDef,
+  UnknownObject
+> = z.union([
   // CollectRequest schemas
   FreeCollectRequestSchema,
   PaidCollectRequestSchema,
 
   // FollowRequest schemas
-  UnconstrainedFollowRequestSchema,
   PaidFollowRequestSchema,
   ProfileOwnerFollowRequestSchema,
+  UnconstrainedFollowRequestSchema,
 
-  CreatePostRequestSchema,
+  // CreatePostRequest schemas
+  CreateEmbedPostRequestSchema,
+  CreateMediaPostRequestSchema,
+  CreateTextualPostRequestSchema,
 
-  CreateCommentRequestSchema,
+  // CreateCommentRequest schemas
+  CreateEmbedCommentRequestSchema,
+  CreateMediaCommentRequestSchema,
+  CreateTextualCommentRequestSchema,
 
   CreateMirrorRequestSchema,
 
@@ -54,11 +74,51 @@ const ProtocolTransactionRequestSchema = z.union([
   UpdateOffChainProfileImageRequestSchema,
 ]);
 
-const AnyTransactionRequestSchema = z.union([
-  TokenAllowanceRequestSchema,
+// the repetition of the schemas compared to ProtocolTransactionRequestSchema
+// is intentional due to https://github.com/colinhacks/zod/issues/2106
+const AnyTransactionRequestSchema: z.Schema<AnyTransactionRequest, z.ZodTypeDef, UnknownObject> =
+  z.union([
+    TokenAllowanceRequestSchema,
 
-  ProtocolTransactionRequestSchema,
-]);
+    // CollectRequest schemas
+    FreeCollectRequestSchema,
+    PaidCollectRequestSchema,
+
+    // FollowRequest schemas
+    PaidFollowRequestSchema,
+    ProfileOwnerFollowRequestSchema,
+    UnconstrainedFollowRequestSchema,
+
+    CreateTextualPostRequestSchema,
+    CreateMediaPostRequestSchema,
+    CreateEmbedPostRequestSchema,
+
+    // CreatePostRequest schemas
+    CreateEmbedPostRequestSchema,
+    CreateMediaPostRequestSchema,
+    CreateTextualPostRequestSchema,
+
+    // CreateCommentRequest schemas
+    CreateEmbedCommentRequestSchema,
+    CreateMediaCommentRequestSchema,
+    CreateTextualCommentRequestSchema,
+
+    CreateMirrorRequestSchema,
+
+    CreateProfileRequestSchema,
+
+    UnfollowRequestSchema,
+
+    UpdateDispatcherConfigRequestSchema,
+
+    UpdateFollowPolicyRequestSchema,
+
+    UpdateProfileDetailsRequestSchema,
+
+    // UpdateProfileImageRequest schemas
+    UpdateNftProfileImageRequestSchema,
+    UpdateOffChainProfileImageRequestSchema,
+  ]);
 
 export enum TransactionType {
   Native,
@@ -110,7 +170,7 @@ const DataTransactionSchema = z.object({
 
 type DataTransactionSchema = z.infer<typeof DataTransactionSchema>;
 
-export const TransactionSchema = z.union([
+export const TransactionSchema = z.discriminatedUnion('type', [
   MetaTransactionSchema,
   NativeTransactionSchema,
   ProxyTransactionSchema,
