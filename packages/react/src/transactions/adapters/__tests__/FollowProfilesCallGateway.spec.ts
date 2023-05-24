@@ -9,8 +9,9 @@ import {
   mockCreateFollowTypedDataData,
   createMockApolloClientWithMultipleResponses,
   createBroadcastProxyActionCallMockedResponse,
+  createBroadcastProxyActionCallMockedError,
 } from '@lens-protocol/api-bindings/mocks';
-import { ProxyActionStatus } from '@lens-protocol/domain/entities';
+import { ProxyActionStatus, ProxyTransaction } from '@lens-protocol/domain/entities';
 import {
   mockNonce,
   mockPaidFollowRequest,
@@ -18,6 +19,7 @@ import {
   mockUnconstrainedFollowRequest,
 } from '@lens-protocol/domain/mocks';
 import { UnconstrainedFollowRequest } from '@lens-protocol/domain/use-cases/profile';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, ILogger, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
@@ -215,45 +217,94 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
   describe(`when calling the "${FollowProfilesCallGateway.prototype.createProxyTransaction.name}" method`, () => {
     describe('with an UnconstrainedFollowRequest', () => {
       const request = mockUnconstrainedFollowRequest();
-      it(`should resolve with  on Polygon`, async () => {
-        const indexingId = 'indexing-id';
-        const apollo = createMockApolloClientWithMultipleResponses([
-          createBroadcastProxyActionCallMockedResponse({
-            result: indexingId,
-            variables: {
-              request: {
-                follow: {
-                  freeFollow: {
-                    profileId: request.profileId,
+      describe('and receiving a successful response', () => {
+        it(`should resolve with ${ProxyTransaction.name} on Polygon`, async () => {
+          const indexingId = 'indexing-id';
+          const apollo = createMockApolloClientWithMultipleResponses([
+            createBroadcastProxyActionCallMockedResponse({
+              result: indexingId,
+              variables: {
+                request: {
+                  follow: {
+                    freeFollow: {
+                      profileId: request.profileId,
+                    },
                   },
                 },
               },
-            },
-          }),
-        ]);
-        const mockTransactionObserver = mockITransactionObserver();
-        const factory = mockITransactionFactory(mockTransactionObserver);
-        const followProfilesCallGateway = mockFollowProfilesCallGateway({ apollo, factory });
+            }),
+          ]);
+          const mockTransactionObserver = mockITransactionObserver();
+          const factory = mockITransactionFactory(mockTransactionObserver);
+          const followProfilesCallGateway = mockFollowProfilesCallGateway({ apollo, factory });
 
-        const transactionResult = await followProfilesCallGateway.createProxyTransaction(request);
+          const transactionResult = await followProfilesCallGateway.createProxyTransaction(request);
 
-        if (transactionResult.isFailure()) throw transactionResult.error;
+          if (transactionResult.isFailure()) throw transactionResult.error;
 
-        const transaction = transactionResult.value;
+          const transaction = transactionResult.value;
 
-        await transaction.waitNextEvent();
+          await transaction.waitNextEvent();
 
-        expect(transaction).toEqual(
-          expect.objectContaining({
-            chainType: ChainType.POLYGON,
-            id: 'id',
-            request,
-            status: ProxyActionStatus.MINTING,
-          }),
-        );
+          expect(transaction).toEqual(
+            expect.objectContaining({
+              chainType: ChainType.POLYGON,
+              id: 'id',
+              request,
+              status: ProxyActionStatus.MINTING,
+            }),
+          );
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-        expect((transaction as any).state.proxyId).toEqual(indexingId);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+          expect((transaction as any).state.proxyId).toEqual(indexingId);
+        });
+      });
+
+      describe('and receiving an error response', () => {
+        it.only('should return broadcast error with fallback', async () => {
+          const apollo = createMockApolloClientWithMultipleResponses([
+            createBroadcastProxyActionCallMockedError({
+              errorMessage: 'Failed to broadcast proxy action call',
+              variables: {
+                request: {
+                  follow: {
+                    freeFollow: {
+                      profileId: request.profileId,
+                    },
+                  },
+                },
+              },
+            }),
+            createCreateFollowTypedDataMutationMockedResponse({
+              variables: {
+                request: {
+                  follow: [
+                    {
+                      profile: request.profileId,
+                    },
+                  ],
+                },
+              },
+              data: mockCreateFollowTypedDataData(),
+            }),
+          ]);
+          const mockTransactionObserver = mockITransactionObserver();
+          const factory = mockITransactionFactory(mockTransactionObserver);
+          const followProfilesCallGateway = mockFollowProfilesCallGateway({ apollo, factory });
+
+          const transactionResult = await followProfilesCallGateway.createProxyTransaction(request);
+
+          if (transactionResult.isSuccess()) throw new Error('Expected transaction to fail');
+
+          expect(transactionResult.error).toEqual(
+            new BroadcastingError('Failed to broadcast proxy action call'),
+          );
+          expect(transactionResult.error.fallback).toEqual(
+            expect.objectContaining({
+              ...request,
+            }),
+          );
+        });
       });
     });
   });

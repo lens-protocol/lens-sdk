@@ -10,8 +10,8 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
-  SubsidizeOnChain,
   SignlessSubsidizeOnChain,
+  SubsidizeOnChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
@@ -19,7 +19,6 @@ import {
 } from '@lens-protocol/domain/use-cases/wallets';
 
 import { useSharedDependencies } from '../../shared';
-import { CollectProxyActionRelayer } from './CollectProxyActionRelayer';
 import { CollectPublicationCallGateway } from './CollectPublicationCallGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 
@@ -36,7 +35,11 @@ export function useCollectController() {
   } = useSharedDependencies();
 
   return async (request: CollectRequest) => {
-    const collectPublicationCallGateway = new CollectPublicationCallGateway(apolloClient);
+    const collectPublicationCallGateway = new CollectPublicationCallGateway(
+      apolloClient,
+      transactionFactory,
+      logger,
+    );
 
     const presenter = new PromiseResultPresenter<
       void,
@@ -57,13 +60,8 @@ export function useCollectController() {
       presenter,
     );
 
-    const collectProxyActionRelayer = new CollectProxyActionRelayer(
-      apolloClient,
-      transactionFactory,
-      logger,
-    );
     const signlessCollect = new SignlessSubsidizeOnChain<FreeCollectRequest>(
-      collectProxyActionRelayer,
+      collectPublicationCallGateway,
       transactionQueue,
       presenter,
     );
