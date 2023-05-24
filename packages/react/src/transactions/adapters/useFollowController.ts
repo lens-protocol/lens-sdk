@@ -10,8 +10,8 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
-  SubsidizeOnChain,
   SignlessSubsidizeOnChain,
+  SubsidizeOnChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
@@ -20,7 +20,6 @@ import {
 
 import { useSharedDependencies } from '../../shared';
 import { FollowProfilesCallGateway } from './FollowProfilesCallGateway';
-import { FollowProxyActionRelayer } from './FollowProxyActionRelayer';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 
 export function useFollowController() {
@@ -46,7 +45,11 @@ export function useFollowController() {
       | WalletConnectionError
     >();
 
-    const followProfilesCallGateway = new FollowProfilesCallGateway(apolloClient);
+    const followProfilesCallGateway = new FollowProfilesCallGateway(
+      apolloClient,
+      transactionFactory,
+      logger,
+    );
 
     const signedFollow = new SubsidizeOnChain<FollowRequest>(
       activeWallet,
@@ -57,13 +60,8 @@ export function useFollowController() {
       presenter,
     );
 
-    const followProxyActionRelayer = new FollowProxyActionRelayer(
-      apolloClient,
-      transactionFactory,
-      logger,
-    );
     const signlessFollow = new SignlessSubsidizeOnChain<UnconstrainedFollowRequest>(
-      followProxyActionRelayer,
+      followProfilesCallGateway,
       transactionQueue,
       presenter,
     );

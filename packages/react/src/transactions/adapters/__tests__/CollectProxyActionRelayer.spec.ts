@@ -67,7 +67,11 @@ describe(`Given an instance of the ${CollectProxyActionRelayer.name}`, () => {
       const factory = mockITransactionFactory(mockTransactionObserver);
       const transactionRelayer = setupCollectProxyActionRelayer({ apollo, factory });
 
-      const transaction = await transactionRelayer.createProxyTransaction(request);
+      const transactionResult = await transactionRelayer.createProxyTransaction(request);
+
+      if (transactionResult.isFailure()) throw transactionResult.error;
+
+      const transaction = transactionResult.value;
 
       await transaction.waitNextEvent();
 

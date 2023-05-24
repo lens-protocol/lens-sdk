@@ -1,15 +1,16 @@
-import { success } from '@lens-protocol/shared-kernel';
+import { PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
 
 import {
   ProtocolTransactionRequestModel,
   ProxyTransaction,
   AnyTransactionRequestModel,
 } from '../../entities';
+import { BroadcastingError } from './BroadcastingError';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
 export interface ISignlessSubsidizedCallRelayer<T extends ProtocolTransactionRequestModel> {
-  createProxyTransaction(request: T): Promise<ProxyTransaction<T>>;
+  createProxyTransaction(request: T): PromiseResult<ProxyTransaction<T>, BroadcastingError>;
 }
 
 export type ISignlessSubsidizeOnChainPresenter = IGenericResultPresenter<void, Error>;
@@ -24,7 +25,11 @@ export class SignlessSubsidizeOnChain<T extends ProtocolTransactionRequestModel>
   async execute(request: T) {
     const transaction = await this.relayer.createProxyTransaction(request);
 
-    await this.transactionQueue.push(transaction);
+    if (transaction.isFailure()) {
+      this.presenter.present(failure(transaction.error));
+      return;
+    }
+    await this.transactionQueue.push(transaction.value);
 
     this.presenter.present(success());
   }
