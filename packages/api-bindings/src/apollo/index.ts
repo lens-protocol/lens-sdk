@@ -41,6 +41,7 @@ export function createLensApolloClient({
   });
 
   return new LensApolloClient({
+    connectToDevTools: true,
     cache: createLensCache({ activeWalletVar, contentMatchers }),
     link: from([authLink, httpLink]),
     pollingInterval,

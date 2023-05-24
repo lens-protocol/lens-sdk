@@ -8,6 +8,7 @@ import { publicProvider } from 'wagmi/providers/public';
 
 import { Home } from './HomePage';
 import { AuthenticationPage } from './authentication/AuthenticationPage';
+import { LoginSpecificProfile } from './authentication/LoginSpecificProfile';
 import { Breadcrumbs } from './components/Breadcrumbs';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
 import { ErrorMessage } from './components/error/ErrorMessage';
@@ -18,12 +19,12 @@ import { UseExplorePublications } from './discovery/UseExplorePublications';
 import { UseFeed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
-import { LoginSpecificProfile } from './misc/LoginSpecificProfile';
 import { MiscPage } from './misc/MiscPage';
 import { UseApproveModule } from './misc/UseApproveModule';
 import { UseCurrencies } from './misc/UseCurrencies';
 import { UseEnabledModules } from './misc/UseEnabledModules';
 import { UseNotifications } from './misc/UseNotifications';
+import { UsePollDetails } from './misc/UsePollDetails';
 import { UseRecentTransactions } from './misc/UseRecentTransactions';
 import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
 import { ProfilesPage } from './profiles/ProfilesPage';
@@ -89,6 +90,10 @@ export function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/authentication" element={<AuthenticationPage />} />
+                <Route
+                  path="/authentication/loginSpecificProfile"
+                  element={<LoginSpecificProfile />}
+                />
 
                 <Route path="/publications" element={<PublicationsPage />} />
                 <Route path="/publications/usePublication" element={<UsePublication />} />
@@ -185,7 +190,7 @@ export function App() {
                 />
                 <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
                 <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
-                <Route path="/misc/loginSpecificProfile" element={<LoginSpecificProfile />} />
+                <Route path="/misc/usePollDetails" element={<UsePollDetails />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

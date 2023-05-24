@@ -1,9 +1,51 @@
 fragment SnapshotProposal on Proposal {
   id
+  author
+  state
+  title
+  choices
+  scores
+  scores_total
+  snapshot
+  symbol
+  network
+  type
+  start
+  end
+  space {
+    id
+    name
+  }
+  strategies {
+    network
+    name
+    params
+  }
 }
 
-query GetSnapshotProposal($id: String!) {
-  proposal(id: $id) {
+fragment SnapshotVote on Vote {
+  choice
+}
+
+fragment SnapshotVotePower on Vp {
+  value: vp
+}
+
+query GetSnapshotProposal(
+  $spaceId: String!
+  $proposalId: String!
+  $voterAddress: String!
+  $includeVotes: Boolean!
+) {
+  proposal(id: $proposalId) {
     ...SnapshotProposal
+  }
+
+  votes(where: { proposal: $proposalId, voter: $voterAddress }) @include(if: $includeVotes) {
+    ...SnapshotVote
+  }
+
+  vp(voter: $voterAddress, space: $spaceId, proposal: $proposalId) @include(if: $includeVotes) {
+    ...SnapshotVotePower
   }
 }

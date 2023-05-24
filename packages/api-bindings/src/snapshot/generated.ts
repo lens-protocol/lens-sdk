@@ -202,26 +202,97 @@ export type VoteWhere = {
   vp_state_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type SnapshotProposal = { id: string };
+export type SnapshotProposal = {
+  id: string;
+  author: string;
+  state: string | null;
+  title: string;
+  choices: Array<string | null>;
+  scores: Array<number | null> | null;
+  scores_total: number | null;
+  snapshot: string | null;
+  symbol: string;
+  network: string;
+  type: string | null;
+  start: number;
+  end: number;
+  space: { id: string; name: string | null } | null;
+  strategies: Array<{ network: string | null; name: string; params: unknown | null } | null>;
+};
+
+export type SnapshotVote = { choice: unknown };
+
+export type SnapshotVotePower = { value: number | null };
 
 export type GetSnapshotProposalVariables = Exact<{
-  id: Scalars['String'];
+  spaceId: Scalars['String'];
+  proposalId: Scalars['String'];
+  voterAddress: Scalars['String'];
+  includeVotes: Scalars['Boolean'];
 }>;
 
-export type GetSnapshotProposalData = { proposal: SnapshotProposal | null };
+export type GetSnapshotProposalData = {
+  proposal: SnapshotProposal | null;
+  votes?: Array<SnapshotVote | null> | null;
+  vp?: SnapshotVotePower | null;
+};
 
 export const FragmentSnapshotProposal = /*#__PURE__*/ gql`
   fragment SnapshotProposal on Proposal {
     id
+    author
+    state
+    title
+    choices
+    scores
+    scores_total
+    snapshot
+    symbol
+    network
+    type
+    start
+    end
+    space {
+      id
+      name
+    }
+    strategies {
+      network
+      name
+      params
+    }
+  }
+`;
+export const FragmentSnapshotVote = /*#__PURE__*/ gql`
+  fragment SnapshotVote on Vote {
+    choice
+  }
+`;
+export const FragmentSnapshotVotePower = /*#__PURE__*/ gql`
+  fragment SnapshotVotePower on Vp {
+    value: vp
   }
 `;
 export const GetSnapshotProposalDocument = /*#__PURE__*/ gql`
-  query GetSnapshotProposal($id: String!) {
-    proposal(id: $id) {
+  query GetSnapshotProposal(
+    $spaceId: String!
+    $proposalId: String!
+    $voterAddress: String!
+    $includeVotes: Boolean!
+  ) {
+    proposal(id: $proposalId) {
       ...SnapshotProposal
+    }
+    votes(where: { proposal: $proposalId, voter: $voterAddress }) @include(if: $includeVotes) {
+      ...SnapshotVote
+    }
+    vp(voter: $voterAddress, space: $spaceId, proposal: $proposalId) @include(if: $includeVotes) {
+      ...SnapshotVotePower
     }
   }
   ${FragmentSnapshotProposal}
+  ${FragmentSnapshotVote}
+  ${FragmentSnapshotVotePower}
 `;
 
 /**
@@ -236,7 +307,10 @@ export const GetSnapshotProposalDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useGetSnapshotProposal({
  *   variables: {
- *      id: // value for 'id'
+ *      spaceId: // value for 'spaceId'
+ *      proposalId: // value for 'proposalId'
+ *      voterAddress: // value for 'voterAddress'
+ *      includeVotes: // value for 'includeVotes'
  *   },
  * });
  */
