@@ -1,10 +1,4 @@
-import {
-  EthereumAddress,
-  failure,
-  invariant,
-  PromiseResult,
-  success,
-} from '@lens-protocol/shared-kernel';
+import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
 
 import { LensConfig } from '../consts/config';
@@ -121,11 +115,13 @@ export class Authentication implements IAuthentication {
       const newCredentials = await this.api.refresh(credentials.refreshToken);
       await this.storage.set(newCredentials);
 
-      invariant(newCredentials.accessToken, 'Access token should be defined');
+      if (!newCredentials.accessToken) {
+        return failure(new CredentialsExpiredError());
+      }
+
       return success(newCredentials.accessToken);
     }
 
-    // otherwise
     return failure(new CredentialsExpiredError());
   }
 
@@ -149,7 +145,6 @@ export class Authentication implements IAuthentication {
       return success(this.buildHeader(newCredentials.accessToken));
     }
 
-    // otherwise
     return failure(new CredentialsExpiredError());
   }
 
