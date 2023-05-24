@@ -14,7 +14,12 @@ async function main() {
 
   await lensClient.authentication.authenticate(address, signature);
 
-  console.log(`Is LensClient authenticated? :`, await lensClient.authentication.isAuthenticated());
+  const accessTokenResult = await lensClient.authentication.getAccessToken();
+  const accessToken = accessTokenResult.unwrap();
+
+  console.log(`Is LensClient authenticated? `, await lensClient.authentication.isAuthenticated());
+  console.log(`Access token: `, accessToken);
+  console.log(`Is access token valid? `, await lensClient.authentication.verify(accessToken));
 }
 
 main();

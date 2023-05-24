@@ -52,6 +52,44 @@ describe(`Given the ${Authentication.name} configured to work with the test envi
     });
   });
 
+  describe(`when the method ${Authentication.prototype.getAccessToken.name} is called`, () => {
+    describe(`and there are no credentials stored`, () => {
+      it(`should return failure with a correct error`, async () => {
+        const authentication = new Authentication(testConfig);
+
+        const result = await authentication.getAccessToken();
+
+        expect(result.isFailure()).toBeTruthy();
+        expect(() => result.unwrap()).toThrow(NotAuthenticatedError);
+      });
+    });
+
+    describeAuthenticatedScenario()((getTestSetup) => {
+      describe(`and credentials are expired and can't refresh`, () => {
+        it(`should return failure with a correct error`, async () => {
+          const { authentication } = getTestSetup();
+          jest.useFakeTimers().setSystemTime(Date.now() + DateUtils.hoursToMs(24 * 7)); // refreshToken is valid for 7 days
+
+          const result = await authentication.getAccessToken();
+
+          expect(result.isFailure()).toBeTruthy();
+          expect(() => result.unwrap()).toThrow(CredentialsExpiredError);
+        });
+      });
+
+      describe(`and credentials are good`, () => {
+        it(`should return the access token`, async () => {
+          const { authentication } = getTestSetup();
+
+          const result = await authentication.getAccessToken();
+
+          expect(result.isSuccess()).toBeTruthy();
+          expect(result.unwrap().length).toBeGreaterThan(20); // long jwt token string
+        });
+      });
+    });
+  });
+
   describe(`when the method ${Authentication.prototype.getRequestHeader.name} is called`, () => {
     describe(`and there are no credentials stored`, () => {
       it(`should return a failure with an error`, async () => {
