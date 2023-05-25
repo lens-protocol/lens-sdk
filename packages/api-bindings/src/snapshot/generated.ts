@@ -216,6 +216,7 @@ export type SnapshotProposal = {
   type: string | null;
   start: number;
   end: number;
+  quorum: number;
   space: { id: string; name: string | null } | null;
   strategies: Array<{ network: string | null; name: string; params: unknown | null } | null>;
 };
@@ -252,6 +253,7 @@ export const FragmentSnapshotProposal = /*#__PURE__*/ gql`
     type
     start
     end
+    quorum
     space {
       id
       name

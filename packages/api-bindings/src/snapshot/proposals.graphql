@@ -12,6 +12,7 @@ fragment SnapshotProposal on Proposal {
   type
   start
   end
+  quorum
   space {
     id
     name

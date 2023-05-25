@@ -119,6 +119,8 @@ export type SnapshotDetails = {
   endAt: Date;
   isActive: boolean;
   isSingleChoice: boolean;
+  quorum: number;
+  snapshot: string | null;
   space: SnapshotSpace;
   startAt: Date;
   system: SnapshotVotingSystem;
@@ -255,6 +257,8 @@ export function usePollDetails({
         isSingleChoice:
           data.proposal.type === SnapshotVotingSystem.SINGLE_CHOICE ||
           data.proposal.type === SnapshotVotingSystem.BASIC,
+        quorum: data.proposal.quorum,
+        snapshot: data.proposal.snapshot,
         space: {
           id: publication.contentInsight.spaceId,
           name: data.proposal.space?.name ?? publication.contentInsight.spaceId,
