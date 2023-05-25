@@ -5,7 +5,7 @@ import {
   Profile,
   Post,
   isPostPublication,
-  LensApolloClient,
+  SafeApolloClient,
   Sources,
   GetPublicationData,
   GetPublicationVariables,
@@ -53,7 +53,7 @@ export const recentPosts = makeVar<ReadonlyArray<PendingPost | Post>>([]);
 export class CreatePostResponder implements ITransactionResponder<CreatePostRequest> {
   constructor(
     private readonly profileCacheManager: IProfileCacheManager,
-    private readonly client: LensApolloClient,
+    private readonly client: SafeApolloClient,
     private readonly sources: Sources,
   ) {}
 

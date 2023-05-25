@@ -1,6 +1,6 @@
 import {
   omitTypename,
-  LensApolloClient,
+  SafeApolloClient,
   CreateDataAvailabilityMirrorViaDispatcherData,
   CreateDataAvailabilityMirrorViaDispatcherVariables,
   CreateDataAvailabilityMirrorViaDispatcherDocument,
@@ -33,7 +33,7 @@ export class CreateOffChainMirrorGateway
     IOffChainProtocolCallGateway<CreateMirrorRequest>
 {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateMirrorRequest>,
   ) {}
 

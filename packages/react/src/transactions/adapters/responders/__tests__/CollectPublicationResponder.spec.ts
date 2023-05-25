@@ -9,7 +9,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import {
   createGetPublicationMockedResponse,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockCommentFragment,
   mockMirrorFragment,
   mockPostFragment,
@@ -41,7 +41,7 @@ function setupTestScenario({
   activeProfileIdentifierVar(activeProfile);
 
   const sources = mockSources();
-  const apolloClient = createMockApolloClientWithMultipleResponses([
+  const apolloClient = mockLensApolloClient([
     createGetPublicationMockedResponse({
       variables: {
         request: { publicationId: publication.id },

@@ -3,7 +3,7 @@ import {
   CreateFollowTypedDataData,
   CreateFollowTypedDataVariables,
   Follow,
-  LensApolloClient,
+  SafeApolloClient,
   moduleFeeAmountParams,
   omitTypename,
 } from '@lens-protocol/api-bindings';
@@ -48,7 +48,7 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
 }
 
 export class FollowProfilesCallGateway implements IOnChainProtocolCallGateway<FollowRequest> {
-  constructor(private apolloClient: LensApolloClient) {}
+  constructor(private apolloClient: SafeApolloClient) {}
 
   async createUnsignedProtocolCall(
     request: FollowRequest,

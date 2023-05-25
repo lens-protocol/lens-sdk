@@ -2,7 +2,7 @@ import {
   CreateProfileDocument,
   CreateProfileData,
   CreateProfileVariables,
-  LensApolloClient,
+  SafeApolloClient,
   RelayErrorReasons,
 } from '@lens-protocol/api-bindings';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
@@ -20,7 +20,7 @@ import { handleRelayError } from '../../transactions/adapters/relayer';
 
 export class ProfileTransactionGateway implements IProfileTransactionGateway {
   constructor(
-    private apolloClient: LensApolloClient,
+    private apolloClient: SafeApolloClient,
     private factory: ITransactionFactory<CreateProfileRequest>,
   ) {}
 

@@ -1,5 +1,5 @@
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createHidePublicationMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockHidePublicationRequest, mockPublicationId } from '@lens-protocol/domain/mocks';
@@ -11,7 +11,7 @@ describe(`Given an instance of the ${HidePublicationGateway.name}`, () => {
     it(`should perform the expected mutation request`, async () => {
       const publicationId = mockPublicationId();
 
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createHidePublicationMockedResponse({
           variables: {
             publicationId,

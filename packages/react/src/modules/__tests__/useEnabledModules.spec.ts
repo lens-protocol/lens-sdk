@@ -1,5 +1,5 @@
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockEnabledModulesFragment,
   createEnabledModulesMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
@@ -14,7 +14,7 @@ describe(`Given the ${useEnabledModules.name} hook`, () => {
       const enabledModules = mockEnabledModulesFragment();
       const { result } = renderHookWithMocks(() => useEnabledModules(), {
         mocks: {
-          apolloClient: createMockApolloClientWithMultipleResponses([
+          apolloClient: mockLensApolloClient([
             createEnabledModulesMockedResponse({ data: enabledModules }),
           ]),
         },

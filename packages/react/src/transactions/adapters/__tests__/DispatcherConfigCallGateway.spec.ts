@@ -5,7 +5,7 @@ import {
   CreateSetDispatcherTypedDataVariables,
 } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockCreateSetDispatcherTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockNonce, mockUpdateDispatcherConfigRequest } from '@lens-protocol/domain/mocks';
@@ -39,7 +39,7 @@ describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
 
       const data = mockCreateSetDispatcherTypedDataData();
 
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         mockCreateSetDispatcherTypedDataMutationMockedResponse({
           variables: {
             request: {
@@ -63,7 +63,7 @@ describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
 
       const nonce = mockNonce();
 
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         mockCreateSetDispatcherTypedDataMutationMockedResponse({
           variables: {
             request: {

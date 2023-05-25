@@ -1,5 +1,5 @@
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createMutualFollowersMockedResponse,
   mockProfileFragment,
   mockSources,
@@ -28,7 +28,7 @@ describe('Given the useMutualFollowers hook', () => {
         {
           mocks: {
             sources,
-            apolloClient: createMockApolloClientWithMultipleResponses([
+            apolloClient: mockLensApolloClient([
               createMutualFollowersMockedResponse({
                 variables: {
                   observerId: observer.id,

@@ -1,5 +1,5 @@
 import {
-  LensApolloClient,
+  SafeApolloClient,
   Sources,
   activeProfileIdentifierVar,
   GetPublicationDocument,
@@ -13,7 +13,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 
 export class CollectPublicationResponder implements ITransactionResponder<CollectRequest> {
-  constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
+  constructor(private readonly client: SafeApolloClient, private readonly sources: Sources) {}
 
   async commit({ request }: TransactionData<CollectRequest>) {
     const activeProfile = activeProfileIdentifierVar();

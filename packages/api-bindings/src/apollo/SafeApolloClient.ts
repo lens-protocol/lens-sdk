@@ -39,7 +39,7 @@ function isTerminating(link: ApolloLink): boolean {
   return link.request.length <= 1;
 }
 
-export type LensApolloClientOptions<TCacheShape> = {
+export type SafeApolloClientOptions<TCacheShape> = {
   cache: ApolloCache<TCacheShape>;
   /**
    * @defaultValue false
@@ -50,7 +50,7 @@ export type LensApolloClientOptions<TCacheShape> = {
   link: ApolloLink;
 };
 
-export class LensApolloClient<TCacheShape extends NormalizedCacheObject = NormalizedCacheObject>
+export class SafeApolloClient<TCacheShape extends NormalizedCacheObject = NormalizedCacheObject>
   extends ApolloClient<TCacheShape>
   implements IGraphQLClient<TCacheShape>
 {
@@ -62,10 +62,10 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
     pollingInterval = defaultPollingInterval,
     version,
     connectToDevTools = false,
-  }: LensApolloClientOptions<TCacheShape>) {
+  }: SafeApolloClientOptions<TCacheShape>) {
     invariant(
       isTerminating(link),
-      'The link passed to LensApolloClient must be a terminating link.',
+      'The link passed to SafeApolloClient must be a terminating link.',
     );
 
     super({

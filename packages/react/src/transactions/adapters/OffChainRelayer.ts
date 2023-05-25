@@ -1,5 +1,5 @@
 import {
-  LensApolloClient,
+  SafeApolloClient,
   BroadcastOffChainData,
   BroadcastOffChainVariables,
   BroadcastOffChainDocument,
@@ -25,7 +25,7 @@ import { handleRelayError, OffChainBroadcastReceipt } from './relayer';
 
 export class OffChainRelayer implements IOffChainRelayer<CreatePostRequest> {
   constructor(
-    private apolloClient: LensApolloClient,
+    private apolloClient: SafeApolloClient,
     private factory: ITransactionFactory<ProtocolTransactionRequest>,
     private logger: ILogger,
   ) {}

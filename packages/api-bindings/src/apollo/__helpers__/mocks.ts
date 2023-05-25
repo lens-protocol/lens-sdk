@@ -2,15 +2,15 @@ import { NormalizedCacheObject } from '@apollo/client';
 import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
-import { LensApolloClient } from '../LensApolloClient';
+import { SafeApolloClient } from '../SafeApolloClient';
 import { mockLensCache, MockCacheConfiguration } from '../cache/__helpers__/mocks';
 import { ApolloServerErrorCode } from '../isGraphQLValidationError';
 
-export function createMockApolloClientWithMultipleResponses(
+export function mockLensApolloClient(
   mocks: ReadonlyArray<MockedResponse<unknown>>,
   cacheConfiguration: MockCacheConfiguration = {},
-): LensApolloClient<NormalizedCacheObject> {
-  return new LensApolloClient({
+): SafeApolloClient<NormalizedCacheObject> {
+  return new SafeApolloClient({
     cache: mockLensCache(cacheConfiguration),
 
     link: mockSingleLink(...mocks).setOnError((error) => {

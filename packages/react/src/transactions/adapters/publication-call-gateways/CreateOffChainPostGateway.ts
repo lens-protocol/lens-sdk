@@ -1,5 +1,5 @@
 import {
-  LensApolloClient,
+  SafeApolloClient,
   omitTypename,
   CreateDataAvailabilityPostTypedDataDocument,
   CreateDataAvailabilityPostTypedDataData,
@@ -35,7 +35,7 @@ export class CreateOffChainPostGateway
     IOffChainProtocolCallGateway<CreatePostRequest>
 {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreatePostRequest>,
     private readonly metadataUploader: IMetadataUploader<CreatePostRequest>,
   ) {}

@@ -6,7 +6,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import {
   mockCreateFollowTypedDataData,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockNonce,
@@ -44,7 +44,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         const request = mockUnconstrainedFollowRequest();
         const data = mockCreateFollowTypedDataData();
 
-        const apollo = createMockApolloClientWithMultipleResponses([
+        const apollo = mockLensApolloClient([
           createCreateFollowTypedDataMutationMockedResponse({
             variables: {
               request: {
@@ -71,7 +71,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         const request = mockProfileOwnerFollowRequest();
         const data = mockCreateFollowTypedDataData();
 
-        const apollo = createMockApolloClientWithMultipleResponses([
+        const apollo = mockLensApolloClient([
           createCreateFollowTypedDataMutationMockedResponse({
             variables: {
               request: {
@@ -103,7 +103,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         const request = mockPaidFollowRequest();
         const data = mockCreateFollowTypedDataData();
 
-        const apollo = createMockApolloClientWithMultipleResponses([
+        const apollo = mockLensApolloClient([
           createCreateFollowTypedDataMutationMockedResponse({
             variables: {
               request: {
@@ -136,7 +136,7 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
     it(`should be possible to override the signature nonce`, async () => {
       const request = mockUnconstrainedFollowRequest();
       const nonce = mockNonce();
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         createCreateFollowTypedDataMutationMockedResponse({
           variables: {
             request: {

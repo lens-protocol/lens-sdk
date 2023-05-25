@@ -1,6 +1,6 @@
-import { LensApolloClient } from '@lens-protocol/api-bindings';
+import { SafeApolloClient } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createBroadcastProxyActionCallMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProxyActionStatus, ProxyTransaction } from '@lens-protocol/domain/entities';
@@ -37,7 +37,7 @@ function setupCollectProxyActionRelayer({
   apollo,
   factory,
 }: {
-  apollo: LensApolloClient;
+  apollo: SafeApolloClient;
   factory: ITransactionFactory<FreeCollectRequest>;
 }) {
   return new CollectProxyActionRelayer(apollo, factory, mock<ILogger>());
@@ -48,7 +48,7 @@ describe(`Given an instance of the ${CollectProxyActionRelayer.name}`, () => {
     const request = mockFreeCollectRequest();
     it(`should resolve with ${ProxyTransaction.name} on Polygon`, async () => {
       const indexingId = 'indexing-id';
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         createBroadcastProxyActionCallMockedResponse({
           result: indexingId,
           variables: {
