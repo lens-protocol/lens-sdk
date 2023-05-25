@@ -119,7 +119,7 @@ export type FollowOperation = Operation<
  *     }
  *   }
  *
- *   if (followee.canFollow === false) {
+ *   if (followee.followStatus.canFollow === false) {
  *     return null;
  *   }
  *
