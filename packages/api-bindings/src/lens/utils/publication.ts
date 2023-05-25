@@ -411,10 +411,6 @@ export function resolveCollectPolicy({
   | VaultFeeCollectPolicy
   | AaveFeeCollectPolicy
   | NoCollectPolicy {
-  return {
-    type: CollectPolicyType.NO_COLLECT,
-    state: CollectState.CANNOT_BE_COLLECTED,
-  };
   switch (collectModule.__typename) {
     case 'SimpleCollectModuleSettings': {
       if (collectModule.feeOptional) {
