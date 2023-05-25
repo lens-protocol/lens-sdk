@@ -4,7 +4,7 @@ import {
   CreateCommentRequest,
   CreatePostRequest,
 } from '@lens-protocol/domain/use-cases/publications';
-import { GatedClient } from '@lens-protocol/gated-content';
+import { IGatedClient } from '@lens-protocol/gated-content';
 import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 
 import { IMetadataUploader } from '../adapters/IMetadataUploader';
@@ -31,7 +31,7 @@ export class EncryptedPublicationMetadataUploader<
 > implements IMetadataUploader<T>
 {
   constructor(
-    private readonly client: GatedClient,
+    private readonly client: IGatedClient,
     private readonly accessConditionBuilderFactory: AccessConditionBuilderFactory,
     private readonly uploader: IMetadataUploader<PublicationMetadata>,
   ) {}

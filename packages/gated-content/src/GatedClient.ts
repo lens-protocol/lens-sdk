@@ -47,7 +47,19 @@ function uint8arrayToHexString(buffer: Uint8Array): string {
 
 export type EncryptionParams = OmitTypename<EncryptionParamsOutput>;
 
-export class GatedClient {
+export interface IGatedClient {
+  encryptPublication(
+    metadata: PublicationMetadata,
+    accessCondition: AccessCondition,
+  ): PromiseResult<GatedPublicationMetadata, never>;
+
+  decryptPublication(
+    encrypted: EncryptedPublicationMetadata,
+    using: EncryptionParams,
+  ): PromiseResult<EncryptedPublicationMetadata, never>;
+}
+
+export class GatedClient implements IGatedClient {
   private readonly authentication: AuthenticationConfig;
 
   private readonly environment: EnvironmentConfig;

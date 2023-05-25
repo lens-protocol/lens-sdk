@@ -31,6 +31,7 @@ export type {
   IEncryptionProvider,
   ILogger,
   LensConfig,
+  IGatedClient,
 } from './config';
 
 /**

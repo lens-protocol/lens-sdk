@@ -1,5 +1,10 @@
 import { AppId } from '@lens-protocol/domain/entities';
-import { AuthenticationConfig, IEncryptionProvider, ICipher } from '@lens-protocol/gated-content';
+import {
+  AuthenticationConfig,
+  IEncryptionProvider,
+  ICipher,
+  IGatedClient,
+} from '@lens-protocol/gated-content';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
@@ -8,7 +13,7 @@ import { createGatedClient } from './transactions/infrastructure/createGatedClie
 import { IProviderBinding, GetProvider } from './wallet/infrastructure/ProviderFactory';
 import { ISignerBinding, GetSigner } from './wallet/infrastructure/SignerFactory';
 
-export type { ILogger, AuthenticationConfig, IEncryptionProvider, ICipher };
+export type { ILogger, AuthenticationConfig, IEncryptionProvider, ICipher, IGatedClient };
 
 export type { GetProvider, GetSigner };
 

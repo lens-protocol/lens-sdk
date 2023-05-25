@@ -1,5 +1,5 @@
 import { IEquatableError, PromiseResult } from '@lens-protocol/shared-kernel';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export type OperationHandler<
   TResult,
@@ -28,9 +28,8 @@ export function useOperation<TResult, TError extends IEquatableError, TArgs exte
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<TError | undefined>(undefined);
 
-  return {
-    error,
-    execute: async (...args: TArgs) => {
+  const execute = useCallback(
+    async (...args: TArgs) => {
       setError(undefined);
       setIsPending(true);
 
@@ -46,6 +45,12 @@ export function useOperation<TResult, TError extends IEquatableError, TArgs exte
         setIsPending(false);
       }
     },
+    [handler],
+  );
+
+  return {
+    error,
+    execute,
     isPending,
   };
 }

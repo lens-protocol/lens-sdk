@@ -138,3 +138,5 @@ export function transform(
     operator: AccessConditionType.Or,
   }) as UnifiedAccessControlConditions;
 }
+
+export type { RootConditionOutput };

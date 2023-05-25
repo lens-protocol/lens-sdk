@@ -30,7 +30,7 @@ export function createGatedClient({
   environment,
   encryptionProvider,
   storageProvider,
-}: GateClientInit) {
+}: GateClientInit): GatedContent.IGatedClient {
   invariant(encryptionProvider, 'Encryption provider is required');
 
   return new GatedContent.GatedClient({
