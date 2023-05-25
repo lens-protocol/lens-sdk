@@ -4,5 +4,6 @@ export * from './Nft';
 export * from './Profile';
 export * from './Publication';
 export * from './ReportClaim';
+export * from './Signature';
 export * from './Transactions';
 export * from './Wallet';

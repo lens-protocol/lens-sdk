@@ -32,6 +32,7 @@ import {
   AnyCriterion,
   PublicationId,
 } from '../Publication';
+import { Signature } from '../Signature';
 import {
   IUnsignedProtocolCall,
   MetaTransaction,
@@ -39,7 +40,6 @@ import {
   Nonce,
   ProxyActionStatus,
   ProxyTransaction,
-  Signature,
   ISignedProtocolCall,
   TransactionError,
   TransactionErrorReason,
@@ -78,7 +78,7 @@ export function mockChallenge(): Challenge {
 }
 
 export function mockSignature(): Signature {
-  return mock32BytesHexString();
+  return mock32BytesHexString() as Signature;
 }
 
 export function mockAnyTransactionRequestModel(

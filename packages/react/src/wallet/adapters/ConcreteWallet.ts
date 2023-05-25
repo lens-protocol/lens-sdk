@@ -12,6 +12,7 @@ import {
   NativeTransaction,
   ProtocolTransactionRequestModel,
   AnyTransactionRequestModel,
+  Signature,
 } from '@lens-protocol/domain/entities';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -82,7 +83,7 @@ export class SignedProtocolCall<T extends ProtocolTransactionRequestModel>
   private constructor(
     readonly id: string,
     readonly request: T,
-    readonly signature: string,
+    readonly signature: Signature,
     readonly nonce: number,
     readonly fallback: SelfFundedProtocolTransactionRequest<T>,
   ) {}
@@ -97,7 +98,7 @@ export class SignedProtocolCall<T extends ProtocolTransactionRequestModel>
     return new SignedProtocolCall(
       unsignedCall.id,
       unsignedCall.request,
-      signature,
+      signature as Signature,
       unsignedCall.nonce,
       unsignedCall.fallback,
     );
@@ -164,7 +165,10 @@ export class ConcreteWallet extends Wallet {
 
   async signMessage(
     message: string,
-  ): PromiseResult<string, PendingSigningRequestError | WalletConnectionError | UserRejectedError> {
+  ): PromiseResult<
+    Signature,
+    PendingSigningRequestError | WalletConnectionError | UserRejectedError
+  > {
     const result = await this.signerFactory.createSigner({
       address: this.address,
     });
@@ -180,7 +184,8 @@ export class ConcreteWallet extends Wallet {
 
     const signer = result.value;
     try {
-      return success(await signer.signMessage(message));
+      const signature = await signer.signMessage(message);
+      return success(signature as Signature);
     } catch (err) {
       assertErrorObjectWithCode<errors>(err);
 

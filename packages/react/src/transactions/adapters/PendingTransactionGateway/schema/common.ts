@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+import { ProfileId, PublicationId, Signature } from '@lens-protocol/domain/entities';
 import {
   Amount,
   ChainType,
@@ -44,3 +44,7 @@ export const ProfileIdSchema: z.Schema<ProfileId, z.ZodTypeDef, string> = z
 export const PublicationIdSchema: z.Schema<PublicationId, z.ZodTypeDef, string> = z
   .string()
   .transform(publicationId);
+
+export const SignatureSchema: z.Schema<Signature, z.ZodTypeDef, string> = z
+  .string()
+  .transform((value) => value as Signature);

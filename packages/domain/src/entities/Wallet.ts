@@ -1,12 +1,12 @@
 import { CryptoNativeAsset, EthereumAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 
+import { Signature } from './Signature';
 import {
   ISignedProtocolCall,
   AnyTransactionRequestModel,
   IUnsignedProtocolCall,
   UnsignedTransaction,
   NativeTransaction,
-  Signature,
   ProtocolTransactionRequestModel,
 } from './Transactions';
 
