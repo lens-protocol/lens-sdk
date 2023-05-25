@@ -49,7 +49,7 @@ export function createLensApolloClient({
   });
 }
 
-export type AnonymousApolloClientConfig = {
+export type AuthApolloClientConfig = {
   /**
    * @deprecated activeWalletVar should not be needed here. Move activeWalletVar in @lens-protocol/api-bindings to solve this.
    */
@@ -58,11 +58,11 @@ export type AnonymousApolloClientConfig = {
   logger: ILogger;
 };
 
-export function createAnonymousLensApolloClient({
+export function createAuthApolloClient({
   activeWalletVar,
   backendURL,
   logger,
-}: AnonymousApolloClientConfig) {
+}: AuthApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
 
   return new SafeApolloClient({
