@@ -118,7 +118,7 @@ export type FollowOperation = Operation<
  *     }
  *   }
  *
- *   if (followee.canFollow === false) {
+ *   if (followee.followStatus.canFollow === false) {
  *     return null;
  *   }
  *
@@ -157,7 +157,7 @@ export function useFollow({ followee, follower }: UseFollowArgs): FollowOperatio
       if (hasPendingUnfollowTx) {
         return failure(
           new PrematureFollowError(
-            `A previous unfollow request for ${followee.handle} is still pending.`,
+            `A previous unfollow request for ${followee.handle} is still pending. Make sure you check 'followee.followStatus.canFollow' beforehand.`,
           ),
         );
       }
