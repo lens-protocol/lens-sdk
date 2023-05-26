@@ -19,7 +19,7 @@ import { ReadResult, useReadResult } from '../helpers/reads';
  * ```tsx
  * import { useCurrencies, Erc20 } from '@lens-protocol/react-web';
  *
- * function CurrencySelector({ onChange }: { onChange: (currency: Erc20) => void) {
+ * function CurrencySelector({ onChange }: { onChange: (currency: Erc20) => void }) {
  *   const { data: currencies, error, loading } = useCurrencies();
  *
  *   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
