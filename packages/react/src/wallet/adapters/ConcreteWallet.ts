@@ -1,5 +1,6 @@
 import { TypedDataSigner } from '@ethersproject/abstract-signer';
 import { TransactionRequest } from '@ethersproject/providers';
+import { TypedData } from '@lens-protocol/blockchain-bindings/src/TypedData';
 import {
   InsufficientGasError,
   Wallet,
@@ -28,7 +29,6 @@ import { z } from 'zod';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from '../../transactions/adapters/SelfFundedProtocolTransactionRequest';
-import { TypedData } from '../../transactions/adapters/TypedData';
 import { assertErrorObjectWithCode } from './errors';
 
 export type RequiredSigner = Signer & TypedDataSigner;
@@ -59,7 +59,7 @@ export class UnsignedProtocolCall<T extends ProtocolTransactionRequestModel>
   ) {}
 
   get nonce() {
-    return this.typedData.value.nonce;
+    return this.typedData.message.nonce;
   }
 
   static create<T extends ProtocolTransactionRequestModel>({
@@ -145,7 +145,7 @@ export class ConcreteWallet extends Wallet {
       const signature = await signer._signTypedData(
         unsignedCall.typedData.domain,
         unsignedCall.typedData.types,
-        unsignedCall.typedData.value,
+        unsignedCall.typedData.message,
       );
 
       const signedCall = SignedProtocolCall.create({ unsignedCall, signature });

@@ -50,9 +50,9 @@ export class CollectPublicationCallGateway implements IOnChainProtocolCallGatewa
   ): SelfFundedProtocolTransactionRequest<CollectRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('collect', [
-      data.result.typedData.value.profileId,
-      data.result.typedData.value.pubId,
-      data.result.typedData.value.data,
+      data.result.typedData.message.profileId,
+      data.result.typedData.message.pubId,
+      data.result.typedData.message.data,
     ]);
     return {
       ...request,

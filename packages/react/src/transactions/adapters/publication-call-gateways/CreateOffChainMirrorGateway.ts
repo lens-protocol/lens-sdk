@@ -119,12 +119,12 @@ export class CreateOffChainMirrorGateway
     const contract = lensHub(data.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('mirror', [
       {
-        profileId: data.value.profileId,
-        profileIdPointed: data.value.profileIdPointed,
-        pubIdPointed: data.value.pubIdPointed,
-        referenceModuleData: data.value.referenceModuleData,
-        referenceModule: data.value.referenceModule,
-        referenceModuleInitData: data.value.referenceModuleInitData,
+        profileId: data.message.profileId,
+        profileIdPointed: data.message.profileIdPointed,
+        pubIdPointed: data.message.pubIdPointed,
+        referenceModuleData: data.message.referenceModuleData,
+        referenceModule: data.message.referenceModule,
+        referenceModuleInitData: data.message.referenceModuleInitData,
       },
     ]);
     return {

@@ -50,8 +50,8 @@ export class DispatcherConfigCallGateway
   ): SelfFundedProtocolTransactionRequest<UpdateDispatcherConfigRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setDispatcher', [
-      data.result.typedData.value.profileId,
-      data.result.typedData.value.dispatcher,
+      data.result.typedData.message.profileId,
+      data.result.typedData.message.dispatcher,
     ]);
     return {
       ...request,

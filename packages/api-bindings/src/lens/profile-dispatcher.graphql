@@ -15,7 +15,7 @@ mutation CreateSetDispatcherTypedData($request: SetDispatcherRequest!, $options:
         version
         verifyingContract
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId

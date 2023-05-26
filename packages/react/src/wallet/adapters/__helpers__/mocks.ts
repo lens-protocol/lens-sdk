@@ -1,5 +1,6 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { faker } from '@faker-js/faker';
+import { TypedData } from '@lens-protocol/blockchain-bindings/src/TypedData';
 import {
   ProtocolTransactionRequestModel,
   AnyTransactionRequestModel,
@@ -18,7 +19,6 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { ITransactionFactory } from '../../../transactions/adapters/ITransactionFactory';
-import { TypedData } from '../../../transactions/adapters/TypedData';
 import { mockSelfFundedProtocolTransactionRequest } from '../../../transactions/adapters/__helpers__/mocks';
 import {
   ConcreteWallet,

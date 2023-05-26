@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { omitTypename } from '@lens-protocol/api-bindings';
+import { TypedData } from '@lens-protocol/blockchain-bindings/src/TypedData';
 import {
   ProtocolTransactionRequestModel,
   ProxyActionStatus,
@@ -29,7 +30,6 @@ import {
   Data,
   SelfFundedProtocolTransactionRequest,
 } from '../SelfFundedProtocolTransactionRequest';
-import { TypedData } from '../TypedData';
 import { OnChainBroadcastReceipt } from '../relayer';
 
 export function mockITransactionFactory(
@@ -58,7 +58,7 @@ export function mockTypedData(): TypedData {
       chainId: 1,
       verifyingContract: mockEthereumAddress(),
     },
-    value: {
+    message: {
       nonce: 0,
     },
   };

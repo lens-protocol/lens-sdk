@@ -56,7 +56,7 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
     it(`should resolve with a ISignedProtocolCall instance`, async () => {
       const signer = mock<providers.JsonRpcSigner>();
       when(signer._signTypedData)
-        .calledWith(typedData.domain, typedData.types, typedData.value)
+        .calledWith(typedData.domain, typedData.types, typedData.message)
         .mockResolvedValue(signature);
 
       const signerFactory = mockISignerFactory({
@@ -80,7 +80,7 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
     it(`should fail with ${PendingSigningRequestError.name} in case of existing signing request`, async () => {
       const signer = mock<providers.JsonRpcSigner>();
       when(signer._signTypedData)
-        .calledWith(typedData.domain, typedData.types, typedData.value)
+        .calledWith(typedData.domain, typedData.types, typedData.message)
         .mockResolvedValue(signature);
 
       const signerFactory = mockISignerFactory({

@@ -140,8 +140,8 @@ export class ProfileImageCallGateway
   ): SelfFundedProtocolTransactionRequest<UpdateProfileImageRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileImageURI', [
-      data.result.typedData.value.profileId,
-      data.result.typedData.value.imageURI,
+      data.result.typedData.message.profileId,
+      data.result.typedData.message.imageURI,
     ]);
     return {
       ...request,

@@ -12,7 +12,7 @@ mutation CreateUnfollowTypedData($request: UnfollowRequest!) {
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         tokenId

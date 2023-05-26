@@ -197,7 +197,7 @@ export function mockCreatePostTypedDataData({
         PostWithSig: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
-      value: {
+      message: {
         __typename: 'CreatePostEIP712TypedDataValue',
         nonce,
         deadline: 1644303500,
@@ -223,7 +223,7 @@ export function mockCreateCommentTypedDataData({
         CommentWithSig: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
-      value: {
+      message: {
         __typename: 'CreateCommentEIP712TypedDataValue',
         profileIdPointed: mockProfileId(),
         pubIdPointed: faker.datatype.hexadecimal({ length: 2 }),
@@ -252,7 +252,7 @@ export function mockCreateMirrorTypedDataData({
         MirrorWithSig: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
-      value: {
+      message: {
         __typename: 'CreateMirrorEIP712TypedDataValue',
         profileIdPointed: mockProfileId(),
         pubIdPointed: faker.datatype.hexadecimal({ length: 2 }),
@@ -338,7 +338,7 @@ export function mockCreateFollowTypedDataData({
         FollowWithSig: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
-      value: {
+      message: {
         __typename: 'CreateFollowEIP712TypedDataValue',
         nonce,
         deadline: '0',
@@ -360,7 +360,7 @@ export function mockCreateSetProfileMetadataTypedDataData({
         SetProfileMetadataURIWithSig: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
-      value: {
+      message: {
         __typename: 'CreateSetProfileMetadataURIEIP712TypedDataValue',
         nonce,
         deadline: '0',
@@ -382,7 +382,7 @@ export function mockCreateUnfollowTypedDataData({
         BurnWithSig: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
-      value: {
+      message: {
         __typename: 'CreateBurnEIP712TypedDataValue',
         nonce,
         deadline: '0',
@@ -418,7 +418,7 @@ export function mockCreateSetFollowModuleTypedDataData({
         SetFollowModuleWithSig: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
-      value: {
+      message: {
         __typename: 'CreateSetFollowModuleEIP712TypedDataValue',
         nonce,
         deadline: '0',
@@ -441,7 +441,7 @@ export function mockCreateSetProfileImageUriTypedDataData({
         SetProfileImageURIWithSig: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
-      value: {
+      message: {
         __typename: 'CreateSetProfileImageUriEIP712TypedDataValue',
         nonce,
         deadline: 1644303500,
@@ -483,7 +483,7 @@ export function mockCreateSetDispatcherTypedDataData({
         SetDispatcherWithSig: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
-      value: {
+      message: {
         __typename: 'CreateSetDispatcherEIP712TypedDataValue',
         nonce,
         deadline: '0',
@@ -796,7 +796,7 @@ export function mockCreateCollectTypedDataData({
         CollectWithSig: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
-      value: {
+      message: {
         __typename: 'CreateCollectEIP712TypedDataValue',
         nonce,
         deadline: '0',

@@ -8,7 +8,7 @@ fragment CreateMirrorEIP712TypedData on CreateMirrorEIP712TypedData {
   domain {
     ...EIP712TypedDataDomain
   }
-  value {
+  message: value {
     nonce
     deadline
     profileId

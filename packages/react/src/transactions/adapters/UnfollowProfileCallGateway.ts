@@ -44,7 +44,7 @@ export class UnfollowProfileCallGateway implements IOnChainProtocolCallGateway<U
   ): SelfFundedProtocolTransactionRequest<UnfollowRequest> {
     const contract = lensFollowNFT(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('burn', [
-      data.result.typedData.value.tokenId,
+      data.result.typedData.message.tokenId,
     ]);
     return {
       ...request,
