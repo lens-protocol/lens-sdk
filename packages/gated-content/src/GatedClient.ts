@@ -69,7 +69,7 @@ export class GatedClient {
 
   private readonly signer: Signer;
 
-  private readonly litClient: ILitNodeClient = new NodeClient({ debug: false });
+  private readonly litClient: ILitNodeClient;
 
   private readonly encryptionProvider: IEncryptionProvider;
 
@@ -79,12 +79,14 @@ export class GatedClient {
     signer,
     storageProvider,
     encryptionProvider,
+    litClient,
   }: GatedClientConfig) {
     this.authentication = authentication;
     this.environment = environment;
     this.signer = signer;
     this.storage = createAuthStorage(storageProvider, environment.name);
     this.encryptionProvider = encryptionProvider;
+    this.litClient = litClient || new NodeClient({ debug: false });
   }
 
   async encryptPublication(
