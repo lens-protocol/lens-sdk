@@ -75,7 +75,9 @@ export function useEncryptedPublication<T extends ContentPublication>({
         );
       }
 
-      const client = createGatedClient({
+      const createGatedClientFn = encryption.createGatedClient || createGatedClient;
+
+      const client = createGatedClientFn({
         config: encryption.authentication,
         signer,
         encryptionProvider: encryption.provider,
@@ -96,6 +98,7 @@ export function useEncryptedPublication<T extends ContentPublication>({
 
       return success();
     }, [
+      encryption.createGatedClient,
       encryption.authentication,
       encryption.provider,
       environment,

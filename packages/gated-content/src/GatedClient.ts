@@ -11,6 +11,7 @@ import {
 import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { IStorage, IStorageProvider } from '@lens-protocol/storage';
 import { NodeClient } from '@lit-protocol/node-client';
+import { JsonEncryptionRetrieveRequest, JsonSaveEncryptionKeyRequest } from '@lit-protocol/types';
 import { Signer, utils } from 'ethers';
 import { SiweMessage } from 'siwe';
 
@@ -39,7 +40,19 @@ export type GatedClientConfig = {
   signer: Signer;
   storageProvider: IStorageProvider;
   encryptionProvider: IEncryptionProvider;
+
+  /**
+   * @internal
+   */
+  litClient?: ILitNodeClient;
 };
+
+export interface ILitNodeClient {
+  ready: boolean;
+  connect(): Promise<void>;
+  saveEncryptionKey(request: JsonSaveEncryptionKeyRequest): Promise<Uint8Array>;
+  getEncryptionKey(request: JsonEncryptionRetrieveRequest): Promise<Uint8Array>;
+}
 
 function uint8arrayToHexString(buffer: Uint8Array): string {
   return buffer.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
@@ -56,7 +69,7 @@ export class GatedClient {
 
   private readonly signer: Signer;
 
-  private readonly litClient = new NodeClient({ debug: false });
+  private readonly litClient: ILitNodeClient = new NodeClient({ debug: false });
 
   private readonly encryptionProvider: IEncryptionProvider;
 

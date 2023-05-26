@@ -4,6 +4,7 @@ import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
+import { createGatedClient } from './transactions/infrastructure/createGatedClient';
 import { IProviderBinding, GetProvider } from './wallet/infrastructure/ProviderFactory';
 import { ISignerBinding, GetSigner } from './wallet/infrastructure/SignerFactory';
 
@@ -64,6 +65,11 @@ export type LensConfig = {
 export type EncryptionConfig = {
   authentication: AuthenticationConfig;
   provider: IEncryptionProvider;
+
+  /**
+   * @internal
+   */
+  createGatedClient?: typeof createGatedClient;
 };
 
 /** @internal */
