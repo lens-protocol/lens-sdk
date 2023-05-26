@@ -5,6 +5,9 @@ import {
   Message,
   Participant,
 } from '@lens-protocol/domain/entities';
+import { EnableConversationsResult } from '@lens-protocol/domain/use-cases/inbox';
+
+import { ConcreteWallet } from '../../wallet/adapters/ConcreteWallet';
 
 export type FetchConversationsRequest = {
   participant: Participant;
@@ -32,6 +35,7 @@ export type SendMessageRequest = {
 };
 
 export interface IConversationProvider {
+  enableConversations(wallet: ConcreteWallet): Promise<EnableConversationsResult>;
   fetchConversations(request: FetchConversationsRequest): Promise<Conversation[]>;
   // fetchConversation(request: FetchConversationRequest): Promise<Conversation | null>;
   // createConversation(request: CreateConversationRequest): Promise<Conversation>;

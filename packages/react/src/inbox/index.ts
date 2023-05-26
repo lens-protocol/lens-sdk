@@ -1,4 +1,5 @@
 export * from './useConversations';
+export * from './useEnableConversations';
 
 export type { InboxConfig } from './config';
 export type {
@@ -17,3 +18,4 @@ export type {
   Message,
   Participant,
 } from '@lens-protocol/domain/entities';
+export type { EnableConversationsResult } from '@lens-protocol/domain/use-cases/inbox';

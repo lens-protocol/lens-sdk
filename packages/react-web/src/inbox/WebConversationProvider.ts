@@ -9,6 +9,7 @@ import {
   ConversationId,
   Markdown,
   Participant,
+  EnableConversationsResult,
 } from '@lens-protocol/react';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { Client, DecodedMessage, Conversation as XmtpConversation } from '@xmtp/xmtp-js';
@@ -35,12 +36,13 @@ export class WebConversationProvider implements IConversationProvider {
 
   constructor(private readonly environment: EnvironmentConfig['name']) {}
 
-  setSigner(signer: ISigner) {
-    this.signer = signer;
-  }
-
   private async getClient(): Promise<Client> {
     invariant(this.signer, 'Signer not set');
+
+    // get key bundle from storage
+
+    // if (singer required)
+    // get from activeWallet.requireActiveWallet()
 
     if (!this.client) {
       this.client = await Client.create(this.signer, {
@@ -49,6 +51,14 @@ export class WebConversationProvider implements IConversationProvider {
     }
 
     return this.client;
+  }
+
+  async enableConversations(wallet: ConcreteWallet): Promise<EnableConversationsResult> {
+    const signer = request.signer;
+
+    invariant(signer, 'Signer not set');
+
+    this.signer = signer;
   }
 
   async fetchConversations(request: FetchConversationsRequest): Promise<Conversation[]> {

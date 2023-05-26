@@ -4,13 +4,13 @@ import {
 } from '@lens-protocol/domain/use-cases/inbox';
 
 import { InboxConfig } from '../config';
-import { GetConversationsGateway } from './GetConversationsGateway';
-import { GetConversationsPresenter } from './GetConversationsPresenter';
+import { GetAllConversationsGateway } from './GetAllConversationsGateway';
+import { GetAllConversationsPresenter } from './GetAllConversationsPresenter';
 
-export function useGetConversationsController(config: InboxConfig) {
+export function useGetAllConversationsController(config: InboxConfig) {
   return async (request: GetAllConversationsRequest) => {
-    const gateway = new GetConversationsGateway(config.provider);
-    const presenter = new GetConversationsPresenter();
+    const gateway = new GetAllConversationsGateway(config.provider);
+    const presenter = new GetAllConversationsPresenter();
     const useCase = new GetAllConversations(gateway, presenter);
 
     await useCase.execute(request);

@@ -1,10 +1,11 @@
 import {
+  ConversationParticipant,
   OverviewConversation,
   ProfileOwnedByMe,
   WalletData,
   useConversations,
+  useEnableConversations,
 } from '@lens-protocol/react-web';
-import { useEffect } from 'react';
 
 import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -24,22 +25,11 @@ function ConversationItem({ conversation }: ConversationItemProps) {
 }
 
 type UseConversationsInnerProps = {
-  wallet: WalletData;
-  profile: ProfileOwnedByMe;
+  participant: ConversationParticipant;
 };
 
-function UseConversationsInner({ profile, wallet }: UseConversationsInnerProps) {
-  const { data, loading, error } = useConversations({
-    profileId: profile.id,
-    address: wallet.address,
-  });
-
-  useEffect(() => {
-    async function run() {
-      console.log('data', profile, await wallet.signerFactory.bindings.getSigner({}));
-    }
-    void run();
-  }, [profile, wallet]);
+function UseConversationsInner({ participant }: UseConversationsInnerProps) {
+  const { data, loading, error } = useConversations(participant);
 
   return (
     <div>
@@ -56,6 +46,32 @@ function UseConversationsInner({ profile, wallet }: UseConversationsInnerProps) 
   );
 }
 
+type EnableConversationsProps = {
+  wallet: WalletData;
+  profile: ProfileOwnedByMe;
+};
+
+function EnableConversations({ profile, wallet }: EnableConversationsProps) {
+  const {
+    data: participant,
+    loading,
+    error,
+  } = useEnableConversations({
+    profileId: profile.id,
+    address: wallet.address,
+  });
+
+  return (
+    <div>
+      {loading && <Loading />}
+
+      {error && <ErrorMessage error={error} />}
+
+      {participant && <UseConversationsInner participant={participant} />}
+    </div>
+  );
+}
+
 export function UseConversations() {
   return (
     <>
@@ -63,7 +79,7 @@ export function UseConversations() {
         <code>useConversations</code>
       </h1>
       <WhenLoggedInWithProfile>
-        {({ profile, wallet }) => <UseConversationsInner profile={profile} wallet={wallet} />}
+        {({ profile, wallet }) => <EnableConversations profile={profile} wallet={wallet} />}
       </WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>

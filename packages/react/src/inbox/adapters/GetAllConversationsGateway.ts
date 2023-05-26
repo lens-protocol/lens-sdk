@@ -10,7 +10,7 @@ import { IConversationProvider } from './IConversationProvider';
 
 type MessagesTuple = [ConversationId, Message[]];
 
-export class GetConversationsGateway implements IGetConversationsGateway {
+export class GetAllConversationsGateway implements IGetConversationsGateway {
   constructor(private readonly provider: IConversationProvider) {}
 
   async fetchConversations(request: GetAllConversationsRequest): Promise<Conversation[]> {

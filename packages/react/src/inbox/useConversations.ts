@@ -1,29 +1,16 @@
-import type { Profile, UnspecifiedError } from '@lens-protocol/api-bindings';
-import type { ConversationId, ProfileId } from '@lens-protocol/domain/entities';
-import type { ConversationData, LastMessageData } from '@lens-protocol/domain/use-cases/inbox';
-import type { EthereumAddress } from '@lens-protocol/shared-kernel';
+import type { UnspecifiedError } from '@lens-protocol/api-bindings';
+import type { ProfileId } from '@lens-protocol/domain/entities';
+import type { ConversationData } from '@lens-protocol/domain/use-cases/inbox';
+import { EthereumAddress, invariant } from '@lens-protocol/shared-kernel';
 import { useEffect, useState } from 'react';
 
 import type { ReadResult } from '../helpers/reads';
-import { useProfiles } from '../profile';
-import { profileId } from '../utils';
-import { useGetConversationsController } from './adapters/useGetConversationsController';
+import { useGetAllConversationsController } from './adapters/useGetAllConversationsController';
 import type { InboxConfig } from './config';
-import { notEmpty } from './helpers';
 
-function extractUniqueProfileIds(conversations: ConversationData[]): ProfileId[] {
-  const ids = conversations
-    .map((convos) => (convos.peer.profileId ? profileId(convos.peer.profileId) : null))
-    .filter(notEmpty);
-
-  return [...new Set(ids)];
-}
-
-export type OverviewConversation = {
-  id: ConversationId;
-  peerAddress: EthereumAddress;
-  peerProfile?: Profile;
-  lastMessage: LastMessageData;
+export type OverviewConversation = ConversationData & {
+  // TODO: fetch full profile in the presenter
+  // peerProfile?: Profile;
 };
 
 export type UseConversationsArgs = {
@@ -38,11 +25,10 @@ export type UseConversationsArgs = {
  */
 export function useConversations(
   args: UseConversationsArgs,
-): ReadResult<OverviewConversation[], UnspecifiedError> {
-  const execute = useGetConversationsController(args.config);
+): ReadResult<ConversationData[], UnspecifiedError> {
+  const execute = useGetAllConversationsController(args.config);
 
   const [conversations, setConversations] = useState<ConversationData[]>([]);
-  const [overviewConversations, setOverviewConversations] = useState<OverviewConversation[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -57,32 +43,7 @@ export function useConversations(
     })();
   }, [execute, args.profileId, args.address]);
 
-  const {
-    data: profiles = [],
-    error: errorProfiles,
-    loading: loadingProfiles,
-  } = useProfiles({
-    profileIds: extractUniqueProfileIds(conversations),
-  });
-
-  useEffect(() => {
-    if (profiles.length > 0 && conversations.length > 0) {
-      const convos = conversations.map((convo) => {
-        const peerProfile = profiles.find((p) => p.id === convo.peer.profileId);
-
-        return {
-          id: convo.id,
-          peerAddress: convo.peer.address,
-          peerProfile,
-          lastMessage: convo.lastMessage,
-        };
-      });
-
-      setOverviewConversations(convos);
-    }
-  }, [profiles, conversations]);
-
-  if (loading || loadingProfiles) {
+  if (loading) {
     return {
       data: undefined,
       error: undefined,
@@ -90,16 +51,10 @@ export function useConversations(
     };
   }
 
-  if (errorProfiles) {
-    return {
-      data: undefined,
-      error: errorProfiles,
-      loading: false,
-    };
-  }
+  invariant(conversations, 'Conversations should be defined at this point');
 
   return {
-    data: overviewConversations,
+    data: conversations,
     error: undefined,
     loading: false,
   };

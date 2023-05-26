@@ -3,7 +3,7 @@ import {
   IGetConversationsPresenter,
 } from '@lens-protocol/domain/use-cases/inbox';
 
-export class GetConversationsPresenter implements IGetConversationsPresenter {
+export class GetAllConversationsPresenter implements IGetConversationsPresenter {
   private result: ConversationData[] = [];
 
   presentConversations(conversations: ConversationData[]) {

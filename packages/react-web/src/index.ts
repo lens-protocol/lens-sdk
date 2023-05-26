@@ -1,5 +1,6 @@
 import { LensConfig, LensProvider, LensProviderProps } from './LensProvider';
 import { UseConversationsArgs, useConversations } from './inbox/useConversations';
+import { UseEnableConversationsArgs, useEnableConversations } from './inbox/useEnableConversations';
 import {
   UseCreateEncryptedCommentArgs,
   useCreateEncryptedComment,
@@ -13,7 +14,10 @@ export * from '@lens-protocol/react';
 // see https://github.com/systemjs/systemjs/issues/1031#issuecomment-171262430
 export {
   LensProvider,
+  // inbox
   useConversations,
+  useEnableConversations,
+  // gated content
   useCreateEncryptedComment,
   useCreateEncryptedPost,
   useEncryptedPublication,
@@ -21,7 +25,10 @@ export {
 export type {
   LensConfig,
   LensProviderProps,
+  // inbox
   UseConversationsArgs,
+  UseEnableConversationsArgs,
+  // gated content
   UseCreateEncryptedCommentArgs,
   UseCreateEncryptedPostArgs,
   UseEncryptedPublicationArgs,
