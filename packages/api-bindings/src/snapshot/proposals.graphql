@@ -1,0 +1,9 @@
+fragment SnapshotProposal on Proposal {
+  id
+}
+
+query GetSnapshotProposal($id: String!) {
+  proposal(id: $id) {
+    ...SnapshotProposal
+  }
+}

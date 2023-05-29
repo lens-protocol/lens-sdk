@@ -1,19 +1,37 @@
 import { OperationVariables } from '@apollo/client';
-import { LensApolloClient, Sources } from '@lens-protocol/api-bindings';
+import { createSnapshotApolloClient, LensApolloClient, Sources } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
+import { useState } from 'react';
 
 import { useActiveProfileIdentifier } from '../profile/useActiveProfileIdentifier';
 import { useSharedDependencies } from '../shared';
 
-export type UseLensApolloClientResult<TOptions> = TOptions & {
+export type UseApolloClientResult<TOptions> = TOptions & {
   client: LensApolloClient;
 };
 
 export function useLensApolloClient<TOptions>(
   args: TOptions = {} as TOptions,
-): UseLensApolloClientResult<TOptions> {
+): UseApolloClientResult<TOptions> {
   const { apolloClient: client } = useSharedDependencies();
+
+  return {
+    ...args,
+    client,
+  };
+}
+
+export function useSnapshotApolloClient<TOptions>(
+  args: TOptions = {} as TOptions,
+): UseApolloClientResult<TOptions> {
+  const { environment } = useSharedDependencies();
+
+  const [client] = useState(() =>
+    createSnapshotApolloClient({
+      backendURL: environment.snapshot.hub,
+    }),
+  );
 
   return {
     ...args,

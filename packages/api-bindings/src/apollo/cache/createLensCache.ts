@@ -21,6 +21,7 @@ import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
+import { ContentInsightMatcher } from './utils/ContentInsight';
 import { noCachedField } from './utils/noCachedField';
 import { notNormalizedType } from './utils/notNormalizedType';
 
@@ -29,13 +30,21 @@ type TypePoliciesArgs = {
    * @deprecated this should not be provided by the consumer but should be part of `@lens-protocol/api-bindings` exports
    */
   activeWalletVar: ReactiveVar<WalletData | null>;
+
+  /**
+   * A list of ContentInsightMatcher used to extract insights from publication metadata content
+   */
+  contentMatchers?: ContentInsightMatcher[];
 };
 
-function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): StrictTypedTypePolicies {
+function createTypePolicies({
+  activeWalletVar,
+  contentMatchers = [],
+}: TypePoliciesArgs): StrictTypedTypePolicies {
   return {
     Profile: createProfileTypePolicy(activeWalletVar),
-    Post: createContentPublicationTypePolicy(),
-    Comment: createContentPublicationTypePolicy(),
+    Post: createContentPublicationTypePolicy({ contentMatchers }),
+    Comment: createContentPublicationTypePolicy({ contentMatchers }),
 
     FeedItem: notNormalizedType(),
 
@@ -82,11 +91,9 @@ function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): StrictTypedT
   };
 }
 
-export function createApolloCache({
-  activeWalletVar,
-}: TypePoliciesArgs): ApolloCache<NormalizedCacheObject> {
+export function createLensCache(args: TypePoliciesArgs): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     possibleTypes: generatedIntrospection.possibleTypes,
-    typePolicies: createTypePolicies({ activeWalletVar }),
+    typePolicies: createTypePolicies(args),
   });
 }

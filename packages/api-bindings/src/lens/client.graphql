@@ -6,6 +6,7 @@ scalar ReferencePolicy
 scalar FollowStatus
 scalar DecryptionCriteria
 scalar PendingPublicationId
+scalar ContentInsight
 
 extend type Profile {
   ownedByMe: Boolean!
@@ -26,6 +27,8 @@ extend type Post {
   isMirroredByMe: Boolean!
   collectPolicy: CollectPolicy!
   referencePolicy: ReferencePolicy!
+
+  contentInsight: ContentInsight!
 }
 
 extend type Comment {
@@ -40,6 +43,8 @@ extend type Comment {
   isMirroredByMe: Boolean!
   collectPolicy: CollectPolicy!
   referencePolicy: ReferencePolicy!
+
+  contentInsight: ContentInsight!
 }
 
 type PendingPost {

@@ -11,6 +11,9 @@ import {
   ReferencePolicy,
   Wallet,
   CollectPolicy,
+  ContentInsight,
+  MetadataOutput,
+  ContentInsightType,
 } from '../../lens';
 import { activeProfileIdentifierVar } from './activeProfileIdentifier';
 import { decryptionCriteria } from './decryptionCriteria';
@@ -19,6 +22,9 @@ import {
   isCollectTransactionFor,
   isMirrorTransactionFor,
 } from './transactions';
+import { ContentInsightMatcher } from './utils/ContentInsight';
+import { extractUrls } from './utils/extractUrls';
+import { firstMatch } from './utils/firstMatch';
 import { noCachedField } from './utils/noCachedField';
 
 function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
@@ -175,22 +181,52 @@ const isOptimisticMirroredByMe: FieldReadFunction<boolean> = (existing) => {
   return existing ?? false;
 };
 
-export function createContentPublicationTypePolicy() {
+export type ContentPublicationTypePolicyConfig = {
+  /**
+   * A list of ContentInsightMatcher used to extract insights from publication metadata content
+   */
+  contentMatchers: ContentInsightMatcher[];
+};
+
+const createContentInsightFieldPolicy: (
+  arg: ContentPublicationTypePolicyConfig,
+) => FieldReadFunction<ContentInsight> =
+  ({ contentMatchers }) =>
+  (_, { readField }) => {
+    const metadata = readField('metadata') as MetadataOutput;
+
+    if (metadata.content) {
+      const urls = extractUrls(metadata.content);
+
+      const match = firstMatch(urls, contentMatchers);
+
+      if (match) {
+        return match;
+      }
+    }
+
+    return {
+      type: ContentInsightType.UNDETERMINED,
+    };
+  };
+
+export function createContentPublicationTypePolicy(config: ContentPublicationTypePolicyConfig) {
   return {
     fields: {
-      referencePolicy,
+      canComment: noCachedField(),
+      canDecrypt: noCachedField(),
+      canMirror: noCachedField(),
+      collectedBy,
+      collectPolicy,
+      contentInsight: createContentInsightFieldPolicy(config),
+      decryptionCriteria,
+      hasCollectedByMe,
+      hasOptimisticCollectedByMe,
+      isMirroredByMe,
+      isOptimisticMirroredByMe,
       mirrors: noCachedField(),
       reaction: noCachedField(),
-      canComment: noCachedField(),
-      canMirror: noCachedField(),
-      canDecrypt: noCachedField(),
-      hasCollectedByMe,
-      isMirroredByMe,
-      collectedBy,
-      hasOptimisticCollectedByMe,
-      isOptimisticMirroredByMe,
-      collectPolicy,
-      decryptionCriteria,
+      referencePolicy,
       stats,
     },
   };

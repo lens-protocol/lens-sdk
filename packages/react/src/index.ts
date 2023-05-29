@@ -10,6 +10,7 @@ export * from './experimental';
 export * from './feed';
 export * from './modules';
 export * from './notifications';
+export * from './polls';
 export * from './profile';
 export * from './publication';
 export * from './revenue';

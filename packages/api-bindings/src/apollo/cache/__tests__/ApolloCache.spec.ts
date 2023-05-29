@@ -15,6 +15,7 @@ import { never } from '@lens-protocol/shared-kernel';
 
 import {
   CollectState,
+  ContentInsightType,
   ContentPublication,
   Profile,
   FragmentComment,
@@ -41,9 +42,11 @@ import {
   mockPublicationStatsFragment,
 } from '../../../mocks';
 import { activeProfileIdentifierVar } from '../activeProfileIdentifier';
-import { createApolloCache } from '../createApolloCache';
+import { createLensCache } from '../createLensCache';
 import { erc20Amount } from '../decryptionCriteria';
 import { recentTransactionsVar } from '../transactions';
+import { snapshotPoll } from '../utils/ContentInsight';
+import { mockSnapshotPollUrl } from '../utils/__helpers__/mocks';
 
 const typeToFragmentMap: Record<ContentPublication['__typename'], DocumentNode> = {
   Post: FragmentPost,
@@ -52,7 +55,7 @@ const typeToFragmentMap: Record<ContentPublication['__typename'], DocumentNode> 
 
 function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}) {
   const activeWalletVar = makeVar<WalletData | null>(wallet);
-  const cache = createApolloCache({ activeWalletVar });
+  const cache = createLensCache({ activeWalletVar, contentMatchers: [snapshotPoll] });
 
   return {
     writePublication(publication: ContentPublication) {
@@ -564,6 +567,28 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           const read = readPublication(publication);
 
           expect(read.isMirroredByMe).toBe(true);
+        });
+      });
+    });
+
+    describe('when retrieving contentInsights', () => {
+      it('should detect Snapshot URLs in the content and return the SnapshotPoll', () => {
+        const publication = mockPostFragment({
+          profile: mockProfileFragment(),
+          metadata: mockMetadataOutputFragment({
+            content: `Hey what do you think of: ${mockSnapshotPollUrl()}`,
+          }),
+        });
+
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
+        const read = readPublication(publication);
+
+        expect(read.contentInsight).toMatchObject({
+          type: ContentInsightType.SNAPSHOT_POLL,
+          proposalId: expect.any(String),
+          spaceId: expect.any(String),
+          url: expect.any(String),
         });
       });
     });
