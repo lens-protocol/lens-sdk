@@ -146,7 +146,7 @@ export function usePaginatedReadResult<
       if (data?.result.pageInfo.next) {
         await fetchMore({
           variables: {
-            cursor: data?.result.pageInfo.next,
+            cursor: data.result.pageInfo.next,
           },
         });
       }
@@ -156,7 +156,7 @@ export function usePaginatedReadResult<
       if (data?.result.pageInfo.prev) {
         await fetchMore({
           variables: {
-            cursor: data?.result.pageInfo.prev,
+            cursor: data.result.pageInfo.prev,
           },
         });
       }

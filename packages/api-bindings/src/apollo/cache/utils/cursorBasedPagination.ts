@@ -1,12 +1,18 @@
 import { FieldFunctionOptions, KeySpecifier } from '@apollo/client/cache/inmemory/policies';
 import { FieldPolicy } from '@apollo/client/core';
-import { InvariantError } from '@lens-protocol/shared-kernel';
+import { never } from '@lens-protocol/shared-kernel';
 
 import { CursorBasedPaginatedResult, isCursor } from '../../../graphql';
 
 // Note: Copied from apollo given it's not exposed publicly
 // eslint-disable-next-line @typescript-eslint/ban-types
 type SafeReadonly<T> = T extends object ? Readonly<T> : T;
+
+function isEndOfTheRoad<TResult extends CursorBasedPaginatedResult>(result: TResult) {
+  return (
+    result.pageInfo.next === null && result.pageInfo.prev === null && result.items.length === 0
+  );
+}
 
 export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult>(
   keyArgs: KeySpecifier,
@@ -41,7 +47,7 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
     },
 
     merge(
-      existing: Readonly<TResult> | undefined,
+      existing: SafeReadonly<TResult> | undefined,
       incoming: SafeReadonly<TResult>,
       { variables = {} }: FieldFunctionOptions,
     ) {
@@ -60,6 +66,20 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
       const incomingItems = incoming.items;
 
       if (variables.cursor === existing.pageInfo.prev) {
+        if (isEndOfTheRoad(incoming)) {
+          return {
+            ...incoming,
+            items: existingItems,
+            pageInfo: {
+              ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
+              beforeCount: 0,
+              moreAfter: existing.pageInfo.next !== null,
+              next: existing.pageInfo.next,
+              prev: existing.pageInfo.prev,
+            },
+          };
+        }
+
         return {
           ...incoming,
           items: incomingItems.concat(existingItems),
@@ -74,20 +94,34 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
       }
 
       if (variables.cursor === existing.pageInfo.next) {
+        if (isEndOfTheRoad(incoming)) {
+          return {
+            ...incoming,
+            items: existingItems,
+            pageInfo: {
+              ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
+              beforeCount: existing.pageInfo.beforeCount,
+              moreAfter: false,
+              next: existing.pageInfo.next,
+              prev: existing.pageInfo.prev,
+            },
+          };
+        }
+
         return {
           ...incoming,
           items: existingItems.concat(incomingItems),
           pageInfo: {
             ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
-            beforeCount: incoming.pageInfo.beforeCount,
+            beforeCount: existing.pageInfo.beforeCount,
             moreAfter: incoming.pageInfo.next !== null,
-            next: incoming.pageInfo.next ?? existing.pageInfo.next,
+            next: incoming.pageInfo.next,
             prev: existing.pageInfo.prev,
           },
         };
       }
 
-      throw new InvariantError('Unable to merge incoming cursor-based pagination result');
+      never('Unable to merge incoming cursor-based pagination result');
     },
   };
 }
