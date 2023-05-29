@@ -27,10 +27,7 @@ describe(`Given an instance of the ${MetadataUploaderErrorMiddleware.name}`, () 
         when(uploadHandler).calledWith(payload).mockResolvedValue(url);
         const middleware = new MetadataUploaderErrorMiddleware(uploadHandler);
 
-        const actual = await middleware.upload(payload);
-
-        expect(actual).toBe(url);
-        // await expect(() => middleware.upload(payload)).rejects.toThrow(InvariantError);
+        await expect(() => middleware.upload(payload)).rejects.toThrow(InvariantError);
       },
     );
 
