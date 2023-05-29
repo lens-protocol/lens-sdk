@@ -23,6 +23,7 @@ import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
 import { noCachedField } from './utils/noCachedField';
 import { notNormalizedType } from './utils/notNormalizedType';
+import { createPublicationFieldPolicy } from './createPublicationFieldPolicy';
 
 type TypePoliciesArgs = {
   /**
@@ -75,6 +76,7 @@ function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): StrictTypedT
         profiles: createProfilesFieldPolicy(),
         profilePublicationsForSale: createProfilePublicationsForSaleFieldPolicy(),
         publications: createPublicationsFieldPolicy(),
+        publication: createPublicationFieldPolicy(),
         search: createSearchFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
         followers: createProfileFollowersFieldPolicy(),

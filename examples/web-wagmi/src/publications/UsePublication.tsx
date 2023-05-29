@@ -4,6 +4,7 @@ import {
   useComments,
   usePublication,
 } from '@lens-protocol/react-web';
+import { useParams } from 'react-router-dom';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
@@ -38,11 +39,13 @@ function Comments({ commentsOf }: CommentsProps) {
 }
 
 export function UsePublication() {
+  const { publicationId: id = '0x1b-0x0118' } = useParams();
+
   const {
     data: publication,
     error,
     loading,
-  } = usePublication({ publicationId: publicationId('0x1b-0x0118') });
+  } = usePublication({ publicationId: publicationId(id) });
 
   if (loading) return <Loading />;
 

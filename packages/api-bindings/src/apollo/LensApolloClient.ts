@@ -79,6 +79,7 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
       link,
       name: clientName,
       version,
+      connectToDevTools: __DEV__,
     });
     this.pollingInterval = pollingInterval;
   }
