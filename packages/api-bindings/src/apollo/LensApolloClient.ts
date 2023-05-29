@@ -41,6 +41,10 @@ function isTerminating(link: ApolloLink): boolean {
 
 export type LensApolloClientOptions<TCacheShape> = {
   cache: ApolloCache<TCacheShape>;
+  /**
+   * @defaultValue false
+   */
+  connectToDevTools?: boolean;
   pollingInterval?: number;
   version?: SemVer;
   link: ApolloLink;
@@ -57,6 +61,7 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
     link,
     pollingInterval = defaultPollingInterval,
     version,
+    connectToDevTools = false,
   }: LensApolloClientOptions<TCacheShape>) {
     invariant(
       isTerminating(link),
@@ -79,6 +84,7 @@ export class LensApolloClient<TCacheShape extends NormalizedCacheObject = Normal
       link,
       name: clientName,
       version,
+      connectToDevTools,
     });
     this.pollingInterval = pollingInterval;
   }

@@ -54,8 +54,8 @@ export type SelfFundedOperation = Operation<
  * @category Misc
  * @group Hooks
  *
- * @example Create a post
- * ```ts
+ * @example
+ * ```tsx
  * import { ContentFocus, ProfileOwnedByMe, supportsSelfFundedFallback, useCreatePost, useSelfFundedFallback } from '@lens-protocol/react-web';
  *
  * function PostComposer({ publisher }: { publisher: ProfileOwnedByMe }) {
