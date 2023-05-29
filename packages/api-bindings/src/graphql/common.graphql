@@ -391,8 +391,10 @@ fragment CommentBase on Comment {
   decryptionCriteria @client
 }
 
-fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+fragment PaginatedResultInfo on PaginatedResultInfo {
   __typename
+  beforeCount @client
+  moreAfter @client
   prev
   next
   totalCount

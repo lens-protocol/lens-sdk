@@ -1,5 +1,5 @@
 import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
-import { CommonPaginatedResultInfo, UnspecifiedError } from '@lens-protocol/api-bindings';
+import { PaginatedResultInfo, UnspecifiedError } from '@lens-protocol/api-bindings';
 import { Prettify } from '@lens-protocol/shared-kernel';
 
 /**
@@ -105,7 +105,7 @@ export type PaginatedArgs<T> = Prettify<
  */
 export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
   /**
-   * Whether there are more items to fetch.
+   * Whether there are more items to fetch in the next page
    */
   hasMore: boolean;
   /**
@@ -114,12 +114,16 @@ export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
    * @returns A promise that resolves when the next page of items has been fetched.
    */
   next: () => Promise<void>;
+  /**
+   * Fetches the previous page of items.
+   *
+   * @returns A promise that resolves when the prev page of items has been fetched.
+   */
+  prev: () => Promise<void>;
 };
 
-export type { CommonPaginatedResultInfo };
-
 export type PaginatedQueryData<K> = {
-  result: { pageInfo: CommonPaginatedResultInfo; items: K };
+  result: { pageInfo: PaginatedResultInfo; items: K };
 };
 
 type InferPaginatedItemsType<T extends PaginatedQueryData<unknown>> = T extends PaginatedQueryData<
@@ -135,12 +139,24 @@ export function usePaginatedReadResult<
 >({ error, data, loading, fetchMore }: ApolloQueryResult<T, V>): PaginatedReadResult<K> {
   return {
     ...buildReadResult<K>(data?.result.items, loading, error),
-    hasMore: data?.result.pageInfo.next ? true : false,
+
+    hasMore: data?.result.pageInfo.moreAfter ?? false,
+
     next: async () => {
       if (data?.result.pageInfo.next) {
         await fetchMore({
           variables: {
-            cursor: data?.result.pageInfo.next,
+            cursor: data.result.pageInfo.next,
+          },
+        });
+      }
+    },
+
+    prev: async () => {
+      if (data?.result.pageInfo.prev) {
+        await fetchMore({
+          variables: {
+            cursor: data.result.pageInfo.prev,
           },
         });
       }

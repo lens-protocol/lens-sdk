@@ -60,7 +60,7 @@ query GetProfilePublicationRevenue(
     }
 
     pageInfo {
-      ...CommonPaginatedResultInfo
+      ...PaginatedResultInfo
     }
   }
 }

@@ -46,9 +46,11 @@ export const FragmentCreateCommentEip712TypedData = /*#__PURE__*/ gql`
   }
   ${FragmentEip712TypedDataDomain}
 `;
-export const FragmentCommonPaginatedResultInfo = /*#__PURE__*/ gql`
-  fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+export const FragmentPaginatedResultInfo = /*#__PURE__*/ gql`
+  fragment PaginatedResultInfo on PaginatedResultInfo {
     __typename
+    beforeCount @client
+    moreAfter @client
     prev
     next
     totalCount
@@ -1861,12 +1863,12 @@ export const FeedDocument = /*#__PURE__*/ gql`
         ...FeedItem
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentFeedItem}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -1921,12 +1923,12 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentProfile}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -2350,7 +2352,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
@@ -2360,7 +2362,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
   ${FragmentNewCommentNotification}
   ${FragmentNewMentionNotification}
   ${FragmentNewReactionNotification}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -2902,12 +2904,12 @@ export const GetAllProfilesDocument = /*#__PURE__*/ gql`
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentProfile}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -3031,12 +3033,12 @@ export const MutualFollowersProfilesDocument = /*#__PURE__*/ gql`
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentProfile}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -3434,12 +3436,12 @@ export const ProfileFollowersDocument = /*#__PURE__*/ gql`
         ...Follower
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentFollower}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -3505,12 +3507,12 @@ export const ProfileFollowingDocument = /*#__PURE__*/ gql`
         ...Following
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentFollowing}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -3825,14 +3827,14 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentPost}
   ${FragmentMirror}
   ${FragmentComment}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -3925,14 +3927,14 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentPost}
   ${FragmentMirror}
   ${FragmentComment}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -4006,12 +4008,12 @@ export const WhoCollectedPublicationDocument = /*#__PURE__*/ gql`
         ...Wallet
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentWallet}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -4086,13 +4088,13 @@ export const ProfilePublicationsForSaleDocument = /*#__PURE__*/ gql`
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentPost}
   ${FragmentComment}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -4268,12 +4270,12 @@ export const WhoReactedPublicationDocument = /*#__PURE__*/ gql`
         ...WhoReactedResult
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentWhoReactedResult}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -4471,12 +4473,12 @@ export const GetProfilePublicationRevenueDocument = /*#__PURE__*/ gql`
         ...PublicationRevenue
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentPublicationRevenue}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -4619,14 +4621,14 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
           }
         }
         pageInfo {
-          ...CommonPaginatedResultInfo
+          ...PaginatedResultInfo
         }
       }
     }
   }
   ${FragmentPost}
   ${FragmentComment}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -4696,13 +4698,13 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
           ...Profile
         }
         pageInfo {
-          ...CommonPaginatedResultInfo
+          ...PaginatedResultInfo
         }
       }
     }
   }
   ${FragmentProfile}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -6838,12 +6840,16 @@ export type PaginatedPublicationResultFieldPolicy = {
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PaginatedResultInfoKeySpecifier = (
+  | 'beforeCount'
+  | 'moreAfter'
   | 'next'
   | 'prev'
   | 'totalCount'
   | PaginatedResultInfoKeySpecifier
 )[];
 export type PaginatedResultInfoFieldPolicy = {
+  beforeCount?: FieldPolicy<any> | FieldReadFunction<any>;
+  moreAfter?: FieldPolicy<any> | FieldReadFunction<any>;
   next?: FieldPolicy<any> | FieldReadFunction<any>;
   prev?: FieldPolicy<any> | FieldReadFunction<any>;
   totalCount?: FieldPolicy<any> | FieldReadFunction<any>;

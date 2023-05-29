@@ -19,7 +19,7 @@ config:
     CollectPolicy: CollectPolicy
     ContentEncryptionKey: ContentEncryptionKey
     ContractAddress: string
-    Cursor: string
+    Cursor: Cursor
     DataAvailabilityId: string
     DateTime: string
     DecryptionCriteria: DecryptionCriteria
@@ -78,6 +78,7 @@ generates:
               "import type { AppId, DecryptionCriteria, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
               "import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';",
               "import type { ContentEncryptionKey } from './ContentEncryptionKey';",
+              "import type { Cursor } from './Cursor';",
               "import type { ProfileAttributes } from './ProfileAttributes';",
               "import type { FollowPolicy } from './FollowPolicy';",
               "import type { FollowStatus } from './FollowStatus';",
