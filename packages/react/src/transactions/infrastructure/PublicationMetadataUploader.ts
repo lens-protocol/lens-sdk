@@ -1,26 +1,27 @@
+import { PublicationMetadata } from '@lens-protocol/api-bindings';
 import {
   CreateCommentRequest,
   CreatePostRequest,
 } from '@lens-protocol/domain/use-cases/publications';
-import { assertError, Url } from '@lens-protocol/shared-kernel';
+import { Url } from '@lens-protocol/shared-kernel';
 
-import { FailedUploadError, IMetadataUploader } from '../adapters/IMetadataUploader';
+import { IMetadataUploader } from '../adapters/IMetadataUploader';
 import { MetadataUploadHandler } from '../adapters/MetadataUploadHandler';
+import { MetadataUploaderErrorMiddleware } from './MetadataUploaderErrorMiddleware';
 import { createPublicationMetadata } from './createPublicationMetadata';
 
 export class PublicationMetadataUploader<T extends CreatePostRequest | CreateCommentRequest>
   implements IMetadataUploader<T>
 {
-  constructor(private readonly handler: MetadataUploadHandler) {}
+  private constructor(private readonly uploader: IMetadataUploader<PublicationMetadata>) {}
 
   async upload(request: T): Promise<Url> {
-    try {
-      const metadata = createPublicationMetadata(request);
-      return await this.handler(metadata);
-    } catch (err: unknown) {
-      assertError(err);
+    const metadata = createPublicationMetadata(request);
 
-      throw new FailedUploadError('Cannot upload metadata', { cause: err });
-    }
+    return this.uploader.upload(metadata);
+  }
+
+  static create(handler: MetadataUploadHandler) {
+    return new PublicationMetadataUploader(new MetadataUploaderErrorMiddleware(handler));
   }
 }

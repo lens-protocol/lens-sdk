@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { InvariantError } from '@lens-protocol/shared-kernel';
 import { when } from 'jest-when';
 
 import { FailedUploadError } from '../../adapters/IMetadataUploader';
@@ -19,6 +20,19 @@ describe(`Given an instance of the ${MetadataUploaderErrorMiddleware.name}`, () 
 
       expect(actual).toBe(url);
     });
+
+    it.each(['not a valid url', '//missing-protocol.com', null, undefined, {}])(
+      `should throw a ${InvariantError.name} if the upload handler returns a "%s"`,
+      async (url) => {
+        when(uploadHandler).calledWith(payload).mockResolvedValue(url);
+        const middleware = new MetadataUploaderErrorMiddleware(uploadHandler);
+
+        const actual = await middleware.upload(payload);
+
+        expect(actual).toBe(url);
+        // await expect(() => middleware.upload(payload)).rejects.toThrow(InvariantError);
+      },
+    );
 
     it(`should throw a ${FailedUploadError.name} if the upload fails`, async () => {
       when(uploadHandler).calledWith(payload).mockRejectedValue(new Error('Unknown error'));
