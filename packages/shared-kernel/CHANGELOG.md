@@ -1,5 +1,17 @@
 # @lens-protocol/shared-kernel
 
+## 0.8.0
+
+### Minor Changes
+
+- c416a2e: **Added:** self-fund protocol calls when subsidized approaches fails
+- c416a2e: **Fixed:** ensures correct chain when signing typed data
+- c416a2e: **Fixed:** network switch in wagmi bindings
+
+### Patch Changes
+
+- b738abb: Fixed `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+
 ## 0.8.0-next.1
 
 ### Patch Changes

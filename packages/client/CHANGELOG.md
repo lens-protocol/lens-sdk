@@ -1,5 +1,39 @@
 # @lens-protocol/client
 
+## 1.1.0
+
+### Minor Changes
+
+- 1e34bc6: **Added** `verify` and `getAccessToken` methods to the authentication module
+- 5c5bfb2: **Added** support for `SimpleCollectModule`
+- 86fc3de: **Added** support for data availability publications
+- a85e9a7: Use `fetch` instead of `XMLHttpRequest` to fix edge functions use cases
+
+### Patch Changes
+
+- ef96756: Fixed enum exports for:
+
+  - `CommentOrderingTypes`
+  - `CommentRankingFilter`
+  - `ContractType`
+  - `ProxyActionStatusTypes`
+  - `PublicationMetadataStatusType`
+  - `PublicationReportingFraudSubreason`
+  - `PublicationReportingIllegalSubreason`
+  - `PublicationReportingReason`
+  - `PublicationReportingSensitiveSubreason`
+  - `PublicationReportingSpamSubreason`
+  - `RelayErrorReasons`
+  - `ScalarOperator`
+  - `TransactionErrorReasons`
+
+- 7218910: Added support for more metadata fields in create publication methods
+- 59c7a20: Added `isPostPublication`, `isCommentPublication` and `isMirrorPublication` helpers
+- Updated dependencies [c416a2e]
+- Updated dependencies [b738abb]
+  - @lens-protocol/shared-kernel@0.8.0
+  - @lens-protocol/storage@0.7.2
+
 ## 1.1.0-next.2
 
 ### Patch Changes

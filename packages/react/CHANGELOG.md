@@ -1,5 +1,45 @@
 # @lens-protocol/react
 
+## 1.1.0
+
+### Minor Changes
+
+- 03a8ad5: **Deprecated** publication's `isOptimisticMirroredByMe` property, introduced `isMirroredByMe`
+- 513373d: **Enhanced** publication's `hasCollectedByMe` to replace deprecated `hasOptimisticCollectedByMe` property
+- 98c6547: **Added** support to fetch results before the current results set
+- c416a2e: **Added:** self-fund protocol calls when subsidized approach fails
+- c416a2e: **Fixed:** ensures correct chain when signing typed data
+- c416a2e: **Fixed:** network switch in wagmi bindings
+- cf4a420: **Added** support for cover and `altTag` in publication media attributes
+- ef1d7e2: **Added** Momoka support to React hooks
+- 5c5bfb2: **Added** support for `SimpleCollectModule`
+
+### Patch Changes
+
+- 1d5cf31: **Fixed** create mirror commit phase so to update the correct publication in cache
+- 72becec: **Fixed** documentation for `useuseActiveProfileSwitch` and `useProfilesOwnedByMe` hooks
+- ca9b8cb: **Fixes** export of `NotificationTypes`
+- 04647bb: **Fixed** issue preventing query hook from detecting active profile changes
+- b738abb: **Fixed** `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+- 71196cf: **Added** support for more metadata fields in create publication hooks
+- c4e6fcf: **Fixes** `CollectType`, `NftAttributeDisplayType`, `ReferencePolicyType` not exported as values
+- Updated dependencies [03a8ad5]
+- Updated dependencies [37bf8e8]
+- Updated dependencies [513373d]
+- Updated dependencies [98c6547]
+- Updated dependencies [04647bb]
+- Updated dependencies [c416a2e]
+- Updated dependencies [ef1d7e2]
+- Updated dependencies [b738abb]
+- Updated dependencies [5c5bfb2]
+- Updated dependencies [71196cf]
+  - @lens-protocol/api-bindings@0.8.0
+  - @lens-protocol/blockchain-bindings@0.8.0
+  - @lens-protocol/shared-kernel@0.8.0
+  - @lens-protocol/domain@0.8.0
+  - @lens-protocol/gated-content@0.2.2
+  - @lens-protocol/storage@0.7.2
+
 ## 1.1.0-next.5
 
 ### Patch Changes
