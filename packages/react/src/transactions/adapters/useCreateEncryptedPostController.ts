@@ -9,7 +9,6 @@ import {
   CreateEncryptedPostRequest,
   EncryptedPublicationMetadataUploader,
 } from '../infrastructure/EncryptedPublicationMetadataUploader';
-import { MetadataUploaderErrorMiddleware } from '../infrastructure/MetadataUploaderErrorMiddleware';
 import { PublicationIdPredictor } from '../infrastructure/PublicationIdPredictor';
 import { createGatedClient } from '../infrastructure/createGatedClient';
 import { CreatePostController } from './CreatePostController';
@@ -55,10 +54,10 @@ export function useCreateEncryptedPostController({ encryption, upload }: UseCrea
       publicationIdPredictor,
     );
 
-    const uploader = new EncryptedPublicationMetadataUploader(
+    const uploader = EncryptedPublicationMetadataUploader.create(
       client,
       accessConditionBuilderFactory,
-      new MetadataUploaderErrorMiddleware(upload),
+      upload,
     );
 
     const controller = new CreatePostController<CreateEncryptedPostRequest>({

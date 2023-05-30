@@ -8,7 +8,9 @@ import { GatedClient } from '@lens-protocol/gated-content';
 import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 
 import { IMetadataUploader } from '../adapters/IMetadataUploader';
+import { MetadataUploadHandler } from '../adapters/MetadataUploadHandler';
 import { AccessConditionBuilderFactory } from './AccessConditionBuilderFactory';
+import { MetadataUploaderErrorMiddleware } from './MetadataUploaderErrorMiddleware';
 import { createPublicationMetadata } from './createPublicationMetadata';
 
 type WithDecryptionCriteria<T extends CreatePostRequest | CreateCommentRequest> = Prettify<
@@ -30,7 +32,7 @@ export class EncryptedPublicationMetadataUploader<
   > = WithDecryptionCriteria<CreatePostRequest | CreateCommentRequest>,
 > implements IMetadataUploader<T>
 {
-  constructor(
+  private constructor(
     private readonly client: GatedClient,
     private readonly accessConditionBuilderFactory: AccessConditionBuilderFactory,
     private readonly uploader: IMetadataUploader<PublicationMetadata>,
@@ -49,5 +51,17 @@ export class EncryptedPublicationMetadataUploader<
     const encryptedMetadata = result.unwrap();
 
     return this.uploader.upload(encryptedMetadata);
+  }
+
+  static create(
+    client: GatedClient,
+    accessConditionBuilderFactory: AccessConditionBuilderFactory,
+    upload: MetadataUploadHandler,
+  ) {
+    return new EncryptedPublicationMetadataUploader(
+      client,
+      accessConditionBuilderFactory,
+      new MetadataUploaderErrorMiddleware(upload),
+    );
   }
 }

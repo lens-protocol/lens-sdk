@@ -10,8 +10,6 @@ export type UseCreatePostArgs = {
 };
 
 export function useCreatePostController({ upload }: UseCreatePostArgs) {
-  const uploader = new PublicationMetadataUploader(upload);
-
   const {
     activeWallet,
     apolloClient,
@@ -23,6 +21,7 @@ export function useCreatePostController({ upload }: UseCreatePostArgs) {
   } = useSharedDependencies();
 
   return async (request: CreatePostRequest) => {
+    const uploader = PublicationMetadataUploader.create(upload);
     const controller = new CreatePostController({
       activeWallet,
       apolloClient,

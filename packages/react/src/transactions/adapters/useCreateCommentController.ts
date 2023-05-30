@@ -1,14 +1,15 @@
 import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
 
 import { useSharedDependencies } from '../../shared';
+import { PublicationMetadataUploader } from '../infrastructure/PublicationMetadataUploader';
 import { CreateCommentController } from './CreateCommentController';
-import { IMetadataUploader } from './IMetadataUploader';
+import { MetadataUploadHandler } from './MetadataUploadHandler';
 
 export type UseCreateCommentArgs = {
-  uploader: IMetadataUploader<CreateCommentRequest>;
+  upload: MetadataUploadHandler;
 };
 
-export function useCreateCommentController({ uploader }: UseCreateCommentArgs) {
+export function useCreateCommentController({ upload }: UseCreateCommentArgs) {
   const {
     activeWallet,
     apolloClient,
@@ -20,6 +21,7 @@ export function useCreateCommentController({ uploader }: UseCreateCommentArgs) {
   } = useSharedDependencies();
 
   return async (request: CreateCommentRequest) => {
+    const uploader = PublicationMetadataUploader.create(upload);
     const controller = new CreateCommentController<CreateCommentRequest>({
       activeWallet,
       apolloClient,

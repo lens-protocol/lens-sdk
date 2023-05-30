@@ -6,7 +6,7 @@ import { MetadataUploadHandler } from '../../adapters/MetadataUploadHandler';
 import { PublicationMetadataUploader } from '../PublicationMetadataUploader';
 
 function setupTestScenario({ uploadHandler }: { uploadHandler: MetadataUploadHandler }) {
-  return new PublicationMetadataUploader(uploadHandler);
+  return PublicationMetadataUploader.create(uploadHandler);
 }
 
 const url = faker.internet.url();
@@ -21,9 +21,9 @@ describe(`Given an instance of the ${PublicationMetadataUploader.name}`, () => {
       const request = mockPublication();
 
       it('should upload the expected publication metadata using the provided upload handler', async () => {
-        const uploader = setupTestScenario({ uploadHandler });
+        const metadataUploader = setupTestScenario({ uploadHandler });
 
-        const result = await uploader.upload(request);
+        const result = await metadataUploader.upload(request);
 
         expect(result).toEqual(url);
         expect(uploadHandler).toHaveBeenCalledWith(

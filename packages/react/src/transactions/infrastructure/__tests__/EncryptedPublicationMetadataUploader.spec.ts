@@ -22,7 +22,6 @@ import {
   IPublicationIdPredictor,
 } from '../AccessConditionBuilderFactory';
 import { EncryptedPublicationMetadataUploader } from '../EncryptedPublicationMetadataUploader';
-import { MetadataUploaderErrorMiddleware } from '../MetadataUploaderErrorMiddleware';
 import { createGatedClient } from '../createGatedClient';
 
 const signer = Wallet.createRandom();
@@ -46,10 +45,10 @@ function setupTestScenario({ uploadHandler }: { uploadHandler: MetadataUploadHan
     publicationIdPredictor,
   );
 
-  const uploader = new EncryptedPublicationMetadataUploader(
+  const uploader = EncryptedPublicationMetadataUploader.create(
     client,
     accessConditionBuilderFactory,
-    new MetadataUploaderErrorMiddleware(uploadHandler),
+    uploadHandler,
   );
 
   return { uploader };
