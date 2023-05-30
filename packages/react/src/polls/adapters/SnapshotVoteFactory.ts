@@ -13,6 +13,7 @@ import { IUnsignedVote, PollId } from '@lens-protocol/domain/src/entities/polls'
 import {
   CreateUnsignedVoteRequest,
   IUnsignedVoteFactory,
+  VoteChoice,
 } from '@lens-protocol/domain/use-cases/polls';
 import { invariant, InvariantError, never } from '@lens-protocol/shared-kernel';
 import { getAddress } from 'ethers/lib/utils';
@@ -57,6 +58,22 @@ function createTypedData({
   };
 }
 
+function isNumber(value: unknown): value is number {
+  return typeof value === 'number';
+}
+
+function validateSingleChoice(
+  request: { choice: VoteChoice },
+  proposal: SnapshotProposal,
+): asserts request is { choice: number } {
+  invariant(isNumber(request.choice), 'Choice must be an number');
+  invariant(request.choice >= 0, 'Choice is a 0-based index, it must be a positive number');
+  invariant(
+    request.choice < proposal.choices.length,
+    'Choice is a 0-based index, it must be less than the number of choices',
+  );
+}
+
 function singleChoiceTypedData(
   proposal: SnapshotProposal,
   choice: number,
@@ -73,6 +90,30 @@ function singleChoiceTypedData(
     },
     types: vote2Types,
   });
+}
+
+function isNumberArray(value: unknown): value is number[] {
+  return Array.isArray(value) && value.every(isNumber);
+}
+
+function validateMultipleChoice(
+  request: { choice: VoteChoice },
+  proposal: SnapshotProposal,
+): asserts request is { choice: number[] } {
+  invariant(isNumberArray(request.choice), 'Choice must be an array of numbers');
+  invariant(request.choice.length > 0, 'Choice must contain at least one choice');
+  invariant(
+    request.choice.length <= proposal.choices.length,
+    'Choice must contain at most the number of choices',
+  );
+  invariant(
+    request.choice.every((c) => c >= 0),
+    'Choice is a 0-based index, it must be a positive number',
+  );
+  invariant(
+    request.choice.every((c) => c < proposal.choices.length),
+    'Choice is a 0-based index, it must be less than the number of choices',
+  );
 }
 
 function multipleChoiceTypedData(
@@ -103,6 +144,21 @@ function serializeWeightedChoice(choice: number[]): string {
   return JSON.stringify(map);
 }
 
+function validateWeightedChoice(
+  request: { choice: VoteChoice },
+  proposal: SnapshotProposal,
+): asserts request is { choice: number[] } {
+  invariant(isNumberArray(request.choice), 'Choice must be an array of numbers');
+  invariant(
+    request.choice.length === proposal.choices.length,
+    'Choice must specify a value for each proposal choice',
+  );
+  invariant(
+    request.choice.every((c) => c >= 0),
+    'Choice is a 0-based index, it must be a positive number',
+  );
+}
+
 function weightedChoiceTypedData(
   proposal: SnapshotProposal,
   choice: number[],
@@ -121,14 +177,6 @@ function weightedChoiceTypedData(
   });
 }
 
-function isNumber(value: unknown): value is number {
-  return typeof value === 'number';
-}
-
-function isNumberArray(value: unknown): value is number[] {
-  return Array.isArray(value) && value.every(isNumber);
-}
-
 function resolveTypedData(
   proposal: SnapshotProposal,
   request: CreateUnsignedVoteRequest,
@@ -137,17 +185,17 @@ function resolveTypedData(
   switch (proposal.type) {
     case SnapshotVotingSystem.BASIC:
     case SnapshotVotingSystem.SINGLE_CHOICE:
-      invariant(isNumber(request.choice), 'Choice must be an number');
+      validateSingleChoice(request, proposal);
       return singleChoiceTypedData(proposal, request.choice, request.voter, appId);
 
     case SnapshotVotingSystem.APPROVAL:
     case SnapshotVotingSystem.RANKED_CHOICE:
-      invariant(isNumberArray(request.choice), 'Choice must be an array of numbers');
+      validateMultipleChoice(request, proposal);
       return multipleChoiceTypedData(proposal, request.choice, request.voter, appId);
 
     case SnapshotVotingSystem.QUADRATIC:
     case SnapshotVotingSystem.WEIGHTED:
-      invariant(isNumberArray(request.choice), 'Choice must be an array of numbers');
+      validateWeightedChoice(request, proposal);
       return weightedChoiceTypedData(proposal, request.choice, request.voter, appId);
 
     default:
@@ -183,5 +231,3 @@ export class SnapshotVoteFactory implements IUnsignedVoteFactory {
     return new UnsignedVote(request.pollId, resolveTypedData(proposal, request, this.appId));
   }
 }
-
-// TODO validate choice more accurately

@@ -211,6 +211,8 @@ export type Poll<T extends ContentPublication> = Overwrite<
 
 /**
  * A publication with a poll in its content
+ *
+ * **Pro-tip**: use {@link isPollPublication} to check if the publication contains a poll.
  */
 export type PollPublication = Prettify<Poll<ContentPublication>>;
 
