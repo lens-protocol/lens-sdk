@@ -53,11 +53,11 @@ export type ApproveModuleOperation = Operation<
  * import { useApproveModule, CollectPolicyType, CollectablePublication, TokenAllowanceLimit } from '@lens-protocol/react-web';
  *
  * function ApproveCollect({ publication }: { publication: CollectablePublication }) {
- *   const approveModule = useApproveModule();
+ *   const { execute: approve, error, loading } = useApproveModule();
  *
  *   const handleClick = async () => {
  *     if (publication.collectPolicy.type === CollectPolicyType.CHARGE) {
- *       const result = await approveModule({
+ *       const result = await approve({
  *         // The collect fee amount
  *         amount: publication.collectPolicy.amount,
  *
