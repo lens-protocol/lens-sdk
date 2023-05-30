@@ -14,6 +14,7 @@ import {
 } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 
+import { AppId } from '../AppId';
 import { ICredentials } from '../Credentials';
 import { Challenge, NftContractType, NftOwnershipChallenge } from '../Nft';
 import { Profile, ProfileId } from '../Profile';
@@ -51,9 +52,14 @@ import {
   DataTransaction,
 } from '../Transactions';
 import { Wallet } from '../Wallet';
+import { ISignedVote, IUnsignedVote, PollId } from '../polls';
 
 export function mockProfileId(): ProfileId {
   return faker.datatype.hexadecimal({ length: 2 }) as ProfileId;
+}
+
+export function mockPollId(): PollId {
+  return faker.datatype.hexadecimal({ length: 2 }) as PollId;
 }
 
 export function mockPublicationId(profileId: ProfileId = mockProfileId()): PublicationId {
@@ -468,4 +474,23 @@ export function mockAndCriterion<T extends AnyCriterion[]>(criteria: T): AndCrit
     and: criteria,
     type: DecryptionCriteriaType.AND,
   };
+}
+
+export function mockIUnsignedVote(overrides?: Partial<IUnsignedVote>): IUnsignedVote {
+  return {
+    pollId: mockPollId(),
+    ...overrides,
+  };
+}
+
+export function mockISignedVote(overrides?: Partial<ISignedVote>): ISignedVote {
+  return {
+    pollId: mockPollId(),
+    signature: mockSignature(),
+    ...overrides,
+  };
+}
+
+export function mockAppId(): AppId {
+  return faker.commerce.productName() as AppId;
 }

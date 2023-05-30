@@ -3,7 +3,7 @@ import {
   mockSnapshotPollUrl,
   mockSnapshotProposalId,
   mockSnapshotSpaceId,
-} from '../../__helpers__/mocks';
+} from '../../../../../mocks';
 import { snapshotPoll, demoSnapshotPoll } from '../matchers';
 
 const spaceId = mockSnapshotSpaceId();

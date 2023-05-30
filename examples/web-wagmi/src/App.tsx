@@ -20,11 +20,11 @@ import { UseFeed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
 import { MiscPage } from './misc/MiscPage';
+import { Polls } from './misc/Polls';
 import { UseApproveModule } from './misc/UseApproveModule';
 import { UseCurrencies } from './misc/UseCurrencies';
 import { UseEnabledModules } from './misc/UseEnabledModules';
 import { UseNotifications } from './misc/UseNotifications';
-import { UsePollDetails } from './misc/UsePollDetails';
 import { UseRecentTransactions } from './misc/UseRecentTransactions';
 import { UseUnreadNotificationCount } from './misc/UseUnreadNotificationCount';
 import { ProfilesPage } from './profiles/ProfilesPage';
@@ -190,7 +190,7 @@ export function App() {
                 />
                 <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
                 <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
-                <Route path="/misc/usePollDetails" element={<UsePollDetails />} />
+                <Route path="/misc/polls" element={<Polls />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

@@ -2,17 +2,23 @@ import { TypedDataField } from 'ethers';
 
 export type Eip712TypedDataDomain = {
   name: string;
-  chainId: number;
   version: string;
-  verifyingContract: string;
+  chainId?: number;
+  verifyingContract?: string;
 };
 
-export type TypedData = {
+export type TypedDataTypes = Record<string, Array<TypedDataField>>;
+
+export type TypedDataMessage = {
+  [k: string]: unknown;
+};
+
+export type TypedData<
+  TTypes extends TypedDataTypes = TypedDataTypes,
+  TMessage extends TypedDataMessage = TypedDataMessage,
+> = {
   domain: Eip712TypedDataDomain;
-  types: Record<string, Array<TypedDataField>>;
+  message: TMessage;
   primaryType?: string;
-  message: {
-    nonce: number;
-    [k: string]: unknown;
-  };
+  types: TTypes;
 };

@@ -203,6 +203,7 @@ export type VoteWhere = {
 };
 
 export type SnapshotProposal = {
+  __typename: 'Proposal';
   id: string;
   author: string;
   state: string | null;
@@ -214,6 +215,7 @@ export type SnapshotProposal = {
   symbol: string;
   network: string;
   type: string | null;
+  privacy: string | null;
   start: number;
   end: number;
   quorum: number;
@@ -221,9 +223,9 @@ export type SnapshotProposal = {
   strategies: Array<{ network: string | null; name: string; params: unknown | null } | null>;
 };
 
-export type SnapshotVote = { choice: unknown };
+export type SnapshotVote = { __typename: 'Vote'; choice: unknown };
 
-export type SnapshotVotePower = { value: number | null };
+export type SnapshotVotePower = { __typename: 'Vp'; value: number | null };
 
 export type GetSnapshotProposalVariables = Exact<{
   spaceId: Scalars['String'];
@@ -240,6 +242,7 @@ export type GetSnapshotProposalData = {
 
 export const FragmentSnapshotProposal = /*#__PURE__*/ gql`
   fragment SnapshotProposal on Proposal {
+    __typename
     id
     author
     state
@@ -251,6 +254,7 @@ export const FragmentSnapshotProposal = /*#__PURE__*/ gql`
     symbol
     network
     type
+    privacy
     start
     end
     quorum
@@ -267,11 +271,13 @@ export const FragmentSnapshotProposal = /*#__PURE__*/ gql`
 `;
 export const FragmentSnapshotVote = /*#__PURE__*/ gql`
   fragment SnapshotVote on Vote {
+    __typename
     choice
   }
 `;
 export const FragmentSnapshotVotePower = /*#__PURE__*/ gql`
   fragment SnapshotVotePower on Vp {
+    __typename
     value: vp
   }
 `;

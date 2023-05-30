@@ -1,6 +1,7 @@
 export * from './AppId';
 export * from './Credentials';
 export * from './Nft';
+export * from './polls';
 export * from './Profile';
 export * from './Publication';
 export * from './ReportClaim';
