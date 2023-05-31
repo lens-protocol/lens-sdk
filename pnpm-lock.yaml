@@ -1209,7 +1209,7 @@ importers:
         specifier: ^4.9.5
         version: 4.9.5
       wagmi:
-        specifier: 0.12.7 || <=0.12.13
+        specifier: ^0.12.13
         version: 0.12.13(ethers@5.7.2)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
 
 packages:
