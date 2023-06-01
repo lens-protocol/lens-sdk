@@ -89,10 +89,6 @@ const AnyTransactionRequestSchema: z.Schema<AnyTransactionRequest, z.ZodTypeDef,
     ProfileOwnerFollowRequestSchema,
     UnconstrainedFollowRequestSchema,
 
-    CreateTextualPostRequestSchema,
-    CreateMediaPostRequestSchema,
-    CreateEmbedPostRequestSchema,
-
     // CreatePostRequest schemas
     CreateEmbedPostRequestSchema,
     CreateMediaPostRequestSchema,

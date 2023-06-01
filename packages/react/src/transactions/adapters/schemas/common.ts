@@ -11,7 +11,7 @@ import {
 } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import { profileId, publicationId } from '../../../../utils';
+import { profileId, publicationId } from '../../../utils';
 
 const Erc20Schema: z.Schema<Erc20, z.ZodTypeDef, UnknownObject> = z
   .object({

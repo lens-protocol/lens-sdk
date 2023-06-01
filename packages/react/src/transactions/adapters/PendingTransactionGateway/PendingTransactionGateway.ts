@@ -16,6 +16,7 @@ import { assertNever, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import differenceBy from 'lodash/differenceBy.js';
 
+import { TransactionSchema, TransactionStorageSchema, TransactionType } from '../schemas';
 import {
   ISerializableDataTransaction,
   ISerializableMetaTransaction,
@@ -23,7 +24,6 @@ import {
   ISerializableProxyTransaction,
   ISerializableTransactionFactory,
 } from './ISerializableTransactionFactory';
-import { TransactionSchema, TransactionStorageSchema, TransactionType } from './schema';
 
 const lensHubTransactionKinds = [
   TransactionKind.COLLECT_PUBLICATION,
