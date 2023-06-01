@@ -3,13 +3,14 @@ import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol
 import {
   ICredentials,
   PendingSigningRequestError,
+  Profile,
   UserRejectedError,
   Wallet,
   WalletConnectionError,
 } from '../../entities';
-import { ActiveProfileLoader } from '../profile/ActiveProfileLoader';
+import { IActiveProfilePresenter, ActiveProfileLoader } from '../profile';
 import { IGenericResultPresenter } from '../transactions';
-import { IActiveWalletPresenter } from './IActiveWalletPresenter';
+import { IActiveWalletPresenter, WalletData } from './IActiveWalletPresenter';
 
 export interface IWalletFactory {
   create(request: WalletLoginRequest): Promise<Wallet>;
@@ -19,8 +20,13 @@ export interface IWritableWalletGateway {
   save(wallet: Wallet): Promise<void>;
 }
 
+export type WalletLoginResult = {
+  wallet: WalletData;
+  profile: Profile | null;
+};
+
 export type IWalletLoginPresenter = IGenericResultPresenter<
-  void,
+  WalletLoginResult,
   PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
@@ -51,6 +57,7 @@ export class WalletLogin {
     private readonly activeWalletPresenter: IActiveWalletPresenter,
     private readonly walletLoginPresenter: IWalletLoginPresenter,
     private readonly activeProfileLoader: ActiveProfileLoader,
+    private readonly activeProfilePresenter: IActiveProfilePresenter,
   ) {}
 
   async login(request: WalletLoginRequest): Promise<void> {
@@ -65,10 +72,14 @@ export class WalletLogin {
     await this.walletGateway.save(wallet);
     await this.credentialsWriter.save(result.value);
 
+    const profile = await this.activeProfileLoader.loadActiveProfileByOwnerAddress(
+      wallet.address,
+      request.handle,
+    );
+
+    this.activeProfilePresenter.presentActiveProfile(profile);
     this.activeWalletPresenter.presentActiveWallet(wallet);
 
-    await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address, request.handle);
-
-    this.walletLoginPresenter.present(success());
+    this.walletLoginPresenter.present(success({ wallet, profile }));
   }
 }

@@ -2,15 +2,17 @@ import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { AnyTransactionRequestModel } from '../../../entities';
+import { Profile } from '../../../entities';
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { mockTransactionQueue } from '../../../mocks';
-import { IActiveProfileGateway } from '../../profile';
-import { ActiveProfileLoader } from '../../profile/ActiveProfileLoader';
-import { TransactionQueue } from '../../transactions/TransactionQueue';
-import { ActiveWallet } from '../../wallets/ActiveWallet';
-import { IActiveWalletPresenter } from '../../wallets/IActiveWalletPresenter';
-import { ILogoutPresenter, LogoutReason } from '../../wallets/ILogoutPresenter';
+import { ActiveProfileLoader, IActiveProfilePresenter } from '../../profile';
+import { TransactionQueue } from '../../transactions';
+import {
+  ILogoutPresenter,
+  LogoutReason,
+  IActiveWalletPresenter,
+  ActiveWallet,
+} from '../../wallets';
 import {
   Bootstrap,
   CredentialsExpiredError,
@@ -25,23 +27,20 @@ type BootstrapSetupConfig = {
   activeWallet: ActiveWallet;
   credentialsGateway?: ICredentialsGateway;
   credentialsRenewer?: ICredentialsRenewer;
-  walletPresenter?: IActiveWalletPresenter;
-  applicationPresenter?: IApplicationPresenter;
-  logoutPresenter?: ILogoutPresenter;
-  transactionQueue?: TransactionQueue<AnyTransactionRequestModel>;
+  activeProfileLoader?: ActiveProfileLoader;
 };
 
 const setupBootstrapInteractor = ({
   activeWallet,
   credentialsGateway = mock<ICredentialsGateway>(),
   credentialsRenewer = mock<ICredentialsRenewer>(),
+  activeProfileLoader = mock<ActiveProfileLoader>(),
 }: BootstrapSetupConfig) => {
-  const activeProfileLoader = mock<ActiveProfileLoader>();
   const walletPresenter = mock<IActiveWalletPresenter>();
   const applicationPresenter = mock<IApplicationPresenter>();
   const logoutPresenter = mock<ILogoutPresenter>();
   const transactionQueue = mockTransactionQueue();
-  const activeProfileGateway = mock<IActiveProfileGateway>();
+  const activeProfilePresenter = mock<IActiveProfilePresenter>();
 
   const bootstrap = new Bootstrap(
     activeWallet,
@@ -52,12 +51,12 @@ const setupBootstrapInteractor = ({
     logoutPresenter,
     activeProfileLoader,
     transactionQueue,
-    activeProfileGateway,
+    activeProfilePresenter,
   );
 
   return {
     bootstrap,
-    activeProfileLoader,
+    activeProfilePresenter,
     walletPresenter,
     applicationPresenter,
     logoutPresenter,
@@ -84,23 +83,30 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
       describe(`when the "${Bootstrap.prototype.start.name}" method is invoked`, () => {
         it(`should check if the credentials are expired and if not:
             - present the wallet
+            - present the active profile
             - resume the ${TransactionQueue.name} (TODO)
             - and finally signal readiness`, async () => {
           const activeWallet = mock<ActiveWallet>();
+          const activeProfile = mock<Profile>();
           const credentialsGateway = mock<ICredentialsGateway>();
           const credentialsRenewer = mock<ICredentialsRenewer>();
+          const activeProfileLoader = mock<ActiveProfileLoader>();
 
           when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
+          when(activeProfileLoader.loadActiveProfileByOwnerAddress)
+            .calledWith(wallet.address)
+            .mockResolvedValue(activeProfile);
           when(credentialsRenewer.renewCredentials).mockResolvedValue(success(mockCredentials()));
           when(credentialsGateway.getCredentials).mockResolvedValue(mockCredentials());
 
           const {
-            activeProfileLoader,
             applicationPresenter,
             bootstrap,
             walletPresenter,
             transactionQueue,
+            activeProfilePresenter,
           } = setupBootstrapInteractor({
+            activeProfileLoader,
             activeWallet,
             credentialsGateway,
             credentialsRenewer,
@@ -109,10 +115,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
           await bootstrap.start();
 
           expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
-          expect(activeProfileLoader.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
-            wallet.address,
-            undefined,
-          );
+          expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(activeProfile);
           expect(applicationPresenter.signalReady).toHaveBeenCalled();
           expect(transactionQueue.init).toHaveBeenCalled();
         });
@@ -120,27 +123,34 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
         it(`should renew the credentials if expired and then:
             - save the new credentials
             - present the wallet
+            - present active profile
             - resume the ${TransactionQueue.name} (TODO)
             - and finally signal readiness`, async () => {
           const activeWallet = mock<ActiveWallet>();
+          const activeProfile = mock<Profile>();
           const credentialsGateway = mock<ICredentialsGateway>();
           const credentialsRenewer = mock<ICredentialsRenewer>();
+          const activeProfileLoader = mock<ActiveProfileLoader>();
           const oldCredentials = mockCredentials();
           const newCredentials = mockCredentials();
 
           when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
           when(credentialsGateway.getCredentials).mockResolvedValue(oldCredentials);
+          when(activeProfileLoader.loadActiveProfileByOwnerAddress)
+            .calledWith(wallet.address)
+            .mockResolvedValue(activeProfile);
           when(credentialsRenewer.renewCredentials)
             .calledWith(oldCredentials)
             .mockResolvedValue(success(newCredentials));
 
           const {
             bootstrap,
-            activeProfileLoader,
             applicationPresenter,
             walletPresenter,
             transactionQueue,
+            activeProfilePresenter,
           } = setupBootstrapInteractor({
+            activeProfileLoader,
             activeWallet,
             credentialsGateway,
             credentialsRenewer,
@@ -149,10 +159,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
           await bootstrap.start();
 
           expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
-          expect(activeProfileLoader.loadActiveProfileByOwnerAddress).toHaveBeenCalledWith(
-            wallet.address,
-            undefined,
-          );
+          expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(activeProfile);
           expect(applicationPresenter.signalReady).toHaveBeenCalled();
           expect(transactionQueue.init).toHaveBeenCalled();
         });
