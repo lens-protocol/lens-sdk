@@ -18,7 +18,7 @@ export type ProfileHandleResolver = (handle: string) => string;
  * @internal
  */
 export type EnvironmentConfig = {
-  name: 'production' | 'development';
+  name: 'production' | 'development' | 'sandbox';
   backend: Url;
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
@@ -63,6 +63,32 @@ export const production: EnvironmentConfig = {
 export const development: EnvironmentConfig = {
   name: 'development',
   backend: 'https://api-mumbai.lens.dev',
+  chains: {
+    [ChainType.ETHEREUM]: goerli,
+    [ChainType.POLYGON]: mumbai,
+  },
+  timings: {
+    pollingInterval: 3000,
+    maxIndexingWaitTime: 240000,
+    maxMiningWaitTime: 120000,
+  },
+  handleResolver: (handle) => `${handle}.test`,
+};
+
+/**
+ * The sandbox environment configuration
+ *
+ * This is the environment to be used when you develop and you need to experiment with custom collect/follow modules.
+ * Although the Lens contract are also deployed on Mumbai this is a separate deployment so expect different test data, profiles, users, etc.
+ *
+ * - Endpoint: https://api-sandbox-mumbai.lens.dev
+ * - Chain IDs: 80001 (Mumbai), 5 (Goerli)
+ * - Profile handle suffix: `.test`
+ * - Environment specific timings
+ */
+export const sandbox: EnvironmentConfig = {
+  name: 'sandbox',
+  backend: 'https://api-sandbox-mumbai.lens.dev',
   chains: {
     [ChainType.ETHEREUM]: goerli,
     [ChainType.POLYGON]: mumbai,
