@@ -1,3 +1,4 @@
+import * as GatedEnvironments from '@lens-protocol/gated-content/environments';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
 import { ChainConfigRegistry, goerli, mainnet, mumbai, polygon } from './chains';
@@ -18,11 +19,12 @@ export type ProfileHandleResolver = (handle: string) => string;
  * @internal
  */
 export type EnvironmentConfig = {
-  name: 'production' | 'development' | 'sandbox';
+  name: 'production' | 'development' | 'sandbox' | string;
   backend: Url;
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
   handleResolver: ProfileHandleResolver;
+  gated: GatedEnvironments.EnvironmentConfig;
 };
 
 /**
@@ -48,6 +50,7 @@ export const production: EnvironmentConfig = {
     maxMiningWaitTime: 60000,
   },
   handleResolver: (handle) => `${handle}.lens`,
+  gated: GatedEnvironments.production,
 };
 
 /**
@@ -73,6 +76,7 @@ export const development: EnvironmentConfig = {
     maxMiningWaitTime: 120000,
   },
   handleResolver: (handle) => `${handle}.test`,
+  gated: GatedEnvironments.development,
 };
 
 /**
@@ -99,6 +103,7 @@ export const sandbox: EnvironmentConfig = {
     maxMiningWaitTime: 120000,
   },
   handleResolver: (handle) => `${handle}.test`,
+  gated: GatedEnvironments.sandbox,
 };
 
 /**
