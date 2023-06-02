@@ -3,7 +3,7 @@ import { EthereumAddress } from '@lens-protocol/shared-kernel';
 import { SupportedChains } from './conditions/types';
 
 export type EnvironmentConfig = {
-  name: 'production' | 'development';
+  name: 'production' | 'development' | 'sandbox';
   chainId: number;
   chainName: SupportedChains;
   contractAddress: EthereumAddress;
@@ -21,4 +21,11 @@ export const development: EnvironmentConfig = {
   chainId: 80001,
   chainName: SupportedChains.MUMBAI,
   contractAddress: '0x8fc44e306CCc61D7ab20Cf743247cfa330ac35bF',
+};
+
+export const sandbox: EnvironmentConfig = {
+  name: 'sandbox',
+  chainId: 80001,
+  chainName: SupportedChains.MUMBAI,
+  contractAddress: '0xcc44c4e8066fFA4acfb619A82dCF918263045c87',
 };
