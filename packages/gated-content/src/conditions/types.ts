@@ -53,12 +53,14 @@ export const enum SupportedChains {
   ETHEREUM = 'ethereum',
   POLYGON = 'polygon',
   MUMBAI = 'mumbai',
+  LINEA_GOERLI = 'lineaGoerli',
 }
 
 export enum SupportedChainId {
   ETHEREUM = 1,
   POLYGON = 137,
   MUMBAI = 80001,
+  LINEA_GOERLI = 59140,
 }
 
 const SUPPORTED_CHAIN_IDS = Object.values(SupportedChainId);

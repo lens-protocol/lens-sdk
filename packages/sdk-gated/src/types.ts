@@ -31,6 +31,7 @@ enum LensEnvironment {
   'Polygon' = 'polygon',
   'Mumbai' = 'mumbai',
   'MumbaiSandbox' = 'mumbai-sandbox',
+  'LineaGoerli' = 'lineaGoerli',
 }
 
 type AuthSig = {
