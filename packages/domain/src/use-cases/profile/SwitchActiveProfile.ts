@@ -22,6 +22,6 @@ export class SwitchActiveProfile {
     invariant(profile, 'Profile not found');
 
     await this.activeProfileGateway.setActiveProfile(profile);
-    await this.activeProfilePresenter.presentActiveProfile(profile);
+    this.activeProfilePresenter.presentActiveProfile(profile);
   }
 }

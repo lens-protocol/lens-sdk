@@ -5,7 +5,7 @@ import {
 } from '@lens-protocol/domain/use-cases/profile';
 
 export class ActiveProfilePresenter implements IActiveProfilePresenter {
-  async presentActiveProfile(profileIdentifier: ProfileIdentifier | null): Promise<void> {
+  presentActiveProfile(profileIdentifier: ProfileIdentifier | null): void {
     activeProfileIdentifierVar(profileIdentifier);
   }
 }
