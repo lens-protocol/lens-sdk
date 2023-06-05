@@ -1,4 +1,5 @@
 import { ApolloCache, DocumentNode, makeVar } from '@apollo/client';
+import { empty } from '@apollo/client/link/core';
 import { DecryptionCriteriaType } from '@lens-protocol/domain/entities';
 import {
   mockCreateMirrorRequest,
@@ -13,8 +14,22 @@ import { CollectPolicyType } from '@lens-protocol/domain/use-cases/publications'
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { CollectState, ContentPublication, Profile } from '../../../graphql';
-import { FragmentComment, FragmentPost, FragmentProfile } from '../../../graphql/hooks';
+import {
+  CollectState,
+  ContentPublication,
+  GetProfileData,
+  GetProfileVariables,
+  GetPublicationData,
+  GetPublicationVariables,
+  Profile,
+} from '../../../graphql';
+import {
+  FragmentComment,
+  FragmentPost,
+  FragmentProfile,
+  GetProfileDocument,
+  GetPublicationDocument,
+} from '../../../graphql/hooks';
 import {
   mockAndAccessCondition,
   mockAttributeFragment,
@@ -34,6 +49,7 @@ import {
   mockProfileOwnershipAccessCondition,
   mockPublicationStatsFragment,
 } from '../../../mocks';
+import { LensApolloClient } from '../../LensApolloClient';
 import { activeProfileIdentifierVar } from '../activeProfileIdentifier';
 import { createApolloCache } from '../createApolloCache';
 import { erc20Amount } from '../decryptionCriteria';
@@ -85,6 +101,13 @@ function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}
         }) ?? never('cannot read profile')
       );
     },
+
+    get client() {
+      return new LensApolloClient({
+        cache,
+        link: empty(),
+      });
+    },
   };
 }
 
@@ -98,7 +121,25 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
       typename: 'Comment',
       mockPublicationFragment: mockCommentFragment,
     },
-  ])('and a cached $typename', ({ mockPublicationFragment }) => {
+  ])('and a cached $typename', ({ mockPublicationFragment, typename }) => {
+    describe(`when reading the same ${typename} via the "publication" query`, () => {
+      const publication = mockPublicationFragment();
+      const { client, writePublication } = setupApolloCache();
+
+      beforeAll(() => {
+        writePublication(publication);
+      });
+
+      it('should perform a cache redirect and avoid a extra network request', async () => {
+        const { data } = await client.query<GetPublicationData, GetPublicationVariables>({
+          query: GetPublicationDocument,
+          variables: { request: { publicationId: publication.id }, sources: [] },
+        });
+
+        expect(data.result).toMatchObject(publication);
+      });
+    });
+
     describe('when reading "collectPolicy"', () => {
       it('should support "CollectPolicy" for free collect', () => {
         const publication = mockPublicationFragment({
@@ -495,6 +536,24 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
 
       it('should allow to access string attributes as String', () => {
         expect(read.attributes.string?.toString()).toEqual('NY');
+      });
+    });
+
+    describe(`when reading the same Profile via the "profile" query`, () => {
+      const profile = mockProfileFragment();
+      const { client, writeProfileFragment } = setupApolloCache();
+
+      beforeAll(() => {
+        writeProfileFragment(profile);
+      });
+
+      it('should perform a cache redirect and avoid a extra network request', async () => {
+        const { data } = await client.query<GetProfileData, GetProfileVariables>({
+          query: GetProfileDocument,
+          variables: { request: { profileId: profile.id } },
+        });
+
+        expect(data.result).toMatchObject(profile);
       });
     });
 

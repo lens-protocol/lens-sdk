@@ -17,6 +17,7 @@ import { createMediaSetTypePolicy } from './createMediaSetTypePolicy';
 import { createMediaTypePolicy } from './createMediaTypePolicy';
 import { createNftImageTypePolicy } from './createNftImageTypePolicy';
 import { createNotificationsFieldPolicy } from './createNotificationsFieldPolicy';
+import { createProfileFieldPolicy } from './createProfileFieldPolicy';
 import { createProfileFollowersFieldPolicy } from './createProfileFollowersFieldPolicy';
 import { createProfileFollowingFieldPolicy } from './createProfileFollowingFieldPolicy';
 import { createProfilePublicationRevenueFieldPolicy } from './createProfilePublicationRevenueFieldPolicy';
@@ -93,6 +94,7 @@ function createTypePolicies({
         exploreProfiles: createExploreProfilesFieldPolicy(),
         explorePublications: createExplorePublicationsFieldPolicy(),
         notifications: createNotificationsFieldPolicy(),
+        profile: createProfileFieldPolicy() as FieldPolicy<unknown>,
         profiles: createProfilesFieldPolicy(),
         profilePublicationsForSale: createProfilePublicationsForSaleFieldPolicy(),
         publications: createPublicationsFieldPolicy(),
