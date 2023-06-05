@@ -6,7 +6,8 @@ import {
 import { ChainType, UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import { TokenAllowanceRequestSchema } from './erc20';
+import { SerializedErc20AmountSchema } from './common';
+import { tokenAllowanceRequestSchema } from './erc20';
 import {
   CreateProfileRequestSchema,
   PaidFollowRequestSchema,
@@ -20,13 +21,13 @@ import {
   UpdateProfileDetailsRequestSchema,
 } from './profiles';
 import {
-  CreateEmbedCommentRequestSchema,
-  CreateEmbedPostRequestSchema,
-  CreateMediaCommentRequestSchema,
-  CreateMediaPostRequestSchema,
+  createEmbedCommentRequestSchema,
+  createEmbedPostRequestSchema,
+  createMediaCommentRequestSchema,
+  createMediaPostRequestSchema,
   CreateMirrorRequestSchema,
-  CreateTextualCommentRequestSchema,
-  CreateTextualPostRequestSchema,
+  createTextualCommentRequestSchema,
+  createTextualPostRequestSchema,
   FreeCollectRequestSchema,
   PaidCollectRequestSchema,
 } from './publications';
@@ -48,14 +49,14 @@ const ProtocolTransactionRequestSchema: z.Schema<
   UnconstrainedFollowRequestSchema,
 
   // CreatePostRequest schemas
-  CreateEmbedPostRequestSchema,
-  CreateMediaPostRequestSchema,
-  CreateTextualPostRequestSchema,
+  createEmbedPostRequestSchema(SerializedErc20AmountSchema),
+  createMediaPostRequestSchema(SerializedErc20AmountSchema),
+  createTextualPostRequestSchema(SerializedErc20AmountSchema),
 
   // CreateCommentRequest schemas
-  CreateEmbedCommentRequestSchema,
-  CreateMediaCommentRequestSchema,
-  CreateTextualCommentRequestSchema,
+  createEmbedCommentRequestSchema(SerializedErc20AmountSchema),
+  createMediaCommentRequestSchema(SerializedErc20AmountSchema),
+  createTextualCommentRequestSchema(SerializedErc20AmountSchema),
 
   CreateMirrorRequestSchema,
 
@@ -78,7 +79,7 @@ const ProtocolTransactionRequestSchema: z.Schema<
 // is intentional due to https://github.com/colinhacks/zod/issues/2106
 const AnyTransactionRequestSchema: z.Schema<AnyTransactionRequest, z.ZodTypeDef, UnknownObject> =
   z.union([
-    TokenAllowanceRequestSchema,
+    tokenAllowanceRequestSchema(SerializedErc20AmountSchema),
 
     // CollectRequest schemas
     FreeCollectRequestSchema,
@@ -90,14 +91,14 @@ const AnyTransactionRequestSchema: z.Schema<AnyTransactionRequest, z.ZodTypeDef,
     UnconstrainedFollowRequestSchema,
 
     // CreatePostRequest schemas
-    CreateEmbedPostRequestSchema,
-    CreateMediaPostRequestSchema,
-    CreateTextualPostRequestSchema,
+    createEmbedPostRequestSchema(SerializedErc20AmountSchema),
+    createMediaPostRequestSchema(SerializedErc20AmountSchema),
+    createTextualPostRequestSchema(SerializedErc20AmountSchema),
 
     // CreateCommentRequest schemas
-    CreateEmbedCommentRequestSchema,
-    CreateMediaCommentRequestSchema,
-    CreateTextualCommentRequestSchema,
+    createEmbedCommentRequestSchema(SerializedErc20AmountSchema),
+    createMediaCommentRequestSchema(SerializedErc20AmountSchema),
+    createTextualCommentRequestSchema(SerializedErc20AmountSchema),
 
     CreateMirrorRequestSchema,
 

@@ -2,6 +2,7 @@
 import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 import {
   Amount,
+  BigDecimal,
   ChainType,
   Erc20,
   erc20,
@@ -30,7 +31,7 @@ const Erc20Schema: z.Schema<Erc20, z.ZodTypeDef, UnknownObject> = z
  * error TS7056: The inferred type of this node exceeds the maximum length the compiler will serialize. An explicit type annotation is needed.
  * ```
  */
-export const Erc20AmountSchema: z.Schema<Erc20Amount, z.ZodTypeDef, UnknownObject> = z
+export const SerializedErc20AmountSchema: z.Schema<Erc20Amount, z.ZodTypeDef, UnknownObject> = z
   .object({
     asset: Erc20Schema,
     value: z.string(),
@@ -44,3 +45,14 @@ export const ProfileIdSchema: z.Schema<ProfileId, z.ZodTypeDef, string> = z
 export const PublicationIdSchema: z.Schema<PublicationId, z.ZodTypeDef, string> = z
   .string()
   .transform(publicationId);
+
+// Checky workaround to private constructor
+const AmountCtor = Amount.ether(0).constructor as new (
+  asset: Erc20,
+  value: BigDecimal,
+) => Erc20Amount;
+
+export const Erc20AmountInstanceSchema: z.Schema<Erc20Amount, z.ZodTypeDef, Erc20Amount> =
+  z.instanceof(AmountCtor, 'value not instance of Amount<Erc20>');
+
+export type Erc20AmountSchema = z.Schema<Erc20Amount, z.ZodTypeDef, unknown>;

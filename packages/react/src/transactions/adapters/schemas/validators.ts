@@ -2,17 +2,20 @@ import {
   CreateCommentRequest,
   CreatePostRequest,
 } from '@lens-protocol/domain/use-cases/publications';
+import { TokenAllowanceRequest } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
+import { Erc20AmountInstanceSchema } from './common';
+import { tokenAllowanceRequestSchema } from './erc20';
 import { formatZodError } from './formatters';
 import {
-  CreateEmbedCommentRequestSchema,
-  CreateEmbedPostRequestSchema,
-  CreateMediaCommentRequestSchema,
-  CreateMediaPostRequestSchema,
-  CreateTextualCommentRequestSchema,
-  CreateTextualPostRequestSchema,
+  createEmbedCommentRequestSchema,
+  createEmbedPostRequestSchema,
+  createMediaCommentRequestSchema,
+  createMediaPostRequestSchema,
+  createTextualCommentRequestSchema,
+  createTextualPostRequestSchema,
 } from './publications';
 
 export type Validator<T> = (request: unknown) => asserts request is T;
@@ -30,20 +33,25 @@ function createRequestValidator<T extends z.ZodType<unknown>>(schema: T) {
 }
 
 const CreatePostRequestSchema = z.discriminatedUnion('contentFocus', [
-  CreateTextualPostRequestSchema,
-  CreateMediaPostRequestSchema,
-  CreateEmbedPostRequestSchema,
+  createEmbedPostRequestSchema(Erc20AmountInstanceSchema),
+  createMediaPostRequestSchema(Erc20AmountInstanceSchema),
+  createTextualPostRequestSchema(Erc20AmountInstanceSchema),
 ]);
 
 export const validateCreatePostRequest: Validator<CreatePostRequest> =
   createRequestValidator(CreatePostRequestSchema);
 
 const CreateCommentRequestSchema = z.discriminatedUnion('contentFocus', [
-  CreateEmbedCommentRequestSchema,
-  CreateMediaCommentRequestSchema,
-  CreateTextualCommentRequestSchema,
+  createEmbedCommentRequestSchema(Erc20AmountInstanceSchema),
+  createMediaCommentRequestSchema(Erc20AmountInstanceSchema),
+  createTextualCommentRequestSchema(Erc20AmountInstanceSchema),
 ]);
 
 export const validateCreateCommentRequest: Validator<CreateCommentRequest> = createRequestValidator(
   CreateCommentRequestSchema,
 );
+
+const TokenAllowanceRequestSchema = tokenAllowanceRequestSchema(Erc20AmountInstanceSchema);
+
+export const validateTokenAllowanceRequest: Validator<TokenAllowanceRequest> =
+  createRequestValidator(TokenAllowanceRequestSchema);

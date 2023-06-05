@@ -2,7 +2,7 @@ import { TransactionKind } from '@lens-protocol/domain/entities';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { z } from 'zod';
 
-import { Erc20AmountSchema, ProfileIdSchema } from './common';
+import { SerializedErc20AmountSchema, ProfileIdSchema } from './common';
 
 export const CreateProfileRequestSchema = z.object({
   handle: z.string(),
@@ -10,7 +10,7 @@ export const CreateProfileRequestSchema = z.object({
 });
 
 const FollowRequestFeeSchema = z.object({
-  amount: Erc20AmountSchema,
+  amount: SerializedErc20AmountSchema,
   contractAddress: z.string(),
   recipient: z.string(),
 });
@@ -48,7 +48,7 @@ export const UpdateDispatcherConfigRequestSchema = z.object({
 
 const ChargeFollowPolicyConfigSchema = z.object({
   type: z.literal(FollowPolicyType.CHARGE),
-  amount: Erc20AmountSchema,
+  amount: SerializedErc20AmountSchema,
   recipient: z.string(),
 });
 
