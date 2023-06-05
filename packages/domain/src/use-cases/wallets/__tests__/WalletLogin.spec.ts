@@ -109,7 +109,7 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
       expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
       expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(activeProfile);
 
-      expect(genericPresenter.present).toBeCalledWith(success({ wallet, profile: activeProfile }));
+      expect(genericPresenter.present).toBeCalledWith(success(activeProfile));
     });
 
     it('should handle scenarios where the user cancels the challenge signing operation', async () => {

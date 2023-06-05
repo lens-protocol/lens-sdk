@@ -10,7 +10,7 @@ import {
 } from '../../entities';
 import { IActiveProfilePresenter, ActiveProfileLoader } from '../profile';
 import { IGenericResultPresenter } from '../transactions';
-import { IActiveWalletPresenter, WalletData } from './IActiveWalletPresenter';
+import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 
 export interface IWalletFactory {
   create(request: WalletLoginRequest): Promise<Wallet>;
@@ -20,10 +20,7 @@ export interface IWritableWalletGateway {
   save(wallet: Wallet): Promise<void>;
 }
 
-export type WalletLoginResult = {
-  wallet: WalletData;
-  profile: Profile | null;
-};
+export type WalletLoginResult = Profile | null;
 
 export type IWalletLoginPresenter = IGenericResultPresenter<
   WalletLoginResult,
@@ -80,6 +77,6 @@ export class WalletLogin {
     this.activeProfilePresenter.presentActiveProfile(profile);
     this.activeWalletPresenter.presentActiveWallet(wallet);
 
-    this.walletLoginPresenter.present(success({ wallet, profile }));
+    this.walletLoginPresenter.present(success(profile));
   }
 }
