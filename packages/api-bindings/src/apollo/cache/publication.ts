@@ -1,7 +1,13 @@
-import { FieldFunctionOptions, FieldPolicy, FieldReadFunction, Reference } from '@apollo/client';
+import {
+  FieldFunctionOptions,
+  FieldPolicy,
+  FieldReadFunction,
+  Reference,
+  StoreObject,
+} from '@apollo/client';
 import { PublicationId } from '@lens-protocol/domain/entities';
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
-import { EthereumAddress } from '@lens-protocol/shared-kernel';
+import { EthereumAddress, never } from '@lens-protocol/shared-kernel';
 
 import {
   CollectModule,
@@ -11,6 +17,8 @@ import {
   ReferencePolicy,
   Wallet,
   CollectPolicy,
+  AnyPublication,
+  PublicationQueryRequest,
 } from '../../graphql';
 import { activeProfileIdentifierVar } from './activeProfileIdentifier';
 import { decryptionCriteria } from './decryptionCriteria';
@@ -175,7 +183,15 @@ const isOptimisticMirroredByMe: FieldReadFunction<boolean> = (existing) => {
   return existing ?? false;
 };
 
-export function createContentPublicationTypePolicy() {
+const publicationTypename = 'Publication';
+
+export function createPublicationTypePolicy() {
+  return {
+    keyFields: ({ id }: Readonly<StoreObject>) => `${publicationTypename}:${String(id)}`,
+  } as const;
+}
+
+function createContentPublicationTypePolicy() {
   return {
     fields: {
       referencePolicy,
@@ -192,6 +208,26 @@ export function createContentPublicationTypePolicy() {
       collectPolicy,
       decryptionCriteria,
       stats,
+    },
+  };
+}
+
+export const createCommentTypePolicy = createContentPublicationTypePolicy;
+
+export const createPostTypePolicy = createContentPublicationTypePolicy;
+
+export function createPublicationFieldPolicy(): FieldPolicy<
+  AnyPublication,
+  AnyPublication,
+  Reference,
+  FieldFunctionOptions<{ request: PublicationQueryRequest }>
+> {
+  return {
+    read(_, { args, toReference }) {
+      return toReference({
+        __typename: publicationTypename,
+        id: args?.request.publicationId ?? never(),
+      });
     },
   };
 }

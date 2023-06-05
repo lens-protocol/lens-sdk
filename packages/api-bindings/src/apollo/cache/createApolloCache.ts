@@ -1,9 +1,15 @@
-import { ApolloCache, InMemoryCache, NormalizedCacheObject, ReactiveVar } from '@apollo/client';
+import {
+  ApolloCache,
+  FieldPolicy,
+  InMemoryCache,
+  NormalizedCacheObject,
+  ReactiveVar,
+  TypePolicy,
+} from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
 import generatedIntrospection, { StrictTypedTypePolicies } from '../../graphql/hooks';
 import { createAttributeTypePolicy } from './createAttributeTypePolicy';
-import { createContentPublicationTypePolicy } from './createContentPublicationTypePolicy';
 import { createExploreProfilesFieldPolicy } from './createExploreProfileFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './createExplorePublicationsFieldPolicy';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
@@ -21,9 +27,14 @@ import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
+import {
+  createCommentTypePolicy,
+  createPublicationTypePolicy,
+  createPostTypePolicy,
+  createPublicationFieldPolicy,
+} from './publication';
 import { noCachedField } from './utils/noCachedField';
 import { notNormalizedType } from './utils/notNormalizedType';
-import { createPublicationFieldPolicy } from './createPublicationFieldPolicy';
 
 type TypePoliciesArgs = {
   /**
@@ -32,11 +43,20 @@ type TypePoliciesArgs = {
   activeWalletVar: ReactiveVar<WalletData | null>;
 };
 
-function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): StrictTypedTypePolicies {
+type InheritedTypePolicies = {
+  Publication: TypePolicy;
+};
+
+function createTypePolicies({
+  activeWalletVar,
+}: TypePoliciesArgs): StrictTypedTypePolicies & InheritedTypePolicies {
   return {
     Profile: createProfileTypePolicy(activeWalletVar),
-    Post: createContentPublicationTypePolicy(),
-    Comment: createContentPublicationTypePolicy(),
+
+    // Comment, Mirror, and Post type policies inherit from Publication type policy
+    Publication: createPublicationTypePolicy(),
+    Comment: createCommentTypePolicy(),
+    Post: createPostTypePolicy(),
 
     FeedItem: notNormalizedType(),
 
@@ -76,7 +96,7 @@ function createTypePolicies({ activeWalletVar }: TypePoliciesArgs): StrictTypedT
         profiles: createProfilesFieldPolicy(),
         profilePublicationsForSale: createProfilePublicationsForSaleFieldPolicy(),
         publications: createPublicationsFieldPolicy(),
-        publication: createPublicationFieldPolicy(),
+        publication: createPublicationFieldPolicy() as FieldPolicy<unknown>,
         search: createSearchFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
         followers: createProfileFollowersFieldPolicy(),

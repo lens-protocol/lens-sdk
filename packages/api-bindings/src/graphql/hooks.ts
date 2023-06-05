@@ -56,203 +56,6 @@ export const FragmentPaginatedResultInfo = /*#__PURE__*/ gql`
     totalCount
   }
 `;
-export const FragmentMedia = /*#__PURE__*/ gql`
-  fragment Media on Media {
-    __typename
-    altTag
-    cover
-    mimeType
-    url
-  }
-`;
-export const FragmentNftImage = /*#__PURE__*/ gql`
-  fragment NftImage on NftImage {
-    __typename
-    contractAddress
-    tokenId
-    uri
-    verified
-  }
-`;
-export const FragmentMediaSet = /*#__PURE__*/ gql`
-  fragment MediaSet on MediaSet {
-    __typename
-    original {
-      ...Media
-    }
-  }
-  ${FragmentMedia}
-`;
-export const FragmentProfileStats = /*#__PURE__*/ gql`
-  fragment ProfileStats on ProfileStats {
-    __typename
-    totalCollects
-    totalComments
-    totalFollowers
-    totalFollowing
-    totalMirrors
-    totalPosts
-    totalPublications
-    commentsCount: commentsTotal(forSources: $sources)
-    postsCount: postsTotal(forSources: $sources)
-    mirrorsCount: mirrorsTotal(forSources: $sources)
-  }
-`;
-export const FragmentErc20Fields = /*#__PURE__*/ gql`
-  fragment Erc20Fields on Erc20 {
-    __typename
-    name
-    symbol
-    decimals
-    address
-  }
-`;
-export const FragmentModuleFeeAmount = /*#__PURE__*/ gql`
-  fragment ModuleFeeAmount on ModuleFeeAmount {
-    __typename
-    asset {
-      ...Erc20Fields
-    }
-    value
-  }
-  ${FragmentErc20Fields}
-`;
-export const FragmentFeeFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
-    __typename
-    amount {
-      ...ModuleFeeAmount
-    }
-    contractAddress
-    recipient
-  }
-  ${FragmentModuleFeeAmount}
-`;
-export const FragmentProfileFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
-    __typename
-    contractAddress
-  }
-`;
-export const FragmentRevertFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
-    __typename
-    contractAddress
-  }
-`;
-export const FragmentUnknownFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
-    __typename
-    contractAddress
-  }
-`;
-export const FragmentAttribute = /*#__PURE__*/ gql`
-  fragment Attribute on Attribute {
-    __typename
-    displayType
-    key
-    value
-  }
-`;
-export const FragmentProfile = /*#__PURE__*/ gql`
-  fragment Profile on Profile {
-    __typename
-    id
-    name
-    bio
-    handle
-    ownedBy
-    interests
-    picture {
-      ... on NftImage {
-        ...NftImage
-      }
-      ... on MediaSet {
-        ...MediaSet
-      }
-    }
-    coverPicture {
-      ... on NftImage {
-        ...NftImage
-      }
-      ... on MediaSet {
-        ...MediaSet
-      }
-    }
-    stats {
-      ...ProfileStats
-    }
-    followModule {
-      ... on FeeFollowModuleSettings {
-        ...FeeFollowModuleSettings
-      }
-      ... on ProfileFollowModuleSettings {
-        ...ProfileFollowModuleSettings
-      }
-      ... on RevertFollowModuleSettings {
-        ...RevertFollowModuleSettings
-      }
-      ... on UnknownFollowModuleSettings {
-        ...UnknownFollowModuleSettings
-      }
-    }
-    followPolicy @client
-    __attributes: attributes {
-      ...Attribute
-    }
-    attributes: attributesMap @client
-    dispatcher {
-      address
-      canUseRelay
-    }
-    onChainIdentity {
-      proofOfHumanity
-      ens {
-        name
-      }
-      sybilDotOrg {
-        verified
-        source {
-          twitter {
-            handle
-          }
-        }
-      }
-      worldcoin {
-        isHuman
-      }
-    }
-    isFollowedByMe
-    isFollowingObserver: isFollowing(who: $observerId)
-    followStatus @client
-    ownedByMe @client
-  }
-  ${FragmentNftImage}
-  ${FragmentMediaSet}
-  ${FragmentProfileStats}
-  ${FragmentFeeFollowModuleSettings}
-  ${FragmentProfileFollowModuleSettings}
-  ${FragmentRevertFollowModuleSettings}
-  ${FragmentUnknownFollowModuleSettings}
-  ${FragmentAttribute}
-`;
-export const FragmentPendingPost = /*#__PURE__*/ gql`
-  fragment PendingPost on PendingPost {
-    __typename
-    id
-    content
-    media {
-      ...Media
-    }
-    profile {
-      ...Profile
-    }
-    locale
-    mainContentFocus
-  }
-  ${FragmentMedia}
-  ${FragmentProfile}
-`;
 export const FragmentPublicationStats = /*#__PURE__*/ gql`
   fragment PublicationStats on PublicationStats {
     __typename
@@ -263,6 +66,24 @@ export const FragmentPublicationStats = /*#__PURE__*/ gql`
     totalAmountOfComments
     commentsCount: commentsTotal(forSources: $sources)
   }
+`;
+export const FragmentMedia = /*#__PURE__*/ gql`
+  fragment Media on Media {
+    __typename
+    altTag
+    cover
+    mimeType
+    url
+  }
+`;
+export const FragmentMediaSet = /*#__PURE__*/ gql`
+  fragment MediaSet on MediaSet {
+    __typename
+    original {
+      ...Media
+    }
+  }
+  ${FragmentMedia}
 `;
 export const FragmentMetadataAttributeOutput = /*#__PURE__*/ gql`
   fragment MetadataAttributeOutput on MetadataAttributeOutput {
@@ -457,6 +278,168 @@ export const FragmentMetadataOutput = /*#__PURE__*/ gql`
   ${FragmentMetadataAttributeOutput}
   ${FragmentEncryptionParamsOutput}
 `;
+export const FragmentNftImage = /*#__PURE__*/ gql`
+  fragment NftImage on NftImage {
+    __typename
+    contractAddress
+    tokenId
+    uri
+    verified
+  }
+`;
+export const FragmentProfileStats = /*#__PURE__*/ gql`
+  fragment ProfileStats on ProfileStats {
+    __typename
+    totalCollects
+    totalComments
+    totalFollowers
+    totalFollowing
+    totalMirrors
+    totalPosts
+    totalPublications
+    commentsCount: commentsTotal(forSources: $sources)
+    postsCount: postsTotal(forSources: $sources)
+    mirrorsCount: mirrorsTotal(forSources: $sources)
+  }
+`;
+export const FragmentErc20Fields = /*#__PURE__*/ gql`
+  fragment Erc20Fields on Erc20 {
+    __typename
+    name
+    symbol
+    decimals
+    address
+  }
+`;
+export const FragmentModuleFeeAmount = /*#__PURE__*/ gql`
+  fragment ModuleFeeAmount on ModuleFeeAmount {
+    __typename
+    asset {
+      ...Erc20Fields
+    }
+    value
+  }
+  ${FragmentErc20Fields}
+`;
+export const FragmentFeeFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    contractAddress
+    recipient
+  }
+  ${FragmentModuleFeeAmount}
+`;
+export const FragmentProfileFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const FragmentRevertFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const FragmentUnknownFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const FragmentAttribute = /*#__PURE__*/ gql`
+  fragment Attribute on Attribute {
+    __typename
+    displayType
+    key
+    value
+  }
+`;
+export const FragmentProfile = /*#__PURE__*/ gql`
+  fragment Profile on Profile {
+    __typename
+    id
+    name
+    bio
+    handle
+    ownedBy
+    interests
+    picture {
+      ... on NftImage {
+        ...NftImage
+      }
+      ... on MediaSet {
+        ...MediaSet
+      }
+    }
+    coverPicture {
+      ... on NftImage {
+        ...NftImage
+      }
+      ... on MediaSet {
+        ...MediaSet
+      }
+    }
+    stats {
+      ...ProfileStats
+    }
+    followModule {
+      ... on FeeFollowModuleSettings {
+        ...FeeFollowModuleSettings
+      }
+      ... on ProfileFollowModuleSettings {
+        ...ProfileFollowModuleSettings
+      }
+      ... on RevertFollowModuleSettings {
+        ...RevertFollowModuleSettings
+      }
+      ... on UnknownFollowModuleSettings {
+        ...UnknownFollowModuleSettings
+      }
+    }
+    followPolicy @client
+    __attributes: attributes {
+      ...Attribute
+    }
+    attributes: attributesMap @client
+    dispatcher {
+      address
+      canUseRelay
+    }
+    onChainIdentity {
+      proofOfHumanity
+      ens {
+        name
+      }
+      sybilDotOrg {
+        verified
+        source {
+          twitter {
+            handle
+          }
+        }
+      }
+      worldcoin {
+        isHuman
+      }
+    }
+    isFollowedByMe
+    isFollowingObserver: isFollowing(who: $observerId)
+    followStatus @client
+    ownedByMe @client
+  }
+  ${FragmentNftImage}
+  ${FragmentMediaSet}
+  ${FragmentProfileStats}
+  ${FragmentFeeFollowModuleSettings}
+  ${FragmentProfileFollowModuleSettings}
+  ${FragmentRevertFollowModuleSettings}
+  ${FragmentUnknownFollowModuleSettings}
+  ${FragmentAttribute}
+`;
 export const FragmentWallet = /*#__PURE__*/ gql`
   fragment Wallet on Wallet {
     __typename
@@ -631,111 +614,6 @@ export const FragmentUnknownReferenceModuleSettings = /*#__PURE__*/ gql`
     referenceModuleReturnData
   }
 `;
-export const FragmentPost = /*#__PURE__*/ gql`
-  fragment Post on Post {
-    __typename
-    id
-    stats {
-      ...PublicationStats
-    }
-    metadata {
-      ...MetadataOutput
-    }
-    profile {
-      ...Profile
-    }
-    collectedBy {
-      ...Wallet
-    }
-    collectModule {
-      ... on AaveFeeCollectModuleSettings {
-        ...AaveFeeCollectModuleSettings
-      }
-      ... on ERC4626FeeCollectModuleSettings {
-        ...Erc4626FeeCollectModuleSettings
-      }
-      ... on MultirecipientFeeCollectModuleSettings {
-        ...MultirecipientFeeCollectModuleSettings
-      }
-      ... on UnknownCollectModuleSettings {
-        ...UnknownCollectModuleSettings
-      }
-      ... on FreeCollectModuleSettings {
-        ...FreeCollectModuleSettings
-      }
-      ... on FeeCollectModuleSettings {
-        ...FeeCollectModuleSettings
-      }
-      ... on LimitedFeeCollectModuleSettings {
-        ...LimitedFeeCollectModuleSettings
-      }
-      ... on LimitedTimedFeeCollectModuleSettings {
-        ...LimitedTimedFeeCollectModuleSettings
-      }
-      ... on RevertCollectModuleSettings {
-        ...RevertCollectModuleSettings
-      }
-      ... on TimedFeeCollectModuleSettings {
-        ...TimedFeeCollectModuleSettings
-      }
-      ... on SimpleCollectModuleSettings {
-        ...SimpleCollectModuleSettings
-      }
-    }
-    collectNftAddress
-    referenceModule {
-      ... on FollowOnlyReferenceModuleSettings {
-        ...FollowOnlyReferenceModuleSettings
-      }
-      ... on DegreesOfSeparationReferenceModuleSettings {
-        ...DegreesOfSeparationReferenceModuleSettings
-      }
-      ... on UnknownReferenceModuleSettings {
-        ...UnknownReferenceModuleSettings
-      }
-    }
-    createdAt
-    hidden
-    isGated
-    reaction(request: { profileId: $observerId })
-    hasCollectedByMe
-    canComment(profileId: $observerId) {
-      result
-    }
-    canMirror(profileId: $observerId) {
-      result
-    }
-    mirrors(by: $observerId)
-    canObserverDecrypt: canDecrypt(profileId: $observerId) {
-      result
-      reasons
-    }
-    hasOptimisticCollectedByMe @client
-    isOptimisticMirroredByMe @client
-    isMirroredByMe @client
-    collectPolicy @client
-    referencePolicy @client
-    decryptionCriteria @client
-  }
-  ${FragmentPublicationStats}
-  ${FragmentMetadataOutput}
-  ${FragmentProfile}
-  ${FragmentWallet}
-  ${FragmentAaveFeeCollectModuleSettings}
-  ${FragmentErc4626FeeCollectModuleSettings}
-  ${FragmentMultirecipientFeeCollectModuleSettings}
-  ${FragmentUnknownCollectModuleSettings}
-  ${FragmentFreeCollectModuleSettings}
-  ${FragmentFeeCollectModuleSettings}
-  ${FragmentLimitedFeeCollectModuleSettings}
-  ${FragmentLimitedTimedFeeCollectModuleSettings}
-  ${FragmentRevertCollectModuleSettings}
-  ${FragmentTimedFeeCollectModuleSettings}
-  ${FragmentSimpleCollectModuleSettings}
-  ${FragmentFollowOnlyReferenceModuleSettings}
-  ${FragmentDegreesOfSeparationReferenceModuleSettings}
-  ${FragmentUnknownReferenceModuleSettings}
-`;
 export const FragmentCommentBase = /*#__PURE__*/ gql`
   fragment CommentBase on Comment {
     __typename
@@ -841,6 +719,111 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
   ${FragmentDegreesOfSeparationReferenceModuleSettings}
   ${FragmentUnknownReferenceModuleSettings}
 `;
+export const FragmentPost = /*#__PURE__*/ gql`
+  fragment Post on Post {
+    __typename
+    id
+    stats {
+      ...PublicationStats
+    }
+    metadata {
+      ...MetadataOutput
+    }
+    profile {
+      ...Profile
+    }
+    collectedBy {
+      ...Wallet
+    }
+    collectModule {
+      ... on AaveFeeCollectModuleSettings {
+        ...AaveFeeCollectModuleSettings
+      }
+      ... on ERC4626FeeCollectModuleSettings {
+        ...Erc4626FeeCollectModuleSettings
+      }
+      ... on MultirecipientFeeCollectModuleSettings {
+        ...MultirecipientFeeCollectModuleSettings
+      }
+      ... on UnknownCollectModuleSettings {
+        ...UnknownCollectModuleSettings
+      }
+      ... on FreeCollectModuleSettings {
+        ...FreeCollectModuleSettings
+      }
+      ... on FeeCollectModuleSettings {
+        ...FeeCollectModuleSettings
+      }
+      ... on LimitedFeeCollectModuleSettings {
+        ...LimitedFeeCollectModuleSettings
+      }
+      ... on LimitedTimedFeeCollectModuleSettings {
+        ...LimitedTimedFeeCollectModuleSettings
+      }
+      ... on RevertCollectModuleSettings {
+        ...RevertCollectModuleSettings
+      }
+      ... on TimedFeeCollectModuleSettings {
+        ...TimedFeeCollectModuleSettings
+      }
+      ... on SimpleCollectModuleSettings {
+        ...SimpleCollectModuleSettings
+      }
+    }
+    collectNftAddress
+    referenceModule {
+      ... on FollowOnlyReferenceModuleSettings {
+        ...FollowOnlyReferenceModuleSettings
+      }
+      ... on DegreesOfSeparationReferenceModuleSettings {
+        ...DegreesOfSeparationReferenceModuleSettings
+      }
+      ... on UnknownReferenceModuleSettings {
+        ...UnknownReferenceModuleSettings
+      }
+    }
+    createdAt
+    hidden
+    isGated
+    reaction(request: { profileId: $observerId })
+    hasCollectedByMe
+    canComment(profileId: $observerId) {
+      result
+    }
+    canMirror(profileId: $observerId) {
+      result
+    }
+    mirrors(by: $observerId)
+    canObserverDecrypt: canDecrypt(profileId: $observerId) {
+      result
+      reasons
+    }
+    hasOptimisticCollectedByMe @client
+    isOptimisticMirroredByMe @client
+    isMirroredByMe @client
+    collectPolicy @client
+    referencePolicy @client
+    decryptionCriteria @client
+  }
+  ${FragmentPublicationStats}
+  ${FragmentMetadataOutput}
+  ${FragmentProfile}
+  ${FragmentWallet}
+  ${FragmentAaveFeeCollectModuleSettings}
+  ${FragmentErc4626FeeCollectModuleSettings}
+  ${FragmentMultirecipientFeeCollectModuleSettings}
+  ${FragmentUnknownCollectModuleSettings}
+  ${FragmentFreeCollectModuleSettings}
+  ${FragmentFeeCollectModuleSettings}
+  ${FragmentLimitedFeeCollectModuleSettings}
+  ${FragmentLimitedTimedFeeCollectModuleSettings}
+  ${FragmentRevertCollectModuleSettings}
+  ${FragmentTimedFeeCollectModuleSettings}
+  ${FragmentSimpleCollectModuleSettings}
+  ${FragmentFollowOnlyReferenceModuleSettings}
+  ${FragmentDegreesOfSeparationReferenceModuleSettings}
+  ${FragmentUnknownReferenceModuleSettings}
+`;
 export const FragmentMirrorBase = /*#__PURE__*/ gql`
   fragment MirrorBase on Mirror {
     __typename
@@ -883,6 +866,56 @@ export const FragmentComment = /*#__PURE__*/ gql`
   ${FragmentCommentBase}
   ${FragmentPost}
   ${FragmentMirrorBase}
+`;
+export const FragmentMirror = /*#__PURE__*/ gql`
+  fragment Mirror on Mirror {
+    __typename
+    ...MirrorBase
+    mirrorOf {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${FragmentMirrorBase}
+  ${FragmentPost}
+  ${FragmentComment}
+`;
+export const FragmentPublication = /*#__PURE__*/ gql`
+  fragment Publication on Publication {
+    ... on Comment {
+      ...Comment
+    }
+    ... on Post {
+      ...Post
+    }
+    ... on Mirror {
+      ...Mirror
+    }
+  }
+  ${FragmentComment}
+  ${FragmentPost}
+  ${FragmentMirror}
+`;
+export const FragmentPendingPost = /*#__PURE__*/ gql`
+  fragment PendingPost on PendingPost {
+    __typename
+    id
+    content
+    media {
+      ...Media
+    }
+    profile {
+      ...Profile
+    }
+    locale
+    mainContentFocus
+  }
+  ${FragmentMedia}
+  ${FragmentProfile}
 `;
 export const FragmentElectedMirror = /*#__PURE__*/ gql`
   fragment ElectedMirror on ElectedMirror {
@@ -1043,23 +1076,6 @@ export const FragmentNewFollowerNotification = /*#__PURE__*/ gql`
     }
   }
   ${FragmentWallet}
-`;
-export const FragmentMirror = /*#__PURE__*/ gql`
-  fragment Mirror on Mirror {
-    __typename
-    ...MirrorBase
-    mirrorOf {
-      ... on Post {
-        ...Post
-      }
-      ... on Comment {
-        ...Comment
-      }
-    }
-  }
-  ${FragmentMirrorBase}
-  ${FragmentPost}
-  ${FragmentComment}
 `;
 export const FragmentNewCollectNotification = /*#__PURE__*/ gql`
   fragment NewCollectNotification on NewCollectNotification {
@@ -6317,11 +6333,22 @@ export type MediaOutputFieldPolicy = {
   source?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type MediaSetKeySpecifier = ('medium' | 'original' | 'small' | MediaSetKeySpecifier)[];
+export type MediaSetKeySpecifier = (
+  | 'medium'
+  | 'onChain'
+  | 'optimized'
+  | 'original'
+  | 'small'
+  | 'transformed'
+  | MediaSetKeySpecifier
+)[];
 export type MediaSetFieldPolicy = {
   medium?: FieldPolicy<any> | FieldReadFunction<any>;
+  onChain?: FieldPolicy<any> | FieldReadFunction<any>;
+  optimized?: FieldPolicy<any> | FieldReadFunction<any>;
   original?: FieldPolicy<any> | FieldReadFunction<any>;
   small?: FieldPolicy<any> | FieldReadFunction<any>;
+  transformed?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MetadataAttributeOutputKeySpecifier = (
   | 'displayType'
@@ -6496,6 +6523,7 @@ export type MutationKeySpecifier = (
   | 'createUnfollowTypedData'
   | 'deleteNftGallery'
   | 'dismissRecommendedProfiles'
+  | 'dss'
   | 'gci'
   | 'gcr'
   | 'gdi'
@@ -6551,6 +6579,7 @@ export type MutationFieldPolicy = {
   createUnfollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   deleteNftGallery?: FieldPolicy<any> | FieldReadFunction<any>;
   dismissRecommendedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
+  dss?: FieldPolicy<any> | FieldReadFunction<any>;
   gci?: FieldPolicy<any> | FieldReadFunction<any>;
   gcr?: FieldPolicy<any> | FieldReadFunction<any>;
   gdi?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -6966,6 +6995,11 @@ export type PostFieldPolicy = {
   referencePolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PrfResponseKeySpecifier = ('dd' | 'ss' | PrfResponseKeySpecifier)[];
+export type PrfResponseFieldPolicy = {
+  dd?: FieldPolicy<any> | FieldReadFunction<any>;
+  ss?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type ProfileKeySpecifier = (
   | 'attributes'
   | 'attributesMap'
@@ -7206,6 +7240,7 @@ export type QueryKeySpecifier = (
   | 'hasTxHashBeenIndexed'
   | 'internalPublicationFilter'
   | 'isIDKitPhoneVerified'
+  | 'iss'
   | 'mutualFollowersProfiles'
   | 'nftGalleries'
   | 'nftOwnershipChallenge'
@@ -7268,6 +7303,7 @@ export type QueryFieldPolicy = {
   hasTxHashBeenIndexed?: FieldPolicy<any> | FieldReadFunction<any>;
   internalPublicationFilter?: FieldPolicy<any> | FieldReadFunction<any>;
   isIDKitPhoneVerified?: FieldPolicy<any> | FieldReadFunction<any>;
+  iss?: FieldPolicy<any> | FieldReadFunction<any>;
   mutualFollowersProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   nftGalleries?: FieldPolicy<any> | FieldReadFunction<any>;
   nftOwnershipChallenge?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -8582,6 +8618,10 @@ export type StrictTypedTypePolicies = {
   Post?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | PostKeySpecifier | (() => undefined | PostKeySpecifier);
     fields?: PostFieldPolicy;
+  };
+  PrfResponse?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | PrfResponseKeySpecifier | (() => undefined | PrfResponseKeySpecifier);
+    fields?: PrfResponseFieldPolicy;
   };
   Profile?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | ProfileKeySpecifier | (() => undefined | ProfileKeySpecifier);
