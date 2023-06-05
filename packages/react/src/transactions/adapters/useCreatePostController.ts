@@ -4,7 +4,7 @@ import { useSharedDependencies } from '../../shared';
 import { PublicationMetadataUploader } from '../infrastructure/PublicationMetadataUploader';
 import { CreatePostController } from './CreatePostController';
 import { MetadataUploadHandler } from './MetadataUploadHandler';
-import { validateCreatePostRequest } from './schemas/publications';
+import { validateCreatePostRequest } from './schemas/validators';
 
 export type UseCreatePostArgs = {
   upload: MetadataUploadHandler;

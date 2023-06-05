@@ -714,9 +714,6 @@ importers:
       zod:
         specifier: ^3.20.6
         version: 3.20.6
-      zod-validation-error:
-        specifier: ^1.3.0
-        version: 1.3.0(zod@3.20.6)
     devDependencies:
       '@babel/core':
         specifier: ^7.20.12
@@ -8322,6 +8319,7 @@ packages:
   /chokidar@3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
     engines: {node: '>= 8.10.0'}
+    requiresBuild: true
     dependencies:
       anymatch: 3.1.3
       braces: 3.0.2
@@ -17335,15 +17333,6 @@ packages:
 
   /zen-observable@0.8.15:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
-    dev: false
-
-  /zod-validation-error@1.3.0(zod@3.20.6):
-    resolution: {integrity: sha512-4WoQnuWnj06kwKR4A+cykRxFmy+CTvwMQO5ogTXLiVx1AuvYYmMjixh7sbkSsQTr1Fvtss6d5kVz8PGeMPUQjQ==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      zod: ^3.18.0
-    dependencies:
-      zod: 3.20.6
     dev: false
 
   /zod@3.20.6:

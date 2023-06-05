@@ -3,10 +3,6 @@
  */
 export class InvariantError extends Error {
   name = 'InvariantError' as const;
-
-  constructor(message: string) {
-    super(message);
-  }
 }
 
 /**

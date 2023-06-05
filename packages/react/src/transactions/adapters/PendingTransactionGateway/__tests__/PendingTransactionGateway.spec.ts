@@ -24,7 +24,7 @@ import {
   mockMetaTransactionData,
   mockNativeTransactionData,
 } from '../../__helpers__/mocks';
-import { TransactionStorageSchema } from '../../schemas';
+import { TransactionStorageSchema } from '../../schemas/transactions';
 import { PendingTransactionGateway } from '../PendingTransactionGateway';
 
 function setupPendingTransactionGateway({

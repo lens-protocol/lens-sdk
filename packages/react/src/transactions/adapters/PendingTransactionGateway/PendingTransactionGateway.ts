@@ -16,7 +16,11 @@ import { assertNever, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import differenceBy from 'lodash/differenceBy.js';
 
-import { TransactionSchema, TransactionStorageSchema, TransactionType } from '../schemas';
+import {
+  TransactionSchema,
+  TransactionStorageSchema,
+  TransactionType,
+} from '../schemas/transactions';
 import {
   ISerializableDataTransaction,
   ISerializableMetaTransaction,

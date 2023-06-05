@@ -8,16 +8,13 @@ import {
   ReferencePolicyType,
   ContentWarning,
   ImageType,
-  CreatePostRequest,
 } from '@lens-protocol/domain/use-cases/publications';
-import { never } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
-import { fromZodError } from 'zod-validation-error';
 
 import { appId } from '../../../utils';
 import { Erc20AmountSchema, ProfileIdSchema, PublicationIdSchema } from './common';
 
-const NftAttributeSchema = z.union([
+const NftAttributeSchema = z.discriminatedUnion('displayType', [
   z.object({
     displayType: z.literal(NftAttributeDisplayType.Date),
     value: z.coerce.date(),
@@ -99,13 +96,6 @@ const SimpleChargeCollectPolicyConfigSchema = z.object({
   timeLimited: z.boolean(),
 });
 
-const ChargeCollectPolicyConfigSchema = z.union([
-  SimpleChargeCollectPolicyConfigSchema,
-  MultirecipientChargeCollectPolicyConfigSchema,
-  VaultChargeCollectPolicyConfigSchema,
-  AaveChargeCollectPolicyConfigSchema,
-]);
-
 const FreeCollectPolicyConfigSchema = z.object({
   type: z.literal(CollectPolicyType.FREE),
   metadata: NftMetadataSchema,
@@ -117,7 +107,10 @@ const NoCollectPolicyConfigSchema = z.object({
 });
 
 const CollectPolicyConfigSchema = z.union([
-  ChargeCollectPolicyConfigSchema,
+  SimpleChargeCollectPolicyConfigSchema,
+  MultirecipientChargeCollectPolicyConfigSchema,
+  VaultChargeCollectPolicyConfigSchema,
+  AaveChargeCollectPolicyConfigSchema,
   FreeCollectPolicyConfigSchema,
   NoCollectPolicyConfigSchema,
 ]);
@@ -146,7 +139,7 @@ const FollowersOnlyReferencePolicyConfigSchema = z.object({
   type: z.literal(ReferencePolicyType.FOLLOWERS_ONLY),
 });
 
-const ReferencePolicyConfigSchema = z.union([
+const ReferencePolicyConfigSchema = z.discriminatedUnion('type', [
   AnyoneReferencePolicyConfigSchema,
   DegreesOfSeparationReferencePolicyConfigSchema,
   FollowersOnlyReferencePolicyConfigSchema,
@@ -186,34 +179,6 @@ export const CreateEmbedPostRequestSchema = BasePostRequestSchema.extend({
   contentFocus: z.enum([ContentFocus.EMBED]),
   media: z.array(MediaSchema).optional(),
 });
-
-const CreatePostRequestSchema = z.discriminatedUnion('contentFocus', [
-  CreateTextualPostRequestSchema,
-  CreateMediaPostRequestSchema,
-  CreateEmbedPostRequestSchema,
-]);
-
-export type Validator<T> = (request: unknown) => asserts request is T;
-
-type InferShape<T extends z.ZodType<unknown>> = T extends z.ZodType<infer R> ? R : never;
-
-function createRequestValidator<T extends z.ZodType<unknown>>(schema: T) {
-  return (request: unknown): asserts request is InferShape<T> => {
-    const result = schema.safeParse(request);
-
-    if (result.success) return;
-
-    never(
-      fromZodError(result.error, {
-        prefix: 'invalid argument, please fix all the errors',
-        prefixSeparator: ':\n',
-      }).message,
-    );
-  };
-}
-
-export const validateCreatePostRequest: Validator<CreatePostRequest> =
-  createRequestValidator(CreatePostRequestSchema);
 
 const BaseCommentRequestSchema = z.object({
   appId: AppIdSchema.optional(),
