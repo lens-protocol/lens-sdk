@@ -9,8 +9,8 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { NotFoundError } from '../../NotFoundError';
+import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { usePublicationRevenue, UsePublicationRevenueArgs } from '../usePublicationRevenue';
 
