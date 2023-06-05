@@ -22,5 +22,8 @@
     "@lens-protocol/tsconfig": "0.2.0",
     "@lens-protocol/wagmi": "1.1.0"
   },
-  "changesets": []
+  "changesets": [
+    "angry-students-grab",
+    "blue-files-happen"
+  ]
 }

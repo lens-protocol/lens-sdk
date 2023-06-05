@@ -1,5 +1,16 @@
 # @lens-protocol/wagmi
 
+## 1.2.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+
+### Patch Changes
+
+- Updated dependencies [cb5b900d]
+  - @lens-protocol/react-web@1.2.0-next.0
+
 ## 1.1.0
 
 ### Minor Changes

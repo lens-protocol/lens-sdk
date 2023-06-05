@@ -1,5 +1,18 @@
 # @lens-protocol/react-web
 
+## 1.2.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+
+### Patch Changes
+
+- Updated dependencies [cb5b900d]
+- Updated dependencies [af4b1133]
+  - @lens-protocol/gated-content@0.3.0-next.0
+  - @lens-protocol/react@1.2.0-next.0
+
 ## 1.1.0
 
 ### Minor Changes

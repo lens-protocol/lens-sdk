@@ -1,5 +1,17 @@
 # @lens-protocol/react
 
+## 1.2.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+- af4b1133: Detects malformed URLs from user's provided `upload` handler
+
+### Patch Changes
+
+- Updated dependencies [cb5b900d]
+  - @lens-protocol/gated-content@0.3.0-next.0
+
 ## 1.1.0
 
 ### Minor Changes

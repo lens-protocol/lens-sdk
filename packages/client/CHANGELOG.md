@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 1.2.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+
 ## 1.1.0
 
 ### Minor Changes

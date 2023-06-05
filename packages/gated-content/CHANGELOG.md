@@ -1,5 +1,11 @@
 # @lens-protocol/gated-content
 
+## 0.3.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+
 ## 0.2.2
 
 ### Patch Changes
