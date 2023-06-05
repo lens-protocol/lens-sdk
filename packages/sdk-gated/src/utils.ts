@@ -10,8 +10,6 @@ export const chainIdToString = (chainId: number): SupportedChains => {
       return SupportedChains.POLYGON;
     case 80001:
       return SupportedChains.MUMBAI;
-    case 59140:
-      return SupportedChains.LINEA_GOERLI;
     default:
       throw new ChainIdError(chainId);
   }
@@ -24,8 +22,6 @@ export const envToChainId = (network: LensEnvironment): number => {
     case LensEnvironment.Mumbai:
     case LensEnvironment.MumbaiSandbox:
       return 80001;
-    case LensEnvironment.LineaGoerli:
-      return 59140;
     default:
       throw new UnsupportedNetworkError(network);
   }

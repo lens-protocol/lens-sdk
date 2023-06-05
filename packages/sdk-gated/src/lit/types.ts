@@ -49,7 +49,6 @@ export const enum SupportedChains {
   ETHEREUM = 'ethereum',
   POLYGON = 'polygon',
   MUMBAI = 'mumbai',
-  LINEA_GOERLI = 'lineaGoerli'
 }
 
 export enum LitScalarOperator {
