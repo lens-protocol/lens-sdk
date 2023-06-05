@@ -19,7 +19,7 @@ import {
 } from '@lens-protocol/domain/use-cases/wallets';
 
 import { useSharedDependencies } from '../../shared';
-import { CollectPublicationCallGateway } from './CollectPublicationCallGateway';
+import { CollectPublicationGateway } from './CollectPublicationGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 
 export function useCollectController() {
@@ -35,7 +35,7 @@ export function useCollectController() {
   } = useSharedDependencies();
 
   return async (request: CollectRequest) => {
-    const collectPublicationCallGateway = new CollectPublicationCallGateway(
+    const collectPublicationGateway = new CollectPublicationGateway(
       apolloClient,
       transactionFactory,
       logger,
@@ -54,14 +54,14 @@ export function useCollectController() {
     const signedCollect = new SubsidizeOnChain<CollectRequest>(
       activeWallet,
       transactionGateway,
-      collectPublicationCallGateway,
+      collectPublicationGateway,
       onChainRelayer,
       transactionQueue,
       presenter,
     );
 
     const signlessCollect = new SignlessSubsidizeOnChain<FreeCollectRequest>(
-      collectPublicationCallGateway,
+      collectPublicationGateway,
       transactionQueue,
       presenter,
     );

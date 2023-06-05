@@ -20,7 +20,7 @@ import { mock } from 'jest-mock-extended';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionObserver } from '../../infrastructure/TransactionFactory';
-import { CollectPublicationCallGateway } from '../CollectPublicationCallGateway';
+import { CollectPublicationGateway } from '../CollectPublicationGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
 import {
   assertUnsignedProtocolCallCorrectness,
@@ -46,14 +46,14 @@ function mockITransactionObserver() {
   return observer;
 }
 
-function mockCollectPublicationCallGateway({
+function mockCollectPublicationGateway({
   apollo,
   factory,
 }: {
   apollo: LensApolloClient;
   factory: ITransactionFactory<FreeCollectRequest>;
 }) {
-  return new CollectPublicationCallGateway(apollo, factory, mock<ILogger>());
+  return new CollectPublicationGateway(apollo, factory, mock<ILogger>());
 }
 
 function mockCreateCollectTypedDatMutationMockedResponse({
@@ -74,10 +74,10 @@ function mockCreateCollectTypedDatMutationMockedResponse({
   };
 }
 
-describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () => {
+describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
   const request = mockFreeCollectRequest();
 
-  describe(`when calling the "${CollectPublicationCallGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
+  describe(`when calling the "${CollectPublicationGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
     it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
       const data = mockCreateCollectTypedDataData();
 
@@ -94,11 +94,11 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
 
       const mockTransactionObserver = mockITransactionObserver();
       const factory = mockITransactionFactory(mockTransactionObserver);
-      const collectPublicationCallGateway = mockCollectPublicationCallGateway({
+      const collectPublicationGateway = mockCollectPublicationGateway({
         apollo,
         factory,
       });
-      const unsignedCall = await collectPublicationCallGateway.createUnsignedProtocolCall(request);
+      const unsignedCall = await collectPublicationGateway.createUnsignedProtocolCall(request);
 
       assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
     });
@@ -121,11 +121,11 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
 
       const mockTransactionObserver = mockITransactionObserver();
       const factory = mockITransactionFactory(mockTransactionObserver);
-      const collectPublicationCallGateway = mockCollectPublicationCallGateway({
+      const collectPublicationGateway = mockCollectPublicationGateway({
         apollo,
         factory,
       });
-      const unsignedCall = await collectPublicationCallGateway.createUnsignedProtocolCall(
+      const unsignedCall = await collectPublicationGateway.createUnsignedProtocolCall(
         request,
         nonce,
       );
@@ -134,7 +134,7 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
     });
   });
 
-  describe(`when calling the "${CollectPublicationCallGateway.prototype.createProxyTransaction.name}" method`, () => {
+  describe(`when calling the "${CollectPublicationGateway.prototype.createProxyTransaction.name}" method`, () => {
     describe('when relaying a FreeCollectRequest', () => {
       describe('and receiving a successful response', () => {
         const request = mockFreeCollectRequest();
@@ -157,14 +157,12 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
 
           const mockTransactionObserver = mockITransactionObserver();
           const factory = mockITransactionFactory(mockTransactionObserver);
-          const collectPublicationCallGateway = mockCollectPublicationCallGateway({
+          const collectPublicationGateway = mockCollectPublicationGateway({
             apollo,
             factory,
           });
 
-          const transactionResult = await collectPublicationCallGateway.createProxyTransaction(
-            request,
-          );
+          const transactionResult = await collectPublicationGateway.createProxyTransaction(request);
 
           if (transactionResult.isFailure()) throw transactionResult.error;
 
@@ -213,14 +211,12 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
 
           const mockTransactionObserver = mockITransactionObserver();
           const factory = mockITransactionFactory(mockTransactionObserver);
-          const collectPublicationCallGateway = mockCollectPublicationCallGateway({
+          const collectPublicationGateway = mockCollectPublicationGateway({
             apollo,
             factory,
           });
 
-          const transactionResult = await collectPublicationCallGateway.createProxyTransaction(
-            request,
-          );
+          const transactionResult = await collectPublicationGateway.createProxyTransaction(request);
 
           if (transactionResult.isSuccess()) throw new Error('Expected transaction to fail');
 

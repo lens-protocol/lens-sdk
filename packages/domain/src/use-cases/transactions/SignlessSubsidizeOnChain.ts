@@ -13,7 +13,7 @@ export interface ISignlessSubsidizedCallRelayer<T extends ProtocolTransactionReq
   createProxyTransaction(request: T): PromiseResult<ProxyTransaction<T>, BroadcastingError>;
 }
 
-export type ISignlessSubsidizeOnChainPresenter = IGenericResultPresenter<void, Error>;
+export type ISignlessSubsidizeOnChainPresenter = IGenericResultPresenter<void, BroadcastingError>;
 
 export class SignlessSubsidizeOnChain<T extends ProtocolTransactionRequestModel> {
   constructor(

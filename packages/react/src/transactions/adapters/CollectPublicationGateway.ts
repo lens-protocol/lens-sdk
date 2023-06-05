@@ -33,7 +33,7 @@ import { ITransactionFactory } from './ITransactionFactory';
 import { ProxyReceipt } from './ProxyReceipt';
 import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
-export class CollectPublicationCallGateway
+export class CollectPublicationGateway
   implements
     IOnChainProtocolCallGateway<CollectRequest>,
     ISignlessSubsidizedCallRelayer<FreeCollectRequest>
