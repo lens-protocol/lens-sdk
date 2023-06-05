@@ -1,18 +1,15 @@
 import {
+  Profile,
   ProfileOwnedByMe,
   useExploreProfiles,
-  useFollow,
   useUnfollow,
-  Profile,
-  useSelfFundedFallback,
-  supportsSelfFundedFallback,
 } from '@lens-protocol/react-web';
-import { useState } from 'react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { useFollowWithSelfFundedFallback } from '../hooks/useFollowWithSelfFundedFallback';
 import { ProfileCard } from './components/ProfileCard';
 
 type FollowButtonProps = {
@@ -25,36 +22,16 @@ function FollowButton({ followee, follower }: FollowButtonProps) {
     execute: follow,
     error: followError,
     isPending: isFollowPending,
-  } = useFollow({ follower, followee });
-  const {
-    execute: selfFundedFollow,
-    isPending: isSelfFundedFallbackPending,
-    error: selfFundedFallbackError,
-  } = useSelfFundedFallback();
+  } = useFollowWithSelfFundedFallback({
+    followee,
+    follower,
+  });
+
   const {
     execute: unfollow,
     error: unfollowError,
     isPending: isUnfollowPending,
   } = useUnfollow({ follower, followee });
-  const [hasRetriedWithSelfFunded, setHasRetriedWithSelfFunded] = useState(false);
-
-  const handleFollow = async () => {
-    const attempt = await follow();
-    if (attempt.isSuccess()) {
-      return;
-    }
-    if (supportsSelfFundedFallback(attempt.error)) {
-      const retry = window.confirm(
-        'We cannot cover the transaction costs at this time. Do you want to retry with your own MATIC?',
-      );
-
-      setHasRetriedWithSelfFunded(true);
-
-      if (retry) {
-        await selfFundedFollow(attempt.error.fallback);
-      }
-    }
-  };
 
   if (followee.followStatus === null) {
     return null;
@@ -73,13 +50,10 @@ function FollowButton({ followee, follower }: FollowButtonProps) {
 
   return (
     <>
-      <button onClick={handleFollow} disabled={isFollowPending || isSelfFundedFallbackPending}>
+      <button onClick={follow} disabled={isFollowPending}>
         Follow
       </button>
-      {followError && !hasRetriedWithSelfFunded && <p>{followError.message}</p>}
-      {selfFundedFallbackError && hasRetriedWithSelfFunded && (
-        <p>{selfFundedFallbackError.message}</p>
-      )}
+      {followError && <p>{followError.message}</p>}
     </>
   );
 }
