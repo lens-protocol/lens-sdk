@@ -134,102 +134,95 @@ describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
     });
   });
 
-  describe(`when calling the "${CollectPublicationGateway.prototype.createProxyTransaction.name}" method`, () => {
-    describe('when relaying a FreeCollectRequest', () => {
-      describe('and receiving a successful response', () => {
-        const request = mockFreeCollectRequest();
-        it(`should resolve with ${ProxyTransaction.name} on Polygon`, async () => {
-          const indexingId = 'indexing-id';
-          const apollo = createMockApolloClientWithMultipleResponses([
-            createBroadcastProxyActionCallMockedResponse({
-              result: indexingId,
-              variables: {
-                request: {
-                  collect: {
-                    freeCollect: {
-                      publicationId: request.publicationId,
-                    },
-                  },
-                },
-              },
-            }),
-          ]);
-
-          const mockTransactionObserver = mockITransactionObserver();
-          const factory = mockITransactionFactory(mockTransactionObserver);
-          const collectPublicationGateway = mockCollectPublicationGateway({
-            apollo,
-            factory,
-          });
-
-          const transactionResult = await collectPublicationGateway.createProxyTransaction(request);
-
-          if (transactionResult.isFailure()) throw transactionResult.error;
-
-          const transaction = transactionResult.value;
-
-          await transaction.waitNextEvent();
-
-          expect(transaction).toEqual(
-            expect.objectContaining({
-              chainType: ChainType.POLYGON,
-              id: 'id',
-              request,
-              status: ProxyActionStatus.MINTING,
-            }),
-          );
-
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-          expect((transaction as any).state.proxyId).toEqual(indexingId);
-        });
-      });
-      describe('and receiving an error response', () => {
-        const request = mockFreeCollectRequest();
-        it(`should resolve with ${ProxyTransaction.name} on Polygon`, async () => {
-          const apollo = createMockApolloClientWithMultipleResponses([
-            createBroadcastProxyActionCallMockedError({
-              errorMessage: 'Failed to broadcast proxy action call',
-              variables: {
-                request: {
-                  collect: {
-                    freeCollect: {
-                      publicationId: request.publicationId,
-                    },
-                  },
-                },
-              },
-            }),
-            mockCreateCollectTypedDatMutationMockedResponse({
-              variables: {
-                request: {
+  describe(`when relaying a FreeCollectRequest via the "${CollectPublicationGateway.prototype.createProxyTransaction.name}" method`, () => {
+    const request = mockFreeCollectRequest();
+    it(`should succeed with ${ProxyTransaction.name} on Polygon`, async () => {
+      const indexingId = 'indexing-id';
+      const apollo = createMockApolloClientWithMultipleResponses([
+        createBroadcastProxyActionCallMockedResponse({
+          result: indexingId,
+          variables: {
+            request: {
+              collect: {
+                freeCollect: {
                   publicationId: request.publicationId,
                 },
               },
-              data: mockCreateCollectTypedDataData(),
-            }),
-          ]);
+            },
+          },
+        }),
+      ]);
 
-          const mockTransactionObserver = mockITransactionObserver();
-          const factory = mockITransactionFactory(mockTransactionObserver);
-          const collectPublicationGateway = mockCollectPublicationGateway({
-            apollo,
-            factory,
-          });
-
-          const transactionResult = await collectPublicationGateway.createProxyTransaction(request);
-
-          if (transactionResult.isSuccess()) throw new Error('Expected transaction to fail');
-
-          expect(transactionResult.error).toEqual(
-            new BroadcastingError('Failed to broadcast proxy action call'),
-          );
-          expect(transactionResult.error.fallback).toEqual(
-            expect.objectContaining({
-              ...request,
-            }),
-          );
-        });
+      const mockTransactionObserver = mockITransactionObserver();
+      const factory = mockITransactionFactory(mockTransactionObserver);
+      const collectPublicationGateway = mockCollectPublicationGateway({
+        apollo,
+        factory,
       });
+
+      const transactionResult = await collectPublicationGateway.createProxyTransaction(request);
+
+      if (transactionResult.isFailure()) throw transactionResult.error;
+
+      const transaction = transactionResult.value;
+
+      await transaction.waitNextEvent();
+
+      expect(transaction).toEqual(
+        expect.objectContaining({
+          chainType: ChainType.POLYGON,
+          id: 'id',
+          request,
+          status: ProxyActionStatus.MINTING,
+        }),
+      );
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+      expect((transaction as any).state.proxyId).toEqual(indexingId);
+    });
+    it(`should fail with ${ProxyTransaction.name} in the case of a broadcast failure`, async () => {
+      const apollo = createMockApolloClientWithMultipleResponses([
+        createBroadcastProxyActionCallMockedError({
+          errorMessage: 'Failed to broadcast proxy action call',
+          variables: {
+            request: {
+              collect: {
+                freeCollect: {
+                  publicationId: request.publicationId,
+                },
+              },
+            },
+          },
+        }),
+        mockCreateCollectTypedDatMutationMockedResponse({
+          variables: {
+            request: {
+              publicationId: request.publicationId,
+            },
+          },
+          data: mockCreateCollectTypedDataData(),
+        }),
+      ]);
+
+      const mockTransactionObserver = mockITransactionObserver();
+      const factory = mockITransactionFactory(mockTransactionObserver);
+      const collectPublicationGateway = mockCollectPublicationGateway({
+        apollo,
+        factory,
+      });
+
+      const transactionResult = await collectPublicationGateway.createProxyTransaction(request);
+
+      if (transactionResult.isSuccess()) throw new Error('Expected transaction to fail');
+
+      expect(transactionResult.error).toEqual(
+        new BroadcastingError('Failed to broadcast proxy action call'),
+      );
+      expect(transactionResult.error.fallback).toEqual(
+        expect.objectContaining({
+          ...request,
+        }),
+      );
     });
   });
 });
