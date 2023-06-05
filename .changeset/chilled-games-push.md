@@ -3,4 +3,4 @@
 "@lens-protocol/react": patch
 ---
 
-Synchonise state change between `useAciveWallet` and `useActiveProfile` hooks
+Synchronize state change between `useActiveWallet` and `useActiveProfile` hooks
