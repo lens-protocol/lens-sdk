@@ -180,7 +180,7 @@ describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
       expect((transaction as any).state.proxyId).toEqual(indexingId);
     });
-    it(`should fail with ${ProxyTransaction.name} in the case of a broadcast failure`, async () => {
+    it(`should fail with ${BroadcastingError.name} in the case of a broadcast failure`, async () => {
       const apollo = createMockApolloClientWithMultipleResponses([
         createBroadcastProxyActionCallMockedError({
           errorMessage: 'Failed to broadcast proxy action call',

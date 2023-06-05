@@ -211,101 +211,95 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
     });
   });
 
-  describe(`when calling the "${FollowProfilesGateway.prototype.createProxyTransaction.name}" method`, () => {
-    describe('with an UnconstrainedFollowRequest', () => {
-      const request = mockUnconstrainedFollowRequest();
-      describe('and receiving a successful response', () => {
-        it(`should resolve with ${ProxyTransaction.name} on Polygon`, async () => {
-          const indexingId = 'indexing-id';
-          const apollo = createMockApolloClientWithMultipleResponses([
-            createBroadcastProxyActionCallMockedResponse({
-              result: indexingId,
-              variables: {
-                request: {
-                  follow: {
-                    freeFollow: {
-                      profileId: request.profileId,
-                    },
-                  },
+  describe(`when relaying an UnconstrainedFollowRequest via the "${FollowProfilesGateway.prototype.createProxyTransaction.name}" method`, () => {
+    const request = mockUnconstrainedFollowRequest();
+    it(`should succeed with ${ProxyTransaction.name} on Polygon`, async () => {
+      const indexingId = 'indexing-id';
+      const apollo = createMockApolloClientWithMultipleResponses([
+        createBroadcastProxyActionCallMockedResponse({
+          result: indexingId,
+          variables: {
+            request: {
+              follow: {
+                freeFollow: {
+                  profileId: request.profileId,
                 },
               },
-            }),
-          ]);
-          const mockTransactionObserver = mockITransactionObserver();
-          const factory = mockITransactionFactory(mockTransactionObserver);
-          const followProfilesGateway = mockFollowProfilesGateway({
-            apollo,
-            factory,
-          });
-
-          const transactionResult = await followProfilesGateway.createProxyTransaction(request);
-
-          if (transactionResult.isFailure()) throw transactionResult.error;
-
-          const transaction = transactionResult.value;
-
-          await transaction.waitNextEvent();
-
-          expect(transaction).toEqual(
-            expect.objectContaining({
-              chainType: ChainType.POLYGON,
-              id: 'id',
-              request,
-              status: ProxyActionStatus.MINTING,
-            }),
-          );
-
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-          expect((transaction as any).state.proxyId).toEqual(indexingId);
-        });
+            },
+          },
+        }),
+      ]);
+      const mockTransactionObserver = mockITransactionObserver();
+      const factory = mockITransactionFactory(mockTransactionObserver);
+      const followProfilesGateway = mockFollowProfilesGateway({
+        apollo,
+        factory,
       });
 
-      describe('and receiving an error response', () => {
-        it.only('should return broadcast error with fallback', async () => {
-          const apollo = createMockApolloClientWithMultipleResponses([
-            createBroadcastProxyActionCallMockedError({
-              errorMessage: 'Failed to broadcast proxy action call',
-              variables: {
-                request: {
-                  follow: {
-                    freeFollow: {
-                      profileId: request.profileId,
-                    },
-                  },
+      const transactionResult = await followProfilesGateway.createProxyTransaction(request);
+
+      if (transactionResult.isFailure()) throw transactionResult.error;
+
+      const transaction = transactionResult.value;
+
+      await transaction.waitNextEvent();
+
+      expect(transaction).toEqual(
+        expect.objectContaining({
+          chainType: ChainType.POLYGON,
+          id: 'id',
+          request,
+          status: ProxyActionStatus.MINTING,
+        }),
+      );
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+      expect((transaction as any).state.proxyId).toEqual(indexingId);
+    });
+
+    it(`should fail with ${BroadcastingError.name} in the case of a broadcast failure`, async () => {
+      const apollo = createMockApolloClientWithMultipleResponses([
+        createBroadcastProxyActionCallMockedError({
+          errorMessage: 'Failed to broadcast proxy action call',
+          variables: {
+            request: {
+              follow: {
+                freeFollow: {
+                  profileId: request.profileId,
                 },
               },
-            }),
-            createCreateFollowTypedDataMutationMockedResponse({
-              variables: {
-                request: {
-                  follow: [
-                    {
-                      profile: request.profileId,
-                    },
-                  ],
+            },
+          },
+        }),
+        createCreateFollowTypedDataMutationMockedResponse({
+          variables: {
+            request: {
+              follow: [
+                {
+                  profile: request.profileId,
                 },
-              },
-              data: mockCreateFollowTypedDataData(),
-            }),
-          ]);
-          const mockTransactionObserver = mockITransactionObserver();
-          const factory = mockITransactionFactory(mockTransactionObserver);
-          const followProfilesGateway = mockFollowProfilesGateway({ apollo, factory });
+              ],
+            },
+          },
+          data: mockCreateFollowTypedDataData(),
+        }),
+      ]);
+      const mockTransactionObserver = mockITransactionObserver();
+      const factory = mockITransactionFactory(mockTransactionObserver);
+      const followProfilesGateway = mockFollowProfilesGateway({ apollo, factory });
 
-          const transactionResult = await followProfilesGateway.createProxyTransaction(request);
+      const transactionResult = await followProfilesGateway.createProxyTransaction(request);
 
-          if (transactionResult.isSuccess()) throw new Error('Expected transaction to fail');
+      if (transactionResult.isSuccess()) throw new Error('Expected transaction to fail');
 
-          expect(transactionResult.error).toEqual(
-            new BroadcastingError('Failed to broadcast proxy action call'),
-          );
-          expect(transactionResult.error.fallback).toEqual(
-            expect.objectContaining({
-              ...request,
-            }),
-          );
-        });
-      });
+      expect(transactionResult.error).toEqual(
+        new BroadcastingError('Failed to broadcast proxy action call'),
+      );
+      expect(transactionResult.error.fallback).toEqual(
+        expect.objectContaining({
+          ...request,
+        }),
+      );
     });
   });
 });
