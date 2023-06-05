@@ -1,3 +1,4 @@
+import { UpdateFollowPolicyRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   CreateCommentRequest,
   CreatePostRequest,
@@ -9,6 +10,7 @@ import { z } from 'zod';
 import { Erc20AmountInstanceSchema } from './common';
 import { tokenAllowanceRequestSchema } from './erc20';
 import { formatZodError } from './formatters';
+import { updateFollowPolicyRequestSchema } from './profiles';
 import {
   createEmbedCommentRequestSchema,
   createEmbedPostRequestSchema,
@@ -55,3 +57,8 @@ const TokenAllowanceRequestSchema = tokenAllowanceRequestSchema(Erc20AmountInsta
 
 export const validateTokenAllowanceRequest: Validator<TokenAllowanceRequest> =
   createRequestValidator(TokenAllowanceRequestSchema);
+
+const UpdateFollowPolicyRequestSchema = updateFollowPolicyRequestSchema(Erc20AmountInstanceSchema);
+
+export const validateUpdateFollowPolicyRequest: Validator<UpdateFollowPolicyRequest> =
+  createRequestValidator(UpdateFollowPolicyRequestSchema);

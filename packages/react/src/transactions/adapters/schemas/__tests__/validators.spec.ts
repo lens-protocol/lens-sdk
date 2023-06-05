@@ -1,5 +1,6 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
 import { mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
+import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import {
   CollectPolicyType,
   ContentFocus,
@@ -10,6 +11,7 @@ import {
   validateCreateCommentRequest,
   validateCreatePostRequest,
   validateTokenAllowanceRequest,
+  validateUpdateFollowPolicyRequest,
 } from '../validators';
 
 describe(`Given the validator helpers`, () => {
@@ -172,7 +174,7 @@ describe(`Given the validator helpers`, () => {
       ).toThrowErrorMatchingInlineSnapshot(`
         "fix the following issues
         · "reference.params": Required"
-      `);
+        `);
     });
   });
 
@@ -188,6 +190,25 @@ describe(`Given the validator helpers`, () => {
         · "amount": value not instance of Amount<Erc20>
         · "spender": Required
         · "limit": Required"
+        `);
+    });
+  });
+
+  describe(`when testing the "validateUpdateFollowPolicyRequest"`, () => {
+    it('should provide an actionable error message in case of misuse', () => {
+      expect(() =>
+        validateUpdateFollowPolicyRequest({
+          kind: TransactionKind.UPDATE_FOLLOW_POLICY,
+          policy: {
+            type: FollowPolicyType.CHARGE,
+            amount: 42,
+          },
+          profileId: mockProfileId(),
+        }),
+      ).toThrowErrorMatchingInlineSnapshot(`
+        "fix the following issues
+        · "policy.amount": value not instance of Amount<Erc20>
+        · "policy.recipient": Required"
       `);
     });
   });

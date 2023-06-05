@@ -15,7 +15,7 @@ import {
   UnconstrainedFollowRequestSchema,
   UnfollowRequestSchema,
   UpdateDispatcherConfigRequestSchema,
-  UpdateFollowPolicyRequestSchema,
+  updateFollowPolicyRequestSchema,
   UpdateNftProfileImageRequestSchema,
   UpdateOffChainProfileImageRequestSchema,
   UpdateProfileDetailsRequestSchema,
@@ -66,7 +66,7 @@ const ProtocolTransactionRequestSchema: z.Schema<
 
   UpdateDispatcherConfigRequestSchema,
 
-  UpdateFollowPolicyRequestSchema,
+  updateFollowPolicyRequestSchema(SerializedErc20AmountSchema),
 
   UpdateProfileDetailsRequestSchema,
 
@@ -108,7 +108,7 @@ const AnyTransactionRequestSchema: z.Schema<AnyTransactionRequest, z.ZodTypeDef,
 
     UpdateDispatcherConfigRequestSchema,
 
-    UpdateFollowPolicyRequestSchema,
+    updateFollowPolicyRequestSchema(SerializedErc20AmountSchema),
 
     UpdateProfileDetailsRequestSchema,
 
