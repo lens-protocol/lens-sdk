@@ -12,6 +12,7 @@ import {
   validateCreatePostRequest,
   validateTokenAllowanceRequest,
   validateUpdateFollowPolicyRequest,
+  validateUpdateProfileDetailsRequest,
 } from '../validators';
 
 describe(`Given the validator helpers`, () => {
@@ -209,6 +210,41 @@ describe(`Given the validator helpers`, () => {
         "fix the following issues
         · "policy.amount": value not instance of Amount<Erc20>
         · "policy.recipient": Required"
+      `);
+    });
+  });
+
+  describe(`when testing the "validateUpdateProfileDetailsRequest"`, () => {
+    it('should provide an actionable error message in case of misuse', () => {
+      expect(() =>
+        validateUpdateProfileDetailsRequest({
+          attributes: {
+            foo: new RegExp('foo'),
+          },
+          bio: 42,
+          coverPicture: null,
+          delegate: false,
+          kind: TransactionKind.UPDATE_PROFILE_DETAILS,
+          policy: {
+            type: FollowPolicyType.CHARGE,
+            amount: 42,
+          },
+          profileId: mockProfileId(),
+        }),
+      ).toThrowErrorMatchingInlineSnapshot(`
+        "fix the following issues
+        · "attributes.foo" expected to match one of the following groups:
+        		· "attributes.foo": Expected boolean, received object
+        	OR:
+        		· "attributes.foo": Invalid date
+        	OR:
+        		· "attributes.foo": Expected number, received object
+        	OR:
+        		· "attributes.foo": Expected string, received object
+        	OR:
+        		· "attributes.foo": Expected null, received object
+        · "bio": Expected string, received number
+        · "name": Required"
       `);
     });
   });
