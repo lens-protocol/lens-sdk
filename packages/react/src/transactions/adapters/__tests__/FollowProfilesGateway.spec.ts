@@ -233,13 +233,12 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
           ]);
           const mockTransactionObserver = mockITransactionObserver();
           const factory = mockITransactionFactory(mockTransactionObserver);
-          const followfollowProfilesGatewaylGateway = mockFollowProfilesGateway({
+          const followProfilesGateway = mockFollowProfilesGateway({
             apollo,
             factory,
           });
 
-          const transactionResult =
-            await followfollowProfilesGatewaylGateway.createProxyTransaction(request);
+          const transactionResult = await followProfilesGateway.createProxyTransaction(request);
 
           if (transactionResult.isFailure()) throw transactionResult.error;
 
