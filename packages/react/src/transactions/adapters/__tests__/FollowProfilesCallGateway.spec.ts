@@ -25,7 +25,7 @@ import { mock } from 'jest-mock-extended';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionObserver } from '../../infrastructure/TransactionFactory';
-import { FollowProfilesCallGateway } from '../FollowProfilesCallGateway';
+import { FollowProfilesGateway } from '../FollowProfilesGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
 import {
   assertUnsignedProtocolCallCorrectness,
@@ -69,18 +69,18 @@ function mockITransactionObserver() {
   return observer;
 }
 
-function mockFollowProfilesCallGateway({
+function mockFollowProfilesGateway({
   apollo,
   factory,
 }: {
   apollo: LensApolloClient;
   factory: ITransactionFactory<UnconstrainedFollowRequest>;
 }) {
-  return new FollowProfilesCallGateway(apollo, factory, mock<ILogger>());
+  return new FollowProfilesGateway(apollo, factory, mock<ILogger>());
 }
 
-describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
-  describe(`when calling the "${FollowProfilesCallGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
+describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
+  describe(`when calling the "${FollowProfilesGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
     describe('with an UnconstrainedFollowRequest', () => {
       it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
         const request = mockUnconstrainedFollowRequest();
@@ -102,9 +102,9 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         ]);
         const mockTransactionObserver = mockITransactionObserver();
         const factory = mockITransactionFactory(mockTransactionObserver);
-        const followProfilesCallGateway = mockFollowProfilesCallGateway({ apollo, factory });
+        const followProfilesGateway = mockFollowProfilesGateway({ apollo, factory });
 
-        const unsignedCall = await followProfilesCallGateway.createUnsignedProtocolCall(request);
+        const unsignedCall = await followProfilesGateway.createUnsignedProtocolCall(request);
 
         assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
@@ -136,9 +136,9 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         ]);
         const mockTransactionObserver = mockITransactionObserver();
         const factory = mockITransactionFactory(mockTransactionObserver);
-        const followProfilesCallGateway = mockFollowProfilesCallGateway({ apollo, factory });
+        const followProfilesGateway = mockFollowProfilesGateway({ apollo, factory });
 
-        const unsignedCall = await followProfilesCallGateway.createUnsignedProtocolCall(request);
+        const unsignedCall = await followProfilesGateway.createUnsignedProtocolCall(request);
 
         assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
@@ -173,9 +173,9 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
         ]);
         const mockTransactionObserver = mockITransactionObserver();
         const factory = mockITransactionFactory(mockTransactionObserver);
-        const followProfilesCallGateway = mockFollowProfilesCallGateway({ apollo, factory });
+        const followProfilesGateway = mockFollowProfilesGateway({ apollo, factory });
 
-        const unsignedCall = await followProfilesCallGateway.createUnsignedProtocolCall(request);
+        const unsignedCall = await followProfilesGateway.createUnsignedProtocolCall(request);
 
         assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
       });
@@ -203,18 +203,15 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
       ]);
       const mockTransactionObserver = mockITransactionObserver();
       const factory = mockITransactionFactory(mockTransactionObserver);
-      const followProfilesCallGateway = mockFollowProfilesCallGateway({ apollo, factory });
+      const followProfilesGateway = mockFollowProfilesGateway({ apollo, factory });
 
-      const unsignedCall = await followProfilesCallGateway.createUnsignedProtocolCall(
-        request,
-        nonce,
-      );
+      const unsignedCall = await followProfilesGateway.createUnsignedProtocolCall(request, nonce);
 
       expect(unsignedCall.nonce).toEqual(nonce);
     });
   });
 
-  describe(`when calling the "${FollowProfilesCallGateway.prototype.createProxyTransaction.name}" method`, () => {
+  describe(`when calling the "${FollowProfilesGateway.prototype.createProxyTransaction.name}" method`, () => {
     describe('with an UnconstrainedFollowRequest', () => {
       const request = mockUnconstrainedFollowRequest();
       describe('and receiving a successful response', () => {
@@ -236,9 +233,13 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
           ]);
           const mockTransactionObserver = mockITransactionObserver();
           const factory = mockITransactionFactory(mockTransactionObserver);
-          const followProfilesCallGateway = mockFollowProfilesCallGateway({ apollo, factory });
+          const followfollowProfilesGatewaylGateway = mockFollowProfilesGateway({
+            apollo,
+            factory,
+          });
 
-          const transactionResult = await followProfilesCallGateway.createProxyTransaction(request);
+          const transactionResult =
+            await followfollowProfilesGatewaylGateway.createProxyTransaction(request);
 
           if (transactionResult.isFailure()) throw transactionResult.error;
 
@@ -290,9 +291,9 @@ describe(`Given an instance of the ${FollowProfilesCallGateway.name}`, () => {
           ]);
           const mockTransactionObserver = mockITransactionObserver();
           const factory = mockITransactionFactory(mockTransactionObserver);
-          const followProfilesCallGateway = mockFollowProfilesCallGateway({ apollo, factory });
+          const followProfilesGateway = mockFollowProfilesGateway({ apollo, factory });
 
-          const transactionResult = await followProfilesCallGateway.createProxyTransaction(request);
+          const transactionResult = await followProfilesGateway.createProxyTransaction(request);
 
           if (transactionResult.isSuccess()) throw new Error('Expected transaction to fail');
 

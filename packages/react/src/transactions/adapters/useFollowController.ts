@@ -19,7 +19,7 @@ import {
 } from '@lens-protocol/domain/use-cases/wallets';
 
 import { useSharedDependencies } from '../../shared';
-import { FollowProfilesCallGateway } from './FollowProfilesCallGateway';
+import { FollowProfilesGateway } from './FollowProfilesGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
 
 export function useFollowController() {
@@ -45,7 +45,7 @@ export function useFollowController() {
       | WalletConnectionError
     >();
 
-    const followProfilesCallGateway = new FollowProfilesCallGateway(
+    const followProfilesGateway = new FollowProfilesGateway(
       apolloClient,
       transactionFactory,
       logger,
@@ -54,14 +54,14 @@ export function useFollowController() {
     const signedFollow = new SubsidizeOnChain<FollowRequest>(
       activeWallet,
       transactionGateway,
-      followProfilesCallGateway,
+      followProfilesGateway,
       onChainRelayer,
       transactionQueue,
       presenter,
     );
 
     const signlessFollow = new SignlessSubsidizeOnChain<UnconstrainedFollowRequest>(
-      followProfilesCallGateway,
+      followProfilesGateway,
       transactionQueue,
       presenter,
     );

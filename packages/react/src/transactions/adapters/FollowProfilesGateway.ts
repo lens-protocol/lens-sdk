@@ -67,7 +67,7 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
   return [{ profile: request.profileId }];
 }
 
-export class FollowProfilesCallGateway
+export class FollowProfilesGateway
   implements
     IOnChainProtocolCallGateway<FollowRequest>,
     ISignlessSubsidizedCallRelayer<UnconstrainedFollowRequest>
