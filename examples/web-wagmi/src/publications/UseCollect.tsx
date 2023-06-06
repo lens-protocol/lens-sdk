@@ -4,17 +4,14 @@ import {
   isPostPublication,
   Post,
   ProfileOwnedByMe,
-  supportsSelfFundedFallback,
-  useCollect,
   useFeed,
-  useSelfFundedFallback,
 } from '@lens-protocol/react-web';
-import { useState } from 'react';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { useCollectWithSelfFundedFallback } from '../hooks/useCollectWithSelfFundedFallback';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { CollectablePublicationCard } from './components/PublicationCard';
 
@@ -24,33 +21,12 @@ type CollectButtonProps = {
 };
 
 function CollectButton({ collector, publication }: CollectButtonProps) {
-  const { execute: collect, error, isPending } = useCollect({ collector, publication });
   const {
-    execute: selfFundedCollect,
-    isPending: isSelfFundedCollectFallbackPending,
-    error: selfFundedError,
-  } = useSelfFundedFallback();
-  const [hasRetriedWithSelfFunded, setHasRetriedWithSelfFunded] = useState(false);
-
+    execute: collect,
+    error,
+    isPending,
+  } = useCollectWithSelfFundedFallback({ collector, publication });
   const isCollected = publication.hasCollectedByMe;
-
-  const handleCollect = async () => {
-    const attempt = await collect();
-    if (attempt.isSuccess()) {
-      return;
-    }
-    if (supportsSelfFundedFallback(attempt.error)) {
-      const retry = window.confirm(
-        'We cannot cover the transaction costs at this time. Do you want to retry with your own MATIC?',
-      );
-
-      setHasRetriedWithSelfFunded(true);
-
-      if (retry) {
-        await selfFundedCollect(attempt.error.fallback);
-      }
-    }
-  };
 
   switch (publication.collectPolicy.state) {
     case CollectState.COLLECT_TIME_EXPIRED:
@@ -64,20 +40,16 @@ function CollectButton({ collector, publication }: CollectButtonProps) {
     case CollectState.CAN_BE_COLLECTED:
       return (
         <>
-          <button
-            onClick={handleCollect}
-            disabled={isCollected || isPending || isSelfFundedCollectFallbackPending}
-          >
+          <button onClick={collect} disabled={isCollected || isPending}>
             {error
               ? 'Error'
-              : isPending || isSelfFundedCollectFallbackPending
+              : isPending
               ? 'Collecting...'
               : isCollected
               ? `You've already collected`
               : 'Collect'}
           </button>
-          {error && !hasRetriedWithSelfFunded && <ErrorMessage error={error} />}
-          {selfFundedError && hasRetriedWithSelfFunded && <ErrorMessage error={selfFundedError} />}
+          {error && <ErrorMessage error={error} />}
         </>
       );
   }
