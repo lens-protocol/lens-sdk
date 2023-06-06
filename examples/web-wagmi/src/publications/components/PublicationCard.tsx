@@ -12,7 +12,6 @@ import {
 } from '@lens-protocol/react-web';
 import { ReactNode } from 'react';
 import { useInView } from 'react-cool-inview';
-import { Link } from 'react-router-dom';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 import { formatAmount } from '../../utils';
@@ -109,16 +108,14 @@ export function PublicationCard({ publication }: PublicationCardProps) {
   }
 
   return (
-    <Link to={`/publications/usePublication/${publication.id}`}>
-      <article>
-        <ProfilePicture picture={publication.profile.picture} />
-        <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
+    <article>
+      <ProfilePicture picture={publication.profile.picture} />
+      <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
 
-        <Content
-          publication={isMirrorPublication(publication) ? publication.mirrorOf : publication}
-        />
-      </article>
-    </Link>
+      <Content
+        publication={isMirrorPublication(publication) ? publication.mirrorOf : publication}
+      />
+    </article>
   );
 }
 

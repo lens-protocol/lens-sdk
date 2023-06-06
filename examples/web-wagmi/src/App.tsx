@@ -92,10 +92,6 @@ export function App() {
 
                 <Route path="/publications" element={<PublicationsPage />} />
                 <Route path="/publications/usePublication" element={<UsePublication />} />
-                <Route
-                  path="/publications/usePublication/:publicationId"
-                  element={<UsePublication />}
-                />
                 <Route path="/publications/usePublications" element={<UsePublications />} />
                 <Route path="/publications/useComments" element={<UsePublication />} />
                 <Route
