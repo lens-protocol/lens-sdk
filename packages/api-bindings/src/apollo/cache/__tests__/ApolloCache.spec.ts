@@ -555,6 +555,15 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
 
         expect(data.result).toMatchObject(profile);
       });
+
+      it('should attempt a cache redirect even if queried by its handle', async () => {
+        const { data } = await client.query<GetProfileData, GetProfileVariables>({
+          query: GetProfileDocument,
+          variables: { request: { handle: profile.handle } },
+        });
+
+        expect(data.result).toMatchObject(profile);
+      });
     });
 
     describe('and an active wallet is defined', () => {
