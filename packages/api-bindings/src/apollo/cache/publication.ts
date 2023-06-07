@@ -7,7 +7,7 @@ import {
 } from '@apollo/client';
 import { PublicationId } from '@lens-protocol/domain/entities';
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
-import { EthereumAddress, never } from '@lens-protocol/shared-kernel';
+import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
   CollectModule,
@@ -226,7 +226,7 @@ export function createPublicationFieldPolicy(): FieldPolicy<
     read(_, { args, toReference }) {
       return toReference({
         __typename: publicationTypename,
-        id: args?.request.publicationId ?? never(),
+        id: args?.request.publicationId,
       });
     },
   };

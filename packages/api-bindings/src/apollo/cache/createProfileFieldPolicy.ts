@@ -1,4 +1,10 @@
-import { FieldFunctionOptions, FieldPolicy, Reference, StoreObject } from '@apollo/client';
+import {
+  defaultDataIdFromObject,
+  FieldFunctionOptions,
+  FieldPolicy,
+  Reference,
+  StoreObject,
+} from '@apollo/client';
 import { never } from '@lens-protocol/shared-kernel';
 
 import { Profile, SingleProfileQueryRequest } from '../../graphql';
@@ -6,6 +12,10 @@ import { Profile, SingleProfileQueryRequest } from '../../graphql';
 function isProfile(value: StoreObject | undefined): value is Profile {
   return value?.__typename === 'Profile';
 }
+
+const identifierPattern =
+  defaultDataIdFromObject({ __typename: 'Profile', id: '0x[a-fA-F0-9]{2,}' }) ?? never();
+const identifierMatcher = new RegExp(`^${identifierPattern}$`);
 
 export function createProfileFieldPolicy(): FieldPolicy<
   Profile,
@@ -20,15 +30,11 @@ export function createProfileFieldPolicy(): FieldPolicy<
       if (args?.request.profileId) {
         return toReference({
           __typename: 'Profile',
-          id: args?.request.profileId ?? never(),
+          id: args.request.profileId,
         });
       }
 
-      const identifierPattern =
-        cache.identify({ __typename: 'Profile', id: '0x[a-fA-F0-9]{2,}' }) ?? never();
-      const identifierMatcher = new RegExp(`^${identifierPattern}$`);
-
-      const normalizedCacheObject = cache.extract(true) as Record<string, StoreObject>;
+      const normalizedCacheObject = cache.extract(true);
 
       for (const key in normalizedCacheObject) {
         const value = normalizedCacheObject[key];
