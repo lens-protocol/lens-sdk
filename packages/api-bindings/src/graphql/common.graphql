@@ -531,6 +531,20 @@ fragment Post on Post {
   decryptionCriteria @client
 }
 
+fragment Publication on Publication {
+  ... on Comment {
+    ...Comment
+  }
+
+  ... on Post {
+    ...Post
+  }
+
+  ... on Mirror {
+    ...Mirror
+  }
+}
+
 fragment PendingPost on PendingPost {
   __typename
   id

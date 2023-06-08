@@ -68,6 +68,8 @@ export type Scalars = {
   Handle: string;
   /** handle claim id custom scalar type */
   HandleClaimIdScalar: unknown;
+  /** image size transform custom scalar type */
+  ImageSizeTransform: unknown;
   /** Internal publication id custom scalar type */
   InternalPublicationId: PublicationId;
   /** IpfsCid scalar type */
@@ -830,6 +832,15 @@ export type LimitedTimedFeeCollectModuleParams = {
   referralFee: Scalars['Float'];
 };
 
+export type MediaTransformParams = {
+  /** Set the transformed image's height. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'. */
+  height?: InputMaybe<Scalars['ImageSizeTransform']>;
+  /** Set if you want to keep the image's original aspect ratio. True by default. If explicitly set to false, the image will stretch based on the width and height values. */
+  keepAspectRatio?: InputMaybe<Scalars['Boolean']>;
+  /** Set the transformed image's width. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'. */
+  width?: InputMaybe<Scalars['ImageSizeTransform']>;
+};
+
 /** The metadata attribute input */
 export type MetadataAttributeInput = {
   /** The display type */
@@ -1070,6 +1081,18 @@ export type OrConditionInput = {
 export type PendingApprovalFollowsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
+};
+
+export type PrfRequest = {
+  dd: Scalars['Boolean'];
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ss: Scalars['Boolean'];
+};
+
+export type PriRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
 };
 
 export type ProfileFollowModuleBeenRedeemedRequest = {
@@ -2099,6 +2122,14 @@ export type Post = {
   canMirror: { result: boolean };
   canObserverDecrypt: { result: boolean; reasons: Array<DecryptFailReason> | null };
 };
+
+type Publication_Comment_ = Comment;
+
+type Publication_Mirror_ = Mirror;
+
+type Publication_Post_ = Post;
+
+export type Publication = Publication_Comment_ | Publication_Mirror_ | Publication_Post_;
 
 export type PendingPost = {
   __typename: 'PendingPost';
