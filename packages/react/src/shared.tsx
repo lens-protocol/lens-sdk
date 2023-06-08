@@ -1,5 +1,5 @@
 import {
-  createAnonymousLensApolloClient,
+  createAuthApolloClient,
   createLensApolloClient,
   SafeApolloClient,
   Sources,
@@ -117,7 +117,7 @@ export function createSharedDependencies(
   const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
 
   // apollo client
-  const anonymousApolloClient = createAnonymousLensApolloClient({
+  const anonymousApolloClient = createAuthApolloClient({
     backendURL: config.environment.backend,
     activeWalletVar: activeWalletVar,
     logger,

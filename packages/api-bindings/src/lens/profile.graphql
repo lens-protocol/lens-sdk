@@ -235,7 +235,7 @@ mutation CreateSetFollowModuleTypedData(
         version
         verifyingContract
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -266,7 +266,7 @@ mutation CreateSetProfileImageURITypedData(
         version
         verifyingContract
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -302,7 +302,7 @@ mutation CreateSetProfileMetadataTypedData(
         version
         verifyingContract
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId

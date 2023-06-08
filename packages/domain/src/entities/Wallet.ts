@@ -1,14 +1,15 @@
 import { CryptoNativeAsset, EthereumAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 
+import { Signature } from './Signature';
 import {
   ISignedProtocolCall,
   AnyTransactionRequestModel,
   IUnsignedProtocolCall,
   UnsignedTransaction,
   NativeTransaction,
-  Signature,
   ProtocolTransactionRequestModel,
 } from './Transactions';
+import { ISignedVote, IUnsignedVote } from './polls';
 
 export class InsufficientGasError extends Error {
   name = 'InsufficientGasError' as const;
@@ -69,5 +70,12 @@ export abstract class Wallet {
   ): PromiseResult<
     NativeTransaction<T>,
     InsufficientGasError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  >;
+
+  abstract signVote(
+    unsignedVote: IUnsignedVote,
+  ): PromiseResult<
+    ISignedVote,
+    PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >;
 }

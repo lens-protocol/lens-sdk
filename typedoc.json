@@ -18,7 +18,9 @@
   "treatWarningsAsErrors": true,
   "intentionallyNotExported": [
     "AnyTransactionRequestModel",
-    "SelfFundedProtocolTransactionRequest"
+    "SelfFundedProtocolTransactionRequest",
+    "SnapshotPoll",
+    "Undetermined"
   ],
   "categoryOrder": ["Components", "Hooks", "Utils", "*"],
   "categorizeByGroup": true,

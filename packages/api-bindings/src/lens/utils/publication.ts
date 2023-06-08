@@ -211,6 +211,8 @@ export type Poll<T extends ContentPublication> = Overwrite<
 
 /**
  * A publication with a poll in its content
+ *
+ * **Pro-tip**: use {@link isPollPublication} to check if the publication contains a poll.
  */
 export type PollPublication = Prettify<Poll<ContentPublication>>;
 
@@ -411,10 +413,6 @@ export function resolveCollectPolicy({
   | VaultFeeCollectPolicy
   | AaveFeeCollectPolicy
   | NoCollectPolicy {
-  return {
-    type: CollectPolicyType.NO_COLLECT,
-    state: CollectState.CANNOT_BE_COLLECTED,
-  };
   switch (collectModule.__typename) {
     case 'SimpleCollectModuleSettings': {
       if (collectModule.feeOptional) {

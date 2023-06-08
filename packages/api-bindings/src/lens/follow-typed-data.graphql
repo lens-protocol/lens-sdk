@@ -12,7 +12,7 @@ mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOpti
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileIds

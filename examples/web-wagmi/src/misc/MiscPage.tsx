@@ -32,9 +32,9 @@ const miscHooks = [
     path: '/misc/useRecentTransactions',
   },
   {
-    label: 'usePollDetails',
-    description: `View the details of a publication containing a poll.`,
-    path: '/misc/usePollDetails',
+    label: 'Polls',
+    description: `Interact with publication containing a poll.`,
+    path: '/misc/polls',
   },
 ];
 

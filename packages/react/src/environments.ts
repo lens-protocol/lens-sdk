@@ -13,6 +13,7 @@ export type { TransactionObserverTimings };
  */
 export type SnapshotConfig = {
   hub: Url;
+  sequencer: Url;
   matcher: ContentInsightMatcher;
 };
 
@@ -63,6 +64,7 @@ export const production: EnvironmentConfig = {
   snapshot: {
     hub: 'https://hub.snapshot.org',
     matcher: snapshotPoll,
+    sequencer: 'https://seq.snapshot.org',
   },
 };
 /**
@@ -91,6 +93,7 @@ export const development: EnvironmentConfig = {
   snapshot: {
     hub: 'https://testnet.snapshot.org',
     matcher: demoSnapshotPoll,
+    sequencer: 'https://testnet.seq.snapshot.org',
   },
 };
 

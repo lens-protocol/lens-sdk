@@ -81,8 +81,8 @@ export class FollowProfilesCallGateway implements IOnChainProtocolCallGateway<Fo
   ): SelfFundedProtocolTransactionRequest<FollowRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('follow', [
-      data.result.typedData.value.profileIds,
-      data.result.typedData.value.datas,
+      data.result.typedData.message.profileIds,
+      data.result.typedData.message.datas,
     ]);
     return {
       ...request,

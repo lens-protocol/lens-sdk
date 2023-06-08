@@ -159,8 +159,8 @@ export class ProfileMetadataCallGateway
   ): SelfFundedProtocolTransactionRequest<UpdateProfileDetailsRequest> {
     const contract = lensPeriphery(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileMetadataURI', [
-      data.result.typedData.value.profileId,
-      data.result.typedData.value.metadata,
+      data.result.typedData.message.profileId,
+      data.result.typedData.message.metadata,
     ]);
     return {
       ...request,

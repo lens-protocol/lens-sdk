@@ -8,7 +8,7 @@ fragment CreateCommentEIP712TypedData on CreateCommentEIP712TypedData {
   domain {
     ...EIP712TypedDataDomain
   }
-  value {
+  message: value {
     nonce
     deadline
     profileId

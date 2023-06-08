@@ -79,6 +79,8 @@ export type Scalars = {
   Handle: string;
   /** handle claim id custom scalar type */
   HandleClaimIdScalar: unknown;
+  /** image size transform custom scalar type */
+  ImageSizeTransform: unknown;
   /** Internal publication id custom scalar type */
   InternalPublicationId: PublicationId;
   /** IpfsCid scalar type */
@@ -841,6 +843,15 @@ export type LimitedTimedFeeCollectModuleParams = {
   referralFee: Scalars['Float'];
 };
 
+export type MediaTransformParams = {
+  /** Set the transformed image's height. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'. */
+  height?: InputMaybe<Scalars['ImageSizeTransform']>;
+  /** Set if you want to keep the image's original aspect ratio. True by default. If explicitly set to false, the image will stretch based on the width and height values. */
+  keepAspectRatio?: InputMaybe<Scalars['Boolean']>;
+  /** Set the transformed image's width. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'. */
+  width?: InputMaybe<Scalars['ImageSizeTransform']>;
+};
+
 /** The metadata attribute input */
 export type MetadataAttributeInput = {
   /** The display type */
@@ -1084,6 +1095,13 @@ export type PendingApprovalFollowsRequest = {
 };
 
 export type PrfRequest = {
+  dd: Scalars['Boolean'];
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ss: Scalars['Boolean'];
+};
+
+export type PriRequest = {
   hhh: Scalars['String'];
   secret: Scalars['String'];
 };
@@ -1763,7 +1781,7 @@ export type CreateCollectTypedDataData = {
     typedData: {
       types: { CollectWithSig: Array<{ name: string; type: string }> };
       domain: Eip712TypedDataDomain;
-      value: {
+      message: {
         nonce: number;
         deadline: unknown;
         profileId: ProfileId;
@@ -1777,7 +1795,7 @@ export type CreateCollectTypedDataData = {
 export type CreateCommentEip712TypedData = {
   types: { CommentWithSig: Array<{ name: string; type: string }> };
   domain: Eip712TypedDataDomain;
-  value: {
+  message: {
     nonce: number;
     deadline: unknown;
     profileId: ProfileId;
@@ -2202,7 +2220,7 @@ export type CreateFollowTypedDataData = {
     typedData: {
       types: { FollowWithSig: Array<{ name: string; type: string }> };
       domain: Eip712TypedDataDomain;
-      value: {
+      message: {
         nonce: number;
         deadline: unknown;
         profileIds: Array<ProfileId>;
@@ -2304,7 +2322,7 @@ export type EncryptionParamsOutput = {
 export type CreateMirrorEip712TypedData = {
   types: { MirrorWithSig: Array<{ name: string; type: string }> };
   domain: Eip712TypedDataDomain;
-  value: {
+  message: {
     nonce: number;
     deadline: unknown;
     profileId: ProfileId;
@@ -2454,7 +2472,7 @@ export type UnreadNotificationCountData = { result: { pageInfo: { totalCount: nu
 export type CreatePostEip712TypedData = {
   types: { PostWithSig: Array<{ name: string; type: string }> };
   domain: Eip712TypedDataDomain;
-  value: {
+  message: {
     nonce: number;
     deadline: unknown;
     profileId: ProfileId;
@@ -2513,7 +2531,7 @@ export type CreateSetDispatcherTypedDataData = {
     typedData: {
       types: { SetDispatcherWithSig: Array<{ name: string; type: string }> };
       domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: {
+      message: {
         nonce: number;
         deadline: unknown;
         profileId: ProfileId;
@@ -2669,7 +2687,7 @@ export type CreateSetFollowModuleTypedDataData = {
     typedData: {
       types: { SetFollowModuleWithSig: Array<{ name: string; type: string }> };
       domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: {
+      message: {
         nonce: number;
         deadline: unknown;
         profileId: ProfileId;
@@ -2692,7 +2710,7 @@ export type CreateSetProfileImageUriTypedDataData = {
     typedData: {
       types: { SetProfileImageURIWithSig: Array<{ name: string; type: string }> };
       domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: { nonce: number; deadline: unknown; profileId: ProfileId; imageURI: Url };
+      message: { nonce: number; deadline: unknown; profileId: ProfileId; imageURI: Url };
     };
   };
 };
@@ -2717,7 +2735,7 @@ export type CreateSetProfileMetadataTypedDataData = {
     typedData: {
       types: { SetProfileMetadataURIWithSig: Array<{ name: string; type: string }> };
       domain: { name: string; chainId: number; version: string; verifyingContract: string };
-      value: { nonce: number; deadline: unknown; profileId: ProfileId; metadata: Url };
+      message: { nonce: number; deadline: unknown; profileId: ProfileId; metadata: Url };
     };
   };
 };
@@ -3051,7 +3069,7 @@ export type CreateUnfollowTypedDataData = {
     typedData: {
       types: { BurnWithSig: Array<{ name: string; type: string }> };
       domain: Eip712TypedDataDomain;
-      value: { nonce: number; deadline: unknown; tokenId: string };
+      message: { nonce: number; deadline: unknown; tokenId: string };
     };
   };
 };
@@ -3076,7 +3094,7 @@ export const FragmentCreateCommentEip712TypedData = /*#__PURE__*/ gql`
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -4026,7 +4044,7 @@ export const FragmentCreateMirrorEip712TypedData = /*#__PURE__*/ gql`
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -4222,7 +4240,7 @@ export const FragmentCreatePostEip712TypedData = /*#__PURE__*/ gql`
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -4540,7 +4558,7 @@ export const CreateCollectTypedDataDocument = /*#__PURE__*/ gql`
         domain {
           ...EIP712TypedDataDomain
         }
-        value {
+        message: value {
           nonce
           deadline
           profileId
@@ -5013,7 +5031,7 @@ export const CreateFollowTypedDataDocument = /*#__PURE__*/ gql`
         domain {
           ...EIP712TypedDataDomain
         }
-        value {
+        message: value {
           nonce
           deadline
           profileIds
@@ -5707,7 +5725,7 @@ export const CreateSetDispatcherTypedDataDocument = /*#__PURE__*/ gql`
           version
           verifyingContract
         }
-        value {
+        message: value {
           nonce
           deadline
           profileId
@@ -6083,7 +6101,7 @@ export const CreateSetFollowModuleTypedDataDocument = /*#__PURE__*/ gql`
           version
           verifyingContract
         }
-        value {
+        message: value {
           nonce
           deadline
           profileId
@@ -6159,7 +6177,7 @@ export const CreateSetProfileImageUriTypedDataDocument = /*#__PURE__*/ gql`
           version
           verifyingContract
         }
-        value {
+        message: value {
           nonce
           deadline
           profileId
@@ -6285,7 +6303,7 @@ export const CreateSetProfileMetadataTypedDataDocument = /*#__PURE__*/ gql`
           version
           verifyingContract
         }
-        value {
+        message: value {
           nonce
           deadline
           profileId
@@ -7806,7 +7824,7 @@ export const CreateUnfollowTypedDataDocument = /*#__PURE__*/ gql`
         domain {
           ...EIP712TypedDataDomain
         }
-        value {
+        message: value {
           nonce
           deadline
           tokenId
@@ -9193,11 +9211,22 @@ export type MediaOutputFieldPolicy = {
   source?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type MediaSetKeySpecifier = ('medium' | 'original' | 'small' | MediaSetKeySpecifier)[];
+export type MediaSetKeySpecifier = (
+  | 'medium'
+  | 'onChain'
+  | 'optimized'
+  | 'original'
+  | 'small'
+  | 'transformed'
+  | MediaSetKeySpecifier
+)[];
 export type MediaSetFieldPolicy = {
   medium?: FieldPolicy<any> | FieldReadFunction<any>;
+  onChain?: FieldPolicy<any> | FieldReadFunction<any>;
+  optimized?: FieldPolicy<any> | FieldReadFunction<any>;
   original?: FieldPolicy<any> | FieldReadFunction<any>;
   small?: FieldPolicy<any> | FieldReadFunction<any>;
+  transformed?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MetadataAttributeOutputKeySpecifier = (
   | 'displayType'
@@ -9841,6 +9870,11 @@ export type PostFieldPolicy = {
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
   referencePolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type PrfResponseKeySpecifier = ('dd' | 'ss' | PrfResponseKeySpecifier)[];
+export type PrfResponseFieldPolicy = {
+  dd?: FieldPolicy<any> | FieldReadFunction<any>;
+  ss?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileKeySpecifier = (
   | 'attributes'
@@ -11460,6 +11494,10 @@ export type StrictTypedTypePolicies = {
   Post?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | PostKeySpecifier | (() => undefined | PostKeySpecifier);
     fields?: PostFieldPolicy;
+  };
+  PrfResponse?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | PrfResponseKeySpecifier | (() => undefined | PrfResponseKeySpecifier);
+    fields?: PrfResponseFieldPolicy;
   };
   Profile?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | ProfileKeySpecifier | (() => undefined | ProfileKeySpecifier);

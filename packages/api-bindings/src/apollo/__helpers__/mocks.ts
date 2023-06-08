@@ -3,6 +3,7 @@ import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
 import { SafeApolloClient } from '../SafeApolloClient';
+import { createSnapshotCache } from '../cache';
 import { mockLensCache, MockCacheConfiguration } from '../cache/__helpers__/mocks';
 import { ApolloServerErrorCode } from '../isGraphQLValidationError';
 
@@ -12,6 +13,20 @@ export function mockLensApolloClient(
 ): SafeApolloClient<NormalizedCacheObject> {
   return new SafeApolloClient({
     cache: mockLensCache(cacheConfiguration),
+
+    link: mockSingleLink(...mocks).setOnError((error) => {
+      throw error;
+    }),
+
+    pollingInterval: 1, // FAST
+  });
+}
+
+export function mockSnapshotApolloClient(
+  mocks: ReadonlyArray<MockedResponse<unknown>>,
+): SafeApolloClient<NormalizedCacheObject> {
+  return new SafeApolloClient({
+    cache: createSnapshotCache(),
 
     link: mockSingleLink(...mocks).setOnError((error) => {
       throw error;

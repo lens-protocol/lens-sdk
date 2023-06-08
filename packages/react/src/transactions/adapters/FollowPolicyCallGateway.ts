@@ -80,9 +80,9 @@ export class FollowPolicyCallGateway
   ): SelfFundedProtocolTransactionRequest<UpdateFollowPolicyRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setFollowModule', [
-      data.result.typedData.value.profileId,
-      data.result.typedData.value.followModule,
-      data.result.typedData.value.followModuleInitData,
+      data.result.typedData.message.profileId,
+      data.result.typedData.message.followModule,
+      data.result.typedData.message.followModuleInitData,
     ]);
     return {
       ...request,

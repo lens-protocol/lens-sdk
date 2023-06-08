@@ -12,7 +12,7 @@ mutation CreateCollectTypedData($request: CreateCollectRequest!, $options: Typed
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId

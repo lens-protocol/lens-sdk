@@ -1,4 +1,5 @@
 fragment SnapshotProposal on Proposal {
+  __typename
   id
   author
   state
@@ -10,8 +11,10 @@ fragment SnapshotProposal on Proposal {
   symbol
   network
   type
+  privacy
   start
   end
+  quorum
   space {
     id
     name
@@ -24,10 +27,12 @@ fragment SnapshotProposal on Proposal {
 }
 
 fragment SnapshotVote on Vote {
+  __typename
   choice
 }
 
 fragment SnapshotVotePower on Vp {
+  __typename
   value: vp
 }
 
