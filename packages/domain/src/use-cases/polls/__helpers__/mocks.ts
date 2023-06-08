@@ -2,13 +2,8 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { mockPollId, mockWallet } from '../../../entities/__helpers__/mocks';
-import { ISignedVote, IUnsignedVote } from '../../../entities/polls';
-import {
-  CreateUnsignedVoteRequest,
-  IPollVoteRelayer,
-  IUnsignedVoteFactory,
-  VotePollRequest,
-} from '../VotePoll';
+import { IUnsignedVote } from '../../../entities/polls';
+import { CreateUnsignedVoteRequest, IUnsignedVoteFactory, VotePollRequest } from '../VotePoll';
 
 export function mockVotePollRequest(overrides?: Partial<VotePollRequest>): VotePollRequest {
   return {
@@ -41,12 +36,4 @@ export function mockIUnsignedVoteFactory({
   when(factory.createUnsignedVote).calledWith(request).mockResolvedValue(vote);
 
   return factory;
-}
-
-export function mockIPollVoteRelayer({ vote }: { vote: ISignedVote }): IPollVoteRelayer {
-  const relayer = mock<IPollVoteRelayer>();
-
-  when(relayer.relay).calledWith(vote).mockResolvedValue();
-
-  return relayer;
 }

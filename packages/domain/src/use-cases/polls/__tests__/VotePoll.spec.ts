@@ -1,53 +1,88 @@
-import { success } from '@lens-protocol/shared-kernel';
+import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { mockActiveWallet, mockISignedVote, mockIUnsignedVote, mockWallet } from '../../../mocks';
-import { IVotePollPresenter, VotePoll, VotePollRequest } from '../VotePoll';
 import {
-  mockIPollVoteRelayer,
+  PendingSigningRequestError,
+  UserRejectedError,
+  Wallet,
+  WalletConnectionError,
+  WalletConnectionErrorReason,
+} from '../../../entities';
+import { mockActiveWallet, mockISignedVote, mockIUnsignedVote, mockWallet } from '../../../mocks';
+import { IPollVoteRelayer, IVotePollPresenter, VotePoll, VotePollRequest } from '../VotePoll';
+import {
+  mockCreateUnsignedVoteRequest,
   mockIUnsignedVoteFactory,
   mockVotePollRequest,
 } from '../__helpers__/mocks';
 
-function setupTestScenario({
-  presenter,
-  request,
-}: {
-  presenter: IVotePollPresenter;
-  request: VotePollRequest;
-}) {
-  const wallet = mockWallet();
+function setupTestScenario({ request, voter }: { request: VotePollRequest; voter: Wallet }) {
   const unsignedVote = mockIUnsignedVote(request);
-  const signedVote = mockISignedVote(request);
-
-  when(wallet.signVote).calledWith(unsignedVote).mockResolvedValue(success(signedVote));
-
-  const factory = mockIUnsignedVoteFactory({ request, vote: unsignedVote });
-  const activeWallet = mockActiveWallet({ wallet });
-  const relayer = mockIPollVoteRelayer({ vote: signedVote });
+  const factory = mockIUnsignedVoteFactory({
+    request: mockCreateUnsignedVoteRequest({ ...request, voter }),
+    vote: unsignedVote,
+  });
+  when;
+  const activeWallet = mockActiveWallet({ wallet: voter });
+  const presenter = mock<IVotePollPresenter>();
+  const relayer = mock<IPollVoteRelayer>();
 
   const useCase = new VotePoll(factory, activeWallet, presenter, relayer);
 
-  return { useCase };
+  return { presenter, relayer, useCase };
 }
 
 describe(`Given the ${VotePoll.name} interactor`, () => {
+  const request = mockVotePollRequest();
+
   describe('when executed', () => {
     it(`should:
         - create an IUnsignedVote
         - use the user's wallet to sign the vote
         - relay the signed vote`, async () => {
-      const request = mockVotePollRequest();
-      const presenter = mock<IVotePollPresenter>();
+      const voter = mockWallet();
+      when(voter.signVote).mockImplementation(async (unsignedVote) =>
+        success(mockISignedVote(unsignedVote)),
+      );
 
-      const { useCase } = setupTestScenario({ presenter, request });
+      const { presenter, relayer, useCase } = setupTestScenario({ request, voter });
 
       await useCase.execute(request);
 
+      expect(relayer.relay).toHaveBeenCalledWith(
+        expect.objectContaining({
+          pollId: request.pollId,
+          signature: expect.any(String),
+          choice: request.choice,
+        }),
+      );
       expect(presenter.present).toHaveBeenCalledWith(success());
     });
 
-    xit('should present the error if the wallet fails to sign the vote', async () => {});
+    it.each([
+      {
+        ErrorCtor: PendingSigningRequestError,
+        error: new PendingSigningRequestError(),
+      },
+      {
+        ErrorCtor: WalletConnectionError,
+        error: new WalletConnectionError(WalletConnectionErrorReason.WRONG_ACCOUNT),
+      },
+      {
+        ErrorCtor: UserRejectedError,
+        error: new UserRejectedError('user does not want'),
+      },
+    ])('should present any "$ErrorCtor.name" the signing fails with', async ({ error }) => {
+      const result = failure(error);
+      const voter = mockWallet();
+      when(voter.signVote).mockResolvedValue(result);
+
+      const { presenter, useCase } = setupTestScenario({ request, voter });
+
+      await useCase.execute(request);
+
+      expect(presenter.present).toHaveBeenCalledWith(result);
+    });
   });
 });
