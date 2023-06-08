@@ -1,11 +1,15 @@
 import { useWalletLogin, useWalletLogout } from '@lens-protocol/react-web';
+import { ethersProviderFromPublicClient } from '@lens-protocol/wagmi';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { getPublicClient } from 'wagmi/actions';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
 import { WhenLoggedInWithProfile } from './WhenLoggedInWithProfile';
 import { WhenLoggedOut } from './WhenLoggedOut';
+
+import 'wagmi/window';
 
 export function LoginButton({ handle }: { handle?: string }) {
   const { execute: login, error: loginError, isPending: isLoginPending } = useWalletLogin();
@@ -26,8 +30,8 @@ export function LoginButton({ handle }: { handle?: string }) {
     const { connector } = await connectAsync();
 
     if (connector instanceof InjectedConnector) {
-      const signer = await connector.getSigner();
-      await login(signer, handle);
+      const publicClient = getPublicClient();
+      await login(ethersProviderFromPublicClient(publicClient).getSigner(), handle);
     }
   };
 

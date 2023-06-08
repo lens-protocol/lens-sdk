@@ -1,12 +1,17 @@
-import { IBindings, RequiredSigner } from '@lens-protocol/react-web';
+import { IBindings } from '@lens-protocol/react-web';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
-import { SwitchChainNotSupportedError } from 'wagmi';
-import { fetchSigner, getNetwork, getProvider, switchNetwork } from 'wagmi/actions';
+import { PublicClient, SwitchChainNotSupportedError } from 'wagmi';
+import { getNetwork, getPublicClient, switchNetwork } from 'wagmi/actions';
+import 'wagmi/window';
 
 export function bindings(): IBindings {
   return {
-    getProvider: async ({ chainId }) => getProvider<providers.JsonRpcProvider>({ chainId }),
+    getProvider: async ({ chainId }) => {
+      const publicClient = getPublicClient<PublicClient>({ chainId });
+
+      return ethersProviderFromPublicClient(publicClient);
+    },
     getSigner: async ({ chainId }) => {
       if (chainId) {
         const { chain } = getNetwork();
@@ -23,11 +28,20 @@ export function bindings(): IBindings {
         }
       }
 
-      const signer = await fetchSigner<RequiredSigner>({ chainId });
+      const publicClient = getPublicClient<PublicClient>({ chainId });
 
-      invariant(signer, 'Cannot get signer, is the wallet connected?');
+      invariant(window.ethereum, 'window.ethereum is not defined');
 
-      return signer;
+      return ethersProviderFromPublicClient(publicClient).getSigner();
     },
   };
+}
+
+export function ethersProviderFromPublicClient(publicClient: PublicClient): providers.Web3Provider {
+  invariant(window.ethereum, 'window.ethereum is not defined');
+
+  return new providers.Web3Provider(
+    window.ethereum as providers.ExternalProvider,
+    publicClient.chain.id,
+  );
 }
