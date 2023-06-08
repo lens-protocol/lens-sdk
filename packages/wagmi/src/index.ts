@@ -30,8 +30,6 @@ export function bindings(): IBindings {
 
       const publicClient = getPublicClient<PublicClient>({ chainId });
 
-      invariant(window.ethereum, 'window.ethereum is not defined');
-
       return ethersProviderFromPublicClient(publicClient).getSigner();
     },
   };
