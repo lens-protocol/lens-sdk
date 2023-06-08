@@ -4,7 +4,6 @@ import {
   isPostPublication,
   Post,
   ProfileOwnedByMe,
-  useCollect,
   useFeed,
 } from '@lens-protocol/react-web';
 
@@ -12,6 +11,7 @@ import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { useCollectWithSelfFundedFallback } from '../hooks/useCollectWithSelfFundedFallback';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { CollectablePublicationCard } from './components/PublicationCard';
 
@@ -21,8 +21,11 @@ type CollectButtonProps = {
 };
 
 function CollectButton({ collector, publication }: CollectButtonProps) {
-  const { execute: collect, error, isPending } = useCollect({ collector, publication });
-
+  const {
+    execute: collect,
+    error,
+    isPending,
+  } = useCollectWithSelfFundedFallback({ collector, publication });
   const isCollected = publication.hasCollectedByMe;
 
   switch (publication.collectPolicy.state) {
@@ -36,15 +39,18 @@ function CollectButton({ collector, publication }: CollectButtonProps) {
       return <button disabled={true}>Cannot be collected</button>;
     case CollectState.CAN_BE_COLLECTED:
       return (
-        <button onClick={collect} disabled={isCollected || isPending}>
-          {error
-            ? 'Error'
-            : isPending
-            ? 'Collecting...'
-            : isCollected
-            ? `You've already collected`
-            : 'Collect'}
-        </button>
+        <>
+          <button onClick={collect} disabled={isCollected || isPending}>
+            {error
+              ? 'Error'
+              : isPending
+              ? 'Collecting...'
+              : isCollected
+              ? `You've already collected`
+              : 'Collect'}
+          </button>
+          {error && <ErrorMessage error={error} />}
+        </>
       );
   }
 }

@@ -1,15 +1,15 @@
 import {
+  Profile,
   ProfileOwnedByMe,
   useExploreProfiles,
-  useFollow,
   useUnfollow,
-  Profile,
 } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { useFollowWithSelfFundedFallback } from '../hooks/useFollowWithSelfFundedFallback';
 import { ProfileCard } from './components/ProfileCard';
 
 type FollowButtonProps = {
@@ -22,7 +22,11 @@ function FollowButton({ followee, follower }: FollowButtonProps) {
     execute: follow,
     error: followError,
     isPending: isFollowPending,
-  } = useFollow({ follower, followee });
+  } = useFollowWithSelfFundedFallback({
+    followee,
+    follower,
+  });
+
   const {
     execute: unfollow,
     error: unfollowError,

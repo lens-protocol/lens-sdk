@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Result } from '@lens-protocol/shared-kernel';
+import { Result, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -137,7 +137,9 @@ export function mockISignlessSubsidizedCallRelayer<
 
   if (instructions) {
     const { request, transaction = MockedProxyTransaction.fromRequest(request) } = instructions;
-    when(relayer.createProxyTransaction).calledWith(request).mockResolvedValue(transaction);
+    when(relayer.createProxyTransaction)
+      .calledWith(request)
+      .mockResolvedValue(success(transaction));
   }
 
   return relayer;
