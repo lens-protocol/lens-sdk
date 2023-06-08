@@ -2,7 +2,7 @@ import {
   CreateCollectTypedDataDocument,
   CreateCollectTypedDataData,
   CreateCollectTypedDataVariables,
-  LensApolloClient,
+  SafeApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
@@ -15,7 +15,7 @@ import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
 export class CollectPublicationCallGateway implements IOnChainProtocolCallGateway<CollectRequest> {
-  constructor(private apolloClient: LensApolloClient) {}
+  constructor(private apolloClient: SafeApolloClient) {}
 
   async createUnsignedProtocolCall(
     request: CollectRequest,

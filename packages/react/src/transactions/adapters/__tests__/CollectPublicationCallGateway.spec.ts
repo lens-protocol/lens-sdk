@@ -5,7 +5,7 @@ import {
   CreateCollectTypedDataVariables,
 } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockCreateCollectTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockFreeCollectRequest, mockNonce } from '@lens-protocol/domain/mocks';
@@ -39,7 +39,7 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
     it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
       const data = mockCreateCollectTypedDataData();
 
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         mockCreateCollectTypedDatMutationMockedResponse({
           variables: {
             request: {
@@ -58,7 +58,7 @@ describe(`Given an instance of the ${CollectPublicationCallGateway.name}`, () =>
 
     it(`should be possible to override the signature nonce`, async () => {
       const nonce = mockNonce();
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         mockCreateCollectTypedDatMutationMockedResponse({
           variables: {
             request: {

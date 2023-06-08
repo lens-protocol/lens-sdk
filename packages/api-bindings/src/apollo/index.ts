@@ -4,7 +4,7 @@ import { ILogger } from '@lens-protocol/shared-kernel';
 
 import { LENS_API_MINIMAL_SUPPORTED_VERSION } from '../constants';
 import type { IAccessTokenStorage } from './IAccessTokenStorage';
-import { LensApolloClient } from './LensApolloClient';
+import { SafeApolloClient } from './SafeApolloClient';
 import { createSnapshotCache } from './cache';
 import { createLensCache } from './cache/createLensCache';
 import { ContentInsightMatcher } from './cache/utils/ContentInsight';
@@ -40,7 +40,7 @@ export function createLensApolloClient({
     supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION,
   });
 
-  return new LensApolloClient({
+  return new SafeApolloClient({
     connectToDevTools: true,
     cache: createLensCache({ activeWalletVar, contentMatchers }),
     link: from([authLink, httpLink]),
@@ -65,7 +65,7 @@ export function createAnonymousLensApolloClient({
 }: AnonymousApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
 
-  return new LensApolloClient({
+  return new SafeApolloClient({
     cache: createLensCache({ activeWalletVar }),
     link: createLensLink({ uri, logger, supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION }),
     version: LENS_API_MINIMAL_SUPPORTED_VERSION,
@@ -77,7 +77,7 @@ export type SnapshotApolloClientConfig = {
 };
 
 export function createSnapshotApolloClient({ backendURL }: SnapshotApolloClientConfig) {
-  return new LensApolloClient({
+  return new SafeApolloClient({
     cache: createSnapshotCache(),
     link: createSnapshotLink({
       uri: `${backendURL}/graphql`,
@@ -90,4 +90,4 @@ export type { IGraphQLClient } from './IGraphQLClient';
 export * from './errors';
 export * from './cache/transactions';
 export * from './cache/activeProfileIdentifier';
-export type { LensApolloClient };
+export type { SafeApolloClient };

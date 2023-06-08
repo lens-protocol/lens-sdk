@@ -1,6 +1,6 @@
 import { ProfileAttributeReader, Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createGetProfileMockedResponse,
   mockProfileFragment,
   mockSources,
@@ -22,7 +22,7 @@ function setupUpdateProfileMetadataResponder({
   updatedProfile?: Profile;
 }) {
   const sources = mockSources();
-  const apolloClient = createMockApolloClientWithMultipleResponses([
+  const apolloClient = mockLensApolloClient([
     createGetProfileMockedResponse({
       profile: updatedProfile,
       variables: {

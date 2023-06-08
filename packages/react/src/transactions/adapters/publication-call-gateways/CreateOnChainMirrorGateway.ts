@@ -7,7 +7,7 @@ import {
   omitTypename,
   CreateMirrorTypedDataData,
   CreateMirrorTypedDataVariables,
-  LensApolloClient,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -34,7 +34,7 @@ export class CreateOnChainMirrorGateway
     IOnChainProtocolCallGateway<CreateMirrorRequest>
 {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateMirrorRequest>,
   ) {}
 

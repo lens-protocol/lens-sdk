@@ -6,7 +6,7 @@ import {
   CreateCommentViaDispatcherData,
   CreateCommentViaDispatcherVariables,
   CreatePublicCommentRequest as CreatePublicCommentRequestArg,
-  LensApolloClient,
+  SafeApolloClient,
   omitTypename,
   CreateCommentEip712TypedData,
 } from '@lens-protocol/api-bindings';
@@ -38,7 +38,7 @@ export class CreateOnChainCommentGateway
     IOnChainProtocolCallGateway<CreateCommentRequest>
 {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateCommentRequest>,
     private readonly uploader: IMetadataUploader<CreateCommentRequest>,
   ) {}

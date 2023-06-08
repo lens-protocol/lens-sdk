@@ -1,5 +1,5 @@
 import {
-  LensApolloClient,
+  SafeApolloClient,
   ProxyActionDocument,
   ProxyActionData,
   ProxyActionVariables,
@@ -20,7 +20,7 @@ export class CollectProxyActionRelayer<T extends FreeCollectRequest>
   implements ISignlessSubsidizedCallRelayer<T>
 {
   constructor(
-    private apolloClient: LensApolloClient,
+    private apolloClient: SafeApolloClient,
     private factory: ITransactionFactory<FreeCollectRequest>,
     private logger: ILogger,
   ) {}

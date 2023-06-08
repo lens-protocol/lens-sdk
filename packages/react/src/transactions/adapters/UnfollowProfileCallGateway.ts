@@ -2,7 +2,7 @@ import {
   CreateUnfollowTypedDataDocument,
   CreateUnfollowTypedDataData,
   CreateUnfollowTypedDataVariables,
-  LensApolloClient,
+  SafeApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensFollowNFT } from '@lens-protocol/blockchain-bindings';
@@ -13,7 +13,7 @@ import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
 export class UnfollowProfileCallGateway implements IOnChainProtocolCallGateway<UnfollowRequest> {
-  constructor(private apolloClient: LensApolloClient) {}
+  constructor(private apolloClient: SafeApolloClient) {}
 
   async createUnsignedProtocolCall(
     request: UnfollowRequest,

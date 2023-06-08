@@ -1,5 +1,5 @@
 import { OperationVariables } from '@apollo/client';
-import { createSnapshotApolloClient, LensApolloClient, Sources } from '@lens-protocol/api-bindings';
+import { createSnapshotApolloClient, SafeApolloClient, Sources } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
@@ -8,7 +8,7 @@ import { useActiveProfileIdentifier } from '../profile/useActiveProfileIdentifie
 import { useSharedDependencies } from '../shared';
 
 export type UseApolloClientResult<TOptions> = TOptions & {
-  client: LensApolloClient;
+  client: SafeApolloClient;
 };
 
 export function useLensApolloClient<TOptions>(

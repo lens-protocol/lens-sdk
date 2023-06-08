@@ -2,7 +2,7 @@ import {
   CreateSetDispatcherTypedDataDocument,
   CreateSetDispatcherTypedDataData,
   CreateSetDispatcherTypedDataVariables,
-  LensApolloClient,
+  SafeApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
@@ -16,7 +16,7 @@ import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocol
 export class DispatcherConfigCallGateway
   implements IOnChainProtocolCallGateway<UpdateDispatcherConfigRequest>
 {
-  constructor(private apolloClient: LensApolloClient) {}
+  constructor(private apolloClient: SafeApolloClient) {}
 
   async createUnsignedProtocolCall(
     request: UpdateDispatcherConfigRequest,

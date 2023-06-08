@@ -3,7 +3,7 @@ import { createHttpLink, gql, InMemoryCache, Observable } from '@apollo/client';
 import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, GraphQLError } from 'graphql';
 
-import { LensApolloClient } from '../LensApolloClient';
+import { SafeApolloClient } from '../SafeApolloClient';
 import {
   createValidationErrorMockedResponse,
   createGenericErrorMockedResponse,
@@ -38,10 +38,10 @@ function observableToPromise<R>(observable: Observable<R>): Promise<R> {
   });
 }
 
-describe(`Given an instance of the ${LensApolloClient.name}`, () => {
-  describe(`when invoking the "${LensApolloClient.prototype.query.name}" method`, () => {
+describe(`Given an instance of the ${SafeApolloClient.name}`, () => {
+  describe(`when invoking the "${SafeApolloClient.prototype.query.name}" method`, () => {
     it(`should throw a ${ValidationError.name} in case of ${GraphQLError.name} with GRAPHQL_VALIDATION_FAILED code`, async () => {
-      const client = new LensApolloClient({
+      const client = new SafeApolloClient({
         cache: new InMemoryCache(),
 
         link: mockSingleLink(createValidationErrorMockedResponse(query)).setOnError((error) => {
@@ -53,7 +53,7 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
     });
 
     it(`should throw an ${UnspecifiedError.name} in case of ${GraphQLError.name}`, async () => {
-      const client = new LensApolloClient({
+      const client = new SafeApolloClient({
         cache: new InMemoryCache(),
 
         link: mockSingleLink(createGenericErrorMockedResponse(query)).setOnError((error) => {
@@ -66,7 +66,7 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
 
     it(`should throw an ${UnspecifiedError.name} in case of ServerError (a specific type of NetworkError)`, async () => {
       const fetch = jest.fn().mockResolvedValue(createUnauthenticatedHttpResponse());
-      const client = new LensApolloClient({
+      const client = new SafeApolloClient({
         cache: new InMemoryCache(),
 
         link: createHttpLink({
@@ -79,7 +79,7 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
     });
   });
 
-  describe(`when invoking the "${LensApolloClient.prototype.mutate.name}" method`, () => {
+  describe(`when invoking the "${SafeApolloClient.prototype.mutate.name}" method`, () => {
     const mutation = gql`
       mutation Ping {
         ping
@@ -87,7 +87,7 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
     `;
 
     it(`should throw a ${ValidationError.name} in case of ${GraphQLError.name} with GRAPHQL_VALIDATION_FAILED code`, async () => {
-      const client = new LensApolloClient({
+      const client = new SafeApolloClient({
         cache: new InMemoryCache(),
 
         link: mockSingleLink(createValidationErrorMockedResponse(mutation)).setOnError((error) => {
@@ -99,7 +99,7 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
     });
 
     it(`should throw an ${UnspecifiedError.name} in case of ${GraphQLError.name}`, async () => {
-      const client = new LensApolloClient({
+      const client = new SafeApolloClient({
         cache: new InMemoryCache(),
 
         link: mockSingleLink(createGenericErrorMockedResponse(mutation)).setOnError((error) => {
@@ -112,7 +112,7 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
 
     it(`should throw an ${UnspecifiedError.name} in case of ServerError (a specific type of NetworkError)`, async () => {
       const fetch = jest.fn().mockResolvedValue(createUnauthenticatedHttpResponse());
-      const client = new LensApolloClient({
+      const client = new SafeApolloClient({
         cache: new InMemoryCache(),
 
         link: createHttpLink({
@@ -125,9 +125,9 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
     });
   });
 
-  describe(`when invoking the "${LensApolloClient.prototype.poll.name}" method`, () => {
+  describe(`when invoking the "${SafeApolloClient.prototype.poll.name}" method`, () => {
     it(`should emit the fetched data`, async () => {
-      const client = new LensApolloClient({
+      const client = new SafeApolloClient({
         cache: new InMemoryCache(),
 
         link: mockSingleLink(
@@ -146,7 +146,7 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
     });
 
     it(`should emit a ${ValidationError.name} in case of ${GraphQLError.name} with GRAPHQL_VALIDATION_FAILED code`, async () => {
-      const client = new LensApolloClient({
+      const client = new SafeApolloClient({
         cache: new InMemoryCache(),
 
         link: mockSingleLink(createValidationErrorMockedResponse(query)).setOnError((error) => {
@@ -160,7 +160,7 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
     });
 
     it(`should emit an ${UnspecifiedError.name} in case of ${GraphQLError.name}`, async () => {
-      const client = new LensApolloClient({
+      const client = new SafeApolloClient({
         cache: new InMemoryCache(),
 
         link: mockSingleLink(createGenericErrorMockedResponse(query)).setOnError((error) => {
@@ -175,7 +175,7 @@ describe(`Given an instance of the ${LensApolloClient.name}`, () => {
 
     it(`should emit an ${UnspecifiedError.name} in case of ServerError (a specific type of NetworkError)`, async () => {
       const fetch = jest.fn().mockResolvedValue(createUnauthenticatedHttpResponse());
-      const client = new LensApolloClient({
+      const client = new SafeApolloClient({
         cache: new InMemoryCache(),
 
         link: createHttpLink({

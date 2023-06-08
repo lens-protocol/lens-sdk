@@ -6,7 +6,7 @@ import {
   CreatePostViaDispatcherData,
   CreatePostViaDispatcherVariables,
   CreatePublicPostRequest as CreatePublicPostRequestArg,
-  LensApolloClient,
+  SafeApolloClient,
   omitTypename,
   CreatePostEip712TypedData,
 } from '@lens-protocol/api-bindings';
@@ -38,7 +38,7 @@ export class CreateOnChainPostGateway
     IOnChainProtocolCallGateway<CreatePostRequest>
 {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreatePostRequest>,
     private readonly metadataUploader: IMetadataUploader<CreatePostRequest>,
   ) {}

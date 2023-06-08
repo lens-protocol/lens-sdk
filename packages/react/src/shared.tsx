@@ -1,7 +1,7 @@
 import {
   createAnonymousLensApolloClient,
   createLensApolloClient,
-  LensApolloClient,
+  SafeApolloClient,
   Sources,
 } from '@lens-protocol/api-bindings';
 import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
@@ -76,7 +76,7 @@ export type SharedDependencies = {
   activeProfileGateway: ActiveProfileGateway;
   activeProfilePresenter: ActiveProfilePresenter;
   activeWallet: ActiveWallet;
-  apolloClient: LensApolloClient;
+  apolloClient: SafeApolloClient;
   bindings: IBindings;
   authApi: AuthApi;
   environment: EnvironmentConfig;

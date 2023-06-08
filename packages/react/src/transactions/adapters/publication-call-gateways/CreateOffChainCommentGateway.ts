@@ -7,7 +7,7 @@ import {
   CreateDataAvailabilityCommentViaDispatcherData,
   CreateDataAvailabilityCommentViaDispatcherDocument,
   CreateDataAvailabilityCommentViaDispatcherVariables,
-  LensApolloClient,
+  SafeApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
@@ -35,7 +35,7 @@ export class CreateOffChainCommentGateway
     IOffChainProtocolCallGateway<CreateCommentRequest>
 {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateCommentRequest>,
     private readonly metadataUploader: IMetadataUploader<CreateCommentRequest>,
   ) {}

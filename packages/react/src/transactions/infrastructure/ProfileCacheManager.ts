@@ -3,7 +3,7 @@ import {
   GetProfileDocument,
   GetProfileData,
   GetProfileVariables,
-  LensApolloClient,
+  SafeApolloClient,
   Profile,
   FragmentProfile,
   Sources,
@@ -15,7 +15,7 @@ import { never } from '@lens-protocol/shared-kernel';
 import { FetchProfileArgs, IProfileCacheManager } from '../adapters/IProfileCacheManager';
 
 export class ProfileCacheManager implements IProfileCacheManager {
-  constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
+  constructor(private readonly client: SafeApolloClient, private readonly sources: Sources) {}
 
   async fetchProfile(args: FetchProfileArgs) {
     return this.request(args, 'cache-first');

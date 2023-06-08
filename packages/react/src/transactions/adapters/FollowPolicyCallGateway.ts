@@ -3,7 +3,7 @@ import {
   CreateSetFollowModuleTypedDataDocument,
   CreateSetFollowModuleTypedDataData,
   CreateSetFollowModuleTypedDataVariables,
-  LensApolloClient,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
@@ -46,7 +46,7 @@ function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
 export class FollowPolicyCallGateway
   implements IOnChainProtocolCallGateway<UpdateFollowPolicyRequest>
 {
-  constructor(private apolloClient: LensApolloClient) {}
+  constructor(private apolloClient: SafeApolloClient) {}
 
   async createUnsignedProtocolCall(
     request: UpdateFollowPolicyRequest,

@@ -4,7 +4,7 @@ import {
   activeProfileIdentifierVar,
 } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockFeedItemFragment,
   createFeedMockedResponse,
   mockSources,
@@ -42,7 +42,7 @@ function setupTestScenario({
       mocks: {
         sources,
 
-        apolloClient: createMockApolloClientWithMultipleResponses([
+        apolloClient: mockLensApolloClient([
           createFeedMockedResponse({
             variables: {
               profileId,

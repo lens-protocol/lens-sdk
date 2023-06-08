@@ -1,4 +1,4 @@
-import { LensApolloClient } from '@lens-protocol/api-bindings';
+import { SafeApolloClient } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   UserRejectedError,
@@ -26,7 +26,7 @@ import { CreateOnChainCommentGateway } from './publication-call-gateways/CreateO
 
 export type CreateCommentControllerArgs<T extends CreateCommentRequest> = {
   activeWallet: ActiveWallet;
-  apolloClient: LensApolloClient;
+  apolloClient: SafeApolloClient;
   offChainRelayer: IOffChainRelayer<T>;
   onChainRelayer: IOnChainRelayer<T>;
   transactionFactory: ITransactionFactory<T>;

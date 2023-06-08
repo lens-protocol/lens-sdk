@@ -5,7 +5,7 @@ import {
   PublicationTypes,
 } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockPostFragment,
   createExplorePublicationsMockedResponse,
   mockSources,
@@ -32,7 +32,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useExplorePublications(args), {
     mocks: {
       sources,
-      apolloClient: createMockApolloClientWithMultipleResponses([
+      apolloClient: mockLensApolloClient([
         createExplorePublicationsMockedResponse({
           variables: {
             limit: DEFAULT_PAGINATED_QUERY_LIMIT,

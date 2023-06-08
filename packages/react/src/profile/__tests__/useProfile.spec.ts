@@ -1,7 +1,7 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { activeProfileIdentifierVar } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createGetProfileMockedResponse,
   mockProfileFragment,
   mockSources,
@@ -23,7 +23,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfile(args), {
     mocks: {
       sources,
-      apolloClient: createMockApolloClientWithMultipleResponses([expectations]),
+      apolloClient: mockLensApolloClient([expectations]),
     },
   });
 }

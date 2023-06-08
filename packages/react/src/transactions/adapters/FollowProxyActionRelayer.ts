@@ -1,5 +1,5 @@
 import {
-  LensApolloClient,
+  SafeApolloClient,
   ProxyActionDocument,
   ProxyActionData,
   ProxyActionVariables,
@@ -20,7 +20,7 @@ export class FollowProxyActionRelayer<T extends UnconstrainedFollowRequest>
   implements ISignlessSubsidizedCallRelayer<T>
 {
   constructor(
-    private apolloClient: LensApolloClient,
+    private apolloClient: SafeApolloClient,
     private factory: ITransactionFactory<UnconstrainedFollowRequest>,
     private logger: ILogger,
   ) {}

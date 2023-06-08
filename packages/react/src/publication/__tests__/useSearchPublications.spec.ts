@@ -1,6 +1,6 @@
 import { activeProfileIdentifierVar, ContentPublication } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createSearchPublicationsMockedResponse,
   mockCommentFragment,
   mockPostFragment,
@@ -27,7 +27,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useSearchPublications(args), {
     mocks: {
       sources,
-      apolloClient: createMockApolloClientWithMultipleResponses([
+      apolloClient: mockLensApolloClient([
         createSearchPublicationsMockedResponse({
           variables: {
             ...args,

@@ -11,7 +11,7 @@ import {
   omitTypename,
   Profile,
   CreatePublicSetProfileMetadataUriRequest,
-  LensApolloClient,
+  SafeApolloClient,
   ProfileMetadata,
 } from '@lens-protocol/api-bindings';
 import { lensPeriphery } from '@lens-protocol/blockchain-bindings';
@@ -41,7 +41,7 @@ export class ProfileMetadataCallGateway
     IOnChainProtocolCallGateway<UpdateProfileDetailsRequest>
 {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<UpdateProfileDetailsRequest>,
     private readonly uploader: IMetadataUploader<ProfileMetadata>,
   ) {}

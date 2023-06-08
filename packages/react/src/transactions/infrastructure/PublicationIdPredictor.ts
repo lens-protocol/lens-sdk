@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
-  LensApolloClient,
+  SafeApolloClient,
   GetPublicationsDocument,
   GetPublicationsData,
   GetPublicationsVariables,
@@ -18,7 +18,7 @@ function formatPublicationId(profileId: ProfileId, newSequentialId: number): Pub
 
 export class PublicationIdPredictor implements IPublicationIdPredictor {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly pendingTransactionGateway: PendingTransactionGateway,
   ) {}
 
