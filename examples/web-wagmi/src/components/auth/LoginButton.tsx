@@ -9,8 +9,6 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WhenLoggedInWithProfile } from './WhenLoggedInWithProfile';
 import { WhenLoggedOut } from './WhenLoggedOut';
 
-import 'wagmi/window';
-
 export function LoginButton({ handle }: { handle?: string }) {
   const { execute: login, error: loginError, isPending: isLoginPending } = useWalletLogin();
   const { execute: logout, isPending: isLogoutPending } = useWalletLogout();
