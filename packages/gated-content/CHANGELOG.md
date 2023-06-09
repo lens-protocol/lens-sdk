@@ -1,5 +1,42 @@
 # @lens-protocol/gated-content
 
+## 0.3.0-next.1
+
+### Minor Changes
+
+- 148e9636: feat: **Added** linea goerli support to gated content
+
+### Patch Changes
+
+- Updated dependencies [55211083]
+  - @lens-protocol/domain@0.8.1-next.0
+  - @lens-protocol/api-bindings@0.8.1-next.0
+
+## 0.3.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [03a8ad5]
+- Updated dependencies [37bf8e8]
+- Updated dependencies [513373d]
+- Updated dependencies [98c6547]
+- Updated dependencies [04647bb]
+- Updated dependencies [c416a2e]
+- Updated dependencies [ef1d7e2]
+- Updated dependencies [b738abb]
+- Updated dependencies [5c5bfb2]
+- Updated dependencies [71196cf]
+  - @lens-protocol/api-bindings@0.8.0
+  - @lens-protocol/shared-kernel@0.8.0
+  - @lens-protocol/domain@0.8.0
+  - @lens-protocol/storage@0.7.2
+
 ## 0.2.2-next.4
 
 ### Patch Changes

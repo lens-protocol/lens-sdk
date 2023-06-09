@@ -6,5 +6,5 @@ export type ProfileIdentifier = {
 };
 
 export interface IActiveProfilePresenter {
-  presentActiveProfile(profileIdentifier: ProfileIdentifier | null): Promise<void>;
+  presentActiveProfile(profileIdentifier: ProfileIdentifier | null): void;
 }

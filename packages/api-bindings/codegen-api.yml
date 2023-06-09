@@ -25,7 +25,7 @@ generates:
         ContentEncryptionKey: ContentEncryptionKey
         ContentInsight: ContentInsight
         ContractAddress: string
-        Cursor: string
+        Cursor: Cursor
         DataAvailabilityId: string
         DateTime: string
         DecryptionCriteria: DecryptionCriteria
@@ -84,6 +84,7 @@ generates:
               "import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';",
               "import type { ContentEncryptionKey } from './ContentEncryptionKey';",
               "import type { ContentInsight } from './ContentInsight';",
+              "import type { Cursor } from './Cursor';",
               "import type { ProfileAttributes } from './ProfileAttributes';",
               "import type { FollowPolicy } from './FollowPolicy';",
               "import type { FollowStatus } from './FollowStatus';",

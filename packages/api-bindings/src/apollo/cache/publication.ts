@@ -1,19 +1,27 @@
-import { FieldFunctionOptions, FieldPolicy, FieldReadFunction, Reference } from '@apollo/client';
+import {
+  FieldFunctionOptions,
+  FieldPolicy,
+  FieldReadFunction,
+  Reference,
+  StoreObject,
+} from '@apollo/client';
 import { PublicationId } from '@lens-protocol/domain/entities';
 import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
+  AnyPublication,
   CollectModule,
-  PublicationStats,
-  ReferenceModule,
-  resolveCollectPolicy,
-  ReferencePolicy,
-  Wallet,
   CollectPolicy,
   ContentInsight,
-  MetadataOutput,
   ContentInsightType,
+  MetadataOutput,
+  PublicationQueryRequest,
+  PublicationStats,
+  ReferenceModule,
+  ReferencePolicy,
+  resolveCollectPolicy,
+  Wallet,
 } from '../../lens';
 import { activeProfileIdentifierVar } from './activeProfileIdentifier';
 import { decryptionCriteria } from './decryptionCriteria';
@@ -210,7 +218,15 @@ const createContentInsightFieldPolicy: (
     };
   };
 
-export function createContentPublicationTypePolicy(config: ContentPublicationTypePolicyConfig) {
+const publicationTypename = 'Publication';
+
+export function createPublicationTypePolicy() {
+  return {
+    keyFields: ({ id }: Readonly<StoreObject>) => `${publicationTypename}:${String(id)}`,
+  } as const;
+}
+
+function createContentPublicationTypePolicy(config: ContentPublicationTypePolicyConfig) {
   return {
     fields: {
       canComment: noCachedField(),
@@ -228,6 +244,26 @@ export function createContentPublicationTypePolicy(config: ContentPublicationTyp
       reaction: noCachedField(),
       referencePolicy,
       stats,
+    },
+  };
+}
+
+export const createCommentTypePolicy = createContentPublicationTypePolicy;
+
+export const createPostTypePolicy = createContentPublicationTypePolicy;
+
+export function createPublicationFieldPolicy(): FieldPolicy<
+  AnyPublication,
+  AnyPublication,
+  Reference,
+  FieldFunctionOptions<{ request: PublicationQueryRequest }>
+> {
+  return {
+    read(_, { args, toReference }) {
+      return toReference({
+        __typename: publicationTypename,
+        id: args?.request.publicationId,
+      });
     },
   };
 }

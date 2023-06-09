@@ -1,4 +1,5 @@
 import { ApolloCache, DocumentNode, makeVar } from '@apollo/client';
+import { empty } from '@apollo/client/link/core';
 import { DecryptionCriteriaType } from '@lens-protocol/domain/entities';
 import {
   mockCreateMirrorRequest,
@@ -21,6 +22,12 @@ import {
   FragmentComment,
   FragmentPost,
   FragmentProfile,
+  GetPublicationData,
+  GetPublicationVariables,
+  GetPublicationDocument,
+  GetProfileData,
+  GetProfileVariables,
+  GetProfileDocument,
 } from '../../../lens';
 import {
   mockAndAccessCondition,
@@ -40,13 +47,14 @@ import {
   mockProfileFragment,
   mockProfileOwnershipAccessCondition,
   mockPublicationStatsFragment,
+  mockSnapshotPollUrl,
 } from '../../../mocks';
+import { SafeApolloClient } from '../../SafeApolloClient';
 import { activeProfileIdentifierVar } from '../activeProfileIdentifier';
 import { createLensCache } from '../createLensCache';
 import { erc20Amount } from '../decryptionCriteria';
 import { recentTransactionsVar } from '../transactions';
 import { snapshotPoll } from '../utils/ContentInsight';
-import { mockSnapshotPollUrl } from '../utils/__helpers__/mocks';
 
 const typeToFragmentMap: Record<ContentPublication['__typename'], DocumentNode> = {
   Post: FragmentPost,
@@ -94,6 +102,13 @@ function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}
         }) ?? never('cannot read profile')
       );
     },
+
+    get client() {
+      return new SafeApolloClient({
+        cache,
+        link: empty(),
+      });
+    },
   };
 }
 
@@ -107,13 +122,226 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
       typename: 'Comment',
       mockPublicationFragment: mockCommentFragment,
     },
-  ])('when reading "decryptionCriteria"', ({ mockPublicationFragment, typename }) => {
-    describe(`for a not token-gated "${typename}"`, () => {
-      const publication = mockPublicationFragment({
-        isGated: false,
+  ])('and a cached $typename', ({ mockPublicationFragment, typename }) => {
+    describe(`when reading the same ${typename} via the "publication" query`, () => {
+      const publication = mockPublicationFragment();
+      const { client, writePublication } = setupApolloCache();
+
+      beforeAll(() => {
+        writePublication(publication);
       });
 
-      it('should return "null"', () => {
+      it('should perform a cache redirect and avoid a extra network request', async () => {
+        const { data } = await client.query<GetPublicationData, GetPublicationVariables>({
+          query: GetPublicationDocument,
+          variables: { request: { publicationId: publication.id }, sources: [] },
+        });
+
+        expect(data.result).toMatchObject(publication);
+      });
+    });
+
+    describe('when reading "contentInsights"', () => {
+      it('should detect Snapshot URLs in the content and return the SnapshotPoll', () => {
+        const publication = mockPostFragment({
+          profile: mockProfileFragment(),
+          metadata: mockMetadataOutputFragment({
+            content: `Hey what do you think of: ${mockSnapshotPollUrl()}`,
+          }),
+        });
+
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
+        const read = readPublication(publication);
+
+        expect(read.contentInsight).toMatchObject({
+          type: ContentInsightType.SNAPSHOT_POLL,
+          proposalId: expect.any(String),
+          spaceId: expect.any(String),
+          url: expect.any(String),
+        });
+      });
+    });
+
+    describe('when reading "collectPolicy"', () => {
+      it('should support "CollectPolicy" for free collect', () => {
+        const publication = mockPublicationFragment({
+          profile: mockProfileFragment(),
+          collectModule: mockFreeCollectModuleSettings(),
+          collectPolicy: undefined,
+          stats: mockPublicationStatsFragment(),
+        });
+
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
+        const read = readPublication(publication);
+
+        expect(read.collectPolicy).toMatchObject({
+          type: CollectPolicyType.FREE,
+          state: CollectState.CAN_BE_COLLECTED,
+          followerOnly: false,
+        });
+      });
+
+      it('should support "CollectPolicy" for not follower profile, free collect with followerOnly flag', () => {
+        const publication = mockPublicationFragment({
+          profile: mockProfileFragment({
+            isFollowedByMe: false,
+          }),
+          collectModule: mockFreeCollectModuleSettings({ followerOnly: true }),
+          collectPolicy: undefined,
+          stats: mockPublicationStatsFragment(),
+        });
+
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
+        const read = readPublication(publication);
+
+        expect(read.collectPolicy).toMatchObject({
+          type: CollectPolicyType.FREE,
+          state: CollectState.NOT_A_FOLLOWER,
+          followerOnly: true,
+        });
+      });
+
+      it('should support "CollectPolicy" for a follower profile, free collect with followerOnly flag', () => {
+        const publication = mockPublicationFragment({
+          profile: mockProfileFragment({
+            isFollowedByMe: true,
+          }),
+          collectModule: mockFreeCollectModuleSettings({ followerOnly: true }),
+          collectPolicy: undefined,
+          stats: mockPublicationStatsFragment(),
+        });
+
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
+        const read = readPublication(publication);
+
+        expect(read.collectPolicy).toMatchObject({
+          type: CollectPolicyType.FREE,
+          state: CollectState.CAN_BE_COLLECTED,
+          followerOnly: true,
+        });
+      });
+    });
+
+    describe('and an active profile is defined', () => {
+      const activeProfile = mockProfile();
+      beforeAll(() => {
+        activeProfileIdentifierVar(activeProfile);
+      });
+
+      afterAll(() => {
+        activeProfileIdentifierVar(undefined);
+      });
+
+      describe('when reading "hasCollectedByMe" while an active profile is defined', () => {
+        it('should return "true" if a a collect transaction for the same publication is pending', () => {
+          const publication = mockPublicationFragment({
+            profile: mockProfileFragment(),
+            hasCollectedByMe: false,
+          });
+
+          recentTransactionsVar([
+            mockTransactionState({
+              request: mockFreeCollectRequest({
+                profileId: activeProfile.id,
+                publicationId: publication.id,
+              }),
+            }),
+          ]);
+
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+          const read = readPublication(publication);
+
+          expect(read.hasCollectedByMe).toBe(true);
+        });
+      });
+
+      describe('when reading "isMirroredByMe" while an active profile is defined', () => {
+        it('should return "true" if a mirror transaction for the same publication is pending', () => {
+          const publication = mockPublicationFragment({
+            profile: mockProfileFragment(),
+            mirrors: [],
+            isMirroredByMe: false,
+          });
+
+          recentTransactionsVar([
+            mockTransactionState({
+              request: mockCreateMirrorRequest({
+                profileId: activeProfile.id,
+                publicationId: publication.id,
+              }),
+            }),
+          ]);
+
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+          const read = readPublication(publication);
+
+          expect(read.isMirroredByMe).toBe(true);
+        });
+      });
+
+      describe('when reading its "stats" while an active profile is defined', () => {
+        it('should return "totalAmountOfMirrors" incremented by number of pending mirror transactions', () => {
+          const publication = mockPublicationFragment({
+            profile: mockProfileFragment(),
+            mirrors: [mockPublicationId()],
+            stats: mockPublicationStatsFragment({
+              totalAmountOfMirrors: 1,
+            }),
+          });
+
+          recentTransactionsVar([
+            mockTransactionState({
+              request: mockCreateMirrorRequest({
+                profileId: activeProfile.id,
+                publicationId: publication.id,
+              }),
+            }),
+          ]);
+
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+          const read = readPublication(publication);
+
+          expect(read.stats.totalAmountOfMirrors).toEqual(2);
+        });
+
+        it('should return "totalAmountOfCollects" incremented by number of pending collect transactions', () => {
+          const publication = mockPublicationFragment({
+            profile: mockProfileFragment(),
+            stats: mockPublicationStatsFragment({
+              totalAmountOfCollects: 1,
+            }),
+          });
+
+          recentTransactionsVar([
+            mockTransactionState({
+              request: mockFreeCollectRequest({
+                profileId: activeProfile.id,
+                publicationId: publication.id,
+              }),
+            }),
+          ]);
+
+          const { writePublication, readPublication } = setupApolloCache();
+          writePublication(publication);
+          const read = readPublication(publication);
+
+          expect(read.stats.totalAmountOfCollects).toEqual(2);
+        });
+      });
+    });
+
+    describe('when reading "decryptionCriteria"', () => {
+      it('should return "null" if not token-gated', () => {
+        const publication = mockPublicationFragment({
+          isGated: false,
+        });
         const { writePublication, readPublication } = setupApolloCache();
         writePublication(publication);
 
@@ -121,9 +349,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
 
         expect(read.decryptionCriteria).toBe(null);
       });
-    });
 
-    describe(`for a token-gated "${typename}"`, () => {
       const author = mockProfileFragment();
 
       const nftCondition = mockNftOwnershipAccessCondition();
@@ -137,9 +363,9 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
         thisPublication: true,
       });
 
-      describe.each([
+      it.each([
         {
-          description: 'with a NFT Ownership access condition',
+          description: 'NFT Ownership access condition',
           criterion: nftCondition,
           expectations: {
             type: DecryptionCriteriaType.NFT_OWNERSHIP,
@@ -150,7 +376,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           },
         },
         {
-          description: 'with an ERC20 Ownership access condition',
+          description: 'ERC20 Ownership access condition',
           criterion: erc20Condition,
           expectations: {
             type: DecryptionCriteriaType.ERC20_OWNERSHIP,
@@ -159,7 +385,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           },
         },
         {
-          description: 'with an Address Ownership access condition',
+          description: 'Address Ownership access condition',
           criterion: eoaCondition,
           expectations: {
             type: DecryptionCriteriaType.ADDRESS_OWNERSHIP,
@@ -167,7 +393,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           },
         },
         {
-          description: 'with a Profile Ownership access condition',
+          description: 'Profile Ownership access condition',
           criterion: profileCondition,
           expectations: {
             type: DecryptionCriteriaType.PROFILE_OWNERSHIP,
@@ -175,7 +401,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           },
         },
         {
-          description: 'with a Follow access condition',
+          description: 'Follow access condition',
           criterion: followCondition,
           expectations: {
             type: DecryptionCriteriaType.FOLLOW_PROFILE,
@@ -183,7 +409,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           },
         },
         {
-          description: 'with a Collect access condition',
+          description: 'Collect access condition',
           criterion: collectCondition,
           expectations: {
             type: DecryptionCriteriaType.COLLECT_PUBLICATION,
@@ -191,14 +417,14 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           },
         },
         {
-          description: 'with a Collect access condition',
+          description: 'Collect access condition',
           criterion: collectThisCondition,
           expectations: {
             type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
           },
         },
         {
-          description: 'with some criteria in AND condition',
+          description: '2+ criteria in AND condition',
           criterion: mockAndAccessCondition([followCondition, collectCondition]),
           expectations: {
             type: DecryptionCriteriaType.AND,
@@ -215,7 +441,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           },
         },
         {
-          description: 'with some criteria in OR condition',
+          description: '2+ criteria in OR condition',
           criterion: mockOrAccessCondition([followCondition, collectCondition]),
           expectations: {
             type: DecryptionCriteriaType.OR,
@@ -231,7 +457,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
             ],
           },
         },
-      ])('$description', ({ criterion, expectations }) => {
+      ])('should return "DecryptionCriteria" for $description', ({ criterion, expectations }) => {
         const metadata = mockMetadataOutputFragment({
           encryptionParams: mockEncryptionParamsOutputFragment({
             ownerId: author.id,
@@ -244,20 +470,18 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           profile: author,
         });
 
-        it('should return the expected "DecryptionCriteria"', () => {
-          const { writePublication, readPublication } = setupApolloCache();
-          writePublication(publication);
+        const { writePublication, readPublication } = setupApolloCache();
+        writePublication(publication);
 
-          const read = readPublication(publication);
+        const read = readPublication(publication);
 
-          expect(read.decryptionCriteria).toEqual(expectations);
-        });
+        expect(read.decryptionCriteria).toEqual(expectations);
       });
     });
   });
 
-  describe('and a Profile', () => {
-    describe('when retrieving its attributes', () => {
+  describe('and a cached Profile', () => {
+    describe('when reading its "attributes"', () => {
       const date = new Date();
       const profile = mockProfileFragment({
         __attributes: [
@@ -305,11 +529,11 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
         expect(read.attributes.validDate?.toString()).toEqual(date.toISOString());
       });
 
-      it('should return null if attempting to access date attributes as Number', () => {
+      it('should return "null" if attempting to access date attributes as Number', () => {
         expect(read.attributes.validDate?.toNumber()).toEqual(null);
       });
 
-      it('should return null if parsing a date attribute fails', () => {
+      it('should return "null" if parsing a date attribute fails', () => {
         expect(read.attributes.invalidDate?.toDate()).toBe(null);
       });
 
@@ -321,7 +545,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
         expect(read.attributes.validNumber?.toString()).toEqual('42');
       });
 
-      it('should return null if parsing a number attribute fails', () => {
+      it('should return "null" if parsing a number attribute fails', () => {
         expect(read.attributes.invalidNumber?.toNumber()).toBe(null);
       });
 
@@ -329,7 +553,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
         expect(read.attributes.validBoolean?.toBoolean()).toBe(true);
       });
 
-      it('should return null if parsing a boolean attribute fails', () => {
+      it('should return "null" if parsing a boolean attribute fails', () => {
         expect(read.attributes.invalidBoolean?.toBoolean()).toBe(null);
       });
 
@@ -338,7 +562,34 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
       });
     });
 
-    describe('and there is an active wallet', () => {
+    describe(`when reading the same Profile via the "profile" query`, () => {
+      const profile = mockProfileFragment();
+      const { client, writeProfileFragment } = setupApolloCache();
+
+      beforeAll(() => {
+        writeProfileFragment(profile);
+      });
+
+      it('should perform a cache redirect and avoid a extra network request', async () => {
+        const { data } = await client.query<GetProfileData, GetProfileVariables>({
+          query: GetProfileDocument,
+          variables: { request: { profileId: profile.id } },
+        });
+
+        expect(data.result).toMatchObject(profile);
+      });
+
+      it('should attempt a cache redirect even if queried by its handle', async () => {
+        const { data } = await client.query<GetProfileData, GetProfileVariables>({
+          query: GetProfileDocument,
+          variables: { request: { handle: profile.handle } },
+        });
+
+        expect(data.result).toMatchObject(profile);
+      });
+    });
+
+    describe('and an active wallet is defined', () => {
       const wallet = mockWalletData();
       const { writeProfileFragment, readProfileFragment } = setupApolloCache({ wallet });
 
@@ -431,226 +682,6 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
               canUnfollow: false,
             });
           });
-        });
-      });
-    });
-  });
-
-  describe('and a Publication', () => {
-    describe('when retrieving its collectPolicy', () => {
-      it('should return expected data for free collect', () => {
-        const publication = mockPostFragment({
-          profile: mockProfileFragment(),
-          collectModule: mockFreeCollectModuleSettings(),
-          collectPolicy: undefined,
-          stats: mockPublicationStatsFragment(),
-        });
-
-        const { writePublication, readPublication } = setupApolloCache();
-        writePublication(publication);
-        const read = readPublication(publication);
-
-        expect(read.collectPolicy).toMatchObject({
-          type: CollectPolicyType.FREE,
-          state: CollectState.CAN_BE_COLLECTED,
-          followerOnly: false,
-        });
-      });
-
-      it('should return expected data for not follower profile, free collect with followerOnly flag', () => {
-        const publication = mockPostFragment({
-          profile: mockProfileFragment({
-            isFollowedByMe: false,
-          }),
-          collectModule: mockFreeCollectModuleSettings({ followerOnly: true }),
-          collectPolicy: undefined,
-          stats: mockPublicationStatsFragment(),
-        });
-
-        const { writePublication, readPublication } = setupApolloCache();
-        writePublication(publication);
-        const read = readPublication(publication);
-
-        expect(read.collectPolicy).toMatchObject({
-          type: CollectPolicyType.FREE,
-          state: CollectState.NOT_A_FOLLOWER,
-          followerOnly: true,
-        });
-      });
-
-      it('should return expected data for a follower profile, free collect with followerOnly flag', () => {
-        const publication = mockPostFragment({
-          profile: mockProfileFragment({
-            isFollowedByMe: true,
-          }),
-          collectModule: mockFreeCollectModuleSettings({ followerOnly: true }),
-          collectPolicy: undefined,
-          stats: mockPublicationStatsFragment(),
-        });
-
-        const { writePublication, readPublication } = setupApolloCache();
-        writePublication(publication);
-        const read = readPublication(publication);
-
-        expect(read.collectPolicy).toMatchObject({
-          type: CollectPolicyType.FREE,
-          state: CollectState.CAN_BE_COLLECTED,
-          followerOnly: true,
-        });
-      });
-    });
-
-    describe('when retrieving hasCollectedByMe', () => {
-      describe('and active profile is available', () => {
-        const activeProfile = mockProfile();
-        beforeAll(() => {
-          activeProfileIdentifierVar(activeProfile);
-        });
-
-        afterAll(() => {
-          activeProfileIdentifierVar(undefined);
-        });
-
-        it('should return true if collect transaction is pending', () => {
-          const publication = mockPostFragment({
-            profile: mockProfileFragment(),
-            hasCollectedByMe: false,
-          });
-
-          recentTransactionsVar([
-            mockTransactionState({
-              request: mockFreeCollectRequest({
-                profileId: activeProfile.id,
-                publicationId: publication.id,
-              }),
-            }),
-          ]);
-
-          const { writePublication, readPublication } = setupApolloCache();
-          writePublication(publication);
-          const read = readPublication(publication);
-
-          expect(read.hasCollectedByMe).toBe(true);
-        });
-      });
-    });
-
-    describe('when retrieving isMirroredByMe', () => {
-      describe('and active profile is available', () => {
-        const activeProfile = mockProfile();
-        beforeAll(() => {
-          activeProfileIdentifierVar(activeProfile);
-        });
-
-        afterAll(() => {
-          activeProfileIdentifierVar(undefined);
-        });
-
-        it('should return true if mirror transaction is pending', () => {
-          const publication = mockPostFragment({
-            profile: mockProfileFragment(),
-            mirrors: [],
-            isMirroredByMe: false,
-          });
-
-          recentTransactionsVar([
-            mockTransactionState({
-              request: mockCreateMirrorRequest({
-                profileId: activeProfile.id,
-                publicationId: publication.id,
-              }),
-            }),
-          ]);
-
-          const { writePublication, readPublication } = setupApolloCache();
-          writePublication(publication);
-          const read = readPublication(publication);
-
-          expect(read.isMirroredByMe).toBe(true);
-        });
-      });
-    });
-
-    describe('when retrieving contentInsights', () => {
-      it('should detect Snapshot URLs in the content and return the SnapshotPoll', () => {
-        const publication = mockPostFragment({
-          profile: mockProfileFragment(),
-          metadata: mockMetadataOutputFragment({
-            content: `Hey what do you think of: ${mockSnapshotPollUrl()}`,
-          }),
-        });
-
-        const { writePublication, readPublication } = setupApolloCache();
-        writePublication(publication);
-        const read = readPublication(publication);
-
-        expect(read.contentInsight).toMatchObject({
-          type: ContentInsightType.SNAPSHOT_POLL,
-          proposalId: expect.any(String),
-          spaceId: expect.any(String),
-          url: expect.any(String),
-        });
-      });
-    });
-
-    describe('when retrieving stats', () => {
-      describe('and active profile is available', () => {
-        const activeProfile = mockProfile();
-        beforeAll(() => {
-          activeProfileIdentifierVar(activeProfile);
-        });
-
-        afterAll(() => {
-          activeProfileIdentifierVar(undefined);
-        });
-
-        it('should return totalAmountOfMirrors incremented by number of pending mirror transactions', () => {
-          const publication = mockPostFragment({
-            profile: mockProfileFragment(),
-            mirrors: [mockPublicationId()],
-            stats: mockPublicationStatsFragment({
-              totalAmountOfMirrors: 1,
-            }),
-          });
-
-          recentTransactionsVar([
-            mockTransactionState({
-              request: mockCreateMirrorRequest({
-                profileId: activeProfile.id,
-                publicationId: publication.id,
-              }),
-            }),
-          ]);
-
-          const { writePublication, readPublication } = setupApolloCache();
-          writePublication(publication);
-          const read = readPublication(publication);
-
-          expect(read.stats.totalAmountOfMirrors).toEqual(2);
-        });
-
-        it('should return totalAmountOfCollects incremented by number of pending collect transactions', () => {
-          const publication = mockPostFragment({
-            profile: mockProfileFragment(),
-            stats: mockPublicationStatsFragment({
-              totalAmountOfCollects: 1,
-            }),
-          });
-
-          recentTransactionsVar([
-            mockTransactionState({
-              request: mockFreeCollectRequest({
-                profileId: activeProfile.id,
-                publicationId: publication.id,
-              }),
-            }),
-          ]);
-
-          const { writePublication, readPublication } = setupApolloCache();
-          writePublication(publication);
-          const read = readPublication(publication);
-
-          expect(read.stats.totalAmountOfCollects).toEqual(2);
         });
       });
     });

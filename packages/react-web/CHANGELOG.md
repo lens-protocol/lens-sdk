@@ -1,5 +1,59 @@
 # @lens-protocol/react-web
 
+## 1.2.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [55211083]
+- Updated dependencies [148e9636]
+  - @lens-protocol/react@1.2.0-next.1
+  - @lens-protocol/gated-content@0.3.0-next.1
+  - @lens-protocol/api-bindings@0.8.1-next.0
+
+## 1.2.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+
+### Patch Changes
+
+- Updated dependencies [cb5b900d]
+- Updated dependencies [af4b1133]
+  - @lens-protocol/gated-content@0.3.0-next.0
+  - @lens-protocol/react@1.2.0-next.0
+
+## 1.1.0
+
+### Minor Changes
+
+- cf4a420: **Added** support for cover and `altTag` in publication media attributes
+
+### Patch Changes
+
+- 72becec: **Fixed** documentation for `useuseActiveProfileSwitch` and `useProfilesOwnedByMe` hooks
+- b738abb: **Fixed** `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+- Updated dependencies [1d5cf31]
+- Updated dependencies [03a8ad5]
+- Updated dependencies [37bf8e8]
+- Updated dependencies [72becec]
+- Updated dependencies [ca9b8cb]
+- Updated dependencies [513373d]
+- Updated dependencies [98c6547]
+- Updated dependencies [04647bb]
+- Updated dependencies [c416a2e]
+- Updated dependencies [cf4a420]
+- Updated dependencies [ef1d7e2]
+- Updated dependencies [b738abb]
+- Updated dependencies [5c5bfb2]
+- Updated dependencies [71196cf]
+- Updated dependencies [c4e6fcf]
+  - @lens-protocol/react@1.1.0
+  - @lens-protocol/api-bindings@0.8.0
+  - @lens-protocol/shared-kernel@0.8.0
+  - @lens-protocol/gated-content@0.2.2
+  - @lens-protocol/storage@0.7.2
+
 ## 1.1.0-next.5
 
 ### Patch Changes

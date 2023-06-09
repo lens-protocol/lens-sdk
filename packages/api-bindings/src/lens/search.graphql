@@ -20,7 +20,7 @@ query SearchPublications(
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
@@ -40,7 +40,7 @@ query SearchProfiles(
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }

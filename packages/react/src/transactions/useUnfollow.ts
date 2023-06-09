@@ -57,7 +57,7 @@ export function useUnfollow({ followee, follower }: UseUnfollowArgs): UnfollowOp
       if (hasPendingFollowTx) {
         return failure(
           new PrematureUnfollowError(
-            `A previous follow request for ${followee.handle} is still pending.`,
+            `A previous follow request for ${followee.handle} is still pending. Make sure you check 'followee.followStatus.canUnfollow' beforehand.`,
           ),
         );
       }

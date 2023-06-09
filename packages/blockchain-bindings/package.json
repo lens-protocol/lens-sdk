@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/blockchain-bindings",
-  "version": "0.8.0-next.3",
+  "version": "0.8.1-next.0",
   "description": "Utilities for interacting with the blockchain.",
   "repository": {
     "directory": "packages/blockchain-bindings",

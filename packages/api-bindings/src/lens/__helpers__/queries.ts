@@ -1,7 +1,9 @@
 import { MockedResponse } from '@apollo/client/testing';
+import { faker } from '@faker-js/faker';
 import { AppId } from '@lens-protocol/domain/entities';
 import { Erc20 } from '@lens-protocol/shared-kernel';
 
+import { Cursor } from '../Cursor';
 import {
   Comment,
   EnabledModuleCurrenciesData,
@@ -81,10 +83,19 @@ import {
 import { SearchProfilesResult, SearchPublicationsResult } from '../index';
 import { Sources } from '../sources';
 import { AnyPublication, ContentPublication } from '../utils/publication';
-import { mockEnabledModulesFragment, mockPostFragment, mockProfileFragment } from './fragments';
+import {
+  mockEnabledModulesFragment,
+  mockPaginatedResultInfo,
+  mockPostFragment,
+  mockProfileFragment,
+} from './fragments';
 
 export function mockSources(): Sources {
   return ['foobar' as AppId];
+}
+
+export function mockCursor(): Cursor {
+  return faker.random.alphaNumeric(10) as Cursor;
 }
 
 export function createProfilesToFollowMockedResponse({
@@ -131,12 +142,7 @@ function mockGetAllProfilesData(profiles: Profile[]): GetAllProfilesData {
   return {
     result: {
       items: profiles,
-      pageInfo: {
-        __typename: 'PaginatedResultInfo',
-        totalCount: null,
-        next: null,
-        prev: null,
-      },
+      pageInfo: mockPaginatedResultInfo(),
     },
   };
 }
@@ -269,12 +275,7 @@ export function createWhoCollectedPublicationMockedResponse(args: {
       data: {
         result: {
           items: args.wallets,
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.wallets.length,
-          },
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.wallets.length }),
         },
       },
     },
@@ -294,12 +295,7 @@ export function createMutualFollowersMockedResponse(args: {
       data: {
         result: {
           items: args.profiles,
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.profiles.length,
-          },
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.profiles.length }),
         },
       },
     },
@@ -319,12 +315,7 @@ export function createGetPublicationsMockedResponse(args: {
       data: {
         result: {
           items: args.publications,
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.publications.length,
-          },
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.publications.length }),
         },
       },
     },
@@ -344,12 +335,7 @@ export function createFeedMockedResponse(args: {
       data: {
         result: {
           items: args.items,
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.items.length,
-          },
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.items.length }),
         },
       },
     },
@@ -369,12 +355,7 @@ export function createExplorePublicationsMockedResponse(args: {
       data: {
         result: {
           items: args.items,
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.items.length,
-          },
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.items.length }),
         },
       },
     },
@@ -410,13 +391,8 @@ export function createGetProfilePublicationRevenueMockedResponse(args: {
     result: {
       data: {
         result: {
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.items.length,
-          },
           items: args.items,
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.items.length }),
         },
       },
     },
@@ -435,13 +411,8 @@ export function createProfilePublicationsForSaleMockedResponse(args: {
     result: {
       data: {
         result: {
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.items.length,
-          },
           items: args.items,
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.items.length }),
         },
       },
     },
@@ -461,12 +432,7 @@ export function createWhoReactedPublicationMockedResponse(args: {
       data: {
         result: {
           items: args.items,
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.items.length,
-          },
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.items.length }),
         },
       },
     },
@@ -507,12 +473,7 @@ export function createSearchProfilesMockedResponse(args: {
         result: {
           __typename: 'ProfileSearchResult',
           items: args.items,
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.items.length,
-          },
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.items.length }),
         },
       },
     },
@@ -532,12 +493,7 @@ export function createExploreProfilesMockedResponse(args: {
       data: {
         result: {
           items: args.items,
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.items.length,
-          },
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.items.length }),
         },
       },
     },
@@ -558,12 +514,7 @@ export function createSearchPublicationsMockedResponse(args: {
         result: {
           __typename: 'PublicationSearchResult',
           items: args.items,
-          pageInfo: {
-            __typename: 'PaginatedResultInfo',
-            prev: null,
-            next: null,
-            totalCount: args.items.length,
-          },
+          pageInfo: mockPaginatedResultInfo({ totalCount: args.items.length }),
         },
       },
     },

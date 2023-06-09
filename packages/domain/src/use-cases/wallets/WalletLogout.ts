@@ -35,7 +35,7 @@ export class WalletLogout {
     await this.activeProfileGateway.reset();
 
     this.activeWalletPresenter.presentActiveWallet(null);
-    await this.activeProfilePresenter.presentActiveProfile(null);
+    this.activeProfilePresenter.presentActiveProfile(null);
 
     await this.credentialsGateway.invalidate();
 

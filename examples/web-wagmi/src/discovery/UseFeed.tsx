@@ -23,7 +23,7 @@ function UseFeedInner({ profile }: UseFeedInnerProps) {
   const [restrictEventTypesTo, setRestrictEventTypesTo] = useState<FeedEventItemType[]>([
     FeedEventItemType.Post,
   ]);
-  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
+  const { data, error, loading, hasMore, observeRef, prev } = useInfiniteScroll(
     useFeed({
       profileId: profile.id,
       ...(restrictEventTypesTo.length > 0 && { restrictEventTypesTo }),
@@ -59,6 +59,10 @@ function UseFeedInner({ profile }: UseFeedInnerProps) {
       {loading && <Loading />}
 
       {error && <ErrorMessage error={error} />}
+
+      <button disabled={loading} onClick={prev}>
+        Fetch newer
+      </button>
 
       {data?.map((item, i) => (
         <PublicationCard key={`${item.root.id}-${i}`} publication={item.root} />

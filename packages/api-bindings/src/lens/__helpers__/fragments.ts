@@ -37,6 +37,7 @@ import {
   Mirror,
   ModuleInfo,
   NftOwnershipOutput,
+  PaginatedResultInfo,
   Post,
   Profile,
   ProfileFollowRevenue,
@@ -709,4 +710,18 @@ export function mockEncryptionParamsOutputFragment({
       encryptionKey,
     },
   };
+}
+
+export function mockPaginatedResultInfo(
+  overrides: Partial<PaginatedResultInfo> = {},
+): PaginatedResultInfo {
+  return {
+    __typename: 'PaginatedResultInfo',
+    // moreAfter: false,
+    // moreBefore: false,
+    prev: null,
+    next: null,
+    totalCount: null,
+    ...overrides,
+  } as PaginatedResultInfo;
 }

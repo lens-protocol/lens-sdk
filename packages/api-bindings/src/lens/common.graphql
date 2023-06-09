@@ -392,8 +392,10 @@ fragment CommentBase on Comment {
   contentInsight @client
 }
 
-fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+fragment PaginatedResultInfo on PaginatedResultInfo {
   __typename
+  beforeCount @client
+  moreAfter @client
   prev
   next
   totalCount
@@ -529,6 +531,20 @@ fragment Post on Post {
   referencePolicy @client
   decryptionCriteria @client
   contentInsight @client
+}
+
+fragment Publication on Publication {
+  ... on Comment {
+    ...Comment
+  }
+
+  ... on Post {
+    ...Post
+  }
+
+  ... on Mirror {
+    ...Mirror
+  }
 }
 
 fragment PendingPost on PendingPost {

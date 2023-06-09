@@ -23,6 +23,7 @@ import gql from 'graphql-tag';
 import type { CollectPolicy } from './CollectPolicy';
 import type { ContentEncryptionKey } from './ContentEncryptionKey';
 import type { ContentInsight } from './ContentInsight';
+import type { Cursor } from './Cursor';
 import type { FollowPolicy } from './FollowPolicy';
 import type { FollowStatus } from './FollowStatus';
 import type { ProfileAttributes } from './ProfileAttributes';
@@ -59,7 +60,7 @@ export type Scalars = {
   /** create handle custom scalar type */
   CreateHandle: unknown;
   /** Cursor custom scalar type */
-  Cursor: string;
+  Cursor: Cursor;
   /** The da id */
   DataAvailabilityId: string;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
@@ -2077,10 +2078,12 @@ export type CommentBase = {
   canObserverDecrypt: { result: boolean; reasons: Array<DecryptFailReason> | null };
 };
 
-export type CommonPaginatedResultInfo = {
+export type PaginatedResultInfo = {
   __typename: 'PaginatedResultInfo';
-  prev: string | null;
-  next: string | null;
+  beforeCount: number;
+  moreAfter: boolean;
+  prev: Cursor | null;
+  next: Cursor | null;
   totalCount: number | null;
 };
 
@@ -2133,6 +2136,14 @@ export type Post = {
   canMirror: { result: boolean };
   canObserverDecrypt: { result: boolean; reasons: Array<DecryptFailReason> | null };
 };
+
+type Publication_Comment_ = Comment;
+
+type Publication_Mirror_ = Mirror;
+
+type Publication_Post_ = Post;
+
+export type Publication = Publication_Comment_ | Publication_Mirror_ | Publication_Post_;
 
 export type PendingPost = {
   __typename: 'PendingPost';
@@ -2194,7 +2205,7 @@ export type FeedVariables = Exact<{
   metadata?: InputMaybe<PublicationMetadataFilters>;
 }>;
 
-export type FeedData = { result: { items: Array<FeedItem>; pageInfo: CommonPaginatedResultInfo } };
+export type FeedData = { result: { items: Array<FeedItem>; pageInfo: PaginatedResultInfo } };
 
 export type ExploreProfilesVariables = Exact<{
   sortCriteria: ProfileSortCriteria;
@@ -2205,7 +2216,7 @@ export type ExploreProfilesVariables = Exact<{
 }>;
 
 export type ExploreProfilesData = {
-  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
 };
 
 export type CreateFollowTypedDataVariables = Exact<{
@@ -2457,7 +2468,7 @@ export type NotificationsData = {
       | NewMirrorNotification
       | NewReactionNotification
     >;
-    pageInfo: CommonPaginatedResultInfo;
+    pageInfo: PaginatedResultInfo;
   };
 };
 
@@ -2652,7 +2663,7 @@ export type GetAllProfilesVariables = Exact<{
 }>;
 
 export type GetAllProfilesData = {
-  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
 };
 
 export type CreateProfileVariables = Exact<{
@@ -2672,7 +2683,7 @@ export type MutualFollowersProfilesVariables = Exact<{
 }>;
 
 export type MutualFollowersProfilesData = {
-  result: { items: Array<Profile>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
 };
 
 export type CreateSetFollowModuleTypedDataVariables = Exact<{
@@ -2761,7 +2772,7 @@ export type ProfileFollowersVariables = Exact<{
 }>;
 
 export type ProfileFollowersData = {
-  result: { items: Array<Follower>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Follower>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProfileFollowingVariables = Exact<{
@@ -2773,7 +2784,7 @@ export type ProfileFollowingVariables = Exact<{
 }>;
 
 export type ProfileFollowingData = {
-  result: { items: Array<Following>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Following>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProxyActionStatusResult = {
@@ -2832,7 +2843,7 @@ export type GetPublicationsVariables = Exact<{
 }>;
 
 export type GetPublicationsData = {
-  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Comment | Mirror | Post>; pageInfo: PaginatedResultInfo };
 };
 
 export type ExplorePublicationsVariables = Exact<{
@@ -2848,7 +2859,7 @@ export type ExplorePublicationsVariables = Exact<{
 }>;
 
 export type ExplorePublicationsData = {
-  result: { items: Array<Comment | Mirror | Post>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Comment | Mirror | Post>; pageInfo: PaginatedResultInfo };
 };
 
 export type WhoCollectedPublicationVariables = Exact<{
@@ -2860,7 +2871,7 @@ export type WhoCollectedPublicationVariables = Exact<{
 }>;
 
 export type WhoCollectedPublicationData = {
-  result: { items: Array<Wallet>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Wallet>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProfilePublicationsForSaleVariables = Exact<{
@@ -2872,7 +2883,7 @@ export type ProfilePublicationsForSaleVariables = Exact<{
 }>;
 
 export type ProfilePublicationsForSaleData = {
-  result: { items: Array<Comment | Post>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<Comment | Post>; pageInfo: PaginatedResultInfo };
 };
 
 export type AddReactionVariables = Exact<{
@@ -2908,7 +2919,7 @@ export type WhoReactedPublicationVariables = Exact<{
 }>;
 
 export type WhoReactedPublicationData = {
-  result: { items: Array<WhoReactedResult>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<WhoReactedResult>; pageInfo: PaginatedResultInfo };
 };
 
 export type ReportPublicationVariables = Exact<{
@@ -2949,7 +2960,7 @@ export type GetProfilePublicationRevenueVariables = Exact<{
 }>;
 
 export type GetProfilePublicationRevenueData = {
-  result: { items: Array<PublicationRevenue>; pageInfo: CommonPaginatedResultInfo };
+  result: { items: Array<PublicationRevenue>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProfileFollowRevenue = {
@@ -2976,7 +2987,7 @@ export type SearchPublicationsData = {
     | {
         __typename: 'PublicationSearchResult';
         items: Array<Comment | Post>;
-        pageInfo: CommonPaginatedResultInfo;
+        pageInfo: PaginatedResultInfo;
       }
     | {};
 };
@@ -2991,11 +3002,7 @@ export type SearchProfilesVariables = Exact<{
 
 export type SearchProfilesData = {
   result:
-    | {
-        __typename: 'ProfileSearchResult';
-        items: Array<Profile>;
-        pageInfo: CommonPaginatedResultInfo;
-      }
+    | { __typename: 'ProfileSearchResult'; items: Array<Profile>; pageInfo: PaginatedResultInfo }
     | {};
 };
 
@@ -3110,210 +3117,15 @@ export const FragmentCreateCommentEip712TypedData = /*#__PURE__*/ gql`
   }
   ${FragmentEip712TypedDataDomain}
 `;
-export const FragmentCommonPaginatedResultInfo = /*#__PURE__*/ gql`
-  fragment CommonPaginatedResultInfo on PaginatedResultInfo {
+export const FragmentPaginatedResultInfo = /*#__PURE__*/ gql`
+  fragment PaginatedResultInfo on PaginatedResultInfo {
     __typename
+    beforeCount @client
+    moreAfter @client
     prev
     next
     totalCount
   }
-`;
-export const FragmentMedia = /*#__PURE__*/ gql`
-  fragment Media on Media {
-    __typename
-    altTag
-    cover
-    mimeType
-    url
-  }
-`;
-export const FragmentNftImage = /*#__PURE__*/ gql`
-  fragment NftImage on NftImage {
-    __typename
-    contractAddress
-    tokenId
-    uri
-    verified
-  }
-`;
-export const FragmentMediaSet = /*#__PURE__*/ gql`
-  fragment MediaSet on MediaSet {
-    __typename
-    original {
-      ...Media
-    }
-  }
-  ${FragmentMedia}
-`;
-export const FragmentProfileStats = /*#__PURE__*/ gql`
-  fragment ProfileStats on ProfileStats {
-    __typename
-    totalCollects
-    totalComments
-    totalFollowers
-    totalFollowing
-    totalMirrors
-    totalPosts
-    totalPublications
-    commentsCount: commentsTotal(forSources: $sources)
-    postsCount: postsTotal(forSources: $sources)
-    mirrorsCount: mirrorsTotal(forSources: $sources)
-  }
-`;
-export const FragmentErc20Fields = /*#__PURE__*/ gql`
-  fragment Erc20Fields on Erc20 {
-    __typename
-    name
-    symbol
-    decimals
-    address
-  }
-`;
-export const FragmentModuleFeeAmount = /*#__PURE__*/ gql`
-  fragment ModuleFeeAmount on ModuleFeeAmount {
-    __typename
-    asset {
-      ...Erc20Fields
-    }
-    value
-  }
-  ${FragmentErc20Fields}
-`;
-export const FragmentFeeFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
-    __typename
-    amount {
-      ...ModuleFeeAmount
-    }
-    contractAddress
-    recipient
-  }
-  ${FragmentModuleFeeAmount}
-`;
-export const FragmentProfileFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
-    __typename
-    contractAddress
-  }
-`;
-export const FragmentRevertFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
-    __typename
-    contractAddress
-  }
-`;
-export const FragmentUnknownFollowModuleSettings = /*#__PURE__*/ gql`
-  fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
-    __typename
-    contractAddress
-  }
-`;
-export const FragmentAttribute = /*#__PURE__*/ gql`
-  fragment Attribute on Attribute {
-    __typename
-    displayType
-    key
-    value
-  }
-`;
-export const FragmentProfile = /*#__PURE__*/ gql`
-  fragment Profile on Profile {
-    __typename
-    id
-    name
-    bio
-    handle
-    ownedBy
-    interests
-    picture {
-      ... on NftImage {
-        ...NftImage
-      }
-      ... on MediaSet {
-        ...MediaSet
-      }
-    }
-    coverPicture {
-      ... on NftImage {
-        ...NftImage
-      }
-      ... on MediaSet {
-        ...MediaSet
-      }
-    }
-    stats {
-      ...ProfileStats
-    }
-    followModule {
-      ... on FeeFollowModuleSettings {
-        ...FeeFollowModuleSettings
-      }
-      ... on ProfileFollowModuleSettings {
-        ...ProfileFollowModuleSettings
-      }
-      ... on RevertFollowModuleSettings {
-        ...RevertFollowModuleSettings
-      }
-      ... on UnknownFollowModuleSettings {
-        ...UnknownFollowModuleSettings
-      }
-    }
-    followPolicy @client
-    __attributes: attributes {
-      ...Attribute
-    }
-    attributes: attributesMap @client
-    dispatcher {
-      address
-      canUseRelay
-    }
-    onChainIdentity {
-      proofOfHumanity
-      ens {
-        name
-      }
-      sybilDotOrg {
-        verified
-        source {
-          twitter {
-            handle
-          }
-        }
-      }
-      worldcoin {
-        isHuman
-      }
-    }
-    isFollowedByMe
-    isFollowingObserver: isFollowing(who: $observerId)
-    followStatus @client
-    ownedByMe @client
-  }
-  ${FragmentNftImage}
-  ${FragmentMediaSet}
-  ${FragmentProfileStats}
-  ${FragmentFeeFollowModuleSettings}
-  ${FragmentProfileFollowModuleSettings}
-  ${FragmentRevertFollowModuleSettings}
-  ${FragmentUnknownFollowModuleSettings}
-  ${FragmentAttribute}
-`;
-export const FragmentPendingPost = /*#__PURE__*/ gql`
-  fragment PendingPost on PendingPost {
-    __typename
-    id
-    content
-    media {
-      ...Media
-    }
-    profile {
-      ...Profile
-    }
-    locale
-    mainContentFocus
-  }
-  ${FragmentMedia}
-  ${FragmentProfile}
 `;
 export const FragmentPublicationStats = /*#__PURE__*/ gql`
   fragment PublicationStats on PublicationStats {
@@ -3325,6 +3137,24 @@ export const FragmentPublicationStats = /*#__PURE__*/ gql`
     totalAmountOfComments
     commentsCount: commentsTotal(forSources: $sources)
   }
+`;
+export const FragmentMedia = /*#__PURE__*/ gql`
+  fragment Media on Media {
+    __typename
+    altTag
+    cover
+    mimeType
+    url
+  }
+`;
+export const FragmentMediaSet = /*#__PURE__*/ gql`
+  fragment MediaSet on MediaSet {
+    __typename
+    original {
+      ...Media
+    }
+  }
+  ${FragmentMedia}
 `;
 export const FragmentMetadataAttributeOutput = /*#__PURE__*/ gql`
   fragment MetadataAttributeOutput on MetadataAttributeOutput {
@@ -3519,6 +3349,168 @@ export const FragmentMetadataOutput = /*#__PURE__*/ gql`
   ${FragmentMetadataAttributeOutput}
   ${FragmentEncryptionParamsOutput}
 `;
+export const FragmentNftImage = /*#__PURE__*/ gql`
+  fragment NftImage on NftImage {
+    __typename
+    contractAddress
+    tokenId
+    uri
+    verified
+  }
+`;
+export const FragmentProfileStats = /*#__PURE__*/ gql`
+  fragment ProfileStats on ProfileStats {
+    __typename
+    totalCollects
+    totalComments
+    totalFollowers
+    totalFollowing
+    totalMirrors
+    totalPosts
+    totalPublications
+    commentsCount: commentsTotal(forSources: $sources)
+    postsCount: postsTotal(forSources: $sources)
+    mirrorsCount: mirrorsTotal(forSources: $sources)
+  }
+`;
+export const FragmentErc20Fields = /*#__PURE__*/ gql`
+  fragment Erc20Fields on Erc20 {
+    __typename
+    name
+    symbol
+    decimals
+    address
+  }
+`;
+export const FragmentModuleFeeAmount = /*#__PURE__*/ gql`
+  fragment ModuleFeeAmount on ModuleFeeAmount {
+    __typename
+    asset {
+      ...Erc20Fields
+    }
+    value
+  }
+  ${FragmentErc20Fields}
+`;
+export const FragmentFeeFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+    __typename
+    amount {
+      ...ModuleFeeAmount
+    }
+    contractAddress
+    recipient
+  }
+  ${FragmentModuleFeeAmount}
+`;
+export const FragmentProfileFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const FragmentRevertFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const FragmentUnknownFollowModuleSettings = /*#__PURE__*/ gql`
+  fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+    __typename
+    contractAddress
+  }
+`;
+export const FragmentAttribute = /*#__PURE__*/ gql`
+  fragment Attribute on Attribute {
+    __typename
+    displayType
+    key
+    value
+  }
+`;
+export const FragmentProfile = /*#__PURE__*/ gql`
+  fragment Profile on Profile {
+    __typename
+    id
+    name
+    bio
+    handle
+    ownedBy
+    interests
+    picture {
+      ... on NftImage {
+        ...NftImage
+      }
+      ... on MediaSet {
+        ...MediaSet
+      }
+    }
+    coverPicture {
+      ... on NftImage {
+        ...NftImage
+      }
+      ... on MediaSet {
+        ...MediaSet
+      }
+    }
+    stats {
+      ...ProfileStats
+    }
+    followModule {
+      ... on FeeFollowModuleSettings {
+        ...FeeFollowModuleSettings
+      }
+      ... on ProfileFollowModuleSettings {
+        ...ProfileFollowModuleSettings
+      }
+      ... on RevertFollowModuleSettings {
+        ...RevertFollowModuleSettings
+      }
+      ... on UnknownFollowModuleSettings {
+        ...UnknownFollowModuleSettings
+      }
+    }
+    followPolicy @client
+    __attributes: attributes {
+      ...Attribute
+    }
+    attributes: attributesMap @client
+    dispatcher {
+      address
+      canUseRelay
+    }
+    onChainIdentity {
+      proofOfHumanity
+      ens {
+        name
+      }
+      sybilDotOrg {
+        verified
+        source {
+          twitter {
+            handle
+          }
+        }
+      }
+      worldcoin {
+        isHuman
+      }
+    }
+    isFollowedByMe
+    isFollowingObserver: isFollowing(who: $observerId)
+    followStatus @client
+    ownedByMe @client
+  }
+  ${FragmentNftImage}
+  ${FragmentMediaSet}
+  ${FragmentProfileStats}
+  ${FragmentFeeFollowModuleSettings}
+  ${FragmentProfileFollowModuleSettings}
+  ${FragmentRevertFollowModuleSettings}
+  ${FragmentUnknownFollowModuleSettings}
+  ${FragmentAttribute}
+`;
 export const FragmentWallet = /*#__PURE__*/ gql`
   fragment Wallet on Wallet {
     __typename
@@ -3693,112 +3685,6 @@ export const FragmentUnknownReferenceModuleSettings = /*#__PURE__*/ gql`
     referenceModuleReturnData
   }
 `;
-export const FragmentPost = /*#__PURE__*/ gql`
-  fragment Post on Post {
-    __typename
-    id
-    stats {
-      ...PublicationStats
-    }
-    metadata {
-      ...MetadataOutput
-    }
-    profile {
-      ...Profile
-    }
-    collectedBy {
-      ...Wallet
-    }
-    collectModule {
-      ... on AaveFeeCollectModuleSettings {
-        ...AaveFeeCollectModuleSettings
-      }
-      ... on ERC4626FeeCollectModuleSettings {
-        ...Erc4626FeeCollectModuleSettings
-      }
-      ... on MultirecipientFeeCollectModuleSettings {
-        ...MultirecipientFeeCollectModuleSettings
-      }
-      ... on UnknownCollectModuleSettings {
-        ...UnknownCollectModuleSettings
-      }
-      ... on FreeCollectModuleSettings {
-        ...FreeCollectModuleSettings
-      }
-      ... on FeeCollectModuleSettings {
-        ...FeeCollectModuleSettings
-      }
-      ... on LimitedFeeCollectModuleSettings {
-        ...LimitedFeeCollectModuleSettings
-      }
-      ... on LimitedTimedFeeCollectModuleSettings {
-        ...LimitedTimedFeeCollectModuleSettings
-      }
-      ... on RevertCollectModuleSettings {
-        ...RevertCollectModuleSettings
-      }
-      ... on TimedFeeCollectModuleSettings {
-        ...TimedFeeCollectModuleSettings
-      }
-      ... on SimpleCollectModuleSettings {
-        ...SimpleCollectModuleSettings
-      }
-    }
-    collectNftAddress
-    referenceModule {
-      ... on FollowOnlyReferenceModuleSettings {
-        ...FollowOnlyReferenceModuleSettings
-      }
-      ... on DegreesOfSeparationReferenceModuleSettings {
-        ...DegreesOfSeparationReferenceModuleSettings
-      }
-      ... on UnknownReferenceModuleSettings {
-        ...UnknownReferenceModuleSettings
-      }
-    }
-    createdAt
-    hidden
-    isGated
-    reaction(request: { profileId: $observerId })
-    hasCollectedByMe
-    canComment(profileId: $observerId) {
-      result
-    }
-    canMirror(profileId: $observerId) {
-      result
-    }
-    mirrors(by: $observerId)
-    canObserverDecrypt: canDecrypt(profileId: $observerId) {
-      result
-      reasons
-    }
-    hasOptimisticCollectedByMe @client
-    isOptimisticMirroredByMe @client
-    isMirroredByMe @client
-    collectPolicy @client
-    referencePolicy @client
-    decryptionCriteria @client
-    contentInsight @client
-  }
-  ${FragmentPublicationStats}
-  ${FragmentMetadataOutput}
-  ${FragmentProfile}
-  ${FragmentWallet}
-  ${FragmentAaveFeeCollectModuleSettings}
-  ${FragmentErc4626FeeCollectModuleSettings}
-  ${FragmentMultirecipientFeeCollectModuleSettings}
-  ${FragmentUnknownCollectModuleSettings}
-  ${FragmentFreeCollectModuleSettings}
-  ${FragmentFeeCollectModuleSettings}
-  ${FragmentLimitedFeeCollectModuleSettings}
-  ${FragmentLimitedTimedFeeCollectModuleSettings}
-  ${FragmentRevertCollectModuleSettings}
-  ${FragmentTimedFeeCollectModuleSettings}
-  ${FragmentSimpleCollectModuleSettings}
-  ${FragmentFollowOnlyReferenceModuleSettings}
-  ${FragmentDegreesOfSeparationReferenceModuleSettings}
-  ${FragmentUnknownReferenceModuleSettings}
-`;
 export const FragmentCommentBase = /*#__PURE__*/ gql`
   fragment CommentBase on Comment {
     __typename
@@ -3905,6 +3791,112 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
   ${FragmentDegreesOfSeparationReferenceModuleSettings}
   ${FragmentUnknownReferenceModuleSettings}
 `;
+export const FragmentPost = /*#__PURE__*/ gql`
+  fragment Post on Post {
+    __typename
+    id
+    stats {
+      ...PublicationStats
+    }
+    metadata {
+      ...MetadataOutput
+    }
+    profile {
+      ...Profile
+    }
+    collectedBy {
+      ...Wallet
+    }
+    collectModule {
+      ... on AaveFeeCollectModuleSettings {
+        ...AaveFeeCollectModuleSettings
+      }
+      ... on ERC4626FeeCollectModuleSettings {
+        ...Erc4626FeeCollectModuleSettings
+      }
+      ... on MultirecipientFeeCollectModuleSettings {
+        ...MultirecipientFeeCollectModuleSettings
+      }
+      ... on UnknownCollectModuleSettings {
+        ...UnknownCollectModuleSettings
+      }
+      ... on FreeCollectModuleSettings {
+        ...FreeCollectModuleSettings
+      }
+      ... on FeeCollectModuleSettings {
+        ...FeeCollectModuleSettings
+      }
+      ... on LimitedFeeCollectModuleSettings {
+        ...LimitedFeeCollectModuleSettings
+      }
+      ... on LimitedTimedFeeCollectModuleSettings {
+        ...LimitedTimedFeeCollectModuleSettings
+      }
+      ... on RevertCollectModuleSettings {
+        ...RevertCollectModuleSettings
+      }
+      ... on TimedFeeCollectModuleSettings {
+        ...TimedFeeCollectModuleSettings
+      }
+      ... on SimpleCollectModuleSettings {
+        ...SimpleCollectModuleSettings
+      }
+    }
+    collectNftAddress
+    referenceModule {
+      ... on FollowOnlyReferenceModuleSettings {
+        ...FollowOnlyReferenceModuleSettings
+      }
+      ... on DegreesOfSeparationReferenceModuleSettings {
+        ...DegreesOfSeparationReferenceModuleSettings
+      }
+      ... on UnknownReferenceModuleSettings {
+        ...UnknownReferenceModuleSettings
+      }
+    }
+    createdAt
+    hidden
+    isGated
+    reaction(request: { profileId: $observerId })
+    hasCollectedByMe
+    canComment(profileId: $observerId) {
+      result
+    }
+    canMirror(profileId: $observerId) {
+      result
+    }
+    mirrors(by: $observerId)
+    canObserverDecrypt: canDecrypt(profileId: $observerId) {
+      result
+      reasons
+    }
+    hasOptimisticCollectedByMe @client
+    isOptimisticMirroredByMe @client
+    isMirroredByMe @client
+    collectPolicy @client
+    referencePolicy @client
+    decryptionCriteria @client
+    contentInsight @client
+  }
+  ${FragmentPublicationStats}
+  ${FragmentMetadataOutput}
+  ${FragmentProfile}
+  ${FragmentWallet}
+  ${FragmentAaveFeeCollectModuleSettings}
+  ${FragmentErc4626FeeCollectModuleSettings}
+  ${FragmentMultirecipientFeeCollectModuleSettings}
+  ${FragmentUnknownCollectModuleSettings}
+  ${FragmentFreeCollectModuleSettings}
+  ${FragmentFeeCollectModuleSettings}
+  ${FragmentLimitedFeeCollectModuleSettings}
+  ${FragmentLimitedTimedFeeCollectModuleSettings}
+  ${FragmentRevertCollectModuleSettings}
+  ${FragmentTimedFeeCollectModuleSettings}
+  ${FragmentSimpleCollectModuleSettings}
+  ${FragmentFollowOnlyReferenceModuleSettings}
+  ${FragmentDegreesOfSeparationReferenceModuleSettings}
+  ${FragmentUnknownReferenceModuleSettings}
+`;
 export const FragmentMirrorBase = /*#__PURE__*/ gql`
   fragment MirrorBase on Mirror {
     __typename
@@ -3947,6 +3939,56 @@ export const FragmentComment = /*#__PURE__*/ gql`
   ${FragmentCommentBase}
   ${FragmentPost}
   ${FragmentMirrorBase}
+`;
+export const FragmentMirror = /*#__PURE__*/ gql`
+  fragment Mirror on Mirror {
+    __typename
+    ...MirrorBase
+    mirrorOf {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+    }
+  }
+  ${FragmentMirrorBase}
+  ${FragmentPost}
+  ${FragmentComment}
+`;
+export const FragmentPublication = /*#__PURE__*/ gql`
+  fragment Publication on Publication {
+    ... on Comment {
+      ...Comment
+    }
+    ... on Post {
+      ...Post
+    }
+    ... on Mirror {
+      ...Mirror
+    }
+  }
+  ${FragmentComment}
+  ${FragmentPost}
+  ${FragmentMirror}
+`;
+export const FragmentPendingPost = /*#__PURE__*/ gql`
+  fragment PendingPost on PendingPost {
+    __typename
+    id
+    content
+    media {
+      ...Media
+    }
+    profile {
+      ...Profile
+    }
+    locale
+    mainContentFocus
+  }
+  ${FragmentMedia}
+  ${FragmentProfile}
 `;
 export const FragmentElectedMirror = /*#__PURE__*/ gql`
   fragment ElectedMirror on ElectedMirror {
@@ -4107,23 +4149,6 @@ export const FragmentNewFollowerNotification = /*#__PURE__*/ gql`
     }
   }
   ${FragmentWallet}
-`;
-export const FragmentMirror = /*#__PURE__*/ gql`
-  fragment Mirror on Mirror {
-    __typename
-    ...MirrorBase
-    mirrorOf {
-      ... on Post {
-        ...Post
-      }
-      ... on Comment {
-        ...Comment
-      }
-    }
-  }
-  ${FragmentMirrorBase}
-  ${FragmentPost}
-  ${FragmentComment}
 `;
 export const FragmentNewCollectNotification = /*#__PURE__*/ gql`
   fragment NewCollectNotification on NewCollectNotification {
@@ -4906,12 +4931,12 @@ export const FeedDocument = /*#__PURE__*/ gql`
         ...FeedItem
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentFeedItem}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -4964,12 +4989,12 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentProfile}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -5379,7 +5404,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
@@ -5389,7 +5414,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
   ${FragmentNewCommentNotification}
   ${FragmentNewMentionNotification}
   ${FragmentNewReactionNotification}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -5900,12 +5925,12 @@ export const GetAllProfilesDocument = /*#__PURE__*/ gql`
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentProfile}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -6020,12 +6045,12 @@ export const MutualFollowersProfilesDocument = /*#__PURE__*/ gql`
         ...Profile
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentProfile}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -6423,12 +6448,12 @@ export const ProfileFollowersDocument = /*#__PURE__*/ gql`
         ...Follower
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentFollower}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -6488,12 +6513,12 @@ export const ProfileFollowingDocument = /*#__PURE__*/ gql`
         ...Following
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentFollowing}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -6778,14 +6803,14 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentPost}
   ${FragmentMirror}
   ${FragmentComment}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -6872,14 +6897,14 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentPost}
   ${FragmentMirror}
   ${FragmentComment}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -6947,12 +6972,12 @@ export const WhoCollectedPublicationDocument = /*#__PURE__*/ gql`
         ...Wallet
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentWallet}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -7027,13 +7052,13 @@ export const ProfilePublicationsForSaleDocument = /*#__PURE__*/ gql`
         }
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentPost}
   ${FragmentComment}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -7197,12 +7222,12 @@ export const WhoReactedPublicationDocument = /*#__PURE__*/ gql`
         ...WhoReactedResult
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentWhoReactedResult}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -7390,12 +7415,12 @@ export const GetProfilePublicationRevenueDocument = /*#__PURE__*/ gql`
         ...PublicationRevenue
       }
       pageInfo {
-        ...CommonPaginatedResultInfo
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentPublicationRevenue}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -7535,14 +7560,14 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
           }
         }
         pageInfo {
-          ...CommonPaginatedResultInfo
+          ...PaginatedResultInfo
         }
       }
     }
   }
   ${FragmentPost}
   ${FragmentComment}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -7606,13 +7631,13 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
           ...Profile
         }
         pageInfo {
-          ...CommonPaginatedResultInfo
+          ...PaginatedResultInfo
         }
       }
     }
   }
   ${FragmentProfile}
-  ${FragmentCommonPaginatedResultInfo}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -9747,12 +9772,16 @@ export type PaginatedPublicationResultFieldPolicy = {
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PaginatedResultInfoKeySpecifier = (
+  | 'beforeCount'
+  | 'moreAfter'
   | 'next'
   | 'prev'
   | 'totalCount'
   | PaginatedResultInfoKeySpecifier
 )[];
 export type PaginatedResultInfoFieldPolicy = {
+  beforeCount?: FieldPolicy<any> | FieldReadFunction<any>;
+  moreAfter?: FieldPolicy<any> | FieldReadFunction<any>;
   next?: FieldPolicy<any> | FieldReadFunction<any>;
   prev?: FieldPolicy<any> | FieldReadFunction<any>;
   totalCount?: FieldPolicy<any> | FieldReadFunction<any>;

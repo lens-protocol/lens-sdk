@@ -2,7 +2,6 @@ import {
   AnyPublication,
   Attribute,
   Comment,
-  CommonPaginatedResultInfo,
   ContentPublication,
   EnabledModule,
   EnabledModules,
@@ -57,9 +56,24 @@ export type EnabledModuleFragment = EnabledModule;
 export type ModuleInfoFragment = ModuleInfo;
 
 /**
- * @deprecated Use {@link CommonPaginatedResultInfo} instead.
+ * @deprecated This is not exposed by any hook so you should not need it.
  */
-export type CommonPaginatedResultInfoFragment = CommonPaginatedResultInfo;
+export type PaginatedResultInfo = {
+  __typename: 'PaginatedResultInfo';
+  prev: string | null;
+  next: string | null;
+  totalCount: number | null;
+};
+
+/**
+ * @deprecated Use {@link PaginatedResultInfo} instead.
+ */
+export type CommonPaginatedResultInfoFragment = PaginatedResultInfo;
+
+/**
+ * @deprecated Use {@link PaginatedResultInfo} instead.
+ */
+export type CommonPaginatedResultInfo = PaginatedResultInfo;
 
 /**
  * @deprecated Use {@link NewCollectNotification} instead.

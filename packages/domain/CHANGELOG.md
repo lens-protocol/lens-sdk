@@ -1,5 +1,29 @@
 # @lens-protocol/domain
 
+## 0.8.1-next.0
+
+### Patch Changes
+
+- 55211083: Synchronize state change between `useActiveWallet` and `useActiveProfile` hooks
+
+## 0.8.0
+
+### Minor Changes
+
+- c416a2e: **Added:** self-fund protocol calls when subsidized approaches fails
+- c416a2e: **Fixed:** ensures correct chain when signing typed data
+- c416a2e: **Fixed:** network switch in wagmi bindings
+- ef1d7e2: **Added** Momoka support to React hooks
+- 5c5bfb2: **Added** support for `SimpleCollectModule`
+
+### Patch Changes
+
+- b738abb: **Fixed** `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment` callback argument
+- 71196cf: **Added** support for more metadata fields in create publication hooks
+- Updated dependencies [c416a2e]
+- Updated dependencies [b738abb]
+  - @lens-protocol/shared-kernel@0.8.0
+
 ## 0.8.0-next.3
 
 ### Minor Changes

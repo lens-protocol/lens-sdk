@@ -1,4 +1,5 @@
 import { ContentInsightMatcher, demoSnapshotPoll, snapshotPoll } from '@lens-protocol/api-bindings';
+import * as GatedEnvironments from '@lens-protocol/gated-content/environments';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
 import { ChainConfigRegistry, goerli, mainnet, mumbai, polygon } from './chains';
@@ -30,12 +31,13 @@ export type ProfileHandleResolver = (handle: string) => string;
  * @internal
  */
 export type EnvironmentConfig = {
-  name: 'production' | 'development';
+  name: 'production' | 'development' | 'sandbox' | string;
   backend: Url;
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
   handleResolver: ProfileHandleResolver;
   snapshot: SnapshotConfig;
+  gated: GatedEnvironments.EnvironmentConfig;
 };
 
 /**
@@ -66,6 +68,7 @@ export const production: EnvironmentConfig = {
     matcher: snapshotPoll,
     sequencer: 'https://seq.snapshot.org',
   },
+  gated: GatedEnvironments.production,
 };
 /**
  * The development environment configuration
@@ -95,6 +98,39 @@ export const development: EnvironmentConfig = {
     matcher: demoSnapshotPoll,
     sequencer: 'https://testnet.seq.snapshot.org',
   },
+  gated: GatedEnvironments.development,
+};
+
+/**
+ * The sandbox environment configuration
+ *
+ * This is the environment to be used when you develop and you need to experiment with custom collect/follow modules.
+ * Although the Lens contract are also deployed on Mumbai this is a separate deployment so expect different test data, profiles, users, etc.
+ *
+ * - Endpoint: https://api-sandbox-mumbai.lens.dev
+ * - Chain IDs: 80001 (Mumbai), 5 (Goerli)
+ * - Profile handle suffix: `.test`
+ * - Environment specific timings
+ */
+export const sandbox: EnvironmentConfig = {
+  name: 'sandbox',
+  backend: 'https://api-sandbox-mumbai.lens.dev',
+  chains: {
+    [ChainType.ETHEREUM]: goerli,
+    [ChainType.POLYGON]: mumbai,
+  },
+  timings: {
+    pollingInterval: 3000,
+    maxIndexingWaitTime: 240000,
+    maxMiningWaitTime: 120000,
+  },
+  handleResolver: (handle) => `${handle}.test`,
+  snapshot: {
+    hub: 'https://testnet.snapshot.org',
+    matcher: demoSnapshotPoll,
+    sequencer: 'https://testnet.seq.snapshot.org',
+  },
+  gated: GatedEnvironments.sandbox,
 };
 
 /**

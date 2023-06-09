@@ -40,7 +40,6 @@ export type {
 export type { WithObserverIdOverride } from './helpers/arguments';
 export type { Operation } from './helpers/operations';
 export type {
-  CommonPaginatedResultInfo,
   PaginatedArgs,
   PaginatedReadResult,
   ReadResult,
@@ -120,7 +119,7 @@ export { UnspecifiedError } from '@lens-protocol/api-bindings';
 /**
  * Helpers
  */
-export { Amount, WellKnownSymbols } from '@lens-protocol/shared-kernel';
+export { Amount, WellKnownSymbols, ether, matic, erc20, usd } from '@lens-protocol/shared-kernel';
 export * from './sources';
 export * from './utils';
 export { isValidHandle } from '@lens-protocol/api-bindings';

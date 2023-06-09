@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { mockNonce, mockProfileId } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { GraphQLError } from 'graphql';
 
 import { createGraphQLValidationError } from '../../apollo/__helpers__/mocks';
 import {
@@ -403,6 +404,21 @@ export function createBroadcastProxyActionCallMockedResponse(instructions: {
     },
     result: {
       data: { result: instructions.result },
+    },
+  };
+}
+
+export function createBroadcastProxyActionCallMockedError(instructions: {
+  errorMessage: string;
+  variables: ProxyActionVariables;
+}): MockedResponse<ProxyActionData> {
+  return {
+    request: {
+      query: ProxyActionDocument,
+      variables: instructions.variables,
+    },
+    result: {
+      errors: [new GraphQLError(instructions.errorMessage)],
     },
   };
 }

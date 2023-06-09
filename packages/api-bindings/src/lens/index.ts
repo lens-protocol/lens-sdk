@@ -1,9 +1,9 @@
-import { QueryHookOptions, useQuery } from '@apollo/client';
+import { QueryHookOptions, StoreValue, useQuery } from '@apollo/client';
 import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
 import {
   Comment,
-  CommonPaginatedResultInfo,
+  PaginatedResultInfo,
   Exact,
   GetPublicationsDocument,
   InputMaybe,
@@ -20,6 +20,7 @@ import { Sources } from './sources';
 export * from './CollectPolicy';
 export * from './ContentEncryptionKey';
 export * from './ContentInsight';
+export * from './Cursor';
 export * from './FollowPolicy';
 export * from './FollowStatus';
 export * from './generated';
@@ -28,6 +29,11 @@ export * from './ProfileAttributes';
 export * from './ReferencePolicy';
 export * from './sources';
 export * from './utils';
+
+export type CursorBasedPaginatedResult<T = StoreValue> = {
+  items: T[];
+  pageInfo: PaginatedResultInfo;
+};
 
 export type GetCommentsVariables = Exact<{
   commentsOf: PublicationId;
@@ -41,7 +47,7 @@ export type GetCommentsVariables = Exact<{
 export type GetCommentsData = {
   result: {
     items: Array<Comment>;
-    pageInfo: CommonPaginatedResultInfo;
+    pageInfo: PaginatedResultInfo;
   };
 };
 
@@ -57,7 +63,7 @@ export type SearchProfilesResult = {
   result: {
     __typename: 'ProfileSearchResult';
     items: Array<Profile>;
-    pageInfo: CommonPaginatedResultInfo;
+    pageInfo: PaginatedResultInfo;
   };
 };
 
@@ -77,7 +83,7 @@ export type SearchPublicationsResult = {
   result: {
     __typename: 'PublicationSearchResult';
     items: Array<Comment | Post>;
-    pageInfo: CommonPaginatedResultInfo;
+    pageInfo: PaginatedResultInfo;
   };
 };
 
