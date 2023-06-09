@@ -1,4 +1,10 @@
-import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
+import {
+  AppId,
+  DecryptionCriteriaType,
+  Erc20ComparisonOperator,
+  NftContractType,
+  TransactionKind,
+} from '@lens-protocol/domain/entities';
 import {
   SupportedFileType,
   CollectPolicyType,
@@ -18,6 +24,102 @@ import {
   ProfileIdSchema,
   PublicationIdSchema,
 } from './common';
+
+const NftOwnershipCriterionSchema = z.object({
+  type: z.literal(DecryptionCriteriaType.NFT_OWNERSHIP),
+  contractAddress: z.string(),
+  chainId: z.number(),
+  contractType: z.nativeEnum(NftContractType),
+  tokenIds: z.array(z.string()).min(1).max(30).optional(),
+});
+
+function erc20OwnershipCriterionSchema<TAmountSchema extends Erc20AmountSchema>(
+  amountSchema: TAmountSchema,
+) {
+  return z.object({
+    type: z.literal(DecryptionCriteriaType.ERC20_OWNERSHIP),
+    amount: amountSchema,
+    condition: z.nativeEnum(Erc20ComparisonOperator),
+  });
+}
+
+const AddressOwnershipCriterionSchema = z.object({
+  type: z.literal(DecryptionCriteriaType.ADDRESS_OWNERSHIP),
+  address: z.string(),
+});
+
+const ProfileOwnershipCriterionSchema = z.object({
+  type: z.literal(DecryptionCriteriaType.PROFILE_OWNERSHIP),
+  profileId: ProfileIdSchema,
+});
+
+const FollowOwnershipCriterionSchema = z.object({
+  type: z.literal(DecryptionCriteriaType.FOLLOW_PROFILE),
+  profileId: ProfileIdSchema,
+});
+
+const CollectPublicationCriterionSchema = z.object({
+  type: z.literal(DecryptionCriteriaType.COLLECT_PUBLICATION),
+  publicationId: PublicationIdSchema,
+});
+
+const CollectThisPublicationCriterionSchema = z.object({
+  type: z.literal(DecryptionCriteriaType.COLLECT_THIS_PUBLICATION),
+});
+
+function simpleCriterionSchema<TAmountSchema extends Erc20AmountSchema>(
+  amountSchema: TAmountSchema,
+) {
+  return z.discriminatedUnion('type', [
+    NftOwnershipCriterionSchema,
+    erc20OwnershipCriterionSchema(amountSchema),
+    AddressOwnershipCriterionSchema,
+    ProfileOwnershipCriterionSchema,
+    FollowOwnershipCriterionSchema,
+    CollectPublicationCriterionSchema,
+    CollectThisPublicationCriterionSchema,
+  ]);
+}
+
+function unique(items: Array<unknown>) {
+  return new Set(items.map((item) => JSON.stringify(item))).size === items.length;
+}
+
+function orCriterionSchema<TAmountSchema extends Erc20AmountSchema>(amountSchema: TAmountSchema) {
+  return z.object({
+    type: z.literal(DecryptionCriteriaType.OR),
+    or: z.array(simpleCriterionSchema(amountSchema)).min(2).max(5).refine(unique, {
+      message: 'Must be an array of unique criteria',
+    }),
+  });
+}
+
+function andCriterionSchema<TAmountSchema extends Erc20AmountSchema>(amountSchema: TAmountSchema) {
+  return z.object({
+    type: z.literal(DecryptionCriteriaType.AND),
+    and: z.array(simpleCriterionSchema(amountSchema)).min(2).max(5).refine(unique, {
+      message: 'Must be an array of unique criteria',
+    }),
+  });
+}
+
+function decryptionCriteriaSchema<TAmountSchema extends Erc20AmountSchema>(
+  amountSchema: TAmountSchema,
+) {
+  return z
+    .discriminatedUnion('type', [
+      orCriterionSchema(amountSchema),
+      andCriterionSchema(amountSchema),
+      NftOwnershipCriterionSchema,
+      erc20OwnershipCriterionSchema(amountSchema),
+      AddressOwnershipCriterionSchema,
+      ProfileOwnershipCriterionSchema,
+      FollowOwnershipCriterionSchema,
+      CollectPublicationCriterionSchema,
+      CollectThisPublicationCriterionSchema,
+    ])
+    .optional();
+}
 
 const NftAttributeSchema = z.discriminatedUnion('displayType', [
   z.object({
@@ -173,13 +275,13 @@ const ReferencePolicyConfigSchema = z.discriminatedUnion('type', [
 const AppIdSchema: z.Schema<AppId, z.ZodTypeDef, string> = z.any().transform(appId);
 
 function createBasePostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
+  amountSchema: TAmountSchema,
 ) {
   return z.object({
     appId: AppIdSchema.optional(),
-    collect: collectPolicyConfigSchema(feeSchema),
+    collect: collectPolicyConfigSchema(amountSchema),
     contentWarning: z.nativeEnum(ContentWarning).optional(),
-    // decryptionCriteria TODO, add to schema
+    decryptionCriteria: decryptionCriteriaSchema(amountSchema),
     delegate: z.boolean(),
     kind: z.literal(TransactionKind.CREATE_POST),
     locale: z.string(),
@@ -191,9 +293,9 @@ function createBasePostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
 }
 
 export function createTextualPostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
+  amountSchema: TAmountSchema,
 ) {
-  return createBasePostRequestSchema(feeSchema).extend({
+  return createBasePostRequestSchema(amountSchema).extend({
     content: z.string(),
     contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
     media: z.array(MediaSchema).optional(),
@@ -201,9 +303,9 @@ export function createTextualPostRequestSchema<TAmountSchema extends Erc20Amount
 }
 
 export function createMediaPostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
+  amountSchema: TAmountSchema,
 ) {
-  return createBasePostRequestSchema(feeSchema).extend({
+  return createBasePostRequestSchema(amountSchema).extend({
     content: z.string().optional(),
     contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
     media: z.array(MediaSchema),
@@ -211,9 +313,9 @@ export function createMediaPostRequestSchema<TAmountSchema extends Erc20AmountSc
 }
 
 export function createEmbedPostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
+  amountSchema: TAmountSchema,
 ) {
-  return createBasePostRequestSchema(feeSchema).extend({
+  return createBasePostRequestSchema(amountSchema).extend({
     animationUrl: z.string(),
     content: z.string().optional(),
     contentFocus: z.enum([ContentFocus.EMBED]),
@@ -222,17 +324,17 @@ export function createEmbedPostRequestSchema<TAmountSchema extends Erc20AmountSc
 }
 
 function createBaseCommentRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
+  amountSchema: TAmountSchema,
 ) {
-  return createBasePostRequestSchema(feeSchema).extend({
+  return createBasePostRequestSchema(amountSchema).extend({
     publicationId: PublicationIdSchema,
   });
 }
 
 export function createTextualCommentRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
+  amountSchema: TAmountSchema,
 ) {
-  return createBaseCommentRequestSchema(feeSchema).extend({
+  return createBaseCommentRequestSchema(amountSchema).extend({
     content: z.string(),
     contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
     media: z.array(MediaSchema).optional(),
@@ -240,9 +342,9 @@ export function createTextualCommentRequestSchema<TAmountSchema extends Erc20Amo
 }
 
 export function createMediaCommentRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
+  amountSchema: TAmountSchema,
 ) {
-  return createBaseCommentRequestSchema(feeSchema).extend({
+  return createBaseCommentRequestSchema(amountSchema).extend({
     content: z.string().optional(),
     contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
     media: z.array(MediaSchema),
@@ -250,9 +352,9 @@ export function createMediaCommentRequestSchema<TAmountSchema extends Erc20Amoun
 }
 
 export function createEmbedCommentRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
+  amountSchema: TAmountSchema,
 ) {
-  return createBaseCommentRequestSchema(feeSchema).extend({
+  return createBaseCommentRequestSchema(amountSchema).extend({
     animationUrl: z.string(),
     content: z.string().optional(),
     contentFocus: z.enum([ContentFocus.EMBED]),

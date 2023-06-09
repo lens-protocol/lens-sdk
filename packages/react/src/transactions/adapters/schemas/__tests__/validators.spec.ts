@@ -1,11 +1,33 @@
-import { TransactionKind } from '@lens-protocol/domain/entities';
-import { mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
+import { faker } from '@faker-js/faker';
+import {
+  AddressOwnershipCriterion,
+  CollectPublicationCriterion,
+  DecryptionCriteriaType,
+  Erc20OwnershipCriterion,
+  FollowProfileCriterion,
+  NftContractType,
+  NftOwnershipCriterion,
+  ProfileOwnershipCriterion,
+  TransactionKind,
+} from '@lens-protocol/domain/entities';
+import {
+  mockAddressOwnershipCriterion,
+  mockCollectPublicationCriterion,
+  mockCollectThisPublicationCriterion,
+  mockCreatePostRequest,
+  mockFollowProfileCriterion,
+  mockNftOwnershipCriterion,
+  mockProfileId,
+  mockProfileOwnershipCriterion,
+  mockPublicationId,
+} from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import {
   CollectPolicyType,
   ContentFocus,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
+import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
   validateCreateCommentRequest,
@@ -16,7 +38,247 @@ import {
 } from '../validators';
 
 describe(`Given the validator helpers`, () => {
-  describe(`when testing the "validateCreatePostRequest"`, () => {
+  describe(`when testing the "validateCreatePostRequest" on a request`, () => {
+    describe('with invalid "NftOwnershipCriterion" criteria for "decryptionCriteria"', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.AND,
+                and: [
+                  {
+                    type: DecryptionCriteriaType.NFT_OWNERSHIP,
+                  } as NftOwnershipCriterion,
+                  {
+                    type: DecryptionCriteriaType.NFT_OWNERSHIP,
+                    contractAddress: mockEthereumAddress(),
+                    chainId: 1,
+                    contractType: NftContractType.Erc721,
+                    tokenIds: [],
+                  },
+                  {
+                    type: DecryptionCriteriaType.NFT_OWNERSHIP,
+                    contractAddress: mockEthereumAddress(),
+                    chainId: 1,
+                    contractType: NftContractType.Erc721,
+                    tokenIds: Array.from({ length: 31 }, faker.datatype.hexadecimal),
+                  },
+                ],
+              },
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.and[0].contractAddress": Required
+          · "decryptionCriteria.and[0].chainId": Required
+          · "decryptionCriteria.and[0].contractType": Required
+          · "decryptionCriteria.and[1].tokenIds": Array must contain at least 1 element(s)
+          · "decryptionCriteria.and[2].tokenIds": Array must contain at most 30 element(s)"
+        `);
+      });
+    });
+
+    describe('with invalid "Erc20OwnershipCriterion" criteria for "decryptionCriteria"', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.ERC20_OWNERSHIP,
+              } as Erc20OwnershipCriterion,
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.amount": value not instance of Amount<Erc20>
+          · "decryptionCriteria.condition": Required"
+        `);
+      });
+    });
+
+    describe('with invalid "AddressOwnershipCriterion" criteria for "decryptionCriteria"', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.ADDRESS_OWNERSHIP,
+              } as AddressOwnershipCriterion,
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.address": Required"
+        `);
+      });
+    });
+
+    describe('with invalid "ProfileOwnershipCriterion" criteria for "decryptionCriteria"', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.PROFILE_OWNERSHIP,
+              } as ProfileOwnershipCriterion,
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.profileId": Required"
+        `);
+      });
+    });
+
+    describe('with invalid "FollowProfileCriterion" criteria for "decryptionCriteria"', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.FOLLOW_PROFILE,
+              } as FollowProfileCriterion,
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.profileId": Required"
+        `);
+      });
+    });
+
+    describe('with invalid "CollectPublicationCriterion" criteria for "decryptionCriteria"', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.COLLECT_PUBLICATION,
+              } as CollectPublicationCriterion,
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.publicationId": Required"
+        `);
+      });
+    });
+
+    describe('with invalid "AndCriterion" criteria for "decryptionCriteria"', () => {
+      it('should provide an actionable error message for not enough criteria', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.AND,
+                and: [mockCollectThisPublicationCriterion()],
+              },
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.and": Array must contain at least 2 element(s)"
+        `);
+      });
+
+      it('should provide an actionable error message for duplicated criteria', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.AND,
+                and: [mockCollectThisPublicationCriterion(), mockCollectThisPublicationCriterion()],
+              },
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.and": Must be an array of unique criteria"
+        `);
+      });
+
+      it('should provide an actionable error message for too many criteria', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.AND,
+                and: [
+                  mockCollectThisPublicationCriterion(),
+                  mockCollectPublicationCriterion(),
+                  mockNftOwnershipCriterion(),
+                  mockAddressOwnershipCriterion(),
+                  mockProfileOwnershipCriterion(),
+                  mockFollowProfileCriterion(),
+                ],
+              },
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.and": Array must contain at most 5 element(s)"
+        `);
+      });
+    });
+
+    describe('with invalid "OrCriterion" criteria for "decryptionCriteria"', () => {
+      it('should provide an actionable error message for not enough criteria', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.OR,
+                or: [mockCollectThisPublicationCriterion()],
+              },
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.or": Array must contain at least 2 element(s)"
+        `);
+      });
+
+      it('should provide an actionable error message for duplicated criteria', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.OR,
+                or: [mockCollectThisPublicationCriterion(), mockCollectThisPublicationCriterion()],
+              },
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.or": Must be an array of unique criteria"
+        `);
+      });
+
+      it('should provide an actionable error message for too many criteria', () => {
+        expect(() =>
+          validateCreatePostRequest(
+            mockCreatePostRequest({
+              decryptionCriteria: {
+                type: DecryptionCriteriaType.OR,
+                or: [
+                  mockCollectThisPublicationCriterion(),
+                  mockCollectPublicationCriterion(),
+                  mockNftOwnershipCriterion(),
+                  mockAddressOwnershipCriterion(),
+                  mockProfileOwnershipCriterion(),
+                  mockFollowProfileCriterion(),
+                ],
+              },
+            }),
+          ),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "decryptionCriteria.or": Array must contain at most 5 element(s)"
+        `);
+      });
+    });
+
     it('should provide an actionable error message in case of "collect" policy misconfiguration', () => {
       expect(() =>
         validateCreatePostRequest({
