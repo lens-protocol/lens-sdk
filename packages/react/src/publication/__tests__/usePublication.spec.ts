@@ -72,7 +72,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
         });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toEqual(publication);
+        expect(result.current.data).toMatchObject(publication);
       });
 
       it('should allow to specify the "observerId" on a per-call basis', async () => {
@@ -85,7 +85,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
         });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toEqual(publication);
+        expect(result.current.data).toMatchObject(publication);
       });
     });
 

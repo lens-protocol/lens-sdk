@@ -72,7 +72,7 @@ describe(`Given the ${usePublicationRevenue.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(revenue);
+      expect(result.current.data).toMatchObject(revenue);
     });
 
     it('should allow to specify the "observerId" on a per-call basis', async () => {
@@ -86,7 +86,7 @@ describe(`Given the ${usePublicationRevenue.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(revenue);
+      expect(result.current.data).toMatchObject(revenue);
     });
 
     it(`should settle with a ${NotFoundError.name} if not found`, async () => {

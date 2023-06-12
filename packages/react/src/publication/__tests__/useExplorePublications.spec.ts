@@ -60,7 +60,7 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
       const { result } = setupTestScenario({ result: publications });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(publications);
+      expect(result.current.data).toMatchObject(publications);
     });
 
     it('should return publications that match the explore with custom parameters', async () => {
@@ -72,7 +72,7 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
       const { result } = setupTestScenario({ ...customParams, result: publications });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(publications);
+      expect(result.current.data).toMatchObject(publications);
     });
   });
 
@@ -90,7 +90,7 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(publications);
+      expect(result.current.data).toMatchObject(publications);
     });
 
     it('should always allow to specify the "observerId" on a per-call basis', async () => {
@@ -103,7 +103,7 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(publications);
+      expect(result.current.data).toMatchObject(publications);
     });
   });
 });

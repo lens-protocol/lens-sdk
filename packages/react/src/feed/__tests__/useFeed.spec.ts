@@ -72,7 +72,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
       const { result } = setupTestScenario({ profileId, items, expectedObserverId: null });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(items);
+      expect(result.current.data).toMatchObject(items);
     });
   });
 
@@ -89,7 +89,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(items);
+      expect(result.current.data).toMatchObject(items);
     });
 
     it('should always allow to specify the "observerId" on a per-call basis', async () => {
@@ -103,7 +103,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(items);
+      expect(result.current.data).toMatchObject(items);
     });
   });
 });

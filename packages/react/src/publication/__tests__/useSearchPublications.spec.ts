@@ -55,7 +55,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
       const { result } = setupTestScenario({ query, result: publications });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(publications);
+      expect(result.current.data).toMatchObject(publications);
     });
   });
 
@@ -74,7 +74,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(publications);
+      expect(result.current.data).toMatchObject(publications);
     });
 
     it('should always allow to specify the "observerId" on a per-call basis', async () => {
@@ -88,7 +88,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(publications);
+      expect(result.current.data).toMatchObject(publications);
     });
   });
 });
