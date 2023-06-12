@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+import { ProfileId, PublicationId, Signature } from '@lens-protocol/domain/entities';
 import {
   Amount,
   BigDecimal,
@@ -56,3 +56,7 @@ export const Erc20AmountInstanceSchema: z.Schema<Erc20Amount, z.ZodTypeDef, Erc2
   z.instanceof(AmountCtor, 'value not instance of Amount<Erc20>');
 
 export type Erc20AmountSchema = z.Schema<Erc20Amount, z.ZodTypeDef, unknown>;
+
+export const SignatureSchema: z.Schema<Signature, z.ZodTypeDef, string> = z
+  .string()
+  .transform((value) => value as Signature);

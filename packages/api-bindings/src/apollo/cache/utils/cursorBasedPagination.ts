@@ -2,7 +2,7 @@ import { FieldFunctionOptions, KeySpecifier } from '@apollo/client/cache/inmemor
 import { FieldPolicy } from '@apollo/client/core';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { CursorBasedPaginatedResult, isCursor } from '../../../graphql';
+import { CursorBasedPaginatedResult, isCursor } from '../../../lens';
 
 // Note: Copied from apollo given it's not exposed publicly
 // eslint-disable-next-line @typescript-eslint/ban-types

@@ -7,7 +7,7 @@ import {
   omitTypename,
   CreateMirrorTypedDataData,
   CreateMirrorTypedDataVariables,
-  LensApolloClient,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -34,7 +34,7 @@ export class CreateOnChainMirrorGateway
     IOnChainProtocolCallGateway<CreateMirrorRequest>
 {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateMirrorRequest>,
   ) {}
 
@@ -135,12 +135,12 @@ export class CreateOnChainMirrorGateway
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('mirror', [
       {
-        profileId: data.result.typedData.value.profileId,
-        profileIdPointed: data.result.typedData.value.profileIdPointed,
-        pubIdPointed: data.result.typedData.value.pubIdPointed,
-        referenceModuleData: data.result.typedData.value.referenceModuleData,
-        referenceModule: data.result.typedData.value.referenceModule,
-        referenceModuleInitData: data.result.typedData.value.referenceModuleInitData,
+        profileId: data.result.typedData.message.profileId,
+        profileIdPointed: data.result.typedData.message.profileIdPointed,
+        pubIdPointed: data.result.typedData.message.pubIdPointed,
+        referenceModuleData: data.result.typedData.message.referenceModuleData,
+        referenceModule: data.result.typedData.message.referenceModule,
+        referenceModuleInitData: data.result.typedData.message.referenceModuleInitData,
       },
     ]);
     return {

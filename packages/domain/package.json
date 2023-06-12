@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/domain",
-  "version": "0.8.0",
+  "version": "0.8.1-next.0",
   "description": "Critical Business Rules and Application-specific Business Rules",
   "exports": {
     "./mocks": {
@@ -10,6 +10,10 @@
     "./entities": {
       "module": "./entities/dist/lens-protocol-domain-entities.esm.js",
       "default": "./entities/dist/lens-protocol-domain-entities.cjs.js"
+    },
+    "./use-cases/polls": {
+      "module": "./use-cases/polls/dist/lens-protocol-domain-use-cases-polls.esm.js",
+      "default": "./use-cases/polls/dist/lens-protocol-domain-use-cases-polls.cjs.js"
     },
     "./use-cases/profile": {
       "module": "./use-cases/profile/dist/lens-protocol-domain-use-cases-profile.esm.js",
@@ -114,6 +118,7 @@
       "entities/index.ts",
       "use-cases/lifecycle/index.ts",
       "use-cases/profile/index.ts",
+      "use-cases/polls/index.ts",
       "use-cases/publications/index.ts",
       "use-cases/transactions/index.ts",
       "use-cases/wallets/index.ts",

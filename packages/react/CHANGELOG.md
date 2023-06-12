@@ -1,5 +1,29 @@
 # @lens-protocol/react
 
+## 1.2.0-next.1
+
+### Patch Changes
+
+- 55211083: Synchronize state change between `useActiveWallet` and `useActiveProfile` hooks
+- Updated dependencies [55211083]
+- Updated dependencies [148e9636]
+  - @lens-protocol/domain@0.8.1-next.0
+  - @lens-protocol/gated-content@0.3.0-next.1
+  - @lens-protocol/api-bindings@0.8.1-next.0
+  - @lens-protocol/blockchain-bindings@0.8.1-next.0
+
+## 1.2.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+- af4b1133: Detects malformed URLs from user's provided `upload` handler
+
+### Patch Changes
+
+- Updated dependencies [cb5b900d]
+  - @lens-protocol/gated-content@0.3.0-next.0
+
 ## 1.1.0
 
 ### Minor Changes

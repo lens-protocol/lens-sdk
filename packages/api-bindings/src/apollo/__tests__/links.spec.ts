@@ -4,7 +4,7 @@ import { mock } from 'jest-mock-extended';
 
 import { semVer } from '../../SemVer';
 import { createHttpJsonResponse } from '../__helpers__/mocks';
-import { createHttpLink } from '../links';
+import { createLensLink } from '../links';
 
 const query = gql`
   query Ping {
@@ -13,7 +13,7 @@ const query = gql`
 `;
 
 describe(`Given an instance of the ${ApolloClient.name}`, () => {
-  describe('wired with our custom HttpLink', () => {
+  describe('wired with our custom LensLink', () => {
     const supportedVersion = semVer('2.0.0');
 
     describe(`when the response 'x-api-version' is ahead by a major version or more compared to the SDK supported range`, () => {
@@ -28,7 +28,7 @@ describe(`Given an instance of the ${ApolloClient.name}`, () => {
         );
         const client = new ApolloClient({
           cache: new InMemoryCache(),
-          link: createHttpLink({
+          link: createLensLink({
             fetch: jest.fn().mockResolvedValue(response),
             logger,
             uri: 'http://localhost:4000/graphql',
@@ -54,7 +54,7 @@ describe(`Given an instance of the ${ApolloClient.name}`, () => {
         );
         const client = new ApolloClient({
           cache: new InMemoryCache(),
-          link: createHttpLink({
+          link: createLensLink({
             fetch: jest.fn().mockResolvedValue(response),
             logger,
             uri: 'http://localhost:4000/graphql',
@@ -80,7 +80,7 @@ describe(`Given an instance of the ${ApolloClient.name}`, () => {
         );
         const client = new ApolloClient({
           cache: new InMemoryCache(),
-          link: createHttpLink({
+          link: createLensLink({
             fetch: jest.fn().mockResolvedValue(response),
             logger,
             uri: 'http://localhost:4000/graphql',

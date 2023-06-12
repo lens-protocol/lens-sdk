@@ -1,5 +1,5 @@
 import {
-  LensApolloClient,
+  SafeApolloClient,
   Sources,
   activeProfileIdentifierVar,
   GetPublicationData,
@@ -13,7 +13,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 
 export class CreateMirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
-  constructor(private readonly client: LensApolloClient, private readonly sources: Sources) {}
+  constructor(private readonly client: SafeApolloClient, private readonly sources: Sources) {}
 
   async commit({ request }: TransactionData<CreateMirrorRequest>) {
     const activeProfile = activeProfileIdentifierVar();

@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/gated-content",
-  "version": "0.2.2",
+  "version": "0.3.0-next.1",
   "description": "Token-gated content for the Lens Protocol",
   "main": "dist/lens-protocol-gated-content.cjs.js",
   "module": "dist/lens-protocol-gated-content.esm.js",
@@ -13,6 +13,10 @@
       "module": "./web/dist/lens-protocol-gated-content-web.esm.js",
       "default": "./web/dist/lens-protocol-gated-content-web.cjs.js"
     },
+    "./environments": {
+      "module": "./environments/dist/lens-protocol-gated-content-environments.esm.js",
+      "default": "./environments/dist/lens-protocol-gated-content-environments.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "repository": {
@@ -23,6 +27,7 @@
   "sideEffects": false,
   "files": [
     "dist",
+    "environments",
     "web"
   ],
   "scripts": {
@@ -98,6 +103,7 @@
   "preconstruct": {
     "entrypoints": [
       "index.ts",
+      "environments.ts",
       "web/index.ts"
     ],
     "exports": true

@@ -1,6 +1,6 @@
 import { ChainType, PromiseResult } from '@lens-protocol/shared-kernel';
 
-export type Signature = string;
+import { Signature } from './Signature';
 
 export type Nonce = number;
 

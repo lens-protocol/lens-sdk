@@ -1,0 +1,56 @@
+fragment SnapshotProposal on Proposal {
+  __typename
+  id
+  author
+  state
+  title
+  choices
+  scores
+  scores_total
+  snapshot
+  symbol
+  network
+  type
+  privacy
+  start
+  end
+  quorum
+  space {
+    id
+    name
+  }
+  strategies {
+    network
+    name
+    params
+  }
+}
+
+fragment SnapshotVote on Vote {
+  __typename
+  choice
+}
+
+fragment SnapshotVotePower on Vp {
+  __typename
+  value: vp
+}
+
+query GetSnapshotProposal(
+  $spaceId: String!
+  $proposalId: String!
+  $voterAddress: String!
+  $includeVotes: Boolean!
+) {
+  proposal(id: $proposalId) {
+    ...SnapshotProposal
+  }
+
+  votes(where: { proposal: $proposalId, voter: $voterAddress }) @include(if: $includeVotes) {
+    ...SnapshotVote
+  }
+
+  vp(voter: $voterAddress, space: $spaceId, proposal: $proposalId) @include(if: $includeVotes) {
+    ...SnapshotVotePower
+  }
+}

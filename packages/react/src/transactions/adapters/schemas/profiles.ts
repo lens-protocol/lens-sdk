@@ -2,7 +2,12 @@ import { TransactionKind } from '@lens-protocol/domain/entities';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { z } from 'zod';
 
-import { SerializedErc20AmountSchema, ProfileIdSchema, Erc20AmountSchema } from './common';
+import {
+  Erc20AmountSchema,
+  ProfileIdSchema,
+  SerializedErc20AmountSchema,
+  SignatureSchema,
+} from './common';
 
 export const CreateProfileRequestSchema = z.object({
   handle: z.string(),
@@ -99,7 +104,7 @@ export const UpdateProfileDetailsRequestSchema = z.object({
 
 const NftOwnershipSignatureSchema = z.object({
   id: z.string(),
-  signature: z.string(),
+  signature: SignatureSchema,
 });
 
 export const UpdateNftProfileImageRequestSchema = z.object({

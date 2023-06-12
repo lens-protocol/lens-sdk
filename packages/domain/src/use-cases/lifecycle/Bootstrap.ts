@@ -1,16 +1,16 @@
 import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { ICredentials, AnyTransactionRequestModel, Wallet } from '../../entities';
-import { ActiveProfileLoader, IActiveProfileGateway } from '../profile';
+import { ActiveProfileLoader, IActiveProfilePresenter } from '../profile';
 import { TransactionQueue } from '../transactions';
 import {
+  ActiveWallet,
   IActiveWalletPresenter,
   ICredentialsReader,
   ICredentialsWriter,
   ILogoutPresenter,
   LogoutReason,
 } from '../wallets';
-import { ActiveWallet } from '../wallets/ActiveWallet';
 
 export class CredentialsExpiredError extends Error {
   name = 'CredentialsExpiredError' as const;
@@ -37,7 +37,7 @@ export class Bootstrap<T extends AnyTransactionRequestModel> {
     private readonly logoutPresenter: ILogoutPresenter,
     private readonly activeProfileLoader: ActiveProfileLoader,
     private readonly transactionQueue: TransactionQueue<T>,
-    private readonly activeProfileGateway: IActiveProfileGateway,
+    private readonly activeProfilePresenter: IActiveProfilePresenter,
   ) {}
 
   async start() {
@@ -69,12 +69,10 @@ export class Bootstrap<T extends AnyTransactionRequestModel> {
   }
 
   private async startWithCredentials(wallet: Wallet) {
+    const profile = await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address);
+
     this.activeWalletPresenter.presentActiveWallet(wallet);
-
-    const activeProfile = await this.activeProfileGateway.getActiveProfile();
-    const handle = activeProfile?.handle;
-
-    await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address, handle);
+    this.activeProfilePresenter.presentActiveProfile(profile);
 
     await this.transactionQueue.init();
     this.applicationPresenter.signalReady();

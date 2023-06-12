@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { PublicationMainFocus } from '../graphql';
+import { PublicationMainFocus } from '../lens';
 import { PublicationMetadata } from '../metadata';
 
 export function mockPublicationMetadata(

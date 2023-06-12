@@ -22,7 +22,7 @@ export type LensConfig = {
    */
   bindings: IBindings;
   /**
-   * The environment to use. See {@link production} and {@link development}.
+   * The environment to use. See {@link production}, {@link development}, and {@link sandbox}
    */
   environment: EnvironmentConfig;
   /**

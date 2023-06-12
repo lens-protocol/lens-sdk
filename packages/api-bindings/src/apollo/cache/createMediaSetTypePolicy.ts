@@ -1,4 +1,4 @@
-import { StrictTypedTypePolicies } from '../../graphql';
+import { StrictTypedTypePolicies } from '../../lens';
 
 export const createMediaSetTypePolicy = (): StrictTypedTypePolicies['MediaSet'] => ({
   keyFields: false,

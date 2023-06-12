@@ -34,8 +34,7 @@ module.exports = {
           {
             name: '@apollo/client/testing',
             importNames: ['createMockClient'],
-            message:
-              'Please import "createMockApolloClientWithMultipleResponses" from @lens-protocol/api-bindings/mocks.',
+            message: 'Please import "mockLensApolloClient" from @lens-protocol/api-bindings/mocks.',
           },
           {
             name: '@apollo/client',

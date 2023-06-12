@@ -1,6 +1,6 @@
 import { activeProfileIdentifierVar, WhoReactedResult } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createWhoReactedPublicationMockedResponse,
   mockSources,
   mockWhoReactedResultFragment,
@@ -26,7 +26,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useWhoReacted(args), {
     mocks: {
       sources,
-      apolloClient: createMockApolloClientWithMultipleResponses([
+      apolloClient: mockLensApolloClient([
         createWhoReactedPublicationMockedResponse({
           variables: {
             ...args,

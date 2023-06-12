@@ -1,6 +1,6 @@
 import { ReactionTypes, ValidationError } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createAddReactionMockedResponse,
   createRemoveReactionMockedResponse,
   createRemoveReactionMockedResponseWithGraphqlValidationError,
@@ -15,7 +15,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const profileId = mockProfileId();
       const publicationId = mockPublicationId();
 
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createAddReactionMockedResponse({
           variables: {
             publicationId,
@@ -40,7 +40,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const profileId = mockProfileId();
       const publicationId = mockPublicationId();
 
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createRemoveReactionMockedResponse({
           variables: {
             publicationId,
@@ -62,7 +62,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
     it(`should be resilient to ${ValidationError.name} and resolve the promise`, async () => {
       const profileId = mockProfileId();
       const publicationId = mockPublicationId();
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createRemoveReactionMockedResponseWithGraphqlValidationError({
           variables: {
             publicationId,
@@ -82,7 +82,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
     });
 
     it(`should propagate any other error`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         // no mocks on purpose to trigger network issue
       ]);
 

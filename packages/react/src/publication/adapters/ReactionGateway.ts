@@ -7,13 +7,13 @@ import {
   RemoveReactionVariables,
   resolveApiReactionType,
   ValidationError,
-  LensApolloClient,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { ReactionRequest, IReactionGateway } from '@lens-protocol/domain/use-cases/publications';
 import { assertError } from '@lens-protocol/shared-kernel';
 
 export class ReactionGateway implements IReactionGateway {
-  constructor(private apolloClient: LensApolloClient) {}
+  constructor(private apolloClient: SafeApolloClient) {}
 
   async add({ profileId, publicationId, reactionType }: ReactionRequest) {
     await this.apolloClient.mutate<AddReactionData, AddReactionVariables>({

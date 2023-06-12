@@ -2,7 +2,7 @@ import {
   GetProfileData,
   GetProfileVariables,
   GetProfileDocument,
-  LensApolloClient,
+  SafeApolloClient,
   GetAllProfilesData,
   GetAllProfilesVariables,
   GetAllProfilesDocument,
@@ -11,7 +11,7 @@ import { Profile, ProfileId } from '@lens-protocol/domain/entities';
 import { IProfileGateway } from '@lens-protocol/domain/use-cases/profile';
 
 export class ProfileGateway implements IProfileGateway {
-  constructor(private readonly apolloClient: LensApolloClient) {}
+  constructor(private readonly apolloClient: SafeApolloClient) {}
 
   async getAllProfilesByOwnerAddress(address: string): Promise<Profile[]> {
     const { data } = await this.apolloClient.query<GetAllProfilesData, GetAllProfilesVariables>({

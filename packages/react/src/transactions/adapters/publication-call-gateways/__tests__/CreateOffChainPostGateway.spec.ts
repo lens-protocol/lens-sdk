@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
-import { LensApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
+import { SafeApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockCreatePostTypedDataData,
   createCreateDataAvailabilityPostTypedDataMockedResponse,
   createCreateDataAvailabilityPostViaDispatcherDataMockedResponse,
@@ -26,7 +26,7 @@ function setupTestScenario({
   apolloClient,
   uploadUrl,
 }: {
-  apolloClient: LensApolloClient;
+  apolloClient: SafeApolloClient;
   uploadUrl: Url;
 }) {
   const transactionFactory = mockITransactionFactory();
@@ -47,7 +47,7 @@ describe(`Given an instance of ${CreateOffChainPostGateway.name}`, () => {
     it(`should:
         - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
         - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createCreateDataAvailabilityPostTypedDataMockedResponse({
           variables: {
             request: {
@@ -74,7 +74,7 @@ describe(`Given an instance of ${CreateOffChainPostGateway.name}`, () => {
     it(`should:
         - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
         - create an instance of the ${DataTransaction.name}`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createCreateDataAvailabilityPostViaDispatcherDataMockedResponse({
           variables: {
             request: {
@@ -107,7 +107,7 @@ describe(`Given an instance of ${CreateOffChainPostGateway.name}`, () => {
     ])(
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
       async (relayError) => {
-        const apolloClient = createMockApolloClientWithMultipleResponses([
+        const apolloClient = mockLensApolloClient([
           createCreateDataAvailabilityPostViaDispatcherDataMockedResponse({
             variables: {
               request: {
