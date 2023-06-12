@@ -16,6 +16,7 @@ import { IMetadataUploader } from './IMetadataUploader';
 import { MetadataUploadHandler } from './MetadataUploadHandler';
 import { ProfileMetadataCallGateway } from './ProfileMetadataCallGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { validateUpdateProfileDetailsRequest } from './schemas/validators';
 
 export type UseUpdateProfileDetailsControllerArgs = {
   upload: MetadataUploadHandler;
@@ -34,6 +35,8 @@ export function useUpdateProfileDetailsController({
   } = useSharedDependencies();
 
   return async (request: UpdateProfileDetailsRequest) => {
+    validateUpdateProfileDetailsRequest(request);
+
     const uploader: IMetadataUploader<ProfileMetadata> = new MetadataUploaderErrorMiddleware(
       upload,
     );

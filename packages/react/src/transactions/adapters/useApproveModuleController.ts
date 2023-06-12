@@ -9,11 +9,14 @@ import { TokenAllowance, TokenAllowanceRequest } from '@lens-protocol/domain/use
 import { useSharedDependencies } from '../../shared';
 import { ApproveTransactionGateway } from './ApproveTransactionGateway';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { validateTokenAllowanceRequest } from './schemas/validators';
 
 export function useApproveModuleController() {
   const { providerFactory, activeWallet, transactionQueue } = useSharedDependencies();
 
   return async (request: TokenAllowanceRequest) => {
+    validateTokenAllowanceRequest(request);
+
     const presenter = new PromiseResultPresenter<
       void,
       InsufficientGasError | PendingSigningRequestError | UserRejectedError | WalletConnectionError

@@ -2,7 +2,12 @@ import { TransactionKind } from '@lens-protocol/domain/entities';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { z } from 'zod';
 
-import { Erc20AmountSchema, ProfileIdSchema, SignatureSchema } from './common';
+import {
+  Erc20AmountSchema,
+  ProfileIdSchema,
+  SerializedErc20AmountSchema,
+  SignatureSchema,
+} from './common';
 
 export const CreateProfileRequestSchema = z.object({
   handle: z.string(),
@@ -10,7 +15,7 @@ export const CreateProfileRequestSchema = z.object({
 });
 
 const FollowRequestFeeSchema = z.object({
-  amount: Erc20AmountSchema,
+  amount: SerializedErc20AmountSchema,
   contractAddress: z.string(),
   recipient: z.string(),
 });
@@ -46,25 +51,42 @@ export const UpdateDispatcherConfigRequestSchema = z.object({
   kind: z.literal(TransactionKind.UPDATE_DISPATCHER_CONFIG),
 });
 
-const ChargeFollowPolicyConfigSchema = z.object({
-  type: z.literal(FollowPolicyType.CHARGE),
-  amount: Erc20AmountSchema,
-  recipient: z.string(),
+function chargeFollowPolicyConfigSchema<TAmountSchema extends Erc20AmountSchema>(
+  amountSchema: TAmountSchema,
+) {
+  return z.object({
+    type: z.literal(FollowPolicyType.CHARGE),
+    amount: amountSchema,
+    recipient: z.string(),
+  });
+}
+
+const AnyoneFollowPolicyConfigSchema = z.object({
+  type: z.literal(FollowPolicyType.ANYONE),
 });
 
-const NoFeeFollowPolicyConfigSchema = z.object({
-  type: z.union([
-    z.literal(FollowPolicyType.ANYONE),
-    z.literal(FollowPolicyType.ONLY_PROFILE_OWNERS),
-    z.literal(FollowPolicyType.NO_ONE),
-  ]),
+const OnlyProfileOwnersFollowPolicyConfigSchema = z.object({
+  type: z.literal(FollowPolicyType.ONLY_PROFILE_OWNERS),
 });
 
-export const UpdateFollowPolicyRequestSchema = z.object({
-  profileId: ProfileIdSchema,
-  policy: z.union([ChargeFollowPolicyConfigSchema, NoFeeFollowPolicyConfigSchema]),
-  kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
+const NoOneFollowPolicyConfigSchema = z.object({
+  type: z.literal(FollowPolicyType.NO_ONE),
 });
+
+export function updateFollowPolicyRequestSchema<TAmountSchema extends Erc20AmountSchema>(
+  amountSchema: TAmountSchema,
+) {
+  return z.object({
+    profileId: ProfileIdSchema,
+    policy: z.discriminatedUnion('type', [
+      chargeFollowPolicyConfigSchema(amountSchema),
+      AnyoneFollowPolicyConfigSchema,
+      OnlyProfileOwnersFollowPolicyConfigSchema,
+      NoOneFollowPolicyConfigSchema,
+    ]),
+    kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
+  });
+}
 
 const PartialAttributesUpdateSchema = z.record(
   z.union([z.boolean(), z.coerce.date(), z.number(), z.string(), z.null()]),
