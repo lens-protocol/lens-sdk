@@ -1,13 +1,13 @@
 import {
-  CreateCollectTypedDataDocument,
   CreateCollectTypedDataData,
+  CreateCollectTypedDataDocument,
   CreateCollectTypedDataVariables,
-  LensApolloClient,
   omitTypename,
   ProxyActionData,
   ProxyActionDocument,
   ProxyActionRequest,
   ProxyActionVariables,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce, ProxyTransaction } from '@lens-protocol/domain/entities';
@@ -39,7 +39,7 @@ export class CollectPublicationGateway
     ISignlessSubsidizedCallRelayer<FreeCollectRequest>
 {
   constructor(
-    private apolloClient: LensApolloClient,
+    private apolloClient: SafeApolloClient,
     private factory: ITransactionFactory<FreeCollectRequest>,
     private logger: ILogger,
   ) {}
@@ -83,9 +83,9 @@ export class CollectPublicationGateway
   ): SelfFundedProtocolTransactionRequest<CollectRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('collect', [
-      data.result.typedData.value.profileId,
-      data.result.typedData.value.pubId,
-      data.result.typedData.value.data,
+      data.result.typedData.message.profileId,
+      data.result.typedData.message.pubId,
+      data.result.typedData.message.data,
     ]);
     return {
       ...request,

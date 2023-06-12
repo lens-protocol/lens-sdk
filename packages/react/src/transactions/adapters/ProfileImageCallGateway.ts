@@ -7,7 +7,7 @@ import {
   CreateSetProfileImageUriViaDispatcherVariables,
   omitTypename,
   UpdateProfileImageRequest as UpdateProfileImageRequestArgs,
-  LensApolloClient,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -31,7 +31,7 @@ export class ProfileImageCallGateway
     IOnChainProtocolCallGateway<UpdateProfileImageRequest>
 {
   constructor(
-    private apolloClient: LensApolloClient,
+    private apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<UpdateProfileImageRequest>,
   ) {}
 
@@ -140,8 +140,8 @@ export class ProfileImageCallGateway
   ): SelfFundedProtocolTransactionRequest<UpdateProfileImageRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileImageURI', [
-      data.result.typedData.value.profileId,
-      data.result.typedData.value.imageURI,
+      data.result.typedData.message.profileId,
+      data.result.typedData.message.imageURI,
     ]);
     return {
       ...request,

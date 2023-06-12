@@ -3,11 +3,11 @@ import {
   CreateFollowTypedDataDocument,
   CreateFollowTypedDataData,
   CreateFollowTypedDataVariables,
-  LensApolloClient,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
   mockCreateFollowTypedDataData,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createBroadcastProxyActionCallMockedResponse,
   createBroadcastProxyActionCallMockedError,
 } from '@lens-protocol/api-bindings/mocks';
@@ -73,7 +73,7 @@ function mockFollowProfilesGateway({
   apollo,
   factory,
 }: {
-  apollo: LensApolloClient;
+  apollo: SafeApolloClient;
   factory: ITransactionFactory<UnconstrainedFollowRequest>;
 }) {
   return new FollowProfilesGateway(apollo, factory, mock<ILogger>());
@@ -86,7 +86,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
         const request = mockUnconstrainedFollowRequest();
         const data = mockCreateFollowTypedDataData();
 
-        const apollo = createMockApolloClientWithMultipleResponses([
+        const apollo = mockLensApolloClient([
           createCreateFollowTypedDataMutationMockedResponse({
             variables: {
               request: {
@@ -115,7 +115,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
         const request = mockProfileOwnerFollowRequest();
         const data = mockCreateFollowTypedDataData();
 
-        const apollo = createMockApolloClientWithMultipleResponses([
+        const apollo = mockLensApolloClient([
           createCreateFollowTypedDataMutationMockedResponse({
             variables: {
               request: {
@@ -149,7 +149,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
         const request = mockPaidFollowRequest();
         const data = mockCreateFollowTypedDataData();
 
-        const apollo = createMockApolloClientWithMultipleResponses([
+        const apollo = mockLensApolloClient([
           createCreateFollowTypedDataMutationMockedResponse({
             variables: {
               request: {
@@ -184,7 +184,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
     it(`should be possible to override the signature nonce`, async () => {
       const request = mockUnconstrainedFollowRequest();
       const nonce = mockNonce();
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         createCreateFollowTypedDataMutationMockedResponse({
           variables: {
             request: {
@@ -215,7 +215,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
     const request = mockUnconstrainedFollowRequest();
     it(`should succeed with ${ProxyTransaction.name} on Polygon`, async () => {
       const indexingId = 'indexing-id';
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         createBroadcastProxyActionCallMockedResponse({
           result: indexingId,
           variables: {
@@ -258,7 +258,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
     });
 
     it(`should fail with ${BroadcastingError.name} in the case of a broadcast failure`, async () => {
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         createBroadcastProxyActionCallMockedError({
           errorMessage: 'Failed to broadcast proxy action call',
           variables: {

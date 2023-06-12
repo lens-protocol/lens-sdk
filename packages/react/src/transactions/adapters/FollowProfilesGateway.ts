@@ -3,13 +3,13 @@ import {
   CreateFollowTypedDataDocument,
   CreateFollowTypedDataVariables,
   Follow,
-  LensApolloClient,
+  moduleFeeAmountParams,
+  omitTypename,
   ProxyActionData,
   ProxyActionDocument,
   ProxyActionRequest,
   ProxyActionVariables,
-  moduleFeeAmountParams,
-  omitTypename,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce, ProxyTransaction } from '@lens-protocol/domain/entities';
@@ -73,7 +73,7 @@ export class FollowProfilesGateway
     ISignlessSubsidizedCallRelayer<UnconstrainedFollowRequest>
 {
   constructor(
-    private apolloClient: LensApolloClient,
+    private apolloClient: SafeApolloClient,
     private factory: ITransactionFactory<UnconstrainedFollowRequest>,
     private logger: ILogger,
   ) {}
@@ -174,8 +174,8 @@ export class FollowProfilesGateway
   ): SelfFundedProtocolTransactionRequest<FollowRequest> {
     const contract = lensHub(data.result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('follow', [
-      data.result.typedData.value.profileIds,
-      data.result.typedData.value.datas,
+      data.result.typedData.message.profileIds,
+      data.result.typedData.message.datas,
     ]);
     return {
       ...request,

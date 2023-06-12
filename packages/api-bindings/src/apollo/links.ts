@@ -84,19 +84,19 @@ function wrapFetch(
   };
 }
 
-export type HttpLinkArgs = {
+export type LensLinkArgs = {
   fetch?: WindowOrWorkerGlobalScope['fetch'];
   logger: ILogger;
   supportedVersion: SemVer;
   uri: string;
 };
 
-export function createHttpLink({
+export function createLensLink({
   fetch: preferredFetch,
   logger,
   supportedVersion,
   uri,
-}: HttpLinkArgs) {
+}: LensLinkArgs) {
   // see https://github.com/apollographql/apollo-client/blob/4bf773f64b78f15419f07676f434fa33e058404e/src/link/http/createHttpLink.ts#L160-L165
   const currentFetch = preferredFetch ?? maybe(() => fetch) ?? backupFetch ?? never();
 
@@ -104,4 +104,12 @@ export function createHttpLink({
     uri,
     fetch: wrapFetch(logger, supportedVersion, currentFetch),
   });
+}
+
+export type SnapshotLinkArgs = {
+  uri: string;
+};
+
+export function createSnapshotLink({ uri }: SnapshotLinkArgs) {
+  return new HttpLink({ uri });
 }

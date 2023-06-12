@@ -10,16 +10,19 @@ import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publication
 import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
+  AnyPublication,
   CollectModule,
+  CollectPolicy,
+  ContentInsight,
+  ContentInsightType,
+  MetadataOutput,
+  PublicationQueryRequest,
   PublicationStats,
   ReferenceModule,
-  resolveCollectPolicy,
   ReferencePolicy,
+  resolveCollectPolicy,
   Wallet,
-  CollectPolicy,
-  AnyPublication,
-  PublicationQueryRequest,
-} from '../../graphql';
+} from '../../lens';
 import { activeProfileIdentifierVar } from './activeProfileIdentifier';
 import { decryptionCriteria } from './decryptionCriteria';
 import {
@@ -27,6 +30,9 @@ import {
   isCollectTransactionFor,
   isMirrorTransactionFor,
 } from './transactions';
+import { ContentInsightMatcher } from './utils/ContentInsight';
+import { extractUrls } from './utils/extractUrls';
+import { firstMatch } from './utils/firstMatch';
 import { noCachedField } from './utils/noCachedField';
 
 function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
@@ -183,6 +189,35 @@ const isOptimisticMirroredByMe: FieldReadFunction<boolean> = (existing) => {
   return existing ?? false;
 };
 
+export type ContentPublicationTypePolicyConfig = {
+  /**
+   * A list of ContentInsightMatcher used to extract insights from publication metadata content
+   */
+  contentMatchers: ContentInsightMatcher[];
+};
+
+const createContentInsightFieldPolicy: (
+  arg: ContentPublicationTypePolicyConfig,
+) => FieldReadFunction<ContentInsight> =
+  ({ contentMatchers }) =>
+  (_, { readField }) => {
+    const metadata = readField('metadata') as MetadataOutput;
+
+    if (metadata.content) {
+      const urls = extractUrls(metadata.content);
+
+      const match = firstMatch(urls, contentMatchers);
+
+      if (match) {
+        return match;
+      }
+    }
+
+    return {
+      type: ContentInsightType.UNDETERMINED,
+    };
+  };
+
 const publicationTypename = 'Publication';
 
 export function createPublicationTypePolicy() {
@@ -191,22 +226,23 @@ export function createPublicationTypePolicy() {
   } as const;
 }
 
-function createContentPublicationTypePolicy() {
+function createContentPublicationTypePolicy(config: ContentPublicationTypePolicyConfig) {
   return {
     fields: {
-      referencePolicy,
+      canComment: noCachedField(),
+      canDecrypt: noCachedField(),
+      canMirror: noCachedField(),
+      collectedBy,
+      collectPolicy,
+      contentInsight: createContentInsightFieldPolicy(config),
+      decryptionCriteria,
+      hasCollectedByMe,
+      hasOptimisticCollectedByMe,
+      isMirroredByMe,
+      isOptimisticMirroredByMe,
       mirrors: noCachedField(),
       reaction: noCachedField(),
-      canComment: noCachedField(),
-      canMirror: noCachedField(),
-      canDecrypt: noCachedField(),
-      hasCollectedByMe,
-      isMirroredByMe,
-      collectedBy,
-      hasOptimisticCollectedByMe,
-      isOptimisticMirroredByMe,
-      collectPolicy,
-      decryptionCriteria,
+      referencePolicy,
       stats,
     },
   };

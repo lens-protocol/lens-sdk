@@ -1,5 +1,6 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { faker } from '@faker-js/faker';
+import { TypedData } from '@lens-protocol/blockchain-bindings/src/TypedData';
 import {
   ProtocolTransactionRequestModel,
   AnyTransactionRequestModel,
@@ -10,6 +11,7 @@ import {
   mockSignature,
   mockAnyTransactionRequestModel,
   mockProtocolTransactionRequestModel,
+  mockPollId,
 } from '@lens-protocol/domain/mocks';
 import { ChainType, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
@@ -18,13 +20,16 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { ITransactionFactory } from '../../../transactions/adapters/ITransactionFactory';
-import { TypedData } from '../../../transactions/adapters/TypedData';
-import { mockSelfFundedProtocolTransactionRequest } from '../../../transactions/adapters/__helpers__/mocks';
+import {
+  mockSelfFundedProtocolTransactionRequest,
+  mockTypedData,
+} from '../../../transactions/adapters/__helpers__/mocks';
 import {
   ConcreteWallet,
   ISignerFactory,
   ITransactionRequest,
   SignedProtocolCall,
+  SignedVote,
   UnsignedProtocolCall,
 } from '../ConcreteWallet';
 import { Credentials } from '../Credentials';
@@ -89,7 +94,7 @@ export function mockUnsignedProtocolCall<T extends ProtocolTransactionRequestMod
 export function mockSignedProtocolCall<T extends ProtocolTransactionRequestModel>() {
   return SignedProtocolCall.create({
     unsignedCall: mockUnsignedProtocolCall({
-      typedData: mock<TypedData>(),
+      typedData: mockTypedData(),
       request: mockProtocolTransactionRequestModel() as T,
     }),
     signature: mockSignature(),
@@ -144,4 +149,8 @@ export function mockCredentials(): Credentials {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YjE5QzI4OTBjZjk0N0FEM2YwYjdkN0U1QTlmZkJjZTM2ZDNmOWJkMiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2Mzc3NTQ2ODEsImV4cCI6MTYzNzc1NDc0MX0.Be1eGBvVuFL4fj4pHHqc0yWDledsgS2GP3Jgonmy-xw',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YjE5QzI4OTBjZjk0N0FEM2YwYjdkN0U1QTlmZkJjZTM2ZDNmOWJkMiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2Mzc3NTQ2ODEsImV4cCI6MTYzNzc1NDc0MX0.Be1eGBvVuFL4fj4pHHqc0yWDledsgS2GP3Jgonmy-xw',
   );
+}
+
+export function mockSignedVote(): SignedVote {
+  return new SignedVote(mockPollId(), mockSignature(), mockTypedData(), mockEthereumAddress());
 }

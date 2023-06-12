@@ -2,11 +2,7 @@ import { gql } from '@apollo/client';
 import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 
-import {
-  Cursor,
-  CursorBasedPaginatedResult,
-  FragmentPaginatedResultInfo,
-} from '../../../../graphql';
+import { Cursor, CursorBasedPaginatedResult, FragmentPaginatedResultInfo } from '../../../../lens';
 import { mockPaginatedResultInfo } from '../../../../mocks';
 
 export const GetHeroDocument = gql`

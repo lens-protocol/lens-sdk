@@ -1,5 +1,5 @@
 import {
-  LensApolloClient,
+  SafeApolloClient,
   PublicationReportingFraudSubreason,
   PublicationReportingIllegalSubreason,
   PublicationReportingReason,
@@ -139,7 +139,7 @@ const mapReportReasonToInput = (reason: ReportReason): ReportingReasonInputParam
 };
 
 export class ReportPublicationGateway implements IReportPublicationGateway {
-  constructor(private apolloClient: LensApolloClient) {}
+  constructor(private apolloClient: SafeApolloClient) {}
 
   async report({ additionalComments, publicationId, reason }: ReportPublicationRequest) {
     await this.apolloClient.mutate<ReportPublicationData, ReportPublicationVariables>({

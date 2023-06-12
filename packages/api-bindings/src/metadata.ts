@@ -6,7 +6,7 @@ import type {
   Erc20OwnershipOutput,
   LeafConditionOutput,
   PublicationMetadataV2Input,
-} from './graphql';
+} from './lens';
 
 export type PublicationMetadata = Prettify<
   Overwrite<PublicationMetadataV2Input, { version: '2.0.0' }>

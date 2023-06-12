@@ -8,13 +8,13 @@ import {
   AuthRefreshDocument,
   AuthRefreshData,
   AuthRefreshVariables,
-  LensApolloClient,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 
 import { Credentials } from '../adapters/Credentials';
 
 export class AuthApi {
-  constructor(private apolloClient: LensApolloClient) {}
+  constructor(private apolloClient: SafeApolloClient) {}
 
   async generateChallenge(address: string): Promise<string> {
     const result = await this.apolloClient.query<AuthChallengeData, AuthChallengeVariables>({

@@ -48,7 +48,8 @@ export type ApproveModuleOperation = Operation<
  * @category Misc
  * @group Hooks
  *
- * @example Approve a collect module for the amount specified in the publication collect policy
+ * @example
+ * Approve a collect module for the amount specified in the publication collect policy
  * ```tsx
  * import { useApproveModule, CollectPolicyType, CollectablePublication, TokenAllowanceLimit } from '@lens-protocol/react-web';
  *

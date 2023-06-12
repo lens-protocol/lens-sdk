@@ -2,7 +2,7 @@ import {
   BroadcastOnChainData,
   BroadcastOnChainDocument,
   BroadcastOnChainVariables,
-  LensApolloClient,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { MetaTransaction } from '@lens-protocol/domain/entities';
 import {
@@ -25,7 +25,7 @@ import { handleRelayError, OnChainBroadcastReceipt } from './relayer';
 
 export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionRequest> {
   constructor(
-    private apolloClient: LensApolloClient,
+    private apolloClient: SafeApolloClient,
     private factory: ITransactionFactory<ProtocolTransactionRequest>,
     private logger: ILogger,
   ) {}

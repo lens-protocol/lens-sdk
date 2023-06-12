@@ -1,6 +1,6 @@
 import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloCache,
+  mockLensCache,
   mockProfileFragment,
   mockProfileStatsFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -9,7 +9,7 @@ import { mockTransactionData, mockUnconstrainedFollowRequest } from '@lens-proto
 import { FollowProfilesResponder } from '../FollowProfilesResponder';
 
 function setupTestScenario({ existingProfile }: { existingProfile: Profile }) {
-  const apolloCache = createMockApolloCache();
+  const apolloCache = mockLensCache();
 
   apolloCache.writeFragment({
     id: apolloCache.identify({

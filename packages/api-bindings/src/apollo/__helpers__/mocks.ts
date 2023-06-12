@@ -2,16 +2,31 @@ import { NormalizedCacheObject } from '@apollo/client';
 import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
-import { LensApolloClient } from '../LensApolloClient';
-import { createMockApolloCache, MockCacheConfiguration } from '../cache/__helpers__/mocks';
+import { SafeApolloClient } from '../SafeApolloClient';
+import { createSnapshotCache } from '../cache';
+import { mockLensCache, MockCacheConfiguration } from '../cache/__helpers__/mocks';
 import { ApolloServerErrorCode } from '../isGraphQLValidationError';
 
-export function createMockApolloClientWithMultipleResponses(
+export function mockLensApolloClient(
   mocks: ReadonlyArray<MockedResponse<unknown>>,
   cacheConfiguration: MockCacheConfiguration = {},
-): LensApolloClient<NormalizedCacheObject> {
-  return new LensApolloClient({
-    cache: createMockApolloCache(cacheConfiguration),
+): SafeApolloClient<NormalizedCacheObject> {
+  return new SafeApolloClient({
+    cache: mockLensCache(cacheConfiguration),
+
+    link: mockSingleLink(...mocks).setOnError((error) => {
+      throw error;
+    }),
+
+    pollingInterval: 1, // FAST
+  });
+}
+
+export function mockSnapshotApolloClient(
+  mocks: ReadonlyArray<MockedResponse<unknown>>,
+): SafeApolloClient<NormalizedCacheObject> {
+  return new SafeApolloClient({
+    cache: createSnapshotCache(),
 
     link: mockSingleLink(...mocks).setOnError((error) => {
       throw error;

@@ -103,7 +103,8 @@ export type FollowOperation = Operation<
  * @group Hooks
  * @param args - {@link UseFollowArgs}
  *
- * @example Follow a profile with {@link OpenFollowPolicy}
+ * @example
+ * Follow a profile with {@link OpenFollowPolicy}
  * ```ts
  * import { useFollow, Profile, ProfileOwnedByMe } from '@lens-protocol/react-web';
  *

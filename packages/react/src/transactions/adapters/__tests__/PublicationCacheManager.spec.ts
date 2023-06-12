@@ -1,6 +1,6 @@
 import { AnyPublication, FragmentPublication } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloCache,
+  mockLensCache,
   mockPostFragment,
   mockCommentFragment,
   mockMirrorFragment,
@@ -10,7 +10,7 @@ import { mockPublicationId } from '@lens-protocol/domain/mocks';
 import { PublicationCacheManager } from '../PublicationCacheManager';
 
 function setupTestScenario({ publication }: { publication: AnyPublication }) {
-  const apolloCache = createMockApolloCache();
+  const apolloCache = mockLensCache();
 
   apolloCache.writeFragment({
     id: apolloCache.identify({

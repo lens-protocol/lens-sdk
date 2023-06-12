@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
-import { LensApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
+import { SafeApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockCreatePostTypedDataData,
   mockRelayerResultFragment,
   createCreatePostTypedDataMockedResponse,
@@ -30,7 +30,7 @@ function setupTestScenario({
   apolloClient,
   uploadUrl,
 }: {
-  apolloClient: LensApolloClient;
+  apolloClient: SafeApolloClient;
   uploadUrl: Url;
 }) {
   const transactionFactory = mockITransactionFactory();
@@ -62,7 +62,7 @@ describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
     it(`should:
             - use the IMetadataUploader<CreatePostRequest> to upload the publication metadata
             - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createCreatePostTypedDataMockedResponse({
           variables: {
             request: {
@@ -84,7 +84,7 @@ describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
 
     it(`should allow to override the signature nonce`, async () => {
       const nonce = mockNonce();
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createCreatePostTypedDataMockedResponse({
           variables: {
             request: {
@@ -111,7 +111,7 @@ describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
     it(`should:
           - use the IMetadataUploader<CreatePostRequest> to upload the publication metadata
           - create an instance of the ${NativeTransaction.name}`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createCreatePostViaDispatcherMockedResponse({
           variables: {
             request: {
@@ -146,7 +146,7 @@ describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
     ])(
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
       async (relayError) => {
-        const apolloClient = createMockApolloClientWithMultipleResponses([
+        const apolloClient = mockLensApolloClient([
           createCreatePostViaDispatcherMockedResponse({
             variables: {
               request: {

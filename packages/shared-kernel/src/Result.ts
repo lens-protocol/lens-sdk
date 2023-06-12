@@ -102,8 +102,8 @@ export interface IEquatableError<T extends string = string, P = Narrow<T>> {
  * By throwing them we want to fail fast so the consumer can fix the issue as soon as possible.
  * Specifically for `InvariantError`, there is no need to code defensively against these errors. Just rectify the coding issue and move on.
  *
- * @example Control flow
- *
+ * @example
+ * Control flow
  * ```ts
  * const result: Result<number, RangeError> = doSomething();
  *
@@ -118,7 +118,8 @@ export interface IEquatableError<T extends string = string, P = Narrow<T>> {
  * console.log(result.value); // result.value gets narrowed to `number`
  * ```
  *
- * @example Exhaustive error handling
+ * @example
+ * Exhaustive error handling
  *
  * Given a result type like the following:
  *

@@ -45,7 +45,7 @@ import {
   LeafConditionOutput,
   Profile,
   MetadataOutput,
-} from '../../graphql';
+} from '../../lens';
 
 function allButPublicationAuthor(authorId: ProfileId) {
   return (criterion: AnyConditionOutput): boolean => {

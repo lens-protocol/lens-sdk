@@ -1,7 +1,7 @@
 import { activeProfileIdentifierVar, Profile } from '@lens-protocol/api-bindings';
 import {
   createGetAllProfilesMockedResponse,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -24,7 +24,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfiles(args), {
     mocks: {
       sources,
-      apolloClient: createMockApolloClientWithMultipleResponses([
+      apolloClient: mockLensApolloClient([
         createGetAllProfilesMockedResponse({
           variables: {
             byHandles: args.handles,

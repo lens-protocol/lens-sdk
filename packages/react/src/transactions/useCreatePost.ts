@@ -151,7 +151,8 @@ export type CreatePostOperation = Operation<
  * @group Hooks
  * @param args - {@link UseCreatePostArgs}
  *
- * @example Create a short text-only post
+ * @example
+ * Create a short text-only post
  * ```ts
  * import { uploadToIpfs } from './myIpfsUploader';
  * import { ContentFocus, ProfileOwnedByMe, useCreatePost } from '@lens-protocol/react-web';

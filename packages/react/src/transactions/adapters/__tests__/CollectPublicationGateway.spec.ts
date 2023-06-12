@@ -3,12 +3,12 @@ import {
   CreateCollectTypedDataData,
   CreateCollectTypedDataDocument,
   CreateCollectTypedDataVariables,
-  LensApolloClient,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
   createBroadcastProxyActionCallMockedError,
   createBroadcastProxyActionCallMockedResponse,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockCreateCollectTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProxyActionStatus, ProxyTransaction } from '@lens-protocol/domain/entities';
@@ -50,7 +50,7 @@ function mockCollectPublicationGateway({
   apollo,
   factory,
 }: {
-  apollo: LensApolloClient;
+  apollo: SafeApolloClient;
   factory: ITransactionFactory<FreeCollectRequest>;
 }) {
   return new CollectPublicationGateway(apollo, factory, mock<ILogger>());
@@ -81,7 +81,7 @@ describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
     it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
       const data = mockCreateCollectTypedDataData();
 
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         mockCreateCollectTypedDatMutationMockedResponse({
           variables: {
             request: {
@@ -105,7 +105,7 @@ describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
 
     it(`should be possible to override the signature nonce`, async () => {
       const nonce = mockNonce();
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         mockCreateCollectTypedDatMutationMockedResponse({
           variables: {
             request: {
@@ -138,7 +138,7 @@ describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
     const request = mockFreeCollectRequest();
     it(`should succeed with ${ProxyTransaction.name} on Polygon`, async () => {
       const indexingId = 'indexing-id';
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         createBroadcastProxyActionCallMockedResponse({
           result: indexingId,
           variables: {
@@ -181,7 +181,7 @@ describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
       expect((transaction as any).state.proxyId).toEqual(indexingId);
     });
     it(`should fail with ${BroadcastingError.name} in the case of a broadcast failure`, async () => {
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         createBroadcastProxyActionCallMockedError({
           errorMessage: 'Failed to broadcast proxy action call',
           variables: {

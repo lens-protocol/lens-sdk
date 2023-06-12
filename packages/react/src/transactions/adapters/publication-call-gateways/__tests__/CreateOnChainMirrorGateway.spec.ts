@@ -1,8 +1,8 @@
-import { LensApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
+import { SafeApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   createCreateMirrorTypedDataMockedResponse,
   createCreateMirrorViaDispatcherMockedResponse,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockCreateMirrorTypedDataData,
   mockRelayerResultFragment,
   mockRelayErrorFragment,
@@ -19,7 +19,7 @@ import {
 } from '../../__helpers__/mocks';
 import { CreateOnChainMirrorGateway } from '../CreateOnChainMirrorGateway';
 
-function setupTestScenario({ apolloClient }: { apolloClient: LensApolloClient }) {
+function setupTestScenario({ apolloClient }: { apolloClient: SafeApolloClient }) {
   const transactionFactory = mockITransactionFactory();
 
   const gateway = new CreateOnChainMirrorGateway(apolloClient, transactionFactory);
@@ -34,7 +34,7 @@ describe(`Given an instance of ${CreateOnChainMirrorGateway.name}`, () => {
     const request = mockCreateMirrorRequest();
 
     it(`should create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createCreateMirrorTypedDataMockedResponse({
           variables: {
             request: {
@@ -58,7 +58,7 @@ describe(`Given an instance of ${CreateOnChainMirrorGateway.name}`, () => {
     const request = mockCreateMirrorRequest();
 
     it(`should create an instance of the ${NativeTransaction.name}`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createCreateMirrorViaDispatcherMockedResponse({
           variables: {
             request: {
@@ -90,7 +90,7 @@ describe(`Given an instance of ${CreateOnChainMirrorGateway.name}`, () => {
     ])(
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
       async (relayError) => {
-        const apolloClient = createMockApolloClientWithMultipleResponses([
+        const apolloClient = mockLensApolloClient([
           createCreateMirrorViaDispatcherMockedResponse({
             variables: {
               request: {

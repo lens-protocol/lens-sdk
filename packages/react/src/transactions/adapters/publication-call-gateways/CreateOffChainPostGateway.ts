@@ -1,5 +1,5 @@
 import {
-  LensApolloClient,
+  SafeApolloClient,
   omitTypename,
   CreateDataAvailabilityPostTypedDataDocument,
   CreateDataAvailabilityPostTypedDataData,
@@ -35,7 +35,7 @@ export class CreateOffChainPostGateway
     IOffChainProtocolCallGateway<CreatePostRequest>
 {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreatePostRequest>,
     private readonly metadataUploader: IMetadataUploader<CreatePostRequest>,
   ) {}
@@ -130,12 +130,12 @@ export class CreateOffChainPostGateway
     const contract = lensHub(data.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('post', [
       {
-        profileId: data.value.profileId,
-        contentURI: data.value.contentURI,
-        collectModule: data.value.collectModule,
-        collectModuleInitData: data.value.collectModuleInitData,
-        referenceModule: data.value.referenceModule,
-        referenceModuleInitData: data.value.referenceModuleInitData,
+        profileId: data.message.profileId,
+        contentURI: data.message.contentURI,
+        collectModule: data.message.collectModule,
+        collectModuleInitData: data.message.collectModuleInitData,
+        referenceModule: data.message.referenceModule,
+        referenceModuleInitData: data.message.referenceModuleInitData,
       },
     ]);
     return {

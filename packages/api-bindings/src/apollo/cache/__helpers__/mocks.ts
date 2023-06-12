@@ -4,17 +4,17 @@ import { mockCreatePostRequest } from '@lens-protocol/domain/mocks';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
-import { createApolloCache } from '../createApolloCache';
+import { createLensCache } from '../createLensCache';
 import { TransactionState, TxStatus } from '../transactions';
 
 export type MockCacheConfiguration = {
   activeWalletVar?: ReactiveVar<WalletData | null>;
 };
 
-export function createMockApolloCache({
+export function mockLensCache({
   activeWalletVar = makeVar<WalletData | null>(null),
 }: MockCacheConfiguration = {}): ApolloCache<NormalizedCacheObject> {
-  return createApolloCache({ activeWalletVar });
+  return createLensCache({ activeWalletVar });
 }
 
 export function mockTransactionState<T extends AnyTransactionRequest>(

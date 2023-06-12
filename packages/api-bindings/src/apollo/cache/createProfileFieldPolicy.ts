@@ -7,7 +7,7 @@ import {
 } from '@apollo/client';
 import { never } from '@lens-protocol/shared-kernel';
 
-import { Profile, SingleProfileQueryRequest } from '../../graphql';
+import { Profile, SingleProfileQueryRequest } from '../../lens';
 
 function isProfile(value: StoreObject | undefined): value is Profile {
   return value?.__typename === 'Profile';
