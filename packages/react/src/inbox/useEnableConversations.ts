@@ -13,9 +13,9 @@ import { useActiveProfile } from '../profile';
 import { useEnableConversationsController } from './adapters/useEnableConversationsController';
 import type { InboxConfig } from './config';
 
-// TODO return ConversationProviderInstance
-export type ConversationParticipant = Participant & {
-  // TODO: Add something unique?
+export type ConversationsEnabled = {
+  config: InboxConfig;
+  participant: Participant;
 };
 
 export type UseEnableConversationsArgs = {
@@ -24,10 +24,10 @@ export type UseEnableConversationsArgs = {
 
 export type UseEnableConversationsResult = Prettify<
   Operation<
-    ConversationParticipant,
+    ConversationsEnabled,
     PendingSigningRequestError | UserRejectedError | WalletConnectionError | UnspecifiedError
   > & {
-    data: ConversationParticipant | undefined;
+    data: ConversationsEnabled | undefined;
   }
 >;
 
@@ -40,7 +40,7 @@ export function useEnableConversations(
 ): UseEnableConversationsResult {
   const { data: profile, error } = useActiveProfile();
   const execute = useEnableConversationsController(args.config);
-  const [participant, setParticipant] = useState<ConversationParticipant>();
+  const [dataResult, setDataResult] = useState<ConversationsEnabled>();
 
   return {
     ...useOperation(async () => {
@@ -57,12 +57,18 @@ export function useEnableConversations(
       });
 
       if (result.isSuccess()) {
-        setParticipant(result.value);
-        return success(result.value);
+        setDataResult({
+          participant: result.value,
+          config: args.config,
+        });
+        return success({
+          participant: result.value,
+          config: args.config,
+        });
       }
 
-      return result;
+      return failure(result.error);
     }),
-    data: participant,
+    data: dataResult,
   };
 }

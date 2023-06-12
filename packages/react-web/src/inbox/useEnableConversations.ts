@@ -1,5 +1,4 @@
 import {
-  ProfileId,
   useEnableConversations as useEnableConversationsBase,
   useEnvironmentConfig,
   useInboxKeyStorage,
@@ -8,15 +7,11 @@ import { useMemo } from 'react';
 
 import { WebConversationProvider } from './adapters/WebConversationProvider';
 
-export type UseEnableConversationsArgs = {
-  profileId?: ProfileId;
-};
-
 /**
  * @internal
  * @experimental
  */
-export function useEnableConversations(args: UseEnableConversationsArgs) {
+export function useEnableConversations() {
   const environment = useEnvironmentConfig();
   const storage = useInboxKeyStorage();
 
@@ -26,7 +21,6 @@ export function useEnableConversations(args: UseEnableConversationsArgs) {
   );
 
   return useEnableConversationsBase({
-    ...args,
     config: {
       provider,
     },

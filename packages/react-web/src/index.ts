@@ -1,10 +1,5 @@
 import { LensConfig, LensProvider, LensProviderProps } from './LensProvider';
-import {
-  useConversations,
-  UseConversationsArgs,
-  useEnableConversations,
-  UseEnableConversationsArgs,
-} from './inbox';
+import { useEnableConversations } from './inbox/useEnableConversations';
 import {
   UseCreateEncryptedCommentArgs,
   useCreateEncryptedComment,
@@ -19,7 +14,6 @@ export * from '@lens-protocol/react';
 export {
   LensProvider,
   // inbox
-  useConversations,
   useEnableConversations,
   // gated content
   useCreateEncryptedComment,
@@ -29,9 +23,6 @@ export {
 export type {
   LensConfig,
   LensProviderProps,
-  // inbox
-  UseConversationsArgs,
-  UseEnableConversationsArgs,
   // gated content
   UseCreateEncryptedCommentArgs,
   UseCreateEncryptedPostArgs,

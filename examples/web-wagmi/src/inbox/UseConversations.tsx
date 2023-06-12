@@ -1,7 +1,6 @@
 import {
   Conversation,
-  ConversationParticipant,
-  ProfileOwnedByMe,
+  ConversationsEnabled,
   useConversations,
   useEnableConversations,
 } from '@lens-protocol/react-web';
@@ -25,11 +24,11 @@ function ConversationItem({ conversation }: ConversationItemProps) {
 }
 
 type UseConversationsInnerProps = {
-  participant: ConversationParticipant;
+  inbox: ConversationsEnabled;
 };
 
-function UseConversationsInner({ participant }: UseConversationsInnerProps) {
-  const { data, loading, error } = useConversations(participant);
+function UseConversationsInner({ inbox }: UseConversationsInnerProps) {
+  const { data, loading, error } = useConversations(inbox);
 
   return (
     <div>
@@ -46,19 +45,8 @@ function UseConversationsInner({ participant }: UseConversationsInnerProps) {
   );
 }
 
-type EnableConversationsProps = {
-  profile: ProfileOwnedByMe;
-};
-
-function EnableConversations({ profile }: EnableConversationsProps) {
-  const {
-    execute: enableConversations,
-    isPending,
-    data: participant,
-    error,
-  } = useEnableConversations({
-    profileId: profile.id,
-  });
+function EnableConversations() {
+  const { execute: enableConversations, isPending, data: inbox, error } = useEnableConversations();
 
   const onEnableClick = async () => {
     await enableConversations();
@@ -66,7 +54,7 @@ function EnableConversations({ profile }: EnableConversationsProps) {
 
   return (
     <div>
-      {!participant && (
+      {!inbox && (
         <button onClick={onEnableClick} disabled={isPending}>
           Enable Inbox
         </button>
@@ -76,7 +64,7 @@ function EnableConversations({ profile }: EnableConversationsProps) {
 
       {error && <ErrorMessage error={error} />}
 
-      {participant && <UseConversationsInner participant={participant} />}
+      {inbox && <UseConversationsInner inbox={inbox} />}
     </div>
   );
 }
@@ -87,9 +75,7 @@ export function UseConversations() {
       <h1>
         <code>useConversations</code>
       </h1>
-      <WhenLoggedInWithProfile>
-        {({ profile }) => <EnableConversations profile={profile} />}
-      </WhenLoggedInWithProfile>
+      <WhenLoggedInWithProfile>{() => <EnableConversations />}</WhenLoggedInWithProfile>
       <WhenLoggedOut>
         <div>
           <p>You must be logged in to use this example.</p>
