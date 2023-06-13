@@ -1168,9 +1168,6 @@ importers:
 
   packages/wagmi:
     dependencies:
-      '@ethersproject/abstract-signer':
-        specifier: ^5.7.0
-        version: 5.7.0
       '@lens-protocol/shared-kernel':
         specifier: workspace:*
         version: link:../shared-kernel

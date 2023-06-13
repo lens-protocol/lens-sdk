@@ -3,7 +3,6 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 import { PublicClient, SwitchChainNotSupportedError, WalletClient } from 'wagmi';
 import { getNetwork, getPublicClient, getWalletClient, switchNetwork } from 'wagmi/actions';
-import 'wagmi/window';
 
 export function bindings(): IBindings {
   return {

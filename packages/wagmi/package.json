@@ -56,7 +56,6 @@
   },
   "prettier": "@lens-protocol/prettier-config",
   "dependencies": {
-    "@ethersproject/abstract-signer": "^5.7.0",
     "@lens-protocol/shared-kernel": "workspace:*"
   },
   "babel": {
