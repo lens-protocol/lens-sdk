@@ -40,11 +40,6 @@ export type GatedClientConfig = {
   signer: Signer;
   storageProvider: IStorageProvider;
   encryptionProvider: IEncryptionProvider;
-
-  /**
-   * @internal
-   */
-  litClient?: ILitNodeClient;
 };
 
 export interface ILitNodeClient {
