@@ -2,7 +2,7 @@ import { Readable } from 'stream';
 
 import { WebBundlr } from '@bundlr-network/client';
 import { ImageType } from '@lens-protocol/react-web';
-import { ethersProviderFromPublicClient } from '@lens-protocol/wagmi';
+import { providerFromPublicClient } from '@lens-protocol/wagmi';
 import { ReadableWebToNodeStream } from 'readable-web-to-node-stream';
 import { getPublicClient } from 'wagmi/actions';
 
@@ -13,7 +13,7 @@ const MIN_FUNDS = 0.05;
 
 async function getBundlr() {
   const publicClient = getPublicClient();
-  const provider = ethersProviderFromPublicClient(publicClient);
+  const provider = providerFromPublicClient({ publicClient });
   const signer = provider.getSigner();
 
   const bundlr = new WebBundlr('https://devnet.bundlr.network', 'matic', provider, {

@@ -40,6 +40,7 @@
     "@lens-protocol/react-web": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@types/node": "^18.15.11",
+    "ethers": "^5.7.2",
     "prettier": "^2.8.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -49,11 +50,13 @@
   },
   "peerDependencies": {
     "@lens-protocol/react-web": "workspace:*",
+    "ethers": "^5.7.2",
     "viem": "^1.0.0",
     "wagmi": "^1.1.0"
   },
   "prettier": "@lens-protocol/prettier-config",
   "dependencies": {
+    "@ethersproject/abstract-signer": "^5.7.0",
     "@lens-protocol/shared-kernel": "workspace:*"
   },
   "babel": {

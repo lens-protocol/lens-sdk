@@ -1,8 +1,8 @@
 import { LensConfig, LensProvider, development } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { configureChains, createConfig, WagmiConfig } from 'wagmi';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { WagmiConfig, configureChains, createConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 

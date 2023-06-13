@@ -1,16 +1,15 @@
 import { IBindings } from '@lens-protocol/react-web';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
-import { PublicClient, SwitchChainNotSupportedError } from 'wagmi';
-import { getNetwork, getPublicClient, switchNetwork } from 'wagmi/actions';
+import { PublicClient, SwitchChainNotSupportedError, WalletClient } from 'wagmi';
+import { getNetwork, getPublicClient, getWalletClient, switchNetwork } from 'wagmi/actions';
 import 'wagmi/window';
 
 export function bindings(): IBindings {
   return {
     getProvider: async ({ chainId }) => {
-      const publicClient = getPublicClient<PublicClient>({ chainId });
-
-      return ethersProviderFromPublicClient(publicClient);
+      const publicClient = getPublicClient({ chainId });
+      return providerFromPublicClient({ publicClient, chainId });
     },
     getSigner: async ({ chainId }) => {
       if (chainId) {
@@ -28,18 +27,31 @@ export function bindings(): IBindings {
         }
       }
 
-      const publicClient = getPublicClient<PublicClient>({ chainId });
+      const walletClient = await getWalletClient({ chainId });
 
-      return ethersProviderFromPublicClient(publicClient).getSigner();
+      invariant(walletClient, 'Wallet client not found');
+
+      return signerFromWalletClient({ walletClient, chainId });
     },
   };
 }
 
-export function ethersProviderFromPublicClient(publicClient: PublicClient): providers.Web3Provider {
-  invariant(window.ethereum, 'window.ethereum is not defined');
+export function providerFromPublicClient({
+  publicClient,
+  chainId,
+}: {
+  publicClient: PublicClient;
+  chainId?: number;
+}): providers.Web3Provider {
+  return new providers.Web3Provider(publicClient.transport, chainId);
+}
 
-  return new providers.Web3Provider(
-    window.ethereum as providers.ExternalProvider,
-    publicClient.chain.id,
-  );
+export async function signerFromWalletClient({
+  walletClient,
+  chainId,
+}: {
+  walletClient: WalletClient;
+  chainId?: number;
+}): Promise<providers.JsonRpcSigner> {
+  return new providers.Web3Provider(walletClient.transport, chainId).getSigner();
 }
