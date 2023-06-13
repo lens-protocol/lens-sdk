@@ -23,15 +23,6 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 - [Introduction](https://docs.lens.xyz/docs/sdk-react-intro)
 - [Getting Started](https://docs.lens.xyz/docs/sdk-react-getting-started)
 
-## Road Map
-
-- [x] Release 0.5.0: Low-level API abstraction client.
-- [x] Release 0.6.0: integration with Lens Gated SDK.
-- [x] Release 1.0.0: initial stable release.
-- [ ] Release 1.x.0: support for Data Availability posts.
-
-**Note**: This road map is subject to change and is provided for informational purposes only.
-
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change (issues template will be provided)
