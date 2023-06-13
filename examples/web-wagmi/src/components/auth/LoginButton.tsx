@@ -2,7 +2,7 @@ import { useWalletLogin, useWalletLogout } from '@lens-protocol/react-web';
 import { signerFromWalletClient } from '@lens-protocol/wagmi';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useAccount, useConnect, useDisconnect, usePublicClient } from 'wagmi';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
 import { WhenLoggedInWithProfile } from './WhenLoggedInWithProfile';
