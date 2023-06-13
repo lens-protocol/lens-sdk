@@ -2,7 +2,7 @@ import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import {
   createGetProfileMockedResponse,
   mockProfileFragment,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import {
@@ -17,7 +17,7 @@ import { UpdateDispatcherConfigResponder } from '../UpdateDispatcherConfigRespon
 
 function setupTestScenario({ profile }: { profile: Profile }) {
   const sources = mockSources();
-  const apolloClient = createMockApolloClientWithMultipleResponses([
+  const apolloClient = mockLensApolloClient([
     createGetProfileMockedResponse({
       profile,
       variables: {

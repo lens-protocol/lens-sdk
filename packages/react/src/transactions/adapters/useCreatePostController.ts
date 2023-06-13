@@ -4,6 +4,7 @@ import { useSharedDependencies } from '../../shared';
 import { PublicationMetadataUploader } from '../infrastructure/PublicationMetadataUploader';
 import { CreatePostController } from './CreatePostController';
 import { MetadataUploadHandler } from './MetadataUploadHandler';
+import { validateCreatePostRequest } from './schemas/validators';
 
 export type UseCreatePostArgs = {
   upload: MetadataUploadHandler;
@@ -21,6 +22,8 @@ export function useCreatePostController({ upload }: UseCreatePostArgs) {
   } = useSharedDependencies();
 
   return async (request: CreatePostRequest) => {
+    validateCreatePostRequest(request);
+
     const uploader = PublicationMetadataUploader.create(upload);
     const controller = new CreatePostController({
       activeWallet,

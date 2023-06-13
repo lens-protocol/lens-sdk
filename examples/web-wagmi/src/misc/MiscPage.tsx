@@ -32,9 +32,9 @@ const miscHooks = [
     path: '/misc/useRecentTransactions',
   },
   {
-    label: 'Login to specific profile',
-    description: `Login to a specific profile by handle`,
-    path: '/misc/loginSpecificProfile',
+    label: 'Polls',
+    description: `Interact with publication containing a poll.`,
+    path: '/misc/polls',
   },
 ];
 

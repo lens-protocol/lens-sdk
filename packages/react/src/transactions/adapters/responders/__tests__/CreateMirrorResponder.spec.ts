@@ -1,6 +1,6 @@
 import { Post, FragmentPost, activeProfileIdentifierVar } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockPostFragment,
   mockProfileFragment,
   mockSources,
@@ -28,7 +28,7 @@ function setupTestScenario({
   activeProfileIdentifierVar(activeProfile);
 
   const sources = mockSources();
-  const apolloClient = createMockApolloClientWithMultipleResponses([
+  const apolloClient = mockLensApolloClient([
     createGetPublicationMockedResponse({
       variables: {
         request: {

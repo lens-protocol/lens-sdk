@@ -1,5 +1,6 @@
 import { TypedDataSigner } from '@ethersproject/abstract-signer';
 import { TransactionRequest } from '@ethersproject/providers';
+import { TypedData } from '@lens-protocol/blockchain-bindings/src/TypedData';
 import {
   InsufficientGasError,
   Wallet,
@@ -12,22 +13,27 @@ import {
   NativeTransaction,
   ProtocolTransactionRequestModel,
   AnyTransactionRequestModel,
+  Signature,
 } from '@lens-protocol/domain/entities';
+import { ISignedVote, PollId } from '@lens-protocol/domain/src/entities/polls';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
   ChainType,
   EthereumAddress,
   failure,
+  invariant,
   matic,
   PromiseResult,
   success,
 } from '@lens-protocol/shared-kernel';
 import { errors, Signer } from 'ethers';
+import { getAddress } from 'ethers/lib/utils';
 import { z } from 'zod';
 
+import { UnsignedVote } from '../../polls/adapters/SnapshotVoteFactory';
+import { ISnapshotVote } from '../../polls/adapters/SnapshotVoteRelayer';
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from '../../transactions/adapters/SelfFundedProtocolTransactionRequest';
-import { TypedData } from '../../transactions/adapters/TypedData';
 import { assertErrorObjectWithCode } from './errors';
 
 export type RequiredSigner = Signer & TypedDataSigner;
@@ -58,7 +64,8 @@ export class UnsignedProtocolCall<T extends ProtocolTransactionRequestModel>
   ) {}
 
   get nonce() {
-    return this.typedData.value.nonce;
+    invariant(typeof this.typedData.message.nonce === 'number', 'Nonce is not defined');
+    return this.typedData.message.nonce;
   }
 
   static create<T extends ProtocolTransactionRequestModel>({
@@ -82,7 +89,7 @@ export class SignedProtocolCall<T extends ProtocolTransactionRequestModel>
   private constructor(
     readonly id: string,
     readonly request: T,
-    readonly signature: string,
+    readonly signature: Signature,
     readonly nonce: number,
     readonly fallback: SelfFundedProtocolTransactionRequest<T>,
   ) {}
@@ -97,11 +104,20 @@ export class SignedProtocolCall<T extends ProtocolTransactionRequestModel>
     return new SignedProtocolCall(
       unsignedCall.id,
       unsignedCall.request,
-      signature,
+      signature as Signature,
       unsignedCall.nonce,
       unsignedCall.fallback,
     );
   }
+}
+
+export class SignedVote implements ISnapshotVote {
+  constructor(
+    readonly pollId: PollId,
+    readonly signature: Signature,
+    readonly data: TypedData,
+    readonly voter: EthereumAddress,
+  ) {}
 }
 
 export interface ITransactionRequest {
@@ -144,7 +160,7 @@ export class ConcreteWallet extends Wallet {
       const signature = await signer._signTypedData(
         unsignedCall.typedData.domain,
         unsignedCall.typedData.types,
-        unsignedCall.typedData.value,
+        unsignedCall.typedData.message,
       );
 
       const signedCall = SignedProtocolCall.create({ unsignedCall, signature });
@@ -164,7 +180,10 @@ export class ConcreteWallet extends Wallet {
 
   async signMessage(
     message: string,
-  ): PromiseResult<string, PendingSigningRequestError | WalletConnectionError | UserRejectedError> {
+  ): PromiseResult<
+    Signature,
+    PendingSigningRequestError | WalletConnectionError | UserRejectedError
+  > {
     const result = await this.signerFactory.createSigner({
       address: this.address,
     });
@@ -180,7 +199,8 @@ export class ConcreteWallet extends Wallet {
 
     const signer = result.value;
     try {
-      return success(await signer.signMessage(message));
+      const signature = await signer.signMessage(message);
+      return success(signature as Signature);
     } catch (err) {
       assertErrorObjectWithCode<errors>(err);
 
@@ -235,6 +255,52 @@ export class ConcreteWallet extends Wallet {
           return failure(new InsufficientGasError(matic()));
       }
 
+      throw err;
+    } finally {
+      this.signingInProgress = false;
+    }
+  }
+
+  async signVote(
+    unsignedVote: UnsignedVote,
+  ): PromiseResult<
+    ISignedVote,
+    WalletConnectionError | PendingSigningRequestError | UserRejectedError
+  > {
+    const result = await this.signerFactory.createSigner({
+      address: this.address,
+    });
+
+    if (result.isFailure()) {
+      return failure(result.error);
+    }
+
+    if (this.signingInProgress) {
+      return failure(new PendingSigningRequestError());
+    }
+    this.signingInProgress = true;
+
+    const signer = result.value;
+    try {
+      const signature = await signer._signTypedData(
+        unsignedVote.typedData.domain,
+        unsignedVote.typedData.types,
+        unsignedVote.typedData.message,
+      );
+
+      const signedVote = new SignedVote(
+        unsignedVote.pollId,
+        signature as Signature,
+        unsignedVote.typedData,
+        getAddress(this.address),
+      );
+      return success(signedVote);
+    } catch (err) {
+      assertErrorObjectWithCode<errors>(err);
+
+      if (err.code === errors.ACTION_REJECTED) {
+        return failure(new UserRejectedError());
+      }
       throw err;
     } finally {
       this.signingInProgress = false;

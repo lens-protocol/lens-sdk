@@ -13,7 +13,7 @@ module.exports = {
           {
             name: '@apollo/client',
             importNames: ['createHttpLink', 'HttpLink'],
-            message: 'Please use "createHttpLink" from src/apollo/links.ts.',
+            message: 'Please terminating links from src/apollo/links.ts.',
           },
         ],
       },

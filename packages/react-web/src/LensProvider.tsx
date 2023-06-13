@@ -85,7 +85,7 @@ const storage = localStorage();
  * @group Components
  * @param props - {@link LensProviderProps}
  *
- * @example Quick start
+ * @example
  * ```tsx
  * import { LensProvider, staging } from '@lens-protocol/react-web';
  * import { bindings as wagmiBindings } from '@lens-protocol/wagmi';

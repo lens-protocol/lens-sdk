@@ -2,7 +2,7 @@ import { MockedResponse } from '@apollo/client/testing';
 import { ReactionTypes } from '@lens-protocol/api-bindings';
 import {
   createAddReactionMockedResponse,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createRemoveReactionMockedResponse,
   mockPostFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -20,7 +20,7 @@ function setupUseReaction({
   profileId: ProfileId;
   mocks?: ReadonlyArray<MockedResponse<unknown>>;
 }) {
-  const apolloClient = createMockApolloClientWithMultipleResponses(mocks);
+  const apolloClient = mockLensApolloClient(mocks);
   return renderHookWithMocks(
     () =>
       useReaction({

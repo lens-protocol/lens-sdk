@@ -2,7 +2,7 @@ import {
   HasTxHashBeenIndexedDocument,
   HasTxHashBeenIndexedData,
   HasTxHashBeenIndexedVariables,
-  LensApolloClient,
+  SafeApolloClient,
   ProxyActionStatusDocument,
   ProxyActionStatusData,
   ProxyActionStatusVariables,
@@ -54,7 +54,7 @@ function resolveTransactionErrorReason(reason: TransactionErrorReasons) {
 export class TransactionObserver implements ITransactionObserver {
   constructor(
     private readonly providerFactory: IProviderFactory,
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly timings: TransactionObserverTimings,
   ) {}
 

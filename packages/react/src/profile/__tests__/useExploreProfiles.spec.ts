@@ -5,7 +5,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import {
   createExploreProfilesMockedResponse,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -30,7 +30,7 @@ function setupTestScenario({
     {
       mocks: {
         sources,
-        apolloClient: createMockApolloClientWithMultipleResponses([
+        apolloClient: mockLensApolloClient([
           createExploreProfilesMockedResponse({
             variables: {
               limit: DEFAULT_PAGINATED_QUERY_LIMIT,

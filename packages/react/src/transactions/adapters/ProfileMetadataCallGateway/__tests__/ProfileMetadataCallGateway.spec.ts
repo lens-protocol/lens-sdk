@@ -4,7 +4,7 @@ import { Profile, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   createCreateSetProfileMetadataTypedDataMockedResponse,
   createCreateSetProfileMetadataViaDispatcherMockedResponse,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockCreateSetProfileMetadataTypedDataData,
   createGetProfileMockedResponse,
   mockProfileFragment,
@@ -42,7 +42,7 @@ function setupTestScenario({
     profile: existingProfile,
   });
 
-  const apolloClient = createMockApolloClientWithMultipleResponses([
+  const apolloClient = mockLensApolloClient([
     getProfilesByIdQueryMockedResponse,
     ...otherMockedResponses,
   ]);

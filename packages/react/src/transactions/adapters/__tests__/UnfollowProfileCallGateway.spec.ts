@@ -5,7 +5,7 @@ import {
   CreateUnfollowTypedDataVariables,
 } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockCreateUnfollowTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockUnfollowRequest } from '@lens-protocol/domain/mocks';
@@ -38,7 +38,7 @@ describe(`Given an instance of the ${UnfollowProfileCallGateway.name}`, () => {
   describe(`when calling the "${UnfollowProfileCallGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
     it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
       const data = mockCreateUnfollowTypedDataData();
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         mockCreateUnfollowTypedDataMutationMockedResponse({
           variables: {
             request: {

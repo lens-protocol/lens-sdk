@@ -7,77 +7,83 @@ hooks:
 watch: false
 config:
   gqlImport: graphql-tag
-  defaultScalarType: unknown
-
-  scalars:
-    Attach: string
-    BroadcastId: string
-    BlockchainData: string
-    ChainId: number
-    ClientErc20Amount: ClientErc20Amount
-    CollectModuleData: string
-    CollectPolicy: CollectPolicy
-    ContentEncryptionKey: ContentEncryptionKey
-    ContractAddress: string
-    Cursor: Cursor
-    DataAvailabilityId: string
-    DateTime: string
-    DecryptionCriteria: DecryptionCriteria
-    EncryptedValueScalar: string
-    EthereumAddress: EthereumAddress
-    FollowModuleData: string
-    FollowPolicy: FollowPolicy
-    FollowStatus: FollowStatus
-    Handle: string
-    InternalPublicationId: PublicationId
-    Jwt: string
-    LimitScalar: number
-    Locale: string
-    Markdown: string
-    Media: string
-    MimeType: string
-    NftOwnershipId: string
-    Nonce: number
-    NotificationId: string
-    PendingPublicationId: string
-    ProfileAttributes: ProfileAttributes
-    ProfileId: ProfileId
-    ProfileInterest: string
-    ProxyActionId: string
-    PublicationId: string
-    PublicationUrl: Url
-    ReferenceModuleData: string
-    ReferencePolicy: ReferencePolicy
-    Search: string
-    Signature: string
-    Sources: AppId
-    String: string
-    TokenId: string
-    TxHash: string
-    TxId: string
-    Url: Url
-    Void: void
   avoidOptionals:
     field: true
 
-schema:
-  - https://api-mumbai.lens.dev/graphql
-  - src/graphql/client.graphql
-documents:
-  - src/graphql/*.graphql
-
 generates:
-  src/graphql/operations.ts:
+  src/lens/generated.ts:
+    config:
+      defaultScalarType: unknown
+      scalars:
+        Attach: string
+        BroadcastId: string
+        BlockchainData: string
+        ChainId: number
+        ClientErc20Amount: ClientErc20Amount
+        CollectModuleData: string
+        CollectPolicy: CollectPolicy
+        ContentEncryptionKey: ContentEncryptionKey
+        ContentInsight: ContentInsight
+        ContractAddress: string
+        Cursor: Cursor
+        DataAvailabilityId: string
+        DateTime: string
+        DecryptionCriteria: DecryptionCriteria
+        EncryptedValueScalar: string
+        EthereumAddress: EthereumAddress
+        FollowModuleData: string
+        FollowPolicy: FollowPolicy
+        FollowStatus: FollowStatus
+        Handle: string
+        InternalPublicationId: PublicationId
+        Jwt: string
+        LimitScalar: number
+        Locale: string
+        Markdown: string
+        Media: string
+        MimeType: string
+        NftOwnershipId: string
+        Nonce: number
+        NotificationId: string
+        PendingPublicationId: string
+        ProfileAttributes: ProfileAttributes
+        ProfileId: ProfileId
+        ProfileInterest: string
+        ProxyActionId: string
+        PublicationId: string
+        PublicationUrl: Url
+        ReferenceModuleData: string
+        ReferencePolicy: ReferencePolicy
+        Search: string
+        Signature: string
+        Sources: AppId
+        String: string
+        TokenId: string
+        TxHash: string
+        TxId: string
+        Url: Url
+        Void: void
+    schema:
+      - https://api-mumbai.lens.dev/graphql
+      - src/lens/client.graphql
+    documents:
+      - src/lens/*.graphql
     plugins:
       - 'typescript':
           onlyOperationTypes: true # scalars and enums
       - add:
           content: [
               '/** Code generated. DO NOT EDIT. */',
+              '/* eslint-disable import/no-default-export */', # generatedTypes default export
               '/* eslint-disable @typescript-eslint/ban-types */', # needed by unions with {}
+              '/* eslint-disable @typescript-eslint/no-explicit-any */', # see extensive use of FieldPolicy<any> | FieldReadFunction<any>
+              '/* eslint-disable @typescript-eslint/naming-convention */', # interface PossibleTypesResultData not starting with I
+              '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
+              '/* eslint-disable tsdoc/syntax */',
               "import type { AppId, DecryptionCriteria, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
               "import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';",
               "import type { ContentEncryptionKey } from './ContentEncryptionKey';",
+              "import type { ContentInsight } from './ContentInsight';",
               "import type { Cursor } from './Cursor';",
               "import type { ProfileAttributes } from './ProfileAttributes';",
               "import type { FollowPolicy } from './FollowPolicy';",
@@ -91,24 +97,39 @@ generates:
           inlineFragmentTypes: combine
           omitOperationSuffix: true
           operationResultSuffix: 'Data'
+      - 'typescript-react-apollo':
+          pureMagicComment: true # keep
+          omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix
+          operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix
+          fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents
+      - 'typescript-apollo-client-helpers'
+      - 'fragment-matcher'
 
-  src/graphql/hooks.ts:
+  src/snapshot/generated.ts:
+    config:
+      strictScalars: true
+      scalars:
+        Any: unknown
+    schema: https://hub.snapshot.org/graphql
+    documents:
+      - src/snapshot/*.graphql
     plugins:
+      - 'typescript':
+          onlyOperationTypes: true # scalars and enums
       - add:
           content: [
               '/** Code generated. DO NOT EDIT. */',
               '/* eslint-disable import/no-default-export */', # generatedTypes default export
-              '/* eslint-disable @typescript-eslint/no-explicit-any */', # see extensive use of FieldPolicy<any> | FieldReadFunction<any>
-              '/* eslint-disable @typescript-eslint/naming-convention */', # interface PossibleTypesResultData not starting with I
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
-              '/* eslint-disable tsdoc/syntax */',
-              "import * as Operations from './operations';",
             ]
+      - 'typescript-operations':
+          skipTypename: true
+          immutableTypes: false
+          inlineFragmentTypes: combine
+          omitOperationSuffix: true
+          operationResultSuffix: 'Data'
       - 'typescript-react-apollo':
           pureMagicComment: true # keep
-          importOperationTypesFrom: 'Operations'
-          omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix in src/graphql/operations.ts
-          operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix in src/graphql/operations.ts
+          omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix
+          operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix
           fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents
-      - 'typescript-apollo-client-helpers'
-      - 'fragment-matcher'
