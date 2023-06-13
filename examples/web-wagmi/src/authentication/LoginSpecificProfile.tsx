@@ -5,6 +5,7 @@ import {
   useWalletLogout,
   WalletData,
 } from '@lens-protocol/react-web';
+import { signerFromWalletClient } from '@lens-protocol/wagmi';
 import { useState } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
@@ -56,7 +57,6 @@ function AuthenticatedContent({
 
   const onLoginClick = async () => {
     await logout();
-
     if (isConnected) {
       await disconnectAsync();
     }
@@ -64,7 +64,8 @@ function AuthenticatedContent({
     const { connector } = await connectAsync();
 
     if (connector instanceof InjectedConnector) {
-      const signer = await connector.getSigner();
+      const walletClient = await connector.getWalletClient();
+      const signer = await signerFromWalletClient({ walletClient });
       await login(signer, handle);
     }
   };

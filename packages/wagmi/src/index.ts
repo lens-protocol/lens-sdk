@@ -1,12 +1,15 @@
-import { IBindings, RequiredSigner } from '@lens-protocol/react-web';
+import { IBindings } from '@lens-protocol/react-web';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
-import { SwitchChainNotSupportedError } from 'wagmi';
-import { fetchSigner, getNetwork, getProvider, switchNetwork } from 'wagmi/actions';
+import { PublicClient, SwitchChainNotSupportedError, WalletClient } from 'wagmi';
+import { getNetwork, getPublicClient, getWalletClient, switchNetwork } from 'wagmi/actions';
 
 export function bindings(): IBindings {
   return {
-    getProvider: async ({ chainId }) => getProvider<providers.JsonRpcProvider>({ chainId }),
+    getProvider: async ({ chainId }) => {
+      const publicClient = getPublicClient({ chainId });
+      return providerFromPublicClient({ publicClient, chainId });
+    },
     getSigner: async ({ chainId }) => {
       if (chainId) {
         const { chain } = getNetwork();
@@ -23,11 +26,31 @@ export function bindings(): IBindings {
         }
       }
 
-      const signer = await fetchSigner<RequiredSigner>({ chainId });
+      const walletClient = await getWalletClient({ chainId });
 
-      invariant(signer, 'Cannot get signer, is the wallet connected?');
+      invariant(walletClient, 'Wallet client not found');
 
-      return signer;
+      return signerFromWalletClient({ walletClient, chainId });
     },
   };
+}
+
+export function providerFromPublicClient({
+  publicClient,
+  chainId,
+}: {
+  publicClient: PublicClient;
+  chainId?: number;
+}): providers.Web3Provider {
+  return new providers.Web3Provider(publicClient.transport, chainId);
+}
+
+export async function signerFromWalletClient({
+  walletClient,
+  chainId,
+}: {
+  walletClient: WalletClient;
+  chainId?: number;
+}): Promise<providers.JsonRpcSigner> {
+  return new providers.Web3Provider(walletClient.transport, chainId).getSigner();
 }

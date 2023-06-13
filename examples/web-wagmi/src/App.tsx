@@ -1,8 +1,8 @@
 import { LensConfig, LensProvider, development } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { WagmiConfig, configureChains, createConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -63,12 +63,15 @@ import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
 import { UseProfilePublicationRevenue } from './revenue/UseProfilePublicationRevenue';
 import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
 
-const { provider, webSocketProvider } = configureChains([polygonMumbai], [publicProvider()]);
+const { publicClient, webSocketPublicClient } = configureChains(
+  [polygonMumbai],
+  [publicProvider()],
+);
 
-const client = createClient({
+const config = createConfig({
   autoConnect: true,
-  provider,
-  webSocketProvider,
+  publicClient,
+  webSocketPublicClient,
 });
 
 const lensConfig: LensConfig = {
@@ -80,7 +83,7 @@ const toastNotification = (error: Error) => toast.error(error.message);
 
 export function App() {
   return (
-    <WagmiConfig client={client}>
+    <WagmiConfig config={config}>
       <LensProvider config={lensConfig} onError={toastNotification}>
         <Router>
           <Header />
