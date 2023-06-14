@@ -23,24 +23,12 @@ export class Reaction {
   ) {}
 
   async add(request: ReactionRequest) {
+    await this.gateway.add(request);
     await this.presenter.add(request);
-
-    try {
-      await this.gateway.add(request);
-    } catch (e) {
-      await this.presenter.remove(request);
-      throw e;
-    }
   }
 
   async remove(request: ReactionRequest) {
+    await this.gateway.remove(request);
     await this.presenter.remove(request);
-
-    try {
-      await this.gateway.remove(request);
-    } catch (e) {
-      await this.presenter.add(request);
-      throw e;
-    }
   }
 }

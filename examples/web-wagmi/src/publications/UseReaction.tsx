@@ -32,6 +32,8 @@ function ReactionButton({ publication, profileId, reactionType }: ReactionButton
     publication,
   });
 
+  const hasAnyReaction = publication.reaction !== null;
+
   const toggleReaction = async () => {
     if (hasReactionType) {
       await removeReaction({
@@ -48,7 +50,7 @@ function ReactionButton({ publication, profileId, reactionType }: ReactionButton
 
   return (
     <>
-      <button onClick={toggleReaction} disabled={isPending}>
+      <button onClick={toggleReaction} disabled={isPending || (hasAnyReaction && !hasReactionType)}>
         <strong>{hasReactionType ? `Remove ${reactionType}` : `Add ${reactionType}`}</strong>
       </button>
     </>
