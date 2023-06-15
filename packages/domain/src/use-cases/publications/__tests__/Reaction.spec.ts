@@ -31,7 +31,7 @@ describe(`Given the ${Reaction.name} use-case interactor`, () => {
       await expect(reaction.add(request)).rejects.toThrow();
 
       expect(presenter.add).toHaveBeenCalledWith(request);
-      expect(presenter.remove).toHaveBeenCalledWith(request);
+      expect(presenter.revert).toHaveBeenCalledWith(request);
     });
   });
 

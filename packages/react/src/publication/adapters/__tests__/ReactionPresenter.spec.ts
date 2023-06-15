@@ -162,4 +162,39 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
       );
     });
   });
+
+  describe(`when the "${ReactionPresenter.prototype.revert.name}" method is invoked`, () => {
+    it(`should update apollo cache with the previous reaction`, async () => {
+      const post = mockPostFragment({
+        reaction: ReactionTypes.Upvote,
+        stats: mockPublicationStatsFragment({
+          totalUpvotes: 3,
+          totalDownvotes: 2,
+        }),
+      });
+      const request = mockReactionRequest({
+        publicationId: post.id,
+        reactionType: ReactionType.DOWNVOTE,
+      });
+
+      const scenario = setupTestScenario({
+        post,
+        request,
+      });
+
+      await scenario.presenter.add(request);
+      await scenario.presenter.revert(request);
+
+      expect(scenario.updatedPostFragment).toEqual(
+        expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          stats: expect.objectContaining({
+            totalUpvotes: 3,
+            totalDownvotes: 2,
+          }),
+          reaction: ReactionTypes.Upvote,
+        }),
+      );
+    });
+  });
 });

@@ -14,6 +14,7 @@ export interface IReactionGateway {
 export interface IReactionPresenter {
   add(request: ReactionRequest): Promise<void>;
   remove(request: ReactionRequest): Promise<void>;
+  revert(request: ReactionRequest): Promise<void>;
 }
 
 export class Reaction {
@@ -28,7 +29,7 @@ export class Reaction {
     try {
       await this.gateway.add(request);
     } catch (e) {
-      await this.presenter.remove(request);
+      await this.presenter.revert(request);
       throw e;
     }
   }
