@@ -13,9 +13,11 @@ import {
   AnyPublication,
   CollectModule,
   CollectPolicy,
+  Comment,
   ContentInsight,
   ContentInsightType,
   MetadataOutput,
+  Post,
   PublicationQueryRequest,
   PublicationStats,
   ReferenceModule,
@@ -31,6 +33,7 @@ import {
   isMirrorTransactionFor,
 } from './transactions';
 import { ContentInsightMatcher } from './utils/ContentInsight';
+import { TypePolicy } from './utils/TypePolicy';
 import { extractUrls } from './utils/extractUrls';
 import { firstMatch } from './utils/firstMatch';
 import { noCachedField } from './utils/noCachedField';
@@ -69,8 +72,8 @@ const referencePolicy: FieldReadFunction<ReferencePolicy> = (existing, { readFie
   return resolveReferencePolicy(module ?? null);
 };
 
-const collectedBy: FieldPolicy<Wallet> = {
-  merge: (existing, incoming) => {
+const collectedBy: FieldPolicy<Wallet | null> = {
+  merge: (existing: Wallet | null | undefined, incoming) => {
     // workaround: try to retain the information even if the publication is updated in
     // cache as part of another query that does not have the collectedBy field
     return existing ?? incoming;
@@ -97,7 +100,10 @@ const collectPolicy = (
   });
 };
 
-const hasCollectedByMe = (existing: boolean, { readField }: FieldFunctionOptions): boolean => {
+const hasCollectedByMe = (
+  existing: boolean | undefined,
+  { readField }: FieldFunctionOptions,
+): boolean => {
   // if collected already then just return, it can't be undone
   if (existing === true) return existing;
 
@@ -230,7 +236,9 @@ export function createPublicationTypePolicy() {
   } as const;
 }
 
-function createContentPublicationTypePolicy(config: ContentPublicationTypePolicyConfig) {
+function createContentPublicationTypePolicy(
+  config: ContentPublicationTypePolicyConfig,
+): TypePolicy<Post | Comment> {
   return {
     fields: {
       canComment: noCachedField(),

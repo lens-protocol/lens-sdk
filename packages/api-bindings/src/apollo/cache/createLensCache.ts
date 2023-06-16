@@ -4,7 +4,6 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
   ReactiveVar,
-  TypePolicy,
 } from '@apollo/client';
 import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
@@ -35,6 +34,7 @@ import {
   createPublicationFieldPolicy,
 } from './publication';
 import { ContentInsightMatcher } from './utils/ContentInsight';
+import { TypePolicy } from './utils/TypePolicy';
 import { noCachedField } from './utils/noCachedField';
 import { notNormalizedType } from './utils/notNormalizedType';
 
@@ -50,14 +50,14 @@ type TypePoliciesArgs = {
   contentMatchers?: ContentInsightMatcher[];
 };
 
-type InheritedTypePolicies = {
-  Publication: TypePolicy;
+export type TypePolicies = {
+  [__typename: string]: TypePolicy<unknown>;
 };
 
 function createTypePolicies({
   activeWalletVar,
   contentMatchers = [],
-}: TypePoliciesArgs): StrictTypedTypePolicies & InheritedTypePolicies {
+}: TypePoliciesArgs): StrictTypedTypePolicies & TypePolicies {
   return {
     Profile: createProfileTypePolicy(activeWalletVar),
 
