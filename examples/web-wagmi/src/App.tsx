@@ -1,5 +1,3 @@
-import { unescape } from 'querystring';
-
 import { LensConfig, LensProvider, development } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
