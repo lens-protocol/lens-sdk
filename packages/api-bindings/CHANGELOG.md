@@ -1,5 +1,11 @@
 # @lens-protocol/api-bindings
 
+## 0.8.1
+
+### Patch Changes
+
+- 58217985: **Fixed** missing cache item that causes logged out flow to not work as expected
+
 ## 0.8.0
 
 ### Minor Changes
