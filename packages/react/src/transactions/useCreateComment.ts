@@ -25,7 +25,6 @@ import { useSharedDependencies } from '../shared';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreateCommentController } from './adapters/useCreateCommentController';
-import { PublicationMetadataUploader } from './infrastructure/PublicationMetadataUploader';
 
 export type UseCreateCommentArg = {
   publisher: ProfileOwnedByMe;
@@ -151,7 +150,8 @@ export type CreateCommentOperation = Operation<
  * @group Hooks
  * @param args - {@link UseCreateCommentArg}
  *
- * @example Create a text-only comment
+ * @example
+ * Create a text-only comment
  * ```ts
  * import { uploadToIpfs } from './myIpfsUploader';
  * import { ContentFocus, ContentPublication, ProfileOwnedByMe, useCreateComment } from '@lens-protocol/react-web';
@@ -205,8 +205,7 @@ export function useCreateComment({
   upload,
 }: UseCreateCommentArg): CreateCommentOperation {
   const { appId } = useSharedDependencies();
-  const uploader = new PublicationMetadataUploader(upload);
-  const createComment = useCreateCommentController({ uploader });
+  const createComment = useCreateCommentController({ upload });
 
   return useOperation(
     async ({

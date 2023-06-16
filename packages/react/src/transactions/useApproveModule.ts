@@ -48,16 +48,17 @@ export type ApproveModuleOperation = Operation<
  * @category Misc
  * @group Hooks
  *
- * @example Approve a collect module for the amount specified in the publication collect policy
+ * @example
+ * Approve a collect module for the amount specified in the publication collect policy
  * ```tsx
  * import { useApproveModule, CollectPolicyType, CollectablePublication, TokenAllowanceLimit } from '@lens-protocol/react-web';
  *
  * function ApproveCollect({ publication }: { publication: CollectablePublication }) {
- *   const approveModule = useApproveModule();
+ *   const { execute: approve, error, loading } = useApproveModule();
  *
  *   const handleClick = async () => {
  *     if (publication.collectPolicy.type === CollectPolicyType.CHARGE) {
- *       const result = await approveModule({
+ *       const result = await approve({
  *         // The collect fee amount
  *         amount: publication.collectPolicy.amount,
  *

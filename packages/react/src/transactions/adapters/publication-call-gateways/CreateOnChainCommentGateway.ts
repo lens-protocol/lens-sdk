@@ -6,7 +6,7 @@ import {
   CreateCommentViaDispatcherData,
   CreateCommentViaDispatcherVariables,
   CreatePublicCommentRequest as CreatePublicCommentRequestArg,
-  LensApolloClient,
+  SafeApolloClient,
   omitTypename,
   CreateCommentEip712TypedData,
 } from '@lens-protocol/api-bindings';
@@ -38,7 +38,7 @@ export class CreateOnChainCommentGateway
     IOnChainProtocolCallGateway<CreateCommentRequest>
 {
   constructor(
-    private readonly apolloClient: LensApolloClient,
+    private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateCommentRequest>,
     private readonly uploader: IMetadataUploader<CreateCommentRequest>,
   ) {}
@@ -142,15 +142,15 @@ export class CreateOnChainCommentGateway
     const contract = lensHub(data.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('comment', [
       {
-        profileId: data.value.profileId,
-        contentURI: data.value.contentURI,
-        profileIdPointed: data.value.profileIdPointed,
-        pubIdPointed: data.value.pubIdPointed,
-        referenceModuleData: data.value.referenceModuleData,
-        collectModule: data.value.collectModule,
-        collectModuleInitData: data.value.collectModuleInitData,
-        referenceModule: data.value.referenceModule,
-        referenceModuleInitData: data.value.referenceModuleInitData,
+        profileId: data.message.profileId,
+        contentURI: data.message.contentURI,
+        profileIdPointed: data.message.profileIdPointed,
+        pubIdPointed: data.message.pubIdPointed,
+        referenceModuleData: data.message.referenceModuleData,
+        collectModule: data.message.collectModule,
+        collectModuleInitData: data.message.collectModuleInitData,
+        referenceModule: data.message.referenceModule,
+        referenceModuleInitData: data.message.referenceModuleInitData,
       },
     ]);
     return {

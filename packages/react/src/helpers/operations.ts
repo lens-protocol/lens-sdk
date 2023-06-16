@@ -1,5 +1,5 @@
 import { IEquatableError, PromiseResult } from '@lens-protocol/shared-kernel';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export type OperationHandler<
   TResult,
@@ -30,22 +30,25 @@ export function useOperation<TResult, TError extends IEquatableError, TArgs exte
 
   return {
     error,
-    execute: async (...args: TArgs) => {
-      setError(undefined);
-      setIsPending(true);
+    execute: useCallback(
+      async (...args: TArgs) => {
+        setError(undefined);
+        setIsPending(true);
 
-      try {
-        const result = await handler(...args);
+        try {
+          const result = await handler(...args);
 
-        if (result.isFailure()) {
-          setError(result.error);
+          if (result.isFailure()) {
+            setError(result.error);
+          }
+
+          return result;
+        } finally {
+          setIsPending(false);
         }
-
-        return result;
-      } finally {
-        setIsPending(false);
-      }
-    },
+      },
+      [handler],
+    ),
     isPending,
   };
 }

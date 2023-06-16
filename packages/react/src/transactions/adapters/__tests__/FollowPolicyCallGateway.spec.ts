@@ -6,7 +6,7 @@ import {
   FollowModuleParams,
 } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockCreateSetFollowModuleTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
 import {
@@ -80,7 +80,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
       it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
         const data = mockCreateSetFollowModuleTypedDataData();
 
-        const apollo = createMockApolloClientWithMultipleResponses([
+        const apollo = mockLensApolloClient([
           createCreateSetFollowModuleTypedDataMockedResponse({
             variables: {
               request: {
@@ -100,7 +100,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
 
       it(`should be possible to override the signature nonce`, async () => {
         const nonce = mockNonce();
-        const apollo = createMockApolloClientWithMultipleResponses([
+        const apollo = mockLensApolloClient([
           createCreateSetFollowModuleTypedDataMockedResponse({
             variables: {
               request: {

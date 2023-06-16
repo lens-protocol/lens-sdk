@@ -11,6 +11,7 @@ import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions'
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { validateUpdateFollowPolicyRequest } from './schemas/validators';
 
 export function useUpdateFollowPolicyController() {
   const {
@@ -21,7 +22,9 @@ export function useUpdateFollowPolicyController() {
     transactionQueue,
   } = useSharedDependencies();
 
-  return async (args: UpdateFollowPolicyRequest) => {
+  return async (request: UpdateFollowPolicyRequest) => {
+    validateUpdateFollowPolicyRequest(request);
+
     const presenter = new PromiseResultPresenter<
       void,
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
@@ -35,7 +38,7 @@ export function useUpdateFollowPolicyController() {
       presenter,
     );
 
-    await updateFollowPolicy.execute(args);
+    await updateFollowPolicy.execute(request);
 
     return presenter.asResult();
   };

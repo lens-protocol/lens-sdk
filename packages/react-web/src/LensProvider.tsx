@@ -22,7 +22,7 @@ export type LensConfig = {
    */
   bindings: IBindings;
   /**
-   * The environment to use. See {@link production} and {@link development}.
+   * The environment to use. See {@link production}, {@link development}, and {@link sandbox}.
    */
   environment: EnvironmentConfig;
   /**
@@ -85,7 +85,7 @@ const storage = localStorage();
  * @group Components
  * @param props - {@link LensProviderProps}
  *
- * @example Quick start
+ * @example
  * ```tsx
  * import { LensProvider, staging } from '@lens-protocol/react-web';
  * import { bindings as wagmiBindings } from '@lens-protocol/wagmi';

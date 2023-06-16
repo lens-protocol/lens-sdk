@@ -1,5 +1,24 @@
 # @lens-protocol/domain
 
+## 0.9.0-next.1
+
+### Minor Changes
+
+- 225f0fa7: **Added** `usePollDetail` and `usePollVote` hooks
+
+### Patch Changes
+
+- 3025d56a: allow self funded fallback for proxy actions
+- Updated dependencies [225f0fa7]
+- Updated dependencies [422c627e]
+  - @lens-protocol/shared-kernel@0.9.0-next.0
+
+## 0.8.1-next.0
+
+### Patch Changes
+
+- 55211083: Synchronize state change between `useActiveWallet` and `useActiveProfile` hooks
+
 ## 0.8.0
 
 ### Minor Changes

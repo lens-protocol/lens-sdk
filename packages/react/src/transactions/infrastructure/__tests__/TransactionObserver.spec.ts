@@ -4,12 +4,12 @@
 
 import { faker } from '@faker-js/faker';
 import {
-  LensApolloClient,
+  SafeApolloClient,
   ProxyActionStatusTypes,
   TransactionErrorReasons,
 } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   mockHasTxHashBeenIndexedData,
   createHasTxHashBeenIndexedMockedResponse,
   createProxyActionStatusMockedResponse,
@@ -31,7 +31,7 @@ import { TransactionObserver, TransactionObserverTimings } from '../TransactionO
 const chainType = ChainType.POLYGON;
 
 function setupTransactionObserver({
-  apolloClient = mock<LensApolloClient>(),
+  apolloClient = mock<SafeApolloClient>(),
   timings = {
     pollingInterval: 1,
     maxIndexingWaitTime: 1000,
@@ -39,7 +39,7 @@ function setupTransactionObserver({
   },
   provider = mock<providers.JsonRpcProvider>(),
 }: {
-  apolloClient?: LensApolloClient;
+  apolloClient?: SafeApolloClient;
   timings?: TransactionObserverTimings;
   provider?: providers.JsonRpcProvider;
 }) {
@@ -128,7 +128,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           }),
         }),
       ];
-      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
+      const apolloClient = mockLensApolloClient(responses);
       const transaction = setupTransactionObserver({
         apolloClient,
       });
@@ -141,7 +141,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     });
 
     it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.REVERTED}] if the tx gets reverted`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txHash },
@@ -163,7 +163,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
 
     it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.INDEXING_TIMEOUT}] if the tx is not indexed within a reasonable time`, async () => {
       const txHash = mockTransactionHash();
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txHash },
@@ -208,7 +208,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           }),
         }),
       ];
-      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
+      const apolloClient = mockLensApolloClient(responses);
       const transaction = setupTransactionObserver({
         apolloClient,
       });
@@ -242,7 +242,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           }),
         }),
       ];
-      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
+      const apolloClient = mockLensApolloClient(responses);
       const transaction = setupTransactionObserver({
         apolloClient,
       });
@@ -277,7 +277,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           }),
         }),
       ];
-      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
+      const apolloClient = mockLensApolloClient(responses);
       const transaction = setupTransactionObserver({
         apolloClient,
       });
@@ -290,7 +290,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     });
 
     it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.REVERTED}] if the tx gets reverted`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txId: indexingId },
@@ -312,7 +312,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
 
     it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.INDEXING_TIMEOUT}] if the tx is not indexed within a reasonable time`, async () => {
       const txHash = mockTransactionHash();
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createHasTxHashBeenIndexedMockedResponse({
           variables: {
             request: { txId: indexingId },
@@ -353,7 +353,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           result: { status: ProxyActionStatusTypes.Complete, txHash, txId },
         }),
       ];
-      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
+      const apolloClient = mockLensApolloClient(responses);
       const transaction = setupTransactionObserver({
         apolloClient,
       });
@@ -396,7 +396,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           },
         }),
       ];
-      const apolloClient = createMockApolloClientWithMultipleResponses(responses);
+      const apolloClient = mockLensApolloClient(responses);
       const transaction = setupTransactionObserver({
         apolloClient,
       });
@@ -410,7 +410,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     });
 
     it(`should fail with ${TransactionError.name} for ${TransactionErrorReason.UNKNOWN} reason if the proxy action returns an error`, async () => {
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createProxyActionStatusMockedResponse({
           variables: { proxyActionId: proxyId },
           result: {
@@ -431,7 +431,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
 
     it(`should fail with ${TransactionError.name} for ${TransactionErrorReason.INDEXING_TIMEOUT} reason if the action is not completed within a reasonable time frame`, async () => {
       const txHash = mockTransactionHash();
-      const apolloClient = createMockApolloClientWithMultipleResponses([
+      const apolloClient = mockLensApolloClient([
         createProxyActionStatusMockedResponse({
           variables: { proxyActionId: proxyId },
           result: {

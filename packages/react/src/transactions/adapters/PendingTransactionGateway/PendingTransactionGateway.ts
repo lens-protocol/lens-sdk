@@ -17,13 +17,17 @@ import { IStorage } from '@lens-protocol/storage';
 import differenceBy from 'lodash/differenceBy.js';
 
 import {
+  TransactionSchema,
+  TransactionStorageSchema,
+  TransactionType,
+} from '../schemas/transactions';
+import {
   ISerializableDataTransaction,
   ISerializableMetaTransaction,
   ISerializableNativeTransaction,
   ISerializableProxyTransaction,
   ISerializableTransactionFactory,
 } from './ISerializableTransactionFactory';
-import { TransactionSchema, TransactionStorageSchema, TransactionType } from './schema';
 
 const lensHubTransactionKinds = [
   TransactionKind.COLLECT_PUBLICATION,

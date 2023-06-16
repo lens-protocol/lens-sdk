@@ -1,5 +1,26 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.9.0-next.1
+
+### Minor Changes
+
+- 225f0fa7: **Added** `usePollDetail` and `usePollVote` hooks
+
+### Patch Changes
+
+- Updated dependencies [3025d56a]
+- Updated dependencies [225f0fa7]
+- Updated dependencies [422c627e]
+  - @lens-protocol/domain@0.9.0-next.1
+  - @lens-protocol/shared-kernel@0.9.0-next.0
+
+## 0.8.1-next.0
+
+### Patch Changes
+
+- Updated dependencies [55211083]
+  - @lens-protocol/domain@0.8.1-next.0
+
 ## 0.8.0
 
 ### Minor Changes

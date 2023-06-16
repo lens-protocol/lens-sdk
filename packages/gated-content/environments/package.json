@@ -1,0 +1,4 @@
+{
+  "main": "dist/lens-protocol-gated-content-environments.cjs.js",
+  "module": "dist/lens-protocol-gated-content-environments.esm.js"
+}

@@ -32,7 +32,8 @@ export type CreateProfileOperation = Operation<
  * @category Profiles
  * @group Hooks
  *
- * @example Simple usage
+ * @example
+ * Simple usage
  * ```tsx
  * import { useCreateProfile } from '@lens-protocol/react-web';
  *
@@ -60,7 +61,8 @@ export type CreateProfileOperation = Operation<
  * }
  * ```
  *
- * @example Programmatic error handling
+ * @example
+ * Programmatic error handling
  * ```tsx
  * import { useCreateProfile, DuplicatedHandleError } from '@lens-protocol/react-web';
  *

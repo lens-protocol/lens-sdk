@@ -14,7 +14,7 @@ import {
   StrictTypedTypePolicies,
   ProfileMedia,
   Attribute,
-} from '../../graphql';
+} from '../../lens';
 import {
   getAllPendingTransactions,
   isFollowTransactionFor,

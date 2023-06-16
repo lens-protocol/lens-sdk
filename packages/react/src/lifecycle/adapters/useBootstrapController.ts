@@ -21,11 +21,7 @@ export function useBootstrapController({
     const activeWalletPresenter = new ActiveWalletPresenter();
     const logoutPresenter = new LogoutPresenter(onLogout);
     const applicationPresenter = new ApplicationPresenter();
-    const activeProfileLoader = new ActiveProfileLoader(
-      profileGateway,
-      activeProfileGateway,
-      activeProfilePresenter,
-    );
+    const activeProfileLoader = new ActiveProfileLoader(profileGateway, activeProfileGateway);
     const bootstrap = new Bootstrap(
       activeWallet,
       credentialsGateway,
@@ -35,7 +31,7 @@ export function useBootstrapController({
       logoutPresenter,
       activeProfileLoader,
       transactionQueue,
-      activeProfileGateway,
+      activeProfilePresenter,
     );
 
     void bootstrap.start();

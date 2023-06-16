@@ -1,1 +1,2 @@
-export * from './createApolloCache';
+export * from './createLensCache';
+export * from './createSnapshotCache';

@@ -35,7 +35,8 @@ export type UseProfilesArgs = PaginatedArgs<
  *
  * @param args - {@link UseProfilesArgs}
  *
- * @example Get profiles by handles
+ * @example
+ * Get profiles by handles
  * ```ts
  * const { data, error, loading } = useProfiles({ handles: ['handle1', 'handle2'] });
  *
@@ -58,7 +59,8 @@ export type UseProfilesArgs = PaginatedArgs<
  * );
  * ```
  *
- * @example Get profiles by profile Ids
+ * @example
+ * Get profiles by profile Ids
  * ```ts
  * const { data, error, loading } = useProfiles({ profileIds: ['profileId1', 'profileId2'] });
  *

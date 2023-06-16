@@ -9,6 +9,48 @@
   - @lens-protocol/gated-content@0.2.3
   - @lens-protocol/react@1.1.1
 
+## 1.2.0-next.2
+
+### Minor Changes
+
+- 225f0fa7: **Added** `usePollDetail` and `usePollVote` hooks
+
+### Patch Changes
+
+- Updated dependencies [3025d56a]
+- Updated dependencies [422c627e]
+- Updated dependencies [225f0fa7]
+- Updated dependencies [422c627e]
+- Updated dependencies [97ecba69]
+  - @lens-protocol/api-bindings@0.9.0-next.1
+  - @lens-protocol/react@1.2.0-next.2
+  - @lens-protocol/shared-kernel@0.9.0-next.0
+  - @lens-protocol/gated-content@0.3.0-next.2
+  - @lens-protocol/storage@0.7.3-next.0
+
+## 1.2.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [55211083]
+- Updated dependencies [148e9636]
+  - @lens-protocol/react@1.2.0-next.1
+  - @lens-protocol/gated-content@0.3.0-next.1
+  - @lens-protocol/api-bindings@0.8.1-next.0
+
+## 1.2.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+
+### Patch Changes
+
+- Updated dependencies [cb5b900d]
+- Updated dependencies [af4b1133]
+  - @lens-protocol/gated-content@0.3.0-next.0
+  - @lens-protocol/react@1.2.0-next.0
+
 ## 1.1.0
 
 ### Minor Changes

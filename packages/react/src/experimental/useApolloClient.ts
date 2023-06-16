@@ -11,7 +11,8 @@ import { useSharedDependencies } from '../shared';
  * The internal Apollo Client instance is configured so that it automatically renews credentials (both Access Token and Refresh Token) when they expire.
  * This is done transparently, so you don't need to worry about it.
  *
- * @example Perform a query
+ * @example
+ * Perform a query
  * ```ts
  * import { useQuery, gql} from '@apollo/client';
  * import { useApolloClient } from '@lens-protocol/react-web';

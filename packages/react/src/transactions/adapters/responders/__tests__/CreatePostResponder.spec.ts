@@ -1,6 +1,6 @@
 import { Post, Profile } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createGetProfileMockedResponse,
   mockPostFragment,
   mockProfileFragment,
@@ -29,7 +29,7 @@ function setupTestScenario({
   transactionData?: TransactionData<CreatePostRequest>;
 }) {
   const sources = mockSources();
-  const apolloClient = createMockApolloClientWithMultipleResponses([
+  const apolloClient = mockLensApolloClient([
     createGetProfileMockedResponse({
       profile: author,
       variables: {

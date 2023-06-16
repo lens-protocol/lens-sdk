@@ -1,6 +1,6 @@
 import { activeProfileIdentifierVar, PublicationRevenue } from '@lens-protocol/api-bindings';
 import {
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createGetProfilePublicationRevenueMockedResponse,
   mockPublicationRevenueFragment,
   mockSources,
@@ -29,7 +29,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfilePublicationRevenue(args), {
     mocks: {
       sources,
-      apolloClient: createMockApolloClientWithMultipleResponses([
+      apolloClient: mockLensApolloClient([
         createGetProfilePublicationRevenueMockedResponse({
           variables: {
             ...args,
@@ -57,7 +57,7 @@ describe(`Given the ${useProfilePublicationRevenue.name} hook`, () => {
       const { result } = setupTestScenario({ profileId, result: revenues });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(revenues);
+      expect(result.current.data).toMatchObject(revenues);
     });
   });
 
@@ -76,7 +76,7 @@ describe(`Given the ${useProfilePublicationRevenue.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(revenues);
+      expect(result.current.data).toMatchObject(revenues);
     });
 
     it('should always allow to specify the "observerId" on a per-call basis', async () => {
@@ -90,7 +90,7 @@ describe(`Given the ${useProfilePublicationRevenue.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(revenues);
+      expect(result.current.data).toMatchObject(revenues);
     });
   });
 });

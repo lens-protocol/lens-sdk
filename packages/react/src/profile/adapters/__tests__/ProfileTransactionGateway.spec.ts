@@ -1,8 +1,8 @@
-import { LensApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
+import { SafeApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   mockRelayerResultFragment,
   mockRelayErrorFragment,
-  createMockApolloClientWithMultipleResponses,
+  mockLensApolloClient,
   createCreateProfileMockedResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
@@ -14,7 +14,7 @@ import { ChainType } from '@lens-protocol/shared-kernel';
 import { mockITransactionFactory } from '../../../transactions/adapters/__helpers__/mocks';
 import { ProfileTransactionGateway } from '../ProfileTransactionGateway';
 
-function setupProfileTransactionGateway({ apollo }: { apollo: LensApolloClient }) {
+function setupProfileTransactionGateway({ apollo }: { apollo: SafeApolloClient }) {
   const factory = mockITransactionFactory();
   return new ProfileTransactionGateway(apollo, factory);
 }
@@ -26,7 +26,7 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
     it(`should create the expected "${NativeTransaction.name}"`, async () => {
       const relayerResult = mockRelayerResultFragment();
 
-      const apollo = createMockApolloClientWithMultipleResponses([
+      const apollo = mockLensApolloClient([
         createCreateProfileMockedResponse({
           request: {
             handle: request.handle,
@@ -63,7 +63,7 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
     ])(
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$relayError.reason" reason`,
       async ({ relayError, expected }) => {
-        const apollo = createMockApolloClientWithMultipleResponses([
+        const apollo = mockLensApolloClient([
           createCreateProfileMockedResponse({
             request: {
               handle: request.handle,

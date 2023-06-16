@@ -1,13 +1,14 @@
 import { LensConfig, LensProvider, development } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { WagmiConfig, configureChains, createConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Home } from './HomePage';
 import { AuthenticationPage } from './authentication/AuthenticationPage';
+import { LoginSpecificProfile } from './authentication/LoginSpecificProfile';
 import { Breadcrumbs } from './components/Breadcrumbs';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
 import { ErrorMessage } from './components/error/ErrorMessage';
@@ -18,8 +19,8 @@ import { UseExplorePublications } from './discovery/UseExplorePublications';
 import { UseFeed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
-import { LoginSpecificProfile } from './misc/LoginSpecificProfile';
 import { MiscPage } from './misc/MiscPage';
+import { Polls } from './misc/Polls';
 import { UseApproveModule } from './misc/UseApproveModule';
 import { UseCurrencies } from './misc/UseCurrencies';
 import { UseEnabledModules } from './misc/UseEnabledModules';
@@ -62,12 +63,15 @@ import { UseProfileFollowRevenue } from './revenue/UseProfileFollowRevenue';
 import { UseProfilePublicationRevenue } from './revenue/UseProfilePublicationRevenue';
 import { UsePublicationRevenue } from './revenue/UsePublicationRevenue';
 
-const { provider, webSocketProvider } = configureChains([polygonMumbai], [publicProvider()]);
+const { publicClient, webSocketPublicClient } = configureChains(
+  [polygonMumbai],
+  [publicProvider()],
+);
 
-const client = createClient({
+const config = createConfig({
   autoConnect: true,
-  provider,
-  webSocketProvider,
+  publicClient,
+  webSocketPublicClient,
 });
 
 const lensConfig: LensConfig = {
@@ -79,7 +83,7 @@ const toastNotification = (error: Error) => toast.error(error.message);
 
 export function App() {
   return (
-    <WagmiConfig client={client}>
+    <WagmiConfig config={config}>
       <LensProvider config={lensConfig} onError={toastNotification}>
         <Router>
           <Header />
@@ -89,6 +93,10 @@ export function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/authentication" element={<AuthenticationPage />} />
+                <Route
+                  path="/authentication/loginSpecificProfile"
+                  element={<LoginSpecificProfile />}
+                />
 
                 <Route path="/publications" element={<PublicationsPage />} />
                 <Route path="/publications/usePublication" element={<UsePublication />} />
@@ -185,7 +193,7 @@ export function App() {
                 />
                 <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
                 <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
-                <Route path="/misc/loginSpecificProfile" element={<LoginSpecificProfile />} />
+                <Route path="/misc/polls" element={<Polls />} />
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

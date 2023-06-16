@@ -8,6 +8,53 @@
   - @lens-protocol/api-bindings@0.8.1
   - @lens-protocol/gated-content@0.2.3
 
+## 1.2.0-next.2
+
+### Minor Changes
+
+- 3025d56a: allow self funded fallback for proxy actions
+- 225f0fa7: **Added** `usePollDetail` and `usePollVote` hooks
+- 422c627e: **Added** eager check on several tx hooks so to fail fast with dev friendly error messages"
+
+### Patch Changes
+
+- 422c627e: **Fixed** missing DecryptionCriteria validation
+- 97ecba69: **Fixed** cache redirects for Publication and Profile
+- Updated dependencies [3025d56a]
+- Updated dependencies [225f0fa7]
+- Updated dependencies [422c627e]
+- Updated dependencies [97ecba69]
+  - @lens-protocol/api-bindings@0.9.0-next.1
+  - @lens-protocol/domain@0.9.0-next.1
+  - @lens-protocol/blockchain-bindings@0.9.0-next.1
+  - @lens-protocol/shared-kernel@0.9.0-next.0
+  - @lens-protocol/gated-content@0.3.0-next.2
+  - @lens-protocol/storage@0.7.3-next.0
+
+## 1.2.0-next.1
+
+### Patch Changes
+
+- 55211083: Synchronize state change between `useActiveWallet` and `useActiveProfile` hooks
+- Updated dependencies [55211083]
+- Updated dependencies [148e9636]
+  - @lens-protocol/domain@0.8.1-next.0
+  - @lens-protocol/gated-content@0.3.0-next.1
+  - @lens-protocol/api-bindings@0.8.1-next.0
+  - @lens-protocol/blockchain-bindings@0.8.1-next.0
+
+## 1.2.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+- af4b1133: Detects malformed URLs from user's provided `upload` handler
+
+### Patch Changes
+
+- Updated dependencies [cb5b900d]
+  - @lens-protocol/gated-content@0.3.0-next.0
+
 ## 1.1.0
 
 ### Minor Changes

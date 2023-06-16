@@ -4,7 +4,11 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { ActiveProfileLoader } from '@lens-protocol/domain/use-cases/profile';
-import { WalletLogin, WalletLoginRequest } from '@lens-protocol/domain/use-cases/wallets';
+import {
+  WalletLogin,
+  WalletLoginRequest,
+  WalletLoginResult,
+} from '@lens-protocol/domain/use-cases/wallets';
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
@@ -24,14 +28,10 @@ export function useWalletLoginController() {
   return async (request: WalletLoginRequest) => {
     const activeWalletPresenter = new ActiveWalletPresenter();
     const loginPresenter = new PromiseResultPresenter<
-      void,
+      WalletLoginResult,
       PendingSigningRequestError | WalletConnectionError | UserRejectedError
     >();
-    const activeProfileLoader = new ActiveProfileLoader(
-      profileGateway,
-      activeProfileGateway,
-      activeProfilePresenter,
-    );
+    const activeProfileLoader = new ActiveProfileLoader(profileGateway, activeProfileGateway);
     const walletLogin = new WalletLogin(
       walletFactory,
       walletGateway,
@@ -40,6 +40,7 @@ export function useWalletLoginController() {
       activeWalletPresenter,
       loginPresenter,
       activeProfileLoader,
+      activeProfilePresenter,
     );
 
     await walletLogin.login(request);

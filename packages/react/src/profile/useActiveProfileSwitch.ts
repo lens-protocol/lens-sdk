@@ -15,7 +15,8 @@ export type ActiveProfileSwitchOperation = Operation<void, never, [ProfileId]>;
  * @category Profiles
  * @group Hooks
  *
- * @example Profile switcher interface
+ * @example
+ * Profile switcher interface
  * ```tsx
  * import { useActiveProfileSwitch, useActiveProfile, useProfilesOwnedByMe } from '@lens-protocol/react-web';
  *

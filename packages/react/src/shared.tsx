@@ -1,7 +1,7 @@
 import {
-  createAnonymousApolloClient,
-  createApolloClient,
-  LensApolloClient,
+  createAuthApolloClient,
+  createLensApolloClient,
+  SafeApolloClient,
   Sources,
 } from '@lens-protocol/api-bindings';
 import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
@@ -76,7 +76,7 @@ export type SharedDependencies = {
   activeProfileGateway: ActiveProfileGateway;
   activeProfilePresenter: ActiveProfilePresenter;
   activeWallet: ActiveWallet;
-  apolloClient: LensApolloClient;
+  apolloClient: SafeApolloClient;
   bindings: IBindings;
   authApi: AuthApi;
   environment: EnvironmentConfig;
@@ -117,19 +117,20 @@ export function createSharedDependencies(
   const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
 
   // apollo client
-  const anonymousApolloClient = createAnonymousApolloClient({
+  const anonymousApolloClient = createAuthApolloClient({
     backendURL: config.environment.backend,
     activeWalletVar: activeWalletVar,
     logger,
   });
   const authApi = new AuthApi(anonymousApolloClient);
   const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
-  const apolloClient = createApolloClient({
+  const apolloClient = createLensApolloClient({
     backendURL: config.environment.backend,
     accessTokenStorage,
     activeWalletVar: activeWalletVar,
     pollingInterval: config.environment.timings.pollingInterval,
     logger,
+    contentMatchers: [config.environment.snapshot.matcher],
   });
   const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
   const profileCacheManager = new ProfileCacheManager(apolloClient, sources);

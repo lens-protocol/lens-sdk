@@ -7,6 +7,37 @@
 - Updated dependencies [58217985]
   - @lens-protocol/api-bindings@0.8.1
 
+## 0.3.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [3025d56a]
+- Updated dependencies [225f0fa7]
+- Updated dependencies [422c627e]
+- Updated dependencies [97ecba69]
+  - @lens-protocol/api-bindings@0.9.0-next.1
+  - @lens-protocol/domain@0.9.0-next.1
+  - @lens-protocol/shared-kernel@0.9.0-next.0
+  - @lens-protocol/storage@0.7.3-next.0
+
+## 0.3.0-next.1
+
+### Minor Changes
+
+- 148e9636: feat: **Added** linea goerli support to gated content
+
+### Patch Changes
+
+- Updated dependencies [55211083]
+  - @lens-protocol/domain@0.8.1-next.0
+  - @lens-protocol/api-bindings@0.8.1-next.0
+
+## 0.3.0-next.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+
 ## 0.2.2
 
 ### Patch Changes

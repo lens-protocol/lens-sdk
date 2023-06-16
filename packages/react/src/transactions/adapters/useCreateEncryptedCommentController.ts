@@ -9,7 +9,6 @@ import {
   CreateEncryptedCommentRequest,
   EncryptedPublicationMetadataUploader,
 } from '../infrastructure/EncryptedPublicationMetadataUploader';
-import { MetadataUploaderErrorMiddleware } from '../infrastructure/MetadataUploaderErrorMiddleware';
 import { PublicationIdPredictor } from '../infrastructure/PublicationIdPredictor';
 import { createGatedClient } from '../infrastructure/createGatedClient';
 import { CreateCommentController } from './CreateCommentController';
@@ -40,7 +39,9 @@ export function useCreateEncryptedCommentController({ encryption, upload }: UseC
       `Cannot find the Active Wallet Signer, did you login with ${useWalletLogin.name}?`,
     );
 
-    const client = createGatedClient({
+    const createGatedClientFn = encryption.createGatedClient || createGatedClient;
+
+    const client = createGatedClientFn({
       config: encryption.authentication,
       signer,
       encryptionProvider: encryption.provider,
@@ -55,10 +56,10 @@ export function useCreateEncryptedCommentController({ encryption, upload }: UseC
       publicationIdPredictor,
     );
 
-    const uploader = new EncryptedPublicationMetadataUploader(
+    const uploader = EncryptedPublicationMetadataUploader.create(
       client,
       accessConditionBuilderFactory,
-      new MetadataUploaderErrorMiddleware(upload),
+      upload,
     );
 
     const controller = new CreateCommentController<CreateEncryptedCommentRequest>({
