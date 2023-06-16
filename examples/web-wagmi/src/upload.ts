@@ -13,8 +13,7 @@ const TOP_UP = '200000000000000000'; // 0.2 MATIC
 const MIN_FUNDS = 0.05;
 
 async function getBundlr() {
-  const walletClient =
-    (await getWalletClient({ chainId: 80001 })) ?? never('Wallet client not found');
+  const walletClient = (await getWalletClient()) ?? never('Wallet client not found');
 
   const bundlr = new WebBundlr(
     'https://devnet.bundlr.network',
