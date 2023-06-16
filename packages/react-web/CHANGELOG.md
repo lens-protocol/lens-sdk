@@ -1,5 +1,13 @@
 # @lens-protocol/react-web
 
+## 1.2.0-next.3
+
+### Patch Changes
+
+- Updated dependencies [2dbe0035]
+  - @lens-protocol/gated-content@0.3.0-next.3
+  - @lens-protocol/react@1.2.0-next.3
+
 ## 1.2.0-next.2
 
 ### Minor Changes
