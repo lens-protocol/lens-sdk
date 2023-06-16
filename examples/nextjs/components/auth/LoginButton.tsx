@@ -27,7 +27,7 @@ export function LoginButton({ handle }: { handle?: string }) {
 
     if (connector instanceof InjectedConnector) {
       const signer = await connector.getSigner();
-      await login(signer, handle);
+      await login(await signer.getAddress(), handle);
     }
   };
 

@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "@bundlr-network/client": "^0.10.3",
+    "@ethersproject/providers": "^5.7.2",
     "@lens-protocol/react-web": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
-    "ethers": "^5.7.2",
     "example-shared": "workspace:*",
     "react": "^18.2.0",
     "react-cool-inview": "^3.0.1",

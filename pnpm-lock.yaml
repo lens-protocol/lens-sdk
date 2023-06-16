@@ -131,15 +131,15 @@ importers:
       '@bundlr-network/client':
         specifier: ^0.10.3
         version: 0.10.3
+      '@ethersproject/providers':
+        specifier: ^5.7.2
+        version: 5.7.2
       '@lens-protocol/react-web':
         specifier: workspace:*
         version: link:../../packages/react-web
       '@lens-protocol/wagmi':
         specifier: workspace:*
         version: link:../../packages/wagmi
-      ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
       example-shared:
         specifier: workspace:*
         version: link:../shared

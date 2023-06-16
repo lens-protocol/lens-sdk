@@ -1,5 +1,4 @@
 import { useWalletLogin, useWalletLogout } from '@lens-protocol/react-web';
-import { signerFromWalletClient } from '@lens-protocol/wagmi';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
@@ -28,8 +27,7 @@ export function LoginButton({ handle }: { handle?: string }) {
 
     if (connector instanceof InjectedConnector) {
       const walletClient = await connector.getWalletClient();
-      const signer = await signerFromWalletClient({ walletClient });
-      await login(signer, handle);
+      await login(walletClient.account.address, handle);
     }
   };
 

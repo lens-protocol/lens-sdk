@@ -4,6 +4,26 @@ import { providers } from 'ethers';
 import { PublicClient, SwitchChainNotSupportedError, WalletClient } from 'wagmi';
 import { getNetwork, getPublicClient, getWalletClient, switchNetwork } from 'wagmi/actions';
 
+function providerFromPublicClient({
+  publicClient,
+  chainId,
+}: {
+  publicClient: PublicClient;
+  chainId?: number;
+}): providers.Web3Provider {
+  return new providers.Web3Provider(publicClient.transport, chainId);
+}
+
+async function signerFromWalletClient({
+  walletClient,
+  chainId,
+}: {
+  walletClient: WalletClient;
+  chainId?: number;
+}): Promise<providers.JsonRpcSigner> {
+  return new providers.Web3Provider(walletClient.transport, chainId).getSigner();
+}
+
 export function bindings(): IBindings {
   return {
     getProvider: async ({ chainId }) => {
@@ -33,24 +53,4 @@ export function bindings(): IBindings {
       return signerFromWalletClient({ walletClient, chainId });
     },
   };
-}
-
-export function providerFromPublicClient({
-  publicClient,
-  chainId,
-}: {
-  publicClient: PublicClient;
-  chainId?: number;
-}): providers.Web3Provider {
-  return new providers.Web3Provider(publicClient.transport, chainId);
-}
-
-export async function signerFromWalletClient({
-  walletClient,
-  chainId,
-}: {
-  walletClient: WalletClient;
-  chainId?: number;
-}): Promise<providers.JsonRpcSigner> {
-  return new providers.Web3Provider(walletClient.transport, chainId).getSigner();
 }

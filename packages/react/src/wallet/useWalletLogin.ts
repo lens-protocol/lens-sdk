@@ -4,7 +4,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { WalletLoginResult } from '@lens-protocol/domain/use-cases/wallets';
-import { Signer } from 'ethers';
+import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useWalletLoginController } from './adapters/useWalletLoginController';
@@ -12,7 +12,7 @@ import { useWalletLoginController } from './adapters/useWalletLoginController';
 export type WalletLoginOperation = Operation<
   WalletLoginResult,
   PendingSigningRequestError | WalletConnectionError | UserRejectedError,
-  [Signer, string?]
+  [string, string?]
 >;
 
 /**
@@ -22,11 +22,9 @@ export type WalletLoginOperation = Operation<
 export function useWalletLogin(): WalletLoginOperation {
   const loginWallet = useWalletLoginController();
 
-  return useOperation(async (signer: Signer, handle?: string) => {
-    const address = await signer.getAddress();
-
+  return useOperation(async (connectedWalletAddress: EthereumAddress, handle?: string) => {
     return loginWallet({
-      address,
+      address: connectedWalletAddress,
       handle,
     });
   });
