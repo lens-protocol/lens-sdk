@@ -118,14 +118,18 @@ const hasCollectedByMe = (existing: boolean, { readField }: FieldFunctionOptions
   return collectPendingTx !== undefined;
 };
 
-const isMirroredByMe = (existing: boolean, { readField }: FieldFunctionOptions): boolean => {
+// TODO: Make sure the typing is correct and force to return the correct type without shallowing the `undefined` which means that the field is missing and breaks the cache
+const isMirroredByMe = (
+  existing: boolean | undefined,
+  { readField }: FieldFunctionOptions,
+): boolean => {
   if (existing === true) return existing;
 
   const profileIdentifier = activeProfileIdentifierVar();
   const publicationId = readField('id') as PublicationId;
   const mirrors = readField('mirrors') as PublicationId[];
 
-  if (!profileIdentifier) return existing;
+  if (!profileIdentifier) return false;
   if (mirrors.length > 0) return true;
 
   const isMirrorTransactionForThisPublication = isMirrorTransactionFor({
