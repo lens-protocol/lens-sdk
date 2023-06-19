@@ -27,7 +27,10 @@ export function LoginButton({ handle }: { handle?: string }) {
 
     if (connector instanceof InjectedConnector) {
       const walletClient = await connector.getWalletClient();
-      await login(walletClient.account.address, handle);
+      await login({
+        address: walletClient.account.address,
+        handle,
+      });
     }
   };
 
