@@ -1,5 +1,18 @@
 # @lens-protocol/gated-content
 
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [58217985]
+  - @lens-protocol/api-bindings@0.8.1
+
+## 0.3.0-next.3
+
+### Patch Changes
+
+- 2dbe0035: - Adds the ability to override the `createGatedClient` function for gated content functionality.
+
 ## 0.3.0-next.2
 
 ### Patch Changes
