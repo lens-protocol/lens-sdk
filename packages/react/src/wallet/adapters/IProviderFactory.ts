@@ -1,3 +1,4 @@
+import { FallbackProvider } from '@ethersproject/providers';
 import { ChainType } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 
@@ -6,5 +7,7 @@ export type CreateProviderConfig = {
 };
 
 export interface IProviderFactory {
-  createProvider(config: CreateProviderConfig): Promise<providers.JsonRpcProvider>;
+  createProvider(
+    config: CreateProviderConfig,
+  ): Promise<providers.JsonRpcProvider | FallbackProvider>;
 }
