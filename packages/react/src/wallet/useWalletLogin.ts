@@ -33,28 +33,21 @@ export type WalletLoginOperation = Operation<
 export function useWalletLogin(): WalletLoginOperation {
   const loginWallet = useWalletLoginController();
 
-  async function callback(
-    signer: Signer,
-    handle?: string,
-  ): Promise<Result<WalletLoginResult, WalletLoginPotentialErrors>>;
-  async function callback(
-    walletLoginArgs: UseWalletLoginArgs,
-  ): Promise<Result<WalletLoginResult, WalletLoginPotentialErrors>>;
-  async function callback(
-    walletLoginArgs: Signer | UseWalletLoginArgs,
-    handle?: string,
-  ): Promise<Result<WalletLoginResult, WalletLoginPotentialErrors>> {
-    if ('address' in walletLoginArgs) {
+  return useOperation(
+    async (
+      walletLoginArgs: Signer | UseWalletLoginArgs,
+      handle?: string,
+    ): Promise<Result<WalletLoginResult, WalletLoginPotentialErrors>> => {
+      if ('address' in walletLoginArgs) {
+        return loginWallet({
+          address: walletLoginArgs.address,
+          handle,
+        });
+      }
       return loginWallet({
-        address: walletLoginArgs.address,
+        address: await walletLoginArgs.getAddress(),
         handle,
       });
-    }
-    return loginWallet({
-      address: await walletLoginArgs.getAddress(),
-      handle,
-    });
-  }
-
-  return useOperation(callback) as WalletLoginOperation;
+    },
+  );
 }
