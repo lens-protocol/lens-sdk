@@ -1,5 +1,17 @@
 # @lens-protocol/react
 
+## 1.2.0-next.4
+
+### Patch Changes
+
+- ea0b40e3: **Fixed** active profile to be always `null` when there is not active wallet
+- Updated dependencies [ea0b40e3]
+- Updated dependencies [a899553c]
+  - @lens-protocol/domain@0.9.0-next.2
+  - @lens-protocol/api-bindings@0.9.0-next.2
+  - @lens-protocol/blockchain-bindings@0.9.0-next.2
+  - @lens-protocol/gated-content@0.3.0-next.4
+
 ## 1.1.1
 
 ### Patch Changes
