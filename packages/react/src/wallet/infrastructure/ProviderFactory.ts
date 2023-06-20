@@ -4,9 +4,7 @@ import { providers } from 'ethers';
 import { ChainConfigRegistry } from '../../chains';
 import { IProviderFactory } from '../adapters/IProviderFactory';
 
-export type GetProvider = (config: {
-  chainId: number;
-}) => Promise<providers.JsonRpcProvider | providers.FallbackProvider>;
+export type GetProvider = (config: { chainId: number }) => Promise<providers.JsonRpcProvider>;
 
 export interface IProviderBinding {
   getProvider: GetProvider;
@@ -18,9 +16,7 @@ export class ProviderFactory implements IProviderFactory {
     private readonly chains: ChainConfigRegistry,
   ) {}
 
-  async createProvider(config: {
-    chainType: ChainType;
-  }): Promise<providers.JsonRpcProvider | providers.FallbackProvider> {
+  async createProvider(config: { chainType: ChainType }): Promise<providers.JsonRpcProvider> {
     const chainId = this.chains[config.chainType]?.chainId ?? never('Unable to determine chainId');
     const provider = await this.bindings.getProvider({ chainId });
 

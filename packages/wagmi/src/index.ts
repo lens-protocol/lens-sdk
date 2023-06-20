@@ -1,7 +1,6 @@
 import { IBindings } from '@lens-protocol/react-web';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
-import { type HttpTransport } from 'viem';
 import { PublicClient, SwitchChainNotSupportedError, WalletClient } from 'wagmi';
 import { getNetwork, getPublicClient, getWalletClient, switchNetwork } from 'wagmi/actions';
 
@@ -9,19 +8,13 @@ function providerFromPublicClient({
   publicClient,
 }: {
   publicClient: PublicClient;
-}): providers.JsonRpcProvider | providers.FallbackProvider {
+}): providers.JsonRpcProvider {
   const { chain, transport } = publicClient;
   const network = {
     chainId: chain.id,
     name: chain.name,
     ensAddress: chain.contracts?.ensRegistry?.address,
   };
-  if (transport.type === 'fallback')
-    return new providers.FallbackProvider(
-      (transport.transports as ReturnType<HttpTransport>[]).map(
-        ({ value }) => new providers.JsonRpcProvider(value?.url, network),
-      ),
-    );
   return new providers.Web3Provider(transport, network);
 }
 
@@ -30,7 +23,7 @@ async function signerFromWalletClient({
   chainId,
 }: {
   walletClient: WalletClient;
-  chainId: number;
+  chainId?: number;
 }): Promise<providers.JsonRpcSigner> {
   const { account, chain, transport } = walletClient;
   const network = chain

@@ -34,8 +34,6 @@ export class MetadataUploaderErrorMiddleware<T> implements IMetadataUploader<T> 
     } catch (err: unknown) {
       assertError(err);
 
-      console.log('Failed to upload metadata', err);
-
       throw new FailedUploadError('Cannot upload metadata', { cause: err });
     }
   }
