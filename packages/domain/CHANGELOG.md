@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.9.0-next.2
+
+### Patch Changes
+
+- ea0b40e3: **Fixed** active profile to be always `null` when there is not active wallet
+
 ## 0.9.0-next.1
 
 ### Minor Changes
