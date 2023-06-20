@@ -8,6 +8,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import { useSourcesFromConfig, useLensApolloClient } from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
+import { useActiveWalletVar } from '../wallet/adapters/ActiveWalletPresenter';
 import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
 
 /**
@@ -42,6 +43,8 @@ import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
  */
 export function useActiveProfile(): ReadResult<ProfileOwnedByMe | null, UnspecifiedError> {
   const { data: identifier, loading: bootstrapping } = useActiveProfileIdentifier();
+  // TODO: This is a patch fix to move forward.
+  const activeWallet = useActiveWalletVar();
 
   const { data, error, loading } = useGetProfile(
     useLensApolloClient({
@@ -60,6 +63,14 @@ export function useActiveProfile(): ReadResult<ProfileOwnedByMe | null, Unspecif
       data: undefined,
       error: undefined,
       loading: true,
+    };
+  }
+
+  if (activeWallet === null) {
+    return {
+      data: null,
+      error: undefined,
+      loading: false,
     };
   }
 

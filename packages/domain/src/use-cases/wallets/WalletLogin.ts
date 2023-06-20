@@ -74,8 +74,8 @@ export class WalletLogin {
       request.handle,
     );
 
-    this.activeProfilePresenter.presentActiveProfile(profile);
     this.activeWalletPresenter.presentActiveWallet(wallet);
+    this.activeProfilePresenter.presentActiveProfile(profile);
 
     this.walletLoginPresenter.present(success(profile));
   }
