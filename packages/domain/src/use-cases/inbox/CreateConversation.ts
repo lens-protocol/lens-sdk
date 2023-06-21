@@ -9,12 +9,12 @@ import {
 } from '../../entities';
 import { ActiveWallet } from '../wallets';
 
-export type CreateConversationResult = Result<Conversation, ConversationsDisabledError>;
-
 export type CreateConversationRequest = {
   creatorProfileId?: ProfileId;
   peer: Participant;
 };
+
+export type CreateConversationResult = Result<Conversation, ConversationsDisabledError>;
 
 export interface ICreateConversationGateway {
   createConversation(

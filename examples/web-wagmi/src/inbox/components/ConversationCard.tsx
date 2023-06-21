@@ -1,4 +1,4 @@
-import { ConversationData, ProfileId, useProfile } from '@lens-protocol/react-web';
+import { Conversation, ProfileId, useProfile } from '@lens-protocol/react-web';
 import { ReactNode } from 'react';
 
 import { Loading } from '../../components/loading/Loading';
@@ -22,7 +22,7 @@ function PeerProfile({ profileId }: PeerProfileProps) {
 
 type ConversationCardProps = {
   children?: ReactNode;
-  conversation: ConversationData;
+  conversation: Conversation;
 };
 
 export function ConversationCard({ conversation, children }: ConversationCardProps) {

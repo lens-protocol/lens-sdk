@@ -19,6 +19,9 @@ import {
   IConversationWallet,
   CreateConversationRequest,
   CreateConversationResult,
+  SendMessageRequest,
+  SendMessageResult,
+  ConversationNotFoundError,
 } from '@lens-protocol/react';
 import { failure, invariant, success } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
@@ -203,6 +206,29 @@ export class WebConversationProvider implements IConversationProvider {
       const conversation = this.buildConversation(newXmtpConversation, creator);
 
       return success(conversation);
+    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore Error not yet properly typed
+      return failure(e);
+    }
+  }
+
+  async sendMessage(request: SendMessageRequest): Promise<SendMessageResult> {
+    try {
+      const xmtpConversation = await this.getXmtpConversation(request.conversationId);
+
+      if (!xmtpConversation) {
+        return failure(new ConversationNotFoundError(request.conversationId));
+      }
+
+      const decodedMessage = await xmtpConversation.send(request.content);
+
+      const peerProfileId = this.extractPeerProfileIdFromConversation(
+        xmtpConversation,
+        request.participant,
+      );
+
+      return success(this.buildMessage(decodedMessage, xmtpConversation, peerProfileId));
     } catch (e) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore Error not yet properly typed

@@ -2,8 +2,12 @@ export * from './useConversation';
 export * from './useConversations';
 export * from './useCreateConversation';
 export * from './useEnableConversations';
+export * from './useSendMessage';
 export { createInboxKeyStorage } from './infrastructure/InboxKeyStorage';
-export { ConversationsDisabledError } from '@lens-protocol/domain/entities';
+export {
+  ConversationsDisabledError,
+  ConversationNotFoundError,
+} from '@lens-protocol/domain/entities';
 
 export type { InboxConfig } from './config';
 export type {
@@ -13,6 +17,7 @@ export type {
   FetchConversationsRequest,
   IConversationProvider,
   IConversationWallet,
+  SendMessageRequest,
 } from './adapters/IConversationProvider';
 export type {
   Conversation,
@@ -28,4 +33,5 @@ export type {
   EnableConversationsResult,
   GetAllConversationsResult,
   GetConversationResult,
+  SendMessageResult,
 } from '@lens-protocol/domain/use-cases/inbox';

@@ -34,3 +34,12 @@ export class ConversationsDisabledError extends Error {
   name = 'ConversationsDisabledError' as const;
   message = 'Conversations are disabled, enable them first';
 }
+
+export class ConversationNotFoundError extends Error {
+  name = 'ConversationNotFoundError' as const;
+  message = 'Conversation not found';
+
+  constructor(readonly conversationId: ConversationId) {
+    super(`Conversation with id ${conversationId} was not found`);
+  }
+}

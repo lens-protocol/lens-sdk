@@ -1,9 +1,10 @@
-import { ConversationId, Participant } from '@lens-protocol/domain/entities';
+import { ConversationId, Markdown, Participant } from '@lens-protocol/domain/entities';
 import {
   CreateConversationResult,
   EnableConversationsResult,
   GetAllConversationsResult,
   GetConversationResult,
+  SendMessageResult,
 } from '@lens-protocol/domain/use-cases/inbox';
 import { EthereumAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 
@@ -29,18 +30,21 @@ export type FetchConversationRequest = {
 export type CreateConversationRequest = {
   creator: Participant;
   peer: Participant;
+  // message: {
+  //   content: Markdown;
+  // }
+};
+
+export type SendMessageRequest = {
+  participant: Participant;
+  conversationId: ConversationId;
+  content: Markdown;
 };
 
 // export type FetchMessagesRequest = {
 //   participant: Participant;
 //   conversationId: ConversationId;
 //   // TODO: add filters and pagination
-// };
-
-// export type SendMessageRequest = {
-//   participant: Participant;
-//   conversationId: ConversationId;
-//   message: Markdown;
 // };
 
 export interface IConversationProvider {
@@ -55,6 +59,7 @@ export interface IConversationProvider {
 
   createConversation(request: CreateConversationRequest): Promise<CreateConversationResult>;
 
+  sendMessage(request: SendMessageRequest): Promise<SendMessageResult>;
+
   // fetchMessages(request: FetchMessagesRequest): Promise<Message[]>;
-  // sendMessage(request: SendMessageRequest): Promise<Message>;
 }

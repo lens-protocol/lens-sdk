@@ -1,7 +1,7 @@
-import { ConversationWithMessagesData } from '@lens-protocol/react-web';
+import { ConversationWithMessages } from '@lens-protocol/react-web';
 
 type MessagesCardProps = {
-  conversation: ConversationWithMessagesData;
+  conversation: ConversationWithMessages;
 };
 
 export function MessagesCard({ conversation }: MessagesCardProps) {

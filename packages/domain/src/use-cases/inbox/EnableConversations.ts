@@ -10,14 +10,14 @@ import {
 } from '../../entities';
 import { ActiveWallet } from '../wallets';
 
+export type EnableConversationsRequest = {
+  profileId?: ProfileId;
+};
+
 export type EnableConversationsResult = Result<
   Participant,
   PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
-
-export type EnableConversationsRequest = {
-  profileId?: ProfileId;
-};
 
 export interface IEnableConversationsGateway {
   enableConversations(

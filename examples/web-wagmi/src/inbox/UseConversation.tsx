@@ -1,4 +1,5 @@
 import {
+  ConversationId,
   ConversationsEnabled,
   useConversation,
   useEnableConversations,
@@ -10,17 +11,18 @@ import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../componen
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ConversationCard } from './components/ConversationCard';
+import { MessageComposer } from './components/MessageComposer';
 import { MessagesCard } from './components/MessagesCard';
 
 type UseConversationsInnerProps = {
   inbox: ConversationsEnabled;
+  conversationId: ConversationId;
 };
 
-function UseConversationInner({ inbox }: UseConversationsInnerProps) {
-  const { conversationId } = useParams();
+function UseConversationInner({ inbox, conversationId }: UseConversationsInnerProps) {
   const { data, loading, error } = useConversation({
     ...inbox,
-    conversationId: conversationId || '',
+    conversationId: conversationId,
   });
 
   return (
@@ -32,6 +34,7 @@ function UseConversationInner({ inbox }: UseConversationsInnerProps) {
       {data && (
         <>
           <ConversationCard key={data.id} conversation={data} />
+          <MessageComposer inbox={inbox} conversationId={conversationId} />
           <MessagesCard conversation={data} />
         </>
       )}
@@ -57,7 +60,7 @@ function EnableConversations() {
 
       {error && <ErrorMessage error={error} />}
 
-      {inbox && <UseConversationInner inbox={inbox} />}
+      {inbox && <UseConversationInner inbox={inbox} conversationId={conversationId} />}
     </div>
   );
 }
