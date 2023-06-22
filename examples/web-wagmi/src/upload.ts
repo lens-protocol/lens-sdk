@@ -1,28 +1,32 @@
 import { Readable } from 'stream';
 
 import { WebBundlr } from '@bundlr-network/client';
+import { Web3Provider } from '@ethersproject/providers';
 import { ImageType } from '@lens-protocol/react-web';
-import { providerFromPublicClient } from '@lens-protocol/wagmi';
 import { ReadableWebToNodeStream } from 'readable-web-to-node-stream';
-import { getPublicClient } from 'wagmi/actions';
+import { getWalletClient } from 'wagmi/actions';
 
 import { ILocalFile } from './hooks/useFileSelect';
+import { never } from './utils';
 
 const TOP_UP = '200000000000000000'; // 0.2 MATIC
 const MIN_FUNDS = 0.05;
 
 async function getBundlr() {
-  const publicClient = getPublicClient();
-  const provider = providerFromPublicClient({ publicClient });
-  const signer = provider.getSigner();
+  const walletClient = (await getWalletClient()) ?? never('Wallet client not found');
 
-  const bundlr = new WebBundlr('https://devnet.bundlr.network', 'matic', provider, {
-    providerUrl: 'https://rpc-mumbai.maticvigil.com/',
-  });
+  const bundlr = new WebBundlr(
+    'https://devnet.bundlr.network',
+    'matic',
+    new Web3Provider(walletClient.transport),
+    {
+      providerUrl: 'https://rpc-mumbai.maticvigil.com/',
+    },
+  );
 
   await bundlr.ready();
 
-  const balance = await bundlr.getBalance(await signer.getAddress());
+  const balance = await bundlr.getBalance(walletClient.account.address);
 
   if (bundlr.utils.unitConverter(balance).toNumber() < MIN_FUNDS) {
     await bundlr.fund(TOP_UP);

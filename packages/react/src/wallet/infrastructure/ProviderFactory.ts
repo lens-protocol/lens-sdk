@@ -1,4 +1,4 @@
-import { ChainType, invariant } from '@lens-protocol/shared-kernel';
+import { ChainType, invariant, never } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 
 import { ChainConfigRegistry } from '../../chains';
@@ -17,7 +17,7 @@ export class ProviderFactory implements IProviderFactory {
   ) {}
 
   async createProvider(config: { chainType: ChainType }): Promise<providers.JsonRpcProvider> {
-    const chainId = this.chains[config.chainType].chainId;
+    const chainId = this.chains[config.chainType]?.chainId ?? never('Unable to determine chainId');
     const provider = await this.bindings.getProvider({ chainId });
 
     const network = await provider.getNetwork();

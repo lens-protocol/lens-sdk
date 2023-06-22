@@ -4,11 +4,45 @@ import { providers } from 'ethers';
 import { PublicClient, SwitchChainNotSupportedError, WalletClient } from 'wagmi';
 import { getNetwork, getPublicClient, getWalletClient, switchNetwork } from 'wagmi/actions';
 
+function providerFromPublicClient({
+  publicClient,
+}: {
+  publicClient: PublicClient;
+}): providers.JsonRpcProvider {
+  const { chain, transport } = publicClient;
+  const network = {
+    chainId: chain.id,
+    name: chain.name,
+    ensAddress: chain.contracts?.ensRegistry?.address,
+  };
+  return new providers.Web3Provider(transport, network);
+}
+
+async function signerFromWalletClient({
+  walletClient,
+  chainId,
+}: {
+  walletClient: WalletClient;
+  chainId?: number;
+}): Promise<providers.JsonRpcSigner> {
+  const { account, chain, transport } = walletClient;
+  const network = chain
+    ? {
+        chainId: chain.id,
+        name: chain.name,
+        ensAddress: chain.contracts?.ensRegistry?.address,
+      }
+    : chainId;
+  const provider = new providers.Web3Provider(transport, network);
+  const signer = provider.getSigner(account.address);
+  return signer;
+}
+
 export function bindings(): IBindings {
   return {
     getProvider: async ({ chainId }) => {
       const publicClient = getPublicClient({ chainId });
-      return providerFromPublicClient({ publicClient, chainId });
+      return providerFromPublicClient({ publicClient });
     },
     getSigner: async ({ chainId }) => {
       if (chainId) {
@@ -33,24 +67,4 @@ export function bindings(): IBindings {
       return signerFromWalletClient({ walletClient, chainId });
     },
   };
-}
-
-export function providerFromPublicClient({
-  publicClient,
-  chainId,
-}: {
-  publicClient: PublicClient;
-  chainId?: number;
-}): providers.Web3Provider {
-  return new providers.Web3Provider(publicClient.transport, chainId);
-}
-
-export async function signerFromWalletClient({
-  walletClient,
-  chainId,
-}: {
-  walletClient: WalletClient;
-  chainId?: number;
-}): Promise<providers.JsonRpcSigner> {
-  return new providers.Web3Provider(walletClient.transport, chainId).getSigner();
 }

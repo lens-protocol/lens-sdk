@@ -4,6 +4,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { WagmiConfig, configureChains, createConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
+import { InjectedConnector } from 'wagmi/connectors/injected';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Home } from './HomePage';
@@ -72,6 +73,13 @@ const config = createConfig({
   autoConnect: true,
   publicClient,
   webSocketPublicClient,
+  connectors: [
+    new InjectedConnector({
+      options: {
+        shimDisconnect: false,
+      },
+    }),
+  ],
 });
 
 const lensConfig: LensConfig = {
