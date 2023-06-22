@@ -20,6 +20,11 @@ import { UseExplorePublications } from './discovery/UseExplorePublications';
 import { UseFeed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
+import { InboxContext } from './inbox/InboxContext';
+import { InboxPage } from './inbox/InboxPage';
+import { UseConversation } from './inbox/UseConversation';
+import { UseConversations } from './inbox/UseConversations';
+import { UseCreateConversation } from './inbox/UseCreateConversation';
 import { MiscPage } from './misc/MiscPage';
 import { Polls } from './misc/Polls';
 import { UseApproveModule } from './misc/UseApproveModule';
@@ -202,6 +207,16 @@ export function App() {
                 <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
                 <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
                 <Route path="/misc/polls" element={<Polls />} />
+
+                <Route element={<InboxContext />}>
+                  <Route path="/inbox" element={<InboxPage />} />
+                  <Route path="/inbox/useConversations" element={<UseConversations />} />
+                  <Route
+                    path="/inbox/useConversations/:conversationId"
+                    element={<UseConversation />}
+                  />
+                  <Route path="/inbox/useCreateConversation" element={<UseCreateConversation />} />
+                </Route>
               </Routes>
             </GenericErrorBoundary>
             <Toaster />
