@@ -166,13 +166,13 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
   } as CreatePostRequest;
 }
 
-export function mockReactionRequest(overrides?: Partial<ReactionRequest>): ReactionRequest {
+export function mockReactionRequest<T extends ReactionRequest>(overrides?: Partial<T>): T {
   return {
     profileId: mockProfileId(),
     publicationId: mockPublicationId(),
     reactionType: ReactionType.UPVOTE,
     ...overrides,
-  };
+  } as T;
 }
 
 export function mockHidePublicationRequest(

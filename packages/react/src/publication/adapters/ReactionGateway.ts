@@ -13,7 +13,7 @@ import { ReactionRequest, IReactionGateway } from '@lens-protocol/domain/use-cas
 import { assertError } from '@lens-protocol/shared-kernel';
 
 export type ExtendedReactionRequest = ReactionRequest & {
-  existingReactionType?: ReactionRequest['reactionType'];
+  existingReactionType: ReactionRequest['reactionType'] | undefined;
 };
 
 export class ReactionGateway implements IReactionGateway<ReactionRequest> {
