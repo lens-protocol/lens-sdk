@@ -12,10 +12,27 @@ import {
 import { ReactionRequest, IReactionGateway } from '@lens-protocol/domain/use-cases/publications';
 import { assertError } from '@lens-protocol/shared-kernel';
 
-export class ReactionGateway implements IReactionGateway {
+export type ExtendedReactionRequest = ReactionRequest & {
+  existingReactionType: ReactionRequest['reactionType'] | undefined;
+};
+
+export class ReactionGateway implements IReactionGateway<ReactionRequest> {
   constructor(private apolloClient: SafeApolloClient) {}
 
-  async add({ profileId, publicationId, reactionType }: ReactionRequest) {
+  async add({
+    profileId,
+    publicationId,
+    reactionType,
+    existingReactionType,
+  }: ExtendedReactionRequest) {
+    if (existingReactionType === reactionType) {
+      return;
+    }
+
+    if (existingReactionType && existingReactionType !== reactionType) {
+      await this.remove({ profileId, publicationId, reactionType: existingReactionType });
+    }
+
     await this.apolloClient.mutate<AddReactionData, AddReactionVariables>({
       mutation: AddReactionDocument,
       variables: {

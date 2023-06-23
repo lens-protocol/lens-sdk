@@ -20,7 +20,7 @@ const getReactionStatKey = (reactionType: ReactionType) => {
   }
 };
 
-export class ReactionPresenter implements IReactionPresenter {
+export class ReactionPresenter implements IReactionPresenter<ReactionRequest> {
   constructor(private readonly publicationCacheManager: PublicationCacheManager) {}
 
   async add(request: ReactionRequest): Promise<void> {

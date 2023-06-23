@@ -5,9 +5,10 @@ import {
   createRemoveReactionMockedResponse,
   createRemoveReactionMockedResponseWithGraphqlValidationError,
 } from '@lens-protocol/api-bindings/mocks';
+import { ReactionType } from '@lens-protocol/domain/entities';
 import { mockProfileId, mockPublicationId, mockReactionRequest } from '@lens-protocol/domain/mocks';
 
-import { ReactionGateway } from '../ReactionGateway';
+import { ExtendedReactionRequest, ReactionGateway } from '../ReactionGateway';
 
 describe(`Given an instance of the ${ReactionGateway.name}`, () => {
   describe(`and the ${ReactionGateway.prototype.add.name} method`, () => {
@@ -26,12 +27,46 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       ]);
 
       const gateway = new ReactionGateway(apolloClient);
-      const request = mockReactionRequest({
+      const request = mockReactionRequest<ExtendedReactionRequest>({
         publicationId,
         profileId,
+        existingReactionType: undefined,
       });
 
       await gateway.add(request);
+    });
+
+    describe(`and there is already an existing reaction`, () => {
+      it(`should first remove existing reaction before adding a new one`, async () => {
+        const profileId = mockProfileId();
+        const publicationId = mockPublicationId();
+
+        const apolloClient = mockLensApolloClient([
+          createRemoveReactionMockedResponse({
+            variables: {
+              publicationId,
+              profileId,
+              reaction: ReactionTypes.Downvote,
+            },
+          }),
+          createAddReactionMockedResponse({
+            variables: {
+              publicationId,
+              profileId,
+              reaction: ReactionTypes.Upvote,
+            },
+          }),
+        ]);
+
+        const gateway = new ReactionGateway(apolloClient);
+        const request = mockReactionRequest<ExtendedReactionRequest>({
+          publicationId,
+          profileId,
+          existingReactionType: ReactionType.DOWNVOTE,
+        });
+
+        await gateway.add(request);
+      });
     });
   });
 

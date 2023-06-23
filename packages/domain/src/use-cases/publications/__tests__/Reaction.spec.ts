@@ -1,7 +1,7 @@
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { Reaction, IReactionGateway, IReactionPresenter } from '../Reaction';
+import { Reaction, IReactionGateway, IReactionPresenter, ReactionRequest } from '../Reaction';
 import { mockReactionRequest } from '../__helpers__/mocks';
 
 describe(`Given the ${Reaction.name} use-case interactor`, () => {
@@ -11,8 +11,8 @@ describe(`Given the ${Reaction.name} use-case interactor`, () => {
     it(`should:
         - present optimistic update
         - add new reaction`, async () => {
-      const presenter = mock<IReactionPresenter>();
-      const gateway = mock<IReactionGateway>();
+      const presenter = mock<IReactionPresenter<ReactionRequest>>();
+      const gateway = mock<IReactionGateway<ReactionRequest>>();
       const reaction = new Reaction(gateway, presenter);
 
       await reaction.add(request);
@@ -21,9 +21,9 @@ describe(`Given the ${Reaction.name} use-case interactor`, () => {
     });
 
     it(`should revert the optimistic update in case of errors and propagate the error`, async () => {
-      const presenter = mock<IReactionPresenter>();
+      const presenter = mock<IReactionPresenter<ReactionRequest>>();
 
-      const gateway = mock<IReactionGateway>();
+      const gateway = mock<IReactionGateway<ReactionRequest>>();
       when(gateway.add).calledWith(request).mockRejectedValue(new Error(''));
 
       const reaction = new Reaction(gateway, presenter);
@@ -41,8 +41,8 @@ describe(`Given the ${Reaction.name} use-case interactor`, () => {
     it(`should:
         - present optimistic update
         - remove reaction`, async () => {
-      const presenter = mock<IReactionPresenter>();
-      const gateway = mock<IReactionGateway>();
+      const presenter = mock<IReactionPresenter<ReactionRequest>>();
+      const gateway = mock<IReactionGateway<ReactionRequest>>();
       const reaction = new Reaction(gateway, presenter);
 
       await reaction.remove(request);
@@ -51,9 +51,9 @@ describe(`Given the ${Reaction.name} use-case interactor`, () => {
     });
 
     it(`should revert the optimistic update in case of errors and propagate the error`, async () => {
-      const presenter = mock<IReactionPresenter>();
+      const presenter = mock<IReactionPresenter<ReactionRequest>>();
 
-      const gateway = mock<IReactionGateway>();
+      const gateway = mock<IReactionGateway<ReactionRequest>>();
       when(gateway.remove).calledWith(request).mockRejectedValue(new Error(''));
       const reaction = new Reaction(gateway, presenter);
 

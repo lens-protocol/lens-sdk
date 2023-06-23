@@ -6,23 +6,23 @@ export type ReactionRequest = {
   reactionType: ReactionType;
 };
 
-export interface IReactionGateway {
-  add(data: ReactionRequest): Promise<void>;
-  remove(data: ReactionRequest): Promise<void>;
+export interface IReactionGateway<T extends ReactionRequest> {
+  add(data: T): Promise<void>;
+  remove(data: T): Promise<void>;
 }
 
-export interface IReactionPresenter {
-  add(request: ReactionRequest): Promise<void>;
-  remove(request: ReactionRequest): Promise<void>;
+export interface IReactionPresenter<T extends ReactionRequest> {
+  add(request: T): Promise<void>;
+  remove(request: T): Promise<void>;
 }
 
-export class Reaction {
+export class Reaction<T extends ReactionRequest> {
   constructor(
-    private readonly gateway: IReactionGateway,
-    private readonly presenter: IReactionPresenter,
+    private readonly gateway: IReactionGateway<T>,
+    private readonly presenter: IReactionPresenter<T>,
   ) {}
 
-  async add(request: ReactionRequest) {
+  async add(request: T) {
     await this.presenter.add(request);
 
     try {
@@ -33,7 +33,7 @@ export class Reaction {
     }
   }
 
-  async remove(request: ReactionRequest) {
+  async remove(request: T) {
     await this.presenter.remove(request);
 
     try {
