@@ -20,6 +20,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@lens-protocol/react-web": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
+    "@xmtp/react-sdk": "1.0.0-preview.39",
     "example-shared": "workspace:*",
     "react": "^18.2.0",
     "react-cool-inview": "^3.0.1",

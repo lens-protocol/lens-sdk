@@ -21,12 +21,17 @@ export interface IActiveProfileGateway {
   reset(): Promise<void>;
 }
 
+export interface IConversationsGateway {
+  reset(): Promise<void>;
+}
+
 export class WalletLogout {
   constructor(
     private walletGateway: IResettableWalletGateway,
     private credentialsGateway: IResettableCredentialsGateway,
     private activeWallet: ActiveWallet,
     private activeProfileGateway: IActiveProfileGateway,
+    private conversationsGateway: IConversationsGateway,
     private sessionPresenter: ISessionPresenter,
   ) {}
 
@@ -35,6 +40,7 @@ export class WalletLogout {
 
     await this.walletGateway.reset();
     await this.activeProfileGateway.reset();
+    await this.conversationsGateway.reset();
 
     await this.credentialsGateway.invalidate();
 

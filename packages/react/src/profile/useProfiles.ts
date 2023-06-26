@@ -24,7 +24,9 @@ export type UseProfilesArgs = PaginatedArgs<
       {
         profileIds: ProfileId[];
       }
-    >
+    > & {
+      skip?: boolean;
+    }
   >
 >;
 
@@ -89,6 +91,7 @@ export function useProfiles({
   profileIds: byProfileIds,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
+  skip = false,
 }: UseProfilesArgs): PaginatedReadResult<Profile[]> {
   invariant(
     byHandles === undefined || byProfileIds === undefined,
@@ -96,14 +99,15 @@ export function useProfiles({
   );
 
   return usePaginatedReadResult(
-    useGetAllProfiles(
-      useLensApolloClient(
+    useGetAllProfiles({
+      ...useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useMediaTransformFromConfig(
             useSourcesFromConfig({ byHandles, byProfileIds, limit, observerId }),
           ),
         }),
       ),
-    ),
+      skip,
+    }),
   );
 }

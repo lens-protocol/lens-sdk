@@ -23,3 +23,6 @@ export type {
 export type EncryptionConfig = never;
 export type IStorageProvider = never;
 export type IObservableStorageProvider = never;
+
+// xmtp integration
+export * from './inbox';

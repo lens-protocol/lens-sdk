@@ -21,7 +21,12 @@ export type UseProfileByHandleArgs = {
 };
 
 export type UseProfileArgs = WithObserverIdOverride<
-  XOR<UseProfileByIdArgs, UseProfileByHandleArgs>
+  XOR<
+    {
+      skip: true;
+    },
+    XOR<UseProfileByIdArgs, UseProfileByHandleArgs>
+  >
 >;
 
 /**
@@ -38,8 +43,8 @@ export function useProfile({
   );
 
   const { data, error, loading } = useReadResult(
-    useGetProfile(
-      useLensApolloClient(
+    useGetProfile({
+      ...useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useMediaTransformFromConfig(
             useSourcesFromConfig({
@@ -49,7 +54,8 @@ export function useProfile({
           ),
         }),
       ),
-    ),
+      skip: request.skip,
+    }),
   );
 
   if (loading) {

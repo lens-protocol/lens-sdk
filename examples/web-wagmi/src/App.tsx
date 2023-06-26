@@ -6,6 +6,7 @@ import {
   development,
 } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
+import { XMTPProvider } from '@xmtp/react-sdk';
 import toast, { Toaster } from 'react-hot-toast';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { WagmiConfig, configureChains, createConfig } from 'wagmi';
@@ -26,6 +27,10 @@ import { UseExplorePublications } from './discovery/UseExplorePublications';
 import { UseFeed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
+import { InboxPage } from './inbox/InboxPage';
+import { UseConversation } from './inbox/UseConversation';
+import { UseConversations } from './inbox/UseConversations';
+import { UseCreateConversation } from './inbox/UseCreateConversation';
 import { MiscPage } from './misc/MiscPage';
 import { Polls } from './misc/Polls';
 import { UseApproveModule } from './misc/UseApproveModule';
@@ -112,104 +117,119 @@ export function App() {
   return (
     <WagmiConfig config={config}>
       <LensProvider config={lensConfig} onError={notifyError} onLogout={notifyLogout}>
-        <Router>
-          <Header />
-          <main>
-            <Breadcrumbs />
-            <GenericErrorBoundary fallback={ErrorMessage}>
-              <Routes>
-                <Route index element={<Home />} />
+        <XMTPProvider>
+          <Router>
+            <Header />
+            <main>
+              <Breadcrumbs />
+              <GenericErrorBoundary fallback={ErrorMessage}>
+                <Routes>
+                  <Route index element={<Home />} />
 
-                <Route path="/authentication">
-                  <Route index element={<AuthenticationPage />} />
-                  <Route path="loginSpecificProfile" element={<LoginSpecificProfile />} />
-                </Route>
+                  <Route path="/authentication">
+                    <Route index element={<AuthenticationPage />} />
+                    <Route path="loginSpecificProfile" element={<LoginSpecificProfile />} />
+                  </Route>
 
-                <Route path="/publications">
-                  <Route index element={<PublicationsPage />} />
-                  <Route path="usePublication" element={<UsePublication />} />
-                  <Route path="usePublications" element={<UsePublications />} />
-                  <Route path="useComments" element={<UsePublication />} />
-                  <Route path="useCollectedPublications" element={<UseCollectedPublications />} />
-                  <Route path="useCreatePost" element={<UseCreatePost />} />
-                  <Route path="useCreateEncryptedPost" element={<UseCreateEncryptedPost />} />
-                  <Route path="useCreateComment" element={<UseCreateComment />} />
-                  <Route
-                    path="useProfilePublicationsForSale"
-                    element={<UseProfilePublicationsForSale />}
-                  />
-                  <Route path="useReaction" element={<UseReaction />} />
-                  <Route path="useWhoReacted" element={<UseWhoReacted />} />
-                  <Route path="useReportPublication" element={<UseReportPublication />} />
-                  <Route path="useHidePublication" element={<UseHidePublication />} />
-                  <Route
-                    path="useWhoCollectedPublication"
-                    element={<UseWhoCollectedPublication />}
-                  />
-                  <Route path="UseCreateMirror" element={<UseCreateMirror />} />
-                  <Route path="useWhoMirroredPublication" element={<UseWhoMirroredPublication />} />
-                  <Route path="useCollect" element={<UseCollect />} />
-                  <Route path="useNotInterested" element={<UseNotInterested />} />
-                  <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
-                  <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
-                </Route>
+                  <Route path="/publications">
+                    <Route index element={<PublicationsPage />} />
+                    <Route path="usePublication" element={<UsePublication />} />
+                    <Route path="usePublications" element={<UsePublications />} />
+                    <Route path="useComments" element={<UsePublication />} />
+                    <Route path="useCollectedPublications" element={<UseCollectedPublications />} />
+                    <Route path="useCreatePost" element={<UseCreatePost />} />
+                    <Route path="useCreateEncryptedPost" element={<UseCreateEncryptedPost />} />
+                    <Route path="useCreateComment" element={<UseCreateComment />} />
+                    <Route
+                      path="useProfilePublicationsForSale"
+                      element={<UseProfilePublicationsForSale />}
+                    />
+                    <Route path="useReaction" element={<UseReaction />} />
+                    <Route path="useWhoReacted" element={<UseWhoReacted />} />
+                    <Route path="useReportPublication" element={<UseReportPublication />} />
+                    <Route path="useHidePublication" element={<UseHidePublication />} />
+                    <Route
+                      path="useWhoCollectedPublication"
+                      element={<UseWhoCollectedPublication />}
+                    />
+                    <Route path="UseCreateMirror" element={<UseCreateMirror />} />
+                    <Route
+                      path="useWhoMirroredPublication"
+                      element={<UseWhoMirroredPublication />}
+                    />
+                    <Route path="useCollect" element={<UseCollect />} />
+                    <Route path="useNotInterested" element={<UseNotInterested />} />
+                    <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
+                    <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
+                  </Route>
 
-                <Route path="/profiles">
-                  <Route index element={<ProfilesPage />} />
-                  <Route path="useCreateProfile" element={<UseCreateProfile />} />
-                  <Route path="useProfile" element={<UseProfile />} />
-                  <Route path="useProfiles" element={<UseProfiles />} />
-                  <Route path="useUpdateDispatcherConfig" element={<UseUpdateDispatcherConfig />} />
-                  <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
-                  <Route path="useProfilesToFollow" element={<ProfilesToFollow />} />
-                  <Route path="useFollow" element={<UseFollowAndUnfollow />} />
-                  <Route path="useUpdateProfileImage" element={<UseUpdateProfileImage />} />
-                  <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
-                  <Route path="useUpdateProfileDetails" element={<UseUpdateProfileDetails />} />
-                  <Route path="useActiveProfileSwitch" element={<UseActiveProfileSwitch />} />
-                  <Route path="useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
-                  <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
-                  <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
-                  <Route path="useProfileGuardian" element={<UseProfileGuardian />} />
-                </Route>
+                  <Route path="/profiles">
+                    <Route index element={<ProfilesPage />} />
+                    <Route path="useCreateProfile" element={<UseCreateProfile />} />
+                    <Route path="useProfile" element={<UseProfile />} />
+                    <Route path="useProfiles" element={<UseProfiles />} />
+                    <Route
+                      path="useUpdateDispatcherConfig"
+                      element={<UseUpdateDispatcherConfig />}
+                    />
+                    <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
+                    <Route path="useProfilesToFollow" element={<ProfilesToFollow />} />
+                    <Route path="useFollow" element={<UseFollowAndUnfollow />} />
+                    <Route path="useUpdateProfileImage" element={<UseUpdateProfileImage />} />
+                    <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
+                    <Route path="useUpdateProfileDetails" element={<UseUpdateProfileDetails />} />
+                    <Route path="useActiveProfileSwitch" element={<UseActiveProfileSwitch />} />
+                    <Route path="useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
+                    <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
+                    <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
+                    <Route path="useProfileGuardian" element={<UseProfileGuardian />} />
+                  </Route>
 
-                <Route path="/discovery">
-                  <Route index element={<DiscoveryPage />} />
-                  <Route path="useFeed" element={<UseFeed />} />
-                  <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
-                  <Route path="useExplorePublications" element={<UseExplorePublications />} />
-                  <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
-                  <Route path="useSearchPublications" element={<UseSearchPublications />} />
-                </Route>
+                  <Route path="/discovery">
+                    <Route index element={<DiscoveryPage />} />
+                    <Route path="useFeed" element={<UseFeed />} />
+                    <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
+                    <Route path="useExplorePublications" element={<UseExplorePublications />} />
+                    <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
+                    <Route path="useSearchPublications" element={<UseSearchPublications />} />
+                  </Route>
 
-                <Route path="/revenue">
-                  <Route index element={<RevenuePage />} />
-                  <Route path="usePublicationRevenue" element={<UsePublicationRevenue />} />
-                  <Route path="useProfileFollowRevenue" element={<UseProfileFollowRevenue />} />
-                  <Route
-                    path="useProfilePublicationRevenue"
-                    element={<UseProfilePublicationRevenue />}
-                  />
-                </Route>
+                  <Route path="/revenue">
+                    <Route index element={<RevenuePage />} />
+                    <Route path="usePublicationRevenue" element={<UsePublicationRevenue />} />
+                    <Route path="useProfileFollowRevenue" element={<UseProfileFollowRevenue />} />
+                    <Route
+                      path="useProfilePublicationRevenue"
+                      element={<UseProfilePublicationRevenue />}
+                    />
+                  </Route>
 
-                <Route path="/misc">
-                  <Route index element={<MiscPage />} />
-                  <Route path="/misc/useCurrencies" element={<UseCurrencies />} />
-                  <Route path="/misc/useEnabledModules" element={<UseEnabledModules />} />
-                  <Route path="/misc/useNotifications" element={<UseNotifications />} />
-                  <Route
-                    path="/misc/useUnreadNotificationCount"
-                    element={<UseUnreadNotificationCount />}
-                  />
-                  <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
-                  <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
-                  <Route path="/misc/polls" element={<Polls />} />
-                </Route>
-              </Routes>
-            </GenericErrorBoundary>
-            <Toaster />
-          </main>
-        </Router>
+                  <Route path="/misc">
+                    <Route index element={<MiscPage />} />
+                    <Route path="useCurrencies" element={<UseCurrencies />} />
+                    <Route path="useEnabledModules" element={<UseEnabledModules />} />
+                    <Route path="useNotifications" element={<UseNotifications />} />
+                    <Route
+                      path="useUnreadNotificationCount"
+                      element={<UseUnreadNotificationCount />}
+                    />
+                    <Route path="useApproveModule" element={<UseApproveModule />} />
+                    <Route path="useRecentTransactions" element={<UseRecentTransactions />} />
+                    <Route path="polls" element={<Polls />} />
+                  </Route>
+
+                  <Route path="/inbox">
+                    <Route index element={<InboxPage />} />
+                    <Route path="useConversations" element={<UseConversations />} />
+                    <Route path="useConversations/:conversationId" element={<UseConversation />} />
+                    <Route path="useCreateConversation" element={<UseCreateConversation />} />
+                  </Route>
+                </Routes>
+              </GenericErrorBoundary>
+              <Toaster />
+            </main>
+          </Router>
+        </XMTPProvider>
       </LensProvider>
     </WagmiConfig>
   );

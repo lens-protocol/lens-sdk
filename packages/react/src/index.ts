@@ -130,6 +130,7 @@ export { UnspecifiedError } from '@lens-protocol/api-bindings';
 export { Amount, WellKnownSymbols, ether, matic, erc20, usd } from '@lens-protocol/shared-kernel';
 export * from './sources';
 export * from './utils';
+export { PromiseResultPresenter } from './transactions/adapters/PromiseResultPresenter';
 export { isValidHandle } from '@lens-protocol/api-bindings';
 
 /**
