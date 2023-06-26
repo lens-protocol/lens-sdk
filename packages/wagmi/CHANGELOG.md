@@ -1,5 +1,23 @@
 # @lens-protocol/wagmi
 
+## 2.0.0
+
+### Major Changes
+
+- 479333d3: **Upgraded** wagmi to v1
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+
+### Patch Changes
+
+- Updated dependencies [cb5b900d]
+- Updated dependencies [225f0fa7]
+- Updated dependencies [422c627e]
+  - @lens-protocol/react-web@1.2.0
+  - @lens-protocol/shared-kernel@0.9.0
+
 ## 2.0.0-next.4
 
 ### Patch Changes

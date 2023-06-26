@@ -1,5 +1,34 @@
 # @lens-protocol/react-web
 
+## 1.2.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+- 225f0fa7: **Added** `usePollDetail` and `usePollVote` hooks
+
+### Patch Changes
+
+- Updated dependencies [cb5b900d]
+- Updated dependencies [af4b1133]
+- Updated dependencies [55211083]
+- Updated dependencies [3025d56a]
+- Updated dependencies [422c627e]
+- Updated dependencies [1d99413a]
+- Updated dependencies [225f0fa7]
+- Updated dependencies [ea0b40e3]
+- Updated dependencies [a899553c]
+- Updated dependencies [422c627e]
+- Updated dependencies [2dbe0035]
+- Updated dependencies [148e9636]
+- Updated dependencies [e4be6c07]
+- Updated dependencies [97ecba69]
+  - @lens-protocol/gated-content@0.3.0
+  - @lens-protocol/react@1.2.0
+  - @lens-protocol/api-bindings@0.9.0
+  - @lens-protocol/shared-kernel@0.9.0
+  - @lens-protocol/storage@0.7.3
+
 ## 1.2.0-next.4
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @lens-protocol/shared-kernel
 
+## 0.9.0
+
+### Minor Changes
+
+- 225f0fa7: **Added** `usePollDetail` and `usePollVote` hooks
+
+### Patch Changes
+
+- 422c627e: **Added** eager check on several tx hooks so to fail fast with dev friendly error messages"
+
 ## 0.9.0-next.0
 
 ### Minor Changes

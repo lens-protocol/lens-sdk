@@ -1,5 +1,42 @@
 # @lens-protocol/react
 
+## 1.2.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+- af4b1133: Detects malformed URLs from user's provided `upload` handler
+- 3025d56a: allow self funded fallback for proxy actions
+- 225f0fa7: **Added** `usePollDetail` and `usePollVote` hooks
+- 422c627e: **Added** eager check on several tx hooks so to fail fast with dev friendly error messages"
+
+### Patch Changes
+
+- 55211083: Synchronize state change between `useActiveWallet` and `useActiveProfile` hooks
+- 422c627e: **Fixed** missing DecryptionCriteria validation
+- 1d99413a: Fixed: wrong reaction state when optimisticaly adding a reaction if another reaction already exists
+- ea0b40e3: **Fixed** active profile to be always `null` when there is not active wallet
+- 2dbe0035: - Adds the ability to override the `createGatedClient` function for gated content functionality.
+- 97ecba69: **Fixed** cache redirects for Publication and Profile
+- Updated dependencies [cb5b900d]
+- Updated dependencies [55211083]
+- Updated dependencies [3025d56a]
+- Updated dependencies [1d99413a]
+- Updated dependencies [225f0fa7]
+- Updated dependencies [ea0b40e3]
+- Updated dependencies [a899553c]
+- Updated dependencies [422c627e]
+- Updated dependencies [2dbe0035]
+- Updated dependencies [148e9636]
+- Updated dependencies [e4be6c07]
+- Updated dependencies [97ecba69]
+  - @lens-protocol/gated-content@0.3.0
+  - @lens-protocol/domain@0.9.0
+  - @lens-protocol/api-bindings@0.9.0
+  - @lens-protocol/blockchain-bindings@0.9.0
+  - @lens-protocol/shared-kernel@0.9.0
+  - @lens-protocol/storage@0.7.3
+
 ## 1.2.0-next.4
 
 ### Patch Changes
