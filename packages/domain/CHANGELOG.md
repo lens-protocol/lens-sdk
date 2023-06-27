@@ -1,5 +1,21 @@
 # @lens-protocol/domain
 
+## 0.9.0
+
+### Minor Changes
+
+- 225f0fa7: **Added** `usePollDetail` and `usePollVote` hooks
+
+### Patch Changes
+
+- 55211083: Synchronize state change between `useActiveWallet` and `useActiveProfile` hooks
+- 3025d56a: allow self funded fallback for proxy actions
+- 1d99413a: Fixed: wrong reaction state when optimisticaly adding a reaction if another reaction already exists
+- ea0b40e3: **Fixed** active profile to be always `null` when there is not active wallet
+- Updated dependencies [225f0fa7]
+- Updated dependencies [422c627e]
+  - @lens-protocol/shared-kernel@0.9.0
+
 ## 0.9.0-next.2
 
 ### Patch Changes

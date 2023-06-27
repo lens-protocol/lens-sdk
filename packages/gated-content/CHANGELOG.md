@@ -1,5 +1,29 @@
 # @lens-protocol/gated-content
 
+## 0.3.0
+
+### Minor Changes
+
+- cb5b900d: **Added** sandbox environment support
+- 148e9636: feat: **Added** linea goerli support to gated content
+
+### Patch Changes
+
+- 2dbe0035: - Adds the ability to override the `createGatedClient` function for gated content functionality.
+- Updated dependencies [55211083]
+- Updated dependencies [3025d56a]
+- Updated dependencies [1d99413a]
+- Updated dependencies [225f0fa7]
+- Updated dependencies [ea0b40e3]
+- Updated dependencies [a899553c]
+- Updated dependencies [422c627e]
+- Updated dependencies [e4be6c07]
+- Updated dependencies [97ecba69]
+  - @lens-protocol/domain@0.9.0
+  - @lens-protocol/api-bindings@0.9.0
+  - @lens-protocol/shared-kernel@0.9.0
+  - @lens-protocol/storage@0.7.3
+
 ## 0.3.0-next.4
 
 ### Patch Changes
