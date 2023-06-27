@@ -1,5 +1,12 @@
 # @lens-protocol/react-web
 
+## 1.2.1
+
+### Patch Changes
+
+- Updated dependencies [6be8cfb6]
+  - @lens-protocol/react@1.2.1
+
 ## 1.2.0
 
 ### Minor Changes
