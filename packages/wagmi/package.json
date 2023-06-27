@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/wagmi",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "wagmi bindings for @lens-protocol/react",
   "repository": {
     "directory": "packages/wagmi",

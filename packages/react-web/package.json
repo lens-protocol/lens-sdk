@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react-web",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Lens Protocol SDK for React web applications",
   "main": "dist/lens-protocol-react-web.cjs.js",
   "module": "dist/lens-protocol-react-web.esm.js",
