@@ -19,8 +19,10 @@
   "intentionallyNotExported": [
     "AnyTransactionRequestModel",
     "SelfFundedProtocolTransactionRequest",
+    "ContentInsightMatcher",
     "SnapshotPoll",
-    "Undetermined"
+    "Undetermined",
+    "EnvironmentConfig"
   ],
   "categoryOrder": ["Components", "Hooks", "Utils", "*"],
   "categorizeByGroup": true,

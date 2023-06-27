@@ -3,12 +3,11 @@ import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol
 import {
   ICredentials,
   PendingSigningRequestError,
-  Profile,
   UserRejectedError,
   Wallet,
   WalletConnectionError,
 } from '../../entities';
-import { IActiveProfilePresenter, ActiveProfileLoader } from '../profile';
+import { IActiveProfilePresenter, ActiveProfileLoader, ProfileIdentifier } from '../profile';
 import { IGenericResultPresenter } from '../transactions';
 import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 
@@ -20,7 +19,7 @@ export interface IWritableWalletGateway {
   save(wallet: Wallet): Promise<void>;
 }
 
-export type WalletLoginResult = Profile | null;
+export type WalletLoginResult = ProfileIdentifier | null;
 
 export type IWalletLoginPresenter = IGenericResultPresenter<
   WalletLoginResult,

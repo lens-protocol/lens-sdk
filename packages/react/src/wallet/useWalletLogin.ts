@@ -10,12 +10,12 @@ import { Signer } from 'ethers';
 import { Operation, useOperation } from '../helpers/operations';
 import { useWalletLoginController } from './adapters/useWalletLoginController';
 
-type UseWalletLoginArgs = {
+export type UseWalletLoginArgs = {
   address: string;
   handle?: string;
 };
 
-type WalletLoginPotentialErrors =
+export type WalletLoginPotentialErrors =
   | PendingSigningRequestError
   | WalletConnectionError
   | UserRejectedError;
