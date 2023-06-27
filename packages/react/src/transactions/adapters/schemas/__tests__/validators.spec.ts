@@ -371,7 +371,7 @@ describe(`Given the validator helpers`, () => {
           },
           delegate: false,
           locale: 'en',
-          kind: TransactionKind.CREATE_POST,
+          kind: TransactionKind.CREATE_COMMENT,
           offChain: false,
           profileId: mockProfileId(),
           publicationId: mockPublicationId(),
@@ -419,7 +419,7 @@ describe(`Given the validator helpers`, () => {
 
     it('should provide an actionable error message in case of "reference" policy misconfiguration', () => {
       expect(() =>
-        validateCreatePostRequest({
+        validateCreateCommentRequest({
           contentFocus: ContentFocus.TEXT_ONLY,
           content: '',
           collect: {
@@ -427,9 +427,10 @@ describe(`Given the validator helpers`, () => {
           },
           delegate: false,
           locale: 'en',
-          kind: TransactionKind.CREATE_POST,
+          kind: TransactionKind.CREATE_COMMENT,
           offChain: false,
           profileId: mockProfileId(),
+          publicationId: mockPublicationId(),
           reference: {
             type: ReferencePolicyType.DEGREES_OF_SEPARATION,
           },
