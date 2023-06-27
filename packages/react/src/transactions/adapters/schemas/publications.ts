@@ -274,7 +274,7 @@ const ReferencePolicyConfigSchema = z.discriminatedUnion('type', [
 
 const AppIdSchema: z.Schema<AppId, z.ZodTypeDef, string> = z.any().transform(appId);
 
-function createBasePostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
+function createCommonPublicationRequestSchema<TAmountSchema extends Erc20AmountSchema>(
   amountSchema: TAmountSchema,
 ) {
   return z.object({
@@ -283,12 +283,19 @@ function createBasePostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
     contentWarning: z.nativeEnum(ContentWarning).optional(),
     decryptionCriteria: decryptionCriteriaSchema(amountSchema),
     delegate: z.boolean(),
-    kind: z.literal(TransactionKind.CREATE_POST),
     locale: z.string(),
     offChain: z.boolean(),
     profileId: ProfileIdSchema,
     reference: ReferencePolicyConfigSchema,
     tags: z.array(z.string()).optional(),
+  });
+}
+
+function createBasePostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
+  amountSchema: TAmountSchema,
+) {
+  return createCommonPublicationRequestSchema(amountSchema).extend({
+    kind: z.literal(TransactionKind.CREATE_POST),
   });
 }
 
@@ -326,8 +333,9 @@ export function createEmbedPostRequestSchema<TAmountSchema extends Erc20AmountSc
 function createBaseCommentRequestSchema<TAmountSchema extends Erc20AmountSchema>(
   amountSchema: TAmountSchema,
 ) {
-  return createBasePostRequestSchema(amountSchema).extend({
+  return createCommonPublicationRequestSchema(amountSchema).extend({
     publicationId: PublicationIdSchema,
+    kind: z.literal(TransactionKind.CREATE_COMMENT),
   });
 }
 
