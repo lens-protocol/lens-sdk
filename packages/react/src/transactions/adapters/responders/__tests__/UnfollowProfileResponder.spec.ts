@@ -6,9 +6,9 @@ import {
   mockUnfollowRequest,
   mockWalletData,
 } from '@lens-protocol/domain/mocks';
+import { WalletData } from '@lens-protocol/domain/use-cases/lifecycle';
 import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
-import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
 import { UnfollowProfileResponder } from '../UnfollowProfileResponder';
 

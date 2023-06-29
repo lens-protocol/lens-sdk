@@ -1,20 +1,17 @@
-import {
-  FeedEventItemType as LensFeedEventItemType,
-  FeedItem,
-  activeProfileIdentifierVar,
-} from '@lens-protocol/api-bindings';
+import { FeedEventItemType as LensFeedEventItemType, FeedItem } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockFeedItemFragment,
   createFeedMockedResponse,
   mockSources,
+  simulateAuthenticatedProfile,
+  simulateAuthenticatedWallet,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
+import { mockProfileId, mockProfileIdentifier } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { FeedEventItemType } from '../FeedEventItemType';
 import { useFeed } from '../useFeed';
 
@@ -62,26 +59,30 @@ function setupTestScenario({
 describe(`Given the ${useFeed.name} hook`, () => {
   const profileId = mockProfileId();
   const items = [mockFeedItemFragment(), mockFeedItemFragment()];
-
-  beforeAll(() => {
-    simulateAppReady();
-  });
+  const expectations = items.map(({ __typename }) => ({ __typename }));
 
   describe('when the query returns data successfully', () => {
+    beforeAll(() => {
+      simulateAuthenticatedWallet();
+    });
+
     it('should return the feed', async () => {
       const { result } = setupTestScenario({ profileId, items, expectedObserverId: null });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(items);
+
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 
   describe('when there is an Active Profile defined', () => {
-    const activeProfile = mockProfile();
+    const activeProfile = mockProfileIdentifier();
+
+    beforeAll(() => {
+      simulateAuthenticatedProfile(activeProfile);
+    });
 
     it('should use the Active Profile Id as the "observerId"', async () => {
-      activeProfileIdentifierVar(activeProfile);
-
       const { result } = setupTestScenario({
         profileId,
         items,
@@ -89,7 +90,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(items);
+      expect(result.current.data).toMatchObject(expectations);
     });
 
     it('should always allow to specify the "observerId" on a per-call basis', async () => {
@@ -103,7 +104,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(items);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 });

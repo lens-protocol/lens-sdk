@@ -5,6 +5,7 @@ import {
   SnapshotVotePower,
   SnapshotVotingSystem,
   useGetSnapshotProposal,
+  useSessionVar,
 } from '@lens-protocol/api-bindings';
 import {
   EthereumAddress,
@@ -18,7 +19,6 @@ import {
 import { NotFoundError } from '../NotFoundError';
 import { useSnapshotApolloClient } from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
-import { useActiveWalletVar } from '../wallet/adapters/ActiveWalletPresenter';
 
 /**
  * @experimental
@@ -175,15 +175,15 @@ function buildPollChoices(
 export function usePollDetails({
   publication,
 }: UsePollDetailsArgs): ReadResult<SnapshotDetails, NotFoundError> {
-  const wallet = useActiveWalletVar();
+  const session = useSessionVar();
 
   const { data, loading } = useGetSnapshotProposal(
     useSnapshotApolloClient({
       variables: {
         spaceId: publication.contentInsight.spaceId,
         proposalId: publication.contentInsight.proposalId,
-        includeVotes: wallet !== null,
-        voterAddress: wallet?.address ?? '',
+        includeVotes: session?.isAuthenticated() ?? false,
+        voterAddress: session?.isAuthenticated() ? session.wallet.address : '',
       },
     }),
   );

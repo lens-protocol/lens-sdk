@@ -19,8 +19,8 @@ import { ConsoleLogger } from './ConsoleLogger';
 import { ErrorHandler } from './ErrorHandler';
 import { IBindings, LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
+import { LogoutHandler, SessionPresenter } from './lifecycle/adapters/SessionPresenter';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
-import { ActiveProfilePresenter } from './profile/adapters/ActiveProfilePresenter';
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
 import { FollowPolicyCallGateway } from './transactions/adapters/FollowPolicyCallGateway';
@@ -47,11 +47,9 @@ import { ProfileCacheManager } from './transactions/infrastructure/ProfileCacheM
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
-import { activeWalletVar } from './wallet/adapters/ActiveWalletPresenter';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
 import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
 import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
-import { LogoutHandler } from './wallet/adapters/LogoutPresenter';
 import { TokenGateway } from './wallet/adapters/TokenGateway';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
@@ -74,7 +72,6 @@ export type Handlers = {
 export type SharedDependencies = {
   appId?: AppId;
   activeProfileGateway: ActiveProfileGateway;
-  activeProfilePresenter: ActiveProfilePresenter;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
   bindings: IBindings;
@@ -86,12 +83,12 @@ export type SharedDependencies = {
   logger: ILogger;
   notificationStorage: IStorage<UnreadNotificationsData>;
   onError: Handlers['onError'];
-  onLogout: Handlers['onLogout'];
   profileGateway: ProfileGateway;
   offChainRelayer: OffChainRelayer;
   onChainRelayer: OnChainRelayer;
   providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
+  sessionPresenter: SessionPresenter;
   sources: Sources;
   storageProvider: IStorageProvider;
   tokenAvailability: TokenAvailability;
@@ -119,7 +116,6 @@ export function createSharedDependencies(
   // apollo client
   const anonymousApolloClient = createAuthApolloClient({
     backendURL: config.environment.backend,
-    activeWalletVar: activeWalletVar,
     logger,
   });
   const authApi = new AuthApi(anonymousApolloClient);
@@ -127,7 +123,6 @@ export function createSharedDependencies(
   const apolloClient = createLensApolloClient({
     backendURL: config.environment.backend,
     accessTokenStorage,
-    activeWalletVar: activeWalletVar,
     pollingInterval: config.environment.timings.pollingInterval,
     logger,
     contentMatchers: [config.environment.snapshot.matcher],
@@ -155,8 +150,7 @@ export function createSharedDependencies(
 
   const profileGateway = new ProfileGateway(apolloClient);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
-  const activeProfilePresenter = new ActiveProfilePresenter();
-
+  const sessionPresenter = new SessionPresenter(onLogout);
   const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
 
   const responders: TransactionResponders<AnyTransactionRequest> = {
@@ -200,7 +194,6 @@ export function createSharedDependencies(
   return {
     appId: config.appId,
     activeProfileGateway,
-    activeProfilePresenter,
     activeWallet,
     apolloClient,
     authApi,
@@ -212,11 +205,11 @@ export function createSharedDependencies(
     logger,
     notificationStorage,
     onError,
-    onLogout,
     profileGateway,
     offChainRelayer,
     onChainRelayer,
     publicationCacheManager,
+    sessionPresenter,
     sources,
     storageProvider: config.storage,
     tokenAvailability,

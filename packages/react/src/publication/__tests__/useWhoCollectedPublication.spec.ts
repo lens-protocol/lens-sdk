@@ -1,16 +1,17 @@
-import { activeProfileIdentifierVar, Wallet } from '@lens-protocol/api-bindings';
+import { Wallet } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockWalletFragment,
   createWhoCollectedPublicationMockedResponse,
   mockSources,
+  simulateAuthenticatedProfile,
+  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import {
   useWhoCollectedPublication,
   UseWhoCollectedPublicationArgs,
@@ -44,9 +45,10 @@ function setupTestScenario({
 describe(`Given the ${useWhoCollectedPublication.name} hook`, () => {
   const publicationId = mockPublicationId();
   const collectors = [mockWalletFragment()];
+  const expectations = collectors.map(({ __typename, address }) => ({ __typename, address }));
 
   beforeAll(() => {
-    simulateAppReady();
+    simulateNotAuthenticated();
   });
 
   describe('when the query returns data successfully', () => {
@@ -54,7 +56,7 @@ describe(`Given the ${useWhoCollectedPublication.name} hook`, () => {
       const { result } = setupTestScenario({ publicationId, result: collectors });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(collectors);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 
@@ -62,7 +64,7 @@ describe(`Given the ${useWhoCollectedPublication.name} hook`, () => {
     const activeProfile = mockProfile();
 
     beforeAll(() => {
-      activeProfileIdentifierVar(activeProfile);
+      simulateAuthenticatedProfile(activeProfile);
     });
 
     it('should use the Active Profile Id as the "observerId"', async () => {
@@ -73,7 +75,7 @@ describe(`Given the ${useWhoCollectedPublication.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(collectors);
+      expect(result.current.data).toMatchObject(expectations);
     });
 
     it('should always allow to specify the "observerId" on a per-call basis', async () => {
@@ -87,7 +89,7 @@ describe(`Given the ${useWhoCollectedPublication.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(collectors);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 });

@@ -9,9 +9,8 @@ import {
   WalletConnectionErrorReason,
 } from '../../../entities';
 import { mockCredentials, mockProfile, mockWallet } from '../../../entities/__helpers__/mocks';
-import { IActiveProfilePresenter } from '../../profile';
+import { ISessionPresenter } from '../../lifecycle';
 import { ActiveProfileLoader } from '../../profile/ActiveProfileLoader';
-import { IActiveWalletPresenter } from '../IActiveWalletPresenter';
 import {
   ICredentialsIssuer,
   ICredentialsWriter,
@@ -33,31 +32,28 @@ function setupTestScenario({
 }) {
   const walletGateway = mock<IWritableWalletGateway>();
   const credentialsWriter = mock<ICredentialsWriter>();
-  const walletPresenter = mock<IActiveWalletPresenter>();
-  const genericPresenter = mock<IWalletLoginPresenter>();
-  const activeProfilePresenter = mock<IActiveProfilePresenter>();
+  const loginPresenter = mock<IWalletLoginPresenter>();
+  const sessionPresenter = mock<ISessionPresenter>();
 
   const walletLogin = new WalletLogin(
     walletFactory,
     walletGateway,
     credentialsIssuer,
     credentialsWriter,
-    walletPresenter,
-    genericPresenter,
+    loginPresenter,
     activeProfileLoader,
-    activeProfilePresenter,
+    sessionPresenter,
   );
 
   return {
     activeProfileLoader,
-    activeProfilePresenter,
     credentialsIssuer,
     credentialsWriter,
-    genericPresenter,
+    loginPresenter,
     walletFactory,
     walletGateway,
     walletLogin,
-    walletPresenter,
+    sessionPresenter,
   };
 }
 
@@ -69,11 +65,10 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
 
     it(`should:
         - use the IWalletFactory to create the specified ${Wallet.name} entity
-        - login with the backend
+        - generate new credentials for the wallet
         - save wallet and credentials
         - load the active profile associated with the wallet
-        - present active wallet
-        - present active profile
+        - present an authenticated session
         - present successful result`, async () => {
       const walletFactory = mock<IWalletFactory>();
       const credentialsIssuer = mock<ICredentialsIssuer>();
@@ -89,27 +84,19 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
         .calledWith(wallet.address, undefined)
         .mockResolvedValue(activeProfile);
 
-      const {
-        walletLogin,
-        walletGateway,
-        credentialsWriter,
-        genericPresenter,
-        walletPresenter,
-        activeProfilePresenter,
-      } = setupTestScenario({
-        activeProfileLoader,
-        credentialsIssuer,
-        walletFactory,
-      });
+      const { walletLogin, walletGateway, credentialsWriter, loginPresenter, sessionPresenter } =
+        setupTestScenario({
+          activeProfileLoader,
+          credentialsIssuer,
+          walletFactory,
+        });
 
       await walletLogin.login(request);
 
       expect(walletGateway.save).toHaveBeenCalledWith(wallet);
       expect(credentialsWriter.save).toHaveBeenCalledWith(credentials);
-      expect(walletPresenter.presentActiveWallet).toHaveBeenCalledWith(wallet);
-      expect(activeProfilePresenter.presentActiveProfile).toHaveBeenCalledWith(activeProfile);
-
-      expect(genericPresenter.present).toBeCalledWith(success(activeProfile));
+      expect(sessionPresenter.authenticated).toHaveBeenCalledWith(wallet, activeProfile);
+      expect(loginPresenter.present).toBeCalledWith(success(activeProfile));
     });
 
     it('should handle scenarios where the user cancels the challenge signing operation', async () => {
@@ -120,14 +107,14 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
       when(walletFactory.create).mockResolvedValue(wallet);
       when(credentialsIssuer.issueCredentials).calledWith(wallet).mockResolvedValue(failure(error));
 
-      const { genericPresenter, walletLogin } = setupTestScenario({
+      const { loginPresenter, walletLogin } = setupTestScenario({
         credentialsIssuer,
         walletFactory,
       });
 
       await walletLogin.login(request);
 
-      expect(genericPresenter.present).toHaveBeenCalledWith(failure(error));
+      expect(loginPresenter.present).toHaveBeenCalledWith(failure(error));
     });
 
     it('should handle scenarios where there is a wallet connection error', async () => {
@@ -138,14 +125,14 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
       when(walletFactory.create).calledWith(request).mockResolvedValue(wallet);
       when(credentialsIssuer.issueCredentials).calledWith(wallet).mockResolvedValue(failure(error));
 
-      const { genericPresenter, walletLogin } = setupTestScenario({
+      const { loginPresenter, walletLogin } = setupTestScenario({
         credentialsIssuer,
         walletFactory,
       });
 
       await walletLogin.login(request);
 
-      expect(genericPresenter.present).toHaveBeenCalledWith(failure(error));
+      expect(loginPresenter.present).toHaveBeenCalledWith(failure(error));
     });
   });
 });

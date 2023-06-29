@@ -39,6 +39,7 @@ import {
   WhoReactedResult,
 } from '@lens-protocol/api-bindings';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { LoginError } from '@lens-protocol/domain/use-cases/wallets';
 
 /**
  * @deprecated Use {@link EnabledModules} instead.
@@ -274,3 +275,8 @@ export type TransactionRequestModel = AnyTransactionRequest;
  * @deprecated Use {@link AnyTransactionRequest} instead.
  */
 export type SupportedTransactionRequest = AnyTransactionRequest;
+
+/**
+ * @deprecated Use {@link LoginError} instead.
+ */
+export type WalletLoginPotentialErrors = LoginError;

@@ -1,16 +1,17 @@
-import { activeProfileIdentifierVar, Profile } from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   createSearchProfilesMockedResponse,
   mockProfileFragment,
   mockSources,
+  simulateAuthenticatedProfile,
+  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { useSearchProfiles, UseSearchProfilesArgs } from '../useSearchProfiles';
 
 function setupTestScenario({
@@ -40,11 +41,11 @@ function setupTestScenario({
 
 describe(`Given the ${useSearchProfiles.name} hook`, () => {
   const query = 'query_test';
-
   const profiles = [mockProfileFragment()];
+  const expectations = profiles.map(({ id }) => ({ __typename: 'Profile', id }));
 
   beforeAll(() => {
-    simulateAppReady();
+    simulateNotAuthenticated();
   });
 
   describe('when the query returns data successfully', () => {
@@ -53,7 +54,7 @@ describe(`Given the ${useSearchProfiles.name} hook`, () => {
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
 
-      expect(result.current.data).toEqual(profiles);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 
@@ -61,7 +62,7 @@ describe(`Given the ${useSearchProfiles.name} hook`, () => {
     const activeProfile = mockProfile();
 
     beforeAll(() => {
-      activeProfileIdentifierVar(activeProfile);
+      simulateAuthenticatedProfile(activeProfile);
     });
 
     it('should use the Active Profile Id as the "observerId"', async () => {
@@ -72,7 +73,7 @@ describe(`Given the ${useSearchProfiles.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(profiles);
+      expect(result.current.data).toMatchObject(expectations);
     });
 
     it('should always allow to specify the "observerId" on a per-call basis', async () => {
@@ -86,7 +87,7 @@ describe(`Given the ${useSearchProfiles.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(profiles);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 });

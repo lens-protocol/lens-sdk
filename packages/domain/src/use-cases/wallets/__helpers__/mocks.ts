@@ -10,9 +10,9 @@ import {
   UnsignedTransaction,
 } from '../../../entities';
 import { mockWallet } from '../../../entities/__helpers__/mocks';
+import { WalletData } from '../../lifecycle';
 import { IPayTransactionGateway } from '../../transactions/PayTransaction';
 import { ActiveWallet } from '../ActiveWallet';
-import { WalletData } from '../IActiveWalletPresenter';
 import {
   IApproveTransactionGateway,
   TokenAllowanceRequest,
