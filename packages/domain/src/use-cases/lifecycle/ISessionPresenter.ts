@@ -1,3 +1,5 @@
+import { EthereumAddress } from '@lens-protocol/shared-kernel';
+
 import { ProfileId } from '../../entities';
 import type { LogoutReason } from '../wallets';
 
@@ -13,7 +15,7 @@ export type ProfileIdentifier = {
  * Framework-agnostic Wallet representation
  */
 export type WalletData = {
-  address: string;
+  address: EthereumAddress;
 };
 
 /**
