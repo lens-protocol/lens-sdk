@@ -36,6 +36,7 @@ function setupTestScenario({
         request: {
           profileId: author.id,
         },
+        observerId: null,
         sources,
       },
     }),

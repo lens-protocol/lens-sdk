@@ -87,6 +87,7 @@ export type SharedDependencies = {
   offChainRelayer: OffChainRelayer;
   onChainRelayer: OnChainRelayer;
   providerFactory: ProviderFactory;
+  profileCacheManager: ProfileCacheManager;
   publicationCacheManager: PublicationCacheManager;
   sessionPresenter: SessionPresenter;
   sources: Sources;
@@ -208,6 +209,7 @@ export function createSharedDependencies(
     profileGateway,
     offChainRelayer,
     onChainRelayer,
+    profileCacheManager,
     publicationCacheManager,
     sessionPresenter,
     sources,

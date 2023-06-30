@@ -19,11 +19,9 @@ export interface IWritableWalletGateway {
   save(wallet: Wallet): Promise<void>;
 }
 
-export type WalletLoginResult = ProfileIdentifier | null;
-
 export type LoginError = PendingSigningRequestError | UserRejectedError | WalletConnectionError;
 
-export type IWalletLoginPresenter = IGenericResultPresenter<WalletLoginResult, LoginError>;
+export type IWalletLoginPresenter = IGenericResultPresenter<ProfileIdentifier | null, LoginError>;
 
 export interface ICredentialsIssuer {
   issueCredentials(wallet: Wallet): PromiseResult<ICredentials, LoginError>;

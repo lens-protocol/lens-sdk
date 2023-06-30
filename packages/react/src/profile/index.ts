@@ -17,10 +17,6 @@ export * from './useProfilesToFollow';
 export * from './useSearchProfiles';
 
 export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-/**
- * TODO avoid to export this type and return Profile instead
- */
-export type { ProfileIdentifier } from '@lens-protocol/domain/use-cases/lifecycle';
 
 /**
  * Follow policy
