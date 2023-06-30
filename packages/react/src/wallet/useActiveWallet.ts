@@ -1,8 +1,7 @@
-import { UnspecifiedError } from '@lens-protocol/api-bindings';
+import { useSessionVar } from '@lens-protocol/api-bindings';
 import { WalletData } from '@lens-protocol/domain/use-cases/lifecycle';
 
 import { ReadResult } from '../helpers/reads';
-import { useCurrentSession } from '../lifecycle/useCurrentSession';
 
 export type { WalletData };
 
@@ -27,36 +26,25 @@ export type { WalletData };
  * }
  * ```
  */
-export function useActiveWallet(): ReadResult<WalletData | null, UnspecifiedError> {
-  const { data: session, error, loading } = useCurrentSession();
+export function useActiveWallet(): ReadResult<WalletData | null, void> {
+  const session = useSessionVar();
 
-  if (loading) {
+  if (session === null) {
     return {
       data: undefined,
-      error: undefined,
       loading: true,
-    };
-  }
-
-  if (error) {
-    return {
-      data: undefined,
-      error,
-      loading: false,
     };
   }
 
   if (session.isNotAuthenticated()) {
     return {
       data: null,
-      error: undefined,
       loading: false,
     };
   }
 
   return {
     data: session.wallet,
-    error: undefined,
     loading: false,
   };
 }

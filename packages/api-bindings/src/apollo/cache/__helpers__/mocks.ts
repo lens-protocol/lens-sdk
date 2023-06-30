@@ -9,7 +9,7 @@ import {
   authenticatedProfile,
   authenticatedWallet,
   notAuthenticated,
-  updateSessionVar,
+  updateSession,
 } from '../session';
 import { TransactionState, TxStatus } from '../transactions';
 
@@ -33,16 +33,16 @@ export function mockTransactionState<T extends AnyTransactionRequest>(
 }
 
 export function simulateAuthenticatedWallet(wallet = mockWalletData()) {
-  updateSessionVar(authenticatedWallet(wallet));
+  updateSession(authenticatedWallet(wallet));
 }
 
 export function simulateAuthenticatedProfile(
   profile: ProfileIdentifier,
   wallet = mockWalletData(),
 ) {
-  updateSessionVar(authenticatedProfile(wallet, profile));
+  updateSession(authenticatedProfile(wallet, profile));
 }
 
 export function simulateNotAuthenticated() {
-  updateSessionVar(notAuthenticated());
+  updateSession(notAuthenticated());
 }

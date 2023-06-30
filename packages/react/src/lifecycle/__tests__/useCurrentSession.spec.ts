@@ -5,8 +5,8 @@ import {
   authenticatedProfile,
   authenticatedWallet,
   notAuthenticated,
-  resetSessionVar,
-  updateSessionVar,
+  resetSession,
+  updateSession,
 } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
@@ -46,7 +46,7 @@ describe(`Given the ${useCurrentSession.name} hook`, () => {
 
   describe(`when the current session is "null"`, () => {
     beforeAll(() => {
-      resetSessionVar();
+      resetSession();
     });
 
     it('should return the expected loading state', async () => {
@@ -85,7 +85,7 @@ describe(`Given the ${useCurrentSession.name} hook`, () => {
   ])(`when the current session is`, ({ session, expectations }) => {
     describe(`a ${session.constructor.name}`, () => {
       beforeAll(() => {
-        resetSessionVar();
+        resetSession();
       });
 
       it('should return the expected session object', async () => {
@@ -94,7 +94,7 @@ describe(`Given the ${useCurrentSession.name} hook`, () => {
         expect(result.current.loading).toBe(true);
 
         act(() => {
-          updateSessionVar(session);
+          updateSession(session);
         });
 
         expect(result.current.loading).toBe(false);
@@ -105,17 +105,17 @@ describe(`Given the ${useCurrentSession.name} hook`, () => {
 
   describe(`when the user logs-in with a Lens Profile`, () => {
     beforeAll(() => {
-      updateSessionVar(notAuthenticated());
+      updateSession(notAuthenticated());
     });
 
     it('should return the profile data without flickering of the "loading" flag', async () => {
       const { result } = setupUseActiveProfile({ profile });
 
       act(() => {
-        updateSessionVar(authenticatedProfile(wallet, profileIdentifier));
+        updateSession(authenticatedProfile(wallet, profileIdentifier));
       });
 
-      expect(result.current.loading).toBeFalsy();
+      expect(result.current.loading).toBe(false);
       expect(result.current.data).toMatchObject({
         type: SessionType.WithProfile,
         wallet,
