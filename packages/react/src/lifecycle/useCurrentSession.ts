@@ -15,6 +15,14 @@ import { useEffect, useRef } from 'react';
 import { useLensApolloClient, useSourcesFromConfig } from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
 
+export type {
+  NotAuthenticatedSession,
+  AuthenticatedWalletSession,
+  AuthenticatedProfileSession,
+} from '@lens-protocol/api-bindings';
+
+export { SessionType };
+
 export type { Session, WalletData };
 
 function usePrevious<T>(value: T) {

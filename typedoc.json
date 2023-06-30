@@ -22,7 +22,8 @@
     "ContentInsightMatcher",
     "SnapshotPoll",
     "Undetermined",
-    "EnvironmentConfig"
+    "EnvironmentConfig",
+    "ProfileIdentifier"
   ],
   "categoryOrder": ["Components", "Hooks", "Utils", "*"],
   "categorizeByGroup": true,

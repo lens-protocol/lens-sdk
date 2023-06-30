@@ -21,6 +21,8 @@ export type UseWalletLoginArgs = {
 
 export type WalletLoginResult = Profile | null;
 
+export type { LoginError };
+
 export type WalletLoginOperation = Operation<
   WalletLoginResult,
   LoginError,
