@@ -53,7 +53,7 @@ import {
 import { SafeApolloClient } from '../../SafeApolloClient';
 import { createLensCache } from '../createLensCache';
 import { erc20Amount } from '../decryptionCriteria';
-import { resetSessionVar } from '../session';
+import { resetSession } from '../session';
 import { recentTransactionsVar } from '../transactions';
 import { snapshotPoll } from '../utils/ContentInsight';
 
@@ -234,7 +234,7 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
       });
 
       afterAll(() => {
-        resetSessionVar();
+        resetSession();
       });
 
       describe('when reading "hasCollectedByMe" while an active profile is defined', () => {

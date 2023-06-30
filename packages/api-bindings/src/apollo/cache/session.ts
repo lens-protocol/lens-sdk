@@ -95,10 +95,10 @@ export function useSessionVar() {
   return useReactiveVar(sessionVar);
 }
 
-export function resetSessionVar() {
+export function resetSession() {
   sessionVar(null);
 }
 
-export function updateSessionVar(session: Session<WalletData, ProfileIdentifier>) {
+export function updateSession(session: Session<WalletData, ProfileIdentifier>) {
   sessionVar(session);
 }

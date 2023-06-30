@@ -1,4 +1,4 @@
-import { FragmentProfile, Profile, resetSessionVar } from '@lens-protocol/api-bindings';
+import { FragmentProfile, Profile, resetSession } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockProfileFragment,
@@ -37,7 +37,7 @@ describe(`Given the ${useActiveProfile.name} hook`, () => {
 
   describe(`when the current session is "null"`, () => {
     beforeAll(() => {
-      resetSessionVar();
+      resetSession();
     });
 
     it('should return the expected loading state', async () => {

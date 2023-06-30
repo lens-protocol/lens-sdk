@@ -3,7 +3,13 @@ import { PromiseResult } from '@lens-protocol/shared-kernel';
 import { ICredentials, AnyTransactionRequestModel, Wallet } from '../../entities';
 import { ActiveProfileLoader } from '../profile';
 import { TransactionQueue } from '../transactions';
-import { ActiveWallet, ICredentialsReader, ICredentialsWriter, LogoutReason } from '../wallets';
+import {
+  ActiveWallet,
+  ICredentialsReader,
+  ICredentialsWriter,
+  LogoutReason,
+  WalletLogout,
+} from '../wallets';
 import { ISessionPresenter } from './ISessionPresenter';
 
 export class CredentialsExpiredError extends Error {
@@ -25,6 +31,7 @@ export class Bootstrap<T extends AnyTransactionRequestModel> {
     private readonly activeProfileLoader: ActiveProfileLoader,
     private readonly transactionQueue: TransactionQueue<T>,
     private readonly sessionPresenter: ISessionPresenter,
+    private readonly walletLogout: WalletLogout,
   ) {}
 
   async execute() {
@@ -37,25 +44,23 @@ export class Bootstrap<T extends AnyTransactionRequestModel> {
 
     const credentials = await this.credentialsGateway.getCredentials();
     if (!credentials) {
-      await this.startWithExpCredentials(wallet);
+      await this.logout();
       return;
     }
 
     const result = await this.credentialsRenewer.renewCredentials(credentials);
 
     if (result.isFailure()) {
-      await this.startWithExpCredentials(wallet);
-
+      await this.logout();
       return;
     }
 
-    const newCredentials = result.unwrap();
-    await this.credentialsGateway.save(newCredentials);
+    await this.credentialsGateway.save(result.value);
 
-    await this.startWithCredentials(wallet);
+    await this.authenticated(wallet);
   }
 
-  private async startWithCredentials(wallet: Wallet) {
+  private async authenticated(wallet: Wallet) {
     const profile = await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address);
 
     this.sessionPresenter.authenticated(wallet, profile);
@@ -63,10 +68,7 @@ export class Bootstrap<T extends AnyTransactionRequestModel> {
     await this.transactionQueue.init();
   }
 
-  private async startWithExpCredentials(wallet: Wallet) {
-    this.sessionPresenter.logout({
-      lastLoggedInWallet: wallet,
-      logoutReason: LogoutReason.CREDENTIALS_EXPIRED,
-    });
+  private async logout() {
+    await this.walletLogout.logout(LogoutReason.CREDENTIALS_EXPIRED);
   }
 }

@@ -1,4 +1,10 @@
-import { LensConfig, LensProvider, development } from '@lens-protocol/react-web';
+import {
+  LensConfig,
+  LensProvider,
+  LogoutData,
+  LogoutReason,
+  development,
+} from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import toast, { Toaster } from 'react-hot-toast';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
@@ -87,12 +93,21 @@ const lensConfig: LensConfig = {
   environment: development,
 };
 
-const toastNotification = (error: Error) => toast.error(error.message);
+const notifyError = (error: Error) => toast.error(error.message);
+
+const notifyLogout = ({ logoutReason }: LogoutData) => {
+  switch (logoutReason) {
+    case LogoutReason.CREDENTIALS_EXPIRED:
+      return toast.error('It appears your credentials have expired. Please log in again.');
+    case LogoutReason.USER_INITIATED:
+      return toast.success('You have successfully logged out.');
+  }
+};
 
 export function App() {
   return (
     <WagmiConfig config={config}>
-      <LensProvider config={lensConfig} onError={toastNotification}>
+      <LensProvider config={lensConfig} onError={notifyError} onLogout={notifyLogout}>
         <Router>
           <Header />
           <main>

@@ -6,7 +6,7 @@ import { mockCredentials, mockProfile, mockWallet } from '../../../entities/__he
 import { mockTransactionQueue } from '../../../mocks';
 import { ActiveProfileLoader } from '../../profile';
 import { TransactionQueue } from '../../transactions';
-import { ActiveWallet, LogoutReason } from '../../wallets';
+import { ActiveWallet, LogoutReason, WalletLogout } from '../../wallets';
 import {
   Bootstrap,
   CredentialsExpiredError,
@@ -30,6 +30,7 @@ const setupBootstrapInteractor = ({
 }: BootstrapSetupConfig) => {
   const transactionQueue = mockTransactionQueue();
   const sessionPresenter = mock<ISessionPresenter>();
+  const walletLogout = mock<WalletLogout>();
 
   const bootstrap = new Bootstrap(
     activeWallet,
@@ -38,17 +39,19 @@ const setupBootstrapInteractor = ({
     activeProfileLoader,
     transactionQueue,
     sessionPresenter,
+    walletLogout,
   );
 
   return {
     bootstrap,
     sessionPresenter,
     transactionQueue,
+    walletLogout,
   };
 };
 
 describe(`Given the ${Bootstrap.name} interactor`, () => {
-  describe(`when executed there is not active wallet`, () => {
+  describe(`when executed with no active wallet`, () => {
     it('should present an anonymous session', async () => {
       const activeWallet = mock<ActiveWallet>();
       when(activeWallet.getActiveWallet).mockResolvedValue(null);
@@ -65,12 +68,12 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
     const wallet = mockWallet();
     const profile = mockProfile();
 
-    describe(`when credentials are present`, () => {
+    describe(`when executed with credentials`, () => {
       const oldCredentials = mockCredentials();
       const newCredentials = mockCredentials();
 
       it(`should:
-          - renew the credentials and save the new credentials
+          - renew the credentials and save the new ones
           - present an authenticated session
           - resume the ${TransactionQueue.name}`, async () => {
         const activeWallet = mock<ActiveWallet>();
@@ -101,19 +104,18 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
         expect(transactionQueue.init).toHaveBeenCalled();
       });
 
-      it(`should:
-          - present the logout reason if it fails to renew the credentials
-          - and finally signal readiness`, async () => {
+      it(`should execute the ${WalletLogout.name} interactor with ${LogoutReason.CREDENTIALS_EXPIRED} reason`, async () => {
         const activeWallet = mock<ActiveWallet>();
         const credentialsGateway = mock<ICredentialsGateway>();
         const credentialsRenewer = mock<ICredentialsRenewer>();
 
         when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
+        when(credentialsGateway.getCredentials).mockResolvedValue(oldCredentials);
         when(credentialsRenewer.renewCredentials).mockResolvedValue(
           failure(new CredentialsExpiredError()),
         );
 
-        const { bootstrap, sessionPresenter } = setupBootstrapInteractor({
+        const { bootstrap, walletLogout } = setupBootstrapInteractor({
           activeWallet,
           credentialsGateway,
           credentialsRenewer,
@@ -121,32 +123,26 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
 
         await bootstrap.execute();
 
-        expect(sessionPresenter.logout).toHaveBeenCalledWith({
-          lastLoggedInWallet: wallet,
-          logoutReason: LogoutReason.CREDENTIALS_EXPIRED,
-        });
+        expect(walletLogout.logout).toHaveBeenCalledWith(LogoutReason.CREDENTIALS_EXPIRED);
       });
     });
 
-    describe(`when credentials are NOT available`, () => {
-      it(`should present the logout reason`, async () => {
+    describe(`when executed without credentials`, () => {
+      it(`should execute the ${WalletLogout.name} interactor with ${LogoutReason.CREDENTIALS_EXPIRED} reason`, async () => {
         const activeWallet = mock<ActiveWallet>();
         const credentialsGateway = mock<ICredentialsGateway>();
 
         when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
         when(credentialsGateway.getCredentials).mockResolvedValue(null);
 
-        const { bootstrap, sessionPresenter } = setupBootstrapInteractor({
+        const { bootstrap, walletLogout } = setupBootstrapInteractor({
           activeWallet,
           credentialsGateway,
         });
 
         await bootstrap.execute();
 
-        expect(sessionPresenter.logout).toHaveBeenCalledWith({
-          lastLoggedInWallet: wallet,
-          logoutReason: LogoutReason.CREDENTIALS_EXPIRED,
-        });
+        expect(walletLogout.logout).toHaveBeenCalledWith(LogoutReason.CREDENTIALS_EXPIRED);
       });
     });
   });
