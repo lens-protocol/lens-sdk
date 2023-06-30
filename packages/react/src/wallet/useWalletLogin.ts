@@ -1,4 +1,5 @@
-import { LoginError, WalletLoginResult } from '@lens-protocol/domain/use-cases/wallets';
+import { Profile } from '@lens-protocol/api-bindings';
+import { LoginError } from '@lens-protocol/domain/use-cases/wallets';
 import { Result } from '@lens-protocol/shared-kernel';
 import { Signer } from 'ethers';
 
@@ -18,6 +19,8 @@ export type UseWalletLoginArgs = {
   handle?: string;
 };
 
+export type WalletLoginResult = Profile | null;
+
 export type WalletLoginOperation = Operation<
   WalletLoginResult,
   LoginError,
@@ -34,15 +37,21 @@ export type WalletLoginOperation = Operation<
  *
  * @example
  * ```tsx
- * import { EthereumAddress, useWalletLogin } from '@lens-protocol/react';
+ * import { EthereumAddress, useWalletLogin } from '@lens-protocol/react-web';
  *
  * function LoginButton({ address }: { address: EthereumAddress }) {
- *   const { execute, error, isPending } = useWalletLogin();
+ *   const { execute, isPending } = useWalletLogin();
  *
  *   const login = async () => {
  *     const result = await execute({ address });
  *
- *     if (result.isFailure()) {
+ *     if (result.isSuccess()) {
+ *       alert(
+ *         result.value !== null
+ *           ? `Welcome ${result.value.handle}`
+ *           : 'Welcome!'
+ *       );
+ *     } else {
  *       alert(result.error.message);
  *     }
  *   };

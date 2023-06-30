@@ -24,6 +24,7 @@ function setupTestScenario({ profile }: { profile: Profile }) {
         request: {
           profileId: profile.id,
         },
+        observerId: null,
         sources,
       },
     }),

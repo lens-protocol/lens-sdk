@@ -1,23 +1,15 @@
-import {
-  PendingSigningRequestError,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
 import { ActiveProfileLoader } from '@lens-protocol/domain/use-cases/profile';
-import {
-  WalletLogin,
-  WalletLoginRequest,
-  WalletLoginResult,
-} from '@lens-protocol/domain/use-cases/wallets';
+import { WalletLogin, WalletLoginRequest } from '@lens-protocol/domain/use-cases/wallets';
 
 import { useSharedDependencies } from '../../shared';
-import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
+import { WalletLoginPresenter } from './WalletLoginPresenter';
 
 export function useWalletLoginController() {
   const {
     activeProfileGateway,
     credentialsFactory,
     credentialsGateway,
+    profileCacheManager,
     profileGateway,
     sessionPresenter,
     walletFactory,
@@ -25,10 +17,7 @@ export function useWalletLoginController() {
   } = useSharedDependencies();
 
   return async (request: WalletLoginRequest) => {
-    const loginPresenter = new PromiseResultPresenter<
-      WalletLoginResult,
-      PendingSigningRequestError | WalletConnectionError | UserRejectedError
-    >();
+    const loginPresenter = new WalletLoginPresenter(profileCacheManager);
     const activeProfileLoader = new ActiveProfileLoader(profileGateway, activeProfileGateway);
     const walletLogin = new WalletLogin(
       walletFactory,

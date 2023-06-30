@@ -29,6 +29,7 @@ function setupUpdateFollowPolicyResponder({
     createGetProfileMockedResponse({
       variables: {
         request: { profileId: updatedProfile.id },
+        observerId: null,
         sources,
       },
       profile: updatedProfile,

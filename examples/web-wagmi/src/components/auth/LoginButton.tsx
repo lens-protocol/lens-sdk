@@ -28,10 +28,18 @@ export function LoginButton({ handle }: { handle?: string }) {
     if (connector instanceof InjectedConnector) {
       const walletClient = await connector.getWalletClient();
 
-      await login({
+      const result = await login({
         address: walletClient.account.address,
         handle,
       });
+
+      if (result.isSuccess()) {
+        toast.success(
+          result.value
+            ? `Welcome ${result.value.handle}`
+            : `Welcome ${walletClient.account.address}`,
+        );
+      }
     }
   };
 

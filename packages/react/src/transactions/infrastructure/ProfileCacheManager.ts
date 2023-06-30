@@ -34,10 +34,13 @@ export class ProfileCacheManager implements IProfileCacheManager {
     const { data } = await this.client.query<GetProfileData, GetProfileVariables>({
       query: GetProfileDocument,
       variables: {
-        request: {
-          profileId: args.id,
-          handle: args.handle,
-        },
+        request: args.id
+          ? {
+              profileId: args.id,
+            }
+          : {
+              handle: args.handle,
+            },
         observerId: session?.type === SessionType.WithProfile ? session.profile.id : null,
         sources: this.sources,
       },
