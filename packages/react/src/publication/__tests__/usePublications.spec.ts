@@ -1,16 +1,17 @@
-import { activeProfileIdentifierVar, AnyPublication } from '@lens-protocol/api-bindings';
+import { AnyPublication } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockPostFragment,
   createGetPublicationsMockedResponse,
   mockSources,
+  simulateAuthenticatedProfile,
+  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { usePublications, UsePublicationsArgs } from '../usePublications';
 
 function setupTestScenario({
@@ -41,9 +42,10 @@ function setupTestScenario({
 describe(`Given the ${usePublications.name} hook`, () => {
   const profileId = mockProfileId();
   const publications = [mockPostFragment()];
+  const expectations = publications.map(({ __typename, id }) => ({ __typename, id }));
 
   beforeAll(() => {
-    simulateAppReady();
+    simulateNotAuthenticated();
   });
 
   describe('when the query returns data successfully', () => {
@@ -51,7 +53,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
       const { result } = setupTestScenario({ profileId, result: publications });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(publications);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 
@@ -59,7 +61,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
     const activeProfile = mockProfile();
 
     beforeAll(() => {
-      activeProfileIdentifierVar(activeProfile);
+      simulateAuthenticatedProfile(activeProfile);
     });
 
     it('should use the Active Profile Id as the "observerId"', async () => {
@@ -70,7 +72,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(publications);
+      expect(result.current.data).toMatchObject(expectations);
     });
 
     it('should always allow to specify the "observerId" on a per-call basis', async () => {
@@ -84,7 +86,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(publications);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 });

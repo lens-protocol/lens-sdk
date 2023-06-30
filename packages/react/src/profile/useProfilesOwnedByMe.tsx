@@ -1,5 +1,4 @@
-import { ProfileOwnedByMe, useGetAllProfiles } from '@lens-protocol/api-bindings';
-import { never } from '@lens-protocol/shared-kernel';
+import { ProfileOwnedByMe, useGetAllProfiles, useSessionVar } from '@lens-protocol/api-bindings';
 import { constants } from 'ethers';
 
 import {
@@ -11,7 +10,6 @@ import {
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { useRecentProfiles } from '../transactions/adapters/responders/CreateProfileResponder';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
-import { useActiveWallet } from '../wallet';
 
 export type UseProfilesOwnedByMeArgs = PaginatedArgs<WithObserverIdOverride>;
 
@@ -47,7 +45,7 @@ export function useProfilesOwnedByMe({
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseProfilesOwnedByMeArgs = {}): PaginatedReadResult<ProfileOwnedByMe[]> {
-  const { data: activeWallet, loading: bootstrapping } = useActiveWallet();
+  const session = useSessionVar();
   const recentProfiles = useRecentProfiles();
 
   const result = usePaginatedReadResult(
@@ -56,17 +54,12 @@ export function useProfilesOwnedByMe({
         useActiveProfileAsDefaultObserver({
           variables: useSourcesFromConfig({
             byOwnerAddresses: [
-              bootstrapping
-                ? constants.AddressZero
-                : activeWallet?.address ??
-                  never(
-                    `Cannot use 'useProfilesOwnedByMe' without being logged in. Use 'useWalletLogin' to log in first.`,
-                  ),
+              session?.isAuthenticated() ? session.wallet.address : constants.AddressZero,
             ],
             observerId,
             limit,
           }),
-          skip: bootstrapping && activeWallet === null,
+          skip: session === null,
         }),
       ),
     ),

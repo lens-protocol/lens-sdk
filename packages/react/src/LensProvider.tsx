@@ -2,10 +2,10 @@ import { ReactNode, useEffect, useRef, useState } from 'react';
 
 import { ErrorHandler } from './ErrorHandler';
 import { LensConfig, validateConfig } from './config';
+import { LogoutHandler } from './lifecycle';
 import { useBootstrapController } from './lifecycle/adapters/useBootstrapController';
 import { createSharedDependencies, SharedDependenciesProvider } from './shared';
 import { FailedTransactionError } from './transactions/adapters/TransactionQueuePresenter';
-import { LogoutHandler } from './wallet';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 function noop() {}

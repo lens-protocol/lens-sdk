@@ -12,21 +12,19 @@ import {
 
 import { useSharedDependencies } from '../../shared';
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
-import { ActiveWalletPresenter } from './ActiveWalletPresenter';
 
 export function useWalletLoginController() {
   const {
     activeProfileGateway,
-    activeProfilePresenter,
     credentialsFactory,
     credentialsGateway,
     profileGateway,
+    sessionPresenter,
     walletFactory,
     walletGateway,
   } = useSharedDependencies();
 
   return async (request: WalletLoginRequest) => {
-    const activeWalletPresenter = new ActiveWalletPresenter();
     const loginPresenter = new PromiseResultPresenter<
       WalletLoginResult,
       PendingSigningRequestError | WalletConnectionError | UserRejectedError
@@ -37,10 +35,9 @@ export function useWalletLoginController() {
       walletGateway,
       credentialsFactory,
       credentialsGateway,
-      activeWalletPresenter,
       loginPresenter,
       activeProfileLoader,
-      activeProfilePresenter,
+      sessionPresenter,
     );
 
     await walletLogin.login(request);

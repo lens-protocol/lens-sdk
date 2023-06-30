@@ -1,4 +1,4 @@
-import { ApolloCache, DocumentNode, makeVar } from '@apollo/client';
+import { ApolloCache, DocumentNode } from '@apollo/client';
 import { empty } from '@apollo/client/link/core';
 import { DecryptionCriteriaType } from '@lens-protocol/domain/entities';
 import {
@@ -11,7 +11,6 @@ import {
   mockWalletData,
 } from '@lens-protocol/domain/mocks';
 import { CollectPolicyType } from '@lens-protocol/domain/use-cases/publications';
-import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
 import {
@@ -48,11 +47,13 @@ import {
   mockProfileOwnershipAccessCondition,
   mockPublicationStatsFragment,
   mockSnapshotPollUrl,
+  simulateAuthenticatedProfile,
+  simulateAuthenticatedWallet,
 } from '../../../mocks';
 import { SafeApolloClient } from '../../SafeApolloClient';
-import { activeProfileIdentifierVar } from '../activeProfileIdentifier';
 import { createLensCache } from '../createLensCache';
 import { erc20Amount } from '../decryptionCriteria';
+import { resetSessionVar } from '../session';
 import { recentTransactionsVar } from '../transactions';
 import { snapshotPoll } from '../utils/ContentInsight';
 
@@ -61,9 +62,8 @@ const typeToFragmentMap: Record<ContentPublication['__typename'], DocumentNode> 
   Comment: FragmentComment,
 };
 
-function setupApolloCache({ wallet = null }: { wallet?: WalletData | null } = {}) {
-  const activeWalletVar = makeVar<WalletData | null>(wallet);
-  const cache = createLensCache({ activeWalletVar, contentMatchers: [snapshotPoll] });
+function setupApolloCache() {
+  const cache = createLensCache({ contentMatchers: [snapshotPoll] });
 
   return {
     writePublication(publication: ContentPublication) {
@@ -228,12 +228,13 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
 
     describe('and an active profile is defined', () => {
       const activeProfile = mockProfile();
+
       beforeAll(() => {
-        activeProfileIdentifierVar(activeProfile);
+        simulateAuthenticatedProfile(activeProfile);
       });
 
       afterAll(() => {
-        activeProfileIdentifierVar(undefined);
+        resetSessionVar();
       });
 
       describe('when reading "hasCollectedByMe" while an active profile is defined', () => {
@@ -589,9 +590,13 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
       });
     });
 
-    describe('and an active wallet is defined', () => {
+    describe('and a Session is defined', () => {
       const wallet = mockWalletData();
-      const { writeProfileFragment, readProfileFragment } = setupApolloCache({ wallet });
+      const { writeProfileFragment, readProfileFragment } = setupApolloCache();
+
+      beforeAll(() => {
+        simulateAuthenticatedWallet(wallet);
+      });
 
       describe('when the profile is followed by the one specified as the "observerId"', () => {
         const profile = mockProfileFragment({

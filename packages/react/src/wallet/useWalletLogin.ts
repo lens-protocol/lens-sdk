@@ -1,9 +1,4 @@
-import {
-  PendingSigningRequestError,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
-import { WalletLoginResult } from '@lens-protocol/domain/use-cases/wallets';
+import { LoginError, WalletLoginResult } from '@lens-protocol/domain/use-cases/wallets';
 import { Result } from '@lens-protocol/shared-kernel';
 import { Signer } from 'ethers';
 
@@ -15,14 +10,9 @@ export type UseWalletLoginArgs = {
   handle?: string;
 };
 
-export type WalletLoginPotentialErrors =
-  | PendingSigningRequestError
-  | WalletConnectionError
-  | UserRejectedError;
-
 export type WalletLoginOperation = Operation<
   WalletLoginResult,
-  WalletLoginPotentialErrors,
+  LoginError,
   [Signer, string?] | [UseWalletLoginArgs]
 >;
 
@@ -37,7 +27,7 @@ export function useWalletLogin(): WalletLoginOperation {
     async (
       walletLoginArgs: Signer | UseWalletLoginArgs,
       handle?: string,
-    ): Promise<Result<WalletLoginResult, WalletLoginPotentialErrors>> => {
+    ): Promise<Result<WalletLoginResult, LoginError>> => {
       if ('address' in walletLoginArgs) {
         return loginWallet({
           address: walletLoginArgs.address,

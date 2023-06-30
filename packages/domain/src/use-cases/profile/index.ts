@@ -2,7 +2,6 @@ export * from './ActiveProfileLoader';
 export * from './CreateProfile';
 export * from './FollowProfiles';
 export * from './IActiveProfileGateway';
-export * from './IActiveProfilePresenter';
 export * from './IProfileGateway';
 export * from './ProveNftOwnership';
 export * from './SwitchActiveProfile';

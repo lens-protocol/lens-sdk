@@ -1,10 +1,11 @@
 import {
-  SafeApolloClient,
-  Sources,
-  activeProfileIdentifierVar,
-  GetPublicationDocument,
   GetPublicationData,
+  GetPublicationDocument,
   GetPublicationVariables,
+  getSession,
+  SafeApolloClient,
+  SessionType,
+  Sources,
 } from '@lens-protocol/api-bindings';
 import { CollectRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
@@ -16,7 +17,7 @@ export class CollectPublicationResponder implements ITransactionResponder<Collec
   constructor(private readonly client: SafeApolloClient, private readonly sources: Sources) {}
 
   async commit({ request }: TransactionData<CollectRequest>) {
-    const activeProfile = activeProfileIdentifierVar();
+    const session = getSession();
 
     await this.client.query<GetPublicationData, GetPublicationVariables>({
       query: GetPublicationDocument,
@@ -24,7 +25,7 @@ export class CollectPublicationResponder implements ITransactionResponder<Collec
         request: {
           publicationId: request.publicationId,
         },
-        observerId: activeProfile?.id,
+        observerId: session?.type === SessionType.WithProfile ? session.profile.id : null,
         sources: this.sources,
       },
       fetchPolicy: 'network-only',
