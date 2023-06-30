@@ -11,8 +11,10 @@ type LoggedInConfig = {
   profile: ProfileOwnedByMe;
 };
 
+type RenderFunction = (config: LoggedInConfig) => ReactNode;
+
 export type WhenLoggedInWithProfileProps = {
-  children: (config: LoggedInConfig) => ReactNode;
+  children: ReactNode | RenderFunction;
 };
 
 export function WhenLoggedInWithProfile({ children }: WhenLoggedInWithProfileProps) {
@@ -32,5 +34,8 @@ export function WhenLoggedInWithProfile({ children }: WhenLoggedInWithProfilePro
     return null;
   }
 
-  return <>{children({ wallet, profile })}</>;
+  if (typeof children === 'function') {
+    return <>{children({ wallet, profile })}</>;
+  }
+  return <>{children}</>;
 }

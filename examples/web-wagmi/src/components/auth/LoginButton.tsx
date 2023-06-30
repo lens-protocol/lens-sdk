@@ -1,15 +1,15 @@
-import { useWalletLogin, useWalletLogout } from '@lens-protocol/react-web';
+import { useWalletLogin } from '@lens-protocol/react-web';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
+import { LogoutButton } from './LogoutButton';
 import { WhenLoggedInWithProfile } from './WhenLoggedInWithProfile';
 import { WhenLoggedOut } from './WhenLoggedOut';
 
 export function LoginButton({ handle }: { handle?: string }) {
   const { execute: login, error: loginError, isPending: isLoginPending } = useWalletLogin();
-  const { execute: logout, isPending: isLogoutPending } = useWalletLogout();
 
   const { isConnected } = useAccount();
   const { disconnectAsync } = useDisconnect();
@@ -27,16 +27,12 @@ export function LoginButton({ handle }: { handle?: string }) {
 
     if (connector instanceof InjectedConnector) {
       const walletClient = await connector.getWalletClient();
+
       await login({
         address: walletClient.account.address,
         handle,
       });
     }
-  };
-
-  const onLogoutClick = async () => {
-    await logout();
-    await disconnectAsync();
   };
 
   useEffect(() => {
@@ -46,11 +42,7 @@ export function LoginButton({ handle }: { handle?: string }) {
   return (
     <>
       <WhenLoggedInWithProfile>
-        {() => (
-          <button onClick={onLogoutClick} disabled={isLogoutPending}>
-            <strong>Log out</strong>
-          </button>
-        )}
+        <LogoutButton />
       </WhenLoggedInWithProfile>
 
       <WhenLoggedOut>

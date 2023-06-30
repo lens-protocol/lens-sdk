@@ -33,7 +33,7 @@ const ONE_SECOND = 1000; // ms
  * @internal
  */
 export type TransactionObserverTimings = {
-  pollingInterval: number; // ms // TODO delete this
+  pollingInterval: number; // ms // TODO move this definition closer to EnvironmentConfig, not used by TransactionObserver
   maxMiningWaitTime: number; // ms
   maxIndexingWaitTime: number; // ms
 };
