@@ -7,6 +7,9 @@ export enum SessionType {
   WithProfile = 'WITH_PROFILE',
 }
 
+/**
+ * @experimental
+ */
 class NotAuthenticatedSession<TWallet, TProfile> {
   readonly type = SessionType.Anonymous;
 
@@ -21,6 +24,9 @@ class NotAuthenticatedSession<TWallet, TProfile> {
   }
 }
 
+/**
+ * @experimental
+ */
 class AuthenticatedWalletSession<TWallet, TProfile> {
   readonly type = SessionType.JustWallet;
 
@@ -37,6 +43,9 @@ class AuthenticatedWalletSession<TWallet, TProfile> {
   }
 }
 
+/**
+ * @experimental
+ */
 class AuthenticatedProfileSession<TWallet, TProfile> {
   readonly type = SessionType.WithProfile;
 
@@ -80,6 +89,9 @@ export function authenticatedWith<TWallet extends WalletData, TProfile extends P
   return authenticatedProfile(wallet, profile);
 }
 
+/**
+ * @experimental
+ */
 export type Session<TWallet extends WalletData, TProfile extends ProfileIdentifier> =
   | NotAuthenticatedSession<never, never>
   | AuthenticatedWalletSession<TWallet, never>
