@@ -1,10 +1,11 @@
 import {
-  SafeApolloClient,
-  Sources,
-  activeProfileIdentifierVar,
   GetPublicationData,
-  GetPublicationVariables,
   GetPublicationDocument,
+  GetPublicationVariables,
+  getSession,
+  SafeApolloClient,
+  SessionType,
+  Sources,
 } from '@lens-protocol/api-bindings';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
@@ -16,7 +17,7 @@ export class CreateMirrorResponder implements ITransactionResponder<CreateMirror
   constructor(private readonly client: SafeApolloClient, private readonly sources: Sources) {}
 
   async commit({ request }: TransactionData<CreateMirrorRequest>) {
-    const activeProfile = activeProfileIdentifierVar();
+    const session = getSession();
 
     await this.client.query<GetPublicationData, GetPublicationVariables>({
       query: GetPublicationDocument,
@@ -24,7 +25,7 @@ export class CreateMirrorResponder implements ITransactionResponder<CreateMirror
         request: {
           publicationId: request.publicationId,
         },
-        observerId: activeProfile?.id,
+        observerId: session?.type === SessionType.WithProfile ? session.profile.id : null,
         sources: this.sources,
       },
       fetchPolicy: 'network-only',

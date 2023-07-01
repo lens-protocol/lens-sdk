@@ -10,6 +10,7 @@ import { when } from 'jest-when';
 
 import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
+import { ProfileIdentifier } from '../../lifecycle';
 import { BroadcastingError } from '../../transactions';
 import {
   CreateProfileRequest,
@@ -21,7 +22,6 @@ import {
   PaidFollowRequest,
   ProfileOwnerFollowRequest,
 } from '../FollowProfiles';
-import { ProfileIdentifier } from '../IActiveProfilePresenter';
 import {
   INftOwnershipChallengeGateway,
   NftOwnershipSignature,

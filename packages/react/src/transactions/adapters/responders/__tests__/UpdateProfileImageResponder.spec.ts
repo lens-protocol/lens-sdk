@@ -30,6 +30,7 @@ function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioA
         request: {
           profileId: responseProfile.id,
         },
+        observerId: null,
         sources,
       },
     }),

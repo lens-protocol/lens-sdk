@@ -27,6 +27,7 @@ function setupUpdateProfileMetadataResponder({
       profile: updatedProfile,
       variables: {
         request: { profileId: updatedProfile.id },
+        observerId: null,
         sources,
       },
     }),

@@ -57,7 +57,7 @@ export type UseExplorePublicationsArgs = PaginatedArgs<
  * @example
  *
  * ```tsx
- * import { useExplorePublications } from '@lens-protocol/react-web';
+ * import { PublicationSortCriteria, useExplorePublications } from '@lens-protocol/react-web';
  *
  * function ExplorePublications() {
  *   const { data, error, loading } = useExplorePublications({ sortCriteria: PublicationSortCriteria.MostComments });

@@ -1,8 +1,8 @@
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { ProfileId } from '../../entities';
+import { ISessionPresenter } from '../lifecycle/ISessionPresenter';
 import { IActiveProfileGateway } from './IActiveProfileGateway';
-import { IActiveProfilePresenter } from './IActiveProfilePresenter';
 import { IProfileGateway } from './IProfileGateway';
 
 export type SwitchActiveProfileRequest = {
@@ -13,7 +13,7 @@ export class SwitchActiveProfile {
   constructor(
     private readonly profileGateway: IProfileGateway,
     private readonly activeProfileGateway: IActiveProfileGateway,
-    private readonly activeProfilePresenter: IActiveProfilePresenter,
+    private readonly sessionPresenter: ISessionPresenter,
   ) {}
 
   async switch(request: SwitchActiveProfileRequest) {
@@ -22,6 +22,6 @@ export class SwitchActiveProfile {
     invariant(profile, 'Profile not found');
 
     await this.activeProfileGateway.setActiveProfile(profile);
-    this.activeProfilePresenter.presentActiveProfile(profile);
+    this.sessionPresenter.switchProfile(profile);
   }
 }

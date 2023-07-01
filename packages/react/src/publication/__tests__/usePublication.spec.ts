@@ -1,9 +1,11 @@
-import { AnyPublication, activeProfileIdentifierVar } from '@lens-protocol/api-bindings';
+import { AnyPublication } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockPostFragment,
   mockSources,
   createGetPublicationMockedResponse,
+  simulateAuthenticatedProfile,
+  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
@@ -11,7 +13,6 @@ import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { usePublication, UsePublicationArgs } from '../usePublication';
 
 function setupTestScenario({
@@ -44,9 +45,10 @@ function setupTestScenario({
 
 describe(`Given the ${usePublication.name} hook`, () => {
   const publication = mockPostFragment();
+  const expectations = { __typename: 'Post', id: publication.id };
 
   beforeAll(() => {
-    simulateAppReady();
+    simulateNotAuthenticated();
   });
 
   describe.each([
@@ -60,7 +62,9 @@ describe(`Given the ${usePublication.name} hook`, () => {
     },
   ])('$precondition', ({ activeProfileValue }) => {
     beforeAll(() => {
-      activeProfileIdentifierVar(activeProfileValue);
+      if (activeProfileValue) {
+        simulateAuthenticatedProfile(activeProfileValue);
+      }
     });
 
     describe('when the query returns data successfully', () => {
@@ -72,7 +76,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
         });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toMatchObject(publication);
+        expect(result.current.data).toMatchObject(expectations);
       });
 
       it('should allow to specify the "observerId" on a per-call basis', async () => {
@@ -85,7 +89,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
         });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toMatchObject(publication);
+        expect(result.current.data).toMatchObject(expectations);
       });
     });
 

@@ -1,15 +1,7 @@
-import {
-  isProfileOwnedByMe,
-  ProfileOwnedByMe,
-  UnspecifiedError,
-  useGetProfile,
-} from '@lens-protocol/api-bindings';
-import { invariant } from '@lens-protocol/shared-kernel';
+import { ProfileOwnedByMe, SessionType, UnspecifiedError } from '@lens-protocol/api-bindings';
 
-import { useSourcesFromConfig, useLensApolloClient } from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
-import { useActiveWalletVar } from '../wallet/adapters/ActiveWalletPresenter';
-import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
+import { useCurrentSession } from '../lifecycle/useCurrentSession';
 
 /**
  * `useActiveProfile` is a hook that lets you retrieve the active profile
@@ -42,47 +34,9 @@ import { useActiveProfileIdentifier } from './useActiveProfileIdentifier';
  * ```
  */
 export function useActiveProfile(): ReadResult<ProfileOwnedByMe | null, UnspecifiedError> {
-  const { data: identifier, loading: bootstrapping } = useActiveProfileIdentifier();
-  // TODO: This is a patch fix to move forward.
-  const activeWallet = useActiveWalletVar();
-
-  const { data, error, loading } = useGetProfile(
-    useLensApolloClient({
-      variables: useSourcesFromConfig({
-        request: {
-          profileId: identifier?.id,
-        },
-      }),
-      fetchPolicy: 'cache-first',
-      skip: bootstrapping || identifier === null,
-    }),
-  );
+  const { data: session, error, loading: bootstrapping } = useCurrentSession();
 
   if (bootstrapping) {
-    return {
-      data: undefined,
-      error: undefined,
-      loading: true,
-    };
-  }
-
-  if (activeWallet === null) {
-    return {
-      data: null,
-      error: undefined,
-      loading: false,
-    };
-  }
-
-  if (identifier === null) {
-    return {
-      data: null,
-      error: undefined,
-      loading: false,
-    };
-  }
-
-  if (loading || data === undefined) {
     return {
       data: undefined,
       error: undefined,
@@ -93,16 +47,21 @@ export function useActiveProfile(): ReadResult<ProfileOwnedByMe | null, Unspecif
   if (error) {
     return {
       data: undefined,
-      error: new UnspecifiedError(error),
+      error,
       loading: false,
     };
   }
 
-  invariant(data.result, 'Profile not found.');
-  invariant(isProfileOwnedByMe(data.result), 'Profile not owned by the active wallet.');
+  if (session.type !== SessionType.WithProfile) {
+    return {
+      data: null,
+      error: undefined,
+      loading: false,
+    };
+  }
 
   return {
-    data: data.result,
+    data: session.profile,
     error: undefined,
     loading: false,
   };

@@ -18,6 +18,8 @@ export type UsePollVoteArgs = {
   publication: PollPublication;
 };
 
+export type { VoteChoice };
+
 export type PollVoteOperation = Operation<
   void,
   PendingSigningRequestError | UserRejectedError | WalletConnectionError,

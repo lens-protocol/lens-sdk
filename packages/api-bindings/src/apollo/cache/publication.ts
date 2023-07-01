@@ -23,8 +23,8 @@ import {
   resolveCollectPolicy,
   Wallet,
 } from '../../lens';
-import { activeProfileIdentifierVar } from './activeProfileIdentifier';
 import { decryptionCriteria } from './decryptionCriteria';
+import { SessionType, getSession } from './session';
 import {
   getAllPendingTransactions,
   isCollectTransactionFor,
@@ -101,14 +101,15 @@ const hasCollectedByMe = (existing: boolean, { readField }: FieldFunctionOptions
   // if collected already then just return, it can't be undone
   if (existing === true) return existing;
 
-  const profileIdentifier = activeProfileIdentifierVar();
-  const publicationId = readField('id') as PublicationId;
+  const session = getSession();
 
-  if (!profileIdentifier) return false;
+  if (!session || session.type !== SessionType.WithProfile) return false;
+
+  const publicationId = readField('id') as PublicationId;
 
   const isCollectTransactionForThisPublication = isCollectTransactionFor({
     publicationId,
-    profileId: profileIdentifier.id,
+    profileId: session.profile.id,
   });
 
   const collectPendingTx = getAllPendingTransactions().find((transaction) => {
@@ -125,16 +126,18 @@ const isMirroredByMe = (
 ): boolean => {
   if (existing === true) return existing;
 
-  const profileIdentifier = activeProfileIdentifierVar();
+  const session = getSession();
+
   const publicationId = readField('id') as PublicationId;
   const mirrors = readField('mirrors') as PublicationId[];
 
-  if (!profileIdentifier) return false;
+  if (!session || session.type !== SessionType.WithProfile) return false;
+
   if (mirrors.length > 0) return true;
 
   const isMirrorTransactionForThisPublication = isMirrorTransactionFor({
     publicationId,
-    profileId: profileIdentifier.id,
+    profileId: session.profile.id,
   });
 
   const mirrorPendingTxs = getAllPendingTransactions().filter((transaction) => {
@@ -147,15 +150,16 @@ const isMirroredByMe = (
 const stats: FieldReadFunction<PublicationStats> = (existing, { readField }) => {
   if (!existing) return existing;
 
-  const profileIdentifier = activeProfileIdentifierVar();
+  const session = getSession();
+
   const publicationId = readField('id') as PublicationId;
 
-  if (!profileIdentifier) return existing;
+  if (!session || session.type !== SessionType.WithProfile) return existing;
 
   // mirror
   const isMirrorTransactionForThisPublication = isMirrorTransactionFor({
     publicationId,
-    profileId: profileIdentifier.id,
+    profileId: session.profile.id,
   });
 
   const mirrorPendingTxs = getAllPendingTransactions().filter((transaction) => {
@@ -165,7 +169,7 @@ const stats: FieldReadFunction<PublicationStats> = (existing, { readField }) => 
   // collect
   const isCollectTransactionForThisPublication = isCollectTransactionFor({
     publicationId,
-    profileId: profileIdentifier.id,
+    profileId: session.profile.id,
   });
 
   const collectPendingTx = getAllPendingTransactions().filter((transaction) => {

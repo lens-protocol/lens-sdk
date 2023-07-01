@@ -1,7 +1,6 @@
-import { FieldFunctionOptions, ReactiveVar } from '@apollo/client';
+import { FieldFunctionOptions } from '@apollo/client';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 
 import {
@@ -15,6 +14,7 @@ import {
   ProfileMedia,
   Attribute,
 } from '../../lens';
+import { getSession } from './session';
 import {
   getAllPendingTransactions,
   isFollowTransactionFor,
@@ -54,9 +54,7 @@ function resolveFollowPolicy({ followModule }: { followModule: FollowModule }): 
   }
 }
 
-export function createProfileTypePolicy(
-  activeWalletVar: ReactiveVar<WalletData | null>,
-): StrictTypedTypePolicies['Profile'] {
+export function createProfileTypePolicy(): StrictTypedTypePolicies['Profile'] {
   return {
     fields: {
       isFollowing: {
@@ -73,9 +71,9 @@ export function createProfileTypePolicy(
 
       followStatus: {
         read(_, { readField }) {
-          const activeWallet = activeWalletVar();
+          const session = getSession();
 
-          if (!activeWallet) {
+          if (!session || session.isNotAuthenticated()) {
             return null;
           }
 
@@ -85,7 +83,7 @@ export function createProfileTypePolicy(
 
           const isFollowTransactionForThisProfile = isFollowTransactionFor({
             profileId,
-            followerAddress: activeWallet.address,
+            followerAddress: session.wallet.address,
           });
           const isUnfollowTransactionForThisProfile = isUnfollowTransactionFor({
             profileId,
@@ -150,11 +148,13 @@ export function createProfileTypePolicy(
       },
 
       ownedByMe(_: boolean | undefined, { readField }) {
-        const activeWallet = activeWalletVar();
-        if (activeWallet) {
-          return readField('ownedBy') === activeWallet.address;
+        const session = getSession();
+
+        if (!session || session.isNotAuthenticated()) {
+          return false;
         }
-        return false;
+
+        return readField('ownedBy') === session.wallet.address;
       },
     },
   };

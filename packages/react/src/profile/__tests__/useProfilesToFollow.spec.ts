@@ -1,16 +1,17 @@
-import { activeProfileIdentifierVar, Profile } from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockProfileFragment,
   createProfilesToFollowMockedResponse,
   mockSources,
+  simulateAuthenticatedProfile,
+  simulateAuthenticatedWallet,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { useProfilesToFollow, UseProfilesToFollowArgs } from '../useProfilesToFollow';
 
 function setupTestScenario({
@@ -41,9 +42,10 @@ function setupTestScenario({
 
 describe(`Given the ${useProfilesToFollow.name} hook`, () => {
   const profiles = [mockProfileFragment()];
+  const expectations = profiles.map((profile) => ({ __typename: 'Profile', id: profile.id }));
 
   beforeAll(() => {
-    simulateAppReady();
+    simulateAuthenticatedWallet();
   });
 
   describe('when the query returns data successfully', () => {
@@ -51,7 +53,7 @@ describe(`Given the ${useProfilesToFollow.name} hook`, () => {
       const { result } = setupTestScenario({ profiles });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(profiles);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 
@@ -59,14 +61,14 @@ describe(`Given the ${useProfilesToFollow.name} hook`, () => {
     const activeProfile = mockProfile();
 
     beforeAll(() => {
-      activeProfileIdentifierVar(activeProfile);
+      simulateAuthenticatedProfile(activeProfile);
     });
 
     it('should use the Active Profile Id as the "observerId"', async () => {
       const { result } = setupTestScenario({ profiles, expectedObserverId: activeProfile.id });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(profiles);
+      expect(result.current.data).toMatchObject(expectations);
     });
 
     it('should always allow to specify the "observerId" on a per-call basis', async () => {
@@ -79,7 +81,7 @@ describe(`Given the ${useProfilesToFollow.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(profiles);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 });

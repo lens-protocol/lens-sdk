@@ -1,16 +1,17 @@
-import { activeProfileIdentifierVar, Profile } from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import {
   createGetAllProfilesMockedResponse,
   mockLensApolloClient,
   mockProfileFragment,
   mockSources,
+  simulateAuthenticatedProfile,
+  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { useProfiles, UseProfilesArgs } from '../useProfiles';
 
@@ -42,9 +43,10 @@ function setupTestScenario({
 
 describe(`Given the ${useProfiles.name} hook`, () => {
   const profiles = [mockProfileFragment()];
+  const expectations = profiles.map(({ id }) => ({ __typename: 'Profile', id }));
 
   beforeAll(() => {
-    simulateAppReady();
+    simulateNotAuthenticated();
   });
 
   describe.each([
@@ -68,7 +70,9 @@ describe(`Given the ${useProfiles.name} hook`, () => {
       },
     ])('$description', ({ args }) => {
       beforeAll(() => {
-        activeProfileIdentifierVar(activeProfileValue);
+        if (activeProfileValue) {
+          simulateAuthenticatedProfile(activeProfileValue);
+        }
       });
 
       it('should return list of profiles', async () => {
@@ -79,7 +83,7 @@ describe(`Given the ${useProfiles.name} hook`, () => {
         });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toEqual(profiles);
+        expect(result.current.data).toMatchObject(expectations);
       });
 
       it('should always allow to specify the "observerId" on a per-call basis', async () => {
@@ -93,7 +97,7 @@ describe(`Given the ${useProfiles.name} hook`, () => {
         });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toEqual(profiles);
+        expect(result.current.data).toMatchObject(expectations);
       });
     });
   });

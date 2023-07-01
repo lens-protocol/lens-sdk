@@ -1,38 +1,56 @@
-import { MockedResponse } from '@apollo/client/testing';
-import { activeProfileIdentifierVar } from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   createGetProfileMockedResponse,
   mockProfileFragment,
   mockSources,
+  simulateAuthenticatedProfile,
+  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { useProfile, UseProfileArgs } from '../useProfile';
 
-const sources = mockSources();
-
 function setupTestScenario({
-  expectations,
+  profile,
+  expectedObserverId,
   ...args
-}: UseProfileArgs & { expectations: MockedResponse<unknown> }) {
+}: UseProfileArgs & { profile: Profile | null; expectedObserverId: ProfileId | null }) {
+  const sources = mockSources();
+
   return renderHookWithMocks(() => useProfile(args), {
     mocks: {
       sources,
-      apolloClient: mockLensApolloClient([expectations]),
+      apolloClient: mockLensApolloClient([
+        createGetProfileMockedResponse({
+          profile,
+          variables: {
+            request: args.profileId
+              ? {
+                  profileId: args.profileId,
+                }
+              : {
+                  handle: args.handle,
+                },
+            observerId: expectedObserverId,
+            sources,
+          },
+        }),
+      ]),
     },
   });
 }
 
 describe(`Given the ${useProfile.name} hook`, () => {
   const profile = mockProfileFragment();
+  const expectations = { __typename: 'Profile', id: profile.id };
 
   beforeAll(() => {
-    simulateAppReady();
+    simulateNotAuthenticated();
   });
 
   describe.each([
@@ -56,52 +74,42 @@ describe(`Given the ${useProfile.name} hook`, () => {
       },
     ])('$description', ({ args }) => {
       beforeAll(() => {
-        activeProfileIdentifierVar(activeProfileValue);
+        if (activeProfileValue) {
+          simulateAuthenticatedProfile(activeProfileValue);
+        }
       });
 
       it('should settle with the profile data', async () => {
-        const expectations = createGetProfileMockedResponse({
+        const { result } = setupTestScenario({
+          ...args,
           profile,
-          variables: {
-            request: args,
-            observerId: activeProfileValue?.id ?? null,
-            sources,
-          },
+          expectedObserverId: activeProfileValue?.id ?? null,
         });
-        const { result } = setupTestScenario({ ...args, expectations });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toEqual(profile);
+        expect(result.current.data).toMatchObject(expectations);
       });
 
       it('should allow to specify the "observerId" on a per-call basis', async () => {
         const observerId = mockProfileId();
 
-        const expectations = createGetProfileMockedResponse({
+        const { result } = setupTestScenario({
+          ...args,
           profile,
-          variables: {
-            request: args,
-            observerId: observerId,
-            sources,
-          },
+          observerId,
+          expectedObserverId: observerId,
         });
 
-        const { result } = setupTestScenario({ ...args, observerId, expectations });
-
         await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toEqual(profile);
+        expect(result.current.data).toMatchObject(expectations);
       });
 
       it(`should settle with a ${NotFoundError.name} if not found`, async () => {
-        const expectations = createGetProfileMockedResponse({
+        const { result } = setupTestScenario({
+          ...args,
           profile: null,
-          variables: {
-            request: args,
-            observerId: activeProfileValue?.id ?? null,
-            sources,
-          },
+          expectedObserverId: activeProfileValue?.id ?? null,
         });
-        const { result } = setupTestScenario({ ...args, expectations });
 
         await waitFor(() => expect(result.current.loading).toBeFalsy());
         expect(result.current.error).toBeInstanceOf(NotFoundError);
