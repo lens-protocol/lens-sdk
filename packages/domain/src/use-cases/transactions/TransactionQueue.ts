@@ -125,8 +125,8 @@ export class TransactionQueue<T extends AnyTransactionRequestModel> {
 
   private async commit(txData: TransactionData<T>) {
     const responder = this.getResponderFor(txData.request.kind);
-    await responder.commit(txData);
     this.transactionQueuePresenter.settled(txData);
+    await responder.commit(txData);
   }
 
   private async rollback(error: TransactionError, txData: TransactionData<T>) {

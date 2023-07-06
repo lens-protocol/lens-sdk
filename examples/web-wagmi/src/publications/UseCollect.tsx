@@ -50,6 +50,7 @@ function CollectButton({ collector, publication }: CollectButtonProps) {
               : 'Collect'}
           </button>
           {error && <ErrorMessage error={error} />}
+          <p>Total collets: {publication.stats.totalAmountOfCollects}</p>
         </>
       );
   }

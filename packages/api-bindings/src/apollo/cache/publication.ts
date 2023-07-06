@@ -251,7 +251,6 @@ function createContentPublicationTypePolicy(config: ContentPublicationTypePolicy
       mirrors: noCachedField(),
       reaction: noCachedField(),
       referencePolicy,
-      stats,
     },
   };
 }
