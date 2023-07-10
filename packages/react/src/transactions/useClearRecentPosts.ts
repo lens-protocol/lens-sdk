@@ -5,5 +5,7 @@ import { recentPosts } from './adapters/responders/CreatePostResponder';
  * @group Hooks
  */
 export function useClearRecentPosts() {
-  return recentPosts([]);
+  return () => {
+    recentPosts([]);
+  };
 }
