@@ -1,4 +1,4 @@
-import { AnyPublication, useGetPublications } from '@lens-protocol/api-bindings';
+import { AnyPublication, PublicationTypes, useGetPublications } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import {
@@ -15,6 +15,7 @@ export type UsePublicationsArgs = PaginatedArgs<
   WithObserverIdOverride<{
     metadataFilter?: PublicationMetadataFilters;
     profileId: ProfileId;
+    publicationTypes?: PublicationTypes | PublicationTypes[];
   }>
 >;
 
@@ -25,6 +26,7 @@ export type UsePublicationsArgs = PaginatedArgs<
 export function usePublications({
   profileId,
   metadataFilter,
+  publicationTypes,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]> {
@@ -36,6 +38,7 @@ export function usePublications({
             profileId,
             observerId,
             limit,
+            publicationTypes,
             metadata: createPublicationMetadataFilters(metadataFilter),
           }),
         }),

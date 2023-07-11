@@ -115,6 +115,7 @@ export function PublicationCard({ publication }: PublicationCardProps) {
       <Content
         publication={isMirrorPublication(publication) ? publication.mirrorOf : publication}
       />
+      <p>Publication type: {publication.__typename}</p>
     </article>
   );
 }
