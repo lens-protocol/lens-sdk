@@ -15,7 +15,7 @@ export type UsePublicationsArgs = PaginatedArgs<
   WithObserverIdOverride<{
     metadataFilter?: PublicationMetadataFilters;
     profileId: ProfileId;
-    publicationTypes?: PublicationTypes | PublicationTypes[];
+    publicationTypes?: PublicationTypes[];
   }>
 >;
 
