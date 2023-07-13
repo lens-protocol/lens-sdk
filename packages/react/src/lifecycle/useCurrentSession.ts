@@ -74,7 +74,11 @@ export function useCurrentSession(): ReadResult<
 > {
   const session = useSessionVar();
 
+  console.log('session', session);
+
   const prevSessionValue = usePrevious(session);
+
+  console.log('prevSessionValue', prevSessionValue);
 
   const trigger = session?.type === SessionType.WithProfile;
 
@@ -89,6 +93,8 @@ export function useCurrentSession(): ReadResult<
       skip: !trigger,
     }),
   );
+
+  console.log(data);
 
   if (!session) {
     return {

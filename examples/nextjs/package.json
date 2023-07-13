@@ -16,14 +16,12 @@
   },
   "dependencies": {
     "@lens-protocol/react-web": "workspace:*",
-    "@lens-protocol/wagmi": "workspace:*",
     "ethers": "^5.7.2",
     "example-shared": "workspace:*",
     "next": "^13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hot-toast": "^2.4.0",
-    "wagmi": "^0.12.13"
+    "react-hot-toast": "^2.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
