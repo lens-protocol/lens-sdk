@@ -6,7 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "eslint:fix": "pnpm run eslint --fix",
-    "eslint": "eslint pages",
+    "eslint": "eslint .",
     "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
     "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",

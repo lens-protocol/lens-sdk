@@ -1,8 +1,8 @@
 import { useWalletLogin, useWalletLogout } from '@lens-protocol/react-web';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { wallet } from '../../domain/wallet';
 
+import { wallet } from '../../domain/wallet';
 import { WhenLoggedInWithProfile } from './WhenLoggedInWithProfile';
 import { WhenLoggedOut } from './WhenLoggedOut';
 
