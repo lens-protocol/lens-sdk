@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@bundlr-network/client": "^0.10.3",
+    "@bundlr-network/client": "^0.11.9",
     "@lens-protocol/client": "workspace:*",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
