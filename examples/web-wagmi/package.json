@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
+    "build:with-packages": "turbo run build --filter=...example-wagmi",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
