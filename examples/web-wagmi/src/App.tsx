@@ -42,6 +42,7 @@ import { UseMutualFollowers } from './profiles/UseMutualFollowers';
 import { UseProfile } from './profiles/UseProfile';
 import { UseProfileFollowers } from './profiles/UseProfileFollowers';
 import { UseProfileFollowing } from './profiles/UseProfileFollowing';
+import { UseProfileGuardian } from './profiles/UseProfileGuardian';
 import { UseProfilesOwnedBy } from './profiles/UseProfileOwnedBy';
 import { UseProfiles } from './profiles/UseProfiles';
 import { ProfilesToFollow } from './profiles/UseProfilesToFollow';
@@ -114,109 +115,90 @@ export function App() {
             <Breadcrumbs />
             <GenericErrorBoundary fallback={ErrorMessage}>
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/authentication" element={<AuthenticationPage />} />
-                <Route
-                  path="/authentication/loginSpecificProfile"
-                  element={<LoginSpecificProfile />}
-                />
+                <Route index element={<Home />} />
 
-                <Route path="/publications" element={<PublicationsPage />} />
-                <Route path="/publications/usePublication" element={<UsePublication />} />
-                <Route path="/publications/usePublications" element={<UsePublications />} />
-                <Route path="/publications/useComments" element={<UsePublication />} />
-                <Route
-                  path="/publications/useCollectedPublications"
-                  element={<UseCollectedPublications />}
-                />
-                <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
-                <Route
-                  path="/publications/useCreateEncryptedPost"
-                  element={<UseCreateEncryptedPost />}
-                />
-                <Route path="/publications/useCreateComment" element={<UseCreateComment />} />
-                <Route
-                  path="/publications/useProfilePublicationsForSale"
-                  element={<UseProfilePublicationsForSale />}
-                />
-                <Route path="/publications/useReaction" element={<UseReaction />} />
-                <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
-                <Route
-                  path="/publications/useReportPublication"
-                  element={<UseReportPublication />}
-                />
-                <Route path="/publications/useHidePublication" element={<UseHidePublication />} />
-                <Route
-                  path="/publications/useWhoCollectedPublication"
-                  element={<UseWhoCollectedPublication />}
-                />
-                <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
-                <Route
-                  path="/publications/useWhoMirroredPublication"
-                  element={<UseWhoMirroredPublication />}
-                />
-                <Route path="/publications/useCollect" element={<UseCollect />} />
+                <Route path="/authentication">
+                  <Route index element={<AuthenticationPage />} />
+                  <Route path="loginSpecificProfile" element={<LoginSpecificProfile />} />
+                </Route>
 
-                <Route path="/profiles" element={<ProfilesPage />} />
-                <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />
-                <Route path="/profiles/useProfile" element={<UseProfile />} />
-                <Route path="/profiles/useProfiles" element={<UseProfiles />} />
-                <Route
-                  path="/profiles/useUpdateDispatcherConfig"
-                  element={<UseUpdateDispatcherConfig />}
-                />
-                <Route path="/profiles/useMutualFollowers" element={<UseMutualFollowers />} />
-                <Route path="/profiles/useProfilesToFollow" element={<ProfilesToFollow />} />
-                <Route path="/profiles/useFollow" element={<UseFollowAndUnfollow />} />
-                <Route path="/profiles/useUpdateProfileImage" element={<UseUpdateProfileImage />} />
-                <Route path="/profiles/useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
-                <Route
-                  path="/profiles/useUpdateProfileDetails"
-                  element={<UseUpdateProfileDetails />}
-                />
-                <Route
-                  path="/profiles/useActiveProfileSwitch"
-                  element={<UseActiveProfileSwitch />}
-                />
-                <Route path="/profiles/useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
-                <Route path="/profiles/useProfileFollowers" element={<UseProfileFollowers />} />
-                <Route path="/profiles/useProfileFollowing" element={<UseProfileFollowing />} />
+                <Route path="/publications">
+                  <Route index element={<PublicationsPage />} />
+                  <Route path="usePublication" element={<UsePublication />} />
+                  <Route path="usePublications" element={<UsePublications />} />
+                  <Route path="useComments" element={<UsePublication />} />
+                  <Route path="useCollectedPublications" element={<UseCollectedPublications />} />
+                  <Route path="useCreatePost" element={<UseCreatePost />} />
+                  <Route path="useCreateEncryptedPost" element={<UseCreateEncryptedPost />} />
+                  <Route path="useCreateComment" element={<UseCreateComment />} />
+                  <Route
+                    path="useProfilePublicationsForSale"
+                    element={<UseProfilePublicationsForSale />}
+                  />
+                  <Route path="useReaction" element={<UseReaction />} />
+                  <Route path="useWhoReacted" element={<UseWhoReacted />} />
+                  <Route path="useReportPublication" element={<UseReportPublication />} />
+                  <Route path="useHidePublication" element={<UseHidePublication />} />
+                  <Route
+                    path="useWhoCollectedPublication"
+                    element={<UseWhoCollectedPublication />}
+                  />
+                  <Route path="UseCreateMirror" element={<UseCreateMirror />} />
+                  <Route path="useWhoMirroredPublication" element={<UseWhoMirroredPublication />} />
+                  <Route path="useCollect" element={<UseCollect />} />
+                </Route>
 
-                <Route path="/discovery" element={<DiscoveryPage />} />
-                <Route path="/discovery/useFeed" element={<UseFeed />} />
-                <Route path="/discovery/useExploreProfiles" element={<UseExploreProfiles />} />
-                <Route
-                  path="/discovery/useExplorePublications"
-                  element={<UseExplorePublications />}
-                />
-                <Route path="/discovery/useSearchProfiles" element={<UseSearchProfiles />} />
-                <Route
-                  path="/discovery/useSearchPublications"
-                  element={<UseSearchPublications />}
-                />
+                <Route path="/profiles">
+                  <Route index element={<ProfilesPage />} />
+                  <Route path="useCreateProfile" element={<UseCreateProfile />} />
+                  <Route path="useProfile" element={<UseProfile />} />
+                  <Route path="useProfiles" element={<UseProfiles />} />
+                  <Route path="useUpdateDispatcherConfig" element={<UseUpdateDispatcherConfig />} />
+                  <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
+                  <Route path="useProfilesToFollow" element={<ProfilesToFollow />} />
+                  <Route path="useFollow" element={<UseFollowAndUnfollow />} />
+                  <Route path="useUpdateProfileImage" element={<UseUpdateProfileImage />} />
+                  <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
+                  <Route path="useUpdateProfileDetails" element={<UseUpdateProfileDetails />} />
+                  <Route path="useActiveProfileSwitch" element={<UseActiveProfileSwitch />} />
+                  <Route path="useProfilesOwnedBy" element={<UseProfilesOwnedBy />} />
+                  <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
+                  <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
+                  <Route path="useProfileGuardian" element={<UseProfileGuardian />} />
+                </Route>
 
-                <Route path="/revenue" element={<RevenuePage />} />
-                <Route path="/revenue/usePublicationRevenue" element={<UsePublicationRevenue />} />
-                <Route
-                  path="/revenue/useProfileFollowRevenue"
-                  element={<UseProfileFollowRevenue />}
-                />
-                <Route
-                  path="/revenue/useProfilePublicationRevenue"
-                  element={<UseProfilePublicationRevenue />}
-                />
+                <Route path="/discovery">
+                  <Route index element={<DiscoveryPage />} />
+                  <Route path="useFeed" element={<UseFeed />} />
+                  <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
+                  <Route path="useExplorePublications" element={<UseExplorePublications />} />
+                  <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
+                  <Route path="useSearchPublications" element={<UseSearchPublications />} />
+                </Route>
 
-                <Route path="/misc" element={<MiscPage />} />
-                <Route path="/misc/useCurrencies" element={<UseCurrencies />} />
-                <Route path="/misc/useEnabledModules" element={<UseEnabledModules />} />
-                <Route path="/misc/useNotifications" element={<UseNotifications />} />
-                <Route
-                  path="/misc/useUnreadNotificationCount"
-                  element={<UseUnreadNotificationCount />}
-                />
-                <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
-                <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
-                <Route path="/misc/polls" element={<Polls />} />
+                <Route path="/revenue">
+                  <Route index element={<RevenuePage />} />
+                  <Route path="usePublicationRevenue" element={<UsePublicationRevenue />} />
+                  <Route path="useProfileFollowRevenue" element={<UseProfileFollowRevenue />} />
+                  <Route
+                    path="useProfilePublicationRevenue"
+                    element={<UseProfilePublicationRevenue />}
+                  />
+                </Route>
+
+                <Route path="/misc">
+                  <Route index element={<MiscPage />} />
+                  <Route path="/misc/useCurrencies" element={<UseCurrencies />} />
+                  <Route path="/misc/useEnabledModules" element={<UseEnabledModules />} />
+                  <Route path="/misc/useNotifications" element={<UseNotifications />} />
+                  <Route
+                    path="/misc/useUnreadNotificationCount"
+                    element={<UseUnreadNotificationCount />}
+                  />
+                  <Route path="/misc/useApproveModule" element={<UseApproveModule />} />
+                  <Route path="/misc/useRecentTransactions" element={<UseRecentTransactions />} />
+                  <Route path="/misc/polls" element={<Polls />} />
+                </Route>
               </Routes>
             </GenericErrorBoundary>
             <Toaster />

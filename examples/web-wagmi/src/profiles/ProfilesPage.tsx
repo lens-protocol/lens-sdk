@@ -71,6 +71,11 @@ const profileHooks = [
     description: `Fetch a list of profile following.`,
     path: '/profiles/useProfileFollowing',
   },
+  {
+    label: 'useProfileGuardian',
+    description: `Fetch profile guardian details.`,
+    path: '/profiles/useProfileGuardian',
+  },
 ];
 
 export function ProfilesPage() {
