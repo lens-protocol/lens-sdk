@@ -8,6 +8,10 @@ import {
 import { ProfileId, PublicationId, TransactionKind } from '@lens-protocol/domain/entities';
 import { hasAtLeastOne, never } from '@lens-protocol/shared-kernel';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { publicationId } from '../../utils';
 import { PendingTransactionGateway } from '../adapters/PendingTransactionGateway';
 import { IPublicationIdPredictor } from './AccessConditionBuilderFactory';
@@ -29,6 +33,7 @@ export class PublicationIdPredictor implements IPublicationIdPredictor {
         profileId,
         sources: [],
         limit: 1,
+        ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
       },
     });
 

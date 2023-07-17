@@ -1,10 +1,11 @@
 import { Following, useProfileFollowing as useUnderlyingQuery } from '@lens-protocol/api-bindings';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
@@ -28,11 +29,13 @@ export function useProfileFollowing({
     useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            walletAddress,
-            limit,
-            observerId,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              walletAddress,
+              limit,
+              observerId,
+            }),
+          ),
         }),
       ),
     ),

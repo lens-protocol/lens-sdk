@@ -2,10 +2,11 @@ import { ProfileOwnedByMe, useGetAllProfiles, useSessionVar } from '@lens-protoc
 import { constants } from 'ethers';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { useRecentProfiles } from '../transactions/adapters/responders/CreateProfileResponder';
@@ -52,13 +53,15 @@ export function useProfilesOwnedByMe({
     useGetAllProfiles(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            byOwnerAddresses: [
-              session?.isAuthenticated() ? session.wallet.address : constants.AddressZero,
-            ],
-            observerId,
-            limit,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              byOwnerAddresses: [
+                session?.isAuthenticated() ? session.wallet.address : constants.AddressZero,
+              ],
+              observerId,
+              limit,
+            }),
+          ),
           skip: session === null,
         }),
       ),

@@ -10,7 +10,11 @@ import {
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
-import { useSourcesFromConfig, useLensApolloClient } from '../helpers/arguments';
+import {
+  useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+} from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 export type UseNotificationsArgs = PaginatedArgs<{
@@ -79,12 +83,14 @@ export function useNotifications({
   return usePaginatedReadResult(
     useUnderlyingQuery(
       useLensApolloClient({
-        variables: useSourcesFromConfig({
-          observerId: profileId,
-          limit: limit ?? 10,
-          notificationTypes,
-          highSignalFilter,
-        }),
+        variables: useMediaTransformFromConfig(
+          useSourcesFromConfig({
+            observerId: profileId,
+            limit: limit ?? 10,
+            notificationTypes,
+            highSignalFilter,
+          }),
+        ),
       }),
     ),
   );

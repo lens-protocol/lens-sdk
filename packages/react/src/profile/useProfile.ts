@@ -4,10 +4,11 @@ import { invariant, XOR } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
@@ -40,10 +41,12 @@ export function useProfile({
     useGetProfile(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            request,
-            observerId,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              request,
+              observerId,
+            }),
+          ),
         }),
       ),
     ),

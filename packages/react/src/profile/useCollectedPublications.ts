@@ -2,10 +2,11 @@ import { AnyPublication, PublicationTypes, useGetPublications } from '@lens-prot
 import { EthereumAddress } from '@lens-protocol/shared-kernel';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
@@ -29,16 +30,18 @@ export function useCollectedPublications({
     useGetPublications(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            walletAddress,
-            publicationTypes: [
-              PublicationTypes.Comment,
-              PublicationTypes.Mirror,
-              PublicationTypes.Post,
-            ],
-            limit: limit,
-            observerId,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              walletAddress,
+              publicationTypes: [
+                PublicationTypes.Comment,
+                PublicationTypes.Mirror,
+                PublicationTypes.Post,
+              ],
+              limit: limit,
+              observerId,
+            }),
+          ),
         }),
       ),
     ),

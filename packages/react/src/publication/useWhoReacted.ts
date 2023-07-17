@@ -2,10 +2,11 @@ import { WhoReactedResult, useWhoReactedPublication } from '@lens-protocol/api-b
 import { PublicationId } from '@lens-protocol/domain/entities';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
 
@@ -24,11 +25,13 @@ export function useWhoReacted(args: UseWhoReactedArgs): PaginatedReadResult<WhoR
     useWhoReactedPublication(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            publicationId: args.publicationId,
-            observerId: args?.observerId,
-            limit: args?.limit ?? 10,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              publicationId: args.publicationId,
+              observerId: args?.observerId,
+              limit: args?.limit ?? 10,
+            }),
+          ),
         }),
       ),
     ),

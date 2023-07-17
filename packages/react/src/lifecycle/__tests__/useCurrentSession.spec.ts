@@ -17,6 +17,7 @@ import { mockProfileIdentifier, mockWalletData } from '@lens-protocol/domain/moc
 import { act } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { defaultMediaTransformsConfig } from '../../mediaTransforms';
 import { useCurrentSession } from '../useCurrentSession';
 
 function setupUseActiveProfile({ profile = mockProfileFragment() }: { profile?: Profile } = {}) {
@@ -35,7 +36,7 @@ function setupUseActiveProfile({ profile = mockProfileFragment() }: { profile?: 
   });
 
   return renderHookWithMocks(() => useCurrentSession(), {
-    mocks: { sources, apolloClient },
+    mocks: { sources, mediaTransforms: defaultMediaTransformsConfig, apolloClient },
   });
 }
 

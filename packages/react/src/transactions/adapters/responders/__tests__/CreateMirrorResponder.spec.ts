@@ -16,6 +16,10 @@ import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publication
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import { nonNullable } from '@lens-protocol/shared-kernel';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../../mediaTransforms';
 import { CreateMirrorResponder } from '../CreateMirrorResponder';
 
 function setupTestScenario({
@@ -29,6 +33,7 @@ function setupTestScenario({
   simulateAuthenticatedProfile(activeProfile);
 
   const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
   const apolloClient = mockLensApolloClient([
     mockGetPublicationResponse({
       variables: {
@@ -37,6 +42,7 @@ function setupTestScenario({
         },
         observerId: activeProfile.id,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
       publication: { ...post, mirrors: post.mirrors.concat(mockPublicationId()) },
     }),
@@ -52,7 +58,7 @@ function setupTestScenario({
     data: post,
   });
 
-  const responder = new CreateMirrorResponder(apolloClient, sources);
+  const responder = new CreateMirrorResponder(apolloClient, sources, mediaTransforms);
 
   return {
     responder,

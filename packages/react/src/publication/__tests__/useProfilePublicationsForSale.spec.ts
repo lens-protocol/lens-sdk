@@ -13,6 +13,10 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
+import {
   useProfilePublicationsForSale,
   UseProfilePublicationsForSaleArgs,
 } from '../useProfilePublicationsForSale';
@@ -30,6 +34,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfilePublicationsForSale(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
         mockProfilePublicationsForSaleResponse({
           variables: {
@@ -37,6 +42,7 @@ function setupTestScenario({
             limit: 10,
             sources,
             observerId: expectedObserverId ?? null,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: result,
         }),

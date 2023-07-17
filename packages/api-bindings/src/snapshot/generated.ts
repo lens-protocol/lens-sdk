@@ -137,6 +137,23 @@ export type SpaceWhere = {
   id_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type StatementsWhere = {
+  created?: InputMaybe<Scalars['Int']>;
+  created_gt?: InputMaybe<Scalars['Int']>;
+  created_gte?: InputMaybe<Scalars['Int']>;
+  created_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  created_lt?: InputMaybe<Scalars['Int']>;
+  created_lte?: InputMaybe<Scalars['Int']>;
+  delegate?: InputMaybe<Scalars['String']>;
+  delegate_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id?: InputMaybe<Scalars['String']>;
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  ipfs?: InputMaybe<Scalars['String']>;
+  ipfs_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  space?: InputMaybe<Scalars['String']>;
+  space_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type SubscriptionWhere = {
   address?: InputMaybe<Scalars['String']>;
   address_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;

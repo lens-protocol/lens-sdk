@@ -8,6 +8,9 @@ query GetPublications(
   $metadata: PublicationMetadataFilters
   $commentsOf: InternalPublicationId
   $walletAddress: EthereumAddress
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: publications(
     request: {
@@ -50,6 +53,9 @@ query ExplorePublications(
   $sortCriteria: PublicationSortCriteria!
   $sources: [Sources!]!
   $timestamp: TimestampScalar
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: explorePublications(
     request: {
@@ -88,6 +94,7 @@ query WhoCollectedPublication(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!]!
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: whoCollectedPublication(
     request: { publicationId: $publicationId, limit: $limit, cursor: $cursor }
@@ -107,6 +114,9 @@ query ProfilePublicationsForSale(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!]!
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: profilePublicationsForSale(
     request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }

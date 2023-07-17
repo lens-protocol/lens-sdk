@@ -9,6 +9,10 @@ import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protoc
 import { mockProfileIdentifier } from '@lens-protocol/domain/mocks';
 import { failure, success } from '@lens-protocol/shared-kernel';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../mediaTransforms';
 import { ProfileCacheManager } from '../../../transactions/infrastructure/ProfileCacheManager';
 import { WalletLoginPresenter } from '../WalletLoginPresenter';
 
@@ -18,6 +22,7 @@ type SetupTestScenarioArgs = {
 
 function setupTestScenario({ profile }: SetupTestScenarioArgs) {
   const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
   const apolloClient = mockLensApolloClient([
     mockGetProfileResponse({
       profile,
@@ -27,11 +32,12 @@ function setupTestScenario({ profile }: SetupTestScenarioArgs) {
         },
         observerId: null,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
     }),
   ]);
 
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
   return new WalletLoginPresenter(profileCacheManager);
 }
 

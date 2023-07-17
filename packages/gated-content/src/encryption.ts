@@ -3,7 +3,7 @@ import {
   EncryptedFields,
   EncryptedFieldsOutput,
   EncryptedMediaSet,
-  MediaSet,
+  PublicationMediaSet,
   MetadataOutput,
   PublicationMetadata,
   PublicationMetadataMediaInput,
@@ -163,7 +163,7 @@ export class PublicationMetadataDecryptor {
     return decrypted;
   }
 
-  private async decryptMedia<T extends MediaSet>(
+  private async decryptMedia<T extends PublicationMediaSet>(
     media: T[],
     encrypted: DeepOmitTypename<EncryptedMediaSet>[],
   ): Promise<T[]> {

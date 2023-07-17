@@ -19,6 +19,10 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
 
+import {
+  MediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../mediaTransforms';
 import { IProfileCacheManager } from '../IProfileCacheManager';
 
 function pendingPost({
@@ -55,6 +59,7 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
     private readonly profileCacheManager: IProfileCacheManager,
     private readonly client: SafeApolloClient,
     private readonly sources: Sources,
+    private readonly mediaTransforms: MediaTransformsConfig,
   ) {}
 
   async prepare({ id, request }: TransactionData<CreatePostRequest>) {
@@ -74,6 +79,7 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
         request: txHash ? { txHash } : { publicationId: id as PublicationId },
         observerId: request.profileId,
         sources: this.sources,
+        ...mediaTransformConfigToQueryVariables(this.mediaTransforms),
       },
       fetchPolicy: 'network-only',
     });

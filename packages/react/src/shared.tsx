@@ -26,6 +26,7 @@ import { ErrorHandler } from './ErrorHandler';
 import { IBindings, LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
 import { LogoutHandler, SessionPresenter } from './lifecycle/adapters/SessionPresenter';
+import { defaultMediaTransformsConfig, MediaTransformsConfig } from './mediaTransforms';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
@@ -88,6 +89,7 @@ export type SharedDependencies = {
   environment: EnvironmentConfig;
   followPolicyCallGateway: FollowPolicyCallGateway;
   logger: ILogger;
+  mediaTransforms: MediaTransformsConfig;
   notificationStorage: IStorage<UnreadNotificationsData>;
   offChainRelayer: OffChainRelayer;
   onChainRelayer: OnChainRelayer;
@@ -113,6 +115,7 @@ export function createSharedDependencies(
 ): SharedDependencies {
   const sources = (config.sources as Sources) ?? [];
   const logger = config.logger ?? new ConsoleLogger();
+  const mediaTransforms = config.mediaTransforms ?? defaultMediaTransformsConfig;
 
   // storages
   const activeProfileStorage = createActiveProfileStorage(config.storage, config.environment.name);
@@ -136,7 +139,7 @@ export function createSharedDependencies(
     contentMatchers: [config.environment.snapshot.matcher],
   });
   const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
 
   // adapters
   const providerFactory = new ProviderFactory(config.bindings, config.environment.chains);
@@ -156,25 +159,34 @@ export function createSharedDependencies(
   const tokenGateway = new TokenGateway(providerFactory);
   const followPolicyCallGateway = new FollowPolicyCallGateway(apolloClient);
 
-  const profileGateway = new ProfileGateway(apolloClient);
+  const profileGateway = new ProfileGateway(apolloClient, mediaTransforms);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
   const sessionPresenter = new SessionPresenter(onLogout);
 
   const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
-    [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(apolloClient, sources),
+    [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(
+      apolloClient,
+      sources,
+      mediaTransforms,
+    ),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
     [TransactionKind.CREATE_POST]: new CreatePostResponder(
       profileCacheManager,
       apolloClient,
       sources,
+      mediaTransforms,
     ),
     [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(
       profileCacheManager,
       config.environment.handleResolver,
     ),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
-    [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(apolloClient, sources),
+    [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
+      apolloClient,
+      sources,
+      mediaTransforms,
+    ),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(
       profileCacheManager,
@@ -232,6 +244,7 @@ export function createSharedDependencies(
     environment: config.environment,
     followPolicyCallGateway,
     logger,
+    mediaTransforms,
     notificationStorage,
     offChainRelayer,
     onChainRelayer,

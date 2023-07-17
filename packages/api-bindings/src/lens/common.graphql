@@ -204,9 +204,41 @@ fragment Media on Media {
   url
 }
 
-fragment MediaSet on MediaSet {
+fragment PublicationMediaSet on MediaSet {
   __typename
   original {
+    ...Media
+  }
+  optimized {
+    ...Media
+  }
+  small: transformed(params: $mediaTransformPublicationSmall) {
+    ...Media
+  }
+  medium: transformed(params: $mediaTransformPublicationMedium) {
+    ...Media
+  }
+}
+
+fragment ProfilePictureSet on MediaSet {
+  __typename
+  original {
+    ...Media
+  }
+  optimized {
+    ...Media
+  }
+  thumbnail: transformed(params: $mediaTransformProfileThumbnail) {
+    ...Media
+  }
+}
+
+fragment ProfileCoverSet on MediaSet {
+  __typename
+  original {
+    ...Media
+  }
+  optimized {
     ...Media
   }
 }
@@ -222,7 +254,7 @@ fragment MetadataOutput on MetadataOutput {
   mainContentFocus
   name
   media {
-    ...MediaSet
+    ...PublicationMediaSet
   }
   attributes {
     ...MetadataAttributeOutput

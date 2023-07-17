@@ -2068,7 +2068,22 @@ export type Media = {
   url: Url;
 };
 
-export type MediaSet = { __typename: 'MediaSet'; original: Media };
+export type PublicationMediaSet = {
+  __typename: 'MediaSet';
+  original: Media;
+  optimized: Media | null;
+  small: Media | null;
+  medium: Media | null;
+};
+
+export type ProfilePictureSet = {
+  __typename: 'MediaSet';
+  original: Media;
+  optimized: Media | null;
+  thumbnail: Media | null;
+};
+
+export type ProfileCoverSet = { __typename: 'MediaSet'; original: Media; optimized: Media | null };
 
 export type MetadataOutput = {
   __typename: 'MetadataOutput';
@@ -2081,7 +2096,7 @@ export type MetadataOutput = {
   mainContentFocus: PublicationMainFocus;
   name: string | null;
   tags: Array<string>;
-  media: Array<MediaSet>;
+  media: Array<PublicationMediaSet>;
   attributes: Array<MetadataAttributeOutput>;
   encryptionParams: EncryptionParamsOutput | null;
 };
@@ -2299,6 +2314,9 @@ export type FeedVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   metadata?: InputMaybe<PublicationMetadataFilters>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type FeedData = { result: { items: Array<FeedItem>; pageInfo: PaginatedResultInfo } };
@@ -2309,6 +2327,9 @@ export type ExploreProfilesVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ExploreProfilesData = {
@@ -2552,6 +2573,9 @@ export type NotificationsVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type NotificationsData = {
@@ -2724,8 +2748,8 @@ export type ProfileFields = {
   ownedByMe: boolean;
   attributes: ProfileAttributes;
   isFollowingObserver: boolean;
-  picture: MediaSet | NftImage | null;
-  coverPicture: MediaSet | NftImage | null;
+  picture: ProfilePictureSet | NftImage | null;
+  coverPicture: ProfileCoverSet | NftImage | null;
   stats: ProfileStats;
   followModule:
     | FeeFollowModuleSettings
@@ -2748,6 +2772,7 @@ export type Profile = { invitedBy: ProfileFields | null } & ProfileFields;
 export type ProfilesToFollowVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ProfilesToFollowData = { result: Array<Profile> };
@@ -2756,6 +2781,7 @@ export type GetProfileVariables = Exact<{
   request: SingleProfileQueryRequest;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetProfileData = { result: Profile | null };
@@ -2769,6 +2795,7 @@ export type GetAllProfilesVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetAllProfilesData = {
@@ -2789,6 +2816,7 @@ export type MutualFollowersProfilesVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type MutualFollowersProfilesData = {
@@ -2878,6 +2906,7 @@ export type ProfileFollowersVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ProfileFollowersData = {
@@ -2890,6 +2919,7 @@ export type ProfileFollowingVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ProfileFollowingData = {
@@ -2929,6 +2959,9 @@ export type GetPublicationVariables = Exact<{
   request: PublicationQueryRequest;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetPublicationData = { result: Comment | Mirror | Post | null };
@@ -2949,6 +2982,9 @@ export type GetPublicationsVariables = Exact<{
   metadata?: InputMaybe<PublicationMetadataFilters>;
   commentsOf?: InputMaybe<Scalars['InternalPublicationId']>;
   walletAddress?: InputMaybe<Scalars['EthereumAddress']>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetPublicationsData = {
@@ -2965,6 +3001,9 @@ export type ExplorePublicationsVariables = Exact<{
   sortCriteria: PublicationSortCriteria;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   timestamp?: InputMaybe<Scalars['TimestampScalar']>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ExplorePublicationsData = {
@@ -2977,6 +3016,7 @@ export type WhoCollectedPublicationVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type WhoCollectedPublicationData = {
@@ -2989,6 +3029,9 @@ export type ProfilePublicationsForSaleVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ProfilePublicationsForSaleData = {
@@ -3025,6 +3068,7 @@ export type WhoReactedPublicationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type WhoReactedPublicationData = {
@@ -3055,6 +3099,9 @@ export type GetPublicationRevenueVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetPublicationRevenueData = { result: PublicationRevenue | null };
@@ -3066,6 +3113,9 @@ export type GetProfilePublicationRevenueVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   publicationTypes?: InputMaybe<Array<PublicationTypes> | PublicationTypes>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetProfilePublicationRevenueData = {
@@ -3089,6 +3139,9 @@ export type SearchPublicationsVariables = Exact<{
   query: Scalars['Search'];
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   observerId?: InputMaybe<Scalars['ProfileId']>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type SearchPublicationsData = {
@@ -3107,6 +3160,7 @@ export type SearchProfilesVariables = Exact<{
   query: Scalars['Search'];
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type SearchProfilesData = {
@@ -3256,10 +3310,19 @@ export const FragmentMedia = /*#__PURE__*/ gql`
     url
   }
 `;
-export const FragmentMediaSet = /*#__PURE__*/ gql`
-  fragment MediaSet on MediaSet {
+export const FragmentPublicationMediaSet = /*#__PURE__*/ gql`
+  fragment PublicationMediaSet on MediaSet {
     __typename
     original {
+      ...Media
+    }
+    optimized {
+      ...Media
+    }
+    small: transformed(params: $mediaTransformPublicationSmall) {
+      ...Media
+    }
+    medium: transformed(params: $mediaTransformPublicationMedium) {
       ...Media
     }
   }
@@ -3444,7 +3507,7 @@ export const FragmentMetadataOutput = /*#__PURE__*/ gql`
     mainContentFocus
     name
     media {
-      ...MediaSet
+      ...PublicationMediaSet
     }
     attributes {
       ...MetadataAttributeOutput
@@ -3454,7 +3517,7 @@ export const FragmentMetadataOutput = /*#__PURE__*/ gql`
     }
     tags
   }
-  ${FragmentMediaSet}
+  ${FragmentPublicationMediaSet}
   ${FragmentMetadataAttributeOutput}
   ${FragmentEncryptionParamsOutput}
 `;
@@ -3466,6 +3529,33 @@ export const FragmentNftImage = /*#__PURE__*/ gql`
     uri
     verified
   }
+`;
+export const FragmentProfilePictureSet = /*#__PURE__*/ gql`
+  fragment ProfilePictureSet on MediaSet {
+    __typename
+    original {
+      ...Media
+    }
+    optimized {
+      ...Media
+    }
+    thumbnail: transformed(params: $mediaTransformProfileThumbnail) {
+      ...Media
+    }
+  }
+  ${FragmentMedia}
+`;
+export const FragmentProfileCoverSet = /*#__PURE__*/ gql`
+  fragment ProfileCoverSet on MediaSet {
+    __typename
+    original {
+      ...Media
+    }
+    optimized {
+      ...Media
+    }
+  }
+  ${FragmentMedia}
 `;
 export const FragmentProfileStats = /*#__PURE__*/ gql`
   fragment ProfileStats on ProfileStats {
@@ -3552,7 +3642,7 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
         ...NftImage
       }
       ... on MediaSet {
-        ...MediaSet
+        ...ProfilePictureSet
       }
     }
     coverPicture {
@@ -3560,7 +3650,7 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
         ...NftImage
       }
       ... on MediaSet {
-        ...MediaSet
+        ...ProfileCoverSet
       }
     }
     stats {
@@ -3612,7 +3702,8 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
     ownedByMe @client
   }
   ${FragmentNftImage}
-  ${FragmentMediaSet}
+  ${FragmentProfilePictureSet}
+  ${FragmentProfileCoverSet}
   ${FragmentProfileStats}
   ${FragmentFeeFollowModuleSettings}
   ${FragmentProfileFollowModuleSettings}
@@ -5040,6 +5131,9 @@ export const FeedDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $sources: [Sources!]!
     $metadata: PublicationMetadataFilters
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: feed(
       request: {
@@ -5082,6 +5176,9 @@ export const FeedDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
  *      metadata: // value for 'metadata'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -5105,6 +5202,9 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: exploreProfiles(
       request: { limit: $limit, cursor: $cursor, sortCriteria: $sortCriteria }
@@ -5138,6 +5238,9 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -5497,6 +5600,9 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $sources: [Sources!]!
     $notificationTypes: [NotificationTypes!]
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: notifications(
       request: {
@@ -5558,6 +5664,9 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
  *      notificationTypes: // value for 'notificationTypes'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -5978,7 +6087,11 @@ export type ProfileGuardianQueryResult = Apollo.QueryResult<
   ProfileGuardianVariables
 >;
 export const ProfilesToFollowDocument = /*#__PURE__*/ gql`
-  query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {
+  query ProfilesToFollow(
+    $observerId: ProfileId
+    $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
+  ) {
     result: recommendedProfiles {
       ...Profile
     }
@@ -6000,6 +6113,7 @@ export const ProfilesToFollowDocument = /*#__PURE__*/ gql`
  *   variables: {
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6032,6 +6146,7 @@ export const GetProfileDocument = /*#__PURE__*/ gql`
     $request: SingleProfileQueryRequest!
     $observerId: ProfileId
     $sources: [Sources!] = []
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: profile(request: $request) {
       ...Profile
@@ -6055,6 +6170,7 @@ export const GetProfileDocument = /*#__PURE__*/ gql`
  *      request: // value for 'request'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6083,6 +6199,7 @@ export const GetAllProfilesDocument = /*#__PURE__*/ gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!] = []
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: profiles(
       request: {
@@ -6126,6 +6243,7 @@ export const GetAllProfilesDocument = /*#__PURE__*/ gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6205,6 +6323,7 @@ export const MutualFollowersProfilesDocument = /*#__PURE__*/ gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: mutualFollowersProfiles(
       request: {
@@ -6243,6 +6362,7 @@ export const MutualFollowersProfilesDocument = /*#__PURE__*/ gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6615,6 +6735,7 @@ export const ProfileFollowersDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: followers(request: { profileId: $profileId, limit: $limit, cursor: $cursor }) {
       items {
@@ -6646,6 +6767,7 @@ export const ProfileFollowersDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6680,6 +6802,7 @@ export const ProfileFollowingDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: following(request: { address: $walletAddress, limit: $limit, cursor: $cursor }) {
       items {
@@ -6711,6 +6834,7 @@ export const ProfileFollowingDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6838,6 +6962,9 @@ export const GetPublicationDocument = /*#__PURE__*/ gql`
     $request: PublicationQueryRequest!
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: publication(request: $request) {
       ... on Post {
@@ -6871,6 +6998,9 @@ export const GetPublicationDocument = /*#__PURE__*/ gql`
  *      request: // value for 'request'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6951,6 +7081,9 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
     $metadata: PublicationMetadataFilters
     $commentsOf: InternalPublicationId
     $walletAddress: EthereumAddress
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: publications(
       request: {
@@ -7007,6 +7140,9 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
  *      metadata: // value for 'metadata'
  *      commentsOf: // value for 'commentsOf'
  *      walletAddress: // value for 'walletAddress'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7045,6 +7181,9 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
     $sortCriteria: PublicationSortCriteria!
     $sources: [Sources!]!
     $timestamp: TimestampScalar
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: explorePublications(
       request: {
@@ -7101,6 +7240,9 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
  *      sortCriteria: // value for 'sortCriteria'
  *      sources: // value for 'sources'
  *      timestamp: // value for 'timestamp'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7137,6 +7279,7 @@ export const WhoCollectedPublicationDocument = /*#__PURE__*/ gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: whoCollectedPublication(
       request: { publicationId: $publicationId, limit: $limit, cursor: $cursor }
@@ -7170,6 +7313,7 @@ export const WhoCollectedPublicationDocument = /*#__PURE__*/ gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7212,6 +7356,9 @@ export const ProfilePublicationsForSaleDocument = /*#__PURE__*/ gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]!
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: profilePublicationsForSale(
       request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
@@ -7251,6 +7398,9 @@ export const ProfilePublicationsForSaleDocument = /*#__PURE__*/ gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7387,6 +7537,7 @@ export const WhoReactedPublicationDocument = /*#__PURE__*/ gql`
     $publicationId: InternalPublicationId!
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: whoReactedPublication(
       request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }
@@ -7420,6 +7571,7 @@ export const WhoReactedPublicationDocument = /*#__PURE__*/ gql`
  *      publicationId: // value for 'publicationId'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7511,6 +7663,9 @@ export const GetPublicationRevenueDocument = /*#__PURE__*/ gql`
     $publicationId: InternalPublicationId!
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: publicationRevenue(request: { publicationId: $publicationId }) {
       ...PublicationRevenue
@@ -7534,6 +7689,9 @@ export const GetPublicationRevenueDocument = /*#__PURE__*/ gql`
  *      publicationId: // value for 'publicationId'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7574,6 +7732,9 @@ export const GetProfilePublicationRevenueDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $publicationTypes: [PublicationTypes!]
     $sources: [Sources!]!
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: profilePublicationRevenue(
       request: {
@@ -7614,6 +7775,9 @@ export const GetProfilePublicationRevenueDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      publicationTypes: // value for 'publicationTypes'
  *      sources: // value for 'sources'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7712,6 +7876,9 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
     $query: Search!
     $sources: [Sources!]!
     $observerId: ProfileId
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: search(
       request: {
@@ -7760,6 +7927,9 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
  *      query: // value for 'query'
  *      sources: // value for 'sources'
  *      observerId: // value for 'observerId'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7796,6 +7966,7 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
     $query: Search!
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
       ... on ProfileSearchResult {
@@ -7830,6 +8001,7 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
  *      query: // value for 'query'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */

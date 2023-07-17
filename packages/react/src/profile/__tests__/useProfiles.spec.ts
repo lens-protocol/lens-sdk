@@ -12,6 +12,10 @@ import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { useProfiles, UseProfilesArgs } from '../useProfiles';
 
@@ -25,6 +29,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfiles(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
         mockGetAllProfilesResponse({
           variables: {
@@ -33,6 +38,7 @@ function setupTestScenario({
             limit: DEFAULT_PAGINATED_QUERY_LIMIT,
             sources,
             observerId: expectedObserverId ?? null,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profiles: result,
         }),

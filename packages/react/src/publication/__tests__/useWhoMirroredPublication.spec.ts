@@ -13,6 +13,10 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
+import {
   useWhoMirroredPublication,
   UseWhoMirroredPublicationArgs,
 } from '../useWhoMirroredPublication';
@@ -28,6 +32,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useWhoMirroredPublication({ publicationId, ...others }), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
         mockGetAllProfilesResponse({
           variables: {
@@ -36,6 +41,7 @@ function setupTestScenario({
             observerId: expectedObserverId ?? null,
             limit: 10,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profiles: result,
         }),

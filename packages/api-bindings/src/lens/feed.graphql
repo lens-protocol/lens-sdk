@@ -68,6 +68,9 @@ query Feed(
   $cursor: Cursor
   $sources: [Sources!]!
   $metadata: PublicationMetadataFilters
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: feed(
     request: {
@@ -95,6 +98,9 @@ query ExploreProfiles(
   $cursor: Cursor
   $observerId: ProfileId
   $sources: [Sources!]!
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: exploreProfiles(
     request: { limit: $limit, cursor: $cursor, sortCriteria: $sortCriteria }

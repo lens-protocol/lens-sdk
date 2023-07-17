@@ -3,10 +3,11 @@ import { PublicationId } from '@lens-protocol/domain/entities';
 
 import { NotFoundError } from '../NotFoundError';
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
@@ -26,12 +27,14 @@ export function usePublication({
     useGetPublication(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            request: {
-              publicationId,
-            },
-            observerId,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              request: {
+                publicationId,
+              },
+              observerId,
+            }),
+          ),
         }),
       ),
     ),

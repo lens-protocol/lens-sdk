@@ -38,12 +38,13 @@ export type {
   Following,
   FollowStatus,
   NftImage,
+  Profile,
   ProfileAttributeReader,
   ProfileAttributes,
-  Profile,
+  ProfileCoverMedia,
   ProfileFields,
-  ProfileMedia,
   ProfileOwnedByMe,
+  ProfilePictureMedia,
   ProfileStats,
 } from '@lens-protocol/api-bindings';
 

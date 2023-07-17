@@ -13,10 +13,15 @@ import {
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { never } from '@lens-protocol/shared-kernel';
 
+import { mediaTransformConfigToQueryVariables, MediaTransformsConfig } from '../../mediaTransforms';
 import { FetchProfileArgs, IProfileCacheManager } from '../adapters/IProfileCacheManager';
 
 export class ProfileCacheManager implements IProfileCacheManager {
-  constructor(private readonly client: SafeApolloClient, private readonly sources: Sources) {}
+  constructor(
+    private readonly client: SafeApolloClient,
+    private readonly sources: Sources,
+    private readonly mediaTransforms: MediaTransformsConfig,
+  ) {}
 
   async fetchProfile(args: FetchProfileArgs) {
     return this.request(args, 'cache-first');
@@ -43,6 +48,7 @@ export class ProfileCacheManager implements IProfileCacheManager {
             },
         observerId: session?.type === SessionType.WithProfile ? session.profile.id : null,
         sources: this.sources,
+        ...mediaTransformConfigToQueryVariables(this.mediaTransforms),
       },
       fetchPolicy,
     });

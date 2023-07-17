@@ -13,6 +13,10 @@ import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { useProfilesOwnedBy, UseProfilesOwnedByArgs } from '../useProfilesOwnedBy';
 
 function setupTestScenario({
@@ -26,6 +30,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfilesOwnedBy({ address, ...others }), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
         mockGetAllProfilesResponse({
           variables: {
@@ -34,6 +39,7 @@ function setupTestScenario({
             observerId: expectedObserverId ?? null,
             limit: 10,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profiles: result,
         }),

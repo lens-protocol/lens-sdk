@@ -2,10 +2,11 @@ import { AnyPublication, PublicationTypes, useGetPublications } from '@lens-prot
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
@@ -34,13 +35,15 @@ export function usePublications({
     useGetPublications(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            profileId,
-            observerId,
-            limit,
-            publicationTypes,
-            metadata: createPublicationMetadataFilters(metadataFilter),
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              profileId,
+              observerId,
+              limit,
+              publicationTypes,
+              metadata: createPublicationMetadataFilters(metadataFilter),
+            }),
+          ),
         }),
       ),
     ),
