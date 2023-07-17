@@ -68,6 +68,7 @@ export type FeedItemFragment = {
 export type FeedQueryVariables = Types.Exact<{
   request: Types.FeedRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformParams: Types.MediaTransformParams;
 }>;
 
 export type FeedQuery = {
@@ -77,6 +78,7 @@ export type FeedQuery = {
 export type FeedHighlightsQueryVariables = Types.Exact<{
   request: Types.FeedHighlightsRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformParams: Types.MediaTransformParams;
 }>;
 
 export type FeedHighlightsQuery = {
@@ -163,7 +165,11 @@ export const FeedItemFragmentDoc = gql`
   ${ReactionEventFragmentDoc}
 `;
 export const FeedDocument = gql`
-  query Feed($request: FeedRequest!, $observerId: ProfileId) {
+  query Feed(
+    $request: FeedRequest!
+    $observerId: ProfileId
+    $mediaTransformParams: MediaTransformParams!
+  ) {
     result: feed(request: $request) {
       items {
         ...FeedItem
@@ -177,7 +183,11 @@ export const FeedDocument = gql`
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 export const FeedHighlightsDocument = gql`
-  query FeedHighlights($request: FeedHighlightsRequest!, $observerId: ProfileId) {
+  query FeedHighlights(
+    $request: FeedHighlightsRequest!
+    $observerId: ProfileId
+    $mediaTransformParams: MediaTransformParams!
+  ) {
     result: feedHighlights(request: $request) {
       items {
         ... on Post {

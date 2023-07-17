@@ -1,13 +1,15 @@
-import { invariant } from '@lens-protocol/shared-kernel';
+import { Prettify, invariant } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
+import { defaultMediaTransformParams } from '../consts/defaults';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type {
   CommentFragment,
   PostFragment,
   ProfileFragment,
 } from '../graphql/fragments.generated';
+import { MediaTransformParams } from '../graphql/types.generated';
 import { buildPaginatedQueryResult, PaginatedResult, provideAuthHeaders } from '../helpers';
 import {
   getSdk,
@@ -15,6 +17,18 @@ import {
   SearchProfilesQueryVariables,
   SearchPublicationsQueryVariables,
 } from './graphql/search.generated';
+
+export type SearchProfilesQuery = Prettify<
+  Omit<SearchProfilesQueryVariables, 'mediaTransformParams'> & {
+    mediaTransformParams?: MediaTransformParams;
+  }
+>;
+
+export type SearchPublicationsQuery = Prettify<
+  Omit<SearchPublicationsQueryVariables, 'mediaTransformParams'> & {
+    mediaTransformParams?: MediaTransformParams;
+  }
+>;
 
 /**
  * Search for profiles and publications.
@@ -45,7 +59,12 @@ export class Search {
    * });
    * ```
    */
-  async profiles(request: SearchProfilesQueryVariables): Promise<PaginatedResult<ProfileFragment>> {
+  async profiles(request: SearchProfilesQuery): Promise<PaginatedResult<ProfileFragment>> {
+    const actualRequest = {
+      ...request,
+      mediaTransformParams: request.mediaTransformParams ?? defaultMediaTransformParams,
+    };
+
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (variables) => {
         const response = await this.sdk.SearchProfiles(variables, headers);
@@ -57,7 +76,7 @@ export class Search {
         );
 
         return result;
-      }, request);
+      }, actualRequest);
     });
   }
 
@@ -75,8 +94,13 @@ export class Search {
    * ```
    */
   async publications(
-    request: SearchPublicationsQueryVariables,
+    request: SearchPublicationsQuery,
   ): Promise<PaginatedResult<CommentFragment | PostFragment>> {
+    const actualRequest = {
+      ...request,
+      mediaTransformParams: request.mediaTransformParams ?? defaultMediaTransformParams,
+    };
+
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (variables) => {
         const response = await this.sdk.SearchPublications(variables, headers);
@@ -88,7 +112,7 @@ export class Search {
         );
 
         return result;
-      }, request);
+      }, actualRequest);
     });
   }
 }

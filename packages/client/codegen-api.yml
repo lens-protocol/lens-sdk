@@ -24,12 +24,12 @@ config:
     FollowModuleData: string
     Handle: string
     HandleClaimIdScalar: string
-    IpfsCid: string
+    ImageSizeTransform: string
     InternalPublicationId: string
+    IpfsCid: string
     Jwt: string
     LimitScalar: number
     Locale: string
-    ImageSizeTransform: string
     Markdown: string
     Media: string
     MimeType: string

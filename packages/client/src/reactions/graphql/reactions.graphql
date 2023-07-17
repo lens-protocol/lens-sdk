@@ -16,7 +16,11 @@ fragment WhoReactedResult on WhoReactedResult {
   }
 }
 
-query WhoReactedPublication($request: WhoReactedPublicationRequest!, $observerId: ProfileId) {
+query WhoReactedPublication(
+  $request: WhoReactedPublicationRequest!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: whoReactedPublication(request: $request) {
     items {
       ...WhoReactedResult

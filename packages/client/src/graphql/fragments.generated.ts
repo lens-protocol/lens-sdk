@@ -218,7 +218,13 @@ export type MediaFragment = {
   url: string;
 };
 
-export type MediaSetFragment = { __typename: 'MediaSet'; original: MediaFragment };
+export type MediaSetFragment = {
+  __typename: 'MediaSet';
+  onChain: MediaFragment;
+  original: MediaFragment;
+  optimized: MediaFragment | null;
+  transformed: MediaFragment | null;
+};
 
 export type MetadataFragment = {
   __typename: 'MetadataOutput';
@@ -419,7 +425,16 @@ export const MediaFragmentDoc = gql`
 export const MediaSetFragmentDoc = gql`
   fragment MediaSet on MediaSet {
     __typename
+    onChain {
+      ...Media
+    }
     original {
+      ...Media
+    }
+    optimized {
+      ...Media
+    }
+    transformed(params: $mediaTransformParams) {
       ...Media
     }
   }

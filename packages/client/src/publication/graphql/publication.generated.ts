@@ -122,6 +122,7 @@ export type CreateCollectTypedDataFragment = {
 export type PublicationQueryVariables = Types.Exact<{
   request: Types.PublicationQueryRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformParams: Types.MediaTransformParams;
 }>;
 
 export type PublicationQuery = { result: CommentFragment | MirrorFragment | PostFragment | null };
@@ -142,6 +143,7 @@ export type PublicationStatsQuery = {
 export type PublicationsQueryVariables = Types.Exact<{
   request: Types.PublicationsQueryRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformParams: Types.MediaTransformParams;
 }>;
 
 export type PublicationsQuery = {
@@ -166,6 +168,7 @@ export type ValidatePublicationMetadataQuery = {
 export type WhoCollectedPublicationQueryVariables = Types.Exact<{
   request: Types.WhoCollectedPublicationRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformParams: Types.MediaTransformParams;
 }>;
 
 export type WhoCollectedPublicationQuery = {
@@ -175,6 +178,7 @@ export type WhoCollectedPublicationQuery = {
 export type ProfilePublicationsForSaleQueryVariables = Types.Exact<{
   request: Types.ProfilePublicationsForSaleRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformParams: Types.MediaTransformParams;
 }>;
 
 export type ProfilePublicationsForSaleQuery = {
@@ -454,7 +458,11 @@ export const CreateCollectTypedDataFragmentDoc = gql`
   ${Eip712TypedDataDomainFragmentDoc}
 `;
 export const PublicationDocument = gql`
-  query Publication($request: PublicationQueryRequest!, $observerId: ProfileId) {
+  query Publication(
+    $request: PublicationQueryRequest!
+    $observerId: ProfileId
+    $mediaTransformParams: MediaTransformParams!
+  ) {
     result: publication(request: $request) {
       ... on Post {
         ...Post
@@ -494,7 +502,11 @@ export const PublicationStatsDocument = gql`
   ${PublicationStatsFragmentDoc}
 `;
 export const PublicationsDocument = gql`
-  query Publications($request: PublicationsQueryRequest!, $observerId: ProfileId) {
+  query Publications(
+    $request: PublicationsQueryRequest!
+    $observerId: ProfileId
+    $mediaTransformParams: MediaTransformParams!
+  ) {
     result: publications(request: $request) {
       items {
         ... on Post {
@@ -527,7 +539,11 @@ export const ValidatePublicationMetadataDocument = gql`
   }
 `;
 export const WhoCollectedPublicationDocument = gql`
-  query WhoCollectedPublication($request: WhoCollectedPublicationRequest!, $observerId: ProfileId) {
+  query WhoCollectedPublication(
+    $request: WhoCollectedPublicationRequest!
+    $observerId: ProfileId
+    $mediaTransformParams: MediaTransformParams!
+  ) {
     result: whoCollectedPublication(request: $request) {
       items {
         ...Wallet
@@ -544,6 +560,7 @@ export const ProfilePublicationsForSaleDocument = gql`
   query ProfilePublicationsForSale(
     $request: ProfilePublicationsForSaleRequest!
     $observerId: ProfileId
+    $mediaTransformParams: MediaTransformParams!
   ) {
     result: profilePublicationsForSale(request: $request) {
       items {

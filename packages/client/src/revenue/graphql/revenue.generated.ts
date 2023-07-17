@@ -24,6 +24,7 @@ import {
 export type ProfilePublicationRevenueQueryVariables = Types.Exact<{
   request: Types.ProfilePublicationRevenueQueryRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformParams: Types.MediaTransformParams;
 }>;
 
 export type ProfilePublicationRevenueQuery = {
@@ -33,6 +34,7 @@ export type ProfilePublicationRevenueQuery = {
 export type PublicationRevenueQueryVariables = Types.Exact<{
   request: Types.PublicationRevenueQueryRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformParams: Types.MediaTransformParams;
 }>;
 
 export type PublicationRevenueQuery = { result: PublicationRevenueFragment | null };
@@ -90,6 +92,7 @@ export const ProfilePublicationRevenueDocument = gql`
   query ProfilePublicationRevenue(
     $request: ProfilePublicationRevenueQueryRequest!
     $observerId: ProfileId
+    $mediaTransformParams: MediaTransformParams!
   ) {
     result: profilePublicationRevenue(request: $request) {
       items {
@@ -104,7 +107,11 @@ export const ProfilePublicationRevenueDocument = gql`
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 export const PublicationRevenueDocument = gql`
-  query PublicationRevenue($request: PublicationRevenueQueryRequest!, $observerId: ProfileId) {
+  query PublicationRevenue(
+    $request: PublicationRevenueQueryRequest!
+    $observerId: ProfileId
+    $mediaTransformParams: MediaTransformParams!
+  ) {
     result: publicationRevenue(request: $request) {
       ...PublicationRevenue
     }

@@ -94,7 +94,11 @@ fragment NewReactionNotification on NewReactionNotification {
   }
 }
 
-query Notifications($request: NotificationRequest!, $observerId: ProfileId) {
+query Notifications(
+  $request: NotificationRequest!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: notifications(request: $request) {
     items {
       ... on NewFollowerNotification {

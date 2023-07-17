@@ -1,5 +1,9 @@
 # queries
-query Profile($request: SingleProfileQueryRequest!, $observerId: ProfileId) {
+query Profile(
+  $request: SingleProfileQueryRequest!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: profile(request: $request) {
     ...Profile
   }
@@ -29,7 +33,11 @@ query ProfileStats($request: SingleProfileQueryRequest!, $sources: [Sources!]!) 
   }
 }
 
-query Profiles($request: ProfileQueryRequest!, $observerId: ProfileId) {
+query Profiles(
+  $request: ProfileQueryRequest!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: profiles(request: $request) {
     items {
       ...Profile
@@ -41,7 +49,11 @@ query Profiles($request: ProfileQueryRequest!, $observerId: ProfileId) {
   }
 }
 
-query RecommendedProfiles($options: RecommendedProfileOptions!, $observerId: ProfileId) {
+query RecommendedProfiles(
+  $options: RecommendedProfileOptions!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: recommendedProfiles(options: $options) {
     ...Profile
   }
@@ -50,6 +62,7 @@ query RecommendedProfiles($options: RecommendedProfileOptions!, $observerId: Pro
 query MutualFollowersProfiles(
   $request: MutualFollowersProfilesQueryRequest!
   $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
 ) {
   result: mutualFollowersProfiles(request: $request) {
     items {
@@ -72,7 +85,11 @@ query DoesFollow($request: DoesFollowRequest!) {
   }
 }
 
-query Following($request: FollowingRequest!, $observerId: ProfileId) {
+query Following(
+  $request: FollowingRequest!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: following(request: $request) {
     items {
       ...Following
@@ -84,7 +101,11 @@ query Following($request: FollowingRequest!, $observerId: ProfileId) {
   }
 }
 
-query Followers($request: FollowersRequest!, $observerId: ProfileId) {
+query Followers(
+  $request: FollowersRequest!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: followers(request: $request) {
     items {
       ...Follower
@@ -104,7 +125,11 @@ query FollowerNftOwnedTokenIds($request: FollowerNftOwnedTokenIdsRequest!) {
   }
 }
 
-query PendingApprovalFollows($request: PendingApprovalFollowsRequest!, $observerId: ProfileId) {
+query PendingApprovalFollows(
+  $request: PendingApprovalFollowsRequest!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: pendingApprovalFollows(request: $request) {
     items {
       ...Profile

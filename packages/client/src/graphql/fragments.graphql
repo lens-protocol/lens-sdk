@@ -276,7 +276,16 @@ fragment Media on Media {
 
 fragment MediaSet on MediaSet {
   __typename
+  onChain {
+    ...Media
+  }
   original {
+    ...Media
+  }
+  optimized {
+    ...Media
+  }
+  transformed(params: $mediaTransformParams) {
     ...Media
   }
 }

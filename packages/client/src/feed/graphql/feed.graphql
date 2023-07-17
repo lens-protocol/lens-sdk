@@ -60,7 +60,11 @@ fragment FeedItem on FeedItem {
   }
 }
 
-query Feed($request: FeedRequest!, $observerId: ProfileId) {
+query Feed(
+  $request: FeedRequest!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: feed(request: $request) {
     items {
       ...FeedItem
@@ -71,7 +75,11 @@ query Feed($request: FeedRequest!, $observerId: ProfileId) {
   }
 }
 
-query FeedHighlights($request: FeedHighlightsRequest!, $observerId: ProfileId) {
+query FeedHighlights(
+  $request: FeedHighlightsRequest!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: feedHighlights(request: $request) {
     items {
       ... on Post {

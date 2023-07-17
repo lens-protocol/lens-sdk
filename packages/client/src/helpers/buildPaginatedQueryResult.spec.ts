@@ -1,6 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { buildTestEnvironment } from '../__helpers__';
+import { defaultMediaTransformParams } from '../consts/defaults';
 import { getSdk } from '../profile/graphql/profile.generated';
 import { buildPaginatedQueryResult } from './buildPaginatedQueryResult';
 
@@ -13,6 +14,8 @@ describe('Given a paginated query function and the paginated query result helper
       async (currRequest) => {
         const res = await sdk.Profiles({
           request: currRequest,
+          observerId: undefined,
+          mediaTransformParams: defaultMediaTransformParams,
         });
 
         return res.data.result;
@@ -28,6 +31,8 @@ describe('Given a paginated query function and the paginated query result helper
       async (currRequest) => {
         const res = await sdk.Profiles({
           request: currRequest,
+          observerId: undefined,
+          mediaTransformParams: defaultMediaTransformParams,
         });
 
         return res.data.result;
@@ -51,6 +56,8 @@ describe('Given a paginated query function and the paginated query result helper
       async (currRequest) => {
         const res = await sdk.Profiles({
           request: currRequest,
+          observerId: undefined,
+          mediaTransformParams: defaultMediaTransformParams,
         });
 
         return res.data.result;

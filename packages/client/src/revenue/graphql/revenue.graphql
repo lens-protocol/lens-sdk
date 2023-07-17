@@ -1,6 +1,7 @@
 query ProfilePublicationRevenue(
   $request: ProfilePublicationRevenueQueryRequest!
   $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
 ) {
   result: profilePublicationRevenue(request: $request) {
     items {
@@ -13,7 +14,11 @@ query ProfilePublicationRevenue(
   }
 }
 
-query PublicationRevenue($request: PublicationRevenueQueryRequest!, $observerId: ProfileId) {
+query PublicationRevenue(
+  $request: PublicationRevenueQueryRequest!
+  $observerId: ProfileId
+  $mediaTransformParams: MediaTransformParams!
+) {
   result: publicationRevenue(request: $request) {
     ...PublicationRevenue
   }

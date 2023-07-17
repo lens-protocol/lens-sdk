@@ -1,7 +1,9 @@
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
+import { defaultMediaTransformParams } from '../consts/defaults';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type {
+  MediaTransformParams,
   ProfileFollowRevenueQueryRequest,
   ProfilePublicationRevenueQueryRequest,
   PublicationRevenueQueryRequest,
@@ -36,6 +38,7 @@ export class Revenue {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
+   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Array of {@link PublicationRevenueFragment} wrapped in {@link PaginatedResult}
    *
    * @example
@@ -48,6 +51,7 @@ export class Revenue {
   async profilePublication(
     request: ProfilePublicationRevenueQueryRequest,
     observerId?: string,
+    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PaginatedResult<PublicationRevenueFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
@@ -55,6 +59,7 @@ export class Revenue {
           {
             request: currRequest,
             observerId,
+            mediaTransformParams,
           },
           headers,
         );
@@ -97,6 +102,7 @@ export class Revenue {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
+   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Publication revenue
    *
    * @example
@@ -109,12 +115,14 @@ export class Revenue {
   async publication(
     request: PublicationRevenueQueryRequest,
     observerId?: string,
+    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PublicationRevenueFragment | null> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.PublicationRevenue(
         {
           request,
           observerId,
+          mediaTransformParams,
         },
         headers,
       );
