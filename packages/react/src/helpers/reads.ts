@@ -51,10 +51,9 @@ export type ReadResult<T, E = UnspecifiedError> = E extends Error
 
 function buildReadResult<T>(
   data: T | undefined,
-  loading: boolean,
   error: ApolloError | undefined,
 ): ReadResult<T, UnspecifiedError> {
-  if (data !== undefined && !loading) {
+  if (data !== undefined) {
     return {
       data,
       error: undefined,
@@ -85,8 +84,8 @@ export function useReadResult<
   T extends QueryData<R>,
   R = InferResult<T>,
   V = { [key: string]: never },
->({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
-  return buildReadResult(data?.result, loading, error);
+>({ error, data }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
+  return buildReadResult(data?.result, error);
 }
 
 export type PaginatedArgs<T> = Prettify<
@@ -136,9 +135,9 @@ export function usePaginatedReadResult<
   V,
   T extends PaginatedQueryData<K>,
   K = InferPaginatedItemsType<T>,
->({ error, data, loading, fetchMore }: ApolloQueryResult<T, V>): PaginatedReadResult<K> {
+>({ error, data, fetchMore }: ApolloQueryResult<T, V>): PaginatedReadResult<K> {
   return {
-    ...buildReadResult<K>(data?.result.items, loading, error),
+    ...buildReadResult<K>(data?.result.items, error),
 
     hasMore: data?.result.pageInfo.moreAfter ?? false,
 

@@ -79,6 +79,8 @@ export class SafeApolloClient<TCacheShape extends NormalizedCacheObject = Normal
         },
         watchQuery: {
           errorPolicy: 'none',
+          fetchPolicy: 'cache-and-network',
+          nextFetchPolicy: 'cache-first',
         },
       },
       link,

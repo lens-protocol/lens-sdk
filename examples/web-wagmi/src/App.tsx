@@ -121,41 +121,31 @@ export function App() {
                   element={<LoginSpecificProfile />}
                 />
 
-                <Route path="/publications" element={<PublicationsPage />} />
-                <Route path="/publications/usePublication" element={<UsePublication />} />
-                <Route path="/publications/usePublications" element={<UsePublications />} />
-                <Route path="/publications/useComments" element={<UsePublication />} />
-                <Route
-                  path="/publications/useCollectedPublications"
-                  element={<UseCollectedPublications />}
-                />
-                <Route path="/publications/useCreatePost" element={<UseCreatePost />} />
-                <Route
-                  path="/publications/useCreateEncryptedPost"
-                  element={<UseCreateEncryptedPost />}
-                />
-                <Route path="/publications/useCreateComment" element={<UseCreateComment />} />
-                <Route
-                  path="/publications/useProfilePublicationsForSale"
-                  element={<UseProfilePublicationsForSale />}
-                />
-                <Route path="/publications/useReaction" element={<UseReaction />} />
-                <Route path="/publications/useWhoReacted" element={<UseWhoReacted />} />
-                <Route
-                  path="/publications/useReportPublication"
-                  element={<UseReportPublication />}
-                />
-                <Route path="/publications/useHidePublication" element={<UseHidePublication />} />
-                <Route
-                  path="/publications/useWhoCollectedPublication"
-                  element={<UseWhoCollectedPublication />}
-                />
-                <Route path="/publications/UseCreateMirror" element={<UseCreateMirror />} />
-                <Route
-                  path="/publications/useWhoMirroredPublication"
-                  element={<UseWhoMirroredPublication />}
-                />
-                <Route path="/publications/useCollect" element={<UseCollect />} />
+                <Route path="/publications">
+                  <Route index element={<PublicationsPage />} />
+                  <Route path="usePublication" element={<UsePublication />} />
+                  <Route path="usePublications" element={<UsePublications />} />
+                  <Route path="useComments" element={<UsePublication />} />
+                  <Route path="useCollectedPublications" element={<UseCollectedPublications />} />
+                  <Route path="useCreatePost" element={<UseCreatePost />} />
+                  <Route path="useCreateEncryptedPost" element={<UseCreateEncryptedPost />} />
+                  <Route path="useCreateComment" element={<UseCreateComment />} />
+                  <Route
+                    path="useProfilePublicationsForSale"
+                    element={<UseProfilePublicationsForSale />}
+                  />
+                  <Route path="useReaction" element={<UseReaction />} />
+                  <Route path="useWhoReacted" element={<UseWhoReacted />} />
+                  <Route path="useReportPublication" element={<UseReportPublication />} />
+                  <Route path="useHidePublication" element={<UseHidePublication />} />
+                  <Route
+                    path="useWhoCollectedPublication"
+                    element={<UseWhoCollectedPublication />}
+                  />
+                  <Route path="UseCreateMirror" element={<UseCreateMirror />} />
+                  <Route path="useWhoMirroredPublication" element={<UseWhoMirroredPublication />} />
+                  <Route path="useCollect" element={<UseCollect />} />
+                </Route>
 
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="/profiles/useCreateProfile" element={<UseCreateProfile />} />
