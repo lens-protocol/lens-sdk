@@ -29,6 +29,7 @@ import type {
   FollowRequest,
   MutualFollowersProfilesQueryRequest,
   PendingApprovalFollowsRequest,
+  ProfileGuardianRequest,
   ProfileQueryRequest,
   RecommendedProfileOptions,
   RemoveProfileInterestsRequest,
@@ -48,6 +49,7 @@ import {
   BurnProfileTypedDataFragment,
   FollowTypedDataFragment,
   getSdk,
+  ProfileGuardianResultFragment,
   ProfileStatsFragment,
   Sdk,
   SetDefaultProfileTypedDataFragment,
@@ -914,6 +916,36 @@ export class Profile {
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.RemoveProfileInterest({ request }, headers);
+    });
+  }
+
+  /**
+   * Fetch profile guardian settings for the specified profile.
+   *
+   * ⚠️ Requires authenticated LensClient with the provided profileId.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link ProfileGuardianResultFragment}
+   *
+   * @example
+   * ```ts
+   * await client.profile.profileGuardian({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
+  async profileGuardian(
+    request: ProfileGuardianRequest,
+  ): PromiseResult<ProfileGuardianResultFragment, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.ProfileGuardian(
+        {
+          request,
+        },
+        headers,
+      );
+
+      return result.data.result;
     });
   }
 }
