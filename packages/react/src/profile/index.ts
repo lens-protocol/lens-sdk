@@ -41,6 +41,7 @@ export type {
   ProfileAttributeReader,
   ProfileAttributes,
   Profile,
+  ProfileFields,
   ProfileMedia,
   ProfileOwnedByMe,
   ProfileStats,

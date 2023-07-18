@@ -52,7 +52,7 @@ fragment ProfileStats on ProfileStats {
   mirrorsCount: mirrorsTotal(forSources: $sources)
 }
 
-fragment Profile on Profile {
+fragment ProfileFields on Profile {
   __typename
   id
   name
@@ -138,6 +138,14 @@ fragment Profile on Profile {
 
   followStatus @client
   ownedByMe @client
+}
+
+fragment Profile on Profile {
+  ...ProfileFields
+
+  invitedBy {
+    ...ProfileFields
+  }
 }
 
 query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {

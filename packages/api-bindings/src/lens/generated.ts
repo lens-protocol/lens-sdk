@@ -2710,7 +2710,7 @@ export type ProfileStats = {
   mirrorsCount: number;
 };
 
-export type Profile = {
+export type ProfileFields = {
   __typename: 'Profile';
   id: ProfileId;
   name: string | null;
@@ -2742,6 +2742,8 @@ export type Profile = {
     worldcoin: { isHuman: boolean };
   };
 };
+
+export type Profile = { invitedBy: ProfileFields | null } & ProfileFields;
 
 export type ProfilesToFollowVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
@@ -3536,8 +3538,8 @@ export const FragmentAttribute = /*#__PURE__*/ gql`
     value
   }
 `;
-export const FragmentProfile = /*#__PURE__*/ gql`
-  fragment Profile on Profile {
+export const FragmentProfileFields = /*#__PURE__*/ gql`
+  fragment ProfileFields on Profile {
     __typename
     id
     name
@@ -3617,6 +3619,15 @@ export const FragmentProfile = /*#__PURE__*/ gql`
   ${FragmentRevertFollowModuleSettings}
   ${FragmentUnknownFollowModuleSettings}
   ${FragmentAttribute}
+`;
+export const FragmentProfile = /*#__PURE__*/ gql`
+  fragment Profile on Profile {
+    ...ProfileFields
+    invitedBy {
+      ...ProfileFields
+    }
+  }
+  ${FragmentProfileFields}
 `;
 export const FragmentWallet = /*#__PURE__*/ gql`
   fragment Wallet on Wallet {

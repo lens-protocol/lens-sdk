@@ -21,6 +21,7 @@ export function ProfileCard({ profile }: ProfileCardProps) {
           </li>
         ))}
       </ul>
+      {profile.invitedBy && <p>Invited by: {profile.invitedBy.handle}</p>}
     </article>
   );
 }
