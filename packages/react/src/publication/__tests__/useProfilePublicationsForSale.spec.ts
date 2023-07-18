@@ -2,7 +2,7 @@ import { ContentPublication } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockPostFragment,
-  createProfilePublicationsForSaleMockedResponse,
+  mockProfilePublicationsForSaleResponse,
   mockSources,
   simulateAuthenticatedProfile,
   simulateNotAuthenticated,
@@ -31,7 +31,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createProfilePublicationsForSaleMockedResponse({
+        mockProfilePublicationsForSaleResponse({
           variables: {
             ...args,
             limit: 10,

@@ -1,7 +1,7 @@
 import { Profile, FragmentProfile, SingleProfileQueryRequest } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockProfileFragment,
   mockSources,
   simulateAuthenticatedProfile,
@@ -25,7 +25,7 @@ function setupTestScenario({
 }) {
   const sources = mockSources();
   const client = mockLensApolloClient([
-    createGetProfileMockedResponse({
+    mockGetProfileResponse({
       profile: profile,
       variables: {
         request: expectedRequest,

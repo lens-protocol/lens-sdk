@@ -1,6 +1,6 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
-  createGetAllProfilesMockedResponse,
+  mockGetAllProfilesResponse,
   mockLensApolloClient,
   mockProfileFragment,
   mockSources,
@@ -31,7 +31,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createGetAllProfilesMockedResponse({
+        mockGetAllProfilesResponse({
           variables: {
             ...args,
             byOwnerAddresses: [address],

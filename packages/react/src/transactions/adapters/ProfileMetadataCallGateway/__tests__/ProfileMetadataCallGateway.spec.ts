@@ -2,11 +2,11 @@ import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 import { Profile, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
-  createCreateSetProfileMetadataTypedDataMockedResponse,
-  createCreateSetProfileMetadataViaDispatcherMockedResponse,
+  mockCreateSetProfileMetadataTypedDataResponse,
+  mockCreateSetProfileMetadataViaDispatcherResponse,
   mockLensApolloClient,
   mockCreateSetProfileMetadataTypedDataData,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockProfileFragment,
   mockRelayerResultFragment,
   mockRelayErrorFragment,
@@ -34,7 +34,7 @@ function setupTestScenario({
   otherMockedResponses?: MockedResponse<unknown>[];
   uploadUrl: Url;
 }) {
-  const getProfilesByIdQueryMockedResponse = createGetProfileMockedResponse({
+  const getProfilesByIdQueryMockedResponse = mockGetProfileResponse({
     variables: {
       request: { profileId: existingProfile.id },
       sources: [],
@@ -71,7 +71,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         existingProfile,
         uploadUrl,
         otherMockedResponses: [
-          createCreateSetProfileMetadataTypedDataMockedResponse({
+          mockCreateSetProfileMetadataTypedDataResponse({
             request: {
               profileId: request.profileId,
               metadata: uploadUrl,
@@ -100,7 +100,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         existingProfile,
         uploadUrl,
         otherMockedResponses: [
-          createCreateSetProfileMetadataTypedDataMockedResponse({
+          mockCreateSetProfileMetadataTypedDataResponse({
             request: {
               profileId: request.profileId,
               metadata: uploadUrl,
@@ -127,7 +127,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         existingProfile,
         uploadUrl,
         otherMockedResponses: [
-          createCreateSetProfileMetadataViaDispatcherMockedResponse({
+          mockCreateSetProfileMetadataViaDispatcherResponse({
             variables: {
               request: {
                 profileId: request.profileId,
@@ -171,7 +171,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
           existingProfile,
           uploadUrl,
           otherMockedResponses: [
-            createCreateSetProfileMetadataViaDispatcherMockedResponse({
+            mockCreateSetProfileMetadataViaDispatcherResponse({
               variables: {
                 request: {
                   profileId: request.profileId,
@@ -183,7 +183,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
               },
             }),
 
-            createCreateSetProfileMetadataTypedDataMockedResponse({
+            mockCreateSetProfileMetadataTypedDataResponse({
               request: {
                 profileId: request.profileId,
                 metadata: uploadUrl,

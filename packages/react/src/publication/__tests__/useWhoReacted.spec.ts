@@ -1,7 +1,7 @@
 import { WhoReactedResult } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createWhoReactedPublicationMockedResponse,
+  mockWhoReactedPublicationResponse,
   mockSources,
   mockWhoReactedResultFragment,
   simulateAuthenticatedProfile,
@@ -28,7 +28,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createWhoReactedPublicationMockedResponse({
+        mockWhoReactedPublicationResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,

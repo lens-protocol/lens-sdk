@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockMediaFragment,
   mockProfileFragment,
   mockProfileMediaFragment,
@@ -24,7 +24,7 @@ type SetupTestScenarioArgs = {
 function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioArgs) {
   const sources = mockSources();
   const apolloClient = mockLensApolloClient([
-    createGetProfileMockedResponse({
+    mockGetProfileResponse({
       profile: responseProfile,
       variables: {
         request: {

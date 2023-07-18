@@ -1,7 +1,7 @@
 import { ContentPublication } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createSearchPublicationsMockedResponse,
+  mockSearchPublicationsResponse,
   mockCommentFragment,
   mockPostFragment,
   mockSources,
@@ -29,7 +29,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createSearchPublicationsMockedResponse({
+        mockSearchPublicationsResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,

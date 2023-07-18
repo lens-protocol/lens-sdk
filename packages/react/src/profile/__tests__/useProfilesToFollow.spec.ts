@@ -2,7 +2,7 @@ import { Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockProfileFragment,
-  createProfilesToFollowMockedResponse,
+  mockProfilesToFollowResponse,
   mockSources,
   simulateAuthenticatedProfile,
   simulateAuthenticatedWallet,
@@ -28,7 +28,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createProfilesToFollowMockedResponse({
+        mockProfilesToFollowResponse({
           variables: {
             observerId: expectedObserverId ?? null,
             sources,

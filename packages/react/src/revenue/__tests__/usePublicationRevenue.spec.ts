@@ -1,7 +1,7 @@
 import { PublicationRevenue } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetPublicationRevenueMockedResponse,
+  mockGetPublicationRevenueResponse,
   mockPublicationRevenueFragment,
   mockSources,
   simulateAuthenticatedProfile,
@@ -29,7 +29,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createGetPublicationRevenueMockedResponse({
+        mockGetPublicationRevenueResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,

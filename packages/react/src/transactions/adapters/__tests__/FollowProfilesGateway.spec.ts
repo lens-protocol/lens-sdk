@@ -8,7 +8,7 @@ import {
 import {
   mockCreateFollowTypedDataData,
   mockLensApolloClient,
-  createBroadcastProxyActionCallMockedResponse,
+  mockBroadcastProxyActionCallResponse,
   createBroadcastProxyActionCallMockedError,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProxyActionStatus, ProxyTransaction } from '@lens-protocol/domain/entities';
@@ -43,7 +43,7 @@ jest.mock('@lens-protocol/shared-kernel', () => {
   };
 });
 
-function createCreateFollowTypedDataMutationMockedResponse({
+function mockCreateFollowTypedDataMutationResponse({
   variables,
   data,
 }: {
@@ -87,7 +87,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
         const data = mockCreateFollowTypedDataData();
 
         const apollo = mockLensApolloClient([
-          createCreateFollowTypedDataMutationMockedResponse({
+          mockCreateFollowTypedDataMutationResponse({
             variables: {
               request: {
                 follow: [
@@ -116,7 +116,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
         const data = mockCreateFollowTypedDataData();
 
         const apollo = mockLensApolloClient([
-          createCreateFollowTypedDataMutationMockedResponse({
+          mockCreateFollowTypedDataMutationResponse({
             variables: {
               request: {
                 follow: [
@@ -150,7 +150,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
         const data = mockCreateFollowTypedDataData();
 
         const apollo = mockLensApolloClient([
-          createCreateFollowTypedDataMutationMockedResponse({
+          mockCreateFollowTypedDataMutationResponse({
             variables: {
               request: {
                 follow: [
@@ -185,7 +185,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
       const request = mockUnconstrainedFollowRequest();
       const nonce = mockNonce();
       const apollo = mockLensApolloClient([
-        createCreateFollowTypedDataMutationMockedResponse({
+        mockCreateFollowTypedDataMutationResponse({
           variables: {
             request: {
               follow: [
@@ -216,7 +216,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
     it(`should succeed with ${ProxyTransaction.name} on Polygon`, async () => {
       const indexingId = 'indexing-id';
       const apollo = mockLensApolloClient([
-        createBroadcastProxyActionCallMockedResponse({
+        mockBroadcastProxyActionCallResponse({
           result: indexingId,
           variables: {
             request: {
@@ -271,7 +271,7 @@ describe(`Given an instance of the ${FollowProfilesGateway.name}`, () => {
             },
           },
         }),
-        createCreateFollowTypedDataMutationMockedResponse({
+        mockCreateFollowTypedDataMutationResponse({
           variables: {
             request: {
               follow: [

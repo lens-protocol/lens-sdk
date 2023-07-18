@@ -1,6 +1,6 @@
 import { Profile, ProfileSortCriteria } from '@lens-protocol/api-bindings';
 import {
-  createExploreProfilesMockedResponse,
+  mockExploreProfilesResponse,
   mockLensApolloClient,
   mockProfileFragment,
   mockSources,
@@ -28,7 +28,7 @@ function setupTestScenario({
       mocks: {
         sources,
         apolloClient: mockLensApolloClient([
-          createExploreProfilesMockedResponse({
+          mockExploreProfilesResponse({
             variables: {
               limit: DEFAULT_PAGINATED_QUERY_LIMIT,
               sortCriteria: ProfileSortCriteria.CreatedOn,
