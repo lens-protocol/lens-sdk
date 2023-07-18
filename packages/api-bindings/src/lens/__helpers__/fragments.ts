@@ -164,6 +164,8 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     __attributes: [],
     attributes: {} as ProfileAttributes,
 
+    invitedBy: null,
+
     ...overrides,
     __typename: 'Profile',
   };
