@@ -929,12 +929,12 @@ export class Profile {
    *
    * @example
    * ```ts
-   * await client.profile.profileGuardian({
+   * await client.profile.guardian({
    *   profileId: '0x123',
    * });
    * ```
    */
-  async profileGuardian(
+  async guardian(
     request: ProfileGuardianRequest,
   ): PromiseResult<ProfileGuardianResultFragment, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {

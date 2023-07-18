@@ -105,12 +105,12 @@ describe(`Given the ${Profile.name} configured to work with the test environment
   });
 
   describeAuthenticatedScenario({ withNewProfile: true })((getTestSetup) => {
-    describe(`when the method ${Profile.prototype.profileGuardian.name} is called`, () => {
+    describe(`when the method ${Profile.prototype.guardian.name} is called`, () => {
       it(`should run successfully`, async () => {
         const { authentication, profileId } = getTestSetup();
         const profile = new Profile(testConfig, authentication);
 
-        const result = await profile.profileGuardian({ profileId });
+        const result = await profile.guardian({ profileId });
 
         expect(result.unwrap()).toEqual({
           protected: true,
