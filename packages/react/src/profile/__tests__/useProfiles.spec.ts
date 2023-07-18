@@ -86,7 +86,7 @@ describe(`Given the ${useProfiles.name} hook`, () => {
         expect(result.current.data).toMatchObject(expectations);
       });
 
-      it('should always allow to specify the "observerId" on a per-call basis', async () => {
+      it('should allow to override the "observerId" on a per-call basis', async () => {
         const observerId = mockProfileId();
 
         const { result } = setupTestScenario({
