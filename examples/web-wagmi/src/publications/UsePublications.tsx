@@ -19,10 +19,12 @@ export function UsePublications() {
 
   const {
     data: publications,
+    beforeCount,
     error,
     loading,
     hasMore,
     observeRef,
+    prev,
   } = useInfiniteScroll(
     usePublications({
       profileId: profileId('0x15'),
@@ -61,6 +63,12 @@ export function UsePublications() {
             </label>
           ))}
         </fieldset>
+
+        {beforeCount > 0 && (
+          <button disabled={loading} onClick={prev}>
+            Fetch newer
+          </button>
+        )}
 
         {publications.map((publication) => (
           <PublicationCard key={publication.id} publication={publication} />

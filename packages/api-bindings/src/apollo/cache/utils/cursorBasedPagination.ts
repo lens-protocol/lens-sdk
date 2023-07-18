@@ -1,6 +1,6 @@
 import { FieldFunctionOptions, KeySpecifier } from '@apollo/client/cache/inmemory/policies';
-import { FieldPolicy } from '@apollo/client/core';
-import { never } from '@lens-protocol/shared-kernel';
+import { FieldPolicy, OperationVariables } from '@apollo/client/core';
+import { Brand, never } from '@lens-protocol/shared-kernel';
 
 import { CursorBasedPaginatedResult, isCursor } from '../../../lens';
 
@@ -12,6 +12,26 @@ function isEndOfTheRoad<TResult extends CursorBasedPaginatedResult>(result: TRes
   return (
     result.pageInfo.next === null && result.pageInfo.prev === null && result.items.length === 0
   );
+}
+
+type Probe = Brand<string, 'Probe'>;
+const probe = '7cfd6539-bdf5-4b16-989e-d9d8d24074b0' as Probe;
+
+type WithProbe<T extends OperationVariables> = T & { [key: Probe]: true };
+
+export function newResultsProbe<TVariables extends OperationVariables>(
+  variables: TVariables,
+): TVariables {
+  return {
+    ...variables,
+    [probe]: true,
+  };
+}
+
+function isNewResultsProbeRequest<TVariables extends OperationVariables>(
+  variables: TVariables,
+): variables is WithProbe<TVariables> {
+  return Object.hasOwn(variables, probe);
 }
 
 export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult>(
@@ -66,6 +86,20 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
       const incomingItems = incoming.items;
 
       if (variables.cursor === existing.pageInfo.prev) {
+        if (isNewResultsProbeRequest(variables)) {
+          return {
+            ...incoming,
+            items: existingItems,
+            pageInfo: {
+              ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
+              beforeCount: incoming.items.length,
+              moreAfter: existing.pageInfo.moreAfter,
+              next: existing.pageInfo.next,
+              prev: existing.pageInfo.prev,
+            },
+          };
+        }
+
         if (isEndOfTheRoad(incoming)) {
           return {
             ...incoming,
@@ -73,7 +107,7 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
             pageInfo: {
               ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
               beforeCount: 0,
-              moreAfter: existing.pageInfo.next !== null,
+              moreAfter: existing.pageInfo.moreAfter,
               next: existing.pageInfo.next,
               prev: existing.pageInfo.prev,
             },
@@ -86,7 +120,7 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
           pageInfo: {
             ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
             beforeCount: incoming.pageInfo.beforeCount,
-            moreAfter: existing.pageInfo.next !== null,
+            moreAfter: existing.pageInfo.moreAfter,
             next: existing.pageInfo.next,
             prev: incoming.pageInfo.prev ?? existing.pageInfo.prev,
           },

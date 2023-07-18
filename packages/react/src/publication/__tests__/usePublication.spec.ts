@@ -1,4 +1,4 @@
-import { AnyPublication } from '@lens-protocol/api-bindings';
+import { SafeApolloClient } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockPostFragment,
@@ -7,7 +7,6 @@ import {
   simulateAuthenticatedProfile,
   simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
-import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
@@ -19,32 +18,20 @@ import {
 } from '../../mediaTransforms';
 import { usePublication, UsePublicationArgs } from '../usePublication';
 
-function setupTestScenario({
-  expectedObserverId,
-  publication,
-  publicationId,
-  observerId,
-}: UsePublicationArgs & {
-  expectedObserverId?: ProfileId;
-  publication: AnyPublication | null;
-}) {
-  const sources = mockSources();
+const sources = mockSources();
 
-  return renderHookWithMocks(() => usePublication({ publicationId, observerId }), {
+function renderUsePublication({
+  args,
+  client,
+}: {
+  args: UsePublicationArgs;
+  client: SafeApolloClient;
+}) {
+  return renderHookWithMocks(() => usePublication(args), {
     mocks: {
       sources,
       mediaTransforms: defaultMediaTransformsConfig,
-      apolloClient: mockLensApolloClient([
-        mockGetPublicationResponse({
-          variables: {
-            request: { publicationId },
-            sources,
-            observerId: expectedObserverId ?? null,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
-          },
-          publication,
-        }),
-      ]),
+      apolloClient: client,
     },
   });
 }
@@ -57,59 +44,175 @@ describe(`Given the ${usePublication.name} hook`, () => {
     simulateNotAuthenticated();
   });
 
-  describe.each([
-    {
-      precondition: 'and NO Active Profile set',
-      activeProfileValue: null,
-    },
-    {
-      precondition: 'and an Active Profile set',
-      activeProfileValue: mockProfile(),
-    },
-  ])('$precondition', ({ activeProfileValue }) => {
-    beforeAll(() => {
-      if (activeProfileValue) {
-        simulateAuthenticatedProfile(activeProfileValue);
-      }
-    });
+  describe('when the queried publication exists', () => {
+    const client = mockLensApolloClient([
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId: null,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication,
+      }),
+    ]);
 
-    describe('when the query returns data successfully', () => {
-      it('should settle with the publication data', async () => {
-        const { result } = setupTestScenario({
+    it('should settle with the publication data', async () => {
+      const { result } = renderUsePublication({
+        args: {
           publicationId: publication.id,
-          expectedObserverId: activeProfileValue?.id,
-          publication,
-        });
-
-        await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toMatchObject(expectations);
+        },
+        client,
       });
 
-      it('should allow to specify the "observerId" on a per-call basis', async () => {
-        const observerId = mockProfileId();
-        const { result } = setupTestScenario({
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toMatchObject(expectations);
+    });
+  });
+
+  describe('when a session with an Active Profile is set', () => {
+    const activeProfile = mockProfile();
+    const client = mockLensApolloClient([
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId: activeProfile.id,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication,
+      }),
+    ]);
+
+    beforeAll(() => {
+      simulateAuthenticatedProfile(activeProfile);
+    });
+
+    afterAll(() => {
+      simulateNotAuthenticated();
+    });
+
+    it('should use the Active Profile as the queried publication observer', async () => {
+      const { result } = renderUsePublication({
+        args: {
+          publicationId: publication.id,
+        },
+        client,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toMatchObject(expectations);
+    });
+  });
+
+  describe('when an "observerId" is provided', () => {
+    const observerId = mockProfileId();
+    const client = mockLensApolloClient([
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication,
+      }),
+    ]);
+
+    it('should use it as the queried publication observer', async () => {
+      const { result } = renderUsePublication({
+        args: {
           publicationId: publication.id,
           observerId,
-          expectedObserverId: observerId,
-          publication,
-        });
-
-        await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toMatchObject(expectations);
+        },
+        client,
       });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toMatchObject(expectations);
     });
+  });
 
-    describe('when the query returns null', () => {
-      it(`should settle with a ${NotFoundError.name} state`, async () => {
-        const { result } = setupTestScenario({
-          publicationId: publication.id,
-          expectedObserverId: activeProfileValue?.id,
-          publication: null,
-        });
+  describe(`when re-rendered`, () => {
+    const client = mockLensApolloClient([
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId: null,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication: mockPostFragment({ id: publication.id }),
+      }),
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId: null,
+        },
+        publication,
+      }),
+    ]);
 
-        await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.error).toBeInstanceOf(NotFoundError);
+    it(`should return cached data and then update it with fresh data from the API`, async () => {
+      const first = renderUsePublication({
+        args: { publicationId: publication.id },
+        client,
       });
+      await waitFor(() => expect(first.result.current.loading).toBeFalsy());
+
+      const second = renderUsePublication({
+        args: { publicationId: publication.id },
+        client,
+      });
+
+      expect(second.result.current).toMatchObject({
+        data: expectations,
+        loading: false,
+      });
+      await waitFor(() =>
+        expect(first.result.current.data).toMatchObject({
+          stats: publication.stats,
+        }),
+      );
+    });
+  });
+
+  describe('when the queried publication does not exist', () => {
+    const client = mockLensApolloClient([
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId: null,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication: null,
+      }),
+    ]);
+
+    it(`should settle with a ${NotFoundError.name} state`, async () => {
+      const { result } = renderUsePublication({
+        args: {
+          publicationId: publication.id,
+        },
+        client,
+      });
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.error).toBeInstanceOf(NotFoundError);
     });
   });
 });

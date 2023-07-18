@@ -1,6 +1,13 @@
-import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
-import { PaginatedResultInfo, UnspecifiedError } from '@lens-protocol/api-bindings';
+/* eslint-disable no-console */
+import { ApolloError, OperationVariables, QueryResult as ApolloQueryResult } from '@apollo/client';
+import {
+  Cursor,
+  PaginatedResultInfo,
+  newResultsProbe,
+  UnspecifiedError,
+} from '@lens-protocol/api-bindings';
 import { Prettify } from '@lens-protocol/shared-kernel';
+import { useEffect, useRef } from 'react';
 
 /**
  * A discriminated union of the possible results of a read operation with no errors.
@@ -51,21 +58,20 @@ export type ReadResult<T, E = UnspecifiedError> = E extends Error
 
 function buildReadResult<T>(
   data: T | undefined,
-  loading: boolean,
   error: ApolloError | undefined,
 ): ReadResult<T, UnspecifiedError> {
-  if (data !== undefined && !loading) {
-    return {
-      data,
-      error: undefined,
-      loading: false,
-    };
-  }
-
   if (error) {
     return {
       data: undefined,
       error: new UnspecifiedError(error),
+      loading: false,
+    };
+  }
+
+  if (data !== undefined) {
+    return {
+      data,
+      error: undefined,
       loading: false,
     };
   }
@@ -85,8 +91,8 @@ export function useReadResult<
   T extends QueryData<R>,
   R = InferResult<T>,
   V = { [key: string]: never },
->({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
-  return buildReadResult(data?.result, loading, error);
+>({ error, data }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
+  return buildReadResult(data?.result, error);
 }
 
 export type PaginatedArgs<T> = Prettify<
@@ -104,6 +110,13 @@ export type PaginatedArgs<T> = Prettify<
  * A paginated read result.
  */
 export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
+  /**
+   * The number of items that are available before the results set.
+   *
+   * Use this to determine if you want to offer the option of loading more items
+   * at the beginning of the list via the `prev` method.
+   */
+  beforeCount: number;
   /**
    * Whether there are more items to fetch in the next page
    */
@@ -133,17 +146,42 @@ type InferPaginatedItemsType<T extends PaginatedQueryData<unknown>> = T extends 
   : never;
 
 export function usePaginatedReadResult<
-  V,
+  V extends OperationVariables & { cursor?: Cursor },
   T extends PaginatedQueryData<K>,
   K = InferPaginatedItemsType<T>,
->({ error, data, loading, fetchMore }: ApolloQueryResult<T, V>): PaginatedReadResult<K> {
+>({ error, data, loading, fetchMore, variables }: ApolloQueryResult<T, V>): PaginatedReadResult<K> {
+  const initialData = useRef(data).current;
+
+  async function probeForNewerResults(prev: Cursor) {
+    const { data: newData } = await fetchMore({
+      variables: newResultsProbe({
+        ...variables,
+        cursor: prev,
+      }),
+    });
+
+    console.log(newData);
+  }
+
+  useEffect(() => {
+    if (initialData && initialData.result.pageInfo.prev) {
+      void probeForNewerResults(initialData.result.pageInfo.prev);
+    }
+  }, [initialData]);
+
   return {
-    ...buildReadResult<K>(data?.result.items, loading, error),
+    ...buildReadResult<K>(data?.result.items, error),
+
+    beforeCount: data?.result.pageInfo.beforeCount ?? 0,
 
     hasMore: data?.result.pageInfo.moreAfter ?? false,
 
     next: async () => {
-      if (data?.result.pageInfo.next) {
+      if (loading) {
+        console.warn('Cannot fetch next page while loading, this is a no-op.');
+        return;
+      }
+      if (!loading && data?.result.pageInfo.next) {
         await fetchMore({
           variables: {
             cursor: data.result.pageInfo.next,
@@ -153,7 +191,11 @@ export function usePaginatedReadResult<
     },
 
     prev: async () => {
-      if (data?.result.pageInfo.prev) {
+      if (loading) {
+        console.warn('Cannot fetch previous page while loading, this is a no-op.');
+        return;
+      }
+      if (!loading && data?.result.pageInfo.prev) {
         await fetchMore({
           variables: {
             cursor: data.result.pageInfo.prev,

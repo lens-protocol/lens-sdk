@@ -50,6 +50,7 @@ import {
   MutualFollowersProfilesData,
   MutualFollowersProfilesDocument,
   MutualFollowersProfilesVariables,
+  PaginatedResultInfo,
   Post,
   Profile,
   ProfileFollowRevenue,
@@ -305,20 +306,25 @@ export function mockMutualFollowersResponse(args: {
   };
 }
 
-export function mockGetPublicationsResponse(args: {
+export function mockGetPublicationsResponse({
+  variables,
+  publications,
+  info = mockPaginatedResultInfo(),
+}: {
   variables: GetPublicationsVariables;
   publications: Array<AnyPublication>;
+  info?: PaginatedResultInfo;
 }): MockedResponse<GetPublicationsData> {
   return {
     request: {
       query: GetPublicationsDocument,
-      variables: args.variables,
+      variables: variables,
     },
     result: {
       data: {
         result: {
-          items: args.publications,
-          pageInfo: mockPaginatedResultInfo({ totalCount: args.publications.length }),
+          items: publications,
+          pageInfo: info,
         },
       },
     },
