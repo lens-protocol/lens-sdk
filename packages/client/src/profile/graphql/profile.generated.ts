@@ -349,6 +349,17 @@ export type DismissRecommendedProfilesMutationVariables = Types.Exact<{
 
 export type DismissRecommendedProfilesMutation = { dismissRecommendedProfiles: void | null };
 
+export type ProfileGuardianResultFragment = {
+  protected: boolean;
+  disablingProtectionTimestamp: string | null;
+};
+
+export type ProfileGuardianQueryVariables = Types.Exact<{
+  request: Types.ProfileGuardianRequest;
+}>;
+
+export type ProfileGuardianQuery = { result: ProfileGuardianResultFragment };
+
 export const ProfileStatsFragmentDoc = gql`
   fragment ProfileStats on ProfileStats {
     __typename
@@ -592,6 +603,12 @@ export const SetFollowNftUriTypedDataFragmentDoc = gql`
         followNFTURI
       }
     }
+  }
+`;
+export const ProfileGuardianResultFragmentDoc = gql`
+  fragment ProfileGuardianResult on ProfileGuardianResult {
+    protected
+    disablingProtectionTimestamp
   }
 `;
 export const ProfileDocument = gql`
@@ -869,6 +886,14 @@ export const DismissRecommendedProfilesDocument = gql`
     dismissRecommendedProfiles(request: $request)
   }
 `;
+export const ProfileGuardianDocument = gql`
+  query ProfileGuardian($request: ProfileGuardianRequest!) {
+    result: profileGuardianInformation(request: $request) {
+      ...ProfileGuardianResult
+    }
+  }
+  ${ProfileGuardianResultFragmentDoc}
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -913,6 +938,7 @@ const CreateSetFollowNftUriTypedDataDocumentString = print(CreateSetFollowNftUri
 const AddProfileInterestDocumentString = print(AddProfileInterestDocument);
 const RemoveProfileInterestDocumentString = print(RemoveProfileInterestDocument);
 const DismissRecommendedProfilesDocumentString = print(DismissRecommendedProfilesDocument);
+const ProfileGuardianDocumentString = print(ProfileGuardianDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -1400,6 +1426,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           ),
         'DismissRecommendedProfiles',
         'mutation',
+      );
+    },
+    ProfileGuardian(
+      variables: ProfileGuardianQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: ProfileGuardianQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ProfileGuardianQuery>(ProfileGuardianDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'ProfileGuardian',
+        'query',
       );
     },
   };

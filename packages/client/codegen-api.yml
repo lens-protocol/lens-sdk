@@ -29,6 +29,7 @@ config:
     Jwt: string
     LimitScalar: number
     Locale: string
+    ImageSizeTransform: string
     Markdown: string
     Media: string
     MimeType: string
