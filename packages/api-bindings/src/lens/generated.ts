@@ -2327,8 +2327,6 @@ export type ExploreProfilesVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
-  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
-  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
   mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
@@ -5202,8 +5200,6 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $observerId: ProfileId
     $sources: [Sources!]!
-    $mediaTransformPublicationSmall: MediaTransformParams = {}
-    $mediaTransformPublicationMedium: MediaTransformParams = {}
     $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: exploreProfiles(
@@ -5238,8 +5234,6 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
- *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
- *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
  *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });

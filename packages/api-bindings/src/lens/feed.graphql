@@ -98,8 +98,6 @@ query ExploreProfiles(
   $cursor: Cursor
   $observerId: ProfileId
   $sources: [Sources!]!
-  $mediaTransformPublicationSmall: MediaTransformParams = {}
-  $mediaTransformPublicationMedium: MediaTransformParams = {}
   $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: exploreProfiles(

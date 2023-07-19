@@ -42,7 +42,7 @@ export function UsePublication() {
     data: publication,
     error,
     loading,
-  } = usePublication({ publicationId: publicationId('0x1b-0x0118') });
+  } = usePublication({ publicationId: publicationId('0x3e-0x15') });
 
   if (loading) return <Loading />;
 

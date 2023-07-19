@@ -13,19 +13,22 @@ export type MediaTransform = {
   /**
    * Set the transformed image's width. You can use specific size in
    * pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically.
-   * Default value is 'auto'.
+   *
+   * @defaultValue 'auto'
    */
   width?: ImageSizeTransform;
   /**
    * Set the transformed image's height. You can use specific size in
    * pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically.
-   * Default value is 'auto'.
+   *
+   * @defaultValue 'auto'
    */
   height?: ImageSizeTransform;
   /**
    * Set if you want to keep the image's original aspect ratio.
-   * True by default.
    * If explicitly set to false, the image will stretch based on the width and height values.
+   *
+   * @defaultValue true
    */
   keepAspectRatio?: boolean;
 };
