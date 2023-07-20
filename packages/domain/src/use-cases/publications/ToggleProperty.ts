@@ -1,25 +1,24 @@
-import { ProfileId, PublicationId, ReactionType } from '../../entities';
+import { ProfileId, PublicationId } from '../../entities';
 
-export type ReactionRequest = {
+export type TogglePropertyRequest = {
   profileId: ProfileId;
   publicationId: PublicationId;
-  reactionType: ReactionType;
 };
 
-export interface IReactionGateway<T extends ReactionRequest> {
+export interface ITogglablePropertyGateway<T extends TogglePropertyRequest> {
   add(data: T): Promise<void>;
   remove(data: T): Promise<void>;
 }
 
-export interface IReactionPresenter<T extends ReactionRequest> {
+export interface ITogglablePropertyPresenter<T extends TogglePropertyRequest> {
   add(request: T): Promise<void>;
   remove(request: T): Promise<void>;
 }
 
-export class Reaction<T extends ReactionRequest> {
+export class ToggleProperty<T extends TogglePropertyRequest> {
   constructor(
-    private readonly gateway: IReactionGateway<T>,
-    private readonly presenter: IReactionPresenter<T>,
+    private readonly gateway: ITogglablePropertyGateway<T>,
+    private readonly presenter: ITogglablePropertyPresenter<T>,
   ) {}
 
   async add(request: T) {

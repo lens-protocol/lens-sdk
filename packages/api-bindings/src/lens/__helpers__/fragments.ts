@@ -165,6 +165,7 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     attributes: {} as ProfileAttributes,
 
     invitedBy: null,
+    observedBy: null,
 
     ...overrides,
     __typename: 'Profile',
@@ -290,6 +291,7 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
     mirrors: [],
     reaction: null,
     hidden: false,
+    notInterested: false,
 
     isGated: false,
     decryptionCriteria: null,

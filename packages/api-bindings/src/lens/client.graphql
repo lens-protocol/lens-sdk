@@ -13,6 +13,7 @@ extend type Profile {
   attributesMap: ProfileAttributes!
   followPolicy: FollowPolicy!
   followStatus: FollowStatus
+  observedBy: ProfileId
 }
 
 extend type Post {
@@ -29,6 +30,7 @@ extend type Post {
   referencePolicy: ReferencePolicy!
 
   contentInsight: ContentInsight!
+  observedBy: ProfileId
 }
 
 extend type Comment {
@@ -45,6 +47,7 @@ extend type Comment {
   referencePolicy: ReferencePolicy!
 
   contentInsight: ContentInsight!
+  observedBy: ProfileId
 }
 
 type PendingPost {

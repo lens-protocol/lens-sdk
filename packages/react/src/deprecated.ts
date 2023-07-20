@@ -280,3 +280,11 @@ export type SupportedTransactionRequest = AnyTransactionRequest;
  * @deprecated Use {@link LoginError} instead.
  */
 export type WalletLoginPotentialErrors = LoginError;
+
+/**
+ * @deprecated Use {@link ReactionTypes} instead.
+ */
+export enum ReactionType {
+  UPVOTE = 'UPVOTE',
+  DOWNVOTE = 'DOWNVOTE',
+}
