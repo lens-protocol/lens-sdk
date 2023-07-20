@@ -1,5 +1,11 @@
 # @lens-protocol/api-bindings
 
+## 0.9.1
+
+### Patch Changes
+
+- 06a30a2c: **Fixed** crash caused by token-gated mismatch of publication author access condition"
+
 ## 0.9.0
 
 ### Minor Changes

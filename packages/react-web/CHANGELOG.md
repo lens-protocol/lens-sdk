@@ -1,5 +1,14 @@
 # @lens-protocol/react-web
 
+## 1.2.2
+
+### Patch Changes
+
+- Updated dependencies [06a30a2c]
+  - @lens-protocol/api-bindings@0.9.1
+  - @lens-protocol/gated-content@0.3.1
+  - @lens-protocol/react@1.2.2
+
 ## 1.2.1
 
 ### Patch Changes
