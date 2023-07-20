@@ -1,9 +1,5 @@
-import {
-  resolveApiReactionType,
-  ContentPublication,
-  resolveDomainReactionType,
-} from '@lens-protocol/api-bindings';
-import { ProfileId, ReactionType } from '@lens-protocol/domain/entities';
+import { ContentPublication, ReactionTypes } from '@lens-protocol/api-bindings';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { useState } from 'react';
 
 import { useReactionController } from './adapters/useReactionController';
@@ -14,7 +10,7 @@ export type UseReactionArgs = {
 
 export type ReactionArgs = {
   publication: ContentPublication;
-  reactionType: ReactionType;
+  reactionType: ReactionTypes;
 };
 
 /**
@@ -32,9 +28,7 @@ export function useReaction({ profileId }: UseReactionArgs) {
       await add({
         publicationId: args.publication.id,
         reactionType: args.reactionType,
-        existingReactionType: args.publication.reaction
-          ? resolveDomainReactionType(args.publication.reaction)
-          : undefined,
+        existingReactionType: args.publication.reaction,
         profileId,
       });
     } finally {
@@ -57,7 +51,7 @@ export function useReaction({ profileId }: UseReactionArgs) {
   };
 
   const hasReaction = ({ publication, reactionType }: ReactionArgs) => {
-    return publication.reaction === resolveApiReactionType(reactionType);
+    return publication.reaction === reactionType;
   };
 
   return {

@@ -34,6 +34,7 @@ import { ContentInsightMatcher } from './utils/ContentInsight';
 import { extractUrls } from './utils/extractUrls';
 import { firstMatch } from './utils/firstMatch';
 import { noCachedField } from './utils/noCachedField';
+import { observedBy } from './utils/observedBy';
 
 function resolveReferencePolicy(module: ReferenceModule | null): ReferencePolicy {
   if (module === null) {
@@ -249,9 +250,11 @@ function createContentPublicationTypePolicy(config: ContentPublicationTypePolicy
       isMirroredByMe,
       isOptimisticMirroredByMe,
       mirrors: noCachedField(),
+      notInterested: noCachedField(),
       reaction: noCachedField(),
       referencePolicy,
       stats,
+      observedBy,
     },
   };
 }

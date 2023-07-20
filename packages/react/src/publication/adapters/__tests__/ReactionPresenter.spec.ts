@@ -4,14 +4,13 @@ import {
   mockPostFragment,
   mockPublicationStatsFragment,
 } from '@lens-protocol/api-bindings/mocks';
-import { ReactionType } from '@lens-protocol/domain/entities';
-import { mockReactionRequest } from '@lens-protocol/domain/mocks';
-import { ReactionRequest } from '@lens-protocol/domain/use-cases/publications';
+import { TogglePropertyRequest } from '@lens-protocol/domain/use-cases/publications';
 
 import { PublicationCacheManager } from '../../../transactions/adapters/PublicationCacheManager';
 import { ReactionPresenter } from '../ReactionPresenter';
+import { mockReactionRequest } from '../__helpers__/mocks';
 
-function setupTestScenario({ post, request }: { post: Post; request: ReactionRequest }) {
+function setupTestScenario({ post, request }: { post: Post; request: TogglePropertyRequest }) {
   const apolloCache = mockLensCache();
 
   apolloCache.writeFragment({
@@ -80,7 +79,7 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
 
       const request = mockReactionRequest({
         publicationId: post.id,
-        reactionType: ReactionType.DOWNVOTE,
+        reactionType: ReactionTypes.Downvote,
       });
 
       const scenario = setupTestScenario({
@@ -111,7 +110,7 @@ describe(`Given the ${ReactionPresenter.name}`, () => {
       });
       const request = mockReactionRequest({
         publicationId: post.id,
-        reactionType: ReactionType.DOWNVOTE,
+        reactionType: ReactionTypes.Downvote,
       });
 
       const scenario = setupTestScenario({

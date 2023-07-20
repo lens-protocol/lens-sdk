@@ -65,7 +65,6 @@ export type {
 export {
   InsufficientGasError,
   PendingSigningRequestError,
-  ReactionType,
   UserRejectedError,
   WalletConnectionError,
   WalletConnectionErrorReason,

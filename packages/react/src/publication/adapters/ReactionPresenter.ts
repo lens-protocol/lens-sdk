@@ -1,26 +1,22 @@
-import {
-  resolveApiReactionType,
-  resolveDomainReactionType,
-  isContentPublication,
-} from '@lens-protocol/api-bindings';
-import { ReactionType } from '@lens-protocol/domain/entities';
-import { ReactionRequest, IReactionPresenter } from '@lens-protocol/domain/use-cases/publications';
+import { isContentPublication, ReactionTypes } from '@lens-protocol/api-bindings';
+import { ITogglablePropertyPresenter } from '@lens-protocol/domain/use-cases/publications';
 import { assertNever, invariant } from '@lens-protocol/shared-kernel';
 
 import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
+import { ReactionRequest } from './ReactionGateway';
 
-const getReactionStatKey = (reactionType: ReactionType) => {
+const getReactionStatKey = (reactionType: ReactionTypes) => {
   switch (reactionType) {
-    case ReactionType.UPVOTE:
+    case ReactionTypes.Upvote:
       return 'totalUpvotes' as const;
-    case ReactionType.DOWNVOTE:
+    case ReactionTypes.Downvote:
       return 'totalDownvotes' as const;
     default:
       assertNever(reactionType, 'Invalid reaction type');
   }
 };
 
-export class ReactionPresenter implements IReactionPresenter<ReactionRequest> {
+export class ReactionPresenter implements ITogglablePropertyPresenter<ReactionRequest> {
   constructor(private readonly publicationCacheManager: PublicationCacheManager) {}
 
   async add(request: ReactionRequest): Promise<void> {
@@ -30,9 +26,7 @@ export class ReactionPresenter implements IReactionPresenter<ReactionRequest> {
         `Reactions are not supported on ${current.__typename}`,
       );
 
-      const removedStatKey = current.reaction
-        ? getReactionStatKey(resolveDomainReactionType(current.reaction))
-        : undefined;
+      const removedStatKey = current.reaction ? getReactionStatKey(current.reaction) : undefined;
 
       const currentStatsValue = current.stats[getReactionStatKey(request.reactionType)];
 
@@ -45,7 +39,7 @@ export class ReactionPresenter implements IReactionPresenter<ReactionRequest> {
           ...(removedStatKey && { [removedStatKey]: current.stats[removedStatKey] - 1 }),
           [getReactionStatKey(request.reactionType)]: currentStatsValue + 1,
         },
-        reaction: resolveApiReactionType(request.reactionType),
+        reaction: request.reactionType,
       };
     });
   }

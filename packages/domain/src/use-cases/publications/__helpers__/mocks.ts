@@ -6,16 +6,16 @@ import {
   mockUsdcAmount,
 } from '@lens-protocol/shared-kernel/mocks';
 
-import { ReactionType, ReportReason, TransactionKind } from '../../../entities';
+import { ReportReason, TransactionKind } from '../../../entities';
 import { mockProfileId, mockPublicationId } from '../../../entities/__helpers__/mocks';
 import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
 import { CreatePostRequest } from '../CreatePost';
 import { HidePublicationRequest } from '../HidePublication';
-import { ReactionRequest } from '../Reaction';
 import { ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
+import { TogglePropertyRequest } from '../ToggleProperty';
 import { ImageType } from '../config';
 import {
   ChargeCollectPolicyConfig,
@@ -166,13 +166,14 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
   } as CreatePostRequest;
 }
 
-export function mockReactionRequest<T extends ReactionRequest>(overrides?: Partial<T>): T {
+export function mockReactionRequest(
+  overrides?: Partial<TogglePropertyRequest>,
+): TogglePropertyRequest {
   return {
     profileId: mockProfileId(),
     publicationId: mockPublicationId(),
-    reactionType: ReactionType.UPVOTE,
     ...overrides,
-  } as T;
+  };
 }
 
 export function mockHidePublicationRequest(

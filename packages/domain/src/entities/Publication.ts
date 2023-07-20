@@ -5,11 +5,6 @@ import { ProfileId } from './Profile';
 
 export type PublicationId = Brand<string, 'PublicationId'>;
 
-export enum ReactionType {
-  UPVOTE = 'upvote',
-  DOWNVOTE = 'downvote',
-}
-
 export enum DecryptionCriteriaType {
   NFT_OWNERSHIP = 'nft-ownership',
   ERC20_OWNERSHIP = 'erc20-ownership',
