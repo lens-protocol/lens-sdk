@@ -1,14 +1,10 @@
-import {
-  Profile,
-  FragmentProfile,
-  SingleProfileQueryRequest,
-  activeProfileIdentifierVar,
-} from '@lens-protocol/api-bindings';
+import { Profile, FragmentProfile, SingleProfileQueryRequest } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockProfileFragment,
   mockSources,
+  simulateAuthenticatedProfile,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
@@ -29,11 +25,11 @@ function setupTestScenario({
 }) {
   const sources = mockSources();
   const client = mockLensApolloClient([
-    createGetProfileMockedResponse({
+    mockGetProfileResponse({
       profile: profile,
       variables: {
         request: expectedRequest,
-        observerId: expectedObserverId,
+        observerId: expectedObserverId ?? null,
         sources,
       },
     }),
@@ -68,6 +64,7 @@ function setupTestScenario({
 
 describe(`Given an instance of the ${ProfileCacheManager.name}`, () => {
   const profile = mockProfileFragment();
+  const expectations = { __typename: 'Profile', id: profile.id };
 
   describe.each([
     {
@@ -80,7 +77,9 @@ describe(`Given an instance of the ${ProfileCacheManager.name}`, () => {
     },
   ])('$precondition', ({ activeProfileValue }) => {
     beforeAll(() => {
-      activeProfileIdentifierVar(activeProfileValue);
+      if (activeProfileValue) {
+        simulateAuthenticatedProfile(activeProfileValue);
+      }
     });
 
     describe(`when invoking the "${ProfileCacheManager.prototype.fetchProfile.name}" method`, () => {
@@ -92,7 +91,7 @@ describe(`Given an instance of the ${ProfileCacheManager.name}`, () => {
 
         const actual = await manager.fetchProfile({ id: profile.id });
 
-        expect(actual).toEqual(profile);
+        expect(actual).toMatchObject(expectations);
       });
 
       it('should allow to query by profile handle', async () => {
@@ -104,7 +103,7 @@ describe(`Given an instance of the ${ProfileCacheManager.name}`, () => {
 
         const actual = await manager.fetchProfile({ handle: profile.handle });
 
-        expect(actual).toEqual(profile);
+        expect(actual).toMatchObject(expectations);
       });
     });
 
@@ -124,11 +123,11 @@ describe(`Given an instance of the ${ProfileCacheManager.name}`, () => {
 
         const actual = await scenario.manager.refreshProfile(profile.id);
 
-        expect(scenario.profileFromCache).toEqual(profile);
-        expect(actual).toEqual(profile);
+        expect(scenario.profileFromCache).toMatchObject(expectations);
+        expect(actual).toMatchObject(expectations);
       });
 
-      it('should update the cache even if the cache entry is null', async () => {
+      it('should update the cache even if the initial cache entry is null', async () => {
         const scenario = setupTestScenario({
           profile,
           cacheEntry: null,
@@ -137,8 +136,8 @@ describe(`Given an instance of the ${ProfileCacheManager.name}`, () => {
 
         const actual = await scenario.manager.refreshProfile(profile.id);
 
-        expect(scenario.profileFromCache).toEqual(profile);
-        expect(actual).toEqual(profile);
+        expect(scenario.profileFromCache).toMatchObject(expectations);
+        expect(actual).toMatchObject(expectations);
       });
     });
   });

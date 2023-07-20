@@ -1,7 +1,7 @@
 import { AnyPublication } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetPublicationsMockedResponse,
+  mockGetPublicationsResponse,
   mockPostFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
@@ -30,7 +30,7 @@ function setupTestScenario({
   pendingTransactionsFor?: ProtocolTransactionRequest[];
 }) {
   const apolloClient = mockLensApolloClient([
-    createGetPublicationsMockedResponse({
+    mockGetPublicationsResponse({
       variables: {
         profileId,
         limit: 1,

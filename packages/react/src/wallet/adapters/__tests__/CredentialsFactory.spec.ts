@@ -74,6 +74,7 @@ describe(`Given an instance of the ${CredentialsFactory.name} class`, () => {
       },
     );
   });
+
   describe(`when ${CredentialsFactory.prototype.renewCredentials.name} method is called`, () => {
     it(`should fail with ${CredentialsExpiredError.name} if the credentials cant be refreshed`, async () => {
       const { credentialsFactory } = setupFactory();

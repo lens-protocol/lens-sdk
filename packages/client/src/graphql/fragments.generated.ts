@@ -34,7 +34,7 @@ export type AttributeFragment = {
   value: string;
 };
 
-export type ProfileFragment = {
+export type ProfileFieldsFragment = {
   __typename: 'Profile';
   id: string;
   name: string | null;
@@ -80,6 +80,8 @@ export type ProfileFragment = {
   attributes: Array<AttributeFragment> | null;
   dispatcher: { address: string; canUseRelay: boolean } | null;
 };
+
+export type ProfileFragment = { invitedBy: ProfileFieldsFragment | null } & ProfileFieldsFragment;
 
 export type Eip712TypedDataDomainFragment = {
   name: string;
@@ -465,8 +467,8 @@ export const AttributeFragmentDoc = gql`
     value
   }
 `;
-export const ProfileFragmentDoc = gql`
-  fragment Profile on Profile {
+export const ProfileFieldsFragmentDoc = gql`
+  fragment ProfileFields on Profile {
     __typename
     id
     name
@@ -535,6 +537,15 @@ export const ProfileFragmentDoc = gql`
   ${RevertFollowModuleSettingsFragmentDoc}
   ${UnknownFollowModuleSettingsFragmentDoc}
   ${AttributeFragmentDoc}
+`;
+export const ProfileFragmentDoc = gql`
+  fragment Profile on Profile {
+    ...ProfileFields
+    invitedBy {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
 `;
 export const MirrorBaseFragmentDoc = gql`
   fragment MirrorBase on Mirror {

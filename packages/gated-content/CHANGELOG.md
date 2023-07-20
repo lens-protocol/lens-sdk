@@ -7,6 +7,16 @@
 - Updated dependencies [06a30a2c]
   - @lens-protocol/api-bindings@0.9.1
 
+## 0.3.1-next.0
+
+### Patch Changes
+
+- Updated dependencies [c2a91ef4]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [4c4505d2]
+  - @lens-protocol/api-bindings@0.9.1-next.0
+  - @lens-protocol/domain@0.9.1-next.0
+
 ## 0.3.0
 
 ### Minor Changes

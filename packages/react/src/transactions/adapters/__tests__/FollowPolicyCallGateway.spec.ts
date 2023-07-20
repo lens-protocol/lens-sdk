@@ -25,7 +25,7 @@ import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { FollowPolicyCallGateway } from '../FollowPolicyCallGateway';
 import { assertUnsignedProtocolCallCorrectness } from '../__helpers__/mocks';
 
-function createCreateSetFollowModuleTypedDataMockedResponse({
+function mockCreateSetFollowModuleTypedDataResponse({
   variables,
   data,
 }: {
@@ -81,7 +81,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
         const data = mockCreateSetFollowModuleTypedDataData();
 
         const apollo = mockLensApolloClient([
-          createCreateSetFollowModuleTypedDataMockedResponse({
+          mockCreateSetFollowModuleTypedDataResponse({
             variables: {
               request: {
                 profileId: request.profileId,
@@ -101,7 +101,7 @@ describe(`Given an instance of the ${FollowPolicyCallGateway.name}`, () => {
       it(`should be possible to override the signature nonce`, async () => {
         const nonce = mockNonce();
         const apollo = mockLensApolloClient([
-          createCreateSetFollowModuleTypedDataMockedResponse({
+          mockCreateSetFollowModuleTypedDataResponse({
             variables: {
               request: {
                 profileId: request.profileId,

@@ -461,3 +461,14 @@ mutation RemoveProfileInterest($request: RemoveProfileInterestsRequest!) {
 mutation DismissRecommendedProfiles($request: DismissRecommendedProfilesRequest!) {
   dismissRecommendedProfiles(request: $request)
 }
+
+fragment ProfileGuardianResult on ProfileGuardianResult {
+  protected
+  disablingProtectionTimestamp
+}
+
+query ProfileGuardian($request: ProfileGuardianRequest!) {
+  result: profileGuardianInformation(request: $request) {
+    ...ProfileGuardianResult
+  }
+}

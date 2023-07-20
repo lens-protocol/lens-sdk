@@ -1,17 +1,18 @@
-import { activeProfileIdentifierVar, ContentPublication } from '@lens-protocol/api-bindings';
+import { ContentPublication } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createSearchPublicationsMockedResponse,
+  mockSearchPublicationsResponse,
   mockCommentFragment,
   mockPostFragment,
   mockSources,
+  simulateAuthenticatedProfile,
+  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { useSearchPublications, UseSearchPublicationsArgs } from '../useSearchPublications';
 
 function setupTestScenario({
@@ -28,7 +29,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createSearchPublicationsMockedResponse({
+        mockSearchPublicationsResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,
@@ -45,9 +46,10 @@ function setupTestScenario({
 describe(`Given the ${useSearchPublications.name} hook`, () => {
   const query = 'query_test';
   const publications = [mockPostFragment(), mockCommentFragment()];
+  const expectations = publications.map(({ __typename, id }) => ({ __typename, id }));
 
   beforeAll(() => {
-    simulateAppReady();
+    simulateNotAuthenticated();
   });
 
   describe('when the query returns data successfully', () => {
@@ -55,7 +57,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
       const { result } = setupTestScenario({ query, result: publications });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(publications);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 
@@ -63,7 +65,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
     const activeProfile = mockProfile();
 
     beforeAll(() => {
-      activeProfileIdentifierVar(activeProfile);
+      simulateAuthenticatedProfile(activeProfile);
     });
 
     it('should use the Active Profile Id as the "observerId"', async () => {
@@ -74,10 +76,10 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(publications);
+      expect(result.current.data).toMatchObject(expectations);
     });
 
-    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+    it('should allow to override the "observerId" on a per-call basis', async () => {
       const observerId = mockProfileId();
 
       const { result } = setupTestScenario({
@@ -88,7 +90,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(publications);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 });

@@ -1,10 +1,15 @@
 import { OperationVariables } from '@apollo/client';
-import { createSnapshotApolloClient, SafeApolloClient, Sources } from '@lens-protocol/api-bindings';
+import {
+  createSnapshotApolloClient,
+  SafeApolloClient,
+  SessionType,
+  Sources,
+  useSessionVar,
+} from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
-import { useActiveProfileIdentifier } from '../profile/useActiveProfileIdentifier';
 import { useSharedDependencies } from '../shared';
 
 export type UseApolloClientResult<TOptions> = TOptions & {
@@ -74,15 +79,17 @@ export function useActiveProfileAsDefaultObserver<TVariables>({
   variables,
   ...others
 }: UseActiveProfileAsDefaultObserverArgs<TVariables>): UseActiveProfileAsDefaultObserverResult<TVariables> {
-  const { data: activeProfile, loading: bootstrapping } = useActiveProfileIdentifier();
+  const session = useSessionVar();
 
   return {
     ...others,
     variables: {
       ...variables,
-      observerId: variables.observerId ?? activeProfile?.id ?? null,
+      observerId:
+        variables.observerId ??
+        (session && session.type === SessionType.WithProfile ? session.profile.id : null),
     },
-    skip: skip || bootstrapping,
+    skip: skip || !session,
   };
 }
 

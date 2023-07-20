@@ -1,10 +1,11 @@
-import { Post, FragmentPost, activeProfileIdentifierVar } from '@lens-protocol/api-bindings';
+import { Post, FragmentPost } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockPostFragment,
   mockProfileFragment,
   mockSources,
-  createGetPublicationMockedResponse,
+  mockGetPublicationResponse,
+  simulateAuthenticatedProfile,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockTransactionData,
@@ -25,11 +26,11 @@ function setupTestScenario({
   transactionData: TransactionData<CreateMirrorRequest>;
 }) {
   const activeProfile = mockProfileFragment();
-  activeProfileIdentifierVar(activeProfile);
+  simulateAuthenticatedProfile(activeProfile);
 
   const sources = mockSources();
   const apolloClient = mockLensApolloClient([
-    createGetPublicationMockedResponse({
+    mockGetPublicationResponse({
       variables: {
         request: {
           publicationId: transactionData.request.publicationId,

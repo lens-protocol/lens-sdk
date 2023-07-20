@@ -11,19 +11,4 @@ export default defineConfig({
     nodePolyfills({ protocolImports: true }),
     visualizer({ open: true }) as PluginOption,
   ],
-
-  build: {
-    target: 'esnext',
-    minify: 'esbuild',
-
-    rollupOptions: {
-      treeshake: {
-        preset: 'recommended',
-      },
-    },
-  },
-
-  define: {
-    'process.env': {},
-  },
 });

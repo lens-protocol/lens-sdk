@@ -1,9 +1,13 @@
-import { success } from '@lens-protocol/shared-kernel';
-
-import { IActiveProfilePresenter } from '../profile';
+import type { ISessionPresenter } from '../lifecycle/ISessionPresenter';
 import { ActiveWallet } from './ActiveWallet';
-import { IActiveWalletPresenter } from './IActiveWalletPresenter';
-import { ILogoutPresenter, LogoutReason } from './ILogoutPresenter';
+
+/**
+ * The reason for logging out
+ */
+export enum LogoutReason {
+  CREDENTIALS_EXPIRED = 'credentials-expired',
+  USER_INITIATED = 'user-initiated',
+}
 
 export interface IResettableCredentialsGateway {
   invalidate(): Promise<void>;
@@ -23,9 +27,7 @@ export class WalletLogout {
     private credentialsGateway: IResettableCredentialsGateway,
     private activeWallet: ActiveWallet,
     private activeProfileGateway: IActiveProfileGateway,
-    private activeProfilePresenter: IActiveProfilePresenter,
-    private activeWalletPresenter: IActiveWalletPresenter,
-    private logoutPresenter: ILogoutPresenter,
+    private sessionPresenter: ISessionPresenter,
   ) {}
 
   async logout(reason: LogoutReason): Promise<void> {
@@ -34,13 +36,8 @@ export class WalletLogout {
     await this.walletGateway.reset();
     await this.activeProfileGateway.reset();
 
-    this.activeWalletPresenter.presentActiveWallet(null);
-    this.activeProfilePresenter.presentActiveProfile(null);
-
     await this.credentialsGateway.invalidate();
 
-    this.logoutPresenter.present(
-      success({ lastLoggedInWallet: activeWallet, logoutReason: reason }),
-    );
+    this.sessionPresenter.logout({ lastLoggedInWallet: activeWallet, logoutReason: reason });
   }
 }

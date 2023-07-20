@@ -4,8 +4,8 @@ import {
   mockLensApolloClient,
   mockRelayerResultFragment,
   mockCreateCommentTypedDataData,
-  createCreateCommentTypedDataMockedResponse,
-  createCreateCommentViaDispatcherMockedResponse,
+  mockCreateCommentTypedDataResponse,
+  mockCreateCommentViaDispatcherResponse,
   mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
@@ -63,7 +63,7 @@ describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
           - use the IMetadataUploader<CreateCommentRequest> to upload the publication metadata
           - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
       const apolloClient = mockLensApolloClient([
-        createCreateCommentTypedDataMockedResponse({
+        mockCreateCommentTypedDataResponse({
           variables: {
             request: {
               contentURI: uploadUrl,
@@ -86,7 +86,7 @@ describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
     it(`should be possible to override the signature nonce`, async () => {
       const nonce = mockNonce();
       const apolloClient = mockLensApolloClient([
-        createCreateCommentTypedDataMockedResponse({
+        mockCreateCommentTypedDataResponse({
           variables: {
             request: {
               contentURI: uploadUrl,
@@ -114,7 +114,7 @@ describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
           - use the IMetadataUploader<CreateCommentRequest> to upload the publication metadata
           - create an instance of the ${NativeTransaction.name}`, async () => {
       const apolloClient = mockLensApolloClient([
-        createCreateCommentViaDispatcherMockedResponse({
+        mockCreateCommentViaDispatcherResponse({
           variables: {
             request: {
               contentURI: uploadUrl,
@@ -152,7 +152,7 @@ describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
       async (relayError) => {
         const apolloClient = mockLensApolloClient([
-          createCreateCommentViaDispatcherMockedResponse({
+          mockCreateCommentViaDispatcherResponse({
             variables: {
               request: {
                 contentURI: uploadUrl,
@@ -166,7 +166,7 @@ describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
               result: relayError,
             },
           }),
-          createCreateCommentTypedDataMockedResponse({
+          mockCreateCommentTypedDataResponse({
             variables: {
               request: {
                 contentURI: uploadUrl,

@@ -95,14 +95,15 @@ export const describeAuthenticatedScenario =
         return;
       }
 
-      await burnProfile({
-        profileId: _testProfileId,
-        handle: testHandle,
-        wallet,
-        walletAddress: _walletAddress,
-        profile,
-        transaction,
-      });
+      // Profile can't be burned anymore because of profile guardian.
+      // await burnProfile({
+      //   profileId: _testProfileId,
+      //   handle: testHandle,
+      //   wallet,
+      //   walletAddress: _walletAddress,
+      //   profile,
+      //   transaction,
+      // });
     });
 
     describe(buildDescribeName(options), () =>
@@ -190,37 +191,37 @@ async function enableDispatcher({ profileId, wallet, profile, transaction }: Ena
   await transaction.waitForIsIndexed(txId);
 }
 
-type BurnProfile = {
-  profileId: string;
-  handle: string;
-  wallet: Wallet;
-  walletAddress: string;
-  profile: Profile;
-  transaction: Transaction;
-};
+// type BurnProfile = {
+//   profileId: string;
+//   handle: string;
+//   wallet: Wallet;
+//   walletAddress: string;
+//   profile: Profile;
+//   transaction: Transaction;
+// };
 
-async function burnProfile({
-  profileId,
-  handle,
-  wallet,
-  walletAddress,
-  profile,
-  transaction,
-}: BurnProfile) {
-  console.log('All tests finished, burning the test profile', {
-    profileId,
-    handle,
-  });
+// async function burnProfile({
+//   profileId,
+//   handle,
+//   wallet,
+//   walletAddress,
+//   profile,
+//   transaction,
+// }: BurnProfile) {
+//   console.log('All tests finished, burning the test profile', {
+//     profileId,
+//     handle,
+//   });
 
-  const burnProfileTypedDataResult = await profile.createBurnProfileTypedData({
-    profileId,
-  });
+//   const burnProfileTypedDataResult = await profile.createBurnProfileTypedData({
+//     profileId,
+//   });
 
-  const txId = await signAndBroadcast(transaction, wallet, burnProfileTypedDataResult);
+//   const txId = await signAndBroadcast(transaction, wallet, burnProfileTypedDataResult);
 
-  if (!txId) {
-    throw Error('Profile burn failed');
-  }
+//   if (!txId) {
+//     throw Error('Profile burn failed');
+//   }
 
-  console.log(`Profile ${profileId} owned by wallet ${walletAddress} is burned in a txId ${txId}`);
-}
+//   console.log(`Profile ${profileId} owned by wallet ${walletAddress} is burned in a txId ${txId}`);
+// }

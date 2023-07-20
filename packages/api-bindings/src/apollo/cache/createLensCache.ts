@@ -3,10 +3,8 @@ import {
   FieldPolicy,
   InMemoryCache,
   NormalizedCacheObject,
-  ReactiveVar,
   TypePolicy,
 } from '@apollo/client';
-import { WalletData } from '@lens-protocol/domain/use-cases/wallets';
 
 import generatedIntrospection, { StrictTypedTypePolicies } from '../../lens/generated';
 import { createAttributeTypePolicy } from './createAttributeTypePolicy';
@@ -40,11 +38,6 @@ import { notNormalizedType } from './utils/notNormalizedType';
 
 type TypePoliciesArgs = {
   /**
-   * @deprecated this should not be provided by the consumer but should be part of `@lens-protocol/api-bindings` exports
-   */
-  activeWalletVar: ReactiveVar<WalletData | null>;
-
-  /**
    * A list of ContentInsightMatcher used to extract insights from publication metadata content
    */
   contentMatchers?: ContentInsightMatcher[];
@@ -55,11 +48,10 @@ type InheritedTypePolicies = {
 };
 
 function createTypePolicies({
-  activeWalletVar,
   contentMatchers = [],
 }: TypePoliciesArgs): StrictTypedTypePolicies & InheritedTypePolicies {
   return {
-    Profile: createProfileTypePolicy(activeWalletVar),
+    Profile: createProfileTypePolicy(),
 
     // Comment, Mirror, and Post type policies inherit from Publication type policy
     Publication: createPublicationTypePolicy(),
@@ -116,7 +108,7 @@ function createTypePolicies({
   };
 }
 
-export function createLensCache(args: TypePoliciesArgs): ApolloCache<NormalizedCacheObject> {
+export function createLensCache(args: TypePoliciesArgs = {}): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     possibleTypes: generatedIntrospection.possibleTypes,
     typePolicies: createTypePolicies(args),

@@ -1,5 +1,5 @@
 export { LensClient } from './LensClient';
-export { polygon, mumbai, production, development } from './consts/environments';
+export { polygon, mumbai, production, development, sandbox } from './consts/environments';
 export * from './authentication';
 export * from './consts/config';
 export * from './consts/errors';
@@ -68,6 +68,7 @@ export type {
   PostFragment,
   ProfileFollowModuleSettingsFragment,
   ProfileFragment,
+  ProfileFieldsFragment,
   RelayerResultFragment,
   RelayErrorFragment,
   RevertCollectModuleSettingsFragment,

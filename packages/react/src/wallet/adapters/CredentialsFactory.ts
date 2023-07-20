@@ -1,14 +1,9 @@
-import {
-  Wallet,
-  WalletConnectionError,
-  UserRejectedError,
-  PendingSigningRequestError,
-} from '@lens-protocol/domain/entities';
+import { Wallet } from '@lens-protocol/domain/entities';
 import {
   CredentialsExpiredError,
   ICredentialsRenewer,
 } from '@lens-protocol/domain/use-cases/lifecycle';
-import { ICredentialsIssuer } from '@lens-protocol/domain/use-cases/wallets';
+import { ICredentialsIssuer, LoginError } from '@lens-protocol/domain/use-cases/wallets';
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { Credentials } from './Credentials';
@@ -32,12 +27,7 @@ export class CredentialsFactory implements ICredentialsIssuer, ICredentialsRenew
     return success(newCredentials);
   }
 
-  async issueCredentials(
-    wallet: Wallet,
-  ): PromiseResult<
-    Credentials,
-    PendingSigningRequestError | UserRejectedError | WalletConnectionError
-  > {
+  async issueCredentials(wallet: Wallet): PromiseResult<Credentials, LoginError> {
     const challenge = await this.auth.generateChallenge(wallet.address);
     const signedChallengeResult = await wallet.signMessage(challenge);
     if (signedChallengeResult.isFailure()) {

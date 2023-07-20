@@ -1,109 +1,91 @@
-import { Profile, activeProfileIdentifierVar } from '@lens-protocol/api-bindings';
+import { FragmentProfile, Profile, resetSession } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetProfileMockedResponse,
   mockProfileFragment,
   mockSources,
+  simulateNotAuthenticated,
+  simulateAuthenticatedWallet,
+  simulateAuthenticatedProfile,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockProfileId, mockProfileIdentifier, mockWalletData } from '@lens-protocol/domain/mocks';
-import { ProfileIdentifier } from '@lens-protocol/domain/use-cases/profile';
-import { waitFor } from '@testing-library/react';
+import { mockProfileIdentifier, mockWalletData } from '@lens-protocol/domain/mocks';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { ApplicationsState, useAppState } from '../../lifecycle/adapters/ApplicationPresenter';
-import { activeWalletVar } from '../../wallet/adapters/ActiveWalletPresenter';
 import { useActiveProfile } from '../useActiveProfile';
 
-jest.mock('../../lifecycle/adapters/ApplicationPresenter');
-
-function setupUseActiveProfile(args: {
-  profile: Profile;
-  activeProfile: ProfileIdentifier | null;
-}) {
+function setupUseActiveProfile({ profile }: { profile: Profile }) {
   const sources = mockSources();
 
-  activeProfileIdentifierVar(args.activeProfile);
-  activeWalletVar(mockWalletData({ address: args.profile.ownedBy }));
+  const apolloClient = mockLensApolloClient();
+
+  apolloClient.cache.writeFragment({
+    id: apolloClient.cache.identify({
+      __typename: 'Profile',
+      id: profile.id,
+    }),
+    fragment: FragmentProfile,
+    fragmentName: 'Profile',
+    data: profile,
+  });
 
   return renderHookWithMocks(() => useActiveProfile(), {
-    mocks: {
-      sources,
-      apolloClient: mockLensApolloClient(
-        [
-          createGetProfileMockedResponse({
-            profile: args.profile,
-            variables: {
-              request: {
-                profileId: args.profile.id,
-              },
-              sources,
-            },
-          }),
-        ],
-        { activeWalletVar },
-      ),
-    },
+    mocks: { sources, apolloClient },
   });
 }
 
 describe(`Given the ${useActiveProfile.name} hook`, () => {
-  const profileId = mockProfileId();
-  const handle = 'aave.lens';
-  const profile = mockProfileFragment({ id: profileId, handle });
+  const profile = mockProfileFragment();
 
-  describe(`when the application state is ${ApplicationsState.LOADING}`, () => {
+  describe(`when the current session is "null"`, () => {
+    beforeAll(() => {
+      resetSession();
+    });
+
     it('should return the expected loading state', async () => {
-      jest.mocked(useAppState).mockReturnValue(ApplicationsState.LOADING);
-      const { result } = setupUseActiveProfile({
-        profile,
-        activeProfile: mockProfileIdentifier({ handle, id: profileId }),
-      });
+      const { result } = setupUseActiveProfile({ profile });
 
       expect(result.current.loading).toBeTruthy();
       expect(result.current.data).toBeUndefined();
     });
   });
 
-  describe(`and the application state is ${ApplicationsState.READY}`, () => {
+  describe(`when the current session is anonymous`, () => {
     beforeAll(() => {
-      jest.mocked(useAppState).mockReturnValue(ApplicationsState.READY);
+      simulateNotAuthenticated();
     });
 
-    describe('when the active profile is defined', () => {
-      it('should return the expected loading state while fetching profile data', async () => {
-        const { result } = setupUseActiveProfile({
-          profile,
-          activeProfile: { handle, id: profileId },
-        });
+    it('should return null', async () => {
+      const { result } = setupUseActiveProfile({ profile });
 
-        expect(result.current.loading).toBe(true);
-        expect(result.current.data).toBeUndefined();
-      });
+      expect(result.current.data).toBeNull();
+    });
+  });
 
-      it('should return the expected profile data', async () => {
-        const { result } = setupUseActiveProfile({
-          profile,
-          activeProfile: mockProfileIdentifier({ handle, id: profileId }),
-        });
-
-        await waitFor(() => expect(result.current.loading).toBe(false));
-
-        expect(result.current.data).toMatchObject({
-          id: profileId,
-        });
-      });
+  describe(`when the current authenticated session does not have an active profile`, () => {
+    beforeAll(() => {
+      simulateAuthenticatedWallet(mockWalletData());
     });
 
-    describe('when the active profile is not defined', () => {
-      it('should return null', async () => {
-        const { result } = setupUseActiveProfile({
-          profile,
-          activeProfile: null,
-        });
+    it('should return null', async () => {
+      const { result } = setupUseActiveProfile({ profile });
 
-        await waitFor(() => expect(result.current.loading).toBe(false));
+      expect(result.current.data).toBeNull();
+    });
+  });
 
-        expect(result.current.data).toBeNull();
+  describe(`when the current session includes an active profile`, () => {
+    beforeAll(() => {
+      simulateAuthenticatedProfile(
+        mockProfileIdentifier(profile),
+        mockWalletData({ address: profile.ownedBy }),
+      );
+    });
+
+    it('should return the expected profile data without flickering of the "loading" flag', async () => {
+      const { result } = setupUseActiveProfile({ profile });
+
+      expect(result.current.loading).toBe(false);
+      expect(result.current.data).toMatchObject({
+        id: profile.id,
       });
     });
   });

@@ -3,16 +3,14 @@ import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
 import { SafeApolloClient } from '../SafeApolloClient';
-import { createSnapshotCache } from '../cache';
-import { mockLensCache, MockCacheConfiguration } from '../cache/__helpers__/mocks';
+import { createLensCache, createSnapshotCache } from '../cache';
 import { ApolloServerErrorCode } from '../isGraphQLValidationError';
 
 export function mockLensApolloClient(
-  mocks: ReadonlyArray<MockedResponse<unknown>>,
-  cacheConfiguration: MockCacheConfiguration = {},
+  mocks: ReadonlyArray<MockedResponse<unknown>> = [],
 ): SafeApolloClient<NormalizedCacheObject> {
   return new SafeApolloClient({
-    cache: mockLensCache(cacheConfiguration),
+    cache: createLensCache(),
 
     link: mockSingleLink(...mocks).setOnError((error) => {
       throw error;
@@ -57,9 +55,7 @@ export function createGraphQLValidationError(message = 'No pings please!'): Grap
   });
 }
 
-export function createValidationErrorMockedResponse(
-  document: DocumentNode,
-): MockedResponse<unknown> {
+export function mockValidationErrorResponse(document: DocumentNode): MockedResponse<unknown> {
   return {
     request: {
       query: document,
@@ -70,7 +66,16 @@ export function createValidationErrorMockedResponse(
   };
 }
 
-export function createGenericErrorMockedResponse(document: DocumentNode): MockedResponse<unknown> {
+export function mockGenericSuccessResponse<T>(document: DocumentNode, data: T): MockedResponse<T> {
+  return {
+    request: {
+      query: document,
+    },
+    result: { data },
+  };
+}
+
+export function mockGenericErrorResponse(document: DocumentNode): MockedResponse<unknown> {
   return {
     request: {
       query: document,

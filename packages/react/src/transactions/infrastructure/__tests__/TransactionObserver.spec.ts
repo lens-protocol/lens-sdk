@@ -11,8 +11,8 @@ import {
 import {
   mockLensApolloClient,
   mockHasTxHashBeenIndexedData,
-  createHasTxHashBeenIndexedMockedResponse,
-  createProxyActionStatusMockedResponse,
+  mockHasTxHashBeenIndexedResponse,
+  mockProxyActionStatusResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   ProxyActionStatus,
@@ -118,7 +118,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
 
     it('should succeed with indexed=true if the tx has been indexed by the BE', async () => {
       const responses = [
-        createHasTxHashBeenIndexedMockedResponse({
+        mockHasTxHashBeenIndexedResponse({
           variables: {
             request: { txHash },
           },
@@ -142,7 +142,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
 
     it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.REVERTED}] if the tx gets reverted`, async () => {
       const apolloClient = mockLensApolloClient([
-        createHasTxHashBeenIndexedMockedResponse({
+        mockHasTxHashBeenIndexedResponse({
           variables: {
             request: { txHash },
           },
@@ -164,7 +164,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.INDEXING_TIMEOUT}] if the tx is not indexed within a reasonable time`, async () => {
       const txHash = mockTransactionHash();
       const apolloClient = mockLensApolloClient([
-        createHasTxHashBeenIndexedMockedResponse({
+        mockHasTxHashBeenIndexedResponse({
           variables: {
             request: { txHash },
           },
@@ -198,7 +198,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     it('should succeed with indexed=true if the tx has been indexed by the BE', async () => {
       const txHash = mockTransactionHash();
       const responses = [
-        createHasTxHashBeenIndexedMockedResponse({
+        mockHasTxHashBeenIndexedResponse({
           variables: {
             request: { txId: indexingId },
           },
@@ -223,7 +223,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     it('should succeed with any new txHash if the it changes before being indexed', async () => {
       const upgradedTxHash = mockTransactionHash();
       const responses = [
-        createHasTxHashBeenIndexedMockedResponse({
+        mockHasTxHashBeenIndexedResponse({
           variables: {
             request: { txId: indexingId },
           },
@@ -232,7 +232,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
             txHash: mockTransactionHash(),
           }),
         }),
-        createHasTxHashBeenIndexedMockedResponse({
+        mockHasTxHashBeenIndexedResponse({
           variables: {
             request: { txId: indexingId },
           },
@@ -258,7 +258,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       const initialTxHash = mockTransactionHash();
       const upgradedTxHash = mockTransactionHash();
       const responses = [
-        createHasTxHashBeenIndexedMockedResponse({
+        mockHasTxHashBeenIndexedResponse({
           variables: {
             request: { txId: indexingId },
           },
@@ -267,7 +267,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
             txHash: initialTxHash,
           }),
         }),
-        createHasTxHashBeenIndexedMockedResponse({
+        mockHasTxHashBeenIndexedResponse({
           variables: {
             request: { txId: indexingId },
           },
@@ -291,7 +291,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
 
     it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.REVERTED}] if the tx gets reverted`, async () => {
       const apolloClient = mockLensApolloClient([
-        createHasTxHashBeenIndexedMockedResponse({
+        mockHasTxHashBeenIndexedResponse({
           variables: {
             request: { txId: indexingId },
           },
@@ -313,7 +313,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.INDEXING_TIMEOUT}] if the tx is not indexed within a reasonable time`, async () => {
       const txHash = mockTransactionHash();
       const apolloClient = mockLensApolloClient([
-        createHasTxHashBeenIndexedMockedResponse({
+        mockHasTxHashBeenIndexedResponse({
           variables: {
             request: { txId: indexingId },
           },
@@ -348,7 +348,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       const txHash = mockTransactionHash();
       const txId = faker.datatype.uuid();
       const responses = [
-        createProxyActionStatusMockedResponse({
+        mockProxyActionStatusResponse({
           variables: { proxyActionId: proxyId },
           result: { status: ProxyActionStatusTypes.Complete, txHash, txId },
         }),
@@ -371,7 +371,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       const upgradedTxHash = mockTransactionHash();
       const lastTxHash = mockTransactionHash();
       const responses = [
-        createProxyActionStatusMockedResponse({
+        mockProxyActionStatusResponse({
           variables: { proxyActionId: proxyId },
           result: {
             status: ProxyActionStatusTypes.Minting,
@@ -379,7 +379,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
             txId,
           },
         }),
-        createProxyActionStatusMockedResponse({
+        mockProxyActionStatusResponse({
           variables: { proxyActionId: proxyId },
           result: {
             status: ProxyActionStatusTypes.Minting,
@@ -387,7 +387,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
             txId,
           },
         }),
-        createProxyActionStatusMockedResponse({
+        mockProxyActionStatusResponse({
           variables: { proxyActionId: proxyId },
           result: {
             status: ProxyActionStatusTypes.Complete,
@@ -411,7 +411,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
 
     it(`should fail with ${TransactionError.name} for ${TransactionErrorReason.UNKNOWN} reason if the proxy action returns an error`, async () => {
       const apolloClient = mockLensApolloClient([
-        createProxyActionStatusMockedResponse({
+        mockProxyActionStatusResponse({
           variables: { proxyActionId: proxyId },
           result: {
             reason: 'UNKNOWN_ERROR',
@@ -432,7 +432,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     it(`should fail with ${TransactionError.name} for ${TransactionErrorReason.INDEXING_TIMEOUT} reason if the action is not completed within a reasonable time frame`, async () => {
       const txHash = mockTransactionHash();
       const apolloClient = mockLensApolloClient([
-        createProxyActionStatusMockedResponse({
+        mockProxyActionStatusResponse({
           variables: { proxyActionId: proxyId },
           result: {
             status: ProxyActionStatusTypes.Minting,

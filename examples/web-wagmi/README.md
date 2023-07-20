@@ -2,7 +2,7 @@
 
 This package is an example app showcasing the `@lens-protocol/react` capabilities as well as a possible integration with [wagmi](https://wagmi.sh/) and Aerwave via [Bundlr](https://github.com/Bundlr-Network).
 
-It is not published or released anywhere directly.
+To play with the latest version of the `web-wagmi` example without running it locally visit `https://lens-sdk-example-web-wagmi.vercel.app/`.
 
 ## Getting Started
 

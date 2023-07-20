@@ -5,8 +5,8 @@ import { when } from 'jest-when';
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveWallet, ICredentialsReader, IReadableWalletGateway } from '../ActiveWallet';
 
-describe('Given the ActiveWallet interactor', () => {
-  describe('when "getActiveWallet" is invoked', () => {
+describe(`Given the ${ActiveWallet.name} interactor`, () => {
+  describe(`when "${ActiveWallet.prototype.getActiveWallet.name}" is invoked`, () => {
     it('should return the active wallet when credentials are present', async () => {
       const wallet = mockWallet();
       const credentials = mockCredentials({ address: wallet.address });
@@ -18,9 +18,9 @@ describe('Given the ActiveWallet interactor', () => {
 
       when(walletGateway.getByAddress).calledWith(credentials.address).mockResolvedValue(wallet);
 
-      const gateway = new ActiveWallet(credentialsReader, walletGateway);
+      const loader = new ActiveWallet(credentialsReader, walletGateway);
 
-      const actual = await gateway.getActiveWallet();
+      const actual = await loader.getActiveWallet();
 
       expect(actual).toEqual(wallet);
     });
@@ -31,9 +31,9 @@ describe('Given the ActiveWallet interactor', () => {
       });
       const walletGateway = mock<IReadableWalletGateway>();
 
-      const gateway = new ActiveWallet(credentialsReader, walletGateway);
+      const loader = new ActiveWallet(credentialsReader, walletGateway);
 
-      const actual = await gateway.getActiveWallet();
+      const actual = await loader.getActiveWallet();
 
       expect(actual).toBeNull();
     });
@@ -48,9 +48,9 @@ describe('Given the ActiveWallet interactor', () => {
 
       when(walletGateway.getByAddress).calledWith(credentials.address).mockResolvedValue(null);
 
-      const gateway = new ActiveWallet(credentialsReader, walletGateway);
+      const loader = new ActiveWallet(credentialsReader, walletGateway);
 
-      await expect(() => gateway.getActiveWallet()).rejects.toThrow(InvariantError);
+      await expect(() => loader.getActiveWallet()).rejects.toThrow(InvariantError);
     });
   });
 });

@@ -1,4 +1,4 @@
-import { FeedEventItemType, ProfileOwnedByMeFragment, useFeed } from '@lens-protocol/react-web';
+import { FeedEventItemType, ProfileOwnedByMe, useFeed } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { LoginButton, WhenLoggedInWithProfile, WhenLoggedOut } from '../components/auth';
@@ -16,7 +16,7 @@ const allFeedEventTypes = [
 ];
 
 type UseFeedInnerProps = {
-  profile: ProfileOwnedByMeFragment;
+  profile: ProfileOwnedByMe;
 };
 
 function UseFeedInner({ profile }: UseFeedInnerProps) {

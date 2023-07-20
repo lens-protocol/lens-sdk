@@ -1,34 +1,28 @@
 import { LogoutReason, WalletLogout } from '@lens-protocol/domain/use-cases/wallets';
+import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
-import { ActiveWalletPresenter } from './ActiveWalletPresenter';
-import { LogoutPresenter } from './LogoutPresenter';
 
 export function useWalletLogoutController() {
   const {
     activeWallet,
     activeProfileGateway,
-    activeProfilePresenter,
     credentialsGateway,
-    onLogout,
+    sessionPresenter,
     walletGateway,
   } = useSharedDependencies();
 
-  return async (reason: LogoutReason) => {
-    const activeWalletPresenter = new ActiveWalletPresenter();
-    const logoutPresenter = new LogoutPresenter(onLogout);
+  return async (reason: LogoutReason): PromiseResult<void, never> => {
     const walletLogout = new WalletLogout(
       walletGateway,
       credentialsGateway,
       activeWallet,
       activeProfileGateway,
-      activeProfilePresenter,
-      activeWalletPresenter,
-      logoutPresenter,
+      sessionPresenter,
     );
 
     await walletLogout.logout(reason);
 
-    return logoutPresenter.asResult();
+    return success();
   };
 }

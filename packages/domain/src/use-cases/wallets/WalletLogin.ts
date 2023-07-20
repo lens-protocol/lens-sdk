@@ -3,14 +3,13 @@ import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol
 import {
   ICredentials,
   PendingSigningRequestError,
-  Profile,
   UserRejectedError,
   Wallet,
   WalletConnectionError,
 } from '../../entities';
-import { IActiveProfilePresenter, ActiveProfileLoader } from '../profile';
+import type { ISessionPresenter, ProfileIdentifier } from '../lifecycle/ISessionPresenter';
+import { ActiveProfileLoader } from '../profile';
 import { IGenericResultPresenter } from '../transactions';
-import { IActiveWalletPresenter } from './IActiveWalletPresenter';
 
 export interface IWalletFactory {
   create(request: WalletLoginRequest): Promise<Wallet>;
@@ -20,20 +19,12 @@ export interface IWritableWalletGateway {
   save(wallet: Wallet): Promise<void>;
 }
 
-export type WalletLoginResult = Profile | null;
+export type LoginError = PendingSigningRequestError | UserRejectedError | WalletConnectionError;
 
-export type IWalletLoginPresenter = IGenericResultPresenter<
-  WalletLoginResult,
-  PendingSigningRequestError | UserRejectedError | WalletConnectionError
->;
+export type IWalletLoginPresenter = IGenericResultPresenter<ProfileIdentifier | null, LoginError>;
 
 export interface ICredentialsIssuer {
-  issueCredentials(
-    wallet: Wallet,
-  ): PromiseResult<
-    ICredentials,
-    PendingSigningRequestError | UserRejectedError | WalletConnectionError
-  >;
+  issueCredentials(wallet: Wallet): PromiseResult<ICredentials, LoginError>;
 }
 
 export interface ICredentialsWriter {
@@ -51,10 +42,9 @@ export class WalletLogin {
     private readonly walletGateway: IWritableWalletGateway,
     private readonly credentialsIssuer: ICredentialsIssuer,
     private readonly credentialsWriter: ICredentialsWriter,
-    private readonly activeWalletPresenter: IActiveWalletPresenter,
-    private readonly walletLoginPresenter: IWalletLoginPresenter,
+    private readonly loginPresenter: IWalletLoginPresenter,
     private readonly activeProfileLoader: ActiveProfileLoader,
-    private readonly activeProfilePresenter: IActiveProfilePresenter,
+    private readonly sessionPresenter: ISessionPresenter,
   ) {}
 
   async login(request: WalletLoginRequest): Promise<void> {
@@ -62,7 +52,7 @@ export class WalletLogin {
     const result = await this.credentialsIssuer.issueCredentials(wallet);
 
     if (result.isFailure()) {
-      this.walletLoginPresenter.present(failure(result.error));
+      this.loginPresenter.present(failure(result.error));
       return;
     }
 
@@ -74,9 +64,7 @@ export class WalletLogin {
       request.handle,
     );
 
-    this.activeWalletPresenter.presentActiveWallet(wallet);
-    this.activeProfilePresenter.presentActiveProfile(profile);
-
-    this.walletLoginPresenter.present(success(profile));
+    this.sessionPresenter.authenticated(wallet, profile);
+    this.loginPresenter.present(success(profile));
   }
 }

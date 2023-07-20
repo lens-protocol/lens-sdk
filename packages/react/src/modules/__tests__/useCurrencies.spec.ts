@@ -1,6 +1,6 @@
 import {
   mockLensApolloClient,
-  createEnabledModuleCurrenciesMockedResponse,
+  mockEnabledModuleCurrenciesResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { ChainType } from '@lens-protocol/shared-kernel';
 import { mockDaiAsset, mockUsdcAsset } from '@lens-protocol/shared-kernel/mocks';
@@ -16,9 +16,7 @@ describe(`Given the ${useCurrencies.name} hook`, () => {
       const currencies = [mockDaiAsset({ chainType }), mockUsdcAsset({ chainType })];
       const { result } = renderHookWithMocks(() => useCurrencies(), {
         mocks: {
-          apolloClient: mockLensApolloClient([
-            createEnabledModuleCurrenciesMockedResponse(currencies),
-          ]),
+          apolloClient: mockLensApolloClient([mockEnabledModuleCurrenciesResponse(currencies)]),
         },
       });
 

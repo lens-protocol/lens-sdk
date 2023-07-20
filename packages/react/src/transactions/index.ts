@@ -14,6 +14,7 @@ export * from './useUpdateDispatcherConfig';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileDetails';
 export * from './useUpdateProfileImage';
+export * from './useClearRecentPosts';
 
 /**
  * Domain

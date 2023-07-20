@@ -207,6 +207,10 @@ export type AllPublicationsTagsRequest = {
   source?: InputMaybe<Scalars['Sources']>;
 };
 
+export type AlreadyInvitedCheckRequest = {
+  address: Scalars['EthereumAddress'];
+};
+
 export type AndConditionInput = {
   /** The list of conditions to apply AND to. You can only use nested boolean conditions at the root level. */
   criteria: Array<AccessConditionInput>;
@@ -805,17 +809,27 @@ export type IllegalReasonInputParams = {
   subreason: PublicationReportingIllegalSubreason;
 };
 
-export type InternalPublicationsFilterRequest = {
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  /** must be DD/MM/YYYY */
-  fromDate: Scalars['String'];
-  limit?: InputMaybe<Scalars['LimitScalar']>;
+export type InRequest = {
+  ethereumAddress: Scalars['EthereumAddress'];
+  numInvites: Scalars['Int'];
+  secret: Scalars['String'];
+};
+
+export type InTotalRequest = {
+  ethereumAddress: Scalars['EthereumAddress'];
+  secret: Scalars['String'];
+};
+
+export type InternalPinRequest = {
+  /** The shared secret */
+  items: Array<Scalars['Url']>;
   /** The shared secret */
   secret: Scalars['String'];
-  /** The App Id */
-  source: Scalars['Sources'];
-  /** must be DD/MM/YYYY */
-  toDate: Scalars['String'];
+};
+
+export type InviteRequest = {
+  invites: Array<Scalars['EthereumAddress']>;
+  secret: Scalars['String'];
 };
 
 export type LimitedFeeCollectModuleParams = {
@@ -942,15 +956,50 @@ export type NftData = {
   signature: Scalars['Signature'];
 };
 
+/** NFT search query */
+export type NftSearchRequest = {
+  /** Chain IDs to search. Supports Ethereum and Polygon. If omitted, it will search in both chains */
+  chainIds?: InputMaybe<Array<Scalars['ChainId']>>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  /** Exclude follower NFTs from the search */
+  excludeFollowers?: InputMaybe<Scalars['Boolean']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** Ethereum address of the owner. If unknown you can also search by profile ID */
+  ownerAddress?: InputMaybe<Scalars['EthereumAddress']>;
+  /** Profile ID of the owner */
+  profileId?: InputMaybe<Scalars['ProfileId']>;
+  /** Search query. Has to be part of a collection name */
+  query: Scalars['String'];
+};
+
 export type NfTsRequest = {
   /** Chain Ids */
-  chainIds: Array<Scalars['ChainId']>;
+  chainIds?: InputMaybe<Array<Scalars['ChainId']>>;
   /** Filter by contract address */
   contractAddress?: InputMaybe<Scalars['ContractAddress']>;
   cursor?: InputMaybe<Scalars['Cursor']>;
+  /** Exclude filtered collection addresses from the search. Cannot be used together ith `includeCollections` */
+  excludeCollections?: InputMaybe<Array<NftCollectionInput>>;
+  /** Exclude follower NFTs from the search. */
+  excludeFollowers?: InputMaybe<Scalars['Boolean']>;
+  /** Include only filtered collection addresses in the search. Overrides `contractAddress` */
+  includeCollections?: InputMaybe<Array<NftCollectionInput>>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
   /** Filter by owner address */
   ownerAddress: Scalars['EthereumAddress'];
+};
+
+export type Nfi = {
+  c: Scalars['ContractAddress'];
+  i: Scalars['ChainId'];
+};
+
+/** NFT collection filtering input */
+export type NftCollectionInput = {
+  /** The chain id that the collection exists in */
+  chainId: Scalars['ChainId'];
+  /** Filter by NFT collection contract address */
+  contractAddress: Scalars['ContractAddress'];
 };
 
 /** The NFT gallery input */
@@ -1057,6 +1106,16 @@ export type NftUpdateItemOrder = {
   tokenId: Scalars['String'];
 };
 
+export type NniRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
+export type NnvRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
 export type NotificationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
@@ -1119,6 +1178,10 @@ export type ProfileFollowModuleRedeemParams = {
 
 export type ProfileFollowRevenueQueryRequest = {
   /** The profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+export type ProfileGuardianRequest = {
   profileId: Scalars['ProfileId'];
 };
 
@@ -1208,6 +1271,12 @@ export enum PublicationContentWarning {
   Sensitive = 'SENSITIVE',
   Spoiler = 'SPOILER',
 }
+
+export type PublicationForYouRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  for: Scalars['ProfileId'];
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+};
 
 /** The publication main focus */
 export enum PublicationMainFocus {
@@ -1357,6 +1426,20 @@ export type PublicationMetadataV2Input = {
   version: Scalars['String'];
 };
 
+export type PublicationProfileBookmarkRequest = {
+  /** Profile id to perform the action */
+  profileId: Scalars['ProfileId'];
+  /** The internal publication id */
+  publicationId: Scalars['InternalPublicationId'];
+};
+
+export type PublicationProfileNotInterestedRequest = {
+  /** Profile id to perform the action */
+  profileId: Scalars['ProfileId'];
+  /** The internal publication id */
+  publicationId: Scalars['InternalPublicationId'];
+};
+
 export type PublicationQueryRequest = {
   /** The publication id */
   publicationId?: InputMaybe<Scalars['InternalPublicationId']>;
@@ -1430,6 +1513,16 @@ export enum PublicationTypes {
   Post = 'POST',
 }
 
+export type PublicationsProfileBookmarkedQueryRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  /** Profile id */
+  profileId: Scalars['ProfileId'];
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+};
+
 export type PublicationsQueryRequest = {
   /** The ethereum address */
   collectedBy?: InputMaybe<Scalars['EthereumAddress']>;
@@ -1485,6 +1578,8 @@ export type RecipientDataInput = {
 export type RecommendedProfileOptions = {
   /** If you wish to turn ML off */
   disableML?: InputMaybe<Scalars['Boolean']>;
+  /** The more advanced who to follow you should pass this in */
+  profileId?: InputMaybe<Scalars['ProfileId']>;
   /** If you wish to shuffle the results */
   shuffle?: InputMaybe<Scalars['Boolean']>;
 };
@@ -1557,6 +1652,7 @@ export enum RelayRoleKey {
   WithSig_1 = 'WITH_SIG_1',
   WithSig_2 = 'WITH_SIG_2',
   WithSig_3 = 'WITH_SIG_3',
+  ZkRelayer_1 = 'ZK_RELAYER_1',
 }
 
 /** The request object to remove interests from a profile */
@@ -2552,6 +2648,17 @@ export type CreateSetDispatcherTypedDataData = {
   };
 };
 
+export type ProfileGuardianResult = {
+  protected: boolean;
+  disablingProtectionTimestamp: string | null;
+};
+
+export type ProfileGuardianVariables = Exact<{
+  request: ProfileGuardianRequest;
+}>;
+
+export type ProfileGuardianData = { result: ProfileGuardianResult };
+
 export type FeeFollowModuleSettings = {
   __typename: 'FeeFollowModuleSettings';
   contractAddress: string;
@@ -2603,7 +2710,7 @@ export type ProfileStats = {
   mirrorsCount: number;
 };
 
-export type Profile = {
+export type ProfileFields = {
   __typename: 'Profile';
   id: ProfileId;
   name: string | null;
@@ -2635,6 +2742,8 @@ export type Profile = {
     worldcoin: { isHuman: boolean };
   };
 };
+
+export type Profile = { invitedBy: ProfileFields | null } & ProfileFields;
 
 export type ProfilesToFollowVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
@@ -3429,8 +3538,8 @@ export const FragmentAttribute = /*#__PURE__*/ gql`
     value
   }
 `;
-export const FragmentProfile = /*#__PURE__*/ gql`
-  fragment Profile on Profile {
+export const FragmentProfileFields = /*#__PURE__*/ gql`
+  fragment ProfileFields on Profile {
     __typename
     id
     name
@@ -3510,6 +3619,15 @@ export const FragmentProfile = /*#__PURE__*/ gql`
   ${FragmentRevertFollowModuleSettings}
   ${FragmentUnknownFollowModuleSettings}
   ${FragmentAttribute}
+`;
+export const FragmentProfile = /*#__PURE__*/ gql`
+  fragment Profile on Profile {
+    ...ProfileFields
+    invitedBy {
+      ...ProfileFields
+    }
+  }
+  ${FragmentProfileFields}
 `;
 export const FragmentWallet = /*#__PURE__*/ gql`
   fragment Wallet on Wallet {
@@ -4277,6 +4395,12 @@ export const FragmentCreatePostEip712TypedData = /*#__PURE__*/ gql`
     }
   }
   ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentProfileGuardianResult = /*#__PURE__*/ gql`
+  fragment ProfileGuardianResult on ProfileGuardianResult {
+    protected
+    disablingProtectionTimestamp
+  }
 `;
 export const FragmentFollower = /*#__PURE__*/ gql`
   fragment Follower on Follower {
@@ -5803,6 +5927,55 @@ export type CreateSetDispatcherTypedDataMutationResult =
 export type CreateSetDispatcherTypedDataMutationOptions = Apollo.BaseMutationOptions<
   CreateSetDispatcherTypedDataData,
   CreateSetDispatcherTypedDataVariables
+>;
+export const ProfileGuardianDocument = /*#__PURE__*/ gql`
+  query ProfileGuardian($request: ProfileGuardianRequest!) {
+    result: profileGuardianInformation(request: $request) {
+      ...ProfileGuardianResult
+    }
+  }
+  ${FragmentProfileGuardianResult}
+`;
+
+/**
+ * __useProfileGuardian__
+ *
+ * To run a query within a React component, call `useProfileGuardian` and pass it any options that fit your needs.
+ * When your component renders, `useProfileGuardian` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileGuardian({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useProfileGuardian(
+  baseOptions: Apollo.QueryHookOptions<ProfileGuardianData, ProfileGuardianVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileGuardianData, ProfileGuardianVariables>(
+    ProfileGuardianDocument,
+    options,
+  );
+}
+export function useProfileGuardianLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfileGuardianData, ProfileGuardianVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileGuardianData, ProfileGuardianVariables>(
+    ProfileGuardianDocument,
+    options,
+  );
+}
+export type ProfileGuardianHookResult = ReturnType<typeof useProfileGuardian>;
+export type ProfileGuardianLazyQueryHookResult = ReturnType<typeof useProfileGuardianLazyQuery>;
+export type ProfileGuardianQueryResult = Apollo.QueryResult<
+  ProfileGuardianData,
+  ProfileGuardianVariables
 >;
 export const ProfilesToFollowDocument = /*#__PURE__*/ gql`
   query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {
@@ -8029,6 +8202,7 @@ export type CollectedEventFieldPolicy = {
 };
 export type CommentKeySpecifier = (
   | 'appId'
+  | 'bookmarked'
   | 'canComment'
   | 'canDecrypt'
   | 'canMirror'
@@ -8053,6 +8227,7 @@ export type CommentKeySpecifier = (
   | 'mainPost'
   | 'metadata'
   | 'mirrors'
+  | 'notInterested'
   | 'onChainContentURI'
   | 'profile'
   | 'rankingScore'
@@ -8064,6 +8239,7 @@ export type CommentKeySpecifier = (
 )[];
 export type CommentFieldPolicy = {
   appId?: FieldPolicy<any> | FieldReadFunction<any>;
+  bookmarked?: FieldPolicy<any> | FieldReadFunction<any>;
   canComment?: FieldPolicy<any> | FieldReadFunction<any>;
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -8088,6 +8264,7 @@ export type CommentFieldPolicy = {
   mainPost?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
+  notInterested?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   rankingScore?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9139,6 +9316,20 @@ export type GlobalProtocolStatsFieldPolicy = {
   totalProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   totalRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type InternalPinResultKeySpecifier = (
+  | 'ipfs'
+  | 'referenceItem'
+  | InternalPinResultKeySpecifier
+)[];
+export type InternalPinResultFieldPolicy = {
+  ipfs?: FieldPolicy<any> | FieldReadFunction<any>;
+  referenceItem?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type InvitedResultKeySpecifier = ('address' | 'when' | InvitedResultKeySpecifier)[];
+export type InvitedResultFieldPolicy = {
+  address?: FieldPolicy<any> | FieldReadFunction<any>;
+  when?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type LimitedFeeCollectModuleSettingsKeySpecifier = (
   | 'amount'
   | 'collectLimit'
@@ -9297,6 +9488,7 @@ export type MetadataOutputFieldPolicy = {
 };
 export type MirrorKeySpecifier = (
   | 'appId'
+  | 'bookmarked'
   | 'canComment'
   | 'canDecrypt'
   | 'canMirror'
@@ -9311,6 +9503,7 @@ export type MirrorKeySpecifier = (
   | 'isGated'
   | 'metadata'
   | 'mirrorOf'
+  | 'notInterested'
   | 'onChainContentURI'
   | 'profile'
   | 'reaction'
@@ -9320,6 +9513,7 @@ export type MirrorKeySpecifier = (
 )[];
 export type MirrorFieldPolicy = {
   appId?: FieldPolicy<any> | FieldReadFunction<any>;
+  bookmarked?: FieldPolicy<any> | FieldReadFunction<any>;
   canComment?: FieldPolicy<any> | FieldReadFunction<any>;
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9334,6 +9528,7 @@ export type MirrorFieldPolicy = {
   isGated?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOf?: FieldPolicy<any> | FieldReadFunction<any>;
+  notInterested?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9390,6 +9585,8 @@ export type MultirecipientFeeCollectModuleSettingsFieldPolicy = {
 export type MutationKeySpecifier = (
   | 'ach'
   | 'addProfileInterests'
+  | 'addPublicationProfileBookmark'
+  | 'addPublicationProfileNotInterested'
   | 'addReaction'
   | 'authenticate'
   | 'broadcast'
@@ -9433,9 +9630,15 @@ export type MutationKeySpecifier = (
   | 'hel'
   | 'hidePublication'
   | 'idKitPhoneVerifyWebhook'
+  | 'in'
+  | 'invite'
+  | 'nni'
+  | 'nnv'
   | 'proxyAction'
   | 'refresh'
   | 'removeProfileInterests'
+  | 'removePublicationProfileBookmark'
+  | 'removePublicationProfileNotInterested'
   | 'removeReaction'
   | 'reportPublication'
   | 'updateNftGalleryInfo'
@@ -9446,6 +9649,8 @@ export type MutationKeySpecifier = (
 export type MutationFieldPolicy = {
   ach?: FieldPolicy<any> | FieldReadFunction<any>;
   addProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
+  addPublicationProfileBookmark?: FieldPolicy<any> | FieldReadFunction<any>;
+  addPublicationProfileNotInterested?: FieldPolicy<any> | FieldReadFunction<any>;
   addReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   authenticate?: FieldPolicy<any> | FieldReadFunction<any>;
   broadcast?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9489,9 +9694,15 @@ export type MutationFieldPolicy = {
   hel?: FieldPolicy<any> | FieldReadFunction<any>;
   hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
   idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
+  in?: FieldPolicy<any> | FieldReadFunction<any>;
+  invite?: FieldPolicy<any> | FieldReadFunction<any>;
+  nni?: FieldPolicy<any> | FieldReadFunction<any>;
+  nnv?: FieldPolicy<any> | FieldReadFunction<any>;
   proxyAction?: FieldPolicy<any> | FieldReadFunction<any>;
   refresh?: FieldPolicy<any> | FieldReadFunction<any>;
   removeProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
+  removePublicationProfileBookmark?: FieldPolicy<any> | FieldReadFunction<any>;
+  removePublicationProfileNotInterested?: FieldPolicy<any> | FieldReadFunction<any>;
   removeReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   reportPublication?: FieldPolicy<any> | FieldReadFunction<any>;
   updateNftGalleryInfo?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9735,6 +9946,15 @@ export type PaginatedFollowingResultFieldPolicy = {
   items?: FieldPolicy<any> | FieldReadFunction<any>;
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PaginatedForYouResultKeySpecifier = (
+  | 'items'
+  | 'pageInfo'
+  | PaginatedForYouResultKeySpecifier
+)[];
+export type PaginatedForYouResultFieldPolicy = {
+  items?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type PaginatedNotificationResultKeySpecifier = (
   | 'items'
   | 'pageInfo'
@@ -9841,6 +10061,7 @@ export type PendingPostFieldPolicy = {
 };
 export type PostKeySpecifier = (
   | 'appId'
+  | 'bookmarked'
   | 'canComment'
   | 'canDecrypt'
   | 'canMirror'
@@ -9862,6 +10083,7 @@ export type PostKeySpecifier = (
   | 'isOptimisticMirroredByMe'
   | 'metadata'
   | 'mirrors'
+  | 'notInterested'
   | 'onChainContentURI'
   | 'profile'
   | 'reaction'
@@ -9872,6 +10094,7 @@ export type PostKeySpecifier = (
 )[];
 export type PostFieldPolicy = {
   appId?: FieldPolicy<any> | FieldReadFunction<any>;
+  bookmarked?: FieldPolicy<any> | FieldReadFunction<any>;
   canComment?: FieldPolicy<any> | FieldReadFunction<any>;
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9893,6 +10116,7 @@ export type PostFieldPolicy = {
   isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
+  notInterested?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9918,6 +10142,7 @@ export type ProfileKeySpecifier = (
   | 'handle'
   | 'id'
   | 'interests'
+  | 'invitedBy'
   | 'isDefault'
   | 'isFollowedByMe'
   | 'isFollowing'
@@ -9943,6 +10168,7 @@ export type ProfileFieldPolicy = {
   handle?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   interests?: FieldPolicy<any> | FieldReadFunction<any>;
+  invitedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   isDefault?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowing?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9962,6 +10188,15 @@ export type ProfileFollowModuleSettingsKeySpecifier = (
 export type ProfileFollowModuleSettingsFieldPolicy = {
   contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type ProfileGuardianResultKeySpecifier = (
+  | 'disablingProtectionTimestamp'
+  | 'protected'
+  | ProfileGuardianResultKeySpecifier
+)[];
+export type ProfileGuardianResultFieldPolicy = {
+  disablingProtectionTimestamp?: FieldPolicy<any> | FieldReadFunction<any>;
+  protected?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileOwnershipOutputKeySpecifier = (
   | 'profileId'
@@ -10094,6 +10329,7 @@ export type PublicationStatsKeySpecifier = (
   | 'totalAmountOfCollects'
   | 'totalAmountOfComments'
   | 'totalAmountOfMirrors'
+  | 'totalBookmarks'
   | 'totalDownvotes'
   | 'totalUpvotes'
   | PublicationStatsKeySpecifier
@@ -10104,6 +10340,7 @@ export type PublicationStatsFieldPolicy = {
   totalAmountOfCollects?: FieldPolicy<any> | FieldReadFunction<any>;
   totalAmountOfComments?: FieldPolicy<any> | FieldReadFunction<any>;
   totalAmountOfMirrors?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalBookmarks?: FieldPolicy<any> | FieldReadFunction<any>;
   totalDownvotes?: FieldPolicy<any> | FieldReadFunction<any>;
   totalUpvotes?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -10118,6 +10355,7 @@ export type PublicationValidateMetadataResultFieldPolicy = {
 };
 export type QueryKeySpecifier = (
   | 'allPublicationsTags'
+  | 'alreadyInvited'
   | 'approvedModuleAllowanceAmount'
   | 'challenge'
   | 'claimableHandles'
@@ -10138,12 +10376,16 @@ export type QueryKeySpecifier = (
   | 'followerNftOwnedTokenIds'
   | 'followers'
   | 'following'
+  | 'forYou'
   | 'gct'
   | 'gdm'
   | 'generateModuleCurrencyApprovalData'
   | 'globalProtocolStats'
   | 'hasTxHashBeenIndexed'
-  | 'internalPublicationFilter'
+  | 'internalPin'
+  | 'intotal'
+  | 'invited'
+  | 'invitesLeft'
   | 'isIDKitPhoneVerified'
   | 'iss'
   | 'mutualFollowersProfiles'
@@ -10156,6 +10398,7 @@ export type QueryKeySpecifier = (
   | 'profile'
   | 'profileFollowModuleBeenRedeemed'
   | 'profileFollowRevenue'
+  | 'profileGuardianInformation'
   | 'profileInterests'
   | 'profileOnChainIdentity'
   | 'profilePublicationRevenue'
@@ -10166,10 +10409,12 @@ export type QueryKeySpecifier = (
   | 'publicationMetadataStatus'
   | 'publicationRevenue'
   | 'publications'
+  | 'publicationsProfileBookmarks'
   | 'recommendedProfiles'
   | 'rel'
   | 'relayQueues'
   | 'search'
+  | 'searchNfts'
   | 'txIdToTxHash'
   | 'unknownEnabledModules'
   | 'userSigNonces'
@@ -10181,6 +10426,7 @@ export type QueryKeySpecifier = (
 )[];
 export type QueryFieldPolicy = {
   allPublicationsTags?: FieldPolicy<any> | FieldReadFunction<any>;
+  alreadyInvited?: FieldPolicy<any> | FieldReadFunction<any>;
   approvedModuleAllowanceAmount?: FieldPolicy<any> | FieldReadFunction<any>;
   challenge?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableHandles?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10201,12 +10447,16 @@ export type QueryFieldPolicy = {
   followerNftOwnedTokenIds?: FieldPolicy<any> | FieldReadFunction<any>;
   followers?: FieldPolicy<any> | FieldReadFunction<any>;
   following?: FieldPolicy<any> | FieldReadFunction<any>;
+  forYou?: FieldPolicy<any> | FieldReadFunction<any>;
   gct?: FieldPolicy<any> | FieldReadFunction<any>;
   gdm?: FieldPolicy<any> | FieldReadFunction<any>;
   generateModuleCurrencyApprovalData?: FieldPolicy<any> | FieldReadFunction<any>;
   globalProtocolStats?: FieldPolicy<any> | FieldReadFunction<any>;
   hasTxHashBeenIndexed?: FieldPolicy<any> | FieldReadFunction<any>;
-  internalPublicationFilter?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalPin?: FieldPolicy<any> | FieldReadFunction<any>;
+  intotal?: FieldPolicy<any> | FieldReadFunction<any>;
+  invited?: FieldPolicy<any> | FieldReadFunction<any>;
+  invitesLeft?: FieldPolicy<any> | FieldReadFunction<any>;
   isIDKitPhoneVerified?: FieldPolicy<any> | FieldReadFunction<any>;
   iss?: FieldPolicy<any> | FieldReadFunction<any>;
   mutualFollowersProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10219,6 +10469,7 @@ export type QueryFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowModuleBeenRedeemed?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
+  profileGuardianInformation?: FieldPolicy<any> | FieldReadFunction<any>;
   profileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   profileOnChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
   profilePublicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10229,10 +10480,12 @@ export type QueryFieldPolicy = {
   publicationMetadataStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   publicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   publications?: FieldPolicy<any> | FieldReadFunction<any>;
+  publicationsProfileBookmarks?: FieldPolicy<any> | FieldReadFunction<any>;
   recommendedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   rel?: FieldPolicy<any> | FieldReadFunction<any>;
   relayQueues?: FieldPolicy<any> | FieldReadFunction<any>;
   search?: FieldPolicy<any> | FieldReadFunction<any>;
+  searchNfts?: FieldPolicy<any> | FieldReadFunction<any>;
   txIdToTxHash?: FieldPolicy<any> | FieldReadFunction<any>;
   unknownEnabledModules?: FieldPolicy<any> | FieldReadFunction<any>;
   userSigNonces?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -11256,6 +11509,17 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | GlobalProtocolStatsKeySpecifier);
     fields?: GlobalProtocolStatsFieldPolicy;
   };
+  InternalPinResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | InternalPinResultKeySpecifier
+      | (() => undefined | InternalPinResultKeySpecifier);
+    fields?: InternalPinResultFieldPolicy;
+  };
+  InvitedResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | InvitedResultKeySpecifier | (() => undefined | InvitedResultKeySpecifier);
+    fields?: InvitedResultFieldPolicy;
+  };
   LimitedFeeCollectModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -11453,6 +11717,13 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | PaginatedFollowingResultKeySpecifier);
     fields?: PaginatedFollowingResultFieldPolicy;
   };
+  PaginatedForYouResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | PaginatedForYouResultKeySpecifier
+      | (() => undefined | PaginatedForYouResultKeySpecifier);
+    fields?: PaginatedForYouResultFieldPolicy;
+  };
   PaginatedNotificationResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -11538,6 +11809,13 @@ export type StrictTypedTypePolicies = {
       | ProfileFollowModuleSettingsKeySpecifier
       | (() => undefined | ProfileFollowModuleSettingsKeySpecifier);
     fields?: ProfileFollowModuleSettingsFieldPolicy;
+  };
+  ProfileGuardianResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | ProfileGuardianResultKeySpecifier
+      | (() => undefined | ProfileGuardianResultKeySpecifier);
+    fields?: ProfileGuardianResultFieldPolicy;
   };
   ProfileOwnershipOutput?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:

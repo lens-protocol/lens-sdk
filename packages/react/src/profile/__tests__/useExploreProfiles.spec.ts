@@ -1,20 +1,17 @@
+import { Profile, ProfileSortCriteria } from '@lens-protocol/api-bindings';
 import {
-  activeProfileIdentifierVar,
-  Profile,
-  ProfileSortCriteria,
-} from '@lens-protocol/api-bindings';
-import {
-  createExploreProfilesMockedResponse,
+  mockExploreProfilesResponse,
   mockLensApolloClient,
   mockProfileFragment,
   mockSources,
+  simulateAuthenticatedProfile,
+  simulateAuthenticatedWallet,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { useExploreProfiles, UseExploreProfilesArgs } from '../useExploreProfiles';
 
@@ -31,7 +28,7 @@ function setupTestScenario({
       mocks: {
         sources,
         apolloClient: mockLensApolloClient([
-          createExploreProfilesMockedResponse({
+          mockExploreProfilesResponse({
             variables: {
               limit: DEFAULT_PAGINATED_QUERY_LIMIT,
               sortCriteria: ProfileSortCriteria.CreatedOn,
@@ -49,18 +46,19 @@ function setupTestScenario({
 
 describe(`Given the ${useExploreProfiles.name} hook`, () => {
   const profiles = [mockProfileFragment()];
-
-  beforeAll(() => {
-    simulateAppReady();
-  });
+  const expectations = profiles.map(({ __typename, id }) => ({ __typename, id }));
 
   describe('when the query returns data successfully', () => {
+    beforeAll(() => {
+      simulateAuthenticatedWallet();
+    });
+
     it('should return list of profiles', async () => {
       const { result } = setupTestScenario({ result: profiles });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
 
-      expect(result.current.data).toEqual(profiles);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 
@@ -68,7 +66,7 @@ describe(`Given the ${useExploreProfiles.name} hook`, () => {
     const activeProfile = mockProfile();
 
     beforeAll(() => {
-      activeProfileIdentifierVar(activeProfile);
+      simulateAuthenticatedProfile(activeProfile);
     });
 
     it('should use the Active Profile Id as the "observerId"', async () => {
@@ -78,10 +76,10 @@ describe(`Given the ${useExploreProfiles.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(profiles);
+      expect(result.current.data).toMatchObject(expectations);
     });
 
-    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+    it('should allow to override the "observerId" on a per-call basis', async () => {
       const observerId = mockProfileId();
 
       const { result } = setupTestScenario({
@@ -91,7 +89,7 @@ describe(`Given the ${useExploreProfiles.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toEqual(profiles);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 });

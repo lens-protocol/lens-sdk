@@ -5,10 +5,9 @@ import {
   FragmentPost,
   AnyPublication,
   ContentPublication,
-  activeProfileIdentifierVar,
 } from '@lens-protocol/api-bindings';
 import {
-  createGetPublicationMockedResponse,
+  mockGetPublicationResponse,
   mockLensApolloClient,
   mockCommentFragment,
   mockMirrorFragment,
@@ -16,6 +15,7 @@ import {
   mockProfileFragment,
   mockPublicationStatsFragment,
   mockSources,
+  simulateAuthenticatedProfile,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockTransactionData, mockPaidCollectRequest } from '@lens-protocol/domain/mocks';
 import { nonNullable } from '@lens-protocol/shared-kernel';
@@ -38,11 +38,11 @@ function setupTestScenario({
   expected: AnyPublication;
 }) {
   const activeProfile = mockProfileFragment();
-  activeProfileIdentifierVar(activeProfile);
+  simulateAuthenticatedProfile(activeProfile);
 
   const sources = mockSources();
   const apolloClient = mockLensApolloClient([
-    createGetPublicationMockedResponse({
+    mockGetPublicationResponse({
       variables: {
         request: { publicationId: publication.id },
         observerId: activeProfile.id,

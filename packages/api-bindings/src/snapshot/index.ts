@@ -33,7 +33,7 @@ export enum SnapshotVotingSystem {
    * In the **second step** if the first-choice candidate doesn't get over 50% of the total votes the choice with the **fewest** number one votes is **eliminated**.
    * Voters who had chosen the defeated choice as number one now have their number two choice **counted as their number one** choice.
    *
-   * The process continues over multiple rounds until a choice has more than half (> 50%) of the total votes.
+   * The process continues over multiple rounds until a choice has more than half (\> 50%) of the total votes.
    */
   RANKED_CHOICE = 'ranked-choice',
   /**

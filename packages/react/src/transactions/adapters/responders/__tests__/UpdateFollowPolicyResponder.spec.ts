@@ -1,7 +1,7 @@
 import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -26,9 +26,10 @@ function setupUpdateFollowPolicyResponder({
 }) {
   const sources = mockSources();
   const apolloClient = mockLensApolloClient([
-    createGetProfileMockedResponse({
+    mockGetProfileResponse({
       variables: {
         request: { profileId: updatedProfile.id },
+        observerId: null,
         sources,
       },
       profile: updatedProfile,

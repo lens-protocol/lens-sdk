@@ -29,7 +29,7 @@ fragment Attribute on Attribute {
   value
 }
 
-fragment Profile on Profile {
+fragment ProfileFields on Profile {
   __typename
   id
   name
@@ -100,6 +100,14 @@ fragment Profile on Profile {
   isDefault
   isFollowedByMe(isFinalisedOnChain: true)
   isFollowing(who: $observerId)
+}
+
+fragment Profile on Profile {
+  ...ProfileFields
+
+  invitedBy {
+    ...ProfileFields
+  }
 }
 
 fragment EIP712TypedDataDomain on EIP712TypedDataDomain {

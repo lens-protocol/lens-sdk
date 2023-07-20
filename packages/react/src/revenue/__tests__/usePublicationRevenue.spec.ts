@@ -1,9 +1,11 @@
-import { PublicationRevenue, activeProfileIdentifierVar } from '@lens-protocol/api-bindings';
+import { PublicationRevenue } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetPublicationRevenueMockedResponse,
+  mockGetPublicationRevenueResponse,
   mockPublicationRevenueFragment,
   mockSources,
+  simulateAuthenticatedProfile,
+  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
@@ -11,7 +13,6 @@ import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { simulateAppReady } from '../../lifecycle/adapters/__helpers__/simulate';
 import { usePublicationRevenue, UsePublicationRevenueArgs } from '../usePublicationRevenue';
 
 function setupTestScenario({
@@ -28,7 +29,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createGetPublicationRevenueMockedResponse({
+        mockGetPublicationRevenueResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,
@@ -44,9 +45,10 @@ function setupTestScenario({
 describe(`Given the ${usePublicationRevenue.name} hook`, () => {
   const revenue = mockPublicationRevenueFragment();
   const publicationId = mockPublicationId();
+  const expectations = { __typename: revenue.__typename };
 
   beforeAll(() => {
-    simulateAppReady();
+    simulateNotAuthenticated();
   });
 
   describe.each([
@@ -60,7 +62,9 @@ describe(`Given the ${usePublicationRevenue.name} hook`, () => {
     },
   ])('$description', ({ activeProfileValue }) => {
     beforeAll(() => {
-      activeProfileIdentifierVar(activeProfileValue);
+      if (activeProfileValue) {
+        simulateAuthenticatedProfile(activeProfileValue);
+      }
     });
 
     it('should settle with the publication revenue details', async () => {
@@ -72,7 +76,7 @@ describe(`Given the ${usePublicationRevenue.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(revenue);
+      expect(result.current.data).toMatchObject(expectations);
     });
 
     it('should allow to specify the "observerId" on a per-call basis', async () => {
@@ -86,7 +90,7 @@ describe(`Given the ${usePublicationRevenue.name} hook`, () => {
       });
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(revenue);
+      expect(result.current.data).toMatchObject(expectations);
     });
 
     it(`should settle with a ${NotFoundError.name} if not found`, async () => {
