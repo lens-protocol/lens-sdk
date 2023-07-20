@@ -4,9 +4,9 @@ import {
   mockLensApolloClient,
   mockDataAvailabilityPublicationResult,
   mockRelayErrorFragment,
-  createCreateDataAvailabilityCommentTypedDataMockedResponse,
+  mockCreateDataAvailabilityCommentTypedDataResponse,
   mockCreateCommentTypedDataData,
-  createCreateDataAvailabilityCommentViaDispatcherDataMockedResponse,
+  mockCreateDataAvailabilityCommentViaDispatcherDataResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { DataTransaction } from '@lens-protocol/domain/entities';
 import { mockCreateCommentRequest } from '@lens-protocol/domain/mocks';
@@ -48,7 +48,7 @@ describe(`Given an instance of ${CreateOffChainCommentGateway.name}`, () => {
         - use the IMetadataUploader<CreateCommentRequest'> to upload the publication metadata
         - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
       const apolloClient = mockLensApolloClient([
-        createCreateDataAvailabilityCommentTypedDataMockedResponse({
+        mockCreateDataAvailabilityCommentTypedDataResponse({
           variables: {
             request: {
               commentOn: request.publicationId,
@@ -76,7 +76,7 @@ describe(`Given an instance of ${CreateOffChainCommentGateway.name}`, () => {
         - use the IMetadataUploader<CreateCommentRequest'> to upload the publication metadata
         - create an instance of the ${DataTransaction.name}`, async () => {
       const apolloClient = mockLensApolloClient([
-        createCreateDataAvailabilityCommentViaDispatcherDataMockedResponse({
+        mockCreateDataAvailabilityCommentViaDispatcherDataResponse({
           variables: {
             request: {
               commentOn: request.publicationId,
@@ -110,7 +110,7 @@ describe(`Given an instance of ${CreateOffChainCommentGateway.name}`, () => {
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
       async (relayError) => {
         const apolloClient = mockLensApolloClient([
-          createCreateDataAvailabilityCommentViaDispatcherDataMockedResponse({
+          mockCreateDataAvailabilityCommentViaDispatcherDataResponse({
             variables: {
               request: {
                 commentOn: request.publicationId,
@@ -122,7 +122,7 @@ describe(`Given an instance of ${CreateOffChainCommentGateway.name}`, () => {
               result: relayError,
             },
           }),
-          createCreateDataAvailabilityCommentTypedDataMockedResponse({
+          mockCreateDataAvailabilityCommentTypedDataResponse({
             variables: {
               request: {
                 commentOn: request.publicationId,

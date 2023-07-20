@@ -2,8 +2,8 @@ import { RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockCreateSetProfileImageUriTypedDataData,
-  createCreateSetProfileImageUriTypedDataMockedResponse,
-  createSetProfileImageURIViaDispatcherMockedResponse,
+  mockCreateSetProfileImageUriTypedDataResponse,
+  mockSetProfileImageURIViaDispatcherResponse,
   mockRelayerResultFragment,
   mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -63,7 +63,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
     describe(`when calling the "${ProfileImageCallGateway.prototype.createUnsignedProtocolCall.name}"`, () => {
       it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
         const apollo = mockLensApolloClient([
-          createCreateSetProfileImageUriTypedDataMockedResponse({
+          mockCreateSetProfileImageUriTypedDataResponse({
             variables: {
               request: expectedRequestVars,
             },
@@ -82,7 +82,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
       it(`should be possible to override the signature nonce`, async () => {
         const nonce = mockNonce();
         const apollo = mockLensApolloClient([
-          createCreateSetProfileImageUriTypedDataMockedResponse({
+          mockCreateSetProfileImageUriTypedDataResponse({
             variables: {
               request: expectedRequestVars,
               options: {
@@ -105,7 +105,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
     describe(`when calling the "${ProfileImageCallGateway.prototype.createDelegatedTransaction.name}"`, () => {
       it(`should create an instance of the ${NativeTransaction.name}`, async () => {
         const apollo = mockLensApolloClient([
-          createSetProfileImageURIViaDispatcherMockedResponse({
+          mockSetProfileImageURIViaDispatcherResponse({
             variables: {
               request: expectedRequestVars,
             },
@@ -137,7 +137,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
         `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
         async (relayError) => {
           const apollo = mockLensApolloClient([
-            createSetProfileImageURIViaDispatcherMockedResponse({
+            mockSetProfileImageURIViaDispatcherResponse({
               variables: {
                 request: expectedRequestVars,
               },
@@ -145,7 +145,7 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
                 result: relayError,
               },
             }),
-            createCreateSetProfileImageUriTypedDataMockedResponse({
+            mockCreateSetProfileImageUriTypedDataResponse({
               variables: {
                 request: expectedRequestVars,
               },

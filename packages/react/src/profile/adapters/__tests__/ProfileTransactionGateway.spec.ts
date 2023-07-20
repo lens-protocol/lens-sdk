@@ -3,7 +3,7 @@ import {
   mockRelayerResultFragment,
   mockRelayErrorFragment,
   mockLensApolloClient,
-  createCreateProfileMockedResponse,
+  mockCreateProfileResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockCreateProfileRequest } from '@lens-protocol/domain/mocks';
@@ -27,7 +27,7 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
       const relayerResult = mockRelayerResultFragment();
 
       const apollo = mockLensApolloClient([
-        createCreateProfileMockedResponse({
+        mockCreateProfileResponse({
           request: {
             handle: request.handle,
           },
@@ -64,7 +64,7 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$relayError.reason" reason`,
       async ({ relayError, expected }) => {
         const apollo = mockLensApolloClient([
-          createCreateProfileMockedResponse({
+          mockCreateProfileResponse({
             request: {
               handle: request.handle,
             },

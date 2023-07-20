@@ -6,7 +6,7 @@ import {
 import {
   mockLensApolloClient,
   mockPostFragment,
-  createExplorePublicationsMockedResponse,
+  mockExplorePublicationsResponse,
   mockSources,
   simulateAuthenticatedProfile,
   simulateNotAuthenticated,
@@ -33,7 +33,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createExplorePublicationsMockedResponse({
+        mockExplorePublicationsResponse({
           variables: {
             limit: DEFAULT_PAGINATED_QUERY_LIMIT,
             sortCriteria: PublicationSortCriteria.Latest,

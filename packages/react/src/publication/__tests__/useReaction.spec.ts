@@ -1,9 +1,9 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { ReactionTypes } from '@lens-protocol/api-bindings';
 import {
-  createAddReactionMockedResponse,
+  mockAddReactionResponse,
   mockLensApolloClient,
-  createRemoveReactionMockedResponse,
+  mockRemoveReactionResponse,
   mockPostFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId, ReactionType } from '@lens-protocol/domain/entities';
@@ -42,7 +42,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
       const profileId = publication.profile.id;
 
       const mocks = [
-        createAddReactionMockedResponse({
+        mockAddReactionResponse({
           variables: {
             publicationId: publication.id,
             profileId,
@@ -73,7 +73,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
       const profileId = mockPublication.profile.id;
 
       const mocks = [
-        createRemoveReactionMockedResponse({
+        mockRemoveReactionResponse({
           variables: {
             publicationId: mockPublication.id,
             profileId,

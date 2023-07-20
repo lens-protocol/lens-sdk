@@ -7,7 +7,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import {
   createBroadcastProxyActionCallMockedError,
-  createBroadcastProxyActionCallMockedResponse,
+  mockBroadcastProxyActionCallResponse,
   mockLensApolloClient,
   mockCreateCollectTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
@@ -56,7 +56,7 @@ function mockCollectPublicationGateway({
   return new CollectPublicationGateway(apollo, factory, mock<ILogger>());
 }
 
-function mockCreateCollectTypedDatMutationMockedResponse({
+function mockmockCollectTypedDatMutationResponse({
   variables,
   data,
 }: {
@@ -82,7 +82,7 @@ describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
       const data = mockCreateCollectTypedDataData();
 
       const apollo = mockLensApolloClient([
-        mockCreateCollectTypedDatMutationMockedResponse({
+        mockmockCollectTypedDatMutationResponse({
           variables: {
             request: {
               publicationId: request.publicationId,
@@ -106,7 +106,7 @@ describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
     it(`should be possible to override the signature nonce`, async () => {
       const nonce = mockNonce();
       const apollo = mockLensApolloClient([
-        mockCreateCollectTypedDatMutationMockedResponse({
+        mockmockCollectTypedDatMutationResponse({
           variables: {
             request: {
               publicationId: request.publicationId,
@@ -139,7 +139,7 @@ describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
     it(`should succeed with ${ProxyTransaction.name} on Polygon`, async () => {
       const indexingId = 'indexing-id';
       const apollo = mockLensApolloClient([
-        createBroadcastProxyActionCallMockedResponse({
+        mockBroadcastProxyActionCallResponse({
           result: indexingId,
           variables: {
             request: {
@@ -194,7 +194,7 @@ describe(`Given an instance of the ${CollectPublicationGateway.name}`, () => {
             },
           },
         }),
-        mockCreateCollectTypedDatMutationMockedResponse({
+        mockmockCollectTypedDatMutationResponse({
           variables: {
             request: {
               publicationId: request.publicationId,

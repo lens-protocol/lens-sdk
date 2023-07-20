@@ -2,7 +2,7 @@ import { FeedEventItemType as LensFeedEventItemType, FeedItem } from '@lens-prot
 import {
   mockLensApolloClient,
   mockFeedItemFragment,
-  createFeedMockedResponse,
+  mockFeedResponse,
   mockSources,
   simulateAuthenticatedProfile,
   simulateAuthenticatedWallet,
@@ -40,7 +40,7 @@ function setupTestScenario({
         sources,
 
         apolloClient: mockLensApolloClient([
-          createFeedMockedResponse({
+          mockFeedResponse({
             variables: {
               profileId,
               observerId: expectedObserverId,

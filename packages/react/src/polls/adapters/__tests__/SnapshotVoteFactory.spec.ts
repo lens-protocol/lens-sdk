@@ -4,7 +4,7 @@ import {
   SnapshotVotingSystem,
 } from '@lens-protocol/api-bindings';
 import {
-  createGetSnapshotProposalDataMockedResponse,
+  mockGetSnapshotProposalDataResponse,
   mockSnapshotApolloClient,
   mockSnapshotProposal,
 } from '@lens-protocol/api-bindings/mocks';
@@ -18,9 +18,7 @@ import { SnapshotVoteFactory, UnsignedVote } from '../SnapshotVoteFactory';
 import { vote2Types, voteArray2Types, voteString2Types } from '../types';
 
 function setupTestScenario({ appId, proposal }: { appId?: AppId; proposal: SnapshotProposal }) {
-  const client = mockSnapshotApolloClient([
-    createGetSnapshotProposalDataMockedResponse({ proposal }),
-  ]);
+  const client = mockSnapshotApolloClient([mockGetSnapshotProposalDataResponse({ proposal })]);
 
   return new SnapshotVoteFactory(client, (proposal.space?.id ?? never()) as SnapshotSpaceId, appId);
 }

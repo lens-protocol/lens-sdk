@@ -1,11 +1,11 @@
 import { Post, Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockPostFragment,
   mockProfileFragment,
   mockSources,
-  createGetPublicationMockedResponse,
+  mockGetPublicationResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { PublicationId } from '@lens-protocol/domain/entities';
 import {
@@ -30,7 +30,7 @@ function setupTestScenario({
 }) {
   const sources = mockSources();
   const apolloClient = mockLensApolloClient([
-    createGetProfileMockedResponse({
+    mockGetProfileResponse({
       profile: author,
       variables: {
         request: {
@@ -40,7 +40,7 @@ function setupTestScenario({
         sources,
       },
     }),
-    createGetPublicationMockedResponse({
+    mockGetPublicationResponse({
       variables: {
         request: transactionData.txHash
           ? {

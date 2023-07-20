@@ -14,7 +14,7 @@ import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { UnfollowProfileCallGateway } from '../UnfollowProfileCallGateway';
 import { assertUnsignedProtocolCallCorrectness } from '../__helpers__/mocks';
 
-function mockCreateUnfollowTypedDataMutationMockedResponse({
+function mockmockUnfollowTypedDataMutationResponse({
   variables,
   data,
 }: {
@@ -39,7 +39,7 @@ describe(`Given an instance of the ${UnfollowProfileCallGateway.name}`, () => {
     it(`should create an "${UnsignedProtocolCall.name}" w/ the expected typed data`, async () => {
       const data = mockCreateUnfollowTypedDataData();
       const apollo = mockLensApolloClient([
-        mockCreateUnfollowTypedDataMutationMockedResponse({
+        mockmockUnfollowTypedDataMutationResponse({
           variables: {
             request: {
               profile: request.profileId,

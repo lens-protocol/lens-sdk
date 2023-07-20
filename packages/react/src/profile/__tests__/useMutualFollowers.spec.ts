@@ -1,6 +1,6 @@
 import {
   mockLensApolloClient,
-  createMutualFollowersMockedResponse,
+  mockMutualFollowersResponse,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -29,7 +29,7 @@ describe('Given the useMutualFollowers hook', () => {
           mocks: {
             sources,
             apolloClient: mockLensApolloClient([
-              createMutualFollowersMockedResponse({
+              mockMutualFollowersResponse({
                 variables: {
                   observerId: observer.id,
                   viewingProfileId: viewingProfile.id,

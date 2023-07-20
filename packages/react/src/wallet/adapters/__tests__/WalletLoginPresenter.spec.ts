@@ -1,7 +1,7 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
@@ -19,7 +19,7 @@ type SetupTestScenarioArgs = {
 function setupTestScenario({ profile }: SetupTestScenarioArgs) {
   const sources = mockSources();
   const apolloClient = mockLensApolloClient([
-    createGetProfileMockedResponse({
+    mockGetProfileResponse({
       profile,
       variables: {
         request: {

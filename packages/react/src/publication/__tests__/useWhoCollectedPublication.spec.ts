@@ -2,7 +2,7 @@ import { Wallet } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockWalletFragment,
-  createWhoCollectedPublicationMockedResponse,
+  mockWhoCollectedPublicationResponse,
   mockSources,
   simulateAuthenticatedProfile,
   simulateNotAuthenticated,
@@ -28,7 +28,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createWhoCollectedPublicationMockedResponse({
+        mockWhoCollectedPublicationResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,

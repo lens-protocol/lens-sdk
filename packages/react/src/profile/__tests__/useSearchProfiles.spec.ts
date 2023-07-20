@@ -1,7 +1,7 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createSearchProfilesMockedResponse,
+  mockSearchProfilesResponse,
   mockProfileFragment,
   mockSources,
   simulateAuthenticatedProfile,
@@ -25,7 +25,7 @@ function setupTestScenario({
     mocks: {
       sources,
       apolloClient: mockLensApolloClient([
-        createSearchProfilesMockedResponse({
+        mockSearchProfilesResponse({
           variables: {
             ...args,
             limit: 10,

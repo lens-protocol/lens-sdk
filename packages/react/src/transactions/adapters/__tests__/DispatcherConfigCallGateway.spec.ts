@@ -14,7 +14,7 @@ import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { DispatcherConfigCallGateway } from '../DispatcherConfigCallGateway';
 import { assertUnsignedProtocolCallCorrectness } from '../__helpers__/mocks';
 
-function mockCreateSetDispatcherTypedDataMutationMockedResponse({
+function mockmockSetDispatcherTypedDataMutationResponse({
   variables,
   data,
 }: {
@@ -40,7 +40,7 @@ describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
       const data = mockCreateSetDispatcherTypedDataData();
 
       const apollo = mockLensApolloClient([
-        mockCreateSetDispatcherTypedDataMutationMockedResponse({
+        mockmockSetDispatcherTypedDataMutationResponse({
           variables: {
             request: {
               profileId: request.profileId,
@@ -64,7 +64,7 @@ describe(`Given an instance of the ${DispatcherConfigCallGateway.name}`, () => {
       const nonce = mockNonce();
 
       const apollo = mockLensApolloClient([
-        mockCreateSetDispatcherTypedDataMutationMockedResponse({
+        mockmockSetDispatcherTypedDataMutationResponse({
           variables: {
             request: {
               profileId: request.profileId,

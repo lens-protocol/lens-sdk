@@ -1,6 +1,6 @@
 import {
   mockLensApolloClient,
-  createProfileFollowRevenueMockedResponse,
+  mockProfileFollowRevenueResponse,
   mockProfileFollowRevenueFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
@@ -19,7 +19,7 @@ describe(`Given the ${useProfileFollowRevenue.name} hook`, () => {
       const { result } = renderHookWithMocks(() => useProfileFollowRevenue({ profileId }), {
         mocks: {
           apolloClient: mockLensApolloClient([
-            createProfileFollowRevenueMockedResponse({
+            mockProfileFollowRevenueResponse({
               variables: { profileId },
               revenues: mockRevenues,
             }),
