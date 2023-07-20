@@ -1,5 +1,13 @@
 # @lens-protocol/domain
 
+## 0.9.1-next.0
+
+### Patch Changes
+
+- 0f75f79d: **Added** experimental `useCurrentSession` hook
+  **Fixed** issue with `Profile` entity being leaked by the `useWalletLogin` hook
+  **Fixed** bug preventing logout on expired credentials detected at startup type
+
 ## 0.9.0
 
 ### Minor Changes
