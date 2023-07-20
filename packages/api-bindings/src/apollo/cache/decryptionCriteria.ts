@@ -22,6 +22,7 @@ import {
   ChainType,
   erc20,
   hasAtLeastOne,
+  hasJustOne,
   hasTwoOrMore,
   invariant,
   isNonNullable,
@@ -229,10 +230,9 @@ export const decryptionCriteria: FieldReadFunction = (_, { canRead, readField })
   const author = (readField('profile') as Profile) ?? never();
   const metadata = (readField('metadata') as MetadataOutput) ?? never();
 
-  invariant(
-    metadata.encryptionParams?.accessCondition.or,
-    'Expected encryptionParams.accessCondition.or to be defined',
-  );
+  if (!metadata.encryptionParams || !metadata.encryptionParams.accessCondition.or) {
+    return null;
+  }
 
   invariant(canRead(author), 'Expected to be able to read publication author');
 
@@ -242,7 +242,9 @@ export const decryptionCriteria: FieldReadFunction = (_, { canRead, readField })
     allButPublicationAuthor(authorId),
   );
 
-  assertJustOne(criteria);
+  if (hasJustOne(criteria)) {
+    return resolveRootCriterion(criteria[0]);
+  }
 
-  return resolveRootCriterion(criteria[0]);
+  return null;
 };
