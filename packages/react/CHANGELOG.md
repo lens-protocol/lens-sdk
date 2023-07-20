@@ -1,5 +1,13 @@
 # @lens-protocol/react
 
+## 1.3.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [d5efd895]
+  - @lens-protocol/api-bindings@0.9.2-next.1
+  - @lens-protocol/gated-content@0.3.2-next.1
+
 ## 1.2.2
 
 ### Patch Changes
