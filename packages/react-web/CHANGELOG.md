@@ -1,5 +1,28 @@
 # @lens-protocol/react-web
 
+## 1.3.0-next.0
+
+### Minor Changes
+
+- c2a91ef4: **Added** `Profile.invitedBy` field
+- cfe0d51e: **Added** `highSignalFilter` to `useNotifications` hook
+- 0f75f79d: **Added** experimental `useCurrentSession` hook
+  **Fixed** issue with `Profile` entity being leaked by the `useWalletLogin` hook
+  **Fixed** bug preventing logout on expired credentials detected at startup type
+- 4c4505d2: **Added** support for Profile Guardian
+
+### Patch Changes
+
+- Updated dependencies [c8426cb3]
+- Updated dependencies [c2a91ef4]
+- Updated dependencies [cfe0d51e]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [847a9db3]
+- Updated dependencies [4c4505d2]
+  - @lens-protocol/react@1.3.0-next.0
+  - @lens-protocol/api-bindings@0.9.1-next.0
+  - @lens-protocol/gated-content@0.3.1-next.0
+
 ## 1.2.1
 
 ### Patch Changes

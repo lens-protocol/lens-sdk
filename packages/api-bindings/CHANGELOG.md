@@ -1,5 +1,17 @@
 # @lens-protocol/api-bindings
 
+## 0.9.1-next.0
+
+### Patch Changes
+
+- c2a91ef4: **Added** `Profile.invitedBy` field
+- 0f75f79d: **Added** experimental `useCurrentSession` hook
+  **Fixed** issue with `Profile` entity being leaked by the `useWalletLogin` hook
+  **Fixed** bug preventing logout on expired credentials detected at startup type
+- 4c4505d2: **Added** support for Profile Guardian
+- Updated dependencies [0f75f79d]
+  - @lens-protocol/domain@0.9.1-next.0
+
 ## 0.9.0
 
 ### Minor Changes
