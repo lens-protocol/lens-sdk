@@ -31,6 +31,7 @@ import {
   PublicationOwnedByMe,
   PublicationRevenue,
   PublicationStats,
+  ReactionTypes,
   RevenueAggregate,
   RevertFollowModuleSettings,
   TransactionState,
@@ -294,6 +295,6 @@ export type MediaSet = { __typename: 'MediaSet'; original: Media };
  * @deprecated Use {@link ReactionTypes} instead.
  */
 export enum ReactionType {
-  UPVOTE = 'UPVOTE',
-  DOWNVOTE = 'DOWNVOTE',
+  UPVOTE = ReactionTypes.Upvote,
+  DOWNVOTE = ReactionTypes.Downvote,
 }
