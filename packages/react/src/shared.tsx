@@ -5,6 +5,7 @@ import {
   Sources,
 } from '@lens-protocol/api-bindings';
 import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
+import { ActiveProfileLoader } from '@lens-protocol/domain/use-cases/profile';
 import {
   AnyTransactionRequest,
   TransactionQueue,
@@ -13,6 +14,7 @@ import {
 import {
   ActiveWallet,
   TokenAvailability,
+  WalletLogin,
   WalletLogout,
 } from '@lens-protocol/domain/use-cases/wallets';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
@@ -58,6 +60,7 @@ import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
 import { TokenGateway } from './wallet/adapters/TokenGateway';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
+import { WalletLoginPresenter } from './wallet/adapters/WalletLoginPresenter';
 import { AccessTokenStorage } from './wallet/infrastructure/AccessTokenStorage';
 import { AuthApi } from './wallet/infrastructure/AuthApi';
 import { CredentialsStorage } from './wallet/infrastructure/CredentialsStorage';
@@ -79,7 +82,6 @@ export type SharedDependencies = {
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
   appId?: AppId;
-  authApi: AuthApi;
   bindings: IBindings;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
@@ -101,8 +103,7 @@ export type SharedDependencies = {
   transactionFactory: TransactionFactory;
   transactionGateway: PendingTransactionGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;
-  walletFactory: WalletFactory;
-  walletGateway: WalletGateway;
+  walletLogin: WalletLogin;
   walletLogout: WalletLogout;
 };
 
@@ -204,6 +205,17 @@ export function createSharedDependencies(
     activeProfileGateway,
     sessionPresenter,
   );
+  const loginPresenter = new WalletLoginPresenter(profileCacheManager);
+  const activeProfileLoader = new ActiveProfileLoader(profileGateway, activeProfileGateway);
+  const walletLogin = new WalletLogin(
+    walletFactory,
+    walletGateway,
+    credentialsFactory,
+    credentialsGateway,
+    loginPresenter,
+    activeProfileLoader,
+    sessionPresenter,
+  );
 
   // controllers
   const credentialsExpiryController = new CredentialsExpiryController(walletLogout);
@@ -214,7 +226,6 @@ export function createSharedDependencies(
     activeWallet,
     apolloClient,
     appId: config.appId,
-    authApi,
     bindings: config.bindings,
     credentialsFactory,
     credentialsGateway,
@@ -236,8 +247,7 @@ export function createSharedDependencies(
     transactionFactory,
     transactionGateway,
     transactionQueue,
-    walletFactory,
-    walletGateway,
+    walletLogin,
     walletLogout,
   };
 }
