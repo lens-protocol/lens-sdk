@@ -6,13 +6,13 @@ export type TogglePropertyRequest = {
 };
 
 export interface ITogglablePropertyGateway<T extends TogglePropertyRequest> {
-  add(data: T): Promise<void>;
-  remove(data: T): Promise<void>;
+  add(request: T): Promise<void>;
+  remove(request: T): Promise<void>;
 }
 
 export interface ITogglablePropertyPresenter<T extends TogglePropertyRequest> {
-  add(request: T): Promise<void>;
-  remove(request: T): Promise<void>;
+  add(data: T): Promise<void>;
+  remove(data: T): Promise<void>;
 }
 
 export class ToggleProperty<T extends TogglePropertyRequest> {

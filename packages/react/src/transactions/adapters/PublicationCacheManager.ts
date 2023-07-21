@@ -5,7 +5,7 @@ import { PublicationId } from '@lens-protocol/domain/entities';
 export class PublicationCacheManager {
   constructor(private cache: ApolloCache<NormalizedCacheObject>) {}
 
-  update(publicationId: PublicationId, updateFn: (current: AnyPublication) => AnyPublication) {
+  update(publicationId: PublicationId, updateFn: <T extends AnyPublication>(current: T) => T) {
     const id = this.cache.identify({
       __typename: 'Publication',
       id: publicationId,

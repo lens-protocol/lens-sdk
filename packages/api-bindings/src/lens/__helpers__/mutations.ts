@@ -7,6 +7,9 @@ import { GraphQLError } from 'graphql';
 
 import { createGraphQLValidationError } from '../../apollo/__helpers__/mocks';
 import {
+  AddNotInterestedData,
+  AddNotInterestedDocument,
+  AddNotInterestedVariables,
   AddReactionData,
   AddReactionDocument,
   AddReactionVariables,
@@ -81,6 +84,9 @@ import {
   ProxyActionData,
   ProxyActionDocument,
   ProxyActionVariables,
+  RemoveNotInterestedData,
+  RemoveNotInterestedDocument,
+  RemoveNotInterestedVariables,
   RemoveReactionData,
   RemoveReactionDocument,
   RemoveReactionVariables,
@@ -829,5 +835,29 @@ export function mockReportPublicationResponse(args: {
       variables: args.variables,
     },
     result: { data: { reportPublication: null } },
+  };
+}
+
+export function mockAddNotInterestedResponse(
+  variables: AddNotInterestedVariables,
+): MockedResponse<AddNotInterestedData> {
+  return {
+    request: {
+      query: AddNotInterestedDocument,
+      variables,
+    },
+    result: { data: { result: null } },
+  };
+}
+
+export function mockRemoveNotInterestedResponse(
+  variables: RemoveNotInterestedVariables,
+): MockedResponse<RemoveNotInterestedData> {
+  return {
+    request: {
+      query: RemoveNotInterestedDocument,
+      variables,
+    },
+    result: { data: { result: null } },
   };
 }

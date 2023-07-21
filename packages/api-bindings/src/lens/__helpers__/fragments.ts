@@ -61,6 +61,7 @@ import {
   CollectModule,
   erc20Amount,
   ProfileCoverMedia,
+  ProfileOwnedByMe,
   ProfilePictureMedia,
 } from '../utils';
 
@@ -193,6 +194,13 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
   };
 }
 
+export function mockProfileOwnedByMeFragment(overrides?: Partial<Profile>): ProfileOwnedByMe {
+  return mockProfileFragment({
+    ...overrides,
+    ownedByMe: true,
+  }) as ProfileOwnedByMe;
+}
+
 export function mockRelayerResultFragment(txHash: string = mockTransactionHash()): RelayerResult {
   return {
     __typename: 'RelayerResult',
@@ -316,6 +324,7 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
 
     isGated: false,
     decryptionCriteria: null,
+    observedBy: null,
 
     canComment: {
       result: true,
@@ -361,6 +370,7 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
 
     isGated: false,
     decryptionCriteria: null,
+    observedBy: null,
 
     canComment: {
       result: true,

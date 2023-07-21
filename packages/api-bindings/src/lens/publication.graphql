@@ -24,3 +24,11 @@ query GetPublication(
 mutation HidePublication($publicationId: InternalPublicationId!) {
   hidePublication(request: { publicationId: $publicationId })
 }
+
+mutation AddNotInterested($request: PublicationProfileNotInterestedRequest!) {
+  result: addPublicationProfileNotInterested(request: $request)
+}
+
+mutation RemoveNotInterested($request: PublicationProfileNotInterestedRequest!) {
+  result: removePublicationProfileNotInterested(request: $request)
+}

@@ -2975,6 +2975,18 @@ export type HidePublicationVariables = Exact<{
 
 export type HidePublicationData = { hidePublication: void | null };
 
+export type AddNotInterestedVariables = Exact<{
+  request: PublicationProfileNotInterestedRequest;
+}>;
+
+export type AddNotInterestedData = { result: void | null };
+
+export type RemoveNotInterestedVariables = Exact<{
+  request: PublicationProfileNotInterestedRequest;
+}>;
+
+export type RemoveNotInterestedData = { result: void | null };
+
 export type GetPublicationsVariables = Exact<{
   profileId?: InputMaybe<Scalars['ProfileId']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
@@ -7073,6 +7085,90 @@ export type HidePublicationMutationResult = Apollo.MutationResult<HidePublicatio
 export type HidePublicationMutationOptions = Apollo.BaseMutationOptions<
   HidePublicationData,
   HidePublicationVariables
+>;
+export const AddNotInterestedDocument = /*#__PURE__*/ gql`
+  mutation AddNotInterested($request: PublicationProfileNotInterestedRequest!) {
+    result: addPublicationProfileNotInterested(request: $request)
+  }
+`;
+export type AddNotInterestedMutationFn = Apollo.MutationFunction<
+  AddNotInterestedData,
+  AddNotInterestedVariables
+>;
+
+/**
+ * __useAddNotInterested__
+ *
+ * To run a mutation, you first call `useAddNotInterested` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddNotInterested` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addNotInterested, { data, loading, error }] = useAddNotInterested({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddNotInterested(
+  baseOptions?: Apollo.MutationHookOptions<AddNotInterestedData, AddNotInterestedVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddNotInterestedData, AddNotInterestedVariables>(
+    AddNotInterestedDocument,
+    options,
+  );
+}
+export type AddNotInterestedHookResult = ReturnType<typeof useAddNotInterested>;
+export type AddNotInterestedMutationResult = Apollo.MutationResult<AddNotInterestedData>;
+export type AddNotInterestedMutationOptions = Apollo.BaseMutationOptions<
+  AddNotInterestedData,
+  AddNotInterestedVariables
+>;
+export const RemoveNotInterestedDocument = /*#__PURE__*/ gql`
+  mutation RemoveNotInterested($request: PublicationProfileNotInterestedRequest!) {
+    result: removePublicationProfileNotInterested(request: $request)
+  }
+`;
+export type RemoveNotInterestedMutationFn = Apollo.MutationFunction<
+  RemoveNotInterestedData,
+  RemoveNotInterestedVariables
+>;
+
+/**
+ * __useRemoveNotInterested__
+ *
+ * To run a mutation, you first call `useRemoveNotInterested` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveNotInterested` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeNotInterested, { data, loading, error }] = useRemoveNotInterested({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useRemoveNotInterested(
+  baseOptions?: Apollo.MutationHookOptions<RemoveNotInterestedData, RemoveNotInterestedVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveNotInterestedData, RemoveNotInterestedVariables>(
+    RemoveNotInterestedDocument,
+    options,
+  );
+}
+export type RemoveNotInterestedHookResult = ReturnType<typeof useRemoveNotInterested>;
+export type RemoveNotInterestedMutationResult = Apollo.MutationResult<RemoveNotInterestedData>;
+export type RemoveNotInterestedMutationOptions = Apollo.BaseMutationOptions<
+  RemoveNotInterestedData,
+  RemoveNotInterestedVariables
 >;
 export const GetPublicationsDocument = /*#__PURE__*/ gql`
   query GetPublications(
