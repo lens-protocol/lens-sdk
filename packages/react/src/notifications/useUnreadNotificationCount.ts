@@ -59,8 +59,10 @@ export function useUnreadNotificationCount({ profileId }: UseUnreadNotificationC
         return;
       }
 
+      invariant(data, 'Expected data to be defined');
+
       invariant(
-        data?.result.pageInfo.totalCount,
+        data.result.pageInfo.totalCount !== null,
         'Expected total notification count to be defined',
       );
 
