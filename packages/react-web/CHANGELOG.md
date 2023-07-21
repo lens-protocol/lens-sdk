@@ -1,5 +1,13 @@
 # @lens-protocol/react-web
 
+## 1.3.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [df70461c]
+- Updated dependencies [1d13a3ab]
+  - @lens-protocol/react@1.3.0-next.2
+
 ## 1.3.0-next.1
 
 ### Patch Changes

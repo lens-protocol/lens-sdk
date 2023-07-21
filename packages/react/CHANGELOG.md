@@ -1,5 +1,12 @@
 # @lens-protocol/react
 
+## 1.3.0-next.2
+
+### Patch Changes
+
+- df70461c: **Fixed** `useUnreadNotificationCount` to work with fresh accounts
+- 1d13a3ab: **Fixed** issue with network switch failing on some wallets. Thanks [@jarrodwatts](https://github.com/jarrodwatts)!
+
 ## 1.3.0-next.1
 
 ### Patch Changes
