@@ -7,6 +7,7 @@ import { CryptoNativeAsset, ChainType, ether, matic } from '@lens-protocol/share
  */
 export type ChainConfig = {
   chainId: number;
+  hexadecimalChainId: string;
   name: string;
   rpcUrl: string;
   blockExplorer: string;
@@ -18,6 +19,7 @@ export type ChainConfig = {
  */
 export const mainnet: ChainConfig = {
   chainId: 1,
+  hexadecimalChainId: "0x1",
   name: 'Ethereum',
   rpcUrl: 'https://mainnet.infura.io/v3',
   blockExplorer: 'https://etherscan.io/',
@@ -29,6 +31,7 @@ export const mainnet: ChainConfig = {
  */
 export const goerli: ChainConfig = {
   chainId: 5,
+  hexadecimalChainId: "0x5",
   name: 'Goerli',
   rpcUrl: 'https://goerli.infura.io/v3',
   blockExplorer: 'https://goerli.etherscan.io/',
@@ -40,6 +43,7 @@ export const goerli: ChainConfig = {
  */
 export const polygon: ChainConfig = {
   chainId: 137,
+  hexadecimalChainId: "0x89",
   name: 'Polygon Mainnet',
   rpcUrl: 'https://polygon-rpc.com/',
   blockExplorer: 'https://polygonscan.com/',
@@ -51,6 +55,7 @@ export const polygon: ChainConfig = {
  */
 export const mumbai: ChainConfig = {
   chainId: 80001,
+  hexadecimalChainId: "0x13881",
   name: 'Polygon Testnet Mumbai',
   rpcUrl: 'https://rpc-mumbai.maticvigil.com/',
   blockExplorer: 'https://mumbai.polygonscan.com/',
