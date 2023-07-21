@@ -10,7 +10,11 @@ import {
   TransactionQueue,
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ActiveWallet, TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
+import {
+  ActiveWallet,
+  TokenAvailability,
+  WalletLogout,
+} from '@lens-protocol/domain/use-cases/wallets';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage, IStorageProvider } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
@@ -48,6 +52,7 @@ import { TransactionFactory } from './transactions/infrastructure/TransactionFac
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
+import { CredentialsExpiryController } from './wallet/adapters/CredentialsExpiryController';
 import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
 import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
 import { TokenGateway } from './wallet/adapters/TokenGateway';
@@ -70,24 +75,24 @@ export type Handlers = {
 };
 
 export type SharedDependencies = {
-  appId?: AppId;
   activeProfileGateway: ActiveProfileGateway;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
-  bindings: IBindings;
+  appId?: AppId;
   authApi: AuthApi;
-  environment: EnvironmentConfig;
+  bindings: IBindings;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
+  environment: EnvironmentConfig;
   followPolicyCallGateway: FollowPolicyCallGateway;
   logger: ILogger;
   notificationStorage: IStorage<UnreadNotificationsData>;
-  onError: Handlers['onError'];
-  profileGateway: ProfileGateway;
   offChainRelayer: OffChainRelayer;
   onChainRelayer: OnChainRelayer;
-  providerFactory: ProviderFactory;
+  onError: Handlers['onError'];
   profileCacheManager: ProfileCacheManager;
+  profileGateway: ProfileGateway;
+  providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
   sessionPresenter: SessionPresenter;
   sources: Sources;
@@ -98,6 +103,7 @@ export type SharedDependencies = {
   transactionQueue: TransactionQueue<AnyTransactionRequest>;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
+  walletLogout: WalletLogout;
 };
 
 export function createSharedDependencies(
@@ -152,7 +158,6 @@ export function createSharedDependencies(
   const profileGateway = new ProfileGateway(apolloClient);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
   const sessionPresenter = new SessionPresenter(onLogout);
-  const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
 
   const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
@@ -185,18 +190,30 @@ export function createSharedDependencies(
   const offChainRelayer = new OffChainRelayer(apolloClient, transactionFactory, logger);
 
   // common interactors
+  const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
   const transactionQueue = new TransactionQueue(
     responders,
     transactionGateway,
     transactionQueuePresenter,
   );
   const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
+  const walletLogout = new WalletLogout(
+    walletGateway,
+    credentialsGateway,
+    activeWallet,
+    activeProfileGateway,
+    sessionPresenter,
+  );
+
+  // controllers
+  const credentialsExpiryController = new CredentialsExpiryController(walletLogout);
+  credentialsExpiryController.subscribe(accessTokenStorage);
 
   return {
-    appId: config.appId,
     activeProfileGateway,
     activeWallet,
     apolloClient,
+    appId: config.appId,
     authApi,
     bindings: config.bindings,
     credentialsFactory,
@@ -205,11 +222,12 @@ export function createSharedDependencies(
     followPolicyCallGateway,
     logger,
     notificationStorage,
-    onError,
-    profileGateway,
     offChainRelayer,
     onChainRelayer,
+    onError,
     profileCacheManager,
+    profileGateway,
+    providerFactory,
     publicationCacheManager,
     sessionPresenter,
     sources,
@@ -220,7 +238,7 @@ export function createSharedDependencies(
     transactionQueue,
     walletFactory,
     walletGateway,
-    providerFactory,
+    walletLogout,
   };
 }
 
