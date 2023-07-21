@@ -166,7 +166,7 @@ export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): C
   } as CreatePostRequest;
 }
 
-export function mockReactionRequest(
+export function mockTogglePropertyRequest(
   overrides?: Partial<TogglePropertyRequest>,
 ): TogglePropertyRequest {
   return {

@@ -7,20 +7,20 @@ import {
   ITogglablePropertyPresenter,
   TogglePropertyRequest,
 } from '../ToggleProperty';
-import { mockReactionRequest } from '../__helpers__/mocks';
+import { mockTogglePropertyRequest } from '../__helpers__/mocks';
 
 describe(`Given the ${ToggleProperty.name} use-case interactor`, () => {
-  describe('when adding a reaction to publication', () => {
-    const request = mockReactionRequest();
+  describe(`when executing the "${ToggleProperty.prototype.add.name}" method`, () => {
+    const request = mockTogglePropertyRequest();
 
     it(`should:
         - present optimistic update
-        - add new reaction`, async () => {
+        - add new property`, async () => {
       const presenter = mock<ITogglablePropertyPresenter<TogglePropertyRequest>>();
       const gateway = mock<ITogglablePropertyGateway<TogglePropertyRequest>>();
-      const reaction = new ToggleProperty(gateway, presenter);
+      const property = new ToggleProperty(gateway, presenter);
 
-      await reaction.add(request);
+      await property.add(request);
 
       expect(presenter.add).toHaveBeenCalledWith(request);
     });
@@ -31,26 +31,26 @@ describe(`Given the ${ToggleProperty.name} use-case interactor`, () => {
       const gateway = mock<ITogglablePropertyGateway<TogglePropertyRequest>>();
       when(gateway.add).calledWith(request).mockRejectedValue(new Error(''));
 
-      const reaction = new ToggleProperty(gateway, presenter);
+      const property = new ToggleProperty(gateway, presenter);
 
-      await expect(reaction.add(request)).rejects.toThrow();
+      await expect(property.add(request)).rejects.toThrow();
 
       expect(presenter.add).toHaveBeenCalledWith(request);
       expect(presenter.remove).toHaveBeenCalledWith(request);
     });
   });
 
-  describe('when removing a reaction to publication', () => {
-    const request = mockReactionRequest();
+  describe(`when executing the "${ToggleProperty.prototype.remove.name}" method`, () => {
+    const request = mockTogglePropertyRequest();
 
     it(`should:
         - present optimistic update
-        - remove reaction`, async () => {
+        - remove the property`, async () => {
       const presenter = mock<ITogglablePropertyPresenter<TogglePropertyRequest>>();
       const gateway = mock<ITogglablePropertyGateway<TogglePropertyRequest>>();
-      const reaction = new ToggleProperty(gateway, presenter);
+      const property = new ToggleProperty(gateway, presenter);
 
-      await reaction.remove(request);
+      await property.remove(request);
 
       expect(presenter.remove).toHaveBeenCalledWith(request);
     });
@@ -60,9 +60,9 @@ describe(`Given the ${ToggleProperty.name} use-case interactor`, () => {
 
       const gateway = mock<ITogglablePropertyGateway<TogglePropertyRequest>>();
       when(gateway.remove).calledWith(request).mockRejectedValue(new Error(''));
-      const reaction = new ToggleProperty(gateway, presenter);
+      const property = new ToggleProperty(gateway, presenter);
 
-      await expect(reaction.remove(request)).rejects.toThrow();
+      await expect(property.remove(request)).rejects.toThrow();
 
       expect(presenter.remove).toHaveBeenCalledWith(request);
       expect(presenter.add).toHaveBeenCalledWith(request);
