@@ -95,7 +95,7 @@ export class SignerFactory implements ISignerFactory {
     try {
       if (signer.provider && signer.provider instanceof JsonRpcProvider) {
         await signer.provider.send('wallet_switchEthereumChain', [
-          { chainId: chainConfig.chainId },
+          { chainId: utils.hexValue(chainConfig.chainId) },
         ]);
 
         return success();
