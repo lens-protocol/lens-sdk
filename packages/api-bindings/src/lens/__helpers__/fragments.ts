@@ -56,7 +56,13 @@ import {
   Wallet,
   WhoReactedResult,
 } from '../generated';
-import { AnyPublication, CollectModule, erc20Amount, ProfileMedia } from '../utils';
+import {
+  AnyPublication,
+  CollectModule,
+  erc20Amount,
+  ProfileMedia,
+  ProfileOwnedByMe,
+} from '../utils';
 
 export function mockMediaFragment(overrides?: Partial<Media>): Media {
   return {
@@ -170,6 +176,13 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     ...overrides,
     __typename: 'Profile',
   };
+}
+
+export function mockProfileOwnedByMeFragment(overrides?: Partial<Profile>): ProfileOwnedByMe {
+  return mockProfileFragment({
+    ...overrides,
+    ownedByMe: true,
+  }) as ProfileOwnedByMe;
 }
 
 export function mockRelayerResultFragment(txHash: string = mockTransactionHash()): RelayerResult {
@@ -295,6 +308,7 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
 
     isGated: false,
     decryptionCriteria: null,
+    observedBy: null,
 
     canComment: {
       result: true,
@@ -340,6 +354,7 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
 
     isGated: false,
     decryptionCriteria: null,
+    observedBy: null,
 
     canComment: {
       result: true,
