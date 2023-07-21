@@ -2,6 +2,7 @@ import { ContentPublication, ReactionTypes } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { useState } from 'react';
 
+import { ReactionType } from '../deprecated';
 import { useReactionController } from './adapters/useReactionController';
 
 export type UseReactionArgs = {
@@ -10,7 +11,7 @@ export type UseReactionArgs = {
 
 export type ReactionArgs = {
   publication: ContentPublication;
-  reactionType: ReactionTypes;
+  reactionType: ReactionTypes | ReactionType;
 };
 
 /**
@@ -27,7 +28,7 @@ export function useReaction({ profileId }: UseReactionArgs) {
     try {
       await add({
         publicationId: args.publication.id,
-        reactionType: args.reactionType,
+        reactionType: args.reactionType as ReactionTypes,
         existingReactionType: args.publication.reaction,
         profileId,
       });
@@ -42,7 +43,7 @@ export function useReaction({ profileId }: UseReactionArgs) {
     try {
       await remove({
         publicationId: args.publication.id,
-        reactionType: args.reactionType,
+        reactionType: args.reactionType as ReactionTypes,
         profileId,
       });
     } finally {
