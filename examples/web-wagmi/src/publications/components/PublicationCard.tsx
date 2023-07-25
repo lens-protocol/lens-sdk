@@ -2,15 +2,12 @@ import {
   Comment,
   Mirror,
   Post,
-  PendingPost,
-  CollectState,
   isMirrorPublication,
   ContentPublication,
   AnyCriterion,
   DecryptionCriteriaType,
   useEncryptedPublication,
 } from '@lens-protocol/react-web';
-import { ReactNode } from 'react';
 import { useInView } from 'react-cool-inview';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
@@ -94,60 +91,23 @@ function Content({ publication }: ContentProps) {
 }
 
 type PublicationCardProps = {
-  publication: Post | Comment | Mirror | PendingPost;
+  children?: React.ReactNode;
+  publication: Post | Comment | Mirror;
 };
 
-export function PublicationCard({ publication }: PublicationCardProps) {
-  if (publication.__typename === 'PendingPost') {
-    return (
-      <article>
-        <ProfilePicture picture={publication.profile.picture} />
-        <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
-        <div>{publication.content}</div>
-      </article>
-    );
-  }
-
+export function PublicationCard({ children, publication }: PublicationCardProps) {
   const contentPublication = isMirrorPublication(publication) ? publication.mirrorOf : publication;
 
   return (
     <article>
       <ProfilePicture picture={publication.profile.picture} />
-      <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
+      <p>
+        {publication.__typename} by {publication.profile.name ?? `@${publication.profile.handle}`}
+      </p>
 
       <Content publication={contentPublication} />
       <Media publication={contentPublication} />
-      <p>Publication type: {publication.__typename}</p>
-    </article>
-  );
-}
-
-type CollectablePublicationCardProps = {
-  publication: Post | Comment;
-  collectButton: ReactNode;
-};
-
-export function CollectablePublicationCard({
-  publication,
-  collectButton,
-}: CollectablePublicationCardProps) {
-  return (
-    <article>
-      <ProfilePicture picture={publication.profile.picture} />
-      <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
-      <p>
-        {publication.hidden ? 'This publication has been hidden' : publication.metadata.content}
-      </p>
-      {collectButton}
-      {publication.collectPolicy.state === CollectState.COLLECT_LIMIT_REACHED && (
-        <p>
-          {publication.stats.totalAmountOfCollects}/{publication.collectPolicy.collectLimit}{' '}
-          collected
-        </p>
-      )}
-      {publication.collectPolicy.state === CollectState.COLLECT_TIME_EXPIRED && (
-        <p>Collectable until: {publication.collectPolicy.endTimestamp}</p>
-      )}
+      {children}
     </article>
   );
 }
