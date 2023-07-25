@@ -1,4 +1,11 @@
-import { ContentPublication, Overwrite } from '@lens-protocol/react-web';
+import {
+  AudioType,
+  ImageType,
+  Media,
+  Overwrite,
+  SupportedFileType,
+  VideoType,
+} from '@lens-protocol/react-web';
 
 import { resolveFullResourceUrl } from './resolveFullResourceUrl';
 
@@ -9,30 +16,7 @@ export const isInEnum = <TEnumValue extends string | number>(
   return Object.values<string | number>(enumVariables).includes(value);
 };
 
-export enum ImageType {
-  JPEG = 'image/jpeg',
-  JPG = 'image/jpg',
-  PNG = 'image/png',
-  WEBP = 'image/webp',
-  GIF = 'image/gif',
-}
-
-export enum VideoType {
-  MP4 = 'video/mp4',
-}
-
-export enum AudioType {
-  WAV = 'audio/wav',
-  MP3 = 'audio/mpeg',
-  OGG = 'audio/ogg',
-}
-
-export const FileType = { ...ImageType, ...VideoType, ...AudioType };
-export type FileType = ImageType | VideoType | AudioType;
-
-type Media = ContentPublication['metadata']['media'][number]['original'];
-
-type NarrowedMedia<T extends FileType> = Overwrite<Media, { mimeType: T }>;
+type NarrowedMedia<T extends SupportedFileType> = Overwrite<Media, { mimeType: T }>;
 
 export type ImageMedia = NarrowedMedia<ImageType>;
 
