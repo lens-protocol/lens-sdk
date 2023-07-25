@@ -12,6 +12,10 @@ import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { useSearchProfiles, UseSearchProfilesArgs } from '../useSearchProfiles';
 
 function setupTestScenario({
@@ -24,6 +28,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useSearchProfiles(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
         mockSearchProfilesResponse({
           variables: {
@@ -31,6 +36,7 @@ function setupTestScenario({
             limit: 10,
             observerId: expectedObserverId ?? null,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: result,
         }),

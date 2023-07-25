@@ -13,8 +13,17 @@ import {
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
+import {
+  mediaTransformConfigToQueryVariables,
+  MediaTransformsConfig,
+} from '../../../mediaTransforms';
+
 export class CreateMirrorResponder implements ITransactionResponder<CreateMirrorRequest> {
-  constructor(private readonly client: SafeApolloClient, private readonly sources: Sources) {}
+  constructor(
+    private readonly client: SafeApolloClient,
+    private readonly sources: Sources,
+    private readonly mediaTransforms: MediaTransformsConfig,
+  ) {}
 
   async commit({ request }: TransactionData<CreateMirrorRequest>) {
     const session = getSession();
@@ -27,6 +36,7 @@ export class CreateMirrorResponder implements ITransactionResponder<CreateMirror
         },
         observerId: session?.type === SessionType.WithProfile ? session.profile.id : null,
         sources: this.sources,
+        ...mediaTransformConfigToQueryVariables(this.mediaTransforms),
       },
       fetchPolicy: 'network-only',
     });

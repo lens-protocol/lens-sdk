@@ -9,6 +9,10 @@ import { mockUpdateProfileDetailsRequest, mockTransactionData } from '@lens-prot
 import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../../mediaTransforms';
 import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { UpdateProfileMetadataResponder } from '../UpdateProfileMetadataResponder';
 
@@ -22,6 +26,7 @@ function setupUpdateProfileMetadataResponder({
   updatedProfile?: Profile;
 }) {
   const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
   const apolloClient = mockLensApolloClient([
     mockGetProfileResponse({
       profile: updatedProfile,
@@ -29,6 +34,7 @@ function setupUpdateProfileMetadataResponder({
         request: { profileId: updatedProfile.id },
         observerId: null,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
     }),
   ]);
@@ -45,7 +51,7 @@ function setupUpdateProfileMetadataResponder({
     data: existingProfile,
   });
 
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
   const responder = new UpdateProfileMetadataResponder(profileCacheManager);
 
   return {

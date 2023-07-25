@@ -12,7 +12,11 @@ import { WalletData } from '@lens-protocol/domain/use-cases/lifecycle';
 import { invariant, never } from '@lens-protocol/shared-kernel';
 import { useEffect, useRef } from 'react';
 
-import { useLensApolloClient, useSourcesFromConfig } from '../helpers/arguments';
+import {
+  useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+} from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
 
 export type {
@@ -80,11 +84,13 @@ export function useCurrentSession(): ReadResult<
 
   const { data, error } = useGetProfile(
     useLensApolloClient({
-      variables: useSourcesFromConfig({
-        request: {
-          profileId: session?.type === SessionType.WithProfile ? session.profile.id : undefined,
-        },
-      }),
+      variables: useMediaTransformFromConfig(
+        useSourcesFromConfig({
+          request: {
+            profileId: session?.type === SessionType.WithProfile ? session.profile.id : undefined,
+          },
+        }),
+      ),
       fetchPolicy: 'cache-first',
       skip: !trigger,
     }),

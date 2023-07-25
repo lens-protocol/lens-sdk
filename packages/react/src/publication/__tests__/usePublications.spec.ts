@@ -12,6 +12,10 @@ import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { usePublications, UsePublicationsArgs } from '../usePublications';
 
 function setupTestScenario({
@@ -24,6 +28,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => usePublications(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
         mockGetPublicationsResponse({
           variables: {
@@ -31,6 +36,7 @@ function setupTestScenario({
             observerId: expectedObserverId ?? null,
             limit: 10,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           publications: result,
         }),

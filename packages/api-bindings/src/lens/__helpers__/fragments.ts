@@ -56,7 +56,13 @@ import {
   Wallet,
   WhoReactedResult,
 } from '../generated';
-import { AnyPublication, CollectModule, erc20Amount, ProfileMedia } from '../utils';
+import {
+  AnyPublication,
+  CollectModule,
+  erc20Amount,
+  ProfileCoverMedia,
+  ProfilePictureMedia,
+} from '../utils';
 
 export function mockMediaFragment(overrides?: Partial<Media>): Media {
   return {
@@ -69,9 +75,24 @@ export function mockMediaFragment(overrides?: Partial<Media>): Media {
   };
 }
 
-export function mockProfileMediaFragment(overrides?: Partial<ProfileMedia>): ProfileMedia {
+export function mockProfilePictureMediaFragment(
+  overrides?: Partial<ProfilePictureMedia>,
+): ProfilePictureMedia {
   return {
     original: mockMediaFragment(),
+    optimized: mockMediaFragment(),
+    thumbnail: mockMediaFragment(),
+    ...overrides,
+    __typename: 'MediaSet',
+  };
+}
+
+export function mockProfileCoverPictureMediaFragment(
+  overrides?: Partial<ProfileCoverMedia>,
+): ProfileCoverMedia {
+  return {
+    original: mockMediaFragment(),
+    optimized: mockMediaFragment(),
     ...overrides,
     __typename: 'MediaSet',
   };
@@ -129,8 +150,8 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     handle: faker.internet.userName(firstName, lastName),
     ownedBy: mockEthereumAddress(),
     interests: [],
-    picture: mockProfileMediaFragment(),
-    coverPicture: mockProfileMediaFragment(),
+    picture: mockProfilePictureMediaFragment(),
+    coverPicture: mockProfileCoverPictureMediaFragment(),
 
     stats: mockProfileStatsFragment(overrides?.stats),
 

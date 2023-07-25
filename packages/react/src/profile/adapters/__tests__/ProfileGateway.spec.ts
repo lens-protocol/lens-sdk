@@ -10,10 +10,15 @@ import { Profile } from '@lens-protocol/domain/entities';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../mediaTransforms';
 import { ProfileGateway } from '../ProfileGateway';
 
 function setupProfileGateway({ apolloClient }: { apolloClient: SafeApolloClient }) {
-  return new ProfileGateway(apolloClient);
+  const mediaTransforms = defaultMediaTransformsConfig;
+  return new ProfileGateway(apolloClient, mediaTransforms);
 }
 
 describe(`Given an instance of the ${ProfileGateway.name}`, () => {
@@ -27,6 +32,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
             byOwnerAddresses: [address],
             limit: 10,
             sources: [],
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profiles: [profileDataFragment],
         }),
@@ -51,6 +57,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
           variables: {
             request: { handle: profileDataFragment.handle },
             sources: [],
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profile: profileDataFragment,
         }),
@@ -70,7 +77,11 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
       const handle = faker.internet.userName();
       const apolloClient = mockLensApolloClient([
         mockGetProfileResponse({
-          variables: { request: { handle }, sources: [] },
+          variables: {
+            request: { handle },
+            sources: [],
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+          },
           profile: null,
         }),
       ]);
@@ -90,6 +101,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
           variables: {
             request: { profileId: profileDataFragment.id },
             sources: [],
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profile: profileDataFragment,
         }),
@@ -112,6 +124,7 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
           variables: {
             request: { profileId },
             sources: [],
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profile: null,
         }),

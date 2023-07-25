@@ -25,6 +25,10 @@ import {
 import { ChainType, failure, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
+import {
+  MediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../mediaTransforms';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IMetadataUploader } from '../IMetadataUploader';
 import { ITransactionFactory } from '../ITransactionFactory';
@@ -44,6 +48,7 @@ export class ProfileMetadataCallGateway
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<UpdateProfileDetailsRequest>,
     private readonly uploader: IMetadataUploader<ProfileMetadata>,
+    private readonly mediaTransforms: MediaTransformsConfig,
   ) {}
 
   async createDelegatedTransaction(
@@ -147,6 +152,7 @@ export class ProfileMetadataCallGateway
       variables: {
         // 'sources' and 'observerId' is not need as profile metadata is independent from observer profile and sources
         request: { profileId },
+        ...mediaTransformConfigToQueryVariables(this.mediaTransforms),
       },
     });
 

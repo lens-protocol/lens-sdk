@@ -1,10 +1,11 @@
 import { useProfilesToFollow as useUnderlyingQuery } from '@lens-protocol/api-bindings';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { useReadResult } from '../helpers/reads';
 
@@ -46,9 +47,11 @@ export function useProfilesToFollow({ observerId }: UseProfilesToFollowArgs = {}
     useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            observerId,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              observerId,
+            }),
+          ),
         }),
       ),
     ),

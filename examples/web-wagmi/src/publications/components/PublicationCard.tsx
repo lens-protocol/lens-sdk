@@ -15,6 +15,7 @@ import { useInView } from 'react-cool-inview';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 import { formatAmount } from '../../utils';
+import { Media } from './Media';
 
 function formatDecryptionCriterion(criterion: AnyCriterion): string {
   switch (criterion.type) {
@@ -107,14 +108,15 @@ export function PublicationCard({ publication }: PublicationCardProps) {
     );
   }
 
+  const contentPublication = isMirrorPublication(publication) ? publication.mirrorOf : publication;
+
   return (
     <article>
       <ProfilePicture picture={publication.profile.picture} />
       <p>{publication.profile.name ?? `@${publication.profile.handle}`}</p>
 
-      <Content
-        publication={isMirrorPublication(publication) ? publication.mirrorOf : publication}
-      />
+      <Content publication={contentPublication} />
+      <Media publication={contentPublication} />
       <p>Publication type: {publication.__typename}</p>
     </article>
   );

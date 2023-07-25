@@ -12,11 +12,16 @@ import {
 import { nonNullable } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../../mediaTransforms';
 import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { UpdateDispatcherConfigResponder } from '../UpdateDispatcherConfigResponder';
 
 function setupTestScenario({ profile }: { profile: Profile }) {
   const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
   const apolloClient = mockLensApolloClient([
     mockGetProfileResponse({
       profile,
@@ -26,11 +31,12 @@ function setupTestScenario({ profile }: { profile: Profile }) {
         },
         observerId: null,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
     }),
   ]);
 
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
   const responder = new UpdateDispatcherConfigResponder(profileCacheManager);
 
   return {

@@ -13,6 +13,10 @@ import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { useProfile, UseProfileArgs } from '../useProfile';
 
 function setupTestScenario({
@@ -25,6 +29,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfile(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
         mockGetProfileResponse({
           profile,
@@ -38,6 +43,7 @@ function setupTestScenario({
                 },
             observerId: expectedObserverId,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
         }),
       ]),

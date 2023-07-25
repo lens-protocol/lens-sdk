@@ -11,8 +11,9 @@ import {
   ProfileAttributeReader,
   ProfileAttributes,
   StrictTypedTypePolicies,
-  ProfileMedia,
+  ProfileCoverSet,
   Attribute,
+  ProfilePictureSet,
 } from '../../lens';
 import { getSession } from './session';
 import {
@@ -126,8 +127,14 @@ export function createProfileTypePolicy(): StrictTypedTypePolicies['Profile'] {
         });
       },
 
+      picture: {
+        merge(_, incoming: ProfilePictureSet) {
+          return incoming;
+        },
+      },
+
       coverPicture: {
-        merge(_, incoming: ProfileMedia) {
+        merge(_, incoming: ProfileCoverSet) {
           return incoming;
         },
       },

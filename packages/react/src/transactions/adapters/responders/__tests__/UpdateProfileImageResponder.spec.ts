@@ -5,14 +5,18 @@ import {
   mockGetProfileResponse,
   mockMediaFragment,
   mockProfileFragment,
-  mockProfileMediaFragment,
   mockSources,
+  mockProfilePictureMediaFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import {
   mockTransactionData,
   mockUpdateOffChainProfileImageRequest,
 } from '@lens-protocol/domain/mocks';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../../mediaTransforms';
 import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { UpdateProfileImageResponder } from '../UpdateProfileImageResponder';
 
@@ -23,6 +27,7 @@ type SetupTestScenarioArgs = {
 
 function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioArgs) {
   const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
   const apolloClient = mockLensApolloClient([
     mockGetProfileResponse({
       profile: responseProfile,
@@ -32,6 +37,7 @@ function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioA
         },
         observerId: null,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
     }),
   ]);
@@ -43,7 +49,7 @@ function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioA
     data: cacheProfile,
   });
 
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
   const responder = new UpdateProfileImageResponder(profileCacheManager);
 
   return {
@@ -72,7 +78,7 @@ describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
 
   const profileWithNewImage: Profile = {
     ...profile,
-    picture: mockProfileMediaFragment({
+    picture: mockProfilePictureMediaFragment({
       original: mockMediaFragment({
         url: newImageUrl,
       }),

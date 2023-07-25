@@ -67,7 +67,7 @@ fragment ProfileFields on Profile {
     }
 
     ... on MediaSet {
-      ...MediaSet
+      ...ProfilePictureSet
     }
   }
 
@@ -77,7 +77,7 @@ fragment ProfileFields on Profile {
     }
 
     ... on MediaSet {
-      ...MediaSet
+      ...ProfileCoverSet
     }
   }
 
@@ -148,7 +148,11 @@ fragment Profile on Profile {
   }
 }
 
-query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {
+query ProfilesToFollow(
+  $observerId: ProfileId
+  $sources: [Sources!]!
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
+) {
   result: recommendedProfiles {
     ...Profile
   }
@@ -158,6 +162,7 @@ query GetProfile(
   $request: SingleProfileQueryRequest!
   $observerId: ProfileId
   $sources: [Sources!] = []
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: profile(request: $request) {
     ...Profile
@@ -173,6 +178,7 @@ query GetAllProfiles(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!] = []
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: profiles(
     request: {
@@ -205,6 +211,7 @@ query MutualFollowersProfiles(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!]!
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: mutualFollowersProfiles(
     request: {

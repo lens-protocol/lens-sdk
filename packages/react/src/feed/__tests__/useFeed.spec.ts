@@ -12,6 +12,10 @@ import { mockProfileId, mockProfileIdentifier } from '@lens-protocol/domain/mock
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { FeedEventItemType } from '../FeedEventItemType';
 import { useFeed } from '../useFeed';
 
@@ -38,7 +42,7 @@ function setupTestScenario({
     {
       mocks: {
         sources,
-
+        mediaTransforms: defaultMediaTransformsConfig,
         apolloClient: mockLensApolloClient([
           mockFeedResponse({
             variables: {
@@ -47,6 +51,7 @@ function setupTestScenario({
               restrictEventTypesTo: [LensFeedEventItemType.Post],
               limit: 50,
               sources,
+              ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
             },
             items,
           }),

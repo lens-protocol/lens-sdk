@@ -16,6 +16,10 @@ import { mockNonce, mockUpdateProfileDetailsRequest } from '@lens-protocol/domai
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../../mediaTransforms';
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import {
   assertBroadcastingErrorResultWithRequestFallback,
@@ -34,10 +38,12 @@ function setupTestScenario({
   otherMockedResponses?: MockedResponse<unknown>[];
   uploadUrl: Url;
 }) {
+  const mediaTransforms = defaultMediaTransformsConfig;
   const getProfilesByIdQueryMockedResponse = mockGetProfileResponse({
     variables: {
       request: { profileId: existingProfile.id },
       sources: [],
+      ...mediaTransformConfigToQueryVariables(mediaTransforms),
     },
     profile: existingProfile,
   });
@@ -50,7 +56,12 @@ function setupTestScenario({
   const transactionFactory = mockITransactionFactory();
   const uploader = mockIMetadataUploader(uploadUrl);
 
-  const gateway = new ProfileMetadataCallGateway(apolloClient, transactionFactory, uploader);
+  const gateway = new ProfileMetadataCallGateway(
+    apolloClient,
+    transactionFactory,
+    uploader,
+    mediaTransforms,
+  );
 
   return { gateway, uploader };
 }

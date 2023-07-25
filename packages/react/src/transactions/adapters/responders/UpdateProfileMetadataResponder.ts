@@ -75,6 +75,14 @@ export class UpdateProfileMetadataResponder
                 cover: null,
                 mimeType: null,
               },
+              optimized: {
+                __typename: 'Media',
+                url: request.coverPicture,
+                // we don't know the following (yet), not important for now
+                altTag: null,
+                cover: null,
+                mimeType: null,
+              },
             }
           : current.coverPicture,
         __attributes: request.attributes

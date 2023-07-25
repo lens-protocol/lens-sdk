@@ -10,14 +10,23 @@ import {
 import { Profile, ProfileId } from '@lens-protocol/domain/entities';
 import { IProfileGateway } from '@lens-protocol/domain/use-cases/profile';
 
+import { MediaTransformsConfig, mediaTransformConfigToQueryVariables } from '../../mediaTransforms';
+
 export class ProfileGateway implements IProfileGateway {
-  constructor(private readonly apolloClient: SafeApolloClient) {}
+  constructor(
+    private readonly apolloClient: SafeApolloClient,
+    private readonly mediaTransforms: MediaTransformsConfig,
+  ) {}
 
   async getAllProfilesByOwnerAddress(address: string): Promise<Profile[]> {
     const { data } = await this.apolloClient.query<GetAllProfilesData, GetAllProfilesVariables>({
       query: GetAllProfilesDocument,
       // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
-      variables: { byOwnerAddresses: [address], limit: 10 },
+      variables: {
+        byOwnerAddresses: [address],
+        limit: 10,
+        ...mediaTransformConfigToQueryVariables(this.mediaTransforms),
+      },
     });
 
     return data.result.items.map(({ id, handle }) => Profile.create({ id, handle }));
@@ -27,7 +36,10 @@ export class ProfileGateway implements IProfileGateway {
     const { data } = await this.apolloClient.query<GetProfileData, GetProfileVariables>({
       query: GetProfileDocument,
       // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
-      variables: { request: { handle } },
+      variables: {
+        request: { handle },
+        ...mediaTransformConfigToQueryVariables(this.mediaTransforms),
+      },
     });
 
     if (data.result === null) {
@@ -43,7 +55,10 @@ export class ProfileGateway implements IProfileGateway {
     const { data } = await this.apolloClient.query<GetProfileData, GetProfileVariables>({
       query: GetProfileDocument,
       // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
-      variables: { request: { profileId } },
+      variables: {
+        request: { profileId },
+        ...mediaTransformConfigToQueryVariables(this.mediaTransforms),
+      },
     });
 
     if (data.result === null) {

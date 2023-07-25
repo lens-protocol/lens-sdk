@@ -7,10 +7,11 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import { nonNullable } from '@lens-protocol/shared-kernel';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import {
@@ -87,13 +88,15 @@ export function useFeed({
     useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            metadata: createPublicationMetadataFilters(metadataFilter),
-            restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
-            profileId,
-            observerId,
-            limit,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              metadata: createPublicationMetadataFilters(metadataFilter),
+              restrictEventTypesTo: mapRestrictEventTypesToLensTypes(restrictEventTypesTo),
+              profileId,
+              observerId,
+              limit,
+            }),
+          ),
         }),
       ),
     ),

@@ -14,6 +14,7 @@ import {
   SearchProfilesVariables,
   SearchPublicationsDocument,
   SearchPublicationsVariables,
+  MediaTransformParams,
 } from './generated';
 import { Sources } from './sources';
 
@@ -42,6 +43,9 @@ export type GetCommentsVariables = Exact<{
   cursor?: string;
   metadata?: InputMaybe<PublicationMetadataFilters>;
   observerId?: InputMaybe<ProfileId>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetCommentsData = {

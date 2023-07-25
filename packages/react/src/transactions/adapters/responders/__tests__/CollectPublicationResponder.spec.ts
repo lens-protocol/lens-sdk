@@ -20,6 +20,10 @@ import {
 import { mockTransactionData, mockPaidCollectRequest } from '@lens-protocol/domain/mocks';
 import { nonNullable } from '@lens-protocol/shared-kernel';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../../mediaTransforms';
 import { CollectPublicationResponder } from '../CollectPublicationResponder';
 
 type AnyPublicationTypename = AnyPublication['__typename'];
@@ -41,12 +45,14 @@ function setupTestScenario({
   simulateAuthenticatedProfile(activeProfile);
 
   const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
   const apolloClient = mockLensApolloClient([
     mockGetPublicationResponse({
       variables: {
         request: { publicationId: publication.id },
         observerId: activeProfile.id,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
       publication: expected,
     }),
@@ -59,7 +65,7 @@ function setupTestScenario({
     data: publication,
   });
 
-  const responder = new CollectPublicationResponder(apolloClient, sources);
+  const responder = new CollectPublicationResponder(apolloClient, sources, mediaTransforms);
 
   return {
     responder,

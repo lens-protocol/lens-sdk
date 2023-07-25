@@ -10,6 +10,7 @@ import {
 import { mockProfileIdentifier, mockWalletData } from '@lens-protocol/domain/mocks';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { defaultMediaTransformsConfig } from '../../mediaTransforms';
 import { useActiveProfile } from '../useActiveProfile';
 
 function setupUseActiveProfile({ profile }: { profile: Profile }) {
@@ -28,7 +29,7 @@ function setupUseActiveProfile({ profile }: { profile: Profile }) {
   });
 
   return renderHookWithMocks(() => useActiveProfile(), {
-    mocks: { sources, apolloClient },
+    mocks: { sources, mediaTransforms: defaultMediaTransformsConfig, apolloClient },
   });
 }
 

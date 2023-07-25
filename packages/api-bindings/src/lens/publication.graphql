@@ -2,6 +2,9 @@ query GetPublication(
   $request: PublicationQueryRequest!
   $observerId: ProfileId
   $sources: [Sources!]!
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: publication(request: $request) {
     ... on Post {

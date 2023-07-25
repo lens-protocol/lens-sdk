@@ -16,6 +16,10 @@ import {
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../../mediaTransforms';
 import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { CreatePostResponder, recentPosts } from '../CreatePostResponder';
 
@@ -29,6 +33,7 @@ function setupTestScenario({
   transactionData?: TransactionData<CreatePostRequest>;
 }) {
   const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
   const apolloClient = mockLensApolloClient([
     mockGetProfileResponse({
       profile: author,
@@ -38,6 +43,7 @@ function setupTestScenario({
         },
         observerId: null,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
     }),
     mockGetPublicationResponse({
@@ -51,13 +57,14 @@ function setupTestScenario({
             },
         observerId: author.id,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
       publication: post,
     }),
   ]);
 
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
-  return new CreatePostResponder(profileCacheManager, apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
+  return new CreatePostResponder(profileCacheManager, apolloClient, sources, mediaTransforms);
 }
 
 describe(`Given an instance of the ${CreatePostResponder.name}`, () => {

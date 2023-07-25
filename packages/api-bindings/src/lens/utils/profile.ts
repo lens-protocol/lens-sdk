@@ -15,4 +15,5 @@ export function isProfileOwnedByMe<T extends ProfileFields>(
 
 export type FollowModule = NonNullable<Profile['followModule']>;
 
-export type ProfileMedia = NonNullable<Profile['picture'] | Profile['coverPicture']>;
+export type ProfilePictureMedia = NonNullable<Profile['picture']>;
+export type ProfileCoverMedia = NonNullable<Profile['coverPicture']>;

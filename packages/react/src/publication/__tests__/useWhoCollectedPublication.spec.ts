@@ -13,6 +13,10 @@ import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
 import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
+import {
   useWhoCollectedPublication,
   UseWhoCollectedPublicationArgs,
 } from '../useWhoCollectedPublication';
@@ -27,6 +31,7 @@ function setupTestScenario({
   return renderHookWithMocks(() => useWhoCollectedPublication(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
         mockWhoCollectedPublicationResponse({
           variables: {
@@ -34,6 +39,7 @@ function setupTestScenario({
             observerId: expectedObserverId ?? null,
             limit: 10,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           wallets: result,
         }),

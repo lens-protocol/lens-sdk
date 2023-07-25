@@ -10,6 +10,10 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import identity from 'lodash/identity';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../mediaTransforms';
 import { ProfileCacheManager } from '../ProfileCacheManager';
 
 function setupTestScenario({
@@ -24,6 +28,7 @@ function setupTestScenario({
   profile: Profile;
 }) {
   const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
   const client = mockLensApolloClient([
     mockGetProfileResponse({
       profile: profile,
@@ -31,6 +36,7 @@ function setupTestScenario({
         request: expectedRequest,
         observerId: expectedObserverId ?? null,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
     }),
   ]);
@@ -47,7 +53,7 @@ function setupTestScenario({
     data: cacheEntry,
   });
 
-  const manager = new ProfileCacheManager(client, sources);
+  const manager = new ProfileCacheManager(client, sources, mediaTransforms);
 
   return {
     manager,

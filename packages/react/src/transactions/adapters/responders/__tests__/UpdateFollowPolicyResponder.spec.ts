@@ -14,6 +14,10 @@ import {
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../../mediaTransforms';
 import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { UpdateFollowPolicyResponder } from '../UpdateFollowPolicyResponder';
 
@@ -25,12 +29,14 @@ function setupUpdateFollowPolicyResponder({
   updatedProfile?: Profile;
 }) {
   const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
   const apolloClient = mockLensApolloClient([
     mockGetProfileResponse({
       variables: {
         request: { profileId: updatedProfile.id },
         observerId: null,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
       profile: updatedProfile,
     }),
@@ -46,7 +52,7 @@ function setupUpdateFollowPolicyResponder({
     data: existingProfile,
   });
 
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
   const responder = new UpdateFollowPolicyResponder(profileCacheManager);
 
   return {

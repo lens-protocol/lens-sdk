@@ -106,7 +106,7 @@ export type {
   GatedPost,
   GatedPublication,
   Media,
-  MediaSet,
+  PublicationMediaSet,
   MetadataAttributeOutput,
   MetadataOutput,
   Mirror,

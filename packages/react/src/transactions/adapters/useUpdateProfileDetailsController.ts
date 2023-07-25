@@ -28,10 +28,11 @@ export function useUpdateProfileDetailsController({
   const {
     activeWallet,
     apolloClient,
-    transactionGateway,
+    mediaTransforms,
     onChainRelayer,
-    transactionQueue,
     transactionFactory,
+    transactionGateway,
+    transactionQueue,
   } = useSharedDependencies();
 
   return async (request: UpdateProfileDetailsRequest) => {
@@ -40,7 +41,12 @@ export function useUpdateProfileDetailsController({
     const uploader: IMetadataUploader<ProfileMetadata> = new MetadataUploaderErrorMiddleware(
       upload,
     );
-    const gateway = new ProfileMetadataCallGateway(apolloClient, transactionFactory, uploader);
+    const gateway = new ProfileMetadataCallGateway(
+      apolloClient,
+      transactionFactory,
+      uploader,
+      mediaTransforms,
+    );
 
     const presenter = new PromiseResultPresenter<
       void,
