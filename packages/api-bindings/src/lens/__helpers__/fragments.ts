@@ -367,6 +367,7 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
     mirrors: [],
     reaction: null,
     hidden: false,
+    notInterested: false,
 
     isGated: false,
     decryptionCriteria: null,
