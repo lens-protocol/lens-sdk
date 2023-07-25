@@ -99,9 +99,10 @@ describe(`Given the ${useNotInterested.name} hook`, () => {
 
         const { result } = scenario.renderHook(() => useNotInterested({ publication, profile }));
 
-        await act(async () => {
+        act(() => {
           void result.current.execute();
         });
+
         expect(result.current).toMatchObject({
           isPending: true,
         });
@@ -123,7 +124,8 @@ describe(`Given the ${useNotInterested.name} hook`, () => {
       const scenario = setupTestScenario({ fragment: FragmentMirror, profile, publication });
 
       const { result } = scenario.renderHook(() => useNotInterested({ publication, profile }));
-      await act(async () => {
+
+      act(() => {
         void result.current.execute();
       });
 
