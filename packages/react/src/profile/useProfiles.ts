@@ -1,8 +1,9 @@
 import { Profile, useGetAllProfiles } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { invariant, XOR } from '@lens-protocol/shared-kernel';
+import { invariant, Prettify, XOR } from '@lens-protocol/shared-kernel';
 
 import {
+  Skippable,
   useActiveProfileAsDefaultObserver,
   useLensApolloClient,
   useMediaTransformFromConfig,
@@ -12,21 +13,20 @@ import {
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
+type UseProfilesByIdsArgs = {
+  profileIds: ProfileId[];
+};
+
+type UseProfilesByHandlesArgs = {
+  handles: string[];
+};
+
 /**
  * {@link useProfiles} hook arguments
  */
-export type UseProfilesArgs = PaginatedArgs<
-  WithObserverIdOverride<
-    XOR<
-      {
-        handles: string[];
-      },
-      {
-        profileIds: ProfileId[];
-      }
-    > & {
-      skip?: boolean;
-    }
+export type UseProfilesArgs = Prettify<
+  Skippable<
+    PaginatedArgs<WithObserverIdOverride<XOR<UseProfilesByIdsArgs, UseProfilesByHandlesArgs>>>
   >
 >;
 
@@ -91,7 +91,7 @@ export function useProfiles({
   profileIds: byProfileIds,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-  skip = false,
+  skip,
 }: UseProfilesArgs): PaginatedReadResult<Profile[]> {
   invariant(
     byHandles === undefined || byProfileIds === undefined,
@@ -105,9 +105,9 @@ export function useProfiles({
           variables: useMediaTransformFromConfig(
             useSourcesFromConfig({ byHandles, byProfileIds, limit, observerId }),
           ),
+          skip,
         }),
       ),
-      skip,
     }),
   );
 }

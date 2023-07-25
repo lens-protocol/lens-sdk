@@ -12,10 +12,23 @@ import { useEffect, useMemo, useState } from 'react';
 import { extractPeerProfileId, createUniqueConversationId, notEmpty } from './helpers';
 import { EnhancedConversation } from './types';
 
+/**
+ * @experimental
+ */
 export type EnhanceConversationsRequest = {
   profile: ProfileOwnedByMe;
 };
 
+/**
+ * Enhance XMTP conversations with profiles of the conversations peers,
+ * if conversation is between two Lens profiles.
+ *
+ * @category Inbox
+ * @group Hooks
+ * @experimental
+ *
+ * @param args - {@link EnhanceConversationsRequest}
+ */
 export function useEnhanceConversations(
   useConversationsResult: ReturnType<typeof useConversations>,
   { profile }: EnhanceConversationsRequest,
@@ -43,10 +56,15 @@ export function useEnhanceConversations(
     data: profiles = [],
     error,
     loading,
-  } = useProfiles({
-    profileIds: uniqueProfileIds,
-    skip: uniqueProfileIds.length === 0,
-  });
+  } = useProfiles(
+    uniqueProfileIds.length > 0
+      ? {
+          profileIds: uniqueProfileIds,
+        }
+      : {
+          skip: true,
+        },
+  );
 
   useEffect(() => {
     if (profiles.length > 0 && conversations.length > 0) {

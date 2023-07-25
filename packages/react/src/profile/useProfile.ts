@@ -1,9 +1,10 @@
 import { Profile, UnspecifiedError, useGetProfile } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { invariant, XOR } from '@lens-protocol/shared-kernel';
+import { invariant, Prettify, XOR } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import {
+  Skippable,
   useActiveProfileAsDefaultObserver,
   useLensApolloClient,
   useMediaTransformFromConfig,
@@ -20,18 +21,20 @@ export type UseProfileByHandleArgs = {
   handle: string;
 };
 
-export type UseProfileArgs = WithObserverIdOverride<
-  XOR<
-    {
-      skip: true;
-    },
-    XOR<UseProfileByIdArgs, UseProfileByHandleArgs>
-  >
+/**
+ * {@link useProfile} hook arguments
+ */
+export type UseProfileArgs = Prettify<
+  Skippable<WithObserverIdOverride<XOR<UseProfileByIdArgs, UseProfileByHandleArgs>>>
 >;
 
 /**
+ * Get a profile by either a handle or profile Id.
+ *
  * @category Profiles
  * @group Hooks
+ *
+ * @param args - {@link UseProfileArgs}
  */
 export function useProfile({
   observerId,
@@ -52,9 +55,9 @@ export function useProfile({
               observerId,
             }),
           ),
+          skip: request.skip,
         }),
       ),
-      skip: request.skip,
     }),
   );
 

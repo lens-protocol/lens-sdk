@@ -135,8 +135,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/wagmi
       '@xmtp/react-sdk':
-        specifier: 1.0.0-preview.39
-        version: 1.0.0-preview.39(react@18.2.0)
+        specifier: 1.0.0-preview.40
+        version: 1.0.0-preview.40(react@18.2.0)
       example-shared:
         specifier: workspace:*
         version: link:../shared
@@ -873,8 +873,8 @@ importers:
         specifier: ^18.0.28
         version: 18.0.28
       '@xmtp/react-sdk':
-        specifier: 1.0.0-preview.39
-        version: 1.0.0-preview.39(react@18.2.0)
+        specifier: 1.0.0-preview.40
+        version: 1.0.0-preview.40(react@18.2.0)
       eslint:
         specifier: ^8.34.0
         version: 8.34.0
@@ -7700,12 +7700,13 @@ packages:
       rxjs: 7.8.0
       undici: 5.22.1
 
-  /@xmtp/react-sdk@1.0.0-preview.39(react@18.2.0):
-    resolution: {integrity: sha512-Ryw81KgshEGzovCGkmOm1eb56fYD3uu8T6i+Vi6oyQdwTsqmW8o+uYZaiwRIct4JyL/NQRe47YEjmB/Q7WRtiQ==}
+  /@xmtp/react-sdk@1.0.0-preview.40(react@18.2.0):
+    resolution: {integrity: sha512-WNkzVaONaRqhAlxoMd2gY17fa36KcuJHutPtOaoVGzP2QZWpLfiymDe8tm2IVxQdud4EMX4wjxtGRL+hBE3pTQ==}
+    engines: {node: '>=18'}
     peerDependencies:
       react: '>=16.14'
     dependencies:
-      '@xmtp/xmtp-js': 9.1.7
+      '@xmtp/xmtp-js': 9.4.1
       date-fns: 2.30.0
       dexie: 3.2.4
       react: 18.2.0
@@ -7713,8 +7714,8 @@ packages:
       - bufferutil
       - utf-8-validate
 
-  /@xmtp/xmtp-js@9.1.7:
-    resolution: {integrity: sha512-xTrEyuueF22986W7wZm6iwQDx1sSlhwQqQtdU1FnUAnkdLhcFLgZaDq3dfpzx2Cm4VdQWHSg3hgYXgAjuEZlug==}
+  /@xmtp/xmtp-js@9.4.1:
+    resolution: {integrity: sha512-NNK7HcR2aiQhZkHRWGUp1gRJcqzkcyE8g7gCatbyZaNDd0JQBo/wLmiCZ3aibXOHOKLj39eIwVfqCRDejMNflw==}
     engines: {node: '>=18'}
     dependencies:
       '@noble/secp256k1': 1.7.1

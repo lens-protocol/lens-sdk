@@ -1,11 +1,7 @@
-import {
-  buildConversationId,
-  extractPeerProfileId,
-  parseConversationId,
-} from '../conversationIdUtils';
+import { buildConversationId, extractPeerProfileId } from '../conversationIdUtils';
 
 describe('Given a collection of inbox helper functions', () => {
-  describe('when calling buildConversationId', () => {
+  describe(`when calling ${buildConversationId.name}`, () => {
     it('should build the same conversationId for provided two profiles, no matter the order', () => {
       const result1 = buildConversationId('0x15', '0x18');
       const result2 = buildConversationId('0x18', '0x15');
@@ -14,17 +10,14 @@ describe('Given a collection of inbox helper functions', () => {
     });
   });
 
-  describe('when calling parseConversationId', () => {
-    it('should return two profileIds', () => {
-      const conversationId = buildConversationId('0x15', '0x18');
-      const result = parseConversationId(conversationId);
+  describe(`when calling ${extractPeerProfileId.name}`, () => {
+    it('should return undefined if not a lens conversation', () => {
+      const result1 = extractPeerProfileId('not-lens-conversation', '0x15');
 
-      expect(result).toEqual(['0x15', '0x18']);
+      expect(result1).toBe(undefined);
     });
-  });
 
-  describe('when calling extractPeerProfileId', () => {
-    it('should return peer profileId', () => {
+    it('should return peer profileId for a lens conversation', () => {
       const conversationId = buildConversationId('0x15', '0x18');
 
       const result1 = extractPeerProfileId(conversationId, '0x15');

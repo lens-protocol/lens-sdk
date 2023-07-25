@@ -11,7 +11,7 @@ export function buildConversationId(profileIdA: string, profileIdB: string) {
     : `${CONVERSATION_ID_PREFIX}/${profileIdB}-${profileIdA}`;
 }
 
-export function parseConversationId(conversationId: string): [string, string] {
+function parseConversationId(conversationId: string): [string, string] {
   const conversationIdWithoutPrefix = conversationId.replace(`${CONVERSATION_ID_PREFIX}/`, '');
   const [profileIdA, profileIdB] = conversationIdWithoutPrefix.split('-');
 
@@ -20,7 +20,7 @@ export function parseConversationId(conversationId: string): [string, string] {
   return [profileIdA, profileIdB];
 }
 
-export function isLensConversation(
+function isLensConversation(
   activeProfileId: string,
   conversationId?: string,
 ): conversationId is string {

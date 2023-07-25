@@ -21,8 +21,14 @@ async function loadKeys(storage: IStorage<string>): Promise<Uint8Array | null> {
   return val ? Uint8Array.from(val.split(',').map((c) => parseInt(c))) : null;
 }
 
+/**
+ * @experimental
+ */
 export type InitXmtpClientOptions = Partial<Omit<ClientOptions, 'env' | 'privateKeyOverride'>>;
 
+/**
+ * @experimental
+ */
 export type UseXmtpClientResult = {
   client: Client | undefined;
   disconnect: () => void;
@@ -35,6 +41,17 @@ const defaultOptions: InitXmtpClientOptions = {
   persistConversations: true,
 };
 
+/**
+ * Initialize XMTP client using the same Signer as the one provided with {@link LensConfig}.
+ * Store XMTP user's decryption key in storage to improve UX.
+ * Be aware that XMTP user's key must be stored safely.
+ *
+ * @category Inbox
+ * @group Hooks
+ * @experimental
+ *
+ * @param args - {@link StartLensConversationRequest}
+ */
 export function useXmtpClient(): UseXmtpClientResult {
   const { client, disconnect, isLoading: clientIsLoading, initialize } = useClient();
   const [isLoading, setIsLoading] = useState(false);

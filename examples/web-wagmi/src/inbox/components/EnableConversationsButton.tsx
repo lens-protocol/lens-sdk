@@ -1,5 +1,4 @@
 import { useXmtpClient } from '@lens-protocol/react-web';
-import { useCallback } from 'react';
 
 import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { Loading } from '../../components/loading/Loading';
@@ -7,9 +6,9 @@ import { Loading } from '../../components/loading/Loading';
 export function EnableConversationsButton() {
   const { client, error, isLoading, initialize } = useXmtpClient();
 
-  const handleConnect = useCallback(async () => {
+  const handleConnect = async () => {
     await initialize();
-  }, [initialize]);
+  };
 
   if (isLoading) return <Loading />;
 
