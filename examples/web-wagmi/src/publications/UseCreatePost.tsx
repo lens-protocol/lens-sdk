@@ -5,6 +5,7 @@ import { WhenLoggedInWithProfile } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { PendingPostCard } from './components/PendingPostCard';
 import { PostComposer } from './components/PostComposer';
 import { PublicationCard } from './components/PublicationCard';
 
@@ -25,7 +26,7 @@ export function Timeline({ profileId }: TimelineProps) {
   return (
     <div>
       {recentPosts.map((item, i) => (
-        <PublicationCard key={`${item.id}-${i}`} publication={item} />
+        <PendingPostCard key={`${item.id}-${i}`} publication={item} />
       ))}
 
       {data.map((item, i) => (

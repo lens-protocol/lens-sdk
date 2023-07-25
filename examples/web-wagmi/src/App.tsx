@@ -58,6 +58,7 @@ import { UseCreateEncryptedPost } from './publications/UseCreateEncryptedPost';
 import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
+import { UseNotInterested } from './publications/UseNotInterested';
 import { UseProfilePublicationsForSale } from './publications/UseProfilePublicationsForSale';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
@@ -146,6 +147,7 @@ export function App() {
                   <Route path="UseCreateMirror" element={<UseCreateMirror />} />
                   <Route path="useWhoMirroredPublication" element={<UseWhoMirroredPublication />} />
                   <Route path="useCollect" element={<UseCollect />} />
+                  <Route path="useNotInterested" element={<UseNotInterested />} />
                 </Route>
 
                 <Route path="/profiles">

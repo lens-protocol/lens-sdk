@@ -28,6 +28,21 @@ export type NotInterestedOperation = Operation<void>;
  * @category Publications
  * @group Hooks
  * @param args - {@link UseNotInterestedArgs}
+ *
+ * @example
+ * ```tsx
+ * import { AnyPublication, ProfileOwnedByMe, useNotInterested } from '@lens-protocol/react-web';
+ *
+ * function Publication({ profile, publication }: { profile: ProfileOwnedByMe, publication: AnyPublication }) {
+ *   const { execute: toggle, isPending } = useNotInterested({ profile, publication });
+ *
+ *   return (
+ *     <button onClick={toggle} disabled={isPending}>
+ *       {publication.notInterested ? 'Not interested' : 'Interested'}
+ *     </button>
+ *   );
+ * }
+ * ```
  */
 export function useNotInterested({
   publication,
