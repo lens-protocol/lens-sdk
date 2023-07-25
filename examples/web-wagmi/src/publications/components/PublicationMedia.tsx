@@ -17,13 +17,13 @@ function MediaItem({ media }: MediaItemProps) {
   return null;
 }
 
-type MediaProps = {
+type PublicationMediaProps = {
   publication: Post | Comment;
 };
 
-export function Media({ publication }: MediaProps) {
+export function PublicationMedia({ publication }: PublicationMediaProps) {
   const medias = publication.metadata.media.map((mediaSet) => {
-    return mediaSet.optimized ?? mediaSet.small ?? mediaSet.medium ?? mediaSet.original;
+    return mediaSet.small ?? mediaSet.medium ?? mediaSet.optimized ?? mediaSet.original;
   });
 
   return (

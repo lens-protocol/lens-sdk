@@ -12,7 +12,7 @@ import { useInView } from 'react-cool-inview';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 import { formatAmount } from '../../utils';
-import { Media } from './Media';
+import { PublicationMedia } from './PublicationMedia';
 
 function formatDecryptionCriterion(criterion: AnyCriterion): string {
   switch (criterion.type) {
@@ -106,7 +106,7 @@ export function PublicationCard({ children, publication }: PublicationCardProps)
       </p>
 
       <Content publication={contentPublication} />
-      <Media publication={contentPublication} />
+      <PublicationMedia publication={contentPublication} />
       {children}
     </article>
   );
