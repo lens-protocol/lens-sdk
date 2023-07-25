@@ -41,7 +41,7 @@ export class WalletGateway
   }
 
   async reset(): Promise<void> {
-    await this.storage.set([]);
+    await this.storage.reset();
   }
 
   async save(wallet: ConcreteWallet): Promise<void> {
