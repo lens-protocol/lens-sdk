@@ -12,6 +12,7 @@ export * from './useWhoMirroredPublication';
 export * from './useProfilePublicationsForSale';
 export * from './useEncryptedPublication';
 export * from './useNotInterested';
+export * from './useMyBookmarks';
 
 /**
  * Domain entities
