@@ -13,11 +13,11 @@ import {
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
-type UseProfilesByIdsArgs = {
+export type UseProfilesByIdsArgs = {
   profileIds: ProfileId[];
 };
 
-type UseProfilesByHandlesArgs = {
+export type UseProfilesByHandlesArgs = {
   handles: string[];
 };
 

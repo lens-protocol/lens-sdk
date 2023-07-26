@@ -38,6 +38,7 @@ export type UseProfileArgs = Prettify<
  */
 export function useProfile({
   observerId,
+  skip,
   ...request
 }: UseProfileArgs): ReadResult<Profile, NotFoundError | UnspecifiedError> {
   invariant(
@@ -55,7 +56,7 @@ export function useProfile({
               observerId,
             }),
           ),
-          skip: request.skip,
+          skip,
         }),
       ),
     }),

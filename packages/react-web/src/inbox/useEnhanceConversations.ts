@@ -7,7 +7,7 @@ import {
 } from '@lens-protocol/react';
 import { assertError } from '@lens-protocol/shared-kernel';
 import { useConversations } from '@xmtp/react-sdk';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { extractPeerProfileId, createUniqueConversationId, notEmpty } from './helpers';
 import { EnhancedConversation } from './types';
@@ -20,7 +20,7 @@ export type EnhanceConversationsRequest = {
 };
 
 /**
- * Enhance XMTP conversations with profiles of the conversations peers,
+ * Enhance XMTP conversations with profiles of the conversations' peers,
  * if conversation is between two Lens profiles.
  *
  * @category Inbox
@@ -34,7 +34,6 @@ export function useEnhanceConversations(
   { profile }: EnhanceConversationsRequest,
 ): ReadResult<EnhancedConversation[], UnspecifiedError | Error> {
   const { conversations, error: resultError, isLoading: resultLoading } = useConversationsResult;
-  const [enhancedConversations, setEnhancedConversations] = useState<EnhancedConversation[]>([]);
 
   const conversationToProfileIdMap: Record<string, ProfileId | undefined> = useMemo(() => {
     return conversations.reduce((acc, c) => {
@@ -66,9 +65,9 @@ export function useEnhanceConversations(
         },
   );
 
-  useEffect(() => {
+  const enhancedConversations = useMemo((): EnhancedConversation[] => {
     if (profiles.length > 0 && conversations.length > 0) {
-      const eConversations = conversations.map((c) => {
+      const eConversations = conversations.map((c): EnhancedConversation => {
         const id = createUniqueConversationId(c);
 
         const peerProfile = profiles.find((p) => p.id === conversationToProfileIdMap[id]);
@@ -82,8 +81,9 @@ export function useEnhanceConversations(
         return Object.assign(Object.create(Object.getPrototypeOf(c)), c, { peerProfile });
       });
 
-      setEnhancedConversations(eConversations);
+      return eConversations;
     }
+    return conversations;
   }, [profiles, conversationToProfileIdMap, conversations]);
 
   if (loading || resultLoading) {

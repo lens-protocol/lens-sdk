@@ -1,9 +1,6 @@
 import { IGenericResultPresenter } from '@lens-protocol/domain/use-cases/transactions';
 import { Deferred, IEquatableError, Result } from '@lens-protocol/shared-kernel';
 
-/**
- * @internal
- */
 export class PromiseResultPresenter<T, E extends IEquatableError>
   implements IGenericResultPresenter<T, E>
 {

@@ -5,9 +5,22 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { SignArbitraryMessage } from '@lens-protocol/domain/use-cases/inbox';
-import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
-import { PromiseResultPresenter } from '@lens-protocol/react';
+import type { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
+import { IEquatableError } from '@lens-protocol/react';
+import { Deferred, Result } from '@lens-protocol/shared-kernel';
 import { Signer } from '@xmtp/react-sdk';
+
+class PromiseResultPresenter<T, E extends IEquatableError> {
+  private deferredResult = new Deferred<Result<T, E>>();
+
+  present(result: Result<T, E>): void {
+    this.deferredResult.resolve(result);
+  }
+
+  asResult(): Promise<Result<T, E>> {
+    return this.deferredResult.promise;
+  }
+}
 
 export class SignerAdapter implements Signer {
   constructor(private activeWallet: ActiveWallet) {}
