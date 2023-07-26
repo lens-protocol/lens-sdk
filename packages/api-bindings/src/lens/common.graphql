@@ -278,6 +278,7 @@ fragment PublicationStats on PublicationStats {
   totalDownvotes
   totalAmountOfCollects
   totalAmountOfComments
+  totalBookmarks
   commentsCount: commentsTotal(forSources: $sources)
 }
 
@@ -415,6 +416,7 @@ fragment CommentBase on Comment {
   }
   mirrors(by: $observerId)
   notInterested(by: $observerId)
+  bookmarked(by: $observerId)
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
@@ -558,6 +560,7 @@ fragment Post on Post {
   }
   mirrors(by: $observerId)
   notInterested(by: $observerId)
+  bookmarked(by: $observerId)
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client

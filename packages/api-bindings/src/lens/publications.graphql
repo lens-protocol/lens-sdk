@@ -134,3 +134,38 @@ query ProfilePublicationsForSale(
     }
   }
 }
+
+query GetProfileBookmarks(
+  $profileId: ProfileId!
+  $limit: LimitScalar!
+  $sources: [Sources!]!
+  $metadata: PublicationMetadataFilters
+  $cursor: Cursor
+  $observerId: ProfileId
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
+) {
+  result: publicationsProfileBookmarks(
+    request: {
+      cursor: $cursor
+      limit: $limit
+      metadata: $metadata
+      profileId: $profileId
+      sources: $sources
+    }
+  ) {
+    items {
+      ... on Post {
+        ...Post
+      }
+
+      ... on Comment {
+        ...Comment
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
