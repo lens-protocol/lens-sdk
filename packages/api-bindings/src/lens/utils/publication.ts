@@ -1,4 +1,4 @@
-import { PublicationId, ReactionType, TransactionKind } from '@lens-protocol/domain/entities';
+import { PublicationId, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   CollectPolicyType,
   CollectRequest,
@@ -31,7 +31,6 @@ import {
   MultirecipientFeeCollectModuleSettings,
   Post,
   PublicationStats,
-  ReactionTypes,
   SimpleCollectModuleSettings,
   TimedFeeCollectModuleSettings,
 } from '../generated';
@@ -75,28 +74,6 @@ export function isMirrorPublication<T extends Typename<string>>(
  */
 export function isDataAvailabilityPublicationId(publicationId: PublicationId): boolean {
   return publicationId.includes('-DA-');
-}
-
-export function resolveDomainReactionType(reaction: ReactionTypes): ReactionType {
-  switch (reaction) {
-    case ReactionTypes.Upvote:
-      return ReactionType.UPVOTE;
-    case ReactionTypes.Downvote:
-      return ReactionType.DOWNVOTE;
-    default:
-      never("Can't infer reaction type");
-  }
-}
-
-export function resolveApiReactionType(reaction: ReactionType): ReactionTypes {
-  switch (reaction) {
-    case ReactionType.UPVOTE:
-      return ReactionTypes.Upvote;
-    case ReactionType.DOWNVOTE:
-      return ReactionTypes.Downvote;
-    default:
-      never("Can't infer reaction type");
-  }
 }
 
 /**

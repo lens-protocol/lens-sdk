@@ -81,6 +81,11 @@ const publicationHooks = [
     description: 'Fetch profile publications for sale.',
     path: '/publications/useProfilePublicationsForSale',
   },
+  {
+    label: 'useNotInterested',
+    description: 'Flag a publication as not interested.',
+    path: '/publications/useNotInterested',
+  },
 ];
 
 export function PublicationsPage() {

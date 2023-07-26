@@ -145,7 +145,9 @@ export type CreatePostOperation = Operation<
 >;
 
 /**
- * Creates a new post.
+ * `useCreatePost` hook let you create a new post.
+ *
+ * You MUST be authenticated via {@link useWalletLogin} to use this hook.
  *
  * @category Publications
  * @group Hooks

@@ -2156,6 +2156,7 @@ export type CommentBase = {
   reaction: ReactionTypes | null;
   hasCollectedByMe: boolean;
   mirrors: Array<PublicationId>;
+  notInterested: boolean;
   hasOptimisticCollectedByMe: boolean;
   isOptimisticMirroredByMe: boolean;
   isMirroredByMe: boolean;
@@ -2163,6 +2164,7 @@ export type CommentBase = {
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
   contentInsight: ContentInsight;
+  observedBy: ProfileId | null;
   stats: PublicationStats;
   metadata: MetadataOutput;
   profile: Profile;
@@ -2215,6 +2217,7 @@ export type Post = {
   reaction: ReactionTypes | null;
   hasCollectedByMe: boolean;
   mirrors: Array<PublicationId>;
+  notInterested: boolean;
   hasOptimisticCollectedByMe: boolean;
   isOptimisticMirroredByMe: boolean;
   isMirroredByMe: boolean;
@@ -2222,6 +2225,7 @@ export type Post = {
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
   contentInsight: ContentInsight;
+  observedBy: ProfileId | null;
   stats: PublicationStats;
   metadata: MetadataOutput;
   profile: Profile;
@@ -2744,6 +2748,7 @@ export type ProfileFields = {
   isFollowedByMe: boolean;
   followStatus: FollowStatus | null;
   ownedByMe: boolean;
+  observedBy: ProfileId | null;
   attributes: ProfileAttributes;
   isFollowingObserver: boolean;
   picture: ProfilePictureSet | NftImage | null;
@@ -2969,6 +2974,18 @@ export type HidePublicationVariables = Exact<{
 }>;
 
 export type HidePublicationData = { hidePublication: void | null };
+
+export type AddNotInterestedVariables = Exact<{
+  request: PublicationProfileNotInterestedRequest;
+}>;
+
+export type AddNotInterestedData = { result: void | null };
+
+export type RemoveNotInterestedVariables = Exact<{
+  request: PublicationProfileNotInterestedRequest;
+}>;
+
+export type RemoveNotInterestedData = { result: void | null };
 
 export type GetPublicationsVariables = Exact<{
   profileId?: InputMaybe<Scalars['ProfileId']>;
@@ -3698,6 +3715,7 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
     isFollowingObserver: isFollowing(who: $observerId)
     followStatus @client
     ownedByMe @client
+    observedBy @client
   }
   ${FragmentNftImage}
   ${FragmentProfilePictureSet}
@@ -3971,6 +3989,7 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
       reasons
     }
     mirrors(by: $observerId)
+    notInterested(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     isMirroredByMe @client
@@ -3978,6 +3997,7 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
     referencePolicy @client
     decryptionCriteria @client
     contentInsight @client
+    observedBy @client
   }
   ${FragmentPublicationStats}
   ${FragmentMetadataOutput}
@@ -4072,11 +4092,12 @@ export const FragmentPost = /*#__PURE__*/ gql`
     canMirror(profileId: $observerId) {
       result
     }
-    mirrors(by: $observerId)
     canObserverDecrypt: canDecrypt(profileId: $observerId) {
       result
       reasons
     }
+    mirrors(by: $observerId)
+    notInterested(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     isMirroredByMe @client
@@ -4084,6 +4105,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
     referencePolicy @client
     decryptionCriteria @client
     contentInsight @client
+    observedBy @client
   }
   ${FragmentPublicationStats}
   ${FragmentMetadataOutput}
@@ -7064,6 +7086,90 @@ export type HidePublicationMutationOptions = Apollo.BaseMutationOptions<
   HidePublicationData,
   HidePublicationVariables
 >;
+export const AddNotInterestedDocument = /*#__PURE__*/ gql`
+  mutation AddNotInterested($request: PublicationProfileNotInterestedRequest!) {
+    result: addPublicationProfileNotInterested(request: $request)
+  }
+`;
+export type AddNotInterestedMutationFn = Apollo.MutationFunction<
+  AddNotInterestedData,
+  AddNotInterestedVariables
+>;
+
+/**
+ * __useAddNotInterested__
+ *
+ * To run a mutation, you first call `useAddNotInterested` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddNotInterested` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addNotInterested, { data, loading, error }] = useAddNotInterested({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddNotInterested(
+  baseOptions?: Apollo.MutationHookOptions<AddNotInterestedData, AddNotInterestedVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddNotInterestedData, AddNotInterestedVariables>(
+    AddNotInterestedDocument,
+    options,
+  );
+}
+export type AddNotInterestedHookResult = ReturnType<typeof useAddNotInterested>;
+export type AddNotInterestedMutationResult = Apollo.MutationResult<AddNotInterestedData>;
+export type AddNotInterestedMutationOptions = Apollo.BaseMutationOptions<
+  AddNotInterestedData,
+  AddNotInterestedVariables
+>;
+export const RemoveNotInterestedDocument = /*#__PURE__*/ gql`
+  mutation RemoveNotInterested($request: PublicationProfileNotInterestedRequest!) {
+    result: removePublicationProfileNotInterested(request: $request)
+  }
+`;
+export type RemoveNotInterestedMutationFn = Apollo.MutationFunction<
+  RemoveNotInterestedData,
+  RemoveNotInterestedVariables
+>;
+
+/**
+ * __useRemoveNotInterested__
+ *
+ * To run a mutation, you first call `useRemoveNotInterested` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveNotInterested` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeNotInterested, { data, loading, error }] = useRemoveNotInterested({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useRemoveNotInterested(
+  baseOptions?: Apollo.MutationHookOptions<RemoveNotInterestedData, RemoveNotInterestedVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveNotInterestedData, RemoveNotInterestedVariables>(
+    RemoveNotInterestedDocument,
+    options,
+  );
+}
+export type RemoveNotInterestedHookResult = ReturnType<typeof useRemoveNotInterested>;
+export type RemoveNotInterestedMutationResult = Apollo.MutationResult<RemoveNotInterestedData>;
+export type RemoveNotInterestedMutationOptions = Apollo.BaseMutationOptions<
+  RemoveNotInterestedData,
+  RemoveNotInterestedVariables
+>;
 export const GetPublicationsDocument = /*#__PURE__*/ gql`
   query GetPublications(
     $profileId: ProfileId
@@ -8394,6 +8500,7 @@ export type CommentKeySpecifier = (
   | 'metadata'
   | 'mirrors'
   | 'notInterested'
+  | 'observedBy'
   | 'onChainContentURI'
   | 'profile'
   | 'rankingScore'
@@ -8431,6 +8538,7 @@ export type CommentFieldPolicy = {
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
   notInterested?: FieldPolicy<any> | FieldReadFunction<any>;
+  observedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   rankingScore?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10250,6 +10358,7 @@ export type PostKeySpecifier = (
   | 'metadata'
   | 'mirrors'
   | 'notInterested'
+  | 'observedBy'
   | 'onChainContentURI'
   | 'profile'
   | 'reaction'
@@ -10283,6 +10392,7 @@ export type PostFieldPolicy = {
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
   notInterested?: FieldPolicy<any> | FieldReadFunction<any>;
+  observedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10314,6 +10424,7 @@ export type ProfileKeySpecifier = (
   | 'isFollowing'
   | 'metadata'
   | 'name'
+  | 'observedBy'
   | 'onChainIdentity'
   | 'ownedBy'
   | 'ownedByMe'
@@ -10340,6 +10451,7 @@ export type ProfileFieldPolicy = {
   isFollowing?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   name?: FieldPolicy<any> | FieldReadFunction<any>;
+  observedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
   ownedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;

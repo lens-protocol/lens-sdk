@@ -414,6 +414,7 @@ fragment CommentBase on Comment {
     reasons
   }
   mirrors(by: $observerId)
+  notInterested(by: $observerId)
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
@@ -422,6 +423,7 @@ fragment CommentBase on Comment {
   referencePolicy @client
   decryptionCriteria @client
   contentInsight @client
+  observedBy @client
 }
 
 fragment PaginatedResultInfo on PaginatedResultInfo {
@@ -550,11 +552,12 @@ fragment Post on Post {
   canMirror(profileId: $observerId) {
     result
   }
-  mirrors(by: $observerId)
   canObserverDecrypt: canDecrypt(profileId: $observerId) {
     result
     reasons
   }
+  mirrors(by: $observerId)
+  notInterested(by: $observerId)
 
   hasOptimisticCollectedByMe @client
   isOptimisticMirroredByMe @client
@@ -563,6 +566,7 @@ fragment Post on Post {
   referencePolicy @client
   decryptionCriteria @client
   contentInsight @client
+  observedBy @client
 }
 
 fragment Publication on Publication {

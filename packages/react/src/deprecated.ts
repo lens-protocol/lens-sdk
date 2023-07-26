@@ -31,6 +31,7 @@ import {
   PublicationOwnedByMe,
   PublicationRevenue,
   PublicationStats,
+  ReactionTypes,
   RevenueAggregate,
   RevertFollowModuleSettings,
   TransactionState,
@@ -278,7 +279,7 @@ export type WalletLoginPotentialErrors = LoginError;
 /**
  * @deprecated Use {@link ProfilePictureMedia} or {@link ProfileCoverMedia} instead.
  */
-export type ProfileMediaFragment = NonNullable<MediaSet | NftImage>;
+export type ProfileMediaFragment = MediaSet | NftImage;
 
 /**
  * @deprecated Use {@link ProfilePictureMedia} or {@link ProfileCoverMedia} instead.
@@ -289,3 +290,11 @@ export type ProfileMedia = ProfileMediaFragment;
  * @deprecated Use {@link ProfilePictureMedia}, {@link ProfileCoverMedia} or {@link PublicationMediaSet} instead.
  */
 export type MediaSet = { __typename: 'MediaSet'; original: Media };
+
+/**
+ * @deprecated Use {@link ReactionTypes} instead.
+ */
+export enum ReactionType {
+  UPVOTE = ReactionTypes.Upvote,
+  DOWNVOTE = ReactionTypes.Downvote,
+}

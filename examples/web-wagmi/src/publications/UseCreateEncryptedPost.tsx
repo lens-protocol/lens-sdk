@@ -14,7 +14,7 @@ import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/WhenLoggedInWithProfile';
 import { upload } from '../upload';
 import { never } from '../utils';
-import { PublicationCard } from './components/PublicationCard';
+import { PendingPostCard } from './components/PendingPostCard';
 
 export type ComposerProps = {
   publisher: ProfileOwnedByMe;
@@ -124,7 +124,7 @@ export function RecentPosts() {
   return (
     <div>
       {recentPosts.map((item, i) => (
-        <PublicationCard key={`${item.id}-${i}`} publication={item} />
+        <PendingPostCard key={`${item.id}-${i}`} publication={item} />
       ))}
     </div>
   );
