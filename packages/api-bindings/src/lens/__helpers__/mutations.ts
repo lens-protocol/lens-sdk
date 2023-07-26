@@ -13,6 +13,8 @@ import {
   AddReactionData,
   AddReactionDocument,
   AddReactionVariables,
+  AddToMyBookmarksDocument,
+  AddToMyBookmarksVariables,
   BroadcastOffChainData,
   BroadcastOffChainDocument,
   BroadcastOffChainResult,
@@ -84,6 +86,8 @@ import {
   ProxyActionData,
   ProxyActionDocument,
   ProxyActionVariables,
+  RemoveFromMyBookmarksDocument,
+  RemoveFromMyBookmarksVariables,
   RemoveNotInterestedData,
   RemoveNotInterestedDocument,
   RemoveNotInterestedVariables,
@@ -856,6 +860,30 @@ export function mockRemoveNotInterestedResponse(
   return {
     request: {
       query: RemoveNotInterestedDocument,
+      variables,
+    },
+    result: { data: { result: null } },
+  };
+}
+
+export function mockAddToMyBookmarksResponse(
+  variables: AddToMyBookmarksVariables,
+): MockedResponse<AddNotInterestedData> {
+  return {
+    request: {
+      query: AddToMyBookmarksDocument,
+      variables,
+    },
+    result: { data: { result: null } },
+  };
+}
+
+export function mockRemoveFromMyBookmarksResponse(
+  variables: RemoveFromMyBookmarksVariables,
+): MockedResponse<RemoveNotInterestedData> {
+  return {
+    request: {
+      query: RemoveFromMyBookmarksDocument,
       variables,
     },
     result: { data: { result: null } },

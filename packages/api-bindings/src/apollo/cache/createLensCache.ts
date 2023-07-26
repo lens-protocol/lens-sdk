@@ -23,6 +23,7 @@ import { createProfilePublicationsForSaleFieldPolicy } from './createProfilePubl
 import { createProfileTypePolicy } from './createProfileTypePolicy';
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
+import { createPublicationsProfileBookmarks } from './createPublicationsProfileBookmarks';
 import { createRevenueAggregateTypePolicy } from './createRevenueAggregateTypePolicy';
 import { createSearchFieldPolicy } from './createSearchFieldPolicy';
 import { createWhoReactedPublicationFieldPolicy } from './createWhoReactedPublicationFieldPolicy';
@@ -103,6 +104,7 @@ function createTypePolicies({
         followers: createProfileFollowersFieldPolicy(),
         following: createProfileFollowingFieldPolicy(),
         profilePublicationRevenue: createProfilePublicationRevenueFieldPolicy(),
+        publicationsProfileBookmarks: createPublicationsProfileBookmarks(),
       },
     },
   };

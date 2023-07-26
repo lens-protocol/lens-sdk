@@ -251,6 +251,7 @@ function createContentPublicationTypePolicy(config: ContentPublicationTypePolicy
       isOptimisticMirroredByMe,
       mirrors: noCachedField(),
       notInterested: noCachedField(),
+      bookmarked: noCachedField(),
       reaction: noCachedField(),
       referencePolicy,
       stats,
