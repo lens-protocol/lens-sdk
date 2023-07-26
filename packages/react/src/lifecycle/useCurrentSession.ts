@@ -9,7 +9,7 @@ import {
   useSessionVar,
 } from '@lens-protocol/api-bindings';
 import { WalletData } from '@lens-protocol/domain/use-cases/lifecycle';
-import { invariant, never } from '@lens-protocol/shared-kernel';
+import { invariant } from '@lens-protocol/shared-kernel';
 import { useEffect, useRef } from 'react';
 
 import {
@@ -81,13 +81,14 @@ export function useCurrentSession(): ReadResult<
   const prevSessionValue = usePrevious(session);
 
   const trigger = session?.type === SessionType.WithProfile;
+  const profileId = session?.type === SessionType.WithProfile ? session.profile.id : undefined;
 
   const { data, error } = useGetProfile(
     useLensApolloClient({
       variables: useMediaTransformFromConfig(
         useSourcesFromConfig({
           request: {
-            profileId: session?.type === SessionType.WithProfile ? session.profile.id : undefined,
+            profileId,
           },
         }),
       ),
@@ -121,7 +122,7 @@ export function useCurrentSession(): ReadResult<
   }
 
   if (!data) {
-    if (!prevSessionValue) {
+    if (!prevSessionValue || prevSessionValue.type === SessionType.WithProfile) {
       return {
         data: undefined,
         error: undefined,
@@ -129,14 +130,8 @@ export function useCurrentSession(): ReadResult<
       };
     }
 
-    if (prevSessionValue.type === SessionType.WithProfile) {
-      never(
-        `Cannot retain previous session data while fetching Profile [ID:${session.profile.id}]\n` +
-          `The previous authenticated session is for Profile [ID:${prevSessionValue.profile.id}].\n` +
-          'This should never happen. If it does, please report it as a bug.',
-      );
-    }
-
+    // when transitioning from NotAuthenticatedSession to AuthenticatedProfileSession
+    // OR from AuthenticatedWalletSession to AuthenticatedProfileSession
     return {
       data: prevSessionValue,
       error: undefined,

@@ -1,5 +1,4 @@
 import {
-  FragmentProfile,
   Profile,
   SessionType,
   authenticatedProfile,
@@ -9,31 +8,34 @@ import {
   updateSession,
 } from '@lens-protocol/api-bindings';
 import {
+  mockGetProfileResponse,
   mockLensApolloClient,
   mockProfileFragment,
   mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileIdentifier, mockWalletData } from '@lens-protocol/domain/mocks';
-import { act } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { defaultMediaTransformsConfig } from '../../mediaTransforms';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { useCurrentSession } from '../useCurrentSession';
 
-function setupUseActiveProfile({ profile = mockProfileFragment() }: { profile?: Profile } = {}) {
+function setupUseCurrentSession({ profile = mockProfileFragment() }: { profile?: Profile } = {}) {
   const sources = mockSources();
 
-  const apolloClient = mockLensApolloClient();
-
-  apolloClient.cache.writeFragment({
-    id: apolloClient.cache.identify({
-      __typename: 'Profile',
-      id: profile.id,
+  const apolloClient = mockLensApolloClient([
+    mockGetProfileResponse({
+      variables: {
+        request: { profileId: profile.id },
+        sources,
+        ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+      },
+      profile,
     }),
-    fragment: FragmentProfile,
-    fragmentName: 'Profile',
-    data: profile,
-  });
+  ]);
 
   return renderHookWithMocks(() => useCurrentSession(), {
     mocks: { sources, mediaTransforms: defaultMediaTransformsConfig, apolloClient },
@@ -51,7 +53,7 @@ describe(`Given the ${useCurrentSession.name} hook`, () => {
     });
 
     it('should return the expected loading state', async () => {
-      const { result } = setupUseActiveProfile();
+      const { result } = setupUseCurrentSession();
 
       expect(result.current.loading).toBeTruthy();
       expect(result.current.data).toBeUndefined();
@@ -90,7 +92,7 @@ describe(`Given the ${useCurrentSession.name} hook`, () => {
       });
 
       it('should return the expected session object', async () => {
-        const { result } = setupUseActiveProfile({ profile });
+        const { result } = setupUseCurrentSession({ profile });
 
         expect(result.current.loading).toBe(true);
 
@@ -98,8 +100,10 @@ describe(`Given the ${useCurrentSession.name} hook`, () => {
           updateSession(session);
         });
 
-        expect(result.current.loading).toBe(false);
-        expect(result.current.data).toMatchObject(expectations);
+        await waitFor(() => {
+          expect(result.current.loading).toBe(false);
+          expect(result.current.data).toMatchObject(expectations);
+        });
       });
     });
   });
@@ -110,20 +114,58 @@ describe(`Given the ${useCurrentSession.name} hook`, () => {
     });
 
     it('should return the profile data without flickering of the "loading" flag', async () => {
-      const { result } = setupUseActiveProfile({ profile });
+      const { result } = setupUseCurrentSession({ profile });
 
       act(() => {
         updateSession(authenticatedProfile(wallet, profileIdentifier));
       });
 
       expect(result.current.loading).toBe(false);
-      expect(result.current.data).toMatchObject({
-        type: SessionType.WithProfile,
-        wallet,
-        profile: {
-          __typename: 'Profile',
-          ...profileIdentifier,
-        },
+
+      await waitFor(() => {
+        expect(result.current.data).toMatchObject({
+          type: SessionType.WithProfile,
+          wallet,
+          profile: {
+            __typename: 'Profile',
+            ...profileIdentifier,
+          },
+        });
+      });
+    });
+  });
+
+  describe(`when the user switches to a different profile`, () => {
+    const prevProfile = mockProfileFragment();
+    const prevWallet = mockWalletData({ address: prevProfile.ownedBy });
+    const prevProfileIdentifier = mockProfileIdentifier({
+      id: prevProfile.id,
+      handle: prevProfile.handle,
+    });
+
+    beforeAll(() => {
+      updateSession(authenticatedProfile(prevWallet, prevProfileIdentifier));
+    });
+
+    it('should return the new profile data', async () => {
+      const { result } = setupUseCurrentSession({ profile });
+
+      act(() => {
+        updateSession(authenticatedProfile(wallet, profileIdentifier));
+      });
+
+      expect(result.current.loading).toBe(true); // loading while fetching the new profile
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false);
+        expect(result.current.data).toMatchObject({
+          type: SessionType.WithProfile,
+          wallet,
+          profile: {
+            __typename: 'Profile',
+            ...profileIdentifier,
+          },
+        });
       });
     });
   });
