@@ -234,6 +234,7 @@ export function mockPublicationStatsFragment(
     totalUpvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     totalDownvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     commentsCount: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
+    totalBookmarks: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     ...overrides,
     __typename: 'PublicationStats',
   };
@@ -321,6 +322,7 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
     reaction: null,
     hidden: false,
     notInterested: false,
+    bookmarked: false,
 
     isGated: false,
     decryptionCriteria: null,
@@ -368,6 +370,7 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
     reaction: null,
     hidden: false,
     notInterested: false,
+    bookmarked: false,
 
     isGated: false,
     decryptionCriteria: null,

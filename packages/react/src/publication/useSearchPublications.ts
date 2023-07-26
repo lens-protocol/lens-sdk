@@ -1,6 +1,5 @@
 import {
-  Comment,
-  Post,
+  ContentPublication,
   useSearchPublications as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
 
@@ -57,7 +56,7 @@ export function useSearchPublications({
   query,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
-}: UseSearchPublicationsArgs): PaginatedReadResult<(Post | Comment)[]> {
+}: UseSearchPublicationsArgs): PaginatedReadResult<ContentPublication[]> {
   return usePaginatedReadResult(
     useUnderlyingQuery(
       useLensApolloClient(
