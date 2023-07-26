@@ -13,6 +13,7 @@ export * from './useProfilePublicationsForSale';
 export * from './useEncryptedPublication';
 export * from './useNotInterested';
 export * from './useMyBookmarks';
+export * from './useBookmarkToggle';
 
 /**
  * Domain entities
