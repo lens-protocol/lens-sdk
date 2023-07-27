@@ -173,10 +173,10 @@ describe(`Given the ${useCurrentSession.name} hook`, () => {
         updateSession(authenticatedProfile(wallet, profileIdentifier));
       });
 
-      expect(result.current.loading).toBe(true); // loading while fetching the new profile
+      // loading state shouldn't change anymore, return previous session while loading a new profile
+      expect(result.current.loading).toBe(false);
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false);
         expect(result.current.data).toMatchObject({
           type: SessionType.WithProfile,
           wallet,

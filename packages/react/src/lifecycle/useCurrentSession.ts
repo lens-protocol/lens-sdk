@@ -9,7 +9,7 @@ import {
   useSessionVar,
 } from '@lens-protocol/api-bindings';
 import { WalletData } from '@lens-protocol/domain/use-cases/lifecycle';
-import { invariant } from '@lens-protocol/shared-kernel';
+import { invariant, never } from '@lens-protocol/shared-kernel';
 import { useEffect, useRef } from 'react';
 
 import {
@@ -78,7 +78,7 @@ export function useCurrentSession(): ReadResult<
 > {
   const session = useSessionVar();
 
-  const prevSessionValue = usePrevious(session);
+  const prevSession = usePrevious(session);
 
   const trigger = session?.type === SessionType.WithProfile;
   const profileId = session?.type === SessionType.WithProfile ? session.profile.id : undefined;
@@ -96,6 +96,8 @@ export function useCurrentSession(): ReadResult<
       skip: !trigger,
     }),
   );
+
+  const prevData = usePrevious(data);
 
   if (!session) {
     return {
@@ -122,7 +124,8 @@ export function useCurrentSession(): ReadResult<
   }
 
   if (!data) {
-    if (!prevSessionValue || prevSessionValue.type === SessionType.WithProfile) {
+    if (!prevSession) {
+      // no data, no previous session, so still loading for initial data
       return {
         data: undefined,
         error: undefined,
@@ -130,17 +133,36 @@ export function useCurrentSession(): ReadResult<
       };
     }
 
-    // when transitioning from NotAuthenticatedSession to AuthenticatedProfileSession
+    if (prevSession.type === SessionType.WithProfile) {
+      // no data, but we have a previous session, so that means transitioning to a new profile
+      if (prevData?.result) {
+        invariant(
+          isProfileOwnedByMe(prevData.result),
+          'Active Profile [ID:${session.profile.id}] not owned by the active wallet.\n' +
+            `Check the Profile ID provided is owned by ${session.wallet.address}.`,
+        );
+
+        return {
+          data: authenticatedProfile(prevSession.wallet, prevData.result),
+          error: undefined,
+          loading: false,
+        };
+      }
+
+      never('Previous data must be defined if previous session was WithProfile');
+    }
+
+    // transitioning from NotAuthenticatedSession to AuthenticatedProfileSession
     // OR from AuthenticatedWalletSession to AuthenticatedProfileSession
     return {
-      data: prevSessionValue,
+      data: prevSession,
       error: undefined,
       loading: false,
     };
   }
 
   invariant(
-    data?.result,
+    data.result,
     `Active Profile [ID:${session.profile.id}] data not found.\n` +
       'Check the Profile ID provided exists in the current environment.',
   );
