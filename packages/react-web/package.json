@@ -50,7 +50,7 @@
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@testing-library/react": "^13.4.0",
-    "@types/jest": "29.2.3",
+    "@types/jest": "29.5.3",
     "@types/jest-when": "^3.5.2",
     "@types/react": "^18.0.28",
     "eslint": "^8.34.0",
