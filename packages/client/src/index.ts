@@ -35,8 +35,9 @@ export type {
 export type { IStorageProvider } from '@lens-protocol/storage';
 
 export type { Environment } from './consts/environments';
-export type { LensConfig } from './consts/config';
+export type { LensConfig, MediaTransformsConfig } from './consts/config';
 export type { TypedData, TypedDataResponse } from './consts/types';
+export type { ImageSizeTransform, MediaTransform } from './consts/media';
 export type { PublicationFragment } from './graphql/types';
 export type { PaginatedResult, PaginatedQueryData } from './helpers/buildPaginatedQueryResult';
 
@@ -59,7 +60,6 @@ export type {
   LimitedFeeCollectModuleSettingsFragment,
   LimitedTimedFeeCollectModuleSettingsFragment,
   MediaFragment,
-  MediaSetFragment,
   MetadataAttributeOutputFragment,
   MetadataFragment,
   MirrorBaseFragment,
@@ -67,15 +67,18 @@ export type {
   ModuleFeeAmountFragment,
   MultirecipientFeeCollectModuleSettingsFragment,
   PostFragment,
+  ProfileCoverSetFragment,
+  ProfileFieldsFragment,
   ProfileFollowModuleSettingsFragment,
   ProfileFragment,
-  ProfileFieldsFragment,
+  ProfilePictureSetFragment,
+  PublicationMediaSetFragment,
   RelayerResultFragment,
   RelayErrorFragment,
   RevertCollectModuleSettingsFragment,
   RevertFollowModuleSettingsFragment,
-  SimplePublicationStatsFragment,
   SimpleCollectModuleSettingsFragment,
+  SimplePublicationStatsFragment,
   TimedFeeCollectModuleSettingsFragment,
   UnknownFollowModuleSettingsFragment,
   WalletFragment,
@@ -133,7 +136,6 @@ export type {
   IllegalReasonInputParams,
   LimitedFeeCollectModuleParams,
   LimitedTimedFeeCollectModuleParams,
-  MediaTransformParams,
   ModuleFeeAmountParams,
   ModuleFeeParams,
   MultirecipientFeeCollectModuleParams,

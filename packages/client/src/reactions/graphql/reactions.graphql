@@ -19,7 +19,8 @@ fragment WhoReactedResult on WhoReactedResult {
 query WhoReactedPublication(
   $request: WhoReactedPublicationRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: whoReactedPublication(request: $request) {
     items {

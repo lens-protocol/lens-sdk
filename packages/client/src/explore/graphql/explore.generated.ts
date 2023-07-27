@@ -34,7 +34,9 @@ import {
 export type ExplorePublicationsQueryVariables = Types.Exact<{
   request: Types.ExplorePublicationRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformPublication?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type ExplorePublicationsQuery = {
@@ -47,7 +49,8 @@ export type ExplorePublicationsQuery = {
 export type ExploreProfilesQueryVariables = Types.Exact<{
   request: Types.ExploreProfilesRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type ExploreProfilesQuery = {
@@ -58,7 +61,9 @@ export const ExplorePublicationsDocument = gql`
   query ExplorePublications(
     $request: ExplorePublicationRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformPublication: MediaTransformParams = {}
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: explorePublications(request: $request) {
       items {
@@ -86,7 +91,8 @@ export const ExploreProfilesDocument = gql`
   query ExploreProfiles(
     $request: ExploreProfilesRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: exploreProfiles(request: $request) {
       items {

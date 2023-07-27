@@ -72,7 +72,9 @@ export type NewReactionNotificationFragment = {
 export type NotificationsQueryVariables = Types.Exact<{
   request: Types.NotificationRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformPublication?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type NotificationsQuery = {
@@ -209,7 +211,9 @@ export const NotificationsDocument = gql`
   query Notifications(
     $request: NotificationRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformPublication: MediaTransformParams = {}
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: notifications(request: $request) {
       items {

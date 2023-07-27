@@ -2,7 +2,6 @@ import type { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
-import { defaultMediaTransformParams } from '../consts/defaults';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type {
@@ -24,7 +23,6 @@ import type {
   CreatePublicPostRequest,
   GetPublicationMetadataStatusRequest,
   HidePublicationRequest,
-  MediaTransformParams,
   ProfilePublicationsForSaleRequest,
   PublicationMetadataStatus,
   PublicationMetadataV2Input,
@@ -37,6 +35,7 @@ import type {
   WhoCollectedPublicationRequest,
 } from '../graphql/types.generated';
 import {
+  buildMediaTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   provideAuthHeaders,
@@ -72,7 +71,7 @@ export class Publication {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication?: Authentication) {
+  constructor(private readonly config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -84,7 +83,6 @@ export class Publication {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Publication or null if not found
    *
    * @example
@@ -97,14 +95,13 @@ export class Publication {
   async fetch(
     request: PublicationQueryRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PublicationFragment | null> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.Publication(
         {
           request,
           observerId,
-          mediaTransformParams,
+          ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
         },
         headers,
       );
@@ -200,7 +197,6 @@ export class Publication {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Publications wrapped in {@link PaginatedResult}
    *
    * @example
@@ -213,7 +209,6 @@ export class Publication {
   async fetchAll(
     request: PublicationsQueryRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PaginatedResult<PublicationFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
@@ -221,7 +216,7 @@ export class Publication {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -236,7 +231,6 @@ export class Publication {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Wallets wrapped in {@link PaginatedResult}
    *
    * @example
@@ -249,7 +243,6 @@ export class Publication {
   async allWalletsWhoCollected(
     request: WhoCollectedPublicationRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PaginatedResult<WalletFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
@@ -257,7 +250,7 @@ export class Publication {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -272,7 +265,6 @@ export class Publication {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Publications wrapped in {@link PaginatedResult}
    *
    * @example
@@ -285,7 +277,6 @@ export class Publication {
   async allForSale(
     request: ProfilePublicationsForSaleRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PaginatedResult<CommentFragment | PostFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
@@ -293,7 +284,7 @@ export class Publication {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );

@@ -68,7 +68,9 @@ export type FeedItemFragment = {
 export type FeedQueryVariables = Types.Exact<{
   request: Types.FeedRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformPublication?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type FeedQuery = {
@@ -78,7 +80,9 @@ export type FeedQuery = {
 export type FeedHighlightsQueryVariables = Types.Exact<{
   request: Types.FeedHighlightsRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformPublication?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type FeedHighlightsQuery = {
@@ -168,7 +172,9 @@ export const FeedDocument = gql`
   query Feed(
     $request: FeedRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformPublication: MediaTransformParams = {}
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: feed(request: $request) {
       items {
@@ -186,7 +192,9 @@ export const FeedHighlightsDocument = gql`
   query FeedHighlights(
     $request: FeedHighlightsRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformPublication: MediaTransformParams = {}
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: feedHighlights(request: $request) {
       items {

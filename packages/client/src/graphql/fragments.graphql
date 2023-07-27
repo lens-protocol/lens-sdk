@@ -48,7 +48,7 @@ fragment ProfileFields on Profile {
     }
 
     ... on MediaSet {
-      ...MediaSet
+      ...ProfilePictureSet
     }
   }
 
@@ -62,7 +62,7 @@ fragment ProfileFields on Profile {
     }
 
     ... on MediaSet {
-      ...MediaSet
+      ...ProfileCoverSet
     }
   }
 
@@ -274,7 +274,7 @@ fragment Media on Media {
   url
 }
 
-fragment MediaSet on MediaSet {
+fragment PublicationMediaSet on MediaSet {
   __typename
   onChain {
     ...Media
@@ -285,7 +285,39 @@ fragment MediaSet on MediaSet {
   optimized {
     ...Media
   }
-  transformed(params: $mediaTransformParams) {
+  transformed(params: $mediaTransformPublication) {
+    ...Media
+  }
+}
+
+fragment ProfilePictureSet on MediaSet {
+  __typename
+  onChain {
+    ...Media
+  }
+  original {
+    ...Media
+  }
+  optimized {
+    ...Media
+  }
+  transformed(params: $mediaTransformProfilePicture) {
+    ...Media
+  }
+}
+
+fragment ProfileCoverSet on MediaSet {
+  __typename
+  onChain {
+    ...Media
+  }
+  original {
+    ...Media
+  }
+  optimized {
+    ...Media
+  }
+  transformed(params: $mediaTransformProfileCover) {
     ...Media
   }
 }
@@ -301,7 +333,7 @@ fragment Metadata on MetadataOutput {
   mainContentFocus
   name
   media {
-    ...MediaSet
+    ...PublicationMediaSet
   }
   attributes {
     ...MetadataAttributeOutput

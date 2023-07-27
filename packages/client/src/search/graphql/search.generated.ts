@@ -37,7 +37,9 @@ export type SearchPublicationsQueryVariables = Types.Exact<{
   query: Types.Scalars['Search'];
   sources?: Types.InputMaybe<Array<Types.Scalars['Sources']> | Types.Scalars['Sources']>;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformPublication?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type SearchPublicationsQuery = {
@@ -55,7 +57,8 @@ export type SearchProfilesQueryVariables = Types.Exact<{
   cursor?: Types.InputMaybe<Types.Scalars['Cursor']>;
   query: Types.Scalars['Search'];
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type SearchProfilesQuery = {
@@ -75,7 +78,9 @@ export const SearchPublicationsDocument = gql`
     $query: Search!
     $sources: [Sources!]
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformPublication: MediaTransformParams = {}
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: search(
       request: {
@@ -115,7 +120,8 @@ export const SearchProfilesDocument = gql`
     $cursor: Cursor
     $query: Search!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
       ... on ProfileSearchResult {

@@ -46,7 +46,7 @@ export type ProfileFieldsFragment = {
   isFollowedByMe: boolean;
   isFollowing: boolean;
   picture:
-    | MediaSetFragment
+    | ProfilePictureSetFragment
     | {
         __typename: 'NftImage';
         contractAddress: string;
@@ -56,7 +56,7 @@ export type ProfileFieldsFragment = {
       }
     | null;
   coverPicture:
-    | MediaSetFragment
+    | ProfileCoverSetFragment
     | {
         __typename: 'NftImage';
         contractAddress: string;
@@ -218,7 +218,23 @@ export type MediaFragment = {
   url: string;
 };
 
-export type MediaSetFragment = {
+export type PublicationMediaSetFragment = {
+  __typename: 'MediaSet';
+  onChain: MediaFragment;
+  original: MediaFragment;
+  optimized: MediaFragment | null;
+  transformed: MediaFragment | null;
+};
+
+export type ProfilePictureSetFragment = {
+  __typename: 'MediaSet';
+  onChain: MediaFragment;
+  original: MediaFragment;
+  optimized: MediaFragment | null;
+  transformed: MediaFragment | null;
+};
+
+export type ProfileCoverSetFragment = {
   __typename: 'MediaSet';
   onChain: MediaFragment;
   original: MediaFragment;
@@ -237,7 +253,7 @@ export type MetadataFragment = {
   mainContentFocus: Types.PublicationMainFocus;
   name: string | null;
   tags: Array<string>;
-  media: Array<MediaSetFragment>;
+  media: Array<PublicationMediaSetFragment>;
   attributes: Array<MetadataAttributeOutputFragment>;
 };
 
@@ -422,8 +438,8 @@ export const MediaFragmentDoc = gql`
     url
   }
 `;
-export const MediaSetFragmentDoc = gql`
-  fragment MediaSet on MediaSet {
+export const ProfilePictureSetFragmentDoc = gql`
+  fragment ProfilePictureSet on MediaSet {
     __typename
     onChain {
       ...Media
@@ -434,7 +450,25 @@ export const MediaSetFragmentDoc = gql`
     optimized {
       ...Media
     }
-    transformed(params: $mediaTransformParams) {
+    transformed(params: $mediaTransformProfilePicture) {
+      ...Media
+    }
+  }
+  ${MediaFragmentDoc}
+`;
+export const ProfileCoverSetFragmentDoc = gql`
+  fragment ProfileCoverSet on MediaSet {
+    __typename
+    onChain {
+      ...Media
+    }
+    original {
+      ...Media
+    }
+    optimized {
+      ...Media
+    }
+    transformed(params: $mediaTransformProfileCover) {
       ...Media
     }
   }
@@ -505,7 +539,7 @@ export const ProfileFieldsFragmentDoc = gql`
         verified
       }
       ... on MediaSet {
-        ...MediaSet
+        ...ProfilePictureSet
       }
     }
     coverPicture {
@@ -517,7 +551,7 @@ export const ProfileFieldsFragmentDoc = gql`
         verified
       }
       ... on MediaSet {
-        ...MediaSet
+        ...ProfileCoverSet
       }
     }
     stats {
@@ -551,7 +585,8 @@ export const ProfileFieldsFragmentDoc = gql`
     isFollowedByMe(isFinalisedOnChain: true)
     isFollowing(who: $observerId)
   }
-  ${MediaSetFragmentDoc}
+  ${ProfilePictureSetFragmentDoc}
+  ${ProfileCoverSetFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}
   ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
@@ -592,6 +627,24 @@ export const SimplePublicationStatsFragmentDoc = gql`
     totalBookmarks
   }
 `;
+export const PublicationMediaSetFragmentDoc = gql`
+  fragment PublicationMediaSet on MediaSet {
+    __typename
+    onChain {
+      ...Media
+    }
+    original {
+      ...Media
+    }
+    optimized {
+      ...Media
+    }
+    transformed(params: $mediaTransformPublication) {
+      ...Media
+    }
+  }
+  ${MediaFragmentDoc}
+`;
 export const MetadataAttributeOutputFragmentDoc = gql`
   fragment MetadataAttributeOutput on MetadataAttributeOutput {
     __typename
@@ -611,14 +664,14 @@ export const MetadataFragmentDoc = gql`
     mainContentFocus
     name
     media {
-      ...MediaSet
+      ...PublicationMediaSet
     }
     attributes {
       ...MetadataAttributeOutput
     }
     tags
   }
-  ${MediaSetFragmentDoc}
+  ${PublicationMediaSetFragmentDoc}
   ${MetadataAttributeOutputFragmentDoc}
 `;
 export const WalletFragmentDoc = gql`

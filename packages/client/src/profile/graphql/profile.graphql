@@ -2,7 +2,8 @@
 query Profile(
   $request: SingleProfileQueryRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: profile(request: $request) {
     ...Profile
@@ -36,7 +37,8 @@ query ProfileStats($request: SingleProfileQueryRequest!, $sources: [Sources!]!) 
 query Profiles(
   $request: ProfileQueryRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: profiles(request: $request) {
     items {
@@ -52,7 +54,8 @@ query Profiles(
 query RecommendedProfiles(
   $options: RecommendedProfileOptions!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: recommendedProfiles(options: $options) {
     ...Profile
@@ -62,7 +65,8 @@ query RecommendedProfiles(
 query MutualFollowersProfiles(
   $request: MutualFollowersProfilesQueryRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: mutualFollowersProfiles(request: $request) {
     items {
@@ -88,7 +92,8 @@ query DoesFollow($request: DoesFollowRequest!) {
 query Following(
   $request: FollowingRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: following(request: $request) {
     items {
@@ -104,7 +109,8 @@ query Following(
 query Followers(
   $request: FollowersRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: followers(request: $request) {
     items {
@@ -128,7 +134,8 @@ query FollowerNftOwnedTokenIds($request: FollowerNftOwnedTokenIdsRequest!) {
 query PendingApprovalFollows(
   $request: PendingApprovalFollowsRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: pendingApprovalFollows(request: $request) {
     items {

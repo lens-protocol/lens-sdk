@@ -97,7 +97,9 @@ fragment NewReactionNotification on NewReactionNotification {
 query Notifications(
   $request: NotificationRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: notifications(request: $request) {
     items {

@@ -32,7 +32,8 @@ import {
 export type ProfileQueryVariables = Types.Exact<{
   request: Types.SingleProfileQueryRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type ProfileQuery = { result: ProfileFragment | null };
@@ -62,7 +63,8 @@ export type ProfileStatsQuery = { result: { stats: ProfileStatsFragment } | null
 export type ProfilesQueryVariables = Types.Exact<{
   request: Types.ProfileQueryRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type ProfilesQuery = {
@@ -72,7 +74,8 @@ export type ProfilesQuery = {
 export type RecommendedProfilesQueryVariables = Types.Exact<{
   options: Types.RecommendedProfileOptions;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type RecommendedProfilesQuery = { result: Array<ProfileFragment> };
@@ -80,7 +83,8 @@ export type RecommendedProfilesQuery = { result: Array<ProfileFragment> };
 export type MutualFollowersProfilesQueryVariables = Types.Exact<{
   request: Types.MutualFollowersProfilesQueryRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type MutualFollowersProfilesQuery = {
@@ -104,7 +108,8 @@ export type DoesFollowQuery = {
 export type FollowingQueryVariables = Types.Exact<{
   request: Types.FollowingRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type FollowingQuery = {
@@ -114,7 +119,8 @@ export type FollowingQuery = {
 export type FollowersQueryVariables = Types.Exact<{
   request: Types.FollowersRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type FollowersQuery = {
@@ -136,7 +142,8 @@ export type FollowerNftOwnedTokenIdsQuery = {
 export type PendingApprovalFollowsQueryVariables = Types.Exact<{
   request: Types.PendingApprovalFollowsRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type PendingApprovalFollowsQuery = {
@@ -622,7 +629,8 @@ export const ProfileDocument = gql`
   query Profile(
     $request: SingleProfileQueryRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: profile(request: $request) {
       ...Profile
@@ -644,7 +652,8 @@ export const ProfilesDocument = gql`
   query Profiles(
     $request: ProfileQueryRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: profiles(request: $request) {
       items {
@@ -662,7 +671,8 @@ export const RecommendedProfilesDocument = gql`
   query RecommendedProfiles(
     $options: RecommendedProfileOptions!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: recommendedProfiles(options: $options) {
       ...Profile
@@ -674,7 +684,8 @@ export const MutualFollowersProfilesDocument = gql`
   query MutualFollowersProfiles(
     $request: MutualFollowersProfilesQueryRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: mutualFollowersProfiles(request: $request) {
       items {
@@ -703,7 +714,8 @@ export const FollowingDocument = gql`
   query Following(
     $request: FollowingRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: following(request: $request) {
       items {
@@ -721,7 +733,8 @@ export const FollowersDocument = gql`
   query Followers(
     $request: FollowersRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: followers(request: $request) {
       items {
@@ -748,7 +761,8 @@ export const PendingApprovalFollowsDocument = gql`
   query PendingApprovalFollows(
     $request: PendingApprovalFollowsRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: pendingApprovalFollows(request: $request) {
       items {

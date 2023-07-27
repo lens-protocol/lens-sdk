@@ -1,7 +1,9 @@
 query ExplorePublications(
   $request: ExplorePublicationRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: explorePublications(request: $request) {
     items {
@@ -26,7 +28,8 @@ query ExplorePublications(
 query ExploreProfiles(
   $request: ExploreProfilesRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: exploreProfiles(request: $request) {
     items {

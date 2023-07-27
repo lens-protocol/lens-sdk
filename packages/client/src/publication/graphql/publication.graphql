@@ -132,7 +132,9 @@ fragment CreateCollectTypedData on CreateCollectBroadcastItemResult {
 query Publication(
   $request: PublicationQueryRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: publication(request: $request) {
     ... on Post {
@@ -174,7 +176,9 @@ query PublicationStats($request: PublicationQueryRequest!, $sources: [Sources!]!
 query Publications(
   $request: PublicationsQueryRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: publications(request: $request) {
     items {
@@ -207,7 +211,8 @@ query ValidatePublicationMetadata($metadata: PublicationMetadataV2Input!) {
 query WhoCollectedPublication(
   $request: WhoCollectedPublicationRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: whoCollectedPublication(request: $request) {
     items {
@@ -223,7 +228,9 @@ query WhoCollectedPublication(
 query ProfilePublicationsForSale(
   $request: ProfilePublicationsForSaleRequest!
   $observerId: ProfileId
-  $mediaTransformParams: MediaTransformParams!
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: profilePublicationsForSale(request: $request) {
     items {

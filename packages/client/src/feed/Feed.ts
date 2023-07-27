@@ -2,16 +2,16 @@ import type { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
-import { defaultMediaTransformParams } from '../consts/defaults';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type { PublicationFragment } from '../graphql/types';
-import type {
-  FeedHighlightsRequest,
-  FeedRequest,
-  MediaTransformParams,
-} from '../graphql/types.generated';
-import { buildPaginatedQueryResult, PaginatedResult, requireAuthHeaders } from '../helpers';
+import type { FeedHighlightsRequest, FeedRequest } from '../graphql/types.generated';
+import {
+  buildMediaTransformsFromConfig,
+  buildPaginatedQueryResult,
+  PaginatedResult,
+  requireAuthHeaders,
+} from '../helpers';
 import { FeedItemFragment, getSdk, Sdk } from './graphql/feed.generated';
 
 /**
@@ -23,7 +23,7 @@ export class Feed {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication: Authentication) {
+  constructor(private readonly config: LensConfig, authentication: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -37,7 +37,6 @@ export class Feed {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns {@link PromiseResult} with array of {@link FeedItemFragment} wrapped in {@link PaginatedResult}
    *
    * @example
@@ -50,7 +49,6 @@ export class Feed {
   async fetch(
     request: FeedRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): PromiseResult<
     PaginatedResult<FeedItemFragment>,
     CredentialsExpiredError | NotAuthenticatedError
@@ -61,7 +59,7 @@ export class Feed {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -78,7 +76,6 @@ export class Feed {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns {@link PromiseResult} with array of {@link PublicationFragment} wrapped in {@link PaginatedResult}
    *
    * @example
@@ -91,7 +88,6 @@ export class Feed {
   async fetchHighlights(
     request: FeedHighlightsRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): PromiseResult<
     PaginatedResult<PublicationFragment>,
     CredentialsExpiredError | NotAuthenticatedError
@@ -102,7 +98,7 @@ export class Feed {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );

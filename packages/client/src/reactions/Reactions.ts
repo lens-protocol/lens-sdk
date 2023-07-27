@@ -2,15 +2,11 @@ import type { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
-import { defaultMediaTransformParams } from '../consts/defaults';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
-import type {
-  MediaTransformParams,
-  ReactionRequest,
-  WhoReactedPublicationRequest,
-} from '../graphql/types.generated';
+import type { ReactionRequest, WhoReactedPublicationRequest } from '../graphql/types.generated';
 import {
+  buildMediaTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   provideAuthHeaders,
@@ -27,7 +23,7 @@ export class Reactions {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication?: Authentication) {
+  constructor(private readonly config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -94,7 +90,6 @@ export class Reactions {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Array of {@link WhoReactedResultFragment} wrapped in {@link PaginatedResult}
    *
    * @example
@@ -107,7 +102,6 @@ export class Reactions {
   async toPublication(
     request: WhoReactedPublicationRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PaginatedResult<WhoReactedResultFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
@@ -115,7 +109,7 @@ export class Reactions {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );

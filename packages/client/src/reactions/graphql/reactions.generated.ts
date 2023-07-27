@@ -52,7 +52,8 @@ export type WhoReactedResultFragment = {
 export type WhoReactedPublicationQueryVariables = Types.Exact<{
   request: Types.WhoReactedPublicationRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
-  mediaTransformParams: Types.MediaTransformParams;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type WhoReactedPublicationQuery = {
@@ -85,7 +86,8 @@ export const WhoReactedPublicationDocument = gql`
   query WhoReactedPublication(
     $request: WhoReactedPublicationRequest!
     $observerId: ProfileId
-    $mediaTransformParams: MediaTransformParams!
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: whoReactedPublication(request: $request) {
       items {

@@ -2,7 +2,6 @@ import type { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
-import { defaultMediaTransformParams } from '../consts/defaults';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type {
@@ -28,7 +27,6 @@ import type {
   FollowersRequest,
   FollowingRequest,
   FollowRequest,
-  MediaTransformParams,
   MutualFollowersProfilesQueryRequest,
   PendingApprovalFollowsRequest,
   ProfileGuardianRequest,
@@ -42,6 +40,7 @@ import type {
   UpdateProfileImageRequest,
 } from '../graphql/types.generated';
 import {
+  buildMediaTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   provideAuthHeaders,
@@ -72,7 +71,7 @@ export class Profile {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication?: Authentication) {
+  constructor(private readonly config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -84,7 +83,6 @@ export class Profile {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Profile or null if not found
    *
    * @example
@@ -95,14 +93,13 @@ export class Profile {
   async fetch(
     request: SingleProfileQueryRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<ProfileFragment | null> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.Profile(
         {
           request,
           observerId,
-          mediaTransformParams,
+          ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
         },
         headers,
       );
@@ -145,7 +142,6 @@ export class Profile {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example
@@ -158,7 +154,6 @@ export class Profile {
   async fetchAll(
     request: ProfileQueryRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PaginatedResult<ProfileFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
@@ -166,7 +161,7 @@ export class Profile {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -181,7 +176,6 @@ export class Profile {
    *
    * @param options - Optional options for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Array of recommended profiles
    *
    * @example
@@ -192,14 +186,13 @@ export class Profile {
   async allRecommended(
     options: RecommendedProfileOptions = {},
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<ProfileFragment[]> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.RecommendedProfiles(
         {
           options,
           observerId,
-          mediaTransformParams,
+          ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
         },
         headers,
       );
@@ -234,7 +227,6 @@ export class Profile {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example
@@ -248,7 +240,6 @@ export class Profile {
   async mutualFollowers(
     request: MutualFollowersProfilesQueryRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PaginatedResult<ProfileFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
@@ -256,7 +247,7 @@ export class Profile {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -306,7 +297,6 @@ export class Profile {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example
@@ -319,7 +309,6 @@ export class Profile {
   async allFollowing(
     request: FollowingRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PaginatedResult<FollowingFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
@@ -327,7 +316,7 @@ export class Profile {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -342,7 +331,6 @@ export class Profile {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Wallets with default profiles wrapped in {@link PaginatedResult}
    *
    * @example
@@ -355,7 +343,6 @@ export class Profile {
   async allFollowers(
     request: FollowersRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): Promise<PaginatedResult<FollowerFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
@@ -363,7 +350,7 @@ export class Profile {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -850,7 +837,6 @@ export class Profile {
    *
    * @param request - Request object for the query
    * @param observerId - Optional id of a profile that is the observer for this request
-   * @param mediaTransformParams - Optional media transform params if you want to optimize media in the response
    * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example
@@ -861,7 +847,6 @@ export class Profile {
   async pendingApprovalFollows(
     request: PendingApprovalFollowsRequest,
     observerId?: string,
-    mediaTransformParams: MediaTransformParams = defaultMediaTransformParams,
   ): PromiseResult<
     PaginatedResult<ProfileFragment>,
     CredentialsExpiredError | NotAuthenticatedError
@@ -872,7 +857,7 @@ export class Profile {
           {
             request: currRequest,
             observerId,
-            mediaTransformParams,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );

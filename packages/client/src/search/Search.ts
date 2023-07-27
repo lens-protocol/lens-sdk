@@ -2,15 +2,18 @@ import { Prettify, invariant } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
-import { defaultMediaTransformParams } from '../consts/defaults';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type {
   CommentFragment,
   PostFragment,
   ProfileFragment,
 } from '../graphql/fragments.generated';
-import { MediaTransformParams } from '../graphql/types.generated';
-import { buildPaginatedQueryResult, PaginatedResult, provideAuthHeaders } from '../helpers';
+import {
+  buildMediaTransformsFromConfig,
+  buildPaginatedQueryResult,
+  PaginatedResult,
+  provideAuthHeaders,
+} from '../helpers';
 import {
   getSdk,
   Sdk,
@@ -19,15 +22,17 @@ import {
 } from './graphql/search.generated';
 
 export type SearchProfilesQuery = Prettify<
-  Omit<SearchProfilesQueryVariables, 'mediaTransformParams'> & {
-    mediaTransformParams?: MediaTransformParams;
-  }
+  Omit<
+    SearchProfilesQueryVariables,
+    'mediaTransformPublication' | 'mediaTransformProfilePicture' | 'mediaTransformProfileCover'
+  >
 >;
 
 export type SearchPublicationsQuery = Prettify<
-  Omit<SearchPublicationsQueryVariables, 'mediaTransformParams'> & {
-    mediaTransformParams?: MediaTransformParams;
-  }
+  Omit<
+    SearchPublicationsQueryVariables,
+    'mediaTransformPublication' | 'mediaTransformProfilePicture' | 'mediaTransformProfileCover'
+  >
 >;
 
 /**
@@ -39,7 +44,7 @@ export class Search {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication?: Authentication) {
+  constructor(private readonly config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -62,7 +67,7 @@ export class Search {
   async profiles(request: SearchProfilesQuery): Promise<PaginatedResult<ProfileFragment>> {
     const actualRequest = {
       ...request,
-      mediaTransformParams: request.mediaTransformParams ?? defaultMediaTransformParams,
+      ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
     };
 
     return provideAuthHeaders(this.authentication, async (headers) => {
@@ -98,7 +103,7 @@ export class Search {
   ): Promise<PaginatedResult<CommentFragment | PostFragment>> {
     const actualRequest = {
       ...request,
-      mediaTransformParams: request.mediaTransformParams ?? defaultMediaTransformParams,
+      ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
     };
 
     return provideAuthHeaders(this.authentication, async (headers) => {
