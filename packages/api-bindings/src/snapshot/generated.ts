@@ -236,6 +236,7 @@ export type SnapshotProposal = {
   start: number;
   end: number;
   quorum: number;
+  flagged: boolean | null;
   space: { id: string; name: string | null } | null;
   strategies: Array<{ network: string | null; name: string; params: unknown | null } | null>;
 };
@@ -284,6 +285,7 @@ export const FragmentSnapshotProposal = /*#__PURE__*/ gql`
       name
       params
     }
+    flagged
   }
 `;
 export const FragmentSnapshotVote = /*#__PURE__*/ gql`

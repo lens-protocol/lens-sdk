@@ -24,6 +24,7 @@ fragment SnapshotProposal on Proposal {
     name
     params
   }
+  flagged
 }
 
 fragment SnapshotVote on Vote {
