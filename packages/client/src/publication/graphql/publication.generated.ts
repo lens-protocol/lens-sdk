@@ -196,6 +196,18 @@ export type PublicationMetadataStatusQuery = {
   };
 };
 
+export type GetProfileBookmarksQueryVariables = Types.Exact<{
+  request: Types.PublicationsProfileBookmarkedQueryRequest;
+  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+}>;
+
+export type GetProfileBookmarksQuery = {
+  result: {
+    items: Array<CommentFragment | MirrorFragment | PostFragment>;
+    pageInfo: CommonPaginatedResultInfoFragment;
+  };
+};
+
 export type CreatePostTypedDataMutationVariables = Types.Exact<{
   request: Types.CreatePublicPostRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
@@ -311,6 +323,18 @@ export type CreateDataAvailabilityMirrorViaDispatcherMutationVariables = Types.E
 export type CreateDataAvailabilityMirrorViaDispatcherMutation = {
   result: CreateDataAvailabilityPublicationResultFragment | RelayErrorFragment;
 };
+
+export type AddToMyBookmarksMutationVariables = Types.Exact<{
+  request: Types.PublicationProfileBookmarkRequest;
+}>;
+
+export type AddToMyBookmarksMutation = { result: void | null };
+
+export type RemoveFromMyBookmarksMutationVariables = Types.Exact<{
+  request: Types.PublicationProfileBookmarkRequest;
+}>;
+
+export type RemoveFromMyBookmarksMutation = { result: void | null };
 
 export const PublicationStatsFragmentDoc = gql`
   fragment PublicationStats on PublicationStats {
@@ -572,6 +596,33 @@ export const PublicationMetadataStatusDocument = gql`
     }
   }
 `;
+export const GetProfileBookmarksDocument = gql`
+  query GetProfileBookmarks(
+    $request: PublicationsProfileBookmarkedQueryRequest!
+    $observerId: ProfileId
+  ) {
+    result: publicationsProfileBookmarks(request: $request) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Comment {
+          ...Comment
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfo
+      }
+    }
+  }
+  ${PostFragmentDoc}
+  ${CommentFragmentDoc}
+  ${MirrorFragmentDoc}
+  ${CommonPaginatedResultInfoFragmentDoc}
+`;
 export const CreatePostTypedDataDocument = gql`
   mutation CreatePostTypedData($request: CreatePublicPostRequest!, $options: TypedDataOptions) {
     result: createPostTypedData(request: $request, options: $options) {
@@ -737,6 +788,16 @@ export const CreateDataAvailabilityMirrorViaDispatcherDocument = gql`
   ${CreateDataAvailabilityPublicationResultFragmentDoc}
   ${RelayErrorFragmentDoc}
 `;
+export const AddToMyBookmarksDocument = gql`
+  mutation AddToMyBookmarks($request: PublicationProfileBookmarkRequest!) {
+    result: addPublicationProfileBookmark(request: $request)
+  }
+`;
+export const RemoveFromMyBookmarksDocument = gql`
+  mutation RemoveFromMyBookmarks($request: PublicationProfileBookmarkRequest!) {
+    result: removePublicationProfileBookmark(request: $request)
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -752,6 +813,7 @@ const ValidatePublicationMetadataDocumentString = print(ValidatePublicationMetad
 const WhoCollectedPublicationDocumentString = print(WhoCollectedPublicationDocument);
 const ProfilePublicationsForSaleDocumentString = print(ProfilePublicationsForSaleDocument);
 const PublicationMetadataStatusDocumentString = print(PublicationMetadataStatusDocument);
+const GetProfileBookmarksDocumentString = print(GetProfileBookmarksDocument);
 const CreatePostTypedDataDocumentString = print(CreatePostTypedDataDocument);
 const CreatePostViaDispatcherDocumentString = print(CreatePostViaDispatcherDocument);
 const CreateCommentTypedDataDocumentString = print(CreateCommentTypedDataDocument);
@@ -780,6 +842,8 @@ const CreateDataAvailabilityMirrorTypedDataDocumentString = print(
 const CreateDataAvailabilityMirrorViaDispatcherDocumentString = print(
   CreateDataAvailabilityMirrorViaDispatcherDocument,
 );
+const AddToMyBookmarksDocumentString = print(AddToMyBookmarksDocument);
+const RemoveFromMyBookmarksDocumentString = print(RemoveFromMyBookmarksDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Publication(
@@ -911,6 +975,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'PublicationMetadataStatus',
+        'query',
+      );
+    },
+    GetProfileBookmarks(
+      variables: GetProfileBookmarksQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: GetProfileBookmarksQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<GetProfileBookmarksQuery>(
+            GetProfileBookmarksDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'GetProfileBookmarks',
         'query',
       );
     },
@@ -1229,6 +1313,45 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'CreateDataAvailabilityMirrorViaDispatcher',
+        'mutation',
+      );
+    },
+    AddToMyBookmarks(
+      variables: AddToMyBookmarksMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: AddToMyBookmarksMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AddToMyBookmarksMutation>(AddToMyBookmarksDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'AddToMyBookmarks',
+        'mutation',
+      );
+    },
+    RemoveFromMyBookmarks(
+      variables: RemoveFromMyBookmarksMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<{
+      data: RemoveFromMyBookmarksMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<RemoveFromMyBookmarksMutation>(
+            RemoveFromMyBookmarksDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'RemoveFromMyBookmarks',
         'mutation',
       );
     },
