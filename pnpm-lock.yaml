@@ -266,8 +266,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/jest':
-        specifier: 29.2.3
-        version: 29.2.3
+        specifier: 29.5.3
+        version: 29.5.3
       '@types/node':
         specifier: ^18.15.11
         version: 18.15.11
@@ -336,8 +336,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/jest':
-        specifier: 29.2.3
-        version: 29.2.3
+        specifier: 29.5.3
+        version: 29.5.3
       eslint:
         specifier: ^8.34.0
         version: 8.34.0
@@ -421,8 +421,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/jest':
-        specifier: 29.2.3
-        version: 29.2.3
+        specifier: 29.5.3
+        version: 29.5.3
       '@types/node':
         specifier: ^18.15.11
         version: 18.15.11
@@ -479,8 +479,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/jest':
-        specifier: 29.2.3
-        version: 29.2.3
+        specifier: 29.5.3
+        version: 29.5.3
       '@types/jest-when':
         specifier: ^3.5.2
         version: 3.5.2
@@ -619,8 +619,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/jest':
-        specifier: 29.2.3
-        version: 29.2.3
+        specifier: 29.5.3
+        version: 29.5.3
       '@types/jest-when':
         specifier: ^3.5.2
         version: 3.5.2
@@ -752,8 +752,8 @@ importers:
         specifier: ^13.4.0
         version: 13.4.0(react-dom@18.2.0)(react@18.2.0)
       '@types/jest':
-        specifier: 29.2.3
-        version: 29.2.3
+        specifier: 29.5.3
+        version: 29.5.3
       '@types/jest-when':
         specifier: ^3.5.2
         version: 3.5.2
@@ -858,8 +858,8 @@ importers:
         specifier: ^13.4.0
         version: 13.4.0(react-dom@18.2.0)(react@18.2.0)
       '@types/jest':
-        specifier: 29.2.3
-        version: 29.2.3
+        specifier: 29.5.3
+        version: 29.5.3
       '@types/jest-when':
         specifier: ^3.5.2
         version: 3.5.2
@@ -988,8 +988,8 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.17.2)(typescript@4.9.5)
       '@types/jest':
-        specifier: 29.2.3
-        version: 29.2.3
+        specifier: 29.5.3
+        version: 29.5.3
       '@types/node':
         specifier: ^18.15.11
         version: 18.15.11
@@ -1079,8 +1079,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/jest':
-        specifier: 29.2.3
-        version: 29.2.3
+        specifier: 29.5.3
+        version: 29.5.3
       '@types/lodash':
         specifier: ^4.14.191
         version: 4.14.191
@@ -1137,8 +1137,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/jest':
-        specifier: 29.2.3
-        version: 29.2.3
+        specifier: 29.5.3
+        version: 29.5.3
       '@types/node':
         specifier: ^18.15.11
         version: 18.15.11
@@ -3107,7 +3107,7 @@ packages:
     resolution: {integrity: sha512-8SegXApWe6VoNw0r9JHpSteLKTpTiLZ4rMlGIm9JQ18KiCtyQiAMEazujAHrUS5flrcqYZa75ukev3P6QmUwUw==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.22.5
       '@babel/parser': 7.21.1
       '@babel/types': 7.21.0
 
@@ -3123,7 +3123,7 @@ packages:
     resolution: {integrity: sha512-Xdt2P1H4LKTO8ApPfnO1KmzYMFpp7D/EinoXzLYN/cHcBNrVCAkAtGUcXnHXrl/VGktureU6fkQrHSBE2URfoA==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.22.5
       '@babel/generator': 7.21.1
       '@babel/helper-environment-visitor': 7.18.9
       '@babel/helper-function-name': 7.21.0
@@ -6616,11 +6616,11 @@ packages:
   /@types/jest-when@3.5.2:
     resolution: {integrity: sha512-1WP+wJDW7h4TYAVLoIebxRIVv8GPk66Qsq2nU7PkwKZ6usurnDQZgk0DfBNKAJ9gVzapCXSV53Vn/3nBHBNzAw==}
     dependencies:
-      '@types/jest': 29.2.3
+      '@types/jest': 29.5.3
     dev: true
 
-  /@types/jest@29.2.3:
-    resolution: {integrity: sha512-6XwoEbmatfyoCjWRX7z0fKMmgYKe9+/HrviJ5k0X/tjJWHGAezZOfYaxqQKuzG/TvQyr+ktjm4jgbk0s4/oF2w==}
+  /@types/jest@29.5.3:
+    resolution: {integrity: sha512-1Nq7YrO/vJE/FYnqYyw0FS8LdrjExSgIiHyKg7xPpn+yi8Q4huZryKnkJatN1ZRH89Kw2v33/8ZMB7DuZeSLlA==}
     dependencies:
       expect: 29.4.3
       pretty-format: 29.4.3
