@@ -1,5 +1,6 @@
 query GetPublications(
   $profileId: ProfileId
+  $profileIds: [ProfileId!]
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
@@ -15,6 +16,7 @@ query GetPublications(
   result: publications(
     request: {
       profileId: $profileId
+      profileIds: $profileIds
       limit: $limit
       collectedBy: $walletAddress
       cursor: $cursor
