@@ -327,6 +327,7 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
 fragment CommentBase on Comment {
   __typename
   id
+  appId
   stats {
     ...PublicationStats
   }
@@ -470,6 +471,7 @@ fragment Comment on Comment {
 fragment Post on Post {
   __typename
   id
+  appId
   stats {
     ...PublicationStats
   }

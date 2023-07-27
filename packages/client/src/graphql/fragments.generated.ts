@@ -268,6 +268,7 @@ export type MirrorFragment = {
 export type CommentBaseFragment = {
   __typename: 'Comment';
   id: string;
+  appId: string | null;
   collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
@@ -315,6 +316,7 @@ export type CommentFragment = {
 export type PostFragment = {
   __typename: 'Post';
   id: string;
+  appId: string | null;
   collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
@@ -749,6 +751,7 @@ export const PostFragmentDoc = gql`
   fragment Post on Post {
     __typename
     id
+    appId
     stats {
       ...SimplePublicationStats
     }
@@ -835,6 +838,7 @@ export const CommentBaseFragmentDoc = gql`
   fragment CommentBase on Comment {
     __typename
     id
+    appId
     stats {
       ...SimplePublicationStats
     }

@@ -344,6 +344,7 @@ fragment Mirror on Mirror {
 fragment CommentBase on Comment {
   __typename
   id
+  appId
   stats {
     ...SimplePublicationStats
   }
@@ -442,6 +443,7 @@ fragment Comment on Comment {
 fragment Post on Post {
   __typename
   id
+  appId
   stats {
     ...SimplePublicationStats
   }
