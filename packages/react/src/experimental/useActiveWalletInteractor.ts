@@ -7,7 +7,7 @@ import { useSharedDependencies } from '../shared';
  *
  * @internal
  */
-export function useActiveWalletController(): ActiveWallet {
+export function useActiveWalletInteractor(): ActiveWallet {
   const { activeWallet } = useSharedDependencies();
 
   return activeWallet;

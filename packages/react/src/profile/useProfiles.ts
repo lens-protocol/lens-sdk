@@ -99,8 +99,8 @@ export function useProfiles({
   );
 
   return usePaginatedReadResult(
-    useGetAllProfiles({
-      ...useLensApolloClient(
+    useGetAllProfiles(
+      useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useMediaTransformFromConfig(
             useSourcesFromConfig({ byHandles, byProfileIds, limit, observerId }),
@@ -108,6 +108,6 @@ export function useProfiles({
           skip,
         }),
       ),
-    }),
+    ),
   );
 }

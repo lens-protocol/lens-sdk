@@ -47,8 +47,8 @@ export function useProfile({
   );
 
   const { data, error, loading } = useReadResult(
-    useGetProfile({
-      ...useLensApolloClient(
+    useGetProfile(
+      useLensApolloClient(
         useActiveProfileAsDefaultObserver({
           variables: useMediaTransformFromConfig(
             useSourcesFromConfig({
@@ -59,7 +59,7 @@ export function useProfile({
           skip,
         }),
       ),
-    }),
+    ),
   );
 
   if (loading) {
