@@ -5,9 +5,9 @@ import {
   CommonPaginatedResultInfoFragment,
   Erc20AmountFragment,
   PostFragment,
-  ProfileFragment,
-  MirrorFragment,
   CommentFragment,
+  MirrorFragment,
+  ProfileFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
@@ -17,9 +17,9 @@ import {
   CommonPaginatedResultInfoFragmentDoc,
   Erc20AmountFragmentDoc,
   PostFragmentDoc,
-  ProfileFragmentDoc,
-  MirrorFragmentDoc,
   CommentFragmentDoc,
+  MirrorFragmentDoc,
+  ProfileFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type NftFragment = {
   __typename: 'NFT';

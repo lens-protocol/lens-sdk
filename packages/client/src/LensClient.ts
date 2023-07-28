@@ -1,4 +1,5 @@
 import { Authentication, IAuthentication } from './authentication';
+import { Bookmarks } from './bookmarks';
 import { LensConfig } from './consts/config';
 import { Explore } from './explore';
 import { Feed } from './feed';
@@ -44,6 +45,13 @@ export class LensClient {
 
   get authentication(): IAuthentication {
     return this._authentication;
+  }
+
+  /**
+   * The Bookmarks module
+   */
+  get bookmarks(): Bookmarks {
+    return new Bookmarks(this.config, this._authentication);
   }
 
   /**
