@@ -4,6 +4,9 @@
 query PublicationsProfileBookmarks(
   $request: PublicationsProfileBookmarkedQueryRequest!
   $observerId: ProfileId
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: publicationsProfileBookmarks(request: $request) {
     items {

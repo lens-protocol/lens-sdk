@@ -27,6 +27,7 @@ export * from './Cursor';
 export * from './FollowPolicy';
 export * from './FollowStatus';
 export * from './generated';
+export * from './ImageSizeTransform';
 export * from './ProfileAttributeReader';
 export * from './ProfileAttributes';
 export * from './ReferencePolicy';

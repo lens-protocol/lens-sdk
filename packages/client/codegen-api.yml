@@ -24,7 +24,7 @@ config:
     FollowModuleData: string
     Handle: string
     HandleClaimIdScalar: string
-    ImageSizeTransform: string
+    ImageSizeTransform: ImageSizeTransform
     InternalPublicationId: string
     IpfsCid: string
     Jwt: string
@@ -68,6 +68,8 @@ documents:
 generates:
   src/graphql/types.generated.ts:
     plugins:
+      - 'add':
+          content: ["import type { ImageSizeTransform } from './ImageSizeTransform';"]
       - 'typescript':
           nonOptionalTypename: true
   ./:
@@ -77,7 +79,7 @@ generates:
       baseTypesPath: src/graphql/types.generated.ts
     plugins:
       - 'add':
-          content: '// @ts-nocheck'
+          content: ['// @ts-nocheck']
       - 'typescript-operations':
           skipTypename: true
           inlineFragmentTypes: combine

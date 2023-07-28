@@ -26,6 +26,7 @@ import type { ContentInsight } from './ContentInsight';
 import type { Cursor } from './Cursor';
 import type { FollowPolicy } from './FollowPolicy';
 import type { FollowStatus } from './FollowStatus';
+import type { ImageSizeTransform } from './ImageSizeTransform';
 import type { ProfileAttributes } from './ProfileAttributes';
 import type { ReferencePolicy } from './ReferencePolicy';
 
@@ -81,7 +82,7 @@ export type Scalars = {
   /** handle claim id custom scalar type */
   HandleClaimIdScalar: unknown;
   /** image size transform custom scalar type */
-  ImageSizeTransform: unknown;
+  ImageSizeTransform: ImageSizeTransform;
   /** Internal publication id custom scalar type */
   InternalPublicationId: PublicationId;
   /** IpfsCid scalar type */

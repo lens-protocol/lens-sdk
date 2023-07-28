@@ -1,15 +1,15 @@
 import { IStorageProvider } from '@lens-protocol/storage';
 
+import { MediaTransformParams } from '../graphql/types.generated';
 import { Environment } from './environments';
-import { MediaTransform } from './media';
 
 /**
  * The media transforms configuration.
  */
 export type MediaTransformsConfig = {
-  publication?: MediaTransform;
-  profilePicture?: MediaTransform;
-  profileCover?: MediaTransform;
+  publication?: MediaTransformParams;
+  profilePicture?: MediaTransformParams;
+  profileCover?: MediaTransformParams;
 };
 
 /**

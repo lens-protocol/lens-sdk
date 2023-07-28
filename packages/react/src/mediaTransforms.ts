@@ -1,22 +1,22 @@
-import { ImageSizeTransform, MediaTransform } from '@lens-protocol/api-bindings';
+import { ImageSizeTransform, MediaTransformParams } from '@lens-protocol/api-bindings';
 
 /**
  * The media transforms configuration.
  */
 export type MediaTransformsConfig = {
   publication: {
-    small: MediaTransform;
-    medium: MediaTransform;
+    small: MediaTransformParams;
+    medium: MediaTransformParams;
   };
   profile: {
-    thumbnail: MediaTransform;
+    thumbnail: MediaTransformParams;
   };
 };
 
 function buildMediaTransform(
   width: ImageSizeTransform,
   height: ImageSizeTransform = 'auto',
-): MediaTransform {
+): MediaTransformParams {
   return {
     width,
     height,

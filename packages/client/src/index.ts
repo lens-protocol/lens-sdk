@@ -1,6 +1,7 @@
 export { LensClient } from './LensClient';
 export { polygon, mumbai, production, development, sandbox } from './consts/environments';
 export * from './authentication';
+export * from './bookmarks';
 export * from './consts/config';
 export * from './consts/errors';
 export * from './explore';
@@ -37,7 +38,7 @@ export type { IStorageProvider } from '@lens-protocol/storage';
 export type { Environment } from './consts/environments';
 export type { LensConfig, MediaTransformsConfig } from './consts/config';
 export type { TypedData, TypedDataResponse } from './consts/types';
-export type { ImageSizeTransform, MediaTransform } from './consts/media';
+export type { Digit, Percentage, Pixel, ImageSizeTransform } from './graphql/ImageSizeTransform';
 export type { PublicationFragment } from './graphql/types';
 export type { PaginatedResult, PaginatedQueryData } from './helpers/buildPaginatedQueryResult';
 
@@ -136,6 +137,7 @@ export type {
   IllegalReasonInputParams,
   LimitedFeeCollectModuleParams,
   LimitedTimedFeeCollectModuleParams,
+  MediaTransformParams,
   ModuleFeeAmountParams,
   ModuleFeeParams,
   MultirecipientFeeCollectModuleParams,
@@ -194,11 +196,14 @@ export type {
   NotificationRequest,
   PendingApprovalFollowsRequest,
   ProfileFollowRevenueQueryRequest,
+  ProfileGuardianRequest,
   ProfilePublicationRevenueQueryRequest,
   ProfilePublicationsForSaleRequest,
   ProfileQueryRequest,
+  PublicationProfileBookmarkRequest,
   PublicationQueryRequest,
   PublicationRevenueQueryRequest,
+  PublicationsProfileBookmarkedQueryRequest,
   PublicationsQueryRequest,
   PublicMediaRequest,
   ReactionRequest,
