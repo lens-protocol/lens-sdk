@@ -10,17 +10,17 @@ export function useBookmarkToggleController() {
   const add = async (request: BookmarkRequest) => {
     const presenter = new BookmarksPresenter(publicationCacheManager);
     const gateway = new BookmarksGateway(apolloClient);
-    const reaction = new ToggleProperty(gateway, presenter);
+    const bookmark = new ToggleProperty(gateway, presenter);
 
-    await reaction.add(request);
+    await bookmark.add(request);
   };
 
   const remove = async (request: BookmarkRequest) => {
     const presenter = new BookmarksPresenter(publicationCacheManager);
     const gateway = new BookmarksGateway(apolloClient);
-    const reaction = new ToggleProperty(gateway, presenter);
+    const bookmark = new ToggleProperty(gateway, presenter);
 
-    await reaction.remove(request);
+    await bookmark.remove(request);
   };
 
   return {

@@ -12,11 +12,11 @@ export type UseBookmarkToggleArgs = {
 export type BookmarkOperation = Operation<void>;
 
 /**
- * `useBookmarkToggle` hook let the user save or remove a publication from their bookmarks.
+ * `useBookmarkToggle` hook lets the user save or remove a publication from their bookmarks.
  *
  * You MUST be authenticated via {@link useWalletLogin} to use this hook.
  *
- * You can use the {@link Post.bookmarked} (or  {@link Comment.bookmarked}) property to determine
+ * You can use the `Post.bookmarked` (or  `Comment.bookmarked`) property to determine
  * if the publication is bookmarked by the current observer.
  *
  * The `profile` argument MUST be the {@link ProfileOwnedByMe} instance that was used as observer when the publication got fetched.
