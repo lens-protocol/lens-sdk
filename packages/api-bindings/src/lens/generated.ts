@@ -2149,6 +2149,7 @@ export type UnknownReferenceModuleSettings = {
 export type CommentBase = {
   __typename: 'Comment';
   id: PublicationId;
+  appId: AppId | null;
   collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
@@ -2210,6 +2211,7 @@ export type Comment = {
 export type Post = {
   __typename: 'Post';
   id: PublicationId;
+  appId: AppId | null;
   collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
@@ -3914,6 +3916,7 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
   fragment CommentBase on Comment {
     __typename
     id
+    appId
     stats {
       ...PublicationStats
     }
@@ -4022,6 +4025,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
   fragment Post on Post {
     __typename
     id
+    appId
     stats {
       ...PublicationStats
     }

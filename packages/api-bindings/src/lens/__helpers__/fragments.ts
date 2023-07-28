@@ -1,6 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { mockProfileId, mockPublicationId, mockTransactionHash } from '@lens-protocol/domain/mocks';
+import {
+  mockAppId,
+  mockProfileId,
+  mockPublicationId,
+  mockTransactionHash,
+} from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import {
   CollectPolicyType,
@@ -304,6 +309,7 @@ function mockNoFeeCollectPolicy(overrides?: Partial<NoFeeCollectPolicy>): NoFeeC
 export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>): Post {
   return {
     id: mockPublicationId(),
+    appId: mockAppId(),
     createdAt: faker.datatype.datetime().toISOString(),
     stats: mockPublicationStatsFragment(),
     metadata: mockMetadataOutputFragment(),
@@ -349,6 +355,7 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
 
   return {
     id: mockPublicationId(),
+    appId: mockAppId(),
     stats: mockPublicationStatsFragment(),
     metadata: mockMetadataOutputFragment(),
     profile: mockProfileFragment(),
