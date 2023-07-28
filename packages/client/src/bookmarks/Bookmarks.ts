@@ -79,7 +79,7 @@ export class Bookmarks {
    *
    * @example
    * ```ts
-   * const result = await client.publication.add({
+   * const result = await client.bookmarks.add({
    *   profileId: '0x123',
    *   publicationId: '0x123-0x456',
    * });
