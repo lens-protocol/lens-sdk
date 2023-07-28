@@ -30,11 +30,11 @@ async function main() {
 
   const profile = await createProfile(client);
 
-  const before = await client.publication.myBookmarks({ profileId: profile.id });
+  const before = await client.bookmarks.fetch({ profileId: profile.id });
 
   console.log(`Initial ${profile.handle} bookmarks: `, before.items.length);
 
-  const addResult = await client.publication.addToMyBookmarks({
+  const addResult = await client.bookmarks.add({
     profileId: profile.id,
     publicationId: "0x0635-0x0f",
   });
@@ -44,11 +44,11 @@ async function main() {
     return;
   }
 
-  const after = await client.publication.myBookmarks({ profileId: profile.id });
+  const after = await client.bookmarks.fetch({ profileId: profile.id });
 
   console.log(`${profile.handle} bookmarks after adding one: `, after.items.length);
 
-  const removeResult = await client.publication.removeToMyBookmarks({
+  const removeResult = await client.bookmarks.remove({
     profileId: profile.id,
     publicationId: "0x0635-0x0f",
   });
@@ -58,7 +58,7 @@ async function main() {
     return;
   }
 
-  const ultimately = await client.publication.myBookmarks({ profileId: profile.id });
+  const ultimately = await client.bookmarks.fetch({ profileId: profile.id });
 
   console.log(`${profile.handle} bookmarks after removing one: `, ultimately.items.length);
 }

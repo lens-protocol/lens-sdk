@@ -26,9 +26,7 @@ import type {
   ProfilePublicationsForSaleRequest,
   PublicationMetadataStatus,
   PublicationMetadataV2Input,
-  PublicationProfileBookmarkRequest,
   PublicationQueryRequest,
-  PublicationsProfileBookmarkedQueryRequest,
   PublicationsQueryRequest,
   PublicationValidateMetadataResult,
   PublicMediaRequest,
@@ -284,90 +282,6 @@ export class Publication {
 
         return result.data.result;
       }, request);
-    });
-  }
-
-  /**
-   * Fetch all publications bookmarked by a profile
-   *
-   * ⚠️ Requires authenticated LensClient.
-   * @param request - Request object for the query
-   * @param observerId - The optional observer Profile ID
-   * @returns Publications wrapped in {@link PaginatedResult}
-   *
-   * @example
-   * ```ts
-   * const result = await client.publication.myBookmarks({
-   *   profileId: '0x123',
-   * });
-   * ```
-   */
-  async myBookmarks(
-    request: PublicationsProfileBookmarkedQueryRequest,
-    observerId?: string,
-  ): Promise<PaginatedResult<PublicationFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.GetProfileBookmarks(
-          {
-            request: currRequest,
-            observerId,
-          },
-          headers,
-        );
-
-        return result.data.result;
-      }, request);
-    });
-  }
-
-  /**
-   * Adds a publication to the profile's bookmarks.
-   * The profile must be owned by the authenticated wallet.
-   *
-   * ⚠️ Requires authenticated LensClient.
-   *
-   * @param request - Request object for the mutation
-   * @returns void
-   *
-   * @example
-   * ```ts
-   * const result = await client.publication.addToMyBookmarks({
-   *   profileId: '0x123',
-   *   publicationId: '0x123-0x456',
-   * });
-   * ```
-   */
-  async addToMyBookmarks(
-    request: PublicationProfileBookmarkRequest,
-  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.AddToMyBookmarks({ request }, headers);
-    });
-  }
-
-  /**
-   * Removes a publication to the profile's bookmarks.
-   * The profile must be owned by the authenticated wallet.
-   *
-   * ⚠️ Requires authenticated LensClient.
-   *
-   * @param request - Request object for the mutation
-   * @returns void
-   *
-   * @example
-   * ```ts
-   * const result = await client.publication.removeToMyBookmarks({
-   *   profileId: '0x123',
-   *   publicationId: '0x123-0x456',
-   * });
-   * ```
-   */
-  async removeToMyBookmarks(
-    request: PublicationProfileBookmarkRequest,
-  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.RemoveFromMyBookmarks({ request }, headers);
     });
   }
 
