@@ -1,4 +1,4 @@
-import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
+import { NftImage, ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
   AppId,
   PendingSigningRequestError,
@@ -14,6 +14,7 @@ import {
   CreatePostRequest,
   Locale,
   MediaObject,
+  NftAttribute,
   ReferencePolicyConfig,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
@@ -79,6 +80,27 @@ export type CreatePostBaseArgs = {
    * These are not the same as #hashtag in the publication content. Use these if you don't want to clutter the publication content with tags.
    */
   tags?: string[];
+  /**
+   * A list of attributes for the collect NFT.
+   *
+   * This is the NFT description visible on marketplaces like OpenSea.
+   */
+  attributes?: NftAttribute[];
+  /**
+   * The collect NFT image.
+   *
+   * This is the NFT image visible on marketplaces like OpenSea.
+   *
+   * DO NOT use this as primary storage for publication media. Use the `media` property instead.
+   * In the case your publication has many media consider to use this field as a static representation
+   * of the collect NFT. For example if the publication is an album of audio files this could well be
+   * used as album cover image. If the publication is a gallery of images, this could be the gallery
+   * cover image.
+   *
+   * DO NOT use this as media cover image.
+   * For individual media cover image (e.g. the video thumbnail image) use the `media[n].cover` (see {@link MediaObject}).
+   */
+  image?: NftImage;
 };
 
 export type CreateTextualPostArgs = CreatePostBaseArgs & {

@@ -76,19 +76,30 @@ export type NftAttribute =
       traitType: string;
     };
 
+export type NftImage = {
+  url: Url;
+  mimeType: ImageType;
+};
+
 export type NftMetadata = {
   /**
-   * The name of the NFT.
+   * The name of the collect NFT.
+   *
+   * This is the NFT name visible on marketplaces like OpenSea.
    */
   name: string;
   /**
-   * The description of the NFT.
+   * The description of the collect NFT.
+   *
+   * This is the NFT description visible on marketplaces like OpenSea.
    */
   description?: string;
   /**
    * A list of attributes for the NFT.
+   *
+   * @deprecated Use the `attributes` field at the request object top level.
    */
-  attributes: NftAttribute[];
+  attributes?: NftAttribute[];
   /**
    * This is the URL that will appear below the asset's image on OpenSea and other marketplaces.
    * It will allow users to leave OpenSea and view the item on the external site.
@@ -96,11 +107,15 @@ export type NftMetadata = {
   externalUrl?: Url;
   /**
    * Legacy to support OpenSea schema, store any NFT image here.
+   *
+   * @deprecated Use the `image` field at the request object top level.
    */
   image?: Url;
   /**
    * This is the mime type of the image. This is used if you are uploading more advanced
    * cover images as sometimes IPFS does not emit the content header so this solves that.
+   *
+   * @deprecated Use the `image` field at the request object top level.
    */
   imageMimeType?: ImageType;
 };
