@@ -2991,6 +2991,7 @@ export type RemoveNotInterestedData = { result: void | null };
 
 export type GetPublicationsVariables = Exact<{
   profileId?: InputMaybe<Scalars['ProfileId']>;
+  profileIds?: InputMaybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
@@ -7177,6 +7178,7 @@ export type RemoveNotInterestedMutationOptions = Apollo.BaseMutationOptions<
 export const GetPublicationsDocument = /*#__PURE__*/ gql`
   query GetPublications(
     $profileId: ProfileId
+    $profileIds: [ProfileId!]
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
@@ -7192,6 +7194,7 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
     result: publications(
       request: {
         profileId: $profileId
+        profileIds: $profileIds
         limit: $limit
         collectedBy: $walletAddress
         cursor: $cursor
@@ -7236,6 +7239,7 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useGetPublications({
  *   variables: {
  *      profileId: // value for 'profileId'
+ *      profileIds: // value for 'profileIds'
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
