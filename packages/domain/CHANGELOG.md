@@ -1,5 +1,12 @@
 # @lens-protocol/domain
 
+## 0.9.1-next.1
+
+### Patch Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- ad797714: **Added** `useNotInterested` hook
+
 ## 0.9.1-next.0
 
 ### Patch Changes

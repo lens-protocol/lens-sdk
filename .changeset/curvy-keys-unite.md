@@ -4,4 +4,4 @@
 "@lens-protocol/gated-content": patch
 ---
 
-**Added** support for optimized and transformed media inside publciation and profile MediaSet
+**Added** support for optimized and transformed media inside publication and profile MediaSet
