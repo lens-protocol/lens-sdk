@@ -24,6 +24,9 @@ import {
   GetAllProfilesData,
   GetAllProfilesDocument,
   GetAllProfilesVariables,
+  GetProfileBookmarksData,
+  GetProfileBookmarksDocument,
+  GetProfileBookmarksVariables,
   GetProfileData,
   GetProfileDocument,
   GetProfilePublicationRevenueData,
@@ -80,7 +83,7 @@ import {
   WhoReactedPublicationVariables,
   WhoReactedResult,
 } from '../generated';
-import { SearchProfilesResult, SearchPublicationsResult } from '../index';
+import { SearchProfilesData, SearchPublicationsData } from '../index';
 import { Sources } from '../sources';
 import { AnyPublication, ContentPublication } from '../utils/publication';
 import {
@@ -462,7 +465,7 @@ export function mockProfileFollowRevenueResponse({
 export function mockSearchProfilesResponse(args: {
   variables: SearchProfilesVariables;
   items: Profile[];
-}): MockedResponse<SearchProfilesResult> {
+}): MockedResponse<SearchProfilesData> {
   return {
     request: {
       query: SearchProfilesDocument,
@@ -503,7 +506,7 @@ export function mockExploreProfilesResponse(args: {
 export function mockSearchPublicationsResponse(args: {
   variables: SearchPublicationsVariables;
   items: Array<ContentPublication>;
-}): MockedResponse<SearchPublicationsResult> {
+}): MockedResponse<SearchPublicationsData> {
   return {
     request: {
       query: SearchPublicationsDocument,
@@ -559,6 +562,29 @@ export function mockEnabledModulesResponse({
     result: {
       data: {
         result: data,
+      },
+    },
+  };
+}
+
+export function mockGetProfileBookmarksResponse({
+  variables,
+  publications,
+}: {
+  variables: GetProfileBookmarksVariables;
+  publications: ContentPublication[];
+}): MockedResponse<GetProfileBookmarksData> {
+  return {
+    request: {
+      query: GetProfileBookmarksDocument,
+      variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: publications,
+          pageInfo: mockPaginatedResultInfo(),
+        },
       },
     },
   };

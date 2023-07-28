@@ -51,6 +51,7 @@ import { UseUpdateFollowPolicy } from './profiles/UseUpdateFollowPolicy';
 import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
 import { UseUpdateProfileImage } from './profiles/UseUpdateProfileImage';
 import { PublicationsPage } from './publications/PublicationsPage';
+import { UseBookmarkToggle } from './publications/UseBookmarkToggle';
 import { UseCollect } from './publications/UseCollect';
 import { UseCollectedPublications } from './publications/UseCollectedPublications';
 import { UseCreateComment } from './publications/UseCreateComment';
@@ -58,6 +59,7 @@ import { UseCreateEncryptedPost } from './publications/UseCreateEncryptedPost';
 import { UseCreateMirror } from './publications/UseCreateMirror';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
+import { UseMyBookmarks } from './publications/UseMyBookmarks';
 import { UseNotInterested } from './publications/UseNotInterested';
 import { UseProfilePublicationsForSale } from './publications/UseProfilePublicationsForSale';
 import { UsePublication } from './publications/UsePublication';
@@ -148,6 +150,8 @@ export function App() {
                   <Route path="useWhoMirroredPublication" element={<UseWhoMirroredPublication />} />
                   <Route path="useCollect" element={<UseCollect />} />
                   <Route path="useNotInterested" element={<UseNotInterested />} />
+                  <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
+                  <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
                 </Route>
 
                 <Route path="/profiles">

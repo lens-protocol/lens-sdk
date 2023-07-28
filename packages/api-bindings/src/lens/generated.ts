@@ -2114,6 +2114,7 @@ export type PublicationStats = {
   totalDownvotes: number;
   totalAmountOfCollects: number;
   totalAmountOfComments: number;
+  totalBookmarks: number;
   commentsCount: number;
 };
 
@@ -2158,6 +2159,7 @@ export type CommentBase = {
   hasCollectedByMe: boolean;
   mirrors: Array<PublicationId>;
   notInterested: boolean;
+  bookmarked: boolean;
   hasOptimisticCollectedByMe: boolean;
   isOptimisticMirroredByMe: boolean;
   isMirroredByMe: boolean;
@@ -2220,6 +2222,7 @@ export type Post = {
   hasCollectedByMe: boolean;
   mirrors: Array<PublicationId>;
   notInterested: boolean;
+  bookmarked: boolean;
   hasOptimisticCollectedByMe: boolean;
   isOptimisticMirroredByMe: boolean;
   isMirroredByMe: boolean;
@@ -2989,6 +2992,18 @@ export type RemoveNotInterestedVariables = Exact<{
 
 export type RemoveNotInterestedData = { result: void | null };
 
+export type AddToMyBookmarksVariables = Exact<{
+  request: PublicationProfileBookmarkRequest;
+}>;
+
+export type AddToMyBookmarksData = { result: void | null };
+
+export type RemoveFromMyBookmarksVariables = Exact<{
+  request: PublicationProfileBookmarkRequest;
+}>;
+
+export type RemoveFromMyBookmarksData = { result: void | null };
+
 export type GetPublicationsVariables = Exact<{
   profileId?: InputMaybe<Scalars['ProfileId']>;
   profileIds?: InputMaybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
@@ -3054,6 +3069,22 @@ export type ProfilePublicationsForSaleVariables = Exact<{
 
 export type ProfilePublicationsForSaleData = {
   result: { items: Array<Comment | Post>; pageInfo: PaginatedResultInfo };
+};
+
+export type GetProfileBookmarksVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  limit: Scalars['LimitScalar'];
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
+}>;
+
+export type GetProfileBookmarksData = {
+  result: { items: Array<Comment | Post | {}>; pageInfo: PaginatedResultInfo };
 };
 
 export type AddReactionVariables = Exact<{
@@ -3316,6 +3347,7 @@ export const FragmentPublicationStats = /*#__PURE__*/ gql`
     totalDownvotes
     totalAmountOfCollects
     totalAmountOfComments
+    totalBookmarks
     commentsCount: commentsTotal(forSources: $sources)
   }
 `;
@@ -3994,6 +4026,7 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
     }
     mirrors(by: $observerId)
     notInterested(by: $observerId)
+    bookmarked(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     isMirroredByMe @client
@@ -4103,6 +4136,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
     }
     mirrors(by: $observerId)
     notInterested(by: $observerId)
+    bookmarked(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     isMirroredByMe @client
@@ -7175,6 +7209,93 @@ export type RemoveNotInterestedMutationOptions = Apollo.BaseMutationOptions<
   RemoveNotInterestedData,
   RemoveNotInterestedVariables
 >;
+export const AddToMyBookmarksDocument = /*#__PURE__*/ gql`
+  mutation AddToMyBookmarks($request: PublicationProfileBookmarkRequest!) {
+    result: addPublicationProfileBookmark(request: $request)
+  }
+`;
+export type AddToMyBookmarksMutationFn = Apollo.MutationFunction<
+  AddToMyBookmarksData,
+  AddToMyBookmarksVariables
+>;
+
+/**
+ * __useAddToMyBookmarks__
+ *
+ * To run a mutation, you first call `useAddToMyBookmarks` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddToMyBookmarks` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addToMyBookmarks, { data, loading, error }] = useAddToMyBookmarks({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddToMyBookmarks(
+  baseOptions?: Apollo.MutationHookOptions<AddToMyBookmarksData, AddToMyBookmarksVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddToMyBookmarksData, AddToMyBookmarksVariables>(
+    AddToMyBookmarksDocument,
+    options,
+  );
+}
+export type AddToMyBookmarksHookResult = ReturnType<typeof useAddToMyBookmarks>;
+export type AddToMyBookmarksMutationResult = Apollo.MutationResult<AddToMyBookmarksData>;
+export type AddToMyBookmarksMutationOptions = Apollo.BaseMutationOptions<
+  AddToMyBookmarksData,
+  AddToMyBookmarksVariables
+>;
+export const RemoveFromMyBookmarksDocument = /*#__PURE__*/ gql`
+  mutation RemoveFromMyBookmarks($request: PublicationProfileBookmarkRequest!) {
+    result: removePublicationProfileBookmark(request: $request)
+  }
+`;
+export type RemoveFromMyBookmarksMutationFn = Apollo.MutationFunction<
+  RemoveFromMyBookmarksData,
+  RemoveFromMyBookmarksVariables
+>;
+
+/**
+ * __useRemoveFromMyBookmarks__
+ *
+ * To run a mutation, you first call `useRemoveFromMyBookmarks` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFromMyBookmarks` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFromMyBookmarks, { data, loading, error }] = useRemoveFromMyBookmarks({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useRemoveFromMyBookmarks(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveFromMyBookmarksData,
+    RemoveFromMyBookmarksVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveFromMyBookmarksData, RemoveFromMyBookmarksVariables>(
+    RemoveFromMyBookmarksDocument,
+    options,
+  );
+}
+export type RemoveFromMyBookmarksHookResult = ReturnType<typeof useRemoveFromMyBookmarks>;
+export type RemoveFromMyBookmarksMutationResult = Apollo.MutationResult<RemoveFromMyBookmarksData>;
+export type RemoveFromMyBookmarksMutationOptions = Apollo.BaseMutationOptions<
+  RemoveFromMyBookmarksData,
+  RemoveFromMyBookmarksVariables
+>;
 export const GetPublicationsDocument = /*#__PURE__*/ gql`
   query GetPublications(
     $profileId: ProfileId
@@ -7543,6 +7664,95 @@ export type ProfilePublicationsForSaleLazyQueryHookResult = ReturnType<
 export type ProfilePublicationsForSaleQueryResult = Apollo.QueryResult<
   ProfilePublicationsForSaleData,
   ProfilePublicationsForSaleVariables
+>;
+export const GetProfileBookmarksDocument = /*#__PURE__*/ gql`
+  query GetProfileBookmarks(
+    $profileId: ProfileId!
+    $limit: LimitScalar!
+    $sources: [Sources!]!
+    $metadata: PublicationMetadataFilters
+    $cursor: Cursor
+    $observerId: ProfileId
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
+  ) {
+    result: publicationsProfileBookmarks(
+      request: {
+        cursor: $cursor
+        limit: $limit
+        metadata: $metadata
+        profileId: $profileId
+        sources: $sources
+      }
+    ) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentPost}
+  ${FragmentComment}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useGetProfileBookmarks__
+ *
+ * To run a query within a React component, call `useGetProfileBookmarks` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileBookmarks` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProfileBookmarks({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *      limit: // value for 'limit'
+ *      sources: // value for 'sources'
+ *      metadata: // value for 'metadata'
+ *      cursor: // value for 'cursor'
+ *      observerId: // value for 'observerId'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
+ *   },
+ * });
+ */
+export function useGetProfileBookmarks(
+  baseOptions: Apollo.QueryHookOptions<GetProfileBookmarksData, GetProfileBookmarksVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetProfileBookmarksData, GetProfileBookmarksVariables>(
+    GetProfileBookmarksDocument,
+    options,
+  );
+}
+export function useGetProfileBookmarksLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetProfileBookmarksData, GetProfileBookmarksVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetProfileBookmarksData, GetProfileBookmarksVariables>(
+    GetProfileBookmarksDocument,
+    options,
+  );
+}
+export type GetProfileBookmarksHookResult = ReturnType<typeof useGetProfileBookmarks>;
+export type GetProfileBookmarksLazyQueryHookResult = ReturnType<
+  typeof useGetProfileBookmarksLazyQuery
+>;
+export type GetProfileBookmarksQueryResult = Apollo.QueryResult<
+  GetProfileBookmarksData,
+  GetProfileBookmarksVariables
 >;
 export const AddReactionDocument = /*#__PURE__*/ gql`
   mutation AddReaction(

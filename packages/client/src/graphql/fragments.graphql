@@ -313,6 +313,7 @@ fragment SimplePublicationStats on PublicationStats {
   totalAmountOfComments
   totalUpvotes
   totalDownvotes
+  totalBookmarks
 }
 
 fragment MirrorBase on Mirror {
@@ -399,6 +400,7 @@ fragment CommentBase on Comment {
   collectNftAddress
   createdAt
   hidden
+  bookmarked(by: $observerId)
   isGated
   isDataAvailability
   dataAvailabilityProofs
@@ -498,6 +500,7 @@ fragment Post on Post {
   collectNftAddress
   createdAt
   hidden
+  bookmarked(by: $observerId)
   isGated
   isDataAvailability
   dataAvailabilityProofs

@@ -86,6 +86,16 @@ const publicationHooks = [
     description: 'Flag a publication as not interested.',
     path: '/publications/useNotInterested',
   },
+  {
+    label: 'useBookmarkToggle',
+    description: 'Save publication in personal bookmarks.',
+    path: '/publications/useBookmarkToggle',
+  },
+  {
+    label: 'useMyBookmarks',
+    description: 'List my bookmarks.',
+    path: '/publications/useMyBookmarks',
+  },
 ];
 
 export function PublicationsPage() {

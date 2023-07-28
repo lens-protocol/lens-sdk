@@ -248,6 +248,7 @@ export type SimplePublicationStatsFragment = {
   totalAmountOfComments: number;
   totalUpvotes: number;
   totalDownvotes: number;
+  totalBookmarks: number;
 };
 
 export type MirrorBaseFragment = {
@@ -272,6 +273,7 @@ export type CommentBaseFragment = {
   collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
+  bookmarked: boolean;
   isGated: boolean;
   isDataAvailability: boolean;
   dataAvailabilityProofs: string | null;
@@ -320,6 +322,7 @@ export type PostFragment = {
   collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
+  bookmarked: boolean;
   isGated: boolean;
   isDataAvailability: boolean;
   dataAvailabilityProofs: string | null;
@@ -571,6 +574,7 @@ export const SimplePublicationStatsFragmentDoc = gql`
     totalAmountOfComments
     totalUpvotes
     totalDownvotes
+    totalBookmarks
   }
 `;
 export const MetadataAttributeOutputFragmentDoc = gql`
@@ -806,6 +810,7 @@ export const PostFragmentDoc = gql`
     collectNftAddress
     createdAt
     hidden
+    bookmarked(by: $observerId)
     isGated
     isDataAvailability
     dataAvailabilityProofs
@@ -893,6 +898,7 @@ export const CommentBaseFragmentDoc = gql`
     collectNftAddress
     createdAt
     hidden
+    bookmarked(by: $observerId)
     isGated
     isDataAvailability
     dataAvailabilityProofs

@@ -416,7 +416,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting the dispatcher
+   * Create typed data for setting the dispatcher
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -454,7 +454,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting the default profile
+   * Create typed data for setting the default profile
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -492,7 +492,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting the profile's metadata
+   * Create typed data for setting the profile's metadata
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -560,7 +560,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting the profile's image
+   * Create typed data for setting the profile's image
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -628,7 +628,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for burning a profile
+   * Create typed data for burning a profile
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -663,7 +663,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for following a profile
+   * Create typed data for following a profile
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -700,7 +700,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for unfollowing a profile
+   * Create typed data for unfollowing a profile
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -735,7 +735,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting a profile's follow module
+   * Create typed data for setting a profile's follow module
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -782,7 +782,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting a profile's follow NFT URI.
+   * Create typed data for setting a profile's follow NFT URI.
    *
    * The follow NFT URI is the NFT metadata followers will mint when they follow your profile.
    *

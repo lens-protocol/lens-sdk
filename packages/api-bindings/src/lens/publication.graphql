@@ -32,3 +32,11 @@ mutation AddNotInterested($request: PublicationProfileNotInterestedRequest!) {
 mutation RemoveNotInterested($request: PublicationProfileNotInterestedRequest!) {
   result: removePublicationProfileNotInterested(request: $request)
 }
+
+mutation AddToMyBookmarks($request: PublicationProfileBookmarkRequest!) {
+  result: addPublicationProfileBookmark(request: $request)
+}
+
+mutation RemoveFromMyBookmarks($request: PublicationProfileBookmarkRequest!) {
+  result: removePublicationProfileBookmark(request: $request)
+}

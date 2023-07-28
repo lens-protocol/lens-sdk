@@ -7,7 +7,6 @@ import {
   Exact,
   GetPublicationsDocument,
   InputMaybe,
-  Post,
   Profile,
   PublicationMetadataFilters,
   SearchProfilesDocument,
@@ -15,8 +14,11 @@ import {
   SearchPublicationsDocument,
   SearchPublicationsVariables,
   MediaTransformParams,
+  GetProfileBookmarksVariables,
+  GetProfileBookmarksDocument,
 } from './generated';
 import { Sources } from './sources';
+import { ContentPublication } from './utils';
 
 export * from './CollectPolicy';
 export * from './ContentEncryptionKey';
@@ -63,7 +65,7 @@ export function useGetComments(options: QueryHookOptions<GetCommentsData, GetCom
   return useQuery<GetCommentsData, GetCommentsVariables>(GetPublicationsDocument, options);
 }
 
-export type SearchProfilesResult = {
+export type SearchProfilesData = {
   result: {
     __typename: 'ProfileSearchResult';
     items: Array<Profile>;
@@ -78,30 +80,52 @@ export type SearchProfilesResult = {
  * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
  */
 export function useSearchProfiles(
-  options: QueryHookOptions<SearchProfilesResult, SearchProfilesVariables>,
+  options: QueryHookOptions<SearchProfilesData, SearchProfilesVariables>,
 ) {
-  return useQuery<SearchProfilesResult, SearchProfilesVariables>(SearchProfilesDocument, options);
+  return useQuery<SearchProfilesData, SearchProfilesVariables>(SearchProfilesDocument, options);
 }
 
-export type SearchPublicationsResult = {
+export type SearchPublicationsData = {
   result: {
     __typename: 'PublicationSearchResult';
-    items: Array<Comment | Post>;
+    items: Array<ContentPublication>;
     pageInfo: PaginatedResultInfo;
   };
 };
 
 /**
  * This is a patched version of the codegen generated useSearchPublicationsQuery hook.
- * It is patched to return paginated results of Comment | Post instead of union with `{}` type.
+ * It is patched to return paginated results of ContentPublication instead of union with `{}` type.
  *
  * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
  */
 export function useSearchPublications(
-  options: QueryHookOptions<SearchPublicationsResult, SearchPublicationsVariables>,
+  options: QueryHookOptions<SearchPublicationsData, SearchPublicationsVariables>,
 ) {
-  return useQuery<SearchPublicationsResult, SearchPublicationsVariables>(
+  return useQuery<SearchPublicationsData, SearchPublicationsVariables>(
     SearchPublicationsDocument,
+    options,
+  );
+}
+
+export type GetProfileBookmarksData = {
+  result: {
+    items: Array<ContentPublication>;
+    pageInfo: PaginatedResultInfo;
+  };
+};
+
+/**
+ * This is a patched version of the codegen generated useGetProfileBookmarks hook.
+ * It is patched to return paginated results of ContentPublication instead of union with `{}` type.
+ *
+ * See: https://github.com/dotansimha/graphql-code-generator/discussions/5567
+ */
+export function useGetProfileBookmarks(
+  options: QueryHookOptions<GetProfileBookmarksData, GetProfileBookmarksVariables>,
+) {
+  return useQuery<GetProfileBookmarksData, GetProfileBookmarksVariables>(
+    GetProfileBookmarksDocument,
     options,
   );
 }
