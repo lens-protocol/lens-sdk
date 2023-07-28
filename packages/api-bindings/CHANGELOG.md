@@ -1,5 +1,22 @@
 # @lens-protocol/api-bindings
 
+## 0.10.0-next.2
+
+### Minor Changes
+
+- de401a59: **Added** support for optimized and transformed media inside publication and profile MediaSet
+- 3b67207b: **Added** `appId` to `Comment` and `Post`
+
+### Patch Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- ad797714: **Added** `useNotInterested` hook
+- 636ff014: **Added** `profileIds` to `usePublications` hook
+- 125ec30c: **Fixed** `usePollDetails` to be robust to flagged or misconfigured Snapshot Proposals
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+  - @lens-protocol/domain@0.9.1-next.1
+
 ## 0.9.2-next.1
 
 ### Patch Changes

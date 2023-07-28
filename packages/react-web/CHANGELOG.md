@@ -1,5 +1,28 @@
 # @lens-protocol/react-web
 
+## 1.3.0-next.3
+
+### Minor Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- ad797714: **Added** `useNotInterested` hook
+- 636ff014: **Added** `profileIds` to `usePublications` hook
+- 3b67207b: **Added** `appId` to `Comment` and `Post`
+
+### Patch Changes
+
+- 125ec30c: **Fixed** `usePollDetails` to be robust to flagged or misconfigured Snapshot Proposals
+- Updated dependencies [de401a59]
+- Updated dependencies [a5cf2198]
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+- Updated dependencies [636ff014]
+- Updated dependencies [125ec30c]
+- Updated dependencies [3b67207b]
+  - @lens-protocol/api-bindings@0.10.0-next.2
+  - @lens-protocol/react@1.3.0-next.3
+  - @lens-protocol/gated-content@0.3.2-next.2
+
 ## 1.3.0-next.2
 
 ### Patch Changes
