@@ -47,6 +47,7 @@ export function mockSnapshotProposal(overrides?: Partial<SnapshotProposal>): Sna
       name: faker.commerce.productName(),
     },
     strategies: [],
+    flagged: null,
     ...overrides,
     __typename: 'Proposal',
   };
