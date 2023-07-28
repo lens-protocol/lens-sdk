@@ -5,8 +5,8 @@ import {
   WalletFragment,
   ProfileFragment,
   PostFragment,
-  MirrorFragment,
   CommentFragment,
+  MirrorFragment,
   CommonPaginatedResultInfoFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -17,8 +17,8 @@ import {
   WalletFragmentDoc,
   ProfileFragmentDoc,
   PostFragmentDoc,
-  MirrorFragmentDoc,
   CommentFragmentDoc,
+  MirrorFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type NewFollowerNotificationFragment = {

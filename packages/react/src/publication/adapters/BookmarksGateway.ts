@@ -1,10 +1,10 @@
 import {
-  AddNotInterestedDocument,
   AddToMyBookmarksData,
+  AddToMyBookmarksDocument,
   AddToMyBookmarksVariables,
   RemoveFromMyBookmarksData,
+  RemoveFromMyBookmarksDocument,
   RemoveFromMyBookmarksVariables,
-  RemoveNotInterestedDocument,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
@@ -19,7 +19,7 @@ export class BookmarksGateway implements ITogglablePropertyGateway<BookmarkReque
 
   async add({ publicationId, profileId }: BookmarkRequest): Promise<void> {
     await this.apolloClient.mutate<AddToMyBookmarksData, AddToMyBookmarksVariables>({
-      mutation: AddNotInterestedDocument,
+      mutation: AddToMyBookmarksDocument,
       variables: {
         request: {
           publicationId,
@@ -31,7 +31,7 @@ export class BookmarksGateway implements ITogglablePropertyGateway<BookmarkReque
 
   async remove({ publicationId, profileId }: BookmarkRequest): Promise<void> {
     await this.apolloClient.mutate<RemoveFromMyBookmarksData, RemoveFromMyBookmarksVariables>({
-      mutation: RemoveNotInterestedDocument,
+      mutation: RemoveFromMyBookmarksDocument,
       variables: {
         request: {
           publicationId,

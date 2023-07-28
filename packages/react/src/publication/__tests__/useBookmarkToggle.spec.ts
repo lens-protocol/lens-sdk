@@ -7,12 +7,12 @@ import {
   isMirrorPublication,
 } from '@lens-protocol/api-bindings';
 import {
-  mockAddNotInterestedResponse,
+  mockAddToMyBookmarksResponse,
   mockLensApolloClient,
   mockMirrorFragment,
   mockPostFragment,
   mockProfileOwnedByMeFragment,
-  mockRemoveNotInterestedResponse,
+  mockRemoveFromMyBookmarksResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { RenderHookResult, act, waitFor } from '@testing-library/react';
 
@@ -32,10 +32,10 @@ function setupTestScenario({
   const publicationId = isMirrorPublication(publication) ? publication.mirrorOf.id : publication.id;
 
   const apolloClient = mockLensApolloClient([
-    mockAddNotInterestedResponse({
+    mockAddToMyBookmarksResponse({
       request: { publicationId, profileId: profile.id },
     }),
-    mockRemoveNotInterestedResponse({
+    mockRemoveFromMyBookmarksResponse({
       request: { publicationId, profileId: profile.id },
     }),
   ]);

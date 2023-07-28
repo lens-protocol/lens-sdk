@@ -4,8 +4,8 @@ import * as Types from '../../graphql/types.generated';
 import {
   ProfileFragment,
   PostFragment,
-  MirrorFragment,
   CommentFragment,
+  MirrorFragment,
   CommonPaginatedResultInfoFragment,
   FollowingFragment,
   FollowerFragment,
@@ -20,8 +20,8 @@ import gql from 'graphql-tag';
 import {
   ProfileFragmentDoc,
   PostFragmentDoc,
-  MirrorFragmentDoc,
   CommentFragmentDoc,
+  MirrorFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
   FollowingFragmentDoc,
   FollowerFragmentDoc,
