@@ -104,7 +104,7 @@ export class Bookmarks {
    *
    * @example
    * ```ts
-   * const result = await client.publication.remove({
+   * const result = await client.bookmarks.remove({
    *   profileId: '0x123',
    *   publicationId: '0x123-0x456',
    * });
