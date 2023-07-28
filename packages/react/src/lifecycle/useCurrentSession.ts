@@ -138,7 +138,7 @@ export function useCurrentSession(): ReadResult<
       if (prevData?.result) {
         invariant(
           isProfileOwnedByMe(prevData.result),
-          'Active Profile [ID:${session.profile.id}] not owned by the active wallet.\n' +
+          `Previous Active Profile [ID:${prevData.result.id}] not owned by the active wallet.\n` +
             `Check the Profile ID provided is owned by ${session.wallet.address}.`,
         );
 
@@ -168,7 +168,7 @@ export function useCurrentSession(): ReadResult<
   );
   invariant(
     isProfileOwnedByMe(data.result),
-    'Active Profile [ID:${session.profile.id}] not owned by the active wallet.\n' +
+    `Active Profile [ID:${session.profile.id}] not owned by the active wallet.\n` +
       `Check the Profile ID provided is owned by ${session.wallet.address}.`,
   );
 
