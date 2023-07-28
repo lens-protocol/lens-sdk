@@ -44,7 +44,7 @@ export class Bookmarks {
    *
    * @example
    * ```ts
-   * const result = await client.publication.fetch({
+   * const result = await client.bookmarks.fetch({
    *   profileId: '0x123',
    * });
    * ```
