@@ -9,8 +9,8 @@ import {
   ContentWarning,
   Locale,
   MediaObject,
-  NftAttribute,
-  NftImage,
+  MetadataAttribute,
+  MetadataImage,
 } from './types';
 
 /**
@@ -74,7 +74,7 @@ export type BasePostRequest = {
    *
    * This is the NFT description visible on marketplaces like OpenSea.
    */
-  attributes?: NftAttribute[];
+  attributes?: MetadataAttribute[];
   /**
    * The collect NFT image.
    *
@@ -89,7 +89,7 @@ export type BasePostRequest = {
    * DO NOT use this as media cover image.
    * For individual media cover image (e.g. the video thumbnail image) use the `media[n].cover` (see {@link MediaObject}).
    */
-  image?: NftImage;
+  image?: MetadataImage;
 };
 
 export type CreateTextualPostRequest = BasePostRequest & {

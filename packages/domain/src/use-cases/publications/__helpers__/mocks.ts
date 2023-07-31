@@ -23,8 +23,9 @@ import {
   ContentFocus,
   FreeCollectPolicyConfig,
   MediaObject,
-  NftAttribute,
-  NftAttributeDisplayType,
+  MetadataAttribute,
+  MetadataAttributeDisplayType,
+  MetadataImage,
   NftMetadata,
   NoCollectPolicyConfig,
   SimpleChargeCollectPolicyConfig,
@@ -62,25 +63,33 @@ export function mockMediaObject(overrides?: Partial<MediaObject>): MediaObject {
   };
 }
 
-export function mockDateNftAttribute(): NftAttribute {
+export function mockMetadataImage(overrides?: Partial<MetadataImage>): MetadataImage {
   return {
-    displayType: NftAttributeDisplayType.Date,
+    url: faker.image.imageUrl(),
+    mimeType: ImageType.JPEG,
+    ...overrides,
+  };
+}
+
+export function mockDateMetadataAttribute(): MetadataAttribute {
+  return {
+    displayType: MetadataAttributeDisplayType.Date,
     traitType: faker.lorem.word(),
     value: faker.date.past(),
   };
 }
 
-export function mockNumberNftAttribute(): NftAttribute {
+export function mockNumberMetadataAttribute(): MetadataAttribute {
   return {
-    displayType: NftAttributeDisplayType.Number,
+    displayType: MetadataAttributeDisplayType.Number,
     traitType: faker.lorem.word(),
     value: faker.datatype.number(),
   };
 }
 
-export function mockStringNftAttribute(): NftAttribute {
+export function mockStringMetadataAttribute(): MetadataAttribute {
   return {
-    displayType: NftAttributeDisplayType.String,
+    displayType: MetadataAttributeDisplayType.String,
     traitType: faker.lorem.word(),
     value: faker.lorem.word(),
   };

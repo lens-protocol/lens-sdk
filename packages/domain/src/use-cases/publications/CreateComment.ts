@@ -15,8 +15,8 @@ import {
   ContentWarning,
   Locale,
   MediaObject,
-  NftAttribute,
-  NftImage,
+  MetadataAttribute,
+  MetadataImage,
 } from './types';
 
 /**
@@ -84,7 +84,7 @@ export type BaseCommentRequest = {
    *
    * This is the NFT description visible on marketplaces like OpenSea.
    */
-  attributes?: NftAttribute[];
+  attributes?: MetadataAttribute[];
   /**
    * The collect NFT image.
    *
@@ -99,7 +99,7 @@ export type BaseCommentRequest = {
    * DO NOT use this as media cover image.
    * For individual media cover image (e.g. the video thumbnail image) use the `media[n].cover` (see {@link MediaObject}).
    */
-  image?: NftImage;
+  image?: MetadataImage;
 };
 
 export type CreateTextualCommentRequest = BaseCommentRequest & {

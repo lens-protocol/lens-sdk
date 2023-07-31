@@ -1,4 +1,4 @@
-import { NftImage, ProfileOwnedByMe } from '@lens-protocol/api-bindings';
+import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
   AppId,
   PendingSigningRequestError,
@@ -14,7 +14,8 @@ import {
   CreatePostRequest,
   Locale,
   MediaObject,
-  NftAttribute,
+  MetadataAttribute,
+  MetadataImage,
   ReferencePolicyConfig,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
@@ -85,7 +86,7 @@ export type CreatePostBaseArgs = {
    *
    * This is the NFT description visible on marketplaces like OpenSea.
    */
-  attributes?: NftAttribute[];
+  attributes?: MetadataAttribute[];
   /**
    * The collect NFT image.
    *
@@ -100,7 +101,7 @@ export type CreatePostBaseArgs = {
    * DO NOT use this as media cover image.
    * For individual media cover image (e.g. the video thumbnail image) use the `media[n].cover` (see {@link MediaObject}).
    */
-  image?: NftImage;
+  image?: MetadataImage;
 };
 
 export type CreateTextualPostArgs = CreatePostBaseArgs & {

@@ -10,7 +10,7 @@ import {
   CollectPolicyType,
   CollectType,
   ContentFocus,
-  NftAttributeDisplayType,
+  MetadataAttributeDisplayType,
   ReferencePolicyType,
   ContentWarning,
   ImageType,
@@ -121,19 +121,19 @@ function decryptionCriteriaSchema<TAmountSchema extends Erc20AmountSchema>(
     .optional();
 }
 
-const NftAttributeSchema = z.discriminatedUnion('displayType', [
+const MetadataAttributeSchema = z.discriminatedUnion('displayType', [
   z.object({
-    displayType: z.literal(NftAttributeDisplayType.Date),
+    displayType: z.literal(MetadataAttributeDisplayType.Date),
     value: z.coerce.date(),
     traitType: z.string(),
   }),
   z.object({
-    displayType: z.literal(NftAttributeDisplayType.Number),
+    displayType: z.literal(MetadataAttributeDisplayType.Number),
     value: z.number(),
     traitType: z.string(),
   }),
   z.object({
-    displayType: z.literal(NftAttributeDisplayType.String),
+    displayType: z.literal(MetadataAttributeDisplayType.String),
     value: z.string(),
     traitType: z.string(),
   }),
@@ -142,7 +142,7 @@ const NftAttributeSchema = z.discriminatedUnion('displayType', [
 const NftMetadataSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  attributes: z.array(NftAttributeSchema),
+  attributes: z.array(MetadataAttributeSchema),
   externalUrl: z.string().optional(),
   image: z.string().optional(),
   imageMimeType: z.nativeEnum(ImageType).optional(),
@@ -242,10 +242,15 @@ function collectPolicyConfigSchema<TAmountSchema extends Erc20AmountSchema>(
   ]);
 }
 
-const MediaSchema = z.object({
+const MediaObjectSchema = z.object({
   altTag: z.string().optional(),
   cover: z.string().optional(),
   mimeType: z.nativeEnum(SupportedFileType),
+  url: z.string(),
+});
+
+const MetadataImageSchema = z.object({
+  mimeType: z.nativeEnum(ImageType),
   url: z.string(),
 });
 
@@ -279,10 +284,12 @@ function createCommonPublicationRequestSchema<TAmountSchema extends Erc20AmountS
 ) {
   return z.object({
     appId: AppIdSchema.optional(),
+    attributes: z.array(MetadataAttributeSchema).optional(),
     collect: collectPolicyConfigSchema(amountSchema),
     contentWarning: z.nativeEnum(ContentWarning).optional(),
     decryptionCriteria: decryptionCriteriaSchema(amountSchema),
     delegate: z.boolean(),
+    image: MetadataImageSchema.optional(),
     locale: z.string(),
     offChain: z.boolean(),
     profileId: ProfileIdSchema,
@@ -305,7 +312,7 @@ export function createTextualPostRequestSchema<TAmountSchema extends Erc20Amount
   return createBasePostRequestSchema(amountSchema).extend({
     content: z.string(),
     contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
-    media: z.array(MediaSchema).optional(),
+    media: z.array(MediaObjectSchema).optional(),
   });
 }
 
@@ -315,7 +322,7 @@ export function createMediaPostRequestSchema<TAmountSchema extends Erc20AmountSc
   return createBasePostRequestSchema(amountSchema).extend({
     content: z.string().optional(),
     contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
-    media: z.array(MediaSchema),
+    media: z.array(MediaObjectSchema),
   });
 }
 
@@ -326,7 +333,7 @@ export function createEmbedPostRequestSchema<TAmountSchema extends Erc20AmountSc
     animationUrl: z.string(),
     content: z.string().optional(),
     contentFocus: z.enum([ContentFocus.EMBED]),
-    media: z.array(MediaSchema).optional(),
+    media: z.array(MediaObjectSchema).optional(),
   });
 }
 
@@ -345,7 +352,7 @@ export function createTextualCommentRequestSchema<TAmountSchema extends Erc20Amo
   return createBaseCommentRequestSchema(amountSchema).extend({
     content: z.string(),
     contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
-    media: z.array(MediaSchema).optional(),
+    media: z.array(MediaObjectSchema).optional(),
   });
 }
 
@@ -355,7 +362,7 @@ export function createMediaCommentRequestSchema<TAmountSchema extends Erc20Amoun
   return createBaseCommentRequestSchema(amountSchema).extend({
     content: z.string().optional(),
     contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
-    media: z.array(MediaSchema),
+    media: z.array(MediaObjectSchema),
   });
 }
 
@@ -366,7 +373,7 @@ export function createEmbedCommentRequestSchema<TAmountSchema extends Erc20Amoun
     animationUrl: z.string(),
     content: z.string().optional(),
     contentFocus: z.enum([ContentFocus.EMBED]),
-    media: z.array(MediaSchema).optional(),
+    media: z.array(MediaObjectSchema).optional(),
   });
 }
 

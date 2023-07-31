@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   PublicationMetadata,
   PublicationMainFocus,
@@ -12,8 +13,7 @@ import {
   CreateCommentRequest,
   CreatePostRequest,
   MediaObject,
-  NftAttribute,
-  NoCollectPolicyConfig,
+  MetadataAttribute,
 } from '@lens-protocol/domain/use-cases/publications';
 import { assertNever, Overwrite } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -25,12 +25,7 @@ type CollectablePublicationRequest = Overwrite<
   { collect: CollectablePolicyConfig }
 >;
 
-type NonCollectablePublicationRequest = Overwrite<
-  CreatePublicationRequest,
-  { collect: NoCollectPolicyConfig }
->;
-
-function mapMetaAttributes(attributes: NftAttribute[]) {
+function mapMetadataAttributes(attributes: MetadataAttribute[]) {
   return attributes.map(({ displayType, value, ...rest }) => {
     return {
       ...rest,
@@ -58,13 +53,25 @@ function essentialFields(request: CreatePublicationRequest) {
   } as const;
 }
 
+function metadataImage(request: CreatePublicationRequest) {
+  if (!request.image) {
+    return undefined;
+  }
+  return {
+    image: request.image.url,
+    imageMimeType: request.image.mimeType,
+  } as const;
+}
+
 function optionalFields(request: CreatePublicationRequest) {
   return {
+    attributes: mapMetadataAttributes(request.attributes ?? []),
     ...(request.appId && { appId: request.appId }),
     ...(request.contentWarning && {
       contentWarning: PublicationContentWarning[request.contentWarning],
     }),
     ...(request.tags && { tags: request.tags }),
+    ...metadataImage(request),
   } as const;
 }
 
@@ -94,42 +101,54 @@ function contentFields(request: CreatePublicationRequest) {
   }
 }
 
-function resolveNonCollectableMetadata(
-  request: NonCollectablePublicationRequest,
-): PublicationMetadata {
+function resolveNonCollectableMetadata() {
   return {
-    ...essentialFields(request),
-    ...optionalFields(request),
-    ...contentFields(request),
     name: 'none', // although "name" is not needed when a publication is not collectable, Publication Metadata V2 schema requires it ¯\_(ツ)_/¯
-    attributes: [],
-  };
+  } as const;
 }
 
-function resolveCollectableMetadata(request: CollectablePublicationRequest): PublicationMetadata {
+function resolveDeprecatedCollectableMetadata(request: CollectablePublicationRequest) {
   return {
-    ...essentialFields(request),
-    ...optionalFields(request),
-    ...contentFields(request),
-    attributes: mapMetaAttributes(request.collect.metadata.attributes),
+    attributes: mapMetadataAttributes(request.collect.metadata.attributes ?? []),
+    image: request.collect.metadata.image,
+    imageMimeType: request.collect.metadata.imageMimeType,
+  } as const;
+}
+
+function resolveCollectableMetadata(request: CollectablePublicationRequest) {
+  if ('attributes' in request.collect.metadata && 'attributes' in request) {
+    console.warn(
+      'Both "attributes" and "collect.metadata.attributes" are provided. Using "collect.metadata.attributes"',
+    );
+  }
+  if ('image' in request.collect.metadata && 'image' in request) {
+    console.warn(
+      'Both "image" and "collect.metadata.image" are provided. Using "collect.metadata.image"',
+    );
+  }
+
+  if ('imageMimeType' in request.collect.metadata && 'image' in request) {
+    console.warn(
+      'Both "image" and "collect.metadata.imageMimeType" are provided. Using "collect.metadata.image"',
+    );
+  }
+
+  return {
     description: request.collect.metadata.description,
     name: request.collect.metadata.name,
+
+    ...resolveDeprecatedCollectableMetadata(request),
+
     ...(request.collect.metadata.externalUrl && {
       external_url: request.collect.metadata.externalUrl,
     }),
-    ...(request.collect.metadata.image && { image: request.collect.metadata.image }),
-    ...(request.collect.metadata.imageMimeType && {
-      imageMimeType: request.collect.metadata.imageMimeType,
-    }),
-  };
+  } as const;
 }
 
-export function createPublicationMetadata(
-  request: CreatePostRequest | CreateCommentRequest,
-): PublicationMetadata {
+function resolveCollectMetadata(request: CreatePublicationRequest) {
   switch (request.collect.type) {
     case CollectPolicyType.NO_COLLECT:
-      return resolveNonCollectableMetadata(request as NonCollectablePublicationRequest);
+      return resolveNonCollectableMetadata();
 
     case CollectPolicyType.CHARGE:
     case CollectPolicyType.FREE:
@@ -138,4 +157,13 @@ export function createPublicationMetadata(
     default:
       assertNever(request.collect, `Unexpected collect policy type`);
   }
+}
+
+export function createPublicationMetadata(request: CreatePublicationRequest): PublicationMetadata {
+  return {
+    ...essentialFields(request),
+    ...optionalFields(request),
+    ...contentFields(request),
+    ...resolveCollectMetadata(request),
+  };
 }

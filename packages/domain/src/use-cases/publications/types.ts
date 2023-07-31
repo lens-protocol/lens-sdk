@@ -53,30 +53,30 @@ export enum ContentWarning {
   SPOILER = 'Spoiler',
 }
 
-export enum NftAttributeDisplayType {
+export enum MetadataAttributeDisplayType {
   Number = 'Number',
   String = 'String',
   Date = 'Date',
 }
 
-export type NftAttribute =
+export type MetadataAttribute =
   | {
-      displayType: NftAttributeDisplayType.Date;
+      displayType: MetadataAttributeDisplayType.Date;
       value: Date;
       traitType: string;
     }
   | {
-      displayType: NftAttributeDisplayType.Number;
+      displayType: MetadataAttributeDisplayType.Number;
       value: number;
       traitType: string;
     }
   | {
-      displayType: NftAttributeDisplayType.String;
+      displayType: MetadataAttributeDisplayType.String;
       value: string;
       traitType: string;
     };
 
-export type NftImage = {
+export type MetadataImage = {
   url: Url;
   mimeType: ImageType;
 };
@@ -99,7 +99,7 @@ export type NftMetadata = {
    *
    * @deprecated Use the `attributes` field at the request object top level.
    */
-  attributes?: NftAttribute[];
+  attributes?: MetadataAttribute[];
   /**
    * This is the URL that will appear below the asset's image on OpenSea and other marketplaces.
    * It will allow users to leave OpenSea and view the item on the external site.
