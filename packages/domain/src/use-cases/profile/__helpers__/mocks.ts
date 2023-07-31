@@ -29,17 +29,13 @@ import {
 } from '../ProveNftOwnership';
 import { UnfollowRequest } from '../UnfollowProfile';
 import { UpdateDispatcherConfigRequest } from '../UpdateDispatcherConfig';
-import {
-  ChargeFollowConfig,
-  FollowPolicyType,
-  NoFeeFollowConfig,
-  UpdateFollowPolicyRequest,
-} from '../UpdateFollowPolicy';
+import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
 import { UpdateProfileDetailsRequest } from '../UpdateProfileDetails';
 import {
   UpdateNftProfileImageRequest,
   UpdateOffChainProfileImageRequest,
 } from '../UpdateProfileImage';
+import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
 
 export function mockCreateProfileRequest(
   overrides?: Partial<CreateProfileRequest>,
@@ -89,9 +85,10 @@ export function mockChargeFollowConfig(
   };
 }
 
-export function mockNoFeeFollowConfig(): NoFeeFollowConfig {
+export function mockNoFeeFollowConfig(overrides?: Partial<NoFeeFollowConfig>): NoFeeFollowConfig {
   return {
     type: FollowPolicyType.ANYONE,
+    ...overrides,
   };
 }
 

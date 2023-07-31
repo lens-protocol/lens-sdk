@@ -15,8 +15,6 @@ export type UseUpdateFollowPolicyArgs = {
   profile: ProfileOwnedByMe;
 };
 
-export type { ChargeFollowConfig, NoFeeFollowConfig };
-
 export type UpdateFollowPolicyArgs = {
   followPolicy: ChargeFollowConfig | NoFeeFollowConfig;
 };

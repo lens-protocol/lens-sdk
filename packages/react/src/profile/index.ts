@@ -17,11 +17,15 @@ export * from './useProfilesOwnedByMe';
 export * from './useProfilesToFollow';
 export * from './useSearchProfiles';
 
-export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-
 /**
  * Follow policy
  */
+export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+export type {
+  FollowPolicyConfig,
+  ChargeFollowConfig,
+  NoFeeFollowConfig,
+} from '@lens-protocol/domain/use-cases/profile';
 export type {
   FollowPolicy,
   ChargeFollowPolicy,

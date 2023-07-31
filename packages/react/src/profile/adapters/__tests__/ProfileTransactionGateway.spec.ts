@@ -6,8 +6,13 @@ import {
   mockCreateProfileResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
-import { mockCreateProfileRequest } from '@lens-protocol/domain/mocks';
-import { DuplicatedHandleError } from '@lens-protocol/domain/use-cases/profile';
+import {
+  mockChargeFollowConfig,
+  mockNoFeeFollowConfig,
+  mockCreateProfileRequest,
+} from '@lens-protocol/domain/mocks';
+import {} from '@lens-protocol/domain/src/use-cases/profile/__helpers__/mocks';
+import { DuplicatedHandleError, FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
@@ -30,6 +35,8 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
         mockCreateProfileResponse({
           request: {
             handle: request.handle,
+            followModule: null,
+            profilePictureUri: null,
           },
           result: relayerResult,
         }),
@@ -51,6 +58,93 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
       );
     });
 
+    const chargeFollowConfig = mockChargeFollowConfig();
+
+    it.each([
+      {
+        followPolicy: chargeFollowConfig,
+        expectedFollowModuleParams: {
+          feeFollowModule: {
+            amount: {
+              currency: chargeFollowConfig.amount.asset.address,
+              value: chargeFollowConfig.amount.toSignificantDigits(),
+            },
+            recipient: chargeFollowConfig.recipient,
+          },
+        },
+      },
+      {
+        followPolicy: mockNoFeeFollowConfig({
+          type: FollowPolicyType.ANYONE,
+        }),
+        expectedFollowModuleParams: {
+          freeFollowModule: true,
+        },
+      },
+      {
+        followPolicy: mockNoFeeFollowConfig({
+          type: FollowPolicyType.NO_ONE,
+        }),
+        expectedFollowModuleParams: {
+          revertFollowModule: true,
+        },
+      },
+      {
+        followPolicy: mockNoFeeFollowConfig({
+          type: FollowPolicyType.ONLY_PROFILE_OWNERS,
+        }),
+        expectedFollowModuleParams: {
+          profileFollowModule: true,
+        },
+      },
+    ])(
+      `should allow to contextually setup the $followPolicy.type follow policy`,
+      async ({ followPolicy, expectedFollowModuleParams }) => {
+        const request = mockCreateProfileRequest({ followPolicy });
+        const relayerResult = mockRelayerResultFragment();
+
+        const apollo = mockLensApolloClient([
+          mockCreateProfileResponse({
+            request: {
+              handle: request.handle,
+              followModule: expectedFollowModuleParams,
+              profilePictureUri: null,
+            },
+            result: relayerResult,
+          }),
+        ]);
+
+        const profileTransactionGateway = setupProfileTransactionGateway({ apollo });
+
+        const result = await profileTransactionGateway.createProfileTransaction(request);
+
+        expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
+      },
+    );
+
+    it(`should allow to contextually setup the profile image`, async () => {
+      const url = 'https://example.com/image.png';
+      const request = mockCreateProfileRequest({ profileImage: url });
+      const relayerResult = mockRelayerResultFragment();
+
+      const apollo = mockLensApolloClient([
+        mockCreateProfileResponse({
+          request: {
+            handle: request.handle,
+            followModule: null,
+            profilePictureUri: url,
+          },
+          result: relayerResult,
+        }),
+      ]);
+
+      const profileTransactionGateway = setupProfileTransactionGateway({ apollo });
+
+      const result = await profileTransactionGateway.createProfileTransaction(request);
+
+      expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
+    });
+
     it.each([
       {
         expected: new DuplicatedHandleError(request.handle),
@@ -67,6 +161,8 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
           mockCreateProfileResponse({
             request: {
               handle: request.handle,
+              followModule: null,
+              profilePictureUri: null,
             },
             result: relayError,
           }),

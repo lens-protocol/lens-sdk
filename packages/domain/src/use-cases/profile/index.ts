@@ -10,3 +10,4 @@ export * from './UpdateDispatcherConfig';
 export * from './UpdateFollowPolicy';
 export * from './UpdateProfileDetails';
 export * from './UpdateProfileImage';
+export * from './types';

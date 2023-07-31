@@ -3,15 +3,33 @@ import { TransactionError, TransactionKind } from '@lens-protocol/domain/entitie
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
+  FollowPolicyConfig,
 } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, Url } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useCreateProfileController } from './adapters/useCreateProfileController';
 
 export type CreateProfileArgs = {
+  /**
+   * The profile handle
+   */
   handle: string;
+
+  /**
+   * The initial follow policy
+   *
+   * @defaultValue anyone can follow
+   */
+  followPolicy?: FollowPolicyConfig;
+
+  /**
+   * The profile image URL
+   *
+   * @defaultValue no profile image
+   */
+  profileImage?: Url;
 };
 
 export { DuplicatedHandleError };

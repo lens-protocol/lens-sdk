@@ -1,3 +1,5 @@
+import { Url } from '@lens-protocol/shared-kernel';
+
 import { ProfileId, TransactionKind } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 import { NftOwnershipSignature } from './ProveNftOwnership';
@@ -13,7 +15,7 @@ export type UpdateNftProfileImageRequest = {
 };
 
 export type UpdateOffChainProfileImageRequest = {
-  url: string;
+  url: Url;
   kind: TransactionKind.UPDATE_PROFILE_IMAGE;
   profileId: ProfileId;
   delegate: boolean;
