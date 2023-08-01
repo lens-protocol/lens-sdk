@@ -9,7 +9,7 @@ import {
   useSessionVar,
 } from '@lens-protocol/api-bindings';
 import { WalletData } from '@lens-protocol/domain/use-cases/lifecycle';
-import { invariant, never } from '@lens-protocol/shared-kernel';
+import { invariant } from '@lens-protocol/shared-kernel';
 import { useEffect, useRef } from 'react';
 
 import {
@@ -149,7 +149,12 @@ export function useCurrentSession(): ReadResult<
         };
       }
 
-      never('Previous data must be defined if previous session was WithProfile');
+      // shoudn't happen, but just in case, fallback to loading
+      return {
+        data: undefined,
+        error: undefined,
+        loading: true,
+      };
     }
 
     // transitioning from NotAuthenticatedSession to AuthenticatedProfileSession
