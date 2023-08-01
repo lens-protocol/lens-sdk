@@ -16,7 +16,7 @@ import {
   InsufficientAllowanceError,
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
-import { failure, InvariantError, PromiseResult } from '@lens-protocol/shared-kernel';
+import { failure, invariant, InvariantError, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useFollowController } from './adapters/useFollowController';
@@ -162,6 +162,8 @@ export function useFollow({ followee, follower }: UseFollowArgs): FollowOperatio
           ),
         );
       }
+
+      invariant(followee.followStatus?.canFollow, 'You already follow this profile');
 
       const request = createFollowRequest(followee, follower);
       return follow(request);
