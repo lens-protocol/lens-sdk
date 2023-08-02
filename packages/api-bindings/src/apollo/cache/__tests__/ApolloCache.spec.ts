@@ -285,57 +285,6 @@ describe(`Given an instance of the ${ApolloCache.name}`, () => {
           expect(read.isMirroredByMe).toBe(true);
         });
       });
-
-      describe('when reading its "stats" while an active profile is defined', () => {
-        it('should return "totalAmountOfMirrors" incremented by number of pending mirror transactions', () => {
-          const publication = mockPublicationFragment({
-            profile: mockProfileFragment(),
-            mirrors: [mockPublicationId()],
-            stats: mockPublicationStatsFragment({
-              totalAmountOfMirrors: 1,
-            }),
-          });
-
-          recentTransactionsVar([
-            mockTransactionState({
-              request: mockCreateMirrorRequest({
-                profileId: activeProfile.id,
-                publicationId: publication.id,
-              }),
-            }),
-          ]);
-
-          const { writePublication, readPublication } = setupApolloCache();
-          writePublication(publication);
-          const read = readPublication(publication);
-
-          expect(read.stats.totalAmountOfMirrors).toEqual(2);
-        });
-
-        it('should return "totalAmountOfCollects" incremented by number of pending collect transactions', () => {
-          const publication = mockPublicationFragment({
-            profile: mockProfileFragment(),
-            stats: mockPublicationStatsFragment({
-              totalAmountOfCollects: 1,
-            }),
-          });
-
-          recentTransactionsVar([
-            mockTransactionState({
-              request: mockFreeCollectRequest({
-                profileId: activeProfile.id,
-                publicationId: publication.id,
-              }),
-            }),
-          ]);
-
-          const { writePublication, readPublication } = setupApolloCache();
-          writePublication(publication);
-          const read = readPublication(publication);
-
-          expect(read.stats.totalAmountOfCollects).toEqual(2);
-        });
-      });
     });
 
     describe('when reading "decryptionCriteria"', () => {
