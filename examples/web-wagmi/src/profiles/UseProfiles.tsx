@@ -7,12 +7,14 @@ import { ProfileCard } from './components/ProfileCard';
 
 export function UseProfiles() {
   const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
-    useProfiles({ handles: ['yoginth.test', 'foobar.test'] }),
+    useProfiles({ handles: ['yoginth.test', 'foobar.test'], skip: false }),
   );
 
   if (loading) return <Loading />;
 
   if (error) return <ErrorMessage error={error} />;
+
+  if (!data) return <div>Skipped</div>;
 
   return (
     <div>

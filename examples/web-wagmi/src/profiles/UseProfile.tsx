@@ -11,11 +11,13 @@ type ProfileByProps = {
 };
 
 function ProfileBy({ profileId }: ProfileByProps) {
-  const { data: profile, error, loading } = useProfile({ profileId });
+  const { data: profile, error, loading } = useProfile({ profileId, skip: true });
 
   if (loading) return <Loading />;
 
   if (error) return <ErrorMessage error={error} />;
+
+  if (!profile) return <div>Skipped</div>;
 
   return <ProfileCard profile={profile} />;
 }

@@ -46,18 +46,18 @@ export function useSnapshotApolloClient<TOptions>(
   };
 }
 
+export type Skipped = {
+  /**
+   * @experimental
+   */
+  skip: true;
+};
+
 /**
  * When `skip` prop is true then all other props are optional.
  * Used to allow to skip apollo API calls
  */
-export type Skippable<T extends UnknownObject> =
-  | (Partial<T> & {
-      /**
-       * @experimental
-       */
-      skip: true;
-    })
-  | (T & { skip?: false });
+export type Skippable<T extends UnknownObject> = (Partial<T> & Skipped) | (T & { skip?: false });
 
 export type WithObserverIdOverride<TVariables = unknown> = Prettify<
   TVariables & {

@@ -11,7 +11,7 @@ import {
   useSourcesFromConfig,
   WithObserverIdOverride,
 } from '../helpers/arguments';
-import { ReadResult, useReadResult } from '../helpers/reads';
+import { SkippableReadResult, useReadResult } from '../helpers/reads';
 
 export type UseProfileByIdArgs = {
   profileId: ProfileId;
@@ -36,11 +36,11 @@ export type UseProfileArgs = Prettify<
  *
  * @param args - {@link UseProfileArgs}
  */
-export function useProfile({
+export function useProfile<A extends UseProfileArgs>({
   observerId,
   skip,
   ...request
-}: UseProfileArgs): ReadResult<Profile, NotFoundError | UnspecifiedError> {
+}: A): SkippableReadResult<A, Profile, NotFoundError | UnspecifiedError> {
   invariant(
     request.profileId === undefined || request.handle === undefined,
     "Only one of 'id' or 'handle' should be provided to 'useProfile' hook",
@@ -62,12 +62,20 @@ export function useProfile({
     ),
   );
 
+  if (skip) {
+    return {
+      data: undefined,
+      error: undefined,
+      loading: false,
+    } as SkippableReadResult<A, Profile, NotFoundError | UnspecifiedError>;
+  }
+
   if (loading) {
     return {
       data: undefined,
       error: undefined,
       loading: true,
-    };
+    } as SkippableReadResult<A, Profile, NotFoundError | UnspecifiedError>;
   }
 
   if (error) {
@@ -75,7 +83,7 @@ export function useProfile({
       data: undefined,
       error,
       loading: false,
-    };
+    } as SkippableReadResult<A, Profile, NotFoundError | UnspecifiedError>;
   }
 
   if (data === null) {
@@ -83,12 +91,12 @@ export function useProfile({
       data: undefined,
       error: new NotFoundError(`Profile for ${JSON.stringify(request)}`),
       loading: false,
-    };
+    } as SkippableReadResult<A, Profile, NotFoundError | UnspecifiedError>;
   }
 
   return {
     data,
     error: undefined,
     loading: false,
-  };
+  } as SkippableReadResult<A, Profile, NotFoundError | UnspecifiedError>;
 }

@@ -2,6 +2,8 @@ import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
 import { PaginatedResultInfo, UnspecifiedError } from '@lens-protocol/api-bindings';
 import { Prettify } from '@lens-protocol/shared-kernel';
 
+import { Skipped } from './arguments';
+
 /**
  * A discriminated union of the possible results of a read operation with no errors.
  *
@@ -48,6 +50,22 @@ export type ReadResultWithError<T, E> =
 export type ReadResult<T, E = UnspecifiedError> = E extends Error
   ? ReadResultWithError<T, E>
   : ReadResultWithoutError<T>;
+
+/**
+ * Returned from skipped read operations.
+ */
+export type SkippedReadResult = {
+  data: undefined;
+  error: undefined;
+  loading: false;
+};
+
+/**
+ * Based on value of Skipped argument, returns a {@link ReadResult} or {@link SkippedReadResult}.
+ */
+export type SkippableReadResult<A, T, E = UnspecifiedError> = A extends Skipped
+  ? SkippedReadResult
+  : ReadResult<T, E>;
 
 function buildReadResult<T>(
   data: T | undefined,
@@ -121,6 +139,16 @@ export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
    */
   prev: () => Promise<void>;
 };
+
+export type PaginatedSkippedReadResult = SkippedReadResult & {
+  hasMore: false;
+  next: () => Promise<void>;
+  prev: () => Promise<void>;
+};
+
+export type PaginatedSkippableReadResult<A, T> = A extends Skipped
+  ? PaginatedSkippedReadResult
+  : PaginatedReadResult<T>;
 
 export type PaginatedQueryData<K> = {
   result: { pageInfo: PaginatedResultInfo; items: K };

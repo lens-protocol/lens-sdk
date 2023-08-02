@@ -10,7 +10,11 @@ import {
   useSourcesFromConfig,
   WithObserverIdOverride,
 } from '../helpers/arguments';
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import {
+  PaginatedArgs,
+  PaginatedSkippableReadResult,
+  usePaginatedReadResult,
+} from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseProfilesByIdsArgs = {
@@ -86,19 +90,19 @@ export type UseProfilesArgs = Prettify<
  * );
  * ```
  */
-export function useProfiles({
+export function useProfiles<A extends UseProfilesArgs>({
   handles: byHandles,
   profileIds: byProfileIds,
   observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   skip,
-}: UseProfilesArgs): PaginatedReadResult<Profile[]> {
+}: A): PaginatedSkippableReadResult<A, Profile[]> {
   invariant(
     byHandles === undefined || byProfileIds === undefined,
     `Cannot provide both 'handles' and 'profileIds' to '${useProfiles.name}' hook`,
   );
 
-  return usePaginatedReadResult(
+  const result = usePaginatedReadResult(
     useGetAllProfiles(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
@@ -110,4 +114,14 @@ export function useProfiles({
       ),
     ),
   );
+
+  if (skip) {
+    return {
+      data: undefined,
+      error: undefined,
+      loading: false,
+    } as PaginatedSkippableReadResult<A, Profile[]>;
+  }
+
+  return result as PaginatedSkippableReadResult<A, Profile[]>;
 }
