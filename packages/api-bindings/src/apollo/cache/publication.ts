@@ -129,11 +129,11 @@ const isMirroredByMe = (
   const session = getSession();
 
   const publicationId = readField('id') as PublicationId;
-  const mirrorsField = readField('mirrors') as PublicationId[];
+  const mirrors = readField('mirrors') as PublicationId[];
 
   if (!session || session.type !== SessionType.WithProfile) return false;
 
-  if (mirrorsField.length > 0) return true;
+  if (mirrors.length > 0) return true;
 
   const isMirrorTransactionForThisPublication = isMirrorTransactionFor({
     publicationId,
