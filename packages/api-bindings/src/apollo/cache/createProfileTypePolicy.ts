@@ -11,8 +11,9 @@ import {
   ProfileAttributeReader,
   ProfileAttributes,
   StrictTypedTypePolicies,
-  ProfileMedia,
+  ProfileCoverSet,
   Attribute,
+  ProfilePictureSet,
 } from '../../lens';
 import { getSession } from './session';
 import {
@@ -20,6 +21,7 @@ import {
   isFollowTransactionFor,
   isUnfollowTransactionFor,
 } from './transactions';
+import { observedBy } from './utils/observedBy';
 
 function resolveFollowPolicy({ followModule }: { followModule: FollowModule }): FollowPolicy {
   if (followModule === null) {
@@ -126,8 +128,14 @@ export function createProfileTypePolicy(): StrictTypedTypePolicies['Profile'] {
         });
       },
 
+      picture: {
+        merge(_, incoming: ProfilePictureSet) {
+          return incoming;
+        },
+      },
+
       coverPicture: {
-        merge(_, incoming: ProfileMedia) {
+        merge(_, incoming: ProfileCoverSet) {
           return incoming;
         },
       },
@@ -156,6 +164,8 @@ export function createProfileTypePolicy(): StrictTypedTypePolicies['Profile'] {
 
         return readField('ownedBy') === session.wallet.address;
       },
+
+      observedBy,
     },
   };
 }

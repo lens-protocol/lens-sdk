@@ -2,7 +2,7 @@ import { Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockProfileFragment,
-  createProfilesToFollowMockedResponse,
+  mockProfilesToFollowResponse,
   mockSources,
   simulateAuthenticatedProfile,
   simulateAuthenticatedWallet,
@@ -12,6 +12,10 @@ import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { useProfilesToFollow, UseProfilesToFollowArgs } from '../useProfilesToFollow';
 
 function setupTestScenario({
@@ -27,11 +31,13 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfilesToFollow(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
-        createProfilesToFollowMockedResponse({
+        mockProfilesToFollowResponse({
           variables: {
             observerId: expectedObserverId ?? null,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profiles,
         }),
@@ -71,7 +77,7 @@ describe(`Given the ${useProfilesToFollow.name} hook`, () => {
       expect(result.current.data).toMatchObject(expectations);
     });
 
-    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+    it('should allow to override the "observerId" on a per-call basis', async () => {
       const observerId = mockProfileId();
 
       const { result } = setupTestScenario({

@@ -1,7 +1,7 @@
 import { ContentPublication } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createSearchPublicationsMockedResponse,
+  mockSearchPublicationsResponse,
   mockCommentFragment,
   mockPostFragment,
   mockSources,
@@ -13,6 +13,10 @@ import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { useSearchPublications, UseSearchPublicationsArgs } from '../useSearchPublications';
 
 function setupTestScenario({
@@ -28,13 +32,15 @@ function setupTestScenario({
   return renderHookWithMocks(() => useSearchPublications(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
-        createSearchPublicationsMockedResponse({
+        mockSearchPublicationsResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,
             limit: 10,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: result,
         }),
@@ -79,7 +85,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
       expect(result.current.data).toMatchObject(expectations);
     });
 
-    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+    it('should allow to override the "observerId" on a per-call basis', async () => {
       const observerId = mockProfileId();
 
       const { result } = setupTestScenario({

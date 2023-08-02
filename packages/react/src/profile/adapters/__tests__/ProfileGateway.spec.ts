@@ -2,18 +2,23 @@ import { faker } from '@faker-js/faker';
 import { SafeApolloClient } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockProfileFragment,
-  createGetAllProfilesMockedResponse,
+  mockGetAllProfilesResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { Profile } from '@lens-protocol/domain/entities';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../mediaTransforms';
 import { ProfileGateway } from '../ProfileGateway';
 
 function setupProfileGateway({ apolloClient }: { apolloClient: SafeApolloClient }) {
-  return new ProfileGateway(apolloClient);
+  const mediaTransforms = defaultMediaTransformsConfig;
+  return new ProfileGateway(apolloClient, mediaTransforms);
 }
 
 describe(`Given an instance of the ${ProfileGateway.name}`, () => {
@@ -22,11 +27,12 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
       const address = mockEthereumAddress();
       const profileDataFragment = mockProfileFragment();
       const apolloClient = mockLensApolloClient([
-        createGetAllProfilesMockedResponse({
+        mockGetAllProfilesResponse({
           variables: {
             byOwnerAddresses: [address],
             limit: 10,
             sources: [],
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profiles: [profileDataFragment],
         }),
@@ -47,10 +53,11 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
     it('should return the Profile entity associated with the given handle', async () => {
       const profileDataFragment = mockProfileFragment();
       const apolloClient = mockLensApolloClient([
-        createGetProfileMockedResponse({
+        mockGetProfileResponse({
           variables: {
             request: { handle: profileDataFragment.handle },
             sources: [],
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profile: profileDataFragment,
         }),
@@ -69,8 +76,12 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
     it('should return null if the Profile does not exist', async () => {
       const handle = faker.internet.userName();
       const apolloClient = mockLensApolloClient([
-        createGetProfileMockedResponse({
-          variables: { request: { handle }, sources: [] },
+        mockGetProfileResponse({
+          variables: {
+            request: { handle },
+            sources: [],
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+          },
           profile: null,
         }),
       ]);
@@ -86,10 +97,11 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
     it('should return the corresponding Profile entity', async () => {
       const profileDataFragment = mockProfileFragment();
       const apolloClient = mockLensApolloClient([
-        createGetProfileMockedResponse({
+        mockGetProfileResponse({
           variables: {
             request: { profileId: profileDataFragment.id },
             sources: [],
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profile: profileDataFragment,
         }),
@@ -108,10 +120,11 @@ describe(`Given an instance of the ${ProfileGateway.name}`, () => {
     it('should return null if the Profile does not exist', async () => {
       const profileId = mockProfileId();
       const apolloClient = mockLensApolloClient([
-        createGetProfileMockedResponse({
+        mockGetProfileResponse({
           variables: {
             request: { profileId },
             sources: [],
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profile: null,
         }),

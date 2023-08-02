@@ -2,7 +2,7 @@ import { FeedEventItemType as LensFeedEventItemType, FeedItem } from '@lens-prot
 import {
   mockLensApolloClient,
   mockFeedItemFragment,
-  createFeedMockedResponse,
+  mockFeedResponse,
   mockSources,
   simulateAuthenticatedProfile,
   simulateAuthenticatedWallet,
@@ -12,6 +12,10 @@ import { mockProfileId, mockProfileIdentifier } from '@lens-protocol/domain/mock
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { FeedEventItemType } from '../FeedEventItemType';
 import { useFeed } from '../useFeed';
 
@@ -38,15 +42,16 @@ function setupTestScenario({
     {
       mocks: {
         sources,
-
+        mediaTransforms: defaultMediaTransformsConfig,
         apolloClient: mockLensApolloClient([
-          createFeedMockedResponse({
+          mockFeedResponse({
             variables: {
               profileId,
               observerId: expectedObserverId,
               restrictEventTypesTo: [LensFeedEventItemType.Post],
               limit: 50,
               sources,
+              ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
             },
             items,
           }),
@@ -93,7 +98,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
       expect(result.current.data).toMatchObject(expectations);
     });
 
-    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+    it('should allow to override the "observerId" on a per-call basis', async () => {
       const observerId = mockProfileId();
 
       const { result } = setupTestScenario({

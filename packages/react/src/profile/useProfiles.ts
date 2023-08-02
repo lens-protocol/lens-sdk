@@ -5,6 +5,7 @@ import { invariant, XOR } from '@lens-protocol/shared-kernel';
 import {
   useActiveProfileAsDefaultObserver,
   useLensApolloClient,
+  useMediaTransformFromConfig,
   useSourcesFromConfig,
   WithObserverIdOverride,
 } from '../helpers/arguments';
@@ -98,7 +99,9 @@ export function useProfiles({
     useGetAllProfiles(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({ byHandles, byProfileIds, limit, observerId }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({ byHandles, byProfileIds, limit, observerId }),
+          ),
         }),
       ),
     ),

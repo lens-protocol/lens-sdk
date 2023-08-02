@@ -8,6 +8,7 @@ export * from './useCreateProfile';
 export * from './useExploreProfiles';
 export * from './useMutualFollowers';
 export * from './useProfile';
+export * from './useProfileGuardian';
 export * from './useProfiles';
 export * from './useProfileFollowers';
 export * from './useProfileFollowing';
@@ -37,11 +38,13 @@ export type {
   Following,
   FollowStatus,
   NftImage,
+  Profile,
   ProfileAttributeReader,
   ProfileAttributes,
-  Profile,
-  ProfileMedia,
+  ProfileCoverMedia,
+  ProfileFields,
   ProfileOwnedByMe,
+  ProfilePictureMedia,
   ProfileStats,
 } from '@lens-protocol/api-bindings';
 

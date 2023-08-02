@@ -6,6 +6,7 @@ import {
   useActiveProfileAsDefaultObserver,
   useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
@@ -32,12 +33,14 @@ export function useComments({
     useGetComments(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            metadata: createPublicationMetadataFilters(metadataFilter),
-            commentsOf,
-            limit,
-            observerId,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              metadata: createPublicationMetadataFilters(metadataFilter),
+              commentsOf,
+              limit,
+              observerId,
+            }),
+          ),
         }),
       ),
     ),

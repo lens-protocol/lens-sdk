@@ -3,10 +3,10 @@ import * as Types from '../../graphql/types.generated';
 
 import {
   PostFragment,
-  ProfileFragment,
-  MirrorFragment,
   CommentFragment,
+  MirrorFragment,
   CommonPaginatedResultInfoFragment,
+  ProfileFragment,
   FollowingFragment,
   FollowerFragment,
   RelayerResultFragment,
@@ -20,10 +20,10 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
   PostFragmentDoc,
-  ProfileFragmentDoc,
-  MirrorFragmentDoc,
   CommentFragmentDoc,
+  MirrorFragmentDoc,
   CommonPaginatedResultInfoFragmentDoc,
+  ProfileFragmentDoc,
   FollowingFragmentDoc,
   FollowerFragmentDoc,
   RelayerResultFragmentDoc,

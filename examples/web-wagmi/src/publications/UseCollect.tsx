@@ -13,7 +13,7 @@ import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useCollectWithSelfFundedFallback } from '../hooks/useCollectWithSelfFundedFallback';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { CollectablePublicationCard } from './components/PublicationCard';
+import { PublicationCard } from './components/PublicationCard';
 
 type CollectButtonProps = {
   collector: ProfileOwnedByMe;
@@ -80,11 +80,18 @@ function Feed({ activeProfile }: FeedProps) {
       {publications
         .filter((i) => isPostPublication(i.root))
         .map((item, i) => (
-          <CollectablePublicationCard
-            key={`${item.root.id}-${i}`}
-            publication={item.root}
-            collectButton={<CollectButton collector={activeProfile} publication={item.root} />}
-          />
+          <PublicationCard key={`${item.root.id}-${i}`} publication={item.root}>
+            <CollectButton collector={activeProfile} publication={item.root} />
+            {item.root.collectPolicy.state === CollectState.COLLECT_LIMIT_REACHED && (
+              <p>
+                {item.root.stats.totalAmountOfCollects}/{item.root.collectPolicy.collectLimit}{' '}
+                collected
+              </p>
+            )}
+            {item.root.collectPolicy.state === CollectState.COLLECT_TIME_EXPIRED && (
+              <p>Collectable until: {item.root.collectPolicy.endTimestamp}</p>
+            )}
+          </PublicationCard>
         ))}
 
       {hasMore && <p ref={observeRef}>Loading more...</p>}

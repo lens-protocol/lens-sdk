@@ -6,7 +6,7 @@ import {
 import {
   mockLensApolloClient,
   mockPostFragment,
-  createExplorePublicationsMockedResponse,
+  mockExplorePublicationsResponse,
   mockSources,
   simulateAuthenticatedProfile,
   simulateNotAuthenticated,
@@ -16,6 +16,10 @@ import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { useExplorePublications, UseExplorePublicationsArgs } from '../useExplorePublications';
 
@@ -32,14 +36,17 @@ function setupTestScenario({
   return renderHookWithMocks(() => useExplorePublications(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
+
       apolloClient: mockLensApolloClient([
-        createExplorePublicationsMockedResponse({
+        mockExplorePublicationsResponse({
           variables: {
             limit: DEFAULT_PAGINATED_QUERY_LIMIT,
             sortCriteria: PublicationSortCriteria.Latest,
             ...args,
             sources,
             observerId: expectedObserverId ?? null,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: result,
         }),
@@ -94,7 +101,7 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
       expect(result.current.data).toMatchObject(expectations);
     });
 
-    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+    it('should allow to override the "observerId" on a per-call basis', async () => {
       const observerId = mockProfileId();
 
       const { result } = setupTestScenario({

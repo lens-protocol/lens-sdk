@@ -1,12 +1,12 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { ReactionTypes } from '@lens-protocol/api-bindings';
 import {
-  createAddReactionMockedResponse,
+  mockAddReactionResponse,
   mockLensApolloClient,
-  createRemoveReactionMockedResponse,
+  mockRemoveReactionResponse,
   mockPostFragment,
 } from '@lens-protocol/api-bindings/mocks';
-import { ProfileId, ReactionType } from '@lens-protocol/domain/entities';
+import { ProfileId } from '@lens-protocol/domain/entities';
 import { act } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
@@ -42,7 +42,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
       const profileId = publication.profile.id;
 
       const mocks = [
-        createAddReactionMockedResponse({
+        mockAddReactionResponse({
           variables: {
             publicationId: publication.id,
             profileId,
@@ -59,7 +59,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
       await act(async () => {
         await result.current.addReaction({
           publication: publication,
-          reactionType: ReactionType.UPVOTE,
+          reactionType: ReactionTypes.Upvote,
         });
       });
 
@@ -73,7 +73,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
       const profileId = mockPublication.profile.id;
 
       const mocks = [
-        createRemoveReactionMockedResponse({
+        mockRemoveReactionResponse({
           variables: {
             publicationId: mockPublication.id,
             profileId,
@@ -86,7 +86,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
       await act(async () => {
         await result.current.removeReaction({
           publication: mockPublication,
-          reactionType: ReactionType.UPVOTE,
+          reactionType: ReactionTypes.Upvote,
         });
       });
 
@@ -106,7 +106,7 @@ describe(`Given the ${useReaction.name} hook`, () => {
 
       const hasReactionResult = result.current.hasReaction({
         publication: mockPublicationWithReaction,
-        reactionType: ReactionType.UPVOTE,
+        reactionType: ReactionTypes.Upvote,
       });
 
       expect(hasReactionResult).toBe(true);

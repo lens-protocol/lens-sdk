@@ -68,6 +68,7 @@ export type {
   PostFragment,
   ProfileFollowModuleSettingsFragment,
   ProfileFragment,
+  ProfileFieldsFragment,
   RelayerResultFragment,
   RelayErrorFragment,
   RevertCollectModuleSettingsFragment,

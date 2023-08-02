@@ -4,7 +4,7 @@ export * from './CreateComment';
 export * from './CreateMirror';
 export * from './CreatePost';
 export * from './HidePublication';
-export * from './Reaction';
 export * from './ReportPublication';
+export * from './ToggleProperty';
 export * from './types';
 export * from './ReferencePolicyConfig';

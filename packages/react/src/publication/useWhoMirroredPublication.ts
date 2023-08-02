@@ -2,10 +2,11 @@ import { Profile, useGetAllProfiles } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
@@ -30,11 +31,13 @@ export function useWhoMirroredPublication({
     useGetAllProfiles(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            byWhoMirroredPublicationId: publicationId,
-            observerId,
-            limit,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              byWhoMirroredPublicationId: publicationId,
+              observerId,
+              limit,
+            }),
+          ),
         }),
       ),
     ),

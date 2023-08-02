@@ -1,7 +1,7 @@
 import { WhoReactedResult } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createWhoReactedPublicationMockedResponse,
+  mockWhoReactedPublicationResponse,
   mockSources,
   mockWhoReactedResultFragment,
   simulateAuthenticatedProfile,
@@ -12,6 +12,10 @@ import { mockProfile, mockProfileId, mockPublicationId } from '@lens-protocol/do
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { useWhoReacted, UseWhoReactedArgs } from '../useWhoReacted';
 
 function setupTestScenario({
@@ -27,13 +31,15 @@ function setupTestScenario({
   return renderHookWithMocks(() => useWhoReacted(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
-        createWhoReactedPublicationMockedResponse({
+        mockWhoReactedPublicationResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,
             limit: 10,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: result,
         }),
@@ -78,7 +84,7 @@ describe(`Given the ${useWhoReacted.name} hook`, () => {
       expect(result.current.data).toMatchObject(expectations);
     });
 
-    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+    it('should allow to override the "observerId" on a per-call basis', async () => {
       const observerId = mockProfileId();
 
       const { result } = setupTestScenario({

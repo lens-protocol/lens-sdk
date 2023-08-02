@@ -5,10 +5,11 @@ import {
 } from '@lens-protocol/api-bindings';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { PaginatedReadResult, PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
@@ -57,7 +58,9 @@ export function useExploreProfiles({
     useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({ limit, observerId, sortCriteria }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({ limit, observerId, sortCriteria }),
+          ),
         }),
       ),
     ),

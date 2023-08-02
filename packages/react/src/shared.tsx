@@ -5,12 +5,18 @@ import {
   Sources,
 } from '@lens-protocol/api-bindings';
 import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
+import { ActiveProfileLoader } from '@lens-protocol/domain/use-cases/profile';
 import {
   AnyTransactionRequest,
   TransactionQueue,
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ActiveWallet, TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
+import {
+  ActiveWallet,
+  TokenAvailability,
+  WalletLogin,
+  WalletLogout,
+} from '@lens-protocol/domain/use-cases/wallets';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage, IStorageProvider } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
@@ -20,6 +26,7 @@ import { ErrorHandler } from './ErrorHandler';
 import { IBindings, LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
 import { LogoutHandler, SessionPresenter } from './lifecycle/adapters/SessionPresenter';
+import { defaultMediaTransformsConfig, MediaTransformsConfig } from './mediaTransforms';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
 import { ProfileGateway } from './profile/adapters/ProfileGateway';
 import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
@@ -48,11 +55,13 @@ import { TransactionFactory } from './transactions/infrastructure/TransactionFac
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
+import { CredentialsExpiryController } from './wallet/adapters/CredentialsExpiryController';
 import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
 import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
 import { TokenGateway } from './wallet/adapters/TokenGateway';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
+import { WalletLoginPresenter } from './wallet/adapters/WalletLoginPresenter';
 import { AccessTokenStorage } from './wallet/infrastructure/AccessTokenStorage';
 import { AuthApi } from './wallet/infrastructure/AuthApi';
 import { CredentialsStorage } from './wallet/infrastructure/CredentialsStorage';
@@ -70,24 +79,24 @@ export type Handlers = {
 };
 
 export type SharedDependencies = {
-  appId?: AppId;
   activeProfileGateway: ActiveProfileGateway;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
+  appId?: AppId;
   bindings: IBindings;
-  authApi: AuthApi;
-  environment: EnvironmentConfig;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
+  environment: EnvironmentConfig;
   followPolicyCallGateway: FollowPolicyCallGateway;
   logger: ILogger;
+  mediaTransforms: MediaTransformsConfig;
   notificationStorage: IStorage<UnreadNotificationsData>;
-  onError: Handlers['onError'];
-  profileGateway: ProfileGateway;
   offChainRelayer: OffChainRelayer;
   onChainRelayer: OnChainRelayer;
-  providerFactory: ProviderFactory;
+  onError: Handlers['onError'];
   profileCacheManager: ProfileCacheManager;
+  profileGateway: ProfileGateway;
+  providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
   sessionPresenter: SessionPresenter;
   sources: Sources;
@@ -96,8 +105,8 @@ export type SharedDependencies = {
   transactionFactory: TransactionFactory;
   transactionGateway: PendingTransactionGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;
-  walletFactory: WalletFactory;
-  walletGateway: WalletGateway;
+  walletLogin: WalletLogin;
+  walletLogout: WalletLogout;
 };
 
 export function createSharedDependencies(
@@ -106,6 +115,7 @@ export function createSharedDependencies(
 ): SharedDependencies {
   const sources = (config.sources as Sources) ?? [];
   const logger = config.logger ?? new ConsoleLogger();
+  const mediaTransforms = config.mediaTransforms ?? defaultMediaTransformsConfig;
 
   // storages
   const activeProfileStorage = createActiveProfileStorage(config.storage, config.environment.name);
@@ -129,7 +139,7 @@ export function createSharedDependencies(
     contentMatchers: [config.environment.snapshot.matcher],
   });
   const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
 
   // adapters
   const providerFactory = new ProviderFactory(config.bindings, config.environment.chains);
@@ -149,26 +159,34 @@ export function createSharedDependencies(
   const tokenGateway = new TokenGateway(providerFactory);
   const followPolicyCallGateway = new FollowPolicyCallGateway(apolloClient);
 
-  const profileGateway = new ProfileGateway(apolloClient);
+  const profileGateway = new ProfileGateway(apolloClient, mediaTransforms);
   const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
   const sessionPresenter = new SessionPresenter(onLogout);
-  const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
 
   const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
-    [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(apolloClient, sources),
+    [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(
+      apolloClient,
+      sources,
+      mediaTransforms,
+    ),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
     [TransactionKind.CREATE_POST]: new CreatePostResponder(
       profileCacheManager,
       apolloClient,
       sources,
+      mediaTransforms,
     ),
     [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(
       profileCacheManager,
       config.environment.handleResolver,
     ),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
-    [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(apolloClient, sources),
+    [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
+      apolloClient,
+      sources,
+      mediaTransforms,
+    ),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
     [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(
       profileCacheManager,
@@ -185,31 +203,55 @@ export function createSharedDependencies(
   const offChainRelayer = new OffChainRelayer(apolloClient, transactionFactory, logger);
 
   // common interactors
+  const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
   const transactionQueue = new TransactionQueue(
     responders,
     transactionGateway,
     transactionQueuePresenter,
   );
   const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
+  const walletLogout = new WalletLogout(
+    walletGateway,
+    credentialsGateway,
+    activeWallet,
+    activeProfileGateway,
+    sessionPresenter,
+  );
+  const loginPresenter = new WalletLoginPresenter(profileCacheManager);
+  const activeProfileLoader = new ActiveProfileLoader(profileGateway, activeProfileGateway);
+  const walletLogin = new WalletLogin(
+    walletFactory,
+    walletGateway,
+    credentialsFactory,
+    credentialsGateway,
+    loginPresenter,
+    activeProfileLoader,
+    sessionPresenter,
+  );
+
+  // controllers
+  const credentialsExpiryController = new CredentialsExpiryController(walletLogout);
+  credentialsExpiryController.subscribe(accessTokenStorage);
 
   return {
-    appId: config.appId,
     activeProfileGateway,
     activeWallet,
     apolloClient,
-    authApi,
+    appId: config.appId,
     bindings: config.bindings,
     credentialsFactory,
     credentialsGateway,
     environment: config.environment,
     followPolicyCallGateway,
     logger,
+    mediaTransforms,
     notificationStorage,
-    onError,
-    profileGateway,
     offChainRelayer,
     onChainRelayer,
+    onError,
     profileCacheManager,
+    profileGateway,
+    providerFactory,
     publicationCacheManager,
     sessionPresenter,
     sources,
@@ -218,9 +260,8 @@ export function createSharedDependencies(
     transactionFactory,
     transactionGateway,
     transactionQueue,
-    walletFactory,
-    walletGateway,
-    providerFactory,
+    walletLogin,
+    walletLogout,
   };
 }
 

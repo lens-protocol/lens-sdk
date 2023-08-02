@@ -1,5 +1,45 @@
 # @lens-protocol/wagmi
 
+## 2.1.0-next.3
+
+### Patch Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+- Updated dependencies [636ff014]
+- Updated dependencies [125ec30c]
+- Updated dependencies [3b67207b]
+  - @lens-protocol/react-web@1.3.0-next.3
+
+## 2.1.0-next.2
+
+### Patch Changes
+
+- @lens-protocol/react-web@1.3.0-next.2
+
+## 2.1.0-next.1
+
+### Patch Changes
+
+- @lens-protocol/react-web@1.3.0-next.1
+
+## 2.0.2
+
+### Patch Changes
+
+- @lens-protocol/react-web@1.2.2
+
+## 2.1.0-next.0
+
+### Patch Changes
+
+- Updated dependencies [c2a91ef4]
+- Updated dependencies [cfe0d51e]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [4c4505d2]
+  - @lens-protocol/react-web@1.3.0-next.0
+
 ## 2.0.1
 
 ### Patch Changes

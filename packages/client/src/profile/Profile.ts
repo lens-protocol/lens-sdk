@@ -29,6 +29,7 @@ import type {
   FollowRequest,
   MutualFollowersProfilesQueryRequest,
   PendingApprovalFollowsRequest,
+  ProfileGuardianRequest,
   ProfileQueryRequest,
   RecommendedProfileOptions,
   RemoveProfileInterestsRequest,
@@ -48,6 +49,7 @@ import {
   BurnProfileTypedDataFragment,
   FollowTypedDataFragment,
   getSdk,
+  ProfileGuardianResultFragment,
   ProfileStatsFragment,
   Sdk,
   SetDefaultProfileTypedDataFragment,
@@ -414,7 +416,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting the dispatcher
+   * Create typed data for setting the dispatcher
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -452,7 +454,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting the default profile
+   * Create typed data for setting the default profile
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -490,7 +492,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting the profile's metadata
+   * Create typed data for setting the profile's metadata
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -558,7 +560,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting the profile's image
+   * Create typed data for setting the profile's image
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -626,7 +628,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for burning a profile
+   * Create typed data for burning a profile
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -661,7 +663,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for following a profile
+   * Create typed data for following a profile
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -698,7 +700,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for unfollowing a profile
+   * Create typed data for unfollowing a profile
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -733,7 +735,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting a profile's follow module
+   * Create typed data for setting a profile's follow module
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -780,7 +782,7 @@ export class Profile {
   }
 
   /**
-   * Fetch typed data for setting a profile's follow NFT URI.
+   * Create typed data for setting a profile's follow NFT URI.
    *
    * The follow NFT URI is the NFT metadata followers will mint when they follow your profile.
    *
@@ -914,6 +916,36 @@ export class Profile {
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.RemoveProfileInterest({ request }, headers);
+    });
+  }
+
+  /**
+   * Fetch profile guardian settings for the specified profile.
+   *
+   * ⚠️ Requires authenticated LensClient with the provided profileId.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link ProfileGuardianResultFragment}
+   *
+   * @example
+   * ```ts
+   * await client.profile.guardian({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
+  async guardian(
+    request: ProfileGuardianRequest,
+  ): PromiseResult<ProfileGuardianResultFragment, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.ProfileGuardian(
+        {
+          request,
+        },
+        headers,
+      );
+
+      return result.data.result;
     });
   }
 }

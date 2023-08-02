@@ -7,9 +7,14 @@ import { GraphQLError } from 'graphql';
 
 import { createGraphQLValidationError } from '../../apollo/__helpers__/mocks';
 import {
+  AddNotInterestedData,
+  AddNotInterestedDocument,
+  AddNotInterestedVariables,
   AddReactionData,
   AddReactionDocument,
   AddReactionVariables,
+  AddToMyBookmarksDocument,
+  AddToMyBookmarksVariables,
   BroadcastOffChainData,
   BroadcastOffChainDocument,
   BroadcastOffChainResult,
@@ -81,6 +86,11 @@ import {
   ProxyActionData,
   ProxyActionDocument,
   ProxyActionVariables,
+  RemoveFromMyBookmarksDocument,
+  RemoveFromMyBookmarksVariables,
+  RemoveNotInterestedData,
+  RemoveNotInterestedDocument,
+  RemoveNotInterestedVariables,
   RemoveReactionData,
   RemoveReactionDocument,
   RemoveReactionVariables,
@@ -89,7 +99,7 @@ import {
   ReportPublicationVariables,
 } from '../generated';
 
-export function createCreateProfileMockedResponse({
+export function mockCreateProfileResponse({
   request,
   result,
 }: {
@@ -113,7 +123,7 @@ function mockBroadcastOnChainData(result: Required<BroadcastOnChainResult>): Bro
   };
 }
 
-export function createBroadcastOnChainMockedResponse({
+export function mockBroadcastOnChainResponse({
   result,
   variables,
 }: {
@@ -139,7 +149,7 @@ function mockBroadcastOffChainData(
   };
 }
 
-export function createBroadcastOffChainMockedResponse({
+export function mockBroadcastOffChainResponse({
   result,
   variables,
 }: {
@@ -268,7 +278,7 @@ export function mockCreateMirrorTypedDataData({
   };
 }
 
-export function createHidePublicationMockedResponse(args: {
+export function mockHidePublicationResponse(args: {
   variables: HidePublicationVariables;
 }): MockedResponse<HidePublicationData> {
   return {
@@ -282,7 +292,7 @@ export function createHidePublicationMockedResponse(args: {
   };
 }
 
-export function createAddReactionMockedResponse(args: {
+export function mockAddReactionResponse(args: {
   variables: AddReactionVariables;
 }): MockedResponse<AddReactionData> {
   return {
@@ -296,7 +306,7 @@ export function createAddReactionMockedResponse(args: {
   };
 }
 
-export function createRemoveReactionMockedResponse(args: {
+export function mockRemoveReactionResponse(args: {
   variables: RemoveReactionVariables;
 }): MockedResponse<RemoveReactionData> {
   return {
@@ -310,7 +320,7 @@ export function createRemoveReactionMockedResponse(args: {
   };
 }
 
-export function createRemoveReactionMockedResponseWithGraphqlValidationError(args: {
+export function mockRemoveReactionResponseWithGraphqlValidationError(args: {
   variables: RemoveReactionVariables;
 }): MockedResponse<RemoveReactionData> {
   return {
@@ -393,7 +403,7 @@ export function mockCreateUnfollowTypedDataData({
   };
 }
 
-export function createBroadcastProxyActionCallMockedResponse(instructions: {
+export function mockBroadcastProxyActionCallResponse(instructions: {
   result: string;
   variables: ProxyActionVariables;
 }): MockedResponse<ProxyActionData> {
@@ -468,7 +478,7 @@ export function mockCreateSetProfileImageUriTypedDataData({
   };
 }
 
-export function createCreateSetProfileImageUriTypedDataMockedResponse<
+export function mockCreateSetProfileImageUriTypedDataResponse<
   T extends CreateSetProfileImageUriTypedDataData,
 >({
   variables,
@@ -510,7 +520,7 @@ export function mockCreateSetDispatcherTypedDataData({
   };
 }
 
-export function createCreateSetProfileMetadataTypedDataMockedResponse({
+export function mockCreateSetProfileMetadataTypedDataResponse({
   request,
   overrideSigNonce,
   data = mockCreateSetProfileMetadataTypedDataData({ nonce: overrideSigNonce }),
@@ -531,7 +541,7 @@ export function createCreateSetProfileMetadataTypedDataMockedResponse({
   };
 }
 
-export function createCreateSetProfileMetadataViaDispatcherMockedResponse<
+export function mockCreateSetProfileMetadataViaDispatcherResponse<
   T extends CreateSetProfileMetadataViaDispatcherData,
 >({
   variables,
@@ -549,7 +559,7 @@ export function createCreateSetProfileMetadataViaDispatcherMockedResponse<
   };
 }
 
-export function createCreateCommentTypedDataMockedResponse<T extends CreateCommentTypedDataData>({
+export function mockCreateCommentTypedDataResponse<T extends CreateCommentTypedDataData>({
   variables,
   data,
 }: {
@@ -567,7 +577,7 @@ export function createCreateCommentTypedDataMockedResponse<T extends CreateComme
   };
 }
 
-export function createCreateDataAvailabilityCommentTypedDataMockedResponse<
+export function mockCreateDataAvailabilityCommentTypedDataResponse<
   T extends CreateDataAvailabilityCommentTypedDataData,
 >({
   variables,
@@ -587,9 +597,7 @@ export function createCreateDataAvailabilityCommentTypedDataMockedResponse<
   };
 }
 
-export function createCreateCommentViaDispatcherMockedResponse<
-  T extends CreateCommentViaDispatcherData,
->({
+export function mockCreateCommentViaDispatcherResponse<T extends CreateCommentViaDispatcherData>({
   variables,
   data,
 }: {
@@ -607,7 +615,7 @@ export function createCreateCommentViaDispatcherMockedResponse<
   };
 }
 
-export function createCreateDataAvailabilityCommentViaDispatcherDataMockedResponse<
+export function mockCreateDataAvailabilityCommentViaDispatcherDataResponse<
   T extends CreateDataAvailabilityCommentViaDispatcherData,
 >({
   variables,
@@ -627,7 +635,7 @@ export function createCreateDataAvailabilityCommentViaDispatcherDataMockedRespon
   };
 }
 
-export function createCreateMirrorTypedDataMockedResponse<T extends CreateMirrorTypedDataData>({
+export function mockCreateMirrorTypedDataResponse<T extends CreateMirrorTypedDataData>({
   variables,
   data,
 }: {
@@ -645,7 +653,7 @@ export function createCreateMirrorTypedDataMockedResponse<T extends CreateMirror
   };
 }
 
-export function createCreateDataAvailabilityMirrorTypedDataMockedResponse<
+export function mockCreateDataAvailabilityMirrorTypedDataResponse<
   T extends CreateDataAvailabilityMirrorTypedDataData,
 >({
   variables,
@@ -665,9 +673,7 @@ export function createCreateDataAvailabilityMirrorTypedDataMockedResponse<
   };
 }
 
-export function createCreateMirrorViaDispatcherMockedResponse<
-  T extends CreateMirrorViaDispatcherData,
->({
+export function mockCreateMirrorViaDispatcherResponse<T extends CreateMirrorViaDispatcherData>({
   variables,
   data,
 }: {
@@ -685,7 +691,7 @@ export function createCreateMirrorViaDispatcherMockedResponse<
   };
 }
 
-export function createCreateDataAvailabilityMirrorViaDispatcherDataMockedResponse<
+export function mockCreateDataAvailabilityMirrorViaDispatcherDataResponse<
   T extends CreateDataAvailabilityMirrorViaDispatcherData,
 >({
   variables,
@@ -705,7 +711,7 @@ export function createCreateDataAvailabilityMirrorViaDispatcherDataMockedRespons
   };
 }
 
-export function createCreatePostTypedDataMockedResponse<T extends CreatePostTypedDataData>({
+export function mockCreatePostTypedDataResponse<T extends CreatePostTypedDataData>({
   variables,
   data,
 }: {
@@ -723,7 +729,7 @@ export function createCreatePostTypedDataMockedResponse<T extends CreatePostType
   };
 }
 
-export function createCreateDataAvailabilityPostTypedDataMockedResponse<
+export function mockCreateDataAvailabilityPostTypedDataResponse<
   T extends CreateDataAvailabilityPostTypedDataData,
 >({
   variables,
@@ -743,7 +749,7 @@ export function createCreateDataAvailabilityPostTypedDataMockedResponse<
   };
 }
 
-export function createCreatePostViaDispatcherMockedResponse<T extends CreatePostViaDispatcherData>({
+export function mockCreatePostViaDispatcherResponse<T extends CreatePostViaDispatcherData>({
   variables,
   data,
 }: {
@@ -761,7 +767,7 @@ export function createCreatePostViaDispatcherMockedResponse<T extends CreatePost
   };
 }
 
-export function createCreateDataAvailabilityPostViaDispatcherDataMockedResponse<
+export function mockCreateDataAvailabilityPostViaDispatcherDataResponse<
   T extends CreateDataAvailabilityPostViaDispatcherData,
 >({
   variables,
@@ -781,7 +787,7 @@ export function createCreateDataAvailabilityPostViaDispatcherDataMockedResponse<
   };
 }
 
-export function createSetProfileImageURIViaDispatcherMockedResponse<
+export function mockSetProfileImageURIViaDispatcherResponse<
   T extends CreateSetProfileImageUriViaDispatcherData,
 >({
   variables,
@@ -824,7 +830,7 @@ export function mockCreateCollectTypedDataData({
   };
 }
 
-export function createReportPublicationMockedResponse(args: {
+export function mockReportPublicationResponse(args: {
   variables: ReportPublicationVariables;
 }): MockedResponse<ReportPublicationData> {
   return {
@@ -833,5 +839,53 @@ export function createReportPublicationMockedResponse(args: {
       variables: args.variables,
     },
     result: { data: { reportPublication: null } },
+  };
+}
+
+export function mockAddNotInterestedResponse(
+  variables: AddNotInterestedVariables,
+): MockedResponse<AddNotInterestedData> {
+  return {
+    request: {
+      query: AddNotInterestedDocument,
+      variables,
+    },
+    result: { data: { result: null } },
+  };
+}
+
+export function mockRemoveNotInterestedResponse(
+  variables: RemoveNotInterestedVariables,
+): MockedResponse<RemoveNotInterestedData> {
+  return {
+    request: {
+      query: RemoveNotInterestedDocument,
+      variables,
+    },
+    result: { data: { result: null } },
+  };
+}
+
+export function mockAddToMyBookmarksResponse(
+  variables: AddToMyBookmarksVariables,
+): MockedResponse<AddNotInterestedData> {
+  return {
+    request: {
+      query: AddToMyBookmarksDocument,
+      variables,
+    },
+    result: { data: { result: null } },
+  };
+}
+
+export function mockRemoveFromMyBookmarksResponse(
+  variables: RemoveFromMyBookmarksVariables,
+): MockedResponse<RemoveNotInterestedData> {
+  return {
+    request: {
+      query: RemoveFromMyBookmarksDocument,
+      variables,
+    },
+    result: { data: { result: null } },
   };
 }

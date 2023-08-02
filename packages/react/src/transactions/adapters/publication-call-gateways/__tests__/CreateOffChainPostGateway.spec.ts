@@ -3,8 +3,8 @@ import { SafeApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings
 import {
   mockLensApolloClient,
   mockCreatePostTypedDataData,
-  createCreateDataAvailabilityPostTypedDataMockedResponse,
-  createCreateDataAvailabilityPostViaDispatcherDataMockedResponse,
+  mockCreateDataAvailabilityPostTypedDataResponse,
+  mockCreateDataAvailabilityPostViaDispatcherDataResponse,
   mockDataAvailabilityPublicationResult,
   mockRelayErrorFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -48,7 +48,7 @@ describe(`Given an instance of ${CreateOffChainPostGateway.name}`, () => {
         - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
         - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
       const apolloClient = mockLensApolloClient([
-        createCreateDataAvailabilityPostTypedDataMockedResponse({
+        mockCreateDataAvailabilityPostTypedDataResponse({
           variables: {
             request: {
               from: request.profileId,
@@ -75,7 +75,7 @@ describe(`Given an instance of ${CreateOffChainPostGateway.name}`, () => {
         - use the IMetadataUploader<CreatePostRequest'> to upload the publication metadata
         - create an instance of the ${DataTransaction.name}`, async () => {
       const apolloClient = mockLensApolloClient([
-        createCreateDataAvailabilityPostViaDispatcherDataMockedResponse({
+        mockCreateDataAvailabilityPostViaDispatcherDataResponse({
           variables: {
             request: {
               from: request.profileId,
@@ -108,7 +108,7 @@ describe(`Given an instance of ${CreateOffChainPostGateway.name}`, () => {
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
       async (relayError) => {
         const apolloClient = mockLensApolloClient([
-          createCreateDataAvailabilityPostViaDispatcherDataMockedResponse({
+          mockCreateDataAvailabilityPostViaDispatcherDataResponse({
             variables: {
               request: {
                 from: request.profileId,
@@ -119,7 +119,7 @@ describe(`Given an instance of ${CreateOffChainPostGateway.name}`, () => {
               result: relayError,
             },
           }),
-          createCreateDataAvailabilityPostTypedDataMockedResponse({
+          mockCreateDataAvailabilityPostTypedDataResponse({
             variables: {
               request: {
                 from: request.profileId,

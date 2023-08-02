@@ -1,7 +1,7 @@
 import { AnyPublication } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetPublicationsMockedResponse,
+  mockGetPublicationsResponse,
   mockPostFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
@@ -16,6 +16,10 @@ import { ProtocolTransactionRequest } from '@lens-protocol/domain/use-cases/tran
 import { never } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../mediaTransforms';
 import { PendingTransactionGateway } from '../../adapters/PendingTransactionGateway';
 import { mockITransactionFactory, mockMetaTransactionData } from '../../adapters/__helpers__/mocks';
 import { PublicationIdPredictor } from '../PublicationIdPredictor';
@@ -30,11 +34,12 @@ function setupTestScenario({
   pendingTransactionsFor?: ProtocolTransactionRequest[];
 }) {
   const apolloClient = mockLensApolloClient([
-    createGetPublicationsMockedResponse({
+    mockGetPublicationsResponse({
       variables: {
         profileId,
         limit: 1,
         sources: [],
+        ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
       },
       publications,
     }),

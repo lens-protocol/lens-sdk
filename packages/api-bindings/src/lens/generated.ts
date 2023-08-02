@@ -207,6 +207,10 @@ export type AllPublicationsTagsRequest = {
   source?: InputMaybe<Scalars['Sources']>;
 };
 
+export type AlreadyInvitedCheckRequest = {
+  address: Scalars['EthereumAddress'];
+};
+
 export type AndConditionInput = {
   /** The list of conditions to apply AND to. You can only use nested boolean conditions at the root level. */
   criteria: Array<AccessConditionInput>;
@@ -805,17 +809,27 @@ export type IllegalReasonInputParams = {
   subreason: PublicationReportingIllegalSubreason;
 };
 
-export type InternalPublicationsFilterRequest = {
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  /** must be DD/MM/YYYY */
-  fromDate: Scalars['String'];
-  limit?: InputMaybe<Scalars['LimitScalar']>;
+export type InRequest = {
+  ethereumAddress: Scalars['EthereumAddress'];
+  numInvites: Scalars['Int'];
+  secret: Scalars['String'];
+};
+
+export type InTotalRequest = {
+  ethereumAddress: Scalars['EthereumAddress'];
+  secret: Scalars['String'];
+};
+
+export type InternalPinRequest = {
+  /** The shared secret */
+  items: Array<Scalars['Url']>;
   /** The shared secret */
   secret: Scalars['String'];
-  /** The App Id */
-  source: Scalars['Sources'];
-  /** must be DD/MM/YYYY */
-  toDate: Scalars['String'];
+};
+
+export type InviteRequest = {
+  invites: Array<Scalars['EthereumAddress']>;
+  secret: Scalars['String'];
 };
 
 export type LimitedFeeCollectModuleParams = {
@@ -942,15 +956,50 @@ export type NftData = {
   signature: Scalars['Signature'];
 };
 
+/** NFT search query */
+export type NftSearchRequest = {
+  /** Chain IDs to search. Supports Ethereum and Polygon. If omitted, it will search in both chains */
+  chainIds?: InputMaybe<Array<Scalars['ChainId']>>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  /** Exclude follower NFTs from the search */
+  excludeFollowers?: InputMaybe<Scalars['Boolean']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** Ethereum address of the owner. If unknown you can also search by profile ID */
+  ownerAddress?: InputMaybe<Scalars['EthereumAddress']>;
+  /** Profile ID of the owner */
+  profileId?: InputMaybe<Scalars['ProfileId']>;
+  /** Search query. Has to be part of a collection name */
+  query: Scalars['String'];
+};
+
 export type NfTsRequest = {
   /** Chain Ids */
-  chainIds: Array<Scalars['ChainId']>;
+  chainIds?: InputMaybe<Array<Scalars['ChainId']>>;
   /** Filter by contract address */
   contractAddress?: InputMaybe<Scalars['ContractAddress']>;
   cursor?: InputMaybe<Scalars['Cursor']>;
+  /** Exclude filtered collection addresses from the search. Cannot be used together ith `includeCollections` */
+  excludeCollections?: InputMaybe<Array<NftCollectionInput>>;
+  /** Exclude follower NFTs from the search. */
+  excludeFollowers?: InputMaybe<Scalars['Boolean']>;
+  /** Include only filtered collection addresses in the search. Overrides `contractAddress` */
+  includeCollections?: InputMaybe<Array<NftCollectionInput>>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
   /** Filter by owner address */
   ownerAddress: Scalars['EthereumAddress'];
+};
+
+export type Nfi = {
+  c: Scalars['ContractAddress'];
+  i: Scalars['ChainId'];
+};
+
+/** NFT collection filtering input */
+export type NftCollectionInput = {
+  /** The chain id that the collection exists in */
+  chainId: Scalars['ChainId'];
+  /** Filter by NFT collection contract address */
+  contractAddress: Scalars['ContractAddress'];
 };
 
 /** The NFT gallery input */
@@ -1057,6 +1106,16 @@ export type NftUpdateItemOrder = {
   tokenId: Scalars['String'];
 };
 
+export type NniRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
+export type NnvRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
 export type NotificationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
@@ -1119,6 +1178,10 @@ export type ProfileFollowModuleRedeemParams = {
 
 export type ProfileFollowRevenueQueryRequest = {
   /** The profile id */
+  profileId: Scalars['ProfileId'];
+};
+
+export type ProfileGuardianRequest = {
   profileId: Scalars['ProfileId'];
 };
 
@@ -1208,6 +1271,12 @@ export enum PublicationContentWarning {
   Sensitive = 'SENSITIVE',
   Spoiler = 'SPOILER',
 }
+
+export type PublicationForYouRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  for: Scalars['ProfileId'];
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+};
 
 /** The publication main focus */
 export enum PublicationMainFocus {
@@ -1357,6 +1426,20 @@ export type PublicationMetadataV2Input = {
   version: Scalars['String'];
 };
 
+export type PublicationProfileBookmarkRequest = {
+  /** Profile id to perform the action */
+  profileId: Scalars['ProfileId'];
+  /** The internal publication id */
+  publicationId: Scalars['InternalPublicationId'];
+};
+
+export type PublicationProfileNotInterestedRequest = {
+  /** Profile id to perform the action */
+  profileId: Scalars['ProfileId'];
+  /** The internal publication id */
+  publicationId: Scalars['InternalPublicationId'];
+};
+
 export type PublicationQueryRequest = {
   /** The publication id */
   publicationId?: InputMaybe<Scalars['InternalPublicationId']>;
@@ -1430,6 +1513,16 @@ export enum PublicationTypes {
   Post = 'POST',
 }
 
+export type PublicationsProfileBookmarkedQueryRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  /** Profile id */
+  profileId: Scalars['ProfileId'];
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
+};
+
 export type PublicationsQueryRequest = {
   /** The ethereum address */
   collectedBy?: InputMaybe<Scalars['EthereumAddress']>;
@@ -1485,6 +1578,8 @@ export type RecipientDataInput = {
 export type RecommendedProfileOptions = {
   /** If you wish to turn ML off */
   disableML?: InputMaybe<Scalars['Boolean']>;
+  /** The more advanced who to follow you should pass this in */
+  profileId?: InputMaybe<Scalars['ProfileId']>;
   /** If you wish to shuffle the results */
   shuffle?: InputMaybe<Scalars['Boolean']>;
 };
@@ -1557,6 +1652,7 @@ export enum RelayRoleKey {
   WithSig_1 = 'WITH_SIG_1',
   WithSig_2 = 'WITH_SIG_2',
   WithSig_3 = 'WITH_SIG_3',
+  ZkRelayer_1 = 'ZK_RELAYER_1',
 }
 
 /** The request object to remove interests from a profile */
@@ -1972,7 +2068,22 @@ export type Media = {
   url: Url;
 };
 
-export type MediaSet = { __typename: 'MediaSet'; original: Media };
+export type PublicationMediaSet = {
+  __typename: 'MediaSet';
+  original: Media;
+  optimized: Media | null;
+  small: Media | null;
+  medium: Media | null;
+};
+
+export type ProfilePictureSet = {
+  __typename: 'MediaSet';
+  original: Media;
+  optimized: Media | null;
+  thumbnail: Media | null;
+};
+
+export type ProfileCoverSet = { __typename: 'MediaSet'; original: Media; optimized: Media | null };
 
 export type MetadataOutput = {
   __typename: 'MetadataOutput';
@@ -1985,7 +2096,7 @@ export type MetadataOutput = {
   mainContentFocus: PublicationMainFocus;
   name: string | null;
   tags: Array<string>;
-  media: Array<MediaSet>;
+  media: Array<PublicationMediaSet>;
   attributes: Array<MetadataAttributeOutput>;
   encryptionParams: EncryptionParamsOutput | null;
 };
@@ -2003,6 +2114,7 @@ export type PublicationStats = {
   totalDownvotes: number;
   totalAmountOfCollects: number;
   totalAmountOfComments: number;
+  totalBookmarks: number;
   commentsCount: number;
 };
 
@@ -2038,6 +2150,7 @@ export type UnknownReferenceModuleSettings = {
 export type CommentBase = {
   __typename: 'Comment';
   id: PublicationId;
+  appId: AppId | null;
   collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
@@ -2045,6 +2158,8 @@ export type CommentBase = {
   reaction: ReactionTypes | null;
   hasCollectedByMe: boolean;
   mirrors: Array<PublicationId>;
+  notInterested: boolean;
+  bookmarked: boolean;
   hasOptimisticCollectedByMe: boolean;
   isOptimisticMirroredByMe: boolean;
   isMirroredByMe: boolean;
@@ -2052,6 +2167,7 @@ export type CommentBase = {
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
   contentInsight: ContentInsight;
+  observedBy: ProfileId | null;
   stats: PublicationStats;
   metadata: MetadataOutput;
   profile: Profile;
@@ -2097,6 +2213,7 @@ export type Comment = {
 export type Post = {
   __typename: 'Post';
   id: PublicationId;
+  appId: AppId | null;
   collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
@@ -2104,6 +2221,8 @@ export type Post = {
   reaction: ReactionTypes | null;
   hasCollectedByMe: boolean;
   mirrors: Array<PublicationId>;
+  notInterested: boolean;
+  bookmarked: boolean;
   hasOptimisticCollectedByMe: boolean;
   isOptimisticMirroredByMe: boolean;
   isMirroredByMe: boolean;
@@ -2111,6 +2230,7 @@ export type Post = {
   referencePolicy: ReferencePolicy;
   decryptionCriteria: DecryptionCriteria | null;
   contentInsight: ContentInsight;
+  observedBy: ProfileId | null;
   stats: PublicationStats;
   metadata: MetadataOutput;
   profile: Profile;
@@ -2203,6 +2323,9 @@ export type FeedVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   metadata?: InputMaybe<PublicationMetadataFilters>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type FeedData = { result: { items: Array<FeedItem>; pageInfo: PaginatedResultInfo } };
@@ -2213,6 +2336,7 @@ export type ExploreProfilesVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ExploreProfilesData = {
@@ -2456,6 +2580,9 @@ export type NotificationsVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type NotificationsData = {
@@ -2552,6 +2679,17 @@ export type CreateSetDispatcherTypedDataData = {
   };
 };
 
+export type ProfileGuardianResult = {
+  protected: boolean;
+  disablingProtectionTimestamp: string | null;
+};
+
+export type ProfileGuardianVariables = Exact<{
+  request: ProfileGuardianRequest;
+}>;
+
+export type ProfileGuardianData = { result: ProfileGuardianResult };
+
 export type FeeFollowModuleSettings = {
   __typename: 'FeeFollowModuleSettings';
   contractAddress: string;
@@ -2603,7 +2741,7 @@ export type ProfileStats = {
   mirrorsCount: number;
 };
 
-export type Profile = {
+export type ProfileFields = {
   __typename: 'Profile';
   id: ProfileId;
   name: string | null;
@@ -2615,10 +2753,11 @@ export type Profile = {
   isFollowedByMe: boolean;
   followStatus: FollowStatus | null;
   ownedByMe: boolean;
+  observedBy: ProfileId | null;
   attributes: ProfileAttributes;
   isFollowingObserver: boolean;
-  picture: MediaSet | NftImage | null;
-  coverPicture: MediaSet | NftImage | null;
+  picture: ProfilePictureSet | NftImage | null;
+  coverPicture: ProfileCoverSet | NftImage | null;
   stats: ProfileStats;
   followModule:
     | FeeFollowModuleSettings
@@ -2636,9 +2775,12 @@ export type Profile = {
   };
 };
 
+export type Profile = { invitedBy: ProfileFields | null } & ProfileFields;
+
 export type ProfilesToFollowVariables = Exact<{
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ProfilesToFollowData = { result: Array<Profile> };
@@ -2647,6 +2789,7 @@ export type GetProfileVariables = Exact<{
   request: SingleProfileQueryRequest;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetProfileData = { result: Profile | null };
@@ -2660,6 +2803,7 @@ export type GetAllProfilesVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources?: InputMaybe<Array<Scalars['Sources']> | Scalars['Sources']>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetAllProfilesData = {
@@ -2680,6 +2824,7 @@ export type MutualFollowersProfilesVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type MutualFollowersProfilesData = {
@@ -2769,6 +2914,7 @@ export type ProfileFollowersVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ProfileFollowersData = {
@@ -2781,6 +2927,7 @@ export type ProfileFollowingVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ProfileFollowingData = {
@@ -2820,6 +2967,9 @@ export type GetPublicationVariables = Exact<{
   request: PublicationQueryRequest;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetPublicationData = { result: Comment | Mirror | Post | null };
@@ -2830,8 +2980,33 @@ export type HidePublicationVariables = Exact<{
 
 export type HidePublicationData = { hidePublication: void | null };
 
+export type AddNotInterestedVariables = Exact<{
+  request: PublicationProfileNotInterestedRequest;
+}>;
+
+export type AddNotInterestedData = { result: void | null };
+
+export type RemoveNotInterestedVariables = Exact<{
+  request: PublicationProfileNotInterestedRequest;
+}>;
+
+export type RemoveNotInterestedData = { result: void | null };
+
+export type AddToMyBookmarksVariables = Exact<{
+  request: PublicationProfileBookmarkRequest;
+}>;
+
+export type AddToMyBookmarksData = { result: void | null };
+
+export type RemoveFromMyBookmarksVariables = Exact<{
+  request: PublicationProfileBookmarkRequest;
+}>;
+
+export type RemoveFromMyBookmarksData = { result: void | null };
+
 export type GetPublicationsVariables = Exact<{
   profileId?: InputMaybe<Scalars['ProfileId']>;
+  profileIds?: InputMaybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
@@ -2840,6 +3015,9 @@ export type GetPublicationsVariables = Exact<{
   metadata?: InputMaybe<PublicationMetadataFilters>;
   commentsOf?: InputMaybe<Scalars['InternalPublicationId']>;
   walletAddress?: InputMaybe<Scalars['EthereumAddress']>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetPublicationsData = {
@@ -2856,6 +3034,9 @@ export type ExplorePublicationsVariables = Exact<{
   sortCriteria: PublicationSortCriteria;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   timestamp?: InputMaybe<Scalars['TimestampScalar']>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ExplorePublicationsData = {
@@ -2868,6 +3049,7 @@ export type WhoCollectedPublicationVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type WhoCollectedPublicationData = {
@@ -2880,10 +3062,29 @@ export type ProfilePublicationsForSaleVariables = Exact<{
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type ProfilePublicationsForSaleData = {
   result: { items: Array<Comment | Post>; pageInfo: PaginatedResultInfo };
+};
+
+export type GetProfileBookmarksVariables = Exact<{
+  profileId: Scalars['ProfileId'];
+  limit: Scalars['LimitScalar'];
+  sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  observerId?: InputMaybe<Scalars['ProfileId']>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
+}>;
+
+export type GetProfileBookmarksData = {
+  result: { items: Array<Comment | Post | {}>; pageInfo: PaginatedResultInfo };
 };
 
 export type AddReactionVariables = Exact<{
@@ -2916,6 +3117,7 @@ export type WhoReactedPublicationVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type WhoReactedPublicationData = {
@@ -2946,6 +3148,9 @@ export type GetPublicationRevenueVariables = Exact<{
   publicationId: Scalars['InternalPublicationId'];
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetPublicationRevenueData = { result: PublicationRevenue | null };
@@ -2957,6 +3162,9 @@ export type GetProfilePublicationRevenueVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   publicationTypes?: InputMaybe<Array<PublicationTypes> | PublicationTypes>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type GetProfilePublicationRevenueData = {
@@ -2980,6 +3188,9 @@ export type SearchPublicationsVariables = Exact<{
   query: Scalars['Search'];
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   observerId?: InputMaybe<Scalars['ProfileId']>;
+  mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
+  mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type SearchPublicationsData = {
@@ -2998,6 +3209,7 @@ export type SearchProfilesVariables = Exact<{
   query: Scalars['Search'];
   observerId?: InputMaybe<Scalars['ProfileId']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
+  mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
 }>;
 
 export type SearchProfilesData = {
@@ -3135,6 +3347,7 @@ export const FragmentPublicationStats = /*#__PURE__*/ gql`
     totalDownvotes
     totalAmountOfCollects
     totalAmountOfComments
+    totalBookmarks
     commentsCount: commentsTotal(forSources: $sources)
   }
 `;
@@ -3147,10 +3360,19 @@ export const FragmentMedia = /*#__PURE__*/ gql`
     url
   }
 `;
-export const FragmentMediaSet = /*#__PURE__*/ gql`
-  fragment MediaSet on MediaSet {
+export const FragmentPublicationMediaSet = /*#__PURE__*/ gql`
+  fragment PublicationMediaSet on MediaSet {
     __typename
     original {
+      ...Media
+    }
+    optimized {
+      ...Media
+    }
+    small: transformed(params: $mediaTransformPublicationSmall) {
+      ...Media
+    }
+    medium: transformed(params: $mediaTransformPublicationMedium) {
       ...Media
     }
   }
@@ -3335,7 +3557,7 @@ export const FragmentMetadataOutput = /*#__PURE__*/ gql`
     mainContentFocus
     name
     media {
-      ...MediaSet
+      ...PublicationMediaSet
     }
     attributes {
       ...MetadataAttributeOutput
@@ -3345,7 +3567,7 @@ export const FragmentMetadataOutput = /*#__PURE__*/ gql`
     }
     tags
   }
-  ${FragmentMediaSet}
+  ${FragmentPublicationMediaSet}
   ${FragmentMetadataAttributeOutput}
   ${FragmentEncryptionParamsOutput}
 `;
@@ -3357,6 +3579,33 @@ export const FragmentNftImage = /*#__PURE__*/ gql`
     uri
     verified
   }
+`;
+export const FragmentProfilePictureSet = /*#__PURE__*/ gql`
+  fragment ProfilePictureSet on MediaSet {
+    __typename
+    original {
+      ...Media
+    }
+    optimized {
+      ...Media
+    }
+    thumbnail: transformed(params: $mediaTransformProfileThumbnail) {
+      ...Media
+    }
+  }
+  ${FragmentMedia}
+`;
+export const FragmentProfileCoverSet = /*#__PURE__*/ gql`
+  fragment ProfileCoverSet on MediaSet {
+    __typename
+    original {
+      ...Media
+    }
+    optimized {
+      ...Media
+    }
+  }
+  ${FragmentMedia}
 `;
 export const FragmentProfileStats = /*#__PURE__*/ gql`
   fragment ProfileStats on ProfileStats {
@@ -3429,8 +3678,8 @@ export const FragmentAttribute = /*#__PURE__*/ gql`
     value
   }
 `;
-export const FragmentProfile = /*#__PURE__*/ gql`
-  fragment Profile on Profile {
+export const FragmentProfileFields = /*#__PURE__*/ gql`
+  fragment ProfileFields on Profile {
     __typename
     id
     name
@@ -3443,7 +3692,7 @@ export const FragmentProfile = /*#__PURE__*/ gql`
         ...NftImage
       }
       ... on MediaSet {
-        ...MediaSet
+        ...ProfilePictureSet
       }
     }
     coverPicture {
@@ -3451,7 +3700,7 @@ export const FragmentProfile = /*#__PURE__*/ gql`
         ...NftImage
       }
       ... on MediaSet {
-        ...MediaSet
+        ...ProfileCoverSet
       }
     }
     stats {
@@ -3501,15 +3750,26 @@ export const FragmentProfile = /*#__PURE__*/ gql`
     isFollowingObserver: isFollowing(who: $observerId)
     followStatus @client
     ownedByMe @client
+    observedBy @client
   }
   ${FragmentNftImage}
-  ${FragmentMediaSet}
+  ${FragmentProfilePictureSet}
+  ${FragmentProfileCoverSet}
   ${FragmentProfileStats}
   ${FragmentFeeFollowModuleSettings}
   ${FragmentProfileFollowModuleSettings}
   ${FragmentRevertFollowModuleSettings}
   ${FragmentUnknownFollowModuleSettings}
   ${FragmentAttribute}
+`;
+export const FragmentProfile = /*#__PURE__*/ gql`
+  fragment Profile on Profile {
+    ...ProfileFields
+    invitedBy {
+      ...ProfileFields
+    }
+  }
+  ${FragmentProfileFields}
 `;
 export const FragmentWallet = /*#__PURE__*/ gql`
   fragment Wallet on Wallet {
@@ -3689,6 +3949,7 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
   fragment CommentBase on Comment {
     __typename
     id
+    appId
     stats {
       ...PublicationStats
     }
@@ -3764,6 +4025,8 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
       reasons
     }
     mirrors(by: $observerId)
+    notInterested(by: $observerId)
+    bookmarked(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     isMirroredByMe @client
@@ -3771,6 +4034,7 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
     referencePolicy @client
     decryptionCriteria @client
     contentInsight @client
+    observedBy @client
   }
   ${FragmentPublicationStats}
   ${FragmentMetadataOutput}
@@ -3795,6 +4059,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
   fragment Post on Post {
     __typename
     id
+    appId
     stats {
       ...PublicationStats
     }
@@ -3865,11 +4130,13 @@ export const FragmentPost = /*#__PURE__*/ gql`
     canMirror(profileId: $observerId) {
       result
     }
-    mirrors(by: $observerId)
     canObserverDecrypt: canDecrypt(profileId: $observerId) {
       result
       reasons
     }
+    mirrors(by: $observerId)
+    notInterested(by: $observerId)
+    bookmarked(by: $observerId)
     hasOptimisticCollectedByMe @client
     isOptimisticMirroredByMe @client
     isMirroredByMe @client
@@ -3877,6 +4144,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
     referencePolicy @client
     decryptionCriteria @client
     contentInsight @client
+    observedBy @client
   }
   ${FragmentPublicationStats}
   ${FragmentMetadataOutput}
@@ -4277,6 +4545,12 @@ export const FragmentCreatePostEip712TypedData = /*#__PURE__*/ gql`
     }
   }
   ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentProfileGuardianResult = /*#__PURE__*/ gql`
+  fragment ProfileGuardianResult on ProfileGuardianResult {
+    protected
+    disablingProtectionTimestamp
+  }
 `;
 export const FragmentFollower = /*#__PURE__*/ gql`
   fragment Follower on Follower {
@@ -4916,6 +5190,9 @@ export const FeedDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $sources: [Sources!]!
     $metadata: PublicationMetadataFilters
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: feed(
       request: {
@@ -4958,6 +5235,9 @@ export const FeedDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
  *      metadata: // value for 'metadata'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -4981,6 +5261,7 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: exploreProfiles(
       request: { limit: $limit, cursor: $cursor, sortCriteria: $sortCriteria }
@@ -5014,6 +5295,7 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -5373,6 +5655,9 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $sources: [Sources!]!
     $notificationTypes: [NotificationTypes!]
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: notifications(
       request: {
@@ -5434,6 +5719,9 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
  *      notificationTypes: // value for 'notificationTypes'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -5804,8 +6092,61 @@ export type CreateSetDispatcherTypedDataMutationOptions = Apollo.BaseMutationOpt
   CreateSetDispatcherTypedDataData,
   CreateSetDispatcherTypedDataVariables
 >;
+export const ProfileGuardianDocument = /*#__PURE__*/ gql`
+  query ProfileGuardian($request: ProfileGuardianRequest!) {
+    result: profileGuardianInformation(request: $request) {
+      ...ProfileGuardianResult
+    }
+  }
+  ${FragmentProfileGuardianResult}
+`;
+
+/**
+ * __useProfileGuardian__
+ *
+ * To run a query within a React component, call `useProfileGuardian` and pass it any options that fit your needs.
+ * When your component renders, `useProfileGuardian` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileGuardian({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useProfileGuardian(
+  baseOptions: Apollo.QueryHookOptions<ProfileGuardianData, ProfileGuardianVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileGuardianData, ProfileGuardianVariables>(
+    ProfileGuardianDocument,
+    options,
+  );
+}
+export function useProfileGuardianLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfileGuardianData, ProfileGuardianVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileGuardianData, ProfileGuardianVariables>(
+    ProfileGuardianDocument,
+    options,
+  );
+}
+export type ProfileGuardianHookResult = ReturnType<typeof useProfileGuardian>;
+export type ProfileGuardianLazyQueryHookResult = ReturnType<typeof useProfileGuardianLazyQuery>;
+export type ProfileGuardianQueryResult = Apollo.QueryResult<
+  ProfileGuardianData,
+  ProfileGuardianVariables
+>;
 export const ProfilesToFollowDocument = /*#__PURE__*/ gql`
-  query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {
+  query ProfilesToFollow(
+    $observerId: ProfileId
+    $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
+  ) {
     result: recommendedProfiles {
       ...Profile
     }
@@ -5827,6 +6168,7 @@ export const ProfilesToFollowDocument = /*#__PURE__*/ gql`
  *   variables: {
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -5859,6 +6201,7 @@ export const GetProfileDocument = /*#__PURE__*/ gql`
     $request: SingleProfileQueryRequest!
     $observerId: ProfileId
     $sources: [Sources!] = []
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: profile(request: $request) {
       ...Profile
@@ -5882,6 +6225,7 @@ export const GetProfileDocument = /*#__PURE__*/ gql`
  *      request: // value for 'request'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -5910,6 +6254,7 @@ export const GetAllProfilesDocument = /*#__PURE__*/ gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!] = []
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: profiles(
       request: {
@@ -5953,6 +6298,7 @@ export const GetAllProfilesDocument = /*#__PURE__*/ gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6032,6 +6378,7 @@ export const MutualFollowersProfilesDocument = /*#__PURE__*/ gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: mutualFollowersProfiles(
       request: {
@@ -6070,6 +6417,7 @@ export const MutualFollowersProfilesDocument = /*#__PURE__*/ gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6442,6 +6790,7 @@ export const ProfileFollowersDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: followers(request: { profileId: $profileId, limit: $limit, cursor: $cursor }) {
       items {
@@ -6473,6 +6822,7 @@ export const ProfileFollowersDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6507,6 +6857,7 @@ export const ProfileFollowingDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: following(request: { address: $walletAddress, limit: $limit, cursor: $cursor }) {
       items {
@@ -6538,6 +6889,7 @@ export const ProfileFollowingDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6665,6 +7017,9 @@ export const GetPublicationDocument = /*#__PURE__*/ gql`
     $request: PublicationQueryRequest!
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: publication(request: $request) {
       ... on Post {
@@ -6698,6 +7053,9 @@ export const GetPublicationDocument = /*#__PURE__*/ gql`
  *      request: // value for 'request'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6767,9 +7125,181 @@ export type HidePublicationMutationOptions = Apollo.BaseMutationOptions<
   HidePublicationData,
   HidePublicationVariables
 >;
+export const AddNotInterestedDocument = /*#__PURE__*/ gql`
+  mutation AddNotInterested($request: PublicationProfileNotInterestedRequest!) {
+    result: addPublicationProfileNotInterested(request: $request)
+  }
+`;
+export type AddNotInterestedMutationFn = Apollo.MutationFunction<
+  AddNotInterestedData,
+  AddNotInterestedVariables
+>;
+
+/**
+ * __useAddNotInterested__
+ *
+ * To run a mutation, you first call `useAddNotInterested` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddNotInterested` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addNotInterested, { data, loading, error }] = useAddNotInterested({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddNotInterested(
+  baseOptions?: Apollo.MutationHookOptions<AddNotInterestedData, AddNotInterestedVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddNotInterestedData, AddNotInterestedVariables>(
+    AddNotInterestedDocument,
+    options,
+  );
+}
+export type AddNotInterestedHookResult = ReturnType<typeof useAddNotInterested>;
+export type AddNotInterestedMutationResult = Apollo.MutationResult<AddNotInterestedData>;
+export type AddNotInterestedMutationOptions = Apollo.BaseMutationOptions<
+  AddNotInterestedData,
+  AddNotInterestedVariables
+>;
+export const RemoveNotInterestedDocument = /*#__PURE__*/ gql`
+  mutation RemoveNotInterested($request: PublicationProfileNotInterestedRequest!) {
+    result: removePublicationProfileNotInterested(request: $request)
+  }
+`;
+export type RemoveNotInterestedMutationFn = Apollo.MutationFunction<
+  RemoveNotInterestedData,
+  RemoveNotInterestedVariables
+>;
+
+/**
+ * __useRemoveNotInterested__
+ *
+ * To run a mutation, you first call `useRemoveNotInterested` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveNotInterested` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeNotInterested, { data, loading, error }] = useRemoveNotInterested({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useRemoveNotInterested(
+  baseOptions?: Apollo.MutationHookOptions<RemoveNotInterestedData, RemoveNotInterestedVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveNotInterestedData, RemoveNotInterestedVariables>(
+    RemoveNotInterestedDocument,
+    options,
+  );
+}
+export type RemoveNotInterestedHookResult = ReturnType<typeof useRemoveNotInterested>;
+export type RemoveNotInterestedMutationResult = Apollo.MutationResult<RemoveNotInterestedData>;
+export type RemoveNotInterestedMutationOptions = Apollo.BaseMutationOptions<
+  RemoveNotInterestedData,
+  RemoveNotInterestedVariables
+>;
+export const AddToMyBookmarksDocument = /*#__PURE__*/ gql`
+  mutation AddToMyBookmarks($request: PublicationProfileBookmarkRequest!) {
+    result: addPublicationProfileBookmark(request: $request)
+  }
+`;
+export type AddToMyBookmarksMutationFn = Apollo.MutationFunction<
+  AddToMyBookmarksData,
+  AddToMyBookmarksVariables
+>;
+
+/**
+ * __useAddToMyBookmarks__
+ *
+ * To run a mutation, you first call `useAddToMyBookmarks` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddToMyBookmarks` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addToMyBookmarks, { data, loading, error }] = useAddToMyBookmarks({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddToMyBookmarks(
+  baseOptions?: Apollo.MutationHookOptions<AddToMyBookmarksData, AddToMyBookmarksVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddToMyBookmarksData, AddToMyBookmarksVariables>(
+    AddToMyBookmarksDocument,
+    options,
+  );
+}
+export type AddToMyBookmarksHookResult = ReturnType<typeof useAddToMyBookmarks>;
+export type AddToMyBookmarksMutationResult = Apollo.MutationResult<AddToMyBookmarksData>;
+export type AddToMyBookmarksMutationOptions = Apollo.BaseMutationOptions<
+  AddToMyBookmarksData,
+  AddToMyBookmarksVariables
+>;
+export const RemoveFromMyBookmarksDocument = /*#__PURE__*/ gql`
+  mutation RemoveFromMyBookmarks($request: PublicationProfileBookmarkRequest!) {
+    result: removePublicationProfileBookmark(request: $request)
+  }
+`;
+export type RemoveFromMyBookmarksMutationFn = Apollo.MutationFunction<
+  RemoveFromMyBookmarksData,
+  RemoveFromMyBookmarksVariables
+>;
+
+/**
+ * __useRemoveFromMyBookmarks__
+ *
+ * To run a mutation, you first call `useRemoveFromMyBookmarks` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFromMyBookmarks` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFromMyBookmarks, { data, loading, error }] = useRemoveFromMyBookmarks({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useRemoveFromMyBookmarks(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveFromMyBookmarksData,
+    RemoveFromMyBookmarksVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveFromMyBookmarksData, RemoveFromMyBookmarksVariables>(
+    RemoveFromMyBookmarksDocument,
+    options,
+  );
+}
+export type RemoveFromMyBookmarksHookResult = ReturnType<typeof useRemoveFromMyBookmarks>;
+export type RemoveFromMyBookmarksMutationResult = Apollo.MutationResult<RemoveFromMyBookmarksData>;
+export type RemoveFromMyBookmarksMutationOptions = Apollo.BaseMutationOptions<
+  RemoveFromMyBookmarksData,
+  RemoveFromMyBookmarksVariables
+>;
 export const GetPublicationsDocument = /*#__PURE__*/ gql`
   query GetPublications(
     $profileId: ProfileId
+    $profileIds: [ProfileId!]
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
@@ -6778,10 +7308,14 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
     $metadata: PublicationMetadataFilters
     $commentsOf: InternalPublicationId
     $walletAddress: EthereumAddress
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: publications(
       request: {
         profileId: $profileId
+        profileIds: $profileIds
         limit: $limit
         collectedBy: $walletAddress
         cursor: $cursor
@@ -6826,6 +7360,7 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useGetPublications({
  *   variables: {
  *      profileId: // value for 'profileId'
+ *      profileIds: // value for 'profileIds'
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
@@ -6834,6 +7369,9 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
  *      metadata: // value for 'metadata'
  *      commentsOf: // value for 'commentsOf'
  *      walletAddress: // value for 'walletAddress'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6872,6 +7410,9 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
     $sortCriteria: PublicationSortCriteria!
     $sources: [Sources!]!
     $timestamp: TimestampScalar
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: explorePublications(
       request: {
@@ -6928,6 +7469,9 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
  *      sortCriteria: // value for 'sortCriteria'
  *      sources: // value for 'sources'
  *      timestamp: // value for 'timestamp'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -6964,6 +7508,7 @@ export const WhoCollectedPublicationDocument = /*#__PURE__*/ gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: whoCollectedPublication(
       request: { publicationId: $publicationId, limit: $limit, cursor: $cursor }
@@ -6997,6 +7542,7 @@ export const WhoCollectedPublicationDocument = /*#__PURE__*/ gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7039,6 +7585,9 @@ export const ProfilePublicationsForSaleDocument = /*#__PURE__*/ gql`
     $limit: LimitScalar!
     $cursor: Cursor
     $sources: [Sources!]!
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: profilePublicationsForSale(
       request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
@@ -7078,6 +7627,9 @@ export const ProfilePublicationsForSaleDocument = /*#__PURE__*/ gql`
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7112,6 +7664,95 @@ export type ProfilePublicationsForSaleLazyQueryHookResult = ReturnType<
 export type ProfilePublicationsForSaleQueryResult = Apollo.QueryResult<
   ProfilePublicationsForSaleData,
   ProfilePublicationsForSaleVariables
+>;
+export const GetProfileBookmarksDocument = /*#__PURE__*/ gql`
+  query GetProfileBookmarks(
+    $profileId: ProfileId!
+    $limit: LimitScalar!
+    $sources: [Sources!]!
+    $metadata: PublicationMetadataFilters
+    $cursor: Cursor
+    $observerId: ProfileId
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
+  ) {
+    result: publicationsProfileBookmarks(
+      request: {
+        cursor: $cursor
+        limit: $limit
+        metadata: $metadata
+        profileId: $profileId
+        sources: $sources
+      }
+    ) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Comment {
+          ...Comment
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentPost}
+  ${FragmentComment}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useGetProfileBookmarks__
+ *
+ * To run a query within a React component, call `useGetProfileBookmarks` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileBookmarks` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProfileBookmarks({
+ *   variables: {
+ *      profileId: // value for 'profileId'
+ *      limit: // value for 'limit'
+ *      sources: // value for 'sources'
+ *      metadata: // value for 'metadata'
+ *      cursor: // value for 'cursor'
+ *      observerId: // value for 'observerId'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
+ *   },
+ * });
+ */
+export function useGetProfileBookmarks(
+  baseOptions: Apollo.QueryHookOptions<GetProfileBookmarksData, GetProfileBookmarksVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetProfileBookmarksData, GetProfileBookmarksVariables>(
+    GetProfileBookmarksDocument,
+    options,
+  );
+}
+export function useGetProfileBookmarksLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetProfileBookmarksData, GetProfileBookmarksVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetProfileBookmarksData, GetProfileBookmarksVariables>(
+    GetProfileBookmarksDocument,
+    options,
+  );
+}
+export type GetProfileBookmarksHookResult = ReturnType<typeof useGetProfileBookmarks>;
+export type GetProfileBookmarksLazyQueryHookResult = ReturnType<
+  typeof useGetProfileBookmarksLazyQuery
+>;
+export type GetProfileBookmarksQueryResult = Apollo.QueryResult<
+  GetProfileBookmarksData,
+  GetProfileBookmarksVariables
 >;
 export const AddReactionDocument = /*#__PURE__*/ gql`
   mutation AddReaction(
@@ -7214,6 +7855,7 @@ export const WhoReactedPublicationDocument = /*#__PURE__*/ gql`
     $publicationId: InternalPublicationId!
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: whoReactedPublication(
       request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }
@@ -7247,6 +7889,7 @@ export const WhoReactedPublicationDocument = /*#__PURE__*/ gql`
  *      publicationId: // value for 'publicationId'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7338,6 +7981,9 @@ export const GetPublicationRevenueDocument = /*#__PURE__*/ gql`
     $publicationId: InternalPublicationId!
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: publicationRevenue(request: { publicationId: $publicationId }) {
       ...PublicationRevenue
@@ -7361,6 +8007,9 @@ export const GetPublicationRevenueDocument = /*#__PURE__*/ gql`
  *      publicationId: // value for 'publicationId'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7401,6 +8050,9 @@ export const GetProfilePublicationRevenueDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $publicationTypes: [PublicationTypes!]
     $sources: [Sources!]!
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: profilePublicationRevenue(
       request: {
@@ -7441,6 +8093,9 @@ export const GetProfilePublicationRevenueDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      publicationTypes: // value for 'publicationTypes'
  *      sources: // value for 'sources'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7539,6 +8194,9 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
     $query: Search!
     $sources: [Sources!]!
     $observerId: ProfileId
+    $mediaTransformPublicationSmall: MediaTransformParams = {}
+    $mediaTransformPublicationMedium: MediaTransformParams = {}
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: search(
       request: {
@@ -7587,6 +8245,9 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
  *      query: // value for 'query'
  *      sources: // value for 'sources'
  *      observerId: // value for 'observerId'
+ *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
+ *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -7623,6 +8284,7 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
     $query: Search!
     $observerId: ProfileId
     $sources: [Sources!]!
+    $mediaTransformProfileThumbnail: MediaTransformParams = {}
   ) {
     result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
       ... on ProfileSearchResult {
@@ -7657,6 +8319,7 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
  *      query: // value for 'query'
  *      observerId: // value for 'observerId'
  *      sources: // value for 'sources'
+ *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'
  *   },
  * });
  */
@@ -8029,6 +8692,7 @@ export type CollectedEventFieldPolicy = {
 };
 export type CommentKeySpecifier = (
   | 'appId'
+  | 'bookmarked'
   | 'canComment'
   | 'canDecrypt'
   | 'canMirror'
@@ -8053,6 +8717,8 @@ export type CommentKeySpecifier = (
   | 'mainPost'
   | 'metadata'
   | 'mirrors'
+  | 'notInterested'
+  | 'observedBy'
   | 'onChainContentURI'
   | 'profile'
   | 'rankingScore'
@@ -8064,6 +8730,7 @@ export type CommentKeySpecifier = (
 )[];
 export type CommentFieldPolicy = {
   appId?: FieldPolicy<any> | FieldReadFunction<any>;
+  bookmarked?: FieldPolicy<any> | FieldReadFunction<any>;
   canComment?: FieldPolicy<any> | FieldReadFunction<any>;
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -8088,6 +8755,8 @@ export type CommentFieldPolicy = {
   mainPost?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
+  notInterested?: FieldPolicy<any> | FieldReadFunction<any>;
+  observedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   rankingScore?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9139,6 +9808,20 @@ export type GlobalProtocolStatsFieldPolicy = {
   totalProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   totalRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type InternalPinResultKeySpecifier = (
+  | 'ipfs'
+  | 'referenceItem'
+  | InternalPinResultKeySpecifier
+)[];
+export type InternalPinResultFieldPolicy = {
+  ipfs?: FieldPolicy<any> | FieldReadFunction<any>;
+  referenceItem?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type InvitedResultKeySpecifier = ('address' | 'when' | InvitedResultKeySpecifier)[];
+export type InvitedResultFieldPolicy = {
+  address?: FieldPolicy<any> | FieldReadFunction<any>;
+  when?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type LimitedFeeCollectModuleSettingsKeySpecifier = (
   | 'amount'
   | 'collectLimit'
@@ -9297,6 +9980,7 @@ export type MetadataOutputFieldPolicy = {
 };
 export type MirrorKeySpecifier = (
   | 'appId'
+  | 'bookmarked'
   | 'canComment'
   | 'canDecrypt'
   | 'canMirror'
@@ -9311,6 +9995,7 @@ export type MirrorKeySpecifier = (
   | 'isGated'
   | 'metadata'
   | 'mirrorOf'
+  | 'notInterested'
   | 'onChainContentURI'
   | 'profile'
   | 'reaction'
@@ -9320,6 +10005,7 @@ export type MirrorKeySpecifier = (
 )[];
 export type MirrorFieldPolicy = {
   appId?: FieldPolicy<any> | FieldReadFunction<any>;
+  bookmarked?: FieldPolicy<any> | FieldReadFunction<any>;
   canComment?: FieldPolicy<any> | FieldReadFunction<any>;
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9334,6 +10020,7 @@ export type MirrorFieldPolicy = {
   isGated?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOf?: FieldPolicy<any> | FieldReadFunction<any>;
+  notInterested?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9390,6 +10077,8 @@ export type MultirecipientFeeCollectModuleSettingsFieldPolicy = {
 export type MutationKeySpecifier = (
   | 'ach'
   | 'addProfileInterests'
+  | 'addPublicationProfileBookmark'
+  | 'addPublicationProfileNotInterested'
   | 'addReaction'
   | 'authenticate'
   | 'broadcast'
@@ -9433,9 +10122,15 @@ export type MutationKeySpecifier = (
   | 'hel'
   | 'hidePublication'
   | 'idKitPhoneVerifyWebhook'
+  | 'in'
+  | 'invite'
+  | 'nni'
+  | 'nnv'
   | 'proxyAction'
   | 'refresh'
   | 'removeProfileInterests'
+  | 'removePublicationProfileBookmark'
+  | 'removePublicationProfileNotInterested'
   | 'removeReaction'
   | 'reportPublication'
   | 'updateNftGalleryInfo'
@@ -9446,6 +10141,8 @@ export type MutationKeySpecifier = (
 export type MutationFieldPolicy = {
   ach?: FieldPolicy<any> | FieldReadFunction<any>;
   addProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
+  addPublicationProfileBookmark?: FieldPolicy<any> | FieldReadFunction<any>;
+  addPublicationProfileNotInterested?: FieldPolicy<any> | FieldReadFunction<any>;
   addReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   authenticate?: FieldPolicy<any> | FieldReadFunction<any>;
   broadcast?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9489,9 +10186,15 @@ export type MutationFieldPolicy = {
   hel?: FieldPolicy<any> | FieldReadFunction<any>;
   hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
   idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
+  in?: FieldPolicy<any> | FieldReadFunction<any>;
+  invite?: FieldPolicy<any> | FieldReadFunction<any>;
+  nni?: FieldPolicy<any> | FieldReadFunction<any>;
+  nnv?: FieldPolicy<any> | FieldReadFunction<any>;
   proxyAction?: FieldPolicy<any> | FieldReadFunction<any>;
   refresh?: FieldPolicy<any> | FieldReadFunction<any>;
   removeProfileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
+  removePublicationProfileBookmark?: FieldPolicy<any> | FieldReadFunction<any>;
+  removePublicationProfileNotInterested?: FieldPolicy<any> | FieldReadFunction<any>;
   removeReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   reportPublication?: FieldPolicy<any> | FieldReadFunction<any>;
   updateNftGalleryInfo?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9735,6 +10438,15 @@ export type PaginatedFollowingResultFieldPolicy = {
   items?: FieldPolicy<any> | FieldReadFunction<any>;
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PaginatedForYouResultKeySpecifier = (
+  | 'items'
+  | 'pageInfo'
+  | PaginatedForYouResultKeySpecifier
+)[];
+export type PaginatedForYouResultFieldPolicy = {
+  items?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type PaginatedNotificationResultKeySpecifier = (
   | 'items'
   | 'pageInfo'
@@ -9841,6 +10553,7 @@ export type PendingPostFieldPolicy = {
 };
 export type PostKeySpecifier = (
   | 'appId'
+  | 'bookmarked'
   | 'canComment'
   | 'canDecrypt'
   | 'canMirror'
@@ -9862,6 +10575,8 @@ export type PostKeySpecifier = (
   | 'isOptimisticMirroredByMe'
   | 'metadata'
   | 'mirrors'
+  | 'notInterested'
+  | 'observedBy'
   | 'onChainContentURI'
   | 'profile'
   | 'reaction'
@@ -9872,6 +10587,7 @@ export type PostKeySpecifier = (
 )[];
 export type PostFieldPolicy = {
   appId?: FieldPolicy<any> | FieldReadFunction<any>;
+  bookmarked?: FieldPolicy<any> | FieldReadFunction<any>;
   canComment?: FieldPolicy<any> | FieldReadFunction<any>;
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9893,6 +10609,8 @@ export type PostFieldPolicy = {
   isOptimisticMirroredByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrors?: FieldPolicy<any> | FieldReadFunction<any>;
+  notInterested?: FieldPolicy<any> | FieldReadFunction<any>;
+  observedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainContentURI?: FieldPolicy<any> | FieldReadFunction<any>;
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reaction?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9918,11 +10636,13 @@ export type ProfileKeySpecifier = (
   | 'handle'
   | 'id'
   | 'interests'
+  | 'invitedBy'
   | 'isDefault'
   | 'isFollowedByMe'
   | 'isFollowing'
   | 'metadata'
   | 'name'
+  | 'observedBy'
   | 'onChainIdentity'
   | 'ownedBy'
   | 'ownedByMe'
@@ -9943,11 +10663,13 @@ export type ProfileFieldPolicy = {
   handle?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   interests?: FieldPolicy<any> | FieldReadFunction<any>;
+  invitedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   isDefault?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowing?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   name?: FieldPolicy<any> | FieldReadFunction<any>;
+  observedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   onChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
   ownedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   ownedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -9962,6 +10684,15 @@ export type ProfileFollowModuleSettingsKeySpecifier = (
 export type ProfileFollowModuleSettingsFieldPolicy = {
   contractAddress?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type ProfileGuardianResultKeySpecifier = (
+  | 'disablingProtectionTimestamp'
+  | 'protected'
+  | ProfileGuardianResultKeySpecifier
+)[];
+export type ProfileGuardianResultFieldPolicy = {
+  disablingProtectionTimestamp?: FieldPolicy<any> | FieldReadFunction<any>;
+  protected?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileOwnershipOutputKeySpecifier = (
   | 'profileId'
@@ -10094,6 +10825,7 @@ export type PublicationStatsKeySpecifier = (
   | 'totalAmountOfCollects'
   | 'totalAmountOfComments'
   | 'totalAmountOfMirrors'
+  | 'totalBookmarks'
   | 'totalDownvotes'
   | 'totalUpvotes'
   | PublicationStatsKeySpecifier
@@ -10104,6 +10836,7 @@ export type PublicationStatsFieldPolicy = {
   totalAmountOfCollects?: FieldPolicy<any> | FieldReadFunction<any>;
   totalAmountOfComments?: FieldPolicy<any> | FieldReadFunction<any>;
   totalAmountOfMirrors?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalBookmarks?: FieldPolicy<any> | FieldReadFunction<any>;
   totalDownvotes?: FieldPolicy<any> | FieldReadFunction<any>;
   totalUpvotes?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -10118,6 +10851,7 @@ export type PublicationValidateMetadataResultFieldPolicy = {
 };
 export type QueryKeySpecifier = (
   | 'allPublicationsTags'
+  | 'alreadyInvited'
   | 'approvedModuleAllowanceAmount'
   | 'challenge'
   | 'claimableHandles'
@@ -10138,12 +10872,16 @@ export type QueryKeySpecifier = (
   | 'followerNftOwnedTokenIds'
   | 'followers'
   | 'following'
+  | 'forYou'
   | 'gct'
   | 'gdm'
   | 'generateModuleCurrencyApprovalData'
   | 'globalProtocolStats'
   | 'hasTxHashBeenIndexed'
-  | 'internalPublicationFilter'
+  | 'internalPin'
+  | 'intotal'
+  | 'invited'
+  | 'invitesLeft'
   | 'isIDKitPhoneVerified'
   | 'iss'
   | 'mutualFollowersProfiles'
@@ -10156,6 +10894,7 @@ export type QueryKeySpecifier = (
   | 'profile'
   | 'profileFollowModuleBeenRedeemed'
   | 'profileFollowRevenue'
+  | 'profileGuardianInformation'
   | 'profileInterests'
   | 'profileOnChainIdentity'
   | 'profilePublicationRevenue'
@@ -10166,10 +10905,12 @@ export type QueryKeySpecifier = (
   | 'publicationMetadataStatus'
   | 'publicationRevenue'
   | 'publications'
+  | 'publicationsProfileBookmarks'
   | 'recommendedProfiles'
   | 'rel'
   | 'relayQueues'
   | 'search'
+  | 'searchNfts'
   | 'txIdToTxHash'
   | 'unknownEnabledModules'
   | 'userSigNonces'
@@ -10181,6 +10922,7 @@ export type QueryKeySpecifier = (
 )[];
 export type QueryFieldPolicy = {
   allPublicationsTags?: FieldPolicy<any> | FieldReadFunction<any>;
+  alreadyInvited?: FieldPolicy<any> | FieldReadFunction<any>;
   approvedModuleAllowanceAmount?: FieldPolicy<any> | FieldReadFunction<any>;
   challenge?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableHandles?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10201,12 +10943,16 @@ export type QueryFieldPolicy = {
   followerNftOwnedTokenIds?: FieldPolicy<any> | FieldReadFunction<any>;
   followers?: FieldPolicy<any> | FieldReadFunction<any>;
   following?: FieldPolicy<any> | FieldReadFunction<any>;
+  forYou?: FieldPolicy<any> | FieldReadFunction<any>;
   gct?: FieldPolicy<any> | FieldReadFunction<any>;
   gdm?: FieldPolicy<any> | FieldReadFunction<any>;
   generateModuleCurrencyApprovalData?: FieldPolicy<any> | FieldReadFunction<any>;
   globalProtocolStats?: FieldPolicy<any> | FieldReadFunction<any>;
   hasTxHashBeenIndexed?: FieldPolicy<any> | FieldReadFunction<any>;
-  internalPublicationFilter?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalPin?: FieldPolicy<any> | FieldReadFunction<any>;
+  intotal?: FieldPolicy<any> | FieldReadFunction<any>;
+  invited?: FieldPolicy<any> | FieldReadFunction<any>;
+  invitesLeft?: FieldPolicy<any> | FieldReadFunction<any>;
   isIDKitPhoneVerified?: FieldPolicy<any> | FieldReadFunction<any>;
   iss?: FieldPolicy<any> | FieldReadFunction<any>;
   mutualFollowersProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10219,6 +10965,7 @@ export type QueryFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowModuleBeenRedeemed?: FieldPolicy<any> | FieldReadFunction<any>;
   profileFollowRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
+  profileGuardianInformation?: FieldPolicy<any> | FieldReadFunction<any>;
   profileInterests?: FieldPolicy<any> | FieldReadFunction<any>;
   profileOnChainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
   profilePublicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -10229,10 +10976,12 @@ export type QueryFieldPolicy = {
   publicationMetadataStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   publicationRevenue?: FieldPolicy<any> | FieldReadFunction<any>;
   publications?: FieldPolicy<any> | FieldReadFunction<any>;
+  publicationsProfileBookmarks?: FieldPolicy<any> | FieldReadFunction<any>;
   recommendedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   rel?: FieldPolicy<any> | FieldReadFunction<any>;
   relayQueues?: FieldPolicy<any> | FieldReadFunction<any>;
   search?: FieldPolicy<any> | FieldReadFunction<any>;
+  searchNfts?: FieldPolicy<any> | FieldReadFunction<any>;
   txIdToTxHash?: FieldPolicy<any> | FieldReadFunction<any>;
   unknownEnabledModules?: FieldPolicy<any> | FieldReadFunction<any>;
   userSigNonces?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -11256,6 +12005,17 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | GlobalProtocolStatsKeySpecifier);
     fields?: GlobalProtocolStatsFieldPolicy;
   };
+  InternalPinResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | InternalPinResultKeySpecifier
+      | (() => undefined | InternalPinResultKeySpecifier);
+    fields?: InternalPinResultFieldPolicy;
+  };
+  InvitedResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | InvitedResultKeySpecifier | (() => undefined | InvitedResultKeySpecifier);
+    fields?: InvitedResultFieldPolicy;
+  };
   LimitedFeeCollectModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -11453,6 +12213,13 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | PaginatedFollowingResultKeySpecifier);
     fields?: PaginatedFollowingResultFieldPolicy;
   };
+  PaginatedForYouResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | PaginatedForYouResultKeySpecifier
+      | (() => undefined | PaginatedForYouResultKeySpecifier);
+    fields?: PaginatedForYouResultFieldPolicy;
+  };
   PaginatedNotificationResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -11538,6 +12305,13 @@ export type StrictTypedTypePolicies = {
       | ProfileFollowModuleSettingsKeySpecifier
       | (() => undefined | ProfileFollowModuleSettingsKeySpecifier);
     fields?: ProfileFollowModuleSettingsFieldPolicy;
+  };
+  ProfileGuardianResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | ProfileGuardianResultKeySpecifier
+      | (() => undefined | ProfileGuardianResultKeySpecifier);
+    fields?: ProfileGuardianResultFieldPolicy;
   };
   ProfileOwnershipOutput?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:

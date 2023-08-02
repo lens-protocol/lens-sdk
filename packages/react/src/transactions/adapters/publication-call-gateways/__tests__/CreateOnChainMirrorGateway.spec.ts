@@ -1,7 +1,7 @@
 import { SafeApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
-  createCreateMirrorTypedDataMockedResponse,
-  createCreateMirrorViaDispatcherMockedResponse,
+  mockCreateMirrorTypedDataResponse,
+  mockCreateMirrorViaDispatcherResponse,
   mockLensApolloClient,
   mockCreateMirrorTypedDataData,
   mockRelayerResultFragment,
@@ -35,7 +35,7 @@ describe(`Given an instance of ${CreateOnChainMirrorGateway.name}`, () => {
 
     it(`should create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
       const apolloClient = mockLensApolloClient([
-        createCreateMirrorTypedDataMockedResponse({
+        mockCreateMirrorTypedDataResponse({
           variables: {
             request: {
               profileId: request.profileId,
@@ -59,7 +59,7 @@ describe(`Given an instance of ${CreateOnChainMirrorGateway.name}`, () => {
 
     it(`should create an instance of the ${NativeTransaction.name}`, async () => {
       const apolloClient = mockLensApolloClient([
-        createCreateMirrorViaDispatcherMockedResponse({
+        mockCreateMirrorViaDispatcherResponse({
           variables: {
             request: {
               profileId: request.profileId,
@@ -91,7 +91,7 @@ describe(`Given an instance of ${CreateOnChainMirrorGateway.name}`, () => {
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
       async (relayError) => {
         const apolloClient = mockLensApolloClient([
-          createCreateMirrorViaDispatcherMockedResponse({
+          mockCreateMirrorViaDispatcherResponse({
             variables: {
               request: {
                 profileId: request.profileId,
@@ -102,7 +102,7 @@ describe(`Given an instance of ${CreateOnChainMirrorGateway.name}`, () => {
               result: relayError,
             },
           }),
-          createCreateMirrorTypedDataMockedResponse({
+          mockCreateMirrorTypedDataResponse({
             variables: {
               request: {
                 profileId: request.profileId,

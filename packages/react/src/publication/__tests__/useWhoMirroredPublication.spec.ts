@@ -1,6 +1,6 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
-  createGetAllProfilesMockedResponse,
+  mockGetAllProfilesResponse,
   mockLensApolloClient,
   mockProfileFragment,
   mockSources,
@@ -12,6 +12,10 @@ import { mockProfile, mockProfileId, mockPublicationId } from '@lens-protocol/do
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import {
   useWhoMirroredPublication,
   UseWhoMirroredPublicationArgs,
@@ -28,14 +32,16 @@ function setupTestScenario({
   return renderHookWithMocks(() => useWhoMirroredPublication({ publicationId, ...others }), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
-        createGetAllProfilesMockedResponse({
+        mockGetAllProfilesResponse({
           variables: {
             ...others,
             byWhoMirroredPublicationId: publicationId,
             observerId: expectedObserverId ?? null,
             limit: 10,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profiles: result,
         }),
@@ -81,7 +87,7 @@ describe(`Given the ${useWhoMirroredPublication.name} hook`, () => {
       expect(result.current.data).toMatchObject(expectations);
     });
 
-    it('should always allow to specify the "observerId" on a per-call basis', async () => {
+    it('should allow to override the "observerId" on a per-call basis', async () => {
       const observerId = mockProfileId();
 
       const { result } = setupTestScenario({

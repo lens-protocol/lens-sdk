@@ -1,5 +1,76 @@
 # @lens-protocol/react
 
+## 1.3.0-next.3
+
+### Minor Changes
+
+- de401a59: **Added** support for optimized and transformed media inside publication and profile MediaSet
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- ad797714: **Added** `useNotInterested` hook
+- 636ff014: **Added** `profileIds` to `usePublications` hook
+- 3b67207b: **Added** `appId` to `Comment` and `Post`
+
+### Patch Changes
+
+- a5cf2198: Fixed useCurrentSession
+- 125ec30c: **Fixed** `usePollDetails` to be robust to flagged or misconfigured Snapshot Proposals
+- Updated dependencies [de401a59]
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+- Updated dependencies [636ff014]
+- Updated dependencies [125ec30c]
+- Updated dependencies [3b67207b]
+  - @lens-protocol/api-bindings@0.10.0-next.2
+  - @lens-protocol/gated-content@0.3.2-next.2
+  - @lens-protocol/blockchain-bindings@0.9.1-next.1
+  - @lens-protocol/domain@0.9.1-next.1
+
+## 1.3.0-next.2
+
+### Patch Changes
+
+- df70461c: **Fixed** `useUnreadNotificationCount` to work with fresh accounts
+- 1d13a3ab: **Fixed** issue with network switch failing on some wallets. Thanks [@jarrodwatts](https://github.com/jarrodwatts)!
+
+## 1.3.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [d5efd895]
+  - @lens-protocol/api-bindings@0.9.2-next.1
+  - @lens-protocol/gated-content@0.3.2-next.1
+
+## 1.2.2
+
+### Patch Changes
+
+- Updated dependencies [06a30a2c]
+  - @lens-protocol/api-bindings@0.9.1
+  - @lens-protocol/gated-content@0.3.1
+
+## 1.3.0-next.0
+
+### Minor Changes
+
+- c8426cb3: **Added** publication types as valid argument for `usePublications` query
+- c2a91ef4: **Added** `Profile.invitedBy` field
+- cfe0d51e: **Added** `highSignalFilter` to `useNotifications` hook
+- 0f75f79d: **Added** experimental `useCurrentSession` hook
+  **Fixed** issue with `Profile` entity being leaked by the `useWalletLogin` hook
+  **Fixed** bug preventing logout on expired credentials detected at startup type
+- 847a9db3: **Added** `useClearRecentPosts` hook
+- 4c4505d2: **Added** support for Profile Guardian
+
+### Patch Changes
+
+- Updated dependencies [c2a91ef4]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [4c4505d2]
+  - @lens-protocol/api-bindings@0.9.1-next.0
+  - @lens-protocol/domain@0.9.1-next.0
+  - @lens-protocol/gated-content@0.3.1-next.0
+  - @lens-protocol/blockchain-bindings@0.9.1-next.0
+
 ## 1.2.1
 
 ### Patch Changes

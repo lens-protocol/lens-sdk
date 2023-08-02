@@ -52,7 +52,7 @@ fragment ProfileStats on ProfileStats {
   mirrorsCount: mirrorsTotal(forSources: $sources)
 }
 
-fragment Profile on Profile {
+fragment ProfileFields on Profile {
   __typename
   id
   name
@@ -67,7 +67,7 @@ fragment Profile on Profile {
     }
 
     ... on MediaSet {
-      ...MediaSet
+      ...ProfilePictureSet
     }
   }
 
@@ -77,7 +77,7 @@ fragment Profile on Profile {
     }
 
     ... on MediaSet {
-      ...MediaSet
+      ...ProfileCoverSet
     }
   }
 
@@ -138,9 +138,22 @@ fragment Profile on Profile {
 
   followStatus @client
   ownedByMe @client
+  observedBy @client
 }
 
-query ProfilesToFollow($observerId: ProfileId, $sources: [Sources!]!) {
+fragment Profile on Profile {
+  ...ProfileFields
+
+  invitedBy {
+    ...ProfileFields
+  }
+}
+
+query ProfilesToFollow(
+  $observerId: ProfileId
+  $sources: [Sources!]!
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
+) {
   result: recommendedProfiles {
     ...Profile
   }
@@ -150,6 +163,7 @@ query GetProfile(
   $request: SingleProfileQueryRequest!
   $observerId: ProfileId
   $sources: [Sources!] = []
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: profile(request: $request) {
     ...Profile
@@ -165,6 +179,7 @@ query GetAllProfiles(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!] = []
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: profiles(
     request: {
@@ -197,6 +212,7 @@ query MutualFollowersProfiles(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!]!
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: mutualFollowersProfiles(
     request: {

@@ -55,9 +55,7 @@ export function createGraphQLValidationError(message = 'No pings please!'): Grap
   });
 }
 
-export function createValidationErrorMockedResponse(
-  document: DocumentNode,
-): MockedResponse<unknown> {
+export function mockValidationErrorResponse(document: DocumentNode): MockedResponse<unknown> {
   return {
     request: {
       query: document,
@@ -68,7 +66,16 @@ export function createValidationErrorMockedResponse(
   };
 }
 
-export function createGenericErrorMockedResponse(document: DocumentNode): MockedResponse<unknown> {
+export function mockGenericSuccessResponse<T>(document: DocumentNode, data: T): MockedResponse<T> {
+  return {
+    request: {
+      query: document,
+    },
+    result: { data },
+  };
+}
+
+export function mockGenericErrorResponse(document: DocumentNode): MockedResponse<unknown> {
   return {
     request: {
       query: document,

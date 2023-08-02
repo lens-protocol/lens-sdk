@@ -5,26 +5,30 @@ import {
   RemoveReactionDocument,
   RemoveReactionData,
   RemoveReactionVariables,
-  resolveApiReactionType,
   ValidationError,
   SafeApolloClient,
+  ReactionTypes,
 } from '@lens-protocol/api-bindings';
-import { ReactionRequest, IReactionGateway } from '@lens-protocol/domain/use-cases/publications';
+import {
+  TogglePropertyRequest,
+  ITogglablePropertyGateway,
+} from '@lens-protocol/domain/use-cases/publications';
 import { assertError } from '@lens-protocol/shared-kernel';
 
-export type ExtendedReactionRequest = ReactionRequest & {
-  existingReactionType: ReactionRequest['reactionType'] | undefined;
+export type ReactionRequest = TogglePropertyRequest & {
+  reactionType: ReactionTypes;
+  existingReactionType?: ReactionTypes | null;
 };
 
-export class ReactionGateway implements IReactionGateway<ReactionRequest> {
+export class ReactionGateway implements ITogglablePropertyGateway<ReactionRequest> {
   constructor(private apolloClient: SafeApolloClient) {}
 
   async add({
     profileId,
     publicationId,
-    reactionType,
+    reactionType: reactionType,
     existingReactionType,
-  }: ExtendedReactionRequest) {
+  }: ReactionRequest) {
     if (existingReactionType === reactionType) {
       return;
     }
@@ -38,7 +42,7 @@ export class ReactionGateway implements IReactionGateway<ReactionRequest> {
       variables: {
         publicationId,
         profileId,
-        reaction: resolveApiReactionType(reactionType),
+        reaction: reactionType,
       },
     });
   }
@@ -50,7 +54,7 @@ export class ReactionGateway implements IReactionGateway<ReactionRequest> {
         variables: {
           publicationId,
           profileId,
-          reaction: resolveApiReactionType(reactionType),
+          reaction: reactionType,
         },
       });
     } catch (e) {

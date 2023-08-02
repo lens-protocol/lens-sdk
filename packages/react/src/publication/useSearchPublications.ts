@@ -1,14 +1,14 @@
 import {
-  Comment,
-  Post,
+  ContentPublication,
   useSearchPublications as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
@@ -56,16 +56,18 @@ export function useSearchPublications({
   query,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   observerId,
-}: UseSearchPublicationsArgs): PaginatedReadResult<(Post | Comment)[]> {
+}: UseSearchPublicationsArgs): PaginatedReadResult<ContentPublication[]> {
   return usePaginatedReadResult(
     useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            query,
-            limit,
-            observerId,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              query,
+              limit,
+              observerId,
+            }),
+          ),
         }),
       ),
     ),

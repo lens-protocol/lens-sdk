@@ -1,14 +1,14 @@
 import { ReactionTypes, ValidationError } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createAddReactionMockedResponse,
-  createRemoveReactionMockedResponse,
-  createRemoveReactionMockedResponseWithGraphqlValidationError,
+  mockAddReactionResponse,
+  mockRemoveReactionResponse,
+  mockRemoveReactionResponseWithGraphqlValidationError,
 } from '@lens-protocol/api-bindings/mocks';
-import { ReactionType } from '@lens-protocol/domain/entities';
-import { mockProfileId, mockPublicationId, mockReactionRequest } from '@lens-protocol/domain/mocks';
+import { mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
 
-import { ExtendedReactionRequest, ReactionGateway } from '../ReactionGateway';
+import { ReactionGateway } from '../ReactionGateway';
+import { mockReactionRequest } from '../__helpers__/mocks';
 
 describe(`Given an instance of the ${ReactionGateway.name}`, () => {
   describe(`and the ${ReactionGateway.prototype.add.name} method`, () => {
@@ -17,7 +17,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const publicationId = mockPublicationId();
 
       const apolloClient = mockLensApolloClient([
-        createAddReactionMockedResponse({
+        mockAddReactionResponse({
           variables: {
             publicationId,
             profileId,
@@ -27,7 +27,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       ]);
 
       const gateway = new ReactionGateway(apolloClient);
-      const request = mockReactionRequest<ExtendedReactionRequest>({
+      const request = mockReactionRequest({
         publicationId,
         profileId,
         existingReactionType: undefined,
@@ -42,14 +42,14 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
         const publicationId = mockPublicationId();
 
         const apolloClient = mockLensApolloClient([
-          createRemoveReactionMockedResponse({
+          mockRemoveReactionResponse({
             variables: {
               publicationId,
               profileId,
               reaction: ReactionTypes.Downvote,
             },
           }),
-          createAddReactionMockedResponse({
+          mockAddReactionResponse({
             variables: {
               publicationId,
               profileId,
@@ -59,10 +59,10 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
         ]);
 
         const gateway = new ReactionGateway(apolloClient);
-        const request = mockReactionRequest<ExtendedReactionRequest>({
+        const request = mockReactionRequest({
           publicationId,
           profileId,
-          existingReactionType: ReactionType.DOWNVOTE,
+          existingReactionType: ReactionTypes.Downvote,
         });
 
         await gateway.add(request);
@@ -76,7 +76,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const publicationId = mockPublicationId();
 
       const apolloClient = mockLensApolloClient([
-        createRemoveReactionMockedResponse({
+        mockRemoveReactionResponse({
           variables: {
             publicationId,
             profileId,
@@ -98,7 +98,7 @@ describe(`Given an instance of the ${ReactionGateway.name}`, () => {
       const profileId = mockProfileId();
       const publicationId = mockPublicationId();
       const apolloClient = mockLensApolloClient([
-        createRemoveReactionMockedResponseWithGraphqlValidationError({
+        mockRemoveReactionResponseWithGraphqlValidationError({
           variables: {
             publicationId,
             profileId,

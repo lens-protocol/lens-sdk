@@ -1,5 +1,44 @@
 # @lens-protocol/gated-content
 
+## 0.3.2-next.2
+
+### Patch Changes
+
+- de401a59: **Added** support for optimized and transformed media inside publication and profile MediaSet
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- Updated dependencies [de401a59]
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+- Updated dependencies [636ff014]
+- Updated dependencies [125ec30c]
+- Updated dependencies [3b67207b]
+  - @lens-protocol/api-bindings@0.10.0-next.2
+  - @lens-protocol/domain@0.9.1-next.1
+
+## 0.3.2-next.1
+
+### Patch Changes
+
+- Updated dependencies [d5efd895]
+  - @lens-protocol/api-bindings@0.9.2-next.1
+
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [06a30a2c]
+  - @lens-protocol/api-bindings@0.9.1
+
+## 0.3.1-next.0
+
+### Patch Changes
+
+- Updated dependencies [c2a91ef4]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [4c4505d2]
+  - @lens-protocol/api-bindings@0.9.1-next.0
+  - @lens-protocol/domain@0.9.1-next.0
+
 ## 0.3.0
 
 ### Minor Changes

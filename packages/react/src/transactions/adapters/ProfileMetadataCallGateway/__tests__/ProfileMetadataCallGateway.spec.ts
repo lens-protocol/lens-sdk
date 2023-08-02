@@ -2,11 +2,11 @@ import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 import { Profile, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
-  createCreateSetProfileMetadataTypedDataMockedResponse,
-  createCreateSetProfileMetadataViaDispatcherMockedResponse,
+  mockCreateSetProfileMetadataTypedDataResponse,
+  mockCreateSetProfileMetadataViaDispatcherResponse,
   mockLensApolloClient,
   mockCreateSetProfileMetadataTypedDataData,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockProfileFragment,
   mockRelayerResultFragment,
   mockRelayErrorFragment,
@@ -16,6 +16,10 @@ import { mockNonce, mockUpdateProfileDetailsRequest } from '@lens-protocol/domai
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Url } from '@lens-protocol/shared-kernel';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../../mediaTransforms';
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import {
   assertBroadcastingErrorResultWithRequestFallback,
@@ -34,10 +38,12 @@ function setupTestScenario({
   otherMockedResponses?: MockedResponse<unknown>[];
   uploadUrl: Url;
 }) {
-  const getProfilesByIdQueryMockedResponse = createGetProfileMockedResponse({
+  const mediaTransforms = defaultMediaTransformsConfig;
+  const getProfilesByIdQueryMockedResponse = mockGetProfileResponse({
     variables: {
       request: { profileId: existingProfile.id },
       sources: [],
+      ...mediaTransformConfigToQueryVariables(mediaTransforms),
     },
     profile: existingProfile,
   });
@@ -50,7 +56,12 @@ function setupTestScenario({
   const transactionFactory = mockITransactionFactory();
   const uploader = mockIMetadataUploader(uploadUrl);
 
-  const gateway = new ProfileMetadataCallGateway(apolloClient, transactionFactory, uploader);
+  const gateway = new ProfileMetadataCallGateway(
+    apolloClient,
+    transactionFactory,
+    uploader,
+    mediaTransforms,
+  );
 
   return { gateway, uploader };
 }
@@ -71,7 +82,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         existingProfile,
         uploadUrl,
         otherMockedResponses: [
-          createCreateSetProfileMetadataTypedDataMockedResponse({
+          mockCreateSetProfileMetadataTypedDataResponse({
             request: {
               profileId: request.profileId,
               metadata: uploadUrl,
@@ -100,7 +111,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         existingProfile,
         uploadUrl,
         otherMockedResponses: [
-          createCreateSetProfileMetadataTypedDataMockedResponse({
+          mockCreateSetProfileMetadataTypedDataResponse({
             request: {
               profileId: request.profileId,
               metadata: uploadUrl,
@@ -127,7 +138,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
         existingProfile,
         uploadUrl,
         otherMockedResponses: [
-          createCreateSetProfileMetadataViaDispatcherMockedResponse({
+          mockCreateSetProfileMetadataViaDispatcherResponse({
             variables: {
               request: {
                 profileId: request.profileId,
@@ -171,7 +182,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
           existingProfile,
           uploadUrl,
           otherMockedResponses: [
-            createCreateSetProfileMetadataViaDispatcherMockedResponse({
+            mockCreateSetProfileMetadataViaDispatcherResponse({
               variables: {
                 request: {
                   profileId: request.profileId,
@@ -183,7 +194,7 @@ describe(`Given an instance of the ${ProfileMetadataCallGateway.name}`, () => {
               },
             }),
 
-            createCreateSetProfileMetadataTypedDataMockedResponse({
+            mockCreateSetProfileMetadataTypedDataResponse({
               request: {
                 profileId: request.profileId,
                 metadata: uploadUrl,

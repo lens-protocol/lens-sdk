@@ -34,7 +34,7 @@ export type AttributeFragment = {
   value: string;
 };
 
-export type ProfileFragment = {
+export type ProfileFieldsFragment = {
   __typename: 'Profile';
   id: string;
   name: string | null;
@@ -80,6 +80,8 @@ export type ProfileFragment = {
   attributes: Array<AttributeFragment> | null;
   dispatcher: { address: string; canUseRelay: boolean } | null;
 };
+
+export type ProfileFragment = { invitedBy: ProfileFieldsFragment | null } & ProfileFieldsFragment;
 
 export type Eip712TypedDataDomainFragment = {
   name: string;
@@ -246,6 +248,7 @@ export type SimplePublicationStatsFragment = {
   totalAmountOfComments: number;
   totalUpvotes: number;
   totalDownvotes: number;
+  totalBookmarks: number;
 };
 
 export type MirrorBaseFragment = {
@@ -266,9 +269,11 @@ export type MirrorFragment = {
 export type CommentBaseFragment = {
   __typename: 'Comment';
   id: string;
+  appId: string | null;
   collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
+  bookmarked: boolean;
   isGated: boolean;
   isDataAvailability: boolean;
   dataAvailabilityProofs: string | null;
@@ -313,9 +318,11 @@ export type CommentFragment = {
 export type PostFragment = {
   __typename: 'Post';
   id: string;
+  appId: string | null;
   collectNftAddress: string | null;
   createdAt: string;
   hidden: boolean;
+  bookmarked: boolean;
   isGated: boolean;
   isDataAvailability: boolean;
   dataAvailabilityProofs: string | null;
@@ -465,8 +472,8 @@ export const AttributeFragmentDoc = gql`
     value
   }
 `;
-export const ProfileFragmentDoc = gql`
-  fragment Profile on Profile {
+export const ProfileFieldsFragmentDoc = gql`
+  fragment ProfileFields on Profile {
     __typename
     id
     name
@@ -536,6 +543,15 @@ export const ProfileFragmentDoc = gql`
   ${UnknownFollowModuleSettingsFragmentDoc}
   ${AttributeFragmentDoc}
 `;
+export const ProfileFragmentDoc = gql`
+  fragment Profile on Profile {
+    ...ProfileFields
+    invitedBy {
+      ...ProfileFields
+    }
+  }
+  ${ProfileFieldsFragmentDoc}
+`;
 export const MirrorBaseFragmentDoc = gql`
   fragment MirrorBase on Mirror {
     __typename
@@ -558,6 +574,7 @@ export const SimplePublicationStatsFragmentDoc = gql`
     totalAmountOfComments
     totalUpvotes
     totalDownvotes
+    totalBookmarks
   }
 `;
 export const MetadataAttributeOutputFragmentDoc = gql`
@@ -738,6 +755,7 @@ export const PostFragmentDoc = gql`
   fragment Post on Post {
     __typename
     id
+    appId
     stats {
       ...SimplePublicationStats
     }
@@ -792,6 +810,7 @@ export const PostFragmentDoc = gql`
     collectNftAddress
     createdAt
     hidden
+    bookmarked(by: $observerId)
     isGated
     isDataAvailability
     dataAvailabilityProofs
@@ -824,6 +843,7 @@ export const CommentBaseFragmentDoc = gql`
   fragment CommentBase on Comment {
     __typename
     id
+    appId
     stats {
       ...SimplePublicationStats
     }
@@ -878,6 +898,7 @@ export const CommentBaseFragmentDoc = gql`
     collectNftAddress
     createdAt
     hidden
+    bookmarked(by: $observerId)
     isGated
     isDataAvailability
     dataAvailabilityProofs

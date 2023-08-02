@@ -4,6 +4,9 @@ query SearchPublications(
   $query: Search!
   $sources: [Sources!]!
   $observerId: ProfileId
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: search(
     request: { query: $query, type: PUBLICATION, limit: $limit, cursor: $cursor, sources: $sources }
@@ -32,6 +35,7 @@ query SearchProfiles(
   $query: Search!
   $observerId: ProfileId
   $sources: [Sources!]!
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: search(request: { query: $query, type: PROFILE, limit: $limit, cursor: $cursor }) {
     ... on ProfileSearchResult {

@@ -1,7 +1,7 @@
 import { PublicationRevenue } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetPublicationRevenueMockedResponse,
+  mockGetPublicationRevenueResponse,
   mockPublicationRevenueFragment,
   mockSources,
   simulateAuthenticatedProfile,
@@ -13,6 +13,10 @@ import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { usePublicationRevenue, UsePublicationRevenueArgs } from '../usePublicationRevenue';
 
 function setupTestScenario({
@@ -28,12 +32,14 @@ function setupTestScenario({
   return renderHookWithMocks(() => usePublicationRevenue(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
-        createGetPublicationRevenueMockedResponse({
+        mockGetPublicationRevenueResponse({
           variables: {
             ...args,
             observerId: expectedObserverId ?? null,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           revenue: result,
         }),

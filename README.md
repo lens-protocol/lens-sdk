@@ -7,7 +7,6 @@
 The official SDK for the [Lens Protocol](https://www.lens.xyz/) 🌿.
 
 - [Documentation](#documentation)
-- [Road Map](#road-map)
 - [Contributing](#contributing)
   - [Setup](#setup)
   - [Running tests](#running-tests)
@@ -22,6 +21,7 @@ All Lens Protocol documentation, including this SDK documentation can be found a
 
 - [Introduction](https://docs.lens.xyz/docs/sdk-react-intro)
 - [Getting Started](https://docs.lens.xyz/docs/sdk-react-getting-started)
+- [Playground](https://lens-sdk-example-web-wagmi.vercel.app/)
 
 ## Contributing
 

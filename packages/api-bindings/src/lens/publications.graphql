@@ -1,5 +1,6 @@
 query GetPublications(
   $profileId: ProfileId
+  $profileIds: [ProfileId!]
   $observerId: ProfileId
   $limit: LimitScalar!
   $cursor: Cursor
@@ -8,10 +9,14 @@ query GetPublications(
   $metadata: PublicationMetadataFilters
   $commentsOf: InternalPublicationId
   $walletAddress: EthereumAddress
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: publications(
     request: {
       profileId: $profileId
+      profileIds: $profileIds
       limit: $limit
       collectedBy: $walletAddress
       cursor: $cursor
@@ -50,6 +55,9 @@ query ExplorePublications(
   $sortCriteria: PublicationSortCriteria!
   $sources: [Sources!]!
   $timestamp: TimestampScalar
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: explorePublications(
     request: {
@@ -88,6 +96,7 @@ query WhoCollectedPublication(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!]!
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: whoCollectedPublication(
     request: { publicationId: $publicationId, limit: $limit, cursor: $cursor }
@@ -107,6 +116,9 @@ query ProfilePublicationsForSale(
   $limit: LimitScalar!
   $cursor: Cursor
   $sources: [Sources!]!
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: profilePublicationsForSale(
     request: { profileId: $profileId, limit: $limit, cursor: $cursor, sources: $sources }
@@ -115,6 +127,41 @@ query ProfilePublicationsForSale(
       ... on Post {
         ...Post
       }
+      ... on Comment {
+        ...Comment
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query GetProfileBookmarks(
+  $profileId: ProfileId!
+  $limit: LimitScalar!
+  $sources: [Sources!]!
+  $metadata: PublicationMetadataFilters
+  $cursor: Cursor
+  $observerId: ProfileId
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
+) {
+  result: publicationsProfileBookmarks(
+    request: {
+      cursor: $cursor
+      limit: $limit
+      metadata: $metadata
+      profileId: $profileId
+      sources: $sources
+    }
+  ) {
+    items {
+      ... on Post {
+        ...Post
+      }
+
       ... on Comment {
         ...Comment
       }

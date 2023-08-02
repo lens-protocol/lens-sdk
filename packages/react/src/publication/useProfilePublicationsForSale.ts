@@ -5,10 +5,11 @@ import {
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import {
-  WithObserverIdOverride,
   useActiveProfileAsDefaultObserver,
-  useSourcesFromConfig,
   useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+  WithObserverIdOverride,
 } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
@@ -32,11 +33,13 @@ export function useProfilePublicationsForSale({
     useUnderlyingQuery(
       useLensApolloClient(
         useActiveProfileAsDefaultObserver({
-          variables: useSourcesFromConfig({
-            profileId,
-            observerId,
-            limit,
-          }),
+          variables: useMediaTransformFromConfig(
+            useSourcesFromConfig({
+              profileId,
+              observerId,
+              limit,
+            }),
+          ),
         }),
       ),
     ),

@@ -1,5 +1,77 @@
 # @lens-protocol/react-web
 
+## 1.3.0-next.3
+
+### Minor Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- ad797714: **Added** `useNotInterested` hook
+- 636ff014: **Added** `profileIds` to `usePublications` hook
+- 3b67207b: **Added** `appId` to `Comment` and `Post`
+
+### Patch Changes
+
+- 125ec30c: **Fixed** `usePollDetails` to be robust to flagged or misconfigured Snapshot Proposals
+- Updated dependencies [de401a59]
+- Updated dependencies [a5cf2198]
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+- Updated dependencies [636ff014]
+- Updated dependencies [125ec30c]
+- Updated dependencies [3b67207b]
+  - @lens-protocol/api-bindings@0.10.0-next.2
+  - @lens-protocol/react@1.3.0-next.3
+  - @lens-protocol/gated-content@0.3.2-next.2
+
+## 1.3.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [df70461c]
+- Updated dependencies [1d13a3ab]
+  - @lens-protocol/react@1.3.0-next.2
+
+## 1.3.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [d5efd895]
+  - @lens-protocol/api-bindings@0.9.2-next.1
+  - @lens-protocol/gated-content@0.3.2-next.1
+  - @lens-protocol/react@1.3.0-next.1
+
+## 1.2.2
+
+### Patch Changes
+
+- Updated dependencies [06a30a2c]
+  - @lens-protocol/api-bindings@0.9.1
+  - @lens-protocol/gated-content@0.3.1
+  - @lens-protocol/react@1.2.2
+
+## 1.3.0-next.0
+
+### Minor Changes
+
+- c2a91ef4: **Added** `Profile.invitedBy` field
+- cfe0d51e: **Added** `highSignalFilter` to `useNotifications` hook
+- 0f75f79d: **Added** experimental `useCurrentSession` hook
+  **Fixed** issue with `Profile` entity being leaked by the `useWalletLogin` hook
+  **Fixed** bug preventing logout on expired credentials detected at startup type
+- 4c4505d2: **Added** support for Profile Guardian
+
+### Patch Changes
+
+- Updated dependencies [c8426cb3]
+- Updated dependencies [c2a91ef4]
+- Updated dependencies [cfe0d51e]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [847a9db3]
+- Updated dependencies [4c4505d2]
+  - @lens-protocol/react@1.3.0-next.0
+  - @lens-protocol/api-bindings@0.9.1-next.0
+  - @lens-protocol/gated-content@0.3.1-next.0
+
 ## 1.2.1
 
 ### Patch Changes

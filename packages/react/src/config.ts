@@ -4,6 +4,7 @@ import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
+import { MediaTransformsConfig } from './mediaTransforms';
 import { createGatedClient } from './transactions/infrastructure/createGatedClient';
 import { IProviderBinding, GetProvider } from './wallet/infrastructure/ProviderFactory';
 import { ISignerBinding, GetSigner } from './wallet/infrastructure/SignerFactory';
@@ -57,6 +58,15 @@ export type LensConfig = {
    * @see {@link appId} helper
    */
   appId?: AppId;
+
+  /**
+   * Media returned from the publication and profile queries can be transformed
+   * to sizes needed by the SDK consuming application.
+   * To overwrite default transformation values, provide a `mediaTransforms` object.
+   *
+   * @see {@link MediaTransformsConfig} for more information
+   */
+  mediaTransforms?: MediaTransformsConfig;
 };
 
 /**

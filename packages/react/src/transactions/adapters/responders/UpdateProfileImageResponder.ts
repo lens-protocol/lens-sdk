@@ -35,6 +35,22 @@ export class UpdateProfileImageResponder
               cover: null,
               mimeType: null,
             },
+            optimized: {
+              __typename: 'Media',
+              url: request.url,
+              // we don't know the following (yet), not important for now
+              altTag: null,
+              cover: null,
+              mimeType: null,
+            },
+            thumbnail: {
+              __typename: 'Media',
+              url: request.url,
+              // we don't know the following (yet), not important for now
+              altTag: null,
+              cover: null,
+              mimeType: null,
+            },
           },
         };
       });

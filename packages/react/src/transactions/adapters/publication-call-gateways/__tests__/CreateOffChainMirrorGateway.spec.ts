@@ -1,7 +1,7 @@
 import { SafeApolloClient, RelayErrorReasons } from '@lens-protocol/api-bindings';
 import {
-  createCreateDataAvailabilityMirrorTypedDataMockedResponse,
-  createCreateDataAvailabilityMirrorViaDispatcherDataMockedResponse,
+  mockCreateDataAvailabilityMirrorTypedDataResponse,
+  mockCreateDataAvailabilityMirrorViaDispatcherDataResponse,
   mockLensApolloClient,
   mockCreateMirrorTypedDataData,
   mockDataAvailabilityPublicationResult,
@@ -35,7 +35,7 @@ describe(`Given an instance of ${CreateOffChainMirrorGateway.name}`, () => {
 
     it(`should create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
       const apolloClient = mockLensApolloClient([
-        createCreateDataAvailabilityMirrorTypedDataMockedResponse({
+        mockCreateDataAvailabilityMirrorTypedDataResponse({
           variables: {
             request: {
               from: request.profileId,
@@ -59,7 +59,7 @@ describe(`Given an instance of ${CreateOffChainMirrorGateway.name}`, () => {
 
     it(`should create an instance of the ${DataTransaction.name}`, async () => {
       const apolloClient = mockLensApolloClient([
-        createCreateDataAvailabilityMirrorViaDispatcherDataMockedResponse({
+        mockCreateDataAvailabilityMirrorViaDispatcherDataResponse({
           variables: {
             request: {
               from: request.profileId,
@@ -91,7 +91,7 @@ describe(`Given an instance of ${CreateOffChainMirrorGateway.name}`, () => {
       `should fail w/ a ${BroadcastingError.name} in case of RelayError response with "$reason" reason`,
       async (relayError) => {
         const apolloClient = mockLensApolloClient([
-          createCreateDataAvailabilityMirrorViaDispatcherDataMockedResponse({
+          mockCreateDataAvailabilityMirrorViaDispatcherDataResponse({
             variables: {
               request: {
                 from: request.profileId,
@@ -102,7 +102,7 @@ describe(`Given an instance of ${CreateOffChainMirrorGateway.name}`, () => {
               result: relayError,
             },
           }),
-          createCreateDataAvailabilityMirrorTypedDataMockedResponse({
+          mockCreateDataAvailabilityMirrorTypedDataResponse({
             variables: {
               request: {
                 from: request.profileId,

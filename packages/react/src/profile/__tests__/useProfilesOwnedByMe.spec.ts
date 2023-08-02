@@ -1,6 +1,6 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
-  createGetAllProfilesMockedResponse,
+  mockGetAllProfilesResponse,
   mockLensApolloClient,
   mockProfileFragment,
   mockSources,
@@ -13,6 +13,10 @@ import { EthereumAddress } from '@lens-protocol/shared-kernel';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { useProfilesOwnedByMe, UseProfilesOwnedByMeArgs } from '../useProfilesOwnedByMe';
 
 function setupTestScenario({
@@ -30,14 +34,16 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfilesOwnedByMe(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
-        createGetAllProfilesMockedResponse({
+        mockGetAllProfilesResponse({
           variables: {
             ...args,
             byOwnerAddresses: [address],
             observerId: expectedObserverId ?? null,
             limit: 10,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profiles: result,
         }),
@@ -86,7 +92,7 @@ describe(`Given the ${useProfilesOwnedByMe.name} hook`, () => {
         expect(result.current.data).toMatchObject(expectedProfiles);
       });
 
-      it('should always allow to specify the "observerId" on a per-call basis', async () => {
+      it('should allow to override the "observerId" on a per-call basis', async () => {
         const observerId = mockProfileId();
 
         const { result } = setupTestScenario({

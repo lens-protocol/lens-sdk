@@ -1,6 +1,6 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
-  createGetAllProfilesMockedResponse,
+  mockGetAllProfilesResponse,
   mockLensApolloClient,
   mockProfileFragment,
   mockSources,
@@ -12,6 +12,10 @@ import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { useProfiles, UseProfilesArgs } from '../useProfiles';
 
@@ -25,14 +29,16 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfiles(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
-        createGetAllProfilesMockedResponse({
+        mockGetAllProfilesResponse({
           variables: {
             byHandles: args.handles,
             byProfileIds: args.profileIds,
             limit: DEFAULT_PAGINATED_QUERY_LIMIT,
             sources,
             observerId: expectedObserverId ?? null,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           profiles: result,
         }),
@@ -86,7 +92,7 @@ describe(`Given the ${useProfiles.name} hook`, () => {
         expect(result.current.data).toMatchObject(expectations);
       });
 
-      it('should always allow to specify the "observerId" on a per-call basis', async () => {
+      it('should allow to override the "observerId" on a per-call basis', async () => {
         const observerId = mockProfileId();
 
         const { result } = setupTestScenario({

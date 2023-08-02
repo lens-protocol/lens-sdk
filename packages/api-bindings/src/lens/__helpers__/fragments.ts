@@ -1,6 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { mockProfileId, mockPublicationId, mockTransactionHash } from '@lens-protocol/domain/mocks';
+import {
+  mockAppId,
+  mockProfileId,
+  mockPublicationId,
+  mockTransactionHash,
+} from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import {
   CollectPolicyType,
@@ -56,7 +61,14 @@ import {
   Wallet,
   WhoReactedResult,
 } from '../generated';
-import { AnyPublication, CollectModule, erc20Amount, ProfileMedia } from '../utils';
+import {
+  AnyPublication,
+  CollectModule,
+  erc20Amount,
+  ProfileCoverMedia,
+  ProfileOwnedByMe,
+  ProfilePictureMedia,
+} from '../utils';
 
 export function mockMediaFragment(overrides?: Partial<Media>): Media {
   return {
@@ -69,9 +81,24 @@ export function mockMediaFragment(overrides?: Partial<Media>): Media {
   };
 }
 
-export function mockProfileMediaFragment(overrides?: Partial<ProfileMedia>): ProfileMedia {
+export function mockProfilePictureMediaFragment(
+  overrides?: Partial<ProfilePictureMedia>,
+): ProfilePictureMedia {
   return {
     original: mockMediaFragment(),
+    optimized: mockMediaFragment(),
+    thumbnail: mockMediaFragment(),
+    ...overrides,
+    __typename: 'MediaSet',
+  };
+}
+
+export function mockProfileCoverPictureMediaFragment(
+  overrides?: Partial<ProfileCoverMedia>,
+): ProfileCoverMedia {
+  return {
+    original: mockMediaFragment(),
+    optimized: mockMediaFragment(),
     ...overrides,
     __typename: 'MediaSet',
   };
@@ -129,8 +156,8 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     handle: faker.internet.userName(firstName, lastName),
     ownedBy: mockEthereumAddress(),
     interests: [],
-    picture: mockProfileMediaFragment(),
-    coverPicture: mockProfileMediaFragment(),
+    picture: mockProfilePictureMediaFragment(),
+    coverPicture: mockProfileCoverPictureMediaFragment(),
 
     stats: mockProfileStatsFragment(overrides?.stats),
 
@@ -164,9 +191,19 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     __attributes: [],
     attributes: {} as ProfileAttributes,
 
+    invitedBy: null,
+    observedBy: null,
+
     ...overrides,
     __typename: 'Profile',
   };
+}
+
+export function mockProfileOwnedByMeFragment(overrides?: Partial<Profile>): ProfileOwnedByMe {
+  return mockProfileFragment({
+    ...overrides,
+    ownedByMe: true,
+  }) as ProfileOwnedByMe;
 }
 
 export function mockRelayerResultFragment(txHash: string = mockTransactionHash()): RelayerResult {
@@ -202,6 +239,7 @@ export function mockPublicationStatsFragment(
     totalUpvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     totalDownvotes: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     commentsCount: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
+    totalBookmarks: faker.datatype.number({ max: 42000, min: 0, precision: 1 }),
     ...overrides,
     __typename: 'PublicationStats',
   };
@@ -272,6 +310,7 @@ function mockNoFeeCollectPolicy(overrides?: Partial<NoFeeCollectPolicy>): NoFeeC
 export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>): Post {
   return {
     id: mockPublicationId(),
+    appId: mockAppId(),
     createdAt: faker.datatype.datetime().toISOString(),
     stats: mockPublicationStatsFragment(),
     metadata: mockMetadataOutputFragment(),
@@ -288,9 +327,12 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
     mirrors: [],
     reaction: null,
     hidden: false,
+    notInterested: false,
+    bookmarked: false,
 
     isGated: false,
     decryptionCriteria: null,
+    observedBy: null,
 
     canComment: {
       result: true,
@@ -315,6 +357,7 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
 
   return {
     id: mockPublicationId(),
+    appId: mockAppId(),
     stats: mockPublicationStatsFragment(),
     metadata: mockMetadataOutputFragment(),
     profile: mockProfileFragment(),
@@ -333,9 +376,12 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
     mirrors: [],
     reaction: null,
     hidden: false,
+    notInterested: false,
+    bookmarked: false,
 
     isGated: false,
     decryptionCriteria: null,
+    observedBy: null,
 
     canComment: {
       result: true,

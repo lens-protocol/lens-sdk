@@ -8,6 +8,7 @@ import {
   useSessionVar,
 } from '@lens-protocol/api-bindings';
 import {
+  assertError,
   EthereumAddress,
   hasTwoOrMore,
   invariant,
@@ -192,36 +193,58 @@ export function usePollDetails({
     if (data.proposal === null) {
       return {
         data: undefined,
-        error: new NotFoundError(`Snapshot proposal ${publication.contentInsight.proposalId}`),
+        error: new NotFoundError(`Snapshot Proposal ${publication.contentInsight.proposalId}`),
         loading: false,
       };
     }
 
-    return {
-      data: {
-        author: data.proposal.author,
-        choices: buildPollChoices(data.proposal, data.votes ?? []),
-        eligibility: resolveVoteEligibility(data.vp),
-        endAt: new Date(data.proposal.end),
-        isActive: data.proposal.state === 'active',
-        isSingleChoice:
-          data.proposal.type === SnapshotVotingSystem.SINGLE_CHOICE ||
-          data.proposal.type === SnapshotVotingSystem.BASIC,
-        quorum: data.proposal.quorum,
-        snapshot: data.proposal.snapshot,
-        space: {
-          id: publication.contentInsight.spaceId,
-          name: data.proposal.space?.name ?? publication.contentInsight.spaceId,
+    if (data.proposal.flagged) {
+      return {
+        data: undefined,
+        error: new NotFoundError(
+          `Snapshot Proposal ${publication.contentInsight.proposalId} might contain scams, offensive material, or be malicious in nature`,
+        ),
+        loading: false,
+      };
+    }
+
+    try {
+      return {
+        data: {
+          author: data.proposal.author,
+          choices: buildPollChoices(data.proposal, data.votes ?? []),
+          eligibility: resolveVoteEligibility(data.vp),
+          endAt: new Date(data.proposal.end),
+          isActive: data.proposal.state === 'active',
+          isSingleChoice:
+            data.proposal.type === SnapshotVotingSystem.SINGLE_CHOICE ||
+            data.proposal.type === SnapshotVotingSystem.BASIC,
+          quorum: data.proposal.quorum,
+          snapshot: data.proposal.snapshot,
+          space: {
+            id: publication.contentInsight.spaceId,
+            name: data.proposal.space?.name ?? publication.contentInsight.spaceId,
+          },
+          startAt: new Date(data.proposal.start),
+          system: data.proposal.type as SnapshotVotingSystem,
+          title: data.proposal.title,
+          totalVotes: data.proposal.scores_total ?? 0,
+          url: publication.contentInsight.url,
         },
-        startAt: new Date(data.proposal.start),
-        system: data.proposal.type as SnapshotVotingSystem,
-        title: data.proposal.title,
-        totalVotes: data.proposal.scores_total ?? 0,
-        url: publication.contentInsight.url,
-      },
-      error: undefined,
-      loading: false,
-    };
+        error: undefined,
+        loading: false,
+      };
+    } catch (error) {
+      assertError(error);
+
+      return {
+        data: undefined,
+        error: new NotFoundError(
+          `Snapshot Proposal ${publication.contentInsight.proposalId} could not be processed due to\n${error.message}`,
+        ),
+        loading: false,
+      };
+    }
   }
 
   return {

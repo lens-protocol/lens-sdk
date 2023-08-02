@@ -22,5 +22,22 @@
     "@lens-protocol/tsconfig": "0.2.0",
     "@lens-protocol/wagmi": "2.0.1"
   },
-  "changesets": []
+  "changesets": [
+    "curvy-keys-unite",
+    "empty-vans-hang",
+    "fair-colts-agree",
+    "five-hounds-bathe",
+    "great-grapes-walk",
+    "heavy-experts-smell",
+    "large-countries-brush",
+    "metal-bikes-impress",
+    "new-items-film",
+    "olive-chefs-tell",
+    "orange-gorillas-jump",
+    "polite-students-move",
+    "shiny-bats-admire",
+    "spicy-cheetahs-promise",
+    "tough-ducks-perform",
+    "tough-kings-tell"
+  ]
 }

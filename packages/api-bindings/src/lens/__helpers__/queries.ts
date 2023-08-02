@@ -24,6 +24,9 @@ import {
   GetAllProfilesData,
   GetAllProfilesDocument,
   GetAllProfilesVariables,
+  GetProfileBookmarksData,
+  GetProfileBookmarksDocument,
+  GetProfileBookmarksVariables,
   GetProfileData,
   GetProfileDocument,
   GetProfilePublicationRevenueData,
@@ -80,7 +83,7 @@ import {
   WhoReactedPublicationVariables,
   WhoReactedResult,
 } from '../generated';
-import { SearchProfilesResult, SearchPublicationsResult } from '../index';
+import { SearchProfilesData, SearchPublicationsData } from '../index';
 import { Sources } from '../sources';
 import { AnyPublication, ContentPublication } from '../utils/publication';
 import {
@@ -98,7 +101,7 @@ export function mockCursor(): Cursor {
   return faker.random.alphaNumeric(10) as Cursor;
 }
 
-export function createProfilesToFollowMockedResponse({
+export function mockProfilesToFollowResponse({
   variables,
   profiles,
 }: {
@@ -118,7 +121,7 @@ export function createProfilesToFollowMockedResponse({
   };
 }
 
-export function createGetProfileMockedResponse({
+export function mockGetProfileResponse({
   variables,
   profile = mockProfileFragment(),
 }: {
@@ -147,7 +150,7 @@ function mockGetAllProfilesData(profiles: Profile[]): GetAllProfilesData {
   };
 }
 
-export function createGetAllProfilesMockedResponse({
+export function mockGetAllProfilesResponse({
   variables,
   profiles = [mockProfileFragment()],
 }: {
@@ -182,7 +185,7 @@ export function mockHasTxHashBeenIndexedData(
   };
 }
 
-export function createHasTxHashBeenIndexedMockedResponse({
+export function mockHasTxHashBeenIndexedResponse({
   variables,
   data,
 }: {
@@ -221,7 +224,7 @@ function mockProxyActionStatusResult(
   };
 }
 
-export function createProxyActionStatusMockedResponse(instructions: {
+export function mockProxyActionStatusResponse(instructions: {
   result: { reason: string; lastKnownTxId: string } | Partial<ProxyActionStatusResult>;
   variables: ProxyActionStatusVariables;
 }): MockedResponse<ProxyActionStatusData> {
@@ -241,7 +244,7 @@ export function createProxyActionStatusMockedResponse(instructions: {
   };
 }
 
-export function createEnabledModuleCurrenciesMockedResponse(
+export function mockEnabledModuleCurrenciesResponse(
   currencies: Erc20[],
 ): MockedResponse<EnabledModuleCurrenciesData> {
   return {
@@ -262,7 +265,7 @@ export function createEnabledModuleCurrenciesMockedResponse(
   };
 }
 
-export function createWhoCollectedPublicationMockedResponse(args: {
+export function mockWhoCollectedPublicationResponse(args: {
   variables: WhoCollectedPublicationVariables;
   wallets: Wallet[];
 }): MockedResponse<WhoCollectedPublicationData> {
@@ -282,7 +285,7 @@ export function createWhoCollectedPublicationMockedResponse(args: {
   };
 }
 
-export function createMutualFollowersMockedResponse(args: {
+export function mockMutualFollowersResponse(args: {
   variables: MutualFollowersProfilesVariables;
   profiles: Profile[];
 }): MockedResponse<MutualFollowersProfilesData> {
@@ -302,7 +305,7 @@ export function createMutualFollowersMockedResponse(args: {
   };
 }
 
-export function createGetPublicationsMockedResponse(args: {
+export function mockGetPublicationsResponse(args: {
   variables: GetPublicationsVariables;
   publications: Array<AnyPublication>;
 }): MockedResponse<GetPublicationsData> {
@@ -322,7 +325,7 @@ export function createGetPublicationsMockedResponse(args: {
   };
 }
 
-export function createFeedMockedResponse(args: {
+export function mockFeedResponse(args: {
   variables: FeedVariables;
   items: FeedItem[];
 }): MockedResponse<FeedData> {
@@ -342,7 +345,7 @@ export function createFeedMockedResponse(args: {
   };
 }
 
-export function createExplorePublicationsMockedResponse(args: {
+export function mockExplorePublicationsResponse(args: {
   variables: ExplorePublicationsVariables;
   items: Array<Post | Comment | Mirror>;
 }): MockedResponse<ExplorePublicationsData> {
@@ -362,7 +365,7 @@ export function createExplorePublicationsMockedResponse(args: {
   };
 }
 
-export function createGetPublicationRevenueMockedResponse(args: {
+export function mockGetPublicationRevenueResponse(args: {
   variables: GetPublicationRevenueVariables;
   revenue: PublicationRevenue | null;
 }): MockedResponse<GetPublicationRevenueData> {
@@ -379,7 +382,7 @@ export function createGetPublicationRevenueMockedResponse(args: {
   };
 }
 
-export function createGetProfilePublicationRevenueMockedResponse(args: {
+export function mockGetProfilePublicationRevenueResponse(args: {
   variables: GetProfilePublicationRevenueVariables;
   items: PublicationRevenue[];
 }): MockedResponse<GetProfilePublicationRevenueData> {
@@ -399,7 +402,7 @@ export function createGetProfilePublicationRevenueMockedResponse(args: {
   };
 }
 
-export function createProfilePublicationsForSaleMockedResponse(args: {
+export function mockProfilePublicationsForSaleResponse(args: {
   variables: ProfilePublicationsForSaleVariables;
   items: ContentPublication[];
 }): MockedResponse<ProfilePublicationsForSaleData> {
@@ -419,7 +422,7 @@ export function createProfilePublicationsForSaleMockedResponse(args: {
   };
 }
 
-export function createWhoReactedPublicationMockedResponse(args: {
+export function mockWhoReactedPublicationResponse(args: {
   variables: WhoReactedPublicationVariables;
   items: Array<WhoReactedResult>;
 }): MockedResponse<WhoReactedPublicationData> {
@@ -439,7 +442,7 @@ export function createWhoReactedPublicationMockedResponse(args: {
   };
 }
 
-export function createProfileFollowRevenueMockedResponse({
+export function mockProfileFollowRevenueResponse({
   variables,
   revenues,
 }: {
@@ -459,10 +462,10 @@ export function createProfileFollowRevenueMockedResponse({
   };
 }
 
-export function createSearchProfilesMockedResponse(args: {
+export function mockSearchProfilesResponse(args: {
   variables: SearchProfilesVariables;
   items: Profile[];
-}): MockedResponse<SearchProfilesResult> {
+}): MockedResponse<SearchProfilesData> {
   return {
     request: {
       query: SearchProfilesDocument,
@@ -480,7 +483,7 @@ export function createSearchProfilesMockedResponse(args: {
   };
 }
 
-export function createExploreProfilesMockedResponse(args: {
+export function mockExploreProfilesResponse(args: {
   variables: ExploreProfilesVariables;
   items: Array<Profile>;
 }): MockedResponse<ExploreProfilesData> {
@@ -500,10 +503,10 @@ export function createExploreProfilesMockedResponse(args: {
   };
 }
 
-export function createSearchPublicationsMockedResponse(args: {
+export function mockSearchPublicationsResponse(args: {
   variables: SearchPublicationsVariables;
   items: Array<ContentPublication>;
-}): MockedResponse<SearchPublicationsResult> {
+}): MockedResponse<SearchPublicationsData> {
   return {
     request: {
       query: SearchPublicationsDocument,
@@ -529,7 +532,7 @@ function mockGetPublicationData(
   };
 }
 
-export function createGetPublicationMockedResponse({
+export function mockGetPublicationResponse({
   variables,
   publication,
 }: {
@@ -547,7 +550,7 @@ export function createGetPublicationMockedResponse({
   };
 }
 
-export function createEnabledModulesMockedResponse({
+export function mockEnabledModulesResponse({
   data = mockEnabledModulesFragment(),
 }: {
   data?: EnabledModules;
@@ -559,6 +562,29 @@ export function createEnabledModulesMockedResponse({
     result: {
       data: {
         result: data,
+      },
+    },
+  };
+}
+
+export function mockGetProfileBookmarksResponse({
+  variables,
+  publications,
+}: {
+  variables: GetProfileBookmarksVariables;
+  publications: ContentPublication[];
+}): MockedResponse<GetProfileBookmarksData> {
+  return {
+    request: {
+      query: GetProfileBookmarksDocument,
+      variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: publications,
+          pageInfo: mockPaginatedResultInfo(),
+        },
       },
     },
   };

@@ -6,7 +6,7 @@ import {
   SnapshotProposal,
 } from '../generated';
 
-export function createGetSnapshotProposalDataMockedResponse({
+export function mockGetSnapshotProposalDataResponse({
   proposal,
 }: {
   proposal: SnapshotProposal;

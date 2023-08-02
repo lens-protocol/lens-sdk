@@ -1,5 +1,46 @@
 # @lens-protocol/api-bindings
 
+## 0.10.0-next.2
+
+### Minor Changes
+
+- de401a59: **Added** support for optimized and transformed media inside publication and profile MediaSet
+- 3b67207b: **Added** `appId` to `Comment` and `Post`
+
+### Patch Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- ad797714: **Added** `useNotInterested` hook
+- 636ff014: **Added** `profileIds` to `usePublications` hook
+- 125ec30c: **Fixed** `usePollDetails` to be robust to flagged or misconfigured Snapshot Proposals
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+  - @lens-protocol/domain@0.9.1-next.1
+
+## 0.9.2-next.1
+
+### Patch Changes
+
+- d5efd895: **Fixed** crash caused by token-gated mismatch of publication author access condition"
+
+## 0.9.1
+
+### Patch Changes
+
+- 06a30a2c: **Fixed** crash caused by token-gated mismatch of publication author access condition"
+
+## 0.9.1-next.0
+
+### Patch Changes
+
+- c2a91ef4: **Added** `Profile.invitedBy` field
+- 0f75f79d: **Added** experimental `useCurrentSession` hook
+  **Fixed** issue with `Profile` entity being leaked by the `useWalletLogin` hook
+  **Fixed** bug preventing logout on expired credentials detected at startup type
+- 4c4505d2: **Added** support for Profile Guardian
+- Updated dependencies [0f75f79d]
+  - @lens-protocol/domain@0.9.1-next.0
+
 ## 0.9.0
 
 ### Minor Changes

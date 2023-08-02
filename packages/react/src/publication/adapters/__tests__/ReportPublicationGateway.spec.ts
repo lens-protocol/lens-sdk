@@ -8,7 +8,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createReportPublicationMockedResponse,
+  mockReportPublicationResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { ReportReason } from '@lens-protocol/domain/entities';
 import { mockPublicationId, mockReportPublicationRequest } from '@lens-protocol/domain/mocks';
@@ -187,7 +187,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         const additionalComments = faker.lorem.sentence();
 
         const apolloClient = mockLensApolloClient([
-          createReportPublicationMockedResponse({
+          mockReportPublicationResponse({
             variables: {
               publicationId,
               reason: expectedRequestReason,

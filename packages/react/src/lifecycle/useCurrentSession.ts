@@ -12,7 +12,11 @@ import { WalletData } from '@lens-protocol/domain/use-cases/lifecycle';
 import { invariant, never } from '@lens-protocol/shared-kernel';
 import { useEffect, useRef } from 'react';
 
-import { useLensApolloClient, useSourcesFromConfig } from '../helpers/arguments';
+import {
+  useLensApolloClient,
+  useMediaTransformFromConfig,
+  useSourcesFromConfig,
+} from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
 
 export type {
@@ -74,21 +78,26 @@ export function useCurrentSession(): ReadResult<
 > {
   const session = useSessionVar();
 
-  const prevSessionValue = usePrevious(session);
+  const prevSession = usePrevious(session);
 
   const trigger = session?.type === SessionType.WithProfile;
+  const profileId = session?.type === SessionType.WithProfile ? session.profile.id : undefined;
 
   const { data, error } = useGetProfile(
     useLensApolloClient({
-      variables: useSourcesFromConfig({
-        request: {
-          profileId: session?.type === SessionType.WithProfile ? session.profile.id : undefined,
-        },
-      }),
+      variables: useMediaTransformFromConfig(
+        useSourcesFromConfig({
+          request: {
+            profileId,
+          },
+        }),
+      ),
       fetchPolicy: 'cache-first',
       skip: !trigger,
     }),
   );
+
+  const prevData = usePrevious(data);
 
   if (!session) {
     return {
@@ -115,7 +124,8 @@ export function useCurrentSession(): ReadResult<
   }
 
   if (!data) {
-    if (!prevSessionValue) {
+    if (!prevSession) {
+      // no data, no previous session, so still loading for initial data
       return {
         data: undefined,
         error: undefined,
@@ -123,29 +133,42 @@ export function useCurrentSession(): ReadResult<
       };
     }
 
-    if (prevSessionValue.type === SessionType.WithProfile) {
-      never(
-        `Cannot retain previous session data while fetching Profile [ID:${session.profile.id}]\n` +
-          `The previous authenticated session is for Profile [ID:${prevSessionValue.profile.id}].\n` +
-          'This should never happen. If it does, please report it as a bug.',
-      );
+    if (prevSession.type === SessionType.WithProfile) {
+      // no data, but we have a previous session, so that means transitioning to a new profile
+      if (prevData?.result) {
+        invariant(
+          isProfileOwnedByMe(prevData.result),
+          `Previous Active Profile [ID:${prevData.result.id}] not owned by the active wallet.\n` +
+            `Check the Profile ID provided is owned by ${session.wallet.address}.`,
+        );
+
+        return {
+          data: authenticatedProfile(prevSession.wallet, prevData.result),
+          error: undefined,
+          loading: false,
+        };
+      }
+
+      never('Previous data must be defined if previous session was WithProfile');
     }
 
+    // transitioning from NotAuthenticatedSession to AuthenticatedProfileSession
+    // OR from AuthenticatedWalletSession to AuthenticatedProfileSession
     return {
-      data: prevSessionValue,
+      data: prevSession,
       error: undefined,
       loading: false,
     };
   }
 
   invariant(
-    data?.result,
+    data.result,
     `Active Profile [ID:${session.profile.id}] data not found.\n` +
       'Check the Profile ID provided exists in the current environment.',
   );
   invariant(
     isProfileOwnedByMe(data.result),
-    'Active Profile [ID:${session.profile.id}] not owned by the active wallet.\n' +
+    `Active Profile [ID:${session.profile.id}] not owned by the active wallet.\n` +
       `Check the Profile ID provided is owned by ${session.wallet.address}.`,
   );
 

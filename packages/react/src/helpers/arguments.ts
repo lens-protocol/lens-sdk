@@ -1,6 +1,7 @@
 import { OperationVariables } from '@apollo/client';
 import {
   createSnapshotApolloClient,
+  MediaTransformParams,
   SafeApolloClient,
   SessionType,
   Sources,
@@ -10,6 +11,7 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
+import { mediaTransformConfigToQueryVariables } from '../mediaTransforms';
 import { useSharedDependencies } from '../shared';
 
 export type UseApolloClientResult<TOptions> = TOptions & {
@@ -105,5 +107,23 @@ export function useSourcesFromConfig<TVariables extends OperationVariables>(
   return {
     ...variables,
     sources,
+  };
+}
+
+export type UseMediaTransformFromConfigResult<TVariables extends OperationVariables> =
+  TVariables & {
+    mediaTransformPublicationSmall: MediaTransformParams;
+    mediaTransformPublicationMedium: MediaTransformParams;
+    mediaTransformProfileThumbnail: MediaTransformParams;
+  };
+
+export function useMediaTransformFromConfig<TVariables extends OperationVariables>(
+  variables: TVariables,
+): UseMediaTransformFromConfigResult<TVariables> {
+  const { mediaTransforms } = useSharedDependencies();
+
+  return {
+    ...variables,
+    ...mediaTransformConfigToQueryVariables(mediaTransforms),
   };
 }

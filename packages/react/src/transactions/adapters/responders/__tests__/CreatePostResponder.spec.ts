@@ -1,11 +1,11 @@
 import { Post, Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockPostFragment,
   mockProfileFragment,
   mockSources,
-  createGetPublicationMockedResponse,
+  mockGetPublicationResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { PublicationId } from '@lens-protocol/domain/entities';
 import {
@@ -16,6 +16,10 @@ import {
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../../mediaTransforms';
 import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
 import { CreatePostResponder, recentPosts } from '../CreatePostResponder';
 
@@ -29,8 +33,9 @@ function setupTestScenario({
   transactionData?: TransactionData<CreatePostRequest>;
 }) {
   const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
   const apolloClient = mockLensApolloClient([
-    createGetProfileMockedResponse({
+    mockGetProfileResponse({
       profile: author,
       variables: {
         request: {
@@ -38,9 +43,10 @@ function setupTestScenario({
         },
         observerId: null,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
     }),
-    createGetPublicationMockedResponse({
+    mockGetPublicationResponse({
       variables: {
         request: transactionData.txHash
           ? {
@@ -51,13 +57,14 @@ function setupTestScenario({
             },
         observerId: author.id,
         sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
       publication: post,
     }),
   ]);
 
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources);
-  return new CreatePostResponder(profileCacheManager, apolloClient, sources);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
+  return new CreatePostResponder(profileCacheManager, apolloClient, sources, mediaTransforms);
 }
 
 describe(`Given an instance of the ${CreatePostResponder.name}`, () => {

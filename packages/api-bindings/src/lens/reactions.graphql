@@ -34,6 +34,7 @@ query WhoReactedPublication(
   $publicationId: InternalPublicationId!
   $observerId: ProfileId
   $sources: [Sources!]!
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: whoReactedPublication(
     request: { limit: $limit, cursor: $cursor, publicationId: $publicationId }

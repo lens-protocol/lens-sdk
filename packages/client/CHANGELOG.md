@@ -1,5 +1,18 @@
 # @lens-protocol/client
 
+## 1.3.0-next.1
+
+### Minor Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+
+## 1.3.0-next.0
+
+### Minor Changes
+
+- c2a91ef4: **Added** `Profile.invitedBy` field
+- 4c4505d2: **Added** support for Profile Guardian
+
 ## 1.2.0
 
 ### Minor Changes

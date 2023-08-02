@@ -1,7 +1,7 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  createGetProfileMockedResponse,
+  mockGetProfileResponse,
   mockProfileFragment,
   mockSources,
   simulateAuthenticatedProfile,
@@ -13,6 +13,10 @@ import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
 import { useProfile, UseProfileArgs } from '../useProfile';
 
 function setupTestScenario({
@@ -25,8 +29,9 @@ function setupTestScenario({
   return renderHookWithMocks(() => useProfile(args), {
     mocks: {
       sources,
+      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
-        createGetProfileMockedResponse({
+        mockGetProfileResponse({
           profile,
           variables: {
             request: args.profileId
@@ -38,6 +43,7 @@ function setupTestScenario({
                 },
             observerId: expectedObserverId,
             sources,
+            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
         }),
       ]),

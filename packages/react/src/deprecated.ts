@@ -9,7 +9,6 @@ import {
   Follower,
   Following,
   Media,
-  MediaSet,
   MetadataAttributeOutput,
   MetadataOutput,
   Mirror,
@@ -20,18 +19,19 @@ import {
   NewMentionNotification,
   NewMirrorNotification,
   NewReactionNotification,
+  NftImage,
   PendingPost,
   Post,
   Profile,
   ProfileAttributeReader,
   ProfileAttributes,
   ProfileFollowModuleSettings,
-  ProfileMedia,
   ProfileOwnedByMe,
   ProfileStats,
   PublicationOwnedByMe,
   PublicationRevenue,
   PublicationStats,
+  ReactionTypes,
   RevenueAggregate,
   RevertFollowModuleSettings,
   TransactionState,
@@ -135,11 +135,6 @@ export type ProfileAttributesFragment = ProfileAttributes;
  * @deprecated Use {@link Profile} instead.
  */
 export type ProfileFragment = Profile;
-
-/**
- * @deprecated Use {@link ProfileMedia} instead.
- */
-export type ProfileMediaFragment = ProfileMedia;
 
 /**
  * @deprecated Use {@link ProfileOwnedByMe} instead.
@@ -280,3 +275,26 @@ export type SupportedTransactionRequest = AnyTransactionRequest;
  * @deprecated Use {@link LoginError} instead.
  */
 export type WalletLoginPotentialErrors = LoginError;
+
+/**
+ * @deprecated Use {@link ProfilePictureMedia} or {@link ProfileCoverMedia} instead.
+ */
+export type ProfileMediaFragment = MediaSet | NftImage;
+
+/**
+ * @deprecated Use {@link ProfilePictureMedia} or {@link ProfileCoverMedia} instead.
+ */
+export type ProfileMedia = ProfileMediaFragment;
+
+/**
+ * @deprecated Use {@link ProfilePictureMedia}, {@link ProfileCoverMedia} or {@link PublicationMediaSet} instead.
+ */
+export type MediaSet = { __typename: 'MediaSet'; original: Media };
+
+/**
+ * @deprecated Use {@link ReactionTypes} instead.
+ */
+export enum ReactionType {
+  UPVOTE = ReactionTypes.Upvote,
+  DOWNVOTE = ReactionTypes.Downvote,
+}

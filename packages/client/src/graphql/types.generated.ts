@@ -26,6 +26,7 @@ export type Scalars = {
   FollowModuleData: string;
   Handle: string;
   HandleClaimIdScalar: string;
+  ImageSizeTransform: string;
   InternalPublicationId: string;
   IpfsCid: string;
   Jwt: string;
@@ -156,6 +157,10 @@ export type AllPublicationsTagsRequest = {
   sort: TagSortCriteria;
   /** The App Id */
   source?: InputMaybe<Scalars['Sources']>;
+};
+
+export type AlreadyInvitedCheckRequest = {
+  address: Scalars['EthereumAddress'];
 };
 
 export type AndConditionInput = {
@@ -356,6 +361,7 @@ export type Comment = {
   __typename: 'Comment';
   /** ID of the source */
   appId: Maybe<Scalars['Sources']>;
+  bookmarked: Scalars['Boolean'];
   canComment: CanCommentResponse;
   canDecrypt: CanDecryptResponse;
   canMirror: CanMirrorResponse;
@@ -387,6 +393,7 @@ export type Comment = {
   /** The metadata for the post */
   metadata: MetadataOutput;
   mirrors: Array<Scalars['InternalPublicationId']>;
+  notInterested: Scalars['Boolean'];
   /** The on chain content uri could be `ipfs://` or `https` */
   onChainContentURI: Scalars['String'];
   /** The profile ref */
@@ -398,6 +405,11 @@ export type Comment = {
   referenceModule: Maybe<ReferenceModule>;
   /** The publication stats */
   stats: PublicationStats;
+};
+
+/** The social comment */
+export type CommentBookmarkedArgs = {
+  by?: InputMaybe<Scalars['ProfileId']>;
 };
 
 /** The social comment */
@@ -423,6 +435,11 @@ export type CommentHasCollectedByMeArgs = {
 
 /** The social comment */
 export type CommentMirrorsArgs = {
+  by?: InputMaybe<Scalars['ProfileId']>;
+};
+
+/** The social comment */
+export type CommentNotInterestedArgs = {
   by?: InputMaybe<Scalars['ProfileId']>;
 };
 
@@ -1840,17 +1857,39 @@ export type IllegalReasonInputParams = {
   subreason: PublicationReportingIllegalSubreason;
 };
 
-export type InternalPublicationsFilterRequest = {
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  /** must be DD/MM/YYYY */
-  fromDate: Scalars['String'];
-  limit?: InputMaybe<Scalars['LimitScalar']>;
+export type InRequest = {
+  ethereumAddress: Scalars['EthereumAddress'];
+  numInvites: Scalars['Int'];
+  secret: Scalars['String'];
+};
+
+export type InTotalRequest = {
+  ethereumAddress: Scalars['EthereumAddress'];
+  secret: Scalars['String'];
+};
+
+export type InternalPinRequest = {
+  /** The shared secret */
+  items: Array<Scalars['Url']>;
   /** The shared secret */
   secret: Scalars['String'];
-  /** The App Id */
-  source: Scalars['Sources'];
-  /** must be DD/MM/YYYY */
-  toDate: Scalars['String'];
+};
+
+export type InternalPinResult = {
+  __typename: 'InternalPinResult';
+  ipfs: Scalars['String'];
+  referenceItem: Scalars['Url'];
+};
+
+export type InviteRequest = {
+  invites: Array<Scalars['EthereumAddress']>;
+  secret: Scalars['String'];
+};
+
+export type InvitedResult = {
+  __typename: 'InvitedResult';
+  address: Scalars['EthereumAddress'];
+  when: Maybe<Scalars['DateTime']>;
 };
 
 export type LimitedFeeCollectModuleParams = {
@@ -1967,16 +2006,35 @@ export type MediaSet = {
   __typename: 'MediaSet';
   /**
    * Medium media - will always be null on the public API
-   * @deprecated should not be used will always be null
+   * @deprecated should not be used will always be null - use transform function to get small media
    */
   medium: Maybe<Media>;
-  /** Original media */
+  /** Original media as found on the publication metadata */
+  onChain: Media;
+  /** Optimized media, snapshotted and served from a CDN */
+  optimized: Maybe<Media>;
+  /** On-chain or snapshotted media on a CDN */
   original: Media;
   /**
    * Small media - will always be null on the public API
-   * @deprecated should not be used will always be null
+   * @deprecated should not be used will always be null - use transform function to get small media
    */
   small: Maybe<Media>;
+  transformed: Maybe<Media>;
+};
+
+/** The Media Set */
+export type MediaSetTransformedArgs = {
+  params: MediaTransformParams;
+};
+
+export type MediaTransformParams = {
+  /** Set the transformed image's height. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'. */
+  height?: InputMaybe<Scalars['ImageSizeTransform']>;
+  /** Set if you want to keep the image's original aspect ratio. True by default. If explicitly set to false, the image will stretch based on the width and height values. */
+  keepAspectRatio?: InputMaybe<Scalars['Boolean']>;
+  /** Set the transformed image's width. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'. */
+  width?: InputMaybe<Scalars['ImageSizeTransform']>;
 };
 
 export type MentionPublication = Comment | Post;
@@ -2038,6 +2096,7 @@ export type Mirror = {
   __typename: 'Mirror';
   /** ID of the source */
   appId: Maybe<Scalars['Sources']>;
+  bookmarked: Scalars['Boolean'];
   canComment: CanCommentResponse;
   canDecrypt: CanDecryptResponse;
   canMirror: CanMirrorResponse;
@@ -2062,6 +2121,7 @@ export type Mirror = {
   metadata: MetadataOutput;
   /** The mirror publication */
   mirrorOf: MirrorablePublication;
+  notInterested: Scalars['Boolean'];
   /** The on chain content uri could be `ipfs://` or `https` */
   onChainContentURI: Scalars['String'];
   /** The profile ref */
@@ -2071,6 +2131,11 @@ export type Mirror = {
   referenceModule: Maybe<ReferenceModule>;
   /** The publication stats */
   stats: PublicationStats;
+};
+
+/** The social mirror */
+export type MirrorBookmarkedArgs = {
+  by?: InputMaybe<Scalars['ProfileId']>;
 };
 
 /** The social mirror */
@@ -2092,6 +2157,11 @@ export type MirrorCanMirrorArgs = {
 /** The social mirror */
 export type MirrorHasCollectedByMeArgs = {
   isFinalisedOnChain?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The social mirror */
+export type MirrorNotInterestedArgs = {
+  by?: InputMaybe<Scalars['ProfileId']>;
 };
 
 /** The social mirror */
@@ -2218,6 +2288,8 @@ export type Mutation = {
   ach: Maybe<Scalars['Void']>;
   /** Adds profile interests to the given profile */
   addProfileInterests: Maybe<Scalars['Void']>;
+  addPublicationProfileBookmark: Maybe<Scalars['Void']>;
+  addPublicationProfileNotInterested: Maybe<Scalars['Void']>;
   addReaction: Maybe<Scalars['Void']>;
   authenticate: AuthenticationResult;
   broadcast: RelayResult;
@@ -2256,16 +2328,23 @@ export type Mutation = {
   /** Delete an NFT Gallery */
   deleteNftGallery: Maybe<Scalars['Void']>;
   dismissRecommendedProfiles: Maybe<Scalars['Void']>;
+  dss: Maybe<Scalars['Void']>;
   gci: Maybe<Scalars['Void']>;
   gcr: Maybe<Scalars['Void']>;
   gdi: Maybe<Scalars['Void']>;
   hel: Maybe<Scalars['Void']>;
   hidePublication: Maybe<Scalars['Void']>;
   idKitPhoneVerifyWebhook: IdKitPhoneVerifyWebhookResultStatusType;
+  in: Maybe<Scalars['Void']>;
+  invite: Maybe<Scalars['Void']>;
+  nni: Maybe<Scalars['Void']>;
+  nnv: Maybe<Scalars['Void']>;
   proxyAction: Scalars['ProxyActionId'];
   refresh: AuthenticationResult;
   /** Removes profile interests from the given profile */
   removeProfileInterests: Maybe<Scalars['Void']>;
+  removePublicationProfileBookmark: Maybe<Scalars['Void']>;
+  removePublicationProfileNotInterested: Maybe<Scalars['Void']>;
   removeReaction: Maybe<Scalars['Void']>;
   reportPublication: Maybe<Scalars['Void']>;
   /** Update the name of an NFT gallery */
@@ -2282,6 +2361,14 @@ export type MutationAchArgs = {
 
 export type MutationAddProfileInterestsArgs = {
   request: AddProfileInterestsRequest;
+};
+
+export type MutationAddPublicationProfileBookmarkArgs = {
+  request: PublicationProfileBookmarkRequest;
+};
+
+export type MutationAddPublicationProfileNotInterestedArgs = {
+  request: PublicationProfileNotInterestedRequest;
 };
 
 export type MutationAddReactionArgs = {
@@ -2442,6 +2529,10 @@ export type MutationDismissRecommendedProfilesArgs = {
   request: DismissRecommendedProfilesRequest;
 };
 
+export type MutationDssArgs = {
+  request: PrfRequest;
+};
+
 export type MutationGciArgs = {
   request: GciRequest;
 };
@@ -2466,6 +2557,22 @@ export type MutationIdKitPhoneVerifyWebhookArgs = {
   request: IdKitPhoneVerifyWebhookRequest;
 };
 
+export type MutationInArgs = {
+  request: InRequest;
+};
+
+export type MutationInviteArgs = {
+  request: InviteRequest;
+};
+
+export type MutationNniArgs = {
+  request: NniRequest;
+};
+
+export type MutationNnvArgs = {
+  request: NnvRequest;
+};
+
 export type MutationProxyActionArgs = {
   request: ProxyActionRequest;
 };
@@ -2476,6 +2583,14 @@ export type MutationRefreshArgs = {
 
 export type MutationRemoveProfileInterestsArgs = {
   request: RemoveProfileInterestsRequest;
+};
+
+export type MutationRemovePublicationProfileBookmarkArgs = {
+  request: PublicationProfileBookmarkRequest;
+};
+
+export type MutationRemovePublicationProfileNotInterestedArgs = {
+  request: PublicationProfileNotInterestedRequest;
 };
 
 export type MutationRemoveReactionArgs = {
@@ -2554,12 +2669,34 @@ export type NftData = {
   signature: Scalars['Signature'];
 };
 
+/** NFT search query */
+export type NftSearchRequest = {
+  /** Chain IDs to search. Supports Ethereum and Polygon. If omitted, it will search in both chains */
+  chainIds?: InputMaybe<Array<Scalars['ChainId']>>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  /** Exclude follower NFTs from the search */
+  excludeFollowers?: InputMaybe<Scalars['Boolean']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  /** Ethereum address of the owner. If unknown you can also search by profile ID */
+  ownerAddress?: InputMaybe<Scalars['EthereumAddress']>;
+  /** Profile ID of the owner */
+  profileId?: InputMaybe<Scalars['ProfileId']>;
+  /** Search query. Has to be part of a collection name */
+  query: Scalars['String'];
+};
+
 export type NfTsRequest = {
   /** Chain Ids */
-  chainIds: Array<Scalars['ChainId']>;
+  chainIds?: InputMaybe<Array<Scalars['ChainId']>>;
   /** Filter by contract address */
   contractAddress?: InputMaybe<Scalars['ContractAddress']>;
   cursor?: InputMaybe<Scalars['Cursor']>;
+  /** Exclude filtered collection addresses from the search. Cannot be used together ith `includeCollections` */
+  excludeCollections?: InputMaybe<Array<NftCollectionInput>>;
+  /** Exclude follower NFTs from the search. */
+  excludeFollowers?: InputMaybe<Scalars['Boolean']>;
+  /** Include only filtered collection addresses in the search. Overrides `contractAddress` */
+  includeCollections?: InputMaybe<Array<NftCollectionInput>>;
   limit?: InputMaybe<Scalars['LimitScalar']>;
   /** Filter by owner address */
   ownerAddress: Scalars['EthereumAddress'];
@@ -2621,6 +2758,19 @@ export type NewReactionNotification = {
   profile: Profile;
   publication: Publication;
   reaction: ReactionTypes;
+};
+
+export type Nfi = {
+  c: Scalars['ContractAddress'];
+  i: Scalars['ChainId'];
+};
+
+/** NFT collection filtering input */
+export type NftCollectionInput = {
+  /** The chain id that the collection exists in */
+  chainId: Scalars['ChainId'];
+  /** Filter by NFT collection contract address */
+  contractAddress: Scalars['ContractAddress'];
 };
 
 /** The NFT gallery input */
@@ -2781,6 +2931,16 @@ export type NftUpdateItemOrder = {
   tokenId: Scalars['String'];
 };
 
+export type NniRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
+export type NnvRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
 export type Notification =
   | NewCollectNotification
   | NewCommentNotification
@@ -2876,6 +3036,13 @@ export type PaginatedFollowingResult = {
   pageInfo: PaginatedResultInfo;
 };
 
+/** The paginated for you result */
+export type PaginatedForYouResult = {
+  __typename: 'PaginatedForYouResult';
+  items: Array<Publication>;
+  pageInfo: PaginatedResultInfo;
+};
+
 /** The paginated notification result */
 export type PaginatedNotificationResult = {
   __typename: 'PaginatedNotificationResult';
@@ -2955,6 +3122,7 @@ export type Post = {
   __typename: 'Post';
   /** ID of the source */
   appId: Maybe<Scalars['Sources']>;
+  bookmarked: Scalars['Boolean'];
   canComment: CanCommentResponse;
   canDecrypt: CanDecryptResponse;
   canMirror: CanMirrorResponse;
@@ -2983,6 +3151,7 @@ export type Post = {
   /** The metadata for the post */
   metadata: MetadataOutput;
   mirrors: Array<Scalars['InternalPublicationId']>;
+  notInterested: Scalars['Boolean'];
   /** The on chain content uri could be `ipfs://` or `https` */
   onChainContentURI: Scalars['String'];
   /** The profile ref */
@@ -2992,6 +3161,11 @@ export type Post = {
   referenceModule: Maybe<ReferenceModule>;
   /** The publication stats */
   stats: PublicationStats;
+};
+
+/** The social post */
+export type PostBookmarkedArgs = {
+  by?: InputMaybe<Scalars['ProfileId']>;
 };
 
 /** The social post */
@@ -3021,8 +3195,31 @@ export type PostMirrorsArgs = {
 };
 
 /** The social post */
+export type PostNotInterestedArgs = {
+  by?: InputMaybe<Scalars['ProfileId']>;
+};
+
+/** The social post */
 export type PostReactionArgs = {
   request?: InputMaybe<ReactionFieldResolverRequest>;
+};
+
+export type PrfRequest = {
+  dd: Scalars['Boolean'];
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ss: Scalars['Boolean'];
+};
+
+export type PrfResponse = {
+  __typename: 'PrfResponse';
+  dd: Scalars['Boolean'];
+  ss: Scalars['Boolean'];
+};
+
+export type PriRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
 };
 
 /** The Profile */
@@ -3046,6 +3243,7 @@ export type Profile = {
   id: Scalars['ProfileId'];
   /** The profile interests */
   interests: Maybe<Array<Scalars['ProfileInterest']>>;
+  invitedBy: Maybe<Profile>;
   /** Is the profile default */
   isDefault: Scalars['Boolean'];
   isFollowedByMe: Scalars['Boolean'];
@@ -3094,6 +3292,16 @@ export type ProfileFollowModuleSettings = {
 export type ProfileFollowRevenueQueryRequest = {
   /** The profile id */
   profileId: Scalars['ProfileId'];
+};
+
+export type ProfileGuardianRequest = {
+  profileId: Scalars['ProfileId'];
+};
+
+export type ProfileGuardianResult = {
+  __typename: 'ProfileGuardianResult';
+  disablingProtectionTimestamp: Maybe<Scalars['DateTime']>;
+  protected: Scalars['Boolean'];
 };
 
 export type ProfileMedia = MediaSet | NftImage;
@@ -3294,6 +3502,12 @@ export enum PublicationContentWarning {
 
 export type PublicationForSale = Comment | Post;
 
+export type PublicationForYouRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  for: Scalars['ProfileId'];
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+};
+
 /** The publication main focus */
 export enum PublicationMainFocus {
   Article = 'ARTICLE',
@@ -3449,6 +3663,20 @@ export type PublicationMetadataV2Input = {
   version: Scalars['String'];
 };
 
+export type PublicationProfileBookmarkRequest = {
+  /** Profile id to perform the action */
+  profileId: Scalars['ProfileId'];
+  /** The internal publication id */
+  publicationId: Scalars['InternalPublicationId'];
+};
+
+export type PublicationProfileNotInterestedRequest = {
+  /** Profile id to perform the action */
+  profileId: Scalars['ProfileId'];
+  /** The internal publication id */
+  publicationId: Scalars['InternalPublicationId'];
+};
+
 export type PublicationQueryRequest = {
   /** The publication id */
   publicationId?: InputMaybe<Scalars['InternalPublicationId']>;
@@ -3544,6 +3772,8 @@ export type PublicationStats = {
   totalAmountOfComments: Scalars['Int'];
   /** The total amount of mirrors */
   totalAmountOfMirrors: Scalars['Int'];
+  /** The total amount of bookmarks */
+  totalBookmarks: Scalars['Int'];
   /** The total amount of upvotes */
   totalDownvotes: Scalars['Int'];
   /** The total amount of downvotes */
@@ -3552,7 +3782,8 @@ export type PublicationStats = {
 
 /** The publication stats */
 export type PublicationStatsCommentsTotalArgs = {
-  forSources: Array<Scalars['Sources']>;
+  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  forSources?: InputMaybe<Array<Scalars['Sources']>>;
 };
 
 /** The publication types */
@@ -3567,6 +3798,16 @@ export type PublicationValidateMetadataResult = {
   /** If `valid` is false it will put a reason why here */
   reason: Maybe<Scalars['String']>;
   valid: Scalars['Boolean'];
+};
+
+export type PublicationsProfileBookmarkedQueryRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<Scalars['LimitScalar']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  /** Profile id */
+  profileId: Scalars['ProfileId'];
+  /** The App Id */
+  sources?: InputMaybe<Array<Scalars['Sources']>>;
 };
 
 export type PublicationsQueryRequest = {
@@ -3597,6 +3838,7 @@ export type PublicationsQueryRequest = {
 export type Query = {
   __typename: 'Query';
   allPublicationsTags: PaginatedAllPublicationsTagsResult;
+  alreadyInvited: Scalars['Boolean'];
   approvedModuleAllowanceAmount: Array<ApprovedAllowanceAmount>;
   challenge: AuthChallengeResult;
   claimableHandles: ClaimableHandles;
@@ -3617,17 +3859,24 @@ export type Query = {
   followerNftOwnedTokenIds: Maybe<FollowerNftOwnedTokenIds>;
   followers: PaginatedFollowersResult;
   following: PaginatedFollowingResult;
+  /** Get publications recommended for you - will only return posts for now */
+  forYou: PaginatedForYouResult;
   gct: Array<Scalars['String']>;
   gdm: Array<Scalars['Url']>;
   generateModuleCurrencyApprovalData: GenerateModuleCurrencyApproval;
   globalProtocolStats: GlobalProtocolStats;
   hasTxHashBeenIndexed: TransactionResult;
-  internalPublicationFilter: PaginatedPublicationResult;
+  internalPin: Array<InternalPinResult>;
+  intotal: Scalars['Int'];
+  invited: Array<InvitedResult>;
+  invitesLeft: Scalars['Int'];
   isIDKitPhoneVerified: Scalars['Boolean'];
+  iss: PrfResponse;
   mutualFollowersProfiles: PaginatedProfileResult;
   /** Get all NFT galleries for a profile */
   nftGalleries: Array<NftGallery>;
   nftOwnershipChallenge: NftOwnershipChallengeResult;
+  /** Get the NFTs that the given wallet or profileId owns. Only supports Ethereum and Polygon NFTs. Note excludeFollowers is set to true by default, so the result will not include Lens Follower NFTs unless explicitly requested. */
   nfts: NfTsResult;
   notifications: PaginatedNotificationResult;
   pendingApprovalFollows: PendingApproveFollowsResult;
@@ -3635,6 +3884,7 @@ export type Query = {
   profile: Maybe<Profile>;
   profileFollowModuleBeenRedeemed: Scalars['Boolean'];
   profileFollowRevenue: FollowRevenueResult;
+  profileGuardianInformation: ProfileGuardianResult;
   /** Get the list of profile interests */
   profileInterests: Array<Scalars['ProfileInterest']>;
   profileOnChainIdentity: Array<OnChainIdentity>;
@@ -3646,10 +3896,13 @@ export type Query = {
   publicationMetadataStatus: PublicationMetadataStatus;
   publicationRevenue: Maybe<PublicationRevenue>;
   publications: PaginatedPublicationResult;
+  publicationsProfileBookmarks: PaginatedPublicationResult;
   recommendedProfiles: Array<Profile>;
   rel: Maybe<Scalars['Void']>;
   relayQueues: Array<RelayQueueResult>;
   search: SearchResult;
+  /** Search for NFTs in a wallet by collection name. Supports Polygon and Ethereum and searches in both by default. */
+  searchNfts: NfTsResult;
   txIdToTxHash: Scalars['TxHash'];
   unknownEnabledModules: EnabledModules;
   userSigNonces: UserSigNonces;
@@ -3661,6 +3914,10 @@ export type Query = {
 
 export type QueryAllPublicationsTagsArgs = {
   request: AllPublicationsTagsRequest;
+};
+
+export type QueryAlreadyInvitedArgs = {
+  request: AlreadyInvitedCheckRequest;
 };
 
 export type QueryApprovedModuleAllowanceAmountArgs = {
@@ -3719,6 +3976,10 @@ export type QueryFollowingArgs = {
   request: FollowingRequest;
 };
 
+export type QueryForYouArgs = {
+  request: PublicationForYouRequest;
+};
+
 export type QueryGctArgs = {
   request: GctRequest;
 };
@@ -3739,8 +4000,16 @@ export type QueryHasTxHashBeenIndexedArgs = {
   request: HasTxHashBeenIndexedRequest;
 };
 
-export type QueryInternalPublicationFilterArgs = {
-  request: InternalPublicationsFilterRequest;
+export type QueryInternalPinArgs = {
+  request: InternalPinRequest;
+};
+
+export type QueryIntotalArgs = {
+  request: InTotalRequest;
+};
+
+export type QueryIssArgs = {
+  request: PriRequest;
 };
 
 export type QueryMutualFollowersProfilesArgs = {
@@ -3779,6 +4048,10 @@ export type QueryProfileFollowRevenueArgs = {
   request: ProfileFollowRevenueQueryRequest;
 };
 
+export type QueryProfileGuardianInformationArgs = {
+  request: ProfileGuardianRequest;
+};
+
 export type QueryProfileOnChainIdentityArgs = {
   request: ProfileOnChainIdentityRequest;
 };
@@ -3815,6 +4088,10 @@ export type QueryPublicationsArgs = {
   request: PublicationsQueryRequest;
 };
 
+export type QueryPublicationsProfileBookmarksArgs = {
+  request: PublicationsProfileBookmarkedQueryRequest;
+};
+
 export type QueryRecommendedProfilesArgs = {
   options?: InputMaybe<RecommendedProfileOptions>;
 };
@@ -3825,6 +4102,10 @@ export type QueryRelArgs = {
 
 export type QuerySearchArgs = {
   request: SearchQueryRequest;
+};
+
+export type QuerySearchNftsArgs = {
+  request: NftSearchRequest;
 };
 
 export type QueryTxIdToTxHashArgs = {
@@ -3892,6 +4173,8 @@ export type RecipientDataOutput = {
 export type RecommendedProfileOptions = {
   /** If you wish to turn ML off */
   disableML?: InputMaybe<Scalars['Boolean']>;
+  /** The more advanced who to follow you should pass this in */
+  profileId?: InputMaybe<Scalars['ProfileId']>;
   /** If you wish to shuffle the results */
   shuffle?: InputMaybe<Scalars['Boolean']>;
 };
@@ -3989,6 +4272,7 @@ export enum RelayRoleKey {
   WithSig_1 = 'WITH_SIG_1',
   WithSig_2 = 'WITH_SIG_2',
   WithSig_3 = 'WITH_SIG_3',
+  ZkRelayer_1 = 'ZK_RELAYER_1',
 }
 
 /** The relayer result */

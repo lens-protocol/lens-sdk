@@ -32,6 +32,9 @@ query GetPublicationRevenue(
   $publicationId: InternalPublicationId!
   $observerId: ProfileId
   $sources: [Sources!]!
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: publicationRevenue(request: { publicationId: $publicationId }) {
     ...PublicationRevenue
@@ -45,6 +48,9 @@ query GetProfilePublicationRevenue(
   $cursor: Cursor
   $publicationTypes: [PublicationTypes!]
   $sources: [Sources!]!
+  $mediaTransformPublicationSmall: MediaTransformParams = {}
+  $mediaTransformPublicationMedium: MediaTransformParams = {}
+  $mediaTransformProfileThumbnail: MediaTransformParams = {}
 ) {
   result: profilePublicationRevenue(
     request: {

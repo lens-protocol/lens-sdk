@@ -286,7 +286,7 @@ export class Publication {
   }
 
   /**
-   * Fetch typed data for creating a post.
+   * Create typed data for creating a post.
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -363,7 +363,7 @@ export class Publication {
   }
 
   /**
-   * Fetch typed data for creating a comment.
+   * Create typed data for creating a comment.
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -445,7 +445,7 @@ export class Publication {
   }
 
   /**
-   * Fetch typed data for creating a mirror.
+   * Create typed data for creating a mirror.
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -516,7 +516,7 @@ export class Publication {
   }
 
   /**
-   * Fetch typed data for collecting a publication or a comment.
+   * Create typed data for collecting a publication or a comment.
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcast}.
    *
@@ -639,7 +639,7 @@ export class Publication {
   }
 
   /**
-   * Fetch typed data for creating a data availability post.
+   * Create typed data for creating a data availability post.
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastDataAvailability}.
    *
@@ -701,7 +701,7 @@ export class Publication {
   }
 
   /**
-   * Fetch typed data for creating a data availability comment.
+   * Create typed data for creating a data availability comment.
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastDataAvailability}.
    *
@@ -771,7 +771,7 @@ export class Publication {
   }
 
   /**
-   * Fetch typed data for creating a data availability mirror.
+   * Create typed data for creating a data availability mirror.
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastDataAvailability}.
    *

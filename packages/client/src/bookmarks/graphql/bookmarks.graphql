@@ -1,0 +1,36 @@
+#fragments
+
+# queries
+query PublicationsProfileBookmarks(
+  $request: PublicationsProfileBookmarkedQueryRequest!
+  $observerId: ProfileId
+) {
+  result: publicationsProfileBookmarks(request: $request) {
+    items {
+      ... on Post {
+        ...Post
+      }
+
+      ... on Comment {
+        ...Comment
+      }
+
+      ... on Mirror {
+        ...Mirror
+      }
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}
+
+# mutations
+
+mutation AddPublicationProfileBookmark($request: PublicationProfileBookmarkRequest!) {
+  result: addPublicationProfileBookmark(request: $request)
+}
+
+mutation RemovePublicationProfileBookmark($request: PublicationProfileBookmarkRequest!) {
+  result: removePublicationProfileBookmark(request: $request)
+}
