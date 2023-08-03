@@ -2,9 +2,9 @@ import { useWalletLogin, useWalletLogout } from '@lens-protocol/react-web';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
+import { wallet } from '../../domain/wallet';
 import { WhenLoggedInWithProfile } from './WhenLoggedInWithProfile';
 import { WhenLoggedOut } from './WhenLoggedOut';
-import { wallet } from '../../domain/wallet';
 
 export function LoginButton() {
   const { execute: login, error: loginError, isPending: isLoginPending } = useWalletLogin();
