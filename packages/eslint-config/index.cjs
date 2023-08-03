@@ -82,6 +82,8 @@ module.exports = {
       },
     ],
 
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+
     'tsdoc/syntax': 'warn',
 
     // note you must disable the base rule as it can report incorrect errors
