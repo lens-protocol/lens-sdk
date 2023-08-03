@@ -44,7 +44,6 @@ describe(`Given an instance of the ${ProfileTransactionGateway.name}`, () => {
         expect.objectContaining({
           chainType: ChainType.POLYGON,
           hash: relayerResult.txHash,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           id: expect.any(String),
           request,
         }),

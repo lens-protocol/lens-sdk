@@ -123,7 +123,6 @@ describe(`Given an instance of the ${ProfileImageCallGateway.name}`, () => {
         expect(result.unwrap()).toEqual(
           expect.objectContaining({
             chainType: ChainType.POLYGON,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             id: expect.any(String),
             request,
           }),

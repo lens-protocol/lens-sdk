@@ -64,20 +64,15 @@ describe(`Given an instance of the ${ApproveTransactionGateway.name}`, () => {
       expect(unsignedTransaction).toBeInstanceOf(UnsignedApproveTransaction);
       expect(unsignedTransaction).toEqual({
         chainType: request.amount.asset.chainType,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         id: expect.any(String),
         request,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         transactionRequest: expect.objectContaining({
           data: erc20(request.amount.asset.address, provider).interface.encodeFunctionData(
             'approve',
             [request.spender, utils.parseEther(request.amount.toSignificantDigits())],
           ),
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           gasLimit: expect.any(BigNumber),
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           maxFeePerGas: expect.any(BigNumber),
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           maxPriorityFeePerGas: expect.any(BigNumber),
           from: wallet.address,
           type: 2, // EIP-1559
@@ -112,20 +107,15 @@ describe(`Given an instance of the ${ApproveTransactionGateway.name}`, () => {
       expect(unsignedTransaction).toBeInstanceOf(UnsignedApproveTransaction);
       expect(unsignedTransaction).toEqual({
         chainType: request.amount.asset.chainType,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         id: expect.any(String),
         request,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         transactionRequest: expect.objectContaining({
           data: erc20(request.amount.asset.address, provider).interface.encodeFunctionData(
             'approve',
             [request.spender, constants.MaxUint256],
           ),
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           gasLimit: expect.any(BigNumber),
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           maxFeePerGas: expect.any(BigNumber),
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           maxPriorityFeePerGas: expect.any(BigNumber),
           from: wallet.address,
           type: 2, // EIP-1559
