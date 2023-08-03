@@ -82,7 +82,7 @@ export type BasePostRequest = {
    *
    * DO NOT use this as primary storage for publication media. Use the `media` property instead.
    * In the case your publication has many media consider to use this field as a static representation
-   * of the collect NFT. For example if the publication is an album of audio files this could well be
+   * of the collect NFT. For example if the publication is an album of audio files this could be
    * used as album cover image. If the publication is a gallery of images, this could be the gallery
    * cover image.
    *
