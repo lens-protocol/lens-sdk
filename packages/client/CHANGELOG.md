@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 1.3.0-next.2
+
+### Minor Changes
+
+- ea1fcc30: **Added** support for new MediaSet fields: onChain, optimized, transformed
+
 ## 1.3.0-next.1
 
 ### Minor Changes

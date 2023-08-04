@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.9.1-next.2
+
+### Patch Changes
+
+- 9428efeb: **Added** support for `attributes` and `image` for non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
+
 ## 0.9.1-next.1
 
 ### Patch Changes
