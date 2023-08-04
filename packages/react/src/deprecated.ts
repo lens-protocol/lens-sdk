@@ -38,6 +38,10 @@ import {
   UnknownFollowModuleSettings,
   WhoReactedResult,
 } from '@lens-protocol/api-bindings';
+import {
+  MetadataAttribute,
+  MetadataAttributeDisplayType,
+} from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { LoginError } from '@lens-protocol/domain/use-cases/wallets';
 
@@ -298,3 +302,13 @@ export enum ReactionType {
   UPVOTE = ReactionTypes.Upvote,
   DOWNVOTE = ReactionTypes.Downvote,
 }
+
+/**
+ * @deprecated Use {@link MetadataAttribute} instead.
+ */
+export type NftAttribute = MetadataAttribute;
+
+/**
+ * @deprecated Use {@link MetadataAttributeDisplayType} instead.
+ */
+export type NftAttributeDisplayType = MetadataAttributeDisplayType;

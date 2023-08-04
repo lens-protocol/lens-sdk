@@ -279,83 +279,201 @@ describe(`Given the validator helpers`, () => {
       });
     });
 
-    it('should provide an actionable error message in case of "collect" policy misconfiguration', () => {
-      expect(() =>
-        validateCreatePostRequest({
-          contentFocus: ContentFocus.TEXT_ONLY,
-          content: '',
-          collect: {
-            type: CollectPolicyType.CHARGE,
-            fee: '1',
-          },
-          delegate: false,
-          locale: 'en',
-          kind: TransactionKind.CREATE_POST,
-          offChain: false,
-          profileId: mockProfileId(),
-          reference: {
-            type: ReferencePolicyType.ANYONE,
-          },
-        }),
-      ).toThrowErrorMatchingInlineSnapshot(`
-        "fix the following issues
-        · "collect" expected to match one of the following groups:
-        		· "collect.fee": value not instance of Amount<Erc20>
-        		· "collect.followersOnly": Required
-        		· "collect.metadata": Required
-        		· "collect.mirrorReward": Required
-        		· "collect.recipient": Required
-        		· "collect.timeLimited": Required
-        	OR:
-        		· "collect.fee": value not instance of Amount<Erc20>
-        		· "collect.followersOnly": Required
-        		· "collect.metadata": Required
-        		· "collect.mirrorReward": Required
-        		· "collect.recipients": Required
-        	OR:
-        		· "collect.fee": value not instance of Amount<Erc20>
-        		· "collect.followersOnly": Required
-        		· "collect.metadata": Required
-        		· "collect.mirrorReward": Required
-        		· "collect.recipient": Required
-        		· "collect.vault": Required
-        	OR:
-        		· "collect.fee": value not instance of Amount<Erc20>
-        		· "collect.followersOnly": Required
-        		· "collect.metadata": Required
-        		· "collect.mirrorReward": Required
-        		· "collect.recipient": Required
-        		· "collect.depositToAave": Invalid literal value, expected true
-        	OR:
-        		· "collect.type": Invalid literal value, expected "FREE"
-        		· "collect.metadata": Required
-        		· "collect.followersOnly": Required
-        	OR:
-        		· "collect.type": Invalid literal value, expected "NO_COLLECT""
-      `);
+    describe('with invalid "collect" policy', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest({
+            contentFocus: ContentFocus.TEXT_ONLY,
+            content: '',
+            collect: {
+              type: CollectPolicyType.CHARGE,
+              fee: '1',
+            },
+            delegate: false,
+            locale: 'en',
+            kind: TransactionKind.CREATE_POST,
+            offChain: false,
+            profileId: mockProfileId(),
+            reference: {
+              type: ReferencePolicyType.ANYONE,
+            },
+          }),
+        ).toThrowErrorMatchingInlineSnapshot(`
+                  "fix the following issues
+                  · "collect" expected to match one of the following groups:
+                  		· "collect.fee": value not instance of Amount<Erc20>
+                  		· "collect.followersOnly": Required
+                  		· "collect.metadata": Required
+                  		· "collect.mirrorReward": Required
+                  		· "collect.recipient": Required
+                  		· "collect.timeLimited": Required
+                  	OR:
+                  		· "collect.fee": value not instance of Amount<Erc20>
+                  		· "collect.followersOnly": Required
+                  		· "collect.metadata": Required
+                  		· "collect.mirrorReward": Required
+                  		· "collect.recipients": Required
+                  	OR:
+                  		· "collect.fee": value not instance of Amount<Erc20>
+                  		· "collect.followersOnly": Required
+                  		· "collect.metadata": Required
+                  		· "collect.mirrorReward": Required
+                  		· "collect.recipient": Required
+                  		· "collect.vault": Required
+                  	OR:
+                  		· "collect.fee": value not instance of Amount<Erc20>
+                  		· "collect.followersOnly": Required
+                  		· "collect.metadata": Required
+                  		· "collect.mirrorReward": Required
+                  		· "collect.recipient": Required
+                  		· "collect.depositToAave": Invalid literal value, expected true
+                  	OR:
+                  		· "collect.type": Invalid literal value, expected "FREE"
+                  		· "collect.metadata": Required
+                  		· "collect.followersOnly": Required
+                  	OR:
+                  		· "collect.type": Invalid literal value, expected "NO_COLLECT""
+              `);
+      });
     });
 
-    it('should provide an actionable error message in case of "reference" policy misconfiguration', () => {
-      expect(() =>
-        validateCreatePostRequest({
-          contentFocus: ContentFocus.TEXT_ONLY,
-          content: '',
-          collect: {
-            type: CollectPolicyType.NO_COLLECT,
-          },
-          delegate: false,
-          locale: 'en',
-          kind: TransactionKind.CREATE_POST,
-          offChain: false,
-          profileId: mockProfileId(),
-          reference: {
-            type: ReferencePolicyType.DEGREES_OF_SEPARATION,
-          },
-        }),
-      ).toThrowErrorMatchingInlineSnapshot(`
-        "fix the following issues
-        · "reference.params": Required"
-      `);
+    describe('with invalid "collect.metadata" for collectable publications', () => {
+      it('should provide an actionable error message in case of "collect.metadata" misconfiguration', () => {
+        expect(() =>
+          validateCreatePostRequest({
+            contentFocus: ContentFocus.TEXT_ONLY,
+            content: '',
+            collect: {
+              type: CollectPolicyType.FREE,
+              metadata: {},
+            },
+            delegate: false,
+            locale: 'en',
+            kind: TransactionKind.CREATE_POST,
+            offChain: false,
+            profileId: mockProfileId(),
+            reference: {
+              type: ReferencePolicyType.ANYONE,
+            },
+          }),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "collect" expected to match one of the following groups:
+          		· "collect.type": Invalid literal value, expected "CHARGE"
+          		· "collect.fee": value not instance of Amount<Erc20>
+          		· "collect.followersOnly": Required
+          		· "collect.metadata.name": Required
+          		· "collect.mirrorReward": Required
+          		· "collect.recipient": Required
+          		· "collect.timeLimited": Required
+          	OR:
+          		· "collect.type": Invalid literal value, expected "CHARGE"
+          		· "collect.fee": value not instance of Amount<Erc20>
+          		· "collect.followersOnly": Required
+          		· "collect.metadata.name": Required
+          		· "collect.mirrorReward": Required
+          		· "collect.recipients": Required
+          	OR:
+          		· "collect.type": Invalid literal value, expected "CHARGE"
+          		· "collect.fee": value not instance of Amount<Erc20>
+          		· "collect.followersOnly": Required
+          		· "collect.metadata.name": Required
+          		· "collect.mirrorReward": Required
+          		· "collect.recipient": Required
+          		· "collect.vault": Required
+          	OR:
+          		· "collect.type": Invalid literal value, expected "CHARGE"
+          		· "collect.fee": value not instance of Amount<Erc20>
+          		· "collect.followersOnly": Required
+          		· "collect.metadata.name": Required
+          		· "collect.mirrorReward": Required
+          		· "collect.recipient": Required
+          		· "collect.depositToAave": Invalid literal value, expected true
+          	OR:
+          		· "collect.metadata.name": Required
+          		· "collect.followersOnly": Required
+          	OR:
+          		· "collect.type": Invalid literal value, expected "NO_COLLECT""
+        `);
+      });
+    });
+
+    describe('with invalid "attributes"', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest({
+            attributes: {},
+            contentFocus: ContentFocus.TEXT_ONLY,
+            content: '',
+            collect: {
+              type: CollectPolicyType.NO_COLLECT,
+            },
+            delegate: false,
+            locale: 'en',
+            kind: TransactionKind.CREATE_POST,
+            offChain: false,
+            profileId: mockProfileId(),
+            reference: {
+              type: ReferencePolicyType.ANYONE,
+            },
+          }),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "attributes": Expected array, received object"
+        `);
+      });
+    });
+
+    describe('with invalid "image"', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest({
+            contentFocus: ContentFocus.TEXT_ONLY,
+            content: '',
+            collect: {
+              type: CollectPolicyType.NO_COLLECT,
+            },
+            delegate: false,
+            image: {},
+            locale: 'en',
+            kind: TransactionKind.CREATE_POST,
+            offChain: false,
+            profileId: mockProfileId(),
+            reference: {
+              type: ReferencePolicyType.ANYONE,
+            },
+          }),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "image.mimeType": Required
+          · "image.url": Required"
+        `);
+      });
+    });
+
+    describe('with invalid "attributes"', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest({
+            contentFocus: ContentFocus.TEXT_ONLY,
+            content: '',
+            collect: {
+              type: CollectPolicyType.NO_COLLECT,
+            },
+            delegate: false,
+            locale: 'en',
+            kind: TransactionKind.CREATE_POST,
+            offChain: false,
+            profileId: mockProfileId(),
+            reference: {
+              type: ReferencePolicyType.DEGREES_OF_SEPARATION,
+            },
+          }),
+        ).toThrowErrorMatchingInlineSnapshot(`
+                  "fix the following issues
+                  · "reference.params": Required"
+              `);
+      });
     });
   });
 

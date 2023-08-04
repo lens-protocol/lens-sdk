@@ -9,13 +9,14 @@ import {
   mockChargeCollectPolicyConfig,
   mockCreateCommentRequest,
   mockCreatePostRequest,
-  mockDateNftAttribute,
+  mockDateMetadataAttribute,
   mockFreeCollectPolicyConfig,
   mockMediaObject,
+  mockMetadataImage,
   mockNftMetadata,
   mockNoCollectPolicyConfig,
-  mockNumberNftAttribute,
-  mockStringNftAttribute,
+  mockNumberMetadataAttribute,
+  mockStringMetadataAttribute,
 } from '@lens-protocol/domain/mocks';
 import {
   CollectPolicyType,
@@ -38,9 +39,10 @@ const media = [
     cover: faker.image.imageUrl(),
   }),
 ];
-const dateNftAttribute = mockDateNftAttribute();
-const numberNftAttribute = mockNumberNftAttribute();
-const stringNftAttribute = mockStringNftAttribute();
+const dateNftAttribute = mockDateMetadataAttribute();
+const numberNftAttribute = mockNumberMetadataAttribute();
+const stringNftAttribute = mockStringMetadataAttribute();
+const image = mockMetadataImage();
 const nftMetadata = mockNftMetadata({
   attributes: [dateNftAttribute, numberNftAttribute, stringNftAttribute],
   description: faker.lorem.sentence(),
@@ -92,6 +94,37 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
           appId,
           contentWarning: PublicationContentWarning[contentWarning],
           tags,
+        });
+      });
+
+      it(`should support 'attributes' and 'image'`, () => {
+        const request = mockPublication({
+          attributes: [dateNftAttribute, numberNftAttribute, stringNftAttribute],
+          image,
+        });
+
+        const metadata = createPublicationMetadata(request);
+
+        expect(metadata).toMatchObject({
+          attributes: [
+            {
+              displayType: PublicationMetadataDisplayTypes[dateNftAttribute.displayType],
+              traitType: dateNftAttribute.traitType,
+              value: dateNftAttribute.value.toString(),
+            },
+            {
+              displayType: PublicationMetadataDisplayTypes[numberNftAttribute.displayType],
+              traitType: numberNftAttribute.traitType,
+              value: numberNftAttribute.value.toString(),
+            },
+            {
+              displayType: PublicationMetadataDisplayTypes[stringNftAttribute.displayType],
+              traitType: stringNftAttribute.traitType,
+              value: stringNftAttribute.value.toString(),
+            },
+          ],
+          image: image.url,
+          imageMimeType: image.mimeType,
         });
       });
 
@@ -216,6 +249,20 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
           const metadata = createPublicationMetadata(request);
 
           expect(metadata).toMatchObject({
+            name: collectPolicyConfig.metadata.name,
+            description: collectPolicyConfig.metadata.description,
+            external_url: nftMetadata.externalUrl,
+          });
+        });
+
+        it('should be backwards compatible with the deprecated `collect.metadata.attributes`, `collect.metadata.image`, and `collect.metadata.imageMimeType`', () => {
+          const request = mockPublication({
+            collect: collectPolicyConfig,
+          });
+
+          const metadata = createPublicationMetadata(request);
+
+          expect(metadata).toMatchObject({
             attributes: [
               {
                 displayType: PublicationMetadataDisplayTypes[dateNftAttribute.displayType],
@@ -233,9 +280,6 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
                 value: stringNftAttribute.value.toString(),
               },
             ],
-            name: collectPolicyConfig.metadata.name,
-            description: collectPolicyConfig.metadata.description,
-            external_url: nftMetadata.externalUrl,
             image: nftMetadata.image,
             imageMimeType: nftMetadata.imageMimeType,
           });
@@ -251,7 +295,6 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
           const metadata = createPublicationMetadata(request);
 
           expect(metadata).toMatchObject({
-            attributes: [],
             name: 'none', // although "name" is not needed when a publication is not collectable, our Publication Metadata V2 schema requires it ¯\_(ツ)_/¯
           });
         });
