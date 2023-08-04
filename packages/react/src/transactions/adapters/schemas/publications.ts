@@ -142,7 +142,7 @@ const MetadataAttributeSchema = z.discriminatedUnion('displayType', [
 const NftMetadataSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  attributes: z.array(MetadataAttributeSchema),
+  attributes: z.array(MetadataAttributeSchema).optional(),
   externalUrl: z.string().optional(),
   image: z.string().optional(),
   imageMimeType: z.nativeEnum(ImageType).optional(),
