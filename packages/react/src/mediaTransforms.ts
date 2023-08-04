@@ -1,4 +1,12 @@
-import { ImageSizeTransform, MediaTransformParams } from '@lens-protocol/api-bindings';
+import {
+  Digit,
+  ImageSizeTransform,
+  MediaTransformParams,
+  Percentage,
+  Pixel,
+} from '@lens-protocol/api-bindings';
+
+export type { Digit, ImageSizeTransform, MediaTransformParams, Percentage, Pixel };
 
 /**
  * The media transforms configuration.
