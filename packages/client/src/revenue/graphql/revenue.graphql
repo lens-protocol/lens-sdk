@@ -1,6 +1,9 @@
 query ProfilePublicationRevenue(
   $request: ProfilePublicationRevenueQueryRequest!
   $observerId: ProfileId
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: profilePublicationRevenue(request: $request) {
     items {
@@ -13,7 +16,13 @@ query ProfilePublicationRevenue(
   }
 }
 
-query PublicationRevenue($request: PublicationRevenueQueryRequest!, $observerId: ProfileId) {
+query PublicationRevenue(
+  $request: PublicationRevenueQueryRequest!
+  $observerId: ProfileId
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
+) {
   result: publicationRevenue(request: $request) {
     ...PublicationRevenue
   }

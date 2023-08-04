@@ -35,6 +35,7 @@ import type {
   WhoCollectedPublicationRequest,
 } from '../graphql/types.generated';
 import {
+  buildMediaTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   provideAuthHeaders,
@@ -70,7 +71,7 @@ export class Publication {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication?: Authentication) {
+  constructor(private readonly config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -81,6 +82,7 @@ export class Publication {
    * Fetch a publication
    *
    * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
    * @returns Publication or null if not found
    *
    * @example
@@ -99,6 +101,7 @@ export class Publication {
         {
           request,
           observerId,
+          ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
         },
         headers,
       );
@@ -193,6 +196,7 @@ export class Publication {
    * Fetch all publications by requested criteria
    *
    * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
    * @returns Publications wrapped in {@link PaginatedResult}
    *
    * @example
@@ -212,6 +216,7 @@ export class Publication {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -225,6 +230,7 @@ export class Publication {
    * Fetch all wallets that collected a publication
    *
    * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
    * @returns Wallets wrapped in {@link PaginatedResult}
    *
    * @example
@@ -244,6 +250,7 @@ export class Publication {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -257,6 +264,7 @@ export class Publication {
    * Fetch all publications for sale by requested criteria
    *
    * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
    * @returns Publications wrapped in {@link PaginatedResult}
    *
    * @example
@@ -276,6 +284,7 @@ export class Publication {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );

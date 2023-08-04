@@ -34,6 +34,9 @@ import {
 export type ExplorePublicationsQueryVariables = Types.Exact<{
   request: Types.ExplorePublicationRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformPublication?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type ExplorePublicationsQuery = {
@@ -46,6 +49,8 @@ export type ExplorePublicationsQuery = {
 export type ExploreProfilesQueryVariables = Types.Exact<{
   request: Types.ExploreProfilesRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type ExploreProfilesQuery = {
@@ -53,7 +58,13 @@ export type ExploreProfilesQuery = {
 };
 
 export const ExplorePublicationsDocument = gql`
-  query ExplorePublications($request: ExplorePublicationRequest!, $observerId: ProfileId) {
+  query ExplorePublications(
+    $request: ExplorePublicationRequest!
+    $observerId: ProfileId
+    $mediaTransformPublication: MediaTransformParams = {}
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
+  ) {
     result: explorePublications(request: $request) {
       items {
         ... on Post {
@@ -77,7 +88,12 @@ export const ExplorePublicationsDocument = gql`
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 export const ExploreProfilesDocument = gql`
-  query ExploreProfiles($request: ExploreProfilesRequest!, $observerId: ProfileId) {
+  query ExploreProfiles(
+    $request: ExploreProfilesRequest!
+    $observerId: ProfileId
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
+  ) {
     result: exploreProfiles(request: $request) {
       items {
         ...Profile

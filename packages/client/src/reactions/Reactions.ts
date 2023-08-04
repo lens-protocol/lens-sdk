@@ -6,6 +6,7 @@ import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/e
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type { ReactionRequest, WhoReactedPublicationRequest } from '../graphql/types.generated';
 import {
+  buildMediaTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   provideAuthHeaders,
@@ -22,7 +23,7 @@ export class Reactions {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication?: Authentication) {
+  constructor(private readonly config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -108,6 +109,7 @@ export class Reactions {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );

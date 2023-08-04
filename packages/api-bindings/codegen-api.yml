@@ -35,6 +35,7 @@ generates:
         FollowPolicy: FollowPolicy
         FollowStatus: FollowStatus
         Handle: string
+        ImageSizeTransform: ImageSizeTransform
         InternalPublicationId: PublicationId
         Jwt: string
         LimitScalar: number
@@ -81,14 +82,15 @@ generates:
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
               '/* eslint-disable tsdoc/syntax */',
               "import type { AppId, DecryptionCriteria, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
-              "import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';",
+              "import type { CollectPolicy } from './CollectPolicy';",
               "import type { ContentEncryptionKey } from './ContentEncryptionKey';",
               "import type { ContentInsight } from './ContentInsight';",
               "import type { Cursor } from './Cursor';",
-              "import type { ProfileAttributes } from './ProfileAttributes';",
+              "import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';",
               "import type { FollowPolicy } from './FollowPolicy';",
               "import type { FollowStatus } from './FollowStatus';",
-              "import type { CollectPolicy } from './CollectPolicy';",
+              "import type { ImageSizeTransform } from './ImageSizeTransform';",
+              "import type { ProfileAttributes } from './ProfileAttributes';",
               "import type { ReferencePolicy } from './ReferencePolicy';",
             ]
       - 'typescript-operations':

@@ -5,7 +5,12 @@ import type { LensConfig } from '../consts/config';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type { NotificationRequest } from '../graphql/types.generated';
-import { PaginatedResult, buildPaginatedQueryResult, requireAuthHeaders } from '../helpers';
+import {
+  PaginatedResult,
+  buildMediaTransformsFromConfig,
+  buildPaginatedQueryResult,
+  requireAuthHeaders,
+} from '../helpers';
 import {
   getSdk,
   NewCollectNotificationFragment,
@@ -34,7 +39,7 @@ export class Notifications {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication: Authentication) {
+  constructor(private readonly config: LensConfig, authentication: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -70,6 +75,7 @@ export class Notifications {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );

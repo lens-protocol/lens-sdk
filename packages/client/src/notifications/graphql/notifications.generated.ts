@@ -72,6 +72,9 @@ export type NewReactionNotificationFragment = {
 export type NotificationsQueryVariables = Types.Exact<{
   request: Types.NotificationRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformPublication?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type NotificationsQuery = {
@@ -205,7 +208,13 @@ export const NewReactionNotificationFragmentDoc = gql`
   ${MirrorFragmentDoc}
 `;
 export const NotificationsDocument = gql`
-  query Notifications($request: NotificationRequest!, $observerId: ProfileId) {
+  query Notifications(
+    $request: NotificationRequest!
+    $observerId: ProfileId
+    $mediaTransformPublication: MediaTransformParams = {}
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
+  ) {
     result: notifications(request: $request) {
       items {
         ... on NewFollowerNotification {

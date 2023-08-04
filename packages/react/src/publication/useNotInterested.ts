@@ -16,7 +16,7 @@ export type NotInterestedOperation = Operation<void>;
  *
  * You MUST be authenticated via {@link useWalletLogin} to use this hook.
  *
- * You can use the {@link Post.notInterested} (or  {@link Comment.notInterested}) property to determine
+ * You can use the `Post.notInterested` (or  `Comment.notInterested`) property to determine
  * the interest associated with the provided publication observer.
  *
  * The `profile` argument MUST be the {@link ProfileOwnedByMe} instance that was used as observer when the publication got fetched.

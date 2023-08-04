@@ -13,6 +13,7 @@ describe('Given a paginated query function and the paginated query result helper
       async (currRequest) => {
         const res = await sdk.Profiles({
           request: currRequest,
+          observerId: undefined,
         });
 
         return res.data.result;
@@ -28,6 +29,7 @@ describe('Given a paginated query function and the paginated query result helper
       async (currRequest) => {
         const res = await sdk.Profiles({
           request: currRequest,
+          observerId: undefined,
         });
 
         return res.data.result;
@@ -51,6 +53,7 @@ describe('Given a paginated query function and the paginated query result helper
       async (currRequest) => {
         const res = await sdk.Profiles({
           request: currRequest,
+          observerId: undefined,
         });
 
         return res.data.result;

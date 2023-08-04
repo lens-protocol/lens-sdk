@@ -1,3 +1,4 @@
+import type { ImageSizeTransform } from './ImageSizeTransform';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -26,7 +27,7 @@ export type Scalars = {
   FollowModuleData: string;
   Handle: string;
   HandleClaimIdScalar: string;
-  ImageSizeTransform: string;
+  ImageSizeTransform: ImageSizeTransform;
   InternalPublicationId: string;
   IpfsCid: string;
   Jwt: string;

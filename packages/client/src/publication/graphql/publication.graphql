@@ -129,7 +129,13 @@ fragment CreateCollectTypedData on CreateCollectBroadcastItemResult {
 }
 
 # queries
-query Publication($request: PublicationQueryRequest!, $observerId: ProfileId) {
+query Publication(
+  $request: PublicationQueryRequest!
+  $observerId: ProfileId
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
+) {
   result: publication(request: $request) {
     ... on Post {
       ...Post
@@ -167,7 +173,13 @@ query PublicationStats($request: PublicationQueryRequest!, $sources: [Sources!]!
   }
 }
 
-query Publications($request: PublicationsQueryRequest!, $observerId: ProfileId) {
+query Publications(
+  $request: PublicationsQueryRequest!
+  $observerId: ProfileId
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
+) {
   result: publications(request: $request) {
     items {
       ... on Post {
@@ -196,7 +208,12 @@ query ValidatePublicationMetadata($metadata: PublicationMetadataV2Input!) {
   }
 }
 
-query WhoCollectedPublication($request: WhoCollectedPublicationRequest!, $observerId: ProfileId) {
+query WhoCollectedPublication(
+  $request: WhoCollectedPublicationRequest!
+  $observerId: ProfileId
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
+) {
   result: whoCollectedPublication(request: $request) {
     items {
       ...Wallet
@@ -211,6 +228,9 @@ query WhoCollectedPublication($request: WhoCollectedPublicationRequest!, $observ
 query ProfilePublicationsForSale(
   $request: ProfilePublicationsForSaleRequest!
   $observerId: ProfileId
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
 ) {
   result: profilePublicationsForSale(request: $request) {
     items {

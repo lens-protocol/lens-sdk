@@ -1,6 +1,7 @@
 export type {
   BurnProfileTypedDataFragment,
   FollowTypedDataFragment,
+  ProfileGuardianResultFragment,
   ProfileStatsFragment,
   SetDefaultProfileTypedDataFragment,
   SetDispatcherTypedDataFragment,

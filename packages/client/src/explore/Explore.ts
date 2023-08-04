@@ -4,7 +4,12 @@ import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type { ProfileFragment } from '../graphql/fragments.generated';
 import type { PublicationFragment } from '../graphql/types';
 import type { ExploreProfilesRequest, ExplorePublicationRequest } from '../graphql/types.generated';
-import { buildPaginatedQueryResult, PaginatedResult, provideAuthHeaders } from '../helpers';
+import {
+  buildMediaTransformsFromConfig,
+  buildPaginatedQueryResult,
+  PaginatedResult,
+  provideAuthHeaders,
+} from '../helpers';
 import { getSdk, Sdk } from './graphql/explore.generated';
 
 /**
@@ -16,7 +21,7 @@ export class Explore {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication?: Authentication) {
+  constructor(private readonly config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -49,6 +54,7 @@ export class Explore {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -84,6 +90,7 @@ export class Explore {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );

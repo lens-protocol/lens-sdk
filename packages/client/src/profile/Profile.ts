@@ -40,6 +40,7 @@ import type {
   UpdateProfileImageRequest,
 } from '../graphql/types.generated';
 import {
+  buildMediaTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   provideAuthHeaders,
@@ -70,7 +71,7 @@ export class Profile {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication?: Authentication) {
+  constructor(private readonly config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -98,6 +99,7 @@ export class Profile {
         {
           request,
           observerId,
+          ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
         },
         headers,
       );
@@ -159,6 +161,7 @@ export class Profile {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -189,6 +192,7 @@ export class Profile {
         {
           options,
           observerId,
+          ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
         },
         headers,
       );
@@ -243,6 +247,7 @@ export class Profile {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -311,6 +316,7 @@ export class Profile {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -324,6 +330,7 @@ export class Profile {
    * Fetch all wallet addresses that follow a profile
    *
    * @param request - Request object for the query
+   * @param observerId - Optional id of a profile that is the observer for this request
    * @returns Wallets with default profiles wrapped in {@link PaginatedResult}
    *
    * @example
@@ -343,6 +350,7 @@ export class Profile {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -849,6 +857,7 @@ export class Profile {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );

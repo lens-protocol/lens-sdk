@@ -24,6 +24,14 @@ export * from './wallet';
 export * from './chains';
 export * from './environments';
 export type {
+  Digit,
+  ImageSizeTransform,
+  MediaTransformsConfig,
+  MediaTransformParams,
+  Percentage,
+  Pixel,
+} from './mediaTransforms';
+export type {
   AuthenticationConfig,
   EncryptionConfig,
   GetProvider,

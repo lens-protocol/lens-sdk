@@ -1,6 +1,7 @@
 import { QueryHookOptions, StoreValue, useQuery } from '@apollo/client';
 import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
+import { MediaTransformParams } from './ImageSizeTransform';
 import {
   Comment,
   PaginatedResultInfo,
@@ -13,7 +14,6 @@ import {
   SearchProfilesVariables,
   SearchPublicationsDocument,
   SearchPublicationsVariables,
-  MediaTransformParams,
   GetProfileBookmarksVariables,
   GetProfileBookmarksDocument,
 } from './generated';
@@ -27,6 +27,13 @@ export * from './Cursor';
 export * from './FollowPolicy';
 export * from './FollowStatus';
 export * from './generated';
+export type {
+  Digit,
+  ImageSizeTransform,
+  MediaTransformParams, // overwrite the generated one
+  Percentage,
+  Pixel,
+} from './ImageSizeTransform';
 export * from './ProfileAttributeReader';
 export * from './ProfileAttributes';
 export * from './ReferencePolicy';

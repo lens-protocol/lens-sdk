@@ -1,6 +1,7 @@
 export { LensClient } from './LensClient';
 export { polygon, mumbai, production, development, sandbox } from './consts/environments';
 export * from './authentication';
+export * from './bookmarks';
 export * from './consts/config';
 export * from './consts/errors';
 export * from './explore';
@@ -26,6 +27,7 @@ export type {
   IEquatableError,
   InvariantError,
   Narrow,
+  Prettify,
   Primitive,
   PromiseResult,
   Result,
@@ -34,8 +36,9 @@ export type {
 export type { IStorageProvider } from '@lens-protocol/storage';
 
 export type { Environment } from './consts/environments';
-export type { LensConfig } from './consts/config';
+export type { LensConfig, MediaTransformsConfig } from './consts/config';
 export type { TypedData, TypedDataResponse } from './consts/types';
+export type { Digit, Percentage, Pixel, ImageSizeTransform } from './graphql/ImageSizeTransform';
 export type { PublicationFragment } from './graphql/types';
 export type { PaginatedResult, PaginatedQueryData } from './helpers/buildPaginatedQueryResult';
 
@@ -58,7 +61,6 @@ export type {
   LimitedFeeCollectModuleSettingsFragment,
   LimitedTimedFeeCollectModuleSettingsFragment,
   MediaFragment,
-  MediaSetFragment,
   MetadataAttributeOutputFragment,
   MetadataFragment,
   MirrorBaseFragment,
@@ -66,24 +68,30 @@ export type {
   ModuleFeeAmountFragment,
   MultirecipientFeeCollectModuleSettingsFragment,
   PostFragment,
+  ProfileCoverSetFragment,
+  ProfileFieldsFragment,
   ProfileFollowModuleSettingsFragment,
   ProfileFragment,
-  ProfileFieldsFragment,
+  ProfilePictureSetFragment,
+  PublicationMediaSetFragment,
   RelayerResultFragment,
   RelayErrorFragment,
   RevertCollectModuleSettingsFragment,
   RevertFollowModuleSettingsFragment,
-  SimplePublicationStatsFragment,
   SimpleCollectModuleSettingsFragment,
+  SimplePublicationStatsFragment,
   TimedFeeCollectModuleSettingsFragment,
   UnknownFollowModuleSettingsFragment,
   WalletFragment,
 } from './graphql/fragments.generated';
 
 export type {
+  DoesFollow,
+  DoesFollowResponse,
   Exact,
   Follow,
   FollowerNftOwnedTokenIds,
+  InputMaybe,
   Maybe,
   NftData,
   NftOwnershipChallenge,
@@ -93,16 +101,9 @@ export type {
   PublicationMetadataStatus,
   PublicationMetadataTagsFilter,
   PublicationValidateMetadataResult,
-  DoesFollow,
   Scalars,
-  InputMaybe,
-  DoesFollowResponse,
 
   // input
-  NftInput,
-  PublicationMetadataMediaInput,
-  PublicationMetadataV2Input,
-  PublicationSignatureContextInput,
   AccessConditionInput,
   AndConditionInput,
   CollectConditionInput,
@@ -111,18 +112,17 @@ export type {
   FollowConditionInput,
   GatedPublicationParamsInput,
   MetadataAttributeInput,
+  NftCollectionInput,
+  NftInput,
   NftOwnershipInput,
   OrConditionInput,
   ProfileOwnershipInput,
+  PublicationMetadataMediaInput,
+  PublicationMetadataV2Input,
+  PublicationSignatureContextInput,
   RecipientDataInput,
 
   // params
-  FollowModuleRedeemParams,
-  FraudReasonInputParams,
-  IllegalReasonInputParams,
-  ReportingReasonInputParams,
-  SensitiveReasonInputParams,
-  SpamReasonInputParams,
   AaveFeeCollectModuleParams,
   CollectModuleParams,
   DegreesOfSeparationReferenceModuleParams,
@@ -131,15 +131,22 @@ export type {
   FeeFollowModuleParams,
   FeeFollowModuleRedeemParams,
   FollowModuleParams,
+  FollowModuleRedeemParams,
+  FraudReasonInputParams,
   FreeCollectModuleParams,
+  IllegalReasonInputParams,
   LimitedFeeCollectModuleParams,
   LimitedTimedFeeCollectModuleParams,
+  MediaTransformParams,
   ModuleFeeAmountParams,
   ModuleFeeParams,
   MultirecipientFeeCollectModuleParams,
   ProfileFollowModuleRedeemParams,
   ReferenceModuleParams,
+  ReportingReasonInputParams,
+  SensitiveReasonInputParams,
   SimpleCollectModuleParams,
+  SpamReasonInputParams,
   TimedFeeCollectModuleParams,
   UnknownCollectModuleParams,
   UnknownFollowModuleParams,
@@ -189,11 +196,14 @@ export type {
   NotificationRequest,
   PendingApprovalFollowsRequest,
   ProfileFollowRevenueQueryRequest,
+  ProfileGuardianRequest,
   ProfilePublicationRevenueQueryRequest,
   ProfilePublicationsForSaleRequest,
   ProfileQueryRequest,
+  PublicationProfileBookmarkRequest,
   PublicationQueryRequest,
   PublicationRevenueQueryRequest,
+  PublicationsProfileBookmarkedQueryRequest,
   PublicationsQueryRequest,
   PublicMediaRequest,
   ReactionRequest,

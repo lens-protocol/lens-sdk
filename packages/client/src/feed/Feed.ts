@@ -6,7 +6,12 @@ import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/e
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
 import type { PublicationFragment } from '../graphql/types';
 import type { FeedHighlightsRequest, FeedRequest } from '../graphql/types.generated';
-import { buildPaginatedQueryResult, PaginatedResult, requireAuthHeaders } from '../helpers';
+import {
+  buildMediaTransformsFromConfig,
+  buildPaginatedQueryResult,
+  PaginatedResult,
+  requireAuthHeaders,
+} from '../helpers';
 import { FeedItemFragment, getSdk, Sdk } from './graphql/feed.generated';
 
 /**
@@ -18,7 +23,7 @@ export class Feed {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication: Authentication) {
+  constructor(private readonly config: LensConfig, authentication: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
     this.sdk = getSdk(client);
@@ -54,6 +59,7 @@ export class Feed {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );
@@ -92,6 +98,7 @@ export class Feed {
           {
             request: currRequest,
             observerId,
+            ...buildMediaTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
         );

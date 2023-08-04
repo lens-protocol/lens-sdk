@@ -1,15 +1,15 @@
-type Digit = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+export type Digit = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
 
-type Percentage = `100%` | `${Digit}${Digit}%` | `${Digit}%`;
+export type Percentage = `100%` | `${Digit}${Digit}%` | `${Digit}%`;
 
-type Pixel =
+export type Pixel =
   | `${Digit}${Digit}${Digit}${Digit}px`
   | `${Digit}${Digit}${Digit}px`
   | `${Digit}${Digit}px`;
 
 export type ImageSizeTransform = Pixel | Percentage | 'auto';
 
-export type MediaTransform = {
+export type MediaTransformParams = {
   /**
    * Set the transformed image's width. You can use specific size in
    * pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically.

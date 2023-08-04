@@ -34,6 +34,9 @@ import {
 export type PublicationsProfileBookmarksQueryVariables = Types.Exact<{
   request: Types.PublicationsProfileBookmarkedQueryRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformPublication?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type PublicationsProfileBookmarksQuery = {
@@ -59,6 +62,9 @@ export const PublicationsProfileBookmarksDocument = gql`
   query PublicationsProfileBookmarks(
     $request: PublicationsProfileBookmarkedQueryRequest!
     $observerId: ProfileId
+    $mediaTransformPublication: MediaTransformParams = {}
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: publicationsProfileBookmarks(request: $request) {
       items {

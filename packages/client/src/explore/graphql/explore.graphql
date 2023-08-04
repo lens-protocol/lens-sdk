@@ -1,4 +1,10 @@
-query ExplorePublications($request: ExplorePublicationRequest!, $observerId: ProfileId) {
+query ExplorePublications(
+  $request: ExplorePublicationRequest!
+  $observerId: ProfileId
+  $mediaTransformPublication: MediaTransformParams = {}
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
+) {
   result: explorePublications(request: $request) {
     items {
       ... on Post {
@@ -19,7 +25,12 @@ query ExplorePublications($request: ExplorePublicationRequest!, $observerId: Pro
   }
 }
 
-query ExploreProfiles($request: ExploreProfilesRequest!, $observerId: ProfileId) {
+query ExploreProfiles(
+  $request: ExploreProfilesRequest!
+  $observerId: ProfileId
+  $mediaTransformProfilePicture: MediaTransformParams = {}
+  $mediaTransformProfileCover: MediaTransformParams = {}
+) {
   result: exploreProfiles(request: $request) {
     items {
       ...Profile

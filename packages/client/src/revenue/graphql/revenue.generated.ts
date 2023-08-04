@@ -24,6 +24,9 @@ import {
 export type ProfilePublicationRevenueQueryVariables = Types.Exact<{
   request: Types.ProfilePublicationRevenueQueryRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformPublication?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type ProfilePublicationRevenueQuery = {
@@ -33,6 +36,9 @@ export type ProfilePublicationRevenueQuery = {
 export type PublicationRevenueQueryVariables = Types.Exact<{
   request: Types.PublicationRevenueQueryRequest;
   observerId?: Types.InputMaybe<Types.Scalars['ProfileId']>;
+  mediaTransformPublication?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfilePicture?: Types.InputMaybe<Types.MediaTransformParams>;
+  mediaTransformProfileCover?: Types.InputMaybe<Types.MediaTransformParams>;
 }>;
 
 export type PublicationRevenueQuery = { result: PublicationRevenueFragment | null };
@@ -90,6 +96,9 @@ export const ProfilePublicationRevenueDocument = gql`
   query ProfilePublicationRevenue(
     $request: ProfilePublicationRevenueQueryRequest!
     $observerId: ProfileId
+    $mediaTransformPublication: MediaTransformParams = {}
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
   ) {
     result: profilePublicationRevenue(request: $request) {
       items {
@@ -104,7 +113,13 @@ export const ProfilePublicationRevenueDocument = gql`
   ${CommonPaginatedResultInfoFragmentDoc}
 `;
 export const PublicationRevenueDocument = gql`
-  query PublicationRevenue($request: PublicationRevenueQueryRequest!, $observerId: ProfileId) {
+  query PublicationRevenue(
+    $request: PublicationRevenueQueryRequest!
+    $observerId: ProfileId
+    $mediaTransformPublication: MediaTransformParams = {}
+    $mediaTransformProfilePicture: MediaTransformParams = {}
+    $mediaTransformProfileCover: MediaTransformParams = {}
+  ) {
     result: publicationRevenue(request: $request) {
       ...PublicationRevenue
     }
