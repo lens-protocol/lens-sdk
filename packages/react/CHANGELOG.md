@@ -1,5 +1,19 @@
 # @lens-protocol/react
 
+## 1.3.0-next.4
+
+### Minor Changes
+
+- 9428efeb: **Added** support for `attributes` and `image` for non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
+
+### Patch Changes
+
+- Updated dependencies [9428efeb]
+  - @lens-protocol/domain@0.9.1-next.2
+  - @lens-protocol/api-bindings@0.10.0-next.3
+  - @lens-protocol/blockchain-bindings@0.9.1-next.2
+  - @lens-protocol/gated-content@0.3.2-next.3
+
 ## 1.3.0-next.3
 
 ### Minor Changes

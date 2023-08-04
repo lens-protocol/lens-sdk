@@ -1,5 +1,12 @@
 # @lens-protocol/api-bindings
 
+## 0.10.0-next.3
+
+### Patch Changes
+
+- Updated dependencies [9428efeb]
+  - @lens-protocol/domain@0.9.1-next.2
+
 ## 0.10.0-next.2
 
 ### Minor Changes
