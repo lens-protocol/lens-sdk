@@ -25,6 +25,8 @@ import { ConsoleLogger } from './ConsoleLogger';
 import { ErrorHandler } from './ErrorHandler';
 import { IBindings, LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
+import { DisableConversationsGateway } from './inbox/adapters/DisableConversationsGateway';
+import { createInboxKeyStorage } from './inbox/infrastructure/InboxKeyStorage';
 import { LogoutHandler, SessionPresenter } from './lifecycle/adapters/SessionPresenter';
 import { defaultMediaTransformsConfig, MediaTransformsConfig } from './mediaTransforms';
 import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
@@ -88,6 +90,7 @@ export type SharedDependencies = {
   credentialsGateway: CredentialsGateway;
   environment: EnvironmentConfig;
   followPolicyCallGateway: FollowPolicyCallGateway;
+  inboxKeyStorage: IStorage<string>;
   logger: ILogger;
   mediaTransforms: MediaTransformsConfig;
   notificationStorage: IStorage<UnreadNotificationsData>;
@@ -123,6 +126,7 @@ export function createSharedDependencies(
   const walletStorage = createWalletStorage(config.storage, config.environment.name);
   const notificationStorage = createNotificationStorage(config.storage, config.environment.name);
   const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
+  const inboxKeyStorage = createInboxKeyStorage(config.storage, config.environment.name);
 
   // apollo client
   const anonymousApolloClient = createAuthApolloClient({
@@ -210,11 +214,13 @@ export function createSharedDependencies(
     transactionQueuePresenter,
   );
   const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
+  const conversationGateway = new DisableConversationsGateway(inboxKeyStorage);
   const walletLogout = new WalletLogout(
     walletGateway,
     credentialsGateway,
     activeWallet,
     activeProfileGateway,
+    conversationGateway,
     sessionPresenter,
   );
   const loginPresenter = new WalletLoginPresenter(profileCacheManager);
@@ -243,6 +249,7 @@ export function createSharedDependencies(
     credentialsGateway,
     environment: config.environment,
     followPolicyCallGateway,
+    inboxKeyStorage,
     logger,
     mediaTransforms,
     notificationStorage,

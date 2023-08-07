@@ -8,7 +8,7 @@ import {
   useSessionVar,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { Overwrite, Prettify } from '@lens-protocol/shared-kernel';
+import { Overwrite, Prettify, UnknownObject } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
 import { mediaTransformConfigToQueryVariables } from '../mediaTransforms';
@@ -45,6 +45,19 @@ export function useSnapshotApolloClient<TOptions>(
     client,
   };
 }
+
+/**
+ * When `skip` prop is true then all other props are optional.
+ * Used to allow to skip apollo API calls
+ */
+export type Skippable<T extends UnknownObject> =
+  | (Partial<T> & {
+      /**
+       * @experimental
+       */
+      skip: true;
+    })
+  | (T & { skip?: false });
 
 export type WithObserverIdOverride<TVariables = unknown> = Prettify<
   TVariables & {

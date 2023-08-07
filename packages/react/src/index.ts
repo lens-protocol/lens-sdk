@@ -46,7 +46,7 @@ export type {
 /**
  * Hooks helpers types
  */
-export type { WithObserverIdOverride } from './helpers/arguments';
+export type { WithObserverIdOverride, Skippable } from './helpers/arguments';
 export type { Operation } from './helpers/operations';
 export type {
   PaginatedArgs,
@@ -60,11 +60,12 @@ export type {
  * Storage
  */
 export type {
-  StorageSubscription,
-  StorageSubscriber,
-  StorageProviderSubscriber,
-  IStorageProvider,
   IObservableStorageProvider,
+  IStorage,
+  IStorageProvider,
+  StorageProviderSubscriber,
+  StorageSubscriber,
+  StorageSubscription,
 } from '@lens-protocol/storage';
 
 /**

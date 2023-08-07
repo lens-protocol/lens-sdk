@@ -6,6 +6,7 @@ import { ISessionPresenter } from '../../lifecycle/ISessionPresenter';
 import { ActiveWallet } from '../ActiveWallet';
 import {
   IActiveProfileGateway,
+  IConversationsGateway,
   IResettableCredentialsGateway,
   IResettableWalletGateway,
   LogoutReason,
@@ -19,12 +20,14 @@ const setupWalletLogout = ({ activeWallet }: { activeWallet: ActiveWallet }) => 
   const credentialsGateway = mock<IResettableCredentialsGateway>();
   const activeProfileGateway = mock<IActiveProfileGateway>();
   const sessionPresenter = mock<ISessionPresenter>();
+  const conversationGateway = mock<IConversationsGateway>();
 
   const walletLogout = new WalletLogout(
     walletGateway,
     credentialsGateway,
     activeWallet,
     activeProfileGateway,
+    conversationGateway,
     sessionPresenter,
   );
 
