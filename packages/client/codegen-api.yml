@@ -7,62 +7,70 @@ config:
   strictScalars: true
 
   scalars:
-    Attach: string
+    AppId: string
+    AudioMimeType: string
     BlockchainData: string
     BroadcastId: string
-    ChainId: number
+    ChainId: string
+    ChallengeId: string
     CollectModuleData: string
     ContentEncryptionKey: string
-    ContractAddress: string
+    ContractPublicationId: string
+    CreateDeleteEIP712TypedData: string
     CreateHandle: string
+    CreateMirrorEIP712TypedData: string
     Cursor: string
-    DataAvailabilityId: string
     DateTime: string
     EncryptedValueScalar: string
     Ens: string
-    EthereumAddress: string
+    Erc20: string
+    EvmAddress: string
+    FeedId: string
     FollowModuleData: string
     Handle: string
     HandleClaimIdScalar: string
+    ImageMimeType: string
     ImageSizeTransform: ImageSizeTransform
-    InternalPublicationId: string
     IpfsCid: string
     Jwt: string
-    LimitScalar: number
+    Limit: string
     Locale: string
+    Location: string
     Markdown: string
-    Media: string
+    MetadataLicenseType: string
+    MetadataMediaAudioType: string
     MimeType: string
+    MomokaId: string
+    MomokaProof: string
+    MomokaTransactionUnion: string
     NftGalleryId: string
-    NftGalleryName: string
-    NftOwnershipId: string
-    Nonce: number
+    NftOwnershipChallengeId: string
+    NftTokenId: string
+    Nonce: string
     NotificationId: string
     ProfileId: string
     ProfileInterest: string
-    ProxyActionId: string
+    ProfileSortCriteria: string
     PublicationId: string
     PublicationTag: string
     PublicationUrl: string
     ReactionId: string
     ReferenceModuleData: string
-    Search: string
     Signature: string
-    Sources: string
-    String: string
-    TimestampScalar: string
-    TokenId: string
+    ThreeDFormat: string
     TxHash: string
     TxId: string
     UnixTimestamp: string
+    Uri: string
     Url: string
-    Void: void
+    VideoMimeType: string
+    Void: string
 
   avoidOptionals:
     field: true
 
 schema:
-  - https://api-mumbai.lens.dev/graphql
+  - ./lens-v2.graphql
 documents:
   - src/**/*.graphql
 generates:
@@ -72,6 +80,7 @@ generates:
           content: ["import type { ImageSizeTransform } from './ImageSizeTransform';"]
       - 'typescript':
           nonOptionalTypename: true
+          onlyOperationTypes: true # scalars and enums
   ./:
     preset: near-operation-file
     presetConfig:
@@ -83,5 +92,10 @@ generates:
       - 'typescript-operations':
           skipTypename: true
           inlineFragmentTypes: combine
+          # omitOperationSuffix: true
+          # operationResultSuffix: 'Data'
       - 'typescript-graphql-request':
           rawRequest: true
+          # omitOperationSuffix: true
+          # operationResultSuffix: 'Data'
+          # fragmentVariablePrefix: Fragment

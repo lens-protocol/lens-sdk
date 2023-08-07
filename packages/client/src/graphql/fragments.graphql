@@ -1,78 +1,143 @@
-fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
-  __typename
-  amount {
-    ...ModuleFeeAmount
+fragment OptimisticStatusResult on OptimisticStatusResult {
+  value
+  isFinalisedOnChain
+}
+
+fragment ERC20 on ERC20 {
+  name
+  symbol
+  decimals
+  contract {
+    ...NetworkAddress
   }
-  contractAddress
+}
+
+fragment FiatAmount on FiatAmount {
+  asset {
+    ...Fiat
+  }
+  value
+}
+
+fragment Fiat on Fiat {
+  name
+  symbol
+  decimals
+}
+
+fragment Amount on Amount {
+  asset {
+    ...ERC20
+  }
+  value
+  rate(currency: USD) {
+    ...FiatAmount
+  }
+}
+
+fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+  amount {
+    ...Amount
+  }
+  contract {
+    ...NetworkAddress
+  }
   recipient
 }
 
 fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
-  __typename
-  contractAddress
+  contract {
+    ...NetworkAddress
+  }
 }
 
 fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
-  __typename
-  contractAddress
+  contract {
+    ...NetworkAddress
+  }
 }
 
 fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
-  __typename
-  contractAddress
+  contract {
+    ...NetworkAddress
+  }
+  followModuleReturnData
 }
 
-fragment Attribute on Attribute {
-  __typename
-  displayType
-  key
-  value
+fragment Gasless on Gasless {
+  enabled
+  relay {
+    ...NetworkAddress
+  }
+}
+
+fragment NetworkAddress on NetworkAddress {
+  address
+  chainId
+}
+
+fragment Image on Image {
+  url
+  mimeType
+  width
+  height
+}
+
+fragment ProfileCoverSet on ImageSet {
+  rawURL
+  media {
+    ...Image
+  }
+  altTag
+  transformed(input: $profileCoverTransform) {
+    ...Image
+  }
+}
+
+fragment ProfilePictureSet on ImageSet {
+  rawURL
+  media {
+    ...Image
+  }
+  altTag
+  transformed(input: $profilePictureTransform) {
+    ...Image
+  }
 }
 
 fragment ProfileFields on Profile {
   __typename
   id
-  name
-  bio
-  handle
-  ownedBy
-  interests
-
-  picture {
-    ... on NftImage {
-      __typename
-      contractAddress
-      tokenId
-      uri
-      verified
-    }
-
-    ... on MediaSet {
-      ...ProfilePictureSet
-    }
-  }
-
-  coverPicture {
-    ... on NftImage {
-      __typename
-      contractAddress
-      tokenId
-      uri
-      verified
-    }
-
-    ... on MediaSet {
+  metadata {
+    rawURL
+    displayName
+    bio
+    coverPicture {
       ...ProfileCoverSet
     }
   }
-
-  stats {
-    __typename
-    totalFollowers
-    totalFollowing
-    totalPosts
+  handle
+  ownedBy {
+    ...NetworkAddress
   }
-
+  picture {
+    ... on NftImage {
+      collection {
+        ...NetworkAddress
+      }
+      tokenId
+      image {
+        ...ProfilePictureSet
+      }
+      verified
+    }
+    ... on ImageSet {
+      ...ProfilePictureSet
+    }
+  }
+  gasless {
+    ...Gasless
+  }
   followModule {
     ... on FeeFollowModuleSettings {
       ...FeeFollowModuleSettings
@@ -87,19 +152,45 @@ fragment ProfileFields on Profile {
       ...UnknownFollowModuleSettings
     }
   }
-
+  followNftAddress {
+    ...NetworkAddress
+  }
   attributes {
-    ...Attribute
+    type
+    key
+    value
   }
-
-  dispatcher {
-    address
-    canUseRelay
+  onChainIdentity {
+    proofOfHumanity {
+      isVerified
+    }
+    ens {
+      name
+    }
+    sybilDotOrg {
+      source {
+        twitter {
+          handle
+        }
+      }
+    }
+    worldcoin {
+      isHuman
+    }
   }
-
-  isDefault
-  isFollowedByMe(isFinalisedOnChain: true)
-  isFollowing(who: $observerId)
+  interests
+  isFollowedByMe {
+    ...OptimisticStatusResult
+  }
+  isFollowingMe {
+    ...OptimisticStatusResult
+  }
+  guardian {
+    protected
+    cooldownEndsOn
+  }
+  invitesLeft
+  createdAt
 }
 
 fragment Profile on Profile {
@@ -110,487 +201,160 @@ fragment Profile on Profile {
   }
 }
 
-fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-  name
-  chainId
-  version
-  verifyingContract
+fragment PaginatedResultInfo on PaginatedResultInfo {
+  prev
+  next
 }
 
-fragment Erc20 on Erc20 {
-  __typename
-  name
-  symbol
-  decimals
-  address
-}
-
-fragment Erc20Amount on Erc20Amount {
-  __typename
-  asset {
-    ...Erc20
-  }
-  value
-}
-
-fragment ModuleFeeAmount on ModuleFeeAmount {
-  __typename
-  asset {
-    ...Erc20
-  }
-  value
-}
-
-fragment FreeCollectModuleSettings on FreeCollectModuleSettings {
-  __typename
-  contractAddress
-  followerOnly
-}
-
-fragment FeeCollectModuleSettings on FeeCollectModuleSettings {
-  __typename
-  amount {
-    ...ModuleFeeAmount
-  }
-  contractAddress
-  followerOnly
-  recipient
-  referralFee
-}
-
-fragment LimitedFeeCollectModuleSettings on LimitedFeeCollectModuleSettings {
-  __typename
-  amount {
-    ...ModuleFeeAmount
-  }
-  collectLimit
-  contractAddress
-  followerOnly
-  recipient
-  referralFee
-}
-
-fragment LimitedTimedFeeCollectModuleSettings on LimitedTimedFeeCollectModuleSettings {
-  __typename
-  amount {
-    ...ModuleFeeAmount
-  }
-  collectLimit
-  contractAddress
-  followerOnly
-  endTimestamp
-  recipient
-  referralFee
-}
-
-fragment RevertCollectModuleSettings on RevertCollectModuleSettings {
-  __typename
-  contractAddress
-}
-
-fragment TimedFeeCollectModuleSettings on TimedFeeCollectModuleSettings {
-  __typename
-  amount {
-    ...ModuleFeeAmount
-  }
-  contractAddress
-  followerOnly
-  endTimestamp
-  recipient
-  referralFee
-}
-
-fragment MultirecipientFeeCollectModuleSettings on MultirecipientFeeCollectModuleSettings {
-  __typename
-  amount {
-    ...ModuleFeeAmount
-  }
-  collectLimitOptional: collectLimit
-  contractAddress
-  followerOnly
-  endTimestampOptional: endTimestamp
-  recipients {
-    recipient
-    split
-  }
-  referralFee
-}
-
-fragment ERC4626FeeCollectModuleSettings on ERC4626FeeCollectModuleSettings {
-  __typename
-  amount {
-    ...ModuleFeeAmount
-  }
-  collectLimitOptional: collectLimit
-  contractAddress
-  followerOnly
-  endTimestampOptional: endTimestamp
-  recipient
-  referralFee
-  vault
-}
-
-fragment AaveFeeCollectModuleSettings on AaveFeeCollectModuleSettings {
-  __typename
-  amount {
-    ...ModuleFeeAmount
-  }
-  collectLimitOptional: collectLimit
-  contractAddress
-  followerOnly
-  endTimestampOptional: endTimestamp
-  recipient
-  referralFee
-}
-
-fragment SimpleCollectModuleSettings on SimpleCollectModuleSettings {
-  __typename
-  contractAddress
-  followerOnly
-  feeOptional: fee {
-    amount {
-      ...ModuleFeeAmount
-    }
-    referralFee
-    recipient
-  }
-  collectLimitOptional: collectLimit
-  endTimestampOptional: endTimestamp
-}
-
-fragment Wallet on Wallet {
-  __typename
-  address
-  defaultProfile {
-    ...Profile
-  }
-}
-
-fragment Media on Media {
-  __typename
-  altTag
-  cover
-  mimeType
-  url
-}
-
-fragment PublicationMediaSet on MediaSet {
-  __typename
-  onChain {
-    ...Media
-  }
-  original {
-    ...Media
-  }
-  optimized {
-    ...Media
-  }
-  transformed(params: $mediaTransformPublication) {
-    ...Media
-  }
-}
-
-fragment ProfilePictureSet on MediaSet {
-  __typename
-  onChain {
-    ...Media
-  }
-  original {
-    ...Media
-  }
-  optimized {
-    ...Media
-  }
-  transformed(params: $mediaTransformProfilePicture) {
-    ...Media
-  }
-}
-
-fragment ProfileCoverSet on MediaSet {
-  __typename
-  onChain {
-    ...Media
-  }
-  original {
-    ...Media
-  }
-  optimized {
-    ...Media
-  }
-  transformed(params: $mediaTransformProfileCover) {
-    ...Media
-  }
-}
-
-fragment Metadata on MetadataOutput {
-  __typename
-  animatedUrl
-  content
-  contentWarning
-  description
-  image
-  locale
-  mainContentFocus
-  name
-  media {
-    ...PublicationMediaSet
-  }
-  attributes {
-    ...MetadataAttributeOutput
-  }
-  tags
-}
-
-fragment MetadataAttributeOutput on MetadataAttributeOutput {
-  __typename
-  traitType
-  value
-}
-
-fragment SimplePublicationStats on PublicationStats {
-  __typename
-  totalAmountOfMirrors
-  totalAmountOfCollects
-  totalAmountOfComments
-  totalUpvotes
-  totalDownvotes
-  totalBookmarks
-}
-
-fragment MirrorBase on Mirror {
-  __typename
+fragment App on App {
   id
-  createdAt
-  isDataAvailability
-  dataAvailabilityProofs
-  profile {
-    ...Profile
-  }
-  hidden
 }
 
-fragment Mirror on Mirror {
-  __typename
-  ...MirrorBase
-  mirrorOf {
-    ... on Post {
-      ...Post
-    }
+fragment MomokaInfo on MomokaInfo {
+  proof
+}
 
-    ... on Comment {
-      ...Comment
-    }
+fragment Post on Post {
+  id
+  by {
+    ...ProfileFields
   }
+
+  # The metadata for the post
+  # metadata: PublicationMetadata!
+
+  # # The open action module
+  # openActionModules: [OpenActionModule!]
+
+  # # The reference module
+  # referenceModule: ReferenceModule
+
+  publishedOn {
+    ...App
+  }
+  isHidden
+  isGated
+  momoka {
+    ...MomokaInfo
+  }
+
+  # operations(by: ProfileId): PublicationOperations
+
+  createdAt
 }
 
 fragment CommentBase on Comment {
-  __typename
   id
-  appId
-  stats {
-    ...SimplePublicationStats
+  by {
+    ...ProfileFields
   }
-  metadata {
-    ...Metadata
+
+  # The metadata for the post
+  # metadata: PublicationMetadata!
+
+  # # The collect module
+  # openActionModules: [OpenActionModule!]!
+
+  # # The reference module
+  # referenceModule: ReferenceModule
+
+  publishedOn {
+    ...App
   }
-  profile {
-    ...Profile
-  }
-  collectedBy {
-    ...Wallet
-  }
-  collectModule {
-    __typename
-    ... on FreeCollectModuleSettings {
-      ...FreeCollectModuleSettings
-    }
-    ... on FeeCollectModuleSettings {
-      ...FeeCollectModuleSettings
-    }
-    ... on LimitedFeeCollectModuleSettings {
-      ...LimitedFeeCollectModuleSettings
-    }
-    ... on LimitedTimedFeeCollectModuleSettings {
-      ...LimitedTimedFeeCollectModuleSettings
-    }
-    ... on RevertCollectModuleSettings {
-      ...RevertCollectModuleSettings
-    }
-    ... on TimedFeeCollectModuleSettings {
-      ...TimedFeeCollectModuleSettings
-    }
-    ... on MultirecipientFeeCollectModuleSettings {
-      ...MultirecipientFeeCollectModuleSettings
-    }
-    ... on ERC4626FeeCollectModuleSettings {
-      ...ERC4626FeeCollectModuleSettings
-    }
-    ... on AaveFeeCollectModuleSettings {
-      ...AaveFeeCollectModuleSettings
-    }
-    ... on SimpleCollectModuleSettings {
-      ...SimpleCollectModuleSettings
-    }
-  }
-  referenceModule {
-    __typename
-    ... on FollowOnlyReferenceModuleSettings {
-      contractAddress
-    }
-  }
-  collectNftAddress
-  createdAt
-  hidden
-  bookmarked(by: $observerId)
+  isHidden
   isGated
-  isDataAvailability
-  dataAvailabilityProofs
-  reaction(request: { profileId: $observerId })
-  hasCollectedByMe(isFinalisedOnChain: true)
-  canComment(profileId: $observerId) {
-    result
+  momoka {
+    ...MomokaInfo
   }
-  canMirror(profileId: $observerId) {
-    result
-  }
-  mirrors(by: $observerId)
+
+  # operations(by: ProfileId): PublicationOperations
+
+  createdAt
 }
 
 fragment Comment on Comment {
-  __typename
   ...CommentBase
+  root {
+    ...Post
+  }
   commentOn {
     ... on Post {
       ...Post
     }
-
-    ... on Mirror {
-      ...MirrorBase
-    }
-
     ... on Comment {
       ...CommentBase
     }
+    ... on Quote {
+      ...QuoteBase
+    }
   }
-  mainPost {
+  firstComment {
+    ...CommentBase
+  }
+}
+
+fragment Mirror on Mirror {
+  id
+  by {
+    ...ProfileFields
+  }
+  momoka {
+    ...MomokaInfo
+  }
+  mirrorOf {
     ... on Post {
       ...Post
     }
-
-    ... on Mirror {
-      ...MirrorBase
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
     }
   }
-}
-
-fragment Post on Post {
-  __typename
-  id
-  appId
-  stats {
-    ...SimplePublicationStats
-  }
-  metadata {
-    ...Metadata
-  }
-  profile {
-    ...Profile
-  }
-  collectedBy {
-    ...Wallet
-  }
-  collectModule {
-    __typename
-    ... on FreeCollectModuleSettings {
-      ...FreeCollectModuleSettings
-    }
-    ... on FeeCollectModuleSettings {
-      ...FeeCollectModuleSettings
-    }
-    ... on LimitedFeeCollectModuleSettings {
-      ...LimitedFeeCollectModuleSettings
-    }
-    ... on LimitedTimedFeeCollectModuleSettings {
-      ...LimitedTimedFeeCollectModuleSettings
-    }
-    ... on RevertCollectModuleSettings {
-      ...RevertCollectModuleSettings
-    }
-    ... on TimedFeeCollectModuleSettings {
-      ...TimedFeeCollectModuleSettings
-    }
-    ... on MultirecipientFeeCollectModuleSettings {
-      ...MultirecipientFeeCollectModuleSettings
-    }
-    ... on ERC4626FeeCollectModuleSettings {
-      ...ERC4626FeeCollectModuleSettings
-    }
-    ... on AaveFeeCollectModuleSettings {
-      ...AaveFeeCollectModuleSettings
-    }
-    ... on SimpleCollectModuleSettings {
-      ...SimpleCollectModuleSettings
-    }
-  }
-  referenceModule {
-    __typename
-    ... on FollowOnlyReferenceModuleSettings {
-      contractAddress
-    }
-  }
-  collectNftAddress
   createdAt
-  hidden
-  bookmarked(by: $observerId)
-  isGated
-  isDataAvailability
-  dataAvailabilityProofs
-  reaction(request: { profileId: $observerId })
-  hasCollectedByMe(isFinalisedOnChain: true)
-  canComment(profileId: $observerId) {
-    result
-  }
-  canMirror(profileId: $observerId) {
-    result
-  }
-  mirrors(by: $observerId)
 }
 
-fragment CommonPaginatedResultInfo on PaginatedResultInfo {
-  __typename
-  prev
-  next
-  totalCount
-}
-
-fragment Following on Following {
-  __typename
-  profile {
-    ...Profile
-  }
-}
-
-fragment Follower on Follower {
-  __typename
-  wallet {
-    ...Wallet
-  }
-}
-
-fragment RelayerResult on RelayerResult {
-  __typename
-  txHash
-  txId
-}
-
-fragment RelayError on RelayError {
-  __typename
-  reason
-}
-
-fragment CreateDataAvailabilityPublicationResult on CreateDataAvailabilityPublicationResult {
-  __typename
+fragment QuoteBase on Quote {
   id
-  proofs
-  dataAvailabilityId
+  by {
+    ...ProfileFields
+  }
+
+  #   # The metadata for the post
+  #   metadata: PublicationMetadata!
+
+  #   # The collect module
+  #   openActionModules: [OpenActionModule!]!
+
+  #   # The reference module
+  #   referenceModule: ReferenceModule
+
+  publishedOn {
+    ...App
+  }
+  isHidden
+  isGated
+  momoka {
+    ...MomokaInfo
+  }
+
+  #   operations(by: ProfileId): PublicationOperations
+
+  createdAt
+}
+
+fragment Quote on Quote {
+  ...QuoteBase
+  quotedOn {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...CommentBase
+    }
+    ... on Quote {
+      ...QuoteBase
+    }
+  }
 }
