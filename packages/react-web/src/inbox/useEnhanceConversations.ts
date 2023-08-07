@@ -51,17 +51,19 @@ export function useEnhanceConversations(
     return [...new Set(ids)];
   }, [conversationToProfileIdMap]);
 
+  const skip = uniqueProfileIds.length === 0;
+
   const {
     data: profiles = [],
     error,
     loading,
   } = useProfiles(
-    uniqueProfileIds.length > 0
+    skip
       ? {
-          profileIds: uniqueProfileIds,
+          skip: true,
         }
       : {
-          skip: true,
+          profileIds: uniqueProfileIds,
         },
   );
 
@@ -85,6 +87,14 @@ export function useEnhanceConversations(
     }
     return conversations;
   }, [profiles, conversationToProfileIdMap, conversations]);
+
+  if (skip) {
+    return {
+      data: conversations,
+      error: undefined,
+      loading: false,
+    };
+  }
 
   if (loading || resultLoading) {
     return {

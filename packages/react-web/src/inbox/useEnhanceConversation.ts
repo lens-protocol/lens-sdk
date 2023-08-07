@@ -32,13 +32,15 @@ export function useEnhanceConversation({
     [conversation, profile],
   );
 
+  const skip = peerProfileId === undefined;
+
   const { data: peerProfile, loading } = useProfile(
-    peerProfileId
+    skip
       ? {
-          profileId: peerProfileId,
+          skip: true,
         }
       : {
-          skip: true,
+          profileId: peerProfileId,
         },
   );
 
@@ -52,6 +54,13 @@ export function useEnhanceConversation({
     }
     return conversation;
   }, [conversation, peerProfile]);
+
+  if (skip) {
+    return {
+      data: conversation,
+      loading: false,
+    };
+  }
 
   if (loading) {
     return {
