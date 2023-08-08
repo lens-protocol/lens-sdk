@@ -16,43 +16,41 @@ import {
 import { mockCreateProfileRequest, mockIProfileTransactionGateway } from '../__helpers__/mocks';
 
 function setupCreateProfile({
-  gateway,
   presenter,
+  transactionFactory,
   transactionQueue = mockTransactionQueue<CreateProfileRequest>(),
 }: {
-  gateway: IProfileTransactionGateway;
   presenter: ICreateProfilePresenter;
+  transactionFactory: IProfileTransactionGateway;
   transactionQueue?: TransactionQueue<CreateProfileRequest>;
 }) {
-  return new CreateProfile(gateway, presenter, transactionQueue);
+  return new CreateProfile(transactionFactory, transactionQueue, presenter);
 }
 
 describe(`Given an instance of the ${CreateProfile.name} interactor`, () => {
-  describe(`when calling the "${CreateProfile.prototype.create.name}" method`, () => {
+  describe(`when calling the "${CreateProfile.prototype.execute.name}" method`, () => {
     const request = mockCreateProfileRequest();
     const transaction = MockedNativeTransaction.fromRequest(request);
 
     it(`should:
         - create a ${NativeTransaction.name}<CreateProfileRequest>
-        - queue the resulting ${NativeTransaction.name} into the ${TransactionQueue.name}
-        - present successful result`, async () => {
+        - queue the resulting ${NativeTransaction.name} into the ${TransactionQueue.name}`, async () => {
       const presenter = mock<ICreateProfilePresenter>();
-      const gateway = mockIProfileTransactionGateway({
+      const transactionFactory = mockIProfileTransactionGateway({
         request,
         result: success(transaction),
       });
       const transactionQueue = mockTransactionQueue<CreateProfileRequest>();
 
       const createProfile = setupCreateProfile({
-        gateway,
+        transactionFactory,
         presenter,
         transactionQueue,
       });
 
-      await createProfile.create(request);
+      await createProfile.execute(request);
 
-      expect(transactionQueue.push).toHaveBeenCalledWith(transaction);
-      expect(presenter.present).toHaveBeenCalledWith(success());
+      expect(transactionQueue.push).toHaveBeenCalledWith(transaction, presenter);
     });
 
     it.each([
@@ -65,18 +63,18 @@ describe(`Given an instance of the ${CreateProfile.name} interactor`, () => {
         error: new BroadcastingError('some reason'),
       },
     ])(`should present any $ErrorCtor might occur`, async ({ error }) => {
-      const gateway = mockIProfileTransactionGateway({
+      const transactionFactory = mockIProfileTransactionGateway({
         request,
         result: failure(error),
       });
       const presenter = mock<ICreateProfilePresenter>();
 
       const createProfile = setupCreateProfile({
-        gateway,
+        transactionFactory,
         presenter,
       });
 
-      await createProfile.create(request);
+      await createProfile.execute(request);
 
       expect(presenter.present).toHaveBeenCalledWith(failure(error));
     });

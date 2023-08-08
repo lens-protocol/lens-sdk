@@ -61,8 +61,8 @@ export type TransactionResponders<T extends AnyTransactionRequestModel> = {
   [K in TransactionKind]: ITransactionResponder<Extract<T, { kind: K }>>;
 };
 
-export interface ITransactionCompletionPresenter<T extends AnyTransactionRequestModel> {
-  present(result: Result<TransactionData<T>, TransactionError>): void;
+export interface ITransactionCompletionPresenter<TRequest extends AnyTransactionRequestModel> {
+  present(result: Result<TransactionData<TRequest>, TransactionError>): void;
 }
 
 export class TransactionQueue<TAll extends AnyTransactionRequestModel> {

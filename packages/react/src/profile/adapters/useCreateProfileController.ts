@@ -1,23 +1,19 @@
-import {
-  CreateProfile,
-  CreateProfileRequest,
-  DuplicatedHandleError,
-} from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import { CreateProfile, CreateProfileRequest } from '@lens-protocol/domain/use-cases/profile';
 
 import { useSharedDependencies } from '../../shared';
-import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
+import { CreateProfilePresenter } from './CreateProfilePresenter';
 import { ProfileTransactionGateway } from './ProfileTransactionGateway';
 
 export function useCreateProfileController() {
-  const { apolloClient, transactionFactory, transactionQueue } = useSharedDependencies();
+  const { apolloClient, profileCacheManager, transactionFactory, transactionQueue } =
+    useSharedDependencies();
 
   return async (request: CreateProfileRequest) => {
-    const presenter = new PromiseResultPresenter<void, DuplicatedHandleError | BroadcastingError>();
+    const presenter = new CreateProfilePresenter(profileCacheManager);
     const gateway = new ProfileTransactionGateway(apolloClient, transactionFactory);
-    const createProfile = new CreateProfile(gateway, presenter, transactionQueue);
+    const createProfile = new CreateProfile(gateway, transactionQueue, presenter);
 
-    await createProfile.create(request);
+    await createProfile.execute(request);
 
     return presenter.asResult();
   };

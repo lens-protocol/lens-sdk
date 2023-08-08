@@ -11,20 +11,43 @@ import {
   Sources,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { never } from '@lens-protocol/shared-kernel';
+import { invariant, never, XOR } from '@lens-protocol/shared-kernel';
 
+import { ProfileHandleResolver } from '../../environments';
 import { mediaTransformConfigToQueryVariables, MediaTransformsConfig } from '../../mediaTransforms';
-import { FetchProfileArgs, IProfileCacheManager } from '../adapters/IProfileCacheManager';
+import { IProfileCacheManager } from '../adapters/IProfileCacheManager';
+
+type RequestProfileArgs = XOR<
+  {
+    handle: string;
+  },
+  {
+    id: ProfileId;
+  }
+>;
 
 export class ProfileCacheManager implements IProfileCacheManager {
   constructor(
     private readonly client: SafeApolloClient,
     private readonly sources: Sources,
     private readonly mediaTransforms: MediaTransformsConfig,
+    private readonly handleResolver: ProfileHandleResolver,
   ) {}
 
-  async fetchProfile(args: FetchProfileArgs) {
-    return this.request(args, 'cache-first');
+  async fetchProfile(id: ProfileId) {
+    return this.request({ id }, 'cache-first');
+  }
+
+  async fetchNewProfile(handlePrefix: string) {
+    const handle = this.handleResolver(handlePrefix);
+    const profile = await this.request(
+      { handle: this.handleResolver(handlePrefix) },
+      'network-only',
+    );
+
+    invariant(profile, `Profile "@${handle}" not found`);
+
+    return profile;
   }
 
   async refreshProfile(id: ProfileId) {
@@ -33,7 +56,7 @@ export class ProfileCacheManager implements IProfileCacheManager {
     return profile ?? never();
   }
 
-  private async request(args: FetchProfileArgs, fetchPolicy: FetchPolicy) {
+  private async request(args: RequestProfileArgs, fetchPolicy: FetchPolicy) {
     const session = getSession();
 
     const { data } = await this.client.query<GetProfileData, GetProfileVariables>({

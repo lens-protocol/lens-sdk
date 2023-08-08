@@ -20,7 +20,7 @@ export class WalletLoginPresenter
         return super.present(success(null));
       }
       const { id } = result.value;
-      const profile = await this.profileCacheManager.fetchProfile({ id });
+      const profile = await this.profileCacheManager.fetchProfile(id);
 
       return super.present(success(profile));
     }

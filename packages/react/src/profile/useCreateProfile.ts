@@ -1,12 +1,8 @@
-import { TransactionState, useWaitUntilTransactionSettled } from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import { TransactionError, TransactionKind } from '@lens-protocol/domain/entities';
-import {
-  CreateProfileRequest,
-  DuplicatedHandleError,
-  FollowPolicyConfig,
-} from '@lens-protocol/domain/use-cases/profile';
+import { DuplicatedHandleError, FollowPolicyConfig } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { failure, PromiseResult, Url } from '@lens-protocol/shared-kernel';
+import { failure, success, Url } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useCreateProfileController } from './adapters/useCreateProfileController';
@@ -35,7 +31,7 @@ export type CreateProfileArgs = {
 export { DuplicatedHandleError };
 
 export type CreateProfileOperation = Operation<
-  void,
+  Profile,
   BroadcastingError | DuplicatedHandleError | TransactionError,
   [CreateProfileArgs]
 >;
@@ -64,7 +60,7 @@ export type CreateProfileOperation = Operation<
  *     const result = await execute({ handle });
  *
  *     if (result.isSuccess()) {
- *       console.log("Profile created!");
+ *       console.log("Profile created!", result.value);
  *     }
  *   };
  *
@@ -93,7 +89,7 @@ export type CreateProfileOperation = Operation<
  *     const result = await execute({ handle });
  *
  *     if (result.isSuccess()) {
- *       console.log("Profile created!");
+ *       console.log("Profile created!", result.value);
  *       return;
  *     }
  *
@@ -119,36 +115,22 @@ export type CreateProfileOperation = Operation<
 export function useCreateProfile(): CreateProfileOperation {
   const createProfile = useCreateProfileController();
 
-  const waitUntilTransactionIsSettled = useWaitUntilTransactionSettled();
-
-  return useOperation(
-    async ({
+  return useOperation(async ({ handle }: CreateProfileArgs) => {
+    const broadcasted = await createProfile({
       handle,
-    }: CreateProfileArgs): PromiseResult<
-      void,
-      BroadcastingError | DuplicatedHandleError | TransactionError
-    > => {
-      try {
-        const result = await createProfile({
-          handle,
-          kind: TransactionKind.CREATE_PROFILE,
-        });
+      kind: TransactionKind.CREATE_PROFILE,
+    });
 
-        if (result.isSuccess()) {
-          await waitUntilTransactionIsSettled(
-            (transaction): transaction is TransactionState<CreateProfileRequest> =>
-              transaction.request.kind === TransactionKind.CREATE_PROFILE &&
-              transaction.request.handle === handle,
-          );
-        }
+    if (broadcasted.isFailure()) {
+      return failure(broadcasted.error);
+    }
 
-        return result;
-      } catch (e) {
-        if (e instanceof TransactionError) {
-          return failure(e);
-        }
-        throw e;
-      }
-    },
-  );
+    const result = await broadcasted.value.waitForCompletion();
+
+    if (result.isFailure()) {
+      return failure(result.error);
+    }
+
+    return success(result.value);
+  });
 }
