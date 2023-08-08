@@ -2750,6 +2750,7 @@ export type ProfileFields = {
   handle: string;
   ownedBy: EthereumAddress;
   interests: Array<string> | null;
+  followNftAddress: string | null;
   followPolicy: FollowPolicy;
   isFollowedByMe: boolean;
   followStatus: FollowStatus | null;
@@ -3688,6 +3689,7 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
     handle
     ownedBy
     interests
+    followNftAddress
     picture {
       ... on NftImage {
         ...NftImage
