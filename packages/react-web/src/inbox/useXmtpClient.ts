@@ -2,8 +2,7 @@ import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
-  useActiveWalletInteractor,
-  useInboxKeyStorage,
+  useSharedDependencies,
 } from '@lens-protocol/react';
 import { assertError } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
@@ -57,8 +56,7 @@ export function useXmtpClient(): UseXmtpClientResult {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<UseXmtpClientResult['error']>();
 
-  const activeWallet = useActiveWalletInteractor();
-  const storage = useInboxKeyStorage();
+  const { activeWallet, inboxKeyStorage: storage } = useSharedDependencies();
 
   const initializeWithLens = useCallback(
     async (options: InitXmtpClientOptions = defaultOptions) => {

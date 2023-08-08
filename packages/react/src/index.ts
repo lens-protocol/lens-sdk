@@ -129,6 +129,7 @@ export { UnspecifiedError } from '@lens-protocol/api-bindings';
  * Helpers
  */
 export { Amount, WellKnownSymbols, ether, matic, erc20, usd } from '@lens-protocol/shared-kernel';
+export { useSharedDependencies } from './shared';
 export * from './sources';
 export * from './utils';
 export { isValidHandle } from '@lens-protocol/api-bindings';

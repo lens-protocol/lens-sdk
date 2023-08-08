@@ -1,3 +1,2 @@
-export * from './useActiveWalletInteractor';
+export * from './useAccessToken';
 export * from './useApolloClient';
-export * from './useInboxKeyStorage';

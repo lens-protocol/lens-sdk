@@ -81,6 +81,7 @@ export type Handlers = {
 };
 
 export type SharedDependencies = {
+  accessTokenStorage: AccessTokenStorage;
   activeProfileGateway: ActiveProfileGateway;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
@@ -240,6 +241,7 @@ export function createSharedDependencies(
   credentialsExpiryController.subscribe(accessTokenStorage);
 
   return {
+    accessTokenStorage,
     activeProfileGateway,
     activeWallet,
     apolloClient,
@@ -290,6 +292,9 @@ export function SharedDependenciesProvider({
   );
 }
 
+/**
+ * @internal DO NOT USE THIS HOOK OUTSIDE OF THE LENS SDK
+ */
 export function useSharedDependencies(): SharedDependencies {
   const context = useContext(SharedDependenciesContext);
 
