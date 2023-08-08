@@ -23,13 +23,13 @@ export interface ICredentialsRenewer {
   renewCredentials(credentials: ICredentials): PromiseResult<ICredentials, CredentialsExpiredError>;
 }
 
-export class Bootstrap<T extends AnyTransactionRequestModel> {
+export class Bootstrap {
   constructor(
     private readonly activeWallet: ActiveWallet,
     private readonly credentialsGateway: ICredentialsGateway,
     private readonly credentialsRenewer: ICredentialsRenewer,
     private readonly activeProfileLoader: ActiveProfileLoader,
-    private readonly transactionQueue: TransactionQueue<T>,
+    private readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
     private readonly sessionPresenter: ISessionPresenter,
     private readonly walletLogout: WalletLogout,
   ) {}
@@ -65,7 +65,7 @@ export class Bootstrap<T extends AnyTransactionRequestModel> {
 
     this.sessionPresenter.authenticated(wallet, profile);
 
-    await this.transactionQueue.init();
+    await this.transactionQueue.resume();
   }
 
   private async logout() {

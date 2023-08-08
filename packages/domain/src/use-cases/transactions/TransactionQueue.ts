@@ -1,4 +1,4 @@
-import { failure, invariant, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
 
 import {
   Transaction,
@@ -61,13 +61,15 @@ export type TransactionResponders<T extends AnyTransactionRequestModel> = {
   [K in TransactionKind]: ITransactionResponder<Extract<T, { kind: K }>>;
 };
 
-export class TransactionQueue<T extends AnyTransactionRequestModel> {
-  private initialized = false;
+export interface ITransactionCompletionPresenter<T extends AnyTransactionRequestModel> {
+  present(result: Result<TransactionData<T>, TransactionError>): void;
+}
 
-  constructor(
-    private readonly responders: TransactionResponders<T>,
-    private readonly transactionGateway: IPendingTransactionGateway<T>,
-    private readonly transactionQueuePresenter: ITransactionQueuePresenter<T>,
+export class TransactionQueue<TAll extends AnyTransactionRequestModel> {
+  private constructor(
+    private readonly responders: TransactionResponders<TAll>,
+    private readonly transactionGateway: IPendingTransactionGateway<TAll>,
+    private readonly transactionQueuePresenter: ITransactionQueuePresenter<TAll>,
   ) {}
 
   clearRecent() {
@@ -76,66 +78,71 @@ export class TransactionQueue<T extends AnyTransactionRequestModel> {
     this.transactionQueuePresenter.clearRecent();
   }
 
-  async push(transaction: Transaction<T>): Promise<void> {
+  async push<TCurrent extends TAll>(
+    transaction: Transaction<TCurrent>,
+    presenter?: ITransactionCompletionPresenter<TCurrent>,
+  ) {
     await this.transactionGateway.save(transaction);
-    await this.handle(transaction);
+    await this.handle(transaction, presenter);
   }
 
-  async init() {
-    invariant(!this.initialized, `${TransactionQueue.name} already initialized`);
-
+  async resume() {
     const transactions = await this.transactionGateway.getAll();
 
     for (const transaction of transactions) {
       await this.handle(transaction);
     }
-    this.transactionGateway.subscribe(async (newTransactions) => {
-      for (const transaction of newTransactions) {
-        await this.handle(transaction);
-      }
-    });
-    this.initialized = true;
   }
 
-  private async handle(transaction: Transaction<T>) {
+  private async handle(
+    transaction: Transaction<TAll>,
+    presenter?: ITransactionCompletionPresenter<TAll>,
+  ) {
     const txData = transactionData(transaction);
     await this.prepare(txData);
-    void this.observe(transaction);
+    void this.observe(transaction, presenter);
   }
 
-  private async observe(transaction: Transaction<T>): Promise<void> {
+  private async observe(
+    transaction: Transaction<TAll>,
+    presenter?: ITransactionCompletionPresenter<TAll>,
+  ): Promise<void> {
     const result = await this.waitCompletion(transaction);
     await this.transactionGateway.remove(transaction.id);
 
     if (result.isFailure()) {
       const txData = transactionData(transaction);
       await this.rollback(result.error, txData);
+      presenter?.present(failure(result.error));
       return;
     }
 
     const txData = transactionData(transaction);
     await this.commit(txData);
+    presenter?.present(success(txData));
   }
 
-  private async prepare(txData: TransactionData<T>) {
+  private async prepare(txData: TransactionData<TAll>) {
     const responder = this.getResponderFor(txData.request.kind);
     await responder.prepare?.(txData);
     this.transactionQueuePresenter.pending(txData);
   }
 
-  private async commit(txData: TransactionData<T>) {
+  private async commit(txData: TransactionData<TAll>) {
     const responder = this.getResponderFor(txData.request.kind);
     await responder.commit(txData);
     this.transactionQueuePresenter.settled(txData);
   }
 
-  private async rollback(error: TransactionError, txData: TransactionData<T>) {
+  private async rollback(error: TransactionError, txData: TransactionData<TAll>) {
     const responder = this.getResponderFor(txData.request.kind);
     await responder.rollback?.(txData);
     this.transactionQueuePresenter.failed(error, txData);
   }
 
-  private async waitCompletion(transaction: Transaction<T>): PromiseResult<void, TransactionError> {
+  private async waitCompletion(
+    transaction: Transaction<TAll>,
+  ): PromiseResult<void, TransactionError> {
     while (true) {
       const result = await transaction.waitNextEvent();
 
@@ -153,7 +160,23 @@ export class TransactionQueue<T extends AnyTransactionRequestModel> {
     }
   }
 
-  private getResponderFor(kind: TransactionKind): ITransactionResponder<T> {
+  private getResponderFor(kind: TransactionKind): ITransactionResponder<TAll> {
     return this.responders[kind];
+  }
+
+  static create<T extends AnyTransactionRequestModel>(
+    responders: TransactionResponders<T>,
+    transactionGateway: IPendingTransactionGateway<T>,
+    transactionQueuePresenter: ITransactionQueuePresenter<T>,
+  ) {
+    const queue = new TransactionQueue(responders, transactionGateway, transactionQueuePresenter);
+
+    transactionGateway.subscribe(async (newTransactions) => {
+      for (const transaction of newTransactions) {
+        await queue.handle(transaction);
+      }
+    });
+
+    return queue;
   }
 }
