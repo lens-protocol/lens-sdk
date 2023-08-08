@@ -148,42 +148,6 @@ const isMirroredByMe = (
   return mirrorPendingTxs.length > 0;
 };
 
-const stats: FieldReadFunction<PublicationStats> = (existing, { readField }) => {
-  if (!existing) return existing;
-
-  const session = getSession();
-
-  const publicationId = readField('id') as PublicationId;
-
-  if (!session || session.type !== SessionType.WithProfile) return existing;
-
-  // mirror
-  const isMirrorTransactionForThisPublication = isMirrorTransactionFor({
-    publicationId,
-    profileId: session.profile.id,
-  });
-
-  const mirrorPendingTxs = getAllPendingTransactions().filter((transaction) => {
-    return isMirrorTransactionForThisPublication(transaction);
-  });
-
-  // collect
-  const isCollectTransactionForThisPublication = isCollectTransactionFor({
-    publicationId,
-    profileId: session.profile.id,
-  });
-
-  const collectPendingTx = getAllPendingTransactions().filter((transaction) => {
-    return isCollectTransactionForThisPublication(transaction);
-  });
-
-  return {
-    ...existing,
-    totalAmountOfMirrors: existing.totalAmountOfMirrors + mirrorPendingTxs.length,
-    totalAmountOfCollects: existing.totalAmountOfCollects + collectPendingTx.length,
-  };
-};
-
 /**
  * @deprecated use `hasCollectedByMe` instead
  */
@@ -254,7 +218,7 @@ function createContentPublicationTypePolicy(config: ContentPublicationTypePolicy
       bookmarked: noCachedField(),
       reaction: noCachedField(),
       referencePolicy,
-      stats,
+      stats: noCachedField(),
       observedBy,
     },
   };

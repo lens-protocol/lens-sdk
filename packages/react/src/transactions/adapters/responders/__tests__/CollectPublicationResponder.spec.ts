@@ -39,24 +39,28 @@ function setupTestScenario({
   expected,
 }: {
   publication: AnyPublication;
-  expected: AnyPublication;
+  expected: AnyPublication | null;
 }) {
   const activeProfile = mockProfileFragment();
   simulateAuthenticatedProfile(activeProfile);
 
   const sources = mockSources();
   const mediaTransforms = defaultMediaTransformsConfig;
-  const apolloClient = mockLensApolloClient([
-    mockGetPublicationResponse({
-      variables: {
-        request: { publicationId: publication.id },
-        observerId: activeProfile.id,
-        sources,
-        ...mediaTransformConfigToQueryVariables(mediaTransforms),
-      },
-      publication: expected,
-    }),
-  ]);
+  const apolloClient = mockLensApolloClient(
+    expected
+      ? [
+          mockGetPublicationResponse({
+            variables: {
+              request: { publicationId: publication.id },
+              observerId: activeProfile.id,
+              sources,
+              ...mediaTransformConfigToQueryVariables(mediaTransforms),
+            },
+            publication: expected,
+          }),
+        ]
+      : [],
+  );
 
   apolloClient.cache.writeFragment({
     id: apolloClient.cache.identify(publication),
@@ -86,6 +90,40 @@ function setupTestScenario({
 const knownInitialPublicationStats = mockPublicationStatsFragment({ totalAmountOfCollects: 1 });
 
 describe(`Given the ${CollectPublicationResponder.name}`, () => {
+  describe.each<ContentPublication>([
+    mockPostFragment({
+      hasCollectedByMe: false,
+      stats: knownInitialPublicationStats,
+    }),
+
+    mockCommentFragment({
+      hasCollectedByMe: false,
+      stats: knownInitialPublicationStats,
+    }),
+  ])('and a $__typename', (publication) => {
+    describe(`when "${CollectPublicationResponder.prototype.prepare.name}" method is invoked`, () => {
+      it('should optimistically update the total amount of collects in the publication stats ', async () => {
+        const request = mockPaidCollectRequest({
+          publicationId: publication.id,
+        });
+        const transactionData = mockTransactionData({ request });
+
+        const scenario = setupTestScenario({
+          publication: publication,
+          expected: null,
+        });
+
+        await scenario.responder.prepare(transactionData);
+
+        expect(scenario.updatedPublicationFragment).toMatchObject({
+          stats: {
+            totalAmountOfCollects: knownInitialPublicationStats.totalAmountOfCollects + 1,
+          },
+        });
+      });
+    });
+  });
+
   describe.each<ContentPublication>([
     mockPostFragment({
       hasCollectedByMe: false,
@@ -156,6 +194,47 @@ describe(`Given the ${CollectPublicationResponder.name}`, () => {
             stats: {
               totalAmountOfCollects: 2,
             },
+          },
+        });
+      });
+    });
+  });
+
+  describe.each<ContentPublication>([
+    mockPostFragment({
+      hasCollectedByMe: false,
+      stats: knownInitialPublicationStats,
+    }),
+
+    mockCommentFragment({
+      hasCollectedByMe: false,
+      stats: knownInitialPublicationStats,
+    }),
+  ])('and a $__typename', (publication) => {
+    describe(`when "${CollectPublicationResponder.prototype.rollback.name}" method is invoked`, () => {
+      it('should update the publication from API', async () => {
+        const request = mockPaidCollectRequest({
+          publicationId: publication.id,
+        });
+        const transactionData = mockTransactionData({ request });
+        const scenario = setupTestScenario({
+          publication: publication,
+          expected: {
+            ...publication,
+            hasCollectedByMe: false,
+            stats: {
+              ...publication.stats,
+              totalAmountOfCollects: 0,
+            },
+          },
+        });
+
+        await scenario.responder.rollback(transactionData);
+
+        expect(scenario.updatedPublicationFragment).toMatchObject({
+          hasCollectedByMe: false,
+          stats: {
+            totalAmountOfCollects: 0,
           },
         });
       });
