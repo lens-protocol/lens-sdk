@@ -2581,6 +2581,7 @@ export type NotificationsVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   notificationTypes?: InputMaybe<Array<NotificationTypes> | NotificationTypes>;
+  highSignalFilter: Scalars['Boolean'];
   mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
   mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
   mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
@@ -5656,6 +5657,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
     $cursor: Cursor
     $sources: [Sources!]!
     $notificationTypes: [NotificationTypes!]
+    $highSignalFilter: Boolean!
     $mediaTransformPublicationSmall: MediaTransformParams = {}
     $mediaTransformPublicationMedium: MediaTransformParams = {}
     $mediaTransformProfileThumbnail: MediaTransformParams = {}
@@ -5667,6 +5669,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
         cursor: $cursor
         sources: $sources
         notificationTypes: $notificationTypes
+        highSignalFilter: $highSignalFilter
       }
     ) {
       items {
@@ -5720,6 +5723,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
  *      cursor: // value for 'cursor'
  *      sources: // value for 'sources'
  *      notificationTypes: // value for 'notificationTypes'
+ *      highSignalFilter: // value for 'highSignalFilter'
  *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
  *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
  *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'

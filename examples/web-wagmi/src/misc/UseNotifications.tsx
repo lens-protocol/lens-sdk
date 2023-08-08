@@ -22,6 +22,7 @@ function NotificationsInner({ profile }: NotificationsInnerProps) {
     useNotifications({
       profileId: profile.id,
       notificationTypes: [NotificationTypes.MentionComment, NotificationTypes.CollectedComment],
+      highSignalFilter: false,
     }),
   );
 

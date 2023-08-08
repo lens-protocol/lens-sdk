@@ -98,6 +98,7 @@ export type ProposalWhere = {
   end_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   end_lt?: InputMaybe<Scalars['Int']>;
   end_lte?: InputMaybe<Scalars['Int']>;
+  flagged?: InputMaybe<Scalars['Boolean']>;
   id?: InputMaybe<Scalars['String']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   ipfs?: InputMaybe<Scalars['String']>;

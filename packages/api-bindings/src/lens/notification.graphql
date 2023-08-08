@@ -100,6 +100,7 @@ query Notifications(
   $cursor: Cursor
   $sources: [Sources!]!
   $notificationTypes: [NotificationTypes!]
+  $highSignalFilter: Boolean!
   $mediaTransformPublicationSmall: MediaTransformParams = {}
   $mediaTransformPublicationMedium: MediaTransformParams = {}
   $mediaTransformProfileThumbnail: MediaTransformParams = {}
@@ -111,6 +112,7 @@ query Notifications(
       cursor: $cursor
       sources: $sources
       notificationTypes: $notificationTypes
+      highSignalFilter: $highSignalFilter
     }
   ) {
     items {
