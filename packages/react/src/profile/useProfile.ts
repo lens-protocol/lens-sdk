@@ -56,6 +56,8 @@ export function useProfile({
               observerId,
             }),
           ),
+          fetchPolicy: 'cache-and-network',
+          nextFetchPolicy: 'cache-first',
           skip,
         }),
       ),
