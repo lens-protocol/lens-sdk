@@ -15,6 +15,7 @@ import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions'
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
+import { resolveFollowModuleParams } from '../../transactions/adapters/FollowPolicyCallGateway';
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 import { handleRelayError } from '../../transactions/adapters/relayer';
 
@@ -32,6 +33,10 @@ export class ProfileTransactionGateway implements IProfileTransactionGateway {
       variables: {
         request: {
           handle: request.handle,
+          followModule: request.followPolicy
+            ? resolveFollowModuleParams(request.followPolicy)
+            : null,
+          profilePictureUri: request.profileImage ?? null,
         },
       },
     });

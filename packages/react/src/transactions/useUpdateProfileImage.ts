@@ -6,6 +6,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import { Url } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useUpdateProfileImageController } from './adapters/useUpdateProfileImageController';
@@ -29,11 +30,11 @@ export function useUpdateProfileImage({
 }: UseUpdateProfileImageArgs): UpdateProfileImageOperation {
   const updateImage = useUpdateProfileImageController();
 
-  return useOperation(async (fileUrl: string) => {
+  return useOperation(async (url: Url) => {
     return updateImage({
       kind: TransactionKind.UPDATE_PROFILE_IMAGE,
       profileId: profile.id,
-      url: fileUrl,
+      url,
       delegate: profile.dispatcher !== null,
     });
   });

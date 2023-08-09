@@ -4,10 +4,12 @@ import {
   CreateSetFollowModuleTypedDataData,
   CreateSetFollowModuleTypedDataVariables,
   SafeApolloClient,
+  FollowModuleParams,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import {
+  FollowPolicyConfig,
   FollowPolicyType,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
@@ -16,16 +18,16 @@ import { IOnChainProtocolCallGateway } from '@lens-protocol/domain/use-cases/tra
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
-function buildFollowModuleRequest(request: UpdateFollowPolicyRequest) {
-  switch (request.policy.type) {
+export function resolveFollowModuleParams(policy: FollowPolicyConfig): FollowModuleParams {
+  switch (policy.type) {
     case FollowPolicyType.CHARGE:
       return {
         feeFollowModule: {
           amount: {
-            currency: request.policy.amount.asset.address,
-            value: request.policy.amount.toSignificantDigits(),
+            currency: policy.amount.asset.address,
+            value: policy.amount.toSignificantDigits(),
           },
-          recipient: request.policy.recipient,
+          recipient: policy.recipient,
         },
       };
     case FollowPolicyType.ANYONE:
@@ -60,7 +62,7 @@ export class FollowPolicyCallGateway
       variables: {
         request: {
           profileId: request.profileId,
-          followModule: buildFollowModuleRequest(request),
+          followModule: resolveFollowModuleParams(request.policy),
         },
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },

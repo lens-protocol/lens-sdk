@@ -1,13 +1,16 @@
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, success, Url } from '@lens-protocol/shared-kernel';
 
 import { NativeTransaction, TransactionKind, AnyTransactionRequestModel } from '../../entities';
 import { BroadcastingError } from '../transactions/BroadcastingError';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
+import { FollowPolicyConfig } from './types';
 
 export type CreateProfileRequest = {
   handle: string;
   kind: TransactionKind.CREATE_PROFILE;
+  followPolicy?: FollowPolicyConfig;
+  profileImage?: Url;
 };
 
 export class DuplicatedHandleError extends Error {
