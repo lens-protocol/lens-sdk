@@ -1,4 +1,4 @@
-import { SafeApolloClient } from '@lens-protocol/api-bindings';
+import { MockedResponse } from '@apollo/client/testing';
 import {
   mockLensApolloClient,
   mockPostFragment,
@@ -8,7 +8,7 @@ import {
   simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
-import { waitFor } from '@testing-library/react';
+import { RenderHookResult, waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
@@ -16,24 +16,26 @@ import {
   defaultMediaTransformsConfig,
   mediaTransformConfigToQueryVariables,
 } from '../../mediaTransforms';
-import { usePublication, UsePublicationArgs } from '../usePublication';
+import { usePublication } from '../usePublication';
 
 const sources = mockSources();
 
-function renderUsePublication({
-  args,
-  client,
-}: {
-  args: UsePublicationArgs;
-  client: SafeApolloClient;
-}) {
-  return renderHookWithMocks(() => usePublication(args), {
-    mocks: {
-      sources,
-      mediaTransforms: defaultMediaTransformsConfig,
-      apolloClient: client,
+function setupTestScenario(mocks: MockedResponse[]) {
+  const client = mockLensApolloClient(mocks);
+
+  return {
+    renderHook<TProps, TResult>(
+      callback: (props: TProps) => TResult,
+    ): RenderHookResult<TResult, TProps> {
+      return renderHookWithMocks(callback, {
+        mocks: {
+          sources,
+          mediaTransforms: defaultMediaTransformsConfig,
+          apolloClient: client,
+        },
+      });
     },
-  });
+  };
 }
 
 describe(`Given the ${usePublication.name} hook`, () => {
@@ -45,7 +47,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
   });
 
   describe('when the queried publication exists', () => {
-    const client = mockLensApolloClient([
+    const { renderHook } = setupTestScenario([
       mockGetPublicationResponse({
         variables: {
           request: {
@@ -60,12 +62,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
     ]);
 
     it('should settle with the publication data', async () => {
-      const { result } = renderUsePublication({
-        args: {
-          publicationId: publication.id,
-        },
-        client,
-      });
+      const { result } = renderHook(() => usePublication({ publicationId: publication.id }));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);
@@ -74,7 +71,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
 
   describe('when a session with an Active Profile is set', () => {
     const activeProfile = mockProfile();
-    const client = mockLensApolloClient([
+    const { renderHook } = setupTestScenario([
       mockGetPublicationResponse({
         variables: {
           request: {
@@ -97,12 +94,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
     });
 
     it('should use the Active Profile as the queried publication observer', async () => {
-      const { result } = renderUsePublication({
-        args: {
-          publicationId: publication.id,
-        },
-        client,
-      });
+      const { result } = renderHook(() => usePublication({ publicationId: publication.id }));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);
@@ -111,7 +103,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
 
   describe('when an "observerId" is provided', () => {
     const observerId = mockProfileId();
-    const client = mockLensApolloClient([
+    const { renderHook } = setupTestScenario([
       mockGetPublicationResponse({
         variables: {
           request: {
@@ -126,13 +118,12 @@ describe(`Given the ${usePublication.name} hook`, () => {
     ]);
 
     it('should use it as the queried publication observer', async () => {
-      const { result } = renderUsePublication({
-        args: {
+      const { result } = renderHook(() =>
+        usePublication({
           publicationId: publication.id,
           observerId,
-        },
-        client,
-      });
+        }),
+      );
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);
@@ -140,7 +131,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
   });
 
   describe(`when re-rendered`, () => {
-    const client = mockLensApolloClient([
+    const { renderHook } = setupTestScenario([
       mockGetPublicationResponse({
         variables: {
           request: {
@@ -159,22 +150,17 @@ describe(`Given the ${usePublication.name} hook`, () => {
           },
           sources,
           observerId: null,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
         },
         publication,
       }),
     ]);
 
     it(`should return cached data and then update it with fresh data from the API`, async () => {
-      const first = renderUsePublication({
-        args: { publicationId: publication.id },
-        client,
-      });
+      const first = renderHook(() => usePublication({ publicationId: publication.id }));
       await waitFor(() => expect(first.result.current.loading).toBeFalsy());
 
-      const second = renderUsePublication({
-        args: { publicationId: publication.id },
-        client,
-      });
+      const second = renderHook(() => usePublication({ publicationId: publication.id }));
 
       expect(second.result.current).toMatchObject({
         data: expectations,
@@ -189,7 +175,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
   });
 
   describe('when the queried publication does not exist', () => {
-    const client = mockLensApolloClient([
+    const { renderHook } = setupTestScenario([
       mockGetPublicationResponse({
         variables: {
           request: {
@@ -204,12 +190,7 @@ describe(`Given the ${usePublication.name} hook`, () => {
     ]);
 
     it(`should settle with a ${NotFoundError.name} state`, async () => {
-      const { result } = renderUsePublication({
-        args: {
-          publicationId: publication.id,
-        },
-        client,
-      });
+      const { result } = renderHook(() => usePublication({ publicationId: publication.id }));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.error).toBeInstanceOf(NotFoundError);

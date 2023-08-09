@@ -72,6 +72,5 @@ extend type Comment {
 }
 
 extend type PaginatedResultInfo {
-  beforeCount: Int!
   moreAfter: Boolean!
 }

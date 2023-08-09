@@ -764,7 +764,6 @@ export function mockPaginatedResultInfo(
   return {
     __typename: 'PaginatedResultInfo',
     moreAfter: false,
-    beforeCount: 0,
     prev: null,
     next: null,
     totalCount: null,

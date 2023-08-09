@@ -431,7 +431,6 @@ fragment CommentBase on Comment {
 
 fragment PaginatedResultInfo on PaginatedResultInfo {
   __typename
-  beforeCount @client
   moreAfter @client
   prev
   next

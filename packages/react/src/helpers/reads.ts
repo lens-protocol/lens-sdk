@@ -1,13 +1,20 @@
 /* eslint-disable no-console */
-import { ApolloError, OperationVariables, QueryResult as ApolloQueryResult } from '@apollo/client';
+import {
+  ApolloError,
+  OperationVariables,
+  QueryResult as ApolloQueryResult,
+  useLazyQuery,
+} from '@apollo/client';
 import {
   Cursor,
   PaginatedResultInfo,
-  newResultsProbe,
   UnspecifiedError,
+  InputMaybe,
 } from '@lens-protocol/api-bindings';
 import { Prettify } from '@lens-protocol/shared-kernel';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { useSharedDependencies } from '../shared';
 
 /**
  * A discriminated union of the possible results of a read operation with no errors.
@@ -58,20 +65,21 @@ export type ReadResult<T, E = UnspecifiedError> = E extends Error
 
 function buildReadResult<T>(
   data: T | undefined,
+  loading: boolean,
   error: ApolloError | undefined,
 ): ReadResult<T, UnspecifiedError> {
-  if (error) {
+  if (data !== undefined && !loading) {
     return {
-      data: undefined,
-      error: new UnspecifiedError(error),
+      data,
+      error: undefined,
       loading: false,
     };
   }
 
-  if (data !== undefined) {
+  if (error) {
     return {
-      data,
-      error: undefined,
+      data: undefined,
+      error: new UnspecifiedError(error),
       loading: false,
     };
   }
@@ -91,8 +99,8 @@ export function useReadResult<
   T extends QueryData<R>,
   R = InferResult<T>,
   V = { [key: string]: never },
->({ error, data }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
-  return buildReadResult(data?.result, error);
+>({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
+  return buildReadResult(data?.result, loading, error);
 }
 
 export type PaginatedArgs<T> = Prettify<
@@ -136,7 +144,7 @@ export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
 };
 
 export type PaginatedQueryData<K> = {
-  result: { pageInfo: PaginatedResultInfo; items: K };
+  result: { pageInfo: PaginatedResultInfo; items: K[] };
 };
 
 type InferPaginatedItemsType<T extends PaginatedQueryData<unknown>> = T extends PaginatedQueryData<
@@ -146,33 +154,53 @@ type InferPaginatedItemsType<T extends PaginatedQueryData<unknown>> = T extends 
   : never;
 
 export function usePaginatedReadResult<
-  V extends OperationVariables & { cursor?: Cursor },
-  T extends PaginatedQueryData<K>,
-  K = InferPaginatedItemsType<T>,
->({ error, data, loading, fetchMore, variables }: ApolloQueryResult<T, V>): PaginatedReadResult<K> {
-  const initialData = useRef(data).current;
+  TVariables extends OperationVariables & { cursor?: InputMaybe<Cursor> },
+  TData extends PaginatedQueryData<TItem>,
+  TItem = InferPaginatedItemsType<TData>,
+>({
+  error,
+  data,
+  loading,
+  fetchMore,
+  variables,
+  observable,
+}: ApolloQueryResult<TData, TVariables>): PaginatedReadResult<TItem[]> {
+  const { apolloClient } = useSharedDependencies();
+  const cachedData = useRef(data).current;
 
-  async function probeForNewerResults(prev: Cursor) {
-    const { data: newData } = await fetchMore({
-      variables: newResultsProbe({
-        ...variables,
-        cursor: prev,
-      }),
-    });
+  const [fetchNewerResult] = useLazyQuery<TData, TVariables>(observable.query, {
+    fetchPolicy: 'no-cache',
+    client: apolloClient,
+  });
 
-    console.log(newData);
-  }
+  const [beforeCount, setBeforeCount] = useState(0);
+
+  const probeForNewerResults = useCallback(
+    async function (prev: Cursor) {
+      const response = await fetchNewerResult({
+        variables: {
+          ...variables,
+          cursor: prev,
+        } as TVariables,
+      });
+
+      if (response.data) {
+        setBeforeCount(response.data.result.items.length);
+      }
+    },
+    [fetchNewerResult, variables],
+  );
 
   useEffect(() => {
-    if (initialData && initialData.result.pageInfo.prev) {
-      void probeForNewerResults(initialData.result.pageInfo.prev);
+    if (cachedData?.result.pageInfo.prev) {
+      void probeForNewerResults(cachedData.result.pageInfo.prev);
     }
-  }, [initialData]);
+  }, [cachedData, probeForNewerResults]);
 
   return {
-    ...buildReadResult<K>(data?.result.items, error),
+    ...buildReadResult(data?.result.items, loading, error),
 
-    beforeCount: data?.result.pageInfo.beforeCount ?? 0,
+    beforeCount,
 
     hasMore: data?.result.pageInfo.moreAfter ?? false,
 
@@ -201,6 +229,7 @@ export function usePaginatedReadResult<
             cursor: data.result.pageInfo.prev,
           },
         });
+        setBeforeCount(0);
       }
     },
   };

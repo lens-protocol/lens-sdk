@@ -79,5 +79,4 @@ export type { IGraphQLClient } from './IGraphQLClient';
 export * from './errors';
 export * from './cache/transactions';
 export * from './cache/session';
-export { newResultsProbe } from './cache/utils/cursorBasedPagination';
 export type { SafeApolloClient };
