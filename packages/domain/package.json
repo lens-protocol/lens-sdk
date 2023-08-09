@@ -94,7 +94,8 @@
     "@faker-js/faker": "^7.6.0",
     "@jest/globals": "^29.3.1",
     "jest-mock-extended": "^3.0.1",
-    "jest-when": "^3.5.2"
+    "jest-when": "^3.5.2",
+    "wait-for-expect": "^3.0.2"
   },
   "peerDependenciesMeta": {
     "@faker-js/faker": {
@@ -107,6 +108,9 @@
       "optional": true
     },
     "jest-when": {
+      "optional": true
+    },
+    "wait-for-expect": {
       "optional": true
     }
   },
