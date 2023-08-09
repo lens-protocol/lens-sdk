@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.10.0-next.0
+
+### Minor Changes
+
+- fc31f146: **Added** experimental hooks that integrate with @xmtp/react-sdk
+
 ## 0.9.0
 
 ### Minor Changes
