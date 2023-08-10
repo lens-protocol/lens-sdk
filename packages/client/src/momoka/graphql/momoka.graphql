@@ -1,0 +1,173 @@
+# fragments
+fragment MomokaVerificationStatusSuccess on MomokaVerificationStatusSuccess {
+  verified
+}
+
+fragment MomokaVerificationStatusFailure on MomokaVerificationStatusFailure {
+  status
+}
+
+fragment MomokaPostTransaction on MomokaPostTransaction {
+  transactionId
+  submitter
+  createdAt
+  app {
+    ...App
+  }
+  profile {
+    ...ProfileFields
+  }
+  publicationId
+  verificationStatus {
+    ... on MomokaVerificationStatusSuccess {
+      ...MomokaVerificationStatusSuccess
+    }
+    ... on MomokaVerificationStatusFailure {
+      ...MomokaVerificationStatusFailure
+    }
+  }
+}
+
+fragment MomokaCommentTransaction on MomokaCommentTransaction {
+  transactionId
+  submitter
+  createdAt
+  app {
+    ...App
+  }
+  profile {
+    ...ProfileFields
+  }
+  publicationId
+  commentedOnProfile {
+    ...ProfileFields
+  }
+  commentedOnPublicationId
+  verificationStatus {
+    ... on MomokaVerificationStatusSuccess {
+      ...MomokaVerificationStatusSuccess
+    }
+    ... on MomokaVerificationStatusFailure {
+      ...MomokaVerificationStatusFailure
+    }
+  }
+}
+
+fragment MomokaMirrorTransaction on MomokaMirrorTransaction {
+  transactionId
+  submitter
+  createdAt
+  app {
+    ...App
+  }
+  profile {
+    ...ProfileFields
+  }
+  publicationId
+  mirrorOfProfile {
+    ...ProfileFields
+  }
+  mirrorOfPublicationId
+  verificationStatus {
+    ... on MomokaVerificationStatusSuccess {
+      ...MomokaVerificationStatusSuccess
+    }
+    ... on MomokaVerificationStatusFailure {
+      ...MomokaVerificationStatusFailure
+    }
+  }
+}
+
+fragment MomokaQuoteTransaction on MomokaQuoteTransaction {
+  transactionId
+  submitter
+  createdAt
+  app {
+    ...App
+  }
+  profile {
+    ...ProfileFields
+  }
+  publicationId
+  quotedOnProfile {
+    ...ProfileFields
+  }
+  quotedOnPublicationId
+  verificationStatus {
+    ... on MomokaVerificationStatusSuccess {
+      ...MomokaVerificationStatusSuccess
+    }
+    ... on MomokaVerificationStatusFailure {
+      ...MomokaVerificationStatusFailure
+    }
+  }
+}
+
+# queries
+query MomokaSubmitters {
+  result: momokaSubmitters {
+    items {
+      address
+      name
+      totalTransactions
+    }
+
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query MomokaSummary {
+  result: momokaSummary {
+    totalTransactions
+  }
+}
+
+query MomokaTransaction(
+  $request: MomokaTransactionRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+) {
+  result: momokaTransaction(request: $request) {
+    ... on MomokaPostTransaction {
+      ...MomokaPostTransaction
+    }
+    ... on MomokaCommentTransaction {
+      ...MomokaCommentTransaction
+    }
+    ... on MomokaMirrorTransaction {
+      ...MomokaMirrorTransaction
+    }
+    ... on MomokaQuoteTransaction {
+      ...MomokaQuoteTransaction
+    }
+  }
+}
+
+query momokaTransactions(
+  $request: MomokaTransactionsRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+) {
+  result: momokaTransactions(request: $request) {
+    items {
+      ... on MomokaPostTransaction {
+        ...MomokaPostTransaction
+      }
+      ... on MomokaCommentTransaction {
+        ...MomokaCommentTransaction
+      }
+      ... on MomokaMirrorTransaction {
+        ...MomokaMirrorTransaction
+      }
+      ... on MomokaQuoteTransaction {
+        ...MomokaQuoteTransaction
+      }
+    }
+
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}

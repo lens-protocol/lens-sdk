@@ -28,7 +28,6 @@ export type Scalars = {
   ContractPublicationId: { input: string; output: string };
   CreateDeleteEIP712TypedData: { input: string; output: string };
   CreateHandle: { input: string; output: string };
-  CreateMirrorEIP712TypedData: { input: string; output: string };
   Cursor: { input: string; output: string };
   DateTime: { input: string; output: string };
   EncryptedValueScalar: { input: string; output: string };
@@ -185,11 +184,6 @@ export enum CommentRankingFilter {
   Relevant = 'RELEVANT',
 }
 
-export type CreateCommentRequest = {
-  commentOn: Scalars['PublicationId']['input'];
-  contentURI: Scalars['Url']['input'];
-};
-
 export type CreateMomokaCommentRequest = {
   commentOn: Scalars['PublicationId']['input'];
   contentURI: Scalars['Url']['input'];
@@ -205,6 +199,7 @@ export type CreateMomokaPostRequest = {
 };
 
 export type CreateOnChainCommentRequest = {
+  commentOn: Scalars['PublicationId']['input'];
   contentURI: Scalars['Url']['input'];
   on: Scalars['PublicationId']['input'];
   openActionModule: Array<OpenActionModuleInput>;

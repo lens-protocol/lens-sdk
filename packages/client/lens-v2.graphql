@@ -21,7 +21,6 @@ scalar CreateDeleteEIP712TypedData
 scalar ProfileSortCriteria
 scalar CollectModuleData
 scalar ReferenceModuleData
-scalar CreateMirrorEIP712TypedData
 scalar FollowModuleData
 scalar MomokaTransactionUnion
 
@@ -429,7 +428,7 @@ type Post {
   metadata: PublicationMetadata!
 
   # The open action module
-  openActionModules: [OpenActionModule!]
+  openActionModules: [OpenActionModule!]!
 
   # The reference module
   referenceModule: ReferenceModule
@@ -666,7 +665,7 @@ type VideoMetadataV1 implements MetadataV3Common {
 
   locale: Locale!
 
-  tags: [String!]!
+  tags: [String!]
 
   contentWarning: PublicationContentWarning
 
@@ -696,7 +695,7 @@ type ImageMetadataV1 implements MetadataV3Common {
 
   locale: Locale!
 
-  tags: [String!]!
+  tags: [String!]
 
   contentWarning: PublicationContentWarning
 
@@ -809,7 +808,7 @@ type EventMetadataV1 implements MetadataV3Common {
 
   startsAt: DateTime!
 
-  endsAt: DateTime!
+  endsAt: DateTime
 
   links: [Url!]
 
@@ -1084,7 +1083,7 @@ type MintMetadataV1 implements MetadataV3Common {
 
   mainContentFocus: MintMetadataV1MainFocus!
 
-  attachments: [MetadataAttachment]
+  attachments: [MetadataAttachment!]
 
   encryptedWith: EncryptionStrategy
 }
@@ -1108,7 +1107,7 @@ type SpaceMetadataV1 implements MetadataV3Common {
 
   appId: AppId
 
-  title: String!
+  title: String
 
   link: Url!
 
@@ -1293,7 +1292,7 @@ type MetadataV2 {
   attributes: [MarketplaceMetadataAttribute!]
 
   # The locale of the publication,
-  locale: Locale
+  locale: Locale!
 
   # The tags for the publication
   tags: [String!]
@@ -2964,7 +2963,7 @@ input ValidatePublicationMetadataRequest {
 scalar NotificationId
 
 type FutureProofNotification {
-  id: String
+  id: NotificationId!
 }
 
 type ReactionNotification {
@@ -3000,7 +2999,7 @@ type ProfileActedResult {
   actions: OpenActionResult!
 }
 
-type ActedNotificaion {
+type ActedNotification {
   id: NotificationId!
   actions: [ProfileActedResult!]!
   publication: AnyPublication!
@@ -3021,7 +3020,7 @@ union Notification =
   | CommentNotification
   | MirrorNotification
   | QuoteNotification
-  | ActedNotificaion
+  | ActedNotification
   | FollowNotification
   | MentionNotification
   | FutureProofNotification
@@ -3832,7 +3831,7 @@ input CreateMomokaCommentRequest {
   contentURI: Url!
 }
 
-input CreateCommentRequest {
+input CreateOnChainCommentRequest {
   # AnyPublication your commenting on
   commentOn: PublicationId!
 
@@ -3874,7 +3873,7 @@ type CreateMirrorBroadcastItemResult {
 }
 
 # The mirror eip 712 typed data
-type CreateOMirrorEIP712TypedData {
+type CreateMirrorEIP712TypedData {
   # The types
   types: CreateMirrorEIP712TypedDataTypes!
 
@@ -4544,7 +4543,7 @@ type Mutation {
     options: TypedDataOptions
     request: CreateOnChainCommentRequest!
   ): CreateCommentBroadcastItemResult!
-  commentOnChain(request: CreateCommentRequest!): LensProfileManagerRelayResult!
+  commentOnChain(request: CreateOnChainCommentRequest!): LensProfileManagerRelayResult!
   commentOnMomoka(request: CreateMomokaCommentRequest!): RelayMomokaResult!
   mirrorOnChain(request: CreateOnChainMirrorRequest!): LensProfileManagerRelayResult!
   mirrorOnMomoka(request: CreateMomokaMirrorRequest!): RelayMomokaResult!

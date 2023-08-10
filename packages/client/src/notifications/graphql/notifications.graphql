@@ -1,0 +1,160 @@
+fragment ReactionNotification on ReactionNotification {
+  id
+  reactions {
+    profile {
+      ...ProfileFields
+    }
+    reactions {
+      reaction
+      reactedAt
+    }
+  }
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+}
+
+fragment CommentNotification on CommentNotification {
+  id
+  comment {
+    ...Comment
+  }
+}
+
+fragment MirrorNotification on MirrorNotification {
+  id
+  mirrors {
+    mirrorId
+    mirroredAt
+    profile {
+      ...ProfileFields
+    }
+  }
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+}
+
+fragment QuoteNotification on QuoteNotification {
+  id
+  quote {
+    ...Quote
+  }
+}
+
+fragment ActedNotification on ActedNotification {
+  id
+  actions {
+    profile {
+      ...ProfileFields
+    }
+    actions {
+      ... on CollectOpenActionResult {
+        ...CollectOpenActionResult
+      }
+      ... on NftDropOpenAction {
+        ...NftDropOpenAction
+      }
+      ... on UnknownOpenActionResult {
+        ...UnknownOpenActionResult
+      }
+    }
+  }
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Mirror {
+      ...Mirror
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+}
+
+fragment FollowNotification on FollowNotification {
+  id
+  followers {
+    ...ProfileFields
+  }
+}
+
+fragment MentionNotification on MentionNotification {
+  id
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+}
+
+fragment FutureProofNotification on FutureProofNotification {
+  id
+}
+
+# queries
+query Notifications(
+  $request: NotificationRequest!
+  $observerId: ProfileId
+  $publicationImageTransform: ImageTransform = {}
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+) {
+  result: notifications(request: $request) {
+    items {
+      ... on ReactionNotification {
+        ...ReactionNotification
+      }
+      ... on CommentNotification {
+        ...CommentNotification
+      }
+      ... on MirrorNotification {
+        ...MirrorNotification
+      }
+      ... on QuoteNotification {
+        ...QuoteNotification
+      }
+      ... on ActedNotification {
+        ...ActedNotification
+      }
+      ... on FollowNotification {
+        ...FollowNotification
+      }
+      ... on MentionNotification {
+        ...MentionNotification
+      }
+      ... on FutureProofNotification {
+        ...FutureProofNotification
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}

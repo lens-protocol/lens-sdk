@@ -1,10 +1,10 @@
-import { CommonPaginatedResultInfoFragment } from '../graphql/fragments.generated';
+import { PaginatedResultInfoFragment } from '../graphql/fragments.generated';
 
 /**
  * @internal
  */
 export type PaginatedQueryData<Item> = {
-  pageInfo: CommonPaginatedResultInfoFragment;
+  pageInfo: PaginatedResultInfoFragment;
   items: Item[];
 };
 

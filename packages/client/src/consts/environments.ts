@@ -2,7 +2,10 @@
  * @internal
  */
 export class Environment {
-  constructor(public readonly name: string, private url: string) {}
+  constructor(
+    public readonly name: string,
+    private url: string,
+  ) {}
 
   get gqlEndpoint() {
     return this.url;

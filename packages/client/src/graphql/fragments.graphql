@@ -1,3 +1,4 @@
+# query fragments
 fragment OptimisticStatusResult on OptimisticStatusResult {
   value
   isFinalisedOnChain
@@ -76,13 +77,40 @@ fragment NetworkAddress on NetworkAddress {
   chainId
 }
 
+# media
 fragment Image on Image {
   url
-  mimeType
+  imageMimeType: mimeType
   width
   height
 }
 
+fragment Video on Video {
+  url
+  videoMimeType: mimeType
+}
+
+fragment VideoSet on VideoSet {
+  rawURL
+  media {
+    ...Video
+  }
+  altTag
+}
+
+fragment Audio on Audio {
+  url
+  audioMimeType: mimeType
+}
+
+fragment AudioSet on AudioSet {
+  rawURL
+  media {
+    ...Audio
+  }
+}
+
+# profile
 fragment ProfileCoverSet on ImageSet {
   rawURL
   media {
@@ -214,21 +242,886 @@ fragment MomokaInfo on MomokaInfo {
   proof
 }
 
+# reference modules
+fragment FollowOnlyReferenceModuleSettings on FollowOnlyReferenceModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+}
+
+fragment DegreesOfSeparationReferenceModuleSettings on DegreesOfSeparationReferenceModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  commentsRestricted
+  mirrorsRestricted
+  degreesOfSeparation
+}
+
+fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  referenceModuleReturnData
+}
+
+# open action modules
+fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
+  contract {
+    ...NetworkAddress
+  }
+  amount {
+    ...Amount
+  }
+  recipient
+  referralFee
+  followerOnly
+  collectLimitOptional: collectLimit
+  endsAtOptional: endsAt
+}
+
+fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
+  contract {
+    ...NetworkAddress
+  }
+  amount {
+    ...Amount
+  }
+  recipients {
+    recipient
+    split
+  }
+  referralFee
+  followerOnly
+  collectLimitOptional: collectLimit
+  endsAtOptional: endsAt
+}
+
+fragment UnknownOpenActionSettings on UnknownOpenActionSettings {
+  contract {
+    ...NetworkAddress
+  }
+  openActionModuleReturnData
+}
+
+fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  followerOnly
+}
+
+fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  amount {
+    ...Amount
+  }
+  recipient
+  referralFee
+  followerOnly
+}
+
+fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  collectLimit
+  amount {
+    ...Amount
+  }
+  recipient
+  referralFee
+  followerOnly
+}
+
+fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeCollectModuleSettings {
+  contract {
+    address
+  }
+  collectLimit
+  amount {
+    ...Amount
+  }
+  recipient
+  referralFee
+  followerOnly
+  endsAt
+}
+
+fragment LegacyRevertCollectModuleSettings on LegacyRevertCollectModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+}
+
+fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  amount {
+    ...Amount
+  }
+  recipient
+  referralFee
+  followerOnly
+  endsAt
+}
+
+fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFeeCollectModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  amount {
+    ...Amount
+  }
+  recipients {
+    recipient
+    split
+  }
+  referralFee
+  followerOnly
+  collectLimitOptional: collectLimit
+  endsAtOptional: endsAt
+}
+
+fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  amount {
+    ...Amount
+  }
+  recipient
+  referralFee
+  followerOnly
+  collectLimitOptional: collectLimit
+  endsAtOptional: endsAt
+}
+
+fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  vault
+  amount {
+    ...Amount
+  }
+  recipient
+  referralFee
+  followerOnly
+  collectLimitOptional: collectLimit
+  endsAtOptional: endsAt
+}
+
+fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  amount {
+    ...Amount
+  }
+  recipient
+  referralFee
+  followerOnly
+  collectLimitOptional: collectLimit
+  endsAtOptional: endsAt
+}
+
+fragment UnknownCollectModuleSettings on UnknownCollectModuleSettings {
+  contract {
+    ...NetworkAddress
+  }
+  collectModuleReturnData
+}
+
+# open action results
+fragment CollectOpenActionResult on CollectOpenActionResult {
+  type
+}
+
+fragment NftDropOpenAction on NftDropOpenAction {
+  tokenMinted
+}
+
+fragment UnknownOpenActionResult on UnknownOpenActionResult {
+  address
+  redeemData
+}
+
+fragment CanDecryptResponse on CanDecryptResponse {
+  result
+  reasons
+  extraDetails
+}
+
+fragment PublicationOperations on PublicationOperations {
+  hasUpvoted: hasReacted(type: UPVOTE)
+  hasDownvoted: hasReacted(type: DOWNVOTE)
+  isNotInterested
+  hasBookmarked
+  hasActed {
+    ... on CollectOpenActionResult {
+      ...CollectOpenActionResult
+    }
+    ... on NftDropOpenAction {
+      ...NftDropOpenAction
+    }
+    ... on UnknownOpenActionResult {
+      ...UnknownOpenActionResult
+    }
+  }
+  canComment
+  canMirror
+  hasMirrored
+  canDecrypt {
+    ...CanDecryptResponse
+  }
+}
+
+# gated content
+fragment MetadataV3LitEncryption on MetadataV3LitEncryption {
+  encryptionKey
+  accessCondition {
+    ... on NftOwnershipCondition {
+      ...NftOwnershipCondition
+    }
+    ... on Erc20OwnershipCondition {
+      ...Erc20OwnershipCondition
+    }
+    ... on EoaOwnershipCondition {
+      ...EoaOwnershipCondition
+    }
+    ... on ProfileOwnershipCondition {
+      ...ProfileOwnershipCondition
+    }
+    ... on FollowCondition {
+      ...FollowCondition
+    }
+    ... on CollectCondition {
+      ...CollectCondition
+    }
+    ... on AndCondition {
+      ...AndCondition
+    }
+    ... on OrCondition {
+      ...OrCondition
+    }
+  }
+}
+
+fragment NftOwnershipCondition on NftOwnershipCondition {
+  contract {
+    ...NetworkAddress
+  }
+  contractType
+  tokenIds
+}
+
+fragment Erc20OwnershipCondition on Erc20OwnershipCondition {
+  contract {
+    ...NetworkAddress
+  }
+  amount {
+    ...Amount
+  }
+  condition
+}
+
+fragment EoaOwnershipCondition on EoaOwnershipCondition {
+  address
+}
+
+fragment ProfileOwnershipCondition on ProfileOwnershipCondition {
+  profileId
+}
+
+fragment FollowCondition on FollowCondition {
+  profileId
+}
+
+fragment CollectCondition on CollectCondition {
+  publicationId
+  thisPublication
+}
+
+fragment AndCondition on AndCondition {
+  criteria {
+    ... on NftOwnershipCondition {
+      ...NftOwnershipCondition
+    }
+    ... on Erc20OwnershipCondition {
+      ...Erc20OwnershipCondition
+    }
+    ... on EoaOwnershipCondition {
+      ...EoaOwnershipCondition
+    }
+    ... on ProfileOwnershipCondition {
+      ...ProfileOwnershipCondition
+    }
+    ... on FollowCondition {
+      ...FollowCondition
+    }
+    ... on CollectCondition {
+      ...CollectCondition
+    }
+  }
+}
+
+fragment OrCondition on OrCondition {
+  criteria {
+    ... on NftOwnershipCondition {
+      ...NftOwnershipCondition
+    }
+    ... on Erc20OwnershipCondition {
+      ...Erc20OwnershipCondition
+    }
+    ... on EoaOwnershipCondition {
+      ...EoaOwnershipCondition
+    }
+    ... on ProfileOwnershipCondition {
+      ...ProfileOwnershipCondition
+    }
+    ... on FollowCondition {
+      ...FollowCondition
+    }
+    ... on CollectCondition {
+      ...CollectCondition
+    }
+  }
+}
+
+# publication metadata
+fragment MetadataV3Common on MetadataV3Common {
+  id
+  rawURL
+  # content
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on MetadataV3LitEncryption {
+      ...MetadataV3LitEncryption
+    }
+  }
+}
+
+fragment PublicationImageSet on ImageSet {
+  rawURL
+  media {
+    ...Image
+  }
+  altTag
+  transformed(input: $publicationImageTransform) {
+    ...Image
+  }
+}
+
+fragment MarketplaceMetadataAttribute on MarketplaceMetadataAttribute {
+  displayType
+  traitType
+  value
+}
+
+fragment MarketplaceMetadata on MarketplaceMetadata {
+  description
+  externalUrl
+  name
+  attributes {
+    ...MarketplaceMetadataAttribute
+  }
+  image
+  animationUrl
+}
+
+fragment MetadataMediaVideo on MetadataMediaVideo {
+  videoMimeType: type
+  videoItem: item {
+    ...VideoSet
+  }
+  cover {
+    ...PublicationImageSet
+  }
+  duration
+  license
+}
+
+fragment MetadataMediaImage on MetadataMediaImage {
+  imageMimeType: type
+  imageItem: item {
+    ...PublicationImageSet
+  }
+  license
+}
+
+fragment MetadataMediaAudio on MetadataMediaAudio {
+  audioMimeType: type
+  audioItem: item {
+    ...AudioSet
+  }
+  cover {
+    ...PublicationImageSet
+  }
+  duration
+  license
+  credits
+  artist
+  genre
+  recordLabel
+  audioType
+  lyrics
+}
+
+fragment MetadataV2 on MetadataV2 {
+  name
+  description
+  optionalContent: content
+  v2image: image {
+    ...PublicationImageSet
+  }
+  media {
+    ... on VideoSet {
+      ...VideoSet
+    }
+    ... on AudioSet {
+      ...AudioSet
+    }
+    ... on ImageSet {
+      ...PublicationImageSet
+    }
+  }
+  attributes {
+    ...MarketplaceMetadataAttribute
+  }
+  locale
+  tags
+  contentWarning
+  v2mainContentFocus: mainContentFocus
+  animationUrl
+  encryptionInput {
+    encryptionKey
+    encryptedFields {
+      content
+      image
+      media {
+        url
+        mimeType
+        altTag
+        cover
+      }
+      animationUrl
+      externalUrl
+    }
+    accessCondition {
+      ... on NftOwnershipCondition {
+        ...NftOwnershipCondition
+      }
+      ... on Erc20OwnershipCondition {
+        ...Erc20OwnershipCondition
+      }
+      ... on EoaOwnershipCondition {
+        ...EoaOwnershipCondition
+      }
+      ... on ProfileOwnershipCondition {
+        ...ProfileOwnershipCondition
+      }
+      ... on FollowCondition {
+        ...FollowCondition
+      }
+      ... on CollectCondition {
+        ...CollectCondition
+      }
+      ... on AndCondition {
+        ...AndCondition
+      }
+      ... on OrCondition {
+        ...OrCondition
+      }
+    }
+  }
+}
+
+fragment VideoMetadataV1 on VideoMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  videoMainContentFocus: mainContentFocus
+  video {
+    ...MetadataMediaVideo
+  }
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment ImageMetadataV1 on ImageMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  imageMainContentFocus: mainContentFocus
+  image {
+    ...MetadataMediaImage
+  }
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment ArticleMetadataV1 on ArticleMetadataV1 {
+  ...MetadataV3Common
+  content
+  title
+  articleMainContentFocus: mainContentFocus
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment EventMetadataV1 on EventMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  eventMainContentFocus: mainContentFocus
+  geographic {
+    latitude
+    longitude
+  }
+  startsAt
+  endsAt
+  links
+  location
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment LinkMetadataV1 on LinkMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  linkMainContentFocus: mainContentFocus
+  sharingLink
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment EmbedMetadataV1 on EmbedMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  embedMainContentFocus: mainContentFocus
+  embed
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment CheckingInMetadataV1 on CheckingInMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  checkingInMainContentFocus: mainContentFocus
+  location
+  geographic {
+    latitude
+    longitude
+  }
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment TextOnlyMetadataV1 on TextOnlyMetadataV1 {
+  ...MetadataV3Common
+  content
+  textOnlyMainContentFocus: mainContentFocus
+}
+
+fragment ThreeDMetadataV1 on ThreeDMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  threeDMainContentFocus: mainContentFocus
+  assets {
+    url
+    zipPath
+    playerUrl
+    format
+    license
+  }
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment StoryMetadataV1 on StoryMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  storyMainContentFocus: mainContentFocus
+  asset {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment TransactionMetadataV1 on TransactionMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  transactionMainContentFocus: mainContentFocus
+  type
+  txHash
+  chainId
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment MintMetadataV1 on MintMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  mintMainContentFocus: mainContentFocus
+  mintLink
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment SpaceMetadataV1 on SpaceMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  spaceMainContentFocus: mainContentFocus
+  title
+  link
+  startsAt
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+fragment LiveStreamMetadataV1 on LiveStreamMetadataV1 {
+  ...MetadataV3Common
+  optionalContent: content
+  liveStreamMainContentFocus: mainContentFocus
+  title
+  startsAt
+  endsAt
+  playbackUrl
+  liveUrl
+  isLiveNowApiCall
+  attachments {
+    ... on MetadataMediaVideo {
+      ...MetadataMediaVideo
+    }
+    ... on MetadataMediaImage {
+      ...MetadataMediaImage
+    }
+    ... on MetadataMediaAudio {
+      ...MetadataMediaAudio
+    }
+  }
+}
+
+# publication fragments
 fragment Post on Post {
   id
   by {
     ...ProfileFields
   }
-
-  # The metadata for the post
-  # metadata: PublicationMetadata!
-
-  # # The open action module
-  # openActionModules: [OpenActionModule!]
-
-  # # The reference module
-  # referenceModule: ReferenceModule
-
+  metadata {
+    ... on MetadataV2 {
+      ...MetadataV2
+    }
+    ... on VideoMetadataV1 {
+      ...VideoMetadataV1
+    }
+    ... on ImageMetadataV1 {
+      ...ImageMetadataV1
+    }
+    ... on ArticleMetadataV1 {
+      ...ArticleMetadataV1
+    }
+    ... on EventMetadataV1 {
+      ...EventMetadataV1
+    }
+    ... on LinkMetadataV1 {
+      ...LinkMetadataV1
+    }
+    ... on EmbedMetadataV1 {
+      ...EmbedMetadataV1
+    }
+    ... on CheckingInMetadataV1 {
+      ...CheckingInMetadataV1
+    }
+    ... on TextOnlyMetadataV1 {
+      ...TextOnlyMetadataV1
+    }
+    ... on ThreeDMetadataV1 {
+      ...ThreeDMetadataV1
+    }
+    ... on StoryMetadataV1 {
+      ...StoryMetadataV1
+    }
+    ... on TransactionMetadataV1 {
+      ...TransactionMetadataV1
+    }
+    ... on MintMetadataV1 {
+      ...MintMetadataV1
+    }
+    ... on SpaceMetadataV1 {
+      ...SpaceMetadataV1
+    }
+    ... on LiveStreamMetadataV1 {
+      ...LiveStreamMetadataV1
+    }
+  }
+  openActionModules {
+    ... on LegacyFreeCollectModuleSettings {
+      ...LegacyFreeCollectModuleSettings
+    }
+    ... on LegacyFeeCollectModuleSettings {
+      ...LegacyFeeCollectModuleSettings
+    }
+    ... on LegacyLimitedFeeCollectModuleSettings {
+      ...LegacyLimitedFeeCollectModuleSettings
+    }
+    ... on LegacyLimitedTimedFeeCollectModuleSettings {
+      ...LegacyLimitedTimedFeeCollectModuleSettings
+    }
+    ... on LegacyRevertCollectModuleSettings {
+      ...LegacyRevertCollectModuleSettings
+    }
+    ... on LegacyTimedFeeCollectModuleSettings {
+      ...LegacyTimedFeeCollectModuleSettings
+    }
+    ... on LegacyMultirecipientFeeCollectModuleSettings {
+      ...LegacyMultirecipientFeeCollectModuleSettings
+    }
+    ... on LegacySimpleCollectModuleSettings {
+      ...LegacySimpleCollectModuleSettings
+    }
+    ... on LegacyERC4626FeeCollectModuleSettings {
+      ...LegacyERC4626FeeCollectModuleSettings
+    }
+    ... on LegacyAaveFeeCollectModuleSettings {
+      ...LegacyAaveFeeCollectModuleSettings
+    }
+    ... on MultirecipientFeeCollectOpenActionSettings {
+      ...MultirecipientFeeCollectOpenActionSettings
+    }
+    ... on SimpleCollectOpenActionSettings {
+      ...SimpleCollectOpenActionSettings
+    }
+    ... on UnknownOpenActionSettings {
+      ...UnknownOpenActionSettings
+    }
+  }
+  referenceModule {
+    ... on FollowOnlyReferenceModuleSettings {
+      ...FollowOnlyReferenceModuleSettings
+    }
+    ... on DegreesOfSeparationReferenceModuleSettings {
+      ...DegreesOfSeparationReferenceModuleSettings
+    }
+    ... on UnknownReferenceModuleSettings {
+      ...UnknownReferenceModuleSettings
+    }
+  }
   publishedOn {
     ...App
   }
@@ -237,9 +1130,9 @@ fragment Post on Post {
   momoka {
     ...MomokaInfo
   }
-
-  # operations(by: ProfileId): PublicationOperations
-
+  operations(by: $observerId) {
+    ...PublicationOperations
+  }
   createdAt
 }
 
@@ -248,16 +1141,105 @@ fragment CommentBase on Comment {
   by {
     ...ProfileFields
   }
-
-  # The metadata for the post
-  # metadata: PublicationMetadata!
-
-  # # The collect module
-  # openActionModules: [OpenActionModule!]!
-
-  # # The reference module
-  # referenceModule: ReferenceModule
-
+  metadata {
+    ... on MetadataV2 {
+      ...MetadataV2
+    }
+    ... on VideoMetadataV1 {
+      ...VideoMetadataV1
+    }
+    ... on ImageMetadataV1 {
+      ...ImageMetadataV1
+    }
+    ... on ArticleMetadataV1 {
+      ...ArticleMetadataV1
+    }
+    ... on EventMetadataV1 {
+      ...EventMetadataV1
+    }
+    ... on LinkMetadataV1 {
+      ...LinkMetadataV1
+    }
+    ... on EmbedMetadataV1 {
+      ...EmbedMetadataV1
+    }
+    ... on CheckingInMetadataV1 {
+      ...CheckingInMetadataV1
+    }
+    ... on TextOnlyMetadataV1 {
+      ...TextOnlyMetadataV1
+    }
+    ... on ThreeDMetadataV1 {
+      ...ThreeDMetadataV1
+    }
+    ... on StoryMetadataV1 {
+      ...StoryMetadataV1
+    }
+    ... on TransactionMetadataV1 {
+      ...TransactionMetadataV1
+    }
+    ... on MintMetadataV1 {
+      ...MintMetadataV1
+    }
+    ... on SpaceMetadataV1 {
+      ...SpaceMetadataV1
+    }
+    ... on LiveStreamMetadataV1 {
+      ...LiveStreamMetadataV1
+    }
+  }
+  openActionModules {
+    ... on LegacyFreeCollectModuleSettings {
+      ...LegacyFreeCollectModuleSettings
+    }
+    ... on LegacyFeeCollectModuleSettings {
+      ...LegacyFeeCollectModuleSettings
+    }
+    ... on LegacyLimitedFeeCollectModuleSettings {
+      ...LegacyLimitedFeeCollectModuleSettings
+    }
+    ... on LegacyLimitedTimedFeeCollectModuleSettings {
+      ...LegacyLimitedTimedFeeCollectModuleSettings
+    }
+    ... on LegacyRevertCollectModuleSettings {
+      ...LegacyRevertCollectModuleSettings
+    }
+    ... on LegacyTimedFeeCollectModuleSettings {
+      ...LegacyTimedFeeCollectModuleSettings
+    }
+    ... on LegacyMultirecipientFeeCollectModuleSettings {
+      ...LegacyMultirecipientFeeCollectModuleSettings
+    }
+    ... on LegacySimpleCollectModuleSettings {
+      ...LegacySimpleCollectModuleSettings
+    }
+    ... on LegacyERC4626FeeCollectModuleSettings {
+      ...LegacyERC4626FeeCollectModuleSettings
+    }
+    ... on LegacyAaveFeeCollectModuleSettings {
+      ...LegacyAaveFeeCollectModuleSettings
+    }
+    ... on MultirecipientFeeCollectOpenActionSettings {
+      ...MultirecipientFeeCollectOpenActionSettings
+    }
+    ... on SimpleCollectOpenActionSettings {
+      ...SimpleCollectOpenActionSettings
+    }
+    ... on UnknownOpenActionSettings {
+      ...UnknownOpenActionSettings
+    }
+  }
+  referenceModule {
+    ... on FollowOnlyReferenceModuleSettings {
+      ...FollowOnlyReferenceModuleSettings
+    }
+    ... on DegreesOfSeparationReferenceModuleSettings {
+      ...DegreesOfSeparationReferenceModuleSettings
+    }
+    ... on UnknownReferenceModuleSettings {
+      ...UnknownReferenceModuleSettings
+    }
+  }
   publishedOn {
     ...App
   }
@@ -266,9 +1248,9 @@ fragment CommentBase on Comment {
   momoka {
     ...MomokaInfo
   }
-
-  # operations(by: ProfileId): PublicationOperations
-
+  operations(by: $observerId) {
+    ...PublicationOperations
+  }
   createdAt
 }
 
@@ -320,16 +1302,105 @@ fragment QuoteBase on Quote {
   by {
     ...ProfileFields
   }
-
-  #   # The metadata for the post
-  #   metadata: PublicationMetadata!
-
-  #   # The collect module
-  #   openActionModules: [OpenActionModule!]!
-
-  #   # The reference module
-  #   referenceModule: ReferenceModule
-
+  metadata {
+    ... on MetadataV2 {
+      ...MetadataV2
+    }
+    ... on VideoMetadataV1 {
+      ...VideoMetadataV1
+    }
+    ... on ImageMetadataV1 {
+      ...ImageMetadataV1
+    }
+    ... on ArticleMetadataV1 {
+      ...ArticleMetadataV1
+    }
+    ... on EventMetadataV1 {
+      ...EventMetadataV1
+    }
+    ... on LinkMetadataV1 {
+      ...LinkMetadataV1
+    }
+    ... on EmbedMetadataV1 {
+      ...EmbedMetadataV1
+    }
+    ... on CheckingInMetadataV1 {
+      ...CheckingInMetadataV1
+    }
+    ... on TextOnlyMetadataV1 {
+      ...TextOnlyMetadataV1
+    }
+    ... on ThreeDMetadataV1 {
+      ...ThreeDMetadataV1
+    }
+    ... on StoryMetadataV1 {
+      ...StoryMetadataV1
+    }
+    ... on TransactionMetadataV1 {
+      ...TransactionMetadataV1
+    }
+    ... on MintMetadataV1 {
+      ...MintMetadataV1
+    }
+    ... on SpaceMetadataV1 {
+      ...SpaceMetadataV1
+    }
+    ... on LiveStreamMetadataV1 {
+      ...LiveStreamMetadataV1
+    }
+  }
+  openActionModules {
+    ... on LegacyFreeCollectModuleSettings {
+      ...LegacyFreeCollectModuleSettings
+    }
+    ... on LegacyFeeCollectModuleSettings {
+      ...LegacyFeeCollectModuleSettings
+    }
+    ... on LegacyLimitedFeeCollectModuleSettings {
+      ...LegacyLimitedFeeCollectModuleSettings
+    }
+    ... on LegacyLimitedTimedFeeCollectModuleSettings {
+      ...LegacyLimitedTimedFeeCollectModuleSettings
+    }
+    ... on LegacyRevertCollectModuleSettings {
+      ...LegacyRevertCollectModuleSettings
+    }
+    ... on LegacyTimedFeeCollectModuleSettings {
+      ...LegacyTimedFeeCollectModuleSettings
+    }
+    ... on LegacyMultirecipientFeeCollectModuleSettings {
+      ...LegacyMultirecipientFeeCollectModuleSettings
+    }
+    ... on LegacySimpleCollectModuleSettings {
+      ...LegacySimpleCollectModuleSettings
+    }
+    ... on LegacyERC4626FeeCollectModuleSettings {
+      ...LegacyERC4626FeeCollectModuleSettings
+    }
+    ... on LegacyAaveFeeCollectModuleSettings {
+      ...LegacyAaveFeeCollectModuleSettings
+    }
+    ... on MultirecipientFeeCollectOpenActionSettings {
+      ...MultirecipientFeeCollectOpenActionSettings
+    }
+    ... on SimpleCollectOpenActionSettings {
+      ...SimpleCollectOpenActionSettings
+    }
+    ... on UnknownOpenActionSettings {
+      ...UnknownOpenActionSettings
+    }
+  }
+  referenceModule {
+    ... on FollowOnlyReferenceModuleSettings {
+      ...FollowOnlyReferenceModuleSettings
+    }
+    ... on DegreesOfSeparationReferenceModuleSettings {
+      ...DegreesOfSeparationReferenceModuleSettings
+    }
+    ... on UnknownReferenceModuleSettings {
+      ...UnknownReferenceModuleSettings
+    }
+  }
   publishedOn {
     ...App
   }
@@ -338,9 +1409,9 @@ fragment QuoteBase on Quote {
   momoka {
     ...MomokaInfo
   }
-
-  #   operations(by: ProfileId): PublicationOperations
-
+  operations(by: $observerId) {
+    ...PublicationOperations
+  }
   createdAt
 }
 
@@ -357,4 +1428,31 @@ fragment Quote on Quote {
       ...QuoteBase
     }
   }
+}
+
+# mutation fragments
+fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+  name
+  chainId
+  version
+  verifyingContract
+}
+
+fragment RelaySuccess on RelaySuccess {
+  txHash
+  txId
+}
+
+fragment RelayError on RelayError {
+  reason
+}
+
+fragment LensProfileManagerRelayError on LensProfileManagerRelayError {
+  reason
+}
+
+fragment CreateMomokaPublicationResult on CreateMomokaPublicationResult {
+  id
+  proof
+  momokaId
 }

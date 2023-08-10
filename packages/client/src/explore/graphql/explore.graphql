@@ -1,17 +1,14 @@
-query SearchPublications(
-  $request: PublicationSearchRequest!
+query ExplorePublications(
+  $request: ExplorePublicationRequest!
   $observerId: ProfileId
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
 ) {
-  result: searchPublication(request: $request) {
+  result: explorePublications(request: $request) {
     items {
       ... on Post {
         ...Post
-      }
-      ... on Comment {
-        ...Comment
       }
       ... on Quote {
         ...Quote
@@ -23,12 +20,12 @@ query SearchPublications(
   }
 }
 
-query SearchProfiles(
-  $request: ProfileSearchRequest!
+query ExploreProfiles(
+  $request: ExploreProfilesRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
 ) {
-  result: searchProfile(request: $request) {
+  result: exploreProfiles(request: $request) {
     items {
       ...Profile
     }

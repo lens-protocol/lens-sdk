@@ -12,7 +12,10 @@ const TOKEN_EXP_THRESHOLD = DateUtils.secondsToMs(30);
 const CLOCK_SKEWED_THRESHOLD = DateUtils.secondsToMs(10);
 
 export class Credentials {
-  constructor(readonly accessToken: string | undefined, readonly refreshToken: string) {}
+  constructor(
+    readonly accessToken: string | undefined,
+    readonly refreshToken: string,
+  ) {}
 
   checkClock() {
     const decodedToken = jwtDecode<JwtPayload>(this.refreshToken);

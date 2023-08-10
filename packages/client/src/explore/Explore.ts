@@ -1,20 +1,22 @@
 import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
-import type { ProfileFragment } from '../graphql/fragments.generated';
-import type { ProfileRequest, ProfilesRequest } from '../graphql/types.generated';
+import type { PostFragment, ProfileFragment, QuoteFragment } from '../graphql/fragments.generated';
+import type { ExploreProfilesRequest, ExplorePublicationRequest } from '../graphql/types.generated';
 import {
-  PaginatedResult,
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
+  PaginatedResult,
   provideAuthHeaders,
 } from '../helpers';
-import { getSdk, Sdk } from './graphql/profile.generated';
+import { getSdk, Sdk } from './graphql/explore.generated';
 
 /**
+ * Explore Lens Protocol.
+ *
  * @group LensClient Modules
  */
-export class Profile {
+export class Explore {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
@@ -28,24 +30,30 @@ export class Profile {
     this.authentication = authentication;
   }
 
-  async fetch(request: ProfileRequest): Promise<ProfileFragment | null> {
+  async publications(
+    request: ExplorePublicationRequest,
+    observerId?: string,
+  ): Promise<PaginatedResult<PostFragment | QuoteFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.Profile(
-        {
-          request,
-          ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        },
-        headers,
-      );
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.ExplorePublications(
+          {
+            request: currRequest,
+            observerId,
+            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+          },
+          headers,
+        );
 
-      return result.data.result;
+        return result.data.result;
+      }, request);
     });
   }
 
-  async fetchAll(request: ProfilesRequest): Promise<PaginatedResult<ProfileFragment>> {
+  async profiles(request: ExploreProfilesRequest): Promise<PaginatedResult<ProfileFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.Profiles(
+        const result = await this.sdk.ExploreProfiles(
           {
             request: currRequest,
             ...buildImageTransformsFromConfig(this.config.mediaTransforms),
