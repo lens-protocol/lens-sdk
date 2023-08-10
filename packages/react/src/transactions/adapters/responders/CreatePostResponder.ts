@@ -63,7 +63,7 @@ export class CreatePostResponder implements ITransactionResponder<CreatePostRequ
   ) {}
 
   async prepare({ id, request }: TransactionData<CreatePostRequest>) {
-    const author = await this.profileCacheManager.fetchProfile({ id: request.profileId });
+    const author = await this.profileCacheManager.fetchProfile(request.profileId);
 
     invariant(author, 'Cannot find author profile');
 

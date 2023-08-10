@@ -1,7 +1,6 @@
 import { Post, Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  mockGetProfileResponse,
   mockPostFragment,
   mockProfileFragment,
   mockSources,
@@ -20,7 +19,7 @@ import {
   defaultMediaTransformsConfig,
   mediaTransformConfigToQueryVariables,
 } from '../../../../mediaTransforms';
-import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
+import { mockIProfileCacheManager } from '../../__helpers__/mocks';
 import { CreatePostResponder, recentPosts } from '../CreatePostResponder';
 
 function setupTestScenario({
@@ -35,17 +34,6 @@ function setupTestScenario({
   const sources = mockSources();
   const mediaTransforms = defaultMediaTransformsConfig;
   const apolloClient = mockLensApolloClient([
-    mockGetProfileResponse({
-      profile: author,
-      variables: {
-        request: {
-          profileId: author.id,
-        },
-        observerId: null,
-        sources,
-        ...mediaTransformConfigToQueryVariables(mediaTransforms),
-      },
-    }),
     mockGetPublicationResponse({
       variables: {
         request: transactionData.txHash
@@ -63,7 +51,7 @@ function setupTestScenario({
     }),
   ]);
 
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
+  const profileCacheManager = mockIProfileCacheManager(author);
   return new CreatePostResponder(profileCacheManager, apolloClient, sources, mediaTransforms);
 }
 

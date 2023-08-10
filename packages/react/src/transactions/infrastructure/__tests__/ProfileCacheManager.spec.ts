@@ -80,9 +80,7 @@ describe(`Given an instance of the ${ProfileCacheManager.name}`, () => {
     });
 
     it('should allow to query by profile Id', async () => {
-      const { manager } = setupTestScenario({
-        profile,
-      });
+      const { manager } = setupTestScenario({ profile });
 
       const actual = await manager.fetchProfile(profile.id);
 
