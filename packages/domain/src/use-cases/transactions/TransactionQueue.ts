@@ -113,7 +113,7 @@ export class TransactionQueue<TAll extends AnyTransactionRequestModel> {
     if (result.isFailure()) {
       const txData = transactionData(transaction);
       await this.rollback(result.error, txData);
-      presenter?.present(failure(result.error));
+      presenter?.present(result);
       return;
     }
 
@@ -147,7 +147,7 @@ export class TransactionQueue<TAll extends AnyTransactionRequestModel> {
       const result = await transaction.waitNextEvent();
 
       if (result.isFailure()) {
-        return failure(result.error);
+        return result;
       }
 
       if (result.value === TransactionEvent.SETTLED) {

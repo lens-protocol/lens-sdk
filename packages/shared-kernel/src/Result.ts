@@ -10,7 +10,7 @@ import { Narrow } from './ts-helpers/types';
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
-class Success<T, E> {
+class Success<T, E extends IEquatableError> {
   /** @internal */
   public constructor(public readonly value: T) {}
 
@@ -20,6 +20,10 @@ class Success<T, E> {
 
   public isFailure(): this is Failure<T, E> {
     return false;
+  }
+
+  public forward() {
+    return success(this.value);
   }
 
   unwrap(): T {
@@ -36,7 +40,7 @@ class Success<T, E> {
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
  */
-class Failure<T, E> {
+class Failure<T, E extends IEquatableError> {
   /** @internal */
   public constructor(public readonly error: E) {}
 
@@ -46,6 +50,10 @@ class Failure<T, E> {
 
   public isFailure(): this is Failure<T, E> {
     return true;
+  }
+
+  public forward() {
+    return failure(this.error);
   }
 
   unwrap(): never {
@@ -164,8 +172,9 @@ export function success<T>(value: any = undefined): Success<T, never> {
   return new Success(value);
 }
 
-export const failure = <E extends IEquatableError>(error: E): Failure<never, E> =>
-  new Failure(error);
+export function failure<E extends IEquatableError>(error: E): Failure<never, E> {
+  return new Failure(error);
+}
 
 /**
  * Returns `true` if the result is a success.

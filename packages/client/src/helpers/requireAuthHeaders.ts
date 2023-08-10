@@ -16,7 +16,7 @@ export async function requireAuthHeaders<Val>(
   const headerResult = await authentication.getRequestHeader();
 
   if (headerResult.isFailure()) {
-    return failure(headerResult.error);
+    return headerResult.forward();
   }
 
   const result = await handler(headerResult.value);

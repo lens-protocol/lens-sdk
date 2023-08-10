@@ -50,7 +50,7 @@ export class CollectPublicationGateway
     const proxyReceipt = await this.proxy(request);
 
     if (proxyReceipt.isFailure()) {
-      return failure(proxyReceipt.error);
+      return proxyReceipt;
     }
 
     return success(

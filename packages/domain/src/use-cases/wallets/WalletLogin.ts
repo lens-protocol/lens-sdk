@@ -1,4 +1,4 @@
-import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { EthereumAddress, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import {
   ICredentials,
@@ -52,7 +52,7 @@ export class WalletLogin {
     const result = await this.credentialsIssuer.issueCredentials(wallet);
 
     if (result.isFailure()) {
-      this.loginPresenter.present(failure(result.error));
+      this.loginPresenter.present(result.forward());
       return;
     }
 

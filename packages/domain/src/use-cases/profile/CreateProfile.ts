@@ -43,7 +43,7 @@ export class CreateProfile {
     const transactionResult = await this.transactionFactory.createProfileTransaction(request);
 
     if (transactionResult.isFailure()) {
-      this.presenter.present(failure(transactionResult.error));
+      this.presenter.present(transactionResult);
       return;
     }
 

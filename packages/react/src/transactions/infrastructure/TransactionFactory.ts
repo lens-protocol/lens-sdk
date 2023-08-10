@@ -124,7 +124,7 @@ class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
       this.state = result.value.state;
       return success(result.value.event);
     }
-    return failure(result.error);
+    return result;
   }
 }
 

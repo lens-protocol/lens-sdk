@@ -18,7 +18,7 @@ import {
   IDelegatedTransactionGateway,
   IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { ChainType, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -48,7 +48,7 @@ export class CreateOnChainCommentGateway
   ): PromiseResult<NativeTransaction<CreateCommentRequest>, BroadcastingError> {
     const result = await this.broadcast(request);
 
-    if (result.isFailure()) return failure(result.error);
+    if (result.isFailure()) return result;
 
     const receipt = result.value;
     const transaction = this.transactionFactory.createNativeTransaction({
