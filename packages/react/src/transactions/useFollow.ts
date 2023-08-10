@@ -163,7 +163,10 @@ export function useFollow({ followee, follower }: UseFollowArgs): FollowOperatio
         );
       }
 
-      invariant(followee.followStatus?.canFollow, 'You already follow this profile');
+      invariant(
+        followee.followStatus?.canFollow,
+        "You're already following this profile. Check the `followee.followStatus.canFollow` to determine if you can call `useFollow`.",
+      );
 
       const request = createFollowRequest(followee, follower);
       return follow(request);
