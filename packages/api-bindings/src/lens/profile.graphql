@@ -60,6 +60,7 @@ fragment ProfileFields on Profile {
   handle
   ownedBy
   interests
+  followNftAddress
 
   picture {
     ... on NftImage {
