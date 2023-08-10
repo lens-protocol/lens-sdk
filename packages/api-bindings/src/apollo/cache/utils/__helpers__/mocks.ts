@@ -3,9 +3,9 @@ import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 
 import { Cursor, CursorBasedPaginatedResult, FragmentPaginatedResultInfo } from '../../../../lens';
-import { mockPaginatedResultInfo } from '../../../../mocks';
+import { mockPaginatedResultInfo } from '../../../../lens/__helpers__/fragments';
 
-export const GetHeroDocument = gql`
+export const AnyPaginatedQueryDocument = gql`
   query GetHero($cursor: String!) {
     result: hero(cursor: $cursor) {
       items {
@@ -19,41 +19,41 @@ export const GetHeroDocument = gql`
   ${FragmentPaginatedResultInfo}
 `;
 
-type Hero = {
+type AnyPaginatedItem = {
   name: string;
 };
 
-export type GetHeroVariables = {
+export type AnyPaginatedQueryVariables = {
   cursor?: string;
 };
 
-type HeroPaginatedResult = CursorBasedPaginatedResult<Hero>;
+type AnyPaginatedQueryResult = CursorBasedPaginatedResult<AnyPaginatedItem>;
 
-export type GetHeroData = {
-  result: HeroPaginatedResult;
+export type AnyPaginatedQueryData = {
+  result: AnyPaginatedQueryResult;
 };
 
-function mockHero(): Hero {
+function mockAnyPaginatedItem(): AnyPaginatedItem {
   return {
     name: faker.helpers.arrayElement(['Luke Skywalker', 'Darth Vader', 'Han Solo']),
   };
 }
 
-export function mockHeroPaginatedResult({
-  items = [mockHero()],
+export function mockAnyPaginatedQueryResult<T = AnyPaginatedItem>({
+  items = [mockAnyPaginatedItem() as T],
   next = null,
   prev = null,
 }:
   | {
-      items?: [];
+      items?: T[];
       next?: null;
       prev?: null;
     }
   | {
-      items?: [Hero];
+      items?: [T];
       next?: Cursor | null;
       prev?: Cursor | null;
-    } = {}): HeroPaginatedResult {
+    } = {}): CursorBasedPaginatedResult<T> {
   return {
     items,
     pageInfo: mockPaginatedResultInfo({
@@ -63,17 +63,17 @@ export function mockHeroPaginatedResult({
   };
 }
 
-export function mockGetHeroResponse({
-  cursor,
+export function mockAnyPaginatedQueryResponse({
+  variables = {},
   result,
 }: {
-  cursor?: Cursor;
-  result: HeroPaginatedResult;
-}): MockedResponse<GetHeroData> {
+  variables?: AnyPaginatedQueryVariables;
+  result: AnyPaginatedQueryResult;
+}): MockedResponse<AnyPaginatedQueryData> {
   return {
     request: {
-      query: GetHeroDocument,
-      variables: { cursor },
+      query: AnyPaginatedQueryDocument,
+      variables,
     },
     result: {
       data: { result },

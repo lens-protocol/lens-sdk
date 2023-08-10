@@ -764,11 +764,10 @@ export function mockPaginatedResultInfo(
 ): PaginatedResultInfo {
   return {
     __typename: 'PaginatedResultInfo',
-    // moreAfter: false,
-    // moreBefore: false,
+    moreAfter: false,
     prev: null,
     next: null,
     totalCount: null,
     ...overrides,
-  } as PaginatedResultInfo;
+  };
 }

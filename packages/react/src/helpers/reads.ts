@@ -1,6 +1,22 @@
-import { ApolloError, QueryResult as ApolloQueryResult } from '@apollo/client';
-import { PaginatedResultInfo, UnspecifiedError } from '@lens-protocol/api-bindings';
+/* eslint-disable no-console */
+import {
+  ApolloError,
+  DocumentNode,
+  LazyQueryExecFunction,
+  OperationVariables,
+  QueryResult as ApolloQueryResult,
+  useLazyQuery,
+} from '@apollo/client';
+import {
+  Cursor,
+  PaginatedResultInfo,
+  UnspecifiedError,
+  InputMaybe,
+} from '@lens-protocol/api-bindings';
 import { Prettify } from '@lens-protocol/shared-kernel';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { useSharedDependencies } from '../shared';
 
 /**
  * A discriminated union of the possible results of a read operation with no errors.
@@ -51,10 +67,9 @@ export type ReadResult<T, E = UnspecifiedError> = E extends Error
 
 function buildReadResult<T>(
   data: T | undefined,
-  loading: boolean,
   error: ApolloError | undefined,
 ): ReadResult<T, UnspecifiedError> {
-  if (data !== undefined && !loading) {
+  if (data !== undefined) {
     return {
       data,
       error: undefined,
@@ -85,8 +100,8 @@ export function useReadResult<
   T extends QueryData<R>,
   R = InferResult<T>,
   V = { [key: string]: never },
->({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
-  return buildReadResult(data?.result, loading, error);
+>({ error, data }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
+  return buildReadResult(data?.result, error);
 }
 
 export type PaginatedArgs<T> = Prettify<
@@ -105,6 +120,13 @@ export type PaginatedArgs<T> = Prettify<
  */
 export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
   /**
+   * The number of items that are available before the results set.
+   *
+   * Use this to determine if you want to offer the option of loading more items
+   * at the beginning of the list via the `prev` method.
+   */
+  beforeCount: number;
+  /**
    * Whether there are more items to fetch in the next page
    */
   hasMore: boolean;
@@ -122,8 +144,10 @@ export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
   prev: () => Promise<void>;
 };
 
+type PaginatedQueryVariables = OperationVariables & { cursor?: InputMaybe<Cursor> };
+
 export type PaginatedQueryData<K> = {
-  result: { pageInfo: PaginatedResultInfo; items: K };
+  result: { pageInfo: PaginatedResultInfo; items: K[] };
 };
 
 type InferPaginatedItemsType<T extends PaginatedQueryData<unknown>> = T extends PaginatedQueryData<
@@ -132,18 +156,72 @@ type InferPaginatedItemsType<T extends PaginatedQueryData<unknown>> = T extends 
   ? R
   : never;
 
+function useAdHocQuery<
+  TVariables extends PaginatedQueryVariables,
+  TData extends PaginatedQueryData<TItem>,
+  TItem = InferPaginatedItemsType<TData>,
+>(query: DocumentNode): LazyQueryExecFunction<TData, TVariables> {
+  const { apolloClient } = useSharedDependencies();
+  const [fetch] = useLazyQuery<TData, TVariables>(query, {
+    fetchPolicy: 'no-cache',
+    client: apolloClient,
+  });
+
+  return fetch;
+}
+
 export function usePaginatedReadResult<
-  V,
-  T extends PaginatedQueryData<K>,
-  K = InferPaginatedItemsType<T>,
->({ error, data, loading, fetchMore }: ApolloQueryResult<T, V>): PaginatedReadResult<K> {
+  TVariables extends PaginatedQueryVariables,
+  TData extends PaginatedQueryData<TItem>,
+  TItem = InferPaginatedItemsType<TData>,
+>({
+  error,
+  data,
+  loading,
+  fetchMore,
+  variables,
+  observable,
+}: ApolloQueryResult<TData, TVariables>): PaginatedReadResult<TItem[]> {
+  const fetch = useAdHocQuery<TVariables, TData, TItem>(observable.query);
+  const cachedData = useRef(data).current;
+
+  const [beforeCount, setBeforeCount] = useState(0);
+
+  const probeForNewerResults = useCallback(
+    async function (prev: Cursor) {
+      const response = await fetch({
+        variables: {
+          ...variables,
+          cursor: prev,
+        } as TVariables,
+      });
+
+      if (response.data) {
+        setBeforeCount(response.data.result.items.length);
+      }
+    },
+    [fetch, variables],
+  );
+
+  useEffect(() => {
+    if (cachedData?.result.pageInfo.prev) {
+      void probeForNewerResults(cachedData.result.pageInfo.prev);
+    }
+  }, [cachedData, probeForNewerResults]);
+
   return {
-    ...buildReadResult<K>(data?.result.items, loading, error),
+    ...buildReadResult(data?.result.items, error),
+
+    beforeCount,
 
     hasMore: data?.result.pageInfo.moreAfter ?? false,
 
     next: async () => {
-      if (data?.result.pageInfo.next) {
+      if (loading) {
+        console.warn('Cannot fetch next page while loading, this is a no-op.');
+        return;
+      }
+      if (!loading && data?.result.pageInfo.next) {
         await fetchMore({
           variables: {
             cursor: data.result.pageInfo.next,
@@ -153,12 +231,17 @@ export function usePaginatedReadResult<
     },
 
     prev: async () => {
-      if (data?.result.pageInfo.prev) {
+      if (loading) {
+        console.warn('Cannot fetch previous page while loading, this is a no-op.');
+        return;
+      }
+      if (!loading && data?.result.pageInfo.prev) {
         await fetchMore({
           variables: {
             cursor: data.result.pageInfo.prev,
           },
         });
+        setBeforeCount(0);
       }
     },
   };

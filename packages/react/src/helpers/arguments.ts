@@ -1,4 +1,4 @@
-import { OperationVariables } from '@apollo/client';
+import { OperationVariables, WatchQueryFetchPolicy } from '@apollo/client';
 import {
   createSnapshotApolloClient,
   MediaTransformParams,
@@ -73,6 +73,8 @@ export type WithObserverIdOverride<TVariables = unknown> = Prettify<
 export type UseActiveProfileAsDefaultObserverArgs<TVariables> = {
   skip?: boolean;
   variables: WithObserverIdOverride<TVariables>;
+  fetchPolicy?: WatchQueryFetchPolicy;
+  nextFetchPolicy?: WatchQueryFetchPolicy;
 };
 
 export type UseActiveProfileAsDefaultObserverResultVariables<TVariables> = TVariables & {

@@ -1,6 +1,7 @@
 import { QueryHookOptions, StoreValue, useQuery } from '@apollo/client';
 import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
+import { Cursor } from './Cursor';
 import { MediaTransformParams } from './ImageSizeTransform';
 import {
   Comment,
@@ -49,7 +50,7 @@ export type GetCommentsVariables = Exact<{
   commentsOf: PublicationId;
   limit: number;
   sources: Sources;
-  cursor?: string;
+  cursor?: InputMaybe<Cursor>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
   observerId?: InputMaybe<ProfileId>;
   mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;

@@ -1,4 +1,4 @@
-import { AnyPublication } from '@lens-protocol/api-bindings';
+import { MockedResponse } from '@apollo/client/testing';
 import {
   mockLensApolloClient,
   mockPostFragment,
@@ -7,9 +7,8 @@ import {
   simulateAuthenticatedProfile,
   simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
-import { ProfileId } from '@lens-protocol/domain/entities';
 import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
-import { waitFor } from '@testing-library/react';
+import { RenderHookResult, waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
@@ -17,36 +16,26 @@ import {
   defaultMediaTransformsConfig,
   mediaTransformConfigToQueryVariables,
 } from '../../mediaTransforms';
-import { usePublication, UsePublicationArgs } from '../usePublication';
+import { usePublication } from '../usePublication';
 
-function setupTestScenario({
-  expectedObserverId,
-  publication,
-  publicationId,
-  observerId,
-}: UsePublicationArgs & {
-  expectedObserverId?: ProfileId;
-  publication: AnyPublication | null;
-}) {
-  const sources = mockSources();
+const sources = mockSources();
 
-  return renderHookWithMocks(() => usePublication({ publicationId, observerId }), {
-    mocks: {
-      sources,
-      mediaTransforms: defaultMediaTransformsConfig,
-      apolloClient: mockLensApolloClient([
-        mockGetPublicationResponse({
-          variables: {
-            request: { publicationId },
-            sources,
-            observerId: expectedObserverId ?? null,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
-          },
-          publication,
-        }),
-      ]),
+function setupTestScenario(mocks: MockedResponse[]) {
+  const client = mockLensApolloClient(mocks);
+
+  return {
+    renderHook<TProps, TResult>(
+      callback: (props: TProps) => TResult,
+    ): RenderHookResult<TResult, TProps> {
+      return renderHookWithMocks(callback, {
+        mocks: {
+          sources,
+          mediaTransforms: defaultMediaTransformsConfig,
+          apolloClient: client,
+        },
+      });
     },
-  });
+  };
 }
 
 describe(`Given the ${usePublication.name} hook`, () => {
@@ -57,59 +46,154 @@ describe(`Given the ${usePublication.name} hook`, () => {
     simulateNotAuthenticated();
   });
 
-  describe.each([
-    {
-      precondition: 'and NO Active Profile set',
-      activeProfileValue: null,
-    },
-    {
-      precondition: 'and an Active Profile set',
-      activeProfileValue: mockProfile(),
-    },
-  ])('$precondition', ({ activeProfileValue }) => {
+  describe('when the queried publication exists', () => {
+    const { renderHook } = setupTestScenario([
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId: null,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication,
+      }),
+    ]);
+
+    it('should settle with the publication data', async () => {
+      const { result } = renderHook(() => usePublication({ publicationId: publication.id }));
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toMatchObject(expectations);
+    });
+  });
+
+  describe('when a session with an Active Profile is set', () => {
+    const activeProfile = mockProfile();
+    const { renderHook } = setupTestScenario([
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId: activeProfile.id,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication,
+      }),
+    ]);
+
     beforeAll(() => {
-      if (activeProfileValue) {
-        simulateAuthenticatedProfile(activeProfileValue);
-      }
+      simulateAuthenticatedProfile(activeProfile);
     });
 
-    describe('when the query returns data successfully', () => {
-      it('should settle with the publication data', async () => {
-        const { result } = setupTestScenario({
-          publicationId: publication.id,
-          expectedObserverId: activeProfileValue?.id,
-          publication,
-        });
+    afterAll(() => {
+      simulateNotAuthenticated();
+    });
 
-        await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toMatchObject(expectations);
-      });
+    it('should use the Active Profile as the queried publication observer', async () => {
+      const { result } = renderHook(() => usePublication({ publicationId: publication.id }));
 
-      it('should allow to specify the "observerId" on a per-call basis', async () => {
-        const observerId = mockProfileId();
-        const { result } = setupTestScenario({
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toMatchObject(expectations);
+    });
+  });
+
+  describe('when an "observerId" is provided', () => {
+    const observerId = mockProfileId();
+    const { renderHook } = setupTestScenario([
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication,
+      }),
+    ]);
+
+    it('should use it as the queried publication observer', async () => {
+      const { result } = renderHook(() =>
+        usePublication({
           publicationId: publication.id,
           observerId,
-          expectedObserverId: observerId,
-          publication,
-        });
+        }),
+      );
 
-        await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toMatchObject(expectations);
-      });
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toMatchObject(expectations);
     });
+  });
 
-    describe('when the query returns null', () => {
-      it(`should settle with a ${NotFoundError.name} state`, async () => {
-        const { result } = setupTestScenario({
-          publicationId: publication.id,
-          expectedObserverId: activeProfileValue?.id,
-          publication: null,
-        });
+  describe(`when re-rendered`, () => {
+    const { renderHook } = setupTestScenario([
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId: null,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication: mockPostFragment({ id: publication.id }),
+      }),
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId: null,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication,
+      }),
+    ]);
 
-        await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.error).toBeInstanceOf(NotFoundError);
+    it(`should return cached data and then update it with fresh data from the API`, async () => {
+      const first = renderHook(() => usePublication({ publicationId: publication.id }));
+      await waitFor(() => expect(first.result.current.loading).toBeFalsy());
+
+      const second = renderHook(() => usePublication({ publicationId: publication.id }));
+
+      expect(second.result.current).toMatchObject({
+        data: expectations,
+        loading: false,
       });
+      await waitFor(() =>
+        expect(first.result.current.data).toMatchObject({
+          stats: publication.stats,
+        }),
+      );
+    });
+  });
+
+  describe('when the queried publication does not exist', () => {
+    const { renderHook } = setupTestScenario([
+      mockGetPublicationResponse({
+        variables: {
+          request: {
+            publicationId: publication.id,
+          },
+          sources,
+          observerId: null,
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+        },
+        publication: null,
+      }),
+    ]);
+
+    it(`should settle with a ${NotFoundError.name} state`, async () => {
+      const { result } = renderHook(() => usePublication({ publicationId: publication.id }));
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.error).toBeInstanceOf(NotFoundError);
     });
   });
 });

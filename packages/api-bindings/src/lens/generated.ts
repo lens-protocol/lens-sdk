@@ -2197,7 +2197,6 @@ export type CommentBase = {
 
 export type PaginatedResultInfo = {
   __typename: 'PaginatedResultInfo';
-  beforeCount: number;
   moreAfter: boolean;
   prev: Cursor | null;
   next: Cursor | null;
@@ -3335,7 +3334,6 @@ export const FragmentCreateCommentEip712TypedData = /*#__PURE__*/ gql`
 export const FragmentPaginatedResultInfo = /*#__PURE__*/ gql`
   fragment PaginatedResultInfo on PaginatedResultInfo {
     __typename
-    beforeCount @client
     moreAfter @client
     prev
     next
@@ -10491,7 +10489,6 @@ export type PaginatedPublicationResultFieldPolicy = {
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PaginatedResultInfoKeySpecifier = (
-  | 'beforeCount'
   | 'moreAfter'
   | 'next'
   | 'prev'
@@ -10499,7 +10496,6 @@ export type PaginatedResultInfoKeySpecifier = (
   | PaginatedResultInfoKeySpecifier
 )[];
 export type PaginatedResultInfoFieldPolicy = {
-  beforeCount?: FieldPolicy<any> | FieldReadFunction<any>;
   moreAfter?: FieldPolicy<any> | FieldReadFunction<any>;
   next?: FieldPolicy<any> | FieldReadFunction<any>;
   prev?: FieldPolicy<any> | FieldReadFunction<any>;

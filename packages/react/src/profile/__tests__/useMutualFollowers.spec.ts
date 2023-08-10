@@ -19,7 +19,8 @@ describe('Given the useMutualFollowers hook', () => {
   const observer = mockProfileFragment();
   const viewingProfile = mockProfileFragment();
 
-  const mockProfiles = [mockProfileFragment()];
+  const profiles = [mockProfileFragment()];
+  const expectations = profiles.map(({ __typename, id }) => ({ __typename, id }));
 
   describe('when the query returns data successfully', () => {
     it('should return mutual followers profiles', async () => {
@@ -42,7 +43,7 @@ describe('Given the useMutualFollowers hook', () => {
                   sources,
                   ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
                 },
-                profiles: mockProfiles,
+                profiles,
               }),
             ]),
           },
@@ -51,7 +52,7 @@ describe('Given the useMutualFollowers hook', () => {
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
 
-      expect(result.current.data).toEqual(mockProfiles);
+      expect(result.current.data).toMatchObject(expectations);
     });
   });
 });
