@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import {
   ApolloError,
+  DocumentNode,
+  LazyQueryExecFunction,
   OperationVariables,
   QueryResult as ApolloQueryResult,
   useLazyQuery,
@@ -65,10 +67,9 @@ export type ReadResult<T, E = UnspecifiedError> = E extends Error
 
 function buildReadResult<T>(
   data: T | undefined,
-  loading: boolean,
   error: ApolloError | undefined,
 ): ReadResult<T, UnspecifiedError> {
-  if (data !== undefined && !loading) {
+  if (data !== undefined) {
     return {
       data,
       error: undefined,
@@ -99,8 +100,8 @@ export function useReadResult<
   T extends QueryData<R>,
   R = InferResult<T>,
   V = { [key: string]: never },
->({ error, data, loading }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
-  return buildReadResult(data?.result, loading, error);
+>({ error, data }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
+  return buildReadResult(data?.result, error);
 }
 
 export type PaginatedArgs<T> = Prettify<
@@ -143,6 +144,8 @@ export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
   prev: () => Promise<void>;
 };
 
+type PaginatedQueryVariables = OperationVariables & { cursor?: InputMaybe<Cursor> };
+
 export type PaginatedQueryData<K> = {
   result: { pageInfo: PaginatedResultInfo; items: K[] };
 };
@@ -153,8 +156,22 @@ type InferPaginatedItemsType<T extends PaginatedQueryData<unknown>> = T extends 
   ? R
   : never;
 
+function useAdHocQuery<
+  TVariables extends PaginatedQueryVariables,
+  TData extends PaginatedQueryData<TItem>,
+  TItem = InferPaginatedItemsType<TData>,
+>(query: DocumentNode): LazyQueryExecFunction<TData, TVariables> {
+  const { apolloClient } = useSharedDependencies();
+  const [fetch] = useLazyQuery<TData, TVariables>(query, {
+    fetchPolicy: 'no-cache',
+    client: apolloClient,
+  });
+
+  return fetch;
+}
+
 export function usePaginatedReadResult<
-  TVariables extends OperationVariables & { cursor?: InputMaybe<Cursor> },
+  TVariables extends PaginatedQueryVariables,
   TData extends PaginatedQueryData<TItem>,
   TItem = InferPaginatedItemsType<TData>,
 >({
@@ -165,19 +182,14 @@ export function usePaginatedReadResult<
   variables,
   observable,
 }: ApolloQueryResult<TData, TVariables>): PaginatedReadResult<TItem[]> {
-  const { apolloClient } = useSharedDependencies();
+  const fetch = useAdHocQuery<TVariables, TData, TItem>(observable.query);
   const cachedData = useRef(data).current;
-
-  const [fetchNewerResult] = useLazyQuery<TData, TVariables>(observable.query, {
-    fetchPolicy: 'no-cache',
-    client: apolloClient,
-  });
 
   const [beforeCount, setBeforeCount] = useState(0);
 
   const probeForNewerResults = useCallback(
     async function (prev: Cursor) {
-      const response = await fetchNewerResult({
+      const response = await fetch({
         variables: {
           ...variables,
           cursor: prev,
@@ -188,7 +200,7 @@ export function usePaginatedReadResult<
         setBeforeCount(response.data.result.items.length);
       }
     },
-    [fetchNewerResult, variables],
+    [fetch, variables],
   );
 
   useEffect(() => {
@@ -198,7 +210,7 @@ export function usePaginatedReadResult<
   }, [cachedData, probeForNewerResults]);
 
   return {
-    ...buildReadResult(data?.result.items, loading, error),
+    ...buildReadResult(data?.result.items, error),
 
     beforeCount,
 
