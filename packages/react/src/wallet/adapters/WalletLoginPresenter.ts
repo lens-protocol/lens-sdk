@@ -1,7 +1,7 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import { ProfileIdentifier } from '@lens-protocol/domain/use-cases/lifecycle';
 import { IWalletLoginPresenter, LoginError } from '@lens-protocol/domain/use-cases/wallets';
-import { Result, success } from '@lens-protocol/shared-kernel';
+import { failure, Result, success } from '@lens-protocol/shared-kernel';
 
 import { IProfileCacheManager } from '../../transactions/adapters/IProfileCacheManager';
 import { PromiseResultPresenter } from '../../transactions/adapters/PromiseResultPresenter';
@@ -25,6 +25,6 @@ export class WalletLoginPresenter
       return super.present(success(profile));
     }
 
-    return super.present(result);
+    return super.present(failure(result.error));
   }
 }

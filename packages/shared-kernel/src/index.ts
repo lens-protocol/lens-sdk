@@ -20,3 +20,4 @@ export * from './ts-helpers/nonNullable';
 export * from './ts-helpers/types';
 export * from './ts-helpers/isInEnum';
 export * from './omitDeep';
+export * from './maybe';
