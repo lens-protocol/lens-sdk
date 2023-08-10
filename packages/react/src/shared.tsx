@@ -144,7 +144,12 @@ export function createSharedDependencies(
     contentMatchers: [config.environment.snapshot.matcher],
   });
   const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
+  const profileCacheManager = new ProfileCacheManager(
+    apolloClient,
+    sources,
+    mediaTransforms,
+    config.environment.handleResolver,
+  );
 
   // adapters
   const providerFactory = new ProviderFactory(config.bindings, config.environment.chains);
@@ -182,10 +187,7 @@ export function createSharedDependencies(
       sources,
       mediaTransforms,
     ),
-    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(
-      profileCacheManager,
-      config.environment.handleResolver,
-    ),
+    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(profileCacheManager),
     [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
     [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
       apolloClient,
@@ -209,7 +211,7 @@ export function createSharedDependencies(
 
   // common interactors
   const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
-  const transactionQueue = new TransactionQueue(
+  const transactionQueue = TransactionQueue.create(
     responders,
     transactionGateway,
     transactionQueuePresenter,

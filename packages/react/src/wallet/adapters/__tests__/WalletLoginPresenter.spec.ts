@@ -1,19 +1,10 @@
 import { Profile } from '@lens-protocol/api-bindings';
-import {
-  mockLensApolloClient,
-  mockGetProfileResponse,
-  mockProfileFragment,
-  mockSources,
-} from '@lens-protocol/api-bindings/mocks';
+import { mockProfileFragment } from '@lens-protocol/api-bindings/mocks';
 import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protocol/domain/entities';
 import { mockProfileIdentifier } from '@lens-protocol/domain/mocks';
 import { failure, success } from '@lens-protocol/shared-kernel';
 
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../../mediaTransforms';
-import { ProfileCacheManager } from '../../../transactions/infrastructure/ProfileCacheManager';
+import { mockIProfileCacheManager } from '../../../transactions/adapters/__helpers__/mocks';
 import { WalletLoginPresenter } from '../WalletLoginPresenter';
 
 type SetupTestScenarioArgs = {
@@ -21,23 +12,7 @@ type SetupTestScenarioArgs = {
 };
 
 function setupTestScenario({ profile }: SetupTestScenarioArgs) {
-  const sources = mockSources();
-  const mediaTransforms = defaultMediaTransformsConfig;
-  const apolloClient = mockLensApolloClient([
-    mockGetProfileResponse({
-      profile,
-      variables: {
-        request: {
-          profileId: profile.id,
-        },
-        observerId: null,
-        sources,
-        ...mediaTransformConfigToQueryVariables(mediaTransforms),
-      },
-    }),
-  ]);
-
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
+  const profileCacheManager = mockIProfileCacheManager(profile);
   return new WalletLoginPresenter(profileCacheManager);
 }
 

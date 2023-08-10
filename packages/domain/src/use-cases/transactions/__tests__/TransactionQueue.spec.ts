@@ -20,6 +20,7 @@ import {
   TransactionQueue,
   TransactionResponders,
 } from '../TransactionQueue';
+import { mockITransactionCompletionPresenter } from '../__helpers__/mocks';
 
 function mockResponders<T extends AnyTransactionRequestModel>(
   mocks: Partial<TransactionResponders<T>>,
@@ -38,25 +39,15 @@ function setupTestScenario<T extends AnyTransactionRequestModel>({
   const transactionGateway = mock<IPendingTransactionGateway<T>>();
   const transactionQueuePresenter = mock<ITransactionQueuePresenter<T>>();
 
-  const transactionQueue = new TransactionQueue(
+  const transactionQueue = TransactionQueue.create(
     responders,
     transactionGateway,
     transactionQueuePresenter,
   );
 
-  const waitForPrepare = async () => {
-    await waitFor(() => {
-      expect(responder.prepare).toHaveBeenCalled();
-    });
-  };
   const waitForCommit = async () => {
     await waitFor(() => {
       expect(responder.commit).toHaveBeenCalled();
-    });
-  };
-  const waitForRollback = async () => {
-    await waitFor(() => {
-      expect(responder.rollback).toHaveBeenCalled();
     });
   };
 
@@ -66,8 +57,6 @@ function setupTestScenario<T extends AnyTransactionRequestModel>({
     transactionQueue,
     transactionQueuePresenter,
     waitForCommit,
-    waitForPrepare,
-    waitForRollback,
   };
 }
 const request = mockCreatePostRequest();
@@ -95,10 +84,11 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
         - persist the transaction via the transactions gateway
         - wait for any transaction event
         - store and present the updated transaction data`, async () => {
-      const { transactionGateway, transactionQueue, transactionQueuePresenter, waitForCommit } =
-        setupTestScenario({
+      const { transactionGateway, transactionQueue, transactionQueuePresenter } = setupTestScenario(
+        {
           request,
-        });
+        },
+      );
 
       const transaction = MockedMetaTransaction.fromRawData(
         { request, hash: mockTransactionHash() },
@@ -110,9 +100,11 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
           ],
         },
       );
-      await transactionQueue.push(transaction);
 
-      await waitForCommit();
+      const completion = mockITransactionCompletionPresenter();
+      await transactionQueue.push(transaction, completion);
+      await completion.waitForSuccess();
+
       const expectedTxData = {
         id: transaction.id,
         request: transaction.request,
@@ -130,15 +122,10 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
           - delete the transaction from underlying storage via the transactions gateway
           - invoke the corresponding responder "commit"
           - present the settled transaction data`, async () => {
-        const {
-          responder,
-          transactionGateway,
-          transactionQueue,
-          transactionQueuePresenter,
-          waitForCommit,
-        } = setupTestScenario({
-          request,
-        });
+        const { responder, transactionGateway, transactionQueue, transactionQueuePresenter } =
+          setupTestScenario({
+            request,
+          });
 
         const transaction = MockedMetaTransaction.fromRawData(
           { request },
@@ -149,9 +136,10 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
             ],
           },
         );
-        await transactionQueue.push(transaction);
+        const completion = mockITransactionCompletionPresenter();
+        await transactionQueue.push(transaction, completion);
+        await completion.waitForSuccess();
 
-        await waitForCommit();
         const expectedTxData = {
           id: transaction.id,
           request: transaction.request,
@@ -169,15 +157,10 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
           - invoke the corresponding responder "rollback"
           - present the error with the failed transaction data`, async () => {
         const error = new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
-        const {
-          responder,
-          transactionGateway,
-          transactionQueue,
-          transactionQueuePresenter,
-          waitForRollback,
-        } = setupTestScenario({
-          request,
-        });
+        const { responder, transactionGateway, transactionQueue, transactionQueuePresenter } =
+          setupTestScenario({
+            request,
+          });
 
         const transaction = MockedMetaTransaction.fromRawData(
           { request },
@@ -190,14 +173,15 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
             ],
           },
         );
-        await transactionQueue.push(transaction);
+        const completion = mockITransactionCompletionPresenter();
+        await transactionQueue.push(transaction, completion);
+        await completion.waitForFailure();
 
         const expectedTxData = {
           id: transaction.id,
           request: transaction.request,
           txHash: transaction.hash,
         };
-        await waitForRollback();
         expect(responder.rollback).toHaveBeenCalledWith(expectedTxData);
         expect(transactionGateway.remove).toHaveBeenCalledWith(transaction.id);
         expect(transactionQueuePresenter.failed).toHaveBeenCalledWith(error, expectedTxData);
@@ -205,7 +189,7 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
     });
   });
 
-  describe(`when resuming the queue from long term storage`, () => {
+  describe(`when invoking "${TransactionQueue.prototype.resume.name}" method`, () => {
     const txHash = mockTransactionHash();
     const transaction = MockedMetaTransaction.fromRawData(
       { request },
@@ -229,24 +213,16 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
       });
       transactionGateway.getAll.mockResolvedValue([transaction]);
 
-      const expectedBroadcastedTxData = {
-        id: transaction.id,
-        request,
-        txHash: transaction.hash,
-      };
-
-      await transactionQueue.init();
-
-      expect(responder.prepare).toHaveBeenCalledWith(expectedBroadcastedTxData);
-      expect(transactionQueuePresenter.pending).toHaveBeenCalledWith(expectedBroadcastedTxData);
+      await transactionQueue.resume();
 
       await waitForCommit();
-
       const expectedTxData = {
         id: transaction.id,
         request: transaction.request,
-        txHash: transaction.hash,
+        txHash: expect.any(String),
       };
+      expect(responder.prepare).toHaveBeenCalledWith(expectedTxData);
+      expect(transactionQueuePresenter.pending).toHaveBeenCalledWith(expectedTxData);
       expect(responder.commit).toHaveBeenCalledWith(expectedTxData);
       expect(transactionGateway.remove).toHaveBeenCalledWith(transaction.id);
       expect(transactionQueuePresenter.settled).toHaveBeenCalledWith(expectedTxData);
@@ -256,28 +232,19 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
   describe('when new transactions are emitted from the transactions gateway', () => {
     const transaction = MockedMetaTransaction.fromRawData({ request });
 
-    it(`should:
-        - subscribe to new transactions emitted by the transactions gateway
-        - present the transaction data to the user
-        - wait for the transaction to complete and execute the expected logic a normal`, async () => {
-      const {
-        responder,
-        transactionGateway,
-        transactionQueue,
-        transactionQueuePresenter,
-        waitForCommit,
-        waitForPrepare,
-      } = setupTestScenario({
-        request,
-      });
+    it(`should handle the transactions as they were to be generated in the current thread`, async () => {
+      const { responder, transactionGateway, transactionQueuePresenter, waitForCommit } =
+        setupTestScenario({
+          request,
+        });
       transactionGateway.getAll.mockResolvedValue([]);
-      await transactionQueue.init();
 
       transactionGateway.subscribe.mock.calls.forEach(([cb]) => {
         cb([transaction]);
       });
 
-      await waitForPrepare();
+      await waitForCommit();
+
       const expectedTxData = {
         id: transaction.id,
         request: transaction.request,
@@ -286,22 +253,20 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
       expect(responder.prepare).toHaveBeenCalledWith(expectedTxData);
       expect(transactionQueuePresenter.pending).toHaveBeenCalledTimes(1);
       expect(transactionQueuePresenter.pending).toHaveBeenCalledWith(expectedTxData);
-
-      await waitForCommit();
       expect(responder.commit).toHaveBeenCalledWith(expectedTxData);
       expect(transactionGateway.remove).toHaveBeenCalledWith(transaction.id);
       expect(transactionQueuePresenter.settled).toHaveBeenCalledWith(expectedTxData);
     });
 
     it('should avoid update loops with other threads by not re-saving straightaway the transaction back into the storage', async () => {
-      const { transactionGateway, transactionQueue, waitForCommit } = setupTestScenario({
+      const { transactionGateway } = setupTestScenario({
         request,
       });
-      transactionGateway.getAll.mockResolvedValue([transaction]);
+      transactionGateway.getAll.mockResolvedValue([]);
 
-      await transactionQueue.init();
-
-      await waitForCommit();
+      transactionGateway.subscribe.mock.calls.forEach(([cb]) => {
+        cb([transaction]);
+      });
 
       expect(transactionGateway.save).not.toHaveBeenCalled();
     });

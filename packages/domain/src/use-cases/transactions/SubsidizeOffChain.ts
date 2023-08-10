@@ -7,6 +7,7 @@ import {
   IUnsignedProtocolCall,
   PendingSigningRequestError,
   ProtocolTransactionRequestModel,
+  Transaction,
   UserRejectedError,
   WalletConnectionError,
 } from '../../entities';
@@ -62,7 +63,7 @@ export class SubsidizeOffChain<T extends ProtocolTransactionRequestModel>
     }
 
     const transaction = relayResult.value;
-    await this.queue.push(transaction);
+    await this.queue.push(transaction as Transaction<T>);
 
     this.presenter.present(success());
   }

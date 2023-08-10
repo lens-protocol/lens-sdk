@@ -4,6 +4,7 @@ import {
   mockGetProfileResponse,
   mockProfileFragment,
   mockSources,
+  simulateAuthenticatedWallet,
   simulateAuthenticatedProfile,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
@@ -18,15 +19,16 @@ import { ProfileCacheManager } from '../ProfileCacheManager';
 
 function setupTestScenario({
   profile,
-  expectedObserverId,
+  expectedObserverId = null,
   cacheEntry = profile,
   expectedRequest = { profileId: profile.id },
 }: {
   expectedRequest?: SingleProfileQueryRequest;
   cacheEntry?: Profile | null;
-  expectedObserverId?: ProfileId;
+  expectedObserverId?: ProfileId | null;
   profile: Profile;
 }) {
+  const handleResolver = (v: string) => v;
   const sources = mockSources();
   const mediaTransforms = defaultMediaTransformsConfig;
   const client = mockLensApolloClient([
@@ -34,7 +36,7 @@ function setupTestScenario({
       profile: profile,
       variables: {
         request: expectedRequest,
-        observerId: expectedObserverId ?? null,
+        observerId: expectedObserverId,
         sources,
         ...mediaTransformConfigToQueryVariables(mediaTransforms),
       },
@@ -53,7 +55,7 @@ function setupTestScenario({
     data: cacheEntry,
   });
 
-  const manager = new ProfileCacheManager(client, sources, mediaTransforms);
+  const manager = new ProfileCacheManager(client, sources, mediaTransforms, handleResolver);
 
   return {
     manager,
@@ -72,79 +74,99 @@ describe(`Given an instance of the ${ProfileCacheManager.name}`, () => {
   const profile = mockProfileFragment();
   const expectations = { __typename: 'Profile', id: profile.id };
 
-  describe.each([
-    {
-      precondition: 'and NO Active Profile set',
-      activeProfileValue: null,
-    },
-    {
-      precondition: 'and an Active Profile set',
-      activeProfileValue: mockProfile(),
-    },
-  ])('$precondition', ({ activeProfileValue }) => {
+  describe(`when invoking the "${ProfileCacheManager.prototype.fetchProfile.name}" method`, () => {
     beforeAll(() => {
-      if (activeProfileValue) {
-        simulateAuthenticatedProfile(activeProfileValue);
-      }
+      simulateAuthenticatedWallet();
     });
 
-    describe(`when invoking the "${ProfileCacheManager.prototype.fetchProfile.name}" method`, () => {
-      it('should allow to query by profile Id', async () => {
-        const { manager } = setupTestScenario({
-          profile,
-          expectedObserverId: activeProfileValue?.id,
-        });
+    it('should allow to query by profile Id', async () => {
+      const { manager } = setupTestScenario({ profile });
 
-        const actual = await manager.fetchProfile({ id: profile.id });
+      const actual = await manager.fetchProfile(profile.id);
 
-        expect(actual).toMatchObject(expectations);
-      });
-
-      it('should allow to query by profile handle', async () => {
-        const { manager } = setupTestScenario({
-          profile,
-          expectedRequest: { handle: profile.handle },
-          expectedObserverId: activeProfileValue?.id,
-        });
-
-        const actual = await manager.fetchProfile({ handle: profile.handle });
-
-        expect(actual).toMatchObject(expectations);
-      });
+      expect(actual).toMatchObject(expectations);
     });
 
-    describe(`when invoking the "${ProfileCacheManager.prototype.refreshProfile.name}" method`, () => {
-      it('should update the cache with fresh data from the API', async () => {
-        const cacheEntry = mockProfileFragment({
-          id: profile.id,
-          handle: profile.handle,
-          ownedBy: profile.ownedBy,
-        });
+    it('should use the Active Profile if available as observerId', async () => {
+      const activeProfile = mockProfile();
+      simulateAuthenticatedProfile(activeProfile);
 
-        const scenario = setupTestScenario({
-          profile,
-          cacheEntry,
-          expectedObserverId: activeProfileValue?.id,
-        });
-
-        const actual = await scenario.manager.refreshProfile(profile.id);
-
-        expect(scenario.profileFromCache).toMatchObject(expectations);
-        expect(actual).toMatchObject(expectations);
+      const { manager } = setupTestScenario({
+        profile,
+        expectedObserverId: activeProfile.id,
       });
 
-      it('should update the cache even if the initial cache entry is null', async () => {
-        const scenario = setupTestScenario({
-          profile,
-          cacheEntry: null,
-          expectedObserverId: activeProfileValue?.id,
-        });
+      const actual = await manager.fetchProfile(profile.id);
 
-        const actual = await scenario.manager.refreshProfile(profile.id);
+      expect(actual).toMatchObject(expectations);
+    });
+  });
 
-        expect(scenario.profileFromCache).toMatchObject(expectations);
-        expect(actual).toMatchObject(expectations);
+  describe(`when invoking the "${ProfileCacheManager.prototype.fetchNewProfile.name}" method`, () => {
+    beforeAll(() => {
+      simulateAuthenticatedWallet();
+    });
+
+    it('should allow to query by profile handle', async () => {
+      const { manager } = setupTestScenario({
+        profile,
+        expectedRequest: { handle: profile.handle },
       });
+
+      const actual = await manager.fetchNewProfile(profile.handle);
+
+      expect(actual).toMatchObject(expectations);
+    });
+
+    it('should use the Active Profile if available as observerId', async () => {
+      const activeProfile = mockProfile();
+      simulateAuthenticatedProfile(activeProfile);
+
+      const { manager } = setupTestScenario({
+        profile,
+        expectedRequest: { handle: profile.handle },
+        expectedObserverId: activeProfile.id,
+      });
+
+      const actual = await manager.fetchNewProfile(profile.handle);
+
+      expect(actual).toMatchObject(expectations);
+    });
+  });
+
+  describe(`when invoking the "${ProfileCacheManager.prototype.refreshProfile.name}" method`, () => {
+    beforeAll(() => {
+      simulateAuthenticatedWallet();
+    });
+
+    it('should update the cache with fresh data from the API', async () => {
+      const cacheEntry = mockProfileFragment({
+        id: profile.id,
+        handle: profile.handle,
+        ownedBy: profile.ownedBy,
+      });
+
+      const scenario = setupTestScenario({
+        profile,
+        cacheEntry,
+      });
+
+      const actual = await scenario.manager.refreshProfile(profile.id);
+
+      expect(scenario.profileFromCache).toMatchObject(expectations);
+      expect(actual).toMatchObject(expectations);
+    });
+
+    it('should update the cache even if the initial cache entry is null', async () => {
+      const scenario = setupTestScenario({
+        profile,
+        cacheEntry: null,
+      });
+
+      const actual = await scenario.manager.refreshProfile(profile.id);
+
+      expect(scenario.profileFromCache).toMatchObject(expectations);
+      expect(actual).toMatchObject(expectations);
     });
   });
 

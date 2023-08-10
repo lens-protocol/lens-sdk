@@ -101,7 +101,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
 
         expect(credentialsGateway.save).toHaveBeenCalledWith(newCredentials);
         expect(sessionPresenter.authenticated).toHaveBeenCalledWith(wallet, profile);
-        expect(transactionQueue.init).toHaveBeenCalled();
+        expect(transactionQueue.resume).toHaveBeenCalled();
       });
 
       it(`should execute the ${WalletLogout.name} interactor with ${LogoutReason.CREDENTIALS_EXPIRED} reason`, async () => {

@@ -1,18 +1,20 @@
 import { IObservableStorageProvider, StorageProviderSubscriber } from '@lens-protocol/storage';
 
+import { window } from './globals';
+
 class LocalStorageProvider implements IObservableStorageProvider {
   private subscribers = new Map<string, StorageProviderSubscriber[]>();
 
   getItem(key: string) {
-    return window.localStorage.getItem(key);
+    return window?.localStorage.getItem(key) ?? null;
   }
 
   setItem(key: string, value: string) {
-    window.localStorage.setItem(key, value);
+    window?.localStorage.setItem(key, value);
   }
 
   removeItem(key: string) {
-    window.localStorage.removeItem(key);
+    window?.localStorage.removeItem(key);
   }
 
   subscribe(key: string, subscriber: StorageProviderSubscriber) {
@@ -48,7 +50,7 @@ class LocalStorageProvider implements IObservableStorageProvider {
   }
 
   private onStorageEvent = (event: StorageEvent) => {
-    if (event.storageArea !== window.localStorage) {
+    if (event.storageArea !== window?.localStorage) {
       return;
     }
 
@@ -59,11 +61,11 @@ class LocalStorageProvider implements IObservableStorageProvider {
   };
 
   private listenToStorageEvent() {
-    window.addEventListener('storage', this.onStorageEvent);
+    window?.addEventListener('storage', this.onStorageEvent);
   }
 
   private stopListeningToStorageEvent() {
-    window.removeEventListener('storage', this.onStorageEvent);
+    window?.removeEventListener('storage', this.onStorageEvent);
   }
 }
 

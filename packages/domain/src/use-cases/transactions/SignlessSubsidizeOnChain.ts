@@ -4,6 +4,7 @@ import {
   ProtocolTransactionRequestModel,
   ProxyTransaction,
   AnyTransactionRequestModel,
+  Transaction,
 } from '../../entities';
 import { BroadcastingError } from './BroadcastingError';
 import { IGenericResultPresenter } from './IGenericResultPresenter';
@@ -29,7 +30,7 @@ export class SignlessSubsidizeOnChain<T extends ProtocolTransactionRequestModel>
       this.presenter.present(failure(transaction.error));
       return;
     }
-    await this.transactionQueue.push(transaction.value);
+    await this.transactionQueue.push(transaction.value as Transaction<T>);
 
     this.presenter.present(success());
   }

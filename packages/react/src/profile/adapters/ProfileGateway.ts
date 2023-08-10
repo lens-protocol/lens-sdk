@@ -32,25 +32,6 @@ export class ProfileGateway implements IProfileGateway {
     return data.result.items.map(({ id, handle }) => Profile.create({ id, handle }));
   }
 
-  async getProfileByHandle(handle: string): Promise<Profile | null> {
-    const { data } = await this.apolloClient.query<GetProfileData, GetProfileVariables>({
-      query: GetProfileDocument,
-      // 'sources' and 'observerId' are not needed. We just use 'id' and 'handle' for now.
-      variables: {
-        request: { handle },
-        ...mediaTransformConfigToQueryVariables(this.mediaTransforms),
-      },
-    });
-
-    if (data.result === null) {
-      return null;
-    }
-    return Profile.create({
-      id: data.result.id,
-      handle: data.result.handle,
-    });
-  }
-
   async getProfileById(profileId: ProfileId): Promise<Profile | null> {
     const { data } = await this.apolloClient.query<GetProfileData, GetProfileVariables>({
       query: GetProfileDocument,

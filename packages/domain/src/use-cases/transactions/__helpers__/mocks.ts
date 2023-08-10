@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { Result, success } from '@lens-protocol/shared-kernel';
+import { failure, Result, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
+import waitFor from 'wait-for-expect';
 
 import {
   IUnsignedProtocolCall,
@@ -14,6 +15,7 @@ import {
   AnyTransactionRequestModel,
   ProtocolTransactionRequestModel,
   DataTransaction,
+  TransactionError,
 } from '../../../entities';
 import { MockedProxyTransaction, mockNonce } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
@@ -161,4 +163,22 @@ export function mockProtocolTransactionRequestModelWithOffChainFlag(): ProtocolT
     kind: TransactionKind.CREATE_POST,
     offChain: true,
   } as ProtocolTransactionRequestModel;
+}
+
+export function mockITransactionCompletionPresenter() {
+  return {
+    present: jest.fn().mockResolvedValue(undefined),
+
+    async waitForSuccess() {
+      await waitFor(() => {
+        expect(this.present).toBeCalledWith(success(expect.anything()));
+      });
+    },
+
+    async waitForFailure() {
+      await waitFor(() => {
+        expect(this.present).toBeCalledWith(failure(expect.any(TransactionError)));
+      });
+    },
+  };
 }

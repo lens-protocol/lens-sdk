@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker';
-import { omitTypename } from '@lens-protocol/api-bindings';
+import { omitTypename, Profile } from '@lens-protocol/api-bindings';
 import { TypedData } from '@lens-protocol/blockchain-bindings/src/TypedData';
 import {
   ProtocolTransactionRequestModel,
   ProxyActionStatus,
   AnyTransactionRequestModel,
+  ProfileId,
 } from '@lens-protocol/domain/entities';
 import {
   mockNonce,
@@ -13,7 +14,7 @@ import {
   mockProtocolTransactionRequestModel,
 } from '@lens-protocol/domain/mocks';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { assertFailure, ChainType, Result, Url } from '@lens-protocol/shared-kernel';
+import { assertFailure, ChainType, never, Result, Url } from '@lens-protocol/shared-kernel';
 import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
@@ -21,6 +22,7 @@ import { when } from 'jest-when';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
 import { IMetadataUploader } from '../IMetadataUploader';
+import { IProfileCacheManager } from '../IProfileCacheManager';
 import {
   MetaTransactionData,
   NativeTransactionData,
@@ -162,4 +164,26 @@ export function mockSelfFundedProtocolTransactionRequest<
     encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
     ...mockAnyTransactionRequestModel(),
   } as SelfFundedProtocolTransactionRequest<TRequest>;
+}
+
+class MockedProfileCacheManager implements IProfileCacheManager {
+  constructor(profile: Profile) {
+    this.latestProfile = profile;
+  }
+
+  latestProfile: Profile;
+
+  fetchProfile = jest.fn().mockImplementation(async () => this.latestProfile);
+
+  fetchNewProfile = jest.fn().mockImplementation(async () => this.latestProfile);
+
+  refreshProfile = jest.fn().mockImplementation(async () => this.latestProfile);
+
+  updateProfile = jest.fn((_: ProfileId, updateFn: (current: Profile) => Profile) => {
+    this.latestProfile = updateFn(this.latestProfile ?? never());
+  });
+}
+
+export function mockIProfileCacheManager(profile: Profile) {
+  return new MockedProfileCacheManager(profile);
 }

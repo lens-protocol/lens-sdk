@@ -1,68 +1,19 @@
 import { faker } from '@faker-js/faker';
-import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
-import {
-  mockLensApolloClient,
-  mockGetProfileResponse,
-  mockMediaFragment,
-  mockProfileFragment,
-  mockSources,
-  mockProfilePictureMediaFragment,
-} from '@lens-protocol/api-bindings/mocks';
+import { Profile } from '@lens-protocol/api-bindings';
+import { mockProfileFragment } from '@lens-protocol/api-bindings/mocks';
 import {
   mockTransactionData,
   mockUpdateOffChainProfileImageRequest,
 } from '@lens-protocol/domain/mocks';
 
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../../../mediaTransforms';
-import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
+import { mockIProfileCacheManager } from '../../__helpers__/mocks';
 import { UpdateProfileImageResponder } from '../UpdateProfileImageResponder';
 
-type SetupTestScenarioArgs = {
-  cacheProfile: Profile;
-  responseProfile: Profile;
-};
-
-function setupTestScenario({ cacheProfile, responseProfile }: SetupTestScenarioArgs) {
-  const sources = mockSources();
-  const mediaTransforms = defaultMediaTransformsConfig;
-  const apolloClient = mockLensApolloClient([
-    mockGetProfileResponse({
-      profile: responseProfile,
-      variables: {
-        request: {
-          profileId: responseProfile.id,
-        },
-        observerId: null,
-        sources,
-        ...mediaTransformConfigToQueryVariables(mediaTransforms),
-      },
-    }),
-  ]);
-
-  apolloClient.cache.writeFragment({
-    id: apolloClient.cache.identify(cacheProfile),
-    fragment: FragmentProfile,
-    fragmentName: 'Profile',
-    data: cacheProfile,
-  });
-
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
+function setupTestScenario({ profile }: { profile: Profile }) {
+  const profileCacheManager = mockIProfileCacheManager(profile);
   const responder = new UpdateProfileImageResponder(profileCacheManager);
 
-  return {
-    responder,
-
-    get profileFromCache() {
-      return apolloClient.cache.readFragment({
-        id: apolloClient.cache.identify(cacheProfile),
-        fragment: FragmentProfile,
-        fragmentName: 'Profile',
-      });
-    },
-  };
+  return { profileCacheManager, responder };
 }
 
 describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
@@ -76,22 +27,13 @@ describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
     }),
   });
 
-  const profileWithNewImage: Profile = {
-    ...profile,
-    picture: mockProfilePictureMediaFragment({
-      original: mockMediaFragment({
-        url: newImageUrl,
-      }),
-    }),
-  };
-
   describe(`when "${UpdateProfileImageResponder.prototype.prepare.name}" method is invoked`, () => {
     it(`should update profile picture to the latest one`, async () => {
-      const scenario = setupTestScenario({ cacheProfile: profile, responseProfile: profile });
+      const { responder, profileCacheManager } = setupTestScenario({ profile });
 
-      await scenario.responder.prepare(transactionData);
+      await responder.prepare(transactionData);
 
-      expect(scenario.profileFromCache).toMatchObject({
+      expect(profileCacheManager.latestProfile).toMatchObject({
         ...profile,
         picture: {
           original: {
@@ -104,33 +46,23 @@ describe(`Given an instance of the ${UpdateProfileImageResponder.name}`, () => {
 
   describe(`when "${UpdateProfileImageResponder.prototype.commit.name}" method is invoked`, () => {
     it(`should query server again for update profile details`, async () => {
-      const scenario = setupTestScenario({
-        cacheProfile: profile,
-        responseProfile: profileWithNewImage,
-      });
+      const { responder, profileCacheManager } = setupTestScenario({ profile });
 
-      await scenario.responder.prepare(transactionData);
-      await scenario.responder.commit(transactionData);
+      await responder.prepare(transactionData);
+      await responder.commit(transactionData);
 
-      expect(scenario.profileFromCache).toMatchObject({
-        ...profile,
-        picture: {
-          original: {
-            url: newImageUrl,
-          },
-        },
-      });
+      expect(profileCacheManager.refreshProfile).toHaveBeenCalledWith(profile.id);
     });
   });
 
   describe(`when "${UpdateProfileImageResponder.prototype.rollback.name}" method is invoked`, () => {
     it(`should restore the original profile picture from the server`, async () => {
-      const scenario = setupTestScenario({ cacheProfile: profile, responseProfile: profile });
+      const { responder, profileCacheManager } = setupTestScenario({ profile });
 
-      await scenario.responder.prepare(transactionData);
-      await scenario.responder.rollback(transactionData);
+      await responder.prepare(transactionData);
+      await responder.rollback(transactionData);
 
-      expect(scenario.profileFromCache).toMatchObject(profile);
+      expect(profileCacheManager.refreshProfile).toHaveBeenCalledWith(profile.id);
     });
   });
 });

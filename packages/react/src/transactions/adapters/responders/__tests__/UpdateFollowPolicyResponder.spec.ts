@@ -1,138 +1,71 @@
-import { Profile, FragmentProfile } from '@lens-protocol/api-bindings';
-import {
-  mockLensApolloClient,
-  mockGetProfileResponse,
-  mockProfileFragment,
-  mockSources,
-} from '@lens-protocol/api-bindings/mocks';
-import { ProfileId } from '@lens-protocol/domain/entities';
+import { Profile } from '@lens-protocol/api-bindings';
+import { mockProfileFragment } from '@lens-protocol/api-bindings/mocks';
 import {
   mockTransactionData,
   mockChargeFollowConfig,
   mockUpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
 
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../../../mediaTransforms';
-import { ProfileCacheManager } from '../../../infrastructure/ProfileCacheManager';
+import { mockIProfileCacheManager } from '../../__helpers__/mocks';
 import { UpdateFollowPolicyResponder } from '../UpdateFollowPolicyResponder';
 
-function setupUpdateFollowPolicyResponder({
-  existingProfile = mockProfileFragment(),
-  updatedProfile = mockProfileFragment(),
-}: {
-  existingProfile?: Profile;
-  updatedProfile?: Profile;
-}) {
-  const sources = mockSources();
-  const mediaTransforms = defaultMediaTransformsConfig;
-  const apolloClient = mockLensApolloClient([
-    mockGetProfileResponse({
-      variables: {
-        request: { profileId: updatedProfile.id },
-        observerId: null,
-        sources,
-        ...mediaTransformConfigToQueryVariables(mediaTransforms),
-      },
-      profile: updatedProfile,
-    }),
-  ]);
-
-  apolloClient.cache.writeFragment({
-    id: apolloClient.cache.identify({
-      __typename: 'Profile',
-      id: existingProfile.id,
-    }),
-    fragment: FragmentProfile,
-    fragmentName: 'Profile',
-    data: existingProfile,
-  });
-
-  const profileCacheManager = new ProfileCacheManager(apolloClient, sources, mediaTransforms);
+function setupUpdateFollowPolicyResponder({ profile }: { profile: Profile }) {
+  const profileCacheManager = mockIProfileCacheManager(profile);
   const responder = new UpdateFollowPolicyResponder(profileCacheManager);
 
   return {
-    responder,
+    profileCacheManager,
 
-    profileFromCache(profileId: ProfileId) {
-      return apolloClient.cache.readFragment({
-        id: apolloClient.cache.identify({
-          __typename: 'Profile',
-          id: profileId,
-        }),
-        fragment: FragmentProfile,
-        fragmentName: 'Profile',
-      });
-    },
+    responder,
   };
 }
 
 describe(`Given the ${UpdateFollowPolicyResponder.name}`, () => {
-  describe(`when "${UpdateFollowPolicyResponder.prototype.prepare.name}" method is invoked with TransactionData<UpdateFollowPolicyRequest>`, () => {
+  const profile = mockProfileFragment({
+    followPolicy: {
+      type: FollowPolicyType.ANYONE,
+    },
+  });
+  const txData = mockTransactionData({
+    request: mockUpdateFollowPolicyRequest({
+      profileId: profile.id,
+      policy: mockChargeFollowConfig(),
+    }),
+  });
+
+  describe(`when "${UpdateFollowPolicyResponder.prototype.prepare.name}" method is invoked`, () => {
     it(`should update the profile's follow policy`, async () => {
-      const existingProfile = mockProfileFragment({
-        followPolicy: {
-          type: FollowPolicyType.ANYONE,
-        },
+      const { responder, profileCacheManager } = setupUpdateFollowPolicyResponder({ profile });
+
+      await responder.prepare(txData);
+
+      expect(profileCacheManager.latestProfile).toMatchObject({
+        followPolicy: txData.request.policy,
       });
-      const updatedFollowPolicy = mockChargeFollowConfig();
-
-      const scenario = setupUpdateFollowPolicyResponder({ existingProfile });
-
-      const txData = mockTransactionData({
-        request: mockUpdateFollowPolicyRequest({
-          profileId: existingProfile.id,
-          policy: updatedFollowPolicy,
-        }),
-      });
-
-      await scenario.responder.prepare(txData);
-
-      expect(scenario.profileFromCache(existingProfile.id)).toEqual(
-        expect.objectContaining({ followPolicy: updatedFollowPolicy }),
-      );
     });
   });
 
-  describe(`when "${UpdateFollowPolicyResponder.prototype.commit.name}" method is invoked with BroadcastedTransactionData<UpdateFollowPolicyRequest>`, () => {
+  describe(`when "${UpdateFollowPolicyResponder.prototype.commit.name}" method is invoked`, () => {
     it(`should update the correct Profile in the Apollo Cache`, async () => {
-      const updatedProfile = mockProfileFragment({
-        followPolicy: {
-          type: FollowPolicyType.ONLY_PROFILE_OWNERS,
-          contractAddress: mockEthereumAddress(),
-        },
-      });
-      const scenario = setupUpdateFollowPolicyResponder({ updatedProfile });
+      const { responder, profileCacheManager } = setupUpdateFollowPolicyResponder({ profile });
 
       const txData = mockTransactionData({
-        request: mockUpdateFollowPolicyRequest({ profileId: updatedProfile.id }),
+        request: mockUpdateFollowPolicyRequest({ profileId: profile.id }),
       });
-      await scenario.responder.commit(txData);
+      await responder.commit(txData);
 
-      expect(scenario.profileFromCache(updatedProfile.id)).toEqual(updatedProfile);
+      expect(profileCacheManager.refreshProfile).toHaveBeenCalledWith(profile.id);
     });
   });
 
-  describe(`when "${UpdateFollowPolicyResponder.prototype.rollback.name}" method is invoked with BroadcastedTransactionData<UpdateFollowPolicyRequest>`, () => {
+  describe(`when "${UpdateFollowPolicyResponder.prototype.rollback.name}" method is invoked`, () => {
     it(`should rollback the correct Profile in the Apollo Cache`, async () => {
-      const updatedProfile = mockProfileFragment({
-        followPolicy: {
-          type: FollowPolicyType.ONLY_PROFILE_OWNERS,
-          contractAddress: mockEthereumAddress(),
-        },
-      });
-      const scenario = setupUpdateFollowPolicyResponder({ updatedProfile });
+      const { responder, profileCacheManager } = setupUpdateFollowPolicyResponder({ profile });
 
-      const txData = mockTransactionData({
-        request: mockUpdateFollowPolicyRequest({ profileId: updatedProfile.id }),
-      });
-      await scenario.responder.rollback(txData);
+      await responder.rollback(txData);
 
-      expect(scenario.profileFromCache(updatedProfile.id)).toEqual(updatedProfile);
+      expect(profileCacheManager.refreshProfile).toHaveBeenCalledWith(profile.id);
     });
   });
 });

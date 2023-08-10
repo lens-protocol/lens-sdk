@@ -1,4 +1,5 @@
 import { useCreateProfile, useProfilesOwnedByMe } from '@lens-protocol/react-web';
+import toast from 'react-hot-toast';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
 import { WhenLoggedInWithProfile } from '../components/auth/WhenLoggedInWithProfile';
@@ -36,6 +37,7 @@ function CreateProfileForm() {
     const result = await create({ handle });
 
     if (result.isSuccess()) {
+      toast.success(`Profile ID: ${result.value.id}`);
       form.reset();
     }
   };

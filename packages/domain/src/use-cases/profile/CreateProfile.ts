@@ -1,8 +1,8 @@
-import { failure, PromiseResult, success, Url } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, Url } from '@lens-protocol/shared-kernel';
 
 import { NativeTransaction, TransactionKind, AnyTransactionRequestModel } from '../../entities';
 import { BroadcastingError } from '../transactions/BroadcastingError';
-import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
+import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
 import { FollowPolicyConfig } from './types';
 
@@ -24,26 +24,24 @@ export class DuplicatedHandleError extends Error {
 export interface IProfileTransactionGateway {
   createProfileTransaction<T extends CreateProfileRequest>(
     request: T,
-  ): PromiseResult<NativeTransaction<T>, DuplicatedHandleError | BroadcastingError>;
+  ): PromiseResult<NativeTransaction<T>, BroadcastingError | DuplicatedHandleError>;
 }
 
-export type ICreateProfilePresenter = IGenericResultPresenter<
-  void,
-  DuplicatedHandleError | BroadcastingError
+export type ICreateProfilePresenter = ITransactionResultPresenter<
+  CreateProfileRequest,
+  BroadcastingError | DuplicatedHandleError
 >;
 
 export class CreateProfile {
   constructor(
-    private readonly gateway: IProfileTransactionGateway,
-    private readonly presenter: ICreateProfilePresenter,
+    private readonly transactionFactory: IProfileTransactionGateway,
     private readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
+    private readonly presenter: ICreateProfilePresenter,
   ) {}
 
-  async create(request: CreateProfileRequest) {
-    const transactionResult = await this.gateway.createProfileTransaction(request);
+  async execute(request: CreateProfileRequest) {
+    const transactionResult = await this.transactionFactory.createProfileTransaction(request);
 
-    // In this occasion optimistic update is not advisable. Setting active profile handle ahead of time
-    // might lead to some presentation logic to query for data using such handle, data that is not yet available.
     if (transactionResult.isFailure()) {
       this.presenter.present(failure(transactionResult.error));
       return;
@@ -51,8 +49,6 @@ export class CreateProfile {
 
     const transaction = transactionResult.value;
 
-    await this.transactionQueue.push(transaction);
-
-    this.presenter.present(success());
+    await this.transactionQueue.push(transaction, this.presenter);
   }
 }
