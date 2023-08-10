@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react",
-  "version": "1.3.0-next.5",
+  "version": "1.3.0-next.6",
   "description": "Interacting with the Lens Protocol API using React.",
   "main": "dist/lens-protocol-react.cjs.js",
   "module": "dist/lens-protocol-react.esm.js",

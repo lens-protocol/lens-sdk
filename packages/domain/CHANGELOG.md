@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.10.0-next.4
+
+### Patch Changes
+
+- 3ffab7b9: **Added** newly created `Profile` to `useCreateProfile` result
+
 ## 0.10.0-next.3
 
 ### Minor Changes

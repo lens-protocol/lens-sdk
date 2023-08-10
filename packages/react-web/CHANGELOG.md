@@ -1,5 +1,23 @@
 # @lens-protocol/react-web
 
+## 1.3.0-next.6
+
+### Minor Changes
+
+- 3ffab7b9: **Added** newly created `Profile` to `useCreateProfile` result
+- 19ed489e: **Added** `beforeCount` to all paginated hooks and refetch data on re-render of `usePublication` and `useProfile` hooks.
+- 6eaaaf22: **Added** `Profile.followNftAddress` field
+
+### Patch Changes
+
+- Updated dependencies [3ffab7b9]
+- Updated dependencies [19ed489e]
+- Updated dependencies [6eaaaf22]
+  - @lens-protocol/react@1.3.0-next.6
+  - @lens-protocol/domain@0.10.0-next.4
+  - @lens-protocol/api-bindings@0.10.0-next.5
+  - @lens-protocol/gated-content@0.3.2-next.5
+
 ## 1.3.0-next.5
 
 ### Minor Changes

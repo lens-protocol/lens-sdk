@@ -1,5 +1,14 @@
 # @lens-protocol/api-bindings
 
+## 0.10.0-next.5
+
+### Patch Changes
+
+- 19ed489e: **Added** `beforeCount` to all paginated hooks and refetch data on re-render of `usePublication` and `useProfile` hooks.
+- 6eaaaf22: **Added** `Profile.followNftAddress` field
+- Updated dependencies [3ffab7b9]
+  - @lens-protocol/domain@0.10.0-next.4
+
 ## 0.10.0-next.4
 
 ### Minor Changes
