@@ -6,27 +6,17 @@ import {
   ICreateProfilePresenter,
 } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError, TransactionData } from '@lens-protocol/domain/use-cases/transactions';
-import {
-  Deferred,
-  Failure,
-  failure,
-  PromiseResult,
-  Result,
-  success,
-} from '@lens-protocol/shared-kernel';
+import { Deferred, Failure, failure, Result, success } from '@lens-protocol/shared-kernel';
 
 import { IProfileCacheManager } from '../../transactions/adapters/IProfileCacheManager';
-
-type AsyncTransactionResult<TValue> = {
-  waitForCompletion(): PromiseResult<TValue, TransactionError>;
-};
+import { AsyncTransactionResult } from './AsyncTransactionResult';
 
 export type CreateProfileAsyncResult = AsyncTransactionResult<Profile>;
 
 export class CreateProfilePresenter implements ICreateProfilePresenter {
-  private deferred = new Deferred<Result<Profile, TransactionError>>();
+  private deferredResult = new Deferred<Result<Profile, TransactionError>>();
 
-  private failure: Failure<never, BroadcastingError | DuplicatedHandleError> | null = null;
+  private earlyFailure: Failure<never, BroadcastingError | DuplicatedHandleError> | null = null;
 
   constructor(
     private readonly profileCacheManager: IProfileCacheManager, // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -43,26 +33,26 @@ export class CreateProfilePresenter implements ICreateProfilePresenter {
         result.error instanceof BroadcastingError ||
         result.error instanceof DuplicatedHandleError
       ) {
-        this.failure = failure(result.error);
+        this.earlyFailure = failure(result.error);
         return;
       }
 
-      this.deferred.resolve(failure(result.error));
+      this.deferredResult.resolve(failure(result.error));
       return;
     }
     const profile = await this.profileCacheManager.fetchNewProfile(result.value.request.handle);
 
-    this.deferred.resolve(success(profile));
+    this.deferredResult.resolve(success(profile));
   }
 
   asResult(): Result<CreateProfileAsyncResult, BroadcastingError | DuplicatedHandleError> {
-    if (this.failure) {
-      return this.failure;
+    if (this.earlyFailure) {
+      return this.earlyFailure;
     }
 
     return success({
       waitForCompletion: async () => {
-        return this.deferred.promise;
+        return this.deferredResult.promise;
       },
     });
   }

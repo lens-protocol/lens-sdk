@@ -23,6 +23,7 @@ import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions'
 import { failure, PromiseResult, Url } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { AsyncTransactionResult } from '../profile/adapters/AsyncTransactionResult';
 import { useSharedDependencies } from '../shared';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
@@ -158,7 +159,7 @@ export type CreateEmbedPostArgs = CreatePostBaseArgs & {
 export type CreatePostArgs = CreateTextualPostArgs | CreateMediaPostArgs | CreateEmbedPostArgs;
 
 export type CreatePostOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   | BroadcastingError
   | PendingSigningRequestError
   | UserRejectedError
@@ -236,7 +237,7 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
       reference = { type: ReferencePolicyType.ANYONE },
       ...args
     }: CreatePostArgs): PromiseResult<
-      void,
+      AsyncTransactionResult<void>,
       | BroadcastingError
       | PendingSigningRequestError
       | UserRejectedError

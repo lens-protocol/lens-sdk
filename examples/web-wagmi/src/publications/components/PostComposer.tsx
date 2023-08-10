@@ -40,6 +40,8 @@ export function PostComposer({ publisher }: PostComposerProps) {
     });
 
     if (subsidizedAttempt.isSuccess()) {
+      await subsidizedAttempt.value.waitForCompletion();
+
       form.reset();
       return;
     }

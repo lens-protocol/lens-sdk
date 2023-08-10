@@ -57,8 +57,7 @@ describe(`Given an instance of the ${DelegableSigning.name}<T> interactor`, () =
 
       it(`should:
           - create a ${NativeTransaction.name}<T>
-          - queue it into the ${TransactionQueue.name}
-          - present successful result`, async () => {
+          - queue it into the ${TransactionQueue.name}`, async () => {
         const transaction = MockedNativeTransaction.fromRequest(request);
         const transactionGateway = mockIDelegatedTransactionGateway({
           request,
@@ -78,8 +77,7 @@ describe(`Given an instance of the ${DelegableSigning.name}<T> interactor`, () =
         await call.execute(request);
 
         expect(transactionGateway.createDelegatedTransaction).toHaveBeenCalledWith(request);
-        expect(transactionQueue.push).toHaveBeenCalledWith(transaction);
-        expect(presenter.present).toHaveBeenCalledWith(success());
+        expect(transactionQueue.push).toHaveBeenCalledWith(transaction, presenter);
       });
 
       it(`should present any ${BroadcastingError.name} from the IDelegableProtocolCallGateway<T>`, async () => {

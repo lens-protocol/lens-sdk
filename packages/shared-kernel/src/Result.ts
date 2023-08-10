@@ -64,7 +64,7 @@ export interface IEquatableError<T extends string = string, P = Narrow<T>> {
 }
 
 /**
- * A `Result` type represents either `Success` or failure `Failure`.
+ * A `Result` type represents either `Success` or `Failure`.
  *
  * **TL;DR**
  *
@@ -156,23 +156,23 @@ export type Result<T, E extends IEquatableError> = Success<T, E> | Failure<T, E>
  */
 export type PromiseResult<T, E extends IEquatableError> = Promise<Result<T, E>>;
 
-export function success<T extends void, E>(): Success<T, E>;
-export function success<T, E>(value: T): Success<T, E>;
+export function success<T extends void>(): Success<T, never>;
+export function success<T>(value: T): Success<T, never>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function success<T, E>(value: any = undefined): Success<T, E> {
+export function success<T>(value: any = undefined): Success<T, never> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return new Success(value);
 }
 
-export const failure = <T, E extends IEquatableError>(error: E): Failure<T, E> =>
+export const failure = <E extends IEquatableError>(error: E): Failure<never, E> =>
   new Failure(error);
 
 /**
  * Returns `true` if the result is a success.
  */
-export function assertSuccess<T, E extends IEquatableError>(
-  result: Result<T, E>,
-): asserts result is Success<T, E> {
+export function assertSuccess<T>(
+  result: Result<T, IEquatableError>,
+): asserts result is Success<T, never> {
   invariant(result.isSuccess(), 'Expected a success result');
 }
 
@@ -181,6 +181,6 @@ export function assertSuccess<T, E extends IEquatableError>(
  */
 export function assertFailure<T, E extends IEquatableError>(
   result: Result<T, E>,
-): asserts result is Failure<T, E> {
+): asserts result is Failure<never, E> {
   invariant(result.isFailure(), 'Expected a failure result');
 }

@@ -1,4 +1,3 @@
-import { success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
 import { ProtocolTransactionRequestModel, ProxyTransaction } from '../../../entities';
@@ -17,11 +16,11 @@ import { mockISignlessSubsidizedCallRelayer, mockTransactionQueue } from '../__h
 function setupTestScenario<T extends ProtocolTransactionRequestModel>({
   relayer,
   transactionQueue = mockTransactionQueue(),
-  presenter = mock<ISignlessSubsidizeOnChainPresenter>(),
+  presenter = mock<ISignlessSubsidizeOnChainPresenter<T>>(),
 }: {
   relayer: ISignlessSubsidizedCallRelayer<T>;
   transactionQueue?: TransactionQueue<T>;
-  presenter?: ISignlessSubsidizeOnChainPresenter;
+  presenter?: ISignlessSubsidizeOnChainPresenter<T>;
 }) {
   const useCase = new SignlessSubsidizeOnChain(relayer, transactionQueue, presenter);
 
@@ -32,8 +31,7 @@ describe(`Given an instance of ${SignlessSubsidizeOnChain.name}<T> interactor`, 
   describe(`when calling "${SignlessSubsidizeOnChain.prototype.execute.name}" method`, () => {
     it(`should:
         - use the ISignlessSubsidizedCallRelayer to generate a ${ProxyTransaction.name}
-        - push the ${ProxyTransaction.name} into the ${TransactionQueue.name}
-        - call the presenter with success()`, async () => {
+        - push the ${ProxyTransaction.name} into the ${TransactionQueue.name}`, async () => {
       const request = mockProtocolTransactionRequestModel();
       const transaction = MockedProxyTransaction.fromRequest(request);
       const relayer = mockISignlessSubsidizedCallRelayer({
@@ -48,8 +46,7 @@ describe(`Given an instance of ${SignlessSubsidizeOnChain.name}<T> interactor`, 
       await useCase.execute(request);
 
       expect(relayer.createProxyTransaction).toHaveBeenCalledWith(request);
-      expect(transactionQueue.push).toHaveBeenCalledWith(transaction);
-      expect(presenter.present).toHaveBeenCalledWith(success());
+      expect(transactionQueue.push).toHaveBeenCalledWith(transaction, presenter);
     });
   });
 });

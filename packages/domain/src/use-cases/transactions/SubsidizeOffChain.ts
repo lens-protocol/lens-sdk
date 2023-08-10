@@ -1,4 +1,4 @@
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import {
   AnyTransactionRequestModel,
@@ -14,7 +14,7 @@ import {
 import { ActiveWallet } from '../wallets/ActiveWallet';
 import { BroadcastingError } from './BroadcastingError';
 import { ISignedOperation } from './DelegableSigning';
-import { IGenericResultPresenter } from './IGenericResultPresenter';
+import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
 export interface IOffChainRelayer<T extends ProtocolTransactionRequestModel> {
@@ -27,10 +27,11 @@ export interface IOffChainProtocolCallGateway<T extends ProtocolTransactionReque
   createUnsignedProtocolCall(request: T): Promise<IUnsignedProtocolCall<T>>;
 }
 
-export type ISubsidizeOffChainPresenter = IGenericResultPresenter<
-  void,
-  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
->;
+export type ISubsidizeOffChainPresenter<T extends ProtocolTransactionRequestModel> =
+  ITransactionResultPresenter<
+    T,
+    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  >;
 
 export class SubsidizeOffChain<T extends ProtocolTransactionRequestModel>
   implements ISignedOperation<T>
@@ -40,7 +41,7 @@ export class SubsidizeOffChain<T extends ProtocolTransactionRequestModel>
     protected readonly gateway: IOffChainProtocolCallGateway<T>,
     protected readonly relayer: IOffChainRelayer<T>,
     protected readonly queue: TransactionQueue<AnyTransactionRequestModel>,
-    protected readonly presenter: ISubsidizeOffChainPresenter,
+    protected readonly presenter: ISubsidizeOffChainPresenter<T>,
   ) {}
 
   async execute(request: T) {
@@ -63,8 +64,6 @@ export class SubsidizeOffChain<T extends ProtocolTransactionRequestModel>
     }
 
     const transaction = relayResult.value;
-    await this.queue.push(transaction as Transaction<T>);
-
-    this.presenter.present(success());
+    await this.queue.push(transaction as Transaction<T>, this.presenter);
   }
 }

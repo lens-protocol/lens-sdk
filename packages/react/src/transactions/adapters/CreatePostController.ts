@@ -20,7 +20,7 @@ import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
 
 import { IMetadataUploader } from './IMetadataUploader';
 import { ITransactionFactory } from './ITransactionFactory';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { CreateOffChainPostGateway } from './publication-call-gateways/CreateOffChainPostGateway';
 import { CreateOnChainPostGateway } from './publication-call-gateways/CreateOnChainPostGateway';
 
@@ -36,8 +36,8 @@ export type CreatePostControllerArgs<T extends CreatePostRequest> = {
 };
 
 export class CreatePostController<T extends CreatePostRequest> {
-  private readonly presenter = new PromiseResultPresenter<
-    void,
+  private readonly presenter = new TransactionResultPresenter<
+    CreatePostRequest,
     BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >();
 

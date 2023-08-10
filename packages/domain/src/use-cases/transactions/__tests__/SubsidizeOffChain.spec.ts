@@ -27,7 +27,7 @@ import {
 } from '../SubsidizeOffChain';
 import { TransactionQueue } from '../TransactionQueue';
 
-function setupStoreOffChain<T extends ProtocolTransactionRequestModel>({
+function setup<T extends ProtocolTransactionRequestModel>({
   gateway,
   relayer = mock<IOffChainRelayer<T>>(),
   queue = mockTransactionQueue(),
@@ -37,7 +37,7 @@ function setupStoreOffChain<T extends ProtocolTransactionRequestModel>({
   gateway: IOffChainProtocolCallGateway<T>;
   relayer?: IOffChainRelayer<T>;
   queue?: TransactionQueue<AnyTransactionRequestModel>;
-  presenter: ISubsidizeOffChainPresenter;
+  presenter: ISubsidizeOffChainPresenter<T>;
   wallet: Wallet;
 }) {
   const activeWallet = mockActiveWallet({ wallet });
@@ -71,9 +71,9 @@ describe(`Given an instance of the ${SubsidizeOffChain.name}<T> interactor`, () 
 
       const queue = mockTransactionQueue();
 
-      const presenter = mock<ISubsidizeOffChainPresenter>();
+      const presenter = mock<ISubsidizeOffChainPresenter<typeof request>>();
 
-      const useCase = setupStoreOffChain({
+      const useCase = setup({
         gateway,
         relayer,
         queue,
@@ -83,8 +83,7 @@ describe(`Given an instance of the ${SubsidizeOffChain.name}<T> interactor`, () 
 
       await useCase.execute(request);
 
-      expect(queue.push).toHaveBeenCalledWith(transaction);
-      expect(presenter.present).toHaveBeenCalledWith(success());
+      expect(queue.push).toHaveBeenCalledWith(transaction, presenter);
     });
   });
 });
