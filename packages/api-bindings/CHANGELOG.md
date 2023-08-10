@@ -1,5 +1,19 @@
 # @lens-protocol/api-bindings
 
+## 0.10.0-next.4
+
+### Minor Changes
+
+- e8dc3cd8: fixes collect/mirror count bug
+
+### Patch Changes
+
+- b7609fcb: **Fixed** `useNotification` to include `highSignalFilter` filter
+- Updated dependencies [433760f3]
+- Updated dependencies [fc31f146]
+  - @lens-protocol/domain@0.10.0-next.3
+  - @lens-protocol/shared-kernel@0.10.0-next.0
+
 ## 0.10.0-next.3
 
 ### Patch Changes

@@ -1,5 +1,27 @@
 # @lens-protocol/react
 
+## 1.3.0-next.5
+
+### Minor Changes
+
+- 433760f3: **Added** ability to specify profile picture and follow policy when creating a new profile"
+- fc31f146: **Added** experimental hooks that integrate with @xmtp/react-sdk
+- e8dc3cd8: fixes collect/mirror count bug
+
+### Patch Changes
+
+- b7609fcb: **Fixed** `useNotification` to include `highSignalFilter` filter
+- Updated dependencies [b7609fcb]
+- Updated dependencies [433760f3]
+- Updated dependencies [fc31f146]
+- Updated dependencies [e8dc3cd8]
+  - @lens-protocol/api-bindings@0.10.0-next.4
+  - @lens-protocol/domain@0.10.0-next.3
+  - @lens-protocol/shared-kernel@0.10.0-next.0
+  - @lens-protocol/gated-content@0.3.2-next.4
+  - @lens-protocol/blockchain-bindings@0.9.1-next.3
+  - @lens-protocol/storage@0.7.4-next.0
+
 ## 1.3.0-next.4
 
 ### Minor Changes

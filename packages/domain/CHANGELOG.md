@@ -1,5 +1,17 @@
 # @lens-protocol/domain
 
+## 0.10.0-next.3
+
+### Minor Changes
+
+- fc31f146: **Added** experimental hooks that integrate with @xmtp/react-sdk
+
+### Patch Changes
+
+- 433760f3: **Added** ability to specify profile picture and follow policy when creating a new profile"
+- Updated dependencies [fc31f146]
+  - @lens-protocol/shared-kernel@0.10.0-next.0
+
 ## 0.9.1-next.2
 
 ### Patch Changes
