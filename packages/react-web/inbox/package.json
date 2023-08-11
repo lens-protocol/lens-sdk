@@ -1,0 +1,4 @@
+{
+  "main": "dist/lens-protocol-react-web-inbox.cjs.js",
+  "module": "dist/lens-protocol-react-web-inbox.esm.js"
+}

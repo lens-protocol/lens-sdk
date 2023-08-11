@@ -1,4 +1,5 @@
-import { ProfileOwnedByMe, useEnhanceConversation } from '@lens-protocol/react-web';
+import { ProfileOwnedByMe } from '@lens-protocol/react-web';
+import { useEnhanceConversation } from '@lens-protocol/react-web/inbox';
 import { Conversation, useClient, useConversations } from '@xmtp/react-sdk';
 import { useParams } from 'react-router-dom';
 
