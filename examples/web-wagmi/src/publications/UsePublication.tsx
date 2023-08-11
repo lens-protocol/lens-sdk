@@ -1,4 +1,6 @@
 import {
+  CommentOrderingTypes,
+  CommentRankingFilter,
   PublicationId,
   publicationId,
   useComments,
@@ -21,7 +23,13 @@ function Comments({ commentsOf }: CommentsProps) {
     loading,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(useComments({ commentsOf }));
+  } = useInfiniteScroll(
+    useComments({
+      commentsOf,
+      commentsOfOrdering: CommentOrderingTypes.Ranking,
+      commentsRankingFilter: CommentRankingFilter.Relevant,
+    }),
+  );
 
   if (loading) return <Loading />;
 

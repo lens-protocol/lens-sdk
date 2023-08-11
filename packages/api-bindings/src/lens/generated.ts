@@ -3016,6 +3016,8 @@ export type GetPublicationsVariables = Exact<{
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   metadata?: InputMaybe<PublicationMetadataFilters>;
   commentsOf?: InputMaybe<Scalars['InternalPublicationId']>;
+  commentsOfOrdering?: InputMaybe<CommentOrderingTypes>;
+  commentsRankingFilter?: InputMaybe<CommentRankingFilter>;
   walletAddress?: InputMaybe<Scalars['EthereumAddress']>;
   mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
   mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
@@ -7312,6 +7314,8 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
     $sources: [Sources!]!
     $metadata: PublicationMetadataFilters
     $commentsOf: InternalPublicationId
+    $commentsOfOrdering: CommentOrderingTypes
+    $commentsRankingFilter: CommentRankingFilter
     $walletAddress: EthereumAddress
     $mediaTransformPublicationSmall: MediaTransformParams = {}
     $mediaTransformPublicationMedium: MediaTransformParams = {}
@@ -7326,6 +7330,8 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
         cursor: $cursor
         publicationTypes: $publicationTypes
         commentsOf: $commentsOf
+        commentsOfOrdering: $commentsOfOrdering
+        commentsRankingFilter: $commentsRankingFilter
         sources: $sources
         metadata: $metadata
       }
@@ -7373,6 +7379,8 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
  *      sources: // value for 'sources'
  *      metadata: // value for 'metadata'
  *      commentsOf: // value for 'commentsOf'
+ *      commentsOfOrdering: // value for 'commentsOfOrdering'
+ *      commentsRankingFilter: // value for 'commentsRankingFilter'
  *      walletAddress: // value for 'walletAddress'
  *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
  *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'

@@ -1,4 +1,4 @@
-import { PublicationId, useComments } from '@lens-protocol/react-web';
+import { CommentOrderingTypes, PublicationId, useComments } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { Loading } from '../../components/loading/Loading';
@@ -11,7 +11,7 @@ type PublicationCommentsProps = {
 
 export function PublicationComments({ publicationId }: PublicationCommentsProps) {
   const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
-    useComments({ commentsOf: publicationId }),
+    useComments({ commentsOf: publicationId, commentsOfOrdering: CommentOrderingTypes.Desc }),
   );
 
   if (loading) return <Loading />;

@@ -10,6 +10,8 @@ export function createPublicationsFieldPolicy() {
         'collectedBy',
         'publicationTypes',
         'commentsOf',
+        'commentsOfOrdering',
+        'commentsRankingFilter',
         'sources',
         'metadata',
       ],
