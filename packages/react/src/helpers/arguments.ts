@@ -120,8 +120,8 @@ export function useSourcesFromConfig<TVariables extends OperationVariables>(
   const { sources } = useSharedDependencies();
 
   return {
-    ...variables,
     sources,
+    ...variables,
   };
 }
 

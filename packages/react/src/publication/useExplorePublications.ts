@@ -4,7 +4,7 @@ import {
   PublicationTypes,
   useExplorePublications as useUnderlyingQuery,
 } from '@lens-protocol/api-bindings';
-import { ProfileId } from '@lens-protocol/domain/entities';
+import { AppId, ProfileId } from '@lens-protocol/domain/entities';
 
 import {
   useActiveProfileAsDefaultObserver,
@@ -45,6 +45,11 @@ export type UseExplorePublicationsArgs = PaginatedArgs<
      * Timestamp to start from
      */
     timestamp?: number;
+
+    /**
+     * @defaultValue defaults to the value provided in {@link LensConfig}
+     */
+    sources?: AppId[];
   }>
 >;
 
@@ -87,6 +92,7 @@ export function useExplorePublications({
   publicationTypes,
   excludeProfileIds,
   metadataFilter,
+  sources,
 }: UseExplorePublicationsArgs = {}): PaginatedReadResult<Array<AnyPublication>> {
   return usePaginatedReadResult(
     useUnderlyingQuery(
@@ -101,6 +107,7 @@ export function useExplorePublications({
               sortCriteria,
               timestamp,
               observerId,
+              sources,
             }),
           ),
         }),
