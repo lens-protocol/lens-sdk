@@ -1,4 +1,5 @@
-import { Profile, ProfileOwnedByMe, useStartLensConversation } from '@lens-protocol/react-web';
+import { Profile, ProfileOwnedByMe } from '@lens-protocol/react-web';
+import { useStartLensConversation } from '@lens-protocol/react-web/inbox';
 
 import { never } from '../../utils';
 

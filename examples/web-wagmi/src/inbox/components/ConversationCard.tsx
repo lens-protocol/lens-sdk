@@ -1,4 +1,5 @@
-import { EnhancedConversation, Profile } from '@lens-protocol/react-web';
+import { Profile } from '@lens-protocol/react-web';
+import { EnhancedConversation } from '@lens-protocol/react-web/inbox';
 import { ReactNode } from 'react';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';

@@ -1,4 +1,4 @@
-import { useXmtpClient } from '@lens-protocol/react-web';
+import { useXmtpClient } from '@lens-protocol/react-web/inbox';
 
 import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { Loading } from '../../components/loading/Loading';
