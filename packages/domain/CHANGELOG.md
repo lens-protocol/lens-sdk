@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.10.0-next.5
+
+### Patch Changes
+
+- 773c2ed8: **Added** `name` support to non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
+
 ## 0.10.0-next.4
 
 ### Patch Changes
