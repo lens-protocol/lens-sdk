@@ -4,7 +4,15 @@ export function createPublicationsFieldPolicy() {
   return cursorBasedPagination([
     [
       'request',
-      ['profileId', 'collectedBy', 'publicationTypes', 'commentsOf', 'sources', 'metadata'],
+      [
+        'profileId',
+        'profileIds',
+        'collectedBy',
+        'publicationTypes',
+        'commentsOf',
+        'sources',
+        'metadata',
+      ],
     ],
     '$observerId',
   ]);
