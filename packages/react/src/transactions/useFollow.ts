@@ -19,6 +19,7 @@ import {
 import { failure, InvariantError, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useFollowController } from './adapters/useFollowController';
 
 export class PrematureFollowError extends Error {
@@ -76,7 +77,7 @@ export type UseFollowArgs = {
 };
 
 export type FollowOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
@@ -146,7 +147,7 @@ export function useFollow({ followee, follower }: UseFollowArgs): FollowOperatio
 
   return useOperation(
     async (): PromiseResult<
-      void,
+      AsyncTransactionResult<void>,
       | BroadcastingError
       | InsufficientAllowanceError
       | InsufficientFundsError

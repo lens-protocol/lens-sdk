@@ -14,6 +14,7 @@ import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions'
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUnfollowController } from './adapters/useUnfollowController';
 
 export class PrematureUnfollowError extends Error {
@@ -26,7 +27,7 @@ export type UseUnfollowArgs = {
 };
 
 export type UnfollowOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   | BroadcastingError
   | PendingSigningRequestError
   | PrematureUnfollowError
@@ -47,7 +48,7 @@ export function useUnfollow({ followee, follower }: UseUnfollowArgs): UnfollowOp
 
   return useOperation(
     async (): PromiseResult<
-      void,
+      AsyncTransactionResult<void>,
       | BroadcastingError
       | PendingSigningRequestError
       | PrematureUnfollowError

@@ -10,7 +10,7 @@ import {
   success,
 } from '@lens-protocol/shared-kernel';
 
-import { AsyncTransactionResult } from '../../profile/adapters/AsyncTransactionResult';
+import { AsyncTransactionResult } from './AsyncTransactionResult';
 
 export class TransactionResultPresenter<
   TRequest extends AnyTransactionRequestModel,

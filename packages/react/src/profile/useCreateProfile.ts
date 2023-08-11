@@ -2,7 +2,7 @@ import { Profile } from '@lens-protocol/api-bindings';
 import { TransactionError, TransactionKind } from '@lens-protocol/domain/entities';
 import { DuplicatedHandleError, FollowPolicyConfig } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { failure, success, Url } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, success, Url } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useCreateProfileController } from './adapters/useCreateProfileController';
@@ -115,22 +115,29 @@ export type CreateProfileOperation = Operation<
 export function useCreateProfile(): CreateProfileOperation {
   const createProfile = useCreateProfileController();
 
-  return useOperation(async ({ handle }: CreateProfileArgs) => {
-    const broadcasted = await createProfile({
+  return useOperation(
+    async ({
       handle,
-      kind: TransactionKind.CREATE_PROFILE,
-    });
+    }: CreateProfileArgs): PromiseResult<
+      Profile,
+      BroadcastingError | DuplicatedHandleError | TransactionError
+    > => {
+      const broadcasted = await createProfile({
+        handle,
+        kind: TransactionKind.CREATE_PROFILE,
+      });
 
-    if (broadcasted.isFailure()) {
-      return failure(broadcasted.error);
-    }
+      if (broadcasted.isFailure()) {
+        return failure(broadcasted.error);
+      }
 
-    const result = await broadcasted.value.waitForCompletion();
+      const result = await broadcasted.value.waitForCompletion();
 
-    if (result.isFailure()) {
-      return failure(result.error);
-    }
+      if (result.isFailure()) {
+        return failure(result.error);
+      }
 
-    return success(result.value);
-  });
+      return success(result.value);
+    },
+  );
 }

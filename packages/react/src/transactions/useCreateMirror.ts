@@ -13,6 +13,7 @@ import {
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useCreateMirrorController } from './adapters/useCreateMirrorController';
 
 export type UseCreateMirrorArgs = {
@@ -24,7 +25,7 @@ export type CreateMirrorArgs = {
 };
 
 export type CreateMirrorOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   [CreateMirrorArgs]
 >;

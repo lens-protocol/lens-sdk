@@ -9,6 +9,7 @@ import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions'
 import { Url } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUpdateProfileImageController } from './adapters/useUpdateProfileImageController';
 
 export type UseUpdateProfileImageArgs = {
@@ -16,7 +17,7 @@ export type UseUpdateProfileImageArgs = {
 };
 
 export type UpdateProfileImageOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   [string]
 >;

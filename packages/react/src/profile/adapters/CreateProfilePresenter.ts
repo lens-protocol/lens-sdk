@@ -8,8 +8,8 @@ import {
 import { BroadcastingError, TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import { Deferred, Failure, failure, Result, success } from '@lens-protocol/shared-kernel';
 
+import { AsyncTransactionResult } from '../../transactions/adapters/AsyncTransactionResult';
 import { IProfileCacheManager } from '../../transactions/adapters/IProfileCacheManager';
-import { AsyncTransactionResult } from './AsyncTransactionResult';
 
 export type CreateProfileAsyncResult = AsyncTransactionResult<Profile>;
 

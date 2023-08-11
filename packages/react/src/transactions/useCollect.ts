@@ -15,6 +15,7 @@ import {
 } from '@lens-protocol/domain/use-cases/wallets';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useCollectController } from './adapters/useCollectController';
 
 export type UseCollectArgs = {
@@ -23,7 +24,7 @@ export type UseCollectArgs = {
 };
 
 export type CollectOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError

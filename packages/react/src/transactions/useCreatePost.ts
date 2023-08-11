@@ -23,7 +23,7 @@ import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions'
 import { failure, PromiseResult, Url } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
-import { AsyncTransactionResult } from '../profile/adapters/AsyncTransactionResult';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useSharedDependencies } from '../shared';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';

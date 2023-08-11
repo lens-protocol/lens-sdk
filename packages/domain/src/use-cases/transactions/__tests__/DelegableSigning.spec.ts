@@ -25,12 +25,12 @@ function setupDelegableSigning<T extends ProtocolTransactionRequestModel>({
   signedOperation = mock<ISignedOperation<T>>(),
   transactionGateway = mock<IDelegatedTransactionGateway<T>>(),
   transactionQueue = mockTransactionQueue<T>(),
-  presenter = mock<IDelegatedTransactionPresenter>(),
+  presenter = mock<IDelegatedTransactionPresenter<T>>(),
 }: {
   signedOperation?: ISignedOperation<T>;
   transactionGateway?: IDelegatedTransactionGateway<T>;
   transactionQueue?: TransactionQueue<AnyTransactionRequestModel>;
-  presenter?: IDelegatedTransactionPresenter;
+  presenter?: IDelegatedTransactionPresenter<T>;
 }) {
   return new DelegableSigning(signedOperation, transactionGateway, transactionQueue, presenter);
 }
@@ -66,7 +66,7 @@ describe(`Given an instance of the ${DelegableSigning.name}<T> interactor`, () =
 
         const transactionQueue = mockTransactionQueue<AnyTransactionRequestModel>();
 
-        const presenter = mock<IDelegatedTransactionPresenter>();
+        const presenter = mock<IDelegatedTransactionPresenter<typeof request>>();
 
         const call = setupDelegableSigning({
           transactionGateway,
@@ -87,7 +87,7 @@ describe(`Given an instance of the ${DelegableSigning.name}<T> interactor`, () =
           result: failure(error),
         });
 
-        const presenter = mock<IDelegatedTransactionPresenter>();
+        const presenter = mock<IDelegatedTransactionPresenter<typeof request>>();
 
         const call = setupDelegableSigning({
           transactionGateway,
