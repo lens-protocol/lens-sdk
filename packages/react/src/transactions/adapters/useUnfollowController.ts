@@ -7,7 +7,7 @@ import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/use-case
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { UnfollowProfileCallGateway } from './UnfollowProfileCallGateway';
 
 export function useUnfollowController() {
@@ -15,8 +15,8 @@ export function useUnfollowController() {
     useSharedDependencies();
 
   return async (request: UnfollowRequest) => {
-    const presenter = new PromiseResultPresenter<
-      void,
+    const presenter = new TransactionResultPresenter<
+      UnfollowRequest,
       BroadcastingError | PendingSigningRequestError | WalletConnectionError | UserRejectedError
     >();
 

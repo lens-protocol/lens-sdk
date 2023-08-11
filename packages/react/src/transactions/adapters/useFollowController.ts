@@ -20,7 +20,7 @@ import {
 
 import { useSharedDependencies } from '../../shared';
 import { FollowProfilesGateway } from './FollowProfilesGateway';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { TransactionResultPresenter } from './TransactionResultPresenter';
 
 export function useFollowController() {
   const {
@@ -35,8 +35,8 @@ export function useFollowController() {
   } = useSharedDependencies();
 
   return async (request: FollowRequest) => {
-    const presenter = new PromiseResultPresenter<
-      void,
+    const presenter = new TransactionResultPresenter<
+      FollowRequest,
       | BroadcastingError
       | InsufficientAllowanceError
       | InsufficientFundsError

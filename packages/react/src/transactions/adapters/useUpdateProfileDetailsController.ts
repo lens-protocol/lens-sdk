@@ -15,7 +15,7 @@ import { MetadataUploaderErrorMiddleware } from '../infrastructure/MetadataUploa
 import { IMetadataUploader } from './IMetadataUploader';
 import { MetadataUploadHandler } from './MetadataUploadHandler';
 import { ProfileMetadataCallGateway } from './ProfileMetadataCallGateway';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { validateUpdateProfileDetailsRequest } from './schemas/validators';
 
 export type UseUpdateProfileDetailsControllerArgs = {
@@ -48,8 +48,8 @@ export function useUpdateProfileDetailsController({
       mediaTransforms,
     );
 
-    const presenter = new PromiseResultPresenter<
-      void,
+    const presenter = new TransactionResultPresenter<
+      UpdateProfileDetailsRequest,
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 

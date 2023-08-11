@@ -12,7 +12,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { CreateOffChainMirrorGateway } from './publication-call-gateways/CreateOffChainMirrorGateway';
 import { CreateOnChainMirrorGateway } from './publication-call-gateways/CreateOnChainMirrorGateway';
 
@@ -28,8 +28,8 @@ export function useCreateMirrorController() {
   } = useSharedDependencies();
 
   return async (request: CreateMirrorRequest) => {
-    const presenter = new PromiseResultPresenter<
-      void,
+    const presenter = new TransactionResultPresenter<
+      CreateMirrorRequest,
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 

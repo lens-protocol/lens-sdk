@@ -1,4 +1,4 @@
-import { failure, success } from '@lens-protocol/shared-kernel';
+import { failure } from '@lens-protocol/shared-kernel';
 
 import {
   InsufficientGasError,
@@ -10,23 +10,24 @@ import {
 } from '../../entities';
 import { UnsignedTransaction } from '../../entities/Transactions';
 import { ActiveWallet } from '../wallets/ActiveWallet';
-import { IGenericResultPresenter } from './IGenericResultPresenter';
+import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
 export interface IPayTransactionGateway<T extends AnyTransactionRequestModel> {
   prepareSelfFundedTransaction(request: T, wallet: Wallet): Promise<UnsignedTransaction<T>>;
 }
 
-export type IPayTransactionPresenter = IGenericResultPresenter<
-  void,
-  PendingSigningRequestError | InsufficientGasError | UserRejectedError | WalletConnectionError
->;
+export type IPayTransactionPresenter<T extends AnyTransactionRequestModel> =
+  ITransactionResultPresenter<
+    T,
+    PendingSigningRequestError | InsufficientGasError | UserRejectedError | WalletConnectionError
+  >;
 
 export class PayTransaction<T extends AnyTransactionRequestModel> {
   constructor(
     private readonly activeWallet: ActiveWallet,
     private readonly gateway: IPayTransactionGateway<T>,
-    private readonly presenter: IPayTransactionPresenter,
+    private readonly presenter: IPayTransactionPresenter<T>,
     private readonly queue: TransactionQueue<AnyTransactionRequestModel>,
   ) {}
 
@@ -43,8 +44,6 @@ export class PayTransaction<T extends AnyTransactionRequestModel> {
     }
 
     const transaction = relayResult.value;
-    await this.queue.push(transaction);
-
-    this.presenter.present(success());
+    await this.queue.push(transaction, this.presenter);
   }
 }

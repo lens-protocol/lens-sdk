@@ -160,17 +160,17 @@ export type CreateCommentRequest =
 
 export class CreateComment {
   constructor(
-    private readonly createOnChainPost: DelegableSigning<CreateCommentRequest>,
-    private readonly createOffChainPost: DelegableSigning<CreateCommentRequest>,
+    private readonly createOnChainComment: DelegableSigning<CreateCommentRequest>,
+    private readonly createOffChainComment: DelegableSigning<CreateCommentRequest>,
   ) {}
 
   async execute(request: CreateCommentRequest) {
     invariant(request.media || request.content, 'One of post media or content is required');
 
     if (request.offChain) {
-      await this.createOffChainPost.execute(request);
+      await this.createOffChainComment.execute(request);
     } else {
-      await this.createOnChainPost.execute(request);
+      await this.createOnChainComment.execute(request);
     }
   }
 }

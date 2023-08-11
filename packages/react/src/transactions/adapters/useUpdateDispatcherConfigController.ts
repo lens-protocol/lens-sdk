@@ -11,15 +11,15 @@ import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions'
 
 import { useSharedDependencies } from '../../shared';
 import { DispatcherConfigCallGateway } from './DispatcherConfigCallGateway';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { TransactionResultPresenter } from './TransactionResultPresenter';
 
 export function useUpdateDispatcherConfigController() {
   const { activeWallet, transactionGateway, onChainRelayer, transactionQueue, apolloClient } =
     useSharedDependencies();
 
   return async (request: UpdateDispatcherConfigRequest) => {
-    const presenter = new PromiseResultPresenter<
-      void,
+    const presenter = new TransactionResultPresenter<
+      UpdateDispatcherConfigRequest,
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
     const gateway = new DispatcherConfigCallGateway(apolloClient);
