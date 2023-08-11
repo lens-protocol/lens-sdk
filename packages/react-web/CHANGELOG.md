@@ -1,5 +1,13 @@
 # @lens-protocol/react-web
 
+## 1.3.0-next.7
+
+### Patch Changes
+
+- 28094a84: **Fixed** XMTP dep is optional until chat features are requested via `@lens-protocol/react-web/inbox` entrypoint
+- Updated dependencies [28094a84]
+  - @lens-protocol/react@1.3.0-next.7
+
 ## 1.3.0-next.6
 
 ### Minor Changes
