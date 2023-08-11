@@ -7,7 +7,7 @@ import {
   Sources,
   useSessionVar,
 } from '@lens-protocol/api-bindings';
-import { ProfileId } from '@lens-protocol/domain/entities';
+import { AppId, ProfileId } from '@lens-protocol/domain/entities';
 import { Overwrite, Prettify, UnknownObject } from '@lens-protocol/shared-kernel';
 import { useState } from 'react';
 
@@ -114,14 +114,14 @@ export type UseSourcesFromConfigResult<TVariables extends OperationVariables> = 
   sources: Sources;
 };
 
-export function useSourcesFromConfig<TVariables extends OperationVariables>(
+export function useSourcesFromConfig<TVariables extends OperationVariables & { sources?: AppId[] }>(
   variables: TVariables,
 ): UseSourcesFromConfigResult<TVariables> {
   const { sources } = useSharedDependencies();
 
   return {
-    sources,
     ...variables,
+    sources: variables.sources ?? sources,
   };
 }
 
