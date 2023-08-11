@@ -80,6 +80,12 @@ export type BaseCommentRequest = {
    */
   tags?: string[];
   /**
+   * The name of the collect NFT.
+   *
+   * This is the NFT name visible on marketplaces like OpenSea.
+   */
+  name?: string;
+  /**
    * A list of attributes for the collect NFT.
    *
    * This is the NFT description visible on marketplaces like OpenSea.

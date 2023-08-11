@@ -49,6 +49,7 @@ const nftMetadata = mockNftMetadata({
   externalUrl: faker.internet.url(),
   image: faker.image.imageUrl(),
   imageMimeType: ImageType.JPEG,
+  name: faker.lorem.word(),
 });
 
 function toPublicationMetadataMediaItem(media: MediaObject) {
@@ -97,10 +98,11 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
         });
       });
 
-      it(`should support 'attributes' and 'image'`, () => {
+      it(`should support 'name', 'attributes', and 'image'`, () => {
         const request = mockPublication({
           attributes: [dateNftAttribute, numberNftAttribute, stringNftAttribute],
           image,
+          name: faker.lorem.word(),
         });
 
         const metadata = createPublicationMetadata(request);
@@ -125,6 +127,7 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
           ],
           image: image.url,
           imageMimeType: image.mimeType,
+          name: request.name,
         });
       });
 
@@ -241,6 +244,14 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
         mockFreeCollectPolicyConfig({ metadata: nftMetadata }),
         mockChargeCollectPolicyConfig({ metadata: nftMetadata }),
       ])('with $type collect policy', (collectPolicyConfig) => {
+        beforeAll(() => {
+          jest.spyOn(console, 'warn').mockImplementation(() => {});
+        });
+
+        afterAll(() => {
+          jest.restoreAllMocks();
+        });
+
         it('should return the expected metadata for collectable publications', () => {
           const request = mockPublication({
             collect: collectPolicyConfig,
@@ -255,8 +266,18 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
           });
         });
 
-        it('should be backwards compatible with the deprecated `collect.metadata.attributes`, `collect.metadata.image`, and `collect.metadata.imageMimeType`', () => {
+        it(`should be backwards compatible with the deprecated:
+            - 'collect.metadata.name'
+            - 'collect.metadata.attributes'
+            - 'collect.metadata.image'
+            - 'collect.metadata.imageMimeType'`, () => {
           const request = mockPublication({
+            /** It should not use these */
+            name: faker.lorem.word(),
+            attributes: [dateNftAttribute],
+            image: mockMetadataImage(),
+            /** ----------------------- */
+
             collect: collectPolicyConfig,
           });
 
@@ -282,6 +303,7 @@ describe(`Given the ${createPublicationMetadata.name} helper`, () => {
             ],
             image: nftMetadata.image,
             imageMimeType: nftMetadata.imageMimeType,
+            name: nftMetadata.name,
           });
         });
       });

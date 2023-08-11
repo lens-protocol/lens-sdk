@@ -140,7 +140,7 @@ const MetadataAttributeSchema = z.discriminatedUnion('displayType', [
 ]);
 
 const NftMetadataSchema = z.object({
-  name: z.string(),
+  name: z.string().optional(),
   description: z.string().optional(),
   attributes: z.array(MetadataAttributeSchema).optional(),
   externalUrl: z.string().optional(),
@@ -290,6 +290,7 @@ function createCommonPublicationRequestSchema<TAmountSchema extends Erc20AmountS
     decryptionCriteria: decryptionCriteriaSchema(amountSchema),
     delegate: z.boolean(),
     image: MetadataImageSchema.optional(),
+    name: z.string().optional(),
     locale: z.string(),
     offChain: z.boolean(),
     profileId: ProfileIdSchema,

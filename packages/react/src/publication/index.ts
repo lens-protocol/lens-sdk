@@ -153,6 +153,8 @@ export type {
  */
 export {
   CollectState,
+  CommentOrderingTypes,
+  CommentRankingFilter,
   DecryptFailReason,
   isCommentPublication,
   isContentPublication,
