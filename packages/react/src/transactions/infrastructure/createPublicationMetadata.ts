@@ -65,6 +65,7 @@ function metadataImage(request: CreatePublicationRequest) {
 
 function optionalFields(request: CreatePublicationRequest) {
   return {
+    name: request.name ?? 'none', // Publication Metadata V2 schema requires it ¯\_(ツ)_/¯
     attributes: mapMetadataAttributes(request.attributes ?? []),
     ...(request.appId && { appId: request.appId }),
     ...(request.contentWarning && {
@@ -101,21 +102,21 @@ function contentFields(request: CreatePublicationRequest) {
   }
 }
 
-function resolveNonCollectableMetadata() {
-  return {
-    name: 'none', // although "name" is not needed when a publication is not collectable, Publication Metadata V2 schema requires it ¯\_(ツ)_/¯
-  } as const;
-}
-
 function resolveDeprecatedCollectableMetadata(request: CollectablePublicationRequest) {
   return {
     attributes: mapMetadataAttributes(request.collect.metadata.attributes ?? []),
     image: request.collect.metadata.image,
     imageMimeType: request.collect.metadata.imageMimeType,
+    name: request.collect.metadata.name,
   } as const;
 }
 
 function resolveCollectableMetadata(request: CollectablePublicationRequest) {
+  if ('name' in request.collect.metadata && 'name' in request) {
+    console.warn(
+      'Both "name" and "collect.metadata.name" are provided. Using "collect.metadata.name"',
+    );
+  }
   if ('attributes' in request.collect.metadata && 'attributes' in request) {
     console.warn(
       'Both "attributes" and "collect.metadata.attributes" are provided. Using "collect.metadata.attributes"',
@@ -135,7 +136,6 @@ function resolveCollectableMetadata(request: CollectablePublicationRequest) {
 
   return {
     description: request.collect.metadata.description,
-    name: request.collect.metadata.name,
 
     ...resolveDeprecatedCollectableMetadata(request),
 
@@ -148,7 +148,7 @@ function resolveCollectableMetadata(request: CollectablePublicationRequest) {
 function resolveCollectMetadata(request: CreatePublicationRequest) {
   switch (request.collect.type) {
     case CollectPolicyType.NO_COLLECT:
-      return resolveNonCollectableMetadata();
+      return {};
 
     case CollectPolicyType.CHARGE:
     case CollectPolicyType.FREE:

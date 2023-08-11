@@ -362,7 +362,6 @@ describe(`Given the validator helpers`, () => {
           		· "collect.type": Invalid literal value, expected "CHARGE"
           		· "collect.fee": value not instance of Amount<Erc20>
           		· "collect.followersOnly": Required
-          		· "collect.metadata.name": Required
           		· "collect.mirrorReward": Required
           		· "collect.recipient": Required
           		· "collect.timeLimited": Required
@@ -370,14 +369,12 @@ describe(`Given the validator helpers`, () => {
           		· "collect.type": Invalid literal value, expected "CHARGE"
           		· "collect.fee": value not instance of Amount<Erc20>
           		· "collect.followersOnly": Required
-          		· "collect.metadata.name": Required
           		· "collect.mirrorReward": Required
           		· "collect.recipients": Required
           	OR:
           		· "collect.type": Invalid literal value, expected "CHARGE"
           		· "collect.fee": value not instance of Amount<Erc20>
           		· "collect.followersOnly": Required
-          		· "collect.metadata.name": Required
           		· "collect.mirrorReward": Required
           		· "collect.recipient": Required
           		· "collect.vault": Required
@@ -385,12 +382,10 @@ describe(`Given the validator helpers`, () => {
           		· "collect.type": Invalid literal value, expected "CHARGE"
           		· "collect.fee": value not instance of Amount<Erc20>
           		· "collect.followersOnly": Required
-          		· "collect.metadata.name": Required
           		· "collect.mirrorReward": Required
           		· "collect.recipient": Required
           		· "collect.depositToAave": Invalid literal value, expected true
           	OR:
-          		· "collect.metadata.name": Required
           		· "collect.followersOnly": Required
           	OR:
           		· "collect.type": Invalid literal value, expected "NO_COLLECT""
@@ -447,6 +442,32 @@ describe(`Given the validator helpers`, () => {
           "fix the following issues
           · "image.mimeType": Required
           · "image.url": Required"
+        `);
+      });
+    });
+
+    describe('with invalid "name"', () => {
+      it('should provide an actionable error message', () => {
+        expect(() =>
+          validateCreatePostRequest({
+            contentFocus: ContentFocus.TEXT_ONLY,
+            content: '',
+            collect: {
+              type: CollectPolicyType.NO_COLLECT,
+            },
+            delegate: false,
+            name: 42, // <<<<<<
+            locale: 'en',
+            kind: TransactionKind.CREATE_POST,
+            offChain: false,
+            profileId: mockProfileId(),
+            reference: {
+              type: ReferencePolicyType.ANYONE,
+            },
+          }),
+        ).toThrowErrorMatchingInlineSnapshot(`
+          "fix the following issues
+          · "name": Expected string, received number"
         `);
       });
     });

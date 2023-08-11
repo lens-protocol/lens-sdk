@@ -86,8 +86,10 @@ export type NftMetadata = {
    * The name of the collect NFT.
    *
    * This is the NFT name visible on marketplaces like OpenSea.
+   *
+   * @deprecated Use the `name` field at the request object top level.
    */
-  name: string;
+  name?: string;
   /**
    * The description of the collect NFT.
    *
