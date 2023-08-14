@@ -1,5 +1,13 @@
 # @lens-protocol/wagmi
 
+## 2.1.0-next.9
+
+### Patch Changes
+
+- Updated dependencies
+  - @lens-protocol/shared-kernel@0.10.0-next.1
+  - @lens-protocol/react-web@1.3.0-next.9
+
 ## 2.1.0-next.8
 
 ### Patch Changes
