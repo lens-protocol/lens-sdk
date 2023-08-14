@@ -1,12 +1,6 @@
 import { SafeApolloClient } from '@lens-protocol/api-bindings';
-import {
-  PendingSigningRequestError,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
 import { CreatePost, CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
-  BroadcastingError,
   IMetaTransactionNonceGateway,
   IOnChainRelayer,
   SubsidizeOnChain,
@@ -18,9 +12,9 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
 
+import { CreatePostPresenter, INewPostCacheManager } from './CreatePostPresenter';
 import { IMetadataUploader } from './IMetadataUploader';
 import { ITransactionFactory } from './ITransactionFactory';
-import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { CreateOffChainPostGateway } from './publication-call-gateways/CreateOffChainPostGateway';
 import { CreateOnChainPostGateway } from './publication-call-gateways/CreateOnChainPostGateway';
 
@@ -29,6 +23,7 @@ export type CreatePostControllerArgs<T extends CreatePostRequest> = {
   apolloClient: SafeApolloClient;
   offChainRelayer: IOffChainRelayer<T>;
   onChainRelayer: IOnChainRelayer<T>;
+  publicationCacheManager: INewPostCacheManager;
   transactionFactory: ITransactionFactory<T>;
   transactionGateway: IMetaTransactionNonceGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;
@@ -36,10 +31,7 @@ export type CreatePostControllerArgs<T extends CreatePostRequest> = {
 };
 
 export class CreatePostController<T extends CreatePostRequest> {
-  private readonly presenter = new TransactionResultPresenter<
-    CreatePostRequest,
-    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
-  >();
+  private readonly presenter: CreatePostPresenter;
 
   private readonly createPost: CreatePost;
 
@@ -48,11 +40,14 @@ export class CreatePostController<T extends CreatePostRequest> {
     apolloClient,
     offChainRelayer,
     onChainRelayer,
+    publicationCacheManager,
     transactionFactory,
     transactionGateway,
     transactionQueue,
     uploader,
   }: CreatePostControllerArgs<T>) {
+    this.presenter = new CreatePostPresenter(publicationCacheManager);
+
     const onChainGateway = new CreateOnChainPostGateway(apolloClient, transactionFactory, uploader);
 
     const onChainPost = new SubsidizeOnChain(

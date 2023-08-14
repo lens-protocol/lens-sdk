@@ -23,13 +23,14 @@ export function useCreateEncryptedPostController({ encryption, upload }: UseCrea
   const {
     activeWallet,
     apolloClient,
+    environment,
     offChainRelayer,
     onChainRelayer,
+    publicationCacheManager,
     storageProvider,
     transactionFactory,
     transactionGateway,
     transactionQueue,
-    environment,
   } = useSharedDependencies();
   const { data: signer } = useActiveWalletSigner();
 
@@ -67,6 +68,7 @@ export function useCreateEncryptedPostController({ encryption, upload }: UseCrea
       apolloClient,
       offChainRelayer,
       onChainRelayer,
+      publicationCacheManager,
       transactionFactory,
       transactionGateway,
       transactionQueue,
