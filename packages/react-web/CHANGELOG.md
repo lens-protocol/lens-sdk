@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- 773c2ed8: **Added** ability to override `sources` in `useExplorePublications` hook
+- 773c2ed8: **Added** ability to override `sources` in `useExplorePublications` hook and support to `noRandomize` param.
 - 773c2ed8: **Added** `name` support to non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
 
 ### Patch Changes

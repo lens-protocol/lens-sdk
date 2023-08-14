@@ -3038,6 +3038,7 @@ export type ExplorePublicationsVariables = Exact<{
   sortCriteria: PublicationSortCriteria;
   sources: Array<Scalars['Sources']> | Scalars['Sources'];
   timestamp?: InputMaybe<Scalars['TimestampScalar']>;
+  noRandomize?: InputMaybe<Scalars['Boolean']>;
   mediaTransformPublicationSmall?: InputMaybe<MediaTransformParams>;
   mediaTransformPublicationMedium?: InputMaybe<MediaTransformParams>;
   mediaTransformProfileThumbnail?: InputMaybe<MediaTransformParams>;
@@ -7423,6 +7424,7 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
     $sortCriteria: PublicationSortCriteria!
     $sources: [Sources!]!
     $timestamp: TimestampScalar
+    $noRandomize: Boolean
     $mediaTransformPublicationSmall: MediaTransformParams = {}
     $mediaTransformPublicationMedium: MediaTransformParams = {}
     $mediaTransformProfileThumbnail: MediaTransformParams = {}
@@ -7437,6 +7439,7 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
         sortCriteria: $sortCriteria
         sources: $sources
         timestamp: $timestamp
+        noRandomize: $noRandomize
       }
     ) {
       items {
@@ -7482,6 +7485,7 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
  *      sortCriteria: // value for 'sortCriteria'
  *      sources: // value for 'sources'
  *      timestamp: // value for 'timestamp'
+ *      noRandomize: // value for 'noRandomize'
  *      mediaTransformPublicationSmall: // value for 'mediaTransformPublicationSmall'
  *      mediaTransformPublicationMedium: // value for 'mediaTransformPublicationMedium'
  *      mediaTransformProfileThumbnail: // value for 'mediaTransformProfileThumbnail'

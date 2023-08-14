@@ -47,6 +47,13 @@ export type UseExplorePublicationsArgs = PaginatedArgs<
     timestamp?: number;
 
     /**
+     * If you want the randomizer off
+     *
+     * @defaultValue false
+     */
+    noRandomize?: boolean;
+
+    /**
      * @defaultValue defaults to the value provided in {@link LensConfig}
      */
     sources?: AppId[];
@@ -89,6 +96,7 @@ export function useExplorePublications({
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
   sortCriteria = PublicationSortCriteria.Latest,
   timestamp,
+  noRandomize,
   publicationTypes,
   excludeProfileIds,
   metadataFilter,
@@ -106,6 +114,7 @@ export function useExplorePublications({
               publicationTypes,
               sortCriteria,
               timestamp,
+              noRandomize,
               observerId,
               sources,
             }),

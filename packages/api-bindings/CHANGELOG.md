@@ -6,7 +6,7 @@
 
 - 773c2ed8: **Fixes** issues with `profileIds` not used to evaluate cache hits. Affecting `usePublications` and `useProfiles`.
 - 773c2ed8: **Added** missing `commentsOfOrdering` and `commentsRankingFilter` to `useComments` hook
-- 773c2ed8: **Added** ability to override `sources` in `useExplorePublications` hook
+- 773c2ed8: **Added** ability to override `sources` in `useExplorePublications` hook and support to `noRandomize` param.
 - 773c2ed8: **Added** `name` support to non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
 - Updated dependencies [773c2ed8]
   - @lens-protocol/domain@0.10.0-next.5
