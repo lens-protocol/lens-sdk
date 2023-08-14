@@ -4,4 +4,4 @@
 "@lens-protocol/api-bindings": patch
 ---
 
-**Added** ability to override `sources` in `useExplorePublications` hook
+**Added** ability to override `sources` in `useExplorePublications` hook and support to `noRandomize` param.

@@ -1,5 +1,25 @@
 # @lens-protocol/react-web
 
+## 1.3.0-next.8
+
+### Minor Changes
+
+- 773c2ed8: **Added** ability to override `sources` in `useExplorePublications` hook and support to `noRandomize` param.
+- 773c2ed8: **Added** `name` support to non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
+
+### Patch Changes
+
+- 773c2ed8: **Fixes** issues with `profileIds` not used to evaluate cache hits. Affecting `usePublications` and `useProfiles`.
+- 773c2ed8: **Added** missing `commentsOfOrdering` and `commentsRankingFilter` to `useComments` hook
+- Updated dependencies [773c2ed8]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [773c2ed8]
+  - @lens-protocol/api-bindings@0.10.0-next.6
+  - @lens-protocol/react@1.3.0-next.8
+  - @lens-protocol/domain@0.10.0-next.5
+  - @lens-protocol/gated-content@0.3.2-next.6
+
 ## 1.3.0-next.7
 
 ### Patch Changes

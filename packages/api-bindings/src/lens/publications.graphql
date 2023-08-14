@@ -59,6 +59,7 @@ query ExplorePublications(
   $sortCriteria: PublicationSortCriteria!
   $sources: [Sources!]!
   $timestamp: TimestampScalar
+  $noRandomize: Boolean
   $mediaTransformPublicationSmall: MediaTransformParams = {}
   $mediaTransformPublicationMedium: MediaTransformParams = {}
   $mediaTransformProfileThumbnail: MediaTransformParams = {}
@@ -73,6 +74,7 @@ query ExplorePublications(
       sortCriteria: $sortCriteria
       sources: $sources
       timestamp: $timestamp
+      noRandomize: $noRandomize
     }
   ) {
     items {
