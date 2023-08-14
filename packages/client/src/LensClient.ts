@@ -1,8 +1,19 @@
 import { Authentication, IAuthentication } from './authentication';
+import { Bookmarks } from './bookmarks';
 import { LensConfig } from './consts/config';
+import { Explore } from './explore';
+import { Feed } from './feed';
+import { Interests } from './interests';
+import { Momoka } from './momoka';
+import { Nfts } from './nfts';
+import { Nonces } from './nonces';
+import { Notifications } from './notifications';
 import { Profile } from './profile';
 import { Publication } from './publication';
+import { Reactions } from './reactions';
+import { Revenue } from './revenue';
 import { Search } from './search';
+import { Transaction } from './transaction';
 
 /**
  * The LensClient is the main entry point for the LensClient SDK.
@@ -36,6 +47,62 @@ export class LensClient {
   }
 
   /**
+   * The Bookmarks module
+   */
+  get bookmarks(): Bookmarks {
+    return new Bookmarks(this.config, this._authentication);
+  }
+
+  /**
+   * The Explore module
+   */
+  get explore(): Explore {
+    return new Explore(this.config, this._authentication);
+  }
+
+  /**
+   * The Feed module
+   */
+  get feed(): Feed {
+    return new Feed(this.config, this._authentication);
+  }
+
+  /**
+   * The Interests module
+   */
+  get interests(): Interests {
+    return new Interests(this.config, this._authentication);
+  }
+
+  /**
+   * The Momoka module
+   */
+  get momoka(): Momoka {
+    return new Momoka(this.config, this._authentication);
+  }
+
+  /**
+   * The Nfts module
+   */
+  get nfts(): Nfts {
+    return new Nfts(this.config, this._authentication);
+  }
+
+  /**
+   * The Nonces module
+   */
+  get nonces(): Nonces {
+    return new Nonces(this.config, this._authentication);
+  }
+
+  /**
+   * The Notifications module
+   */
+  get notifications(): Notifications {
+    return new Notifications(this.config, this._authentication);
+  }
+
+  /**
    * The Profile module
    */
   get profile(): Profile {
@@ -50,9 +117,30 @@ export class LensClient {
   }
 
   /**
+   * The Reactions module
+   */
+  get reactions(): Reactions {
+    return new Reactions(this.config, this._authentication);
+  }
+
+  /**
+   * The Revenue module
+   */
+  get revenue(): Revenue {
+    return new Revenue(this.config, this._authentication);
+  }
+
+  /**
    * The Search module
    */
   get search(): Search {
     return new Search(this.config, this._authentication);
+  }
+
+  /**
+   * The Transaction module
+   */
+  get transaction(): Transaction {
+    return new Transaction(this.config, this._authentication);
   }
 }

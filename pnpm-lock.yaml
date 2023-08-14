@@ -388,8 +388,8 @@ importers:
         specifier: ^2.6.1
         version: 2.6.1
       zod:
-        specifier: ^3.21.4
-        version: 3.21.4
+        specifier: ^3.20.6
+        version: 3.20.6
     devDependencies:
       '@babel/core':
         specifier: ^7.22.10
@@ -21291,10 +21291,6 @@ packages:
 
   /zod@3.20.6:
     resolution: {integrity: sha512-oyu0m54SGCtzh6EClBVqDDlAYRz4jrVtKwQ7ZnsEmMI9HnzuZFj8QFwAY1M5uniIYACdGvv0PBWPF2kO0aNofA==}
-
-  /zod@3.21.4:
-    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
-    dev: false
 
   /zustand@4.3.8(react@18.2.0):
     resolution: {integrity: sha512-4h28KCkHg5ii/wcFFJ5Fp+k1J3gJoasaIbppdgZFO4BPJnsNxL0mQXBSFgOgAdCdBj35aDTPvdAJReTMntFPGg==}

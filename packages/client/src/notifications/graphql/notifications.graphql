@@ -61,15 +61,13 @@ fragment QuoteNotification on QuoteNotification {
 fragment ActedNotification on ActedNotification {
   id
   actions {
+    id
     profile {
       ...ProfileFields
     }
-    actions {
+    action {
       ... on CollectOpenActionResult {
         ...CollectOpenActionResult
-      }
-      ... on NftDropOpenAction {
-        ...NftDropOpenAction
       }
       ... on UnknownOpenActionResult {
         ...UnknownOpenActionResult
@@ -114,14 +112,9 @@ fragment MentionNotification on MentionNotification {
   }
 }
 
-fragment FutureProofNotification on FutureProofNotification {
-  id
-}
-
 # queries
 query Notifications(
   $request: NotificationRequest!
-  $observerId: ProfileId
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
@@ -148,9 +141,6 @@ query Notifications(
       }
       ... on MentionNotification {
         ...MentionNotification
-      }
-      ... on FutureProofNotification {
-        ...FutureProofNotification
       }
     }
     pageInfo {

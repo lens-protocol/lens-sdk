@@ -4,7 +4,7 @@ fragment OptimisticStatusResult on OptimisticStatusResult {
   isFinalisedOnChain
 }
 
-fragment ERC20 on ERC20 {
+fragment Erc20 on Erc20 {
   name
   symbol
   decimals
@@ -13,27 +13,27 @@ fragment ERC20 on ERC20 {
   }
 }
 
-fragment FiatAmount on FiatAmount {
-  asset {
-    ...Fiat
-  }
-  value
-}
+# fragment FiatAmount on FiatAmount {
+#   asset {
+#     ...Fiat
+#   }
+#   value
+# }
 
-fragment Fiat on Fiat {
-  name
-  symbol
-  decimals
-}
+# fragment Fiat on Fiat {
+#   name
+#   symbol
+#   decimals
+# }
 
 fragment Amount on Amount {
   asset {
-    ...ERC20
+    ...Erc20
   }
   value
-  rate(currency: USD) {
-    ...FiatAmount
-  }
+  # rate(currency: USD) {
+  #   ...FiatAmount
+  # }
 }
 
 fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
@@ -92,7 +92,7 @@ fragment Video on Video {
 
 fragment VideoSet on VideoSet {
   rawURL
-  media {
+  video {
     ...Video
   }
   altTag
@@ -104,16 +104,16 @@ fragment Audio on Audio {
 }
 
 fragment AudioSet on AudioSet {
-  rawURL
-  media {
+  rawURI
+  audio {
     ...Audio
   }
 }
 
 # profile
 fragment ProfileCoverSet on ImageSet {
-  rawURL
-  media {
+  rawURI
+  image {
     ...Image
   }
   altTag
@@ -123,8 +123,8 @@ fragment ProfileCoverSet on ImageSet {
 }
 
 fragment ProfilePictureSet on ImageSet {
-  rawURL
-  media {
+  rawURI
+  image {
     ...Image
   }
   altTag
@@ -137,7 +137,7 @@ fragment ProfileFields on Profile {
   __typename
   id
   metadata {
-    rawURL
+    rawURI
     displayName
     bio
     coverPicture {
@@ -189,9 +189,7 @@ fragment ProfileFields on Profile {
     value
   }
   onChainIdentity {
-    proofOfHumanity {
-      isVerified
-    }
+    proofOfHumanity
     ens {
       name
     }
@@ -270,14 +268,14 @@ fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
   contract {
     ...NetworkAddress
   }
-  amount {
+  amountOptional: amount {
     ...Amount
   }
   recipient
   referralFee
   followerOnly
   collectLimitOptional: collectLimit
-  endsAtOptional: endsAt
+  endTimestampOptional: endTimestamp
 }
 
 fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
@@ -294,10 +292,10 @@ fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectO
   referralFee
   followerOnly
   collectLimitOptional: collectLimit
-  endsAtOptional: endsAt
+  endTimestampOptional: endTimestamp
 }
 
-fragment UnknownOpenActionSettings on UnknownOpenActionSettings {
+fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
   contract {
     ...NetworkAddress
   }
@@ -347,7 +345,7 @@ fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeColl
   recipient
   referralFee
   followerOnly
-  endsAt
+  endTimestamp
 }
 
 fragment LegacyRevertCollectModuleSettings on LegacyRevertCollectModuleSettings {
@@ -366,7 +364,7 @@ fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSetti
   recipient
   referralFee
   followerOnly
-  endsAt
+  endTimestamp
 }
 
 fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFeeCollectModuleSettings {
@@ -383,28 +381,30 @@ fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFee
   referralFee
   followerOnly
   collectLimitOptional: collectLimit
-  endsAtOptional: endsAt
+  endTimestampOptional: endTimestamp
 }
 
 fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings {
   contract {
     ...NetworkAddress
   }
-  amount {
+  amountOptional: amount {
     ...Amount
   }
   recipient
   referralFee
   followerOnly
   collectLimitOptional: collectLimit
-  endsAtOptional: endsAt
+  endTimestampOptional: endTimestamp
 }
 
 fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleSettings {
   contract {
     ...NetworkAddress
   }
-  vault
+  vault {
+    ...NetworkAddress
+  }
   amount {
     ...Amount
   }
@@ -412,7 +412,7 @@ fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleS
   referralFee
   followerOnly
   collectLimitOptional: collectLimit
-  endsAtOptional: endsAt
+  endTimestampOptional: endTimestamp
 }
 
 fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSettings {
@@ -426,23 +426,12 @@ fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSetting
   referralFee
   followerOnly
   collectLimitOptional: collectLimit
-  endsAtOptional: endsAt
-}
-
-fragment UnknownCollectModuleSettings on UnknownCollectModuleSettings {
-  contract {
-    ...NetworkAddress
-  }
-  collectModuleReturnData
+  endTimestampOptional: endTimestamp
 }
 
 # open action results
 fragment CollectOpenActionResult on CollectOpenActionResult {
   type
-}
-
-fragment NftDropOpenAction on NftDropOpenAction {
-  tokenMinted
 }
 
 fragment UnknownOpenActionResult on UnknownOpenActionResult {
@@ -457,16 +446,13 @@ fragment CanDecryptResponse on CanDecryptResponse {
 }
 
 fragment PublicationOperations on PublicationOperations {
-  hasUpvoted: hasReacted(type: UPVOTE)
-  hasDownvoted: hasReacted(type: DOWNVOTE)
+  hasUpvoted: hasReacted(request: { type: UPVOTE })
+  hasDownvoted: hasReacted(request: { type: DOWNVOTE })
   isNotInterested
   hasBookmarked
   hasActed {
     ... on CollectOpenActionResult {
       ...CollectOpenActionResult
-    }
-    ... on NftDropOpenAction {
-      ...NftDropOpenAction
     }
     ... on UnknownOpenActionResult {
       ...UnknownOpenActionResult
@@ -481,7 +467,7 @@ fragment PublicationOperations on PublicationOperations {
 }
 
 # gated content
-fragment MetadataV3LitEncryption on MetadataV3LitEncryption {
+fragment PublicationMetadataV3LitEncryption on PublicationMetadataV3LitEncryption {
   encryptionKey
   accessCondition {
     ... on NftOwnershipCondition {
@@ -538,7 +524,7 @@ fragment ProfileOwnershipCondition on ProfileOwnershipCondition {
 }
 
 fragment FollowCondition on FollowCondition {
-  profileId
+  follow
 }
 
 fragment CollectCondition on CollectCondition {
@@ -593,29 +579,10 @@ fragment OrCondition on OrCondition {
 }
 
 # publication metadata
-fragment MetadataV3Common on MetadataV3Common {
-  id
-  rawURL
-  # content
-  locale
-  tags
-  contentWarning
-  hideFromFeed
-  globalReach
-  appId
-  marketplace {
-    ...MarketplaceMetadata
-  }
-  encryptedWith {
-    ... on MetadataV3LitEncryption {
-      ...MetadataV3LitEncryption
-    }
-  }
-}
 
 fragment PublicationImageSet on ImageSet {
-  rawURL
-  media {
+  rawURI
+  image {
     ...Image
   }
   altTag
@@ -624,7 +591,7 @@ fragment PublicationImageSet on ImageSet {
   }
 }
 
-fragment MarketplaceMetadataAttribute on MarketplaceMetadataAttribute {
+fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {
   displayType
   traitType
   value
@@ -632,16 +599,16 @@ fragment MarketplaceMetadataAttribute on MarketplaceMetadataAttribute {
 
 fragment MarketplaceMetadata on MarketplaceMetadata {
   description
-  externalUrl
+  externalURL
   name
   attributes {
-    ...MarketplaceMetadataAttribute
+    ...PublicationMarketplaceMetadataAttribute
   }
   image
   animationUrl
 }
 
-fragment MetadataMediaVideo on MetadataMediaVideo {
+fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
   videoMimeType: type
   videoItem: item {
     ...VideoSet
@@ -653,7 +620,7 @@ fragment MetadataMediaVideo on MetadataMediaVideo {
   license
 }
 
-fragment MetadataMediaImage on MetadataMediaImage {
+fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
   imageMimeType: type
   imageItem: item {
     ...PublicationImageSet
@@ -661,7 +628,7 @@ fragment MetadataMediaImage on MetadataMediaImage {
   license
 }
 
-fragment MetadataMediaAudio on MetadataMediaAudio {
+fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
   audioMimeType: type
   audioItem: item {
     ...AudioSet
@@ -679,7 +646,7 @@ fragment MetadataMediaAudio on MetadataMediaAudio {
   lyrics
 }
 
-fragment MetadataV2 on MetadataV2 {
+fragment PublicationMetadataV2 on PublicationMetadataV2 {
   name
   description
   optionalContent: content
@@ -698,20 +665,20 @@ fragment MetadataV2 on MetadataV2 {
     }
   }
   attributes {
-    ...MarketplaceMetadataAttribute
+    ...PublicationMarketplaceMetadataAttribute
   }
   locale
   tags
   contentWarning
   v2mainContentFocus: mainContentFocus
   animationUrl
-  encryptionInput {
+  encryptedWith {
     encryptionKey
     encryptedFields {
       content
       image
       media {
-        url
+        uri
         mimeType
         altTag
         cover
@@ -748,66 +715,126 @@ fragment MetadataV2 on MetadataV2 {
   }
 }
 
-fragment VideoMetadataV1 on VideoMetadataV1 {
-  ...MetadataV3Common
+fragment PublicationVideoMetadataV1 on PublicationVideoMetadataV1 {
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   videoMainContentFocus: mainContentFocus
   video {
-    ...MetadataMediaVideo
+    ...PublicationMetadataMediaVideo
   }
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
-fragment ImageMetadataV1 on ImageMetadataV1 {
-  ...MetadataV3Common
+fragment PublicationImageMetadataV1 on PublicationImageMetadataV1 {
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   imageMainContentFocus: mainContentFocus
   image {
-    ...MetadataMediaImage
+    ...PublicationMetadataMediaImage
   }
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment ArticleMetadataV1 on ArticleMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   content
-  title
+  optionalTitle: title
   articleMainContentFocus: mainContentFocus
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment EventMetadataV1 on EventMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   eventMainContentFocus: mainContentFocus
   geographic {
@@ -819,56 +846,101 @@ fragment EventMetadataV1 on EventMetadataV1 {
   links
   location
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment LinkMetadataV1 on LinkMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   linkMainContentFocus: mainContentFocus
   sharingLink
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment EmbedMetadataV1 on EmbedMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   embedMainContentFocus: mainContentFocus
   embed
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment CheckingInMetadataV1 on CheckingInMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   checkingInMainContentFocus: mainContentFocus
   location
@@ -877,142 +949,247 @@ fragment CheckingInMetadataV1 on CheckingInMetadataV1 {
     longitude
   }
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment TextOnlyMetadataV1 on TextOnlyMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   content
   textOnlyMainContentFocus: mainContentFocus
 }
 
 fragment ThreeDMetadataV1 on ThreeDMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   threeDMainContentFocus: mainContentFocus
   assets {
-    url
+    uri
     zipPath
-    playerUrl
+    playerURL
     format
     license
   }
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment StoryMetadataV1 on StoryMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   storyMainContentFocus: mainContentFocus
   asset {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment TransactionMetadataV1 on TransactionMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   transactionMainContentFocus: mainContentFocus
   type
   txHash
   chainId
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment MintMetadataV1 on MintMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   mintMainContentFocus: mainContentFocus
   mintLink
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment SpaceMetadataV1 on SpaceMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   spaceMainContentFocus: mainContentFocus
   title
   link
   startsAt
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
 
 fragment LiveStreamMetadataV1 on LiveStreamMetadataV1 {
-  ...MetadataV3Common
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  globalReach
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  encryptedWith {
+    ... on PublicationMetadataV3LitEncryption {
+      ...PublicationMetadataV3LitEncryption
+    }
+  }
   optionalContent: content
   liveStreamMainContentFocus: mainContentFocus
-  title
+  optionalTitle: title
   startsAt
-  endsAt
-  playbackUrl
-  liveUrl
-  isLiveNowApiCall
+  optionalEndsAt: endsAt
+  playbackURL
+  liveURL
+  checkLiveAPI
   attachments {
-    ... on MetadataMediaVideo {
-      ...MetadataMediaVideo
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
     }
-    ... on MetadataMediaImage {
-      ...MetadataMediaImage
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
     }
-    ... on MetadataMediaAudio {
-      ...MetadataMediaAudio
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
     }
   }
 }
@@ -1024,14 +1201,14 @@ fragment Post on Post {
     ...ProfileFields
   }
   metadata {
-    ... on MetadataV2 {
-      ...MetadataV2
+    ... on PublicationMetadataV2 {
+      ...PublicationMetadataV2
     }
-    ... on VideoMetadataV1 {
-      ...VideoMetadataV1
+    ... on PublicationVideoMetadataV1 {
+      ...PublicationVideoMetadataV1
     }
-    ... on ImageMetadataV1 {
-      ...ImageMetadataV1
+    ... on PublicationImageMetadataV1 {
+      ...PublicationImageMetadataV1
     }
     ... on ArticleMetadataV1 {
       ...ArticleMetadataV1
@@ -1107,8 +1284,8 @@ fragment Post on Post {
     ... on SimpleCollectOpenActionSettings {
       ...SimpleCollectOpenActionSettings
     }
-    ... on UnknownOpenActionSettings {
-      ...UnknownOpenActionSettings
+    ... on UnknownOpenActionModuleSettings {
+      ...UnknownOpenActionModuleSettings
     }
   }
   referenceModule {
@@ -1130,7 +1307,7 @@ fragment Post on Post {
   momoka {
     ...MomokaInfo
   }
-  operations(by: $observerId) {
+  operations {
     ...PublicationOperations
   }
   createdAt
@@ -1142,14 +1319,14 @@ fragment CommentBase on Comment {
     ...ProfileFields
   }
   metadata {
-    ... on MetadataV2 {
-      ...MetadataV2
+    ... on PublicationMetadataV2 {
+      ...PublicationMetadataV2
     }
-    ... on VideoMetadataV1 {
-      ...VideoMetadataV1
+    ... on PublicationVideoMetadataV1 {
+      ...PublicationVideoMetadataV1
     }
-    ... on ImageMetadataV1 {
-      ...ImageMetadataV1
+    ... on PublicationImageMetadataV1 {
+      ...PublicationImageMetadataV1
     }
     ... on ArticleMetadataV1 {
       ...ArticleMetadataV1
@@ -1225,8 +1402,8 @@ fragment CommentBase on Comment {
     ... on SimpleCollectOpenActionSettings {
       ...SimpleCollectOpenActionSettings
     }
-    ... on UnknownOpenActionSettings {
-      ...UnknownOpenActionSettings
+    ... on UnknownOpenActionModuleSettings {
+      ...UnknownOpenActionModuleSettings
     }
   }
   referenceModule {
@@ -1248,7 +1425,7 @@ fragment CommentBase on Comment {
   momoka {
     ...MomokaInfo
   }
-  operations(by: $observerId) {
+  operations {
     ...PublicationOperations
   }
   createdAt
@@ -1303,14 +1480,14 @@ fragment QuoteBase on Quote {
     ...ProfileFields
   }
   metadata {
-    ... on MetadataV2 {
-      ...MetadataV2
+    ... on PublicationMetadataV2 {
+      ...PublicationMetadataV2
     }
-    ... on VideoMetadataV1 {
-      ...VideoMetadataV1
+    ... on PublicationVideoMetadataV1 {
+      ...PublicationVideoMetadataV1
     }
-    ... on ImageMetadataV1 {
-      ...ImageMetadataV1
+    ... on PublicationImageMetadataV1 {
+      ...PublicationImageMetadataV1
     }
     ... on ArticleMetadataV1 {
       ...ArticleMetadataV1
@@ -1386,8 +1563,8 @@ fragment QuoteBase on Quote {
     ... on SimpleCollectOpenActionSettings {
       ...SimpleCollectOpenActionSettings
     }
-    ... on UnknownOpenActionSettings {
-      ...UnknownOpenActionSettings
+    ... on UnknownOpenActionModuleSettings {
+      ...UnknownOpenActionModuleSettings
     }
   }
   referenceModule {
@@ -1409,7 +1586,7 @@ fragment QuoteBase on Quote {
   momoka {
     ...MomokaInfo
   }
-  operations(by: $observerId) {
+  operations {
     ...PublicationOperations
   }
   createdAt
@@ -1439,11 +1616,13 @@ fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
 }
 
 fragment RelaySuccess on RelaySuccess {
+  __typename
   txHash
   txId
 }
 
 fragment RelayError on RelayError {
+  __typename
   reason
 }
 

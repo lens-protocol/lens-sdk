@@ -5,10 +5,13 @@ import {
   AppFragment,
   ProfileFieldsFragment,
   PostFragment,
+  CommentFragment,
+  MirrorFragment,
   QuoteFragment,
   PaginatedResultInfoFragment,
   ProfileFragment,
-  CommentFragment,
+  CreateMomokaPublicationResultFragment,
+  RelayErrorFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -18,21 +21,24 @@ import {
   AppFragmentDoc,
   ProfileFieldsFragmentDoc,
   PostFragmentDoc,
+  CommentFragmentDoc,
+  MirrorFragmentDoc,
   QuoteFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   ProfileFragmentDoc,
-  CommentFragmentDoc,
+  CreateMomokaPublicationResultFragmentDoc,
+  RelayErrorFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type MomokaVerificationStatusSuccessFragment = { verified: boolean };
 
-export type MomokaVerificationStatusFailureFragment = { status: Types.MomokaValidatorError | null };
+export type MomokaVerificationStatusFailureFragment = { status: Types.MomokaValidatorErrorType };
 
 export type MomokaPostTransactionFragment = {
   transactionId: string;
   submitter: string;
   createdAt: string;
   publicationId: string;
-  app: AppFragment | null;
+  app: AppFragment;
   profile: ProfileFieldsFragment;
   verificationStatus:
     | MomokaVerificationStatusFailureFragment
@@ -45,7 +51,7 @@ export type MomokaCommentTransactionFragment = {
   createdAt: string;
   publicationId: string;
   commentedOnPublicationId: string;
-  app: AppFragment | null;
+  app: AppFragment;
   profile: ProfileFieldsFragment;
   commentedOnProfile: ProfileFieldsFragment;
   verificationStatus:
@@ -59,7 +65,7 @@ export type MomokaMirrorTransactionFragment = {
   createdAt: string;
   publicationId: string;
   mirrorOfPublicationId: string;
-  app: AppFragment | null;
+  app: AppFragment;
   profile: ProfileFieldsFragment;
   mirrorOfProfile: ProfileFieldsFragment;
   verificationStatus:
@@ -73,7 +79,7 @@ export type MomokaQuoteTransactionFragment = {
   createdAt: string;
   publicationId: string;
   quotedOnPublicationId: string;
-  app: AppFragment | null;
+  app: AppFragment;
   profile: ProfileFieldsFragment;
   quotedOnProfile: ProfileFieldsFragment;
   verificationStatus:
@@ -81,13 +87,16 @@ export type MomokaQuoteTransactionFragment = {
     | MomokaVerificationStatusSuccessFragment;
 };
 
+export type MomokaSubmitterResultFragment = {
+  address: string;
+  name: string;
+  totalTransactions: number;
+};
+
 export type MomokaSubmittersQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type MomokaSubmittersQuery = {
-  result: {
-    items: Array<{ address: string; name: string; totalTransactions: number }>;
-    pageInfo: PaginatedResultInfoFragment;
-  };
+  result: { items: Array<MomokaSubmitterResultFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
 export type MomokaSummaryQueryVariables = Types.Exact<{ [key: string]: never }>;
@@ -105,8 +114,7 @@ export type MomokaTransactionQuery = {
     | MomokaCommentTransactionFragment
     | MomokaMirrorTransactionFragment
     | MomokaPostTransactionFragment
-    | MomokaQuoteTransactionFragment
-    | null;
+    | MomokaQuoteTransactionFragment;
 };
 
 export type MomokaTransactionsQueryVariables = Types.Exact<{
@@ -125,6 +133,14 @@ export type MomokaTransactionsQuery = {
     >;
     pageInfo: PaginatedResultInfoFragment;
   };
+};
+
+export type BroadcastOnMomokaMutationVariables = Types.Exact<{
+  request: Types.BroadcastRequest;
+}>;
+
+export type BroadcastOnMomokaMutation = {
+  result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
 };
 
 export const MomokaVerificationStatusSuccessFragmentDoc = gql`
@@ -253,19 +269,25 @@ export const MomokaQuoteTransactionFragmentDoc = gql`
   ${MomokaVerificationStatusSuccessFragmentDoc}
   ${MomokaVerificationStatusFailureFragmentDoc}
 `;
+export const MomokaSubmitterResultFragmentDoc = gql`
+  fragment MomokaSubmitterResult on MomokaSubmitterResult {
+    address
+    name
+    totalTransactions
+  }
+`;
 export const MomokaSubmittersDocument = gql`
   query MomokaSubmitters {
     result: momokaSubmitters {
       items {
-        address
-        name
-        totalTransactions
+        ...MomokaSubmitterResult
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }
+  ${MomokaSubmitterResultFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
 export const MomokaSummaryDocument = gql`
@@ -333,6 +355,20 @@ export const MomokaTransactionsDocument = gql`
   ${MomokaQuoteTransactionFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
+export const BroadcastOnMomokaDocument = gql`
+  mutation BroadcastOnMomoka($request: BroadcastRequest!) {
+    result: broadcastOnMomoka(request: $request) {
+      ... on CreateMomokaPublicationResult {
+        ...CreateMomokaPublicationResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${CreateMomokaPublicationResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -345,6 +381,7 @@ const MomokaSubmittersDocumentString = print(MomokaSubmittersDocument);
 const MomokaSummaryDocumentString = print(MomokaSummaryDocument);
 const MomokaTransactionDocumentString = print(MomokaTransactionDocument);
 const MomokaTransactionsDocumentString = print(MomokaTransactionsDocument);
+const BroadcastOnMomokaDocumentString = print(BroadcastOnMomokaDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     MomokaSubmitters(
@@ -421,6 +458,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           }),
         'momokaTransactions',
         'query',
+      );
+    },
+    BroadcastOnMomoka(
+      variables: BroadcastOnMomokaMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: BroadcastOnMomokaMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<BroadcastOnMomokaMutation>(BroadcastOnMomokaDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'BroadcastOnMomoka',
+        'mutation',
       );
     },
   };

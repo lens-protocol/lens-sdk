@@ -1,7 +1,6 @@
 # queries
 query Publication(
   $request: PublicationRequest!
-  $observerId: ProfileId
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
@@ -24,7 +23,6 @@ query Publication(
 
 query Publications(
   $request: PublicationsRequest!
-  $observerId: ProfileId
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
@@ -51,7 +49,7 @@ query Publications(
 }
 
 # mutation fragments
-fragment CreatePostBroadcastItemResult on CreatePostBroadcastItemResult {
+fragment CreateOnChainPostBroadcastItemResult on CreateOnChainPostBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -67,17 +65,17 @@ fragment CreatePostBroadcastItemResult on CreatePostBroadcastItemResult {
     value {
       nonce
       deadline
-      profileId
-      contentURI
-      collectModule
-      collectModuleInitData
-      referenceModule
-      referenceModuleInitData
+      # profileId
+      # contentURI
+      # collectModule
+      # collectModuleInitData
+      # referenceModule
+      # referenceModuleInitData
     }
   }
 }
 
-fragment CreateCommentBroadcastItemResult on CreateCommentBroadcastItemResult {
+fragment CreateOnChainCommentBroadcastItemResult on CreateOnChainCommentBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -93,20 +91,20 @@ fragment CreateCommentBroadcastItemResult on CreateCommentBroadcastItemResult {
     value {
       nonce
       deadline
-      profileId
-      contentURI
-      profileIdPointed
-      pubIdPointed
-      collectModule
-      collectModuleInitData
-      referenceModuleData
-      referenceModule
-      referenceModuleInitData
+      # profileId
+      # contentURI
+      # profileIdPointed
+      # pubIdPointed
+      # collectModule
+      # collectModuleInitData
+      # referenceModuleData
+      # referenceModule
+      # referenceModuleInitData
     }
   }
 }
 
-fragment CreateMirrorBroadcastItemResult on CreateMirrorBroadcastItemResult {
+fragment CreateOnChainMirrorBroadcastItemResult on CreateOnChainMirrorBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -122,12 +120,72 @@ fragment CreateMirrorBroadcastItemResult on CreateMirrorBroadcastItemResult {
     value {
       nonce
       deadline
-      profileId
-      profileIdPointed
-      pubIdPointed
-      referenceModuleData
-      referenceModule
-      referenceModuleInitData
+      # profileId
+      # profileIdPointed
+      # pubIdPointed
+      # referenceModuleData
+      # referenceModule
+      # referenceModuleInitData
+    }
+  }
+}
+
+fragment CreateMomokaPostBroadcastItemResult on CreateMomokaPostBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      PostWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+}
+
+fragment CreateMomokaCommentBroadcastItemResult on CreateMomokaCommentBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      CommentWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+}
+
+fragment CreateMomokaMirrorBroadcastItemResult on CreateMomokaMirrorBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      MirrorWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
     }
   }
 }
@@ -138,7 +196,7 @@ mutation CreateOnChainPostTypedData(
   $options: TypedDataOptions
 ) {
   result: createOnChainPostTypedData(request: $request, options: $options) {
-    ...CreatePostBroadcastItemResult
+    ...CreateOnChainPostBroadcastItemResult
   }
 }
 
@@ -147,7 +205,7 @@ mutation CreateOnChainCommentTypedData(
   $options: TypedDataOptions
 ) {
   result: createOnChainCommentTypedData(request: $request, options: $options) {
-    ...CreateCommentBroadcastItemResult
+    ...CreateOnChainCommentBroadcastItemResult
   }
 }
 
@@ -156,25 +214,25 @@ mutation CreateOnChainMirrorTypedData(
   $options: TypedDataOptions
 ) {
   result: createOnChainMirrorTypedData(request: $request, options: $options) {
-    ...CreateMirrorBroadcastItemResult
+    ...CreateOnChainMirrorBroadcastItemResult
   }
 }
 
-mutation CreateMomokaPostTypedData($request: CreateMomokaPostRequest!) {
+mutation CreateMomokaPostTypedData($request: MomokaPostRequest!) {
   result: createMomokaPostTypedData(request: $request) {
-    ...CreatePostBroadcastItemResult
+    ...CreateMomokaPostBroadcastItemResult
   }
 }
 
-mutation CreateMomokaCommentTypedData($request: CreateMomokaCommentRequest!) {
+mutation CreateMomokaCommentTypedData($request: MomokaCommentRequest!) {
   result: createMomokaCommentTypedData(request: $request) {
-    ...CreateCommentBroadcastItemResult
+    ...CreateMomokaCommentBroadcastItemResult
   }
 }
 
-mutation CreateMomokaMirrorTypedData($request: CreateMomokaMirrorRequest!) {
+mutation CreateMomokaMirrorTypedData($request: MomokaMirrorRequest!) {
   result: createMomokaMirrorTypedData(request: $request) {
-    ...CreateMirrorBroadcastItemResult
+    ...CreateMomokaMirrorBroadcastItemResult
   }
 }
 
@@ -211,7 +269,7 @@ mutation MirrorOnChain($request: CreateOnChainMirrorRequest!) {
   }
 }
 
-mutation PostOnMomoka($request: CreateMomokaPostRequest!) {
+mutation PostOnMomoka($request: MomokaPostRequest!) {
   result: postOnMomoka(request: $request) {
     ... on CreateMomokaPublicationResult {
       ...CreateMomokaPublicationResult
@@ -222,7 +280,7 @@ mutation PostOnMomoka($request: CreateMomokaPostRequest!) {
   }
 }
 
-mutation CommentOnMomoka($request: CreateMomokaCommentRequest!) {
+mutation CommentOnMomoka($request: MomokaCommentRequest!) {
   result: commentOnMomoka(request: $request) {
     ... on CreateMomokaPublicationResult {
       ...CreateMomokaPublicationResult
@@ -233,7 +291,7 @@ mutation CommentOnMomoka($request: CreateMomokaCommentRequest!) {
   }
 }
 
-mutation MirrorOnMomoka($request: CreateMomokaMirrorRequest!) {
+mutation MirrorOnMomoka($request: MomokaMirrorRequest!) {
   result: mirrorOnMomoka(request: $request) {
     ... on CreateMomokaPublicationResult {
       ...CreateMomokaPublicationResult

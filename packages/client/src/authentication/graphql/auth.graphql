@@ -1,0 +1,28 @@
+fragment AuthChallenge on AuthChallengeResult {
+  id
+  text
+}
+
+query AuthChallenge($request: ChallengeRequest!) {
+  result: challenge(request: $request) {
+    ...AuthChallenge
+  }
+}
+
+query AuthVerify($request: VerifyRequest!) {
+  result: verify(request: $request)
+}
+
+mutation AuthAuthenticate($request: SignedAuthChallenge!) {
+  result: authenticate(request: $request) {
+    accessToken
+    refreshToken
+  }
+}
+
+mutation AuthRefresh($request: RefreshRequest!) {
+  result: refresh(request: $request) {
+    accessToken
+    refreshToken
+  }
+}

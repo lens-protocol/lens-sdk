@@ -15,7 +15,6 @@ import {
   ActedNotificationFragment,
   CommentNotificationFragment,
   FollowNotificationFragment,
-  FutureProofNotificationFragment,
   getSdk,
   MentionNotificationFragment,
   MirrorNotificationFragment,
@@ -28,11 +27,11 @@ export type NotificationFragment =
   | ActedNotificationFragment
   | CommentNotificationFragment
   | FollowNotificationFragment
-  | FutureProofNotificationFragment
   | MentionNotificationFragment
   | MirrorNotificationFragment
   | QuoteNotificationFragment
-  | ReactionNotificationFragment;
+  | ReactionNotificationFragment
+  | Record<string, never>;
 
 /**
  * Notifications on activity for a profile including collects, comment, new followers, and mirrors.
@@ -55,7 +54,6 @@ export class Notifications {
 
   async fetch(
     request: NotificationRequest,
-    observerId?: string,
   ): PromiseResult<
     PaginatedResult<NotificationFragment>,
     CredentialsExpiredError | NotAuthenticatedError
@@ -65,7 +63,6 @@ export class Notifications {
         const result = await this.sdk.Notifications(
           {
             request: currRequest,
-            observerId,
             ...buildImageTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,

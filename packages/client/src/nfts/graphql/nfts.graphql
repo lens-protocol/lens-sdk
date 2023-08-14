@@ -1,0 +1,82 @@
+fragment Nft on NFT {
+  contractName
+  contract {
+    ...NetworkAddress
+  }
+  symbol
+  tokenId
+  ownerInfo {
+    amount
+    address
+  }
+  name
+  description
+  contentURI
+  originalContent {
+    url
+    animationUrl
+    metaType
+  }
+  collectionName
+  ercType
+}
+
+fragment NftGallery on NftGallery {
+  id
+  name
+  createdAt
+  updatedAt
+  items {
+    ...Nft
+  }
+}
+
+fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
+  id
+  text
+}
+
+# queries
+query Nfts($request: NFTsRequest!) {
+  result: nfts(request: $request) {
+    items {
+      ...Nft
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query ProfileGalleries($request: NftGalleriesRequest!) {
+  result: nftGalleries(request: $request) {
+    ...NftGallery
+  }
+}
+
+# mutations
+mutation NftOwnershipChallenge($request: NftOwnershipChallengeRequest!) {
+  result: nftOwnershipChallenge(request: $request) {
+    ...NftOwnershipChallengeResult
+  }
+}
+
+mutation CreateNFTGallery($request: NftGalleryCreateRequest!) {
+  result: createNftGallery(request: $request)
+}
+
+mutation UpdateNFTGalleryInfo($request: NftGalleryUpdateInfoRequest!) {
+  updateNftGalleryInfo(request: $request)
+}
+
+mutation UpdateNFTGalleryOrder($request: NftGalleryUpdateItemOrderRequest!) {
+  updateNftGalleryOrder(request: $request)
+}
+
+mutation UpdateNFTGalleryItems($request: NftGalleryUpdateItemsRequest!) {
+  updateNftGalleryItems(request: $request)
+}
+
+mutation DeleteNFTGallery($request: NftGalleryDeleteRequest!) {
+  deleteNftGallery(request: $request)
+}

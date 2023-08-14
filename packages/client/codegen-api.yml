@@ -8,62 +8,39 @@ config:
 
   scalars:
     AppId: string
-    AudioMimeType: string
     BlockchainData: string
     BroadcastId: string
     ChainId: string
     ChallengeId: string
-    CollectModuleData: string
     ContentEncryptionKey: string
-    ContractPublicationId: string
-    CreateDeleteEIP712TypedData: string
     CreateHandle: string
-    CreateMirrorEIP712TypedData: string
     Cursor: string
     DateTime: string
-    EncryptedValueScalar: string
+    EncryptedValue: string
     Ens: string
-    Erc20: string
     EvmAddress: string
-    FeedId: string
-    FollowModuleData: string
     Handle: string
-    HandleClaimIdScalar: string
-    ImageMimeType: string
     ImageSizeTransform: ImageSizeTransform
     IpfsCid: string
     Jwt: string
     Limit: string
     Locale: string
-    Location: string
     Markdown: string
-    MetadataLicenseType: string
-    MetadataMediaAudioType: string
     MimeType: string
     MomokaId: string
     MomokaProof: string
-    MomokaTransactionUnion: string
     NftGalleryId: string
-    NftOwnershipChallengeId: string
-    NftTokenId: string
+    NftGalleryName: string
     Nonce: string
-    NotificationId: string
     ProfileId: string
-    ProfileInterest: string
-    ProfileSortCriteria: string
     PublicationId: string
-    PublicationTag: string
-    PublicationUrl: string
-    ReactionId: string
-    ReferenceModuleData: string
     Signature: string
-    ThreeDFormat: string
+    TokenId: string
     TxHash: string
     TxId: string
     UnixTimestamp: string
-    Uri: string
-    Url: string
-    VideoMimeType: string
+    URI: string
+    URL: string
     Void: string
 
   avoidOptionals:

@@ -1,11 +1,10 @@
 query SearchPublications(
   $request: PublicationSearchRequest!
-  $observerId: ProfileId
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
 ) {
-  result: searchPublication(request: $request) {
+  result: searchPublications(request: $request) {
     items {
       ... on Post {
         ...Post
@@ -28,7 +27,7 @@ query SearchProfiles(
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
 ) {
-  result: searchProfile(request: $request) {
+  result: searchProfiles(request: $request) {
     items {
       ...Profile
     }

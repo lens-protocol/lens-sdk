@@ -13,12 +13,11 @@ describe('Given a paginated query function and the paginated query result helper
       async (currRequest) => {
         const res = await sdk.Profiles({
           request: currRequest,
-          observerId: undefined,
         });
 
         return res.data.result;
       },
-      { ownedBy: ['0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6'], limit: 2 },
+      { where: { ownedBy: ['0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6'], limit: 2 } },
     );
 
     await expect(result.next()).resolves.not.toThrow();
@@ -29,12 +28,11 @@ describe('Given a paginated query function and the paginated query result helper
       async (currRequest) => {
         const res = await sdk.Profiles({
           request: currRequest,
-          observerId: undefined,
         });
 
         return res.data.result;
       },
-      { ownedBy: ['0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6'], limit: 2 },
+      { where: { ownedBy: ['0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6'], limit: 2 } },
     );
 
     const firstPageResults = [...result.items];
@@ -53,12 +51,11 @@ describe('Given a paginated query function and the paginated query result helper
       async (currRequest) => {
         const res = await sdk.Profiles({
           request: currRequest,
-          observerId: undefined,
         });
 
         return res.data.result;
       },
-      { ownedBy: ['0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6'], limit: 50 },
+      { where: { ownedBy: ['0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6'], limit: 50 } },
     );
 
     await expect(result.next()).resolves.not.toThrow();

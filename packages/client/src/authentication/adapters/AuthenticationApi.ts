@@ -1,8 +1,7 @@
-import { EthereumAddress } from '@lens-protocol/shared-kernel';
-
-import { LensConfig } from '../../consts/config';
+import type { LensConfig } from '../../consts/config';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
-import { getSdk, Sdk } from '../graphql/auth.generated';
+import type { ChallengeRequest, SignedAuthChallenge } from '../../graphql/types.generated';
+import { AuthChallengeFragment, getSdk, Sdk } from '../graphql/auth.generated';
 import { Credentials } from './Credentials';
 
 export class AuthenticationApi {
@@ -13,20 +12,20 @@ export class AuthenticationApi {
     this.sdk = getSdk(client);
   }
 
-  async challenge(address: EthereumAddress): Promise<string> {
-    const result = await this.sdk.AuthChallenge({ address });
-
-    return result.data.result.text;
-  }
-
-  async verify(accessToken: string): Promise<boolean> {
-    const result = await this.sdk.AuthVerify({ accessToken });
+  async challenge(request: ChallengeRequest): Promise<AuthChallengeFragment> {
+    const result = await this.sdk.AuthChallenge({ request });
 
     return result.data.result;
   }
 
-  async authenticate(address: EthereumAddress, signature: string): Promise<Credentials> {
-    const result = await this.sdk.AuthAuthenticate({ address, signature });
+  async verify(accessToken: string): Promise<boolean> {
+    const result = await this.sdk.AuthVerify({ request: { accessToken } });
+
+    return result.data.result;
+  }
+
+  async authenticate(request: SignedAuthChallenge): Promise<Credentials> {
+    const result = await this.sdk.AuthAuthenticate({ request });
     const { accessToken, refreshToken } = result.data.result;
 
     const credentials = new Credentials(accessToken, refreshToken);
@@ -36,7 +35,7 @@ export class AuthenticationApi {
   }
 
   async refresh(refreshToken: string): Promise<Credentials> {
-    const result = await this.sdk.AuthRefresh({ refreshToken });
+    const result = await this.sdk.AuthRefresh({ request: { refreshToken } });
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.data.result;
 
     const credentials = new Credentials(newAccessToken, newRefreshToken);

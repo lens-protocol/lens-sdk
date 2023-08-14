@@ -1,6 +1,5 @@
 query ExplorePublications(
   $request: ExplorePublicationRequest!
-  $observerId: ProfileId
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}

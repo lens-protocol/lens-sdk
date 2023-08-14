@@ -3,11 +3,11 @@ import * as Types from '../../graphql/types.generated';
 
 import {
   PostFragment,
+  CommentFragment,
+  MirrorFragment,
   QuoteFragment,
   PaginatedResultInfoFragment,
   ProfileFragment,
-  MirrorFragment,
-  CommentFragment,
   Eip712TypedDataDomainFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
@@ -20,11 +20,11 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
   PostFragmentDoc,
+  CommentFragmentDoc,
+  MirrorFragmentDoc,
   QuoteFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   ProfileFragmentDoc,
-  MirrorFragmentDoc,
-  CommentFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
@@ -33,7 +33,6 @@ import {
 } from '../../graphql/fragments.generated';
 export type ExplorePublicationsQueryVariables = Types.Exact<{
   request: Types.ExplorePublicationRequest;
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']['input']>;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -56,7 +55,6 @@ export type ExploreProfilesQuery = {
 export const ExplorePublicationsDocument = gql`
   query ExplorePublications(
     $request: ExplorePublicationRequest!
-    $observerId: ProfileId
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}

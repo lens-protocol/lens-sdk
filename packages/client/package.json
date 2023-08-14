@@ -42,7 +42,7 @@
     "graphql-tag": "^2.12.6",
     "jwt-decode": "^3.1.2",
     "tslib": "^2.6.1",
-    "zod": "^3.21.4"
+    "zod": "^3.20.6"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",

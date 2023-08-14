@@ -32,14 +32,12 @@ export class Explore {
 
   async publications(
     request: ExplorePublicationRequest,
-    observerId?: string,
   ): Promise<PaginatedResult<PostFragment | QuoteFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
         const result = await this.sdk.ExplorePublications(
           {
             request: currRequest,
-            observerId,
             ...buildImageTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,

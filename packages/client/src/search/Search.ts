@@ -52,14 +52,12 @@ export class Search {
 
   async publications(
     request: PublicationSearchRequest,
-    observerId?: string,
   ): Promise<PaginatedResult<CommentFragment | PostFragment | QuoteFragment>> {
     return provideAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
         const response = await this.sdk.SearchPublications(
           {
             request: currRequest,
-            observerId,
             ...buildImageTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,

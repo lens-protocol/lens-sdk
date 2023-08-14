@@ -4,14 +4,13 @@ import * as Types from '../../graphql/types.generated';
 import {
   ProfileFieldsFragment,
   PostFragment,
+  CommentFragment,
+  MirrorFragment,
   QuoteFragment,
   PaginatedResultInfoFragment,
   ProfileFragment,
-  CommentFragment,
   CollectOpenActionResultFragment,
-  NftDropOpenActionFragment,
   UnknownOpenActionResultFragment,
-  MirrorFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -20,14 +19,13 @@ import gql from 'graphql-tag';
 import {
   ProfileFieldsFragmentDoc,
   PostFragmentDoc,
+  CommentFragmentDoc,
+  MirrorFragmentDoc,
   QuoteFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   ProfileFragmentDoc,
-  CommentFragmentDoc,
   CollectOpenActionResultFragmentDoc,
-  NftDropOpenActionFragmentDoc,
   UnknownOpenActionResultFragmentDoc,
-  MirrorFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type ElectedMirrorFragment = {
   mirrorId: string;
@@ -40,7 +38,7 @@ export type MirrorEventFragment = { timestamp: string; by: ProfileFieldsFragment
 export type CollectedEventFragment = { timestamp: string; by: ProfileFieldsFragment };
 
 export type ReactionEventFragment = {
-  reaction: Types.ReactionTypes;
+  reaction: Types.PublicationReactionType;
   timestamp: string;
   by: ProfileFieldsFragment;
 };
@@ -52,13 +50,12 @@ export type FeedItemFragment = {
   mirrors: Array<MirrorEventFragment>;
   collects: Array<CollectedEventFragment>;
   reactions: Array<ReactionEventFragment>;
-  comments: Array<CommentFragment> | null;
-  quotes: Array<QuoteFragment> | null;
+  comments: Array<CommentFragment>;
+  quotes: Array<QuoteFragment>;
 };
 
 export type FeedQueryVariables = Types.Exact<{
   request: Types.FeedRequest;
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']['input']>;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -70,7 +67,6 @@ export type FeedQuery = {
 
 export type FeedHighlightsQueryVariables = Types.Exact<{
   request: Types.FeedHighlightsRequest;
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']['input']>;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -82,7 +78,6 @@ export type FeedHighlightsQuery = {
 
 export type ForYouQueryVariables = Types.Exact<{
   request: Types.PublicationForYouRequest;
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']['input']>;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -174,7 +169,6 @@ export const FeedItemFragmentDoc = gql`
 export const FeedDocument = gql`
   query Feed(
     $request: FeedRequest!
-    $observerId: ProfileId
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
@@ -194,7 +188,6 @@ export const FeedDocument = gql`
 export const FeedHighlightsDocument = gql`
   query FeedHighlights(
     $request: FeedHighlightsRequest!
-    $observerId: ProfileId
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
@@ -220,7 +213,6 @@ export const FeedHighlightsDocument = gql`
 export const ForYouDocument = gql`
   query ForYou(
     $request: PublicationForYouRequest!
-    $observerId: ProfileId
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}

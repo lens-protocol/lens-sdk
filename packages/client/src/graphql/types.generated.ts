@@ -18,80 +18,56 @@ export type Scalars = {
   Int: { input: number; output: number };
   Float: { input: number; output: number };
   AppId: { input: string; output: string };
-  AudioMimeType: { input: string; output: string };
   BlockchainData: { input: string; output: string };
   BroadcastId: { input: string; output: string };
   ChainId: { input: string; output: string };
   ChallengeId: { input: string; output: string };
-  CollectModuleData: { input: string; output: string };
   ContentEncryptionKey: { input: string; output: string };
-  ContractPublicationId: { input: string; output: string };
-  CreateDeleteEIP712TypedData: { input: string; output: string };
   CreateHandle: { input: string; output: string };
   Cursor: { input: string; output: string };
   DateTime: { input: string; output: string };
-  EncryptedValueScalar: { input: string; output: string };
+  EncryptedValue: { input: string; output: string };
   Ens: { input: string; output: string };
-  Erc20: { input: string; output: string };
   EvmAddress: { input: string; output: string };
-  FeedId: { input: string; output: string };
-  FollowModuleData: { input: string; output: string };
   Handle: { input: string; output: string };
-  HandleClaimIdScalar: { input: string; output: string };
-  ImageMimeType: { input: string; output: string };
   ImageSizeTransform: { input: ImageSizeTransform; output: ImageSizeTransform };
   IpfsCid: { input: string; output: string };
   Jwt: { input: string; output: string };
   Limit: { input: string; output: string };
   Locale: { input: string; output: string };
-  Location: { input: string; output: string };
   Markdown: { input: string; output: string };
-  MetadataLicenseType: { input: string; output: string };
-  MetadataMediaAudioType: { input: string; output: string };
   MimeType: { input: string; output: string };
   MomokaId: { input: string; output: string };
   MomokaProof: { input: string; output: string };
-  MomokaTransactionUnion: { input: string; output: string };
   NftGalleryId: { input: string; output: string };
-  NftOwnershipChallengeId: { input: string; output: string };
-  NftTokenId: { input: string; output: string };
+  NftGalleryName: { input: string; output: string };
   Nonce: { input: string; output: string };
-  NotificationId: { input: string; output: string };
   ProfileId: { input: string; output: string };
-  ProfileInterest: { input: string; output: string };
-  ProfileSortCriteria: { input: string; output: string };
   PublicationId: { input: string; output: string };
-  PublicationTag: { input: string; output: string };
-  PublicationUrl: { input: string; output: string };
-  ReactionId: { input: string; output: string };
-  ReferenceModuleData: { input: string; output: string };
   Signature: { input: string; output: string };
-  ThreeDFormat: { input: string; output: string };
+  TokenId: { input: string; output: string };
   TxHash: { input: string; output: string };
   TxId: { input: string; output: string };
+  URI: { input: string; output: string };
+  URL: { input: string; output: string };
   UnixTimestamp: { input: string; output: string };
-  Uri: { input: string; output: string };
-  Url: { input: string; output: string };
-  VideoMimeType: { input: string; output: string };
   Void: { input: string; output: string };
 };
 
 export type AchRequest = {
-  ethereumAddress: Scalars['EvmAddress']['input'];
-  freeTextHandle?: InputMaybe<Scalars['Boolean']['input']>;
-  handle?: InputMaybe<Scalars['CreateHandle']['input']>;
+  address: Scalars['EvmAddress']['input'];
+  freeTextHandle: Scalars['Boolean']['input'];
+  handle: Scalars['CreateHandle']['input'];
   overrideAlreadyClaimed: Scalars['Boolean']['input'];
   overrideTradeMark: Scalars['Boolean']['input'];
   secret: Scalars['String']['input'];
 };
 
-export type ActedByFilter = {
-  openAction: Array<OpenActionFilter>;
-  who: Scalars['ProfileId']['input'];
-};
-
-export type AddProfileInterestsRequest = {
-  interests: Array<Scalars['ProfileInterest']['input']>;
+export type ActOnOpenActionRequest = {
+  for?: InputMaybe<Scalars['PublicationId']['input']>;
+  multirecipientCollectOpenAction?: InputMaybe<Scalars['Boolean']['input']>;
+  simpleCollectOpenAction?: InputMaybe<Scalars['Boolean']['input']>;
+  unknownOpenAction?: InputMaybe<UnknownOpenActionActRequest>;
 };
 
 export type AlreadyInvitedCheckRequest = {
@@ -104,29 +80,25 @@ export type AmountInput = {
 };
 
 export type ApprovedModuleAllowanceAmountRequest = {
-  currencies: Array<Scalars['EvmAddress']['input']>;
-  followModules?: InputMaybe<Array<FollowModules>>;
-  openActionModules?: InputMaybe<Array<OpenActionModules>>;
-  referenceModules?: InputMaybe<Array<ReferenceModules>>;
-  unknownCollectModules?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
+  currencies?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
+  followModules?: InputMaybe<Array<FollowModuleType>>;
+  openActionModules?: InputMaybe<Array<OpenActionModuleType>>;
+  referenceModules?: InputMaybe<Array<ReferenceModuleType>>;
   unknownFollowModules?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
+  unknownOpenActionModules?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
   unknownReferenceModules?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
 };
 
-export enum ArticleMetadataV1MainFocus {
-  Article = 'ARTICLE',
-}
-
-export enum AttributeTypes {
-  Boolean = 'Boolean',
-  Date = 'Date',
+export enum AttributeType {
+  Boolean = 'BOOLEAN',
+  Date = 'DATE',
   Json = 'JSON',
-  Number = 'Number',
-  String = 'String',
+  Number = 'NUMBER',
+  String = 'STRING',
 }
 
-export enum AudioMetadataV1MainFocus {
-  Audio = 'AUDIO',
+export enum AudioMimeType {
+  Mp3 = 'MP3',
 }
 
 export type BlockRequest = {
@@ -139,31 +111,29 @@ export type BroadcastRequest = {
 };
 
 export type ChallengeRequest = {
+  address: Scalars['EvmAddress']['input'];
   profileId: Scalars['ProfileId']['input'];
 };
 
-export enum CheckingInMetadataV1MainFocus {
-  CheckingIn = 'CHECKING_IN',
-}
-
-export type ClaimHandleRequest = {
-  followModule?: InputMaybe<FollowModuleInput>;
-  freeTextHandle?: InputMaybe<Scalars['CreateHandle']['input']>;
-  id?: InputMaybe<Scalars['HandleClaimIdScalar']['input']>;
+export type ChangeProfileManagersRequest = {
+  add?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
+  lens: Scalars['Boolean']['input'];
+  remove?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
 };
 
-export enum ClaimRelayErrorReasons {
-  Failed = 'FAILED',
-  HandleTaken = 'HANDLE_TAKEN',
-}
+export type ClaimProfileRequest = {
+  followModule?: InputMaybe<FollowModuleInput>;
+  freeTextHandle?: InputMaybe<Scalars['CreateHandle']['input']>;
+  id: Scalars['String']['input'];
+};
 
-export enum ClaimStatus {
+export enum ClaimProfileStatusType {
   AlreadyClaimed = 'ALREADY_CLAIMED',
   ClaimFailed = 'CLAIM_FAILED',
   NotClaimed = 'NOT_CLAIMED',
 }
 
-export enum CollectOpenActionModules {
+export enum CollectOpenActionModuleType {
   LegacyAaveFeeCollectModule = 'LegacyAaveFeeCollectModule',
   LegacyErc4626FeeCollectModule = 'LegacyERC4626FeeCollectModule',
   LegacyFeeCollectModule = 'LegacyFeeCollectModule',
@@ -174,92 +144,67 @@ export enum CollectOpenActionModules {
   LegacyRevertCollectModule = 'LegacyRevertCollectModule',
   LegacySimpleCollectModule = 'LegacySimpleCollectModule',
   LegacyTimedFeeCollectModule = 'LegacyTimedFeeCollectModule',
-  LegacyUnknownCollectModule = 'LegacyUnknownCollectModule',
-  MultirecipientCollectOpenActionModule = 'MultirecipientCollectOpenActionModule',
-  SimpleCollectOpenAction = 'SimpleCollectOpenAction',
+  UnknownOpenActionModule = 'UnknownOpenActionModule',
 }
 
-export enum CommentRankingFilter {
+export enum CommentRankingFilterType {
   NoneRelevant = 'NONE_RELEVANT',
   Relevant = 'RELEVANT',
 }
 
-export type CreateMomokaCommentRequest = {
-  commentOn: Scalars['PublicationId']['input'];
-  contentURI: Scalars['Url']['input'];
-};
-
-export type CreateMomokaMirrorRequest = {
-  from: Scalars['ProfileId']['input'];
-  mirror: Scalars['PublicationId']['input'];
-};
-
-export type CreateMomokaPostRequest = {
-  contentURI: Scalars['Url']['input'];
-};
+export enum ComparisonOperatorConditionType {
+  Equal = 'EQUAL',
+  GreaterThan = 'GREATER_THAN',
+  GreaterThanOrEqual = 'GREATER_THAN_OR_EQUAL',
+  LessThan = 'LESS_THAN',
+  LessThanOrEqual = 'LESS_THAN_OR_EQUAL',
+  NotEqual = 'NOT_EQUAL',
+}
 
 export type CreateOnChainCommentRequest = {
   commentOn: Scalars['PublicationId']['input'];
-  contentURI: Scalars['Url']['input'];
-  on: Scalars['PublicationId']['input'];
+  contentURI: Scalars['URI']['input'];
   openActionModule: Array<OpenActionModuleInput>;
   referenceModule?: InputMaybe<ReferenceModuleInput>;
 };
 
 export type CreateOnChainMirrorRequest = {
   on: Scalars['PublicationId']['input'];
-  referenceModule?: InputMaybe<ReferenceModuleInput>;
 };
 
 export type CreateOnChainPostRequest = {
-  contentURI: Scalars['Url']['input'];
+  contentURI: Scalars['URI']['input'];
   openActionModule: Array<OpenActionModuleInput>;
   referenceModule?: InputMaybe<ReferenceModuleInput>;
 };
 
-export type CreateOpenActionActRequest = {
-  for: Scalars['PublicationId']['input'];
-  multirecipientCollectOpenAction?: InputMaybe<Scalars['Boolean']['input']>;
-  simpleCollectOpenAction?: InputMaybe<Scalars['Boolean']['input']>;
-  unknownOpenAction?: InputMaybe<UnknownOpenActionActEquest>;
-};
-
-export type CreateProfileRequest = {
-  followModule?: InputMaybe<FollowModuleInput>;
-  followNFTURI?: InputMaybe<Scalars['Url']['input']>;
-  handle: Scalars['CreateHandle']['input'];
-  profilePictureUri?: InputMaybe<Scalars['Url']['input']>;
-};
-
-export type CreateQuoteRequest = {
-  contentURI: Scalars['Url']['input'];
+export type CreateOnChainQuoteRequest = {
+  contentURI: Scalars['URI']['input'];
   on: Scalars['PublicationId']['input'];
   openActionModule: Array<OpenActionModuleInput>;
   referenceModule?: InputMaybe<ReferenceModuleInput>;
 };
 
-export enum CreateRelayErrorReasons {
+export enum CreateProfilErrorReasonType {
   Failed = 'FAILED',
   HandleTaken = 'HANDLE_TAKEN',
 }
 
-export type CreateSetFollowModuleRequest = {
-  followModule: FollowModuleInput;
-};
-
-export type CreateSetProfileMetadataUriRequest = {
-  metadata: Scalars['Url']['input'];
+export type CreateProfileRequest = {
+  followModule?: InputMaybe<FollowModuleInput>;
+  handle: Scalars['CreateHandle']['input'];
+  profilePictureURI?: InputMaybe<Scalars['URI']['input']>;
 };
 
 export type CurRequest = {
   secret: Scalars['String']['input'];
 };
 
-export enum CustomFiltersTypes {
+export enum CustomFiltersType {
   Gardeners = 'GARDENERS',
 }
 
-export enum DecryptFailReasonTypes {
+export enum DecryptFailReasonType {
   CanNotDecrypt = 'CAN_NOT_DECRYPT',
   CollectNotFinalisedOnChain = 'COLLECT_NOT_FINALISED_ON_CHAIN',
   DoesNotFollowProfile = 'DOES_NOT_FOLLOW_PROFILE',
@@ -280,21 +225,9 @@ export type DegreesOfSeparationReferenceModuleInput = {
   quotesRestricted: Scalars['Boolean']['input'];
 };
 
-export type DeleteProfileRequest = {
+export type DismissRecommendedProfilesRequest = {
   for: Scalars['ProfileId']['input'];
 };
-
-export type DismissRecommendedProfilesRequest = {
-  for: Array<Scalars['ProfileId']['input']>;
-};
-
-export enum EmbedMetadataV1MainFocus {
-  Embed = 'EMBED',
-}
-
-export enum EventMetadataV1MainFocus {
-  Event = 'EVENT',
-}
 
 export enum ExploreProfileOrderBy {
   CreatedOn = 'CREATED_ON',
@@ -315,25 +248,24 @@ export type ExploreProfilesRequest = {
 };
 
 export type ExploreProfilesWhere = {
-  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
   since?: InputMaybe<Scalars['UnixTimestamp']['input']>;
-  sortCriteria: Scalars['ProfileSortCriteria']['input'];
 };
 
 export type ExplorePublicationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<Scalars['Limit']['input']>;
-  orderBy: ExplorePublicationsOrderBy;
+  orderBy: ExplorePublicationsOrderByType;
   where?: InputMaybe<ExplorePublicationsWhere>;
 };
 
-export enum ExplorePublicationTypes {
+export enum ExplorePublicationType {
   Comment = 'COMMENT',
   Post = 'POST',
   Quote = 'QUOTE',
 }
 
-export enum ExplorePublicationsOrderBy {
+export enum ExplorePublicationsOrderByType {
   Latest = 'LATEST',
   LensCurated = 'LENS_CURATED',
   TopCollectedOpenAction = 'TOP_COLLECTED_OPEN_ACTION',
@@ -343,9 +275,9 @@ export enum ExplorePublicationsOrderBy {
 }
 
 export type ExplorePublicationsWhere = {
-  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
-  matadata?: InputMaybe<PublicationMetadataFilters>;
-  publicationTypes?: InputMaybe<Array<ExplorePublicationTypes>>;
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  publicationTypes?: InputMaybe<Array<ExplorePublicationType>>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
   since?: InputMaybe<Scalars['UnixTimestamp']['input']>;
 };
@@ -371,7 +303,7 @@ export enum FeedEventItemType {
 }
 
 export type FeedHighlightWhere = {
-  metadata?: InputMaybe<PublicationMetadataFilters>;
+  metadata: PublicationMetadataFilters;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
@@ -389,8 +321,8 @@ export type FeedRequest = {
 
 export type FeedWhere = {
   feedEventItemTypes?: InputMaybe<Array<FeedEventItemType>>;
-  for?: InputMaybe<Scalars['ProfileId']['input']>;
-  metadata?: InputMaybe<PublicationMetadataFilters>;
+  for: Scalars['ProfileId']['input'];
+  metadata: PublicationMetadataFilters;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
@@ -402,7 +334,6 @@ export type Follow = {
 export type FollowModuleInput = {
   feeFollowModule?: InputMaybe<FeeFollowModuleInput>;
   freeFollowModule?: InputMaybe<Scalars['Boolean']['input']>;
-  profileFollowModule?: InputMaybe<Scalars['Boolean']['input']>;
   revertFollowModule?: InputMaybe<Scalars['Boolean']['input']>;
   unknownFollowModule?: InputMaybe<UnknownFollowModuleInput>;
 };
@@ -413,7 +344,7 @@ export type FollowModuleRedeemInput = {
   unknownFollowModule?: InputMaybe<UnknownFollowModuleRedeemInput>;
 };
 
-export enum FollowModules {
+export enum FollowModuleType {
   FeeFollowModule = 'FeeFollowModule',
   ProfileFollowModule = 'ProfileFollowModule',
   RevertFollowModule = 'RevertFollowModule',
@@ -428,19 +359,13 @@ export type FollowRevenueRequest = {
   for: Scalars['ProfileId']['input'];
 };
 
-export type FollowersRequest = {
-  cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['Limit']['input']>;
-  of: Scalars['ProfileId']['input'];
-};
-
 export type FollowingRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
   limit?: InputMaybe<Scalars['Limit']['input']>;
 };
 
-export type FraudReasonInputInput = {
+export type FraudReasonInput = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingFraudSubreason;
 };
@@ -458,12 +383,11 @@ export type GcrRequest = {
 };
 
 export type GctRequest = {
-  hhh: Scalars['String']['input'];
   secret: Scalars['String']['input'];
 };
 
 export type GddRequest = {
-  domain: Scalars['Url']['input'];
+  domain: Scalars['URL']['input'];
   secret: Scalars['String']['input'];
 };
 
@@ -473,11 +397,11 @@ export type GdmRequest = {
 
 export type GenerateModuleCurrencyApprovalDataRequest = {
   currency: Scalars['EvmAddress']['input'];
-  followModule?: InputMaybe<FollowModules>;
-  openActionModule?: InputMaybe<OpenActionModules>;
-  referenceModule?: InputMaybe<ReferenceModules>;
-  unknownCollectModule?: InputMaybe<Scalars['EvmAddress']['input']>;
+  followModule?: InputMaybe<FollowModuleType>;
+  openActionModule?: InputMaybe<OpenActionModuleType>;
+  referenceModule?: InputMaybe<ReferenceModuleType>;
   unknownFollowModule?: InputMaybe<Scalars['EvmAddress']['input']>;
+  unknownOpenActionModule?: InputMaybe<Scalars['EvmAddress']['input']>;
   unknownReferenceModule?: InputMaybe<Scalars['EvmAddress']['input']>;
   value: Scalars['String']['input'];
 };
@@ -502,13 +426,13 @@ export enum IdKitPhoneVerifyWebhookResultStatusType {
   Success = 'SUCCESS',
 }
 
-export type IllegalReasonInputInput = {
+export type IllegalReasonInput = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingIllegalSubreason;
 };
 
-export enum ImageMetadataV1MainFocus {
-  Image = 'IMAGE',
+export enum ImageMimeType {
+  Png = 'PNG',
 }
 
 export type ImageTransform = {
@@ -518,18 +442,18 @@ export type ImageTransform = {
 };
 
 export type InRequest = {
-  ethereumAddress: Scalars['EvmAddress']['input'];
+  address: Scalars['EvmAddress']['input'];
   numInvites: Scalars['Int']['input'];
   secret: Scalars['String']['input'];
 };
 
 export type InTotalRequest = {
-  ethereumAddress: Scalars['EvmAddress']['input'];
+  address: Scalars['EvmAddress']['input'];
   secret: Scalars['String']['input'];
 };
 
 export type InternalPinRequest = {
-  items: Array<Scalars['Url']['input']>;
+  items: Array<Scalars['URL']['input']>;
   secret: Scalars['String']['input'];
 };
 
@@ -538,12 +462,16 @@ export type InviteRequest = {
   secret: Scalars['String']['input'];
 };
 
-export enum LensMetadataTransactionFailureTypes {
+export type LegacyCollectPublicationRequest = {
+  on: Scalars['PublicationId']['input'];
+};
+
+export enum LensMetadataTransactionFailureType {
   MetadataError = 'METADATA_ERROR',
   Reverted = 'REVERTED',
 }
 
-export enum LensProfileManagerRelayErrorReasons {
+export enum LensProfileManagerRelayErrorReasonType {
   AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
   Expired = 'EXPIRED',
   Failed = 'FAILED',
@@ -552,14 +480,8 @@ export enum LensProfileManagerRelayErrorReasons {
   WrongWalletSigned = 'WRONG_WALLET_SIGNED',
 }
 
-export enum LensTransactionFailureTypes {
+export enum LensTransactionFailureType {
   Reverted = 'REVERTED',
-}
-
-export enum LensTransactionStatus {
-  Complete = 'COMPLETE',
-  Failed = 'FAILED',
-  Progressing = 'PROGRESSING',
 }
 
 export type LensTransactionStatusRequest = {
@@ -567,67 +489,32 @@ export type LensTransactionStatusRequest = {
   txId?: InputMaybe<Scalars['TxId']['input']>;
 };
 
-export enum LinkMetadataV1MainFocus {
-  Link = 'LINK',
+export enum LensTransactionStatusType {
+  Complete = 'COMPLETE',
+  Failed = 'FAILED',
+  Progressing = 'PROGRESSING',
 }
 
-export enum LiveStreamMetadataV1MainFocus {
-  Livestream = 'LIVESTREAM',
-}
-
-export type ManagedProfilesRequest = {
-  address: Scalars['EvmAddress']['input'];
+export type LinkHandleRequest = {
+  handle: Scalars['Handle']['input'];
 };
 
-export enum MarketplaceMetadataAttributeDisplayTypes {
-  Date = 'date',
-  Number = 'number',
-  String = 'string',
-}
+export type MomokaCommentRequest = {
+  commentOn: Scalars['PublicationId']['input'];
+  contentURI: Scalars['URI']['input'];
+};
 
-export enum MetadataContentWarnings {
-  Nsfw = 'NSFW',
-  Sensitive = 'SENSITIVE',
-  Spoiler = 'SPOILER',
-}
+export type MomokaMirrorRequest = {
+  from: Scalars['ProfileId']['input'];
+  mirror: Scalars['PublicationId']['input'];
+};
 
-export enum MetadataMainFocus {
-  Article = 'ARTICLE',
-  Audio = 'AUDIO',
-  CheckingIn = 'CHECKING_IN',
-  Embed = 'EMBED',
-  Event = 'EVENT',
-  Image = 'IMAGE',
-  Link = 'LINK',
-  Livestream = 'LIVESTREAM',
-  Mint = 'MINT',
-  ShortVideo = 'SHORT_VIDEO',
-  Spaces = 'SPACES',
-  Story = 'STORY',
-  TextOnly = 'TEXT_ONLY',
-  ThreeD = 'THREE_D',
-  Transaction = 'TRANSACTION',
-  Video = 'VIDEO',
-}
+export type MomokaPostRequest = {
+  contentURI: Scalars['URI']['input'];
+};
 
-export enum MetadataV2MainFocus {
-  Article = 'ARTICLE',
-  Audio = 'AUDIO',
-  Embed = 'EMBED',
-  Image = 'IMAGE',
-  Link = 'LINK',
-  TextOnly = 'TEXT_ONLY',
-  Video = 'VIDEO',
-}
-
-export enum MintMetadataV1MainFocus {
-  Mint = 'MINT',
-}
-
-export type ModuleFeeInput = {
-  amount: AmountInput;
-  recipient: Scalars['EvmAddress']['input'];
-  referralFee: Scalars['Float']['input'];
+export type MomokaQuoteRequest = {
+  contentURI: Scalars['URI']['input'];
 };
 
 export type MomokaTransactionRequest = {
@@ -636,11 +523,11 @@ export type MomokaTransactionRequest = {
 
 export type MomokaTransactionsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  for: Scalars['ProfileId']['input'];
   limit?: InputMaybe<Scalars['Limit']['input']>;
-  profileId?: InputMaybe<Scalars['ProfileId']['input']>;
 };
 
-export enum MomokaValidatorError {
+export enum MomokaValidatorErrorType {
   BlockCantBeReadFromNode = 'BLOCK_CANT_BE_READ_FROM_NODE',
   BlockTooFar = 'BLOCK_TOO_FAR',
   CanNotConnectToBundlr = 'CAN_NOT_CONNECT_TO_BUNDLR',
@@ -673,7 +560,7 @@ export enum MomokaValidatorError {
 
 export type MultirecipientFeeCollectModuleInput = {
   amount: AmountInput;
-  collectLimit?: InputMaybe<Scalars['String']['input']>;
+  collectLimit: Scalars['String']['input'];
   endsAt?: InputMaybe<Scalars['DateTime']['input']>;
   followerOnly: Scalars['Boolean']['input'];
   recipients: Array<RecipientDataInput>;
@@ -685,11 +572,6 @@ export type MutualFollowersRequest = {
   limit?: InputMaybe<Scalars['Limit']['input']>;
   observer: Scalars['ProfileId']['input'];
   viewing: Scalars['ProfileId']['input'];
-};
-
-export type NftOwnershipProof = {
-  id: Scalars['NftOwnershipChallengeId']['input'];
-  signature: Scalars['Signature']['input'];
 };
 
 export type NfTsRequest = {
@@ -727,7 +609,7 @@ export type NftGalleriesRequest = {
 
 export type NftGalleryCreateRequest = {
   items: Array<NftInput>;
-  name: Scalars['String']['input'];
+  name: Scalars['NftGalleryName']['input'];
 };
 
 export type NftGalleryDeleteRequest = {
@@ -752,12 +634,12 @@ export type NftGalleryUpdateItemsRequest = {
 
 export type NftInput = {
   contract: NetworkAddressInput;
-  tokenId: Scalars['String']['input'];
+  tokenId: Scalars['TokenId']['input'];
 };
 
 export type NftOwnershipChallenge = {
   contract: NetworkAddressInput;
-  tokenId: Scalars['String']['input'];
+  tokenId: Scalars['TokenId']['input'];
 };
 
 export type NftOwnershipChallengeRequest = {
@@ -766,9 +648,9 @@ export type NftOwnershipChallengeRequest = {
 };
 
 export type NftUpdateItemOrder = {
-  EvmAddress: NetworkAddressInput;
+  contract: NetworkAddressInput;
   newOrder: Scalars['Int']['input'];
-  tokenId: Scalars['String']['input'];
+  tokenId: Scalars['TokenId']['input'];
 };
 
 export type NniRequest = {
@@ -787,7 +669,11 @@ export type NotificationRequest = {
   where?: InputMaybe<NotificationWhere>;
 };
 
-export enum NotificationTypes {
+export type NotificationSubscriptionRequest = {
+  for: Scalars['ProfileId']['input'];
+};
+
+export enum NotificationType {
   CollectActed = 'COLLECT_ACTED',
   Commented = 'COMMENTED',
   Followed = 'FOLLOWED',
@@ -799,29 +685,29 @@ export enum NotificationTypes {
 }
 
 export type NotificationWhere = {
-  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
   highSignalFilter?: InputMaybe<Scalars['Boolean']['input']>;
-  notificationTypes?: InputMaybe<Array<NotificationTypes>>;
+  notificationTypes?: InputMaybe<Array<NotificationType>>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
-export enum OpenActionCategories {
-  Collect = 'Collect',
+export enum OpenActionCategoryType {
+  Collect = 'COLLECT',
 }
 
 export type OpenActionFilter = {
   address?: InputMaybe<Scalars['EvmAddress']['input']>;
-  category?: InputMaybe<OpenActionCategories>;
-  type?: InputMaybe<OpenActionModules>;
+  category?: InputMaybe<OpenActionCategoryType>;
+  type?: InputMaybe<OpenActionModuleType>;
 };
 
 export type OpenActionModuleInput = {
   multirecipientCollectOpenAction?: InputMaybe<MultirecipientFeeCollectModuleInput>;
   simpleCollectOpenAction?: InputMaybe<SimpleCollectOpenActionModuleInput>;
-  unknownOpenAction?: InputMaybe<UnknownCollectModuleInput>;
+  unknownOpenAction?: InputMaybe<UnknownCollectOpenActionModuleInput>;
 };
 
-export enum OpenActionModules {
+export enum OpenActionModuleType {
   LegacyAaveFeeCollectModule = 'LegacyAaveFeeCollectModule',
   LegacyErc4626FeeCollectModule = 'LegacyERC4626FeeCollectModule',
   LegacyFeeCollectModule = 'LegacyFeeCollectModule',
@@ -832,10 +718,8 @@ export enum OpenActionModules {
   LegacyRevertCollectModule = 'LegacyRevertCollectModule',
   LegacySimpleCollectModule = 'LegacySimpleCollectModule',
   LegacyTimedFeeCollectModule = 'LegacyTimedFeeCollectModule',
-  LegacyUnknownCollectModule = 'LegacyUnknownCollectModule',
-  MultirecipientCollectOpenActionModule = 'MultirecipientCollectOpenActionModule',
-  NftDropOpenActionModule = 'NftDropOpenActionModule',
-  SimpleCollectOpenAction = 'SimpleCollectOpenAction',
+  MultirecipientFeeCollectModule = 'MultirecipientFeeCollectModule',
+  SimpleCollectOpenActionModule = 'SimpleCollectOpenActionModule',
   UnknownOpenActionModule = 'UnknownOpenActionModule',
 }
 
@@ -862,6 +746,8 @@ export type ProfileBookmarksRequest = {
 };
 
 export type ProfileBookmarksWhere = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<Scalars['Limit']['input']>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
@@ -870,13 +756,23 @@ export type ProfileFollowModuleRedeemInput = {
   profileId: Scalars['ProfileId']['input'];
 };
 
+export type ProfileInterestsRequest = {
+  interests: Scalars['String']['input'];
+};
+
 export type ProfileManagersRequest = {
-  profile: Scalars['ProfileId']['input'];
+  for: Scalars['ProfileId']['input'];
+};
+
+export type ProfileRecommendationsRequest = {
+  disableML?: InputMaybe<Scalars['Boolean']['input']>;
+  for: Scalars['ProfileId']['input'];
+  shuffle?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ProfileRequest = {
-  handle?: InputMaybe<Scalars['Handle']['input']>;
-  profileId?: InputMaybe<Scalars['ProfileId']['input']>;
+  handle?: InputMaybe<Array<Scalars['Handle']['input']>>;
+  profileId?: InputMaybe<Array<Scalars['ProfileId']['input']>>;
 };
 
 export type ProfileSearchRequest = {
@@ -887,32 +783,65 @@ export type ProfileSearchRequest = {
 };
 
 export type ProfileSearchWhere = {
-  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
+};
+
+export type ProfileStatsArgs = {
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
+  forApps?: InputMaybe<Array<Scalars['AppId']['input']>>;
+};
+
+export type ProfileStatsCountOpenActionArgs = {
+  anyOf?: InputMaybe<Array<OpenActionFilter>>;
+};
+
+export type ProfileStatsReactionArgs = {
+  type?: InputMaybe<PublicationReactionType>;
+};
+
+export type ProfilesManagedRequest = {
+  address: Scalars['EvmAddress']['input'];
 };
 
 export type ProfilesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<Scalars['Limit']['input']>;
-  where?: InputMaybe<ProfilesRequestWhere>;
+  where: ProfilesRequestWhere;
 };
 
 export type ProfilesRequestWhere = {
-  ownedBy?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
+  handles?: InputMaybe<Array<Scalars['Handle']['input']>>;
+  ownedBy?: InputMaybe<Array<Scalars['ProfileId']['input']>>;
   profileIds?: InputMaybe<Array<Scalars['ProfileId']['input']>>;
-  /** Direct comments only */
   whoCommentedOn?: InputMaybe<Scalars['PublicationId']['input']>;
   whoMirroredPublication?: InputMaybe<Scalars['PublicationId']['input']>;
   whoQuotedPublication?: InputMaybe<Scalars['PublicationId']['input']>;
 };
 
+export enum PublicationArticleMetadataV1MainFocusType {
+  Article = 'ARTICLE',
+}
+
 export type PublicationBookmarkRequest = {
   on: Scalars['PublicationId']['input'];
 };
 
-export enum PublicationContentWarning {
+export enum PublicationCheckingInMetadataV1MainFocusType {
+  CheckingIn = 'CHECKING_IN',
+}
+
+export enum PublicationContentWarningType {
   Nsfw = 'NSFW',
   Sensitive = 'SENSITIVE',
   Spoiler = 'SPOILER',
+}
+
+export enum PublicationEmbedMetadataV1MainFocusType {
+  Embed = 'EMBED',
+}
+
+export enum PublicationEventMetadataV1MainFocusType {
+  Event = 'EVENT',
 }
 
 export type PublicationForYouRequest = {
@@ -921,25 +850,93 @@ export type PublicationForYouRequest = {
   limit?: InputMaybe<Scalars['Limit']['input']>;
 };
 
+export enum PublicationImageMetadataV1MainFocusType {
+  Image = 'IMAGE',
+}
+
+export enum PublicationLinkMetadataV1MainFocusType {
+  Link = 'LINK',
+}
+
+export enum PublicationLiveStreamMetadataV1MainFocusType {
+  Livestream = 'LIVESTREAM',
+}
+
+export enum PublicationMarketplaceMetadataAttributeDisplayType {
+  Date = 'DATE',
+  Number = 'NUMBER',
+  String = 'STRING',
+}
+
 export type PublicationMetadataContentWarningFilter = {
-  oneOf?: InputMaybe<Array<PublicationContentWarning>>;
+  oneOf?: InputMaybe<Array<PublicationContentWarningType>>;
 };
 
 export type PublicationMetadataFilters = {
   contentWarning?: InputMaybe<PublicationMetadataContentWarningFilter>;
   locale?: InputMaybe<Scalars['Locale']['input']>;
-  mainContentFocus?: InputMaybe<Array<MetadataMainFocus>>;
+  mainContentFocus?: InputMaybe<Array<PublicationMetadataMainFocusType>>;
   tags?: InputMaybe<PublicationMetadataTagsFilter>;
 };
+
+export enum PublicationMetadataLicenseType {
+  AllRightsReserved = 'ALL_RIGHTS_RESERVED',
+}
+
+export enum PublicationMetadataMainFocusType {
+  Article = 'ARTICLE',
+  Audio = 'AUDIO',
+  CheckingIn = 'CHECKING_IN',
+  Embed = 'EMBED',
+  Event = 'EVENT',
+  Image = 'IMAGE',
+  Link = 'LINK',
+  Livestream = 'LIVESTREAM',
+  Mint = 'MINT',
+  ShortVideo = 'SHORT_VIDEO',
+  Spaces = 'SPACES',
+  Story = 'STORY',
+  TextOnly = 'TEXT_ONLY',
+  ThreeD = 'THREE_D',
+  Transaction = 'TRANSACTION',
+  Video = 'VIDEO',
+}
+
+export enum PublicationMetadataMediaAudioType {
+  Mp3 = 'MP3',
+}
 
 export type PublicationMetadataTagsFilter = {
   all?: InputMaybe<Array<Scalars['String']['input']>>;
   oneOf?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+export enum PublicationMetadataV2MainFocusType {
+  Article = 'ARTICLE',
+  Audio = 'AUDIO',
+  Embed = 'EMBED',
+  Image = 'IMAGE',
+  Link = 'LINK',
+  TextOnly = 'TEXT_ONLY',
+  Video = 'VIDEO',
+}
+
+export enum PublicationMintMetadataV1MainFocusType {
+  Mint = 'MINT',
+}
+
 export type PublicationNotInterestedRequest = {
   on: Scalars['PublicationId']['input'];
 };
+
+export type PublicationOperationsReactionArgs = {
+  type?: InputMaybe<PublicationReactionType>;
+};
+
+export enum PublicationReactionType {
+  Downvote = 'DOWNVOTE',
+  Upvote = 'UPVOTE',
+}
 
 export enum PublicationReportingFraudSubreason {
   Impersonation = 'IMPERSONATION',
@@ -990,23 +987,71 @@ export type PublicationSearchRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<Scalars['Limit']['input']>;
   query: Scalars['String']['input'];
-  where?: InputMaybe<PublicationSearchWhere>;
+  where: PublicationSearchWhere;
 };
 
 export type PublicationSearchWhere = {
-  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
-  publicationTypes?: InputMaybe<Array<PublicationTypes>>;
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
+  publicationTypes?: InputMaybe<Array<PublicationType>>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
-export enum PublicationTypes {
+export enum PublicationSpaceMetadataV1MainFocusType {
+  Space = 'SPACE',
+}
+
+export type PublicationStatsCountOpenActionArgs = {
+  anyOf?: InputMaybe<Array<OpenActionFilter>>;
+};
+
+export type PublicationStatsInput = {
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
+  forApps?: InputMaybe<Array<Scalars['AppId']['input']>>;
+};
+
+export type PublicationStatsReactionArgs = {
+  type?: InputMaybe<PublicationReactionType>;
+};
+
+export type PublicationStatsSubscriptionRequest = {
+  for: Scalars['PublicationId']['input'];
+};
+
+export enum PublicationStoryMetadataV1MainFocusType {
+  Story = 'STORY',
+}
+
+export enum PublicationTextOnlyMetadataV1MainFocusType {
+  TextOnly = 'TEXT_ONLY',
+}
+
+export enum PublicationThreeDMetadataV1MainFocusType {
+  ThreeD = 'THREE_D',
+}
+
+export enum PublicationTransactionMetadataType {
+  Erc20 = 'ERC20',
+  Erc721 = 'ERC721',
+  Other = 'OTHER',
+}
+
+export enum PublicationTransactionMetadataV1MainFocusType {
+  Transaction = 'TRANSACTION',
+}
+
+export enum PublicationType {
   Comment = 'COMMENT',
   Mirror = 'MIRROR',
   Post = 'POST',
   Quote = 'QUOTE',
 }
 
-export enum PublicationsOrderBy {
+export enum PublicationVideoMetadataV1MainFocusType {
+  ShortVideo = 'SHORT_VIDEO',
+  Video = 'VIDEO',
+}
+
+export enum PublicationsOrderByType {
   CommentOfQueryRanking = 'COMMENT_OF_QUERY_RANKING',
   Latest = 'LATEST',
   TopCollectedOpenAction = 'TOP_COLLECTED_OPEN_ACTION',
@@ -1016,60 +1061,47 @@ export enum PublicationsOrderBy {
 }
 
 export type PublicationsRequest = {
-  commentsRankingFilter?: InputMaybe<CommentRankingFilter>;
+  commentsRankingFilter?: InputMaybe<CommentRankingFilterType>;
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<Scalars['Limit']['input']>;
-  orderBy?: InputMaybe<PublicationsOrderBy>;
+  orderBy?: InputMaybe<PublicationsOrderByType>;
   where?: InputMaybe<PublicationsWhere>;
 };
 
 export type PublicationsTagsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<Scalars['Limit']['input']>;
-  orderBy: TagSortCriteria;
+  orderBy?: InputMaybe<TagSortCriteriaType>;
   where?: InputMaybe<PublicationsTagsWhere>;
 };
 
 export type PublicationsTagsWhere = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<Scalars['Limit']['input']>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
 export type PublicationsWhere = {
   actedBy?: InputMaybe<Array<OpenActionFilter>>;
   commentsOf?: InputMaybe<Scalars['PublicationId']['input']>;
-  customFilters?: InputMaybe<Array<CustomFiltersTypes>>;
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
   from?: InputMaybe<Array<Scalars['ProfileId']['input']>>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
   mirrorOf?: InputMaybe<Scalars['PublicationId']['input']>;
   publicationIds?: InputMaybe<Array<Scalars['PublicationId']['input']>>;
-  publicationTypes?: InputMaybe<Array<PublicationTypes>>;
+  publicationTypes?: InputMaybe<Array<PublicationType>>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
   withOpenActions?: InputMaybe<Array<OpenActionFilter>>;
 };
 
 export type ReactionRequest = {
   for: Scalars['PublicationId']['input'];
-  reaction: ReactionTypes;
+  reaction: PublicationReactionType;
 };
-
-export enum ReactionTypes {
-  Downvote = 'DOWNVOTE',
-  Upvote = 'UPVOTE',
-}
 
 export type RecipientDataInput = {
   recipient: Scalars['EvmAddress']['input'];
   split: Scalars['Float']['input'];
-};
-
-export type RecommendedProfileRequest = {
-  disableML?: InputMaybe<Scalars['Boolean']['input']>;
-  shuffle?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<RecommendedProfileRequestWhere>;
-};
-
-export type RecommendedProfileRequestWhere = {
-  for?: InputMaybe<Scalars['ProfileId']['input']>;
 };
 
 export type ReferenceModuleInput = {
@@ -1078,7 +1110,7 @@ export type ReferenceModuleInput = {
   unknownReferenceModule?: InputMaybe<UnknownReferenceModuleInput>;
 };
 
-export enum ReferenceModules {
+export enum ReferenceModuleType {
   DegreesOfSeparationReferenceModule = 'DegreesOfSeparationReferenceModule',
   FollowerOnlyReferenceModule = 'FollowerOnlyReferenceModule',
   UnknownReferenceModule = 'UnknownReferenceModule',
@@ -1089,11 +1121,11 @@ export type RefreshRequest = {
 };
 
 export type RelRequest = {
-  ethereumAddress: Scalars['EvmAddress']['input'];
+  address: Scalars['EvmAddress']['input'];
   secret: Scalars['String']['input'];
 };
 
-export enum RelayErrorReasons {
+export enum RelayErrorReasonType {
   AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
   Expired = 'EXPIRED',
   Failed = 'FAILED',
@@ -1135,57 +1167,49 @@ export enum RelayRoleKey {
   ZkRelayer_1 = 'ZK_RELAYER_1',
 }
 
-export type RemoveProfileInterestsRequest = {
-  interests: Array<Scalars['ProfileInterest']['input']>;
-};
-
 export type ReportPublicationRequest = {
   additionalComments?: InputMaybe<Scalars['String']['input']>;
   for: Scalars['PublicationId']['input'];
-  reason: ReportingReasonInputInput;
+  reason: ReportingReasonInput;
 };
 
-export type ReportingReasonInputInput = {
-  fraudReason?: InputMaybe<FraudReasonInputInput>;
-  illegalReason?: InputMaybe<IllegalReasonInputInput>;
-  sensitiveReason?: InputMaybe<SensitiveReasonInputInput>;
-  spamReason?: InputMaybe<SpamReasonInputInput>;
+export type ReportingReasonInput = {
+  fraudReason?: InputMaybe<FraudReasonInput>;
+  illegalReason?: InputMaybe<IllegalReasonInput>;
+  sensitiveReason?: InputMaybe<SensitiveReasonInput>;
+  spamReason?: InputMaybe<SpamReasonInput>;
 };
 
 export type RevenueFromPublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
   limit?: InputMaybe<Scalars['Limit']['input']>;
-  where?: InputMaybe<RevenueFromPublicationsWhere>;
+  where: RevenueFromPublicationsWhere;
 };
 
 export type RevenueFromPublicationsWhere = {
   anyOf?: InputMaybe<Array<OpenActionFilter>>;
-  fromCollects?: InputMaybe<Scalars['Boolean']['input']>;
+  fromCollects: Scalars['Boolean']['input'];
   metadata?: InputMaybe<PublicationMetadataFilters>;
-  publicationTypes?: InputMaybe<Array<PublicationTypes>>;
+  publicationTypes?: InputMaybe<Array<PublicationType>>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
-export enum ScalarOperator {
-  Equal = 'EQUAL',
-  GreaterThan = 'GREATER_THAN',
-  GreaterThanOrEqual = 'GREATER_THAN_OR_EQUAL',
-  LessThan = 'LESS_THAN',
-  LessThanOrEqual = 'LESS_THAN_OR_EQUAL',
-  NotEqual = 'NOT_EQUAL',
-}
-
-export type SensitiveReasonInputInput = {
+export type SensitiveReasonInput = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingSensitiveSubreason;
 };
 
-export type SetProfileManagerRequest = {
-  add?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
-  for: Scalars['ProfileId']['input'];
-  lens?: InputMaybe<Scalars['Boolean']['input']>;
-  remove?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
+export type SetFollowModuleRequest = {
+  followModule: FollowModuleInput;
+};
+
+export type SetProfileImageRequest = {
+  imageURI: Scalars['URI']['input'];
+};
+
+export type SetProfileMetadataRequest = {
+  metadataURI: Scalars['URI']['input'];
 };
 
 export type SignedAuthChallenge = {
@@ -1193,60 +1217,23 @@ export type SignedAuthChallenge = {
   signature: Scalars['Signature']['input'];
 };
 
-export type SimpleCollectModuleInput = {
-  collectLimit?: InputMaybe<Scalars['String']['input']>;
-  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
-  fee?: InputMaybe<ModuleFeeInput>;
-  followerOnly: Scalars['Boolean']['input'];
-};
-
 export type SimpleCollectOpenActionModuleInput = {
   amount: AmountInput;
-  collectLimit?: InputMaybe<Scalars['String']['input']>;
+  collectLimit: Scalars['String']['input'];
   endsAt?: InputMaybe<Scalars['DateTime']['input']>;
   followerOnly: Scalars['Boolean']['input'];
   recipient: Scalars['EvmAddress']['input'];
   referralFee?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export enum SpaceMetadataV1MainFocus {
-  Space = 'SPACE',
-}
-
-export type SpamReasonInputInput = {
+export type SpamReasonInput = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingSpamSubreason;
 };
 
-export enum StoryMetadataV1MainFocus {
-  Story = 'STORY',
-}
-
-export enum SupportedFiatTypes {
-  Usd = 'USD',
-}
-
-export enum TagSortCriteria {
+export enum TagSortCriteriaType {
   Alphabetical = 'ALPHABETICAL',
   MostPopular = 'MOST_POPULAR',
-}
-
-export enum TextOnlyMetadataV1MainFocus {
-  TextOnly = 'TEXT_ONLY',
-}
-
-export enum ThreeDMetadataV1MainFocus {
-  ThreeD = 'THREE_D',
-}
-
-export enum TransactionMetadataTypes {
-  Erc20 = 'ERC20',
-  Erc721 = 'ERC721',
-  Other = 'OTHER',
-}
-
-export enum TransactionMetadataV1MainFocus {
-  Transaction = 'TRANSACTION',
 }
 
 export type TypedDataOptions = {
@@ -1261,7 +1248,7 @@ export type UnfollowRequest = {
   profile: Scalars['ProfileId']['input'];
 };
 
-export type UnknownCollectModuleInput = {
+export type UnknownCollectOpenActionModuleInput = {
   address: Scalars['EvmAddress']['input'];
   data: Scalars['BlockchainData']['input'];
 };
@@ -1275,43 +1262,41 @@ export type UnknownFollowModuleRedeemInput = {
   data: Scalars['BlockchainData']['input'];
 };
 
-export type UnknownOpenActionActEquest = {
+export type UnknownOpenActionActRequest = {
   address: Scalars['EvmAddress']['input'];
-  data?: InputMaybe<Scalars['BlockchainData']['input']>;
-};
-
-export type UnknownReferenceModuleInput = {
-  EvmAddress: Scalars['EvmAddress']['input'];
   data: Scalars['BlockchainData']['input'];
 };
 
-export type UpdateProfileImageRequest = {
-  nftData?: InputMaybe<NftOwnershipProof>;
-  url?: InputMaybe<Scalars['Url']['input']>;
+export type UnknownReferenceModuleInput = {
+  address: Scalars['EvmAddress']['input'];
+  data: Scalars['BlockchainData']['input'];
+};
+
+export type UnlinkHandleRequest = {
+  handle: Scalars['Handle']['input'];
 };
 
 export type ValidatePublicationMetadataRequest = {
   json?: InputMaybe<Scalars['String']['input']>;
-  rawURL?: InputMaybe<Scalars['Url']['input']>;
+  rawURI?: InputMaybe<Scalars['URI']['input']>;
 };
 
 export type VerifyRequest = {
   accessToken: Scalars['Jwt']['input'];
 };
 
-export enum VideoMetadataV1MainFocus {
-  ShortVideo = 'SHORT_VIDEO',
-  Video = 'VIDEO',
+export enum VideoMimeType {
+  Mp4 = 'MP4',
 }
 
-export type WhoActedPublicationRequest = {
+export type WhoActedOnPublicationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<Scalars['Limit']['input']>;
   on: Scalars['PublicationId']['input'];
-  where?: InputMaybe<WhoActedPublicationWhere>;
+  where?: InputMaybe<WhoActedOnPublicationWhere>;
 };
 
-export type WhoActedPublicationWhere = {
+export type WhoActedOnPublicationWhere = {
   anyOf: Array<OpenActionFilter>;
 };
 
@@ -1323,7 +1308,9 @@ export type WhoReactedPublicationRequest = {
 };
 
 export type WhoReactedPublicationWhere = {
-  anyOf?: InputMaybe<Array<ReactionTypes>>;
+  anyOf?: InputMaybe<Array<PublicationReactionType>>;
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<Scalars['Limit']['input']>;
 };
 
 export enum WorldcoinPhoneVerifyType {

@@ -103,15 +103,18 @@ fragment MomokaQuoteTransaction on MomokaQuoteTransaction {
   }
 }
 
+fragment MomokaSubmitterResult on MomokaSubmitterResult {
+  address
+  name
+  totalTransactions
+}
+
 # queries
 query MomokaSubmitters {
   result: momokaSubmitters {
     items {
-      address
-      name
-      totalTransactions
+      ...MomokaSubmitterResult
     }
-
     pageInfo {
       ...PaginatedResultInfo
     }
@@ -165,9 +168,20 @@ query momokaTransactions(
         ...MomokaQuoteTransaction
       }
     }
-
     pageInfo {
       ...PaginatedResultInfo
+    }
+  }
+}
+
+# mutations
+mutation BroadcastOnMomoka($request: BroadcastRequest!) {
+  result: broadcastOnMomoka(request: $request) {
+    ... on CreateMomokaPublicationResult {
+      ...CreateMomokaPublicationResult
+    }
+    ... on RelayError {
+      ...RelayError
     }
   }
 }

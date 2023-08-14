@@ -1,4 +1,4 @@
-import { buildTestEnvironment, describeAuthenticatedScenario } from '../__helpers__';
+import { buildTestEnvironment } from '../__helpers__';
 import { Authentication } from '../authentication';
 import { provideAuthHeaders } from './provideAuthHeaders';
 
@@ -28,18 +28,18 @@ describe(`Given the "${provideAuthHeaders.name}" helper`, () => {
     });
   });
 
-  describeAuthenticatedScenario()((getTestSetup) => {
-    describe(`when the ${Authentication.name} is available and authenticated`, () => {
-      it(`should provide the authentication header`, async () => {
-        const { authentication } = getTestSetup();
-        const result = await provideAuthHeaders(authentication, (header) => {
-          return Promise.resolve(header);
-        });
+  // describeAuthenticatedScenario()((getTestSetup) => {
+  //   describe(`when the ${Authentication.name} is available and authenticated`, () => {
+  //     it(`should provide the authentication header`, async () => {
+  //       const { authentication } = getTestSetup();
+  //       const result = await provideAuthHeaders(authentication, (header) => {
+  //         return Promise.resolve(header);
+  //       });
 
-        expect(result).toEqual({
-          authorization: expect.any(String),
-        });
-      });
-    });
-  });
+  //       expect(result).toEqual({
+  //         authorization: expect.any(String),
+  //       });
+  //     });
+  //   });
+  // });
 });

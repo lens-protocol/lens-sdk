@@ -4,14 +4,13 @@ import * as Types from '../../graphql/types.generated';
 import {
   ProfileFieldsFragment,
   PostFragment,
+  CommentFragment,
+  MirrorFragment,
   QuoteFragment,
   PaginatedResultInfoFragment,
   ProfileFragment,
-  CommentFragment,
   CollectOpenActionResultFragment,
-  NftDropOpenActionFragment,
   UnknownOpenActionResultFragment,
-  MirrorFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -20,20 +19,19 @@ import gql from 'graphql-tag';
 import {
   ProfileFieldsFragmentDoc,
   PostFragmentDoc,
+  CommentFragmentDoc,
+  MirrorFragmentDoc,
   QuoteFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   ProfileFragmentDoc,
-  CommentFragmentDoc,
   CollectOpenActionResultFragmentDoc,
-  NftDropOpenActionFragmentDoc,
   UnknownOpenActionResultFragmentDoc,
-  MirrorFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type ReactionNotificationFragment = {
   id: string;
   reactions: Array<{
     profile: ProfileFieldsFragment;
-    reactions: Array<{ reaction: Types.ReactionTypes; reactedAt: string } | null>;
+    reactions: Array<{ reaction: Types.PublicationReactionType; reactedAt: string }>;
   }>;
   publication: CommentFragment | PostFragment | QuoteFragment;
 };
@@ -51,11 +49,9 @@ export type QuoteNotificationFragment = { id: string; quote: QuoteFragment };
 export type ActedNotificationFragment = {
   id: string;
   actions: Array<{
+    id: string;
     profile: ProfileFieldsFragment;
-    actions:
-      | CollectOpenActionResultFragment
-      | NftDropOpenActionFragment
-      | UnknownOpenActionResultFragment;
+    action: CollectOpenActionResultFragment | UnknownOpenActionResultFragment;
   }>;
   publication: CommentFragment | MirrorFragment | PostFragment | QuoteFragment;
 };
@@ -67,11 +63,8 @@ export type MentionNotificationFragment = {
   publication: CommentFragment | PostFragment | QuoteFragment;
 };
 
-export type FutureProofNotificationFragment = { id: string };
-
 export type NotificationsQueryVariables = Types.Exact<{
   request: Types.NotificationRequest;
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']['input']>;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -83,11 +76,11 @@ export type NotificationsQuery = {
       | ActedNotificationFragment
       | CommentNotificationFragment
       | FollowNotificationFragment
-      | FutureProofNotificationFragment
       | MentionNotificationFragment
       | MirrorNotificationFragment
       | QuoteNotificationFragment
       | ReactionNotificationFragment
+      | {}
     >;
     pageInfo: PaginatedResultInfoFragment;
   };
@@ -171,15 +164,13 @@ export const ActedNotificationFragmentDoc = gql`
   fragment ActedNotification on ActedNotification {
     id
     actions {
+      id
       profile {
         ...ProfileFields
       }
-      actions {
+      action {
         ... on CollectOpenActionResult {
           ...CollectOpenActionResult
-        }
-        ... on NftDropOpenAction {
-          ...NftDropOpenAction
         }
         ... on UnknownOpenActionResult {
           ...UnknownOpenActionResult
@@ -203,7 +194,6 @@ export const ActedNotificationFragmentDoc = gql`
   }
   ${ProfileFieldsFragmentDoc}
   ${CollectOpenActionResultFragmentDoc}
-  ${NftDropOpenActionFragmentDoc}
   ${UnknownOpenActionResultFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
@@ -238,15 +228,9 @@ export const MentionNotificationFragmentDoc = gql`
   ${CommentFragmentDoc}
   ${QuoteFragmentDoc}
 `;
-export const FutureProofNotificationFragmentDoc = gql`
-  fragment FutureProofNotification on FutureProofNotification {
-    id
-  }
-`;
 export const NotificationsDocument = gql`
   query Notifications(
     $request: NotificationRequest!
-    $observerId: ProfileId
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
@@ -274,9 +258,6 @@ export const NotificationsDocument = gql`
         ... on MentionNotification {
           ...MentionNotification
         }
-        ... on FutureProofNotification {
-          ...FutureProofNotification
-        }
       }
       pageInfo {
         ...PaginatedResultInfo
@@ -290,7 +271,6 @@ export const NotificationsDocument = gql`
   ${ActedNotificationFragmentDoc}
   ${FollowNotificationFragmentDoc}
   ${MentionNotificationFragmentDoc}
-  ${FutureProofNotificationFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
 

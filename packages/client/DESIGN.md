@@ -6,7 +6,7 @@ they're all chained under LensClient instance, like so:
 client.[moduleName].[moduleMethod](args)
 ```
 
-- authentication
+- [x] authentication
   <!-- queries -->
 
   - challenge(profileId)
@@ -22,7 +22,7 @@ client.[moduleName].[moduleMethod](args)
   - isAuthenticated
   - getAccessToken
 
-- bookmarks
+- [x] bookmarks
 
   <!-- queries -->
 
@@ -44,25 +44,21 @@ client.[moduleName].[moduleMethod](args)
   - add
   - undo
 
-- interests
-
-    <!-- queries -->
-
-  - fetch
+- [x] interests
 
   <!-- mutations -->
 
   - add
   - remove
 
-- explore
+- [x] explore
 
   <!-- queries -->
 
   - profiles
   - publications
 
-- feed
+- [x] feed
 
   <!-- queries -->
 
@@ -82,7 +78,7 @@ client.[moduleName].[moduleMethod](args)
 
   - invite
 
-- momoka
+- [x] momoka
 
   <!-- queries -->
 
@@ -95,7 +91,7 @@ client.[moduleName].[moduleMethod](args)
 
   - broadcast
 
-- nfts
+- [x] nfts
   <!-- queries -->
 
   - fetch
@@ -110,12 +106,12 @@ client.[moduleName].[moduleMethod](args)
   - updateGalleryItems
   - updateGalleryOrder
 
-- nonces
+- [x] nonces
   <!-- queries -->
 
   - fetch
 
-- notifications
+- [x] notifications
   <!-- queries -->
 
   - fetch
@@ -205,7 +201,7 @@ client.[moduleName].[moduleMethod](args)
 
   - createOpenActionActTypedData ??
 
-- reactions
+- [x] reactions
 
   <!-- queries -->
 
@@ -216,7 +212,7 @@ client.[moduleName].[moduleMethod](args)
   - add
   - remove
 
-- revenue
+- [x] revenue
 
   <!-- queries -->
 
@@ -228,9 +224,9 @@ client.[moduleName].[moduleMethod](args)
 
   <!-- queries -->
 
-  - profiles
-  - publications
-  - nfts
+  - [x] profiles
+  - [x] publications
+  - nfts ??
 
 - stats (global)
 
@@ -238,7 +234,7 @@ client.[moduleName].[moduleMethod](args)
 
   - fetch
 
-- transaction
+- [x] transaction
 
   <!-- queries -->
 

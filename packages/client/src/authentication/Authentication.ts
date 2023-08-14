@@ -1,55 +1,13 @@
-import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
 
-import { LensConfig } from '../consts/config';
+import type { LensConfig } from '../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { ChallengeRequest, SignedAuthChallenge } from '../graphql/types.generated';
+import type { IAuthentication } from './IAuthentication';
 import { AuthenticationApi } from './adapters/AuthenticationApi';
 import { CredentialsStorage } from './adapters/CredentialsStorage';
-
-/**
- * Authentication for Lens API.
- *
- * @group LensClient Modules
- */
-export interface IAuthentication {
-  /**
-   * Generate a challenge string for the wallet to sign.
-   *
-   * @param address - The wallet address
-   * @returns A challenge string
-   */
-  generateChallenge(address: EthereumAddress): Promise<string>;
-
-  /**
-   * Authenticate the user with the wallet address and signature of the challenge.
-   *
-   * @param address - The wallet address
-   * @param signature - The signature of the challenge
-   */
-  authenticate(address: EthereumAddress, signature: string): Promise<void>;
-
-  /**
-   * Check if the user is authenticated. If the credentials are expired, try to refresh them.
-   *
-   * @returns Whether the user is authenticated
-   */
-  isAuthenticated(): Promise<boolean>;
-
-  /**
-   * Verify that the access token is signed by the server and the user.
-   *
-   * @param accessToken - The access token to verify
-   * @returns Whether the access token is valid
-   */
-  verify(accessToken: string): Promise<boolean>;
-
-  /**
-   * Get the access token. If it expired, try to refresh it.
-   *
-   * @returns The access token
-   */
-  getAccessToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
-}
+import type { AuthChallengeFragment } from './graphql/auth.generated';
 
 /**
  * Authentication for Lens API. Request challenge, authenticate, manage credentials.
@@ -66,13 +24,17 @@ export class Authentication implements IAuthentication {
     );
   }
 
-  async generateChallenge(address: EthereumAddress): Promise<string> {
-    return this.api.challenge(address);
+  async generateChallenge(request: ChallengeRequest): Promise<AuthChallengeFragment> {
+    return this.api.challenge(request);
   }
 
-  async authenticate(address: EthereumAddress, signature: string): Promise<void> {
-    const credentials = await this.api.authenticate(address, signature);
+  async authenticate(request: SignedAuthChallenge): Promise<void> {
+    const credentials = await this.api.authenticate(request);
     await this.storage.set(credentials);
+  }
+
+  async verify(accessToken: string): Promise<boolean> {
+    return this.api.verify(accessToken);
   }
 
   async isAuthenticated(): Promise<boolean> {
@@ -94,10 +56,6 @@ export class Authentication implements IAuthentication {
 
     // credentials expired
     return false;
-  }
-
-  async verify(accessToken: string): Promise<boolean> {
-    return this.api.verify(accessToken);
   }
 
   async getAccessToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {

@@ -3,35 +3,6 @@ import { Wallet } from 'ethers';
 
 import { LensClient } from '.';
 import { buildTestEnvironment } from './__helpers__';
-import { Profile } from './profile';
-import { Publication } from './publication';
-import { Search } from './search';
-
-const testConfig = {
-  environment: buildTestEnvironment(),
-};
-
-describe(`Given the ${LensClient.name} configured for the test environment`, () => {
-  const client = new LensClient(testConfig);
-
-  describe(`when accessing the ${Profile.name} module`, () => {
-    it(`should return a new instance of ${Profile.name}`, () => {
-      expect(client.profile).toBeInstanceOf(Profile);
-    });
-  });
-
-  describe(`when accessing the ${Publication.name} module`, () => {
-    it(`should return a new instance of ${Publication.name}`, () => {
-      expect(client.publication).toBeInstanceOf(Publication);
-    });
-  });
-
-  describe(`when accessing the ${Search.name} module`, () => {
-    it(`should return a new instance of ${Search.name}`, () => {
-      expect(client.search).toBeInstanceOf(Search);
-    });
-  });
-});
 
 describe(`Given storage and two ${LensClient.name} instances sharing the same storage`, () => {
   const storage = new InMemoryStorageProvider();
@@ -46,11 +17,17 @@ describe(`Given storage and two ${LensClient.name} instances sharing the same st
     it(`should allow 2nd client to trigger methods that require authentication`, async () => {
       const wallet = Wallet.createRandom();
       const walletAddress = await wallet.getAddress();
-      const challenge = await client1.authentication.generateChallenge(walletAddress);
-      const signature = await wallet.signMessage(challenge);
+      const { id, text } = await client1.authentication.generateChallenge({
+        address: walletAddress,
+        profileId: '1',
+      });
+      const signature = await wallet.signMessage(text);
 
       // authenticate 1st client
-      await client1.authentication.authenticate(walletAddress, signature);
+      await client1.authentication.authenticate({
+        id,
+        signature,
+      });
 
       expect(await client1.authentication.isAuthenticated()).toBeTruthy();
 

@@ -3,11 +3,11 @@ import * as Types from '../../graphql/types.generated';
 
 import {
   PostFragment,
+  CommentFragment,
+  MirrorFragment,
   QuoteFragment,
   PaginatedResultInfoFragment,
   ProfileFragment,
-  MirrorFragment,
-  CommentFragment,
   Eip712TypedDataDomainFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
@@ -20,11 +20,11 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
   PostFragmentDoc,
+  CommentFragmentDoc,
+  MirrorFragmentDoc,
   QuoteFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   ProfileFragmentDoc,
-  MirrorFragmentDoc,
-  CommentFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
@@ -33,19 +33,17 @@ import {
 } from '../../graphql/fragments.generated';
 export type PublicationQueryVariables = Types.Exact<{
   request: Types.PublicationRequest;
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']['input']>;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
 }>;
 
 export type PublicationQuery = {
-  result: CommentFragment | MirrorFragment | PostFragment | QuoteFragment | null;
+  result: CommentFragment | MirrorFragment | PostFragment | QuoteFragment;
 };
 
 export type PublicationsQueryVariables = Types.Exact<{
   request: Types.PublicationsRequest;
-  observerId?: Types.InputMaybe<Types.Scalars['ProfileId']['input']>;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -58,63 +56,63 @@ export type PublicationsQuery = {
   };
 };
 
-export type CreatePostBroadcastItemResultFragment = {
+export type CreateOnChainPostBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
   typedData: {
     types: { PostWithSig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: {
-      nonce: string;
-      deadline: string;
-      profileId: string;
-      contentURI: string;
-      collectModule: string;
-      collectModuleInitData: string;
-      referenceModule: string;
-      referenceModuleInitData: string;
-    };
+    value: { nonce: string; deadline: string };
   };
 };
 
-export type CreateCommentBroadcastItemResultFragment = {
+export type CreateOnChainCommentBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
   typedData: {
     types: { CommentWithSig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: {
-      nonce: string;
-      deadline: string;
-      profileId: string;
-      contentURI: string;
-      profileIdPointed: string;
-      pubIdPointed: string;
-      collectModule: string;
-      collectModuleInitData: string;
-      referenceModuleData: string;
-      referenceModule: string;
-      referenceModuleInitData: string;
-    };
+    value: { nonce: string; deadline: string };
   };
 };
 
-export type CreateMirrorBroadcastItemResultFragment = {
+export type CreateOnChainMirrorBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
   typedData: {
     types: { MirrorWithSig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: {
-      nonce: string;
-      deadline: string;
-      profileId: string;
-      profileIdPointed: string;
-      pubIdPointed: string;
-      referenceModuleData: string;
-      referenceModule: string;
-      referenceModuleInitData: string;
-    };
+    value: { nonce: string; deadline: string };
+  };
+};
+
+export type CreateMomokaPostBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { PostWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: string; deadline: string };
+  };
+};
+
+export type CreateMomokaCommentBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { CommentWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: string; deadline: string };
+  };
+};
+
+export type CreateMomokaMirrorBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { MirrorWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: string; deadline: string };
   };
 };
 
@@ -123,7 +121,9 @@ export type CreateOnChainPostTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateOnChainPostTypedDataMutation = { result: CreatePostBroadcastItemResultFragment };
+export type CreateOnChainPostTypedDataMutation = {
+  result: CreateOnChainPostBroadcastItemResultFragment;
+};
 
 export type CreateOnChainCommentTypedDataMutationVariables = Types.Exact<{
   request: Types.CreateOnChainCommentRequest;
@@ -131,7 +131,7 @@ export type CreateOnChainCommentTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateOnChainCommentTypedDataMutation = {
-  result: CreateCommentBroadcastItemResultFragment;
+  result: CreateOnChainCommentBroadcastItemResultFragment;
 };
 
 export type CreateOnChainMirrorTypedDataMutationVariables = Types.Exact<{
@@ -140,29 +140,31 @@ export type CreateOnChainMirrorTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateOnChainMirrorTypedDataMutation = {
-  result: CreateMirrorBroadcastItemResultFragment;
+  result: CreateOnChainMirrorBroadcastItemResultFragment;
 };
 
 export type CreateMomokaPostTypedDataMutationVariables = Types.Exact<{
-  request: Types.CreateMomokaPostRequest;
+  request: Types.MomokaPostRequest;
 }>;
 
-export type CreateMomokaPostTypedDataMutation = { result: CreatePostBroadcastItemResultFragment };
+export type CreateMomokaPostTypedDataMutation = {
+  result: CreateMomokaPostBroadcastItemResultFragment;
+};
 
 export type CreateMomokaCommentTypedDataMutationVariables = Types.Exact<{
-  request: Types.CreateMomokaCommentRequest;
+  request: Types.MomokaCommentRequest;
 }>;
 
 export type CreateMomokaCommentTypedDataMutation = {
-  result: CreateCommentBroadcastItemResultFragment;
+  result: CreateMomokaCommentBroadcastItemResultFragment;
 };
 
 export type CreateMomokaMirrorTypedDataMutationVariables = Types.Exact<{
-  request: Types.CreateMomokaMirrorRequest;
+  request: Types.MomokaMirrorRequest;
 }>;
 
 export type CreateMomokaMirrorTypedDataMutation = {
-  result: CreateMirrorBroadcastItemResultFragment;
+  result: CreateMomokaMirrorBroadcastItemResultFragment;
 };
 
 export type PostOnChainMutationVariables = Types.Exact<{
@@ -190,7 +192,7 @@ export type MirrorOnChainMutation = {
 };
 
 export type PostOnMomokaMutationVariables = Types.Exact<{
-  request: Types.CreateMomokaPostRequest;
+  request: Types.MomokaPostRequest;
 }>;
 
 export type PostOnMomokaMutation = {
@@ -198,7 +200,7 @@ export type PostOnMomokaMutation = {
 };
 
 export type CommentOnMomokaMutationVariables = Types.Exact<{
-  request: Types.CreateMomokaCommentRequest;
+  request: Types.MomokaCommentRequest;
 }>;
 
 export type CommentOnMomokaMutation = {
@@ -206,15 +208,15 @@ export type CommentOnMomokaMutation = {
 };
 
 export type MirrorOnMomokaMutationVariables = Types.Exact<{
-  request: Types.CreateMomokaMirrorRequest;
+  request: Types.MomokaMirrorRequest;
 }>;
 
 export type MirrorOnMomokaMutation = {
   result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
 };
 
-export const CreatePostBroadcastItemResultFragmentDoc = gql`
-  fragment CreatePostBroadcastItemResult on CreatePostBroadcastItemResult {
+export const CreateOnChainPostBroadcastItemResultFragmentDoc = gql`
+  fragment CreateOnChainPostBroadcastItemResult on CreateOnChainPostBroadcastItemResult {
     id
     expiresAt
     typedData {
@@ -230,19 +232,13 @@ export const CreatePostBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
-        profileId
-        contentURI
-        collectModule
-        collectModuleInitData
-        referenceModule
-        referenceModuleInitData
       }
     }
   }
   ${Eip712TypedDataDomainFragmentDoc}
 `;
-export const CreateCommentBroadcastItemResultFragmentDoc = gql`
-  fragment CreateCommentBroadcastItemResult on CreateCommentBroadcastItemResult {
+export const CreateOnChainCommentBroadcastItemResultFragmentDoc = gql`
+  fragment CreateOnChainCommentBroadcastItemResult on CreateOnChainCommentBroadcastItemResult {
     id
     expiresAt
     typedData {
@@ -258,22 +254,13 @@ export const CreateCommentBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
-        profileId
-        contentURI
-        profileIdPointed
-        pubIdPointed
-        collectModule
-        collectModuleInitData
-        referenceModuleData
-        referenceModule
-        referenceModuleInitData
       }
     }
   }
   ${Eip712TypedDataDomainFragmentDoc}
 `;
-export const CreateMirrorBroadcastItemResultFragmentDoc = gql`
-  fragment CreateMirrorBroadcastItemResult on CreateMirrorBroadcastItemResult {
+export const CreateOnChainMirrorBroadcastItemResultFragmentDoc = gql`
+  fragment CreateOnChainMirrorBroadcastItemResult on CreateOnChainMirrorBroadcastItemResult {
     id
     expiresAt
     typedData {
@@ -289,12 +276,72 @@ export const CreateMirrorBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
-        profileId
-        profileIdPointed
-        pubIdPointed
-        referenceModuleData
-        referenceModule
-        referenceModuleInitData
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateMomokaPostBroadcastItemResultFragmentDoc = gql`
+  fragment CreateMomokaPostBroadcastItemResult on CreateMomokaPostBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        PostWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateMomokaCommentBroadcastItemResultFragmentDoc = gql`
+  fragment CreateMomokaCommentBroadcastItemResult on CreateMomokaCommentBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        CommentWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateMomokaMirrorBroadcastItemResultFragmentDoc = gql`
+  fragment CreateMomokaMirrorBroadcastItemResult on CreateMomokaMirrorBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        MirrorWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
       }
     }
   }
@@ -303,7 +350,6 @@ export const CreateMirrorBroadcastItemResultFragmentDoc = gql`
 export const PublicationDocument = gql`
   query Publication(
     $request: PublicationRequest!
-    $observerId: ProfileId
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
@@ -331,7 +377,6 @@ export const PublicationDocument = gql`
 export const PublicationsDocument = gql`
   query Publications(
     $request: PublicationsRequest!
-    $observerId: ProfileId
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
@@ -368,10 +413,10 @@ export const CreateOnChainPostTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createOnChainPostTypedData(request: $request, options: $options) {
-      ...CreatePostBroadcastItemResult
+      ...CreateOnChainPostBroadcastItemResult
     }
   }
-  ${CreatePostBroadcastItemResultFragmentDoc}
+  ${CreateOnChainPostBroadcastItemResultFragmentDoc}
 `;
 export const CreateOnChainCommentTypedDataDocument = gql`
   mutation CreateOnChainCommentTypedData(
@@ -379,10 +424,10 @@ export const CreateOnChainCommentTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createOnChainCommentTypedData(request: $request, options: $options) {
-      ...CreateCommentBroadcastItemResult
+      ...CreateOnChainCommentBroadcastItemResult
     }
   }
-  ${CreateCommentBroadcastItemResultFragmentDoc}
+  ${CreateOnChainCommentBroadcastItemResultFragmentDoc}
 `;
 export const CreateOnChainMirrorTypedDataDocument = gql`
   mutation CreateOnChainMirrorTypedData(
@@ -390,34 +435,34 @@ export const CreateOnChainMirrorTypedDataDocument = gql`
     $options: TypedDataOptions
   ) {
     result: createOnChainMirrorTypedData(request: $request, options: $options) {
-      ...CreateMirrorBroadcastItemResult
+      ...CreateOnChainMirrorBroadcastItemResult
     }
   }
-  ${CreateMirrorBroadcastItemResultFragmentDoc}
+  ${CreateOnChainMirrorBroadcastItemResultFragmentDoc}
 `;
 export const CreateMomokaPostTypedDataDocument = gql`
-  mutation CreateMomokaPostTypedData($request: CreateMomokaPostRequest!) {
+  mutation CreateMomokaPostTypedData($request: MomokaPostRequest!) {
     result: createMomokaPostTypedData(request: $request) {
-      ...CreatePostBroadcastItemResult
+      ...CreateMomokaPostBroadcastItemResult
     }
   }
-  ${CreatePostBroadcastItemResultFragmentDoc}
+  ${CreateMomokaPostBroadcastItemResultFragmentDoc}
 `;
 export const CreateMomokaCommentTypedDataDocument = gql`
-  mutation CreateMomokaCommentTypedData($request: CreateMomokaCommentRequest!) {
+  mutation CreateMomokaCommentTypedData($request: MomokaCommentRequest!) {
     result: createMomokaCommentTypedData(request: $request) {
-      ...CreateCommentBroadcastItemResult
+      ...CreateMomokaCommentBroadcastItemResult
     }
   }
-  ${CreateCommentBroadcastItemResultFragmentDoc}
+  ${CreateMomokaCommentBroadcastItemResultFragmentDoc}
 `;
 export const CreateMomokaMirrorTypedDataDocument = gql`
-  mutation CreateMomokaMirrorTypedData($request: CreateMomokaMirrorRequest!) {
+  mutation CreateMomokaMirrorTypedData($request: MomokaMirrorRequest!) {
     result: createMomokaMirrorTypedData(request: $request) {
-      ...CreateMirrorBroadcastItemResult
+      ...CreateMomokaMirrorBroadcastItemResult
     }
   }
-  ${CreateMirrorBroadcastItemResultFragmentDoc}
+  ${CreateMomokaMirrorBroadcastItemResultFragmentDoc}
 `;
 export const PostOnChainDocument = gql`
   mutation PostOnChain($request: CreateOnChainPostRequest!) {
@@ -462,7 +507,7 @@ export const MirrorOnChainDocument = gql`
   ${LensProfileManagerRelayErrorFragmentDoc}
 `;
 export const PostOnMomokaDocument = gql`
-  mutation PostOnMomoka($request: CreateMomokaPostRequest!) {
+  mutation PostOnMomoka($request: MomokaPostRequest!) {
     result: postOnMomoka(request: $request) {
       ... on CreateMomokaPublicationResult {
         ...CreateMomokaPublicationResult
@@ -476,7 +521,7 @@ export const PostOnMomokaDocument = gql`
   ${RelayErrorFragmentDoc}
 `;
 export const CommentOnMomokaDocument = gql`
-  mutation CommentOnMomoka($request: CreateMomokaCommentRequest!) {
+  mutation CommentOnMomoka($request: MomokaCommentRequest!) {
     result: commentOnMomoka(request: $request) {
       ... on CreateMomokaPublicationResult {
         ...CreateMomokaPublicationResult
@@ -490,7 +535,7 @@ export const CommentOnMomokaDocument = gql`
   ${RelayErrorFragmentDoc}
 `;
 export const MirrorOnMomokaDocument = gql`
-  mutation MirrorOnMomoka($request: CreateMomokaMirrorRequest!) {
+  mutation MirrorOnMomoka($request: MomokaMirrorRequest!) {
     result: mirrorOnMomoka(request: $request) {
       ... on CreateMomokaPublicationResult {
         ...CreateMomokaPublicationResult

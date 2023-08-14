@@ -1,0 +1,10 @@
+fragment UserSigNonces on UserSigNonces {
+  lensHubOnChainSigNonce
+  peripheryOnChainSigNonce
+}
+
+query UserSigNonces {
+  result: userSigNonces {
+    ...UserSigNonces
+  }
+}

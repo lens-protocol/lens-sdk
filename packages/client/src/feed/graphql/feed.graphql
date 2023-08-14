@@ -63,7 +63,6 @@ fragment FeedItem on FeedItem {
 
 query Feed(
   $request: FeedRequest!
-  $observerId: ProfileId
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
@@ -80,7 +79,6 @@ query Feed(
 
 query FeedHighlights(
   $request: FeedHighlightsRequest!
-  $observerId: ProfileId
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
@@ -102,7 +100,6 @@ query FeedHighlights(
 
 query ForYou(
   $request: PublicationForYouRequest!
-  $observerId: ProfileId
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}

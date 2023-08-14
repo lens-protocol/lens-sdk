@@ -39,7 +39,6 @@ export class Feed {
 
   async fetch(
     request: FeedRequest,
-    observerId?: string,
   ): PromiseResult<
     PaginatedResult<FeedItemFragment>,
     CredentialsExpiredError | NotAuthenticatedError
@@ -49,7 +48,6 @@ export class Feed {
         const result = await this.sdk.Feed(
           {
             request: currRequest,
-            observerId,
             ...buildImageTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
@@ -62,7 +60,6 @@ export class Feed {
 
   async highlights(
     request: FeedHighlightsRequest,
-    observerId?: string,
   ): PromiseResult<
     PaginatedResult<PostFragment | QuoteFragment>,
     CredentialsExpiredError | NotAuthenticatedError
@@ -72,7 +69,6 @@ export class Feed {
         const result = await this.sdk.FeedHighlights(
           {
             request: currRequest,
-            observerId,
             ...buildImageTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,
@@ -85,7 +81,6 @@ export class Feed {
 
   async forYou(
     request: PublicationForYouRequest,
-    observerId?: string,
   ): PromiseResult<
     PaginatedResult<PostFragment | QuoteFragment>,
     CredentialsExpiredError | NotAuthenticatedError
@@ -95,7 +90,6 @@ export class Feed {
         const result = await this.sdk.ForYou(
           {
             request: currRequest,
-            observerId,
             ...buildImageTransformsFromConfig(this.config.mediaTransforms),
           },
           headers,

@@ -1,0 +1,40 @@
+fragment LensTransaction on LensTransaction {
+  __typename
+  status
+  txHash
+  reason
+  extraInfo
+}
+
+fragment LensMetadataTransaction on LensMetadataTransaction {
+  __typename
+  status
+  metadataFailedReason
+  extraInfo
+}
+
+query TxIdToTxHash($txId: TxId!) {
+  result: txIdToTxHash(txId: $txId)
+}
+
+query LensTransactionStatus($request: LensTransactionStatusRequest!) {
+  result: lensTransactionStatus(request: $request) {
+    ... on LensTransaction {
+      ...LensTransaction
+    }
+    ... on LensMetadataTransaction {
+      ...LensMetadataTransaction
+    }
+  }
+}
+
+mutation BroadcastOnChain($request: BroadcastRequest!) {
+  result: broadcastOnChain(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
