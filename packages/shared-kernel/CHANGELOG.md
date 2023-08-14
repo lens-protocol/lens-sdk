@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.10.0-next.1
+
+### Patch Changes
+
+- **Fixed** missing dependency update related to https://github.com/lens-protocol/lens-sdk/pull/475
+
 ## 0.10.0-next.0
 
 ### Minor Changes
