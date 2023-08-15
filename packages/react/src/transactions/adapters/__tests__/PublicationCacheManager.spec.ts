@@ -1,19 +1,55 @@
 import { AnyPublication, FragmentPublication } from '@lens-protocol/api-bindings';
 import {
-  mockLensCache,
   mockPostFragment,
   mockCommentFragment,
   mockMirrorFragment,
+  mockGetPublicationResponse,
+  mockSources,
+  mockLensApolloClient,
+  simulateAuthenticatedWallet,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockPublicationId } from '@lens-protocol/domain/mocks';
+import {
+  mockCreatePostRequest,
+  mockPublicationId,
+  mockTransactionData,
+  mockTransactionHash,
+} from '@lens-protocol/domain/mocks';
 
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../../mediaTransforms';
 import { PublicationCacheManager } from '../PublicationCacheManager';
 
-function setupTestScenario({ publication }: { publication: AnyPublication }) {
-  const apolloCache = mockLensCache();
+function setupTestScenario({
+  txHash,
+  publication,
+}: {
+  txHash?: string;
+  publication: AnyPublication;
+}) {
+  const sources = mockSources();
+  const mediaTransforms = defaultMediaTransformsConfig;
+  const client = mockLensApolloClient([
+    mockGetPublicationResponse({
+      variables: {
+        request: txHash
+          ? {
+              txHash,
+            }
+          : {
+              publicationId: publication.id,
+            },
+        observerId: null,
+        sources,
+        ...mediaTransformConfigToQueryVariables(mediaTransforms),
+      },
+      publication,
+    }),
+  ]);
 
-  apolloCache.writeFragment({
-    id: apolloCache.identify({
+  client.cache.writeFragment({
+    id: client.cache.identify({
       __typename: publication.__typename,
       id: publication.id,
     }),
@@ -23,11 +59,11 @@ function setupTestScenario({ publication }: { publication: AnyPublication }) {
   });
 
   return {
-    cacheManager: new PublicationCacheManager(apolloCache),
+    cacheManager: new PublicationCacheManager(client, sources, mediaTransforms),
 
-    get updatedPublicationFragment() {
-      return apolloCache.readFragment({
-        id: apolloCache.identify({
+    get publicationFromCache() {
+      return client.cache.readFragment({
+        id: client.cache.identify({
           __typename: publication.__typename,
           id: publication.id,
         }),
@@ -39,6 +75,46 @@ function setupTestScenario({ publication }: { publication: AnyPublication }) {
 }
 
 describe(`Given the ${PublicationCacheManager.name}`, () => {
+  beforeAll(() => {
+    simulateAuthenticatedWallet();
+  });
+
+  describe(`when "${PublicationCacheManager.prototype.fetchNewPost.name}" method is invoked`, () => {
+    const post = mockPostFragment();
+
+    it('should fetch new publication by "txHash" if available', async () => {
+      const txHash = mockTransactionHash();
+      const scenario = setupTestScenario({
+        txHash,
+        publication: post,
+      });
+
+      const transactionData = mockTransactionData({
+        txHash,
+        request: mockCreatePostRequest(),
+      });
+      const publication = await scenario.cacheManager.fetchNewPost(transactionData);
+
+      expect(publication).toMatchObject({
+        id: post.id,
+      });
+    });
+
+    it('should fetch new publication by "id" if "txHash" is not available', async () => {
+      const request = mockCreatePostRequest();
+      const scenario = setupTestScenario({
+        publication: post,
+      });
+
+      const transactionData = mockTransactionData({ id: post.id, request });
+      const publication = await scenario.cacheManager.fetchNewPost(transactionData);
+
+      expect(publication).toMatchObject({
+        id: post.id,
+      });
+    });
+  });
+
   describe(`when "${PublicationCacheManager.prototype.update.name}" method is invoked`, () => {
     it.each([
       mockPostFragment({
@@ -58,7 +134,7 @@ describe(`Given the ${PublicationCacheManager.name}`, () => {
         hidden: true,
       }));
 
-      expect(scenario.updatedPublicationFragment).toMatchObject({
+      expect(scenario.publicationFromCache).toMatchObject({
         hidden: true,
       });
     });

@@ -30,12 +30,12 @@ import { mockTransactionQueue } from '../__helpers__/mocks';
 
 function setupPayTransaction({
   gateway,
-  presenter = mock<IPayTransactionPresenter>(),
+  presenter = mock<IPayTransactionPresenter<AnyTransactionRequestModel>>(),
   queue = mockTransactionQueue<AnyTransactionRequestModel>(),
   wallet,
 }: {
   gateway: IPayTransactionGateway<AnyTransactionRequestModel>;
-  presenter?: IPayTransactionPresenter;
+  presenter?: IPayTransactionPresenter<AnyTransactionRequestModel>;
   queue?: TransactionQueue<AnyTransactionRequestModel>;
   wallet: Wallet;
 }) {
@@ -51,8 +51,7 @@ describe(`Given the ${PayTransaction.name} interactor`, () => {
     it(`should:
         - create an ${UnsignedTransaction.name}<T>
         - sign and broadcast the transaction with the user's wallet
-        - queue the resulting ${NativeTransaction.name} into the ${TransactionQueue.name}
-        - present successful result`, async () => {
+        - queue the resulting ${NativeTransaction.name} into the ${TransactionQueue.name}`, async () => {
       const wallet = mockWallet();
       const queue = mockTransactionQueue<AnyTransactionRequestModel>();
       const gateway = mockIPayTransactionGateway({
@@ -60,7 +59,7 @@ describe(`Given the ${PayTransaction.name} interactor`, () => {
         wallet,
         unsignedTransaction,
       });
-      const presenter = mock<IPayTransactionPresenter>();
+      const presenter = mock<IPayTransactionPresenter<AnyTransactionRequestModel>>();
       const payTransaction = setupPayTransaction({
         gateway,
         presenter,
@@ -74,8 +73,7 @@ describe(`Given the ${PayTransaction.name} interactor`, () => {
 
       await payTransaction.execute(request);
 
-      expect(queue.push).toHaveBeenCalledWith(transaction);
-      expect(presenter.present).toHaveBeenCalledWith(success());
+      expect(queue.push).toHaveBeenCalledWith(transaction, presenter);
     });
 
     it.each([
@@ -109,7 +107,7 @@ describe(`Given the ${PayTransaction.name} interactor`, () => {
           unsignedTransaction,
         });
 
-        const presenter = mock<IPayTransactionPresenter>();
+        const presenter = mock<IPayTransactionPresenter<AnyTransactionRequestModel>>();
         const payTransaction = setupPayTransaction({
           gateway,
           presenter,

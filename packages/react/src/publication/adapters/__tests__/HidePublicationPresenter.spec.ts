@@ -1,18 +1,20 @@
 import { Post, FragmentPost } from '@lens-protocol/api-bindings';
 import {
-  mockLensCache,
+  mockLensApolloClient,
   mockPostFragment,
   mockPublicationStatsFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 
+import { defaultMediaTransformsConfig } from '../../../mediaTransforms';
 import { PublicationCacheManager } from '../../../transactions/adapters/PublicationCacheManager';
 import { HidePublicationPresenter } from '../HidePublicationPresenter';
 
 function setupTestScenario({ post }: { post: Post }) {
-  const apolloCache = mockLensCache();
+  const client = mockLensApolloClient();
 
-  apolloCache.writeFragment({
-    id: apolloCache.identify({
+  client.cache.writeFragment({
+    id: client.cache.identify({
       __typename: 'Post',
       id: post.id,
     }),
@@ -21,15 +23,19 @@ function setupTestScenario({ post }: { post: Post }) {
     data: post,
   });
 
-  const publicationCacheManager = new PublicationCacheManager(apolloCache);
+  const publicationCacheManager = new PublicationCacheManager(
+    client,
+    mockSources(),
+    defaultMediaTransformsConfig,
+  );
   const presenter = new HidePublicationPresenter(publicationCacheManager);
 
   return {
     presenter,
 
     get updatedPostFragment() {
-      return apolloCache.readFragment({
-        id: apolloCache.identify({
+      return client.cache.readFragment({
+        id: client.cache.identify({
           __typename: 'Post',
           id: post.id,
         }),

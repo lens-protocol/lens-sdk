@@ -1,4 +1,4 @@
-import { ProfileOwnedByMe } from '@lens-protocol/api-bindings';
+import { Post, ProfileOwnedByMe } from '@lens-protocol/api-bindings';
 import {
   AppId,
   PendingSigningRequestError,
@@ -24,6 +24,7 @@ import { failure, PromiseResult, Url } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreatePostController } from './adapters/useCreatePostController';
@@ -163,8 +164,10 @@ export type CreateEmbedPostArgs = CreatePostBaseArgs & {
 
 export type CreatePostArgs = CreateTextualPostArgs | CreateMediaPostArgs | CreateEmbedPostArgs;
 
+export type CreatePostAsyncResult = AsyncTransactionResult<Post>;
+
 export type CreatePostOperation = Operation<
-  void,
+  CreatePostAsyncResult,
   | BroadcastingError
   | PendingSigningRequestError
   | UserRejectedError
@@ -242,7 +245,7 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
       reference = { type: ReferencePolicyType.ANYONE },
       ...args
     }: CreatePostArgs): PromiseResult<
-      void,
+      CreatePostAsyncResult,
       | BroadcastingError
       | PendingSigningRequestError
       | UserRejectedError

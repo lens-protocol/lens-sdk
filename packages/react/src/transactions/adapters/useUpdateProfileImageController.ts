@@ -11,7 +11,7 @@ import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-c
 
 import { useSharedDependencies } from '../../shared';
 import { ProfileImageCallGateway } from './ProfileImageCallGateway';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { TransactionResultPresenter } from './TransactionResultPresenter';
 
 export function useUpdateProfileImageController() {
   const {
@@ -26,8 +26,8 @@ export function useUpdateProfileImageController() {
   return async (request: UpdateProfileImageRequest) => {
     const profileImageCallGateway = new ProfileImageCallGateway(apolloClient, transactionFactory);
 
-    const presenter = new PromiseResultPresenter<
-      void,
+    const presenter = new TransactionResultPresenter<
+      UpdateProfileImageRequest,
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 

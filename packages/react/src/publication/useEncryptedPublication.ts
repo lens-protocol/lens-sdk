@@ -4,7 +4,7 @@ import {
   MetadataOutput,
   UnspecifiedError,
 } from '@lens-protocol/api-bindings';
-import { failure, invariant, success } from '@lens-protocol/shared-kernel';
+import { failure, invariant, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { EncryptionConfig } from '../config';
@@ -61,7 +61,7 @@ export function useEncryptedPublication<T extends ContentPublication>({
   const { data: signer } = useActiveWalletSigner();
 
   const { error, execute, isPending }: Operation<void, UseEncryptedPublicationError> = useOperation(
-    useCallback(async () => {
+    useCallback(async (): PromiseResult<void, DecryptionError | UnspecifiedError> => {
       invariant(isGatedPublication(publication), 'Publication is not gated');
       invariant(signer, `Cannot find the Active Wallet Signer`);
 

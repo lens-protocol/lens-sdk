@@ -13,6 +13,7 @@ import { UpdateDispatcherConfigRequest } from '@lens-protocol/domain/use-cases/p
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUpdateDispatcherConfigController } from './adapters/useUpdateDispatcherConfigController';
 
 export type UseUpdateDispatcherConfigArgs = {
@@ -24,7 +25,7 @@ export type UpdateDispatcherConfigArgs = {
 };
 
 export type UpdateDispatcherConfigOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   [UpdateDispatcherConfigArgs]
 >;

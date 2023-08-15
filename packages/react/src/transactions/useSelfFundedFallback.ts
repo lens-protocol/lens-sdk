@@ -11,6 +11,7 @@ import {
 import { IEquatableError } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { SelfFundedProtocolTransactionRequest } from './adapters/SelfFundedProtocolTransactionRequest';
 import { usePayTransactionController } from './adapters/usePayTransactionController';
 
@@ -43,7 +44,7 @@ export function supportsSelfFundedFallback(
 }
 
 export type SelfFundedOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   InsufficientGasError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   [SelfFundedOperationRequest]
 >;

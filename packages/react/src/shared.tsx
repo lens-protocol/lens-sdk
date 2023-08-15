@@ -143,7 +143,11 @@ export function createSharedDependencies(
     logger,
     contentMatchers: [config.environment.snapshot.matcher],
   });
-  const publicationCacheManager = new PublicationCacheManager(apolloClient.cache);
+  const publicationCacheManager = new PublicationCacheManager(
+    apolloClient,
+    sources,
+    mediaTransforms,
+  );
   const profileCacheManager = new ProfileCacheManager(
     apolloClient,
     sources,

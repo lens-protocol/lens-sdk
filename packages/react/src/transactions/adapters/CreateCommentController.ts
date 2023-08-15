@@ -20,7 +20,7 @@ import { ActiveWallet } from '@lens-protocol/domain/use-cases/wallets';
 
 import { IMetadataUploader } from './IMetadataUploader';
 import { ITransactionFactory } from './ITransactionFactory';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { CreateOffChainCommentGateway } from './publication-call-gateways/CreateOffChainCommentGateway';
 import { CreateOnChainCommentGateway } from './publication-call-gateways/CreateOnChainCommentGateway';
 
@@ -36,8 +36,8 @@ export type CreateCommentControllerArgs<T extends CreateCommentRequest> = {
 };
 
 export class CreateCommentController<T extends CreateCommentRequest> {
-  private readonly presenter = new PromiseResultPresenter<
-    void,
+  private readonly presenter = new TransactionResultPresenter<
+    CreateCommentRequest,
     BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >();
 

@@ -20,7 +20,7 @@ import {
 
 import { useSharedDependencies } from '../../shared';
 import { CollectPublicationGateway } from './CollectPublicationGateway';
-import { PromiseResultPresenter } from './PromiseResultPresenter';
+import { TransactionResultPresenter } from './TransactionResultPresenter';
 
 export function useCollectController() {
   const {
@@ -41,8 +41,8 @@ export function useCollectController() {
       logger,
     );
 
-    const presenter = new PromiseResultPresenter<
-      void,
+    const presenter = new TransactionResultPresenter<
+      CollectRequest,
       | BroadcastingError
       | InsufficientAllowanceError
       | InsufficientFundsError

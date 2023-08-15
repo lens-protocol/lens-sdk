@@ -16,6 +16,7 @@ import { Distribute, failure, PromiseResult } from '@lens-protocol/shared-kernel
 import { EncryptionConfig } from '../config';
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreateEncryptedCommentController } from './adapters/useCreateEncryptedCommentController';
@@ -38,7 +39,7 @@ export type CreateEncryptedCommentArgs = Distribute<
 >;
 
 export type CreateEncryptedCommentOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   | BroadcastingError
   | PendingSigningRequestError
   | UserRejectedError
@@ -66,7 +67,7 @@ export function useCreateEncryptedComment({
       reference = { type: ReferencePolicyType.ANYONE },
       ...args
     }: CreateEncryptedCommentArgs): PromiseResult<
-      void,
+      AsyncTransactionResult<void>,
       | BroadcastingError
       | PendingSigningRequestError
       | UserRejectedError

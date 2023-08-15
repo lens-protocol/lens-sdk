@@ -7,7 +7,7 @@ import {
   WalletConnectionError,
   ProfileId,
 } from '../../entities';
-import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
+import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { SignlessSubsidizeOnChain } from '../transactions/SignlessSubsidizeOnChain';
 import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 import {
@@ -63,8 +63,8 @@ export function isUnconstrainedFollowRequest(
   return !isPaidFollowRequest(request) && !isProfileOwnerFollowRequest(request);
 }
 
-export type IFollowProfilePresenter = IGenericResultPresenter<
-  void,
+export type IFollowProfilePresenter = ITransactionResultPresenter<
+  FollowRequest,
   | InsufficientAllowanceError
   | InsufficientFundsError
   | PendingSigningRequestError

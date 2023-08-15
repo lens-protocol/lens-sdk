@@ -24,6 +24,7 @@ import { failure, PromiseResult, Url } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreateCommentController } from './adapters/useCreateCommentController';
@@ -163,7 +164,7 @@ export type CreateCommentArgs =
   | CreateEmbedCommentArgs;
 
 export type CreateCommentOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   | BroadcastingError
   | PendingSigningRequestError
   | UserRejectedError
@@ -242,7 +243,7 @@ export function useCreateComment({
       reference = { type: ReferencePolicyType.ANYONE },
       ...args
     }: CreateCommentArgs): PromiseResult<
-      void,
+      AsyncTransactionResult<void>,
       | BroadcastingError
       | PendingSigningRequestError
       | UserRejectedError

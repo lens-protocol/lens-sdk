@@ -19,7 +19,7 @@ import { useSharedDependencies } from '../shared';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreateEncryptedPostController } from './adapters/useCreateEncryptedPostController';
-import { CreatePostArgs } from './useCreatePost';
+import { CreatePostArgs, CreatePostAsyncResult } from './useCreatePost';
 
 export type UseCreateEncryptedPostArgs = {
   /**
@@ -47,7 +47,7 @@ export type CreateEncryptedPostArgs = Distribute<
 >;
 
 export type CreateEncryptedPostOperation = Operation<
-  void,
+  CreatePostAsyncResult,
   | BroadcastingError
   | PendingSigningRequestError
   | UserRejectedError
@@ -75,7 +75,7 @@ export function useCreateEncryptedPost({
       reference = { type: ReferencePolicyType.ANYONE },
       ...args
     }: CreateEncryptedPostArgs): PromiseResult<
-      void,
+      CreatePostAsyncResult,
       | BroadcastingError
       | PendingSigningRequestError
       | UserRejectedError

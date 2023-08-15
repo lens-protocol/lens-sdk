@@ -1,20 +1,22 @@
 import { Post, FragmentPost, ReactionTypes } from '@lens-protocol/api-bindings';
 import {
-  mockLensCache,
+  mockLensApolloClient,
   mockPostFragment,
   mockPublicationStatsFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { TogglePropertyRequest } from '@lens-protocol/domain/use-cases/publications';
 
+import { defaultMediaTransformsConfig } from '../../../mediaTransforms';
 import { PublicationCacheManager } from '../../../transactions/adapters/PublicationCacheManager';
 import { ReactionPresenter } from '../ReactionPresenter';
 import { mockReactionRequest } from '../__helpers__/mocks';
 
 function setupTestScenario({ post, request }: { post: Post; request: TogglePropertyRequest }) {
-  const apolloCache = mockLensCache();
+  const client = mockLensApolloClient();
 
-  apolloCache.writeFragment({
-    id: apolloCache.identify({
+  client.cache.writeFragment({
+    id: client.cache.identify({
       __typename: 'Post',
       id: request.publicationId,
     }),
@@ -23,15 +25,19 @@ function setupTestScenario({ post, request }: { post: Post; request: TogglePrope
     data: post,
   });
 
-  const publicationCacheManager = new PublicationCacheManager(apolloCache);
+  const publicationCacheManager = new PublicationCacheManager(
+    client,
+    mockSources(),
+    defaultMediaTransformsConfig,
+  );
   const presenter = new ReactionPresenter(publicationCacheManager);
 
   return {
     presenter,
 
     get updatedPostFragment() {
-      return apolloCache.readFragment({
-        id: apolloCache.identify({
+      return client.cache.readFragment({
+        id: client.cache.identify({
           __typename: 'Post',
           id: post.id,
         }),

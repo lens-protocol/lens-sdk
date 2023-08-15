@@ -1,4 +1,4 @@
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import {
   IUnsignedProtocolCall,
@@ -11,11 +11,12 @@ import {
   UserRejectedError,
   WalletConnectionError,
   ProtocolTransactionRequestModel,
+  TransactionError,
 } from '../../entities';
 import { ActiveWallet } from '../wallets/ActiveWallet';
 import { BroadcastingError } from './BroadcastingError';
 import { ISignedOperation } from './DelegableSigning';
-import { IGenericResultPresenter } from './IGenericResultPresenter';
+import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
 export interface IMetaTransactionNonceGateway {
@@ -32,10 +33,15 @@ export interface IOnChainProtocolCallGateway<T extends ProtocolTransactionReques
   createUnsignedProtocolCall(request: T, nonceOverride?: Nonce): Promise<IUnsignedProtocolCall<T>>;
 }
 
-export type ISubsidizeOnChainPresenter = IGenericResultPresenter<
-  void,
-  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
->;
+export type ISubsidizeOnChainPresenter<T extends ProtocolTransactionRequestModel> =
+  ITransactionResultPresenter<
+    T,
+    | BroadcastingError
+    | PendingSigningRequestError
+    | UserRejectedError
+    | WalletConnectionError
+    | TransactionError
+  >;
 
 export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
   implements ISignedOperation<T>
@@ -46,7 +52,7 @@ export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
     protected readonly onChainProtocolCallGateway: IOnChainProtocolCallGateway<T>,
     protected readonly relayer: IOnChainRelayer<T>,
     protected readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
-    protected readonly presenter: ISubsidizeOnChainPresenter,
+    protected readonly presenter: ISubsidizeOnChainPresenter<T>,
   ) {}
 
   async execute(request: T) {
@@ -76,8 +82,6 @@ export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
     }
 
     const transaction = relayResult.value;
-    await this.transactionQueue.push(transaction);
-
-    this.presenter.present(success());
+    await this.transactionQueue.push(transaction, this.presenter);
   }
 }

@@ -9,6 +9,7 @@ import { ChargeFollowConfig, NoFeeFollowConfig } from '@lens-protocol/domain/use
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 
 export type UseUpdateFollowPolicyArgs = {
@@ -20,7 +21,7 @@ export type UpdateFollowPolicyArgs = {
 };
 
 export type UpdateFollowPolicyOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   [UpdateFollowPolicyArgs]
 >;

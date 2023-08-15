@@ -5,6 +5,7 @@ import {
   useCreatePost,
   useSelfFundedFallback,
 } from '@lens-protocol/react-web';
+import { toast } from 'react-hot-toast';
 
 import { upload } from '../../upload';
 import { never } from '../../utils';
@@ -40,7 +41,13 @@ export function PostComposer({ publisher }: PostComposerProps) {
     });
 
     if (subsidizedAttempt.isSuccess()) {
-      form.reset();
+      const result = await subsidizedAttempt.value.waitForCompletion();
+
+      if (result.isSuccess()) {
+        toast.success(`Post ID: ${result.value.id}`);
+        form.reset();
+      }
+
       return;
     }
 

@@ -10,6 +10,7 @@ import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions'
 import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Operation, useOperation } from '../helpers/operations';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useUpdateProfileDetailsController } from './adapters/useUpdateProfileDetailsController';
@@ -25,7 +26,7 @@ export type UpdateProfileDetailsArgs = Pick<
 >;
 
 export type UpdateProfileDetailsOperation = Operation<
-  void,
+  AsyncTransactionResult<void>,
   | BroadcastingError
   | PendingSigningRequestError
   | UserRejectedError
@@ -48,7 +49,7 @@ export function useUpdateProfileDetails({
     async (
       details: UpdateProfileDetailsArgs,
     ): PromiseResult<
-      void,
+      AsyncTransactionResult<void>,
       | BroadcastingError
       | PendingSigningRequestError
       | UserRejectedError

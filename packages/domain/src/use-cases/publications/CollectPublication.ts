@@ -8,7 +8,7 @@ import {
   ProfileId,
   PublicationId,
 } from '../../entities';
-import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
+import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { SignlessSubsidizeOnChain } from '../transactions/SignlessSubsidizeOnChain';
 import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 import {
@@ -49,8 +49,8 @@ export function isPaidCollectRequest(request: CollectRequest): request is PaidCo
   return request.type === CollectType.PAID;
 }
 
-export type ICollectPublicationPresenter = IGenericResultPresenter<
-  void,
+export type ICollectPublicationPresenter = ITransactionResultPresenter<
+  CollectRequest,
   | InsufficientAllowanceError
   | InsufficientFundsError
   | PendingSigningRequestError

@@ -1,4 +1,4 @@
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import {
   ProtocolTransactionRequestModel,
@@ -6,7 +6,7 @@ import {
   Transaction,
 } from '../../entities';
 import { BroadcastingError } from './BroadcastingError';
-import { IGenericResultPresenter } from './IGenericResultPresenter';
+import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
 export type WithDelegateFlag<T extends ProtocolTransactionRequestModel> = T extends {
@@ -23,14 +23,15 @@ export interface IDelegatedTransactionGateway<T extends ProtocolTransactionReque
   createDelegatedTransaction(request: T): PromiseResult<Transaction<T>, BroadcastingError>;
 }
 
-export type IDelegatedTransactionPresenter = IGenericResultPresenter<void, BroadcastingError>;
+export type IDelegatedTransactionPresenter<T extends ProtocolTransactionRequestModel> =
+  ITransactionResultPresenter<T, BroadcastingError>;
 
 export class DelegableSigning<T extends ProtocolTransactionRequestModel> {
   constructor(
     private readonly signedOperation: ISignedOperation<T>,
     private readonly transactionGateway: IDelegatedTransactionGateway<T>,
     private readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
-    private readonly presenter: IDelegatedTransactionPresenter,
+    private readonly presenter: IDelegatedTransactionPresenter<T>,
   ) {}
 
   async execute(request: WithDelegateFlag<T>): Promise<void> {
@@ -43,9 +44,7 @@ export class DelegableSigning<T extends ProtocolTransactionRequestModel> {
       }
 
       const transaction = result.value;
-      await this.transactionQueue.push(transaction);
-
-      this.presenter.present(success());
+      await this.transactionQueue.push(transaction, this.presenter);
       return;
     }
     return this.signedOperation.execute(request);
