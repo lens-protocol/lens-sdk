@@ -1,5 +1,12 @@
 # @lens-protocol/storage
 
+## 0.7.4-next.2
+
+### Patch Changes
+
+- Updated dependencies [bdbc71d5]
+  - @lens-protocol/shared-kernel@0.10.0-next.2
+
 ## 0.7.4-next.1
 
 ### Patch Changes

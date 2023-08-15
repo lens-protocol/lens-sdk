@@ -1,5 +1,13 @@
 # @lens-protocol/domain
 
+## 0.10.0-next.7
+
+### Patch Changes
+
+- bdbc71d5: **Added** ability to await newly created post in `useCreatePost` hook
+- Updated dependencies [bdbc71d5]
+  - @lens-protocol/shared-kernel@0.10.0-next.2
+
 ## 0.10.0-next.6
 
 ### Patch Changes

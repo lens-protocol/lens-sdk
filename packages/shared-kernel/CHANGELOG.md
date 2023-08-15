@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.10.0-next.2
+
+### Patch Changes
+
+- bdbc71d5: **Added** ability to await newly created post in `useCreatePost` hook
+
 ## 0.10.0-next.1
 
 ### Patch Changes

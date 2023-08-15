@@ -1,5 +1,13 @@
 # @lens-protocol/client
 
+## 1.3.0-next.5
+
+### Patch Changes
+
+- Updated dependencies [bdbc71d5]
+  - @lens-protocol/shared-kernel@0.10.0-next.2
+  - @lens-protocol/storage@0.7.4-next.2
+
 ## 1.3.0-next.4
 
 ### Patch Changes
