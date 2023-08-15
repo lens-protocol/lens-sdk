@@ -13,10 +13,12 @@ import {
   mockPostFragment,
   mockProfileOwnedByMeFragment,
   mockRemoveFromMyBookmarksResponse,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { RenderHookResult, act, waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { defaultMediaTransformsConfig } from '../../mediaTransforms';
 import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
 import { useBookmarkToggle } from '../useBookmarkToggle';
 
@@ -47,7 +49,11 @@ function setupTestScenario({
     data: publication,
   });
 
-  const cacheManager = new PublicationCacheManager(apolloClient.cache);
+  const cacheManager = new PublicationCacheManager(
+    apolloClient,
+    mockSources(),
+    defaultMediaTransformsConfig,
+  );
 
   return {
     renderHook<TProps, TResult>(

@@ -158,8 +158,10 @@ export type CreateEmbedPostArgs = CreatePostBaseArgs & {
 
 export type CreatePostArgs = CreateTextualPostArgs | CreateMediaPostArgs | CreateEmbedPostArgs;
 
+export type CreatePostAsyncResult = AsyncTransactionResult<Post>;
+
 export type CreatePostOperation = Operation<
-  AsyncTransactionResult<Post>,
+  CreatePostAsyncResult,
   | BroadcastingError
   | PendingSigningRequestError
   | UserRejectedError
@@ -237,7 +239,7 @@ export function useCreatePost({ publisher, upload }: UseCreatePostArgs): CreateP
       reference = { type: ReferencePolicyType.ANYONE },
       ...args
     }: CreatePostArgs): PromiseResult<
-      AsyncTransactionResult<Post>,
+      CreatePostAsyncResult,
       | BroadcastingError
       | PendingSigningRequestError
       | UserRejectedError

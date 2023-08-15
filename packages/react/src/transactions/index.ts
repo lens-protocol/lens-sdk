@@ -119,5 +119,6 @@ export {
  * Helpers
  */
 export type { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
+export type { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 export type { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 export { FailedUploadError } from './adapters/IMetadataUploader';

@@ -16,11 +16,10 @@ import { Distribute, failure, PromiseResult } from '@lens-protocol/shared-kernel
 import { EncryptionConfig } from '../config';
 import { Operation, useOperation } from '../helpers/operations';
 import { useSharedDependencies } from '../shared';
-import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { FailedUploadError } from './adapters/IMetadataUploader';
 import { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
 import { useCreateEncryptedPostController } from './adapters/useCreateEncryptedPostController';
-import { CreatePostArgs } from './useCreatePost';
+import { CreatePostArgs, CreatePostAsyncResult } from './useCreatePost';
 
 export type UseCreateEncryptedPostArgs = {
   /**
@@ -48,7 +47,7 @@ export type CreateEncryptedPostArgs = Distribute<
 >;
 
 export type CreateEncryptedPostOperation = Operation<
-  AsyncTransactionResult<void>,
+  CreatePostAsyncResult,
   | BroadcastingError
   | PendingSigningRequestError
   | UserRejectedError
@@ -76,7 +75,7 @@ export function useCreateEncryptedPost({
       reference = { type: ReferencePolicyType.ANYONE },
       ...args
     }: CreateEncryptedPostArgs): PromiseResult<
-      AsyncTransactionResult<void>,
+      CreatePostAsyncResult,
       | BroadcastingError
       | PendingSigningRequestError
       | UserRejectedError

@@ -5,11 +5,13 @@ import {
   mockLensApolloClient,
   mockRemoveReactionResponse,
   mockPostFragment,
+  mockSources,
 } from '@lens-protocol/api-bindings/mocks';
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { act } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { defaultMediaTransformsConfig } from '../../mediaTransforms';
 import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
 import { useReaction } from '../useReaction';
 
@@ -29,7 +31,11 @@ function setupUseReaction({
     {
       mocks: {
         apolloClient: apolloClient,
-        publicationCacheManager: new PublicationCacheManager(apolloClient.cache),
+        publicationCacheManager: new PublicationCacheManager(
+          apolloClient,
+          mockSources(),
+          defaultMediaTransformsConfig,
+        ),
       },
     },
   );
