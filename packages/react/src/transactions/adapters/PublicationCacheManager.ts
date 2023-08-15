@@ -5,9 +5,11 @@ import {
   GetPublicationData,
   GetPublicationDocument,
   GetPublicationVariables,
+  getSession,
   isPostPublication,
   Post,
   SafeApolloClient,
+  SessionType,
   Sources,
 } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
@@ -70,11 +72,13 @@ export class PublicationCacheManager
   }
 
   private async request(request: RequestPublicationArgs, fetchPolicy: FetchPolicy) {
+    const session = getSession();
+
     const { data } = await this.client.query<GetPublicationData, GetPublicationVariables>({
       query: GetPublicationDocument,
       variables: {
         request,
-        observerId: null, //session?.type === SessionType.WithProfile ? session.profile.id : null,
+        observerId: session?.type === SessionType.WithProfile ? session.profile.id : null,
         sources: this.sources,
         ...mediaTransformConfigToQueryVariables(this.mediaTransforms),
       },
