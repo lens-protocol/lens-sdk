@@ -71,7 +71,7 @@
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
-    "@types/jest": "29.2.3",
+    "@types/jest": "29.5.3",
     "@types/jest-when": "^3.5.2",
     "@types/node": "^18.15.11",
     "eslint": "^8.34.0",

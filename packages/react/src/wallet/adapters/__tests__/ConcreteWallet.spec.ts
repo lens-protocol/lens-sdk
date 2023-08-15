@@ -215,7 +215,6 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
       expect(result.unwrap()).toEqual(
         expect.objectContaining({
           chainType,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           hash: expect.any(String),
           id: unsignedTransaction.id,
           request: unsignedTransaction.request,

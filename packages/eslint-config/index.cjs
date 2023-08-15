@@ -58,6 +58,7 @@ module.exports = {
         '@typescript-eslint/no-var-requires': 'off',
         '@typescript-eslint/no-shadow': 'off',
         '@typescript-eslint/no-empty-function': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
       },
     },
 
@@ -65,6 +66,7 @@ module.exports = {
       files: ['**/*.spec.{js,ts,tsx}'],
       rules: {
         'tsdoc/syntax': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
       },
     },
   ],
