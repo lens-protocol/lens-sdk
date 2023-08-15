@@ -1,5 +1,21 @@
 # @lens-protocol/react-web
 
+## 1.3.0-next.10
+
+### Minor Changes
+
+- bdbc71d5: **Added** ability to await newly created post in `useCreatePost` hook
+
+### Patch Changes
+
+- Updated dependencies [bdbc71d5]
+  - @lens-protocol/react@1.3.0-next.10
+  - @lens-protocol/shared-kernel@0.10.0-next.2
+  - @lens-protocol/domain@0.10.0-next.7
+  - @lens-protocol/api-bindings@0.10.0-next.8
+  - @lens-protocol/gated-content@0.3.2-next.8
+  - @lens-protocol/storage@0.7.4-next.2
+
 ## 1.3.0-next.9
 
 ### Patch Changes
