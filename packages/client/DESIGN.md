@@ -9,29 +9,29 @@ client.[moduleName].[moduleMethod](args)
 - [x] authentication
   <!-- queries -->
 
-  - challenge(profileId)
-  - verify
+  - [x] challenge(profileId)
+  - [x] verify
 
   <!-- mutations -->
 
-  - authenticate
-  - refresh
+  - [x] authenticate
+  - [x] refresh
 
   <!-- helpers -->
 
-  - isAuthenticated
-  - getAccessToken
+  - [x] isAuthenticated
+  - [x] getAccessToken
 
 - [x] bookmarks
 
   <!-- queries -->
 
-  - fetch
+  - [x] fetch
 
   <!-- mutations -->
 
-  - add
-  - remove
+  - [x] add
+  - [x] remove
 
 - notInterested
 
@@ -44,27 +44,20 @@ client.[moduleName].[moduleMethod](args)
   - add
   - undo
 
-- [x] interests
-
-  <!-- mutations -->
-
-  - add
-  - remove
-
 - [x] explore
 
   <!-- queries -->
 
-  - profiles
-  - publications
+  - [x] profiles
+  - [x] publications
 
 - [x] feed
 
   <!-- queries -->
 
-  - fetch
-  - highlights
-  - forYou
+  - [x] fetch
+  - [x] highlights
+  - [x] forYou
 
 - invites
 
@@ -76,50 +69,36 @@ client.[moduleName].[moduleMethod](args)
 
   <!-- mutations -->
 
-  - invite
+  - invite ?? - or profile.invite()
 
 - [x] momoka
 
   <!-- queries -->
 
-  - submitters
-  - summary
-  - transactions
-  - transaction
-
-  <!-- mutations -->
-
-  - broadcast
+  - [x] submitters
+  - [x] summary
+  - [x] transactions
+  - [x] transaction
 
 - [x] nfts
   <!-- queries -->
 
-  - fetch
-  - fetchGalleries
+  - [x] fetch
+  - [x] fetchGalleries
 
   <!-- mutations -->
 
-  - ownershipChallenge
-  - createGallery
-  - deleteGallery
-  - updateGalleryInfo
-  - updateGalleryItems
-  - updateGalleryOrder
-
-- [x] nonces
-  <!-- queries -->
-
-  - fetch
+  - [x] ownershipChallenge
+  - [x] createGallery
+  - [x] deleteGallery
+  - [x] updateGalleryInfo
+  - [x] updateGalleryItems
+  - [x] updateGalleryOrder
 
 - [x] notifications
   <!-- queries -->
 
-  - fetch
-
-- openAction(s)
-
-  - createOpenActionActTypedData
-  - ??
+  - [x] fetch
 
 - modules
   <!-- queries -->
@@ -128,51 +107,59 @@ client.[moduleName].[moduleMethod](args)
   - enabled
   - ??
 
-- wallet
+- [x] wallet
 
   <!-- queries -->
 
-  - handles
-  - profiles
+  - [x] ownedHandles
+  - [x] profilesManaged
+  - [x] sigNonces
 
 - profile
 
     <!-- queries -->
 
-  - fetch
-  - fetchAll
-  - managers
-  - followers
-  - following
-  - allRecommended
-  - doesFollow
-  - mutualFollowers
+  - [x] fetch
+  - [x] fetchAll
+  - [x] managers
+  - [ ] followers ??
+  - [x] following
+  - [x] recommendations
+  - [ ] doesFollow ??
+  - [x] mutualFollowers
   - stats
 
     <!-- mutations -->
 
-  - claimHandle
-  - block
-  - unblock
-  - dismissRecommended
-  - create
+  - [x] claim
+  - [x] create
+  - [x] addInterests
+  - [x] removeInterests
+  - [x] setMetadata
+  - [x] setImage
+  - [x] setManager
+  - [x] block
+  - [x] unblock
+  - [x] follow
+  - [x] unfollow
+  - [x] dismissRecommended
 
-  - createSetProfileManagerTypedData
-  - createFollowTypedData
-  - createUnfollowTypedData
-  - createSetFollowModuleTypedData
-  - createOpenActionActTypedData ??
-  - createSetProfileMetadataTypedData
-  - createSetProfileImageURITypedData
-  - createSetProfileImageURI
-  - createDeleteProfileTypedData
+  - [x] createSetProfileMetadataTypedData
+  - [x] createSetProfileImageTypedData
+  - [x] createChangeProfileManagersTypedData
+  - [x] createBlockProfileTypedData
+  - [x] createUnblockProfileTypedData
+  - [x] createFollowTypedData
+  - [x] createUnfollowTypedData
+  - [x] createSetFollowModuleTypedData
+  - createDeleteProfileTypedData ??
 
 - publication
 
   <!-- queries -->
 
-  - fetch
-  - fetchAll
+  - [x] fetch
+  - [x] fetchAll
   - allForSale
   - allWhoCollected
   - metadataStatus
@@ -185,40 +172,41 @@ client.[moduleName].[moduleMethod](args)
   - hide
   - report
 
-  - postOnChain
-  - postOnMomoka
-  - commentOnChain
-  - commentOnMomoka
-  - mirrorOnChain
-  - mirrorOnMomoka
+  - [ ] postOnChain
+  - [ ] postOnMomoka
+  - [ ] commentOnChain
+  - [ ] commentOnMomoka
+  - [ ] mirrorOnChain
+  - [ ] mirrorOnMomoka
 
-  - createOnChainPostTypedData
-  - createMomokaPostTypedData
-  - createOnChainCommentTypedData
-  - createMomokaCommentTypedData
-  - createOnChainMirrorTypedData
-  - createMomokaMirrorTypedData
+  - [ ] createOnChainPostTypedData
+  - [ ] createMomokaPostTypedData
+  - [ ] createOnChainCommentTypedData
+  - [ ] createMomokaCommentTypedData
+  - [ ] createOnChainMirrorTypedData
+  - [ ] createMomokaMirrorTypedData
 
-  - createOpenActionActTypedData ??
+  - actOnOpenAction ??
+  - createActOnOpenActionTypedData ??
 
 - [x] reactions
 
   <!-- queries -->
 
-  - fetch
+  - [x] fetch
 
   <!-- mutations -->
 
-  - add
-  - remove
+  - [x] add
+  - [x] remove
 
 - [x] revenue
 
   <!-- queries -->
 
-  - fromFollow
-  - fromPublications
-  - forPublication
+  - [x] fromFollow
+  - [x] fromPublications
+  - [x] forPublication
 
 - search
 
@@ -238,9 +226,14 @@ client.[moduleName].[moduleMethod](args)
 
   <!-- queries -->
 
-  - txIdToTxHash
-  - status
+  - [x] txIdToTxHash
+  - [x] status
 
   <!-- mutations -->
 
-  - broadcast
+  - [x] broadcastOnChain
+  - [x] broadcastOnMomoka
+
+## To consider
+
+- separate module `manager` to trigger all managed actions (that return LensProfileManagerRelayResult)

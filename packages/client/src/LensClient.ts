@@ -3,10 +3,8 @@ import { Bookmarks } from './bookmarks';
 import { LensConfig } from './consts/config';
 import { Explore } from './explore';
 import { Feed } from './feed';
-import { Interests } from './interests';
 import { Momoka } from './momoka';
 import { Nfts } from './nfts';
-import { Nonces } from './nonces';
 import { Notifications } from './notifications';
 import { Profile } from './profile';
 import { Publication } from './publication';
@@ -14,6 +12,7 @@ import { Reactions } from './reactions';
 import { Revenue } from './revenue';
 import { Search } from './search';
 import { Transaction } from './transaction';
+import { Wallet } from './wallet';
 
 /**
  * The LensClient is the main entry point for the LensClient SDK.
@@ -68,13 +67,6 @@ export class LensClient {
   }
 
   /**
-   * The Interests module
-   */
-  get interests(): Interests {
-    return new Interests(this.config, this._authentication);
-  }
-
-  /**
    * The Momoka module
    */
   get momoka(): Momoka {
@@ -86,13 +78,6 @@ export class LensClient {
    */
   get nfts(): Nfts {
     return new Nfts(this.config, this._authentication);
-  }
-
-  /**
-   * The Nonces module
-   */
-  get nonces(): Nonces {
-    return new Nonces(this.config, this._authentication);
   }
 
   /**
@@ -142,5 +127,12 @@ export class LensClient {
    */
   get transaction(): Transaction {
     return new Transaction(this.config, this._authentication);
+  }
+
+  /**
+   * The Wallet module
+   */
+  get wallet(): Wallet {
+    return new Wallet(this.config, this._authentication);
   }
 }

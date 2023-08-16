@@ -1,12 +1,20 @@
 // @ts-nocheck
 import * as Types from '../../graphql/types.generated';
 
-import { RelaySuccessFragment, RelayErrorFragment } from '../../graphql/fragments.generated';
+import {
+  RelaySuccessFragment,
+  RelayErrorFragment,
+  CreateMomokaPublicationResultFragment,
+} from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-import { RelaySuccessFragmentDoc, RelayErrorFragmentDoc } from '../../graphql/fragments.generated';
+import {
+  RelaySuccessFragmentDoc,
+  RelayErrorFragmentDoc,
+  CreateMomokaPublicationResultFragmentDoc,
+} from '../../graphql/fragments.generated';
 export type LensTransactionFragment = {
   __typename: 'LensTransaction';
   status: Types.LensTransactionStatusType;
@@ -41,6 +49,14 @@ export type BroadcastOnChainMutationVariables = Types.Exact<{
 }>;
 
 export type BroadcastOnChainMutation = { result: RelayErrorFragment | RelaySuccessFragment };
+
+export type BroadcastOnMomokaMutationVariables = Types.Exact<{
+  request: Types.BroadcastRequest;
+}>;
+
+export type BroadcastOnMomokaMutation = {
+  result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
+};
 
 export const LensTransactionFragmentDoc = gql`
   fragment LensTransaction on LensTransaction {
@@ -92,6 +108,20 @@ export const BroadcastOnChainDocument = gql`
   ${RelaySuccessFragmentDoc}
   ${RelayErrorFragmentDoc}
 `;
+export const BroadcastOnMomokaDocument = gql`
+  mutation BroadcastOnMomoka($request: BroadcastRequest!) {
+    result: broadcastOnMomoka(request: $request) {
+      ... on CreateMomokaPublicationResult {
+        ...CreateMomokaPublicationResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${CreateMomokaPublicationResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -103,6 +133,7 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 const TxIdToTxHashDocumentString = print(TxIdToTxHashDocument);
 const LensTransactionStatusDocumentString = print(LensTransactionStatusDocument);
 const BroadcastOnChainDocumentString = print(BroadcastOnChainDocument);
+const BroadcastOnMomokaDocumentString = print(BroadcastOnMomokaDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     TxIdToTxHash(
@@ -160,6 +191,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'BroadcastOnChain',
+        'mutation',
+      );
+    },
+    BroadcastOnMomoka(
+      variables: BroadcastOnMomokaMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: BroadcastOnMomokaMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<BroadcastOnMomokaMutation>(BroadcastOnMomokaDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'BroadcastOnMomoka',
         'mutation',
       );
     },

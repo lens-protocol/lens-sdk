@@ -1,4 +1,3 @@
-- auth
 - other missing modules - see DESIGN.md
 - add `__typename` to fragments if needed
 - documentation for each method as a comment block with example of use

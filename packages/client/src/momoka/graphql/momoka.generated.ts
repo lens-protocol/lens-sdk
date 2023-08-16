@@ -10,8 +10,6 @@ import {
   QuoteFragment,
   PaginatedResultInfoFragment,
   ProfileFragment,
-  CreateMomokaPublicationResultFragment,
-  RelayErrorFragment,
 } from '../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -26,8 +24,6 @@ import {
   QuoteFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   ProfileFragmentDoc,
-  CreateMomokaPublicationResultFragmentDoc,
-  RelayErrorFragmentDoc,
 } from '../../graphql/fragments.generated';
 export type MomokaVerificationStatusSuccessFragment = { verified: boolean };
 
@@ -133,14 +129,6 @@ export type MomokaTransactionsQuery = {
     >;
     pageInfo: PaginatedResultInfoFragment;
   };
-};
-
-export type BroadcastOnMomokaMutationVariables = Types.Exact<{
-  request: Types.BroadcastRequest;
-}>;
-
-export type BroadcastOnMomokaMutation = {
-  result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
 };
 
 export const MomokaVerificationStatusSuccessFragmentDoc = gql`
@@ -355,20 +343,6 @@ export const MomokaTransactionsDocument = gql`
   ${MomokaQuoteTransactionFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
-export const BroadcastOnMomokaDocument = gql`
-  mutation BroadcastOnMomoka($request: BroadcastRequest!) {
-    result: broadcastOnMomoka(request: $request) {
-      ... on CreateMomokaPublicationResult {
-        ...CreateMomokaPublicationResult
-      }
-      ... on RelayError {
-        ...RelayError
-      }
-    }
-  }
-  ${CreateMomokaPublicationResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
-`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -381,7 +355,6 @@ const MomokaSubmittersDocumentString = print(MomokaSubmittersDocument);
 const MomokaSummaryDocumentString = print(MomokaSummaryDocument);
 const MomokaTransactionDocumentString = print(MomokaTransactionDocument);
 const MomokaTransactionsDocumentString = print(MomokaTransactionsDocument);
-const BroadcastOnMomokaDocumentString = print(BroadcastOnMomokaDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     MomokaSubmitters(
@@ -458,25 +431,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           }),
         'momokaTransactions',
         'query',
-      );
-    },
-    BroadcastOnMomoka(
-      variables: BroadcastOnMomokaMutationVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: BroadcastOnMomokaMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<BroadcastOnMomokaMutation>(BroadcastOnMomokaDocumentString, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'BroadcastOnMomoka',
-        'mutation',
       );
     },
   };

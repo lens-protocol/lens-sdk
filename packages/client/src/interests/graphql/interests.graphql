@@ -1,8 +1,0 @@
-# mutations
-mutation AddProfileInterests($request: ProfileInterestsRequest!) {
-  result: addProfileInterests(request: $request)
-}
-
-mutation RemoveProfileInterests($request: ProfileInterestsRequest!) {
-  result: removeProfileInterests(request: $request)
-}

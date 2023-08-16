@@ -173,15 +173,3 @@ query momokaTransactions(
     }
   }
 }
-
-# mutations
-mutation BroadcastOnMomoka($request: BroadcastRequest!) {
-  result: broadcastOnMomoka(request: $request) {
-    ... on CreateMomokaPublicationResult {
-      ...CreateMomokaPublicationResult
-    }
-    ... on RelayError {
-      ...RelayError
-    }
-  }
-}

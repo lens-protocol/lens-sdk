@@ -1,3 +1,171 @@
+fragment ProfileManager on ProfilesManagedResult {
+  address
+}
+
+fragment CreateProfileErrorResult on CreateProfileErrorResult {
+  reason
+}
+
+fragment CreateSetProfileMetadataBroadcastItemResult on CreateSetProfileMetadataBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetProfileMetadataURIWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+}
+
+fragment CreateSetProfileImageBroadcastItemResult on CreateSetProfileImageBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetProfileImageURIWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+}
+
+fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileManagersBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      ChangeDelegatedExecutorsConfigWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+}
+
+fragment CreateBlockProfileBroadcastItemResult on CreateBlockProfileBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetBlockStatusWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+}
+
+fragment CreateUnblockProfileBroadcastItemResult on CreateUnblockProfileBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetBlockStatusWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+}
+
+fragment CreateFollowBroadcastItemResult on CreateFollowBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      FollowWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+}
+
+fragment CreateUnfollowBroadcastItemResult on CreateUnfollowBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      UnfollowWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+}
+
+fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      SetFollowModuleWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+}
+
 # queries
 query Profile(
   $request: ProfileRequest!
@@ -18,9 +186,236 @@ query Profiles(
     items {
       ...Profile
     }
-
     pageInfo {
       ...PaginatedResultInfo
     }
+  }
+}
+
+query ProfileManagers($request: ProfileManagersRequest!) {
+  result: profileManagers(request: $request) {
+    items {
+      ...ProfileManager
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query ProfileRecommendations(
+  $request: ProfileRecommendationsRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+) {
+  result: profileRecommendations(request: $request) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query Following(
+  $request: FollowingRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+) {
+  result: following(request: $request) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query MutualFollowers(
+  $request: MutualFollowersRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+) {
+  result: mutualFollowers(request: $request) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+# mutations
+mutation ClaimProfile($request: ClaimProfileRequest!) {
+  result: claimProfile(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on CreateProfileErrorResult {
+      ...CreateProfileErrorResult
+    }
+  }
+}
+
+mutation CreateProfile($request: CreateProfileRequest!) {
+  result: createProfile(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on CreateProfileErrorResult {
+      ...CreateProfileErrorResult
+    }
+  }
+}
+
+mutation AddProfileInterests($request: ProfileInterestsRequest!) {
+  result: addProfileInterests(request: $request)
+}
+
+mutation RemoveProfileInterests($request: ProfileInterestsRequest!) {
+  result: removeProfileInterests(request: $request)
+}
+
+mutation SetProfileMetadata($request: SetProfileMetadataRequest!) {
+  result: setProfileMetadata(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation SetProfileImageURI($request: SetProfileImageRequest!) {
+  result: setProfileImageURI(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation SetProfileManager($request: ChangeProfileManagersRequest!) {
+  result: setProfileManager(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation Block($request: BlockRequest!) {
+  result: block(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation Unblock($request: UnblockRequest!) {
+  result: unblock(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation Follow($request: FollowRequest!) {
+  result: follow(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation Unfollow($request: UnfollowRequest!) {
+  result: unfollow(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation DismissRecommendedProfiles($request: DismissRecommendedProfilesRequest!) {
+  result: dismissRecommendedProfiles(request: $request)
+}
+
+mutation CreateSetProfileMetadataTypedData(
+  $request: SetProfileMetadataRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetProfileMetadataTypedData(request: $request, options: $options) {
+    ...CreateSetProfileMetadataBroadcastItemResult
+  }
+}
+
+mutation CreateSetProfileImageTypedData(
+  $request: SetProfileImageRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetProfileImageTypedData(request: $request, options: $options) {
+    ...CreateSetProfileImageBroadcastItemResult
+  }
+}
+
+mutation CreateChangeProfileManagersTypedData(
+  $request: ChangeProfileManagersRequest!
+  $options: TypedDataOptions
+) {
+  result: createChangeProfileManagersTypedData(request: $request, options: $options) {
+    ...CreateChangeProfileManagersBroadcastItemResult
+  }
+}
+
+mutation CreateBlockProfileTypedData($request: BlockRequest!, $options: TypedDataOptions) {
+  result: createBlockProfileTypedData(request: $request, options: $options) {
+    ...CreateBlockProfileBroadcastItemResult
+  }
+}
+
+mutation CreateUnblockProfileTypedData($request: UnblockRequest!, $options: TypedDataOptions) {
+  result: createUnblockProfileTypedData(request: $request, options: $options) {
+    ...CreateUnblockProfileBroadcastItemResult
+  }
+}
+
+mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
+  result: createFollowTypedData(request: $request, options: $options) {
+    ...CreateFollowBroadcastItemResult
+  }
+}
+
+mutation CreateUnfollowTypedData($request: UnfollowRequest!, $options: TypedDataOptions) {
+  result: createUnfollowTypedData(request: $request, options: $options) {
+    ...CreateUnfollowBroadcastItemResult
+  }
+}
+
+mutation CreateSetFollowModuleTypedData(
+  $request: SetFollowModuleRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetFollowModuleTypedData(request: $request, options: $options) {
+    ...CreateSetFollowModuleBroadcastItemResult
   }
 }

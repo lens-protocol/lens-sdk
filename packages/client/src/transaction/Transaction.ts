@@ -4,7 +4,11 @@ import type { Authentication } from '../authentication';
 import type { LensConfig } from '../consts/config';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
 import { FetchGraphQLClient } from '../graphql/FetchGraphQLClient';
-import type { RelayErrorFragment, RelaySuccessFragment } from '../graphql/fragments.generated';
+import type {
+  CreateMomokaPublicationResultFragment,
+  RelayErrorFragment,
+  RelaySuccessFragment,
+} from '../graphql/fragments.generated';
 import type { BroadcastRequest, LensTransactionStatusRequest } from '../graphql/types.generated';
 import { requireAuthHeaders } from '../helpers';
 import {
@@ -36,34 +40,6 @@ export class Transaction {
     this.authentication = authentication;
   }
 
-  /**
-   * Broadcast a signed typed data for a gasless transaction.
-   *
-   * ⚠️ Requires authenticated LensClient.
-   *
-   * @param request - Request object for the mutation
-   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link RelayErrorFragment}
-   *
-   * @example
-   * ```ts
-   * const result = await client.transaction.broadcast({
-   *   id: data.id,
-   *   signature: signedTypedData,
-   * });
-   * ```
-   */
-  async broadcast(
-    request: BroadcastRequest,
-  ): PromiseResult<
-    RelaySuccessFragment | RelayErrorFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.BroadcastOnChain({ request }, headers);
-      return result.data.result;
-    });
-  }
-
   async status(
     request: LensTransactionStatusRequest,
   ): PromiseResult<
@@ -79,5 +55,29 @@ export class Transaction {
   async txIdToTxHash(txId: string): Promise<string> {
     const result = await this.sdk.TxIdToTxHash({ txId });
     return result.data.result;
+  }
+
+  async broadcastOnChain(
+    request: BroadcastRequest,
+  ): PromiseResult<
+    RelaySuccessFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.BroadcastOnChain({ request }, headers);
+      return result.data.result;
+    });
+  }
+
+  async broadcastOnMomoka(
+    request: BroadcastRequest,
+  ): PromiseResult<
+    CreateMomokaPublicationResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.BroadcastOnMomoka({ request }, headers);
+      return result.data.result;
+    });
   }
 }
