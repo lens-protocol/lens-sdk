@@ -2560,19 +2560,9 @@ type Mutation {
   commentOnChain(request: CreateOnChainCommentRequest!): LensProfileManagerRelayResult!
   mirrorOnChain(request: CreateOnChainMirrorRequest!): LensProfileManagerRelayResult!
   createOnChainQuoteTypedData(
+    options: TypedDataOptions
     request: CreateOnChainQuoteRequest!
   ): CreateOnChainQuoteBroadcastItemResult!
-
-  # createOnChainPostTypedData(
-  #   request: CreateOnChainPostRequest!
-  # ): CreateOnChainPostBroadcastItemResult!
-  # createOnChainCommentTypedData(
-  #   request: CreateOnChainCommentRequest!
-  # ): CreateOnChainCommentBroadcastItemResult!
-  # createOnChainMirrorTypedData(
-  #   request: CreateOnChainMirrorRequest!
-  # ): CreateOnChainMirrorBroadcastItemResult!
-
   createOnChainPostTypedData(
     options: TypedDataOptions
     request: CreateOnChainPostRequest!
@@ -2938,7 +2928,7 @@ scalar BroadcastId
 
 type CreateOnChainQuoteEIP712TypedData {
   # The types
-  types: CreateOnChainMirrorEIP712TypedDataTypes!
+  types: CreateOnChainQuoteEIP712TypedDataTypes!
 
   # The typed data domain
   domain: EIP712TypedDataDomain!
@@ -2949,6 +2939,10 @@ type CreateOnChainQuoteEIP712TypedData {
 
 type CreateOnChainMirrorEIP712TypedDataTypes {
   MirrorWithSig: [EIP712TypedDataField!]!
+}
+
+type CreateOnChainQuoteEIP712TypedDataTypes {
+  QuoteWithSig: [EIP712TypedDataField!]!
 }
 
 # The eip 712 typed data field

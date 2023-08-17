@@ -31,6 +31,10 @@ import {
   CreateMomokaPublicationResultFragmentDoc,
   RelayErrorFragmentDoc,
 } from '../../../graphql/fragments.generated';
+export type TagResultFragment = { tag: string; total: number };
+
+export type PublicationValidateMetadataResultFragment = { valid: boolean; reason: string | null };
+
 export type PublicationQueryVariables = Types.Exact<{
   request: Types.PublicationRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -54,6 +58,22 @@ export type PublicationsQuery = {
     items: Array<CommentFragment | MirrorFragment | PostFragment | QuoteFragment>;
     pageInfo: PaginatedResultInfoFragment;
   };
+};
+
+export type PublicationsTagsQueryVariables = Types.Exact<{
+  request: Types.PublicationsTagsRequest;
+}>;
+
+export type PublicationsTagsQuery = {
+  result: { items: Array<TagResultFragment>; pageInfo: PaginatedResultInfoFragment };
+};
+
+export type ValidatePublicationMetadataQueryVariables = Types.Exact<{
+  request: Types.ValidatePublicationMetadataRequest;
+}>;
+
+export type ValidatePublicationMetadataQuery = {
+  result: PublicationValidateMetadataResultFragment;
 };
 
 export type CreateOnChainPostBroadcastItemResultFragment = {
@@ -81,6 +101,16 @@ export type CreateOnChainMirrorBroadcastItemResultFragment = {
   expiresAt: string;
   typedData: {
     types: { MirrorWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: string; deadline: string };
+  };
+};
+
+export type CreateOnChainQuoteBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { QuoteWithSig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: { nonce: string; deadline: string };
   };
@@ -116,6 +146,16 @@ export type CreateMomokaMirrorBroadcastItemResultFragment = {
   };
 };
 
+export type CreateMomokaQuoteBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { QuoteWithSig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: string; deadline: string };
+  };
+};
+
 export type CreateOnChainPostTypedDataMutationVariables = Types.Exact<{
   request: Types.CreateOnChainPostRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
@@ -143,6 +183,15 @@ export type CreateOnChainMirrorTypedDataMutation = {
   result: CreateOnChainMirrorBroadcastItemResultFragment;
 };
 
+export type CreateOnChainQuoteTypedDataMutationVariables = Types.Exact<{
+  request: Types.CreateOnChainQuoteRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
+}>;
+
+export type CreateOnChainQuoteTypedDataMutation = {
+  result: CreateOnChainQuoteBroadcastItemResultFragment;
+};
+
 export type CreateMomokaPostTypedDataMutationVariables = Types.Exact<{
   request: Types.MomokaPostRequest;
 }>;
@@ -167,6 +216,14 @@ export type CreateMomokaMirrorTypedDataMutation = {
   result: CreateMomokaMirrorBroadcastItemResultFragment;
 };
 
+export type CreateMomokaQuoteTypedDataMutationVariables = Types.Exact<{
+  request: Types.MomokaQuoteRequest;
+}>;
+
+export type CreateMomokaQuoteTypedDataMutation = {
+  result: CreateMomokaQuoteBroadcastItemResultFragment;
+};
+
 export type PostOnChainMutationVariables = Types.Exact<{
   request: Types.CreateOnChainPostRequest;
 }>;
@@ -188,6 +245,14 @@ export type MirrorOnChainMutationVariables = Types.Exact<{
 }>;
 
 export type MirrorOnChainMutation = {
+  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+};
+
+export type QuoteOnChainMutationVariables = Types.Exact<{
+  request: Types.CreateOnChainQuoteRequest;
+}>;
+
+export type QuoteOnChainMutation = {
   result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
 };
 
@@ -215,6 +280,38 @@ export type MirrorOnMomokaMutation = {
   result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
 };
 
+export type QuoteOnMomokaMutationVariables = Types.Exact<{
+  request: Types.MomokaQuoteRequest;
+}>;
+
+export type QuoteOnMomokaMutation = {
+  result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
+};
+
+export type HidePublicationMutationVariables = Types.Exact<{
+  request: Types.HidePublicationRequest;
+}>;
+
+export type HidePublicationMutation = { hidePublication: string };
+
+export type ReportPublicationMutationVariables = Types.Exact<{
+  request: Types.ReportPublicationRequest;
+}>;
+
+export type ReportPublicationMutation = { reportPublication: string };
+
+export const TagResultFragmentDoc = gql`
+  fragment TagResult on TagResult {
+    tag
+    total
+  }
+`;
+export const PublicationValidateMetadataResultFragmentDoc = gql`
+  fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult {
+    valid
+    reason
+  }
+`;
 export const CreateOnChainPostBroadcastItemResultFragmentDoc = gql`
   fragment CreateOnChainPostBroadcastItemResult on CreateOnChainPostBroadcastItemResult {
     id
@@ -266,6 +363,28 @@ export const CreateOnChainMirrorBroadcastItemResultFragmentDoc = gql`
     typedData {
       types {
         MirrorWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateOnChainQuoteBroadcastItemResultFragmentDoc = gql`
+  fragment CreateOnChainQuoteBroadcastItemResult on CreateOnChainQuoteBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        QuoteWithSig {
           name
           type
         }
@@ -347,6 +466,28 @@ export const CreateMomokaMirrorBroadcastItemResultFragmentDoc = gql`
   }
   ${Eip712TypedDataDomainFragmentDoc}
 `;
+export const CreateMomokaQuoteBroadcastItemResultFragmentDoc = gql`
+  fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        QuoteWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+      }
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
 export const PublicationDocument = gql`
   query Publication(
     $request: PublicationRequest!
@@ -407,6 +548,28 @@ export const PublicationsDocument = gql`
   ${QuoteFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
+export const PublicationsTagsDocument = gql`
+  query PublicationsTags($request: PublicationsTagsRequest!) {
+    result: publicationsTags(request: $request) {
+      items {
+        ...TagResult
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${TagResultFragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
+`;
+export const ValidatePublicationMetadataDocument = gql`
+  query ValidatePublicationMetadata($request: ValidatePublicationMetadataRequest!) {
+    result: validatePublicationMetadata(request: $request) {
+      ...PublicationValidateMetadataResult
+    }
+  }
+  ${PublicationValidateMetadataResultFragmentDoc}
+`;
 export const CreateOnChainPostTypedDataDocument = gql`
   mutation CreateOnChainPostTypedData(
     $request: CreateOnChainPostRequest!
@@ -440,6 +603,17 @@ export const CreateOnChainMirrorTypedDataDocument = gql`
   }
   ${CreateOnChainMirrorBroadcastItemResultFragmentDoc}
 `;
+export const CreateOnChainQuoteTypedDataDocument = gql`
+  mutation CreateOnChainQuoteTypedData(
+    $request: CreateOnChainQuoteRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createOnChainQuoteTypedData(request: $request, options: $options) {
+      ...CreateOnChainQuoteBroadcastItemResult
+    }
+  }
+  ${CreateOnChainQuoteBroadcastItemResultFragmentDoc}
+`;
 export const CreateMomokaPostTypedDataDocument = gql`
   mutation CreateMomokaPostTypedData($request: MomokaPostRequest!) {
     result: createMomokaPostTypedData(request: $request) {
@@ -463,6 +637,14 @@ export const CreateMomokaMirrorTypedDataDocument = gql`
     }
   }
   ${CreateMomokaMirrorBroadcastItemResultFragmentDoc}
+`;
+export const CreateMomokaQuoteTypedDataDocument = gql`
+  mutation CreateMomokaQuoteTypedData($request: MomokaQuoteRequest!) {
+    result: createMomokaQuoteTypedData(request: $request) {
+      ...CreateMomokaQuoteBroadcastItemResult
+    }
+  }
+  ${CreateMomokaQuoteBroadcastItemResultFragmentDoc}
 `;
 export const PostOnChainDocument = gql`
   mutation PostOnChain($request: CreateOnChainPostRequest!) {
@@ -495,6 +677,20 @@ export const CommentOnChainDocument = gql`
 export const MirrorOnChainDocument = gql`
   mutation MirrorOnChain($request: CreateOnChainMirrorRequest!) {
     result: mirrorOnChain(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${RelaySuccessFragmentDoc}
+  ${LensProfileManagerRelayErrorFragmentDoc}
+`;
+export const QuoteOnChainDocument = gql`
+  mutation QuoteOnChain($request: CreateOnChainQuoteRequest!) {
+    result: quoteOnChain(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess
       }
@@ -548,6 +744,30 @@ export const MirrorOnMomokaDocument = gql`
   ${CreateMomokaPublicationResultFragmentDoc}
   ${RelayErrorFragmentDoc}
 `;
+export const QuoteOnMomokaDocument = gql`
+  mutation QuoteOnMomoka($request: MomokaQuoteRequest!) {
+    result: quoteOnMomoka(request: $request) {
+      ... on CreateMomokaPublicationResult {
+        ...CreateMomokaPublicationResult
+      }
+      ... on RelayError {
+        ...RelayError
+      }
+    }
+  }
+  ${CreateMomokaPublicationResultFragmentDoc}
+  ${RelayErrorFragmentDoc}
+`;
+export const HidePublicationDocument = gql`
+  mutation HidePublication($request: HidePublicationRequest!) {
+    hidePublication(request: $request)
+  }
+`;
+export const ReportPublicationDocument = gql`
+  mutation ReportPublication($request: ReportPublicationRequest!) {
+    reportPublication(request: $request)
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -558,18 +778,26 @@ export type SdkFunctionWrapper = <T>(
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const PublicationDocumentString = print(PublicationDocument);
 const PublicationsDocumentString = print(PublicationsDocument);
+const PublicationsTagsDocumentString = print(PublicationsTagsDocument);
+const ValidatePublicationMetadataDocumentString = print(ValidatePublicationMetadataDocument);
 const CreateOnChainPostTypedDataDocumentString = print(CreateOnChainPostTypedDataDocument);
 const CreateOnChainCommentTypedDataDocumentString = print(CreateOnChainCommentTypedDataDocument);
 const CreateOnChainMirrorTypedDataDocumentString = print(CreateOnChainMirrorTypedDataDocument);
+const CreateOnChainQuoteTypedDataDocumentString = print(CreateOnChainQuoteTypedDataDocument);
 const CreateMomokaPostTypedDataDocumentString = print(CreateMomokaPostTypedDataDocument);
 const CreateMomokaCommentTypedDataDocumentString = print(CreateMomokaCommentTypedDataDocument);
 const CreateMomokaMirrorTypedDataDocumentString = print(CreateMomokaMirrorTypedDataDocument);
+const CreateMomokaQuoteTypedDataDocumentString = print(CreateMomokaQuoteTypedDataDocument);
 const PostOnChainDocumentString = print(PostOnChainDocument);
 const CommentOnChainDocumentString = print(CommentOnChainDocument);
 const MirrorOnChainDocumentString = print(MirrorOnChainDocument);
+const QuoteOnChainDocumentString = print(QuoteOnChainDocument);
 const PostOnMomokaDocumentString = print(PostOnMomokaDocument);
 const CommentOnMomokaDocumentString = print(CommentOnMomokaDocument);
 const MirrorOnMomokaDocumentString = print(MirrorOnMomokaDocument);
+const QuoteOnMomokaDocumentString = print(QuoteOnMomokaDocument);
+const HidePublicationDocumentString = print(HidePublicationDocument);
+const ReportPublicationDocumentString = print(ReportPublicationDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Publication(
@@ -602,6 +830,45 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'Publications',
+        'query',
+      );
+    },
+    PublicationsTags(
+      variables: PublicationsTagsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: PublicationsTagsQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PublicationsTagsQuery>(PublicationsTagsDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'PublicationsTags',
+        'query',
+      );
+    },
+    ValidatePublicationMetadata(
+      variables: ValidatePublicationMetadataQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: ValidatePublicationMetadataQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ValidatePublicationMetadataQuery>(
+            ValidatePublicationMetadataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'ValidatePublicationMetadata',
         'query',
       );
     },
@@ -665,6 +932,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
+    CreateOnChainQuoteTypedData(
+      variables: CreateOnChainQuoteTypedDataMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: CreateOnChainQuoteTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateOnChainQuoteTypedDataMutation>(
+            CreateOnChainQuoteTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateOnChainQuoteTypedData',
+        'mutation',
+      );
+    },
     CreateMomokaPostTypedData(
       variables: CreateMomokaPostTypedDataMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
@@ -725,6 +1012,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
+    CreateMomokaQuoteTypedData(
+      variables: CreateMomokaQuoteTypedDataMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: CreateMomokaQuoteTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateMomokaQuoteTypedDataMutation>(
+            CreateMomokaQuoteTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateMomokaQuoteTypedData',
+        'mutation',
+      );
+    },
     PostOnChain(
       variables: PostOnChainMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
@@ -782,6 +1089,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
+    QuoteOnChain(
+      variables: QuoteOnChainMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: QuoteOnChainMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<QuoteOnChainMutation>(QuoteOnChainDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'QuoteOnChain',
+        'mutation',
+      );
+    },
     PostOnMomoka(
       variables: PostOnMomokaMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
@@ -836,6 +1162,63 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'MirrorOnMomoka',
+        'mutation',
+      );
+    },
+    QuoteOnMomoka(
+      variables: QuoteOnMomokaMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: QuoteOnMomokaMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<QuoteOnMomokaMutation>(QuoteOnMomokaDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'QuoteOnMomoka',
+        'mutation',
+      );
+    },
+    HidePublication(
+      variables: HidePublicationMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: HidePublicationMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<HidePublicationMutation>(HidePublicationDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'HidePublication',
+        'mutation',
+      );
+    },
+    ReportPublication(
+      variables: ReportPublicationMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: ReportPublicationMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ReportPublicationMutation>(ReportPublicationDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'ReportPublication',
         'mutation',
       );
     },

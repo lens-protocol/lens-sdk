@@ -60,29 +60,31 @@ client.[moduleName].[moduleMethod](args)
 
   - [x] fetch
   - [x] fetchAll
-  - allForSale
-  - allWhoCollected
-  - metadataStatus
-  - validateMetadata
-  - stats
+  - [x] tags
+  - [x] validateMetadata
+  - stats ??
 
-  - quote
-  - hide
-  - report
+  - [x] hide
+  - [x] report
 
-  - [ ] postOnChain
+  - [x] postOnChain
+  - [x] commentOnChain
+  - [x] mirrorOnChain
+  - [x] quoteOnChain
+
   - [ ] postOnMomoka
-  - [ ] commentOnChain
   - [ ] commentOnMomoka
-  - [ ] mirrorOnChain
   - [ ] mirrorOnMomoka
+  - [ ] quoteOnMomoka
 
   - [ ] createOnChainPostTypedData
-  - [ ] createMomokaPostTypedData
   - [ ] createOnChainCommentTypedData
-  - [ ] createMomokaCommentTypedData
   - [ ] createOnChainMirrorTypedData
+  - [ ] createOnChainQuoteTypedData
+  - [ ] createMomokaPostTypedData
+  - [ ] createMomokaCommentTypedData
   - [ ] createMomokaMirrorTypedData
+  - [ ] createMomokaQuoteTypedData
 
   - [x] bookmarks
 
