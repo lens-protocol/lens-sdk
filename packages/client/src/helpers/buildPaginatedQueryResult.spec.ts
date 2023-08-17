@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { buildTestEnvironment } from '../__helpers__';
-import { getSdk } from '../profile/graphql/profile.generated';
+import { getSdk } from '../submodules/profile/graphql/profile.generated';
 import { buildPaginatedQueryResult } from './buildPaginatedQueryResult';
 
 describe('Given a paginated query function and the paginated query result helper', () => {

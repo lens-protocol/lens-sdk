@@ -6,118 +6,22 @@ they're all chained under LensClient instance, like so:
 client.[moduleName].[moduleMethod](args)
 ```
 
-- [x] authentication
-  <!-- queries -->
+- authentication
 
-  - [x] challenge(profileId)
+  - [x] challenge
   - [x] verify
-
-  <!-- mutations -->
-
   - [x] authenticate
   - [x] refresh
-
-  <!-- helpers -->
-
   - [x] isAuthenticated
   - [x] getAccessToken
 
-- [x] bookmarks
-
-  <!-- queries -->
-
-  - [x] fetch
-
-  <!-- mutations -->
-
-  - [x] add
-  - [x] remove
-
-- notInterested
-
-  <!-- queries -->
-
-  - fetch
-
-  <!-- mutations -->
-
-  - add
-  - undo
-
-- [x] explore
-
-  <!-- queries -->
-
-  - [x] profiles
-  - [x] publications
-
-- [x] feed
-
-  <!-- queries -->
-
-  - [x] fetch
-  - [x] highlights
-  - [x] forYou
-
-- invites
-
-  <!-- queries -->
-
-  - amountLeft
-  - alreadyInvited
-  - invited
-
-  <!-- mutations -->
-
-  - invite ?? - or profile.invite()
-
-- [x] momoka
-
-  <!-- queries -->
-
-  - [x] submitters
-  - [x] summary
-  - [x] transactions
-  - [x] transaction
-
-- [x] nfts
-  <!-- queries -->
-
-  - [x] fetch
-  - [x] fetchGalleries
-
-  <!-- mutations -->
-
-  - [x] ownershipChallenge
-  - [x] createGallery
-  - [x] deleteGallery
-  - [x] updateGalleryInfo
-  - [x] updateGalleryItems
-  - [x] updateGalleryOrder
-
-- [x] notifications
-  <!-- queries -->
-
-  - [x] fetch
-
-- modules
-  <!-- queries -->
-
-  - currencies
-  - enabled
-  - ??
-
-- [x] wallet
-
-  <!-- queries -->
+- wallet
 
   - [x] ownedHandles
   - [x] profilesManaged
   - [x] sigNonces
 
 - profile
-
-    <!-- queries -->
 
   - [x] fetch
   - [x] fetchAll
@@ -128,8 +32,6 @@ client.[moduleName].[moduleMethod](args)
   - [ ] doesFollow ??
   - [x] mutualFollowers
   - stats
-
-    <!-- mutations -->
 
   - [x] claim
   - [x] create
@@ -156,8 +58,6 @@ client.[moduleName].[moduleMethod](args)
 
 - publication
 
-  <!-- queries -->
-
   - [x] fetch
   - [x] fetchAll
   - allForSale
@@ -165,8 +65,6 @@ client.[moduleName].[moduleMethod](args)
   - metadataStatus
   - validateMetadata
   - stats
-
-  <!-- mutations -->
 
   - quote
   - hide
@@ -186,54 +84,94 @@ client.[moduleName].[moduleMethod](args)
   - [ ] createOnChainMirrorTypedData
   - [ ] createMomokaMirrorTypedData
 
-  - actOnOpenAction ??
-  - createActOnOpenActionTypedData ??
+  - [ ] bookmarks
 
-- [x] reactions
+    - [x] fetch
+    - [x] add
+    - [x] remove
 
-  <!-- queries -->
+  - [ ] notInterested
+
+    - add
+    - undo
+
+  - [ ] reactions
+
+    - [x] fetch
+    - [x] add
+    - [x] remove
+
+  - [ ] actions
+
+    - actOn
+    - createActOnOpenActionTypedData
+
+- feed
 
   - [x] fetch
+  - [x] highlights
+  - [x] forYou
 
-  <!-- mutations -->
+- explore
 
-  - [x] add
-  - [x] remove
-
-- [x] revenue
-
-  <!-- queries -->
-
-  - [x] fromFollow
-  - [x] fromPublications
-  - [x] forPublication
+  - [x] profiles
+  - [x] publications
 
 - search
-
-  <!-- queries -->
 
   - [x] profiles
   - [x] publications
   - nfts ??
 
-- stats (global)
+- notifications
 
-  <!-- queries -->
+  - [x] fetch
 
-  - fetch
+- momoka
 
-- [x] transaction
+  - [x] submitters
+  - [x] summary
+  - [x] transactions
+  - [x] transaction
 
-  <!-- queries -->
+- nfts
+
+  - [x] fetch
+  - [x] fetchGalleries
+
+  - [x] ownershipChallenge
+  - [x] createGallery
+  - [x] deleteGallery
+  - [x] updateGalleryInfo
+  - [x] updateGalleryItems
+  - [x] updateGalleryOrder
+
+- revenue
+
+  - [x] fromFollow
+  - [x] fromPublications
+  - [x] forPublication
+
+- transaction
 
   - [x] txIdToTxHash
   - [x] status
 
-  <!-- mutations -->
-
   - [x] broadcastOnChain
   - [x] broadcastOnMomoka
 
-## To consider
+- stats (global)
 
-- separate module `manager` to trigger all managed actions (that return LensProfileManagerRelayResult)
+  - fetch
+
+- invites
+
+  - amountLeft
+  - alreadyInvited
+  - inviteStatus
+  - invite(address)
+
+- modules
+  - currencies
+  - enabled
+  - ??

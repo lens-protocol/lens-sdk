@@ -1,18 +1,18 @@
 import { Authentication, IAuthentication } from './authentication';
-import { Bookmarks } from './bookmarks';
 import { LensConfig } from './consts/config';
-import { Explore } from './explore';
-import { Feed } from './feed';
-import { Momoka } from './momoka';
-import { Nfts } from './nfts';
-import { Notifications } from './notifications';
-import { Profile } from './profile';
-import { Publication } from './publication';
-import { Reactions } from './reactions';
-import { Revenue } from './revenue';
-import { Search } from './search';
-import { Transaction } from './transaction';
-import { Wallet } from './wallet';
+import {
+  Explore,
+  Feed,
+  Momoka,
+  Nfts,
+  Notifications,
+  Profile,
+  Publication,
+  Revenue,
+  Search,
+  Transaction,
+  Wallet,
+} from './submodules';
 
 /**
  * The LensClient is the main entry point for the LensClient SDK.
@@ -43,13 +43,6 @@ export class LensClient {
 
   get authentication(): IAuthentication {
     return this._authentication;
-  }
-
-  /**
-   * The Bookmarks module
-   */
-  get bookmarks(): Bookmarks {
-    return new Bookmarks(this.config, this._authentication);
   }
 
   /**
@@ -99,13 +92,6 @@ export class LensClient {
    */
   get publication(): Publication {
     return new Publication(this.config, this._authentication);
-  }
-
-  /**
-   * The Reactions module
-   */
-  get reactions(): Reactions {
-    return new Reactions(this.config, this._authentication);
   }
 
   /**
