@@ -14,7 +14,7 @@ import {
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
-  provideAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../helpers';
 import { getSdk, Sdk } from './graphql/explore.generated';
 
@@ -24,7 +24,6 @@ import { getSdk, Sdk } from './graphql/explore.generated';
  * @group LensClient Modules
  */
 export class Explore {
-  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
   constructor(
@@ -32,42 +31,30 @@ export class Explore {
     authentication?: Authentication,
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
-
-    this.sdk = getSdk(client);
-    this.authentication = authentication;
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
   }
 
   async publications(
     request: ExplorePublicationRequest,
   ): Promise<PaginatedResult<PostFragment | QuoteFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.ExplorePublications(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ExplorePublications({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 
   async profiles(request: ExploreProfilesRequest): Promise<PaginatedResult<ProfileFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.ExploreProfiles(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ExploreProfiles({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 }

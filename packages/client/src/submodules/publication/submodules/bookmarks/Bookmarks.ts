@@ -13,7 +13,6 @@ import {
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
-  provideAuthHeaders,
   requireAuthHeaders,
 } from '../../../../helpers';
 import { getSdk, Sdk } from './graphql/bookmarks.generated';
@@ -50,8 +49,13 @@ export class Bookmarks {
    * const result = await client.bookmarks.fetch();
    * ```
    */
-  async fetch(request: ProfileBookmarksRequest): Promise<PaginatedResult<AnyPublicationFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
+  async fetch(
+    request: ProfileBookmarksRequest,
+  ): PromiseResult<
+    PaginatedResult<AnyPublicationFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
         const result = await this.sdk.ProfileBookmarks(
           {

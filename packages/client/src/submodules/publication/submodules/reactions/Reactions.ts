@@ -12,8 +12,8 @@ import {
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
-  provideAuthHeaders,
   requireAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../../../helpers';
 import { getSdk, ProfileReactedResultFragment, Sdk } from './graphql/reactions.generated';
 
@@ -32,7 +32,7 @@ export class Reactions {
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 
@@ -48,7 +48,7 @@ export class Reactions {
    * ```ts
    * import { ReactionTypes } from '@lens-protocol/client';
    *
-   * await client.reactions.add({
+   * await client.publication.reactions.add({
    *   for: '0x02-0x01',
    *   reaction: ReactionTypes.Upvote,
    * });
@@ -75,7 +75,7 @@ export class Reactions {
    * ```ts
    * import { ReactionTypes } from '@lens-protocol/client';
    *
-   * await client.reactions.remove({
+   * await client.publication.reactions.remove({
    *   for: '0x02-0x01',
    *   reaction: ReactionTypes.Upvote,
    * });
@@ -97,7 +97,7 @@ export class Reactions {
    *
    * @example
    * ```ts
-   * const result = await client.reactions.fetch({
+   * const result = await client.publication.reactions.fetch({
    *   for: '0x01-0x02',
    * });
    * ```
@@ -105,18 +105,13 @@ export class Reactions {
   async fetch(
     request: WhoReactedPublicationRequest,
   ): Promise<PaginatedResult<ProfileReactedResultFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.WhoReactedPublication(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.WhoReactedPublication({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 }

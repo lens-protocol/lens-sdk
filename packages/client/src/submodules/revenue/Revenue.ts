@@ -10,7 +10,7 @@ import {
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
-  provideAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
   getSdk,
@@ -25,7 +25,6 @@ import {
  * @group LensClient Modules
  */
 export class Revenue {
-  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
   constructor(
@@ -33,55 +32,38 @@ export class Revenue {
     authentication?: Authentication,
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
-
-    this.sdk = getSdk(client);
-    this.authentication = authentication;
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
   }
 
   async fromPublications(
     request: RevenueFromPublicationsRequest,
   ): Promise<PaginatedResult<PublicationRevenueFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.RevenueFromPublications(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.RevenueFromPublications({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 
   async fromFollow(request: FollowRevenueRequest): Promise<RevenueAggregateFragment[]> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.FollowRevenues(
-        {
-          request,
-        },
-        headers,
-      );
-
-      return result.data.result.revenues;
+    const result = await this.sdk.FollowRevenues({
+      request,
     });
+
+    return result.data.result.revenues;
   }
 
   async forPublication(
     request: PublicationRevenueRequest,
   ): Promise<PublicationRevenueFragment | null> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.RevenueForPublication(
-        {
-          request,
-          ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        },
-        headers,
-      );
-
-      return result.data.result;
+    const result = await this.sdk.RevenueForPublication({
+      request,
+      ...buildImageTransformsFromConfig(this.config.mediaTransforms),
     });
+
+    return result.data.result;
   }
 }

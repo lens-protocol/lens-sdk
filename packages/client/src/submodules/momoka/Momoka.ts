@@ -6,7 +6,7 @@ import {
   PaginatedResult,
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
-  provideAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
   MomokaCommentTransactionFragment,
@@ -28,7 +28,6 @@ export type MomokaTransaction =
  * @group LensClient Modules
  */
 export class Momoka {
-  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
   constructor(
@@ -36,49 +35,36 @@ export class Momoka {
     authentication?: Authentication,
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
-
-    this.sdk = getSdk(client);
-    this.authentication = authentication;
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
   }
 
   async submitters(): Promise<PaginatedResult<MomokaSubmitterResultFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.MomokaSubmitters(currRequest, headers);
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.MomokaSubmitters(currRequest);
 
-        return result.data.result;
-      }, {});
-    });
+      return result.data.result;
+    }, {});
   }
 
   async summary(): Promise<{ totalTransactions: number }> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.MomokaSummary(undefined, headers);
-      return result.data.result;
-    });
+    const result = await this.sdk.MomokaSummary(undefined);
+    return result.data.result;
   }
 
   async transaction(request: MomokaTransactionRequest): Promise<MomokaTransaction | null> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.MomokaTransaction({ request }, headers);
-      return result.data.result;
-    });
+    const result = await this.sdk.MomokaTransaction({ request });
+    return result.data.result;
   }
 
   async transactions(
     request: MomokaTransactionsRequest,
   ): Promise<PaginatedResult<MomokaTransaction>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.momokaTransactions(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
-        return result.data.result;
-      }, request);
-    });
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.momokaTransactions({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
+      return result.data.result;
+    }, request);
   }
 }

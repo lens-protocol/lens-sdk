@@ -34,8 +34,8 @@ import {
   PaginatedResult,
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
-  provideAuthHeaders,
   requireAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
   CreateBlockProfileBroadcastItemResultFragment,
@@ -65,107 +65,77 @@ export class Profile {
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 
   async fetch(request: ProfileRequest): Promise<ProfileFragment | null> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.Profile(
-        {
-          request,
-          ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        },
-        headers,
-      );
-
-      return result.data.result;
+    const result = await this.sdk.Profile({
+      request,
+      ...buildImageTransformsFromConfig(this.config.mediaTransforms),
     });
+
+    return result.data.result;
   }
 
   async fetchAll(request: ProfilesRequest): Promise<PaginatedResult<ProfileFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.Profiles(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.Profiles({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 
   async managers(
     request: ProfileManagersRequest,
   ): Promise<PaginatedResult<ProfileManagerFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.ProfileManagers(
-          {
-            request: currRequest,
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ProfileManagers({
+        request: currRequest,
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 
   async recommendations(
     request: ProfileRecommendationsRequest,
   ): Promise<PaginatedResult<ProfileFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.ProfileRecommendations(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ProfileRecommendations({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 
   async following(request: FollowingRequest): Promise<PaginatedResult<ProfileFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.Following(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.Following({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 
   async mutualFollowers(
     request: MutualFollowersRequest,
   ): Promise<PaginatedResult<ProfileFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.MutualFollowers(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.MutualFollowers({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 
   async claim(

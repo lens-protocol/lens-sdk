@@ -12,7 +12,7 @@ import {
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
-  provideAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../helpers';
 import { getSdk, Sdk } from './graphql/publication.generated';
 import { Bookmarks, Reactions } from './submodules';
@@ -30,7 +30,7 @@ export class Publication {
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 
@@ -51,17 +51,12 @@ export class Publication {
   async fetch(
     request: PublicationRequest,
   ): Promise<CommentFragment | MirrorFragment | PostFragment | QuoteFragment | null> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.Publication(
-        {
-          request,
-          ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        },
-        headers,
-      );
-
-      return result.data.result;
+    const result = await this.sdk.Publication({
+      request,
+      ...buildImageTransformsFromConfig(this.config.mediaTransforms),
     });
+
+    return result.data.result;
   }
 
   async fetchAll(
@@ -69,18 +64,13 @@ export class Publication {
   ): Promise<
     PaginatedResult<CommentFragment | MirrorFragment | PostFragment | QuoteFragment | null>
   > {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.Publications(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.Publications({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 }

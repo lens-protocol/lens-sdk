@@ -10,7 +10,6 @@ import {
   PaginatedResult,
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
-  provideAuthHeaders,
   requireAuthHeaders,
 } from '../../helpers';
 import {
@@ -37,8 +36,13 @@ export class Wallet {
     this.authentication = authentication;
   }
 
-  async ownedHandles(request: OwnedHandlesRequest): Promise<PaginatedResult<HandleResultFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
+  async ownedHandles(
+    request: OwnedHandlesRequest,
+  ): PromiseResult<
+    PaginatedResult<HandleResultFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
         const result = await this.sdk.OwnedHandles(
           {
@@ -54,8 +58,11 @@ export class Wallet {
 
   async profilesManaged(
     request: ProfilesManagedRequest,
-  ): Promise<PaginatedResult<ProfileFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
+  ): PromiseResult<
+    PaginatedResult<ProfileFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
         const result = await this.sdk.ProfilesManaged(
           {

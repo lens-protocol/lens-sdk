@@ -12,7 +12,7 @@ import {
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
-  provideAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../helpers';
 import { getSdk, Sdk } from './graphql/search.generated';
 
@@ -22,7 +22,6 @@ import { getSdk, Sdk } from './graphql/search.generated';
  * @group LensClient Modules
  */
 export class Search {
-  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
   constructor(
@@ -30,40 +29,28 @@ export class Search {
     authentication?: Authentication,
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
-
-    this.sdk = getSdk(client);
-    this.authentication = authentication;
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
   }
 
   async profiles(request: ProfileSearchRequest): Promise<PaginatedResult<ProfileFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const response = await this.sdk.SearchProfiles(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
-        return response.data.result;
-      }, request);
-    });
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const response = await this.sdk.SearchProfiles({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
+      return response.data.result;
+    }, request);
   }
 
   async publications(
     request: PublicationSearchRequest,
   ): Promise<PaginatedResult<CommentFragment | PostFragment | QuoteFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const response = await this.sdk.SearchPublications(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
-        return response.data.result;
-      }, request);
-    });
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const response = await this.sdk.SearchPublications({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
+      return response.data.result;
+    }, request);
   }
 }

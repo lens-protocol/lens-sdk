@@ -84,7 +84,7 @@ client.[moduleName].[moduleMethod](args)
   - [ ] createOnChainMirrorTypedData
   - [ ] createMomokaMirrorTypedData
 
-  - [ ] bookmarks
+  - [x] bookmarks
 
     - [x] fetch
     - [x] add
@@ -95,7 +95,7 @@ client.[moduleName].[moduleMethod](args)
     - add
     - undo
 
-  - [ ] reactions
+  - [x] reactions
 
     - [x] fetch
     - [x] add

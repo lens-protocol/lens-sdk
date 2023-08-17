@@ -17,8 +17,8 @@ import type {
 import {
   buildPaginatedQueryResult,
   PaginatedResult,
-  provideAuthHeaders,
   requireAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
   getSdk,
@@ -40,7 +40,7 @@ export class Nfts {
   constructor(config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 
@@ -56,18 +56,13 @@ export class Nfts {
    * ```
    */
   async fetch(request: NfTsRequest): Promise<PaginatedResult<NftFragment>> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.Nfts(
-          {
-            request: currRequest,
-          },
-          headers,
-        );
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.Nfts({
+        request: currRequest,
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 
   /**
@@ -110,8 +105,6 @@ export class Nfts {
   /**
    * Fetch NFT galleries of a profile.
    *
-   * ⚠️ Requires authenticated LensClient.
-   *
    * @param request - Request object for the query
    * @returns Array of {@link NftGalleryFragment}
    *
@@ -123,11 +116,9 @@ export class Nfts {
    * ```
    */
   async fetchGalleries(request: NftGalleriesRequest): Promise<NftGalleryFragment[]> {
-    return provideAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.ProfileGalleries({ request }, headers);
+    const result = await this.sdk.ProfileGalleries({ request }, headers);
 
-      return result.data.result;
-    });
+    return result.data.result;
   }
 
   /**
