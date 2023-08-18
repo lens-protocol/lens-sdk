@@ -1,7 +1,8 @@
-- other missing modules - see DESIGN.md
+- other missing submodules and methods - see DESIGN.md
 - add `__typename` to fragments if needed
 - documentation for each method as a comment block with example of use
 - export used types - typedoc generation helps to know what is used
 - update /examples/node scripts to use v2
+
 - unit tests - maybe not needed and be replaced by e2e tests (cc Juan)
 - test scenarios use-case based - maybe client sdk could be used for e2e API tests - cc Juan

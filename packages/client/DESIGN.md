@@ -26,17 +26,17 @@ client.[moduleName].[moduleMethod](args)
   - [x] fetch
   - [x] fetchAll
   - [x] managers
-  - [ ] followers ??
   - [x] following
   - [x] recommendations
-  - [ ] doesFollow ??
   - [x] mutualFollowers
-  - stats
+  - [ ] followers ?? - was it removed?
+  - [ ] stats - as a separate method using ProfileStatsArgs
 
   - [x] claim
   - [x] create
-  - [x] addInterests
-  - [x] removeInterests
+  - [x] addInterests - client.profile.interests.add() ?
+  - [x] removeInterests - client.profile.interests.remove() ?
+  - [ ] interests.fetch - there was a method to fetch all available interests - was it removed ?
   - [x] setMetadata
   - [x] setImage
   - [x] setManager
@@ -44,7 +44,11 @@ client.[moduleName].[moduleMethod](args)
   - [x] unblock
   - [x] follow
   - [x] unfollow
+  - [ ] setFollowModule
   - [x] dismissRecommended
+
+  - [ ] linkHandle - Query.linkHandleToProfile (should be mutation?)
+  - [ ] unlinkHandle - Query.unlinkHandleToProfile
 
   - [x] createSetProfileMetadataTypedData
   - [x] createSetProfileImageTypedData
@@ -54,7 +58,7 @@ client.[moduleName].[moduleMethod](args)
   - [x] createFollowTypedData
   - [x] createUnfollowTypedData
   - [x] createSetFollowModuleTypedData
-  - createDeleteProfileTypedData ??
+  - [ ] createDeleteProfileTypedData ?? - was it removed?
 
 - publication
 
@@ -62,7 +66,7 @@ client.[moduleName].[moduleMethod](args)
   - [x] fetchAll
   - [x] tags
   - [x] validateMetadata
-  - stats ??
+  - [ ] stats - as a separate method using PublicationStatsInput
 
   - [x] hide
   - [x] report
@@ -85,6 +89,9 @@ client.[moduleName].[moduleMethod](args)
   - [ ] createMomokaCommentTypedData
   - [ ] createMomokaMirrorTypedData
   - [ ] createMomokaQuoteTypedData
+
+  - [ ] legacyCollect
+  - [ ] createLegacyCollectPublicationTypedData
 
   - [x] bookmarks
 
@@ -123,7 +130,6 @@ client.[moduleName].[moduleMethod](args)
 
   - [x] profiles
   - [x] publications
-  - nfts ??
 
 - notifications
 
@@ -162,18 +168,16 @@ client.[moduleName].[moduleMethod](args)
   - [x] broadcastOnChain
   - [x] broadcastOnMomoka
 
-- stats (global)
-
-  - fetch
-
-- invites
+- invites ??
 
   - amountLeft
+  - inTotal
   - alreadyInvited
   - inviteStatus
   - invite(address)
 
 - modules
   - currencies
-  - enabled
-  - ??
+  - supportedModules
+  - approvedModuleAllowanceAmount
+  - generateModuleCurrencyApprovalData

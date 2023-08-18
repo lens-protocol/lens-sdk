@@ -81,7 +81,7 @@ export class Bookmarks {
    *
    * @example
    * ```ts
-   * const result = await client.bookmarks.add({
+   * const result = await client.publication.bookmarks.add({
    *   on: '0x123-0x456',
    * });
    * ```
@@ -105,7 +105,7 @@ export class Bookmarks {
    *
    * @example
    * ```ts
-   * const result = await client.bookmarks.remove({
+   * const result = await client.publication.bookmarks.remove({
    *   on: '0x123-0x456',
    * });
    * ```
