@@ -167,13 +167,11 @@ client.[moduleName].[moduleMethod](args)
   - [x] broadcastOnChain
   - [x] broadcastOnMomoka
 
-- invites ??
+- invites
 
-  - amountLeft
-  - inTotal
-  - alreadyInvited
-  - inviteStatus
-  - invite(address)
+  - invitedProfiles
+  - profileAlreadyInvited
+  - inviteProfile
 
 - modules
   - currencies

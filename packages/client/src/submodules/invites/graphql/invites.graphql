@@ -1,0 +1,24 @@
+fragment InvitedResult on InvitedResult {
+  invited
+  profileMinted {
+    ...Profile
+  }
+  when
+}
+
+query InvitedProfiles(
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+) {
+  invitedProfiles {
+    ...InvitedResult
+  }
+}
+
+query ProfileAlreadyInvited($request: AlreadyInvitedCheckRequest!) {
+  result: profileAlreadyInvited(request: $request)
+}
+
+mutation InviteProfile($request: InviteRequest!) {
+  inviteProfile(request: $request)
+}

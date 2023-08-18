@@ -3,6 +3,7 @@ import { LensConfig } from './consts/config';
 import {
   Explore,
   Feed,
+  Invites,
   Momoka,
   Nfts,
   Notifications,
@@ -57,6 +58,13 @@ export class LensClient {
    */
   get feed(): Feed {
     return new Feed(this.config, this._authentication);
+  }
+
+  /**
+   * The Invites module
+   */
+  get invite(): Invites {
+    return new Invites(this.config, this._authentication);
   }
 
   /**
