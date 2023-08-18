@@ -66,7 +66,7 @@ client.[moduleName].[moduleMethod](args)
   - [x] fetchAll
   - [x] tags
   - [x] validateMetadata
-  - [ ] stats - as a separate method using PublicationStatsInput
+  - [x] stats
 
   - [x] hide
   - [x] report
@@ -89,8 +89,8 @@ client.[moduleName].[moduleMethod](args)
   - [x] createMomokaMirrorTypedData
   - [x] createMomokaQuoteTypedData
 
-  - [ ] legacyCollect
-  - [ ] createLegacyCollectPublicationTypedData
+  - [x] legacyCollect
+  - [x] createLegacyCollectPublicationTypedData
 
   - [x] bookmarks
 

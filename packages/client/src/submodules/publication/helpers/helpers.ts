@@ -47,3 +47,15 @@ export function isMirrorPublication<T extends Typename<string>>(
 ): publication is PickByTypename<T, 'Mirror'> {
   return publication.__typename === 'Mirror';
 }
+
+/**
+ * Check if publication is a {@link QuoteFragment}.
+ *
+ * @param publication - publication to check
+ * @returns true if the result is a {@link QuoteFragment}
+ */
+export function isQuotePublication<T extends Typename<string>>(
+  publication: T,
+): publication is PickByTypename<T, 'Quote'> {
+  return publication.__typename === 'Quote';
+}

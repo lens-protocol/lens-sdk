@@ -20,6 +20,7 @@ import type {
   CreateOnChainPostRequest,
   CreateOnChainQuoteRequest,
   HidePublicationRequest,
+  LegacyCollectPublicationRequest,
   MomokaCommentRequest,
   MomokaMirrorRequest,
   MomokaPostRequest,
@@ -39,6 +40,7 @@ import {
   sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
+  CreateLegacyCollectPublicationEip712TypedDataFragment,
   CreateMomokaCommentBroadcastItemResultFragment,
   CreateMomokaMirrorBroadcastItemResultFragment,
   CreateMomokaPostBroadcastItemResultFragment,
@@ -48,10 +50,13 @@ import {
   CreateOnChainPostBroadcastItemResultFragment,
   CreateOnChainQuoteBroadcastItemResultFragment,
   getSdk,
+  PublicationStatsFragment,
+  PublicationStatsQueryVariables,
   PublicationValidateMetadataResultFragment,
   Sdk,
   TagResultFragment,
 } from './graphql/publication.generated';
+import { isMirrorPublication } from './helpers';
 import { Bookmarks, Reactions, NotInterested, Actions } from './submodules';
 
 /**
@@ -120,6 +125,16 @@ export class Publication {
 
       return result.data.result;
     }, request);
+  }
+
+  async stats(vars: PublicationStatsQueryVariables): Promise<PublicationStatsFragment | undefined> {
+    const result = await this.sdk.PublicationStats(vars);
+    const data = result.data.result;
+
+    if (isMirrorPublication(data)) {
+      return undefined;
+    }
+    return data.stats as PublicationStatsFragment;
   }
 
   async tags(request: PublicationsTagsRequest): Promise<PaginatedResult<TagResultFragment>> {
@@ -396,6 +411,36 @@ export class Publication {
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateMomokaQuoteTypedData(
+        {
+          request,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async legacyCollect(
+    request: LegacyCollectPublicationRequest,
+  ): PromiseResult<
+    LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.LegacyCollectPublication({ request }, headers);
+      return result.data.result;
+    });
+  }
+
+  async createLegacyCollectPublicationTypedData(
+    request: LegacyCollectPublicationRequest,
+  ): PromiseResult<
+    CreateLegacyCollectPublicationEip712TypedDataFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateLegacyCollectPublicationTypedData(
         {
           request,
         },

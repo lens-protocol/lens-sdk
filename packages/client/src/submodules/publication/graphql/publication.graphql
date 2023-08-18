@@ -9,6 +9,19 @@ fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult 
   reason
 }
 
+fragment PublicationStats on PublicationStats {
+  additionalArgs {
+    forApps
+    customFilters
+  }
+  id
+  comments
+  mirrors
+  quotes
+  reactions(request: $reactionsRequest)
+  countOpenActions(request: $openActionsRequest)
+}
+
 # queries
 query Publication(
   $request: PublicationRequest!
@@ -28,6 +41,37 @@ query Publication(
     }
     ... on Quote {
       ...Quote
+    }
+  }
+}
+
+query PublicationStats(
+  $request: PublicationRequest!
+  $statsRequest: PublicationStatsInput!
+  $reactionsRequest: PublicationStatsReactionArgs!
+  $openActionsRequest: PublicationStatsCountOpenActionArgs!
+) {
+  result: publication(request: $request) {
+    ... on Post {
+      __typename
+      stats(request: $statsRequest) {
+        ...PublicationStats
+      }
+    }
+    ... on Comment {
+      __typename
+      stats(request: $statsRequest) {
+        ...PublicationStats
+      }
+    }
+    ... on Quote {
+      __typename
+      stats(request: $statsRequest) {
+        ...PublicationStats
+      }
+    }
+    ... on Mirror {
+      __typename
     }
   }
 }
@@ -258,6 +302,22 @@ fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemR
   }
 }
 
+fragment CreateLegacyCollectPublicationEIP712TypedData on CreateLegacyCollectPublicationEIP712TypedData {
+  types {
+    ActWithSig {
+      name
+      type
+    }
+  }
+  domain {
+    ...EIP712TypedDataDomain
+  }
+  value {
+    nonce
+    deadline
+  }
+}
+
 # mutations
 mutation CreateOnChainPostTypedData(
   $request: CreateOnChainPostRequest!
@@ -413,4 +473,24 @@ mutation HidePublication($request: HidePublicationRequest!) {
 
 mutation ReportPublication($request: ReportPublicationRequest!) {
   reportPublication(request: $request)
+}
+
+mutation LegacyCollectPublication($request: LegacyCollectPublicationRequest!) {
+  result: legacyCollectPublication(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation CreateLegacyCollectPublicationTypedData(
+  $request: LegacyCollectPublicationRequest!
+  $options: TypedDataOptions
+) {
+  result: createLegacyCollectPublicationTypedData(request: $request, options: $options) {
+    ...CreateLegacyCollectPublicationEIP712TypedData
+  }
 }

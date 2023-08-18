@@ -35,6 +35,19 @@ export type TagResultFragment = { tag: string; total: number };
 
 export type PublicationValidateMetadataResultFragment = { valid: boolean; reason: string | null };
 
+export type PublicationStatsFragment = {
+  id: string;
+  comments: number;
+  mirrors: number;
+  quotes: number;
+  reactions: number;
+  countOpenActions: number;
+  additionalArgs: {
+    forApps: Array<string> | null;
+    customFilters: Array<Types.CustomFiltersType> | null;
+  };
+};
+
 export type PublicationQueryVariables = Types.Exact<{
   request: Types.PublicationRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -44,6 +57,21 @@ export type PublicationQueryVariables = Types.Exact<{
 
 export type PublicationQuery = {
   result: CommentFragment | MirrorFragment | PostFragment | QuoteFragment;
+};
+
+export type PublicationStatsQueryVariables = Types.Exact<{
+  request: Types.PublicationRequest;
+  statsRequest: Types.PublicationStatsInput;
+  reactionsRequest: Types.PublicationStatsReactionArgs;
+  openActionsRequest: Types.PublicationStatsCountOpenActionArgs;
+}>;
+
+export type PublicationStatsQuery = {
+  result:
+    | { __typename: 'Comment'; stats: PublicationStatsFragment }
+    | { __typename: 'Mirror' }
+    | { __typename: 'Post'; stats: PublicationStatsFragment }
+    | { __typename: 'Quote'; stats: PublicationStatsFragment };
 };
 
 export type PublicationsQueryVariables = Types.Exact<{
@@ -154,6 +182,12 @@ export type CreateMomokaQuoteBroadcastItemResultFragment = {
     domain: Eip712TypedDataDomainFragment;
     value: { nonce: string; deadline: string };
   };
+};
+
+export type CreateLegacyCollectPublicationEip712TypedDataFragment = {
+  types: { ActWithSig: Array<{ name: string; type: string }> };
+  domain: Eip712TypedDataDomainFragment;
+  value: { nonce: string; deadline: string };
 };
 
 export type CreateOnChainPostTypedDataMutationVariables = Types.Exact<{
@@ -300,6 +334,23 @@ export type ReportPublicationMutationVariables = Types.Exact<{
 
 export type ReportPublicationMutation = { reportPublication: string };
 
+export type LegacyCollectPublicationMutationVariables = Types.Exact<{
+  request: Types.LegacyCollectPublicationRequest;
+}>;
+
+export type LegacyCollectPublicationMutation = {
+  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+};
+
+export type CreateLegacyCollectPublicationTypedDataMutationVariables = Types.Exact<{
+  request: Types.LegacyCollectPublicationRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
+}>;
+
+export type CreateLegacyCollectPublicationTypedDataMutation = {
+  result: CreateLegacyCollectPublicationEip712TypedDataFragment;
+};
+
 export const TagResultFragmentDoc = gql`
   fragment TagResult on TagResult {
     tag
@@ -310,6 +361,20 @@ export const PublicationValidateMetadataResultFragmentDoc = gql`
   fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult {
     valid
     reason
+  }
+`;
+export const PublicationStatsFragmentDoc = gql`
+  fragment PublicationStats on PublicationStats {
+    additionalArgs {
+      forApps
+      customFilters
+    }
+    id
+    comments
+    mirrors
+    quotes
+    reactions(request: $reactionsRequest)
+    countOpenActions(request: $openActionsRequest)
   }
 `;
 export const CreateOnChainPostBroadcastItemResultFragmentDoc = gql`
@@ -488,6 +553,24 @@ export const CreateMomokaQuoteBroadcastItemResultFragmentDoc = gql`
   }
   ${Eip712TypedDataDomainFragmentDoc}
 `;
+export const CreateLegacyCollectPublicationEip712TypedDataFragmentDoc = gql`
+  fragment CreateLegacyCollectPublicationEIP712TypedData on CreateLegacyCollectPublicationEIP712TypedData {
+    types {
+      ActWithSig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+    }
+  }
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
 export const PublicationDocument = gql`
   query Publication(
     $request: PublicationRequest!
@@ -514,6 +597,39 @@ export const PublicationDocument = gql`
   ${MirrorFragmentDoc}
   ${CommentFragmentDoc}
   ${QuoteFragmentDoc}
+`;
+export const PublicationStatsDocument = gql`
+  query PublicationStats(
+    $request: PublicationRequest!
+    $statsRequest: PublicationStatsInput!
+    $reactionsRequest: PublicationStatsReactionArgs!
+    $openActionsRequest: PublicationStatsCountOpenActionArgs!
+  ) {
+    result: publication(request: $request) {
+      ... on Post {
+        __typename
+        stats(request: $statsRequest) {
+          ...PublicationStats
+        }
+      }
+      ... on Comment {
+        __typename
+        stats(request: $statsRequest) {
+          ...PublicationStats
+        }
+      }
+      ... on Quote {
+        __typename
+        stats(request: $statsRequest) {
+          ...PublicationStats
+        }
+      }
+      ... on Mirror {
+        __typename
+      }
+    }
+  }
+  ${PublicationStatsFragmentDoc}
 `;
 export const PublicationsDocument = gql`
   query Publications(
@@ -768,6 +884,31 @@ export const ReportPublicationDocument = gql`
     reportPublication(request: $request)
   }
 `;
+export const LegacyCollectPublicationDocument = gql`
+  mutation LegacyCollectPublication($request: LegacyCollectPublicationRequest!) {
+    result: legacyCollectPublication(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${RelaySuccessFragmentDoc}
+  ${LensProfileManagerRelayErrorFragmentDoc}
+`;
+export const CreateLegacyCollectPublicationTypedDataDocument = gql`
+  mutation CreateLegacyCollectPublicationTypedData(
+    $request: LegacyCollectPublicationRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createLegacyCollectPublicationTypedData(request: $request, options: $options) {
+      ...CreateLegacyCollectPublicationEIP712TypedData
+    }
+  }
+  ${CreateLegacyCollectPublicationEip712TypedDataFragmentDoc}
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -777,6 +918,7 @@ export type SdkFunctionWrapper = <T>(
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const PublicationDocumentString = print(PublicationDocument);
+const PublicationStatsDocumentString = print(PublicationStatsDocument);
 const PublicationsDocumentString = print(PublicationsDocument);
 const PublicationsTagsDocumentString = print(PublicationsTagsDocument);
 const ValidatePublicationMetadataDocumentString = print(ValidatePublicationMetadataDocument);
@@ -798,6 +940,10 @@ const MirrorOnMomokaDocumentString = print(MirrorOnMomokaDocument);
 const QuoteOnMomokaDocumentString = print(QuoteOnMomokaDocument);
 const HidePublicationDocumentString = print(HidePublicationDocument);
 const ReportPublicationDocumentString = print(ReportPublicationDocument);
+const LegacyCollectPublicationDocumentString = print(LegacyCollectPublicationDocument);
+const CreateLegacyCollectPublicationTypedDataDocumentString = print(
+  CreateLegacyCollectPublicationTypedDataDocument,
+);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Publication(
@@ -811,6 +957,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'Publication',
+        'query',
+      );
+    },
+    PublicationStats(
+      variables: PublicationStatsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: PublicationStatsQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PublicationStatsQuery>(PublicationStatsDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'PublicationStats',
         'query',
       );
     },
@@ -1219,6 +1384,46 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'ReportPublication',
+        'mutation',
+      );
+    },
+    LegacyCollectPublication(
+      variables: LegacyCollectPublicationMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: LegacyCollectPublicationMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<LegacyCollectPublicationMutation>(
+            LegacyCollectPublicationDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'LegacyCollectPublication',
+        'mutation',
+      );
+    },
+    CreateLegacyCollectPublicationTypedData(
+      variables: CreateLegacyCollectPublicationTypedDataMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: CreateLegacyCollectPublicationTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateLegacyCollectPublicationTypedDataMutation>(
+            CreateLegacyCollectPublicationTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateLegacyCollectPublicationTypedData',
         'mutation',
       );
     },
