@@ -1615,6 +1615,11 @@ fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
   verifyingContract
 }
 
+fragment EIP712TypedDataField on EIP712TypedDataField {
+  name
+  type
+}
+
 fragment RelaySuccess on RelaySuccess {
   __typename
   txHash

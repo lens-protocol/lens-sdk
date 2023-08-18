@@ -883,6 +883,8 @@ export type Eip712TypedDataDomainFragment = {
   verifyingContract: string;
 };
 
+export type Eip712TypedDataFieldFragment = { name: string; type: string };
+
 export type RelaySuccessFragment = {
   __typename: 'RelaySuccess';
   txHash: string | null;
@@ -2837,6 +2839,12 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     chainId
     version
     verifyingContract
+  }
+`;
+export const Eip712TypedDataFieldFragmentDoc = gql`
+  fragment EIP712TypedDataField on EIP712TypedDataField {
+    name
+    type
   }
 `;
 export const RelaySuccessFragmentDoc = gql`

@@ -1,0 +1,48 @@
+mutation ActOnOpenAction($request: ActOnOpenActionRequest!) {
+  result: actOnOpenAction(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+fragment CreateActOnOpenActionEIP712TypedDataTypes on CreateActOnOpenActionEIP712TypedDataTypes {
+  ActWithSig {
+    ...EIP712TypedDataField
+  }
+}
+
+fragment CreateActOnOpenActionEIP712TypedDataValue on CreateActOnOpenActionEIP712TypedDataValue {
+  nonce
+  deadline
+  fillIn
+}
+
+fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712TypedData {
+  types {
+    ...CreateActOnOpenActionEIP712TypedDataTypes
+  }
+  domain {
+    ...EIP712TypedDataDomain
+  }
+  value {
+    ...CreateActOnOpenActionEIP712TypedDataValue
+  }
+}
+
+fragment CreateActOnOpenActionBroadcastItemResult on CreateActOnOpenActionBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    ...CreateActOnOpenActionEIP712TypedData
+  }
+}
+
+mutation CreateActOnOpenActionTypedData($request: ActOnOpenActionRequest!) {
+  result: createActOnOpenActionTypedData(request: $request) {
+    ...CreateActOnOpenActionBroadcastItemResult
+  }
+}

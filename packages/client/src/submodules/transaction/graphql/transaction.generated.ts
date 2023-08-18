@@ -3,6 +3,11 @@ import * as Types from '../../../graphql/types.generated';
 
 import {
   RelaySuccessFragment,
+  LensProfileManagerRelayErrorFragment,
+  Eip712TypedDataFieldFragment,
+  Eip712TypedDataDomainFragment,
+  ProfileFragment,
+  PaginatedResultInfoFragment,
   RelayErrorFragment,
   CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
@@ -12,6 +17,11 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
   RelaySuccessFragmentDoc,
+  LensProfileManagerRelayErrorFragmentDoc,
+  Eip712TypedDataFieldFragmentDoc,
+  Eip712TypedDataDomainFragmentDoc,
+  ProfileFragmentDoc,
+  PaginatedResultInfoFragmentDoc,
   RelayErrorFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
