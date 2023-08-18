@@ -109,10 +109,10 @@ client.[moduleName].[moduleMethod](args)
     - [x] add
     - [x] remove
 
-  - [ ] actions
+  - [x] actions
 
-    - actOn
-    - createActOnOpenActionTypedData
+    - [x] actOn
+    - [x] createActOnOpenActionTypedData
 
 - feed
 
