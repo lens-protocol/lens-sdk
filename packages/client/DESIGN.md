@@ -75,20 +75,19 @@ client.[moduleName].[moduleMethod](args)
   - [x] commentOnChain
   - [x] mirrorOnChain
   - [x] quoteOnChain
+  - [x] postOnMomoka
+  - [x] commentOnMomoka
+  - [x] mirrorOnMomoka
+  - [x] quoteOnMomoka
 
-  - [ ] postOnMomoka
-  - [ ] commentOnMomoka
-  - [ ] mirrorOnMomoka
-  - [ ] quoteOnMomoka
-
-  - [ ] createOnChainPostTypedData
-  - [ ] createOnChainCommentTypedData
-  - [ ] createOnChainMirrorTypedData
-  - [ ] createOnChainQuoteTypedData
-  - [ ] createMomokaPostTypedData
-  - [ ] createMomokaCommentTypedData
-  - [ ] createMomokaMirrorTypedData
-  - [ ] createMomokaQuoteTypedData
+  - [x] createOnChainPostTypedData
+  - [x] createOnChainCommentTypedData
+  - [x] createOnChainMirrorTypedData
+  - [x] createOnChainQuoteTypedData
+  - [x] createMomokaPostTypedData
+  - [x] createMomokaCommentTypedData
+  - [x] createMomokaMirrorTypedData
+  - [x] createMomokaQuoteTypedData
 
   - [ ] legacyCollect
   - [ ] createLegacyCollectPublicationTypedData

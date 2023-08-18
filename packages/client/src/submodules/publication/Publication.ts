@@ -6,10 +6,12 @@ import { CredentialsExpiredError, NotAuthenticatedError } from '../../consts/err
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import {
   CommentFragment,
+  CreateMomokaPublicationResultFragment,
   LensProfileManagerRelayErrorFragment,
   MirrorFragment,
   PostFragment,
   QuoteFragment,
+  RelayErrorFragment,
   RelaySuccessFragment,
 } from '../../graphql/fragments.generated';
 import type {
@@ -18,10 +20,15 @@ import type {
   CreateOnChainPostRequest,
   CreateOnChainQuoteRequest,
   HidePublicationRequest,
+  MomokaCommentRequest,
+  MomokaMirrorRequest,
+  MomokaPostRequest,
+  MomokaQuoteRequest,
   PublicationRequest,
   PublicationsRequest,
   PublicationsTagsRequest,
   ReportPublicationRequest,
+  TypedDataOptions,
   ValidatePublicationMetadataRequest,
 } from '../../graphql/types.generated';
 import {
@@ -32,6 +39,14 @@ import {
   sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
+  CreateMomokaCommentBroadcastItemResultFragment,
+  CreateMomokaMirrorBroadcastItemResultFragment,
+  CreateMomokaPostBroadcastItemResultFragment,
+  CreateMomokaQuoteBroadcastItemResultFragment,
+  CreateOnChainCommentBroadcastItemResultFragment,
+  CreateOnChainMirrorBroadcastItemResultFragment,
+  CreateOnChainPostBroadcastItemResultFragment,
+  CreateOnChainQuoteBroadcastItemResultFragment,
   getSdk,
   PublicationValidateMetadataResultFragment,
   Sdk,
@@ -71,7 +86,7 @@ export class Publication {
   }
 
   /**
-   * The Not Interested module
+   * The NotInterested module
    */
   get notInterested(): NotInterested {
     return new NotInterested(this.config, this.authentication);
@@ -183,6 +198,206 @@ export class Publication {
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.QuoteOnChain({ request }, headers);
+      return result.data.result;
+    });
+  }
+
+  async postOnMomoka(
+    request: MomokaPostRequest,
+  ): PromiseResult<
+    CreateMomokaPublicationResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.PostOnMomoka({ request }, headers);
+      return result.data.result;
+    });
+  }
+
+  async commentOnMomoka(
+    request: MomokaCommentRequest,
+  ): PromiseResult<
+    CreateMomokaPublicationResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CommentOnMomoka({ request }, headers);
+      return result.data.result;
+    });
+  }
+
+  async mirrorOnMomoka(
+    request: MomokaMirrorRequest,
+  ): PromiseResult<
+    CreateMomokaPublicationResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.MirrorOnMomoka({ request }, headers);
+      return result.data.result;
+    });
+  }
+
+  async quoteOnMomoka(
+    request: MomokaQuoteRequest,
+  ): PromiseResult<
+    CreateMomokaPublicationResultFragment | RelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.QuoteOnMomoka({ request }, headers);
+      return result.data.result;
+    });
+  }
+
+  async createOnChainPostTypedData(
+    request: CreateOnChainPostRequest,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    CreateOnChainPostBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateOnChainPostTypedData(
+        {
+          request,
+          options,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createOnChainCommentTypedData(
+    request: CreateOnChainCommentRequest,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    CreateOnChainCommentBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateOnChainCommentTypedData(
+        {
+          request,
+          options,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createOnChainMirrorTypedData(
+    request: CreateOnChainMirrorRequest,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    CreateOnChainMirrorBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateOnChainMirrorTypedData(
+        {
+          request,
+          options,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createOnChainQuoteTypedData(
+    request: CreateOnChainQuoteRequest,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    CreateOnChainQuoteBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateOnChainQuoteTypedData(
+        {
+          request,
+          options,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createMomokaPostTypedData(
+    request: MomokaPostRequest,
+  ): PromiseResult<
+    CreateMomokaPostBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateMomokaPostTypedData(
+        {
+          request,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createMomokaCommentTypedData(
+    request: MomokaCommentRequest,
+  ): PromiseResult<
+    CreateMomokaCommentBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateMomokaCommentTypedData(
+        {
+          request,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createMomokaMirrorTypedData(
+    request: MomokaMirrorRequest,
+  ): PromiseResult<
+    CreateMomokaMirrorBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateMomokaMirrorTypedData(
+        {
+          request,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async createMomokaQuoteTypedData(
+    request: MomokaQuoteRequest,
+  ): PromiseResult<
+    CreateMomokaQuoteBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateMomokaQuoteTypedData(
+        {
+          request,
+        },
+        headers,
+      );
+
       return result.data.result;
     });
   }
