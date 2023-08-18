@@ -1,5 +1,11 @@
 # @lens-protocol/react
 
+## 1.3.0-next.11
+
+### Patch Changes
+
+- 09206763: **Fixed** issue with `useWalletLogin` never settling
+
 ## 1.3.0-next.10
 
 ### Minor Changes
