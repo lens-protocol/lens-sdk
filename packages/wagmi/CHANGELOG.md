@@ -1,5 +1,12 @@
 # @lens-protocol/wagmi
 
+## 2.1.0-next.11
+
+### Patch Changes
+
+- Updated dependencies [09206763]
+  - @lens-protocol/react-web@1.3.0-next.11
+
 ## 2.1.0-next.10
 
 ### Patch Changes
