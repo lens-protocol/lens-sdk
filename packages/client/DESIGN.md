@@ -92,10 +92,10 @@ client.[moduleName].[moduleMethod](args)
     - [x] add
     - [x] remove
 
-  - [ ] notInterested
+  - [x] notInterested
 
-    - add
-    - undo
+    - [x] add
+    - [x] undo
 
   - [x] reactions
 

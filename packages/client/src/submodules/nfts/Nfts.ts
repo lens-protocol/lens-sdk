@@ -116,7 +116,7 @@ export class Nfts {
    * ```
    */
   async fetchGalleries(request: NftGalleriesRequest): Promise<NftGalleryFragment[]> {
-    const result = await this.sdk.ProfileGalleries({ request }, headers);
+    const result = await this.sdk.ProfileGalleries({ request });
 
     return result.data.result;
   }

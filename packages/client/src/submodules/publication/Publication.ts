@@ -37,7 +37,7 @@ import {
   Sdk,
   TagResultFragment,
 } from './graphql/publication.generated';
-import { Bookmarks, Reactions } from './submodules';
+import { Bookmarks, Reactions, NotInterested } from './submodules';
 
 /**
  * @group LensClient Modules
@@ -68,6 +68,13 @@ export class Publication {
    */
   get reactions(): Reactions {
     return new Reactions(this.config, this.authentication);
+  }
+
+  /**
+   * The Not Interested module
+   */
+  get notInterested(): NotInterested {
+    return new NotInterested(this.config, this.authentication);
   }
 
   async fetch(
