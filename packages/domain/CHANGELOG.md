@@ -1,5 +1,28 @@
 # @lens-protocol/domain
 
+## 0.10.0
+
+### Minor Changes
+
+- fc31f146: **Added** experimental hooks that integrate with @xmtp/react-sdk
+
+### Patch Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- ad797714: **Added** `useNotInterested` hook
+- 3ffab7b9: **Added** newly created `Profile` to `useCreateProfile` result
+- 0f75f79d: **Added** experimental `useCurrentSession` hook
+  **Fixed** issue with `Profile` entity being leaked by the `useWalletLogin` hook
+  **Fixed** bug preventing logout on expired credentials detected at startup type
+- 773c2ed8: **Added** `name` support to non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
+- 433760f3: **Added** ability to specify profile picture and follow policy when creating a new profile"
+- 9428efeb: **Added** support for `attributes` and `image` for non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
+- bdbc71d5: **Added** ability to await newly created post in `useCreatePost` hook
+- Updated dependencies [fc31f146]
+- Updated dependencies [bdbc71d5]
+- Updated dependencies [5943a0f0]
+  - @lens-protocol/shared-kernel@0.10.0
+
 ## 0.10.0-next.7
 
 ### Patch Changes

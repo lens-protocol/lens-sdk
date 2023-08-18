@@ -1,5 +1,22 @@
 # @lens-protocol/client
 
+## 1.3.0
+
+### Minor Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- c2a91ef4: **Added** `Profile.invitedBy` field
+- ea1fcc30: **Added** support for new MediaSet fields: onChain, optimized, transformed
+- 4c4505d2: **Added** support for Profile Guardian
+
+### Patch Changes
+
+- Updated dependencies [fc31f146]
+- Updated dependencies [bdbc71d5]
+- Updated dependencies [5943a0f0]
+  - @lens-protocol/shared-kernel@0.10.0
+  - @lens-protocol/storage@0.7.4
+
 ## 1.3.0-next.5
 
 ### Patch Changes

@@ -1,5 +1,45 @@
 # @lens-protocol/api-bindings
 
+## 0.10.0
+
+### Minor Changes
+
+- de401a59: **Added** support for optimized and transformed media inside publication and profile MediaSet
+- e8dc3cd8: fixes collect/mirror count bug
+- 3b67207b: **Added** `appId` to `Comment` and `Post`
+
+### Patch Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- ad797714: **Added** `useNotInterested` hook
+- 773c2ed8: **Fixes** issues with `profileIds` not used to evaluate cache hits. Affecting `usePublications` and `useProfiles`.
+- c2a91ef4: **Added** `Profile.invitedBy` field
+- b7609fcb: **Fixed** `useNotification` to include `highSignalFilter` filter
+- 636ff014: **Added** `profileIds` to `usePublications` hook
+- 773c2ed8: **Added** missing `commentsOfOrdering` and `commentsRankingFilter` to `useComments` hook
+- 19ed489e: **Added** `beforeCount` to all paginated hooks and refetch data on re-render of `usePublication` and `useProfile` hooks.
+- 0f75f79d: **Added** experimental `useCurrentSession` hook
+  **Fixed** issue with `Profile` entity being leaked by the `useWalletLogin` hook
+  **Fixed** bug preventing logout on expired credentials detected at startup type
+- d5efd895: **Fixed** crash caused by token-gated mismatch of publication author access condition"
+- 773c2ed8: **Added** ability to override `sources` in `useExplorePublications` hook and support to `noRandomize` param.
+- 773c2ed8: **Added** `name` support to non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
+- 125ec30c: **Fixed** `usePollDetails` to be robust to flagged or misconfigured Snapshot Proposals
+- 6eaaaf22: **Added** `Profile.followNftAddress` field
+- 4c4505d2: **Added** support for Profile Guardian
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+- Updated dependencies [3ffab7b9]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [433760f3]
+- Updated dependencies [fc31f146]
+- Updated dependencies [9428efeb]
+- Updated dependencies [bdbc71d5]
+- Updated dependencies [5943a0f0]
+  - @lens-protocol/domain@0.10.0
+  - @lens-protocol/shared-kernel@0.10.0
+
 ## 0.10.0-next.8
 
 ### Patch Changes
