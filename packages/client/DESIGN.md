@@ -60,7 +60,7 @@ client.[moduleName].[moduleMethod](args)
   - [x] createSetFollowModuleTypedData
   - [ ] createDeleteProfileTypedData ?? - was it removed?
 
-- publication
+- [x] publication
 
   - [x] fetch
   - [x] fetchAll
@@ -114,34 +114,34 @@ client.[moduleName].[moduleMethod](args)
     - [x] actOn
     - [x] createActOnOpenActionTypedData
 
-- feed
+- [x] feed
 
   - [x] fetch
   - [x] highlights
   - [x] forYou
 
-- explore
+- [x] explore
 
   - [x] profiles
   - [x] publications
 
-- search
+- [x] search
 
   - [x] profiles
   - [x] publications
 
-- notifications
+- [x] notifications
 
   - [x] fetch
 
-- momoka
+- [x] momoka
 
   - [x] submitters
   - [x] summary
   - [x] transactions
   - [x] transaction
 
-- nfts
+- [x] nfts
 
   - [x] fetch
   - [x] fetchGalleries
@@ -153,7 +153,7 @@ client.[moduleName].[moduleMethod](args)
   - [x] updateGalleryItems
   - [x] updateGalleryOrder
 
-- revenue
+- [x] revenue
 
   - [x] fromFollow
   - [x] fromPublications
@@ -173,8 +173,8 @@ client.[moduleName].[moduleMethod](args)
   - [x] profileAlreadyInvited
   - [x] inviteProfile
 
-- modules
-  - currencies
-  - supportedModules
-  - approvedModuleAllowanceAmount
-  - generateModuleCurrencyApprovalData
+- [x] modules
+  - [x] currencies
+  - [x] supportedModules
+  - [x] approvedModuleAllowanceAmount
+  - [x] generateModuleCurrencyApprovalData

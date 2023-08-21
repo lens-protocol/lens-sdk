@@ -1,0 +1,76 @@
+fragment ModuleInfo on ModuleInfo {
+  name
+  type
+}
+
+fragment SupportedModule on SupportedModule {
+  moduleName
+  contract {
+    ...NetworkAddress
+  }
+  moduleInput {
+    ...ModuleInfo
+  }
+  redeemInput {
+    ...ModuleInfo
+  }
+  returnDataInput {
+    ...ModuleInfo
+  }
+  isTypeSafe
+}
+
+fragment SupportedModules on SupportedModules {
+  openActionsModules {
+    ...SupportedModule
+  }
+  followModules {
+    ...SupportedModule
+  }
+  referenceModules {
+    ...SupportedModule
+  }
+}
+
+fragment ApprovedAllowanceAmountResult on ApprovedAllowanceAmountResult {
+  currency
+  moduleName
+  moduleContract {
+    ...NetworkAddress
+  }
+  allowance
+}
+
+fragment GenerateModuleCurrencyApprovalResult on GenerateModuleCurrencyApprovalResult {
+  to
+  from
+  data
+}
+
+query SupportedModules {
+  result: supportedModules {
+    ...SupportedModules
+  }
+}
+
+query Currencies {
+  result: currencies {
+    ...Erc20
+  }
+}
+
+query ApprovedModuleAllowanceAmount($request: ApprovedModuleAllowanceAmountRequest!) {
+  result: approvedModuleAllowanceAmount(request: $request) {
+    ... on ApprovedAllowanceAmountResult {
+      ...ApprovedAllowanceAmountResult
+    }
+  }
+}
+
+query GenerateModuleCurrencyApprovalData($request: GenerateModuleCurrencyApprovalDataRequest!) {
+  result: generateModuleCurrencyApprovalData(request: $request) {
+    ... on GenerateModuleCurrencyApprovalResult {
+      ...GenerateModuleCurrencyApprovalResult
+    }
+  }
+}

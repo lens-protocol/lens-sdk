@@ -3,6 +3,7 @@ import * as Types from '../../../graphql/types.generated';
 
 import {
   NetworkAddressFragment,
+  Erc20Fragment,
   PaginatedResultInfoFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -11,6 +12,7 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
   NetworkAddressFragmentDoc,
+  Erc20FragmentDoc,
   PaginatedResultInfoFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type OwnerFragment = { amount: number; address: string };
