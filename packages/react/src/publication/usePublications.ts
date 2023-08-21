@@ -1,6 +1,6 @@
 import { AnyPublication, PublicationTypes, useGetPublications } from '@lens-protocol/api-bindings';
-import { ProfileId } from '@lens-protocol/domain/entities';
-import { XOR } from '@lens-protocol/shared-kernel';
+import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+import { OneOf, XOR } from '@lens-protocol/shared-kernel';
 
 import {
   useActiveProfileAsDefaultObserver,
@@ -16,9 +16,13 @@ import { createPublicationMetadataFilters, PublicationMetadataFilters } from './
 export type UsePublicationsArgs = PaginatedArgs<
   WithObserverIdOverride<{
     metadataFilter?: PublicationMetadataFilters;
-    publicationTypes?: PublicationTypes[];
   }> &
-    XOR<{ profileId: ProfileId }, { profileIds: ProfileId[] }>
+    XOR<
+      OneOf<{ profileId: ProfileId; profileIds: ProfileId[] }> & {
+        publicationTypes?: PublicationTypes[];
+      },
+      { publicationIds: PublicationId[] }
+    >
 >;
 
 /**
@@ -53,11 +57,12 @@ export type UsePublicationsArgs = PaginatedArgs<
  * ```
  */
 export function usePublications({
+  metadataFilter,
+  observerId,
   profileId,
   profileIds,
-  metadataFilter,
+  publicationIds,
   publicationTypes,
-  observerId,
   limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]> {
   return usePaginatedReadResult(
@@ -66,12 +71,13 @@ export function usePublications({
         useActiveProfileAsDefaultObserver({
           variables: useMediaTransformFromConfig(
             useSourcesFromConfig({
+              limit,
+              metadata: createPublicationMetadataFilters(metadataFilter),
+              observerId,
               profileId,
               profileIds,
-              observerId,
-              limit,
+              publicationIds,
               publicationTypes,
-              metadata: createPublicationMetadataFilters(metadataFilter),
             }),
           ),
         }),

@@ -3009,6 +3009,9 @@ export type RemoveFromMyBookmarksData = { result: void | null };
 export type GetPublicationsVariables = Exact<{
   profileId?: InputMaybe<Scalars['ProfileId']>;
   profileIds?: InputMaybe<Array<Scalars['ProfileId']> | Scalars['ProfileId']>;
+  publicationIds?: InputMaybe<
+    Array<Scalars['InternalPublicationId']> | Scalars['InternalPublicationId']
+  >;
   observerId?: InputMaybe<Scalars['ProfileId']>;
   limit: Scalars['LimitScalar'];
   cursor?: InputMaybe<Scalars['Cursor']>;
@@ -7308,6 +7311,7 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
   query GetPublications(
     $profileId: ProfileId
     $profileIds: [ProfileId!]
+    $publicationIds: [InternalPublicationId!]
     $observerId: ProfileId
     $limit: LimitScalar!
     $cursor: Cursor
@@ -7326,6 +7330,7 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
       request: {
         profileId: $profileId
         profileIds: $profileIds
+        publicationIds: $publicationIds
         limit: $limit
         collectedBy: $walletAddress
         cursor: $cursor
@@ -7373,6 +7378,7 @@ export const GetPublicationsDocument = /*#__PURE__*/ gql`
  *   variables: {
  *      profileId: // value for 'profileId'
  *      profileIds: // value for 'profileIds'
+ *      publicationIds: // value for 'publicationIds'
  *      observerId: // value for 'observerId'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
