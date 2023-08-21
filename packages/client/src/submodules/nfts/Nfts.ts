@@ -12,20 +12,20 @@ import type {
   NftGalleryUpdateItemOrderRequest,
   NftGalleryUpdateItemsRequest,
   NftOwnershipChallengeRequest,
-  NfTsRequest,
+  NftsRequest,
 } from '../../graphql/types.generated';
 import {
-  buildPaginatedQueryResult,
   PaginatedResult,
+  buildPaginatedQueryResult,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
-  getSdk,
   NftFragment,
   NftGalleryFragment,
   NftOwnershipChallengeResultFragment,
   Sdk,
+  getSdk,
 } from './graphql/nfts.generated';
 
 /**
@@ -55,9 +55,11 @@ export class Nfts {
    * const result = await client.nfts.fetch();
    * ```
    */
-  async fetch(request: NfTsRequest): Promise<PaginatedResult<NftFragment>> {
+  async fetch(request: NftsRequest): Promise<PaginatedResult<NftFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Nfts({
+        // TODO: resolve why eslint classes this as assigning an 'any' value
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         request: currRequest,
       });
 

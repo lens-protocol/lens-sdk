@@ -56,7 +56,7 @@ export type PublicationQueryVariables = Types.Exact<{
 }>;
 
 export type PublicationQuery = {
-  result: CommentFragment | MirrorFragment | PostFragment | QuoteFragment;
+  result: CommentFragment | MirrorFragment | PostFragment | QuoteFragment | null;
 };
 
 export type PublicationStatsQueryVariables = Types.Exact<{
@@ -71,7 +71,8 @@ export type PublicationStatsQuery = {
     | { __typename: 'Comment'; stats: PublicationStatsFragment }
     | { __typename: 'Mirror' }
     | { __typename: 'Post'; stats: PublicationStatsFragment }
-    | { __typename: 'Quote'; stats: PublicationStatsFragment };
+    | { __typename: 'Quote'; stats: PublicationStatsFragment }
+    | null;
 };
 
 export type PublicationsQueryVariables = Types.Exact<{
@@ -138,7 +139,7 @@ export type CreateOnChainQuoteBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
   typedData: {
-    types: { QuoteWithSig: Array<{ name: string; type: string }> };
+    types: { MirrorWithSig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: { nonce: string; deadline: string };
   };
@@ -449,7 +450,7 @@ export const CreateOnChainQuoteBroadcastItemResultFragmentDoc = gql`
     expiresAt
     typedData {
       types {
-        QuoteWithSig {
+        MirrorWithSig {
           name
           type
         }

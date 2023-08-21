@@ -21,7 +21,7 @@ import {
 } from '../../../graphql/fragments.generated';
 export type ProfileManagerFragment = { address: string };
 
-export type CreateProfileErrorResultFragment = { reason: Types.CreateProfilErrorReasonType };
+export type CreateProfileErrorResultFragment = { reason: Types.CreateProfileErrorReasonType };
 
 export type CreateSetProfileMetadataBroadcastItemResultFragment = {
   id: string;

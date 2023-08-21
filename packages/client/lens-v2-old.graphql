@@ -1,35 +1,14 @@
 type Query {
   txIdToTxHash(txId: TxId!): TxHash!
   lensTransactionStatus(request: LensTransactionStatusRequest!): LensTransactionResult!
-  nfts(request: NftsRequest!): PaginatedNftsResult!
-
-  # Search for NFTs in a wallet by collection name. Supports Polygon and Ethereum and searches in both by default.
-  searchNfts(request: NftSearchRequest!): PaginatedNftsResult!
-
-  # Get the NFT collections that the given wallet or profileId owns at least one NFT of. Only supports Ethereum and Polygon NFTs. Note excludeFollowers is set to true by default, so the result will not include Lens Follower NFTsunless explicitly requested.
-  nftCollections(request: NftCollectionsRequest!): PaginatedNftCollectionsResult!
-
-  # Get the NFT collections that the given two profiles own at least one NFT of.
-  mutualNftCollections(request: MutualNftCollectionsRequest!): PaginatedNftCollectionsResult!
-
-  # Get the Lens Profiles that own NFTs from a given collection.
-  nftCollectionOwners(request: NftCollectionOwnersRequest!): PaginatedProfileResult!
-
-  # Get the most popular NFT collections. Popularity is based on how many Lens Profiles own NFTs from a given collection.
-  popularNftCollections(
-    request: PopularNftCollectionsRequest!
-  ): PaginatedPopularNftCollectionsResult!
+  nfts(request: NFTsRequest!): PaginatedNFTsResult!
   nftGalleries(request: NftGalleriesRequest!): [NftGallery!]!
   linkHandleToProfile(request: LinkHandleRequest!): Void
   unlinkHandleToProfile(request: UnlinkHandleRequest!): Void
   ownedHandles(request: OwnedHandlesRequest!): PaginatedHandlesResult!
   relayQueues: [RelayQueueResult!]!
-  momokaSubmitters: MomokaSubmittersResult!
-  momokaSummary: MomokaSummaryResult!
-  momokaTransactions(request: MomokaTransactionsRequest!): MomokaTransactionsResult!
-  momokaTransaction(request: MomokaTransactionRequest!): MomokaTransaction!
   publications(request: PublicationsRequest!): PaginatedPublicationsResult!
-  publication(request: PublicationRequest!): AnyPublication
+  publication(request: PublicationRequest!): AnyPublication!
   publicationsTags(request: PublicationsTagsRequest!): PaginatedPublicationsTagsResult!
   profileBookmarks(request: ProfileBookmarksRequest!): PaginatedPublicationsResult!
   whoReactedPublication(request: WhoReactedPublicationRequest!): PaginatedWhoReactedResult!
@@ -43,6 +22,10 @@ type Query {
   ): PaginatedRevenueFromPublicationsResult!
   revenueForPublication(request: PublicationRevenueRequest!): PublicationRevenue!
   searchPublications(request: PublicationSearchRequest!): PaginatedPublicationPrimaryResult!
+  momokaSubmitters: MomokaSubmittersResult!
+  momokaSummary: MomokaSummaryResult!
+  momokaTransactions(request: MomokaTransactionsRequest!): MomokaTransactionsResult!
+  momokaTransaction(request: MomokaTransactionRequest!): MomokaTransaction!
   approvedModuleAllowanceAmount(
     request: ApprovedModuleAllowanceAmountRequest!
   ): ApprovedAllowanceAmountResult!
@@ -53,7 +36,6 @@ type Query {
   profiles(request: ProfilesRequest!): PaginatedProfileResult!
   profile(request: ProfileRequest!): Profile
   whoActedOnPublication(request: WhoActedOnPublicationRequest!): PaginatedProfileResult
-  profileInterestsOptions: [String!]!
   claimableProfiles: ClaimableProfilesResult!
   claimableStatus: ClaimProfileStatusType!
   exploreProfiles(request: ExploreProfilesRequest!): PaginatedProfileResult!
@@ -69,9 +51,6 @@ type Query {
   feed(request: FeedRequest!): PaginatedFeedResult!
   feedHighlights(request: FeedHighlightsRequest!): PaginatedFeedHighlightsResult!
   notifications(request: NotificationRequest!): PaginatedNotificationResult!
-  poaps(request: UserPoapsQueryRequest!): PaginatedPoapResult!
-  mutualPoaps(request: MutualPoapsQueryRequest!): PaginatedPoapResult!
-  poapHolders(request: PoapHoldersQueryRequest!): PaginatedPoapResult!
   currencies: [Erc20!]!
   following(request: FollowingRequest!): PaginatedProfileResult!
   mutualFollowers(request: MutualFollowersRequest!): PaginatedProfileResult!
@@ -83,6 +62,24 @@ type Query {
   iss(request: PriRequest!): [PrfResult!]!
   intotal(request: InTotalRequest!): Int!
   userSigNonces: UserSigNonces!
+}
+
+scalar ImageSizeTransform
+
+input ImageTransform {
+  # Set the transformed image's width. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'.
+  width: ImageSizeTransform = "auto"
+
+  # Set the transformed image's height. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'.
+  height: ImageSizeTransform = "auto"
+
+  # Set if you want to keep the image's original aspect ratio. True by default. If explicitly set to false, the image will stretch based on the width and height values.
+  keepAspectRatio: Boolean = true
+}
+
+type OptimisticStatusResult {
+  value: Boolean!
+  isFinalisedOnChain: Boolean
 }
 
 # The tx hash
@@ -129,20 +126,35 @@ input LensTransactionStatusRequest {
   txId: TxId
 }
 
-type PaginatedNftsResult {
-  items: [Nft!]!
+type PaginatedNFTsResult {
+  items: [NFT!]!
   pageInfo: PaginatedResultInfo!
 }
 
-type Nft {
+type NFT {
+  contractName: String!
+  contract: NetworkAddress!
+  symbol: String!
   tokenId: TokenId!
   ownerInfo: Owner!
-  contentUri: URI!
-  contract: NetworkAddress!
-  contractType: NftContractType!
-  collection: NftCollection!
-  metadata: NftMetadata!
+  name: String!
+  description: String!
+  contentURI: URI!
+  originalContent: NFTContent!
+  collectionName: String!
+  ercType: String!
 }
+
+type NetworkAddress {
+  address: EvmAddress!
+  chainId: ChainId!
+}
+
+# evm address type
+scalar EvmAddress
+
+# The chain id
+scalar ChainId
 
 # The NFT token id
 scalar TokenId
@@ -152,48 +164,13 @@ type Owner {
   address: EvmAddress!
 }
 
-# evm address type
-scalar EvmAddress
-
 # The URI value not this can be used in it can be a https OR different aka ar:// and ipfs://
 scalar URI
 
-type NetworkAddress {
-  address: EvmAddress!
-  chainId: ChainId!
-}
-
-# The chain id
-scalar ChainId
-
-enum NftContractType {
-  ERC721
-  ERC1155
-  ERC721Enumerable
-}
-
-# Nft Collection type
-type NftCollection {
-  # The contract info, address and chain id
-  contract: NetworkAddress!
-
-  # Collection name
-  name: String!
-
-  # Collection symbol
-  symbol: String!
-
-  # Collection base URI for token metadata
-  baseUri: URI
-
-  # Collection ERC type
-  contractType: NftContractType!
-}
-
-type NftMetadata {
-  name: String!
-  description: String!
-  image: URI!
+type NFTContent {
+  url: URI!
+  metaType: String!
+  animationUrl: URI
 }
 
 # The paginated result info
@@ -203,21 +180,27 @@ type PaginatedResultInfo {
 
   # Cursor to query next results
   next: Cursor
+
+  # The total number of entities the pagination iterates over. If its null then its not been worked out due to it being an expensive query and not really needed for the client. All main counters are in counter tables to allow them to be faster fetching.
+  totalCount: Int
+    @deprecated(
+      reason: "Total counts is expensive and in dynamic nature of queries it slows stuff down. Most the time you do not need this you can just use the `next` property to see if there is more data. This will be removed soon. The only use case anyone is using this right now is on notification query, this should be changed to query the notifications and cache the last notification id. You can then keep checking if the id changes you know more notifications."
+    )
 }
 
 # Cursor custom scalar type
 scalar Cursor
 
-input NftsRequest {
-  limit: LimitScalar
+input NFTsRequest {
+  limit: Limit
   cursor: Cursor
-  where: NftsRequestWhere
+  where: NFTsRequestWhere
 }
 
 # The limit number
-scalar LimitScalar
+scalar Limit
 
-input NftsRequestWhere {
+input NFTsRequestWhere {
   for: ProfileId
   query: String
   includeCollections: [NetworkAddressInput!] = []
@@ -233,227 +216,165 @@ input NetworkAddressInput {
   chainId: ChainId!
 }
 
-# NFT search query
-input NftSearchRequest {
-  limit: LimitScalar
-  cursor: Cursor
-
-  # Search query. Has to be part of a collection name
-  query: String!
-
-  # Profile ID of the owner
-  forProfileId: ProfileId = null
-
-  # Ethereum address of the owner. If unknown you can also search by profile ID
-  forAddress: EvmAddress = null
-
-  # Chain IDs to search. Supports Ethereum and Polygon. If omitted, it will search in both chains
-  chainIds: [ChainId!] = [5, 80001]
-
-  # Exclude follower NFTs from the search
-  excludeFollowers: Boolean = true
+type NftGallery {
+  id: NftGalleryId!
+  name: NftGalleryName!
+  items: [NFT!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
-# Nft collections paginated result
-type PaginatedNftCollectionsResult {
-  items: [NftCollection!]!
+# Nft gallery id type
+scalar NftGalleryId
+
+# Nft gallery name type
+scalar NftGalleryName
+
+# The javascript `Date` as string. Type represents date and time as the ISO Date string.
+scalar DateTime
+
+input NftGalleriesRequest {
+  for: ProfileId!
+}
+
+# Represents NULL values
+scalar Void
+
+input LinkHandleRequest {
+  handle: Handle!
+}
+
+# The handle attached to a profile - note its it own NFT
+scalar Handle
+
+input UnlinkHandleRequest {
+  handle: Handle!
+}
+
+type PaginatedHandlesResult {
+  items: [HandleResult!]!
   pageInfo: PaginatedResultInfo!
 }
 
-# NFT collections request
-input NftCollectionsRequest {
-  limit: Float = 50
-  cursor: Cursor
-
-  # Filter by owner address
-  forAddress: EvmAddress
-  for: ProfileId
-
-  # The chain ids to look for NFTs on. Ethereum and Polygon are supported. If omitted, it will look on both chains by default.
-  chainIds: [ChainId!] = [5, 80001]
-
-  # Exclude Lens Follower NFTs
-  excludeFollowers: Boolean = true
+type HandleResult {
+  handle: Handle!
 }
 
-# Mutual NFT collections request
-input MutualNftCollectionsRequest {
-  limit: LimitScalar
-  cursor: Cursor
-
-  # Profile id of the first user
-  yourProfileId: ProfileId!
-
-  # Profile id of the second user
-  viewingProfileId: ProfileId!
+input OwnedHandlesRequest {
+  # The Ethereum address for which to retrieve owned handles
+  address: EvmAddress!
 }
 
-# The paginated profile result
-type PaginatedProfileResult {
-  items: [Profile!]!
+type RelayQueueResult {
+  key: RelayRoleKey!
+  relay: NetworkAddress!
+  queue: Int!
+}
+
+enum RelayRoleKey {
+  CREATE_PROFILE
+  DISPATCHER_1
+  DISPATCHER_2
+  DISPATCHER_3
+  DISPATCHER_4
+  DISPATCHER_5
+  DISPATCHER_6
+  DISPATCHER_7
+  DISPATCHER_8
+  DISPATCHER_9
+  DISPATCHER_10
+  PROXY_ACTION_COLLECT_1
+  PROXY_ACTION_COLLECT_2
+  PROXY_ACTION_COLLECT_3
+  PROXY_ACTION_COLLECT_4
+  PROXY_ACTION_COLLECT_5
+  PROXY_ACTION_COLLECT_6
+  PROXY_ACTION_FOLLOW_1
+  PROXY_ACTION_FOLLOW_2
+  PROXY_ACTION_FOLLOW_3
+  PROXY_ACTION_FOLLOW_4
+  PROXY_ACTION_FOLLOW_5
+  PROXY_ACTION_FOLLOW_6
+  PROXY_ACTION_FOLLOW_7
+  PROXY_ACTION_FOLLOW_8
+  PROXY_ACTION_FOLLOW_9
+  PROXY_ACTION_FOLLOW_10
+  WITH_SIG_1
+  WITH_SIG_2
+  WITH_SIG_3
+  ZK_RELAYER_1
+}
+
+type PaginatedPublicationsResult {
+  items: [AnyPublication!]!
   pageInfo: PaginatedResultInfo!
 }
+
+union AnyPublication = Post | Comment | Mirror | Quote
+
+type Post {
+  id: PublicationId!
+  by: Profile!
+  metadata: PublicationMetadata!
+  openActionModules: [OpenActionModule!]
+  referenceModule: ReferenceModule
+  publishedOn: App
+  isHidden: Boolean!
+  isGated: Boolean!
+  momoka: MomokaInfo
+  createdAt: DateTime!
+  stats(request: PublicationStatsInput!): PublicationStats!
+  operations: PublicationOperations!
+}
+
+# Publication id
+scalar PublicationId
 
 # The Profile
 type Profile {
   # The profile id
   id: ProfileId!
 
+  # The profile metadata
+  metadata: ProfileMetadata
+
+  # The profile handle - a profile may not have one
+  handle: Handle
+
+  # The picture for the profile
+  picture: ProfilePicture
+
   # Who owns the profile
   ownedBy: NetworkAddress!
 
   # The gasless settings for the profile
   gasless: Gasless!
-  txHash: TxHash!
 
-  # When the profile was created
-  createdAt: DateTime!
-  stats(request: ProfileStatsArgs!): ProfileStats!
-  interests: [String!]!
-  isFollowedByMe: OptimisticStatusResult!
-  isFollowingMe: OptimisticStatusResult!
-  guardian: ProfileGuardianResult
-  invitedBy: Profile
-  invitesLeft: Int!
-
-  # The on chain identity
-  onChainIdentity: ProfileOnChainIdentity!
-
-  # The profile follow nft address
-  followNftAddress: NetworkAddress
-
-  # The profile metadata
-  metadata: ProfileMetadata
+  # Optionals param to add extra attributes on the metadata
+  attributes: [Attribute!]
 
   # The follow module
   followModule: FollowModule
 
-  # The profile handle - a profile may not have one
-  handle: Handle
-}
+  # The profile follow nft address
+  followNftAddress: NetworkAddress
 
-type Gasless {
-  enabled: Boolean!
-  relay: NetworkAddress
-}
+  # The on chain identity
+  onChainIdentity: ProfileOnChainIdentity!
 
-# The javascript `Date` as string. Type represents date and time as the ISO Date string.
-scalar DateTime
+  # The profile interests
+  interests: [String!]
 
-# The Profile Stats
-type ProfileStats {
-  id: ProfileId!
-  followers(request: ProfileStatsArgs!): Int!
-  following(request: ProfileStatsArgs!): Int!
-  comments(request: ProfileStatsArgs!): Int!
-  posts(request: ProfileStatsArgs!): Int!
-  mirrors(request: ProfileStatsArgs!): Int!
-  quotes(request: ProfileStatsArgs!): Int!
-  publications(request: ProfileStatsArgs!): Int!
-  reactions(request: ProfileStatsReactionArgs!): Int!
-  countOpenActions(request: ProfileStatsCountOpenActionArgs!): Int!
-}
-
-input ProfileStatsArgs {
-  forApps: [AppId!] = []
-  customFilters: [CustomFiltersType!] = []
-}
-
-# The app id
-scalar AppId
-
-enum CustomFiltersType {
-  GARDENERS
-}
-
-input ProfileStatsReactionArgs {
-  type: PublicationReactionType
-}
-
-enum PublicationReactionType {
-  UPVOTE
-  DOWNVOTE
-}
-
-input ProfileStatsCountOpenActionArgs {
-  anyOf: [OpenActionFilter!]
-}
-
-input OpenActionFilter {
-  address: EvmAddress
-  type: OpenActionModuleType
-  category: OpenActionCategoryType
-}
-
-enum OpenActionModuleType {
-  SimpleCollectOpenActionModule
-  MultirecipientFeeCollectOpenActionModule
-  UnknownOpenActionModule
-  LegacyLimitedFeeCollectModule
-  LegacyFeeCollectModule
-  LegacyLimitedTimedFeeCollectModule
-  LegacyTimedFeeCollectModule
-  LegacyAaveFeeCollectModule
-  LegacyRevertCollectModule
-  LegacyFreeCollectModule
-  LegacyMultirecipientFeeCollectModule
-  LegacyERC4626FeeCollectModule
-  LegacySimpleCollectModule
-}
-
-enum OpenActionCategoryType {
-  COLLECT
-}
-
-type OptimisticStatusResult {
-  value: Boolean!
-  isFinalisedOnChain: Boolean!
-}
-
-type ProfileGuardianResult {
-  protected: Boolean!
-  cooldownEndsOn: DateTime
-}
-
-type ProfileOnChainIdentity {
-  # The POH status
-  proofOfHumanity: Boolean!
-
-  # The ens information
-  ens: EnsOnChainIdentity
-
-  # The sybil dot org information
-  sybilDotOrg: SybilDotOrgIdentity!
-
-  # The worldcoin identity
-  worldcoin: WorldcoinIdentity!
-}
-
-type EnsOnChainIdentity {
-  # The default ens mapped to this address
-  name: Ens
-}
-
-# The ens name
-scalar Ens
-
-type SybilDotOrgIdentity {
-  # The sybil dot org status
-  verified: Boolean!
-  source: SybilDotOrgIdentitySource!
-}
-
-type SybilDotOrgIdentitySource {
-  twitter: SybilDotOrgTwitterIdentity!
-}
-
-type SybilDotOrgTwitterIdentity {
-  handle: String
-}
-
-type WorldcoinIdentity {
-  # If the profile has verified as a user
-  isHuman: Boolean!
+  # When the profile was created
+  createdAt: DateTime!
+  stats(request: ProfileStatsArgs!): ProfileStats!
+  # isFollowedByMe: Boolean!
+  # isFollowingMe: Boolean!
+  isFollowedByMe: OptimisticStatusResult!
+  isFollowingMe: OptimisticStatusResult!
+  guardian: ProfileGuardianResult!
+  invitedBy: Profile
+  invitesLeft: Int!
 }
 
 type ProfileMetadata {
@@ -468,25 +389,6 @@ type ProfileMetadata {
 
   # The cover picture for the profile
   coverPicture: ImageSet
-
-  # The picture for the profile
-  picture: ProfilePicture
-
-  # Optionals param to add extra attributes on the metadata
-  attributes: [Attribute!]
-}
-
-scalar ImageSizeTransform
-
-input ImageTransform {
-  # Set the transformed image's width. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'.
-  width: ImageSizeTransform = "auto"
-
-  # Set the transformed image's height. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'.
-  height: ImageSizeTransform = "auto"
-
-  # Set if you want to keep the image's original aspect ratio. True by default. If explicitly set to false, the image will stretch based on the width and height values.
-  keepAspectRatio: Boolean = true
 }
 
 type ImageSet {
@@ -495,6 +397,7 @@ type ImageSet {
 
   # Alternative text for the image
   altTag: String
+  transformed(input: ImageTransform): Image
 }
 
 type Image {
@@ -528,6 +431,11 @@ type NftImage {
 
   # Indicates whether the NFT is verified or not
   verified: Boolean!
+}
+
+type Gasless {
+  enabled: Boolean!
+  relay: NetworkAddress
 }
 
 type Attribute {
@@ -608,354 +516,96 @@ type UnknownFollowModuleSettings {
 # Blockchain data
 scalar BlockchainData
 
-# The handle attached to a profile - note its it own NFT
-scalar Handle
+type ProfileOnChainIdentity {
+  # The POH status
+  proofOfHumanity: Boolean!
 
-# NFT collection owners request
-input NftCollectionOwnersRequest {
-  limit: LimitScalar
-  cursor: Cursor
+  # The ens information
+  ens: EnsOnChainIdentity
 
-  # The contract address
-  address: EvmAddress!
+  # The sybil dot org information
+  sybilDotOrg: SybilDotOrgIdentity!
 
-  # The chain id
-  chainId: ChainId!
-
-  # The ordering of Nft collection owners
-  order: NftCollectionOwnersOrder = None
-
-  # The profile id to use when ordering by followers
-  for: ProfileId = null
+  # The worldcoin identity
+  worldcoin: WorldcoinIdentity!
 }
 
-enum NftCollectionOwnersOrder {
-  FollowersFirst
-  None
+type EnsOnChainIdentity {
+  # The default ens mapped to this address
+  name: Ens
 }
 
-# Popular Nft collections paginated result
-type PaginatedPopularNftCollectionsResult {
-  items: [NftCollectionWithOwners!]!
-  pageInfo: PaginatedResultInfo!
-}
+# The ens name
+scalar Ens
 
-# A wrapper object containing an Nft collection, the total number of Lens profiles that own it, and optional field resolvers
-type NftCollectionWithOwners {
-  # The Nft collection
-  collection: NftCollection!
-
-  # The total number of Lens profiles that own this collection
-  totalProfiles: Float!
-}
-
-# Popular NFT collections request
-input PopularNftCollectionsRequest {
-  limit: LimitScalar
-  cursor: Cursor
-
-  # The chain ids to look for NFTs on. Ethereum and Polygon are supported. If omitted, it will look on both chains by default.
-  chainIds: [ChainId!] = [5, 80001]
-
-  # Exclude Lens Follower NFTs
-  excludeFollowers: Boolean = true
-
-  # Include only verified collections
-  onlyVerified: Boolean = true
-}
-
-type NftGallery {
-  id: NftGalleryId!
-  name: NftGalleryName!
-  owner: ProfileId!
-  items: [Nft!]!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-# Nft gallery id type
-scalar NftGalleryId
-
-# Nft gallery name type
-scalar NftGalleryName
-
-input NftGalleriesRequest {
-  for: ProfileId!
-}
-
-# Represents NULL values
-scalar Void
-
-input LinkHandleRequest {
-  handle: Handle!
-}
-
-input UnlinkHandleRequest {
-  handle: Handle!
-}
-
-type PaginatedHandlesResult {
-  items: [HandleResult!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-type HandleResult {
-  handle: Handle!
-}
-
-input OwnedHandlesRequest {
-  # The Ethereum address for which to retrieve owned handles
-  address: EvmAddress!
-}
-
-type RelayQueueResult {
-  key: RelayRoleKey!
-  relay: NetworkAddress!
-  queue: Int!
-}
-
-enum RelayRoleKey {
-  CREATE_PROFILE
-  DISPATCHER_1
-  DISPATCHER_2
-  DISPATCHER_3
-  DISPATCHER_4
-  DISPATCHER_5
-  DISPATCHER_6
-  DISPATCHER_7
-  DISPATCHER_8
-  DISPATCHER_9
-  DISPATCHER_10
-  PROXY_ACTION_COLLECT_1
-  PROXY_ACTION_COLLECT_2
-  PROXY_ACTION_COLLECT_3
-  PROXY_ACTION_COLLECT_4
-  PROXY_ACTION_COLLECT_5
-  PROXY_ACTION_COLLECT_6
-  PROXY_ACTION_FOLLOW_1
-  PROXY_ACTION_FOLLOW_2
-  PROXY_ACTION_FOLLOW_3
-  PROXY_ACTION_FOLLOW_4
-  PROXY_ACTION_FOLLOW_5
-  PROXY_ACTION_FOLLOW_6
-  PROXY_ACTION_FOLLOW_7
-  PROXY_ACTION_FOLLOW_8
-  PROXY_ACTION_FOLLOW_9
-  PROXY_ACTION_FOLLOW_10
-  WITH_SIG_1
-  WITH_SIG_2
-  WITH_SIG_3
-  ZK_RELAYER_1
-}
-
-type MomokaSubmittersResult {
-  items: [MomokaSubmitterResult!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-type MomokaSubmitterResult {
-  address: EvmAddress!
-  name: String!
-  totalTransactions: Int!
-}
-
-type MomokaSummaryResult {
-  totalTransactions: Int!
-}
-
-type MomokaTransactionsResult {
-  items: [MomokaTransaction!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-union MomokaTransaction =
-    MomokaPostTransaction
-  | MomokaCommentTransaction
-  | MomokaMirrorTransaction
-  | MomokaQuoteTransaction
-
-type MomokaPostTransaction {
-  transactionId: String!
-  submitter: EvmAddress!
-  createdAt: DateTime!
-  app: App!
-  verificationStatus: MomokaVerificationStatus!
-  profile: Profile!
-  publicationId: PublicationId!
-}
-
-type App {
-  id: AppId!
-}
-
-union MomokaVerificationStatus = MomokaVerificationStatusSuccess | MomokaVerificationStatusFailure
-
-type MomokaVerificationStatusSuccess {
+type SybilDotOrgIdentity {
+  # The sybil dot org status
   verified: Boolean!
+  source: SybilDotOrgIdentitySource!
 }
 
-type MomokaVerificationStatusFailure {
-  status: MomokaValidatorErrorType!
+type SybilDotOrgIdentitySource {
+  twitter: SybilDotOrgTwitterIdentity!
 }
 
-enum MomokaValidatorErrorType {
-  NO_SIGNATURE_SUBMITTER
-  INVALID_SIGNATURE_SUBMITTER
-  TIMESTAMP_PROOF_INVALID_SIGNATURE
-  TIMESTAMP_PROOF_INVALID_TYPE
-  TIMESTAMP_PROOF_INVALID_DA_ID
-  TIMESTAMP_PROOF_NOT_SUBMITTER
-  CAN_NOT_CONNECT_TO_BUNDLR
-  INVALID_TX_ID
-  INVALID_FORMATTED_TYPED_DATA
-  BLOCK_CANT_BE_READ_FROM_NODE
-  DATA_CANT_BE_READ_FROM_NODE
-  SIMULATION_NODE_COULD_NOT_RUN
-  SIMULATION_FAILED
-  EVENT_MISMATCH
-  INVALID_EVENT_TIMESTAMP
-  INVALID_TYPED_DATA_DEADLINE_TIMESTAMP
-  GENERATED_PUBLICATION_ID_MISMATCH
-  INVALID_POINTER_SET_NOT_NEEDED
-  POINTER_FAILED_VERIFICATION
-  NOT_CLOSEST_BLOCK
-  BLOCK_TOO_FAR
-  PUBLICATION_NO_POINTER
-  PUBLICATION_NONE_DA
-  PUBLICATION_NONCE_INVALID
-  PUBLICATION_SIGNER_NOT_ALLOWED
-  CHAIN_SIGNATURE_ALREADY_USED
-  POTENTIAL_REORG
-  UNKNOWN
+type SybilDotOrgTwitterIdentity {
+  handle: String
 }
 
-# Publication id
-scalar PublicationId
-
-type MomokaCommentTransaction {
-  transactionId: String!
-  submitter: EvmAddress!
-  createdAt: DateTime!
-  app: App!
-  verificationStatus: MomokaVerificationStatus!
-  profile: Profile!
-  publicationId: PublicationId!
-  commentedOnProfile: Profile!
-  commentedOnPublicationId: PublicationId!
+type WorldcoinIdentity {
+  # If the profile has verified as a user
+  isHuman: Boolean!
 }
 
-type MomokaMirrorTransaction {
-  transactionId: String!
-  submitter: EvmAddress!
-  createdAt: DateTime!
-  app: App!
-  verificationStatus: MomokaVerificationStatus!
-  profile: Profile!
-  publicationId: PublicationId!
-  mirrorOfProfile: Profile!
-  mirrorOfPublicationId: PublicationId!
+# The Profile Stats
+type ProfileStats {
+  id: ProfileId!
+  followers(request: ProfileStatsArgs!): Int!
+  following(request: ProfileStatsArgs!): Int!
+  comments(request: ProfileStatsArgs!): Int!
+  posts(request: ProfileStatsArgs!): Int!
+  mirrors(request: ProfileStatsArgs!): Int!
+  quotes(request: ProfileStatsArgs!): Int!
+  publications(request: ProfileStatsArgs!): Int!
+  reactions(request: ProfileStatsReactionArgs!): Int!
+  countOpenActions(request: ProfileStatsCountOpenActionArgs!): Int!
 }
 
-type MomokaQuoteTransaction {
-  transactionId: String!
-  submitter: EvmAddress!
-  createdAt: DateTime!
-  app: App!
-  verificationStatus: MomokaVerificationStatus!
-  profile: Profile!
-  publicationId: PublicationId!
-  quotedOnProfile: Profile!
-  quotedOnPublicationId: PublicationId!
-}
-
-input MomokaTransactionsRequest {
-  limit: LimitScalar
-  cursor: Cursor
-  for: ProfileId!
-}
-
-input MomokaTransactionRequest {
-  # The momoka transaction id or internal publication id
-  id: String!
-}
-
-type PaginatedPublicationsResult {
-  items: [AnyPublication!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-union AnyPublication = Post | Comment | Mirror | Quote
-
-type Post {
-  id: PublicationId!
-  by: Profile!
-  publishedOn: App
-  isHidden: Boolean!
-  isGated: Boolean!
-  momoka: MomokaInfo
-  txHash: TxHash!
-  createdAt: DateTime!
-  stats(request: PublicationStatsInput!): PublicationStats!
-  operations: PublicationOperations!
-  metadata: PublicationMetadata!
-  openActionModules: [OpenActionModule!]
-  referenceModule: ReferenceModule
-}
-
-type MomokaInfo {
-  proof: MomokaProof!
-}
-
-# The momoke proof
-scalar MomokaProof
-
-type PublicationStats {
-  additionalArgs: PublicationStatsRequest!
-  id: PublicationId!
-  comments: Int!
-  mirrors: Int!
-  quotes: Int!
-  reactions(request: PublicationStatsReactionArgs!): Int!
-  countOpenActions(request: PublicationStatsCountOpenActionArgs!): Int!
-}
-
-type PublicationStatsRequest {
-  forApps: [AppId!]
-  customFilters: [CustomFiltersType!]
-}
-
-input PublicationStatsReactionArgs {
-  type: PublicationReactionType
-}
-
-input PublicationStatsCountOpenActionArgs {
-  anyOf: [OpenActionFilter!]
-}
-
-input PublicationStatsInput {
+input ProfileStatsArgs {
   forApps: [AppId!] = []
   customFilters: [CustomFiltersType!] = []
 }
 
-type PublicationOperations {
-  id: PublicationId!
-  isNotInterested: Boolean!
-  hasBookmarked: Boolean!
-  hasActed: [OpenActionResult!]!
-  hasReacted(request: PublicationOperationsReactionArgs!): Boolean!
-  canComment: Boolean!
-  canMirror: Boolean!
-  hasMirrored: Boolean!
-  canDecrypt: CanDecryptResponse!
+# The app id
+scalar AppId
+
+enum CustomFiltersType {
+  GARDENERS
 }
 
-union OpenActionResult = CollectOpenActionResult | UnknownOpenActionResult
-
-type CollectOpenActionResult {
-  type: CollectOpenActionModuleType!
+input ProfileStatsReactionArgs {
+  type: PublicationReactionType
 }
 
-enum CollectOpenActionModuleType {
+enum PublicationReactionType {
+  UPVOTE
+  DOWNVOTE
+}
+
+input ProfileStatsCountOpenActionArgs {
+  anyOf: [OpenActionFilter!]
+}
+
+input OpenActionFilter {
+  address: EvmAddress
+  type: OpenActionModuleType
+  category: OpenActionCategoryType
+}
+
+enum OpenActionModuleType {
+  SimpleCollectOpenActionModule
+  MultirecipientFeeCollectModule
+  UnknownOpenActionModule
   LegacyLimitedFeeCollectModule
   LegacyFeeCollectModule
   LegacyLimitedTimedFeeCollectModule
@@ -966,36 +616,15 @@ enum CollectOpenActionModuleType {
   LegacyMultirecipientFeeCollectModule
   LegacyERC4626FeeCollectModule
   LegacySimpleCollectModule
-  UnknownOpenActionModule
 }
 
-type UnknownOpenActionResult {
-  address: EvmAddress!
-  redeemData: BlockchainData!
+enum OpenActionCategoryType {
+  COLLECT
 }
 
-input PublicationOperationsReactionArgs {
-  type: PublicationReactionType
-}
-
-type CanDecryptResponse {
-  result: Boolean!
-  reasons: [DecryptFailReasonType!]
-  extraDetails: String
-}
-
-enum DecryptFailReasonType {
-  UNAUTHORIZED_ADDRESS
-  DOES_NOT_OWN_NFT
-  DOES_NOT_OWN_PROFILE
-  DOES_NOT_FOLLOW_PROFILE
-  HAS_NOT_COLLECTED_PUBLICATION
-  UNAUTHORIZED_BALANCE
-  PROFILE_DOES_NOT_EXIST
-  MISSING_ENCRYPTION_PARAMS
-  FOLLOW_NOT_FINALISED_ON_CHAIN
-  COLLECT_NOT_FINALISED_ON_CHAIN
-  CAN_NOT_DECRYPT
+type ProfileGuardianResult {
+  protected: Boolean!
+  cooldownEndsOn: DateTime
 }
 
 union PublicationMetadata =
@@ -1037,7 +666,7 @@ scalar Markdown
 union MediaSet = VideoSet | AudioSet | ImageSet
 
 type VideoSet {
-  rawURI: URI!
+  rawURL: URI!
   video: Video!
   altTag: String
 }
@@ -1119,6 +748,11 @@ type NftOwnershipCondition {
   contract: NetworkAddress!
   contractType: NftContractType!
   tokenIds: [TokenId!]
+}
+
+enum NftContractType {
+  ERC721
+  ERC1155
 }
 
 type Erc20OwnershipCondition {
@@ -1880,23 +1514,122 @@ type DegreesOfSeparationReferenceModuleSettings {
   degreesOfSeparation: Int!
 }
 
+type App {
+  id: AppId!
+}
+
+type MomokaInfo {
+  proof: MomokaProof!
+}
+
+# The momoke proof
+scalar MomokaProof
+
+type PublicationStats {
+  additionalArgs: PublicationStatsRequest!
+  id: PublicationId!
+  comments: Int!
+  mirrors: Int!
+  quotes: Int!
+  reactions(request: PublicationStatsReactionArgs!): Int!
+  countOpenActions(request: PublicationStatsCountOpenActionArgs!): Int!
+}
+
+type PublicationStatsRequest {
+  forApps: [AppId!]
+  customFilters: [CustomFiltersType!]
+}
+
+input PublicationStatsReactionArgs {
+  type: PublicationReactionType
+}
+
+input PublicationStatsCountOpenActionArgs {
+  anyOf: [OpenActionFilter!]
+}
+
+input PublicationStatsInput {
+  forApps: [AppId!] = []
+  customFilters: [CustomFiltersType!] = []
+}
+
+type PublicationOperations {
+  id: PublicationId!
+  isNotInterested: Boolean!
+  hasBookmarked: Boolean!
+  hasActed: [OpenActionResult!]!
+  hasReacted(request: PublicationOperationsReactionArgs!): Boolean!
+  canComment: Boolean!
+  canMirror: Boolean!
+  hasMirrored: Boolean!
+  canDecrypt: CanDecryptResponse!
+}
+
+union OpenActionResult = CollectOpenActionResult | UnknownOpenActionResult
+
+type CollectOpenActionResult {
+  type: CollectOpenActionModuleType!
+}
+
+enum CollectOpenActionModuleType {
+  LegacyLimitedFeeCollectModule
+  LegacyFeeCollectModule
+  LegacyLimitedTimedFeeCollectModule
+  LegacyTimedFeeCollectModule
+  LegacyAaveFeeCollectModule
+  LegacyRevertCollectModule
+  LegacyFreeCollectModule
+  LegacyMultirecipientFeeCollectModule
+  LegacyERC4626FeeCollectModule
+  LegacySimpleCollectModule
+  UnknownOpenActionModule
+}
+
+type UnknownOpenActionResult {
+  address: EvmAddress!
+  redeemData: BlockchainData!
+}
+
+input PublicationOperationsReactionArgs {
+  type: PublicationReactionType
+}
+
+type CanDecryptResponse {
+  result: Boolean!
+  reasons: [DecryptFailReasonType!]
+  extraDetails: String
+}
+
+enum DecryptFailReasonType {
+  UNAUTHORIZED_ADDRESS
+  DOES_NOT_OWN_NFT
+  DOES_NOT_OWN_PROFILE
+  DOES_NOT_FOLLOW_PROFILE
+  HAS_NOT_COLLECTED_PUBLICATION
+  UNAUTHORIZED_BALANCE
+  PROFILE_DOES_NOT_EXIST
+  MISSING_ENCRYPTION_PARAMS
+  FOLLOW_NOT_FINALISED_ON_CHAIN
+  COLLECT_NOT_FINALISED_ON_CHAIN
+  CAN_NOT_DECRYPT
+}
+
 type Comment {
   id: PublicationId!
   by: Profile!
+  metadata: PublicationMetadata!
+  openActionModules: [OpenActionModule!]
+  referenceModule: ReferenceModule
   publishedOn: App
   isHidden: Boolean!
   isGated: Boolean!
   momoka: MomokaInfo
-  txHash: TxHash!
-  createdAt: DateTime!
-  stats(request: PublicationStatsInput!): PublicationStats!
-  operations: PublicationOperations!
-  metadata: PublicationMetadata!
-  openActionModules: [OpenActionModule!]
-  referenceModule: ReferenceModule
   root: Post!
   commentOn: PrimaryPublication!
   firstComment: Comment!
+  createdAt: DateTime!
+  stats(request: PublicationStatsInput!): PublicationStats!
+  operations: PublicationOperations!
 }
 
 union PrimaryPublication = Post | Comment | Quote
@@ -1904,52 +1637,47 @@ union PrimaryPublication = Post | Comment | Quote
 type Quote {
   id: PublicationId!
   by: Profile!
+  metadata: PublicationMetadata!
+  openActionModules: [OpenActionModule!]
+  referenceModule: ReferenceModule
   publishedOn: App
   isHidden: Boolean!
   isGated: Boolean!
   momoka: MomokaInfo
-  txHash: TxHash!
+  quotedOn: PrimaryPublication!
+  commentOn: PrimaryPublication!
   createdAt: DateTime!
   stats(request: PublicationStatsInput!): PublicationStats!
   operations: PublicationOperations!
-  metadata: PublicationMetadata!
-  openActionModules: [OpenActionModule!]
-  referenceModule: ReferenceModule
-  commentOn: PrimaryPublication!
-  quotedOn: PrimaryPublication!
 }
 
 type Mirror {
   id: PublicationId!
   by: Profile!
-  publishedOn: App
-  isHidden: Boolean!
-  isGated: Boolean!
   momoka: MomokaInfo
-  txHash: TxHash!
-  createdAt: DateTime!
   mirrorOf: MirrorablePublication!
+  createdAt: DateTime!
 }
 
 union MirrorablePublication = Post | Comment | Quote
 
 input PublicationsRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
-  where: PublicationsWhere!
+  where: PublicationsWhere
   orderBy: PublicationsOrderByType = COMMENT_OF_QUERY_RANKING
+  commentsRankingFilter: CommentRankingFilterType
 }
 
 input PublicationsWhere {
-  publicationIds: [PublicationId!]
   from: [ProfileId!]
   publicationTypes: [PublicationType!]
-  commentsOf: PublicationCommentOf
+  commentsOf: PublicationId
   mirrorOf: PublicationId
-  quoteOf: PublicationId
   publishedOn: [AppId!]
   withOpenActions: [OpenActionFilter!]
-  acted: [OpenActionFilter!]
+  actedBy: [OpenActionFilter!]
+  publicationIds: [PublicationId!]
   metadata: PublicationMetadataFilters
   customFilters: [CustomFiltersType!]
 }
@@ -1959,16 +1687,6 @@ enum PublicationType {
   COMMENT
   QUOTE
   MIRROR
-}
-
-input PublicationCommentOf {
-  id: PublicationId!
-  commentsRankingFilter: CommentRankingFilterType
-}
-
-enum CommentRankingFilterType {
-  NONE_RELEVANT
-  RELEVANT
 }
 
 input PublicationMetadataFilters {
@@ -2015,6 +1733,11 @@ enum PublicationsOrderByType {
   LATEST
 }
 
+enum CommentRankingFilterType {
+  NONE_RELEVANT
+  RELEVANT
+}
+
 input PublicationRequest {
   for: PublicationId
   txHash: TxHash
@@ -2031,14 +1754,14 @@ type TagResult {
 }
 
 input PublicationsTagsRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   where: PublicationsTagsWhere
   orderBy: TagSortCriteriaType = ALPHABETICAL
 }
 
 input PublicationsTagsWhere {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   publishedOn: [AppId!]
 }
@@ -2049,13 +1772,13 @@ enum TagSortCriteriaType {
 }
 
 input ProfileBookmarksRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   where: ProfileBookmarksWhere
 }
 
 input ProfileBookmarksWhere {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   publishedOn: [AppId!]
   metadata: PublicationMetadataFilters
@@ -2077,14 +1800,14 @@ type ReactedResult {
 }
 
 input WhoReactedPublicationRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   for: PublicationId!
   where: WhoReactedPublicationWhere
 }
 
 input WhoReactedPublicationWhere {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   anyOf: [PublicationReactionType!]
 }
@@ -2097,7 +1820,7 @@ type PaginatedExplorePublicationResult {
 union ExplorePublication = Post | Quote
 
 input ExplorePublicationRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   where: ExplorePublicationsWhere
   orderBy: ExplorePublicationsOrderByType!
@@ -2147,7 +1870,7 @@ type PaginatedForYouResult {
 union PublicationForYou = Post | Quote
 
 input PublicationForYouRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   for: ProfileId!
 }
@@ -2167,7 +1890,7 @@ type RevenueAggregate {
 }
 
 input RevenueFromPublicationsRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   where: RevenueFromPublicationsWhere!
   for: ProfileId!
@@ -2191,7 +1914,7 @@ type PaginatedPublicationPrimaryResult {
 }
 
 input PublicationSearchRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   where: PublicationSearchWhere!
   query: String!
@@ -2201,6 +1924,130 @@ input PublicationSearchWhere {
   publishedOn: [AppId!]
   customFilters: [CustomFiltersType!]
   publicationTypes: [PublicationType!]
+}
+
+type MomokaSubmittersResult {
+  items: [MomokaSubmitterResult!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type MomokaSubmitterResult {
+  address: EvmAddress!
+  name: String!
+  totalTransactions: Int!
+}
+
+type MomokaSummaryResult {
+  totalTransactions: Int!
+}
+
+type MomokaTransactionsResult {
+  items: [MomokaTransaction!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+union MomokaTransaction =
+    MomokaPostTransaction
+  | MomokaCommentTransaction
+  | MomokaMirrorTransaction
+  | MomokaQuoteTransaction
+
+type MomokaPostTransaction {
+  transactionId: String!
+  submitter: EvmAddress!
+  createdAt: DateTime!
+  app: App!
+  verificationStatus: MomokaVerificationStatus!
+  profile: Profile!
+  publicationId: PublicationId!
+}
+
+union MomokaVerificationStatus = MomokaVerificationStatusSuccess | MomokaVerificationStatusFailure
+
+type MomokaVerificationStatusSuccess {
+  verified: Boolean!
+}
+
+type MomokaVerificationStatusFailure {
+  status: MomokaValidatorErrorType!
+}
+
+enum MomokaValidatorErrorType {
+  NO_SIGNATURE_SUBMITTER
+  INVALID_SIGNATURE_SUBMITTER
+  TIMESTAMP_PROOF_INVALID_SIGNATURE
+  TIMESTAMP_PROOF_INVALID_TYPE
+  TIMESTAMP_PROOF_INVALID_DA_ID
+  TIMESTAMP_PROOF_NOT_SUBMITTER
+  CAN_NOT_CONNECT_TO_BUNDLR
+  INVALID_TX_ID
+  INVALID_FORMATTED_TYPED_DATA
+  BLOCK_CANT_BE_READ_FROM_NODE
+  DATA_CANT_BE_READ_FROM_NODE
+  SIMULATION_NODE_COULD_NOT_RUN
+  SIMULATION_FAILED
+  EVENT_MISMATCH
+  INVALID_EVENT_TIMESTAMP
+  INVALID_TYPED_DATA_DEADLINE_TIMESTAMP
+  GENERATED_PUBLICATION_ID_MISMATCH
+  INVALID_POINTER_SET_NOT_NEEDED
+  POINTER_FAILED_VERIFICATION
+  NOT_CLOSEST_BLOCK
+  BLOCK_TOO_FAR
+  PUBLICATION_NO_POINTER
+  PUBLICATION_NONE_DA
+  PUBLICATION_NONCE_INVALID
+  PUBLICATION_SIGNER_NOT_ALLOWED
+  CHAIN_SIGNATURE_ALREADY_USED
+  POTENTIAL_REORG
+  UNKNOWN
+}
+
+type MomokaCommentTransaction {
+  transactionId: String!
+  submitter: EvmAddress!
+  createdAt: DateTime!
+  app: App!
+  verificationStatus: MomokaVerificationStatus!
+  profile: Profile!
+  publicationId: PublicationId!
+  commentedOnProfile: Profile!
+  commentedOnPublicationId: PublicationId!
+}
+
+type MomokaMirrorTransaction {
+  transactionId: String!
+  submitter: EvmAddress!
+  createdAt: DateTime!
+  app: App!
+  verificationStatus: MomokaVerificationStatus!
+  profile: Profile!
+  publicationId: PublicationId!
+  mirrorOfProfile: Profile!
+  mirrorOfPublicationId: PublicationId!
+}
+
+type MomokaQuoteTransaction {
+  transactionId: String!
+  submitter: EvmAddress!
+  createdAt: DateTime!
+  app: App!
+  verificationStatus: MomokaVerificationStatus!
+  profile: Profile!
+  publicationId: PublicationId!
+  quotedOnProfile: Profile!
+  quotedOnPublicationId: PublicationId!
+}
+
+input MomokaTransactionsRequest {
+  limit: Limit
+  cursor: Cursor
+  for: ProfileId!
+}
+
+input MomokaTransactionRequest {
+  # The momoka transaction id or internal publiation id
+  id: String!
 }
 
 type ApprovedAllowanceAmountResult {
@@ -2270,8 +2117,14 @@ type ModuleInfo {
   type: String!
 }
 
+# The paginated profile result
+type PaginatedProfileResult {
+  items: [Profile!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 input ProfilesRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
 
   # The where clause to use to filter on what you are looking for
@@ -2307,7 +2160,7 @@ input ProfileRequest {
 }
 
 input WhoActedOnPublicationRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   on: PublicationId!
   where: WhoActedOnPublicationWhere
@@ -2336,7 +2189,7 @@ enum ClaimProfileStatusType {
 }
 
 input ExploreProfilesRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
 
   # Filtering criteria for exploring profiles
@@ -2416,7 +2269,7 @@ input FollowRevenueRequest {
 }
 
 input ProfileSearchRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
 
   # Query for the profile search
@@ -2496,7 +2349,7 @@ type ReactionEvent {
 }
 
 input FeedRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   where: FeedWhere
 }
@@ -2527,7 +2380,7 @@ type PaginatedFeedHighlightsResult {
 union FeedHighlight = Post | Quote
 
 input FeedHighlightsRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   where: FeedHighlightWhere
 }
@@ -2608,7 +2461,7 @@ type FutureProofNotification {
 }
 
 input NotificationRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   where: NotificationWhere
 }
@@ -2631,93 +2484,14 @@ enum NotificationType {
   REACTED
 }
 
-# The paginated User POAP result
-type PaginatedPoapResult {
-  items: [PoapTokenEvent!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-# The Poap Token Event
-type PoapTokenEvent {
-  tokenId: String!
-
-  # Poap Event Details
-  event: PoapEvent!
-
-  # Total following count (remember the wallet follows not profile so will be same for every profile they own)
-  owner: NetworkAddress!
-
-  # Which network the token is: L1 (eth) or L2 (Gnosis)
-  layer: PoapTokenLayerType!
-
-  # Total minted tokens for the event
-  supply: PoapTokenSupply!
-  created: DateTime!
-
-  # migrated to L1 at
-  migrated: DateTime
-}
-
-# The POAP Event result
-type PoapEvent {
-  id: Int!
-  fancy_id: String!
-  name: String!
-  event_url: URL!
-  image_url: URL
-  country: String
-  city: String
-  description: String
-  year: Int
-  start_date: DateTime
-  end_date: DateTime
-  virtual_event: Boolean
-  animation_url: URL
-  event_template_id: Int
-  private_event: Boolean
-}
-
-enum PoapTokenLayerType {
-  Layer1
-  Layer2
-}
-
-# The Poap Token Supply
-type PoapTokenSupply {
-  # Total minted tokens for the event
-  total: Int!
-
-  # Order of the token
-  order: Int!
-}
-
-input UserPoapsQueryRequest {
-  limit: LimitScalar
-  cursor: Cursor
-  for: ProfileId!
-}
-
-input MutualPoapsQueryRequest {
-  limit: LimitScalar
-  cursor: Cursor
-  observer: ProfileId!
-  viewing: ProfileId!
-}
-
-input PoapHoldersQueryRequest {
-  limit: LimitScalar
-  cursor: Cursor
-  eventId: Float!
-}
-
 input FollowingRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   for: ProfileId!
 }
 
 input MutualFollowersRequest {
-  limit: LimitScalar
+  limit: Limit
   cursor: Cursor
   viewing: ProfileId!
   observer: ProfileId!
@@ -2770,18 +2544,6 @@ type Mutation {
   updateNftGalleryItems(request: NftGalleryUpdateItemsRequest!): Void
   deleteNftGallery(request: NftGalleryDeleteRequest!): Void
   nftOwnershipChallenge(request: NftOwnershipChallengeRequest!): NftOwnershipChallengeResult!
-  quoteOnMomoka(request: MomokaQuoteRequest!): RelayMomokaResult!
-  postOnMomoka(request: MomokaPostRequest!): RelayMomokaResult!
-  commentOnMomoka(request: MomokaCommentRequest!): RelayMomokaResult!
-  mirrorOnMomoka(request: MomokaMirrorRequest!): RelayMomokaResult!
-  broadcastOnMomoka(request: BroadcastRequest!): BroadcastMomokaResult!
-  broadcastOnChain(request: BroadcastRequest!): RelayResult!
-  createMomokaQuoteTypedData(request: MomokaQuoteRequest!): CreateMomokaQuoteBroadcastItemResult!
-  createMomokaPostTypedData(request: MomokaPostRequest!): CreateMomokaPostBroadcastItemResult!
-  createMomokaCommentTypedData(
-    request: MomokaCommentRequest!
-  ): CreateMomokaCommentBroadcastItemResult!
-  createMomokaMirrorTypedData(request: MomokaMirrorRequest!): CreateMomokaMirrorBroadcastItemResult!
   hidePublication(request: HidePublicationRequest!): Void!
   addPublicationNotInterested(request: PublicationNotInterestedRequest!): Void!
   undoPublicationNotInterested(request: PublicationNotInterestedRequest!): Void!
@@ -2790,6 +2552,8 @@ type Mutation {
   addReaction(request: ReactionRequest!): Void!
   removeReaction(request: ReactionRequest!): Void!
   reportPublication(request: ReportPublicationRequest!): Void!
+  addProfileInterests(request: ProfileInterestsRequest!): Void!
+  removeProfileInterests(request: ProfileInterestsRequest!): Void!
   dismissRecommendedProfiles(request: DismissRecommendedProfilesRequest!): Void!
   quoteOnChain(request: CreateOnChainQuoteRequest!): LensProfileManagerRelayResult!
   postOnChain(request: CreateOnChainPostRequest!): LensProfileManagerRelayResult!
@@ -2811,6 +2575,19 @@ type Mutation {
     options: TypedDataOptions
     request: CreateOnChainMirrorRequest!
   ): CreateOnChainMirrorBroadcastItemResult!
+
+  quoteOnMomoka(request: MomokaQuoteRequest!): RelayMomokaResult!
+  postOnMomoka(request: MomokaPostRequest!): RelayMomokaResult!
+  commentOnMomoka(request: MomokaCommentRequest!): RelayMomokaResult!
+  mirrorOnMomoka(request: MomokaMirrorRequest!): RelayMomokaResult!
+  broadcastOnMomoka(request: BroadcastRequest!): BroadcastMomokaResult!
+  broadcastOnChain(request: BroadcastRequest!): RelayResult!
+  createMomokaQuoteTypedData(request: MomokaQuoteRequest!): CreateMomokaQuoteBroadcastItemResult!
+  createMomokaPostTypedData(request: MomokaPostRequest!): CreateMomokaPostBroadcastItemResult!
+  createMomokaCommentTypedData(
+    request: MomokaCommentRequest!
+  ): CreateMomokaCommentBroadcastItemResult!
+  createMomokaMirrorTypedData(request: MomokaMirrorRequest!): CreateMomokaMirrorBroadcastItemResult!
   setFollowModule(request: SetFollowModuleRequest!): LensProfileManagerRelayResult!
   actOnOpenAction(request: ActOnOpenActionRequest!): LensProfileManagerRelayResult!
   legacyCollectPublication(
@@ -2828,8 +2605,6 @@ type Mutation {
     options: TypedDataOptions
     request: LegacyCollectPublicationRequest!
   ): CreateLegacyCollectPublicationEIP712TypedData!
-  addProfileInterests(request: ProfileInterestsRequest!): Void!
-  removeProfileInterests(request: ProfileInterestsRequest!): Void!
   claimProfile(request: ClaimProfileRequest!): CreateProfileResult!
   createProfile(request: CreateProfileRequest!): CreateProfileResult!
   inviteProfile(request: InviteRequest!): Void
@@ -2897,12 +2672,12 @@ input NftInput {
 
 input NftGalleryUpdateInfoRequest {
   galleryId: NftGalleryId!
-  name: NftGalleryName!
+  name: String!
 }
 
 input NftGalleryUpdateItemOrderRequest {
   galleryId: NftGalleryId!
-  updates: [NftUpdateItemOrder!] = []
+  updates: [NftUpdateItemOrder!]!
 }
 
 input NftUpdateItemOrder {
@@ -2934,6 +2709,362 @@ input NftOwnershipChallengeRequest {
 input NftOwnershipChallenge {
   contract: NetworkAddressInput!
   tokenId: TokenId!
+}
+
+input HidePublicationRequest {
+  publicationId: PublicationId!
+}
+
+input PublicationNotInterestedRequest {
+  on: PublicationId!
+}
+
+input PublicationBookmarkRequest {
+  on: PublicationId!
+}
+
+input ReactionRequest {
+  reaction: PublicationReactionType!
+  for: PublicationId!
+}
+
+input ReportPublicationRequest {
+  for: PublicationId!
+  reason: ReportingReasonInput!
+  additionalComments: String
+}
+
+input ReportingReasonInput {
+  sensitiveReason: SensitiveReasonInput
+  illegalReason: IllegalReasonInput
+  fraudReason: FraudReasonInput
+  spamReason: SpamReasonInput
+}
+
+input SensitiveReasonInput {
+  reason: PublicationReportingReason!
+  subreason: PublicationReportingSensitiveSubreason!
+}
+
+enum PublicationReportingReason {
+  SENSITIVE
+  ILLEGAL
+  FRAUD
+  SPAM
+}
+
+enum PublicationReportingSensitiveSubreason {
+  NSFW
+  OFFENSIVE
+}
+
+input IllegalReasonInput {
+  reason: PublicationReportingReason!
+  subreason: PublicationReportingIllegalSubreason!
+}
+
+enum PublicationReportingIllegalSubreason {
+  ANIMAL_ABUSE
+  HUMAN_ABUSE
+  VIOLENCE
+  THREAT_INDIVIDUAL
+  DIRECT_THREAT
+}
+
+input FraudReasonInput {
+  reason: PublicationReportingReason!
+  subreason: PublicationReportingFraudSubreason!
+}
+
+enum PublicationReportingFraudSubreason {
+  SCAM
+  IMPERSONATION
+}
+
+input SpamReasonInput {
+  reason: PublicationReportingReason!
+  subreason: PublicationReportingSpamSubreason!
+}
+
+enum PublicationReportingSpamSubreason {
+  MISLEADING
+  MISUSE_HASHTAGS
+  UNRELATED
+  REPETITIVE
+  FAKE_ENGAGEMENT
+  MANIPULATION_ALGO
+  LOW_SIGNAL
+  SOMETHING_ELSE
+}
+
+input ProfileInterestsRequest {
+  interests: String!
+}
+
+input DismissRecommendedProfilesRequest {
+  for: ProfileId!
+}
+
+union LensProfileManagerRelayResult = RelaySuccess | LensProfileManagerRelayError
+
+type RelaySuccess {
+  txHash: TxHash
+  txId: TxId
+}
+
+type LensProfileManagerRelayError {
+  reason: LensProfileManagerRelayErrorReasonType!
+}
+
+enum LensProfileManagerRelayErrorReasonType {
+  RATE_LIMITED
+  FAILED
+  EXPIRED
+  WRONG_WALLET_SIGNED
+  APP_GASLESS_NOT_ALLOWED
+  REQUIRES_SIGNATURE
+}
+
+input CreateOnChainQuoteRequest {
+  on: PublicationId!
+  contentURI: URI!
+  openActionModule: [OpenActionModuleInput!]!
+  referenceModule: ReferenceModuleInput
+}
+
+input OpenActionModuleInput {
+  multirecipientCollectOpenAction: MultirecipientFeeCollectModuleInput
+  simpleCollectOpenAction: SimpleCollectOpenActionModuleInput
+  unknownOpenAction: UnknownCollectOpenActionModuleInput
+}
+
+input MultirecipientFeeCollectModuleInput {
+  amount: AmountInput!
+  collectLimit: String!
+  referralFee: Float = 0
+  followerOnly: Boolean!
+  endsAt: DateTime
+  recipients: [RecipientDataInput!]!
+}
+
+input AmountInput {
+  # The currency
+  currency: NetworkAddressInput!
+
+  # Floating point number as string (e.g. 42.009837). It could have the entire precision of the Asset or be truncated to the last significant decimal.
+  value: String!
+}
+
+input RecipientDataInput {
+  # Recipient of collect fees.
+  recipient: EvmAddress!
+
+  # Split %, should be between 0.01 and 100. Up to 2 decimal points supported. All % should add up to 100
+  split: Float!
+}
+
+input SimpleCollectOpenActionModuleInput {
+  amount: AmountInput!
+  referralFee: Float = 0
+  recipient: EvmAddress!
+  collectLimit: String!
+  followerOnly: Boolean!
+  endsAt: DateTime
+}
+
+input UnknownCollectOpenActionModuleInput {
+  address: EvmAddress!
+  data: BlockchainData!
+}
+
+input ReferenceModuleInput {
+  followerOnlyReferenceModule: Boolean
+  unknownReferenceModule: UnknownReferenceModuleInput
+  degreesOfSeparationReferenceModule: DegreesOfSeparationReferenceModuleInput
+}
+
+input UnknownReferenceModuleInput {
+  address: EvmAddress!
+  data: BlockchainData!
+}
+
+input DegreesOfSeparationReferenceModuleInput {
+  commentsRestricted: Boolean!
+  mirrorsRestricted: Boolean!
+  quotesRestricted: Boolean!
+  degreesOfSeparation: Int!
+}
+
+input CreateOnChainPostRequest {
+  contentURI: URI!
+  openActionModule: [OpenActionModuleInput!]!
+  referenceModule: ReferenceModuleInput
+}
+
+input CreateOnChainCommentRequest {
+  contentURI: URI!
+  commentOn: PublicationId!
+  openActionModule: [OpenActionModuleInput!]!
+  referenceModule: ReferenceModuleInput
+}
+
+input CreateOnChainMirrorRequest {
+  on: PublicationId!
+}
+
+type CreateOnChainQuoteBroadcastItemResult {
+  # This broadcast item ID
+  id: BroadcastId!
+
+  # The date the broadcast item expiries
+  expiresAt: DateTime!
+
+  # The typed data
+  typedData: CreateOnChainQuoteEIP712TypedData!
+}
+
+# The broadcast id
+scalar BroadcastId
+
+type CreateOnChainQuoteEIP712TypedData {
+  # The types
+  types: CreateOnChainQuoteEIP712TypedDataTypes!
+
+  # The typed data domain
+  domain: EIP712TypedDataDomain!
+
+  # The values
+  value: CreateOnChainQuoteEIP712TypedDataValue!
+}
+
+type CreateOnChainMirrorEIP712TypedDataTypes {
+  MirrorWithSig: [EIP712TypedDataField!]!
+}
+
+type CreateOnChainQuoteEIP712TypedDataTypes {
+  QuoteWithSig: [EIP712TypedDataField!]!
+}
+
+# The eip 712 typed data field
+type EIP712TypedDataField {
+  # The name of the typed data field
+  name: String!
+
+  # The type of the typed data field
+  type: String!
+}
+
+# The eip 712 typed data domain
+type EIP712TypedDataDomain {
+  # The name of the typed data domain
+  name: String!
+
+  # The chainId
+  chainId: ChainId!
+
+  # The version
+  version: String!
+
+  # The verifying contract
+  verifyingContract: EvmAddress!
+}
+
+type CreateOnChainQuoteEIP712TypedDataValue {
+  nonce: Nonce!
+  deadline: UnixTimestamp!
+  fillIn: String!
+}
+
+type CreateOnChainPostBroadcastItemResult {
+  # This broadcast item ID
+  id: BroadcastId!
+
+  # The date the broadcast item expiries
+  expiresAt: DateTime!
+
+  # The typed data
+  typedData: CreateOnChainPostEIP712TypedData!
+}
+
+type CreateOnChainPostEIP712TypedData {
+  # The types
+  types: CreateOnChainPostEIP712TypedDataTypes!
+
+  # The typed data domain
+  domain: EIP712TypedDataDomain!
+
+  # The values
+  value: CreateOnChainPostEIP712TypedDataValue!
+}
+
+type CreateOnChainPostEIP712TypedDataTypes {
+  PostWithSig: [EIP712TypedDataField!]!
+}
+
+type CreateOnChainPostEIP712TypedDataValue {
+  nonce: Nonce!
+  deadline: UnixTimestamp!
+  fillIn: String!
+}
+
+type CreateOnChainCommentBroadcastItemResult {
+  # This broadcast item ID
+  id: BroadcastId!
+
+  # The date the broadcast item expiries
+  expiresAt: DateTime!
+
+  # The typed data
+  typedData: CreateOnChainCommentEIP712TypedData!
+}
+
+type CreateOnChainCommentEIP712TypedData {
+  # The types
+  types: CreateOnChainCommentEIP712TypedDataTypes!
+
+  # The typed data domain
+  domain: EIP712TypedDataDomain!
+
+  # The values
+  value: CreateOnChainCommentEIP712TypedDataValue!
+}
+
+type CreateOnChainCommentEIP712TypedDataTypes {
+  CommentWithSig: [EIP712TypedDataField!]!
+}
+
+type CreateOnChainCommentEIP712TypedDataValue {
+  nonce: Nonce!
+  deadline: UnixTimestamp!
+  fillIn: String!
+}
+
+type CreateOnChainMirrorBroadcastItemResult {
+  # This broadcast item ID
+  id: BroadcastId!
+
+  # The date the broadcast item expiries
+  expiresAt: DateTime!
+
+  # The typed data
+  typedData: CreateOnChainMirrorEIP712TypedData!
+}
+
+type CreateOnChainMirrorEIP712TypedData {
+  # The types
+  types: CreateOnChainMirrorEIP712TypedDataTypes!
+
+  # The typed data domain
+  domain: EIP712TypedDataDomain!
+
+  # The values
+  value: CreateOnChainMirrorEIP712TypedDataValue!
+}
+
+type CreateOnChainMirrorEIP712TypedDataValue {
+  nonce: Nonce!
+  deadline: UnixTimestamp!
+  fillIn: String!
 }
 
 union RelayMomokaResult = CreateMomokaPublicationResult | RelayError
@@ -2984,18 +3115,10 @@ input BroadcastRequest {
   signature: Signature!
 }
 
-# The broadcast id
-scalar BroadcastId
-
 # The signature value
 scalar Signature
 
 union RelayResult = RelaySuccess | RelayError
-
-type RelaySuccess {
-  txHash: TxHash
-  txId: TxId
-}
 
 type CreateMomokaQuoteBroadcastItemResult {
   # This broadcast item ID
@@ -3021,30 +3144,6 @@ type CreateMomokaQuoteEIP712TypedData {
 
 type CreateMomokaQuoteEIP712TypedDataTypes {
   QuoteWithSig: [EIP712TypedDataField!]!
-}
-
-# The eip 712 typed data field
-type EIP712TypedDataField {
-  # The name of the typed data field
-  name: String!
-
-  # The type of the typed data field
-  type: String!
-}
-
-# The eip 712 typed data domain
-type EIP712TypedDataDomain {
-  # The name of the typed data domain
-  name: String!
-
-  # The chainId
-  chainId: ChainId!
-
-  # The version
-  version: String!
-
-  # The verifying contract
-  verifyingContract: EvmAddress!
 }
 
 type CreateMomokaQuoteEIP712TypedDataValue {
@@ -3149,327 +3248,6 @@ type CreateMomokaMirrorEIP712TypedDataValue {
   fillIn: String!
 }
 
-input HidePublicationRequest {
-  publicationId: PublicationId!
-}
-
-input PublicationNotInterestedRequest {
-  on: PublicationId!
-}
-
-input PublicationBookmarkRequest {
-  on: PublicationId!
-}
-
-input ReactionRequest {
-  reaction: PublicationReactionType!
-  for: PublicationId!
-}
-
-input ReportPublicationRequest {
-  for: PublicationId!
-  reason: ReportingReasonInput!
-  additionalComments: String
-}
-
-input ReportingReasonInput {
-  sensitiveReason: SensitiveReasonInput
-  illegalReason: IllegalReasonInput
-  fraudReason: FraudReasonInput
-  spamReason: SpamReasonInput
-}
-
-input SensitiveReasonInput {
-  reason: PublicationReportingReason!
-  subreason: PublicationReportingSensitiveSubreason!
-}
-
-enum PublicationReportingReason {
-  SENSITIVE
-  ILLEGAL
-  FRAUD
-  SPAM
-}
-
-enum PublicationReportingSensitiveSubreason {
-  NSFW
-  OFFENSIVE
-}
-
-input IllegalReasonInput {
-  reason: PublicationReportingReason!
-  subreason: PublicationReportingIllegalSubreason!
-}
-
-enum PublicationReportingIllegalSubreason {
-  ANIMAL_ABUSE
-  HUMAN_ABUSE
-  VIOLENCE
-  THREAT_INDIVIDUAL
-  DIRECT_THREAT
-}
-
-input FraudReasonInput {
-  reason: PublicationReportingReason!
-  subreason: PublicationReportingFraudSubreason!
-}
-
-enum PublicationReportingFraudSubreason {
-  SCAM
-  IMPERSONATION
-}
-
-input SpamReasonInput {
-  reason: PublicationReportingReason!
-  subreason: PublicationReportingSpamSubreason!
-}
-
-enum PublicationReportingSpamSubreason {
-  MISLEADING
-  MISUSE_HASHTAGS
-  UNRELATED
-  REPETITIVE
-  FAKE_ENGAGEMENT
-  MANIPULATION_ALGO
-  LOW_SIGNAL
-  SOMETHING_ELSE
-}
-
-input DismissRecommendedProfilesRequest {
-  for: ProfileId!
-}
-
-union LensProfileManagerRelayResult = RelaySuccess | LensProfileManagerRelayError
-
-type LensProfileManagerRelayError {
-  reason: LensProfileManagerRelayErrorReasonType!
-}
-
-enum LensProfileManagerRelayErrorReasonType {
-  RATE_LIMITED
-  FAILED
-  EXPIRED
-  WRONG_WALLET_SIGNED
-  APP_GASLESS_NOT_ALLOWED
-  REQUIRES_SIGNATURE
-}
-
-input CreateOnChainQuoteRequest {
-  on: PublicationId!
-  contentURI: URI!
-  openActionModule: [OpenActionModuleInput!]!
-  referenceModule: ReferenceModuleInput
-}
-
-input OpenActionModuleInput {
-  multirecipientCollectOpenAction: MultirecipientFeeCollectModuleInput
-  simpleCollectOpenAction: SimpleCollectOpenActionModuleInput
-  unknownOpenAction: UnknownOpenActionModuleInput
-}
-
-input MultirecipientFeeCollectModuleInput {
-  amount: AmountInput!
-  collectLimit: String!
-  referralFee: Float = 0
-  followerOnly: Boolean!
-  endsAt: DateTime
-  recipients: [RecipientDataInput!]!
-}
-
-input AmountInput {
-  # The currency
-  currency: NetworkAddressInput!
-
-  # Floating point number as string (e.g. 42.009837). It could have the entire precision of the Asset or be truncated to the last significant decimal.
-  value: String!
-}
-
-input RecipientDataInput {
-  # Recipient of collect fees.
-  recipient: EvmAddress!
-
-  # Split %, should be between 0.01 and 100. Up to 2 decimal points supported. All % should add up to 100
-  split: Float!
-}
-
-input SimpleCollectOpenActionModuleInput {
-  amount: AmountInput!
-  referralFee: Float = 0
-  recipient: EvmAddress!
-  collectLimit: String!
-  followerOnly: Boolean!
-  endsAt: DateTime
-}
-
-input UnknownOpenActionModuleInput {
-  address: EvmAddress!
-  data: BlockchainData!
-}
-
-input ReferenceModuleInput {
-  followerOnlyReferenceModule: Boolean
-  unknownReferenceModule: UnknownReferenceModuleInput
-  degreesOfSeparationReferenceModule: DegreesOfSeparationReferenceModuleInput
-}
-
-input UnknownReferenceModuleInput {
-  address: EvmAddress!
-  data: BlockchainData!
-}
-
-input DegreesOfSeparationReferenceModuleInput {
-  commentsRestricted: Boolean!
-  mirrorsRestricted: Boolean!
-  quotesRestricted: Boolean!
-  degreesOfSeparation: Int!
-}
-
-input CreateOnChainPostRequest {
-  contentURI: URI!
-  openActionModule: [OpenActionModuleInput!]!
-  referenceModule: ReferenceModuleInput
-}
-
-input CreateOnChainCommentRequest {
-  contentURI: URI!
-  commentOn: PublicationId!
-  openActionModule: [OpenActionModuleInput!]!
-  referenceModule: ReferenceModuleInput
-}
-
-input CreateOnChainMirrorRequest {
-  on: PublicationId!
-}
-
-type CreateOnChainQuoteBroadcastItemResult {
-  # This broadcast item ID
-  id: BroadcastId!
-
-  # The date the broadcast item expiries
-  expiresAt: DateTime!
-
-  # The typed data
-  typedData: CreateOnChainQuoteEIP712TypedData!
-}
-
-type CreateOnChainQuoteEIP712TypedData {
-  # The types
-  types: CreateOnChainMirrorEIP712TypedDataTypes!
-
-  # The typed data domain
-  domain: EIP712TypedDataDomain!
-
-  # The values
-  value: CreateOnChainQuoteEIP712TypedDataValue!
-}
-
-type CreateOnChainMirrorEIP712TypedDataTypes {
-  MirrorWithSig: [EIP712TypedDataField!]!
-}
-
-type CreateOnChainQuoteEIP712TypedDataValue {
-  nonce: Nonce!
-  deadline: UnixTimestamp!
-  fillIn: String!
-}
-
-input TypedDataOptions {
-  # If you wish to override the nonce for the sig if you want to do some clever stuff in the client
-  overrideSigNonce: Nonce!
-}
-
-type CreateOnChainPostBroadcastItemResult {
-  # This broadcast item ID
-  id: BroadcastId!
-
-  # The date the broadcast item expiries
-  expiresAt: DateTime!
-
-  # The typed data
-  typedData: CreateOnChainPostEIP712TypedData!
-}
-
-type CreateOnChainPostEIP712TypedData {
-  # The types
-  types: CreateOnChainPostEIP712TypedDataTypes!
-
-  # The typed data domain
-  domain: EIP712TypedDataDomain!
-
-  # The values
-  value: CreateOnChainPostEIP712TypedDataValue!
-}
-
-type CreateOnChainPostEIP712TypedDataTypes {
-  PostWithSig: [EIP712TypedDataField!]!
-}
-
-type CreateOnChainPostEIP712TypedDataValue {
-  nonce: Nonce!
-  deadline: UnixTimestamp!
-  fillIn: String!
-}
-
-type CreateOnChainCommentBroadcastItemResult {
-  # This broadcast item ID
-  id: BroadcastId!
-
-  # The date the broadcast item expiries
-  expiresAt: DateTime!
-
-  # The typed data
-  typedData: CreateOnChainCommentEIP712TypedData!
-}
-
-type CreateOnChainCommentEIP712TypedData {
-  # The types
-  types: CreateOnChainCommentEIP712TypedDataTypes!
-
-  # The typed data domain
-  domain: EIP712TypedDataDomain!
-
-  # The values
-  value: CreateOnChainCommentEIP712TypedDataValue!
-}
-
-type CreateOnChainCommentEIP712TypedDataTypes {
-  CommentWithSig: [EIP712TypedDataField!]!
-}
-
-type CreateOnChainCommentEIP712TypedDataValue {
-  nonce: Nonce!
-  deadline: UnixTimestamp!
-  fillIn: String!
-}
-
-type CreateOnChainMirrorBroadcastItemResult {
-  # This broadcast item ID
-  id: BroadcastId!
-
-  # The date the broadcast item expiries
-  expiresAt: DateTime!
-
-  # The typed data
-  typedData: CreateOnChainMirrorEIP712TypedData!
-}
-
-type CreateOnChainMirrorEIP712TypedData {
-  # The types
-  types: CreateOnChainMirrorEIP712TypedDataTypes!
-
-  # The typed data domain
-  domain: EIP712TypedDataDomain!
-
-  # The values
-  value: CreateOnChainMirrorEIP712TypedDataValue!
-}
-
-type CreateOnChainMirrorEIP712TypedDataValue {
-  nonce: Nonce!
-  deadline: UnixTimestamp!
-  fillIn: String!
-}
-
 input SetFollowModuleRequest {
   followModule: FollowModuleInput!
 }
@@ -3495,10 +3273,10 @@ input ActOnOpenActionRequest {
   for: PublicationId
   multirecipientCollectOpenAction: Boolean
   simpleCollectOpenAction: Boolean
-  unknownOpenAction: UnknownOpenActionActRedeemInput
+  unknownOpenAction: UnknownOpenActionActRequest
 }
 
-input UnknownOpenActionActRedeemInput {
+input UnknownOpenActionActRequest {
   address: EvmAddress!
   data: BlockchainData!
 }
@@ -3537,6 +3315,11 @@ type CreateSetFollowModuleEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
   fillIn: String!
+}
+
+input TypedDataOptions {
+  # If you wish to override the nonce for the sig if you want to do some clever stuff in the client
+  overrideSigNonce: Nonce!
 }
 
 type CreateActOnOpenActionBroadcastItemResult {
@@ -3592,17 +3375,13 @@ type CreateLegacyCollectPublicationEIP712TypedDataValue {
   fillIn: String!
 }
 
-input ProfileInterestsRequest {
-  interests: String!
-}
-
 union CreateProfileResult = RelaySuccess | CreateProfileErrorResult
 
 type CreateProfileErrorResult {
-  reason: CreateProfileErrorReasonType!
+  reason: CreateProfilErrorReasonType!
 }
 
-enum CreateProfileErrorReasonType {
+enum CreateProfilErrorReasonType {
   FAILED
   HANDLE_TAKEN
 }
@@ -4026,8 +3805,8 @@ input InternalPinRequest {
 }
 
 type Subscription {
-  newMomokaTransaction: MomokaTransaction!
   newPublicationStats(request: PublicationStatsSubscriptionRequest!): PublicationStats!
+  newMomokaTransaction: MomokaTransaction!
   newNotification(request: NotificationSubscriptionRequest!): Notification!
 }
 

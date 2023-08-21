@@ -5,7 +5,7 @@ import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-export type OptimisticStatusResultFragment = { value: boolean; isFinalisedOnChain: boolean | null };
+export type OptimisticStatusResultFragment = { value: boolean; isFinalisedOnChain: boolean };
 
 export type Erc20Fragment = {
   name: string;
@@ -44,7 +44,7 @@ export type ImageFragment = {
 
 export type VideoFragment = { url: string; videoMimeType: Types.VideoMimeType | null };
 
-export type VideoSetFragment = { rawURL: string; altTag: string | null; video: VideoFragment };
+export type VideoSetFragment = { rawURI: string; altTag: string | null; video: VideoFragment };
 
 export type AudioFragment = { url: string; audioMimeType: Types.AudioMimeType | null };
 
@@ -54,21 +54,19 @@ export type ProfileCoverSetFragment = {
   rawURI: string;
   altTag: string | null;
   image: ImageFragment;
-  transformed: ImageFragment | null;
 };
 
 export type ProfilePictureSetFragment = {
   rawURI: string;
   altTag: string | null;
   image: ImageFragment;
-  transformed: ImageFragment | null;
 };
 
 export type ProfileFieldsFragment = {
   __typename: 'Profile';
   id: string;
   handle: string | null;
-  interests: Array<string> | null;
+  interests: Array<string>;
   invitesLeft: number;
   createdAt: string;
   metadata: {
@@ -76,17 +74,18 @@ export type ProfileFieldsFragment = {
     displayName: string | null;
     bio: string | null;
     coverPicture: ProfileCoverSetFragment | null;
+    picture:
+      | ProfilePictureSetFragment
+      | {
+          tokenId: string;
+          verified: boolean;
+          collection: NetworkAddressFragment;
+          image: ProfilePictureSetFragment;
+        }
+      | null;
+    attributes: Array<{ type: Types.AttributeType; key: string; value: string }> | null;
   } | null;
   ownedBy: NetworkAddressFragment;
-  picture:
-    | ProfilePictureSetFragment
-    | {
-        tokenId: string;
-        verified: boolean;
-        collection: NetworkAddressFragment;
-        image: ProfilePictureSetFragment;
-      }
-    | null;
   gasless: GaslessFragment;
   followModule:
     | FeeFollowModuleSettingsFragment
@@ -95,7 +94,6 @@ export type ProfileFieldsFragment = {
     | UnknownFollowModuleSettingsFragment
     | null;
   followNftAddress: NetworkAddressFragment | null;
-  attributes: Array<{ type: Types.AttributeType; key: string; value: string }> | null;
   onChainIdentity: {
     proofOfHumanity: boolean;
     ens: { name: string | null } | null;
@@ -104,7 +102,7 @@ export type ProfileFieldsFragment = {
   };
   isFollowedByMe: OptimisticStatusResultFragment;
   isFollowingMe: OptimisticStatusResultFragment;
-  guardian: { protected: boolean; cooldownEndsOn: string | null };
+  guardian: { protected: boolean; cooldownEndsOn: string | null } | null;
 };
 
 export type ProfileFragment = { invitedBy: ProfileFieldsFragment | null } & ProfileFieldsFragment;
@@ -324,7 +322,6 @@ export type PublicationImageSetFragment = {
   rawURI: string;
   altTag: string | null;
   image: ImageFragment;
-  transformed: ImageFragment | null;
 };
 
 export type PublicationMarketplaceMetadataAttributeFragment = {
@@ -914,9 +911,6 @@ export const ProfileCoverSetFragmentDoc = gql`
       ...Image
     }
     altTag
-    transformed(input: $profileCoverTransform) {
-      ...Image
-    }
   }
   ${ImageFragmentDoc}
 `;
@@ -933,9 +927,6 @@ export const ProfilePictureSetFragmentDoc = gql`
       ...Image
     }
     altTag
-    transformed(input: $profilePictureTransform) {
-      ...Image
-    }
   }
   ${ImageFragmentDoc}
 `;
@@ -1023,25 +1014,30 @@ export const ProfileFieldsFragmentDoc = gql`
       coverPicture {
         ...ProfileCoverSet
       }
+      picture {
+        ... on NftImage {
+          collection {
+            ...NetworkAddress
+          }
+          tokenId
+          image {
+            ...ProfilePictureSet
+          }
+          verified
+        }
+        ... on ImageSet {
+          ...ProfilePictureSet
+        }
+      }
+      attributes {
+        type
+        key
+        value
+      }
     }
     handle
     ownedBy {
       ...NetworkAddress
-    }
-    picture {
-      ... on NftImage {
-        collection {
-          ...NetworkAddress
-        }
-        tokenId
-        image {
-          ...ProfilePictureSet
-        }
-        verified
-      }
-      ... on ImageSet {
-        ...ProfilePictureSet
-      }
     }
     gasless {
       ...Gasless
@@ -1062,11 +1058,6 @@ export const ProfileFieldsFragmentDoc = gql`
     }
     followNftAddress {
       ...NetworkAddress
-    }
-    attributes {
-      type
-      key
-      value
     }
     onChainIdentity {
       proofOfHumanity
@@ -1135,9 +1126,6 @@ export const PublicationImageSetFragmentDoc = gql`
       ...Image
     }
     altTag
-    transformed(input: $publicationImageTransform) {
-      ...Image
-    }
   }
   ${ImageFragmentDoc}
 `;
@@ -1149,7 +1137,7 @@ export const VideoFragmentDoc = gql`
 `;
 export const VideoSetFragmentDoc = gql`
   fragment VideoSet on VideoSet {
-    rawURL
+    rawURI
     video {
       ...Video
     }

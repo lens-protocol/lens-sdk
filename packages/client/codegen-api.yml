@@ -23,7 +23,8 @@ config:
     ImageSizeTransform: ImageSizeTransform
     IpfsCid: string
     Jwt: string
-    Limit: string
+    # TODO: should 'Scalar' be appended here?
+    LimitScalar: string
     Locale: string
     Markdown: string
     MimeType: string

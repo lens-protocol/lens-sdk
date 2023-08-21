@@ -13,18 +13,26 @@ import {
   NetworkAddressFragmentDoc,
   PaginatedResultInfoFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type NftFragment = {
-  contractName: string;
-  symbol: string;
-  tokenId: string;
+export type OwnerFragment = { amount: number; address: string };
+
+export type NftCollectionFragment = {
   name: string;
-  description: string;
-  contentURI: string;
-  collectionName: string;
-  ercType: string;
+  symbol: string;
+  baseUri: string | null;
+  contractType: Types.NftContractType;
   contract: NetworkAddressFragment;
-  ownerInfo: { amount: number; address: string };
-  originalContent: { url: string; animationUrl: string | null; metaType: string };
+};
+
+export type NftMetadataFragment = { name: string; description: string; image: string };
+
+export type NftFragment = {
+  tokenId: string;
+  contentUri: string;
+  contractType: Types.NftContractType;
+  ownerInfo: OwnerFragment;
+  contract: NetworkAddressFragment;
+  collection: NftCollectionFragment;
+  metadata: NftMetadataFragment;
 };
 
 export type NftGalleryFragment = {
@@ -38,7 +46,7 @@ export type NftGalleryFragment = {
 export type NftOwnershipChallengeResultFragment = { id: string; text: string };
 
 export type NftsQueryVariables = Types.Exact<{
-  request: Types.NfTsRequest;
+  request: Types.NftsRequest;
 }>;
 
 export type NftsQuery = {
@@ -87,30 +95,53 @@ export type DeleteNftGalleryMutationVariables = Types.Exact<{
 
 export type DeleteNftGalleryMutation = { deleteNftGallery: string | null };
 
-export const NftFragmentDoc = gql`
-  fragment Nft on NFT {
-    contractName
+export const OwnerFragmentDoc = gql`
+  fragment Owner on Owner {
+    amount
+    address
+  }
+`;
+export const NftCollectionFragmentDoc = gql`
+  fragment NftCollection on NftCollection {
     contract {
       ...NetworkAddress
     }
-    symbol
-    tokenId
-    ownerInfo {
-      amount
-      address
-    }
     name
-    description
-    contentURI
-    originalContent {
-      url
-      animationUrl
-      metaType
-    }
-    collectionName
-    ercType
+    symbol
+    baseUri
+    contractType
   }
   ${NetworkAddressFragmentDoc}
+`;
+export const NftMetadataFragmentDoc = gql`
+  fragment NftMetadata on NftMetadata {
+    name
+    description
+    image
+  }
+`;
+export const NftFragmentDoc = gql`
+  fragment Nft on Nft {
+    tokenId
+    ownerInfo {
+      ...Owner
+    }
+    contentUri
+    contract {
+      ...NetworkAddress
+    }
+    contractType
+    collection {
+      ...NftCollection
+    }
+    metadata {
+      ...NftMetadata
+    }
+  }
+  ${OwnerFragmentDoc}
+  ${NetworkAddressFragmentDoc}
+  ${NftCollectionFragmentDoc}
+  ${NftMetadataFragmentDoc}
 `;
 export const NftGalleryFragmentDoc = gql`
   fragment NftGallery on NftGallery {
@@ -131,7 +162,7 @@ export const NftOwnershipChallengeResultFragmentDoc = gql`
   }
 `;
 export const NftsDocument = gql`
-  query Nfts($request: NFTsRequest!) {
+  query Nfts($request: NftsRequest!) {
     result: nfts(request: $request) {
       items {
         ...Nft

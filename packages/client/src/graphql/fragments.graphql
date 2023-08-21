@@ -91,7 +91,7 @@ fragment Video on Video {
 }
 
 fragment VideoSet on VideoSet {
-  rawURL
+  rawURI
   video {
     ...Video
   }
@@ -117,9 +117,10 @@ fragment ProfileCoverSet on ImageSet {
     ...Image
   }
   altTag
-  transformed(input: $profileCoverTransform) {
-    ...Image
-  }
+  # TODO: uncomment on field resolver fix
+  # transformed(input: $profileCoverTransform) {
+  #   ...Image
+  # }
 }
 
 fragment ProfilePictureSet on ImageSet {
@@ -128,9 +129,10 @@ fragment ProfilePictureSet on ImageSet {
     ...Image
   }
   altTag
-  transformed(input: $profilePictureTransform) {
-    ...Image
-  }
+  # TODO: uncomment on field resolver fix
+  # transformed(input: $profilePictureTransform) {
+  #   ...Image
+  # }
 }
 
 fragment ProfileFields on Profile {
@@ -143,25 +145,30 @@ fragment ProfileFields on Profile {
     coverPicture {
       ...ProfileCoverSet
     }
+    picture {
+      ... on NftImage {
+        collection {
+          ...NetworkAddress
+        }
+        tokenId
+        image {
+          ...ProfilePictureSet
+        }
+        verified
+      }
+      ... on ImageSet {
+        ...ProfilePictureSet
+      }
+    }
+    attributes {
+      type
+      key
+      value
+    }
   }
   handle
   ownedBy {
     ...NetworkAddress
-  }
-  picture {
-    ... on NftImage {
-      collection {
-        ...NetworkAddress
-      }
-      tokenId
-      image {
-        ...ProfilePictureSet
-      }
-      verified
-    }
-    ... on ImageSet {
-      ...ProfilePictureSet
-    }
   }
   gasless {
     ...Gasless
@@ -182,11 +189,6 @@ fragment ProfileFields on Profile {
   }
   followNftAddress {
     ...NetworkAddress
-  }
-  attributes {
-    type
-    key
-    value
   }
   onChainIdentity {
     proofOfHumanity
@@ -586,9 +588,10 @@ fragment PublicationImageSet on ImageSet {
     ...Image
   }
   altTag
-  transformed(input: $publicationImageTransform) {
-    ...Image
-  }
+  # TODO: uncomment on field resolver fix
+  # transformed(input: $publicationImageTransform) {
+  #   ...Image
+  # }
 }
 
 fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {

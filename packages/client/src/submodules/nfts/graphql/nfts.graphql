@@ -1,24 +1,40 @@
-fragment Nft on NFT {
-  contractName
+fragment Owner on Owner {
+  amount
+  address
+}
+
+fragment NftCollection on NftCollection {
   contract {
     ...NetworkAddress
   }
+  name
   symbol
-  tokenId
-  ownerInfo {
-    amount
-    address
-  }
+  baseUri
+  contractType
+}
+
+fragment NftMetadata on NftMetadata {
   name
   description
-  contentURI
-  originalContent {
-    url
-    animationUrl
-    metaType
+  image
+}
+
+fragment Nft on Nft {
+  tokenId
+  ownerInfo {
+    ...Owner
   }
-  collectionName
-  ercType
+  contentUri
+  contract {
+    ...NetworkAddress
+  }
+  contractType
+  collection {
+    ...NftCollection
+  }
+  metadata {
+    ...NftMetadata
+  }
 }
 
 fragment NftGallery on NftGallery {
@@ -37,7 +53,7 @@ fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
 }
 
 # queries
-query Nfts($request: NFTsRequest!) {
+query Nfts($request: NftsRequest!) {
   result: nfts(request: $request) {
     items {
       ...Nft

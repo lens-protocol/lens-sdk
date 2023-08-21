@@ -167,11 +167,11 @@ client.[moduleName].[moduleMethod](args)
   - [x] broadcastOnChain
   - [x] broadcastOnMomoka
 
-- invites
+- [x] invites
 
-  - invitedProfiles
-  - profileAlreadyInvited
-  - inviteProfile
+  - [x] invitedProfiles
+  - [x] profileAlreadyInvited
+  - [x] inviteProfile
 
 - modules
   - currencies

@@ -131,10 +131,10 @@ export class Publication {
     const result = await this.sdk.PublicationStats(vars);
     const data = result.data.result;
 
-    if (isMirrorPublication(data)) {
+    if (data === null || isMirrorPublication(data)) {
       return undefined;
     }
-    return data.stats as PublicationStatsFragment;
+    return data.stats;
   }
 
   async tags(request: PublicationsTagsRequest): Promise<PaginatedResult<TagResultFragment>> {

@@ -207,7 +207,7 @@ fragment CreateOnChainQuoteBroadcastItemResult on CreateOnChainQuoteBroadcastIte
   expiresAt
   typedData {
     types {
-      QuoteWithSig {
+      MirrorWithSig {
         name
         type
       }
