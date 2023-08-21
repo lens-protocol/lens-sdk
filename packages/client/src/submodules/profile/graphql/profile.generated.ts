@@ -315,6 +315,18 @@ export type CreateSetFollowModuleTypedDataMutation = {
   result: CreateSetFollowModuleBroadcastItemResultFragment;
 };
 
+export type LinkHandleToProfileQueryVariables = Types.Exact<{
+  request: Types.LinkHandleRequest;
+}>;
+
+export type LinkHandleToProfileQuery = { linkHandleToProfile: string | null };
+
+export type UnlinkHandleToProfileQueryVariables = Types.Exact<{
+  request: Types.UnlinkHandleRequest;
+}>;
+
+export type UnlinkHandleToProfileQuery = { unlinkHandleToProfile: string | null };
+
 export const ProfileManagerFragmentDoc = gql`
   fragment ProfileManager on ProfilesManagedResult {
     address
@@ -816,6 +828,16 @@ export const CreateSetFollowModuleTypedDataDocument = gql`
   }
   ${CreateSetFollowModuleBroadcastItemResultFragmentDoc}
 `;
+export const LinkHandleToProfileDocument = gql`
+  query LinkHandleToProfile($request: LinkHandleRequest!) {
+    linkHandleToProfile(request: $request)
+  }
+`;
+export const UnlinkHandleToProfileDocument = gql`
+  query UnlinkHandleToProfile($request: UnlinkHandleRequest!) {
+    unlinkHandleToProfile(request: $request)
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -854,6 +876,8 @@ const CreateUnblockProfileTypedDataDocumentString = print(CreateUnblockProfileTy
 const CreateFollowTypedDataDocumentString = print(CreateFollowTypedDataDocument);
 const CreateUnfollowTypedDataDocumentString = print(CreateUnfollowTypedDataDocument);
 const CreateSetFollowModuleTypedDataDocumentString = print(CreateSetFollowModuleTypedDataDocument);
+const LinkHandleToProfileDocumentString = print(LinkHandleToProfileDocument);
+const UnlinkHandleToProfileDocumentString = print(UnlinkHandleToProfileDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -1327,6 +1351,46 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           ),
         'CreateSetFollowModuleTypedData',
         'mutation',
+      );
+    },
+    LinkHandleToProfile(
+      variables: LinkHandleToProfileQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: LinkHandleToProfileQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<LinkHandleToProfileQuery>(
+            LinkHandleToProfileDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'LinkHandleToProfile',
+        'query',
+      );
+    },
+    UnlinkHandleToProfile(
+      variables: UnlinkHandleToProfileQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: UnlinkHandleToProfileQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<UnlinkHandleToProfileQuery>(
+            UnlinkHandleToProfileDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'UnlinkHandleToProfile',
+        'query',
       );
     },
   };

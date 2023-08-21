@@ -419,3 +419,11 @@ mutation CreateSetFollowModuleTypedData(
     ...CreateSetFollowModuleBroadcastItemResult
   }
 }
+
+query LinkHandleToProfile($request: LinkHandleRequest!) {
+  linkHandleToProfile(request: $request)
+}
+
+query UnlinkHandleToProfile($request: UnlinkHandleRequest!) {
+  unlinkHandleToProfile(request: $request)
+}

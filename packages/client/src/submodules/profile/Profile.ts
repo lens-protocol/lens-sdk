@@ -17,6 +17,7 @@ import type {
   DismissRecommendedProfilesRequest,
   FollowRequest,
   FollowingRequest,
+  LinkHandleRequest,
   MutualFollowersRequest,
   ProfileInterestsRequest,
   ProfileManagersRequest,
@@ -427,6 +428,22 @@ export class Profile {
       );
 
       return result.data.result;
+    });
+  }
+
+  async linkHandle(
+    request: LinkHandleRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.LinkHandleToProfile({ request }, headers);
+    });
+  }
+
+  async unlinkHandle(
+    request: LinkHandleRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.UnlinkHandleToProfile({ request }, headers);
     });
   }
 }
