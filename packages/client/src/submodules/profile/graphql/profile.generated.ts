@@ -306,6 +306,14 @@ export type CreateUnfollowTypedDataMutationVariables = Types.Exact<{
 
 export type CreateUnfollowTypedDataMutation = { result: CreateUnfollowBroadcastItemResultFragment };
 
+export type SetFollowModuleMutationVariables = Types.Exact<{
+  request: Types.SetFollowModuleRequest;
+}>;
+
+export type SetFollowModuleMutation = {
+  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+};
+
 export type CreateSetFollowModuleTypedDataMutationVariables = Types.Exact<{
   request: Types.SetFollowModuleRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
@@ -817,6 +825,20 @@ export const CreateUnfollowTypedDataDocument = gql`
   }
   ${CreateUnfollowBroadcastItemResultFragmentDoc}
 `;
+export const SetFollowModuleDocument = gql`
+  mutation SetFollowModule($request: SetFollowModuleRequest!) {
+    result: setFollowModule(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${RelaySuccessFragmentDoc}
+  ${LensProfileManagerRelayErrorFragmentDoc}
+`;
 export const CreateSetFollowModuleTypedDataDocument = gql`
   mutation CreateSetFollowModuleTypedData(
     $request: SetFollowModuleRequest!
@@ -875,6 +897,7 @@ const CreateBlockProfileTypedDataDocumentString = print(CreateBlockProfileTypedD
 const CreateUnblockProfileTypedDataDocumentString = print(CreateUnblockProfileTypedDataDocument);
 const CreateFollowTypedDataDocumentString = print(CreateFollowTypedDataDocument);
 const CreateUnfollowTypedDataDocumentString = print(CreateUnfollowTypedDataDocument);
+const SetFollowModuleDocumentString = print(SetFollowModuleDocument);
 const CreateSetFollowModuleTypedDataDocumentString = print(CreateSetFollowModuleTypedDataDocument);
 const LinkHandleToProfileDocumentString = print(LinkHandleToProfileDocument);
 const UnlinkHandleToProfileDocumentString = print(UnlinkHandleToProfileDocument);
@@ -1330,6 +1353,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'CreateUnfollowTypedData',
+        'mutation',
+      );
+    },
+    SetFollowModule(
+      variables: SetFollowModuleMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: SetFollowModuleMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<SetFollowModuleMutation>(SetFollowModuleDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'SetFollowModule',
         'mutation',
       );
     },

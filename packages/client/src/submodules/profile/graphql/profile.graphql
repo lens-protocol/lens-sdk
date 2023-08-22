@@ -411,6 +411,17 @@ mutation CreateUnfollowTypedData($request: UnfollowRequest!, $options: TypedData
   }
 }
 
+mutation SetFollowModule($request: SetFollowModuleRequest!) {
+  result: setFollowModule(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
 mutation CreateSetFollowModuleTypedData(
   $request: SetFollowModuleRequest!
   $options: TypedDataOptions

@@ -215,6 +215,18 @@ export class Profile {
     });
   }
 
+  async setFollowModule(
+    request: SetFollowModuleRequest,
+  ): PromiseResult<
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.SetFollowModule({ request }, headers);
+      return result.data.result;
+    });
+  }
+
   async block(
     request: BlockRequest,
   ): PromiseResult<

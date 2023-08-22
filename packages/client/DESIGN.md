@@ -47,8 +47,8 @@ client.[moduleName].[moduleMethod](args)
   - [ ] setFollowModule
   - [x] dismissRecommended
 
-  - [ ] linkHandle - Query.linkHandleToProfile (should be mutation?)
-  - [ ] unlinkHandle - Query.unlinkHandleToProfile
+  - [x] linkHandle - Query.linkHandleToProfile (should be mutation?)
+  - [x] unlinkHandle - Query.unlinkHandleToProfile
 
   - [x] createSetProfileMetadataTypedData
   - [x] createSetProfileImageTypedData
