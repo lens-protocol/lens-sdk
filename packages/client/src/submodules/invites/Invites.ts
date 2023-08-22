@@ -9,7 +9,7 @@ import { buildImageTransformsFromConfig, requireAuthHeaders } from '../../helper
 import { InvitedResultFragment, Sdk, getSdk } from './graphql/invites.generated';
 
 /**
- * // TODO
+ * Invite new users to join Lens Protocol.
  *
  * @group LensClient Modules
  */
@@ -27,6 +27,18 @@ export class Invites {
     this.authentication = authentication;
   }
 
+  /**
+   * Get all invited profiles.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @returns {@link PromiseResult} with array of {@link InvitedResultFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.invites.invitedProfiles();
+   * ```
+   */
   async invitedProfiles(): PromiseResult<
     InvitedResultFragment[],
     CredentialsExpiredError | NotAuthenticatedError
@@ -43,6 +55,19 @@ export class Invites {
     });
   }
 
+  /**
+   * Check if a profile is already invited.
+   *
+   * @param request - {@link AlreadyInvitedCheckRequest}
+   * @returns boolean
+   *
+   * @example
+   * ```
+   * const result = await client.invites.profileAlreadyInvited({
+   *    address: '0x1234567890123456789012345678901234567890',
+   *  });
+   * ```
+   */
   async profileAlreadyInvited(
     request: AlreadyInvitedCheckRequest,
   ): PromiseResult<boolean, CredentialsExpiredError | NotAuthenticatedError> {
@@ -52,6 +77,20 @@ export class Invites {
     });
   }
 
+  /**
+   * Invite one or many wallet addresses to join Lens Protocol.
+   *
+   * @param request - {@link InviteRequest}
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * const result = await client.invites.inviteProfile({
+   *   addresses: ['0x1234567890123456789012345678901234567890'],
+   *   secret: 'secret',
+   * });
+   * ```
+   */
   async inviteProfile(
     request: InviteRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {

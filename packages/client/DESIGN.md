@@ -44,7 +44,7 @@ client.[moduleName].[moduleMethod](args)
   - [x] unblock
   - [x] follow
   - [x] unfollow
-  - [ ] setFollowModule
+  - [x] setFollowModule
   - [x] dismissRecommended
 
   - [x] linkHandle - Query.linkHandleToProfile (should be mutation?)
