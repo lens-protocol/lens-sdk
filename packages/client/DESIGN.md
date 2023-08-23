@@ -29,8 +29,7 @@ client.[moduleName].[moduleMethod](args)
   - [x] following
   - [x] recommendations
   - [x] mutualFollowers
-  - [ ] followers ?? - was it removed?
-  - [ ] stats - as a separate method using ProfileStatsArgs
+  - [x] followers
 
   - [x] claim
   - [x] create

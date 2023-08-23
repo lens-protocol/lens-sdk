@@ -16,6 +16,7 @@ import type {
   CreateProfileRequest,
   DismissRecommendedProfilesRequest,
   FollowRequest,
+  FollowersRequest,
   FollowingRequest,
   LinkHandleRequest,
   MutualFollowersRequest,
@@ -118,6 +119,17 @@ export class Profile {
   async following(request: FollowingRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Following({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
+
+      return result.data.result;
+    }, request);
+  }
+
+  async followers(request: FollowersRequest): Promise<PaginatedResult<ProfileFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.Followers({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
       });

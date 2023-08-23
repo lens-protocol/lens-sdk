@@ -233,6 +233,21 @@ query Following(
   }
 }
 
+query Followers(
+  $request: FollowersRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+) {
+  result: followers(request: $request) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
 query MutualFollowers(
   $request: MutualFollowersRequest!
   $profileCoverTransform: ImageTransform = {}

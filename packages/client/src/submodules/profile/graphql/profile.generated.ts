@@ -149,6 +149,16 @@ export type FollowingQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
+export type FollowersQueryVariables = Types.Exact<{
+  request: Types.FollowersRequest;
+  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+}>;
+
+export type FollowersQuery = {
+  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+};
+
 export type MutualFollowersQueryVariables = Types.Exact<{
   request: Types.MutualFollowersRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -601,6 +611,24 @@ export const FollowingDocument = gql`
   ${ProfileFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
+export const FollowersDocument = gql`
+  query Followers(
+    $request: FollowersRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+  ) {
+    result: followers(request: $request) {
+      items {
+        ...Profile
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${ProfileFragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
+`;
 export const MutualFollowersDocument = gql`
   query MutualFollowers(
     $request: MutualFollowersRequest!
@@ -873,6 +901,7 @@ const ProfilesDocumentString = print(ProfilesDocument);
 const ProfileManagersDocumentString = print(ProfileManagersDocument);
 const ProfileRecommendationsDocumentString = print(ProfileRecommendationsDocument);
 const FollowingDocumentString = print(FollowingDocument);
+const FollowersDocumentString = print(FollowersDocument);
 const MutualFollowersDocumentString = print(MutualFollowersDocument);
 const ClaimProfileDocumentString = print(ClaimProfileDocument);
 const CreateProfileDocumentString = print(CreateProfileDocument);
@@ -981,6 +1010,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'Following',
+        'query',
+      );
+    },
+    Followers(
+      variables: FollowersQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: FollowersQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<FollowersQuery>(FollowersDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'Followers',
         'query',
       );
     },
