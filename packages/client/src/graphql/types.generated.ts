@@ -359,6 +359,12 @@ export type FollowRevenueRequest = {
   for: Scalars['ProfileId']['input'];
 };
 
+export type FollowersRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  of: Scalars['ProfileId']['input'];
+};
+
 export type FollowingRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
@@ -413,7 +419,7 @@ export type HelRequest = {
 };
 
 export type HidePublicationRequest = {
-  publicationId: Scalars['PublicationId']['input'];
+  for: Scalars['PublicationId']['input'];
 };
 
 export type IdKitPhoneVerifyWebhookRequest = {

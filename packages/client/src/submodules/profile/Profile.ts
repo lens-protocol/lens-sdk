@@ -455,7 +455,7 @@ export class Profile {
     request: LinkHandleRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.UnlinkHandleToProfile({ request }, headers);
+      await this.sdk.UnlinkHandleFromProfile({ request }, headers);
     });
   }
 }

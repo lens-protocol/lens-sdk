@@ -435,6 +435,6 @@ query LinkHandleToProfile($request: LinkHandleRequest!) {
   linkHandleToProfile(request: $request)
 }
 
-query UnlinkHandleToProfile($request: UnlinkHandleRequest!) {
-  unlinkHandleToProfile(request: $request)
+query UnlinkHandleFromProfile($request: UnlinkHandleRequest!) {
+  unlinkHandleFromProfile(request: $request)
 }

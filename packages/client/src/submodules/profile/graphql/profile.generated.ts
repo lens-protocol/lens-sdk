@@ -329,11 +329,11 @@ export type LinkHandleToProfileQueryVariables = Types.Exact<{
 
 export type LinkHandleToProfileQuery = { linkHandleToProfile: string | null };
 
-export type UnlinkHandleToProfileQueryVariables = Types.Exact<{
+export type UnlinkHandleFromProfileQueryVariables = Types.Exact<{
   request: Types.UnlinkHandleRequest;
 }>;
 
-export type UnlinkHandleToProfileQuery = { unlinkHandleToProfile: string | null };
+export type UnlinkHandleFromProfileQuery = { unlinkHandleFromProfile: string | null };
 
 export const ProfileManagerFragmentDoc = gql`
   fragment ProfileManager on ProfilesManagedResult {
@@ -855,9 +855,9 @@ export const LinkHandleToProfileDocument = gql`
     linkHandleToProfile(request: $request)
   }
 `;
-export const UnlinkHandleToProfileDocument = gql`
-  query UnlinkHandleToProfile($request: UnlinkHandleRequest!) {
-    unlinkHandleToProfile(request: $request)
+export const UnlinkHandleFromProfileDocument = gql`
+  query UnlinkHandleFromProfile($request: UnlinkHandleRequest!) {
+    unlinkHandleFromProfile(request: $request)
   }
 `;
 
@@ -900,7 +900,7 @@ const CreateUnfollowTypedDataDocumentString = print(CreateUnfollowTypedDataDocum
 const SetFollowModuleDocumentString = print(SetFollowModuleDocument);
 const CreateSetFollowModuleTypedDataDocumentString = print(CreateSetFollowModuleTypedDataDocument);
 const LinkHandleToProfileDocumentString = print(LinkHandleToProfileDocument);
-const UnlinkHandleToProfileDocumentString = print(UnlinkHandleToProfileDocument);
+const UnlinkHandleFromProfileDocumentString = print(UnlinkHandleFromProfileDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -1415,23 +1415,23 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'query',
       );
     },
-    UnlinkHandleToProfile(
-      variables: UnlinkHandleToProfileQueryVariables,
+    UnlinkHandleFromProfile(
+      variables: UnlinkHandleFromProfileQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: UnlinkHandleToProfileQuery;
+      data: UnlinkHandleFromProfileQuery;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<UnlinkHandleToProfileQuery>(
-            UnlinkHandleToProfileDocumentString,
+          client.rawRequest<UnlinkHandleFromProfileQuery>(
+            UnlinkHandleFromProfileDocumentString,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'UnlinkHandleToProfile',
+        'UnlinkHandleFromProfile',
         'query',
       );
     },

@@ -21,7 +21,7 @@ type Query {
   ): PaginatedPopularNftCollectionsResult!
   nftGalleries(request: NftGalleriesRequest!): [NftGallery!]!
   linkHandleToProfile(request: LinkHandleRequest!): Void
-  unlinkHandleToProfile(request: UnlinkHandleRequest!): Void
+  unlinkHandleFromProfile(request: UnlinkHandleRequest!): Void
   ownedHandles(request: OwnedHandlesRequest!): PaginatedHandlesResult!
   relayQueues: [RelayQueueResult!]!
   momokaSubmitters: MomokaSubmittersResult!
@@ -73,8 +73,9 @@ type Query {
   mutualPoaps(request: MutualPoapsQueryRequest!): PaginatedPoapResult!
   poapHolders(request: PoapHoldersQueryRequest!): PaginatedPoapResult!
   currencies: [Erc20!]!
-  following(request: FollowingRequest!): PaginatedProfileResult!
+  followers(request: FollowersRequest!): PaginatedProfileResult!
   mutualFollowers(request: MutualFollowersRequest!): PaginatedProfileResult!
+  following(request: FollowingRequest!): PaginatedProfileResult!
   ping: String!
   rel(request: RelRequest!): Void
   cur(request: CurRequest!): [String!]!
@@ -314,7 +315,9 @@ type Profile {
   isFollowingMe: OptimisticStatusResult!
   guardian: ProfileGuardianResult
   invitedBy: Profile
-  invitesLeft: Int!
+
+  # The number of invites left
+  invitesLeft: Int
 
   # The on chain identity
   onChainIdentity: ProfileOnChainIdentity!
@@ -476,25 +479,13 @@ type ProfileMetadata {
   attributes: [Attribute!]
 }
 
-scalar ImageSizeTransform
-
-input ImageTransform {
-  # Set the transformed image's width. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'.
-  width: ImageSizeTransform = "auto"
-
-  # Set the transformed image's height. You can use specific size in pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically. Default value is 'auto'.
-  height: ImageSizeTransform = "auto"
-
-  # Set if you want to keep the image's original aspect ratio. True by default. If explicitly set to false, the image will stretch based on the width and height values.
-  keepAspectRatio: Boolean = true
-}
-
 type ImageSet {
   rawURI: URI!
   image: Image!
 
   # Alternative text for the image
   altTag: String
+  transformed(request: ImageTransform!): Image!
 }
 
 type Image {
@@ -513,6 +504,20 @@ type Image {
 enum ImageMimeType {
   PNG
 }
+
+input ImageTransform {
+  # Set the transformed image's width
+  width: ImageSizeTransform
+
+  # Set the transformed image's height
+  height: ImageSizeTransform
+
+  # Set if you want to keep the image's original aspect ratio. True by default. If explicitly set to false, the image will stretch based on the width and height values.
+  keepAspectRatio: Boolean = true
+}
+
+# The image size transform
+scalar ImageSizeTransform
 
 union ProfilePicture = ImageSet | NftImage
 
@@ -571,6 +576,7 @@ type Amount {
 
   # Floating point number as string (e.g. 42.009837). It could have the entire precision of the Asset or be truncated to the last significant decimal.
   value: String!
+  rate(request: String!): FiatAmount!
 }
 
 union Asset = Erc20
@@ -588,6 +594,17 @@ type Erc20 {
 
   # The erc20 address
   contract: NetworkAddress!
+}
+
+type FiatAmount {
+  asset: Fiat!
+  value: String!
+}
+
+type Fiat {
+  name: String!
+  symbol: String!
+  decimals: Int!
 }
 
 type ProfileFollowModuleSettings {
@@ -941,6 +958,7 @@ type PublicationOperations {
   id: PublicationId!
   isNotInterested: Boolean!
   hasBookmarked: Boolean!
+  hasReported: Boolean!
   hasActed: [OpenActionResult!]!
   hasReacted(request: PublicationOperationsReactionArgs!): Boolean!
   canComment: Boolean!
@@ -2710,10 +2728,10 @@ input PoapHoldersQueryRequest {
   eventId: Float!
 }
 
-input FollowingRequest {
+input FollowersRequest {
   limit: LimitScalar
   cursor: Cursor
-  for: ProfileId!
+  of: ProfileId!
 }
 
 input MutualFollowersRequest {
@@ -2721,6 +2739,12 @@ input MutualFollowersRequest {
   cursor: Cursor
   viewing: ProfileId!
   observer: ProfileId!
+}
+
+input FollowingRequest {
+  limit: LimitScalar
+  cursor: Cursor
+  for: ProfileId!
 }
 
 input RelRequest {
@@ -3150,7 +3174,7 @@ type CreateMomokaMirrorEIP712TypedDataValue {
 }
 
 input HidePublicationRequest {
-  publicationId: PublicationId!
+  for: PublicationId!
 }
 
 input PublicationNotInterestedRequest {

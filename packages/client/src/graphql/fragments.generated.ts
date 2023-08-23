@@ -67,7 +67,7 @@ export type ProfileFieldsFragment = {
   id: string;
   handle: string | null;
   interests: Array<string>;
-  invitesLeft: number;
+  invitesLeft: number | null;
   createdAt: string;
   metadata: {
     rawURI: string;
