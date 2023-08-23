@@ -35,7 +35,6 @@ client.[moduleName].[moduleMethod](args)
   - [x] create
   - [x] addInterests - client.profile.interests.add() ?
   - [x] removeInterests - client.profile.interests.remove() ?
-  - [ ] interests.fetch - there was a method to fetch all available interests - was it removed ?
   - [x] setMetadata
   - [x] setImage
   - [x] setManager
@@ -57,7 +56,6 @@ client.[moduleName].[moduleMethod](args)
   - [x] createFollowTypedData
   - [x] createUnfollowTypedData
   - [x] createSetFollowModuleTypedData
-  - [ ] createDeleteProfileTypedData ?? - was it removed?
 
 - [x] publication
 
