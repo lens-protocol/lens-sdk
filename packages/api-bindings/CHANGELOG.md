@@ -1,5 +1,17 @@
 # @lens-protocol/api-bindings
 
+## 0.10.1-next.1
+
+### Patch Changes
+
+- dfb15e1a: **Fixed** 1.3.1-next.0 release packages bundles
+
+## 0.10.1-next.0
+
+### Patch Changes
+
+- ebc2e7e5: **Added** `publicationsId` to `usePublications` args
+
 ## 0.10.0
 
 ### Minor Changes

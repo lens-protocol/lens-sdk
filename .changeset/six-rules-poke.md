@@ -1,6 +1,6 @@
 ---
-"@lens-protocol/react": minor
-"@lens-protocol/react-web": minor
+"@lens-protocol/react": patch
+"@lens-protocol/react-web": patch
 "@lens-protocol/api-bindings": patch
 ---
 

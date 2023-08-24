@@ -1,5 +1,25 @@
 # @lens-protocol/react-web
 
+## 1.3.1-next.1
+
+### Patch Changes
+
+- dfb15e1a: **Fixed** 1.3.1-next.0 release packages bundles
+- Updated dependencies [dfb15e1a]
+  - @lens-protocol/api-bindings@0.10.1-next.1
+  - @lens-protocol/react@1.3.1-next.1
+  - @lens-protocol/gated-content@0.3.3-next.1
+
+## 1.3.1-next.0
+
+### Patch Changes
+
+- ebc2e7e5: **Added** `publicationsId` to `usePublications` args
+- Updated dependencies [ebc2e7e5]
+  - @lens-protocol/react@1.3.1-next.0
+  - @lens-protocol/api-bindings@0.10.1-next.0
+  - @lens-protocol/gated-content@0.3.3-next.0
+
 ## 1.3.0
 
 ### Minor Changes
