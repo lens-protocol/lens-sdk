@@ -1,5 +1,14 @@
 # @lens-protocol/react
 
+## 1.3.1-next.0
+
+### Patch Changes
+
+- ebc2e7e5: **Added** `publicationsId` to `usePublications` args
+- Updated dependencies [ebc2e7e5]
+  - @lens-protocol/api-bindings@0.10.1-next.0
+  - @lens-protocol/gated-content@0.3.3-next.0
+
 ## 1.3.0
 
 ### Minor Changes

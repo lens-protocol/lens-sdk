@@ -1,5 +1,12 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-next.0
+
+### Patch Changes
+
+- Updated dependencies [ebc2e7e5]
+  - @lens-protocol/api-bindings@0.10.1-next.0
+
 ## 0.3.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @lens-protocol/api-bindings
 
+## 0.10.1-next.0
+
+### Patch Changes
+
+- ebc2e7e5: **Added** `publicationsId` to `usePublications` args
+
 ## 0.10.0
 
 ### Minor Changes
