@@ -1,5 +1,11 @@
 # @lens-protocol/api-bindings
 
+## 0.10.1-next.1
+
+### Patch Changes
+
+- dfb15e1a: **Fixed** 1.3.1-next.0 release packages bundles
+
 ## 0.10.1-next.0
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/api-bindings",
-  "version": "0.10.1-next.0",
+  "version": "0.10.1-next.1",
   "description": "Graphql fragments, react hooks, typescript types of lens API.",
   "repository": {
     "directory": "packages/api-bindings",
