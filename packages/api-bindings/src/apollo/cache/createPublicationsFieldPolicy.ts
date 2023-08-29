@@ -14,6 +14,7 @@ export function createPublicationsFieldPolicy() {
         'commentsRankingFilter',
         'sources',
         'metadata',
+        'publicationIds',
       ],
     ],
     '$observerId',
