@@ -59,7 +59,7 @@ const _handleOwnsMultipleFromERC1155Collection = (
   parameters: [tokenIds.map(() => LitKnownParams.USER_ADDRESS).join(','), tokenIds.join(',')],
   returnValueTest: {
     comparator: LitScalarOperator.GREATER_THAN,
-    value: '0',
+    value: LitKnownParams.ZERO,
   },
 });
 
