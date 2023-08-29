@@ -14,7 +14,8 @@
     "@lens-protocol/client": "workspace:*",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "viem": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",

@@ -42,6 +42,7 @@ export type Scalars = {
   NftGalleryId: { input: string; output: string };
   NftGalleryName: { input: string; output: string };
   Nonce: { input: string; output: string };
+  OnChainPublicationId: { input: string; output: string };
   ProfileId: { input: string; output: string };
   PublicationId: { input: string; output: string };
   Signature: { input: string; output: string };
@@ -102,7 +103,7 @@ export enum AudioMimeType {
 }
 
 export type BlockRequest = {
-  profile: Scalars['ProfileId']['input'];
+  profiles: Array<Scalars['ProfileId']['input']>;
 };
 
 export type BroadcastRequest = {
@@ -115,10 +116,19 @@ export type ChallengeRequest = {
   profileId: Scalars['ProfileId']['input'];
 };
 
+export type ChangeProfileManager = {
+  action: ChangeProfileManagerActionType;
+  address: Scalars['EvmAddress']['input'];
+};
+
+export enum ChangeProfileManagerActionType {
+  Add = 'ADD',
+  Remove = 'REMOVE',
+}
+
 export type ChangeProfileManagersRequest = {
-  add?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
-  lens: Scalars['Boolean']['input'];
-  remove?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
+  approveLensManager: Scalars['Boolean']['input'];
+  changeManagers?: InputMaybe<Array<ChangeProfileManager>>;
 };
 
 export type ClaimProfileRequest = {
@@ -161,30 +171,6 @@ export enum ComparisonOperatorConditionType {
   NotEqual = 'NOT_EQUAL',
 }
 
-export type CreateOnChainCommentRequest = {
-  commentOn: Scalars['PublicationId']['input'];
-  contentURI: Scalars['URI']['input'];
-  openActionModule: Array<OpenActionModuleInput>;
-  referenceModule?: InputMaybe<ReferenceModuleInput>;
-};
-
-export type CreateOnChainMirrorRequest = {
-  on: Scalars['PublicationId']['input'];
-};
-
-export type CreateOnChainPostRequest = {
-  contentURI: Scalars['URI']['input'];
-  openActionModule: Array<OpenActionModuleInput>;
-  referenceModule?: InputMaybe<ReferenceModuleInput>;
-};
-
-export type CreateOnChainQuoteRequest = {
-  contentURI: Scalars['URI']['input'];
-  on: Scalars['PublicationId']['input'];
-  openActionModule: Array<OpenActionModuleInput>;
-  referenceModule?: InputMaybe<ReferenceModuleInput>;
-};
-
 export enum CreateProfileErrorReasonType {
   Failed = 'FAILED',
   HandleTaken = 'HANDLE_TAKEN',
@@ -226,7 +212,7 @@ export type DegreesOfSeparationReferenceModuleInput = {
 };
 
 export type DismissRecommendedProfilesRequest = {
-  for: Scalars['ProfileId']['input'];
+  dismiss: Array<Scalars['ProfileId']['input']>;
 };
 
 export enum ExploreProfileOrderBy {
@@ -743,6 +729,45 @@ export type NotificationWhere = {
   highSignalFilter?: InputMaybe<Scalars['Boolean']['input']>;
   notificationTypes?: InputMaybe<Array<NotificationType>>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
+};
+
+export type OnChainCommentRequest = {
+  commentOn: Scalars['PublicationId']['input'];
+  commentOnReferenceModuleData?: InputMaybe<Scalars['BlockchainData']['input']>;
+  contentURI: Scalars['URI']['input'];
+  openActionModules: Array<OpenActionModuleInput>;
+  referenceModule?: InputMaybe<ReferenceModuleInput>;
+  referrers?: InputMaybe<Array<OnChainReferrer>>;
+};
+
+export type OnChainMirrorRequest = {
+  mirrorReferenceModuleData?: InputMaybe<Scalars['BlockchainData']['input']>;
+  on: Scalars['PublicationId']['input'];
+  referrers?: InputMaybe<Array<OnChainReferrer>>;
+};
+
+export type OnChainPostRequest = {
+  contentURI: Scalars['URI']['input'];
+  openActionModules: Array<OpenActionModuleInput>;
+  referenceModule?: InputMaybe<ReferenceModuleInput>;
+};
+
+export type OnChainQuoteRequest = {
+  contentURI: Scalars['URI']['input'];
+  openActionModules: Array<OpenActionModuleInput>;
+  quoteOn: Scalars['PublicationId']['input'];
+  quoteOnReferenceModuleData?: InputMaybe<Scalars['BlockchainData']['input']>;
+  referenceModule?: InputMaybe<ReferenceModuleInput>;
+  referrers?: InputMaybe<Array<OnChainReferrer>>;
+};
+
+export type OnChainReferrer = {
+  profileId?: InputMaybe<Scalars['ProfileId']['input']>;
+  publicationId?: InputMaybe<Scalars['PublicationId']['input']>;
+};
+
+export type OnChainSetProfileMetadataRequest = {
+  metadataURI: Scalars['URI']['input'];
 };
 
 export enum OpenActionCategoryType {
@@ -1282,14 +1307,6 @@ export type SetFollowModuleRequest = {
   followModule: FollowModuleInput;
 };
 
-export type SetProfileImageRequest = {
-  imageURI: Scalars['URI']['input'];
-};
-
-export type SetProfileMetadataRequest = {
-  metadataURI: Scalars['URI']['input'];
-};
-
 export type SignedAuthChallenge = {
   id: Scalars['ChallengeId']['input'];
   signature: Scalars['Signature']['input'];
@@ -1319,7 +1336,7 @@ export type TypedDataOptions = {
 };
 
 export type UnblockRequest = {
-  profile: Scalars['ProfileId']['input'];
+  profiles: Array<Scalars['ProfileId']['input']>;
 };
 
 export type UnfollowRequest = {

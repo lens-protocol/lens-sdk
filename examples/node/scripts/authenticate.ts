@@ -4,6 +4,18 @@ import { setupWallet } from "./shared/setupWallet";
 async function main() {
   const lensClient = new LensClient({
     environment: development,
+    storage: {
+      getItem: async (key: string) => {
+        const value = localStorage.getItem(key);
+        return localStorage.getItem(key);
+      },
+      setItem: async (key: string, value: string) => {
+        localStorage.setItem(key, value);
+      },
+      removeItem: async (key: string) => {
+        localStorage.removeItem(key);
+      },
+    },
   });
 
   const wallet = setupWallet();

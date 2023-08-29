@@ -6,32 +6,12 @@ fragment CreateProfileErrorResult on CreateProfileErrorResult {
   reason
 }
 
-fragment CreateSetProfileMetadataBroadcastItemResult on CreateSetProfileMetadataBroadcastItemResult {
+fragment CreateOnChainSetProfileMetadataBroadcastItemResult on CreateOnChainSetProfileMetadataBroadcastItemResult {
   id
   expiresAt
   typedData {
     types {
       SetProfileMetadataURIWithSig {
-        name
-        type
-      }
-    }
-    domain {
-      ...EIP712TypedDataDomain
-    }
-    value {
-      nonce
-      deadline
-    }
-  }
-}
-
-fragment CreateSetProfileImageBroadcastItemResult on CreateSetProfileImageBroadcastItemResult {
-  id
-  expiresAt
-  typedData {
-    types {
-      SetProfileImageURIWithSig {
         name
         type
       }
@@ -66,7 +46,7 @@ fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileMa
   }
 }
 
-fragment CreateBlockProfileBroadcastItemResult on CreateBlockProfileBroadcastItemResult {
+fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -86,7 +66,7 @@ fragment CreateBlockProfileBroadcastItemResult on CreateBlockProfileBroadcastIte
   }
 }
 
-fragment CreateUnblockProfileBroadcastItemResult on CreateUnblockProfileBroadcastItemResult {
+fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -294,19 +274,8 @@ mutation RemoveProfileInterests($request: ProfileInterestsRequest!) {
   result: removeProfileInterests(request: $request)
 }
 
-mutation SetProfileMetadata($request: SetProfileMetadataRequest!) {
+mutation SetProfileMetadata($request: OnChainSetProfileMetadataRequest!) {
   result: setProfileMetadata(request: $request) {
-    ... on RelaySuccess {
-      ...RelaySuccess
-    }
-    ... on LensProfileManagerRelayError {
-      ...LensProfileManagerRelayError
-    }
-  }
-}
-
-mutation SetProfileImageURI($request: SetProfileImageRequest!) {
-  result: setProfileImageURI(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
@@ -375,21 +344,12 @@ mutation DismissRecommendedProfiles($request: DismissRecommendedProfilesRequest!
   result: dismissRecommendedProfiles(request: $request)
 }
 
-mutation CreateSetProfileMetadataTypedData(
-  $request: SetProfileMetadataRequest!
+mutation CreateOnChainSetProfileMetadataTypedData(
+  $request: OnChainSetProfileMetadataRequest!
   $options: TypedDataOptions
 ) {
-  result: createSetProfileMetadataTypedData(request: $request, options: $options) {
-    ...CreateSetProfileMetadataBroadcastItemResult
-  }
-}
-
-mutation CreateSetProfileImageTypedData(
-  $request: SetProfileImageRequest!
-  $options: TypedDataOptions
-) {
-  result: createSetProfileImageTypedData(request: $request, options: $options) {
-    ...CreateSetProfileImageBroadcastItemResult
+  result: createOnChainSetProfileMetadataTypedData(request: $request, options: $options) {
+    ...CreateOnChainSetProfileMetadataBroadcastItemResult
   }
 }
 
@@ -402,15 +362,15 @@ mutation CreateChangeProfileManagersTypedData(
   }
 }
 
-mutation CreateBlockProfileTypedData($request: BlockRequest!, $options: TypedDataOptions) {
-  result: createBlockProfileTypedData(request: $request, options: $options) {
-    ...CreateBlockProfileBroadcastItemResult
+mutation CreateBlockProfilesTypedData($request: BlockRequest!, $options: TypedDataOptions) {
+  result: createBlockProfilesTypedData(request: $request, options: $options) {
+    ...CreateBlockProfilesBroadcastItemResult
   }
 }
 
 mutation CreateUnblockProfileTypedData($request: UnblockRequest!, $options: TypedDataOptions) {
   result: createUnblockProfileTypedData(request: $request, options: $options) {
-    ...CreateUnblockProfileBroadcastItemResult
+    ...CreateUnblockProfilesBroadcastItemResult
   }
 }
 
@@ -453,3 +413,5 @@ query LinkHandleToProfile($request: LinkHandleRequest!) {
 query UnlinkHandleFromProfile($request: UnlinkHandleRequest!) {
   unlinkHandleFromProfile(request: $request)
 }
+
+# mutation CreateSetDispatcherTypedData($)

@@ -23,21 +23,11 @@ export type ProfileManagerFragment = { address: string };
 
 export type CreateProfileErrorResultFragment = { reason: Types.CreateProfileErrorReasonType };
 
-export type CreateSetProfileMetadataBroadcastItemResultFragment = {
+export type CreateOnChainSetProfileMetadataBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
   typedData: {
     types: { SetProfileMetadataURIWithSig: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
-  };
-};
-
-export type CreateSetProfileImageBroadcastItemResultFragment = {
-  id: string;
-  expiresAt: string;
-  typedData: {
-    types: { SetProfileImageURIWithSig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: { nonce: string; deadline: string };
   };
@@ -53,7 +43,7 @@ export type CreateChangeProfileManagersBroadcastItemResultFragment = {
   };
 };
 
-export type CreateBlockProfileBroadcastItemResultFragment = {
+export type CreateBlockProfilesBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
   typedData: {
@@ -63,7 +53,7 @@ export type CreateBlockProfileBroadcastItemResultFragment = {
   };
 };
 
-export type CreateUnblockProfileBroadcastItemResultFragment = {
+export type CreateUnblockProfilesBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
   typedData: {
@@ -198,18 +188,10 @@ export type RemoveProfileInterestsMutationVariables = Types.Exact<{
 export type RemoveProfileInterestsMutation = { result: string };
 
 export type SetProfileMetadataMutationVariables = Types.Exact<{
-  request: Types.SetProfileMetadataRequest;
+  request: Types.OnChainSetProfileMetadataRequest;
 }>;
 
 export type SetProfileMetadataMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
-};
-
-export type SetProfileImageUriMutationVariables = Types.Exact<{
-  request: Types.SetProfileImageRequest;
-}>;
-
-export type SetProfileImageUriMutation = {
   result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
 };
 
@@ -257,22 +239,13 @@ export type DismissRecommendedProfilesMutationVariables = Types.Exact<{
 
 export type DismissRecommendedProfilesMutation = { result: string };
 
-export type CreateSetProfileMetadataTypedDataMutationVariables = Types.Exact<{
-  request: Types.SetProfileMetadataRequest;
+export type CreateOnChainSetProfileMetadataTypedDataMutationVariables = Types.Exact<{
+  request: Types.OnChainSetProfileMetadataRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateSetProfileMetadataTypedDataMutation = {
-  result: CreateSetProfileMetadataBroadcastItemResultFragment;
-};
-
-export type CreateSetProfileImageTypedDataMutationVariables = Types.Exact<{
-  request: Types.SetProfileImageRequest;
-  options?: Types.InputMaybe<Types.TypedDataOptions>;
-}>;
-
-export type CreateSetProfileImageTypedDataMutation = {
-  result: CreateSetProfileImageBroadcastItemResultFragment;
+export type CreateOnChainSetProfileMetadataTypedDataMutation = {
+  result: CreateOnChainSetProfileMetadataBroadcastItemResultFragment;
 };
 
 export type CreateChangeProfileManagersTypedDataMutationVariables = Types.Exact<{
@@ -284,13 +257,13 @@ export type CreateChangeProfileManagersTypedDataMutation = {
   result: CreateChangeProfileManagersBroadcastItemResultFragment;
 };
 
-export type CreateBlockProfileTypedDataMutationVariables = Types.Exact<{
+export type CreateBlockProfilesTypedDataMutationVariables = Types.Exact<{
   request: Types.BlockRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateBlockProfileTypedDataMutation = {
-  result: CreateBlockProfileBroadcastItemResultFragment;
+export type CreateBlockProfilesTypedDataMutation = {
+  result: CreateBlockProfilesBroadcastItemResultFragment;
 };
 
 export type CreateUnblockProfileTypedDataMutationVariables = Types.Exact<{
@@ -299,7 +272,7 @@ export type CreateUnblockProfileTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateUnblockProfileTypedDataMutation = {
-  result: CreateUnblockProfileBroadcastItemResultFragment;
+  result: CreateUnblockProfilesBroadcastItemResultFragment;
 };
 
 export type CreateFollowTypedDataMutationVariables = Types.Exact<{
@@ -355,35 +328,13 @@ export const CreateProfileErrorResultFragmentDoc = gql`
     reason
   }
 `;
-export const CreateSetProfileMetadataBroadcastItemResultFragmentDoc = gql`
-  fragment CreateSetProfileMetadataBroadcastItemResult on CreateSetProfileMetadataBroadcastItemResult {
+export const CreateOnChainSetProfileMetadataBroadcastItemResultFragmentDoc = gql`
+  fragment CreateOnChainSetProfileMetadataBroadcastItemResult on CreateOnChainSetProfileMetadataBroadcastItemResult {
     id
     expiresAt
     typedData {
       types {
         SetProfileMetadataURIWithSig {
-          name
-          type
-        }
-      }
-      domain {
-        ...EIP712TypedDataDomain
-      }
-      value {
-        nonce
-        deadline
-      }
-    }
-  }
-  ${Eip712TypedDataDomainFragmentDoc}
-`;
-export const CreateSetProfileImageBroadcastItemResultFragmentDoc = gql`
-  fragment CreateSetProfileImageBroadcastItemResult on CreateSetProfileImageBroadcastItemResult {
-    id
-    expiresAt
-    typedData {
-      types {
-        SetProfileImageURIWithSig {
           name
           type
         }
@@ -421,8 +372,8 @@ export const CreateChangeProfileManagersBroadcastItemResultFragmentDoc = gql`
   }
   ${Eip712TypedDataDomainFragmentDoc}
 `;
-export const CreateBlockProfileBroadcastItemResultFragmentDoc = gql`
-  fragment CreateBlockProfileBroadcastItemResult on CreateBlockProfileBroadcastItemResult {
+export const CreateBlockProfilesBroadcastItemResultFragmentDoc = gql`
+  fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastItemResult {
     id
     expiresAt
     typedData {
@@ -443,8 +394,8 @@ export const CreateBlockProfileBroadcastItemResultFragmentDoc = gql`
   }
   ${Eip712TypedDataDomainFragmentDoc}
 `;
-export const CreateUnblockProfileBroadcastItemResultFragmentDoc = gql`
-  fragment CreateUnblockProfileBroadcastItemResult on CreateUnblockProfileBroadcastItemResult {
+export const CreateUnblockProfilesBroadcastItemResultFragmentDoc = gql`
+  fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadcastItemResult {
     id
     expiresAt
     typedData {
@@ -686,22 +637,8 @@ export const RemoveProfileInterestsDocument = gql`
   }
 `;
 export const SetProfileMetadataDocument = gql`
-  mutation SetProfileMetadata($request: SetProfileMetadataRequest!) {
+  mutation SetProfileMetadata($request: OnChainSetProfileMetadataRequest!) {
     result: setProfileMetadata(request: $request) {
-      ... on RelaySuccess {
-        ...RelaySuccess
-      }
-      ... on LensProfileManagerRelayError {
-        ...LensProfileManagerRelayError
-      }
-    }
-  }
-  ${RelaySuccessFragmentDoc}
-  ${LensProfileManagerRelayErrorFragmentDoc}
-`;
-export const SetProfileImageUriDocument = gql`
-  mutation SetProfileImageURI($request: SetProfileImageRequest!) {
-    result: setProfileImageURI(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess
       }
@@ -788,27 +725,16 @@ export const DismissRecommendedProfilesDocument = gql`
     result: dismissRecommendedProfiles(request: $request)
   }
 `;
-export const CreateSetProfileMetadataTypedDataDocument = gql`
-  mutation CreateSetProfileMetadataTypedData(
-    $request: SetProfileMetadataRequest!
+export const CreateOnChainSetProfileMetadataTypedDataDocument = gql`
+  mutation CreateOnChainSetProfileMetadataTypedData(
+    $request: OnChainSetProfileMetadataRequest!
     $options: TypedDataOptions
   ) {
-    result: createSetProfileMetadataTypedData(request: $request, options: $options) {
-      ...CreateSetProfileMetadataBroadcastItemResult
+    result: createOnChainSetProfileMetadataTypedData(request: $request, options: $options) {
+      ...CreateOnChainSetProfileMetadataBroadcastItemResult
     }
   }
-  ${CreateSetProfileMetadataBroadcastItemResultFragmentDoc}
-`;
-export const CreateSetProfileImageTypedDataDocument = gql`
-  mutation CreateSetProfileImageTypedData(
-    $request: SetProfileImageRequest!
-    $options: TypedDataOptions
-  ) {
-    result: createSetProfileImageTypedData(request: $request, options: $options) {
-      ...CreateSetProfileImageBroadcastItemResult
-    }
-  }
-  ${CreateSetProfileImageBroadcastItemResultFragmentDoc}
+  ${CreateOnChainSetProfileMetadataBroadcastItemResultFragmentDoc}
 `;
 export const CreateChangeProfileManagersTypedDataDocument = gql`
   mutation CreateChangeProfileManagersTypedData(
@@ -821,21 +747,21 @@ export const CreateChangeProfileManagersTypedDataDocument = gql`
   }
   ${CreateChangeProfileManagersBroadcastItemResultFragmentDoc}
 `;
-export const CreateBlockProfileTypedDataDocument = gql`
-  mutation CreateBlockProfileTypedData($request: BlockRequest!, $options: TypedDataOptions) {
-    result: createBlockProfileTypedData(request: $request, options: $options) {
-      ...CreateBlockProfileBroadcastItemResult
+export const CreateBlockProfilesTypedDataDocument = gql`
+  mutation CreateBlockProfilesTypedData($request: BlockRequest!, $options: TypedDataOptions) {
+    result: createBlockProfilesTypedData(request: $request, options: $options) {
+      ...CreateBlockProfilesBroadcastItemResult
     }
   }
-  ${CreateBlockProfileBroadcastItemResultFragmentDoc}
+  ${CreateBlockProfilesBroadcastItemResultFragmentDoc}
 `;
 export const CreateUnblockProfileTypedDataDocument = gql`
   mutation CreateUnblockProfileTypedData($request: UnblockRequest!, $options: TypedDataOptions) {
     result: createUnblockProfileTypedData(request: $request, options: $options) {
-      ...CreateUnblockProfileBroadcastItemResult
+      ...CreateUnblockProfilesBroadcastItemResult
     }
   }
-  ${CreateUnblockProfileBroadcastItemResultFragmentDoc}
+  ${CreateUnblockProfilesBroadcastItemResultFragmentDoc}
 `;
 export const CreateFollowTypedDataDocument = gql`
   mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
@@ -908,21 +834,19 @@ const CreateProfileDocumentString = print(CreateProfileDocument);
 const AddProfileInterestsDocumentString = print(AddProfileInterestsDocument);
 const RemoveProfileInterestsDocumentString = print(RemoveProfileInterestsDocument);
 const SetProfileMetadataDocumentString = print(SetProfileMetadataDocument);
-const SetProfileImageUriDocumentString = print(SetProfileImageUriDocument);
 const SetProfileManagerDocumentString = print(SetProfileManagerDocument);
 const BlockDocumentString = print(BlockDocument);
 const UnblockDocumentString = print(UnblockDocument);
 const FollowDocumentString = print(FollowDocument);
 const UnfollowDocumentString = print(UnfollowDocument);
 const DismissRecommendedProfilesDocumentString = print(DismissRecommendedProfilesDocument);
-const CreateSetProfileMetadataTypedDataDocumentString = print(
-  CreateSetProfileMetadataTypedDataDocument,
+const CreateOnChainSetProfileMetadataTypedDataDocumentString = print(
+  CreateOnChainSetProfileMetadataTypedDataDocument,
 );
-const CreateSetProfileImageTypedDataDocumentString = print(CreateSetProfileImageTypedDataDocument);
 const CreateChangeProfileManagersTypedDataDocumentString = print(
   CreateChangeProfileManagersTypedDataDocument,
 );
-const CreateBlockProfileTypedDataDocumentString = print(CreateBlockProfileTypedDataDocument);
+const CreateBlockProfilesTypedDataDocumentString = print(CreateBlockProfilesTypedDataDocument);
 const CreateUnblockProfileTypedDataDocumentString = print(CreateUnblockProfileTypedDataDocument);
 const CreateFollowTypedDataDocumentString = print(CreateFollowTypedDataDocument);
 const CreateUnfollowTypedDataDocumentString = print(CreateUnfollowTypedDataDocument);
@@ -1144,26 +1068,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
-    SetProfileImageURI(
-      variables: SetProfileImageUriMutationVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: SetProfileImageUriMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<SetProfileImageUriMutation>(
-            SetProfileImageUriDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'SetProfileImageURI',
-        'mutation',
-      );
-    },
     SetProfileManager(
       variables: SetProfileManagerMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
@@ -1259,43 +1163,23 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
-    CreateSetProfileMetadataTypedData(
-      variables: CreateSetProfileMetadataTypedDataMutationVariables,
+    CreateOnChainSetProfileMetadataTypedData(
+      variables: CreateOnChainSetProfileMetadataTypedDataMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: CreateSetProfileMetadataTypedDataMutation;
+      data: CreateOnChainSetProfileMetadataTypedDataMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<CreateSetProfileMetadataTypedDataMutation>(
-            CreateSetProfileMetadataTypedDataDocumentString,
+          client.rawRequest<CreateOnChainSetProfileMetadataTypedDataMutation>(
+            CreateOnChainSetProfileMetadataTypedDataDocumentString,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'CreateSetProfileMetadataTypedData',
-        'mutation',
-      );
-    },
-    CreateSetProfileImageTypedData(
-      variables: CreateSetProfileImageTypedDataMutationVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: CreateSetProfileImageTypedDataMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<CreateSetProfileImageTypedDataMutation>(
-            CreateSetProfileImageTypedDataDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'CreateSetProfileImageTypedData',
+        'CreateOnChainSetProfileMetadataTypedData',
         'mutation',
       );
     },
@@ -1319,23 +1203,23 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
-    CreateBlockProfileTypedData(
-      variables: CreateBlockProfileTypedDataMutationVariables,
+    CreateBlockProfilesTypedData(
+      variables: CreateBlockProfilesTypedDataMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: CreateBlockProfileTypedDataMutation;
+      data: CreateBlockProfilesTypedDataMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<CreateBlockProfileTypedDataMutation>(
-            CreateBlockProfileTypedDataDocumentString,
+          client.rawRequest<CreateBlockProfilesTypedDataMutation>(
+            CreateBlockProfilesTypedDataDocumentString,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'CreateBlockProfileTypedData',
+        'CreateBlockProfilesTypedData',
         'mutation',
       );
     },

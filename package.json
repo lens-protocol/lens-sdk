@@ -17,7 +17,7 @@
     "lint": "turbo run lint --parallel",
     "lint:fix": "turbo run lint:fix --parallel --no-cache",
     "lint:examples": "sh ./scripts/lint-examples.sh",
-    "typedoc": "typedoc"
+    "typedoc": "typedoc  --logLevel Verbose"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",

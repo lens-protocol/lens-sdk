@@ -1,19 +1,27 @@
 type Query {
   txIdToTxHash(txId: TxId!): TxHash!
-  lensTransactionStatus(request: LensTransactionStatusRequest!): LensTransactionResult!
+  lensTransactionStatus(
+    request: LensTransactionStatusRequest!
+  ): LensTransactionResult!
   nfts(request: NftsRequest!): PaginatedNftsResult!
 
   # Search for NFTs in a wallet by collection name. Supports Polygon and Ethereum and searches in both by default.
   searchNfts(request: NftSearchRequest!): PaginatedNftsResult!
 
   # Get the NFT collections that the given wallet or profileId owns at least one NFT of. Only supports Ethereum and Polygon NFTs. Note excludeFollowers is set to true by default, so the result will not include Lens Follower NFTsunless explicitly requested.
-  nftCollections(request: NftCollectionsRequest!): PaginatedNftCollectionsResult!
+  nftCollections(
+    request: NftCollectionsRequest!
+  ): PaginatedNftCollectionsResult!
 
   # Get the NFT collections that the given two profiles own at least one NFT of.
-  mutualNftCollections(request: MutualNftCollectionsRequest!): PaginatedNftCollectionsResult!
+  mutualNftCollections(
+    request: MutualNftCollectionsRequest!
+  ): PaginatedNftCollectionsResult!
 
   # Get the Lens Profiles that own NFTs from a given collection.
-  nftCollectionOwners(request: NftCollectionOwnersRequest!): PaginatedProfileResult!
+  nftCollectionOwners(
+    request: NftCollectionOwnersRequest!
+  ): PaginatedProfileResult!
 
   # Get the most popular NFT collections. Popularity is based on how many Lens Profiles own NFTs from a given collection.
   popularNftCollections(
@@ -26,14 +34,24 @@ type Query {
   relayQueues: [RelayQueueResult!]!
   momokaSubmitters: MomokaSubmittersResult!
   momokaSummary: MomokaSummaryResult!
-  momokaTransactions(request: MomokaTransactionsRequest!): MomokaTransactionsResult!
+  momokaTransactions(
+    request: MomokaTransactionsRequest!
+  ): MomokaTransactionsResult!
   momokaTransaction(request: MomokaTransactionRequest!): MomokaTransaction!
   publications(request: PublicationsRequest!): PaginatedPublicationsResult!
   publication(request: PublicationRequest!): AnyPublication
-  publicationsTags(request: PublicationsTagsRequest!): PaginatedPublicationsTagsResult!
-  profileBookmarks(request: ProfileBookmarksRequest!): PaginatedPublicationsResult!
-  whoReactedPublication(request: WhoReactedPublicationRequest!): PaginatedWhoReactedResult!
-  explorePublications(request: ExplorePublicationRequest!): PaginatedExplorePublicationResult!
+  publicationsTags(
+    request: PublicationsTagsRequest!
+  ): PaginatedPublicationsTagsResult!
+  profileBookmarks(
+    request: ProfileBookmarksRequest!
+  ): PaginatedPublicationsResult!
+  whoReactedPublication(
+    request: WhoReactedPublicationRequest!
+  ): PaginatedWhoReactedResult!
+  explorePublications(
+    request: ExplorePublicationRequest!
+  ): PaginatedExplorePublicationResult!
   validatePublicationMetadata(
     request: ValidatePublicationMetadataRequest!
   ): PublicationValidateMetadataResult!
@@ -41,8 +59,12 @@ type Query {
   revenueFromPublications(
     request: RevenueFromPublicationsRequest!
   ): PaginatedRevenueFromPublicationsResult!
-  revenueForPublication(request: PublicationRevenueRequest!): PublicationRevenue!
-  searchPublications(request: PublicationSearchRequest!): PaginatedPublicationPrimaryResult!
+  revenueForPublication(
+    request: PublicationRevenueRequest!
+  ): PublicationRevenue!
+  searchPublications(
+    request: PublicationSearchRequest!
+  ): PaginatedPublicationPrimaryResult!
   approvedModuleAllowanceAmount(
     request: ApprovedModuleAllowanceAmountRequest!
   ): ApprovedAllowanceAmountResult!
@@ -52,22 +74,30 @@ type Query {
   supportedModules: [SupportedModules!]!
   profiles(request: ProfilesRequest!): PaginatedProfileResult!
   profile(request: ProfileRequest!): Profile
-  whoActedOnPublication(request: WhoActedOnPublicationRequest!): PaginatedProfileResult
+  whoActedOnPublication(
+    request: WhoActedOnPublicationRequest!
+  ): PaginatedProfileResult
   profileInterestsOptions: [String!]!
   claimableProfiles: ClaimableProfilesResult!
   claimableStatus: ClaimProfileStatusType!
   exploreProfiles(request: ExploreProfilesRequest!): PaginatedProfileResult!
   invitedProfiles: [InvitedResult!]!
   profileAlreadyInvited(request: AlreadyInvitedCheckRequest!): Boolean!
-  profileManagers(request: ProfileManagersRequest!): PaginatedProfileManagersResult!
+  profileManagers(
+    request: ProfileManagersRequest!
+  ): PaginatedProfileManagersResult!
   profilesManaged(request: ProfilesManagedRequest!): PaginatedProfileResult!
-  profileRecommendations(request: ProfileRecommendationsRequest!): PaginatedProfileResult!
+  profileRecommendations(
+    request: ProfileRecommendationsRequest!
+  ): PaginatedProfileResult!
   followRevenues(request: FollowRevenueRequest!): FollowRevenueResult!
   searchProfiles(request: ProfileSearchRequest!): PaginatedProfileResult!
   challenge(request: ChallengeRequest!): AuthChallengeResult!
   verify(request: VerifyRequest!): Boolean!
   feed(request: FeedRequest!): PaginatedFeedResult!
-  feedHighlights(request: FeedHighlightsRequest!): PaginatedFeedHighlightsResult!
+  feedHighlights(
+    request: FeedHighlightsRequest!
+  ): PaginatedFeedHighlightsResult!
   notifications(request: NotificationRequest!): PaginatedNotificationResult!
   poaps(request: UserPoapsQueryRequest!): PaginatedPoapResult!
   mutualPoaps(request: MutualPoapsQueryRequest!): PaginatedPoapResult!
@@ -379,7 +409,7 @@ enum PublicationReactionType {
 }
 
 input ProfileStatsCountOpenActionArgs {
-  anyOf: [OpenActionFilter!]
+  anyOf: [OpenActionFilter!] = []
 }
 
 input OpenActionFilter {
@@ -805,7 +835,9 @@ type App {
   id: AppId!
 }
 
-union MomokaVerificationStatus = MomokaVerificationStatusSuccess | MomokaVerificationStatusFailure
+union MomokaVerificationStatus =
+    MomokaVerificationStatusSuccess
+  | MomokaVerificationStatusFailure
 
 type MomokaVerificationStatusSuccess {
   verified: Boolean!
@@ -2793,19 +2825,27 @@ type Mutation {
   updateNftGalleryOrder(request: NftGalleryUpdateItemOrderRequest!): Void
   updateNftGalleryItems(request: NftGalleryUpdateItemsRequest!): Void
   deleteNftGallery(request: NftGalleryDeleteRequest!): Void
-  nftOwnershipChallenge(request: NftOwnershipChallengeRequest!): NftOwnershipChallengeResult!
+  nftOwnershipChallenge(
+    request: NftOwnershipChallengeRequest!
+  ): NftOwnershipChallengeResult!
   quoteOnMomoka(request: MomokaQuoteRequest!): RelayMomokaResult!
   postOnMomoka(request: MomokaPostRequest!): RelayMomokaResult!
   commentOnMomoka(request: MomokaCommentRequest!): RelayMomokaResult!
   mirrorOnMomoka(request: MomokaMirrorRequest!): RelayMomokaResult!
   broadcastOnMomoka(request: BroadcastRequest!): BroadcastMomokaResult!
   broadcastOnChain(request: BroadcastRequest!): RelayResult!
-  createMomokaQuoteTypedData(request: MomokaQuoteRequest!): CreateMomokaQuoteBroadcastItemResult!
-  createMomokaPostTypedData(request: MomokaPostRequest!): CreateMomokaPostBroadcastItemResult!
+  createMomokaQuoteTypedData(
+    request: MomokaQuoteRequest!
+  ): CreateMomokaQuoteBroadcastItemResult!
+  createMomokaPostTypedData(
+    request: MomokaPostRequest!
+  ): CreateMomokaPostBroadcastItemResult!
   createMomokaCommentTypedData(
     request: MomokaCommentRequest!
   ): CreateMomokaCommentBroadcastItemResult!
-  createMomokaMirrorTypedData(request: MomokaMirrorRequest!): CreateMomokaMirrorBroadcastItemResult!
+  createMomokaMirrorTypedData(
+    request: MomokaMirrorRequest!
+  ): CreateMomokaMirrorBroadcastItemResult!
   hidePublication(request: HidePublicationRequest!): Void!
   addPublicationNotInterested(request: PublicationNotInterestedRequest!): Void!
   undoPublicationNotInterested(request: PublicationNotInterestedRequest!): Void!
@@ -2814,29 +2854,34 @@ type Mutation {
   addReaction(request: ReactionRequest!): Void!
   removeReaction(request: ReactionRequest!): Void!
   reportPublication(request: ReportPublicationRequest!): Void!
-  dismissRecommendedProfiles(request: DismissRecommendedProfilesRequest!): Void!
-  quoteOnChain(request: CreateOnChainQuoteRequest!): LensProfileManagerRelayResult!
-  postOnChain(request: CreateOnChainPostRequest!): LensProfileManagerRelayResult!
-  commentOnChain(request: CreateOnChainCommentRequest!): LensProfileManagerRelayResult!
-  mirrorOnChain(request: CreateOnChainMirrorRequest!): LensProfileManagerRelayResult!
+  quoteOnChain(request: OnChainQuoteRequest!): LensProfileManagerRelayResult!
+  postOnChain(request: OnChainPostRequest!): LensProfileManagerRelayResult!
+  commentOnChain(
+    request: OnChainCommentRequest!
+  ): LensProfileManagerRelayResult!
+  mirrorOnChain(request: OnChainMirrorRequest!): LensProfileManagerRelayResult!
   createOnChainQuoteTypedData(
     options: TypedDataOptions
-    request: CreateOnChainQuoteRequest!
+    request: OnChainQuoteRequest!
   ): CreateOnChainQuoteBroadcastItemResult!
   createOnChainPostTypedData(
     options: TypedDataOptions
-    request: CreateOnChainPostRequest!
+    request: OnChainPostRequest!
   ): CreateOnChainPostBroadcastItemResult!
   createOnChainCommentTypedData(
     options: TypedDataOptions
-    request: CreateOnChainCommentRequest!
+    request: OnChainCommentRequest!
   ): CreateOnChainCommentBroadcastItemResult!
   createOnChainMirrorTypedData(
     options: TypedDataOptions
-    request: CreateOnChainMirrorRequest!
+    request: OnChainMirrorRequest!
   ): CreateOnChainMirrorBroadcastItemResult!
-  setFollowModule(request: SetFollowModuleRequest!): LensProfileManagerRelayResult!
-  actOnOpenAction(request: ActOnOpenActionRequest!): LensProfileManagerRelayResult!
+  setFollowModule(
+    request: SetFollowModuleRequest!
+  ): LensProfileManagerRelayResult!
+  actOnOpenAction(
+    request: ActOnOpenActionRequest!
+  ): LensProfileManagerRelayResult!
   legacyCollectPublication(
     request: LegacyCollectPublicationRequest!
   ): LensProfileManagerRelayResult!
@@ -2854,34 +2899,34 @@ type Mutation {
   ): CreateLegacyCollectPublicationEIP712TypedData!
   addProfileInterests(request: ProfileInterestsRequest!): Void!
   removeProfileInterests(request: ProfileInterestsRequest!): Void!
+  dismissRecommendedProfiles(request: DismissRecommendedProfilesRequest!): Void!
   claimProfile(request: ClaimProfileRequest!): CreateProfileResult!
   createProfile(request: CreateProfileRequest!): CreateProfileResult!
   inviteProfile(request: InviteRequest!): Void
   block(request: BlockRequest!): LensProfileManagerRelayResult!
   unblock(request: UnblockRequest!): LensProfileManagerRelayResult!
-  setProfileMetadata(request: SetProfileMetadataRequest!): LensProfileManagerRelayResult!
-  setProfileImageURI(request: SetProfileImageRequest!): LensProfileManagerRelayResult!
-  setProfileManager(request: ChangeProfileManagersRequest!): LensProfileManagerRelayResult!
-  createSetProfileMetadataTypedData(
+  setProfileMetadata(
+    request: OnChainSetProfileMetadataRequest!
+  ): LensProfileManagerRelayResult!
+  setProfileManager(
+    request: ChangeProfileManagersRequest!
+  ): LensProfileManagerRelayResult!
+  createOnChainSetProfileMetadataTypedData(
     options: TypedDataOptions
-    request: SetProfileMetadataRequest!
-  ): CreateSetProfileMetadataBroadcastItemResult!
-  createSetProfileImageTypedData(
-    options: TypedDataOptions
-    request: SetProfileImageRequest!
-  ): CreateSetProfileImageBroadcastItemResult!
+    request: OnChainSetProfileMetadataRequest!
+  ): CreateOnChainSetProfileMetadataBroadcastItemResult!
   createChangeProfileManagersTypedData(
     options: TypedDataOptions
     request: ChangeProfileManagersRequest!
   ): CreateChangeProfileManagersBroadcastItemResult!
-  createBlockProfileTypedData(
+  createBlockProfilesTypedData(
     options: TypedDataOptions
     request: BlockRequest!
-  ): CreateBlockProfileBroadcastItemResult!
+  ): CreateBlockProfilesBroadcastItemResult!
   createUnblockProfileTypedData(
     options: TypedDataOptions
     request: UnblockRequest!
-  ): CreateUnblockProfileBroadcastItemResult!
+  ): CreateUnblockProfilesBroadcastItemResult!
   authenticate(request: SignedAuthChallenge!): AuthenticationResult!
   refresh(request: RefreshRequest!): AuthenticationResult!
   idKitPhoneVerifyWebhook(
@@ -3074,8 +3119,21 @@ type EIP712TypedDataDomain {
 type CreateMomokaQuoteEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  profileId: ProfileId!
+  contentURI: URI!
+  pointedProfileId: ProfileId!
+  pointedPubId: OnChainPublicationId!
+  referrerProfileIds: [ProfileId!]!
+  referrerPubIds: [OnChainPublicationId!]!
+  referenceModuleData: BlockchainData!
+  actionModules: [EvmAddress!]!
+  actionModulesInitDatas: [BlockchainData!]!
+  referenceModule: EvmAddress!
+  referenceModuleInitData: BlockchainData!
 }
+
+# The onchain publication id
+scalar OnChainPublicationId
 
 type CreateMomokaPostBroadcastItemResult {
   # This broadcast item ID
@@ -3106,7 +3164,12 @@ type CreateMomokaPostEIP712TypedDataTypes {
 type CreateMomokaPostEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  profileId: ProfileId!
+  contentURI: URI!
+  actionModules: [EvmAddress!]!
+  actionModulesInitDatas: [BlockchainData!]!
+  referenceModule: EvmAddress!
+  referenceModuleInitData: BlockchainData!
 }
 
 type CreateMomokaCommentBroadcastItemResult {
@@ -3138,7 +3201,17 @@ type CreateMomokaCommentEIP712TypedDataTypes {
 type CreateMomokaCommentEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  profileId: ProfileId!
+  contentURI: URI!
+  pointedProfileId: ProfileId!
+  pointedPubId: OnChainPublicationId!
+  referrerProfileIds: [ProfileId!]!
+  referrerPubIds: [OnChainPublicationId!]!
+  referenceModuleData: BlockchainData!
+  actionModules: [EvmAddress!]!
+  actionModulesInitDatas: [BlockchainData!]!
+  referenceModule: EvmAddress!
+  referenceModuleInitData: BlockchainData!
 }
 
 type CreateMomokaMirrorBroadcastItemResult {
@@ -3170,7 +3243,12 @@ type CreateMomokaMirrorEIP712TypedDataTypes {
 type CreateMomokaMirrorEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  profileId: ProfileId!
+  pointedProfileId: ProfileId!
+  pointedPubId: OnChainPublicationId!
+  referrerProfileIds: [ProfileId!]!
+  referrerPubIds: [OnChainPublicationId!]!
+  referenceModuleData: BlockchainData!
 }
 
 input HidePublicationRequest {
@@ -3259,11 +3337,9 @@ enum PublicationReportingSpamSubreason {
   SOMETHING_ELSE
 }
 
-input DismissRecommendedProfilesRequest {
-  for: ProfileId!
-}
-
-union LensProfileManagerRelayResult = RelaySuccess | LensProfileManagerRelayError
+union LensProfileManagerRelayResult =
+    RelaySuccess
+  | LensProfileManagerRelayError
 
 type LensProfileManagerRelayError {
   reason: LensProfileManagerRelayErrorReasonType!
@@ -3278,11 +3354,13 @@ enum LensProfileManagerRelayErrorReasonType {
   REQUIRES_SIGNATURE
 }
 
-input CreateOnChainQuoteRequest {
-  on: PublicationId!
+input OnChainQuoteRequest {
+  quoteOn: PublicationId!
+  quoteOnReferenceModuleData: BlockchainData = "0x"
   contentURI: URI!
-  openActionModule: [OpenActionModuleInput!]!
+  openActionModules: [OpenActionModuleInput!]!
   referenceModule: ReferenceModuleInput
+  referrers: [OnChainReferrer!] = []
 }
 
 input OpenActionModuleInput {
@@ -3332,13 +3410,8 @@ input UnknownOpenActionModuleInput {
 
 input ReferenceModuleInput {
   followerOnlyReferenceModule: Boolean
-  unknownReferenceModule: UnknownReferenceModuleInput
   degreesOfSeparationReferenceModule: DegreesOfSeparationReferenceModuleInput
-}
-
-input UnknownReferenceModuleInput {
-  address: EvmAddress!
-  data: BlockchainData!
+  unknownReferenceModule: UnknownReferenceModuleInput
 }
 
 input DegreesOfSeparationReferenceModuleInput {
@@ -3348,21 +3421,35 @@ input DegreesOfSeparationReferenceModuleInput {
   degreesOfSeparation: Int!
 }
 
-input CreateOnChainPostRequest {
+input UnknownReferenceModuleInput {
+  address: EvmAddress!
+  data: BlockchainData!
+}
+
+input OnChainReferrer {
+  publicationId: PublicationId
+  profileId: ProfileId
+}
+
+input OnChainPostRequest {
   contentURI: URI!
-  openActionModule: [OpenActionModuleInput!]!
+  openActionModules: [OpenActionModuleInput!]!
   referenceModule: ReferenceModuleInput
 }
 
-input CreateOnChainCommentRequest {
+input OnChainCommentRequest {
   contentURI: URI!
   commentOn: PublicationId!
-  openActionModule: [OpenActionModuleInput!]!
+  commentOnReferenceModuleData: BlockchainData = "0x"
+  openActionModules: [OpenActionModuleInput!]!
   referenceModule: ReferenceModuleInput
+  referrers: [OnChainReferrer!] = []
 }
 
-input CreateOnChainMirrorRequest {
+input OnChainMirrorRequest {
   on: PublicationId!
+  mirrorReferenceModuleData: BlockchainData = "0x"
+  referrers: [OnChainReferrer!] = []
 }
 
 type CreateOnChainQuoteBroadcastItemResult {
@@ -3378,7 +3465,7 @@ type CreateOnChainQuoteBroadcastItemResult {
 
 type CreateOnChainQuoteEIP712TypedData {
   # The types
-  types: CreateOnChainMirrorEIP712TypedDataTypes!
+  types: CreateOnChainQuoteEIP712TypedDataTypes!
 
   # The typed data domain
   domain: EIP712TypedDataDomain!
@@ -3387,14 +3474,24 @@ type CreateOnChainQuoteEIP712TypedData {
   value: CreateOnChainQuoteEIP712TypedDataValue!
 }
 
-type CreateOnChainMirrorEIP712TypedDataTypes {
-  MirrorWithSig: [EIP712TypedDataField!]!
+type CreateOnChainQuoteEIP712TypedDataTypes {
+  QuoteWithSig: [EIP712TypedDataField!]!
 }
 
 type CreateOnChainQuoteEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  profileId: ProfileId!
+  contentURI: URI!
+  pointedProfileId: ProfileId!
+  pointedPubId: OnChainPublicationId!
+  referrerProfileIds: [ProfileId!]!
+  referrerPubIds: [OnChainPublicationId!]!
+  referenceModuleData: BlockchainData!
+  actionModules: [EvmAddress!]!
+  actionModulesInitDatas: [BlockchainData!]!
+  referenceModule: EvmAddress!
+  referenceModuleInitData: BlockchainData!
 }
 
 input TypedDataOptions {
@@ -3431,7 +3528,12 @@ type CreateOnChainPostEIP712TypedDataTypes {
 type CreateOnChainPostEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  profileId: ProfileId!
+  contentURI: URI!
+  actionModules: [EvmAddress!]!
+  actionModulesInitDatas: [BlockchainData!]!
+  referenceModule: EvmAddress!
+  referenceModuleInitData: BlockchainData!
 }
 
 type CreateOnChainCommentBroadcastItemResult {
@@ -3463,7 +3565,17 @@ type CreateOnChainCommentEIP712TypedDataTypes {
 type CreateOnChainCommentEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  profileId: ProfileId!
+  contentURI: URI!
+  pointedProfileId: ProfileId!
+  pointedPubId: OnChainPublicationId!
+  referrerProfileIds: [ProfileId!]!
+  referrerPubIds: [OnChainPublicationId!]!
+  referenceModuleData: BlockchainData!
+  actionModules: [EvmAddress!]!
+  actionModulesInitDatas: [BlockchainData!]!
+  referenceModule: EvmAddress!
+  referenceModuleInitData: BlockchainData!
 }
 
 type CreateOnChainMirrorBroadcastItemResult {
@@ -3488,10 +3600,19 @@ type CreateOnChainMirrorEIP712TypedData {
   value: CreateOnChainMirrorEIP712TypedDataValue!
 }
 
+type CreateOnChainMirrorEIP712TypedDataTypes {
+  MirrorWithSig: [EIP712TypedDataField!]!
+}
+
 type CreateOnChainMirrorEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  profileId: ProfileId!
+  pointedProfileId: ProfileId!
+  pointedPubId: OnChainPublicationId!
+  referrerProfileIds: [ProfileId!]!
+  referrerPubIds: [OnChainPublicationId!]!
+  referenceModuleData: BlockchainData!
 }
 
 input SetFollowModuleRequest {
@@ -3560,7 +3681,9 @@ type CreateSetFollowModuleEIP712TypedDataTypes {
 type CreateSetFollowModuleEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  profileId: ProfileId!
+  followModule: EvmAddress!
+  followModuleInitData: BlockchainData!
 }
 
 type CreateActOnOpenActionBroadcastItemResult {
@@ -3592,7 +3715,13 @@ type CreateActOnOpenActionEIP712TypedDataTypes {
 type CreateActOnOpenActionEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  publicationActedProfileId: ProfileId!
+  publicationActedId: OnChainPublicationId!
+  actorProfileId: ProfileId!
+  referrerProfileIds: [ProfileId!]!
+  referrerPubIds: [OnChainPublicationId!]!
+  actionModuleAddress: EvmAddress!
+  actionModuleData: BlockchainData!
 }
 
 type CreateLegacyCollectPublicationEIP712TypedData {
@@ -3613,11 +3742,20 @@ type CreateLegacyCollectPublicationEIP712TypedDataTypes {
 type CreateLegacyCollectPublicationEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  publicationCollectedProfileId: ProfileId!
+  publicationCollectedId: OnChainPublicationId!
+  collectorProfileId: ProfileId!
+  referrerProfileId: ProfileId!
+  referrerPubId: OnChainPublicationId!
+  collectModuleData: BlockchainData!
 }
 
 input ProfileInterestsRequest {
   interests: String!
+}
+
+input DismissRecommendedProfilesRequest {
+  dismiss: [ProfileId!]!
 }
 
 union CreateProfileResult = RelaySuccess | CreateProfileErrorResult
@@ -3652,28 +3790,33 @@ input InviteRequest {
 }
 
 input BlockRequest {
-  profile: ProfileId!
+  profiles: [ProfileId!]!
 }
 
 input UnblockRequest {
-  profile: ProfileId!
+  profiles: [ProfileId!]!
 }
 
-input SetProfileMetadataRequest {
+input OnChainSetProfileMetadataRequest {
   metadataURI: URI!
 }
 
-input SetProfileImageRequest {
-  imageURI: URI!
-}
-
 input ChangeProfileManagersRequest {
-  remove: [EvmAddress!]
-  add: [EvmAddress!]
-  lens: Boolean!
+  changeManagers: [ChangeProfileManager!] = []
+  approveLensManager: Boolean!
 }
 
-type CreateSetProfileMetadataBroadcastItemResult {
+input ChangeProfileManager {
+  address: EvmAddress!
+  action: ChangeProfileManagerActionType!
+}
+
+enum ChangeProfileManagerActionType {
+  REMOVE
+  ADD
+}
+
+type CreateOnChainSetProfileMetadataBroadcastItemResult {
   # This broadcast item ID
   id: BroadcastId!
 
@@ -3681,60 +3824,29 @@ type CreateSetProfileMetadataBroadcastItemResult {
   expiresAt: DateTime!
 
   # The typed data
-  typedData: CreateSetProfileMetadataEIP712TypedData!
+  typedData: CreateOnChainSetProfileMetadataEIP712TypedData!
 }
 
-type CreateSetProfileMetadataEIP712TypedData {
+type CreateOnChainSetProfileMetadataEIP712TypedData {
   # The types
-  types: CreateSetProfileMetadataEIP712TypedDataTypes!
+  types: CreateOnChainSetProfileMetadataEIP712TypedDataTypes!
 
   # The typed data domain
   domain: EIP712TypedDataDomain!
 
   # The values
-  value: CreateSetProfileMetadataEIP712TypedDataValue!
+  value: CreateOnChainSetProfileMetadataEIP712TypedDataValue!
 }
 
-type CreateSetProfileMetadataEIP712TypedDataTypes {
+type CreateOnChainSetProfileMetadataEIP712TypedDataTypes {
   SetProfileMetadataURIWithSig: [EIP712TypedDataField!]!
 }
 
-type CreateSetProfileMetadataEIP712TypedDataValue {
+type CreateOnChainSetProfileMetadataEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
-}
-
-type CreateSetProfileImageBroadcastItemResult {
-  # This broadcast item ID
-  id: BroadcastId!
-
-  # The date the broadcast item expiries
-  expiresAt: DateTime!
-
-  # The typed data
-  typedData: CreateSetProfileImageEIP712TypedData!
-}
-
-type CreateSetProfileImageEIP712TypedData {
-  # The types
-  types: CreateSetProfileImageEIP712TypedDataTypes!
-
-  # The typed data domain
-  domain: EIP712TypedDataDomain!
-
-  # The values
-  value: CreateSetProfileImageEIP712TypedDataValue!
-}
-
-type CreateSetProfileImageEIP712TypedDataTypes {
-  SetProfileImageURIWithSig: [EIP712TypedDataField!]!
-}
-
-type CreateSetProfileImageEIP712TypedDataValue {
-  nonce: Nonce!
-  deadline: UnixTimestamp!
-  fillIn: String!
+  profileId: ProfileId!
+  metadataURI: URI!
 }
 
 type CreateChangeProfileManagersBroadcastItemResult {
@@ -3766,10 +3878,14 @@ type CreateChangeProfileManagersEIP712TypedDataTypes {
 type CreateChangeProfileManagersEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  delegatorProfileId: ProfileId!
+  delegatedExecutors: [EvmAddress!]!
+  approvals: [Boolean!]!
+  configNumber: Int!
+  switchToGivenConfig: Boolean!
 }
 
-type CreateBlockProfileBroadcastItemResult {
+type CreateBlockProfilesBroadcastItemResult {
   # This broadcast item ID
   id: BroadcastId!
 
@@ -3777,31 +3893,33 @@ type CreateBlockProfileBroadcastItemResult {
   expiresAt: DateTime!
 
   # The typed data
-  typedData: CreateBlockProfileEIP712TypedData!
+  typedData: CreateBlockProfilesEIP712TypedData!
 }
 
-type CreateBlockProfileEIP712TypedData {
+type CreateBlockProfilesEIP712TypedData {
   # The types
-  types: CreateBlockProfileEIP712TypedDataTypes!
+  types: CreateBlockProfilesEIP712TypedDataTypes!
 
   # The typed data domain
   domain: EIP712TypedDataDomain!
 
   # The values
-  value: CreateBlockProfileEIP712TypedDataValue!
+  value: CreateBlockProfilesEIP712TypedDataValue!
 }
 
-type CreateBlockProfileEIP712TypedDataTypes {
+type CreateBlockProfilesEIP712TypedDataTypes {
   SetBlockStatusWithSig: [EIP712TypedDataField!]!
 }
 
-type CreateBlockProfileEIP712TypedDataValue {
+type CreateBlockProfilesEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  byProfileId: ProfileId!
+  idsOfProfilesToSetBlockStatus: [ProfileId!]!
+  blockStatus: [Boolean!]!
 }
 
-type CreateUnblockProfileBroadcastItemResult {
+type CreateUnblockProfilesBroadcastItemResult {
   # This broadcast item ID
   id: BroadcastId!
 
@@ -3809,28 +3927,30 @@ type CreateUnblockProfileBroadcastItemResult {
   expiresAt: DateTime!
 
   # The typed data
-  typedData: CreateUnblockProfileEIP712TypedData!
+  typedData: CreateUnblockProfilesEIP712TypedData!
 }
 
-type CreateUnblockProfileEIP712TypedData {
+type CreateUnblockProfilesEIP712TypedData {
   # The types
-  types: CreateUnblockProfileEIP712TypedDataTypes!
+  types: CreateUnblockProfilesEIP712TypedDataTypes!
 
   # The typed data domain
   domain: EIP712TypedDataDomain!
 
   # The values
-  value: CreateUnblockProfileEIP712TypedDataValue!
+  value: CreateUnblockProfilesEIP712TypedDataValue!
 }
 
-type CreateUnblockProfileEIP712TypedDataTypes {
+type CreateUnblockProfilesEIP712TypedDataTypes {
   SetBlockStatusWithSig: [EIP712TypedDataField!]!
 }
 
-type CreateUnblockProfileEIP712TypedDataValue {
+type CreateUnblockProfilesEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  byProfileId: ProfileId!
+  idsOfProfilesToSetBlockStatus: [ProfileId!]!
+  blockStatus: [Boolean!]!
 }
 
 # The authentication result
@@ -3940,7 +4060,9 @@ type CreateFollowEIP712TypedDataTypes {
 type CreateFollowEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  profileIds: [ProfileId!]!
+  followerProfileId: ProfileId!
+  idsOfProfilesToFollow: [ProfileId!]!
+  followTokenIds: [TokenId!]!
   datas: [BlockchainData!]!
 }
 
@@ -3973,7 +4095,8 @@ type CreateUnfollowEIP712TypedDataTypes {
 type CreateUnfollowEIP712TypedDataValue {
   nonce: Nonce!
   deadline: UnixTimestamp!
-  fillIn: String!
+  unfollowerProfileId: ProfileId!
+  idsOfProfilesToUnfollow: [ProfileId!]!
 }
 
 input AchRequest {
@@ -4051,7 +4174,9 @@ input InternalPinRequest {
 
 type Subscription {
   newMomokaTransaction: MomokaTransaction!
-  newPublicationStats(request: PublicationStatsSubscriptionRequest!): PublicationStats!
+  newPublicationStats(
+    request: PublicationStatsSubscriptionRequest!
+  ): PublicationStats!
   newNotification(request: NotificationSubscriptionRequest!): Notification!
 }
 

@@ -43,6 +43,7 @@ config:
     URI: string
     URL: string
     Void: string
+    OnChainPublicationId: string
 
   avoidOptionals:
     field: true

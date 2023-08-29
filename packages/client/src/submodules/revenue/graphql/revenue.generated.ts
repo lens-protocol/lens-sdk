@@ -12,6 +12,7 @@ import {
   Eip712TypedDataDomainFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
+  Eip712TypedDataFieldFragment,
   CreateMomokaPublicationResultFragment,
   RelayErrorFragment,
 } from '../../../graphql/fragments.generated';
@@ -30,6 +31,7 @@ import {
   Eip712TypedDataDomainFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
+  Eip712TypedDataFieldFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
   RelayErrorFragmentDoc,
 } from '../../../graphql/fragments.generated';

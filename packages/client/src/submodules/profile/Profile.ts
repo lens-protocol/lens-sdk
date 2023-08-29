@@ -455,6 +455,16 @@ export class Profile {
     });
   }
 
+  async createSetDispatcherTypedData(
+    request: SetDispa,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    CreateSetFollowModuleBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return this.createSetFollowModuleTypedData(request, options);
+  }
+
   async linkHandle(
     request: LinkHandleRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {

@@ -1,16 +1,16 @@
 import { isRelayerResult } from "@lens-protocol/client";
 import { getActiveProfile } from "./shared/getActiveProfile";
-import { getAuthenticatedClient } from "./shared/getAuthenticatedClient";
+import { getAuthenticatedClientFromEthersWallet } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
 
 async function main() {
   const wallet = setupWallet();
   const address = await wallet.getAddress();
-  const lensClient = await getAuthenticatedClient(wallet);
+  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
   const activeProfile = await getActiveProfile(lensClient, address);
 
   // we need some typedData to sign and broadcast so let's set the dispatcher as an example
-  const setDispatcherResult = await lensClient.profile.createSetDispatcherTypedData({
+  const setDispatcherResult = await lensClient.profile.crea({
     profileId: activeProfile.id,
   });
 

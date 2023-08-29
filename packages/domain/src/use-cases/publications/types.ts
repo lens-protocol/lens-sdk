@@ -76,8 +76,17 @@ export type MetadataAttribute =
       traitType: string;
     };
 
+/**
+ * The metadata of an image
+ */
 export type MetadataImage = {
+  /**
+   * The URL of the image.
+   */
   url: Url;
+  /**
+   * The mime type of the image.
+   */
   mimeType: ImageType;
 };
 

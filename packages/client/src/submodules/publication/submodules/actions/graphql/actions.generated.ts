@@ -40,7 +40,13 @@ export type CreateActOnOpenActionEip712TypedDataTypesFragment = {
 export type CreateActOnOpenActionEip712TypedDataValueFragment = {
   nonce: string;
   deadline: string;
-  fillIn: string;
+  publicationActedProfileId: string;
+  publicationActedId: string;
+  actorProfileId: string;
+  referrerProfileIds: Array<string>;
+  referrerPubIds: Array<string>;
+  actionModuleAddress: string;
+  actionModuleData: string;
 };
 
 export type CreateActOnOpenActionEip712TypedDataFragment = {
@@ -75,7 +81,13 @@ export const CreateActOnOpenActionEip712TypedDataValueFragmentDoc = gql`
   fragment CreateActOnOpenActionEIP712TypedDataValue on CreateActOnOpenActionEIP712TypedDataValue {
     nonce
     deadline
-    fillIn
+    publicationActedProfileId
+    publicationActedId
+    actorProfileId
+    referrerProfileIds
+    referrerPubIds
+    actionModuleAddress
+    actionModuleData
   }
 `;
 export const CreateActOnOpenActionEip712TypedDataFragmentDoc = gql`

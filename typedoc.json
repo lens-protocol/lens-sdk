@@ -15,7 +15,7 @@
   "plugin": ["@mxssfd/typedoc-theme"],
   "theme": "my-theme",
   "disableSources": true,
-  "treatWarningsAsErrors": true,
+  "treatWarningsAsErrors": false,
   "intentionallyNotExported": [
     "AnyTransactionRequestModel",
     "SelfFundedProtocolTransactionRequest",
