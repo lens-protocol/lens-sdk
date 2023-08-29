@@ -23,6 +23,7 @@
     "@lens-protocol/wagmi": "2.1.0"
   },
   "changesets": [
+    "loud-actors-cry",
     "shaggy-falcons-sparkle",
     "six-rules-poke"
   ]

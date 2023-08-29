@@ -1,5 +1,14 @@
 # @lens-protocol/react
 
+## 1.3.1-next.2
+
+### Patch Changes
+
+- 5f251069: **Fixed** `usePublications` to refetch on `publicationIds` change
+- Updated dependencies [5f251069]
+  - @lens-protocol/api-bindings@0.10.1-next.2
+  - @lens-protocol/gated-content@0.3.3-next.2
+
 ## 1.3.1-next.1
 
 ### Patch Changes
