@@ -12,7 +12,7 @@ const knownAddress = mockEthereumAddress();
 describe(`Given the "${transformNftCondition.name}" function`, () => {
   describe.each([
     {
-      description: 'a NFT Ownership condition: any token from the specified collection',
+      description: 'a NFT 721 Ownership condition: any token from the specified collection',
       condition: mockNftOwnershipInput({
         chainID: ethereumChainId,
         contractAddress: knownAddress,
@@ -35,7 +35,7 @@ describe(`Given the "${transformNftCondition.name}" function`, () => {
     },
 
     {
-      description: 'a NFT Ownership condition: 1 token from the specified collection',
+      description: 'a NFT 721 Ownership condition: 1 token from the specified collection',
       condition: mockNftOwnershipInput({
         chainID: ethereumChainId,
         contractAddress: knownAddress,
@@ -59,7 +59,7 @@ describe(`Given the "${transformNftCondition.name}" function`, () => {
     },
 
     {
-      description: 'a NFT Ownership condition: 2 or more tokens from the specified collection',
+      description: 'a NFT 721 Ownership condition: 2 or more tokens from the specified collection',
       condition: mockNftOwnershipInput({
         chainID: ethereumChainId,
         contractAddress: knownAddress,
@@ -96,7 +96,7 @@ describe(`Given the "${transformNftCondition.name}" function`, () => {
     },
 
     {
-      description: 'a NFT Ownership condition that has invalid token ID',
+      description: 'a NFT 721 Ownership condition that has invalid token ID',
       condition: mockNftOwnershipInput({
         chainID: ethereumChainId,
         contractAddress: knownAddress,
@@ -107,7 +107,7 @@ describe(`Given the "${transformNftCondition.name}" function`, () => {
     },
 
     {
-      description: 'a NFT Ownership condition that has invalid contract address',
+      description: 'a NFT 721 Ownership condition that has invalid contract address',
       condition: mockNftOwnershipInput({
         chainID: ethereumChainId,
         contractAddress: '0x123',
@@ -117,7 +117,7 @@ describe(`Given the "${transformNftCondition.name}" function`, () => {
     },
 
     {
-      description: 'a NFT Ownership condition that has invalid chain ID',
+      description: 'a NFT 721 Ownership condition that has invalid chain ID',
       condition: mockNftOwnershipInput({
         chainID: 42,
         contractAddress: knownAddress,
@@ -127,7 +127,7 @@ describe(`Given the "${transformNftCondition.name}" function`, () => {
     },
 
     {
-      description: 'a NFT Ownership condition that has invalid contract type',
+      description: 'a ERC20 Ownership condition that has invalid contract type',
       condition: mockNftOwnershipInput({
         chainID: ethereumChainId,
         contractAddress: knownAddress,
@@ -137,13 +137,83 @@ describe(`Given the "${transformNftCondition.name}" function`, () => {
     },
 
     {
-      description: 'a NFT Ownership condition that has invalid contract type',
+      description: 'a ERC20 Ownership condition that has invalid contract type',
       condition: mockNftOwnershipInput({
         chainID: ethereumChainId,
         contractAddress: knownAddress,
         contractType: ContractType.Erc20,
       }),
       expectedErrorCtor: InvalidAccessCriteriaError,
+    },
+
+    {
+      description: 'a ERC1155 Ownership condition that has no token ids set',
+      condition: mockNftOwnershipInput({
+        chainID: ethereumChainId,
+        contractAddress: knownAddress,
+        contractType: ContractType.Erc1155,
+        tokenIds: undefined,
+      }),
+      expectedErrorCtor: InvalidAccessCriteriaError,
+    },
+
+    {
+      description: 'a ERC1155 Ownership condition that has empty token ids set',
+      condition: mockNftOwnershipInput({
+        chainID: ethereumChainId,
+        contractAddress: knownAddress,
+        contractType: ContractType.Erc1155,
+        tokenIds: [],
+      }),
+      expectedErrorCtor: InvalidAccessCriteriaError,
+    },
+
+    {
+      description: 'a ERC1155 Ownership condition: 1 token from the specified collection',
+      condition: mockNftOwnershipInput({
+        chainID: ethereumChainId,
+        contractAddress: knownAddress,
+        contractType: ContractType.Erc1155,
+        tokenIds: ['1'],
+      }),
+      expectedLitAccessConditions: [
+        {
+          conditionType: LitConditionType.EVM_BASIC,
+          chain: SupportedChains.ETHEREUM,
+          contractAddress: knownAddress.toLowerCase(),
+          method: 'balanceOf',
+          parameters: [':userAddress', '1'],
+          returnValueTest: {
+            comparator: LitScalarOperator.GREATER_THAN,
+            value: '0',
+          },
+          standardContractType: ContractType.Erc1155,
+        },
+      ],
+    },
+
+    {
+      description: 'a ERC1155 Ownership condition: 2 or more tokens from the specified collection',
+      condition: mockNftOwnershipInput({
+        chainID: ethereumChainId,
+        contractAddress: knownAddress,
+        contractType: ContractType.Erc1155,
+        tokenIds: ['1', '2'],
+      }),
+      expectedLitAccessConditions: [
+        {
+          conditionType: LitConditionType.EVM_BASIC,
+          chain: SupportedChains.ETHEREUM,
+          contractAddress: knownAddress.toLowerCase(),
+          method: 'balanceOfBatch',
+          parameters: [':userAddress,:userAddress', '1,2'],
+          returnValueTest: {
+            comparator: LitScalarOperator.GREATER_THAN,
+            value: '0',
+          },
+          standardContractType: ContractType.Erc1155,
+        },
+      ],
     },
   ])(
     `when called with $description AccessCondition`,
