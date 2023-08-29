@@ -28,6 +28,7 @@ import {
   isNonNullable,
   never,
   TwoAtLeastArray,
+  assertNever,
 } from '@lens-protocol/shared-kernel';
 
 import {
@@ -76,22 +77,30 @@ function nftOwnershipCriterion({
     return null;
   }
 
-  if (tokenIds && hasAtLeastOne(tokenIds)) {
-    return {
-      type: DecryptionCriteriaType.NFT_OWNERSHIP,
-      chainId: chainID,
-      contractAddress: contractAddress,
-      contractType: supportedNftContractType,
-      tokenIds: tokenIds,
-    };
-  }
+  switch (supportedNftContractType) {
+    case NftContractType.Erc721:
+      return {
+        type: DecryptionCriteriaType.NFT_OWNERSHIP,
+        chainId: chainID,
+        contractAddress: contractAddress,
+        contractType: supportedNftContractType,
+        tokenIds: tokenIds ?? undefined,
+      };
+    case NftContractType.Erc1155:
+      if (tokenIds && hasAtLeastOne(tokenIds)) {
+        return {
+          type: DecryptionCriteriaType.NFT_OWNERSHIP,
+          chainId: chainID,
+          contractAddress: contractAddress,
+          contractType: supportedNftContractType,
+          tokenIds: tokenIds,
+        };
+      }
 
-  return {
-    type: DecryptionCriteriaType.NFT_OWNERSHIP,
-    chainId: chainID,
-    contractAddress: contractAddress,
-    contractType: supportedNftContractType,
-  };
+      return null;
+    default:
+      assertNever(supportedNftContractType, 'NFT contract type is not supported');
+  }
 }
 
 export function erc20Amount({ from }: { from: Erc20OwnershipOutput }) {
