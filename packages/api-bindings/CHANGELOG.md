@@ -1,5 +1,11 @@
 # @lens-protocol/api-bindings
 
+## 0.10.1-next.2
+
+### Patch Changes
+
+- 5f251069: **Fixed** `usePublications` to refetch on `publicationIds` change
+
 ## 0.10.1-next.1
 
 ### Patch Changes
