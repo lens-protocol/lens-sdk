@@ -11,7 +11,7 @@ import {
 } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback } from '../components/UnauthenticatedFallback';
-import { WhenLoggedInWithProfile } from '../components/auth/WhenLoggedInWithProfile';
+import { WhenLoggedInWithProfile } from '../components/auth';
 import { upload } from '../upload';
 import { never } from '../utils';
 import { PendingPostCard } from './components/PendingPostCard';
@@ -36,8 +36,8 @@ export function Composer({ publisher }: ComposerProps) {
     if (formData.has('nft') && formData.get('nft')?.length) {
       criteria.push({
         type: DecryptionCriteriaType.NFT_OWNERSHIP,
-        chainId: 137,
-        contractType: NftContractType.Erc1155,
+        chainId: 80001,
+        contractType: NftContractType.Erc721,
         contractAddress: formData.get('nft') as string,
       });
     }

@@ -1,4 +1,5 @@
 import { isAddress } from '@ethersproject/address';
+import { BigNumber } from '@ethersproject/bignumber';
 import { ContractType } from '@lens-protocol/api-bindings';
 import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 import { EthereumAddress, TwoAtLeastArray } from '@lens-protocol/shared-kernel';
@@ -28,6 +29,18 @@ export function assertSupportedNftContractType(
 
   throw new InvalidAccessCriteriaError(`Invalid contract type: ${contractType}`);
 }
+
+export const assertValidTokenIds = (tokenIds?: string[] | null) => {
+  if (!tokenIds) {
+    return;
+  }
+
+  try {
+    tokenIds.every((tokenId) => BigNumber.from(tokenId));
+  } catch (e: unknown) {
+    throw new InvalidAccessCriteriaError(`Invalid token ids`);
+  }
+};
 
 function isValidLensId(id: string): boolean {
   const regex = /^0x(?:[a-fA-F0-9]{2})+$/;

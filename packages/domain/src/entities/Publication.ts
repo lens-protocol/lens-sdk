@@ -29,6 +29,8 @@ export enum Erc20ComparisonOperator {
 /**
  * The active wallet must satisfy the NFT ownership criteria
  */
+// TODO: Introduce a new type that splits NFT ownership criteria into two types: one for ERC721 and one for ERC1155
+// This would allow to force the `tokenIds` field to be always presented for ERC1155
 export type NftOwnershipCriterion = {
   type: DecryptionCriteriaType.NFT_OWNERSHIP;
   /**
