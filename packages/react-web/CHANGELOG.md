@@ -1,5 +1,14 @@
 # @lens-protocol/react-web
 
+## 1.3.1-next.3
+
+### Patch Changes
+
+- ace02d32: **Fixes** support for ERC1155 gated content
+- Updated dependencies [ace02d32]
+  - @lens-protocol/gated-content@0.3.3-next.3
+  - @lens-protocol/react@1.3.1-next.3
+
 ## 1.3.1-next.2
 
 ### Patch Changes
