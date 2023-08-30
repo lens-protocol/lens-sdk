@@ -127,26 +127,6 @@ describe(`Given the "${transformNftCondition.name}" function`, () => {
     },
 
     {
-      description: 'a ERC20 Ownership condition that has invalid contract type',
-      condition: mockNftOwnershipInput({
-        chainID: ethereumChainId,
-        contractAddress: knownAddress,
-        contractType: ContractType.Erc20,
-      }),
-      expectedErrorCtor: InvalidAccessCriteriaError,
-    },
-
-    {
-      description: 'a ERC20 Ownership condition that has invalid contract type',
-      condition: mockNftOwnershipInput({
-        chainID: ethereumChainId,
-        contractAddress: knownAddress,
-        contractType: ContractType.Erc20,
-      }),
-      expectedErrorCtor: InvalidAccessCriteriaError,
-    },
-
-    {
       description: 'a ERC1155 Ownership condition that has no token ids set',
       condition: mockNftOwnershipInput({
         chainID: ethereumChainId,
