@@ -9,14 +9,23 @@ import type {
   RelayErrorFragment,
   RelaySuccessFragment,
 } from '../../graphql/fragments.generated';
-import type { BroadcastRequest, LensTransactionStatusRequest } from '../../graphql/types.generated';
-import { requireAuthHeaders } from '../../helpers';
+import {
+  LensTransactionStatusType,
+  type BroadcastRequest,
+  type LensTransactionStatusRequest,
+} from '../../graphql/types.generated';
+import { poll, requireAuthHeaders } from '../../helpers';
 import {
   getSdk,
   LensMetadataTransactionFragment,
   LensTransactionFragment,
   Sdk,
 } from './graphql/transaction.generated';
+
+export class TransactionPollingError extends Error {
+  name = 'TransactionPollingError' as const;
+  message = 'Max attempts exceeded';
+}
 
 /**
  * Broadcast signed typed data for a gasless transaction.
@@ -57,7 +66,7 @@ export class Transaction {
     return result.data.result;
   }
 
-  async broadcastOnChain(
+  async broadcastOnchain(
     request: BroadcastRequest,
   ): PromiseResult<
     RelaySuccessFragment | RelayErrorFragment,
@@ -78,6 +87,29 @@ export class Transaction {
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.BroadcastOnMomoka({ request }, headers);
       return result.data.result;
+    });
+  }
+
+  async waitUntilComplete({
+    txId,
+  }: {
+    txId: string;
+  }): PromiseResult<
+    LensMetadataTransactionFragment | LensTransactionFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return poll({
+      fn: () => this.status({ txId }),
+      validate: (result: Awaited<ReturnType<typeof this.status>>) => {
+        if (result.isSuccess()) {
+          const value = result.value;
+
+          return value.status === LensTransactionStatusType.Complete;
+        }
+        // in any not positive scenario, return true to resolve the polling with the Result
+        return true;
+      },
+      onMaxAttempts: () => new TransactionPollingError(),
     });
   }
 }

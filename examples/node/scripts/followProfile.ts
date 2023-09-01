@@ -1,4 +1,4 @@
-import { isRelayerResult } from "@lens-protocol/client";
+import { isRelaySuccess } from "@lens-protocol/client";
 import { getAuthenticatedClient } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
 import { signAndBroadcast } from "./shared/signAndBroadcast";
@@ -44,7 +44,7 @@ async function main() {
     followTypedDataResult
   );
 
-  if (!isRelayerResult(followBroadcastResultValue)) {
+  if (!isRelaySuccess(followBroadcastResultValue)) {
     console.log(`Something went wrong`, followBroadcastResultValue);
     return;
   }
@@ -80,7 +80,7 @@ async function main() {
     unfollowTypedDataResult
   );
 
-  if (!isRelayerResult(unfollowBroadcastResultValue)) {
+  if (!isRelaySuccess(unfollowBroadcastResultValue)) {
     console.log(`Something went wrong`, unfollowBroadcastResultValue);
     return;
   }

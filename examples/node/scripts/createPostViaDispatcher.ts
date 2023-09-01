@@ -1,4 +1,4 @@
-import { isRelayerResult } from "@lens-protocol/client";
+import { isRelaySuccess } from "@lens-protocol/client";
 import { getAuthenticatedClient } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
 import { uploadWithBundlr } from "./shared/uploadWithBundlr";
@@ -42,7 +42,7 @@ async function main() {
   // createPostResult is a Result object
   const createPostResultValue = createPostResult.unwrap();
 
-  if (!isRelayerResult(createPostResultValue)) {
+  if (!isRelaySuccess(createPostResultValue)) {
     console.log(`Something went wrong`, createPostResultValue);
     return;
   }

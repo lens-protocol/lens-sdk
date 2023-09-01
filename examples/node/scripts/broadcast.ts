@@ -1,4 +1,4 @@
-import { isRelayerResult } from "@lens-protocol/client";
+import { isRelaySuccess } from "@lens-protocol/client";
 import { getActiveProfile } from "./shared/getActiveProfile";
 import { getAuthenticatedClientFromEthersWallet } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
@@ -33,7 +33,7 @@ async function main() {
   // broadcastResult is a Result object
   const broadcastResultValue = broadcastResult.unwrap();
 
-  if (!isRelayerResult(broadcastResultValue)) {
+  if (!isRelaySuccess(broadcastResultValue)) {
     console.log(`Something went wrong`, broadcastResultValue);
     return;
   }

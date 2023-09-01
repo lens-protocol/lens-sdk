@@ -33,7 +33,7 @@ export type Scalars = {
   ImageSizeTransform: { input: ImageSizeTransform; output: ImageSizeTransform };
   IpfsCid: { input: string; output: string };
   Jwt: { input: string; output: string };
-  LimitScalar: { input: string; output: string };
+  LimitScalar: { input: number; output: number };
   Locale: { input: string; output: string };
   Markdown: { input: string; output: string };
   MimeType: { input: string; output: string };

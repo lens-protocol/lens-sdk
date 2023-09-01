@@ -24,7 +24,7 @@ config:
     IpfsCid: string
     Jwt: string
     # TODO: should 'Scalar' be appended here?
-    LimitScalar: string
+    LimitScalar: number
     Locale: string
     Markdown: string
     MimeType: string
@@ -50,6 +50,7 @@ config:
 
 schema:
   - ./lens-v2.graphql
+  # - https://api-v2-mumbai.lens.dev/graphql
 documents:
   - src/**/*.graphql
 generates:

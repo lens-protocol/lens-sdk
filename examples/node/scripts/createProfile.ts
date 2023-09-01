@@ -1,4 +1,4 @@
-import { isRelayerResult } from "@lens-protocol/client";
+import { isRelaySuccess } from "@lens-protocol/client";
 import { getAuthenticatedClient } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
 
@@ -16,7 +16,7 @@ async function main() {
   // profileCreateResult is a Result object
   const profileCreateResultValue = profileCreateResult.unwrap();
 
-  if (!isRelayerResult(profileCreateResultValue)) {
+  if (!isRelaySuccess(profileCreateResultValue)) {
     console.log(`Something went wrong`, profileCreateResultValue);
     return;
   }

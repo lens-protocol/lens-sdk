@@ -20,6 +20,7 @@ import type {
   FollowingRequest,
   LinkHandleRequest,
   MutualFollowersRequest,
+  OnChainSetProfileMetadataRequest,
   ProfileInterestsRequest,
   ProfileManagersRequest,
   ProfileRecommendationsRequest,
@@ -40,7 +41,7 @@ import {
   sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
-  CreateBlockProfileBroadcastItemResultFragment,
+  CreateBlockProfilesBroadcastItemResultFragment,
   CreateChangeProfileManagersBroadcastItemResultFragment,
   CreateFollowBroadcastItemResultFragment,
   CreateProfileErrorResultFragment,
@@ -203,18 +204,6 @@ export class Profile {
     });
   }
 
-  async setImage(
-    request: SetProfileImageRequest,
-  ): PromiseResult<
-    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.SetProfileImageURI({ request }, headers);
-      return result.data.result;
-    });
-  }
-
   async setManager(
     request: ChangeProfileManagersRequest,
   ): PromiseResult<
@@ -295,35 +284,15 @@ export class Profile {
     });
   }
 
-  async createSetProfileMetadataTypedData(
-    request: SetProfileMetadataRequest,
+  async createOnChainSetProfileMetadataTypedData(
+    request: OnChainSetProfileMetadataRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
     CreateSetProfileMetadataBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateSetProfileMetadataTypedData(
-        {
-          request,
-          options,
-        },
-        headers,
-      );
-
-      return result.data.result;
-    });
-  }
-
-  async createSetProfileImageTypedData(
-    request: SetProfileImageRequest,
-    options?: TypedDataOptions,
-  ): PromiseResult<
-    CreateSetProfileImageBroadcastItemResultFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateSetProfileImageTypedData(
+      const result = await this.sdk.CreateOnChainSetProfileMetadataTypedData(
         {
           request,
           options,
@@ -355,15 +324,15 @@ export class Profile {
     });
   }
 
-  async createBlockProfileTypedData(
+  async createBlockProfilesTypedData(
     request: BlockRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateBlockProfileBroadcastItemResultFragment,
+    CreateBlockProfilesBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateBlockProfileTypedData(
+      const result = await this.sdk.CreateBlockProfilesTypedData(
         {
           request,
           options,
@@ -453,16 +422,6 @@ export class Profile {
 
       return result.data.result;
     });
-  }
-
-  async createSetDispatcherTypedData(
-    request: SetDispa,
-    options?: TypedDataOptions,
-  ): PromiseResult<
-    CreateSetFollowModuleBroadcastItemResultFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return this.createSetFollowModuleTypedData(request, options);
   }
 
   async linkHandle(
