@@ -1,5 +1,5 @@
 import { isRelaySuccess } from "@lens-protocol/client";
-import { getAuthenticatedClient } from "./shared/getAuthenticatedClient";
+import { getAuthenticatedClientFromEthersWallet } from "./shared/getAuthenticatedClient";
 import { setupWallet } from "./shared/setupWallet";
 import { uploadWithBundlr } from "./shared/uploadWithBundlr";
 import { getActiveProfile } from "./shared/getActiveProfile";
@@ -8,7 +8,7 @@ import { buildPublicationMetadata } from "./shared/buildPublicationMetadata";
 async function main() {
   const wallet = setupWallet();
   const address = await wallet.getAddress();
-  const lensClient = await getAuthenticatedClient(wallet);
+  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
   const profile = await getActiveProfile(lensClient, address);
   const profileId = profile.id;
 

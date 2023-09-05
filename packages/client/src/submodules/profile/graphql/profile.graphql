@@ -2,16 +2,16 @@ fragment ProfileManager on ProfilesManagedResult {
   address
 }
 
-fragment CreateProfileErrorResult on CreateProfileErrorResult {
+fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
   reason
 }
 
-fragment CreateOnChainSetProfileMetadataBroadcastItemResult on CreateOnChainSetProfileMetadataBroadcastItemResult {
+fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetProfileMetadataBroadcastItemResult {
   id
   expiresAt
   typedData {
     types {
-      SetProfileMetadataURIWithSig {
+      SetProfileMetadataURI {
         name
         type
       }
@@ -31,7 +31,7 @@ fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileMa
   expiresAt
   typedData {
     types {
-      ChangeDelegatedExecutorsConfigWithSig {
+      ChangeDelegatedExecutorsConfig {
         name
         type
       }
@@ -51,7 +51,7 @@ fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastI
   expiresAt
   typedData {
     types {
-      SetBlockStatusWithSig {
+      SetBlockStatus {
         name
         type
       }
@@ -71,7 +71,7 @@ fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadc
   expiresAt
   typedData {
     types {
-      SetBlockStatusWithSig {
+      SetBlockStatus {
         name
         type
       }
@@ -91,7 +91,7 @@ fragment CreateFollowBroadcastItemResult on CreateFollowBroadcastItemResult {
   expiresAt
   typedData {
     types {
-      FollowWithSig {
+      Follow {
         name
         type
       }
@@ -111,7 +111,7 @@ fragment CreateUnfollowBroadcastItemResult on CreateUnfollowBroadcastItemResult 
   expiresAt
   typedData {
     types {
-      UnfollowWithSig {
+      Unfollow {
         name
         type
       }
@@ -131,7 +131,7 @@ fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadc
   expiresAt
   typedData {
     types {
-      SetFollowModuleWithSig {
+      SetFollowModule {
         name
         type
       }
@@ -249,19 +249,19 @@ mutation ClaimProfile($request: ClaimProfileRequest!) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
-    ... on CreateProfileErrorResult {
-      ...CreateProfileErrorResult
+    ... on CreateProfileWithHandleErrorResult {
+      ...CreateProfileWithHandleErrorResult
     }
   }
 }
 
-mutation CreateProfile($request: CreateProfileRequest!) {
-  result: createProfile(request: $request) {
+mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
+  result: createProfileWithHandle(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
-    ... on CreateProfileErrorResult {
-      ...CreateProfileErrorResult
+    ... on CreateProfileWithHandleErrorResult {
+      ...CreateProfileWithHandleErrorResult
     }
   }
 }
@@ -274,19 +274,8 @@ mutation RemoveProfileInterests($request: ProfileInterestsRequest!) {
   result: removeProfileInterests(request: $request)
 }
 
-mutation SetProfileMetadata($request: OnChainSetProfileMetadataRequest!) {
+mutation SetProfileMetadata($request: OnchainSetProfileMetadataRequest!) {
   result: setProfileMetadata(request: $request) {
-    ... on RelaySuccess {
-      ...RelaySuccess
-    }
-    ... on LensProfileManagerRelayError {
-      ...LensProfileManagerRelayError
-    }
-  }
-}
-
-mutation SetProfileManager($request: ChangeProfileManagersRequest!) {
-  result: setProfileManager(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
@@ -318,7 +307,7 @@ mutation Unblock($request: UnblockRequest!) {
   }
 }
 
-mutation Follow($request: FollowRequest!) {
+mutation Follow($request: FollowLensManagerRequest!) {
   result: follow(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
@@ -344,12 +333,12 @@ mutation DismissRecommendedProfiles($request: DismissRecommendedProfilesRequest!
   result: dismissRecommendedProfiles(request: $request)
 }
 
-mutation CreateOnChainSetProfileMetadataTypedData(
-  $request: OnChainSetProfileMetadataRequest!
+mutation CreateOnchainSetProfileMetadataTypedData(
+  $request: OnchainSetProfileMetadataRequest!
   $options: TypedDataOptions
 ) {
-  result: createOnChainSetProfileMetadataTypedData(request: $request, options: $options) {
-    ...CreateOnChainSetProfileMetadataBroadcastItemResult
+  result: createOnchainSetProfileMetadataTypedData(request: $request, options: $options) {
+    ...CreateOnchainSetProfileMetadataBroadcastItemResult
   }
 }
 
@@ -368,8 +357,8 @@ mutation CreateBlockProfilesTypedData($request: BlockRequest!, $options: TypedDa
   }
 }
 
-mutation CreateUnblockProfileTypedData($request: UnblockRequest!, $options: TypedDataOptions) {
-  result: createUnblockProfileTypedData(request: $request, options: $options) {
+mutation CreateUnblockProfilesTypedData($request: UnblockRequest!, $options: TypedDataOptions) {
+  result: createUnblockProfilesTypedData(request: $request, options: $options) {
     ...CreateUnblockProfilesBroadcastItemResult
   }
 }
@@ -406,12 +395,26 @@ mutation CreateSetFollowModuleTypedData(
   }
 }
 
-query LinkHandleToProfile($request: LinkHandleRequest!) {
-  linkHandleToProfile(request: $request)
+mutation HandleLinkToProfile($request: HandleLinkToProfileRequest!) {
+  result: handleLinkToProfile(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
 }
 
-query UnlinkHandleFromProfile($request: UnlinkHandleRequest!) {
-  unlinkHandleFromProfile(request: $request)
+mutation UnlinkHandleFromProfile($request: HandleUnlinkFromProfileRequest!) {
+  result: handleUnlinkFromProfile(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
 }
 
 # mutation CreateSetDispatcherTypedData($)

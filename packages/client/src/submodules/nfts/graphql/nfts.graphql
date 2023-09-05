@@ -24,7 +24,7 @@ fragment Nft on Nft {
   ownerInfo {
     ...Owner
   }
-  contentUri
+  contentURI
   contract {
     ...NetworkAddress
   }

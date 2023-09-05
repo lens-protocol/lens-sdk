@@ -49,9 +49,13 @@ export type SupportedModulesQueryVariables = Types.Exact<{ [key: string]: never 
 
 export type SupportedModulesQuery = { result: Array<SupportedModulesFragment> };
 
-export type CurrenciesQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type CurrenciesQueryVariables = Types.Exact<{
+  request: Types.PaginatedOffsetRequest;
+}>;
 
-export type CurrenciesQuery = { result: Array<Erc20Fragment> };
+export type CurrenciesQuery = {
+  result: { items: Array<Erc20Fragment>; pageInfo: PaginatedResultInfoFragment };
+};
 
 export type ApprovedModuleAllowanceAmountQueryVariables = Types.Exact<{
   request: Types.ApprovedModuleAllowanceAmountRequest;
@@ -134,12 +138,18 @@ export const SupportedModulesDocument = gql`
   ${SupportedModulesFragmentDoc}
 `;
 export const CurrenciesDocument = gql`
-  query Currencies {
-    result: currencies {
-      ...Erc20
+  query Currencies($request: PaginatedOffsetRequest!) {
+    result: currencies(request: $request) {
+      items {
+        ...Erc20
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
     }
   }
   ${Erc20FragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
 `;
 export const ApprovedModuleAllowanceAmountDocument = gql`
   query ApprovedModuleAllowanceAmount($request: ApprovedModuleAllowanceAmountRequest!) {
@@ -197,7 +207,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
       );
     },
     Currencies(
-      variables?: CurrenciesQueryVariables,
+      variables: CurrenciesQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{ data: CurrenciesQuery; extensions?: any; headers: Dom.Headers; status: number }> {
       return withWrapper(

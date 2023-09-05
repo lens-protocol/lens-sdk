@@ -51,7 +51,7 @@ export type WhoReactedPublicationQueryVariables = Types.Exact<{
 }>;
 
 export type WhoReactedPublicationQuery = {
-  result: { items: Array<ProfileReactedResultFragment>; pageInfo: PaginatedResultInfoFragment };
+  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
 export const ProfileReactedResultFragmentDoc = gql`
@@ -84,14 +84,14 @@ export const WhoReactedPublicationDocument = gql`
   ) {
     result: whoReactedPublication(request: $request) {
       items {
-        ...ProfileReactedResult
+        ...Profile
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }
-  ${ProfileReactedResultFragmentDoc}
+  ${ProfileFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
 

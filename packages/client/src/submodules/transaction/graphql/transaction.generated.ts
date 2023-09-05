@@ -44,21 +44,34 @@ export type TxIdToTxHashQueryVariables = Types.Exact<{
   txId: Types.Scalars['TxId']['input'];
 }>;
 
-export type TxIdToTxHashQuery = { result: string };
+export type TxIdToTxHashQuery = { result: string | null };
 
 export type LensTransactionStatusQueryVariables = Types.Exact<{
   request: Types.LensTransactionStatusRequest;
 }>;
 
 export type LensTransactionStatusQuery = {
-  result: LensMetadataTransactionFragment | LensTransactionFragment;
+  result:
+    | {
+        __typename: 'LensMetadataTransaction';
+        status: Types.LensTransactionStatusType;
+        metadataFailedReason: Types.LensMetadataTransactionFailureType | null;
+        extraInfo: string | null;
+      }
+    | {
+        __typename: 'LensTransaction';
+        status: Types.LensTransactionStatusType;
+        txHash: string;
+        reason: Types.LensTransactionFailureType | null;
+        extraInfo: string | null;
+      };
 };
 
-export type BroadcastOnChainMutationVariables = Types.Exact<{
+export type BroadcastOnchainMutationVariables = Types.Exact<{
   request: Types.BroadcastRequest;
 }>;
 
-export type BroadcastOnChainMutation = { result: RelayErrorFragment | RelaySuccessFragment };
+export type BroadcastOnchainMutation = { result: RelayErrorFragment | RelaySuccessFragment };
 
 export type BroadcastOnMomokaMutationVariables = Types.Exact<{
   request: Types.BroadcastRequest;
@@ -94,19 +107,24 @@ export const LensTransactionStatusDocument = gql`
   query LensTransactionStatus($request: LensTransactionStatusRequest!) {
     result: lensTransactionStatus(request: $request) {
       ... on LensTransaction {
-        ...LensTransaction
+        __typename
+        status
+        txHash
+        reason
+        extraInfo
       }
       ... on LensMetadataTransaction {
-        ...LensMetadataTransaction
+        __typename
+        status
+        metadataFailedReason
+        extraInfo
       }
     }
   }
-  ${LensTransactionFragmentDoc}
-  ${LensMetadataTransactionFragmentDoc}
 `;
-export const BroadcastOnChainDocument = gql`
-  mutation BroadcastOnChain($request: BroadcastRequest!) {
-    result: broadcastOnChain(request: $request) {
+export const BroadcastOnchainDocument = gql`
+  mutation BroadcastOnchain($request: BroadcastRequest!) {
+    result: broadcastOnchain(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess
       }
@@ -142,7 +160,7 @@ export type SdkFunctionWrapper = <T>(
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const TxIdToTxHashDocumentString = print(TxIdToTxHashDocument);
 const LensTransactionStatusDocumentString = print(LensTransactionStatusDocument);
-const BroadcastOnChainDocumentString = print(BroadcastOnChainDocument);
+const BroadcastOnchainDocumentString = print(BroadcastOnchainDocument);
 const BroadcastOnMomokaDocumentString = print(BroadcastOnMomokaDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
@@ -185,22 +203,22 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'query',
       );
     },
-    BroadcastOnChain(
-      variables: BroadcastOnChainMutationVariables,
+    BroadcastOnchain(
+      variables: BroadcastOnchainMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: BroadcastOnChainMutation;
+      data: BroadcastOnchainMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<BroadcastOnChainMutation>(BroadcastOnChainDocumentString, variables, {
+          client.rawRequest<BroadcastOnchainMutation>(BroadcastOnchainDocumentString, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        'BroadcastOnChain',
+        'BroadcastOnchain',
         'mutation',
       );
     },

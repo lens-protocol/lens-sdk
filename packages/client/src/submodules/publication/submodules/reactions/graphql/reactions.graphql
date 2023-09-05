@@ -23,7 +23,7 @@ query WhoReactedPublication(
 ) {
   result: whoReactedPublication(request: $request) {
     items {
-      ...ProfileReactedResult
+      ...Profile
     }
     pageInfo {
       ...PaginatedResultInfo

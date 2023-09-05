@@ -29,8 +29,8 @@ query ProfilesManaged(
 }
 
 fragment UserSigNonces on UserSigNonces {
-  lensHubOnChainSigNonce
-  peripheryOnChainSigNonce
+  lensHubOnchainSigNonce
+  lensTokenHandleRegistryOnchainSigNonce
 }
 
 query UserSigNonces {

@@ -121,12 +121,12 @@ query ValidatePublicationMetadata($request: ValidatePublicationMetadataRequest!)
 }
 
 # mutation fragments
-fragment CreateOnChainPostBroadcastItemResult on CreateOnChainPostBroadcastItemResult {
+fragment CreateOnchainPostBroadcastItemResult on CreateOnchainPostBroadcastItemResult {
   id
   expiresAt
   typedData {
     types {
-      PostWithSig {
+      Post {
         name
         type
       }
@@ -147,12 +147,12 @@ fragment CreateOnChainPostBroadcastItemResult on CreateOnChainPostBroadcastItemR
   }
 }
 
-fragment CreateOnChainCommentBroadcastItemResult on CreateOnChainCommentBroadcastItemResult {
+fragment CreateOnchainCommentBroadcastItemResult on CreateOnchainCommentBroadcastItemResult {
   id
   expiresAt
   typedData {
     types {
-      CommentWithSig {
+      Comment {
         name
         type
       }
@@ -176,7 +176,7 @@ fragment CreateOnChainCommentBroadcastItemResult on CreateOnChainCommentBroadcas
   }
 }
 
-fragment CreateOnChainMirrorEIP712TypedDataValue on CreateOnChainMirrorEIP712TypedDataValue {
+fragment CreateOnchainMirrorEIP712TypedDataValue on CreateOnchainMirrorEIP712TypedDataValue {
   nonce
   deadline
   profileId
@@ -188,30 +188,30 @@ fragment CreateOnChainMirrorEIP712TypedDataValue on CreateOnChainMirrorEIP712Typ
   referenceModuleData
 }
 
-fragment CreateOnChainMirrorEIP712TypedDataTypes on CreateOnChainMirrorEIP712TypedDataTypes {
-  MirrorWithSig {
+fragment CreateOnchainMirrorEIP712TypedDataTypes on CreateOnchainMirrorEIP712TypedDataTypes {
+  Mirror {
     ...EIP712TypedDataField
   }
 }
 
-fragment CreateOnChainMirrorEIP712TypedData on CreateOnChainMirrorEIP712TypedData {
+fragment CreateOnchainMirrorEIP712TypedData on CreateOnchainMirrorEIP712TypedData {
   types {
-    ...CreateOnChainMirrorEIP712TypedDataTypes
+    ...CreateOnchainMirrorEIP712TypedDataTypes
   }
   domain {
     ...EIP712TypedDataDomain
   }
   value {
-    ...CreateOnChainMirrorEIP712TypedDataValue
+    ...CreateOnchainMirrorEIP712TypedDataValue
   }
 }
 
-fragment CreateOnChainMirrorBroadcastItemResult on CreateOnChainMirrorBroadcastItemResult {
+fragment CreateOnchainMirrorBroadcastItemResult on CreateOnchainMirrorBroadcastItemResult {
   id
   expiresAt
   typedData {
     types {
-      MirrorWithSig {
+      Mirror {
         name
         type
       }
@@ -232,7 +232,7 @@ fragment CreateOnChainMirrorBroadcastItemResult on CreateOnChainMirrorBroadcastI
   }
 }
 
-fragment CreateOnChainQuoteEIP712TypedDataValue on CreateOnChainQuoteEIP712TypedDataValue {
+fragment CreateOnchainQuoteEIP712TypedDataValue on CreateOnchainQuoteEIP712TypedDataValue {
   nonce
   deadline
   profileId
@@ -248,35 +248,29 @@ fragment CreateOnChainQuoteEIP712TypedDataValue on CreateOnChainQuoteEIP712Typed
   referenceModuleInitData
 }
 
-fragment CreateOnChainQuoteEIP712TypedDataTypes on CreateOnChainQuoteEIP712TypedDataTypes {
-  QuoteWithSig {
+fragment CreateOnchainQuoteEIP712TypedDataTypes on CreateOnchainQuoteEIP712TypedDataTypes {
+  Quote {
     ...EIP712TypedDataField
   }
 }
 
-fragment CreateOnChainQuoteEIP712TypedDataTypes on CreateOnChainQuoteEIP712TypedDataTypes {
-  QuoteWithSig {
-    ...EIP712TypedDataField
-  }
-}
-
-fragment CreateOnChainQuoteEIP712TypedData on CreateOnChainQuoteEIP712TypedData {
+fragment CreateOnchainQuoteEIP712TypedData on CreateOnchainQuoteEIP712TypedData {
   types {
-    ...CreateOnChainQuoteEIP712TypedDataTypes
+    ...CreateOnchainQuoteEIP712TypedDataTypes
   }
   domain {
     ...EIP712TypedDataDomain
   }
   value {
-    ...CreateOnChainQuoteEIP712TypedDataValue
+    ...CreateOnchainQuoteEIP712TypedDataValue
   }
 }
 
-fragment CreateOnChainQuoteBroadcastItemResult on CreateOnChainQuoteBroadcastItemResult {
+fragment CreateOnchainQuoteBroadcastItemResult on CreateOnchainQuoteBroadcastItemResult {
   id
   expiresAt
   typedData {
-    ...CreateOnChainQuoteEIP712TypedData
+    ...CreateOnchainQuoteEIP712TypedData
   }
 }
 
@@ -285,7 +279,7 @@ fragment CreateMomokaPostBroadcastItemResult on CreateMomokaPostBroadcastItemRes
   expiresAt
   typedData {
     types {
-      PostWithSig {
+      Post {
         name
         type
       }
@@ -305,7 +299,7 @@ fragment CreateMomokaCommentBroadcastItemResult on CreateMomokaCommentBroadcastI
   expiresAt
   typedData {
     types {
-      CommentWithSig {
+      Comment {
         name
         type
       }
@@ -325,7 +319,7 @@ fragment CreateMomokaMirrorBroadcastItemResult on CreateMomokaMirrorBroadcastIte
   expiresAt
   typedData {
     types {
-      MirrorWithSig {
+      Mirror {
         name
         type
       }
@@ -345,7 +339,7 @@ fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemR
   expiresAt
   typedData {
     types {
-      QuoteWithSig {
+      Quote {
         name
         type
       }
@@ -360,47 +354,39 @@ fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemR
   }
 }
 
-fragment CreateLegacyCollectPublicationEIP712TypedData on CreateLegacyCollectPublicationEIP712TypedData {
-  types {
-    ActWithSig {
-      name
-      type
-    }
-  }
-  domain {
-    ...EIP712TypedDataDomain
-  }
-  value {
-    nonce
-    deadline
+fragment CreateLegacyCollectBroadcastItemResult on CreateLegacyCollectBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    ...CreateActOnOpenActionEIP712TypedData
   }
 }
 
 # mutations
-mutation CreateOnChainPostTypedData($request: OnChainPostRequest!, $options: TypedDataOptions) {
-  result: createOnChainPostTypedData(request: $request, options: $options) {
-    ...CreateOnChainPostBroadcastItemResult
+mutation CreateOnchainPostTypedData($request: OnchainPostRequest!, $options: TypedDataOptions) {
+  result: createOnchainPostTypedData(request: $request, options: $options) {
+    ...CreateOnchainPostBroadcastItemResult
   }
 }
 
-mutation CreateOnChainCommentTypedData(
-  $request: OnChainCommentRequest!
+mutation CreateOnchainCommentTypedData(
+  $request: OnchainCommentRequest!
   $options: TypedDataOptions
 ) {
-  result: createOnChainCommentTypedData(request: $request, options: $options) {
-    ...CreateOnChainCommentBroadcastItemResult
+  result: createOnchainCommentTypedData(request: $request, options: $options) {
+    ...CreateOnchainCommentBroadcastItemResult
   }
 }
 
-mutation CreateOnChainMirrorTypedData($request: OnChainMirrorRequest!, $options: TypedDataOptions) {
-  result: createOnChainMirrorTypedData(request: $request, options: $options) {
-    ...CreateOnChainMirrorBroadcastItemResult
+mutation CreateOnchainMirrorTypedData($request: OnchainMirrorRequest!, $options: TypedDataOptions) {
+  result: createOnchainMirrorTypedData(request: $request, options: $options) {
+    ...CreateOnchainMirrorBroadcastItemResult
   }
 }
 
-mutation CreateOnChainQuoteTypedData($request: OnChainQuoteRequest!, $options: TypedDataOptions) {
-  result: createOnChainQuoteTypedData(request: $request, options: $options) {
-    ...CreateOnChainQuoteBroadcastItemResult
+mutation CreateOnchainQuoteTypedData($request: OnchainQuoteRequest!, $options: TypedDataOptions) {
+  result: createOnchainQuoteTypedData(request: $request, options: $options) {
+    ...CreateOnchainQuoteBroadcastItemResult
   }
 }
 
@@ -428,8 +414,8 @@ mutation CreateMomokaQuoteTypedData($request: MomokaQuoteRequest!) {
   }
 }
 
-mutation PostOnChain($request: OnChainPostRequest!) {
-  result: postOnChain(request: $request) {
+mutation PostOnchain($request: OnchainPostRequest!) {
+  result: postOnchain(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
@@ -439,8 +425,8 @@ mutation PostOnChain($request: OnChainPostRequest!) {
   }
 }
 
-mutation CommentOnChain($request: OnChainCommentRequest!) {
-  result: commentOnChain(request: $request) {
+mutation CommentOnchain($request: OnchainCommentRequest!) {
+  result: commentOnchain(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
@@ -450,8 +436,8 @@ mutation CommentOnChain($request: OnChainCommentRequest!) {
   }
 }
 
-mutation MirrorOnChain($request: OnChainMirrorRequest!) {
-  result: mirrorOnChain(request: $request) {
+mutation MirrorOnchain($request: OnchainMirrorRequest!) {
+  result: mirrorOnchain(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
@@ -461,8 +447,8 @@ mutation MirrorOnChain($request: OnChainMirrorRequest!) {
   }
 }
 
-mutation QuoteOnChain($request: OnChainQuoteRequest!) {
-  result: quoteOnChain(request: $request) {
+mutation QuoteOnchain($request: OnchainQuoteRequest!) {
+  result: quoteOnchain(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
@@ -524,8 +510,8 @@ mutation ReportPublication($request: ReportPublicationRequest!) {
   reportPublication(request: $request)
 }
 
-mutation LegacyCollectPublication($request: LegacyCollectPublicationRequest!) {
-  result: legacyCollectPublication(request: $request) {
+mutation LegacyCollectPublication($request: LegacyCollectRequest!) {
+  result: legacyCollect(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
@@ -535,11 +521,8 @@ mutation LegacyCollectPublication($request: LegacyCollectPublicationRequest!) {
   }
 }
 
-mutation CreateLegacyCollectPublicationTypedData(
-  $request: LegacyCollectPublicationRequest!
-  $options: TypedDataOptions
-) {
-  result: createLegacyCollectPublicationTypedData(request: $request, options: $options) {
-    ...CreateLegacyCollectPublicationEIP712TypedData
+mutation CreateLegacyCollectTypedData($request: LegacyCollectRequest!, $options: TypedDataOptions) {
+  result: createLegacyCollectTypedData(request: $request, options: $options) {
+    ...CreateLegacyCollectBroadcastItemResult
   }
 }

@@ -26,7 +26,7 @@ import {
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../../../graphql/fragments.generated';
 export type ActOnOpenActionMutationVariables = Types.Exact<{
-  request: Types.ActOnOpenActionRequest;
+  request: Types.ActOnOpenActionLensManagerRequest;
 }>;
 
 export type ActOnOpenActionMutation = {
@@ -34,7 +34,7 @@ export type ActOnOpenActionMutation = {
 };
 
 export type CreateActOnOpenActionEip712TypedDataTypesFragment = {
-  ActWithSig: Array<Eip712TypedDataFieldFragment>;
+  Act: Array<Eip712TypedDataFieldFragment>;
 };
 
 export type CreateActOnOpenActionEip712TypedDataValueFragment = {
@@ -71,7 +71,7 @@ export type CreateActOnOpenActionTypedDataMutation = {
 
 export const CreateActOnOpenActionEip712TypedDataTypesFragmentDoc = gql`
   fragment CreateActOnOpenActionEIP712TypedDataTypes on CreateActOnOpenActionEIP712TypedDataTypes {
-    ActWithSig {
+    Act {
       ...EIP712TypedDataField
     }
   }
@@ -117,7 +117,7 @@ export const CreateActOnOpenActionBroadcastItemResultFragmentDoc = gql`
   ${CreateActOnOpenActionEip712TypedDataFragmentDoc}
 `;
 export const ActOnOpenActionDocument = gql`
-  mutation ActOnOpenAction($request: ActOnOpenActionRequest!) {
+  mutation ActOnOpenAction($request: ActOnOpenActionLensManagerRequest!) {
     result: actOnOpenAction(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess

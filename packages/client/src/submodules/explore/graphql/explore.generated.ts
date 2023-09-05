@@ -38,6 +38,7 @@ export type ExplorePublicationsQueryVariables = Types.Exact<{
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileId?: Types.InputMaybe<Types.Scalars['ProfileId']['input']>;
 }>;
 
 export type ExplorePublicationsQuery = {
@@ -60,6 +61,7 @@ export const ExplorePublicationsDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileId: ProfileId
   ) {
     result: explorePublications(request: $request) {
       items {

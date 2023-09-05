@@ -43,14 +43,13 @@ config:
     URI: string
     URL: string
     Void: string
-    OnChainPublicationId: string
+    OnchainPublicationId: string
 
   avoidOptionals:
     field: true
 
 schema:
-  - ./lens-v2.graphql
-  # - https://api-v2-mumbai.lens.dev/graphql
+  - https://api-v2-mumbai.lens.dev/graphql
 documents:
   - src/**/*.graphql
 generates:

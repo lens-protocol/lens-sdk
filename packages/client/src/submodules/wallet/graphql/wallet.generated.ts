@@ -31,8 +31,8 @@ export type ProfilesManagedQuery = {
 };
 
 export type UserSigNoncesFragment = {
-  lensHubOnChainSigNonce: string;
-  peripheryOnChainSigNonce: string;
+  lensHubOnchainSigNonce: string;
+  lensTokenHandleRegistryOnchainSigNonce: string;
 };
 
 export type UserSigNoncesQueryVariables = Types.Exact<{ [key: string]: never }>;
@@ -46,8 +46,8 @@ export const HandleResultFragmentDoc = gql`
 `;
 export const UserSigNoncesFragmentDoc = gql`
   fragment UserSigNonces on UserSigNonces {
-    lensHubOnChainSigNonce
-    peripheryOnChainSigNonce
+    lensHubOnchainSigNonce
+    lensTokenHandleRegistryOnchainSigNonce
   }
 `;
 export const OwnedHandlesDocument = gql`

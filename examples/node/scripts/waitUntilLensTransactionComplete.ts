@@ -37,7 +37,7 @@ async function main() {
 
   const broadcastResult = await signTypedDataAndBroadcast(lensClient, wallet);
 
-  const result = await lensClient.transaction.status({ txId: broadcastResult.txId });
+  const result = await lensClient.transaction.waitUntilComplete({ txId: broadcastResult.txId });
 
   if (result.isFailure()) {
     console.log(`Something went wrong`, result);
@@ -47,18 +47,25 @@ async function main() {
   const transactionStatusResult = result.value;
 
   if (transactionStatusResult.__typename === "LensTransaction") {
-    console.log(`LensTransaction has status ${transactionStatusResult.status}`, {
-      txId: broadcastResult.txId,
-      txHash: broadcastResult.txHash,
-      reason: transactionStatusResult.reason,
-      extraInfo: transactionStatusResult.extraInfo,
-    });
+    console.log(
+      `LensTransaction successfully completed 
+    `,
+      {
+        txId: broadcastResult.txId,
+        txHash: broadcastResult.txHash,
+        lensTransactionStatus: transactionStatusResult.status,
+        reason: transactionStatusResult.reason,
+        extraInfo: transactionStatusResult.extraInfo,
+      }
+    );
     return;
   }
 
-  console.log(`LensMetadataTransaction has status ${transactionStatusResult.status}`, {
+  console.log(`LensMetadataTransaction successfully completed`, {
     txId: broadcastResult.txId,
     txHash: broadcastResult.txHash,
+    // a: transactionStatusResult.
+    lensTransactionStatus: transactionStatusResult.status,
     extraInfo: transactionStatusResult.extraInfo,
     metadataFailedReason: transactionStatusResult.metadataFailedReason,
   });

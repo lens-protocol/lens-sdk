@@ -20,16 +20,23 @@ query TxIdToTxHash($txId: TxId!) {
 query LensTransactionStatus($request: LensTransactionStatusRequest!) {
   result: lensTransactionStatus(request: $request) {
     ... on LensTransaction {
-      ...LensTransaction
+      __typename
+      status
+      txHash
+      reason
+      extraInfo
     }
     ... on LensMetadataTransaction {
-      ...LensMetadataTransaction
+      __typename
+      status
+      metadataFailedReason
+      extraInfo
     }
   }
 }
 
-mutation BroadcastOnChain($request: BroadcastRequest!) {
-  result: broadcastOnChain(request: $request) {
+mutation BroadcastOnchain($request: BroadcastRequest!) {
+  result: broadcastOnchain(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }

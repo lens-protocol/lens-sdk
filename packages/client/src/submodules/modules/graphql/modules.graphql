@@ -53,9 +53,14 @@ query SupportedModules {
   }
 }
 
-query Currencies {
-  result: currencies {
-    ...Erc20
+query Currencies($request: PaginatedOffsetRequest!) {
+  result: currencies(request: $request) {
+    items {
+      ...Erc20
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
   }
 }
 

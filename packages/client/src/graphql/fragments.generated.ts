@@ -5,7 +5,7 @@ import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-export type OptimisticStatusResultFragment = { value: boolean; isFinalisedOnChain: boolean };
+export type OptimisticStatusResultFragment = { value: boolean; isFinalisedOnchain: boolean };
 
 export type Erc20Fragment = {
   name: string;
@@ -21,8 +21,6 @@ export type FeeFollowModuleSettingsFragment = {
   amount: AmountFragment;
   contract: NetworkAddressFragment;
 };
-
-export type ProfileFollowModuleSettingsFragment = { contract: NetworkAddressFragment };
 
 export type RevertFollowModuleSettingsFragment = { contract: NetworkAddressFragment };
 
@@ -69,35 +67,19 @@ export type ProfileFieldsFragment = {
   interests: Array<string>;
   invitesLeft: number | null;
   createdAt: string;
-  metadata: {
-    rawURI: string;
-    displayName: string | null;
-    bio: string | null;
-    coverPicture: ProfileCoverSetFragment | null;
-    picture:
-      | ProfilePictureSetFragment
-      | {
-          tokenId: string;
-          verified: boolean;
-          collection: NetworkAddressFragment;
-          image: ProfilePictureSetFragment;
-        }
-      | null;
-    attributes: Array<{ type: Types.AttributeType; key: string; value: string }> | null;
-  } | null;
+  metadata: { rawURI: string; displayName: string | null; bio: string | null } | null;
   ownedBy: NetworkAddressFragment;
   gasless: GaslessFragment;
   followModule:
     | FeeFollowModuleSettingsFragment
-    | ProfileFollowModuleSettingsFragment
     | RevertFollowModuleSettingsFragment
     | UnknownFollowModuleSettingsFragment
     | null;
   followNftAddress: NetworkAddressFragment | null;
-  onChainIdentity: {
+  onchainIdentity: {
     proofOfHumanity: boolean;
     ens: { name: string | null } | null;
-    sybilDotOrg: { source: { twitter: { handle: string | null } } };
+    sybilDotOrg: { source: { twitter: { handle: string | null } } | null };
     worldcoin: { isHuman: boolean };
   };
   isFollowedByMe: OptimisticStatusResultFragment;
@@ -279,7 +261,6 @@ export type NftOwnershipConditionFragment = {
 
 export type Erc20OwnershipConditionFragment = {
   condition: Types.ComparisonOperatorConditionType;
-  contract: NetworkAddressFragment;
   amount: AmountFragment;
 };
 
@@ -810,7 +791,7 @@ export type CommentBaseFragment = {
 export type CommentFragment = {
   root: PostFragment;
   commentOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
-  firstComment: CommentBaseFragment;
+  firstComment: CommentBaseFragment | null;
 } & CommentBaseFragment;
 
 export type MirrorFragment = {
@@ -914,12 +895,6 @@ export const ProfileCoverSetFragmentDoc = gql`
   }
   ${ImageFragmentDoc}
 `;
-export const NetworkAddressFragmentDoc = gql`
-  fragment NetworkAddress on NetworkAddress {
-    address
-    chainId
-  }
-`;
 export const ProfilePictureSetFragmentDoc = gql`
   fragment ProfilePictureSet on ImageSet {
     rawURI
@@ -929,6 +904,12 @@ export const ProfilePictureSetFragmentDoc = gql`
     altTag
   }
   ${ImageFragmentDoc}
+`;
+export const NetworkAddressFragmentDoc = gql`
+  fragment NetworkAddress on NetworkAddress {
+    address
+    chainId
+  }
 `;
 export const GaslessFragmentDoc = gql`
   fragment Gasless on Gasless {
@@ -972,14 +953,6 @@ export const FeeFollowModuleSettingsFragmentDoc = gql`
   ${AmountFragmentDoc}
   ${NetworkAddressFragmentDoc}
 `;
-export const ProfileFollowModuleSettingsFragmentDoc = gql`
-  fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
-    contract {
-      ...NetworkAddress
-    }
-  }
-  ${NetworkAddressFragmentDoc}
-`;
 export const RevertFollowModuleSettingsFragmentDoc = gql`
   fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
     contract {
@@ -1000,7 +973,7 @@ export const UnknownFollowModuleSettingsFragmentDoc = gql`
 export const OptimisticStatusResultFragmentDoc = gql`
   fragment OptimisticStatusResult on OptimisticStatusResult {
     value
-    isFinalisedOnChain
+    isFinalisedOnchain
   }
 `;
 export const ProfileFieldsFragmentDoc = gql`
@@ -1011,29 +984,6 @@ export const ProfileFieldsFragmentDoc = gql`
       rawURI
       displayName
       bio
-      coverPicture {
-        ...ProfileCoverSet
-      }
-      picture {
-        ... on NftImage {
-          collection {
-            ...NetworkAddress
-          }
-          tokenId
-          image {
-            ...ProfilePictureSet
-          }
-          verified
-        }
-        ... on ImageSet {
-          ...ProfilePictureSet
-        }
-      }
-      attributes {
-        type
-        key
-        value
-      }
     }
     handle
     ownedBy {
@@ -1046,9 +996,6 @@ export const ProfileFieldsFragmentDoc = gql`
       ... on FeeFollowModuleSettings {
         ...FeeFollowModuleSettings
       }
-      ... on ProfileFollowModuleSettings {
-        ...ProfileFollowModuleSettings
-      }
       ... on RevertFollowModuleSettings {
         ...RevertFollowModuleSettings
       }
@@ -1059,7 +1006,7 @@ export const ProfileFieldsFragmentDoc = gql`
     followNftAddress {
       ...NetworkAddress
     }
-    onChainIdentity {
+    onchainIdentity {
       proofOfHumanity
       ens {
         name
@@ -1089,12 +1036,9 @@ export const ProfileFieldsFragmentDoc = gql`
     invitesLeft
     createdAt
   }
-  ${ProfileCoverSetFragmentDoc}
   ${NetworkAddressFragmentDoc}
-  ${ProfilePictureSetFragmentDoc}
   ${GaslessFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}
-  ${ProfileFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
   ${UnknownFollowModuleSettingsFragmentDoc}
   ${OptimisticStatusResultFragmentDoc}
@@ -1179,15 +1123,11 @@ export const NftOwnershipConditionFragmentDoc = gql`
 `;
 export const Erc20OwnershipConditionFragmentDoc = gql`
   fragment Erc20OwnershipCondition on Erc20OwnershipCondition {
-    contract {
-      ...NetworkAddress
-    }
     amount {
       ...Amount
     }
     condition
   }
-  ${NetworkAddressFragmentDoc}
   ${AmountFragmentDoc}
 `;
 export const EoaOwnershipConditionFragmentDoc = gql`

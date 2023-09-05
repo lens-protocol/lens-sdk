@@ -1,7 +1,7 @@
 # query fragments
 fragment OptimisticStatusResult on OptimisticStatusResult {
   value
-  isFinalisedOnChain
+  isFinalisedOnchain
 }
 
 fragment Erc20 on Erc20 {
@@ -44,12 +44,6 @@ fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
     ...NetworkAddress
   }
   recipient
-}
-
-fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
-  contract {
-    ...NetworkAddress
-  }
 }
 
 fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
@@ -142,29 +136,6 @@ fragment ProfileFields on Profile {
     rawURI
     displayName
     bio
-    coverPicture {
-      ...ProfileCoverSet
-    }
-    picture {
-      ... on NftImage {
-        collection {
-          ...NetworkAddress
-        }
-        tokenId
-        image {
-          ...ProfilePictureSet
-        }
-        verified
-      }
-      ... on ImageSet {
-        ...ProfilePictureSet
-      }
-    }
-    attributes {
-      type
-      key
-      value
-    }
   }
   handle
   ownedBy {
@@ -177,9 +148,6 @@ fragment ProfileFields on Profile {
     ... on FeeFollowModuleSettings {
       ...FeeFollowModuleSettings
     }
-    ... on ProfileFollowModuleSettings {
-      ...ProfileFollowModuleSettings
-    }
     ... on RevertFollowModuleSettings {
       ...RevertFollowModuleSettings
     }
@@ -190,7 +158,7 @@ fragment ProfileFields on Profile {
   followNftAddress {
     ...NetworkAddress
   }
-  onChainIdentity {
+  onchainIdentity {
     proofOfHumanity
     ens {
       name
@@ -508,9 +476,6 @@ fragment NftOwnershipCondition on NftOwnershipCondition {
 }
 
 fragment Erc20OwnershipCondition on Erc20OwnershipCondition {
-  contract {
-    ...NetworkAddress
-  }
   amount {
     ...Amount
   }

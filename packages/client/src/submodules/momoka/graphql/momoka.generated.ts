@@ -32,7 +32,7 @@ export type MomokaPostTransactionFragment = {
   submitter: string;
   createdAt: string;
   publicationId: string;
-  app: AppFragment;
+  app: AppFragment | null;
   profile: ProfileFieldsFragment;
   verificationStatus:
     | MomokaVerificationStatusFailureFragment
@@ -45,7 +45,7 @@ export type MomokaCommentTransactionFragment = {
   createdAt: string;
   publicationId: string;
   commentedOnPublicationId: string;
-  app: AppFragment;
+  app: AppFragment | null;
   profile: ProfileFieldsFragment;
   commentedOnProfile: ProfileFieldsFragment;
   verificationStatus:
@@ -59,7 +59,7 @@ export type MomokaMirrorTransactionFragment = {
   createdAt: string;
   publicationId: string;
   mirrorOfPublicationId: string;
-  app: AppFragment;
+  app: AppFragment | null;
   profile: ProfileFieldsFragment;
   mirrorOfProfile: ProfileFieldsFragment;
   verificationStatus:
@@ -73,7 +73,7 @@ export type MomokaQuoteTransactionFragment = {
   createdAt: string;
   publicationId: string;
   quotedOnPublicationId: string;
-  app: AppFragment;
+  app: AppFragment | null;
   profile: ProfileFieldsFragment;
   quotedOnProfile: ProfileFieldsFragment;
   verificationStatus:
@@ -108,7 +108,8 @@ export type MomokaTransactionQuery = {
     | MomokaCommentTransactionFragment
     | MomokaMirrorTransactionFragment
     | MomokaPostTransactionFragment
-    | MomokaQuoteTransactionFragment;
+    | MomokaQuoteTransactionFragment
+    | null;
 };
 
 export type MomokaTransactionsQueryVariables = Types.Exact<{

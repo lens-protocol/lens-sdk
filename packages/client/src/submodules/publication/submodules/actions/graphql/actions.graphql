@@ -1,4 +1,4 @@
-mutation ActOnOpenAction($request: ActOnOpenActionRequest!) {
+mutation ActOnOpenAction($request: ActOnOpenActionLensManagerRequest!) {
   result: actOnOpenAction(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
@@ -10,7 +10,7 @@ mutation ActOnOpenAction($request: ActOnOpenActionRequest!) {
 }
 
 fragment CreateActOnOpenActionEIP712TypedDataTypes on CreateActOnOpenActionEIP712TypedDataTypes {
-  ActWithSig {
+  Act {
     ...EIP712TypedDataField
   }
 }

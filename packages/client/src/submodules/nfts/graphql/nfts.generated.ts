@@ -29,7 +29,7 @@ export type NftMetadataFragment = { name: string; description: string; image: st
 
 export type NftFragment = {
   tokenId: string;
-  contentUri: string;
+  contentURI: string;
   contractType: Types.NftContractType;
   ownerInfo: OwnerFragment;
   contract: NetworkAddressFragment;
@@ -128,7 +128,7 @@ export const NftFragmentDoc = gql`
     ownerInfo {
       ...Owner
     }
-    contentUri
+    contentURI
     contract {
       ...NetworkAddress
     }
