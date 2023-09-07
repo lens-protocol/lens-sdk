@@ -3,7 +3,6 @@ query ExplorePublications(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $profileId: ProfileId
 ) {
   result: explorePublications(request: $request) {
     items {
@@ -15,7 +14,8 @@ query ExplorePublications(
       }
     }
     pageInfo {
-      ...PaginatedResultInfo
+      prev
+      next
     }
   }
 }

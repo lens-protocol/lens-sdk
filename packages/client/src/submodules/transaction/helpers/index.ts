@@ -1,5 +1,6 @@
 import type {
   CreateMomokaPublicationResultFragment,
+  LensProfileManagerRelayErrorFragment,
   RelayErrorFragment,
   RelaySuccessFragment,
 } from '../../../graphql/fragments.generated';
@@ -48,4 +49,10 @@ export function isMomokaRelayResult(
   result: CreateMomokaPublicationResultFragment | RelayErrorFragment,
 ): result is CreateMomokaPublicationResultFragment {
   return 'momokaId' in result;
+}
+
+export function isSuccessfulLensProfileManagerResponse(
+  result: RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+): result is RelaySuccessFragment {
+  return '__typename' in result && result.__typename === 'RelaySuccess';
 }

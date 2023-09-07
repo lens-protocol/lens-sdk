@@ -4,8 +4,8 @@ import * as Types from '../../../graphql/types.generated';
 import {
   PostFragment,
   QuoteFragment,
-  PaginatedResultInfoFragment,
   ProfileFragment,
+  PaginatedResultInfoFragment,
   MirrorFragment,
   CommentFragment,
   Eip712TypedDataDomainFragment,
@@ -22,8 +22,8 @@ import gql from 'graphql-tag';
 import {
   PostFragmentDoc,
   QuoteFragmentDoc,
-  PaginatedResultInfoFragmentDoc,
   ProfileFragmentDoc,
+  PaginatedResultInfoFragmentDoc,
   MirrorFragmentDoc,
   CommentFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
@@ -38,11 +38,13 @@ export type ExplorePublicationsQueryVariables = Types.Exact<{
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profileId?: Types.InputMaybe<Types.Scalars['ProfileId']['input']>;
 }>;
 
 export type ExplorePublicationsQuery = {
-  result: { items: Array<PostFragment | QuoteFragment>; pageInfo: PaginatedResultInfoFragment };
+  result: {
+    items: Array<PostFragment | QuoteFragment>;
+    pageInfo: { prev: string | null; next: string | null };
+  };
 };
 
 export type ExploreProfilesQueryVariables = Types.Exact<{
@@ -61,7 +63,6 @@ export const ExplorePublicationsDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
-    $profileId: ProfileId
   ) {
     result: explorePublications(request: $request) {
       items {
@@ -73,13 +74,13 @@ export const ExplorePublicationsDocument = gql`
         }
       }
       pageInfo {
-        ...PaginatedResultInfo
+        prev
+        next
       }
     }
   }
   ${PostFragmentDoc}
   ${QuoteFragmentDoc}
-  ${PaginatedResultInfoFragmentDoc}
 `;
 export const ExploreProfilesDocument = gql`
   query ExploreProfiles(

@@ -6,8 +6,8 @@ import {
   ProfileFieldsFragment,
   PostFragment,
   QuoteFragment,
-  PaginatedResultInfoFragment,
   ProfileFragment,
+  PaginatedResultInfoFragment,
   CommentFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -19,8 +19,8 @@ import {
   ProfileFieldsFragmentDoc,
   PostFragmentDoc,
   QuoteFragmentDoc,
-  PaginatedResultInfoFragmentDoc,
   ProfileFragmentDoc,
+  PaginatedResultInfoFragmentDoc,
   CommentFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type MomokaVerificationStatusSuccessFragment = { verified: boolean };

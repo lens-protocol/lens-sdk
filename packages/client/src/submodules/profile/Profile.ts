@@ -13,22 +13,21 @@ import type {
   BlockRequest,
   ChangeProfileManagersRequest,
   ClaimProfileRequest,
-  CreateProfileRequest,
+  CreateProfileWithHandleRequest,
   DismissRecommendedProfilesRequest,
   FollowRequest,
   FollowersRequest,
   FollowingRequest,
-  LinkHandleRequest,
+  HandleLinkToProfileRequest,
+  HandleUnlinkFromProfileRequest,
   MutualFollowersRequest,
-  OnChainSetProfileMetadataRequest,
+  OnchainSetProfileMetadataRequest,
   ProfileInterestsRequest,
   ProfileManagersRequest,
   ProfileRecommendationsRequest,
   ProfileRequest,
   ProfilesRequest,
   SetFollowModuleRequest,
-  SetProfileImageRequest,
-  SetProfileMetadataRequest,
   TypedDataOptions,
   UnblockRequest,
   UnfollowRequest,
@@ -44,15 +43,14 @@ import {
   CreateBlockProfilesBroadcastItemResultFragment,
   CreateChangeProfileManagersBroadcastItemResultFragment,
   CreateFollowBroadcastItemResultFragment,
-  CreateProfileErrorResultFragment,
+  CreateOnchainSetProfileMetadataBroadcastItemResultFragment,
+  CreateProfileWithHandleErrorResultFragment,
   CreateSetFollowModuleBroadcastItemResultFragment,
-  CreateSetProfileImageBroadcastItemResultFragment,
-  CreateSetProfileMetadataBroadcastItemResultFragment,
-  CreateUnblockProfileBroadcastItemResultFragment,
+  CreateUnblockProfilesBroadcastItemResultFragment,
   CreateUnfollowBroadcastItemResultFragment,
-  getSdk,
   ProfileManagerFragment,
   Sdk,
+  getSdk,
 } from './graphql/profile.generated';
 
 /**
@@ -155,7 +153,7 @@ export class Profile {
   async claim(
     request: ClaimProfileRequest,
   ): PromiseResult<
-    RelaySuccessFragment | CreateProfileErrorResultFragment,
+    RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -165,13 +163,13 @@ export class Profile {
   }
 
   async create(
-    request: CreateProfileRequest,
+    request: CreateProfileWithHandleRequest,
   ): PromiseResult<
-    RelaySuccessFragment | CreateProfileErrorResultFragment,
+    RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateProfile({ request }, headers);
+      const result = await this.sdk.CreateProfileWithHandle({ request }, headers);
       return result.data.result;
     });
   }
@@ -192,10 +190,12 @@ export class Profile {
     });
   }
 
-  async setMetadata(
-    request: SetProfileMetadataRequest,
+  async setProfileMetadata(
+    request: OnchainSetProfileMetadataRequest,
   ): PromiseResult<
-    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+    | RelaySuccessFragment
+    | CreateBlockProfilesBroadcastItemResultFragment
+    | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -207,11 +207,11 @@ export class Profile {
   async setManager(
     request: ChangeProfileManagersRequest,
   ): PromiseResult<
-    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+    CreateChangeProfileManagersBroadcastItemResultFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.SetProfileManager({ request }, headers);
+      const result = await this.sdk.CreateChangeProfileManagersTypedData({ request }, headers);
       return result.data.result;
     });
   }
@@ -285,14 +285,14 @@ export class Profile {
   }
 
   async createOnChainSetProfileMetadataTypedData(
-    request: OnChainSetProfileMetadataRequest,
+    request: OnchainSetProfileMetadataRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateSetProfileMetadataBroadcastItemResultFragment,
+    CreateOnchainSetProfileMetadataBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateOnChainSetProfileMetadataTypedData(
+      const result = await this.sdk.CreateOnchainSetProfileMetadataTypedData(
         {
           request,
           options,
@@ -348,11 +348,11 @@ export class Profile {
     request: BlockRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateUnblockProfileBroadcastItemResultFragment,
+    CreateUnblockProfilesBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateUnblockProfileTypedData(
+      const result = await this.sdk.CreateUnblockProfilesTypedData(
         {
           request,
           options,
@@ -425,15 +425,15 @@ export class Profile {
   }
 
   async linkHandle(
-    request: LinkHandleRequest,
+    request: HandleLinkToProfileRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.LinkHandleToProfile({ request }, headers);
+      await this.sdk.HandleLinkToProfile({ request }, headers);
     });
   }
 
-  async unlinkHandle(
-    request: LinkHandleRequest,
+  async unlinkHandleFromProfile(
+    request: HandleUnlinkFromProfileRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.UnlinkHandleFromProfile({ request }, headers);

@@ -4,8 +4,8 @@ import * as Types from '../../../../../graphql/types.generated';
 import {
   PostFragment,
   QuoteFragment,
-  PaginatedResultInfoFragment,
   ProfileFragment,
+  PaginatedResultInfoFragment,
   MirrorFragment,
   CommentFragment,
   Eip712TypedDataDomainFragment,
@@ -22,8 +22,8 @@ import gql from 'graphql-tag';
 import {
   PostFragmentDoc,
   QuoteFragmentDoc,
-  PaginatedResultInfoFragmentDoc,
   ProfileFragmentDoc,
+  PaginatedResultInfoFragmentDoc,
   MirrorFragmentDoc,
   CommentFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
