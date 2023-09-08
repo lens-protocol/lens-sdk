@@ -15,10 +15,10 @@ import {
  * @param result - result to check
  * @returns true if the result is a {@link RelaySuccessFragment}
  */
-export function isRelaySuccess(
-  result: RelaySuccessFragment | RelayErrorFragment,
+export function isRelaySuccess<T extends { reason: string }>(
+  result: RelaySuccessFragment | T,
 ): result is RelaySuccessFragment {
-  return result.__typename === 'RelaySuccess';
+  return '__typename' in result && result.__typename === 'RelaySuccess';
 }
 
 /**
