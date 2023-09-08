@@ -1,0 +1,6 @@
+{
+  "tsconfig": "./tsconfig.json",
+  "extends": ["../../typedoc.base.json"],
+  "entryPoints": ["src/index.ts", "src/gated/index.ts"],
+  "intentionallyNotExported": ["Environment", "LensContext"]
+}

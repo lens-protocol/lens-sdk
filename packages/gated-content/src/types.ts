@@ -1,16 +1,31 @@
-import { Maybe } from '@lens-protocol/api-bindings';
-import { UnknownObject } from '@lens-protocol/shared-kernel';
+import { Primitive } from '@lens-protocol/shared-kernel';
 
-type UnwrapMaybe<T extends Maybe<unknown>> = T extends Maybe<infer V> ? NonNullable<V> : never;
+export type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
-type KeyValuePairs<T> = {
-  [K in keyof T]: T[K] extends null | undefined ? never : [K, UnwrapMaybe<T[K]>];
+type UnionOf<A> = A extends Array<unknown> ? A[number] : A[keyof A];
+
+// Adapted from ts-toolbelt: https://github.com/millsp/ts-toolbelt/blob/master/sources/Object/Paths.ts#L21
+export type PathsOf<Target, Root extends string = ''> = UnionOf<{
+  [Key in keyof Target]-?: Key extends string
+    ? `${Root}${Target[Key] extends Primitive | undefined | null
+        ? Key
+        : Target[Key] extends ReadonlyArray<infer ItemType> | null | undefined
+        ? ItemType extends Primitive // acts also to distribute over union ItemType
+          ? `${Key}[n]`
+          : PathsOf<ItemType, `${Key}[n].`>
+        : PathsOf<Target[Key], `${Key}.`>}`
+    : never;
+}>;
+
+export type LitError = {
+  message: string;
+  name: string;
+  errorCode: string;
 };
 
-type Values<T> = T extends { [s: string]: infer V } ? V[] : never;
-
-export type Entries<T> = Values<KeyValuePairs<T>>;
-
-export type Entry<T> = Values<KeyValuePairs<T>>[number];
-
-export type ExtractFields<T extends UnknownObject, F extends string> = Pick<T, Extract<keyof T, F>>;
+export function isLitError(throwable: unknown): throwable is LitError {
+  if (typeof throwable !== 'object' || throwable === null) {
+    return false;
+  }
+  return ['name', 'message', 'errorCode'].every((key) => key in throwable);
+}

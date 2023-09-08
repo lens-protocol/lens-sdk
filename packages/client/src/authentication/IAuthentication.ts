@@ -1,6 +1,6 @@
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../errors';
 import type { ChallengeRequest, SignedAuthChallenge } from '../graphql/types.generated';
 import type { AuthChallengeFragment } from './graphql/auth.generated';
 
@@ -44,14 +44,14 @@ export interface IAuthentication {
   /**
    * Get the access token. If it expired, try to refresh it.
    *
-   * @returns The access token
+   * @returns A Result with the access token or possible error scenarios
    */
   getAccessToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
 
   /**
-   * Get the profileId of authenticated profile.
+   * Get the authentication profile id.
    *
-   * @returns The access token
+   * @returns The profile id or null if not authenticated
    */
-  getProfileId(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
+  getProfileId(): Promise<string | null>;
 }

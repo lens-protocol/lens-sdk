@@ -1,9 +1,8 @@
-import { ProfileId } from '@lens-protocol/domain/entities';
-import { mockProfileId } from '@lens-protocol/domain/mocks';
+import { toProfileId } from '@lens-protocol/metadata';
 import { BigNumber } from 'ethers';
 
 import { testing } from '../../__helpers__/env';
-import { mockProfileOwnershipInput } from '../__helpers__/mocks';
+import { mockProfileId, mockProfileOwnershipCondition } from '../../__helpers__/mocks';
 import { transformProfileCondition } from '../profile-condition';
 import {
   LitConditionType,
@@ -14,12 +13,12 @@ import {
 } from '../types';
 import { InvalidAccessCriteriaError } from '../validators';
 
-describe(`Given the "${mockProfileOwnershipInput.name}" function`, () => {
+describe(`Given the "${transformProfileCondition.name}" function`, () => {
   describe('when called with a Profile Ownership condition', () => {
     const profileId = mockProfileId();
 
     it('should return the expected Lit AccessControlCondition', () => {
-      const condition = mockProfileOwnershipInput({ profileId });
+      const condition = mockProfileOwnershipCondition({ profileId });
 
       const actual = transformProfileCondition(condition, testing);
 
@@ -73,8 +72,8 @@ describe(`Given the "${mockProfileOwnershipInput.name}" function`, () => {
     it.each([
       {
         description: 'if with invalid profile Id',
-        condition: mockProfileOwnershipInput({
-          profileId: 'invalid-profile-id' as ProfileId,
+        condition: mockProfileOwnershipCondition({
+          profileId: toProfileId('invalid-profile-id'),
         }),
       },
     ])(`should throw an ${InvalidAccessCriteriaError.name} $description`, ({ condition }) => {

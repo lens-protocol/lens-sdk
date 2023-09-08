@@ -1,8 +1,8 @@
-import { PromiseResult } from '@lens-protocol/shared-kernel';
+import { hasAtLeastOne, never, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../../authentication';
-import type { LensConfig } from '../../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../../consts/errors';
+import { LensContext } from '../../context';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../../errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import {
   CreateMomokaPublicationResultFragment,
@@ -10,9 +10,10 @@ import {
   RelaySuccessFragment,
 } from '../../graphql/fragments.generated';
 import { AnyPublicationFragment } from '../../graphql/types';
-import type {
+import {
   HidePublicationRequest,
   LegacyCollectRequest,
+  LimitType,
   MomokaCommentRequest,
   MomokaMirrorRequest,
   MomokaPostRequest,
@@ -22,11 +23,13 @@ import type {
   OnchainPostRequest,
   OnchainQuoteRequest,
   PublicationRequest,
+  PublicationsOrderByType,
   PublicationsRequest,
   PublicationsTagsRequest,
   RefreshPublicationMetadataRequest,
   RefreshPublicationMetadataResultType,
   ReportPublicationRequest,
+  Scalars,
   TypedDataOptions,
   ValidatePublicationMetadataRequest,
 } from '../../graphql/types.generated';
@@ -65,10 +68,10 @@ export class Publication {
   private readonly sdk: Sdk;
 
   constructor(
-    private readonly config: LensConfig,
+    private readonly context: LensContext,
     authentication?: Authentication,
   ) {
-    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
@@ -78,28 +81,28 @@ export class Publication {
    * The Bookmarks module
    */
   get bookmarks(): Bookmarks {
-    return new Bookmarks(this.config, this.authentication);
+    return new Bookmarks(this.context, this.authentication);
   }
 
   /**
    * The Reactions module
    */
   get reactions(): Reactions {
-    return new Reactions(this.config, this.authentication);
+    return new Reactions(this.context, this.authentication);
   }
 
   /**
    * The NotInterested module
    */
   get notInterested(): NotInterested {
-    return new NotInterested(this.config, this.authentication);
+    return new NotInterested(this.context, this.authentication);
   }
 
   /**
    * The Actions module
    */
   get actions(): Actions {
-    return new Actions(this.config, this.authentication);
+    return new Actions(this.context, this.authentication);
   }
 
   /**
@@ -122,7 +125,7 @@ export class Publication {
   ): Promise<AnyPublicationFragment | null> {
     const result = await this.sdk.Publication({
       request,
-      ...buildRequestFromConfig(this.config),
+      ...buildRequestFromConfig(this.context),
       ...options,
     });
 
@@ -152,7 +155,7 @@ export class Publication {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Publications({
         request: currRequest,
-        ...buildRequestFromConfig(this.config),
+        ...buildRequestFromConfig(this.context),
         ...options,
       });
 
@@ -865,5 +868,40 @@ export class Publication {
 
       return result.data.result;
     });
+  }
+
+  /**
+   * Predict the next onchain Publication id for a Profile.
+   *
+   * @param request - Request object for the method
+   * @param request.from - ProfileId of the profile to predict the next onchain publication id for
+   * @returns Publication Id
+   */
+  async predictNextOnChainPublicationId({
+    from,
+  }: {
+    from: Scalars['ProfileId']['input'];
+  }): Promise<Scalars['PublicationId']['output']> {
+    const result = await this.fetchAll({
+      limit: LimitType.Ten,
+      orderBy: PublicationsOrderByType.Latest,
+      where: { from: [from] },
+    });
+
+    if (hasAtLeastOne(result.items)) {
+      const latest = result.items[0] ?? never();
+      const [, onchainPublicationId = never()] = latest.id.split('-');
+
+      const value = parseInt(onchainPublicationId, 16);
+      const predictedOnchainPublicationId = (value + 1).toString(16);
+
+      return `${from}-0x${
+        predictedOnchainPublicationId.length % 2
+          ? '0' + predictedOnchainPublicationId
+          : predictedOnchainPublicationId
+      }`;
+    }
+
+    return `${from}-0x01`;
   }
 }

@@ -1,4 +1,4 @@
-import type { LensConfig } from '../../consts/config';
+import { LensContext } from '../../context';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type { ChallengeRequest, SignedAuthChallenge } from '../../graphql/types.generated';
 import { AuthChallengeFragment, getSdk, Sdk } from '../graphql/auth.generated';
@@ -7,8 +7,8 @@ import { Credentials } from './Credentials';
 export class AuthenticationApi {
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig) {
-    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
+  constructor(context: LensContext) {
+    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
     this.sdk = getSdk(client);
   }
 

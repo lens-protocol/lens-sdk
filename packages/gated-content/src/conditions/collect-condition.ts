@@ -1,9 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { CollectConditionInput } from '@lens-protocol/api-bindings';
+import { CollectCondition } from '@lens-protocol/metadata';
 import { invariant, isNonNullable } from '@lens-protocol/shared-kernel';
 
 import { EnvironmentConfig } from '../environments';
 import {
+  DecryptionContext,
   LitConditionType,
   LitEvmAccessCondition,
   LitKnownMethods,
@@ -14,8 +15,9 @@ import { toLitSupportedChainName } from './utils';
 import { assertValidPublicationId } from './validators';
 
 export const transformCollectCondition = (
-  condition: CollectConditionInput,
+  condition: CollectCondition,
   env: EnvironmentConfig,
+  context?: DecryptionContext,
 ): Array<LitEvmAccessCondition> => {
   invariant(isNonNullable(condition.publicationId), 'publicationId is missing');
   assertValidPublicationId(condition.publicationId);
@@ -32,7 +34,7 @@ export const transformCollectCondition = (
         LitKnownParams.USER_ADDRESS,
         BigNumber.from(publisherId).toString(),
         BigNumber.from(publicationId).toString(),
-        BigNumber.from(0).toString(), // empty for now
+        context?.profileId ?? BigNumber.from(0).toString(),
         '0x',
       ],
       functionAbi: {

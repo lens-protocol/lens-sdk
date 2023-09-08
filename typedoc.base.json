@@ -1,0 +1,13 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "includeVersion": true,
+  "excludeExternals": false,
+  "excludeInternal": true,
+  "excludeNotDocumented": false,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "disableSources": true,
+  "gitRevision": "lens-v2",
+  "hideGenerator": true,
+  "intentionallyNotExported": []
+}

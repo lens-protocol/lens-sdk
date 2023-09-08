@@ -1,5 +1,5 @@
 import type { Authentication } from '../../authentication';
-import type { LensConfig } from '../../consts/config';
+import { LensContext } from '../../context';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type {
   PostFragment,
@@ -27,10 +27,10 @@ export class Explore {
   private readonly sdk: Sdk;
 
   constructor(
-    private readonly config: LensConfig,
+    private readonly context: LensContext,
     authentication?: Authentication,
   ) {
-    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
   }
 
@@ -55,7 +55,7 @@ export class Explore {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ExplorePublications({
         request: currRequest,
-        ...buildRequestFromConfig(this.config),
+        ...buildRequestFromConfig(this.context),
       });
 
       return result.data.result;
@@ -81,7 +81,7 @@ export class Explore {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ExploreProfiles({
         request: currRequest,
-        ...buildRequestFromConfig(this.config),
+        ...buildRequestFromConfig(this.context),
       });
 
       return result.data.result;

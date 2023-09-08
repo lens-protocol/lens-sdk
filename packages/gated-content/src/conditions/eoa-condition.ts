@@ -1,4 +1,4 @@
-import { EoaOwnershipInput } from '@lens-protocol/api-bindings';
+import { EoaOwnershipCondition } from '@lens-protocol/metadata';
 
 import {
   LitAccessCondition,
@@ -9,7 +9,9 @@ import {
 } from './types';
 import { assertValidAddress } from './validators';
 
-export const transformEoaCondition = (condition: EoaOwnershipInput): Array<LitAccessCondition> => {
+export const transformEoaCondition = (
+  condition: EoaOwnershipCondition,
+): Array<LitAccessCondition> => {
   assertValidAddress(condition.address);
 
   return [

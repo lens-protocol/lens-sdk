@@ -1,13 +1,14 @@
-import { ContractType, NftOwnershipInput } from '@lens-protocol/api-bindings';
+import { NftContractType, NftOwnershipCondition } from '@lens-protocol/metadata';
 import { assertNever, never } from '@lens-protocol/shared-kernel';
 
 import {
-  AccessConditionType,
   LitAccessCondition,
   LitConditionType,
+  LitContractType,
   LitKnownMethods,
   LitKnownParams,
   LitOperator,
+  LitOperatorType,
   LitScalarOperator,
 } from './types';
 import { insertObjectInBetweenArrayElements, toLitSupportedChainName } from './utils';
@@ -15,7 +16,6 @@ import {
   InvalidAccessCriteriaError,
   assertValidAddress,
   assertSupportedChainId,
-  assertSupportedNftContractType,
   assertValidTokenIds,
 } from './validators';
 
@@ -64,24 +64,23 @@ const _handleOwnsMultipleFromERC1155Collection = (
 });
 
 export const transformNftCondition = (
-  condition: NftOwnershipInput,
+  condition: NftOwnershipCondition,
 ): Array<LitAccessCondition | LitOperator> => {
-  assertValidAddress(condition.contractAddress);
-  assertSupportedChainId(condition.chainID);
-  assertSupportedNftContractType(condition.contractType);
+  assertValidAddress(condition.contract.address);
+  assertSupportedChainId(condition.contract.chainId);
   assertValidTokenIds(condition.tokenIds);
 
   let partial: Partial<LitAccessCondition>;
 
   const result: Partial<LitAccessCondition> = {
     conditionType: LitConditionType.EVM_BASIC,
-    contractAddress: condition.contractAddress.toLowerCase(),
-    standardContractType: condition.contractType,
-    chain: toLitSupportedChainName(condition.chainID),
+    contractAddress: condition.contract.address.toLowerCase(),
+    standardContractType: LitContractType[condition.contractType],
+    chain: toLitSupportedChainName(condition.contract.chainId),
   };
 
   switch (condition.contractType) {
-    case ContractType.Erc721:
+    case NftContractType.ERC721:
       // case owns at least one nft from the collection
       if (!condition.tokenIds || condition.tokenIds.length === 0) {
         partial = _handleOwnsAtLeastOneNftFromCollection();
@@ -95,12 +94,12 @@ export const transformNftCondition = (
           _handleOwnsOneSpecificNftFromCollection(tokenId),
         );
         const results = partials.map((p) => Object.assign(p, result) as LitAccessCondition);
-        // wrap the condition in an or condition
-        return insertObjectInBetweenArrayElements(results, { operator: AccessConditionType.Or });
+        // wrap the condition in a Lit or condition
+        return insertObjectInBetweenArrayElements(results, { operator: LitOperatorType.OR });
       }
-
       break;
-    case ContractType.Erc1155:
+
+    case NftContractType.ERC1155:
       if (!condition.tokenIds || condition.tokenIds.length === 0) {
         throw new InvalidAccessCriteriaError(`ERC1155 requires at least one token id`);
       } else if (condition.tokenIds.length === 1) {

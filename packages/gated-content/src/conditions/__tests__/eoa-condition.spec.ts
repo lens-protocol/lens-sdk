@@ -1,16 +1,16 @@
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { toEvmAddress } from '@lens-protocol/metadata';
 
-import { mockEoaOwnershipInput } from '../__helpers__/mocks';
+import { mockEoaOwnershipCondition, mockEvmAddress } from '../../__helpers__/mocks';
 import { transformEoaCondition } from '../eoa-condition';
 import { LitConditionType, LitKnownParams, LitScalarOperator, SupportedChains } from '../types';
 import { InvalidAccessCriteriaError } from '../validators';
 
-const knownAddress = mockEthereumAddress();
+const knownAddress = mockEvmAddress();
 
 describe(`Given the "${transformEoaCondition.name}" function`, () => {
   describe('when called with an EOA Ownership condition', () => {
     it('should return the expected Lit AccessControlCondition', () => {
-      const condition = mockEoaOwnershipInput({ address: knownAddress });
+      const condition = mockEoaOwnershipCondition({ address: knownAddress });
 
       const actual = transformEoaCondition(condition);
 
@@ -23,7 +23,7 @@ describe(`Given the "${transformEoaCondition.name}" function`, () => {
           parameters: [LitKnownParams.USER_ADDRESS],
           returnValueTest: {
             comparator: LitScalarOperator.EQUAL,
-            value: knownAddress,
+            value: condition.address,
           },
           standardContractType: '',
         },
@@ -32,7 +32,7 @@ describe(`Given the "${transformEoaCondition.name}" function`, () => {
     });
 
     it(`should throw a ${InvalidAccessCriteriaError.name}`, () => {
-      const condition = mockEoaOwnershipInput({ address: '0x123' });
+      const condition = mockEoaOwnershipCondition({ address: toEvmAddress('0x123') });
       expect(() => transformEoaCondition(condition)).toThrow(InvalidAccessCriteriaError);
     });
   });

@@ -1,10 +1,12 @@
 # query fragments
 fragment OptimisticStatusResult on OptimisticStatusResult {
+  __typename
   value
   isFinalisedOnchain
 }
 
 fragment Erc20 on Erc20 {
+  __typename
   name
   symbol
   decimals
@@ -14,6 +16,7 @@ fragment Erc20 on Erc20 {
 }
 
 fragment FiatAmount on FiatAmount {
+  __typename
   asset {
     ...Fiat
   }
@@ -21,12 +24,14 @@ fragment FiatAmount on FiatAmount {
 }
 
 fragment Fiat on Fiat {
+  __typename
   name
   symbol
   decimals
 }
 
 fragment Amount on Amount {
+  __typename
   asset {
     ...Erc20
   }
@@ -37,6 +42,7 @@ fragment Amount on Amount {
 }
 
 fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+  __typename
   amount {
     ...Amount
   }
@@ -47,12 +53,14 @@ fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
 }
 
 fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
 }
 
 fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -60,12 +68,14 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
 }
 
 fragment NetworkAddress on NetworkAddress {
+  __typename
   address
   chainId
 }
 
 # media
 fragment Image on Image {
+  __typename
   uri
   mimeType
   width
@@ -73,11 +83,13 @@ fragment Image on Image {
 }
 
 fragment Video on Video {
+  __typename
   uri
   mimeType
 }
 
 fragment VideoSet on VideoSet {
+  __typename
   raw {
     ...Video
   }
@@ -87,11 +99,13 @@ fragment VideoSet on VideoSet {
 }
 
 fragment EncryptableVideo on EncryptableVideo {
+  __typename
   mimeType
   uri
 }
 
 fragment EncryptableVideoSet on EncryptableVideoSet {
+  __typename
   raw {
     ...EncryptableVideo
   }
@@ -101,11 +115,13 @@ fragment EncryptableVideoSet on EncryptableVideoSet {
 }
 
 fragment Audio on Audio {
+  __typename
   uri
   mimeType
 }
 
 fragment AudioSet on AudioSet {
+  __typename
   raw {
     ...Audio
   }
@@ -115,11 +131,13 @@ fragment AudioSet on AudioSet {
 }
 
 fragment EncryptableAudio on EncryptableAudio {
+  __typename
   mimeType
   uri
 }
 
 fragment EncryptableAudioSet on EncryptableAudioSet {
+  __typename
   raw {
     ...EncryptableAudio
   }
@@ -129,6 +147,7 @@ fragment EncryptableAudioSet on EncryptableAudioSet {
 }
 
 fragment LegacyAudioItem on LegacyAudioItem {
+  __typename
   audio {
     ...AudioSet
   }
@@ -139,6 +158,7 @@ fragment LegacyAudioItem on LegacyAudioItem {
 }
 
 fragment LegacyImageItem on LegacyImageItem {
+  __typename
   image {
     ...PublicationImageSet
   }
@@ -146,6 +166,7 @@ fragment LegacyImageItem on LegacyImageItem {
 }
 
 fragment LegacyVideoItem on LegacyVideoItem {
+  __typename
   video {
     ...VideoSet
   }
@@ -157,6 +178,7 @@ fragment LegacyVideoItem on LegacyVideoItem {
 
 # profile
 fragment ProfileCoverSet on ImageSet {
+  __typename
   raw {
     ...Image
   }
@@ -218,6 +240,7 @@ fragment Profile on Profile {
   txHash
   createdAt
   operations {
+    __typename
     id
     isBlockedByMe {
       ...OptimisticStatusResult
@@ -307,21 +330,25 @@ fragment PaginatedResultInfo on PaginatedResultInfo {
 }
 
 fragment App on App {
+  __typename
   id
 }
 
 fragment MomokaInfo on MomokaInfo {
+  __typename
   proof
 }
 
 # reference modules
 fragment FollowOnlyReferenceModuleSettings on FollowOnlyReferenceModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
 }
 
 fragment DegreesOfSeparationReferenceModuleSettings on DegreesOfSeparationReferenceModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -331,6 +358,7 @@ fragment DegreesOfSeparationReferenceModuleSettings on DegreesOfSeparationRefere
 }
 
 fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -339,6 +367,7 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
 
 # open action modules
 fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -353,6 +382,7 @@ fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
 }
 
 fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -360,6 +390,7 @@ fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectO
     ...Amount
   }
   recipients {
+    __typename
     recipient
     split
   }
@@ -370,6 +401,7 @@ fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectO
 }
 
 fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -384,6 +416,7 @@ fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
 }
 
 fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -396,6 +429,7 @@ fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
 }
 
 fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -409,8 +443,9 @@ fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleS
 }
 
 fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeCollectModuleSettings {
+  __typename
   contract {
-    address
+    ...NetworkAddress
   }
   collectLimit
   amount {
@@ -423,12 +458,14 @@ fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeColl
 }
 
 fragment LegacyRevertCollectModuleSettings on LegacyRevertCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
 }
 
 fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -442,6 +479,7 @@ fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSetti
 }
 
 fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -459,6 +497,7 @@ fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFee
 }
 
 fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -473,6 +512,7 @@ fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings 
 }
 
 fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -490,6 +530,7 @@ fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleS
 }
 
 fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -504,12 +545,14 @@ fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSetting
 }
 
 fragment UnknownOpenActionResult on UnknownOpenActionResult {
+  __typename
   address
   category
   initReturnData
 }
 
 fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
+  __typename
   type
 }
 
@@ -523,12 +566,14 @@ fragment OpenActionResult on OpenActionResult {
 }
 
 fragment CanDecryptResponse on CanDecryptResponse {
+  __typename
   result
   reasons
   extraDetails
 }
 
 fragment PublicationOperations on PublicationOperations {
+  __typename
   isNotInterested
   hasBookmarked
   hasReported
@@ -677,6 +722,7 @@ fragment RootCondition on RootCondition {
 
 # publication metadata
 fragment PublicationImageSet on ImageSet {
+  __typename
   raw {
     ...Image
   }
@@ -689,6 +735,7 @@ fragment PublicationImageSet on ImageSet {
 }
 
 fragment EncryptableImage on EncryptableImage {
+  __typename
   uri
   mimeType
   width
@@ -696,6 +743,7 @@ fragment EncryptableImage on EncryptableImage {
 }
 
 fragment PublicationEncryptableImageSet on EncryptableImageSet {
+  __typename
   raw {
     ...EncryptableImage
   }
@@ -705,12 +753,14 @@ fragment PublicationEncryptableImageSet on EncryptableImageSet {
 }
 
 fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {
+  __typename
   displayType
   traitType
   value
 }
 
 fragment MarketplaceMetadata on MarketplaceMetadata {
+  __typename
   description
   externalURL
   name
@@ -724,6 +774,7 @@ fragment MarketplaceMetadata on MarketplaceMetadata {
 }
 
 fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
+  __typename
   video {
     ...EncryptableVideoSet
   }
@@ -736,6 +787,7 @@ fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
 }
 
 fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
+  __typename
   image {
     ...PublicationEncryptableImageSet
   }
@@ -743,6 +795,7 @@ fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
 }
 
 fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
+  __typename
   audio {
     ...EncryptableAudioSet
   }
@@ -759,6 +812,7 @@ fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
 }
 
 fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
+  __typename
   content
   media {
     ... on LegacyAudioItem {
@@ -779,11 +833,14 @@ fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
     ...MarketplaceMetadata
   }
   encryptedWith {
+    __typename
     encryptionKey
     encryptedFields {
+      __typename
       content
       image
       media {
+        __typename
         uri
         mimeType
         altTag
@@ -798,7 +855,21 @@ fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
   }
 }
 
+fragment GeoLocation on GeoLocation {
+  __typename
+  rawURI
+  latitude
+  longitude
+}
+
+fragment PublicationMetadataV3Attribute on PublicationMetadataV3Attribute {
+  __typename
+  key
+  value
+}
+
 fragment VideoMetadataV3 on VideoMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -810,8 +881,7 @@ fragment VideoMetadataV3 on VideoMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -838,6 +908,7 @@ fragment VideoMetadataV3 on VideoMetadataV3 {
 }
 
 fragment AudioMetadataV3 on AudioMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -849,8 +920,7 @@ fragment AudioMetadataV3 on AudioMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -876,6 +946,7 @@ fragment AudioMetadataV3 on AudioMetadataV3 {
 }
 
 fragment ImageMetadataV3 on ImageMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -887,8 +958,7 @@ fragment ImageMetadataV3 on ImageMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -914,6 +984,7 @@ fragment ImageMetadataV3 on ImageMetadataV3 {
 }
 
 fragment ArticleMetadataV3 on ArticleMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -925,8 +996,7 @@ fragment ArticleMetadataV3 on ArticleMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -949,6 +1019,7 @@ fragment ArticleMetadataV3 on ArticleMetadataV3 {
 }
 
 fragment EventMetadataV3 on EventMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -960,8 +1031,7 @@ fragment EventMetadataV3 on EventMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -969,8 +1039,7 @@ fragment EventMetadataV3 on EventMetadataV3 {
     }
   }
   geographic {
-    latitude
-    longitude
+    ...GeoLocation
   }
   startsAt
   endsAt
@@ -990,6 +1059,7 @@ fragment EventMetadataV3 on EventMetadataV3 {
 }
 
 fragment LinkMetadataV3 on LinkMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1001,8 +1071,7 @@ fragment LinkMetadataV3 on LinkMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -1025,6 +1094,7 @@ fragment LinkMetadataV3 on LinkMetadataV3 {
 }
 
 fragment EmbedMetadataV3 on EmbedMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1036,8 +1106,7 @@ fragment EmbedMetadataV3 on EmbedMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -1060,6 +1129,7 @@ fragment EmbedMetadataV3 on EmbedMetadataV3 {
 }
 
 fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1071,8 +1141,7 @@ fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -1082,8 +1151,7 @@ fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
   content
   location
   geographic {
-    latitude
-    longitude
+    ...GeoLocation
   }
   attachments {
     ... on PublicationMetadataMediaVideo {
@@ -1099,6 +1167,7 @@ fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
 }
 
 fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1110,8 +1179,7 @@ fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -1121,7 +1189,17 @@ fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
   content
 }
 
+fragment ThreeDMetadataV3Asset on ThreeDMetadataV3Asset {
+  __typename
+  uri
+  zipPath
+  playerURL
+  format
+  license
+}
+
 fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1133,8 +1211,7 @@ fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -1143,11 +1220,7 @@ fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
   }
   content
   assets {
-    uri
-    zipPath
-    playerURL
-    format
-    license
+    ...ThreeDMetadataV3Asset
   }
   attachments {
     ... on PublicationMetadataMediaVideo {
@@ -1163,6 +1236,7 @@ fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
 }
 
 fragment StoryMetadataV3 on StoryMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1174,8 +1248,7 @@ fragment StoryMetadataV3 on StoryMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -1197,6 +1270,7 @@ fragment StoryMetadataV3 on StoryMetadataV3 {
 }
 
 fragment TransactionMetadataV3 on TransactionMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1208,8 +1282,7 @@ fragment TransactionMetadataV3 on TransactionMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -1234,6 +1307,7 @@ fragment TransactionMetadataV3 on TransactionMetadataV3 {
 }
 
 fragment MintMetadataV3 on MintMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1245,8 +1319,7 @@ fragment MintMetadataV3 on MintMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -1269,6 +1342,7 @@ fragment MintMetadataV3 on MintMetadataV3 {
 }
 
 fragment SpaceMetadataV3 on SpaceMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1280,8 +1354,7 @@ fragment SpaceMetadataV3 on SpaceMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {
@@ -1306,6 +1379,7 @@ fragment SpaceMetadataV3 on SpaceMetadataV3 {
 }
 
 fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1317,8 +1391,7 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    key
-    value
+    ...PublicationMetadataV3Attribute
   }
   encryptedWith {
     ... on PublicationMetadataEncryptionStrategy {

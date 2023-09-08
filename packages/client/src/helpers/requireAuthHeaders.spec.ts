@@ -1,10 +1,16 @@
+import { InMemoryStorageProvider } from '@lens-protocol/storage';
+
 import { buildTestEnvironment } from '../__helpers__';
 import { Authentication } from '../authentication';
-import { NotAuthenticatedError } from '../consts/errors';
+import { LensContext } from '../context';
+import { NotAuthenticatedError } from '../errors';
 import { requireAuthHeaders } from './requireAuthHeaders';
 
-const testConfig = {
+const context: LensContext = {
   environment: buildTestEnvironment(),
+  storage: new InMemoryStorageProvider(),
+  forApps: [],
+  mediaTransforms: {},
 };
 
 describe(`Given the "${requireAuthHeaders.name}" helper`, () => {
@@ -21,7 +27,7 @@ describe(`Given the "${requireAuthHeaders.name}" helper`, () => {
 
   describe(`when the ${Authentication.name} is available but not authenticated`, () => {
     it(`should return failure with ${NotAuthenticatedError.name}`, async () => {
-      const authentication = new Authentication(testConfig);
+      const authentication = new Authentication(context);
       const result = await requireAuthHeaders(authentication, (header) => {
         return Promise.resolve(header);
       });

@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { FollowConditionInput } from '@lens-protocol/api-bindings';
+import { FollowCondition } from '@lens-protocol/metadata';
 
 import { EnvironmentConfig } from '../environments';
 import {
@@ -13,10 +13,10 @@ import { toLitSupportedChainName } from './utils';
 import { assertValidProfileId } from './validators';
 
 export const transformFollowCondition = (
-  condition: FollowConditionInput,
+  condition: FollowCondition,
   env: EnvironmentConfig,
 ): Array<LitEvmAccessCondition> => {
-  assertValidProfileId(condition.profileId);
+  assertValidProfileId(condition.follow);
 
   return [
     {
@@ -26,7 +26,7 @@ export const transformFollowCondition = (
       functionName: LitKnownMethods.IS_FOLLOWING,
       functionParams: [
         LitKnownParams.USER_ADDRESS,
-        BigNumber.from(condition.profileId).toString(),
+        BigNumber.from(condition.follow).toString(),
         BigNumber.from(0).toString(),
         '0x',
       ],

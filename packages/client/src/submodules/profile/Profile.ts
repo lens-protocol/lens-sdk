@@ -1,8 +1,8 @@
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../../authentication';
-import type { LensConfig } from '../../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../../consts/errors';
+import { LensContext } from '../../context';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../../errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type {
   LensProfileManagerRelayErrorFragment,
@@ -68,10 +68,10 @@ export class Profile {
   private readonly sdk: Sdk;
 
   constructor(
-    private readonly config: LensConfig,
+    private readonly context: LensContext,
     authentication?: Authentication,
   ) {
-    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
@@ -97,7 +97,7 @@ export class Profile {
   ): Promise<ProfileFragment | null> {
     const result = await this.sdk.Profile({
       request,
-      ...buildRequestFromConfig(this.config),
+      ...buildRequestFromConfig(this.context),
       ...options,
     });
 
@@ -127,7 +127,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Profiles({
         request: currRequest,
-        ...buildRequestFromConfig(this.config),
+        ...buildRequestFromConfig(this.context),
         ...options,
       });
 
@@ -179,7 +179,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ProfileRecommendations({
         request: currRequest,
-        ...buildRequestFromConfig(this.config),
+        ...buildRequestFromConfig(this.context),
       });
 
       return result.data.result;
@@ -226,7 +226,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Following({
         request: currRequest,
-        ...buildRequestFromConfig(this.config),
+        ...buildRequestFromConfig(this.context),
       });
 
       return result.data.result;
@@ -250,7 +250,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Followers({
         request: currRequest,
-        ...buildRequestFromConfig(this.config),
+        ...buildRequestFromConfig(this.context),
       });
 
       return result.data.result;
@@ -277,7 +277,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.MutualFollowers({
         request: currRequest,
-        ...buildRequestFromConfig(this.config),
+        ...buildRequestFromConfig(this.context),
       });
 
       return result.data.result;
@@ -303,7 +303,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.WhoActedOnPublication({
         request: currRequest,
-        ...buildRequestFromConfig(this.config),
+        ...buildRequestFromConfig(this.context),
       });
 
       return result.data.result;

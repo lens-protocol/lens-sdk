@@ -1,0 +1,4 @@
+{
+  "main": "dist/lens-protocol-client-gated.cjs.js",
+  "module": "dist/lens-protocol-client-gated.esm.js"
+}

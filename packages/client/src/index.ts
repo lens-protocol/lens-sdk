@@ -1,9 +1,43 @@
-export { LensClient } from './LensClient';
-export { production, development, sandbox } from './consts/environments';
+/**
+ * @module Base
+ *
+ * @example
+ * Development example:
+ * ```ts
+ * import { LensClient, development } from '@lens-protocol/client';
+ *
+ * const client = new LensClient({
+ *   environment: development
+ * });
+ * ```
+ *
+ * @example
+ * Production example:
+ * ```ts
+ * import { LensClient, production } from '@lens-protocol/client';
+ *
+ * const client = new LensClient({
+ *   environment: production
+ * });
+ * ```
+ *
+ * @example
+ * Use [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API) to persist authentication state:
+ * ```ts
+ * const client = new LensClient({
+ *   environment: production,
+ *
+ *   storage: window.localStorage,
+ * });
+ * ```
+ */
 
+export * from './LensClient';
+export * from './environments';
+export * from './errors';
+export * from './graphql';
 export * from './authentication';
 export * from './submodules';
-export * from './consts/errors';
 
 // types
 export type {
@@ -19,315 +53,7 @@ export type {
   Result,
   Success,
 } from '@lens-protocol/shared-kernel';
-export type { IStorageProvider } from '@lens-protocol/storage';
-
-export type { Environment } from './consts/environments';
-export type { LensConfig, MediaTransformsConfig } from './consts/config';
-export type { TypedData, TypedDataResponse } from './consts/types';
-export type { AnyPublicationFragment, PrimaryPublicationFragment } from './graphql/types';
-export type { Digit, Percentage, Pixel, ImageSizeTransform } from './graphql/ImageSizeTransform';
+export type { IStorageProvider, InMemoryStorageProvider } from '@lens-protocol/storage';
+export type { TypedData, TypedDataResponse } from './types';
+export type { LensContext, MediaTransformsConfig } from './context';
 export type { PaginatedResult, PaginatedQueryData } from './helpers/buildPaginatedQueryResult';
-
-export type {
-  AmountFragment,
-  AndConditionFragment,
-  AppFragment,
-  ArticleMetadataV3Fragment,
-  AudioFragment,
-  AudioMetadataV3Fragment,
-  AudioSetFragment,
-  CanDecryptResponseFragment,
-  CheckingInMetadataV3Fragment,
-  CollectConditionFragment,
-  CommentBaseFragment,
-  CommentFragment,
-  CreateActOnOpenActionEip712TypedDataFragment,
-  CreateMomokaPublicationResultFragment,
-  DegreesOfSeparationReferenceModuleSettingsFragment,
-  Eip712TypedDataDomainFragment,
-  Eip712TypedDataFieldFragment,
-  EmbedMetadataV3Fragment,
-  EncryptableAudioFragment,
-  EncryptableAudioSetFragment,
-  EncryptableImageFragment,
-  EncryptableVideoFragment,
-  EncryptableVideoSetFragment,
-  EoaOwnershipConditionFragment,
-  Erc20Fragment,
-  Erc20OwnershipConditionFragment,
-  EventMetadataV3Fragment,
-  FeeFollowModuleSettingsFragment,
-  FiatAmountFragment,
-  FiatFragment,
-  FollowConditionFragment,
-  FollowOnlyReferenceModuleSettingsFragment,
-  ImageFragment,
-  ImageMetadataV3Fragment,
-  KnownCollectOpenActionResultFragment,
-  LegacyAaveFeeCollectModuleSettingsFragment,
-  LegacyAudioItemFragment,
-  LegacyErc4626FeeCollectModuleSettingsFragment,
-  LegacyFeeCollectModuleSettingsFragment,
-  LegacyFreeCollectModuleSettingsFragment,
-  LegacyImageItemFragment,
-  LegacyLimitedFeeCollectModuleSettingsFragment,
-  LegacyLimitedTimedFeeCollectModuleSettingsFragment,
-  LegacyMultirecipientFeeCollectModuleSettingsFragment,
-  LegacyPublicationMetadataFragment,
-  LegacyRevertCollectModuleSettingsFragment,
-  LegacySimpleCollectModuleSettingsFragment,
-  LegacyTimedFeeCollectModuleSettingsFragment,
-  LegacyVideoItemFragment,
-  LensProfileManagerRelayErrorFragment,
-  LinkMetadataV3Fragment,
-  LiveStreamMetadataV3Fragment,
-  MarketplaceMetadataFragment,
-  MintMetadataV3Fragment,
-  MirrorFragment,
-  MomokaInfoFragment,
-  MultirecipientFeeCollectOpenActionSettingsFragment,
-  NetworkAddressFragment,
-  NftImageFragment,
-  NftOwnershipConditionFragment,
-  OpenActionResult_KnownCollectOpenActionResult_Fragment,
-  OpenActionResult_UnknownOpenActionResult_Fragment,
-  OptimisticStatusResultFragment,
-  OrConditionFragment,
-  PaginatedResultInfoFragment,
-  PostFragment,
-  ProfileCoverSetFragment,
-  ProfileFragment,
-  ProfileOwnershipConditionFragment,
-  ProfilePictureSetFragment,
-  ProfileStatsFragment,
-  PublicationEncryptableImageSetFragment,
-  PublicationImageSetFragment,
-  PublicationMarketplaceMetadataAttributeFragment,
-  PublicationMetadataEncryptionStrategyFragment,
-  PublicationMetadataMediaAudioFragment,
-  PublicationMetadataMediaImageFragment,
-  PublicationMetadataMediaVideoFragment,
-  PublicationOperationsFragment,
-  PublicationStatsFragment,
-  QuoteBaseFragment,
-  QuoteFragment,
-  RelayErrorFragment,
-  RelaySuccessFragment,
-  RevertFollowModuleSettingsFragment,
-  RootConditionFragment,
-  SimpleCollectOpenActionSettingsFragment,
-  SpaceMetadataV3Fragment,
-  StoryMetadataV3Fragment,
-  TextOnlyMetadataV3Fragment,
-  ThreeDMetadataV3Fragment,
-  TransactionMetadataV3Fragment,
-  UnknownFollowModuleSettingsFragment,
-  UnknownOpenActionModuleSettingsFragment,
-  UnknownOpenActionResultFragment,
-  UnknownReferenceModuleSettingsFragment,
-  VideoFragment,
-  VideoMetadataV3Fragment,
-  VideoSetFragment,
-} from './graphql/fragments.generated';
-
-export type {
-  // requests
-  ActOnOpenActionRequest,
-  AlreadyInvitedCheckRequest,
-  ApprovedModuleAllowanceAmountRequest,
-  BlockRequest,
-  BroadcastRequest,
-  ChallengeRequest,
-  ChangeProfileManagersRequest,
-  ClaimProfileRequest,
-  CreateProfileWithHandleRequest,
-  DismissRecommendedProfilesRequest,
-  ExploreProfilesRequest,
-  ExplorePublicationRequest,
-  FeedHighlightsRequest,
-  FeedRequest,
-  FollowersRequest,
-  FollowingRequest,
-  FollowRequest,
-  FollowRevenueRequest,
-  GenerateModuleCurrencyApprovalDataRequest,
-  HandleLinkToProfileRequest,
-  HandleUnlinkFromProfileRequest,
-  HidePublicationRequest,
-  InviteRequest,
-  LegacyCollectRequest,
-  LensTransactionStatusRequest,
-  MomokaCommentRequest,
-  MomokaMirrorRequest,
-  MomokaPostRequest,
-  MomokaQuoteRequest,
-  MomokaTransactionRequest,
-  MomokaTransactionsRequest,
-  MutualFollowersRequest,
-  MutualPoapsQueryRequest,
-  NftGalleriesRequest,
-  NftGalleryCreateRequest,
-  NftGalleryDeleteRequest,
-  NftGalleryUpdateInfoRequest,
-  NftGalleryUpdateItemOrderRequest,
-  NftGalleryUpdateItemsRequest,
-  NftOwnershipChallengeRequest,
-  NftsRequest,
-  NotificationRequest,
-  OnchainCommentRequest,
-  OnchainMirrorRequest,
-  OnchainPostRequest,
-  OnchainQuoteRequest,
-  OnchainSetProfileMetadataRequest,
-  OwnedHandlesRequest,
-  PaginatedOffsetRequest,
-  PoapEventQueryRequest,
-  PoapHoldersQueryRequest,
-  ProfileActionHistoryRequest,
-  ProfileInterestsRequest,
-  ProfileManagersRequest,
-  ProfileRecommendationsRequest,
-  ProfileRequest,
-  ProfileSearchRequest,
-  ProfilesManagedRequest,
-  ProfilesRequest,
-  PublicationBookmarkRequest,
-  PublicationBookmarksRequest,
-  PublicationNotInterestedRequest,
-  PublicationRequest,
-  PublicationSearchRequest,
-  PublicationsRequest,
-  PublicationsTagsRequest,
-  ReactionRequest,
-  RefreshPublicationMetadataRequest,
-  ReportPublicationRequest,
-  RevenueFromPublicationRequest,
-  RevenueFromPublicationsRequest,
-  SetFollowModuleRequest,
-  SupportedModulesRequest,
-  UnblockRequest,
-  UnfollowRequest,
-  UserPoapsQueryRequest,
-  ValidatePublicationMetadataRequest,
-  WhoActedOnPublicationRequest,
-  WhoReactedPublicationRequest,
-
-  // where
-  ExploreProfilesWhere,
-  ExplorePublicationsWhere,
-  FeedHighlightWhere,
-  FeedWhere,
-  NftsRequestWhere,
-  NotificationWhere,
-  ProfileSearchWhere,
-  ProfilesRequestWhere,
-  PublicationBookmarksWhere,
-  PublicationSearchWhere,
-  PublicationsTagsWhere,
-  PublicationsWhere,
-  WhoActedOnPublicationWhere,
-  WhoReactedPublicationWhere,
-
-  // inputs
-  ActOnOpenActionInput,
-  AmountInput,
-  CollectActionModuleInput,
-  DegreesOfSeparationReferenceModuleInput,
-  FeeFollowModuleInput,
-  FollowModuleInput,
-  FollowModuleRedeemInput,
-  FraudReasonInput,
-  IllegalReasonInput,
-  MultirecipientFeeCollectModuleInput,
-  NetworkAddressInput,
-  NftInput,
-  OpenActionModuleInput,
-  PublicationStatsInput,
-  RecipientDataInput,
-  ReferenceModuleInput,
-  ReportingReasonInput,
-  SensitiveReasonInput,
-  SimpleCollectOpenActionModuleInput,
-  SpamReasonInput,
-  UnknownFollowModuleInput,
-  UnknownFollowModuleRedeemInput,
-  UnknownOpenActionActRedeemInput,
-  UnknownOpenActionModuleInput,
-  UnknownReferenceModuleInput,
-
-  // args
-  ProfileStatsArg,
-  ProfileStatsCountOpenActionArgs,
-  PublicationStatsCountOpenActionArgs,
-
-  // filters
-  PublicationMetadataContentWarningFilter,
-  PublicationMetadataFilters,
-  PublicationMetadataTagsFilter,
-
-  // other
-  ChangeProfileManager,
-  Exact,
-  Follow,
-  ImageTransform,
-  InputMaybe,
-  Maybe,
-  ModuleCurrencyApproval,
-  NftUpdateItemOrder,
-  OnchainReferrer,
-  OpenActionFilter,
-  PublicationCommentOn,
-  Scalars,
-  SignedAuthChallenge,
-  TypedDataOptions,
-} from './graphql/types.generated';
-
-// enums
-export {
-  AttributeType,
-  ChangeProfileManagerActionType,
-  CollectOpenActionModuleType,
-  CommentRankingFilterType,
-  ComparisonOperatorConditionType,
-  CreateProfileWithHandleErrorReasonType,
-  CustomFiltersType,
-  DecryptFailReasonType,
-  ExploreProfilesOrderByType,
-  ExplorePublicationsOrderByType,
-  ExplorePublicationType,
-  FeedEventItemType,
-  FollowModuleType,
-  LegacyPublicationMetadataMainFocusType,
-  LensProfileManagerRelayErrorReasonType,
-  LensTransactionFailureType,
-  LensTransactionStatusType,
-  LimitType,
-  MarketplaceMetadataAttributeDisplayType,
-  MomokaValidatorError,
-  NftContractType,
-  NotificationType,
-  OpenActionCategoryType,
-  OpenActionModuleType,
-  PoapTokenLayerType,
-  ProfileActionHistoryType,
-  ProfileInterestTypes,
-  PublicationContentWarningType,
-  PublicationMetadataLicenseType,
-  PublicationMetadataMainFocusType,
-  PublicationMetadataTransactionType,
-  PublicationReactionType,
-  PublicationReportingFraudSubreason,
-  PublicationReportingIllegalSubreason,
-  PublicationReportingReason,
-  PublicationReportingSensitiveSubreason,
-  PublicationReportingSpamSubreason,
-  PublicationsOrderByType,
-  PublicationType,
-  ReferenceModuleType,
-  RefreshPublicationMetadataResultType,
-  RelayErrorReasonType,
-  RelayRoleKey,
-  SearchPublicationType,
-  TagSortCriteriaType,
-  TriStateValue,
-} from './graphql/types.generated';

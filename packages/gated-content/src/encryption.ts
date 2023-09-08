@@ -1,198 +1,225 @@
-import {
-  DeepOmitTypename,
-  EncryptedFields,
-  EncryptedFieldsOutput,
-  EncryptedMediaSet,
-  PublicationMediaSet,
-  MetadataOutput,
-  PublicationMetadata,
-  PublicationMetadataMediaInput,
-} from '@lens-protocol/api-bindings';
-import { invariant, isNonNullable, never, UnknownObject, Url } from '@lens-protocol/shared-kernel';
+import * as raw from '@lens-protocol/metadata';
+import { invariant, never } from '@lens-protocol/shared-kernel';
 
 import { ICipher } from './IEncryptionProvider';
-import { Entries, ExtractFields } from './types';
+import * as gql from './graphql';
+import { resolvePathsToDecrypt, resolvePathsToEncrypt } from './paths';
+import { Mutable } from './types';
+import { update } from './update';
 
-const SUPPORTED_FIELDS = ['content', 'image', 'media', 'animation_url', 'external_url'] as const;
-
-const MEDIA_PLACEHOLDER_URL = 'ipfs://QmZq4ozZ4ZAoPuPnujgyhQmpmsQTJnBS36KfijUCqmnhQa';
-const STRING_PLACEHOLDER = 'This publication is gated.';
-
-type SupportedFieldKeys = (typeof SUPPORTED_FIELDS)[number];
-
-type ExtractSupportedFields<T extends UnknownObject> = ExtractFields<T, SupportedFieldKeys>;
-
-function supportedFields<T extends UnknownObject, R extends ExtractSupportedFields<T>>(
-  metadata: T,
-): Entries<R> {
-  return SUPPORTED_FIELDS.reduce((acc, key) => {
-    if (key in metadata && isNonNullable(metadata[key])) {
-      acc.push([key, metadata[key]]);
-    }
-    return acc;
-  }, [] as unknown[] as Entries<R>);
-}
-
-export type EncryptResultValue = {
-  obfuscated: PublicationMetadata;
-  encryptedFields: Partial<EncryptedFields>;
+export type EncryptionResult<T extends raw.PublicationMetadata> = {
+  encrypted: T;
+  paths: raw.EncryptedPaths;
 };
 
 export class PublicationMetadataEncryptor {
   constructor(private readonly cipher: ICipher) {}
 
-  async encrypt(metadata: PublicationMetadata): Promise<EncryptResultValue> {
-    const fields = supportedFields(metadata);
-    const obfuscated = Object.assign({}, metadata);
-    const encryptedFields: Partial<EncryptedFields> = {};
+  async encrypt<T extends raw.PublicationMetadata>(metadata: T): Promise<EncryptionResult<T>> {
+    const paths = resolvePathsToEncrypt(metadata);
 
-    for (const [key, value] of fields) {
-      switch (key) {
-        case 'content':
-          obfuscated[key] = this.obfuscateText(value);
-          encryptedFields[key] = await this.encryptString(value);
-          break;
-
-        case 'media':
-          obfuscated[key] = this.obfuscateMedia(value);
-          encryptedFields[key] = await this.encryptMedia(value);
-          break;
-
-        case 'image':
-          obfuscated[key] = this.obfuscateUrl(value);
-          encryptedFields[key] = await this.encryptString(value);
-          break;
-
-        case 'animation_url':
-          obfuscated[key] = this.obfuscateUrl(value);
-          encryptedFields[key] = await this.encryptString(value);
-          break;
-
-        case 'external_url':
-          obfuscated[key] = this.obfuscateUrl(value);
-          encryptedFields[key] = await this.encryptString(value);
-          break;
-      }
-    }
+    const encrypted = await update(metadata, paths, (value) => this.encryptString(value));
 
     return {
-      obfuscated,
-      encryptedFields,
+      encrypted,
+      paths,
     };
   }
 
   private async encryptString(value: string): Promise<string> {
     return this.cipher.encrypt(value);
   }
-
-  private async encryptMedia(
-    media: PublicationMetadataMediaInput[],
-  ): Promise<NonNullable<EncryptedFields['media']>> {
-    return Promise.all(
-      media.map(async ({ altTag, cover, item, type }) => ({
-        altTag: altTag ? await this.encryptString(altTag) : null,
-        cover: cover ? await this.encryptString(cover) : null,
-        item: await this.encryptString(item),
-        type: type, // keep mime-type unencrypted so consumers have a chance to show something meaningful
-      })),
-    );
-  }
-
-  private obfuscateMedia(media: PublicationMetadataMediaInput[]): PublicationMetadataMediaInput[] {
-    return media.map(({ altTag, cover, item, type }) => ({
-      altTag: altTag ? this.obfuscateText(altTag) : null,
-      cover: cover ? this.obfuscateUrl(cover) : null,
-      item: this.obfuscateUrl(item),
-      type: type, // mime-type is not encrypted
-    }));
-  }
-
-  private obfuscateText(_: string): string {
-    return STRING_PLACEHOLDER;
-  }
-
-  private obfuscateUrl(_: Url): Url {
-    return MEDIA_PLACEHOLDER_URL;
-  }
 }
-
-type SupportedMetadataOutputFields = 'animatedUrl' | keyof EncryptedFieldsOutput;
-
-export type EncryptedPublicationMetadata = Partial<
-  ExtractFields<MetadataOutput, SupportedMetadataOutputFields>
->;
-
-export type IndexedEncryptedFields = Partial<ExtractSupportedFields<EncryptedFieldsOutput>>;
 
 export class PublicationMetadataDecryptor {
   constructor(private readonly cipher: ICipher) {}
 
-  async decrypt<T extends EncryptedPublicationMetadata>(
-    encrypted: T,
-    using: IndexedEncryptedFields,
-  ): Promise<T> {
-    const fields = supportedFields(using);
-    const decrypted = Object.assign({}, encrypted);
+  async decrypt<T extends gql.EncryptedFragmentOfPublicationMetadata>(encrypted: T): Promise<T> {
+    const paths = resolvePathsToDecrypt(encrypted);
+    return update(encrypted, paths, (value) => this.decryptString(value));
+  }
 
-    for (const [key, value] of fields) {
+  private async decryptString(value: string): Promise<string> {
+    return this.cipher.decrypt(value);
+  }
+}
+
+const PUBLICATION_METADATA_V2_ENCRYPTABLE_FIELDS = [
+  'content',
+  'image',
+  'media',
+  'animationUrl',
+  'externalUrl',
+] as const;
+
+export class LegacyPublicationMetadataDecryptor {
+  constructor(private readonly cipher: ICipher) {}
+
+  async decrypt<T extends gql.EncryptedFragmentOfLegacyPublicationMetadata>(
+    encrypted: T,
+  ): Promise<T> {
+    const decrypted: Mutable<T> = Object.assign({}, encrypted);
+
+    for (const key of PUBLICATION_METADATA_V2_ENCRYPTABLE_FIELDS) {
       switch (key) {
-        case 'content':
-        case 'image':
-          decrypted[key] = await this.decryptString(value);
+        case 'animationUrl':
+          if (
+            encrypted.marketplace?.animationUrl &&
+            encrypted.encryptedWith.encryptedFields.animationUrl
+          ) {
+            decrypted.marketplace = Object.assign({}, decrypted.marketplace, {
+              animationUrl: await this.decryptString(
+                encrypted.encryptedWith.encryptedFields.animationUrl,
+              ),
+            });
+          }
           break;
-        case 'animation_url':
-          // notice discrepancy between MetadataOutput and PublicationMetadata naming
-          decrypted['animatedUrl'] = await this.decryptString(value);
+
+        case 'content':
+          if (encrypted.content && encrypted.encryptedWith.encryptedFields.content) {
+            decrypted.content = await this.decryptString(
+              encrypted.encryptedWith.encryptedFields.content,
+            );
+          }
+          break;
+
+        case 'externalUrl':
+          if (
+            encrypted.marketplace?.externalURL &&
+            encrypted.encryptedWith.encryptedFields.externalUrl
+          ) {
+            decrypted.marketplace = Object.assign({}, decrypted.marketplace, {
+              externalURL: await this.decryptString(
+                encrypted.encryptedWith.encryptedFields.externalUrl,
+              ),
+            });
+          }
+          break;
+
+        case 'image':
+          if (
+            encrypted.marketplace?.image?.raw?.uri &&
+            encrypted.encryptedWith.encryptedFields.image
+          ) {
+            decrypted.marketplace = Object.assign({}, decrypted.marketplace, {
+              image: await this.decryptMediaSet(
+                encrypted.marketplace.image,
+                encrypted.encryptedWith.encryptedFields.image,
+              ),
+            });
+          }
           break;
 
         case 'media':
-          decrypted[key] = await this.decryptMedia(
-            encrypted[key] ??
-              never(
-                `Cannot find "media" in encrypted metadata. It appears to be a discrepancy between the provided encrypted metadata and the encrypted fields in the decryption parameters.`,
-              ),
-            value,
-          );
+          if (encrypted.media && encrypted.encryptedWith.encryptedFields.media) {
+            decrypted.media = await this.decryptLegacyMediaItemList(
+              encrypted.media,
+              encrypted.encryptedWith.encryptedFields.media,
+            );
+          }
           break;
-
-        case 'external_url':
-        // not supported in MetadataOutput ¯\_(ツ)_/¯
       }
     }
 
     return decrypted;
   }
 
-  private async decryptMedia<T extends PublicationMediaSet>(
-    media: T[],
-    encrypted: DeepOmitTypename<EncryptedMediaSet>[],
+  private async decryptLegacyMediaItemList<T extends gql.FragmentOf<gql.LegacyMediaItem>>(
+    items: readonly T[],
+    encrypted: readonly gql.EncryptedMedia[],
   ): Promise<T[]> {
     invariant(
-      media.length === encrypted.length,
+      items.length === encrypted.length,
       'Media and encrypted media must have the same length',
     );
 
     return Promise.all(
-      media.map(async (obfuscated, index) => {
+      items.map(async (item, index) => {
         const encryptedMediaSet = encrypted[index] ?? never();
-
-        return {
-          ...obfuscated,
-          original: {
-            ...obfuscated.original,
-            altTag:
-              obfuscated.original.altTag && encryptedMediaSet.original.altTag
-                ? await this.decryptString(encryptedMediaSet.original.altTag ?? never())
-                : null,
-            cover:
-              obfuscated.original.cover && encryptedMediaSet.original.cover
-                ? await this.decryptString(encryptedMediaSet.original.cover ?? never())
-                : null,
-            url: await this.decryptString(encryptedMediaSet.original.url),
-          },
-        };
+        return this.decryptLegacyMediaItem(item, encryptedMediaSet);
       }),
     );
+  }
+
+  private async decryptLegacyMediaItem<T extends gql.FragmentOf<gql.LegacyMediaItem>>(
+    item: T,
+    encrypted: gql.EncryptedMedia,
+  ): Promise<T> {
+    switch (item.__typename) {
+      case 'LegacyAudioItem':
+        return this.decryptLegacyAudioItem(item, encrypted) as Promise<T>;
+
+      case 'LegacyImageItem':
+        return this.decryptLegacyImageItem(item, encrypted) as Promise<T>;
+
+      case 'LegacyVideoItem':
+        return this.decryptLegacyVideoItem(item, encrypted) as Promise<T>;
+    }
+  }
+
+  private async decryptLegacyAudioItem<T extends gql.FragmentOf<gql.LegacyAudioItem>>(
+    item: T,
+    encrypted: gql.EncryptedMedia,
+  ): Promise<T> {
+    if (item?.audio) {
+      return {
+        ...item,
+        audio: await this.decryptMediaSet(item.audio, encrypted.uri),
+      };
+    }
+    return item; // fail-safe
+  }
+
+  private async decryptLegacyImageItem<T extends gql.FragmentOf<gql.LegacyImageItem>>(
+    item: T,
+    encrypted: gql.EncryptedMedia,
+  ): Promise<T> {
+    if (item?.image) {
+      return {
+        ...item,
+        altTag: item.altTag && encrypted.altTag ? await this.decryptString(encrypted.altTag) : null, // fail-safe
+        image: await this.decryptMediaSet(item.image, encrypted.uri),
+      };
+    }
+    return item; // fail-safe
+  }
+
+  private async decryptLegacyVideoItem<T extends gql.FragmentOf<gql.LegacyVideoItem>>(
+    item: T,
+    encrypted: gql.EncryptedMedia,
+  ): Promise<T> {
+    if (item?.video) {
+      return {
+        ...item,
+        altTag: item.altTag && encrypted.altTag ? await this.decryptString(encrypted.altTag) : null, // fail-safe
+        video: await this.decryptMediaSet(item.video, encrypted.uri),
+      };
+    }
+    return item; // fail-safe
+  }
+
+  private async decryptMediaSet<
+    T extends gql.FragmentOf<gql.AudioSet | gql.ImageSet | gql.VideoSet>,
+  >(mediaSet: T, encrypted: gql.Scalars['EncryptedValue']): Promise<T> {
+    if (mediaSet?.raw?.uri && encrypted) {
+      return {
+        ...mediaSet,
+        raw: await this.decryptMedia(mediaSet.raw, encrypted),
+      };
+    }
+    return mediaSet; // fail-safe
+  }
+
+  private async decryptMedia<
+    T extends gql.FragmentOf<gql.Audio | gql.Image | gql.Video> | undefined,
+  >(media: T, encrypted: gql.Scalars['EncryptedValue']): Promise<T> {
+    if (media?.uri && encrypted) {
+      return {
+        ...media,
+        uri: await this.decryptString(encrypted),
+      };
+    }
+    return media; // fail-safe
   }
 
   private async decryptString(value: string): Promise<string> {

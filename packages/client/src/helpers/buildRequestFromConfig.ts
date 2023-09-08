@@ -1,4 +1,4 @@
-import { LensConfig } from '../consts/config';
+import { LensContext } from '../context';
 import { ImageTransform, ProfileStatsArg } from '../graphql/types.generated';
 
 type RequestFromConfig = {
@@ -8,7 +8,7 @@ type RequestFromConfig = {
   profileStatsArg?: ProfileStatsArg;
 };
 
-export function buildRequestFromConfig(config: LensConfig): RequestFromConfig {
+export function buildRequestFromConfig(config: LensContext): RequestFromConfig {
   return {
     publicationImageTransform: config.mediaTransforms?.publication,
     profileCoverTransform: config.mediaTransforms?.profileCover,
