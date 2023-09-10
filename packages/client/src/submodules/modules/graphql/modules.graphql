@@ -3,7 +3,7 @@ fragment ModuleInfo on ModuleInfo {
   type
 }
 
-fragment SupportedModule on SupportedModule {
+fragment KnownSupportedModule on KnownSupportedModule {
   moduleName
   contract {
     ...NetworkAddress
@@ -17,23 +17,25 @@ fragment SupportedModule on SupportedModule {
   returnDataInput {
     ...ModuleInfo
   }
-  isTypeSafe
 }
 
-fragment SupportedModules on SupportedModules {
-  openActionsModules {
-    ...SupportedModule
+fragment UnknownSupportedModule on UnknownSupportedModule {
+  moduleName
+  contract {
+    ...NetworkAddress
   }
-  followModules {
-    ...SupportedModule
+}
+
+fragment SupportedModule on SupportedModule {
+  ... on KnownSupportedModule {
+    ...KnownSupportedModule
   }
-  referenceModules {
-    ...SupportedModule
+  ... on UnknownSupportedModule {
+    ...UnknownSupportedModule
   }
 }
 
 fragment ApprovedAllowanceAmountResult on ApprovedAllowanceAmountResult {
-  currency
   moduleName
   moduleContract {
     ...NetworkAddress
@@ -45,12 +47,6 @@ fragment GenerateModuleCurrencyApprovalResult on GenerateModuleCurrencyApprovalR
   to
   from
   data
-}
-
-query SupportedModules {
-  result: supportedModules {
-    ...SupportedModules
-  }
 }
 
 query Currencies($request: PaginatedOffsetRequest!) {

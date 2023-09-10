@@ -1,31 +1,9 @@
-fragment ElectedMirror on ElectedMirror {
-  mirrorId
-  by {
-    ...ProfileFields
-  }
-  timestamp
-}
-
-fragment MirrorEvent on MirrorEvent {
-  by {
-    ...ProfileFields
-  }
-  timestamp
-}
-
-fragment CollectedEvent on CollectedEvent {
-  by {
-    ...ProfileFields
-  }
-  timestamp
-}
-
 fragment ReactionEvent on ReactionEvent {
   by {
     ...ProfileFields
   }
   reaction
-  timestamp
+  createdAt
 }
 
 fragment FeedItem on FeedItem {
@@ -41,23 +19,14 @@ fragment FeedItem on FeedItem {
       ...Quote
     }
   }
-  electedMirror {
-    ...ElectedMirror
-  }
   mirrors {
-    ...MirrorEvent
-  }
-  collects {
-    ...CollectedEvent
+    ...Mirror
   }
   reactions {
     ...ReactionEvent
   }
   comments {
     ...Comment
-  }
-  quotes {
-    ...Quote
   }
 }
 
@@ -66,6 +35,7 @@ query Feed(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: feed(request: $request) {
     items {
@@ -82,6 +52,7 @@ query FeedHighlights(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: feedHighlights(request: $request) {
     items {
@@ -103,6 +74,7 @@ query ForYou(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: forYou(request: $request) {
     items {

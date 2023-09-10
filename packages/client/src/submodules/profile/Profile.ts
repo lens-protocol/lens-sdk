@@ -84,6 +84,7 @@ export class Profile {
       const result = await this.sdk.Profiles({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        sources: this.config.sources,
       });
 
       return result.data.result;

@@ -35,14 +35,6 @@ fragment MomokaCommentTransaction on MomokaCommentTransaction {
   app {
     ...App
   }
-  profile {
-    ...ProfileFields
-  }
-  publicationId
-  commentedOnProfile {
-    ...ProfileFields
-  }
-  commentedOnPublicationId
   verificationStatus {
     ... on MomokaVerificationStatusSuccess {
       ...MomokaVerificationStatusSuccess
@@ -51,6 +43,12 @@ fragment MomokaCommentTransaction on MomokaCommentTransaction {
       ...MomokaVerificationStatusFailure
     }
   }
+  profile {
+    ...ProfileFields
+  }
+  publicationId
+  commentedOnProfileId
+  commentedOnPublicationId
 }
 
 fragment MomokaMirrorTransaction on MomokaMirrorTransaction {
@@ -60,14 +58,6 @@ fragment MomokaMirrorTransaction on MomokaMirrorTransaction {
   app {
     ...App
   }
-  profile {
-    ...ProfileFields
-  }
-  publicationId
-  mirrorOfProfile {
-    ...ProfileFields
-  }
-  mirrorOfPublicationId
   verificationStatus {
     ... on MomokaVerificationStatusSuccess {
       ...MomokaVerificationStatusSuccess
@@ -76,6 +66,12 @@ fragment MomokaMirrorTransaction on MomokaMirrorTransaction {
       ...MomokaVerificationStatusFailure
     }
   }
+  profile {
+    ...ProfileFields
+  }
+  publicationId
+  mirrorOfProfileId
+  mirrorOfPublicationId
 }
 
 fragment MomokaQuoteTransaction on MomokaQuoteTransaction {
@@ -85,14 +81,6 @@ fragment MomokaQuoteTransaction on MomokaQuoteTransaction {
   app {
     ...App
   }
-  profile {
-    ...ProfileFields
-  }
-  publicationId
-  quotedOnProfile {
-    ...ProfileFields
-  }
-  quotedOnPublicationId
   verificationStatus {
     ... on MomokaVerificationStatusSuccess {
       ...MomokaVerificationStatusSuccess
@@ -101,6 +89,12 @@ fragment MomokaQuoteTransaction on MomokaQuoteTransaction {
       ...MomokaVerificationStatusFailure
     }
   }
+  profile {
+    ...ProfileFields
+  }
+  publicationId
+  quotedOnProfileId
+  quotedOnPublicationId
 }
 
 fragment MomokaSubmitterResult on MomokaSubmitterResult {

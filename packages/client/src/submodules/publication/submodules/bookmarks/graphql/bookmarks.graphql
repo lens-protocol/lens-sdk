@@ -4,6 +4,7 @@ query ProfileBookmarks(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: profileBookmarks(request: $request) {
     items {

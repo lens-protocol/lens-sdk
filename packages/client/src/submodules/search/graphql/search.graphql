@@ -3,6 +3,7 @@ query SearchPublications(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: searchPublications(request: $request) {
     items {

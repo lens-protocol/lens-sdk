@@ -13,7 +13,6 @@ import {
   LensProfileManagerRelayErrorFragment,
   Eip712TypedDataFieldFragment,
   CreateMomokaPublicationResultFragment,
-  RelayErrorFragment,
 } from '../../../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -31,13 +30,13 @@ import {
   LensProfileManagerRelayErrorFragmentDoc,
   Eip712TypedDataFieldFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
-  RelayErrorFragmentDoc,
 } from '../../../../../graphql/fragments.generated';
 export type ProfileBookmarksQueryVariables = Types.Exact<{
   request: Types.ProfileBookmarksRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
 }>;
 
 export type ProfileBookmarksQuery = {
@@ -65,6 +64,7 @@ export const ProfileBookmarksDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   ) {
     result: profileBookmarks(request: $request) {
       items {

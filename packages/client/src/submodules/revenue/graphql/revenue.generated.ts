@@ -14,7 +14,6 @@ import {
   LensProfileManagerRelayErrorFragment,
   Eip712TypedDataFieldFragment,
   CreateMomokaPublicationResultFragment,
-  RelayErrorFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -33,7 +32,6 @@ import {
   LensProfileManagerRelayErrorFragmentDoc,
   Eip712TypedDataFieldFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
-  RelayErrorFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type RevenueAggregateFragment = { total: AmountFragment };
 
@@ -47,6 +45,7 @@ export type RevenueFromPublicationsQueryVariables = Types.Exact<{
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
 }>;
 
 export type RevenueFromPublicationsQuery = {
@@ -58,6 +57,7 @@ export type RevenueForPublicationQueryVariables = Types.Exact<{
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
 }>;
 
 export type RevenueForPublicationQuery = { result: PublicationRevenueFragment };
@@ -108,6 +108,7 @@ export const RevenueFromPublicationsDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   ) {
     result: revenueFromPublications(request: $request) {
       items {
@@ -127,6 +128,7 @@ export const RevenueForPublicationDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   ) {
     result: revenueForPublication(request: $request) {
       ...PublicationRevenue

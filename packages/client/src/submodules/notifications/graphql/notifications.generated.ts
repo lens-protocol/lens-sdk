@@ -8,9 +8,9 @@ import {
   ProfileFragment,
   PaginatedResultInfoFragment,
   CommentFragment,
-  CollectOpenActionResultFragment,
-  UnknownOpenActionResultFragment,
   MirrorFragment,
+  OpenActionResult_KnownCollectOpenActionResult_Fragment,
+  OpenActionResult_UnknownOpenActionResult_Fragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -23,9 +23,8 @@ import {
   ProfileFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   CommentFragmentDoc,
-  CollectOpenActionResultFragmentDoc,
-  UnknownOpenActionResultFragmentDoc,
   MirrorFragmentDoc,
+  OpenActionResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type ReactionNotificationFragment = {
   id: string;
@@ -46,13 +45,17 @@ export type MirrorNotificationFragment = {
 
 export type QuoteNotificationFragment = { id: string; quote: QuoteFragment };
 
+export type OpenActionProfileActedFragment = {
+  actedAt: string;
+  profile: ProfileFieldsFragment;
+  action:
+    | OpenActionResult_KnownCollectOpenActionResult_Fragment
+    | OpenActionResult_UnknownOpenActionResult_Fragment;
+};
+
 export type ActedNotificationFragment = {
   id: string;
-  actions: Array<{
-    id: string;
-    profile: ProfileFieldsFragment;
-    action: CollectOpenActionResultFragment | UnknownOpenActionResultFragment;
-  }>;
+  actions: Array<OpenActionProfileActedFragment>;
   publication: CommentFragment | MirrorFragment | PostFragment | QuoteFragment;
 };
 
@@ -68,6 +71,7 @@ export type NotificationsQueryVariables = Types.Exact<{
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
 }>;
 
 export type NotificationsQuery = {
@@ -80,7 +84,6 @@ export type NotificationsQuery = {
       | MirrorNotificationFragment
       | QuoteNotificationFragment
       | ReactionNotificationFragment
-      | {}
     >;
     pageInfo: PaginatedResultInfoFragment;
   };
@@ -160,22 +163,24 @@ export const QuoteNotificationFragmentDoc = gql`
   }
   ${QuoteFragmentDoc}
 `;
+export const OpenActionProfileActedFragmentDoc = gql`
+  fragment OpenActionProfileActed on OpenActionProfileActed {
+    profile {
+      ...ProfileFields
+    }
+    action {
+      ...OpenActionResult
+    }
+    actedAt
+  }
+  ${ProfileFieldsFragmentDoc}
+  ${OpenActionResultFragmentDoc}
+`;
 export const ActedNotificationFragmentDoc = gql`
   fragment ActedNotification on ActedNotification {
     id
     actions {
-      id
-      profile {
-        ...ProfileFields
-      }
-      action {
-        ... on CollectOpenActionResult {
-          ...CollectOpenActionResult
-        }
-        ... on UnknownOpenActionResult {
-          ...UnknownOpenActionResult
-        }
-      }
+      ...OpenActionProfileActed
     }
     publication {
       ... on Post {
@@ -192,9 +197,7 @@ export const ActedNotificationFragmentDoc = gql`
       }
     }
   }
-  ${ProfileFieldsFragmentDoc}
-  ${CollectOpenActionResultFragmentDoc}
-  ${UnknownOpenActionResultFragmentDoc}
+  ${OpenActionProfileActedFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
   ${MirrorFragmentDoc}
@@ -234,6 +237,7 @@ export const NotificationsDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   ) {
     result: notifications(request: $request) {
       items {

@@ -8,9 +8,9 @@ import {
   ProfileFragment,
   PaginatedResultInfoFragment,
   CommentFragment,
-  CollectOpenActionResultFragment,
-  UnknownOpenActionResultFragment,
   MirrorFragment,
+  OpenActionResult_KnownCollectOpenActionResult_Fragment,
+  OpenActionResult_UnknownOpenActionResult_Fragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -23,35 +23,21 @@ import {
   ProfileFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   CommentFragmentDoc,
-  CollectOpenActionResultFragmentDoc,
-  UnknownOpenActionResultFragmentDoc,
   MirrorFragmentDoc,
+  OpenActionResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type ElectedMirrorFragment = {
-  mirrorId: string;
-  timestamp: string;
-  by: ProfileFieldsFragment;
-};
-
-export type MirrorEventFragment = { timestamp: string; by: ProfileFieldsFragment };
-
-export type CollectedEventFragment = { timestamp: string; by: ProfileFieldsFragment };
-
 export type ReactionEventFragment = {
   reaction: Types.PublicationReactionType;
-  timestamp: string;
+  createdAt: string;
   by: ProfileFieldsFragment;
 };
 
 export type FeedItemFragment = {
   id: string;
   root: CommentFragment | PostFragment | QuoteFragment;
-  electedMirror: ElectedMirrorFragment | null;
-  mirrors: Array<MirrorEventFragment>;
-  collects: Array<CollectedEventFragment>;
+  mirrors: Array<MirrorFragment>;
   reactions: Array<ReactionEventFragment>;
   comments: Array<CommentFragment>;
-  quotes: Array<QuoteFragment>;
 };
 
 export type FeedQueryVariables = Types.Exact<{
@@ -59,6 +45,7 @@ export type FeedQueryVariables = Types.Exact<{
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
 }>;
 
 export type FeedQuery = {
@@ -70,6 +57,7 @@ export type FeedHighlightsQueryVariables = Types.Exact<{
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
 }>;
 
 export type FeedHighlightsQuery = {
@@ -81,47 +69,20 @@ export type ForYouQueryVariables = Types.Exact<{
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
 }>;
 
 export type ForYouQuery = {
   result: { items: Array<PostFragment | QuoteFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
-export const ElectedMirrorFragmentDoc = gql`
-  fragment ElectedMirror on ElectedMirror {
-    mirrorId
-    by {
-      ...ProfileFields
-    }
-    timestamp
-  }
-  ${ProfileFieldsFragmentDoc}
-`;
-export const MirrorEventFragmentDoc = gql`
-  fragment MirrorEvent on MirrorEvent {
-    by {
-      ...ProfileFields
-    }
-    timestamp
-  }
-  ${ProfileFieldsFragmentDoc}
-`;
-export const CollectedEventFragmentDoc = gql`
-  fragment CollectedEvent on CollectedEvent {
-    by {
-      ...ProfileFields
-    }
-    timestamp
-  }
-  ${ProfileFieldsFragmentDoc}
-`;
 export const ReactionEventFragmentDoc = gql`
   fragment ReactionEvent on ReactionEvent {
     by {
       ...ProfileFields
     }
     reaction
-    timestamp
+    createdAt
   }
   ${ProfileFieldsFragmentDoc}
 `;
@@ -139,14 +100,8 @@ export const FeedItemFragmentDoc = gql`
         ...Quote
       }
     }
-    electedMirror {
-      ...ElectedMirror
-    }
     mirrors {
-      ...MirrorEvent
-    }
-    collects {
-      ...CollectedEvent
+      ...Mirror
     }
     reactions {
       ...ReactionEvent
@@ -154,16 +109,11 @@ export const FeedItemFragmentDoc = gql`
     comments {
       ...Comment
     }
-    quotes {
-      ...Quote
-    }
   }
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
   ${QuoteFragmentDoc}
-  ${ElectedMirrorFragmentDoc}
-  ${MirrorEventFragmentDoc}
-  ${CollectedEventFragmentDoc}
+  ${MirrorFragmentDoc}
   ${ReactionEventFragmentDoc}
 `;
 export const FeedDocument = gql`
@@ -172,6 +122,7 @@ export const FeedDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   ) {
     result: feed(request: $request) {
       items {
@@ -191,6 +142,7 @@ export const FeedHighlightsDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   ) {
     result: feedHighlights(request: $request) {
       items {
@@ -216,6 +168,7 @@ export const ForYouDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   ) {
     result: forYou(request: $request) {
       items {

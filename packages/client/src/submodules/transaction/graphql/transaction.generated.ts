@@ -25,18 +25,11 @@ import {
   RelayErrorFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type LensTransactionFragment = {
-  __typename: 'LensTransaction';
+export type LensTransactionResultFragment = {
+  __typename: 'LensTransactionResult';
   status: Types.LensTransactionStatusType;
   txHash: string;
   reason: Types.LensTransactionFailureType | null;
-  extraInfo: string | null;
-};
-
-export type LensMetadataTransactionFragment = {
-  __typename: 'LensMetadataTransaction';
-  status: Types.LensTransactionStatusType;
-  metadataFailedReason: Types.LensMetadataTransactionFailureType | null;
   extraInfo: string | null;
 };
 
@@ -50,22 +43,7 @@ export type LensTransactionStatusQueryVariables = Types.Exact<{
   request: Types.LensTransactionStatusRequest;
 }>;
 
-export type LensTransactionStatusQuery = {
-  result:
-    | {
-        __typename: 'LensMetadataTransaction';
-        status: Types.LensTransactionStatusType;
-        metadataFailedReason: Types.LensMetadataTransactionFailureType | null;
-        extraInfo: string | null;
-      }
-    | {
-        __typename: 'LensTransaction';
-        status: Types.LensTransactionStatusType;
-        txHash: string;
-        reason: Types.LensTransactionFailureType | null;
-        extraInfo: string | null;
-      };
-};
+export type LensTransactionStatusQuery = { result: LensTransactionResultFragment | null };
 
 export type BroadcastOnchainMutationVariables = Types.Exact<{
   request: Types.BroadcastRequest;
@@ -81,20 +59,12 @@ export type BroadcastOnMomokaMutation = {
   result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
 };
 
-export const LensTransactionFragmentDoc = gql`
-  fragment LensTransaction on LensTransaction {
+export const LensTransactionResultFragmentDoc = gql`
+  fragment LensTransactionResult on LensTransactionResult {
     __typename
     status
     txHash
     reason
-    extraInfo
-  }
-`;
-export const LensMetadataTransactionFragmentDoc = gql`
-  fragment LensMetadataTransaction on LensMetadataTransaction {
-    __typename
-    status
-    metadataFailedReason
     extraInfo
   }
 `;
@@ -106,21 +76,10 @@ export const TxIdToTxHashDocument = gql`
 export const LensTransactionStatusDocument = gql`
   query LensTransactionStatus($request: LensTransactionStatusRequest!) {
     result: lensTransactionStatus(request: $request) {
-      ... on LensTransaction {
-        __typename
-        status
-        txHash
-        reason
-        extraInfo
-      }
-      ... on LensMetadataTransaction {
-        __typename
-        status
-        metadataFailedReason
-        extraInfo
-      }
+      ...LensTransactionResult
     }
   }
+  ${LensTransactionResultFragmentDoc}
 `;
 export const BroadcastOnchainDocument = gql`
   mutation BroadcastOnchain($request: BroadcastRequest!) {

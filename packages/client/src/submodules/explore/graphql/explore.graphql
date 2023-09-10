@@ -3,6 +3,7 @@ query ExplorePublications(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: explorePublications(request: $request) {
     items {

@@ -82,8 +82,16 @@ export type ProfileFieldsFragment = {
     sybilDotOrg: { source: { twitter: { handle: string | null } } | null };
     worldcoin: { isHuman: boolean };
   };
-  isFollowedByMe: OptimisticStatusResultFragment;
-  isFollowingMe: OptimisticStatusResultFragment;
+  operations: {
+    id: string;
+    canBlock: boolean;
+    canUnblock: boolean;
+    canFollow: Types.TriStateValue;
+    canUnfollow: boolean;
+    isBlockedByMe: OptimisticStatusResultFragment;
+    isFollowedByMe: OptimisticStatusResultFragment;
+    isFollowingMe: OptimisticStatusResultFragment;
+  };
   guardian: { protected: boolean; cooldownEndsOn: string | null } | null;
 };
 
@@ -218,9 +226,22 @@ export type LegacyAaveFeeCollectModuleSettingsFragment = {
   amount: AmountFragment;
 };
 
-export type CollectOpenActionResultFragment = { type: Types.CollectOpenActionModuleType };
+export type UnknownOpenActionResultFragment = {
+  address: string;
+  category: Types.OpenActionCategoryType | null;
+  initReturnData: string;
+};
 
-export type UnknownOpenActionResultFragment = { address: string; redeemData: string };
+export type KnownCollectOpenActionResultFragment = { type: Types.CollectOpenActionModuleType };
+
+export type OpenActionResult_KnownCollectOpenActionResult_Fragment =
+  KnownCollectOpenActionResultFragment;
+
+export type OpenActionResult_UnknownOpenActionResult_Fragment = UnknownOpenActionResultFragment;
+
+export type OpenActionResultFragment =
+  | OpenActionResult_KnownCollectOpenActionResult_Fragment
+  | OpenActionResult_UnknownOpenActionResult_Fragment;
 
 export type CanDecryptResponseFragment = {
   result: boolean;
@@ -229,14 +250,21 @@ export type CanDecryptResponseFragment = {
 };
 
 export type PublicationOperationsFragment = {
+  id: string;
   isNotInterested: boolean;
   hasBookmarked: boolean;
-  canComment: boolean;
+  hasReported: boolean;
+  canAct: Types.TriStateValue;
+  canComment: Types.TriStateValue;
   canMirror: boolean;
   hasMirrored: boolean;
   hasUpvoted: boolean;
   hasDownvoted: boolean;
-  hasActed: Array<CollectOpenActionResultFragment | UnknownOpenActionResultFragment>;
+  hasActed: OptimisticStatusResultFragment;
+  actedOn: Array<
+    | OpenActionResult_KnownCollectOpenActionResult_Fragment
+    | OpenActionResult_UnknownOpenActionResult_Fragment
+  >;
   canDecrypt: CanDecryptResponseFragment;
 };
 
@@ -335,16 +363,15 @@ export type PublicationMetadataMediaImageFragment = {
 };
 
 export type PublicationMetadataMediaAudioFragment = {
+  type: Types.AudioMimeType;
   duration: number | null;
   license: Types.PublicationMetadataLicenseType | null;
   credits: string | null;
   artist: string | null;
   genre: string | null;
   recordLabel: string | null;
-  audioType: Types.PublicationMetadataMediaAudioType | null;
   lyrics: string | null;
-  audioMimeType: Types.AudioMimeType;
-  audioItem: AudioSetFragment;
+  item: AudioSetFragment;
   cover: PublicationImageSetFragment | null;
 };
 
@@ -386,7 +413,7 @@ export type PublicationMetadataV2Fragment = {
   } | null;
 };
 
-export type PublicationVideoMetadataV1Fragment = {
+export type VideoMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -396,9 +423,9 @@ export type PublicationVideoMetadataV1Fragment = {
   globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
-  videoMainContentFocus: Types.PublicationVideoMetadataV1MainFocusType;
+  videoMainContentFocus: Types.PublicationVideoMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   video: PublicationMetadataMediaVideoFragment;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
@@ -407,7 +434,7 @@ export type PublicationVideoMetadataV1Fragment = {
   > | null;
 };
 
-export type PublicationImageMetadataV1Fragment = {
+export type ImageMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -417,9 +444,9 @@ export type PublicationImageMetadataV1Fragment = {
   globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
-  imageMainContentFocus: Types.PublicationImageMetadataV1MainFocusType;
+  imageMainContentFocus: Types.PublicationImageMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   image: PublicationMetadataMediaImageFragment;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
@@ -428,7 +455,7 @@ export type PublicationImageMetadataV1Fragment = {
   > | null;
 };
 
-export type ArticleMetadataV1Fragment = {
+export type ArticleMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -439,9 +466,9 @@ export type ArticleMetadataV1Fragment = {
   appId: string | null;
   content: string;
   optionalTitle: string | null;
-  articleMainContentFocus: Types.PublicationArticleMetadataV1MainFocusType;
+  articleMainContentFocus: Types.PublicationArticleMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -449,7 +476,7 @@ export type ArticleMetadataV1Fragment = {
   > | null;
 };
 
-export type EventMetadataV1Fragment = {
+export type EventMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -463,9 +490,9 @@ export type EventMetadataV1Fragment = {
   links: Array<string> | null;
   location: string;
   optionalContent: string | null;
-  eventMainContentFocus: Types.PublicationEventMetadataV1MainFocusType;
+  eventMainContentFocus: Types.PublicationEventMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   geographic: { latitude: number | null; longitude: number | null } | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
@@ -474,7 +501,7 @@ export type EventMetadataV1Fragment = {
   > | null;
 };
 
-export type LinkMetadataV1Fragment = {
+export type LinkMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -485,9 +512,9 @@ export type LinkMetadataV1Fragment = {
   appId: string | null;
   sharingLink: string;
   optionalContent: string | null;
-  linkMainContentFocus: Types.PublicationLinkMetadataV1MainFocusType;
+  linkMainContentFocus: Types.PublicationLinkMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -495,7 +522,7 @@ export type LinkMetadataV1Fragment = {
   > | null;
 };
 
-export type EmbedMetadataV1Fragment = {
+export type EmbedMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -506,9 +533,9 @@ export type EmbedMetadataV1Fragment = {
   appId: string | null;
   embed: string;
   optionalContent: string | null;
-  embedMainContentFocus: Types.PublicationEmbedMetadataV1MainFocusType;
+  embedMainContentFocus: Types.PublicationEmbedMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -516,7 +543,7 @@ export type EmbedMetadataV1Fragment = {
   > | null;
 };
 
-export type CheckingInMetadataV1Fragment = {
+export type CheckingInMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -527,9 +554,9 @@ export type CheckingInMetadataV1Fragment = {
   appId: string | null;
   location: string;
   optionalContent: string | null;
-  checkingInMainContentFocus: Types.PublicationCheckingInMetadataV1MainFocusType;
+  checkingInMainContentFocus: Types.PublicationCheckingInMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   geographic: { latitude: number | null; longitude: number | null } | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
@@ -538,7 +565,7 @@ export type CheckingInMetadataV1Fragment = {
   > | null;
 };
 
-export type TextOnlyMetadataV1Fragment = {
+export type TextOnlyMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -548,12 +575,12 @@ export type TextOnlyMetadataV1Fragment = {
   globalReach: boolean;
   appId: string | null;
   content: string;
-  textOnlyMainContentFocus: Types.PublicationTextOnlyMetadataV1MainFocusType;
+  textOnlyMainContentFocus: Types.PublicationTextOnlyMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
 };
 
-export type ThreeDMetadataV1Fragment = {
+export type ThreeDMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -563,9 +590,9 @@ export type ThreeDMetadataV1Fragment = {
   globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
-  threeDMainContentFocus: Types.PublicationThreeDMetadataV1MainFocusType;
+  threeDMainContentFocus: Types.PublicationThreeDMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   assets: Array<{
     uri: string;
     zipPath: string | null;
@@ -580,7 +607,7 @@ export type ThreeDMetadataV1Fragment = {
   > | null;
 };
 
-export type StoryMetadataV1Fragment = {
+export type StoryMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -590,16 +617,16 @@ export type StoryMetadataV1Fragment = {
   globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
-  storyMainContentFocus: Types.PublicationStoryMetadataV1MainFocusType;
+  storyMainContentFocus: Types.PublicationStoryMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   asset:
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
     | PublicationMetadataMediaVideoFragment;
 };
 
-export type TransactionMetadataV1Fragment = {
+export type TransactionMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -612,9 +639,9 @@ export type TransactionMetadataV1Fragment = {
   txHash: string;
   chainId: string;
   optionalContent: string | null;
-  transactionMainContentFocus: Types.PublicationTransactionMetadataV1MainFocusType;
+  transactionMainContentFocus: Types.PublicationTransactionMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -622,7 +649,7 @@ export type TransactionMetadataV1Fragment = {
   > | null;
 };
 
-export type MintMetadataV1Fragment = {
+export type MintMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -633,9 +660,9 @@ export type MintMetadataV1Fragment = {
   appId: string | null;
   mintLink: string;
   optionalContent: string | null;
-  mintMainContentFocus: Types.PublicationMintMetadataV1MainFocusType;
+  mintMainContentFocus: Types.PublicationMintMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -643,7 +670,7 @@ export type MintMetadataV1Fragment = {
   > | null;
 };
 
-export type SpaceMetadataV1Fragment = {
+export type SpaceMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -656,9 +683,9 @@ export type SpaceMetadataV1Fragment = {
   link: string;
   startsAt: string;
   optionalContent: string | null;
-  spaceMainContentFocus: Types.PublicationSpaceMetadataV1MainFocusType;
+  spaceMainContentFocus: Types.PublicationSpaceMetadataV3MainFocusType;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -666,7 +693,7 @@ export type SpaceMetadataV1Fragment = {
   > | null;
 };
 
-export type LiveStreamMetadataV1Fragment = {
+export type LiveStreamMetadataV3Fragment = {
   id: string;
   rawURI: string;
   locale: string | null;
@@ -680,11 +707,11 @@ export type LiveStreamMetadataV1Fragment = {
   liveURL: string;
   checkLiveAPI: string | null;
   optionalContent: string | null;
-  liveStreamMainContentFocus: Types.PublicationLiveStreamMetadataV1MainFocusType;
+  liveStreamMainContentFocus: Types.PublicationLiveStreamMetadataV3MainFocusType;
   optionalTitle: string | null;
   optionalEndsAt: string | null;
   marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: PublicationMetadataV3LitEncryptionFragment | {} | null;
+  encryptedWith: PublicationMetadataV3LitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -695,25 +722,29 @@ export type LiveStreamMetadataV1Fragment = {
 export type PostFragment = {
   id: string;
   isHidden: boolean;
-  isGated: boolean;
+  isEncrypted: boolean;
+  txHash: string;
   createdAt: string;
+  publishedOn: AppFragment | null;
+  momoka: MomokaInfoFragment | null;
   by: ProfileFieldsFragment;
+  operations: PublicationOperationsFragment;
   metadata:
-    | ArticleMetadataV1Fragment
-    | CheckingInMetadataV1Fragment
-    | EmbedMetadataV1Fragment
-    | EventMetadataV1Fragment
-    | LinkMetadataV1Fragment
-    | LiveStreamMetadataV1Fragment
-    | MintMetadataV1Fragment
-    | PublicationImageMetadataV1Fragment
+    | ArticleMetadataV3Fragment
+    | CheckingInMetadataV3Fragment
+    | EmbedMetadataV3Fragment
+    | EventMetadataV3Fragment
+    | ImageMetadataV3Fragment
+    | LinkMetadataV3Fragment
+    | LiveStreamMetadataV3Fragment
+    | MintMetadataV3Fragment
     | PublicationMetadataV2Fragment
-    | PublicationVideoMetadataV1Fragment
-    | SpaceMetadataV1Fragment
-    | StoryMetadataV1Fragment
-    | TextOnlyMetadataV1Fragment
-    | ThreeDMetadataV1Fragment
-    | TransactionMetadataV1Fragment
+    | SpaceMetadataV3Fragment
+    | StoryMetadataV3Fragment
+    | TextOnlyMetadataV3Fragment
+    | ThreeDMetadataV3Fragment
+    | TransactionMetadataV3Fragment
+    | VideoMetadataV3Fragment
     | {};
   openActionModules: Array<
     | LegacyAaveFeeCollectModuleSettingsFragment
@@ -735,33 +766,34 @@ export type PostFragment = {
     | FollowOnlyReferenceModuleSettingsFragment
     | UnknownReferenceModuleSettingsFragment
     | null;
-  publishedOn: AppFragment | null;
-  momoka: MomokaInfoFragment | null;
-  operations: PublicationOperationsFragment;
 };
 
 export type CommentBaseFragment = {
   id: string;
   isHidden: boolean;
-  isGated: boolean;
+  isEncrypted: boolean;
+  txHash: string;
   createdAt: string;
+  publishedOn: AppFragment | null;
+  momoka: MomokaInfoFragment | null;
   by: ProfileFieldsFragment;
+  operations: PublicationOperationsFragment;
   metadata:
-    | ArticleMetadataV1Fragment
-    | CheckingInMetadataV1Fragment
-    | EmbedMetadataV1Fragment
-    | EventMetadataV1Fragment
-    | LinkMetadataV1Fragment
-    | LiveStreamMetadataV1Fragment
-    | MintMetadataV1Fragment
-    | PublicationImageMetadataV1Fragment
+    | ArticleMetadataV3Fragment
+    | CheckingInMetadataV3Fragment
+    | EmbedMetadataV3Fragment
+    | EventMetadataV3Fragment
+    | ImageMetadataV3Fragment
+    | LinkMetadataV3Fragment
+    | LiveStreamMetadataV3Fragment
+    | MintMetadataV3Fragment
     | PublicationMetadataV2Fragment
-    | PublicationVideoMetadataV1Fragment
-    | SpaceMetadataV1Fragment
-    | StoryMetadataV1Fragment
-    | TextOnlyMetadataV1Fragment
-    | ThreeDMetadataV1Fragment
-    | TransactionMetadataV1Fragment
+    | SpaceMetadataV3Fragment
+    | StoryMetadataV3Fragment
+    | TextOnlyMetadataV3Fragment
+    | ThreeDMetadataV3Fragment
+    | TransactionMetadataV3Fragment
+    | VideoMetadataV3Fragment
     | {};
   openActionModules: Array<
     | LegacyAaveFeeCollectModuleSettingsFragment
@@ -783,9 +815,6 @@ export type CommentBaseFragment = {
     | FollowOnlyReferenceModuleSettingsFragment
     | UnknownReferenceModuleSettingsFragment
     | null;
-  publishedOn: AppFragment | null;
-  momoka: MomokaInfoFragment | null;
-  operations: PublicationOperationsFragment;
 };
 
 export type CommentFragment = {
@@ -796,8 +825,11 @@ export type CommentFragment = {
 
 export type MirrorFragment = {
   id: string;
+  isHidden: boolean;
+  isEncrypted: boolean;
+  txHash: string;
   createdAt: string;
-  by: ProfileFieldsFragment;
+  publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
   mirrorOf: CommentFragment | PostFragment | QuoteFragment;
 };
@@ -805,25 +837,29 @@ export type MirrorFragment = {
 export type QuoteBaseFragment = {
   id: string;
   isHidden: boolean;
-  isGated: boolean;
+  isEncrypted: boolean;
+  txHash: string;
   createdAt: string;
+  publishedOn: AppFragment | null;
+  momoka: MomokaInfoFragment | null;
   by: ProfileFieldsFragment;
+  operations: PublicationOperationsFragment;
   metadata:
-    | ArticleMetadataV1Fragment
-    | CheckingInMetadataV1Fragment
-    | EmbedMetadataV1Fragment
-    | EventMetadataV1Fragment
-    | LinkMetadataV1Fragment
-    | LiveStreamMetadataV1Fragment
-    | MintMetadataV1Fragment
-    | PublicationImageMetadataV1Fragment
+    | ArticleMetadataV3Fragment
+    | CheckingInMetadataV3Fragment
+    | EmbedMetadataV3Fragment
+    | EventMetadataV3Fragment
+    | ImageMetadataV3Fragment
+    | LinkMetadataV3Fragment
+    | LiveStreamMetadataV3Fragment
+    | MintMetadataV3Fragment
     | PublicationMetadataV2Fragment
-    | PublicationVideoMetadataV1Fragment
-    | SpaceMetadataV1Fragment
-    | StoryMetadataV1Fragment
-    | TextOnlyMetadataV1Fragment
-    | ThreeDMetadataV1Fragment
-    | TransactionMetadataV1Fragment
+    | SpaceMetadataV3Fragment
+    | StoryMetadataV3Fragment
+    | TextOnlyMetadataV3Fragment
+    | ThreeDMetadataV3Fragment
+    | TransactionMetadataV3Fragment
+    | VideoMetadataV3Fragment
     | {};
   openActionModules: Array<
     | LegacyAaveFeeCollectModuleSettingsFragment
@@ -845,9 +881,7 @@ export type QuoteBaseFragment = {
     | FollowOnlyReferenceModuleSettingsFragment
     | UnknownReferenceModuleSettingsFragment
     | null;
-  publishedOn: AppFragment | null;
-  momoka: MomokaInfoFragment | null;
-  operations: PublicationOperationsFragment;
+  quotedOn: CommentBaseFragment | PostFragment | {};
 };
 
 export type QuoteFragment = {
@@ -1023,11 +1057,21 @@ export const ProfileFieldsFragmentDoc = gql`
       }
     }
     interests
-    isFollowedByMe {
-      ...OptimisticStatusResult
-    }
-    isFollowingMe {
-      ...OptimisticStatusResult
+    operations {
+      id
+      isBlockedByMe {
+        ...OptimisticStatusResult
+      }
+      isFollowedByMe {
+        ...OptimisticStatusResult
+      }
+      isFollowingMe {
+        ...OptimisticStatusResult
+      }
+      canBlock
+      canUnblock
+      canFollow
+      canUnfollow
     }
     guardian {
       protected
@@ -1058,10 +1102,72 @@ export const PaginatedResultInfoFragmentDoc = gql`
     next
   }
 `;
+export const AppFragmentDoc = gql`
+  fragment App on App {
+    id
+  }
+`;
 export const MomokaInfoFragmentDoc = gql`
   fragment MomokaInfo on MomokaInfo {
     proof
   }
+`;
+export const KnownCollectOpenActionResultFragmentDoc = gql`
+  fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
+    type
+  }
+`;
+export const UnknownOpenActionResultFragmentDoc = gql`
+  fragment UnknownOpenActionResult on UnknownOpenActionResult {
+    address
+    category
+    initReturnData
+  }
+`;
+export const OpenActionResultFragmentDoc = gql`
+  fragment OpenActionResult on OpenActionResult {
+    ... on KnownCollectOpenActionResult {
+      ...KnownCollectOpenActionResult
+    }
+    ... on UnknownOpenActionResult {
+      ...UnknownOpenActionResult
+    }
+  }
+  ${KnownCollectOpenActionResultFragmentDoc}
+  ${UnknownOpenActionResultFragmentDoc}
+`;
+export const CanDecryptResponseFragmentDoc = gql`
+  fragment CanDecryptResponse on CanDecryptResponse {
+    result
+    reasons
+    extraDetails
+  }
+`;
+export const PublicationOperationsFragmentDoc = gql`
+  fragment PublicationOperations on PublicationOperations {
+    id
+    isNotInterested
+    hasBookmarked
+    hasReported
+    canAct(request: $publicationOperationsActedArgs)
+    hasActed(request: $publicationOperationsActedArgs) {
+      ...OptimisticStatusResult
+    }
+    actedOn(request: $publicationOperationsActedArgs) {
+      ...OpenActionResult
+    }
+    hasUpvoted: hasReacted(request: { type: UPVOTE })
+    hasDownvoted: hasReacted(request: { type: DOWNVOTE })
+    canComment
+    canMirror
+    hasMirrored
+    canDecrypt {
+      ...CanDecryptResponse
+    }
+  }
+  ${OptimisticStatusResultFragmentDoc}
+  ${OpenActionResultFragmentDoc}
+  ${CanDecryptResponseFragmentDoc}
 `;
 export const PublicationImageSetFragmentDoc = gql`
   fragment PublicationImageSet on ImageSet {
@@ -1372,8 +1478,8 @@ export const PublicationMetadataMediaImageFragmentDoc = gql`
 `;
 export const PublicationMetadataMediaAudioFragmentDoc = gql`
   fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
-    audioMimeType: type
-    audioItem: item {
+    type
+    item {
       ...AudioSet
     }
     cover {
@@ -1385,14 +1491,13 @@ export const PublicationMetadataMediaAudioFragmentDoc = gql`
     artist
     genre
     recordLabel
-    audioType
     lyrics
   }
   ${AudioSetFragmentDoc}
   ${PublicationImageSetFragmentDoc}
 `;
-export const PublicationVideoMetadataV1FragmentDoc = gql`
-  fragment PublicationVideoMetadataV1 on PublicationVideoMetadataV1 {
+export const VideoMetadataV3FragmentDoc = gql`
+  fragment VideoMetadataV3 on VideoMetadataV3 {
     id
     rawURI
     locale
@@ -1432,8 +1537,8 @@ export const PublicationVideoMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const PublicationImageMetadataV1FragmentDoc = gql`
-  fragment PublicationImageMetadataV1 on PublicationImageMetadataV1 {
+export const ImageMetadataV3FragmentDoc = gql`
+  fragment ImageMetadataV3 on ImageMetadataV3 {
     id
     rawURI
     locale
@@ -1473,8 +1578,8 @@ export const PublicationImageMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const ArticleMetadataV1FragmentDoc = gql`
-  fragment ArticleMetadataV1 on ArticleMetadataV1 {
+export const ArticleMetadataV3FragmentDoc = gql`
+  fragment ArticleMetadataV3 on ArticleMetadataV3 {
     id
     rawURI
     locale
@@ -1512,8 +1617,8 @@ export const ArticleMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const EventMetadataV1FragmentDoc = gql`
-  fragment EventMetadataV1 on EventMetadataV1 {
+export const EventMetadataV3FragmentDoc = gql`
+  fragment EventMetadataV3 on EventMetadataV3 {
     id
     rawURI
     locale
@@ -1558,8 +1663,8 @@ export const EventMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const LinkMetadataV1FragmentDoc = gql`
-  fragment LinkMetadataV1 on LinkMetadataV1 {
+export const LinkMetadataV3FragmentDoc = gql`
+  fragment LinkMetadataV3 on LinkMetadataV3 {
     id
     rawURI
     locale
@@ -1597,8 +1702,8 @@ export const LinkMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const EmbedMetadataV1FragmentDoc = gql`
-  fragment EmbedMetadataV1 on EmbedMetadataV1 {
+export const EmbedMetadataV3FragmentDoc = gql`
+  fragment EmbedMetadataV3 on EmbedMetadataV3 {
     id
     rawURI
     locale
@@ -1636,8 +1741,8 @@ export const EmbedMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const CheckingInMetadataV1FragmentDoc = gql`
-  fragment CheckingInMetadataV1 on CheckingInMetadataV1 {
+export const CheckingInMetadataV3FragmentDoc = gql`
+  fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
     id
     rawURI
     locale
@@ -1679,8 +1784,8 @@ export const CheckingInMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const TextOnlyMetadataV1FragmentDoc = gql`
-  fragment TextOnlyMetadataV1 on TextOnlyMetadataV1 {
+export const TextOnlyMetadataV3FragmentDoc = gql`
+  fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
     id
     rawURI
     locale
@@ -1703,8 +1808,8 @@ export const TextOnlyMetadataV1FragmentDoc = gql`
   ${MarketplaceMetadataFragmentDoc}
   ${PublicationMetadataV3LitEncryptionFragmentDoc}
 `;
-export const ThreeDMetadataV1FragmentDoc = gql`
-  fragment ThreeDMetadataV1 on ThreeDMetadataV1 {
+export const ThreeDMetadataV3FragmentDoc = gql`
+  fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
     id
     rawURI
     locale
@@ -1748,8 +1853,8 @@ export const ThreeDMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const StoryMetadataV1FragmentDoc = gql`
-  fragment StoryMetadataV1 on StoryMetadataV1 {
+export const StoryMetadataV3FragmentDoc = gql`
+  fragment StoryMetadataV3 on StoryMetadataV3 {
     id
     rawURI
     locale
@@ -1786,8 +1891,8 @@ export const StoryMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const TransactionMetadataV1FragmentDoc = gql`
-  fragment TransactionMetadataV1 on TransactionMetadataV1 {
+export const TransactionMetadataV3FragmentDoc = gql`
+  fragment TransactionMetadataV3 on TransactionMetadataV3 {
     id
     rawURI
     locale
@@ -1827,8 +1932,8 @@ export const TransactionMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const MintMetadataV1FragmentDoc = gql`
-  fragment MintMetadataV1 on MintMetadataV1 {
+export const MintMetadataV3FragmentDoc = gql`
+  fragment MintMetadataV3 on MintMetadataV3 {
     id
     rawURI
     locale
@@ -1866,8 +1971,8 @@ export const MintMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const SpaceMetadataV1FragmentDoc = gql`
-  fragment SpaceMetadataV1 on SpaceMetadataV1 {
+export const SpaceMetadataV3FragmentDoc = gql`
+  fragment SpaceMetadataV3 on SpaceMetadataV3 {
     id
     rawURI
     locale
@@ -1907,8 +2012,8 @@ export const SpaceMetadataV1FragmentDoc = gql`
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
-export const LiveStreamMetadataV1FragmentDoc = gql`
-  fragment LiveStreamMetadataV1 on LiveStreamMetadataV1 {
+export const LiveStreamMetadataV3FragmentDoc = gql`
+  fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
     id
     rawURI
     locale
@@ -2179,105 +2284,70 @@ export const UnknownReferenceModuleSettingsFragmentDoc = gql`
   }
   ${NetworkAddressFragmentDoc}
 `;
-export const AppFragmentDoc = gql`
-  fragment App on App {
-    id
-  }
-`;
-export const CollectOpenActionResultFragmentDoc = gql`
-  fragment CollectOpenActionResult on CollectOpenActionResult {
-    type
-  }
-`;
-export const UnknownOpenActionResultFragmentDoc = gql`
-  fragment UnknownOpenActionResult on UnknownOpenActionResult {
-    address
-    redeemData
-  }
-`;
-export const CanDecryptResponseFragmentDoc = gql`
-  fragment CanDecryptResponse on CanDecryptResponse {
-    result
-    reasons
-    extraDetails
-  }
-`;
-export const PublicationOperationsFragmentDoc = gql`
-  fragment PublicationOperations on PublicationOperations {
-    hasUpvoted: hasReacted(request: { type: UPVOTE })
-    hasDownvoted: hasReacted(request: { type: DOWNVOTE })
-    isNotInterested
-    hasBookmarked
-    hasActed {
-      ... on CollectOpenActionResult {
-        ...CollectOpenActionResult
-      }
-      ... on UnknownOpenActionResult {
-        ...UnknownOpenActionResult
-      }
-    }
-    canComment
-    canMirror
-    hasMirrored
-    canDecrypt {
-      ...CanDecryptResponse
-    }
-  }
-  ${CollectOpenActionResultFragmentDoc}
-  ${UnknownOpenActionResultFragmentDoc}
-  ${CanDecryptResponseFragmentDoc}
-`;
 export const PostFragmentDoc = gql`
   fragment Post on Post {
     id
+    publishedOn {
+      ...App
+    }
+    isHidden
+    isEncrypted
+    momoka {
+      ...MomokaInfo
+    }
+    txHash
+    createdAt
     by {
       ...ProfileFields
+    }
+    operations {
+      ...PublicationOperations
     }
     metadata {
       ... on PublicationMetadataV2 {
         ...PublicationMetadataV2
       }
-      ... on PublicationVideoMetadataV1 {
-        ...PublicationVideoMetadataV1
+      ... on VideoMetadataV3 {
+        ...VideoMetadataV3
       }
-      ... on PublicationImageMetadataV1 {
-        ...PublicationImageMetadataV1
+      ... on ImageMetadataV3 {
+        ...ImageMetadataV3
       }
-      ... on ArticleMetadataV1 {
-        ...ArticleMetadataV1
+      ... on ArticleMetadataV3 {
+        ...ArticleMetadataV3
       }
-      ... on EventMetadataV1 {
-        ...EventMetadataV1
+      ... on EventMetadataV3 {
+        ...EventMetadataV3
       }
-      ... on LinkMetadataV1 {
-        ...LinkMetadataV1
+      ... on LinkMetadataV3 {
+        ...LinkMetadataV3
       }
-      ... on EmbedMetadataV1 {
-        ...EmbedMetadataV1
+      ... on EmbedMetadataV3 {
+        ...EmbedMetadataV3
       }
-      ... on CheckingInMetadataV1 {
-        ...CheckingInMetadataV1
+      ... on CheckingInMetadataV3 {
+        ...CheckingInMetadataV3
       }
-      ... on TextOnlyMetadataV1 {
-        ...TextOnlyMetadataV1
+      ... on TextOnlyMetadataV3 {
+        ...TextOnlyMetadataV3
       }
-      ... on ThreeDMetadataV1 {
-        ...ThreeDMetadataV1
+      ... on ThreeDMetadataV3 {
+        ...ThreeDMetadataV3
       }
-      ... on StoryMetadataV1 {
-        ...StoryMetadataV1
+      ... on StoryMetadataV3 {
+        ...StoryMetadataV3
       }
-      ... on TransactionMetadataV1 {
-        ...TransactionMetadataV1
+      ... on TransactionMetadataV3 {
+        ...TransactionMetadataV3
       }
-      ... on MintMetadataV1 {
-        ...MintMetadataV1
+      ... on MintMetadataV3 {
+        ...MintMetadataV3
       }
-      ... on SpaceMetadataV1 {
-        ...SpaceMetadataV1
+      ... on SpaceMetadataV3 {
+        ...SpaceMetadataV3
       }
-      ... on LiveStreamMetadataV1 {
-        ...LiveStreamMetadataV1
+      ... on LiveStreamMetadataV3 {
+        ...LiveStreamMetadataV3
       }
     }
     openActionModules {
@@ -2332,35 +2402,26 @@ export const PostFragmentDoc = gql`
         ...UnknownReferenceModuleSettings
       }
     }
-    publishedOn {
-      ...App
-    }
-    isHidden
-    isGated
-    momoka {
-      ...MomokaInfo
-    }
-    operations {
-      ...PublicationOperations
-    }
-    createdAt
   }
+  ${AppFragmentDoc}
+  ${MomokaInfoFragmentDoc}
   ${ProfileFieldsFragmentDoc}
+  ${PublicationOperationsFragmentDoc}
   ${PublicationMetadataV2FragmentDoc}
-  ${PublicationVideoMetadataV1FragmentDoc}
-  ${PublicationImageMetadataV1FragmentDoc}
-  ${ArticleMetadataV1FragmentDoc}
-  ${EventMetadataV1FragmentDoc}
-  ${LinkMetadataV1FragmentDoc}
-  ${EmbedMetadataV1FragmentDoc}
-  ${CheckingInMetadataV1FragmentDoc}
-  ${TextOnlyMetadataV1FragmentDoc}
-  ${ThreeDMetadataV1FragmentDoc}
-  ${StoryMetadataV1FragmentDoc}
-  ${TransactionMetadataV1FragmentDoc}
-  ${MintMetadataV1FragmentDoc}
-  ${SpaceMetadataV1FragmentDoc}
-  ${LiveStreamMetadataV1FragmentDoc}
+  ${VideoMetadataV3FragmentDoc}
+  ${ImageMetadataV3FragmentDoc}
+  ${ArticleMetadataV3FragmentDoc}
+  ${EventMetadataV3FragmentDoc}
+  ${LinkMetadataV3FragmentDoc}
+  ${EmbedMetadataV3FragmentDoc}
+  ${CheckingInMetadataV3FragmentDoc}
+  ${TextOnlyMetadataV3FragmentDoc}
+  ${ThreeDMetadataV3FragmentDoc}
+  ${StoryMetadataV3FragmentDoc}
+  ${TransactionMetadataV3FragmentDoc}
+  ${MintMetadataV3FragmentDoc}
+  ${SpaceMetadataV3FragmentDoc}
+  ${LiveStreamMetadataV3FragmentDoc}
   ${LegacyFreeCollectModuleSettingsFragmentDoc}
   ${LegacyFeeCollectModuleSettingsFragmentDoc}
   ${LegacyLimitedFeeCollectModuleSettingsFragmentDoc}
@@ -2377,61 +2438,71 @@ export const PostFragmentDoc = gql`
   ${FollowOnlyReferenceModuleSettingsFragmentDoc}
   ${DegreesOfSeparationReferenceModuleSettingsFragmentDoc}
   ${UnknownReferenceModuleSettingsFragmentDoc}
-  ${AppFragmentDoc}
-  ${MomokaInfoFragmentDoc}
-  ${PublicationOperationsFragmentDoc}
 `;
 export const CommentBaseFragmentDoc = gql`
   fragment CommentBase on Comment {
     id
+    publishedOn {
+      ...App
+    }
+    isHidden
+    isEncrypted
+    momoka {
+      ...MomokaInfo
+    }
+    txHash
+    createdAt
     by {
       ...ProfileFields
+    }
+    operations {
+      ...PublicationOperations
     }
     metadata {
       ... on PublicationMetadataV2 {
         ...PublicationMetadataV2
       }
-      ... on PublicationVideoMetadataV1 {
-        ...PublicationVideoMetadataV1
+      ... on VideoMetadataV3 {
+        ...VideoMetadataV3
       }
-      ... on PublicationImageMetadataV1 {
-        ...PublicationImageMetadataV1
+      ... on ImageMetadataV3 {
+        ...ImageMetadataV3
       }
-      ... on ArticleMetadataV1 {
-        ...ArticleMetadataV1
+      ... on ArticleMetadataV3 {
+        ...ArticleMetadataV3
       }
-      ... on EventMetadataV1 {
-        ...EventMetadataV1
+      ... on EventMetadataV3 {
+        ...EventMetadataV3
       }
-      ... on LinkMetadataV1 {
-        ...LinkMetadataV1
+      ... on LinkMetadataV3 {
+        ...LinkMetadataV3
       }
-      ... on EmbedMetadataV1 {
-        ...EmbedMetadataV1
+      ... on EmbedMetadataV3 {
+        ...EmbedMetadataV3
       }
-      ... on CheckingInMetadataV1 {
-        ...CheckingInMetadataV1
+      ... on CheckingInMetadataV3 {
+        ...CheckingInMetadataV3
       }
-      ... on TextOnlyMetadataV1 {
-        ...TextOnlyMetadataV1
+      ... on TextOnlyMetadataV3 {
+        ...TextOnlyMetadataV3
       }
-      ... on ThreeDMetadataV1 {
-        ...ThreeDMetadataV1
+      ... on ThreeDMetadataV3 {
+        ...ThreeDMetadataV3
       }
-      ... on StoryMetadataV1 {
-        ...StoryMetadataV1
+      ... on StoryMetadataV3 {
+        ...StoryMetadataV3
       }
-      ... on TransactionMetadataV1 {
-        ...TransactionMetadataV1
+      ... on TransactionMetadataV3 {
+        ...TransactionMetadataV3
       }
-      ... on MintMetadataV1 {
-        ...MintMetadataV1
+      ... on MintMetadataV3 {
+        ...MintMetadataV3
       }
-      ... on SpaceMetadataV1 {
-        ...SpaceMetadataV1
+      ... on SpaceMetadataV3 {
+        ...SpaceMetadataV3
       }
-      ... on LiveStreamMetadataV1 {
-        ...LiveStreamMetadataV1
+      ... on LiveStreamMetadataV3 {
+        ...LiveStreamMetadataV3
       }
     }
     openActionModules {
@@ -2486,35 +2557,26 @@ export const CommentBaseFragmentDoc = gql`
         ...UnknownReferenceModuleSettings
       }
     }
-    publishedOn {
-      ...App
-    }
-    isHidden
-    isGated
-    momoka {
-      ...MomokaInfo
-    }
-    operations {
-      ...PublicationOperations
-    }
-    createdAt
   }
+  ${AppFragmentDoc}
+  ${MomokaInfoFragmentDoc}
   ${ProfileFieldsFragmentDoc}
+  ${PublicationOperationsFragmentDoc}
   ${PublicationMetadataV2FragmentDoc}
-  ${PublicationVideoMetadataV1FragmentDoc}
-  ${PublicationImageMetadataV1FragmentDoc}
-  ${ArticleMetadataV1FragmentDoc}
-  ${EventMetadataV1FragmentDoc}
-  ${LinkMetadataV1FragmentDoc}
-  ${EmbedMetadataV1FragmentDoc}
-  ${CheckingInMetadataV1FragmentDoc}
-  ${TextOnlyMetadataV1FragmentDoc}
-  ${ThreeDMetadataV1FragmentDoc}
-  ${StoryMetadataV1FragmentDoc}
-  ${TransactionMetadataV1FragmentDoc}
-  ${MintMetadataV1FragmentDoc}
-  ${SpaceMetadataV1FragmentDoc}
-  ${LiveStreamMetadataV1FragmentDoc}
+  ${VideoMetadataV3FragmentDoc}
+  ${ImageMetadataV3FragmentDoc}
+  ${ArticleMetadataV3FragmentDoc}
+  ${EventMetadataV3FragmentDoc}
+  ${LinkMetadataV3FragmentDoc}
+  ${EmbedMetadataV3FragmentDoc}
+  ${CheckingInMetadataV3FragmentDoc}
+  ${TextOnlyMetadataV3FragmentDoc}
+  ${ThreeDMetadataV3FragmentDoc}
+  ${StoryMetadataV3FragmentDoc}
+  ${TransactionMetadataV3FragmentDoc}
+  ${MintMetadataV3FragmentDoc}
+  ${SpaceMetadataV3FragmentDoc}
+  ${LiveStreamMetadataV3FragmentDoc}
   ${LegacyFreeCollectModuleSettingsFragmentDoc}
   ${LegacyFeeCollectModuleSettingsFragmentDoc}
   ${LegacyLimitedFeeCollectModuleSettingsFragmentDoc}
@@ -2531,61 +2593,71 @@ export const CommentBaseFragmentDoc = gql`
   ${FollowOnlyReferenceModuleSettingsFragmentDoc}
   ${DegreesOfSeparationReferenceModuleSettingsFragmentDoc}
   ${UnknownReferenceModuleSettingsFragmentDoc}
-  ${AppFragmentDoc}
-  ${MomokaInfoFragmentDoc}
-  ${PublicationOperationsFragmentDoc}
 `;
 export const QuoteBaseFragmentDoc = gql`
   fragment QuoteBase on Quote {
     id
+    publishedOn {
+      ...App
+    }
+    isHidden
+    isEncrypted
+    momoka {
+      ...MomokaInfo
+    }
+    txHash
+    createdAt
     by {
       ...ProfileFields
+    }
+    operations {
+      ...PublicationOperations
     }
     metadata {
       ... on PublicationMetadataV2 {
         ...PublicationMetadataV2
       }
-      ... on PublicationVideoMetadataV1 {
-        ...PublicationVideoMetadataV1
+      ... on VideoMetadataV3 {
+        ...VideoMetadataV3
       }
-      ... on PublicationImageMetadataV1 {
-        ...PublicationImageMetadataV1
+      ... on ImageMetadataV3 {
+        ...ImageMetadataV3
       }
-      ... on ArticleMetadataV1 {
-        ...ArticleMetadataV1
+      ... on ArticleMetadataV3 {
+        ...ArticleMetadataV3
       }
-      ... on EventMetadataV1 {
-        ...EventMetadataV1
+      ... on EventMetadataV3 {
+        ...EventMetadataV3
       }
-      ... on LinkMetadataV1 {
-        ...LinkMetadataV1
+      ... on LinkMetadataV3 {
+        ...LinkMetadataV3
       }
-      ... on EmbedMetadataV1 {
-        ...EmbedMetadataV1
+      ... on EmbedMetadataV3 {
+        ...EmbedMetadataV3
       }
-      ... on CheckingInMetadataV1 {
-        ...CheckingInMetadataV1
+      ... on CheckingInMetadataV3 {
+        ...CheckingInMetadataV3
       }
-      ... on TextOnlyMetadataV1 {
-        ...TextOnlyMetadataV1
+      ... on TextOnlyMetadataV3 {
+        ...TextOnlyMetadataV3
       }
-      ... on ThreeDMetadataV1 {
-        ...ThreeDMetadataV1
+      ... on ThreeDMetadataV3 {
+        ...ThreeDMetadataV3
       }
-      ... on StoryMetadataV1 {
-        ...StoryMetadataV1
+      ... on StoryMetadataV3 {
+        ...StoryMetadataV3
       }
-      ... on TransactionMetadataV1 {
-        ...TransactionMetadataV1
+      ... on TransactionMetadataV3 {
+        ...TransactionMetadataV3
       }
-      ... on MintMetadataV1 {
-        ...MintMetadataV1
+      ... on MintMetadataV3 {
+        ...MintMetadataV3
       }
-      ... on SpaceMetadataV1 {
-        ...SpaceMetadataV1
+      ... on SpaceMetadataV3 {
+        ...SpaceMetadataV3
       }
-      ... on LiveStreamMetadataV1 {
-        ...LiveStreamMetadataV1
+      ... on LiveStreamMetadataV3 {
+        ...LiveStreamMetadataV3
       }
     }
     openActionModules {
@@ -2640,35 +2712,34 @@ export const QuoteBaseFragmentDoc = gql`
         ...UnknownReferenceModuleSettings
       }
     }
-    publishedOn {
-      ...App
+    quotedOn {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...CommentBase
+      }
     }
-    isHidden
-    isGated
-    momoka {
-      ...MomokaInfo
-    }
-    operations {
-      ...PublicationOperations
-    }
-    createdAt
   }
+  ${AppFragmentDoc}
+  ${MomokaInfoFragmentDoc}
   ${ProfileFieldsFragmentDoc}
+  ${PublicationOperationsFragmentDoc}
   ${PublicationMetadataV2FragmentDoc}
-  ${PublicationVideoMetadataV1FragmentDoc}
-  ${PublicationImageMetadataV1FragmentDoc}
-  ${ArticleMetadataV1FragmentDoc}
-  ${EventMetadataV1FragmentDoc}
-  ${LinkMetadataV1FragmentDoc}
-  ${EmbedMetadataV1FragmentDoc}
-  ${CheckingInMetadataV1FragmentDoc}
-  ${TextOnlyMetadataV1FragmentDoc}
-  ${ThreeDMetadataV1FragmentDoc}
-  ${StoryMetadataV1FragmentDoc}
-  ${TransactionMetadataV1FragmentDoc}
-  ${MintMetadataV1FragmentDoc}
-  ${SpaceMetadataV1FragmentDoc}
-  ${LiveStreamMetadataV1FragmentDoc}
+  ${VideoMetadataV3FragmentDoc}
+  ${ImageMetadataV3FragmentDoc}
+  ${ArticleMetadataV3FragmentDoc}
+  ${EventMetadataV3FragmentDoc}
+  ${LinkMetadataV3FragmentDoc}
+  ${EmbedMetadataV3FragmentDoc}
+  ${CheckingInMetadataV3FragmentDoc}
+  ${TextOnlyMetadataV3FragmentDoc}
+  ${ThreeDMetadataV3FragmentDoc}
+  ${StoryMetadataV3FragmentDoc}
+  ${TransactionMetadataV3FragmentDoc}
+  ${MintMetadataV3FragmentDoc}
+  ${SpaceMetadataV3FragmentDoc}
+  ${LiveStreamMetadataV3FragmentDoc}
   ${LegacyFreeCollectModuleSettingsFragmentDoc}
   ${LegacyFeeCollectModuleSettingsFragmentDoc}
   ${LegacyLimitedFeeCollectModuleSettingsFragmentDoc}
@@ -2685,9 +2756,8 @@ export const QuoteBaseFragmentDoc = gql`
   ${FollowOnlyReferenceModuleSettingsFragmentDoc}
   ${DegreesOfSeparationReferenceModuleSettingsFragmentDoc}
   ${UnknownReferenceModuleSettingsFragmentDoc}
-  ${AppFragmentDoc}
-  ${MomokaInfoFragmentDoc}
-  ${PublicationOperationsFragmentDoc}
+  ${PostFragmentDoc}
+  ${CommentBaseFragmentDoc}
 `;
 export const CommentFragmentDoc = gql`
   fragment Comment on Comment {
@@ -2736,12 +2806,16 @@ export const QuoteFragmentDoc = gql`
 export const MirrorFragmentDoc = gql`
   fragment Mirror on Mirror {
     id
-    by {
-      ...ProfileFields
+    publishedOn {
+      ...App
     }
+    isHidden
+    isEncrypted
     momoka {
       ...MomokaInfo
     }
+    txHash
+    createdAt
     mirrorOf {
       ... on Post {
         ...Post
@@ -2753,9 +2827,8 @@ export const MirrorFragmentDoc = gql`
         ...Quote
       }
     }
-    createdAt
   }
-  ${ProfileFieldsFragmentDoc}
+  ${AppFragmentDoc}
   ${MomokaInfoFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}

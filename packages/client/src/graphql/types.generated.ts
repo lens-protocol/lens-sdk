@@ -99,7 +99,7 @@ export type AmountInput = {
 };
 
 export type ApprovedModuleAllowanceAmountRequest = {
-  currencies?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
+  currencies: Array<Scalars['EvmAddress']['input']>;
   followModules?: InputMaybe<Array<FollowModuleType>>;
   openActionModules?: InputMaybe<Array<OpenActionModuleType>>;
   referenceModules?: InputMaybe<Array<ReferenceModuleType>>;
@@ -107,6 +107,14 @@ export type ApprovedModuleAllowanceAmountRequest = {
   unknownOpenActionModules?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
   unknownReferenceModules?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
 };
+
+export enum AttributeType {
+  Boolean = 'BOOLEAN',
+  Date = 'DATE',
+  Json = 'JSON',
+  Number = 'NUMBER',
+  String = 'STRING',
+}
 
 export enum AudioMimeType {
   Mp3 = 'MP3',
@@ -297,18 +305,18 @@ export type FeeFollowModuleInput = {
 };
 
 export enum FeedEventItemType {
-  CollectComment = 'COLLECT_COMMENT',
-  CollectPost = 'COLLECT_POST',
+  Acted = 'ACTED',
+  Collect = 'COLLECT',
   Comment = 'COMMENT',
   Mirror = 'MIRROR',
   Post = 'POST',
   Quote = 'QUOTE',
-  ReactionComment = 'REACTION_COMMENT',
-  ReactionPost = 'REACTION_POST',
+  Reaction = 'REACTION',
 }
 
 export type FeedHighlightWhere = {
-  metadata: PublicationMetadataFilters;
+  for?: InputMaybe<Scalars['ProfileId']['input']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
 export type FeedHighlightsRequest = {
@@ -325,8 +333,8 @@ export type FeedRequest = {
 
 export type FeedWhere = {
   feedEventItemTypes?: InputMaybe<Array<FeedEventItemType>>;
-  for: Scalars['ProfileId']['input'];
-  metadata: PublicationMetadataFilters;
+  for?: InputMaybe<Scalars['ProfileId']['input']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
 export type Follow = {
@@ -417,14 +425,8 @@ export type GdmRequest = {
 };
 
 export type GenerateModuleCurrencyApprovalDataRequest = {
-  currency: Scalars['EvmAddress']['input'];
-  followModule?: InputMaybe<FollowModuleType>;
-  openActionModule?: InputMaybe<OpenActionModuleType>;
-  referenceModule?: InputMaybe<ReferenceModuleType>;
-  unknownFollowModule?: InputMaybe<Scalars['EvmAddress']['input']>;
-  unknownOpenActionModule?: InputMaybe<Scalars['EvmAddress']['input']>;
-  unknownReferenceModule?: InputMaybe<Scalars['EvmAddress']['input']>;
-  value: Scalars['String']['input'];
+  allowance: Scalars['EvmAddress']['input'];
+  module: ModuleCurrencyApproval;
 };
 
 export type HandleLinkToProfileRequest = {
@@ -498,11 +500,6 @@ export enum LegacyPublicationMetadataVersions {
   V2 = 'V2',
 }
 
-export enum LensMetadataTransactionFailureType {
-  MetadataError = 'METADATA_ERROR',
-  Reverted = 'REVERTED',
-}
-
 export enum LensProfileManagerRelayErrorReasonType {
   AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
   Failed = 'FAILED',
@@ -512,6 +509,7 @@ export enum LensProfileManagerRelayErrorReasonType {
 }
 
 export enum LensTransactionFailureType {
+  MetadataError = 'METADATA_ERROR',
   Reverted = 'REVERTED',
 }
 
@@ -526,8 +524,17 @@ export enum LensTransactionStatusType {
   Complete = 'COMPLETE',
   Failed = 'FAILED',
   OptimisticallyUpdated = 'OPTIMISTICALLY_UPDATED',
-  Progressing = 'PROGRESSING',
+  Processing = 'PROCESSING',
 }
+
+export type ModuleCurrencyApproval = {
+  followModule?: InputMaybe<FollowModuleType>;
+  openActionModule?: InputMaybe<OpenActionModuleType>;
+  referenceModule?: InputMaybe<ReferenceModuleType>;
+  unknownFollowModule?: InputMaybe<Scalars['EvmAddress']['input']>;
+  unknownOpenActionModule?: InputMaybe<Scalars['EvmAddress']['input']>;
+  unknownReferenceModule?: InputMaybe<Scalars['EvmAddress']['input']>;
+};
 
 export type MomokaCommentRequest = {
   commentOn: Scalars['PublicationId']['input'];
@@ -535,8 +542,7 @@ export type MomokaCommentRequest = {
 };
 
 export type MomokaMirrorRequest = {
-  from: Scalars['ProfileId']['input'];
-  mirror: Scalars['PublicationId']['input'];
+  mirrorOf: Scalars['PublicationId']['input'];
 };
 
 export type MomokaPostRequest = {
@@ -545,6 +551,7 @@ export type MomokaPostRequest = {
 
 export type MomokaQuoteRequest = {
   contentURI: Scalars['URI']['input'];
+  quoteOn: Scalars['PublicationId']['input'];
 };
 
 export type MomokaTransactionRequest = {
@@ -558,7 +565,7 @@ export type MomokaTransactionsRequest = {
   limit?: InputMaybe<Scalars['LimitScalar']['input']>;
 };
 
-export enum MomokaValidatorErrorType {
+export enum MomokaValidatorError {
   BlockCantBeReadFromNode = 'BLOCK_CANT_BE_READ_FROM_NODE',
   BlockTooFar = 'BLOCK_TOO_FAR',
   CanNotConnectToBundlr = 'CAN_NOT_CONNECT_TO_BUNDLR',
@@ -666,7 +673,6 @@ export type NftCollectionsRequest = {
 
 export enum NftContractType {
   Erc721 = 'ERC721',
-  Erc721Enumerable = 'ERC721Enumerable',
   Erc1155 = 'ERC1155',
 }
 
@@ -861,6 +867,8 @@ export enum OpenActionModuleType {
 export type OwnedHandlesRequest = {
   /** The Ethereum address for which to retrieve owned handles */
   address: Scalars['EvmAddress']['input'];
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
 };
 
 /** Pagination with Offset fields  */
@@ -963,7 +971,7 @@ export type ProfileSearchWhere = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
 };
 
-export type ProfileStatsArgs = {
+export type ProfileStatsArg = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
   forApps?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
@@ -1005,15 +1013,19 @@ export type ProfilesRequestWhere = {
   whoQuotedPublication?: InputMaybe<Scalars['PublicationId']['input']>;
 };
 
-export enum PublicationArticleMetadataV1MainFocusType {
+export enum PublicationArticleMetadataV3MainFocusType {
   Article = 'ARTICLE',
+}
+
+export enum PublicationAudioMetadataV3MainFocusType {
+  Audio = 'AUDIO',
 }
 
 export type PublicationBookmarkRequest = {
   on: Scalars['PublicationId']['input'];
 };
 
-export enum PublicationCheckingInMetadataV1MainFocusType {
+export enum PublicationCheckingInMetadataV3MainFocusType {
   CheckingIn = 'CHECKING_IN',
 }
 
@@ -1028,29 +1040,29 @@ export enum PublicationContentWarningType {
   Spoiler = 'SPOILER',
 }
 
-export enum PublicationEmbedMetadataV1MainFocusType {
+export enum PublicationEmbedMetadataV3MainFocusType {
   Embed = 'EMBED',
 }
 
-export enum PublicationEventMetadataV1MainFocusType {
+export enum PublicationEventMetadataV3MainFocusType {
   Event = 'EVENT',
 }
 
 export type PublicationForYouRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  for: Scalars['ProfileId']['input'];
+  for?: InputMaybe<Scalars['ProfileId']['input']>;
   limit?: InputMaybe<Scalars['LimitScalar']['input']>;
 };
 
-export enum PublicationImageMetadataV1MainFocusType {
+export enum PublicationImageMetadataV3MainFocusType {
   Image = 'IMAGE',
 }
 
-export enum PublicationLinkMetadataV1MainFocusType {
+export enum PublicationLinkMetadataV3MainFocusType {
   Link = 'LINK',
 }
 
-export enum PublicationLiveStreamMetadataV1MainFocusType {
+export enum PublicationLiveStreamMetadataV3MainFocusType {
   Livestream = 'LIVESTREAM',
 }
 
@@ -1095,10 +1107,6 @@ export enum PublicationMetadataMainFocusType {
   Video = 'VIDEO',
 }
 
-export enum PublicationMetadataMediaAudioType {
-  Mp3 = 'MP3',
-}
-
 export type PublicationMetadataTagsFilter = {
   all?: InputMaybe<Array<Scalars['String']['input']>>;
   oneOf?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -1114,12 +1122,16 @@ export enum PublicationMetadataV2MainFocusType {
   Video = 'VIDEO',
 }
 
-export enum PublicationMintMetadataV1MainFocusType {
+export enum PublicationMintMetadataV3MainFocusType {
   Mint = 'MINT',
 }
 
 export type PublicationNotInterestedRequest = {
   on: Scalars['PublicationId']['input'];
+};
+
+export type PublicationOperationsActedArgs = {
+  filter?: InputMaybe<OpenActionFilter>;
 };
 
 export type PublicationOperationsReactionArgs = {
@@ -1189,7 +1201,7 @@ export type PublicationSearchWhere = {
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
-export enum PublicationSpaceMetadataV1MainFocusType {
+export enum PublicationSpaceMetadataV3MainFocusType {
   Space = 'SPACE',
 }
 
@@ -1210,15 +1222,15 @@ export type PublicationStatsSubscriptionRequest = {
   for: Scalars['PublicationId']['input'];
 };
 
-export enum PublicationStoryMetadataV1MainFocusType {
+export enum PublicationStoryMetadataV3MainFocusType {
   Story = 'STORY',
 }
 
-export enum PublicationTextOnlyMetadataV1MainFocusType {
+export enum PublicationTextOnlyMetadataV3MainFocusType {
   TextOnly = 'TEXT_ONLY',
 }
 
-export enum PublicationThreeDMetadataV1MainFocusType {
+export enum PublicationThreeDMetadataV3MainFocusType {
   ThreeD = 'THREE_D',
 }
 
@@ -1228,7 +1240,7 @@ export enum PublicationTransactionMetadataType {
   Other = 'OTHER',
 }
 
-export enum PublicationTransactionMetadataV1MainFocusType {
+export enum PublicationTransactionMetadataV3MainFocusType {
   Transaction = 'TRANSACTION',
 }
 
@@ -1239,7 +1251,7 @@ export enum PublicationType {
   Quote = 'QUOTE',
 }
 
-export enum PublicationVideoMetadataV1MainFocusType {
+export enum PublicationVideoMetadataV3MainFocusType {
   ShortVideo = 'SHORT_VIDEO',
   Video = 'VIDEO',
 }
@@ -1308,6 +1320,16 @@ export enum ReferenceModuleType {
   DegreesOfSeparationReferenceModule = 'DegreesOfSeparationReferenceModule',
   FollowerOnlyReferenceModule = 'FollowerOnlyReferenceModule',
   UnknownReferenceModule = 'UnknownReferenceModule',
+}
+
+export type RefreshPublicationMetadataRequest = {
+  for: Scalars['PublicationId']['input'];
+};
+
+export enum RefreshPublicationMetadataResultType {
+  AlreadyPending = 'ALREADY_PENDING',
+  Queued = 'QUEUED',
+  ValidPublicationNotFound = 'VALID_PUBLICATION_NOT_FOUND',
 }
 
 /** The refresh request */
@@ -1419,9 +1441,21 @@ export type SpamReasonInput = {
   subreason: PublicationReportingSpamSubreason;
 };
 
+export type SupportedModulesRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  includeUnknown?: InputMaybe<Scalars['Boolean']['input']>;
+  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+};
+
 export enum TagSortCriteriaType {
   Alphabetical = 'ALPHABETICAL',
   MostPopular = 'MOST_POPULAR',
+}
+
+export enum TriStateValue {
+  No = 'NO',
+  Unknown = 'UNKNOWN',
+  Yes = 'YES',
 }
 
 export type TypedDataOptions = {

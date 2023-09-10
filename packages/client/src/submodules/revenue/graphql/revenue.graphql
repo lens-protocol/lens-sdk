@@ -29,6 +29,7 @@ query RevenueFromPublications(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: revenueFromPublications(request: $request) {
     items {
@@ -45,6 +46,7 @@ query RevenueForPublication(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: revenueForPublication(request: $request) {
     ...PublicationRevenue

@@ -308,11 +308,11 @@ export type HandleLinkToProfileMutation = {
   result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
 };
 
-export type UnlinkHandleFromProfileMutationVariables = Types.Exact<{
+export type HandleUnlinkFromProfileMutationVariables = Types.Exact<{
   request: Types.HandleUnlinkFromProfileRequest;
 }>;
 
-export type UnlinkHandleFromProfileMutation = {
+export type HandleUnlinkFromProfileMutation = {
   result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
 };
 
@@ -802,8 +802,8 @@ export const HandleLinkToProfileDocument = gql`
   ${RelaySuccessFragmentDoc}
   ${LensProfileManagerRelayErrorFragmentDoc}
 `;
-export const UnlinkHandleFromProfileDocument = gql`
-  mutation UnlinkHandleFromProfile($request: HandleUnlinkFromProfileRequest!) {
+export const HandleUnlinkFromProfileDocument = gql`
+  mutation HandleUnlinkFromProfile($request: HandleUnlinkFromProfileRequest!) {
     result: handleUnlinkFromProfile(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess
@@ -854,7 +854,7 @@ const CreateUnfollowTypedDataDocumentString = print(CreateUnfollowTypedDataDocum
 const SetFollowModuleDocumentString = print(SetFollowModuleDocument);
 const CreateSetFollowModuleTypedDataDocumentString = print(CreateSetFollowModuleTypedDataDocument);
 const HandleLinkToProfileDocumentString = print(HandleLinkToProfileDocument);
-const UnlinkHandleFromProfileDocumentString = print(UnlinkHandleFromProfileDocument);
+const HandleUnlinkFromProfileDocumentString = print(HandleUnlinkFromProfileDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -1325,23 +1325,23 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
-    UnlinkHandleFromProfile(
-      variables: UnlinkHandleFromProfileMutationVariables,
+    HandleUnlinkFromProfile(
+      variables: HandleUnlinkFromProfileMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: UnlinkHandleFromProfileMutation;
+      data: HandleUnlinkFromProfileMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<UnlinkHandleFromProfileMutation>(
-            UnlinkHandleFromProfileDocumentString,
+          client.rawRequest<HandleUnlinkFromProfileMutation>(
+            HandleUnlinkFromProfileDocumentString,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'UnlinkHandleFromProfile',
+        'HandleUnlinkFromProfile',
         'mutation',
       );
     },

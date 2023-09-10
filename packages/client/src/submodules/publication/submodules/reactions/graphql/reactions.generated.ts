@@ -8,9 +8,9 @@ import {
   ProfileFragment,
   PaginatedResultInfoFragment,
   CommentFragment,
-  CollectOpenActionResultFragment,
-  UnknownOpenActionResultFragment,
   MirrorFragment,
+  OpenActionResult_KnownCollectOpenActionResult_Fragment,
+  OpenActionResult_UnknownOpenActionResult_Fragment,
 } from '../../../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -23,9 +23,8 @@ import {
   ProfileFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   CommentFragmentDoc,
-  CollectOpenActionResultFragmentDoc,
-  UnknownOpenActionResultFragmentDoc,
   MirrorFragmentDoc,
+  OpenActionResultFragmentDoc,
 } from '../../../../../graphql/fragments.generated';
 export type AddReactionMutationVariables = Types.Exact<{
   request: Types.ReactionRequest;

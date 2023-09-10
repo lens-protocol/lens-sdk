@@ -13,7 +13,6 @@ import {
   LensProfileManagerRelayErrorFragment,
   Eip712TypedDataFieldFragment,
   CreateMomokaPublicationResultFragment,
-  RelayErrorFragment,
 } from '../../../graphql/fragments.generated';
 import { CreateActOnOpenActionEip712TypedDataFragment } from '../submodules/actions/graphql/actions.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -32,7 +31,6 @@ import {
   LensProfileManagerRelayErrorFragmentDoc,
   Eip712TypedDataFieldFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
-  RelayErrorFragmentDoc,
 } from '../../../graphql/fragments.generated';
 import { CreateActOnOpenActionEip712TypedDataFragmentDoc } from '../submodules/actions/graphql/actions.generated';
 export type TagResultFragment = { tag: string; total: number };
@@ -57,6 +55,7 @@ export type PublicationQueryVariables = Types.Exact<{
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
 }>;
 
 export type PublicationQuery = {
@@ -84,6 +83,7 @@ export type PublicationsQueryVariables = Types.Exact<{
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
 }>;
 
 export type PublicationsQuery = {
@@ -343,7 +343,7 @@ export type PostOnMomokaMutationVariables = Types.Exact<{
 }>;
 
 export type PostOnMomokaMutation = {
-  result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
+  result: CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment;
 };
 
 export type CommentOnMomokaMutationVariables = Types.Exact<{
@@ -351,7 +351,7 @@ export type CommentOnMomokaMutationVariables = Types.Exact<{
 }>;
 
 export type CommentOnMomokaMutation = {
-  result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
+  result: CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment;
 };
 
 export type MirrorOnMomokaMutationVariables = Types.Exact<{
@@ -359,7 +359,7 @@ export type MirrorOnMomokaMutationVariables = Types.Exact<{
 }>;
 
 export type MirrorOnMomokaMutation = {
-  result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
+  result: CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment;
 };
 
 export type QuoteOnMomokaMutationVariables = Types.Exact<{
@@ -367,7 +367,7 @@ export type QuoteOnMomokaMutationVariables = Types.Exact<{
 }>;
 
 export type QuoteOnMomokaMutation = {
-  result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
+  result: CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment;
 };
 
 export type HidePublicationMutationVariables = Types.Exact<{
@@ -683,6 +683,7 @@ export const PublicationDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   ) {
     result: publication(request: $request) {
       ... on Post {
@@ -743,6 +744,7 @@ export const PublicationsDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   ) {
     result: publications(request: $request) {
       items {
@@ -924,13 +926,13 @@ export const PostOnMomokaDocument = gql`
       ... on CreateMomokaPublicationResult {
         ...CreateMomokaPublicationResult
       }
-      ... on RelayError {
-        ...RelayError
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
       }
     }
   }
   ${CreateMomokaPublicationResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${LensProfileManagerRelayErrorFragmentDoc}
 `;
 export const CommentOnMomokaDocument = gql`
   mutation CommentOnMomoka($request: MomokaCommentRequest!) {
@@ -938,13 +940,13 @@ export const CommentOnMomokaDocument = gql`
       ... on CreateMomokaPublicationResult {
         ...CreateMomokaPublicationResult
       }
-      ... on RelayError {
-        ...RelayError
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
       }
     }
   }
   ${CreateMomokaPublicationResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${LensProfileManagerRelayErrorFragmentDoc}
 `;
 export const MirrorOnMomokaDocument = gql`
   mutation MirrorOnMomoka($request: MomokaMirrorRequest!) {
@@ -952,13 +954,13 @@ export const MirrorOnMomokaDocument = gql`
       ... on CreateMomokaPublicationResult {
         ...CreateMomokaPublicationResult
       }
-      ... on RelayError {
-        ...RelayError
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
       }
     }
   }
   ${CreateMomokaPublicationResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${LensProfileManagerRelayErrorFragmentDoc}
 `;
 export const QuoteOnMomokaDocument = gql`
   mutation QuoteOnMomoka($request: MomokaQuoteRequest!) {
@@ -966,13 +968,13 @@ export const QuoteOnMomokaDocument = gql`
       ... on CreateMomokaPublicationResult {
         ...CreateMomokaPublicationResult
       }
-      ... on RelayError {
-        ...RelayError
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
       }
     }
   }
   ${CreateMomokaPublicationResultFragmentDoc}
-  ${RelayErrorFragmentDoc}
+  ${LensProfileManagerRelayErrorFragmentDoc}
 `;
 export const HidePublicationDocument = gql`
   mutation HidePublication($request: HidePublicationRequest!) {

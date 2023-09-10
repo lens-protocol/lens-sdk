@@ -9,6 +9,7 @@ import {
   ProfileFragment,
   PaginatedResultInfoFragment,
   CommentFragment,
+  MirrorFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -22,10 +23,11 @@ import {
   ProfileFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   CommentFragmentDoc,
+  MirrorFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type MomokaVerificationStatusSuccessFragment = { verified: boolean };
 
-export type MomokaVerificationStatusFailureFragment = { status: Types.MomokaValidatorErrorType };
+export type MomokaVerificationStatusFailureFragment = { status: Types.MomokaValidatorError };
 
 export type MomokaPostTransactionFragment = {
   transactionId: string;
@@ -44,13 +46,13 @@ export type MomokaCommentTransactionFragment = {
   submitter: string;
   createdAt: string;
   publicationId: string;
+  commentedOnProfileId: string;
   commentedOnPublicationId: string;
   app: AppFragment | null;
-  profile: ProfileFieldsFragment;
-  commentedOnProfile: ProfileFieldsFragment;
   verificationStatus:
     | MomokaVerificationStatusFailureFragment
     | MomokaVerificationStatusSuccessFragment;
+  profile: ProfileFieldsFragment;
 };
 
 export type MomokaMirrorTransactionFragment = {
@@ -58,13 +60,13 @@ export type MomokaMirrorTransactionFragment = {
   submitter: string;
   createdAt: string;
   publicationId: string;
+  mirrorOfProfileId: string;
   mirrorOfPublicationId: string;
   app: AppFragment | null;
-  profile: ProfileFieldsFragment;
-  mirrorOfProfile: ProfileFieldsFragment;
   verificationStatus:
     | MomokaVerificationStatusFailureFragment
     | MomokaVerificationStatusSuccessFragment;
+  profile: ProfileFieldsFragment;
 };
 
 export type MomokaQuoteTransactionFragment = {
@@ -72,13 +74,13 @@ export type MomokaQuoteTransactionFragment = {
   submitter: string;
   createdAt: string;
   publicationId: string;
+  quotedOnProfileId: string;
   quotedOnPublicationId: string;
   app: AppFragment | null;
-  profile: ProfileFieldsFragment;
-  quotedOnProfile: ProfileFieldsFragment;
   verificationStatus:
     | MomokaVerificationStatusFailureFragment
     | MomokaVerificationStatusSuccessFragment;
+  profile: ProfileFieldsFragment;
 };
 
 export type MomokaSubmitterResultFragment = {
@@ -174,14 +176,6 @@ export const MomokaCommentTransactionFragmentDoc = gql`
     app {
       ...App
     }
-    profile {
-      ...ProfileFields
-    }
-    publicationId
-    commentedOnProfile {
-      ...ProfileFields
-    }
-    commentedOnPublicationId
     verificationStatus {
       ... on MomokaVerificationStatusSuccess {
         ...MomokaVerificationStatusSuccess
@@ -190,11 +184,17 @@ export const MomokaCommentTransactionFragmentDoc = gql`
         ...MomokaVerificationStatusFailure
       }
     }
+    profile {
+      ...ProfileFields
+    }
+    publicationId
+    commentedOnProfileId
+    commentedOnPublicationId
   }
   ${AppFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
   ${MomokaVerificationStatusSuccessFragmentDoc}
   ${MomokaVerificationStatusFailureFragmentDoc}
+  ${ProfileFieldsFragmentDoc}
 `;
 export const MomokaMirrorTransactionFragmentDoc = gql`
   fragment MomokaMirrorTransaction on MomokaMirrorTransaction {
@@ -204,14 +204,6 @@ export const MomokaMirrorTransactionFragmentDoc = gql`
     app {
       ...App
     }
-    profile {
-      ...ProfileFields
-    }
-    publicationId
-    mirrorOfProfile {
-      ...ProfileFields
-    }
-    mirrorOfPublicationId
     verificationStatus {
       ... on MomokaVerificationStatusSuccess {
         ...MomokaVerificationStatusSuccess
@@ -220,11 +212,17 @@ export const MomokaMirrorTransactionFragmentDoc = gql`
         ...MomokaVerificationStatusFailure
       }
     }
+    profile {
+      ...ProfileFields
+    }
+    publicationId
+    mirrorOfProfileId
+    mirrorOfPublicationId
   }
   ${AppFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
   ${MomokaVerificationStatusSuccessFragmentDoc}
   ${MomokaVerificationStatusFailureFragmentDoc}
+  ${ProfileFieldsFragmentDoc}
 `;
 export const MomokaQuoteTransactionFragmentDoc = gql`
   fragment MomokaQuoteTransaction on MomokaQuoteTransaction {
@@ -234,14 +232,6 @@ export const MomokaQuoteTransactionFragmentDoc = gql`
     app {
       ...App
     }
-    profile {
-      ...ProfileFields
-    }
-    publicationId
-    quotedOnProfile {
-      ...ProfileFields
-    }
-    quotedOnPublicationId
     verificationStatus {
       ... on MomokaVerificationStatusSuccess {
         ...MomokaVerificationStatusSuccess
@@ -250,11 +240,17 @@ export const MomokaQuoteTransactionFragmentDoc = gql`
         ...MomokaVerificationStatusFailure
       }
     }
+    profile {
+      ...ProfileFields
+    }
+    publicationId
+    quotedOnProfileId
+    quotedOnPublicationId
   }
   ${AppFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
   ${MomokaVerificationStatusSuccessFragmentDoc}
   ${MomokaVerificationStatusFailureFragmentDoc}
+  ${ProfileFieldsFragmentDoc}
 `;
 export const MomokaSubmitterResultFragmentDoc = gql`
   fragment MomokaSubmitterResult on MomokaSubmitterResult {

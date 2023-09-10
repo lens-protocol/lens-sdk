@@ -28,6 +28,7 @@ query Publication(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: publication(request: $request) {
     ... on Post {
@@ -81,6 +82,7 @@ query Publications(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: publications(request: $request) {
     items {
@@ -463,8 +465,8 @@ mutation PostOnMomoka($request: MomokaPostRequest!) {
     ... on CreateMomokaPublicationResult {
       ...CreateMomokaPublicationResult
     }
-    ... on RelayError {
-      ...RelayError
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
     }
   }
 }
@@ -474,8 +476,8 @@ mutation CommentOnMomoka($request: MomokaCommentRequest!) {
     ... on CreateMomokaPublicationResult {
       ...CreateMomokaPublicationResult
     }
-    ... on RelayError {
-      ...RelayError
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
     }
   }
 }
@@ -485,8 +487,8 @@ mutation MirrorOnMomoka($request: MomokaMirrorRequest!) {
     ... on CreateMomokaPublicationResult {
       ...CreateMomokaPublicationResult
     }
-    ... on RelayError {
-      ...RelayError
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
     }
   }
 }
@@ -496,8 +498,8 @@ mutation QuoteOnMomoka($request: MomokaQuoteRequest!) {
     ... on CreateMomokaPublicationResult {
       ...CreateMomokaPublicationResult
     }
-    ... on RelayError {
-      ...RelayError
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
     }
   }
 }

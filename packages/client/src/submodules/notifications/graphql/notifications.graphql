@@ -58,21 +58,20 @@ fragment QuoteNotification on QuoteNotification {
   }
 }
 
+fragment OpenActionProfileActed on OpenActionProfileActed {
+  profile {
+    ...ProfileFields
+  }
+  action {
+    ...OpenActionResult
+  }
+  actedAt
+}
+
 fragment ActedNotification on ActedNotification {
   id
   actions {
-    id
-    profile {
-      ...ProfileFields
-    }
-    action {
-      ... on CollectOpenActionResult {
-        ...CollectOpenActionResult
-      }
-      ... on UnknownOpenActionResult {
-        ...UnknownOpenActionResult
-      }
-    }
+    ...OpenActionProfileActed
   }
   publication {
     ... on Post {
@@ -118,6 +117,7 @@ query Notifications(
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
 ) {
   result: notifications(request: $request) {
     items {

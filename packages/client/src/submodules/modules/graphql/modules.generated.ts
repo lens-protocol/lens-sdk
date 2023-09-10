@@ -17,23 +17,28 @@ import {
 } from '../../../graphql/fragments.generated';
 export type ModuleInfoFragment = { name: string; type: string };
 
-export type SupportedModuleFragment = {
+export type KnownSupportedModuleFragment = {
   moduleName: string;
-  isTypeSafe: boolean;
   contract: NetworkAddressFragment;
   moduleInput: Array<ModuleInfoFragment>;
   redeemInput: Array<ModuleInfoFragment>;
   returnDataInput: Array<ModuleInfoFragment>;
 };
 
-export type SupportedModulesFragment = {
-  openActionsModules: Array<SupportedModuleFragment>;
-  followModules: Array<SupportedModuleFragment>;
-  referenceModules: Array<SupportedModuleFragment>;
+export type UnknownSupportedModuleFragment = {
+  moduleName: string;
+  contract: NetworkAddressFragment;
 };
 
+export type SupportedModule_KnownSupportedModule_Fragment = KnownSupportedModuleFragment;
+
+export type SupportedModule_UnknownSupportedModule_Fragment = UnknownSupportedModuleFragment;
+
+export type SupportedModuleFragment =
+  | SupportedModule_KnownSupportedModule_Fragment
+  | SupportedModule_UnknownSupportedModule_Fragment;
+
 export type ApprovedAllowanceAmountResultFragment = {
-  currency: string;
   moduleName: string;
   allowance: string;
   moduleContract: NetworkAddressFragment;
@@ -44,10 +49,6 @@ export type GenerateModuleCurrencyApprovalResultFragment = {
   from: string;
   data: string;
 };
-
-export type SupportedModulesQueryVariables = Types.Exact<{ [key: string]: never }>;
-
-export type SupportedModulesQuery = { result: Array<SupportedModulesFragment> };
 
 export type CurrenciesQueryVariables = Types.Exact<{
   request: Types.PaginatedOffsetRequest;
@@ -61,7 +62,9 @@ export type ApprovedModuleAllowanceAmountQueryVariables = Types.Exact<{
   request: Types.ApprovedModuleAllowanceAmountRequest;
 }>;
 
-export type ApprovedModuleAllowanceAmountQuery = { result: ApprovedAllowanceAmountResultFragment };
+export type ApprovedModuleAllowanceAmountQuery = {
+  result: Array<ApprovedAllowanceAmountResultFragment>;
+};
 
 export type GenerateModuleCurrencyApprovalDataQueryVariables = Types.Exact<{
   request: Types.GenerateModuleCurrencyApprovalDataRequest;
@@ -77,8 +80,8 @@ export const ModuleInfoFragmentDoc = gql`
     type
   }
 `;
-export const SupportedModuleFragmentDoc = gql`
-  fragment SupportedModule on SupportedModule {
+export const KnownSupportedModuleFragmentDoc = gql`
+  fragment KnownSupportedModule on KnownSupportedModule {
     moduleName
     contract {
       ...NetworkAddress
@@ -92,28 +95,33 @@ export const SupportedModuleFragmentDoc = gql`
     returnDataInput {
       ...ModuleInfo
     }
-    isTypeSafe
   }
   ${NetworkAddressFragmentDoc}
   ${ModuleInfoFragmentDoc}
 `;
-export const SupportedModulesFragmentDoc = gql`
-  fragment SupportedModules on SupportedModules {
-    openActionsModules {
-      ...SupportedModule
-    }
-    followModules {
-      ...SupportedModule
-    }
-    referenceModules {
-      ...SupportedModule
+export const UnknownSupportedModuleFragmentDoc = gql`
+  fragment UnknownSupportedModule on UnknownSupportedModule {
+    moduleName
+    contract {
+      ...NetworkAddress
     }
   }
-  ${SupportedModuleFragmentDoc}
+  ${NetworkAddressFragmentDoc}
+`;
+export const SupportedModuleFragmentDoc = gql`
+  fragment SupportedModule on SupportedModule {
+    ... on KnownSupportedModule {
+      ...KnownSupportedModule
+    }
+    ... on UnknownSupportedModule {
+      ...UnknownSupportedModule
+    }
+  }
+  ${KnownSupportedModuleFragmentDoc}
+  ${UnknownSupportedModuleFragmentDoc}
 `;
 export const ApprovedAllowanceAmountResultFragmentDoc = gql`
   fragment ApprovedAllowanceAmountResult on ApprovedAllowanceAmountResult {
-    currency
     moduleName
     moduleContract {
       ...NetworkAddress
@@ -128,14 +136,6 @@ export const GenerateModuleCurrencyApprovalResultFragmentDoc = gql`
     from
     data
   }
-`;
-export const SupportedModulesDocument = gql`
-  query SupportedModules {
-    result: supportedModules {
-      ...SupportedModules
-    }
-  }
-  ${SupportedModulesFragmentDoc}
 `;
 export const CurrenciesDocument = gql`
   query Currencies($request: PaginatedOffsetRequest!) {
@@ -179,7 +179,6 @@ export type SdkFunctionWrapper = <T>(
 ) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
-const SupportedModulesDocumentString = print(SupportedModulesDocument);
 const CurrenciesDocumentString = print(CurrenciesDocument);
 const ApprovedModuleAllowanceAmountDocumentString = print(ApprovedModuleAllowanceAmountDocument);
 const GenerateModuleCurrencyApprovalDataDocumentString = print(
@@ -187,25 +186,6 @@ const GenerateModuleCurrencyApprovalDataDocumentString = print(
 );
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    SupportedModules(
-      variables?: SupportedModulesQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: SupportedModulesQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<SupportedModulesQuery>(SupportedModulesDocumentString, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'SupportedModules',
-        'query',
-      );
-    },
     Currencies(
       variables: CurrenciesQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,

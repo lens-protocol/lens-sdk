@@ -1,15 +1,8 @@
-fragment LensTransaction on LensTransaction {
+fragment LensTransactionResult on LensTransactionResult {
   __typename
   status
   txHash
   reason
-  extraInfo
-}
-
-fragment LensMetadataTransaction on LensMetadataTransaction {
-  __typename
-  status
-  metadataFailedReason
   extraInfo
 }
 
@@ -19,19 +12,7 @@ query TxIdToTxHash($txId: TxId!) {
 
 query LensTransactionStatus($request: LensTransactionStatusRequest!) {
   result: lensTransactionStatus(request: $request) {
-    ... on LensTransaction {
-      __typename
-      status
-      txHash
-      reason
-      extraInfo
-    }
-    ... on LensMetadataTransaction {
-      __typename
-      status
-      metadataFailedReason
-      extraInfo
-    }
+    ...LensTransactionResult
   }
 }
 

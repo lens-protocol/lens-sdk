@@ -415,6 +415,19 @@ fragment UnknownOpenActionResult on UnknownOpenActionResult {
   initReturnData
 }
 
+fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
+  type
+}
+
+fragment OpenActionResult on OpenActionResult {
+  ... on KnownCollectOpenActionResult {
+    ...KnownCollectOpenActionResult
+  }
+  ... on UnknownOpenActionResult {
+    ...UnknownOpenActionResult
+  }
+}
+
 fragment CanDecryptResponse on CanDecryptResponse {
   result
   reasons
@@ -426,17 +439,12 @@ fragment PublicationOperations on PublicationOperations {
   isNotInterested
   hasBookmarked
   hasReported
-  canAct(request: PublicationOperationsActedArgs)
-  hasActed(request: PublicationOperationsActedArgs) {
+  canAct(request: $publicationOperationsActedArgs)
+  hasActed(request: $publicationOperationsActedArgs) {
     ...OptimisticStatusResult
   }
-  actedOn(request: PublicationOperationsActedArgs) {
-    ... on KnownCollectOpenActionResult {
-      ...CollectOpenActionModuleType
-    }
-    ... on UnknownOpenActionResult {
-      ...UnknownOpenActionResult
-    }
+  actedOn(request: $publicationOperationsActedArgs) {
+    ...OpenActionResult
   }
   hasUpvoted: hasReacted(request: { type: UPVOTE })
   hasDownvoted: hasReacted(request: { type: DOWNVOTE })
@@ -609,8 +617,8 @@ fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
 }
 
 fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
-  audioMimeType: type
-  audioItem: item {
+  type
+  item {
     ...AudioSet
   }
   cover {
@@ -622,7 +630,6 @@ fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
   artist
   genre
   recordLabel
-  audioType
   lyrics
 }
 
@@ -695,7 +702,7 @@ fragment PublicationMetadataV2 on PublicationMetadataV2 {
   }
 }
 
-fragment PublicationVideoMetadataV1 on PublicationVideoMetadataV1 {
+fragment VideoMetadataV3 on VideoMetadataV3 {
   id
   rawURI
   locale
@@ -730,7 +737,7 @@ fragment PublicationVideoMetadataV1 on PublicationVideoMetadataV1 {
   }
 }
 
-fragment PublicationImageMetadataV1 on PublicationImageMetadataV1 {
+fragment ImageMetadataV3 on ImageMetadataV3 {
   id
   rawURI
   locale
@@ -765,7 +772,7 @@ fragment PublicationImageMetadataV1 on PublicationImageMetadataV1 {
   }
 }
 
-fragment ArticleMetadataV1 on ArticleMetadataV1 {
+fragment ArticleMetadataV3 on ArticleMetadataV3 {
   id
   rawURI
   locale
@@ -798,7 +805,7 @@ fragment ArticleMetadataV1 on ArticleMetadataV1 {
   }
 }
 
-fragment EventMetadataV1 on EventMetadataV1 {
+fragment EventMetadataV3 on EventMetadataV3 {
   id
   rawURI
   locale
@@ -838,7 +845,7 @@ fragment EventMetadataV1 on EventMetadataV1 {
   }
 }
 
-fragment LinkMetadataV1 on LinkMetadataV1 {
+fragment LinkMetadataV3 on LinkMetadataV3 {
   id
   rawURI
   locale
@@ -871,7 +878,7 @@ fragment LinkMetadataV1 on LinkMetadataV1 {
   }
 }
 
-fragment EmbedMetadataV1 on EmbedMetadataV1 {
+fragment EmbedMetadataV3 on EmbedMetadataV3 {
   id
   rawURI
   locale
@@ -904,7 +911,7 @@ fragment EmbedMetadataV1 on EmbedMetadataV1 {
   }
 }
 
-fragment CheckingInMetadataV1 on CheckingInMetadataV1 {
+fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
   id
   rawURI
   locale
@@ -941,7 +948,7 @@ fragment CheckingInMetadataV1 on CheckingInMetadataV1 {
   }
 }
 
-fragment TextOnlyMetadataV1 on TextOnlyMetadataV1 {
+fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
   id
   rawURI
   locale
@@ -962,7 +969,7 @@ fragment TextOnlyMetadataV1 on TextOnlyMetadataV1 {
   textOnlyMainContentFocus: mainContentFocus
 }
 
-fragment ThreeDMetadataV1 on ThreeDMetadataV1 {
+fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
   id
   rawURI
   locale
@@ -1001,7 +1008,7 @@ fragment ThreeDMetadataV1 on ThreeDMetadataV1 {
   }
 }
 
-fragment StoryMetadataV1 on StoryMetadataV1 {
+fragment StoryMetadataV3 on StoryMetadataV3 {
   id
   rawURI
   locale
@@ -1033,7 +1040,7 @@ fragment StoryMetadataV1 on StoryMetadataV1 {
   }
 }
 
-fragment TransactionMetadataV1 on TransactionMetadataV1 {
+fragment TransactionMetadataV3 on TransactionMetadataV3 {
   id
   rawURI
   locale
@@ -1068,7 +1075,7 @@ fragment TransactionMetadataV1 on TransactionMetadataV1 {
   }
 }
 
-fragment MintMetadataV1 on MintMetadataV1 {
+fragment MintMetadataV3 on MintMetadataV3 {
   id
   rawURI
   locale
@@ -1101,7 +1108,7 @@ fragment MintMetadataV1 on MintMetadataV1 {
   }
 }
 
-fragment SpaceMetadataV1 on SpaceMetadataV1 {
+fragment SpaceMetadataV3 on SpaceMetadataV3 {
   id
   rawURI
   locale
@@ -1136,7 +1143,7 @@ fragment SpaceMetadataV1 on SpaceMetadataV1 {
   }
 }
 
-fragment LiveStreamMetadataV1 on LiveStreamMetadataV1 {
+fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
   id
   rawURI
   locale
@@ -1177,54 +1184,67 @@ fragment LiveStreamMetadataV1 on LiveStreamMetadataV1 {
 # publication fragments
 fragment Post on Post {
   id
+  publishedOn {
+    ...App
+  }
+  isHidden
+  isEncrypted
+  momoka {
+    ...MomokaInfo
+  }
+  txHash
+  createdAt
   by {
     ...ProfileFields
+  }
+  operations {
+    ...PublicationOperations
   }
   metadata {
     ... on PublicationMetadataV2 {
       ...PublicationMetadataV2
     }
-    ... on PublicationVideoMetadataV1 {
-      ...PublicationVideoMetadataV1
+    ... on VideoMetadataV3 {
+      ...VideoMetadataV3
     }
-    ... on PublicationImageMetadataV1 {
-      ...PublicationImageMetadataV1
+    ... on ImageMetadataV3 {
+      ...ImageMetadataV3
     }
-    ... on ArticleMetadataV1 {
-      ...ArticleMetadataV1
+    ... on ArticleMetadataV3 {
+      ...ArticleMetadataV3
     }
-    ... on EventMetadataV1 {
-      ...EventMetadataV1
+    ... on EventMetadataV3 {
+      ...EventMetadataV3
     }
-    ... on LinkMetadataV1 {
-      ...LinkMetadataV1
+    ... on LinkMetadataV3 {
+      ...LinkMetadataV3
     }
-    ... on EmbedMetadataV1 {
-      ...EmbedMetadataV1
+    ... on EmbedMetadataV3 {
+      ...EmbedMetadataV3
     }
-    ... on CheckingInMetadataV1 {
-      ...CheckingInMetadataV1
+    ... on CheckingInMetadataV3 {
+      ...CheckingInMetadataV3
     }
-    ... on TextOnlyMetadataV1 {
-      ...TextOnlyMetadataV1
+    ... on TextOnlyMetadataV3 {
+      ...TextOnlyMetadataV3
     }
-    ... on ThreeDMetadataV1 {
-      ...ThreeDMetadataV1
+    ... on ThreeDMetadataV3 {
+      ...ThreeDMetadataV3
     }
-    ... on StoryMetadataV1 {
-      ...StoryMetadataV1
+    ... on StoryMetadataV3 {
+      ...StoryMetadataV3
     }
-    ... on TransactionMetadataV1 {
-      ...TransactionMetadataV1
+    ... on TransactionMetadataV3 {
+      ...TransactionMetadataV3
     }
-    ... on MintMetadataV1 {
-      ...MintMetadataV1
+    ... on MintMetadataV3 {
+      ...MintMetadataV3
     }
-    ... on SpaceMetadataV1 {
-      ...SpaceMetadataV1
+    ... on SpaceMetadataV3 {
+      ...SpaceMetadataV3
     }
-    ... on LiveStreamMetadataV1 {
-      ...LiveStreamMetadataV1
+    ... on LiveStreamMetadataV3 {
+      ...LiveStreamMetadataV3
     }
   }
   openActionModules {
@@ -1279,70 +1299,75 @@ fragment Post on Post {
       ...UnknownReferenceModuleSettings
     }
   }
-  publishedOn {
-    ...App
-  }
-  isHidden
-  isGated
-  momoka {
-    ...MomokaInfo
-  }
-  operations {
-    ...PublicationOperations
-  }
-  createdAt
 }
 
 fragment CommentBase on Comment {
   id
+  publishedOn {
+    ...App
+  }
+  isHidden
+  isEncrypted
+  momoka {
+    ...MomokaInfo
+  }
+  txHash
+  createdAt
   by {
     ...ProfileFields
+  }
+  # TODO: stats
+  # stats {
+  #   ...PublicationStats
+  # }
+  operations {
+    ...PublicationOperations
   }
   metadata {
     ... on PublicationMetadataV2 {
       ...PublicationMetadataV2
     }
-    ... on PublicationVideoMetadataV1 {
-      ...PublicationVideoMetadataV1
+    ... on VideoMetadataV3 {
+      ...VideoMetadataV3
     }
-    ... on PublicationImageMetadataV1 {
-      ...PublicationImageMetadataV1
+    ... on ImageMetadataV3 {
+      ...ImageMetadataV3
     }
-    ... on ArticleMetadataV1 {
-      ...ArticleMetadataV1
+    ... on ArticleMetadataV3 {
+      ...ArticleMetadataV3
     }
-    ... on EventMetadataV1 {
-      ...EventMetadataV1
+    ... on EventMetadataV3 {
+      ...EventMetadataV3
     }
-    ... on LinkMetadataV1 {
-      ...LinkMetadataV1
+    ... on LinkMetadataV3 {
+      ...LinkMetadataV3
     }
-    ... on EmbedMetadataV1 {
-      ...EmbedMetadataV1
+    ... on EmbedMetadataV3 {
+      ...EmbedMetadataV3
     }
-    ... on CheckingInMetadataV1 {
-      ...CheckingInMetadataV1
+    ... on CheckingInMetadataV3 {
+      ...CheckingInMetadataV3
     }
-    ... on TextOnlyMetadataV1 {
-      ...TextOnlyMetadataV1
+    ... on TextOnlyMetadataV3 {
+      ...TextOnlyMetadataV3
     }
-    ... on ThreeDMetadataV1 {
-      ...ThreeDMetadataV1
+    ... on ThreeDMetadataV3 {
+      ...ThreeDMetadataV3
     }
-    ... on StoryMetadataV1 {
-      ...StoryMetadataV1
+    ... on StoryMetadataV3 {
+      ...StoryMetadataV3
     }
-    ... on TransactionMetadataV1 {
-      ...TransactionMetadataV1
+    ... on TransactionMetadataV3 {
+      ...TransactionMetadataV3
     }
-    ... on MintMetadataV1 {
-      ...MintMetadataV1
+    ... on MintMetadataV3 {
+      ...MintMetadataV3
     }
-    ... on SpaceMetadataV1 {
-      ...SpaceMetadataV1
+    ... on SpaceMetadataV3 {
+      ...SpaceMetadataV3
     }
-    ... on LiveStreamMetadataV1 {
-      ...LiveStreamMetadataV1
+    ... on LiveStreamMetadataV3 {
+      ...LiveStreamMetadataV3
     }
   }
   openActionModules {
@@ -1397,18 +1422,6 @@ fragment CommentBase on Comment {
       ...UnknownReferenceModuleSettings
     }
   }
-  publishedOn {
-    ...App
-  }
-  isHidden
-  isGated
-  momoka {
-    ...MomokaInfo
-  }
-  operations {
-    ...PublicationOperations
-  }
-  createdAt
 }
 
 fragment Comment on Comment {
@@ -1434,12 +1447,16 @@ fragment Comment on Comment {
 
 fragment Mirror on Mirror {
   id
-  by {
-    ...ProfileFields
+  publishedOn {
+    ...App
   }
+  isHidden
+  isEncrypted
   momoka {
     ...MomokaInfo
   }
+  txHash
+  createdAt
   mirrorOf {
     ... on Post {
       ...Post
@@ -1451,59 +1468,76 @@ fragment Mirror on Mirror {
       ...Quote
     }
   }
-  createdAt
 }
 
 fragment QuoteBase on Quote {
   id
+  publishedOn {
+    ...App
+  }
+  isHidden
+  isEncrypted
+  momoka {
+    ...MomokaInfo
+  }
+  txHash
+  createdAt
   by {
     ...ProfileFields
+  }
+  # TODO: stats
+  # stats {
+  #   ...PublicationStats
+  # }
+
+  operations {
+    ...PublicationOperations
   }
   metadata {
     ... on PublicationMetadataV2 {
       ...PublicationMetadataV2
     }
-    ... on PublicationVideoMetadataV1 {
-      ...PublicationVideoMetadataV1
+    ... on VideoMetadataV3 {
+      ...VideoMetadataV3
     }
-    ... on PublicationImageMetadataV1 {
-      ...PublicationImageMetadataV1
+    ... on ImageMetadataV3 {
+      ...ImageMetadataV3
     }
-    ... on ArticleMetadataV1 {
-      ...ArticleMetadataV1
+    ... on ArticleMetadataV3 {
+      ...ArticleMetadataV3
     }
-    ... on EventMetadataV1 {
-      ...EventMetadataV1
+    ... on EventMetadataV3 {
+      ...EventMetadataV3
     }
-    ... on LinkMetadataV1 {
-      ...LinkMetadataV1
+    ... on LinkMetadataV3 {
+      ...LinkMetadataV3
     }
-    ... on EmbedMetadataV1 {
-      ...EmbedMetadataV1
+    ... on EmbedMetadataV3 {
+      ...EmbedMetadataV3
     }
-    ... on CheckingInMetadataV1 {
-      ...CheckingInMetadataV1
+    ... on CheckingInMetadataV3 {
+      ...CheckingInMetadataV3
     }
-    ... on TextOnlyMetadataV1 {
-      ...TextOnlyMetadataV1
+    ... on TextOnlyMetadataV3 {
+      ...TextOnlyMetadataV3
     }
-    ... on ThreeDMetadataV1 {
-      ...ThreeDMetadataV1
+    ... on ThreeDMetadataV3 {
+      ...ThreeDMetadataV3
     }
-    ... on StoryMetadataV1 {
-      ...StoryMetadataV1
+    ... on StoryMetadataV3 {
+      ...StoryMetadataV3
     }
-    ... on TransactionMetadataV1 {
-      ...TransactionMetadataV1
+    ... on TransactionMetadataV3 {
+      ...TransactionMetadataV3
     }
-    ... on MintMetadataV1 {
-      ...MintMetadataV1
+    ... on MintMetadataV3 {
+      ...MintMetadataV3
     }
-    ... on SpaceMetadataV1 {
-      ...SpaceMetadataV1
+    ... on SpaceMetadataV3 {
+      ...SpaceMetadataV3
     }
-    ... on LiveStreamMetadataV1 {
-      ...LiveStreamMetadataV1
+    ... on LiveStreamMetadataV3 {
+      ...LiveStreamMetadataV3
     }
   }
   openActionModules {
@@ -1558,18 +1592,18 @@ fragment QuoteBase on Quote {
       ...UnknownReferenceModuleSettings
     }
   }
-  publishedOn {
-    ...App
+  quotedOn {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...CommentBase
+    }
+    # TODO: Cannot spread fragment "QuoteBase" within itself via "Quote".
+    # ... on Quote {
+    #   ...Quote
+    # }
   }
-  isHidden
-  isGated
-  momoka {
-    ...MomokaInfo
-  }
-  operations {
-    ...PublicationOperations
-  }
-  createdAt
 }
 
 fragment Quote on Quote {

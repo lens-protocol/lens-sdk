@@ -13,7 +13,6 @@ import {
   LensProfileManagerRelayErrorFragment,
   Eip712TypedDataFieldFragment,
   CreateMomokaPublicationResultFragment,
-  RelayErrorFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -31,13 +30,13 @@ import {
   LensProfileManagerRelayErrorFragmentDoc,
   Eip712TypedDataFieldFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
-  RelayErrorFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type ExplorePublicationsQueryVariables = Types.Exact<{
   request: Types.ExplorePublicationRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
 }>;
 
 export type ExplorePublicationsQuery = {
@@ -63,6 +62,7 @@ export const ExplorePublicationsDocument = gql`
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   ) {
     result: explorePublications(request: $request) {
       items {
