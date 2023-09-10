@@ -24,6 +24,8 @@ export type ProfilesManagedQueryVariables = Types.Exact<{
   request: Types.ProfilesManagedRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
 }>;
 
 export type ProfilesManagedQuery = {
@@ -69,6 +71,8 @@ export const ProfilesManagedDocument = gql`
     $request: ProfilesManagedRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   ) {
     result: profilesManaged(request: $request) {
       items {

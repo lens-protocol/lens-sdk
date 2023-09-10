@@ -37,6 +37,8 @@ export type SearchPublicationsQueryVariables = Types.Exact<{
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
 }>;
 
 export type SearchPublicationsQuery = {
@@ -50,6 +52,8 @@ export type SearchProfilesQueryVariables = Types.Exact<{
   request: Types.ProfileSearchRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
 }>;
 
 export type SearchProfilesQuery = {
@@ -63,6 +67,8 @@ export const SearchPublicationsDocument = gql`
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   ) {
     result: searchPublications(request: $request) {
       items {
@@ -91,6 +97,8 @@ export const SearchProfilesDocument = gql`
     $request: ProfileSearchRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   ) {
     result: searchProfiles(request: $request) {
       items {

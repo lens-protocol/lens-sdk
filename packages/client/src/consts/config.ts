@@ -33,4 +33,10 @@ export type LensConfig = {
    * @see {@link MediaTransformsConfig} for more information
    */
   mediaTransforms?: MediaTransformsConfig;
+
+  /**
+   * The app ids to use to read data from the Lens Protocol.
+   * If not provided, all apps will be used.
+   */
+  forApps?: string[];
 };

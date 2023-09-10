@@ -103,6 +103,8 @@ export type MomokaTransactionQueryVariables = Types.Exact<{
   request: Types.MomokaTransactionRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
 }>;
 
 export type MomokaTransactionQuery = {
@@ -118,6 +120,8 @@ export type MomokaTransactionsQueryVariables = Types.Exact<{
   request: Types.MomokaTransactionsRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
 }>;
 
 export type MomokaTransactionsQuery = {
@@ -285,6 +289,8 @@ export const MomokaTransactionDocument = gql`
     $request: MomokaTransactionRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   ) {
     result: momokaTransaction(request: $request) {
       ... on MomokaPostTransaction {
@@ -311,6 +317,8 @@ export const MomokaTransactionsDocument = gql`
     $request: MomokaTransactionsRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   ) {
     result: momokaTransactions(request: $request) {
       items {

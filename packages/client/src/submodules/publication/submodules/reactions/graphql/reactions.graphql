@@ -20,6 +20,8 @@ query WhoReactedPublication(
   $request: WhoReactedPublicationRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
 ) {
   result: whoReactedPublication(request: $request) {
     items {

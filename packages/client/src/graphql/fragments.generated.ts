@@ -60,6 +60,20 @@ export type ProfilePictureSetFragment = {
   image: ImageFragment;
 };
 
+export type ProfileStatsFragment = {
+  id: string;
+  followers: number;
+  following: number;
+  comments: number;
+  posts: number;
+  mirrors: number;
+  quotes: number;
+  publications: number;
+  countOpenActions: number;
+  upvoteReactions: number;
+  downvoteReactions: number;
+};
+
 export type ProfileFieldsFragment = {
   __typename: 'Profile';
   id: string;
@@ -93,6 +107,7 @@ export type ProfileFieldsFragment = {
     isFollowingMe: OptimisticStatusResultFragment;
   };
   guardian: { protected: boolean; cooldownEndsOn: string | null } | null;
+  stats: ProfileStatsFragment;
 };
 
 export type ProfileFragment = { invitedBy: ProfileFieldsFragment | null } & ProfileFieldsFragment;
@@ -1010,6 +1025,23 @@ export const OptimisticStatusResultFragmentDoc = gql`
     isFinalisedOnchain
   }
 `;
+export const ProfileStatsFragmentDoc = gql`
+  fragment ProfileStats on ProfileStats {
+    id
+    followers(request: $profileStatsArg)
+    following(request: $profileStatsArg)
+    comments(request: $profileStatsArg)
+    posts(request: $profileStatsArg)
+    mirrors(request: $profileStatsArg)
+    quotes(request: $profileStatsArg)
+    mirrors(request: $profileStatsArg)
+    quotes(request: $profileStatsArg)
+    publications(request: $profileStatsArg)
+    upvoteReactions: reactions(request: { type: UPVOTE })
+    downvoteReactions: reactions(request: { type: DOWNVOTE })
+    countOpenActions(request: $profileStatsCountOpenActionArgs)
+  }
+`;
 export const ProfileFieldsFragmentDoc = gql`
   fragment ProfileFields on Profile {
     __typename
@@ -1077,6 +1109,9 @@ export const ProfileFieldsFragmentDoc = gql`
       protected
       cooldownEndsOn
     }
+    stats(request: $profileStatsArg) {
+      ...ProfileStats
+    }
     invitesLeft
     createdAt
   }
@@ -1086,6 +1121,7 @@ export const ProfileFieldsFragmentDoc = gql`
   ${RevertFollowModuleSettingsFragmentDoc}
   ${UnknownFollowModuleSettingsFragmentDoc}
   ${OptimisticStatusResultFragmentDoc}
+  ${ProfileStatsFragmentDoc}
 `;
 export const ProfileFragmentDoc = gql`
   fragment Profile on Profile {

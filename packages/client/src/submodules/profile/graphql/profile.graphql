@@ -151,6 +151,8 @@ query Profile(
   $request: ProfileRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
 ) {
   result: profile(request: $request) {
     ...Profile
@@ -161,6 +163,8 @@ query Profiles(
   $request: ProfilesRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
 ) {
   result: profiles(request: $request) {
     items {
@@ -187,6 +191,8 @@ query ProfileRecommendations(
   $request: ProfileRecommendationsRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
 ) {
   result: profileRecommendations(request: $request) {
     items {
@@ -202,6 +208,8 @@ query Following(
   $request: FollowingRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
 ) {
   result: following(request: $request) {
     items {
@@ -217,6 +225,8 @@ query Followers(
   $request: FollowersRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
 ) {
   result: followers(request: $request) {
     items {
@@ -232,6 +242,8 @@ query MutualFollowers(
   $request: MutualFollowersRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
 ) {
   result: mutualFollowers(request: $request) {
     items {

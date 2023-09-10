@@ -16,6 +16,8 @@ export type InvitedResultFragment = {
 export type InvitedProfilesQueryVariables = Types.Exact<{
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
 }>;
 
 export type InvitedProfilesQuery = { invitedProfiles: Array<InvitedResultFragment> };
@@ -46,6 +48,8 @@ export const InvitedProfilesDocument = gql`
   query InvitedProfiles(
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   ) {
     invitedProfiles {
       ...InvitedResult

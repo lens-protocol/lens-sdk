@@ -17,6 +17,8 @@ query ProfilesManaged(
   $request: ProfilesManagedRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
 ) {
   result: profilesManaged(request: $request) {
     items {

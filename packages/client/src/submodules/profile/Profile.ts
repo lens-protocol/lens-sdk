@@ -7,6 +7,7 @@ import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type {
   LensProfileManagerRelayErrorFragment,
   ProfileFragment,
+  ProfileStatsFragment,
   RelaySuccessFragment,
 } from '../../graphql/fragments.generated';
 import type {
@@ -34,8 +35,10 @@ import type {
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
+  ProfileQueryOptions,
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
+  buildProfileQueryOptions,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
 } from '../../helpers';
@@ -59,6 +62,7 @@ import {
 export class Profile {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
+  private readonly defaultOptions: ProfileQueryOptions;
 
   constructor(
     private readonly config: LensConfig,
@@ -68,23 +72,39 @@ export class Profile {
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
+    this.defaultOptions = buildProfileQueryOptions({
+      config,
+    });
   }
 
-  async fetch(request: ProfileRequest): Promise<ProfileFragment | null> {
+  async fetch(
+    request: ProfileRequest,
+    options?: ProfileQueryOptions,
+  ): Promise<ProfileFragment | null> {
     const result = await this.sdk.Profile({
       request,
       ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      ...buildProfileQueryOptions({
+        config: this.config,
+        ...options,
+      }),
     });
 
     return result.data.result;
   }
 
-  async fetchAll(request: ProfilesRequest): Promise<PaginatedResult<ProfileFragment>> {
+  async fetchAll(
+    request: ProfilesRequest,
+    options?: ProfileQueryOptions,
+  ): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Profiles({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        sources: this.config.sources,
+        ...buildProfileQueryOptions({
+          config: this.config,
+          ...options,
+        }),
       });
 
       return result.data.result;
@@ -105,33 +125,52 @@ export class Profile {
 
   async recommendations(
     request: ProfileRecommendationsRequest,
+    options?: ProfileQueryOptions,
   ): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ProfileRecommendations({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildProfileQueryOptions({
+          config: this.config,
+          ...options,
+        }),
       });
 
       return result.data.result;
     }, request);
   }
 
-  async following(request: FollowingRequest): Promise<PaginatedResult<ProfileFragment>> {
+  async following(
+    request: FollowingRequest,
+    options?: ProfileQueryOptions,
+  ): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Following({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildProfileQueryOptions({
+          config: this.config,
+          ...options,
+        }),
       });
 
       return result.data.result;
     }, request);
   }
 
-  async followers(request: FollowersRequest): Promise<PaginatedResult<ProfileFragment>> {
+  async followers(
+    request: FollowersRequest,
+    options?: ProfileQueryOptions,
+  ): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Followers({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildProfileQueryOptions({
+          config: this.config,
+          ...options,
+        }),
       });
 
       return result.data.result;
@@ -140,11 +179,16 @@ export class Profile {
 
   async mutualFollowers(
     request: MutualFollowersRequest,
+    options?: ProfileQueryOptions,
   ): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.MutualFollowers({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildProfileQueryOptions({
+          config: this.config,
+          ...options,
+        }),
       });
 
       return result.data.result;
@@ -283,6 +327,19 @@ export class Profile {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.DismissRecommendedProfiles({ request }, headers);
     });
+  }
+
+  async stats(
+    request: ProfileRequest,
+    options: ProfileQueryOptions = this.defaultOptions,
+  ): Promise<ProfileStatsFragment | undefined> {
+    const result = await this.sdk.Profile({
+      request,
+      ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      ...options,
+    });
+
+    return result.data.result?.stats;
   }
 
   async createOnChainSetProfileMetadataTypedData(
@@ -437,7 +494,7 @@ export class Profile {
     request: HandleUnlinkFromProfileRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.UnlinkHandleFromProfile({ request }, headers);
+      await this.sdk.HandleUnlinkFromProfile({ request }, headers);
     });
   }
 }

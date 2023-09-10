@@ -129,6 +129,22 @@ fragment ProfilePictureSet on ImageSet {
   # }
 }
 
+fragment ProfileStats on ProfileStats {
+  id
+  followers(request: $profileStatsArg)
+  following(request: $profileStatsArg)
+  comments(request: $profileStatsArg)
+  posts(request: $profileStatsArg)
+  mirrors(request: $profileStatsArg)
+  quotes(request: $profileStatsArg)
+  mirrors(request: $profileStatsArg)
+  quotes(request: $profileStatsArg)
+  publications(request: $profileStatsArg)
+  upvoteReactions: reactions(request: { type: UPVOTE })
+  downvoteReactions: reactions(request: { type: DOWNVOTE })
+  countOpenActions(request: $profileStatsCountOpenActionArgs)
+}
+
 fragment ProfileFields on Profile {
   __typename
   id
@@ -194,6 +210,9 @@ fragment ProfileFields on Profile {
   guardian {
     protected
     cooldownEndsOn
+  }
+  stats(request: $profileStatsArg) {
+    ...ProfileStats
   }
   invitesLeft
   createdAt
