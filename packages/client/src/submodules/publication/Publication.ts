@@ -93,6 +93,9 @@ export class Publication {
     return new NotInterested(this.config, this.authentication);
   }
 
+  /**
+   * The Actions module
+   */
   get actions(): Actions {
     return new Actions(this.config, this.authentication);
   }
