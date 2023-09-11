@@ -30,14 +30,6 @@ export type UnknownSupportedModuleFragment = {
   contract: NetworkAddressFragment;
 };
 
-export type SupportedModule_KnownSupportedModule_Fragment = KnownSupportedModuleFragment;
-
-export type SupportedModule_UnknownSupportedModule_Fragment = UnknownSupportedModuleFragment;
-
-export type SupportedModuleFragment =
-  | SupportedModule_KnownSupportedModule_Fragment
-  | SupportedModule_UnknownSupportedModule_Fragment;
-
 export type ApprovedAllowanceAmountResultFragment = {
   moduleName: string;
   allowance: string;
@@ -74,6 +66,50 @@ export type GenerateModuleCurrencyApprovalDataQuery = {
   result: GenerateModuleCurrencyApprovalResultFragment;
 };
 
+export type SupportedFollowModulesQueryVariables = Types.Exact<{
+  request: Types.SupportedModulesRequest;
+}>;
+
+export type SupportedFollowModulesQuery = {
+  result: {
+    items: Array<KnownSupportedModuleFragment | UnknownSupportedModuleFragment>;
+    pageInfo: PaginatedResultInfoFragment;
+  };
+};
+
+export type SupportedReferenceModulesQueryVariables = Types.Exact<{
+  request: Types.SupportedModulesRequest;
+}>;
+
+export type SupportedReferenceModulesQuery = {
+  result: {
+    items: Array<KnownSupportedModuleFragment | UnknownSupportedModuleFragment>;
+    pageInfo: PaginatedResultInfoFragment;
+  };
+};
+
+export type SupportedOpenActionModulesQueryVariables = Types.Exact<{
+  request: Types.SupportedModulesRequest;
+}>;
+
+export type SupportedOpenActionModulesQuery = {
+  result: {
+    items: Array<KnownSupportedModuleFragment | UnknownSupportedModuleFragment>;
+    pageInfo: PaginatedResultInfoFragment;
+  };
+};
+
+export type SupportedOpenActionCollectModulesQueryVariables = Types.Exact<{
+  request: Types.SupportedModulesRequest;
+}>;
+
+export type SupportedOpenActionCollectModulesQuery = {
+  result: {
+    items: Array<KnownSupportedModuleFragment | UnknownSupportedModuleFragment>;
+    pageInfo: PaginatedResultInfoFragment;
+  };
+};
+
 export const ModuleInfoFragmentDoc = gql`
   fragment ModuleInfo on ModuleInfo {
     name
@@ -107,18 +143,6 @@ export const UnknownSupportedModuleFragmentDoc = gql`
     }
   }
   ${NetworkAddressFragmentDoc}
-`;
-export const SupportedModuleFragmentDoc = gql`
-  fragment SupportedModule on SupportedModule {
-    ... on KnownSupportedModule {
-      ...KnownSupportedModule
-    }
-    ... on UnknownSupportedModule {
-      ...UnknownSupportedModule
-    }
-  }
-  ${KnownSupportedModuleFragmentDoc}
-  ${UnknownSupportedModuleFragmentDoc}
 `;
 export const ApprovedAllowanceAmountResultFragmentDoc = gql`
   fragment ApprovedAllowanceAmountResult on ApprovedAllowanceAmountResult {
@@ -171,6 +195,86 @@ export const GenerateModuleCurrencyApprovalDataDocument = gql`
   }
   ${GenerateModuleCurrencyApprovalResultFragmentDoc}
 `;
+export const SupportedFollowModulesDocument = gql`
+  query SupportedFollowModules($request: SupportedModulesRequest!) {
+    result: supportedFollowModules(request: $request) {
+      items {
+        ... on KnownSupportedModule {
+          ...KnownSupportedModule
+        }
+        ... on UnknownSupportedModule {
+          ...UnknownSupportedModule
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${KnownSupportedModuleFragmentDoc}
+  ${UnknownSupportedModuleFragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
+`;
+export const SupportedReferenceModulesDocument = gql`
+  query SupportedReferenceModules($request: SupportedModulesRequest!) {
+    result: supportedReferenceModules(request: $request) {
+      items {
+        ... on KnownSupportedModule {
+          ...KnownSupportedModule
+        }
+        ... on UnknownSupportedModule {
+          ...UnknownSupportedModule
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${KnownSupportedModuleFragmentDoc}
+  ${UnknownSupportedModuleFragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
+`;
+export const SupportedOpenActionModulesDocument = gql`
+  query SupportedOpenActionModules($request: SupportedModulesRequest!) {
+    result: supportedOpenActionModules(request: $request) {
+      items {
+        ... on KnownSupportedModule {
+          ...KnownSupportedModule
+        }
+        ... on UnknownSupportedModule {
+          ...UnknownSupportedModule
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${KnownSupportedModuleFragmentDoc}
+  ${UnknownSupportedModuleFragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
+`;
+export const SupportedOpenActionCollectModulesDocument = gql`
+  query SupportedOpenActionCollectModules($request: SupportedModulesRequest!) {
+    result: supportedOpenActionCollectModules(request: $request) {
+      items {
+        ... on KnownSupportedModule {
+          ...KnownSupportedModule
+        }
+        ... on UnknownSupportedModule {
+          ...UnknownSupportedModule
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${KnownSupportedModuleFragmentDoc}
+  ${UnknownSupportedModuleFragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -183,6 +287,12 @@ const CurrenciesDocumentString = print(CurrenciesDocument);
 const ApprovedModuleAllowanceAmountDocumentString = print(ApprovedModuleAllowanceAmountDocument);
 const GenerateModuleCurrencyApprovalDataDocumentString = print(
   GenerateModuleCurrencyApprovalDataDocument,
+);
+const SupportedFollowModulesDocumentString = print(SupportedFollowModulesDocument);
+const SupportedReferenceModulesDocumentString = print(SupportedReferenceModulesDocument);
+const SupportedOpenActionModulesDocumentString = print(SupportedOpenActionModulesDocument);
+const SupportedOpenActionCollectModulesDocumentString = print(
+  SupportedOpenActionCollectModulesDocument,
 );
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
@@ -237,6 +347,86 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'GenerateModuleCurrencyApprovalData',
+        'query',
+      );
+    },
+    SupportedFollowModules(
+      variables: SupportedFollowModulesQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: SupportedFollowModulesQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<SupportedFollowModulesQuery>(
+            SupportedFollowModulesDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'SupportedFollowModules',
+        'query',
+      );
+    },
+    SupportedReferenceModules(
+      variables: SupportedReferenceModulesQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: SupportedReferenceModulesQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<SupportedReferenceModulesQuery>(
+            SupportedReferenceModulesDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'SupportedReferenceModules',
+        'query',
+      );
+    },
+    SupportedOpenActionModules(
+      variables: SupportedOpenActionModulesQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: SupportedOpenActionModulesQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<SupportedOpenActionModulesQuery>(
+            SupportedOpenActionModulesDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'SupportedOpenActionModules',
+        'query',
+      );
+    },
+    SupportedOpenActionCollectModules(
+      variables: SupportedOpenActionCollectModulesQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: SupportedOpenActionCollectModulesQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<SupportedOpenActionCollectModulesQuery>(
+            SupportedOpenActionCollectModulesDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'SupportedOpenActionCollectModules',
         'query',
       );
     },

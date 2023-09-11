@@ -26,15 +26,6 @@ fragment UnknownSupportedModule on UnknownSupportedModule {
   }
 }
 
-fragment SupportedModule on SupportedModule {
-  ... on KnownSupportedModule {
-    ...KnownSupportedModule
-  }
-  ... on UnknownSupportedModule {
-    ...UnknownSupportedModule
-  }
-}
-
 fragment ApprovedAllowanceAmountResult on ApprovedAllowanceAmountResult {
   moduleName
   moduleContract {
@@ -72,6 +63,70 @@ query GenerateModuleCurrencyApprovalData($request: GenerateModuleCurrencyApprova
   result: generateModuleCurrencyApprovalData(request: $request) {
     ... on GenerateModuleCurrencyApprovalResult {
       ...GenerateModuleCurrencyApprovalResult
+    }
+  }
+}
+
+query SupportedFollowModules($request: SupportedModulesRequest!) {
+  result: supportedFollowModules(request: $request) {
+    items {
+      ... on KnownSupportedModule {
+        ...KnownSupportedModule
+      }
+      ... on UnknownSupportedModule {
+        ...UnknownSupportedModule
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query SupportedReferenceModules($request: SupportedModulesRequest!) {
+  result: supportedReferenceModules(request: $request) {
+    items {
+      ... on KnownSupportedModule {
+        ...KnownSupportedModule
+      }
+      ... on UnknownSupportedModule {
+        ...UnknownSupportedModule
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query SupportedOpenActionModules($request: SupportedModulesRequest!) {
+  result: supportedOpenActionModules(request: $request) {
+    items {
+      ... on KnownSupportedModule {
+        ...KnownSupportedModule
+      }
+      ... on UnknownSupportedModule {
+        ...UnknownSupportedModule
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query SupportedOpenActionCollectModules($request: SupportedModulesRequest!) {
+  result: supportedOpenActionCollectModules(request: $request) {
+    items {
+      ... on KnownSupportedModule {
+        ...KnownSupportedModule
+      }
+      ... on UnknownSupportedModule {
+        ...UnknownSupportedModule
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
     }
   }
 }

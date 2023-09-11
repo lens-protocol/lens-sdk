@@ -1,12 +1,15 @@
 // @ts-nocheck
 import * as Types from '../../../graphql/types.generated';
 
-import { ProfileFragment } from '../../../graphql/fragments.generated';
+import { ProfileFragment, PaginatedResultInfoFragment } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-import { ProfileFragmentDoc } from '../../../graphql/fragments.generated';
+import {
+  ProfileFragmentDoc,
+  PaginatedResultInfoFragmentDoc,
+} from '../../../graphql/fragments.generated';
 export type InvitedResultFragment = {
   invited: string;
   when: string;

@@ -4,6 +4,7 @@ import type { Authentication } from '../../../../authentication';
 import type { LensConfig } from '../../../../consts/config';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../../../../consts/errors';
 import { FetchGraphQLClient } from '../../../../graphql/FetchGraphQLClient';
+import { ProfileFragment } from '../../../../graphql/fragments.generated';
 import type {
   ReactionRequest,
   WhoReactedPublicationRequest,
@@ -15,7 +16,7 @@ import {
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
 } from '../../../../helpers';
-import { getSdk, ProfileReactedResultFragment, Sdk } from './graphql/reactions.generated';
+import { getSdk, Sdk } from './graphql/reactions.generated';
 
 /**
  * React to publications off-chain.
@@ -93,7 +94,7 @@ export class Reactions {
    * Fetch who reacted to a publication.
    *
    * @param request - Request object for the query
-   * @returns Array of {@link ProfileReactedResultFragment} wrapped in {@link PaginatedResult}
+   * @returns Array of {@link ProfileFragment} wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -102,9 +103,7 @@ export class Reactions {
    * });
    * ```
    */
-  async fetch(
-    request: WhoReactedPublicationRequest,
-  ): Promise<PaginatedResult<ProfileReactedResultFragment>> {
+  async fetch(request: WhoReactedPublicationRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.WhoReactedPublication({
         request: currRequest,

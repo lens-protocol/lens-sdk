@@ -2,29 +2,16 @@
 import * as Types from '../../../../../graphql/types.generated';
 
 import {
-  ProfileFieldsFragment,
-  PostFragment,
-  QuoteFragment,
   ProfileFragment,
   PaginatedResultInfoFragment,
-  CommentFragment,
-  MirrorFragment,
-  OpenActionResult_KnownCollectOpenActionResult_Fragment,
-  OpenActionResult_UnknownOpenActionResult_Fragment,
 } from '../../../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
-  ProfileFieldsFragmentDoc,
-  PostFragmentDoc,
-  QuoteFragmentDoc,
   ProfileFragmentDoc,
   PaginatedResultInfoFragmentDoc,
-  CommentFragmentDoc,
-  MirrorFragmentDoc,
-  OpenActionResultFragmentDoc,
 } from '../../../../../graphql/fragments.generated';
 export type AddReactionMutationVariables = Types.Exact<{
   request: Types.ReactionRequest;
@@ -38,11 +25,6 @@ export type RemoveReactionMutationVariables = Types.Exact<{
 
 export type RemoveReactionMutation = { removeReaction: string };
 
-export type ProfileReactedResultFragment = {
-  profile: ProfileFieldsFragment;
-  reactions: Array<{ reaction: Types.PublicationReactionType; reactedAt: string }>;
-};
-
 export type WhoReactedPublicationQueryVariables = Types.Exact<{
   request: Types.WhoReactedPublicationRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -55,18 +37,6 @@ export type WhoReactedPublicationQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
-export const ProfileReactedResultFragmentDoc = gql`
-  fragment ProfileReactedResult on ProfileReactedResult {
-    profile {
-      ...ProfileFields
-    }
-    reactions {
-      reaction
-      reactedAt
-    }
-  }
-  ${ProfileFieldsFragmentDoc}
-`;
 export const AddReactionDocument = gql`
   mutation AddReaction($request: ReactionRequest!) {
     addReaction(request: $request)

@@ -1,9 +1,3 @@
-export type {
-  CollectedEventFragment,
-  ElectedMirrorFragment,
-  FeedItemFragment,
-  MirrorEventFragment,
-  ReactionEventFragment,
-} from './graphql/feed.generated';
+export type { FeedItemFragment, ReactionEventFragment } from './graphql/feed.generated';
 
 export * from './Feed';

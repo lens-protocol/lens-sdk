@@ -5,26 +5,22 @@ import type { LensConfig } from '../../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../../consts/errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import {
-  CommentFragment,
   CreateMomokaPublicationResultFragment,
   LensProfileManagerRelayErrorFragment,
-  MirrorFragment,
-  PostFragment,
-  QuoteFragment,
-  RelayErrorFragment,
   RelaySuccessFragment,
 } from '../../graphql/fragments.generated';
+import { AnyPublicationFragment } from '../../graphql/types';
 import type {
-  CreateOnChainCommentRequest,
-  CreateOnChainMirrorRequest,
-  CreateOnChainPostRequest,
-  CreateOnChainQuoteRequest,
   HidePublicationRequest,
-  LegacyCollectPublicationRequest,
+  LegacyCollectRequest,
   MomokaCommentRequest,
   MomokaMirrorRequest,
   MomokaPostRequest,
   MomokaQuoteRequest,
+  OnchainCommentRequest,
+  OnchainMirrorRequest,
+  OnchainPostRequest,
+  OnchainQuoteRequest,
   PublicationRequest,
   PublicationsRequest,
   PublicationsTagsRequest,
@@ -40,15 +36,15 @@ import {
   sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
-  CreateLegacyCollectPublicationEip712TypedDataFragment,
+  CreateLegacyCollectBroadcastItemResultFragment,
   CreateMomokaCommentBroadcastItemResultFragment,
   CreateMomokaMirrorBroadcastItemResultFragment,
   CreateMomokaPostBroadcastItemResultFragment,
   CreateMomokaQuoteBroadcastItemResultFragment,
-  CreateOnChainCommentBroadcastItemResultFragment,
-  CreateOnChainMirrorBroadcastItemResultFragment,
-  CreateOnChainPostBroadcastItemResultFragment,
-  CreateOnChainQuoteBroadcastItemResultFragment,
+  CreateOnchainCommentBroadcastItemResultFragment,
+  CreateOnchainMirrorBroadcastItemResultFragment,
+  CreateOnchainPostBroadcastItemResultFragment,
+  CreateOnchainQuoteBroadcastItemResultFragment,
   getSdk,
   PublicationStatsFragment,
   PublicationStatsQueryVariables,
@@ -101,9 +97,7 @@ export class Publication {
     return new Actions(this.config, this.authentication);
   }
 
-  async fetch(
-    request: PublicationRequest,
-  ): Promise<CommentFragment | MirrorFragment | PostFragment | QuoteFragment | null> {
+  async fetch(request: PublicationRequest): Promise<AnyPublicationFragment | null> {
     const result = await this.sdk.Publication({
       request,
       ...buildImageTransformsFromConfig(this.config.mediaTransforms),
@@ -114,9 +108,7 @@ export class Publication {
 
   async fetchAll(
     request: PublicationsRequest,
-  ): Promise<
-    PaginatedResult<CommentFragment | MirrorFragment | PostFragment | QuoteFragment | null>
-  > {
+  ): Promise<PaginatedResult<AnyPublicationFragment | null>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Publications({
         request: currRequest,
@@ -173,50 +165,50 @@ export class Publication {
     });
   }
 
-  async postOnChain(
-    request: CreateOnChainPostRequest,
+  async postOnchain(
+    request: OnchainPostRequest,
   ): PromiseResult<
     LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.PostOnChain({ request }, headers);
+      const result = await this.sdk.PostOnchain({ request }, headers);
       return result.data.result;
     });
   }
 
-  async commentOnChain(
-    request: CreateOnChainCommentRequest,
+  async commentOnchain(
+    request: OnchainCommentRequest,
   ): PromiseResult<
     LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CommentOnChain({ request }, headers);
+      const result = await this.sdk.CommentOnchain({ request }, headers);
       return result.data.result;
     });
   }
 
-  async mirrorOnChain(
-    request: CreateOnChainMirrorRequest,
+  async mirrorOnchain(
+    request: OnchainMirrorRequest,
   ): PromiseResult<
     LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.MirrorOnChain({ request }, headers);
+      const result = await this.sdk.MirrorOnchain({ request }, headers);
       return result.data.result;
     });
   }
 
-  async quoteOnChain(
-    request: CreateOnChainQuoteRequest,
+  async quoteOnchain(
+    request: OnchainQuoteRequest,
   ): PromiseResult<
     LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.QuoteOnChain({ request }, headers);
+      const result = await this.sdk.QuoteOnchain({ request }, headers);
       return result.data.result;
     });
   }
@@ -224,7 +216,7 @@ export class Publication {
   async postOnMomoka(
     request: MomokaPostRequest,
   ): PromiseResult<
-    CreateMomokaPublicationResultFragment | RelayErrorFragment,
+    CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -236,7 +228,7 @@ export class Publication {
   async commentOnMomoka(
     request: MomokaCommentRequest,
   ): PromiseResult<
-    CreateMomokaPublicationResultFragment | RelayErrorFragment,
+    CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -248,7 +240,7 @@ export class Publication {
   async mirrorOnMomoka(
     request: MomokaMirrorRequest,
   ): PromiseResult<
-    CreateMomokaPublicationResultFragment | RelayErrorFragment,
+    CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -260,7 +252,7 @@ export class Publication {
   async quoteOnMomoka(
     request: MomokaQuoteRequest,
   ): PromiseResult<
-    CreateMomokaPublicationResultFragment | RelayErrorFragment,
+    CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -269,15 +261,15 @@ export class Publication {
     });
   }
 
-  async createOnChainPostTypedData(
-    request: CreateOnChainPostRequest,
+  async createOnchainPostTypedData(
+    request: OnchainPostRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateOnChainPostBroadcastItemResultFragment,
+    CreateOnchainPostBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateOnChainPostTypedData(
+      const result = await this.sdk.CreateOnchainPostTypedData(
         {
           request,
           options,
@@ -289,15 +281,15 @@ export class Publication {
     });
   }
 
-  async createOnChainCommentTypedData(
-    request: CreateOnChainCommentRequest,
+  async createOnchainCommentTypedData(
+    request: OnchainCommentRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateOnChainCommentBroadcastItemResultFragment,
+    CreateOnchainCommentBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateOnChainCommentTypedData(
+      const result = await this.sdk.CreateOnchainCommentTypedData(
         {
           request,
           options,
@@ -309,15 +301,15 @@ export class Publication {
     });
   }
 
-  async createOnChainMirrorTypedData(
-    request: CreateOnChainMirrorRequest,
+  async createOnchainMirrorTypedData(
+    request: OnchainMirrorRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateOnChainMirrorBroadcastItemResultFragment,
+    CreateOnchainMirrorBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateOnChainMirrorTypedData(
+      const result = await this.sdk.CreateOnchainMirrorTypedData(
         {
           request,
           options,
@@ -329,15 +321,15 @@ export class Publication {
     });
   }
 
-  async createOnChainQuoteTypedData(
-    request: CreateOnChainQuoteRequest,
+  async createOnchainQuoteTypedData(
+    request: OnchainQuoteRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateOnChainQuoteBroadcastItemResultFragment,
+    CreateOnchainQuoteBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateOnChainQuoteTypedData(
+      const result = await this.sdk.CreateOnchainQuoteTypedData(
         {
           request,
           options,
@@ -422,7 +414,7 @@ export class Publication {
   }
 
   async legacyCollect(
-    request: LegacyCollectPublicationRequest,
+    request: LegacyCollectRequest,
   ): PromiseResult<
     LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
     CredentialsExpiredError | NotAuthenticatedError
@@ -433,14 +425,14 @@ export class Publication {
     });
   }
 
-  async createLegacyCollectPublicationTypedData(
-    request: LegacyCollectPublicationRequest,
+  async createLegacyCollectTypedData(
+    request: LegacyCollectRequest,
   ): PromiseResult<
-    CreateLegacyCollectPublicationEip712TypedDataFragment,
+    CreateLegacyCollectBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateLegacyCollectPublicationTypedData(
+      const result = await this.sdk.CreateLegacyCollectTypedData(
         {
           request,
         },

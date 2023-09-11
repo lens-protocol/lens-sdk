@@ -26,7 +26,6 @@ import {
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type LensTransactionResultFragment = {
-  __typename: 'LensTransactionResult';
   status: Types.LensTransactionStatusType;
   txHash: string;
   reason: Types.LensTransactionFailureType | null;
@@ -61,7 +60,6 @@ export type BroadcastOnMomokaMutation = {
 
 export const LensTransactionResultFragmentDoc = gql`
   fragment LensTransactionResult on LensTransactionResult {
-    __typename
     status
     txHash
     reason

@@ -4,10 +4,6 @@ import type {
   RelayErrorFragment,
   RelaySuccessFragment,
 } from '../../../graphql/fragments.generated';
-import {
-  LensMetadataTransactionFragment,
-  LensTransactionFragment,
-} from '../graphql/transaction.generated';
 
 /**
  * Check if the result is a {@link RelaySuccessFragment}.
@@ -31,18 +27,6 @@ export function isRelayError(
   result: RelaySuccessFragment | RelayErrorFragment,
 ): result is RelayErrorFragment {
   return result.__typename === 'RelayError';
-}
-
-export function isLensMetadataTransaction(
-  result: LensMetadataTransactionFragment | LensTransactionFragment,
-): result is LensMetadataTransactionFragment {
-  return result.__typename === 'LensMetadataTransaction';
-}
-
-export function isLensTransaction(
-  result: LensMetadataTransactionFragment | LensTransactionFragment,
-): result is LensTransactionFragment {
-  return result.__typename === 'LensTransaction';
 }
 
 export function isMomokaRelayResult(

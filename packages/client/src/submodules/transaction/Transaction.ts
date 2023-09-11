@@ -15,12 +15,7 @@ import {
   type LensTransactionStatusRequest,
 } from '../../graphql/types.generated';
 import { poll, requireAuthHeaders } from '../../helpers';
-import {
-  getSdk,
-  LensMetadataTransactionFragment,
-  LensTransactionFragment,
-  Sdk,
-} from './graphql/transaction.generated';
+import { getSdk, LensTransactionResultFragment, Sdk } from './graphql/transaction.generated';
 
 export class TransactionPollingError extends Error {
   name = 'TransactionPollingError' as const;
@@ -52,7 +47,7 @@ export class Transaction {
   async status(
     request: LensTransactionStatusRequest,
   ): PromiseResult<
-    LensMetadataTransactionFragment | LensTransactionFragment,
+    LensTransactionResultFragment | null,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -61,19 +56,19 @@ export class Transaction {
     });
   }
 
-  async txIdToTxHash(txId: string): Promise<string> {
+  async txIdToTxHash(txId: string): Promise<string | null> {
     const result = await this.sdk.TxIdToTxHash({ txId });
     return result.data.result;
   }
 
-  async broadcastOnchain(
+  async broadcastOnChain(
     request: BroadcastRequest,
   ): PromiseResult<
     RelaySuccessFragment | RelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.BroadcastOnChain({ request }, headers);
+      const result = await this.sdk.BroadcastOnchain({ request }, headers);
       return result.data.result;
     });
   }
@@ -95,7 +90,7 @@ export class Transaction {
   }: {
     txId: string;
   }): PromiseResult<
-    LensMetadataTransactionFragment | LensTransactionFragment,
+    LensTransactionResultFragment | null,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return poll({
@@ -104,7 +99,7 @@ export class Transaction {
         if (result.isSuccess()) {
           const value = result.value;
 
-          return value.status === LensTransactionStatusType.Complete;
+          return value?.status === LensTransactionStatusType.Complete;
         }
         // in any not positive scenario, return true to resolve the polling with the Result
         return true;

@@ -1,5 +1,4 @@
 fragment LensTransactionResult on LensTransactionResult {
-  __typename
   status
   txHash
   reason
