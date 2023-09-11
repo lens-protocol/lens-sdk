@@ -13,7 +13,7 @@ async function main() {
     recommendedProfiles.items.slice(0, 3).map((p) => ({
       id: p.id,
       handle: p.handle,
-      isFollowedByMe: p.isFollowedByMe,
+      isFollowedByMe: p.operations.isFollowedByMe,
     }))
   );
 

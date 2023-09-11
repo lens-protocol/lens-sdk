@@ -1,6 +1,6 @@
 import { isRelaySuccess } from "@lens-protocol/client";
-import { getAuthenticatedClientFromEthersWallet } from "./shared/getAuthenticatedClient";
-import { setupWallet } from "./shared/setupWallet";
+import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
+import { setupWallet } from "../shared/setupWallet";
 import { LensTransactionStatusType } from "@lens-protocol/client/src/graphql/types.generated";
 
 async function main() {
@@ -34,15 +34,6 @@ async function main() {
     console.log(`Something went wrong`, broadcastResultValue);
     return;
   }
-
-  const result = await lensClient.transaction.status({ txId: broadcastResultValue.txId });
-
-  if (!result.isSuccess()) {
-    console.log(`Something went wrong`, result);
-    return;
-  }
-
-  const isCompleted = result.value.status === LensTransactionStatusType.Complete;
 
   // or wait till transaction is indexed
   await lensClient.transaction.waitUntilComplete({ txId: broadcastResultValue.txId });

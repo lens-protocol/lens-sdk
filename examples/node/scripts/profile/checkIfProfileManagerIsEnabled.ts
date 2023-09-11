@@ -1,5 +1,5 @@
-import { getAuthenticatedClientFromEthersWallet } from "./shared/getAuthenticatedClient";
-import { setupWallet } from "./shared/setupWallet";
+import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
+import { setupWallet } from "../shared/setupWallet";
 
 async function main() {
   const wallet = setupWallet();
