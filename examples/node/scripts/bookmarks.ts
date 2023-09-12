@@ -7,7 +7,7 @@ async function createProfile(client: LensClient): Promise<ProfileFragment> {
 
   console.log(`Creating ${handle}.test...`);
 
-  const profileCreateResult = await client.profile.create({ handle });
+  const profileCreateResult = await client.profile.createWithHandle({ handle });
 
   const profileCreateResultValue = profileCreateResult.unwrap();
 

@@ -11,8 +11,8 @@ async function main() {
 
   console.log(`Creating a new profile for ${address} with handle "${handle}"`);
 
-  const profileCreateResult = await lensClient.profile.create({
-    handle: "CHOSEN_HANDLE",
+  const profileCreateResult = await lensClient.profile.createWithHandle({
+    handle: handle,
     to: "YOUR_EVM_ADDRESS",
   });
 
@@ -28,7 +28,6 @@ async function main() {
     `Transaction to create a new profile with handle "${handle}" was successfuly broadcasted with txId ${profileCreateResultValue.txId}`
   );
 
-  // wait in a loop
   console.log(`Waiting for the transaction to be indexed...`);
   await lensClient.transaction.waitUntilComplete({ txId: profileCreateResultValue.txId });
 
