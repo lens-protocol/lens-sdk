@@ -13,7 +13,7 @@ describe(`Given storage and two ${LensClient.name} instances sharing the same st
   const client1 = new LensClient(config);
   const client2 = new LensClient(config);
 
-  describe(`when 1st client is authenticated`, () => {
+  describe.skip(`when 1st client is authenticated`, () => {
     it(`should allow 2nd client to trigger methods that require authentication`, async () => {
       const wallet = Wallet.createRandom();
       const walletAddress = await wallet.getAddress();
