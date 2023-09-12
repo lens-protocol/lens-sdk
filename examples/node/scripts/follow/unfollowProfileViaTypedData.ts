@@ -1,4 +1,4 @@
-import { isRelaySuccess, isSuccessfulLensProfileManagerResponse } from "@lens-protocol/client";
+import { isRelaySuccess } from "@lens-protocol/client";
 import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
 import { setupWallet } from "../shared/setupWallet";
 import { signAndBroadcast } from "../shared/signAndBroadcast";
@@ -23,7 +23,7 @@ async function main() {
     data.typedData.value
   );
 
-  const broadcastResult = await lensClient.transaction.broadcastOnchain({
+  const broadcastResult = await lensClient.transaction.broadcastOnChain({
     id: data.id,
     signature: signedTypedData,
   });

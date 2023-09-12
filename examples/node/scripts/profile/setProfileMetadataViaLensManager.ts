@@ -1,7 +1,6 @@
-import { isRelaySuccess, isSuccessfulLensProfileManagerResponse } from "@lens-protocol/client";
+import { isRelaySuccess } from "@lens-protocol/client";
 import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
 import { setupWallet } from "../shared/setupWallet";
-import { LensTransactionStatusType } from "@lens-protocol/client/src/graphql/types.generated";
 
 async function main() {
   const wallet = setupWallet();
@@ -13,7 +12,7 @@ async function main() {
 
   const data = result.unwrap();
 
-  if (!isSuccessfulLensProfileManagerResponse(data)) {
+  if (!isRelaySuccess(data)) {
     console.log(`Something went wrong`, data);
     return;
   }

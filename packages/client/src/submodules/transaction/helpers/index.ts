@@ -1,7 +1,5 @@
 import type {
   CreateMomokaPublicationResultFragment,
-  LensProfileManagerRelayErrorFragment,
-  RelayErrorFragment,
   RelaySuccessFragment,
 } from '../../../graphql/fragments.generated';
 
@@ -18,25 +16,13 @@ export function isRelaySuccess<T extends { reason: string }>(
 }
 
 /**
- * Check if the result is a {@link RelayErrorFragment}.
+ * Check if the result is a {@link CreateMomokaPublicationResultFragment}.
  *
  * @param result - result to check
- * @returns true if the result is a {@link RelayErrorFragment}
+ * @returns true if the result is a {@link CreateMomokaPublicationResultFragment}
  */
-export function isRelayError(
-  result: RelaySuccessFragment | RelayErrorFragment,
-): result is RelayErrorFragment {
-  return result.__typename === 'RelayError';
-}
-
-export function isMomokaRelayResult(
-  result: CreateMomokaPublicationResultFragment | RelayErrorFragment,
+export function isCreateMomokaPublicationResult<T extends { reason: string }>(
+  result: CreateMomokaPublicationResultFragment | T,
 ): result is CreateMomokaPublicationResultFragment {
-  return 'momokaId' in result;
-}
-
-export function isSuccessfulLensProfileManagerResponse(
-  result: RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
-): result is RelaySuccessFragment {
-  return '__typename' in result && result.__typename === 'RelaySuccess';
+  return '__typename' in result && result.__typename === 'CreateMomokaPublicationResult';
 }

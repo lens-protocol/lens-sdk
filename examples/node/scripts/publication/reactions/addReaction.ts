@@ -9,7 +9,6 @@ async function main() {
     where: {
       for: "PROFILE_ID",
     },
-    limit: 20,
   });
 
   const feedItems = feedResult.unwrap().items;

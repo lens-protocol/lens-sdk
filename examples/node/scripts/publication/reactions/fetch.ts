@@ -1,9 +1,4 @@
-import {
-  ExplorePublicationsOrderByType,
-  LensClient,
-  PublicationReactionType,
-  development,
-} from "@lens-protocol/client";
+import { LensClient, LimitType, PublicationReactionType, development } from "@lens-protocol/client";
 
 async function main() {
   const lensClient = new LensClient({
@@ -12,7 +7,7 @@ async function main() {
 
   const profilesWhoReacted = await lensClient.publication.reactions.fetch({
     for: "PUBLICATION_ID",
-    limit: 20,
+    limit: LimitType.TwentyFive,
   });
 
   console.log(
@@ -26,7 +21,7 @@ async function main() {
 
   const profilesWhoReactedAfterUpvote = await lensClient.publication.reactions.fetch({
     for: "PUBLICATION_ID",
-    limit: 20,
+    limit: LimitType.TwentyFive,
   });
 
   console.log(

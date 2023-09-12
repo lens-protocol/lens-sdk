@@ -22,7 +22,7 @@ async function main() {
   );
 
   // broadcast
-  const broadcastResult = await lensClient.transaction.broadcastOnchain({
+  const broadcastResult = await lensClient.transaction.broadcastOnChain({
     id: data.id,
     signature: signedTypedData,
   });
