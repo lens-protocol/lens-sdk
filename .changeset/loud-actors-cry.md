@@ -4,4 +4,4 @@
 "@lens-protocol/react-web": patch
 ---
 
-**Added** missing `commentsOfOrdering` and `commentsRankingFilter` to `useComments` hook
+**Fixed** `usePublications` to refetch on `publicationIds` change

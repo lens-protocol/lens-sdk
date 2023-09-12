@@ -1,5 +1,123 @@
 # @lens-protocol/react-web
 
+## 1.3.1-next.3
+
+### Patch Changes
+
+- ace02d32: **Fixes** support for ERC1155 gated content
+- Updated dependencies [ace02d32]
+  - @lens-protocol/gated-content@0.3.3-next.3
+  - @lens-protocol/react@1.3.1-next.3
+
+## 1.3.1-next.2
+
+### Patch Changes
+
+- 5f251069: **Fixed** `usePublications` to refetch on `publicationIds` change
+- Updated dependencies [5f251069]
+  - @lens-protocol/api-bindings@0.10.1-next.2
+  - @lens-protocol/react@1.3.1-next.2
+  - @lens-protocol/gated-content@0.3.3-next.2
+
+## 1.3.1-next.1
+
+### Patch Changes
+
+- dfb15e1a: **Fixed** 1.3.1-next.0 release packages bundles
+- Updated dependencies [dfb15e1a]
+  - @lens-protocol/api-bindings@0.10.1-next.1
+  - @lens-protocol/react@1.3.1-next.1
+  - @lens-protocol/gated-content@0.3.3-next.1
+
+## 1.3.1-next.0
+
+### Patch Changes
+
+- ebc2e7e5: **Added** `publicationsId` to `usePublications` args
+- Updated dependencies [ebc2e7e5]
+  - @lens-protocol/react@1.3.1-next.0
+  - @lens-protocol/api-bindings@0.10.1-next.0
+  - @lens-protocol/gated-content@0.3.3-next.0
+
+## 1.3.0
+
+### Minor Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- ad797714: **Added** `useNotInterested` hook
+- c2a91ef4: **Added** `Profile.invitedBy` field
+- 636ff014: **Added** `profileIds` to `usePublications` hook
+- cfe0d51e: **Added** `highSignalFilter` to `useNotifications` hook
+- 3ffab7b9: **Added** newly created `Profile` to `useCreateProfile` result
+- 19ed489e: **Added** `beforeCount` to all paginated hooks and refetch data on re-render of `usePublication` and `useProfile` hooks.
+- 0f75f79d: **Added** experimental `useCurrentSession` hook
+  **Fixed** issue with `Profile` entity being leaked by the `useWalletLogin` hook
+  **Fixed** bug preventing logout on expired credentials detected at startup type
+- 773c2ed8: **Added** ability to override `sources` in `useExplorePublications` hook and support to `noRandomize` param.
+- 773c2ed8: **Added** `name` support to non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
+- 6eaaaf22: **Added** `Profile.followNftAddress` field
+- 433760f3: **Added** ability to specify profile picture and follow policy when creating a new profile"
+- fc31f146: **Added** experimental hooks that integrate with @xmtp/react-sdk
+- 9428efeb: **Added** support for `attributes` and `image` for non-collectable publications. Affects `useCreatePost`, `useCreateComment`, `useCreateEncryptedPost`, and `useCreateEncryptedComment`
+- 3b67207b: **Added** `appId` to `Comment` and `Post`
+- 4c4505d2: **Added** support for Profile Guardian
+- bdbc71d5: **Added** ability to await newly created post in `useCreatePost` hook
+
+### Patch Changes
+
+- 09206763: **Fixed** issue with `useWalletLogin` never settling
+- 773c2ed8: **Fixes** issues with `profileIds` not used to evaluate cache hits. Affecting `usePublications` and `useProfiles`.
+- b7609fcb: **Fixed** `useNotification` to include `highSignalFilter` filter
+- 773c2ed8: **Added** missing `commentsOfOrdering` and `commentsRankingFilter` to `useComments` hook
+- 125ec30c: **Fixed** `usePollDetails` to be robust to flagged or misconfigured Snapshot Proposals
+- 28094a84: **Fixed** XMTP dep is optional until chat features are requested via `@lens-protocol/react-web/inbox` entrypoint
+- Updated dependencies [de401a59]
+- Updated dependencies [a5cf2198]
+- Updated dependencies [c8426cb3]
+- Updated dependencies [09206763]
+- Updated dependencies [df70461c]
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [c2a91ef4]
+- Updated dependencies [b7609fcb]
+- Updated dependencies [636ff014]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [cfe0d51e]
+- Updated dependencies [3ffab7b9]
+- Updated dependencies [19ed489e]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [847a9db3]
+- Updated dependencies [d5efd895]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [125ec30c]
+- Updated dependencies [28094a84]
+- Updated dependencies [1d13a3ab]
+- Updated dependencies [6eaaaf22]
+- Updated dependencies [433760f3]
+- Updated dependencies [fc31f146]
+- Updated dependencies [9428efeb]
+- Updated dependencies [e8dc3cd8]
+- Updated dependencies [3b67207b]
+- Updated dependencies [4c4505d2]
+- Updated dependencies [bdbc71d5]
+- Updated dependencies [5943a0f0]
+  - @lens-protocol/api-bindings@0.10.0
+  - @lens-protocol/react@1.3.0
+  - @lens-protocol/gated-content@0.3.2
+  - @lens-protocol/domain@0.10.0
+  - @lens-protocol/shared-kernel@0.10.0
+  - @lens-protocol/storage@0.7.4
+
+## 1.3.0-next.11
+
+### Patch Changes
+
+- 09206763: **Fixed** issue with `useWalletLogin` never settling
+- Updated dependencies [09206763]
+  - @lens-protocol/react@1.3.0-next.11
+
 ## 1.3.0-next.10
 
 ### Minor Changes

@@ -1,5 +1,67 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-next.3
+
+### Patch Changes
+
+- ace02d32: **Fixes** support for ERC1155 gated content
+
+## 0.3.3-next.2
+
+### Patch Changes
+
+- Updated dependencies [5f251069]
+  - @lens-protocol/api-bindings@0.10.1-next.2
+
+## 0.3.3-next.1
+
+### Patch Changes
+
+- Updated dependencies [dfb15e1a]
+  - @lens-protocol/api-bindings@0.10.1-next.1
+
+## 0.3.3-next.0
+
+### Patch Changes
+
+- Updated dependencies [ebc2e7e5]
+  - @lens-protocol/api-bindings@0.10.1-next.0
+
+## 0.3.2
+
+### Patch Changes
+
+- de401a59: **Added** support for optimized and transformed media inside publication and profile MediaSet
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- Updated dependencies [de401a59]
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [c2a91ef4]
+- Updated dependencies [b7609fcb]
+- Updated dependencies [636ff014]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [3ffab7b9]
+- Updated dependencies [19ed489e]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [d5efd895]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [125ec30c]
+- Updated dependencies [6eaaaf22]
+- Updated dependencies [433760f3]
+- Updated dependencies [fc31f146]
+- Updated dependencies [9428efeb]
+- Updated dependencies [e8dc3cd8]
+- Updated dependencies [3b67207b]
+- Updated dependencies [4c4505d2]
+- Updated dependencies [bdbc71d5]
+- Updated dependencies [5943a0f0]
+  - @lens-protocol/api-bindings@0.10.0
+  - @lens-protocol/domain@0.10.0
+  - @lens-protocol/shared-kernel@0.10.0
+  - @lens-protocol/storage@0.7.4
+
 ## 0.3.2-next.8
 
 ### Patch Changes

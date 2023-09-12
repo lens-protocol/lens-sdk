@@ -1,5 +1,23 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.9.1
+
+### Patch Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+- Updated dependencies [3ffab7b9]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [433760f3]
+- Updated dependencies [fc31f146]
+- Updated dependencies [9428efeb]
+- Updated dependencies [bdbc71d5]
+- Updated dependencies [5943a0f0]
+  - @lens-protocol/domain@0.10.0
+  - @lens-protocol/shared-kernel@0.10.0
+
 ## 0.9.1-next.7
 
 ### Patch Changes

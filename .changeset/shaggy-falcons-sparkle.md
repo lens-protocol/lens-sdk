@@ -4,4 +4,4 @@
 "@lens-protocol/react-web": patch
 ---
 
-**Fixed** `usePollDetails` to be robust to flagged or misconfigured Snapshot Proposals
+**Fixed** 1.3.1-next.0 release packages bundles

@@ -1,5 +1,72 @@
 # @lens-protocol/wagmi
 
+## 2.1.1-next.3
+
+### Patch Changes
+
+- Updated dependencies [ace02d32]
+  - @lens-protocol/react-web@1.3.1-next.3
+
+## 2.1.1-next.2
+
+### Patch Changes
+
+- Updated dependencies [5f251069]
+  - @lens-protocol/react-web@1.3.1-next.2
+
+## 2.1.1-next.1
+
+### Patch Changes
+
+- Updated dependencies [dfb15e1a]
+  - @lens-protocol/react-web@1.3.1-next.1
+
+## 2.1.1-next.0
+
+### Patch Changes
+
+- Updated dependencies [ebc2e7e5]
+  - @lens-protocol/react-web@1.3.1-next.0
+
+## 2.1.0
+
+### Patch Changes
+
+- 40fce6ff: **Added** support for bookmarks: list, add, and remove from a Profile private list of publications
+- Updated dependencies [09206763]
+- Updated dependencies [40fce6ff]
+- Updated dependencies [ad797714]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [c2a91ef4]
+- Updated dependencies [b7609fcb]
+- Updated dependencies [636ff014]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [cfe0d51e]
+- Updated dependencies [3ffab7b9]
+- Updated dependencies [19ed489e]
+- Updated dependencies [0f75f79d]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [773c2ed8]
+- Updated dependencies [125ec30c]
+- Updated dependencies [28094a84]
+- Updated dependencies [6eaaaf22]
+- Updated dependencies [433760f3]
+- Updated dependencies [fc31f146]
+- Updated dependencies [9428efeb]
+- Updated dependencies [3b67207b]
+- Updated dependencies [4c4505d2]
+- Updated dependencies [bdbc71d5]
+- Updated dependencies [5943a0f0]
+  - @lens-protocol/react-web@1.3.0
+  - @lens-protocol/shared-kernel@0.10.0
+
+## 2.1.0-next.11
+
+### Patch Changes
+
+- Updated dependencies [09206763]
+  - @lens-protocol/react-web@1.3.0-next.11
+
 ## 2.1.0-next.10
 
 ### Patch Changes

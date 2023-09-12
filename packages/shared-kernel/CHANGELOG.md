@@ -1,5 +1,16 @@
 # @lens-protocol/shared-kernel
 
+## 0.10.0
+
+### Minor Changes
+
+- fc31f146: **Added** experimental hooks that integrate with @xmtp/react-sdk
+
+### Patch Changes
+
+- bdbc71d5: **Added** ability to await newly created post in `useCreatePost` hook
+- 5943a0f0: **Fixed** missing dependency update related to https://github.com/lens-protocol/lens-sdk/pull/475
+
 ## 0.10.0-next.2
 
 ### Patch Changes
