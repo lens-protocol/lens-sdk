@@ -5,11 +5,13 @@ async function main() {
     environment: development,
   });
 
-  const result = await client.publication.fetch({
-    for: "0x123-0x456",
+  const result = await client.publication.stats({
+    request: {
+      for: "0x123",
+    },
   });
 
-  console.log(`Publication fetched by id: `, result);
+  console.log(`Stats for the publication: `, result);
 }
 
 main();

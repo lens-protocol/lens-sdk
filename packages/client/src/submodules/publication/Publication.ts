@@ -47,15 +47,17 @@ import {
   CreateOnchainQuoteBroadcastItemResultFragment,
   getSdk,
   PublicationStatsFragment,
-  PublicationStatsQueryVariables,
   PublicationValidateMetadataResultFragment,
   Sdk,
   TagResultFragment,
 } from './graphql/publication.generated';
 import { isMirrorPublication } from './helpers';
 import { Bookmarks, Reactions, NotInterested, Actions } from './submodules';
+import { PublicationStatsVariables } from './types';
 
 /**
+ * Publications are the posts, comments, mirrors and quotes that a profile creates.
+ *
  * @group LensClient Modules
  */
 export class Publication {
@@ -100,6 +102,19 @@ export class Publication {
     return new Actions(this.config, this.authentication);
   }
 
+  /**
+   * Fetch a publication
+   *
+   * @param request - Request object for the query
+   * @returns {@link AnyPublicationFragment} or null if not found
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.fetch({
+   *   for: '0x123-0x456',
+   * });
+   * ```
+   */
   async fetch(request: PublicationRequest): Promise<AnyPublicationFragment | null> {
     const result = await this.sdk.Publication({
       request,
@@ -109,6 +124,21 @@ export class Publication {
     return result.data.result;
   }
 
+  /**
+   * Fetch all publications by requested criteria
+   *
+   * @param request - Request object for the query
+   * @returns {@link AnyPublicationFragment} wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.fetchAll({
+   *   where: {
+   *     from: ['0x123'],
+   *   },
+   * });
+   * ```
+   */
   async fetchAll(
     request: PublicationsRequest,
   ): Promise<PaginatedResult<AnyPublicationFragment | null>> {
@@ -122,8 +152,29 @@ export class Publication {
     }, request);
   }
 
-  async stats(vars: PublicationStatsQueryVariables): Promise<PublicationStatsFragment | undefined> {
-    const result = await this.sdk.PublicationStats(vars);
+  /**
+   * Fetch a publication's stats
+   *
+   * @param vars - Object defining all variables for the query
+   * @returns {@link PublicationStatsFragment} or undefined if not found or publication is a mirror
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.stats({
+   *   request: {
+   *     for: "0x123",
+   *   },
+   * });
+   * ```
+   */
+  async stats(vars: PublicationStatsVariables): Promise<PublicationStatsFragment | undefined> {
+    const { request, statsRequest = {}, reactionsRequest = {}, openActionsRequest = {} } = vars;
+    const result = await this.sdk.PublicationStats({
+      request,
+      statsRequest,
+      reactionsRequest,
+      openActionsRequest,
+    });
     const data = result.data.result;
 
     if (data === null || isMirrorPublication(data)) {
@@ -132,6 +183,9 @@ export class Publication {
     return data.stats;
   }
 
+  /**
+   * TODO
+   */
   async tags(request: PublicationsTagsRequest): Promise<PaginatedResult<TagResultFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.PublicationsTags({
@@ -142,6 +196,21 @@ export class Publication {
     }, request);
   }
 
+  /**
+   * Validate a publication's metadata before creating it
+   *
+   * @param request - Request object for the query
+   * @returns Validation result
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.validateMetadata(metadata);
+   *
+   * if (!result.valid) {
+   *   throw new Error(`Metadata is not valid because of ${result.reason}`);
+   * }
+   * ```
+   */
   async validateMetadata(
     request: ValidatePublicationMetadataRequest,
   ): Promise<PublicationValidateMetadataResultFragment> {
