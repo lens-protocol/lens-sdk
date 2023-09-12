@@ -1,4 +1,5 @@
 import { isRelaySuccess } from '@lens-protocol/client';
+
 import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
 import { setupWallet } from '../shared/setupWallet';
 

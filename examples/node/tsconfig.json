@@ -1,11 +1,12 @@
 {
-  "ts-node": {
-    "transpileOnly": true
-  },
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "module": "NodeNext",
     "target": "ESNext",
     "moduleResolution": "NodeNext"
   },
-  "include": ["scripts"]
+  "include": ["./scripts"],
+  "ts-node": {
+    "transpileOnly": true
+  }
 }

@@ -75,4 +75,11 @@ export {
   PublicationReportingReason,
   PublicationReportingSensitiveSubreason,
   PublicationReportingSpamSubreason,
+  PublicationMetadataMainFocusType,
+  PublicationMarketplaceMetadataAttributeDisplayType,
+  ChangeProfileManagerActionType,
+  ProfileInterestTypes,
+  CustomFiltersType,
+  OpenActionCategoryType,
+  OpenActionModuleType,
 } from './graphql/types.generated';

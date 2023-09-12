@@ -1,13 +1,14 @@
-import { isCreateMomokaPublicationResult } from "@lens-protocol/client";
-import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
-import { setupWallet } from "../shared/setupWallet";
+import { isCreateMomokaPublicationResult } from '@lens-protocol/client';
+
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
   const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
 
   const typedDataResult = await lensClient.publication.createMomokaPostTypedData({
-    contentURI: "ipfs://Qm...", // or arweave
+    contentURI: 'ipfs://Qm...', // or arweave
   });
 
   const { id, typedData } = typedDataResult.unwrap();
@@ -16,7 +17,7 @@ async function main() {
   const signedTypedData = await wallet._signTypedData(
     typedData.domain,
     typedData.types,
-    typedData.value
+    typedData.value,
   );
 
   const broadcastResult = await lensClient.transaction.broadcastOnMomoka({

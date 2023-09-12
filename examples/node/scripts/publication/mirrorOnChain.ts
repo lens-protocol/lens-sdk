@@ -1,13 +1,14 @@
-import { isRelaySuccess } from "@lens-protocol/client";
-import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
-import { setupWallet } from "../shared/setupWallet";
+import { isRelaySuccess } from '@lens-protocol/client';
+
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
   const result = await client.publication.mirrorOnChain({
-    mirrorOn: "0x123-0x456",
+    mirrorOn: '0x123-0x456',
   });
 
   const resultValue = result.unwrap();

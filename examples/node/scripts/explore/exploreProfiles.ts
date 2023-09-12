@@ -1,4 +1,4 @@
-import { ExploreProfileOrderBy, LensClient, development } from "@lens-protocol/client";
+import { ExploreProfileOrderBy, LensClient, development } from '@lens-protocol/client';
 
 async function main() {
   const lensClient = new LensClient({
@@ -12,7 +12,7 @@ async function main() {
   const mostPostsThisYear = await lensClient.explore.profiles({
     orderBy: ExploreProfileOrderBy.MostPosts,
     where: {
-      since: "2023-01-01T00:00:00.000Z",
+      since: '2023-01-01T00:00:00.000Z',
     },
   });
 

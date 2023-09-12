@@ -1,4 +1,4 @@
-import { LensClient, PublicationReactionType, development } from "@lens-protocol/client";
+import { LensClient, PublicationReactionType, development } from '@lens-protocol/client';
 
 async function main() {
   const lensClient = new LensClient({
@@ -7,7 +7,7 @@ async function main() {
 
   const feedResult = await lensClient.feed.fetch({
     where: {
-      for: "PROFILE_ID",
+      for: 'PROFILE_ID',
     },
   });
 
@@ -22,7 +22,7 @@ async function main() {
 
   // add reaction
   await lensClient.publication.reactions.add({
-    for: "PUBLICATION_ID",
+    for: 'PUBLICATION_ID',
     reaction: PublicationReactionType.Upvote,
   });
 
